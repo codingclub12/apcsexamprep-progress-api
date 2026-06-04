@@ -76,11 +76,12 @@ router.get('/classes', requireTeacher, (req, res) => {
 // ── CREATE CLASS ──────────────────────────────────────────────────────────────
 router.post('/classes', requireTeacher, (req, res) => {
   try {
-    const { class_name, course = 'ap-cybersecurity', mastery_threshold = 80 } = req.body;
+    const { class_name, course = 'ap-cybersecurity', mastery_threshold = 80, retry_allowed = 1 } = req.body;
     if (!class_name || class_name.trim().length < 2) return res.status(400).json({ error: 'Class name required' });
     if (!COURSES[course]) return res.status(400).json({ error: 'Invalid course' });
 
-    const threshold = Math.min(100, Math.max(0, parseInt(mastery_threshold, 10) || 80));
+    const threshold   = Math.min(100, Math.max(0, parseInt(mastery_threshold, 10) || 80));
+    const retryFlag   = retry_allowed ? 1 : 0;
 
     const prefix = COURSE_PREFIXES[course] || 'CLASS';
     // Generate unique class code
@@ -93,9 +94,9 @@ router.post('/classes', requireTeacher, (req, res) => {
 
     const id = newId();
     db.prepare(`
-      INSERT INTO classes (id, teacher_id, class_code, class_name, course, mastery_threshold)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `).run(id, req.teacher.id, code, sanitize(class_name, 100), course, threshold);
+      INSERT INTO classes (id, teacher_id, class_code, class_name, course, mastery_threshold, retry_allowed)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `).run(id, req.teacher.id, code, sanitize(class_name, 100), course, threshold, retryFlag);
 
     const cls = db.prepare('SELECT * FROM classes WHERE id = ?').get(id);
     res.status(201).json({ class: cls });
@@ -131,7 +132,7 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
   `).all(cls.id);
 
   const allProgress = db.prepare(`
-    SELECT student_id, unit, lesson, activity_type, completed, score, attempts, confidence, completed_at
+    SELECT student_id, unit, lesson, activity_type, completed, score, attempts, confidence, completed_at, locked, id as progress_id
     FROM progress WHERE class_id = ? AND course = ?
   `).all(cls.id, cls.course);
 
@@ -142,11 +143,13 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
     if (!progressMap[p.student_id][p.unit]) progressMap[p.student_id][p.unit] = {};
     if (!progressMap[p.student_id][p.unit][p.lesson]) progressMap[p.student_id][p.unit][p.lesson] = {};
     progressMap[p.student_id][p.unit][p.lesson][p.activity_type] = {
-      completed: !!p.completed,
-      score: p.score,
-      attempts: p.attempts,
-      confidence: p.confidence,
+      completed:    !!p.completed,
+      score:        p.score,
+      attempts:     p.attempts,
+      confidence:   p.confidence,
       completed_at: p.completed_at,
+      locked:       !!p.locked,
+      progress_id:  p.progress_id,
     };
   }
 
@@ -256,6 +259,65 @@ router.delete('/classes/:code/students/:studentId', requireTeacher, (req, res) =
 
   db.prepare('DELETE FROM students WHERE id = ? AND class_id = ?').run(req.params.studentId, cls.id);
   res.json({ ok: true });
+});
+
+// ── SET CLASS RETRY DEFAULT ───────────────────────────────────────────────────
+router.patch('/classes/:code/retry', requireTeacher, (req, res) => {
+  const cls = db.prepare('SELECT * FROM classes WHERE class_code = ? AND teacher_id = ?')
+    .get(req.params.code.toUpperCase(), req.teacher.id);
+  if (!cls) return res.status(404).json({ error: 'Class not found' });
+
+  const { retry_allowed } = req.body;
+  if (retry_allowed === undefined) return res.status(400).json({ error: 'retry_allowed required (true/false)' });
+
+  db.prepare('UPDATE classes SET retry_allowed = ? WHERE id = ?').run(retry_allowed ? 1 : 0, cls.id);
+  res.json({ ok: true, retry_allowed: !!retry_allowed });
+});
+
+// ── SET PER-STUDENT RETRY OVERRIDE ───────────────────────────────────────────
+router.patch('/classes/:code/students/:studentId/retry', requireTeacher, (req, res) => {
+  const cls = db.prepare('SELECT id FROM classes WHERE class_code = ? AND teacher_id = ?')
+    .get(req.params.code.toUpperCase(), req.teacher.id);
+  if (!cls) return res.status(404).json({ error: 'Class not found' });
+
+  const student = db.prepare('SELECT id FROM students WHERE id = ? AND class_id = ?')
+    .get(req.params.studentId, cls.id);
+  if (!student) return res.status(404).json({ error: 'Student not found' });
+
+  const { retry_override } = req.body;
+  // null = revert to class default; true/false = explicit override
+  const val = retry_override === null || retry_override === undefined ? null : (retry_override ? 1 : 0);
+  db.prepare('UPDATE students SET retry_override = ? WHERE id = ?').run(val, student.id);
+  res.json({ ok: true, retry_override: val });
+});
+
+// ── UNLOCK QUIZ (teacher) ─────────────────────────────────────────────────────
+// reset=true wipes the score; reset=false keeps best score
+router.patch('/classes/:code/progress/:progressId/unlock', requireTeacher, (req, res) => {
+  const cls = db.prepare('SELECT id FROM classes WHERE class_code = ? AND teacher_id = ?')
+    .get(req.params.code.toUpperCase(), req.teacher.id);
+  if (!cls) return res.status(404).json({ error: 'Class not found' });
+
+  // Verify the progress record belongs to this class
+  const record = db.prepare('SELECT id, score FROM progress WHERE id = ? AND class_id = ?')
+    .get(req.params.progressId, cls.id);
+  if (!record) return res.status(404).json({ error: 'Progress record not found' });
+
+  const reset = req.body.reset === true;
+  const now   = new Date().toISOString();
+
+  if (reset) {
+    db.prepare(`
+      UPDATE progress SET locked = 0, completed = 0, score = NULL, attempts = 0,
+        completed_at = NULL, updated_at = ? WHERE id = ?
+    `).run(now, record.id);
+  } else {
+    db.prepare(`
+      UPDATE progress SET locked = 0, updated_at = ? WHERE id = ?
+    `).run(now, record.id);
+  }
+
+  res.json({ ok: true, reset, score: reset ? null : record.score });
 });
 
 module.exports = router;

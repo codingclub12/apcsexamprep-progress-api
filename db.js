@@ -31,21 +31,22 @@ db.exec(`
     course            TEXT NOT NULL DEFAULT 'ap-cybersecurity',
     active            INTEGER DEFAULT 1,
     mastery_threshold INTEGER DEFAULT 80,
+    retry_allowed     INTEGER DEFAULT 1,
     created_at        TEXT DEFAULT (datetime('now'))
   );
 
-  -- Migration: add mastery_threshold to existing classes tables
-  -- (SQLite ignores this if column already exists via the try/catch below)
-
+  -- Migration: add mastery_threshold / retry_allowed to existing classes tables
+  -- (handled below via try/catch ALTER TABLE)
 
   CREATE TABLE IF NOT EXISTS students (
-    id           TEXT PRIMARY KEY,
-    class_id     TEXT NOT NULL REFERENCES classes(id) ON DELETE CASCADE,
-    display_name TEXT NOT NULL,
-    pin_hash     TEXT NOT NULL,
-    student_ref  TEXT,
-    created_at   TEXT DEFAULT (datetime('now')),
-    last_active  TEXT
+    id             TEXT PRIMARY KEY,
+    class_id       TEXT NOT NULL REFERENCES classes(id) ON DELETE CASCADE,
+    display_name   TEXT NOT NULL,
+    pin_hash       TEXT NOT NULL,
+    student_ref    TEXT,
+    retry_override INTEGER DEFAULT NULL,
+    created_at     TEXT DEFAULT (datetime('now')),
+    last_active    TEXT
   );
 
   CREATE TABLE IF NOT EXISTS progress (
@@ -61,6 +62,7 @@ db.exec(`
     attempts      INTEGER DEFAULT 0,
     confidence    INTEGER,
     time_spent_s  INTEGER,
+    locked        INTEGER DEFAULT 0,
     completed_at  TEXT,
     updated_at    TEXT DEFAULT (datetime('now')),
     UNIQUE(student_id, course, unit, lesson, activity_type)
@@ -85,11 +87,15 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_quiz_student    ON quiz_attempts(student_id);
 `);
 
-// Migration: add mastery_threshold to existing databases
-try {
-  db.exec(`ALTER TABLE classes ADD COLUMN mastery_threshold INTEGER DEFAULT 80`);
-} catch (e) {
-  // Column already exists — safe to ignore
+// Migrations — safe to re-run on every boot, ignored if column already exists
+const migrations = [
+  `ALTER TABLE classes   ADD COLUMN mastery_threshold INTEGER DEFAULT 80`,
+  `ALTER TABLE classes   ADD COLUMN retry_allowed     INTEGER DEFAULT 1`,
+  `ALTER TABLE students  ADD COLUMN retry_override    INTEGER DEFAULT NULL`,
+  `ALTER TABLE progress  ADD COLUMN locked            INTEGER DEFAULT 0`,
+];
+for (const sql of migrations) {
+  try { db.exec(sql); } catch(e) { /* column already exists */ }
 }
 
 module.exports = db;

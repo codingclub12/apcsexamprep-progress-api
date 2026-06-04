@@ -73,7 +73,8 @@
         </div>
         <div class="tcdash-actions">
           <a class="tcdash-btn outline" href="/pages/cyber-class">&larr; All Classes</a>
-          <button class="tcdash-btn purple" onclick="TCDash.openThresholdModal()">Mastery Threshold: <span id="dash-threshold-display">80</span>%</button>
+          <button class="tcdash-btn purple" onclick="TCDash.openThresholdModal()">Mastery: <span id="dash-threshold-display">80</span>%</button>
+          <button id="dash-retry-btn" class="tcdash-btn" onclick="TCDash.toggleClassRetry()" style="background:#0F766E!important;color:#fff!important;-webkit-text-fill-color:#fff!important;">Retry: <span id="dash-retry-display">On</span></button>
           <button class="tcdash-btn amber" onclick="TCDash.exportCSV()">Export CSV</button>
         </div>
       </div>
@@ -176,7 +177,11 @@ window.TCDash = {
       const d = await r.json();
       this.data = d;
       this.currentThreshold = d.class.mastery_threshold != null ? d.class.mastery_threshold : 80;
+      this.currentRetry     = d.class.retry_allowed !== 0;
       document.getElementById('dash-threshold-display').textContent = this.currentThreshold;
+      document.getElementById('dash-retry-display').textContent = this.currentRetry ? 'On' : 'Off';
+      const retryBtn = document.getElementById('dash-retry-btn');
+      if (retryBtn) retryBtn.style.setProperty('background', this.currentRetry ? '#0F766E' : '#DC2626', 'important');
       document.getElementById('dash-classname').textContent = d.class.class_name + ' \u00B7 ' + this.formatCourse(d.class.course);
       this.renderStats(d.summary);
       this.renderTable(d.summary, d.course_config);
@@ -210,55 +215,208 @@ window.TCDash = {
 
     // Build header
     const thead = document.getElementById('tcdash-thead');
-    thead.innerHTML = `
-      <tr>
-        <th>Student</th>
-        <th class="center">Unit 1</th>
-        ${lessons.map(l =>
-          ACTIVITIES.map(a => `<th class="center" style="font-size:10px!important;white-space:nowrap!important;">${l.id}<br>${ACT_SHORT[a]}</th>`).join('')
-        ).join('')}
-        <th>Last Active</th>
-      </tr>
-    `;
+    thead.innerHTML =
+      '<tr>' +
+        '<th>Student</th>' +
+        '<th class="center">Retry</th>' +
+        '<th class="center">Unit 1</th>' +
+        lessons.map(function(l) {
+          return ACTIVITIES.map(function(a) {
+            return '<th class="center" style="font-size:10px!important;white-space:nowrap!important;">' + l.id + '<br>' + ACT_SHORT[a] + '</th>';
+          }).join('');
+        }).join('') +
+        '<th>Last Active</th>' +
+      '</tr>';
 
     const tbody = document.getElementById('tcdash-tbody');
     if (!summary.length) {
-      tbody.innerHTML = `<tr><td colspan="100" class="tcdash-empty">No students have joined yet. Share the class code above.</td></tr>`;
+      tbody.innerHTML = '<tr><td colspan="100" class="tcdash-empty">No students have joined yet. Share the class code above.</td></tr>';
       return;
     }
 
-    tbody.innerHTML = summary.map(s => {
-      const unit1 = s.units['unit-1'] || { pct: 0, avg_score: null };
-      const lastActive = s.student.last_active ? this.formatDate(s.student.last_active) : 'Never';
+    const self = this;
+    tbody.innerHTML = summary.map(function(s) {
+      const unit1      = s.units['unit-1'] || { pct: 0, avg_score: null };
+      const lastActive = s.student.last_active ? self.formatDate(s.student.last_active) : 'Never';
 
-      const actCells = lessons.map(lesson =>
-        ACTIVITIES.map(act => {
-          const rec = s.detail?.['unit-1']?.[lesson.id]?.[act];
-          const done = rec?.completed;
-          const score = rec?.score != null ? rec.score + '%' : '';
-          return `<td class="act-cell">
-            <span class="act-check ${done ? 'act-done' : 'act-none'}">${done ? '\u2713' : '\u25CB'}</span>
-            ${score ? `<span class="act-score">${score}</span>` : ''}
-          </td>`;
-        }).join('')
-      ).join('');
+      // Retry override: null=class default, 1=allowed, 0=blocked
+      const ro = s.student.retry_override;
+      const classDefault = self.data && self.data.class ? !!self.data.class.retry_allowed : true;
+      const effectiveRetry = ro !== null && ro !== undefined ? !!ro : classDefault;
+      const retryLabel = ro !== null && ro !== undefined
+        ? (ro ? 'On (override)' : 'Off (override)')
+        : (classDefault ? 'On (class)' : 'Off (class)');
+      const retryColor = effectiveRetry ? '#6EE7B7' : '#F87171';
 
-      return `<tr>
-        <td>
-          <div class="student-name">${this.esc(s.student.name)}</div>
-          ${s.student.ref ? `<div class="student-ref">${this.esc(s.student.ref)}</div>` : ''}
-        </td>
-        <td class="prog-cell">
-          <div class="prog-pct">${unit1.pct}%</div>
-          <div class="prog-bar-wrap"><div class="prog-bar" style="width:${unit1.pct}%"></div></div>
-          ${unit1.avg_score != null ? `<div class="prog-score">Avg: ${unit1.avg_score}%</div>` : ''}
-        </td>
-        ${actCells}
-        <td class="last-active">${lastActive}</td>
-      </tr>`;
+      const actCells = lessons.map(function(lesson) {
+        return ACTIVITIES.map(function(act) {
+          const rec   = s.detail && s.detail['unit-1'] && s.detail['unit-1'][lesson.id] ? s.detail['unit-1'][lesson.id][act] : null;
+          const done  = rec && rec.completed;
+          const score = rec && rec.score != null ? rec.score + '%' : '';
+          const locked = rec && rec.locked;
+          const pid    = rec && rec.progress_id;
+
+          let lockBtn = '';
+          if (act === 'quiz' && locked && pid) {
+            lockBtn = ' <button onclick="TCDash.openUnlockModal(\'' + self.esc(s.student.id) + '\',\'' + self.esc(pid) + '\',\'' + self.esc(s.student.name) + '\')" ' +
+              'style="background:#E8A020!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;' +
+              'border:none!important;padding:2px 6px!important;border-radius:4px!important;font-size:10px!important;' +
+              'font-weight:700!important;cursor:pointer!important;font-family:Georgia,serif!important;margin-top:2px!important;">Unlock</button>';
+          }
+
+          return '<td class="act-cell">' +
+            '<span class="act-check ' + (done ? 'act-done' : 'act-none') + '">' +
+              (locked ? '&#128274;' : done ? '&#10003;' : '&#9675;') +
+            '</span>' +
+            (score ? '<span class="act-score">' + score + '</span>' : '') +
+            lockBtn +
+          '</td>';
+        }).join('');
+      }).join('');
+
+      return '<tr>' +
+        '<td>' +
+          '<div class="student-name">' + self.esc(s.student.name) + '</div>' +
+          (s.student.ref ? '<div class="student-ref">' + self.esc(s.student.ref) + '</div>' : '') +
+        '</td>' +
+        '<td class="act-cell" style="text-align:center!important;">' +
+          '<div style="font-size:11px!important;color:' + retryColor + '!important;-webkit-text-fill-color:' + retryColor + '!important;font-weight:700!important">' + retryLabel + '</div>' +
+          '<button onclick="TCDash.toggleStudentRetry(\'' + self.esc(s.student.id) + '\',' + (effectiveRetry ? 'false' : 'true') + ')" ' +
+            'style="background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;' +
+            'border:none!important;padding:2px 8px!important;border-radius:4px!important;font-size:10px!important;' +
+            'font-weight:700!important;cursor:pointer!important;font-family:Georgia,serif!important;margin-top:3px!important;">' +
+            (effectiveRetry ? 'Disable' : 'Enable') +
+          '</button>' +
+          '<button onclick="TCDash.clearStudentRetry(\'' + self.esc(s.student.id) + '\')" ' +
+            'style="background:transparent!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;' +
+            'border:1px solid #4B5563!important;padding:2px 6px!important;border-radius:4px!important;font-size:10px!important;' +
+            'cursor:pointer!important;font-family:Georgia,serif!important;margin-top:3px!important;margin-left:2px!important;">Reset</button>' +
+        '</td>' +
+        '<td class="prog-cell">' +
+          '<div class="prog-pct">' + unit1.pct + '%</div>' +
+          '<div class="prog-bar-wrap"><div class="prog-bar" style="width:' + unit1.pct + '%"></div></div>' +
+          (unit1.avg_score != null ? '<div class="prog-score">Avg: ' + unit1.avg_score + '%</div>' : '') +
+        '</td>' +
+        actCells +
+        '<td class="last-active">' + lastActive + '</td>' +
+      '</tr>';
     }).join('');
   },
 
+  // ── PER-STUDENT RETRY TOGGLE ──────────────────────────────────────────────────
+  async toggleStudentRetry(studentId, allow) {
+    const token = localStorage.getItem('apcse_teacher_token');
+    const r = await fetch(`${API}/api/teacher/classes/${this.classCode}/students/${studentId}/retry`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ retry_override: allow }),
+    });
+    const d = await r.json();
+    if (d.ok) this.loadData(); // re-render
+    else alert('Failed to update retry: ' + (d.error || 'Unknown error'));
+  },
+
+  async clearStudentRetry(studentId) {
+    const token = localStorage.getItem('apcse_teacher_token');
+    const r = await fetch(`${API}/api/teacher/classes/${this.classCode}/students/${studentId}/retry`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ retry_override: null }),
+    });
+    const d = await r.json();
+    if (d.ok) this.loadData();
+    else alert('Failed to reset retry: ' + (d.error || 'Unknown error'));
+  },
+
+  // ── UNLOCK MODAL ─────────────────────────────────────────────────────────────
+  openUnlockModal(studentId, progressId, studentName) {
+    this._unlockTarget = { studentId, progressId, studentName };
+
+    let modal = document.getElementById('unlock-modal');
+    let bd    = document.getElementById('unlock-backdrop');
+    if (!modal) {
+      bd = document.createElement('div');
+      bd.id = 'unlock-backdrop';
+      bd.setAttribute('style', 'position:fixed!important;inset:0!important;z-index:10000!important;background:rgba(0,0,0,.6)!important;');
+      bd.addEventListener('click', function() { TCDash.closeUnlockModal(); });
+      document.body.appendChild(bd);
+
+      modal = document.createElement('div');
+      modal.id = 'unlock-modal';
+      modal.setAttribute('style', [
+        'position:fixed!important', 'top:50%!important', 'left:50%!important',
+        'transform:translate(-50%,-50%)!important', 'z-index:10001!important',
+        'background:#1E1B4B!important', 'border:2px solid #E8A020!important',
+        'border-radius:12px!important', 'padding:32px 36px!important',
+        'max-width:420px!important', 'width:90vw!important',
+        'box-shadow:0 8px 40px rgba(0,0,0,.5)!important',
+        'font-family:Georgia,serif!important', 'text-align:center!important',
+      ].join(';'));
+      document.body.appendChild(modal);
+    }
+
+    bd.style.setProperty('display', 'block', 'important');
+    modal.style.setProperty('display', 'block', 'important');
+    modal.innerHTML =
+      '<div style="font-size:32px!important;margin-bottom:8px!important">&#128274;</div>' +
+      '<div style="color:#E8A020!important;-webkit-text-fill-color:#E8A020!important;font-size:18px!important;font-weight:700!important;margin-bottom:6px!important">Unlock Quiz</div>' +
+      '<div style="color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-size:14px!important;margin-bottom:24px!important">' +
+        'Unlock the final-grade submission for <strong style="color:#fff!important;-webkit-text-fill-color:#fff!important">' + this.esc(studentName) + '</strong>.' +
+      '</div>' +
+      '<div style="display:flex!important;gap:10px!important;justify-content:center!important;flex-wrap:wrap!important;">' +
+        '<button onclick="TCDash.doUnlock(false)" style="background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;' +
+          'border:none!important;padding:10px 18px!important;border-radius:7px!important;font-size:14px!important;' +
+          'font-weight:700!important;cursor:pointer!important;font-family:Georgia,serif!important;">Unlock (Keep Score)</button>' +
+        '<button onclick="TCDash.doUnlock(true)" style="background:#DC2626!important;color:#fff!important;-webkit-text-fill-color:#fff!important;' +
+          'border:none!important;padding:10px 18px!important;border-radius:7px!important;font-size:14px!important;' +
+          'font-weight:700!important;cursor:pointer!important;font-family:Georgia,serif!important;">Unlock &amp; Reset Score</button>' +
+        '<button onclick="TCDash.closeUnlockModal()" style="background:transparent!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;' +
+          'border:1px solid #4B5563!important;padding:10px 14px!important;border-radius:7px!important;font-size:13px!important;' +
+          'cursor:pointer!important;font-family:Georgia,serif!important;">Cancel</button>' +
+      '</div>';
+  },
+
+  closeUnlockModal() {
+    const modal = document.getElementById('unlock-modal');
+    const bd    = document.getElementById('unlock-backdrop');
+    if (modal) modal.style.setProperty('display', 'none', 'important');
+    if (bd)    bd.style.setProperty('display', 'none', 'important');
+  },
+
+  async doUnlock(reset) {
+    if (!this._unlockTarget) return;
+    const { progressId } = this._unlockTarget;
+    const token = localStorage.getItem('apcse_teacher_token');
+    const r = await fetch(`${API}/api/teacher/classes/${this.classCode}/progress/${progressId}/unlock`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ reset }),
+    });
+    const d = await r.json();
+    this.closeUnlockModal();
+    if (d.ok) this.loadData();
+    else alert('Failed to unlock: ' + (d.error || 'Unknown error'));
+  },
+
+
+  },
+
+  async toggleClassRetry() {
+    const newVal = !this.currentRetry;
+    const token  = localStorage.getItem('apcse_teacher_token');
+    const r = await fetch(`${API}/api/teacher/classes/${this.classCode}/retry`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ retry_allowed: newVal }),
+    });
+    const d = await r.json();
+    if (!d.ok) { alert('Failed to update retry setting.'); return; }
+    this.currentRetry = newVal;
+    document.getElementById('dash-retry-display').textContent = newVal ? 'On' : 'Off';
+    const btn = document.getElementById('dash-retry-btn');
+    if (btn) btn.style.setProperty('background', newVal ? '#0F766E' : '#DC2626', 'important');
+    // Re-render table so per-student labels update
+    this.loadData();
   },
 
   openThresholdModal() {

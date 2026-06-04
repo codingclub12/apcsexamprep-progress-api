@@ -166,6 +166,18 @@ router.post('/progress', requireStudent, (req, res) => {
   }
 });
 
+
+// ── HELPER: resolve retry permission for a student ────────────────────────────
+function canRetry(studentId, classId) {
+  const cls = db.prepare('SELECT retry_allowed, mastery_threshold FROM classes WHERE id = ?').get(classId);
+  const stu = db.prepare('SELECT retry_override FROM students WHERE id = ?').get(studentId);
+  // Student override takes precedence over class default; NULL means use class default
+  if (stu && stu.retry_override !== null && stu.retry_override !== undefined) {
+    return !!stu.retry_override;
+  }
+  return cls ? !!cls.retry_allowed : true;
+}
+
 // ── SUBMIT QUIZ ATTEMPT ───────────────────────────────────────────────────────
 router.post('/quiz', requireStudent, (req, res) => {
   try {
@@ -173,36 +185,42 @@ router.post('/quiz', requireStudent, (req, res) => {
     if (!course || !unit || !lesson) return res.status(400).json({ error: 'course, unit, lesson required' });
     if (typeof score !== 'number') return res.status(400).json({ error: 'score required (0-100)' });
 
-    // Get mastery threshold from this student's class (default 80 if not set)
-    const cls = db.prepare('SELECT mastery_threshold FROM classes WHERE id = ?').get(req.student.class_id);
+    // Get class settings
+    const cls = db.prepare('SELECT mastery_threshold, retry_allowed FROM classes WHERE id = ?').get(req.student.class_id);
     const threshold = (cls && cls.mastery_threshold != null) ? cls.mastery_threshold : 80;
-    const passed = score >= threshold;
+    const passed    = score >= threshold;
+    const retryOk   = canRetry(req.student.id, req.student.class_id);
 
-    // Find or create progress record for quiz
+    // Find or create progress record
     let progressRecord = db.prepare(`
-      SELECT id FROM progress WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = 'quiz'
+      SELECT id, locked FROM progress
+      WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = 'quiz'
     `).get(req.student.id, course, unit, lesson);
+
+    // Block attempt if locked (final grade submitted)
+    if (progressRecord && progressRecord.locked) {
+      return res.status(403).json({ error: 'This quiz has been submitted as a final grade and cannot be retaken.', locked: true });
+    }
 
     const now = new Date().toISOString();
 
     if (!progressRecord) {
       const pid = newId();
+      // completed stays 0 until finalize — score is recorded but not "done" yet
       db.prepare(`
         INSERT INTO progress (id, student_id, class_id, course, unit, lesson, activity_type,
-          completed, score, attempts, completed_at, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?, 'quiz', ?, ?, 1, ?, ?)
-      `).run(pid, req.student.id, req.student.class_id, course, unit, lesson, passed ? 1 : 0, score, passed ? now : null, now);
+          completed, score, attempts, locked, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, 'quiz', 0, ?, 1, 0, ?)
+      `).run(pid, req.student.id, req.student.class_id, course, unit, lesson, score, now);
       progressRecord = { id: pid };
     } else {
       db.prepare(`
         UPDATE progress SET
-          score = CASE WHEN ? > COALESCE(score, 0) THEN ? ELSE score END,
+          score    = CASE WHEN ? > COALESCE(score, 0) THEN ? ELSE score END,
           attempts = attempts + 1,
-          completed = CASE WHEN ? >= ? THEN 1 ELSE completed END,
-          completed_at = CASE WHEN ? >= ? AND completed_at IS NULL THEN ? ELSE completed_at END,
           updated_at = ?
         WHERE id = ?
-      `).run(score, score, score, threshold, score, threshold, now, now, progressRecord.id);
+      `).run(score, score, now, progressRecord.id);
     }
 
     // Log the attempt
@@ -211,11 +229,66 @@ router.post('/quiz', requireStudent, (req, res) => {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `).run(newId(), req.student.id, progressRecord.id, course, unit, lesson, JSON.stringify(answers || {}), score);
 
-    res.json({ ok: true, score, passed, threshold });
+    res.json({ ok: true, score, passed, threshold, retry_allowed: retryOk, locked: false });
   } catch (e) {
     console.error('Quiz submit error:', e);
     res.status(500).json({ error: 'Failed to submit quiz' });
   }
 });
 
+// ── FINALIZE QUIZ (Submit Final Grade) ────────────────────────────────────────
+// Locks the progress record and marks completed=1 regardless of score.
+router.post('/quiz/finalize', requireStudent, (req, res) => {
+  try {
+    const { course, unit, lesson } = req.body;
+    if (!course || !unit || !lesson) return res.status(400).json({ error: 'course, unit, lesson required' });
+
+    const progressRecord = db.prepare(`
+      SELECT id, score, locked FROM progress
+      WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = 'quiz'
+    `).get(req.student.id, course, unit, lesson);
+
+    if (!progressRecord) return res.status(404).json({ error: 'No quiz attempt found to finalize.' });
+    if (progressRecord.locked) return res.status(409).json({ error: 'Already finalized.', locked: true });
+
+    const now = new Date().toISOString();
+    db.prepare(`
+      UPDATE progress SET locked = 1, completed = 1, completed_at = ?, updated_at = ?
+      WHERE id = ?
+    `).run(now, now, progressRecord.id);
+
+    res.json({ ok: true, locked: true, score: progressRecord.score, completed_at: now });
+  } catch (e) {
+    console.error('Finalize error:', e);
+    res.status(500).json({ error: 'Failed to finalize quiz' });
+  }
+});
+
+// ── GET RETRY STATUS ──────────────────────────────────────────────────────────
+// Quiz pages call this on load to know whether to show "Try Again" or lock UI.
+router.get('/quiz/status', requireStudent, (req, res) => {
+  const { course, unit, lesson } = req.query;
+  if (!course || !unit || !lesson) return res.status(400).json({ error: 'course, unit, lesson required' });
+
+  const cls = db.prepare('SELECT mastery_threshold FROM classes WHERE id = ?').get(req.student.class_id);
+  const threshold = (cls && cls.mastery_threshold != null) ? cls.mastery_threshold : 80;
+  const retryOk   = canRetry(req.student.id, req.student.class_id);
+
+  const record = db.prepare(`
+    SELECT score, attempts, completed, locked, completed_at
+    FROM progress WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = 'quiz'
+  `).get(req.student.id, course, unit, lesson);
+
+  res.json({
+    threshold,
+    retry_allowed: retryOk,
+    score:         record ? record.score : null,
+    attempts:      record ? record.attempts : 0,
+    completed:     record ? !!record.completed : false,
+    locked:        record ? !!record.locked : false,
+    completed_at:  record ? record.completed_at : null,
+  });
+});
+
 module.exports = router;
+
