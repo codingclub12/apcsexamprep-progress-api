@@ -16,7 +16,7 @@
 (function() {
   'use strict';
 
-  const API = 'https://progress.apcsexamprep.com';
+  const API = 'https://apcsexamprep-progress-api-production.up.railway.app';
 
   // ── SESSION ─────────────────────────────────────────────────────────────────
   function getSession() {
