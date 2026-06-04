@@ -35,35 +35,21 @@
   }
 
   // ── API HELPERS ───────────────────────────────────────────────────────────────
-  // Ad scripts (Raptive) monkey-patch window.fetch AND window.XMLHttpRequest.
-  // Solution: grab native fetch from an iframe before ad scripts can patch it.
-
-  var _nativeFetch = null;
-  function getNativeFetch() {
-    if (_nativeFetch) return _nativeFetch;
-    try {
-      var iframe = document.createElement('iframe');
-      iframe.style.cssText = 'display:none!important;width:0!important;height:0!important;';
-      document.body.appendChild(iframe);
-      _nativeFetch = iframe.contentWindow.fetch.bind(iframe.contentWindow);
-      // Keep iframe alive so fetch stays valid
-    } catch(e) {
-      _nativeFetch = window.fetch.bind(window);
-    }
-    return _nativeFetch;
-  }
+  // window.__nativeFetch is captured in quiz-tracker-wiring.liquid BEFORE
+  // Appointo/ad scripts patch window.fetch. This is the only reliable way
+  // to make requests without scrlybrkr injection.
 
   function apiCall(method, endpoint, data, token) {
     return new Promise(function(resolve) {
       try {
-        var nativeFetch = getNativeFetch();
+        // Use pre-captured native fetch; fall back to current window.fetch
+        var nativeFetch = window.__nativeFetch || fetch;
         var opts = {
           method: method,
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + token,
           },
-          redirect: 'error', // fail instead of following redirects
         };
         if (data) opts.body = JSON.stringify(data);
         nativeFetch(API + endpoint, opts)
