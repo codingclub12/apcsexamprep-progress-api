@@ -34,11 +34,29 @@
     } catch(e) { return null; }
   }
 
-  // ── API HELPERS (XHR — avoids Raptive/ad fetch monkey-patching) ──────────────
+  // ── API HELPERS ───────────────────────────────────────────────────────────────
+  // Use sendBeacon for fire-and-forget POSTs (immune to ad script patching).
+  // Use a fresh native XHR created from an iframe contentWindow to bypass
+  // ad script monkey-patching of window.XMLHttpRequest.
+
+  function getNativeXHR() {
+    try {
+      // Create a temporary iframe to get an unpatched XMLHttpRequest
+      var iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+      var NativeXHR = iframe.contentWindow.XMLHttpRequest;
+      document.body.removeChild(iframe);
+      return new NativeXHR();
+    } catch(e) {
+      return new XMLHttpRequest();
+    }
+  }
+
   function xhrRequest(method, endpoint, data, token) {
     return new Promise(function(resolve) {
       try {
-        var xhr = new XMLHttpRequest();
+        var xhr = getNativeXHR();
         xhr.open(method, API + endpoint, true);
         xhr.setRequestHeader('Content-Type', 'application/json');
         if (token) xhr.setRequestHeader('Authorization', 'Bearer ' + token);
