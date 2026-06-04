@@ -173,13 +173,17 @@ router.post('/quiz', requireStudent, (req, res) => {
     if (!course || !unit || !lesson) return res.status(400).json({ error: 'course, unit, lesson required' });
     if (typeof score !== 'number') return res.status(400).json({ error: 'score required (0-100)' });
 
+    // Get mastery threshold from this student's class (default 80 if not set)
+    const cls = db.prepare('SELECT mastery_threshold FROM classes WHERE id = ?').get(req.student.class_id);
+    const threshold = (cls && cls.mastery_threshold != null) ? cls.mastery_threshold : 80;
+    const passed = score >= threshold;
+
     // Find or create progress record for quiz
     let progressRecord = db.prepare(`
       SELECT id FROM progress WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = 'quiz'
     `).get(req.student.id, course, unit, lesson);
 
     const now = new Date().toISOString();
-    const passed = score >= 60;
 
     if (!progressRecord) {
       const pid = newId();
@@ -194,11 +198,11 @@ router.post('/quiz', requireStudent, (req, res) => {
         UPDATE progress SET
           score = CASE WHEN ? > COALESCE(score, 0) THEN ? ELSE score END,
           attempts = attempts + 1,
-          completed = CASE WHEN ? >= 60 THEN 1 ELSE completed END,
-          completed_at = CASE WHEN ? >= 60 AND completed_at IS NULL THEN ? ELSE completed_at END,
+          completed = CASE WHEN ? >= ? THEN 1 ELSE completed END,
+          completed_at = CASE WHEN ? >= ? AND completed_at IS NULL THEN ? ELSE completed_at END,
           updated_at = ?
         WHERE id = ?
-      `).run(score, score, score, score, now, now, progressRecord.id);
+      `).run(score, score, score, threshold, score, threshold, now, now, progressRecord.id);
     }
 
     // Log the attempt
@@ -207,7 +211,7 @@ router.post('/quiz', requireStudent, (req, res) => {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `).run(newId(), req.student.id, progressRecord.id, course, unit, lesson, JSON.stringify(answers || {}), score);
 
-    res.json({ ok: true, score, passed });
+    res.json({ ok: true, score, passed, threshold });
   } catch (e) {
     console.error('Quiz submit error:', e);
     res.status(500).json({ error: 'Failed to submit quiz' });

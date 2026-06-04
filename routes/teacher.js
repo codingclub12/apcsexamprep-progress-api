@@ -76,9 +76,11 @@ router.get('/classes', requireTeacher, (req, res) => {
 // ── CREATE CLASS ──────────────────────────────────────────────────────────────
 router.post('/classes', requireTeacher, (req, res) => {
   try {
-    const { class_name, course = 'ap-cybersecurity' } = req.body;
+    const { class_name, course = 'ap-cybersecurity', mastery_threshold = 80 } = req.body;
     if (!class_name || class_name.trim().length < 2) return res.status(400).json({ error: 'Class name required' });
     if (!COURSES[course]) return res.status(400).json({ error: 'Invalid course' });
+
+    const threshold = Math.min(100, Math.max(0, parseInt(mastery_threshold, 10) || 80));
 
     const prefix = COURSE_PREFIXES[course] || 'CLASS';
     // Generate unique class code
@@ -91,9 +93,9 @@ router.post('/classes', requireTeacher, (req, res) => {
 
     const id = newId();
     db.prepare(`
-      INSERT INTO classes (id, teacher_id, class_code, class_name, course)
-      VALUES (?, ?, ?, ?, ?)
-    `).run(id, req.teacher.id, code, sanitize(class_name, 100), course);
+      INSERT INTO classes (id, teacher_id, class_code, class_name, course, mastery_threshold)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `).run(id, req.teacher.id, code, sanitize(class_name, 100), course, threshold);
 
     const cls = db.prepare('SELECT * FROM classes WHERE id = ?').get(id);
     res.status(201).json({ class: cls });
@@ -213,11 +215,37 @@ router.put('/classes/:code', requireTeacher, (req, res) => {
     .get(req.params.code.toUpperCase(), req.teacher.id);
   if (!cls) return res.status(404).json({ error: 'Class not found' });
 
-  const { class_name, active } = req.body;
-  db.prepare('UPDATE classes SET class_name = ?, active = ? WHERE id = ?')
-    .run(sanitize(class_name || cls.class_name, 100), active !== undefined ? (active ? 1 : 0) : cls.active, cls.id);
+  const { class_name, active, mastery_threshold } = req.body;
+  const threshold = mastery_threshold !== undefined
+    ? Math.min(100, Math.max(0, parseInt(mastery_threshold, 10) || cls.mastery_threshold))
+    : cls.mastery_threshold;
+
+  db.prepare('UPDATE classes SET class_name = ?, active = ?, mastery_threshold = ? WHERE id = ?')
+    .run(
+      sanitize(class_name || cls.class_name, 100),
+      active !== undefined ? (active ? 1 : 0) : cls.active,
+      threshold,
+      cls.id
+    );
 
   res.json({ class: db.prepare('SELECT * FROM classes WHERE id = ?').get(cls.id) });
+});
+
+// ── SET MASTERY THRESHOLD ─────────────────────────────────────────────────────
+router.patch('/classes/:code/threshold', requireTeacher, (req, res) => {
+  const cls = db.prepare('SELECT * FROM classes WHERE class_code = ? AND teacher_id = ?')
+    .get(req.params.code.toUpperCase(), req.teacher.id);
+  if (!cls) return res.status(404).json({ error: 'Class not found' });
+
+  const { mastery_threshold } = req.body;
+  if (mastery_threshold === undefined || mastery_threshold === null) {
+    return res.status(400).json({ error: 'mastery_threshold required' });
+  }
+  const threshold = Math.min(100, Math.max(0, parseInt(mastery_threshold, 10)));
+  if (isNaN(threshold)) return res.status(400).json({ error: 'mastery_threshold must be a number 0-100' });
+
+  db.prepare('UPDATE classes SET mastery_threshold = ? WHERE id = ?').run(threshold, cls.id);
+  res.json({ ok: true, mastery_threshold: threshold });
 });
 
 // ── REMOVE STUDENT ─────────────────────────────────────────────────────────────

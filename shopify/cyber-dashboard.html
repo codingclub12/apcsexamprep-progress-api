@@ -73,6 +73,7 @@
         </div>
         <div class="tcdash-actions">
           <a class="tcdash-btn outline" href="/pages/cyber-class">&larr; All Classes</a>
+          <button class="tcdash-btn purple" onclick="TCDash.openThresholdModal()">Mastery Threshold: <span id="dash-threshold-display">80</span>%</button>
           <button class="tcdash-btn amber" onclick="TCDash.exportCSV()">Export CSV</button>
         </div>
       </div>
@@ -99,6 +100,26 @@
 
       <!-- Progress table -->
       <div id="tcdash-loading" class="tcdash-loading">Loading class progress&hellip;</div>
+
+      <!-- Mastery Threshold Modal -->
+      <div id="threshold-backdrop" style="display:none!important;position:fixed!important;inset:0!important;z-index:10000!important;background:rgba(0,0,0,.6)!important;" onclick="TCDash.closeThresholdModal()"></div>
+      <div id="threshold-modal" style="display:none!important;position:fixed!important;top:50%!important;left:50%!important;transform:translate(-50%,-50%)!important;z-index:10001!important;background:#1E1B4B!important;border:2px solid #6B21A8!important;border-radius:12px!important;padding:32px 36px!important;max-width:400px!important;width:90vw!important;box-shadow:0 8px 40px rgba(0,0,0,.5)!important;font-family:Georgia,serif!important;">
+        <div style="font-size:18px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:8px!important;">Set Mastery Threshold</div>
+        <div style="font-size:13px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;margin-bottom:20px!important;">
+          Students must score at or above this threshold for a quiz to count as complete. Default is 80%.
+        </div>
+        <div style="display:flex!important;align-items:center!important;gap:12px!important;margin-bottom:8px!important;">
+          <input id="threshold-input" type="number" min="50" max="100" step="5"
+            style="width:80px!important;padding:8px 12px!important;font-size:20px!important;font-weight:700!important;background:#0F172A!important;color:#E8A020!important;-webkit-text-fill-color:#E8A020!important;border:2px solid #6B21A8!important;border-radius:7px!important;text-align:center!important;font-family:monospace!important;" />
+          <span style="color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-size:18px!important;">%</span>
+        </div>
+        <div style="font-size:11px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;margin-bottom:24px!important;">Range: 50&ndash;100. Recommended: 80.</div>
+        <div style="display:flex!important;gap:10px!important;">
+          <button onclick="TCDash.saveThreshold()" style="background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;padding:10px 22px!important;border-radius:7px!important;font-size:15px!important;font-weight:700!important;cursor:pointer!important;font-family:Georgia,serif!important;">Save</button>
+          <button onclick="TCDash.closeThresholdModal()" style="background:transparent!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;border:1px solid #4B5563!important;padding:10px 18px!important;border-radius:7px!important;font-size:14px!important;cursor:pointer!important;font-family:Georgia,serif!important;">Cancel</button>
+          <span id="threshold-save-msg" style="color:#6EE7B7!important;-webkit-text-fill-color:#6EE7B7!important;font-size:13px!important;align-self:center!important;display:none!important;"></span>
+        </div>
+      </div>
       <div class="tcdash-table-wrap" id="tcdash-table-wrap" style="display:none!important;">
         <table class="tcdash-table" id="tcdash-table">
           <thead id="tcdash-thead"></thead>
@@ -154,6 +175,8 @@ window.TCDash = {
       if (r.status === 401) { localStorage.removeItem('apcse_teacher_token'); location.href='/pages/cyber-class'; return; }
       const d = await r.json();
       this.data = d;
+      this.currentThreshold = d.class.mastery_threshold != null ? d.class.mastery_threshold : 80;
+      document.getElementById('dash-threshold-display').textContent = this.currentThreshold;
       document.getElementById('dash-classname').textContent = d.class.class_name + ' \u00B7 ' + this.formatCourse(d.class.course);
       this.renderStats(d.summary);
       this.renderTable(d.summary, d.course_config);
@@ -234,6 +257,48 @@ window.TCDash = {
         <td class="last-active">${lastActive}</td>
       </tr>`;
     }).join('');
+  },
+
+  },
+
+  openThresholdModal() {
+    const input = document.getElementById('threshold-input');
+    input.value = this.currentThreshold || 80;
+    document.getElementById('threshold-save-msg').style.setProperty('display', 'none', 'important');
+    document.getElementById('threshold-modal').style.setProperty('display', 'block', 'important');
+    document.getElementById('threshold-backdrop').style.setProperty('display', 'block', 'important');
+    input.focus();
+  },
+
+  closeThresholdModal() {
+    document.getElementById('threshold-modal').style.setProperty('display', 'none', 'important');
+    document.getElementById('threshold-backdrop').style.setProperty('display', 'none', 'important');
+  },
+
+  async saveThreshold() {
+    const val = parseInt(document.getElementById('threshold-input').value, 10);
+    if (isNaN(val) || val < 50 || val > 100) {
+      alert('Please enter a number between 50 and 100.');
+      return;
+    }
+    const token = localStorage.getItem('apcse_teacher_token');
+    try {
+      const r = await fetch(`${API}/api/teacher/classes/${this.classCode}/threshold`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ mastery_threshold: val }),
+      });
+      const d = await r.json();
+      if (!d.ok) { alert('Failed to save: ' + (d.error || 'Unknown error')); return; }
+      this.currentThreshold = val;
+      document.getElementById('dash-threshold-display').textContent = val;
+      const msg = document.getElementById('threshold-save-msg');
+      msg.textContent = '\u2713 Saved';
+      msg.style.setProperty('display', 'inline', 'important');
+      setTimeout(() => { this.closeThresholdModal(); }, 1200);
+    } catch(e) {
+      alert('Network error. Please try again.');
+    }
   },
 
   async exportCSV() {

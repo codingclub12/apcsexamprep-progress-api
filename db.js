@@ -24,14 +24,19 @@ db.exec(`
   );
 
   CREATE TABLE IF NOT EXISTS classes (
-    id           TEXT PRIMARY KEY,
-    teacher_id   TEXT NOT NULL REFERENCES teachers(id) ON DELETE CASCADE,
-    class_code   TEXT UNIQUE NOT NULL,
-    class_name   TEXT NOT NULL,
-    course       TEXT NOT NULL DEFAULT 'ap-cybersecurity',
-    active       INTEGER DEFAULT 1,
-    created_at   TEXT DEFAULT (datetime('now'))
+    id                TEXT PRIMARY KEY,
+    teacher_id        TEXT NOT NULL REFERENCES teachers(id) ON DELETE CASCADE,
+    class_code        TEXT UNIQUE NOT NULL,
+    class_name        TEXT NOT NULL,
+    course            TEXT NOT NULL DEFAULT 'ap-cybersecurity',
+    active            INTEGER DEFAULT 1,
+    mastery_threshold INTEGER DEFAULT 80,
+    created_at        TEXT DEFAULT (datetime('now'))
   );
+
+  -- Migration: add mastery_threshold to existing classes tables
+  -- (SQLite ignores this if column already exists via the try/catch below)
+
 
   CREATE TABLE IF NOT EXISTS students (
     id           TEXT PRIMARY KEY,
@@ -79,5 +84,12 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_progress_class  ON progress(class_id);
   CREATE INDEX IF NOT EXISTS idx_quiz_student    ON quiz_attempts(student_id);
 `);
+
+// Migration: add mastery_threshold to existing databases
+try {
+  db.exec(`ALTER TABLE classes ADD COLUMN mastery_threshold INTEGER DEFAULT 80`);
+} catch (e) {
+  // Column already exists — safe to ignore
+}
 
 module.exports = db;
