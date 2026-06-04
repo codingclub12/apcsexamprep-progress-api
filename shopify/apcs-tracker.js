@@ -35,37 +35,41 @@
   }
 
   // ── API HELPERS ───────────────────────────────────────────────────────────────
-  // Use sendBeacon for fire-and-forget POSTs (immune to ad script patching).
-  // Use a fresh native XHR created from an iframe contentWindow to bypass
-  // ad script monkey-patching of window.XMLHttpRequest.
+  // Ad scripts (Raptive) monkey-patch window.fetch AND window.XMLHttpRequest.
+  // Solution: grab native fetch from an iframe before ad scripts can patch it.
 
-  function getNativeXHR() {
+  var _nativeFetch = null;
+  function getNativeFetch() {
+    if (_nativeFetch) return _nativeFetch;
     try {
-      // Create a temporary iframe to get an unpatched XMLHttpRequest
       var iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
+      iframe.style.cssText = 'display:none!important;width:0!important;height:0!important;';
       document.body.appendChild(iframe);
-      var NativeXHR = iframe.contentWindow.XMLHttpRequest;
-      document.body.removeChild(iframe);
-      return new NativeXHR();
+      _nativeFetch = iframe.contentWindow.fetch.bind(iframe.contentWindow);
+      // Keep iframe alive so fetch stays valid
     } catch(e) {
-      return new XMLHttpRequest();
+      _nativeFetch = window.fetch.bind(window);
     }
+    return _nativeFetch;
   }
 
-  function xhrRequest(method, endpoint, data, token) {
+  function apiCall(method, endpoint, data, token) {
     return new Promise(function(resolve) {
       try {
-        var xhr = getNativeXHR();
-        xhr.open(method, API + endpoint, true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        if (token) xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-        xhr.onload = function() {
-          try { resolve(JSON.parse(xhr.responseText)); }
-          catch(e) { resolve(null); }
+        var nativeFetch = getNativeFetch();
+        var opts = {
+          method: method,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token,
+          },
+          redirect: 'error', // fail instead of following redirects
         };
-        xhr.onerror = function() { resolve(null); };
-        xhr.send(data ? JSON.stringify(data) : null);
+        if (data) opts.body = JSON.stringify(data);
+        nativeFetch(API + endpoint, opts)
+          .then(function(r) { return r.json(); })
+          .then(function(d) { resolve(d); })
+          .catch(function() { resolve(null); });
       } catch(e) { resolve(null); }
     });
   }
@@ -73,13 +77,13 @@
   async function apiPost(endpoint, data) {
     const session = getSession();
     if (!session) return null;
-    return xhrRequest('POST', endpoint, data, session.token);
+    return apiCall('POST', endpoint, data, session.token);
   }
 
   async function apiGet(endpoint) {
     const session = getSession();
     if (!session) return null;
-    return xhrRequest('GET', endpoint, null, session.token);
+    return apiCall('GET', endpoint, null, session.token);
   }
 
   // ── SESSION BAR ───────────────────────────────────────────────────────────────
