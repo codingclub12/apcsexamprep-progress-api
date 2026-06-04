@@ -34,29 +34,34 @@
     } catch(e) { return null; }
   }
 
-  // ── API ───────────────────────────────────────────────────────────────────────
+  // ── API HELPERS (XHR — avoids Raptive/ad fetch monkey-patching) ──────────────
+  function xhrRequest(method, endpoint, data, token) {
+    return new Promise(function(resolve) {
+      try {
+        var xhr = new XMLHttpRequest();
+        xhr.open(method, API + endpoint, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        if (token) xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+        xhr.onload = function() {
+          try { resolve(JSON.parse(xhr.responseText)); }
+          catch(e) { resolve(null); }
+        };
+        xhr.onerror = function() { resolve(null); };
+        xhr.send(data ? JSON.stringify(data) : null);
+      } catch(e) { resolve(null); }
+    });
+  }
+
   async function apiPost(endpoint, data) {
     const session = getSession();
     if (!session) return null;
-    try {
-      const r = await fetch(API + endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.token },
-        body: JSON.stringify(data),
-      });
-      return await r.json();
-    } catch(e) { return null; }
+    return xhrRequest('POST', endpoint, data, session.token);
   }
 
   async function apiGet(endpoint) {
     const session = getSession();
     if (!session) return null;
-    try {
-      const r = await fetch(API + endpoint, {
-        headers: { 'Authorization': 'Bearer ' + session.token },
-      });
-      return await r.json();
-    } catch(e) { return null; }
+    return xhrRequest('GET', endpoint, null, session.token);
   }
 
   // ── SESSION BAR ───────────────────────────────────────────────────────────────
