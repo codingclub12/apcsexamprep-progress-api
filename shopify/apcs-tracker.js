@@ -410,7 +410,7 @@
       });
     }
 
-    // ── GLOBAL: called by quiz page after each scored attempt ─────────────────
+    // ── GLOBAL: called by quiz wiring after results panel appears ─────────────
     var _lastScore = null;
     window.APCS_saveQuizScore = async function(score, answers, onRetry) {
       _lastScore = score;
@@ -430,17 +430,8 @@
         return result;
       }
 
-      const threshold    = result.threshold || 80;
-      const retryAllowed = result.retry_allowed !== false;
-
-      if (result.passed) {
-        setBarStatus('\u2713 ' + score + '% \u2014 above threshold', '#6EE7B7');
-        renderPassPanel(score, threshold, onRetry, retryAllowed);
-      } else {
-        setBarStatus(score + '% \u2014 need ' + threshold + '%', '#F87171');
-        renderRetryPanel(score, threshold, retryAllowed, onRetry);
-      }
-
+      // Quiz is one-shot — just update bar with score, no retry/pass panels
+      setBarStatus('\u2713 Score saved: ' + score + '%', '#6EE7B7');
       loadUnitProgress(pageInfo);
       return result;
     };

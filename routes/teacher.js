@@ -76,7 +76,7 @@ router.get('/classes', requireTeacher, (req, res) => {
 // ── CREATE CLASS ──────────────────────────────────────────────────────────────
 router.post('/classes', requireTeacher, (req, res) => {
   try {
-    const { class_name, course = 'ap-cybersecurity', mastery_threshold = 80, retry_allowed = 1 } = req.body;
+    const { class_name, course = 'ap-cybersecurity', mastery_threshold = 80, retry_allowed = 0 } = req.body;
     if (!class_name || class_name.trim().length < 2) return res.status(400).json({ error: 'Class name required' });
     if (!COURSES[course]) return res.status(400).json({ error: 'Invalid course' });
 

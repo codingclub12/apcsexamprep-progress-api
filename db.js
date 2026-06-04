@@ -31,7 +31,7 @@ db.exec(`
     course            TEXT NOT NULL DEFAULT 'ap-cybersecurity',
     active            INTEGER DEFAULT 1,
     mastery_threshold INTEGER DEFAULT 80,
-    retry_allowed     INTEGER DEFAULT 1,
+    retry_allowed     INTEGER DEFAULT 0,
     created_at        TEXT DEFAULT (datetime('now'))
   );
 
@@ -90,7 +90,7 @@ db.exec(`
 // Migrations — safe to re-run on every boot, ignored if column already exists
 const migrations = [
   `ALTER TABLE classes   ADD COLUMN mastery_threshold INTEGER DEFAULT 80`,
-  `ALTER TABLE classes   ADD COLUMN retry_allowed     INTEGER DEFAULT 1`,
+  `ALTER TABLE classes   ADD COLUMN retry_allowed     INTEGER DEFAULT 0`,
   `ALTER TABLE students  ADD COLUMN retry_override    INTEGER DEFAULT NULL`,
   `ALTER TABLE progress  ADD COLUMN locked            INTEGER DEFAULT 0`,
 ];
