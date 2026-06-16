@@ -374,14 +374,54 @@
 
     // ── NON-QUIZ PAGES ────────────────────────────────────────────────────────
     if (pageInfo.activity !== 'quiz') {
+      // Mark as visited (not completed) on page load
       apiPost('/api/student/progress', {
         course: pageInfo.course, unit: pageInfo.unit,
         lesson: pageInfo.lesson, activity_type: pageInfo.activity,
-        completed: true,
+        completed: false,
       }).then(function() {
-        setBarStatus('\u2713 Progress saved', '#6EE7B7');
+        setBarStatus('Progress tracked', '#c4b5fd');
         loadUnitProgress(pageInfo);
       });
+
+      // ── GLOBAL: lesson/exercise pages call this when CFU is submitted ───────
+      // score = 0-100 percentage
+      window.APCS_saveLessonScore = async function(score) {
+        const cls = null; // threshold comes from API response
+        setBarStatus('Saving\u2026', '#c4b5fd');
+
+        // Get class threshold to determine completion
+        const statusData = await apiGet(
+          '/api/student/quiz/status?course=' + encodeURIComponent(pageInfo.course) +
+          '&unit=' + encodeURIComponent(pageInfo.unit) +
+          '&lesson=' + encodeURIComponent(pageInfo.lesson)
+        );
+        const threshold = statusData ? (statusData.threshold || 80) : 80;
+        const passed    = score >= threshold;
+
+        const result = await apiPost('/api/student/progress', {
+          course:        pageInfo.course,
+          unit:          pageInfo.unit,
+          lesson:        pageInfo.lesson,
+          activity_type: pageInfo.activity,
+          score:         score,
+          completed:     passed,
+        });
+
+        if (!result || !result.ok) {
+          setBarStatus('Error saving. Try again.', '#F87171');
+          return result;
+        }
+
+        if (passed) {
+          setBarStatus('\u2713 Complete: ' + score + '%', '#6EE7B7');
+        } else {
+          setBarStatus(score + '% \u2014 need ' + threshold + '% to complete', '#E8A020');
+        }
+
+        loadUnitProgress(pageInfo);
+        return { ok: true, score, passed, threshold };
+      };
     } else {
       // ── QUIZ PAGE INIT ──────────────────────────────────────────────────────
       // Check lock/retry status before doing anything
