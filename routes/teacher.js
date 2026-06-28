@@ -6,7 +6,7 @@ const db = require('../db');
 const { requireTeacher } = require('../middleware');
 const {
   newId, generateClassCode, signTeacherToken,
-  isValidEmail, sanitize, COURSES, COURSE_PREFIXES,
+  isValidEmail, isValidPin, sanitize, COURSES, COURSE_PREFIXES,
 } = require('../utils');
 
 // ── REGISTER ──────────────────────────────────────────────────────────────────
@@ -318,6 +318,64 @@ router.patch('/classes/:code/progress/:progressId/unlock', requireTeacher, (req,
   }
 
   res.json({ ok: true, reset, score: reset ? null : record.score });
+});
+
+// ── DELETE CLASS ──────────────────────────────────────────────────────────────
+// Permanently removes the class. ON DELETE CASCADE clears its students,
+// progress, and quiz_attempts automatically.
+router.delete('/classes/:code', requireTeacher, (req, res) => {
+  const cls = db.prepare('SELECT id FROM classes WHERE class_code = ? AND teacher_id = ?')
+    .get(req.params.code.toUpperCase(), req.teacher.id);
+  if (!cls) return res.status(404).json({ error: 'Class not found' });
+
+  const info = db.prepare('DELETE FROM classes WHERE id = ?').run(cls.id);
+  res.json({ ok: true, deleted: info.changes });
+});
+
+// ── RENAME STUDENT / RESET PIN ────────────────────────────────────────────────
+// Body: { display_name?, pin? }. Either or both. Mirrors the join rules:
+// names are unique per class (case-insensitive), PINs are exactly 4 digits.
+router.patch('/classes/:code/students/:studentId', requireTeacher, async (req, res) => {
+  const cls = db.prepare('SELECT id FROM classes WHERE class_code = ? AND teacher_id = ?')
+    .get(req.params.code.toUpperCase(), req.teacher.id);
+  if (!cls) return res.status(404).json({ error: 'Class not found' });
+
+  const student = db.prepare('SELECT id, display_name FROM students WHERE id = ? AND class_id = ?')
+    .get(req.params.studentId, cls.id);
+  if (!student) return res.status(404).json({ error: 'Student not found' });
+
+  const { display_name, pin } = req.body;
+  if (display_name === undefined && pin === undefined) {
+    return res.status(400).json({ error: 'Provide display_name and/or pin to update' });
+  }
+
+  // Rename
+  if (display_name !== undefined) {
+    const cleanName = sanitize(display_name, 50);
+    if (!cleanName || cleanName.trim().length < 1) {
+      return res.status(400).json({ error: 'Name cannot be empty' });
+    }
+    const clash = db.prepare(
+      'SELECT id FROM students WHERE class_id = ? AND lower(display_name) = lower(?) AND id != ?'
+    ).get(cls.id, cleanName, student.id);
+    if (clash) return res.status(409).json({ error: 'That name is already taken in this class.' });
+    db.prepare('UPDATE students SET display_name = ? WHERE id = ?').run(cleanName, student.id);
+  }
+
+  // Reset PIN
+  if (pin !== undefined) {
+    if (!isValidPin(pin)) return res.status(400).json({ error: 'PIN must be exactly 4 digits' });
+    const pinHash = await bcrypt.hash(String(pin), 10);
+    db.prepare('UPDATE students SET pin_hash = ? WHERE id = ?').run(pinHash, student.id);
+  }
+
+  const updated = db.prepare(
+    'SELECT id, display_name, student_ref, last_active FROM students WHERE id = ?'
+  ).get(student.id);
+  res.json({
+    ok: true,
+    student: { id: updated.id, name: updated.display_name, ref: updated.student_ref, last_active: updated.last_active },
+  });
 });
 
 module.exports = router;
