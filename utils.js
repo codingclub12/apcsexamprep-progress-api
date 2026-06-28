@@ -66,6 +66,16 @@ const COURSES = {
         lessons: ['3.1', '3.2', '3.3', '3.4', '3.5'],
         activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
       },
+      'unit-4': {
+        label: 'Unit 4: Securing Devices',
+        lessons: ['4.1', '4.2', '4.3'],
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
+      },
+      'unit-5': {
+        label: 'Unit 5: Securing Applications and Data',
+        lessons: ['5.1', '5.2', '5.3', '5.4', '5.5', '5.6'],
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
+      },
     },
   },
   'ap-csa': {
