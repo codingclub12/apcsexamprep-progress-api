@@ -1,13 +1,25 @@
 'use strict';
 // routes/judge0.js
-// Judge0 proxy for AP CSA in-lesson Java code editors.
+// Judge0 proxy for APCSExamPrep code editors.
+//   - Java (default) powers the AP CSA in-lesson editors.
+//   - Python and JavaScript power the AP CSP Create Task builder.
 // Requires env var: RAPIDAPI_KEY
+//
+// Backward compatible: requests that send no language_id (the existing AP CSA
+// editors) still run as Java, exactly as before.
 
 const express = require('express');
 const router = express.Router();
 
 const JUDGE0_HOST = 'judge0-ce.p.rapidapi.com';
 const JAVA_LANGUAGE_ID = 62; // Java (OpenJDK 13.0.1) on Judge0 CE
+
+// Only these languages may be requested. Anything else falls back to Java.
+const ALLOWED_LANGUAGE_IDS = {
+  62: true, // Java (OpenJDK 13.0.1)
+  71: true, // Python 3
+  63: true  // JavaScript (Node.js)
+};
 
 // ── Rate limiter: 40 runs/hour per IP ─────────────────────────────────────────
 // Worst case cost per student: 40 * $0.0017 = ~$0.07/hr
@@ -36,7 +48,7 @@ setInterval(() => {
 }, 10 * 60 * 1000).unref();
 
 // ── POST /api/judge0/run ──────────────────────────────────────────────────────
-// body: { code: string, stdin?: string }
+// body: { code: string, language_id?: number, stdin?: string }
 router.post('/run', async (req, res) => {
   try {
     const ip = req.headers['x-forwarded-for']
@@ -53,6 +65,13 @@ router.post('/run', async (req, res) => {
     const code = req.body && req.body.code;
     const stdin = (req.body && req.body.stdin) || '';
 
+    // Pick the language: honor a requested, allow-listed id; otherwise Java.
+    let languageId = JAVA_LANGUAGE_ID;
+    const requested = req.body && Number(req.body.language_id);
+    if (requested && ALLOWED_LANGUAGE_IDS[requested]) {
+      languageId = requested;
+    }
+
     if (!code || typeof code !== 'string') {
       return res.status(400).json({ error: 'bad_request', message: 'Missing code.' });
     }
@@ -65,7 +84,7 @@ router.post('/run', async (req, res) => {
     }
 
     const payload = {
-      language_id: JAVA_LANGUAGE_ID,
+      language_id: languageId,
       source_code: Buffer.from(code, 'utf8').toString('base64'),
       stdin: Buffer.from(stdin, 'utf8').toString('base64'),
       cpu_time_limit: 5,
@@ -104,6 +123,7 @@ router.post('/run', async (req, res) => {
     }
 
     return res.json({
+      language_id: languageId,
       status: data.status && data.status.description ? data.status.description : 'Unknown',
       status_id: data.status ? data.status.id : 0,
       stdout: fromB64(data.stdout),
