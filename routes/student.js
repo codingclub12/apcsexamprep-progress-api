@@ -311,10 +311,17 @@ router.post('/solo-init', async (req, res) => {
     const studentId = newId();
 
     db.transaction(() => {
+      // One shared system teacher owns all solo classes (satisfies the teacher_id foreign key)
       db.prepare(`
-        INSERT INTO classes (id, class_code, class_name, course, active)
-        VALUES (?, ?, 'Personal Progress', 'solo', 1)
+        INSERT OR IGNORE INTO teachers (id, email, name, password_hash, verified)
+        VALUES ('SOLO_SYSTEM', 'solo@system.invalid', 'Solo Accounts', 'x', 1)
+      `).run();
+
+      db.prepare(`
+        INSERT INTO classes (id, teacher_id, class_code, class_name, course, active)
+        VALUES (?, 'SOLO_SYSTEM', ?, 'Personal Progress', 'solo', 1)
       `).run(classId, code);
+
       db.prepare(`
         INSERT INTO students (id, class_id, display_name, pin_hash)
         VALUES (?, ?, ?, ?)
@@ -331,10 +338,9 @@ router.post('/solo-init', async (req, res) => {
     });
   } catch (e) {
     console.error('Solo init error:', e);
-    res.status(500).json({ error: e.message});
+    res.status(500).json({ error: e.message });
   }
 });
-
 // ── SOLO: log back in with personal code + PIN ────────────────────────────────
 router.post('/solo-login', async (req, res) => {
   try {
