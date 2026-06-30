@@ -289,6 +289,80 @@ router.get('/quiz/status', requireStudent, (req, res) => {
     completed_at:  record ? record.completed_at : null,
   });
 });
+// ── SOLO: create a personal (class-less) progress account ─────────────────────
+router.post('/solo-init', async (req, res) => {
+  try {
+    const { display_name, pin } = req.body;
+    if (!isValidPin(pin)) return res.status(400).json({ error: 'PIN must be exactly 4 digits' });
 
+    const cleanName = sanitize(display_name || 'Student', 50);
+
+    // Unique personal code — doubles as the student's solo class_code
+    let code = null;
+    for (let i = 0; i < 6; i++) {
+      const c = 'ME-' + Array.from({ length: 4 }, () =>
+        'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random() * 32)]).join('');
+      if (!db.prepare('SELECT id FROM classes WHERE class_code = ?').get(c)) { code = c; break; }
+    }
+    if (!code) return res.status(500).json({ error: 'Could not generate a code. Try again.' });
+
+    const pinHash = await bcrypt.hash(String(pin), 10);
+    const classId = newId();
+    const studentId = newId();
+
+    db.transaction(() => {
+      db.prepare(`
+        INSERT INTO classes (id, class_code, class_name, course, active)
+        VALUES (?, ?, 'Personal Progress', 'solo', 1)
+      `).run(classId, code);
+      db.prepare(`
+        INSERT INTO students (id, class_id, display_name, pin_hash)
+        VALUES (?, ?, ?, ?)
+      `).run(studentId, classId, cleanName, pinHash);
+    })();
+
+    const student = db.prepare('SELECT id, class_id, display_name FROM students WHERE id = ?').get(studentId);
+    const token = signStudentToken(student, code);
+
+    res.status(201).json({
+      token,
+      student: { id: student.id, name: student.display_name },
+      login_code: code,
+    });
+  } catch (e) {
+    console.error('Solo init error:', e);
+    res.status(500).json({ error: 'Failed to create account' });
+  }
+});
+
+// ── SOLO: log back in with personal code + PIN ────────────────────────────────
+router.post('/solo-login', async (req, res) => {
+  try {
+    const { login_code, pin } = req.body;
+    if (!login_code || !pin) return res.status(400).json({ error: 'Code and PIN required' });
+
+    const cls = db.prepare("SELECT * FROM classes WHERE class_code = ? AND course = 'solo'")
+      .get(String(login_code).toUpperCase().trim());
+    if (!cls) return res.status(404).json({ error: 'Code not found. Double-check it.' });
+
+    const student = db.prepare('SELECT * FROM students WHERE class_id = ?').get(cls.id);
+    if (!student) return res.status(404).json({ error: 'No account found for that code.' });
+
+    const valid = await bcrypt.compare(String(pin), student.pin_hash);
+    if (!valid) return res.status(401).json({ error: 'Incorrect PIN' });
+
+    db.prepare("UPDATE students SET last_active = datetime('now') WHERE id = ?").run(student.id);
+    const token = signStudentToken(student, cls.class_code);
+
+    res.json({
+      token,
+      student: { id: student.id, name: student.display_name },
+      login_code: cls.class_code,
+    });
+  } catch (e) {
+    console.error('Solo login error:', e);
+    res.status(500).json({ error: 'Login failed' });
+  }
+});
 module.exports = router;
 
