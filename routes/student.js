@@ -331,7 +331,7 @@ router.post('/solo-init', async (req, res) => {
     });
   } catch (e) {
     console.error('Solo init error:', e);
-    res.status(500).json({ error: 'Failed to create account' });
+    res.status(500).json({ error: e.message});
   }
 });
 
