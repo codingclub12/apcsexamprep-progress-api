@@ -47,71 +47,11 @@ function verifyStudentToken(token) {
 }
 
 // ── COURSE CONFIG ─────────────────────────────────────────────────────────────
+// ONE object. Each course is a KEY (not its own const). Unit keys and lesson-id
+// formats below intentionally match what pageFromHandle() writes at the bottom
+// of this file: CSA units 'unit-N' with lesson 'U.L', CSP units 'bi-N' with slug
+// lessons, Cyber units 'unit-N'.
 const COURSES = {
-
-const CSA = {
-  label: 'AP Computer Science A',
-  units: {
-    'unit-1': {
-      label: 'Unit 1: Using Objects and Methods',
-      lessons: ['1.1','1.2','1.3','1.4','1.5','1.6','1.7','1.8','1.9','1.10','1.11','1.12','1.13','1.14','1.15'],
-      activities: ['lesson'],
-    },
-    'unit-2': {
-      label: 'Unit 2: Selection and Iteration',
-      lessons: ['2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','2.10','2.11','2.12'],
-      activities: ['lesson'],
-    },
-    'unit-3': {
-      label: 'Unit 3: Class Creation',
-      lessons: ['3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9'],
-      activities: ['lesson'],
-    },
-    'unit-4': {
-      label: 'Unit 4: Data Collections',
-      lessons: ['4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','4.9','4.10','4.11','4.12','4.13','4.14','4.15','4.16','4.17'],
-      activities: ['lesson'],
-    },
-  },
-};
-
-const CSP = {
-  label: 'AP Computer Science Principles',
-  units: {
-    'bi-1': {
-      label: 'Big Idea 1: Creative Development',
-      lessons: ['collaboration','program-function-purpose','program-design-development','identifying-correcting-errors'],
-      activities: ['lesson'],
-    },
-    'bi-2': {
-      label: 'Big Idea 2: Data',
-      lessons: ['binary-numbers','data-compression','extracting-information','using-programs-with-data'],
-      activities: ['lesson'],
-    },
-    'bi-3': {
-      label: 'Big Idea 3: Algorithms and Programming',
-      lessons: [
-        'variables','data-abstraction','mathematical-expressions','strings',
-        'boolean-expressions','conditionals','nested-conditionals','iteration',
-        'developing-algorithms','lists','binary-search','calling-procedures',
-        'developing-procedures','libraries','random-values','simulations',
-        'algorithmic-efficiency','undecidable-problems',
-      ],
-      activities: ['lesson'],
-    },
-    'bi-4': {
-      label: 'Big Idea 4: Computer Systems and Networks',
-      lessons: ['the-internet','fault-tolerance','parallel-distributed-computing'],
-      activities: ['lesson'],
-    },
-    'bi-5': {
-      label: 'Big Idea 5: Impact of Computing',
-      lessons: ['beneficial-harmful-effects','digital-divide','computing-bias','crowdsourcing','legal-ethical-concerns','safe-computing'],
-      activities: ['lesson'],
-    },
-  },
-};
-
   'ap-cybersecurity': {
     label: 'AP Cybersecurity',
     units: {
@@ -155,20 +95,62 @@ const CSP = {
   'ap-csa': {
     label: 'AP Computer Science A',
     units: {
-      'unit-1': { label: 'Unit 1: Primitive Types', lessons: [], activities: ['lesson', 'quiz'] },
-      'unit-2': { label: 'Unit 2: Using Objects', lessons: [], activities: ['lesson', 'quiz'] },
-      'unit-3': { label: 'Unit 3: Boolean Expressions', lessons: [], activities: ['lesson', 'quiz'] },
-      'unit-4': { label: 'Unit 4: Iteration & Arrays', lessons: [], activities: ['lesson', 'quiz'] },
+      'unit-1': {
+        label: 'Unit 1: Using Objects and Methods',
+        lessons: ['1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', '1.8', '1.9', '1.10', '1.11', '1.12', '1.13', '1.14', '1.15'],
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
+      },
+      'unit-2': {
+        label: 'Unit 2: Selection and Iteration',
+        lessons: ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6', '2.7', '2.8', '2.9', '2.10', '2.11', '2.12'],
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
+      },
+      'unit-3': {
+        label: 'Unit 3: Class Creation',
+        lessons: ['3.1', '3.2', '3.3', '3.4', '3.5', '3.6', '3.7', '3.8', '3.9'],
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
+      },
+      'unit-4': {
+        label: 'Unit 4: Data Collections',
+        lessons: ['4.1', '4.2', '4.3', '4.4', '4.5', '4.6', '4.7', '4.8', '4.9', '4.10', '4.11', '4.12', '4.13', '4.14', '4.15', '4.16', '4.17'],
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
+      },
     },
   },
   'ap-csp': {
     label: 'AP Computer Science Principles',
     units: {
-      'bi-1': { label: 'Big Idea 1: Creative Development', lessons: [], activities: ['lesson', 'quiz'] },
-      'bi-2': { label: 'Big Idea 2: Data', lessons: [], activities: ['lesson', 'quiz'] },
-      'bi-3': { label: 'Big Idea 3: Algorithms & Programming', lessons: [], activities: ['lesson', 'quiz'] },
-      'bi-4': { label: 'Big Idea 4: Computing Systems & Networks', lessons: [], activities: ['lesson', 'quiz'] },
-      'bi-5': { label: 'Big Idea 5: Impact of Computing', lessons: [], activities: ['lesson', 'quiz'] },
+      'bi-1': {
+        label: 'Big Idea 1: Creative Development',
+        lessons: ['collaboration', 'program-function-purpose', 'program-design-development', 'identifying-correcting-errors'],
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
+      },
+      'bi-2': {
+        label: 'Big Idea 2: Data',
+        lessons: ['binary-numbers', 'data-compression', 'extracting-information', 'using-programs-with-data'],
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
+      },
+      'bi-3': {
+        label: 'Big Idea 3: Algorithms and Programming',
+        lessons: [
+          'variables', 'data-abstraction', 'mathematical-expressions', 'strings',
+          'boolean-expressions', 'conditionals', 'nested-conditionals', 'iteration',
+          'developing-algorithms', 'lists', 'binary-search', 'calling-procedures',
+          'developing-procedures', 'libraries', 'random-values', 'simulations',
+          'algorithmic-efficiency', 'undecidable-problems',
+        ],
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
+      },
+      'bi-4': {
+        label: 'Big Idea 4: Computer Systems and Networks',
+        lessons: ['the-internet', 'fault-tolerance', 'parallel-distributed-computing'],
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
+      },
+      'bi-5': {
+        label: 'Big Idea 5: Impact of Computing',
+        lessons: ['beneficial-harmful-effects', 'digital-divide', 'computing-bias', 'crowdsourcing', 'legal-ethical-concerns', 'safe-computing'],
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
+      },
     },
   },
 };
@@ -199,17 +181,17 @@ const COURSE_PREFIXES = {
 };
 
 const ACTIVITY_TOKENS = ['exercise-1', 'exercise-2', 'lab', 'quiz', 'exam', 'code'];
- 
+
 function trailingActivity(h) {
   // anchored at the end so a slug like "collaboration" never trips "lab"
   for (const a of ACTIVITY_TOKENS) if (h.endsWith('-' + a)) return a;
   return 'lesson';
 }
- 
+
 function pageFromHandle(raw) {
   if (!raw) return null;
   const h = String(raw).split('/').filter(Boolean).pop() || '';
- 
+
   // CSP course: ap-csp-course-bi{N}-{slug}   (lesson id = slug)
   // hub pages ap-csp-course, ap-csp-course-big-idea-N, ap-csp-course-create-task
   // do not match bi{digit} and are correctly ignored.
@@ -219,23 +201,23 @@ function pageFromHandle(raw) {
     const lesson = m[2].replace(new RegExp('-' + activity_type + '$'), '');
     return { course: 'ap-csp', unit: 'bi-' + m[1], lesson, activity_type };
   }
- 
+
   // CSA course: ap-csa-lesson-{U}-{L}-{slug}   (lesson id = "U.L")
   // hubs ap-csa-course and ap-csa-unit-{N}-course do not match and are ignored.
   m = h.match(/^ap-csa-lesson-(\d+)-(\d+)-/);
   if (m) {
     return { course: 'ap-csa', unit: 'unit-' + m[1], lesson: m[1] + '.' + m[2], activity_type: trailingActivity(h) };
   }
- 
+
   // Cyber: ap-cyber-unit-{N}-exam | ap-cyber-unit-{N}-lesson-{M}[-{activity}]
   m = h.match(/^ap-cyber-unit-(\d+)-exam$/);
   if (m) return { course: 'ap-cybersecurity', unit: 'unit-' + m[1], lesson: 'exam', activity_type: 'exam' };
   m = h.match(/^ap-cyber-unit-(\d+)-lesson-(\d+)/);
   if (m) return { course: 'ap-cybersecurity', unit: 'unit-' + m[1], lesson: m[1] + '.' + m[2], activity_type: trailingActivity(h) };
- 
+
   return null; // unknown page, /track no-ops
 }
- 
+
 module.exports = { pageFromHandle, trailingActivity, ACTIVITY_TOKENS,
   newId, generateClassCode, signTeacherToken, verifyTeacherToken,
   signStudentToken, verifyStudentToken, COURSES, COURSE_PREFIXES,
