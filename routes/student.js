@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const router = express.Router();
 const db = require('../db');
 const { requireStudent } = require('../middleware');
-const { newId, signStudentToken, isValidPin, sanitize, COURSES } = require('../utils');
+const { newId, signStudentToken, isValidPin, sanitize, COURSES, pageFromHandle } = require('../utils');
 
 // ── JOIN CLASS (first time) ───────────────────────────────────────────────────
 router.post('/join', async (req, res) => {
@@ -368,6 +368,62 @@ router.post('/solo-login', async (req, res) => {
   } catch (e) {
     console.error('Solo login error:', e);
     res.status(500).json({ error: 'Login failed' });
+  }
+});
+// ── TRACK (auto page-view completion) ─────────────────────────────────────────
+// Footer sends { handle } plus the student JWT on every ap- page.
+// Course is taken from the student's class, not the page, so a stray page for a
+// different course is ignored. Solo accounts roam, so they trust the page.
+router.post('/track', requireStudent, (req, res) => {
+  try {
+    const parsed = pageFromHandle(req.body && req.body.handle);
+    if (!parsed) return res.json({ ok: true, tracked: false });
+
+    // Quizzes and exams have their own flow; never auto-complete them here.
+    if (parsed.activity_type === 'quiz' || parsed.activity_type === 'exam') {
+      return res.json({ ok: true, tracked: false, reason: 'handled by /quiz' });
+    }
+
+    const cls = db.prepare('SELECT course FROM classes WHERE id = ?').get(req.student.class_id);
+    if (!cls) return res.json({ ok: true, tracked: false });
+
+    let course;
+    if (cls.course === 'solo') {
+      course = parsed.course;               // solo roams across subjects
+    } else if (cls.course === parsed.course) {
+      course = cls.course;                  // normal case, page matches class
+    } else {
+      return res.json({ ok: true, tracked: false, reason: 'off-course page' });
+    }
+
+    const { unit, lesson, activity_type } = parsed;
+    const now = new Date().toISOString();
+
+    const existing = db.prepare(`
+      SELECT id FROM progress
+      WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
+    `).get(req.student.id, course, unit, lesson, activity_type);
+
+    if (existing) {
+      db.prepare(`
+        UPDATE progress SET
+          completed = 1,
+          completed_at = COALESCE(completed_at, ?),
+          updated_at = ?
+        WHERE id = ?
+      `).run(now, now, existing.id);
+    } else {
+      db.prepare(`
+        INSERT INTO progress (id, student_id, class_id, course, unit, lesson, activity_type,
+          completed, score, attempts, confidence, time_spent_s, completed_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, 1, NULL, 0, NULL, NULL, ?, ?)
+      `).run(newId(), req.student.id, req.student.class_id, course, unit, lesson, activity_type, now, now);
+    }
+
+    res.json({ ok: true, tracked: true, course, unit, lesson, activity_type });
+  } catch (e) {
+    console.error('Track error:', e);
+    res.status(500).json({ error: 'Failed to track' });
   }
 });
 module.exports = router;
