@@ -28,6 +28,7 @@ app.use(express.json({ limit: '1mb' }));
 app.use('/api/teacher', require('./routes/teacher'));
 app.use('/api/student', require('./routes/student'));
 app.use('/api/judge0', require('./routes/judge0'));
+app.use('/api/admin', require('./routes/admin'));
 
 // ── PUBLIC ENDPOINTS ──────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
