@@ -8,20 +8,7 @@ const {
   newId, generateClassCode, signTeacherToken,
   isValidEmail, isValidPin, sanitize, COURSES, COURSE_PREFIXES,
 } = require('../utils');
-// TEMP diagnostic — DELETE after use. Returns the real unit + activity_type
-// strings a course actually stores (no names, no scores).
-router.get('/_debug/keys', (req, res) => {
-  const course = req.query.course;
-  if (!course) return res.status(400).json({ error: 'pass ?course=ap-csa' });
-  const rows = db.prepare(
-    `SELECT unit, activity_type, COUNT(*) AS rows
-       FROM progress
-      WHERE course = ?
-      GROUP BY unit, activity_type
-      ORDER BY unit, activity_type`
-  ).all(course);
-  res.json({ course, keys: rows });
-});
+
 // ── REGISTER ──────────────────────────────────────────────────────────────────
 router.post('/register', async (req, res) => {
   try {
@@ -199,30 +186,95 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
   res.json({ class: cls, course_config: courseConfig, summary });
 });
 
-// ── CSV EXPORT ────────────────────────────────────────────────────────────────
+// ── CSV EXPORT (Wide gradebook, CodeHS-style) — SINGLE canonical export ─────────
+// Rows = students. Columns = identity + per-unit summary + every lesson/activity.
+// Score shows ONLY for graded activities (quiz, exam, case-file). Lessons and
+// exercises show "Done" or blank, never a number. Per-unit average is quiz-only
+// and labeled "Avg Quiz" so it never mixes an exam raw score into a percentage.
 router.get('/classes/:code/export', requireTeacher, (req, res) => {
-  const cls = db.prepare('SELECT * FROM classes WHERE class_code = ? AND teacher_id = ?')
-    .get(req.params.code.toUpperCase(), req.teacher.id);
-  if (!cls) return res.status(404).json({ error: 'Class not found' });
+  try {
+    const cls = db.prepare('SELECT * FROM classes WHERE class_code = ? AND teacher_id = ?')
+      .get(req.params.code.toUpperCase(), req.teacher.id);
+    if (!cls) return res.status(404).json({ error: 'Class not found' });
 
-  const rows = db.prepare(`
-    SELECT s.display_name, s.student_ref, s.last_active,
-           p.unit, p.lesson, p.activity_type, p.completed, p.score, p.attempts, p.confidence, p.completed_at
-    FROM students s
-    LEFT JOIN progress p ON p.student_id = s.id AND p.class_id = s.class_id
-    WHERE s.class_id = ?
-    ORDER BY s.display_name, p.unit, p.lesson, p.activity_type
-  `).all(cls.id);
+    const courseConfig = COURSES[cls.course];
+    if (!courseConfig) return res.status(400).json({ error: `Course ${cls.course} not in manifest` });
 
-  const header = 'Name,Student ID,Unit,Lesson,Activity,Completed,Score,Attempts,Confidence,Completed At,Last Active\n';
-  const lines = rows.map(r =>
-    `"${r.display_name}","${r.student_ref || ''}","${r.unit || ''}","${r.lesson || ''}","${r.activity_type || ''}",` +
-    `${r.completed ? 'Yes' : 'No'},${r.score ?? ''},${r.attempts ?? ''},${r.confidence ?? ''},"${r.completed_at || ''}","${r.last_active || ''}"`
-  ).join('\n');
+    const students = db.prepare(
+      'SELECT id, display_name, student_ref, last_active FROM students WHERE class_id = ? ORDER BY display_name'
+    ).all(cls.id);
 
-  res.setHeader('Content-Type', 'text/csv');
-  res.setHeader('Content-Disposition', `attachment; filename="${cls.class_code}-progress.csv"`);
-  res.send(header + lines);
+    const allProgress = db.prepare(
+      'SELECT student_id, unit, lesson, activity_type, completed, score FROM progress WHERE class_id = ? AND course = ?'
+    ).all(cls.id, cls.course);
+    const map = {};
+    for (const p of allProgress) {
+      (map[p.student_id] = map[p.student_id] || {})[`${p.unit}|${p.lesson}|${p.activity_type}`] = p;
+    }
+
+    const GRADED = new Set(['quiz', 'exam', 'case-file']);
+    const ABBR = { lesson: 'L', 'exercise-1': 'E1', 'exercise-2': 'E2', quiz: 'Q', lab: 'Lab', code: 'Code' };
+    const abbr = a => ABBR[a] || a;
+    const shortUnit = k => k.replace(/^unit-/, 'Unit ').replace(/^bi-/, 'BI ');
+
+    // Activity columns, built once from the manifest.
+    const unitIds = Object.keys(courseConfig.units);
+    const cols = [];
+    for (const unitId of unitIds) {
+      const u = courseConfig.units[unitId];
+      for (const lesson of u.lessons)
+        for (const act of u.activities)
+          cols.push({ unit: unitId, lesson, activity: act, header: `${lesson} ${abbr(act)}`, graded: GRADED.has(act) });
+      if (u.case_file) cols.push({ unit: unitId, lesson: u.case_file.lesson, activity: 'case-file', header: u.case_file.label || 'Case File', graded: true });
+      if (u.exam)      cols.push({ unit: unitId, lesson: u.exam.lesson, activity: 'exam', header: u.exam.label || 'Unit Exam', graded: true });
+    }
+
+    // Lead: identity + Overall % + per-unit (% and Avg Quiz).
+    const lead = ['Name', 'Student Ref', 'Last Active', 'Overall %'];
+    for (const unitId of unitIds) lead.push(`${shortUnit(unitId)} %`, `${shortUnit(unitId)} Avg Quiz`);
+
+    const rows = [[...lead, ...cols.map(c => c.header)]];
+    for (const s of students) {
+      const sm = map[s.id] || {};
+      let allDone = 0, allTot = 0;
+      const summaryCells = [];
+      for (const unitId of unitIds) {
+        const u = courseConfig.units[unitId];
+        let done = 0, tot = 0, qSum = 0, qN = 0;
+        for (const lesson of u.lessons) for (const act of u.activities) {
+          tot++; const r = sm[`${unitId}|${lesson}|${act}`]; if (r && r.completed) done++;
+        }
+        if (u.case_file) { tot++; const r = sm[`${unitId}|${u.case_file.lesson}|case-file`]; if (r && r.completed) done++; }
+        if (u.exam)      { tot++; const r = sm[`${unitId}|${u.exam.lesson}|exam`]; if (r && r.completed) done++; }
+        for (const lesson of u.lessons) { const r = sm[`${unitId}|${lesson}|quiz`]; if (r && r.score != null) { qSum += r.score; qN++; } }
+        allDone += done; allTot += tot;
+        summaryCells.push(tot ? `${Math.round(done / tot * 100)}%` : '0%', qN ? Math.round(qSum / qN) : '');
+      }
+      const cells = cols.map(c => {
+        const r = sm[`${c.unit}|${c.lesson}|${c.activity}`];
+        if (!r) return '';
+        if (c.graded && r.score != null) return r.score;
+        return r.completed ? 'Done' : '';
+      });
+      rows.push([s.display_name, s.student_ref || '', s.last_active || '',
+        `${allTot ? Math.round(allDone / allTot * 100) : 0}%`, ...summaryCells, ...cells]);
+    }
+
+    const csv = '\uFEFF' + rows.map(row =>
+      row.map(cell => {
+        const str = (cell === null || cell === undefined) ? '' : String(cell);
+        return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
+      }).join(',')
+    ).join('\r\n');
+
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition',
+      `attachment; filename="gradebook-${cls.class_code}-${new Date().toISOString().split('T')[0]}.csv"`);
+    res.send(csv);
+  } catch (e) {
+    console.error('Export error:', e);
+    res.status(500).json({ error: 'Failed to export gradebook' });
+  }
 });
 
 // ── UPDATE CLASS ──────────────────────────────────────────────────────────────
@@ -390,83 +442,5 @@ router.patch('/classes/:code/students/:studentId', requireTeacher, async (req, r
     student: { id: updated.id, name: updated.display_name, ref: updated.student_ref, last_active: updated.last_active },
   });
 });
-// ── CSV EXPORT (Wide gradebook, CodeHS-style) ──────────────────────────────────
-// Rows = students, columns = every lesson/activity in the manifest.
-// Graded columns (quiz, exam, case-file) show the score; others show "Done" or blank.
-router.get('/classes/:code/export', requireTeacher, (req, res) => {
-  try {
-    const cls = db.prepare('SELECT * FROM classes WHERE class_code = ? AND teacher_id = ?')
-      .get(req.params.code.toUpperCase(), req.teacher.id);
-    if (!cls) return res.status(404).json({ error: 'Class not found' });
 
-    const courseConfig = COURSES[cls.course];
-    if (!courseConfig) return res.status(400).json({ error: `Course ${cls.course} not in manifest` });
-
-    const students = db.prepare(
-      'SELECT id, display_name, student_ref FROM students WHERE class_id = ? ORDER BY display_name'
-    ).all(cls.id);
-
-    // ONE query for the whole class, then a lookup map (no per-cell queries)
-    const allProgress = db.prepare(
-      'SELECT student_id, unit, lesson, activity_type, completed, score FROM progress WHERE class_id = ? AND course = ?'
-    ).all(cls.id, cls.course);
-
-    const map = {};
-    for (const p of allProgress) {
-      (map[p.student_id] = map[p.student_id] || {})[`${p.unit}|${p.lesson}|${p.activity_type}`] = p;
-    }
-
-    // Columns built once from the manifest: per-lesson activities, then each
-    // unit's case-file and exam as single columns.
-    const GRADED = new Set(['quiz', 'exam', 'case-file']);
-    const cols = [];
-    for (const [unitId, u] of Object.entries(courseConfig.units)) {
-      for (const lesson of u.lessons) {
-        for (const act of u.activities) {
-          cols.push({ unit: unitId, lesson, activity: act, header: `${lesson} ${act}`, graded: GRADED.has(act) });
-        }
-      }
-      if (u.case_file) cols.push({ unit: unitId, lesson: u.case_file.lesson, activity: 'case-file', header: `${unitId} case-file`, graded: true });
-      if (u.exam)      cols.push({ unit: unitId, lesson: u.exam.lesson, activity: 'exam', header: `${unitId} exam`, graded: true });
-    }
-
-    const lead = ['Student', 'Code', '% Complete', 'Done', 'Total', 'Avg Score'];
-    const rows = [];
-    rows.push([...lead, ...cols.map(c => c.header)]);              // header
-    rows.push([...lead.map(() => ''), ...cols.map(c => c.activity)]); // activity-type row
-
-    for (const s of students) {
-      const sm = map[s.id] || {};
-      let done = 0, sum = 0, n = 0;
-      const cells = cols.map(c => {
-        const r = sm[`${c.unit}|${c.lesson}|${c.activity}`];
-        if (!r) return '';
-        if (r.completed) done++;
-        if (c.graded && r.score != null) { sum += r.score; n++; return r.score; }
-        return r.completed ? 'Done' : '';
-      });
-      rows.push([
-        s.display_name, s.student_ref || '',
-        `${cols.length ? Math.round(done / cols.length * 100) : 0}%`,
-        done, cols.length, n ? Math.round(sum / n) : '',
-        ...cells,
-      ]);
-    }
-
-    const csv = '\uFEFF' + rows.map(row =>
-      row.map(cell => {
-        const str = (cell === null || cell === undefined) ? '' : String(cell);
-        return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
-      }).join(',')
-    ).join('\r\n');
-
-    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
-    res.setHeader('Content-Disposition',
-      `attachment; filename="gradebook-${cls.class_code}-${new Date().toISOString().split('T')[0]}.csv"`);
-    res.send(csv);
-  } catch (e) {
-    console.error('Export error:', e);
-    res.status(500).json({ error: 'Failed to export gradebook' });
-  }
-});
 module.exports = router;
