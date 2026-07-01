@@ -198,7 +198,45 @@ const COURSE_PREFIXES = {
   'ap-csp':           'CSP',
 };
 
-module.exports = {
+const ACTIVITY_TOKENS = ['exercise-1', 'exercise-2', 'lab', 'quiz', 'exam', 'code'];
+ 
+function trailingActivity(h) {
+  // anchored at the end so a slug like "collaboration" never trips "lab"
+  for (const a of ACTIVITY_TOKENS) if (h.endsWith('-' + a)) return a;
+  return 'lesson';
+}
+ 
+function pageFromHandle(raw) {
+  if (!raw) return null;
+  const h = String(raw).split('/').filter(Boolean).pop() || '';
+ 
+  // CSP course: ap-csp-course-bi{N}-{slug}   (lesson id = slug)
+  // hub pages ap-csp-course, ap-csp-course-big-idea-N, ap-csp-course-create-task
+  // do not match bi{digit} and are correctly ignored.
+  let m = h.match(/^ap-csp-course-bi(\d+)-(.+)$/);
+  if (m) {
+    const activity_type = trailingActivity(h);
+    const lesson = m[2].replace(new RegExp('-' + activity_type + '$'), '');
+    return { course: 'ap-csp', unit: 'bi-' + m[1], lesson, activity_type };
+  }
+ 
+  // CSA course: ap-csa-lesson-{U}-{L}-{slug}   (lesson id = "U.L")
+  // hubs ap-csa-course and ap-csa-unit-{N}-course do not match and are ignored.
+  m = h.match(/^ap-csa-lesson-(\d+)-(\d+)-/);
+  if (m) {
+    return { course: 'ap-csa', unit: 'unit-' + m[1], lesson: m[1] + '.' + m[2], activity_type: trailingActivity(h) };
+  }
+ 
+  // Cyber: ap-cyber-unit-{N}-exam | ap-cyber-unit-{N}-lesson-{M}[-{activity}]
+  m = h.match(/^ap-cyber-unit-(\d+)-exam$/);
+  if (m) return { course: 'ap-cybersecurity', unit: 'unit-' + m[1], lesson: 'exam', activity_type: 'exam' };
+  m = h.match(/^ap-cyber-unit-(\d+)-lesson-(\d+)/);
+  if (m) return { course: 'ap-cybersecurity', unit: 'unit-' + m[1], lesson: m[1] + '.' + m[2], activity_type: trailingActivity(h) };
+ 
+  return null; // unknown page, /track no-ops
+}
+ 
+module.exports = { pageFromHandle, trailingActivity, ACTIVITY_TOKENS,
   newId, generateClassCode, signTeacherToken, verifyTeacherToken,
   signStudentToken, verifyStudentToken, COURSES, COURSE_PREFIXES,
   isValidEmail, isValidPin, isValidClassCode, sanitize,
