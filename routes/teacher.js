@@ -8,7 +8,20 @@ const {
   newId, generateClassCode, signTeacherToken,
   isValidEmail, isValidPin, sanitize, COURSES, COURSE_PREFIXES,
 } = require('../utils');
-
+// TEMP diagnostic — DELETE after use. Returns the real unit + activity_type
+// strings a course actually stores (no names, no scores).
+router.get('/_debug/keys', (req, res) => {
+  const course = req.query.course;
+  if (!course) return res.status(400).json({ error: 'pass ?course=ap-csa' });
+  const rows = db.prepare(
+    `SELECT unit, activity_type, COUNT(*) AS rows
+       FROM progress
+      WHERE course = ?
+      GROUP BY unit, activity_type
+      ORDER BY unit, activity_type`
+  ).all(course);
+  res.json({ course, keys: rows });
+});
 // ── REGISTER ──────────────────────────────────────────────────────────────────
 router.post('/register', async (req, res) => {
   try {
