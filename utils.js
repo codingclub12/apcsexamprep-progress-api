@@ -48,6 +48,70 @@ function verifyStudentToken(token) {
 
 // ── COURSE CONFIG ─────────────────────────────────────────────────────────────
 const COURSES = {
+
+const CSA = {
+  label: 'AP Computer Science A',
+  units: {
+    'unit-1': {
+      label: 'Unit 1: Using Objects and Methods',
+      lessons: ['1.1','1.2','1.3','1.4','1.5','1.6','1.7','1.8','1.9','1.10','1.11','1.12','1.13','1.14','1.15'],
+      activities: ['lesson'],
+    },
+    'unit-2': {
+      label: 'Unit 2: Selection and Iteration',
+      lessons: ['2.1','2.2','2.3','2.4','2.5','2.6','2.7','2.8','2.9','2.10','2.11','2.12'],
+      activities: ['lesson'],
+    },
+    'unit-3': {
+      label: 'Unit 3: Class Creation',
+      lessons: ['3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9'],
+      activities: ['lesson'],
+    },
+    'unit-4': {
+      label: 'Unit 4: Data Collections',
+      lessons: ['4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8','4.9','4.10','4.11','4.12','4.13','4.14','4.15','4.16','4.17'],
+      activities: ['lesson'],
+    },
+  },
+};
+
+const CSP = {
+  label: 'AP Computer Science Principles',
+  units: {
+    'bi-1': {
+      label: 'Big Idea 1: Creative Development',
+      lessons: ['collaboration','program-function-purpose','program-design-development','identifying-correcting-errors'],
+      activities: ['lesson'],
+    },
+    'bi-2': {
+      label: 'Big Idea 2: Data',
+      lessons: ['binary-numbers','data-compression','extracting-information','using-programs-with-data'],
+      activities: ['lesson'],
+    },
+    'bi-3': {
+      label: 'Big Idea 3: Algorithms and Programming',
+      lessons: [
+        'variables','data-abstraction','mathematical-expressions','strings',
+        'boolean-expressions','conditionals','nested-conditionals','iteration',
+        'developing-algorithms','lists','binary-search','calling-procedures',
+        'developing-procedures','libraries','random-values','simulations',
+        'algorithmic-efficiency','undecidable-problems',
+      ],
+      activities: ['lesson'],
+    },
+    'bi-4': {
+      label: 'Big Idea 4: Computer Systems and Networks',
+      lessons: ['the-internet','fault-tolerance','parallel-distributed-computing'],
+      activities: ['lesson'],
+    },
+    'bi-5': {
+      label: 'Big Idea 5: Impact of Computing',
+      lessons: ['beneficial-harmful-effects','digital-divide','computing-bias','crowdsourcing','legal-ethical-concerns','safe-computing'],
+      activities: ['lesson'],
+    },
+  },
+};
+
   'ap-cybersecurity': {
     label: 'AP Cybersecurity',
     units: {
