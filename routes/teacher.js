@@ -390,5 +390,83 @@ router.patch('/classes/:code/students/:studentId', requireTeacher, async (req, r
     student: { id: updated.id, name: updated.display_name, ref: updated.student_ref, last_active: updated.last_active },
   });
 });
+// ── CSV EXPORT (Wide gradebook, CodeHS-style) ──────────────────────────────────
+// Rows = students, columns = every lesson/activity in the manifest.
+// Graded columns (quiz, exam, case-file) show the score; others show "Done" or blank.
+router.get('/classes/:code/export', requireTeacher, (req, res) => {
+  try {
+    const cls = db.prepare('SELECT * FROM classes WHERE class_code = ? AND teacher_id = ?')
+      .get(req.params.code.toUpperCase(), req.teacher.id);
+    if (!cls) return res.status(404).json({ error: 'Class not found' });
 
+    const courseConfig = COURSES[cls.course];
+    if (!courseConfig) return res.status(400).json({ error: `Course ${cls.course} not in manifest` });
+
+    const students = db.prepare(
+      'SELECT id, display_name, student_ref FROM students WHERE class_id = ? ORDER BY display_name'
+    ).all(cls.id);
+
+    // ONE query for the whole class, then a lookup map (no per-cell queries)
+    const allProgress = db.prepare(
+      'SELECT student_id, unit, lesson, activity_type, completed, score FROM progress WHERE class_id = ? AND course = ?'
+    ).all(cls.id, cls.course);
+
+    const map = {};
+    for (const p of allProgress) {
+      (map[p.student_id] = map[p.student_id] || {})[`${p.unit}|${p.lesson}|${p.activity_type}`] = p;
+    }
+
+    // Columns built once from the manifest: per-lesson activities, then each
+    // unit's case-file and exam as single columns.
+    const GRADED = new Set(['quiz', 'exam', 'case-file']);
+    const cols = [];
+    for (const [unitId, u] of Object.entries(courseConfig.units)) {
+      for (const lesson of u.lessons) {
+        for (const act of u.activities) {
+          cols.push({ unit: unitId, lesson, activity: act, header: `${lesson} ${act}`, graded: GRADED.has(act) });
+        }
+      }
+      if (u.case_file) cols.push({ unit: unitId, lesson: u.case_file.lesson, activity: 'case-file', header: `${unitId} case-file`, graded: true });
+      if (u.exam)      cols.push({ unit: unitId, lesson: u.exam.lesson, activity: 'exam', header: `${unitId} exam`, graded: true });
+    }
+
+    const lead = ['Student', 'Code', '% Complete', 'Done', 'Total', 'Avg Score'];
+    const rows = [];
+    rows.push([...lead, ...cols.map(c => c.header)]);              // header
+    rows.push([...lead.map(() => ''), ...cols.map(c => c.activity)]); // activity-type row
+
+    for (const s of students) {
+      const sm = map[s.id] || {};
+      let done = 0, sum = 0, n = 0;
+      const cells = cols.map(c => {
+        const r = sm[`${c.unit}|${c.lesson}|${c.activity}`];
+        if (!r) return '';
+        if (r.completed) done++;
+        if (c.graded && r.score != null) { sum += r.score; n++; return r.score; }
+        return r.completed ? 'Done' : '';
+      });
+      rows.push([
+        s.display_name, s.student_ref || '',
+        `${cols.length ? Math.round(done / cols.length * 100) : 0}%`,
+        done, cols.length, n ? Math.round(sum / n) : '',
+        ...cells,
+      ]);
+    }
+
+    const csv = '\uFEFF' + rows.map(row =>
+      row.map(cell => {
+        const str = (cell === null || cell === undefined) ? '' : String(cell);
+        return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
+      }).join(',')
+    ).join('\r\n');
+
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition',
+      `attachment; filename="gradebook-${cls.class_code}-${new Date().toISOString().split('T')[0]}.csv"`);
+    res.send(csv);
+  } catch (e) {
+    console.error('Export error:', e);
+    res.status(500).json({ error: 'Failed to export gradebook' });
+  }
+});
 module.exports = router;
