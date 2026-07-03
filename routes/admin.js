@@ -1,4 +1,3 @@
-'use strict';
 // ─────────────────────────────────────────────────────────────────────────────
 //  ADMIN ROUTES — owner-only read access to the whole database.
 //  Mount in server.js:  app.use('/api/admin', require('./routes/admin'));
@@ -52,6 +51,7 @@ router.get('/', (req, res) => {
     ok: true,
     endpoints: [
       'GET /api/admin/overview            top-line counts',
+      'GET /api/admin/stats               adoption + growth rollup (external vs raw)',
       'GET /api/admin/classes             every class + teacher + student/completion counts',
       'GET /api/admin/students            roster; filter ?class_code= or ?class_id=',
       'GET /api/admin/class/:code         one class: meta + roster + recent activity',
@@ -80,6 +80,145 @@ router.get('/overview', (req, res) => {
   } catch (e) {
     console.error('admin/overview:', e);
     res.status(500).json({ error: 'overview failed', detail: e.message });
+  }
+});
+
+// ── STATS: adoption + growth rollup for the live tracker ──────────────────────
+//  Richer than /overview. Separates REAL external adoption from owner / system /
+//  audit rows, breaks students + completions down by course, and returns growth
+//  over the last 30 days. Read-only; auth is inherited from requireAdmin above.
+router.get('/stats', (req, res) => {
+  try {
+    // Rows that are NOT real external teachers. Hard-coded constants (no user
+    // input), so interpolating them into the filter below is safe. Edit this
+    // list if you add more of your own test/system emails.
+    const INTERNAL_FILTER = `
+      LOWER(COALESCE(t.email, '')) NOT IN ('tannercrow12@gmail.com', 'solo@system.invalid')
+      AND LOWER(COALESCE(t.email, '')) NOT LIKE '%audit%'
+      AND LOWER(COALESCE(t.email, '')) NOT LIKE '%delete%'
+    `;
+
+    const scalar = (sql) => db.prepare(sql).get().n;
+    const rows = (sql) => db.prepare(sql).all();
+
+    // RAW — everything in the DB, unfiltered.
+    const raw = {
+      teachers:       scalar(`SELECT COUNT(*) n FROM teachers`),
+      classes:        scalar(`SELECT COUNT(*) n FROM classes`),
+      classes_active: scalar(`SELECT COUNT(*) n FROM classes WHERE active = 1`),
+      students:       scalar(`SELECT COUNT(*) n FROM students`),
+      completions:    scalar(`SELECT COUNT(*) n FROM progress WHERE completed = 1`),
+      quiz_attempts:  scalar(`SELECT COUNT(*) n FROM quiz_attempts`),
+    };
+
+    // EXTERNAL — real teacher adoption (owner / system / audit removed).
+    const external = {
+      teachers: scalar(`
+        SELECT COUNT(DISTINCT c.teacher_id) n
+        FROM classes c JOIN teachers t ON c.teacher_id = t.id
+        WHERE ${INTERNAL_FILTER}`),
+      classes: scalar(`
+        SELECT COUNT(*) n
+        FROM classes c JOIN teachers t ON c.teacher_id = t.id
+        WHERE ${INTERNAL_FILTER}`),
+      classes_with_students: scalar(`
+        SELECT COUNT(*) n
+        FROM classes c JOIN teachers t ON c.teacher_id = t.id
+        WHERE ${INTERNAL_FILTER}
+          AND (SELECT COUNT(*) FROM students s WHERE s.class_id = c.id) > 0`),
+      students: scalar(`
+        SELECT COUNT(*) n
+        FROM students s
+        JOIN classes c  ON s.class_id = c.id
+        JOIN teachers t ON c.teacher_id = t.id
+        WHERE ${INTERNAL_FILTER}`),
+      completions: scalar(`
+        SELECT COUNT(*) n
+        FROM progress p
+        JOIN classes c  ON p.class_id = c.id
+        JOIN teachers t ON c.teacher_id = t.id
+        WHERE p.completed = 1 AND ${INTERNAL_FILTER}`),
+    };
+
+    // BY COURSE (external) — merged from three simple aggregates to avoid
+    // cartesian blowups from joining students x progress in one query.
+    const bcClasses = rows(`
+      SELECT c.course, COUNT(*) n
+      FROM classes c JOIN teachers t ON c.teacher_id = t.id
+      WHERE ${INTERNAL_FILTER} GROUP BY c.course`);
+    const bcStudents = rows(`
+      SELECT c.course, COUNT(*) n
+      FROM students s JOIN classes c ON s.class_id = c.id
+      JOIN teachers t ON c.teacher_id = t.id
+      WHERE ${INTERNAL_FILTER} GROUP BY c.course`);
+    const bcCompletions = rows(`
+      SELECT c.course, COUNT(*) n
+      FROM progress p JOIN classes c ON p.class_id = c.id
+      JOIN teachers t ON c.teacher_id = t.id
+      WHERE p.completed = 1 AND ${INTERNAL_FILTER} GROUP BY c.course`);
+
+    const courseMap = {};
+    const merge = (list, key) => {
+      for (const r of list) {
+        if (!courseMap[r.course]) {
+          courseMap[r.course] = { course: r.course, classes: 0, students: 0, completions: 0 };
+        }
+        courseMap[r.course][key] = r.n;
+      }
+    };
+    merge(bcClasses, 'classes');
+    merge(bcStudents, 'students');
+    merge(bcCompletions, 'completions');
+    const by_course = Object.values(courseMap).sort((a, b) => b.classes - a.classes);
+
+    // GROWTH — last 30 days, using confirmed created_at columns.
+    const classes_per_day = rows(`
+      SELECT DATE(created_at) d, COUNT(*) n FROM classes
+      WHERE created_at >= DATE('now', '-30 days')
+      GROUP BY DATE(created_at) ORDER BY d`);
+    const students_per_day = rows(`
+      SELECT DATE(created_at) d, COUNT(*) n FROM students
+      WHERE created_at >= DATE('now', '-30 days')
+      GROUP BY DATE(created_at) ORDER BY d`);
+    const new_teachers_per_day = rows(`
+      SELECT DATE(first_seen) d, COUNT(*) n FROM (
+        SELECT c.teacher_id, MIN(c.created_at) first_seen
+        FROM classes c JOIN teachers t ON c.teacher_id = t.id
+        WHERE ${INTERNAL_FILTER}
+        GROUP BY c.teacher_id
+      ) WHERE first_seen >= DATE('now', '-30 days')
+      GROUP BY DATE(first_seen) ORDER BY d`);
+
+    // ACTIVITY — recent movement from progress.updated_at.
+    const activity = {
+      updates_last_7_days:     scalar(`SELECT COUNT(*) n FROM progress WHERE updated_at >= DATETIME('now', '-7 days')`),
+      completions_last_7_days: scalar(`SELECT COUNT(*) n FROM progress WHERE completed = 1 AND updated_at >= DATETIME('now', '-7 days')`),
+    };
+
+    // TOP external classes by engagement.
+    const top_classes = rows(`
+      SELECT
+        c.class_code, c.class_name, c.course,
+        t.name AS teacher_name, t.email AS teacher_email,
+        (SELECT COUNT(*) FROM students s WHERE s.class_id = c.id) AS students,
+        (SELECT COUNT(*) FROM progress p WHERE p.class_id = c.id AND p.completed = 1) AS completions
+      FROM classes c JOIN teachers t ON c.teacher_id = t.id
+      WHERE ${INTERNAL_FILTER}
+      ORDER BY completions DESC, students DESC
+      LIMIT 10`);
+
+    res.json({
+      raw,
+      external,
+      by_course,
+      growth: { classes_per_day, students_per_day, new_teachers_per_day },
+      activity,
+      top_classes,
+      generated_at: new Date().toISOString(),
+    });
+  } catch (e) {
+    console.error('admin/stats:', e);
+    res.status(500).json({ error: 'stats failed', detail: e.message });
   }
 });
 
