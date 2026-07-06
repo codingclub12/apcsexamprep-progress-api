@@ -426,5 +426,150 @@ router.post('/track', requireStudent, (req, res) => {
     res.status(500).json({ error: 'Failed to track' });
   }
 });
-module.exports = router;
+// ── ROLLUP HELPER (used by /score) ────────────────────────────────────────────
+// Best points per DISTINCT item, summed, expressed 0-100. Re-answering an item
+// keeps the best result (never averages a right answer back down); different
+// items in the same activity accumulate. Recomputed on every write, so
+// progress.score is always exactly consistent with the ledger and idempotent.
+function rollupScore(studentId, course, unit, lesson, activity_type) {
+  const agg = db.prepare(`
+    SELECT
+      COALESCE(SUM(best_points), 0) AS earned,
+      COALESCE(SUM(item_max),   0)  AS possible,
+      COUNT(*)                      AS items
+    FROM (
+      SELECT item, MAX(points) AS best_points, MAX(max_points) AS item_max
+      FROM score_events
+      WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
+      GROUP BY item
+    )
+  `).get(studentId, course, unit, lesson, activity_type);
 
+  const events = db.prepare(`
+    SELECT COUNT(*) n FROM score_events
+    WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
+  `).get(studentId, course, unit, lesson, activity_type).n;
+
+  const pct = agg.possible > 0 ? Math.round((agg.earned / agg.possible) * 100) : 0;
+  return { earned: agg.earned, possible: agg.possible, items: agg.items, events, pct };
+}
+
+// ── SCORE (record one graded interaction) ─────────────────────────────────────
+// The course-agnostic keystone. Every CFU "check answer", exercise item, or any
+// scored response posts here, for CSA, CSP, and Cyber alike. It does two things:
+//   1. Appends the raw result to score_events (append-only; the full attempt
+//      history and the submitted answer are kept, never overwritten).
+//   2. Recomputes the activity rollup and writes it as a 0-100 pct into
+//      progress.score, lighting up the student view, teacher gradebook, and
+//      admin drill with no read-side changes.
+// completed is deliberately NOT touched here: visit-completion stays owned by
+// /track and gated finals by /quiz + /quiz/finalize. This records grades only.
+router.post('/score', requireStudent, (req, res) => {
+  try {
+    const b = req.body || {};
+    if (!b.course || !b.unit || !b.lesson) {
+      return res.status(400).json({ error: 'course, unit, lesson required' });
+    }
+
+    // Resolve course exactly like /track: solo accounts roam across subjects;
+    // class accounts may only score their own course's pages.
+    const cls = db.prepare('SELECT course FROM classes WHERE id = ?').get(req.student.class_id);
+    if (!cls) return res.json({ ok: true, tracked: false });
+    let course;
+    if (cls.course === 'solo')          course = b.course;
+    else if (cls.course === b.course)   course = cls.course;
+    else return res.json({ ok: true, tracked: false, reason: 'off-course page' });
+
+    const unit          = String(b.unit);
+    const lesson        = String(b.lesson);
+    const activity_type = b.activity_type ? String(b.activity_type) : 'cfu';
+    const item          = b.item != null ? String(b.item).slice(0, 120) : 'item';
+
+    // Points: explicit points/max_points win (partial credit); otherwise derive
+    // from the boolean `correct`. One of the two forms is required.
+    let points, max_points, correct;
+    if (b.points != null || b.max_points != null) {
+      points     = Number(b.points ?? 0);
+      max_points = Number(b.max_points ?? 1);
+      correct    = b.correct != null ? (b.correct ? 1 : 0)
+                 : (max_points > 0 && points >= max_points ? 1 : 0);
+    } else if (b.correct != null) {
+      correct    = b.correct ? 1 : 0;
+      points     = correct;
+      max_points = 1;
+    } else {
+      return res.status(400).json({ error: 'Provide `correct` (boolean) or `points` + `max_points`' });
+    }
+    if (!Number.isFinite(points) || !Number.isFinite(max_points) || max_points <= 0) {
+      return res.status(400).json({ error: 'points must be finite and max_points > 0' });
+    }
+    points = Math.max(0, Math.min(points, max_points)); // clamp into [0, max]
+
+    // Known location? Never block on a config lag — store either way, but flag
+    // an unrecognized course/unit so drift surfaces instead of failing silently.
+    const recognized = !!(COURSES[course] && COURSES[course].units[unit]);
+    const clientEventId = b.client_event_id ? String(b.client_event_id).slice(0, 100) : null;
+
+    // Idempotency: a client_event_id already seen for this student is a retry
+    // (flaky mobile double-submit). Don't double-count; return the live rollup.
+    if (clientEventId) {
+      const dupe = db.prepare(
+        'SELECT id FROM score_events WHERE student_id = ? AND client_event_id = ?'
+      ).get(req.student.id, clientEventId);
+      if (dupe) {
+        return res.json({
+          ok: true, tracked: true, duplicate: true, recognized,
+          item: { item, points, max_points, correct },
+          rollup: rollupScore(req.student.id, course, unit, lesson, activity_type),
+        });
+      }
+    }
+
+    const now = new Date().toISOString();
+
+    const rollup = db.transaction(() => {
+      // 1) append the immutable event
+      db.prepare(`
+        INSERT INTO score_events
+          (id, student_id, class_id, course, unit, lesson, activity_type, item,
+           points, max_points, correct, answers, client_event_id, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `).run(
+        newId(), req.student.id, req.student.class_id, course, unit, lesson,
+        activity_type, item, points, max_points, correct,
+        b.answers != null ? JSON.stringify(b.answers) : null,
+        clientEventId, now
+      );
+
+      // 2) recompute rollup and 3) upsert it into progress.score
+      const roll = rollupScore(req.student.id, course, unit, lesson, activity_type);
+      const existing = db.prepare(`
+        SELECT id FROM progress
+        WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
+      `).get(req.student.id, course, unit, lesson, activity_type);
+
+      if (existing) {
+        db.prepare(`UPDATE progress SET score = ?, attempts = ?, updated_at = ? WHERE id = ?`)
+          .run(roll.pct, roll.events, now, existing.id);
+      } else {
+        db.prepare(`
+          INSERT INTO progress (id, student_id, class_id, course, unit, lesson,
+            activity_type, completed, score, attempts, updated_at)
+          VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?)
+        `).run(newId(), req.student.id, req.student.class_id, course, unit, lesson,
+          activity_type, roll.pct, roll.events, now);
+      }
+      return roll;
+    })();
+
+    const out = { ok: true, tracked: true, recognized, item: { item, points, max_points, correct }, rollup };
+    if (!recognized) {
+      out.warning = `Unrecognized ${course} location ${unit}/${lesson}. Stored anyway; check COURSES config.`;
+    }
+    res.json(out);
+  } catch (e) {
+    console.error('Score error:', e);
+    res.status(500).json({ error: 'Failed to record score' });
+  }
+});
+module.exports = router;
