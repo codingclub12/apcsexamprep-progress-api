@@ -56,6 +56,7 @@ router.get('/', (req, res) => {
       'GET /api/admin/students            roster; filter ?class_code= or ?class_id=',
       'GET /api/admin/class/:code         one class: meta + roster + recent activity',
       'GET /api/admin/schema              live table/column listing',
+      'GET /api/admin/score-events        raw graded-interaction ledger; ?student_id= ?class_code= ?course= ?limit=',
     ],
   });
 });
@@ -317,6 +318,39 @@ router.get('/class/:code', (req, res) => {
   } catch (e) {
     console.error('admin/class/:code:', e);
     res.status(500).json({ error: 'class drill failed', detail: e.message });
+  }
+});
+
+// ── SCORE EVENTS: raw graded-interaction ledger (CFU-level detail) ────────────
+//  The append-only detail behind progress.score. Filter by ?student_id=,
+//  ?class_code=, ?course=; ?limit= caps rows (default 200, max 2000).
+router.get('/score-events', (req, res) => {
+  try {
+    const { student_id, class_code, course } = req.query;
+    const lim = Math.min(parseInt(req.query.limit, 10) || 200, 2000);
+    const where = [];
+    const args = [];
+    if (student_id) { where.push('se.student_id = ?'); args.push(student_id); }
+    if (course)     { where.push('se.course = ?');     args.push(course); }
+    if (class_code) { where.push('c.class_code = ?');  args.push(String(class_code).toUpperCase()); }
+    const clause = where.length ? `WHERE ${where.join(' AND ')}` : '';
+
+    const events = db.prepare(`
+      SELECT se.id, se.student_id, s.display_name, c.class_code,
+             se.course, se.unit, se.lesson, se.activity_type, se.item,
+             se.points, se.max_points, se.correct, se.answers, se.created_at
+      FROM score_events se
+      LEFT JOIN students s ON se.student_id = s.id
+      LEFT JOIN classes  c ON se.class_id  = c.id
+      ${clause}
+      ORDER BY se.created_at DESC
+      LIMIT ?
+    `).all(...args, lim);
+
+    res.json({ total: events.length, limit: lim, events });
+  } catch (e) {
+    console.error('admin/score-events:', e);
+    res.status(500).json({ error: 'score-events failed', detail: e.message });
   }
 });
 
