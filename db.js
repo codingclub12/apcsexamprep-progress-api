@@ -85,6 +85,33 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_progress_student ON progress(student_id);
   CREATE INDEX IF NOT EXISTS idx_progress_class  ON progress(class_id);
   CREATE INDEX IF NOT EXISTS idx_quiz_student    ON quiz_attempts(student_id);
+
+  -- Append-only ledger of every graded interaction: CFU "check answer" clicks,
+  -- exercise items, any scored response. Rows are never edited or deleted; the
+  -- rollup (best points per item, summed to a 0-100 pct) is written to
+  -- progress.score so every existing dashboard picks scores up unchanged.
+  CREATE TABLE IF NOT EXISTS score_events (
+    id              TEXT PRIMARY KEY,
+    student_id      TEXT NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    class_id        TEXT NOT NULL REFERENCES classes(id)  ON DELETE CASCADE,
+    course          TEXT NOT NULL,
+    unit            TEXT NOT NULL,
+    lesson          TEXT NOT NULL,
+    activity_type   TEXT NOT NULL DEFAULT 'cfu',
+    item            TEXT NOT NULL DEFAULT 'item',
+    points          REAL NOT NULL DEFAULT 0,
+    max_points      REAL NOT NULL DEFAULT 1,
+    correct         INTEGER,
+    answers         TEXT,
+    client_event_id TEXT,
+    created_at      TEXT DEFAULT (datetime('now'))
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_score_events_student ON score_events(student_id);
+  CREATE INDEX IF NOT EXISTS idx_score_events_rollup  ON score_events(student_id, course, unit, lesson, activity_type);
+  CREATE INDEX IF NOT EXISTS idx_score_events_item    ON score_events(student_id, course, unit, lesson, activity_type, item);
+  CREATE UNIQUE INDEX IF NOT EXISTS uidx_score_events_client
+    ON score_events(student_id, client_event_id) WHERE client_event_id IS NOT NULL;
 `);
 
 // Migrations — safe to re-run on every boot, ignored if column already exists
