@@ -9,6 +9,7 @@ const db = new Database(DB_PATH);
 
 // Performance settings
 db.pragma('journal_mode = WAL');
+db.pragma('busy_timeout = 5000');
 db.pragma('foreign_keys = ON');
 
 // ── SCHEMA ────────────────────────────────────────────────────────────────────
@@ -112,6 +113,41 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_score_events_item    ON score_events(student_id, course, unit, lesson, activity_type, item);
   CREATE UNIQUE INDEX IF NOT EXISTS uidx_score_events_client
     ON score_events(student_id, client_event_id) WHERE client_event_id IS NOT NULL;
+
+  -- Attempt-level saves for CFUs and quizzes (ap-csa / ap-csp pilot; Cyber can
+  -- migrate onto it later). One row per submission; per-question results live
+  -- in the detail JSON (option indices and booleans only, never answer text).
+  CREATE TABLE IF NOT EXISTS attempts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id TEXT NOT NULL,
+    class_id TEXT NOT NULL,
+    course TEXT NOT NULL,           -- 'ap-csa' | 'ap-csp' | 'ap-cybersecurity'
+    lesson_id TEXT NOT NULL,        -- '1.2'
+    item_id TEXT NOT NULL,          -- '1.2-cfu-3', '1.2-quiz'
+    item_type TEXT NOT NULL,        -- 'cfu' | 'quiz'
+    score REAL NOT NULL,
+    max_score REAL NOT NULL,
+    passed INTEGER NOT NULL,        -- computed server-side against class mastery_threshold
+    attempt_no INTEGER NOT NULL,
+    detail TEXT,                    -- JSON array of {q, sel, ok}; sanitized before insert
+    created_at TEXT DEFAULT (datetime('now'))
+  );
+  CREATE INDEX IF NOT EXISTS idx_attempts_student_item ON attempts(student_id, item_id);
+  CREATE INDEX IF NOT EXISTS idx_attempts_class ON attempts(class_id);
+
+  -- Single authority for denominators and max scores. Every percentage on every
+  -- endpoint computes against this table so admin stats, teacher dashboards, and
+  -- student views can never disagree. Adding a lesson is a manifest row, not a
+  -- code change. Seeded by scripts/seed-manifest.js.
+  CREATE TABLE IF NOT EXISTS course_manifest (
+    course TEXT NOT NULL,
+    unit TEXT NOT NULL,
+    lesson_id TEXT NOT NULL,
+    item_id TEXT NOT NULL,
+    item_type TEXT NOT NULL,        -- 'visit' | 'cfu' | 'quiz'
+    points REAL NOT NULL DEFAULT 1,
+    PRIMARY KEY (course, item_id)
+  );
 `);
 
 // Migrations — safe to re-run on every boot, ignored if column already exists
@@ -124,5 +160,9 @@ const migrations = [
 for (const sql of migrations) {
   try { db.exec(sql); } catch(e) { /* column already exists */ }
 }
+
+// Solo (ME-) accounts always get best-attempt grading. solo-init historically
+// relied on the column default (0), so backfill the invariant. Idempotent.
+db.exec(`UPDATE classes SET retry_allowed = 1 WHERE course = 'solo' AND (retry_allowed IS NULL OR retry_allowed = 0)`);
 
 module.exports = db;

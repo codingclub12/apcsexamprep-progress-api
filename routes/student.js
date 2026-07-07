@@ -318,8 +318,8 @@ router.post('/solo-init', async (req, res) => {
       `).run();
 
       db.prepare(`
-        INSERT INTO classes (id, teacher_id, class_code, class_name, course, active)
-        VALUES (?, 'SOLO_SYSTEM', ?, 'Personal Progress', 'solo', 1)
+        INSERT INTO classes (id, teacher_id, class_code, class_name, course, active, retry_allowed)
+        VALUES (?, 'SOLO_SYSTEM', ?, 'Personal Progress', 'solo', 1, 1)
       `).run(classId, code);
 
       db.prepare(`
