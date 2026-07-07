@@ -129,6 +129,8 @@ db.exec(`
     max_score REAL NOT NULL,
     passed INTEGER NOT NULL,        -- computed server-side against class mastery_threshold
     attempt_no INTEGER NOT NULL,
+    duration_seconds INTEGER,       -- client-computed: item render to submit
+    ua TEXT,                        -- server-captured User-Agent, truncated to 120 chars
     detail TEXT,                    -- JSON array of {q, sel, ok}; sanitized before insert
     created_at TEXT DEFAULT (datetime('now'))
   );
@@ -156,6 +158,8 @@ const migrations = [
   `ALTER TABLE classes   ADD COLUMN retry_allowed     INTEGER DEFAULT 0`,
   `ALTER TABLE students  ADD COLUMN retry_override    INTEGER DEFAULT NULL`,
   `ALTER TABLE progress  ADD COLUMN locked            INTEGER DEFAULT 0`,
+  `ALTER TABLE attempts  ADD COLUMN duration_seconds  INTEGER`,
+  `ALTER TABLE attempts  ADD COLUMN ua                TEXT`,
 ];
 for (const sql of migrations) {
   try { db.exec(sql); } catch(e) { /* column already exists */ }

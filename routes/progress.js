@@ -35,8 +35,8 @@ const countPriorStmt = db.prepare(
 );
 const insertAttemptStmt = db.prepare(`
   INSERT INTO attempts (student_id, class_id, course, lesson_id, item_id, item_type,
-    score, max_score, passed, attempt_no, detail)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    score, max_score, passed, attempt_no, duration_seconds, ua, detail)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 `);
 // Grade of record for one item. First param picks the ordering: 1 = best score
 // ratio wins (retry on), 0 = first attempt wins (retry off).
@@ -156,6 +156,14 @@ router.post('/attempt', requireStudent, rateLimit, (req, res) => {
       return res.status(400).json({ error: 'detail must be an array of {q, sel, ok}: integer indices and a boolean only' });
     }
 
+    // Telemetry, not grade data: junk never blocks the write. duration is
+    // client-computed (item render to submit), clamped to one day; ua is
+    // captured server-side from the request header.
+    const duration = Number.isInteger(b.duration_seconds) && b.duration_seconds >= 0
+      ? Math.min(b.duration_seconds, 86400)
+      : null;
+    const ua = (req.get('user-agent') || '').slice(0, 120) || null;
+
     const threshold = cls.mastery_threshold != null ? cls.mastery_threshold : 80;
     const passed = (score / maxScore) * 100 >= threshold ? 1 : 0;
 
@@ -168,7 +176,7 @@ router.post('/attempt', requireStudent, rateLimit, (req, res) => {
       const attempt_no = countPriorStmt.get(req.student.id, item_id, course).n + 1;
       insertAttemptStmt.run(
         req.student.id, req.student.class_id, course, lesson_id, item_id, b.item_type,
-        score, maxScore, passed, attempt_no, detail.json
+        score, maxScore, passed, attempt_no, duration, ua, detail.json
       );
       const gor = gradeOfRecordStmt.get(retryOn, req.student.id, item_id, course);
       return { attempt_no, gor };
