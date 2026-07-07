@@ -55,6 +55,8 @@ router.get('/', (req, res) => {
       'GET /api/admin/classes             every class + teacher + student/completion counts',
       'GET /api/admin/students            roster; filter ?class_code= or ?class_id=',
       'GET /api/admin/class/:code         one class: meta + roster + recent activity',
+      'GET /api/admin/student/:id         per-lesson visit status + grade-of-record per item, vs manifest',
+      'GET /api/admin/class/:id/gradebook class rollup: students x per-lesson grade aggregates, vs manifest',
       'GET /api/admin/schema              live table/column listing',
       'GET /api/admin/score-events        raw graded-interaction ledger; ?student_id= ?class_code= ?course= ?limit=',
     ],
@@ -73,6 +75,8 @@ router.get('/overview', (req, res) => {
       progress_rows: one(`SELECT COUNT(*) n FROM progress`),
       completions: one(`SELECT COUNT(*) n FROM progress WHERE completed = 1`),
       quiz_attempts: one(`SELECT COUNT(*) n FROM quiz_attempts`),
+      attempts: one(`SELECT COUNT(*) n FROM attempts`),
+      manifest_items: one(`SELECT COUNT(*) n FROM course_manifest`),
       classes_by_course: db.prepare(
         `SELECT course, COUNT(*) n FROM classes GROUP BY course ORDER BY n DESC`
       ).all(),
@@ -318,6 +322,246 @@ router.get('/class/:code', (req, res) => {
   } catch (e) {
     console.error('admin/class/:code:', e);
     res.status(500).json({ error: 'class drill failed', detail: e.message });
+  }
+});
+
+// ── HELPERS for the attempt-grade views below ─────────────────────────────────
+//  Grade of record across many items in ONE window-function pass. Retry policy
+//  per student (retry_override beats class retry_allowed): best score ratio
+//  when retry is on, first attempt when it is off. Both ROW_NUMBER orderings
+//  are computed and the CASE picks one, so this stays a single scan.
+const GOR_SELECT = `
+  SELECT student_id, course, lesson_id, item_id, item_type,
+         score, max_score, passed, attempt_no, attempts
+  FROM (
+    SELECT a.student_id, a.course, a.lesson_id, a.item_id, a.item_type,
+      a.score, a.max_score, a.passed, a.attempt_no,
+      COUNT(*) OVER (PARTITION BY a.student_id, a.course, a.item_id) AS attempts,
+      CASE WHEN COALESCE(s.retry_override, c.retry_allowed, 0) != 0
+        THEN ROW_NUMBER() OVER (PARTITION BY a.student_id, a.course, a.item_id
+               ORDER BY a.score * 1.0 / a.max_score DESC, a.attempt_no ASC)
+        ELSE ROW_NUMBER() OVER (PARTITION BY a.student_id, a.course, a.item_id
+               ORDER BY a.attempt_no ASC)
+      END AS rn
+    FROM attempts a
+    JOIN students s ON s.id = a.student_id
+    JOIN classes  c ON c.id = a.class_id
+    %WHERE%
+  ) WHERE rn = 1
+`;
+
+const pctOf = (earned, possible) => (possible > 0 ? Math.round((earned / possible) * 100) : 0);
+
+// ── STUDENT DRILL: per-lesson visits + grade-of-record per item ───────────────
+//  Percentages compute against course_manifest, the single denominator
+//  authority. The legacy ?total=NN param is accepted and ignored; the admin
+//  tracker page still sends it.
+router.get('/student/:id', (req, res) => {
+  try {
+    const student = db.prepare(`
+      SELECT s.id, s.class_id, s.display_name, s.student_ref, s.retry_override,
+             s.created_at, s.last_active,
+             c.class_code, c.class_name, c.course, c.mastery_threshold, c.retry_allowed
+      FROM students s
+      LEFT JOIN classes c ON s.class_id = c.id
+      WHERE s.id = ?
+    `).get(req.params.id);
+    if (!student) return res.status(404).json({ error: 'Student not found' });
+
+    // Solo accounts roam, so report every course in the manifest; class
+    // accounts report their class course only.
+    const courseList = student.course === 'solo'
+      ? db.prepare('SELECT DISTINCT course FROM course_manifest ORDER BY course').all().map(r => r.course)
+      : [student.course];
+
+    const placeholders = courseList.map(() => '?').join(',');
+    const manifest = db.prepare(`
+      SELECT course, unit, lesson_id, item_id, item_type, points
+      FROM course_manifest WHERE course IN (${placeholders})
+      ORDER BY course, unit, lesson_id, item_id
+    `).all(...courseList);
+
+    // Visit status from the existing page-visit tracking (never migrated).
+    const visitRows = db.prepare(`
+      SELECT DISTINCT course, lesson FROM progress
+      WHERE student_id = ? AND completed = 1 AND activity_type NOT IN ('quiz', 'exam')
+    `).all(student.id);
+    const visited = new Set(visitRows.map(v => `${v.course}|${v.lesson}`));
+
+    // Grade of record for every item this student has attempted, one pass.
+    const gorRows = db.prepare(GOR_SELECT.replace('%WHERE%', 'WHERE a.student_id = ?')).all(student.id);
+    const gorByItem = new Map(gorRows.map(g => [`${g.course}|${g.item_id}`, g]));
+
+    // Assemble per-course, per-lesson view from the manifest skeleton.
+    const courses = new Map();
+    for (const m of manifest) {
+      if (!courses.has(m.course)) {
+        courses.set(m.course, {
+          course: m.course,
+          lessons: new Map(),
+          summary: {
+            visits: { visited: 0, total: 0, pct: 0 },
+            graded: { earned: 0, possible: 0, pct: 0, items_total: 0, items_attempted: 0, items_passed: 0 },
+          },
+        });
+      }
+      const courseView = courses.get(m.course);
+      if (!courseView.lessons.has(m.lesson_id)) {
+        courseView.lessons.set(m.lesson_id, { lesson_id: m.lesson_id, unit: m.unit, visited: false, items: [] });
+      }
+      const lesson = courseView.lessons.get(m.lesson_id);
+
+      if (m.item_type === 'visit') {
+        lesson.visited = visited.has(`${m.course}|${m.lesson_id}`);
+        courseView.summary.visits.total++;
+        if (lesson.visited) courseView.summary.visits.visited++;
+        continue;
+      }
+
+      const gor = gorByItem.get(`${m.course}|${m.item_id}`);
+      lesson.items.push({
+        item_id: m.item_id,
+        item_type: m.item_type,
+        max_score: m.points,
+        score: gor ? gor.score : null,
+        pct: gor ? pctOf(gor.score, m.points) : null,
+        passed: gor ? !!gor.passed : null,
+        attempts: gor ? gor.attempts : 0,
+        attempt_no: gor ? gor.attempt_no : null,
+      });
+      courseView.summary.graded.possible += m.points;
+      courseView.summary.graded.items_total++;
+      if (gor) {
+        courseView.summary.graded.earned += gor.score;
+        courseView.summary.graded.items_attempted++;
+        if (gor.passed) courseView.summary.graded.items_passed++;
+      }
+    }
+
+    const courseViews = [...courses.values()].map(cv => {
+      cv.summary.visits.pct = pctOf(cv.summary.visits.visited, cv.summary.visits.total);
+      cv.summary.graded.pct = pctOf(cv.summary.graded.earned, cv.summary.graded.possible);
+      return { course: cv.course, summary: cv.summary, lessons: [...cv.lessons.values()] };
+    });
+
+    res.json({
+      student: {
+        id: student.id, display_name: student.display_name, student_ref: student.student_ref,
+        created_at: student.created_at, last_active: student.last_active,
+        retry_override: student.retry_override,
+      },
+      class: {
+        id: student.class_id, class_code: student.class_code, class_name: student.class_name,
+        course: student.course, mastery_threshold: student.mastery_threshold,
+        retry_allowed: student.retry_allowed,
+      },
+      courses: courseViews,
+      generated_at: new Date().toISOString(),
+    });
+  } catch (e) {
+    console.error('admin/student/:id:', e);
+    res.status(500).json({ error: 'student drill failed', detail: e.message });
+  }
+});
+
+// ── CLASS GRADEBOOK: students x per-lesson aggregates, vs manifest ────────────
+//  Reads are the heavy path: one window-function pass over attempts for the
+//  whole class, one aggregate over progress for visits, no per-student queries.
+//  :id accepts a class id or a class code. Solo system classes may pass
+//  ?course= (default ap-csa) since their course column is 'solo'.
+router.get('/class/:id/gradebook', (req, res) => {
+  try {
+    const key = String(req.params.id);
+    const cls = db.prepare(`
+      SELECT id, class_code, class_name, course, mastery_threshold, retry_allowed
+      FROM classes WHERE id = ? OR class_code = ?
+    `).get(key, key.toUpperCase());
+    if (!cls) return res.status(404).json({ error: `No class with id or code ${key}` });
+
+    const course = cls.course === 'solo' ? String(req.query.course || 'ap-csa') : cls.course;
+
+    const gradedItems = db.prepare(`
+      SELECT unit, lesson_id, item_id, points FROM course_manifest
+      WHERE course = ? AND item_type != 'visit'
+      ORDER BY unit, lesson_id, item_id
+    `).all(course);
+    const visitTotal = db.prepare(
+      `SELECT COUNT(*) n FROM course_manifest WHERE course = ? AND item_type = 'visit'`
+    ).get(course).n;
+
+    // Lesson columns from the manifest (denominator authority).
+    const lessonCols = new Map();
+    let coursePossible = 0;
+    for (const item of gradedItems) {
+      if (!lessonCols.has(item.lesson_id)) {
+        lessonCols.set(item.lesson_id, { lesson_id: item.lesson_id, unit: item.unit, possible: 0, items: 0 });
+      }
+      const col = lessonCols.get(item.lesson_id);
+      col.possible += item.points;
+      col.items++;
+      coursePossible += item.points;
+    }
+
+    const roster = db.prepare(`
+      SELECT id, display_name, student_ref, last_active
+      FROM students WHERE class_id = ? ORDER BY display_name
+    `).all(cls.id);
+
+    // Single aggregate pass: grade of record for every (student, item).
+    const gorRows = db.prepare(
+      GOR_SELECT.replace('%WHERE%', 'WHERE a.class_id = ? AND a.course = ?')
+    ).all(cls.id, course);
+
+    // Visit completion per student in one aggregate.
+    const visitRows = db.prepare(`
+      SELECT student_id, COUNT(DISTINCT lesson) n FROM progress
+      WHERE class_id = ? AND course = ? AND completed = 1 AND activity_type NOT IN ('quiz', 'exam')
+      GROUP BY student_id
+    `).all(cls.id, course);
+    const visitsByStudent = new Map(visitRows.map(v => [v.student_id, v.n]));
+
+    const students = new Map(roster.map(s => [s.id, {
+      id: s.id,
+      name: s.display_name,
+      ref: s.student_ref,
+      last_active: s.last_active,
+      visits: { visited: visitsByStudent.get(s.id) || 0, total: visitTotal },
+      lessons: {},
+      overall: { earned: 0, possible: coursePossible, pct: 0, items_attempted: 0, items_passed: 0 },
+    }]));
+
+    for (const g of gorRows) {
+      const row = students.get(g.student_id);
+      if (!row) continue; // attempt from a since-removed student
+      const col = lessonCols.get(g.lesson_id);
+      if (!row.lessons[g.lesson_id]) {
+        row.lessons[g.lesson_id] = {
+          earned: 0, possible: col ? col.possible : 0, pct: 0, items_attempted: 0, items_passed: 0,
+        };
+      }
+      const cell = row.lessons[g.lesson_id];
+      cell.earned += g.score;
+      cell.items_attempted++;
+      if (g.passed) cell.items_passed++;
+      cell.pct = pctOf(cell.earned, cell.possible);
+      row.overall.earned += g.score;
+      row.overall.items_attempted++;
+      if (g.passed) row.overall.items_passed++;
+    }
+    for (const row of students.values()) {
+      row.overall.pct = pctOf(row.overall.earned, row.overall.possible);
+    }
+
+    res.json({
+      class: cls,
+      course,
+      lessons: [...lessonCols.values()],
+      students: [...students.values()],
+      generated_at: new Date().toISOString(),
+    });
+  } catch (e) {
+    console.error('admin/class/:id/gradebook:', e);
+    res.status(500).json({ error: 'gradebook failed', detail: e.message });
   }
 });
 
