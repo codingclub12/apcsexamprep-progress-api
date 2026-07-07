@@ -27,8 +27,15 @@ app.use(express.json({ limit: '1mb' }));
 // ── ROUTES ────────────────────────────────────────────────────────────────────
 app.use('/api/teacher', require('./routes/teacher'));
 app.use('/api/student', require('./routes/student'));
+app.use('/api/progress', require('./routes/progress'));
 app.use('/api/judge0', require('./routes/judge0'));
 app.use('/api/admin', require('./routes/admin'));
+
+// Manifest seed on boot: insert-or-ignore only, so a fresh deploy is never
+// fail-closed with an empty course_manifest and existing rows are untouched.
+// Run `node scripts/seed-manifest.js --update` to push edits to existing rows.
+const seeded = require('./scripts/seed-manifest').seedManifest();
+console.log(`course_manifest: ${seeded.changed} new of ${seeded.total} seed rows`);
 
 // ── PUBLIC ENDPOINTS ──────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
