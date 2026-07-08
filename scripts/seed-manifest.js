@@ -60,7 +60,7 @@ const CSA_UNIT1_GRADED = {
 // run --update. Until then these rows stay out of the manifest so
 // denominators are not deflated by items nobody can earn. Grades are
 // test-case pass counts only; student source code is never stored.
-const CODE_ITEMS_ENABLED = false;
+const CODE_ITEMS_ENABLED = true;
 const CSA_UNIT1_CODE = {
   '1.1': 1, '1.2': 1, '1.3': 1, '1.4': 1, '1.5': 1, '1.6': 1,
   '1.7': 0, '1.8': 0,
