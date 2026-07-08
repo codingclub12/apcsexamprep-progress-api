@@ -25,27 +25,30 @@ const { COURSES } = require('../utils');
 // existing grade-reporting path and is intentionally not seeded here.
 const VISIT_COURSES = ['ap-csa', 'ap-csp'];
 
-// CSA Unit 1 pilot: graded items per lesson. cfus = how many numbered CFU
-// items the lesson page has (item ids 1.X-cfu-1 .. 1.X-cfu-N, 1 point each);
-// quiz = the lesson quiz's question count (item id 1.X-quiz, 1 point per
-// question). PLACEHOLDER COUNTS: verify against the finalized lesson pages
-// before the pilot and push corrections with --update.
+// CSA Unit 1 pilot: graded items per lesson, counted from the 2026-07-07
+// Matrixify pages export. cfus = auto-graded apcs-ex widgets in the lesson
+// body (item ids 1.X-cfu-1 .. 1.X-cfu-N in DOM order, 1 point each). quiz =
+// question count of the Tier 3 AP Mastery Challenge section, which serves as
+// the lesson quiz (item id 1.X-quiz, 1 point per question); quiz: 0 means the
+// page has no mastery section and gets no quiz row. Reveal-rubric FRQs,
+// games, and the code editor are not auto-graded and are never manifest
+// items. Recount when pages change and push with --update.
 const CSA_UNIT1_GRADED = {
-  '1.1':  { cfus: 3, quiz: 10 },
-  '1.2':  { cfus: 3, quiz: 10 },
-  '1.3':  { cfus: 3, quiz: 10 },
-  '1.4':  { cfus: 3, quiz: 10 },
-  '1.5':  { cfus: 3, quiz: 10 },
-  '1.6':  { cfus: 3, quiz: 10 },
-  '1.7':  { cfus: 3, quiz: 10 },
-  '1.8':  { cfus: 3, quiz: 10 },
-  '1.9':  { cfus: 3, quiz: 10 },
-  '1.10': { cfus: 3, quiz: 10 },
-  '1.11': { cfus: 3, quiz: 10 },
-  '1.12': { cfus: 3, quiz: 10 },
-  '1.13': { cfus: 3, quiz: 10 },
-  '1.14': { cfus: 3, quiz: 10 },
-  '1.15': { cfus: 3, quiz: 10 },
+  '1.1':  { cfus: 6, quiz: 2 },
+  '1.2':  { cfus: 6, quiz: 2 },
+  '1.3':  { cfus: 8, quiz: 2 },
+  '1.4':  { cfus: 8, quiz: 2 },
+  '1.5':  { cfus: 8, quiz: 2 },
+  '1.6':  { cfus: 8, quiz: 0 },
+  '1.7':  { cfus: 6, quiz: 2 },
+  '1.8':  { cfus: 6, quiz: 2 },
+  '1.9':  { cfus: 6, quiz: 2 },
+  '1.10': { cfus: 8, quiz: 2 },
+  '1.11': { cfus: 8, quiz: 2 },
+  '1.12': { cfus: 6, quiz: 2 },
+  '1.13': { cfus: 8, quiz: 2 },
+  '1.14': { cfus: 8, quiz: 2 },
+  '1.15': { cfus: 8, quiz: 2 },
 };
 
 function buildRows() {
@@ -65,7 +68,9 @@ function buildRows() {
     for (let i = 1; i <= cfg.cfus; i++) {
       rows.push({ course: 'ap-csa', unit: 'unit-1', lesson_id: lesson, item_id: `${lesson}-cfu-${i}`, item_type: 'cfu', points: 1 });
     }
-    rows.push({ course: 'ap-csa', unit: 'unit-1', lesson_id: lesson, item_id: `${lesson}-quiz`, item_type: 'quiz', points: cfg.quiz });
+    if (cfg.quiz > 0) {
+      rows.push({ course: 'ap-csa', unit: 'unit-1', lesson_id: lesson, item_id: `${lesson}-quiz`, item_type: 'quiz', points: cfg.quiz });
+    }
   }
 
   return rows;
