@@ -97,6 +97,159 @@ router.get('/progress', requireStudent, (req, res) => {
   res.json({ progress: records, map });
 });
 
+// ── STUDENT ATTEMPTS GRID (per-item grade-of-record, self) ────────────────────
+//  Student-facing read of the attempts ledger, the counterpart to the admin
+//  drill but scoped to the logged-in student. Powers the CSA per-item grid on
+//  my-progress. Percentages compute against course_manifest, the single
+//  denominator authority, so this can never disagree with the gradebook.
+//
+//  Response:
+//    { student, courses: [ { course, summary, lessons: [ {
+//        lesson_id, unit, visited,
+//        cfu:  { total, attempted, earned, possible, pct } | null,
+//        quiz: { score, max_score, pct, passed, attempt_no, attempts } | null,
+//        code: { total, attempted, earned, possible, pct } | null,
+//        items: [ { item_id, kind, item_type, score, max_score, pct, passed,
+//                   attempts, attempt_no } ]
+//      } ] } ] }
+//    kind is 'cfu' | 'quiz' | 'code'. Code items are item_type 'cfu' in the
+//    manifest but split into their own column by the 1.X-code-N id pattern.
+//  A per-lesson bucket (cfu/quiz/code) is null when the manifest has no such
+//  item for that lesson (e.g. 1.6 quiz, 1.7/1.8 code), and a stub with
+//  attempted 0 / score null when the item exists but was not attempted.
+//  Solo accounts roam: without ?course= they return every course they have
+//  attempts in; a class account always returns its own course.
+
+const saGetClassStmt = db.prepare('SELECT course FROM classes WHERE id = ?');
+const saCoursesStmt = db.prepare(
+  'SELECT DISTINCT course FROM attempts WHERE student_id = ? ORDER BY course'
+);
+const saManifestStmt = db.prepare(`
+  SELECT unit, lesson_id, item_id, item_type, points
+  FROM course_manifest WHERE course = ?
+  ORDER BY unit, lesson_id, item_id
+`);
+const saVisitsStmt = db.prepare(`
+  SELECT DISTINCT lesson FROM progress
+  WHERE student_id = ? AND course = ? AND completed = 1
+    AND activity_type NOT IN ('quiz', 'exam')
+`);
+// Grade of record per item for one student+course in a single window pass.
+// Retry policy: student retry_override beats class retry_allowed; best score
+// ratio when retry is on, first attempt when off.
+const saGorStmt = db.prepare(`
+  SELECT item_id, item_type, score, max_score, passed, attempt_no, attempts FROM (
+    SELECT a.item_id, a.item_type, a.score, a.max_score, a.passed, a.attempt_no,
+      COUNT(*) OVER (PARTITION BY a.item_id) AS attempts,
+      CASE WHEN COALESCE(s.retry_override, c.retry_allowed, 0) != 0
+        THEN ROW_NUMBER() OVER (PARTITION BY a.item_id ORDER BY a.score * 1.0 / a.max_score DESC, a.attempt_no ASC)
+        ELSE ROW_NUMBER() OVER (PARTITION BY a.item_id ORDER BY a.attempt_no ASC)
+      END AS rn
+    FROM attempts a
+    JOIN students s ON s.id = a.student_id
+    JOIN classes  c ON c.id = a.class_id
+    WHERE a.student_id = ? AND a.course = ?
+  ) WHERE rn = 1
+`);
+
+const saPct = (earned, possible) => (possible > 0 ? Math.round((earned / possible) * 100) : null);
+const saIsCode = (itemId) => /-code-\d+$/.test(itemId);
+
+router.get('/attempts', requireStudent, (req, res) => {
+  try {
+    const cls = saGetClassStmt.get(req.student.class_id);
+    if (!cls) return res.status(401).json({ error: 'Class not found for student' });
+
+    let courseList;
+    if (cls.course === 'solo') {
+      courseList = req.query.course
+        ? [String(req.query.course)]
+        : saCoursesStmt.all(req.student.id).map((r) => r.course);
+    } else {
+      courseList = [cls.course];
+    }
+
+    const courses = courseList.map((course) => {
+      const manifest = saManifestStmt.all(course);
+      const visited = new Set(saVisitsStmt.all(req.student.id, course).map((v) => v.lesson));
+      const gor = new Map(saGorStmt.all(req.student.id, course).map((g) => [g.item_id, g]));
+
+      const lessons = new Map();
+      const summary = {
+        visits: { visited: 0, total: 0, pct: null },
+        graded: { earned: 0, possible: 0, pct: null, items_total: 0, items_attempted: 0, items_passed: 0 },
+      };
+
+      for (const m of manifest) {
+        if (!lessons.has(m.lesson_id)) {
+          lessons.set(m.lesson_id, {
+            lesson_id: m.lesson_id, unit: m.unit, visited: false,
+            cfu: null, quiz: null, code: null, items: [],
+          });
+        }
+        const lesson = lessons.get(m.lesson_id);
+
+        if (m.item_type === 'visit') {
+          lesson.visited = visited.has(m.lesson_id);
+          summary.visits.total++;
+          if (lesson.visited) summary.visits.visited++;
+          continue;
+        }
+
+        const kind = m.item_type === 'quiz' ? 'quiz' : (saIsCode(m.item_id) ? 'code' : 'cfu');
+        const g = gor.get(m.item_id);
+        lesson.items.push({
+          item_id: m.item_id, kind, item_type: m.item_type, max_score: m.points,
+          score: g ? g.score : null,
+          pct: g ? saPct(g.score, m.points) : null,
+          passed: g ? !!g.passed : null,
+          attempts: g ? g.attempts : 0,
+          attempt_no: g ? g.attempt_no : null,
+        });
+
+        summary.graded.possible += m.points;
+        summary.graded.items_total++;
+        if (g) {
+          summary.graded.earned += g.score;
+          summary.graded.items_attempted++;
+          if (g.passed) summary.graded.items_passed++;
+        }
+
+        if (kind === 'quiz') {
+          lesson.quiz = g
+            ? { score: g.score, max_score: m.points, pct: saPct(g.score, m.points), passed: !!g.passed, attempt_no: g.attempt_no, attempts: g.attempts }
+            : { score: null, max_score: m.points, pct: null, passed: null, attempt_no: null, attempts: 0 };
+        } else {
+          const bucket = lesson[kind] || { total: 0, attempted: 0, earned: 0, possible: 0, pct: null };
+          bucket.total++;
+          bucket.possible += m.points;
+          if (g) { bucket.attempted++; bucket.earned += g.score; }
+          lesson[kind] = bucket;
+        }
+      }
+
+      for (const lesson of lessons.values()) {
+        for (const k of ['cfu', 'code']) {
+          if (lesson[k]) lesson[k].pct = saPct(lesson[k].earned, lesson[k].possible);
+        }
+      }
+      summary.visits.pct = saPct(summary.visits.visited, summary.visits.total);
+      summary.graded.pct = saPct(summary.graded.earned, summary.graded.possible);
+
+      return { course, summary, lessons: [...lessons.values()] };
+    });
+
+    res.json({
+      student: { id: req.student.id, name: req.student.display_name },
+      courses,
+      generated_at: new Date().toISOString(),
+    });
+  } catch (e) {
+    console.error('Student attempts error:', e);
+    res.status(500).json({ error: 'Failed to load attempts' });
+  }
+});
+
 // ── SAVE / UPDATE PROGRESS ────────────────────────────────────────────────────
 router.post('/progress', requireStudent, (req, res) => {
   try {
