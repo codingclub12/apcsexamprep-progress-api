@@ -51,6 +51,22 @@ const CSA_UNIT1_GRADED = {
   '1.15': { cfus: 8, quiz: 2 },
 };
 
+// Judge0-backed code editors, counted from the same export: one Try It
+// Yourself editor per lesson except 1.7 and 1.8, which have none. NOT yet
+// seeded. An editor becomes a graded item only when its page defines an
+// expected output or test cases, carries data-item-id="1.X-code-1", and its
+// script calls APCS_reportAttempt on the first passing run (contract in
+// shopify/apcs-reporter.js). Flip CODE_ITEMS_ENABLED when that ships, then
+// run --update. Until then these rows stay out of the manifest so
+// denominators are not deflated by items nobody can earn. Grades are
+// test-case pass counts only; student source code is never stored.
+const CODE_ITEMS_ENABLED = false;
+const CSA_UNIT1_CODE = {
+  '1.1': 1, '1.2': 1, '1.3': 1, '1.4': 1, '1.5': 1, '1.6': 1,
+  '1.7': 0, '1.8': 0,
+  '1.9': 1, '1.10': 1, '1.11': 1, '1.12': 1, '1.13': 1, '1.14': 1, '1.15': 1,
+};
+
 function buildRows() {
   const rows = [];
 
@@ -70,6 +86,14 @@ function buildRows() {
     }
     if (cfg.quiz > 0) {
       rows.push({ course: 'ap-csa', unit: 'unit-1', lesson_id: lesson, item_id: `${lesson}-quiz`, item_type: 'quiz', points: cfg.quiz });
+    }
+  }
+
+  if (CODE_ITEMS_ENABLED) {
+    for (const [lesson, nEditors] of Object.entries(CSA_UNIT1_CODE)) {
+      for (let i = 1; i <= nEditors; i++) {
+        rows.push({ course: 'ap-csa', unit: 'unit-1', lesson_id: lesson, item_id: `${lesson}-code-${i}`, item_type: 'cfu', points: 1 });
+      }
     }
   }
 
