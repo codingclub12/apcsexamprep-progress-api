@@ -135,6 +135,21 @@ POST /api/student/score             Record one graded interaction (rolls up to p
 POST /api/progress/attempt          Record one CFU/quiz attempt (manifest-gated)
 ```
 
+### Server-side quiz scoring (Phase 2, answer keys never ship to the browser)
+```
+GET  /api/quiz/:course/:unit/:lesson/:activity_type   Shuffled questions + order_token (no keys). Public.
+POST /api/quiz/submit                                  Server-scores against quiz_bank. Optional student auth.
+POST /api/teacher/classes/:code/release               Release the answer key for one activity to a class.
+GET  /api/teacher/classes/:code/releases              List released activities.
+```
+
+The server owns the questions and correct answers in `quiz_bank`; the page renders
+prompts and options only. Self-study gets the key immediately with unlimited
+attempts; class mode returns correct/incorrect booleans only, one attempt (unless
+retry is allowed), and the key is withheld until the teacher releases it. Seed keys
+with `node scripts/seed-quiz-bank.js` (never auto-runs on boot). Full request and
+response shapes: `docs/phase2-server-scoring-contract.md`.
+
 ### Graded reporting: which endpoint per course
 
 There are two graded-reporting paths and each course uses exactly one. Pick by

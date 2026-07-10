@@ -170,6 +170,47 @@ db.exec(`
   );
   CREATE INDEX IF NOT EXISTS idx_game_scores_game_created ON game_scores(game, created_at);
   CREATE INDEX IF NOT EXISTS idx_game_scores_game_value   ON game_scores(game, value);
+
+  -- Server-owned answer keys (Phase 2 server-side scoring). Questions and their
+  -- correct answers live here, never in the page HTML, so no key ever ships to
+  -- the browser. The render endpoint returns prompt + options only; correct_index
+  -- and explanation are released to the client at submit time subject to the
+  -- release rule. This is author content, not student input, so it is not PII.
+  -- Seeded manually via scripts/seed-quiz-bank.js (never on boot), so a fresh
+  -- deploy stays empty and every page not yet migrated keeps its existing flow.
+  CREATE TABLE IF NOT EXISTS quiz_bank (
+    qid           TEXT PRIMARY KEY,   -- stable per-question id, e.g. 'ap-cybersecurity:unit-1:1.1:quiz#1'
+    course        TEXT NOT NULL,      -- 'ap-cybersecurity' | 'ap-csa' | 'ap-csp'
+    unit          TEXT NOT NULL,      -- 'unit-1'
+    lesson        TEXT NOT NULL,      -- '1.1'
+    activity_type TEXT NOT NULL,      -- 'quiz' | 'exam' | 'exercise-1' | 'exercise-2'
+    q_order       INTEGER NOT NULL DEFAULT 0,
+    prompt        TEXT NOT NULL,
+    options       TEXT NOT NULL,      -- JSON array of option strings (canonical order)
+    correct_index INTEGER NOT NULL,   -- index into options; NEVER sent before submit
+    explanation   TEXT,               -- NEVER sent before submit or before class release
+    points        REAL NOT NULL DEFAULT 1,
+    active        INTEGER NOT NULL DEFAULT 1,
+    created_at    TEXT DEFAULT (datetime('now'))
+  );
+  CREATE INDEX IF NOT EXISTS idx_quiz_bank_activity
+    ON quiz_bank(course, unit, lesson, activity_type, q_order);
+
+  -- Teacher key release ledger. A row means the teacher has released the answer
+  -- key (correct answers + explanations) for one activity to one class. Absence
+  -- means "class mode, not released": the submit response returns correct/incorrect
+  -- booleans only. Public self-study (no class) always gets the key immediately and
+  -- never consults this table.
+  CREATE TABLE IF NOT EXISTS key_releases (
+    class_id      TEXT NOT NULL REFERENCES classes(id) ON DELETE CASCADE,
+    course        TEXT NOT NULL,
+    unit          TEXT NOT NULL,
+    lesson        TEXT NOT NULL,
+    activity_type TEXT NOT NULL,
+    released      INTEGER NOT NULL DEFAULT 1,
+    released_at   TEXT DEFAULT (datetime('now')),
+    PRIMARY KEY (class_id, course, unit, lesson, activity_type)
+  );
 `);
 
 // Migrations — safe to re-run on every boot, ignored if column already exists

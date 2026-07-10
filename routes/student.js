@@ -5,6 +5,7 @@ const router = express.Router();
 const db = require('../db');
 const { requireStudent } = require('../middleware');
 const { newId, signStudentToken, isValidPin, sanitize, COURSES, pageFromHandle } = require('../utils');
+const { rollupScore } = require('../scoring');
 
 // ── JOIN CLASS (first time) ───────────────────────────────────────────────────
 router.post('/join', async (req, res) => {
@@ -584,35 +585,9 @@ router.post('/track', requireStudent, (req, res) => {
     res.status(500).json({ error: 'Failed to track' });
   }
 });
-// ── ROLLUP HELPER (used by /score) ────────────────────────────────────────────
-// Best points per DISTINCT item, summed, expressed 0-100. Re-answering an item
-// keeps the best result (never averages a right answer back down); different
-// items in the same activity accumulate. Recomputed on every write, so
-// progress.score is always exactly consistent with the ledger and idempotent.
-function rollupScore(studentId, course, unit, lesson, activity_type) {
-  const agg = db.prepare(`
-    SELECT
-      COALESCE(SUM(best_points), 0) AS earned,
-      COALESCE(SUM(item_max),   0)  AS possible,
-      COUNT(*)                      AS items
-    FROM (
-      SELECT item, MAX(points) AS best_points, MAX(max_points) AS item_max
-      FROM score_events
-      WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
-      GROUP BY item
-    )
-  `).get(studentId, course, unit, lesson, activity_type);
-
-  const events = db.prepare(`
-    SELECT COUNT(*) n FROM score_events
-    WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
-  `).get(studentId, course, unit, lesson, activity_type).n;
-
-  const pct = agg.possible > 0 ? Math.round((agg.earned / agg.possible) * 100) : 0;
-  return { earned: agg.earned, possible: agg.possible, items: agg.items, events, pct };
-}
-
 // ── SCORE (record one graded interaction) ─────────────────────────────────────
+// rollupScore lives in ../scoring.js so this path and the Phase 2 server-side
+// quiz scorer (routes/quiz.js) roll up progress.score identically.
 // The course-agnostic keystone. Every CFU "check answer", exercise item, or any
 // scored response posts here, for CSA, CSP, and Cyber alike. It does two things:
 //   1. Appends the raw result to score_events (append-only; the full attempt
