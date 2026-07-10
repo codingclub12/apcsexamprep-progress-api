@@ -1,6 +1,11 @@
 /**
- * APCSExamPrep Attempt Reporter v1
- * Drop on ap-csa / ap-csp lesson pages AFTER the page's own widget scripts.
+ * APCSExamPrep Attempt Reporter v1  (ap-csa only)
+ * Drop on ap-csa lesson pages AFTER the page's own widget scripts. This reporter
+ * is bound to the CSA apcs-ex widget system (.apcs-ex / .apcsa-mastery) and the
+ * manifest-gated POST /api/progress/attempt path. CSP and Cyber report graded
+ * items through POST /api/student/score with their own reporters instead (see
+ * the "Graded reporting: which endpoint per course" table in README.md); do not
+ * drop this file on CSP pages.
  * Companion to apcs-tracker.js (which owns visits and the legacy quiz flow);
  * this file owns attempt-level grade reporting to POST /api/progress/attempt.
  *
