@@ -2,7 +2,18 @@
 const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-in-production';
+// Fail closed on a missing or default secret in production: without a real
+// secret every student (180-day) and teacher token is forgeable, which would
+// undercut the whole scoring/gradebook trust posture. Local dev keeps the
+// convenience default.
+const DEV_SECRET = 'dev-secret-change-in-production';
+const JWT_SECRET = process.env.JWT_SECRET || DEV_SECRET;
+if (process.env.NODE_ENV === 'production' && JWT_SECRET === DEV_SECRET) {
+  throw new Error('JWT_SECRET must be set to a strong random value in production. Refusing to start with the dev default.');
+}
+if (JWT_SECRET === DEV_SECRET) {
+  console.warn('[utils] JWT_SECRET is unset; using the insecure dev default. Set JWT_SECRET before deploying.');
+}
 const JWT_EXPIRES = '30d';
 
 // ── CLASS CODE ────────────────────────────────────────────────────────────────
