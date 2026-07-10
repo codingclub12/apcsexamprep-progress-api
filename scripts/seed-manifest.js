@@ -6,7 +6,9 @@
 //  (CSA: 53 lessons across Units 1-4, 2025-2026 CED; CSP: 35 lessons across
 //  Big Ideas 1-5), so the manifest can never drift from what /track records.
 //
-//  Graded (cfu/quiz) items are seeded for the CSA Unit 1 pilot only. The
+//  Graded (cfu/quiz) items are seeded for the CSA Unit 1 pilot. The CSP graded
+//  map is scaffolded below with every lesson but zero counts, pending the CSP
+//  pages export; fill the numbers and push with --update to light CSP up. The
 //  manifest grows as reporters go live on more units.
 //
 //  Runs automatically on server boot in insert-or-ignore mode, so a fresh
@@ -67,6 +69,68 @@ const CSA_UNIT1_CODE = {
   '1.9': 1, '1.10': 1, '1.11': 1, '1.12': 1, '1.13': 1, '1.14': 1, '1.15': 1,
 };
 
+// CSP graded items. Counts are from the 2026-07-10 Matrixify pages export.
+// Unlike CSA, CSP lessons have no inline apcs-ex CFU widgets: each lesson body
+// carries a single MCQ block that serves as the lesson quiz. So quiz = the
+// mcq-item question count of that block (item id {slug}-quiz, 1 point per
+// question) and cfus = 0 across the board. quiz: 0 means no MCQ block is
+// authored yet (all of Big Idea 4 and 5 at export time) and gets no row, so
+// denominators are never deflated by items nobody can earn. Keyed by CSP lesson
+// slug; the unit (bi-N) is resolved from the COURSES config so item ids can
+// never drift. Recount and push with --update when BI4/BI5 MCQs land or a
+// block's question count changes. Reveal-rubric FRQs, the binary/compression
+// demo widgets, and topic games are not auto-graded and are never manifest
+// items (games post to the separate leaderboard, not the gradebook).
+const CSP_GRADED = {
+  // Big Idea 1: Creative Development (4-question MCQ block each)
+  'collaboration':                 { cfus: 0, quiz: 4 },
+  'program-function-purpose':      { cfus: 0, quiz: 4 },
+  'program-design-development':    { cfus: 0, quiz: 4 },
+  'identifying-correcting-errors': { cfus: 0, quiz: 4 },
+  // Big Idea 2: Data (4-question MCQ block each)
+  'binary-numbers':                { cfus: 0, quiz: 4 },
+  'data-compression':              { cfus: 0, quiz: 4 },
+  'extracting-information':        { cfus: 0, quiz: 4 },
+  'using-programs-with-data':      { cfus: 0, quiz: 4 },
+  // Big Idea 3: Algorithms and Programming (6-question MCQ block each)
+  'variables':                     { cfus: 0, quiz: 6 },
+  'data-abstraction':              { cfus: 0, quiz: 6 },
+  'mathematical-expressions':      { cfus: 0, quiz: 6 },
+  'strings':                       { cfus: 0, quiz: 6 },
+  'boolean-expressions':           { cfus: 0, quiz: 6 },
+  'conditionals':                  { cfus: 0, quiz: 6 },
+  'nested-conditionals':           { cfus: 0, quiz: 6 },
+  'iteration':                     { cfus: 0, quiz: 6 },
+  'developing-algorithms':         { cfus: 0, quiz: 6 },
+  'lists':                         { cfus: 0, quiz: 6 },
+  'binary-search':                 { cfus: 0, quiz: 6 },
+  'calling-procedures':            { cfus: 0, quiz: 6 },
+  'developing-procedures':         { cfus: 0, quiz: 6 },
+  'libraries':                     { cfus: 0, quiz: 6 },
+  'random-values':                 { cfus: 0, quiz: 6 },
+  'simulations':                   { cfus: 0, quiz: 6 },
+  'algorithmic-efficiency':        { cfus: 0, quiz: 6 },
+  'undecidable-problems':          { cfus: 0, quiz: 6 },
+  // Big Idea 4: Computer Systems and Networks
+  'the-internet':                  { cfus: 0, quiz: 0 },
+  'fault-tolerance':               { cfus: 0, quiz: 0 },
+  'parallel-distributed-computing':{ cfus: 0, quiz: 0 },
+  // Big Idea 5: Impact of Computing
+  'beneficial-harmful-effects':    { cfus: 0, quiz: 0 },
+  'digital-divide':                { cfus: 0, quiz: 0 },
+  'computing-bias':                { cfus: 0, quiz: 0 },
+  'crowdsourcing':                 { cfus: 0, quiz: 0 },
+  'legal-ethical-concerns':        { cfus: 0, quiz: 0 },
+  'safe-computing':                { cfus: 0, quiz: 0 },
+};
+
+// Lesson slug -> unit (bi-N) for CSP, derived from the config so a typo'd slug
+// in CSP_GRADED is caught (skipped) rather than seeding an orphan item id.
+const CSP_UNIT_OF = {};
+for (const [unit, cfg] of Object.entries(COURSES['ap-csp'].units)) {
+  for (const lesson of cfg.lessons) CSP_UNIT_OF[lesson] = unit;
+}
+
 function buildRows() {
   const rows = [];
 
@@ -94,6 +158,19 @@ function buildRows() {
       for (let i = 1; i <= nEditors; i++) {
         rows.push({ course: 'ap-csa', unit: 'unit-1', lesson_id: lesson, item_id: `${lesson}-code-${i}`, item_type: 'cfu', points: 1 });
       }
+    }
+  }
+
+  // CSP cfu/quiz items. Emits nothing until CSP_GRADED counts are filled, so
+  // this is a safe no-op on production until the CSP pages export lands.
+  for (const [lesson, cfg] of Object.entries(CSP_GRADED)) {
+    const unit = CSP_UNIT_OF[lesson];
+    if (!unit) continue; // slug not in the CSP config; skip rather than orphan
+    for (let i = 1; i <= cfg.cfus; i++) {
+      rows.push({ course: 'ap-csp', unit, lesson_id: lesson, item_id: `${lesson}-cfu-${i}`, item_type: 'cfu', points: 1 });
+    }
+    if (cfg.quiz > 0) {
+      rows.push({ course: 'ap-csp', unit, lesson_id: lesson, item_id: `${lesson}-quiz`, item_type: 'quiz', points: cfg.quiz });
     }
   }
 
