@@ -127,10 +127,32 @@ POST /api/student/login             { class_code, display_name, pin }
 ### Student Progress (auth required)
 ```
 GET  /api/student/me                Student profile + class info
-GET  /api/student/progress          All progress records
+GET  /api/student/progress          All progress records + class mastery_threshold
+GET  /api/student/attempts          Per-item grade-of-record grid (manifest-scored)
 POST /api/student/progress          Save/update progress record
 POST /api/student/quiz              Submit quiz attempt with score
+POST /api/student/score             Record one graded interaction (rolls up to progress.score)
+POST /api/progress/attempt          Record one CFU/quiz attempt (manifest-gated)
 ```
+
+### Graded reporting: which endpoint per course
+
+There are two graded-reporting paths and each course uses exactly one. Pick by
+course; do not mix them for a single course, or the two rollups disagree.
+
+| Course | Endpoint | Denominator authority | Notes |
+|--------|----------|-----------------------|-------|
+| ap-csa | `POST /api/progress/attempt` | `course_manifest` | Unit 1 pilot. Rejects any `(course, item_id)` not in the manifest. |
+| ap-csp | `POST /api/student/score` | client-sent `max_points` | Course-agnostic. No manifest rows required; `(course, unit, lesson)` is validated against the `COURSES` config in `utils.js`. |
+| ap-cybersecurity | `POST /api/student/score` | client-sent `max_points` | Same path as CSP; existing grade-reporting flow. |
+
+`/api/student/score` appends to the append-only `score_events` ledger and
+recomputes `progress.score` (best points per distinct item, summed, 0-100).
+Reporter key strings for `/score` (unit, lesson, activity_type) must match
+across the reporter, the rollup, and both dashboards. For CSP: `unit` is
+`bi-N`, `lesson` is the lesson slug (e.g. `conditionals`), `activity_type` is
+`lesson` | `exercise-1` | `exercise-2` | `quiz`. Send `item` (a stable
+per-question id) plus either `correct` (boolean) or `points` + `max_points`.
 
 ## Local Development
 
