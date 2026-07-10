@@ -150,6 +150,26 @@ db.exec(`
     points REAL NOT NULL DEFAULT 1,
     PRIMARY KEY (course, item_id)
   );
+
+  -- Append-only leaderboard ledger for the AP CSP topic games. Never edited or
+  -- deleted. This is NOT a grade source: it is fully separate from progress /
+  -- attempts / score_events and must never touch a gradebook table. One row per
+  -- score submission; boards dedupe to a best-per-identity at read time. Auth is
+  -- optional: a signed-in student attributes by student_id, anonymous public
+  -- play attributes by a sanitized display name plus a daily-rotating ip_hash.
+  CREATE TABLE IF NOT EXISTS game_scores (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    game       TEXT NOT NULL,       -- registry key, namespaces the board
+    metric     TEXT NOT NULL,       -- server-owned metric label (spoof-proof)
+    value      REAL NOT NULL,
+    student_id TEXT,                -- set when a student JWT was present
+    name       TEXT,               -- display name (student's, or sanitized anon)
+    ip_hash    TEXT,               -- sha-256 of ip + daily salt; anti-spam only
+    ua         TEXT,               -- server-captured User-Agent, truncated
+    created_at TEXT DEFAULT (datetime('now'))
+  );
+  CREATE INDEX IF NOT EXISTS idx_game_scores_game_created ON game_scores(game, created_at);
+  CREATE INDEX IF NOT EXISTS idx_game_scores_game_value   ON game_scores(game, value);
 `);
 
 // Migrations — safe to re-run on every boot, ignored if column already exists

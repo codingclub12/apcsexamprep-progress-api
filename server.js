@@ -28,6 +28,7 @@ app.use(express.json({ limit: '1mb' }));
 app.use('/api/teacher', require('./routes/teacher'));
 app.use('/api/student', require('./routes/student'));
 app.use('/api/progress', require('./routes/progress'));
+app.use('/api/game', require('./routes/game'));
 app.use('/api/judge0', require('./routes/judge0'));
 app.use('/api/admin', require('./routes/admin'));
 
