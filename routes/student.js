@@ -94,7 +94,12 @@ router.get('/progress', requireStudent, (req, res) => {
     map[key] = r;
   }
 
-  res.json({ progress: records, map });
+  // Class mastery_threshold rides along so the student view can label the
+  // "Passing mark" line instead of defaulting to 80. Class-level, so top-level.
+  const cls = db.prepare('SELECT mastery_threshold FROM classes WHERE id = ?').get(req.student.class_id);
+  const mastery_threshold = (cls && cls.mastery_threshold != null) ? cls.mastery_threshold : 80;
+
+  res.json({ progress: records, map, mastery_threshold });
 });
 
 // ── STUDENT ATTEMPTS GRID (per-item grade-of-record, self) ────────────────────

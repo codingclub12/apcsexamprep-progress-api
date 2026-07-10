@@ -136,12 +136,37 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
     FROM progress WHERE class_id = ? AND course = ?
   `).all(cls.id, cls.course);
 
+  // Exact points per activity from the score_events ledger, in a single
+  // aggregate pass (no N+1). Best points per DISTINCT item, summed, exactly as
+  // rollupScore derives progress.score, so the raw points and the percent can
+  // never disagree. The gradebook shows real points instead of reconstructing
+  // them from the rounded percent.
+  const allPoints = db.prepare(`
+    SELECT student_id, unit, lesson, activity_type,
+           SUM(best_points) AS points_earned,
+           SUM(item_max)    AS points_possible
+    FROM (
+      SELECT student_id, unit, lesson, activity_type, item,
+             MAX(points)     AS best_points,
+             MAX(max_points) AS item_max
+      FROM score_events
+      WHERE class_id = ? AND course = ?
+      GROUP BY student_id, unit, lesson, activity_type, item
+    )
+    GROUP BY student_id, unit, lesson, activity_type
+  `).all(cls.id, cls.course);
+  const pointsMap = {};
+  for (const pt of allPoints) {
+    pointsMap[`${pt.student_id}|${pt.unit}|${pt.lesson}|${pt.activity_type}`] = pt;
+  }
+
   // Build progress map: student_id → { unit → { lesson → { activity → record } } }
   const progressMap = {};
   for (const p of allProgress) {
     if (!progressMap[p.student_id]) progressMap[p.student_id] = {};
     if (!progressMap[p.student_id][p.unit]) progressMap[p.student_id][p.unit] = {};
     if (!progressMap[p.student_id][p.unit][p.lesson]) progressMap[p.student_id][p.unit][p.lesson] = {};
+    const pt = pointsMap[`${p.student_id}|${p.unit}|${p.lesson}|${p.activity_type}`];
     progressMap[p.student_id][p.unit][p.lesson][p.activity_type] = {
       completed:    !!p.completed,
       score:        p.score,
@@ -150,6 +175,8 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
       completed_at: p.completed_at,
       locked:       !!p.locked,
       progress_id:  p.progress_id,
+      points_earned:   pt ? pt.points_earned : null,
+      points_possible: pt ? pt.points_possible : null,
     };
   }
 
