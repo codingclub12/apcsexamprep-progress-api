@@ -412,6 +412,47 @@ router.patch('/classes/:code/progress/:progressId/unlock', requireTeacher, (req,
   res.json({ ok: true, reset, score: reset ? null : record.score });
 });
 
+// ── RELEASE ANSWER KEY (Phase 2 server-side scoring) ──────────────────────────
+// Controls whether class-mode students see correct answers + explanations in the
+// POST /api/quiz/submit response for one activity. Until released, class mode
+// returns correct/incorrect booleans only. Public self-study is unaffected: it
+// never consults this table and always gets the key. Body:
+//   { course, unit, lesson, activity_type, released? }  (released defaults true)
+router.post('/classes/:code/release', requireTeacher, (req, res) => {
+  const cls = db.prepare('SELECT id, course FROM classes WHERE class_code = ? AND teacher_id = ?')
+    .get(req.params.code.toUpperCase(), req.teacher.id);
+  if (!cls) return res.status(404).json({ error: 'Class not found' });
+
+  const { course, unit, lesson, activity_type } = req.body || {};
+  if (!course || !unit || !lesson || !activity_type) {
+    return res.status(400).json({ error: 'course, unit, lesson, activity_type required' });
+  }
+  const released = req.body.released === undefined ? 1 : (req.body.released ? 1 : 0);
+
+  db.prepare(`
+    INSERT INTO key_releases (class_id, course, unit, lesson, activity_type, released, released_at)
+    VALUES (?, ?, ?, ?, ?, ?, datetime('now'))
+    ON CONFLICT(class_id, course, unit, lesson, activity_type)
+      DO UPDATE SET released = excluded.released, released_at = datetime('now')
+  `).run(cls.id, String(course), String(unit), String(lesson), String(activity_type), released);
+
+  res.json({ ok: true, released: !!released, course, unit, lesson, activity_type });
+});
+
+// ── LIST RELEASED KEYS ────────────────────────────────────────────────────────
+router.get('/classes/:code/releases', requireTeacher, (req, res) => {
+  const cls = db.prepare('SELECT id FROM classes WHERE class_code = ? AND teacher_id = ?')
+    .get(req.params.code.toUpperCase(), req.teacher.id);
+  if (!cls) return res.status(404).json({ error: 'Class not found' });
+
+  const releases = db.prepare(`
+    SELECT course, unit, lesson, activity_type, released, released_at
+    FROM key_releases WHERE class_id = ? AND released = 1
+    ORDER BY course, unit, lesson, activity_type
+  `).all(cls.id);
+  res.json({ releases });
+});
+
 // ── DELETE CLASS ──────────────────────────────────────────────────────────────
 // Permanently removes the class. ON DELETE CASCADE clears its students,
 // progress, and quiz_attempts automatically.
