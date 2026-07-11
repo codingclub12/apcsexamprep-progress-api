@@ -58,6 +58,15 @@ in the order given. The `chosen_index` you submit is the index into the
 it back unchanged; it encodes the shuffle so the server can map positions back to
 `qid`s. It expires in 2 hours; on 400 at submit, re-fetch.
 
+**N-of-M randomization.** An activity may be configured to serve only a random
+subset of its question pool (for example 3 of 5). When it is, `total` is the
+number of questions actually served and `pool` is the full pool size, so
+`total < pool`. The subset is chosen server-side and differs from fetch to fetch,
+so two loads can contain different questions, not just a different order. Submit
+answers only for the `qid`s you were served; the server scores out of the served
+set, and `score`/`total` in the response are relative to that subset. `pool` is
+informational (for a "3 of 5" label); never assume the full pool.
+
 404 means no server-scored quiz exists for that location. Fall back to the page's
 existing behavior.
 

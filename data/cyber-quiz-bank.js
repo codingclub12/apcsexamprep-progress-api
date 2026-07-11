@@ -86,6 +86,10 @@ const QUESTIONS = [
 ];
 
 module.exports = {
-  location: { course: COURSE, unit: UNIT, lesson: LESSON, activity_type: ACTIVITY },
+  // serve_count drives N-of-M: serve 3 random questions of the 5-question pool
+  // per attempt. Set to 0 (or omit) to serve the whole pool. Chosen server-side
+  // and carried in the order_token, so two loads draw different subsets and a
+  // student cannot ask for fewer.
+  location: { course: COURSE, unit: UNIT, lesson: LESSON, activity_type: ACTIVITY, serve_count: 3 },
   questions: QUESTIONS,
 };

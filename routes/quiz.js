@@ -29,7 +29,7 @@ const router = express.Router();
 const db = require('../db');
 const { verifyStudentToken, newId, COURSES } = require('../utils');
 const { rollupScore } = require('../scoring');
-const { buildOrder, readOrder } = require('../lib/quiz-order');
+const { buildOrder, readOrder, sample } = require('../lib/quiz-order');
 
 // ── PREPARED STATEMENTS (module scope, reused) ────────────────────────────────
 const bankByLocationStmt = db.prepare(`
@@ -38,6 +38,9 @@ const bankByLocationStmt = db.prepare(`
   WHERE course = ? AND unit = ? AND lesson = ? AND activity_type = ? AND active = 1
   ORDER BY q_order, qid
 `);
+const quizConfigStmt = db.prepare(
+  'SELECT serve_count FROM quiz_config WHERE course = ? AND unit = ? AND lesson = ? AND activity_type = ?'
+);
 const classByIdStmt = db.prepare('SELECT course, retry_allowed, mastery_threshold FROM classes WHERE id = ?');
 const retryOverrideStmt = db.prepare('SELECT retry_override FROM students WHERE id = ?');
 const releaseStmt = db.prepare(`
@@ -140,11 +143,17 @@ router.get('/:course/:unit/:lesson/:activity_type', optionalStudent, (req, res) 
     if (!rows.length) {
       return res.status(404).json({ error: 'No server-scored quiz for this location' });
     }
-    const { token, questions } = buildOrder({ course, unit, lesson, activity_type }, rows);
+    // N-of-M: serve a server-chosen random subset when configured. The token
+    // records exactly which questions were served, so the scorer grades only
+    // those, and a student cannot request a smaller set.
+    const cfg = quizConfigStmt.get(course, unit, lesson, activity_type);
+    const served = cfg ? sample(rows, cfg.serve_count) : rows;
+    const { token, questions } = buildOrder({ course, unit, lesson, activity_type }, served);
     res.json({
       course, unit, lesson, activity_type,
       order_token: token,
-      total: questions.length,
+      total: questions.length,       // number of questions actually served
+      pool: rows.length,             // size of the full pool this was drawn from
       questions, // prompt + options only; no correct_index, no explanation
     });
   } catch (e) {
@@ -165,9 +174,12 @@ router.post('/submit', optionalStudent, rateLimit, (req, res) => {
     }
     const { course, unit, lesson, activity_type } = order.location;
 
-    // 2) Load the authoritative key set for this location.
-    const rows = bankByLocationStmt.all(course, unit, lesson, activity_type);
-    if (!rows.length) return res.status(404).json({ error: 'No server-scored quiz for this location' });
+    // 2) Load the authoritative key set for this location, indexed by qid. Under
+    //    N-of-M the token holds only the served subset, so we score against the
+    //    token's questions and look each one up here for its key and points.
+    const bank = bankByLocationStmt.all(course, unit, lesson, activity_type);
+    if (!bank.length) return res.status(404).json({ error: 'No server-scored quiz for this location' });
+    const bankByQid = new Map(bank.map((r) => [r.qid, r]));
 
     // 3) Resolve mode from the authenticated identity, never from the client.
     let mode = 'self-study';   // anonymous public OR solo account
@@ -224,26 +236,29 @@ router.post('/submit', optionalStudent, rateLimit, (req, res) => {
     let score = 0, total = 0;
     const perQuestion = [];
     const graded = [];   // for persistence: { qid, correct, canonicalChosen, points, max }
-    for (const row of rows) {
-      const perm = order.map.get(row.qid);           // shown pos -> canonical index
-      const shownChosen = chosenByQid.has(row.qid) ? chosenByQid.get(row.qid) : null;
+    // Iterate the served set in the order the token recorded (the order the page
+    // rendered). A qid dropped from the bank since render is skipped.
+    for (const [qid, perm] of order.map) {
+      const row = bankByQid.get(qid);
+      if (!row) continue;
+      const shownChosen = chosenByQid.has(qid) ? chosenByQid.get(qid) : null;
       let canonicalChosen = null;
-      if (perm && shownChosen !== null && shownChosen >= 0 && shownChosen < perm.optPerm.length) {
+      if (shownChosen !== null && shownChosen >= 0 && shownChosen < perm.optPerm.length) {
         canonicalChosen = perm.optPerm[shownChosen];
       }
       const correct = canonicalChosen === row.correct_index;
       const pts = correct ? row.points : 0;
       score += pts; total += row.points;
 
-      const entry = { qid: row.qid, correct };
+      const entry = { qid, correct };
       if (released) {
         // Return the correct answer in the SHOWN order the client rendered, so it
         // can highlight without re-deriving the permutation.
-        entry.correct_index = perm ? perm.optPerm.indexOf(row.correct_index) : row.correct_index;
+        entry.correct_index = perm.optPerm.indexOf(row.correct_index);
         if (row.explanation) entry.explanation = row.explanation;
       }
       perQuestion.push(entry);
-      graded.push({ qid: row.qid, correct, canonicalChosen, points: pts, max: row.points });
+      graded.push({ qid, correct, canonicalChosen, points: pts, max: row.points });
     }
 
     // 7) Persist grades for authenticated students only (class and solo). Anonymous

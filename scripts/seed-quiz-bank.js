@@ -32,12 +32,21 @@ const update = db.prepare(`
     prompt = ?, options = ?, correct_index = ?, explanation = ?, points = ?, active = 1
   WHERE qid = ?
 `);
+const upsertConfig = db.prepare(`
+  INSERT INTO quiz_config (course, unit, lesson, activity_type, serve_count)
+  VALUES (?, ?, ?, ?, ?)
+  ON CONFLICT(course, unit, lesson, activity_type)
+    DO UPDATE SET serve_count = excluded.serve_count
+`);
 
 function seedQuizBank({ update: doUpdate = false } = {}) {
   let inserted = 0, updated = 0, total = 0;
   const run = db.transaction(() => {
     for (const src of SOURCES) {
       const { course, unit, lesson, activity_type } = src.location;
+      // N-of-M config always reflects the source (safe to overwrite: it is
+      // config, not per-student data, and holds no attempt history).
+      upsertConfig.run(course, unit, lesson, activity_type, Number(src.location.serve_count) || 0);
       src.questions.forEach((q, i) => {
         total++;
         if (typeof q.correct_index !== 'number' || !Array.isArray(q.options) || q.correct_index < 0 || q.correct_index >= q.options.length) {
