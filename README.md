@@ -169,6 +169,18 @@ across the reporter, the rollup, and both dashboards. For CSP: `unit` is
 `lesson` | `exercise-1` | `exercise-2` | `quiz`. Send `item` (a stable
 per-question id) plus either `correct` (boolean) or `points` + `max_points`.
 
+### Denominators: course_manifest is the authority
+
+The teacher dashboard (`/classes/:code/progress`) and CSV export
+(`/classes/:code/export`) size their columns and completion denominators from
+`course_manifest`, not the static `COURSES` config. Cyber is seeded at activity
+granularity (one row per lesson-activity plus each unit's Case File and Exam,
+each carrying its `activity_type`), so adding a cyber lesson or activity is a
+manifest row, not a code change. ap-csa / ap-csp keep the lesson-visit + graded
+model the attempts path uses (their manifest rows have a null `activity_type`),
+so `courseStructure()` in `lib/course-structure.js` falls back to the `COURSES`
+config for them. Reseed after edits with `node scripts/seed-manifest.js --update`.
+
 ## Local Development
 
 ```bash

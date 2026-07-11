@@ -67,6 +67,16 @@ const CSA_UNIT1_CODE = {
   '1.9': 1, '1.10': 1, '1.11': 1, '1.12': 1, '1.13': 1, '1.14': 1, '1.15': 1,
 };
 
+// Cyber is seeded at ACTIVITY granularity so the teacher dashboard and CSV export
+// can size their percentages off the manifest without losing the per-activity
+// (L / E1 / E2 / Quiz) columns those views show today. Each (lesson, activity)
+// plus each unit's Case File and Exam is one manifest row carrying its
+// activity_type, so a row maps directly to a progress activity. This mirrors the
+// COURSES config exactly, so denominators are unchanged the day it lands; the
+// point is that the manifest, not the code, is now the authority. Graded set
+// (quiz / exam / case-file) matches the export's GRADED set.
+const CYBER_GRADED = new Set(['quiz', 'exam', 'case-file']);
+
 function buildRows() {
   const rows = [];
 
@@ -74,25 +84,46 @@ function buildRows() {
   for (const course of VISIT_COURSES) {
     for (const [unit, cfg] of Object.entries(COURSES[course].units)) {
       for (const lesson of cfg.lessons) {
-        rows.push({ course, unit, lesson_id: lesson, item_id: `${lesson}-visit`, item_type: 'visit', points: 1 });
+        rows.push({ course, unit, lesson_id: lesson, item_id: `${lesson}-visit`, item_type: 'visit', points: 1, activity_type: null });
       }
     }
   }
 
-  // CSA Unit 1 cfu/quiz items (the pilot).
+  // Cyber: one row per (lesson, activity), plus per-unit Case File and Exam.
+  for (const [unit, cfg] of Object.entries(COURSES['ap-cybersecurity'].units)) {
+    for (const lesson of cfg.lessons) {
+      for (const act of cfg.activities) {
+        rows.push({
+          course: 'ap-cybersecurity', unit, lesson_id: lesson,
+          item_id: `${lesson}-${act}`,
+          item_type: CYBER_GRADED.has(act) ? 'quiz' : 'visit',
+          points: 1, activity_type: act,
+        });
+      }
+    }
+    if (cfg.case_file) {
+      rows.push({ course: 'ap-cybersecurity', unit, lesson_id: cfg.case_file.lesson, item_id: `${unit}-case-file`, item_type: 'quiz', points: 1, activity_type: 'case-file' });
+    }
+    if (cfg.exam) {
+      rows.push({ course: 'ap-cybersecurity', unit, lesson_id: cfg.exam.lesson, item_id: `${unit}-exam`, item_type: 'quiz', points: 1, activity_type: 'exam' });
+    }
+  }
+
+  // CSA Unit 1 cfu/quiz items (the pilot). These keep the lesson-visit + graded
+  // model the attempts path uses, so activity_type stays null.
   for (const [lesson, cfg] of Object.entries(CSA_UNIT1_GRADED)) {
     for (let i = 1; i <= cfg.cfus; i++) {
-      rows.push({ course: 'ap-csa', unit: 'unit-1', lesson_id: lesson, item_id: `${lesson}-cfu-${i}`, item_type: 'cfu', points: 1 });
+      rows.push({ course: 'ap-csa', unit: 'unit-1', lesson_id: lesson, item_id: `${lesson}-cfu-${i}`, item_type: 'cfu', points: 1, activity_type: null });
     }
     if (cfg.quiz > 0) {
-      rows.push({ course: 'ap-csa', unit: 'unit-1', lesson_id: lesson, item_id: `${lesson}-quiz`, item_type: 'quiz', points: cfg.quiz });
+      rows.push({ course: 'ap-csa', unit: 'unit-1', lesson_id: lesson, item_id: `${lesson}-quiz`, item_type: 'quiz', points: cfg.quiz, activity_type: null });
     }
   }
 
   if (CODE_ITEMS_ENABLED) {
     for (const [lesson, nEditors] of Object.entries(CSA_UNIT1_CODE)) {
       for (let i = 1; i <= nEditors; i++) {
-        rows.push({ course: 'ap-csa', unit: 'unit-1', lesson_id: lesson, item_id: `${lesson}-code-${i}`, item_type: 'cfu', points: 1 });
+        rows.push({ course: 'ap-csa', unit: 'unit-1', lesson_id: lesson, item_id: `${lesson}-code-${i}`, item_type: 'cfu', points: 1, activity_type: null });
       }
     }
   }
@@ -104,15 +135,16 @@ function seedManifest({ update = false } = {}) {
   const rows = buildRows();
   const insert = update
     ? db.prepare(`
-        INSERT INTO course_manifest (course, unit, lesson_id, item_id, item_type, points)
-        VALUES (@course, @unit, @lesson_id, @item_id, @item_type, @points)
+        INSERT INTO course_manifest (course, unit, lesson_id, item_id, item_type, points, activity_type)
+        VALUES (@course, @unit, @lesson_id, @item_id, @item_type, @points, @activity_type)
         ON CONFLICT(course, item_id) DO UPDATE SET
           unit = excluded.unit, lesson_id = excluded.lesson_id,
-          item_type = excluded.item_type, points = excluded.points
+          item_type = excluded.item_type, points = excluded.points,
+          activity_type = excluded.activity_type
       `)
     : db.prepare(`
-        INSERT OR IGNORE INTO course_manifest (course, unit, lesson_id, item_id, item_type, points)
-        VALUES (@course, @unit, @lesson_id, @item_id, @item_type, @points)
+        INSERT OR IGNORE INTO course_manifest (course, unit, lesson_id, item_id, item_type, points, activity_type)
+        VALUES (@course, @unit, @lesson_id, @item_id, @item_type, @points, @activity_type)
       `);
 
   const changed = db.transaction((rs) => {

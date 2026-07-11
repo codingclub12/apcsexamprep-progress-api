@@ -149,6 +149,9 @@ db.exec(`
     item_id TEXT NOT NULL,
     item_type TEXT NOT NULL,        -- 'visit' | 'cfu' | 'quiz'
     points REAL NOT NULL DEFAULT 1,
+    activity_type TEXT,             -- set on activity-granularity rows (cyber): the
+                                    -- progress activity_type this item maps to; NULL
+                                    -- on the CSA/CSP visit/cfu/quiz rows
     PRIMARY KEY (course, item_id)
   );
 
@@ -238,6 +241,7 @@ const migrations = [
   `ALTER TABLE progress  ADD COLUMN locked            INTEGER DEFAULT 0`,
   `ALTER TABLE attempts  ADD COLUMN duration_seconds  INTEGER`,
   `ALTER TABLE attempts  ADD COLUMN ua                TEXT`,
+  `ALTER TABLE course_manifest ADD COLUMN activity_type TEXT`,
 ];
 for (const sql of migrations) {
   try { db.exec(sql); } catch(e) { /* column already exists */ }

@@ -8,6 +8,7 @@ const {
   newId, generateClassCode, signTeacherToken,
   isValidEmail, isValidPin, sanitize, COURSES, COURSE_PREFIXES,
 } = require('../utils');
+const { courseStructure } = require('../lib/course-structure');
 
 // Mastery threshold is clamped to 50-100 per the class settings spec: a bar
 // below 50 is not a meaningful mastery line. Reads elsewhere default to 80 when
@@ -190,7 +191,10 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
     };
   }
 
-  const courseConfig = COURSES[cls.course] || {};
+  // course_manifest is the denominator authority: for cyber this structure is
+  // built from the manifest, for ap-csa / ap-csp it falls back to the COURSES
+  // config. Same shape either way, so the summary math below is unchanged.
+  const courseConfig = courseStructure(cls.course) || { label: cls.course, units: {} };
 
   // Compute per-student summary
   const summary = students.map(s => {
@@ -234,7 +238,9 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
       .get(req.params.code.toUpperCase(), req.teacher.id);
     if (!cls) return res.status(404).json({ error: 'Class not found' });
 
-    const courseConfig = COURSES[cls.course];
+    // Columns and per-unit denominators come from course_manifest (the authority)
+    // for cyber, and fall back to the COURSES config for ap-csa / ap-csp.
+    const courseConfig = courseStructure(cls.course);
     if (!courseConfig) return res.status(400).json({ error: `Course ${cls.course} not in manifest` });
 
     const students = db.prepare(
