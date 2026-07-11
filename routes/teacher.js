@@ -9,6 +9,16 @@ const {
   isValidEmail, isValidPin, sanitize, COURSES, COURSE_PREFIXES,
 } = require('../utils');
 
+// Mastery threshold is clamped to 50-100 per the class settings spec: a bar
+// below 50 is not a meaningful mastery line. Reads elsewhere default to 80 when
+// a class has no threshold set. Returns fallback when the value is not a number.
+const THRESHOLD_MIN = 50, THRESHOLD_MAX = 100;
+function clampThreshold(v, fallback = 80) {
+  const n = parseInt(v, 10);
+  if (Number.isNaN(n)) return fallback;
+  return Math.min(THRESHOLD_MAX, Math.max(THRESHOLD_MIN, n));
+}
+
 // ── REGISTER ──────────────────────────────────────────────────────────────────
 router.post('/register', async (req, res) => {
   try {
@@ -80,7 +90,7 @@ router.post('/classes', requireTeacher, (req, res) => {
     if (!class_name || class_name.trim().length < 2) return res.status(400).json({ error: 'Class name required' });
     if (!COURSES[course]) return res.status(400).json({ error: 'Invalid course' });
 
-    const threshold   = Math.min(100, Math.max(0, parseInt(mastery_threshold, 10) || 80));
+    const threshold   = clampThreshold(mastery_threshold, 80);
     const retryFlag   = retry_allowed ? 1 : 0;
 
     const prefix = COURSE_PREFIXES[course] || 'CLASS';
@@ -312,7 +322,7 @@ router.put('/classes/:code', requireTeacher, (req, res) => {
 
   const { class_name, active, mastery_threshold } = req.body;
   const threshold = mastery_threshold !== undefined
-    ? Math.min(100, Math.max(0, parseInt(mastery_threshold, 10) || cls.mastery_threshold))
+    ? clampThreshold(mastery_threshold, cls.mastery_threshold)
     : cls.mastery_threshold;
 
   db.prepare('UPDATE classes SET class_name = ?, active = ?, mastery_threshold = ? WHERE id = ?')
@@ -336,8 +346,10 @@ router.patch('/classes/:code/threshold', requireTeacher, (req, res) => {
   if (mastery_threshold === undefined || mastery_threshold === null) {
     return res.status(400).json({ error: 'mastery_threshold required' });
   }
-  const threshold = Math.min(100, Math.max(0, parseInt(mastery_threshold, 10)));
-  if (isNaN(threshold)) return res.status(400).json({ error: 'mastery_threshold must be a number 0-100' });
+  if (Number.isNaN(parseInt(mastery_threshold, 10))) {
+    return res.status(400).json({ error: 'mastery_threshold must be a number 50-100' });
+  }
+  const threshold = clampThreshold(mastery_threshold);
 
   db.prepare('UPDATE classes SET mastery_threshold = ? WHERE id = ?').run(threshold, cls.id);
   res.json({ ok: true, mastery_threshold: threshold });
