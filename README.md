@@ -112,7 +112,8 @@ GET  /api/teacher/me                Get teacher profile (auth required)
 GET  /api/teacher/classes           List all classes
 POST /api/teacher/classes           Create class { class_name, course }
 GET  /api/teacher/classes/:code     Class details + student list
-GET  /api/teacher/classes/:code/progress   Full dashboard data
+GET  /api/teacher/classes/:code/progress   Full dashboard data (visits + progress.score)
+GET  /api/teacher/classes/:code/gradebook  Per-lesson attempts grades vs manifest (CSA)
 GET  /api/teacher/classes/:code/export     CSV download
 PUT  /api/teacher/classes/:code     Update class { class_name, active }
 DELETE /api/teacher/classes/:code/students/:id  Remove student

@@ -13,6 +13,7 @@
 const express = require('express');
 const crypto = require('crypto');
 const db = require('../db');
+const { classGradebook } = require('../gradebook');
 
 const router = express.Router();
 
@@ -480,86 +481,9 @@ router.get('/class/:id/gradebook', (req, res) => {
 
     const course = cls.course === 'solo' ? String(req.query.course || 'ap-csa') : cls.course;
 
-    const gradedItems = db.prepare(`
-      SELECT unit, lesson_id, item_id, points FROM course_manifest
-      WHERE course = ? AND item_type != 'visit'
-      ORDER BY unit, lesson_id, item_id
-    `).all(course);
-    const visitTotal = db.prepare(
-      `SELECT COUNT(*) n FROM course_manifest WHERE course = ? AND item_type = 'visit'`
-    ).get(course).n;
-
-    // Lesson columns from the manifest (denominator authority).
-    const lessonCols = new Map();
-    let coursePossible = 0;
-    for (const item of gradedItems) {
-      if (!lessonCols.has(item.lesson_id)) {
-        lessonCols.set(item.lesson_id, { lesson_id: item.lesson_id, unit: item.unit, possible: 0, items: 0 });
-      }
-      const col = lessonCols.get(item.lesson_id);
-      col.possible += item.points;
-      col.items++;
-      coursePossible += item.points;
-    }
-
-    const roster = db.prepare(`
-      SELECT id, display_name, student_ref, active, last_active
-      FROM students WHERE class_id = ? ORDER BY display_name
-    `).all(cls.id);
-
-    // Single aggregate pass: grade of record for every (student, item).
-    const gorRows = db.prepare(
-      GOR_SELECT.replace('%WHERE%', 'WHERE a.class_id = ? AND a.course = ?')
-    ).all(cls.id, course);
-
-    // Visit completion per student in one aggregate.
-    const visitRows = db.prepare(`
-      SELECT student_id, COUNT(DISTINCT lesson) n FROM progress
-      WHERE class_id = ? AND course = ? AND completed = 1 AND activity_type NOT IN ('quiz', 'exam')
-      GROUP BY student_id
-    `).all(cls.id, course);
-    const visitsByStudent = new Map(visitRows.map(v => [v.student_id, v.n]));
-
-    const students = new Map(roster.map(s => [s.id, {
-      id: s.id,
-      name: s.display_name,
-      ref: s.student_ref,
-      active: s.active,
-      last_active: s.last_active,
-      visits: { visited: visitsByStudent.get(s.id) || 0, total: visitTotal },
-      lessons: {},
-      overall: { earned: 0, possible: coursePossible, pct: 0, items_attempted: 0, items_passed: 0 },
-    }]));
-
-    for (const g of gorRows) {
-      const row = students.get(g.student_id);
-      if (!row) continue; // attempt from a since-removed student
-      const col = lessonCols.get(g.lesson_id);
-      if (!row.lessons[g.lesson_id]) {
-        row.lessons[g.lesson_id] = {
-          earned: 0, possible: col ? col.possible : 0, pct: 0, items_attempted: 0, items_passed: 0,
-        };
-      }
-      const cell = row.lessons[g.lesson_id];
-      cell.earned += g.score;
-      cell.items_attempted++;
-      if (g.passed) cell.items_passed++;
-      cell.pct = pctOf(cell.earned, cell.possible);
-      row.overall.earned += g.score;
-      row.overall.items_attempted++;
-      if (g.passed) row.overall.items_passed++;
-    }
-    for (const row of students.values()) {
-      row.overall.pct = pctOf(row.overall.earned, row.overall.possible);
-    }
-
-    res.json({
-      class: cls,
-      course,
-      lessons: [...lessonCols.values()],
-      students: [...students.values()],
-      generated_at: new Date().toISOString(),
-    });
+    // Shared with the teacher gradebook so the two views can never disagree.
+    const gb = classGradebook(cls.id, course);
+    res.json({ class: cls, ...gb, generated_at: new Date().toISOString() });
   } catch (e) {
     console.error('admin/class/:id/gradebook:', e);
     res.status(500).json({ error: 'gradebook failed', detail: e.message });
