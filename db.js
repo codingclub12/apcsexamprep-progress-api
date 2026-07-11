@@ -211,6 +211,21 @@ db.exec(`
     released_at   TEXT DEFAULT (datetime('now')),
     PRIMARY KEY (class_id, course, unit, lesson, activity_type)
   );
+
+  -- N-of-M randomization config. A row says "serve serve_count random questions
+  -- out of the pool of M in quiz_bank for this activity." serve_count is chosen
+  -- server-side and carried in the signed order_token, so a student can never ask
+  -- for a smaller or easier subset. No row, or serve_count <= 0, or serve_count
+  -- >= the pool size, means serve the whole pool (the Phase 2 default). Seeded by
+  -- scripts/seed-quiz-bank.js alongside the bank.
+  CREATE TABLE IF NOT EXISTS quiz_config (
+    course        TEXT NOT NULL,
+    unit          TEXT NOT NULL,
+    lesson        TEXT NOT NULL,
+    activity_type TEXT NOT NULL,
+    serve_count   INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (course, unit, lesson, activity_type)
+  );
 `);
 
 // Migrations — safe to re-run on every boot, ignored if column already exists
