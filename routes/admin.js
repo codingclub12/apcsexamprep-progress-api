@@ -299,7 +299,7 @@ router.get('/class/:code', (req, res) => {
 
     const roster = db.prepare(`
       SELECT
-        s.id, s.display_name, s.student_ref, s.created_at, s.last_active,
+        s.id, s.display_name, s.student_ref, s.active, s.created_at, s.last_active,
         (SELECT COUNT(*) FROM progress p WHERE p.student_id = s.id AND p.completed = 1) AS completions
       FROM students s
       WHERE s.class_id = ?
@@ -503,7 +503,7 @@ router.get('/class/:id/gradebook', (req, res) => {
     }
 
     const roster = db.prepare(`
-      SELECT id, display_name, student_ref, last_active
+      SELECT id, display_name, student_ref, active, last_active
       FROM students WHERE class_id = ? ORDER BY display_name
     `).all(cls.id);
 
@@ -524,6 +524,7 @@ router.get('/class/:id/gradebook', (req, res) => {
       id: s.id,
       name: s.display_name,
       ref: s.student_ref,
+      active: s.active,
       last_active: s.last_active,
       visits: { visited: visitsByStudent.get(s.id) || 0, total: visitTotal },
       lessons: {},

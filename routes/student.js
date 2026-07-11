@@ -58,6 +58,7 @@ router.post('/login', async (req, res) => {
     const student = db.prepare('SELECT * FROM students WHERE class_id = ? AND lower(display_name) = lower(?)')
       .get(cls.id, display_name.trim());
     if (!student) return res.status(401).json({ error: 'Name not found in this class' });
+    if (student.active === 0) return res.status(403).json({ error: 'This account has been deactivated by your teacher.' });
 
     const valid = await bcrypt.compare(String(pin), student.pin_hash);
     if (!valid) return res.status(401).json({ error: 'Incorrect PIN' });

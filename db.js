@@ -46,6 +46,7 @@ db.exec(`
     pin_hash       TEXT NOT NULL,
     student_ref    TEXT,
     retry_override INTEGER DEFAULT NULL,
+    active         INTEGER DEFAULT 1,
     created_at     TEXT DEFAULT (datetime('now')),
     last_active    TEXT
   );
@@ -233,6 +234,7 @@ const migrations = [
   `ALTER TABLE classes   ADD COLUMN mastery_threshold INTEGER DEFAULT 80`,
   `ALTER TABLE classes   ADD COLUMN retry_allowed     INTEGER DEFAULT 0`,
   `ALTER TABLE students  ADD COLUMN retry_override    INTEGER DEFAULT NULL`,
+  `ALTER TABLE students  ADD COLUMN active            INTEGER DEFAULT 1`,
   `ALTER TABLE progress  ADD COLUMN locked            INTEGER DEFAULT 0`,
   `ALTER TABLE attempts  ADD COLUMN duration_seconds  INTEGER`,
   `ALTER TABLE attempts  ADD COLUMN ua                TEXT`,

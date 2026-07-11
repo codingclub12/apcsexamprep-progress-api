@@ -123,7 +123,7 @@ router.get('/classes/:code', requireTeacher, (req, res) => {
   if (!cls) return res.status(404).json({ error: 'Class not found' });
 
   const students = db.prepare(`
-    SELECT id, display_name, student_ref, created_at, last_active
+    SELECT id, display_name, student_ref, active, created_at, last_active
     FROM students WHERE class_id = ? ORDER BY display_name
   `).all(cls.id);
 
@@ -137,7 +137,7 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
   if (!cls) return res.status(404).json({ error: 'Class not found' });
 
   const students = db.prepare(`
-    SELECT id, display_name, student_ref, last_active
+    SELECT id, display_name, student_ref, active, last_active
     FROM students WHERE class_id = ? ORDER BY display_name
   `).all(cls.id);
 
@@ -214,7 +214,7 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
       };
     }
     return {
-      student: { id: s.id, name: s.display_name, ref: s.student_ref, last_active: s.last_active },
+      student: { id: s.id, name: s.display_name, ref: s.student_ref, active: s.active, last_active: s.last_active },
       units: unitSummaries,
       detail: sp,
     };
@@ -355,14 +355,20 @@ router.patch('/classes/:code/threshold', requireTeacher, (req, res) => {
   res.json({ ok: true, mastery_threshold: threshold });
 });
 
-// ── REMOVE STUDENT ─────────────────────────────────────────────────────────────
+// ── DEACTIVATE STUDENT (never hard-delete) ─────────────────────────────────────
+// Attempt history is gradebook data and always survives. This route deactivates
+// the student (active = 0): they can no longer log in, but every progress,
+// attempt, and score_event row is preserved for the gradebook. Reactivate via
+// PATCH .../students/:studentId with { active: true }.
 router.delete('/classes/:code/students/:studentId', requireTeacher, (req, res) => {
   const cls = db.prepare('SELECT id FROM classes WHERE class_code = ? AND teacher_id = ?')
     .get(req.params.code.toUpperCase(), req.teacher.id);
   if (!cls) return res.status(404).json({ error: 'Class not found' });
 
-  db.prepare('DELETE FROM students WHERE id = ? AND class_id = ?').run(req.params.studentId, cls.id);
-  res.json({ ok: true });
+  const info = db.prepare('UPDATE students SET active = 0 WHERE id = ? AND class_id = ?')
+    .run(req.params.studentId, cls.id);
+  if (!info.changes) return res.status(404).json({ error: 'Student not found' });
+  res.json({ ok: true, active: 0 });
 });
 
 // ── SET CLASS RETRY DEFAULT ───────────────────────────────────────────────────
@@ -489,9 +495,9 @@ router.patch('/classes/:code/students/:studentId', requireTeacher, async (req, r
     .get(req.params.studentId, cls.id);
   if (!student) return res.status(404).json({ error: 'Student not found' });
 
-  const { display_name, pin } = req.body;
-  if (display_name === undefined && pin === undefined) {
-    return res.status(400).json({ error: 'Provide display_name and/or pin to update' });
+  const { display_name, pin, active } = req.body;
+  if (display_name === undefined && pin === undefined && active === undefined) {
+    return res.status(400).json({ error: 'Provide display_name, pin, and/or active to update' });
   }
 
   // Rename
@@ -514,12 +520,17 @@ router.patch('/classes/:code/students/:studentId', requireTeacher, async (req, r
     db.prepare('UPDATE students SET pin_hash = ? WHERE id = ?').run(pinHash, student.id);
   }
 
+  // Deactivate / reactivate. Never deletes: history always survives.
+  if (active !== undefined) {
+    db.prepare('UPDATE students SET active = ? WHERE id = ?').run(active ? 1 : 0, student.id);
+  }
+
   const updated = db.prepare(
-    'SELECT id, display_name, student_ref, last_active FROM students WHERE id = ?'
+    'SELECT id, display_name, student_ref, active, last_active FROM students WHERE id = ?'
   ).get(student.id);
   res.json({
     ok: true,
-    student: { id: updated.id, name: updated.display_name, ref: updated.student_ref, last_active: updated.last_active },
+    student: { id: updated.id, name: updated.display_name, ref: updated.student_ref, active: updated.active, last_active: updated.last_active },
   });
 });
 
