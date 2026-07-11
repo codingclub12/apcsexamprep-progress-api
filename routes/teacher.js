@@ -73,8 +73,11 @@ router.get('/me', requireTeacher, (req, res) => {
 // ── LIST CLASSES ──────────────────────────────────────────────────────────────
 router.get('/classes', requireTeacher, (req, res) => {
   const classes = db.prepare(`
-    SELECT c.*, 
-      (SELECT COUNT(*) FROM students WHERE class_id = c.id) as student_count,
+    SELECT c.*,
+      (SELECT COUNT(*) FROM students s
+         WHERE s.class_id = c.id
+            OR EXISTS (SELECT 1 FROM enrollments e WHERE e.student_id = s.id AND e.class_id = c.id AND e.active = 1)
+      ) as student_count,
       (SELECT COUNT(*) FROM progress WHERE class_id = c.id AND completed = 1) as completions
     FROM classes c
     WHERE c.teacher_id = ?
@@ -123,9 +126,12 @@ router.get('/classes/:code', requireTeacher, (req, res) => {
   if (!cls) return res.status(404).json({ error: 'Class not found' });
 
   const students = db.prepare(`
-    SELECT id, display_name, student_ref, active, created_at, last_active
-    FROM students WHERE class_id = ? ORDER BY display_name
-  `).all(cls.id);
+    SELECT id, display_name, student_code, student_ref, active, created_at, last_active
+    FROM students s
+    WHERE s.class_id = ?
+       OR EXISTS (SELECT 1 FROM enrollments e WHERE e.student_id = s.id AND e.class_id = ? AND e.active = 1)
+    ORDER BY display_name
+  `).all(cls.id, cls.id);
 
   res.json({ class: cls, students });
 });
@@ -137,21 +143,29 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
   if (!cls) return res.status(404).json({ error: 'Class not found' });
 
   const students = db.prepare(`
-    SELECT id, display_name, student_ref, active, last_active
-    FROM students WHERE class_id = ? ORDER BY display_name
-  `).all(cls.id);
+    SELECT id, display_name, student_code, student_ref, active, last_active
+    FROM students s
+    WHERE s.class_id = ?
+       OR EXISTS (SELECT 1 FROM enrollments e WHERE e.student_id = s.id AND e.class_id = ? AND e.active = 1)
+    ORDER BY display_name
+  `).all(cls.id, cls.id);
 
-  const allProgress = db.prepare(`
+  // Progress and points are keyed to the roster's student_ids for this course,
+  // not to progress.class_id, so a cross-enrolled student's work shows in this
+  // class too. Identical to the old class_id filter for a single-class student.
+  const rosterIds = students.map((s) => s.id);
+  const rosterPh = rosterIds.map(() => '?').join(',');
+  const allProgress = rosterIds.length ? db.prepare(`
     SELECT student_id, unit, lesson, activity_type, completed, score, attempts, confidence, completed_at, locked, id as progress_id
-    FROM progress WHERE class_id = ? AND course = ?
-  `).all(cls.id, cls.course);
+    FROM progress WHERE student_id IN (${rosterPh}) AND course = ?
+  `).all(...rosterIds, cls.course) : [];
 
   // Exact points per activity from the score_events ledger, in a single
   // aggregate pass (no N+1). Best points per DISTINCT item, summed, exactly as
   // rollupScore derives progress.score, so the raw points and the percent can
   // never disagree. The gradebook shows real points instead of reconstructing
   // them from the rounded percent.
-  const allPoints = db.prepare(`
+  const allPoints = rosterIds.length ? db.prepare(`
     SELECT student_id, unit, lesson, activity_type,
            SUM(best_points) AS points_earned,
            SUM(item_max)    AS points_possible
@@ -160,11 +174,11 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
              MAX(points)     AS best_points,
              MAX(max_points) AS item_max
       FROM score_events
-      WHERE class_id = ? AND course = ?
+      WHERE student_id IN (${rosterPh}) AND course = ?
       GROUP BY student_id, unit, lesson, activity_type, item
     )
     GROUP BY student_id, unit, lesson, activity_type
-  `).all(cls.id, cls.course);
+  `).all(...rosterIds, cls.course) : [];
   const pointsMap = {};
   for (const pt of allPoints) {
     pointsMap[`${pt.student_id}|${pt.unit}|${pt.lesson}|${pt.activity_type}`] = pt;
@@ -237,13 +251,18 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
     const courseConfig = COURSES[cls.course];
     if (!courseConfig) return res.status(400).json({ error: `Course ${cls.course} not in manifest` });
 
-    const students = db.prepare(
-      'SELECT id, display_name, student_ref, last_active FROM students WHERE class_id = ? ORDER BY display_name'
-    ).all(cls.id);
+    const students = db.prepare(`
+      SELECT id, display_name, student_ref, last_active FROM students s
+      WHERE s.class_id = ?
+         OR EXISTS (SELECT 1 FROM enrollments e WHERE e.student_id = s.id AND e.class_id = ? AND e.active = 1)
+      ORDER BY display_name
+    `).all(cls.id, cls.id);
 
-    const allProgress = db.prepare(
-      'SELECT student_id, unit, lesson, activity_type, completed, score FROM progress WHERE class_id = ? AND course = ?'
-    ).all(cls.id, cls.course);
+    const exportIds = students.map((s) => s.id);
+    const exportPh = exportIds.map(() => '?').join(',');
+    const allProgress = exportIds.length ? db.prepare(
+      `SELECT student_id, unit, lesson, activity_type, completed, score FROM progress WHERE student_id IN (${exportPh}) AND course = ?`
+    ).all(...exportIds, cls.course) : [];
     const map = {};
     for (const p of allProgress) {
       (map[p.student_id] = map[p.student_id] || {})[`${p.unit}|${p.lesson}|${p.activity_type}`] = p;

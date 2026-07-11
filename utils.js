@@ -27,6 +27,20 @@ function generateClassCode(prefix = 'CYBER') {
   return `${prefix}-${code}`;
 }
 
+// ── STUDENT CODE ──────────────────────────────────────────────────────────────
+// Identity-scoped login code, issued once at registration: ST-XXXX (4
+// unambiguous chars). This is what solves the login-collision problem: two
+// students named "Jake M." with PIN 1234 in different schools never collide,
+// because login is student_code + PIN, never name + PIN. Uniqueness is enforced
+// by the caller against the students table (retry on the rare clash).
+function generateStudentCode() {
+  let code = '';
+  for (let i = 0; i < 4; i++) {
+    code += CHARS[Math.floor(Math.random() * CHARS.length)];
+  }
+  return `ST-${code}`;
+}
+
 // ── UUID ──────────────────────────────────────────────────────────────────────
 function newId() { return uuidv4(); }
 
@@ -230,7 +244,7 @@ function pageFromHandle(raw) {
 }
 
 module.exports = { pageFromHandle, trailingActivity, ACTIVITY_TOKENS,
-  newId, generateClassCode, signTeacherToken, verifyTeacherToken,
+  newId, generateClassCode, generateStudentCode, signTeacherToken, verifyTeacherToken,
   signStudentToken, verifyStudentToken, COURSES, COURSE_PREFIXES,
   isValidEmail, isValidPin, isValidClassCode, sanitize,
 };

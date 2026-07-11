@@ -4,7 +4,8 @@ const bcrypt = require('bcryptjs');
 const router = express.Router();
 const db = require('../db');
 const { requireStudent } = require('../middleware');
-const { newId, signStudentToken, isValidPin, sanitize, COURSES, pageFromHandle } = require('../utils');
+const { newId, signStudentToken, verifyStudentToken, generateStudentCode,
+  isValidPin, isValidClassCode, sanitize, COURSES, pageFromHandle } = require('../utils');
 const { rollupScore } = require('../scoring');
 
 // ── JOIN CLASS (first time) ───────────────────────────────────────────────────
@@ -83,11 +84,20 @@ router.get('/me', requireStudent, (req, res) => {
 });
 
 // ── GET ALL PROGRESS ──────────────────────────────────────────────────────────
+// Progress is keyed to student_id, so one identity's work across every course it
+// has touched is returned in a single call (the my-progress course switcher reads
+// this). Pass ?course=ap-csa to scope to one course; omit it for everything.
 router.get('/progress', requireStudent, (req, res) => {
-  const records = db.prepare(`
-    SELECT course, unit, lesson, activity_type, completed, score, attempts, confidence, completed_at, updated_at
-    FROM progress WHERE student_id = ? ORDER BY unit, lesson, activity_type
-  `).all(req.student.id);
+  const course = typeof req.query.course === 'string' ? req.query.course : null;
+  const records = course
+    ? db.prepare(`
+        SELECT course, unit, lesson, activity_type, completed, score, attempts, confidence, completed_at, updated_at
+        FROM progress WHERE student_id = ? AND course = ? ORDER BY unit, lesson, activity_type
+      `).all(req.student.id, course)
+    : db.prepare(`
+        SELECT course, unit, lesson, activity_type, completed, score, attempts, confidence, completed_at, updated_at
+        FROM progress WHERE student_id = ? ORDER BY unit, lesson, activity_type
+      `).all(req.student.id);
 
   // Build structured map for easy frontend consumption
   const map = {};
@@ -706,4 +716,237 @@ router.post('/score', requireStudent, (req, res) => {
     res.status(500).json({ error: 'Failed to record score' });
   }
 });
+// ─────────────────────────────────────────────────────────────────────────────
+//  MULTI-CLASS IDENTITY (additive to the class-scoped flow above)
+//
+//  Identity is now split from enrollment: one student can belong to many classes
+//  and study other courses solo, all under a single login (student_code + PIN).
+//  These routes never touch the legacy /join /login /solo-* endpoints, which stay
+//  live for the deployed theme. class_id on the student row is the HOME class
+//  (first class joined) and keeps the existing write path working; membership
+//  proper lives in the enrollments table.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Issue a student_code no other identity holds. Retries on the rare collision.
+function mintStudentCode() {
+  for (let i = 0; i < 8; i++) {
+    const code = generateStudentCode();
+    if (!db.prepare('SELECT 1 FROM students WHERE student_code = ?').get(code)) return code;
+  }
+  return null;
+}
+
+// Enrollment list for one identity, richest-first, with class + teacher context.
+const enrollmentsForStmt = db.prepare(`
+  SELECT c.id AS class_id, c.class_code, c.class_name, c.course,
+         c.mastery_threshold, c.retry_allowed, c.active AS class_active,
+         e.active AS enrolled, e.enrolled_at, t.name AS teacher_name
+  FROM enrollments e
+  JOIN classes c  ON c.id = e.class_id
+  LEFT JOIN teachers t ON t.id = c.teacher_id
+  WHERE e.student_id = ? AND e.active = 1
+  ORDER BY e.enrolled_at DESC
+`);
+
+// ── REGISTER (identity-first, no class) ───────────────────────────────────────
+// Mints a class-less identity and its student_code. The /pages/join flow calls
+// this for a brand-new student, shows the code once, then calls /enroll with the
+// class code they arrived on. Two "Jake M."s with PIN 1234 never collide: login
+// is by student_code, not name.
+router.post('/register', async (req, res) => {
+  try {
+    const { display_name, pin } = req.body || {};
+    if (!display_name || String(display_name).trim().length < 1) return res.status(400).json({ error: 'Name required' });
+    if (!isValidPin(pin)) return res.status(400).json({ error: 'PIN must be exactly 4 digits' });
+
+    const cleanName = sanitize(display_name, 50);
+    const code = mintStudentCode();
+    if (!code) return res.status(500).json({ error: 'Could not issue a student code. Try again.' });
+
+    const pinHash = await bcrypt.hash(String(pin), 10);
+    const id = newId();
+    // class_id stays NULL until the student enrolls: identity before enrollment.
+    db.prepare(`
+      INSERT INTO students (id, class_id, student_code, display_name, pin_hash)
+      VALUES (?, NULL, ?, ?, ?)
+    `).run(id, code, cleanName, pinHash);
+
+    const student = db.prepare('SELECT id, class_id, display_name, student_code FROM students WHERE id = ?').get(id);
+    const token = signStudentToken(student, null);
+
+    res.status(201).json({
+      token,
+      student_code: student.student_code,
+      student: { id: student.id, name: student.display_name, student_code: student.student_code },
+    });
+  } catch (e) {
+    console.error('Register error:', e);
+    res.status(500).json({ error: 'Failed to register' });
+  }
+});
+
+// ── LOGIN BY STUDENT CODE ─────────────────────────────────────────────────────
+// The identity login: student_code + PIN, class-independent. Kept separate from
+// the legacy class-scoped /login so the deployed theme is untouched.
+router.post('/login-code', async (req, res) => {
+  try {
+    const { student_code, pin } = req.body || {};
+    if (!student_code || !pin) return res.status(400).json({ error: 'Student code and PIN required' });
+
+    const student = db.prepare('SELECT * FROM students WHERE student_code = ?')
+      .get(String(student_code).toUpperCase().trim());
+    if (!student) return res.status(404).json({ error: 'Student code not found. Ask your teacher for your code.' });
+    if (student.active === 0) return res.status(403).json({ error: 'This account has been deactivated by your teacher.' });
+
+    const valid = await bcrypt.compare(String(pin), student.pin_hash);
+    if (!valid) return res.status(401).json({ error: 'Incorrect PIN' });
+
+    db.prepare("UPDATE students SET last_active = datetime('now') WHERE id = ?").run(student.id);
+    const homeCode = student.class_id
+      ? (db.prepare('SELECT class_code FROM classes WHERE id = ?').get(student.class_id) || {}).class_code
+      : null;
+    const token = signStudentToken(student, homeCode);
+
+    res.json({
+      token,
+      student: { id: student.id, name: student.display_name, student_code: student.student_code },
+      enrollments: enrollmentsForStmt.all(student.id),
+    });
+  } catch (e) {
+    console.error('Login-code error:', e);
+    res.status(500).json({ error: 'Login failed' });
+  }
+});
+
+// ── ENROLL (join a class as an existing identity) ─────────────────────────────
+// Writes an enrollment row against the CURRENT student. It never creates a
+// student, which is the whole fix for the second-class-mints-a-second-account
+// bug. Idempotent: re-joining a class you are already in is a friendly no-op.
+router.post('/enroll', requireStudent, (req, res) => {
+  try {
+    const { class_code } = req.body || {};
+    if (!class_code) return res.status(400).json({ error: 'Class code required' });
+
+    const cls = db.prepare('SELECT * FROM classes WHERE class_code = ?')
+      .get(String(class_code).toUpperCase().trim());
+    if (!cls) return res.status(404).json({ error: 'Class not found. Check your class code.' });
+    if (cls.course === 'solo') return res.status(400).json({ error: 'That is a personal code, not a class code.' });
+    if (!cls.active) return res.status(403).json({ error: 'That class is inactive. Ask your teacher.' });
+
+    const existing = db.prepare('SELECT id, active FROM enrollments WHERE student_id = ? AND class_id = ?')
+      .get(req.student.id, cls.id);
+    if (existing && existing.active) {
+      return res.status(200).json({
+        already_enrolled: true,
+        enrollment: { class_code: cls.class_code, class_name: cls.class_name, course: cls.course },
+      });
+    }
+
+    // Joining a second class for a course you already have a class in is allowed
+    // but surfaced, since it is usually a mistake (per the handoff join flow).
+    const sameCourse = db.prepare(`
+      SELECT c.class_code FROM enrollments e JOIN classes c ON c.id = e.class_id
+      WHERE e.student_id = ? AND e.active = 1 AND c.course = ? AND c.id != ?
+    `).all(req.student.id, cls.course, cls.id).map(r => r.class_code);
+
+    db.transaction(() => {
+      if (existing) {
+        db.prepare('UPDATE enrollments SET active = 1, enrolled_at = datetime(\'now\') WHERE id = ?').run(existing.id);
+      } else {
+        db.prepare(`
+          INSERT INTO enrollments (id, student_id, class_id, enrolled_at, active)
+          VALUES (?, ?, ?, datetime('now'), 1)
+        `).run(newId(), req.student.id, cls.id);
+      }
+      // Adopt this class as the home class if the identity has none yet, so the
+      // legacy class_id-based write path (track/score/quiz) keeps working.
+      if (!req.student.class_id) {
+        db.prepare('UPDATE students SET class_id = ? WHERE id = ? AND class_id IS NULL').run(cls.id, req.student.id);
+      }
+    })();
+
+    res.status(201).json({
+      enrollment: {
+        class_code: cls.class_code, class_name: cls.class_name, course: cls.course,
+        mastery_threshold: cls.mastery_threshold, retry_allowed: cls.retry_allowed,
+      },
+      duplicate_course_warning: sameCourse.length ? sameCourse : undefined,
+    });
+  } catch (e) {
+    console.error('Enroll error:', e);
+    res.status(500).json({ error: 'Failed to enroll' });
+  }
+});
+
+// ── LIST ENROLLMENTS (identity's classes) ─────────────────────────────────────
+router.get('/enrollments', requireStudent, (req, res) => {
+  try {
+    res.json({
+      student: { id: req.student.id, name: req.student.display_name },
+      enrollments: enrollmentsForStmt.all(req.student.id),
+    });
+  } catch (e) {
+    console.error('Enrollments error:', e);
+    res.status(500).json({ error: 'Failed to load enrollments' });
+  }
+});
+
+// ── AD GATE (per-course resolution) ───────────────────────────────────────────
+// One call the theme evaluates per page. The trap the handoff calls out: a
+// student enrolled in Cyber who reads CSA pages is SOLO for CSA and must see
+// ads there. So enrollment is resolved for the page's course, never "is this
+// user in any class". Auth is optional: no/invalid token is anonymous.
+//
+//   GET /api/student/ad-gate?course=ap-csa[&unit=unit-1]
+//   -> { ads, reason, course, unit, authenticated, enrolled_in_course }
+//
+// NOTE: the free-vs-paid teacher tier from the handoff table cannot be resolved
+// yet: teachers have no plan column. Until one lands, an enrolled student's ads
+// are OFF for the first unit and ON beyond it (the FREE-teacher default, the
+// revenue-safe choice). teacher_plan is reported as 'unknown' so the caller can
+// see the gate is running on the default tier.
+router.get('/ad-gate', (req, res) => {
+  const course = typeof req.query.course === 'string' ? req.query.course : null;
+  const unit = typeof req.query.unit === 'string' ? req.query.unit : null;
+  if (!course) return res.status(400).json({ error: 'course required' });
+
+  // Optional auth: parse a bearer token if present, but never fail on its absence.
+  let student = null;
+  const auth = req.headers.authorization || '';
+  const tok = auth.startsWith('Bearer ') ? auth.slice(7) : null;
+  if (tok) {
+    try {
+      const payload = verifyStudentToken(tok);
+      if (payload.role === 'student') {
+        student = db.prepare('SELECT id FROM students WHERE id = ?').get(payload.id) || null;
+      }
+    } catch (e) { /* anonymous */ }
+  }
+
+  if (!student) {
+    return res.json({ ads: true, reason: 'anonymous', course, unit, authenticated: false, enrolled_in_course: false });
+  }
+
+  const enrolled = !!db.prepare(`
+    SELECT 1 FROM enrollments e JOIN classes c ON c.id = e.class_id
+    WHERE e.student_id = ? AND e.active = 1 AND c.active = 1 AND c.course = ?
+    LIMIT 1
+  `).get(student.id, course);
+
+  if (!enrolled) {
+    // Solo for this course even if enrolled elsewhere. This is the anti-trap case.
+    return res.json({ ads: true, reason: 'solo-for-course', course, unit, authenticated: true, enrolled_in_course: false, teacher_plan: 'unknown' });
+  }
+
+  // Enrolled. FREE-teacher default until a plan column exists: first unit free,
+  // rest gated. A caller that passes no unit gets ads OFF (lesson-level pages
+  // pass their unit; hub pages that omit it are treated as first-unit context).
+  const firstUnit = !unit || unit === 'unit-1' || unit === 'bi-1';
+  return res.json({
+    ads: !firstUnit,
+    reason: firstUnit ? 'enrolled-free-unit1' : 'enrolled-free-unit2plus',
+    course, unit, authenticated: true, enrolled_in_course: true, teacher_plan: 'unknown',
+  });
+});
+
 module.exports = router;
