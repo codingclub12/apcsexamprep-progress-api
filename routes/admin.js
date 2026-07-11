@@ -13,6 +13,7 @@
 const express = require('express');
 const crypto = require('crypto');
 const db = require('../db');
+const { grantEntitlement } = require('../lib/entitlements');
 
 const router = express.Router();
 
@@ -59,6 +60,8 @@ router.get('/', (req, res) => {
       'GET /api/admin/class/:id/gradebook class rollup: students x per-lesson grade aggregates, vs manifest',
       'GET /api/admin/schema              live table/column listing',
       'GET /api/admin/score-events        raw graded-interaction ledger; ?student_id= ?class_code= ?course= ?limit=',
+      'POST /api/admin/entitlement        manual/comp grant { email, course, unit?, source? }',
+      'GET /api/admin/entitlements        list entitlements; filter ?email= ?course= ?teacher_id=',
     ],
   });
 });
@@ -596,6 +599,43 @@ router.get('/score-events', (req, res) => {
   } catch (e) {
     console.error('admin/score-events:', e);
     res.status(500).json({ error: 'score-events failed', detail: e.message });
+  }
+});
+
+// ── ENTITLEMENTS: manual grant + list (Phase 4) ───────────────────────────────
+// Granting is admin-only on purpose: a teacher self-granting a paid entitlement
+// would be a paywall bypass, so the roadmap's "teacher POST entitlement" lives
+// here behind requireAdmin instead. The Shopify webhook is the automated path;
+// this is the manual/comp lever.
+router.post('/entitlement', (req, res) => {
+  try {
+    const { email, course, unit, source } = req.body || {};
+    if (!email || !course) return res.status(400).json({ error: 'email and course required' });
+    const r = grantEntitlement({ email, course, unit: unit || null, source: source || 'manual' });
+    res.json({ ok: true, granted: r.granted, teacher_id: r.teacher_id });
+  } catch (e) {
+    console.error('admin/entitlement:', e);
+    res.status(500).json({ error: 'grant failed', detail: e.message });
+  }
+});
+
+router.get('/entitlements', (req, res) => {
+  try {
+    const { email, course, teacher_id } = req.query;
+    const where = [];
+    const args = [];
+    if (email)      { where.push('email = ?');      args.push(String(email).toLowerCase()); }
+    if (course)     { where.push('course = ?');     args.push(course); }
+    if (teacher_id) { where.push('teacher_id = ?'); args.push(teacher_id); }
+    const clause = where.length ? `WHERE ${where.join(' AND ')}` : '';
+    const entitlements = db.prepare(`
+      SELECT id, email, teacher_id, course, unit, source, external_ref, active, granted_at, expires_at
+      FROM entitlements ${clause} ORDER BY granted_at DESC LIMIT 2000
+    `).all(...args);
+    res.json({ total: entitlements.length, entitlements });
+  } catch (e) {
+    console.error('admin/entitlements:', e);
+    res.status(500).json({ error: 'entitlements list failed', detail: e.message });
   }
 });
 

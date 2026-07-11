@@ -135,6 +135,20 @@ POST /api/student/score             Record one graded interaction (rolls up to p
 POST /api/progress/attempt          Record one CFU/quiz attempt (manifest-gated)
 ```
 
+### Teacher Command Center (Phase 4, entitlements + webhook)
+```
+POST /api/webhooks/shopify/orders          HMAC-verified Shopify order webhook -> entitlements (fails closed without SHOPIFY_WEBHOOK_SECRET)
+GET  /api/teacher/entitlements             Teacher's own "owns Unit N" flags
+GET  /api/teacher/classes/:code/continue   Furthest lesson reached + next lesson
+GET  /api/teacher/classes/:code/need-help  Students below threshold on their most recent activity
+POST /api/admin/entitlement                Manual/comp grant { email, course, unit?, source? }
+GET  /api/admin/entitlements               List entitlements (filters: email, course, teacher_id)
+```
+
+Entitlements are recorded and readable but not yet enforced, so nothing blocks
+existing access. Configure the Shopify secret and real SKUs before going live:
+`docs/phase4-entitlements-webhook.md`.
+
 ### Server-side quiz scoring (Phase 2, answer keys never ship to the browser)
 ```
 GET  /api/quiz/:course/:unit/:lesson/:activity_type   Shuffled questions + order_token (no keys). Public.
@@ -168,6 +182,18 @@ across the reporter, the rollup, and both dashboards. For CSP: `unit` is
 `bi-N`, `lesson` is the lesson slug (e.g. `conditionals`), `activity_type` is
 `lesson` | `exercise-1` | `exercise-2` | `quiz`. Send `item` (a stable
 per-question id) plus either `correct` (boolean) or `points` + `max_points`.
+
+### Denominators: course_manifest is the authority
+
+The teacher dashboard (`/classes/:code/progress`) and CSV export
+(`/classes/:code/export`) size their columns and completion denominators from
+`course_manifest`, not the static `COURSES` config. Cyber is seeded at activity
+granularity (one row per lesson-activity plus each unit's Case File and Exam,
+each carrying its `activity_type`), so adding a cyber lesson or activity is a
+manifest row, not a code change. ap-csa / ap-csp keep the lesson-visit + graded
+model the attempts path uses (their manifest rows have a null `activity_type`),
+so `courseStructure()` in `lib/course-structure.js` falls back to the `COURSES`
+config for them. Reseed after edits with `node scripts/seed-manifest.js --update`.
 
 ## Local Development
 

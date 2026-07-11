@@ -22,6 +22,11 @@ app.use(cors({
   credentials: true,
 }));
 
+// Shopify webhook needs the RAW body to verify its HMAC, so it is mounted with a
+// raw parser BEFORE express.json consumes the stream. Only this path gets raw
+// bytes; every other route still receives parsed JSON.
+app.use('/api/webhooks/shopify', express.raw({ type: '*/*', limit: '1mb' }), require('./routes/webhooks'));
+
 app.use(express.json({ limit: '1mb' }));
 
 // ── ROUTES ────────────────────────────────────────────────────────────────────
