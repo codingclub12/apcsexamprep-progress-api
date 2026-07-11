@@ -38,6 +38,11 @@ router.post('/register', async (req, res) => {
       VALUES (?, ?, ?, ?, ?)
     `).run(id, email.trim().toLowerCase(), sanitize(name, 100), sanitize(school || '', 200), hash);
 
+    // Link any entitlements purchased before this teacher registered (they were
+    // recorded by email with a null teacher_id).
+    db.prepare('UPDATE entitlements SET teacher_id = ? WHERE email = ? AND teacher_id IS NULL')
+      .run(id, email.trim().toLowerCase());
+
     const teacher = db.prepare('SELECT id, email, name, school FROM teachers WHERE id = ?').get(id);
     const token = signTeacherToken(teacher);
     res.status(201).json({ token, teacher: { id: teacher.id, email: teacher.email, name: teacher.name, school: teacher.school } });
@@ -475,6 +480,96 @@ router.get('/classes/:code/releases', requireTeacher, (req, res) => {
     ORDER BY course, unit, lesson, activity_type
   `).all(cls.id);
   res.json({ releases });
+});
+
+// ── ENTITLEMENTS (Phase 4: teacher reads their own "owns Unit N" flags) ───────
+// Resolved by teacher_id OR email, so a purchase made before this teacher
+// registered still shows up. Recorded and readable only; not yet enforced.
+router.get('/entitlements', requireTeacher, (req, res) => {
+  const rows = db.prepare(`
+    SELECT course, unit, source, granted_at, expires_at
+    FROM entitlements
+    WHERE active = 1 AND (teacher_id = ? OR email = ?)
+      AND (expires_at IS NULL OR expires_at > datetime('now'))
+    ORDER BY course, unit
+  `).all(req.teacher.id, req.teacher.email);
+
+  // Convenience rollup: whole-course grants (unit NULL) plus the set of owned
+  // units, so the caller does not have to fold NULLs itself.
+  const courses = {};
+  for (const r of rows) {
+    if (!courses[r.course]) courses[r.course] = { whole_course: false, units: [] };
+    if (r.unit === null) courses[r.course].whole_course = true;
+    else courses[r.course].units.push(r.unit);
+  }
+  res.json({ entitlements: rows, courses });
+});
+
+// ── CONTINUE TEACHING (Phase 4: furthest lesson the class has reached) ────────
+// Lesson order comes from course_manifest via courseStructure (the authority),
+// so "furthest" and "next" follow the same sequence the dashboard renders.
+router.get('/classes/:code/continue', requireTeacher, (req, res) => {
+  const cls = db.prepare('SELECT id, class_code, course FROM classes WHERE class_code = ? AND teacher_id = ?')
+    .get(req.params.code.toUpperCase(), req.teacher.id);
+  if (!cls) return res.status(404).json({ error: 'Class not found' });
+
+  const struct = courseStructure(cls.course);
+  const ordered = [];
+  if (struct) {
+    for (const [unitKey, u] of Object.entries(struct.units)) {
+      for (const lesson of u.lessons) ordered.push({ unit: unitKey, lesson });
+    }
+  }
+  const idxOf = new Map(ordered.map((o, i) => [`${o.unit}|${o.lesson}`, i]));
+
+  const done = db.prepare(`
+    SELECT DISTINCT unit, lesson FROM progress
+    WHERE class_id = ? AND course = ? AND completed = 1
+  `).all(cls.id, cls.course);
+
+  let maxIdx = -1;
+  for (const d of done) {
+    const i = idxOf.get(`${d.unit}|${d.lesson}`);
+    if (i != null && i > maxIdx) maxIdx = i;
+  }
+
+  res.json({
+    class: { code: cls.class_code, course: cls.course },
+    furthest_lesson: maxIdx >= 0 ? ordered[maxIdx] : null,
+    next_lesson: maxIdx + 1 < ordered.length ? ordered[maxIdx + 1] : null,
+    lessons_reached: maxIdx + 1,
+    total_lessons: ordered.length,
+  });
+});
+
+// ── N NEED HELP (Phase 4: students below threshold on their most recent activity)
+// Threshold is read live off the class, so a settings change re-evaluates with no
+// migration. Deactivated students are excluded. One window-function pass, no N+1.
+router.get('/classes/:code/need-help', requireTeacher, (req, res) => {
+  const cls = db.prepare('SELECT id, class_code, mastery_threshold FROM classes WHERE class_code = ? AND teacher_id = ?')
+    .get(req.params.code.toUpperCase(), req.teacher.id);
+  if (!cls) return res.status(404).json({ error: 'Class not found' });
+  const threshold = cls.mastery_threshold != null ? cls.mastery_threshold : 80;
+
+  const latest = db.prepare(`
+    SELECT student_id, display_name, unit, lesson, activity_type, score, updated_at FROM (
+      SELECT p.student_id, s.display_name, p.unit, p.lesson, p.activity_type, p.score, p.updated_at,
+        ROW_NUMBER() OVER (PARTITION BY p.student_id ORDER BY p.updated_at DESC) rn
+      FROM progress p
+      JOIN students s ON s.id = p.student_id
+      WHERE p.class_id = ? AND p.score IS NOT NULL AND s.active = 1
+    ) WHERE rn = 1
+  `).all(cls.id);
+
+  const students = latest
+    .filter((r) => r.score < threshold)
+    .map((r) => ({
+      student_id: r.student_id, name: r.display_name,
+      unit: r.unit, lesson: r.lesson, activity_type: r.activity_type,
+      score: r.score, updated_at: r.updated_at,
+    }));
+
+  res.json({ threshold, count: students.length, students });
 });
 
 // ── DELETE CLASS ──────────────────────────────────────────────────────────────

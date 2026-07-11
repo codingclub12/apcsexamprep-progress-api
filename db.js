@@ -230,6 +230,33 @@ db.exec(`
     serve_count   INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY (course, unit, lesson, activity_type)
   );
+
+  -- Teacher entitlements: the "owns Unit N" flag behind the Teacher Command
+  -- Center. Populated by the HMAC-verified Shopify order webhook, or granted
+  -- manually by an admin. Keyed durably by purchaser email (lowercased) so a
+  -- purchase made before the teacher registers still resolves once they do;
+  -- teacher_id is a best-effort link filled when a teacher with that email
+  -- exists. unit NULL means the whole course. This table is recorded and
+  -- readable but not yet enforced anywhere, so it never blocks existing access.
+  CREATE TABLE IF NOT EXISTS entitlements (
+    id           TEXT PRIMARY KEY,
+    email        TEXT NOT NULL COLLATE NOCASE,   -- purchaser email, the durable key
+    teacher_id   TEXT,                           -- resolved when a matching teacher exists
+    course       TEXT NOT NULL,                  -- 'ap-cybersecurity' etc
+    unit         TEXT,                           -- 'unit-1', or NULL for the whole course
+    source       TEXT NOT NULL DEFAULT 'shopify',-- 'shopify' | 'manual' | 'comp'
+    external_ref TEXT,                           -- Shopify order id; idempotency key
+    active       INTEGER NOT NULL DEFAULT 1,
+    granted_at   TEXT DEFAULT (datetime('now')),
+    expires_at   TEXT
+  );
+  CREATE INDEX IF NOT EXISTS idx_entitlements_email   ON entitlements(email);
+  CREATE INDEX IF NOT EXISTS idx_entitlements_teacher ON entitlements(teacher_id);
+  -- One row per (order, course, unit): makes the webhook idempotent under
+  -- Shopify's at-least-once retries. COALESCE folds the nullable unit so a
+  -- whole-course grant dedupes too.
+  CREATE UNIQUE INDEX IF NOT EXISTS uidx_entitlements_order
+    ON entitlements(external_ref, course, COALESCE(unit, '*')) WHERE external_ref IS NOT NULL;
 `);
 
 // Migrations — safe to re-run on every boot, ignored if column already exists
