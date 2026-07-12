@@ -11,10 +11,11 @@
 //
 //  Grade of record per (student, item): best score ratio when retry is on
 //  (student retry_override beats class retry_allowed), first attempt when off.
-//  passed is the stored write-time snapshot, matching the admin gradebook as it
-//  stood; the read-time recompute against the current mastery_threshold is a
-//  known follow-up tracked in docs/grading-systems.md. Percentages compute
-//  against manifest points. Prepared statements live at module scope.
+//  passed is recomputed at read time as (score / max_score) * 100 >= the class's
+//  CURRENT mastery_threshold, never the stored attempts.passed snapshot, so a
+//  teacher raising or lowering the bar applies retroactively with no migration
+//  (CLAUDE.md: never hardcode 80). Percentages compute against manifest points.
+//  Prepared statements live at module scope.
 // ─────────────────────────────────────────────────────────────────────────────
 const db = require('./db');
 
@@ -57,6 +58,7 @@ const visitStmt = db.prepare(`
   WHERE class_id = ? AND course = ? AND completed = 1 AND activity_type NOT IN ('quiz', 'exam')
   GROUP BY student_id
 `);
+const thresholdStmt = db.prepare('SELECT mastery_threshold FROM classes WHERE id = ?');
 
 // Build the class gradebook for one course: per-lesson columns from the manifest
 // (denominator authority) and per-student, per-lesson grade-of-record aggregates
@@ -83,6 +85,12 @@ function classGradebook(classId, course) {
   const visitRows = visitStmt.all(classId, course);
   const visitsByStudent = new Map(visitRows.map(v => [v.student_id, v.n]));
 
+  // Recompute passed against the class's current mastery_threshold, not the
+  // stored attempts.passed snapshot, so threshold changes apply retroactively.
+  const trow = thresholdStmt.get(classId);
+  const threshold = (trow && trow.mastery_threshold != null) ? trow.mastery_threshold : 80;
+  const isPassed = (g) => g.max_score > 0 && (g.score / g.max_score) * 100 >= threshold;
+
   const students = new Map(roster.map(s => [s.id, {
     id: s.id,
     name: s.display_name,
@@ -104,13 +112,14 @@ function classGradebook(classId, course) {
       };
     }
     const cell = row.lessons[g.lesson_id];
+    const passed = isPassed(g);
     cell.earned += g.score;
     cell.items_attempted++;
-    if (g.passed) cell.items_passed++;
+    if (passed) cell.items_passed++;
     cell.pct = pctOf(cell.earned, cell.possible);
     row.overall.earned += g.score;
     row.overall.items_attempted++;
-    if (g.passed) row.overall.items_passed++;
+    if (passed) row.overall.items_passed++;
   }
   for (const row of students.values()) {
     row.overall.pct = pctOf(row.overall.earned, row.overall.possible);

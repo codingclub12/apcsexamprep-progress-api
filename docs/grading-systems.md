@@ -95,11 +95,12 @@ disagree. The theme-side teacher dashboard must call this endpoint to render CSA
 grades; `/progress` continues to carry only the System B `progress.score`
 (CSP/Cyber) plus the `points_earned` / `points_possible` fields.
 
-Known follow-up: `passed` / `items_passed` in the gradebook still reflect the
-write-time snapshot in `attempts.passed`, not a read-time recompute against the
-class's current `mastery_threshold`. Recomputing at read time (so a threshold
-change applies retroactively) is a small change in `classGradebook`, deferred
-so this pass stays output-neutral with the existing admin gradebook.
+Read-time `passed`: `classGradebook` recomputes `passed` / `items_passed` as
+`(score / max_score) * 100 >= the class's current mastery_threshold`, never the
+stored `attempts.passed` snapshot. A teacher moving the mastery bar applies
+retroactively across both the teacher and admin gradebooks with no migration
+(CLAUDE.md: never hardcode 80). `pct` and grade-of-record were already computed
+at read time; this closes the last write-time snapshot the gradebook relied on.
 
 ## Why it is this way
 
