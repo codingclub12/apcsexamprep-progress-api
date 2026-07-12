@@ -227,6 +227,46 @@ db.exec(`
     serve_count   INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY (course, unit, lesson, activity_type)
   );
+
+  -- Per-activity denominator authority for the ap-csp server-scored path. One row
+  -- per gradable activity (quiz / exam / exercise), item_count = number of items.
+  -- This is deliberately a SEPARATE table from course_manifest: course_manifest is
+  -- per-item (PK course, item_id) and is the CSA manifest-gated /api/progress/attempt
+  -- authority, read all over admin/teacher/student. The ap-csp /api/student/score
+  -- path is per-activity and needs "earned out of item_count" denominators keyed by
+  -- (course, unit, lesson, activity_type), so it gets its own table rather than
+  -- reshaping a table four other routes depend on. Seeded from
+  -- data/csp-course-manifest-FULL.json by scripts/seed-activity-manifest.js (boot,
+  -- insert-or-ignore) so a fresh deploy is never fail-closed with empty denominators.
+  CREATE TABLE IF NOT EXISTS activity_manifest (
+    course        TEXT NOT NULL,
+    unit          TEXT NOT NULL,
+    lesson        TEXT NOT NULL,
+    activity_type TEXT NOT NULL,      -- 'lesson' | 'quiz' | 'exam' | 'exercise-1' | 'exercise-2'
+    item_count    INTEGER NOT NULL DEFAULT 1,
+    PRIMARY KEY (course, unit, lesson, activity_type)
+  );
+
+  -- Server-owned answer keys for the ap-csp integrity fix. The correct letter lives
+  -- here only, never in the page HTML, so it can never be trusted from the client.
+  -- POST /api/student/score scores quiz/exam submissions against this table and the
+  -- correct letter is released ONLY in the per-submission scoring response, never in
+  -- any list/dump endpoint. This is author content, not student input, so it is not
+  -- PII. Seeded manually via scripts/seed-answer-bank.js (never on boot), so a fresh
+  -- deploy stays empty and every quiz/exam not yet seeded keeps its existing flow.
+  CREATE TABLE IF NOT EXISTS answer_bank (
+    course        TEXT NOT NULL,
+    unit          TEXT NOT NULL,
+    lesson        TEXT NOT NULL,
+    activity_type TEXT NOT NULL,      -- 'quiz' | 'exam'
+    item          TEXT NOT NULL,      -- 'q1'..'q6' (quiz), 'e1'..'eN' (exam)
+    correct       TEXT NOT NULL,      -- letter 'A'-'D'; NEVER returned except in a scoring response
+    rationale     TEXT,
+    created_at    TEXT DEFAULT (datetime('now')),
+    PRIMARY KEY (course, unit, lesson, item)
+  );
+  CREATE INDEX IF NOT EXISTS idx_answer_bank_location
+    ON answer_bank(course, unit, lesson, activity_type);
 `);
 
 // Migrations — safe to re-run on every boot, ignored if column already exists

@@ -24,7 +24,37 @@ Handler reference: `routes/student.js`, the `POST /score` route and its
 `rollupScore` helper. Every claim below is taken from that handler as it stands
 today; if the handler changes, this doc is the thing to update.
 
-## 2. Accepted request body
+### 1a. Server-side scoring for quiz and exam (integrity fix)
+
+`quiz` and `exam` activities are now scored on the SERVER, not the client. The
+correct answer lives in the server-only `answer_bank` table and never ships to the
+page, so it cannot be trusted from the browser. For these two activity types the
+reporter sends a `choice` letter (`A`-`D`) and NO `correct`/`points` field; the
+server looks up the key, computes correctness, and returns it in the response.
+
+This engages only once an activity's keys are seeded (`scripts/seed-answer-bank.js`).
+An un-seeded quiz/exam location falls through to the legacy client-reported path
+below, so nothing breaks before seeding. All other activity types (`lesson`,
+`cfu`, `exercise-1`, `exercise-2`) stay client-reported exactly as described below.
+
+Quiz/exam request body:
+
+```json
+{ "course": "ap-csp", "unit": "bi-1", "lesson": "collaboration",
+  "activity_type": "quiz", "item": "q1", "choice": "B",
+  "client_event_id": "..." }
+```
+
+- `choice` is the selected option letter `A`-`D`. Untrusted: anything else is
+  ignored (`tracked: false`), nothing is recorded.
+- `item` is `q1`..`q6` for a lesson quiz, `e1`..`eN` for a unit test.
+- Scoring response adds `is_correct` (boolean), `correct` (the correct letter),
+  and `rationale`. Percent uses the `activity_manifest` denominator (item_count),
+  so a quiz shows out of its full question count, not just questions answered.
+- Best-per-item and idempotency work the same as the client-reported path: a
+  re-answer keeps the higher result and never inflates the denominator.
+
+## 2. Accepted request body (client-reported path: cfu / lesson / exercise-*)
 
 | Field | Required | Type | Notes |
 |-------|----------|------|-------|
