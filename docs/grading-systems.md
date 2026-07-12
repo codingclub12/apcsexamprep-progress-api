@@ -82,6 +82,26 @@ and makes the teacher dashboard agree with the admin gradebook, which already
 computes exactly these numbers. Revisit option 1 or 3 only if a single unified
 write path becomes worth the semantic change.
 
+## Status: option 2 implemented
+
+CSA attempt grades are now readable by teachers via
+`GET /api/teacher/classes/:code/gradebook` (teacher-owned, fail-closed). Rather
+than blend two grade shapes into the `/progress` payload, the attempts grades
+are exposed on a dedicated endpoint that mirrors
+`GET /api/admin/class/:id/gradebook`. Both routes call the same builder,
+`gradebook.js` `classGradebook(classId, course)`, one window pass over
+`attempts` against the manifest, so the teacher and admin gradebooks can never
+disagree. The theme-side teacher dashboard must call this endpoint to render CSA
+grades; `/progress` continues to carry only the System B `progress.score`
+(CSP/Cyber) plus the `points_earned` / `points_possible` fields.
+
+Read-time `passed`: `classGradebook` recomputes `passed` / `items_passed` as
+`(score / max_score) * 100 >= the class's current mastery_threshold`, never the
+stored `attempts.passed` snapshot. A teacher moving the mastery bar applies
+retroactively across both the teacher and admin gradebooks with no migration
+(CLAUDE.md: never hardcode 80). `pct` and grade-of-record were already computed
+at read time; this closes the last write-time snapshot the gradebook relied on.
+
 ## Why it is this way
 
 System B (`score_events` + `progress.score`) is the older, course-agnostic

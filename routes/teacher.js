@@ -8,6 +8,7 @@ const {
   newId, generateClassCode, signTeacherToken,
   isValidEmail, isValidPin, sanitize, COURSES, COURSE_PREFIXES,
 } = require('../utils');
+const { classGradebook } = require('../gradebook');
 
 // Mastery threshold is clamped to 50-100 per the class settings spec: a bar
 // below 50 is not a meaningful mastery line. Reads elsewhere default to 80 when
@@ -221,6 +222,31 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
   });
 
   res.json({ class: cls, course_config: courseConfig, summary });
+});
+
+// ── CLASS GRADEBOOK (attempts / manifest grades) ──────────────────────────────
+// Teacher-facing twin of GET /api/admin/class/:id/gradebook, scoped by class
+// ownership. Per-student, per-lesson grade-of-record from the attempts table
+// against course_manifest denominators, in a single window pass (no N+1). This
+// is where CSA CFU/quiz grades (posted to /api/progress/attempt) surface for a
+// teacher; /classes/:code/progress only carries progress.score, the System B
+// path used by CSP and Cyber. See docs/grading-systems.md.
+router.get('/classes/:code/gradebook', requireTeacher, (req, res) => {
+  try {
+    const cls = db.prepare(
+      'SELECT id, class_code, class_name, course, mastery_threshold, retry_allowed FROM classes WHERE class_code = ? AND teacher_id = ?'
+    ).get(req.params.code.toUpperCase(), req.teacher.id);
+    if (!cls) return res.status(404).json({ error: 'Class not found' });
+
+    // Solo system classes carry course 'solo'; a real teacher never owns one,
+    // but keep the same ?course= fallback the admin gradebook uses for safety.
+    const course = cls.course === 'solo' ? String(req.query.course || 'ap-csa') : cls.course;
+    const gb = classGradebook(cls.id, course);
+    res.json({ class: cls, ...gb, generated_at: new Date().toISOString() });
+  } catch (e) {
+    console.error('teacher gradebook:', e);
+    res.status(500).json({ error: 'Failed to load gradebook' });
+  }
 });
 
 // ── CSV EXPORT (Wide gradebook, CodeHS-style) — SINGLE canonical export ─────────
