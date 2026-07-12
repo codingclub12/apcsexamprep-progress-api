@@ -900,11 +900,13 @@ router.get('/enrollments', requireStudent, (req, res) => {
 //   GET /api/student/ad-gate?course=ap-csa[&unit=unit-1]
 //   -> { ads, reason, course, unit, authenticated, enrolled_in_course }
 //
-// NOTE: the free-vs-paid teacher tier from the handoff table cannot be resolved
-// yet: teachers have no plan column. Until one lands, an enrolled student's ads
-// are OFF for the first unit and ON beyond it (the FREE-teacher default, the
-// revenue-safe choice). teacher_plan is reported as 'unknown' so the caller can
-// see the gate is running on the default tier.
+// Tier resolution (handoff section 9):
+//   anonymous / no token                        -> ads ON
+//   enrolled for THIS course, teacher PAID      -> ads OFF (all units)
+//   enrolled for THIS course, teacher FREE      -> ads OFF for the first unit, ON beyond it
+//   token but NOT enrolled for this course      -> ads ON (solo for the course; the trap)
+// A student enrolled in two classes for the same course gets the better tier
+// (paid wins). teacher_plan echoes the tier that decided the outcome.
 router.get('/ad-gate', (req, res) => {
   const course = typeof req.query.course === 'string' ? req.query.course : null;
   const unit = typeof req.query.unit === 'string' ? req.query.unit : null;
@@ -927,25 +929,33 @@ router.get('/ad-gate', (req, res) => {
     return res.json({ ads: true, reason: 'anonymous', course, unit, authenticated: false, enrolled_in_course: false });
   }
 
-  const enrolled = !!db.prepare(`
-    SELECT 1 FROM enrollments e JOIN classes c ON c.id = e.class_id
+  // Active enrollments for THIS course, with the owning teacher's plan. Paid
+  // beats free across multiple classes for the same course.
+  const tiers = db.prepare(`
+    SELECT COALESCE(t.plan, 'free') AS plan
+    FROM enrollments e
+    JOIN classes  c ON c.id = e.class_id
+    LEFT JOIN teachers t ON t.id = c.teacher_id
     WHERE e.student_id = ? AND e.active = 1 AND c.active = 1 AND c.course = ?
-    LIMIT 1
-  `).get(student.id, course);
+  `).all(student.id, course).map(r => r.plan);
 
-  if (!enrolled) {
+  if (!tiers.length) {
     // Solo for this course even if enrolled elsewhere. This is the anti-trap case.
-    return res.json({ ads: true, reason: 'solo-for-course', course, unit, authenticated: true, enrolled_in_course: false, teacher_plan: 'unknown' });
+    return res.json({ ads: true, reason: 'solo-for-course', course, unit, authenticated: true, enrolled_in_course: false, teacher_plan: null });
   }
 
-  // Enrolled. FREE-teacher default until a plan column exists: first unit free,
-  // rest gated. A caller that passes no unit gets ads OFF (lesson-level pages
-  // pass their unit; hub pages that omit it are treated as first-unit context).
+  const paid = tiers.includes('paid');
+  if (paid) {
+    return res.json({ ads: false, reason: 'enrolled-paid', course, unit, authenticated: true, enrolled_in_course: true, teacher_plan: 'paid' });
+  }
+
+  // Free teacher: first unit free, rest gated. A caller that passes no unit gets
+  // ads OFF (lesson pages pass their unit; hubs that omit it read as first-unit).
   const firstUnit = !unit || unit === 'unit-1' || unit === 'bi-1';
   return res.json({
     ads: !firstUnit,
     reason: firstUnit ? 'enrolled-free-unit1' : 'enrolled-free-unit2plus',
-    course, unit, authenticated: true, enrolled_in_course: true, teacher_plan: 'unknown',
+    course, unit, authenticated: true, enrolled_in_course: true, teacher_plan: 'free',
   });
 });
 

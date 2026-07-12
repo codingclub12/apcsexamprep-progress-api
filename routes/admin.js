@@ -59,8 +59,30 @@ router.get('/', (req, res) => {
       'GET /api/admin/class/:id/gradebook class rollup: students x per-lesson grade aggregates, vs manifest',
       'GET /api/admin/schema              live table/column listing',
       'GET /api/admin/score-events        raw graded-interaction ledger; ?student_id= ?class_code= ?course= ?limit=',
+      'PATCH /api/admin/teacher/:id/plan  set a teacher billing tier { plan: "free" | "paid" }',
     ],
   });
+});
+
+// ── SET TEACHER PLAN (owner/billing action) ───────────────────────────────────
+//  The one write on this router. It lives here, not on the teacher API, because
+//  a teacher must never mark themselves paid: the billing tier is an owner
+//  decision, so it sits behind ADMIN_KEY like everything else here. Drives the
+//  per-course ad gate (paid => ads off on every unit for enrolled students).
+router.patch('/teacher/:id/plan', (req, res) => {
+  try {
+    const plan = String((req.body && req.body.plan) || '').toLowerCase();
+    if (plan !== 'free' && plan !== 'paid') {
+      return res.status(400).json({ error: "plan must be 'free' or 'paid'" });
+    }
+    const info = db.prepare('UPDATE teachers SET plan = ? WHERE id = ?').run(plan, req.params.id);
+    if (!info.changes) return res.status(404).json({ error: 'Teacher not found' });
+    const teacher = db.prepare('SELECT id, email, name, plan FROM teachers WHERE id = ?').get(req.params.id);
+    res.json({ ok: true, teacher });
+  } catch (e) {
+    console.error('admin/teacher/:id/plan:', e);
+    res.status(500).json({ error: 'set plan failed', detail: e.message });
+  }
 });
 
 // ── OVERVIEW: top-line counts ─────────────────────────────────────────────────
@@ -236,6 +258,7 @@ router.get('/classes', (req, res) => {
         c.mastery_threshold, c.retry_allowed, c.created_at,
         t.name  AS teacher_name,
         t.email AS teacher_email,
+        COALESCE(t.plan, 'free') AS teacher_plan,
         (SELECT COUNT(*) FROM students s WHERE s.class_id = c.id) AS student_count,
         (SELECT COUNT(*) FROM progress p WHERE p.class_id = c.id AND p.completed = 1) AS completions
       FROM classes c

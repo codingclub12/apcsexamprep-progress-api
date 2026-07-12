@@ -34,7 +34,15 @@ The migration is non-destructive: no row is dropped and no column loses data.
   second-class-mints-a-second-account bug. Idempotent; warns when joining a second
   class in a course you already have one in.
 - `GET /api/student/enrollments` (auth) lists the identity's classes.
-- `GET /api/student/ad-gate?course=&unit=` resolves ads PER COURSE (optional auth).
+- `GET /api/student/ad-gate?course=&unit=` resolves ads PER COURSE (optional auth),
+  including the free-vs-paid teacher tier: anonymous -> ads on; enrolled + paid
+  teacher -> ads off all units; enrolled + free teacher -> off for the first unit,
+  on beyond it; token but not enrolled for the course -> ads on (the trap). Paid
+  wins across multiple classes in the same course.
+- `PATCH /api/admin/teacher/:id/plan { plan: "free" | "paid" }` (owner-only, behind
+  ADMIN_KEY) sets a teacher's billing tier. Teachers cannot set their own tier;
+  `teachers.plan` defaults to 'free'. Surfaced read-only on teacher `/me` and the
+  admin class listing (`teacher_plan`).
 - `GET /api/student/progress?course=` now accepts an optional course filter (the
   no-arg call is unchanged and still returns every course the identity has touched).
 
@@ -76,17 +84,13 @@ live data or depend on data that does not exist yet:
    using `/solo-init` for now.
 2. **`score_events.class_id` nullable** ("null = work done solo / outside any
    class"). Same rebuild dependency as above.
-3. **Teacher free/paid plan.** The ad-gate free-vs-paid tier from the handoff
-   table cannot be resolved: `teachers` has no plan column. The gate runs on the
-   FREE-teacher default (first unit free, rest gated) and reports
-   `teacher_plan: 'unknown'`. Add a `teachers.plan` column to finish it.
-4. **Manual data ops (handoff migration steps 7-8).** Not scripted here:
+3. **Manual data ops (handoff migration steps 7-8).** Not scripted here:
    hand-resolve `ME-3A2J` (2 students in one solo container: distinct people vs a
    duplicate) and delete the stale audit class `CYBER-KK4L` + its throwaway student.
    Left for a human to run against production with a backup.
-5. **Identity-scoped student mutation.** Teacher rename / reset-PIN / deactivate
+4. **Identity-scoped student mutation.** Teacher rename / reset-PIN / deactivate
    stay HOME-class-scoped: a teacher can only mutate identities homed in their
    class, so one teacher cannot deactivate another teacher's student across a shared
    enrollment. Revisit if cross-class roster management is wanted.
-6. **Theme frontend** (`APCSExamPrep-theme` repo): the `/pages/join` branch flow
+5. **Theme frontend** (`APCSExamPrep-theme` repo): the `/pages/join` branch flow
    and the `/pages/my-progress` course switcher live there, not here.

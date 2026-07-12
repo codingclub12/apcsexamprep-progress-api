@@ -21,6 +21,7 @@ db.exec(`
     school       TEXT,
     password_hash TEXT NOT NULL,
     verified     INTEGER DEFAULT 0,
+    plan         TEXT DEFAULT 'free',   -- 'free' | 'paid'; drives the per-course ad gate
     created_at   TEXT DEFAULT (datetime('now'))
   );
 
@@ -255,6 +256,7 @@ db.exec(`
 
 // Migrations — safe to re-run on every boot, ignored if column already exists
 const migrations = [
+  `ALTER TABLE teachers  ADD COLUMN plan              TEXT DEFAULT 'free'`,
   `ALTER TABLE classes   ADD COLUMN mastery_threshold INTEGER DEFAULT 80`,
   `ALTER TABLE classes   ADD COLUMN retry_allowed     INTEGER DEFAULT 0`,
   `ALTER TABLE students  ADD COLUMN retry_override    INTEGER DEFAULT NULL`,
