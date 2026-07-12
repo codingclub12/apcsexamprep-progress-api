@@ -227,6 +227,40 @@ db.exec(`
     serve_count   INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY (course, unit, lesson, activity_type)
   );
+
+  -- Lightweight server-side answer key for the choice-only quiz path on
+  -- POST /api/student/score. The lesson page (System B, ap-csa-course-* pages)
+  -- posts { activity_type:'quiz', item:'q3', choice:'B' } with no correctness
+  -- verdict; the server scores the choice against the correct letter stored here,
+  -- so no answer key ever ships to a class-mode page. This is a simpler key than
+  -- quiz_bank (which owns full prompt/options for the order-token render flow):
+  -- here the page renders its own options and only the correct letter is server
+  -- owned. Author content only; zero student PII. Seeded by
+  -- scripts/seed-csa-bank.js (on boot, insert-or-ignore) from data/csa-answer-bank.js.
+  CREATE TABLE IF NOT EXISTS quiz_answer_bank (
+    course TEXT NOT NULL,
+    lesson TEXT NOT NULL,        -- lesson slug, e.g. '2-9-for-loops'
+    item   TEXT NOT NULL,        -- question id, e.g. 'q3'
+    answer TEXT NOT NULL,        -- correct choice letter, e.g. 'A'
+    PRIMARY KEY (course, lesson, item)
+  );
+
+  -- Per-lesson denominators for the System-B (score_events -> progress.score)
+  -- percent rollup, one row per (course, lesson, activity_type). This is the
+  -- CSA-course-manifest counterpart to course_manifest, kept separate because
+  -- course_manifest is item-level and read by the System-A attempts grid;
+  -- mixing the slug-lesson System-B rows into it would pollute that grid. Not a
+  -- grade source and not yet consumed by the self-summing rollup; seeded so the
+  -- authoritative denominators live server-side, ready for a fixed-denominator
+  -- read. Seeded by scripts/seed-csa-bank.js from data/csa-course-manifest.js.
+  CREATE TABLE IF NOT EXISTS course_denominators (
+    course        TEXT NOT NULL,
+    unit          TEXT NOT NULL,
+    lesson        TEXT NOT NULL,
+    activity_type TEXT NOT NULL,
+    possible      REAL NOT NULL DEFAULT 1,
+    PRIMARY KEY (course, lesson, activity_type)
+  );
 `);
 
 // Migrations — safe to re-run on every boot, ignored if column already exists
