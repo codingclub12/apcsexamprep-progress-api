@@ -586,6 +586,13 @@ router.post('/track', requireStudent, (req, res) => {
     res.status(500).json({ error: 'Failed to track' });
   }
 });
+// Server-owned correct letter for the choice-only quiz path (System B). The page
+// posts the chosen letter; the server scores it against this key, so no answer
+// key ships to a class-mode page. Seeded by scripts/seed-csa-bank.js.
+const scoreAnswerKeyStmt = db.prepare(
+  'SELECT answer FROM quiz_answer_bank WHERE course = ? AND lesson = ? AND item = ?'
+);
+
 // ── SCORE (record one graded interaction) ─────────────────────────────────────
 // rollupScore lives in ../scoring.js so this path and the Phase 2 server-side
 // quiz scorer (routes/quiz.js) roll up progress.score identically.
@@ -619,10 +626,32 @@ router.post('/score', requireStudent, (req, res) => {
     const activity_type = b.activity_type ? String(b.activity_type) : 'cfu';
     const item          = b.item != null ? String(b.item).slice(0, 120) : 'item';
 
-    // Points: explicit points/max_points win (partial credit); otherwise derive
-    // from the boolean `correct`. One of the two forms is required.
+    // Points, resolved from whichever form the reporter sent:
+    //   • quiz + choice     : server-side scoring. The page sends only the chosen
+    //     letter; the server owns correctness via quiz_answer_bank so no key ever
+    //     ships to a class-mode page. 1 point if the choice matches, else 0.
+    //   • earned + possible : whole-run form for exercise-2 (game, out of 6) and
+    //     exercise-3 (FRQ, out of 1). One result per run, best kept per item.
+    //   • points + max_points : explicit partial credit.
+    //   • correct           : boolean, mapped to 1/1 or 0/1.
     let points, max_points, correct;
-    if (b.points != null || b.max_points != null) {
+    const quizChoice = activity_type === 'quiz' && b.choice != null
+      && b.correct == null && b.points == null && b.max_points == null
+      && b.earned == null && b.possible == null;
+    if (quizChoice) {
+      const key = scoreAnswerKeyStmt.get(course, lesson, item);
+      if (!key) {
+        return res.status(400).json({ error: `No answer key for ${course} ${lesson} ${item}. Cannot score this quiz item.` });
+      }
+      correct    = String(b.choice).trim().toUpperCase() === String(key.answer).trim().toUpperCase() ? 1 : 0;
+      points     = correct;
+      max_points = 1;
+    } else if (b.earned != null || b.possible != null) {
+      points     = Number(b.earned ?? 0);
+      max_points = Number(b.possible ?? 1);
+      correct    = b.correct != null ? (b.correct ? 1 : 0)
+                 : (max_points > 0 && points >= max_points ? 1 : 0);
+    } else if (b.points != null || b.max_points != null) {
       points     = Number(b.points ?? 0);
       max_points = Number(b.max_points ?? 1);
       correct    = b.correct != null ? (b.correct ? 1 : 0)
@@ -632,7 +661,7 @@ router.post('/score', requireStudent, (req, res) => {
       points     = correct;
       max_points = 1;
     } else {
-      return res.status(400).json({ error: 'Provide `correct` (boolean) or `points` + `max_points`' });
+      return res.status(400).json({ error: 'Provide `choice` (quiz), `correct` (boolean), `points` + `max_points`, or `earned` + `possible`' });
     }
     if (!Number.isFinite(points) || !Number.isFinite(max_points) || max_points <= 0) {
       return res.status(400).json({ error: 'points must be finite and max_points > 0' });

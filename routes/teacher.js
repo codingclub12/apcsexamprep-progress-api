@@ -250,7 +250,7 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
     }
 
     const GRADED = new Set(['quiz', 'exam', 'case-file']);
-    const ABBR = { lesson: 'L', 'exercise-1': 'E1', 'exercise-2': 'E2', quiz: 'Q', lab: 'Lab', code: 'Code' };
+    const ABBR = { lesson: 'L', 'exercise-1': 'E1', 'exercise-2': 'E2', 'exercise-3': 'E3', quiz: 'Q', lab: 'Lab', code: 'Code' };
     const abbr = a => ABBR[a] || a;
     const shortUnit = k => k.replace(/^unit-/, 'Unit ').replace(/^bi-/, 'BI ');
 

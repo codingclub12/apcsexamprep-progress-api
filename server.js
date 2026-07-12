@@ -39,6 +39,13 @@ app.use('/api/admin', require('./routes/admin'));
 const seeded = require('./scripts/seed-manifest').seedManifest();
 console.log(`course_manifest: ${seeded.changed} new of ${seeded.total} seed rows`);
 
+// CSA answer key + denominators for the ap-csa reporter (System B). Unlike the
+// order-token quiz_bank, this MUST be present on boot so the choice-only quiz
+// scoring path works the moment the reporter goes live. Insert-or-ignore only;
+// run `node scripts/seed-csa-bank.js --update` to push edits to existing rows.
+const csaSeeded = require('./scripts/seed-csa-bank').seedCsaBank();
+console.log(`csa bank: ${csaSeeded.answers} new answer rows, ${csaSeeded.denoms} new denominator rows`);
+
 // ── PUBLIC ENDPOINTS ──────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', ts: new Date().toISOString() });
