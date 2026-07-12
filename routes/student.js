@@ -586,6 +586,44 @@ router.post('/track', requireStudent, (req, res) => {
     res.status(500).json({ error: 'Failed to track' });
   }
 });
+// ── SERVER-SIDE SCORING SUPPORT (ap-csp quiz/exam integrity fix) ──────────────
+// The correct letter lives only in answer_bank and is read here at submit time,
+// never shipped to the page. A (course, unit, lesson, activity_type) counts as
+// "server-scored" once its answer_bank rows are seeded; until then quiz/exam posts
+// fall through to the legacy client-reported path, so nothing that works today
+// breaks. Prepared once at module scope per the perf rules in CLAUDE.md.
+const ssBankCountStmt = db.prepare(
+  'SELECT COUNT(*) n FROM answer_bank WHERE course = ? AND unit = ? AND lesson = ? AND activity_type = ?'
+);
+const ssBankItemStmt = db.prepare(
+  'SELECT correct, rationale FROM answer_bank WHERE course = ? AND unit = ? AND lesson = ? AND item = ?'
+);
+const ssManifestStmt = db.prepare(
+  'SELECT item_count FROM activity_manifest WHERE course = ? AND unit = ? AND lesson = ? AND activity_type = ?'
+);
+const ssDupeStmt = db.prepare(
+  'SELECT id FROM score_events WHERE student_id = ? AND client_event_id = ?'
+);
+const ssInsertEventStmt = db.prepare(`
+  INSERT OR IGNORE INTO score_events
+    (id, student_id, class_id, course, unit, lesson, activity_type, item,
+     points, max_points, correct, answers, client_event_id, created_at)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+`);
+const ssFindProgressStmt = db.prepare(`
+  SELECT id FROM progress
+  WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
+`);
+const ssUpdateProgressStmt = db.prepare(
+  'UPDATE progress SET score = ?, attempts = ?, updated_at = ? WHERE id = ?'
+);
+const ssInsertProgressStmt = db.prepare(`
+  INSERT INTO progress (id, student_id, class_id, course, unit, lesson,
+    activity_type, completed, score, attempts, updated_at)
+  VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?)
+`);
+const CHOICE_INDEX = { A: 0, B: 1, C: 2, D: 3 };
+
 // ── SCORE (record one graded interaction) ─────────────────────────────────────
 // rollupScore lives in ../scoring.js so this path and the Phase 2 server-side
 // quiz scorer (routes/quiz.js) roll up progress.score identically.
@@ -618,6 +656,83 @@ router.post('/score', requireStudent, (req, res) => {
     const lesson        = String(b.lesson);
     const activity_type = b.activity_type ? String(b.activity_type) : 'cfu';
     const item          = b.item != null ? String(b.item).slice(0, 120) : 'item';
+
+    // ── SERVER-SIDE SCORING (ap-csp quiz/exam) ────────────────────────────────
+    // Quizzes and unit tests are scored on the server against answer_bank; the
+    // client sends a `choice` letter and never a correctness flag. Only engage
+    // when this activity has seeded keys, so un-migrated locations keep their
+    // existing client-reported flow (the branch is skipped and control falls to
+    // the legacy points resolution below).
+    if ((activity_type === 'quiz' || activity_type === 'exam') &&
+        ssBankCountStmt.get(course, unit, lesson, activity_type).n > 0) {
+      const choice = String(b.choice == null ? '' : b.choice).trim().toUpperCase();
+      // Untrusted input: ignore anything that is not A-D, do not record.
+      if (!(choice in CHOICE_INDEX)) {
+        return res.json({ ok: true, tracked: false, reason: 'choice must be one of A, B, C, D' });
+      }
+
+      const key = ssBankItemStmt.get(course, unit, lesson, item); // undefined for an unknown item
+      const isCorrect = !!(key && choice === key.correct);
+      const points = isCorrect ? 1 : 0;
+      const recognized = !!(COURSES[course] && COURSES[course].units[unit]);
+      const clientEventId = b.client_event_id ? String(b.client_event_id).slice(0, 100) : null;
+
+      // Idempotency: a client_event_id already seen for this student is a retry.
+      if (clientEventId) {
+        const dupe = ssDupeStmt.get(req.student.id, clientEventId);
+        if (dupe) {
+          return res.json({
+            ok: true, tracked: true, duplicate: true, recognized,
+            is_correct: isCorrect,
+            correct: key ? key.correct : null,
+            rationale: key ? key.rationale : null,
+            item: { item, points, max_points: 1, correct: points },
+            rollup: rollupScore(req.student.id, course, unit, lesson, activity_type),
+          });
+        }
+      }
+
+      const now = new Date().toISOString();
+      // Zero-PII: store the selected OPTION INDEX and a boolean only, never text.
+      const answersLog = JSON.stringify([{ sel: CHOICE_INDEX[choice], ok: isCorrect }]);
+
+      const rollup = db.transaction(() => {
+        ssInsertEventStmt.run(
+          newId(), req.student.id, req.student.class_id, course, unit, lesson,
+          activity_type, item, points, 1, isCorrect ? 1 : 0, answersLog, clientEventId, now
+        );
+        const roll = rollupScore(req.student.id, course, unit, lesson, activity_type);
+        // Denominator authority is the manifest item_count, not "questions
+        // answered so far". Re-answers keep best-per-item and never inflate it.
+        // Falls back to the event-derived possible until the manifest is seeded.
+        const mrow = ssManifestStmt.get(course, unit, lesson, activity_type);
+        const possible = mrow && mrow.item_count > 0 ? mrow.item_count : roll.possible;
+        roll.possible = possible;
+        roll.pct = possible > 0 ? Math.round((roll.earned / possible) * 100) : 0;
+
+        const existing = ssFindProgressStmt.get(req.student.id, course, unit, lesson, activity_type);
+        if (existing) {
+          ssUpdateProgressStmt.run(roll.pct, roll.events, now, existing.id);
+        } else {
+          ssInsertProgressStmt.run(newId(), req.student.id, req.student.class_id,
+            course, unit, lesson, activity_type, roll.pct, roll.events, now);
+        }
+        return roll;
+      })();
+
+      const out = {
+        ok: true, tracked: true, recorded: true, recognized,
+        is_correct: isCorrect,
+        correct: key ? key.correct : null,
+        rationale: key ? key.rationale : null,
+        item: { item, points, max_points: 1, correct: points },
+        rollup,
+      };
+      // Unknown item inside a seeded activity: stored 0 rather than crashing, but
+      // surface it so a typo'd item id does not silently score every student 0.
+      if (!key) out.warning = `No answer key for ${course} ${unit}/${lesson} item '${item}'. Scored 0. Check the item id or seed the key.`;
+      return res.json(out);
+    }
 
     // Points: explicit points/max_points win (partial credit); otherwise derive
     // from the boolean `correct`. One of the two forms is required.
