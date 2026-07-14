@@ -42,8 +42,14 @@ console.log(`course_manifest: ${seeded.changed} new of ${seeded.total} seed rows
 // Per-activity denominator authority for the ap-csp server-scored path. Same
 // insert-or-ignore posture: a fresh deploy is never fail-closed with empty
 // denominators. Run `node scripts/seed-activity-manifest.js --update` for edits.
-const actSeeded = require('./scripts/seed-activity-manifest').seedActivityManifest();
-console.log(`activity_manifest: ${actSeeded.changed} new of ${actSeeded.total} seed rows`);
+// Wrapped so a missing or corrupt data file degrades to "no CSP denominators"
+// rather than crashing boot and taking auth down with it.
+try {
+  const actSeeded = require('./scripts/seed-activity-manifest').seedActivityManifest();
+  console.log(`activity_manifest: ${actSeeded.changed} new of ${actSeeded.total} seed rows`);
+} catch (e) {
+  console.error('activity_manifest seed skipped (non-fatal):', e.message);
+}
 
 // ── PUBLIC ENDPOINTS ──────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
