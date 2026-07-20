@@ -236,7 +236,7 @@ db.exec(`
   -- quiz_bank (which owns full prompt/options for the order-token render flow):
   -- here the page renders its own options and only the correct letter is server
   -- owned. Author content only; zero student PII. Seeded by
-  -- scripts/seed-csa-bank.js (on boot, insert-or-ignore) from data/csa-answer-bank.js.
+  -- scripts/seed-csa-bank.js (on boot, insert-or-ignore) from seed/csa-answer-bank.js.
   CREATE TABLE IF NOT EXISTS quiz_answer_bank (
     course TEXT NOT NULL,
     lesson TEXT NOT NULL,        -- lesson slug, e.g. '2-9-for-loops'
@@ -252,7 +252,7 @@ db.exec(`
   -- mixing the slug-lesson System-B rows into it would pollute that grid. Not a
   -- grade source and not yet consumed by the self-summing rollup; seeded so the
   -- authoritative denominators live server-side, ready for a fixed-denominator
-  -- read. Seeded by scripts/seed-csa-bank.js from data/csa-course-manifest.js.
+  -- read. Seeded by scripts/seed-csa-bank.js from seed/csa-course-manifest.js.
   CREATE TABLE IF NOT EXISTS course_denominators (
     course        TEXT NOT NULL,
     unit          TEXT NOT NULL,

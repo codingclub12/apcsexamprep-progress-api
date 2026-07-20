@@ -157,7 +157,7 @@ change. Canonical strings: `course` `ap-cybersecurity`, `unit` `unit-N`, `lesson
 
 ## Seeding real keys
 
-`data/cyber-quiz-bank.js` holds a representative placeholder quiz. The
+`seed/cyber-quiz-bank.js` holds a representative placeholder quiz. The
 authoritative Unit 1 questions currently live in the Shopify page HTML
 (`data-correct`) and must be exported into the same shape (one object per
 question, stable `qid`, `options`, `correct_index`, `explanation`) and loaded
