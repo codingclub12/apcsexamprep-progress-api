@@ -33,18 +33,33 @@ app.use('/api/game', require('./routes/game'));
 app.use('/api/judge0', require('./routes/judge0'));
 app.use('/api/admin', require('./routes/admin'));
 
+// Boot seeds run before app.listen, so any throw here would crash the process
+// before the healthcheck can pass and take the whole service down. Each seed is
+// therefore wrapped: a failure is logged loudly but never blocks boot. Seeds are
+// insert-or-ignore and idempotent, so a skipped seed just leaves existing rows
+// in place and can be re-run later with the script's --update flag. The API must
+// always come up and serve /api/health, even with a bad seed.
+function runBootSeed(label, fn) {
+  try {
+    return fn();
+  } catch (err) {
+    console.error(`[boot-seed] ${label} failed, continuing without it:`, err);
+    return null;
+  }
+}
+
 // Manifest seed on boot: insert-or-ignore only, so a fresh deploy is never
 // fail-closed with an empty course_manifest and existing rows are untouched.
 // Run `node scripts/seed-manifest.js --update` to push edits to existing rows.
-const seeded = require('./scripts/seed-manifest').seedManifest();
-console.log(`course_manifest: ${seeded.changed} new of ${seeded.total} seed rows`);
+const seeded = runBootSeed('course_manifest', () => require('./scripts/seed-manifest').seedManifest());
+if (seeded) console.log(`course_manifest: ${seeded.changed} new of ${seeded.total} seed rows`);
 
 // CSA answer key + denominators for the ap-csa reporter (System B). Unlike the
 // order-token quiz_bank, this MUST be present on boot so the choice-only quiz
 // scoring path works the moment the reporter goes live. Insert-or-ignore only;
 // run `node scripts/seed-csa-bank.js --update` to push edits to existing rows.
-const csaSeeded = require('./scripts/seed-csa-bank').seedCsaBank();
-console.log(`csa bank: ${csaSeeded.answers} new answer rows, ${csaSeeded.denoms} new denominator rows`);
+const csaSeeded = runBootSeed('csa_bank', () => require('./scripts/seed-csa-bank').seedCsaBank());
+if (csaSeeded) console.log(`csa bank: ${csaSeeded.answers} new answer rows, ${csaSeeded.denoms} new denominator rows`);
 
 // ── PUBLIC ENDPOINTS ──────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
