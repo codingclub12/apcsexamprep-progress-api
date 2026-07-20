@@ -16,8 +16,8 @@
 //  Idempotent. Author content only; zero student PII.
 // ─────────────────────────────────────────────────────────────────────────────
 const db = require('../db');
-const answerSrc = require('../data/csa-answer-bank');
-const manifestSrc = require('../data/csa-course-manifest');
+const answerSrc = require('../seed/csa-answer-bank');
+const manifestSrc = require('../seed/csa-course-manifest');
 
 const insAnswer = db.prepare(
   'INSERT OR IGNORE INTO quiz_answer_bank (course, lesson, item, answer) VALUES (?, ?, ?, ?)'

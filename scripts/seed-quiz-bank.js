@@ -18,7 +18,7 @@ const db = require('../db');
 
 // Each source module exports { location, questions }. Add more as courses go live.
 const SOURCES = [
-  require('../data/cyber-quiz-bank'),
+  require('../seed/cyber-quiz-bank'),
 ];
 
 const insert = db.prepare(`
