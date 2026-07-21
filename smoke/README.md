@@ -19,22 +19,27 @@ automation stack on the 1 vCPU / 1 GB box. Nothing here touches the deploy.
 
 From the repo root:
 
-The reserved smoke-test classes (all owned by Tanner), one per course:
+The suite runs against all five classes owned by Tanner (his explicit choice):
 
 | Code | Course | Notes |
 | --- | --- | --- |
 | `CYBER-Q9JG` | AP Cybersecurity | Named "TEST"; a throwaway. |
 | `CSA-CQ3G` | AP CSA | Empty, so test rows stay isolated. |
-| `CSP-CHSH` | AP CSP | Not empty (has students) - swap for a dedicated empty `CSP-XXXX` class if you want isolation. |
+| `CSP-CHSH` | AP CSP | Has students. |
+| `CSA-4UC8` | AP CSA | **Real class** (has students/completions). |
+| `CYBER-U89X` | AP Cybersecurity | "3rd Hour" - **real class**. |
 
-Test students accumulate in whichever class you pass, so never point the test at
-a real class. Pass one or more, comma-separated; the full A-E suite runs against
-each in its own isolated browser context, and the run fails if ANY class fails.
+Heads up: three of these are real classes, so each run adds a `ZZ-SMOKE` student
+to those real rosters. That is an accepted tradeoff here since Tanner owns them;
+never point the test at another teacher's class. Every created student is listed
+in `created-artifacts.json` for cleanup. Pass one or more codes, comma-separated;
+the full A-E suite runs against each in its own isolated browser context, and the
+run fails if ANY class fails.
 
 ```bash
 npm run smoke:install      # one time: installs Playwright into smoke/
 cd smoke && npx playwright install chromium && cd ..   # if the browser did not auto-download
-SMOKE_TEST_CLASS_CODE=CYBER-Q9JG,CSA-CQ3G,CSP-CHSH npm run smoke:auth
+SMOKE_TEST_CLASS_CODE=CYBER-Q9JG,CSA-CQ3G,CSP-CHSH,CSA-4UC8,CYBER-U89X npm run smoke:auth
 ```
 
 The test exits non-zero if any hard assertion fails, so it can gate CI or a
@@ -51,7 +56,7 @@ SMOKE_CHROMIUM_PATH=/opt/pw-browsers/chromium SMOKE_TEST_CLASS_CODE=CSA-XXXX npm
 
 | Var | Default | Notes |
 | --- | --- | --- |
-| `SMOKE_TEST_CLASS_CODE` | **(required)** | One or more reserved disposable test classes, comma-separated: `CYBER-Q9JG,CSA-CQ3G,CSP-CHSH` (owned by Tanner). The full suite runs per class. NEVER point this at a real class - it pollutes the roster and analytics. |
+| `SMOKE_TEST_CLASS_CODE` | **(required)** | One or more class codes, comma-separated: `CYBER-Q9JG,CSA-CQ3G,CSP-CHSH,CSA-4UC8,CYBER-U89X` (all owned by Tanner). The full suite runs per class. NEVER point this at another teacher's class. |
 | `SMOKE_SITE_BASE` | `https://www.apcsexamprep.com` | The Shopify site. |
 | `SMOKE_API_BASE` | `https://progress.apcsexamprep.com` | Only used for the roster-count check (block B9). |
 | `SMOKE_PIN` | generated (4 digits) | Reused across join + login in a run. |
