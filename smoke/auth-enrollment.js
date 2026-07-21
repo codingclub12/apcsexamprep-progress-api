@@ -79,7 +79,16 @@ const CFG = {
     .split(',').map((s) => s.toUpperCase().trim()).filter(Boolean),
   pin:        (process.env.SMOKE_PIN || '').trim(),          // 4 digits; generated if unset
   headless:   process.env.SMOKE_HEADLESS !== '0',
-  navTimeout: Number(process.env.SMOKE_NAV_TIMEOUT_MS || 8000), // the "N seconds" guard
+  // Two distinct timeouts, deliberately:
+  //  - navTimeout is the silent-failure guard window: after a SUBMIT, how long
+  //    we allow for navigation-or-visible-error. It stays tight and
+  //    user-realistic, because a 30s "did anything happen?" is itself a bug.
+  //  - loadTimeout covers infra latency that is NOT a product signal: a cold
+  //    Shopify page load and the cold-start Railway API fetch behind the
+  //    class-code step. Generous, so slow infra does not masquerade as a
+  //    silent-submit failure.
+  navTimeout:  Number(process.env.SMOKE_NAV_TIMEOUT_MS || 8000),
+  loadTimeout: Number(process.env.SMOKE_LOAD_TIMEOUT_MS || 25000),
   doGradeable: process.env.SMOKE_DO_GRADEABLE === '1',        // optional block C, off by default
   lessonUrl:  process.env.SMOKE_LESSON_URL || '',            // required only if doGradeable
   artifactsDir: process.env.SMOKE_ARTIFACTS_DIR || path.join(process.cwd(), 'artifacts'),
@@ -219,12 +228,12 @@ async function blockA_register(page, ctx) {
   ctx.rosterBefore = await rosterCount(page, ctx.classCode);
 
   // Step 1: class code -> Continue.
-  await page.waitForSelector('#joinCode', { timeout: CFG.navTimeout });
+  await page.waitForSelector('#joinCode', { timeout: CFG.loadTimeout });
   await page.fill('#joinCode', ctx.classCode);
   await page.click('#step-join-code button.apjoin-btn');
 
   // The page previews the class then advances after ~500ms; wait for step 2.
-  await page.waitForSelector('#step-join-details.active #joinName, #step-join-details #joinName', { timeout: CFG.navTimeout })
+  await page.waitForSelector('#step-join-details.active #joinName, #step-join-details #joinName', { timeout: CFG.loadTimeout })
     .catch(() => {});
   const onDetails = await page.locator('#joinName').isVisible().catch(() => false);
   record(B, 'class code accepted -> reached name/PIN step', onDetails,
@@ -272,7 +281,7 @@ async function blockB_enroll(page, ctx) {
   const B = 'B/enroll';
   await page.goto(`${CFG.siteBase}/pages/my-progress`, { waitUntil: 'domcontentloaded' });
 
-  const mainVisible = await page.locator('#aprog-main').isVisible({ timeout: CFG.navTimeout }).catch(() => false);
+  const mainVisible = await page.locator('#aprog-main').isVisible({ timeout: CFG.loadTimeout }).catch(() => false);
   const guestVisible = await page.locator('#aprog-not-logged').isVisible().catch(() => false);
   record(B, 'dashboard shows logged-in state (#aprog-main)', mainVisible && !guestVisible,
     mainVisible ? (guestVisible ? 'both main and guest visible' : '') : 'logged-in dashboard did not render');
@@ -325,7 +334,7 @@ async function blockD_roundtrip(page, ctx) {
   // D12: log out, assert token cleared. The join page shows an already-logged
   // panel with a Sign Out control that calls APJoin.logout().
   await page.goto(`${CFG.siteBase}/pages/join`, { waitUntil: 'domcontentloaded' });
-  const loggedPanel = await page.locator('#alreadyLogged').isVisible({ timeout: CFG.navTimeout }).catch(() => false);
+  const loggedPanel = await page.locator('#alreadyLogged').isVisible({ timeout: CFG.loadTimeout }).catch(() => false);
   if (loggedPanel) {
     await page.click('#alreadyLogged .l-out-btn').catch(() => {});
     await page.waitForLoadState('domcontentloaded').catch(() => {}); // logout() reloads
@@ -339,9 +348,9 @@ async function blockD_roundtrip(page, ctx) {
 
   // D13: log back in. CURRENT live model is class_code + display_name + PIN.
   // (Post-refactor this becomes student_code + PIN; swap the two fills below.)
-  await page.waitForSelector('.apjoin-tab', { timeout: CFG.navTimeout });
+  await page.waitForSelector('.apjoin-tab', { timeout: CFG.loadTimeout });
   await page.locator('.apjoin-tab', { hasText: 'Return Student' }).click();
-  await page.waitForSelector('#step-login #loginCode, #loginCode', { timeout: CFG.navTimeout });
+  await page.waitForSelector('#step-login #loginCode, #loginCode', { timeout: CFG.loadTimeout });
   await page.fill('#loginCode', ctx.classCode);
   await page.fill('#loginName', DISPLAY_NAME);
   await fillPin(page, ['lp1', 'lp2', 'lp3', 'lp4'], CFG.pin);
@@ -362,7 +371,7 @@ async function blockD_roundtrip(page, ctx) {
 
   // D14: same dashboard renders, enrollment persists.
   await page.goto(`${CFG.siteBase}/pages/my-progress`, { waitUntil: 'domcontentloaded' });
-  const mainVisible = await page.locator('#aprog-main').isVisible({ timeout: CFG.navTimeout }).catch(() => false);
+  const mainVisible = await page.locator('#aprog-main').isVisible({ timeout: CFG.loadTimeout }).catch(() => false);
   record(B, 'dashboard renders again after login (enrollment persists)', mainVisible,
     mainVisible ? '' : 'dashboard did not render after re-login');
 }
@@ -378,7 +387,7 @@ async function blockE_negatives(page, ctx) {
 
   // E16: wrong PIN -> a VISIBLE error, not a silent nothing.
   await page.locator('.apjoin-tab', { hasText: 'Return Student' }).click();
-  await page.waitForSelector('#loginCode', { timeout: CFG.navTimeout });
+  await page.waitForSelector('#loginCode', { timeout: CFG.loadTimeout });
   await page.fill('#loginCode', ctx.classCode);
   await page.fill('#loginName', DISPLAY_NAME);
   await fillPin(page, ['lp1', 'lp2', 'lp3', 'lp4'], '0000' === CFG.pin ? '1111' : '0000'); // deliberately wrong
@@ -393,7 +402,7 @@ async function blockE_negatives(page, ctx) {
 
   // E17: invalid/nonexistent class code -> a friendly visible error.
   await page.goto(`${CFG.siteBase}/pages/join`, { waitUntil: 'domcontentloaded' });
-  await page.waitForSelector('#joinCode', { timeout: CFG.navTimeout });
+  await page.waitForSelector('#joinCode', { timeout: CFG.loadTimeout });
   await page.fill('#joinCode', 'ZZ-NOPE-9999');
   await page.click('#step-join-code button.apjoin-btn');
   // verifyCode shows #joinCodeError on a bad code (and must NOT advance to step 2).
@@ -407,10 +416,10 @@ async function blockE_negatives(page, ctx) {
   // E18: already-enrolled (duplicate name in same class) -> graceful message,
   // not a crash or a duplicate row. Re-join with the SAME sentinel name.
   await page.goto(`${CFG.siteBase}/pages/join`, { waitUntil: 'domcontentloaded' });
-  await page.waitForSelector('#joinCode', { timeout: CFG.navTimeout });
+  await page.waitForSelector('#joinCode', { timeout: CFG.loadTimeout });
   await page.fill('#joinCode', ctx.classCode);
   await page.click('#step-join-code button.apjoin-btn');
-  const reached = await page.waitForSelector('#joinName', { timeout: CFG.navTimeout }).then(() => true).catch(() => false);
+  const reached = await page.waitForSelector('#joinName', { timeout: CFG.loadTimeout }).then(() => true).catch(() => false);
   if (!reached) {
     record(B, 'already-enrolled handled gracefully', false, 'could not reach name step to re-join');
     return;
@@ -453,6 +462,14 @@ async function main() {
   if (CFG.chromiumPath) launchOpts.executablePath = CFG.chromiumPath;
   const browser = await chromium.launch(launchOpts);
 
+  // Warm the API before the first real interaction. Railway can cold-start, and
+  // the very first class-code step waits on an API fetch; without this the first
+  // class flakes on infra latency, not a product bug. Best-effort, non-fatal.
+  try {
+    const warm = await fetch(`${CFG.apiBase}/api/health`).then((r) => r.ok).catch(() => false);
+    console.log(`  warmup ${CFG.apiBase}/api/health: ${warm ? 'ok' : 'no response (continuing)'}`);
+  } catch { /* ignore */ }
+
   const blocks = [
     ['A', blockA_register],
     ['B', blockB_enroll],
@@ -472,6 +489,10 @@ async function main() {
 
     const context = await browser.newContext({ ignoreHTTPSErrors: false });
     const page = await context.newPage();
+    // Default all implicit waits/navigation to the generous infra timeout; the
+    // silent-failure guard uses its own tight window explicitly.
+    page.setDefaultTimeout(CFG.loadTimeout);
+    page.setDefaultNavigationTimeout(CFG.loadTimeout);
     attachListeners(page);
     const ctx = { classCode };
 
@@ -486,6 +507,9 @@ async function main() {
     }
 
     await context.close().catch(() => {});
+    // Gentle pause between classes - the API has light rate limiting and this
+    // suite is deliberately not a hammer.
+    await sleep(1000);
   }
 
   await browser.close().catch(() => {});

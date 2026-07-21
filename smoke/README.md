@@ -86,7 +86,8 @@ smoke run, or on a schedule during the back-to-school window.
 | `SMOKE_API_BASE` | `https://progress.apcsexamprep.com` | Only used for the roster-count check (block B9). |
 | `SMOKE_PIN` | generated (4 digits) | Reused across join + login in a run. |
 | `SMOKE_HEADLESS` | `1` | Set `0` to watch the browser. |
-| `SMOKE_NAV_TIMEOUT_MS` | `8000` | The "N seconds" window for the silent-failure guard. |
+| `SMOKE_NAV_TIMEOUT_MS` | `8000` | The tight "N seconds" window for the silent-failure guard (after a submit). Keep it user-realistic. |
+| `SMOKE_LOAD_TIMEOUT_MS` | `25000` | Generous timeout for infra latency (cold Shopify load + cold-start Railway API fetch behind the class-code step). Not a product signal. |
 | `SMOKE_DO_GRADEABLE` | `0` | Optional block C; needs `SMOKE_LESSON_URL` and live lesson selectors wired. |
 | `SMOKE_LESSON_URL` | (unset) | Lesson page for block C when enabled. |
 | `SMOKE_ARTIFACTS_DIR` | `./artifacts` | Where screenshots + console/network dumps land on failure. |
