@@ -1,0 +1,13 @@
+{
+  "name": "progress-api-smoke",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Auth + enrollment browser smoke test (kept isolated so the Railway deploy never installs Playwright)",
+  "main": "auth-enrollment.js",
+  "scripts": {
+    "test": "node auth-enrollment.js"
+  },
+  "dependencies": {
+    "playwright": "^1.48.0"
+  }
+}

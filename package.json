@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "smoke:install": "npm install --prefix smoke",
+    "smoke:auth": "node smoke/auth-enrollment.js"
   },
   "keywords": [],
   "author": "",
