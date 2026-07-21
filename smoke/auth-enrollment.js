@@ -215,6 +215,39 @@ async function rosterCount(page, code) {
   } catch { return null; }
 }
 
+// ── Live-site chrome helpers ──────────────────────────────────────────────────
+// The deployed theme injects marketing modals (e.g. #apcs-csa-popup, the "Exam
+// week survival guide" overlay) and a sticky nav that intercept pointer events
+// and swallow real clicks. These are site chrome, NOT the product under test, so
+// we remove any active overlay before interacting. Best-effort and safe when
+// none is present.
+async function dismissOverlays(page) {
+  await page.evaluate(() => {
+    const sel = '.apcs-popup-overlay, #apcs-csa-popup, [role="dialog"][aria-modal="true"]';
+    document.querySelectorAll(sel).forEach((el) => { try { el.remove(); } catch (e) {} });
+  }).catch(() => {});
+}
+
+async function gotoClean(page, url) {
+  await page.goto(url, { waitUntil: 'domcontentloaded' });
+  await dismissOverlays(page);
+}
+
+// Dismiss overlays immediately before a click so a popup that appeared after the
+// page settled cannot intercept it.
+async function clickClean(page, selector) {
+  await dismissOverlays(page);
+  await page.click(selector);
+}
+
+// Real visibility wait. NOTE: Playwright's locator.isVisible() does NOT wait and
+// ignores a timeout - it samples the current state. Use this whenever an element
+// only appears after the page's own JS runs.
+async function visibleWithin(page, selector, timeoutMs) {
+  return page.waitForSelector(selector, { state: 'visible', timeout: timeoutMs })
+    .then(() => true).catch(() => false);
+}
+
 // =============================================================================
 // BLOCKS
 // =============================================================================
@@ -222,7 +255,7 @@ async function rosterCount(page, code) {
 // A. Register (join) a new student + silent-failure guard.
 async function blockA_register(page, ctx) {
   const B = 'A/register';
-  await page.goto(`${CFG.siteBase}/pages/join`, { waitUntil: 'domcontentloaded' });
+  await gotoClean(page, `${CFG.siteBase}/pages/join`);
 
   // Snapshot roster size before we create anyone (for B9's "no duplicate" check).
   ctx.rosterBefore = await rosterCount(page, ctx.classCode);
@@ -230,7 +263,7 @@ async function blockA_register(page, ctx) {
   // Step 1: class code -> Continue.
   await page.waitForSelector('#joinCode', { timeout: CFG.loadTimeout });
   await page.fill('#joinCode', ctx.classCode);
-  await page.click('#step-join-code button.apjoin-btn');
+  await clickClean(page, '#step-join-code button.apjoin-btn');
 
   // The page previews the class then advances after ~500ms; wait for step 2.
   await page.waitForSelector('#step-join-details.active #joinName, #step-join-details #joinName', { timeout: CFG.loadTimeout })
@@ -243,7 +276,7 @@ async function blockA_register(page, ctx) {
   // Step 2: name + PIN -> Join.
   await page.fill('#joinName', DISPLAY_NAME);
   await fillPin(page, ['p1', 'p2', 'p3', 'p4'], CFG.pin);
-  await page.click('#step-join-details button.apjoin-btn');
+  await clickClean(page, '#step-join-details button.apjoin-btn');
 
   // A6: the silent-failure guard.
   const outcome = await waitNavOrError(page, {
@@ -279,12 +312,30 @@ async function blockA_register(page, ctx) {
 // B. Confirm enrollment renders on the dashboard + no duplicate created.
 async function blockB_enroll(page, ctx) {
   const B = 'B/enroll';
-  await page.goto(`${CFG.siteBase}/pages/my-progress`, { waitUntil: 'domcontentloaded' });
+  await gotoClean(page, `${CFG.siteBase}/pages/my-progress`);
 
-  const mainVisible = await page.locator('#aprog-main').isVisible({ timeout: CFG.loadTimeout }).catch(() => false);
+  const mainVisible = await visibleWithin(page, '#aprog-main', CFG.loadTimeout);
   const guestVisible = await page.locator('#aprog-not-logged').isVisible().catch(() => false);
   record(B, 'dashboard shows logged-in state (#aprog-main)', mainVisible && !guestVisible,
     mainVisible ? (guestVisible ? 'both main and guest visible' : '') : 'logged-in dashboard did not render');
+
+  // If the dashboard did not render, dump why so the log is self-diagnosing:
+  // guest view shown? token lost? element present-but-hidden? page errored?
+  if (!mainVisible) {
+    const diag = await page.evaluate(() => {
+      const m = document.querySelector('#aprog-main');
+      const g = document.querySelector('#aprog-not-logged');
+      return {
+        url: location.href,
+        token: !!localStorage.getItem('apcse_token'),
+        session: !!localStorage.getItem('apcse_student'),
+        mainPresent: !!m, mainDisplay: m ? getComputedStyle(m).display : null,
+        guestDisplay: g ? getComputedStyle(g).display : null,
+      };
+    }).catch(() => ({}));
+    const errs = consoleLog.filter((e) => e.type === 'pageerror').slice(-3).map((e) => e.text);
+    console.log(`      B-diag: ${JSON.stringify(diag)} pageerrors=${JSON.stringify(errs)}`);
+  }
 
   const name = (await page.locator('#aprog-name').textContent().catch(() => '')) || '';
   record(B, 'dashboard shows our student name', name.trim() === DISPLAY_NAME,
@@ -333,10 +384,10 @@ async function blockD_roundtrip(page, ctx) {
 
   // D12: log out, assert token cleared. The join page shows an already-logged
   // panel with a Sign Out control that calls APJoin.logout().
-  await page.goto(`${CFG.siteBase}/pages/join`, { waitUntil: 'domcontentloaded' });
-  const loggedPanel = await page.locator('#alreadyLogged').isVisible({ timeout: CFG.loadTimeout }).catch(() => false);
+  await gotoClean(page, `${CFG.siteBase}/pages/join`);
+  const loggedPanel = await visibleWithin(page, '#alreadyLogged', CFG.loadTimeout);
   if (loggedPanel) {
-    await page.click('#alreadyLogged .l-out-btn').catch(() => {});
+    await clickClean(page, '#alreadyLogged .l-out-btn').catch(() => {});
     await page.waitForLoadState('domcontentloaded').catch(() => {}); // logout() reloads
   } else {
     // Fallback: clear directly so the round-trip can still be exercised.
@@ -348,13 +399,14 @@ async function blockD_roundtrip(page, ctx) {
 
   // D13: log back in. CURRENT live model is class_code + display_name + PIN.
   // (Post-refactor this becomes student_code + PIN; swap the two fills below.)
-  await page.waitForSelector('.apjoin-tab', { timeout: CFG.loadTimeout });
+  await page.waitForSelector('.apjoin-tab', { state: 'visible', timeout: CFG.loadTimeout });
+  await dismissOverlays(page);
   await page.locator('.apjoin-tab', { hasText: 'Return Student' }).click();
-  await page.waitForSelector('#step-login #loginCode, #loginCode', { timeout: CFG.loadTimeout });
+  await page.waitForSelector('#step-login #loginCode, #loginCode', { state: 'visible', timeout: CFG.loadTimeout });
   await page.fill('#loginCode', ctx.classCode);
   await page.fill('#loginName', DISPLAY_NAME);
   await fillPin(page, ['lp1', 'lp2', 'lp3', 'lp4'], CFG.pin);
-  await page.click('#step-login button.apjoin-btn');
+  await clickClean(page, '#step-login button.apjoin-btn');
 
   // D15: silent-failure guard on the login submit (identical durable check).
   const outcome = await waitNavOrError(page, {
@@ -370,8 +422,8 @@ async function blockD_roundtrip(page, ctx) {
   record(B, 'auth token present after login', !!token, token ? '' : 'no token after login');
 
   // D14: same dashboard renders, enrollment persists.
-  await page.goto(`${CFG.siteBase}/pages/my-progress`, { waitUntil: 'domcontentloaded' });
-  const mainVisible = await page.locator('#aprog-main').isVisible({ timeout: CFG.loadTimeout }).catch(() => false);
+  await gotoClean(page, `${CFG.siteBase}/pages/my-progress`);
+  const mainVisible = await visibleWithin(page, '#aprog-main', CFG.loadTimeout);
   record(B, 'dashboard renders again after login (enrollment persists)', mainVisible,
     mainVisible ? '' : 'dashboard did not render after re-login');
 }
@@ -381,17 +433,19 @@ async function blockE_negatives(page, ctx) {
   const B = 'E/negatives';
 
   // Ensure a clean, logged-out page.
-  await page.goto(`${CFG.siteBase}/pages/join`, { waitUntil: 'domcontentloaded' });
+  await gotoClean(page, `${CFG.siteBase}/pages/join`);
   await page.evaluate(() => { localStorage.removeItem('apcse_token'); localStorage.removeItem('apcse_student'); });
   await page.reload({ waitUntil: 'domcontentloaded' });
 
   // E16: wrong PIN -> a VISIBLE error, not a silent nothing.
+  await page.waitForSelector('.apjoin-tab', { state: 'visible', timeout: CFG.loadTimeout });
+  await dismissOverlays(page);
   await page.locator('.apjoin-tab', { hasText: 'Return Student' }).click();
-  await page.waitForSelector('#loginCode', { timeout: CFG.loadTimeout });
+  await page.waitForSelector('#loginCode', { state: 'visible', timeout: CFG.loadTimeout });
   await page.fill('#loginCode', ctx.classCode);
   await page.fill('#loginName', DISPLAY_NAME);
   await fillPin(page, ['lp1', 'lp2', 'lp3', 'lp4'], '0000' === CFG.pin ? '1111' : '0000'); // deliberately wrong
-  await page.click('#step-login button.apjoin-btn');
+  await clickClean(page, '#step-login button.apjoin-btn');
   const wrongPinOutcome = await waitNavOrError(page, {
     successLocator: page.locator('#step-success'),
     errorSelector: '#loginError',
@@ -401,10 +455,10 @@ async function blockE_negatives(page, ctx) {
     `got '${wrongPinOutcome}'`);
 
   // E17: invalid/nonexistent class code -> a friendly visible error.
-  await page.goto(`${CFG.siteBase}/pages/join`, { waitUntil: 'domcontentloaded' });
+  await gotoClean(page, `${CFG.siteBase}/pages/join`);
   await page.waitForSelector('#joinCode', { timeout: CFG.loadTimeout });
   await page.fill('#joinCode', 'ZZ-NOPE-9999');
-  await page.click('#step-join-code button.apjoin-btn');
+  await clickClean(page, '#step-join-code button.apjoin-btn');
   // verifyCode shows #joinCodeError on a bad code (and must NOT advance to step 2).
   const badCodeErr = await waitNavOrError(page, {
     successLocator: page.locator('#step-join-details #joinName'),
@@ -415,10 +469,10 @@ async function blockE_negatives(page, ctx) {
 
   // E18: already-enrolled (duplicate name in same class) -> graceful message,
   // not a crash or a duplicate row. Re-join with the SAME sentinel name.
-  await page.goto(`${CFG.siteBase}/pages/join`, { waitUntil: 'domcontentloaded' });
+  await gotoClean(page, `${CFG.siteBase}/pages/join`);
   await page.waitForSelector('#joinCode', { timeout: CFG.loadTimeout });
   await page.fill('#joinCode', ctx.classCode);
-  await page.click('#step-join-code button.apjoin-btn');
+  await clickClean(page, '#step-join-code button.apjoin-btn');
   const reached = await page.waitForSelector('#joinName', { timeout: CFG.loadTimeout }).then(() => true).catch(() => false);
   if (!reached) {
     record(B, 'already-enrolled handled gracefully', false, 'could not reach name step to re-join');
@@ -426,7 +480,7 @@ async function blockE_negatives(page, ctx) {
   }
   await page.fill('#joinName', DISPLAY_NAME);
   await fillPin(page, ['p1', 'p2', 'p3', 'p4'], CFG.pin);
-  await page.click('#step-join-details button.apjoin-btn');
+  await clickClean(page, '#step-join-details button.apjoin-btn');
   const dupOutcome = await waitNavOrError(page, {
     successLocator: page.locator('#step-success'),
     errorSelector: '#joinDetailsError',
