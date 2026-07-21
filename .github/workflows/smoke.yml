@@ -7,11 +7,14 @@ name: Auth Smoke Test
 #   feature branch, so a run can be forced by pushing.
 on:
   workflow_dispatch:
-  push:
-    branches: [claude/auth-enrollment-smoke-test-nojdvl]
-    paths:
-      - 'smoke/**'
-      - '.github/workflows/smoke.yml'
+  # Once daily. This is production monitoring, and driving the live Shopify site
+  # repeatedly trips its bot/rate protection (rapid runs started serving empty
+  # pages). A per-push trigger was removed for that reason - trigger extra runs
+  # with the "Run workflow" button (available once this workflow is on the
+  # default branch). schedule + workflow_dispatch only fire from the default
+  # branch, so no run fires from the feature branch.
+  schedule:
+    - cron: '0 7 * * *'
 
 jobs:
   smoke:
@@ -38,10 +41,7 @@ jobs:
         env:
           # These are class codes, not secrets; all five are disposable test
           # classes owned by Tanner.
-          # Narrowed to two representative disposable classes (one CSA to
-          # exercise the #apcs-csa-popup overlay path, one Cyber) while the
-          # harness is stabilized. Restore the full five once green.
-          SMOKE_TEST_CLASS_CODE: CSA-CQ3G,CYBER-Q9JG
+          SMOKE_TEST_CLASS_CODE: CYBER-Q9JG,CSA-CQ3G,CSP-CHSH,CSA-4UC8,CYBER-U89X
 
       # Optional: deactivate the ZZ-SMOKE students this run created. Only runs if
       # the teacher credentials are provided as repo secrets; otherwise skipped.
@@ -49,10 +49,7 @@ jobs:
         if: ${{ always() && env.SMOKE_TEACHER_EMAIL != '' }}
         run: npm run smoke:cleanup
         env:
-          # Narrowed to two representative disposable classes (one CSA to
-          # exercise the #apcs-csa-popup overlay path, one Cyber) while the
-          # harness is stabilized. Restore the full five once green.
-          SMOKE_TEST_CLASS_CODE: CSA-CQ3G,CYBER-Q9JG
+          SMOKE_TEST_CLASS_CODE: CYBER-Q9JG,CSA-CQ3G,CSP-CHSH,CSA-4UC8,CYBER-U89X
 
       - name: Upload artifacts
         if: always()
