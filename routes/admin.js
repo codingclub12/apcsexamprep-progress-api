@@ -59,8 +59,30 @@ router.get('/', (req, res) => {
       'GET /api/admin/class/:id/gradebook class rollup: students x per-lesson grade aggregates, vs manifest',
       'GET /api/admin/schema              live table/column listing',
       'GET /api/admin/score-events        raw graded-interaction ledger; ?student_id= ?class_code= ?course= ?limit=',
+      'PATCH /api/admin/teacher/:id/plan  set a teacher billing tier { plan: "free" | "paid" }',
     ],
   });
+});
+
+// ── SET TEACHER PLAN (owner/billing action) ───────────────────────────────────
+//  The one write on this router. It lives here, not on the teacher API, because
+//  a teacher must never mark themselves paid: the billing tier is an owner
+//  decision, so it sits behind ADMIN_KEY like everything else here. Drives the
+//  per-course ad gate (paid => ads off on every unit for enrolled students).
+router.patch('/teacher/:id/plan', (req, res) => {
+  try {
+    const plan = String((req.body && req.body.plan) || '').toLowerCase();
+    if (plan !== 'free' && plan !== 'paid') {
+      return res.status(400).json({ error: "plan must be 'free' or 'paid'" });
+    }
+    const info = db.prepare('UPDATE teachers SET plan = ? WHERE id = ?').run(plan, req.params.id);
+    if (!info.changes) return res.status(404).json({ error: 'Teacher not found' });
+    const teacher = db.prepare('SELECT id, email, name, plan FROM teachers WHERE id = ?').get(req.params.id);
+    res.json({ ok: true, teacher });
+  } catch (e) {
+    console.error('admin/teacher/:id/plan:', e);
+    res.status(500).json({ error: 'set plan failed', detail: e.message });
+  }
 });
 
 // ── OVERVIEW: top-line counts ─────────────────────────────────────────────────
@@ -236,6 +258,7 @@ router.get('/classes', (req, res) => {
         c.mastery_threshold, c.retry_allowed, c.created_at,
         t.name  AS teacher_name,
         t.email AS teacher_email,
+        COALESCE(t.plan, 'free') AS teacher_plan,
         (SELECT COUNT(*) FROM students s WHERE s.class_id = c.id) AS student_count,
         (SELECT COUNT(*) FROM progress p WHERE p.class_id = c.id AND p.completed = 1) AS completions
       FROM classes c
@@ -264,7 +287,7 @@ router.get('/students', (req, res) => {
     }
     const students = db.prepare(`
       SELECT
-        s.id, s.class_id, s.display_name, s.student_ref,
+        s.id, s.class_id, s.display_name, s.student_code, s.student_ref,
         s.retry_override, s.created_at, s.last_active,
         c.class_code, c.class_name, c.course,
         (SELECT COUNT(*) FROM progress p WHERE p.student_id = s.id AND p.completed = 1) AS completions
@@ -299,12 +322,13 @@ router.get('/class/:code', (req, res) => {
 
     const roster = db.prepare(`
       SELECT
-        s.id, s.display_name, s.student_ref, s.active, s.created_at, s.last_active,
+        s.id, s.display_name, s.student_code, s.student_ref, s.active, s.created_at, s.last_active,
         (SELECT COUNT(*) FROM progress p WHERE p.student_id = s.id AND p.completed = 1) AS completions
       FROM students s
       WHERE s.class_id = ?
+         OR EXISTS (SELECT 1 FROM enrollments e WHERE e.student_id = s.id AND e.class_id = ? AND e.active = 1)
       ORDER BY s.last_active DESC NULLS LAST, s.created_at DESC
-    `).all(cls.id);
+    `).all(cls.id, cls.id);
 
     const recent_activity = db.prepare(`
       SELECT
@@ -359,7 +383,7 @@ const pctOf = (earned, possible) => (possible > 0 ? Math.round((earned / possibl
 router.get('/student/:id', (req, res) => {
   try {
     const student = db.prepare(`
-      SELECT s.id, s.class_id, s.display_name, s.student_ref, s.retry_override,
+      SELECT s.id, s.class_id, s.display_name, s.student_code, s.student_ref, s.retry_override,
              s.created_at, s.last_active,
              c.class_code, c.class_name, c.course, c.mastery_threshold, c.retry_allowed
       FROM students s
@@ -444,9 +468,18 @@ router.get('/student/:id', (req, res) => {
       return { course: cv.course, summary: cv.summary, lessons: [...cv.lessons.values()] };
     });
 
+    // Every class this identity belongs to (home + cross-enrollments).
+    const enrollments = db.prepare(`
+      SELECT c.class_code, c.class_name, c.course, e.active, e.enrolled_at
+      FROM enrollments e JOIN classes c ON c.id = e.class_id
+      WHERE e.student_id = ?
+      ORDER BY e.enrolled_at DESC
+    `).all(student.id);
+
     res.json({
       student: {
-        id: student.id, display_name: student.display_name, student_ref: student.student_ref,
+        id: student.id, display_name: student.display_name,
+        student_code: student.student_code, student_ref: student.student_ref,
         created_at: student.created_at, last_active: student.last_active,
         retry_override: student.retry_override,
       },
@@ -455,6 +488,7 @@ router.get('/student/:id', (req, res) => {
         course: student.course, mastery_threshold: student.mastery_threshold,
         retry_allowed: student.retry_allowed,
       },
+      enrollments,
       courses: courseViews,
       generated_at: new Date().toISOString(),
     });
@@ -502,27 +536,42 @@ router.get('/class/:id/gradebook', (req, res) => {
       coursePossible += item.points;
     }
 
+    // Roster = students homed in this class OR actively enrolled in it. A student
+    // cross-enrolled from another home class shows here too.
     const roster = db.prepare(`
-      SELECT id, display_name, student_ref, active, last_active
-      FROM students WHERE class_id = ? ORDER BY display_name
-    `).all(cls.id);
+      SELECT id, display_name, student_code, student_ref, active, last_active
+      FROM students s
+      WHERE s.class_id = ?
+         OR EXISTS (SELECT 1 FROM enrollments e WHERE e.student_id = s.id AND e.class_id = ? AND e.active = 1)
+      ORDER BY display_name
+    `).all(cls.id, cls.id);
 
-    // Single aggregate pass: grade of record for every (student, item).
-    const gorRows = db.prepare(
-      GOR_SELECT.replace('%WHERE%', 'WHERE a.class_id = ? AND a.course = ?')
-    ).all(cls.id, course);
+    // Grades are keyed to (student_id, course), not class_id, so a cross-enrolled
+    // student's work for this course counts no matter which class recorded it.
+    // For a single-class student this is identical to the old class_id filter.
+    const ids = roster.map((s) => s.id);
+    const ph = ids.map(() => '?').join(',');
+    let gorRows = [];
+    let visitRows = [];
+    if (ids.length) {
+      // Single aggregate pass: grade of record for every (student, item).
+      gorRows = db.prepare(
+        GOR_SELECT.replace('%WHERE%', `WHERE a.student_id IN (${ph}) AND a.course = ?`)
+      ).all(...ids, course);
 
-    // Visit completion per student in one aggregate.
-    const visitRows = db.prepare(`
-      SELECT student_id, COUNT(DISTINCT lesson) n FROM progress
-      WHERE class_id = ? AND course = ? AND completed = 1 AND activity_type NOT IN ('quiz', 'exam')
-      GROUP BY student_id
-    `).all(cls.id, course);
+      // Visit completion per student in one aggregate.
+      visitRows = db.prepare(`
+        SELECT student_id, COUNT(DISTINCT lesson) n FROM progress
+        WHERE student_id IN (${ph}) AND course = ? AND completed = 1 AND activity_type NOT IN ('quiz', 'exam')
+        GROUP BY student_id
+      `).all(...ids, course);
+    }
     const visitsByStudent = new Map(visitRows.map(v => [v.student_id, v.n]));
 
     const students = new Map(roster.map(s => [s.id, {
       id: s.id,
       name: s.display_name,
+      student_code: s.student_code,
       ref: s.student_ref,
       active: s.active,
       last_active: s.last_active,

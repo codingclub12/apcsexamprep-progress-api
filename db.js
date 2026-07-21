@@ -21,6 +21,7 @@ db.exec(`
     school       TEXT,
     password_hash TEXT NOT NULL,
     verified     INTEGER DEFAULT 0,
+    plan         TEXT DEFAULT 'free',   -- 'free' | 'paid'; drives the per-course ad gate
     created_at   TEXT DEFAULT (datetime('now'))
   );
 
@@ -39,9 +40,17 @@ db.exec(`
   -- Migration: add mastery_threshold / retry_allowed to existing classes tables
   -- (handled below via try/catch ALTER TABLE)
 
+  -- Student identity. class_id is the student's HOME class (the one they first
+  -- registered under) and is kept for backward compatibility with the existing
+  -- class-scoped write path; it is NULLABLE so an identity can exist before/
+  -- without any class (identity-first registration). Class membership proper
+  -- lives in the enrollments table below: one identity, many classes. Login is
+  -- student_code + PIN (never name + PIN), so two students with the same
+  -- display_name and PIN in different classes never collide.
   CREATE TABLE IF NOT EXISTS students (
     id             TEXT PRIMARY KEY,
-    class_id       TEXT NOT NULL REFERENCES classes(id) ON DELETE CASCADE,
+    class_id       TEXT REFERENCES classes(id) ON DELETE CASCADE,
+    student_code   TEXT,
     display_name   TEXT NOT NULL,
     pin_hash       TEXT NOT NULL,
     student_ref    TEXT,
@@ -49,6 +58,18 @@ db.exec(`
     active         INTEGER DEFAULT 1,
     created_at     TEXT DEFAULT (datetime('now')),
     last_active    TEXT
+  );
+
+  -- Enrollment splits class membership from identity, so joining a second class
+  -- is a new enrollments row against the SAME student, not a second student.
+  -- A student with zero active enrollments for a course is solo for that course.
+  CREATE TABLE IF NOT EXISTS enrollments (
+    id          TEXT PRIMARY KEY,
+    student_id  TEXT NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    class_id    TEXT NOT NULL REFERENCES classes(id)  ON DELETE CASCADE,
+    enrolled_at TEXT DEFAULT (datetime('now')),
+    active      INTEGER DEFAULT 1,
+    UNIQUE(student_id, class_id)
   );
 
   CREATE TABLE IF NOT EXISTS progress (
@@ -84,6 +105,10 @@ db.exec(`
 
   CREATE INDEX IF NOT EXISTS idx_classes_teacher ON classes(teacher_id);
   CREATE INDEX IF NOT EXISTS idx_students_class  ON students(class_id);
+  CREATE INDEX IF NOT EXISTS idx_enrollments_student ON enrollments(student_id);
+  CREATE INDEX IF NOT EXISTS idx_enrollments_class   ON enrollments(class_id);
+  -- uidx_students_code is created after the student_code migration runs (below),
+  -- so an existing students table that predates the column does not error here.
   CREATE INDEX IF NOT EXISTS idx_progress_student ON progress(student_id);
   CREATE INDEX IF NOT EXISTS idx_progress_class  ON progress(class_id);
   CREATE INDEX IF NOT EXISTS idx_quiz_student    ON quiz_attempts(student_id);
@@ -265,16 +290,123 @@ db.exec(`
 
 // Migrations — safe to re-run on every boot, ignored if column already exists
 const migrations = [
+  `ALTER TABLE teachers  ADD COLUMN plan              TEXT DEFAULT 'free'`,
   `ALTER TABLE classes   ADD COLUMN mastery_threshold INTEGER DEFAULT 80`,
   `ALTER TABLE classes   ADD COLUMN retry_allowed     INTEGER DEFAULT 0`,
   `ALTER TABLE students  ADD COLUMN retry_override    INTEGER DEFAULT NULL`,
   `ALTER TABLE students  ADD COLUMN active            INTEGER DEFAULT 1`,
+  `ALTER TABLE students  ADD COLUMN student_code      TEXT`,
   `ALTER TABLE progress  ADD COLUMN locked            INTEGER DEFAULT 0`,
   `ALTER TABLE attempts  ADD COLUMN duration_seconds  INTEGER`,
   `ALTER TABLE attempts  ADD COLUMN ua                TEXT`,
 ];
 for (const sql of migrations) {
   try { db.exec(sql); } catch(e) { /* column already exists */ }
+}
+
+// student_code column is guaranteed to exist now (fresh CREATE TABLE or the
+// ALTER above), so the unique index is safe to declare.
+db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS uidx_students_code ON students(student_code) WHERE student_code IS NOT NULL`);
+
+// ── MULTI-CLASS IDENTITY MIGRATION ────────────────────────────────────────────
+// One-time, idempotent, value-preserving. Splits identity from enrollment:
+//   1. Relax students.class_id from NOT NULL to nullable (identity can exist
+//      before/without a class). SQLite can't DROP NOT NULL in place, so this is
+//      the standard guarded 12-step table rebuild, wrapped in a transaction with
+//      foreign_keys temporarily off. Runs only while class_id is still NOT NULL;
+//      once relaxed the guard skips it, so re-runs are free.
+//   2. Backfill a unique student_code for every existing identity.
+//   3. Backfill one enrollments row per student whose home class is a real
+//      teacher class (course != 'solo'). Solo (ME-) students get NO enrollment:
+//      solo is "zero enrollments", exactly the target model.
+// Non-destructive: no row is dropped, no existing column loses data, and the
+// old class-scoped write path keeps working (class_id stays the home class).
+{
+  const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const randCode = () => {
+    let c = 'ST-';
+    for (let i = 0; i < 4; i++) c += CODE_CHARS[Math.floor(Math.random() * CODE_CHARS.length)];
+    return c;
+  };
+  const uuid = () => require('crypto').randomUUID();
+
+  // 1) Relax class_id NOT NULL if the live table still enforces it.
+  const classIdCol = db
+    .prepare(`SELECT "notnull" AS nn FROM pragma_table_info('students') WHERE name = 'class_id'`)
+    .get();
+  if (classIdCol && classIdCol.nn === 1) {
+    db.pragma('foreign_keys = OFF');
+    try {
+      db.transaction(() => {
+        db.exec(`
+          CREATE TABLE students_rebuild (
+            id             TEXT PRIMARY KEY,
+            class_id       TEXT REFERENCES classes(id) ON DELETE CASCADE,
+            student_code   TEXT,
+            display_name   TEXT NOT NULL,
+            pin_hash       TEXT NOT NULL,
+            student_ref    TEXT,
+            retry_override INTEGER DEFAULT NULL,
+            active         INTEGER DEFAULT 1,
+            created_at     TEXT DEFAULT (datetime('now')),
+            last_active    TEXT
+          );
+          INSERT INTO students_rebuild
+            (id, class_id, student_code, display_name, pin_hash, student_ref,
+             retry_override, active, created_at, last_active)
+          SELECT
+            id, class_id, student_code, display_name, pin_hash, student_ref,
+            retry_override, active, created_at, last_active
+          FROM students;
+          DROP TABLE students;
+          ALTER TABLE students_rebuild RENAME TO students;
+          CREATE INDEX IF NOT EXISTS idx_students_class ON students(class_id);
+          CREATE UNIQUE INDEX IF NOT EXISTS uidx_students_code ON students(student_code) WHERE student_code IS NOT NULL;
+        `);
+      })();
+    } finally {
+      db.pragma('foreign_keys = ON');
+    }
+    console.log('[migrate] students.class_id relaxed to nullable (identity split)');
+  }
+
+  // 2) Backfill student_code for identities that predate the column.
+  const needCode = db.prepare('SELECT id FROM students WHERE student_code IS NULL').all();
+  if (needCode.length) {
+    const setCode = db.prepare('UPDATE students SET student_code = ? WHERE id = ?');
+    const codeTaken = db.prepare('SELECT 1 FROM students WHERE student_code = ?');
+    db.transaction(() => {
+      for (const s of needCode) {
+        let code;
+        do { code = randCode(); } while (codeTaken.get(code));
+        setCode.run(code, s.id);
+      }
+    })();
+    console.log(`[migrate] backfilled student_code for ${needCode.length} identities`);
+  }
+
+  // 3) Backfill enrollments from each student's home teacher class (skip solo).
+  const homeClassStudents = db.prepare(`
+    SELECT s.id AS student_id, s.class_id, COALESCE(s.created_at, datetime('now')) AS enrolled_at
+    FROM students s
+    JOIN classes c ON c.id = s.class_id
+    WHERE c.course != 'solo'
+      AND NOT EXISTS (
+        SELECT 1 FROM enrollments e WHERE e.student_id = s.id AND e.class_id = s.class_id
+      )
+  `).all();
+  if (homeClassStudents.length) {
+    const insEnroll = db.prepare(`
+      INSERT OR IGNORE INTO enrollments (id, student_id, class_id, enrolled_at, active)
+      VALUES (?, ?, ?, ?, 1)
+    `);
+    db.transaction(() => {
+      for (const r of homeClassStudents) {
+        insEnroll.run(uuid(), r.student_id, r.class_id, r.enrolled_at);
+      }
+    })();
+    console.log(`[migrate] backfilled ${homeClassStudents.length} enrollments from home classes`);
+  }
 }
 
 // Solo (ME-) accounts always get best-attempt grading. solo-init historically

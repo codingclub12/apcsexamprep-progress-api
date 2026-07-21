@@ -10,7 +10,7 @@ function requireTeacher(req, res, next) {
     const payload = verifyTeacherToken(token);
     if (payload.role !== 'teacher') throw new Error('Not a teacher token');
     // Verify teacher still exists
-    const teacher = db.prepare('SELECT id, name, email FROM teachers WHERE id = ?').get(payload.id);
+    const teacher = db.prepare('SELECT id, name, email, plan FROM teachers WHERE id = ?').get(payload.id);
     if (!teacher) return res.status(401).json({ error: 'Teacher not found' });
     req.teacher = teacher;
     next();
