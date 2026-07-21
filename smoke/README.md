@@ -52,6 +52,30 @@ the browser download and point at it instead:
 SMOKE_CHROMIUM_PATH=/opt/pw-browsers/chromium SMOKE_TEST_CLASS_CODE=CSA-XXXX npm run smoke:auth
 ```
 
+## Cleanup (deactivate accumulated ZZ-SMOKE students)
+
+Because three targets are real classes and there is no student hard-delete API
+(deactivate only, never hard-delete), the sentinel students pile up. `smoke:cleanup`
+sweeps each target class's roster for names starting with `ZZ-SMOKE` and
+deactivates them via the teacher endpoint (progress rows are preserved). It
+sweeps by name prefix, so it cleans everything accumulated, not just the last run.
+
+```bash
+# Dry run first (recommended, especially against real classes) - lists, changes nothing:
+SMOKE_TEACHER_EMAIL=you@example.com SMOKE_TEACHER_PASSWORD=... \
+SMOKE_TEST_CLASS_CODE=CYBER-Q9JG,CSA-CQ3G,CSP-CHSH,CSA-4UC8,CYBER-U89X \
+npm run smoke:cleanup -- --dry-run
+
+# Then for real:
+SMOKE_TEACHER_EMAIL=you@example.com SMOKE_TEACHER_PASSWORD=... \
+SMOKE_TEST_CLASS_CODE=CYBER-Q9JG,CSA-CQ3G,CSP-CHSH,CSA-4UC8,CYBER-U89X \
+npm run smoke:cleanup
+```
+
+It authenticates as the class owner (`SMOKE_TEACHER_EMAIL` / `SMOKE_TEACHER_PASSWORD`)
+and only touches classes that account owns. A run is a good habit after each
+smoke run, or on a schedule during the back-to-school window.
+
 ## Required / configurable env vars
 
 | Var | Default | Notes |
@@ -66,6 +90,9 @@ SMOKE_CHROMIUM_PATH=/opt/pw-browsers/chromium SMOKE_TEST_CLASS_CODE=CSA-XXXX npm
 | `SMOKE_LESSON_URL` | (unset) | Lesson page for block C when enabled. |
 | `SMOKE_ARTIFACTS_DIR` | `./artifacts` | Where screenshots + console/network dumps land on failure. |
 | `SMOKE_CHROMIUM_PATH` | (unset) | Point at a pre-provisioned Chromium instead of a downloaded one. |
+| `SMOKE_TEACHER_EMAIL` / `SMOKE_TEACHER_PASSWORD` | (unset) | Class-owner credentials, `smoke:cleanup` only. |
+| `SMOKE_CLEANUP_DRY_RUN` | `0` | `smoke:cleanup` only; `1` (or `--dry-run`) lists without changing anything. |
+| `SMOKE_SENTINEL_PREFIX` | `ZZ-SMOKE` | Name prefix `smoke:cleanup` sweeps for. |
 
 ## What it asserts (each is a hard assertion, not a "looks ok")
 
