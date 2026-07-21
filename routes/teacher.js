@@ -534,4 +534,52 @@ router.patch('/classes/:code/students/:studentId', requireTeacher, async (req, r
   });
 });
 
+// ── REDEEM AN ACCESS CODE (Phase 4: Teacher Command Center, slice 1) ──────────
+// A teacher redeems a single-use access code to gain (or refresh) an active
+// entitlement for that code's course. Idempotent for the same teacher. Light
+// per-teacher rate limit with bounded memory, mirroring the /api/progress
+// pattern: fixed 60s window, no timers, hard-capped map.
+const entitlements = require('../lib/entitlements');
+
+const REDEEM_RL_WINDOW_MS = 60_000;
+const REDEEM_RL_MAX = 10;
+const REDEEM_RL_MAX_KEYS = 5000;
+const redeemBuckets = new Map();
+function redeemRateLimit(req, res, next) {
+  const now = Date.now();
+  let bucket = redeemBuckets.get(req.teacher.id);
+  if (!bucket || now - bucket.start >= REDEEM_RL_WINDOW_MS) {
+    if (redeemBuckets.size >= REDEEM_RL_MAX_KEYS) {
+      for (const [k, v] of redeemBuckets) {
+        if (now - v.start >= REDEEM_RL_WINDOW_MS) redeemBuckets.delete(k);
+      }
+      if (redeemBuckets.size >= REDEEM_RL_MAX_KEYS) redeemBuckets.clear();
+    }
+    bucket = { start: now, count: 0 };
+    redeemBuckets.set(req.teacher.id, bucket);
+  }
+  bucket.count++;
+  if (bucket.count > REDEEM_RL_MAX) {
+    return res.status(429).json({ error: 'Too many attempts. Wait a minute and try again.' });
+  }
+  next();
+}
+
+router.post('/redeem', requireTeacher, redeemRateLimit, (req, res) => {
+  try {
+    const { code } = req.body || {};
+    if (!code || typeof code !== 'string') {
+      return res.status(400).json({ entitled: false, error: 'Code required' });
+    }
+    const result = entitlements.redeemCode(req.teacher.id, code);
+    if (!result.ok) {
+      return res.status(result.http || 400).json({ entitled: false, error: result.error });
+    }
+    return res.json({ entitled: true, course: result.course });
+  } catch (e) {
+    console.error('teacher/redeem:', e);
+    return res.status(500).json({ error: 'Redeem failed' });
+  }
+});
+
 module.exports = router;

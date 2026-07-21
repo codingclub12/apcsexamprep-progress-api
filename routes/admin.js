@@ -617,4 +617,103 @@ router.get('/schema', (req, res) => {
   }
 });
 
+// ── ACCESS CODES + ENTITLEMENTS (Phase 4: Teacher Command Center, slice 1) ─────
+// All routes below inherit requireAdmin above (fails closed on a missing or weak
+// ADMIN_KEY). Body parsing is the app-level express.json() in server.js.
+const entitlements = require('../lib/entitlements');
+
+// Generate N single-use access codes for a course.
+// POST /api/admin/access-codes   body { course, count }
+router.post('/access-codes', (req, res) => {
+  try {
+    const { course, count } = req.body || {};
+    if (!entitlements.isValidCourse(course)) {
+      return res.status(400).json({ error: `course must be one of: ${entitlements.VALID_COURSES.join(', ')}` });
+    }
+    const n = parseInt(count, 10);
+    if (!Number.isInteger(n) || n < 1 || n > 500) {
+      return res.status(400).json({ error: 'count must be an integer from 1 to 500' });
+    }
+    const codes = entitlements.generateCodes(course, n);
+    res.json({ course, requested: n, created: codes.length, codes });
+  } catch (e) {
+    console.error('admin/access-codes create:', e);
+    res.status(500).json({ error: 'code generation failed', detail: e.message });
+  }
+});
+
+// List access codes. Optional filters ?course= ?status= ?limit=
+router.get('/access-codes', (req, res) => {
+  try {
+    const clauses = [], params = [];
+    if (req.query.course) { clauses.push('course = ?'); params.push(req.query.course); }
+    if (req.query.status) { clauses.push('status = ?'); params.push(req.query.status); }
+    const where = clauses.length ? `WHERE ${clauses.join(' AND ')}` : '';
+    const limit = Math.min(1000, Math.max(1, parseInt(req.query.limit, 10) || 200));
+    const rows = db.prepare(
+      `SELECT code, course, status, redeemed_by_teacher, order_ref, created_at
+         FROM access_codes ${where} ORDER BY created_at DESC LIMIT ?`
+    ).all(...params, limit);
+    res.json({ count: rows.length, codes: rows });
+  } catch (e) {
+    console.error('admin/access-codes list:', e);
+    res.status(500).json({ error: 'list failed', detail: e.message });
+  }
+});
+
+// Revoke an UNUSED access code so it can never be redeemed. A redeemed code's
+// grant is killed via the entitlement revoke below, not here.
+// POST /api/admin/access-codes/revoke   body { code }
+router.post('/access-codes/revoke', (req, res) => {
+  try {
+    const { code } = req.body || {};
+    if (!code) return res.status(400).json({ error: 'code required' });
+    const changed = entitlements.revokeCode(code);
+    res.json({
+      revoked: changed > 0,
+      code: String(code).trim().toUpperCase(),
+      note: changed ? undefined
+        : 'Code not found or not in an unused state. Revoke a redeemed code\'s access via the entitlement.',
+    });
+  } catch (e) {
+    console.error('admin/access-codes revoke:', e);
+    res.status(500).json({ error: 'revoke failed', detail: e.message });
+  }
+});
+
+// List entitlements. Optional filters ?teacher_id= ?course= ?status=
+router.get('/entitlements', (req, res) => {
+  try {
+    const clauses = [], params = [];
+    if (req.query.teacher_id) { clauses.push('teacher_id = ?'); params.push(req.query.teacher_id); }
+    if (req.query.course) { clauses.push('course = ?'); params.push(req.query.course); }
+    if (req.query.status) { clauses.push('status = ?'); params.push(req.query.status); }
+    const where = clauses.length ? `WHERE ${clauses.join(' AND ')}` : '';
+    const rows = db.prepare(
+      `SELECT id, teacher_id, course, source, status, order_ref, granted_at, expires_at
+         FROM entitlements ${where} ORDER BY granted_at DESC LIMIT 500`
+    ).all(...params);
+    res.json({ count: rows.length, entitlements: rows });
+  } catch (e) {
+    console.error('admin/entitlements list:', e);
+    res.status(500).json({ error: 'list failed', detail: e.message });
+  }
+});
+
+// Revoke a teacher's active entitlement for a course.
+// POST /api/admin/entitlements/revoke   body { teacher_id, course }
+router.post('/entitlements/revoke', (req, res) => {
+  try {
+    const { teacher_id, course } = req.body || {};
+    if (!teacher_id || !course) {
+      return res.status(400).json({ error: 'teacher_id and course required' });
+    }
+    const changed = entitlements.revokeEntitlement(teacher_id, course);
+    res.json({ revoked: changed > 0, teacher_id, course });
+  } catch (e) {
+    console.error('admin/entitlements revoke:', e);
+    res.status(500).json({ error: 'revoke failed', detail: e.message });
+  }
+});
+
 module.exports = router;

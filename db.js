@@ -261,6 +261,45 @@ db.exec(`
     possible      REAL NOT NULL DEFAULT 1,
     PRIMARY KEY (course, lesson, activity_type)
   );
+
+  -- Per-course entitlements (Phase 4: Teacher Command Center, slice 1). The
+  -- teacher is the paying seat, per course. One active row per
+  -- (teacher_id, course) grants unlimited classes and students within that
+  -- course; a student inherits access to their class's course while that
+  -- class's teacher holds a live entitlement for it. Additive only: this table
+  -- gates nothing on its own and changes no existing table or route. source
+  -- carries provenance ('shopify_order' once the webhook lands, 'code' for an
+  -- access-code redemption). expires_at is nullable; NULL means no expiry, and
+  -- the active check honors it now so time-boxed Shopify grants need no change.
+  CREATE TABLE IF NOT EXISTS entitlements (
+    id         TEXT PRIMARY KEY,
+    teacher_id TEXT NOT NULL REFERENCES teachers(id) ON DELETE CASCADE,
+    course     TEXT NOT NULL,        -- 'ap-csp' | 'ap-csa' | 'ap-cybersecurity'
+    source     TEXT NOT NULL,        -- 'shopify_order' | 'code'
+    status     TEXT NOT NULL DEFAULT 'active',  -- 'active' | 'revoked'
+    order_ref  TEXT,
+    granted_at TEXT DEFAULT (datetime('now')),
+    expires_at TEXT
+  );
+  CREATE INDEX IF NOT EXISTS idx_entitlements_teacher_course ON entitlements(teacher_id, course);
+  -- At most one ACTIVE entitlement per (teacher, course), enforced by a partial
+  -- unique index rather than app logic. A revoked row frees the slot so a fresh
+  -- grant can be created later.
+  CREATE UNIQUE INDEX IF NOT EXISTS uidx_entitlements_active
+    ON entitlements(teacher_id, course) WHERE status = 'active';
+
+  -- Single-use access codes. Admin generates a batch for a course; a teacher
+  -- redeems one to gain an entitlement for that course. redeemed_by_teacher and
+  -- order_ref are set at redemption / fulfillment time.
+  CREATE TABLE IF NOT EXISTS access_codes (
+    code                TEXT PRIMARY KEY,
+    course              TEXT NOT NULL,        -- 'ap-csp' | 'ap-csa' | 'ap-cybersecurity'
+    status              TEXT NOT NULL DEFAULT 'unused',  -- 'unused' | 'redeemed' | 'revoked'
+    redeemed_by_teacher TEXT REFERENCES teachers(id) ON DELETE SET NULL,
+    order_ref           TEXT,
+    created_at          TEXT DEFAULT (datetime('now'))
+  );
+  CREATE INDEX IF NOT EXISTS idx_access_codes_course_status ON access_codes(course, status);
 `);
 
 // Migrations — safe to re-run on every boot, ignored if column already exists

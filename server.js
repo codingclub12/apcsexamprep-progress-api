@@ -32,6 +32,7 @@ app.use('/api/quiz', require('./routes/quiz'));
 app.use('/api/game', require('./routes/game'));
 app.use('/api/judge0', require('./routes/judge0'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api/gate', require('./routes/gate'));
 
 // Boot seeds run before app.listen, so any throw here would crash the process
 // before the healthcheck can pass and take the whole service down. Each seed is
