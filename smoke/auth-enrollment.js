@@ -72,7 +72,11 @@ const CFG = {
   // the API at progress.apcsexamprep.com; the repo pages call the Railway URL
   // behind it. Either resolves the same app.
   apiBase:    (process.env.SMOKE_API_BASE   || 'https://progress.apcsexamprep.com').replace(/\/$/, ''),
-  classCode:  (process.env.SMOKE_TEST_CLASS_CODE || '').toUpperCase().trim(),
+  // One or more reserved disposable test classes (comma-separated). The full
+  // A-E suite runs against each, so e.g. `CYBER-Q9JG,CSA-CQ3G` covers both the
+  // Cyber and the CSA join/enroll paths in one invocation.
+  classCodes: (process.env.SMOKE_TEST_CLASS_CODE || '')
+    .split(',').map((s) => s.toUpperCase().trim()).filter(Boolean),
   pin:        (process.env.SMOKE_PIN || '').trim(),          // 4 digits; generated if unset
   headless:   process.env.SMOKE_HEADLESS !== '0',
   navTimeout: Number(process.env.SMOKE_NAV_TIMEOUT_MS || 8000), // the "N seconds" guard
@@ -91,15 +95,16 @@ const DISPLAY_NAME = `ZZ-SMOKE ${RUN_ID}`;
 if (!CFG.pin) CFG.pin = String((Number(Date.now()) % 9000) + 1000); // 4 digits, 1000-9999
 
 // ── Result tracking ───────────────────────────────────────────────────────────
-const results = [];   // { block, name, pass, detail }
+const results = [];   // { cls, block, name, pass, detail }
 const created = [];   // { student_id, display_name, class_code, pin, run_id, created_at }
 let hardFailures = 0;
+let CURRENT_CLASS = '';   // set per class in the main loop; tags every record
 
 function record(block, name, pass, detail) {
-  results.push({ block, name, pass: !!pass, detail: detail || '' });
+  results.push({ cls: CURRENT_CLASS, block, name, pass: !!pass, detail: detail || '' });
   if (!pass) hardFailures++;
   const tag = pass ? 'PASS' : 'FAIL';
-  console.log(`  [${tag}] ${block} - ${name}${detail ? ' :: ' + detail : ''}`);
+  console.log(`  [${tag}] ${CURRENT_CLASS} ${block} - ${name}${detail ? ' :: ' + detail : ''}`);
 }
 
 // ── Bounded console + network capture (paranoid about the 40k-errors flood) ───
@@ -211,11 +216,11 @@ async function blockA_register(page, ctx) {
   await page.goto(`${CFG.siteBase}/pages/join`, { waitUntil: 'domcontentloaded' });
 
   // Snapshot roster size before we create anyone (for B9's "no duplicate" check).
-  ctx.rosterBefore = await rosterCount(page, CFG.classCode);
+  ctx.rosterBefore = await rosterCount(page, ctx.classCode);
 
   // Step 1: class code -> Continue.
   await page.waitForSelector('#joinCode', { timeout: CFG.navTimeout });
-  await page.fill('#joinCode', CFG.classCode);
+  await page.fill('#joinCode', ctx.classCode);
   await page.click('#step-join-code button.apjoin-btn');
 
   // The page previews the class then advances after ~500ms; wait for step 2.
@@ -251,7 +256,7 @@ async function blockA_register(page, ctx) {
   const sess = await getSession(page);
   if (sess && sess.id) {
     created.push({
-      student_id: sess.id, display_name: DISPLAY_NAME, class_code: CFG.classCode,
+      student_id: sess.id, display_name: DISPLAY_NAME, class_code: ctx.classCode,
       pin: CFG.pin, run_id: RUN_ID, created_at: new Date().toISOString(),
     });
   }
@@ -278,7 +283,7 @@ async function blockB_enroll(page, ctx) {
 
   // B9: exactly one student created for this identity (guards the duplicate /
   // class-scoped-identity bug). Uses the public roster count before/after.
-  const after = await rosterCount(page, CFG.classCode);
+  const after = await rosterCount(page, ctx.classCode);
   if (ctx.rosterBefore == null || after == null) {
     record(B, 'no duplicate student created (roster delta == 1)', true,
       'roster count unavailable via API; skipped (not a hard fail)');
@@ -337,7 +342,7 @@ async function blockD_roundtrip(page, ctx) {
   await page.waitForSelector('.apjoin-tab', { timeout: CFG.navTimeout });
   await page.locator('.apjoin-tab', { hasText: 'Return Student' }).click();
   await page.waitForSelector('#step-login #loginCode, #loginCode', { timeout: CFG.navTimeout });
-  await page.fill('#loginCode', CFG.classCode);
+  await page.fill('#loginCode', ctx.classCode);
   await page.fill('#loginName', DISPLAY_NAME);
   await fillPin(page, ['lp1', 'lp2', 'lp3', 'lp4'], CFG.pin);
   await page.click('#step-login button.apjoin-btn');
@@ -363,7 +368,7 @@ async function blockD_roundtrip(page, ctx) {
 }
 
 // E. Negative cases - these catch the bugs that matter.
-async function blockE_negatives(page) {
+async function blockE_negatives(page, ctx) {
   const B = 'E/negatives';
 
   // Ensure a clean, logged-out page.
@@ -374,7 +379,7 @@ async function blockE_negatives(page) {
   // E16: wrong PIN -> a VISIBLE error, not a silent nothing.
   await page.locator('.apjoin-tab', { hasText: 'Return Student' }).click();
   await page.waitForSelector('#loginCode', { timeout: CFG.navTimeout });
-  await page.fill('#loginCode', CFG.classCode);
+  await page.fill('#loginCode', ctx.classCode);
   await page.fill('#loginName', DISPLAY_NAME);
   await fillPin(page, ['lp1', 'lp2', 'lp3', 'lp4'], '0000' === CFG.pin ? '1111' : '0000'); // deliberately wrong
   await page.click('#step-login button.apjoin-btn');
@@ -403,7 +408,7 @@ async function blockE_negatives(page) {
   // not a crash or a duplicate row. Re-join with the SAME sentinel name.
   await page.goto(`${CFG.siteBase}/pages/join`, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector('#joinCode', { timeout: CFG.navTimeout });
-  await page.fill('#joinCode', CFG.classCode);
+  await page.fill('#joinCode', ctx.classCode);
   await page.click('#step-join-code button.apjoin-btn');
   const reached = await page.waitForSelector('#joinName', { timeout: CFG.navTimeout }).then(() => true).catch(() => false);
   if (!reached) {
@@ -429,16 +434,17 @@ async function blockE_negatives(page) {
 // =============================================================================
 async function main() {
   console.log('APCSExamPrep auth + enrollment smoke test');
-  console.log(`  site:   ${CFG.siteBase}`);
-  console.log(`  api:    ${CFG.apiBase}`);
-  console.log(`  class:  ${CFG.classCode || '(unset!)'}`);
-  console.log(`  name:   ${DISPLAY_NAME}`);
-  console.log(`  pin:    ${CFG.pin}`);
+  console.log(`  site:    ${CFG.siteBase}`);
+  console.log(`  api:     ${CFG.apiBase}`);
+  console.log(`  classes: ${CFG.classCodes.join(', ') || '(unset!)'}`);
+  console.log(`  name:    ${DISPLAY_NAME}`);
+  console.log(`  pin:     ${CFG.pin}`);
   console.log('');
 
-  if (!CFG.classCode) {
+  if (CFG.classCodes.length === 0) {
     console.error('FATAL: SMOKE_TEST_CLASS_CODE is required (a disposable test class owned by Tanner).');
     console.error('       Refusing to guess a class code - never enroll into an external teacher\'s real class.');
+    console.error('       Pass one or more, comma-separated, e.g. SMOKE_TEST_CLASS_CODE=CYBER-Q9JG,CSA-CQ3G');
     writeCreatedArtifacts();
     process.exit(2);
   }
@@ -446,11 +452,7 @@ async function main() {
   const launchOpts = { headless: CFG.headless };
   if (CFG.chromiumPath) launchOpts.executablePath = CFG.chromiumPath;
   const browser = await chromium.launch(launchOpts);
-  const context = await browser.newContext({ ignoreHTTPSErrors: false });
-  const page = await context.newPage();
-  attachListeners(page);
 
-  const ctx = {};
   const blocks = [
     ['A', blockA_register],
     ['B', blockB_enroll],
@@ -459,14 +461,31 @@ async function main() {
     ['E', blockE_negatives],
   ];
 
-  for (const [letter, fn] of blocks) {
-    console.log(`\n== Block ${letter} ==`);
-    try {
-      await fn(page, ctx);
-    } catch (e) {
-      record(`${letter}`, 'block crashed', false, e.message);
-      await dumpArtifacts(page, `block-${letter}`);
+  // Full A-E suite per class, each in its own isolated browser context so
+  // localStorage never leaks between classes. Console/network capture is reset
+  // per class so a failure dump is scoped to the class that failed.
+  for (const classCode of CFG.classCodes) {
+    CURRENT_CLASS = classCode;
+    consoleLog.length = 0;
+    networkLog.length = 0;
+    console.log(`\n################ CLASS ${classCode} ################`);
+
+    const context = await browser.newContext({ ignoreHTTPSErrors: false });
+    const page = await context.newPage();
+    attachListeners(page);
+    const ctx = { classCode };
+
+    for (const [letter, fn] of blocks) {
+      console.log(`\n== ${classCode} Block ${letter} ==`);
+      try {
+        await fn(page, ctx);
+      } catch (e) {
+        record(`${letter}`, 'block crashed', false, e.message);
+        await dumpArtifacts(page, `${classCode}-block-${letter}`);
+      }
     }
+
+    await context.close().catch(() => {});
   }
 
   await browser.close().catch(() => {});
@@ -482,7 +501,7 @@ function writeCreatedArtifacts() {
   try {
     fs.mkdirSync(CFG.artifactsDir, { recursive: true });
   } catch { /* ignore */ }
-  const out = { run_id: RUN_ID, site: CFG.siteBase, class_code: CFG.classCode, created };
+  const out = { run_id: RUN_ID, site: CFG.siteBase, class_codes: CFG.classCodes, created };
   const p = path.join(process.cwd(), 'created-artifacts.json');
   fs.writeFileSync(p, JSON.stringify(out, null, 2));
   console.log(`\ncreated-artifacts.json written (${created.length} student(s)) -> ${p}`);
@@ -494,17 +513,24 @@ function writeCreatedArtifacts() {
 
 function printSummary() {
   console.log('\n===== SMOKE SUMMARY =====');
-  const byBlock = {};
+  // class -> block -> {pass, fail}
+  const byClass = {};
   for (const r of results) {
-    const key = r.block.split('/')[0];
-    byBlock[key] = byBlock[key] || { pass: 0, fail: 0 };
-    if (r.pass) byBlock[key].pass++; else byBlock[key].fail++;
+    const cls = r.cls || '(none)';
+    const block = r.block.split('/')[0];
+    byClass[cls] = byClass[cls] || {};
+    byClass[cls][block] = byClass[cls][block] || { pass: 0, fail: 0 };
+    if (r.pass) byClass[cls][block].pass++; else byClass[cls][block].fail++;
   }
-  for (const [block, s] of Object.entries(byBlock)) {
-    const verdict = s.fail === 0 ? 'PASS' : 'FAIL';
-    console.log(`  Block ${block}: ${verdict}  (${s.pass} pass, ${s.fail} fail)`);
+  for (const [cls, blocks] of Object.entries(byClass)) {
+    const clsFail = Object.values(blocks).some((s) => s.fail > 0);
+    console.log(`  ${cls}: ${clsFail ? 'FAIL' : 'PASS'}`);
+    for (const [block, s] of Object.entries(blocks)) {
+      const verdict = s.fail === 0 ? 'PASS' : 'FAIL';
+      console.log(`      Block ${block}: ${verdict}  (${s.pass} pass, ${s.fail} fail)`);
+    }
   }
-  console.log(`\nOVERALL: ${hardFailures === 0 ? 'PASS' : 'FAIL'}  (${hardFailures} assertion failure(s))`);
+  console.log(`\nOVERALL: ${hardFailures === 0 ? 'PASS' : 'FAIL'}  (${hardFailures} assertion failure(s) across ${CFG.classCodes.length} class(es))`);
 }
 
 main().catch((e) => {
