@@ -8,6 +8,7 @@
     "dev": "node server.js",
     "smoke:install": "npm install --prefix smoke",
     "smoke:auth": "node smoke/auth-enrollment.js",
+    "smoke:teacher": "node smoke/teacher-dashboard.js",
     "smoke:cleanup": "node smoke/cleanup.js"
   },
   "keywords": [],
