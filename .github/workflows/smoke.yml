@@ -1,0 +1,59 @@
+name: Auth Smoke Test
+
+# Runs the real-browser auth + enrollment smoke test against production.
+# - workflow_dispatch: a manual "Run workflow" button (available once this file
+#   is on the default branch).
+# - push: fires immediately when the smoke test or this workflow changes on the
+#   feature branch, so a run can be forced by pushing.
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/auth-enrollment-smoke-test-nojdvl]
+    paths:
+      - 'smoke/**'
+      - '.github/workflows/smoke.yml'
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    env:
+      SMOKE_TEACHER_EMAIL: ${{ secrets.SMOKE_TEACHER_EMAIL }}
+      SMOKE_TEACHER_PASSWORD: ${{ secrets.SMOKE_TEACHER_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install smoke deps
+        run: npm run smoke:install
+
+      - name: Install Chromium
+        working-directory: smoke
+        run: npx playwright install --with-deps chromium
+
+      - name: Run auth smoke test
+        run: npm run smoke:auth
+        env:
+          # These are class codes, not secrets; all five are disposable test
+          # classes owned by Tanner.
+          SMOKE_TEST_CLASS_CODE: CYBER-Q9JG,CSA-CQ3G,CSP-CHSH,CSA-4UC8,CYBER-U89X
+
+      # Optional: deactivate the ZZ-SMOKE students this run created. Only runs if
+      # the teacher credentials are provided as repo secrets; otherwise skipped.
+      - name: Cleanup sentinel students
+        if: ${{ always() && env.SMOKE_TEACHER_EMAIL != '' }}
+        run: npm run smoke:cleanup
+        env:
+          SMOKE_TEST_CLASS_CODE: CYBER-Q9JG,CSA-CQ3G,CSP-CHSH,CSA-4UC8,CYBER-U89X
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-artifacts
+          path: |
+            artifacts/
+            created-artifacts.json
+          if-no-files-found: ignore
