@@ -15,6 +15,13 @@ on:
   # branch, so no run fires from the feature branch.
   schedule:
     - cron: '0 7 * * *'
+  # TEMPORARY: one controlled validation run for the student B/D API-refactor on
+  # this branch. Removed before merge so main keeps dispatch+schedule only.
+  push:
+    branches: [claude/auth-enrollment-smoke-test-nojdvl]
+    paths:
+      - 'smoke/**'
+      - '.github/workflows/smoke.yml'
 
 jobs:
   smoke:
