@@ -19,16 +19,22 @@ automation stack on the 1 vCPU / 1 GB box. Nothing here touches the deploy.
 
 From the repo root:
 
-The reserved disposable smoke-test classes are **`CYBER-Q9JG`** (named "TEST")
-and **`CSA-CQ3G`** (an empty AP CSA class), both owned by Tanner. Test students
-accumulate there, so never point the test at a real class. Pass one or more,
-comma-separated; the full A-E suite runs against each in its own isolated
-browser context, and the run fails if ANY class fails.
+The reserved smoke-test classes (all owned by Tanner), one per course:
+
+| Code | Course | Notes |
+| --- | --- | --- |
+| `CYBER-Q9JG` | AP Cybersecurity | Named "TEST"; a throwaway. |
+| `CSA-CQ3G` | AP CSA | Empty, so test rows stay isolated. |
+| `CSP-CHSH` | AP CSP | Not empty (has students) - swap for a dedicated empty `CSP-XXXX` class if you want isolation. |
+
+Test students accumulate in whichever class you pass, so never point the test at
+a real class. Pass one or more, comma-separated; the full A-E suite runs against
+each in its own isolated browser context, and the run fails if ANY class fails.
 
 ```bash
 npm run smoke:install      # one time: installs Playwright into smoke/
 cd smoke && npx playwright install chromium && cd ..   # if the browser did not auto-download
-SMOKE_TEST_CLASS_CODE=CYBER-Q9JG,CSA-CQ3G npm run smoke:auth
+SMOKE_TEST_CLASS_CODE=CYBER-Q9JG,CSA-CQ3G,CSP-CHSH npm run smoke:auth
 ```
 
 The test exits non-zero if any hard assertion fails, so it can gate CI or a
@@ -45,7 +51,7 @@ SMOKE_CHROMIUM_PATH=/opt/pw-browsers/chromium SMOKE_TEST_CLASS_CODE=CSA-XXXX npm
 
 | Var | Default | Notes |
 | --- | --- | --- |
-| `SMOKE_TEST_CLASS_CODE` | **(required)** | One or more reserved disposable test classes, comma-separated: `CYBER-Q9JG,CSA-CQ3G` (owned by Tanner). The full suite runs per class. NEVER point this at a real class - it pollutes the roster and analytics. |
+| `SMOKE_TEST_CLASS_CODE` | **(required)** | One or more reserved disposable test classes, comma-separated: `CYBER-Q9JG,CSA-CQ3G,CSP-CHSH` (owned by Tanner). The full suite runs per class. NEVER point this at a real class - it pollutes the roster and analytics. |
 | `SMOKE_SITE_BASE` | `https://www.apcsexamprep.com` | The Shopify site. |
 | `SMOKE_API_BASE` | `https://progress.apcsexamprep.com` | Only used for the roster-count check (block B9). |
 | `SMOKE_PIN` | generated (4 digits) | Reused across join + login in a run. |
