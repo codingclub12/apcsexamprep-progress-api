@@ -16,11 +16,15 @@
 // logged and skipped by the webhook (never a failure), so an unmapped or new
 // product cannot 500 the webhook or block the rest of the order.
 const DEFAULT_SKU_MAP = {
-  // Fill in real values, for example:
-  // 'CSA-FULL-2025': 'ap-csa',      // by line-item SKU (preferred)
-  // 'CSP-FULL-2025': 'ap-csp',
-  // 'CYBER-FULL':    'ap-cybersecurity',
-  // '7654321098765': 'ap-csa',      // by numeric product_id (fallback)
+  // Teacher whole-course purchases only. Each product here grants the buying
+  // teacher a full-course entitlement, so student add-ons (reference cards, PDFs,
+  // flashcards, tutoring) are deliberately NOT listed. Add a course's teacher
+  // pack here when it goes live.
+  'AP-CYBER-FOUNDER-2026': 'ap-cybersecurity', // AP Cybersecurity Founding Teacher Bundle, Units 1-5
+  'CSA-TSP-COMPLETE':      'ap-csa',            // AP CSA Teacher Superpack, Complete (All 4 Units)
+  // AP CSP Teacher Superpack has no line-item SKU, so it is mapped by its numeric
+  // Shopify product_id (courseForLineItem falls back to product_id when sku is absent).
+  '9278941888727':         'ap-csp',            // AP CSP Teacher Superpack
 };
 
 function loadEnvMap() {
