@@ -107,6 +107,16 @@
   .act-bar { height: 8px; border-radius: 4px; background: color-mix(in srgb, var(--ink) 8%, transparent); overflow: hidden; }
   .act-bar > i { display: block; height: 100%; border-radius: 4px; background: var(--cyber); }
 
+  /* ── Split bar + stat lines (monetization / engagement) ──────────────── */
+  .splitbar { display: flex; height: 10px; border-radius: 5px; overflow: hidden; margin: 12px 0 10px; background: color-mix(in srgb, var(--ink) 8%, transparent); gap: 2px; }
+  .splitbar > i { display: block; height: 100%; }
+  .split-legend { display: flex; gap: 16px; font-size: 12px; color: var(--ink-2); margin-bottom: 6px; }
+  .split-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .statline { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 13px; padding: 7px 0; border-bottom: 1px solid var(--grid); }
+  .statline:last-child { border-bottom: none; }
+  .statline .k { color: var(--ink-2); display: inline-flex; align-items: center; gap: 6px; }
+  .statline .v { font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
+
   /* ── Florida cohort + data quality tables ────────────────────────────── */
   .minitable { width: 100%; border-collapse: collapse; font-size: 13px; }
   .minitable th { text-align: left; font-weight: 600; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--border); white-space: nowrap; }
@@ -223,6 +233,19 @@
       <h3>Florida cohort</h3>
       <p class="hint">Districts starting mid-August, matched by teacher email domain.</p>
       <div id="florida"></div>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <h3>Monetization</h3>
+      <p class="hint">Paid seats vs ad-supported, among real students (test / owner / audit excluded).</p>
+      <div id="monetization"></div>
+    </div>
+    <div class="card">
+      <h3>Engagement</h3>
+      <p class="hint">Time on site and active (engaged) time per session, split by tier.</p>
+      <div id="engagement"></div>
     </div>
   </div>
 
@@ -407,6 +430,39 @@
       "<tbody>" + rows + "</tbody></table>";
   }
 
+  // ── Render: monetization (paid vs ad-supported) ──────────────────────────
+  function renderMonetization() {
+    var m = (state.summary || {}).monetization; if (!m) return;
+    var pStu = m.premium.students, fStu = m.free.students, tot = pStu + fStu;
+    var pPct = tot > 0 ? Math.round((pStu / tot) * 100) : 0, fPct = 100 - pPct;
+    $("monetization").innerHTML =
+      '<div class="act-rate"><span class="big">' + m.premium_student_share_pct + '%</span>' +
+      '<span class="cap">of real students sit on a paid seat; the rest are ad-supported</span></div>' +
+      '<div class="splitbar"><i style="width:' + pPct + '%;background:var(--cyber)"></i>' +
+      '<i style="width:' + fPct + '%;background:var(--csp)"></i></div>' +
+      '<div class="split-legend"><span><i class="swatch" style="background:var(--cyber)"></i>Premium ' + fmt(pStu) + '</span>' +
+      '<span><i class="swatch" style="background:var(--csp)"></i>Ad-supported ' + fmt(fStu) + '</span></div>' +
+      '<div class="statline"><span class="k">Premium</span><span class="v">' + fmt(m.premium.teachers) + ' teachers · ' + fmt(m.premium.classes) + ' classes</span></div>' +
+      '<div class="statline"><span class="k">Ad-supported</span><span class="v">' + fmt(m.free.classes) + ' classes</span></div>';
+  }
+
+  // ── Render: engagement (time on site, active time, by tier) ──────────────
+  function renderEngagement() {
+    var e = (state.summary || {}).engagement; if (!e) return;
+    if (!e.sessions_total) {
+      $("engagement").innerHTML = '<p class="hint">No session data yet. Once the heartbeat reporter is live on lesson pages, time-on-site and active-time metrics appear here, split by paid vs ad-supported.</p>';
+      return;
+    }
+    var t = e.by_tier;
+    $("engagement").innerHTML =
+      '<div class="act-rate"><span class="big">' + e.avg_active_min_per_session + 'm</span>' +
+      '<span class="cap">avg active time per session · ' + e.active_share_pct + '% of time on site is engaged</span></div>' +
+      '<div class="statline"><span class="k">Sessions</span><span class="v">' + fmt(e.sessions_total) + ' (' + fmt(e.last_7d.sessions) + ' in 7d)</span></div>' +
+      '<div class="statline"><span class="k">Active minutes</span><span class="v">' + fmt(e.active_minutes_total) + '</span></div>' +
+      '<div class="statline"><span class="k"><i class="swatch" style="background:var(--cyber)"></i>Premium active</span><span class="v">' + fmt(t.premium.active_minutes) + 'm · ' + t.premium.avg_active_min_per_session + 'm/sess</span></div>' +
+      '<div class="statline"><span class="k"><i class="swatch" style="background:var(--csp)"></i>Ad-supported active</span><span class="v">' + fmt(t.free.active_minutes) + 'm · ' + t.free.avg_active_min_per_session + 'm/sess</span></div>';
+  }
+
   // ── Render: data-quality footer (reconciliation guard) ───────────────────
   function renderDataQuality() {
     var q = (state.summary || {}).data_quality; if (!q) return;
@@ -584,7 +640,8 @@
 
   function render() {
     renderKPIs(); renderAdoption(); renderCourseChart(); renderGrowthChart();
-    renderActivation(); renderFlorida(); renderTable(); renderDataQuality();
+    renderActivation(); renderFlorida(); renderMonetization(); renderEngagement();
+    renderTable(); renderDataQuality();
   }
 
   // ── CSV export ────────────────────────────────────────────────────────────

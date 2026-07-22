@@ -18,7 +18,7 @@
  */
 
 const path = require('path');
-const { classifyClass } = require(path.join(__dirname, '..', 'lib', 'admin-metrics'));
+const { classifyClass, premiumStatus } = require(path.join(__dirname, '..', 'lib', 'admin-metrics'));
 
 let failures = 0;
 function check(name, got, want) {
@@ -67,6 +67,23 @@ const sum = counts.SOLO + counts.TANNER + counts.PROBER + counts.AUDIT + counts.
 check('bucket sum equals total', sum, fleet.length);
 check('external count is exactly the two real teachers', counts.EXTERNAL, 2);
 check('no test/system rows leaked into external', counts.EXTERNAL, 2);
+
+// Premium vs free (paid-seat) classification. The teacher is the paying seat: a
+// class is premium only when its (teacher_id, course) holds a live entitlement.
+console.log('premiumStatus (paid seat = teacher entitlement for the course)');
+const ENT = new Set(['paidT|ap-csa']); // paidT is entitled for ap-csa only
+check('entitled teacher + matching course is premium',
+  premiumStatus({ class_code: 'CSA-P', teacher_email: 'p@s.edu', teacher_id: 'paidT', course: 'ap-csa' }, ENT), 'premium');
+check('entitled teacher but different course is free',
+  premiumStatus({ class_code: 'CSP-P', teacher_email: 'p@s.edu', teacher_id: 'paidT', course: 'ap-csp' }, ENT), 'free');
+check('unentitled external teacher is free',
+  premiumStatus({ class_code: 'CSA-F', teacher_email: 'f@s.edu', teacher_id: 'freeT', course: 'ap-csa' }, ENT), 'free');
+check('solo account is always free (never a paid seat)',
+  premiumStatus({ class_code: 'ME-1', teacher_email: 'solo@system.invalid', teacher_id: 'sys', course: 'solo' }, ENT), 'free');
+check('owner class is excluded from monetization',
+  premiumStatus({ class_code: 'CSA-O', teacher_email: 'tannercrow12@gmail.com', teacher_id: 'own', course: 'ap-csa' }, ENT), 'excluded');
+check('audit class is excluded from monetization',
+  premiumStatus({ class_code: 'CY-A', teacher_email: 'x@y.com', teacher_name: 'AUDIT DELETE', teacher_id: 'aud', course: 'ap-cybersecurity' }, ENT), 'excluded');
 
 console.log(failures ? `\nFAILED (${failures})` : '\nOK');
 process.exit(failures ? 1 : 0);

@@ -199,4 +199,91 @@ router.post('/attempt', requireStudent, rateLimit, (req, res) => {
   }
 });
 
+// ── SESSION HEARTBEAT: time on site + active (engaged) time ───────────────────
+//  The reporter keeps ONE session id per visit (sessionStorage) and cumulative
+//  active/total second counters. It flushes them here a couple times a minute and
+//  once more on page hide. The server UPSERTs the single session row and keeps the
+//  MAX of each counter, so a retried or out-of-order flush can never double count.
+//  Coalesced to ~1-2 tiny writes/minute per active tab, one row per visit; this is
+//  the write-amplification guard that keeps heartbeats off the Railway bill.
+//
+//  Zero PII: only the client-generated id, durations, a page-view count, and a
+//  truncated User-Agent are stored. No URL, no student input.
+const upsertSessionStmt = db.prepare(`
+  INSERT INTO sessions
+    (id, student_id, class_id, course, active_seconds, total_seconds, page_views, ua, started_at, last_beat_at)
+  VALUES
+    (@id, @sid, @cid, @course, @active, @total, @pv, @ua, datetime('now'), datetime('now'))
+  ON CONFLICT(id) DO UPDATE SET
+    active_seconds = MAX(active_seconds, excluded.active_seconds),
+    total_seconds  = MAX(total_seconds,  excluded.total_seconds),
+    page_views     = MAX(page_views,     excluded.page_views),
+    ua             = excluded.ua,
+    last_beat_at   = datetime('now')
+  WHERE sessions.student_id = excluded.student_id
+`);
+
+// Heartbeat has its own bounded limiter (separate budget from /attempt). ~1-2
+// beats/min per tab expected; 40/min per student leaves headroom for several open
+// tabs and the page-hide flush without starving the attempt limiter.
+const HB_WINDOW_MS = 60_000;
+const HB_MAX_PER_WINDOW = 40;
+const HB_MAX_KEYS = 5000;
+const hbBuckets = new Map();
+function heartbeatRateLimit(req, res, next) {
+  const now = Date.now();
+  let bucket = hbBuckets.get(req.student.id);
+  if (!bucket || now - bucket.start >= HB_WINDOW_MS) {
+    if (hbBuckets.size >= HB_MAX_KEYS) {
+      for (const [k, v] of hbBuckets) {
+        if (now - v.start >= HB_WINDOW_MS) hbBuckets.delete(k);
+      }
+      if (hbBuckets.size >= HB_MAX_KEYS) hbBuckets.clear();
+    }
+    bucket = { start: now, count: 0 };
+    hbBuckets.set(req.student.id, bucket);
+  }
+  bucket.count++;
+  if (bucket.count > HB_MAX_PER_WINDOW) {
+    return res.status(429).json({ error: 'Too many heartbeats.' });
+  }
+  next();
+}
+
+const SESSION_ID_RE = /^[A-Za-z0-9_-]{8,64}$/;
+const DAY_SECONDS = 86_400;
+// Clamp a value to a non-negative integer within [0, max]; junk becomes 0.
+function clampInt(v, max) {
+  var n = Math.floor(Number(v));
+  if (!Number.isFinite(n) || n < 0) return 0;
+  return n > max ? max : n;
+}
+
+router.post('/heartbeat', requireStudent, heartbeatRateLimit, (req, res) => {
+  try {
+    const b = req.body || {};
+    const id = String(b.session_id || '');
+    if (!SESSION_ID_RE.test(id)) {
+      return res.status(400).json({ error: 'session_id must be 8-64 url-safe chars' });
+    }
+    const course = b.course != null ? String(b.course).slice(0, 40) : null;
+    const ua = (req.get('user-agent') || '').slice(0, 120);
+
+    upsertSessionStmt.run({
+      id,
+      sid: req.student.id,
+      cid: req.student.class_id,
+      course,
+      active: clampInt(b.active_seconds, DAY_SECONDS),
+      total: clampInt(b.total_seconds, DAY_SECONDS),
+      pv: clampInt(b.page_views, 100_000),
+      ua,
+    });
+    res.json({ ok: true });
+  } catch (e) {
+    console.error('Heartbeat error:', e);
+    res.status(500).json({ error: 'Failed to record heartbeat' });
+  }
+});
+
 module.exports = router;

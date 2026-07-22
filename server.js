@@ -117,6 +117,15 @@ app.post('/admin/logout', (req, res) => {
   res.json({ ok: true });
 });
 
+// Public client asset: the session heartbeat reporter. Served explicitly (not via
+// a blanket static mount, which would also expose the gated dashboard.html). Safe
+// to load cross-origin from the storefront via a plain <script src>.
+app.get('/heartbeat-reporter.js', (req, res) => {
+  res.set('Cache-Control', 'public, max-age=3600');
+  res.type('application/javascript');
+  res.sendFile(path.join(__dirname, 'public', 'heartbeat-reporter.js'));
+});
+
 // Keep crawlers away from the admin surface. The gate is the real protection;
 // this just avoids the page ever being indexed or probed by well-behaved bots.
 app.get('/robots.txt', (req, res) => {
