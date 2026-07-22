@@ -4,10 +4,23 @@ const bcrypt = require('bcryptjs');
 const router = express.Router();
 const db = require('../db');
 const { requireTeacher } = require('../middleware');
+const { claimPending } = require('../lib/entitlements');
 const {
   newId, generateClassCode, signTeacherToken,
   isValidEmail, isValidPin, sanitize, COURSES, COURSE_PREFIXES,
 } = require('../utils');
+
+// Convert any pending Shopify entitlements for this email into real grants right
+// after a successful auth (Phase 4 slice 2 claim-on-auth). Best effort: a failure
+// here must never break registration or login, so it is wrapped and only logged.
+function claimPendingSafe(teacherId, email) {
+  try {
+    const n = claimPending(teacherId, email);
+    if (n) console.log(`[entitlements] claimed ${n} pending grant(s) for ${email}`);
+  } catch (e) {
+    console.error('[entitlements] claim-on-auth failed (auth unaffected):', e);
+  }
+}
 
 // Mastery threshold is clamped to 50-100 per the class settings spec: a bar
 // below 50 is not a meaningful mastery line. Reads elsewhere default to 80 when
@@ -39,6 +52,7 @@ router.post('/register', async (req, res) => {
 
     const teacher = db.prepare('SELECT id, email, name, school FROM teachers WHERE id = ?').get(id);
     const token = signTeacherToken(teacher);
+    claimPendingSafe(teacher.id, teacher.email);
     res.status(201).json({ token, teacher: { id: teacher.id, email: teacher.email, name: teacher.name, school: teacher.school } });
   } catch (e) {
     console.error('Register error:', e);
@@ -59,6 +73,7 @@ router.post('/login', async (req, res) => {
     if (!valid) return res.status(401).json({ error: 'Invalid email or password' });
 
     const token = signTeacherToken(teacher);
+    claimPendingSafe(teacher.id, teacher.email);
     res.json({ token, teacher: { id: teacher.id, email: teacher.email, name: teacher.name, school: teacher.school } });
   } catch (e) {
     res.status(500).json({ error: 'Login failed' });

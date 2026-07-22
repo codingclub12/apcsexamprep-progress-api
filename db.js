@@ -300,6 +300,28 @@ db.exec(`
     created_at          TEXT DEFAULT (datetime('now'))
   );
   CREATE INDEX IF NOT EXISTS idx_access_codes_course_status ON access_codes(course, status);
+
+  -- Phase 4 slice 2: purchases whose buyer has no teacher account yet. A Shopify
+  -- order can arrive before the buyer registers, so the grant is parked here by
+  -- email and converted to a real entitlement the first time a teacher registers
+  -- or logs in with that email (claim-on-auth). claimed_at NULL means still
+  -- pending; a non-null value is a claimed-and-converted audit trail (rows are
+  -- kept, never deleted). Idempotency: the partial unique index guards against a
+  -- redelivered webhook parking the same (email, course, order_ref) twice while
+  -- it is still unclaimed.
+  CREATE TABLE IF NOT EXISTS pending_entitlements (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    email       TEXT NOT NULL COLLATE NOCASE,
+    course      TEXT NOT NULL,
+    source      TEXT NOT NULL,
+    order_ref   TEXT,
+    created_at  TEXT DEFAULT (datetime('now')),
+    claimed_at  TEXT
+  );
+  CREATE UNIQUE INDEX IF NOT EXISTS uidx_pending_ent_unclaimed
+    ON pending_entitlements(email, course, order_ref) WHERE claimed_at IS NULL;
+  CREATE INDEX IF NOT EXISTS idx_pending_ent_email
+    ON pending_entitlements(email) WHERE claimed_at IS NULL;
 `);
 
 // Migrations — safe to re-run on every boot, ignored if column already exists
