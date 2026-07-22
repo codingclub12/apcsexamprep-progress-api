@@ -22,6 +22,11 @@ app.use(cors({
   credentials: true,
 }));
 
+// Shopify orders/paid webhook must see the EXACT raw request bytes to verify its
+// HMAC signature, so it is mounted BEFORE the global JSON parser. The router uses
+// express.raw internally. Do not move this below express.json(). (Phase 4 slice 2.)
+app.use('/api/shopify', require('./routes/shopify'));
+
 app.use(express.json({ limit: '1mb' }));
 
 // ── ROUTES ────────────────────────────────────────────────────────────────────
