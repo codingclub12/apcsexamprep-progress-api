@@ -80,19 +80,6 @@
   button.ghost { background: transparent; }
   .btnrow { display: flex; gap: 8px; flex-wrap: wrap; }
 
-  /* ── Lock screen ─────────────────────────────────────────────────────── */
-  #lock {
-    max-width: 420px; margin: 12vh auto 0; padding: 28px;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 14px; box-shadow: var(--shadow);
-  }
-  #lock h2 { margin: 0 0 6px; font-size: 18px; }
-  #lock p { margin: 0 0 18px; color: var(--ink-2); font-size: 13px; }
-  #lock input { width: 100%; margin-bottom: 12px; }
-  #lock button { width: 100%; }
-  #lockErr { color: var(--critical); font-size: 13px; min-height: 18px; margin-top: 10px; }
-  .hide { display: none !important; }
-
   /* ── KPI tiles ───────────────────────────────────────────────────────── */
   .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
   .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; box-shadow: var(--shadow); }
@@ -146,17 +133,8 @@
 </head>
 <body>
 
-<!-- ── Lock screen ──────────────────────────────────────────────────────── -->
-<div id="lock">
-  <h2>Class Dashboard</h2>
-  <p>Enter the admin key to load live data. The key stays in this browser tab only and is sent as the <code>x-admin-key</code> header.</p>
-  <input id="keyInput" type="password" placeholder="Admin key" autocomplete="off" />
-  <button class="primary" id="unlockBtn">Unlock</button>
-  <div id="lockErr"></div>
-</div>
-
 <!-- ── Dashboard ────────────────────────────────────────────────────────── -->
-<div id="app" class="wrap hide">
+<div id="app" class="wrap">
   <header class="top">
     <h1>Class Dashboard</h1>
     <span class="sub">live from <code>/api/admin</code></span>
@@ -166,7 +144,7 @@
       <span id="liveText">Updated just now</span>
       <button class="ghost" id="pauseBtn" title="Pause / resume auto-refresh">Pause</button>
       <button class="ghost" id="refreshBtn" title="Refresh now">Refresh</button>
-      <button class="ghost" id="lockBtn" title="Forget key and lock">Lock</button>
+      <button class="ghost" id="lockBtn" title="End session and sign out">Sign out</button>
     </div>
   </header>
 
@@ -222,7 +200,6 @@
 
   // ── Config ──────────────────────────────────────────────────────────────
   var REFRESH_SECONDS = 30;
-  var KEY_STORE = "apcs_admin_key";
   var COURSE = {
     "ap-csa":          { label: "AP CSA",           css: "var(--csa)"   },
     "ap-csp":          { label: "AP CSP",           css: "var(--csp)"   },
@@ -231,8 +208,9 @@
   };
 
   // ── State (single object, no growth per refresh) ────────────────────────
+  //  Auth is the http-only session cookie set at /admin/login; this page is only
+  //  ever served once that cookie is valid, so there is no key to hold here.
   var state = {
-    key: sessionStorage.getItem(KEY_STORE) || "",
     classes: [], overview: null, stats: null,
     sort: { key: "created_at", dir: -1 },
     paused: false, countdown: REFRESH_SECONDS, ticker: null, err: null
@@ -267,9 +245,13 @@
   }
 
   // ── Fetch ───────────────────────────────────────────────────────────────
+  //  The session cookie rides along automatically (same-origin). A 401/403/503
+  //  means the cookie expired or was revoked; bounce back to the login page.
   function api(path) {
-    return fetch(path, { headers: { "x-admin-key": state.key } }).then(function (r) {
-      if (r.status === 403 || r.status === 503) { var e = new Error("auth"); e.auth = true; throw e; }
+    return fetch(path, { credentials: "same-origin" }).then(function (r) {
+      if (r.status === 401 || r.status === 403 || r.status === 503) {
+        var e = new Error("auth"); e.auth = true; throw e;
+      }
       if (!r.ok) throw new Error("HTTP " + r.status);
       return r.json();
     });
@@ -288,6 +270,13 @@
       render();
       markUpdated();
     });
+  }
+
+  // Session gone: stop the ticker and reload, which the server answers with the
+  // login page (this route serves the dashboard only with a valid cookie).
+  function toLogin() {
+    if (state.ticker) { clearInterval(state.ticker); state.ticker = null; }
+    window.location.href = "/admin/dashboard";
   }
 
   // ── Render: KPIs ─────────────────────────────────────────────────────────
@@ -479,39 +468,22 @@
   }
   function refresh() {
     loadAll().catch(function (e) {
-      if (e && e.auth) { lock("Key rejected. Enter it again."); return; }
+      if (e && e.auth) { toLogin(); return; }
       state.err = "Refresh failed — retrying"; updateStatus();
     });
   }
 
-  // ── Lock / unlock ─────────────────────────────────────────────────────────
-  function lock(msg) {
+  // ── Sign out: drop the session cookie, then land on the login page ───────
+  function logout() {
     if (state.ticker) { clearInterval(state.ticker); state.ticker = null; }
-    state.key = ""; sessionStorage.removeItem(KEY_STORE);
-    $("app").classList.add("hide");
-    $("lock").classList.remove("hide");
-    $("lockErr").textContent = msg || "";
-    $("keyInput").value = ""; $("keyInput").focus();
-  }
-  function unlock(key) {
-    state.key = key;
-    $("lockErr").textContent = "Checking…";
-    loadAll().then(function () {
-      sessionStorage.setItem(KEY_STORE, key);
-      $("lock").classList.add("hide");
-      $("app").classList.remove("hide");
-      if (!state.ticker) state.ticker = setInterval(tick, 1000);
-    }).catch(function (e) {
-      state.key = "";
-      $("lockErr").textContent = e && e.auth ? "Invalid admin key." : "Could not reach the API. Try again.";
-    });
+    fetch("/admin/logout", { method: "POST", credentials: "same-origin" })
+      .catch(function () {})
+      .then(function () { window.location.href = "/admin/dashboard"; });
   }
 
   // ── Wire controls ONCE (no per-refresh listener churn) ───────────────────
-  $("unlockBtn").addEventListener("click", function () { unlock($("keyInput").value.trim()); });
-  $("keyInput").addEventListener("keydown", function (e) { if (e.key === "Enter") unlock($("keyInput").value.trim()); });
   $("refreshBtn").addEventListener("click", function () { markUpdated(); refresh(); });
-  $("lockBtn").addEventListener("click", function () { lock(""); });
+  $("lockBtn").addEventListener("click", logout);
   $("pauseBtn").addEventListener("click", function () {
     state.paused = !state.paused;
     $("pauseBtn").textContent = state.paused ? "Resume" : "Pause";
@@ -530,7 +502,10 @@
   });
 
   // ── Boot ─────────────────────────────────────────────────────────────────
-  if (state.key) { unlock(state.key); } else { $("keyInput").focus(); }
+  //  Served only with a valid session cookie, so load immediately and start the
+  //  ticker. An expired cookie mid-session bounces to login via toLogin().
+  refresh();
+  state.ticker = setInterval(tick, 1000);
 })();
 </script>
 </body>

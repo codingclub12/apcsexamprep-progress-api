@@ -13,6 +13,7 @@
 const express = require('express');
 const crypto = require('crypto');
 const db = require('../db');
+const session = require('../lib/admin-session');
 
 const router = express.Router();
 
@@ -32,14 +33,22 @@ function requireAdmin(req, res, next) {
   // Header is preferred (does not land in access logs). ?key= is a convenience
   // fallback for quick browser/curl use; if you use it, treat the key as burnable.
   const provided = req.get('x-admin-key') || req.query.key || '';
+  if (provided) {
+    // Hash both to a fixed 32 bytes so the compare is constant-time and does not
+    // leak key length. timingSafeEqual throws on length mismatch otherwise.
+    const digest = (s) => crypto.createHash('sha256').update(String(s)).digest();
+    if (crypto.timingSafeEqual(digest(provided), digest(configured))) return next();
+    return res.status(403).json({ error: 'Invalid or missing admin key.' });
+  }
 
-  // Hash both to a fixed 32 bytes so the compare is constant-time and does not
-  // leak key length. timingSafeEqual throws on length mismatch otherwise.
-  const digest = (s) => crypto.createHash('sha256').update(String(s)).digest();
-  const ok = crypto.timingSafeEqual(digest(provided), digest(configured));
+  // Dashboard session cookie: a valid signed cookie proves the holder passed the
+  // key check at /admin/login. Accepted for SAFE (read-only) methods only, so the
+  // cookie can never authorize a mutation route (access-codes, entitlements); those
+  // always require the x-admin-key header. Combined with the cookie's SameSite=Strict,
+  // this closes CSRF against the admin API.
+  if ((req.method === 'GET' || req.method === 'HEAD') && session.isAuthed(req)) return next();
 
-  if (!ok) return res.status(403).json({ error: 'Invalid or missing admin key.' });
-  next();
+  return res.status(403).json({ error: 'Invalid or missing admin key.' });
 }
 
 // Every route on this router is now behind the key. Add routes AFTER this line.
