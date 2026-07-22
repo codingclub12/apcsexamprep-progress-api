@@ -3,3 +3,10 @@ node_modules/
 # Smoke-test run outputs (written to cwd when run from the repo root)
 artifacts/
 created-artifacts.json
+
+# Local SQLite database files
+progress.db
+progress.db-*
+*.db
+*.db-shm
+*.db-wal

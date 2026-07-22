@@ -80,25 +80,55 @@
   button.ghost { background: transparent; }
   .btnrow { display: flex; gap: 8px; flex-wrap: wrap; }
 
-  /* ── Lock screen ─────────────────────────────────────────────────────── */
-  #lock {
-    max-width: 420px; margin: 12vh auto 0; padding: 28px;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 14px; box-shadow: var(--shadow);
-  }
-  #lock h2 { margin: 0 0 6px; font-size: 18px; }
-  #lock p { margin: 0 0 18px; color: var(--ink-2); font-size: 13px; }
-  #lock input { width: 100%; margin-bottom: 12px; }
-  #lock button { width: 100%; }
-  #lockErr { color: var(--critical); font-size: 13px; min-height: 18px; margin-top: 10px; }
-  .hide { display: none !important; }
-
   /* ── KPI tiles ───────────────────────────────────────────────────────── */
   .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
   .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; box-shadow: var(--shadow); }
   .kpi .label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
   .kpi .value { font-size: 30px; font-weight: 650; line-height: 1.1; margin-top: 4px; letter-spacing: -0.02em; }
   .kpi .foot { font-size: 12px; color: var(--ink-2); margin-top: 4px; }
+  .kpi .deltas { display: flex; gap: 6px; align-items: center; margin-top: 8px; flex-wrap: wrap; }
+  .kpi .dl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em; }
+  .chip { font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; padding: 1px 6px; border-radius: 6px; }
+  .chip.up   { color: var(--good); background: color-mix(in srgb, var(--good) 14%, transparent); }
+  .chip.down { color: var(--critical); background: color-mix(in srgb, var(--critical) 14%, transparent); }
+  .chip.flat { color: var(--muted); background: color-mix(in srgb, var(--muted) 14%, transparent); }
+
+  /* ── Section band ────────────────────────────────────────────────────── */
+  .band-title { font-size: 13px; font-weight: 650; margin: 4px 0 10px; display: flex; align-items: baseline; gap: 8px; }
+  .band-title .sub2 { font-size: 12px; font-weight: 400; color: var(--muted); }
+
+  /* ── Activation ──────────────────────────────────────────────────────── */
+  .act-rate { display: flex; align-items: baseline; gap: 8px; margin-bottom: 12px; }
+  .act-rate .big { font-size: 34px; font-weight: 650; letter-spacing: -0.02em; }
+  .act-rate .cap { font-size: 12px; color: var(--ink-2); }
+  .act-row { display: grid; grid-template-columns: 88px 1fr 40px; align-items: center; gap: 10px; margin: 7px 0; font-size: 13px; }
+  .act-row .lab { color: var(--ink-2); }
+  .act-row .num { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .act-bar { height: 8px; border-radius: 4px; background: color-mix(in srgb, var(--ink) 8%, transparent); overflow: hidden; }
+  .act-bar > i { display: block; height: 100%; border-radius: 4px; background: var(--cyber); }
+
+  /* ── Florida cohort + data quality tables ────────────────────────────── */
+  .minitable { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .minitable th { text-align: left; font-weight: 600; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  .minitable td { padding: 7px 8px; border-bottom: 1px solid var(--grid); white-space: nowrap; }
+  .minitable td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .minitable tr:last-child td { border-bottom: none; }
+  .tag { font-size: 10.5px; font-weight: 600; padding: 1px 7px; border-radius: 999px; }
+  .tag.ok   { color: var(--good); background: color-mix(in srgb, var(--good) 14%, transparent); }
+  .tag.warn { color: var(--muted); background: color-mix(in srgb, var(--muted) 14%, transparent); }
+
+  .dq { margin-top: 22px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow); }
+  .dq h3 { margin: 0 0 10px; font-size: 14px; }
+  .dq .recon { font-size: 13px; font-weight: 600; padding: 8px 12px; border-radius: 8px; margin-bottom: 12px; }
+  .dq .recon.ok   { color: var(--good); background: color-mix(in srgb, var(--good) 12%, transparent); }
+  .dq .recon.bad  { color: var(--critical); background: color-mix(in srgb, var(--critical) 14%, transparent); }
+  .dq .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px 20px; font-size: 13px; }
+  .dq .excl { color: var(--ink-2); }
+  .dq .excl b { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .dq .anoms { margin: 10px 0 0; padding: 0; list-style: none; font-size: 13px; }
+  .dq .anoms li { padding: 5px 0 5px 20px; position: relative; color: var(--ink-2); }
+  .dq .anoms li::before { content: "!"; position: absolute; left: 0; top: 5px; width: 15px; height: 15px; text-align: center; line-height: 15px; font-size: 11px; font-weight: 700; border-radius: 4px; color: var(--critical); background: color-mix(in srgb, var(--critical) 14%, transparent); }
+  .dq .clean { color: var(--good); font-size: 13px; }
 
   /* ── Chart cards ─────────────────────────────────────────────────────── */
   .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px; }
@@ -146,17 +176,8 @@
 </head>
 <body>
 
-<!-- ── Lock screen ──────────────────────────────────────────────────────── -->
-<div id="lock">
-  <h2>Class Dashboard</h2>
-  <p>Enter the admin key to load live data. The key stays in this browser tab only and is sent as the <code>x-admin-key</code> header.</p>
-  <input id="keyInput" type="password" placeholder="Admin key" autocomplete="off" />
-  <button class="primary" id="unlockBtn">Unlock</button>
-  <div id="lockErr"></div>
-</div>
-
 <!-- ── Dashboard ────────────────────────────────────────────────────────── -->
-<div id="app" class="wrap hide">
+<div id="app" class="wrap">
   <header class="top">
     <h1>Class Dashboard</h1>
     <span class="sub">live from <code>/api/admin</code></span>
@@ -166,11 +187,14 @@
       <span id="liveText">Updated just now</span>
       <button class="ghost" id="pauseBtn" title="Pause / resume auto-refresh">Pause</button>
       <button class="ghost" id="refreshBtn" title="Refresh now">Refresh</button>
-      <button class="ghost" id="lockBtn" title="Forget key and lock">Lock</button>
+      <button class="ghost" id="lockBtn" title="End session and sign out">Sign out</button>
     </div>
   </header>
 
   <div class="kpis" id="kpis"></div>
+
+  <div class="band-title">External adoption <span class="sub2">test, solo, owner, and audit accounts excluded</span></div>
+  <div class="kpis" id="adoption"></div>
 
   <div class="cards">
     <div class="card">
@@ -186,6 +210,19 @@
         <span><i class="swatch" style="background:var(--csa)"></i>New classes</span>
         <span><i class="swatch" style="background:var(--csp)"></i>New students</span>
       </div>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <h3>Activation</h3>
+      <p class="hint">External classes with students enrolled. The fall-launch readiness signal.</p>
+      <div id="activation"></div>
+    </div>
+    <div class="card">
+      <h3>Florida cohort</h3>
+      <p class="hint">Districts starting mid-August, matched by teacher email domain.</p>
+      <div id="florida"></div>
     </div>
   </div>
 
@@ -214,6 +251,8 @@
       <tbody id="tbody"></tbody>
     </table>
   </div>
+
+  <div class="dq" id="dq"></div>
 </div>
 
 <script>
@@ -222,7 +261,6 @@
 
   // ── Config ──────────────────────────────────────────────────────────────
   var REFRESH_SECONDS = 30;
-  var KEY_STORE = "apcs_admin_key";
   var COURSE = {
     "ap-csa":          { label: "AP CSA",           css: "var(--csa)"   },
     "ap-csp":          { label: "AP CSP",           css: "var(--csp)"   },
@@ -231,9 +269,10 @@
   };
 
   // ── State (single object, no growth per refresh) ────────────────────────
+  //  Auth is the http-only session cookie set at /admin/login; this page is only
+  //  ever served once that cookie is valid, so there is no key to hold here.
   var state = {
-    key: sessionStorage.getItem(KEY_STORE) || "",
-    classes: [], overview: null, stats: null,
+    classes: [], overview: null, stats: null, summary: null,
     sort: { key: "created_at", dir: -1 },
     paused: false, countdown: REFRESH_SECONDS, ticker: null, err: null
   };
@@ -267,9 +306,13 @@
   }
 
   // ── Fetch ───────────────────────────────────────────────────────────────
+  //  The session cookie rides along automatically (same-origin). A 401/403/503
+  //  means the cookie expired or was revoked; bounce back to the login page.
   function api(path) {
-    return fetch(path, { headers: { "x-admin-key": state.key } }).then(function (r) {
-      if (r.status === 403 || r.status === 503) { var e = new Error("auth"); e.auth = true; throw e; }
+    return fetch(path, { credentials: "same-origin" }).then(function (r) {
+      if (r.status === 401 || r.status === 403 || r.status === 503) {
+        var e = new Error("auth"); e.auth = true; throw e;
+      }
       if (!r.ok) throw new Error("HTTP " + r.status);
       return r.json();
     });
@@ -279,15 +322,112 @@
     return Promise.all([
       api("/api/admin/classes"),
       api("/api/admin/overview"),
-      api("/api/admin/stats")
+      api("/api/admin/stats"),
+      api("/api/admin/summary")
     ]).then(function (res) {
       state.classes = res[0].classes || [];
       state.overview = res[1];
       state.stats = res[2];
+      state.summary = res[3];
       state.err = null;
       render();
       markUpdated();
     });
+  }
+
+  // Session gone: stop the ticker and reload, which the server answers with the
+  // login page (this route serves the dashboard only with a valid cookie).
+  function toLogin() {
+    if (state.ticker) { clearInterval(state.ticker); state.ticker = null; }
+    window.location.href = "/admin/dashboard";
+  }
+
+  // A delta chip: green up / red down / muted flat, dash when no baseline yet.
+  function chip(d) {
+    if (d == null) return '<span class="chip flat">no base</span>';
+    if (d === 0) return '<span class="chip flat">0</span>';
+    var up = d > 0;
+    return '<span class="chip ' + (up ? "up" : "down") + '">' + (up ? "▲+" : "▼") + d + "</span>";
+  }
+
+  // ── Render: external adoption tiles (bucketed, with 24h/7d deltas) ───────
+  function renderAdoption() {
+    var s = state.summary; if (!s) return;
+    var h = s.headline, d = s.deltas;
+    var tile = function (label, value, dk, foot) {
+      return '<div class="kpi"><div class="label">' + esc(label) + '</div>' +
+        '<div class="value">' + fmt(value) + '</div>' +
+        (foot ? '<div class="foot">' + esc(foot) + '</div>' : '') +
+        (dk ? '<div class="deltas"><span class="dl">24h</span>' + chip(d[dk].d24h) +
+              '<span class="dl">7d</span>' + chip(d[dk].d7d) + '</div>' : '') +
+        '</div>';
+    };
+    $("adoption").innerHTML =
+      tile("Ext. teachers",    h.external.teachers,    "external_teachers") +
+      tile("Ext. classes",     h.external.classes,     "external_classes") +
+      tile("Ext. students",    h.external.students,    "external_students") +
+      tile("Ext. completions", h.external.completions, "external_completions") +
+      tile("Solo students",    h.solo.students,        "solo_students", fmt(h.solo.classes) + " solo accounts");
+  }
+
+  // ── Render: activation panel ─────────────────────────────────────────────
+  function renderActivation() {
+    var a = (state.summary || {}).activation; if (!a) return;
+    var total = a.external_classes || 0;
+    var bar = function (label, n) {
+      var pct = total > 0 ? Math.round((n / total) * 100) : 0;
+      return '<div class="act-row"><span class="lab">' + esc(label) + '</span>' +
+        '<span class="act-bar"><i style="width:' + pct + '%"></i></span>' +
+        '<span class="num">' + fmt(n) + '</span></div>';
+    };
+    $("activation").innerHTML =
+      '<div class="act-rate"><span class="big">' + a.rate + '%</span>' +
+      '<span class="cap">of ' + fmt(total) + ' external classes have a student enrolled</span></div>' +
+      bar("1+ students", a.ge1) + bar("5+ students", a.ge5) + bar("20+ students", a.ge20);
+  }
+
+  // ── Render: Florida cohort ───────────────────────────────────────────────
+  function renderFlorida() {
+    var fl = ((state.summary || {}).florida || []).filter(function (f) { return f.classes > 0; });
+    if (!fl.length) { $("florida").innerHTML = '<p class="hint">No matched classes yet.</p>'; return; }
+    var rows = fl.map(function (f) {
+      var who = f.matched_teachers && f.matched_teachers.length ? f.matched_teachers.join(", ") : f.teacher;
+      var badge = f.confirmed ? '<span class="tag ok">confirmed</span>' : '<span class="tag warn">verify</span>';
+      return "<tr><td>" + esc(f.district) + " " + badge + "</td>" +
+        '<td class="muted">' + esc(who) + "</td>" +
+        "<td>" + esc(f.start) + "</td>" +
+        '<td class="num">' + fmt(f.classes) + "</td>" +
+        '<td class="num">' + fmt(f.students) + "</td>" +
+        '<td class="num">' + fmt(f.completions) + "</td>" +
+        '<td class="muted">' + esc((f.last_activity || "").slice(0, 10) || "-") + "</td></tr>";
+    }).join("");
+    $("florida").innerHTML =
+      '<table class="minitable"><thead><tr><th>District</th><th>Teacher</th><th>Start</th>' +
+      '<th class="num">Cls</th><th class="num">Stu</th><th class="num">Done</th><th>Last</th></tr></thead>' +
+      "<tbody>" + rows + "</tbody></table>";
+  }
+
+  // ── Render: data-quality footer (reconciliation guard) ───────────────────
+  function renderDataQuality() {
+    var q = (state.summary || {}).data_quality; if (!q) return;
+    var recon = q.mismatch
+      ? '<div class="recon bad">Reconciliation FAILED: ' + fmt(q.total_classes) +
+        ' classes but buckets sum to ' + fmt(q.bucket_sum) + '. A metric is dropping rows.</div>'
+      : '<div class="recon ok">Reconciliation OK: ' + fmt(q.total_classes) +
+        ' classes = ' + fmt(q.bucket_sum) + ' bucketed (' +
+        ['EXTERNAL', 'SOLO', 'TANNER', 'PROBER', 'AUDIT'].map(function (k) {
+          return q.bucket_counts[k] + " " + k.toLowerCase();
+        }).join(", ") + ').</div>';
+    var ex = q.excluded_counts;
+    var grid = '<div class="grid">' +
+      '<span class="excl">Owner (Tanner): <b>' + fmt(ex.tanner.classes) + '</b> classes</span>' +
+      '<span class="excl">Probers: <b>' + fmt(ex.prober.classes) + '</b> classes</span>' +
+      '<span class="excl">Audit: <b>' + fmt(ex.audit.classes) + '</b> classes</span>' +
+      '</div>';
+    var anoms = (q.known_anomalies && q.known_anomalies.length)
+      ? '<ul class="anoms">' + q.known_anomalies.map(function (a) { return "<li>" + esc(a) + "</li>"; }).join("") + "</ul>"
+      : '<p class="clean">No anomalies detected.</p>';
+    $("dq").innerHTML = "<h3>Data quality</h3>" + recon + grid + anoms;
   }
 
   // ── Render: KPIs ─────────────────────────────────────────────────────────
@@ -432,8 +572,8 @@
         '<td class="code">' + esc(c.class_code) + "</td>" +
         "<td>" + esc(c.class_name) + "</td>" +
         '<td><span class="pill"><i class="swatch" style="background:' + info.css + '"></i>' + esc(info.label) + "</span></td>" +
-        "<td>" + esc(c.teacher_name || "—") + "</td>" +
-        '<td class="muted">' + esc(c.teacher_email || "—") + "</td>" +
+        "<td>" + esc(c.teacher_name || "-") + "</td>" +
+        '<td class="muted">' + esc(c.teacher_email || "-") + "</td>" +
         '<td class="num">' + fmt(c.student_count) + "</td>" +
         '<td class="num">' + fmt(c.completions) + "</td>" +
         '<td class="num">' + (c.active ? '<span class="badge on">Yes</span>' : '<span class="badge off">No</span>') + "</td>" +
@@ -442,7 +582,10 @@
     }).join("");
   }
 
-  function render() { renderKPIs(); renderCourseChart(); renderGrowthChart(); renderTable(); }
+  function render() {
+    renderKPIs(); renderAdoption(); renderCourseChart(); renderGrowthChart();
+    renderActivation(); renderFlorida(); renderTable(); renderDataQuality();
+  }
 
   // ── CSV export ────────────────────────────────────────────────────────────
   function exportCSV() {
@@ -479,39 +622,22 @@
   }
   function refresh() {
     loadAll().catch(function (e) {
-      if (e && e.auth) { lock("Key rejected. Enter it again."); return; }
-      state.err = "Refresh failed — retrying"; updateStatus();
+      if (e && e.auth) { toLogin(); return; }
+      state.err = "Refresh failed, retrying"; updateStatus();
     });
   }
 
-  // ── Lock / unlock ─────────────────────────────────────────────────────────
-  function lock(msg) {
+  // ── Sign out: drop the session cookie, then land on the login page ───────
+  function logout() {
     if (state.ticker) { clearInterval(state.ticker); state.ticker = null; }
-    state.key = ""; sessionStorage.removeItem(KEY_STORE);
-    $("app").classList.add("hide");
-    $("lock").classList.remove("hide");
-    $("lockErr").textContent = msg || "";
-    $("keyInput").value = ""; $("keyInput").focus();
-  }
-  function unlock(key) {
-    state.key = key;
-    $("lockErr").textContent = "Checking…";
-    loadAll().then(function () {
-      sessionStorage.setItem(KEY_STORE, key);
-      $("lock").classList.add("hide");
-      $("app").classList.remove("hide");
-      if (!state.ticker) state.ticker = setInterval(tick, 1000);
-    }).catch(function (e) {
-      state.key = "";
-      $("lockErr").textContent = e && e.auth ? "Invalid admin key." : "Could not reach the API. Try again.";
-    });
+    fetch("/admin/logout", { method: "POST", credentials: "same-origin" })
+      .catch(function () {})
+      .then(function () { window.location.href = "/admin/dashboard"; });
   }
 
   // ── Wire controls ONCE (no per-refresh listener churn) ───────────────────
-  $("unlockBtn").addEventListener("click", function () { unlock($("keyInput").value.trim()); });
-  $("keyInput").addEventListener("keydown", function (e) { if (e.key === "Enter") unlock($("keyInput").value.trim()); });
   $("refreshBtn").addEventListener("click", function () { markUpdated(); refresh(); });
-  $("lockBtn").addEventListener("click", function () { lock(""); });
+  $("lockBtn").addEventListener("click", logout);
   $("pauseBtn").addEventListener("click", function () {
     state.paused = !state.paused;
     $("pauseBtn").textContent = state.paused ? "Resume" : "Pause";
@@ -530,7 +656,10 @@
   });
 
   // ── Boot ─────────────────────────────────────────────────────────────────
-  if (state.key) { unlock(state.key); } else { $("keyInput").focus(); }
+  //  Served only with a valid session cookie, so load immediately and start the
+  //  ticker. An expired cookie mid-session bounces to login via toLogin().
+  refresh();
+  state.ticker = setInterval(tick, 1000);
 })();
 </script>
 </body>

@@ -3,24 +3,39 @@ require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const cors = require('cors');
+const adminSession = require('./lib/admin-session');
 const app = express();
+
+// Railway terminates TLS at its proxy and forwards the real client IP and
+// protocol in X-Forwarded-* headers. Trusting the proxy lets req.ip (login rate
+// limiting) and req.secure (Secure cookie flag) reflect the real client.
+app.set('trust proxy', true);
 
 // ── CORS ──────────────────────────────────────────────────────────────────────
 const ALLOWED_ORIGINS = [
   'https://www.apcsexamprep.com',
   'https://apcsexamprep.com',
+  'https://progress.apcsexamprep.com', // this API + the admin dashboard page
   'http://localhost:3000',
   'http://localhost:5173',
   'null', // file:// origin for local testing
 ];
 
-app.use(cors({
-  origin: (origin, cb) => {
-    // Allow requests with no origin (curl, Postman, server-to-server)
-    if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
-    cb(new Error(`CORS blocked: ${origin}`));
-  },
-  credentials: true,
+// Same-origin requests (Origin host === the request's own Host) are always safe
+// and must be allowed regardless of the allowlist, or the same-origin admin
+// dashboard's POST /admin/login (which browsers send with an Origin header) is
+// rejected. The allowlist still governs genuine cross-origin callers (storefront).
+function isAllowedOrigin(origin, host) {
+  if (!origin) return true; // curl, server-to-server, most same-origin GETs
+  if (ALLOWED_ORIGINS.includes(origin)) return true;
+  try { if (host && new URL(origin).host === host) return true; } catch (_) { /* malformed */ }
+  return false;
+}
+
+app.use(cors((req, cb) => {
+  const origin = req.header('Origin');
+  const ok = isAllowedOrigin(origin, req.header('Host'));
+  cb(ok ? null : new Error(`CORS blocked: ${origin}`), { origin: ok, credentials: true });
 }));
 
 // Shopify orders/paid webhook must see the EXACT raw request bytes to verify its
@@ -73,13 +88,39 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', ts: new Date().toISOString() });
 });
 
-// Admin class dashboard: an unlisted, noindex HTML page. The page itself carries
-// NO data. It prompts for the admin key in the browser and makes authenticated
-// x-admin-key fetches against /api/admin/* from the same origin, so every byte of
-// class data still passes through the fail-closed requireAdmin middleware. The
-// URL being known only exposes an empty lock screen, never the database.
+// ── ADMIN CLASS DASHBOARD (gated page) ────────────────────────────────────────
+//  A reachable, unlisted, noindex page. The gate is a signed session cookie minted
+//  only after a constant-time admin-key check at /admin/login. Until then the
+//  dashboard route serves the LOGIN page, so a bot that finds the URL never
+//  receives the dashboard markup or its data-fetching JS, let alone any data. The
+//  raw ADMIN_KEY never reaches the browser; data fetches ride the httpOnly cookie.
 app.get('/admin/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+  res.set('Cache-Control', 'no-store');
+  const file = adminSession.isAuthed(req) ? 'dashboard.html' : 'login.html';
+  res.sendFile(path.join(__dirname, 'public', file));
+});
+
+// Exchange the admin key for a session cookie. Rate limited + constant-time +
+// fails closed on a missing/weak ADMIN_KEY, same posture as /api/admin/*.
+app.post('/admin/login', adminSession.loginRateLimit, (req, res) => {
+  if (!adminSession.keyConfigured()) {
+    return res.status(503).json({ error: 'Admin API disabled. Set a strong ADMIN_KEY (>= 20 chars).' });
+  }
+  const key = (req.body && req.body.key) || '';
+  if (!adminSession.checkKey(key)) return res.status(403).json({ error: 'Invalid admin key.' });
+  adminSession.issue(req, res);
+  res.json({ ok: true });
+});
+
+app.post('/admin/logout', (req, res) => {
+  adminSession.clear(res);
+  res.json({ ok: true });
+});
+
+// Keep crawlers away from the admin surface. The gate is the real protection;
+// this just avoids the page ever being indexed or probed by well-behaved bots.
+app.get('/robots.txt', (req, res) => {
+  res.type('text/plain').send('User-agent: *\nDisallow: /admin\nDisallow: /api\n');
 });
 
 // Validate class code exists (for student join flow)
