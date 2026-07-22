@@ -14,6 +14,7 @@ const express = require('express');
 const crypto = require('crypto');
 const db = require('../db');
 const session = require('../lib/admin-session');
+const metrics = require('../lib/admin-metrics');
 
 const router = express.Router();
 
@@ -60,6 +61,7 @@ router.get('/', (req, res) => {
     ok: true,
     endpoints: [
       'GET /api/admin/overview            top-line counts',
+      'GET /api/admin/summary             bucketed adoption metrics: activation, deltas, cohort, data-quality',
       'GET /api/admin/stats               adoption + growth rollup (external vs raw)',
       'GET /api/admin/classes             every class + teacher + student/completion counts',
       'GET /api/admin/students            roster; filter ?class_code= or ?class_id=',
@@ -94,6 +96,21 @@ router.get('/overview', (req, res) => {
   } catch (e) {
     console.error('admin/overview:', e);
     res.status(500).json({ error: 'overview failed', detail: e.message });
+  }
+});
+
+// ── SUMMARY: bucketed adoption metrics (single classifier) ────────────────────
+//  The one place classes are bucketed (SOLO / TANNER / PROBER / AUDIT / EXTERNAL)
+//  so admin stats can never disagree with a hand-derived number. Powers the
+//  activation panel, 24h/7d deltas, Florida cohort, and the reconciliation guard.
+//  A GET, so the dashboard session cookie authorizes it; auth is inherited from
+//  requireAdmin above. The only write is the idempotent daily snapshot baseline.
+router.get('/summary', (req, res) => {
+  try {
+    res.json(metrics.computeSummary());
+  } catch (e) {
+    console.error('admin/summary:', e);
+    res.status(500).json({ error: 'summary failed', detail: e.message });
   }
 });
 

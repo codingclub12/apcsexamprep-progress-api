@@ -322,6 +322,21 @@ db.exec(`
     ON pending_entitlements(email, course, order_ref) WHERE claimed_at IS NULL;
   CREATE INDEX IF NOT EXISTS idx_pending_ent_email
     ON pending_entitlements(email) WHERE claimed_at IS NULL;
+
+  -- Nightly baseline for the admin dashboard deltas. The classes endpoint is
+  -- point-in-time only, so 24h / 7d change on any headline metric needs a stored
+  -- history to diff against. One row per (date, metric) per day. The admin
+  -- summary writes today's row insert-or-ignore on the first request of the day
+  -- (first-write-wins), so the value recorded is the day's opening baseline and
+  -- live deltas read as (current live value - the baseline from N days ago).
+  -- Tiny table (a handful of metrics per day); no unbounded growth concern.
+  CREATE TABLE IF NOT EXISTS daily_snapshots (
+    date       TEXT NOT NULL,        -- 'YYYY-MM-DD' (UTC, from DATE('now'))
+    metric     TEXT NOT NULL,        -- headline metric key, e.g. 'external_students'
+    value      REAL NOT NULL,
+    created_at TEXT DEFAULT (datetime('now')),
+    PRIMARY KEY (date, metric)
+  );
 `);
 
 // Migrations — safe to re-run on every boot, ignored if column already exists
