@@ -1,5 +1,6 @@
 'use strict';
 require('dotenv').config();
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -70,6 +71,15 @@ if (csaSeeded) console.log(`csa bank: ${csaSeeded.answers} new answer rows, ${cs
 // ── PUBLIC ENDPOINTS ──────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', ts: new Date().toISOString() });
+});
+
+// Admin class dashboard: an unlisted, noindex HTML page. The page itself carries
+// NO data. It prompts for the admin key in the browser and makes authenticated
+// x-admin-key fetches against /api/admin/* from the same origin, so every byte of
+// class data still passes through the fail-closed requireAdmin middleware. The
+// URL being known only exposes an empty lock screen, never the database.
+app.get('/admin/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
 
 // Validate class code exists (for student join flow)

@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>APCSExamPrep · Class Dashboard</title>
+<style>
+  /* ── Palette (validated dataviz reference: light + dark) ──────────────── */
+  :root {
+    color-scheme: light dark;
+    --plane:        #f9f9f7;
+    --surface:      #fcfcfb;
+    --ink:          #0b0b0b;
+    --ink-2:        #52514e;
+    --muted:        #898781;
+    --grid:         #e1e0d9;
+    --baseline:     #c3c2b7;
+    --border:       rgba(11,11,11,0.10);
+    --good:         #0ca30c;
+    --critical:     #d03b3b;
+    /* course/series hues, fixed by entity */
+    --csa:    #2a78d6;  /* blue   */
+    --csp:    #eb6834;  /* orange */
+    --cyber:  #1baf7a;  /* aqua   */
+    --solo:   #eda100;  /* yellow */
+    --shadow: 0 1px 2px rgba(11,11,11,0.04), 0 1px 3px rgba(11,11,11,0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --plane:    #0d0d0d;
+      --surface:  #1a1a19;
+      --ink:      #ffffff;
+      --ink-2:    #c3c2b7;
+      --muted:    #898781;
+      --grid:     #2c2c2a;
+      --baseline: #383835;
+      --border:   rgba(255,255,255,0.10);
+      --good:     #0ca30c;
+      --critical: #e66767;
+      --csa:   #3987e5;
+      --csp:   #d95926;
+      --cyber: #199e70;
+      --solo:  #c98500;
+      --shadow: none;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--plane);
+    color: var(--ink);
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--csa); }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 20px 20px 64px; }
+
+  /* ── Header ──────────────────────────────────────────────────────────── */
+  header.top {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px;
+    padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 20px;
+  }
+  header.top h1 { font-size: 20px; margin: 0; font-weight: 650; letter-spacing: -0.01em; }
+  header.top .sub { color: var(--muted); font-size: 13px; }
+  header.top .spacer { flex: 1 1 auto; }
+  .status { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--ink-2); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 3px rgba(12,163,12,0.16); }
+  .dot.paused { background: var(--muted); box-shadow: none; }
+
+  button, select, input {
+    font: inherit; color: var(--ink);
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 7px 11px;
+  }
+  button { cursor: pointer; }
+  button:hover { border-color: var(--baseline); }
+  button.primary { background: var(--csa); color: #fff; border-color: transparent; font-weight: 600; }
+  button.ghost { background: transparent; }
+  .btnrow { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* ── Lock screen ─────────────────────────────────────────────────────── */
+  #lock {
+    max-width: 420px; margin: 12vh auto 0; padding: 28px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; box-shadow: var(--shadow);
+  }
+  #lock h2 { margin: 0 0 6px; font-size: 18px; }
+  #lock p { margin: 0 0 18px; color: var(--ink-2); font-size: 13px; }
+  #lock input { width: 100%; margin-bottom: 12px; }
+  #lock button { width: 100%; }
+  #lockErr { color: var(--critical); font-size: 13px; min-height: 18px; margin-top: 10px; }
+  .hide { display: none !important; }
+
+  /* ── KPI tiles ───────────────────────────────────────────────────────── */
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; box-shadow: var(--shadow); }
+  .kpi .label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .kpi .value { font-size: 30px; font-weight: 650; line-height: 1.1; margin-top: 4px; letter-spacing: -0.02em; }
+  .kpi .foot { font-size: 12px; color: var(--ink-2); margin-top: 4px; }
+
+  /* ── Chart cards ─────────────────────────────────────────────────────── */
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px; }
+  @media (max-width: 820px) { .cards { grid-template-columns: 1fr; } }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow); }
+  .card h3 { margin: 0 0 2px; font-size: 14px; font-weight: 600; }
+  .card .hint { color: var(--muted); font-size: 12px; margin: 0 0 12px; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--ink-2); margin-top: 10px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .swatch { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+  svg { display: block; width: 100%; height: auto; overflow: visible; }
+  svg text { font: 12px system-ui, sans-serif; fill: var(--ink-2); }
+  svg .tick { fill: var(--muted); }
+  svg .val { fill: var(--ink); font-weight: 600; }
+
+  /* ── Controls ────────────────────────────────────────────────────────── */
+  .controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+  .controls input[type="search"] { min-width: 220px; flex: 1 1 220px; }
+  .controls label.chk { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink-2); cursor: pointer; }
+  .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+
+  /* ── Table ───────────────────────────────────────────────────────────── */
+  .tablewrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); box-shadow: var(--shadow); }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+  thead th {
+    position: sticky; top: 0; z-index: 1; background: var(--surface);
+    text-align: left; font-weight: 600; color: var(--ink-2);
+    padding: 11px 12px; border-bottom: 1px solid var(--border); white-space: nowrap; cursor: pointer; user-select: none;
+  }
+  thead th.num { text-align: right; }
+  thead th .arrow { color: var(--muted); font-size: 11px; margin-left: 3px; }
+  tbody td { padding: 10px 12px; border-bottom: 1px solid var(--grid); white-space: nowrap; }
+  tbody td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: color-mix(in srgb, var(--ink) 3%, transparent); }
+  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  .pill .swatch { width: 8px; height: 8px; }
+  .code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; }
+  .badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 6px; }
+  .badge.on  { color: var(--good); background: color-mix(in srgb, var(--good) 14%, transparent); }
+  .badge.off { color: var(--critical); background: color-mix(in srgb, var(--critical) 14%, transparent); }
+  .muted { color: var(--muted); }
+  .empty { padding: 40px; text-align: center; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- ── Lock screen ──────────────────────────────────────────────────────── -->
+<div id="lock">
+  <h2>Class Dashboard</h2>
+  <p>Enter the admin key to load live data. The key stays in this browser tab only and is sent as the <code>x-admin-key</code> header.</p>
+  <input id="keyInput" type="password" placeholder="Admin key" autocomplete="off" />
+  <button class="primary" id="unlockBtn">Unlock</button>
+  <div id="lockErr"></div>
+</div>
+
+<!-- ── Dashboard ────────────────────────────────────────────────────────── -->
+<div id="app" class="wrap hide">
+  <header class="top">
+    <h1>Class Dashboard</h1>
+    <span class="sub">live from <code>/api/admin</code></span>
+    <span class="spacer"></span>
+    <div class="status">
+      <span class="dot" id="liveDot"></span>
+      <span id="liveText">Updated just now</span>
+      <button class="ghost" id="pauseBtn" title="Pause / resume auto-refresh">Pause</button>
+      <button class="ghost" id="refreshBtn" title="Refresh now">Refresh</button>
+      <button class="ghost" id="lockBtn" title="Forget key and lock">Lock</button>
+    </div>
+  </header>
+
+  <div class="kpis" id="kpis"></div>
+
+  <div class="cards">
+    <div class="card">
+      <h3>Classes by course</h3>
+      <p class="hint">Every class in the database, grouped by course.</p>
+      <div id="courseChart"></div>
+    </div>
+    <div class="card">
+      <h3>New sign-ups, last 30 days</h3>
+      <p class="hint">New classes and new students created per day.</p>
+      <div id="growthChart"></div>
+      <div class="legend">
+        <span><i class="swatch" style="background:var(--csa)"></i>New classes</span>
+        <span><i class="swatch" style="background:var(--csp)"></i>New students</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search code, name, teacher, email…" />
+    <select id="courseFilter">
+      <option value="">All courses</option>
+      <option value="ap-csa">AP CSA</option>
+      <option value="ap-csp">AP CSP</option>
+      <option value="ap-cybersecurity">AP Cybersecurity</option>
+      <option value="solo">Solo</option>
+    </select>
+    <select id="activeFilter">
+      <option value="">Active + inactive</option>
+      <option value="1">Active only</option>
+      <option value="0">Inactive only</option>
+    </select>
+    <label class="chk"><input type="checkbox" id="hideInternal" /> Hide test / solo / system</label>
+    <button class="ghost" id="csvBtn">Export CSV</button>
+    <span class="count" id="rowCount"></span>
+  </div>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr id="headRow"></tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ── Config ──────────────────────────────────────────────────────────────
+  var REFRESH_SECONDS = 30;
+  var KEY_STORE = "apcs_admin_key";
+  var COURSE = {
+    "ap-csa":          { label: "AP CSA",           css: "var(--csa)"   },
+    "ap-csp":          { label: "AP CSP",           css: "var(--csp)"   },
+    "ap-cybersecurity":{ label: "AP Cybersecurity", css: "var(--cyber)" },
+    "solo":            { label: "Solo",             css: "var(--solo)"  }
+  };
+
+  // ── State (single object, no growth per refresh) ────────────────────────
+  var state = {
+    key: sessionStorage.getItem(KEY_STORE) || "",
+    classes: [], overview: null, stats: null,
+    sort: { key: "created_at", dir: -1 },
+    paused: false, countdown: REFRESH_SECONDS, ticker: null, err: null
+  };
+
+  var COLUMNS = [
+    { key: "class_code",   label: "Code",     num: false },
+    { key: "class_name",   label: "Class",    num: false },
+    { key: "course",       label: "Course",   num: false },
+    { key: "teacher_name", label: "Teacher",  num: false },
+    { key: "teacher_email",label: "Email",    num: false },
+    { key: "student_count",label: "Students", num: true  },
+    { key: "completions",  label: "Done",     num: true  },
+    { key: "active",       label: "Active",   num: true  },
+    { key: "created_at",   label: "Created",  num: false }
+  ];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) {
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  };
+  var fmt = function (n) { return (n == null ? 0 : n).toLocaleString(); };
+
+  // A row is "internal" if it is a solo/system/audit/owner account.
+  function isInternal(c) {
+    var email = (c.teacher_email || "").toLowerCase();
+    return c.course === "solo" ||
+      email === "tannercrow12@gmail.com" || email === "solo@system.invalid" ||
+      email.indexOf("audit") !== -1 || email.indexOf("delete") !== -1;
+  }
+
+  // ── Fetch ───────────────────────────────────────────────────────────────
+  function api(path) {
+    return fetch(path, { headers: { "x-admin-key": state.key } }).then(function (r) {
+      if (r.status === 403 || r.status === 503) { var e = new Error("auth"); e.auth = true; throw e; }
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    });
+  }
+
+  function loadAll() {
+    return Promise.all([
+      api("/api/admin/classes"),
+      api("/api/admin/overview"),
+      api("/api/admin/stats")
+    ]).then(function (res) {
+      state.classes = res[0].classes || [];
+      state.overview = res[1];
+      state.stats = res[2];
+      state.err = null;
+      render();
+      markUpdated();
+    });
+  }
+
+  // ── Render: KPIs ─────────────────────────────────────────────────────────
+  function renderKPIs() {
+    var o = state.overview || {}, s = state.stats || {};
+    var ext = s.external || {};
+    var tiles = [
+      { label: "Classes",      value: o.classes,       foot: fmt(o.classes_active) + " active" },
+      { label: "Students",     value: o.students,      foot: fmt(ext.students) + " external" },
+      { label: "Teachers",     value: o.teachers,      foot: fmt(ext.teachers) + " external" },
+      { label: "Completions",  value: o.completions,   foot: fmt((s.activity || {}).completions_last_7_days) + " this week" },
+      { label: "Attempts",     value: o.attempts,      foot: fmt(o.quiz_attempts) + " quiz attempts" }
+    ];
+    $("kpis").innerHTML = tiles.map(function (t) {
+      return '<div class="kpi"><div class="label">' + esc(t.label) + '</div>' +
+        '<div class="value">' + fmt(t.value) + '</div>' +
+        '<div class="foot">' + esc(t.foot) + '</div></div>';
+    }).join("");
+  }
+
+  // ── Render: horizontal bar chart — classes by course ─────────────────────
+  function renderCourseChart() {
+    var counts = {};
+    state.classes.forEach(function (c) { counts[c.course] = (counts[c.course] || 0) + 1; });
+    var order = ["ap-cybersecurity", "ap-csp", "ap-csa", "solo"];
+    var rows = order.filter(function (k) { return counts[k]; })
+      .map(function (k) { return { k: k, n: counts[k] }; })
+      .sort(function (a, b) { return b.n - a.n; });
+    Object.keys(counts).forEach(function (k) {
+      if (order.indexOf(k) === -1) rows.push({ k: k, n: counts[k] });
+    });
+
+    var max = rows.reduce(function (m, r) { return Math.max(m, r.n); }, 1);
+    var rowH = 30, gap = 12, labelW = 128, W = 520, padR = 44;
+    var H = rows.length * (rowH + gap);
+    var barMax = W - labelW - padR;
+    var svg = ['<svg viewBox="0 0 ' + W + ' ' + Math.max(H, 20) + '" role="img" aria-label="Classes by course">'];
+    rows.forEach(function (r, i) {
+      var y = i * (rowH + gap);
+      var w = Math.max(2, (r.n / max) * barMax);
+      var info = COURSE[r.k] || { label: r.k, css: "var(--baseline)" };
+      svg.push('<text x="0" y="' + (y + rowH / 2 + 4) + '">' + esc(info.label) + '</text>');
+      svg.push('<rect x="' + labelW + '" y="' + y + '" width="' + w + '" height="' + rowH +
+        '" rx="4" fill="' + info.css + '"><title>' + esc(info.label) + ': ' + r.n + ' classes</title></rect>');
+      svg.push('<text class="val" x="' + (labelW + w + 8) + '" y="' + (y + rowH / 2 + 4) + '">' + r.n + '</text>');
+    });
+    svg.push('</svg>');
+    $("courseChart").innerHTML = svg.join("");
+  }
+
+  // ── Render: line chart — 30-day growth ───────────────────────────────────
+  function renderGrowthChart() {
+    var g = (state.stats || {}).growth || {};
+    var days = [];
+    var today = new Date();
+    for (var i = 29; i >= 0; i--) {
+      var d = new Date(today.getFullYear(), today.getMonth(), today.getDate() - i);
+      days.push(d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"));
+    }
+    var seriesFor = function (arr) {
+      var map = {}; (arr || []).forEach(function (r) { map[r.d] = r.n; });
+      return days.map(function (d) { return map[d] || 0; });
+    };
+    var sClasses = seriesFor(g.classes_per_day);
+    var sStudents = seriesFor(g.students_per_day);
+    var max = Math.max(1, Math.max.apply(null, sClasses.concat(sStudents)));
+
+    var W = 520, H = 200, padL = 28, padR = 12, padT = 12, padB = 22;
+    var iw = W - padL - padR, ih = H - padT - padB;
+    var x = function (i) { return padL + (days.length <= 1 ? 0 : (i / (days.length - 1)) * iw); };
+    var y = function (v) { return padT + ih - (v / max) * ih; };
+
+    var svg = ['<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="New sign-ups over 30 days">'];
+    // gridlines + y ticks (0, mid, max)
+    [0, Math.round(max / 2), max].forEach(function (v) {
+      var yy = y(v);
+      svg.push('<line x1="' + padL + '" y1="' + yy + '" x2="' + (W - padR) + '" y2="' + yy + '" stroke="var(--grid)" stroke-width="1"/>');
+      svg.push('<text class="tick" x="0" y="' + (yy + 4) + '">' + v + '</text>');
+    });
+    // x labels: first, mid, last
+    [0, Math.floor(days.length / 2), days.length - 1].forEach(function (i) {
+      svg.push('<text class="tick" text-anchor="middle" x="' + x(i) + '" y="' + (H - 6) + '">' + days[i].slice(5) + '</text>');
+    });
+    var line = function (data, color) {
+      var pts = data.map(function (v, i) { return x(i) + "," + y(v); }).join(" ");
+      svg.push('<polyline points="' + pts + '" fill="none" stroke="' + color + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>');
+      data.forEach(function (v, i) {
+        if (v > 0) svg.push('<circle cx="' + x(i) + '" cy="' + y(v) + '" r="2.5" fill="' + color +
+          '"><title>' + days[i] + ": " + v + '</title></circle>');
+      });
+    };
+    line(sClasses, "var(--csa)");
+    line(sStudents, "var(--csp)");
+    svg.push('</svg>');
+    $("growthChart").innerHTML = svg.join("");
+  }
+
+  // ── Render: table ────────────────────────────────────────────────────────
+  function filteredClasses() {
+    var q = $("search").value.trim().toLowerCase();
+    var cf = $("courseFilter").value;
+    var af = $("activeFilter").value;
+    var hi = $("hideInternal").checked;
+    var rows = state.classes.filter(function (c) {
+      if (cf && c.course !== cf) return false;
+      if (af !== "" && String(c.active) !== af) return false;
+      if (hi && isInternal(c)) return false;
+      if (q) {
+        var hay = (c.class_code + " " + c.class_name + " " + c.teacher_name + " " + c.teacher_email).toLowerCase();
+        if (hay.indexOf(q) === -1) return false;
+      }
+      return true;
+    });
+    var k = state.sort.key, dir = state.sort.dir;
+    rows.sort(function (a, b) {
+      var av = a[k], bv = b[k];
+      if (typeof av === "number" && typeof bv === "number") return (av - bv) * dir;
+      return String(av == null ? "" : av).localeCompare(String(bv == null ? "" : bv)) * dir;
+    });
+    return rows;
+  }
+
+  function renderHead() {
+    $("headRow").innerHTML = COLUMNS.map(function (col) {
+      var arrow = state.sort.key === col.key ? (state.sort.dir === 1 ? "▲" : "▼") : "";
+      return '<th data-key="' + col.key + '" class="' + (col.num ? "num" : "") + '">' +
+        esc(col.label) + '<span class="arrow">' + arrow + '</span></th>';
+    }).join("");
+  }
+
+  function renderTable() {
+    renderHead();
+    var rows = filteredClasses();
+    $("rowCount").textContent = rows.length + " of " + state.classes.length + " classes";
+    if (!rows.length) {
+      $("tbody").innerHTML = '<tr><td class="empty" colspan="' + COLUMNS.length + '">No classes match these filters.</td></tr>';
+      return;
+    }
+    $("tbody").innerHTML = rows.map(function (c) {
+      var info = COURSE[c.course] || { label: c.course, css: "var(--baseline)" };
+      return "<tr>" +
+        '<td class="code">' + esc(c.class_code) + "</td>" +
+        "<td>" + esc(c.class_name) + "</td>" +
+        '<td><span class="pill"><i class="swatch" style="background:' + info.css + '"></i>' + esc(info.label) + "</span></td>" +
+        "<td>" + esc(c.teacher_name || "—") + "</td>" +
+        '<td class="muted">' + esc(c.teacher_email || "—") + "</td>" +
+        '<td class="num">' + fmt(c.student_count) + "</td>" +
+        '<td class="num">' + fmt(c.completions) + "</td>" +
+        '<td class="num">' + (c.active ? '<span class="badge on">Yes</span>' : '<span class="badge off">No</span>') + "</td>" +
+        '<td class="muted">' + esc((c.created_at || "").slice(0, 10)) + "</td>" +
+      "</tr>";
+    }).join("");
+  }
+
+  function render() { renderKPIs(); renderCourseChart(); renderGrowthChart(); renderTable(); }
+
+  // ── CSV export ────────────────────────────────────────────────────────────
+  function exportCSV() {
+    var rows = filteredClasses();
+    var head = COLUMNS.map(function (c) { return c.label; });
+    var lines = [head.join(",")];
+    rows.forEach(function (c) {
+      lines.push(COLUMNS.map(function (col) {
+        var v = c[col.key];
+        v = v == null ? "" : String(v);
+        return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
+      }).join(","));
+    });
+    var blob = new Blob([lines.join("\n")], { type: "text/csv" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url; a.download = "classes-" + new Date().toISOString().slice(0, 10) + ".csv";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // ── Auto-refresh (single 1s ticker, no accumulation) ─────────────────────
+  function markUpdated() { state.countdown = REFRESH_SECONDS; updateStatus(); }
+  function updateStatus() {
+    $("liveDot").className = "dot" + (state.paused ? " paused" : "");
+    $("liveText").textContent = state.err ? state.err
+      : state.paused ? "Paused" : "Next refresh in " + state.countdown + "s";
+  }
+  function tick() {
+    if (state.paused) return;
+    state.countdown -= 1;
+    if (state.countdown <= 0) { state.countdown = REFRESH_SECONDS; refresh(); }
+    updateStatus();
+  }
+  function refresh() {
+    loadAll().catch(function (e) {
+      if (e && e.auth) { lock("Key rejected. Enter it again."); return; }
+      state.err = "Refresh failed — retrying"; updateStatus();
+    });
+  }
+
+  // ── Lock / unlock ─────────────────────────────────────────────────────────
+  function lock(msg) {
+    if (state.ticker) { clearInterval(state.ticker); state.ticker = null; }
+    state.key = ""; sessionStorage.removeItem(KEY_STORE);
+    $("app").classList.add("hide");
+    $("lock").classList.remove("hide");
+    $("lockErr").textContent = msg || "";
+    $("keyInput").value = ""; $("keyInput").focus();
+  }
+  function unlock(key) {
+    state.key = key;
+    $("lockErr").textContent = "Checking…";
+    loadAll().then(function () {
+      sessionStorage.setItem(KEY_STORE, key);
+      $("lock").classList.add("hide");
+      $("app").classList.remove("hide");
+      if (!state.ticker) state.ticker = setInterval(tick, 1000);
+    }).catch(function (e) {
+      state.key = "";
+      $("lockErr").textContent = e && e.auth ? "Invalid admin key." : "Could not reach the API. Try again.";
+    });
+  }
+
+  // ── Wire controls ONCE (no per-refresh listener churn) ───────────────────
+  $("unlockBtn").addEventListener("click", function () { unlock($("keyInput").value.trim()); });
+  $("keyInput").addEventListener("keydown", function (e) { if (e.key === "Enter") unlock($("keyInput").value.trim()); });
+  $("refreshBtn").addEventListener("click", function () { markUpdated(); refresh(); });
+  $("lockBtn").addEventListener("click", function () { lock(""); });
+  $("pauseBtn").addEventListener("click", function () {
+    state.paused = !state.paused;
+    $("pauseBtn").textContent = state.paused ? "Resume" : "Pause";
+    updateStatus();
+  });
+  $("csvBtn").addEventListener("click", exportCSV);
+  ["search", "courseFilter", "activeFilter", "hideInternal"].forEach(function (id) {
+    $(id).addEventListener("input", renderTable);
+  });
+  $("headRow").addEventListener("click", function (e) {
+    var th = e.target.closest("th"); if (!th) return;
+    var key = th.getAttribute("data-key");
+    if (state.sort.key === key) state.sort.dir *= -1;
+    else { state.sort.key = key; state.sort.dir = (key === "created_at" || key === "student_count" || key === "completions") ? -1 : 1; }
+    renderTable();
+  });
+
+  // ── Boot ─────────────────────────────────────────────────────────────────
+  if (state.key) { unlock(state.key); } else { $("keyInput").focus(); }
+})();
+</script>
+</body>
+</html>
