@@ -30,6 +30,12 @@ app.use('/api/shopify', require('./routes/shopify'));
 app.use(express.json({ limit: '1mb' }));
 
 // ── ROUTES ────────────────────────────────────────────────────────────────────
+// Admin dashboard (server-rendered page + JSON summary) is mounted at '/' and
+// BEFORE the /api/admin key-auth router, so it fully owns /admin/* and
+// /api/admin/summary under its cookie-session auth. The /api/admin router below
+// never sees those paths.
+app.use(require('./routes/dashboard'));
+
 app.use('/api/teacher', require('./routes/teacher'));
 app.use('/api/student', require('./routes/student'));
 app.use('/api/progress', require('./routes/progress'));
