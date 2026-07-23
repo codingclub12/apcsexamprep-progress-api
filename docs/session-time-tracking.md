@@ -20,7 +20,7 @@ client-generated id kept in `sessionStorage`.
 | `total_seconds` | foreground time on site |
 | `page_views` | pages viewed in the visit |
 | `ua` | User-Agent, truncated to 120 chars |
-| `channel` | acquisition channel: Direct / Organic Search / Social / Referral / Email / Paid / Other (first-touch, entry channel) |
+| `channel` | acquisition channel: Direct / Organic Search / Social / Referral / Email / Paid / Class link / Other (first-touch, entry channel). `Class link` = teacher-referred: a student who entered through a class link (class code in the URL, the join/enroll landing, or `channelHint: 'Class link'`) |
 | `referrer_host` | referring domain only (no path, query, or full URL) |
 | `started_at`, `last_beat_at` | first and most recent heartbeat |
 

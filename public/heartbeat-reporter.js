@@ -42,6 +42,7 @@
       (document.body && document.body.dataset && document.body.dataset.course) ||
       (document.querySelector("[data-course]") && document.querySelector("[data-course]").getAttribute("data-course")) ||
       "";
+    var channelHint = cfg.channelHint || null; // e.g. 'Class link' on the join landing
     var getToken = typeof cfg.getToken === "function" ? cfg.getToken : function () {
       // Best-effort fallbacks; override via window.APCS_HEARTBEAT.getToken to
       // match the existing tracker's storage key.
@@ -51,7 +52,7 @@
           localStorage.getItem("student_token") || "";
       } catch (e) { return ""; }
     };
-    return { base: base, course: course, getToken: getToken };
+    return { base: base, course: course, getToken: getToken, channelHint: channelHint };
   }
 
   var cfg = resolveConfig();
@@ -78,7 +79,16 @@
       return new URL(document.referrer).hostname.replace(/^www\./, "");
     } catch (e) { return ""; }
   }
+  var CHANNEL_SET = /^(Direct|Organic Search|Social|Referral|Email|Paid|Class link)$/;
   function classifyChannel(host) {
+    // First-party teacher referral wins: the join/enroll landing can set
+    // channelHint 'Class link', or the entry URL carries a class code / join path.
+    if (cfg.channelHint && CHANNEL_SET.test(cfg.channelHint)) return cfg.channelHint;
+    try {
+      var q = new URLSearchParams(location.search);
+      if (q.get("class") || q.get("classcode") || q.get("class_code") || q.get("join") ||
+          /\/(join|enroll)\b/i.test(location.pathname)) return "Class link";
+    } catch (e) {}
     var medium = "", source = "";
     try {
       var p = new URLSearchParams(location.search);

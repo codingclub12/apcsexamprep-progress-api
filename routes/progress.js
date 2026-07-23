@@ -231,7 +231,9 @@ const upsertSessionStmt = db.prepare(`
 `);
 
 // The acquisition channels the reporter may report; anything else becomes 'Other'.
-const CHANNELS = new Set(['Direct', 'Organic Search', 'Social', 'Referral', 'Email', 'Paid', 'Other']);
+// 'Class link' is the first-party teacher-referral channel: a student who entered
+// through a class link (class code in the URL, or the join/enroll landing).
+const CHANNELS = new Set(['Direct', 'Organic Search', 'Social', 'Referral', 'Email', 'Paid', 'Class link', 'Other']);
 
 // Heartbeat has its own bounded limiter (separate budget from /attempt). ~1-2
 // beats/min per tab expected; 40/min per student leaves headroom for several open

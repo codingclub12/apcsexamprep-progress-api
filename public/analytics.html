@@ -250,6 +250,22 @@
   function renderAcquisition(d) {
     var a = d.acquisition; if (!a) return "";
     var nvr = a.new_vs_returning;
+
+    // Highlighted returning segments: organic, direct, and teacher-referred
+    // (students who entered through a class link).
+    var byCh = {}; a.by_channel.forEach(function (c) { byCh[c.channel] = c; });
+    var ret = function (ch) { return (byCh[ch] || {}).returning_users || 0; };
+    var users = function (ch) { return (byCh[ch] || {}).users || 0; };
+    var hlTile = function (label, ch, foot) {
+      var r = ret(ch), u = users(ch);
+      return '<div class="tile"><div class="label">' + esc(label) + '</div><div class="value">' + fmt(r) + '</div>' +
+        '<div class="foot">' + (u ? Math.round(r / u * 100) + '% of ' + fmt(u) + ' ' : '') + esc(foot) + '</div></div>';
+    };
+    var highlights = '<div class="tiles" style="margin-bottom:16px">' +
+      hlTile("Returning · Organic", "Organic Search", "from search") +
+      hlTile("Returning · Direct", "Direct", "direct entries") +
+      hlTile("Returning · Teacher link", "Class link", "via a class link") +
+      '</div>';
     var total = nvr.total || 1;
     var newPct = Math.round((nvr.new / total) * 100), retPct = 100 - newPct;
     var nvrBody =
@@ -268,7 +284,8 @@
     var refBars = a.top_referrers.length
       ? bars(a.top_referrers.map(function (r) { return { label: r.host, value: r.sessions }; }), "var(--violet)")
       : '<div class="empty">No external referrers captured yet.</div>';
-    return '<div class="cards">' + card("New vs returning", "Returning = a user with sessions on 2+ distinct days.", nvrBody) + chanCard + '</div>' +
+    return highlights +
+      '<div class="cards">' + card("New vs returning", "Returning = a user with sessions on 2+ distinct days.", nvrBody) + chanCard + '</div>' +
       '<div class="cards">' + card("Top referrers", "Referring domains only - no full URLs stored.", refBars) + '<div></div></div>';
   }
 
