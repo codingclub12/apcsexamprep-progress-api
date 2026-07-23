@@ -101,7 +101,7 @@
   .act-rate { display: flex; align-items: baseline; gap: 8px; margin-bottom: 12px; }
   .act-rate .big { font-size: 34px; font-weight: 650; letter-spacing: -0.02em; }
   .act-rate .cap { font-size: 12px; color: var(--ink-2); }
-  .act-row { display: grid; grid-template-columns: 88px 1fr 40px; align-items: center; gap: 10px; margin: 7px 0; font-size: 13px; }
+  .act-row { display: grid; grid-template-columns: 88px 1fr auto; align-items: center; gap: 10px; margin: 7px 0; font-size: 13px; }
   .act-row .lab { color: var(--ink-2); }
   .act-row .num { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
   .act-bar { height: 8px; border-radius: 4px; background: color-mix(in srgb, var(--ink) 8%, transparent); overflow: hidden; }
@@ -116,6 +116,9 @@
   .statline:last-child { border-bottom: none; }
   .statline .k { color: var(--ink-2); display: inline-flex; align-items: center; gap: 6px; }
   .statline .v { font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
+  .dinline { display: inline-flex; gap: 4px; align-items: center; margin-left: 10px; font-size: 11px; font-weight: 400; color: var(--muted); }
+  .dinline .chip { font-size: 11px; padding: 0 5px; }
+  .numwrap { display: inline-flex; align-items: center; gap: 8px; justify-content: flex-end; }
 
   /* ── Florida cohort + data quality tables ────────────────────────────── */
   .minitable { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -373,16 +376,29 @@
     return '<span class="chip ' + (up ? "up" : "down") + '">' + (up ? "▲+" : "▼") + d + "</span>";
   }
 
+  // The 24h + 7d delta pair for a snapshot metric key. Empty string if the key
+  // is not in the summary (so a caller can request a delta unconditionally).
+  function deltaBlk(dk) {
+    var d = (state.summary || {}).deltas;
+    if (!d || !d[dk]) return '';
+    return '<div class="deltas"><span class="dl">24h</span>' + chip(d[dk].d24h) +
+           '<span class="dl">7d</span>' + chip(d[dk].d7d) + '</div>';
+  }
+  // A compact inline "24h +n · 7d +n" for stat lines.
+  function deltaInline(dk) {
+    var d = (state.summary || {}).deltas;
+    if (!d || !d[dk]) return '';
+    return '<span class="dinline">24h ' + chip(d[dk].d24h) + ' 7d ' + chip(d[dk].d7d) + '</span>';
+  }
+
   // ── Render: external adoption tiles (bucketed, with 24h/7d deltas) ───────
   function renderAdoption() {
     var s = state.summary; if (!s) return;
-    var h = s.headline, d = s.deltas;
+    var h = s.headline;
     var tile = function (label, value, dk, foot) {
       return '<div class="kpi"><div class="label">' + esc(label) + '</div>' +
         '<div class="value">' + fmt(value) + '</div>' +
-        (foot ? '<div class="foot">' + esc(foot) + '</div>' : '') +
-        (dk ? '<div class="deltas"><span class="dl">24h</span>' + chip(d[dk].d24h) +
-              '<span class="dl">7d</span>' + chip(d[dk].d7d) + '</div>' : '') +
+        (foot ? '<div class="foot">' + esc(foot) + '</div>' : '') + deltaBlk(dk) +
         '</div>';
     };
     $("adoption").innerHTML =
@@ -397,16 +413,17 @@
   function renderActivation() {
     var a = (state.summary || {}).activation; if (!a) return;
     var total = a.external_classes || 0;
-    var bar = function (label, n) {
+    var bar = function (label, n, dk) {
       var pct = total > 0 ? Math.round((n / total) * 100) : 0;
       return '<div class="act-row"><span class="lab">' + esc(label) + '</span>' +
         '<span class="act-bar"><i style="width:' + pct + '%"></i></span>' +
-        '<span class="num">' + fmt(n) + '</span></div>';
+        '<span class="numwrap"><span class="num">' + fmt(n) + '</span>' + deltaInline(dk) + '</span></div>';
     };
     $("activation").innerHTML =
       '<div class="act-rate"><span class="big">' + a.rate + '%</span>' +
       '<span class="cap">of ' + fmt(total) + ' external classes have a student enrolled</span></div>' +
-      bar("1+ students", a.ge1) + bar("5+ students", a.ge5) + bar("20+ students", a.ge20);
+      bar("1+ students", a.ge1, "activation_ge1") + bar("5+ students", a.ge5, "activation_ge5") +
+      bar("20+ students", a.ge20, "activation_ge20");
   }
 
   // ── Render: Florida cohort ───────────────────────────────────────────────
@@ -442,8 +459,9 @@
       '<i style="width:' + fPct + '%;background:var(--csp)"></i></div>' +
       '<div class="split-legend"><span><i class="swatch" style="background:var(--cyber)"></i>Premium ' + fmt(pStu) + '</span>' +
       '<span><i class="swatch" style="background:var(--csp)"></i>Ad-supported ' + fmt(fStu) + '</span></div>' +
-      '<div class="statline"><span class="k">Premium</span><span class="v">' + fmt(m.premium.teachers) + ' teachers · ' + fmt(m.premium.classes) + ' classes</span></div>' +
-      '<div class="statline"><span class="k">Ad-supported</span><span class="v">' + fmt(m.free.classes) + ' classes</span></div>';
+      '<div class="statline"><span class="k">Premium students</span><span class="v">' + fmt(pStu) + deltaInline("premium_students") + '</span></div>' +
+      '<div class="statline"><span class="k">Ad-supported students</span><span class="v">' + fmt(fStu) + deltaInline("free_students") + '</span></div>' +
+      '<div class="statline"><span class="k">Premium seats</span><span class="v">' + fmt(m.premium.teachers) + ' teachers · ' + fmt(m.premium.classes) + ' classes</span></div>';
   }
 
   // ── Render: engagement (time on site, active time, by tier) ──────────────
@@ -457,8 +475,8 @@
     $("engagement").innerHTML =
       '<div class="act-rate"><span class="big">' + e.avg_active_min_per_session + 'm</span>' +
       '<span class="cap">avg active time per session · ' + e.active_share_pct + '% of time on site is engaged</span></div>' +
-      '<div class="statline"><span class="k">Sessions</span><span class="v">' + fmt(e.sessions_total) + ' (' + fmt(e.last_7d.sessions) + ' in 7d)</span></div>' +
-      '<div class="statline"><span class="k">Active minutes</span><span class="v">' + fmt(e.active_minutes_total) + '</span></div>' +
+      '<div class="statline"><span class="k">Sessions</span><span class="v">' + fmt(e.sessions_total) + ' (' + fmt(e.last_7d.sessions) + ' in 7d)' + deltaInline("sessions_total") + '</span></div>' +
+      '<div class="statline"><span class="k">Active minutes</span><span class="v">' + fmt(e.active_minutes_total) + deltaInline("active_minutes_total") + '</span></div>' +
       '<div class="statline"><span class="k"><i class="swatch" style="background:var(--cyber)"></i>Premium active</span><span class="v">' + fmt(t.premium.active_minutes) + 'm · ' + t.premium.avg_active_min_per_session + 'm/sess</span></div>' +
       '<div class="statline"><span class="k"><i class="swatch" style="background:var(--csp)"></i>Ad-supported active</span><span class="v">' + fmt(t.free.active_minutes) + 'm · ' + t.free.avg_active_min_per_session + 'm/sess</span></div>';
   }
@@ -491,16 +509,16 @@
     var o = state.overview || {}, s = state.stats || {};
     var ext = s.external || {};
     var tiles = [
-      { label: "Classes",      value: o.classes,       foot: fmt(o.classes_active) + " active" },
-      { label: "Students",     value: o.students,      foot: fmt(ext.students) + " external" },
-      { label: "Teachers",     value: o.teachers,      foot: fmt(ext.teachers) + " external" },
-      { label: "Completions",  value: o.completions,   foot: fmt((s.activity || {}).completions_last_7_days) + " this week" },
-      { label: "Attempts",     value: o.attempts,      foot: fmt(o.quiz_attempts) + " quiz attempts" }
+      { label: "Classes",      value: o.classes,       foot: fmt(o.classes_active) + " active",              dk: "raw_classes" },
+      { label: "Students",     value: o.students,      foot: fmt(ext.students) + " external",                dk: "raw_students" },
+      { label: "Teachers",     value: o.teachers,      foot: fmt(ext.teachers) + " external",                dk: "raw_teachers" },
+      { label: "Completions",  value: o.completions,   foot: fmt((s.activity || {}).completions_last_7_days) + " this week", dk: "raw_completions" },
+      { label: "Attempts",     value: o.attempts,      foot: fmt(o.quiz_attempts) + " quiz attempts",        dk: "raw_attempts" }
     ];
     $("kpis").innerHTML = tiles.map(function (t) {
       return '<div class="kpi"><div class="label">' + esc(t.label) + '</div>' +
         '<div class="value">' + fmt(t.value) + '</div>' +
-        '<div class="foot">' + esc(t.foot) + '</div></div>';
+        '<div class="foot">' + esc(t.foot) + '</div>' + deltaBlk(t.dk) + '</div>';
     }).join("");
   }
 
