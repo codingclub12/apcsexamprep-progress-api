@@ -15,6 +15,7 @@ const crypto = require('crypto');
 const db = require('../db');
 const session = require('../lib/admin-session');
 const metrics = require('../lib/admin-metrics');
+const analytics = require('../lib/admin-analytics');
 
 const router = express.Router();
 
@@ -62,6 +63,7 @@ router.get('/', (req, res) => {
     endpoints: [
       'GET /api/admin/overview            top-line counts',
       'GET /api/admin/summary             bucketed adoption metrics: activation, deltas, cohort, data-quality',
+      'GET /api/admin/analytics           full deck: by-course, by-teacher, geography, funnel, device, trends, hardest items',
       'GET /api/admin/stats               adoption + growth rollup (external vs raw)',
       'GET /api/admin/classes             every class + teacher + student/completion counts',
       'GET /api/admin/students            roster; filter ?class_code= or ?class_id=',
@@ -111,6 +113,20 @@ router.get('/summary', (req, res) => {
   } catch (e) {
     console.error('admin/summary:', e);
     res.status(500).json({ error: 'summary failed', detail: e.message });
+  }
+});
+
+// ── ANALYTICS: the full breakdown deck ────────────────────────────────────────
+//  by-course, by-teacher, geography (school/district/state from email domain),
+//  engagement funnel, device/browser/OS, 30-day trends, and hardest items. Read
+//  only; a GET, so the dashboard session cookie authorizes it. All breakdowns use
+//  the same real-user population (owner / prober / audit excluded) as /summary.
+router.get('/analytics', (req, res) => {
+  try {
+    res.json(analytics.computeAnalytics());
+  } catch (e) {
+    console.error('admin/analytics:', e);
+    res.status(500).json({ error: 'analytics failed', detail: e.message });
   }
 });
 

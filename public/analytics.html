@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>APCSExamPrep · Analytics</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --plane:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --baseline:#c3c2b7; --border:rgba(11,11,11,0.10); --good:#0ca30c; --critical:#d03b3b;
+    --csa:#2a78d6; --csp:#eb6834; --cyber:#1baf7a; --solo:#eda100; --violet:#4a3aa7;
+    --shadow:0 1px 2px rgba(11,11,11,0.04),0 1px 3px rgba(11,11,11,0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --plane:#0d0d0d; --surface:#1a1a19; --ink:#fff; --ink-2:#c3c2b7; --muted:#898781;
+      --grid:#2c2c2a; --baseline:#383835; --border:rgba(255,255,255,0.10); --good:#0ca30c; --critical:#e66767;
+      --csa:#3987e5; --csp:#d95926; --cyber:#199e70; --solo:#c98500; --violet:#9085e9; --shadow:none; }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--plane); color: var(--ink); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+  code { font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 20px 20px 64px; }
+
+  header.top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  header.top h1 { font-size: 20px; margin: 0; font-weight: 650; letter-spacing: -0.01em; }
+  header.top .spacer { flex: 1 1 auto; }
+  .navlink { color: var(--csa); text-decoration: none; font-size: 13px; font-weight: 600; }
+  .navlink:hover { text-decoration: underline; }
+  .status { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--ink-2); }
+  button { font: inherit; color: var(--ink); background: transparent; border: 1px solid var(--border); border-radius: 8px; padding: 7px 11px; cursor: pointer; }
+  button:hover { border-color: var(--baseline); }
+
+  h2.sec { font-size: 15px; font-weight: 650; margin: 26px 0 12px; }
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .cards.three { grid-template-columns: 1fr 1fr 1fr; }
+  @media (max-width: 900px) { .cards, .cards.three { grid-template-columns: 1fr; } }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow); }
+  .card h3 { margin: 0 0 2px; font-size: 14px; font-weight: 600; }
+  .card .hint { color: var(--muted); font-size: 12px; margin: 0 0 12px; }
+
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit,minmax(150px,1fr)); gap: 12px; }
+  .tile { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; box-shadow: var(--shadow); }
+  .tile .label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+  .tile .value { font-size: 28px; font-weight: 650; margin-top: 4px; letter-spacing: -.02em; }
+  .tile .foot { font-size: 12px; color: var(--ink-2); margin-top: 2px; }
+
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  .tablewrap { overflow-x: auto; }
+  th { text-align: left; font-weight: 600; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  td { padding: 8px 10px; border-bottom: 1px solid var(--grid); white-space: nowrap; }
+  th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tr:last-child td { border-bottom: none; }
+  .muted { color: var(--muted); }
+  .pill { display: inline-flex; align-items: center; gap: 5px; padding: 1px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 600; }
+  .swatch { width: 8px; height: 8px; border-radius: 3px; display: inline-block; }
+  .tag { font-size: 10.5px; font-weight: 600; padding: 1px 7px; border-radius: 999px; }
+  .tag.paid { color: var(--good); background: color-mix(in srgb, var(--good) 14%, transparent); }
+  .tag.free { color: var(--muted); background: color-mix(in srgb, var(--muted) 14%, transparent); }
+
+  /* horizontal bar rows */
+  .barrow { display: grid; grid-template-columns: 150px 1fr 96px; align-items: center; gap: 10px; margin: 7px 0; font-size: 13px; }
+  .barrow .lab { color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; }
+  .barrow .track { height: 9px; border-radius: 5px; background: color-mix(in srgb, var(--ink) 8%, transparent); overflow: hidden; }
+  .barrow .track > i { display: block; height: 100%; border-radius: 5px; }
+  .barrow .val { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .barrow .val small { color: var(--muted); font-weight: 400; }
+
+  /* funnel */
+  .funnel .frow { display: grid; grid-template-columns: 190px 1fr 120px; align-items: center; gap: 12px; margin: 8px 0; }
+  .funnel .lab { color: var(--ink-2); font-size: 13px; }
+  .funnel .track { height: 22px; border-radius: 6px; background: color-mix(in srgb,var(--ink) 6%, transparent); overflow: hidden; }
+  .funnel .track > i { display: block; height: 100%; background: var(--csa); border-radius: 6px; }
+  .funnel .val { text-align: right; font-size: 13px; font-variant-numeric: tabular-nums; }
+  .funnel .val b { font-weight: 650; }
+
+  svg { display: block; width: 100%; height: auto; overflow: visible; }
+  svg text { font: 11px system-ui, sans-serif; fill: var(--muted); }
+  .spark-cap { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
+  .spark-cap .t { font-size: 12px; color: var(--ink-2); font-weight: 600; }
+  .spark-cap .n { font-size: 12px; color: var(--muted); }
+  .empty { padding: 30px; text-align: center; color: var(--muted); }
+  .note { font-size: 12px; color: var(--muted); margin-top: 8px; }
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <header class="top">
+    <h1>Analytics</h1>
+    <a class="navlink" href="/admin/dashboard">← Dashboard</a>
+    <span class="spacer"></span>
+    <div class="status">
+      <span id="updated">Loading…</span>
+      <button id="refreshBtn">Refresh</button>
+      <button id="signoutBtn">Sign out</button>
+    </div>
+  </header>
+
+  <div id="content"><div class="empty">Loading analytics…</div></div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var COURSE = {
+    "ap-csa": { label: "AP CSA", css: "var(--csa)" },
+    "ap-csp": { label: "AP CSP", css: "var(--csp)" },
+    "ap-cybersecurity": { label: "AP Cyber", css: "var(--cyber)" },
+    "solo": { label: "Solo", css: "var(--solo)" }
+  };
+  var state = { data: null, ticker: null };
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+  var fmt = function (n) { return (n == null ? 0 : n).toLocaleString(); };
+  var courseLabel = function (c) { return (COURSE[c] || { label: c }).label; };
+  var courseCss = function (c) { return (COURSE[c] || { css: "var(--baseline)" }).css; };
+
+  function api(path) {
+    return fetch(path, { credentials: "same-origin" }).then(function (r) {
+      if (r.status === 401 || r.status === 403 || r.status === 503) { var e = new Error("auth"); e.auth = true; throw e; }
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    });
+  }
+  function toLogin() { if (state.ticker) clearInterval(state.ticker); window.location.href = "/admin/analytics"; }
+
+  // ── building blocks ──────────────────────────────────────────────────────
+  function card(title, hint, body) {
+    return '<div class="card"><h3>' + esc(title) + '</h3>' +
+      (hint ? '<p class="hint">' + esc(hint) + '</p>' : '') + body + '</div>';
+  }
+  function bars(rows, color) {
+    var max = rows.reduce(function (m, r) { return Math.max(m, r.value); }, 1);
+    return rows.map(function (r) {
+      var w = Math.max(2, Math.round((r.value / max) * 100));
+      return '<div class="barrow"><span class="lab" title="' + esc(r.label) + '">' + esc(r.label) + '</span>' +
+        '<span class="track"><i style="width:' + w + '%;background:' + (r.color || color) + '"></i></span>' +
+        '<span class="val">' + fmt(r.value) + (r.sub ? ' <small>' + esc(r.sub) + '</small>' : '') + '</span></div>';
+    }).join("");
+  }
+  function table(headers, rows) {
+    var thead = '<tr>' + headers.map(function (h) { return '<th class="' + (h.num ? "num" : "") + '">' + esc(h.label) + '</th>'; }).join("") + '</tr>';
+    var body = rows.length ? rows.map(function (cells) {
+      return '<tr>' + cells.map(function (c, i) { return '<td class="' + (headers[i].num ? "num" : "") + '">' + (c == null ? '<span class="muted">-</span>' : c) + '</td>'; }).join("") + '</tr>';
+    }).join("") : '<tr><td class="empty" colspan="' + headers.length + '">No data yet.</td></tr>';
+    return '<div class="tablewrap"><table><thead>' + thead + '</thead><tbody>' + body + '</tbody></table></div>';
+  }
+  // small line chart for a 30-day series
+  function spark(title, series, color) {
+    var total = series.reduce(function (a, b) { return a + b; }, 0);
+    var W = 320, H = 70, max = Math.max(1, Math.max.apply(null, series));
+    var n = series.length;
+    var x = function (i) { return (i / (n - 1)) * W; };
+    var y = function (v) { return H - (v / max) * (H - 6) - 2; };
+    var pts = series.map(function (v, i) { return x(i) + "," + y(v); }).join(" ");
+    var area = "0," + H + " " + pts + " " + W + "," + H;
+    return '<div>' +
+      '<div class="spark-cap"><span class="t">' + esc(title) + '</span><span class="n">' + fmt(total) + ' · 30d</span></div>' +
+      '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" style="height:70px" aria-label="' + esc(title) + '">' +
+      '<polygon points="' + area + '" fill="' + color + '" opacity="0.10"/>' +
+      '<polyline points="' + pts + '" fill="none" stroke="' + color + '" stroke-width="2" stroke-linejoin="round"/>' +
+      '</svg></div>';
+  }
+
+  // ── sections ─────────────────────────────────────────────────────────────
+  function renderFunnel(d) {
+    if (!d.funnel.length) return "";
+    var top = d.funnel[0].students || 1;
+    var body = '<div class="funnel">' + d.funnel.map(function (f) {
+      var w = Math.max(2, Math.round((f.students / top) * 100));
+      return '<div class="frow"><span class="lab">' + esc(f.stage) + '</span>' +
+        '<span class="track"><i style="width:' + w + '%"></i></span>' +
+        '<span class="val"><b>' + fmt(f.students) + '</b> · ' + f.pct_of_top + '%</span></div>';
+    }).join("") + '</div>';
+    return card("Engagement funnel", "Distinct real students reaching each stage.", body);
+  }
+
+  function renderRecency(d) {
+    var r = d.recency;
+    var t = function (label, v) { return '<div class="tile"><div class="label">' + label + '</div><div class="value">' + fmt(v) + '</div><div class="foot">' + (r.total ? Math.round(v / r.total * 100) : 0) + '% of ' + fmt(r.total) + '</div></div>'; };
+    return '<div class="tiles">' + t("Active 24h", r.active_1d) + t("Active 7d", r.active_7d) + t("Active 30d", r.active_30d) + t("Total students", r.total) + '</div>';
+  }
+
+  function renderByCourse(d) {
+    var rows = d.by_course.map(function (c) {
+      return ['<span class="pill"><i class="swatch" style="background:' + courseCss(c.course) + '"></i>' + esc(courseLabel(c.course)) + '</span>',
+        fmt(c.classes), fmt(c.teachers), fmt(c.students), fmt(c.active_7d), fmt(c.completions), c.completions_per_student, fmt(c.sessions), fmt(c.active_minutes)];
+    });
+    return card("By course", null, table(
+      [{ label: "Course" }, { label: "Classes", num: 1 }, { label: "Teachers", num: 1 }, { label: "Students", num: 1 },
+       { label: "Active 7d", num: 1 }, { label: "Completions", num: 1 }, { label: "Comp/stu", num: 1 }, { label: "Sessions", num: 1 }, { label: "Active min", num: 1 }], rows));
+  }
+
+  function renderByTeacher(d) {
+    var rows = d.by_teacher.map(function (t) {
+      return [esc(t.teacher || "-"), '<span class="muted">' + esc(t.email || "-") + '</span>',
+        t.courses.map(courseLabel).join(", "), fmt(t.classes), fmt(t.students), fmt(t.active_7d),
+        fmt(t.completions), t.completions_per_student, fmt(t.active_minutes),
+        '<span class="muted">' + esc((t.last_activity || "").slice(0, 10) || "-") + '</span>'];
+    });
+    return card("By teacher", "External teachers, most students first.", table(
+      [{ label: "Teacher" }, { label: "Email" }, { label: "Courses" }, { label: "Classes", num: 1 }, { label: "Students", num: 1 },
+       { label: "Active 7d", num: 1 }, { label: "Completions", num: 1 }, { label: "Comp/stu", num: 1 }, { label: "Active min", num: 1 }, { label: "Last active" }], rows));
+  }
+
+  function renderGeography(d) {
+    var g = d.geography;
+    var stateBars = bars(g.by_state.map(function (s) { return { label: s.region, value: s.students, sub: s.teachers + " tch" }; }), "var(--violet)");
+    var schoolRows = g.by_school.map(function (s) { return [esc(s.name), esc([s.city, s.state, s.country].filter(Boolean).join(", ")), fmt(s.teachers), fmt(s.students), fmt(s.completions)]; });
+    var unmapped = g.unmapped_domains.map(function (u) { return ['<code>' + esc(u.domain) + '</code>', esc([u.state, u.country].filter(Boolean).join(" / ") || "-"), fmt(u.teachers), fmt(u.students)]; });
+    var left = card("By state / region", "From teacher email domain.", g.by_state.length ? stateBars : '<div class="empty">No data.</div>');
+    var mid = card("Mapped schools / districts", "Curated directory matches.", table(
+      [{ label: "School / district" }, { label: "Location" }, { label: "Teachers", num: 1 }, { label: "Students", num: 1 }, { label: "Completions", num: 1 }], schoolRows));
+    var right = card("Unmapped domains", "Institutional domains not in the directory yet - add these to grow coverage.", table(
+      [{ label: "Domain" }, { label: "Auto geo" }, { label: "Teachers", num: 1 }, { label: "Students", num: 1 }], unmapped));
+    return '<div class="cards three">' + left + mid + right + '</div>';
+  }
+
+  function renderDevices(d) {
+    var mk = function (title, arr) {
+      return card(title, null, arr.length ? bars(arr.map(function (x) { return { label: x.name, value: x.sessions, sub: x.share_pct + "%" }; }), "var(--csa)") : '<div class="empty">No sessions yet.</div>');
+    };
+    return '<div class="cards three">' + mk("Browser", d.devices.browser) + mk("Operating system", d.devices.os) + mk("Device type", d.devices.device) + '</div>';
+  }
+
+  function renderUnits(d) {
+    // group by course
+    var byC = {};
+    d.completions_by_unit.forEach(function (u) { (byC[u.course] || (byC[u.course] = [])).push(u); });
+    var cardsInner = Object.keys(byC).map(function (course) {
+      var rows = byC[course].map(function (u) { return { label: u.unit, value: u.completions }; });
+      return card(courseLabel(course) + " - completions by unit", null, bars(rows, courseCss(course)));
+    }).join("");
+    return cardsInner ? '<div class="cards">' + cardsInner + '</div>' : "";
+  }
+
+  function renderHardest(d) {
+    var rows = d.hardest_items.map(function (h) {
+      return ['<span class="pill"><i class="swatch" style="background:' + courseCss(h.course) + '"></i>' + esc(courseLabel(h.course)) + '</span>',
+        '<code>' + esc(h.item_id) + '</code>', esc(h.item_type), fmt(h.attempts), h.pass_rate_pct + "%", h.avg_score_pct + "%", h.avg_duration_s == null ? null : h.avg_duration_s + "s"];
+    });
+    return card("Hardest items", "Lowest pass rate, 3+ attempts.", table(
+      [{ label: "Course" }, { label: "Item" }, { label: "Type" }, { label: "Attempts", num: 1 }, { label: "Pass rate", num: 1 }, { label: "Avg score", num: 1 }, { label: "Avg time", num: 1 }], rows));
+  }
+
+  function renderTrends(d) {
+    var s = function (key) { return d.trends.map(function (t) { return t[key]; }); };
+    var body = '<div class="cards" style="grid-template-columns:1fr 1fr">' +
+      '<div>' + spark("New students", s("new_students"), "var(--csa)") + '</div>' +
+      '<div>' + spark("Completions", s("completions"), "var(--cyber)") + '</div>' +
+      '<div>' + spark("Sessions", s("sessions"), "var(--csp)") + '</div>' +
+      '<div>' + spark("Active minutes", s("active_minutes"), "var(--violet)") + '</div>' +
+      '</div>';
+    return card("Trends - last 30 days", null, body);
+  }
+
+  function render() {
+    var d = state.data;
+    if (d.empty) { $("content").innerHTML = '<div class="card"><div class="empty">No real user data yet. Breakdowns appear once classes have students and activity.</div></div>'; return; }
+    var html = '';
+    html += '<h2 class="sec">Engagement</h2><div class="cards">' + renderFunnel(d) + '<div>' + renderRecency(d) + '</div></div>';
+    html += '<h2 class="sec">By course</h2>' + renderByCourse(d);
+    html += '<h2 class="sec">By teacher</h2>' + renderByTeacher(d);
+    html += '<h2 class="sec">Geography</h2>' + renderGeography(d) +
+      '<p class="note">State and country are auto-derived from the email domain (US <code>*.k12.&lt;st&gt;.us</code> and ccTLDs). Named schools come from the curated directory in <code>lib/school-directory.js</code>; extend it with the unmapped domains above.</p>';
+    html += '<h2 class="sec">Devices</h2>' + renderDevices(d);
+    html += '<h2 class="sec">Progress by unit</h2>' + renderUnits(d);
+    html += '<h2 class="sec">Hardest items</h2>' + renderHardest(d);
+    html += '<h2 class="sec">Trends</h2>' + renderTrends(d);
+    $("content").innerHTML = html;
+  }
+
+  function load() {
+    return api("/api/admin/analytics").then(function (d) {
+      state.data = d; render();
+      $("updated").textContent = "Updated " + new Date().toLocaleTimeString();
+    }).catch(function (e) {
+      if (e && e.auth) { toLogin(); return; }
+      $("updated").textContent = "Load failed";
+    });
+  }
+
+  $("refreshBtn").addEventListener("click", load);
+  $("signoutBtn").addEventListener("click", function () {
+    fetch("/admin/logout", { method: "POST", credentials: "same-origin" }).catch(function () {}).then(function () { window.location.href = "/admin/dashboard"; });
+  });
+  load();
+  state.ticker = setInterval(load, 60000);
+})();
+</script>
+</body>
+</html>
