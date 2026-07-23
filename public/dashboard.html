@@ -65,6 +65,8 @@
   header.top h1 { font-size: 20px; margin: 0; font-weight: 650; letter-spacing: -0.01em; }
   header.top .sub { color: var(--muted); font-size: 13px; }
   header.top .spacer { flex: 1 1 auto; }
+  .navlink { color: var(--csa); text-decoration: none; font-size: 13px; font-weight: 600; }
+  .navlink:hover { text-decoration: underline; }
   .status { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--ink-2); }
   .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 3px rgba(12,163,12,0.16); }
   .dot.paused { background: var(--muted); box-shadow: none; }
@@ -194,6 +196,7 @@
   <header class="top">
     <h1>Class Dashboard</h1>
     <span class="sub">live from <code>/api/admin</code></span>
+    <a class="navlink" href="/admin/analytics">Analytics →</a>
     <span class="spacer"></span>
     <div class="status">
       <span class="dot" id="liveDot"></span>

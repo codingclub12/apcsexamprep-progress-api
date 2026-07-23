@@ -100,6 +100,14 @@ app.get('/admin/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', file));
 });
 
+// Analytics deck. Same cookie gate: the page (and its data-fetching JS) is only
+// served with a valid session; otherwise the login page.
+app.get('/admin/analytics', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  const file = adminSession.isAuthed(req) ? 'analytics.html' : 'login.html';
+  res.sendFile(path.join(__dirname, 'public', file));
+});
+
 // Exchange the admin key for a session cookie. Rate limited + constant-time +
 // fails closed on a missing/weak ADMIN_KEY, same posture as /api/admin/*.
 app.post('/admin/login', adminSession.loginRateLimit, (req, res) => {
