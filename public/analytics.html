@@ -30,8 +30,12 @@
   .navlink { color: var(--csa); text-decoration: none; font-size: 13px; font-weight: 600; }
   .navlink:hover { text-decoration: underline; }
   .status { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--ink-2); }
-  button { font: inherit; color: var(--ink); background: transparent; border: 1px solid var(--border); border-radius: 8px; padding: 7px 11px; cursor: pointer; }
-  button:hover { border-color: var(--baseline); }
+  button, select { font: inherit; color: var(--ink); background: transparent; border: 1px solid var(--border); border-radius: 8px; padding: 7px 11px; cursor: pointer; }
+  button:hover, select:hover { border-color: var(--baseline); }
+  select { background: var(--surface); }
+  .card-h { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .csvbtn { font-size: 11px; padding: 3px 9px; border-radius: 6px; white-space: nowrap; }
+  .rangenote { font-size: 12px; color: var(--muted); margin: 0 0 16px; }
 
   h2.sec { font-size: 15px; font-weight: 650; margin: 26px 0 12px; }
   .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -82,6 +86,8 @@
   .spark-cap .t { font-size: 12px; color: var(--ink-2); font-weight: 600; }
   .spark-cap .n { font-size: 12px; color: var(--muted); }
   .empty { padding: 30px; text-align: center; color: var(--muted); }
+  .split-legend { display: flex; gap: 16px; font-size: 12px; color: var(--ink-2); margin-top: 8px; }
+  .split-legend span { display: inline-flex; align-items: center; gap: 6px; }
   .note { font-size: 12px; color: var(--muted); margin-top: 8px; }
 </style>
 </head>
@@ -92,6 +98,12 @@
     <a class="navlink" href="/admin/dashboard">← Dashboard</a>
     <span class="spacer"></span>
     <div class="status">
+      <select id="rangeSel" title="Date range for activity metrics">
+        <option value="0">All time</option>
+        <option value="90">Last 90 days</option>
+        <option value="30">Last 30 days</option>
+        <option value="7">Last 7 days</option>
+      </select>
       <span id="updated">Loading…</span>
       <button id="refreshBtn">Refresh</button>
       <button id="signoutBtn">Sign out</button>
@@ -110,7 +122,40 @@
     "ap-cybersecurity": { label: "AP Cyber", css: "var(--cyber)" },
     "solo": { label: "Solo", css: "var(--solo)" }
   };
-  var state = { data: null, ticker: null };
+  var state = { data: null, ticker: null, range: 0 };
+
+  // CSV export registry: key -> { file, cols, rows(data) }. Buttons carry
+  // data-export; a single delegated click handler builds and downloads.
+  var EXPORTS = {
+    by_course: { file: "by-course", cols: ["Course", "Classes", "Teachers", "Students", "Active7d", "Completions", "Comp/stu", "Sessions", "ActiveMin"],
+      rows: function (d) { return d.by_course.map(function (c) { return [c.course, c.classes, c.teachers, c.students, c.active_7d, c.completions, c.completions_per_student, c.sessions, c.active_minutes]; }); } },
+    by_teacher: { file: "by-teacher", cols: ["Teacher", "Email", "Courses", "Classes", "Students", "Active7d", "Completions", "Comp/stu", "ActiveMin", "LastActive"],
+      rows: function (d) { return d.by_teacher.map(function (t) { return [t.teacher, t.email, t.courses.join("|"), t.classes, t.students, t.active_7d, t.completions, t.completions_per_student, t.active_minutes, (t.last_activity || "").slice(0, 10)]; }); } },
+    channels: { file: "acquisition-by-channel", cols: ["Channel", "Users", "New", "Returning", "Sessions", "ActiveMin"],
+      rows: function (d) { return d.acquisition.by_channel.map(function (c) { return [c.channel, c.users, c.new_users, c.returning_users, c.sessions, c.active_minutes]; }); } },
+    schools: { file: "geography-schools", cols: ["School/District", "City", "State", "Country", "Teachers", "Students", "Completions"],
+      rows: function (d) { return d.geography.by_school.map(function (s) { return [s.name, s.city, s.state, s.country, s.teachers, s.students, s.completions]; }); } },
+    unmapped: { file: "unmapped-domains", cols: ["Domain", "State", "Country", "Teachers", "Students"],
+      rows: function (d) { return d.geography.unmapped_domains.map(function (u) { return [u.domain, u.state, u.country, u.teachers, u.students]; }); } },
+    units: { file: "completions-by-unit", cols: ["Course", "Unit", "Completions"],
+      rows: function (d) { return d.completions_by_unit.map(function (u) { return [u.course, u.unit, u.completions]; }); } },
+    hardest: { file: "hardest-items", cols: ["Course", "Item", "Type", "Attempts", "PassRate%", "AvgScore%", "AvgDurationS"],
+      rows: function (d) { return d.hardest_items.map(function (h) { return [h.course, h.item_id, h.item_type, h.attempts, h.pass_rate_pct, h.avg_score_pct, h.avg_duration_s]; }); } }
+  };
+  function toCSV(cols, rows) {
+    var cell = function (v) { v = v == null ? "" : String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+    return [cols.join(",")].concat(rows.map(function (r) { return r.map(cell).join(","); })).join("\n");
+  }
+  function downloadCSV(key) {
+    var e = EXPORTS[key]; if (!e || !state.data) return;
+    var blob = new Blob([toCSV(e.cols, e.rows(state.data))], { type: "text/csv" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    var range = state.range ? "-" + state.range + "d" : "-all";
+    a.href = url; a.download = "apcs-" + e.file + range + "-" + new Date().toISOString().slice(0, 10) + ".csv";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
   var $ = function (id) { return document.getElementById(id); };
   var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
   var fmt = function (n) { return (n == null ? 0 : n).toLocaleString(); };
@@ -127,9 +172,10 @@
   function toLogin() { if (state.ticker) clearInterval(state.ticker); window.location.href = "/admin/analytics"; }
 
   // ── building blocks ──────────────────────────────────────────────────────
-  function card(title, hint, body) {
-    return '<div class="card"><h3>' + esc(title) + '</h3>' +
-      (hint ? '<p class="hint">' + esc(hint) + '</p>' : '') + body + '</div>';
+  function card(title, hint, body, exportKey) {
+    var btn = exportKey ? '<button class="csvbtn" data-export="' + exportKey + '">CSV</button>' : '';
+    return '<div class="card"><div class="card-h"><div><h3>' + esc(title) + '</h3>' +
+      (hint ? '<p class="hint">' + esc(hint) + '</p>' : '') + '</div>' + btn + '</div>' + body + '</div>';
   }
   function bars(rows, color) {
     var max = rows.reduce(function (m, r) { return Math.max(m, r.value); }, 1);
@@ -190,7 +236,7 @@
     });
     return card("By course", null, table(
       [{ label: "Course" }, { label: "Classes", num: 1 }, { label: "Teachers", num: 1 }, { label: "Students", num: 1 },
-       { label: "Active 7d", num: 1 }, { label: "Completions", num: 1 }, { label: "Comp/stu", num: 1 }, { label: "Sessions", num: 1 }, { label: "Active min", num: 1 }], rows));
+       { label: "Active 7d", num: 1 }, { label: "Completions", num: 1 }, { label: "Comp/stu", num: 1 }, { label: "Sessions", num: 1 }, { label: "Active min", num: 1 }], rows), "by_course");
   }
 
   function renderByTeacher(d) {
@@ -202,7 +248,7 @@
     });
     return card("By teacher", "External teachers, most students first.", table(
       [{ label: "Teacher" }, { label: "Email" }, { label: "Courses" }, { label: "Classes", num: 1 }, { label: "Students", num: 1 },
-       { label: "Active 7d", num: 1 }, { label: "Completions", num: 1 }, { label: "Comp/stu", num: 1 }, { label: "Active min", num: 1 }, { label: "Last active" }], rows));
+       { label: "Active 7d", num: 1 }, { label: "Completions", num: 1 }, { label: "Comp/stu", num: 1 }, { label: "Active min", num: 1 }, { label: "Last active" }], rows), "by_teacher");
   }
 
   function renderGeography(d) {
@@ -212,9 +258,9 @@
     var unmapped = g.unmapped_domains.map(function (u) { return ['<code>' + esc(u.domain) + '</code>', esc([u.state, u.country].filter(Boolean).join(" / ") || "-"), fmt(u.teachers), fmt(u.students)]; });
     var left = card("By state / region", "From teacher email domain.", g.by_state.length ? stateBars : '<div class="empty">No data.</div>');
     var mid = card("Mapped schools / districts", "Curated directory matches.", table(
-      [{ label: "School / district" }, { label: "Location" }, { label: "Teachers", num: 1 }, { label: "Students", num: 1 }, { label: "Completions", num: 1 }], schoolRows));
+      [{ label: "School / district" }, { label: "Location" }, { label: "Teachers", num: 1 }, { label: "Students", num: 1 }, { label: "Completions", num: 1 }], schoolRows), "schools");
     var right = card("Unmapped domains", "Institutional domains not in the directory yet - add these to grow coverage.", table(
-      [{ label: "Domain" }, { label: "Auto geo" }, { label: "Teachers", num: 1 }, { label: "Students", num: 1 }], unmapped));
+      [{ label: "Domain" }, { label: "Auto geo" }, { label: "Teachers", num: 1 }, { label: "Students", num: 1 }], unmapped), "unmapped");
     return '<div class="cards three">' + left + mid + right + '</div>';
   }
 
@@ -242,7 +288,49 @@
         '<code>' + esc(h.item_id) + '</code>', esc(h.item_type), fmt(h.attempts), h.pass_rate_pct + "%", h.avg_score_pct + "%", h.avg_duration_s == null ? null : h.avg_duration_s + "s"];
     });
     return card("Hardest items", "Lowest pass rate, 3+ attempts.", table(
-      [{ label: "Course" }, { label: "Item" }, { label: "Type" }, { label: "Attempts", num: 1 }, { label: "Pass rate", num: 1 }, { label: "Avg score", num: 1 }, { label: "Avg time", num: 1 }], rows));
+      [{ label: "Course" }, { label: "Item" }, { label: "Type" }, { label: "Attempts", num: 1 }, { label: "Pass rate", num: 1 }, { label: "Avg score", num: 1 }, { label: "Avg time", num: 1 }], rows), "hardest");
+  }
+
+  function renderAcquisition(d) {
+    var a = d.acquisition; if (!a) return "";
+    var nvr = a.new_vs_returning;
+
+    // Highlighted returning segments: organic, direct, and teacher-referred
+    // (students who entered through a class link).
+    var byCh = {}; a.by_channel.forEach(function (c) { byCh[c.channel] = c; });
+    var ret = function (ch) { return (byCh[ch] || {}).returning_users || 0; };
+    var users = function (ch) { return (byCh[ch] || {}).users || 0; };
+    var hlTile = function (label, ch, foot) {
+      var r = ret(ch), u = users(ch);
+      return '<div class="tile"><div class="label">' + esc(label) + '</div><div class="value">' + fmt(r) + '</div>' +
+        '<div class="foot">' + (u ? Math.round(r / u * 100) + '% of ' + fmt(u) + ' ' : '') + esc(foot) + '</div></div>';
+    };
+    var highlights = '<div class="tiles" style="margin-bottom:16px">' +
+      hlTile("Returning · Organic", "Organic Search", "from search") +
+      hlTile("Returning · Direct", "Direct", "direct entries") +
+      hlTile("Returning · Teacher link", "Class link", "via a class link") +
+      '</div>';
+    var total = nvr.total || 1;
+    var newPct = Math.round((nvr.new / total) * 100), retPct = 100 - newPct;
+    var nvrBody =
+      '<div class="tiles">' +
+      '<div class="tile"><div class="label">Returning users</div><div class="value">' + fmt(nvr.returning) + '</div><div class="foot">' + nvr.returning_pct + '% of ' + fmt(nvr.total) + '</div></div>' +
+      '<div class="tile"><div class="label">New users</div><div class="value">' + fmt(nvr.new) + '</div><div class="foot">' + (100 - nvr.returning_pct) + '% of ' + fmt(nvr.total) + '</div></div>' +
+      '</div>' +
+      '<div class="barrow" style="margin-top:12px;grid-template-columns:1fr"><span class="track" style="height:14px">' +
+      '<i style="width:' + retPct + '%;background:var(--cyber);float:left"></i><i style="width:' + newPct + '%;background:var(--csa);float:left"></i></span></div>' +
+      '<div class="split-legend"><span><i class="swatch" style="background:var(--cyber)"></i>Returning</span><span><i class="swatch" style="background:var(--csa)"></i>New</span></div>';
+    var chanRows = a.by_channel.map(function (c) {
+      return [esc(c.channel), fmt(c.users), fmt(c.new_users), fmt(c.returning_users), fmt(c.sessions), fmt(c.active_minutes)];
+    });
+    var chanCard = card("By acquisition channel", "First-touch: each user counted once, by their entry channel.", table(
+      [{ label: "Channel" }, { label: "Users", num: 1 }, { label: "New", num: 1 }, { label: "Returning", num: 1 }, { label: "Sessions", num: 1 }, { label: "Active min", num: 1 }], chanRows), "channels");
+    var refBars = a.top_referrers.length
+      ? bars(a.top_referrers.map(function (r) { return { label: r.host, value: r.sessions }; }), "var(--violet)")
+      : '<div class="empty">No external referrers captured yet.</div>';
+    return highlights +
+      '<div class="cards">' + card("New vs returning", "Returning = a user with sessions on 2+ distinct days.", nvrBody) + chanCard + '</div>' +
+      '<div class="cards">' + card("Top referrers", "Referring domains only - no full URLs stored.", refBars) + '<div></div></div>';
   }
 
   function renderTrends(d) {
@@ -260,7 +348,10 @@
     var d = state.data;
     if (d.empty) { $("content").innerHTML = '<div class="card"><div class="empty">No real user data yet. Breakdowns appear once classes have students and activity.</div></div>'; return; }
     var html = '';
+    var rlabel = state.range ? ('Last ' + state.range + ' days') : 'All time';
+    html += '<p class="rangenote">Activity window: <b>' + rlabel + '</b> for completions, sessions, acquisition, devices, funnel, and hardest items. Class / student / teacher counts, recency cohorts, and the 30-day trends are always as-of-now.</p>';
     html += '<h2 class="sec">Engagement</h2><div class="cards">' + renderFunnel(d) + '<div>' + renderRecency(d) + '</div></div>';
+    html += '<h2 class="sec">Acquisition</h2>' + renderAcquisition(d);
     html += '<h2 class="sec">By course</h2>' + renderByCourse(d);
     html += '<h2 class="sec">By teacher</h2>' + renderByTeacher(d);
     html += '<h2 class="sec">Geography</h2>' + renderGeography(d) +
@@ -273,7 +364,7 @@
   }
 
   function load() {
-    return api("/api/admin/analytics").then(function (d) {
+    return api("/api/admin/analytics" + (state.range ? "?days=" + state.range : "")).then(function (d) {
       state.data = d; render();
       $("updated").textContent = "Updated " + new Date().toLocaleTimeString();
     }).catch(function (e) {
@@ -283,6 +374,11 @@
   }
 
   $("refreshBtn").addEventListener("click", load);
+  $("rangeSel").addEventListener("change", function () { state.range = parseInt(this.value, 10) || 0; load(); });
+  // One delegated handler for every CSV button (content is re-rendered in place).
+  $("content").addEventListener("click", function (e) {
+    var b = e.target.closest(".csvbtn"); if (b) downloadCSV(b.getAttribute("data-export"));
+  });
   $("signoutBtn").addEventListener("click", function () {
     fetch("/admin/logout", { method: "POST", credentials: "same-origin" }).catch(function () {}).then(function () { window.location.href = "/admin/dashboard"; });
   });

@@ -123,7 +123,7 @@ router.get('/summary', (req, res) => {
 //  the same real-user population (owner / prober / audit excluded) as /summary.
 router.get('/analytics', (req, res) => {
   try {
-    res.json(analytics.computeAnalytics());
+    res.json(analytics.computeAnalytics(parseInt(req.query.days, 10)));
   } catch (e) {
     console.error('admin/analytics:', e);
     res.status(500).json({ error: 'analytics failed', detail: e.message });

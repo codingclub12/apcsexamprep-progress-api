@@ -373,6 +373,11 @@ const migrations = [
   `ALTER TABLE progress  ADD COLUMN locked            INTEGER DEFAULT 0`,
   `ALTER TABLE attempts  ADD COLUMN duration_seconds  INTEGER`,
   `ALTER TABLE attempts  ADD COLUMN ua                TEXT`,
+  // Acquisition on a session: the entry channel (Direct / Organic Search /
+  // Social / Referral / Email / Paid / Other) and the referrer domain only.
+  // Zero PII: an enum plus a hostname, never a full URL, query string, or IP.
+  `ALTER TABLE sessions  ADD COLUMN channel        TEXT`,
+  `ALTER TABLE sessions  ADD COLUMN referrer_host  TEXT`,
 ];
 for (const sql of migrations) {
   try { db.exec(sql); } catch(e) { /* column already exists */ }

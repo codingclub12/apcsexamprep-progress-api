@@ -20,6 +20,8 @@ client-generated id kept in `sessionStorage`.
 | `total_seconds` | foreground time on site |
 | `page_views` | pages viewed in the visit |
 | `ua` | User-Agent, truncated to 120 chars |
+| `channel` | acquisition channel: Direct / Organic Search / Social / Referral / Email / Paid / Class link / Other (first-touch, entry channel). `Class link` = teacher-referred: a student who entered through a class link (class code in the URL, the join/enroll landing, or `channelHint: 'Class link'`) |
+| `referrer_host` | referring domain only (no path, query, or full URL) |
 | `started_at`, `last_beat_at` | first and most recent heartbeat |
 
 Counters are **cumulative** on the client and the server keeps the **MAX** on
@@ -37,9 +39,16 @@ Request:
   "course": "ap-csa",
   "active_seconds": 300,
   "total_seconds": 500,
-  "page_views": 3
+  "page_views": 3,
+  "channel": "Organic Search",
+  "referrer_host": "google.com"
 }
 ```
+`channel` is classified by the reporter from `document.referrer` + UTM tags and is
+validated server-side against the fixed enum (anything else becomes `Other`);
+`referrer_host` is stored as a domain only. Both are first-write-wins, so they
+record the visit's ENTRY channel. Powers the analytics acquisition report
+(new vs returning users by channel, top referrers).
 The server derives `student_id` / `class_id` from the token and captures the
 User-Agent itself. `active_seconds` / `total_seconds` are clamped to `[0, 86400]`
 and the session row is UPSERTed monotonically (bound to the owning student).
