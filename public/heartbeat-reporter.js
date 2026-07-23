@@ -66,8 +66,52 @@
   function ssSet(k, v) { try { SS.setItem(k, String(v)); } catch (e) {} }
 
   var K_SID = "apcs_hb_sid", K_ACT = "apcs_hb_active", K_TOT = "apcs_hb_total", K_PV = "apcs_hb_pv";
+  var K_CH = "apcs_hb_channel", K_REF = "apcs_hb_ref";
+
+  // Acquisition channel + referrer domain, classified ONCE at the start of the
+  // visit from document.referrer and any UTM tags, then reused for every page of
+  // the session (entry-channel / first-touch). Zero PII: an enum plus a hostname,
+  // never a full URL or query string.
+  function refHost() {
+    try {
+      if (!document.referrer) return "";
+      return new URL(document.referrer).hostname.replace(/^www\./, "");
+    } catch (e) { return ""; }
+  }
+  function classifyChannel(host) {
+    var medium = "", source = "";
+    try {
+      var p = new URLSearchParams(location.search);
+      medium = (p.get("utm_medium") || "").toLowerCase();
+      source = (p.get("utm_source") || "").toLowerCase();
+    } catch (e) {}
+    if (medium) {
+      if (/cpc|ppc|paid|display|banner/.test(medium)) return "Paid";
+      if (/email|newsletter/.test(medium) || source === "email") return "Email";
+      if (/social/.test(medium)) return "Social";
+      if (/organic/.test(medium)) return "Organic Search";
+      if (/referral/.test(medium)) return "Referral";
+    }
+    if (!host) return "Direct";
+    var self = location.hostname.replace(/^www\./, "");
+    if (host === self || /apcsexamprep\.com$/.test(host)) return "Direct";
+    if (/(^|\.)(google|bing|duckduckgo|yahoo|ecosia|baidu|yandex|ask|aol)\./.test(host)) return "Organic Search";
+    if (/(facebook|fb\.com|instagram|twitter|x\.com|t\.co|tiktok|youtube|youtu\.be|linkedin|lnkd\.in|reddit|pinterest|threads)/.test(host)) return "Social";
+    if (/(^mail\.|outlook|gmail|mailchimp|sendgrid)/.test(host)) return "Email";
+    return "Referral";
+  }
+
   var sid = ssGet(K_SID, "");
-  if (!sid) { sid = uuid(); ssSet(K_SID, sid); }
+  var channel, referrer;
+  if (!sid) {
+    sid = uuid(); ssSet(K_SID, sid);
+    referrer = refHost();
+    channel = classifyChannel(referrer);
+    ssSet(K_CH, channel); ssSet(K_REF, referrer);
+  } else {
+    channel = ssGet(K_CH, "Direct");
+    referrer = ssGet(K_REF, "");
+  }
   var baseActive = parseInt(ssGet(K_ACT, "0"), 10) || 0;   // seconds from prior pages this visit
   var baseTotal = parseInt(ssGet(K_TOT, "0"), 10) || 0;
   var pv = (parseInt(ssGet(K_PV, "0"), 10) || 0) + 1;      // this page load counts as a view
@@ -102,7 +146,9 @@
       course: cfg.course,
       active_seconds: baseActive + activeThisPage,
       total_seconds: baseTotal + totalThisPage,
-      page_views: pv
+      page_views: pv,
+      channel: channel,
+      referrer_host: referrer
     });
     try {
       // keepalive lets the final flush survive page unload while still carrying

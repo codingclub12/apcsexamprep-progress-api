@@ -207,21 +207,31 @@ router.post('/attempt', requireStudent, rateLimit, (req, res) => {
 //  Coalesced to ~1-2 tiny writes/minute per active tab, one row per visit; this is
 //  the write-amplification guard that keeps heartbeats off the Railway bill.
 //
-//  Zero PII: only the client-generated id, durations, a page-view count, and a
-//  truncated User-Agent are stored. No URL, no student input.
+//  Zero PII: only the client-generated id, durations, a page-view count, a
+//  truncated User-Agent, and the acquisition channel + referrer DOMAIN are stored.
+//  No full URL, no query string, no IP, no student input.
+//
+//  channel / referrer_host are first-write-wins (COALESCE keeps the value set on
+//  the first beat of the visit), so the acquisition channel is the ENTRY channel
+//  and later same-session page navigations never overwrite it.
 const upsertSessionStmt = db.prepare(`
   INSERT INTO sessions
-    (id, student_id, class_id, course, active_seconds, total_seconds, page_views, ua, started_at, last_beat_at)
+    (id, student_id, class_id, course, active_seconds, total_seconds, page_views, ua, channel, referrer_host, started_at, last_beat_at)
   VALUES
-    (@id, @sid, @cid, @course, @active, @total, @pv, @ua, datetime('now'), datetime('now'))
+    (@id, @sid, @cid, @course, @active, @total, @pv, @ua, @channel, @refhost, datetime('now'), datetime('now'))
   ON CONFLICT(id) DO UPDATE SET
     active_seconds = MAX(active_seconds, excluded.active_seconds),
     total_seconds  = MAX(total_seconds,  excluded.total_seconds),
     page_views     = MAX(page_views,     excluded.page_views),
     ua             = excluded.ua,
+    channel        = COALESCE(sessions.channel, excluded.channel),
+    referrer_host  = COALESCE(sessions.referrer_host, excluded.referrer_host),
     last_beat_at   = datetime('now')
   WHERE sessions.student_id = excluded.student_id
 `);
+
+// The acquisition channels the reporter may report; anything else becomes 'Other'.
+const CHANNELS = new Set(['Direct', 'Organic Search', 'Social', 'Referral', 'Email', 'Paid', 'Other']);
 
 // Heartbeat has its own bounded limiter (separate budget from /attempt). ~1-2
 // beats/min per tab expected; 40/min per student leaves headroom for several open
@@ -268,6 +278,12 @@ router.post('/heartbeat', requireStudent, heartbeatRateLimit, (req, res) => {
     }
     const course = b.course != null ? String(b.course).slice(0, 40) : null;
     const ua = (req.get('user-agent') || '').slice(0, 120);
+    // Acquisition, validated to the enum; referrer is a domain only (strip any
+    // stray path/query/@ before storing, belt-and-suspenders against PII).
+    const channel = CHANNELS.has(b.channel) ? b.channel : (b.channel != null ? 'Other' : null);
+    const refhost = b.referrer_host != null
+      ? String(b.referrer_host).toLowerCase().replace(/[/?#@].*$/, '').slice(0, 100) || null
+      : null;
 
     upsertSessionStmt.run({
       id,
@@ -278,6 +294,8 @@ router.post('/heartbeat', requireStudent, heartbeatRateLimit, (req, res) => {
       total: clampInt(b.total_seconds, DAY_SECONDS),
       pv: clampInt(b.page_views, 100_000),
       ua,
+      channel,
+      refhost,
     });
     res.json({ ok: true });
   } catch (e) {
