@@ -271,6 +271,7 @@
     </select>
     <label class="chk"><input type="checkbox" id="hideInternal" /> Hide test / solo / system</label>
     <button class="ghost" id="csvBtn">Export CSV</button>
+    <button class="ghost" id="exportAllBtn" title="Download all dashboard data as a ZIP">Export all</button>
     <span class="count" id="rowCount"></span>
   </div>
 
@@ -677,12 +678,65 @@
         return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
       }).join(","));
     });
-    var blob = new Blob([lines.join("\n")], { type: "text/csv" });
+    saveBlob(new Blob([lines.join("\n")], { type: "text/csv" }), "classes-" + new Date().toISOString().slice(0, 10) + ".csv");
+  }
+
+  function saveBlob(blob, filename) {
     var url = URL.createObjectURL(blob);
     var a = document.createElement("a");
-    a.href = url; a.download = "classes-" + new Date().toISOString().slice(0, 10) + ".csv";
+    a.href = url; a.download = filename;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  }
+  var csvCell = function (v) { v = v == null ? "" : String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+  function toCSV(cols, rows) { return [cols.join(",")].concat(rows.map(function (r) { return r.map(csvCell).join(","); })).join("\n"); }
+
+  // ── Minimal dependency-free ZIP (store method) for "Export all" ───────────
+  function crc32(bytes) {
+    var c, crc = 0xFFFFFFFF;
+    if (!crc32.t) { crc32.t = []; for (var n = 0; n < 256; n++) { c = n; for (var k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1); crc32.t[n] = c >>> 0; } }
+    for (var i = 0; i < bytes.length; i++) crc = (crc >>> 8) ^ crc32.t[(crc ^ bytes[i]) & 0xFF];
+    return (crc ^ 0xFFFFFFFF) >>> 0;
+  }
+  function makeZip(files) {
+    var enc = new TextEncoder();
+    var u16 = function (v) { return [v & 0xFF, (v >>> 8) & 0xFF]; };
+    var u32 = function (v) { return [v & 0xFF, (v >>> 8) & 0xFF, (v >>> 16) & 0xFF, (v >>> 24) & 0xFF]; };
+    var parts = [], central = [], offset = 0;
+    files.forEach(function (f) {
+      var name = enc.encode(f.name), data = enc.encode(f.text), crc = crc32(data);
+      var local = [].concat(u32(0x04034b50), u16(20), u16(0), u16(0), u16(0), u16(0),
+        u32(crc), u32(data.length), u32(data.length), u16(name.length), u16(0));
+      parts.push(new Uint8Array(local), name, data);
+      central.push(new Uint8Array([].concat(u32(0x02014b50), u16(20), u16(20), u16(0), u16(0), u16(0), u16(0),
+        u32(crc), u32(data.length), u32(data.length), u16(name.length),
+        u16(0), u16(0), u16(0), u16(0), u32(0), u32(offset))), name);
+      offset += local.length + name.length + data.length;
+    });
+    var cdSize = 0; central.forEach(function (c) { cdSize += c.length; });
+    var eocd = [].concat(u32(0x06054b50), u16(0), u16(0), u16(files.length), u16(files.length),
+      u32(cdSize), u32(offset), u16(0));
+    return new Blob(parts.concat(central, [new Uint8Array(eocd)]), { type: "application/zip" });
+  }
+
+  // Everything the dashboard holds, as a ZIP: the full class list plus the
+  // adoption / monetization / engagement summaries and the raw JSON payloads.
+  function exportAll() {
+    var o = state.overview || {}, s = state.stats || {}, m = state.summary || {};
+    var files = [];
+    files.push({ name: "classes.csv", text: toCSV(COLUMNS.map(function (c) { return c.label; }),
+      state.classes.map(function (c) { return COLUMNS.map(function (col) { return c[col.key]; }); })) });
+    if (m.monetization) files.push({ name: "monetization.csv", text: toCSV(["Tier", "Teachers", "Classes", "Students"],
+      [["Premium", m.monetization.premium.teachers, m.monetization.premium.classes, m.monetization.premium.students],
+       ["Ad-supported", "", m.monetization.free.classes, m.monetization.free.students]]) });
+    if (m.engagement) files.push({ name: "engagement.csv", text: toCSV(["Metric", "Value"],
+      [["Sessions", m.engagement.sessions_total], ["Active minutes", m.engagement.active_minutes_total],
+       ["Avg active min/session", m.engagement.avg_active_min_per_session], ["Active share %", m.engagement.active_share_pct],
+       ["Premium active min", m.engagement.by_tier.premium.active_minutes], ["Ad-supported active min", m.engagement.by_tier.free.active_minutes]]) });
+    files.push({ name: "overview.json", text: JSON.stringify(o, null, 2) });
+    files.push({ name: "stats.json", text: JSON.stringify(s, null, 2) });
+    files.push({ name: "summary.json", text: JSON.stringify(m, null, 2) });
+    saveBlob(makeZip(files), "apcs-dashboard-all-" + new Date().toISOString().slice(0, 10) + ".zip");
   }
 
   // ── Auto-refresh (single 1s ticker, no accumulation) ─────────────────────
@@ -722,6 +776,7 @@
     updateStatus();
   });
   $("csvBtn").addEventListener("click", exportCSV);
+  $("exportAllBtn").addEventListener("click", exportAll);
   ["search", "courseFilter", "activeFilter", "hideInternal"].forEach(function (id) {
     $(id).addEventListener("input", renderTable);
   });

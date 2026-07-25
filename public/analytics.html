@@ -105,6 +105,7 @@
         <option value="7">Last 7 days</option>
       </select>
       <span id="updated">Loading…</span>
+      <button id="exportAllBtn" title="Download every table as a ZIP of CSVs + raw JSON">Export all</button>
       <button id="refreshBtn">Refresh</button>
       <button id="signoutBtn">Sign out</button>
     </div>
@@ -146,15 +147,61 @@
     var cell = function (v) { v = v == null ? "" : String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
     return [cols.join(",")].concat(rows.map(function (r) { return r.map(cell).join(","); })).join("\n");
   }
-  function downloadCSV(key) {
-    var e = EXPORTS[key]; if (!e || !state.data) return;
-    var blob = new Blob([toCSV(e.cols, e.rows(state.data))], { type: "text/csv" });
+  function saveBlob(blob, filename) {
     var url = URL.createObjectURL(blob);
     var a = document.createElement("a");
-    var range = state.range ? "-" + state.range + "d" : "-all";
-    a.href = url; a.download = "apcs-" + e.file + range + "-" + new Date().toISOString().slice(0, 10) + ".csv";
+    a.href = url; a.download = filename;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  }
+  function rangeTag() { return state.range ? "-" + state.range + "d" : "-all"; }
+  function downloadCSV(key) {
+    var e = EXPORTS[key]; if (!e || !state.data) return;
+    saveBlob(new Blob([toCSV(e.cols, e.rows(state.data))], { type: "text/csv" }),
+      "apcs-" + e.file + rangeTag() + "-" + new Date().toISOString().slice(0, 10) + ".csv");
+  }
+
+  // ── Minimal dependency-free ZIP (store method) for "Export all" ───────────
+  function crc32(bytes) {
+    var c, crc = 0xFFFFFFFF;
+    if (!crc32.t) { crc32.t = []; for (var n = 0; n < 256; n++) { c = n; for (var k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1); crc32.t[n] = c >>> 0; } }
+    for (var i = 0; i < bytes.length; i++) crc = (crc >>> 8) ^ crc32.t[(crc ^ bytes[i]) & 0xFF];
+    return (crc ^ 0xFFFFFFFF) >>> 0;
+  }
+  function makeZip(files) {
+    var enc = new TextEncoder();
+    var u16 = function (v) { return [v & 0xFF, (v >>> 8) & 0xFF]; };
+    var u32 = function (v) { return [v & 0xFF, (v >>> 8) & 0xFF, (v >>> 16) & 0xFF, (v >>> 24) & 0xFF]; };
+    var parts = [], central = [], offset = 0;
+    files.forEach(function (f) {
+      var name = enc.encode(f.name), data = enc.encode(f.text), crc = crc32(data);
+      var local = [].concat(u32(0x04034b50), u16(20), u16(0), u16(0), u16(0), u16(0),
+        u32(crc), u32(data.length), u32(data.length), u16(name.length), u16(0));
+      parts.push(new Uint8Array(local), name, data);
+      central.push(new Uint8Array([].concat(u32(0x02014b50), u16(20), u16(20), u16(0), u16(0), u16(0), u16(0),
+        u32(crc), u32(data.length), u32(data.length), u16(name.length),
+        u16(0), u16(0), u16(0), u16(0), u32(0), u32(offset))), name);
+      offset += local.length + name.length + data.length;
+    });
+    var cdSize = 0; central.forEach(function (c) { cdSize += c.length; });
+    var eocd = [].concat(u32(0x06054b50), u16(0), u16(0), u16(files.length), u16(files.length),
+      u32(cdSize), u32(offset), u16(0));
+    return new Blob(parts.concat(central, [new Uint8Array(eocd)]), { type: "application/zip" });
+  }
+
+  // Everything as a ZIP of CSVs plus the raw JSON payload.
+  function exportAll() {
+    var d = state.data; if (!d) return;
+    var files = [];
+    Object.keys(EXPORTS).forEach(function (k) { var e = EXPORTS[k]; files.push({ name: e.file + ".csv", text: toCSV(e.cols, e.rows(d)) }); });
+    files.push({ name: "funnel.csv", text: toCSV(["Stage", "Students", "PctOfTop"], d.funnel.map(function (f) { return [f.stage, f.students, f.pct_of_top]; })) });
+    files.push({ name: "recency.csv", text: toCSV(["Cohort", "Students"], [["Active 24h", d.recency.active_1d], ["Active 7d", d.recency.active_7d], ["Active 30d", d.recency.active_30d], ["Total", d.recency.total]]) });
+    files.push({ name: "geography-by-state.csv", text: toCSV(["Region", "State", "Country", "Teachers", "Students", "Completions"], d.geography.by_state.map(function (s) { return [s.region, s.state, s.country, s.teachers, s.students, s.completions]; })) });
+    files.push({ name: "acquisition-new-vs-returning.csv", text: toCSV(["New", "Returning", "Total", "ReturningPct"], [[d.acquisition.new_vs_returning.new, d.acquisition.new_vs_returning.returning, d.acquisition.new_vs_returning.total, d.acquisition.new_vs_returning.returning_pct]]) });
+    files.push({ name: "top-referrers.csv", text: toCSV(["Host", "Sessions"], d.acquisition.top_referrers.map(function (r) { return [r.host, r.sessions]; })) });
+    files.push({ name: "trends-30d.csv", text: toCSV(["Date", "NewStudents", "Completions", "Sessions", "ActiveMinutes"], d.trends.map(function (t) { return [t.date, t.new_students, t.completions, t.sessions, t.active_minutes]; })) });
+    files.push({ name: "analytics-raw.json", text: JSON.stringify(d, null, 2) });
+    saveBlob(makeZip(files), "apcs-analytics" + rangeTag() + "-" + new Date().toISOString().slice(0, 10) + ".zip");
   }
   var $ = function (id) { return document.getElementById(id); };
   var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
@@ -381,6 +428,7 @@
   }
 
   $("refreshBtn").addEventListener("click", load);
+  $("exportAllBtn").addEventListener("click", exportAll);
   $("rangeSel").addEventListener("change", function () { state.range = parseInt(this.value, 10) || 0; load(); });
   // One delegated handler for every CSV button (content is re-rendered in place).
   $("content").addEventListener("click", function (e) {
