@@ -11,7 +11,8 @@
     "smoke:teacher": "node smoke/teacher-dashboard.js",
     "smoke:cleanup": "node smoke/cleanup.js",
     "smoke:shopify": "node smoke/shopify-entitlements.js",
-    "smoke:admin": "node smoke/admin-dashboard.js"
+    "smoke:admin": "node smoke/admin-dashboard.js",
+    "smoke:codegrade": "node smoke/code-grade.js"
   },
   "keywords": [],
   "author": "",

@@ -2,28 +2,37 @@
 // ─────────────────────────────────────────────────────────────────────────────
 //  CSA COURSE MANIFEST — per-lesson denominators for the ap-csa reporter.
 //
-//  One entry per shipped ap-csa-course-* lesson, giving the "possible" points
-//  per activity_type so a percent is earned / possible with the denominator
-//  server owned rather than reconstructed on the page. Two CSA specifics vs CSP:
-//  exercise-2 (the game) has 6 rounds (possible 6, not 8), and exercise-3 (the
-//  FRQ) is a new activity worth 1.
+//  One entry per ap-csa lesson (all 53, 2025-2026 four-unit CED: 15 / 12 / 9 / 17
+//  across Units 1-4), giving the "possible" points per activity_type. The manifest
+//  is the denominator authority: a percent is earned / possible with the
+//  denominator server owned rather than reconstructed on the page, and the code
+//  grader (POST /api/student/code-grade) reads the same possible to scale a
+//  cases-passed ratio into item points. All 53 lessons are seeded now even though
+//  content ships unit by unit, because changing a denominator later retroactively
+//  moves every student's percentage.
 //
-//  Delivered with the CSA reporter handoff, generated from the lesson configs
-//  (authoritative). Loaded by scripts/seed-csa-bank.js into course_denominators.
-//  Not a grade source. No em-dashes.
+//  Per lesson: lesson (visit) 1, exercise-1 10, exercise-2 8, frq 4, quiz 6. frq
+//  is its own activity_type (not folded into exercise-1). Lesson ids and unit keys
+//  match utils.js COURSES and pageFromHandle exactly (unit 'unit-N', lesson 'U.L'),
+//  so course_denominators keys line up with the (course, unit, lesson) the reporter
+//  and the grade routes send.
+//
+//  Loaded by scripts/seed-csa-bank.js into course_denominators. Not a grade source.
+//  No em-dashes.
 // ─────────────────────────────────────────────────────────────────────────────
+const { COURSES } = require('../utils');
 
-const MANIFEST = [
-  { course: 'ap-csa', unit: 'unit-2', lesson: '2-9-for-loops',
-    denominators: { lesson: 1, 'exercise-1': 8, 'exercise-2': 6, 'exercise-3': 1, quiz: 6 } },
-  { course: 'ap-csa', unit: 'unit-4', lesson: '4-2-traversing-arrays',
-    denominators: { lesson: 1, 'exercise-1': 8, 'exercise-2': 6, 'exercise-3': 1, quiz: 6 } },
-  { course: 'ap-csa', unit: 'unit-4', lesson: '4-12-traversing-2d-arrays',
-    denominators: { lesson: 1, 'exercise-1': 8, 'exercise-2': 6, 'exercise-3': 1, quiz: 6 } },
-  { course: 'ap-csa', unit: 'unit-4', lesson: 'array-references-aliasing',
-    denominators: { lesson: 1, 'exercise-1': 8, 'exercise-2': 6, 'exercise-3': 1, quiz: 6 } },
-  { course: 'ap-csa', unit: 'unit-2', lesson: '2-10-loop-algorithms',
-    denominators: { lesson: 1, 'exercise-1': 8, 'exercise-2': 6, 'exercise-3': 1, quiz: 6 } },
-];
+// Per-lesson possible points by activity_type. frq is a first-class graded
+// activity worth 4, distinct from the exercise-1 code exercise (10).
+const DENOMINATORS = { lesson: 1, 'exercise-1': 10, 'exercise-2': 8, frq: 4, quiz: 6 };
+
+// Generated from the COURSES config so the manifest can never drift from the
+// 53-lesson, four-unit structure defined there.
+const MANIFEST = [];
+for (const [unit, cfg] of Object.entries(COURSES['ap-csa'].units)) {
+  for (const lesson of cfg.lessons) {
+    MANIFEST.push({ course: 'ap-csa', unit, lesson, denominators: { ...DENOMINATORS } });
+  }
+}
 
 module.exports = { manifest: MANIFEST };

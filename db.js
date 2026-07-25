@@ -262,6 +262,29 @@ db.exec(`
     PRIMARY KEY (course, lesson, activity_type)
   );
 
+  -- Hidden test bank for server-side code grading (POST /api/student/code-grade).
+  -- One row per test case for a graded code item, keyed by (course, lesson, item)
+  -- with seq breaking ties so an item can hold many cases. stdin + expected_stdout
+  -- are author content, NOT student input, so this is not PII. Cases never reach
+  -- the client: the grade route runs the student's source against them through the
+  -- Judge0 proxy and returns pass counts only. A hidden case (hidden = 1) exists so
+  -- a hardcoded println of the visible expected output cannot pass every case. This
+  -- table stores author test cases only; student source code is NEVER stored here or
+  -- anywhere else (it is graded in transit and discarded). Seeded manually by
+  -- scripts/seed-code-tests.js (never on boot), same posture as the quiz_bank.
+  CREATE TABLE IF NOT EXISTS code_test_cases (
+    course          TEXT NOT NULL,   -- 'ap-csa'
+    lesson          TEXT NOT NULL,   -- '1.1'
+    item            TEXT NOT NULL,   -- graded code item = activity_type: 'exercise-1' | 'exercise-2' | 'frq'
+    seq             INTEGER NOT NULL DEFAULT 0,
+    stdin           TEXT NOT NULL DEFAULT '',
+    expected_stdout TEXT NOT NULL,
+    hidden          INTEGER NOT NULL DEFAULT 0,   -- 1 = never surfaced to the client, even in a failure summary
+    created_at      TEXT DEFAULT (datetime('now')),
+    PRIMARY KEY (course, lesson, item, seq)
+  );
+  CREATE INDEX IF NOT EXISTS idx_code_test_cases ON code_test_cases(course, lesson, item);
+
   -- Per-course entitlements (Phase 4: Teacher Command Center, slice 1). The
   -- teacher is the paying seat, per course. One active row per
   -- (teacher_id, course) grants unlimited classes and students within that
