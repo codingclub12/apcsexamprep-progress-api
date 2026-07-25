@@ -316,7 +316,8 @@
     { key: "student_count",label: "Students", num: true  },
     { key: "completions",  label: "Done",     num: true  },
     { key: "active",       label: "Active",   num: true  },
-    { key: "created_at",   label: "Created",  num: false }
+    { key: "created_at",   label: "Created",  num: false },
+    { key: "last_activity",label: "Last active", num: false }
   ];
 
   var $ = function (id) { return document.getElementById(id); };
@@ -656,6 +657,7 @@
         '<td class="num">' + fmt(c.completions) + "</td>" +
         '<td class="num">' + (c.active ? '<span class="badge on">Yes</span>' : '<span class="badge off">No</span>') + "</td>" +
         '<td class="muted">' + esc((c.created_at || "").slice(0, 10)) + "</td>" +
+        '<td class="muted">' + (c.last_activity ? esc(c.last_activity.slice(0, 10)) : "-") + "</td>" +
       "</tr>";
     }).join("");
   }
@@ -784,7 +786,7 @@
     var th = e.target.closest("th"); if (!th) return;
     var key = th.getAttribute("data-key");
     if (state.sort.key === key) state.sort.dir *= -1;
-    else { state.sort.key = key; state.sort.dir = (key === "created_at" || key === "student_count" || key === "completions") ? -1 : 1; }
+    else { state.sort.key = key; state.sort.dir = (key === "created_at" || key === "last_activity" || key === "student_count" || key === "completions") ? -1 : 1; }
     renderTable();
   });
 
