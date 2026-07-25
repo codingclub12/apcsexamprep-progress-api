@@ -64,6 +64,7 @@ router.get('/', (req, res) => {
       'GET /api/admin/overview            top-line counts',
       'GET /api/admin/summary             bucketed adoption metrics: activation, deltas, cohort, data-quality',
       'GET /api/admin/analytics           full deck: by-course, by-teacher, geography, funnel, device, trends, hardest items',
+      'GET /api/admin/sessions            heartbeat/session pipeline diagnostic: counts + recent rows',
       'GET /api/admin/stats               adoption + growth rollup (external vs raw)',
       'GET /api/admin/classes             every class + teacher + student/completion counts',
       'GET /api/admin/students            roster; filter ?class_code= or ?class_id=',
@@ -98,6 +99,41 @@ router.get('/overview', (req, res) => {
   } catch (e) {
     console.error('admin/overview:', e);
     res.status(500).json({ error: 'overview failed', detail: e.message });
+  }
+});
+
+// ── SESSIONS DIAGNOSTIC: is the heartbeat pipeline delivering? ────────────────
+//  Ground truth for the "everything session-based reads 0" question. If total is
+//  0, no heartbeats are being recorded (the reporter is not on the pages, or is
+//  firing but silently idle: no course / no student token). If total > 0 but the
+//  deck still shows 0, that is a read/display bug to chase here. Read-only; the
+//  recent rows carry no PII (durations, counts, structured ids, coarse UA).
+router.get('/sessions', (req, res) => {
+  try {
+    const scalar = (sql) => db.prepare(sql).get().n;
+    const has = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='sessions'").get();
+    if (!has) return res.json({ sessions_table: false, total: 0, note: 'sessions table does not exist yet' });
+    res.json({
+      sessions_table: true,
+      total:             scalar('SELECT COUNT(*) n FROM sessions'),
+      last_24h:          scalar("SELECT COUNT(*) n FROM sessions WHERE started_at >= datetime('now','-1 day')"),
+      last_7d:           scalar("SELECT COUNT(*) n FROM sessions WHERE started_at >= datetime('now','-7 days')"),
+      distinct_students: scalar('SELECT COUNT(DISTINCT student_id) n FROM sessions'),
+      with_channel:      scalar("SELECT COUNT(*) n FROM sessions WHERE channel IS NOT NULL"),
+      with_active_time:  scalar('SELECT COUNT(*) n FROM sessions WHERE active_seconds > 0'),
+      orphan_class:      scalar('SELECT COUNT(*) n FROM sessions s WHERE NOT EXISTS (SELECT 1 FROM classes c WHERE c.id = s.class_id)'),
+      recent: db.prepare(`
+        SELECT s.started_at, s.last_beat_at, s.course, s.channel, s.referrer_host,
+               s.active_seconds, s.total_seconds, s.page_views, c.class_code,
+               substr(COALESCE(s.ua,''), 1, 40) AS ua
+        FROM sessions s LEFT JOIN classes c ON c.id = s.class_id
+        ORDER BY s.last_beat_at DESC LIMIT 10
+      `).all(),
+      generated_at: new Date().toISOString(),
+    });
+  } catch (e) {
+    console.error('admin/sessions:', e);
+    res.status(500).json({ error: 'sessions diagnostic failed', detail: e.message });
   }
 });
 

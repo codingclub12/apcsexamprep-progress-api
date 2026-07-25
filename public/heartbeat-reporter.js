@@ -56,7 +56,17 @@
   }
 
   var cfg = resolveConfig();
-  if (!cfg.course) return; // nothing to attribute time to; stay silent
+  // Idle conditions are the usual reason no data shows up. Say so loudly (once)
+  // so a lesson page can be debugged from the console, instead of failing silent.
+  if (!cfg.course) {
+    try { console.warn("[apcs-heartbeat] idle: no course. Set window.APCS_HEARTBEAT.course or a [data-course] attribute before this script."); } catch (e) {}
+    return;
+  }
+  if (!cfg.getToken()) {
+    try { console.warn("[apcs-heartbeat] idle: no student token. Set window.APCS_HEARTBEAT.getToken to return the logged-in student's JWT (the same one the tracker sends)."); } catch (e) {}
+    // Do not return: the student may log in later this visit; flush() re-checks
+    // the token each time and simply skips a beat while it is absent.
+  }
 
   // ── Session id + cross-page cumulative counters (per tab) ───────────────
   function uuid() {
