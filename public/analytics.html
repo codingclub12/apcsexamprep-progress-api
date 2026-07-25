@@ -129,8 +129,8 @@
   var EXPORTS = {
     by_course: { file: "by-course", cols: ["Course", "Classes", "Teachers", "Students", "Active7d", "Completions", "Comp/stu", "Sessions", "ActiveMin"],
       rows: function (d) { return d.by_course.map(function (c) { return [c.course, c.classes, c.teachers, c.students, c.active_7d, c.completions, c.completions_per_student, c.sessions, c.active_minutes]; }); } },
-    by_teacher: { file: "by-teacher", cols: ["Teacher", "Email", "Courses", "Classes", "Students", "Active7d", "Completions", "Comp/stu", "ActiveMin", "LastActive"],
-      rows: function (d) { return d.by_teacher.map(function (t) { return [t.teacher, t.email, t.courses.join("|"), t.classes, t.students, t.active_7d, t.completions, t.completions_per_student, t.active_minutes, (t.last_activity || "").slice(0, 10)]; }); } },
+    by_teacher: { file: "by-teacher", cols: ["Teacher", "Email", "State", "ExpectedStart", "StartIsEstimate", "Courses", "Classes", "Students", "Active7d", "Completions", "Comp/stu", "ActiveMin", "LastActive"],
+      rows: function (d) { return d.by_teacher.map(function (t) { return [t.teacher, t.email, t.state || "", t.expected_start || "", t.expected_start_approx ? "yes" : "", t.courses.join("|"), t.classes, t.students, t.active_7d, t.completions, t.completions_per_student, t.active_minutes, (t.last_activity || "").slice(0, 10)]; }); } },
     channels: { file: "acquisition-by-channel", cols: ["Channel", "Users", "New", "Returning", "Sessions", "ActiveMin"],
       rows: function (d) { return d.acquisition.by_channel.map(function (c) { return [c.channel, c.users, c.new_users, c.returning_users, c.sessions, c.active_minutes]; }); } },
     schools: { file: "geography-schools", cols: ["School/District", "City", "State", "Country", "Teachers", "Students", "Completions"],
@@ -240,15 +240,22 @@
   }
 
   function renderByTeacher(d) {
+    var startCell = function (t) {
+      if (!t.expected_start) return '<span class="muted">-</span>';
+      return (t.expected_start_approx ? '~' : '') + esc(t.expected_start) +
+        (t.expected_start_approx ? ' <span class="muted" title="state-level estimate">est</span>' : '');
+    };
     var rows = d.by_teacher.map(function (t) {
       return [esc(t.teacher || "-"), '<span class="muted">' + esc(t.email || "-") + '</span>',
+        t.state ? esc(t.state) : '<span class="muted">-</span>', startCell(t),
         t.courses.map(courseLabel).join(", "), fmt(t.classes), fmt(t.students), fmt(t.active_7d),
         fmt(t.completions), t.completions_per_student, fmt(t.active_minutes),
         '<span class="muted">' + esc((t.last_activity || "").slice(0, 10) || "-") + '</span>'];
     });
-    return card("By teacher", "External teachers, most students first.", table(
-      [{ label: "Teacher" }, { label: "Email" }, { label: "Courses" }, { label: "Classes", num: 1 }, { label: "Students", num: 1 },
-       { label: "Active 7d", num: 1 }, { label: "Completions", num: 1 }, { label: "Comp/stu", num: 1 }, { label: "Active min", num: 1 }, { label: "Last active" }], rows), "by_teacher");
+    return card("By teacher", "External teachers, most students first. State and start date derive from the email domain; ~ = state-level estimate.", table(
+      [{ label: "Teacher" }, { label: "Email" }, { label: "State" }, { label: "Expected start" }, { label: "Courses" },
+       { label: "Classes", num: 1 }, { label: "Students", num: 1 }, { label: "Active 7d", num: 1 }, { label: "Completions", num: 1 },
+       { label: "Comp/stu", num: 1 }, { label: "Active min", num: 1 }, { label: "Last active" }], rows), "by_teacher");
   }
 
   function renderGeography(d) {
