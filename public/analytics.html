@@ -406,12 +406,14 @@
     html += '<p class="rangenote">Activity window: <b>' + rlabel + '</b> for completions, sessions, acquisition, devices, funnel, and hardest items. Class / student / teacher counts, recency cohorts, and the 30-day trends are always as-of-now.</p>';
     html += '<h2 class="sec">Engagement</h2><div class="cards">' + renderFunnel(d) + '<div>' + renderRecency(d) + '</div></div>';
     html += '<h2 class="sec">Acquisition</h2>' + renderAcquisition(d);
-    html += '<h2 class="sec">By course</h2>' + renderByCourse(d);
+    html += '<h2 class="sec">By course</h2>' + renderByCourse(d) +
+      '<p class="note">Grouped by the class\'s course. A solo account\'s course is "Solo", so a solo learner\'s lesson work counts in the <b>Solo</b> row here and under the subject they studied in <b>Progress by unit</b> below. That is why a subject\'s unit totals can exceed its By-course "Completions" (class-enrolled work only). The two views reconcile: the total completions match.</p>';
     html += '<h2 class="sec">By teacher</h2>' + renderByTeacher(d);
     html += '<h2 class="sec">Geography</h2>' + renderGeography(d) +
       '<p class="note">State and country are auto-derived from the email domain (US <code>*.k12.&lt;st&gt;.us</code> and ccTLDs). Named schools come from the curated directory in <code>lib/school-directory.js</code>; extend it with the unmapped domains above.</p>';
     html += '<h2 class="sec">Devices</h2>' + renderDevices(d);
-    html += '<h2 class="sec">Progress by unit</h2>' + renderUnits(d);
+    html += '<h2 class="sec">Progress by unit</h2>' + renderUnits(d) +
+      '<p class="note">Completions grouped by the subject studied and unit, including solo learners, so the totals here are the same completions the Solo row aggregates in By course, viewed by subject.</p>';
     html += '<h2 class="sec">Hardest items</h2>' + renderHardest(d);
     html += '<h2 class="sec">Trends</h2>' + renderTrends(d);
     $("content").innerHTML = html;
