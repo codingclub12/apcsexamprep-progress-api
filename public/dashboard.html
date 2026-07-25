@@ -328,6 +328,19 @@
   };
   var fmt = function (n) { return (n == null ? 0 : n).toLocaleString(); };
 
+  // Stored timestamps are SQLite UTC ("YYYY-MM-DD HH:MM:SS"). Show a condensed
+  // local date + time (e.g. "Jul 23, 3:35 PM"), with the full local timestamp on
+  // hover. Returns { text, title }.
+  var fmtWhen = function (ts) {
+    if (!ts) return { text: "-", title: "" };
+    var d = new Date(String(ts).replace(" ", "T") + "Z");
+    if (isNaN(d.getTime())) return { text: String(ts).slice(0, 10), title: String(ts) };
+    return {
+      text: d.toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }),
+      title: d.toLocaleString()
+    };
+  };
+
   // A row is "internal" if it is a solo/system/audit/owner account.
   function isInternal(c) {
     var email = (c.teacher_email || "").toLowerCase();
@@ -444,7 +457,7 @@
         '<td class="num">' + fmt(f.classes) + "</td>" +
         '<td class="num">' + fmt(f.students) + "</td>" +
         '<td class="num">' + fmt(f.completions) + "</td>" +
-        '<td class="muted">' + esc((f.last_activity || "").slice(0, 10) || "-") + "</td></tr>";
+        '<td class="muted" title="' + esc(fmtWhen(f.last_activity).title) + '">' + esc(fmtWhen(f.last_activity).text) + "</td></tr>";
     }).join("");
     $("florida").innerHTML =
       '<table class="minitable"><thead><tr><th>District</th><th>Teacher</th><th>Start</th>' +
@@ -527,7 +540,7 @@
     }).join("");
   }
 
-  // ── Render: horizontal bar chart — classes by course ─────────────────────
+  // ── Render: horizontal bar chart - classes by course ─────────────────────
   function renderCourseChart() {
     var counts = {};
     state.classes.forEach(function (c) { counts[c.course] = (counts[c.course] || 0) + 1; });
@@ -557,7 +570,7 @@
     $("courseChart").innerHTML = svg.join("");
   }
 
-  // ── Render: line chart — 30-day growth ───────────────────────────────────
+  // ── Render: line chart - 30-day growth ───────────────────────────────────
   function renderGrowthChart() {
     var g = (state.stats || {}).growth || {};
     var days = [];
@@ -657,7 +670,7 @@
         '<td class="num">' + fmt(c.completions) + "</td>" +
         '<td class="num">' + (c.active ? '<span class="badge on">Yes</span>' : '<span class="badge off">No</span>') + "</td>" +
         '<td class="muted">' + esc((c.created_at || "").slice(0, 10)) + "</td>" +
-        '<td class="muted">' + (c.last_activity ? esc(c.last_activity.slice(0, 10)) : "-") + "</td>" +
+        '<td class="muted" title="' + esc(fmtWhen(c.last_activity).title) + '">' + esc(fmtWhen(c.last_activity).text) + "</td>" +
       "</tr>";
     }).join("");
   }
