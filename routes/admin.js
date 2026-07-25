@@ -315,7 +315,15 @@ router.get('/classes', (req, res) => {
         t.name  AS teacher_name,
         t.email AS teacher_email,
         (SELECT COUNT(*) FROM students s WHERE s.class_id = c.id) AS student_count,
-        (SELECT COUNT(*) FROM progress p WHERE p.class_id = c.id AND p.completed = 1) AS completions
+        (SELECT COUNT(*) FROM progress p WHERE p.class_id = c.id AND p.completed = 1) AS completions,
+        -- Most recent activity in the class: the latest student sign-in (last_active
+        -- is bumped on every authenticated request) or progress update, whichever
+        -- is newer. NULL for a class no one has signed into yet.
+        (SELECT MAX(ts) FROM (
+           SELECT MAX(s.last_active) AS ts FROM students s WHERE s.class_id = c.id
+           UNION ALL
+           SELECT MAX(p.updated_at) AS ts FROM progress p WHERE p.class_id = c.id
+         )) AS last_activity
       FROM classes c
       LEFT JOIN teachers t ON c.teacher_id = t.id
       ORDER BY c.created_at DESC
