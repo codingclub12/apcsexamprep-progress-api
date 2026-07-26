@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>APCSExamPrep · Executive KPIs</title>
+<style>
+  /* ── Palette (validated dataviz reference: light + dark) ──────────────── */
+  :root {
+    color-scheme: light dark;
+    --plane:   #f9f9f7;
+    --surface: #fcfcfb;
+    --ink:     #0b0b0b;
+    --ink-2:   #52514e;
+    --muted:   #898781;
+    --grid:    #e1e0d9;
+    --baseline:#c3c2b7;
+    --border:  rgba(11,11,11,0.10);
+    --good:    #0ca30c;
+    --critical:#d03b3b;
+    --csa:   #2a78d6;  /* blue   */
+    --csp:   #eb6834;  /* orange */
+    --cyber: #1baf7a;  /* aqua   */
+    --solo:  #eda100;  /* yellow */
+    --shadow: 0 1px 2px rgba(11,11,11,0.04), 0 1px 3px rgba(11,11,11,0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --plane:   #0d0d0d;
+      --surface: #1a1a19;
+      --ink:     #ffffff;
+      --ink-2:   #c3c2b7;
+      --muted:   #898781;
+      --grid:    #2c2c2a;
+      --baseline:#383835;
+      --border:  rgba(255,255,255,0.10);
+      --good:    #0ca30c;
+      --critical:#e66767;
+      --csa:   #3987e5;
+      --csp:   #d95926;
+      --cyber: #199e70;
+      --solo:  #c98500;
+      --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    --plane:#0d0d0d; --surface:#1a1a19; --ink:#fff; --ink-2:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --baseline:#383835; --border:rgba(255,255,255,0.10);
+    --critical:#e66767; --csa:#3987e5; --csp:#d95926; --cyber:#199e70; --solo:#c98500; --shadow:none;
+  }
+  :root[data-theme="light"] {
+    --plane:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --baseline:#c3c2b7; --border:rgba(11,11,11,0.10);
+    --critical:#d03b3b; --csa:#2a78d6; --csp:#eb6834; --cyber:#1baf7a; --solo:#eda100;
+    --shadow:0 1px 2px rgba(11,11,11,0.04),0 1px 3px rgba(11,11,11,0.06);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--plane); color: var(--ink);
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--csa); }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 20px 20px 64px; }
+
+  /* ── Header ──────────────────────────────────────────────────────────── */
+  header.top {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px;
+    padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 20px;
+  }
+  header.top h1 { font-size: 20px; margin: 0; font-weight: 650; letter-spacing: -0.01em; }
+  header.top .sub { color: var(--muted); font-size: 13px; }
+  header.top .spacer { flex: 1 1 auto; }
+  .navlink { color: var(--csa); text-decoration: none; font-size: 13px; font-weight: 600; }
+  .navlink:hover { text-decoration: underline; }
+  .status { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--ink-2); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 3px rgba(12,163,12,0.16); }
+  .dot.paused { background: var(--muted); box-shadow: none; }
+  button {
+    font: inherit; color: var(--ink); background: transparent;
+    border: 1px solid var(--border); border-radius: 8px; padding: 7px 11px; cursor: pointer;
+  }
+  button:hover { border-color: var(--baseline); }
+
+  /* ── KPI tiles ───────────────────────────────────────────────────────── */
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 15px 16px; box-shadow: var(--shadow); }
+  .kpi .label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .kpi .value { font-size: 32px; font-weight: 650; line-height: 1.1; margin-top: 5px; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .kpi .foot { font-size: 12px; color: var(--ink-2); margin-top: 6px; }
+  .kpi .foot .warn { color: var(--solo); }
+  /* inline meter for rate tiles */
+  .meter { height: 6px; border-radius: 3px; margin-top: 10px; background: color-mix(in srgb, var(--ink) 8%, transparent); overflow: hidden; }
+  .meter > i { display: block; height: 100%; border-radius: 3px; }
+
+  /* ── Section band ────────────────────────────────────────────────────── */
+  .band-title { font-size: 13px; font-weight: 650; margin: 4px 0 12px; display: flex; align-items: baseline; gap: 8px; }
+  .band-title .sub2 { font-size: 12px; font-weight: 400; color: var(--muted); }
+
+  /* ── Cards ───────────────────────────────────────────────────────────── */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow); margin-bottom: 22px; }
+  .card h3 { margin: 0 0 2px; font-size: 14px; font-weight: 600; }
+  .card .hint { color: var(--muted); font-size: 12px; margin: 0 0 12px; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 820px) { .cols { grid-template-columns: 1fr; } }
+
+  /* daily-completions summary strip */
+  .strip { display: flex; flex-wrap: wrap; gap: 20px; margin: 4px 0 14px; }
+  .strip .s { font-size: 12px; color: var(--muted); }
+  .strip .s b { display: block; font-size: 20px; font-weight: 650; color: var(--ink); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+
+  svg { display: block; width: 100%; height: auto; overflow: visible; }
+  svg text { font: 11px system-ui, sans-serif; fill: var(--muted); }
+
+  /* ── Lesson tables ───────────────────────────────────────────────────── */
+  .minitable { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .minitable th { text-align: left; font-weight: 600; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  .minitable th.num { text-align: right; }
+  .minitable td { padding: 8px 8px; border-bottom: 1px solid var(--grid); white-space: nowrap; }
+  .minitable td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .minitable tr:last-child td { border-bottom: none; }
+  .lz { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+  .pill .swatch { width: 8px; height: 8px; border-radius: 3px; display: inline-block; }
+  /* inline bar inside a table cell */
+  .cellbar { display: inline-flex; align-items: center; gap: 8px; justify-content: flex-end; }
+  .cellbar .track { width: 60px; height: 6px; border-radius: 3px; background: color-mix(in srgb, var(--ink) 8%, transparent); overflow: hidden; }
+  .cellbar .track > i { display: block; height: 100%; border-radius: 3px; }
+  .cellbar .pctnum { width: 38px; text-align: right; font-variant-numeric: tabular-nums; }
+
+  .foot-note { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .empty { padding: 30px; text-align: center; color: var(--muted); }
+  .banner { background: color-mix(in srgb, var(--solo) 12%, transparent); color: var(--ink-2); border: 1px solid color-mix(in srgb, var(--solo) 30%, transparent); border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-bottom: 20px; }
+</style>
+</head>
+<body>
+
+<div id="app" class="wrap">
+  <header class="top">
+    <h1>Executive KPIs</h1>
+    <span class="sub">live from <code>/api/admin/exec</code></span>
+    <a class="navlink" href="/admin/dashboard">Dashboard →</a>
+    <a class="navlink" href="/admin/analytics">Analytics →</a>
+    <span class="spacer"></span>
+    <div class="status">
+      <span class="dot" id="liveDot"></span>
+      <span id="liveText">Updated just now</span>
+      <button id="pauseBtn" title="Pause / resume auto-refresh">Pause</button>
+      <button id="refreshBtn" title="Refresh now">Refresh</button>
+      <button id="lockBtn" title="End session and sign out">Sign out</button>
+    </div>
+  </header>
+
+  <div id="sessionBanner"></div>
+
+  <div class="band-title">Headline <span class="sub2">real users only: test, owner, and audit accounts excluded</span></div>
+  <div class="kpis" id="kpis"></div>
+
+  <div class="card">
+    <h3>Daily lesson completions</h3>
+    <p class="hint">Lessons finished per day, last 30 days. Graded quiz / exam submissions excluded.</p>
+    <div class="strip" id="dcStrip"></div>
+    <div id="dcChart"></div>
+  </div>
+
+  <div class="cols">
+    <div class="card" style="margin-bottom:0">
+      <h3>Top 10 most-used lessons</h3>
+      <p class="hint">Ranked by distinct students who started the lesson.</p>
+      <div id="topUsed"></div>
+    </div>
+    <div class="card" style="margin-bottom:0">
+      <h3>Top 10 highest-abandonment lessons</h3>
+      <p class="hint" id="abHint">Started but never finished. Minimum starters applied so a lone dropout is not noise.</p>
+      <div id="topAbandon"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var REFRESH_SECONDS = 60;
+  var COURSE = {
+    "ap-csa":           { label: "AP CSA",           css: "var(--csa)"   },
+    "ap-csp":           { label: "AP CSP",           css: "var(--csp)"   },
+    "ap-cybersecurity": { label: "AP Cybersecurity", css: "var(--cyber)" },
+    "solo":             { label: "Solo",             css: "var(--solo)"  }
+  };
+
+  var state = { exec: null, paused: false, countdown: REFRESH_SECONDS, ticker: null };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) {
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  };
+  var fmt = function (n) { return (n == null ? 0 : n).toLocaleString(); };
+
+  // Pick a bar/meter color from the pass/completion percentage: green when
+  // healthy, yellow mid, red when low. One rule, reused by every rate meter.
+  function rateColor(p) {
+    if (p >= 80) return "var(--good)";
+    if (p >= 50) return "var(--solo)";
+    return "var(--critical)";
+  }
+  function courseCss(c) { return (COURSE[c] && COURSE[c].css) || "var(--muted)"; }
+  function courseLabel(c) { return (COURSE[c] && COURSE[c].label) || c; }
+
+  // ── Fetch (session cookie rides along; 401/403/503 bounces to login) ─────
+  function api(path) {
+    return fetch(path, { credentials: "same-origin" }).then(function (r) {
+      if (r.status === 401 || r.status === 403 || r.status === 503) {
+        var e = new Error("auth"); e.auth = true; throw e;
+      }
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    });
+  }
+  function toLogin() {
+    if (state.ticker) { clearInterval(state.ticker); state.ticker = null; }
+    window.location.href = "/admin/exec";
+  }
+
+  function load() {
+    return api("/api/admin/exec").then(function (d) {
+      state.exec = d;
+      render();
+      markUpdated();
+    });
+  }
+
+  // ── KPI tiles ────────────────────────────────────────────────────────────
+  function tile(label, value, foot, meterPct, meterColor) {
+    var m = meterPct == null ? "" :
+      '<div class="meter"><i style="width:' + Math.max(0, Math.min(100, meterPct)) + '%;background:' + meterColor + '"></i></div>';
+    return '<div class="kpi">' +
+      '<div class="label">' + esc(label) + '</div>' +
+      '<div class="value">' + value + '</div>' +
+      m +
+      (foot ? '<div class="foot">' + foot + '</div>' : "") +
+      '</div>';
+  }
+
+  function renderKpis() {
+    var k = state.exec.kpis;
+    var lc = k.lesson_completion_rate, cf = k.cfu_pass_rate, qz = k.quiz_pass_rate, rs = k.returning_student_pct;
+    var tiles = [
+      tile("Active teachers (7d)", fmt(k.active_teachers_7d),
+        "with a student active this week", null, null),
+      tile("Active students (7d)", fmt(k.active_students_7d),
+        fmt(k.active_students_1d) + " today · " + fmt(k.active_students_30d) + " in 30d · " + fmt(k.students_total) + " total", null, null),
+      tile("New classrooms (7d)", fmt(k.new_classrooms_7d),
+        fmt(k.new_classrooms_1d) + " in the last 24h", null, null),
+      tile("Lesson completion rate", lc.pct + "%",
+        fmt(lc.completed) + " of " + fmt(lc.assigned) + " assigned lessons", lc.pct, rateColor(lc.pct)),
+      tile("CFU pass rate", cf.items ? cf.pct + "%" : "-",
+        cf.items ? fmt(cf.passed) + " of " + fmt(cf.items) + " items mastered" : "no CFU attempts yet",
+        cf.items ? cf.pct : null, rateColor(cf.pct)),
+      tile("Quiz pass rate", qz.items ? qz.pct + "%" : "-",
+        qz.items ? fmt(qz.passed) + " of " + fmt(qz.items) + " quizzes mastered" : "no quiz attempts yet",
+        qz.items ? qz.pct : null, rateColor(qz.pct)),
+      tile("Returning student %", rs.measured ? rs.pct + "%" : "-",
+        rs.measured
+          ? fmt(rs.returning) + " of " + fmt(rs.measured) + " returned on a 2nd day"
+          : '<span class="warn">no session data yet</span>',
+        rs.measured ? rs.pct : null, "var(--csa)")
+    ];
+    $("kpis").innerHTML = tiles.join("");
+  }
+
+  // ── Daily completions: summary strip + 30-day bar chart ──────────────────
+  function renderDaily() {
+    var dc = state.exec.daily_completions;
+    $("dcStrip").innerHTML =
+      '<div class="s"><b>' + fmt(dc.today) + '</b>today</div>' +
+      '<div class="s"><b>' + fmt(dc.yesterday) + '</b>yesterday</div>' +
+      '<div class="s"><b>' + fmt(dc.last_7d) + '</b>last 7 days</div>' +
+      '<div class="s"><b>' + dc.avg_per_day_7d + '</b>avg / day (7d)</div>' +
+      '<div class="s"><b>' + fmt(dc.last_30d) + '</b>last 30 days</div>';
+    $("dcChart").innerHTML = barChart(dc.series);
+  }
+
+  // Simple, dependency-free SVG bar chart. viewBox coordinates; scales with the
+  // container. One <title> per bar for the exact date + count on hover.
+  function barChart(series) {
+    var W = 720, H = 150, padB = 20, padT = 8, padL = 4, padR = 4;
+    var n = series.length || 1;
+    var max = 1;
+    series.forEach(function (p) { if (p.completions > max) max = p.completions; });
+    var plotH = H - padB - padT, plotW = W - padL - padR;
+    var bw = plotW / n;
+    var bars = series.map(function (p, i) {
+      var h = Math.round((p.completions / max) * plotH);
+      var x = padL + i * bw;
+      var y = padT + (plotH - h);
+      var label = p.date + ": " + p.completions + (p.completions === 1 ? " completion" : " completions");
+      return '<rect x="' + (x + 1).toFixed(1) + '" y="' + y + '" width="' + Math.max(1, bw - 2).toFixed(1) + '" height="' + h +
+        '" rx="1.5" fill="var(--csa)"><title>' + esc(label) + '</title></rect>';
+    }).join("");
+    // sparse x-axis: first, ~middle, last date (month/day only)
+    function md(d) { var p = d.split("-"); return (+p[1]) + "/" + (+p[2]); }
+    var labels = "";
+    if (n > 1) {
+      var idx = [0, Math.floor(n / 2), n - 1];
+      labels = idx.map(function (i) {
+        var x = padL + i * bw + bw / 2;
+        var anchor = i === 0 ? "start" : (i === n - 1 ? "end" : "middle");
+        return '<text x="' + x.toFixed(1) + '" y="' + (H - 4) + '" text-anchor="' + anchor + '">' + esc(md(series[i].date)) + '</text>';
+      }).join("");
+    }
+    var maxLabel = '<text x="' + padL + '" y="' + (padT + 8) + '" text-anchor="start">peak ' + max + '</text>';
+    return '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Daily lesson completions, last 30 days">' +
+      bars + labels + maxLabel + '</svg>';
+  }
+
+  // ── Lesson tables ────────────────────────────────────────────────────────
+  function lessonPill(course) {
+    return '<span class="pill" style="background:color-mix(in srgb,' + courseCss(course) + ' 16%,transparent);color:var(--ink-2)">' +
+      '<i class="swatch" style="background:' + courseCss(course) + '"></i>' + esc(courseLabel(course)) + '</span>';
+  }
+  function cellBar(pct, color) {
+    return '<span class="cellbar"><span class="track"><i style="width:' + pct + '%;background:' + color + '"></i></span>' +
+      '<span class="pctnum">' + pct + '%</span></span>';
+  }
+
+  function renderTopUsed() {
+    var rows = state.exec.top_lessons || [];
+    if (!rows.length) { $("topUsed").innerHTML = '<div class="empty">No lesson activity yet.</div>'; return; }
+    var body = rows.map(function (r) {
+      return "<tr>" +
+        "<td>" + lessonPill(r.course) + ' <span class="lz">' + esc(r.lesson) + "</span></td>" +
+        '<td class="num">' + fmt(r.started) + "</td>" +
+        '<td class="num">' + fmt(r.completed) + "</td>" +
+        '<td class="num">' + cellBar(r.completion_pct, rateColor(r.completion_pct)) + "</td>" +
+        "</tr>";
+    }).join("");
+    $("topUsed").innerHTML =
+      '<table class="minitable"><thead><tr><th>Lesson</th>' +
+      '<th class="num">Started</th><th class="num">Done</th><th class="num">Completion</th></tr></thead>' +
+      "<tbody>" + body + "</tbody></table>";
+  }
+
+  function renderTopAbandon() {
+    var rows = state.exec.top_abandonment || [];
+    var minS = state.exec.abandonment_min_starters;
+    if (minS != null) {
+      $("abHint").textContent = "Started but never finished. Minimum " + minS + " starters so a lone dropout is not noise.";
+    }
+    if (!rows.length) { $("topAbandon").innerHTML = '<div class="empty">Not enough lesson activity to rank yet.</div>'; return; }
+    var body = rows.map(function (r) {
+      return "<tr>" +
+        "<td>" + lessonPill(r.course) + ' <span class="lz">' + esc(r.lesson) + "</span></td>" +
+        '<td class="num">' + fmt(r.started) + "</td>" +
+        '<td class="num">' + cellBar(r.abandonment_pct, r.abandonment_pct >= 50 ? "var(--critical)" : "var(--solo)") + "</td>" +
+        "</tr>";
+    }).join("");
+    $("topAbandon").innerHTML =
+      '<table class="minitable"><thead><tr><th>Lesson</th>' +
+      '<th class="num">Started</th><th class="num">Abandoned</th></tr></thead>' +
+      "<tbody>" + body + "</tbody></table>";
+  }
+
+  function renderBanner() {
+    var rs = state.exec.kpis.returning_student_pct;
+    var el = $("sessionBanner");
+    if (rs.measured === 0) {
+      el.innerHTML = '<div class="banner">Returning student % reads 0 because no session heartbeats have been recorded yet. ' +
+        'Every other KPI on this page is unaffected. Check the pipeline at <code>/api/admin/sessions</code>.</div>';
+    } else {
+      el.innerHTML = "";
+    }
+  }
+
+  function render() {
+    if (!state.exec) return;
+    renderBanner();
+    renderKpis();
+    renderDaily();
+    renderTopUsed();
+    renderTopAbandon();
+  }
+
+  // ── Live status + auto-refresh ───────────────────────────────────────────
+  function markUpdated() {
+    state.countdown = REFRESH_SECONDS;
+    $("liveText").textContent = "Updated just now";
+  }
+  function tick() {
+    if (state.paused) return;
+    state.countdown -= 1;
+    if (state.countdown <= 0) {
+      state.countdown = REFRESH_SECONDS;
+      load().catch(onErr);
+    } else {
+      $("liveText").textContent = "Next refresh in " + state.countdown + "s";
+    }
+  }
+  function onErr(e) {
+    if (e && e.auth) { toLogin(); return; }
+    $("liveText").textContent = "Error loading. Retrying…";
+  }
+
+  $("pauseBtn").addEventListener("click", function () {
+    state.paused = !state.paused;
+    this.textContent = state.paused ? "Resume" : "Pause";
+    $("liveDot").classList.toggle("paused", state.paused);
+    if (!state.paused) markUpdated();
+    else $("liveText").textContent = "Paused";
+  });
+  $("refreshBtn").addEventListener("click", function () { load().catch(onErr); });
+  $("lockBtn").addEventListener("click", function () {
+    fetch("/admin/logout", { method: "POST", credentials: "same-origin" })
+      .then(function () { toLogin(); })
+      .catch(function () { toLogin(); });
+  });
+
+  load().catch(onErr);
+  state.ticker = setInterval(tick, 1000);
+})();
+</script>
+</body>
+</html>

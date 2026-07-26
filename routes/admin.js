@@ -16,6 +16,7 @@ const db = require('../db');
 const session = require('../lib/admin-session');
 const metrics = require('../lib/admin-metrics');
 const analytics = require('../lib/admin-analytics');
+const exec = require('../lib/admin-exec');
 
 const router = express.Router();
 
@@ -63,6 +64,7 @@ router.get('/', (req, res) => {
     endpoints: [
       'GET /api/admin/overview            top-line counts',
       'GET /api/admin/summary             bucketed adoption metrics: activation, deltas, cohort, data-quality',
+      'GET /api/admin/exec                executive KPIs: active teachers/students, new classrooms, completion + pass rates, returning %, top/abandoned lessons',
       'GET /api/admin/analytics           full deck: by-course, by-teacher, geography, funnel, device, trends, hardest items',
       'GET /api/admin/sessions            heartbeat/session pipeline diagnostic: counts + recent rows',
       'GET /api/admin/stats               adoption + growth rollup (external vs raw)',
@@ -149,6 +151,20 @@ router.get('/summary', (req, res) => {
   } catch (e) {
     console.error('admin/summary:', e);
     res.status(500).json({ error: 'summary failed', detail: e.message });
+  }
+});
+
+// ── EXEC: the ten decision-driving KPIs on one page ───────────────────────────
+//  Active teachers/students (7d), new classrooms this week, lesson completion
+//  rate, CFU + quiz pass rates, returning student %, daily lesson completions,
+//  and the most-used / highest-abandonment lessons. Same real-user population and
+//  manifest denominators as the other decks; a GET, so the session cookie authorizes it.
+router.get('/exec', (req, res) => {
+  try {
+    res.json(exec.computeExec());
+  } catch (e) {
+    console.error('admin/exec:', e);
+    res.status(500).json({ error: 'exec failed', detail: e.message });
   }
 });
 
