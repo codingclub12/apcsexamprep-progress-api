@@ -92,9 +92,18 @@ global.fetch = async function (url, opts) {
   };
 };
 
-// ── Boot: seed the hidden test bank, then start the app ───────────────────────
+// ── Boot: seed this test's OWN code item, then start the app ──────────────────
+// Self-contained on purpose: this proves the integrity property, so it seeds its
+// own dedicated item (read an int, print double it; visible 5 -> 10, hidden
+// 7/3/-4) instead of depending on the shipped pilot seed, which changes as real
+// content lands. Uses lesson 1.5 (a real manifest denominator, not in the pilot
+// bank) so it never collides with seed/csa-code-tests.js.
 const db = require('../db');
-require('../scripts/seed-code-tests').seedCodeTests({ update: true });   // load code_test_cases
+const cgIns = db.prepare(
+  'INSERT OR REPLACE INTO code_test_cases (course, lesson, item, seq, stdin, expected_stdout, hidden) VALUES (?, ?, ?, ?, ?, ?, ?)'
+);
+[['5\n', '10', 0], ['7\n', '14', 1], ['3\n', '6', 1], ['-4\n', '-8', 1]]
+  .forEach((c, i) => cgIns.run('ap-csa', '1.5', 'exercise-1', i, c[0], c[1], c[2]));
 require('../server');                                                    // boots denominators + listens
 const { signStudentToken } = require('../utils');
 
@@ -129,7 +138,7 @@ async function waitForHealth() {
   throw new Error('server did not become healthy');
 }
 
-const LOCATION = { course: 'ap-csa', unit: 'unit-1', lesson: '1.1', item: 'exercise-1' };
+const LOCATION = { course: 'ap-csa', unit: 'unit-1', lesson: '1.5', item: 'exercise-1' };
 
 // A token unique to the student's source, used to prove the source is not stored.
 const SOURCE_TOKENS = ['nextInt', 'System.out.println', 'public class Main'];
@@ -197,7 +206,7 @@ function assertNoDbLeak() {
     // 3) The grade rolled up onto System B (progress.score), best-per-item.
     check('grade rolled up to progress.score = 100', () => {
       const row = db.prepare(`SELECT score FROM progress
-        WHERE student_id = ? AND course = 'ap-csa' AND unit = 'unit-1' AND lesson = '1.1' AND activity_type = 'exercise-1'`)
+        WHERE student_id = ? AND course = 'ap-csa' AND unit = 'unit-1' AND lesson = '1.5' AND activity_type = 'exercise-1'`)
         .get(STUDENT_ID);
       assert.ok(row, 'expected a progress row for the code item');
       assert.strictEqual(row.score, 100);
@@ -226,7 +235,7 @@ function assertNoDbLeak() {
     // 7) A valid location with no seeded test bank 404s so the page can fall back.
     // Lesson 1.2 has a manifest denominator but no code cases seeded.
     const noBank = await post('/api/student/code-grade',
-      { course: 'ap-csa', unit: 'unit-1', lesson: '1.2', item: 'exercise-1', language: 'java', source: REAL_SRC });
+      { course: 'ap-csa', unit: 'unit-1', lesson: '1.6', item: 'exercise-1', language: 'java', source: REAL_SRC });
     check('location with no test bank returns 404', () => assert.strictEqual(noBank.status, 404));
 
   } catch (e) {
