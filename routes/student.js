@@ -735,4 +735,264 @@ router.post('/score', requireStudent, (req, res) => {
     res.status(500).json({ error: 'Failed to record score' });
   }
 });
+
+// ── CODE GRADE (server-side grading for Judge0-backed code items) ──────────────
+//  The integrity fix for code exercises. A client-reported verdict is forgeable,
+//  and for code, output comparison against the visible expected output dies to a
+//  hardcoded System.out.println of that output. The fix, ported from the quiz
+//  path: the correct answers (here, a bank of test cases) live server-side and
+//  never ship to the client. The server runs the student's source against every
+//  case through the EXISTING Judge0 proxy (POST /api/judge0/run), scores
+//  cases-passed / total scaled to the item's manifest points, and writes the grade
+//  onto the same System B ledger (score_events -> progress.score) the Cyber and CSP
+//  grade paths use, so the teacher dashboard and CSV light up with no read change.
+//
+//  DATA POLICY (non-negotiable): the source is graded in transit and DISCARDED.
+//  It is never written to any table. Only the verdict (pass counts) and the derived
+//  points are stored. The response summarizes what failed; it never returns a test
+//  case, especially a hidden one.
+const JUDGE0_LANGUAGE_IDS = { java: 62, python: 71, python3: 71, javascript: 63, js: 63, node: 63 };
+const CODE_ALLOWED_LANGUAGE_IDS = new Set([62, 71, 63]);
+const CODE_MAX_SOURCE_LEN = 20000;   // matches the Judge0 proxy's own cap
+const CODE_MAX_CASES = 20;           // bound Judge0 calls per grade (cost + memory)
+
+const codeDenominatorStmt = db.prepare(
+  'SELECT possible FROM course_denominators WHERE course = ? AND lesson = ? AND activity_type = ?'
+);
+const codeCasesStmt = db.prepare(
+  'SELECT seq, stdin, expected_stdout, hidden FROM code_test_cases WHERE course = ? AND lesson = ? AND item = ? ORDER BY seq'
+);
+const codeDupeStmt = db.prepare(
+  'SELECT answers FROM score_events WHERE student_id = ? AND client_event_id = ?'
+);
+
+// Normalize stdout for comparison: unify line endings, strip trailing whitespace
+// on each line, and drop trailing blank lines. Robust to a stray newline without
+// letting a wrong answer slip through.
+function normalizeOutput(s) {
+  return String(s == null ? '' : s)
+    .replace(/\r\n/g, '\n')
+    .split('\n').map((l) => l.replace(/[ \t]+$/, '')).join('\n')
+    .replace(/\n+$/, '');
+}
+
+// Resolve a requested language to an allow-listed Judge0 id, or null if unknown.
+function resolveLanguageId(language) {
+  if (typeof language === 'number' || /^\d+$/.test(String(language))) {
+    const id = Number(language);
+    return CODE_ALLOWED_LANGUAGE_IDS.has(id) ? id : null;
+  }
+  const id = JUDGE0_LANGUAGE_IDS[String(language).trim().toLowerCase()];
+  return id && CODE_ALLOWED_LANGUAGE_IDS.has(id) ? id : null;
+}
+
+// Rate limit per (student, item): Judge0 is the expensive call, so this is the
+// primary guard. Same bounded-map shape as routes/progress.js: fixed window, no
+// timers, hard key cap so the map can never grow unbounded on Railway.
+const CG_WINDOW_MS = 60_000;
+const CG_MAX_PER_WINDOW = 10;
+const CG_MAX_KEYS = 5000;
+const cgBuckets = new Map();
+function codeGradeRateLimit(key) {
+  const now = Date.now();
+  let bucket = cgBuckets.get(key);
+  if (!bucket || now - bucket.start >= CG_WINDOW_MS) {
+    if (cgBuckets.size >= CG_MAX_KEYS) {
+      for (const [k, v] of cgBuckets) if (now - v.start >= CG_WINDOW_MS) cgBuckets.delete(k);
+      if (cgBuckets.size >= CG_MAX_KEYS) cgBuckets.clear();
+    }
+    bucket = { start: now, count: 0 };
+    cgBuckets.set(key, bucket);
+  }
+  bucket.count++;
+  return bucket.count <= CG_MAX_PER_WINDOW;
+}
+
+// Run one source against one stdin through the existing Judge0 proxy. We call our
+// own /api/judge0/run over loopback rather than Judge0 directly, so all language
+// allow-listing, base64 handling, and limits stay owned by that one subsystem. The
+// X-Forwarded-For carries the student id so the proxy's per-identity hourly limiter
+// partitions by student instead of lumping every internal call into one bucket.
+async function runOneCase(baseUrl, studentId, languageId, source, stdin) {
+  const r = await fetch(baseUrl + '/api/judge0/run', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Forwarded-For': 'codegrade:' + studentId },
+    body: JSON.stringify({ code: source, language_id: languageId, stdin }),
+  });
+  if (!r.ok) {
+    const err = new Error('judge0_unavailable');
+    err.statusFromProxy = r.status;
+    throw err;
+  }
+  return r.json();
+}
+
+router.post('/code-grade', requireStudent, async (req, res) => {
+  try {
+    const b = req.body || {};
+
+    // Resolve course exactly like /score: solo accounts roam; class accounts may
+    // only grade their own course's pages.
+    const cls = db.prepare('SELECT course FROM classes WHERE id = ?').get(req.student.class_id);
+    if (!cls) return res.status(401).json({ error: 'Class not found for student' });
+    let course;
+    if (cls.course === 'solo')        course = typeof b.course === 'string' ? b.course.slice(0, 40) : '';
+    else if (cls.course === b.course) course = cls.course;
+    else return res.status(400).json({ error: `course must be '${cls.course}' for this class` });
+
+    const unit   = b.unit != null ? String(b.unit) : '';
+    const lesson = b.lesson != null ? String(b.lesson) : '';
+    const item   = b.item != null ? String(b.item).slice(0, 120) : '';
+    if (!course || !unit || !lesson || !item) {
+      return res.status(400).json({ error: 'course, unit, lesson, item, language, source required' });
+    }
+
+    const languageId = resolveLanguageId(b.language);
+    if (!languageId) {
+      return res.status(400).json({ error: 'language must be one of java (62), python (71), javascript (63)' });
+    }
+
+    const source = typeof b.source === 'string' ? b.source : '';
+    if (!source.trim()) return res.status(400).json({ error: 'source is required' });
+    if (source.length > CODE_MAX_SOURCE_LEN) {
+      return res.status(400).json({ error: `source too long (max ${CODE_MAX_SOURCE_LEN} chars)` });
+    }
+
+    // Idempotency: a client_event_id already graded for this student is a retry
+    // (flaky mobile double-submit). Do NOT re-run Judge0; return the stored verdict.
+    const clientEventId = b.client_event_id ? String(b.client_event_id).slice(0, 100) : null;
+    if (clientEventId) {
+      const dupe = codeDupeStmt.get(req.student.id, clientEventId);
+      if (dupe) {
+        let v = {};
+        try { v = JSON.parse(dupe.answers || '{}'); } catch (_) { /* ignore */ }
+        return res.json({
+          passed: v.cases_passed ?? null,
+          total: v.cases_total ?? null,
+          points_earned: v.points_earned ?? null,
+          points_possible: v.points_possible ?? null,
+          failing_case_summary: null,
+          duplicate: true,
+        });
+      }
+    }
+
+    // The hidden test bank. No cases means this location is not server-graded; the
+    // page keeps its existing behavior. Checked first so this 404 fallback signal is
+    // reliable even where the manifest is still incomplete (same 404-to-fallback
+    // posture as the quizzes).
+    const cases = codeCasesStmt.all(course, lesson, item);
+    if (!cases.length) {
+      return res.status(404).json({ error: 'No server-graded code exercise for this location' });
+    }
+    if (cases.length > CODE_MAX_CASES) cases.length = CODE_MAX_CASES;
+
+    // Manifest is the max_score authority: no denominator, no grade (surface drift
+    // rather than invent a scale).
+    const denom = codeDenominatorStmt.get(course, lesson, item);
+    if (!denom) {
+      return res.status(400).json({ error: `No manifest points for ${course} ${lesson} ${item}. Not in course_denominators.` });
+    }
+    const pointsPossible = Number(denom.possible);
+
+    // Rate limit per (student, item): the expensive path is Judge0, so guard here
+    // before we make any run.
+    const rlKey = req.student.id + '|' + course + '|' + lesson + '|' + item;
+    if (!codeGradeRateLimit(rlKey)) {
+      return res.status(429).json({ error: 'Too many grade attempts. Wait a minute and try again.' });
+    }
+
+    const baseUrl = process.env.SELF_BASE_URL || `http://127.0.0.1:${process.env.PORT || 4000}`;
+
+    // Run every case sequentially (bounded concurrency, bounded memory). A pass
+    // requires an Accepted run (status_id 3) whose stdout matches the expected
+    // output after normalization. Compile or runtime errors fail the case.
+    let passed = 0;
+    for (const c of cases) {
+      let result;
+      try {
+        result = await runOneCase(baseUrl, req.student.id, languageId, source, String(c.stdin || ''));
+      } catch (err) {
+        // Judge0 rate-limited or unavailable: do NOT record a 0 for an infra
+        // failure. Return without writing anything so the student can retry.
+        const status = err.statusFromProxy === 429 ? 429 : 502;
+        return res.status(status).json({
+          error: status === 429
+            ? 'Code runner is busy. Wait a moment and try again.'
+            : 'Code runner is temporarily unavailable. Your attempt was not graded; try again shortly.',
+        });
+      }
+      const accepted = result && result.status_id === 3;
+      if (accepted && normalizeOutput(result.stdout) === normalizeOutput(c.expected_stdout)) {
+        passed++;
+      }
+    }
+
+    const total = cases.length;
+    const pointsEarned = Math.round((passed / total) * pointsPossible * 100) / 100;
+    const allPassed = passed === total;
+
+    // Write onto System B. The graded code item is one distinct item within its
+    // activity (activity_type = item), so rollupScore keeps the best result per
+    // item and writes the 0-100 percent into progress.score. answers holds the
+    // verdict ONLY: pass counts and points. Never the source, never a test case.
+    const now = new Date().toISOString();
+    const verdict = JSON.stringify({
+      cases_passed: passed, cases_total: total,
+      points_earned: pointsEarned, points_possible: pointsPossible,
+    });
+    const rollup = db.transaction(() => {
+      db.prepare(`
+        INSERT INTO score_events
+          (id, student_id, class_id, course, unit, lesson, activity_type, item,
+           points, max_points, correct, answers, client_event_id, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `).run(
+        newId(), req.student.id, req.student.class_id, course, unit, lesson,
+        item, item, pointsEarned, pointsPossible, allPassed ? 1 : 0,
+        verdict, clientEventId, now
+      );
+      const roll = rollupScore(req.student.id, course, unit, lesson, item);
+      const existing = db.prepare(`
+        SELECT id FROM progress
+        WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
+      `).get(req.student.id, course, unit, lesson, item);
+      if (existing) {
+        db.prepare('UPDATE progress SET score = ?, attempts = ?, updated_at = ? WHERE id = ?')
+          .run(roll.pct, roll.events, now, existing.id);
+      } else {
+        db.prepare(`
+          INSERT INTO progress (id, student_id, class_id, course, unit, lesson,
+            activity_type, completed, score, attempts, updated_at)
+          VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?)
+        `).run(newId(), req.student.id, req.student.class_id, course, unit, lesson,
+          item, roll.pct, roll.events, now);
+      }
+      return roll;
+    })();
+
+    // Summary of what failed, never the case. A hidden case's stdin or expected
+    // output is never revealed, so the summary cannot become an answer key.
+    const failing_case_summary = allPassed ? null : {
+      cases_failed: total - passed,
+      cases_total: total,
+      message: `${total - passed} of ${total} test cases failed. Some tests use hidden inputs, so matching only the shown example is not enough. Make sure your program reads its input and computes the result.`,
+    };
+
+    // source goes out of scope here and is never persisted. Only the verdict above
+    // was written.
+    res.json({
+      passed,
+      total,
+      points_earned: pointsEarned,
+      points_possible: pointsPossible,
+      failing_case_summary,
+      score_pct: rollup.pct,
+    });
+  } catch (e) {
+    console.error('Code grade error:', e);
+    res.status(500).json({ error: 'Failed to grade code' });
+  }
+});
+
 module.exports = router;
