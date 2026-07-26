@@ -108,6 +108,15 @@ app.get('/admin/analytics', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', file));
 });
 
+// Executive KPI page. Same cookie gate: served only with a valid session,
+// otherwise the login page, so the markup and its data-fetching JS never reach
+// an unauthenticated visitor.
+app.get('/admin/exec', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  const file = adminSession.isAuthed(req) ? 'exec.html' : 'login.html';
+  res.sendFile(path.join(__dirname, 'public', file));
+});
+
 // Exchange the admin key for a session cookie. Rate limited + constant-time +
 // fails closed on a missing/weak ADMIN_KEY, same posture as /api/admin/*.
 app.post('/admin/login', adminSession.loginRateLimit, (req, res) => {
