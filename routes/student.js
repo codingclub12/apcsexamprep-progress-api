@@ -760,7 +760,7 @@ const codeDenominatorStmt = db.prepare(
   'SELECT possible FROM course_denominators WHERE course = ? AND lesson = ? AND activity_type = ?'
 );
 const codeCasesStmt = db.prepare(
-  'SELECT seq, stdin, expected_stdout, hidden FROM code_test_cases WHERE course = ? AND lesson = ? AND item = ? ORDER BY seq'
+  'SELECT seq, prelude, postlude, stdin, expected_stdout, hidden FROM code_test_cases WHERE course = ? AND lesson = ? AND item = ? ORDER BY seq'
 );
 const codeDupeStmt = db.prepare(
   'SELECT answers FROM score_events WHERE student_id = ? AND client_event_id = ?'
@@ -784,6 +784,19 @@ function resolveLanguageId(language) {
   }
   const id = JUDGE0_LANGUAGE_IDS[String(language).trim().toLowerCase()];
   return id && CODE_ALLOWED_LANGUAGE_IDS.has(id) ? id : null;
+}
+
+// Assemble the program actually run for one case. The student submits a BARE CODE
+// SEGMENT (AP style); the case injects inputs as `prelude` (before) and `postlude`
+// (after). For Java we wrap prelude + segment + postlude in a class/main so the
+// segment compiles. Python/JS have no class ceremony, so we just concatenate.
+// The student segment is used in transit only and never stored.
+function buildProgram(languageId, prelude, segment, postlude) {
+  const body = (prelude ? prelude + '\n' : '') + segment + '\n' + (postlude ? postlude + '\n' : '');
+  if (languageId === 62) {
+    return 'public class Main {\n  public static void main(String[] args) {\n' + body + '  }\n}\n';
+  }
+  return body;
 }
 
 // Rate limit per (student, item): Judge0 is the expensive call, so this is the
@@ -909,9 +922,13 @@ router.post('/code-grade', requireStudent, async (req, res) => {
     // output after normalization. Compile or runtime errors fail the case.
     let passed = 0;
     for (const c of cases) {
+      // Inject this case's inputs and wrap the student's bare segment into a
+      // runnable program. Different (often hidden) preludes are what make
+      // hardcoding the visible output fail.
+      const program = buildProgram(languageId, c.prelude || '', source, c.postlude || '');
       let result;
       try {
-        result = await runOneCase(baseUrl, req.student.id, languageId, source, String(c.stdin || ''));
+        result = await runOneCase(baseUrl, req.student.id, languageId, program, String(c.stdin || ''));
       } catch (err) {
         // Judge0 rate-limited or unavailable: do NOT record a 0 for an infra
         // failure. Return without writing anything so the student can retry.
@@ -971,12 +988,12 @@ router.post('/code-grade', requireStudent, async (req, res) => {
       return roll;
     })();
 
-    // Summary of what failed, never the case. A hidden case's stdin or expected
+    // Summary of what failed, never the case. A hidden case's prelude or expected
     // output is never revealed, so the summary cannot become an answer key.
     const failing_case_summary = allPassed ? null : {
       cases_failed: total - passed,
       cases_total: total,
-      message: `${total - passed} of ${total} test cases failed. Some tests use hidden inputs, so matching only the shown example is not enough. Make sure your program reads its input and computes the result.`,
+      message: `${total - passed} of ${total} test cases failed. Some tests use hidden inputs, so matching only the shown example is not enough. Make sure your code computes the result from the given values instead of printing a fixed answer.`,
     };
 
     // source goes out of scope here and is never persisted. Only the verdict above

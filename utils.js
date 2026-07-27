@@ -109,22 +109,22 @@ const COURSES = {
       'unit-1': {
         label: 'Unit 1: Using Objects and Methods',
         lessons: ['1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', '1.8', '1.9', '1.10', '1.11', '1.12', '1.13', '1.14', '1.15'],
-        activities: ['lesson', 'exercise-1', 'exercise-2', 'frq', 'quiz'],
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'exercise-3', 'quiz'],
       },
       'unit-2': {
         label: 'Unit 2: Selection and Iteration',
         lessons: ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6', '2.7', '2.8', '2.9', '2.10', '2.11', '2.12'],
-        activities: ['lesson', 'exercise-1', 'exercise-2', 'frq', 'quiz'],
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'exercise-3', 'quiz'],
       },
       'unit-3': {
         label: 'Unit 3: Class Creation',
         lessons: ['3.1', '3.2', '3.3', '3.4', '3.5', '3.6', '3.7', '3.8', '3.9'],
-        activities: ['lesson', 'exercise-1', 'exercise-2', 'frq', 'quiz'],
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'exercise-3', 'quiz'],
       },
       'unit-4': {
         label: 'Unit 4: Data Collections',
         lessons: ['4.1', '4.2', '4.3', '4.4', '4.5', '4.6', '4.7', '4.8', '4.9', '4.10', '4.11', '4.12', '4.13', '4.14', '4.15', '4.16', '4.17'],
-        activities: ['lesson', 'exercise-1', 'exercise-2', 'frq', 'quiz'],
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'exercise-3', 'quiz'],
       },
     },
   },
@@ -191,7 +191,7 @@ const COURSE_PREFIXES = {
   'ap-csp':           'CSP',
 };
 
-const ACTIVITY_TOKENS = ['exercise-1', 'exercise-2', 'frq', 'lab', 'quiz', 'exam', 'code'];
+const ACTIVITY_TOKENS = ['exercise-1', 'exercise-2', 'exercise-3', 'lab', 'quiz', 'exam', 'code'];
 
 function trailingActivity(h) {
   // anchored at the end so a slug like "collaboration" never trips "lab"

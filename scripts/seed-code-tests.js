@@ -23,13 +23,14 @@ const SOURCES = [
 ];
 
 const insert = db.prepare(`
-  INSERT OR IGNORE INTO code_test_cases (course, lesson, item, seq, stdin, expected_stdout, hidden)
-  VALUES (?, ?, ?, ?, ?, ?, ?)
+  INSERT OR IGNORE INTO code_test_cases (course, lesson, item, seq, prelude, postlude, stdin, expected_stdout, hidden)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 `);
 const update = db.prepare(`
-  INSERT INTO code_test_cases (course, lesson, item, seq, stdin, expected_stdout, hidden)
-  VALUES (?, ?, ?, ?, ?, ?, ?)
+  INSERT INTO code_test_cases (course, lesson, item, seq, prelude, postlude, stdin, expected_stdout, hidden)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   ON CONFLICT(course, lesson, item, seq) DO UPDATE SET
+    prelude = excluded.prelude, postlude = excluded.postlude,
     stdin = excluded.stdin, expected_stdout = excluded.expected_stdout, hidden = excluded.hidden
 `);
 
@@ -57,6 +58,7 @@ function seedCodeTests({ update: doUpdate = false } = {}) {
           cases++;
           written += stmt.run(
             it.course, it.lesson, it.item, i,
+            String(c.prelude || ''), String(c.postlude || ''),
             String(c.stdin || ''), c.expected_stdout, c.hidden ? 1 : 0
           ).changes;
         });

@@ -264,20 +264,31 @@ db.exec(`
 
   -- Hidden test bank for server-side code grading (POST /api/student/code-grade).
   -- One row per test case for a graded code item, keyed by (course, lesson, item)
-  -- with seq breaking ties so an item can hold many cases. stdin + expected_stdout
-  -- are author content, NOT student input, so this is not PII. Cases never reach
-  -- the client: the grade route runs the student's source against them through the
-  -- Judge0 proxy and returns pass counts only. A hidden case (hidden = 1) exists so
-  -- a hardcoded println of the visible expected output cannot pass every case. This
+  -- with seq breaking ties so an item can hold many cases. All fields here are
+  -- author content, NOT student input, so this is not PII. Cases never reach the
+  -- client: the grade route runs the student's source against them through the
+  -- Judge0 proxy and returns pass counts only.
+  --
+  -- Model (AP style): the student submits a BARE CODE SEGMENT, not a full class.
+  -- Each case injects its inputs as a prelude (Java prepended before the segment,
+  -- for example: int a = 17; int b = 5;) and an optional postlude (appended after).
+  -- The grader wraps prelude + segment + postlude in a class/main, compiles, runs, and
+  -- compares stdout to expected_stdout. Because hidden cases feed prelude values the
+  -- page never shows, a hardcoded println of the visible output cannot pass them.
+  -- This replaces stdin as the input channel (kept as an optional column for any
+  -- Scanner-style item), and needs no Scanner, so it works for every lesson.
+  -- A hidden case (hidden = 1) exists so hardcoding cannot pass every case. This
   -- table stores author test cases only; student source code is NEVER stored here or
   -- anywhere else (it is graded in transit and discarded). Seeded manually by
   -- scripts/seed-code-tests.js (never on boot), same posture as the quiz_bank.
   CREATE TABLE IF NOT EXISTS code_test_cases (
     course          TEXT NOT NULL,   -- 'ap-csa'
-    lesson          TEXT NOT NULL,   -- '1.1'
-    item            TEXT NOT NULL,   -- graded code item = activity_type: 'exercise-1' | 'exercise-2' | 'frq'
+    lesson          TEXT NOT NULL,   -- '1.3'
+    item            TEXT NOT NULL,   -- graded code item = activity_type: 'exercise-1' | 'exercise-2' | 'exercise-3' | 'quiz'
     seq             INTEGER NOT NULL DEFAULT 0,
-    stdin           TEXT NOT NULL DEFAULT '',
+    prelude         TEXT NOT NULL DEFAULT '',   -- Java prepended before the student segment (injects inputs)
+    postlude        TEXT NOT NULL DEFAULT '',   -- Java appended after the student segment
+    stdin           TEXT NOT NULL DEFAULT '',   -- optional: stdin for a Scanner-style item (usually empty)
     expected_stdout TEXT NOT NULL,
     hidden          INTEGER NOT NULL DEFAULT 0,   -- 1 = never surfaced to the client, even in a failure summary
     created_at      TEXT DEFAULT (datetime('now')),
@@ -401,6 +412,10 @@ const migrations = [
   // Zero PII: an enum plus a hostname, never a full URL, query string, or IP.
   `ALTER TABLE sessions  ADD COLUMN channel        TEXT`,
   `ALTER TABLE sessions  ADD COLUMN referrer_host  TEXT`,
+  // Prelude/postlude input injection for the bare-segment code grader. Existing
+  // rows default to empty (equivalent to the old stdin-only behavior).
+  `ALTER TABLE code_test_cases ADD COLUMN prelude  TEXT NOT NULL DEFAULT ''`,
+  `ALTER TABLE code_test_cases ADD COLUMN postlude TEXT NOT NULL DEFAULT ''`,
 ];
 for (const sql of migrations) {
   try { db.exec(sql); } catch(e) { /* column already exists */ }
