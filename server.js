@@ -117,6 +117,14 @@ app.get('/admin/exec', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', file));
 });
 
+// Teacher inspector: pipeline health plus a per-teacher drill-down (classes,
+// gradebook, feature adoption, roster). Same cookie gate as every admin page.
+app.get('/admin/teachers', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  const file = adminSession.isAuthed(req) ? 'teachers.html' : 'login.html';
+  res.sendFile(path.join(__dirname, 'public', file));
+});
+
 // Exchange the admin key for a session cookie. Rate limited + constant-time +
 // fails closed on a missing/weak ADMIN_KEY, same posture as /api/admin/*.
 app.post('/admin/login', adminSession.loginRateLimit, (req, res) => {

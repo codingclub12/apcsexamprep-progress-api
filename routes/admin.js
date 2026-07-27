@@ -17,6 +17,8 @@ const session = require('../lib/admin-session');
 const metrics = require('../lib/admin-metrics');
 const analytics = require('../lib/admin-analytics');
 const exec = require('../lib/admin-exec');
+const health = require('../lib/admin-health');
+const teacherView = require('../lib/admin-teacher');
 
 const router = express.Router();
 
@@ -65,6 +67,9 @@ router.get('/', (req, res) => {
       'GET /api/admin/overview            top-line counts',
       'GET /api/admin/summary             bucketed adoption metrics: activation, deltas, cohort, data-quality',
       'GET /api/admin/exec                executive KPIs: active teachers/students, new classrooms, completion + pass rates, returning %, top/abandoned lessons',
+      'GET /api/admin/health              data pipeline health: where scores are not syncing, rollup gaps, manifest gaps, quiet classes',
+      'GET /api/admin/teachers            every teacher with usage + pipeline status',
+      'GET /api/admin/teacher/:id         one teacher in full: classes, gradebook readiness, feature adoption, roster (anonymized), timeline',
       'GET /api/admin/analytics           full deck: by-course, by-teacher, geography, funnel, device, trends, hardest items',
       'GET /api/admin/sessions            heartbeat/session pipeline diagnostic: counts + recent rows',
       'GET /api/admin/stats               adoption + growth rollup (external vs raw)',
@@ -165,6 +170,45 @@ router.get('/exec', (req, res) => {
   } catch (e) {
     console.error('admin/exec:', e);
     res.status(500).json({ error: 'exec failed', detail: e.message });
+  }
+});
+
+// ── HEALTH: is the data pipeline actually delivering? ─────────────────────────
+//  Cross-checks the four writers that feed a gradebook (visits, score_events,
+//  attempts, quiz_attempts) and reports every case of "X happened but the Y that
+//  should accompany it did not". A silently-missing reporter produces no error
+//  anywhere; this is what makes that absence visible.
+router.get('/health', (req, res) => {
+  try {
+    res.json(health.computeHealth());
+  } catch (e) {
+    console.error('admin/health:', e);
+    res.status(500).json({ error: 'health failed', detail: e.message });
+  }
+});
+
+// ── TEACHERS: list every teacher with usage + pipeline status ─────────────────
+router.get('/teachers', (req, res) => {
+  try {
+    res.json(teacherView.listTeachers());
+  } catch (e) {
+    console.error('admin/teachers:', e);
+    res.status(500).json({ error: 'teachers failed', detail: e.message });
+  }
+});
+
+// ── TEACHER DETAIL: one account in full ──────────────────────────────────────
+//  :id accepts a teacher id or email. Rosters come back ANONYMIZED ("Student N")
+//  unless ?reveal=1 is passed: the pipeline questions never need real names, and
+//  the students are minors.
+router.get('/teacher/:id', (req, res) => {
+  try {
+    const out = teacherView.teacherDetail(req.params.id, { reveal: req.query.reveal === '1' });
+    if (!out) return res.status(404).json({ error: `No teacher with id or email ${req.params.id}` });
+    res.json(out);
+  } catch (e) {
+    console.error('admin/teacher/:id:', e);
+    res.status(500).json({ error: 'teacher drill failed', detail: e.message });
   }
 });
 
@@ -461,6 +505,26 @@ const GOR_SELECT = `
 
 const pctOf = (earned, possible) => (possible > 0 ? Math.round((earned / possible) * 100) : 0);
 
+// Lesson ids are dotted numbers ('1.2', '1.10'), so a plain string sort puts
+// 1.10 before 1.2 and the gradebook columns come out in the wrong order.
+// Compare segment by segment, numerically where both segments are numeric.
+function compareLessonId(a, b) {
+  const pa = String(a).split('.');
+  const pb = String(b).split('.');
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const xa = pa[i], xb = pb[i];
+    if (xa === undefined) return -1;
+    if (xb === undefined) return 1;
+    const na = Number(xa), nb = Number(xb);
+    if (Number.isFinite(na) && Number.isFinite(nb)) {
+      if (na !== nb) return na - nb;
+    } else if (xa !== xb) {
+      return xa < xb ? -1 : 1;
+    }
+  }
+  return 0;
+}
+
 // ── STUDENT DRILL: per-lesson visits + grade-of-record per item ───────────────
 //  Percentages compute against course_manifest, the single denominator
 //  authority. The legacy ?total=NN param is accepted and ignored; the admin
@@ -665,7 +729,10 @@ router.get('/class/:id/gradebook', (req, res) => {
     res.json({
       class: cls,
       course,
-      lessons: [...lessonCols.values()],
+      // Natural lesson order so 1.2 precedes 1.10 in the column headers.
+      lessons: [...lessonCols.values()].sort(
+        (x, y) => String(x.unit).localeCompare(String(y.unit)) || compareLessonId(x.lesson_id, y.lesson_id)
+      ),
       students: [...students.values()],
       generated_at: new Date().toISOString(),
     });

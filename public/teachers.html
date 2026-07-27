@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>APCSExamPrep · Teacher Inspector</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --plane:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --baseline:#c3c2b7; --border:rgba(11,11,11,0.10);
+    --good:#0ca30c; --critical:#d03b3b; --warnc:#eda100;
+    --csa:#2a78d6; --csp:#eb6834; --cyber:#1baf7a; --solo:#eda100;
+    --shadow:0 1px 2px rgba(11,11,11,0.04),0 1px 3px rgba(11,11,11,0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --plane:#0d0d0d; --surface:#1a1a19; --ink:#fff; --ink-2:#c3c2b7; --muted:#898781;
+      --grid:#2c2c2a; --baseline:#383835; --border:rgba(255,255,255,0.10);
+      --critical:#e66767; --warnc:#c98500;
+      --csa:#3987e5; --csp:#d95926; --cyber:#199e70; --solo:#c98500; --shadow:none;
+    }
+  }
+  :root[data-theme="dark"]{--plane:#0d0d0d;--surface:#1a1a19;--ink:#fff;--ink-2:#c3c2b7;--muted:#898781;--grid:#2c2c2a;--baseline:#383835;--border:rgba(255,255,255,0.10);--critical:#e66767;--warnc:#c98500;--csa:#3987e5;--csp:#d95926;--cyber:#199e70;--solo:#c98500;--shadow:none;}
+  :root[data-theme="light"]{--plane:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink-2:#52514e;--muted:#898781;--grid:#e1e0d9;--baseline:#c3c2b7;--border:rgba(11,11,11,0.10);--critical:#d03b3b;--warnc:#eda100;--csa:#2a78d6;--csp:#eb6834;--cyber:#1baf7a;--solo:#eda100;--shadow:0 1px 2px rgba(11,11,11,0.04),0 1px 3px rgba(11,11,11,0.06);}
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--plane); color: var(--ink); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: var(--csa); }
+  .wrap { max-width: 1320px; margin: 0 auto; padding: 20px 20px 64px; }
+
+  header.top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 16px; padding-bottom:16px; border-bottom:1px solid var(--border); margin-bottom:20px; }
+  header.top h1 { font-size:20px; margin:0; font-weight:650; letter-spacing:-0.01em; }
+  header.top .sub { color:var(--muted); font-size:13px; }
+  header.top .spacer { flex:1 1 auto; }
+  .navlink { color:var(--csa); text-decoration:none; font-size:13px; font-weight:600; }
+  .navlink:hover { text-decoration:underline; }
+  button { font:inherit; color:var(--ink); background:transparent; border:1px solid var(--border); border-radius:8px; padding:7px 11px; cursor:pointer; }
+  button:hover { border-color:var(--baseline); }
+  button.primary { background:var(--csa); color:#fff; border-color:transparent; font-weight:600; }
+  input, select { font:inherit; color:var(--ink); background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:7px 11px; }
+
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 18px; box-shadow:var(--shadow); margin-bottom:20px; }
+  .card h3 { margin:0 0 2px; font-size:14px; font-weight:600; }
+  .card .hint { color:var(--muted); font-size:12px; margin:0 0 12px; }
+
+  /* pipeline strip */
+  .pipes { display:flex; flex-wrap:wrap; gap:22px; margin:6px 0 4px; }
+  .pipes .p { font-size:12px; color:var(--muted); }
+  .pipes .p b { display:block; font-size:21px; font-weight:650; color:var(--ink); font-variant-numeric:tabular-nums; letter-spacing:-0.01em; }
+  .pipes .p.zero b { color:var(--critical); }
+
+  /* findings */
+  .finding { border:1px solid var(--border); border-radius:10px; margin-top:10px; overflow:hidden; }
+  .finding > summary { cursor:pointer; padding:10px 14px; display:flex; align-items:center; gap:10px; font-size:13.5px; list-style:none; }
+  .finding > summary::-webkit-details-marker { display:none; }
+  .finding > summary:hover { background:color-mix(in srgb, var(--ink) 3%, transparent); }
+  .finding .ttl { font-weight:600; }
+  .finding .cnt { margin-left:auto; color:var(--muted); font-size:12px; font-variant-numeric:tabular-nums; }
+  .finding .body { padding:0 14px 12px; }
+  .finding .detail { font-size:12.5px; color:var(--ink-2); margin:0 0 10px; }
+  .sev { font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:999px; text-transform:uppercase; letter-spacing:0.03em; }
+  .sev.critical { color:var(--critical); background:color-mix(in srgb, var(--critical) 14%, transparent); }
+  .sev.warn { color:var(--warnc); background:color-mix(in srgb, var(--warnc) 18%, transparent); }
+  .sev.info { color:var(--muted); background:color-mix(in srgb, var(--muted) 14%, transparent); }
+  .allclear { color:var(--good); font-size:13px; font-weight:600; }
+
+  table { border-collapse:collapse; width:100%; font-size:13.5px; }
+  thead th { position:sticky; top:0; z-index:1; background:var(--surface); text-align:left; font-weight:600; color:var(--ink-2); padding:10px 12px; border-bottom:1px solid var(--border); white-space:nowrap; }
+  thead th.num { text-align:right; }
+  tbody td { padding:9px 12px; border-bottom:1px solid var(--grid); white-space:nowrap; }
+  tbody td.num { text-align:right; font-variant-numeric:tabular-nums; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr.click { cursor:pointer; }
+  tbody tr.click:hover td { background:color-mix(in srgb, var(--ink) 4%, transparent); }
+  .tablewrap { overflow-x:auto; border:1px solid var(--border); border-radius:12px; background:var(--surface); box-shadow:var(--shadow); }
+  .minitable td, .minitable th { padding:7px 8px; }
+
+  .badge { font-size:11px; font-weight:600; padding:2px 9px; border-radius:999px; white-space:nowrap; }
+  .badge.reporting { color:var(--good); background:color-mix(in srgb, var(--good) 14%, transparent); }
+  .badge.scores_missing { color:var(--critical); background:color-mix(in srgb, var(--critical) 14%, transparent); }
+  .badge.roster_only { color:var(--warnc); background:color-mix(in srgb, var(--warnc) 18%, transparent); }
+  .badge.empty { color:var(--muted); background:color-mix(in srgb, var(--muted) 12%, transparent); }
+  .tag { font-size:10.5px; font-weight:600; padding:1px 7px; border-radius:999px; color:var(--muted); background:color-mix(in srgb, var(--muted) 14%, transparent); }
+  .tag.paid { color:var(--good); background:color-mix(in srgb, var(--good) 14%, transparent); }
+  .pill { display:inline-flex; align-items:center; gap:6px; padding:1px 8px; border-radius:999px; font-size:11px; font-weight:600; }
+  .pill .swatch { width:8px; height:8px; border-radius:3px; display:inline-block; }
+  .muted { color:var(--muted); }
+  .mono { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12.5px; }
+
+  .controls { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:12px; }
+  .controls input[type="search"] { min-width:240px; flex:1 1 240px; }
+  .count { color:var(--muted); font-size:13px; margin-left:auto; }
+
+  /* detail */
+  .backrow { display:flex; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
+  .who h2 { margin:0; font-size:19px; font-weight:650; letter-spacing:-0.01em; }
+  .who .meta { color:var(--muted); font-size:13px; }
+  .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-bottom:20px; }
+  .kpi { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:13px 15px; box-shadow:var(--shadow); }
+  .kpi .label { font-size:11.5px; color:var(--muted); text-transform:uppercase; letter-spacing:0.04em; }
+  .kpi .value { font-size:26px; font-weight:650; line-height:1.15; margin-top:3px; font-variant-numeric:tabular-nums; letter-spacing:-0.02em; }
+  .kpi .foot { font-size:11.5px; color:var(--ink-2); margin-top:3px; }
+
+  .adopt { display:grid; grid-template-columns:repeat(auto-fit,minmax(215px,1fr)); gap:8px 18px; }
+  .adopt .row { display:flex; align-items:center; gap:9px; font-size:13px; padding:3px 0; }
+  .adopt .dot { width:15px; height:15px; border-radius:5px; flex:none; display:inline-flex; align-items:center; justify-content:center; font-size:10px; font-weight:800; }
+  .adopt .dot.yes { color:var(--good); background:color-mix(in srgb, var(--good) 16%, transparent); }
+  .adopt .dot.no { color:var(--muted); background:color-mix(in srgb, var(--muted) 14%, transparent); }
+  .adopt .row.no .lab { color:var(--muted); }
+  .adopt .d2 { color:var(--muted); font-size:11.5px; margin-left:auto; font-variant-numeric:tabular-nums; }
+
+  .prob { display:block; font-size:11.5px; margin-top:3px; }
+  .prob.critical { color:var(--critical); }
+  .prob.warn { color:var(--warnc); }
+  .prob.info { color:var(--muted); }
+
+  svg { display:block; width:100%; height:auto; overflow:visible; }
+  svg text { font:11px system-ui,sans-serif; fill:var(--muted); }
+  .legend { display:flex; gap:16px; flex-wrap:wrap; font-size:12px; color:var(--ink-2); margin-top:8px; }
+  .legend span { display:inline-flex; align-items:center; gap:6px; }
+  .swatch { width:10px; height:10px; border-radius:3px; display:inline-block; }
+
+  .gbcell { font-variant-numeric:tabular-nums; }
+  .gbcell.pass { color:var(--good); font-weight:600; }
+  .gbcell.fail { color:var(--critical); font-weight:600; }
+  .gbcell.none { color:var(--muted); }
+  .empty { padding:34px; text-align:center; color:var(--muted); }
+  .hide { display:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Teacher Inspector</h1>
+    <span class="sub">live from <code>/api/admin</code></span>
+    <a class="navlink" href="/admin/dashboard">Dashboard →</a>
+    <a class="navlink" href="/admin/exec">Exec →</a>
+    <a class="navlink" href="/admin/analytics">Analytics →</a>
+    <span class="spacer"></span>
+    <button id="refreshBtn">Refresh</button>
+    <button id="lockBtn">Sign out</button>
+  </header>
+
+  <!-- LIST VIEW -->
+  <div id="listView">
+    <div class="card">
+      <h3>Pipeline health</h3>
+      <p class="hint">Whether student work is actually reaching this API. Every check looks for something that should be there and is not, because a reporter that stops firing raises no error anywhere.</p>
+      <div class="pipes" id="pipes"></div>
+      <div id="findings"></div>
+    </div>
+
+    <div class="controls">
+      <input id="search" type="search" placeholder="Search teacher, email, school…" />
+      <select id="statusFilter">
+        <option value="">All statuses</option>
+        <option value="reporting">Reporting</option>
+        <option value="scores_missing">Scores missing</option>
+        <option value="roster_only">Roster only</option>
+        <option value="empty">Empty</option>
+      </select>
+      <label style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2);cursor:pointer">
+        <input type="checkbox" id="hideInternal" checked /> Hide test / owner accounts
+      </label>
+      <span class="count" id="rowCount"></span>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr id="headRow"></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- DETAIL VIEW -->
+  <div id="detailView" class="hide"></div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var COURSE = {
+    "ap-csa":{label:"AP CSA",css:"var(--csa)"},
+    "ap-csp":{label:"AP CSP",css:"var(--csp)"},
+    "ap-cybersecurity":{label:"AP Cybersecurity",css:"var(--cyber)"},
+    "solo":{label:"Solo",css:"var(--solo)"}
+  };
+  var STATUS_LABEL = {
+    reporting: "Reporting",
+    scores_missing: "Scores missing",
+    roster_only: "Roster only",
+    empty: "Empty"
+  };
+
+  var state = {
+    health: null, list: null, detail: null,
+    sort: { key: "students", dir: -1 },
+    reveal: false, gradebooks: {}
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) {
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+      return { "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c];
+    });
+  };
+  var fmt = function (n) { return (n == null ? 0 : n).toLocaleString(); };
+  function courseCss(c){ return (COURSE[c]&&COURSE[c].css)||"var(--muted)"; }
+  function courseLabel(c){ return (COURSE[c]&&COURSE[c].label)||c||"-"; }
+
+  // Stored timestamps are SQLite UTC. Condensed local date + time, full on hover.
+  function fmtWhen(ts) {
+    if (!ts) return { text: "-", title: "" };
+    var d = new Date(String(ts).replace(" ", "T") + "Z");
+    if (isNaN(d.getTime())) return { text: String(ts).slice(0,10), title: String(ts) };
+    return {
+      text: d.toLocaleString(undefined, { month:"short", day:"numeric", hour:"numeric", minute:"2-digit" }),
+      title: d.toLocaleString()
+    };
+  }
+  function whenCell(ts, cls) {
+    var w = fmtWhen(ts);
+    return '<td class="' + (cls||"muted") + '" title="' + esc(w.title) + '">' + esc(w.text) + "</td>";
+  }
+
+  function api(path) {
+    return fetch(path, { credentials: "same-origin" }).then(function (r) {
+      if (r.status === 401 || r.status === 403 || r.status === 503) { var e = new Error("auth"); e.auth = true; throw e; }
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    });
+  }
+  function toLogin(){ window.location.href = "/admin/teachers"; }
+  function onErr(e){ if (e && e.auth) return toLogin(); console.error(e); }
+
+  // ── Health ────────────────────────────────────────────────────────────────
+  function renderHealth() {
+    var h = state.health; if (!h) return;
+    var p = h.pipelines || {};
+    var r = h.recent || {};
+    function pipe(label, val, sub) {
+      return '<div class="p' + (val ? "" : " zero") + '"><b>' + fmt(val) + "</b>" + esc(label) +
+        (sub != null ? ' <span style="opacity:.75">(' + fmt(sub) + " in 7d)</span>" : "") + "</div>";
+    }
+    $("pipes").innerHTML =
+      pipe("lesson completions", p.visits, r.visits_7d) +
+      pipe("score events", p.score_events, r.score_events_7d) +
+      pipe("attempt saves", p.attempts, r.attempts_7d) +
+      pipe("legacy quiz rows", p.quiz_attempts);
+
+    var f = h.findings || [];
+    if (!f.length) { $("findings").innerHTML = '<p class="allclear">No pipeline problems detected.</p>'; return; }
+    $("findings").innerHTML = f.map(function (x) {
+      return '<details class="finding">' +
+        "<summary>" +
+          '<span class="sev ' + esc(x.severity) + '">' + esc(x.severity) + "</span>" +
+          '<span class="ttl">' + esc(x.title) + "</span>" +
+          '<span class="cnt">' + fmt(x.count) + "</span>" +
+        "</summary>" +
+        '<div class="body"><p class="detail">' + esc(x.detail) + "</p>" + findingTable(x) + "</div>" +
+      "</details>";
+    }).join("");
+  }
+
+  // Findings carry heterogeneous item shapes; render whatever keys are present.
+  function findingTable(f) {
+    var items = f.items || [];
+    if (!items.length) return "";
+    var keys = Object.keys(items[0]).filter(function (k) { return k !== "teacher_id"; });
+    var head = keys.map(function (k) {
+      return "<th" + (typeof items[0][k] === "number" ? ' class="num"' : "") + ">" + esc(k.replace(/_/g," ")) + "</th>";
+    }).join("");
+    var rows = items.slice(0, 40).map(function (it) {
+      return "<tr>" + keys.map(function (k) {
+        var v = it[k];
+        if (k === "teacher" && it.teacher_id) {
+          return '<td><a href="#teacher/' + esc(it.teacher_id) + '">' + esc(v == null ? "-" : v) + "</a></td>";
+        }
+        if (typeof v === "number") return '<td class="num">' + fmt(v) + "</td>";
+        if (/_at$|_ts$|last_|_activity$|_seen$/.test(k)) { var w = fmtWhen(v); return '<td class="muted" title="' + esc(w.title) + '">' + esc(w.text) + "</td>"; }
+        return "<td>" + esc(v == null ? "-" : v) + "</td>";
+      }).join("") + "</tr>";
+    }).join("");
+    var more = items.length > 40 ? '<p class="hint" style="margin:8px 0 0">Showing 40 of ' + fmt(items.length) + ".</p>" : "";
+    return '<div class="tablewrap"><table class="minitable"><thead><tr>' + head + "</tr></thead><tbody>" + rows + "</tbody></table></div>" + more;
+  }
+
+  // ── Teacher list ──────────────────────────────────────────────────────────
+  var COLUMNS = [
+    { key:"name", label:"Teacher", num:false },
+    { key:"email", label:"Email", num:false },
+    { key:"state", label:"State", num:false },
+    { key:"classes", label:"Cls", num:true },
+    { key:"students", label:"Students", num:true },
+    { key:"active_7d", label:"Active 7d", num:true },
+    { key:"lessons_completed", label:"Lessons", num:true },
+    { key:"score_events", label:"Scores", num:true },
+    { key:"attempts", label:"Attempts", num:true },
+    { key:"key_releases", label:"Keys", num:true },
+    { key:"status", label:"Status", num:false },
+    { key:"last_activity", label:"Last active", num:false }
+  ];
+
+  function isInternal(t) {
+    return t.bucket && t.bucket !== "EXTERNAL" && t.bucket !== "SOLO";
+  }
+
+  function filteredTeachers() {
+    var q = ($("search").value || "").trim().toLowerCase();
+    var st = $("statusFilter").value;
+    var hide = $("hideInternal").checked;
+    var rows = (state.list && state.list.teachers) || [];
+    rows = rows.filter(function (t) {
+      if (hide && isInternal(t)) return false;
+      if (st && t.status !== st) return false;
+      if (!q) return true;
+      return [t.name, t.email, t.school, t.state].join(" ").toLowerCase().indexOf(q) !== -1;
+    });
+    var k = state.sort.key, dir = state.sort.dir;
+    return rows.slice().sort(function (a, b) {
+      var x = a[k], y = b[k];
+      if (x == null) x = ""; if (y == null) y = "";
+      if (typeof x === "number" && typeof y === "number") return (x - y) * dir;
+      return String(x).localeCompare(String(y)) * dir;
+    });
+  }
+
+  function renderList() {
+    $("headRow").innerHTML = COLUMNS.map(function (c) {
+      var arrow = state.sort.key === c.key ? (state.sort.dir === 1 ? " ▲" : " ▼") : "";
+      return '<th class="' + (c.num ? "num " : "") + 'sortable" data-key="' + c.key + '" style="cursor:pointer">' + esc(c.label) + arrow + "</th>";
+    }).join("");
+    Array.prototype.forEach.call(document.querySelectorAll("th.sortable"), function (th) {
+      th.addEventListener("click", function () {
+        var k = th.getAttribute("data-key");
+        if (state.sort.key === k) state.sort.dir *= -1;
+        else { state.sort.key = k; state.sort.dir = (k === "name" || k === "email" || k === "state" || k === "status") ? 1 : -1; }
+        renderList();
+      });
+    });
+
+    var rows = filteredTeachers();
+    $("rowCount").textContent = fmt(rows.length) + " of " + fmt(((state.list||{}).teachers||[]).length) + " teachers";
+    if (!rows.length) { $("tbody").innerHTML = '<tr><td colspan="' + COLUMNS.length + '" class="empty">No teachers match.</td></tr>'; return; }
+
+    $("tbody").innerHTML = rows.map(function (t) {
+      return '<tr class="click" data-id="' + esc(t.id) + '">' +
+        "<td>" + esc(t.name || "-") + (isInternal(t) ? ' <span class="tag">' + esc(t.bucket) + "</span>" : "") +
+          (t.entitlements ? ' <span class="tag paid">paid</span>' : "") + "</td>" +
+        '<td class="muted">' + esc(t.email || "-") + "</td>" +
+        '<td class="muted">' + esc(t.state || "-") + "</td>" +
+        '<td class="num">' + fmt(t.classes) + "</td>" +
+        '<td class="num">' + fmt(t.students) + "</td>" +
+        '<td class="num">' + fmt(t.active_7d) + "</td>" +
+        '<td class="num">' + fmt(t.lessons_completed) + "</td>" +
+        '<td class="num">' + fmt(t.score_events) + "</td>" +
+        '<td class="num">' + fmt(t.attempts) + "</td>" +
+        '<td class="num">' + fmt(t.key_releases) + "</td>" +
+        '<td><span class="badge ' + esc(t.status) + '">' + esc(STATUS_LABEL[t.status] || t.status) + "</span></td>" +
+        whenCell(t.last_activity) +
+      "</tr>";
+    }).join("");
+    Array.prototype.forEach.call($("tbody").querySelectorAll("tr.click"), function (tr) {
+      tr.addEventListener("click", function () { window.location.hash = "teacher/" + tr.getAttribute("data-id"); });
+    });
+  }
+
+  // ── Teacher detail ────────────────────────────────────────────────────────
+  function renderDetail() {
+    var d = state.detail; if (!d) return;
+    var t = d.teacher, tot = d.totals;
+    var el = $("detailView");
+
+    var kpis = [
+      ["Classes", fmt(tot.classes), fmt(tot.active_classes) + " active"],
+      ["Students", fmt(tot.students), fmt(tot.never_signed_in) + " never signed in"],
+      ["Active 7d", fmt(tot.active_7d), "students this week"],
+      ["Lessons done", fmt(tot.lessons_completed), "page completions"],
+      ["Score events", fmt(tot.score_events), "CFU / quiz / code"],
+      ["Attempt saves", fmt(tot.attempts), "attempt-level"]
+    ].map(function (k) {
+      return '<div class="kpi"><div class="label">' + esc(k[0]) + '</div><div class="value">' + k[1] + '</div><div class="foot">' + esc(k[2]) + "</div></div>";
+    }).join("");
+
+    var ents = (d.entitlements || []).length
+      ? d.entitlements.map(function (e) {
+          return '<span class="tag ' + (e.live ? "paid" : "") + '">' + esc(e.course) + " · " + esc(e.status) + (e.source ? " · " + esc(e.source) : "") + "</span>";
+        }).join(" ")
+      : '<span class="muted" style="font-size:13px">No entitlements (free).</span>';
+
+    var adoption = (d.feature_usage || []).map(function (f) {
+      return '<div class="row ' + (f.used ? "yes" : "no") + '">' +
+        '<span class="dot ' + (f.used ? "yes" : "no") + '">' + (f.used ? "✓" : "·") + "</span>" +
+        '<span class="lab">' + esc(f.label) + "</span>" +
+        '<span class="d2">' + esc(f.detail) + "</span></div>";
+    }).join("");
+
+    var classRows = (d.classes || []).map(function (c) {
+      var probs = (c.problems || []).map(function (p) {
+        return '<span class="prob ' + esc(p.severity) + '">' + esc(p.text) + "</span>";
+      }).join("");
+      return '<tr><td><span class="mono">' + esc(c.class_code) + "</span><br>" +
+          '<span class="muted" style="font-size:12px">' + esc(c.class_name || "") + "</span>" + probs + "</td>" +
+        '<td><span class="pill" style="background:color-mix(in srgb,' + courseCss(c.course) + ' 16%,transparent);color:var(--ink-2)">' +
+          '<i class="swatch" style="background:' + courseCss(c.course) + '"></i>' + esc(courseLabel(c.course)) + "</span></td>" +
+        '<td class="num">' + fmt(c.students) + "</td>" +
+        '<td class="num">' + fmt(c.active_7d) + "</td>" +
+        '<td class="num">' + fmt(c.lessons_completed) + "</td>" +
+        '<td class="num">' + fmt(c.score_events) + "</td>" +
+        '<td class="num">' + fmt(c.attempts) + "</td>" +
+        '<td class="num">' + fmt(c.key_releases) + "</td>" +
+        "<td>" + (c.customized ? '<span class="tag">m' + esc(c.mastery_threshold) + (c.retry_allowed ? " retry" : "") + "</span>" : '<span class="muted">defaults</span>') + "</td>" +
+        whenCell(c.last_activity) +
+        '<td><button class="gb" data-id="' + esc(c.id) + '" data-code="' + esc(c.class_code) + '" data-course="' + esc(c.course) + '">Gradebook</button></td>' +
+      "</tr>";
+    }).join("");
+
+    var rosterRows = (d.roster || []).map(function (r) {
+      var cls = (d.classes || []).filter(function (c) { return c.id === r.class_id; })[0];
+      var sync = r.syncing === true ? '<span class="badge reporting">syncing</span>'
+        : (r.syncing === false ? '<span class="badge scores_missing">no scores</span>'
+        : '<span class="badge empty">no activity</span>');
+      return "<tr><td>" + esc(r.label) + "</td>" +
+        '<td class="mono muted">' + esc(cls ? cls.class_code : "-") + "</td>" +
+        '<td class="num">' + fmt(r.lessons_completed) + "</td>" +
+        '<td class="num">' + fmt(r.score_events) + "</td>" +
+        '<td class="num">' + fmt(r.attempts) + "</td>" +
+        "<td>" + sync + "</td>" +
+        whenCell(r.last_active) + "</tr>";
+    }).join("");
+
+    el.innerHTML =
+      '<div class="backrow"><button id="backBtn">← All teachers</button>' +
+        '<div class="who"><h2>' + esc(t.name || "(no name)") + "</h2>" +
+        '<div class="meta">' + esc(t.email || "") + (t.school ? " · " + esc(t.school) : "") +
+          (t.school_guess ? " · " + esc(t.school_guess) : "") +
+          (t.state ? " · " + esc(t.state) : "") +
+          (t.expected_start ? " · starts " + esc(t.expected_start) + (t.expected_start_approx ? " (est)" : "") : "") +
+        "</div></div></div>" +
+
+      '<div class="kpis">' + kpis + "</div>" +
+
+      '<div class="card"><h3>Feature adoption</h3>' +
+        '<p class="hint">What this account has actually used, derived from the data already recorded. A row with a dot has never happened.</p>' +
+        '<div style="margin-bottom:12px">' + ents + "</div>" +
+        '<div class="adopt">' + adoption + "</div></div>" +
+
+      '<div class="card"><h3>Classes</h3>' +
+        '<p class="hint">Per-class pipeline state. Problems are listed under the class code.</p>' +
+        '<div class="tablewrap"><table class="minitable"><thead><tr>' +
+          "<th>Class</th><th>Course</th><th class='num'>Stu</th><th class='num'>7d</th>" +
+          "<th class='num'>Lessons</th><th class='num'>Scores</th><th class='num'>Attempts</th><th class='num'>Keys</th>" +
+          "<th>Settings</th><th>Last active</th><th></th>" +
+        "</tr></thead><tbody>" + (classRows || '<tr><td colspan="11" class="empty">No classes.</td></tr>') + "</tbody></table></div></div>" +
+
+      '<div class="card" id="gbCard" style="display:none"><h3 id="gbTitle">Gradebook</h3>' +
+        '<p class="hint">Rendered from the same data the teacher sees. Student names are replaced with stable labels unless revealed.</p>' +
+        '<div id="gbBody"></div></div>' +
+
+      '<div class="card"><h3>Activity, last 30 days</h3>' +
+        '<p class="hint">Lesson completions, score events, and attempt saves per day across all of this teacher\'s classes.</p>' +
+        '<div id="chart"></div>' +
+        '<div class="legend">' +
+          '<span><i class="swatch" style="background:var(--csa)"></i>Lessons</span>' +
+          '<span><i class="swatch" style="background:var(--cyber)"></i>Scores</span>' +
+          '<span><i class="swatch" style="background:var(--csp)"></i>Attempts</span>' +
+        "</div></div>" +
+
+      '<div class="card"><h3>Students</h3>' +
+        '<p class="hint">Per-student sync state. <b>no scores</b> means the student is completing lessons but nothing graded is arriving for them.</p>' +
+        '<div style="margin-bottom:10px"><label style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2);cursor:pointer">' +
+          '<input type="checkbox" id="revealChk"' + (state.reveal ? " checked" : "") + " /> Show real student names</label></div>" +
+        '<div class="tablewrap"><table class="minitable"><thead><tr><th>Student</th><th>Class</th>' +
+          "<th class='num'>Lessons</th><th class='num'>Scores</th><th class='num'>Attempts</th><th>Sync</th><th>Last active</th>" +
+        "</tr></thead><tbody>" + (rosterRows || '<tr><td colspan="7" class="empty">No students.</td></tr>') + "</tbody></table></div></div>";
+
+    $("backBtn").addEventListener("click", function () { window.location.hash = ""; });
+    $("revealChk").addEventListener("change", function () {
+      state.reveal = this.checked;
+      loadDetail(t.id);
+    });
+    Array.prototype.forEach.call(el.querySelectorAll("button.gb"), function (b) {
+      b.addEventListener("click", function () {
+        showGradebook(b.getAttribute("data-id"), b.getAttribute("data-code"), b.getAttribute("data-course"));
+      });
+    });
+    $("chart").innerHTML = activityChart(d.activity_30d || []);
+  }
+
+  // Grouped 3-series bar chart, dependency free.
+  function activityChart(series) {
+    var W = 900, H = 170, padB = 20, padT = 10, padL = 4, padR = 4;
+    var n = series.length || 1, max = 1;
+    series.forEach(function (p) { max = Math.max(max, p.lessons, p.scores, p.attempts); });
+    var plotH = H - padB - padT, plotW = W - padL - padR, gw = plotW / n;
+    var bw = Math.max(1, (gw - 2) / 3);
+    var keys = [["lessons","var(--csa)"],["scores","var(--cyber)"],["attempts","var(--csp)"]];
+    var bars = series.map(function (p, i) {
+      return keys.map(function (k, j) {
+        var v = p[k[0]] || 0;
+        if (!v) return "";
+        var h = Math.max(1, Math.round((v / max) * plotH));
+        var x = padL + i * gw + 1 + j * bw;
+        return '<rect x="' + x.toFixed(1) + '" y="' + (padT + plotH - h) + '" width="' + bw.toFixed(1) +
+          '" height="' + h + '" rx="1" fill="' + k[1] + '"><title>' + esc(p.date + "  " + k[0] + ": " + v) + "</title></rect>";
+      }).join("");
+    }).join("");
+    function md(s){ var p = s.split("-"); return (+p[1]) + "/" + (+p[2]); }
+    var labels = "";
+    if (n > 1) {
+      labels = [0, Math.floor(n/2), n-1].map(function (i) {
+        var x = padL + i * gw + gw/2;
+        var a = i === 0 ? "start" : (i === n-1 ? "end" : "middle");
+        return '<text x="' + x.toFixed(1) + '" y="' + (H-4) + '" text-anchor="' + a + '">' + esc(md(series[i].date)) + "</text>";
+      }).join("");
+    }
+    return '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Activity, last 30 days">' +
+      bars + labels + '<text x="' + padL + '" y="' + (padT+8) + '">peak ' + max + "</text></svg>";
+  }
+
+  // ── Gradebook (the actual teacher view) ───────────────────────────────────
+  function showGradebook(classId, code, course) {
+    var card = $("gbCard"), body = $("gbBody");
+    card.style.display = "";
+    $("gbTitle").textContent = "Gradebook · " + code;
+    body.innerHTML = '<p class="hint">Loading…</p>';
+    var url = "/api/admin/class/" + encodeURIComponent(classId) + "/gradebook" +
+      (course === "solo" ? "?course=ap-csa" : "");
+    api(url).then(function (g) {
+      body.innerHTML = renderGradebook(g);
+      card.scrollIntoView({ behavior: "smooth", block: "start" });
+    }).catch(function (e) {
+      if (e && e.auth) return toLogin();
+      body.innerHTML = '<p class="empty">Could not load the gradebook (' + esc(e.message) + ").</p>";
+    });
+  }
+
+  function renderGradebook(g) {
+    var lessons = g.lessons || [], studs = g.students || [];
+    if (!lessons.length) {
+      return '<p class="empty">This course has no graded items in the manifest yet, so there is no gradebook to show. ' +
+        "Visit tracking still works; add cfu/quiz manifest rows to populate this.</p>";
+    }
+    if (!studs.length) return '<p class="empty">No students enrolled in this class.</p>';
+
+    // Stable anonymized labels, keyed by student id so they match the roster.
+    var labelById = {};
+    ((state.detail || {}).roster || []).forEach(function (r) { labelById[r.id] = r.label; });
+
+    var head = "<th>Student</th><th class='num'>Visits</th>" +
+      lessons.map(function (l) { return "<th class='num' title='" + esc(l.unit) + "'>" + esc(l.lesson_id) + "</th>"; }).join("") +
+      "<th class='num'>Overall</th>";
+
+    var rows = studs.map(function (s) {
+      var cells = lessons.map(function (l) {
+        var c = s.lessons && s.lessons[l.lesson_id];
+        if (!c || !c.items_attempted) return '<td class="num gbcell none">-</td>';
+        var cls = c.items_passed >= c.items_attempted ? "pass" : "fail";
+        return '<td class="num gbcell ' + cls + '" title="' + esc(c.earned + "/" + c.possible + " · " + c.items_passed + " of " + c.items_attempted + " passed") + '">' + c.pct + "%</td>";
+      }).join("");
+      var ov = s.overall || {};
+      return "<tr><td>" + esc(labelById[s.id] || (state.reveal ? s.name : "Student")) + "</td>" +
+        '<td class="num muted">' + fmt((s.visits||{}).visited) + "/" + fmt((s.visits||{}).total) + "</td>" +
+        cells +
+        '<td class="num gbcell"><b>' + (ov.pct != null ? ov.pct + "%" : "-") + "</b></td></tr>";
+    }).join("");
+
+    var note = '<p class="hint" style="margin-top:10px">Mastery threshold ' + esc(g.class.mastery_threshold == null ? 80 : g.class.mastery_threshold) +
+      "%, retry " + (g.class.retry_allowed ? "allowed (best attempt counts)" : "off (first attempt counts)") +
+      ". Percentages are computed against the course manifest.</p>";
+    return '<div class="tablewrap"><table class="minitable"><thead><tr>' + head + "</tr></thead><tbody>" + rows + "</tbody></table></div>" + note;
+  }
+
+  // ── Routing ───────────────────────────────────────────────────────────────
+  function currentId() {
+    var m = (window.location.hash || "").match(/^#teacher\/(.+)$/);
+    return m ? decodeURIComponent(m[1]) : null;
+  }
+  function route() {
+    var id = currentId();
+    if (id) {
+      $("listView").classList.add("hide");
+      $("detailView").classList.remove("hide");
+      loadDetail(id);
+    } else {
+      $("detailView").classList.add("hide");
+      $("listView").classList.remove("hide");
+      state.detail = null;
+      loadList();
+    }
+  }
+  function loadList() {
+    Promise.all([api("/api/admin/health"), api("/api/admin/teachers")]).then(function (r) {
+      state.health = r[0]; state.list = r[1];
+      renderHealth(); renderList();
+    }).catch(onErr);
+  }
+  function loadDetail(id) {
+    $("detailView").innerHTML = '<p class="empty">Loading…</p>';
+    api("/api/admin/teacher/" + encodeURIComponent(id) + (state.reveal ? "?reveal=1" : "")).then(function (d) {
+      state.detail = d; renderDetail();
+    }).catch(function (e) {
+      if (e && e.auth) return toLogin();
+      $("detailView").innerHTML = '<div class="backrow"><button id="backBtn">← All teachers</button></div>' +
+        '<p class="empty">Could not load this teacher (' + esc(e.message) + ").</p>";
+      var b = $("backBtn"); if (b) b.addEventListener("click", function(){ window.location.hash = ""; });
+    });
+  }
+
+  ["search","statusFilter","hideInternal"].forEach(function (id) {
+    $(id).addEventListener("input", renderList);
+    $(id).addEventListener("change", renderList);
+  });
+  $("refreshBtn").addEventListener("click", route);
+  $("lockBtn").addEventListener("click", function () {
+    fetch("/admin/logout", { method:"POST", credentials:"same-origin" }).then(toLogin).catch(toLogin);
+  });
+  window.addEventListener("hashchange", route);
+  route();
+})();
+</script>
+</body>
+</html>
