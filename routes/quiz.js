@@ -74,7 +74,7 @@ const insertQuizAttemptStmt = db.prepare(`
   VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 `);
 
-const VALID_ACTIVITIES = new Set(['quiz', 'exam', 'exercise-1', 'exercise-2', 'frq']);
+const VALID_ACTIVITIES = new Set(['quiz', 'exam', 'exercise-1', 'exercise-2', 'exercise-3']);
 
 // ── RATE LIMIT (light, per identity, bounded memory) ──────────────────────────
 // Same shape as routes/progress.js: fixed 60s window, no timers, hard key cap so

@@ -266,10 +266,11 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
 
     // GRADED is the graded/retry classification: these activities carry a numeric
     // grade of record (subject to the class mastery_threshold and retry policy) and
-    // render their score, while other activities render "Done". frq is graded, same
-    // as a quiz, and gets its own gradebook column via the ABBR + activities lists.
-    const GRADED = new Set(['quiz', 'exam', 'case-file', 'frq']);
-    const ABBR = { lesson: 'L', 'exercise-1': 'E1', 'exercise-2': 'E2', 'exercise-3': 'E3', frq: 'FRQ', quiz: 'Q', lab: 'Lab', code: 'Code' };
+    // render their score, while other activities render "Done". exercise-3 (the FRQ)
+    // is graded, same as a quiz, and gets its own gradebook column via the ABBR +
+    // activities lists.
+    const GRADED = new Set(['quiz', 'exam', 'case-file', 'exercise-3']);
+    const ABBR = { lesson: 'L', 'exercise-1': 'E1', 'exercise-2': 'E2', 'exercise-3': 'E3', quiz: 'Q', lab: 'Lab', code: 'Code' };
     const abbr = a => ABBR[a] || a;
     const shortUnit = k => k.replace(/^unit-/, 'Unit ').replace(/^bi-/, 'BI ');
 

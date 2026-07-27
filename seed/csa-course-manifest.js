@@ -11,20 +11,23 @@
 //  content ships unit by unit, because changing a denominator later retroactively
 //  moves every student's percentage.
 //
-//  Per lesson: lesson (visit) 1, exercise-1 10, exercise-2 8, frq 4, quiz 6. frq
-//  is its own activity_type (not folded into exercise-1). Lesson ids and unit keys
-//  match utils.js COURSES and pageFromHandle exactly (unit 'unit-N', lesson 'U.L'),
-//  so course_denominators keys line up with the (course, unit, lesson) the reporter
-//  and the grade routes send.
+//  Per lesson: lesson (visit) 1, exercise-1 1, exercise-2 6, exercise-3 4, quiz 6.
+//  These point values match the authored content weighting (a code exercise is
+//  worth 1, the FRQ exercise-3 is worth 4). exercise-3 is the free-response item;
+//  it is its own activity_type, not folded into exercise-1. Lesson ids and unit
+//  keys match utils.js COURSES and pageFromHandle exactly (unit 'unit-N', lesson
+//  'U.L'), so course_denominators keys line up with the (course, unit, lesson) the
+//  reporter and the grade routes send.
 //
 //  Loaded by scripts/seed-csa-bank.js into course_denominators. Not a grade source.
 //  No em-dashes.
 // ─────────────────────────────────────────────────────────────────────────────
 const { COURSES } = require('../utils');
 
-// Per-lesson possible points by activity_type. frq is a first-class graded
-// activity worth 4, distinct from the exercise-1 code exercise (10).
-const DENOMINATORS = { lesson: 1, 'exercise-1': 10, 'exercise-2': 8, frq: 4, quiz: 6 };
+// Per-lesson possible points by activity_type, aligned to the authored content:
+// exercise-1 (code exercise) 1, exercise-2 (game, 6 rounds) 6, exercise-3 (FRQ) 4,
+// quiz 6. The code grader scales cases-passed / total into these points.
+const DENOMINATORS = { lesson: 1, 'exercise-1': 1, 'exercise-2': 6, 'exercise-3': 4, quiz: 6 };
 
 // Generated from the COURSES config so the manifest can never drift from the
 // 53-lesson, four-unit structure defined there.
