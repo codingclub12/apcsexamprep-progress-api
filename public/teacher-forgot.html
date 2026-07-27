@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>APCSExamPrep · Reset your password</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --plane: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e;
+    --muted: #898781; --border: rgba(11,11,11,0.10); --csa: #2a78d6; --good: #0ca30c; --critical: #d03b3b;
+    --shadow: 0 1px 2px rgba(11,11,11,0.04), 0 1px 3px rgba(11,11,11,0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --plane: #0d0d0d; --surface: #1a1a19; --ink: #fff; --ink-2: #c3c2b7;
+      --muted: #898781; --border: rgba(255,255,255,0.10); --csa: #3987e5; --good: #0ca30c; --critical: #e66767; --shadow: none;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: flex; align-items: flex-start; justify-content: center;
+    background: var(--plane); color: var(--ink);
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased;
+  }
+  .card {
+    width: 100%; max-width: 420px; margin: 12vh 20px 0; padding: 28px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow);
+  }
+  h1 { margin: 0 0 6px; font-size: 18px; }
+  p { margin: 0 0 18px; color: var(--ink-2); font-size: 13px; }
+  label { display: block; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
+  input, button { font: inherit; width: 100%; border-radius: 8px; padding: 10px 12px; }
+  input { color: var(--ink); background: var(--plane); border: 1px solid var(--border); margin-bottom: 14px; }
+  button { cursor: pointer; border: none; background: var(--csa); color: #fff; font-weight: 600; }
+  button:disabled { opacity: 0.6; cursor: default; }
+  .msg { font-size: 13px; min-height: 18px; margin-top: 12px; }
+  .msg.err { color: var(--critical); }
+  .msg.ok { color: var(--good); }
+  .note { margin-top: 16px; font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+  <form class="card" id="form">
+    <h1>Reset your password</h1>
+    <p>Enter the email you use to sign in. If it matches a teacher account, we will send a link to choose a new password. The link expires in 45 minutes.</p>
+    <label for="email">Email</label>
+    <input id="email" name="email" type="email" autocomplete="email" autofocus />
+    <button id="btn" type="submit">Send reset link</button>
+    <div class="msg" id="msg"></div>
+    <p class="note">Students do not have passwords; they sign in with a name and PIN. This page is for teacher accounts only.</p>
+  </form>
+<script>
+(function () {
+  "use strict";
+  var form = document.getElementById("form");
+  var btn = document.getElementById("btn");
+  var msg = document.getElementById("msg");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var email = document.getElementById("email").value.trim();
+    if (!email) { msg.className = "msg err"; msg.textContent = "Enter your email."; return; }
+    btn.disabled = true; msg.className = "msg"; msg.textContent = "Sending…";
+    fetch("/api/teacher/forgot-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: email })
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        if (r.ok) {
+          msg.className = "msg ok";
+          msg.textContent = j.message || "If that email is registered, a reset link is on its way.";
+          // Leave the button disabled: the generic success is intentionally the
+          // same whether or not the address exists.
+        } else {
+          msg.className = "msg err";
+          msg.textContent = j.error || (r.status === 429 ? "Too many requests. Wait a few minutes." : "Something went wrong. Try again.");
+          btn.disabled = false;
+        }
+      });
+    }).catch(function () {
+      msg.className = "msg err"; msg.textContent = "Could not reach the server. Try again.";
+      btn.disabled = false;
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,10 +1,13 @@
 'use strict';
 const express = require('express');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const router = express.Router();
 const db = require('../db');
 const { requireTeacher } = require('../middleware');
 const { claimPending } = require('../lib/entitlements');
+const { makeRateLimit } = require('../lib/rate-limit');
+const mailer = require('../lib/mailer');
 const {
   newId, generateClassCode, signTeacherToken,
   isValidEmail, isValidPin, sanitize, COURSES, COURSE_PREFIXES,
@@ -77,6 +80,127 @@ router.post('/login', async (req, res) => {
     res.json({ token, teacher: { id: teacher.id, email: teacher.email, name: teacher.name, school: teacher.school } });
   } catch (e) {
     res.status(500).json({ error: 'Login failed' });
+  }
+});
+
+// ── PASSWORD RESET (self-service, token + email) ──────────────────────────────
+//  Two steps. forgot-password issues a single-use, short-lived token and emails a
+//  link; reset-password consumes the token and sets a new bcrypt hash. Passwords
+//  are hashed, so a forgotten one is unrecoverable by design: this RESETS it, it
+//  never reveals the old one. Both routes are rate limited and forgot-password is
+//  written to give NO signal about whether an email is registered.
+const RESET_TTL_MIN = 45;
+const sha256hex = (s) => crypto.createHash('sha256').update(String(s)).digest('hex');
+
+// Base origin for the emailed link. PUBLIC_BASE_URL wins (the public origin,
+// e.g. https://progress.apcsexamprep.com); SELF_BASE_URL is the existing
+// fallback used elsewhere; last resort is the production origin.
+function resetBaseUrl() {
+  const raw = process.env.PUBLIC_BASE_URL || process.env.SELF_BASE_URL || 'https://progress.apcsexamprep.com';
+  return raw.replace(/\/+$/, '');
+}
+
+// Same generic 200 whether or not the email exists: this endpoint must not be
+// usable to enumerate which addresses have a teacher account.
+const FORGOT_GENERIC = { ok: true, message: 'If that email is registered, a password reset link is on its way.' };
+
+const forgotLimit = makeRateLimit({
+  windowMs: 15 * 60 * 1000, max: 5,
+  message: 'Too many reset requests. Please wait a few minutes and try again.',
+});
+const resetLimit = makeRateLimit({
+  windowMs: 15 * 60 * 1000, max: 10,
+  message: 'Too many attempts. Please wait a few minutes and try again.',
+});
+
+// POST /api/teacher/forgot-password  { email }
+router.post('/forgot-password', forgotLimit, async (req, res) => {
+  try {
+    const email = String((req.body && req.body.email) || '').trim().toLowerCase();
+    if (!isValidEmail(email)) return res.json(FORGOT_GENERIC);
+
+    const teacher = db.prepare('SELECT id, email, name FROM teachers WHERE email = ?').get(email);
+    if (!teacher) return res.json(FORGOT_GENERIC); // no account: say the same thing
+
+    // One live token per teacher: drop any earlier ones, then mint a fresh 256-bit
+    // token. Only its hash is stored; the raw value lives only in the email link.
+    const raw = crypto.randomBytes(32).toString('base64url');
+    db.transaction(() => {
+      db.prepare('DELETE FROM password_reset_tokens WHERE teacher_id = ?').run(teacher.id);
+      db.prepare(
+        `INSERT INTO password_reset_tokens (id, teacher_id, token_hash, expires_at)
+         VALUES (?, ?, ?, datetime('now', ?))`
+      ).run(newId(), teacher.id, sha256hex(raw), `+${RESET_TTL_MIN} minutes`);
+    })();
+
+    const link = `${resetBaseUrl()}/teacher/reset-password?token=${raw}`;
+    const name = teacher.name ? teacher.name.split(' ')[0] : 'there';
+    const subject = 'Reset your APCSExamPrep password';
+    const text =
+      `Hi ${name},\n\n` +
+      `We received a request to reset the password for your APCSExamPrep teacher account.\n` +
+      `Open this link within ${RESET_TTL_MIN} minutes to choose a new password:\n\n` +
+      `${link}\n\n` +
+      `If you did not request this, you can ignore this email. Your password will not change ` +
+      `and the link above will expire on its own.\n`;
+    const html =
+      `<div style="font:15px/1.5 system-ui,-apple-system,'Segoe UI',sans-serif;color:#0b0b0b">` +
+      `<p>Hi ${sanitize(name, 60)},</p>` +
+      `<p>We received a request to reset the password for your APCSExamPrep teacher account.</p>` +
+      `<p><a href="${link}" style="display:inline-block;background:#2a78d6;color:#fff;` +
+      `text-decoration:none;padding:10px 18px;border-radius:8px;font-weight:600">Choose a new password</a></p>` +
+      `<p style="color:#52514e;font-size:13px">This link expires in ${RESET_TTL_MIN} minutes. ` +
+      `If you did not request it, you can safely ignore this email; your password will not change.</p>` +
+      `<p style="color:#898781;font-size:12px">If the button does not work, paste this into your browser:<br>${link}</p>` +
+      `</div>`;
+
+    try {
+      await mailer.sendEmail({ to: teacher.email, subject, html, text });
+    } catch (e) {
+      // Never leak send status to the caller; log for the operator and still 200.
+      console.error('[forgot-password] email send failed:', e.message);
+    }
+    return res.json(FORGOT_GENERIC);
+  } catch (e) {
+    console.error('forgot-password error:', e);
+    return res.json(FORGOT_GENERIC); // even on error, no signal
+  }
+});
+
+// POST /api/teacher/reset-password  { token, password }
+router.post('/reset-password', resetLimit, async (req, res) => {
+  try {
+    const token = String((req.body && req.body.token) || '');
+    const password = String((req.body && req.body.password) || '');
+    if (!token) return res.status(400).json({ error: 'Missing reset token.' });
+    if (password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters' });
+
+    // Look the token up by its hash (indexed). The token is itself a 256-bit
+    // secret, so an equality match on its hash is safe; expiry + single-use are
+    // checked in the same row.
+    const row = db.prepare(
+      `SELECT id, teacher_id, used_at, (expires_at <= datetime('now')) AS expired
+       FROM password_reset_tokens WHERE token_hash = ?`
+    ).get(sha256hex(token));
+
+    if (!row || row.used_at || row.expired) {
+      return res.status(400).json({
+        error: 'This reset link is invalid, already used, or expired. Please request a new one.',
+      });
+    }
+
+    const hash = await bcrypt.hash(password, 12);
+    db.transaction(() => {
+      db.prepare('UPDATE teachers SET password_hash = ? WHERE id = ?').run(hash, row.teacher_id);
+      db.prepare("UPDATE password_reset_tokens SET used_at = datetime('now') WHERE id = ?").run(row.id);
+      // Burn any other outstanding tokens for this teacher too.
+      db.prepare('DELETE FROM password_reset_tokens WHERE teacher_id = ? AND id != ?').run(row.teacher_id, row.id);
+    })();
+
+    return res.json({ ok: true, message: 'Your password has been reset. You can now sign in with your new password.' });
+  } catch (e) {
+    console.error('reset-password error:', e);
+    return res.status(500).json({ error: 'Could not reset password. Please try again.' });
   }
 });
 

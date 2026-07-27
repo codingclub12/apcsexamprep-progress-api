@@ -396,6 +396,22 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_sessions_student ON sessions(student_id);
   CREATE INDEX IF NOT EXISTS idx_sessions_class   ON sessions(class_id);
   CREATE INDEX IF NOT EXISTS idx_sessions_started ON sessions(started_at);
+
+  -- Teacher self-service password reset. One row per issued reset link. The raw
+  -- token is NEVER stored: only its SHA-256 hash, so a leaked DB row cannot be
+  -- turned back into a working link. Single-use (used_at) and short-lived
+  -- (expires_at). Rows are disposable and safe to prune; nothing here is PII
+  -- beyond the teacher_id foreign key. Students are unaffected (they use PINs).
+  CREATE TABLE IF NOT EXISTS password_reset_tokens (
+    id         TEXT PRIMARY KEY,
+    teacher_id TEXT NOT NULL REFERENCES teachers(id) ON DELETE CASCADE,
+    token_hash TEXT NOT NULL,          -- sha256(raw token); raw never persisted
+    expires_at TEXT NOT NULL,
+    used_at    TEXT,                   -- set when consumed; a token works once
+    created_at TEXT DEFAULT (datetime('now'))
+  );
+  CREATE INDEX IF NOT EXISTS idx_prt_token   ON password_reset_tokens(token_hash);
+  CREATE INDEX IF NOT EXISTS idx_prt_teacher ON password_reset_tokens(teacher_id);
 `);
 
 // Migrations — safe to re-run on every boot, ignored if column already exists

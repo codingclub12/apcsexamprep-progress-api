@@ -117,6 +117,14 @@ app.get('/admin/exec', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', file));
 });
 
+// Teacher inspector: pipeline health plus a per-teacher drill-down (classes,
+// gradebook, feature adoption, roster). Same cookie gate as every admin page.
+app.get('/admin/teachers', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  const file = adminSession.isAuthed(req) ? 'teachers.html' : 'login.html';
+  res.sendFile(path.join(__dirname, 'public', file));
+});
+
 // Exchange the admin key for a session cookie. Rate limited + constant-time +
 // fails closed on a missing/weak ADMIN_KEY, same posture as /api/admin/*.
 app.post('/admin/login', adminSession.loginRateLimit, (req, res) => {
@@ -143,10 +151,25 @@ app.get('/heartbeat-reporter.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'heartbeat-reporter.js'));
 });
 
-// Keep crawlers away from the admin surface. The gate is the real protection;
-// this just avoids the page ever being indexed or probed by well-behaved bots.
+// Teacher self-service password reset pages (public, no gate). Two static pages:
+// /teacher/forgot collects an email and calls POST /api/teacher/forgot-password;
+// /teacher/reset-password reads the emailed ?token= and calls POST
+// /api/teacher/reset-password. Both are noindex. no-store keeps the token page
+// out of any shared cache.
+app.get('/teacher/forgot', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  res.sendFile(path.join(__dirname, 'public', 'teacher-forgot.html'));
+});
+app.get('/teacher/reset-password', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  res.sendFile(path.join(__dirname, 'public', 'teacher-reset.html'));
+});
+
+// Keep crawlers away from the admin surface and the reset pages. The gate is the
+// real protection for admin; this just avoids indexing or probing by well-behaved
+// bots (the reset pages carry no data, but a tokened URL should never be indexed).
 app.get('/robots.txt', (req, res) => {
-  res.type('text/plain').send('User-agent: *\nDisallow: /admin\nDisallow: /api\n');
+  res.type('text/plain').send('User-agent: *\nDisallow: /admin\nDisallow: /api\nDisallow: /teacher/\n');
 });
 
 // Validate class code exists (for student join flow)
