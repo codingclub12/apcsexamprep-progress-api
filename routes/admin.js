@@ -191,10 +191,17 @@ router.get('/stats', (req, res) => {
     // Rows that are NOT real external teachers. Hard-coded constants (no user
     // input), so interpolating them into the filter below is safe. Edit this
     // list if you add more of your own test/system emails.
+    //
+    // This MUST stay in lockstep with classifyClass (lib/admin-metrics): owner
+    // (TANNER), solo, AUDIT, and PROBER are all excluded there, so the same four
+    // buckets are excluded here. Miss one and this endpoint's "external" tiles
+    // disagree with the adoption band / analytics / exec deck (the prober rows
+    // once leaked in, inflating external students 15 -> 18 and teachers 53 -> 55).
     const INTERNAL_FILTER = `
-      LOWER(COALESCE(t.email, '')) NOT IN ('tannercrow12@gmail.com', 'solo@system.invalid')
+      LOWER(COALESCE(t.email, '')) NOT IN ('tannercrow12@gmail.com', 'solo@system.invalid', 'a@a.comsss')
       AND LOWER(COALESCE(t.email, '')) NOT LIKE '%audit%'
       AND LOWER(COALESCE(t.email, '')) NOT LIKE '%delete%'
+      AND LOWER(COALESCE(t.email, '')) NOT LIKE '%kinws.com%'
     `;
 
     const scalar = (sql) => db.prepare(sql).get().n;
