@@ -109,6 +109,48 @@ function tokenFromEmail() {
   ok('expired token did not change the password',
     (await post('/login', { email: EMAIL, password: NEW })).status === 200);
 
+  console.log('change-password (signed in)');
+  // Sign in to get a teacher JWT.
+  let lr = await post('/login', { email: EMAIL, password: NEW });
+  const jwt1 = (await lr.json()).token;
+  const authed = (p, body) => fetch(base + '/api/teacher' + p, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + jwt1 },
+    body: JSON.stringify(body),
+  });
+  ok('change-password without auth is 401',
+    (await post('/change-password', { current_password: NEW, new_password: 'whatever123' })).status === 401);
+  let r2 = await authed('/change-password', { current_password: 'wrongpass1', new_password: 'chosenPass7' });
+  ok('wrong current password rejected 401', r2.status === 401, r2.status);
+  ok('  password unchanged after wrong current',
+    (await post('/login', { email: EMAIL, password: NEW })).status === 200);
+  r2 = await authed('/change-password', { current_password: NEW, new_password: 'short' });
+  ok('too-short new password rejected 400', r2.status === 400, r2.status);
+  r2 = await authed('/change-password', { current_password: NEW, new_password: NEW });
+  ok('identical new password rejected 400', r2.status === 400, r2.status);
+
+  const CHOSEN = 'chosenPass7';
+  r2 = await authed('/change-password', { current_password: NEW, new_password: CHOSEN });
+  ok('valid change returns 200', r2.status === 200, r2.status);
+  ok('login works with the chosen password', (await post('/login', { email: EMAIL, password: CHOSEN })).status === 200);
+  ok('old password no longer works', (await post('/login', { email: EMAIL, password: NEW })).status === 401);
+
+  // A deliberate change must invalidate any reset link sitting in an inbox.
+  lastEmail = null;
+  await post('/forgot-password', { email: EMAIL });
+  const staleTok = tokenFromEmail();
+  const lr2 = await post('/login', { email: EMAIL, password: CHOSEN });
+  const tok2 = (await lr2.json()).token;
+  await fetch(base + '/api/teacher/change-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tok2 },
+    body: JSON.stringify({ current_password: CHOSEN, new_password: 'finalPass99' }),
+  });
+  r2 = await post('/reset-password', { token: staleTok, password: 'hijack1234' });
+  ok('change-password burns outstanding reset links', r2.status === 400, r2.status);
+  ok('  hijack attempt did not change the password',
+    (await post('/login', { email: EMAIL, password: 'finalPass99' })).status === 200);
+
   console.log('\n' + (fail ? (fail + ' FAILED, ' + pass + ' passed') : ('OK - all ' + pass + ' checks passed')));
   for (const suf of ['', '-wal', '-shm']) { try { fs.unlinkSync(process.env.DB_PATH + suf); } catch (e) {} }
   process.exit(fail ? 1 : 0);

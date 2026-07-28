@@ -20,6 +20,7 @@ const analytics = require('../lib/admin-analytics');
 const exec = require('../lib/admin-exec');
 const health = require('../lib/admin-health');
 const teacherView = require('../lib/admin-teacher');
+const resetLib = require('../lib/password-reset');
 
 const router = express.Router();
 
@@ -72,6 +73,7 @@ router.get('/', (req, res) => {
       'GET /api/admin/teachers            every teacher with usage + pipeline status',
       'GET /api/admin/teacher/:id         one teacher in full: classes, gradebook readiness, feature adoption, roster (anonymized), timeline',
       'POST /api/admin/teacher/:id/reset-password   set a temporary password (header key required); everything else about the account is preserved',
+      'POST /api/admin/teacher/:id/reset-link       generate a single-use reset link to relay; the teacher then chooses her own password',
       'DELETE /api/admin/teacher/:id      hard delete, guarded; no ?confirm= returns a dry-run impact report',
       'GET /api/admin/analytics           full deck: by-course, by-teacher, geography, funnel, device, trends, hardest items',
       'GET /api/admin/sessions            heartbeat/session pipeline diagnostic: counts + recent rows',
@@ -296,6 +298,36 @@ router.post('/teacher/:id/reset-password', async (req, res) => {
   } catch (e) {
     console.error('admin/teacher/:id/reset-password:', e);
     res.status(500).json({ error: 'password reset failed', detail: e.message });
+  }
+});
+
+// POST /api/admin/teacher/:id/reset-link
+//  Generates a password-reset LINK and returns it, without sending any email.
+//  This is the better answer than handing out a temporary password: the teacher
+//  chooses her own password, the link is single-use, and it expires on its own.
+//  Use it while email delivery is not configured yet; once RESEND_API_KEY is set
+//  the teacher can just use /teacher/forgot herself and this becomes a fallback.
+//
+//  The link is a bearer credential for that account until it is used or expires,
+//  so relay it over a channel you trust and do not paste it anywhere public.
+router.post('/teacher/:id/reset-link', (req, res) => {
+  try {
+    const t = findTeacher(req.params.id);
+    if (!t) return res.status(404).json({ error: `No teacher with id or email ${req.params.id}` });
+
+    const minted = resetLib.mintResetLink(t.id);
+    console.log(`[admin] reset link generated for teacher ${t.id} (${t.email})`);
+    res.json({
+      ok: true,
+      teacher: { id: t.id, email: t.email, name: t.name },
+      reset_link: minted.link,
+      expires_at: minted.expires_at,
+      ttl_minutes: minted.ttl_minutes,
+      note: 'Single use. Send this to the teacher over a channel you trust; she opens it and chooses her own password. It replaces any earlier link for this account.',
+    });
+  } catch (e) {
+    console.error('admin/teacher/:id/reset-link:', e);
+    res.status(500).json({ error: 'reset link generation failed', detail: e.message });
   }
 });
 

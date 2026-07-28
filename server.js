@@ -164,6 +164,12 @@ app.get('/teacher/reset-password', (req, res) => {
   res.set('Cache-Control', 'no-store');
   res.sendFile(path.join(__dirname, 'public', 'teacher-reset.html'));
 });
+// Change password while signed in. Needs the teacher's own JWT, which the page
+// reads from the browser; the API enforces the current-password check.
+app.get('/teacher/change-password', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  res.sendFile(path.join(__dirname, 'public', 'teacher-change-password.html'));
+});
 
 // Keep crawlers away from the admin surface and the reset pages. The gate is the
 // real protection for admin; this just avoids indexing or probing by well-behaved
