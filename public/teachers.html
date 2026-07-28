@@ -125,8 +125,24 @@
 
   .gbcell { font-variant-numeric:tabular-nums; }
   .gbcell.pass { color:var(--good); font-weight:600; }
+  .gbcell.near { color:var(--warnc); font-weight:600; }
   .gbcell.fail { color:var(--critical); font-weight:600; }
   .gbcell.none { color:var(--muted); }
+  /* Wide gradebook: cap the height, freeze the student column and the header so
+     scrolling 53 lesson columns never loses the row or column you are reading. */
+  .gbwrap { max-height:70vh; overflow:auto; }
+  .gbtable th, .gbtable td { white-space:nowrap; }
+  .gbtable th.stick, .gbtable td.stick {
+    position:sticky; left:0; z-index:2; background:var(--surface);
+    box-shadow:1px 0 0 var(--border); text-align:left; max-width:190px; overflow:hidden; text-overflow:ellipsis;
+  }
+  .gbtable thead th { position:sticky; top:0; z-index:3; background:var(--surface); }
+  .gbtable thead th.stick { z-index:4; }
+  .gbtable th.offman { color:var(--csp); }
+  .gbtable tr.avgrow td { border-top:2px solid var(--border); font-weight:600; background:color-mix(in srgb, var(--ink) 3%, transparent); }
+  .gbtable tr.avgrow td.stick { background:var(--surface); }
+  .gbtable tbody tr:hover td { background:color-mix(in srgb, var(--ink) 4%, transparent); }
+  .gbtable tbody tr:hover td.stick { background:var(--surface); }
   .empty { padding:34px; text-align:center; color:var(--muted); }
   .hide { display:none; }
 </style>
@@ -522,16 +538,21 @@
       bars + labels + '<text x="' + padL + '" y="' + (padT+8) + '">peak ' + max + "</text></svg>";
   }
 
-  // ── Gradebook (the actual teacher view) ───────────────────────────────────
+  // ── Gradebook (the full picture, both grading pipelines) ──────────────────
   function showGradebook(classId, code, course) {
     var card = $("gbCard"), body = $("gbBody");
     card.style.display = "";
     $("gbTitle").textContent = "Gradebook · " + code;
     body.innerHTML = '<p class="hint">Loading…</p>';
-    var url = "/api/admin/class/" + encodeURIComponent(classId) + "/gradebook" +
-      (course === "solo" ? "?course=ap-csa" : "");
+    var qs = [];
+    if (course === "solo") qs.push("course=ap-csa");
+    if (state.reveal) qs.push("reveal=1");
+    var url = "/api/admin/class/" + encodeURIComponent(classId) + "/gradebook" + (qs.length ? "?" + qs.join("&") : "");
     api(url).then(function (g) {
+      state.gradebooks[classId] = g;
       body.innerHTML = renderGradebook(g);
+      var b = document.getElementById("gbCsv");
+      if (b) b.addEventListener("click", function () { downloadGradebookCsv(g); });
       card.scrollIntoView({ behavior: "smooth", block: "start" });
     }).catch(function (e) {
       if (e && e.auth) return toLogin();
@@ -539,40 +560,122 @@
     });
   }
 
+  // Colour a percentage the same way everywhere: green at/above the class
+  // mastery threshold, yellow within 20 points of it, red below.
+  function gbClass(p, threshold) {
+    if (p == null) return "none";
+    if (p >= threshold) return "pass";
+    if (p >= threshold - 20) return "near";
+    return "fail";
+  }
+
   function renderGradebook(g) {
     var lessons = g.lessons || [], studs = g.students || [];
-    if (!lessons.length) {
-      return '<p class="empty">This course has no graded items in the manifest yet, so there is no gradebook to show. ' +
-        "Visit tracking still works; add cfu/quiz manifest rows to populate this.</p>";
-    }
+    var th = g.class.mastery_threshold == null ? 80 : g.class.mastery_threshold;
+
     if (!studs.length) return '<p class="empty">No students enrolled in this class.</p>';
+    if (!lessons.length) {
+      return '<p class="empty">No graded work recorded for this class yet. ' +
+        "Visits are still tracked; scores appear here as soon as any CFU, quiz, or attempt is reported.</p>";
+    }
 
-    // Stable anonymized labels, keyed by student id so they match the roster.
-    var labelById = {};
-    ((state.detail || {}).roster || []).forEach(function (r) { labelById[r.id] = r.label; });
+    var sum = g.summary || {};
+    var strip =
+      '<div class="strip" style="margin:2px 0 12px">' +
+        '<div class="s"><b>' + (sum.class_avg_pct == null ? "-" : sum.class_avg_pct + "%") + "</b>class average</div>" +
+        '<div class="s"><b>' + fmt(sum.students_with_scores) + "/" + fmt(sum.students) + "</b>students with scores</div>" +
+        '<div class="s"><b>' + fmt(sum.graded_lessons) + "</b>lessons with grades</div>" +
+        '<div class="s"><b>' + th + "%</b>mastery threshold</div>" +
+      "</div>";
 
-    var head = "<th>Student</th><th class='num'>Visits</th>" +
-      lessons.map(function (l) { return "<th class='num' title='" + esc(l.unit) + "'>" + esc(l.lesson_id) + "</th>"; }).join("") +
-      "<th class='num'>Overall</th>";
+    var head = '<th class="stick">Student</th><th class="num">Visits</th>' +
+      lessons.map(function (l) {
+        var t = (l.unit ? l.unit + " · " : "") + "class avg " +
+          (l.class_avg_pct == null ? "no data" : l.class_avg_pct + "%") +
+          (l.in_manifest ? "" : " · not in manifest");
+        return '<th class="num' + (l.in_manifest ? "" : " offman") + '" title="' + esc(t) + '">' + esc(l.lesson_id) + "</th>";
+      }).join("") +
+      '<th class="num">Overall</th>';
 
     var rows = studs.map(function (s) {
       var cells = lessons.map(function (l) {
-        var c = s.lessons && s.lessons[l.lesson_id];
-        if (!c || !c.items_attempted) return '<td class="num gbcell none">-</td>';
-        var cls = c.items_passed >= c.items_attempted ? "pass" : "fail";
-        return '<td class="num gbcell ' + cls + '" title="' + esc(c.earned + "/" + c.possible + " · " + c.items_passed + " of " + c.items_attempted + " passed") + '">' + c.pct + "%</td>";
+        var c = s.cells && s.cells[l.lesson_id];
+        if (!c) return '<td class="num gbcell none">·</td>';
+        if (c.pct == null) {
+          // Visited the lesson but nothing graded arrived for it.
+          return '<td class="num gbcell none" title="Visited, no score recorded">v</td>';
+        }
+        var tip = c.source === "attempt"
+          ? (c.earned + "/" + c.possible + " over " + c.items + " item(s), " + c.tries + " attempt(s)")
+          : ((c.activities || []).map(function (a) { return a.type + " " + a.pct + "%"; }).join(", ") || "score rollup");
+        return '<td class="num gbcell ' + gbClass(c.pct, th) + '" title="' + esc(tip) + '">' + c.pct + "%</td>";
       }).join("");
       var ov = s.overall || {};
-      return "<tr><td>" + esc(labelById[s.id] || (state.reveal ? s.name : "Student")) + "</td>" +
-        '<td class="num muted">' + fmt((s.visits||{}).visited) + "/" + fmt((s.visits||{}).total) + "</td>" +
+      return '<tr><td class="stick">' + esc(s.label) + "</td>" +
+        '<td class="num muted">' + fmt((s.visits || {}).visited) + "/" + fmt((s.visits || {}).total) + "</td>" +
         cells +
-        '<td class="num gbcell"><b>' + (ov.pct != null ? ov.pct + "%" : "-") + "</b></td></tr>";
+        '<td class="num gbcell ' + gbClass(ov.pct, th) + '" title="' + esc(ov.items_passed + " of " + ov.items_graded + " passed · basis: " + ov.basis) + '"><b>' +
+          (ov.pct == null ? "-" : ov.pct + "%") + "</b></td></tr>";
     }).join("");
 
-    var note = '<p class="hint" style="margin-top:10px">Mastery threshold ' + esc(g.class.mastery_threshold == null ? 80 : g.class.mastery_threshold) +
-      "%, retry " + (g.class.retry_allowed ? "allowed (best attempt counts)" : "off (first attempt counts)") +
-      ". Percentages are computed against the course manifest.</p>";
-    return '<div class="tablewrap"><table class="minitable"><thead><tr>' + head + "</tr></thead><tbody>" + rows + "</tbody></table></div>" + note;
+    // Class-average footer row: which lesson is hurting the whole class.
+    var avgRow = '<tr class="avgrow"><td class="stick">Class average</td><td class="num muted"></td>' +
+      lessons.map(function (l) {
+        return '<td class="num gbcell ' + gbClass(l.class_avg_pct, th) + '">' +
+          (l.class_avg_pct == null ? "·" : l.class_avg_pct + "%") + "</td>";
+      }).join("") + '<td class="num"></td></tr>';
+
+    var srcNote = "";
+    if (sum.sources) {
+      var bits = [];
+      if (sum.sources.attempts) bits.push(fmt(sum.sources.attempts) + " from attempt saves");
+      if (sum.sources.score_rollups) bits.push(fmt(sum.sources.score_rollups) + " from score rollups");
+      if (bits.length) srcNote = " Sources: " + bits.join(", ") + ".";
+    }
+
+    return strip +
+      '<div style="margin-bottom:10px"><button id="gbCsv">Export gradebook CSV</button></div>' +
+      '<div class="tablewrap gbwrap"><table class="minitable gbtable"><thead><tr>' + head + "</tr></thead><tbody>" +
+        rows + avgRow + "</tbody></table></div>" +
+      '<p class="hint" style="margin-top:10px">Mastery threshold ' + th + "%, retry " +
+        (g.class.retry_allowed ? "allowed (best attempt counts)" : "off (first attempt counts)") +
+        ". <b>v</b> means the lesson was visited but no score arrived. A dot means no activity." +
+        " Columns marked in orange are not in the course manifest." + esc(srcNote) + "</p>";
+  }
+
+  function downloadGradebookCsv(g) {
+    var lessons = g.lessons || [];
+    var header = ["Student", "Visits", "VisitsTotal"]
+      .concat(lessons.map(function (l) { return l.lesson_id; }))
+      .concat(["Overall", "Basis", "ItemsGraded", "ItemsPassed"]);
+    var lines = [header];
+    (g.students || []).forEach(function (s) {
+      var row = [s.label, (s.visits || {}).visited, (s.visits || {}).total];
+      lessons.forEach(function (l) {
+        var c = s.cells && s.cells[l.lesson_id];
+        row.push(c && c.pct != null ? c.pct : "");
+      });
+      var ov = s.overall || {};
+      row.push(ov.pct == null ? "" : ov.pct, ov.basis, ov.items_graded, ov.items_passed);
+      lines.push(row);
+    });
+    var avg = ["Class average", "", ""].concat(lessons.map(function (l) {
+      return l.class_avg_pct == null ? "" : l.class_avg_pct;
+    })).concat([g.summary ? g.summary.class_avg_pct : "", "", "", ""]);
+    lines.push(avg);
+
+    var csv = lines.map(function (r) {
+      return r.map(function (v) {
+        var t = v == null ? "" : String(v);
+        return /[",\n]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t;
+      }).join(",");
+    }).join("\n");
+    var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "gradebook-" + (g.class.class_code || "class") + ".csv";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
   }
 
   // ── Routing ───────────────────────────────────────────────────────────────
