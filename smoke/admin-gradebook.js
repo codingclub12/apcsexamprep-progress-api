@@ -163,6 +163,42 @@ ok('completed lesson cell recorded as done', (function(){
 })());
 ok('per-item class average computed', quizKey.class_avg_pct != null, quizKey);
 
+console.log('denominators come from the AUTHORED source, retroactively');
+// The authored "out of" for these activities. Nothing about the stored rows
+// changes; only how they are denominated at read time.
+run(`INSERT INTO course_denominators (course,unit,lesson,activity_type,possible) VALUES
+ ('ap-cybersecurity','unit-1','1.1','quiz',6),
+ ('ap-cybersecurity','unit-1','1.1','cfu',4)`);
+const gd = buildGradebook('CYBER-1');
+const qCol = gd.items.find((i) => i.lesson_id === '1.1' && i.activity === 'quiz');
+const cCol = gd.items.find((i) => i.lesson_id === '1.1' && i.activity === 'cfu');
+ok('column carries the authored denominator', qCol.denominator === 6 && qCol.denominator_source === 'authored', qCol);
+const d1 = gd.students[0];
+// student 1 scored 80 on the quiz; 80% of 6 = 4.8
+ok('rollup cell now shows an out-of', d1.items[qCol.key].possible === 6, d1.items[qCol.key]);
+ok('  earned rescaled to the authored total', d1.items[qCol.key].earned === 4.8, d1.items[qCol.key]);
+ok('  percentage is unchanged by the rescale', d1.items[qCol.key].pct === 80, d1.items[qCol.key]);
+ok('  source labelled authored', d1.items[qCol.key].denominator_source === 'authored');
+// cfu 90% of 4 = 3.6
+ok('a second activity uses ITS own denominator', d1.items[cCol.key].possible === 4 && d1.items[cCol.key].earned === 3.6,
+  d1.items[cCol.key]);
+ok('an activity with no authored row has none', (function () {
+  const noD = gd.items.find((i) => i.activity === 'exercise-1');
+  return noD && noD.denominator === null && noD.denominator_source === null;
+})());
+ok('summary counts authored vs missing denominators',
+  gd.summary.denominators_authored === 2 && gd.summary.denominators_missing > 0, gd.summary);
+
+// The attempts path must respect the authored value too, not the summed max_score.
+run(`INSERT INTO course_denominators (course,unit,lesson,activity_type,possible) VALUES ('ap-csa','unit-1','1.2','quiz',20)`);
+const gd2 = buildGradebook('CSA-1');
+const q2 = gd2.items.find((i) => i.lesson_id === '1.2' && i.activity === 'quiz');
+const a2 = gd2.students[0];
+ok('attempts cell adopts the authored denominator (20, not the stored 10)',
+  a2.items[q2.key].possible === 20, a2.items[q2.key]);
+ok('  earned rescaled: 100% of 20', a2.items[q2.key].earned === 20, a2.items[q2.key]);
+ok('  percentage still 100', a2.items[q2.key].pct === 100, a2.items[q2.key]);
+
 console.log('edge cases');
 ok('unknown class returns null', buildGradebook('NOPE-9999') === null);
 run(`INSERT INTO classes (id,class_code,class_name,course,teacher_id,active) VALUES ('c_e','CYBER-EMPTY','E','ap-cybersecurity','t1',1)`);
