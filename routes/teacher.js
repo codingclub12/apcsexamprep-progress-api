@@ -8,6 +8,7 @@ const { requireTeacher } = require('../middleware');
 const { claimPending } = require('../lib/entitlements');
 const { makeRateLimit } = require('../lib/rate-limit');
 const mailer = require('../lib/mailer');
+const resetLib = require('../lib/password-reset');
 const {
   newId, generateClassCode, signTeacherToken,
   isValidEmail, isValidPin, sanitize, COURSES, COURSE_PREFIXES,
@@ -89,16 +90,10 @@ router.post('/login', async (req, res) => {
 //  are hashed, so a forgotten one is unrecoverable by design: this RESETS it, it
 //  never reveals the old one. Both routes are rate limited and forgot-password is
 //  written to give NO signal about whether an email is registered.
-const RESET_TTL_MIN = 45;
-const sha256hex = (s) => crypto.createHash('sha256').update(String(s)).digest('hex');
-
-// Base origin for the emailed link. PUBLIC_BASE_URL wins (the public origin,
-// e.g. https://progress.apcsexamprep.com); SELF_BASE_URL is the existing
-// fallback used elsewhere; last resort is the production origin.
-function resetBaseUrl() {
-  const raw = process.env.PUBLIC_BASE_URL || process.env.SELF_BASE_URL || 'https://progress.apcsexamprep.com';
-  return raw.replace(/\/+$/, '');
-}
+//  The token contract itself (TTL, hashing, one live token per teacher) lives in
+//  lib/password-reset.js so the owner-generated link from /api/admin cannot drift
+//  from the emailed one.
+const RESET_TTL_MIN = resetLib.RESET_TTL_MIN;
 
 // Same generic 200 whether or not the email exists: this endpoint must not be
 // usable to enumerate which addresses have a teacher account.
@@ -112,6 +107,13 @@ const resetLimit = makeRateLimit({
   windowMs: 15 * 60 * 1000, max: 10,
   message: 'Too many attempts. Please wait a few minutes and try again.',
 });
+// Its own bucket, deliberately. Sharing resetLimit would let anonymous traffic
+// hammering /reset-password lock a signed-in teacher out of changing her own
+// password, which is a denial of service against the legitimate user.
+const changeLimit = makeRateLimit({
+  windowMs: 15 * 60 * 1000, max: 10,
+  message: 'Too many attempts. Please wait a few minutes and try again.',
+});
 
 // POST /api/teacher/forgot-password  { email }
 router.post('/forgot-password', forgotLimit, async (req, res) => {
@@ -122,18 +124,8 @@ router.post('/forgot-password', forgotLimit, async (req, res) => {
     const teacher = db.prepare('SELECT id, email, name FROM teachers WHERE email = ?').get(email);
     if (!teacher) return res.json(FORGOT_GENERIC); // no account: say the same thing
 
-    // One live token per teacher: drop any earlier ones, then mint a fresh 256-bit
-    // token. Only its hash is stored; the raw value lives only in the email link.
-    const raw = crypto.randomBytes(32).toString('base64url');
-    db.transaction(() => {
-      db.prepare('DELETE FROM password_reset_tokens WHERE teacher_id = ?').run(teacher.id);
-      db.prepare(
-        `INSERT INTO password_reset_tokens (id, teacher_id, token_hash, expires_at)
-         VALUES (?, ?, ?, datetime('now', ?))`
-      ).run(newId(), teacher.id, sha256hex(raw), `+${RESET_TTL_MIN} minutes`);
-    })();
-
-    const link = `${resetBaseUrl()}/teacher/reset-password?token=${raw}`;
+    // One live token per teacher, minted by the shared module.
+    const { link } = resetLib.mintResetLink(teacher.id);
     const name = teacher.name ? teacher.name.split(' ')[0] : 'there';
     const subject = 'Reset your APCSExamPrep password';
     const text =
@@ -178,10 +170,7 @@ router.post('/reset-password', resetLimit, async (req, res) => {
     // Look the token up by its hash (indexed). The token is itself a 256-bit
     // secret, so an equality match on its hash is safe; expiry + single-use are
     // checked in the same row.
-    const row = db.prepare(
-      `SELECT id, teacher_id, used_at, (expires_at <= datetime('now')) AS expired
-       FROM password_reset_tokens WHERE token_hash = ?`
-    ).get(sha256hex(token));
+    const row = resetLib.findToken(token);
 
     if (!row || row.used_at || row.expired) {
       return res.status(400).json({
@@ -201,6 +190,39 @@ router.post('/reset-password', resetLimit, async (req, res) => {
   } catch (e) {
     console.error('reset-password error:', e);
     return res.status(500).json({ error: 'Could not reset password. Please try again.' });
+  }
+});
+
+// ── CHANGE PASSWORD (signed in) ───────────────────────────────────────────────
+//  The counterpart to the reset flow: a teacher who is already signed in and
+//  simply wants a different password, without going through email. Requires the
+//  CURRENT password, so a walk-up on an unattended logged-in browser cannot
+//  silently take the account over. Any outstanding reset links are burned, since
+//  a deliberate password change should invalidate a link sitting in an inbox.
+router.post('/change-password', requireTeacher, changeLimit, async (req, res) => {
+  try {
+    const current = String((req.body && req.body.current_password) || '');
+    const next = String((req.body && req.body.new_password) || '');
+    if (!current) return res.status(400).json({ error: 'Current password required' });
+    if (next.length < 8) return res.status(400).json({ error: 'New password must be at least 8 characters' });
+    if (next === current) return res.status(400).json({ error: 'New password must be different from the current one' });
+
+    const row = db.prepare('SELECT id, password_hash FROM teachers WHERE id = ?').get(req.teacher.id);
+    if (!row) return res.status(404).json({ error: 'Account not found' });
+
+    const valid = await bcrypt.compare(current, row.password_hash);
+    if (!valid) return res.status(401).json({ error: 'Current password is incorrect' });
+
+    const hash = await bcrypt.hash(next, 12);
+    db.transaction(() => {
+      db.prepare('UPDATE teachers SET password_hash = ? WHERE id = ?').run(hash, row.id);
+      resetLib.burnTokens(row.id);
+    })();
+
+    res.json({ ok: true, message: 'Your password has been changed.' });
+  } catch (e) {
+    console.error('change-password error:', e);
+    res.status(500).json({ error: 'Could not change password. Please try again.' });
   }
 });
 

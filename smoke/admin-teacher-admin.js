@@ -84,6 +84,48 @@ run(`INSERT INTO entitlements (id,teacher_id,course,source,status) VALUES ('ent1
   ok('reset preserves student work', count('score_events', 'class_id = ?', 'c_work') === 1);
   ok('reset preserves entitlements', count('entitlements', 'teacher_id = ?', 't_work') === 1);
 
+  console.log('reset-link (owner generates, teacher chooses her own password)');
+  ok('reset-link without key is 403', (await noKey('POST', '/api/admin/teacher/t_work/reset-link')).status === 403);
+  r = await call('POST', '/api/admin/teacher/nope@nowhere.test/reset-link');
+  ok('unknown teacher 404', r.status === 404, r.status);
+
+  r = await call('POST', '/api/admin/teacher/busy@school.org/reset-link');
+  j = await r.json();
+  ok('returns 200', r.status === 200, r.status);
+  ok('returns a reset link', /\/teacher\/reset-password\?token=/.test(j.reset_link || ''), j.reset_link);
+  ok('reports an expiry', !!j.expires_at && j.ttl_minutes === 45, { e: j.expires_at, t: j.ttl_minutes });
+  const linkTok = new URL(j.reset_link).searchParams.get('token');
+  ok('raw token is NOT stored (only its hash)',
+    count('password_reset_tokens', 'token_hash = ?', linkTok) === 0);
+  ok('exactly one live token for that teacher',
+    count('password_reset_tokens', 'teacher_id = ?', 't_work') === 1);
+
+  // The generated link must actually work through the real public reset route.
+  let rp = await fetch(base + '/api/teacher/reset-password', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token: linkTok, password: 'ownChoice123' }),
+  });
+  ok('link works on the public reset route', rp.status === 200, rp.status);
+  ok('teacher can log in with her chosen password',
+    (await fetch(base + '/api/teacher/login', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: 'busy@school.org', password: 'ownChoice123' }),
+    })).status === 200);
+  rp = await fetch(base + '/api/teacher/reset-password', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token: linkTok, password: 'replay9999' }),
+  });
+  ok('link is single use', rp.status === 400, rp.status);
+
+  // Generating a new link must invalidate the previous one.
+  const first = new URL((await (await call('POST', '/api/admin/teacher/t_work/reset-link')).json()).reset_link).searchParams.get('token');
+  await call('POST', '/api/admin/teacher/t_work/reset-link');
+  rp = await fetch(base + '/api/teacher/reset-password', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token: first, password: 'stale12345' }),
+  });
+  ok('a newly generated link invalidates the previous one', rp.status === 400, rp.status);
+
   console.log('delete guards');
   r = await call('DELETE', '/api/admin/teacher/t_work');
   j = await r.json();
