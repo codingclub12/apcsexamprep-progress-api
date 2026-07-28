@@ -18,7 +18,8 @@
     "smoke:teacheradmin": "node smoke/admin-teacher-admin.js",
     "smoke:gradebook": "node smoke/admin-gradebook.js",
     "smoke:export": "node smoke/teacher-export.js",
-    "smoke:quizparse": "node smoke/quiz-answer-parsing.js"
+    "smoke:quizparse": "node smoke/quiz-answer-parsing.js",
+    "smoke:wirelog": "node smoke/wire-log.js"
   },
   "keywords": [],
   "author": "",

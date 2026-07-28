@@ -128,6 +128,34 @@ ok('owner/test class never appears in findings', !allItems.includes('CSA-OWNR'))
 ok('critical findings counted', h.totals.critical >= 2, h.totals);
 ok('findings sorted critical-first', h.findings[0].severity === 'critical', h.findings[0] && h.findings[0].severity);
 
+// ── Attempts lost to the answer-parse bug ────────────────────────────────────
+console.log('attempts lost to the quiz answer-parse bug');
+// Parse-bug fingerprint: scored 0 and NOT ONE question carries a selection.
+run(`INSERT INTO quiz_attempts (id,student_id,progress_id,course,unit,lesson,answers,score) VALUES
+ ('qa1','s1',NULL,'ap-cybersecurity','unit-1','1.1','[{"q":1,"sel":null,"ok":false},{"q":2,"sel":null,"ok":false}]',0),
+ ('qa2','s2',NULL,'ap-cybersecurity','unit-1','1.1','[{"q":1,"sel":null,"ok":false},{"q":2,"sel":null,"ok":false}]',0)`);
+// Genuinely wrong: the student DID pick, and picked badly. Must NOT be flagged.
+run(`INSERT INTO quiz_attempts (id,student_id,progress_id,course,unit,lesson,answers,score) VALUES
+ ('qa3','s1',NULL,'ap-cybersecurity','unit-1','1.2','[{"q":1,"sel":2,"ok":false},{"q":2,"sel":0,"ok":false}]',0)`);
+// Partially correct: has a score. Must NOT be flagged.
+run(`INSERT INTO quiz_attempts (id,student_id,progress_id,course,unit,lesson,answers,score) VALUES
+ ('qa4','s2',NULL,'ap-cybersecurity','unit-1','1.3','[{"q":1,"sel":1,"ok":true},{"q":2,"sel":0,"ok":false}]',50)`);
+// Owner class attempt must never leak into findings.
+run(`INSERT INTO quiz_attempts (id,student_id,progress_id,course,unit,lesson,answers,score) VALUES
+ ('qa5',?,NULL,'ap-csa','unit-1','1.1','[{"q":1,"sel":null,"ok":false}]',0)`, owner[0]);
+
+const h2 = computeHealth();
+const lost = h2.findings.find((f) => f.code === 'attempts_lost_to_parse_bug');
+ok('detects attempts with no selection recorded', !!lost, h2.findings.map((f) => f.code));
+ok('  flags the affected lesson 1.1', !!lost && lost.items.some((i) => i.lesson === '1.1'), lost && lost.items);
+ok('  counts both affected attempts', !!lost && lost.items.reduce((n, i) => n + i.attempts, 0) === 2,
+  lost && lost.items.map((i) => i.attempts));
+ok('  does NOT flag a genuinely wrong answer (1.2)', !!lost && !lost.items.some((i) => i.lesson === '1.2'), lost && lost.items);
+ok('  does NOT flag a partially correct attempt (1.3)', !!lost && !lost.items.some((i) => i.lesson === '1.3'), lost && lost.items);
+ok('  owner class never appears', !JSON.stringify(lost || {}).includes('CSA-OWNR'));
+ok('  is critical severity', !!lost && lost.severity === 'critical');
+ok('  says the picks cannot be rescored', !!lost && /cannot be rescored/i.test(lost.detail), lost && lost.detail);
+
 // ── Teacher list ─────────────────────────────────────────────────────────────
 console.log('teacher list');
 const list = listTeachers();

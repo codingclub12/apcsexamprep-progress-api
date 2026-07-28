@@ -22,6 +22,7 @@ const health = require('../lib/admin-health');
 const teacherView = require('../lib/admin-teacher');
 const resetLib = require('../lib/password-reset');
 const gradebook = require('../lib/admin-gradebook');
+const wire = require('../lib/wire-log');
 
 const router = express.Router();
 
@@ -70,6 +71,7 @@ router.get('/', (req, res) => {
       'GET /api/admin/overview            top-line counts',
       'GET /api/admin/summary             bucketed adoption metrics: activation, deltas, cohort, data-quality',
       'GET /api/admin/exec                executive KPIs: active teachers/students, new classrooms, completion + pass rates, returning %, top/abandoned lessons',
+      'GET /api/admin/wire-log           what pages actually send to the scoring endpoints; ?endpoint= ?activity= ?limit=',
       'GET /api/admin/health              data pipeline health: where scores are not syncing, rollup gaps, manifest gaps, quiet classes',
       'GET /api/admin/teachers            every teacher with usage + pipeline status',
       'GET /api/admin/teacher/:id         one teacher in full: classes, gradebook readiness, feature adoption, roster (anonymized), timeline',
@@ -190,6 +192,36 @@ router.get('/health', (req, res) => {
   } catch (e) {
     console.error('admin/health:', e);
     res.status(500).json({ error: 'health failed', detail: e.message });
+  }
+});
+
+// ── WIRE LOG: what the pages actually SEND to the scoring endpoints ──────────
+//  Reading code cannot tell you which of the three scoring paths a page posts to
+//  or what shape its payload has, and each guess costs a deploy. This returns the
+//  most recent scoring requests as captured on the wire.
+//
+//  Shape only, never content: field names, value types, and numbers (option
+//  indices, scores, counts). No answer text, no student names, no free text. The
+//  student id is reduced to a short hash so one student's repeat submissions can
+//  be correlated without identifying them.
+//
+//  ?endpoint= filters by path fragment, ?activity= by activity_type, ?limit= caps rows.
+router.get('/wire-log', (req, res) => {
+  try {
+    const limit = Math.min(parseInt(req.query.limit, 10) || 40, 120);
+    let rows = wire.recent(120);
+    if (req.query.endpoint) {
+      const f = String(req.query.endpoint).toLowerCase();
+      rows = rows.filter((r) => String(r.endpoint).toLowerCase().includes(f));
+    }
+    if (req.query.activity) {
+      const a = String(req.query.activity).toLowerCase();
+      rows = rows.filter((r) => String(r.activity_type || '').toLowerCase() === a);
+    }
+    res.json({ ...wire.stats(), returned: Math.min(rows.length, limit), entries: rows.slice(0, limit) });
+  } catch (e) {
+    console.error('admin/wire-log:', e);
+    res.status(500).json({ error: 'wire log failed', detail: e.message });
   }
 });
 
