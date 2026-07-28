@@ -4,6 +4,7 @@ const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const adminSession = require('./lib/admin-session');
+const wireLog = require('./lib/wire-log');
 const app = express();
 
 // Railway terminates TLS at its proxy and forwards the real client IP and
@@ -44,6 +45,11 @@ app.use(cors((req, cb) => {
 app.use('/api/shopify', require('./routes/shopify'));
 
 app.use(express.json({ limit: '1mb' }));
+
+// Diagnostic capture of the scoring endpoints, mounted before their routers so a
+// request that 400s or never reaches its handler is still recorded. Strict path
+// allowlist inside; auth routes carrying names and PINs are never captured.
+app.use(wireLog.middleware);
 
 // ── ROUTES ────────────────────────────────────────────────────────────────────
 app.use('/api/teacher', require('./routes/teacher'));

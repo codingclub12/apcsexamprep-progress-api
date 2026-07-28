@@ -272,7 +272,7 @@ router.post('/submit', optionalStudent, rateLimit, (req, res) => {
       else if (!parsed.skip) chosenByQid.set(ans.qid, parsed.index);
     }
     if (unparsed.length) {
-      wire.record({ endpoint: 'POST /api/quiz/submit', body: b, student_id: req.student && req.student.id,
+      wire.recordOnce(req, { endpoint: 'POST /api/quiz/submit', body: b, student_id: req.student && req.student.id,
         course, unit, lesson, activity_type, status: 400, result: { unparsed: unparsed.length } });
       return res.status(400).json({
         error: 'Could not read the selected option for one or more questions, so this submission was not scored.',
@@ -346,7 +346,7 @@ router.post('/submit', optionalStudent, rateLimit, (req, res) => {
     }
 
     const recognized = !!(COURSES[course] && COURSES[course].units[unit]);
-    wire.record({ endpoint: 'POST /api/quiz/submit', body: b, student_id: req.student && req.student.id,
+    wire.recordOnce(req, { endpoint: 'POST /api/quiz/submit', body: b, student_id: req.student && req.student.id,
       course, unit, lesson, activity_type, status: 200, result: { score, total, recorded } });
     res.json({
       score, total,

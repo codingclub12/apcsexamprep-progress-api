@@ -390,7 +390,7 @@ router.post('/quiz', requireStudent, (req, res) => {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `).run(newId(), req.student.id, progressRecord.id, course, unit, lesson, JSON.stringify(answers || {}), score);
 
-    wire.record({ endpoint: 'POST /api/student/quiz', body: req.body, student_id: req.student.id,
+    wire.recordOnce(req, { endpoint: 'POST /api/student/quiz', body: req.body, student_id: req.student.id,
       course, unit, lesson, activity_type: 'quiz', status: 200, result: { score, passed } });
     res.json({ ok: true, score, passed, threshold, retry_allowed: retryOk, locked: false });
   } catch (e) {
@@ -728,7 +728,7 @@ router.post('/score', requireStudent, (req, res) => {
       return roll;
     })();
 
-    wire.record({ endpoint: 'POST /api/student/score', body: b, student_id: req.student.id,
+    wire.recordOnce(req, { endpoint: 'POST /api/student/score', body: b, student_id: req.student.id,
       course, unit, lesson, activity_type, status: 200,
       result: { points, max_points, correct, rollup_pct: rollup && rollup.pct } });
     const out = { ok: true, tracked: true, recognized, item: { item, points, max_points, correct }, rollup };
