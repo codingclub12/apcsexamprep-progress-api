@@ -14,7 +14,8 @@
     "smoke:admin": "node smoke/admin-dashboard.js",
     "smoke:codegrade": "node smoke/code-grade.js",
     "smoke:reset": "node smoke/password-reset.js",
-    "smoke:health": "node smoke/admin-health.js"
+    "smoke:health": "node smoke/admin-health.js",
+    "smoke:teacheradmin": "node smoke/admin-teacher-admin.js"
   },
   "keywords": [],
   "author": "",

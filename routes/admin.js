@@ -12,6 +12,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 const express = require('express');
 const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
 const db = require('../db');
 const session = require('../lib/admin-session');
 const metrics = require('../lib/admin-metrics');
@@ -70,6 +71,8 @@ router.get('/', (req, res) => {
       'GET /api/admin/health              data pipeline health: where scores are not syncing, rollup gaps, manifest gaps, quiet classes',
       'GET /api/admin/teachers            every teacher with usage + pipeline status',
       'GET /api/admin/teacher/:id         one teacher in full: classes, gradebook readiness, feature adoption, roster (anonymized), timeline',
+      'POST /api/admin/teacher/:id/reset-password   set a temporary password (header key required); everything else about the account is preserved',
+      'DELETE /api/admin/teacher/:id      hard delete, guarded; no ?confirm= returns a dry-run impact report',
       'GET /api/admin/analytics           full deck: by-course, by-teacher, geography, funnel, device, trends, hardest items',
       'GET /api/admin/sessions            heartbeat/session pipeline diagnostic: counts + recent rows',
       'GET /api/admin/stats               adoption + growth rollup (external vs raw)',
@@ -209,6 +212,157 @@ router.get('/teacher/:id', (req, res) => {
   } catch (e) {
     console.error('admin/teacher/:id:', e);
     res.status(500).json({ error: 'teacher drill failed', detail: e.message });
+  }
+});
+
+// ── TEACHER ACCOUNT ADMIN (mutations: x-admin-key header required) ────────────
+//  requireAdmin only honours the dashboard cookie for GET/HEAD, so every route
+//  below needs the raw key in the header. That is deliberate: these change or
+//  destroy account data and must never be reachable by a browser-side CSRF.
+
+const stmtFindTeacher = db.prepare(
+  'SELECT id, email, name, school, created_at FROM teachers WHERE id = ? OR email = ?'
+);
+function findTeacher(key) {
+  return stmtFindTeacher.get(String(key), String(key).toLowerCase());
+}
+
+// Human-relayable temporary password: 3 groups of 4 from an unambiguous alphabet
+// (no O/0, l/1) so it survives being read aloud or retyped. ~62 bits of entropy.
+const PW_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+function tempPassword() {
+  const bytes = crypto.randomBytes(12);
+  let out = '';
+  for (let i = 0; i < 12; i++) {
+    if (i && i % 4 === 0) out += '-';
+    out += PW_ALPHABET[bytes[i] % PW_ALPHABET.length];
+  }
+  return out;
+}
+
+// What a hard delete would remove. Used both for the dry run and to decide
+// whether the call needs ?force=1 (any real student work makes it destructive).
+function deletionImpact(teacherId) {
+  const ids = db.prepare('SELECT id FROM classes WHERE teacher_id = ?').all(teacherId).map((r) => r.id);
+  if (!ids.length) {
+    return { classes: 0, students: 0, progress_rows: 0, score_events: 0, attempts: 0, sessions: 0, entitlements: countEnt(teacherId), has_student_work: false };
+  }
+  const ph = ids.map(() => '?').join(',');
+  const n = (sql) => db.prepare(sql).get(...ids).n;
+  const impact = {
+    classes: ids.length,
+    students: n(`SELECT COUNT(*) n FROM students WHERE class_id IN (${ph})`),
+    progress_rows: n(`SELECT COUNT(*) n FROM progress WHERE class_id IN (${ph})`),
+    score_events: n(`SELECT COUNT(*) n FROM score_events WHERE class_id IN (${ph})`),
+    attempts: n(`SELECT COUNT(*) n FROM attempts WHERE class_id IN (${ph})`),
+    sessions: n(`SELECT COUNT(*) n FROM sessions WHERE class_id IN (${ph})`),
+    entitlements: countEnt(teacherId),
+  };
+  impact.has_student_work = impact.progress_rows > 0 || impact.score_events > 0 || impact.attempts > 0;
+  return impact;
+}
+function countEnt(teacherId) {
+  return db.prepare('SELECT COUNT(*) n FROM entitlements WHERE teacher_id = ?').get(teacherId).n;
+}
+
+// POST /api/admin/teacher/:id/reset-password
+//  The safe answer to "I am locked out" or "just delete me so I can re-sign up".
+//  Sets a fresh temporary password and returns it once, in the response body, for
+//  the operator to relay. Nothing else about the account changes: same teacher_id,
+//  so classes, rosters, gradebook history, and entitlements are all untouched.
+//  Any outstanding self-service reset tokens are burned so an old emailed link
+//  cannot be used to take the account back over.
+router.post('/teacher/:id/reset-password', async (req, res) => {
+  try {
+    const t = findTeacher(req.params.id);
+    if (!t) return res.status(404).json({ error: `No teacher with id or email ${req.params.id}` });
+
+    const password = (req.body && req.body.password) ? String(req.body.password) : tempPassword();
+    if (password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters' });
+
+    const hash = await bcrypt.hash(password, 12);
+    db.transaction(() => {
+      db.prepare('UPDATE teachers SET password_hash = ? WHERE id = ?').run(hash, t.id);
+      db.prepare('DELETE FROM password_reset_tokens WHERE teacher_id = ?').run(t.id);
+    })();
+
+    console.log(`[admin] password reset for teacher ${t.id} (${t.email})`);
+    res.json({
+      ok: true,
+      teacher: { id: t.id, email: t.email, name: t.name },
+      temporary_password: password,
+      note: 'Relay this to the teacher over a channel you trust. It replaces their old password immediately. Everything else about the account is unchanged.',
+    });
+  } catch (e) {
+    console.error('admin/teacher/:id/reset-password:', e);
+    res.status(500).json({ error: 'password reset failed', detail: e.message });
+  }
+});
+
+// DELETE /api/admin/teacher/:id?confirm=<email>[&force=1]
+//  HARD delete, and genuinely destructive: classes, students, progress, and
+//  score_events all cascade from the teacher row, and entitlements go with it.
+//  attempts and sessions carry no foreign key, so they are removed explicitly
+//  here; leaving them behind would orphan rows that still count in the analytics
+//  and health modules.
+//
+//  Guarded three ways: no ?confirm returns a dry-run impact report and changes
+//  nothing; ?confirm must equal the teacher's own email; and if the account holds
+//  any real student work the call is refused unless ?force=1 is also present.
+//  Prefer reset-password: a locked-out teacher never needs deletion.
+router.delete('/teacher/:id', (req, res) => {
+  try {
+    const t = findTeacher(req.params.id);
+    if (!t) return res.status(404).json({ error: `No teacher with id or email ${req.params.id}` });
+
+    const impact = deletionImpact(t.id);
+    const confirm = String(req.query.confirm || '').toLowerCase();
+    const force = req.query.force === '1';
+
+    if (confirm !== String(t.email).toLowerCase()) {
+      return res.status(400).json({
+        ok: false,
+        dry_run: true,
+        teacher: { id: t.id, email: t.email, name: t.name },
+        would_delete: impact,
+        how_to_confirm: `DELETE /api/admin/teacher/${t.id}?confirm=${encodeURIComponent(t.email)}` + (impact.has_student_work ? '&force=1' : ''),
+        warning: impact.has_student_work
+          ? 'This account holds real student work. Deleting is permanent and cannot be undone. A locked-out teacher should be given a new password instead: POST /api/admin/teacher/:id/reset-password'
+          : 'Nothing but empty class shells would be removed. A password reset is still the better fix for a lockout.',
+      });
+    }
+    if (impact.has_student_work && !force) {
+      return res.status(409).json({
+        ok: false,
+        error: 'Refusing to delete: this account holds student work.',
+        would_delete: impact,
+        override: `Add &force=1 only if you are certain this gradebook data should be destroyed.`,
+      });
+    }
+
+    const ids = db.prepare('SELECT id FROM classes WHERE teacher_id = ?').all(t.id).map((r) => r.id);
+    db.transaction(() => {
+      if (ids.length) {
+        const ph = ids.map(() => '?').join(',');
+        // No FK on these two, so they must be cleared by hand or they orphan.
+        db.prepare(`DELETE FROM attempts WHERE class_id IN (${ph})`).run(...ids);
+        db.prepare(`DELETE FROM sessions WHERE class_id IN (${ph})`).run(...ids);
+      }
+      // Cascades: classes -> students -> progress / score_events / quiz_attempts,
+      // plus entitlements and any reset tokens.
+      db.prepare('DELETE FROM teachers WHERE id = ?').run(t.id);
+    })();
+
+    console.log(`[admin] DELETED teacher ${t.id} (${t.email}) removing ${impact.classes} class(es), ${impact.students} student(s)`);
+    res.json({
+      ok: true,
+      deleted: { id: t.id, email: t.email, name: t.name },
+      removed: impact,
+      note: 'The email is now free to register again from scratch.',
+    });
+  } catch (e) {
+    console.error('admin/teacher/:id delete:', e);
+    res.status(500).json({ error: 'teacher delete failed', detail: e.message });
   }
 });
 
