@@ -22,6 +22,7 @@ const health = require('../lib/admin-health');
 const teacherView = require('../lib/admin-teacher');
 const resetLib = require('../lib/password-reset');
 const gradebook = require('../lib/admin-gradebook');
+const denominators = require('../lib/admin-denominators');
 const wire = require('../lib/wire-log');
 
 const router = express.Router();
@@ -86,6 +87,8 @@ router.get('/', (req, res) => {
       'GET /api/admin/class/:code         one class: meta + roster + recent activity',
       'GET /api/admin/student/:id         per-lesson visit status + grade-of-record per item, vs manifest',
       'GET /api/admin/class/:id/gradebook full gradebook: merges attempts + score_events rollups; ?reveal=1 for real names, ?course= for solo',
+      'GET /api/admin/denominators        which graded columns have an authored "out of"; ?course= required, proposes values where the data agrees',
+      'POST /api/admin/denominators/adopt author denominators (header key required); {course, adopt_proposed} or {course, values}, dry_run supported',
       'GET /api/admin/schema              live table/column listing',
       'GET /api/admin/score-events        raw graded-interaction ledger; ?student_id= ?class_code= ?course= ?limit=',
     ],
@@ -872,6 +875,74 @@ router.get('/class/:id/gradebook', (req, res) => {
   } catch (e) {
     console.error('admin/class/:id/gradebook:', e);
     res.status(500).json({ error: 'gradebook failed', detail: e.message });
+  }
+});
+
+// ── DENOMINATOR COVERAGE: which graded columns have an authored "out of" ─────
+//  Both gradebooks display the authored denominator from course_denominators
+//  whenever one exists, so filling a row corrects every existing gradebook
+//  retroactively. Only ap-csa was ever seeded, which is why a Cybersecurity
+//  gradebook still denominates by whatever was recorded. This reports the gap
+//  per (lesson, activity) and, where the students' own submissions agree,
+//  proposes the value to author.
+//  ?course= (required), ?min_students=, ?agreement= to tune what counts as
+//  agreement, ?status= to filter (e.g. ?status=proposed).
+router.get('/denominators', (req, res) => {
+  try {
+    const course = req.query.course;
+    if (!course) {
+      return res.status(400).json({
+        error: 'course is required',
+        courses: db.prepare('SELECT DISTINCT course FROM classes ORDER BY course').all().map((r) => r.course),
+      });
+    }
+    const out = denominators.coverage(course, {
+      min_students: req.query.min_students,
+      agreement: req.query.agreement,
+    });
+    if (req.query.status) {
+      const want = new Set(String(req.query.status).split(',').map((s) => s.trim()));
+      out.columns = out.columns.filter((c) => want.has(c.status));
+    }
+    res.json(out);
+  } catch (e) {
+    console.error('admin/denominators:', e);
+    res.status(500).json({ error: 'denominators failed', detail: e.message });
+  }
+});
+
+// ── ADOPT DENOMINATORS: write the authored "out of" ───────────────────────────
+//  A mutation, so the x-admin-key HEADER is required (the dashboard cookie is
+//  read-only by design). Body:
+//    { course, adopt_proposed: true }         author every column the class data
+//                                             agrees on
+//    { course, values: { "1.1|quiz": 10 } }   author explicit values
+//    { ..., dry_run: true }                   return the plan, write nothing
+//    { ..., overwrite: true }                 replace existing authored rows
+//    { ..., include_ambiguous: true }         force columns students disagree on
+//  Additive and reversible: the write only changes what gradebooks DISPLAY, and
+//  deleting the row restores the previous behaviour exactly. No stored score is
+//  touched, so nothing here can corrupt a grade.
+router.post('/denominators/adopt', (req, res) => {
+  try {
+    const b = req.body || {};
+    if (!b.course) return res.status(400).json({ error: 'course is required' });
+    if (!b.adopt_proposed && !b.values) {
+      return res.status(400).json({ error: 'nothing to do: pass adopt_proposed: true and/or values' });
+    }
+    const out = denominators.adopt(b.course, {
+      values: b.values,
+      adopt_proposed: !!b.adopt_proposed,
+      include_ambiguous: !!b.include_ambiguous,
+      overwrite: !!b.overwrite,
+      dry_run: !!b.dry_run,
+      min_students: b.min_students,
+      agreement: b.agreement,
+    });
+    res.json(out);
+  } catch (e) {
+    console.error('admin/denominators/adopt:', e);
+    res.status(500).json({ error: 'adopt failed', detail: e.message });
   }
 });
 
