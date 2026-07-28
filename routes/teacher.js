@@ -386,9 +386,14 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
 
 // ── CSV EXPORT (Wide gradebook, CodeHS-style) — SINGLE canonical export ─────────
 // Rows = students. Columns = identity + per-unit summary + every lesson/activity.
-// Score shows ONLY for graded activities (quiz, exam, case-file). Lessons and
-// exercises show "Done" or blank, never a number. Per-unit average is quiz-only
-// and labeled "Avg Quiz" so it never mixes an exam raw score into a percentage.
+// A cell shows its SCORE whenever one was recorded, otherwise "Done" if the
+// activity was completed, otherwise blank. This used to gate the score behind an
+// allow-list of "graded" activities, which silently discarded real recorded
+// scores for exercise-1 and exercise-2: the number was in the database and the
+// export threw it away. Any activity that reports a score now shows it, so
+// adding a new graded activity type needs no change here.
+// Per-unit average stays quiz-only and is labeled "Avg Quiz" so it never mixes an
+// exam raw score into a percentage.
 router.get('/classes/:code/export', requireTeacher, (req, res) => {
   try {
     const cls = db.prepare('SELECT * FROM classes WHERE class_code = ? AND teacher_id = ?')
@@ -410,12 +415,6 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
       (map[p.student_id] = map[p.student_id] || {})[`${p.unit}|${p.lesson}|${p.activity_type}`] = p;
     }
 
-    // GRADED is the graded/retry classification: these activities carry a numeric
-    // grade of record (subject to the class mastery_threshold and retry policy) and
-    // render their score, while other activities render "Done". exercise-3 (the FRQ)
-    // is graded, same as a quiz, and gets its own gradebook column via the ABBR +
-    // activities lists.
-    const GRADED = new Set(['quiz', 'exam', 'case-file', 'exercise-3']);
     const ABBR = { lesson: 'L', 'exercise-1': 'E1', 'exercise-2': 'E2', 'exercise-3': 'E3', quiz: 'Q', lab: 'Lab', code: 'Code' };
     const abbr = a => ABBR[a] || a;
     const shortUnit = k => k.replace(/^unit-/, 'Unit ').replace(/^bi-/, 'BI ');
@@ -427,9 +426,9 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
       const u = courseConfig.units[unitId];
       for (const lesson of u.lessons)
         for (const act of u.activities)
-          cols.push({ unit: unitId, lesson, activity: act, header: `${lesson} ${abbr(act)}`, graded: GRADED.has(act) });
-      if (u.case_file) cols.push({ unit: unitId, lesson: u.case_file.lesson, activity: 'case-file', header: u.case_file.label || 'Case File', graded: true });
-      if (u.exam)      cols.push({ unit: unitId, lesson: u.exam.lesson, activity: 'exam', header: u.exam.label || 'Unit Exam', graded: true });
+          cols.push({ unit: unitId, lesson, activity: act, header: `${lesson} ${abbr(act)}` });
+      if (u.case_file) cols.push({ unit: unitId, lesson: u.case_file.lesson, activity: 'case-file', header: u.case_file.label || 'Case File' });
+      if (u.exam)      cols.push({ unit: unitId, lesson: u.exam.lesson, activity: 'exam', header: u.exam.label || 'Unit Exam' });
     }
 
     // Lead: identity + Overall % + per-unit (% and Avg Quiz).
@@ -456,7 +455,9 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
       const cells = cols.map(c => {
         const r = sm[`${c.unit}|${c.lesson}|${c.activity}`];
         if (!r) return '';
-        if (c.graded && r.score != null) return r.score;
+        // A recorded score always wins. Gating this on an activity allow-list is
+        // what hid exercise scores that had been captured correctly all along.
+        if (r.score != null) return r.score;
         return r.completed ? 'Done' : '';
       });
       rows.push([s.display_name, s.student_ref || '', s.last_active || '',

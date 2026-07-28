@@ -125,8 +125,24 @@
 
   .gbcell { font-variant-numeric:tabular-nums; }
   .gbcell.pass { color:var(--good); font-weight:600; }
+  .gbcell.near { color:var(--warnc); font-weight:600; }
   .gbcell.fail { color:var(--critical); font-weight:600; }
   .gbcell.none { color:var(--muted); }
+  /* Wide gradebook: cap the height, freeze the student column and the header so
+     scrolling 53 lesson columns never loses the row or column you are reading. */
+  .gbwrap { max-height:70vh; overflow:auto; }
+  .gbtable th, .gbtable td { white-space:nowrap; }
+  .gbtable th.stick, .gbtable td.stick {
+    position:sticky; left:0; z-index:2; background:var(--surface);
+    box-shadow:1px 0 0 var(--border); text-align:left; max-width:190px; overflow:hidden; text-overflow:ellipsis;
+  }
+  .gbtable thead th { position:sticky; top:0; z-index:3; background:var(--surface); }
+  .gbtable thead th.stick { z-index:4; }
+  .gbtable th.offman { color:var(--csp); }
+  .gbtable tr.avgrow td { border-top:2px solid var(--border); font-weight:600; background:color-mix(in srgb, var(--ink) 3%, transparent); }
+  .gbtable tr.avgrow td.stick { background:var(--surface); }
+  .gbtable tbody tr:hover td { background:color-mix(in srgb, var(--ink) 4%, transparent); }
+  .gbtable tbody tr:hover td.stick { background:var(--surface); }
   .empty { padding:34px; text-align:center; color:var(--muted); }
   .hide { display:none; }
 </style>
@@ -199,7 +215,10 @@
   var state = {
     health: null, list: null, detail: null,
     sort: { key: "students", dir: -1 },
-    reveal: false, gradebooks: {}
+    reveal: false, gradebooks: {},
+    // Gradebook view: "item" is one column per assignment (the per-assignment
+    // view), "lesson" rolls a lesson's assignments into one column.
+    gbMode: "item", gbUnit: "", gbEmpty: false, gbCurrent: null
   };
 
   var $ = function (id) { return document.getElementById(id); };
@@ -522,57 +541,253 @@
       bars + labels + '<text x="' + padL + '" y="' + (padT+8) + '">peak ' + max + "</text></svg>";
   }
 
-  // ── Gradebook (the actual teacher view) ───────────────────────────────────
+  // ── Gradebook (the full picture, both grading pipelines) ──────────────────
   function showGradebook(classId, code, course) {
     var card = $("gbCard"), body = $("gbBody");
     card.style.display = "";
     $("gbTitle").textContent = "Gradebook · " + code;
     body.innerHTML = '<p class="hint">Loading…</p>';
-    var url = "/api/admin/class/" + encodeURIComponent(classId) + "/gradebook" +
-      (course === "solo" ? "?course=ap-csa" : "");
+    var qs = [];
+    if (course === "solo") qs.push("course=ap-csa");
+    if (state.reveal) qs.push("reveal=1");
+    var url = "/api/admin/class/" + encodeURIComponent(classId) + "/gradebook" + (qs.length ? "?" + qs.join("&") : "");
     api(url).then(function (g) {
-      body.innerHTML = renderGradebook(g);
-      card.scrollIntoView({ behavior: "smooth", block: "start" });
+      state.gradebooks[classId] = g;
+      state.gbCurrent = g;
+      paintGradebook(g, true);
     }).catch(function (e) {
       if (e && e.auth) return toLogin();
       body.innerHTML = '<p class="empty">Could not load the gradebook (' + esc(e.message) + ").</p>";
     });
   }
 
+  // Colour a percentage the same way everywhere: green at/above the class
+  // mastery threshold, yellow within 20 points of it, red below.
+  function gbClass(p, threshold) {
+    if (p == null) return "none";
+    if (p >= threshold) return "pass";
+    if (p >= threshold - 20) return "near";
+    return "fail";
+  }
+
+  // Re-render the gradebook body in place and re-bind its controls. Called on
+  // first load and whenever a view toggle changes, so the fetched data is reused
+  // rather than re-requested.
+  function paintGradebook(g, scroll) {
+    var body = $("gbBody");
+    body.innerHTML = renderGradebook(g);
+    var m = document.getElementById("gbMode");
+    if (m) m.addEventListener("click", function () {
+      state.gbMode = state.gbMode === "item" ? "lesson" : "item";
+      paintGradebook(g, false);
+    });
+    var u = document.getElementById("gbUnit");
+    if (u) u.addEventListener("change", function () { state.gbUnit = this.value; paintGradebook(g, false); });
+    var e = document.getElementById("gbEmpty");
+    if (e) e.addEventListener("change", function () { state.gbEmpty = this.checked; paintGradebook(g, false); });
+    var c = document.getElementById("gbCsv");
+    if (c) c.addEventListener("click", function () { downloadGradebookCsv(g); });
+    if (scroll) $("gbCard").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   function renderGradebook(g) {
-    var lessons = g.lessons || [], studs = g.students || [];
-    if (!lessons.length) {
-      return '<p class="empty">This course has no graded items in the manifest yet, so there is no gradebook to show. ' +
-        "Visit tracking still works; add cfu/quiz manifest rows to populate this.</p>";
-    }
+    var studs = g.students || [];
+    var th = g.class.mastery_threshold == null ? 80 : g.class.mastery_threshold;
     if (!studs.length) return '<p class="empty">No students enrolled in this class.</p>';
 
-    // Stable anonymized labels, keyed by student id so they match the roster.
-    var labelById = {};
-    ((state.detail || {}).roster || []).forEach(function (r) { labelById[r.id] = r.label; });
+    var sum = g.summary || {};
+    var strip =
+      '<div class="strip" style="margin:2px 0 12px">' +
+        '<div class="s"><b>' + (sum.class_avg_pct == null ? "-" : sum.class_avg_pct + "%") + "</b>class average</div>" +
+        '<div class="s"><b>' + fmt(sum.students_with_scores) + "/" + fmt(sum.students) + "</b>students with scores</div>" +
+        '<div class="s"><b>' + fmt(sum.items_shown) + "</b>assignments</div>" +
+        '<div class="s"><b>' + th + "%</b>mastery threshold</div>" +
+      "</div>";
 
-    var head = "<th>Student</th><th class='num'>Visits</th>" +
-      lessons.map(function (l) { return "<th class='num' title='" + esc(l.unit) + "'>" + esc(l.lesson_id) + "</th>"; }).join("") +
-      "<th class='num'>Overall</th>";
+    // Which activity types are actually reporting. This is what makes a grader
+    // that never fires visible, instead of looking like students did no work.
+    var cov = g.activity_coverage || [];
+    var covHtml = "";
+    if (cov.length) {
+      var broken = cov.filter(function (c) { return c.never_scored; });
+      var rows = cov.map(function (c) {
+        var state = c.never_scored
+          ? '<span class="badge scores_missing">never scores</span>'
+          : (c.scored_cells ? '<span class="badge reporting">reporting</span>'
+                            : '<span class="badge empty">' + (c.graded_kind ? "no data" : "not graded") + "</span>");
+        return "<tr><td><b>" + esc(c.label) + "</b> <span class='muted'>" + esc(c.activity) + "</span></td>" +
+          '<td class="num">' + fmt(c.items) + "</td>" +
+          '<td class="num">' + fmt(c.scored_cells) + "/" + fmt(c.possible_cells) + "</td>" +
+          '<td class="num">' + (c.avg_pct == null ? "-" : c.avg_pct + "%") + "</td>" +
+          "<td>" + state + "</td></tr>";
+      }).join("");
+      covHtml =
+        (broken.length
+          ? '<div class="banner" style="margin:0 0 12px">Not recording any scores: <b>' +
+            broken.map(function (b) { return esc(b.label) + " (" + esc(b.activity) + ")"; }).join(", ") +
+            "</b>. These assignments exist in the course but no score has ever arrived for them in this class." +
+            " Every other activity below is reporting normally, so this is a grader that is not wired rather than students not working.</div>"
+          : "") +
+        '<details class="finding" style="margin:0 0 14px"><summary><span class="ttl">Assignment coverage by type</span>' +
+          '<span class="cnt">' + cov.length + " types</span></summary>" +
+          '<div class="body"><div class="tablewrap"><table class="minitable"><thead><tr>' +
+            "<th>Activity</th><th class='num'>Items</th><th class='num'>Scored cells</th><th class='num'>Avg</th><th>State</th>" +
+          "</tr></thead><tbody>" + rows + "</tbody></table></div></div></details>";
+    }
 
-    var rows = studs.map(function (s) {
-      var cells = lessons.map(function (l) {
-        var c = s.lessons && s.lessons[l.lesson_id];
-        if (!c || !c.items_attempted) return '<td class="num gbcell none">-</td>';
-        var cls = c.items_passed >= c.items_attempted ? "pass" : "fail";
-        return '<td class="num gbcell ' + cls + '" title="' + esc(c.earned + "/" + c.possible + " · " + c.items_passed + " of " + c.items_attempted + " passed") + '">' + c.pct + "%</td>";
+    var units = (g.units || []).filter(function (u) {
+      return (g.items || []).some(function (i) { return i.unit === u; });
+    });
+    var unitSel = units.length > 1
+      ? '<select id="gbUnit"><option value="">All units</option>' +
+        units.map(function (u) {
+          return '<option value="' + esc(u) + '"' + (state.gbUnit === u ? " selected" : "") + ">" + esc(u) + "</option>";
+        }).join("") + "</select>"
+      : "";
+
+    var controls =
+      '<div class="controls" style="margin-bottom:10px">' +
+        '<button id="gbMode">' + (state.gbMode === "item" ? "Showing: by assignment" : "Showing: by lesson") + "</button>" +
+        unitSel +
+        '<label class="chk" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2);cursor:pointer">' +
+          '<input type="checkbox" id="gbEmpty"' + (state.gbEmpty ? " checked" : "") + " /> Show assignments with no data</label>" +
+        '<button id="gbCsv">Export CSV</button>' +
+      "</div>";
+
+    var table = state.gbMode === "item" ? itemTable(g, th) : lessonTable(g, th);
+    return strip + covHtml + controls + table +
+      '<p class="hint" style="margin-top:10px">Mastery threshold ' + th + "%, retry " +
+        (g.class.retry_allowed ? "allowed (best attempt counts)" : "off (first attempt counts)") +
+        ". <b>done</b> means completed with no score recorded; a dot means no activity." +
+        " Orange headers are assignments the course declares that have never reported a score in this class.</p>";
+  }
+
+  // Which assignment columns to show, after the unit and empty-column filters.
+  function visibleItems(g) {
+    return (g.items || []).filter(function (i) {
+      if (state.gbUnit && i.unit !== state.gbUnit) return false;
+      if (!state.gbEmpty && i.scored_students === 0 && i.completed_students === 0) return false;
+      return true;
+    });
+  }
+
+  function itemTable(g, th) {
+    var items = visibleItems(g);
+    if (!items.length) {
+      return '<p class="empty">No assignments match this filter. Tick "Show assignments with no data" to see every assignment the course declares.</p>';
+    }
+    var head = '<th class="stick">Student</th>' +
+      items.map(function (i) {
+        var t = (i.unit ? i.unit + " · " : "") + i.lesson_id + " " + i.activity +
+          " · class avg " + (i.class_avg_pct == null ? "no data" : i.class_avg_pct + "%") +
+          " · " + i.scored_students + " scored" + (i.expected ? "" : " · not in course config");
+        var cls = (i.expected && i.scored_students === 0 && i.graded_kind) ? " offman" : "";
+        return '<th class="num' + cls + '" title="' + esc(t) + '">' + esc(i.label) + "</th>";
+      }).join("") +
+      '<th class="num">Overall</th>';
+
+    var rows = (g.students || []).map(function (s) {
+      var cells = items.map(function (i) {
+        var c = s.items && s.items[i.key];
+        if (!c) return '<td class="num gbcell none">·</td>';
+        if (c.pct == null) return '<td class="num gbcell none" title="Completed, no score recorded">done</td>';
+        var tip = c.source === "attempt"
+          ? (c.earned + "/" + c.possible + " · " + c.tries + " attempt(s)")
+          : (i.activity + " " + c.pct + "%");
+        return '<td class="num gbcell ' + gbClass(c.pct, th) + '" title="' + esc(tip) + '">' + c.pct + "%</td>";
       }).join("");
       var ov = s.overall || {};
-      return "<tr><td>" + esc(labelById[s.id] || (state.reveal ? s.name : "Student")) + "</td>" +
-        '<td class="num muted">' + fmt((s.visits||{}).visited) + "/" + fmt((s.visits||{}).total) + "</td>" +
-        cells +
-        '<td class="num gbcell"><b>' + (ov.pct != null ? ov.pct + "%" : "-") + "</b></td></tr>";
+      return '<tr><td class="stick">' + esc(s.label) + "</td>" + cells +
+        '<td class="num gbcell ' + gbClass(ov.pct, th) + '"><b>' + (ov.pct == null ? "-" : ov.pct + "%") + "</b></td></tr>";
     }).join("");
 
-    var note = '<p class="hint" style="margin-top:10px">Mastery threshold ' + esc(g.class.mastery_threshold == null ? 80 : g.class.mastery_threshold) +
-      "%, retry " + (g.class.retry_allowed ? "allowed (best attempt counts)" : "off (first attempt counts)") +
-      ". Percentages are computed against the course manifest.</p>";
-    return '<div class="tablewrap"><table class="minitable"><thead><tr>' + head + "</tr></thead><tbody>" + rows + "</tbody></table></div>" + note;
+    var avg = '<tr class="avgrow"><td class="stick">Class average</td>' +
+      items.map(function (i) {
+        return '<td class="num gbcell ' + gbClass(i.class_avg_pct, th) + '">' +
+          (i.class_avg_pct == null ? "·" : i.class_avg_pct + "%") + "</td>";
+      }).join("") + '<td class="num"></td></tr>';
+
+    return '<div class="tablewrap gbwrap"><table class="minitable gbtable"><thead><tr>' + head +
+      "</tr></thead><tbody>" + rows + avg + "</tbody></table></div>";
+  }
+
+  function lessonTable(g, th) {
+    var lessons = (g.lessons || []).filter(function (l) {
+      if (state.gbUnit && l.unit !== state.gbUnit) return false;
+      if (!state.gbEmpty && l.graded_students === 0) return false;
+      return true;
+    });
+    if (!lessons.length) return '<p class="empty">No lessons with grades in this view.</p>';
+
+    var head = '<th class="stick">Student</th><th class="num">Visits</th>' +
+      lessons.map(function (l) {
+        var t = (l.unit ? l.unit + " · " : "") + "class avg " +
+          (l.class_avg_pct == null ? "no data" : l.class_avg_pct + "%") + (l.in_manifest ? "" : " · not in manifest");
+        return '<th class="num' + (l.in_manifest ? "" : " offman") + '" title="' + esc(t) + '">' + esc(l.lesson_id) + "</th>";
+      }).join("") + '<th class="num">Overall</th>';
+
+    var rows = (g.students || []).map(function (s) {
+      var cells = lessons.map(function (l) {
+        var c = s.cells && s.cells[l.lesson_id];
+        if (!c || c.pct == null) return '<td class="num gbcell none">·</td>';
+        return '<td class="num gbcell ' + gbClass(c.pct, th) + '" title="' + esc("average of " + c.items + " assignment(s)") + '">' + c.pct + "%</td>";
+      }).join("");
+      var ov = s.overall || {};
+      return '<tr><td class="stick">' + esc(s.label) + "</td>" +
+        '<td class="num muted">' + fmt((s.visits || {}).visited) + "/" + fmt((s.visits || {}).total) + "</td>" +
+        cells + '<td class="num gbcell ' + gbClass(ov.pct, th) + '"><b>' + (ov.pct == null ? "-" : ov.pct + "%") + "</b></td></tr>";
+    }).join("");
+
+    var avg = '<tr class="avgrow"><td class="stick">Class average</td><td class="num muted"></td>' +
+      lessons.map(function (l) {
+        return '<td class="num gbcell ' + gbClass(l.class_avg_pct, th) + '">' +
+          (l.class_avg_pct == null ? "·" : l.class_avg_pct + "%") + "</td>";
+      }).join("") + '<td class="num"></td></tr>';
+
+    return '<div class="tablewrap gbwrap"><table class="minitable gbtable"><thead><tr>' + head +
+      "</tr></thead><tbody>" + rows + avg + "</tbody></table></div>";
+  }
+
+  function downloadGradebookCsv(g) {
+    var byItem = state.gbMode === "item";
+    var cols = byItem
+      ? visibleItems(g).map(function (i) { return { key: i.key, header: i.label, avg: i.class_avg_pct }; })
+      : (g.lessons || []).filter(function (l) {
+          if (state.gbUnit && l.unit !== state.gbUnit) return false;
+          if (!state.gbEmpty && l.graded_students === 0) return false;
+          return true;
+        }).map(function (l) { return { key: l.lesson_id, header: l.lesson_id, avg: l.class_avg_pct }; });
+
+    var lines = [["Student", "Visits", "VisitsTotal"]
+      .concat(cols.map(function (c) { return c.header; }))
+      .concat(["Overall", "Basis", "ItemsGraded", "ItemsPassed"])];
+
+    (g.students || []).forEach(function (s) {
+      var row = [s.label, (s.visits || {}).visited, (s.visits || {}).total];
+      cols.forEach(function (c) {
+        var cell = byItem ? (s.items && s.items[c.key]) : (s.cells && s.cells[c.key]);
+        row.push(cell && cell.pct != null ? cell.pct : (cell && cell.completed ? "done" : ""));
+      });
+      var ov = s.overall || {};
+      row.push(ov.pct == null ? "" : ov.pct, ov.basis, ov.items_graded, ov.items_passed);
+      lines.push(row);
+    });
+    lines.push(["Class average", "", ""]
+      .concat(cols.map(function (c) { return c.avg == null ? "" : c.avg; }))
+      .concat([g.summary ? g.summary.class_avg_pct : "", "", "", ""]));
+
+    var csv = lines.map(function (r) {
+      return r.map(function (v) {
+        var t = v == null ? "" : String(v);
+        return /[",\n]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t;
+      }).join(",");
+    }).join("\n");
+    var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "gradebook-" + (g.class.class_code || "class") + "-" + (byItem ? "assignments" : "lessons") + ".csv";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
   }
 
   // ── Routing ───────────────────────────────────────────────────────────────

@@ -76,6 +76,34 @@ const insertQuizAttemptStmt = db.prepare(`
 
 const VALID_ACTIVITIES = new Set(['quiz', 'exam', 'exercise-1', 'exercise-2', 'exercise-3']);
 
+// Field names a page might reasonably use for "the option the student picked".
+// Checked in order; the first one present on the answer object wins.
+const ANSWER_KEYS = ['chosen_index', 'chosen', 'answer', 'index', 'selected', 'choice'];
+
+// Interpret one answer entry. Returns { index } when understood, { skip: true }
+// for a deliberately unanswered question, or { bad: true, value } when a value
+// was supplied that cannot be read as an option position. Accepts a whole
+// number, a numeric string, or a single letter (A -> 0, B -> 1, ...), because a
+// page sending any of those means the same thing and none of them should be
+// silently scored as wrong.
+function parseChosen(ans) {
+  for (const k of ANSWER_KEYS) {
+    if (!(k in ans)) continue;
+    const v = ans[k];
+    if (v === null || v === undefined || v === '') return { skip: true };
+    if (typeof v === 'number') {
+      return Number.isFinite(v) ? { index: Math.trunc(v) } : { bad: true, value: v };
+    }
+    if (typeof v === 'string') {
+      const t = v.trim();
+      if (/^-?\d+$/.test(t)) return { index: parseInt(t, 10) };
+      if (/^[A-Za-z]$/.test(t)) return { index: t.toUpperCase().charCodeAt(0) - 65 };
+    }
+    return { bad: true, value: v };
+  }
+  return { skip: true };   // no answer field at all: an unanswered question
+}
+
 // ── RATE LIMIT (light, per identity, bounded memory) ──────────────────────────
 // Same shape as routes/progress.js: fixed 60s window, no timers, hard key cap so
 // the map can never grow unbounded on Railway's 1 GB ceiling. Keyed by student id
@@ -225,12 +253,31 @@ router.post('/submit', optionalStudent, rateLimit, (req, res) => {
 
     // 6) Score against the key. Map the shown option position the student picked
     //    back to the canonical option index via the order token, then compare.
+    //
+    //    Parsing is deliberately liberal, and failure is deliberately LOUD. This
+    //    used to require a literal integer on `chosen_index` and silently drop
+    //    anything else, which scored every question wrong: a page sending "2"
+    //    instead of 2, or naming the field `chosen`, got a confident 0 out of N
+    //    with a 200 response and no clue anywhere that the submission had not
+    //    been understood. A skipped question is a real zero; an answer we cannot
+    //    interpret is a bug, and the two must never look the same.
     const answers = Array.isArray(b.answers) ? b.answers : [];
     const chosenByQid = new Map();
+    const unparsed = [];
     for (const ans of answers) {
-      if (ans && typeof ans.qid === 'string' && Number.isInteger(ans.chosen_index)) {
-        chosenByQid.set(ans.qid, ans.chosen_index);
-      }
+      if (!ans || typeof ans.qid !== 'string') continue;
+      const parsed = parseChosen(ans);
+      if (parsed.bad) unparsed.push({ qid: ans.qid, value: parsed.value });
+      else if (!parsed.skip) chosenByQid.set(ans.qid, parsed.index);
+    }
+    if (unparsed.length) {
+      return res.status(400).json({
+        error: 'Could not read the selected option for one or more questions, so this submission was not scored.',
+        detail: `Send the index of the option AS SHOWN on the page, e.g. {"qid":"...","chosen_index":2}. ` +
+          `A whole number, a numeric string, or a letter (A/B/C/D) is accepted; omit the field or send null for a skipped question. ` +
+          `Accepted field names: ${ANSWER_KEYS.join(', ')}.`,
+        unparsed,
+      });
     }
 
     let score = 0, total = 0;
