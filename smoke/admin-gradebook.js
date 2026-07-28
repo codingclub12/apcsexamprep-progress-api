@@ -75,14 +75,25 @@ ok('resolves by class code', !!g && g.class.class_code === 'CYBER-1');
 ok('NOT empty: lessons present', g.lessons.length >= 3, g.lessons.map((l) => l.lesson_id));
 ok('every student has scores', g.students.every((s) => Object.keys(s.cells).length > 0));
 const s1 = g.students[0];
-ok('cell uses the score rollup source', s1.cells['1.1'].source === 'score', s1.cells['1.1']);
+// Lesson cells are pure rollups now; the source lives on the per-assignment cell.
+const cfu11 = g.items.find((i) => i.lesson_id === '1.1' && i.activity === 'cfu');
+ok('per-item cell records the score-rollup source',
+  cfu11 && s1.items[cfu11.key] && s1.items[cfu11.key].source === 'score', cfu11 && s1.items[cfu11.key]);
 ok('1.1 averages cfu 90 + quiz 80 = 85', s1.cells['1.1'].pct === 85, s1.cells['1.1']);
-ok('carries the per-activity breakdown', (s1.cells['1.1'].activities || []).length === 2, s1.cells['1.1'].activities);
+ok('cfu and quiz are separate assignment cells', (function () {
+  const q = g.items.find((i) => i.lesson_id === '1.1' && i.activity === 'quiz');
+  return cfu11 && q && s1.items[cfu11.key] && s1.items[q.key] &&
+    s1.items[cfu11.key].pct === 90 && s1.items[q.key].pct === 80;
+})());
+ok('lesson rollup averages those two to 85', s1.cells['1.1'].items === 2 && s1.cells['1.1'].pct === 85, s1.cells['1.1']);
 ok('passed computed vs class threshold 80', s1.cells['1.1'].passed === true);
 ok('failing student marked not passed', g.students[1].cells['1.1'].passed === false, g.students[1].cells['1.1']);
 ok('lesson with NO manifest row still shown', g.lessons.some((l) => l.lesson_id === '2.7'), g.lessons.map((l) => l.lesson_id));
 ok('  and is flagged as off-manifest', g.lessons.find((l) => l.lesson_id === '2.7').in_manifest === false);
-ok('visit recorded on the cell', s1.cells['1.1'].visited === true);
+ok('the lesson visit is its own cell, marked done', (function () {
+  const l = g.items.find((i) => i.lesson_id === '1.1' && i.activity === 'lesson');
+  return l && s1.items[l.key] && s1.items[l.key].source === 'done' && s1.items[l.key].completed === true;
+})());
 ok('overall basis is percent', s1.overall.basis === 'percent', s1.overall);
 ok('class average computed', typeof g.summary.class_avg_pct === 'number', g.summary);
 ok('per-lesson class average', g.lessons.find((l) => l.lesson_id === '1.1').class_avg_pct === Math.round((85 + 50 + 100) / 3),
@@ -91,10 +102,19 @@ ok('summary counts the score-rollup source', g.summary.sources.score_rollups > 0
 
 console.log('csa class (attempts path)');
 const g2 = buildGradebook('CSA-1');
-ok('lessons in natural order', g2.lessons.map((l) => l.lesson_id).join(' ') === '1.2 1.10', g2.lessons.map((l) => l.lesson_id));
+// Columns now come from the course config, so every declared lesson shows even
+// with no data. Assert the ORDERING is natural rather than a fixed short list.
+const order = g2.lessons.map((l) => l.lesson_id);
+ok('all configured lessons shown', order.length > 2, order.length);
+ok('lessons in natural order (1.9 < 1.10 < 2.1)', (function () {
+  const i9 = order.indexOf('1.9'), i10 = order.indexOf('1.10'), i21 = order.indexOf('2.1');
+  return i9 !== -1 && i10 !== -1 && i9 < i10 && (i21 === -1 || i10 < i21);
+})(), order.slice(0, 12));
 const a1 = g2.students[0];
-ok('cell uses the attempt source', a1.cells['1.2'].source === 'attempt', a1.cells['1.2']);
-ok('retry_allowed=1 takes the BEST attempt (10/10)', a1.cells['1.2'].pct === 100, a1.cells['1.2']);
+const q12 = g2.items.find((i) => i.lesson_id === '1.2' && i.activity === 'quiz');
+ok('per-item cell records the attempt source',
+  q12 && a1.items[q12.key] && a1.items[q12.key].source === 'attempt', q12 && a1.items[q12.key]);
+ok('retry_allowed=1 takes the BEST attempt (10/10)', a1.items[q12.key].pct === 100, a1.items[q12.key]);
 ok('overall basis is points', a1.overall.basis === 'points', a1.overall);
 ok('summary counts the attempts source', g2.summary.sources.attempts > 0, g2.summary.sources);
 
@@ -105,6 +125,43 @@ const gr = buildGradebook('CYBER-1', { reveal: true });
 ok('reveal returns real names', gr.students.some((s) => s.label.startsWith('Real Name')), gr.students.map((s) => s.label));
 ok('labels are stable across calls',
   buildGradebook('CYBER-1').students[0].id === g.students[0].id);
+
+console.log('per-assignment columns + exercise detection');
+// The Cyber config declares lesson, exercise-1, exercise-2, quiz per lesson.
+// The seed above recorded ONLY cfu/quiz style rollups, never an exercise, which
+// is exactly the reported production symptom.
+const gi = buildGradebook('CYBER-1');
+ok('per-assignment columns exist', (gi.items || []).length > 0, (gi.items || []).length);
+ok('columns include expected exercise-1 from the course config',
+  gi.items.some((i) => i.activity === 'exercise-1' && i.expected), gi.items.slice(0, 6));
+ok('expected-but-never-observed exercise column is present but unobserved',
+  gi.items.some((i) => i.activity === 'exercise-1' && i.expected && !i.observed));
+const cov = new Map((gi.activity_coverage || []).map((c) => [c.activity, c]));
+ok('activity_coverage reports every activity type', cov.size >= 3, [...cov.keys()]);
+ok('quiz coverage shows scores', (cov.get('quiz') || {}).scored_cells > 0, cov.get('quiz'));
+ok('exercise-1 flagged never_scored', (cov.get('exercise-1') || {}).never_scored === true, cov.get('exercise-1'));
+ok('exercise-2 flagged never_scored', (cov.get('exercise-2') || {}).never_scored === true, cov.get('exercise-2'));
+ok('lesson (a visit type) NOT flagged never_scored',
+  (cov.get('lesson') || {}).never_scored === false, cov.get('lesson'));
+ok('summary lists never-scored activities',
+  (gi.summary.never_scored_activities || []).indexOf('exercise-1') !== -1, gi.summary.never_scored_activities);
+ok('quiz NOT in never-scored list',
+  (gi.summary.never_scored_activities || []).indexOf('quiz') === -1, gi.summary.never_scored_activities);
+
+// A per-assignment cell carries its own score, not a lesson average.
+const st1 = gi.students[0];
+const quizKey = gi.items.find((i) => i.lesson_id === '1.1' && i.activity === 'quiz');
+ok('1.1 quiz cell holds the quiz score alone', quizKey && st1.items[quizKey.key] &&
+  st1.items[quizKey.key].pct === 80, quizKey && st1.items[quizKey.key]);
+const cfuKey = gi.items.find((i) => i.lesson_id === '1.1' && i.activity === 'cfu');
+ok('1.1 cfu cell holds the cfu score alone', cfuKey && st1.items[cfuKey.key] &&
+  st1.items[cfuKey.key].pct === 90, cfuKey && st1.items[cfuKey.key]);
+ok('lesson rollup still averages them to 85', st1.cells['1.1'].pct === 85, st1.cells['1.1']);
+ok('completed lesson cell recorded as done', (function(){
+  var lk = gi.items.find((i) => i.lesson_id === '1.1' && i.activity === 'lesson');
+  return lk && st1.items[lk.key] && st1.items[lk.key].source === 'done';
+})());
+ok('per-item class average computed', quizKey.class_avg_pct != null, quizKey);
 
 console.log('edge cases');
 ok('unknown class returns null', buildGradebook('NOPE-9999') === null);
