@@ -78,5 +78,48 @@ ok('non-array answers survive', (function () {
   return wire.recent(1)[0].answers.present === false;
 })());
 
+console.log('capture allowlist');
+const paths = [...wire.CAPTURE_PATHS];
+['/api/quiz/submit','/api/student/score','/api/student/quiz','/api/student/quiz/finalize',
+ '/api/student/track','/api/student/code-grade','/api/progress/attempt'].forEach((p) => {
+  ok('covers ' + p, wire.CAPTURE_PATHS.has(p));
+});
+// Auth routes carry names and PINs and must never be capturable, even by accident.
+['/api/student/login','/api/student/join','/api/student/solo-init','/api/student/solo-login',
+ '/api/teacher/login','/api/teacher/register','/admin/login'].forEach((p) => {
+  ok('EXCLUDES ' + p, !wire.CAPTURE_PATHS.has(p));
+});
+
+console.log('middleware gating');
+function fakeReq(method, path) { return { method, path, student: { id: 's1' } }; }
+function fakeRes() {
+  const handlers = {};
+  return { statusCode: 200, on: (ev, fn) => { handlers[ev] = fn; }, fire: (ev) => handlers[ev] && handlers[ev]() };
+}
+const beforeN = wire.stats().captured_total;
+let called = 0;
+wire.middleware(fakeReq('GET', '/api/student/score'), fakeRes(), () => { called++; });
+wire.middleware(fakeReq('POST', '/api/student/login'), fakeRes(), () => { called++; });
+ok('always calls next()', called === 2, called);
+ok('GET is not captured', wire.stats().captured_total === beforeN);
+ok('non-allowlisted POST is not captured', wire.stats().captured_total === beforeN);
+
+const res1 = fakeRes();
+wire.middleware(fakeReq('POST', '/api/student/score'), res1, () => {});
+res1.fire('finish');
+ok('allowlisted POST is captured on finish', wire.stats().captured_total === beforeN + 1);
+res1.fire('close');
+ok('  and only once even if close also fires', wire.stats().captured_total === beforeN + 1);
+
+// A handler that logged the richer entry must suppress the middleware's.
+const req2 = fakeReq('POST', '/api/quiz/submit');
+const res2 = fakeRes();
+wire.middleware(req2, res2, () => {});
+wire.recordOnce(req2, { endpoint: 'POST /api/quiz/submit', body: {}, status: 200, result: { score: 5, total: 5 } });
+const afterHandler = wire.stats().captured_total;
+res2.fire('finish');
+ok('handler entry suppresses the middleware duplicate', wire.stats().captured_total === afterHandler,
+  { afterHandler, now: wire.stats().captured_total });
+
 console.log('\n' + (fail ? (fail + ' FAILED, ' + pass + ' passed') : ('OK - all ' + pass + ' checks passed')));
 process.exit(fail ? 1 : 0);

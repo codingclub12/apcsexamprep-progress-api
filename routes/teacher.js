@@ -331,6 +331,16 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
     pointsMap[`${pt.student_id}|${pt.unit}|${pt.lesson}|${pt.activity_type}`] = pt;
   }
 
+
+  // Authored 'out of' per (lesson, activity) for this course, loaded once.
+
+  const authoredDenom = new Map(db.prepare(
+
+    'SELECT lesson, activity_type, possible FROM course_denominators WHERE course = ?'
+
+  ).all(cls.course).map((r) => [`${r.lesson}|${r.activity_type}`, r.possible]));
+
+
   // Build progress map: student_id → { unit → { lesson → { activity → record } } }
   const progressMap = {};
   for (const p of allProgress) {
@@ -338,6 +348,24 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
     if (!progressMap[p.student_id][p.unit]) progressMap[p.student_id][p.unit] = {};
     if (!progressMap[p.student_id][p.unit][p.lesson]) progressMap[p.student_id][p.unit][p.lesson] = {};
     const pt = pointsMap[`${p.student_id}|${p.unit}|${p.lesson}|${p.activity_type}`];
+    // The "out of" comes from course_denominators (the AUTHORED value) whenever
+    // that lesson/activity has one. Summing the recorded max_points instead made
+    // the denominator depend on what happened to be captured: a student served 5
+    // of a 6-point quiz read "/5", and a partial recording read as a partial
+    // total. Denominators are computed here at read time, so preferring the
+    // authored value corrects every existing gradebook with no data migration.
+    // Earned is rescaled to keep the pair consistent; the percentage never moves.
+    const authored = authoredDenom.get(`${p.lesson}|${p.activity_type}`);
+    let earned = pt ? pt.points_earned : null;
+    let possible = pt ? pt.points_possible : null;
+    let denomSource = possible != null ? 'observed' : null;
+    if (authored != null) {
+      const ratio = (possible && possible > 0) ? (earned / possible)
+                  : (p.score != null ? p.score / 100 : null);
+      possible = authored;
+      earned = ratio == null ? null : Math.round(ratio * authored * 100) / 100;
+      denomSource = 'authored';
+    }
     progressMap[p.student_id][p.unit][p.lesson][p.activity_type] = {
       completed:    !!p.completed,
       score:        p.score,
@@ -346,8 +374,9 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
       completed_at: p.completed_at,
       locked:       !!p.locked,
       progress_id:  p.progress_id,
-      points_earned:   pt ? pt.points_earned : null,
-      points_possible: pt ? pt.points_possible : null,
+      points_earned:   earned,
+      points_possible: possible,
+      denominator_source: denomSource,
     };
   }
 
