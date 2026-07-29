@@ -22,7 +22,8 @@
     "smoke:wirelog": "node smoke/wire-log.js",
     "smoke:denominators": "node smoke/admin-denominators.js",
     "smoke:legacypoints": "node smoke/legacy-points.js",
-    "smoke:exercises": "node smoke/exercise-reporting.js"
+    "smoke:exercises": "node smoke/exercise-reporting.js",
+    "smoke:ungraded": "node smoke/ungraded-fallout.js"
   },
   "keywords": [],
   "author": "",

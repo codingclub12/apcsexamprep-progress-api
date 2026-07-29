@@ -23,6 +23,7 @@ const teacherView = require('../lib/admin-teacher');
 const resetLib = require('../lib/password-reset');
 const gradebook = require('../lib/admin-gradebook');
 const denominators = require('../lib/admin-denominators');
+const ungraded = require('../lib/admin-ungraded');
 const wire = require('../lib/wire-log');
 
 const router = express.Router();
@@ -88,6 +89,7 @@ router.get('/', (req, res) => {
       'GET /api/admin/student/:id         per-lesson visit status + grade-of-record per item, vs manifest',
       'GET /api/admin/class/:id/gradebook full gradebook: merges attempts + score_events rollups; ?reveal=1 for real names, ?course= for solo',
       'GET /api/admin/denominators        which graded columns have an authored "out of"; ?course= required, proposes values where the data agrees',
+      'GET /api/admin/ungraded-fallout   completed activities that were never scored, and how much real graded work sits alongside them; ?course=',
       'POST /api/admin/denominators/adopt author denominators (header key required); {course, adopt_proposed} or {course, values}, dry_run supported',
       'POST /api/admin/denominators/remove un-author denominators (header key required); {course, activity_types} plus optional lessons / only_possible, dry_run supported',
       'GET /api/admin/schema              live table/column listing',
@@ -944,6 +946,21 @@ router.post('/denominators/adopt', (req, res) => {
   } catch (e) {
     console.error('admin/denominators/adopt:', e);
     res.status(500).json({ error: 'adopt failed', detail: e.message });
+  }
+});
+
+// ── UNGRADED FALLOUT: who saw a fabricated zero ───────────────────────────────
+//  Exercise pages report no score, so their rows sit in progress with
+//  completed = 1 and score = NULL. The teacher gradebook used to render exactly
+//  that as a hard "0 / 5" and average it in. This reports who was affected, and
+//  crucially how much REAL graded work those same classes have, since a row
+//  carrying a score is never touched by any of this. Read only. ?course= filters.
+router.get('/ungraded-fallout', (req, res) => {
+  try {
+    res.json(ungraded.ungradedFallout({ course: req.query.course }));
+  } catch (e) {
+    console.error('admin/ungraded-fallout:', e);
+    res.status(500).json({ error: 'ungraded fallout failed', detail: e.message });
   }
 });
 
