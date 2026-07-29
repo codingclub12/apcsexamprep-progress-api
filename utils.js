@@ -139,12 +139,16 @@ const COURSES = {
       'bi-1': {
         label: 'Big Idea 1: Creative Development',
         lessons: ['collaboration', 'program-function-purpose', 'program-design-development', 'identifying-correcting-errors'],
-        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
+        // No exercise-1: only Big Idea 3 lessons carry guided code problems. The
+        // other big ideas emit exercise-2 (a practice game) plus a quiz, so
+        // listing exercise-1 here only created a permanently empty gradebook column.
+        activities: ['lesson', 'exercise-2', 'quiz'],
       },
       'bi-2': {
         label: 'Big Idea 2: Data',
         lessons: ['binary-numbers', 'data-compression', 'extracting-information', 'using-programs-with-data'],
-        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
+        // No exercise-1 (see bi-1): these lessons emit exercise-2 plus a quiz only.
+        activities: ['lesson', 'exercise-2', 'quiz'],
       },
       'bi-3': {
         label: 'Big Idea 3: Algorithms and Programming',
@@ -155,17 +159,20 @@ const COURSES = {
           'developing-procedures', 'libraries', 'random-values', 'simulations',
           'algorithmic-efficiency', 'undecidable-problems',
         ],
+        // Big Idea 3 is the only one with guided code problems, so exercise-1 is real here.
         activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
       },
       'bi-4': {
         label: 'Big Idea 4: Computer Systems and Networks',
         lessons: ['the-internet', 'fault-tolerance', 'parallel-distributed-computing'],
-        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
+        // No exercise-1 (see bi-1): these lessons emit exercise-2 plus a quiz only.
+        activities: ['lesson', 'exercise-2', 'quiz'],
       },
       'bi-5': {
         label: 'Big Idea 5: Impact of Computing',
         lessons: ['beneficial-harmful-effects', 'digital-divide', 'computing-bias', 'crowdsourcing', 'legal-ethical-concerns', 'safe-computing'],
-        activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
+        // No exercise-1 (see bi-1): these lessons emit exercise-2 plus a quiz only.
+        activities: ['lesson', 'exercise-2', 'quiz'],
       },
     },
   },
