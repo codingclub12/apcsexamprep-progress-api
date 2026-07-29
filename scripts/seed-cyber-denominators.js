@@ -17,9 +17,11 @@
 //  gradebook printing "/5" above every exercise was the visible symptom.
 //
 //  WHAT IS DELIBERATELY ABSENT
-//  Seven Unit 1 activities whose pages do not state a total in any form this
-//  could read, and Units 4 and 5, which have not been scanned yet. An absent
-//  column keeps today's behaviour; a guessed one silently regrades a class.
+//  Twenty activities whose pages state no total in any form this could read:
+//  fifteen in Unit 1 (its `ap-cyber-unit-1-lesson-N-*` page set, which is
+//  duplicated by an `ap-cybersecurity-unit-1-<topic>-*` set that DOES state
+//  totals) and the five Unit 4 labs. An absent column keeps today's
+//  behaviour; a guessed one silently regrades a class.
 //  Per-unit exams are also absent: they need a key that distinguishes Unit 1's
 //  exam from Unit 2's, which this lesson|activity shape cannot express.
 //
@@ -42,92 +44,153 @@ const COURSE = 'ap-cybersecurity';
 // `lesson|activity_type` -> points. Evidence in the trailing comment.
 const POINTS = {
 
-  // ── 1.1 ──────────────────────────────────────────────
+  // ── 1.1 ────────────────────────────────────────────
   '1.1|exercise-1': 7,        // foundCount reads / 7
   '1.1|exercise-2': 8,        // ANSWERS[] has 8 entries
   '1.1|quiz': 5,              // ANSWERS{} has 5 keys
 
-  // ── 1.2 ──────────────────────────────────────────────
+  // ── 1.2 ────────────────────────────────────────────
   '1.2|lab': 30,              // score readout reads 0 / 30
   '1.2|quiz': 5,              // score-display reads 0 / 5
 
-  // ── 1.4 ──────────────────────────────────────────────
+  // ── 1.4 ────────────────────────────────────────────
   '1.4|exercise-1': 25,       // score readout reads 0 / 25
   '1.4|exercise-2': 25,       // score readout reads 0 / 25
   '1.4|lab': 30,              // score readout reads 0 / 30
   '1.4|quiz': 5,              // ANSWERS{} has 5 keys
 
-  // ── 1.5 ──────────────────────────────────────────────
+  // ── 1.5 ────────────────────────────────────────────
   '1.5|exercise-1': 4,        // score readout reads 0 / 4
   '1.5|exercise-2': 4,        // score readout reads 0 / 4
   '1.5|lab': 30,              // score readout reads 0 / 30
   '1.5|quiz': 5,              // ANSWERS{} has 5 keys
 
-  // ── 2.1 ──────────────────────────────────────────────
+  // ── 2.1 ────────────────────────────────────────────
   '2.1|exercise-1': 6,        // ANSWERS{} has 6 keys
   '2.1|exercise-2': 24,       // score-display reads 0 / 24
   '2.1|lab': 30,              // score-display reads 0 / 30
   '2.1|quiz': 5,              // ANSWERS{} has 5 keys
 
-  // ── 2.2 ──────────────────────────────────────────────
+  // ── 2.2 ────────────────────────────────────────────
   '2.2|exercise-1': 6,        // ANSWERS{} has 6 keys
   '2.2|exercise-2': 24,       // score-display reads 0 / 24
   '2.2|lab': 30,              // score-display reads 0 / 30
   '2.2|quiz': 5,              // ANSWERS{} has 5 keys
 
-  // ── 2.3 ──────────────────────────────────────────────
+  // ── 2.3 ────────────────────────────────────────────
   '2.3|exercise-1': 6,        // ANSWERS{} has 6 keys
   '2.3|exercise-2': 24,       // score-display reads 0 / 24
   '2.3|lab': 30,              // score-display reads 0 / 30
   '2.3|quiz': 5,              // ANSWERS{} has 5 keys
 
-  // ── 2.4 ──────────────────────────────────────────────
+  // ── 2.4 ────────────────────────────────────────────
   '2.4|exercise-1': 6,        // ANSWERS{} has 6 keys
   '2.4|exercise-2': 24,       // score-display reads 0 / 24
   '2.4|lab': 30,              // score-display reads 0 / 30
   '2.4|quiz': 5,              // ANSWERS{} has 5 keys
 
-  // ── 2.5 ──────────────────────────────────────────────
+  // ── 2.5 ────────────────────────────────────────────
   '2.5|exercise-1': 6,        // ANSWERS{} has 6 keys
   '2.5|exercise-2': 24,       // score-display reads 0 / 24
   '2.5|lab': 30,              // score-display reads 0 / 30
   '2.5|quiz': 5,              // ANSWERS{} has 5 keys
 
-  // ── 3.1 ──────────────────────────────────────────────
+  // ── 3.1 ────────────────────────────────────────────
   '3.1|exercise-1': 6,        // ANSWERS{} has 6 keys
   '3.1|exercise-2': 24,       // score-display reads 0 / 24
   '3.1|lab': 30,              // score-display reads 0 / 30
   '3.1|quiz': 5,              // ANSWERS{} has 5 keys
 
-  // ── 3.2 ──────────────────────────────────────────────
+  // ── 3.2 ────────────────────────────────────────────
   '3.2|exercise-1': 6,        // ANSWERS{} has 6 keys
   '3.2|exercise-2': 24,       // score-display reads 0 / 24
   '3.2|lab': 30,              // score-display reads 0 / 30
   '3.2|quiz': 5,              // ANSWERS{} has 5 keys
 
-  // ── 3.3 ──────────────────────────────────────────────
+  // ── 3.3 ────────────────────────────────────────────
   '3.3|exercise-1': 6,        // ANSWERS{} has 6 keys
   '3.3|exercise-2': 24,       // score-display reads 0 / 24
   '3.3|lab': 30,              // score-display reads 0 / 30
   '3.3|quiz': 5,              // ANSWERS{} has 5 keys
 
-  // ── 3.4 ──────────────────────────────────────────────
+  // ── 3.4 ────────────────────────────────────────────
   '3.4|exercise-1': 6,        // ANSWERS{} has 6 keys
   '3.4|exercise-2': 24,       // score-display reads 0 / 24
   '3.4|lab': 30,              // score-display reads 0 / 30
   '3.4|quiz': 5,              // ANSWERS{} has 5 keys
 
-  // ── 3.5 ──────────────────────────────────────────────
+  // ── 3.5 ────────────────────────────────────────────
   '3.5|exercise-1': 24,       // score-display reads 0 / 24
   '3.5|exercise-2': 24,       // score-display reads 0 / 24
   '3.5|lab': 24,              // score-display reads 0 / 24
   '3.5|quiz': 10,             // score-display reads 0 / 10
 
-  // ── 3.6 ──────────────────────────────────────────────
+  // ── 3.6 ────────────────────────────────────────────
   '3.6|exercise-1': 6,        // ANSWERS{} has 6 keys
   '3.6|exercise-2': 24,       // score-display reads 0 / 24
   '3.6|lab': 30,              // score-display reads 0 / 30
   '3.6|quiz': 5,              // ANSWERS{} has 5 keys
+
+  // ── 4.1 ────────────────────────────────────────────
+  '4.1|exercise-1': 5,        // score readout reads 0 / 5
+  '4.1|exercise-2': 4,        // score readout reads 0 / 4
+  '4.1|quiz': 6,              // score readout reads 0 / 6
+
+  // ── 4.2 ────────────────────────────────────────────
+  '4.2|exercise-1': 5,        // score readout reads 0 / 5
+  '4.2|exercise-2': 4,        // score readout reads 0 / 4
+  '4.2|quiz': 5,              // score readout reads 0 / 5
+
+  // ── 4.3 ────────────────────────────────────────────
+  '4.3|exercise-1': 5,        // score readout reads 0 / 5
+  '4.3|exercise-2': 4,        // score readout reads 0 / 4
+  '4.3|quiz': 5,              // score readout reads 0 / 5
+
+  // ── 4.4 ────────────────────────────────────────────
+  '4.4|exercise-1': 5,        // score readout reads 0 / 5
+  '4.4|exercise-2': 4,        // score readout reads 0 / 4
+  '4.4|quiz': 5,              // score readout reads 0 / 5
+
+  // ── 4.5 ────────────────────────────────────────────
+  '4.5|exercise-1': 5,        // score readout reads 0 / 5
+  '4.5|exercise-2': 4,        // score readout reads 0 / 4
+  '4.5|quiz': 5,              // score readout reads 0 / 5
+
+  // ── 5.1 ────────────────────────────────────────────
+  '5.1|exercise-1': 8,        // score readout reads 0 / 8
+  '5.1|exercise-2': 6,        // score readout reads 0 / 6
+  '5.1|lab': 6,               // score readout reads 0 / 6
+  '5.1|quiz': 5,              // score readout reads 0 / 5
+
+  // ── 5.2 ────────────────────────────────────────────
+  '5.2|exercise-1': 8,        // score readout reads 0 / 8
+  '5.2|exercise-2': 6,        // score readout reads 0 / 6
+  '5.2|lab': 6,               // score readout reads 0 / 6
+  '5.2|quiz': 5,              // score readout reads 0 / 5
+
+  // ── 5.3 ────────────────────────────────────────────
+  '5.3|exercise-1': 8,        // score readout reads 0 / 8
+  '5.3|exercise-2': 6,        // score readout reads 0 / 6
+  '5.3|lab': 6,               // score readout reads 0 / 6
+  '5.3|quiz': 5,              // score readout reads 0 / 5
+
+  // ── 5.4 ────────────────────────────────────────────
+  '5.4|exercise-1': 8,        // score readout reads 0 / 8
+  '5.4|exercise-2': 6,        // score readout reads 0 / 6
+  '5.4|lab': 6,               // score readout reads 0 / 6
+  '5.4|quiz': 5,              // score readout reads 0 / 5
+
+  // ── 5.5 ────────────────────────────────────────────
+  '5.5|exercise-1': 8,        // score readout reads 0 / 8
+  '5.5|exercise-2': 6,        // score readout reads 0 / 6
+  '5.5|lab': 6,               // score readout reads 0 / 6
+  '5.5|quiz': 5,              // score readout reads 0 / 5
+
+  // ── 5.6 ────────────────────────────────────────────
+  '5.6|exercise-1': 8,        // score readout reads 0 / 8
+  '5.6|exercise-2': 6,        // score readout reads 0 / 6
+  '5.6|lab': 6,               // score readout reads 0 / 6
+  '5.6|quiz': 5,              // score readout reads 0 / 5
 };
 
 // unit is descriptive, not part of the primary key, so a best-effort lookup from
