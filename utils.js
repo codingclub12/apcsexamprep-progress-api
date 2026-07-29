@@ -283,6 +283,17 @@ function pageFromHandle(raw) {
     'wireless-security':  '1.3',
     'ai-driven-threats':  '1.4',
     'ai-cyber-defense':   '1.5',
+
+    // Unit 2. Confirmed canonical against the lesson page titles. A SECOND
+    // topic-named set exists and is deliberately absent: cia-triad,
+    // defense-in-depth, physical-security, risk-assessment and access-controls
+    // are titled "Topic 2.1" through "Topic 2.5" and claim the same lesson
+    // numbers as these. Leaving them unmapped keeps them untracked rather than
+    // filing a student's work under a lesson from the wrong curriculum.
+    'cyber-foundations':          '2.1',
+    'physical-vulnerabilities':   '2.2',
+    'protecting-physical-spaces': '2.3',
+    'detecting-physical-attacks': '2.4',
   };
   m = h.match(/^ap-cybersecurity-unit-(\d+)-(.+)$/);
   if (m) {

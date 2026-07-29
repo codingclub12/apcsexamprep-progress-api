@@ -113,11 +113,17 @@ console.log('\n1b. Canonical Unit 1 pages are tracked');
     at('ap-cybersecurity-unit-1-ai-cyber-defense-quiz').activity_type === 'quiz'
     && at('ap-cybersecurity-unit-1-ai-cyber-defense-quiz').lesson === '1.5');
 
-  // Unit 2 carries TWO topic-named sets that both claim 2.1 through 2.4, so any
-  // mapping would guess which curriculum is live. Guessing files a student's
-  // work under the wrong lesson, which is worse than not recording it.
-  ok('  Unit 2 duplicates stay untracked', at('ap-cybersecurity-unit-2-cia-triad') === null
-    && at('ap-cybersecurity-unit-2-cyber-foundations') === null);
+  // Unit 2's CANONICAL set, confirmed against the lesson page titles.
+  ok('  cyber-foundations is 2.1', at('ap-cybersecurity-unit-2-cyber-foundations').lesson === '2.1');
+  ok('  physical-vulnerabilities is 2.2', at('ap-cybersecurity-unit-2-physical-vulnerabilities').lesson === '2.2');
+  ok('  protecting-physical-spaces is 2.3', at('ap-cybersecurity-unit-2-protecting-physical-spaces').lesson === '2.3');
+  ok('  detecting-physical-attacks is 2.4', at('ap-cybersecurity-unit-2-detecting-physical-attacks').lesson === '2.4');
+
+  // The COMPETING Unit 2 set claims the same numbers and stays untracked, so a
+  // student on a legacy page never has work filed under the live curriculum.
+  ok('  the competing Unit 2 set stays untracked',
+    ['cia-triad', 'defense-in-depth', 'physical-security', 'risk-assessment', 'access-controls']
+      .every((s) => at('ap-cybersecurity-unit-2-' + s) === null));
 
   // Hubs and study guides are not lessons and must not become one.
   ok('  hub and study-guide pages stay untracked',
