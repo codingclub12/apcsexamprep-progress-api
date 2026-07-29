@@ -77,6 +77,7 @@ const NET_UNIT1_GRADED = {
   '1.1': { cfus: 3, quiz: 8 },
   '1.2': { cfus: 3, quiz: 8 },
   '1.3': { cfus: 3, quiz: 8 },
+  '1.4': { cfus: 3, quiz: 8 },
 };
 
 function buildRows() {
