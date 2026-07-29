@@ -75,21 +75,26 @@ const COURSES = {
       },
       'unit-2': {
         label: 'Unit 2: Securing Spaces',
-        lessons: ['2.1', '2.2', '2.3', '2.4'],
+        // 2.5 exists as full content on the storefront (exercises, lab, quiz)
+        // and was absent here, so it rendered no gradebook columns at all and
+        // any work a student did on it was recorded and never displayed.
+        lessons: ['2.1', '2.2', '2.3', '2.4', '2.5'],
         activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
         case_file: { lesson: 'case-file', label: 'Case File' },
         exam: { lesson: 'exam', label: 'Unit Exam' },
       },
       'unit-3': {
         label: 'Unit 3: Securing Networks',
-        lessons: ['3.1', '3.2', '3.3', '3.4', '3.5'],
+        // 3.6 likewise: real content, no column.
+        lessons: ['3.1', '3.2', '3.3', '3.4', '3.5', '3.6'],
         activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
         case_file: { lesson: 'case-file', label: 'Case File' },
         exam: { lesson: 'exam', label: 'Unit Exam' },
       },
       'unit-4': {
         label: 'Unit 4: Securing Devices',
-        lessons: ['4.1', '4.2', '4.3'],
+        // 4.4 and 4.5 likewise: real content, no columns.
+        lessons: ['4.1', '4.2', '4.3', '4.4', '4.5'],
         activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
         case_file: { lesson: 'case-file', label: 'Case File' },
         exam: { lesson: 'exam', label: 'Unit Exam' },

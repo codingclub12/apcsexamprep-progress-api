@@ -49,13 +49,46 @@ console.log('1. Per-lesson values, as the pages state them');
   ok('  1.1 exercise-2 is out of 8', POINTS['1.1|exercise-2'] === 8, POINTS['1.1|exercise-2']);
   ok('  1.5 exercise-1 is out of 4', POINTS['1.5|exercise-1'] === 4, POINTS['1.5|exercise-1']);
 
+  // Units 4 and 5 are covered by the full scan, and lessons the course config
+  // was missing entirely (2.5, 3.6, 4.4, 4.5) are authored too.
+  ok('  4.5 quiz is authored', POINTS['4.5|quiz'] > 0, POINTS['4.5|quiz']);
+  ok('  5.6 exercise-2 is authored', POINTS['5.6|exercise-2'] > 0, POINTS['5.6|exercise-2']);
+  ok('  2.5, 3.6, 4.4 and 4.5 all carry values',
+    ['2.5|quiz', '3.6|quiz', '4.4|quiz', '4.5|quiz'].every((k) => POINTS[k] > 0));
+
   // The whole point: one constant per activity type could never be right.
-  const ex1 = new Set(Object.entries(POINTS)
-    .filter(([k]) => k.endsWith('|exercise-1')).map(([, v]) => v));
-  ok('  exercise-1 takes several distinct values', ex1.size >= 4, [...ex1].sort());
-  ok('  and 5 is not one of them', !ex1.has(5), [...ex1].sort());
+  // The full scan does turn up a 5 somewhere, so the claim is not that 5 is
+  // never correct. It is that no single value covers the column set, which is
+  // what the hardcoded page constant assumed.
+  const ex1vals = Object.entries(POINTS)
+    .filter(([k]) => k.endsWith('|exercise-1')).map(([, v]) => v);
+  const ex1 = new Set(ex1vals);
+  ok('  exercise-1 takes several distinct values', ex1.size >= 5, [...ex1].sort((a, b) => a - b));
+
+  const commonest = Math.max(...[...ex1].map((v) => ex1vals.filter((x) => x === v).length));
+  ok('  no single value covers even half the exercise-1 columns',
+    commonest < ex1vals.length / 2, { commonest, of: ex1vals.length });
+  // Stated as wrongness, not rightness: the page's hardcoded 5 produced a wrong
+  // denominator on at least three quarters of exercise-1 columns. It happens to
+  // be correct on a handful, which is precisely why the bug was easy to miss.
+  const wrong = ex1vals.filter((v) => v !== 5).length;
+  ok('  the hardcoded 5 was wrong on at least 3 of every 4 columns',
+    wrong >= ex1vals.length * 0.75, { wrong, of: ex1vals.length });
 
   ok('  no value is zero or negative', Object.values(POINTS).every((v) => v > 0));
+
+  // Every authored lesson must exist in the course config, or the gradebook
+  // builds no column for it and the value is unreachable. 2.5, 3.6, 4.4 and 4.5
+  // were exactly that case: real content the config did not list.
+  {
+    const { COURSES } = require('../utils');
+    const cfg = new Set();
+    for (const u of Object.values(COURSES['ap-cybersecurity'].units)) {
+      for (const l of (u.lessons || [])) cfg.add(l);
+    }
+    const orphan = [...new Set(Object.keys(POINTS).map((k) => k.split('|')[0]))].filter((l) => !cfg.has(l));
+    ok('  every authored lesson has a column in the course config', orphan.length === 0, orphan);
+  }
   ok('  no lesson column is authored twice', new Set(Object.keys(POINTS)).size === Object.keys(POINTS).length);
 }
 
