@@ -89,6 +89,13 @@ if (seeded) console.log(`course_manifest: ${seeded.changed} new of ${seeded.tota
 const csaSeeded = runBootSeed('csa_bank', () => require('./scripts/seed-csa-bank').seedCsaBank());
 if (csaSeeded) console.log(`csa bank: ${csaSeeded.answers} new answer rows, ${csaSeeded.denoms} new denominator rows`);
 
+// Cyber denominators, extracted from the Shopify pages that own each activity.
+// Insert-or-ignore only: a value authored or corrected by hand is never
+// clobbered, and re-running is a no-op. Run
+// `node scripts/seed-cyber-denominators.js --update` to push edits.
+const cyberDenoms = runBootSeed('cyber_denominators', () => require('./scripts/seed-cyber-denominators').seedCyberDenominators());
+if (cyberDenoms) console.log(`cyber denominators: ${cyberDenoms.changed} new of ${cyberDenoms.total} rows`);
+
 
 // ── PUBLIC ENDPOINTS ──────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {

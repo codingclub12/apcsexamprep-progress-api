@@ -410,7 +410,22 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
     };
   });
 
-  res.json({ class: cls, course_config: courseConfig, summary });
+  // The authored "out of" per column, keyed `lesson|activity_type`.
+  //
+  // A gradebook COLUMN HEADER needs a denominator before any student has
+  // submitted, so it cannot come from a cell. Without this the page had nowhere
+  // to get one and fell back to a hardcoded per-activity constant, printing
+  // "Ex 1 /5" above a cell reading "7/7". Activities genuinely differ (Unit 1
+  // Exercise 1 is out of 7, Unit 2 Exercise 1 is out of 6), so a constant can
+  // never be right for more than a handful of them.
+  //
+  // Only authored values appear here. A column with no authored value is absent
+  // rather than defaulted, so the page can tell "out of 7" from "unknown" and
+  // show no denominator instead of a wrong one.
+  const denominators = {};
+  for (const [key, possible] of authoredDenom) denominators[key] = possible;
+
+  res.json({ class: cls, course_config: courseConfig, denominators, summary });
 });
 
 // ── CSV EXPORT (Wide gradebook, CodeHS-style) — SINGLE canonical export ─────────
