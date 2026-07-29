@@ -89,6 +89,7 @@ router.get('/', (req, res) => {
       'GET /api/admin/class/:id/gradebook full gradebook: merges attempts + score_events rollups; ?reveal=1 for real names, ?course= for solo',
       'GET /api/admin/denominators        which graded columns have an authored "out of"; ?course= required, proposes values where the data agrees',
       'POST /api/admin/denominators/adopt author denominators (header key required); {course, adopt_proposed} or {course, values}, dry_run supported',
+      'POST /api/admin/denominators/remove un-author denominators (header key required); {course, activity_types} plus optional lessons / only_possible, dry_run supported',
       'GET /api/admin/schema              live table/column listing',
       'GET /api/admin/score-events        raw graded-interaction ledger; ?student_id= ?class_code= ?course= ?limit=',
     ],
@@ -943,6 +944,38 @@ router.post('/denominators/adopt', (req, res) => {
   } catch (e) {
     console.error('admin/denominators/adopt:', e);
     res.status(500).json({ error: 'adopt failed', detail: e.message });
+  }
+});
+
+// ── UN-AUTHOR DENOMINATORS: remove a wrong "out of" ───────────────────────────
+//  The counterpart to adopt, and a mutation, so the x-admin-key HEADER is
+//  required. A WRONG authored value is worse than none: a missing one shows a
+//  percentage, a wrong one shows a confident "4 / 6" for a quiz really out of
+//  10, and it reaches the teacher CSV export. Undoing has to be as easy as
+//  authoring. Body:
+//    { course, activity_types: ['quiz'] }        remove those columns
+//    { ..., lessons: ['1.1','1.2'] }             narrow to specific lessons
+//    { ..., only_possible: 6 }                   remove only if still exactly 6,
+//                                                so a hand-corrected value lives
+//    { ..., dry_run: true }                      report the plan, delete nothing
+//  activity_types is mandatory: no call can wipe a course's authoring wholesale.
+//  Reversible in the same sense adopt is: no stored score is touched, and
+//  re-authoring restores the previous display exactly.
+router.post('/denominators/remove', (req, res) => {
+  try {
+    const b = req.body || {};
+    if (!b.course) return res.status(400).json({ error: 'course is required' });
+    const out = denominators.remove(b.course, {
+      activity_types: b.activity_types,
+      lessons: b.lessons,
+      only_possible: b.only_possible,
+      dry_run: !!b.dry_run,
+    });
+    if (out.error) return res.status(400).json(out);
+    res.json(out);
+  } catch (e) {
+    console.error('admin/denominators/remove:', e);
+    res.status(500).json({ error: 'remove failed', detail: e.message });
   }
 });
 
