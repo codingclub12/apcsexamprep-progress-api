@@ -164,6 +164,36 @@ const COURSES = {
       },
     },
   },
+  // AP Networking (AP Career Kickstart pilot, for use beginning 2026-2027).
+  // 4 units, 22 topics. Unit/lesson keys ('unit-N', 'U.T') match pageFromHandle
+  // and the course_manifest seed exactly, so visit denominators line up with
+  // what the reporter sends. Content ships unit by unit; all 22 topics are
+  // listed now so visit denominators never move later.
+  'ap-networking': {
+    label: 'AP Networking',
+    units: {
+      'unit-1': {
+        label: 'Unit 1: Managing My Connections',
+        lessons: ['1.1', '1.2', '1.3', '1.4'],
+        activities: ['lesson', 'cfu', 'quiz'],
+      },
+      'unit-2': {
+        label: 'Unit 2: Managing My Shared Connections',
+        lessons: ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6'],
+        activities: ['lesson', 'cfu', 'quiz'],
+      },
+      'unit-3': {
+        label: 'Unit 3: Managing Many Connections',
+        lessons: ['3.1', '3.2', '3.3', '3.4', '3.5', '3.6'],
+        activities: ['lesson', 'cfu', 'quiz'],
+      },
+      'unit-4': {
+        label: 'Unit 4: Managing Our Global Connections',
+        lessons: ['4.1', '4.2', '4.3', '4.4', '4.5', '4.6'],
+        activities: ['lesson', 'cfu', 'quiz'],
+      },
+    },
+  },
 };
 
 // ── VALIDATION ────────────────────────────────────────────────────────────────
@@ -189,6 +219,7 @@ const COURSE_PREFIXES = {
   'ap-cybersecurity': 'CYBER',
   'ap-csa':           'CSA',
   'ap-csp':           'CSP',
+  'ap-networking':    'NET',
 };
 
 const ACTIVITY_TOKENS = ['exercise-1', 'exercise-2', 'exercise-3', 'lab', 'quiz', 'exam', 'code'];
@@ -218,6 +249,13 @@ function pageFromHandle(raw) {
   m = h.match(/^ap-csa-lesson-(\d+)-(\d+)-/);
   if (m) {
     return { course: 'ap-csa', unit: 'unit-' + m[1], lesson: m[1] + '.' + m[2], activity_type: trailingActivity(h) };
+  }
+
+  // AP Networking: ap-networking-lesson-{U}-{T}-{slug}   (lesson id = "U.T")
+  // hubs ap-networking and ap-networking-unit-{N} do not match and are ignored.
+  m = h.match(/^ap-networking-lesson-(\d+)-(\d+)-/);
+  if (m) {
+    return { course: 'ap-networking', unit: 'unit-' + m[1], lesson: m[1] + '.' + m[2], activity_type: trailingActivity(h) };
   }
 
   // Cyber: ap-cyber-unit-{N}-exam | ap-cyber-unit-{N}-lesson-{M}[-{activity}]
