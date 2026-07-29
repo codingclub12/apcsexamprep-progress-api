@@ -67,17 +67,24 @@ const CSA_UNIT1_CODE = {
   '1.9': 1, '1.10': 1, '1.11': 1, '1.12': 1, '1.13': 1, '1.14': 1, '1.15': 1,
 };
 
-// AP Networking Unit 1 pilot: graded items per topic. cfus = auto-graded
-// widgets/checks in the lesson body (item ids 1.X-cfu-1..N, 1 point each).
-// quiz = topic quiz question count (item id 1.X-quiz, 1 point per question).
+// AP Networking graded items per topic. cfus = auto-graded widgets/checks in
+// the lesson body (item ids U.T-cfu-1..N, 1 point each). quiz = topic quiz
+// question count (item id U.T-quiz, 1 point per question). The unit is
+// derived from the lesson id prefix (2.3 -> unit-2).
 // Only authored topics are listed; adding a NEW topic's items later is safe,
 // but changing an existing item's points retroactively moves percentages, so
 // counts here must match the shipped page. Topic 1.1 is the authored exemplar.
-const NET_UNIT1_GRADED = {
+const NET_GRADED = {
   '1.1': { cfus: 3, quiz: 8 },
   '1.2': { cfus: 3, quiz: 8 },
   '1.3': { cfus: 3, quiz: 8 },
   '1.4': { cfus: 3, quiz: 8 },
+  '2.1': { cfus: 3, quiz: 8 },
+  '2.2': { cfus: 3, quiz: 8 },
+  '2.3': { cfus: 3, quiz: 8 },
+  '2.4': { cfus: 3, quiz: 8 },
+  '2.5': { cfus: 3, quiz: 8 },
+  '2.6': { cfus: 3, quiz: 8 },
 };
 
 function buildRows() {
@@ -110,13 +117,14 @@ function buildRows() {
     }
   }
 
-  // AP Networking Unit 1 cfu/quiz items (the pilot).
-  for (const [lesson, cfg] of Object.entries(NET_UNIT1_GRADED)) {
+  // AP Networking cfu/quiz items (authored topics only).
+  for (const [lesson, cfg] of Object.entries(NET_GRADED)) {
+    const unit = `unit-${lesson.split('.')[0]}`;
     for (let i = 1; i <= cfg.cfus; i++) {
-      rows.push({ course: 'ap-networking', unit: 'unit-1', lesson_id: lesson, item_id: `${lesson}-cfu-${i}`, item_type: 'cfu', points: 1 });
+      rows.push({ course: 'ap-networking', unit, lesson_id: lesson, item_id: `${lesson}-cfu-${i}`, item_type: 'cfu', points: 1 });
     }
     if (cfg.quiz > 0) {
-      rows.push({ course: 'ap-networking', unit: 'unit-1', lesson_id: lesson, item_id: `${lesson}-quiz`, item_type: 'quiz', points: cfg.quiz });
+      rows.push({ course: 'ap-networking', unit, lesson_id: lesson, item_id: `${lesson}-quiz`, item_type: 'quiz', points: cfg.quiz });
     }
   }
 
