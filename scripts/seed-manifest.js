@@ -75,6 +75,7 @@ const CSA_UNIT1_CODE = {
 // counts here must match the shipped page. Topic 1.1 is the authored exemplar.
 const NET_UNIT1_GRADED = {
   '1.1': { cfus: 3, quiz: 8 },
+  '1.2': { cfus: 3, quiz: 8 },
 };
 
 function buildRows() {
