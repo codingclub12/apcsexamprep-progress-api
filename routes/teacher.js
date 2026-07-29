@@ -531,16 +531,23 @@ router.put('/classes/:code', requireTeacher, (req, res) => {
     .get(req.params.code.toUpperCase(), req.teacher.id);
   if (!cls) return res.status(404).json({ error: 'Class not found' });
 
-  const { class_name, active, mastery_threshold } = req.body;
+  const { class_name, active, mastery_threshold, games_graded } = req.body;
   const threshold = mastery_threshold !== undefined
     ? clampThreshold(mastery_threshold, cls.mastery_threshold)
     : cls.mastery_threshold;
+  // games_graded: whether the exercise-2 game counts toward the grade. Accept
+  // 1/0 to force on/off, or null to fall back to the course default. Omitting
+  // the field leaves the current setting untouched.
+  const gamesGraded = games_graded === undefined
+    ? cls.games_graded
+    : (games_graded === null ? null : (games_graded ? 1 : 0));
 
-  db.prepare('UPDATE classes SET class_name = ?, active = ?, mastery_threshold = ? WHERE id = ?')
+  db.prepare('UPDATE classes SET class_name = ?, active = ?, mastery_threshold = ?, games_graded = ? WHERE id = ?')
     .run(
       sanitize(class_name || cls.class_name, 100),
       active !== undefined ? (active ? 1 : 0) : cls.active,
       threshold,
+      gamesGraded,
       cls.id
     );
 
