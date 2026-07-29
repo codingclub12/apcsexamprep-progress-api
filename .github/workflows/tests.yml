@@ -20,8 +20,13 @@ name: Tests
 #   network or secrets. smoke:auth and smoke:teacher are excluded because they
 #   drive a browser against production, and smoke:cleanup because it is a
 #   destructive live tool that deactivates real rows, not a test.
+#   A bare `push:` alongside `pull_request:` fires BOTH for every push to a PR
+#   branch, running the whole suite twice for one commit. Restricting push to the
+#   default branch means a PR is checked once via pull_request, and main is
+#   checked again on merge, which is the state that actually ships.
 on:
   push:
+    branches: [main]
   pull_request:
 
 # A newer commit supersedes an in-flight run on the same ref.
