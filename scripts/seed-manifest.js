@@ -23,7 +23,7 @@ const { COURSES } = require('../utils');
 
 // Courses whose visit items come from the COURSES config. Cyber keeps its
 // existing grade-reporting path and is intentionally not seeded here.
-const VISIT_COURSES = ['ap-csa', 'ap-csp'];
+const VISIT_COURSES = ['ap-csa', 'ap-csp', 'ap-networking'];
 
 // CSA Unit 1 pilot: graded items per lesson, counted from the 2026-07-07
 // Matrixify pages export. cfus = auto-graded apcs-ex widgets in the lesson
@@ -67,6 +67,16 @@ const CSA_UNIT1_CODE = {
   '1.9': 1, '1.10': 1, '1.11': 1, '1.12': 1, '1.13': 1, '1.14': 1, '1.15': 1,
 };
 
+// AP Networking Unit 1 pilot: graded items per topic. cfus = auto-graded
+// widgets/checks in the lesson body (item ids 1.X-cfu-1..N, 1 point each).
+// quiz = topic quiz question count (item id 1.X-quiz, 1 point per question).
+// Only authored topics are listed; adding a NEW topic's items later is safe,
+// but changing an existing item's points retroactively moves percentages, so
+// counts here must match the shipped page. Topic 1.1 is the authored exemplar.
+const NET_UNIT1_GRADED = {
+  '1.1': { cfus: 3, quiz: 8 },
+};
+
 function buildRows() {
   const rows = [];
 
@@ -94,6 +104,16 @@ function buildRows() {
       for (let i = 1; i <= nEditors; i++) {
         rows.push({ course: 'ap-csa', unit: 'unit-1', lesson_id: lesson, item_id: `${lesson}-code-${i}`, item_type: 'cfu', points: 1 });
       }
+    }
+  }
+
+  // AP Networking Unit 1 cfu/quiz items (the pilot).
+  for (const [lesson, cfg] of Object.entries(NET_UNIT1_GRADED)) {
+    for (let i = 1; i <= cfg.cfus; i++) {
+      rows.push({ course: 'ap-networking', unit: 'unit-1', lesson_id: lesson, item_id: `${lesson}-cfu-${i}`, item_type: 'cfu', points: 1 });
+    }
+    if (cfg.quiz > 0) {
+      rows.push({ course: 'ap-networking', unit: 'unit-1', lesson_id: lesson, item_id: `${lesson}-quiz`, item_type: 'quiz', points: cfg.quiz });
     }
   }
 
