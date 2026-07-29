@@ -1,0 +1,93 @@
+name: Tests
+
+# The OFFLINE smoke suites, run on every push and pull request.
+#
+# WHY THIS IS SEPARATE FROM smoke.yml
+#   smoke.yml is production monitoring: it drives the real Shopify storefront
+#   with a browser, so it runs once daily and on demand only. Driving the live
+#   site repeatedly trips its bot protection, which is why it must never be a
+#   per-push trigger.
+#
+#   The suites below touch no network at all. They build a throwaway SQLite file,
+#   exercise the real routers in process, and delete it. They cost seconds, they
+#   need no secrets, and they cannot generate production traffic. There was no
+#   reason for them not to gate a pull request, and until now nothing did: every
+#   PR reported zero checks, so "the suite is green" was a claim in a description
+#   rather than an enforced fact.
+#
+# ADDING A SUITE
+#   Add its npm script to SUITES below. The only bar is that it must not need
+#   network or secrets. smoke:auth and smoke:teacher are excluded because they
+#   drive a browser against production, and smoke:cleanup because it is a
+#   destructive live tool that deactivates real rows, not a test.
+on:
+  push:
+  pull_request:
+
+# A newer commit supersedes an in-flight run on the same ref.
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline-smoke:
+    name: Offline smoke suites
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      # better-sqlite3 is a native module; npm ci uses the lockfile so a
+      # transitive bump can never silently change what is being tested.
+      - name: Install
+        run: npm ci
+
+      # Every suite runs even after one fails, so a red build reports ALL the
+      # damage rather than only the first thing to break. Failing fast here
+      # would mean a second push to discover the second failure.
+      - name: Run offline smoke suites
+        run: |
+          set -uo pipefail
+          SUITES="reset health teacheradmin gradebook export quizparse wirelog denominators legacypoints shopify admin codegrade"
+          failed=""
+          for s in $SUITES; do
+            echo "::group::smoke:$s"
+            if npm run --silent "smoke:$s"; then
+              echo "PASS  smoke:$s"
+            else
+              echo "FAIL  smoke:$s"
+              failed="$failed $s"
+            fi
+            echo "::endgroup::"
+          done
+
+          echo
+          echo "──────────────────────────────────────────"
+          if [ -n "$failed" ]; then
+            echo "FAILED:$failed"
+            for s in $failed; do
+              echo "::error title=smoke:$s::smoke:$s failed. Reproduce locally with: npm run smoke:$s"
+            done
+            exit 1
+          fi
+          echo "All offline smoke suites passed."
+
+      # A suite must not modify anything that is committed. Its throwaway .db is
+      # expected and gitignored (each suite unlinks its own at startup, so the
+      # last run stays inspectable), but a TRACKED file changing means a test
+      # wrote into the repo, which would make the next run depend on this one.
+      - name: Tests did not modify tracked files
+        run: |
+          dirty=$(git status --porcelain -- . || true)
+          if [ -n "$dirty" ]; then
+            echo "$dirty"
+            echo "::error title=repo modified::A suite modified a tracked file. Tests must not write into the repo."
+            exit 1
+          fi
+          echo "No tracked file was modified."
