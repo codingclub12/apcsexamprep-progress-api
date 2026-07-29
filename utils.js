@@ -263,6 +263,39 @@ function pageFromHandle(raw) {
     return { course: 'ap-networking', unit: 'unit-' + m[1], lesson: m[1] + '.' + m[2], activity_type: trailingActivity(h) };
   }
 
+  // Cyber CANONICAL lesson pages: ap-cybersecurity-unit-{N}-{slug}[-{activity}]
+  //
+  // These are the URLs students are actually sent to, and every one of them used
+  // to fall through to `return null`, so /track silently no-opped: no visit, no
+  // score, nothing. The parallel ap-cyber-unit-{N}-lesson-{M} handles below were
+  // the only cyber pages ever tracked.
+  //
+  // The slug carries no lesson number, so it needs an explicit map. Units 3 to 5
+  // have no topic-named lesson pages and are covered by the numbered rule below.
+  //
+  // Unit 2 is deliberately absent: it has TWO competing topic-named sets
+  // (cia-triad vs cyber-foundations both claim 2.1, and so on down the unit), so
+  // any mapping would be a guess about which curriculum is live. Dropping those
+  // handles keeps today's behaviour rather than filing work under a wrong lesson.
+  const CYBER_SLUGS = {
+    'social-engineering': '1.1',
+    'password-attacks':   '1.2',
+    'wireless-security':  '1.3',
+    'ai-driven-threats':  '1.4',
+    'ai-cyber-defense':   '1.5',
+  };
+  m = h.match(/^ap-cybersecurity-unit-(\d+)-(.+)$/);
+  if (m) {
+    const activity_type = trailingActivity(h);
+    const slug = m[2].replace(new RegExp('-' + activity_type + '$'), '');
+    const lesson = CYBER_SLUGS[slug];
+    // An unmapped slug (a hub page, a study guide, Unit 2's duplicates) stays
+    // untracked rather than being invented into a lesson.
+    if (lesson) {
+      return { course: 'ap-cybersecurity', unit: 'unit-' + m[1], lesson, activity_type };
+    }
+  }
+
   // Cyber: ap-cyber-unit-{N}-exam | ap-cyber-unit-{N}-lesson-{M}[-{activity}]
   m = h.match(/^ap-cyber-unit-(\d+)-exam$/);
   if (m) return { course: 'ap-cybersecurity', unit: 'unit-' + m[1], lesson: 'exam', activity_type: 'exam' };

@@ -92,6 +92,49 @@ console.log('1. Per-lesson values, as the pages state them');
   ok('  no lesson column is authored twice', new Set(Object.keys(POINTS)).size === Object.keys(POINTS).length);
 }
 
+// ── 1b. The canonical lesson pages are actually tracked ──────────────────────
+//  Every ap-cybersecurity-unit-1-<slug> URL used to fall through pageFromHandle
+//  to null, so /track silently no-opped. These are the URLs students are sent
+//  to, so nothing a student did on a Unit 1 lesson page was ever recorded.
+console.log('\n1b. Canonical Unit 1 pages are tracked');
+{
+  const { pageFromHandle } = require('../utils');
+  const at = (h) => pageFromHandle(h);
+
+  ok('  social-engineering is 1.1', at('ap-cybersecurity-unit-1-social-engineering').lesson === '1.1');
+  ok('  password-attacks is 1.2', at('ap-cybersecurity-unit-1-password-attacks').lesson === '1.2');
+  ok('  wireless-security is 1.3', at('ap-cybersecurity-unit-1-wireless-security').lesson === '1.3');
+  ok('  ai-driven-threats is 1.4', at('ap-cybersecurity-unit-1-ai-driven-threats').lesson === '1.4');
+  ok('  ai-cyber-defense is 1.5', at('ap-cybersecurity-unit-1-ai-cyber-defense').lesson === '1.5');
+
+  ok('  a lesson page records as a `lesson` visit',
+    at('ap-cybersecurity-unit-1-social-engineering').activity_type === 'lesson');
+  ok('  a trailing activity is still read',
+    at('ap-cybersecurity-unit-1-ai-cyber-defense-quiz').activity_type === 'quiz'
+    && at('ap-cybersecurity-unit-1-ai-cyber-defense-quiz').lesson === '1.5');
+
+  // Unit 2 carries TWO topic-named sets that both claim 2.1 through 2.4, so any
+  // mapping would guess which curriculum is live. Guessing files a student's
+  // work under the wrong lesson, which is worse than not recording it.
+  ok('  Unit 2 duplicates stay untracked', at('ap-cybersecurity-unit-2-cia-triad') === null
+    && at('ap-cybersecurity-unit-2-cyber-foundations') === null);
+
+  // Hubs and study guides are not lessons and must not become one.
+  ok('  hub and study-guide pages stay untracked',
+    at('ap-cybersecurity-unit-1-introduction-to-security') === null
+    && at('ap-cybersecurity-unit-3-securing-networks') === null);
+
+  // The numbered handles that were already tracked must keep working.
+  ok('  the pre-existing numbered handles are unaffected',
+    at('ap-cyber-unit-1-lesson-1-exercise-1').lesson === '1.1'
+    && at('ap-cyber-unit-4-lesson-4-quiz').lesson === '4.4');
+
+  // Other courses must not be captured by the new rule.
+  ok('  other courses are untouched',
+    at('ap-csa-lesson-2-1-algorithms').course === 'ap-csa'
+    && at('ap-networking-lesson-1-2-x').course === 'ap-networking');
+}
+
 // ── 2. Seeding ───────────────────────────────────────────────────────────────
 console.log('\n2. Seeding is safe and idempotent');
 {
