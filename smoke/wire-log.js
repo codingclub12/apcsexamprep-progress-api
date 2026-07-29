@@ -49,6 +49,44 @@ ok('the same student hashes consistently', (function () {
   return wire.recent(1)[0].student === e.student;
 })());
 
+console.log('the attempt-level shape is readable too');
+// A live reading showed every /api/progress/attempt entry with a null lesson,
+// null activity, and no max_score: that endpoint names its fields lesson_id /
+// item_type / item_id / detail, and the log only knew the ledger path's names.
+// A submission logged with no location and no denominator answers nothing.
+wire.record({
+  endpoint: 'POST /api/progress/attempt',
+  student_id: 's3',
+  status: 200,
+  body: {
+    course: 'ap-csa', lesson_id: '1.1', item_id: '1.1-cfu-3', item_type: 'cfu',
+    score: 0, max_score: 5, duration_seconds: 41,
+    detail: [{ q: 1, sel: 2, ok: false }, { q: 2, sel: 0, ok: true }],
+  },
+  result: { score: 0, max_score: 5, passed: false, attempt_no: 2 },
+});
+e = wire.recent(1)[0];
+ok('lesson_id is read as the lesson', e.lesson === '1.1', e.lesson);
+ok('item_type is read as the activity', e.activity_type === 'cfu', e.activity_type);
+ok('item_id is captured verbatim, not reduced to a length', e.item === '1.1-cfu-3', e.item);
+ok('  and is not duplicated into fields', !('item_id' in e.fields) && !('item' in e.fields), e.fields);
+ok('max_score is captured', e.fields.max_score.v === 5, e.fields);
+ok('  so "0 out of what" has an answer', e.fields.score.v === 0 && e.fields.max_score.v === 5, e.fields);
+ok('duration is captured', e.fields.duration_seconds.v === 41, e.fields);
+ok('detail is read as the answers array', e.answers.present === true && e.answers.count === 2, e.answers);
+ok('  and is labelled as detail, not answers', e.answers.field === 'detail', e.answers.field);
+ok('  with the chosen index typed', e.answers.chosen_value_types[0].shape === 'sel:number', e.answers.chosen_value_types);
+ok('the grade of record is visible', e.result.attempt_no === 2 && e.result.max_score === 5, e.result);
+ok('the ledger shape still reads as answers', (function () {
+  wire.record({ endpoint: 'x', student_id: 's3', status: 200,
+    body: { answers: [{ qid: 'q1', chosen_index: 1 }] } });
+  return wire.recent(1)[0].answers.field === 'answers';
+})());
+ok('a body with neither is labelled null', (function () {
+  wire.record({ endpoint: 'x', student_id: 's3', status: 200, body: { course: 'ap-csa' } });
+  return wire.recent(1)[0].answers.field === null;
+})());
+
 console.log('numbers are kept, they are not PII');
 wire.record({ endpoint: 'POST /api/student/score', student_id: 's2', status: 200,
   body: { course: 'ap-csa', unit: 'unit-1', lesson: '1.2', activity_type: 'exercise-2',
