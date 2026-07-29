@@ -432,6 +432,11 @@ const migrations = [
   // rows default to empty (equivalent to the old stdin-only behavior).
   `ALTER TABLE code_test_cases ADD COLUMN prelude  TEXT NOT NULL DEFAULT ''`,
   `ALTER TABLE code_test_cases ADD COLUMN postlude TEXT NOT NULL DEFAULT ''`,
+  // Whether the exercise-2 "game" activity counts toward the class grade.
+  // NULL = use the course default (CSP games are practice/not counted; other
+  // courses count them, unchanged), so no backfill is needed and a teacher's
+  // explicit 0/1 override always wins. Resolved at read time in the gradebook.
+  `ALTER TABLE classes   ADD COLUMN games_graded      INTEGER DEFAULT NULL`,
 ];
 for (const sql of migrations) {
   try { db.exec(sql); } catch(e) { /* column already exists */ }
