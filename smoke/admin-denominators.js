@@ -173,5 +173,95 @@ ok('score_events is unchanged', scoreSum.n === eid && scoreSum.p === 5 * 4 + (5 
   scoreSum);
 ok('attempts is unchanged', db.prepare('SELECT COUNT(*) n, SUM(score) s FROM attempts').get().s === 14);
 
+// ── LEGACY QUIZ PATH: quiz_attempts as an observation source ─────────────────
+//  Cyber and CSP write neither score_events nor attempts. Reading only those two
+//  is why all 71 cyber columns reported no_data while real submissions sat in
+//  quiz_attempts. The answer payload's entry count is the only surviving record
+//  of how many questions the page served, so it IS the denominator.
+console.log('\nlegacy quiz_attempts is read as a denominator source');
+{
+  // A fresh lesson with no score_events and no attempts: only legacy rows.
+  const qa = (sid, lesson, nAnswers, score, id) => run(
+    `INSERT INTO quiz_attempts (id,student_id,progress_id,course,unit,lesson,answers,score)
+     VALUES (?,?,NULL,'ap-cybersecurity','unit-2',?,?,?)`,
+    id, sid, lesson,
+    JSON.stringify(Object.fromEntries(Array.from({ length: nAnswers }, (_, i) => ['q' + (i + 1), 0]))),
+    score
+  );
+  // Three students each answered 10 questions on 2.1. Unanimous.
+  qa(cy[0], '2.1', 10, 40, 'qa1');
+  qa(cy[1], '2.1', 10, 60, 'qa2');
+  qa(cy[2], '2.1', 10, 80, 'qa3');
+
+  const cov = denom.coverage('ap-cybersecurity');
+  const c = col(cov, '2.1', 'quiz');
+  ok('a lesson with ONLY legacy rows is no longer no_data', c.status === 'proposed', c.status);
+  ok('  it proposes 10, the question count the page served', c.proposal === 10, c.proposal);
+  ok('  and credits quiz_attempts as the source', c.sources.includes('quiz_attempts'), c.sources);
+  ok('  counting students, not rows', c.students_scored === 3, c.students_scored);
+
+  // A retake must not let one student outvote the class.
+  qa(cy[0], '2.1', 10, 90, 'qa4');
+  const c2 = col(denom.coverage('ap-cybersecurity'), '2.1', 'quiz');
+  ok('  a retake does not double-count its student', c2.students_scored === 3, c2.students_scored);
+
+  // A partial attempt is not evidence of a smaller quiz: the fullest attempt saw
+  // the whole set, so the largest count per student is the one that counts.
+  qa(cy[3], '2.1', 4, 20, 'qa5');
+  qa(cy[3], '2.1', 10, 70, 'qa6');
+  const c3 = col(denom.coverage('ap-cybersecurity'), '2.1', 'quiz');
+  ok('  an abandoned attempt does not drag the denominator down', c3.proposal === 10, c3.proposal);
+
+  // Only quizzes. quiz_attempts has no activity_type column, so it must never be
+  // read as evidence about an exercise.
+  const ex = col(denom.coverage('ap-cybersecurity'), '2.1', 'exercise-1');
+  ok('  never speaks for an exercise column', ex.status === 'no_data' && !ex.sources.includes('quiz_attempts'), ex.status);
+
+  // Junk must be ignored rather than trusted.
+  ok('unparseable payloads yield nothing', denom.answerCount('{not json') === null);
+  ok('  an empty payload is not a zero-question quiz', denom.answerCount('{}') === null);
+  ok('  an absurd payload is refused', denom.answerCount(JSON.stringify(
+    Object.fromEntries(Array.from({ length: 500 }, (_, i) => ['q' + i, 0])))) === null);
+  ok('  an array payload is counted too', denom.answerCount('[1,2,3]') === 3);
+}
+
+// ── REMOVAL: un-authoring a wrong value ──────────────────────────────────────
+//  A wrong authored value is worse than none: it shows a confident "4 / 6" for a
+//  quiz really out of 10, and it reaches the teacher CSV export. Undo must be as
+//  easy as authoring, and just as hard to do by accident.
+console.log('\nauthored values can be removed');
+{
+  run(`INSERT OR REPLACE INTO course_denominators (course,unit,lesson,activity_type,possible) VALUES
+   ('ap-cybersecurity','unit-3','3.1','quiz',6),
+   ('ap-cybersecurity','unit-3','3.1','exercise-1',6),
+   ('ap-cybersecurity','unit-3','3.2','quiz',10)`);
+
+  const plan = denom.remove('ap-cybersecurity', { activity_types: ['quiz'], lessons: ['3.1'], dry_run: true });
+  ok('dry run reports the plan', plan.would_remove === 1, plan.would_remove);
+  ok('  and deletes nothing', !!db.prepare(
+    "SELECT 1 FROM course_denominators WHERE course='ap-cybersecurity' AND lesson='3.1' AND activity_type='quiz'").get());
+
+  ok('activity_types is mandatory', !!denom.remove('ap-cybersecurity', {}).error);
+  ok('  so no call can wipe a course wholesale',
+    db.prepare("SELECT COUNT(*) n FROM course_denominators WHERE course='ap-cybersecurity'").get().n > 0);
+
+  const gone = denom.remove('ap-cybersecurity', { activity_types: ['quiz'], lessons: ['3.1'] });
+  ok('removes exactly what was named', gone.removed === 1, gone.removed);
+  ok('  the sibling exercise survives', !!db.prepare(
+    "SELECT 1 FROM course_denominators WHERE course='ap-cybersecurity' AND lesson='3.1' AND activity_type='exercise-1'").get());
+  ok('  the other lesson survives', !!db.prepare(
+    "SELECT 1 FROM course_denominators WHERE course='ap-cybersecurity' AND lesson='3.2' AND activity_type='quiz'").get());
+
+  // only_possible is the guard that lets a bad batch be pulled without undoing a
+  // value someone has since corrected by hand.
+  const guarded = denom.remove('ap-cybersecurity', { activity_types: ['quiz'], lessons: ['3.2'], only_possible: 6 });
+  ok('only_possible spares a value corrected since', guarded.removed === 0, guarded.removed);
+  ok('  and that row is still there', !!db.prepare(
+    "SELECT 1 FROM course_denominators WHERE course='ap-cybersecurity' AND lesson='3.2' AND activity_type='quiz'").get());
+
+  const scoresAfter = db.prepare('SELECT COUNT(*) n FROM score_events').get().n;
+  ok('removal touches no stored score', scoresAfter === eid, scoresAfter);
+}
+
 console.log('\n' + (fail ? (fail + ' FAILED, ' + pass + ' passed') : ('OK - all ' + pass + ' checks passed')));
 process.exit(fail ? 1 : 0);

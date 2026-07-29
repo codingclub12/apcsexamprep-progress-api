@@ -89,15 +89,6 @@ if (seeded) console.log(`course_manifest: ${seeded.changed} new of ${seeded.tota
 const csaSeeded = runBootSeed('csa_bank', () => require('./scripts/seed-csa-bank').seedCsaBank());
 if (csaSeeded) console.log(`csa bank: ${csaSeeded.answers} new answer rows, ${csaSeeded.denoms} new denominator rows`);
 
-// Authored denominators for cyber and CSP. Those courses report through the
-// legacy percentage path and write no score_events, so without an authored "out
-// of" every gradebook points column on 94 classes stays blank. The teacher
-// dashboard rescales the stored percentage against this value at read time, so
-// one row per graded column is the entire fix. Insert-or-ignore only: a value
-// authored by hand is never clobbered, and re-running is a no-op. Run
-// `node scripts/seed-denominators.js --update` to push edits to existing rows.
-const denomSeeded = runBootSeed('course_denominators', () => require('./scripts/seed-denominators').seedDenominators());
-if (denomSeeded) console.log(`course_denominators: ${denomSeeded.changed} new of ${denomSeeded.total} seed rows`);
 
 // ── PUBLIC ENDPOINTS ──────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
