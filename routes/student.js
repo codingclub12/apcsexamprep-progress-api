@@ -608,6 +608,23 @@ const scoreAnswerKeyStmt = db.prepare(
 //      admin drill with no read-side changes.
 // completed is deliberately NOT touched here: visit-completion stays owned by
 // /track and gated finals by /quiz + /quiz/finalize. This records grades only.
+// A score is a PAIR. Half of one is a page bug, and the only safe response is to
+// say so loudly: guessing the other half stores a number no one can later tell
+// apart from a real result. The message names both field names and what was
+// actually received, because the page author reading it cannot see this code.
+function pairError(aName, bName, aVal, bVal) {
+  const missing = aVal == null ? aName : (bVal == null ? bName : null);
+  if (!missing) return null;
+  const got = aVal == null ? `${bName}: ${JSON.stringify(bVal)}` : `${aName}: ${JSON.stringify(aVal)}`;
+  return {
+    error: `\`${aName}\` and \`${bName}\` must be sent together. Received ${got} but no \`${missing}\`, so this submission was not scored.`,
+    detail: `A score is a pair: how many points were earned, and out of how many. ` +
+      `Sending one half used to be filled in with a default, which recorded a confident wrong grade. ` +
+      `Send both, e.g. {"${aName}": 5, "${bName}": 7} for 5 of 7.`,
+    missing,
+  };
+}
+
 router.post('/score', requireStudent, (req, res) => {
   try {
     const b = req.body || {};
@@ -650,13 +667,24 @@ router.post('/score', requireStudent, (req, res) => {
       points     = correct;
       max_points = 1;
     } else if (b.earned != null || b.possible != null) {
-      points     = Number(b.earned ?? 0);
-      max_points = Number(b.possible ?? 1);
+      // BOTH halves are required. Defaulting the missing one, as this used to,
+      // turned a page bug into a confident wrong grade with a 200 response:
+      // sending only `possible: 7` scored a flat 0 out of 7, and sending only
+      // `earned: 5` scored 5 clamped down to 1 out of 1. Neither is
+      // distinguishable from a real result once stored, which is exactly the
+      // failure already fixed on the quiz scorer: a genuine zero and a
+      // submission we could not read must never look the same.
+      const half = pairError('earned', 'possible', b.earned, b.possible);
+      if (half) return res.status(400).json(half);
+      points     = Number(b.earned);
+      max_points = Number(b.possible);
       correct    = b.correct != null ? (b.correct ? 1 : 0)
                  : (max_points > 0 && points >= max_points ? 1 : 0);
     } else if (b.points != null || b.max_points != null) {
-      points     = Number(b.points ?? 0);
-      max_points = Number(b.max_points ?? 1);
+      const half = pairError('points', 'max_points', b.points, b.max_points);
+      if (half) return res.status(400).json(half);
+      points     = Number(b.points);
+      max_points = Number(b.max_points);
       correct    = b.correct != null ? (b.correct ? 1 : 0)
                  : (max_points > 0 && points >= max_points ? 1 : 0);
     } else if (b.correct != null) {
