@@ -190,6 +190,21 @@ toggled on the correct/incorrect option, or a feedback element), that signal is
 a prerequisite the theme session should confirm or add on the page before the
 reporter can hook it. Flag it rather than guessing at grading client-side.
 
+RESOLVED (2026-07): the live CSP lesson pages already expose exactly this. Each
+graded question is `<div class="mcq-item" data-activity="{quiz|exercise-1|
+exercise-2|lesson}" data-item="{qid}">` inside a `<div class="lesson-page"
+data-course="ap-csp" data-unit="bi-N" data-lesson="{slug}">` wrapper. The page's
+own `checkMCQ()` handler, on option click, adds `.correct` to the chosen
+`.mcq-option` when right and `.incorrect` when wrong (and `.revealed-correct` to
+the answer key when wrong), then dispatches a document-level
+`CustomEvent('apcsActivity', {detail: {activity, item, choice, course, unit,
+lesson}})`. The shipped reporter (`assets/ap-csp-reporter.js` in the theme repo)
+hooks both that event and raw `.mcq-option` clicks, reads correctness from the
+`.mcq-option.correct` class, and posts `{ correct: true|false }` per question.
+The event detail carries no correctness flag, so the reporter reads it from the
+DOM class the handler set (the event fires synchronously after the class is
+applied).
+
 ## 8. Response shape
 
 On success the handler returns:
@@ -227,9 +242,9 @@ the console for the pilot).
 
 ## 10. Open questions for the theme-repo session
 
-1. Does the current CSP `.mcq-item` markup expose a stable graded signal
-   (a class on the chosen option, or a feedback node), or does the page handler
-   need a small addition first?
+1. RESOLVED. Yes: the page sets `.correct` / `.incorrect` on the chosen
+   `.mcq-option` and dispatches an `apcsActivity` event. See section 7. No page
+   change was needed; the reporter hooks the existing signal.
 2. Should CSP `quiz` activities post per-question items (recommended, partial
    credit, best-per-question) or a single aggregate per quiz? Per-question is the
    default unless there is a reason to hide question-level data.
