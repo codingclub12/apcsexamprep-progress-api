@@ -19,6 +19,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const { requireStudent } = require('../middleware');
+const wireLog = require('../lib/wire-log');
 
 // ── PREPARED STATEMENTS (module scope, reused across requests) ────────────────
 const getClassStmt = db.prepare(
@@ -181,6 +182,24 @@ router.post('/attempt', requireStudent, rateLimit, (req, res) => {
       const gor = gradeOfRecordStmt.get(retryOn, req.student.id, item_id, course);
       return { attempt_no, gor };
     })();
+
+    // Log from here, where the OUTCOME is known. The catch-all middleware only
+    // sees the request and a status code, so a 200 told us a submission landed
+    // but not what it was graded out of or what the grade of record became. That
+    // is the whole question behind "it says 0 out of 5". Suppresses the
+    // middleware's thinner entry for this request.
+    wireLog.recordOnce(req, {
+      endpoint: 'POST /api/progress/attempt',
+      student_id: req.student.id,
+      status: 200,
+      body: b,
+      course,
+      result: {
+        score, max_score: maxScore, passed: !!passed,
+        attempt_no: result.attempt_no,
+        gor_score: result.gor.score, gor_max: result.gor.max_score,
+      },
+    });
 
     res.json({
       recorded: true,
