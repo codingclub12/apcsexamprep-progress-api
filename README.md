@@ -157,9 +157,15 @@ course; do not mix them for a single course, or the two rollups disagree.
 
 | Course | Endpoint | Denominator authority | Notes |
 |--------|----------|-----------------------|-------|
-| ap-csa | `POST /api/progress/attempt` | `course_manifest` | Unit 1 pilot. Rejects any `(course, item_id)` not in the manifest. |
+| ap-csa | `POST /api/progress/attempt` | `course_manifest` | Unit 1 pilot (per-widget cfu/quiz items) plus Unit 3 built lessons (per-activity exercise-1/2/3 and quiz items with authored point weights). Rejects any `(course, item_id)` not in the manifest. |
+| ap-networking | `POST /api/progress/attempt` | `course_manifest` | Same manifest-gated path as CSA. |
 | ap-csp | `POST /api/student/score` | client-sent `max_points` | Course-agnostic. No manifest rows required; `(course, unit, lesson)` is validated against the `COURSES` config in `utils.js`. |
 | ap-cybersecurity | `POST /api/student/score` | client-sent `max_points` | Same path as CSP; existing grade-reporting flow. |
+
+Attempt-path grades reach the teacher dashboard and CSV export through the
+grade-of-record rollup in `lib/attempt-rollup.js`: points earned over the sum
+of manifest points for the lesson and activity, so unattempted items count
+against the denominator and every problem keeps its authored point weight.
 
 `/api/student/score` appends to the append-only `score_events` ledger and
 recomputes `progress.score` (best points per distinct item, summed, 0-100).

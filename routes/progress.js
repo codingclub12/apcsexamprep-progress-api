@@ -80,6 +80,9 @@ function rateLimit(req, res, next) {
   next();
 }
 
+// Accepted item types. Must stay in step with what seed-manifest.js writes.
+const ITEM_TYPES = new Set(['cfu', 'quiz', 'exercise-1', 'exercise-2', 'exercise-3']);
+
 // ── DETAIL SANITIZER (zero PII enforcement) ───────────────────────────────────
 // Per-question results: [{"q":1,"sel":2,"ok":true}]. Objects are rebuilt so no
 // other key, string, or nested value can reach the database. sel may be null
@@ -125,8 +128,12 @@ router.post('/attempt', requireStudent, rateLimit, (req, res) => {
     if (!course || !lesson_id || !item_id) {
       return res.status(400).json({ error: 'course, lesson_id, item_id, item_type, score required' });
     }
-    if (b.item_type !== 'cfu' && b.item_type !== 'quiz') {
-      return res.status(400).json({ error: "item_type must be 'cfu' or 'quiz'" });
+    // cfu and quiz are the Unit 1 pilot vocabulary; the exercise types carry
+    // the authored point weights of the newer whole-activity lesson pages
+    // (exercise-1 code problems, exercise-2 game, exercise-3 FRQ). The
+    // manifest match below still gates which types are real for an item.
+    if (!ITEM_TYPES.has(b.item_type)) {
+      return res.status(400).json({ error: "item_type must be one of 'cfu', 'quiz', 'exercise-1', 'exercise-2', 'exercise-3'" });
     }
 
     // Manifest is the gate: unknown (course, item_id) means a junk write or a

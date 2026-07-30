@@ -9,6 +9,7 @@ const { claimPending } = require('../lib/entitlements');
 const { makeRateLimit } = require('../lib/rate-limit');
 const mailer = require('../lib/mailer');
 const resetLib = require('../lib/password-reset');
+const { attemptRollup } = require('../lib/attempt-rollup');
 const {
   newId, generateClassCode, signTeacherToken,
   isValidEmail, isValidPin, sanitize, COURSES, COURSE_PREFIXES,
@@ -380,6 +381,43 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
     };
   }
 
+  // ── Attempts merge (System A) ───────────────────────────────────────────────
+  //  Grades posted through POST /api/progress/attempt (CSA, AP Networking) live
+  //  in the attempts table and were invisible on this dashboard: the student
+  //  had a grade, the admin saw it, the teacher saw a blank. Fold the
+  //  grade-of-record rollup in as cells the renderer already understands.
+  //  points_possible comes from course_manifest (every item's authored point
+  //  weight, attempted or not), so 2 of 8 CFUs reads 2/8 points, never 2/2.
+  //  An existing System B cell with a recorded score is never overwritten.
+  const rollup = attemptRollup(cls.id, cls.course);
+  if (rollup) {
+    for (const [key, cell] of rollup.cells) {
+      const sep1 = key.indexOf('|'), sep2 = key.lastIndexOf('|');
+      const sid = key.slice(0, sep1), lesson = key.slice(sep1 + 1, sep2), act = key.slice(sep2 + 1);
+      const unit = rollup.unitOf.get(lesson) || 'unit-' + String(lesson).split('.')[0];
+      if (!progressMap[sid]) progressMap[sid] = {};
+      if (!progressMap[sid][unit]) progressMap[sid][unit] = {};
+      if (!progressMap[sid][unit][lesson]) progressMap[sid][unit][lesson] = {};
+      const existing = progressMap[sid][unit][lesson][act];
+      if (existing && existing.score != null) continue;
+      progressMap[sid][unit][lesson][act] = {
+        completed:    cell.completed,
+        score:        cell.pct,
+        attempts:     cell.tries,
+        confidence:   existing ? existing.confidence : null,
+        completed_at: existing ? existing.completed_at : null,
+        locked:       existing ? !!existing.locked : false,
+        progress_id:  existing ? existing.progress_id : null,
+        points_earned:   cell.earned,
+        points_possible: cell.possible,
+        denominator_source: 'manifest',
+        items_attempted: cell.items_attempted,
+        items_total:     cell.items_total,
+        source: 'attempts',
+      };
+    }
+  }
+
   const courseConfig = COURSES[cls.course] || {};
 
   // Compute per-student summary
@@ -424,6 +462,14 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
   // show no denominator instead of a wrong one.
   const denominators = {};
   for (const [key, possible] of authoredDenom) denominators[key] = possible;
+  // Manifest-backed columns (the attempts path) override course_denominators:
+  // for a System A course the manifest is the single denominator authority,
+  // and the legacy CSA rows in course_denominators describe a page model that
+  // never shipped for Unit 1 (quiz "out of 6" vs the authored 2-question
+  // mastery quiz).
+  if (rollup) {
+    for (const [key, p] of rollup.possible) denominators[key] = p.possible;
+  }
 
   res.json({ class: cls, course_config: courseConfig, denominators, summary });
 });
@@ -457,6 +503,22 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
     const map = {};
     for (const p of allProgress) {
       (map[p.student_id] = map[p.student_id] || {})[`${p.unit}|${p.lesson}|${p.activity_type}`] = p;
+    }
+
+    // Attempts merge (System A): same fold as the dashboard endpoint, so the
+    // CSV a teacher downloads can never disagree with the dashboard. Cells
+    // carry real points ("8/10") plus a percent for the Avg Quiz summary.
+    const rollup = attemptRollup(cls.id, cls.course);
+    if (rollup) {
+      for (const [key, cell] of rollup.cells) {
+        const sep1 = key.indexOf('|'), sep2 = key.lastIndexOf('|');
+        const sid = key.slice(0, sep1), lesson = key.slice(sep1 + 1, sep2), act = key.slice(sep2 + 1);
+        const unit = rollup.unitOf.get(lesson) || 'unit-' + String(lesson).split('.')[0];
+        const k = `${unit}|${lesson}|${act}`;
+        const sm = (map[sid] = map[sid] || {});
+        if (sm[k] && sm[k].score != null) continue;
+        sm[k] = { completed: cell.completed ? 1 : 0, score: cell.pct, points: `${cell.earned}/${cell.possible}` };
+      }
     }
 
     const ABBR = { lesson: 'L', 'exercise-1': 'E1', 'exercise-2': 'E2', 'exercise-3': 'E3', quiz: 'Q', lab: 'Lab', code: 'Code' };
@@ -501,6 +563,9 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
         if (!r) return '';
         // A recorded score always wins. Gating this on an activity allow-list is
         // what hid exercise scores that had been captured correctly all along.
+        // Attempts-backed cells show true points ("8/10"); percent cells from
+        // the score_events path keep showing the percent they always did.
+        if (r.points != null) return r.points;
         if (r.score != null) return r.score;
         return r.completed ? 'Done' : '';
       });

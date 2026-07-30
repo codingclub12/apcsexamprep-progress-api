@@ -67,6 +67,21 @@ const CSA_UNIT1_CODE = {
   '1.9': 1, '1.10': 1, '1.11': 1, '1.12': 1, '1.13': 1, '1.14': 1, '1.15': 1,
 };
 
+// CSA Unit 3 built lessons (the whole-activity page generation). Counts and
+// point weights read from each page's LESSON_DATA in the 2026-07-29 Matrixify
+// pages export: exercise-1 is 8 runnable problems worth 10 points (six 1-point
+// and two 2-point), exercise-2 is the 6-round game (1 point per round), the
+// quiz is 12 AP-style MCQs (1 point each), and exercise-3 is the 4-point FRQ.
+// One manifest row PER ACTIVITY (the page reports one attempt per activity
+// with per-problem results in the detail JSON), unlike Unit 1's row-per-widget
+// model. Lessons 3.2 and 3.5 to 3.9 have no pages yet; add them here as they
+// ship, then run --update.
+const CSA_UNIT3_GRADED = {
+  '3.1': { 'exercise-1': 10, 'exercise-2': 6, quiz: 12, 'exercise-3': 4 },
+  '3.3': { 'exercise-1': 10, 'exercise-2': 6, quiz: 12, 'exercise-3': 4 },
+  '3.4': { 'exercise-1': 10, 'exercise-2': 6, quiz: 12, 'exercise-3': 4 },
+};
+
 // AP Networking graded items per topic. cfus = auto-graded widgets/checks in
 // the lesson body (item ids U.T-cfu-1..N, 1 point each). quiz = topic quiz
 // question count (item id U.T-quiz, 1 point per question). The unit is
@@ -120,6 +135,13 @@ function buildRows() {
       for (let i = 1; i <= nEditors; i++) {
         rows.push({ course: 'ap-csa', unit: 'unit-1', lesson_id: lesson, item_id: `${lesson}-code-${i}`, item_type: 'cfu', points: 1 });
       }
+    }
+  }
+
+  // CSA Unit 3 whole-activity items (built lessons only).
+  for (const [lesson, acts] of Object.entries(CSA_UNIT3_GRADED)) {
+    for (const [act, points] of Object.entries(acts)) {
+      rows.push({ course: 'ap-csa', unit: 'unit-3', lesson_id: lesson, item_id: `${lesson}-${act}`, item_type: act, points });
     }
   }
 
