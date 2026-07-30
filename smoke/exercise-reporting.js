@@ -143,6 +143,50 @@ const EX1 = { course: 'ap-cybersecurity', unit: 'unit-1', lesson: '1.1', activit
       (await cell('1.4', 'exercise-1')) == null);
   }
 
+  // ── 6b. A page can identify itself by HANDLE ─────────────────────────────
+  //  124 graded pages across eleven scoring shapes means a reporter that must
+  //  know its own course/unit/lesson is 124 chances to hardcode the wrong one.
+  //  The handle is already in the URL, and pageFromHandle is the same mapping
+  //  /track uses, so one generic reporter can post `handle` and be right.
+  console.log('\n6b. A page can report by handle alone');
+  {
+    const r = await fetch(`${base()}/api/student/score`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + sTok },
+      body: JSON.stringify({ handle: 'ap-cybersecurity-unit-1-wireless-security-quiz', earned: 4, possible: 5 }),
+    });
+    ok('  accepted with no course/unit/lesson', r.status === 200, await r.clone().json());
+    const c = await cell('1.3', 'quiz');
+    ok('  resolved to 1.3 / quiz from the handle', c && c.points_possible === 5 && c.points_earned === 4, c);
+  }
+
+  console.log('\n6c. An unresolvable handle is refused, not guessed');
+  {
+    const r = await fetch(`${base()}/api/student/score`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + sTok },
+      body: JSON.stringify({ handle: 'ap-cybersecurity-unit-2-cia-triad-quiz', earned: 3, possible: 5 }),
+    });
+    // cia-triad is Unit 2's LEGACY set, deliberately unmapped. Recording it
+    // under a guessed lesson would file work against the wrong curriculum.
+    ok('  a deliberately unmapped handle is rejected', r.status === 400, r.status);
+    const body = await r.json();
+    ok('  and says why', /Unrecognis?zed|Unrecognised/i.test(body.error || ''), body.error);
+  }
+
+  console.log('\n6d. Explicit fields still win over the handle');
+  {
+    await fetch(`${base()}/api/student/score`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + sTok },
+      body: JSON.stringify({ ...EX1, lesson: '3.3', handle: 'ap-cybersecurity-unit-1-social-engineering',
+                             item: 'x', earned: 2, possible: 3 }),
+    });
+    const c = await cell('3.3', 'exercise-1');
+    ok('  a caller that states its location is not overridden',
+      c && c.points_earned === 2 && c.points_possible === 3, c);
+  }
+
   // ── 6. Retry keeps the best result ───────────────────────────────────────
   console.log('\n6. A retake keeps the better attempt');
   {
