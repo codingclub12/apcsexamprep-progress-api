@@ -628,8 +628,34 @@ function pairError(aName, bName, aVal, bVal) {
 router.post('/score', requireStudent, (req, res) => {
   try {
     const b = req.body || {};
+
+    // A page may identify itself by HANDLE instead of spelling out its location.
+    //
+    // There are 124 graded cyber pages across eleven different scoring shapes,
+    // so a reporter that has to know its own course, unit, lesson and activity
+    // is 124 chances to hardcode the wrong one. The handle is already on screen
+    // in the URL, and pageFromHandle is the same tested mapping /track uses, so
+    // one generic reporter can post `handle` and be right everywhere.
+    //
+    // Explicit fields still win when both are sent: a caller that states its
+    // location is never overridden by a guess from the URL.
+    if (b.handle && (!b.course || !b.unit || !b.lesson)) {
+      const loc = pageFromHandle(b.handle);
+      if (!loc) {
+        return res.status(400).json({
+          error: `Unrecognised page handle "${String(b.handle).slice(0, 120)}", so this submission was not scored.`,
+          detail: 'The handle does not map to a known lesson. A page whose location cannot be resolved is a ' +
+                  'content or routing problem, and recording it under a guessed lesson would be worse than refusing.',
+        });
+      }
+      b.course = b.course || loc.course;
+      b.unit = b.unit || loc.unit;
+      b.lesson = b.lesson || loc.lesson;
+      if (!b.activity_type) b.activity_type = loc.activity_type;
+    }
+
     if (!b.course || !b.unit || !b.lesson) {
-      return res.status(400).json({ error: 'course, unit, lesson required' });
+      return res.status(400).json({ error: 'course, unit, lesson required (or send `handle`)' });
     }
 
     // Resolve course exactly like /track: solo accounts roam across subjects;
