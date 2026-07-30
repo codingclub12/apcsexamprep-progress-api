@@ -112,9 +112,15 @@ const COURSES = {
     label: 'AP Computer Science A',
     units: {
       'unit-1': {
+        // Unit 1 pages are the apcs-ex pilot: auto-graded CFU widgets (the
+        // Judge0 code editor items also report as cfu) plus a short mastery
+        // quiz. No exercise-1/2/3 pages exist for these lessons, so declaring
+        // them only created permanently empty gradebook columns (the same fix
+        // CSP bi-1 got). Grades arrive via POST /api/progress/attempt and are
+        // denominated by course_manifest, not course_denominators.
         label: 'Unit 1: Using Objects and Methods',
         lessons: ['1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', '1.8', '1.9', '1.10', '1.11', '1.12', '1.13', '1.14', '1.15'],
-        activities: ['lesson', 'exercise-1', 'exercise-2', 'exercise-3', 'quiz'],
+        activities: ['lesson', 'cfu', 'quiz'],
       },
       'unit-2': {
         label: 'Unit 2: Selection and Iteration',
