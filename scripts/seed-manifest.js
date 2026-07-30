@@ -85,6 +85,12 @@ const NET_GRADED = {
   '2.4': { cfus: 3, quiz: 8 },
   '2.5': { cfus: 3, quiz: 8 },
   '2.6': { cfus: 3, quiz: 8 },
+  '3.1': { cfus: 3, quiz: 8 },
+  '3.2': { cfus: 3, quiz: 8 },
+  '3.3': { cfus: 3, quiz: 8 },
+  '3.4': { cfus: 3, quiz: 8 },
+  '3.5': { cfus: 3, quiz: 8 },
+  '3.6': { cfus: 3, quiz: 8 },
 };
 
 function buildRows() {
