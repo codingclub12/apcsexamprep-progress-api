@@ -17,15 +17,20 @@ options. It documents a state to decide on; it does not change behavior.
 | Reporter using it today | `shopify/apcs-reporter.js` (CSA) | CSP reporter (to be built), Cyber grade path |
 | Course in practice | ap-csa | ap-csp, ap-cybersecurity |
 
-## Who reads which (the disconnect)
+## Who reads which
+
+UPDATE 2026-07-30: option 2 below is implemented. The teacher dashboard and
+CSV export now fold the attempts grade-of-record in through
+`lib/attempt-rollup.js` (same window pass as the admin gradebook, denominated
+by `course_manifest` points), so CSA and AP Networking grades reach teachers.
 
 | Read endpoint | Reads `attempts` (A) | Reads `progress.score` (B) |
 |---|---|---|
 | `GET /api/student/attempts` (student per-item grid) | yes | no |
 | `GET /api/admin/student/:id` | yes | no |
-| `GET /api/admin/class/:id/gradebook` | yes | no |
-| `GET /api/teacher/classes/:code/progress` (teacher dashboard) | **no** | yes |
-| `GET /api/teacher/classes/:code/export` (CSV) | **no** | yes |
+| `GET /api/admin/class/:id/gradebook` | yes | yes |
+| `GET /api/teacher/classes/:code/progress` (teacher dashboard) | **yes** (attempt-rollup merge) | yes |
+| `GET /api/teacher/classes/:code/export` (CSV) | **yes** (attempt-rollup merge) | yes |
 | `GET /api/student/progress` (progress map) | **no** | yes |
 
 Verified by tracing the routes: `progress.score` is written only by
