@@ -4,8 +4,8 @@
 // THIS IS THE ONE PLACE TO EDIT when a real Shopify product goes live. Add an
 // entry keyed by the product's line-item SKU (preferred) or its numeric
 // product_id (fallback), with the course as the value. Course values must be one
-// of the per-course model keys: 'ap-csa', 'ap-csp', 'ap-cybersecurity'. AP CSA
-// is the 2025 4-unit curriculum only.
+// of the per-course model keys: 'ap-csa', 'ap-csp', 'ap-cybersecurity',
+// 'ap-networking'. AP CSA is the 2025 4-unit curriculum only.
 //
 // Two ways to fill it in, so staging and prod can differ without a code change:
 //   1. Add lines to DEFAULT_SKU_MAP below (checked into the repo), or
@@ -22,6 +22,7 @@ const DEFAULT_SKU_MAP = {
   // pack here when it goes live.
   'AP-CYBER-FOUNDER-2026': 'ap-cybersecurity', // AP Cybersecurity Founding Teacher Bundle, Units 1-5
   'CSA-TSP-COMPLETE':      'ap-csa',            // AP CSA Teacher Superpack, Complete (All 4 Units)
+  'APNET-TEACHER-BUNDLE':  'ap-networking',     // AP Networking Teacher Course Bundle, Units 1-4
   // AP CSP Teacher Superpack has no line-item SKU, so it is mapped by its numeric
   // Shopify product_id (courseForLineItem falls back to product_id when sku is absent).
   '9278941888727':         'ap-csp',            // AP CSP Teacher Superpack
