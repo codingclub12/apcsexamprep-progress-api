@@ -21,11 +21,11 @@ const DEFAULT_SKU_MAP = {
   // flashcards, tutoring) are deliberately NOT listed. Add a course's teacher
   // pack here when it goes live.
   'AP-CYBER-FOUNDER-2026': 'ap-cybersecurity', // AP Cybersecurity Founding Teacher Bundle, Units 1-5
-  'CSA-TSP-COMPLETE':      'ap-csa',            // AP CSA Teacher Superpack, Complete (All 4 Units)
+  'CSA-TSP-COMPLETE':      'ap-csa',            // AP CSA Teacher Course Bundle, Complete (All 4 Units)
   'APNET-TEACHER-BUNDLE':  'ap-networking',     // AP Networking Teacher Course Bundle, Units 1-4
-  // AP CSP Teacher Superpack has no line-item SKU, so it is mapped by its numeric
+  // AP CSP Teacher Course Bundle has no line-item SKU, so it is mapped by its numeric
   // Shopify product_id (courseForLineItem falls back to product_id when sku is absent).
-  '9278941888727':         'ap-csp',            // AP CSP Teacher Superpack
+  '9278941888727':         'ap-csp',            // AP CSP Teacher Course Bundle
 };
 
 function loadEnvMap() {
