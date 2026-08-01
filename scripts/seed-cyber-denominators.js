@@ -89,12 +89,6 @@ const POINTS = {
   '2.4|lab': 30,              // score-display reads 0 / 30
   '2.4|quiz': 5,              // ANSWERS{} has 5 keys
 
-  // ── 2.5 ────────────────────────────────────────────
-  '2.5|exercise-1': 6,        // ANSWERS{} has 6 keys
-  '2.5|exercise-2': 24,       // score-display reads 0 / 24
-  '2.5|lab': 30,              // score-display reads 0 / 30
-  '2.5|quiz': 5,              // ANSWERS{} has 5 keys
-
   // ── 3.1 ────────────────────────────────────────────
   '3.1|exercise-1': 6,        // ANSWERS{} has 6 keys
   '3.1|exercise-2': 24,       // score-display reads 0 / 24

@@ -75,10 +75,11 @@ const COURSES = {
       },
       'unit-2': {
         label: 'Unit 2: Securing Spaces',
-        // 2.5 exists as full content on the storefront (exercises, lab, quiz)
-        // and was absent here, so it rendered no gradebook columns at all and
-        // any work a student did on it was recorded and never displayed.
-        lessons: ['2.1', '2.2', '2.3', '2.4', '2.5'],
+        // Unit 2 is 2.1 through 2.4. A 2.5 page set exists on the storefront
+        // (ap-cyber-unit-2-lesson-5-*, plus an access-controls page titled
+        // "Topic 2.5") but the lesson does not exist in the course, so it must
+        // not render a column. Confirmed with the course owner.
+        lessons: ['2.1', '2.2', '2.3', '2.4'],
         activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
         case_file: { lesson: 'case-file', label: 'Case File' },
         exam: { lesson: 'exam', label: 'Unit Exam' },
@@ -321,10 +322,21 @@ function pageFromHandle(raw) {
   }
 
   // Cyber: ap-cyber-unit-{N}-exam | ap-cyber-unit-{N}-lesson-{M}[-{activity}]
+  //
+  // The numbered rule derives a lesson from the handle, so a page that exists on
+  // the storefront but not in the course would be filed under a lesson with no
+  // gradebook column: recorded forever, displayed never. Cyber 2.5 is exactly
+  // that, a leftover page set from an earlier cut of Unit 2. Listing it here
+  // keeps it untracked, which is the same choice the unmapped slugs above make.
+  const CYBER_NOT_IN_COURSE = new Set(['2.5']);
   m = h.match(/^ap-cyber-unit-(\d+)-exam$/);
   if (m) return { course: 'ap-cybersecurity', unit: 'unit-' + m[1], lesson: 'exam', activity_type: 'exam' };
   m = h.match(/^ap-cyber-unit-(\d+)-lesson-(\d+)/);
-  if (m) return { course: 'ap-cybersecurity', unit: 'unit-' + m[1], lesson: m[1] + '.' + m[2], activity_type: trailingActivity(h) };
+  if (m) {
+    const lesson = m[1] + '.' + m[2];
+    if (CYBER_NOT_IN_COURSE.has(lesson)) return null;
+    return { course: 'ap-cybersecurity', unit: 'unit-' + m[1], lesson, activity_type: trailingActivity(h) };
+  }
 
   return null; // unknown page, /track no-ops
 }
