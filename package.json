@@ -27,7 +27,8 @@
     "smoke:cyberdenoms": "node smoke/cyber-denominators.js",
     "smoke:attemptrollup": "node smoke/attempt-rollup.js",
     "smoke:reporter": "node smoke/score-reporter.js",
-    "smoke:solo": "node smoke/solo-student.js"
+    "smoke:solo": "node smoke/solo-student.js",
+    "smoke:classroom": "node smoke/teacher-classroom.js"
   },
   "keywords": [],
   "author": "",
