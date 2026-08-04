@@ -41,9 +41,12 @@ function requireAdmin(req, res, next) {
     });
   }
 
-  // Header is preferred (does not land in access logs). ?key= is a convenience
-  // fallback for quick browser/curl use; if you use it, treat the key as burnable.
-  const provided = req.get('x-admin-key') || req.query.key || '';
+  // HEADER ONLY. The ?key= querystring fallback was removed: a key on the URL
+  // lands in Railway's access logs, in browser history, and in any Referer sent
+  // by a page loaded with it, and this one key is full read plus write across
+  // every admin route. Browsers get in through /admin/login, which exchanges the
+  // key for the httpOnly session cookie checked below; curl sends x-admin-key.
+  const provided = req.get('x-admin-key') || '';
   if (provided) {
     // Hash both to a fixed 32 bytes so the compare is constant-time and does not
     // leak key length. timingSafeEqual throws on length mismatch otherwise.

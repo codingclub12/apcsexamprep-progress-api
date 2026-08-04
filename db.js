@@ -450,6 +450,26 @@ for (const sql of migrations) {
   try { db.exec(sql); } catch(e) { /* column already exists */ }
 }
 
+// ── COMMAND CENTER (Phase 1) ──────────────────────────────────────────────────
+// Six additive tables (tasks, promises, deps, claims, task_events,
+// command_config). Wrapped so a throw in here can never stop the process from
+// booting and serving /api/health: this deploys against a live database with
+// real student rows, and a boot exception in August reads as a total outage to
+// the nightly production smoke. The guarded row counts (progress, attempts) are
+// snapshotted before and after and logged, so "the migration touched student
+// data" would be visible in the boot log rather than found in September.
+try {
+  const { applyCommandCenterSchema } = require('./lib/command-schema');
+  const result = applyCommandCenterSchema(db);
+  if (!result.unchanged) {
+    console.error('[command-center] ROW COUNT CHANGED during migration:', result.before, '->', result.after);
+  } else {
+    console.log(`[command-center] schema ok: ${result.created.length} tables, progress=${result.after.progress} attempts=${result.after.attempts} unchanged`);
+  }
+} catch (err) {
+  console.error('[command-center] schema failed, continuing without it:', err);
+}
+
 // Solo (ME-) accounts always get best-attempt grading. solo-init historically
 // relied on the column default (0), so backfill the invariant. Idempotent.
 db.exec(`UPDATE classes SET retry_allowed = 1 WHERE course = 'solo' AND (retry_allowed IS NULL OR retry_allowed = 0)`);
