@@ -5,11 +5,39 @@ const router = express.Router();
 const db = require('../db');
 const wire = require('../lib/wire-log');
 const { requireStudent } = require('../middleware');
+const { makeRateLimit } = require('../lib/rate-limit');
 const { newId, signStudentToken, isValidPin, sanitize, COURSES, pageFromHandle } = require('../utils');
 const { rollupScore } = require('../scoring');
 
+// ── CREDENTIAL RATE LIMITS ────────────────────────────────────────────────────
+//  The four unauthenticated entry points below are the only places a caller can
+//  guess a 4-digit PIN or a class code, and every one of them is reachable from
+//  the open internet. Ten minutes of unlimited tries is enough to walk the whole
+//  PIN space for a known name, so each gets its own bucket.
+//
+//  Separate buckets on purpose: a bot hammering /join must not lock a real class
+//  out of /login, and the solo endpoints must not be collateral damage either.
+//  Limits are deliberately generous (200 per 10 min per IP) - a whole school behind
+//  one NAT IP must never lock out legit students; this only stops runaway abuse.
+const joinLimit = makeRateLimit({
+  windowMs: 10 * 60 * 1000, max: 200,
+  message: 'Too many join attempts. Please wait a few minutes and try again.',
+});
+const loginLimit = makeRateLimit({
+  windowMs: 10 * 60 * 1000, max: 200,
+  message: 'Too many sign-in attempts. Please wait a few minutes and try again.',
+});
+const soloInitLimit = makeRateLimit({
+  windowMs: 10 * 60 * 1000, max: 200,
+  message: 'Too many attempts. Please wait a few minutes and try again.',
+});
+const soloLoginLimit = makeRateLimit({
+  windowMs: 10 * 60 * 1000, max: 200,
+  message: 'Too many sign-in attempts. Please wait a few minutes and try again.',
+});
+
 // ── JOIN CLASS (first time) ───────────────────────────────────────────────────
-router.post('/join', async (req, res) => {
+router.post('/join', joinLimit, async (req, res) => {
   try {
     const { class_code, display_name, pin } = req.body;
     if (!class_code) return res.status(400).json({ error: 'Class code required' });
@@ -48,7 +76,7 @@ router.post('/join', async (req, res) => {
 });
 
 // ── LOGIN (returning student) ─────────────────────────────────────────────────
-router.post('/login', async (req, res) => {
+router.post('/login', loginLimit, async (req, res) => {
   try {
     const { class_code, display_name, pin } = req.body;
     if (!class_code || !display_name || !pin) return res.status(400).json({ error: 'Class code, name, and PIN required' });
@@ -453,7 +481,7 @@ router.get('/quiz/status', requireStudent, (req, res) => {
   });
 });
 // ── SOLO: create a personal (class-less) progress account ─────────────────────
-router.post('/solo-init', async (req, res) => {
+router.post('/solo-init', soloInitLimit, async (req, res) => {
   try {
     const { display_name, pin } = req.body;
     if (!isValidPin(pin)) return res.status(400).json({ error: 'PIN must be exactly 4 digits' });
@@ -505,7 +533,7 @@ router.post('/solo-init', async (req, res) => {
   }
 });
 // ── SOLO: log back in with personal code + PIN ────────────────────────────────
-router.post('/solo-login', async (req, res) => {
+router.post('/solo-login', soloLoginLimit, async (req, res) => {
   try {
     const { login_code, pin } = req.body;
     if (!login_code || !pin) return res.status(400).json({ error: 'Code and PIN required' });
