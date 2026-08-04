@@ -129,7 +129,9 @@ POST /api/student/login             { class_code, display_name, pin }
 GET  /api/student/me                Student profile + class info
 GET  /api/student/progress          All progress records + class mastery_threshold
 GET  /api/student/attempts          Per-item grade-of-record grid (manifest-scored)
-POST /api/student/progress          Save/update progress record
+GET  /api/student/history           Every scored submission, newest first, with the grade-of-record flag
+                                    (?course= ?unit= ?lesson= ?limit=). Own data only.
+POST /api/student/progress          Save/update progress record (never lowers a stored score; appends to score_events)
 POST /api/student/quiz              Submit quiz attempt with score
 POST /api/student/score             Record one graded interaction (rolls up to progress.score)
 POST /api/progress/attempt          Record one CFU/quiz attempt (manifest-gated)

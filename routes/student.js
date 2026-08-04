@@ -7,7 +7,7 @@ const wire = require('../lib/wire-log');
 const { requireStudent } = require('../middleware');
 const { makeRateLimit } = require('../lib/rate-limit');
 const { newId, signStudentToken, isValidPin, sanitize, COURSES, pageFromHandle } = require('../utils');
-const { rollupScore } = require('../scoring');
+const { rollupScore, LESSON_SCORE_ITEM } = require('../scoring');
 
 // ── CREDENTIAL RATE LIMITS ────────────────────────────────────────────────────
 //  The four unauthenticated entry points below are the only places a caller can
@@ -286,72 +286,397 @@ router.get('/attempts', requireStudent, (req, res) => {
   }
 });
 
+// ── LESSON-SCORE LEDGER (the history behind POST /api/student/progress) ───────
+//  This path used to write `score = CASE WHEN ? IS NOT NULL THEN ? ELSE score END`,
+//  an unconditional overwrite with no history anywhere. A page refresh, a widget
+//  reset, or a DOM re-render that momentarily reads 0 out of 6 replaced a passing
+//  grade with a failing one and the better score was gone forever. Every non-quiz
+//  scored activity now drives this path (window.APCS_saveLessonScore), so that is
+//  a live data-loss bug, not a theoretical one.
+//
+//  The fix has two halves.
+//
+//  HISTORY. Every scored submission appends one row to score_events, the existing
+//  append-only ledger, under the reserved item name LESSON_SCORE_ITEM. No schema
+//  change, no new table, and the reserved name is what tells a whole-activity
+//  percent apart from a /api/student/score item write both when reading the ledger
+//  and inside rollupScore, which ignores it (see scoring.js).
+//
+//  POLICY. progress.score is a derived cache, so it is recomputed from the ledger
+//  on every write instead of being patched in place. Grade of record follows the
+//  rule the owner set and the rule System A already implements (routes/progress.js
+//  gradeOfRecordStmt): BEST attempt when the effective retry setting is on, FIRST
+//  attempt when it is off, where "effective" is canRetry, the same student
+//  retry_override beats class retry_allowed resolution the quiz path uses. The
+//  threshold is never hardcoded. Because the grade is derived rather than stored
+//  per attempt, a teacher flipping retry_allowed later applies retroactively.
+//
+//  PRE-LEDGER SCORES. This path never logged before, so most existing rows carry a
+//  score with no history behind it. Fabricating attempt rows for them would be
+//  inventing data, so instead the FIRST ledger row written for an activity records
+//  the score that was already stored, as {"prior_score": N} in the existing answers
+//  column, and every later read treats that as an implicit first attempt. Numbers
+//  only; zero PII. Net effect on deploy: a stored grade cannot drop, and with retry
+//  off it cannot move at all.
+const lsProgressStmt = db.prepare(`
+  SELECT id, attempts, score FROM progress
+  WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
+`);
+const lsEventsStmt = db.prepare(`
+  SELECT points, answers, created_at FROM score_events
+  WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
+    AND item = ?
+  ORDER BY created_at ASC, rowid ASC
+`);
+const lsInsertEventStmt = db.prepare(`
+  INSERT INTO score_events
+    (id, student_id, class_id, course, unit, lesson, activity_type, item,
+     points, max_points, correct, answers, client_event_id, created_at)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 100, ?, ?, ?, ?)
+`);
+const lsDupeStmt = db.prepare(
+  'SELECT id FROM score_events WHERE student_id = ? AND client_event_id = ?'
+);
+const lsUpdateProgressStmt = db.prepare(`
+  UPDATE progress SET
+    completed = CASE WHEN ? = 1 THEN 1 ELSE completed END,
+    score = ?,
+    attempts = ?,
+    confidence = CASE WHEN ? IS NOT NULL THEN ? ELSE confidence END,
+    time_spent_s = CASE WHEN ? IS NOT NULL THEN COALESCE(time_spent_s, 0) + ? ELSE time_spent_s END,
+    completed_at = CASE WHEN ? = 1 AND completed_at IS NULL THEN ? ELSE completed_at END,
+    updated_at = ?
+  WHERE id = ?
+`);
+const lsInsertProgressStmt = db.prepare(`
+  INSERT INTO progress (id, student_id, class_id, course, unit, lesson, activity_type,
+    completed, score, attempts, confidence, time_spent_s, completed_at, updated_at)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+`);
+const lsReadProgressStmt = db.prepare(`
+  SELECT * FROM progress
+  WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
+`);
+
+// Read `{"prior_score": N}` off the earliest ledger row of an activity. Anything
+// else in that column (a real answers payload from another writer, malformed
+// JSON, a string) is ignored rather than trusted.
+function priorScoreOf(row) {
+  if (!row || !row.answers) return null;
+  try {
+    const a = JSON.parse(row.answers);
+    return a && typeof a.prior_score === 'number' ? a.prior_score : null;
+  } catch (_) {
+    return null;
+  }
+}
+
+// Every scored attempt behind one activity, oldest first: the implicit pre-ledger
+// score when there is one, then each logged submission.
+function lessonScoreAttempts(studentId, course, unit, lesson, activity_type) {
+  const rows = lsEventsStmt.all(studentId, course, unit, lesson, activity_type, LESSON_SCORE_ITEM);
+  const out = [];
+  if (rows.length) {
+    const prior = priorScoreOf(rows[0]);
+    if (prior != null) out.push({ score: prior, recorded_at: null, implicit: true });
+  }
+  for (const r of rows) out.push({ score: r.points, recorded_at: r.created_at, implicit: false });
+  return out;
+}
+
+// Grade of record over that list. Best score when retry is on (ties resolve to the
+// earliest attempt), first attempt when it is off. Returns the index so callers can
+// flag exactly one row.
+function lessonGradeOfRecordIndex(attempts, retryOn) {
+  if (!attempts.length) return -1;
+  if (!retryOn) return 0;
+  let best = 0;
+  for (let i = 1; i < attempts.length; i++) if (attempts[i].score > attempts[best].score) best = i;
+  return best;
+}
+
 // ── SAVE / UPDATE PROGRESS ────────────────────────────────────────────────────
 router.post('/progress', requireStudent, (req, res) => {
   try {
-    const { course, unit, lesson, activity_type, completed, score, confidence, time_spent_s } = req.body;
+    const { course, unit, lesson, activity_type, completed, confidence, time_spent_s } = req.body;
 
     if (!course || !unit || !lesson || !activity_type) {
       return res.status(400).json({ error: 'course, unit, lesson, and activity_type required' });
     }
 
-    const now = new Date().toISOString();
-    const existing = db.prepare(`
-      SELECT id, attempts FROM progress
-      WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
-    `).get(req.student.id, course, unit, lesson, activity_type);
-
-    if (existing) {
-      // Update existing record
-      const newAttempts = (existing.attempts || 0) + (score != null ? 1 : 0);
-      db.prepare(`
-        UPDATE progress SET
-          completed = CASE WHEN ? = 1 THEN 1 ELSE completed END,
-          score = CASE WHEN ? IS NOT NULL THEN ? ELSE score END,
-          attempts = ?,
-          confidence = CASE WHEN ? IS NOT NULL THEN ? ELSE confidence END,
-          time_spent_s = CASE WHEN ? IS NOT NULL THEN COALESCE(time_spent_s, 0) + ? ELSE time_spent_s END,
-          completed_at = CASE WHEN ? = 1 AND completed_at IS NULL THEN ? ELSE completed_at END,
-          updated_at = ?
-        WHERE id = ?
-      `).run(
-        completed ? 1 : 0,
-        score, score,
-        newAttempts,
-        confidence, confidence,
-        time_spent_s, time_spent_s,
-        completed ? 1 : 0, now,
-        now,
-        existing.id
-      );
-    } else {
-      // Insert new record
-      db.prepare(`
-        INSERT INTO progress (id, student_id, class_id, course, unit, lesson, activity_type,
-          completed, score, attempts, confidence, time_spent_s, completed_at, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `).run(
-        newId(), req.student.id, req.student.class_id,
-        course, unit, lesson, activity_type,
-        completed ? 1 : 0,
-        score ?? null,
-        score != null ? 1 : 0,
-        confidence ?? null,
-        time_spent_s ?? null,
-        completed ? now : null,
-        now
-      );
+    // A score is optional here: the same route also records visits, confidence and
+    // time. When one IS sent it has to be a number, because a value that cannot be
+    // read must never be stored as if it were a grade.
+    const scored = req.body.score !== undefined && req.body.score !== null;
+    const score = scored ? Number(req.body.score) : null;
+    if (scored && !Number.isFinite(score)) {
+      return res.status(400).json({ error: 'score must be a number (0-100), or omitted' });
     }
 
-    const record = db.prepare(`
-      SELECT * FROM progress
-      WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
-    `).get(req.student.id, course, unit, lesson, activity_type);
+    const clientEventId = req.body.client_event_id
+      ? String(req.body.client_event_id).slice(0, 100) : null;
 
-    res.json({ ok: true, progress: record });
+    const now = new Date().toISOString();
+    const existing = lsProgressStmt.get(req.student.id, course, unit, lesson, activity_type);
+
+    // Idempotency, same rule as /score: a client_event_id already seen for this
+    // student is a retry (flaky mobile double-submit), never a second attempt.
+    if (clientEventId && lsDupeStmt.get(req.student.id, clientEventId)) {
+      const record = lsReadProgressStmt.get(req.student.id, course, unit, lesson, activity_type);
+      return res.json({ ok: true, duplicate: true, progress: record });
+    }
+
+    const cls = db.prepare('SELECT mastery_threshold FROM classes WHERE id = ?').get(req.student.class_id);
+    const threshold = (cls && cls.mastery_threshold != null) ? cls.mastery_threshold : 80;
+    const retryOn = canRetry(req.student.id, req.student.class_id);
+
+    const result = db.transaction(() => {
+      // Unscored save: leave whatever grade is on record completely alone.
+      let derivedScore = existing ? existing.score : null;
+      let attempts = existing ? (existing.attempts || 0) : 0;
+      let gor = null;
+
+      if (scored) {
+        // Carry a pre-ledger score into the ledger once, on the first row for this
+        // activity, so the policy engine can see the attempt that was never logged.
+        const before = lsEventsStmt.all(
+          req.student.id, course, unit, lesson, activity_type, LESSON_SCORE_ITEM);
+        const answers = (before.length === 0 && existing && existing.score != null)
+          ? JSON.stringify({ prior_score: existing.score })
+          : null;
+
+        lsInsertEventStmt.run(
+          newId(), req.student.id, req.student.class_id, course, unit, lesson,
+          activity_type, LESSON_SCORE_ITEM, score, score >= threshold ? 1 : 0,
+          answers, clientEventId, now
+        );
+
+        const list = lessonScoreAttempts(req.student.id, course, unit, lesson, activity_type);
+        const idx = lessonGradeOfRecordIndex(list, retryOn);
+        gor = { score: list[idx].score, attempt_no: idx + 1, attempts: list.length };
+        derivedScore = gor.score;
+        attempts += 1;
+      }
+
+      if (existing) {
+        lsUpdateProgressStmt.run(
+          completed ? 1 : 0,
+          derivedScore,
+          attempts,
+          confidence, confidence,
+          time_spent_s, time_spent_s,
+          completed ? 1 : 0, now,
+          now,
+          existing.id
+        );
+      } else {
+        lsInsertProgressStmt.run(
+          newId(), req.student.id, req.student.class_id,
+          course, unit, lesson, activity_type,
+          completed ? 1 : 0,
+          derivedScore,
+          attempts,
+          confidence ?? null,
+          time_spent_s ?? null,
+          completed ? now : null,
+          now
+        );
+      }
+      return gor;
+    })();
+
+    const record = lsReadProgressStmt.get(req.student.id, course, unit, lesson, activity_type);
+
+    const out = { ok: true, progress: record };
+    if (scored) {
+      out.submitted_score = score;
+      out.grade_of_record = result;
+      out.retry_allowed = retryOn;
+      out.threshold = threshold;
+    }
+
+    // Log from here, where the outcome is known: "it recorded 40 but the gradebook
+    // says 90" is answerable only if both numbers were captured together.
+    wire.recordOnce(req, { endpoint: 'POST /api/student/progress', body: req.body,
+      student_id: req.student.id, course, unit, lesson, activity_type, status: 200,
+      result: scored
+        ? { submitted: score, grade_of_record: result.score, attempts: result.attempts, retry_allowed: retryOn }
+        : { scored: false } });
+
+    res.json(out);
   } catch (e) {
     console.error('Save progress error:', e);
     res.status(500).json({ error: 'Failed to save progress' });
+  }
+});
+
+// ── ATTEMPT HISTORY (every scored submission, self) ──────────────────────────
+//  The read side of the fix above. Before this, a student or a teacher looking at
+//  a single stored number had no way to see what produced it, which is precisely
+//  what made a silent overwrite invisible. This returns one row per SUBMISSION,
+//  newest first, across all three ledgers that exist today:
+//
+//    score_events   item 'lesson-score' -> whole-activity percents from
+//                                          POST /api/student/progress
+//    score_events   any other item      -> per-item writes from POST /api/student/score
+//    quiz_attempts                      -> POST /api/student/quiz
+//    attempts                           -> POST /api/progress/attempt (System A)
+//
+//  Exactly one row per group carries grade_of_record: true, computed AT READ TIME
+//  against the class's CURRENT retry setting, so a teacher flipping retry_allowed
+//  changes the answer retroactively with no migration and no rewrite. Each family
+//  keeps its own established rule, because this endpoint reports what the gradebook
+//  does rather than inventing a fourth policy:
+//    lesson-score and attempts -> best when retry is on, first when it is off
+//    score-event items         -> best per item (what rollupScore stores)
+//    quiz attempts             -> best (what the quiz path stores)
+//
+//  Auth is requireStudent and the student id comes from the JWT, never from a
+//  parameter, so there is no shape of request that reads another student's rows.
+//  Zero PII: ids, lesson labels, numbers and timestamps. The `answers` column is
+//  read for the prior-score marker and is never returned.
+//
+//  Bounded by design: one indexed query per source plus a JS merge, and a hard row
+//  cap, so a student with years of history cannot allocate without limit.
+const HISTORY_DEFAULT_LIMIT = 500;
+const HISTORY_MAX_LIMIT = 2000;
+
+const histScoreEventsStmt = db.prepare(`
+  SELECT course, unit, lesson, activity_type, item, points, max_points, answers, created_at
+  FROM score_events WHERE student_id = ?
+  ORDER BY created_at ASC, rowid ASC
+`);
+const histQuizAttemptsStmt = db.prepare(`
+  SELECT course, unit, lesson, score, attempted_at
+  FROM quiz_attempts WHERE student_id = ?
+  ORDER BY attempted_at ASC, rowid ASC
+`);
+const histAttemptsStmt = db.prepare(`
+  SELECT a.course, a.lesson_id, a.item_id, a.item_type, a.score, a.max_score,
+         a.attempt_no, a.created_at, m.unit AS unit
+  FROM attempts a
+  LEFT JOIN course_manifest m ON m.course = a.course AND m.item_id = a.item_id
+  WHERE a.student_id = ?
+  ORDER BY a.created_at ASC, a.id ASC
+`);
+
+const histPct = (points, max) => (max > 0 ? Math.round((points / max) * 100) : null);
+
+router.get('/history', requireStudent, (req, res) => {
+  try {
+    const retryOn = canRetry(req.student.id, req.student.class_id);
+    const cls = db.prepare('SELECT mastery_threshold FROM classes WHERE id = ?').get(req.student.class_id);
+    const threshold = (cls && cls.mastery_threshold != null) ? cls.mastery_threshold : 80;
+
+    const limitRaw = Number(req.query.limit);
+    const limit = Number.isFinite(limitRaw) && limitRaw > 0
+      ? Math.min(Math.floor(limitRaw), HISTORY_MAX_LIMIT) : HISTORY_DEFAULT_LIMIT;
+
+    // key -> rows, oldest first. Grade of record is decided per group once every
+    // row is collected, because it depends on the whole group and on the policy.
+    const groups = new Map();
+    const push = (key, rule, row) => {
+      let g = groups.get(key);
+      if (!g) { g = { rule, rows: [] }; groups.set(key, g); }
+      row.attempt_no = g.rows.length + 1;
+      g.rows.push(row);
+    };
+
+    for (const e of histScoreEventsStmt.all(req.student.id)) {
+      if (e.item === LESSON_SCORE_ITEM) {
+        const key = `ls|${e.course}|${e.unit}|${e.lesson}|${e.activity_type}`;
+        // The pre-ledger score, surfaced as the implicit first attempt it is
+        // treated as. It has no timestamp because none was ever recorded.
+        if (!groups.has(key)) {
+          const prior = priorScoreOf(e);
+          if (prior != null) {
+            push(key, 'policy', {
+              source: 'prior-score', course: e.course, unit: e.unit, lesson: e.lesson,
+              activity_type: e.activity_type, item: null,
+              points: prior, max_points: 100, score: prior, recorded_at: null,
+            });
+          }
+        }
+        push(key, 'policy', {
+          source: 'lesson-score', course: e.course, unit: e.unit, lesson: e.lesson,
+          activity_type: e.activity_type, item: null,
+          points: e.points, max_points: e.max_points,
+          score: histPct(e.points, e.max_points), recorded_at: e.created_at,
+        });
+      } else {
+        push(`se|${e.course}|${e.unit}|${e.lesson}|${e.activity_type}|${e.item}`, 'best', {
+          source: 'score-event', course: e.course, unit: e.unit, lesson: e.lesson,
+          activity_type: e.activity_type, item: e.item,
+          points: e.points, max_points: e.max_points,
+          score: histPct(e.points, e.max_points), recorded_at: e.created_at,
+        });
+      }
+    }
+
+    for (const q of histQuizAttemptsStmt.all(req.student.id)) {
+      push(`qa|${q.course}|${q.unit}|${q.lesson}`, 'best', {
+        source: 'quiz-attempt', course: q.course, unit: q.unit, lesson: q.lesson,
+        activity_type: 'quiz', item: null,
+        points: q.score, max_points: 100, score: q.score, recorded_at: q.attempted_at,
+      });
+    }
+
+    for (const a of histAttemptsStmt.all(req.student.id)) {
+      push(`at|${a.course}|${a.item_id}`, 'policy', {
+        source: 'attempt', course: a.course, unit: a.unit || null, lesson: a.lesson_id,
+        activity_type: a.item_type, item: a.item_id,
+        points: a.score, max_points: a.max_score,
+        score: histPct(a.score, a.max_score), recorded_at: a.created_at,
+      });
+    }
+
+    const rows = [];
+    for (const g of groups.values()) {
+      // 'policy' groups follow the retry setting; 'best' groups follow the rule the
+      // writer that owns them already stores. Ties resolve to the earliest attempt.
+      let gi = 0;
+      if (g.rule === 'best' || retryOn) {
+        for (let i = 1; i < g.rows.length; i++) {
+          if ((g.rows[i].score ?? -1) > (g.rows[gi].score ?? -1)) gi = i;
+        }
+      }
+      for (let i = 0; i < g.rows.length; i++) {
+        g.rows[i].attempts = g.rows.length;
+        g.rows[i].grade_of_record = i === gi;
+        rows.push(g.rows[i]);
+      }
+    }
+
+    const f = (v) => (v == null ? null : String(v));
+    const fCourse = f(req.query.course), fUnit = f(req.query.unit), fLesson = f(req.query.lesson);
+    const filtered = rows.filter((r) =>
+      (!fCourse || r.course === fCourse) &&
+      (!fUnit || r.unit === fUnit) &&
+      (!fLesson || r.lesson === fLesson));
+
+    // Newest first. A row with no timestamp is the pre-ledger attempt, which is
+    // older than everything that was actually logged, so it sorts last.
+    filtered.sort((a, b) => {
+      if (a.recorded_at === b.recorded_at) return a.attempt_no - b.attempt_no;
+      if (!a.recorded_at) return 1;
+      if (!b.recorded_at) return -1;
+      return a.recorded_at < b.recorded_at ? 1 : -1;
+    });
+
+    const truncated = filtered.length > limit;
+    res.json({
+      student: { id: req.student.id, name: req.student.display_name },
+      retry_allowed: retryOn,
+      mastery_threshold: threshold,
+      count: Math.min(filtered.length, limit),
+      total: filtered.length,
+      truncated,
+      history: filtered.slice(0, limit),
+      generated_at: new Date().toISOString(),
+    });
+  } catch (e) {
+    console.error('Student history error:', e);
+    res.status(500).json({ error: 'Failed to load history' });
   }
 });
 
