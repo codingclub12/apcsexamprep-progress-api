@@ -33,7 +33,8 @@
     "smoke:history": "node smoke/student-history.js",
     "smoke:gradereset": "node smoke/teacher-grade-reset.js",
     "smoke:quizvisibility": "node smoke/quiz-grade-visibility.js",
-    "smoke:command": "node smoke/command-center.js"
+    "smoke:command": "node smoke/command-center.js",
+    "smoke:gbagree": "node smoke/gradebook-agreement.js"
   },
   "keywords": [],
   "author": "",
