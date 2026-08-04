@@ -313,8 +313,7 @@
     h += '<div class="acts" style="margin-top:9px">'
       + '<button class="small" data-act="save">Save</button>'
       + '<button class="small" data-act="prompt">Copy prompt</button>'
-      + '<button class="small' + (t.status === "done" && !t.verified ? " primary" : "") + '" data-act="verify"'
-      + (t.artifact_url ? "" : " disabled title=\"Needs an artifact first\"") + ">"
+      + '<button class="small' + (t.status === "done" && !t.verified ? " primary" : "") + '" data-act="verify">'
       + (t.verified ? "Verified" : "Verify") + "</button>";
     // The auto-dispatch toggle is GREYED with the router's reason rather than
     // letting you set a flag that would silently do nothing.
@@ -385,15 +384,9 @@
       state.open[id] = !state.open[id]; save(); render(); return;
     }
     if (act === "check") {
-      var checked = ev.target.checked;
-      var task = data.tasks.filter(function (t) { return t.id === id; })[0];
-      if (checked && !task.artifact_url) {
-        ev.target.checked = false;
-        state.open[id] = true; save(); render();
-        toast("Needs an artifact before it can close.");
-        return;
-      }
-      patch(id, { status: checked ? "done" : "open" });
+      // One click closes it. No artifact required from the browser: you are the
+      // verification. An AGENT closing the same row still has to produce one.
+      patch(id, { status: ev.target.checked ? "done" : "open" });
       return;
     }
     if (act === "save") {
