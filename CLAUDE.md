@@ -1,5 +1,18 @@
 # CLAUDE.md - APCSExamPrep Progress API
 
+## Read before starting work
+
+```
+GET https://progress.apcsexamprep.com/api/command/digest  (bearer TODO_KEY)
+Chat, no headers available: /api/command/digest/r/<read_token>  (read-only, no PII)
+Human view: https://progress.apcsexamprep.com/admin/command
+```
+
+Claim before you touch a file. Return with an artifact. Never trust this file for
+live state - query the source: Shopify Admin API for pages, progress API for the
+manifest, git for branch heads. Claims about live state decay; claims about method
+survive.
+
 ## What this repo is
 
 Railway-hosted progress tracking API for apcsexamprep.com, served at progress.apcsexamprep.com.
@@ -147,5 +160,8 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
 
 - Additive migrations only. Never destructive operations against the production SQLite file.
 - Small commits. Pushing to main deploys via Railway's GitHub integration; verify the deploy branch config before the first push.
+- Claude Code may merge its own pull requests once CI is green. Work still lands on a
+  branch behind a PR, never straight to main, and merging is still a deploy: say what
+  was merged and check the Railway boot log after it lands.
 - No em-dashes in any prose, comments, commit messages, or user-facing strings.
 - AP CSA references use the 2025-2026 4-unit structure exclusively.

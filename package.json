@@ -32,7 +32,8 @@
     "smoke:progressguard": "node smoke/progress-score-guard.js",
     "smoke:history": "node smoke/student-history.js",
     "smoke:gradereset": "node smoke/teacher-grade-reset.js",
-    "smoke:quizvisibility": "node smoke/quiz-grade-visibility.js"
+    "smoke:quizvisibility": "node smoke/quiz-grade-visibility.js",
+    "smoke:command": "node smoke/command-center.js"
   },
   "keywords": [],
   "author": "",
