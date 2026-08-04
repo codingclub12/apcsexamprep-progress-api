@@ -114,6 +114,19 @@ const NET_GRADED = {
   '4.6': { cfus: 3, quiz: 8 },
 };
 
+// AP Networking unit tests: one cumulative test per unit, item id U-test, at
+// the lesson_id 'test' so it never collides with a topic row. Points are the
+// mc_points declared by each unit's own units/N/test/unit-test.yaml in the
+// course repo (the MC item count). The two free-response prompts on each test
+// are scored offline against the rubric and are deliberately NOT manifest
+// items, so the denominator here matches exactly what auto-grades.
+const NET_UNIT_TESTS = {
+  'unit-1': 16,
+  'unit-2': 24,
+  'unit-3': 24,
+  'unit-4': 24,
+};
+
 function buildRows() {
   const rows = [];
 
@@ -160,6 +173,12 @@ function buildRows() {
     if (cfg.quiz > 0) {
       rows.push({ course: 'ap-networking', unit, lesson_id: lesson, item_id: `${lesson}-quiz`, item_type: 'quiz', points: cfg.quiz });
     }
+  }
+
+  // AP Networking unit tests (one per unit).
+  for (const [unit, points] of Object.entries(NET_UNIT_TESTS)) {
+    const n = unit.split('-')[1];
+    rows.push({ course: 'ap-networking', unit, lesson_id: 'test', item_id: `${n}-test`, item_type: 'quiz', points });
   }
 
   return rows;
