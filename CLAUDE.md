@@ -160,5 +160,8 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
 
 - Additive migrations only. Never destructive operations against the production SQLite file.
 - Small commits. Pushing to main deploys via Railway's GitHub integration; verify the deploy branch config before the first push.
+- Claude Code may merge its own pull requests once CI is green. Work still lands on a
+  branch behind a PR, never straight to main, and merging is still a deploy: say what
+  was merged and check the Railway boot log after it lands.
 - No em-dashes in any prose, comments, commit messages, or user-facing strings.
 - AP CSA references use the 2025-2026 4-unit structure exclusively.
