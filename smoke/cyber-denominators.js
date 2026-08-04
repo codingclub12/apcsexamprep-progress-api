@@ -53,8 +53,15 @@ console.log('1. Per-lesson values, as the pages state them');
   // was missing entirely (2.5, 3.6, 4.4, 4.5) are authored too.
   ok('  4.5 quiz is authored', POINTS['4.5|quiz'] > 0, POINTS['4.5|quiz']);
   ok('  5.6 exercise-2 is authored', POINTS['5.6|exercise-2'] > 0, POINTS['5.6|exercise-2']);
-  ok('  2.5, 3.6, 4.4 and 4.5 all carry values',
-    ['2.5|quiz', '3.6|quiz', '4.4|quiz', '4.5|quiz'].every((k) => POINTS[k] > 0));
+  ok('  3.6, 4.4 and 4.5 carry values',
+    ['3.6|quiz', '4.4|quiz', '4.5|quiz'].every((k) => POINTS[k] > 0));
+
+  // Cyber Unit 2 is 2.1 through 2.4. A 2.5 page set exists on the storefront
+  // but the lesson does not exist in the course, so authoring it would render a
+  // column for a lesson no student can take.
+  ok('  2.5 is NOT authored, because the lesson does not exist',
+    !Object.keys(POINTS).some((k) => k.startsWith('2.5|')),
+    Object.keys(POINTS).filter((k) => k.startsWith('2.5|')));
 
   // The whole point: one constant per activity type could never be right.
   // The full scan does turn up a 5 somewhere, so the claim is not that 5 is
@@ -134,6 +141,16 @@ console.log('\n1b. Canonical Unit 1 pages are tracked');
   ok('  the pre-existing numbered handles are unaffected',
     at('ap-cyber-unit-1-lesson-1-exercise-1').lesson === '1.1'
     && at('ap-cyber-unit-4-lesson-4-quiz').lesson === '4.4');
+
+  // Unit 2 stops at 2.4. The numbered rule would happily derive a 2.5 from the
+  // leftover page set, filing work under a lesson that has no column and so can
+  // never be read back. Untracked is the honest outcome.
+  ok('  cyber 2.5 stays untracked, because the lesson does not exist',
+    at('ap-cyber-unit-2-lesson-5') === null
+    && at('ap-cyber-unit-2-lesson-5-quiz') === null
+    && at('ap-cyber-unit-2-lesson-5-exercise-1') === null,
+    at('ap-cyber-unit-2-lesson-5-quiz'));
+  ok('    but 2.4 next door still is', at('ap-cyber-unit-2-lesson-4-quiz').lesson === '2.4');
 
   // Other courses must not be captured by the new rule.
   ok('  other courses are untouched',
