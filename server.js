@@ -60,6 +60,11 @@ app.use('/api/game', require('./routes/game'));
 app.use('/api/judge0', require('./routes/judge0'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/gate', require('./routes/gate'));
+// Command center (Phase 1). Dual auth inside each router (browser cookie OR
+// Authorization: Bearer TODO_KEY); the one public route is the PII-stripped
+// digest read URL, which is declared ahead of that middleware in routes/command.
+app.use('/api/command', require('./routes/command'));
+app.use('/api/todo', require('./routes/todo'));
 
 // Boot seeds run before app.listen, so any throw here would crash the process
 // before the healthcheck can pass and take the whole service down. Each seed is
@@ -136,6 +141,16 @@ app.get('/admin/exec', (req, res) => {
 app.get('/admin/teachers', (req, res) => {
   res.set('Cache-Control', 'no-store');
   const file = adminSession.isAuthed(req) ? 'teachers.html' : 'login.html';
+  res.sendFile(path.join(__dirname, 'public', file));
+});
+
+// Command center. Same cookie gate as every other admin page: without a valid
+// session the login page is served, so neither the markup nor its data-fetching
+// JS reaches an unauthenticated visitor. The page never embeds TODO_KEY in any
+// form; its fetches ride the httpOnly cookie.
+app.get('/admin/command', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  const file = adminSession.isAuthed(req) ? 'command.html' : 'login.html';
   res.sendFile(path.join(__dirname, 'public', file));
 });
 
