@@ -11,8 +11,8 @@
  *   };
  *
  * Quiz pages additionally call:
- *   APCS_saveQuizScore(score, answers, onRetry)  — after each attempt
- *   APCS_finalizeQuiz()                          — when student hits Submit Final Grade
+ *   APCS_saveQuizScore(score, answers, onRetry)  - after each attempt
+ *   APCS_finalizeQuiz()                          - when student hits Submit Final Grade
  *
  * Hub pages call:
  *   APCS_renderHubProgress(lessonMap)
@@ -22,9 +22,9 @@
 (function() {
   'use strict';
 
-  const API = 'https://apcsexamprep-progress-api-production.up.railway.app';
+  const API = 'https://progress.apcsexamprep.com';
 
-  // ── SESSION ──────────────────────────────────────────────────────────────────
+  // -- SESSION ------------------------------------------------------------------
   function getSession() {
     try {
       const token   = localStorage.getItem('apcse_token');
@@ -34,7 +34,7 @@
     } catch(e) { return null; }
   }
 
-  // ── API HELPERS ───────────────────────────────────────────────────────────────
+  // -- API HELPERS ---------------------------------------------------------------
   // window.__nativeFetch is captured in quiz-tracker-wiring.liquid BEFORE
   // Appointo/ad scripts patch window.fetch. This is the only reliable way
   // to make requests without scrlybrkr injection.
@@ -72,7 +72,7 @@
     return apiCall('GET', endpoint, null, session.token);
   }
 
-  // ── SESSION BAR ───────────────────────────────────────────────────────────────
+  // -- SESSION BAR ---------------------------------------------------------------
   function renderSessionBar(session) {
     const bar = document.createElement('div');
     bar.id = 'apcs-session-bar';
@@ -119,7 +119,7 @@
     if (el) el.textContent = completed + '/' + total + ' complete';
   }
 
-  // ── LOAD UNIT PROGRESS FOR BAR ────────────────────────────────────────────────
+  // -- LOAD UNIT PROGRESS FOR BAR ------------------------------------------------
   async function loadUnitProgress(pageInfo) {
     const data = await apiGet('/api/student/progress');
     if (!data || !data.progress) return;
@@ -135,7 +135,7 @@
     if (total > 0) setBarUnitProgress(completed, total);
   }
 
-  // ── MODALS ────────────────────────────────────────────────────────────────────
+  // -- MODALS --------------------------------------------------------------------
   function makeBackdrop(id, zIndex, onClick) {
     const bd = document.createElement('div');
     bd.id = id;
@@ -170,7 +170,7 @@
     if (m) m.remove();
   }
 
-  // ── RETRY PANEL ───────────────────────────────────────────────────────────────
+  // -- RETRY PANEL ---------------------------------------------------------------
   function renderRetryPanel(score, threshold, retryAllowed, onRetry) {
     removeModal('apcs-retry-bd', 'apcs-retry-modal');
     const close = function() { removeModal('apcs-retry-bd', 'apcs-retry-modal'); };
@@ -217,7 +217,7 @@
     document.getElementById('apcs-retry-dismiss').addEventListener('click', close);
   }
 
-  // ── PASS PANEL ────────────────────────────────────────────────────────────────
+  // -- PASS PANEL ----------------------------------------------------------------
   function renderPassPanel(score, threshold, onRetry, retryAllowed) {
     removeModal('apcs-pass-bd', 'apcs-pass-modal');
     const close = function() { removeModal('apcs-pass-bd', 'apcs-pass-modal'); };
@@ -258,7 +258,7 @@
     }
   }
 
-  // ── LOCKED PANEL ─────────────────────────────────────────────────────────────
+  // -- LOCKED PANEL -------------------------------------------------------------
   function renderLockedPanel(score) {
     removeModal('apcs-locked-bd', 'apcs-locked-modal');
     const close = function() { removeModal('apcs-locked-bd', 'apcs-locked-modal'); };
@@ -282,7 +282,7 @@
     document.getElementById('apcs-locked-close').addEventListener('click', close);
   }
 
-  // ── JOIN PROMPT ───────────────────────────────────────────────────────────────
+  // -- JOIN PROMPT ---------------------------------------------------------------
   function renderJoinPrompt() {
     const prompt = document.createElement('div');
     prompt.setAttribute('style', [
@@ -303,7 +303,7 @@
     document.body.appendChild(prompt);
   }
 
-  // ── HUB PROGRESS RINGS ────────────────────────────────────────────────────────
+  // -- HUB PROGRESS RINGS --------------------------------------------------------
   /**
    * Call on hub pages to decorate lesson cards with live progress.
    * @param {Object} lessonMap  e.g. { '1.1': { el: DOMElement, activities: ['lesson','exercise-1','exercise-2','quiz'] } }
@@ -316,7 +316,7 @@
     const data = await apiGet('/api/student/progress');
     if (!data || !data.progress) return;
 
-    // Build a lookup: "course|unit|lesson|activity" → record
+    // Build a lookup: "course|unit|lesson|activity" -> record
     const lookup = {};
     for (const r of data.progress) {
       lookup[r.course + '|' + r.unit + '|' + r.lesson + '|' + r.activity_type] = r;
@@ -362,7 +362,7 @@
     });
   };
 
-  // ── MAIN INIT ─────────────────────────────────────────────────────────────────
+  // -- MAIN INIT -----------------------------------------------------------------
   function init() {
     const session  = getSession();
     const pageInfo = window.APCS_PAGE;
@@ -372,7 +372,7 @@
 
     renderSessionBar(session);
 
-    // ── NON-QUIZ PAGES ────────────────────────────────────────────────────────
+    // -- NON-QUIZ PAGES --------------------------------------------------------
     if (pageInfo.activity !== 'quiz') {
       // Mark as visited (not completed) on page load
       apiPost('/api/student/progress', {
@@ -384,7 +384,7 @@
         loadUnitProgress(pageInfo);
       });
 
-      // ── GLOBAL: lesson/exercise pages call this when CFU is submitted ───────
+      // -- GLOBAL: lesson/exercise pages call this when CFU is submitted -------
       // score = 0-100 percentage
       window.APCS_saveLessonScore = async function(score) {
         const cls = null; // threshold comes from API response
@@ -423,7 +423,7 @@
         return { ok: true, score, passed, threshold };
       };
     } else {
-      // ── QUIZ PAGE INIT ──────────────────────────────────────────────────────
+      // -- QUIZ PAGE INIT ------------------------------------------------------
       // Check lock/retry status before doing anything
       apiGet('/api/student/quiz/status?course=' + encodeURIComponent(pageInfo.course) +
              '&unit=' + encodeURIComponent(pageInfo.unit) +
@@ -434,7 +434,7 @@
         window._APCS_quizStatus = status;
 
         if (status.locked) {
-          // Already finalized — show locked panel and disable quiz
+          // Already finalized - show locked panel and disable quiz
           setBarStatus('\u{1F512} Final grade: ' + status.score + '%', '#E8A020');
           renderLockedPanel(status.score);
           // Dispatch event so quiz page JS can disable its UI
@@ -450,7 +450,7 @@
       });
     }
 
-    // ── GLOBAL: called by quiz wiring after results panel appears ─────────────
+    // -- GLOBAL: called by quiz wiring after results panel appears -------------
     var _lastScore = null;
     window.APCS_saveQuizScore = async function(score, answers, onRetry) {
       _lastScore = score;
@@ -470,13 +470,38 @@
         return result;
       }
 
-      // Quiz is one-shot — just update bar with score, no retry/pass panels
       setBarStatus('\u2713 Score saved: ' + score + '%', '#6EE7B7');
       loadUnitProgress(pageInfo);
+
+      // -- Whose call is it whether this attempt is the last one ---------------
+      // The class setting decides. POST /api/student/quiz answers with the
+      // EFFECTIVE setting (students.retry_override when it is set, otherwise
+      // classes.retry_allowed), so it is read off the response rather than
+      // guessed here. The quiz/status read from page load is the fallback for a
+      // server that has not shipped that field yet. When neither can be read,
+      // retries stay OFF, which is exactly how this page behaved before, so a
+      // failed lookup can never quietly leave a quiz unfinalized.
+      const st      = window._APCS_quizStatus || {};
+      const retryOn = typeof result.retry_allowed === 'boolean' ? result.retry_allowed
+                    : (typeof st.retry_allowed === 'boolean' ? st.retry_allowed : false);
+      const thr     = typeof result.threshold === 'number' ? result.threshold
+                    : (typeof st.threshold === 'number' ? st.threshold : 80);
+      const passed  = typeof result.passed === 'boolean' ? result.passed : (score >= thr);
+
+      // Retries ON: the score is on record but nothing is final. Hand the
+      // student the choice - try again, or submit this as the final grade.
+      // Retries OFF: no panel; the caller finalizes straight away, as today.
+      if (retryOn) {
+        if (passed) renderPassPanel(score, thr, onRetry, true);
+        else        renderRetryPanel(score, thr, true, onRetry);
+      }
+
+      // Resolved once, here, so the quiz wiring never has to repeat the rule.
+      result.retry_effective = retryOn;
       return result;
     };
 
-    // ── GLOBAL: Submit Final Grade ────────────────────────────────────────────
+    // -- GLOBAL: Submit Final Grade --------------------------------------------
     window.APCS_finalizeQuiz = async function() {
       setBarStatus('Submitting final grade\u2026', '#c4b5fd');
       const result = await apiPost('/api/student/quiz/finalize', {
@@ -499,7 +524,7 @@
       return result;
     };
 
-    // ── GLOBAL: confidence rating ─────────────────────────────────────────────
+    // -- GLOBAL: confidence rating ---------------------------------------------
     window.APCS_saveConfidence = function(rating) {
       apiPost('/api/student/progress', {
         course: pageInfo.course, unit: pageInfo.unit,

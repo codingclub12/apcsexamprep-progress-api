@@ -121,7 +121,9 @@ The dashboard settings UI panel is a fast-follow after the CSA Unit 1 pilot. Onl
 
 A shared reporter script following the apcs-tracker.js pattern hooks the existing check-answer and quiz grade handlers on lesson pages: when a CFU or quiz is graded client-side, compute score and POST once to /api/progress/attempt. The script reads data-lesson-id and data-item-id attributes from the page wrapper.
 
-File ownership: this Claude Code session is the owning agent for utils.js, apcs-tracker.js, student.js, and the new reporter file. The versions here are canonical. Other agents are pointed away from these files.
+File ownership: this Claude Code session is the owning agent for utils.js, student.js, and the new reporter file. The versions here are canonical. Other agents are pointed away from these files.
+
+Exception, apcs-tracker.js: this repo is NOT canonical for it. The deployed asset lives in the APCSExamPrep-theme repo at assets/apcs-tracker.js and reaches the storefront through Shopify two-way GitHub sync, so the theme repo is the only source of truth. shopify/apcs-tracker.js here is a byte-identical mirror for reference. Any change to tracker behaviour ships as a theme PR first, then the mirror is re-synced in the same pass. Never edit the mirror on its own and never upload it to Shopify by hand.
 
 ## Out of scope for this repo
 
