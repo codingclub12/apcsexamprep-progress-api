@@ -1,5 +1,18 @@
 # CLAUDE.md - APCSExamPrep Progress API
 
+## Read before starting work
+
+```
+GET https://progress.apcsexamprep.com/api/command/digest  (bearer TODO_KEY)
+Chat, no headers available: /api/command/digest/r/<read_token>  (read-only, no PII)
+Human view: https://progress.apcsexamprep.com/admin/command
+```
+
+Claim before you touch a file. Return with an artifact. Never trust this file for
+live state - query the source: Shopify Admin API for pages, progress API for the
+manifest, git for branch heads. Claims about live state decay; claims about method
+survive.
+
 ## What this repo is
 
 Railway-hosted progress tracking API for apcsexamprep.com, served at progress.apcsexamprep.com.

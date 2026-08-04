@@ -10,6 +10,19 @@ Supports AP Cybersecurity, AP CSA, AP CSP.
 - **Auth**: JWT (teachers) + long-lived JWT session tokens (students)
 - **Database**: SQLite via better-sqlite3 (upgrade to Postgres when needed)
 
+## Command center
+
+Owner-only queue, router, prompt compiler, and claim ledger at
+`/admin/command`, with the API under `/api/command/*` and `/api/todo/*`.
+Additive: six new tables, no existing route or table touched.
+
+- **Auth**: the admin session cookie (browser), or `Authorization: Bearer $TODO_KEY`
+  (agents). Anything else is 401. Only the cookie can set `verified=1`.
+- **Chat**: cannot send headers, so it reads a single PII-stripped digest at
+  `/api/command/digest/r/<read_token>`, rotatable from the page.
+- **Tests**: `npm run smoke:command` runs the whole acceptance suite offline in
+  a couple of seconds. No network, no production data.
+
 ## Deployment: Railway
 
 ### Step 1 — Create Railway project
