@@ -65,6 +65,12 @@ db.exec(`
     confidence    INTEGER,
     time_spent_s  INTEGER,
     locked        INTEGER DEFAULT 0,
+    -- When a teacher resets this activity's grade from the gradebook. Scored
+    -- submissions logged at or before this moment are excluded from the grade of
+    -- record, so the student's next attempt starts a clean slate. NULL means no
+    -- reset has happened. Nothing is deleted: the pre-reset attempts stay in
+    -- score_events and still show in GET /api/student/history, marked pre-reset.
+    score_reset_at TEXT DEFAULT NULL,
     completed_at  TEXT,
     updated_at    TEXT DEFAULT (datetime('now')),
     UNIQUE(student_id, course, unit, lesson, activity_type)
@@ -421,6 +427,8 @@ const migrations = [
   `ALTER TABLE students  ADD COLUMN retry_override    INTEGER DEFAULT NULL`,
   `ALTER TABLE students  ADD COLUMN active            INTEGER DEFAULT 1`,
   `ALTER TABLE progress  ADD COLUMN locked            INTEGER DEFAULT 0`,
+  // Teacher gradebook reset marker. See the progress table definition above.
+  `ALTER TABLE progress  ADD COLUMN score_reset_at    TEXT DEFAULT NULL`,
   `ALTER TABLE attempts  ADD COLUMN duration_seconds  INTEGER`,
   `ALTER TABLE attempts  ADD COLUMN ua                TEXT`,
   // Acquisition on a session: the entry channel (Direct / Organic Search /

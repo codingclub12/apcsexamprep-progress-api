@@ -700,10 +700,19 @@ router.patch('/classes/:code/progress/:progressId/unlock', requireTeacher, (req,
   const now   = new Date().toISOString();
 
   if (reset) {
+    // score_reset_at is what makes this reset stick. progress.score is a derived
+    // cache recomputed from the score_events ledger on every write (see the
+    // lesson-score block in routes/student.js), so nulling the cache alone would
+    // be undone the moment the student resubmits: the pre-reset attempts are
+    // still in the ledger, and with retries off the first of them is the grade of
+    // record forever. Stamping the moment of the reset excludes everything logged
+    // at or before it, so the student's next submission is attempt 1 and a reset
+    // grants exactly one retry. The old rows are not deleted; they stay in the
+    // ledger and in GET /api/student/history, marked pre-reset.
     db.prepare(`
       UPDATE progress SET locked = 0, completed = 0, score = NULL, attempts = 0,
-        completed_at = NULL, updated_at = ? WHERE id = ?
-    `).run(now, record.id);
+        score_reset_at = ?, completed_at = NULL, updated_at = ? WHERE id = ?
+    `).run(now, now, record.id);
   } else {
     db.prepare(`
       UPDATE progress SET locked = 0, updated_at = ? WHERE id = ?

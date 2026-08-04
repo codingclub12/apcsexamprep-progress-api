@@ -16,6 +16,20 @@
 // ─────────────────────────────────────────────────────────────────────────────
 const db = require('./db');
 
+// RESERVED ITEM NAME. POST /api/student/progress records a WHOLE-ACTIVITY
+// percentage (0-100), not one graded item inside an activity, and it rides this
+// same append-only ledger under this reserved `item`. Two things follow.
+//
+//  1. It is how a lesson-score submission is told apart from a /api/student/score
+//     write when reading the ledger, without a schema change.
+//  2. It must be INVISIBLE to this rollup. Folding "83 out of 100" in beside a
+//     real item ("5 out of 7") would produce 88 out of 107, a number matching
+//     nothing a student did. The two writers own the same progress.score cell by
+//     different arithmetic, so each computes its own value from its own rows and
+//     neither reads the other's. Excluding it here is what keeps the /score and
+//     /quiz paths behaving on deploy exactly as they did before.
+const LESSON_SCORE_ITEM = 'lesson-score';
+
 const rollupAggStmt = db.prepare(`
   SELECT
     COALESCE(SUM(best_points), 0) AS earned,
@@ -25,12 +39,14 @@ const rollupAggStmt = db.prepare(`
     SELECT item, MAX(points) AS best_points, MAX(max_points) AS item_max
     FROM score_events
     WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
+      AND item <> '${LESSON_SCORE_ITEM}'
     GROUP BY item
   )
 `);
 const rollupEventsStmt = db.prepare(`
   SELECT COUNT(*) n FROM score_events
   WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
+    AND item <> '${LESSON_SCORE_ITEM}'
 `);
 
 function rollupScore(studentId, course, unit, lesson, activity_type) {
@@ -40,4 +56,4 @@ function rollupScore(studentId, course, unit, lesson, activity_type) {
   return { earned: agg.earned, possible: agg.possible, items: agg.items, events, pct };
 }
 
-module.exports = { rollupScore };
+module.exports = { rollupScore, LESSON_SCORE_ITEM };
