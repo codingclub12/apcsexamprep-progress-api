@@ -66,7 +66,19 @@ Paste the HTML from shopify/ into the page body (template: page.blank).
 
 ### Step 6 — Add tracker.js to your theme
 
-1. Upload `shopify/apcs-tracker.js` to Shopify theme → Assets as `apcs-tracker.js`
+> **Do not upload `shopify/apcs-tracker.js` by hand.** The live asset is owned by
+> the `codingclub12/APCSExamPrep-theme` repo at `assets/apcs-tracker.js`, which is
+> connected to Shopify by two-way GitHub sync. Merging there deploys. Uploading the
+> copy in this repo over it would revert whatever shipped through the theme repo
+> most recently. The copy here is a read-only mirror kept for reference, and it is
+> only trustworthy when its md5 matches the theme repo's copy:
+>
+> ```
+> md5sum shopify/apcs-tracker.js                  # this repo
+> md5sum <theme-repo>/assets/apcs-tracker.js      # must be identical
+> ```
+
+1. Confirm `assets/apcs-tracker.js` is present in the theme repo (it is deployed from there)
 2. On each lesson/exercise/quiz page, add before the closing `</body>`:
 
 ```html
