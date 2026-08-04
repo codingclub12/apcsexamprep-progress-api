@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>APCSExamPrep &middot; Command Center</title>
+<!--
+  COMMAND CENTER. Plain HTML, same pattern as /admin/teachers: no build step, no
+  framework, no external asset.
+
+  AUTH: this page holds NO credential. Every fetch below rides the httpOnly
+  admin session cookie with credentials:"same-origin". The agent bearer key is
+  never embedded here in any form, not in markup, not in a data attribute, not
+  in inline JS, not substituted at build time; its name does not even appear in
+  this file, so the smoke suite can assert on the literal. Cookie absent means
+  the signed-out panel, never a token prompt, never a fallback to the bearer path.
+
+  MOBILE: full control, not a reduced capture-only mode. Every affordance on the
+  desktop layout is reachable at 380px; the layout reflows, nothing is removed.
+-->
+<style>
+  :root {
+    color-scheme: light dark;
+    --plane:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --baseline:#c3c2b7; --border:rgba(11,11,11,0.10);
+    --good:#0ca30c; --critical:#d03b3b; --warnc:#eda100; --accent:#2a78d6; --money:#0ca30c;
+    --shadow:0 1px 2px rgba(11,11,11,0.04),0 1px 3px rgba(11,11,11,0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --plane:#0d0d0d; --surface:#1a1a19; --ink:#fff; --ink-2:#c3c2b7; --muted:#898781;
+      --grid:#2c2c2a; --baseline:#383835; --border:rgba(255,255,255,0.10);
+      --critical:#e66767; --warnc:#c98500; --accent:#3987e5; --money:#3fbf6a; --shadow:none;
+    }
+  }
+  * { box-sizing:border-box; }
+  html, body { margin:0; max-width:100%; overflow-x:hidden; }
+  body { background:var(--plane); color:var(--ink); font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; -webkit-font-smoothing:antialiased; }
+  a { color:var(--accent); }
+  .wrap { max-width:1100px; margin:0 auto; padding:16px 14px 72px; }
+
+  header.top { display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 14px; padding-bottom:12px; border-bottom:1px solid var(--border); margin-bottom:14px; }
+  header.top h1 { font-size:19px; margin:0; font-weight:650; letter-spacing:-0.01em; }
+  header.top .sub { color:var(--muted); font-size:12.5px; }
+  header.top .spacer { flex:1 1 auto; }
+  .navlink { color:var(--accent); text-decoration:none; font-size:12.5px; font-weight:600; }
+
+  button { font:inherit; color:var(--ink); background:transparent; border:1px solid var(--border); border-radius:8px; padding:7px 11px; cursor:pointer; min-height:38px; }
+  button:hover:not(:disabled) { border-color:var(--baseline); }
+  button:disabled { opacity:0.45; cursor:not-allowed; }
+  button.primary { background:var(--accent); color:#fff; border-color:transparent; font-weight:600; }
+  button.small { padding:4px 9px; min-height:32px; font-size:12.5px; }
+  input, select, textarea { font:inherit; color:var(--ink); background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:8px 10px; max-width:100%; }
+  textarea { width:100%; resize:vertical; }
+
+  /* header strip */
+  .strip { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px; }
+  @media (min-width:720px) { .strip { grid-template-columns:repeat(6,1fr); } }
+  .strip .m { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:9px 10px; box-shadow:var(--shadow); }
+  .strip .m b { display:block; font-size:20px; font-weight:650; font-variant-numeric:tabular-nums; letter-spacing:-0.02em; }
+  .strip .m span { font-size:11px; color:var(--muted); display:block; line-height:1.3; }
+  .strip .m.alert b { color:var(--critical); }
+  .strip .m.money b { color:var(--money); }
+
+  .bar { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:12px; }
+  .seg { display:inline-flex; border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+  .seg button { border:0; border-radius:0; padding:6px 12px; font-size:13px; }
+  .seg button[aria-pressed="true"] { background:var(--accent); color:#fff; font-weight:600; }
+  .quickadd { display:flex; gap:8px; margin-bottom:14px; }
+  .quickadd input { flex:1 1 auto; min-width:0; }
+
+  details.group { margin-bottom:10px; border:1px solid var(--border); border-radius:11px; background:var(--surface); box-shadow:var(--shadow); overflow:hidden; }
+  details.group > summary { cursor:pointer; padding:10px 13px; font-size:13px; font-weight:650; letter-spacing:0.02em; text-transform:uppercase; color:var(--ink-2); list-style:none; display:flex; align-items:center; gap:9px; }
+  details.group > summary::-webkit-details-marker { display:none; }
+  details.group > summary .n { margin-left:auto; color:var(--muted); font-variant-numeric:tabular-nums; font-weight:600; }
+  details.group.now > summary { color:var(--ink); }
+
+  .row { border-top:1px solid var(--border); padding:10px 13px 10px 11px; border-left:3px solid transparent; }
+  .row.bleeding { border-left-color:var(--critical); }
+  .row.overdue { background:color-mix(in srgb, var(--critical) 10%, transparent); }
+  .row.blocked { opacity:0.55; }
+  .row .line { display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
+  .row .ttl { font-size:14.5px; font-weight:560; cursor:pointer; flex:1 1 220px; min-width:0; word-break:break-word; }
+  .row .ttl.done { text-decoration:line-through; color:var(--muted); }
+  .chk { flex:0 0 auto; width:20px; height:20px; margin:0 2px 0 0; }
+  .chip { font-size:10.5px; font-weight:700; padding:2px 7px; border-radius:999px; text-transform:uppercase; letter-spacing:0.03em; white-space:nowrap; background:color-mix(in srgb, var(--muted) 14%, transparent); color:var(--ink-2); }
+  .chip.surface { background:color-mix(in srgb, var(--accent) 16%, transparent); color:var(--accent); }
+  .chip.money { background:color-mix(in srgb, var(--money) 16%, transparent); color:var(--money); }
+  .chip.amber { background:color-mix(in srgb, var(--warnc) 20%, transparent); color:var(--warnc); }
+  .chip.red { background:color-mix(in srgb, var(--critical) 16%, transparent); color:var(--critical); }
+  .chip.flight { background:color-mix(in srgb, var(--good) 16%, transparent); color:var(--good); animation:pulse 1.8s ease-in-out infinite; }
+  .chip.manual { background:transparent; border:1px dashed var(--border); color:var(--muted); }
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.45; } }
+  @media (prefers-reduced-motion: reduce) { .chip.flight { animation:none; } }
+  .row .meta { font-size:12px; color:var(--muted); margin-top:3px; }
+  .row .meta .blockedby { color:var(--critical); }
+
+  .expand { margin-top:10px; padding-top:10px; border-top:1px dashed var(--border); font-size:13px; }
+  .expand .detail { color:var(--ink-2); white-space:pre-wrap; margin-bottom:9px; }
+  .expand .why { font-size:12px; color:var(--muted); margin-bottom:9px; }
+  .fields { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:9px; }
+  @media (min-width:640px) { .fields { grid-template-columns:repeat(4,1fr); } }
+  .fields label { font-size:11px; color:var(--muted); display:flex; flex-direction:column; gap:3px; }
+  .fields input, .fields select { width:100%; }
+  .acts { display:flex; flex-wrap:wrap; gap:8px; }
+  .ledger { margin-top:9px; font-size:12px; color:var(--muted); }
+  .ledger div { padding:2px 0; border-bottom:1px solid var(--border); }
+  .ledger div:last-child { border-bottom:0; }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:11px; padding:13px; box-shadow:var(--shadow); margin-bottom:14px; }
+  .card h3 { margin:0 0 6px; font-size:13px; font-weight:650; }
+  .hint { color:var(--muted); font-size:12px; margin:0 0 8px; }
+  code.url { font-size:11.5px; word-break:break-all; color:var(--ink-2); }
+  .toast { position:fixed; left:50%; transform:translateX(-50%); bottom:16px; background:var(--ink); color:var(--plane); padding:9px 15px; border-radius:9px; font-size:13px; z-index:9; }
+  .err { color:var(--critical); font-size:13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Command Center</h1>
+    <span class="sub" id="asof">loading</span>
+    <span class="spacer"></span>
+    <a class="navlink" href="/admin/dashboard">dashboard</a>
+    <a class="navlink" href="/admin/teachers">teachers</a>
+    <button class="small" id="refresh">refresh</button>
+  </header>
+
+  <div id="signedout" class="card" hidden>
+    <h3>Signed out</h3>
+    <p class="hint">This session has expired. Sign in again and the page comes back with it. There is no
+      token to paste here: the page only ever authenticates with the session cookie.</p>
+    <button class="primary" onclick="location.href='/admin/dashboard'">Sign in</button>
+  </div>
+
+  <main id="app">
+    <div class="strip" id="strip"></div>
+
+    <form class="quickadd" id="quickadd">
+      <input id="qa" placeholder="Quick add (bucket=week, owner=tanner)" autocomplete="off" />
+      <button class="primary" type="submit">Add</button>
+    </form>
+
+    <div class="bar">
+      <span class="seg" role="group" aria-label="owner filter">
+        <button data-owner="all" type="button">All</button>
+        <button data-owner="tanner" type="button">Mine</button>
+        <button data-owner="agent" type="button">Agent</button>
+      </span>
+      <select id="fsurface"><option value="">surface: any</option></select>
+      <select id="fcourse"><option value="">course: any</option></select>
+      <select id="fbucket"><option value="">bucket: any</option></select>
+      <label style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:5px">
+        <input type="checkbox" id="fclosed" /> show closed
+      </label>
+    </div>
+
+    <div id="list"></div>
+
+    <div class="card" id="chatcard">
+      <h3>Chat read URL</h3>
+      <p class="hint">Chat has web_fetch and nothing else: no headers, no POST body, so it can never send a
+        bearer token. This URL is read-only, carries no person or email, reads the digest and nothing else,
+        and rotating it kills the old one immediately.</p>
+      <div class="acts">
+        <button class="small" id="showtoken" type="button">Show URL</button>
+        <button class="small" id="rotate" type="button">Rotate</button>
+      </div>
+      <p style="margin:8px 0 0"><code class="url" id="tokenurl"></code></p>
+    </div>
+  </main>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function () {
+  "use strict";
+  var LS = "apcse_command_ui";
+  var state = { owner: "tanner", surface: "", course: "", bucket: "", closed: false, open: {}, groups: {} };
+  try { state = Object.assign(state, JSON.parse(localStorage.getItem(LS) || "{}")); } catch (e) {}
+  function save() { try { localStorage.setItem(LS, JSON.stringify(state)); } catch (e) {} }
+
+  var BUCKETS = ["now", "decision", "week", "before_school", "september", "someday", "closed"];
+  var SURFACES = ["theme", "api", "content", "klaviyo", "shopify", "drive", "ops"];
+  var COURSES = ["csa", "csp", "cyber", "networking", "greenfoot", "all"];
+  var STATUSES = ["open", "in_progress", "awaiting_review", "blocked", "done", "dropped"];
+  var SIZES = ["xs", "s", "m", "l", "xl"];
+  var OWNERS = ["tanner", "agent", "either"];
+
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function toast(msg) { var t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(t._h); t._h = setTimeout(function () { t.hidden = true; }, 2600); }
+
+  // Every call rides the cookie. A 401 means the session died, which shows the
+  // signed-out panel; it never falls back to another credential.
+  function api(path, opts) {
+    opts = opts || {};
+    opts.credentials = "same-origin";
+    opts.headers = Object.assign({ "Content-Type": "application/json" }, opts.headers || {});
+    return fetch(path, opts).then(function (r) {
+      if (r.status === 401) { $("app").hidden = true; $("signedout").hidden = false; throw new Error("signed out"); }
+      return r.json().then(function (body) {
+        if (!r.ok) throw new Error(body && body.error ? body.error : ("HTTP " + r.status));
+        return body;
+      });
+    });
+  }
+
+  var data = { tasks: [], digest: null };
+
+  function load() {
+    var q = "?" + (state.closed ? "include_closed=1" : "");
+    return Promise.all([api("/api/todo" + q), api("/api/command/digest")]).then(function (out) {
+      data.tasks = out[0].tasks;
+      data.digest = out[1];
+      render();
+    }).catch(function (e) { if (e.message !== "signed out") toast(e.message); });
+  }
+
+  function renderStrip() {
+    var d = data.digest;
+    if (!d) return;
+    var promises = d.overdue_promises.length;
+    var cells = [
+      { n: promises, label: "open promises overdue", cls: promises ? "alert" : "" },
+      { n: "$" + (d.costing_money.total_per_day || 0), label: "burning per day", cls: "money" },
+      { n: d.due_soon.length, label: "due this week", cls: "" },
+      { n: d.needs_verification.length, label: "awaiting verification", cls: d.needs_verification.length ? "alert" : "" },
+      { n: d.in_flight.length, label: "in flight", cls: "" },
+      { n: d.stale.length + d.stuck.length, label: "stale or stuck", cls: (d.stale.length + d.stuck.length) ? "alert" : "" }
+    ];
+    $("strip").innerHTML = cells.map(function (c) {
+      return '<div class="m ' + c.cls + '"><b>' + esc(c.n) + "</b><span>" + esc(c.label) + "</span></div>";
+    }).join("");
+    $("asof").textContent = "as of " + new Date(d.as_of).toLocaleTimeString() + " · " + d.task_count + " open";
+  }
+
+  function inFlightFor(id) {
+    if (!data.digest) return null;
+    for (var i = 0; i < data.digest.in_flight.length; i++) {
+      if (data.digest.in_flight[i].task_id === id) return data.digest.in_flight[i];
+    }
+    return null;
+  }
+
+  function rowHtml(t) {
+    var cls = ["row"];
+    if (t.bleeding) cls.push("bleeding");
+    if (t.overdue_promise) cls.push("overdue");
+    if (t.blocked) cls.push("blocked");
+    var chips = [];
+    if (t.size) chips.push('<span class="chip">' + esc(t.size) + "</span>");
+    chips.push('<span class="chip">' + esc(t.owner) + "</span>");
+    chips.push('<span class="chip surface">' + esc(t.routed_surface) + "</span>");
+    if (t.cost_per_day) chips.push('<span class="chip money">$' + esc(t.cost_per_day) + "/day</span>");
+    if (t.status === "done" && !t.verified) chips.push('<span class="chip amber">unverified</span>');
+    if (t.status === "awaiting_review") chips.push('<span class="chip amber">review</span>');
+    if (t.overdue_promise) chips.push('<span class="chip red">promise ' + esc(t.overdue_promise_days) + "d late</span>");
+    var live = inFlightFor(t.id);
+    if (live) chips.push('<span class="chip flight">' + esc(live.surface) + " " + esc(live.age_minutes) + "m</span>");
+    // Chat holds no lock and cannot POST a return, so the row says how it closes
+    // instead of offering a claim affordance that cannot work.
+    if (t.closes_manually) chips.push('<span class="chip manual">closes manually</span>');
+
+    var meta = [];
+    if (t.due_date) meta.push("due " + esc(t.due_date));
+    if (t.blocked) meta.push('<span class="blockedby">blocked by ' + t.blocked_by.map(function (b) { return "#" + b.id; }).join(", ") + "</span>");
+    if (t.deferred) meta.push("deferred to " + esc(t.defer_until));
+    if (t.artifact_url) meta.push('<a href="' + esc(t.artifact_url) + '" target="_blank" rel="noopener">artifact</a>');
+
+    return '<div class="' + cls.join(" ") + '" data-id="' + t.id + '">'
+      + '<div class="line">'
+      + '<input class="chk" type="checkbox" data-act="check" ' + (t.closed ? "checked" : "") + ' aria-label="check off" />'
+      + '<span class="ttl' + (t.closed ? " done" : "") + '" data-act="expand">' + esc(t.title) + "</span>"
+      + chips.join("")
+      + "</div>"
+      + (meta.length ? '<div class="meta">' + meta.join(" · ") + "</div>" : "")
+      + (state.open[t.id] ? expandHtml(t) : "")
+      + "</div>";
+  }
+
+  function opts(list, val) {
+    return list.map(function (v) { return '<option value="' + esc(v) + '"' + (v === val ? " selected" : "") + ">" + esc(v) + "</option>"; }).join("");
+  }
+
+  function expandHtml(t) {
+    var h = '<div class="expand">';
+    if (t.detail) h += '<div class="detail">' + esc(t.detail) + "</div>";
+    h += '<div class="why">' + esc(t.routed_reason) + "</div>";
+    h += '<div class="fields">'
+      + '<label>bucket<select data-f="bucket">' + opts(BUCKETS.slice(0, 6), t.bucket) + "</select></label>"
+      + '<label>status<select data-f="status">' + opts(STATUSES, t.status) + "</select></label>"
+      + '<label>owner<select data-f="owner">' + opts(OWNERS, t.owner) + "</select></label>"
+      + '<label>size<select data-f="size"><option value=""></option>' + opts(SIZES, t.size) + "</select></label>"
+      + '<label>surface<select data-f="surface"><option value=""></option>' + opts(SURFACES, t.surface) + "</select></label>"
+      + '<label>course<select data-f="course"><option value=""></option>' + opts(COURSES, t.course) + "</select></label>"
+      + '<label>due<input type="date" data-f="due_date" value="' + esc(t.due_date || "") + '" /></label>'
+      + '<label>$/day<input type="number" step="0.01" data-f="cost_per_day" value="' + esc(t.cost_per_day == null ? "" : t.cost_per_day) + '" /></label>'
+      + "</div>"
+      + '<label style="font-size:11px;color:var(--muted)">artifact url'
+      + '<input style="width:100%" data-f="artifact_url" value="' + esc(t.artifact_url || "") + '" placeholder="PR url, updatedAt delta, md5, curl result" /></label>';
+
+    if (t.blocked_by.length) {
+      h += '<div class="ledger">' + t.blocked_by.map(function (b) {
+        return "<div>blocked by #" + b.id + " " + esc(b.title) + " (" + esc(b.status) + ")</div>"; }).join("") + "</div>";
+    }
+    if (t.blocks && t.blocks.length) {
+      h += '<div class="ledger">' + t.blocks.map(function (b) {
+        return "<div>blocks #" + b.id + " " + esc(b.title) + "</div>"; }).join("") + "</div>";
+    }
+
+    h += '<div class="acts" style="margin-top:9px">'
+      + '<button class="small" data-act="save">Save</button>'
+      + '<button class="small" data-act="prompt">Copy prompt</button>'
+      + '<button class="small' + (t.status === "done" && !t.verified ? " primary" : "") + '" data-act="verify"'
+      + (t.artifact_url ? "" : " disabled title=\"Needs an artifact first\"") + ">"
+      + (t.verified ? "Verified" : "Verify") + "</button>";
+    // The auto-dispatch toggle is GREYED with the router's reason rather than
+    // letting you set a flag that would silently do nothing.
+    h += '<button class="small" data-act="dispatch"' + (t.auto_dispatch_eligible ? "" : " disabled")
+      + ' title="' + esc(t.auto_dispatch_reason) + '">auto-dispatch: ' + esc(t.auto_dispatch) + "</button>";
+    h += "</div>";
+    h += '<div class="ledger" data-ledger="' + t.id + '">loading history</div>';
+    h += "</div>";
+    return h;
+  }
+
+  function visible() {
+    return data.tasks.filter(function (t) {
+      if (state.owner !== "all" && t.owner !== state.owner) return false;
+      if (state.surface && t.surface !== state.surface) return false;
+      if (state.course && t.course !== state.course) return false;
+      if (state.bucket && t.effective_bucket !== state.bucket) return false;
+      return true;
+    });
+  }
+
+  function render() {
+    renderStrip();
+    var rows = visible();
+    var groups = {};
+    rows.forEach(function (t) { (groups[t.effective_bucket] = groups[t.effective_bucket] || []).push(t); });
+    var html = BUCKETS.map(function (b) {
+      var list = groups[b];
+      if (!list || !list.length) return "";
+      var open = state.groups[b] !== false && b !== "closed";
+      return '<details class="group ' + b + '"' + (open ? " open" : "") + ' data-bucket="' + b + '">'
+        + "<summary>" + esc(b.replace(/_/g, " ")) + '<span class="n">' + list.length + "</span></summary>"
+        + list.map(rowHtml).join("") + "</details>";
+    }).join("");
+    $("list").innerHTML = html || '<p class="hint">Nothing here with these filters.</p>';
+    Object.keys(state.open).forEach(function (id) { if (state.open[id]) loadLedger(Number(id)); });
+    syncControls();
+  }
+
+  function loadLedger(id) {
+    var el = document.querySelector('[data-ledger="' + id + '"]');
+    if (!el) return;
+    api("/api/todo/" + id).then(function (body) {
+      var parts = body.events.slice(0, 8).map(function (e) {
+        return "<div>" + esc(e.at) + " · " + esc(e.actor) + " · " + esc(e.action)
+          + (e.to_value ? " → " + esc(e.to_value) : "") + "</div>";
+      });
+      body.claims.forEach(function (c) {
+        parts.unshift("<div>claim " + esc(c.surface) + " " + esc(c.session_label || "") + " " + esc(c.claimed_at)
+          + (c.released_at ? " · " + esc(c.outcome) : " · live") + "</div>");
+      });
+      el.innerHTML = parts.join("") || "<div>no history yet</div>";
+    }).catch(function () { el.textContent = "history unavailable"; });
+  }
+
+  function patch(id, body) {
+    return api("/api/todo/" + id, { method: "PATCH", body: JSON.stringify(body) })
+      .then(function () { return load(); })
+      .catch(function (e) { if (e.message !== "signed out") toast(e.message); });
+  }
+
+  $("list").addEventListener("click", function (ev) {
+    var row = ev.target.closest(".row");
+    if (!row) return;
+    var id = Number(row.getAttribute("data-id"));
+    var act = ev.target.getAttribute("data-act");
+    if (act === "expand") {
+      state.open[id] = !state.open[id]; save(); render(); return;
+    }
+    if (act === "check") {
+      var checked = ev.target.checked;
+      var task = data.tasks.filter(function (t) { return t.id === id; })[0];
+      if (checked && !task.artifact_url) {
+        ev.target.checked = false;
+        state.open[id] = true; save(); render();
+        toast("Needs an artifact before it can close.");
+        return;
+      }
+      patch(id, { status: checked ? "done" : "open" });
+      return;
+    }
+    if (act === "save") {
+      var body = {};
+      row.querySelectorAll("[data-f]").forEach(function (el) {
+        var v = el.value;
+        body[el.getAttribute("data-f")] = v === "" ? null : v;
+      });
+      patch(id, body).then(function () { toast("saved"); });
+      return;
+    }
+    if (act === "verify") {
+      api("/api/todo/" + id + "/verify", { method: "POST", body: "{}" })
+        .then(function () { toast("verified"); return load(); })
+        .catch(function (e) { if (e.message !== "signed out") toast(e.message); });
+      return;
+    }
+    if (act === "prompt") {
+      fetch("/api/command/task/" + id + "/prompt?format=text", { credentials: "same-origin" })
+        .then(function (r) { return r.text(); })
+        .then(function (text) {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            return navigator.clipboard.writeText(text).then(function () { toast("prompt copied"); });
+          }
+          window.prompt("Copy the compiled prompt", text);
+        }).catch(function () { toast("could not copy"); });
+      return;
+    }
+    if (act === "dispatch") {
+      patch(id, { auto_dispatch: "eligible" }).then(function () { toast("auto-dispatch armed"); });
+    }
+  });
+
+  $("list").addEventListener("toggle", function (ev) {
+    var d = ev.target;
+    if (d.tagName !== "DETAILS") return;
+    state.groups[d.getAttribute("data-bucket")] = d.open;
+    save();
+  }, true);
+
+  $("quickadd").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var text = $("qa").value.trim();
+    if (!text) return;
+    api("/api/todo", { method: "POST", body: JSON.stringify({ text: text }) })
+      .then(function () { $("qa").value = ""; return load(); })
+      .catch(function (e) { if (e.message !== "signed out") toast(e.message); });
+  });
+
+  function syncControls() {
+    document.querySelectorAll("[data-owner]").forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-owner") === state.owner));
+    });
+    $("fsurface").value = state.surface;
+    $("fcourse").value = state.course;
+    $("fbucket").value = state.bucket;
+    $("fclosed").checked = !!state.closed;
+  }
+
+  $("fsurface").innerHTML = '<option value="">surface: any</option>' + opts(SURFACES, state.surface);
+  $("fcourse").innerHTML = '<option value="">course: any</option>' + opts(COURSES, state.course);
+  $("fbucket").innerHTML = '<option value="">bucket: any</option>' + opts(BUCKETS, state.bucket);
+
+  document.querySelector(".seg").addEventListener("click", function (ev) {
+    var o = ev.target.getAttribute("data-owner");
+    if (!o) return;
+    state.owner = o; save(); render();
+  });
+  ["fsurface", "fcourse", "fbucket"].forEach(function (id) {
+    $(id).addEventListener("change", function () {
+      state[id.slice(1)] = $(id).value; save(); render();
+    });
+  });
+  $("fclosed").addEventListener("change", function () { state.closed = $("fclosed").checked; save(); load(); });
+  $("refresh").addEventListener("click", load);
+
+  $("showtoken").addEventListener("click", function () {
+    api("/api/command/read-token").then(function (b) { $("tokenurl").textContent = b.url; });
+  });
+  $("rotate").addEventListener("click", function () {
+    if (!window.confirm("Rotate the read URL? Any chat session using the old one stops working immediately.")) return;
+    api("/api/command/read-token/rotate", { method: "POST", body: "{}" }).then(function (b) {
+      $("tokenurl").textContent = b.url;
+      toast("rotated, old URL is dead");
+    });
+  });
+
+  syncControls();
+  load();
+})();
+</script>
+</body>
+</html>
