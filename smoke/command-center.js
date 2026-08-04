@@ -293,10 +293,24 @@ const raw = (sql, ...args) => db.prepare(sql).run(...args);
   const cookieVerify = await call('POST', `/api/todo/${agentDone.id}/verify`, { as: 'tanner', body: {} });
   ok('12. the cookie path can set verified=1', cookieVerify.status === 200 && cookieVerify.body.task.verified === true);
 
+  // The artifact gate is an AGENT rule, not a universal one. Tanner closing his
+  // own row is one click: half the queue is email, phone calls, and Shopify
+  // edits that will never have a PR URL, and the human pressing the button is
+  // the verification. Criterion 13 above still holds for the bearer path.
+  const humanClose = list3.body.tasks.find((t) => t.owner === 'tanner' && t.bucket !== 'decision'
+    && ![agentTask.id, nowTask.id, blocker.id, lowly.id, agentDone.id].includes(t.id));
+  const humanDone = await call('PATCH', `/api/todo/${humanClose.id}`, { as: 'tanner', body: { status: 'done' } });
+  ok('the cookie path closes an item with no artifact, in one click',
+    humanDone.status === 200 && humanDone.body.task.status === 'done' && !humanDone.body.task.artifact_url,
+    humanDone.body);
+  const humanVerify = await call('POST', `/api/todo/${humanClose.id}/verify`, { as: 'tanner', body: {} });
+  ok('and can verify it without an artifact too',
+    humanVerify.status === 200 && humanVerify.body.task.verified === true, humanVerify.body);
+
   // ── Claim protocol ────────────────────────────────────────────────────────
   section('Claim protocol (criteria 16, 17, 18)');
   const claimTask = list3.body.tasks.find((t) => t.surface === 'api'
-    && ![agentTask.id, agentDone.id, nowTask.id, blocker.id, lowly.id].includes(t.id));
+    && ![agentTask.id, agentDone.id, nowTask.id, blocker.id, lowly.id, humanClose.id].includes(t.id));
   const claim1 = await call('POST', `/api/command/task/${claimTask.id}/claim`, {
     as: 'agent',
     body: { surface: 'claude_code', session_label: 'first session', locks: ['progress-api:db.js'], ttl_minutes: 60 },

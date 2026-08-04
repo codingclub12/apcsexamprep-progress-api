@@ -174,7 +174,9 @@ router.post('/:id/verify', auth.requireCookieAuth, (req, res) => {
   const id = Number(req.params.id);
   const task = store.getTask(id);
   if (!task) return res.status(404).json({ error: `No task #${id}` });
-  if (!task.artifact_url) return res.status(400).json({ error: write.ARTIFACT_MESSAGE });
+  // No artifact required to verify from the browser. The cookie holder looking
+  // at the row and pressing the button is what verified=1 means; demanding a URL
+  // first would just block the ledger on work that never produces one.
   const verified = req.body && req.body.verified === false ? 0 : 1;
   db.prepare("UPDATE tasks SET verified = ?, updated_at = datetime('now'), last_touched_at = datetime('now') WHERE id = ?").run(verified, id);
   store.logEvent(id, req.command.actor, 'set:verified', task.verified ? 1 : 0, verified);
