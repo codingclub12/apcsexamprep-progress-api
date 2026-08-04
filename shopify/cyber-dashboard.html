@@ -312,7 +312,7 @@ window.TCDash = {
       body: JSON.stringify({ retry_override: allow }),
     });
     const d = await r.json();
-    if (d.ok) this.loadData(); // re-render
+    if (d.ok) this.loadProgress(token); // re-render
     else alert('Failed to update retry: ' + (d.error || 'Unknown error'));
   },
 
@@ -324,7 +324,7 @@ window.TCDash = {
       body: JSON.stringify({ retry_override: null }),
     });
     const d = await r.json();
-    if (d.ok) this.loadData();
+    if (d.ok) this.loadProgress(token);
     else alert('Failed to reset retry: ' + (d.error || 'Unknown error'));
   },
 
@@ -394,11 +394,8 @@ window.TCDash = {
     });
     const d = await r.json();
     this.closeUnlockModal();
-    if (d.ok) this.loadData();
+    if (d.ok) this.loadProgress(token);
     else alert('Failed to unlock: ' + (d.error || 'Unknown error'));
-  },
-
-
   },
 
   async toggleClassRetry() {
@@ -416,7 +413,7 @@ window.TCDash = {
     const btn = document.getElementById('dash-retry-btn');
     if (btn) btn.style.setProperty('background', newVal ? '#0F766E' : '#DC2626', 'important');
     // Re-render table so per-student labels update
-    this.loadData();
+    this.loadProgress(token);
   },
 
   openThresholdModal() {
