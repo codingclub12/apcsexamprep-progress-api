@@ -319,13 +319,25 @@ router.get('/attempts', requireStudent, (req, res) => {
 //  only; zero PII. Net effect on deploy: a stored grade cannot drop, and with retry
 //  off it cannot move at all.
 const lsProgressStmt = db.prepare(`
-  SELECT id, attempts, score FROM progress
+  SELECT id, attempts, score, score_reset_at FROM progress
   WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
 `);
+//  The reset guard. A teacher resetting a grade in the gradebook stamps
+//  progress.score_reset_at (see the unlock route in routes/teacher.js), and the
+//  grade of record is derived only from submissions logged AFTER that moment.
+//  Without this clause the reset would be undone by the student's next save: the
+//  pre-reset attempts are still in the ledger, so with retries off the first of
+//  them would stay the grade of record forever and the teacher's reset would
+//  silently reappear as the old score. Nothing is deleted; the excluded rows are
+//  still returned by GET /history, marked pre_reset.
+//
+//  Both sides of the comparison are ISO-8601 strings written by
+//  new Date().toISOString(), so ordering them as text is exact.
 const lsEventsStmt = db.prepare(`
   SELECT points, answers, created_at FROM score_events
   WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
     AND item = ?
+    AND (? IS NULL OR created_at > ?)
   ORDER BY created_at ASC, rowid ASC
 `);
 const lsInsertEventStmt = db.prepare(`
@@ -372,9 +384,12 @@ function priorScoreOf(row) {
 }
 
 // Every scored attempt behind one activity, oldest first: the implicit pre-ledger
-// score when there is one, then each logged submission.
-function lessonScoreAttempts(studentId, course, unit, lesson, activity_type) {
-  const rows = lsEventsStmt.all(studentId, course, unit, lesson, activity_type, LESSON_SCORE_ITEM);
+// score when there is one, then each logged submission. resetAt, when set, is the
+// moment a teacher reset this grade; everything logged at or before it is excluded,
+// so the next submission is attempt 1 and a reset grants exactly one retry.
+function lessonScoreAttempts(studentId, course, unit, lesson, activity_type, resetAt) {
+  const rows = lsEventsStmt.all(
+    studentId, course, unit, lesson, activity_type, LESSON_SCORE_ITEM, resetAt, resetAt);
   const out = [];
   if (rows.length) {
     const prior = priorScoreOf(rows[0]);
@@ -436,11 +451,16 @@ router.post('/progress', requireStudent, (req, res) => {
       let attempts = existing ? (existing.attempts || 0) : 0;
       let gor = null;
 
+      const resetAt = existing ? (existing.score_reset_at || null) : null;
+
       if (scored) {
         // Carry a pre-ledger score into the ledger once, on the first row for this
         // activity, so the policy engine can see the attempt that was never logged.
+        // Scoped to the current era: after a teacher reset there is no grade to
+        // carry (the reset nulls it), so a reset never resurrects an old score.
         const before = lsEventsStmt.all(
-          req.student.id, course, unit, lesson, activity_type, LESSON_SCORE_ITEM);
+          req.student.id, course, unit, lesson, activity_type, LESSON_SCORE_ITEM,
+          resetAt, resetAt);
         const answers = (before.length === 0 && existing && existing.score != null)
           ? JSON.stringify({ prior_score: existing.score })
           : null;
@@ -451,7 +471,8 @@ router.post('/progress', requireStudent, (req, res) => {
           answers, clientEventId, now
         );
 
-        const list = lessonScoreAttempts(req.student.id, course, unit, lesson, activity_type);
+        const list = lessonScoreAttempts(
+          req.student.id, course, unit, lesson, activity_type, resetAt);
         const idx = lessonGradeOfRecordIndex(list, retryOn);
         gor = { score: list[idx].score, attempt_no: idx + 1, attempts: list.length };
         derivedScore = gor.score;
@@ -551,6 +572,14 @@ const histQuizAttemptsStmt = db.prepare(`
   FROM quiz_attempts WHERE student_id = ?
   ORDER BY attempted_at ASC, rowid ASC
 `);
+// Teacher gradebook resets, one row per activity that has had one. Submissions
+// logged at or before the stamp are still returned (deleting gradebook data is
+// never the answer here) but are marked pre_reset, numbered in their own era, and
+// can never hold the grade of record.
+const histResetsStmt = db.prepare(`
+  SELECT course, unit, lesson, activity_type, score_reset_at
+  FROM progress WHERE student_id = ? AND score_reset_at IS NOT NULL
+`);
 const histAttemptsStmt = db.prepare(`
   SELECT a.course, a.lesson_id, a.item_id, a.item_type, a.score, a.max_score,
          a.attempt_no, a.created_at, m.unit AS unit
@@ -578,15 +607,26 @@ router.get('/history', requireStudent, (req, res) => {
     const push = (key, rule, row) => {
       let g = groups.get(key);
       if (!g) { g = { rule, rows: [] }; groups.set(key, g); }
+      // Only lesson-score rows can sit behind a teacher reset; every other source
+      // says so explicitly rather than leaving the field missing.
+      if (row.pre_reset === undefined) row.pre_reset = false;
       row.attempt_no = g.rows.length + 1;
       g.rows.push(row);
     };
 
+    const resets = new Map();
+    for (const r of histResetsStmt.all(req.student.id)) {
+      resets.set(`${r.course}|${r.unit}|${r.lesson}|${r.activity_type}`, r.score_reset_at);
+    }
+
     for (const e of histScoreEventsStmt.all(req.student.id)) {
       if (e.item === LESSON_SCORE_ITEM) {
         const key = `ls|${e.course}|${e.unit}|${e.lesson}|${e.activity_type}`;
+        const resetAt = resets.get(`${e.course}|${e.unit}|${e.lesson}|${e.activity_type}`) || null;
+        const preReset = !!(resetAt && e.created_at <= resetAt);
         // The pre-ledger score, surfaced as the implicit first attempt it is
-        // treated as. It has no timestamp because none was ever recorded.
+        // treated as. It has no timestamp because none was ever recorded. It
+        // belongs to the same era as the row that carried it forward.
         if (!groups.has(key)) {
           const prior = priorScoreOf(e);
           if (prior != null) {
@@ -594,6 +634,7 @@ router.get('/history', requireStudent, (req, res) => {
               source: 'prior-score', course: e.course, unit: e.unit, lesson: e.lesson,
               activity_type: e.activity_type, item: null,
               points: prior, max_points: 100, score: prior, recorded_at: null,
+              pre_reset: preReset,
             });
           }
         }
@@ -602,6 +643,7 @@ router.get('/history', requireStudent, (req, res) => {
           activity_type: e.activity_type, item: null,
           points: e.points, max_points: e.max_points,
           score: histPct(e.points, e.max_points), recorded_at: e.created_at,
+          pre_reset: preReset,
         });
       } else {
         push(`se|${e.course}|${e.unit}|${e.lesson}|${e.activity_type}|${e.item}`, 'best', {
@@ -632,18 +674,32 @@ router.get('/history', requireStudent, (req, res) => {
 
     const rows = [];
     for (const g of groups.values()) {
+      // A teacher reset splits a group into eras. Attempts are numbered within
+      // their own era, so the first submission after a reset is attempt 1, and only
+      // the live era can hold the grade of record. Groups no reset ever touched
+      // have one era, which is the ordinary case and behaves exactly as before.
+      const live = [], pre = [];
+      for (const r of g.rows) (r.pre_reset ? pre : live).push(r);
+      for (let i = 0; i < pre.length; i++) { pre[i].attempt_no = i + 1; pre[i].attempts = pre.length; }
+      for (let i = 0; i < live.length; i++) { live[i].attempt_no = i + 1; live[i].attempts = live.length; }
+
       // 'policy' groups follow the retry setting; 'best' groups follow the rule the
       // writer that owns them already stores. Ties resolve to the earliest attempt.
-      let gi = 0;
-      if (g.rule === 'best' || retryOn) {
-        for (let i = 1; i < g.rows.length; i++) {
-          if ((g.rows[i].score ?? -1) > (g.rows[gi].score ?? -1)) gi = i;
+      let gi = -1;
+      if (live.length) {
+        gi = 0;
+        if (g.rule === 'best' || retryOn) {
+          for (let i = 1; i < live.length; i++) {
+            if ((live[i].score ?? -1) > (live[gi].score ?? -1)) gi = i;
+          }
         }
       }
-      for (let i = 0; i < g.rows.length; i++) {
-        g.rows[i].attempts = g.rows.length;
-        g.rows[i].grade_of_record = i === gi;
-        rows.push(g.rows[i]);
+      // A reset with no submission after it yet leaves the activity with no grade,
+      // which is exactly what the gradebook shows, so no row is flagged.
+      for (const r of pre) { r.grade_of_record = false; rows.push(r); }
+      for (let i = 0; i < live.length; i++) {
+        live[i].grade_of_record = i === gi;
+        rows.push(live[i]);
       }
     }
 
