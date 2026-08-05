@@ -50,9 +50,14 @@ const ok = (n, c, x) => {
 const run = (s, ...a) => db.prepare(s).run(...a);
 
 run(`INSERT INTO teachers (id,name,email,password_hash) VALUES ('t1','T','t@s.org','x')`);
-run(`INSERT INTO classes (id,class_code,class_name,course,teacher_id,active,mastery_threshold,retry_allowed) VALUES
- ('c_off','CYBER-OFF','No retries','ap-cybersecurity','t1',1,80,0),
- ('c_on','CYBER-ON','Retries allowed','ap-cybersecurity','t1',1,80,1)`);
+// W11: retry policy is three-mode. This suite pins the two ENDS of the policy, so
+// c_off is mode 'none' (no retries anywhere) and c_on is mode 'all'. Plain
+// retry_allowed = 0 now means mode 'practice', which still allows a redo of the
+// exercise-1 activity these cases use; that middle setting is covered by
+// smoke/retry-modes.js. retry_allowed is the derived assessment flag.
+run(`INSERT INTO classes (id,class_code,class_name,course,teacher_id,active,mastery_threshold,retry_allowed,retry_mode) VALUES
+ ('c_off','CYBER-OFF','No retries','ap-cybersecurity','t1',1,80,0,'none'),
+ ('c_on','CYBER-ON','Retries allowed','ap-cybersecurity','t1',1,80,1,'all')`);
 run(`INSERT INTO students (id,class_id,display_name,pin_hash) VALUES
  ('s_off','c_off','A','x'),
  ('s_on','c_on','B','x'),
@@ -172,7 +177,7 @@ const ledger = (sid, loc) => db.prepare(`
     ok('  first-attempt class: stored 40 despite a better second try',
       stored('s_flip', L).score === 40, stored('s_flip', L));
 
-    run(`UPDATE classes SET retry_allowed = 1 WHERE id = 'c_off'`);
+    run(`UPDATE classes SET retry_mode = 'all', retry_allowed = 1 WHERE id = 'c_off'`);
 
     // The cache catches up on the next write, from the SAME ledger rows. No new
     // information was supplied: the 10 below is worse than everything already
@@ -183,7 +188,7 @@ const ledger = (sid, loc) => db.prepare(`
     ok('  and progress.score agrees', stored('s_flip', L).score === 90, stored('s_flip', L));
     ok('  no ledger row was rewritten: still 3 submissions', ledger('s_flip', L).length === 3, ledger('s_flip', L).length);
 
-    run(`UPDATE classes SET retry_allowed = 0 WHERE id = 'c_off'`);
+    run(`UPDATE classes SET retry_mode = 'none', retry_allowed = 0 WHERE id = 'c_off'`);
   }
 
   // ── 6. The ledger is one row per submission, and only for submissions ────

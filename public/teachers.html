@@ -432,7 +432,7 @@
         '<td class="num">' + fmt(c.score_events) + "</td>" +
         '<td class="num">' + fmt(c.attempts) + "</td>" +
         '<td class="num">' + fmt(c.key_releases) + "</td>" +
-        "<td>" + (c.customized ? '<span class="tag">m' + esc(c.mastery_threshold) + (c.retry_allowed ? " retry" : "") + "</span>" : '<span class="muted">defaults</span>') + "</td>" +
+        "<td>" + (c.customized ? '<span class="tag">m' + esc(c.mastery_threshold) + (c.retry_mode && c.retry_mode !== "practice" ? " " + c.retry_mode : (c.retry_allowed ? " all" : "")) + "</span>" : '<span class="muted">defaults</span>') + "</td>" +
         whenCell(c.last_activity) +
         '<td><button class="gb" data-id="' + esc(c.id) + '" data-code="' + esc(c.class_code) + '" data-course="' + esc(c.course) + '">Gradebook</button></td>' +
       "</tr>";
@@ -656,10 +656,23 @@
 
     var table = state.gbMode === "item" ? itemTable(g, th) : lessonTable(g, th);
     return strip + covHtml + controls + table +
-      '<p class="hint" style="margin-top:10px">Mastery threshold ' + th + "%, retry " +
-        (g.class.retry_allowed ? "allowed (best attempt counts)" : "off (first attempt counts)") +
+      '<p class="hint" style="margin-top:10px">Mastery threshold ' + th + "%, " + retryModeText(g.class) +
         ". <b>done</b> means completed with no score recorded; a dot means no activity." +
         " Orange headers are assignments the course declares that have never reported a score in this class.</p>";
+  }
+
+  // The class retry policy in a teacher's words. This is a READ-ONLY display:
+  // the control lives on the class dashboard. retry_mode is the policy; the
+  // legacy boolean is the fallback for a payload written before the mode existed
+  // (retry_allowed 1 meant everything, 0 meant practice only).
+  function retryModeText(cls) {
+    var mode = cls && cls.retry_mode;
+    if (mode !== "all" && mode !== "practice" && mode !== "none") {
+      mode = (cls && cls.retry_allowed) ? "all" : "practice";
+    }
+    if (mode === "all") return "retries on everything (best attempt counts)";
+    if (mode === "none") return "no retries (first attempt counts)";
+    return "retries on practice only (best practice attempt counts; a quiz or exam is one attempt)";
   }
 
   // Which assignment columns to show, after the unit and empty-column filters.

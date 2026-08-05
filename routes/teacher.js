@@ -11,6 +11,12 @@ const mailer = require('../lib/mailer');
 const resetLib = require('../lib/password-reset');
 const { attemptRollup } = require('../lib/attempt-rollup');
 const {
+  normalizeMode, legacyFromMode, DEFAULT_MODE, MODE_LABELS, MODE_DESCRIPTIONS, retrySqlExpr,
+} = require('../retry-policy');
+// The retry decision as SQL, for the aggregate gradebook pass below. Built once
+// at module load from the same helper the row-by-row code paths use.
+const RETRY_SQL = retrySqlExpr('c.retry_mode', 's.retry_override', 'se.activity_type');
+const {
   newId, generateClassCode, signTeacherToken,
   isValidEmail, isValidPin, sanitize, COURSES, COURSE_PREFIXES,
 } = require('../utils');
@@ -248,12 +254,16 @@ router.get('/classes', requireTeacher, (req, res) => {
 // ── CREATE CLASS ──────────────────────────────────────────────────────────────
 router.post('/classes', requireTeacher, (req, res) => {
   try {
-    const { class_name, course = 'ap-cybersecurity', mastery_threshold = 80, retry_allowed = 0 } = req.body;
+    const { class_name, course = 'ap-cybersecurity', mastery_threshold = 80, retry_allowed, retry_mode } = req.body;
     if (!class_name || class_name.trim().length < 2) return res.status(400).json({ error: 'Class name required' });
     if (!COURSES[course]) return res.status(400).json({ error: 'Invalid course' });
 
     const threshold   = clampThreshold(mastery_threshold, 80);
-    const retryFlag   = retry_allowed ? 1 : 0;
+    // A new class defaults to 'practice': redo the practice, one shot at the quiz.
+    // That is the behavior the old default (retry_allowed = 0) already produced,
+    // now stated instead of accidental.
+    const mode        = normalizeMode(retry_mode !== undefined ? retry_mode : retry_allowed) || DEFAULT_MODE;
+    const retryFlag   = legacyFromMode(mode);
 
     const prefix = COURSE_PREFIXES[course] || 'CLASS';
     // Generate unique class code
@@ -266,9 +276,9 @@ router.post('/classes', requireTeacher, (req, res) => {
 
     const id = newId();
     db.prepare(`
-      INSERT INTO classes (id, teacher_id, class_code, class_name, course, mastery_threshold, retry_allowed)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `).run(id, req.teacher.id, code, sanitize(class_name, 100), course, threshold, retryFlag);
+      INSERT INTO classes (id, teacher_id, class_code, class_name, course, mastery_threshold, retry_allowed, retry_mode)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(id, req.teacher.id, code, sanitize(class_name, 100), course, threshold, retryFlag, mode);
 
     const cls = db.prepare('SELECT * FROM classes WHERE id = ?').get(id);
     res.status(201).json({ class: cls });
@@ -309,22 +319,35 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
   `).all(cls.id, cls.course);
 
   // Exact points per activity from the score_events ledger, in a single
-  // aggregate pass (no N+1). Best points per DISTINCT item, summed, exactly as
+  // aggregate pass (no N+1). ONE row per DISTINCT item, summed, exactly as
   // rollupScore derives progress.score, so the raw points and the percent can
   // never disagree. The gradebook shows real points instead of reconstructing
   // them from the rounded percent.
+  //
+  // Which attempt at an item counts is the retry policy, and it used to be a
+  // flat MAX(points) here. That was a second, silent copy of "best always wins"
+  // living in the gradebook, so under mode 'none' this pass would have shown a
+  // student's best points beside a first-attempt percent. The ordering trick:
+  // when the best attempt counts, sort by -points first; when it does not, that
+  // term is a constant and the oldest row wins.
   const allPoints = db.prepare(`
     SELECT student_id, unit, lesson, activity_type,
-           SUM(best_points) AS points_earned,
+           SUM(kept_points) AS points_earned,
            SUM(item_max)    AS points_possible
     FROM (
-      SELECT student_id, unit, lesson, activity_type, item,
-             MAX(points)     AS best_points,
-             MAX(max_points) AS item_max
-      FROM score_events
-      WHERE class_id = ? AND course = ?
-      GROUP BY student_id, unit, lesson, activity_type, item
-    )
+      SELECT se.student_id, se.unit, se.lesson, se.activity_type, se.item,
+             se.points     AS kept_points,
+             se.max_points AS item_max,
+             ROW_NUMBER() OVER (
+               PARTITION BY se.student_id, se.unit, se.lesson, se.activity_type, se.item
+               ORDER BY CASE WHEN ${RETRY_SQL} = 1 THEN -se.points ELSE 0 END ASC,
+                        se.created_at ASC, se.rowid ASC
+             ) AS rn
+      FROM score_events se
+      JOIN students s ON s.id = se.student_id
+      JOIN classes  c ON c.id = se.class_id
+      WHERE se.class_id = ? AND se.course = ?
+    ) WHERE rn = 1
     GROUP BY student_id, unit, lesson, activity_type
   `).all(cls.id, cls.course);
   const pointsMap = {};
@@ -654,17 +677,49 @@ router.delete('/classes/:code/students/:studentId', requireTeacher, (req, res) =
   res.json({ ok: true, active: 0 });
 });
 
-// ── SET CLASS RETRY DEFAULT ───────────────────────────────────────────────────
+// ── SET CLASS RETRY POLICY ────────────────────────────────────────────────────
+//  One endpoint, not a sibling. A second route would leave two writers for one
+//  piece of state, and the invariant retry_allowed = (mode === 'all') would then
+//  depend on which one a client happened to call. The old boolean is accepted as
+//  an alias so any cached copy of the dashboard keeps working:
+//      {retry_allowed: true}  -> 'all'
+//      {retry_allowed: false} -> 'practice'   (quizzes one shot, practice redoable:
+//                                              exactly what false has always meant
+//                                              in production)
+//  A client sending the boolean therefore cannot reach 'none'. That is deliberate:
+//  'none' is new behavior and must be chosen explicitly, never inferred.
 router.patch('/classes/:code/retry', requireTeacher, (req, res) => {
   const cls = db.prepare('SELECT * FROM classes WHERE class_code = ? AND teacher_id = ?')
     .get(req.params.code.toUpperCase(), req.teacher.id);
   if (!cls) return res.status(404).json({ error: 'Class not found' });
 
-  const { retry_allowed } = req.body;
-  if (retry_allowed === undefined) return res.status(400).json({ error: 'retry_allowed required (true/false)' });
+  const { retry_mode, retry_allowed } = req.body;
+  if (retry_mode === undefined && retry_allowed === undefined) {
+    return res.status(400).json({
+      error: "retry_mode required: 'all', 'practice' or 'none' (legacy retry_allowed true/false also accepted)",
+    });
+  }
+  // retry_mode wins when both are sent, so a client that posts the new field plus
+  // a stale boolean cannot get the boolean's answer.
+  const mode = normalizeMode(retry_mode !== undefined ? retry_mode : retry_allowed);
+  if (!mode) {
+    return res.status(400).json({
+      error: `Unrecognised retry policy ${JSON.stringify(retry_mode !== undefined ? retry_mode : retry_allowed)}. Use 'all', 'practice' or 'none'.`,
+    });
+  }
 
-  db.prepare('UPDATE classes SET retry_allowed = ? WHERE id = ?').run(retry_allowed ? 1 : 0, cls.id);
-  res.json({ ok: true, retry_allowed: !!retry_allowed });
+  // Both columns, one statement: retry_allowed is derived and must never be
+  // written independently of the mode.
+  db.prepare('UPDATE classes SET retry_mode = ?, retry_allowed = ? WHERE id = ?')
+    .run(mode, legacyFromMode(mode), cls.id);
+
+  res.json({
+    ok: true,
+    retry_mode: mode,
+    retry_allowed: !!legacyFromMode(mode),
+    label: MODE_LABELS[mode],
+    description: MODE_DESCRIPTIONS[mode],
+  });
 });
 
 // ── SET PER-STUDENT RETRY OVERRIDE ───────────────────────────────────────────

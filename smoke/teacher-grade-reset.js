@@ -81,16 +81,22 @@ const ledgerCount = (sid, loc) => db.prepare(`
   const TT = reg.body.token;
   ok('teacher registered', (reg.status === 200 || reg.status === 201) && !!TT, reg.body);
 
-  const mk = async (name, retry) => {
+  // W11: retry policy is three-mode. This suite pins the two ENDS of it, because
+  // every activity it exercises is PRACTICE (exercise-1). "No retries" is now
+  // spelled mode 'none'; plain retry_allowed = 0 maps to 'practice', which still
+  // allows a redo of practice work and would make CODE_OFF best-of here. The
+  // middle setting is covered by smoke/retry-modes.js. retry_allowed rides along
+  // as the derived assessment flag: 1 only for mode 'all'.
+  const mk = async (name, mode) => {
     const r = await call('POST', '/api/teacher/classes',
       { class_name: name, course: 'ap-cybersecurity' }, TT);
     const code = r.body.class.class_code;
-    db.prepare('UPDATE classes SET retry_allowed = ?, mastery_threshold = 80 WHERE class_code = ?')
-      .run(retry, code);
+    db.prepare('UPDATE classes SET retry_mode = ?, retry_allowed = ?, mastery_threshold = 80 WHERE class_code = ?')
+      .run(mode, mode === 'all' ? 1 : 0, code);
     return code;
   };
-  const CODE_OFF = await mk('No retries', 0);
-  const CODE_ON = await mk('Retries allowed', 1);
+  const CODE_OFF = await mk('No retries', 'none');
+  const CODE_ON = await mk('Retries allowed', 'all');
 
   const join = async (code, name) => {
     const r = await call('POST', '/api/student/join',
@@ -236,7 +242,7 @@ const ledgerCount = (sid, loc) => db.prepare(`
   // ── 8. Retroactivity survives a reset ──────────────────────────────────────
   console.log('\n8. Flipping the class retry setting is still retroactive');
   {
-    db.prepare('UPDATE classes SET retry_allowed = 1 WHERE class_code = ?').run(CODE_OFF);
+    db.prepare("UPDATE classes SET retry_mode = 'all', retry_allowed = 1 WHERE class_code = ?").run(CODE_OFF);
     const h = await call('GET', '/api/student/history?lesson=4.3', null, sOff.token);
     const mine = h.body.history.filter((r) => r.source === 'lesson-score');
     const gor = mine.find((r) => r.grade_of_record);
@@ -245,7 +251,7 @@ const ledgerCount = (sid, loc) => db.prepare(`
     ok('  and it is still exactly one row',
       mine.filter((r) => r.grade_of_record).length === 1);
 
-    db.prepare('UPDATE classes SET retry_allowed = 0 WHERE class_code = ?').run(CODE_OFF);
+    db.prepare("UPDATE classes SET retry_mode = 'none', retry_allowed = 0 WHERE class_code = ?").run(CODE_OFF);
     const back = await call('GET', '/api/student/history?lesson=4.3', null, sOff.token);
     const gor2 = back.body.history.filter((r) => r.source === 'lesson-score')
       .find((r) => r.grade_of_record);
