@@ -10,6 +10,7 @@ const { makeRateLimit } = require('../lib/rate-limit');
 const mailer = require('../lib/mailer');
 const resetLib = require('../lib/password-reset');
 const { attemptRollup } = require('../lib/attempt-rollup');
+const { formatCell, buildCanvasUnitExport } = require('../lib/export-format');
 const {
   normalizeMode, legacyFromMode, DEFAULT_MODE, MODE_LABELS, MODE_DESCRIPTIONS, retrySqlExpr,
 } = require('../retry-policy');
@@ -497,6 +498,16 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
   res.json({ class: cls, course_config: courseConfig, denominators, summary });
 });
 
+// ── CSV serialization ─────────────────────────────────────────────────────────
+//  Excel and Canvas both need the BOM to read a non-ASCII name correctly.
+//  A cell is quoted when it has to be, plus on demand: the Canvas Student column
+//  is always quoted because "Doe, Jane" is a name, not two fields.
+const BOM = '\uFEFF';
+function csvCell(v, forceQuote) {
+  const str = (v === null || v === undefined) ? '' : String(v);
+  return (forceQuote || /[",\n\r]/.test(str)) ? `"${str.replace(/"/g, '""')}"` : str;
+}
+
 // ── CSV EXPORT (Wide gradebook, CodeHS-style) — SINGLE canonical export ─────────
 // Rows = students. Columns = identity + per-unit summary + every lesson/activity.
 // A cell shows its SCORE whenever one was recorded, otherwise "Done" if the
@@ -507,8 +518,31 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
 // adding a new graded activity type needs no change here.
 // Per-unit average stays quiz-only and is labeled "Avg Quiz" so it never mixes an
 // exam raw score into a percentage.
+//
+// ?format=canvas&scope=unit swaps the RENDERING of the same data for a Canvas
+// gradebook import: one assignment per unit out of 100 points, identity carried
+// on student_ref as the SIS Login ID, every cell a number or a blank. It is a
+// query param on this route and not a second route on purpose: a duplicate
+// export route already shadowed the real one once and had to be removed.
+// ?preflight=1 returns the match counts as JSON instead of the file, so the
+// teacher sees which students Canvas will silently drop BEFORE downloading.
 router.get('/classes/:code/export', requireTeacher, (req, res) => {
   try {
+    const format = String(req.query.format || 'native').toLowerCase();
+    if (format !== 'native' && format !== 'canvas') {
+      return res.status(400).json({ error: "format must be 'native' or 'canvas'" });
+    }
+    // scope applies to the Canvas rendering only. Unit scope is the whole point
+    // of the reduction: one column per unit, not ~55 lesson-activity columns
+    // that would become 55 Canvas assignments.
+    const scope = String(req.query.scope || 'unit').toLowerCase();
+    if (format === 'canvas' && scope !== 'unit') {
+      return res.status(400).json({
+        error: "scope must be 'unit'; scope=activity is not implemented yet",
+      });
+    }
+    const wantsPreflight = ['1', 'true', 'yes'].includes(String(req.query.preflight || '').toLowerCase());
+
     const cls = db.prepare('SELECT * FROM classes WHERE class_code = ? AND teacher_id = ?')
       .get(req.params.code.toUpperCase(), req.teacher.id);
     if (!cls) return res.status(404).json({ error: 'Class not found' });
@@ -542,6 +576,38 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
         if (sm[k] && sm[k].score != null) continue;
         sm[k] = { completed: cell.completed ? 1 : 0, score: cell.pct, points: `${cell.earned}/${cell.possible}` };
       }
+    }
+
+    // ── Canvas rendering ──────────────────────────────────────────────────────
+    //  Same merged grid, different shape. Everything above this point is shared
+    //  with the native export, so the two files can never disagree about a grade.
+    if (format === 'canvas') {
+      const built = buildCanvasUnitExport({
+        course: cls.course,
+        courseConfig,
+        className: cls.class_name,
+        students,
+        cellFor: (sid, unit, lesson, act) => (map[sid] || {})[`${unit}|${lesson}|${act}`],
+      });
+
+      // The warning before the download button, from the same pass that builds
+      // the file: a teacher learns Canvas will drop three students before the
+      // import, not after.
+      if (wantsPreflight) return res.json(built.preflight);
+
+      // Row 1 headers, row 2 "Points Possible" (Canvas requires it second), then
+      // one row per student. No comment or instruction row: Canvas parses it as
+      // a student.
+      const lines = [
+        built.headers.map((c) => csvCell(c)).join(','),
+        built.pointsRow.map((c) => csvCell(c)).join(','),
+        ...built.rows.map((r) => r.map((c, i) => csvCell(c, i === 0)).join(',')),
+      ];
+      res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+      res.setHeader('Content-Disposition',
+        `attachment; filename="canvas-${cls.class_code}-${new Date().toISOString().split('T')[0]}.csv"`);
+      // The BOM stays: Canvas needs it to read non-ASCII names correctly.
+      return res.send(BOM + lines.join('\r\n'));
     }
 
     const ABBR = { lesson: 'L', 'exercise-1': 'E1', 'exercise-2': 'E2', 'exercise-3': 'E3', quiz: 'Q', lab: 'Lab', code: 'Code' };
@@ -581,27 +647,18 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
         allDone += done; allTot += tot;
         summaryCells.push(tot ? `${Math.round(done / tot * 100)}%` : '0%', qN ? Math.round(qSum / qN) : '');
       }
-      const cells = cols.map(c => {
-        const r = sm[`${c.unit}|${c.lesson}|${c.activity}`];
-        if (!r) return '';
-        // A recorded score always wins. Gating this on an activity allow-list is
-        // what hid exercise scores that had been captured correctly all along.
-        // Attempts-backed cells show true points ("8/10"); percent cells from
-        // the score_events path keep showing the percent they always did.
-        if (r.points != null) return r.points;
-        if (r.score != null) return r.score;
-        return r.completed ? 'Done' : '';
-      });
+      // A recorded score always wins. Gating this on an activity allow-list is
+      // what hid exercise scores that had been captured correctly all along.
+      // Attempts-backed cells show true points ("8/10"); percent cells from the
+      // score_events path keep showing the percent they always did. The ladder
+      // itself now lives in lib/export-format.js, shared with the Canvas path so
+      // one cell can never be read two ways.
+      const cells = cols.map(c => formatCell(sm[`${c.unit}|${c.lesson}|${c.activity}`], 'human'));
       rows.push([s.display_name, s.student_ref || '', s.last_active || '',
         `${allTot ? Math.round(allDone / allTot * 100) : 0}%`, ...summaryCells, ...cells]);
     }
 
-    const csv = '\uFEFF' + rows.map(row =>
-      row.map(cell => {
-        const str = (cell === null || cell === undefined) ? '' : String(cell);
-        return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
-      }).join(',')
-    ).join('\r\n');
+    const csv = BOM + rows.map(row => row.map(cell => csvCell(cell)).join(',')).join('\r\n');
 
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');
     res.setHeader('Content-Disposition',
