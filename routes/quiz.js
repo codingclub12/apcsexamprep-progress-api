@@ -27,6 +27,7 @@ const express = require('express');
 const crypto = require('crypto');
 const router = express.Router();
 const db = require('../db');
+const { resolveMode, retryAllowedFor } = require('../retry-policy');
 const { verifyStudentToken, newId, COURSES } = require('../utils');
 const { rollupScore } = require('../scoring');
 const { buildOrder, readOrder, sample } = require('../lib/quiz-order');
@@ -42,7 +43,7 @@ const bankByLocationStmt = db.prepare(`
 const quizConfigStmt = db.prepare(
   'SELECT serve_count FROM quiz_config WHERE course = ? AND unit = ? AND lesson = ? AND activity_type = ?'
 );
-const classByIdStmt = db.prepare('SELECT course, retry_allowed, mastery_threshold FROM classes WHERE id = ?');
+const classByIdStmt = db.prepare('SELECT course, retry_allowed, retry_mode, mastery_threshold FROM classes WHERE id = ?');
 const retryOverrideStmt = db.prepare('SELECT retry_override FROM students WHERE id = ?');
 const releaseStmt = db.prepare(`
   SELECT released FROM key_releases
@@ -227,12 +228,15 @@ router.post('/submit', optionalStudent, rateLimit, (req, res) => {
     }
 
     // 4) Class mode: enforce one attempt unless retry is allowed. The lever for a
-    //    retake is retry_allowed (class) or retry_override (student), not the
-    //    legacy unlock flow, which belongs to client-submitted /api/student/quiz.
+    //    retake is the class retry MODE (or retry_override on the student), not
+    //    the legacy unlock flow, which belongs to client-submitted
+    //    /api/student/quiz. This router serves assessments AND practice activity
+    //    types, so the question is asked per activity_type: under mode 'practice'
+    //    a CFU here may be redone while a quiz here may not.
     let retryOn = true;
     if (mode === 'class') {
       const override = canRetry(req.student.id);
-      retryOn = override !== null ? override : !!cls.retry_allowed;
+      retryOn = retryAllowedFor(resolveMode(cls), activity_type, override);
       const prior = priorEventsStmt.get(req.student.id, course, unit, lesson, activity_type).n;
       if (prior > 0 && !retryOn) {
         const roll = rollupScore(req.student.id, course, unit, lesson, activity_type);

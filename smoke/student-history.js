@@ -43,9 +43,13 @@ const ok = (n, c, x) => {
 const run = (s, ...a) => db.prepare(s).run(...a);
 
 run(`INSERT INTO teachers (id,name,email,password_hash) VALUES ('t1','T','t@s.org','x')`);
-run(`INSERT INTO classes (id,class_code,class_name,course,teacher_id,active,mastery_threshold,retry_allowed) VALUES
- ('c_off','CSA-OFF','No retries','ap-csa','t1',1,80,0),
- ('c_on','CSA-ON','Retries allowed','ap-csa','t1',1,80,1)`);
+// W11: retry policy is three-mode. "No retries" is now spelled retry_mode 'none'
+// (retry_allowed 0 alone maps to 'practice', which still allows a redo of PRACTICE
+// work and would make c_off best-of on the exercise-1 rows below). retry_allowed
+// stays alongside as the derived assessment flag: 1 only for mode 'all'.
+run(`INSERT INTO classes (id,class_code,class_name,course,teacher_id,active,mastery_threshold,retry_allowed,retry_mode) VALUES
+ ('c_off','CSA-OFF','No retries','ap-csa','t1',1,80,0,'none'),
+ ('c_on','CSA-ON','Retries allowed','ap-csa','t1',1,80,1,'all')`);
 run(`INSERT INTO students (id,class_id,display_name,pin_hash) VALUES
  ('s1','c_off','A','x'),
  ('s2','c_off','B','x'),
@@ -150,9 +154,13 @@ const gor = (rows) => rows.filter((r) => r.grade_of_record);
 
   console.log('\n4. Each other ledger keeps the rule its own writer uses');
   {
+    // W11: /score items follow the retry policy now, exactly as rollupScore does,
+    // instead of always reporting the best. This class is mode 'none', so the
+    // FIRST write for the item is the grade of record. Under 'all' or 'practice'
+    // it is the best; smoke/retry-modes.js pins all three against this same path.
     const items = all.filter((x) => x.source === 'score-event');
-    ok('  the best /score write for an item is the grade of record (rollupScore semantics)',
-      gor(items).length === 1 && gor(items)[0].points === 4, gor(items));
+    ok('  the /score grade of record follows the policy (mode none: first write, 3 of 4)',
+      gor(items).length === 1 && gor(items)[0].points === 3, gor(items));
     const quizzes = all.filter((x) => x.source === 'quiz-attempt');
     ok('  the best quiz attempt is the grade of record (what the quiz path stores)',
       gor(quizzes).length === 1 && gor(quizzes)[0].score === 80, gor(quizzes));
@@ -166,7 +174,7 @@ const gor = (rows) => rows.filter((r) => r.grade_of_record);
 
   console.log('\n5. Flipping the class retry setting re-grades retroactively, with no write');
   {
-    run(`UPDATE classes SET retry_allowed = 1 WHERE id = 'c_off'`);
+    run(`UPDATE classes SET retry_mode = 'all', retry_allowed = 1 WHERE id = 'c_off'`);
     const r = await history('s1');
     const rows = r.body.history.filter((x) => x.source === 'lesson-score');
     ok('  the flag moved to the best attempt, 91', gor(rows).length === 1 && gor(rows)[0].score === 91, gor(rows));
@@ -174,7 +182,7 @@ const gor = (rows) => rows.filter((r) => r.grade_of_record);
     ok('  System A attempts moved too, to 9 of 10', gor(att)[0].points === 9, gor(att));
     ok('  the endpoint reports the setting it applied', r.body.retry_allowed === true, r.body.retry_allowed);
     ok('  and the ledger itself is untouched: still nine rows', r.body.history.length === 9, r.body.history.length);
-    run(`UPDATE classes SET retry_allowed = 0 WHERE id = 'c_off'`);
+    run(`UPDATE classes SET retry_mode = 'none', retry_allowed = 0 WHERE id = 'c_off'`);
     const back = await history('s1');
     ok('  flipping back restores the first-attempt answer',
       gor(back.body.history.filter((x) => x.source === 'lesson-score'))[0].score === 62);

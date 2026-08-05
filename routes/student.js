@@ -8,6 +8,7 @@ const { requireStudent } = require('../middleware');
 const { makeRateLimit } = require('../lib/rate-limit');
 const { newId, signStudentToken, isValidPin, sanitize, COURSES, pageFromHandle } = require('../utils');
 const { rollupScore, LESSON_SCORE_ITEM } = require('../scoring');
+const { resolveMode, retryAllowedFor } = require('../retry-policy');
 
 // ── CREDENTIAL RATE LIMITS ────────────────────────────────────────────────────
 //  The four unauthenticated entry points below are the only places a caller can
@@ -443,7 +444,9 @@ router.post('/progress', requireStudent, (req, res) => {
 
     const cls = db.prepare('SELECT mastery_threshold FROM classes WHERE id = ?').get(req.student.class_id);
     const threshold = (cls && cls.mastery_threshold != null) ? cls.mastery_threshold : 80;
-    const retryOn = canRetry(req.student.id, req.student.class_id);
+    // Policy for THIS activity: a lesson, CFU, exercise or lab is practice, and
+    // under mode 'practice' it stays best-of-many even though quizzes are locked.
+    const retryOn = canRetry(req.student.id, req.student.class_id, activity_type);
 
     const result = db.transaction(() => {
       // Unscored save: leave whatever grade is on record completely alone.
@@ -513,6 +516,7 @@ router.post('/progress', requireStudent, (req, res) => {
       out.submitted_score = score;
       out.grade_of_record = result;
       out.retry_allowed = retryOn;
+      out.retry_mode = classRetryMode(req.student.class_id);
       out.threshold = threshold;
     }
 
@@ -593,7 +597,17 @@ const histPct = (points, max) => (max > 0 ? Math.round((points / max) * 100) : n
 
 router.get('/history', requireStudent, (req, res) => {
   try {
-    const retryOn = canRetry(req.student.id, req.student.class_id);
+    // Grade of record is decided per GROUP now, because the policy depends on
+    // the activity type: under mode 'practice' a CFU follows best-attempt while
+    // a quiz in the same class follows first-attempt. Memoized per type, since
+    // a history page walks hundreds of groups over a handful of types.
+    const retryMemo = new Map();
+    const retryFor = (activityType) => {
+      const k = String(activityType || '');
+      if (!retryMemo.has(k)) retryMemo.set(k, canRetry(req.student.id, req.student.class_id, k));
+      return retryMemo.get(k);
+    };
+    const retryOn = retryFor('quiz'); // the headline value, unchanged in meaning
     const cls = db.prepare('SELECT mastery_threshold FROM classes WHERE id = ?').get(req.student.class_id);
     const threshold = (cls && cls.mastery_threshold != null) ? cls.mastery_threshold : 80;
 
@@ -604,9 +618,14 @@ router.get('/history', requireStudent, (req, res) => {
     // key -> rows, oldest first. Grade of record is decided per group once every
     // row is collected, because it depends on the whole group and on the policy.
     const groups = new Map();
-    const push = (key, rule, row) => {
+    //  rule 'best'   : the writer that owns this progress.score always stores the
+    //                  best attempt, so history must say the same thing.
+    //  rule 'policy' : follows the retry policy for policyType, which is the
+    //                  row's own activity type except for System A attempts (see
+    //                  below).
+    const push = (key, rule, row, policyType) => {
       let g = groups.get(key);
-      if (!g) { g = { rule, rows: [] }; groups.set(key, g); }
+      if (!g) { g = { rule, rows: [], policyType: policyType || row.activity_type }; groups.set(key, g); }
       // Only lesson-score rows can sit behind a teacher reset; every other source
       // says so explicitly rather than leaving the field missing.
       if (row.pre_reset === undefined) row.pre_reset = false;
@@ -646,7 +665,10 @@ router.get('/history', requireStudent, (req, res) => {
           pre_reset: preReset,
         });
       } else {
-        push(`se|${e.course}|${e.unit}|${e.lesson}|${e.activity_type}|${e.item}`, 'best', {
+        // Was 'best' unconditionally, matching the old rollupScore. rollupScore
+        // now follows the retry policy per activity type, so this must too or the
+        // history view would flag a different attempt than the gradebook uses.
+        push(`se|${e.course}|${e.unit}|${e.lesson}|${e.activity_type}|${e.item}`, 'policy', {
           source: 'score-event', course: e.course, unit: e.unit, lesson: e.lesson,
           activity_type: e.activity_type, item: e.item,
           points: e.points, max_points: e.max_points,
@@ -664,12 +686,16 @@ router.get('/history', requireStudent, (req, res) => {
     }
 
     for (const a of histAttemptsStmt.all(req.student.id)) {
+      // SYSTEM A CARVE-OUT. attempts-table grades (routes/progress.js and the
+      // admin gradebook) still resolve on the legacy assessment boolean, so this
+      // family is scored as 'quiz' here to report exactly what those readers do.
+      // See README-DEPLOY / retry-policy.js for why that path was not converted.
       push(`at|${a.course}|${a.item_id}`, 'policy', {
         source: 'attempt', course: a.course, unit: a.unit || null, lesson: a.lesson_id,
         activity_type: a.item_type, item: a.item_id,
         points: a.score, max_points: a.max_score,
         score: histPct(a.score, a.max_score), recorded_at: a.created_at,
-      });
+      }, 'quiz');
     }
 
     const rows = [];
@@ -683,12 +709,13 @@ router.get('/history', requireStudent, (req, res) => {
       for (let i = 0; i < pre.length; i++) { pre[i].attempt_no = i + 1; pre[i].attempts = pre.length; }
       for (let i = 0; i < live.length; i++) { live[i].attempt_no = i + 1; live[i].attempts = live.length; }
 
-      // 'policy' groups follow the retry setting; 'best' groups follow the rule the
-      // writer that owns them already stores. Ties resolve to the earliest attempt.
+      // 'policy' groups follow the retry setting for their own activity type;
+      // 'best' groups follow the rule the writer that owns them already stores.
+      // Ties resolve to the earliest attempt.
       let gi = -1;
       if (live.length) {
         gi = 0;
-        if (g.rule === 'best' || retryOn) {
+        if (g.rule === 'best' || retryFor(g.policyType)) {
           for (let i = 1; i < live.length; i++) {
             if ((live[i].score ?? -1) > (live[gi].score ?? -1)) gi = i;
           }
@@ -723,6 +750,7 @@ router.get('/history', requireStudent, (req, res) => {
     res.json({
       student: { id: req.student.id, name: req.student.display_name },
       retry_allowed: retryOn,
+      retry_mode: classRetryMode(req.student.class_id),
       mastery_threshold: threshold,
       count: Math.min(filtered.length, limit),
       total: filtered.length,
@@ -738,14 +766,28 @@ router.get('/history', requireStudent, (req, res) => {
 
 
 // ── HELPER: resolve retry permission for a student ────────────────────────────
-function canRetry(studentId, classId) {
-  const cls = db.prepare('SELECT retry_allowed, mastery_threshold FROM classes WHERE id = ?').get(classId);
+//  Now three-mode aware (see retry-policy.js). The answer depends on the ACTIVITY
+//  as well as the class, because 'practice' means "redo the practice, one shot at
+//  the quiz". The default activity type is 'quiz', so every pre-existing caller
+//  (the quiz submit and quiz status routes) keeps asking exactly the question it
+//  asked before and gets exactly the answer it got before:
+//      mode 'all' -> true, mode 'practice' or 'none' -> false,
+//  which is the same as the old `!!retry_allowed` under the deploy mapping.
+//  Student retry_override still wins outright, unchanged.
+function canRetry(studentId, classId, activityType = 'quiz') {
+  const cls = db.prepare('SELECT retry_mode, retry_allowed FROM classes WHERE id = ?').get(classId);
   const stu = db.prepare('SELECT retry_override FROM students WHERE id = ?').get(studentId);
-  // Student override takes precedence over class default; NULL means use class default
-  if (stu && stu.retry_override !== null && stu.retry_override !== undefined) {
-    return !!stu.retry_override;
-  }
-  return cls ? !!cls.retry_allowed : true;
+  const override = (stu && stu.retry_override !== null && stu.retry_override !== undefined)
+    ? stu.retry_override : null;
+  // An unknown class stays permissive, as it always was.
+  return retryAllowedFor(cls ? resolveMode(cls) : 'all', activityType, override);
+}
+
+// The class's mode, for reporting it back to a client that has to decide what
+// button to draw. Falls back through resolveMode, never returns NULL.
+function classRetryMode(classId) {
+  const cls = db.prepare('SELECT retry_mode, retry_allowed FROM classes WHERE id = ?').get(classId);
+  return resolveMode(cls);
 }
 
 // ── SUBMIT QUIZ ATTEMPT ───────────────────────────────────────────────────────
@@ -801,7 +843,8 @@ router.post('/quiz', requireStudent, (req, res) => {
 
     wire.recordOnce(req, { endpoint: 'POST /api/student/quiz', body: req.body, student_id: req.student.id,
       course, unit, lesson, activity_type: 'quiz', status: 200, result: { score, passed } });
-    res.json({ ok: true, score, passed, threshold, retry_allowed: retryOk, locked: false });
+    res.json({ ok: true, score, passed, threshold, retry_allowed: retryOk,
+      retry_mode: classRetryMode(req.student.class_id), locked: false });
   } catch (e) {
     console.error('Quiz submit error:', e);
     res.status(500).json({ error: 'Failed to submit quiz' });
@@ -854,6 +897,7 @@ router.get('/quiz/status', requireStudent, (req, res) => {
   res.json({
     threshold,
     retry_allowed: retryOk,
+    retry_mode: classRetryMode(req.student.class_id),
     score:         record ? record.score : null,
     attempts:      record ? record.attempts : 0,
     completed:     record ? !!record.completed : false,
@@ -890,8 +934,8 @@ router.post('/solo-init', soloInitLimit, async (req, res) => {
       `).run();
 
       db.prepare(`
-        INSERT INTO classes (id, teacher_id, class_code, class_name, course, active, retry_allowed)
-        VALUES (?, 'SOLO_SYSTEM', ?, 'Personal Progress', 'solo', 1, 1)
+        INSERT INTO classes (id, teacher_id, class_code, class_name, course, active, retry_allowed, retry_mode)
+        VALUES (?, 'SOLO_SYSTEM', ?, 'Personal Progress', 'solo', 1, 1, 'all')
       `).run(classId, code);
 
       db.prepare(`
@@ -1194,7 +1238,8 @@ router.post('/score', requireStudent, (req, res) => {
     wire.recordOnce(req, { endpoint: 'POST /api/student/score', body: b, student_id: req.student.id,
       course, unit, lesson, activity_type, status: 200,
       result: { points, max_points, correct, rollup_pct: rollup && rollup.pct } });
-    const out = { ok: true, tracked: true, recognized, item: { item, points, max_points, correct }, rollup };
+    const out = { ok: true, tracked: true, recognized, item: { item, points, max_points, correct },
+      rollup, retry_mode: classRetryMode(req.student.class_id) };
     if (!recognized) {
       out.warning = `Unrecognized ${course} location ${unit}/${lesson}. Stored anyway; check COURSES config.`;
     }

@@ -445,6 +445,11 @@ const migrations = [
   // courses count them, unchanged), so no backfill is needed and a teacher's
   // explicit 0/1 override always wins. Resolved at read time in the gradebook.
   `ALTER TABLE classes   ADD COLUMN games_graded      INTEGER DEFAULT NULL`,
+  // Three-mode retry policy: 'all' | 'practice' | 'none'. See retry-policy.js.
+  // Deliberately NO column default: an existing row must land on NULL so the
+  // backfill below can map it from retry_allowed. A default would stamp every
+  // old row with the same value and destroy the mapping.
+  `ALTER TABLE classes   ADD COLUMN retry_mode        TEXT DEFAULT NULL`,
 ];
 for (const sql of migrations) {
   try { db.exec(sql); } catch(e) { /* column already exists */ }
@@ -473,5 +478,26 @@ try {
 // Solo (ME-) accounts always get best-attempt grading. solo-init historically
 // relied on the column default (0), so backfill the invariant. Idempotent.
 db.exec(`UPDATE classes SET retry_allowed = 1 WHERE course = 'solo' AND (retry_allowed IS NULL OR retry_allowed = 0)`);
+
+// ── RETRY MODE BACKFILL AND SYNC (idempotent, every boot) ────────────────────
+//  The mapping is chosen so that NO live class changes behavior on deploy:
+//
+//    retry_allowed = 1 -> 'all'
+//        Today: quizzes are retryable, and practice is best-of-many because
+//        scoring.js always kept the best points per item. 'all' is exactly that.
+//    retry_allowed = 0 -> 'practice'
+//        Today: quizzes are ONE SHOT (POST /api/student/quiz refuses a retake
+//        and the client locks), but practice is STILL best-of-many, because the
+//        practice rollup never consulted the setting at all. 'practice' is
+//        exactly that. Mapping these rows to 'none' would silently regrade every
+//        CFU and exercise in the product from best-attempt to first-attempt.
+//
+//  'none' is genuinely new: no existing row maps to it. A teacher must choose it.
+//
+//  Runs before any request is served (this module is required at boot), so no
+//  route can observe a NULL retry_mode on an existing row. New rows written by
+//  older code paths would still be NULL; resolveMode() in retry-policy.js falls
+//  back to the same mapping at read time, and the next boot fills the column.
+for (const sql of require('./retry-policy').BACKFILL_SQL) db.exec(sql);
 
 module.exports = db;

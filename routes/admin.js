@@ -606,7 +606,7 @@ router.get('/classes', (req, res) => {
     const classes = db.prepare(`
       SELECT
         c.id, c.class_code, c.class_name, c.course, c.active,
-        c.mastery_threshold, c.retry_allowed, c.created_at,
+        c.mastery_threshold, c.retry_allowed, c.retry_mode, c.created_at,
         t.name  AS teacher_name,
         t.email AS teacher_email,
         (SELECT COUNT(*) FROM students s WHERE s.class_id = c.id) AS student_count,
@@ -669,7 +669,7 @@ router.get('/class/:code', (req, res) => {
     const cls = db.prepare(`
       SELECT
         c.id, c.class_code, c.class_name, c.course, c.active,
-        c.mastery_threshold, c.retry_allowed, c.created_at,
+        c.mastery_threshold, c.retry_allowed, c.retry_mode, c.created_at,
         t.name AS teacher_name, t.email AS teacher_email
       FROM classes c
       LEFT JOIN teachers t ON c.teacher_id = t.id
