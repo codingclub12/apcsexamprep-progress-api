@@ -20,6 +20,7 @@ const auth = require('../lib/command-auth');
 const digest = require('../lib/command-digest');
 const { compilePrompt } = require('../lib/command-prompt');
 const routerLib = require('../lib/command-router');
+const checksLib = require('../lib/command-checks');
 
 const router = express.Router();
 const db = store.db;
@@ -321,6 +322,50 @@ router.patch('/config', auth.requireCookieAuth, (req, res) => {
     time_weighting: Object.assign({}, routerLib.DEFAULT_TIME_WEIGHTING, store.timeWeighting() || {}),
     source_documents: store.sourceDocs(),
   });
+});
+
+// ── CHECKS (Phase 2) ─────────────────────────────────────────────────────────
+//  Deterministic sources only: nightly smoke, CI, /api/health, link-check. One
+//  row per (source, check_id), so a suite failing five nights running is one
+//  task aging rather than five tasks. Green auto-closes with the passing run as
+//  the artifact.
+//
+//  Accepts a single result or a batch, so one CI job can report every suite in
+//  one request rather than one request per suite.
+router.post('/checks', (req, res) => {
+  const body = req.body || {};
+  const items = Array.isArray(body) ? body : (Array.isArray(body.checks) ? body.checks : [body]);
+  if (items.length > 200) return res.status(400).json({ error: 'Batch is capped at 200 checks.' });
+
+  const results = [];
+  const errors = [];
+  for (let i = 0; i < items.length; i++) {
+    let out;
+    try { out = checksLib.recordCheck(items[i] || {}); } catch (e) { out = { error: e.message }; }
+    if (out.error) errors.push({ index: i, error: out.error });
+    else results.push(out);
+  }
+  if (!results.length && errors.length) return res.status(400).json({ errors });
+
+  res.status(201).json({
+    recorded: results.length,
+    created: results.filter((r) => r.created).length,
+    closed: results.filter((r) => r.closed).length,
+    failing: results.filter((r) => r.state === 'fail').length,
+    errors,
+  });
+});
+
+router.get('/checks', (req, res) => {
+  res.json({ checks: checksLib.listChecks(), summary: checksLib.checksSummary() });
+});
+
+// Snapshot today's free metrics (gradebook + pipeline) into metrics_daily, and
+// prune past the 400-day retention. Cheap, idempotent, safe to call repeatedly:
+// the upsert overwrites today's row and the prune runs at most once a day.
+router.post('/metrics/snapshot', (req, res) => {
+  const out = checksLib.snapshotFreeMetrics();
+  res.json({ ok: true, ...out, pruned: checksLib.pruneMetrics() });
 });
 
 // ── ROUTER PREVIEW ───────────────────────────────────────────────────────────
