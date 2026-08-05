@@ -20,8 +20,13 @@ Additive: six new tables, no existing route or table touched.
   (agents). Anything else is 401. Only the cookie can set `verified=1`.
 - **Chat**: cannot send headers, so it reads a single PII-stripped digest at
   `/api/command/digest/r/<read_token>`, rotatable from the page.
-- **Tests**: `npm run smoke:command` runs the whole acceptance suite offline in
-  a couple of seconds. No network, no production data.
+- **Checks (Phase 2)**: deterministic sources (nightly smoke, CI, `/api/health`,
+  link-check) POST to `/api/command/checks`. Fingerprinted on
+  `(source, check_id)`, so a suite failing five nights running is one task
+  aging, not five; green auto-closes it with the passing run as the artifact.
+  Wire a CI job by setting the `TODO_KEY` repo secret.
+- **Tests**: `npm run smoke:command` and `npm run smoke:checks` run the whole
+  acceptance suite offline in a couple of seconds. No network, no production data.
 
 ## Deployment: Railway
 

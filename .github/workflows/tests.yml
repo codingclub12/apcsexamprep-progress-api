@@ -59,7 +59,7 @@ jobs:
       - name: Run offline smoke suites
         run: |
           set -uo pipefail
-          SUITES="command reset health teacheradmin gradebook export quizparse wirelog denominators legacypoints exercises ungraded cyberdenoms reporter attemptrollup solo classroom shopify admin codegrade progressguard history gradereset quizvisibility gbagree retrymodes attemptretry"
+          SUITES="command checks reset health teacheradmin gradebook export quizparse wirelog denominators legacypoints exercises ungraded cyberdenoms reporter attemptrollup solo classroom shopify admin codegrade progressguard history gradereset quizvisibility gbagree retrymodes attemptretry"
           failed=""
           for s in $SUITES; do
             echo "::group::smoke:$s"
@@ -82,6 +82,34 @@ jobs:
             exit 1
           fi
           echo "All offline smoke suites passed."
+
+      # Report each suite's result to the command center, so a suite that goes
+      # red on main opens ONE task that ages until it is fixed, and closes
+      # itself when it goes green again (spec section 12).
+      #
+      # main only: a red PR is already visible as a failed check, and reporting
+      # from PR runs would open tasks for work in progress. Never fails the job
+      # (`|| true` plus continue-on-error): the command center is an observer,
+      # and an observer that can break the build is a liability. Skipped
+      # entirely when the secret is absent, so a fork or an unconfigured repo
+      # sees no difference.
+      - name: Report suite results to the command center
+        if: always() && github.ref == 'refs/heads/main'
+        continue-on-error: true
+        env:
+          TODO_KEY: ${{ secrets.TODO_KEY }}
+        run: |
+          if [ -z "${TODO_KEY:-}" ]; then
+            echo "TODO_KEY not configured; skipping command center report."
+            exit 0
+          fi
+          state=$([ "${{ job.status }}" = "success" ] && echo pass || echo fail)
+          curl -sS -X POST https://progress.apcsexamprep.com/api/command/checks \
+            -H "Authorization: Bearer $TODO_KEY" \
+            -H "Content-Type: application/json" \
+            -H "User-Agent: Mozilla/5.0 (compatible; apcse-ci/1.0) Chrome/120.0.0.0 Safari/537.36" \
+            -d "{\"source\":\"ci\",\"check_id\":\"offline-smoke\",\"state\":\"$state\",\"detail\":\"run ${{ github.run_id }} on ${{ github.sha }}\"}" \
+            || echo "report failed, ignoring"
 
       # A suite must not modify anything that is committed. Its throwaway .db is
       # expected and gitignored (each suite unlinks its own at startup, so the
