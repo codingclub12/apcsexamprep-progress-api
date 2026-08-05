@@ -15,7 +15,7 @@ const {
 } = require('../retry-policy');
 // The retry decision as SQL, for the aggregate gradebook pass below. Built once
 // at module load from the same helper the row-by-row code paths use.
-const RETRY_SQL = retrySqlExpr('c.retry_mode', 's.retry_override', 'se.activity_type');
+const RETRY_SQL = retrySqlExpr('c.retry_mode', 's.retry_override', 'se.activity_type', 'c.retry_allowed');
 const {
   newId, generateClassCode, signTeacherToken,
   isValidEmail, isValidPin, sanitize, COURSES, COURSE_PREFIXES,

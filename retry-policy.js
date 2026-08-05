@@ -151,19 +151,34 @@ function retryAllowedFor(mode, activityType, override) {
 //   modeCol     : the classes.retry_mode column (e.g. 'c.retry_mode')
 //   overrideCol : the students.retry_override column (e.g. 's.retry_override')
 //   typeCol     : the activity type column (e.g. 'se.activity_type')
-// Evaluates to 1 when the BEST attempt counts, 0 when the FIRST one does. A NULL
-// mode (a row inserted by an older code path and not yet seen by a boot) reads as
-// best-of, the permissive side, so a policy gap can never silently mark a grade
-// down; the next boot backfills the column.
-function retrySqlExpr(modeCol, overrideCol, typeCol) {
+//   legacyCol   : the classes.retry_allowed column (e.g. 'c.retry_allowed'),
+//                 optional but strongly preferred; see the NULL case below
+// Evaluates to 1 when the BEST attempt counts, 0 when the FIRST one does.
+//
+// THE NULL MODE CASE, AND WHY legacyCol MATTERS
+// A row can carry a NULL retry_mode only between an insert by an older code path
+// and the next boot. resolveMode() in JS handles that by falling back to the
+// legacy boolean through the same deploy mapping the migration uses, so a NULL
+// row still resolves to a real mode. This expression must do the SAME THING or
+// the two implementations disagree exactly where they are hardest to test, and a
+// teacher sees one number in the gradebook (SQL) and another from the API (JS).
+// Passing legacyCol reproduces resolveMode() precisely. Without it, the only
+// safe answer left is the permissive one (best-of), so a policy gap can never
+// silently mark a grade DOWN.
+function retrySqlExpr(modeCol, overrideCol, typeCol, legacyCol) {
   const assessments = ASSESSMENT_ACTIVITY_TYPES.map((t) => `'${t}'`).join(', ');
+  const practiceIsBest = `(CASE WHEN LOWER(TRIM(COALESCE(${typeCol}, ''))) IN (${assessments}) THEN 0 ELSE 1 END)`;
+  // NULL mode: mirror resolveMode(), which maps retry_allowed 1 -> 'all' and
+  // 0 -> 'practice'. With no legacy column to read, fall back to permissive.
+  const nullCase = legacyCol
+    ? `WHEN ${modeCol} IS NULL THEN (CASE WHEN COALESCE(${legacyCol}, 0) != 0 THEN 1 ELSE ${practiceIsBest} END)`
+    : `WHEN ${modeCol} IS NULL THEN 1`;
   return `(CASE
     WHEN ${overrideCol} IS NOT NULL THEN (CASE WHEN ${overrideCol} != 0 THEN 1 ELSE 0 END)
-    WHEN ${modeCol} IS NULL THEN 1
+    ${nullCase}
     WHEN ${modeCol} = '${MODE_ALL}' THEN 1
     WHEN ${modeCol} = '${MODE_NONE}' THEN 0
-    WHEN LOWER(TRIM(COALESCE(${typeCol}, ''))) IN (${assessments}) THEN 0
-    ELSE 1
+    ELSE ${practiceIsBest}
   END)`;
 }
 

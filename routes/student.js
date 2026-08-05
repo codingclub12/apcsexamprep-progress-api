@@ -686,16 +686,18 @@ router.get('/history', requireStudent, (req, res) => {
     }
 
     for (const a of histAttemptsStmt.all(req.student.id)) {
-      // SYSTEM A CARVE-OUT. attempts-table grades (routes/progress.js and the
-      // admin gradebook) still resolve on the legacy assessment boolean, so this
-      // family is scored as 'quiz' here to report exactly what those readers do.
-      // See README-DEPLOY / retry-policy.js for why that path was not converted.
+      // System A attempts follow the policy for their OWN item type now, the same
+      // as every other family here. This carried a carve-out that scored them as
+      // 'quiz' regardless, because routes/progress.js and the admin gradebook
+      // still resolved grade of record on the legacy assessment boolean. Those
+      // readers go through retry-policy.js as of this change, so the carve-out
+      // would now make history the one view that disagreed with them.
       push(`at|${a.course}|${a.item_id}`, 'policy', {
         source: 'attempt', course: a.course, unit: a.unit || null, lesson: a.lesson_id,
         activity_type: a.item_type, item: a.item_id,
         points: a.score, max_points: a.max_score,
         score: histPct(a.score, a.max_score), recorded_at: a.created_at,
-      }, 'quiz');
+      });
     }
 
     const rows = [];

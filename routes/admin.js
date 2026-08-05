@@ -25,6 +25,7 @@ const gradebook = require('../lib/admin-gradebook');
 const denominators = require('../lib/admin-denominators');
 const ungraded = require('../lib/admin-ungraded');
 const wire = require('../lib/wire-log');
+const { retrySqlExpr } = require('../retry-policy');
 
 const router = express.Router();
 
@@ -708,9 +709,12 @@ router.get('/class/:code', (req, res) => {
 
 // ── HELPERS for the attempt-grade views below ─────────────────────────────────
 //  Grade of record across many items in ONE window-function pass. Retry policy
-//  per student (retry_override beats class retry_allowed): best score ratio
-//  when retry is on, first attempt when it is off. Both ROW_NUMBER orderings
-//  are computed and the CASE picks one, so this stays a single scan.
+//  per student (retry_override beats the class policy): best score ratio when
+//  the best attempt counts for THIS item type, first attempt when it does not.
+//  Both ROW_NUMBER orderings are computed and the CASE picks one, so this stays
+//  a single scan. The decision itself comes from retry-policy.js, so this pass
+//  cannot drift from the row-by-row JS paths.
+const RETRY_SQL = retrySqlExpr('c.retry_mode', 's.retry_override', 'a.item_type', 'c.retry_allowed');
 const GOR_SELECT = `
   SELECT student_id, course, lesson_id, item_id, item_type,
          score, max_score, passed, attempt_no, attempts
@@ -718,7 +722,7 @@ const GOR_SELECT = `
     SELECT a.student_id, a.course, a.lesson_id, a.item_id, a.item_type,
       a.score, a.max_score, a.passed, a.attempt_no,
       COUNT(*) OVER (PARTITION BY a.student_id, a.course, a.item_id) AS attempts,
-      CASE WHEN COALESCE(s.retry_override, c.retry_allowed, 0) != 0
+      CASE WHEN ${RETRY_SQL} = 1
         THEN ROW_NUMBER() OVER (PARTITION BY a.student_id, a.course, a.item_id
                ORDER BY a.score * 1.0 / a.max_score DESC, a.attempt_no ASC)
         ELSE ROW_NUMBER() OVER (PARTITION BY a.student_id, a.course, a.item_id
