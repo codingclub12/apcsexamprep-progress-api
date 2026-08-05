@@ -35,7 +35,8 @@
     "smoke:quizvisibility": "node smoke/quiz-grade-visibility.js",
     "smoke:command": "node smoke/command-center.js",
     "smoke:gbagree": "node smoke/gradebook-agreement.js",
-    "smoke:retrymodes": "node smoke/retry-modes.js"
+    "smoke:retrymodes": "node smoke/retry-modes.js",
+    "smoke:attemptretry": "node smoke/attempt-retry-modes.js"
   },
   "keywords": [],
   "author": "",

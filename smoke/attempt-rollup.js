@@ -7,7 +7,7 @@
 //  read only progress/score_events. This asserts the fold that fixes it:
 //   - points_possible is the SUM of manifest points for the whole cell,
 //     attempted or not (2 of 8 CFUs must read 2/8, never 2/2)
-//   - grade of record honors retry_allowed (best ratio) vs first-attempt
+//   - grade of record honors the class retry MODE (best ratio) vs first-attempt
 //   - a student retry_override beats the class default
 //   - weighted items (a 2-point problem, a 12-point quiz) keep their weights
 //   - an item missing from the manifest still surfaces via its recorded
@@ -29,9 +29,15 @@ const ok = (n, c, x) => { if (c) { pass++; console.log('  [PASS] ' + n); } else 
 const run = (s, ...a) => db.prepare(s).run(...a);
 
 run(`INSERT INTO teachers (id,name,email,password_hash) VALUES ('t1','T','t@s.org','x')`);
-run(`INSERT INTO classes (id,class_code,class_name,course,teacher_id,active,mastery_threshold,retry_allowed) VALUES
- ('c_first','CSA-FIRST','First attempt of record','ap-csa','t1',1,80,0),
- ('c_retry','CSA-RETRY','Best attempt of record','ap-csa','t1',1,80,1)`);
+// Retry policy is three-mode. This suite pins the two ENDS of it, because the
+// cells it checks are PRACTICE (cfu): "first attempt of record" is now spelled
+// mode 'none'. Plain retry_allowed = 0 maps to 'practice', which keeps practice
+// best-of and would make c_first best-of here; that middle setting is covered by
+// smoke/attempt-retry-modes.js. retry_allowed rides along as the derived
+// assessment flag: 1 only for mode 'all'.
+run(`INSERT INTO classes (id,class_code,class_name,course,teacher_id,active,mastery_threshold,retry_allowed,retry_mode) VALUES
+ ('c_first','CSA-FIRST','First attempt of record','ap-csa','t1',1,80,0,'none'),
+ ('c_retry','CSA-RETRY','Best attempt of record','ap-csa','t1',1,80,1,'all')`);
 run(`INSERT INTO students (id,class_id,display_name,pin_hash) VALUES
  ('s1','c_first','A','x'),
  ('s2','c_first','B','x'),

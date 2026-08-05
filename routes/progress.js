@@ -20,10 +20,11 @@ const router = express.Router();
 const db = require('../db');
 const { requireStudent } = require('../middleware');
 const wireLog = require('../lib/wire-log');
+const { resolveMode, retryAllowedFor } = require('../retry-policy');
 
 // ── PREPARED STATEMENTS (module scope, reused across requests) ────────────────
 const getClassStmt = db.prepare(
-  'SELECT course, mastery_threshold, retry_allowed FROM classes WHERE id = ?'
+  'SELECT course, mastery_threshold, retry_allowed, retry_mode FROM classes WHERE id = ?'
 );
 const getRetryOverrideStmt = db.prepare(
   'SELECT retry_override FROM students WHERE id = ?'
@@ -175,10 +176,17 @@ router.post('/attempt', requireStudent, rateLimit, (req, res) => {
     const threshold = cls.mastery_threshold != null ? cls.mastery_threshold : 80;
     const passed = (score / maxScore) * 100 >= threshold ? 1 : 0;
 
+    // Which attempt at this item counts, under the class's three-mode retry
+    // policy. This used to read the legacy boolean alone, which meant System A
+    // practice items behaved as if the mode were always 'all' for a retryable
+    // class and 'none' for a non-retryable one. A CFU here is practice, so under
+    // mode 'practice' it is now redoable, exactly as the same CFU posted through
+    // the score_events ledger already was. retry_override still wins outright.
     const override = getRetryOverrideStmt.get(req.student.id);
-    const retryOn = (override && override.retry_override != null)
-      ? (override.retry_override ? 1 : 0)
-      : (cls.retry_allowed ? 1 : 0);
+    const retryOn = retryAllowedFor(
+      resolveMode(cls), b.item_type,
+      (override && override.retry_override != null) ? override.retry_override : null
+    ) ? 1 : 0;
 
     const result = db.transaction(() => {
       const attempt_no = countPriorStmt.get(req.student.id, item_id, course).n + 1;
