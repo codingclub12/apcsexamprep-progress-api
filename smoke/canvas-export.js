@@ -16,7 +16,10 @@
 //      free text nobody validated. preflight=1 has to report exactly who will
 //      not match BEFORE the teacher imports.
 //   4. The Canvas file format itself: header row, "Points Possible" second,
-//      BOM present.
+//      and NO BOM. Canvas matches the first header cell against the literal
+//      "Student", so a BOM makes it read "\ufeffStudent" and Canvas rejects the
+//      file with "The CSV header row is invalid." The native export keeps its
+//      BOM, because Excel needs it.
 //
 //  Also pins that the native export is untouched by the shared formatter: the
 //  default format is still the wide human CSV, "Done" and all.
@@ -64,8 +67,8 @@ function splitCsv(line) {
 }
 
 // fetch().text() runs a UTF-8 decode, which SWALLOWS the BOM. Reading the raw
-// bytes is the only way to assert the BOM is really on the wire, and the BOM is
-// what makes Canvas read a non-ASCII name correctly.
+// bytes is the only way to tell whether a BOM is really on the wire, which is
+// the difference between a file Canvas imports and one it rejects outright.
 async function getCsv(url, opts) {
   const r = await fetch(url, opts);
   const buf = Buffer.from(await r.arrayBuffer());
@@ -116,10 +119,15 @@ async function getCsv(url, opts) {
   const res = await getCsv(base + '/api/teacher/classes/CYBER-CNV/export?format=canvas&scope=unit', { headers: auth });
   ok('  returns 200', res.status === 200, res.status);
   const raw = res.text;
-  ok('  UTF-8 BOM present on the wire', res.buf[0] === 0xef && res.buf[1] === 0xbb && res.buf[2] === 0xbf,
+  // THE header bug: a BOM here is what made Canvas answer "The CSV header row
+  // is invalid" on the first real import attempt.
+  ok('  NO BOM on the wire, so the first header cell is literally "Student"',
+    !(res.buf[0] === 0xef && res.buf[1] === 0xbb && res.buf[2] === 0xbf),
     [...res.buf.slice(0, 3)]);
+  ok('  the file begins with the exact bytes of "Student,"',
+    res.buf.slice(0, 8).toString('utf8') === 'Student,', res.buf.slice(0, 8).toString('utf8'));
 
-  const lines = raw.replace(/^﻿/, '').split('\r\n');
+  const lines = raw.split('\r\n');
   const header = splitCsv(lines[0]);
   // All three Canvas identity columns ship, blank where unknown, so a district
   // can match on a student number and never store an email here.
