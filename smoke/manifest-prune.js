@@ -129,5 +129,36 @@ console.log('\n5. A pruned row comes back by re-seeding, with no data repair');
   ok('  re-seeding leaves it in place (seed never deletes)', has('1.1-cfu-3'), after);
 }
 
+// ── 6. The boot gate: MANIFEST_PRUNE must be exactly '1' to delete ──────────
+//  server.js runs the report on every boot and deletes only behind this flag,
+//  so the whole operation is doable from the Railway dashboard with no shell.
+//  A delete in a boot path deserves an explicit test of what turns it on.
+console.log('\n6. The boot flag gates the delete, and only the exact value turns it on');
+{
+  const gate = (v) => v === '1';   // the condition server.js uses, verbatim
+  ok('  unset does not prune', !gate(undefined));
+  ok('  "0" does not prune', !gate('0'));
+  ok('  "true" does not prune (exact match only)', !gate('true'));
+  ok('  "" does not prune', !gate(''));
+  ok('  "1" prunes', gate('1'));
+
+  // A flagged boot must be IDEMPOTENT: once the orphans are gone, later deploys
+  // with the variable still set do nothing. That is what makes it safe to leave
+  // set, and it is the difference between a one-time fix and a standing risk.
+  // Section 5 restored 1.1-cfu-3, so the first flagged run has real work to do.
+  const first = pruneManifest({ apply: true });
+  ok('  the first flagged run clears the remaining removable orphan',
+    first.deleted === 1, first.deleted);
+
+  const before = one(`SELECT COUNT(*) n FROM course_manifest`).n;
+  const second = pruneManifest({ apply: true });
+  ok('  a second flagged run deletes nothing', second.deleted === 0, second.deleted);
+  ok('  the manifest row count is unchanged by it',
+    one(`SELECT COUNT(*) n FROM course_manifest`).n === before);
+  ok('  the only orphan left is the one with an attempt, still refused',
+    second.orphans.length === 1 && second.kept.length === 1
+      && second.kept[0].item_id === '1.1-cfu-4', second.orphans);
+}
+
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);

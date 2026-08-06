@@ -87,6 +87,45 @@ function runBootSeed(label, fn) {
 const seeded = runBootSeed('course_manifest', () => require('./scripts/seed-manifest').seedManifest());
 if (seeded) console.log(`course_manifest: ${seeded.changed} new of ${seeded.total} seed rows`);
 
+// ── MANIFEST ORPHAN REPORT, AND THE OPT-IN PRUNE ──────────────────────────────
+//  A course_manifest row IS a denominator, so an item that no page can report
+//  marks every student down for a reason no teacher can see. Un-seeding such an
+//  item is not enough on its own: the boot seed above is insert-or-ignore and
+//  never deletes, by design, so the stale row stays.
+//
+//  Removing it needs a shell on the volume, which the owner does not always
+//  have. So the report runs on EVERY boot (read only, names the orphans in the
+//  boot log) and the delete happens only when MANIFEST_PRUNE=1 is set on the
+//  service. That makes the whole operation doable from the Railway dashboard:
+//  read the log, set the variable, redeploy, unset it.
+//
+//  The guarantees come from pruneManifest() itself and are not re-implemented
+//  here: an item with ANY recorded attempt is never deleted whatever the flag
+//  says, and nothing on attempts, score_events or progress is touched. Wrapped
+//  in runBootSeed so a failure here can never stop the API from serving.
+//
+//  Idempotent. Once the orphans are gone this logs "none" and does nothing, so
+//  leaving the variable set is harmless; unsetting it is still the tidy end.
+const MANIFEST_PRUNE = process.env.MANIFEST_PRUNE === '1';
+runBootSeed('course_manifest prune', () => {
+  const { pruneManifest } = require('./scripts/seed-manifest');
+  const p = pruneManifest({ apply: MANIFEST_PRUNE });
+  if (!p.orphans.length) {
+    console.log('course_manifest prune: no orphaned rows.');
+    return p;
+  }
+  for (const o of p.removable) {
+    console.log(MANIFEST_PRUNE
+      ? `course_manifest prune: REMOVED ${o.course} ${o.item_id} (${o.item_type}, ${o.points} pt, 0 attempts)`
+      : `course_manifest prune: ORPHAN ${o.course} ${o.item_id} (${o.item_type}, ${o.points} pt, 0 attempts). Set MANIFEST_PRUNE=1 to remove.`);
+  }
+  for (const o of p.kept) {
+    console.log(`course_manifest prune: KEPT ${o.course} ${o.item_id}, has ${o.attempts} attempt(s), refusing to delete.`);
+  }
+  console.log(`course_manifest prune: ${p.orphans.length} orphan(s), ${p.removable.length} removable, ${p.deleted} deleted (MANIFEST_PRUNE=${MANIFEST_PRUNE ? '1' : 'unset'}).`);
+  return p;
+});
+
 // CSA answer key + denominators for the ap-csa reporter (System B). Unlike the
 // order-token quiz_bank, this MUST be present on boot so the choice-only quiz
 // scoring path works the moment the reporter goes live. Insert-or-ignore only;
