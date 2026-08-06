@@ -500,4 +500,90 @@ db.exec(`UPDATE classes SET retry_allowed = 1 WHERE course = 'solo' AND (retry_a
 //  back to the same mapping at read time, and the next boot fills the column.
 for (const sql of require('./retry-policy').BACKFILL_SQL) db.exec(sql);
 
+// ── FREE-TEXT SAFETY BACKFILL (idempotent, every boot) ───────────────────────
+//  sanitize() in utils.js now strips the characters that let a stored name turn
+//  into markup. That only protects values written from here on. Every name
+//  already in this database was stored under the old trim-and-truncate rule, so
+//  a payload planted before the deploy would still be sitting in the students
+//  table waiting to render. This pass rewrites the rows that are already there.
+//
+//  Runs at boot, before any request is served, and converges: once a value is
+//  clean, sanitize() is a no-op on it and the row is not touched again.
+//
+//  Login resolves a student by class_id + lower(name), so two rows in one class
+//  sharing a name would make one of them unreachable. Cleaning can create that
+//  collision: two different payloads can reduce to the same safe string.
+//
+//  The collision is resolved by disambiguating, NOT by skipping. Skipping would
+//  mean the row that is hardest to clean is the one left holding live markup,
+//  which is precisely backwards for a security backfill. A numeric suffix is
+//  appended until the name is unique within the class, and the base is trimmed
+//  so the result still fits the column's write-site limit. Reaching this branch
+//  takes deliberately crafted input, so the expected count is 0; when it is not,
+//  the affected ids are logged so the teacher can rename the student properly.
+//
+//  Renaming does NOT lock anyone out on the ordinary path. POST
+//  /api/student/login runs the typed name through the same sanitize() before
+//  matching, so a student stored with a folded apostrophe still signs in by
+//  typing either form. A student who was disambiguated with a suffix does need
+//  their teacher to rename them, which is the correct outcome for a row whose
+//  stored name was an injection attempt.
+const { sanitize } = require('./utils');
+
+const STUDENT_NAME_MAX = 50;
+
+function backfillFreeText() {
+  const report = { students: 0, teachers: 0, classes: 0, disambiguated: [] };
+
+  const students = db.prepare('SELECT id, class_id, display_name FROM students').all();
+  const rename = db.prepare('UPDATE students SET display_name = ? WHERE id = ?');
+  const clash = db.prepare(
+    'SELECT id FROM students WHERE class_id = ? AND lower(display_name) = lower(?) AND id != ?'
+  );
+  for (const s of students) {
+    const clean = sanitize(s.display_name, STUDENT_NAME_MAX);
+    if (!clean || clean === s.display_name) continue;
+
+    let candidate = clean;
+    for (let n = 2; clash.get(s.class_id, candidate, s.id); n++) {
+      const suffix = ' ' + n;
+      candidate = clean.slice(0, STUDENT_NAME_MAX - suffix.length).trim() + suffix;
+      if (n === 2) report.disambiguated.push(s.id);
+    }
+    rename.run(candidate, s.id);
+    report.students++;
+  }
+
+  // Teachers and classes carry no uniqueness rule on these columns, so they are
+  // a straight rewrite. Lengths match the sanitize() calls at their write sites.
+  for (const [table, column, maxLen, counter] of [
+    ['teachers', 'name',       100, 'teachers'],
+    ['teachers', 'school',     200, 'teachers'],
+    ['classes',  'class_name', 100, 'classes'],
+  ]) {
+    const rows = db.prepare(`SELECT id, ${column} AS val FROM ${table} WHERE ${column} IS NOT NULL`).all();
+    const upd = db.prepare(`UPDATE ${table} SET ${column} = ? WHERE id = ?`);
+    for (const r of rows) {
+      const clean = sanitize(r.val, maxLen);
+      if (clean === r.val) continue;
+      upd.run(clean, r.id);
+      report[counter]++;
+    }
+  }
+  return report;
+}
+
+const freeTextReport = db.transaction(backfillFreeText)();
+if (freeTextReport.students || freeTextReport.teachers || freeTextReport.classes) {
+  console.log('[db] free-text safety backfill rewrote',
+    freeTextReport.students, 'student name(s),',
+    freeTextReport.teachers, 'teacher field(s),',
+    freeTextReport.classes, 'class name(s)');
+}
+if (freeTextReport.disambiguated.length) {
+  console.warn('[db] free-text backfill added a numeric suffix to', freeTextReport.disambiguated.length,
+    'student row(s) whose cleaned name collided with a classmate; these need a teacher rename:',
+    freeTextReport.disambiguated.join(', '));
+}
+
 module.exports = db;

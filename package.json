@@ -39,7 +39,8 @@
     "smoke:gbagree": "node smoke/gradebook-agreement.js",
     "smoke:retrymodes": "node smoke/retry-modes.js",
     "smoke:attemptretry": "node smoke/attempt-retry-modes.js",
-    "smoke:manifestprune": "node smoke/manifest-prune.js"
+    "smoke:manifestprune": "node smoke/manifest-prune.js",
+    "smoke:namesafety": "node smoke/display-name-safety.js"
   },
   "keywords": [],
   "author": "",

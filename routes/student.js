@@ -85,8 +85,13 @@ router.post('/login', loginLimit, async (req, res) => {
     const cls = db.prepare('SELECT * FROM classes WHERE class_code = ?').get(class_code.toUpperCase().trim());
     if (!cls) return res.status(404).json({ error: 'Class not found' });
 
+    // Normalise the typed name exactly as /join normalised it before storing.
+    // sanitize() folds ASCII quotes to their typographic forms, so a student who
+    // joined as O'Brien is stored as O’Brien; comparing the raw input against
+    // that would refuse the correct name and PIN with "Name not found".
+    // Both sides must run through the same function or the two drift apart.
     const student = db.prepare('SELECT * FROM students WHERE class_id = ? AND lower(display_name) = lower(?)')
-      .get(cls.id, display_name.trim());
+      .get(cls.id, sanitize(display_name, 50));
     if (!student) return res.status(401).json({ error: 'Name not found in this class' });
     if (student.active === 0) return res.status(403).json({ error: 'This account has been deactivated by your teacher.' });
 
