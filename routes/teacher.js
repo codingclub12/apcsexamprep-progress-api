@@ -499,7 +499,9 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
 });
 
 // ── CSV serialization ─────────────────────────────────────────────────────────
-//  Excel and Canvas both need the BOM to read a non-ASCII name correctly.
+//  The native export carries a BOM so Excel reads a non-ASCII name correctly.
+//  The Canvas export must NOT: Canvas matches the first header cell against the
+//  literal "Student" and a BOM breaks that match, rejecting the header row.
 //  A cell is quoted when it has to be, plus on demand: the Canvas Student column
 //  is always quoted because "Doe, Jane" is a name, not two fields.
 const BOM = '\uFEFF';
@@ -606,8 +608,12 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
       res.setHeader('Content-Type', 'text/csv; charset=utf-8');
       res.setHeader('Content-Disposition',
         `attachment; filename="canvas-${cls.class_code}-${new Date().toISOString().split('T')[0]}.csv"`);
-      // The BOM stays: Canvas needs it to read non-ASCII names correctly.
-      return res.send(BOM + lines.join('\r\n'));
+      // NO BOM on the Canvas file, unlike the native export. Canvas matches the
+      // first header cell against the literal string "Student", and a BOM makes
+      // that cell parse as "﻿Student", so the whole header is rejected with
+      // "The CSV header row is invalid." UTF-8 without a BOM is read correctly
+      // by Canvas, and it is what CodeHS ships in its own Canvas export.
+      return res.send(lines.join('\r\n'));
     }
 
     const ABBR = { lesson: 'L', 'exercise-1': 'E1', 'exercise-2': 'E2', 'exercise-3': 'E3', quiz: 'Q', lab: 'Lab', code: 'Code' };

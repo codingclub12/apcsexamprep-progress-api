@@ -82,8 +82,12 @@ personal information about her is stored anywhere in this system.
   quiz counts for more than a 1 point check-for-understanding, and an authored
   item nobody attempted still counts in the denominator. It is the same number
   the portal gradebook shows.
-- The file is UTF-8 with a BOM, which is what makes Canvas read a name with an
-  accent in it correctly.
+- **The file is UTF-8 with no byte order mark.** This matters more than it
+  sounds: Canvas matches the first header cell against the literal string
+  `Student`, and a BOM makes that cell read as `﻿Student`, so Canvas rejects the
+  upload with "The CSV header row is invalid." The native export still carries a
+  BOM, because Excel needs one to render an accented name correctly. Canvas
+  reads UTF-8 without a BOM correctly, so nothing is lost here.
 
 ## The API, for reference
 
