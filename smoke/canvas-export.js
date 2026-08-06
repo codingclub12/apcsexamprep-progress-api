@@ -258,6 +258,56 @@ async function getCsv(url, opts) {
       natCsa.split('\r\n')[1]);
   }
 
+  // ── 9. Setting the ref, which is what makes any of this reach Canvas ───────
+  //  The export is inert until a teacher can actually set student_ref. Nothing
+  //  wrote it before this route did, so the whole identity bridge was
+  //  documented but unreachable: every student exported blank and Canvas
+  //  matched nobody.
+  console.log('\n9. Teachers can set the SIS ref');
+  {
+    const patch = (sid, body) => fetch(base + '/api/teacher/classes/CYBER-CNV/students/' + sid, {
+      method: 'PATCH', headers: { ...auth, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const refOf = (sid) => db.prepare('SELECT student_ref FROM students WHERE id = ?').get(sid).student_ref;
+
+    // s3 had no ref, so Canvas dropped them. This is the fix, end to end.
+    const before = await (await fetch(base + '/api/teacher/classes/CYBER-CNV/export?format=canvas&scope=unit&preflight=1',
+      { headers: auth })).json();
+    const r1 = await patch('s3', { student_ref: 'jane.d@sfcakings.org' });
+    ok('  a valid ref is accepted', r1.status === 200, r1.status);
+    ok('  and is stored', refOf('s3') === 'jane.d@sfcakings.org', refOf('s3'));
+    const after = await (await fetch(base + '/api/teacher/classes/CYBER-CNV/export?format=canvas&scope=unit&preflight=1',
+      { headers: auth })).json();
+    ok('  which moves the student from unmatchable to matchable',
+      after.matchable === before.matchable + 1 && after.unmatchable.indexOf('Jane D.') === -1,
+      { before: before.matchable, after: after.matchable, unmatchable: after.unmatchable });
+    const file = (await getCsv(base + '/api/teacher/classes/CYBER-CNV/export?format=canvas&scope=unit',
+      { headers: auth })).text;
+    ok('  and the ID reaches the file', file.indexOf('jane.d@sfcakings.org') !== -1);
+
+    // A ref that would export blank is refused at set time, not discovered in
+    // Canvas after an import silently dropped the student.
+    const r2 = await patch('s3', { student_ref: 'has space' });
+    ok('  a ref the export would blank is refused', r2.status === 400, r2.status);
+    const r3 = await patch('s3', { student_ref: 'a,b' });
+    ok('  a ref carrying a comma is refused', r3.status === 400, r3.status);
+    ok('  and neither refusal changed the stored ref', refOf('s3') === 'jane.d@sfcakings.org', refOf('s3'));
+
+    // Two students sharing one SIS ID would import one on top of the other.
+    const r4 = await patch('s2', { student_ref: 'JANE.D@sfcakings.org' });
+    ok('  a duplicate ref is refused, case-insensitively', r4.status === 409, r4.status);
+
+    const r5 = await patch('s3', { student_ref: '' });
+    ok('  empty string clears the ref', r5.status === 200 && refOf('s3') === null, { s: r5.status, ref: refOf('s3') });
+    const r6 = await patch('s3', {});
+    ok('  an empty body is still a 400', r6.status === 400, r6.status);
+
+    // The pre-existing fields still work alongside it.
+    const r7 = await patch('s3', { display_name: 'Jane Doe II', student_ref: 'jane2' });
+    ok('  name and ref update together', r7.status === 200 && refOf('s3') === 'jane2', refOf('s3'));
+  }
+
   console.log('\n' + (fail ? (fail + ' FAILED, ' + pass + ' passed') : ('OK - all ' + pass + ' checks passed')));
   for (const suf of ['', '-wal', '-shm']) { try { fs.unlinkSync(process.env.DB_PATH + suf); } catch (e) {} }
   process.exit(fail ? 1 : 0);
