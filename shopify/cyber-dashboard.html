@@ -244,8 +244,8 @@
             <button class="gb-btn primary" onclick="TCDash.toggleExportMenu(event)">Export &#9662;</button>
             <div class="gb-export-list" id="gb-export-list">
               <button onclick="TCDash.pickExport('gradebook')"><b>Gradebook spreadsheet</b><span>Every activity, for Excel or Sheets</span></button>
-              <button onclick="TCDash.pickExport('canvas')"><b>Canvas: one per unit</b><span>Five Canvas assignments, a unit grade in each</span></button>
-              <button onclick="TCDash.pickExport('canvas-activity')"><b>Canvas: one per activity</b><span>Every lesson, quiz, case file and exam as its own assignment</span></button>
+              <button onclick="TCDash.pickExport('canvas')"><b>Canvas CSV by unit</b><span>Five Canvas assignments, a unit grade in each</span></button>
+              <button onclick="TCDash.pickExport('canvas-activity')"><b>Canvas CSV by activity</b><span>Every lesson, quiz, case file and exam as its own assignment</span></button>
               <button onclick="TCDash.pickExport('full')"><b>Full data CSV</b><span>Raw scores and completion from the server</span></button>
             </div>
           </span>
@@ -785,44 +785,15 @@ window.TCDash = {
       const blob=await r.blob(); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=this.classCode+'-full-data.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1500);
     }catch(e){ alert('Could not export CSV. Refresh and try again.'); }
   },
-  // Canvas import file. Preflight first: Canvas silently skips any student it
-  // cannot match on an ID column, so the teacher sees who is missing here
-  // rather than discovering it in the Canvas gradebook after importing.
-  toggleExportMenu(ev){ if(ev)ev.stopPropagation(); const el=document.getElementById('gb-export-list'); if(el)el.classList.toggle('on'); },
-  pickExport(which){ const el=document.getElementById('gb-export-list'); if(el)el.classList.remove('on');
-    if(which==='gradebook')return this.exportGradebook();
-    if(which==='canvas')return this.exportCanvasCSV('unit');
-    if(which==='canvas-activity')return this.exportCanvasCSV('activity');
-    return this.exportCSV(); },
-  // Set the Canvas SIS identifier for one student. The server validates it with
-  // the same rule the export applies, so a ref that would silently export blank
-  // is refused here rather than dropping the student during the Canvas import.
-  async setStudentRef(id){ const stu=this._findStudent(id); if(!stu)return;
-    const next=prompt('Canvas ref for '+stu.name+'.\n\nUse the SIS User ID from your Canvas gradebook export (a student number is best). An email works too. Leave blank to clear.',stu.ref||'');
-    if(next==null)return;
-    const r=await this._api('PATCH','/api/teacher/classes/'+this.classCode+'/students/'+id,{student_ref:next.trim()});
-    if(r.ok){ await this.loadProgress(this._token()); this.showTab('student'); }
-    else alert(r.error||'Could not set the Canvas ref.'); },
+  // Canvas import file. One request, no preflight gate: Canvas's own import
+  // screen lets a teacher map any unmatched row to a student by name, so
+  // warning about a missing Student Ref beforehand only added a click and a
+  // second request that could hang. preflight=1 still exists on the API for
+  // anything that wants the counts.
   async exportCanvasCSV(scope){
     const token=localStorage.getItem('apcse_teacher_token');
     const sc=(scope==='activity')?'activity':'unit';
-    const q='?format=canvas&scope='+sc;
-    try{
-      const pre=await fetch(API+'/api/teacher/classes/'+this.classCode+'/export'+q+'&preflight=1',{headers:{'Authorization':'Bearer '+token}});
-      if(pre.status===401){ localStorage.removeItem('apcse_teacher_token'); location.href='/pages/cyber-class'; return; }
-      if(pre.ok){
-        const pf=await pre.json(), missing=(pf&&pf.unmatchable)||[];
-        if(missing.length){
-          const matched=pf.students-missing.length;
-          const shown=missing.slice(0,5).join('\n  '), more=missing.length>5?('\n  and '+(missing.length-5)+' more'):'';
-          const head=(matched===0)
-            ? 'No students can be matched to Canvas yet, so this file would import nothing.'
-            : (matched+' of '+pf.students+' students will import. '+missing.length+' will be skipped.');
-          if(!confirm(head+'\n\nTo fix: open the Students tab, click Canvas ref, and paste that student\'s SIS User ID from your Canvas gradebook export.\n\nSkipped:\n  '+shown+more+'\n\nDownload anyway?')) return;
-        }
-      }
-    }catch(e){ /* preflight is advisory: never block the download */ }
-    try{ const r=await fetch(API+'/api/teacher/classes/'+this.classCode+'/export'+q,{headers:{'Authorization':'Bearer '+token}});
+    try{ const r=await fetch(API+'/api/teacher/classes/'+this.classCode+'/export?format=canvas&scope='+sc,{headers:{'Authorization':'Bearer '+token}});
       if(r.status===401){ localStorage.removeItem('apcse_teacher_token'); location.href='/pages/cyber-class'; return; }
       if(!r.ok) throw new Error('status '+r.status);
       const blob=await r.blob(); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=this.classCode+'-canvas-'+sc+'.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1500);
