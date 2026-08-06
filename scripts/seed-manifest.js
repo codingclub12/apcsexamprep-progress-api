@@ -33,9 +33,21 @@ const VISIT_COURSES = ['ap-csa', 'ap-csp', 'ap-networking'];
 // page has no mastery section and gets no quiz row. Reveal-rubric FRQs,
 // games, and the code editor are not auto-graded and are never manifest
 // items. Recount when pages change and push with --update.
+//
+// 1.1 and 1.2 carry `cfu_items` instead of a count. They are the only Unit 1
+// pages with non-MCQ widgets: cfu-3 is `matching`, cfu-4 is `scenario-sort`,
+// cfu-5 is `cloze`. Those three have no grading logic on the page at all (no
+// interaction handler, nothing that sets .apcs-ex-feedback.show), so they can
+// never report an attempt. Seeding them would put six items in the denominator
+// while only three can ever be earned, capping every student at 50 percent on
+// those lessons for a reason no teacher could see. Only the MCQ widgets, which
+// are cfu-1, cfu-2 and cfu-6, are seeded. Note the gap: the gradeable items are
+// NOT 1 through 3, so this cannot be expressed as a smaller count.
+// When the three widget types are implemented, restore these two to
+// { cfus: 6, quiz: 2 } and run --update; the rows come back with no data change.
 const CSA_UNIT1_GRADED = {
-  '1.1':  { cfus: 6, quiz: 2 },
-  '1.2':  { cfus: 6, quiz: 2 },
+  '1.1':  { cfu_items: [1, 2, 6], quiz: 2 },
+  '1.2':  { cfu_items: [1, 2, 6], quiz: 2 },
   '1.3':  { cfus: 8, quiz: 2 },
   '1.4':  { cfus: 8, quiz: 2 },
   '1.5':  { cfus: 8, quiz: 2 },
@@ -139,9 +151,14 @@ function buildRows() {
     }
   }
 
-  // CSA Unit 1 cfu/quiz items (the pilot).
+  // CSA Unit 1 cfu/quiz items (the pilot). A lesson declares either `cfus` (the
+  // widgets are 1..N, the ordinary case) or `cfu_items` (an explicit list, for a
+  // page where only some widgets can be graded; see the note on 1.1 and 1.2).
   for (const [lesson, cfg] of Object.entries(CSA_UNIT1_GRADED)) {
-    for (let i = 1; i <= cfg.cfus; i++) {
+    const cfuNumbers = cfg.cfu_items
+      ? cfg.cfu_items
+      : Array.from({ length: cfg.cfus }, (_, i) => i + 1);
+    for (const i of cfuNumbers) {
       rows.push({ course: 'ap-csa', unit: 'unit-1', lesson_id: lesson, item_id: `${lesson}-cfu-${i}`, item_type: 'cfu', points: 1 });
     }
     if (cfg.quiz > 0) {
@@ -208,9 +225,67 @@ function seedManifest({ update = false } = {}) {
   return { total: rows.length, changed, mode: update ? 'update' : 'ignore' };
 }
 
-if (require.main === module) {
-  const result = seedManifest({ update: process.argv.includes('--update') });
-  console.log(`course_manifest seed: ${result.changed} of ${result.total} rows written (mode: ${result.mode})`);
+// ── PRUNE (report by default, delete only when asked, never with attempts) ────
+//  Seeding is insert-or-upsert and never deletes, which is the right default
+//  against a live database. But un-seeding an item leaves its row behind, and a
+//  manifest row IS a denominator: an item nobody can earn quietly marks every
+//  student down. That is exactly the 1.1 / 1.2 case above.
+//
+//  So this reports orphans (rows in the manifest that buildRows no longer
+//  produces) and deletes them ONLY with --prune. An orphan that has ANY recorded
+//  attempt is never deleted, whatever the flags say: attempts are gradebook data
+//  and a manifest row is what makes one legible. Those are reported as kept, so
+//  a real conflict surfaces instead of being silently resolved.
+//
+//  Deleting a manifest row is reversible: restore the seed entry and re-run.
+//  Nothing on `attempts`, `score_events` or `progress` is touched here.
+function findOrphans() {
+  const wanted = new Set(buildRows().map((r) => `${r.course}|${r.item_id}`));
+  const live = db.prepare('SELECT course, unit, lesson_id, item_id, item_type, points FROM course_manifest').all();
+  const orphans = [];
+  for (const row of live) {
+    if (wanted.has(`${row.course}|${row.item_id}`)) continue;
+    const attempts = db.prepare(
+      'SELECT COUNT(*) n FROM attempts WHERE course = ? AND item_id = ?'
+    ).get(row.course, row.item_id).n;
+    orphans.push({ ...row, attempts });
+  }
+  return orphans;
 }
 
-module.exports = { seedManifest, buildRows };
+function pruneManifest({ apply = false } = {}) {
+  const orphans = findOrphans();
+  const removable = orphans.filter((o) => o.attempts === 0);
+  const kept = orphans.filter((o) => o.attempts > 0);
+  let deleted = 0;
+  if (apply && removable.length) {
+    const del = db.prepare('DELETE FROM course_manifest WHERE course = ? AND item_id = ?');
+    deleted = db.transaction((rs) => {
+      let n = 0;
+      for (const r of rs) n += del.run(r.course, r.item_id).changes;
+      return n;
+    })(removable);
+  }
+  return { orphans, removable, kept, deleted, applied: !!apply };
+}
+
+if (require.main === module) {
+  const apply = process.argv.includes('--prune');
+  const result = seedManifest({ update: process.argv.includes('--update') });
+  console.log(`course_manifest seed: ${result.changed} of ${result.total} rows written (mode: ${result.mode})`);
+
+  const p = pruneManifest({ apply });
+  if (!p.orphans.length) {
+    console.log('course_manifest prune: no orphaned rows.');
+  } else {
+    for (const o of p.removable) {
+      console.log(`  ${apply ? 'removed' : 'ORPHAN (run --prune to remove)'}: ${o.course} ${o.item_id} (${o.item_type}, ${o.points} pt, 0 attempts)`);
+    }
+    for (const o of p.kept) {
+      console.log(`  KEPT, has ${o.attempts} attempt(s), refusing to delete: ${o.course} ${o.item_id}`);
+    }
+    console.log(`course_manifest prune: ${p.orphans.length} orphan(s), ${p.removable.length} removable, ${p.deleted} deleted.`);
+  }
+}
+
+module.exports = { seedManifest, buildRows, findOrphans, pruneManifest };
