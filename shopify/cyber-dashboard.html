@@ -1,503 +1,824 @@
-<!-- APCSExamPrep Teacher Dashboard — /pages/cyber-dashboard -->
+<!-- apcs-ccx cross-link bar (managed) --><div id="apcs-ccx">
+<style>#apcs-ccx{all:initial!important;display:block!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;}#apcs-ccx *{box-sizing:border-box!important;}#apcs-ccx .ccx-bar{display:flex!important;gap:8px!important;align-items:center!important;background:#0f1f3d!important;padding:10px 14px!important;border-radius:10px!important;margin:0 0 18px!important;flex-wrap:wrap!important;}#apcs-ccx .ccx-lbl{font-size:11px!important;font-weight:700!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin-right:2px!important;}#apcs-ccx a.ccx-link{display:inline-block!important;padding:7px 13px!important;border-radius:7px!important;font-size:14px!important;font-weight:600!important;line-height:1.2!important;text-decoration:none!important;color:#e5edff!important;-webkit-text-fill-color:#e5edff!important;background:rgba(255,255,255,.08)!important;border:1px solid rgba(255,255,255,.16)!important;}#apcs-ccx a.ccx-link:hover{background:rgba(255,255,255,.16)!important;}#apcs-ccx a.ccx-active{background:#2563eb!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-color:#2563eb!important;cursor:default!important;}#apcs-ccx .ccx-soon{font-size:12px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;padding:0 4px!important;}#apcs-ccx .ccx-sep{width:1px!important;height:20px!important;background:rgba(255,255,255,.2)!important;margin:0 4px!important;}</style>
+<nav class="ccx-bar" aria-label="Teacher hubs"><span class="ccx-lbl">Hubs</span><a class="ccx-link" href="/pages/cyber-command-center">Cyber</a><a class="ccx-link" href="/pages/csp-command-center">CSP</a><a class="ccx-link" href="/pages/csa-command-center">CSA</a><a class="ccx-link" href="/pages/ap-networking-command-center">Networking</a><span class="ccx-sep"></span><a class="ccx-link ccx-active" href="/pages/cyber-dashboard" aria-current="page">Gradebook</a></nav>
+</div>
+<!-- APCSExamPrep Teacher Dashboard - /pages/cyber-dashboard -->
+<!-- Redesign: clean tabbed gradebook. Keeps auth, ?code= loading, /progress fetch, exports, roster tools, delete. -->
 <style>
-#tcdash-wrap{all:initial!important;display:block!important;font-family:'Georgia',serif!important;color:#1a1a1a!important;-webkit-text-fill-color:#1a1a1a!important;}
-#tcdash-wrap *{box-sizing:border-box!important;font-family:'Georgia',serif!important;}
-.tcdash-page{background:#f8f7ff!important;min-height:100vh!important;padding:0 0 60px!important;}
-.tcdash-header{background:#1E1B4B!important;padding:16px 24px!important;}
-.tcdash-header-inner{max-width:1100px!important;margin:0 auto!important;display:flex!important;align-items:center!important;justify-content:space-between!important;flex-wrap:wrap!important;gap:12px!important;}
-.tcdash-header .class-code{font-size:24px!important;font-weight:700!important;color:#E8A020!important;-webkit-text-fill-color:#E8A020!important;letter-spacing:2px!important;font-family:monospace!important;}
-.tcdash-header .class-name{font-size:15px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;margin-top:2px!important;}
-.tcdash-actions{display:flex!important;gap:8px!important;flex-wrap:wrap!important;}
-.tcdash-btn{padding:8px 16px!important;border-radius:6px!important;font-size:13px!important;font-weight:600!important;cursor:pointer!important;text-decoration:none!important;display:inline-block!important;border:none!important;}
-.tcdash-btn.outline{background:transparent!important;border:1px solid #4c1d95!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
-.tcdash-btn.amber{background:#E8A020!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;}
-.tcdash-btn.purple{background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
-.tcdash-body{max-width:1100px!important;margin:0 auto!important;padding:24px 16px!important;}
-/* Stats bar */
-.tcdash-stats{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:16px!important;margin-bottom:24px!important;}
-.tcdash-stat{background:#fff!important;border-radius:10px!important;padding:18px!important;text-align:center!important;box-shadow:0 2px 8px rgba(107,33,168,.08)!important;}
-.tcdash-stat .sv{font-size:28px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
-.tcdash-stat .sl{font-size:12px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;margin-top:4px!important;text-transform:uppercase!important;letter-spacing:.5px!important;}
-/* Progress table */
-.tcdash-table-wrap{background:#fff!important;border-radius:10px!important;box-shadow:0 2px 12px rgba(107,33,168,.08)!important;overflow:auto!important;}
-.tcdash-table{width:100%!important;border-collapse:collapse!important;font-size:14px!important;}
-.tcdash-table th{background:#1E1B4B!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:12px 14px!important;text-align:left!important;font-weight:600!important;font-size:12px!important;text-transform:uppercase!important;letter-spacing:.5px!important;white-space:nowrap!important;}
-.tcdash-table th.center{text-align:center!important;}
-.tcdash-table td{padding:11px 14px!important;border-bottom:1px solid #f3f4f6!important;vertical-align:middle!important;}
-.tcdash-table tr:last-child td{border-bottom:none!important;}
-.tcdash-table tr:hover td{background:#f8f7ff!important;}
-.student-name{font-weight:600!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;}
-.student-ref{font-size:12px!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;}
-.last-active{font-size:12px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;}
-/* Progress cell */
-.prog-cell{text-align:center!important;}
-.prog-bar-wrap{width:100%!important;height:6px!important;background:#e5e7eb!important;border-radius:3px!important;margin:4px 0!important;}
-.prog-bar{height:6px!important;border-radius:3px!important;background:#6B21A8!important;}
-.prog-pct{font-size:12px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
-.prog-score{font-size:11px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;}
-/* Activity cells */
-.act-cell{text-align:center!important;width:48px!important;}
-.act-check{width:24px!important;height:24px!important;border-radius:50%!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;font-size:12px!important;}
-.act-done{background:#D1FAE5!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;}
-.act-none{background:#F3F4F6!important;color:#D1D5DB!important;-webkit-text-fill-color:#D1D5DB!important;}
-.act-score{font-size:11px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;display:block!important;}
-/* Lesson group header */
-.lesson-group-header td{background:#EDE9FE!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:12px!important;padding:8px 14px!important;}
-/* Empty / loading */
-.tcdash-empty{text-align:center!important;padding:48px!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;}
-.tcdash-loading{text-align:center!important;padding:48px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;}
-/* Share box */
-.tcdash-share{background:#EDE9FE!important;border-radius:10px!important;padding:16px 20px!important;margin-bottom:20px!important;display:flex!important;align-items:center!important;gap:16px!important;flex-wrap:wrap!important;}
-.tcdash-share .share-label{font-size:14px!important;color:#4c1d95!important;-webkit-text-fill-color:#4c1d95!important;font-weight:600!important;}
-.tcdash-share .share-code{font-size:20px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-family:monospace!important;letter-spacing:2px!important;}
-.tcdash-share .share-url{font-size:13px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;}
-@media(max-width:700px){
-  .tcdash-stats{grid-template-columns:repeat(2,1fr)!important;}
-  .tcdash-table{font-size:12px!important;}
-}
+#tcdash-wrap{all:initial!important;display:block!important;}
+#tcdash-wrap *{box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important;}
+#tcdash-wrap .gb-page{background:#f6f8fb!important;min-height:100vh!important;padding:24px 0 60px!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;font-size:14px!important;line-height:1.5!important;}
+#tcdash-wrap .gb-wrap{max-width:1320px!important;margin:0 auto!important;padding:0 18px!important;}
+#tcdash-wrap .gb-hidden{display:none!important;}
+
+#tcdash-wrap .gb-topbar{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:16px!important;flex-wrap:wrap!important;margin-bottom:16px!important;}
+#tcdash-wrap .gb-cid{display:flex!important;align-items:center!important;gap:13px!important;}
+#tcdash-wrap .gb-av{width:46px!important;height:46px!important;border-radius:12px!important;background:#1e3a5f!important;color:#fff!important;-webkit-text-fill-color:#fff;display:flex!important;align-items:center!important;justify-content:center!important;font-weight:700!important;font-size:17px!important;}
+#tcdash-wrap .gb-cname{font-size:19px!important;margin:0!important;font-weight:700!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .gb-sub{display:flex!important;align-items:center!important;gap:8px!important;flex-wrap:wrap!important;margin-top:4px!important;color:#64748b!important;-webkit-text-fill-color:#64748b;font-size:12.5px!important;}
+#tcdash-wrap .gb-chip{display:inline-flex!important;align-items:center!important;gap:7px!important;background:#fff!important;border:1px solid #e5e7eb!important;border-radius:8px!important;padding:3px 9px 3px 11px!important;font-weight:600!important;color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;font-size:12.5px!important;cursor:pointer!important;}
+#tcdash-wrap .gb-chip .cc{font-family:monospace!important;letter-spacing:1px!important;}
+#tcdash-wrap .gb-chip .cp{font-size:11px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;}
+#tcdash-wrap .gb-tag{background:#eff6ff!important;color:#3b82f6!important;-webkit-text-fill-color:#3b82f6;border:1px solid #dbeafe!important;border-radius:999px!important;padding:2px 10px!important;font-weight:600!important;font-size:11.5px!important;}
+#tcdash-wrap .gb-actions{display:flex!important;gap:10px!important;align-items:center!important;flex-wrap:wrap!important;}
+#tcdash-wrap .gb-btn{border:1px solid #e5e7eb!important;background:#fff!important;color:#475569!important;-webkit-text-fill-color:#475569;border-radius:9px!important;padding:9px 14px!important;font-size:13px!important;font-weight:600!important;cursor:pointer!important;text-decoration:none!important;display:inline-block!important;}
+#tcdash-wrap .gb-btn:hover{border-color:#94a3b8!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .gb-btn.primary{background:#1e3a5f!important;border-color:#1e3a5f!important;color:#fff!important;-webkit-text-fill-color:#fff;}
+#tcdash-wrap .gb-btn.primary:hover{background:#274b78!important;color:#fff!important;-webkit-text-fill-color:#fff;}
+#tcdash-wrap .gb-btn.sm{padding:6px 11px!important;font-size:12px!important;border-radius:8px!important;}
+#tcdash-wrap .gb-btn.danger{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c;border-color:#fecaca!important;}
+
+#tcdash-wrap .gb-tabs{display:flex!important;gap:2px!important;border-bottom:1px solid #e5e7eb!important;margin-bottom:18px!important;}
+#tcdash-wrap .gb-tab{border:none!important;background:none!important;font-size:13.5px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b;padding:11px 16px!important;cursor:pointer!important;border-bottom:2px solid transparent!important;margin-bottom:-1px!important;}
+#tcdash-wrap .gb-tab:hover{color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .gb-tab.on{color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;border-bottom-color:#1e3a5f!important;}
+
+#tcdash-wrap .gb-share{display:flex!important;align-items:center!important;gap:14px!important;background:#eff6ff!important;border:1px solid #dbeafe!important;border-radius:12px!important;padding:12px 16px!important;margin-bottom:18px!important;flex-wrap:wrap!important;}
+#tcdash-wrap .gb-share .sl{font-size:13px!important;color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;font-weight:600!important;}
+#tcdash-wrap .gb-share .su{font-size:12.5px!important;color:#64748b!important;-webkit-text-fill-color:#64748b;}
+#tcdash-wrap .gb-share .su b{color:#0f172a!important;-webkit-text-fill-color:#0f172a;font-family:monospace!important;letter-spacing:1px!important;}
+
+#tcdash-wrap .gb-promo{display:flex!important;align-items:center!important;gap:14px!important;background:linear-gradient(100deg,#f0f7ff,#eef2ff)!important;border:1px solid #dbe6fb!important;border-radius:12px!important;padding:12px 16px!important;margin-bottom:18px!important;}
+#tcdash-wrap .gb-promo .pi{width:32px!important;height:32px!important;border-radius:9px!important;background:#fff!important;border:1px solid #dbe6fb!important;display:flex!important;align-items:center!important;justify-content:center!important;}
+#tcdash-wrap .gb-promo .pi i{width:13px!important;height:13px!important;border-radius:3px!important;background:#3b82f6!important;display:block!important;}
+#tcdash-wrap .gb-promo p{margin:0!important;font-size:13px!important;color:#475569!important;-webkit-text-fill-color:#475569;}
+#tcdash-wrap .gb-promo p b{color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .gb-promo .gb-btn{margin-left:auto!important;white-space:nowrap!important;}
+#tcdash-wrap .gb-promo .x{background:none!important;border:none!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;font-size:18px!important;cursor:pointer!important;}
+
+#tcdash-wrap .gb-stats{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:14px!important;margin-bottom:18px!important;}
+#tcdash-wrap .gb-stat{background:#fff!important;border:1px solid #e5e7eb!important;border-radius:12px!important;padding:14px 16px!important;}
+#tcdash-wrap .gb-stat .l{font-size:11.5px!important;font-weight:600!important;text-transform:uppercase!important;letter-spacing:.04em!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;}
+#tcdash-wrap .gb-stat .v{font-size:26px!important;font-weight:750!important;margin-top:5px!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .gb-stat .v small{font-size:14px!important;font-weight:600!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;}
+#tcdash-wrap .gb-stat .f{font-size:12px!important;color:#64748b!important;-webkit-text-fill-color:#64748b;margin-top:2px!important;}
+
+#tcdash-wrap .gb-toolbar{display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important;margin-bottom:14px!important;}
+#tcdash-wrap .gb-seg{display:inline-flex!important;background:#eef2f6!important;border-radius:9px!important;padding:3px!important;}
+#tcdash-wrap .gb-seg button{border:none!important;background:none!important;font-size:12.5px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b;padding:6px 13px!important;border-radius:7px!important;cursor:pointer!important;}
+#tcdash-wrap .gb-seg button.on{background:#fff!important;color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;}
+#tcdash-wrap .gb-input{font-size:13px!important;border:1px solid #e5e7eb!important;border-radius:9px!important;padding:8px 11px!important;background:#fff!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;min-width:180px!important;}
+#tcdash-wrap .gb-note{margin-left:auto!important;font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;}
+
+#tcdash-wrap .gb-card{background:#fff!important;border:1px solid #e5e7eb!important;border-radius:12px!important;box-shadow:0 6px 18px rgba(15,23,42,.08)!important;overflow:hidden!important;}
+#tcdash-wrap .gb-scroll{overflow:auto!important;max-height:70vh!important;}
+#tcdash-wrap table.gb-grid{border-collapse:separate!important;border-spacing:0!important;width:100%!important;font-size:13px!important;}
+#tcdash-wrap .gb-grid th,#tcdash-wrap .gb-grid td{white-space:nowrap!important;}
+#tcdash-wrap .gb-grid thead th{position:sticky!important;top:0!important;background:#fff!important;z-index:20!important;}
+#tcdash-wrap .gb-grid thead tr.grp th{top:0!important;height:34px!important;font-size:11.5px!important;font-weight:700!important;color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;border-bottom:1px solid #eef2f6!important;text-align:center!important;padding:0 8px!important;background:#fbfcfe!important;}
+#tcdash-wrap .gb-grid thead tr.sub th{top:34px!important;height:38px!important;font-size:11px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b;border-bottom:1px solid #e5e7eb!important;text-align:center!important;padding:4px 6px!important;background:#fff!important;}
+#tcdash-wrap .gb-grid thead tr.sub th .mx{display:block!important;font-size:10px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;font-weight:500!important;}
+#tcdash-wrap .gb-grid tbody td{border-bottom:1px solid #eef2f6!important;height:46px!important;text-align:center!important;padding:4px 6px!important;}
+#tcdash-wrap .gb-grid tbody tr:hover td{background:#f9fbfd!important;}
+#tcdash-wrap .c-stick{position:sticky!important;background:#fff!important;z-index:10!important;}
+#tcdash-wrap .gb-grid{--w-name:190px;--w-grade:60px;--w-pts:70px;}
+#tcdash-wrap .c-name{left:0!important;width:var(--w-name)!important;min-width:var(--w-name)!important;max-width:var(--w-name)!important;text-align:left!important;padding-left:14px!important;overflow:hidden!important;box-shadow:1px 0 0 #eef2f6!important;}
+#tcdash-wrap .c-grade{left:var(--w-name)!important;width:var(--w-grade)!important;min-width:var(--w-grade)!important;}
+#tcdash-wrap .c-pts{left:calc(var(--w-name) + var(--w-grade))!important;width:var(--w-pts)!important;min-width:var(--w-pts)!important;box-shadow:1px 0 0 #e5e7eb!important;}
+#tcdash-wrap .stu .nm{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;max-width:130px!important;}
+/* Density is a continuous slider. Default vars + var-consuming overrides are in the density block near the end of this style; applyDensity() in JS interpolates them from the slider. */
+#tcdash-wrap .gb-grid thead .c-stick{z-index:30!important;}
+#tcdash-wrap .gb-grid thead tr.grp .c-name,#tcdash-wrap .gb-grid thead tr.grp .c-grade,#tcdash-wrap .gb-grid thead tr.grp .c-pts{background:#fbfcfe!important;}
+#tcdash-wrap .stu{display:flex!important;align-items:center!important;gap:10px!important;cursor:pointer!important;}
+#tcdash-wrap .stu .ini{width:30px!important;height:30px!important;border-radius:50%!important;background:#eef2f9!important;color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;font-weight:700!important;font-size:12px!important;display:flex!important;align-items:center!important;justify-content:center!important;}
+#tcdash-wrap .stu .nm{font-weight:600!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;font-size:13px!important;}
+#tcdash-wrap .stu .la{font-size:11px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;}
+#tcdash-wrap .stu:hover .nm{color:#3b82f6!important;-webkit-text-fill-color:#3b82f6;}
+#tcdash-wrap .letter{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:26px!important;height:26px!important;border-radius:7px!important;font-weight:750!important;font-size:13px!important;}
+#tcdash-wrap .l-A{background:#ecfdf5!important;color:#047857!important;-webkit-text-fill-color:#047857;}
+#tcdash-wrap .l-B{background:#eff6ff!important;color:#1d4ed8!important;-webkit-text-fill-color:#1d4ed8;}
+#tcdash-wrap .l-C{background:#fffbeb!important;color:#b45309!important;-webkit-text-fill-color:#b45309;}
+#tcdash-wrap .l-D{background:#fff7ed!important;color:#c2410c!important;-webkit-text-fill-color:#c2410c;}
+#tcdash-wrap .l-F{background:#fef2f2!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c;}
+#tcdash-wrap .gcell{display:flex!important;flex-direction:column!important;align-items:center!important;}
+#tcdash-wrap .pct{font-size:11.5px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;margin-top:2px!important;}
+#tcdash-wrap .ptsb{font-weight:700!important;font-size:13px!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .ptss{font-size:11px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;}
+#tcdash-wrap .cellbtn{position:relative!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;min-width:48px!important;height:31px!important;border-radius:8px!important;font-weight:700!important;font-size:12.5px!important;border:1px solid transparent!important;padding:0 8px!important;cursor:pointer!important;}
+#tcdash-wrap .cellbtn:hover{outline:2px solid #3b82f6!important;outline-offset:1px!important;}
+#tcdash-wrap .g{background:#ecfdf5!important;color:#047857!important;-webkit-text-fill-color:#047857;border-color:#a7f3d0!important;}
+#tcdash-wrap .a{background:#fffbeb!important;color:#b45309!important;-webkit-text-fill-color:#b45309;border-color:#fde68a!important;}
+#tcdash-wrap .r{background:#fef2f2!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c;border-color:#fecaca!important;}
+#tcdash-wrap .cellbtn.n{background:#fff!important;border-color:#e5e7eb!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1;}
+#tcdash-wrap .ptxt{display:inline-flex!important;align-items:center!important;gap:6px!important;min-width:78px!important;justify-content:center!important;}
+#tcdash-wrap .dot{width:7px!important;height:7px!important;border-radius:50%!important;display:inline-block!important;}
+#tcdash-wrap .dot.g{background:#047857!important;}#tcdash-wrap .dot.a{background:#b45309!important;}#tcdash-wrap .dot.r{background:#b91c1c!important;}
+#tcdash-wrap .mk{position:absolute!important;top:-5px!important;right:-5px!important;min-width:14px!important;height:14px!important;border-radius:8px!important;font-size:9px!important;font-weight:800!important;display:flex!important;align-items:center!important;justify-content:center!important;border:1.5px solid #fff!important;padding:0 2px!important;}
+#tcdash-wrap .mk.ov{background:#3b82f6!important;color:#fff!important;-webkit-text-fill-color:#fff;}
+#tcdash-wrap .mk.open{background:#f59e0b!important;color:#fff!important;-webkit-text-fill-color:#fff;}
+#tcdash-wrap .gb-grid tfoot td{position:sticky!important;bottom:0!important;background:#fbfcfe!important;border-top:1px solid #e5e7eb!important;height:42px!important;font-weight:700!important;color:#475569!important;-webkit-text-fill-color:#475569;font-size:12px!important;text-align:center!important;z-index:15!important;}
+#tcdash-wrap .gb-grid tfoot td.c-name{text-align:left!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;z-index:25!important;}
+#tcdash-wrap .gb-grid tfoot td.c-stick{z-index:25!important;}
+#tcdash-wrap .gb-legend{display:flex!important;gap:16px!important;align-items:center!important;flex-wrap:wrap!important;margin-top:12px!important;font-size:12px!important;color:#64748b!important;-webkit-text-fill-color:#64748b;}
+#tcdash-wrap .gb-legend .k{display:inline-flex!important;align-items:center!important;gap:6px!important;}
+#tcdash-wrap .sw{width:14px!important;height:14px!important;border-radius:4px!important;border:1px solid transparent!important;}
+#tcdash-wrap .sw.g{background:#ecfdf5!important;border-color:#a7f3d0!important;}#tcdash-wrap .sw.a{background:#fffbeb!important;border-color:#fde68a!important;}
+#tcdash-wrap .sw.r{background:#fef2f2!important;border-color:#fecaca!important;}#tcdash-wrap .sw.n{background:#fff!important;border-color:#e5e7eb!important;}
+#tcdash-wrap .mb{display:inline-block!important;width:12px!important;height:12px!important;border-radius:50%!important;border:1.5px solid #fff!important;vertical-align:-1px!important;}
+#tcdash-wrap .mb.ov{background:#3b82f6!important;}#tcdash-wrap .mb.open{background:#f59e0b!important;}
+
+#tcdash-wrap .gb-panel{background:#fff!important;border:1px solid #e5e7eb!important;border-radius:12px!important;padding:20px 22px!important;}
+#tcdash-wrap .rep-head{display:flex!important;align-items:center!important;gap:14px!important;flex-wrap:wrap!important;}
+#tcdash-wrap .rep-head .ini{width:44px!important;height:44px!important;font-size:16px!important;border-radius:50%!important;background:#eef2f9!important;color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;font-weight:700!important;display:flex!important;align-items:center!important;justify-content:center!important;}
+#tcdash-wrap .rep-head h2{margin:0!important;font-size:18px!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .thin{color:#64748b!important;-webkit-text-fill-color:#64748b;font-size:12.5px!important;}
+#tcdash-wrap .picker{margin-left:auto!important;}
+#tcdash-wrap .gb-select{font-size:13px!important;border:1px solid #e5e7eb!important;border-radius:9px!important;padding:8px 11px!important;background:#fff!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .rep-grid{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:12px!important;margin:16px 0 6px!important;}
+#tcdash-wrap .mini{background:#fbfcfe!important;border:1px solid #eef2f6!important;border-radius:10px!important;padding:12px 14px!important;}
+#tcdash-wrap .mini .l{font-size:11px!important;text-transform:uppercase!important;letter-spacing:.04em!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;font-weight:600!important;}
+#tcdash-wrap .mini .v{font-size:20px!important;font-weight:750!important;margin-top:3px!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .stu-tools{display:flex!important;gap:8px!important;margin:14px 0 4px!important;flex-wrap:wrap!important;}
+#tcdash-wrap .stu-retry{background:#fbfcfe!important;border:1px solid #eef2f6!important;border-radius:10px!important;padding:14px 16px!important;margin-top:14px!important;}
+#tcdash-wrap .sr-head{font-size:13px!important;font-weight:700!important;margin-bottom:12px!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .sr-head .thin{font-weight:500!important;}
+#tcdash-wrap .sr-rows{display:flex!important;flex-wrap:wrap!important;gap:12px 26px!important;}
+#tcdash-wrap .sr-item{display:flex!important;align-items:center!important;gap:10px!important;font-size:12.5px!important;color:#475569!important;-webkit-text-fill-color:#475569;}
+#tcdash-wrap .sr-item .nmw{min-width:78px!important;}
+#tcdash-wrap .sr-seg{display:inline-flex!important;background:#eef2f6!important;border-radius:8px!important;padding:2px!important;}
+#tcdash-wrap .sr-seg button{border:none!important;background:none!important;font-size:11.5px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b;padding:4px 10px!important;border-radius:6px!important;cursor:pointer!important;}
+#tcdash-wrap .sr-seg button.on{background:#fff!important;color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;}
+#tcdash-wrap .rep-table{width:100%!important;border-collapse:collapse!important;margin-top:14px!important;font-size:13px!important;}
+#tcdash-wrap .rep-table th{text-align:left!important;font-size:11px!important;text-transform:uppercase!important;letter-spacing:.04em!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;font-weight:600!important;padding:8px 10px!important;border-bottom:1px solid #e5e7eb!important;}
+#tcdash-wrap .rep-table td{padding:9px 10px!important;border-bottom:1px solid #eef2f6!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .flag{font-size:11px!important;font-weight:700!important;padding:2px 8px!important;border-radius:999px!important;}
+#tcdash-wrap .flag.low{background:#fef2f2!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c;}
+#tcdash-wrap .flag.miss{background:#fff7ed!important;color:#c2410c!important;-webkit-text-fill-color:#c2410c;}
+#tcdash-wrap .flag.ok{background:#ecfdf5!important;color:#047857!important;-webkit-text-fill-color:#047857;}
+#tcdash-wrap .flag.open{background:#fffbeb!important;color:#b45309!important;-webkit-text-fill-color:#b45309;}
+#tcdash-wrap .bar{height:9px!important;border-radius:999px!important;background:#eef2f6!important;overflow:hidden!important;}
+#tcdash-wrap .bar i{display:block!important;height:100%!important;border-radius:999px!important;background:#3b82f6!important;}
+#tcdash-wrap .ba-head{display:flex!important;align-items:baseline!important;gap:10px!important;flex-wrap:wrap!important;margin-bottom:4px!important;}
+#tcdash-wrap .ba-head h2{margin:0!important;font-size:18px!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .set-row{display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:20px!important;padding:16px 0!important;border-bottom:1px solid #eef2f6!important;}
+#tcdash-wrap .set-row:last-child{border-bottom:none!important;}
+#tcdash-wrap .set-row .txt h4{margin:0 0 3px!important;font-size:14px!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .set-row .txt p{margin:0!important;font-size:12.5px!important;color:#64748b!important;-webkit-text-fill-color:#64748b;max-width:560px!important;}
+#tcdash-wrap .free-tag{font-size:10px!important;font-weight:700!important;color:#047857!important;-webkit-text-fill-color:#047857;background:#ecfdf5!important;border:1px solid #a7f3d0!important;border-radius:999px!important;padding:2px 8px!important;margin-left:8px!important;}
+#tcdash-wrap .soon-tag{font-size:10px!important;font-weight:700!important;color:#b45309!important;-webkit-text-fill-color:#b45309;background:#fffbeb!important;border:1px solid #fde68a!important;border-radius:999px!important;padding:2px 8px!important;margin-left:8px!important;}
+#tcdash-wrap .switch{position:relative!important;width:44px!important;height:26px!important;flex-shrink:0!important;display:inline-block!important;}
+#tcdash-wrap .switch input{opacity:0!important;width:0!important;height:0!important;position:absolute!important;}
+#tcdash-wrap .slider{position:absolute!important;inset:0!important;background:#cbd5e1!important;border-radius:999px!important;cursor:pointer!important;}
+#tcdash-wrap .slider:before{content:""!important;position:absolute!important;width:20px!important;height:20px!important;left:3px!important;top:3px!important;background:#fff!important;border-radius:50%!important;transition:.15s!important;}
+#tcdash-wrap .switch input:checked + .slider{background:#1e3a5f!important;}
+#tcdash-wrap .switch input:checked + .slider:before{transform:translateX(18px)!important;}
+#tcdash-wrap .retrytypes{display:flex!important;flex-direction:column!important;gap:9px!important;min-width:190px!important;}
+#tcdash-wrap .retrytypes label{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:14px!important;font-size:13px!important;color:#475569!important;-webkit-text-fill-color:#475569;}
+#tcdash-wrap h3.sec{font-size:13px!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;margin:4px 0 2px!important;}
+#tcdash-wrap .gb-loading{text-align:center!important;padding:48px!important;color:#64748b!important;-webkit-text-fill-color:#64748b;}
+#tcdash-wrap .overlay{position:fixed!important;inset:0!important;z-index:150!important;background:transparent!important;}
+#tcdash-wrap .pop{position:absolute!important;z-index:200!important;width:256px!important;background:#fff!important;border:1px solid #e5e7eb!important;border-radius:12px!important;box-shadow:0 12px 34px rgba(15,23,42,.18)!important;padding:14px!important;font-size:13px!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#tcdash-wrap .pop h5{margin:0 0 2px!important;font-size:13px!important;}
+#tcdash-wrap .pop .s{font-size:11.5px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;margin-bottom:10px!important;}
+#tcdash-wrap .pop .cur{margin-bottom:10px!important;}
+#tcdash-wrap .pop .cur b{font-size:18px!important;}
+#tcdash-wrap .pop .fld{display:flex!important;gap:6px!important;align-items:center!important;margin-bottom:8px!important;}
+#tcdash-wrap .pop input{width:64px!important;font-size:13px!important;border:1px solid #e5e7eb!important;border-radius:8px!important;padding:6px 8px!important;}
+#tcdash-wrap .pop .row2{display:flex!important;gap:6px!important;}
+#tcdash-wrap .pop .row2 .gb-btn{flex:1!important;text-align:center!important;}
+#tcdash-wrap .pop .pc{position:absolute!important;top:8px!important;right:10px!important;background:none!important;border:none!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;font-size:16px!important;cursor:pointer!important;}
+#tcdash-wrap .pop .soon{margin-top:10px!important;font-size:11px!important;color:#b45309!important;-webkit-text-fill-color:#b45309;background:#fffbeb!important;border:1px solid #fde68a!important;border-radius:8px!important;padding:6px 8px!important;}
+/* ---- density slider: default vars (JS overrides via inline style on the table) ---- */
+#tcdash-wrap .gb-grid{--w-name:148px;--w-grade:45px;--w-pts:53px;--gfs:10.5px;--cfs:10.5px;--cmw:29px;--cch:21px;--trh:30px;--sbh:29px;--mxfs:8.5px;--inisz:20px;--ltsz:20px;--nmmax:87px;--sbfs:10px;--cpx:4.5px;}
+#tcdash-wrap table.gb-grid{font-size:var(--gfs)!important;}
+#tcdash-wrap .gb-grid tbody td{height:var(--trh)!important;}
+#tcdash-wrap .gb-grid thead tr.sub th{height:var(--sbh)!important;}
+#tcdash-wrap .gb-grid thead tr.sub th .mx{font-size:var(--mxfs)!important;}
+#tcdash-wrap .cellbtn{min-width:var(--cmw)!important;height:var(--cch)!important;font-size:var(--cfs)!important;}
+#tcdash-wrap .stu .ini{width:var(--inisz)!important;height:var(--inisz)!important;font-size:calc(var(--inisz) * .42)!important;}
+#tcdash-wrap .stu .nm{max-width:var(--nmmax)!important;}
+#tcdash-wrap .letter{width:var(--ltsz)!important;height:var(--ltsz)!important;font-size:calc(var(--ltsz) * .55)!important;}
+#tcdash-wrap .gb-grid thead tr.sub th:not(.c-stick){font-size:var(--sbfs)!important;padding-left:var(--cpx)!important;padding-right:var(--cpx)!important;}
+#tcdash-wrap .gb-grid thead tr.grp th:not(.c-stick){padding-left:var(--cpx)!important;padding-right:var(--cpx)!important;}
+#tcdash-wrap .gb-grid tbody td:not(.c-stick){padding-left:var(--cpx)!important;padding-right:var(--cpx)!important;}
+#tcdash-wrap .gb-dens{display:inline-flex!important;align-items:center!important;gap:8px!important;}
+#tcdash-wrap .gb-dens-a{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;font-weight:700!important;line-height:1!important;}
+#tcdash-wrap .gb-dens-a.sm{font-size:11px!important;}
+#tcdash-wrap .gb-dens-a.lg{font-size:16px!important;}
+#tcdash-wrap #gb-densrange{width:118px!important;accent-color:#1e3a5f!important;cursor:pointer!important;height:16px!important;}
+#tcdash-wrap .gb-dd{position:relative!important;display:inline-block!important;}
+#tcdash-wrap .gb-dd-btn{display:inline-flex!important;align-items:center!important;gap:6px!important;}
+#tcdash-wrap .gb-dd-btn .ck{font-size:10px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;}
+#tcdash-wrap .gb-dd-panel{position:absolute!important;top:calc(100% + 6px)!important;left:0!important;z-index:130!important;background:#fff!important;border:1px solid #e5e7eb!important;border-radius:10px!important;box-shadow:0 12px 34px rgba(15,23,42,.16)!important;padding:8px!important;min-width:190px!important;max-height:300px!important;overflow:auto!important;}
+#tcdash-wrap .gb-dd-panel label{display:flex!important;align-items:center!important;gap:9px!important;padding:7px 9px!important;border-radius:7px!important;font-size:13px!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;cursor:pointer!important;}
+#tcdash-wrap .gb-dd-panel label:hover{background:#f6f8fb!important;}
+#tcdash-wrap .gb-dd-panel input{width:15px!important;height:15px!important;accent-color:#1e3a5f!important;cursor:pointer!important;}
+#tcdash-wrap .gb-dd-panel .dd-div{height:1px!important;background:#eef2f6!important;margin:6px 4px!important;}
+@media(max-width:820px){#tcdash-wrap .gb-stats,#tcdash-wrap .rep-grid{grid-template-columns:repeat(2,1fr)!important;}}
 </style>
 
 <div id="tcdash-wrap">
-<div class="tcdash-page">
-  <div id="tcdash-not-auth" style="display:none;text-align:center;padding:60px 20px;">
-    <div style="font-size:20px;font-weight:700;color:#1E1B4B;margin-bottom:12px;">Sign in to view your dashboard</div>
-    <a href="/pages/cyber-class" style="display:inline-block;background:#6B21A8;color:#fff;padding:12px 24px;border-radius:8px;font-weight:700;text-decoration:none;">Go to Teacher Portal</a>
-  </div>
+<div class="gb-page">
+  <div class="gb-wrap">
 
-  <div id="tcdash-main" style="display:none">
-    <div class="tcdash-header">
-      <div class="tcdash-header-inner">
-        <div>
-          <div class="class-code" id="dash-code"></div>
-          <div class="class-name" id="dash-classname"></div>
-        </div>
-        <div class="tcdash-actions">
-          <a class="tcdash-btn outline" href="/pages/cyber-class">&larr; All Classes</a>
-          <button class="tcdash-btn purple" onclick="TCDash.openThresholdModal()">Mastery: <span id="dash-threshold-display">80</span>%</button>
-          <button id="dash-retry-btn" class="tcdash-btn" onclick="TCDash.toggleClassRetry()" style="background:#0F766E!important;color:#fff!important;-webkit-text-fill-color:#fff!important;">Retry: <span id="dash-retry-display">On</span></button>
-          <button class="tcdash-btn amber" onclick="TCDash.exportCSV()">Export CSV</button>
-        </div>
-      </div>
+    <div id="tcdash-not-auth" class="gb-hidden" style="text-align:center;padding:60px 20px;">
+      <div style="font-size:20px;font-weight:700;color:#1e3a5f;-webkit-text-fill-color:#1e3a5f;margin-bottom:12px;">Sign in to view your dashboard</div>
+      <a class="gb-btn primary" href="/pages/cyber-class">Go to Teacher Portal</a>
     </div>
 
-    <div class="tcdash-body">
-      <!-- Share box -->
-      <div class="tcdash-share">
+    <div id="tcdash-main" class="gb-hidden">
+
+      <div class="gb-topbar">
+        <div class="gb-cid">
+          <div class="gb-av" id="gb-av">C</div>
+          <div>
+            <h1 class="gb-cname" id="gb-cname">Class</h1>
+            <div class="gb-sub">
+              <span class="gb-tag" id="gb-course">Course</span>
+              <span class="gb-chip" onclick="TCDash.copyCode()">Join code: <span class="cc" id="gb-code"></span> <span class="cp" id="gb-copy">copy</span></span>
+              <span id="gb-count"></span>
+            </div>
+          </div>
+        </div>
+        <div class="gb-actions">
+          <a class="gb-btn" href="/pages/cyber-class">All classes</a>
+          <button class="gb-btn primary" onclick="TCDash.exportGradebook()">Export gradebook</button>
+        </div>
+      </div>
+
+      <div class="gb-tabs" id="gb-tabs">
+        <button class="gb-tab on" data-tab="overview">Overview</button>
+        <button class="gb-tab" data-tab="student">By Student</button>
+        <button class="gb-tab" data-tab="assignment">By Assignment</button>
+        <button class="gb-tab" data-tab="settings">Settings</button>
+      </div>
+
+      <div class="gb-promo" id="gb-promo">
+        <div class="pi"><i></i></div>
+        <p id="gb-promo-text"><b>Teaching this course?</b> The teacher pack has the lecture slide decks, printable student guides, and editable quizzes ready to assign.</p>
+        <a class="gb-btn primary" id="gb-promo-link" href="/collections/bundles">View course bundles</a>
+        <button class="x" onclick="document.getElementById('gb-promo').remove()">×</button>
+      </div>
+
+      <div class="gb-share">
         <div>
-          <div class="share-label">Share with students</div>
-          <div class="share-url">apcsexamprep.com/pages/join?code=<span id="share-code-url"></span></div>
+          <div class="sl">Share with students</div>
+          <div class="su">apcsexamprep.com/pages/join?code=<b id="gb-share-code"></b>
+</div>
         </div>
-        <div class="share-code" id="share-code-display"></div>
-        <button class="tcdash-btn purple" onclick="TCDash.copyJoinLink()">Copy Join Link</button>
+        <button class="gb-btn primary" style="margin-left:auto" onclick="TCDash.copyJoinLink()">Copy join link</button>
       </div>
 
-      <!-- Stats -->
-      <div class="tcdash-stats">
-        <div class="tcdash-stat"><div class="sv" id="stat-students">-</div><div class="sl">Students</div></div>
-        <div class="tcdash-stat"><div class="sv" id="stat-active">-</div><div class="sl">Active Today</div></div>
-        <div class="tcdash-stat"><div class="sv" id="stat-completion">-</div><div class="sl">Avg Completion</div></div>
-        <div class="tcdash-stat"><div class="sv" id="stat-score">-</div><div class="sl">Avg Quiz Score</div></div>
+      <div id="gb-loading" class="gb-loading">Loading class progress...</div>
+
+      <div id="overview" class="gb-hidden">
+        <div class="gb-stats" id="gb-statcards"></div>
+        <div class="gb-toolbar">
+          <div class="gb-dd" id="gb-unitdd">
+<button class="gb-btn sm gb-dd-btn" id="gb-unitbtn" onclick="TCDash.toggleUnitDD(event)">All units <span class="ck">▾</span></button><div class="gb-dd-panel gb-hidden" id="gb-unitpanel"></div>
+</div>
+          <div class="gb-seg" id="gb-viewseg">
+<button class="on" data-view="points">Points</button><button data-view="mastery">Mastery</button>
+</div>
+          <div class="gb-dens" title="Drag left to fit more columns with smaller text, right for bigger text">
+<span class="gb-dens-a sm">A</span><input type="range" id="gb-densrange" min="0" max="100" value="50"><span class="gb-dens-a lg">A</span>
+</div>
+          <input class="gb-input" type="search" id="gb-search" placeholder="Search students">
+          <span class="gb-note" id="gb-calcnote"></span>
+        </div>
+        <div class="gb-card"><div class="gb-scroll"><table class="gb-grid" id="gb-table"></table></div></div>
+        <div class="gb-legend">
+          <span class="k"><span class="sw g"></span> 80 and up</span>
+          <span class="k"><span class="sw a"></span> 60 to 79</span>
+          <span class="k"><span class="sw r"></span> below 60</span>
+          <span class="k"><span class="sw n"></span> not started</span>
+          <span class="k"><span class="mb ov"></span> override</span>
+          <span class="k"><span class="mb open"></span> retry open</span>
+          <span class="k" style="margin-left:auto;color:#94a3b8;-webkit-text-fill-color:#94a3b8;">Click a name or a score cell to drill in.</span>
+        </div>
       </div>
 
-      <!-- Progress table -->
-      <div id="tcdash-loading" class="tcdash-loading">Loading class progress&hellip;</div>
+      <div id="student" class="gb-hidden">
+        <div class="gb-panel">
+          <div class="rep-head">
+            <div class="ini" id="rep-ini">--</div>
+            <div>
+<h2 id="rep-name">Student</h2>
+<div class="thin" id="rep-meta"></div>
+</div>
+            <select class="gb-select picker" id="rep-picker"></select>
+          </div>
+          <div class="stu-tools" id="rep-tools"></div>
+          <div class="rep-grid" id="rep-mini"></div>
+          <div id="rep-retry"></div>
+          <table class="rep-table" id="rep-table"></table>
+        </div>
+      </div>
 
-      <!-- Mastery Threshold Modal -->
-      <div id="threshold-backdrop" style="display:none!important;position:fixed!important;inset:0!important;z-index:10000!important;background:rgba(0,0,0,.6)!important;" onclick="TCDash.closeThresholdModal()"></div>
-      <div id="threshold-modal" style="display:none!important;position:fixed!important;top:50%!important;left:50%!important;transform:translate(-50%,-50%)!important;z-index:10001!important;background:#1E1B4B!important;border:2px solid #6B21A8!important;border-radius:12px!important;padding:32px 36px!important;max-width:400px!important;width:90vw!important;box-shadow:0 8px 40px rgba(0,0,0,.5)!important;font-family:Georgia,serif!important;">
-        <div style="font-size:18px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:8px!important;">Set Mastery Threshold</div>
-        <div style="font-size:13px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;margin-bottom:20px!important;">
-          Students must score at or above this threshold for a quiz to count as complete. Default is 80%.
-        </div>
-        <div style="display:flex!important;align-items:center!important;gap:12px!important;margin-bottom:8px!important;">
-          <input id="threshold-input" type="number" min="50" max="100" step="5"
-            style="width:80px!important;padding:8px 12px!important;font-size:20px!important;font-weight:700!important;background:#0F172A!important;color:#E8A020!important;-webkit-text-fill-color:#E8A020!important;border:2px solid #6B21A8!important;border-radius:7px!important;text-align:center!important;font-family:monospace!important;" />
-          <span style="color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-size:18px!important;">%</span>
-        </div>
-        <div style="font-size:11px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;margin-bottom:24px!important;">Range: 50&ndash;100. Recommended: 80.</div>
-        <div style="display:flex!important;gap:10px!important;">
-          <button onclick="TCDash.saveThreshold()" style="background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;padding:10px 22px!important;border-radius:7px!important;font-size:15px!important;font-weight:700!important;cursor:pointer!important;font-family:Georgia,serif!important;">Save</button>
-          <button onclick="TCDash.closeThresholdModal()" style="background:transparent!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;border:1px solid #4B5563!important;padding:10px 18px!important;border-radius:7px!important;font-size:14px!important;cursor:pointer!important;font-family:Georgia,serif!important;">Cancel</button>
-          <span id="threshold-save-msg" style="color:#6EE7B7!important;-webkit-text-fill-color:#6EE7B7!important;font-size:13px!important;align-self:center!important;display:none!important;"></span>
+      <div id="assignment" class="gb-hidden">
+        <div class="gb-panel">
+          <div class="ba-head">
+<h2 id="ba-name">Assignment</h2>
+<select class="gb-select picker" id="ba-picker" style="margin-left:auto"></select>
+</div>
+          <div class="thin" id="ba-meta"></div>
+          <div class="rep-grid" id="ba-mini"></div>
+          <table class="rep-table" id="ba-table"></table>
         </div>
       </div>
-      <div class="tcdash-table-wrap" id="tcdash-table-wrap" style="display:none!important;">
-        <table class="tcdash-table" id="tcdash-table">
-          <thead id="tcdash-thead"></thead>
-          <tbody id="tcdash-tbody"></tbody>
-        </table>
+
+      <div id="settings" class="gb-hidden">
+        <div class="gb-panel">
+          <h3 class="sec">Grade calculation</h3>
+          <div class="set-row">
+            <div class="txt">
+<h4>Calculation method</h4>
+<p>Earned over graded counts only work a student has attempted. Earned over possible counts everything assigned, so untouched work pulls the average down.</p>
+</div>
+            <div class="gb-seg" id="gb-calcseg">
+<button class="on" data-calc="graded">Earned / graded</button><button data-calc="possible">Earned / possible</button>
+</div>
+          </div>
+          <div class="set-row">
+            <div class="txt">
+<h4>Mastery threshold</h4>
+<p>The percent that counts as passed. Cells at or above this show green.</p>
+</div>
+            <div style="text-align:right">
+<input type="range" id="gb-thr" min="50" max="95" step="5" value="80"><span id="gb-thrv" style="font-weight:700;margin-left:8px">80%</span>
+</div>
+          </div>
+          <div class="set-row">
+            <div class="txt">
+<h4>Retry until mastery, by assignment type<span class="free-tag">FREE</span><span class="soon-tag">SAVING SOON</span>
+</h4>
+<p>Choose which activity types students may re-attempt until they reach the mastery threshold. Formative work fits; exams usually stay one attempt. Per-student overrides live on the By Student tab.</p>
+</div>
+            <div class="retrytypes">
+              <label>Lesson CFUs <span class="switch"><input type="checkbox" id="rt-lesson" checked><span class="slider"></span></span></label>
+              <label>Exercises <span class="switch"><input type="checkbox" id="rt-ex" checked><span class="slider"></span></span></label>
+              <label>Quizzes <span class="switch"><input type="checkbox" id="rt-quiz" checked><span class="slider"></span></span></label>
+              <label>Unit tests <span class="switch"><input type="checkbox" id="rt-exam"><span class="slider"></span></span></label>
+            </div>
+          </div>
+          <div class="set-row">
+            <div class="txt">
+<h4>Show letter grades</h4>
+<p>Display an A to F letter next to each student percent.</p>
+</div>
+            <label class="switch"><input type="checkbox" id="gb-letters" checked><span class="slider"></span></label>
+          </div>
+          <h3 class="sec" style="margin-top:18px">Count toward the grade</h3>
+          <div class="set-row">
+<div class="txt">
+<h4>Lesson checks (CFUs)</h4>
+<p>Off by default so daily practice does not flood the gradebook.</p>
+</div>
+<label class="switch"><input type="checkbox" id="inc-lesson"><span class="slider"></span></label>
+</div>
+          <div class="set-row">
+<div class="txt"><h4>Exercises</h4></div>
+<label class="switch"><input type="checkbox" id="inc-ex" checked><span class="slider"></span></label>
+</div>
+          <div class="set-row">
+<div class="txt"><h4>Quizzes</h4></div>
+<label class="switch"><input type="checkbox" id="inc-quiz" checked><span class="slider"></span></label>
+</div>
+          <div class="set-row">
+<div class="txt"><h4>Unit tests</h4></div>
+<label class="switch"><input type="checkbox" id="inc-exam" checked><span class="slider"></span></label>
+</div>
+          <h3 class="sec" style="margin-top:18px">Class data</h3>
+          <div class="set-row">
+<div class="txt">
+<h4>Full data CSV</h4>
+<p>Every score and completion for this class.</p>
+</div>
+<button class="gb-btn" onclick="TCDash.exportCSV()">Download full data CSV</button>
+</div>
+          <div class="set-row">
+<div class="txt">
+<h4>Canvas gradebook CSV</h4>
+<p>One assignment per unit, formatted to import straight into Canvas. Set each student's Student Ref to their Canvas SIS User ID first.</p>
+</div>
+<button class="gb-btn" onclick="TCDash.exportCanvasCSV()">Download Canvas CSV</button>
+</div>
+          <div class="set-row">
+<div class="txt">
+<h4>Delete class</h4>
+<p>Permanently removes the class and all student progress. Cannot be undone.</p>
+</div>
+<button class="gb-btn danger" onclick="TCDash.deleteClass()">Delete class</button>
+</div>
+        </div>
       </div>
+
     </div>
   </div>
 </div>
+<div class="overlay gb-hidden" id="gb-overlay" onclick="TCDash.closePop()"></div>
+<div class="pop gb-hidden" id="gb-pop"></div>
 </div>
 
 <script>
-const API = 'https://apcsexamprep-progress-api-production.up.railway.app';
-
-const UNIT_LESSONS = {
-  'unit-1': [
-    { id:'1.1', label:'1.1 Social Engineering' },
-    { id:'1.2', label:'1.2 Password Attacks' },
-    { id:'1.3', label:'1.3 Public Networks' },
-    { id:'1.4', label:'1.4 AI Attacks' },
-    { id:'1.5', label:'1.5 AI Defense' },
-  ],
-};
+(function(){
+const API = 'https://progress.apcsexamprep.com';
 const ACTIVITIES = ['lesson','exercise-1','exercise-2','quiz'];
-const ACT_SHORT = { 'lesson':'L', 'exercise-1':'E1', 'exercise-2':'E2', 'quiz':'Q' };
+    // Authored per-lesson totals from the API, keyed `lesson|activity`.
+    // Activities genuinely differ (1.1 Exercise 1 is out of 7, 2.1 is out of
+    // 6), so a per-activity constant cannot be right for more than a few.
+    // Only AUTHORED columns appear, so an absent key means unknown, not zero.
+    var DEN = {};
+const POINTS = {'lesson':10,'exercise-1':5,'exercise-2':5,'quiz':10,'exam':25,'case_file':10};
+const ACT_LABEL = {'lesson':'Lesson','exercise-1':'Ex 1','exercise-2':'Ex 2','quiz':'Quiz','exam':'Exam','case_file':'Case File'};
+// Course-specific teacher pack the gradebook promo cross-sells
+const BUNDLE = {
+  'ap-cybersecurity':{url:'/products/ap-cybersecurity-founding-teacher-bundle', label:'View the Cyber teacher pack', blurb:'The Founding Teacher Bundle has the full lecture slide decks, printable student guides, and editable quizzes for all five units.'},
+  'ap-csp':{url:'/products/ap-csp-teacher-superpack', label:'View the AP CSP teacher pack', blurb:'The CSP Teacher Superpack has the lecture slide decks, printable student guides, and editable quizzes ready to assign.'},
+  'ap-csa':{url:'/products/ap-csa-teacher-superpack-free-preview', label:'View the AP CSA teacher pack', blurb:'The CSA Teacher Superpack has the lecture slide decks, printable student guides, and editable quizzes ready to assign.'}
+};
 
 window.TCDash = {
-  classCode: '',
-  data: null,
+  classCode:'', data:null, model:null,
+  OVER:{}, RESET:{}, GRANT:{}, STUDENT_RETRY:{},
+  state:{view:'points',calc:'graded',threshold:80,letters:true,search:'',
+    retryTypes:{lesson:true,exercise:true,quiz:true,exam:false},
+    include:{lesson:false,exercise:true,quiz:true,exam:true}, sortKey:'name', sortDir:1, densityScale:50, units:null},
 
-  async init() {
+  async init(){
     const token = localStorage.getItem('apcse_teacher_token');
-    if (!token) { document.getElementById('tcdash-not-auth').style.display='block'; return; }
-
-    // Get class code from URL
-    const params = new URLSearchParams(window.location.search);
+    if(!token){ document.getElementById('tcdash-not-auth').classList.remove('gb-hidden'); const here=location.pathname+location.search; location.replace('/pages/cyber-class?next='+encodeURIComponent(here)); return; }
+    const params = new URLSearchParams(location.search);
     this.classCode = params.get('code') || '';
-    if (!this.classCode) { document.getElementById('tcdash-not-auth').style.display='block'; return; }
-
-    document.getElementById('tcdash-main').style.display = 'block';
-    document.getElementById('dash-code').textContent = this.classCode;
-    document.getElementById('share-code-display').textContent = this.classCode;
-    document.getElementById('share-code-url').textContent = this.classCode;
-
+    if(!this.classCode){ location.replace('/pages/cyber-class'); return; }
+    document.getElementById('tcdash-main').classList.remove('gb-hidden');
+    document.getElementById('gb-code').textContent = this.classCode;
+    document.getElementById('gb-share-code').textContent = this.classCode;
+    this.bindControls();
     await this.loadProgress(token);
   },
 
-  async loadProgress(token) {
-    try {
-      const r = await fetch(`${API}/api/teacher/classes/${this.classCode}/progress`, {
-        headers: { 'Authorization': 'Bearer ' + token }
-      });
-      if (r.status === 401) { localStorage.removeItem('apcse_teacher_token'); location.href='/pages/cyber-class'; return; }
+  async loadProgress(token){
+    try{
+      const r = await fetch(API+'/api/teacher/classes/'+this.classCode+'/progress',{headers:{'Authorization':'Bearer '+token}});
+      if(r.status===401){ localStorage.removeItem('apcse_teacher_token'); location.href='/pages/cyber-class'; return; }
       const d = await r.json();
-      this.data = d;
-      this.currentThreshold = d.class.mastery_threshold != null ? d.class.mastery_threshold : 80;
-      this.currentRetry     = d.class.retry_allowed !== 0;
-      document.getElementById('dash-threshold-display').textContent = this.currentThreshold;
-      document.getElementById('dash-retry-display').textContent = this.currentRetry ? 'On' : 'Off';
-      const retryBtn = document.getElementById('dash-retry-btn');
-      if (retryBtn) retryBtn.style.setProperty('background', this.currentRetry ? '#0F766E' : '#DC2626', 'important');
-      document.getElementById('dash-classname').textContent = d.class.class_name + ' \u00B7 ' + this.formatCourse(d.class.course);
-      this.renderStats(d.summary);
-      this.renderTable(d.summary, d.course_config);
-    } catch(e) {
-      document.getElementById('tcdash-loading').textContent = 'Failed to load data. Try refreshing.';
-    }
+      this.applyData(d);
+    }catch(e){ document.getElementById('gb-loading').textContent='Failed to load data. Try refreshing.'; }
   },
 
-  renderStats(summary) {
-    const today = new Date().toDateString();
-    const activeToday = summary.filter(s => s.student.last_active && new Date(s.student.last_active).toDateString() === today).length;
-
-    let totalPct = 0, scoreCount = 0, totalScore = 0;
-    for (const s of summary) {
-      const unit1 = s.units['unit-1'];
-      if (unit1) { totalPct += unit1.pct; if (unit1.avg_score != null) { totalScore += unit1.avg_score; scoreCount++; } }
-    }
-
-    document.getElementById('stat-students').textContent = summary.length;
-    document.getElementById('stat-active').textContent = activeToday;
-    document.getElementById('stat-completion').textContent = summary.length ? Math.round(totalPct / summary.length) + '%' : '-';
-    document.getElementById('stat-score').textContent = scoreCount ? Math.round(totalScore / scoreCount) + '%' : '-';
+  applyData(d){
+    this.data = d;
+    this.model = this.buildModel(d);
+    document.getElementById('gb-loading').style.display='none';
+    document.getElementById('overview').classList.remove('gb-hidden');
+    document.getElementById('gb-cname').textContent = (d.class&&d.class.class_name)||this.classCode;
+    document.getElementById('gb-course').textContent = this.formatCourse((d.class&&d.class.course)||'');
+    const b = BUNDLE[(d.class&&d.class.course)] || {url:'/collections/bundles',label:'View course bundles',blurb:'The teacher pack has the lecture slide decks, printable student guides, and editable quizzes ready to assign.'};
+    const bl=document.getElementById('gb-promo-link'); if(bl){ bl.href=b.url; bl.textContent=b.label; }
+    const bt=document.getElementById('gb-promo-text'); if(bt){ bt.innerHTML='<b>Teaching this course?</b> '+b.blurb; }
+    document.getElementById('gb-av').textContent = ((d.class&&d.class.class_name)||'C').replace(/[^A-Za-z0-9]/g,'').slice(0,2).toUpperCase() || 'C';
+    document.getElementById('gb-count').textContent = this.model.students.length+' students';
+    this.initPickers();
+    this.renderUnitFilter();
+    this.renderAll();
+    this.applyDensity();
   },
 
-  renderTable(summary, courseCfg) {
-    document.getElementById('tcdash-loading').style.display = 'none';
-    const wrap = document.getElementById('tcdash-table-wrap');
-    wrap.style.display = 'block';
+  buildModel(resp){
+    const cfg = resp.course_config || {units:{}};
+    const units = cfg.units || {}; const uids = Object.keys(units);
+    const cols=[], groups=[];
+    uids.forEach(uid=>{
+      const u = units[uid]||{}; const acts = u.activities||ACTIVITIES; const lessons = u.lessons||[];
+      const uLabel = String(u.label||uid).replace(/:.*$/,'');
+      lessons.forEach(l=>{
+        const g={key:uid+'|'+l,title:String(l),span:0,unit:uid}; groups.push(g);
+        acts.forEach(a=>{ cols.push({unit:uid,uLabel:uLabel,lesson:String(l),lessonName:String(l),activity:a,type:ACT_LABEL[a]||a,possible:(DEN[String(l)+'|'+a]!=null?DEN[String(l)+'|'+a]:(POINTS[a]||100)),authored:(DEN[String(l)+'|'+a]!=null),group:g.key,dl:String(l),da:a}); g.span++; });
+      });
+      if(u.case_file){ const cl=(u.case_file&&u.case_file.label)||'Case File'; const g={key:uid+'|cf',title:cl,span:1,unit:uid}; groups.push(g);
+        cols.push({unit:uid,uLabel:uLabel,lesson:'case-file',lessonName:cl,activity:'case_file',type:'Case File',possible:POINTS.case_file,group:g.key,dl:'case-file',da:'case-file'}); }
+      if(u.exam){ const el=(u.exam&&u.exam.label)||'Unit Exam'; const g={key:uid+'|exam',title:el,span:1,unit:uid}; groups.push(g);
+        cols.push({unit:uid,uLabel:uLabel,lesson:'exam',lessonName:el,activity:'exam',type:'Exam',possible:POINTS.exam,group:g.key,dl:'exam',da:'exam'}); }
+    });
+    const unitList=uids.map(uid=>({id:uid,label:String((units[uid]&&units[uid].label)||uid).replace(/:.*$/,'')}));
+    DEN = (resp && resp.denominators) || {};
+      const students=(resp.summary||[]).map(rec=>({
+      id:rec.student.id, name:rec.student.name, ref:rec.student.ref,
+      initials:(rec.student.name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(),
+      lastActive:this.formatDate(rec.student.last_active), detail:rec.detail||{}
+    }));
+    return {cols:cols,groups:groups,students:students,units:unitList};
+  },
 
-    const lessons = UNIT_LESSONS['unit-1'] || [];
+  keyOf(sid,c){ return sid+'|'+c.unit+'|'+c.lesson+'|'+c.activity; },
+  counts(a){ if(a==='lesson')return this.state.include.lesson; if(a==='exercise-1'||a==='exercise-2')return this.state.include.exercise; if(a==='quiz')return this.state.include.quiz; if(a==='exam')return this.state.include.exam; return true; },
+  retryGroup(a){ if(a==='lesson')return'lesson'; if(a==='exercise-1'||a==='exercise-2')return'exercise'; if(a==='quiz')return'quiz'; if(a==='exam')return'exam'; return null; },
+  retryOn(a,stu){ const g=this.retryGroup(a); if(!g)return false; if(stu){ const o=this.STUDENT_RETRY[stu.id]; if(o&&o[g])return o[g]==='on'; } return !!this.state.retryTypes[g]; },
+  retryEff(stu,g){ const o=this.STUDENT_RETRY[stu.id]; return (o&&o[g])?o[g]:'default'; },
+  clsFor(p){ if(p===null)return'n'; if(p>=this.state.threshold)return'g'; if(p>=60)return'a'; return'r'; },
+  letterFor(p){ if(p>=90)return'A'; if(p>=80)return'B'; if(p>=70)return'C'; if(p>=60)return'D'; return'F'; },
 
-    // Build header
-    const thead = document.getElementById('tcdash-thead');
-    thead.innerHTML =
-      '<tr>' +
-        '<th>Student</th>' +
-        '<th class="center">Retry</th>' +
-        '<th class="center">Unit 1</th>' +
-        lessons.map(function(l) {
-          return ACTIVITIES.map(function(a) {
-            return '<th class="center" style="font-size:10px!important;white-space:nowrap!important;">' + l.id + '<br>' + ACT_SHORT[a] + '</th>';
-          }).join('');
-        }).join('') +
-        '<th>Last Active</th>' +
-      '</tr>';
+  cellData(stu,c){
+    const k=this.keyOf(stu.id,c);
+    if(this.RESET[k]) return {pct:null,earned:null,possible:c.possible,started:false,granted:this.GRANT[k]||0};
+    if(this.OVER[k]!=null){ const e=this.OVER[k]; return {pct:c.possible?Math.round(e/c.possible*100):e,earned:e,possible:c.possible,started:true,override:true,granted:this.GRANT[k]||0}; }
+    const d = stu.detail[c.unit] && stu.detail[c.unit][c.dl] && stu.detail[c.unit][c.dl][c.da];
+    if(!d || (d.score==null && !d.completed)) return {pct:null,earned:null,possible:c.possible,started:false,granted:this.GRANT[k]||0};
+      // Completed but never graded is NOT a zero. The exercise pages report no
+      // score at all, so turning null into 0 invented a failing grade for every
+      // exercise a student merely opened, and averaged it in against them.
+      if(d.score==null) return {pct:null,earned:null,possible:c.possible,started:false,ungraded:true,granted:this.GRANT[k]||0};
+      // Prefer the real pair the API reports. points_possible is per item, so an
+      // exercise out of 7 stays out of 7 instead of being squashed onto a
+      // per-activity constant and re-rounded, where 6/7 and 5/7 both became 4/5.
+      const pair = (d.points_possible!=null && d.points_possible>0 && d.points_earned!=null);
+      const possible = pair ? d.points_possible : c.possible;
+      const earned = pair ? d.points_earned : Math.round(d.score/100*c.possible);
+      return {pct:d.score,earned:earned,possible:possible,started:true,granted:this.GRANT[k]||0};
+  },
+  totals(stu){
+    let earned=0,poss=0,done=0,total=0;
+    this.model.cols.forEach(c=>{ if(!this.counts(c.activity))return; total++; const cd=this.cellData(stu,c);
+      if(!cd.started){ if(this.state.calc==='possible') poss+=cd.possible; return; } done++; earned+=cd.earned; poss+=cd.possible; });
+    return {earned:earned,poss:poss,pct:poss>0?Math.round(earned/poss*100):0,done:done,total:total};
+  },
 
-    const tbody = document.getElementById('tcdash-tbody');
-    if (!summary.length) {
-      tbody.innerHTML = '<tr><td colspan="100" class="tcdash-empty">No students have joined yet. Share the class code above.</td></tr>';
-      return;
-    }
+  renderAll(){ this.renderStats(); this.renderGrid(); this.renderStudent(+document.getElementById('rep-picker').value||0); this.renderAssignment(+document.getElementById('ba-picker').value||0); },
 
-    const self = this;
-    tbody.innerHTML = summary.map(function(s) {
-      const unit1      = s.units['unit-1'] || { pct: 0, avg_score: null };
-      const lastActive = s.student.last_active ? self.formatDate(s.student.last_active) : 'Never';
+  renderStats(){
+    const arr=this.model.students.map(s=>this.totals(s));
+    const n=arr.length||1;
+    const avg=Math.round(arr.reduce((a,b)=>a+b.pct,0)/n);
+    const comp=Math.round(arr.reduce((a,b)=>a+(b.total?b.done/b.total:0),0)/n*100);
+    const active=this.model.students.filter(s=>/Today|Yesterday/.test(s.lastActive||'')).length;
+    const graded=arr.reduce((a,b)=>a+b.done,0);
+    const card=(l,v,f)=>'<div class="gb-stat"><div class="l">'+l+'</div><div class="v">'+v+'</div><div class="f">'+f+'</div></div>';
+    document.getElementById('gb-statcards').innerHTML=
+      card('Class average',avg+'<small>%</small>',this.letterFor(avg)+' average')+
+      card('Completion',comp+'<small>%</small>','of assigned work')+
+      card('Active recently',active+'<small>/'+this.model.students.length+'</small>','today or yesterday')+
+      card('Graded items',graded,'submissions logged');
+  },
 
-      // Retry override: null=class default, 1=allowed, 0=blocked
-      const ro = s.student.retry_override;
-      const classDefault = self.data && self.data.class ? !!self.data.class.retry_allowed : true;
-      const effectiveRetry = ro !== null && ro !== undefined ? !!ro : classDefault;
-      const retryLabel = ro !== null && ro !== undefined
-        ? (ro ? 'On (override)' : 'Off (override)')
-        : (classDefault ? 'On (class)' : 'Off (class)');
-      const retryColor = effectiveRetry ? '#6EE7B7' : '#F87171';
+  renderGrid(){
+    const S=this, sel=this.state.units;
+    const showU=u=>(!sel||sel.length===0||sel.indexOf(u)>-1);
+    const vcols=this.model.cols.map((c,i)=>({c:c,oi:i})).filter(o=>showU(o.c.unit));
+    const vgroups=this.model.groups.filter(g=>showU(g.unit));
+    let h="<thead><tr class='grp'><th class='c-stick c-name'></th><th class='c-stick c-grade'></th><th class='c-stick c-pts'></th>";
+    vgroups.forEach(g=>{ h+="<th colspan='"+g.span+"'>"+S.esc(g.title)+"</th>"; });
+    h+="</tr><tr class='sub'><th class='c-stick c-name' style='cursor:pointer' onclick=\"TCDash.setSort('name')\">Student</th><th class='c-stick c-grade' style='cursor:pointer' onclick=\"TCDash.setSort('grade')\">Grade</th><th class='c-stick c-pts'>Points</th>";
+    vcols.forEach(o=>{ const c=o.c; h+="<th style='cursor:pointer' onclick=\"TCDash.gotoAssign("+o.oi+")\" title='"+S.esc(c.lessonName+' '+c.type)+"'>"+S.esc(c.type)+((S.counts(c.activity)&&c.authored)?"<span class='mx'>/"+c.possible+"</span>":"")+"</th>"; });
+    h+="</tr></thead><tbody>";
+    let rows=this.model.students.map((s,idx)=>({s:s,idx:idx,t:this.totals(s)}))
+      .filter(r=>r.s.name.toLowerCase().indexOf(this.state.search.toLowerCase())>-1);
+    rows.sort((a,b)=>{ const d=this.state.sortKey==='grade'?(a.t.pct-b.t.pct):a.s.name.localeCompare(b.s.name); return d*this.state.sortDir; });
+    rows.forEach(r=>{
+      const s=r.s,t=r.t,lt=this.letterFor(t.pct);
+      h+="<tr><td class='c-stick c-name'><div class='stu' onclick='TCDash.gotoStudent("+r.idx+")'><div class='ini'>"+s.initials+"</div><div><div class='nm'>"+S.esc(s.name)+"</div><div class='la'>"+S.esc(s.lastActive||'')+"</div></div></div></td>";
+      h+="<td class='c-stick c-grade'><div class='gcell'>"+(this.state.letters?"<span class='letter l-"+lt+"'>"+lt+"</span>":"")+"<span class='pct'>"+t.pct+"%</span></div></td>";
+      h+="<td class='c-stick c-pts'><div class='ptsb'>"+t.earned+"</div><div class='ptss'>/ "+t.poss+"</div></td>";
+      vcols.forEach(o=>{ const c=o.c;
+        const cd=this.cellData(s,c), off=!this.counts(c.activity), dim=off?" style='opacity:.45'":"";
+        const rOn=this.retryOn(c.activity,s); let mk="";
+        if(cd.override) mk="<span class='mk ov'>●</span>";
+        else if(rOn && cd.started && cd.pct<this.state.threshold) mk="<span class='mk open'>↻</span>";
+        else if(cd.granted) mk="<span class='mk open'>+"+cd.granted+"</span>";
+        let inner;
+        if(!cd.started) inner="–";
+        else if(this.state.view==='points') inner=cd.earned+"/"+cd.possible;
+        else { const lab=cd.pct>=this.state.threshold?"Mastered":(cd.pct>=60?"Approaching":"Not yet"); inner="<span class='ptxt'><span class='dot "+this.clsFor(cd.pct)+"'></span>"+lab+"</span>"; }
+        const cl=cd.started?(cd.earned===0?'r':this.clsFor(cd.pct)):'n';
+        const ttl=cd.started?(' title="'+cd.pct+'%"'):'';
+        h+="<td"+dim+"><button class='cellbtn "+cl+"'"+ttl+" onclick='TCDash.openPop(event,"+r.idx+","+o.oi+")'>"+inner+mk+"</button></td>";
+      });
+      h+="</tr>";
+    });
+    h+="</tbody><tfoot><tr><td class='c-stick c-name'>Class average</td><td class='c-stick c-grade'></td><td class='c-stick c-pts'></td>";
+    vcols.forEach(o=>{ const c=o.c; const vals=this.model.students.map(s=>this.cellData(s,c)).filter(x=>x.started);
+      if(!vals.length){ h+="<td>–</td>"; return; } h+="<td>"+Math.round(vals.reduce((a,b)=>a+b.pct,0)/vals.length)+"%</td>"; });
+    h+="</tr></tfoot>";
+    document.getElementById('gb-table').innerHTML=h;
+    const rL={lesson:'CFU',exercise:'Ex',quiz:'Quiz',exam:'Exam'};
+    const rOn=['lesson','exercise','quiz','exam'].filter(k=>this.state.retryTypes[k]).map(k=>rL[k]);
+    document.getElementById('gb-calcnote').textContent=(this.state.calc==='graded'?'Earned / graded':'Earned / possible')+'  |  mastery '+this.state.threshold+'%  |  retry: '+(rOn.length?rOn.join(', '):'off');
+  },
+  setSort(k){ if(this.state.sortKey===k)this.state.sortDir*=-1; else{this.state.sortKey=k;this.state.sortDir=1;} this.renderGrid(); },
+  renderUnitFilter(){
+    const units=this.model.units||[]; const sel=this.state.units;
+    const course=(this.data&&this.data.class&&this.data.class.course)||'';
+    const termAll=course==='ap-csp'?'All Big Ideas':'All units', termN=course==='ap-csp'?' Big Ideas':' units';
+    const isAll=!sel||sel.length===0||sel.length===units.length;
+    const checked=id=>isAll||sel.indexOf(id)>-1;
+    let h="<label><input type='checkbox' "+(isAll?'checked':'')+" onchange=\"TCDash.setUnitSel('all',this.checked)\"><b>"+termAll+"</b></label><div class='dd-div'></div>";
+    units.forEach(u=>{ h+="<label><input type='checkbox' "+(checked(u.id)?'checked':'')+" onchange=\"TCDash.setUnitSel('"+u.id+"',this.checked)\">"+this.esc(u.label)+"</label>"; });
+    document.getElementById('gb-unitpanel').innerHTML=h;
+    let lbl=termAll;
+    if(!isAll){ if(sel.length===1){ const u=units.find(x=>x.id===sel[0]); lbl=u?u.label:('1'+termN); } else lbl=sel.length+termN; }
+    document.getElementById('gb-unitbtn').innerHTML=this.esc(lbl)+" <span class='ck'>▾</span>";
+  },
+  setUnitSel(id,on){
+    const all=(this.model.units||[]).map(u=>u.id);
+    let sel=(!this.state.units||this.state.units.length===0)?all.slice():this.state.units.slice();
+    if(id==='all'){ sel=on?all.slice():[]; }
+    else if(on){ if(sel.indexOf(id)<0)sel.push(id); } else { sel=sel.filter(x=>x!==id); }
+    if(sel.length===0) sel=all.slice();
+    this.state.units=(sel.length===all.length)?null:sel;
+    this.renderUnitFilter(); this.renderGrid();
+  },
+  toggleUnitDD(ev){ ev.stopPropagation(); document.getElementById('gb-unitpanel').classList.toggle('gb-hidden'); },
 
-      const actCells = lessons.map(function(lesson) {
-        return ACTIVITIES.map(function(act) {
-          const rec   = s.detail && s.detail['unit-1'] && s.detail['unit-1'][lesson.id] ? s.detail['unit-1'][lesson.id][act] : null;
-          const done  = rec && rec.completed;
-          const score = rec && rec.score != null ? rec.score + '%' : '';
-          const locked = rec && rec.locked;
-          const pid    = rec && rec.progress_id;
+  openPop(ev,sidx,cidx){
+    ev.stopPropagation();
+    const s=this.model.students[sidx], c=this.model.cols[cidx], cd=this.cellData(s,c);
+    this.popCtx={sidx:sidx,cidx:cidx};
+    const pop=document.getElementById('gb-pop');
+    pop.innerHTML=
+      "<button class='pc' onclick='TCDash.closePop()'>×</button>"+
+      "<h5>"+this.esc(s.name)+"</h5><div class='s'>"+this.esc((c.lesson==='exam'?c.lessonName:c.lesson+' '+c.type))+" · out of "+cd.possible+"</div>"+
+      "<div class='cur'>Current: <b>"+(cd.started?cd.earned:'–')+"</b> <span class='thin'>"+(cd.started?'/ '+c.possible+'  ('+cd.pct+'%)':'not started')+"</span>"+(cd.override?" <span class='flag ok'>override</span>":"")+"</div>"+
+      "<div class='fld'>Override to <input type='number' id='gb-ovin' min='0' max='"+c.possible+"' value='"+(cd.started?cd.earned:0)+"'> / "+c.possible+"</div>"+
+      "<div class='fld'><button class='gb-btn primary sm' style='width:100%' onclick='TCDash.applyOverride()'>Set score</button></div>"+
+      "<div class='row2'><button class='gb-btn sm' onclick='TCDash.applyGrant()'>Grant attempt</button><button class='gb-btn sm danger' onclick='TCDash.applyReset()'>Reset</button></div>"+
+      "<div class='soon'>Preview only in this session. Saved overrides ship with the next update.</div>";
+    pop.classList.remove('gb-hidden'); document.getElementById('gb-overlay').classList.remove('gb-hidden');
+    const rect=ev.currentTarget.getBoundingClientRect();
+    let top=window.scrollY+rect.bottom+8, left=window.scrollX+rect.left-100;
+    left=Math.max(12,Math.min(left,window.scrollX+window.innerWidth-268));
+    pop.style.top=top+'px'; pop.style.left=left+'px';
+  },
+  closePop(){ document.getElementById('gb-pop').classList.add('gb-hidden'); document.getElementById('gb-overlay').classList.add('gb-hidden'); this.popCtx=null; },
+  applyOverride(){ const s=this.model.students[this.popCtx.sidx],c=this.model.cols[this.popCtx.cidx]; const v=Math.max(0,Math.min(c.possible,+document.getElementById('gb-ovin').value||0)); this.OVER[this.keyOf(s.id,c)]=v; delete this.RESET[this.keyOf(s.id,c)]; /* TODO PATCH .../students/:id/score */ this.closePop(); this.renderAll(); },
+  applyReset(){ const s=this.model.students[this.popCtx.sidx],c=this.model.cols[this.popCtx.cidx]; this.RESET[this.keyOf(s.id,c)]=true; delete this.OVER[this.keyOf(s.id,c)]; /* TODO DELETE .../students/:id/score */ this.closePop(); this.renderAll(); },
+  applyGrant(){ const s=this.model.students[this.popCtx.sidx],c=this.model.cols[this.popCtx.cidx]; const k=this.keyOf(s.id,c); this.GRANT[k]=(this.GRANT[k]||0)+1; /* TODO POST .../students/:id/grant-attempt */ this.closePop(); this.renderAll(); },
 
-          let lockBtn = '';
-          if (act === 'quiz' && locked && pid) {
-            lockBtn = ' <button onclick="TCDash.openUnlockModal(\'' + self.esc(s.student.id) + '\',\'' + self.esc(pid) + '\',\'' + self.esc(s.student.name) + '\')" ' +
-              'style="background:#E8A020!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;' +
-              'border:none!important;padding:2px 6px!important;border-radius:4px!important;font-size:10px!important;' +
-              'font-weight:700!important;cursor:pointer!important;font-family:Georgia,serif!important;margin-top:2px!important;">Unlock</button>';
-          }
-
-          return '<td class="act-cell">' +
-            '<span class="act-check ' + (done ? 'act-done' : 'act-none') + '">' +
-              (locked ? '&#128274;' : done ? '&#10003;' : '&#9675;') +
-            '</span>' +
-            (score ? '<span class="act-score">' + score + '</span>' : '') +
-            lockBtn +
-          '</td>';
-        }).join('');
-      }).join('');
-
-      return '<tr>' +
-        '<td>' +
-          '<div class="student-name">' + self.esc(s.student.name) + '</div>' +
-          (s.student.ref ? '<div class="student-ref">' + self.esc(s.student.ref) + '</div>' : '') +
-        '</td>' +
-        '<td class="act-cell" style="text-align:center!important;">' +
-          '<div style="font-size:11px!important;color:' + retryColor + '!important;-webkit-text-fill-color:' + retryColor + '!important;font-weight:700!important">' + retryLabel + '</div>' +
-          '<button onclick="TCDash.toggleStudentRetry(\'' + self.esc(s.student.id) + '\',' + (effectiveRetry ? 'false' : 'true') + ')" ' +
-            'style="background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;' +
-            'border:none!important;padding:2px 8px!important;border-radius:4px!important;font-size:10px!important;' +
-            'font-weight:700!important;cursor:pointer!important;font-family:Georgia,serif!important;margin-top:3px!important;">' +
-            (effectiveRetry ? 'Disable' : 'Enable') +
-          '</button>' +
-          '<button onclick="TCDash.clearStudentRetry(\'' + self.esc(s.student.id) + '\')" ' +
-            'style="background:transparent!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;' +
-            'border:1px solid #4B5563!important;padding:2px 6px!important;border-radius:4px!important;font-size:10px!important;' +
-            'cursor:pointer!important;font-family:Georgia,serif!important;margin-top:3px!important;margin-left:2px!important;">Reset</button>' +
-        '</td>' +
-        '<td class="prog-cell">' +
-          '<div class="prog-pct">' + unit1.pct + '%</div>' +
-          '<div class="prog-bar-wrap"><div class="prog-bar" style="width:' + unit1.pct + '%"></div></div>' +
-          (unit1.avg_score != null ? '<div class="prog-score">Avg: ' + unit1.avg_score + '%</div>' : '') +
-        '</td>' +
-        actCells +
-        '<td class="last-active">' + lastActive + '</td>' +
-      '</tr>';
+  renderStudent(idx){
+    const s=this.model.students[idx]; if(!s)return; const t=this.totals(s),lt=this.letterFor(t.pct), S=this;
+    document.getElementById('rep-ini').textContent=s.initials;
+    document.getElementById('rep-name').textContent=s.name;
+    document.getElementById('rep-meta').textContent=((this.data.class&&this.data.class.class_name)||'')+'  |  last active '+(s.lastActive||'n/a')+(s.ref?('  |  '+s.ref):'');
+    document.getElementById('rep-tools').innerHTML=
+      "<button class='gb-btn sm' onclick=\"TCDash.renameStudent('"+s.id+"')\">Rename</button>"+
+      "<button class='gb-btn sm' onclick=\"TCDash.resetPin('"+s.id+"')\">Reset PIN</button>"+
+      "<button class='gb-btn sm danger' onclick=\"TCDash.removeStudent('"+s.id+"')\">Remove</button>";
+    let miss=0,low=0; this.model.cols.forEach(c=>{ if(!S.counts(c.activity))return; const cd=S.cellData(s,c); if(!cd.started)miss++; else if(cd.pct<S.state.threshold)low++; });
+    const mini=(l,v)=>"<div class='mini'><div class='l'>"+l+"</div><div class='v'>"+v+"</div></div>";
+    document.getElementById('rep-mini').innerHTML=mini('Overall',"<span class='letter l-"+lt+"' style='vertical-align:-5px'>"+lt+"</span> "+t.pct+'%')+mini('Points',t.earned+' / '+t.poss)+mini('Below mastery',low)+mini('Not started',miss);
+    document.getElementById('rep-retry').innerHTML=this.retryCard(idx,s);
+    let rows="<tr><th>Lesson</th><th>Activity</th><th>Score</th><th>Percent</th><th>Status</th></tr>";
+    this.model.cols.forEach(c=>{ const cd=S.cellData(s,c); let st,sc,pc;
+      if(cd.ungraded){ st="<span class='flag'>Done, not graded</span>"; sc="–"; pc="–"; }
+      else if(!cd.started){ st="<span class='flag miss'>Not started</span>"; sc="–"; pc="–"; }
+      else{ pc=cd.pct+'%'; sc=cd.earned+' / '+cd.possible;
+        if(cd.pct>=S.state.threshold) st="<span class='flag ok'>Mastered</span>";
+        else if(S.retryOn(c.activity,s)) st="<span class='flag open'>Retry open</span>";
+        else st="<span class='flag low'>"+(cd.earned===0?'Missing':'Below '+S.state.threshold)+"</span>";
+        if(cd.override) st+=" <span class='flag ok'>override</span>"; }
+      rows+="<tr><td>"+S.esc((c.lesson==='exam'||c.lesson==='case-file')?c.lessonName:c.lesson)+"</td><td>"+S.esc(c.type)+"</td><td>"+sc+"</td><td>"+pc+"</td><td>"+st+(S.counts(c.activity)?"":" <span class='thin'>(not counted)</span>")+"</td></tr>"; });
+    document.getElementById('rep-table').innerHTML=rows;
+  },
+  retryCard(idx,s){
+    const S=this; const types=[['lesson','Lesson CFUs'],['exercise','Exercises'],['quiz','Quizzes'],['exam','Unit tests']];
+    const rows=types.map(t=>{ const g=t[0], eff=S.retryEff(s,g), def=S.state.retryTypes[g]?'on':'off';
+      const b=(val,lab)=>"<button class='"+(eff===val?'on':'')+"' onclick=\"TCDash.setStuRetry("+idx+",'"+g+"','"+val+"')\">"+lab+"</button>";
+      return "<div class='sr-item'><span class='nmw'>"+t[1]+"</span><span class='sr-seg'>"+b('default','Default ('+def+')')+b('on','On')+b('off','Off')+"</span></div>";
     }).join('');
+    return "<div class='stu-retry'><div class='sr-head'>Retry until mastery for "+S.esc(s.name)+" <span class='thin'>overrides the class policy for this student</span></div><div class='sr-rows'>"+rows+"</div></div>";
+  },
+  setStuRetry(idx,g,val){ const s=this.model.students[idx]; this.STUDENT_RETRY[s.id]=this.STUDENT_RETRY[s.id]||{}; if(val==='default') delete this.STUDENT_RETRY[s.id][g]; else this.STUDENT_RETRY[s.id][g]=val; /* TODO PATCH .../students/:id retry_modes */ this.renderAll(); },
+
+  renderAssignment(cidx){
+    const c=this.model.cols[cidx]; if(!c)return; const S=this;
+    document.getElementById('ba-name').textContent=((c.lesson==='exam'||c.lesson==='case-file')?c.lessonName:c.lesson+' '+c.type);
+    const cells=this.model.students.map(s=>({s:s,cd:S.cellData(s,c)}));
+    const done=cells.filter(o=>o.cd.started);
+    const avg=done.length?Math.round(done.reduce((a,b)=>a+b.cd.pct,0)/done.length):0;
+    const mastered=done.filter(o=>o.cd.pct>=S.state.threshold).length;
+    document.getElementById('ba-meta').textContent='Out of '+c.possible+' points  |  '+(S.counts(c.activity)?'counts toward grade':'display only, not counted');
+    const mini=(l,v)=>"<div class='mini'><div class='l'>"+l+"</div><div class='v'>"+v+"</div></div>";
+    document.getElementById('ba-mini').innerHTML=mini('Class average',avg+'%')+mini('Completed',done.length+' / '+cells.length)+mini('Mastered',mastered+' / '+cells.length)+mini('Missing',(cells.length-done.length));
+    cells.sort((a,b)=>{ const av=a.cd.started?a.cd.pct:-1, bv=b.cd.started?b.cd.pct:-1; return bv-av; });
+    let rows="<tr><th>Student</th><th>Score</th><th>Percent</th><th style='width:180px'>Distribution</th><th>Status</th></tr>";
+    cells.forEach(o=>{ const cd=o.cd; let cell,pc,bar,st;
+      if(!cd.started){ cell="–"; pc="–"; bar=0; st="<span class='flag miss'>Not started</span>"; }
+      else{ cell=cd.earned+' / '+c.possible; pc=cd.pct+'%'; bar=cd.pct; st=cd.pct>=S.state.threshold?"<span class='flag ok'>Mastered</span>":(S.retryOn(c.activity,o.s)?"<span class='flag open'>Retry open</span>":"<span class='flag low'>"+(cd.earned===0?'Missing':'Retry')+"</span>"); }
+      rows+="<tr><td>"+S.esc(o.s.name)+"</td><td>"+cell+"</td><td>"+pc+"</td><td><div class='bar'><i style='width:"+bar+"%'></i></div></td><td>"+st+"</td></tr>"; });
+    document.getElementById('ba-table').innerHTML=rows;
   },
 
-  // ── PER-STUDENT RETRY TOGGLE ──────────────────────────────────────────────────
-  async toggleStudentRetry(studentId, allow) {
-    const token = localStorage.getItem('apcse_teacher_token');
-    const r = await fetch(`${API}/api/teacher/classes/${this.classCode}/students/${studentId}/retry`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-      body: JSON.stringify({ retry_override: allow }),
+  showTab(n){ ['overview','student','assignment','settings'].forEach(t=>document.getElementById(t).classList.toggle('gb-hidden',t!==n));
+    Array.prototype.forEach.call(document.querySelectorAll('#gb-tabs .gb-tab'),b=>b.classList.toggle('on',b.dataset.tab===n)); },
+  gotoStudent(i){ document.getElementById('rep-picker').value=i; this.renderStudent(i); this.showTab('student'); },
+  gotoAssign(i){ document.getElementById('ba-picker').value=i; this.renderAssignment(i); this.showTab('assignment'); },
+
+  initPickers(){
+    const sp=document.getElementById('rep-picker'); sp.innerHTML=''; this.model.students.forEach((s,i)=>sp.add(new Option(s.name,i)));
+    const ap=document.getElementById('ba-picker'); ap.innerHTML=''; this.model.cols.forEach((c,i)=>ap.add(new Option((c.lesson==='exam'?c.lessonName:c.lesson+' '+c.type),i)));
+    sp.onchange=()=>this.renderStudent(+sp.value); ap.onchange=()=>this.renderAssignment(+ap.value);
+  },
+  bindControls(){
+    const S=this;
+    document.getElementById('gb-tabs').addEventListener('click',e=>{ if(e.target.dataset.tab) S.showTab(e.target.dataset.tab); });
+    document.getElementById('gb-viewseg').addEventListener('click',e=>{ if(!e.target.dataset.view)return; S.state.view=e.target.dataset.view; S.segOn('gb-viewseg',e.target); S.renderGrid(); });
+    const dr=document.getElementById('gb-densrange'); dr.value=S.state.densityScale; dr.addEventListener('input',e=>{ S.state.densityScale=+e.target.value; S.applyDensity(); });
+    document.addEventListener('click',e=>{ const dd=document.getElementById('gb-unitdd'); if(dd && !dd.contains(e.target)){ const p=document.getElementById('gb-unitpanel'); if(p)p.classList.add('gb-hidden'); } });
+    document.getElementById('gb-calcseg').addEventListener('click',e=>{ if(!e.target.dataset.calc)return; S.state.calc=e.target.dataset.calc; S.segOn('gb-calcseg',e.target); S.renderAll(); });
+    document.getElementById('gb-search').addEventListener('input',e=>{ S.state.search=e.target.value; S.renderGrid(); });
+    document.getElementById('gb-thr').addEventListener('input',e=>{ S.state.threshold=+e.target.value; document.getElementById('gb-thrv').textContent=S.state.threshold+'%'; S.renderAll(); });
+    document.getElementById('gb-letters').addEventListener('change',e=>{ S.state.letters=e.target.checked; S.renderGrid(); });
+    const bindRetry=(id,key)=>{ const el=document.getElementById(id); el.checked=!!S.state.retryTypes[key]; el.addEventListener('change',ev=>{ S.state.retryTypes[key]=ev.target.checked; S.renderAll(); }); };
+    bindRetry('rt-lesson','lesson'); bindRetry('rt-ex','exercise'); bindRetry('rt-quiz','quiz'); bindRetry('rt-exam','exam');
+    const bindInc=(id,key)=>{ document.getElementById(id).addEventListener('change',ev=>{ S.state.include[key]=ev.target.checked; S.renderAll(); }); };
+    bindInc('inc-lesson','lesson'); bindInc('inc-ex','exercise'); bindInc('inc-quiz','quiz'); bindInc('inc-exam','exam');
+  },
+  segOn(w,btn){ Array.prototype.forEach.call(document.getElementById(w).children,b=>b.classList.toggle('on',b===btn)); },
+  applyDensity(){ const g=document.getElementById('gb-table'); if(!g)return; const t=Math.max(0,Math.min(1,(this.state.densityScale||0)/100));
+    const A={wn:100,wg:30,wp:36,gfs:7,cfs:7,cmw:14,cch:14,trh:20,sbh:23,mxfs:6.5,ini:14,lt:14,nm:60,sbfs:8,cpx:2};
+    const B={wn:196,wg:60,wp:70,gfs:14,cfs:14,cmw:44,cch:28,trh:40,sbh:35,mxfs:10.5,ini:26,lt:26,nm:114,sbfs:12,cpx:7};
+    const L=(a,b,d)=>(a+(b-a)*t).toFixed(d==null?1:d)+'px', s=g.style;
+    s.setProperty('--w-name',L(A.wn,B.wn)); s.setProperty('--w-grade',L(A.wg,B.wg)); s.setProperty('--w-pts',L(A.wp,B.wp));
+    s.setProperty('--gfs',L(A.gfs,B.gfs,2)); s.setProperty('--cfs',L(A.cfs,B.cfs,2));
+    s.setProperty('--cmw',L(A.cmw,B.cmw)); s.setProperty('--cch',L(A.cch,B.cch));
+    s.setProperty('--trh',L(A.trh,B.trh)); s.setProperty('--sbh',L(A.sbh,B.sbh)); s.setProperty('--mxfs',L(A.mxfs,B.mxfs,2));
+    s.setProperty('--sbfs',L(A.sbfs,B.sbfs,2)); s.setProperty('--cpx',L(A.cpx,B.cpx,2));
+    s.setProperty('--inisz',L(A.ini,B.ini)); s.setProperty('--ltsz',L(A.lt,B.lt)); s.setProperty('--nmmax',L(A.nm,B.nm)); },
+
+  copyCode(){ if(navigator.clipboard)navigator.clipboard.writeText(this.classCode); const e=document.getElementById('gb-copy'); e.textContent='copied'; setTimeout(()=>e.textContent='copy',1200); },
+  copyJoinLink(){ const url='https://www.apcsexamprep.com/pages/join?code='+this.classCode; navigator.clipboard.writeText(url).catch(()=>prompt('Copy this link:',url)); },
+
+  // ---- exports (unchanged from prior dashboard) ----
+  buildGradebookCSV(){
+    const d=this.data||{}, summary=d.summary||[], units=(d.course_config&&d.course_config.units)||{}, uids=Object.keys(units);
+    const headers=['Name','Student Ref','Last Active','Overall %'];
+    uids.forEach(uid=>{ const lbl=String((units[uid]&&units[uid].label)||uid).replace(/:.*$/,''); headers.push(lbl+' %',lbl+' Avg Score'); });
+    const cols=[];
+    uids.forEach(uid=>{ const u=units[uid]||{}, lessons=u.lessons||[], acts=u.activities||ACTIVITIES;
+      lessons.forEach(l=>acts.forEach(a=>{ cols.push({uid:uid,l:l,a:a}); headers.push(String(l)+' '+(ACT_LABEL[a]||a)); }));
+      if(u.case_file){ cols.push({uid:uid,l:'case-file',a:'case-file'}); headers.push((u.case_file.label)||'Case File'); }
+      if(u.exam){ cols.push({uid:uid,l:'exam',a:'exam'}); headers.push((u.exam.label)||'Unit Exam'); }
     });
-    const d = await r.json();
-    if (d.ok) this.loadData(); // re-render
-    else alert('Failed to update retry: ' + (d.error || 'Unknown error'));
-  },
-
-  async clearStudentRetry(studentId) {
-    const token = localStorage.getItem('apcse_teacher_token');
-    const r = await fetch(`${API}/api/teacher/classes/${this.classCode}/students/${studentId}/retry`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-      body: JSON.stringify({ retry_override: null }),
+    const lines=[headers];
+    summary.forEach(s=>{ let comp=0,tot=0; uids.forEach(uid=>{ const un=s.units&&s.units[uid]; if(un){comp+=un.completed||0;tot+=un.total||0;} });
+      const overall=tot>0?Math.round(100*comp/tot):0;
+      const row=[s.student.name||'',s.student.ref||'',s.student.last_active?this.formatDate(s.student.last_active):'Never',overall+'%'];
+      uids.forEach(uid=>{ const un=(s.units&&s.units[uid])||{}; row.push((un.pct!=null?un.pct:0)+'%',un.avg_score!=null?String(un.avg_score):''); });
+      cols.forEach(c=>{ const rec=s.detail&&s.detail[c.uid]&&s.detail[c.uid][c.l]?s.detail[c.uid][c.l][c.a]:null; let v=''; if(rec){ if(rec.score!=null)v=String(rec.score); else if(rec.completed)v='Complete'; } row.push(v); });
+      lines.push(row);
     });
-    const d = await r.json();
-    if (d.ok) this.loadData();
-    else alert('Failed to reset retry: ' + (d.error || 'Unknown error'));
+    return lines.map(r=>r.map(f=>{ const x=(f==null)?'':String(f); return /[",\r\n]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x; }).join(',')).join('\r\n');
+  },
+  exportGradebook(){ if(!this.data||!this.data.summary){ alert('No data loaded yet.'); return; }
+    try{ const csv=this.buildGradebookCSV(); const blob=new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8;'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=this.classCode+'-gradebook.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1500); }catch(e){ alert('Could not build the gradebook file.'); } },
+  async exportCSV(){
+    const token=localStorage.getItem('apcse_teacher_token');
+    try{ const r=await fetch(API+'/api/teacher/classes/'+this.classCode+'/export',{headers:{'Authorization':'Bearer '+token}});
+      if(r.status===401){ localStorage.removeItem('apcse_teacher_token'); location.href='/pages/cyber-class'; return; }
+      if(!r.ok) throw new Error('status '+r.status);
+      const blob=await r.blob(); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=this.classCode+'-full-data.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1500);
+    }catch(e){ alert('Could not export CSV. Refresh and try again.'); }
+  },
+  // Canvas import file. Preflight first: Canvas silently skips any student it
+  // cannot match on an ID column, so the teacher sees who is missing here
+  // rather than discovering it in the Canvas gradebook after importing.
+  async exportCanvasCSV(){
+    const token=localStorage.getItem('apcse_teacher_token');
+    const q='?format=canvas&scope=unit';
+    try{
+      const pre=await fetch(API+'/api/teacher/classes/'+this.classCode+'/export'+q+'&preflight=1',{headers:{'Authorization':'Bearer '+token}});
+      if(pre.status===401){ localStorage.removeItem('apcse_teacher_token'); location.href='/pages/cyber-class'; return; }
+      if(pre.ok){
+        const pf=await pre.json(), missing=(pf&&pf.unmatchable)||[];
+        if(missing.length){
+          const shown=missing.slice(0,10).join('\n  '), more=missing.length>10?('\n  and '+(missing.length-10)+' more'):'';
+          if(!confirm(missing.length+' of '+pf.students+' students have no usable Student Ref, so Canvas will skip them:\n\n  '+shown+more+'\n\nSet each one to the SIS User ID (preferred) or SIS Login ID from your Canvas gradebook export, then try again.\n\nDownload anyway?')) return;
+        }
+      }
+    }catch(e){ /* preflight is advisory: never block the download */ }
+    try{ const r=await fetch(API+'/api/teacher/classes/'+this.classCode+'/export'+q,{headers:{'Authorization':'Bearer '+token}});
+      if(r.status===401){ localStorage.removeItem('apcse_teacher_token'); location.href='/pages/cyber-class'; return; }
+      if(!r.ok) throw new Error('status '+r.status);
+      const blob=await r.blob(); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=this.classCode+'-canvas.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1500);
+    }catch(e){ alert('Could not export the Canvas CSV. Refresh and try again.'); }
   },
 
-  // ── UNLOCK MODAL ─────────────────────────────────────────────────────────────
-  openUnlockModal(studentId, progressId, studentName) {
-    this._unlockTarget = { studentId, progressId, studentName };
-
-    let modal = document.getElementById('unlock-modal');
-    let bd    = document.getElementById('unlock-backdrop');
-    if (!modal) {
-      bd = document.createElement('div');
-      bd.id = 'unlock-backdrop';
-      bd.setAttribute('style', 'position:fixed!important;inset:0!important;z-index:10000!important;background:rgba(0,0,0,.6)!important;');
-      bd.addEventListener('click', function() { TCDash.closeUnlockModal(); });
-      document.body.appendChild(bd);
-
-      modal = document.createElement('div');
-      modal.id = 'unlock-modal';
-      modal.setAttribute('style', [
-        'position:fixed!important', 'top:50%!important', 'left:50%!important',
-        'transform:translate(-50%,-50%)!important', 'z-index:10001!important',
-        'background:#1E1B4B!important', 'border:2px solid #E8A020!important',
-        'border-radius:12px!important', 'padding:32px 36px!important',
-        'max-width:420px!important', 'width:90vw!important',
-        'box-shadow:0 8px 40px rgba(0,0,0,.5)!important',
-        'font-family:Georgia,serif!important', 'text-align:center!important',
-      ].join(';'));
-      document.body.appendChild(modal);
-    }
-
-    bd.style.setProperty('display', 'block', 'important');
-    modal.style.setProperty('display', 'block', 'important');
-    modal.innerHTML =
-      '<div style="font-size:32px!important;margin-bottom:8px!important">&#128274;</div>' +
-      '<div style="color:#E8A020!important;-webkit-text-fill-color:#E8A020!important;font-size:18px!important;font-weight:700!important;margin-bottom:6px!important">Unlock Quiz</div>' +
-      '<div style="color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-size:14px!important;margin-bottom:24px!important">' +
-        'Unlock the final-grade submission for <strong style="color:#fff!important;-webkit-text-fill-color:#fff!important">' + this.esc(studentName) + '</strong>.' +
-      '</div>' +
-      '<div style="display:flex!important;gap:10px!important;justify-content:center!important;flex-wrap:wrap!important;">' +
-        '<button onclick="TCDash.doUnlock(false)" style="background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;' +
-          'border:none!important;padding:10px 18px!important;border-radius:7px!important;font-size:14px!important;' +
-          'font-weight:700!important;cursor:pointer!important;font-family:Georgia,serif!important;">Unlock (Keep Score)</button>' +
-        '<button onclick="TCDash.doUnlock(true)" style="background:#DC2626!important;color:#fff!important;-webkit-text-fill-color:#fff!important;' +
-          'border:none!important;padding:10px 18px!important;border-radius:7px!important;font-size:14px!important;' +
-          'font-weight:700!important;cursor:pointer!important;font-family:Georgia,serif!important;">Unlock &amp; Reset Score</button>' +
-        '<button onclick="TCDash.closeUnlockModal()" style="background:transparent!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;' +
-          'border:1px solid #4B5563!important;padding:10px 14px!important;border-radius:7px!important;font-size:13px!important;' +
-          'cursor:pointer!important;font-family:Georgia,serif!important;">Cancel</button>' +
-      '</div>';
+  // ---- roster tools (unchanged) ----
+  _token(){ return localStorage.getItem('apcse_teacher_token'); },
+  _findStudent(id){ const list=(this.data&&this.data.summary)||[]; const hit=list.find(x=>x.student&&x.student.id===id); return hit?hit.student:null; },
+  async _api(method,path,body){
+    try{ const opts={method:method,headers:{'Authorization':'Bearer '+this._token()}}; if(body){opts.headers['Content-Type']='application/json';opts.body=JSON.stringify(body);}
+      const res=await fetch(API+path,opts);
+      if(res.status===401){ localStorage.removeItem('apcse_teacher_token'); location.href='/pages/cyber-class'; return {ok:false,error:'Session expired.'}; }
+      let data={}; try{ data=await res.json(); }catch(e){}
+      return res.ok?{ok:true,data:data}:{ok:false,error:(data&&data.error)||('Request failed ('+res.status+')')};
+    }catch(e){ return {ok:false,error:'Network error.'}; }
   },
+  async renameStudent(id){ const stu=this._findStudent(id); if(!stu)return; const next=prompt('New name for '+stu.name+':',stu.name); if(next==null)return; const name=next.trim(); if(name.length<1){ alert('Name cannot be empty.'); return; } if(name===stu.name)return;
+    const r=await this._api('PATCH','/api/teacher/classes/'+this.classCode+'/students/'+id,{display_name:name}); if(r.ok){ await this.loadProgress(this._token()); this.showTab('student'); } else alert(r.error||'Could not rename student.'); },
+  async resetPin(id){ const stu=this._findStudent(id); if(!stu)return; const suggested=String(Math.floor(1000+Math.random()*9000)); const pin=prompt('Set a new 4-digit PIN for '+stu.name+'.',suggested); if(pin==null)return; const clean=pin.trim(); if(!/^\d{4}$/.test(clean)){ alert('PIN must be exactly 4 digits.'); return; }
+    const r=await this._api('PATCH','/api/teacher/classes/'+this.classCode+'/students/'+id,{pin:clean}); if(r.ok) alert(stu.name+"'s new PIN is "+clean+'.'); else alert(r.error||'Could not reset PIN.'); },
+  async removeStudent(id){ const stu=this._findStudent(id); if(!stu)return; if(!confirm('Remove '+stu.name+' from this class? This permanently deletes their progress and cannot be undone.'))return;
+    const r=await this._api('DELETE','/api/teacher/classes/'+this.classCode+'/students/'+id); if(r.ok){ await this.loadProgress(this._token()); } else alert(r.error||'Could not remove student.'); },
+  async deleteClass(){ const name=(this.data&&this.data.class&&this.data.class.class_name)||this.classCode; const count=((this.data&&this.data.summary)||[]).length;
+    const typed=prompt('This permanently deletes "'+name+'" and all '+count+' student(s). This CANNOT be undone.\n\nType the class code ('+this.classCode+') to confirm:'); if(typed==null)return;
+    if(typed.trim().toUpperCase()!==this.classCode.toUpperCase()){ alert('Class code did not match. Nothing was deleted.'); return; }
+    const r=await this._api('DELETE','/api/teacher/classes/'+this.classCode); if(r.ok){ alert('Class deleted.'); location.href='/pages/cyber-class'; } else alert(r.error||'Could not delete class.'); },
 
-  closeUnlockModal() {
-    const modal = document.getElementById('unlock-modal');
-    const bd    = document.getElementById('unlock-backdrop');
-    if (modal) modal.style.setProperty('display', 'none', 'important');
-    if (bd)    bd.style.setProperty('display', 'none', 'important');
-  },
-
-  async doUnlock(reset) {
-    if (!this._unlockTarget) return;
-    const { progressId } = this._unlockTarget;
-    const token = localStorage.getItem('apcse_teacher_token');
-    const r = await fetch(`${API}/api/teacher/classes/${this.classCode}/progress/${progressId}/unlock`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-      body: JSON.stringify({ reset }),
-    });
-    const d = await r.json();
-    this.closeUnlockModal();
-    if (d.ok) this.loadData();
-    else alert('Failed to unlock: ' + (d.error || 'Unknown error'));
-  },
-
-
-  },
-
-  async toggleClassRetry() {
-    const newVal = !this.currentRetry;
-    const token  = localStorage.getItem('apcse_teacher_token');
-    const r = await fetch(`${API}/api/teacher/classes/${this.classCode}/retry`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-      body: JSON.stringify({ retry_allowed: newVal }),
-    });
-    const d = await r.json();
-    if (!d.ok) { alert('Failed to update retry setting.'); return; }
-    this.currentRetry = newVal;
-    document.getElementById('dash-retry-display').textContent = newVal ? 'On' : 'Off';
-    const btn = document.getElementById('dash-retry-btn');
-    if (btn) btn.style.setProperty('background', newVal ? '#0F766E' : '#DC2626', 'important');
-    // Re-render table so per-student labels update
-    this.loadData();
-  },
-
-  openThresholdModal() {
-    const input = document.getElementById('threshold-input');
-    input.value = this.currentThreshold || 80;
-    document.getElementById('threshold-save-msg').style.setProperty('display', 'none', 'important');
-    document.getElementById('threshold-modal').style.setProperty('display', 'block', 'important');
-    document.getElementById('threshold-backdrop').style.setProperty('display', 'block', 'important');
-    input.focus();
-  },
-
-  closeThresholdModal() {
-    document.getElementById('threshold-modal').style.setProperty('display', 'none', 'important');
-    document.getElementById('threshold-backdrop').style.setProperty('display', 'none', 'important');
-  },
-
-  async saveThreshold() {
-    const val = parseInt(document.getElementById('threshold-input').value, 10);
-    if (isNaN(val) || val < 50 || val > 100) {
-      alert('Please enter a number between 50 and 100.');
-      return;
-    }
-    const token = localStorage.getItem('apcse_teacher_token');
-    try {
-      const r = await fetch(`${API}/api/teacher/classes/${this.classCode}/threshold`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-        body: JSON.stringify({ mastery_threshold: val }),
-      });
-      const d = await r.json();
-      if (!d.ok) { alert('Failed to save: ' + (d.error || 'Unknown error')); return; }
-      this.currentThreshold = val;
-      document.getElementById('dash-threshold-display').textContent = val;
-      const msg = document.getElementById('threshold-save-msg');
-      msg.textContent = '\u2713 Saved';
-      msg.style.setProperty('display', 'inline', 'important');
-      setTimeout(() => { this.closeThresholdModal(); }, 1200);
-    } catch(e) {
-      alert('Network error. Please try again.');
-    }
-  },
-
-  async exportCSV() {
-    const token = localStorage.getItem('apcse_teacher_token');
-    window.location.href = `${API}/api/teacher/classes/${this.classCode}/export?token=${token}`;
-    // Note: The export endpoint uses query param token for download links
-  },
-
-  copyJoinLink() {
-    const url = `https://www.apcsexamprep.com/pages/join?code=${this.classCode}`;
-    navigator.clipboard.writeText(url).then(() => {
-      const btn = document.querySelector('[onclick="TCDash.copyJoinLink()"]');
-      const orig = btn.textContent;
-      btn.textContent = '\u2713 Copied!';
-      setTimeout(() => { btn.textContent = orig; }, 2000);
-    }).catch(() => prompt('Copy this link:', `https://www.apcsexamprep.com/pages/join?code=${this.classCode}`));
-  },
-
-  formatDate(dt) {
-    if (!dt) return 'Never';
-    const d = new Date(dt);
-    const today = new Date();
-    const diff = Math.floor((today - d) / 86400000);
-    if (diff === 0) return 'Today';
-    if (diff === 1) return 'Yesterday';
-    if (diff < 7) return diff + 'd ago';
-    return d.toLocaleDateString('en-US', { month:'short', day:'numeric' });
-  },
-
-  formatCourse(c) {
-    return { 'ap-cybersecurity':'AP Cybersecurity', 'ap-csa':'AP CSA', 'ap-csp':'AP CSP' }[c] || c;
-  },
-
-  esc(str) {
-    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  },
+  formatDate(dt){ if(!dt)return'Never'; const d=new Date(dt), today=new Date(); const diff=Math.floor((today-d)/86400000);
+    if(diff===0)return'Today'; if(diff===1)return'Yesterday'; if(diff<7)return diff+'d ago'; return d.toLocaleDateString('en-US',{month:'short',day:'numeric'}); },
+  formatCourse(c){ return {'ap-cybersecurity':'AP Cybersecurity','ap-csa':'AP CSA','ap-csp':'AP CSP'}[c]||c; },
+  esc(str){ return String(str==null?'':str).replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>').replace(/"/g,'"'); }
 };
-
-// Support token in query for CSV export
-const urlToken = new URLSearchParams(window.location.search).get('token');
-if (urlToken) localStorage.setItem('apcse_teacher_token', urlToken);
-
-document.addEventListener('DOMContentLoaded', () => TCDash.init());
+document.addEventListener('DOMContentLoaded',()=>TCDash.init());
+})();
 </script>
