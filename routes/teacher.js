@@ -553,7 +553,7 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
     if (!courseConfig) return res.status(400).json({ error: `Course ${cls.course} not in manifest` });
 
     const students = db.prepare(
-      'SELECT id, display_name, student_ref, last_active FROM students WHERE class_id = ? ORDER BY display_name'
+      'SELECT id, display_name, student_ref, last_active, active FROM students WHERE class_id = ? ORDER BY display_name'
     ).all(cls.id);
 
     const allProgress = db.prepare(
@@ -584,11 +584,17 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
     //  Same merged grid, different shape. Everything above this point is shared
     //  with the native export, so the two files can never disagree about a grade.
     if (format === 'canvas') {
+      // Deactivated students stay out of Canvas. Their history survives here and
+      // in the native export, which is the teacher's own record, but pushing a
+      // withdrawn student into a live Canvas gradebook creates a row nobody
+      // asked for and a name the teacher then has to match by hand.
+      const canvasStudents = students.filter((s) => s.active !== 0);
+
       const built = buildCanvasUnitExport({
         course: cls.course,
         courseConfig,
         className: cls.class_name,
-        students,
+        students: canvasStudents,
         cellFor: (sid, unit, lesson, act) => (map[sid] || {})[`${unit}|${lesson}|${act}`],
       });
 

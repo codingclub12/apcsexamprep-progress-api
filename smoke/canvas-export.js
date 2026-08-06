@@ -97,6 +97,11 @@ async function getCsv(url, opts) {
     ('s4','c1','M. Chen','has space','x'),
     ('s5','c1','Mary Jo Watson','watson, mary','x')`);
 
+  // Deactivated, with a perfectly good ref. Must not reach Canvas at all: a
+  // withdrawn student is a row the teacher would have to match by hand.
+  run(`INSERT INTO students (id,class_id,display_name,student_ref,pin_hash,active)
+       VALUES ('s9','c1','Gone Student','gone@sfcakings.org','x',0)`);
+
   let pid = 0;
   const prog = (sid, l, act, completed, score) =>
     run(`INSERT INTO progress (id,student_id,class_id,course,unit,lesson,activity_type,completed,score)
@@ -143,7 +148,9 @@ async function getCsv(url, opts) {
   ok('  every assignment is out of 100', points.slice(5).every((p) => p === '100'), points.slice(5));
 
   const dataRows = lines.slice(2).filter((l) => l.length).map(splitCsv);
-  ok('  one row per student, no instruction row', dataRows.length === 5, dataRows.length);
+  ok('  one row per ACTIVE student, no instruction row', dataRows.length === 5, dataRows.length);
+  ok('  a deactivated student is not exported to Canvas at all',
+    raw.indexOf('Gone Student') === -1 && raw.indexOf('gone@sfcakings.org') === -1);
 
   // ── 2. Every data cell is a number or a blank ──────────────────────────────
   console.log('\n2. No cell Canvas would reject');
@@ -201,7 +208,7 @@ async function getCsv(url, opts) {
   {
     const pf = await (await fetch(base + '/api/teacher/classes/CYBER-CNV/export?format=canvas&scope=unit&preflight=1',
       { headers: auth })).json();
-    ok('  counts the roster', pf.students === 5, pf.students);
+    ok('  counts the ACTIVE roster only', pf.students === 5, pf.students);
     ok('  counts who Canvas can match', pf.matchable === 2, pf.matchable);
     ok('  names exactly who it cannot', pf.unmatchable.slice().sort().join('|') === 'Jane D.|M. Chen|Mary Jo Watson',
       pf.unmatchable);

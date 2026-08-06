@@ -25,6 +25,14 @@
 #tcdash-wrap .gb-btn:hover{border-color:#94a3b8!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
 #tcdash-wrap .gb-btn.primary{background:#1e3a5f!important;border-color:#1e3a5f!important;color:#fff!important;-webkit-text-fill-color:#fff;}
 #tcdash-wrap .gb-btn.primary:hover{background:#274b78!important;color:#fff!important;-webkit-text-fill-color:#fff;}
+#tcdash-wrap .gb-export-menu{position:relative!important;display:inline-block!important;}
+#tcdash-wrap .gb-export-list{display:none;position:absolute!important;right:0!important;top:calc(100% + 6px)!important;z-index:50!important;background:#fff!important;border:1px solid #d7dee8!important;border-radius:8px!important;box-shadow:0 8px 24px rgba(15,32,56,.16)!important;min-width:280px!important;overflow:hidden!important;}
+#tcdash-wrap .gb-export-list.on{display:block!important;}
+#tcdash-wrap .gb-export-list button{display:block!important;width:100%!important;text-align:left!important;background:#fff!important;border:none!important;border-bottom:1px solid #eef2f7!important;padding:10px 14px!important;cursor:pointer!important;font:inherit!important;}
+#tcdash-wrap .gb-export-list button:last-child{border-bottom:none!important;}
+#tcdash-wrap .gb-export-list button:hover{background:#f4f7fb!important;}
+#tcdash-wrap .gb-export-list b{display:block!important;color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f!important;font-size:13px!important;}
+#tcdash-wrap .gb-export-list span{display:block!important;color:#6b7a90!important;-webkit-text-fill-color:#6b7a90!important;font-size:11px!important;margin-top:2px!important;}
 #tcdash-wrap .gb-btn.sm{padding:6px 11px!important;font-size:12px!important;border-radius:8px!important;}
 #tcdash-wrap .gb-btn.danger{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c;border-color:#fecaca!important;}
 
@@ -232,7 +240,14 @@
         </div>
         <div class="gb-actions">
           <a class="gb-btn" href="/pages/cyber-class">All classes</a>
-          <button class="gb-btn primary" onclick="TCDash.exportGradebook()">Export gradebook</button>
+          <span class="gb-export-menu" id="gb-export-menu">
+            <button class="gb-btn primary" onclick="TCDash.toggleExportMenu(event)">Export &#9662;</button>
+            <div class="gb-export-list" id="gb-export-list">
+              <button onclick="TCDash.pickExport('gradebook')"><b>Gradebook spreadsheet</b><span>Every activity, for Excel or Sheets</span></button>
+              <button onclick="TCDash.pickExport('canvas')"><b>Canvas import file</b><span>One assignment per unit, ready to import</span></button>
+              <button onclick="TCDash.pickExport('full')"><b>Full data CSV</b><span>Raw scores and completion from the server</span></button>
+            </div>
+          </span>
         </div>
       </div>
 
@@ -651,6 +666,7 @@ window.TCDash = {
     document.getElementById('rep-tools').innerHTML=
       "<button class='gb-btn sm' onclick=\"TCDash.renameStudent('"+s.id+"')\">Rename</button>"+
       "<button class='gb-btn sm' onclick=\"TCDash.resetPin('"+s.id+"')\">Reset PIN</button>"+
+      "<button class='gb-btn sm' onclick=\"TCDash.setStudentRef('"+s.id+"')\">Canvas ref</button>"+
       "<button class='gb-btn sm danger' onclick=\"TCDash.removeStudent('"+s.id+"')\">Remove</button>";
     let miss=0,low=0; this.model.cols.forEach(c=>{ if(!S.counts(c.activity))return; const cd=S.cellData(s,c); if(!cd.started)miss++; else if(cd.pct<S.state.threshold)low++; });
     const mini=(l,v)=>"<div class='mini'><div class='l'>"+l+"</div><div class='v'>"+v+"</div></div>";
@@ -771,6 +787,20 @@ window.TCDash = {
   // Canvas import file. Preflight first: Canvas silently skips any student it
   // cannot match on an ID column, so the teacher sees who is missing here
   // rather than discovering it in the Canvas gradebook after importing.
+  toggleExportMenu(ev){ if(ev)ev.stopPropagation(); const el=document.getElementById('gb-export-list'); if(el)el.classList.toggle('on'); },
+  pickExport(which){ const el=document.getElementById('gb-export-list'); if(el)el.classList.remove('on');
+    if(which==='gradebook')return this.exportGradebook();
+    if(which==='canvas')return this.exportCanvasCSV();
+    return this.exportCSV(); },
+  // Set the Canvas SIS identifier for one student. The server validates it with
+  // the same rule the export applies, so a ref that would silently export blank
+  // is refused here rather than dropping the student during the Canvas import.
+  async setStudentRef(id){ const stu=this._findStudent(id); if(!stu)return;
+    const next=prompt('Canvas ref for '+stu.name+'.\n\nUse the SIS User ID from your Canvas gradebook export (a student number is best). An email works too. Leave blank to clear.',stu.ref||'');
+    if(next==null)return;
+    const r=await this._api('PATCH','/api/teacher/classes/'+this.classCode+'/students/'+id,{student_ref:next.trim()});
+    if(r.ok){ await this.loadProgress(this._token()); this.showTab('student'); }
+    else alert(r.error||'Could not set the Canvas ref.'); },
   async exportCanvasCSV(){
     const token=localStorage.getItem('apcse_teacher_token');
     const q='?format=canvas&scope=unit';
@@ -780,8 +810,12 @@ window.TCDash = {
       if(pre.ok){
         const pf=await pre.json(), missing=(pf&&pf.unmatchable)||[];
         if(missing.length){
-          const shown=missing.slice(0,10).join('\n  '), more=missing.length>10?('\n  and '+(missing.length-10)+' more'):'';
-          if(!confirm(missing.length+' of '+pf.students+' students have no usable Student Ref, so Canvas will skip them:\n\n  '+shown+more+'\n\nSet each one to the SIS User ID (preferred) or SIS Login ID from your Canvas gradebook export, then try again.\n\nDownload anyway?')) return;
+          const matched=pf.students-missing.length;
+          const shown=missing.slice(0,5).join('\n  '), more=missing.length>5?('\n  and '+(missing.length-5)+' more'):'';
+          const head=(matched===0)
+            ? 'No students can be matched to Canvas yet, so this file would import nothing.'
+            : (matched+' of '+pf.students+' students will import. '+missing.length+' will be skipped.');
+          if(!confirm(head+'\n\nTo fix: open the Students tab, click Canvas ref, and paste that student\'s SIS User ID from your Canvas gradebook export.\n\nSkipped:\n  '+shown+more+'\n\nDownload anyway?')) return;
         }
       }
     }catch(e){ /* preflight is advisory: never block the download */ }
@@ -819,6 +853,12 @@ window.TCDash = {
   formatCourse(c){ return {'ap-cybersecurity':'AP Cybersecurity','ap-csa':'AP CSA','ap-csp':'AP CSP'}[c]||c; },
   esc(str){ return String(str==null?'':str).replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>').replace(/"/g,'"'); }
 };
+// Close the export menu on any outside click, so it cannot be left hanging
+// over the gradebook.
+document.addEventListener('click', function(ev){
+  const menu=document.getElementById('gb-export-menu'), list=document.getElementById('gb-export-list');
+  if(list && menu && !menu.contains(ev.target)) list.classList.remove('on');
+});
 document.addEventListener('DOMContentLoaded',()=>TCDash.init());
 })();
 </script>
