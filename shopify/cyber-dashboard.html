@@ -244,7 +244,8 @@
             <button class="gb-btn primary" onclick="TCDash.toggleExportMenu(event)">Export &#9662;</button>
             <div class="gb-export-list" id="gb-export-list">
               <button onclick="TCDash.pickExport('gradebook')"><b>Gradebook spreadsheet</b><span>Every activity, for Excel or Sheets</span></button>
-              <button onclick="TCDash.pickExport('canvas')"><b>Canvas import file</b><span>One assignment per unit, ready to import</span></button>
+              <button onclick="TCDash.pickExport('canvas')"><b>Canvas: one per unit</b><span>Five Canvas assignments, a unit grade in each</span></button>
+              <button onclick="TCDash.pickExport('canvas-activity')"><b>Canvas: one per activity</b><span>Every lesson, quiz, case file and exam as its own assignment</span></button>
               <button onclick="TCDash.pickExport('full')"><b>Full data CSV</b><span>Raw scores and completion from the server</span></button>
             </div>
           </span>
@@ -406,7 +407,7 @@
 <h4>Canvas gradebook CSV</h4>
 <p>One assignment per unit, formatted to import straight into Canvas. Set each student's Student Ref to their Canvas SIS User ID first.</p>
 </div>
-<button class="gb-btn" onclick="TCDash.exportCanvasCSV()">Download Canvas CSV</button>
+<button class="gb-btn" onclick="TCDash.exportCanvasCSV('unit')">Download Canvas CSV</button>
 </div>
           <div class="set-row">
 <div class="txt">
@@ -790,7 +791,8 @@ window.TCDash = {
   toggleExportMenu(ev){ if(ev)ev.stopPropagation(); const el=document.getElementById('gb-export-list'); if(el)el.classList.toggle('on'); },
   pickExport(which){ const el=document.getElementById('gb-export-list'); if(el)el.classList.remove('on');
     if(which==='gradebook')return this.exportGradebook();
-    if(which==='canvas')return this.exportCanvasCSV();
+    if(which==='canvas')return this.exportCanvasCSV('unit');
+    if(which==='canvas-activity')return this.exportCanvasCSV('activity');
     return this.exportCSV(); },
   // Set the Canvas SIS identifier for one student. The server validates it with
   // the same rule the export applies, so a ref that would silently export blank
@@ -801,9 +803,10 @@ window.TCDash = {
     const r=await this._api('PATCH','/api/teacher/classes/'+this.classCode+'/students/'+id,{student_ref:next.trim()});
     if(r.ok){ await this.loadProgress(this._token()); this.showTab('student'); }
     else alert(r.error||'Could not set the Canvas ref.'); },
-  async exportCanvasCSV(){
+  async exportCanvasCSV(scope){
     const token=localStorage.getItem('apcse_teacher_token');
-    const q='?format=canvas&scope=unit';
+    const sc=(scope==='activity')?'activity':'unit';
+    const q='?format=canvas&scope='+sc;
     try{
       const pre=await fetch(API+'/api/teacher/classes/'+this.classCode+'/export'+q+'&preflight=1',{headers:{'Authorization':'Bearer '+token}});
       if(pre.status===401){ localStorage.removeItem('apcse_teacher_token'); location.href='/pages/cyber-class'; return; }
@@ -822,7 +825,7 @@ window.TCDash = {
     try{ const r=await fetch(API+'/api/teacher/classes/'+this.classCode+'/export'+q,{headers:{'Authorization':'Bearer '+token}});
       if(r.status===401){ localStorage.removeItem('apcse_teacher_token'); location.href='/pages/cyber-class'; return; }
       if(!r.ok) throw new Error('status '+r.status);
-      const blob=await r.blob(); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=this.classCode+'-canvas.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1500);
+      const blob=await r.blob(); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=this.classCode+'-canvas-'+sc+'.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1500);
     }catch(e){ alert('Could not export the Canvas CSV. Refresh and try again.'); }
   },
 
