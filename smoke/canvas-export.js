@@ -397,6 +397,65 @@ async function getCsv(url, opts) {
     ok('  an unknown scope is still refused', bogus.status === 400, bogus.status);
   }
 
+  // ── 11. The export matches what the dashboard is showing ──────────────────
+  //  The dashboard has four include toggles and a unit selection. An export
+  //  that ignores them hands a teacher a different gradebook from the one on
+  //  their screen. Both filters are opt-in, so an absent param still means the
+  //  whole course and no existing caller changes.
+  console.log('\n11. include= and units= follow the dashboard');
+  {
+    const head = async (q) => {
+      const r = await getCsv(base + '/api/teacher/classes/CYBER-CNV/export' + q, { headers: auth });
+      return { status: r.status, cols: splitCsv(r.text.split('\r\n')[0]) };
+    };
+
+    const all = await head('?format=canvas&scope=activity');
+    const quizOnly = await head('?format=canvas&scope=activity&include=quiz');
+    ok('  include=quiz drops every non-quiz column',
+      quizOnly.cols.slice(5).every((c) => / Quiz$/.test(c) || /Case File$/.test(c)),
+      quizOnly.cols.slice(5).filter((c) => !/ Quiz$|Case File$/.test(c)).slice(0, 4));
+    ok('  and is genuinely smaller than the unfiltered export',
+      quizOnly.cols.length < all.cols.length, { filtered: quizOnly.cols.length, all: all.cols.length });
+
+    // A case file has no toggle and always counts, exactly as the dashboard's
+    // own counts() does by falling through to true.
+    ok('  a case file survives even when nothing is included',
+      (await head('?format=canvas&scope=activity&include=')).cols.slice(5).every((c) => /Case File$/.test(c)));
+
+    const u1 = await head('?format=canvas&scope=activity&units=unit-1');
+    ok('  units=unit-1 exports that unit only',
+      u1.cols.slice(5).every((c) => /^Cyber (1\.|Unit 1 )/.test(c)),
+      u1.cols.slice(5).filter((c) => !/^Cyber (1\.|Unit 1 )/.test(c)).slice(0, 4));
+
+    const u13 = await head('?format=canvas&scope=unit&units=unit-1,unit-3');
+    ok('  unit scope honours the same selection',
+      u13.cols.slice(5).join('|') === 'Cyber Unit 1|Cyber Unit 3', u13.cols.slice(5));
+
+    // Filtering changes the denominator, so the unit grade has to move with it.
+    const bothTypes = await getCsv(base + '/api/teacher/classes/CYBER-CNV/export?format=canvas&scope=unit',
+      { headers: auth });
+    const janeAll = bothTypes.text.split('\r\n').slice(2).map(splitCsv).find((r) => r[0] === 'Doe, Jane');
+    const lessonOnly = await getCsv(
+      base + '/api/teacher/classes/CYBER-CNV/export?format=canvas&scope=unit&include=lesson', { headers: auth });
+    const janeLesson = lessonOnly.text.split('\r\n').slice(2).map(splitCsv).find((r) => r[0] === 'Doe, Jane');
+    ok('  excluding quizzes changes the unit grade rather than silently keeping it',
+      janeAll[5] === '87' && janeLesson[5] !== '87', { all: janeAll[5], lessonOnly: janeLesson[5] });
+    ok('  a unit with nothing included is blank, never 0', janeLesson[5] === '', janeLesson[5]);
+
+    // A typo would silently export a smaller gradebook, which is worse than an
+    // error because the teacher would not know what was missing.
+    const bad = await fetch(base + '/api/teacher/classes/CYBER-CNV/export?format=canvas&include=quizzes',
+      { headers: auth });
+    ok('  an unknown include value is refused', bad.status === 400, bad.status);
+    const badUnit = await fetch(base + '/api/teacher/classes/CYBER-CNV/export?format=canvas&units=unit-9',
+      { headers: auth });
+    ok('  an unknown unit is refused', badUnit.status === 400, badUnit.status);
+
+    const untouched = await head('?format=canvas&scope=activity');
+    ok('  omitting both params still exports the whole course',
+      untouched.cols.length === all.cols.length, untouched.cols.length);
+  }
+
   console.log('\n' + (fail ? (fail + ' FAILED, ' + pass + ' passed') : ('OK - all ' + pass + ' checks passed')));
   for (const suf of ['', '-wal', '-shm']) { try { fs.unlinkSync(process.env.DB_PATH + suf); } catch (e) {} }
   process.exit(fail ? 1 : 0);
