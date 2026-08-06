@@ -97,6 +97,11 @@ async function getCsv(url, opts) {
     ('s4','c1','M. Chen','has space','x'),
     ('s5','c1','Mary Jo Watson','watson, mary','x')`);
 
+  // Deactivated, with a perfectly good ref. Must not reach Canvas at all: a
+  // withdrawn student is a row the teacher would have to match by hand.
+  run(`INSERT INTO students (id,class_id,display_name,student_ref,pin_hash,active)
+       VALUES ('s9','c1','Gone Student','gone@sfcakings.org','x',0)`);
+
   let pid = 0;
   const prog = (sid, l, act, completed, score) =>
     run(`INSERT INTO progress (id,student_id,class_id,course,unit,lesson,activity_type,completed,score)
@@ -143,7 +148,9 @@ async function getCsv(url, opts) {
   ok('  every assignment is out of 100', points.slice(5).every((p) => p === '100'), points.slice(5));
 
   const dataRows = lines.slice(2).filter((l) => l.length).map(splitCsv);
-  ok('  one row per student, no instruction row', dataRows.length === 5, dataRows.length);
+  ok('  one row per ACTIVE student, no instruction row', dataRows.length === 5, dataRows.length);
+  ok('  a deactivated student is not exported to Canvas at all',
+    raw.indexOf('Gone Student') === -1 && raw.indexOf('gone@sfcakings.org') === -1);
 
   // ── 2. Every data cell is a number or a blank ──────────────────────────────
   console.log('\n2. No cell Canvas would reject');
@@ -201,7 +208,7 @@ async function getCsv(url, opts) {
   {
     const pf = await (await fetch(base + '/api/teacher/classes/CYBER-CNV/export?format=canvas&scope=unit&preflight=1',
       { headers: auth })).json();
-    ok('  counts the roster', pf.students === 5, pf.students);
+    ok('  counts the ACTIVE roster only', pf.students === 5, pf.students);
     ok('  counts who Canvas can match', pf.matchable === 2, pf.matchable);
     ok('  names exactly who it cannot', pf.unmatchable.slice().sort().join('|') === 'Jane D.|M. Chen|Mary Jo Watson',
       pf.unmatchable);
@@ -226,8 +233,9 @@ async function getCsv(url, opts) {
   console.log('\n7. Guardrails');
   {
     const s = async (q) => (await fetch(base + '/api/teacher/classes/CYBER-CNV/export' + q, { headers: auth })).status;
-    ok('  scope=activity is refused rather than silently exporting units',
-      await s('?format=canvas&scope=activity') === 400);
+    ok('  scope=activity is served, not refused', await s('?format=canvas&scope=activity') === 200);
+    ok('  an unknown scope is refused rather than silently exporting units',
+      await s('?format=canvas&scope=lesson') === 400);
     ok('  an unknown format is refused', await s('?format=blackboard') === 400);
     ok('  scope defaults to unit', await s('?format=canvas') === 200);
     ok('  no token cannot export',
@@ -326,6 +334,67 @@ async function getCsv(url, opts) {
     // The pre-existing fields still work alongside it.
     const r7 = await patch('s3', { display_name: 'Jane Doe II', student_ref: 'jane2' });
     ok('  name and ref update together', r7.status === 200 && refOf('s3') === 'jane2', refOf('s3'));
+  }
+
+  // ── 10. scope=activity: one Canvas assignment per graded activity ─────────
+  console.log('\n10. Activity scope');
+  {
+    const act = await getCsv(base + '/api/teacher/classes/CYBER-CNV/export?format=canvas&scope=activity',
+      { headers: auth });
+    ok('  returns 200', act.status === 200, act.status);
+    const aLines = act.text.split('\r\n');
+    const aHeader = splitCsv(aLines[0]);
+    const aPoints = splitCsv(aLines[1]);
+    const aRows = aLines.slice(2).filter((l) => l.length).map(splitCsv);
+
+    ok('  keeps the same identity columns as unit scope',
+      aHeader.slice(0, 5).join('|') === 'Student|ID|SIS User ID|SIS Login ID|Section', aHeader.slice(0, 5));
+    ok('  has far more columns than the five unit ones', aHeader.length > 20, aHeader.length);
+
+    // A Canvas assignment name is global to the course, so a bare "Case File"
+    // would collide across all five units and silently overwrite grades.
+    const names = aHeader.slice(5);
+    ok('  every assignment name is unique', new Set(names).size === names.length,
+      names.filter((n, i) => names.indexOf(n) !== i));
+    ok('  every assignment name carries the course prefix',
+      names.every((n) => n.indexOf('Cyber') === 0), names.filter((n) => n.indexOf('Cyber') !== 0).slice(0, 3));
+    ok('  a case file names its unit, so the five do not collide',
+      names.filter((n) => /Case File/.test(n)).length >= 2
+      && new Set(names.filter((n) => /Case File/.test(n))).size
+         === names.filter((n) => /Case File/.test(n)).length,
+      names.filter((n) => /Case File/.test(n)));
+    ok('  no name contains a Canvas reserved phrase',
+      !names.some((n) => /current (score|points|grade)|final (score|points|grade)|override/i.test(n)));
+    ok('  activity columns read as words, not the export abbreviations',
+      names.some((n) => /1\.1 Quiz$/.test(n)) && !names.some((n) => / Q$/.test(n)),
+      names.slice(0, 4));
+
+    ok('  Points Possible is 100 for every activity',
+      aPoints.slice(5).every((p) => p === '100'), aPoints.slice(5, 8));
+
+    // The rules that matter most survive the different column set.
+    const bad = [];
+    for (const r of aRows) for (const c of r.slice(5)) if (!CANVAS_CELL_RE.test(c)) bad.push(c);
+    ok('  every cell is still a number or a blank', bad.length === 0, bad.slice(0, 5));
+    ok('  no "Done" leaks into activity scope', !/\bDone\b/.test(act.text));
+    const janeA = aRows.find((r) => r[0] === 'Doe, Jane');
+    ok('  a graded quiz reports its own percent, not a unit average',
+      janeA.slice(5).indexOf('90') !== -1 && janeA.slice(5).indexOf('84') !== -1,
+      janeA.slice(5).filter(Boolean));
+    ok('  the visited-but-ungraded lesson is still BLANK, never 0',
+      janeA.slice(5).filter((c) => c === '0').length === 0,
+      janeA.slice(5).filter(Boolean));
+    ok('  deactivated students stay out of activity scope too',
+      act.text.indexOf('Gone Student') === -1);
+
+    const pfA = await (await fetch(base
+      + '/api/teacher/classes/CYBER-CNV/export?format=canvas&scope=activity&preflight=1',
+      { headers: auth })).json();
+    ok('  preflight works for activity scope as well', pfA.students === 5, pfA);
+
+    const bogus = await fetch(base + '/api/teacher/classes/CYBER-CNV/export?format=canvas&scope=nonsense',
+      { headers: auth });
+    ok('  an unknown scope is still refused', bogus.status === 400, bogus.status);
   }
 
   console.log('\n' + (fail ? (fail + ' FAILED, ' + pass + ' passed') : ('OK - all ' + pass + ' checks passed')));

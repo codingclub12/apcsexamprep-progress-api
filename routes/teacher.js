@@ -10,7 +10,9 @@ const { makeRateLimit } = require('../lib/rate-limit');
 const mailer = require('../lib/mailer');
 const resetLib = require('../lib/password-reset');
 const { attemptRollup } = require('../lib/attempt-rollup');
-const { formatCell, buildCanvasUnitExport, canvasSisLoginId } = require('../lib/export-format');
+const {
+  formatCell, buildCanvasUnitExport, buildCanvasActivityExport, canvasSisLoginId,
+} = require('../lib/export-format');
 const {
   normalizeMode, legacyFromMode, DEFAULT_MODE, MODE_LABELS, MODE_DESCRIPTIONS, retrySqlExpr,
 } = require('../retry-policy');
@@ -534,14 +536,16 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
     if (format !== 'native' && format !== 'canvas') {
       return res.status(400).json({ error: "format must be 'native' or 'canvas'" });
     }
-    // scope applies to the Canvas rendering only. Unit scope is the whole point
-    // of the reduction: one column per unit, not ~55 lesson-activity columns
-    // that would become 55 Canvas assignments.
+    // scope applies to the Canvas rendering only.
+    //   unit     one column per unit, five Canvas assignments for Cyber
+    //   activity one column per graded activity, so a case file or a unit exam
+    //            is its own Canvas assignment rather than folded into a unit
+    //            average. Roughly 55 columns for Cyber.
+    // Unit stays the default: it is the smaller gradebook, and a teacher who
+    // wants per-activity granularity is asking for it deliberately.
     const scope = String(req.query.scope || 'unit').toLowerCase();
-    if (format === 'canvas' && scope !== 'unit') {
-      return res.status(400).json({
-        error: "scope must be 'unit'; scope=activity is not implemented yet",
-      });
+    if (format === 'canvas' && scope !== 'unit' && scope !== 'activity') {
+      return res.status(400).json({ error: "scope must be 'unit' or 'activity'" });
     }
     const wantsPreflight = ['1', 'true', 'yes'].includes(String(req.query.preflight || '').toLowerCase());
 
@@ -553,7 +557,7 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
     if (!courseConfig) return res.status(400).json({ error: `Course ${cls.course} not in manifest` });
 
     const students = db.prepare(
-      'SELECT id, display_name, student_ref, last_active FROM students WHERE class_id = ? ORDER BY display_name'
+      'SELECT id, display_name, student_ref, last_active, active FROM students WHERE class_id = ? ORDER BY display_name'
     ).all(cls.id);
 
     const allProgress = db.prepare(
@@ -584,11 +588,18 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
     //  Same merged grid, different shape. Everything above this point is shared
     //  with the native export, so the two files can never disagree about a grade.
     if (format === 'canvas') {
-      const built = buildCanvasUnitExport({
+      // Deactivated students stay out of Canvas. Their history survives here and
+      // in the native export, which is the teacher's own record, but pushing a
+      // withdrawn student into a live Canvas gradebook creates a row nobody
+      // asked for and a name the teacher then has to match by hand.
+      const canvasStudents = students.filter((s) => s.active !== 0);
+
+      const build = scope === 'activity' ? buildCanvasActivityExport : buildCanvasUnitExport;
+      const built = build({
         course: cls.course,
         courseConfig,
         className: cls.class_name,
-        students,
+        students: canvasStudents,
         cellFor: (sid, unit, lesson, act) => (map[sid] || {})[`${unit}|${lesson}|${act}`],
       });
 
@@ -607,7 +618,7 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
       ];
       res.setHeader('Content-Type', 'text/csv; charset=utf-8');
       res.setHeader('Content-Disposition',
-        `attachment; filename="canvas-${cls.class_code}-${new Date().toISOString().split('T')[0]}.csv"`);
+        `attachment; filename="canvas-${scope}-${cls.class_code}-${new Date().toISOString().split('T')[0]}.csv"`);
       // NO BOM on the Canvas file, unlike the native export. Canvas matches the
       // first header cell against the literal string "Student", and a BOM makes
       // that cell parse as "﻿Student", so the whole header is rejected with

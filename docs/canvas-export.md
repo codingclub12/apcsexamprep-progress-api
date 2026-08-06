@@ -48,17 +48,28 @@ do steps 1 and 2 once per class, before the first import.
    unless you fix them in step 2 first. (The portal surfaces this as a warning
    above the download button once that panel ships.)
 4. **In Canvas: Grades, then Import.** Upload the file. Canvas will ask you to
-   confirm the new assignments (one per unit). Confirm, review the preview, and
-   save.
+   confirm each new assignment and its points possible. Confirm, review the
+   preview, and save. If your course has multiple grading periods enabled, Canvas
+   will not create assignments from a CSV at all: create them by hand first, with
+   names matching the column headers exactly, then import.
 
 Steps 1 and 2 are one time per class. After that, an export and an import is the
 whole loop.
 
+## Two shapes, pick one per class
+
+| Scope | Canvas assignments | Use it when |
+| --- | --- | --- |
+| `scope=unit` (default) | 5 for Cyber, one per unit | you want a compact gradebook and a single grade per unit |
+| `scope=activity` | ~55 for Cyber, one per lesson, quiz, case file and exam | you want case files and exams to be their own Canvas assignments |
+
+Both use identical identity columns, the same blank-means-ungraded rule, and 100
+points per assignment. Pick one and stay with it: importing both creates two sets
+of Canvas assignments covering the same work.
+
 ## What the file looks like
 
-One assignment per unit, each out of 100 points. Not one per lesson activity:
-that would be roughly 55 Canvas assignments for AP Cybersecurity, which is not a
-gradebook anyone wants to read.
+`scope=unit`, one assignment per unit, each out of 100 points.
 
 ```csv
 Student,ID,SIS User ID,SIS Login ID,Section,Cyber Unit 1,Cyber Unit 2,Cyber Unit 3,Cyber Unit 4,Cyber Unit 5
@@ -74,7 +85,12 @@ personal information about her is stored anywhere in this system.
   it is what tells Canvas each unit assignment is out of 100.
 - **Assignment names carry the course label** (`Cyber`, `AP CSA`, `AP CSP`,
   `AP Networking`) so a new column cannot collide with an assignment already in
-  your Canvas course.
+  your Canvas course. Under `scope=activity` each name also carries its lesson or
+  unit, because a Canvas assignment name is global to the course: five bare
+  `Case File` columns would collide and silently overwrite each other. Names are
+  deduplicated, and a name Canvas reserves (anything containing `Current Grade`,
+  `Final Score`, `Override Status` and the like) is renamed rather than silently
+  ignored on import.
 - **A blank cell means ungraded, and it always will.** A unit a student has not
   reached exports blank, never `0`. Canvas leaves a blank cell alone, so an
   import can never invent a failing grade for work nobody has done yet.
@@ -93,7 +109,8 @@ personal information about her is stored anywhere in this system.
 
 ```
 GET /api/teacher/classes/:code/export                          # unchanged: the wide human CSV
-GET /api/teacher/classes/:code/export?format=canvas&scope=unit # the Canvas file above
+GET /api/teacher/classes/:code/export?format=canvas&scope=unit     # the Canvas file above
+GET /api/teacher/classes/:code/export?format=canvas&scope=activity # one column per activity
 GET /api/teacher/classes/:code/export?format=canvas&scope=unit&preflight=1
 ```
 
@@ -121,8 +138,6 @@ same rule when it is set, this should never be a surprise at export time.
 
 ## Deliberately not built
 
-- `scope=activity` (one Canvas assignment per lesson activity). The flag is
-  already there for it; the export is not.
 - Per-assignment due dates, and splitting one class into Canvas sections.
 - A Canvas API push over OAuth or LTI. This is a file a teacher uploads, on
   purpose: no app install, no admin approval, no integration to maintain.
