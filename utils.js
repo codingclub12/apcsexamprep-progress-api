@@ -228,9 +228,55 @@ function isValidClassCode(code) {
   return /^[A-Z]+-[A-Z0-9]{4}$/.test(code);
 }
 
+// Every free-text field that reaches a rendered page goes through here: student
+// display_name (join, roster import, teacher rename), teacher name, school, and
+// class_name. It used to trim and truncate only, which made it the entry point
+// for stored XSS. The teacher gradebook and the student progress page both
+// interpolate these values into innerHTML behind an escaper that was a no-op
+// (every .replace mapped a character to itself), so a student who joined a class
+// as `<img src=x onerror=...>` got script execution in their teacher's browser,
+// where the teacher JWT lives in localStorage.
+//
+// The escaper is being repaired separately. This is the layer that has to hold
+// regardless, because it is the only one every consumer shares: the gradebook,
+// the CSV and Canvas exports, the admin pages, and anything built later.
+//
+// Why transform rather than reject: these are names typed by minors on a phone.
+// A 400 mid-join strands a student in front of a class, so the value is made
+// inert instead of refused.
+//
+// Character policy, in the order the checks apply:
+//   C0/C1 controls  removed. Never typed deliberately, and they corrupt the CSV
+//                   export and hide payloads from anyone reading the roster.
+//   < and >         removed. No legitimate name contains them, and without `<`
+//                   no attacker-controlled string can open a tag at all.
+//   " and '         folded to the typographic forms " and '. This is the
+//                   subtle one. Stripping them would mangle O'Brien, which is a
+//                   real student name, but keeping the ASCII forms leaves a live
+//                   hole: both pages build attributes as aria-label='...', so a
+//                   bare apostrophe still closes the attribute and starts a new
+//                   one, and `x' onmouseover='alert(1)` executes without ever
+//                   needing a `<`. The curly forms read identically to a human
+//                   and are inert to an HTML parser.
+//   &               kept. Legitimate in "Period 3 & 4", and harmless on its own:
+//                   an entity decodes to a text character, and a text character
+//                   cannot become markup. Entities inside a quoted attribute are
+//                   decoded after the delimiter is found, so &#39; cannot break
+//                   out either.
+//
+// Truncation stays last so the length limit applies to what is actually stored.
+const CONTROL_CHARS = /[\x00-\x1F\x7F-\x9F]/g;
+const TAG_CHARS = /[<>]/g;
+
 function sanitize(str, maxLen = 100) {
   if (typeof str !== 'string') return '';
-  return str.trim().slice(0, maxLen);
+  return str
+    .replace(CONTROL_CHARS, '')
+    .replace(TAG_CHARS, '')
+    .replace(/"/g, '”')
+    .replace(/'/g, '’')
+    .trim()
+    .slice(0, maxLen);
 }
 
 // ── COURSE PREFIX for class codes ─────────────────────────────────────────────
