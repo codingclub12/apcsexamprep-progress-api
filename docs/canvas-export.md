@@ -9,15 +9,27 @@ grades in one step.
 The CSV is the easy half. The identity match is the half that fails silently, so
 do steps 1 and 2 once per class, before the first import.
 
-1. **In Canvas: Grades, then Export.** Canvas downloads its own CSV. The column
-   named **SIS Login ID** is the identifier Canvas will match on when you import
-   grades back. That column is the authority. Whatever is in it (a school email
-   like `jane.doe@sfcakings.org`, or a student number like `100482`) is what has
-   to appear in step 2.
-2. **Set each student's Student Ref** to that student's SIS Login ID, exactly.
-   This is the whole identity bridge. There is no email stored on a student
-   account here and there never will be (students are minors, on a name and a
-   PIN only), so `student_ref` is the field that carries the match.
+1. **In Canvas: Grades, then Export.** Canvas downloads its own CSV. It carries
+   three identifier columns and will match on whichever one is filled in:
+
+   | Column | Usually holds | Use it when |
+   | --- | --- | --- |
+   | `SIS User ID` | the student number | **preferred**, see below |
+   | `SIS Login ID` | the username, often a school email | there is no student number |
+   | `ID` | Canvas's own internal user ID | never, we do not emit it |
+
+   **Prefer `SIS User ID` if your Canvas has one.** A student number is an
+   opaque identifier, so nothing resembling a student's personal information
+   ever gets stored here. Fall back to `SIS Login ID` only if that column is the
+   only one your district populates.
+2. **Set each student's Student Ref** to that identifier, exactly. This is the
+   whole identity bridge. There is no email stored on a student account here and
+   there never will be (students are minors, on a name and a PIN only), so
+   `student_ref` is the field that carries the match.
+
+   The export routes it to the right column by its shape: anything that looks
+   like an email is emitted as the `SIS Login ID`, anything else as the
+   `SIS User ID`. There is no setting to get wrong.
 
    Until the roster panel ships, this is an API call per student:
 
@@ -49,10 +61,14 @@ that would be roughly 55 Canvas assignments for AP Cybersecurity, which is not a
 gradebook anyone wants to read.
 
 ```csv
-Student,SIS Login ID,Section,Cyber Unit 1,Cyber Unit 2,Cyber Unit 3,Cyber Unit 4,Cyber Unit 5
-Points Possible,,,100,100,100,100,100
-"Doe, Jane",jane.doe@sfcakings.org,Period 3,87,92,,,
+Student,ID,SIS User ID,SIS Login ID,Section,Cyber Unit 1,Cyber Unit 2,Cyber Unit 3,Cyber Unit 4,Cyber Unit 5
+Points Possible,,,,,100,100,100,100,100
+"Doe, Jane",,,jane.doe@sfcakings.org,Period 3,87,92,,,
+"Ruiz, Ana",,100482,,Period 3,75,,,,
 ```
+
+Both students above import correctly. Ana matches on her student number and no
+personal information about her is stored anywhere in this system.
 
 - **Row 2 must be `Points Possible`.** Canvas requires it in that position, and
   it is what tells Canvas each unit assignment is out of 100.
@@ -87,16 +103,17 @@ caller keeps getting today's file.
 { "students": 24, "matchable": 21, "unmatchable": ["Jane D.", "M. Chen", "student3"] }
 ```
 
-`matchable` is how many students Canvas can match on SIS Login ID.
+`matchable` is how many students Canvas can match on any of its ID columns.
 `unmatchable` names the rest, so the portal can warn before the download rather
 than after the import. The counts come from the same pass that builds the file,
 so the warning and the file cannot disagree.
 
-A Student Ref is emitted as the SIS Login ID only when it is non-empty, 128
-characters or fewer, free of commas and newlines, and either an email address or
-made up of letters, digits, dot, underscore and hyphen. Anything else exports as
-a blank cell: a wrong identifier would attach a real grade to the wrong student,
-which is worse than not importing it.
+A Student Ref reaches the file only when it is non-empty, 128 characters or
+fewer, free of commas and newlines, and either an email address or made up of
+letters, digits, dot, underscore and hyphen. Anything else exports as a blank
+cell: a wrong identifier would attach a real grade to the wrong student, which
+is worse than not importing it. Since the roster route validates a ref by the
+same rule when it is set, this should never be a surprise at export time.
 
 ## Deliberately not built
 
