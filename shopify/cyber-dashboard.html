@@ -777,13 +777,24 @@ window.TCDash = {
   },
   exportGradebook(){ if(!this.data||!this.data.summary){ alert('No data loaded yet.'); return; }
     try{ const csv=this.buildGradebookCSV(); const blob=new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8;'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=this.classCode+'-gradebook.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1500); }catch(e){ alert('Could not build the gradebook file.'); } },
+  // A fetch that cannot hang forever. Without this a stalled connection (the API
+  // restarting after a deploy, a dropped link) leaves the promise unsettled, so
+  // the button spins with no error and no file, which is indistinguishable from
+  // a broken export.
+  async _fetchWithTimeout(url,opts,ms){
+    const ctl=new AbortController(); const t=setTimeout(()=>ctl.abort(),ms||20000);
+    try{ return await fetch(url,Object.assign({},opts,{signal:ctl.signal})); }
+    finally{ clearTimeout(t); }
+  },
   async exportCSV(){
     const token=localStorage.getItem('apcse_teacher_token');
-    try{ const r=await fetch(API+'/api/teacher/classes/'+this.classCode+'/export',{headers:{'Authorization':'Bearer '+token}});
+    try{ const r=await this._fetchWithTimeout(API+'/api/teacher/classes/'+this.classCode+'/export',{headers:{'Authorization':'Bearer '+token}});
       if(r.status===401){ localStorage.removeItem('apcse_teacher_token'); location.href='/pages/cyber-class'; return; }
       if(!r.ok) throw new Error('status '+r.status);
       const blob=await r.blob(); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=this.classCode+'-full-data.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1500);
-    }catch(e){ alert('Could not export CSV. Refresh and try again.'); }
+    }catch(e){ alert(e.name==='AbortError'
+      ? 'The export timed out. The API may be restarting after a deploy: wait a minute and try again.'
+      : ('Could not export CSV ('+(e.message||'unknown error')+'). Refresh and try again.')); }
   },
   // Canvas import file. One request, no preflight gate: Canvas's own import
   // screen lets a teacher map any unmatched row to a student by name, so
@@ -793,11 +804,13 @@ window.TCDash = {
   async exportCanvasCSV(scope){
     const token=localStorage.getItem('apcse_teacher_token');
     const sc=(scope==='activity')?'activity':'unit';
-    try{ const r=await fetch(API+'/api/teacher/classes/'+this.classCode+'/export?format=canvas&scope='+sc,{headers:{'Authorization':'Bearer '+token}});
+    try{ const r=await this._fetchWithTimeout(API+'/api/teacher/classes/'+this.classCode+'/export?format=canvas&scope='+sc,{headers:{'Authorization':'Bearer '+token}});
       if(r.status===401){ localStorage.removeItem('apcse_teacher_token'); location.href='/pages/cyber-class'; return; }
       if(!r.ok) throw new Error('status '+r.status);
       const blob=await r.blob(); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=this.classCode+'-canvas-'+sc+'.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1500);
-    }catch(e){ alert('Could not export the Canvas CSV. Refresh and try again.'); }
+    }catch(e){ alert(e.name==='AbortError'
+      ? 'The Canvas export timed out. The API may be restarting after a deploy: wait a minute and try again.'
+      : ('Could not export the Canvas CSV ('+(e.message||'unknown error')+'). Refresh and try again.')); }
   },
 
   // ---- roster tools (unchanged) ----
