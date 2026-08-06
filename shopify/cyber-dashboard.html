@@ -777,27 +777,49 @@ window.TCDash = {
   },
   exportGradebook(){ if(!this.data||!this.data.summary){ alert('No data loaded yet.'); return; }
     try{ const csv=this.buildGradebookCSV(); const blob=new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8;'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=this.classCode+'-gradebook.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1500); }catch(e){ alert('Could not build the gradebook file.'); } },
+  // A fetch that cannot hang forever. Without this a stalled connection (the API
+  // restarting after a deploy, a dropped link) leaves the promise unsettled, so
+  // the button spins with no error and no file.
+  async _fetchWithTimeout(url,opts,ms){
+    const ctl=new AbortController(); const t=setTimeout(()=>ctl.abort(),ms||20000);
+    try{ return await fetch(url,Object.assign({},opts,{signal:ctl.signal})); }
+    finally{ clearTimeout(t); }
+  },
   async exportCSV(){
     const token=localStorage.getItem('apcse_teacher_token');
-    try{ const r=await fetch(API+'/api/teacher/classes/'+this.classCode+'/export',{headers:{'Authorization':'Bearer '+token}});
+    try{ const r=await this._fetchWithTimeout(API+'/api/teacher/classes/'+this.classCode+'/export',{headers:{'Authorization':'Bearer '+token}});
       if(r.status===401){ localStorage.removeItem('apcse_teacher_token'); location.href='/pages/cyber-class'; return; }
       if(!r.ok) throw new Error('status '+r.status);
       const blob=await r.blob(); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=this.classCode+'-full-data.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1500);
-    }catch(e){ alert('Could not export CSV. Refresh and try again.'); }
+    }catch(e){ alert(e.name==='AbortError' ? 'The export timed out. The API may be restarting after a deploy: wait a minute and try again.' : ('Could not export CSV ('+(e.message||'unknown')+'). Refresh and try again.')); }
   },
   // Canvas import file. One request, no preflight gate: Canvas's own import
   // screen lets a teacher map any unmatched row to a student by name, so
-  // warning about a missing Student Ref beforehand only added a click and a
-  // second request that could hang. preflight=1 still exists on the API for
-  // anything that wants the counts.
+  // warning first only added a click. preflight=1 still exists on the API.
+  toggleExportMenu(ev){ if(ev)ev.stopPropagation(); const el=document.getElementById('gb-export-list'); if(el)el.classList.toggle('on'); },
+  pickExport(which){ const el=document.getElementById('gb-export-list'); if(el)el.classList.remove('on');
+    if(which==='gradebook')return this.exportGradebook();
+    if(which==='canvas')return this.exportCanvasCSV('unit');
+    if(which==='canvas-activity')return this.exportCanvasCSV('activity');
+    return this.exportCSV(); },
+  // Set the Canvas SIS identifier for one student. The server validates it with
+  // the same rule the export applies, so a ref that would silently export blank
+  // is refused here rather than dropping the student during the Canvas import.
+  async setStudentRef(id){ const stu=this._findStudent(id); if(!stu)return;
+    const next=prompt('Canvas ref for '+stu.name+'.\n\nUse the SIS User ID from your Canvas gradebook export (a student number is best). An email works too. Leave blank to clear.',stu.ref||'');
+    if(next==null)return;
+    const r=await this._api('PATCH','/api/teacher/classes/'+this.classCode+'/students/'+id,{student_ref:next.trim()});
+    if(r.ok){ await this.loadProgress(this._token()); this.showTab('student'); }
+    else alert(r.error||'Could not set the Canvas ref.'); },
   async exportCanvasCSV(scope){
     const token=localStorage.getItem('apcse_teacher_token');
     const sc=(scope==='activity')?'activity':'unit';
-    try{ const r=await fetch(API+'/api/teacher/classes/'+this.classCode+'/export?format=canvas&scope='+sc,{headers:{'Authorization':'Bearer '+token}});
+    const q='?format=canvas&scope='+sc;
+    try{ const r=await this._fetchWithTimeout(API+'/api/teacher/classes/'+this.classCode+'/export'+q,{headers:{'Authorization':'Bearer '+token}});
       if(r.status===401){ localStorage.removeItem('apcse_teacher_token'); location.href='/pages/cyber-class'; return; }
       if(!r.ok) throw new Error('status '+r.status);
       const blob=await r.blob(); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=this.classCode+'-canvas-'+sc+'.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1500);
-    }catch(e){ alert('Could not export the Canvas CSV. Refresh and try again.'); }
+    }catch(e){ alert(e.name==='AbortError' ? 'The Canvas export timed out. The API may be restarting after a deploy: wait a minute and try again.' : ('Could not export the Canvas CSV ('+(e.message||'unknown')+'). Refresh and try again.')); }
   },
 
   // ---- roster tools (unchanged) ----
