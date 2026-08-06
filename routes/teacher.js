@@ -10,7 +10,7 @@ const { makeRateLimit } = require('../lib/rate-limit');
 const mailer = require('../lib/mailer');
 const resetLib = require('../lib/password-reset');
 const { attemptRollup } = require('../lib/attempt-rollup');
-const { formatCell, buildCanvasUnitExport } = require('../lib/export-format');
+const { formatCell, buildCanvasUnitExport, canvasSisLoginId } = require('../lib/export-format');
 const {
   normalizeMode, legacyFromMode, DEFAULT_MODE, MODE_LABELS, MODE_DESCRIPTIONS, retrySqlExpr,
 } = require('../retry-policy');
@@ -887,9 +887,16 @@ router.delete('/classes/:code', requireTeacher, (req, res) => {
   res.json({ ok: true, deleted: info.changes });
 });
 
-// ── RENAME STUDENT / RESET PIN ────────────────────────────────────────────────
-// Body: { display_name?, pin? }. Either or both. Mirrors the join rules:
-// names are unique per class (case-insensitive), PINs are exactly 4 digits.
+// ── RENAME STUDENT / RESET PIN / SET SIS REF ──────────────────────────────────
+// Body: { display_name?, pin?, active?, student_ref? }. Any combination.
+// Mirrors the join rules: names are unique per class (case-insensitive), PINs
+// are exactly 4 digits.
+//
+// student_ref is the Canvas SIS Login ID bridge. It is validated here with the
+// same rule the Canvas export applies, so a ref that would silently export
+// blank (and silently drop the student from the import) is refused at the point
+// the teacher sets it rather than discovered later in Canvas. Empty string
+// clears it.
 router.patch('/classes/:code/students/:studentId', requireTeacher, async (req, res) => {
   const cls = db.prepare('SELECT id FROM classes WHERE class_code = ? AND teacher_id = ?')
     .get(req.params.code.toUpperCase(), req.teacher.id);
@@ -899,9 +906,9 @@ router.patch('/classes/:code/students/:studentId', requireTeacher, async (req, r
     .get(req.params.studentId, cls.id);
   if (!student) return res.status(404).json({ error: 'Student not found' });
 
-  const { display_name, pin, active } = req.body;
-  if (display_name === undefined && pin === undefined && active === undefined) {
-    return res.status(400).json({ error: 'Provide display_name, pin, and/or active to update' });
+  const { display_name, pin, active, student_ref } = req.body;
+  if (display_name === undefined && pin === undefined && active === undefined && student_ref === undefined) {
+    return res.status(400).json({ error: 'Provide display_name, pin, active, and/or student_ref to update' });
   }
 
   // Rename
@@ -927,6 +934,25 @@ router.patch('/classes/:code/students/:studentId', requireTeacher, async (req, r
   // Deactivate / reactivate. Never deletes: history always survives.
   if (active !== undefined) {
     db.prepare('UPDATE students SET active = ? WHERE id = ?').run(active ? 1 : 0, student.id);
+  }
+
+  // Canvas SIS Login ID. Stored only if it would survive the export unchanged.
+  if (student_ref !== undefined) {
+    const raw = student_ref == null ? '' : String(student_ref).trim();
+    if (raw === '') {
+      db.prepare('UPDATE students SET student_ref = NULL WHERE id = ?').run(student.id);
+    } else {
+      if (canvasSisLoginId(raw) !== raw) {
+        return res.status(400).json({
+          error: 'student_ref must be an email or use only letters, numbers, dot, underscore, or hyphen (max 128 chars)',
+        });
+      }
+      const clash = db.prepare(
+        'SELECT id FROM students WHERE class_id = ? AND student_ref IS NOT NULL AND lower(student_ref) = lower(?) AND id != ?'
+      ).get(cls.id, raw, student.id);
+      if (clash) return res.status(409).json({ error: 'That student ref is already used in this class.' });
+      db.prepare('UPDATE students SET student_ref = ? WHERE id = ?').run(raw, student.id);
+    }
   }
 
   const updated = db.prepare(

@@ -14,15 +14,27 @@ do steps 1 and 2 once per class, before the first import.
    grades back. That column is the authority. Whatever is in it (a school email
    like `jane.doe@sfcakings.org`, or a student number like `100482`) is what has
    to appear in step 2.
-2. **In the Teacher Portal roster: set each student's Student Ref** to that
-   student's SIS Login ID, exactly. This is the whole identity bridge. There is
-   no email stored on a student account here and there never will be (students
-   are minors, on a name and a PIN only), so `student_ref` is the field that
-   carries the match.
-3. **Export from the portal with the Canvas option.** Check the warning above the
-   download button first: it names every student whose Student Ref is missing or
-   unusable. Those students are not in the import, silently, unless you fix them
-   in step 2 first.
+2. **Set each student's Student Ref** to that student's SIS Login ID, exactly.
+   This is the whole identity bridge. There is no email stored on a student
+   account here and there never will be (students are minors, on a name and a
+   PIN only), so `student_ref` is the field that carries the match.
+
+   Until the roster panel ships, this is an API call per student:
+
+   ```
+   PATCH /api/teacher/classes/:code/students/:studentId
+   Authorization: Bearer <teacher token>
+   {"student_ref": "jane.doe@sfcakings.org"}
+   ```
+
+   A ref that the export would blank out is refused here with a 400 rather than
+   accepted and silently dropped at import time, and two students in one class
+   cannot share a ref (409). Send `""` to clear one.
+3. **Export with the Canvas option.** Check who will not match first, via
+   `?format=canvas&scope=unit&preflight=1`: it names every student whose Student
+   Ref is missing or unusable. Those students are not in the import, silently,
+   unless you fix them in step 2 first. (The portal surfaces this as a warning
+   above the download button once that panel ships.)
 4. **In Canvas: Grades, then Import.** Upload the file. Canvas will ask you to
    confirm the new assignments (one per unit). Confirm, review the preview, and
    save.
