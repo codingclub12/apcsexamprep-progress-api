@@ -11,9 +11,10 @@
 //   2. A CELL CANVAS REJECTS. The native export emits "Done" and "8/10" and a
 //      percent, all in the same column. Canvas takes a number or a blank and
 //      nothing else, so every data cell has to match /^$|^\d+(\.\d{1,2})?$/.
-//   3. A SILENTLY DROPPED STUDENT. Canvas matches on SIS Login ID, which here
-//      is student_ref, which is free text nobody validated. preflight=1 has to
-//      report exactly who will not match BEFORE the teacher imports.
+//   3. A SILENTLY DROPPED STUDENT. Canvas matches on whichever of its three ID
+//      columns is populated, and here they all come from student_ref, which is
+//      free text nobody validated. preflight=1 has to report exactly who will
+//      not match BEFORE the teacher imports.
 //   4. The Canvas file format itself: header row, "Points Possible" second,
 //      BOM present.
 //
@@ -120,15 +121,18 @@ async function getCsv(url, opts) {
 
   const lines = raw.replace(/^﻿/, '').split('\r\n');
   const header = splitCsv(lines[0]);
-  ok('  header is Student, SIS Login ID, Section, then one column per unit',
-    header.slice(0, 3).join('|') === 'Student|SIS Login ID|Section' && header.length === 8, header);
+  // All three Canvas identity columns ship, blank where unknown, so a district
+  // can match on a student number and never store an email here.
+  ok('  header is Student, the three Canvas ID columns, Section, then one column per unit',
+    header.slice(0, 5).join('|') === 'Student|ID|SIS User ID|SIS Login ID|Section' && header.length === 10, header);
   ok('  assignment headers carry the course prefix so they cannot collide in Canvas',
-    header[3] === 'Cyber Unit 1' && header[7] === 'Cyber Unit 5', header.slice(3));
+    header[5] === 'Cyber Unit 1' && header[9] === 'Cyber Unit 5', header.slice(5));
 
   const points = splitCsv(lines[1]);
   ok('  row 2 is Points Possible (Canvas requires it second)', points[0] === 'Points Possible', points[0]);
-  ok('  Points Possible leaves ID and Section blank', points[1] === '' && points[2] === '', points.slice(0, 3));
-  ok('  every assignment is out of 100', points.slice(3).every((p) => p === '100'), points.slice(3));
+  ok('  Points Possible leaves the ID columns and Section blank',
+    points.slice(1, 5).every((c) => c === ''), points.slice(0, 5));
+  ok('  every assignment is out of 100', points.slice(5).every((p) => p === '100'), points.slice(5));
 
   const dataRows = lines.slice(2).filter((l) => l.length).map(splitCsv);
   ok('  one row per student, no instruction row', dataRows.length === 5, dataRows.length);
@@ -137,7 +141,7 @@ async function getCsv(url, opts) {
   console.log('\n2. No cell Canvas would reject');
   {
     const bad = [];
-    for (const r of dataRows) for (const cell of r.slice(3)) if (!CANVAS_CELL_RE.test(cell)) bad.push(cell);
+    for (const r of dataRows) for (const cell of r.slice(5)) if (!CANVAS_CELL_RE.test(cell)) bad.push(cell);
     ok('  every grade cell matches /^$|^\\d+(\\.\\d{1,2})?$/', bad.length === 0, bad);
     ok('  no "Done" anywhere in the file', !/\bDone\b/.test(raw));
     ok('  no "earned/possible" fraction anywhere in the file', !/\d+\/\d+/.test(raw));
@@ -149,12 +153,12 @@ async function getCsv(url, opts) {
   {
     const jane = rowFor('Doe, Jane');
     ok('  Unit 1 is the points-weighted percent of the graded work (90 and 84 -> 87)',
-      jane[3] === '87', jane[3]);
-    ok('  a visited-but-ungraded unit is BLANK, never 0', jane[4] === '', jane[4]);
-    ok('  an untouched unit is blank', jane[5] === '' && jane[6] === '' && jane[7] === '', jane.slice(5));
-    ok('  a single graded item reports its own percent', rowFor('Chen')[3] === '71', rowFor('Chen')[3]);
+      jane[5] === '87', jane[5]);
+    ok('  a visited-but-ungraded unit is BLANK, never 0', jane[6] === '', jane[6]);
+    ok('  an untouched unit is blank', jane[7] === '' && jane[8] === '' && jane[9] === '', jane.slice(7));
+    ok('  a single graded item reports its own percent', rowFor('Chen')[5] === '71', rowFor('Chen')[5]);
     ok('  a student with no work at all is blank across every unit',
-      rowFor('D., Jane').slice(3).every((c) => c === ''), rowFor('D., Jane').slice(3));
+      rowFor('D., Jane').slice(5).every((c) => c === ''), rowFor('D., Jane').slice(5));
   }
 
   // ── 4. Identity ────────────────────────────────────────────────────────────
@@ -167,13 +171,21 @@ async function getCsv(url, opts) {
     ok('  the Student column is always quoted', lines.slice(2).filter((l) => l.length).every((l) => l[0] === '"'),
       lines.slice(2, 4));
     ok('  an email student_ref becomes the SIS Login ID',
-      rowFor('Doe, Jane')[1] === 'jane.doe@sfcakings.org', rowFor('Doe, Jane')[1]);
-    ok('  a plain student number is accepted too', rowFor('Chen')[1] === 'student-4417', rowFor('Chen')[1]);
-    ok('  a missing student_ref is blank, never invented', rowFor('D., Jane')[1] === '', rowFor('D., Jane')[1]);
-    ok('  a ref with a space is rejected as unmatchable', rowFor('Chen, M.')[1] === '', rowFor('Chen, M.')[1]);
+      rowFor('Doe, Jane')[3] === 'jane.doe@sfcakings.org', rowFor('Doe, Jane')[3]);
+    ok('  an email does NOT land in the student-number column',
+      rowFor('Doe, Jane')[2] === '', rowFor('Doe, Jane')[2]);
+    ok('  a plain student number becomes the SIS User ID, so no email is needed',
+      rowFor('Chen')[2] === 'student-4417', rowFor('Chen')[2]);
+    ok('  and does NOT land in the login column', rowFor('Chen')[3] === '', rowFor('Chen')[3]);
+    ok('  the Canvas ID column is never synthesized',
+      dataRows.every((r) => r[1] === ''), dataRows.map((r) => r[1]));
+    ok('  a missing student_ref is blank, never invented',
+      rowFor('D., Jane').slice(1, 4).every((c) => c === ''), rowFor('D., Jane').slice(1, 4));
+    ok('  a ref with a space is rejected as unmatchable',
+      rowFor('Chen, M.').slice(1, 4).every((c) => c === ''), rowFor('Chen, M.').slice(1, 4));
     ok('  a ref with a comma is rejected (it would also break the CSV)',
-      rowFor('Mary Jo Watson')[1] === '', rowFor('Mary Jo Watson')[1]);
-    ok('  Section is the class name', dataRows.every((r) => r[2] === 'Period 3'), dataRows.map((r) => r[2]));
+      rowFor('Mary Jo Watson').slice(1, 4).every((c) => c === ''), rowFor('Mary Jo Watson').slice(1, 4));
+    ok('  Section is the class name', dataRows.every((r) => r[4] === 'Period 3'), dataRows.map((r) => r[4]));
   }
 
   // ── 5. Preflight ───────────────────────────────────────────────────────────
@@ -187,7 +199,7 @@ async function getCsv(url, opts) {
       pf.unmatchable);
     ok('  preflight agrees with the file (matchable + unmatchable = students)',
       pf.matchable + pf.unmatchable.length === pf.students, pf);
-    const blanks = dataRows.filter((r) => r[1] === '').length;
+    const blanks = dataRows.filter((r) => r.slice(1, 4).every((c) => c === '')).length;
     ok('  and the file has exactly that many blank IDs', blanks === pf.unmatchable.length, { blanks, pf });
   }
 
@@ -249,9 +261,9 @@ async function getCsv(url, opts) {
     // 1/2 CFU points + 8/10 quiz points = 9 of 12 authored points = 75.
     // The unattempted CFU counts against the denominator exactly as the
     // dashboard counts it, so teacher and Canvas cannot disagree.
-    ok('  points-weighted across item types (9 of 12 authored points -> 75)', ada[3] === '75', ada[3]);
-    ok('  no fraction leaks into the Canvas cell', CANVAS_CELL_RE.test(ada[3]), ada[3]);
-    ok('  units with no manifest items stay blank', ada.slice(4).every((c) => c === ''), ada.slice(4));
+    ok('  points-weighted across item types (9 of 12 authored points -> 75)', ada[5] === '75', ada[5]);
+    ok('  no fraction leaks into the Canvas cell', CANVAS_CELL_RE.test(ada[5]), ada[5]);
+    ok('  units with no manifest items stay blank', ada.slice(6).every((c) => c === ''), ada.slice(6));
 
     const natCsa = (await getCsv(base + '/api/teacher/classes/CSA-CNV/export', { headers: auth })).text;
     ok('  the native export still shows the raw points for the same cell', /9\/12|1\/2|8\/10/.test(natCsa),
