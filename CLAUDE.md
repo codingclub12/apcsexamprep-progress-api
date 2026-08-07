@@ -58,6 +58,22 @@ Per-question results live inside the detail JSON, never as separate rows. Format
 
 Column vs JSON rule: real columns are for fields aggregated in SQL (duration_seconds gets queried constantly). Exploratory or per-question extras ride inside detail JSON at zero schema cost: per-question tries where a widget allows in-item retries, and a focus_lost counter later if a tab-switching integrity signal is wanted. Do not pre-add speculative columns; ALTER TABLE ADD COLUMN in SQLite is trivial later.
 
+### 1b. One gradebook contract for every course
+
+Read `docs/gradebook-contract.md` before touching a gradebook, adding a course, or
+adding an activity type. `lib/gradebook-contract.js` is the normalizer and the ONLY
+place course-specific shape is interpreted; everything downstream reads one
+course-agnostic contract. A view that branches on the course is a bug in the
+normalizer, not in the view.
+
+The grade is `earned / graded` (points over attempted work), never `earned / possible`.
+Pace is a separate number. Nothing attempted is `pct: null`, never `0`. Not attempted
+and scored zero are different facts and must never render alike.
+
+The teacher route and `GET /api/admin/class/:id/gradebook/as-teacher` call the same
+builder with the same arguments, so the operator view cannot drift from the teacher
+view. Do not add a second implementation of either.
+
 ### 2. Manifest table replaces the ?total denominator
 
 ```sql

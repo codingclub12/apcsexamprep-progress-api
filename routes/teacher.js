@@ -10,6 +10,7 @@ const { makeRateLimit } = require('../lib/rate-limit');
 const mailer = require('../lib/mailer');
 const resetLib = require('../lib/password-reset');
 const { attemptRollup } = require('../lib/attempt-rollup');
+const { buildCanonicalGradebook } = require('../lib/gradebook-contract');
 const {
   formatCell, buildCanvasUnitExport, buildCanvasActivityExport, canvasSisLoginId,
   INCLUDE_BUCKETS,
@@ -499,6 +500,40 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
   }
 
   res.json({ class: cls, course_config: courseConfig, denominators, summary });
+});
+
+// ── THE CANONICAL GRADEBOOK ───────────────────────────────────────────────────
+//  One shape for every course. A view built against this never branches on the
+//  course: if it has to ask whether this course has `cfu` or `lab`, the
+//  normalizer in lib/gradebook-contract.js has failed, and that is where the fix
+//  belongs.
+//
+//  This is ADDITIVE. GET /classes/:code/progress is untouched and still serves
+//  the live dashboard, so nothing a teacher can see today goes away when this
+//  lands. The contract is the shape new views are built against.
+//
+//  GET /api/admin/class/:id/gradebook/as-teacher calls this exact function with
+//  the same arguments, so an operator verifying the numbers is looking at the
+//  teacher's gradebook rather than at a second implementation of it.
+//
+//  Ownership is enforced the same way every other route on this router does it:
+//  the class must be selected by code AND teacher_id, so a student holding a
+//  class code reaches nothing here.
+router.get('/classes/:code/gradebook', requireTeacher, (req, res) => {
+  try {
+    const cls = db.prepare('SELECT id, course FROM classes WHERE class_code = ? AND teacher_id = ?')
+      .get(req.params.code.toUpperCase(), req.teacher.id);
+    if (!cls) return res.status(404).json({ error: 'Class not found' });
+
+    // A teacher looking at their own class sees their own students' names. The
+    // anonymized rendering exists for the admin caller, not for them.
+    const out = buildCanonicalGradebook(cls.id, { course: req.query.course, reveal: true });
+    if (!out) return res.status(404).json({ error: 'Class not found' });
+    res.json(out);
+  } catch (e) {
+    console.error('teacher/classes/:code/gradebook:', e);
+    res.status(500).json({ error: 'Failed to build gradebook' });
+  }
 });
 
 // ── CSV serialization ─────────────────────────────────────────────────────────
