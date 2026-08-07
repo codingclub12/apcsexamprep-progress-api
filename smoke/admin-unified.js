@@ -53,7 +53,16 @@ mkStudent('s1', 'c_ext', '-0 days');
 mkStudent('s2', 'c_ext', '-0 days');
 mkStudent('s3', 'c_ext', '-3 days');
 mkStudent('s4', 'c_ext', '-40 days');   // stale: outside every recency window
-mkStudent('s5', 'c_solo', '-1 days');
+// NOT '-1 days'. That lands EXACTLY on the edge of the `last_active >=
+// datetime('now','-1 day')` window that computeExec and the analytics deck both
+// use, and SQLite's `now` has one-second granularity. This suite compares two
+// separate computations of the same numbers, so a one-second tick between them
+// flipped this student in and out of the 1-day count and the comparison failed.
+// It passed locally, where both calls land inside one second, and failed on a
+// slower CI runner. 25 hours keeps the student in every window this suite
+// asserts on (the 7-day count is still 5) while sitting decisively outside the
+// 1-day one, so the number cannot depend on when the clock ticks.
+mkStudent('s5', 'c_solo', '-25 hours');
 mkStudent('s6', 'c_solo', '-2 days');
 
 let pid = 0;
