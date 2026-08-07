@@ -28,8 +28,16 @@
   a new item without answering anything differently. Points are summed now:
   earned over the possible of the work actually attempted.
 
-  A column nobody has authored a denominator for shows its percent alone. That
-  is honest and it is loud; a made up fraction is the defect this replaces.
+  EVERY graded cell shows a pair, on every course. Where nobody has authored a
+  total, the percent is its own pair: 17 percent is 17 out of 100. That
+  substitution changes no number, which is exactly what separates it from the
+  constant table above. Rescaling 17 onto a /5 column produced "1/5", which
+  reads as 20; showing 17/100 still reads as 17.
+
+  Those cells are marked with a * and counted under the table, because a
+  provisional 100 is a placeholder for an authored total, not a substitute for
+  one. Until the real total is authored the column carries more weight in an
+  average than it should.
 -->
 <style>
 #stprog-wrap{all:initial!important;display:block!important;}
@@ -76,6 +84,7 @@
 #stprog-wrap .r{background:#fef2f2!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c;border-color:#fecaca!important;}
 #stprog-wrap .n{color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1;font-weight:700!important;}
 #stprog-wrap .sp-cell.c{background:#eff6ff!important;color:#1d4ed8!important;-webkit-text-fill-color:#1d4ed8;border-color:#dbeafe!important;}
+#stprog-wrap .sp-prov{color:#b45309!important;-webkit-text-fill-color:#b45309;font-weight:700!important;margin-left:1px!important;}
 #stprog-wrap .sp-att{font-size:10px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;margin-left:3px!important;font-weight:600!important;}
 #stprog-wrap .sp-course-h{font-size:12.5px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.06em!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;margin:14px 2px 10px!important;}
 #stprog-wrap .sp-course-h:first-child{margin-top:0!important;}
@@ -213,14 +222,18 @@ window.StProg={
       // points_earned and points_possible come straight from the API. They are
       // null when the column has no authored denominator, and that null is
       // carried rather than filled in.
-      const possible=(r.points_possible!=null)?r.points_possible:this.possibleFor(u,l,r.activity_type);
-      const earned=(r.points_earned!=null)?r.points_earned
+      let possible=(r.points_possible!=null)?r.points_possible:this.possibleFor(u,l,r.activity_type);
+      let earned=(r.points_earned!=null)?r.points_earned
         :((possible!=null&&r.score!=null)?Math.round(r.score/100*possible*100)/100:null);
+      let src=r.denominator_source||null;
+      // No authored total: the percent is its own pair. Marked provisional so a
+      // placeholder weight is never read as an authored one.
+      if(possible==null&&r.score!=null){ possible=100; earned=Math.round(r.score*100)/100; src='percent'; }
       U.lessons[l].acts[r.activity_type]={
         completed:!!r.completed,
         score:(r.score==null?null:r.score),
         attempts:(r.attempts==null?null:r.attempts),
-        earned:earned, possible:possible
+        earned:earned, possible:possible, source:src
       };
     });
     return courses;
@@ -242,11 +255,14 @@ window.StProg={
   cellHtml(nm,a,c){ const S=this;
     if(c&&c.score!=null){
       const att=(c.attempts&&c.attempts>1)?("<span class='sp-att'>"+c.attempts+"x</span>"):"";
-      const priced=(c.possible!=null&&c.earned!=null);
-      const text=priced?(S.num(c.earned)+"/"+S.num(c.possible)):(c.score+"%");
-      const label=priced
-        ? (S.num(c.earned)+" of "+S.num(c.possible)+" points, "+c.score+" percent")
-        : (c.score+" percent, points not yet assigned for this activity");
+      // Always points over points. A column with no authored total falls back to
+      // the percent as its own pair (17 percent is 17 out of 100), which changes
+      // no number, and is marked so a provisional weight is not mistaken for an
+      // authored one.
+      const prov=(c.source==='percent');
+      const text=S.num(c.earned)+"/"+S.num(c.possible)+(prov?"<span class='sp-prov' title='Points not assigned to this activity yet'>*</span>":"");
+      const label=S.num(c.earned)+" of "+S.num(c.possible)+" points"
+        +(prov?", provisional because points have not been assigned to this activity yet":"");
       return "<span class='sp-cell "+S.clsFor(c.score)+"' aria-label='"+S.esc(nm)+": "+label
         +((c.attempts&&c.attempts>1)?(", "+c.attempts+" attempts"):"")+"'>"+text+att+"</span>";
     }
@@ -271,8 +287,8 @@ window.StProg={
     let earned=0,graded=0,priced=0,unpriced=0;
     (cells||[]).forEach(c=>{
       if(c.score==null) return;
-      if(c.possible!=null&&c.earned!=null&&c.possible>0){ earned+=c.earned; graded+=c.possible; priced++; }
-      else unpriced++;
+      if(c.possible!=null&&c.earned!=null&&c.possible>0){ earned+=c.earned; graded+=c.possible; }
+      if(c.source==='percent') unpriced++; else priced++;
     });
     return { earned:Math.round(earned*100)/100, graded:Math.round(graded*100)/100,
              pct: graded>0?Math.round(earned/graded*1000)/10:null, priced:priced, unpriced:unpriced };
@@ -340,7 +356,7 @@ window.StProg={
     if(pn){
       const t=this.totals(this.allActivityCells());
       let note="Passing mark: <b>"+this.threshold+"%</b>. Each score is points earned out of points possible. A blue check means completed but not yet graded.";
-      if(t.unpriced) note+=" "+t.unpriced+" activit"+(t.unpriced===1?"y is":"ies are")+" shown as a percent because points have not been assigned to "+(t.unpriced===1?"it":"them")+" yet.";
+      if(t.unpriced) note+=" A * marks "+t.unpriced+" activit"+(t.unpriced===1?"y whose":"ies whose")+" points have not been assigned yet; "+(t.unpriced===1?"it counts":"they count")+" out of 100 until then.";
       pn.innerHTML=note;
     }
   },
