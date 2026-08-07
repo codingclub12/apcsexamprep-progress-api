@@ -140,6 +140,14 @@ if (csaSeeded) console.log(`csa bank: ${csaSeeded.answers} new answer rows, ${cs
 const cyberDenoms = runBootSeed('cyber_denominators', () => require('./scripts/seed-cyber-denominators').seedCyberDenominators());
 if (cyberDenoms) console.log(`cyber denominators: ${cyberDenoms.changed} new of ${cyberDenoms.total} rows`);
 
+// CSP denominators, counted from the mcq-item widgets on each lesson page. CSP
+// was the only course with no denominator authority at all, so until this ran
+// its 53 graded columns were priced by whatever the page happened to paint.
+// Same insert-or-ignore posture; `node scripts/seed-csp-denominators.js --update`
+// pushes edits after a page's question count changes.
+const cspDenoms = runBootSeed('csp_denominators', () => require('./scripts/seed-csp-denominators').seedCspDenominators());
+if (cspDenoms) console.log(`csp denominators: ${cspDenoms.changed} new of ${cspDenoms.total} rows`);
+
 
 // ── PUBLIC ENDPOINTS ──────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
