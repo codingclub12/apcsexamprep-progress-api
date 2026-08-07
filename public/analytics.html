@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex, nofollow" />
-<title>APCSExamPrep Â· Analytics</title>
+<title>APCSExamPrep · Analytics</title>
 <style>
   :root {
     color-scheme: light dark;
@@ -107,14 +107,14 @@
         <option value="30">Last 30 days</option>
         <option value="7">Last 7 days</option>
       </select>
-      <span id="updated">Loadingâ¦</span>
+      <span id="updated">Loading…</span>
       <button id="exportAllBtn" title="Download every table as a ZIP of CSVs + raw JSON">Export all</button>
       <button id="refreshBtn">Refresh</button>
       <button id="signoutBtn">Sign out</button>
     </div>
   </header>
 
-  <div id="content"><div class="empty">Loading analyticsâ¦</div></div>
+  <div id="content"><div class="empty">Loading analytics…</div></div>
 </div>
 
 <script>
@@ -164,7 +164,7 @@
       "apcs-" + e.file + rangeTag() + "-" + new Date().toISOString().slice(0, 10) + ".csv");
   }
 
-  // ââ Minimal dependency-free ZIP (store method) for "Export all" âââââââââââ
+  // ── Minimal dependency-free ZIP (store method) for "Export all" ───────────
   function crc32(bytes) {
     var c, crc = 0xFFFFFFFF;
     if (!crc32.t) { crc32.t = []; for (var n = 0; n < 256; n++) { c = n; for (var k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1); crc32.t[n] = c >>> 0; } }
@@ -221,7 +221,7 @@
   }
   function toLogin() { if (state.ticker) clearInterval(state.ticker); window.location.href = "/admin/analytics"; }
 
-  // ââ building blocks ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  // ── building blocks ──────────────────────────────────────────────────────
   function card(title, hint, body, exportKey) {
     var btn = exportKey ? '<button class="csvbtn" data-export="' + exportKey + '">CSV</button>' : '';
     return '<div class="card"><div class="card-h"><div><h3>' + esc(title) + '</h3>' +
@@ -253,14 +253,14 @@
     var pts = series.map(function (v, i) { return x(i) + "," + y(v); }).join(" ");
     var area = "0," + H + " " + pts + " " + W + "," + H;
     return '<div>' +
-      '<div class="spark-cap"><span class="t">' + esc(title) + '</span><span class="n">' + fmt(total) + ' Â· 30d</span></div>' +
+      '<div class="spark-cap"><span class="t">' + esc(title) + '</span><span class="n">' + fmt(total) + ' · 30d</span></div>' +
       '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" style="height:70px" aria-label="' + esc(title) + '">' +
       '<polygon points="' + area + '" fill="' + color + '" opacity="0.10"/>' +
       '<polyline points="' + pts + '" fill="none" stroke="' + color + '" stroke-width="2" stroke-linejoin="round"/>' +
       '</svg></div>';
   }
 
-  // ââ sections âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  // ── sections ─────────────────────────────────────────────────────────────
   function renderFunnel(d) {
     if (!d.funnel.length) return "";
     var top = d.funnel[0].students || 1;
@@ -268,7 +268,7 @@
       var w = Math.max(2, Math.round((f.students / top) * 100));
       return '<div class="frow"><span class="lab">' + esc(f.stage) + '</span>' +
         '<span class="track"><i style="width:' + w + '%"></i></span>' +
-        '<span class="val"><b>' + fmt(f.students) + '</b> Â· ' + f.pct_of_top + '%</span></div>';
+        '<span class="val"><b>' + fmt(f.students) + '</b> · ' + f.pct_of_top + '%</span></div>';
     }).join("") + '</div>';
     return card("Engagement funnel", "Distinct real students reaching each stage.", body);
   }
@@ -363,9 +363,9 @@
         '<div class="foot">' + (u ? Math.round(r / u * 100) + '% of ' + fmt(u) + ' ' : '') + esc(foot) + '</div></div>';
     };
     var highlights = '<div class="tiles" style="margin-bottom:16px">' +
-      hlTile("Returning Â· Organic", "Organic Search", "from search") +
-      hlTile("Returning Â· Direct", "Direct", "direct entries") +
-      hlTile("Returning Â· Teacher link", "Class link", "via a class link") +
+      hlTile("Returning · Organic", "Organic Search", "from search") +
+      hlTile("Returning · Direct", "Direct", "direct entries") +
+      hlTile("Returning · Teacher link", "Class link", "via a class link") +
       '</div>';
     var total = nvr.total || 1;
     var newPct = Math.round((nvr.new / total) * 100), retPct = 100 - newPct;

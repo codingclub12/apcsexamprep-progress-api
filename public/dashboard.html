@@ -4,9 +4,9 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex, nofollow" />
-<title>APCSExamPrep Â· Class Dashboard</title>
+<title>APCSExamPrep · Class Dashboard</title>
 <style>
-  /* ââ Palette (validated dataviz reference: light + dark) ââââââââââââââââ */
+  /* ── Palette (validated dataviz reference: light + dark) ──────────────── */
   :root {
     color-scheme: light dark;
     --plane:        #f9f9f7;
@@ -57,7 +57,7 @@
   a { color: var(--csa); }
   .wrap { max-width: 1240px; margin: 0 auto; padding: 20px 20px 64px; }
 
-  /* ââ Header ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
+  /* ── Header ──────────────────────────────────────────────────────────── */
   header.top {
     display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px;
     padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 20px;
@@ -82,7 +82,7 @@
   button.ghost { background: transparent; }
   .btnrow { display: flex; gap: 8px; flex-wrap: wrap; }
 
-  /* ââ KPI tiles âââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
+  /* ── KPI tiles ───────────────────────────────────────────────────────── */
   .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
   .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; box-shadow: var(--shadow); }
   .kpi .label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
@@ -95,11 +95,11 @@
   .chip.down { color: var(--critical); background: color-mix(in srgb, var(--critical) 14%, transparent); }
   .chip.flat { color: var(--muted); background: color-mix(in srgb, var(--muted) 14%, transparent); }
 
-  /* ââ Section band ââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
+  /* ── Section band ────────────────────────────────────────────────────── */
   .band-title { font-size: 13px; font-weight: 650; margin: 4px 0 10px; display: flex; align-items: baseline; gap: 8px; }
   .band-title .sub2 { font-size: 12px; font-weight: 400; color: var(--muted); }
 
-  /* ââ Activation ââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
+  /* ── Activation ──────────────────────────────────────────────────────── */
   .act-rate { display: flex; align-items: baseline; gap: 8px; margin-bottom: 12px; }
   .act-rate .big { font-size: 34px; font-weight: 650; letter-spacing: -0.02em; }
   .act-rate .cap { font-size: 12px; color: var(--ink-2); }
@@ -109,7 +109,7 @@
   .act-bar { height: 8px; border-radius: 4px; background: color-mix(in srgb, var(--ink) 8%, transparent); overflow: hidden; }
   .act-bar > i { display: block; height: 100%; border-radius: 4px; background: var(--cyber); }
 
-  /* ââ Split bar + stat lines (monetization / engagement) ââââââââââââââââ */
+  /* ── Split bar + stat lines (monetization / engagement) ──────────────── */
   .splitbar { display: flex; height: 10px; border-radius: 5px; overflow: hidden; margin: 12px 0 10px; background: color-mix(in srgb, var(--ink) 8%, transparent); gap: 2px; }
   .splitbar > i { display: block; height: 100%; }
   .split-legend { display: flex; gap: 16px; font-size: 12px; color: var(--ink-2); margin-bottom: 6px; }
@@ -122,7 +122,7 @@
   .dinline .chip { font-size: 11px; padding: 0 5px; }
   .numwrap { display: inline-flex; align-items: center; gap: 8px; justify-content: flex-end; }
 
-  /* ââ Florida cohort + data quality tables ââââââââââââââââââââââââââââââ */
+  /* ── Florida cohort + data quality tables ────────────────────────────── */
   .minitable { width: 100%; border-collapse: collapse; font-size: 13px; }
   .minitable th { text-align: left; font-weight: 600; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--border); white-space: nowrap; }
   .minitable td { padding: 7px 8px; border-bottom: 1px solid var(--grid); white-space: nowrap; }
@@ -145,7 +145,7 @@
   .dq .anoms li::before { content: "!"; position: absolute; left: 0; top: 5px; width: 15px; height: 15px; text-align: center; line-height: 15px; font-size: 11px; font-weight: 700; border-radius: 4px; color: var(--critical); background: color-mix(in srgb, var(--critical) 14%, transparent); }
   .dq .clean { color: var(--good); font-size: 13px; }
 
-  /* ââ Chart cards âââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
+  /* ── Chart cards ─────────────────────────────────────────────────────── */
   .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px; }
   @media (max-width: 820px) { .cards { grid-template-columns: 1fr; } }
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow); }
@@ -159,13 +159,13 @@
   svg .tick { fill: var(--muted); }
   svg .val { fill: var(--ink); font-weight: 600; }
 
-  /* ââ Controls ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
+  /* ── Controls ────────────────────────────────────────────────────────── */
   .controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
   .controls input[type="search"] { min-width: 220px; flex: 1 1 220px; }
   .controls label.chk { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink-2); cursor: pointer; }
   .count { color: var(--muted); font-size: 13px; margin-left: auto; }
 
-  /* ââ Table âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
+  /* ── Table ───────────────────────────────────────────────────────────── */
   .tablewrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); box-shadow: var(--shadow); }
   table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
   thead th {
@@ -191,7 +191,7 @@
 </head>
 <body>
 
-<!-- ââ Dashboard ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ -->
+<!-- ── Dashboard ────────────────────────────────────────────────────────── -->
 <div id="app" class="wrap">
   <header class="top">
     <h1>Class Dashboard</h1>
@@ -259,7 +259,7 @@
   </div>
 
   <div class="controls">
-    <input id="search" type="search" placeholder="Search code, name, teacher, emailâ¦" />
+    <input id="search" type="search" placeholder="Search code, name, teacher, email…" />
     <select id="courseFilter">
       <option value="">All courses</option>
       <option value="ap-csa">AP CSA</option>
@@ -292,7 +292,7 @@
 (function () {
   "use strict";
 
-  // ââ Config ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  // ── Config ──────────────────────────────────────────────────────────────
   var REFRESH_SECONDS = 30;
   var COURSE = {
     "ap-csa":          { label: "AP CSA",           css: "var(--csa)"   },
@@ -301,7 +301,7 @@
     "solo":            { label: "Solo",             css: "var(--solo)"  }
   };
 
-  // ââ State (single object, no growth per refresh) ââââââââââââââââââââââââ
+  // ── State (single object, no growth per refresh) ────────────────────────
   //  Auth is the http-only session cookie set at /admin/login; this page is only
   //  ever served once that cookie is valid, so there is no key to hold here.
   var state = {
@@ -352,7 +352,7 @@
       email.indexOf("audit") !== -1 || email.indexOf("delete") !== -1;
   }
 
-  // ââ Fetch âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  // ── Fetch ───────────────────────────────────────────────────────────────
   //  The session cookie rides along automatically (same-origin). A 401/403/503
   //  means the cookie expired or was revoked; bounce back to the login page.
   function api(path) {
@@ -394,7 +394,7 @@
     if (d == null) return '<span class="chip flat">no base</span>';
     if (d === 0) return '<span class="chip flat">0</span>';
     var up = d > 0;
-    return '<span class="chip ' + (up ? "up" : "down") + '">' + (up ? "â²+" : "â¼") + d + "</span>";
+    return '<span class="chip ' + (up ? "up" : "down") + '">' + (up ? "▲+" : "▼") + d + "</span>";
   }
 
   // The 24h + 7d delta pair for a snapshot metric key. Empty string if the key
@@ -405,14 +405,14 @@
     return '<div class="deltas"><span class="dl">24h</span>' + chip(d[dk].d24h) +
            '<span class="dl">7d</span>' + chip(d[dk].d7d) + '</div>';
   }
-  // A compact inline "24h +n Â· 7d +n" for stat lines.
+  // A compact inline "24h +n · 7d +n" for stat lines.
   function deltaInline(dk) {
     var d = (state.summary || {}).deltas;
     if (!d || !d[dk]) return '';
     return '<span class="dinline">24h ' + chip(d[dk].d24h) + ' 7d ' + chip(d[dk].d7d) + '</span>';
   }
 
-  // ââ Render: external adoption tiles (bucketed, with 24h/7d deltas) âââââââ
+  // ── Render: external adoption tiles (bucketed, with 24h/7d deltas) ───────
   function renderAdoption() {
     var s = state.summary; if (!s) return;
     var h = s.headline;
@@ -430,7 +430,7 @@
       tile("Solo students",    h.solo.students,        "solo_students", fmt(h.solo.classes) + " solo accounts");
   }
 
-  // ââ Render: activation panel âââââââââââââââââââââââââââââââââââââââââââââ
+  // ── Render: activation panel ─────────────────────────────────────────────
   function renderActivation() {
     var a = (state.summary || {}).activation; if (!a) return;
     var total = a.external_classes || 0;
@@ -447,7 +447,7 @@
       bar("20+ students", a.ge20, "activation_ge20");
   }
 
-  // ââ Render: Florida cohort âââââââââââââââââââââââââââââââââââââââââââââââ
+  // ── Render: Florida cohort ───────────────────────────────────────────────
   function renderFlorida() {
     var fl = ((state.summary || {}).florida || []).filter(function (f) { return f.classes > 0; });
     if (!fl.length) { $("florida").innerHTML = '<p class="hint">No matched classes yet.</p>'; return; }
@@ -468,7 +468,7 @@
       "<tbody>" + rows + "</tbody></table>";
   }
 
-  // ââ Render: monetization (paid vs ad-supported) ââââââââââââââââââââââââââ
+  // ── Render: monetization (paid vs ad-supported) ──────────────────────────
   function renderMonetization() {
     var m = (state.summary || {}).monetization; if (!m) return;
     var pStu = m.premium.students, fStu = m.free.students, tot = pStu + fStu;
@@ -482,10 +482,10 @@
       '<span><i class="swatch" style="background:var(--csp)"></i>Ad-supported ' + fmt(fStu) + '</span></div>' +
       '<div class="statline"><span class="k">Premium students</span><span class="v">' + fmt(pStu) + deltaInline("premium_students") + '</span></div>' +
       '<div class="statline"><span class="k">Ad-supported students</span><span class="v">' + fmt(fStu) + deltaInline("free_students") + '</span></div>' +
-      '<div class="statline"><span class="k">Premium seats</span><span class="v">' + fmt(m.premium.teachers) + ' teachers Â· ' + fmt(m.premium.classes) + ' classes</span></div>';
+      '<div class="statline"><span class="k">Premium seats</span><span class="v">' + fmt(m.premium.teachers) + ' teachers · ' + fmt(m.premium.classes) + ' classes</span></div>';
   }
 
-  // ââ Render: engagement (time on site, active time, by tier) ââââââââââââââ
+  // ── Render: engagement (time on site, active time, by tier) ──────────────
   function renderEngagement() {
     var e = (state.summary || {}).engagement; if (!e) return;
     if (!e.sessions_total) {
@@ -495,14 +495,14 @@
     var t = e.by_tier;
     $("engagement").innerHTML =
       '<div class="act-rate"><span class="big">' + e.avg_active_min_per_session + 'm</span>' +
-      '<span class="cap">avg active time per session Â· ' + e.active_share_pct + '% of time on site is engaged</span></div>' +
+      '<span class="cap">avg active time per session · ' + e.active_share_pct + '% of time on site is engaged</span></div>' +
       '<div class="statline"><span class="k">Sessions</span><span class="v">' + fmt(e.sessions_total) + ' (' + fmt(e.last_7d.sessions) + ' in 7d)' + deltaInline("sessions_total") + '</span></div>' +
       '<div class="statline"><span class="k">Active minutes</span><span class="v">' + fmt(e.active_minutes_total) + deltaInline("active_minutes_total") + '</span></div>' +
-      '<div class="statline"><span class="k"><i class="swatch" style="background:var(--cyber)"></i>Premium active</span><span class="v">' + fmt(t.premium.active_minutes) + 'm Â· ' + t.premium.avg_active_min_per_session + 'm/sess</span></div>' +
-      '<div class="statline"><span class="k"><i class="swatch" style="background:var(--csp)"></i>Ad-supported active</span><span class="v">' + fmt(t.free.active_minutes) + 'm Â· ' + t.free.avg_active_min_per_session + 'm/sess</span></div>';
+      '<div class="statline"><span class="k"><i class="swatch" style="background:var(--cyber)"></i>Premium active</span><span class="v">' + fmt(t.premium.active_minutes) + 'm · ' + t.premium.avg_active_min_per_session + 'm/sess</span></div>' +
+      '<div class="statline"><span class="k"><i class="swatch" style="background:var(--csp)"></i>Ad-supported active</span><span class="v">' + fmt(t.free.active_minutes) + 'm · ' + t.free.avg_active_min_per_session + 'm/sess</span></div>';
   }
 
-  // ââ Render: data-quality footer (reconciliation guard) âââââââââââââââââââ
+  // ── Render: data-quality footer (reconciliation guard) ───────────────────
   function renderDataQuality() {
     var q = (state.summary || {}).data_quality; if (!q) return;
     var recon = q.mismatch
@@ -525,7 +525,7 @@
     $("dq").innerHTML = "<h3>Data quality</h3>" + recon + grid + anoms;
   }
 
-  // ââ Render: KPIs âââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  // ── Render: KPIs ─────────────────────────────────────────────────────────
   function renderKPIs() {
     var o = state.overview || {}, s = state.stats || {};
     var ext = s.external || {};
@@ -543,7 +543,7 @@
     }).join("");
   }
 
-  // ââ Render: horizontal bar chart - classes by course âââââââââââââââââââââ
+  // ── Render: horizontal bar chart - classes by course ─────────────────────
   function renderCourseChart() {
     var counts = {};
     state.classes.forEach(function (c) { counts[c.course] = (counts[c.course] || 0) + 1; });
@@ -573,7 +573,7 @@
     $("courseChart").innerHTML = svg.join("");
   }
 
-  // ââ Render: line chart - 30-day growth âââââââââââââââââââââââââââââââââââ
+  // ── Render: line chart - 30-day growth ───────────────────────────────────
   function renderGrowthChart() {
     var g = (state.stats || {}).growth || {};
     var days = [];
@@ -620,7 +620,7 @@
     $("growthChart").innerHTML = svg.join("");
   }
 
-  // ââ Render: table ââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  // ── Render: table ────────────────────────────────────────────────────────
   function filteredClasses() {
     var q = $("search").value.trim().toLowerCase();
     var cf = $("courseFilter").value;
@@ -647,7 +647,7 @@
 
   function renderHead() {
     $("headRow").innerHTML = COLUMNS.map(function (col) {
-      var arrow = state.sort.key === col.key ? (state.sort.dir === 1 ? "â²" : "â¼") : "";
+      var arrow = state.sort.key === col.key ? (state.sort.dir === 1 ? "▲" : "▼") : "";
       return '<th data-key="' + col.key + '" class="' + (col.num ? "num" : "") + '">' +
         esc(col.label) + '<span class="arrow">' + arrow + '</span></th>';
     }).join("");
@@ -684,7 +684,7 @@
     renderTable(); renderDataQuality();
   }
 
-  // ââ CSV export ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  // ── CSV export ────────────────────────────────────────────────────────────
   function exportCSV() {
     var rows = filteredClasses();
     var head = COLUMNS.map(function (c) { return c.label; });
@@ -709,7 +709,7 @@
   var csvCell = function (v) { v = v == null ? "" : String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
   function toCSV(cols, rows) { return [cols.join(",")].concat(rows.map(function (r) { return r.map(csvCell).join(","); })).join("\n"); }
 
-  // ââ Minimal dependency-free ZIP (store method) for "Export all" âââââââââââ
+  // ── Minimal dependency-free ZIP (store method) for "Export all" ───────────
   function crc32(bytes) {
     var c, crc = 0xFFFFFFFF;
     if (!crc32.t) { crc32.t = []; for (var n = 0; n < 256; n++) { c = n; for (var k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1); crc32.t[n] = c >>> 0; } }
@@ -757,7 +757,7 @@
     saveBlob(makeZip(files), "apcs-dashboard-all-" + new Date().toISOString().slice(0, 10) + ".zip");
   }
 
-  // ââ Auto-refresh (single 1s ticker, no accumulation) âââââââââââââââââââââ
+  // ── Auto-refresh (single 1s ticker, no accumulation) ─────────────────────
   function markUpdated() { state.countdown = REFRESH_SECONDS; updateStatus(); }
   function updateStatus() {
     $("liveDot").className = "dot" + (state.paused ? " paused" : "");
@@ -777,7 +777,7 @@
     });
   }
 
-  // ââ Sign out: drop the session cookie, then land on the login page âââââââ
+  // ── Sign out: drop the session cookie, then land on the login page ───────
   function logout() {
     if (state.ticker) { clearInterval(state.ticker); state.ticker = null; }
     fetch("/admin/logout", { method: "POST", credentials: "same-origin" })
@@ -785,7 +785,7 @@
       .then(function () { window.location.href = "/admin/dashboard"; });
   }
 
-  // ââ Wire controls ONCE (no per-refresh listener churn) âââââââââââââââââââ
+  // ── Wire controls ONCE (no per-refresh listener churn) ───────────────────
   $("refreshBtn").addEventListener("click", function () { markUpdated(); refresh(); });
   $("lockBtn").addEventListener("click", logout);
   $("pauseBtn").addEventListener("click", function () {
@@ -806,7 +806,7 @@
     renderTable();
   });
 
-  // ââ Boot âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  // ── Boot ─────────────────────────────────────────────────────────────────
   //  Served only with a valid session cookie, so load immediately and start the
   //  ticker. An expired cookie mid-session bounces to login via toLogin().
   refresh();
