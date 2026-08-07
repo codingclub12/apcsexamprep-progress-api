@@ -21,6 +21,7 @@ const exec = require('../lib/admin-exec');
 const health = require('../lib/admin-health');
 const teacherView = require('../lib/admin-teacher');
 const resetLib = require('../lib/password-reset');
+const unified = require('../lib/admin-unified');
 const gradebook = require('../lib/admin-gradebook');
 const contract = require('../lib/gradebook-contract');
 const denominators = require('../lib/admin-denominators');
@@ -86,6 +87,7 @@ router.get('/', (req, res) => {
       'POST /api/admin/teacher/:id/reset-link       generate a single-use reset link to relay; the teacher then chooses her own password',
       'DELETE /api/admin/teacher/:id      hard delete, guarded; no ?confirm= returns a dry-run impact report',
       'GET /api/admin/analytics           full deck: by-course, by-teacher, geography, funnel, device, trends, hardest items',
+      'GET /api/admin/unified             exec + summary + analytics in one pass, plus a cross-deck agreement check; ?days= applies to the analytics deck only',
       'GET /api/admin/sessions            heartbeat/session pipeline diagnostic: counts + recent rows',
       'GET /api/admin/stats               adoption + growth rollup (external vs raw)',
       'GET /api/admin/classes             every class + teacher + student/completion counts',
@@ -454,6 +456,26 @@ router.get('/analytics', (req, res) => {
   } catch (e) {
     console.error('admin/analytics:', e);
     res.status(500).json({ error: 'analytics failed', detail: e.message });
+  }
+});
+
+// ── UNIFIED: exec KPIs + adoption summary + breakdown deck in one response ────
+//  Backs /admin/unified. The three decks each scan every class and run their own
+//  aggregate suite, so three auto-refreshing tabs meant three full passes a
+//  minute against the same data. This serves all three from one pass, adds a
+//  cross-check over the figures more than one deck derives independently, and
+//  memoizes per range for a short TTL (key space is the range allow-list, so the
+//  cache cannot grow with traffic).
+//
+//  ?days applies to the analytics deck only; the exec KPIs and the adoption
+//  summary carry their own fixed windows by design. Read-only, so the dashboard
+//  session cookie authorizes it, same as the decks it composes.
+router.get('/unified', (req, res) => {
+  try {
+    res.json(unified.computeUnified(parseInt(req.query.days, 10)));
+  } catch (e) {
+    console.error('admin/unified:', e);
+    res.status(500).json({ error: 'unified failed', detail: e.message });
   }
 });
 
