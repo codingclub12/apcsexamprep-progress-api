@@ -45,9 +45,20 @@ const VISIT_COURSES = ['ap-csa', 'ap-csp', 'ap-networking'];
 // NOT 1 through 3, so this cannot be expressed as a smaller count.
 // When the three widget types are implemented, restore these two to
 // { cfus: 6, quiz: 2 } and run --update; the rows come back with no data change.
+//
+// 1.1 and 1.2 briefly carried `cfu_items: [1, 2, 6]`, on the belief that their
+// matching / scenario-sort / cloze widgets could never be graded because no
+// interaction code existed for them. That was wrong in an important way: the
+// items have 56 recorded attempts between them, so students HAD completed them
+// before the page JS went missing. The guarded prune refused to delete rows with
+// attempts, which is the only reason no gradebook data was lost.
+//
+// The widget engine is restored in the theme repo (assets/apcs-widgets.js), so
+// all six CFUs on both pages can be earned again and the full range is seeded.
+// Prefer fixing the page over shrinking the manifest.
 const CSA_UNIT1_GRADED = {
-  '1.1':  { cfu_items: [1, 2, 6], quiz: 2 },
-  '1.2':  { cfu_items: [1, 2, 6], quiz: 2 },
+  '1.1':  { cfus: 6, quiz: 2 },
+  '1.2':  { cfus: 6, quiz: 2 },
   '1.3':  { cfus: 8, quiz: 2 },
   '1.4':  { cfus: 8, quiz: 2 },
   '1.5':  { cfus: 8, quiz: 2 },

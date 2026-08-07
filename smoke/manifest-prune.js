@@ -47,22 +47,40 @@ const has = (item) => !!one(`SELECT 1 x FROM course_manifest WHERE course='ap-cs
 
 console.log('\nMANIFEST SEED ITEM LISTS AND GUARDED PRUNE\n');
 
-// ── 1. The seed expresses a non-contiguous item list ────────────────────────
-console.log('1. CSA 1.1 and 1.2 seed only the gradeable widgets');
+// ── 1. The seed can express a non-contiguous item list ──────────────────────
+//  `cfu_items` exists for the case where only SOME widgets on a page can be
+//  graded, because the gradeable ones are not necessarily 1..N. It is not in use
+//  today: CSA 1.1 and 1.2 briefly carried [1, 2, 6] on the belief their
+//  matching / scenario-sort / cloze widgets were unearnable, which turned out to
+//  be a page regression rather than a fact about the items (they hold 56
+//  recorded attempts). The widget engine was restored and both lessons are back
+//  to the full range. The mechanism stays tested so the next real case works.
+console.log('1. The seed supports an explicit, non-contiguous item list');
 {
   const idsFor = (lesson) => buildRows()
     .filter((r) => r.course === 'ap-csa' && r.lesson_id === lesson && r.item_type === 'cfu')
     .map((r) => r.item_id).sort();
 
-  ok('  1.1 seeds cfu-1, cfu-2, cfu-6 (not 1 through 3)',
-    JSON.stringify(idsFor('1.1')) === JSON.stringify(['1.1-cfu-1', '1.1-cfu-2', '1.1-cfu-6', '1.1-code-1'].sort()),
-    idsFor('1.1'));
-  ok('  1.2 likewise', idsFor('1.2').includes('1.2-cfu-6') && !idsFor('1.2').includes('1.2-cfu-3'), idsFor('1.2'));
-  ok('  the dead widgets are absent: no cfu-3, cfu-4 or cfu-5 on 1.1',
-    !['1.1-cfu-3', '1.1-cfu-4', '1.1-cfu-5'].some((i) => idsFor('1.1').includes(i)));
-  ok('  an ordinary lesson still seeds the full contiguous range (1.3 has 8)',
+  ok('  CSA 1.1 seeds all six CFUs again, not a reduced set',
+    ['1.1-cfu-1', '1.1-cfu-2', '1.1-cfu-3', '1.1-cfu-4', '1.1-cfu-5', '1.1-cfu-6']
+      .every((i) => idsFor('1.1').includes(i)), idsFor('1.1'));
+  ok('  and so does 1.2',
+    ['1.2-cfu-3', '1.2-cfu-4', '1.2-cfu-5'].every((i) => idsFor('1.2').includes(i)), idsFor('1.2'));
+  ok('  an ordinary lesson is unchanged (1.3 has 8)',
     ['1.3-cfu-1', '1.3-cfu-4', '1.3-cfu-8'].every((i) => idsFor('1.3').includes(i)), idsFor('1.3'));
-  ok('  the quiz row is untouched on both', buildRows().some((r) => r.item_id === '1.1-quiz' && r.points === 2));
+  ok('  the quiz rows are untouched', buildRows().some((r) => r.item_id === '1.1-quiz' && r.points === 2));
+
+  // The mechanism itself, exercised directly rather than through live data, so
+  // it keeps working for whatever page needs it next.
+  const expand = (cfg) => (cfg.cfu_items
+    ? cfg.cfu_items
+    : Array.from({ length: cfg.cfus }, (_, i) => i + 1));
+  ok('  cfu_items is used verbatim when present, gaps and all',
+    expand({ cfu_items: [1, 2, 6] }).join(',') === '1,2,6');
+  ok('  a plain count still expands to the contiguous range',
+    expand({ cfus: 4 }).join(',') === '1,2,3,4');
+  ok('  which a smaller count could NOT express: 3 gives 1,2,3, dropping 6',
+    expand({ cfus: 3 }).join(',') === '1,2,3');
 }
 
 // ── 2. Seeding is still insert-only ─────────────────────────────────────────
@@ -71,27 +89,29 @@ console.log('\n2. Seeding writes the manifest and never deletes');
   const r = seedManifest({ update: true });
   ok('  seed wrote rows', r.changed > 0, r);
   ok('  1.1-cfu-6 is present', has('1.1-cfu-6'));
-  ok('  1.1-cfu-3 was never seeded', !has('1.1-cfu-3'));
+  ok('  all six of 1.1 CFUs are present, including the widget items',
+    ['1.1-cfu-1', '1.1-cfu-3', '1.1-cfu-5', '1.1-cfu-6'].every(has));
+  ok('  an id the seed does not produce is absent', !has('1.1-cfu-9'));
 }
 
 // ── 3. An orphan is found but NOT deleted without the flag ──────────────────
 console.log('\n3. An orphaned row is reported, and left alone by default');
 {
-  // Simulate the live database: the pre-change seed had put cfu-3/4/5 in.
+  // Simulate the live database: retired item ids that the seed no longer produces.
   run(`INSERT INTO course_manifest (course,unit,lesson_id,item_id,item_type,points)
-       VALUES ('ap-csa','unit-1','1.1','1.1-cfu-3','cfu',1),
-              ('ap-csa','unit-1','1.1','1.1-cfu-4','cfu',1),
-              ('ap-csa','unit-1','1.1','1.1-cfu-5','cfu',1)`);
-  ok('  the three legacy rows exist', has('1.1-cfu-3') && has('1.1-cfu-4') && has('1.1-cfu-5'));
+       VALUES ('ap-csa','unit-1','1.1','1.1-cfu-9','cfu',1),
+              ('ap-csa','unit-1','1.1','1.1-cfu-10','cfu',1),
+              ('ap-csa','unit-1','1.1','1.1-cfu-11','cfu',1)`);
+  ok('  the three legacy rows exist', has('1.1-cfu-9') && has('1.1-cfu-10') && has('1.1-cfu-11'));
 
   const orphanIds = findOrphans().map((o) => o.item_id);
   ok('  all three are reported as orphans',
-    ['1.1-cfu-3', '1.1-cfu-4', '1.1-cfu-5'].every((i) => orphanIds.includes(i)), orphanIds);
+    ['1.1-cfu-9', '1.1-cfu-10', '1.1-cfu-11'].every((i) => orphanIds.includes(i)), orphanIds);
   ok('  a seeded item is never an orphan', !orphanIds.includes('1.1-cfu-6'));
 
   const dry = pruneManifest();           // no apply
   ok('  a dry run deletes nothing', dry.deleted === 0, dry.deleted);
-  ok('  and the rows are still there', has('1.1-cfu-3'));
+  ok('  and the rows are still there', has('1.1-cfu-9'));
   ok('  but it names them as removable', dry.removable.length >= 3, dry.removable.length);
 }
 
@@ -105,15 +125,15 @@ console.log('\n4. An orphan with recorded attempts is refused, even with --prune
        VALUES ('c1','t1','CSA-PRN','P','ap-csa',1,80,0,'practice')`);
   run(`INSERT INTO students (id,class_id,display_name,pin_hash) VALUES ('s1','c1','A','x')`);
   run(`INSERT INTO attempts (student_id,class_id,course,lesson_id,item_id,item_type,score,max_score,passed,attempt_no)
-       VALUES ('s1','c1','ap-csa','1.1','1.1-cfu-4','cfu',1,1,1,1)`);
+       VALUES ('s1','c1','ap-csa','1.1','1.1-cfu-10','cfu',1,1,1,1)`);
 
   const p = pruneManifest({ apply: true });
-  ok('  cfu-3 and cfu-5 were deleted (no attempts)', !has('1.1-cfu-3') && !has('1.1-cfu-5'));
-  ok('  cfu-4 was KEPT because a student answered it', has('1.1-cfu-4'));
+  ok('  the two with no attempts were deleted', !has('1.1-cfu-9') && !has('1.1-cfu-11'));
+  ok('  the one with an attempt was KEPT', has('1.1-cfu-10'));
   ok('  and it is reported as kept, not silently skipped',
-    p.kept.some((k) => k.item_id === '1.1-cfu-4' && k.attempts === 1), p.kept);
+    p.kept.some((k) => k.item_id === '1.1-cfu-10' && k.attempts === 1), p.kept);
   ok('  the attempt row itself was not touched',
-    one(`SELECT COUNT(*) n FROM attempts WHERE item_id='1.1-cfu-4'`).n === 1);
+    one(`SELECT COUNT(*) n FROM attempts WHERE item_id='1.1-cfu-10'`).n === 1);
   ok('  live seeded rows survived the prune', has('1.1-cfu-6') && has('1.1-quiz') && has('1.3-cfu-8'));
 }
 
@@ -123,10 +143,10 @@ console.log('\n4. An orphan with recorded attempts is refused, even with --prune
 console.log('\n5. A pruned row comes back by re-seeding, with no data repair');
 {
   run(`INSERT INTO course_manifest (course,unit,lesson_id,item_id,item_type,points)
-       VALUES ('ap-csa','unit-1','1.1','1.1-cfu-3','cfu',1)`);
-  ok('  restoring the row is a plain insert', has('1.1-cfu-3'));
+       VALUES ('ap-csa','unit-1','1.1','1.1-cfu-9','cfu',1)`);
+  ok('  restoring the row is a plain insert', has('1.1-cfu-9'));
   const after = seedManifest({ update: true });
-  ok('  re-seeding leaves it in place (seed never deletes)', has('1.1-cfu-3'), after);
+  ok('  re-seeding leaves it in place (seed never deletes)', has('1.1-cfu-9'), after);
 }
 
 // ── 6. The boot gate: MANIFEST_PRUNE must be exactly '1' to delete ──────────
@@ -145,7 +165,7 @@ console.log('\n6. The boot flag gates the delete, and only the exact value turns
   // A flagged boot must be IDEMPOTENT: once the orphans are gone, later deploys
   // with the variable still set do nothing. That is what makes it safe to leave
   // set, and it is the difference between a one-time fix and a standing risk.
-  // Section 5 restored 1.1-cfu-3, so the first flagged run has real work to do.
+  // Section 5 restored 1.1-cfu-9, so the first flagged run has real work to do.
   const first = pruneManifest({ apply: true });
   ok('  the first flagged run clears the remaining removable orphan',
     first.deleted === 1, first.deleted);
@@ -157,7 +177,7 @@ console.log('\n6. The boot flag gates the delete, and only the exact value turns
     one(`SELECT COUNT(*) n FROM course_manifest`).n === before);
   ok('  the only orphan left is the one with an attempt, still refused',
     second.orphans.length === 1 && second.kept.length === 1
-      && second.kept[0].item_id === '1.1-cfu-4', second.orphans);
+      && second.kept[0].item_id === '1.1-cfu-10', second.orphans);
 }
 
 console.log(`\n${pass} passed, ${fail} failed\n`);
