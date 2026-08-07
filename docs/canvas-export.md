@@ -107,11 +107,32 @@ personal information about her is stored anywhere in this system.
 
 ## The API, for reference
 
+### Exporting only what the dashboard is showing
+
+Two optional params make the file match the screen instead of the whole course:
+
+| Param | Example | Meaning |
+| --- | --- | --- |
+| `include` | `include=quiz,exam` | only these activity types count. Values: `lesson`, `exercise`, `quiz`, `exam` |
+| `units` | `units=unit-1,unit-3` | only these units |
+
+Both are opt-in. Omitting one means "everything", so existing callers are
+unaffected. The dashboard sends its four include toggles and its unit selection
+automatically, which is why a filtered dashboard now produces a filtered file.
+
+A case file has no toggle and always counts, exactly as the dashboard's own
+`counts()` does. Filtering changes the denominator, so a unit grade moves with
+the filter rather than silently reporting the unfiltered number, and a unit with
+nothing included exports blank rather than `0`. An unknown value in either param
+is a 400: a typo would otherwise export a quietly smaller gradebook, which is
+worse than an error because nobody would know what was missing.
+
 ```
 GET /api/teacher/classes/:code/export                          # unchanged: the wide human CSV
 GET /api/teacher/classes/:code/export?format=canvas&scope=unit     # the Canvas file above
 GET /api/teacher/classes/:code/export?format=canvas&scope=activity # one column per activity
 GET /api/teacher/classes/:code/export?format=canvas&scope=unit&preflight=1
+GET /api/teacher/classes/:code/export?format=canvas&scope=activity&include=quiz,exam&units=unit-1
 ```
 
 Teacher auth (`Authorization: Bearer <teacher token>`) and class ownership are

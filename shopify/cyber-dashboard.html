@@ -811,10 +811,22 @@ window.TCDash = {
     const r=await this._api('PATCH','/api/teacher/classes/'+this.classCode+'/students/'+id,{student_ref:next.trim()});
     if(r.ok){ await this.loadProgress(this._token()); this.showTab('student'); }
     else alert(r.error||'Could not set the Canvas ref.'); },
+  // The export follows the dashboard: the four include toggles and the unit
+  // selection go with it, so a teacher gets the gradebook on their screen
+  // rather than the whole course every time. Omitting a param means "all", so
+  // an unfiltered dashboard still exports everything.
+  exportFilterQuery(){
+    const inc=this.state.include||{};
+    const on=['lesson','exercise','quiz','exam'].filter(k=>inc[k]!==false);
+    let q='&include='+on.join(',');
+    const units=this.state.units;
+    if(units && units.length) q+='&units='+units.map(encodeURIComponent).join(',');
+    return q;
+  },
   async exportCanvasCSV(scope){
     const token=localStorage.getItem('apcse_teacher_token');
     const sc=(scope==='activity')?'activity':'unit';
-    const q='?format=canvas&scope='+sc;
+    const q='?format=canvas&scope='+sc+this.exportFilterQuery();
     try{ const r=await this._fetchWithTimeout(API+'/api/teacher/classes/'+this.classCode+'/export'+q,{headers:{'Authorization':'Bearer '+token}});
       if(r.status===401){ localStorage.removeItem('apcse_teacher_token'); location.href='/pages/cyber-class'; return; }
       if(!r.ok) throw new Error('status '+r.status);

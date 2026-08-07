@@ -12,6 +12,7 @@ const resetLib = require('../lib/password-reset');
 const { attemptRollup } = require('../lib/attempt-rollup');
 const {
   formatCell, buildCanvasUnitExport, buildCanvasActivityExport, canvasSisLoginId,
+  INCLUDE_BUCKETS,
 } = require('../lib/export-format');
 const {
   normalizeMode, legacyFromMode, DEFAULT_MODE, MODE_LABELS, MODE_DESCRIPTIONS, retrySqlExpr,
@@ -547,6 +548,26 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
     if (format === 'canvas' && scope !== 'unit' && scope !== 'activity') {
       return res.status(400).json({ error: "scope must be 'unit' or 'activity'" });
     }
+
+    // include= and units= mirror what the dashboard is currently showing, so a
+    // teacher exports the gradebook on their screen rather than a different one.
+    // Both are opt-in: absent means the whole course, which is what every
+    // existing caller already gets.
+    const csvList = (v) => String(v).split(',').map((x) => x.trim()).filter(Boolean);
+
+    let includeFilter = null;
+    if (req.query.include !== undefined) {
+      const wanted = csvList(req.query.include);
+      const unknown = wanted.filter((w) => !INCLUDE_BUCKETS.includes(w));
+      if (unknown.length) {
+        return res.status(400).json({
+          error: `include must be a comma separated list of ${INCLUDE_BUCKETS.join(', ')}`,
+          unknown,
+        });
+      }
+      includeFilter = {};
+      for (const bucket of INCLUDE_BUCKETS) includeFilter[bucket] = wanted.includes(bucket);
+    }
     const wantsPreflight = ['1', 'true', 'yes'].includes(String(req.query.preflight || '').toLowerCase());
 
     const cls = db.prepare('SELECT * FROM classes WHERE class_code = ? AND teacher_id = ?')
@@ -555,6 +576,22 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
 
     const courseConfig = COURSES[cls.course];
     if (!courseConfig) return res.status(400).json({ error: `Course ${cls.course} not in manifest` });
+
+    // A typo'd unit would silently export a smaller gradebook, which is worse
+    // than an error: the teacher would not know what was missing.
+    let unitFilter = null;
+    if (req.query.units !== undefined) {
+      const wanted = csvList(req.query.units);
+      const known = Object.keys(courseConfig.units);
+      const unknown = wanted.filter((u) => !known.includes(u));
+      if (unknown.length) {
+        return res.status(400).json({ error: 'unknown unit in units', unknown, known });
+      }
+      unitFilter = wanted;
+    }
+    const exportFilter = (includeFilter || unitFilter)
+      ? { include: includeFilter, units: unitFilter }
+      : null;
 
     const students = db.prepare(
       'SELECT id, display_name, student_ref, last_active, active FROM students WHERE class_id = ? ORDER BY display_name'
@@ -601,6 +638,7 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
         className: cls.class_name,
         students: canvasStudents,
         cellFor: (sid, unit, lesson, act) => (map[sid] || {})[`${unit}|${lesson}|${act}`],
+        filter: exportFilter,
       });
 
       // The warning before the download button, from the same pass that builds
