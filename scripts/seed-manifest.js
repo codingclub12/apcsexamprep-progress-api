@@ -105,36 +105,49 @@ const CSA_UNIT3_GRADED = {
   '3.4': { 'exercise-1': 10, 'exercise-2': 6, quiz: 12, 'exercise-3': 4 },
 };
 
-// AP Networking graded items per topic. cfus = auto-graded widgets/checks in
-// the lesson body (item ids U.T-cfu-1..N, 1 point each). quiz = topic quiz
+// AP Networking graded items per topic. cfu_ids lists WHICH checks exist as a
+// reporting element on the page, not how many the lesson plan mentions. Every
+// topic page carries exactly one graded practice widget, tagged
+// data-item-id="U.T-cfu-2", and that is the only cfu the theme reporter can
+// ever emit. cfu-1 and cfu-3 are named in the lesson notes as spoken checks for
+// understanding; no page element exists for them.
+//
+// They were seeded anyway, which put 44 points of denominator across the course
+// that no student could earn: 22 topics times the two missing checks. That is
+// the failure smoke/manifest-prune.js exists to prevent, and it is why this is
+// a list of ids rather than a count. A count invites "there are three CFUs in
+// the lesson" when the question is "how many can report a score".
+//
+// Adding cfu-1 and cfu-3 back is a page-authoring job, not a seed change: build
+// the widget, tag it, then add its id here. quiz = topic quiz
 // question count (item id U.T-quiz, 1 point per question). The unit is
 // derived from the lesson id prefix (2.3 -> unit-2).
 // Only authored topics are listed; adding a NEW topic's items later is safe,
 // but changing an existing item's points retroactively moves percentages, so
 // counts here must match the shipped page. Topic 1.1 is the authored exemplar.
 const NET_GRADED = {
-  '1.1': { cfus: 3, quiz: 8 },
-  '1.2': { cfus: 3, quiz: 8 },
-  '1.3': { cfus: 3, quiz: 8 },
-  '1.4': { cfus: 3, quiz: 8 },
-  '2.1': { cfus: 3, quiz: 8 },
-  '2.2': { cfus: 3, quiz: 8 },
-  '2.3': { cfus: 3, quiz: 8 },
-  '2.4': { cfus: 3, quiz: 8 },
-  '2.5': { cfus: 3, quiz: 8 },
-  '2.6': { cfus: 3, quiz: 8 },
-  '3.1': { cfus: 3, quiz: 8 },
-  '3.2': { cfus: 3, quiz: 8 },
-  '3.3': { cfus: 3, quiz: 8 },
-  '3.4': { cfus: 3, quiz: 8 },
-  '3.5': { cfus: 3, quiz: 8 },
-  '3.6': { cfus: 3, quiz: 8 },
-  '4.1': { cfus: 3, quiz: 8 },
-  '4.2': { cfus: 3, quiz: 8 },
-  '4.3': { cfus: 3, quiz: 8 },
-  '4.4': { cfus: 3, quiz: 8 },
-  '4.5': { cfus: 3, quiz: 8 },
-  '4.6': { cfus: 3, quiz: 8 },
+  '1.1': { cfu_ids: [2], quiz: 8 },
+  '1.2': { cfu_ids: [2], quiz: 8 },
+  '1.3': { cfu_ids: [2], quiz: 8 },
+  '1.4': { cfu_ids: [2], quiz: 8 },
+  '2.1': { cfu_ids: [2], quiz: 8 },
+  '2.2': { cfu_ids: [2], quiz: 8 },
+  '2.3': { cfu_ids: [2], quiz: 8 },
+  '2.4': { cfu_ids: [2], quiz: 8 },
+  '2.5': { cfu_ids: [2], quiz: 8 },
+  '2.6': { cfu_ids: [2], quiz: 8 },
+  '3.1': { cfu_ids: [2], quiz: 8 },
+  '3.2': { cfu_ids: [2], quiz: 8 },
+  '3.3': { cfu_ids: [2], quiz: 8 },
+  '3.4': { cfu_ids: [2], quiz: 8 },
+  '3.5': { cfu_ids: [2], quiz: 8 },
+  '3.6': { cfu_ids: [2], quiz: 8 },
+  '4.1': { cfu_ids: [2], quiz: 8 },
+  '4.2': { cfu_ids: [2], quiz: 8 },
+  '4.3': { cfu_ids: [2], quiz: 8 },
+  '4.4': { cfu_ids: [2], quiz: 8 },
+  '4.5': { cfu_ids: [2], quiz: 8 },
+  '4.6': { cfu_ids: [2], quiz: 8 },
 };
 
 // AP Networking unit tests: one cumulative test per unit, item id U-test, at
@@ -234,7 +247,7 @@ function buildRows() {
   // AP Networking cfu/quiz items (authored topics only).
   for (const [lesson, cfg] of Object.entries(NET_GRADED)) {
     const unit = `unit-${lesson.split('.')[0]}`;
-    for (let i = 1; i <= cfg.cfus; i++) {
+    for (const i of cfg.cfu_ids) {
       rows.push({ course: 'ap-networking', unit, lesson_id: lesson, item_id: `${lesson}-cfu-${i}`, item_type: 'cfu', points: 1 });
     }
     if (cfg.quiz > 0) {
