@@ -180,5 +180,27 @@ console.log('\n6. The boot flag gates the delete, and only the exact value turns
       && second.kept[0].item_id === '1.1-cfu-10', second.orphans);
 }
 
+// ── 7. AP NETWORKING SEEDS ONLY THE CFU THAT CAN REPORT ──────────────────────
+//  Every ap-networking topic page carries exactly ONE graded practice widget,
+//  tagged data-item-id="U.T-cfu-2". cfu-1 and cfu-3 are spoken checks in the
+//  lesson notes with no page element, so the theme reporter cannot emit them.
+//
+//  They were seeded anyway for a while, which is 22 topics times two missing
+//  checks: 44 points of denominator no student could earn, spread thin enough
+//  across the course that no single lesson looked wrong.
+//
+//  This is the same rule the rest of this file tests, applied to the seed itself
+//  rather than to the prune: do not create the row in the first place.
+{
+  console.log('\n7. ap-networking seeds only the CFU that has a reporting element');
+  const netCfu = buildRows().filter((r) => r.course === 'ap-networking' && r.item_type === 'cfu');
+  const suffixes = [...new Set(netCfu.map((r) => r.item_id.replace(/^.*-(cfu-\d+)$/, '$1')))];
+  ok('  every seeded ap-networking cfu is cfu-2',
+    suffixes.length === 1 && suffixes[0] === 'cfu-2', suffixes);
+  ok('  one per authored topic, not three', netCfu.length === 22, netCfu.length);
+  ok('  no topic seeds cfu-1 or cfu-3',
+    !netCfu.some((r) => /-cfu-(1|3)$/.test(r.item_id)));
+}
+
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);
