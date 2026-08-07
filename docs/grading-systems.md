@@ -95,3 +95,47 @@ grade path that Cyber shipped on and that CSP now targets. System A
 denominators, per-question detail with zero PII, and first-attempt-of-record
 grading. They were built for different requirements and were never wired to a
 single teacher read. The pilot is the moment to reconcile them.
+
+## Off-platform instruments (System A, teacher-entered)
+
+Added after the AP Networking exam build. A `course_manifest` row IS a
+denominator: `smoke/manifest-prune.js` pins the rule and the reason, that an
+item no page can report marks every student in the class down for something no
+teacher can see on screen. The remedy there was to un-seed items that could
+never be earned (CSA 1.1 and 1.2 CFUs with no grading logic on the page).
+
+The printed instruments are the case that remedy cannot solve. The four AP
+Networking unit tests (88 MC points) and the three cumulative exams (130 MC
+points) are 218 points of assessment a teacher really administers, on paper.
+Un-seeding them would keep the denominator honest and leave the largest block
+of assessment in the course permanently outside the gradebook. So the teacher
+enters the scores instead, and the manifest rows become true.
+
+    GET  /api/teacher/classes/:code/scores?course=&item_id=
+    POST /api/teacher/classes/:code/scores
+         { course, item_id, scores: [ { student_id, score }, ... ] }
+
+The write lands one ordinary `attempts` row per student with `source =
+'teacher'`, so every existing read path (attempt rollup, admin gradebook, CSV
+and Canvas export) picks it up with no change. The manifest still supplies
+`lesson_id`, `item_type` and `max_score`; the teacher supplies only a number,
+and it is validated against manifest points exactly as a student submission is.
+
+Two properties are load-bearing:
+
+- **Re-entry replaces.** A typo corrected downward must not leave the higher
+  original sitting in the bank as a best attempt under a retry-on class. The
+  route deletes the teacher's own prior row for the item before inserting.
+- **The delete is scoped to `source = 'teacher'`.** A student-reported attempt
+  at the same item is never touched, and still counts toward `attempt_no`, so a
+  paper retake entered after an online try numbers correctly. This is the only
+  place a row is removed from `attempts`.
+
+`source` is NULL on every pre-existing row and on every student submission,
+which is what "the student reported it from the page" means. It is a real
+column rather than a `detail` JSON key because the route filters on it in SQL.
+
+Still unearnable after this, and deliberately so: the AP Networking baseline
+diagnostic is not seeded at all (it runs before instruction and is not graded
+for marks), and the unit-test and exam free-response sections are not manifest
+items (they are scored offline against the performance-task rubrics).
