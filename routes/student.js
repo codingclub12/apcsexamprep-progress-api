@@ -9,6 +9,10 @@ const { makeRateLimit } = require('../lib/rate-limit');
 const { newId, signStudentToken, isValidPin, sanitize, COURSES, pageFromHandle } = require('../utils');
 const { rollupScore, LESSON_SCORE_ITEM } = require('../scoring');
 const { resolveMode, retryAllowedFor } = require('../retry-policy');
+// The single denominator authority. The student view resolves "out of what"
+// through the same function the teacher and admin views use, so the three can
+// never print different fractions for the same work.
+const contract = require('../lib/gradebook-contract');
 
 // ── CREDENTIAL RATE LIMITS ────────────────────────────────────────────────────
 //  The four unauthenticated entry points below are the only places a caller can
@@ -133,10 +137,41 @@ router.get('/progress', requireStudent, (req, res) => {
 
   // Class mastery_threshold rides along so the student view can label the
   // "Passing mark" line instead of defaulting to 80. Class-level, so top-level.
-  const cls = db.prepare('SELECT mastery_threshold FROM classes WHERE id = ?').get(req.student.class_id);
+  const cls = db.prepare('SELECT mastery_threshold, course FROM classes WHERE id = ?').get(req.student.class_id);
   const mastery_threshold = (cls && cls.mastery_threshold != null) ? cls.mastery_threshold : 80;
 
-  res.json({ progress: records, map, mastery_threshold });
+  // ── POINTS EARNED OVER POINTS POSSIBLE ─────────────────────────────────────
+  //  Every cell a student sees is real points over the real total, resolved by
+  //  the same authority the teacher and admin views use
+  //  (lib/gradebook-contract.js). This is the whole point: a fraction shown to
+  //  a student and the fraction shown to their teacher are now the same number
+  //  by construction.
+  //
+  //  Before this, the response carried a percent and nothing else, so the page
+  //  invented a constant per activity and rescaled the percent onto it. On
+  //  Cyber 1.1 that printed "5/5" for an exercise out of 7 and "/10" for a quiz
+  //  out of 5, and the rounding moved the grade: 17 percent rendered as "1/5",
+  //  which reads as 20.
+  //
+  //  progress.score is a PERCENT (0-100), so earned is that percent of the
+  //  authored total. The percentage itself never moves; only the pair the
+  //  student is shown becomes true.
+  //
+  //  points_possible is null when nobody has authored a value for the column.
+  //  A page must render that as a bare percent, never as a guessed fraction:
+  //  an invented denominator is exactly the defect this replaces.
+  const denoms = contract.denominatorMap(cls ? cls.course : null);
+  const denominators = {};
+  for (const [key, v] of denoms) denominators[key] = v.possible;
+
+  for (const r of records) {
+    const d = contract.lookupDenominator(denoms, r.unit, r.lesson, r.activity_type);
+    r.points_possible = d ? d.possible : null;
+    r.points_earned = (d && r.score != null) ? Math.round((r.score / 100) * d.possible * 100) / 100 : null;
+    r.denominator_source = d ? d.source : null;
+  }
+
+  res.json({ progress: records, map, mastery_threshold, denominators });
 });
 
 // ── STUDENT ATTEMPTS GRID (per-item grade-of-record, self) ────────────────────
