@@ -260,5 +260,52 @@ console.log('\n6. The boot flag gates the delete, and only the exact value turns
   ok('  attempts are never touched', one(`SELECT COUNT(*) n FROM attempts WHERE item_id='2.1-cfu-1'`).n === 1);
 }
 
+// ── 9. ONE LESSON ID PER STANDALONE INSTRUMENT ───────────────────────────────
+//  attemptRollup keys cells by (student, lesson_id, item_type). Two items that
+//  share BOTH collapse into one cell with their points summed.
+//
+//  For a topic's CFUs that is the intent: 1.1-cfu-1 and 1.1-cfu-2 are meant to
+//  aggregate into one "1.1 practice" cell. For a standalone instrument it is a
+//  bug, and a quiet one. All four unit tests shared lesson_id 'test', so a
+//  student who scored 14 of 16 on the Unit 1 test read 14/88, the whole year's
+//  tests as the denominator, filed under unit-1 because unitOf takes the first
+//  match. Every student looked like they were failing.
+//
+//  So: unit tests, exams and labs each get their own lesson_id. This pins it.
+{
+  console.log('\n9. every standalone AP Networking instrument has its own gradebook cell');
+  const net = buildRows().filter((r) => r.course === 'ap-networking');
+  const standalone = net.filter((r) => /^(\d-test|exam-|lab-)/.test(r.item_id));
+  ok('  4 unit tests, 3 exams, 4 labs are all present', standalone.length === 11, standalone.length);
+
+  const cells = {};
+  for (const r of standalone) {
+    const key = `${r.lesson_id}|${r.item_type}`;
+    (cells[key] = cells[key] || []).push(r.item_id);
+  }
+  const shared = Object.entries(cells).filter(([, items]) => items.length > 1);
+  ok('  no two of them share a (lesson_id, item_type) cell', shared.length === 0, shared);
+  ok('  which means 11 distinct cells', Object.keys(cells).length === 11, Object.keys(cells).length);
+
+  // And none of them collides with a topic lesson id, which would fold an exam
+  // into a topic's row.
+  const topicLessons = new Set(net.filter((r) => /^\d\.\d$/.test(r.lesson_id)).map((r) => r.lesson_id));
+  ok('  none reuses a topic lesson id',
+    !standalone.some((r) => topicLessons.has(r.lesson_id)),
+    standalone.filter((r) => topicLessons.has(r.lesson_id)).map((r) => r.item_id));
+
+  // A unit test belongs to ITS unit, not to whichever one sorted first.
+  const t3 = net.find((r) => r.item_id === '3-test');
+  ok('  the Unit 3 test is filed under unit-3', t3 && t3.unit === 'unit-3', t3 && t3.unit);
+  const l4 = net.find((r) => r.item_id === 'lab-4');
+  ok('  lab 4 is filed under unit-4', l4 && l4.unit === 'unit-4', l4 && l4.unit);
+
+  // The topic CFU aggregation this does NOT break: cfu-2 and the topic quiz are
+  // different item_types on the same lesson, which is a different cell each.
+  const t11 = net.filter((r) => r.lesson_id === '1.1');
+  ok('  a topic still has separate practice and quiz cells',
+    new Set(t11.map((r) => r.item_type)).size === t11.length, t11.map((r) => r.item_id));
+}
+
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);

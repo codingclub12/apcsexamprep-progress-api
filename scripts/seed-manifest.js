@@ -151,7 +151,14 @@ const NET_GRADED = {
 };
 
 // AP Networking unit tests: one cumulative test per unit, item id U-test, at
-// the lesson_id 'test' so it never collides with a topic row. Points are the
+// the lesson_id 'test-N', one per test, so it never collides with a topic row.
+// ONE LESSON ID PER INSTRUMENT. Sharing a single 'test' across all four
+// collapsed them into one gradebook cell: the rollup keys cells by
+// (student, lesson, activity), so a student who scored 14 of 16 on the Unit 1
+// test read 14/88, the whole year's tests as the denominator, filed under
+// unit-1 because unitOf takes the first match. The same mistake was extended to
+// the exams and the labs before it was caught. It is not a display bug; every
+// student looks like they are failing. Points are the
 // mc_points declared by each unit's own units/N/test/unit-test.yaml in the
 // course repo (the MC item count). The two free-response prompts on each test
 // are scored offline against the rubric and are deliberately NOT manifest
@@ -166,11 +173,11 @@ const NET_UNIT_TESTS = {
 // AP Networking browser labs, one per unit, from labs/labs.yaml in the course
 // repo. Eight checkpoints each, one point per checkpoint.
 //
-// lesson_id is 'lab', matching what the shipped widget posts and following the
-// 'test' and 'exam' ids the unit tests and cumulative exams already use for
-// course-level instruments. POST /api/progress/attempt 400s a submission whose
-// lesson_id disagrees with its manifest row, so these two strings are a
-// contract: changing one without the other silently drops every lab grade.
+// lesson_id equals the item id, one per lab, so each lab gets its own cell with
+// its own denominator. POST /api/progress/attempt 400s a submission whose
+// lesson_id disagrees with its manifest row, so this string and the one the
+// widget posts are a contract: changing one without the other silently drops
+// every lab grade. The widget derives it from item_id for that reason.
 //
 // Unlike the unit tests and the exams, these ARE delivered in the browser and
 // report themselves, so seeding them adds denominator that a student can
@@ -194,8 +201,8 @@ const NET_LABS = {
 // instruction, it is not graded for marks, and seeding it would put 20 points
 // a student cannot yet earn into every denominator on every dashboard.
 //
-// lesson_id is 'exam' so these never collide with a topic row, mirroring the
-// 'test' lesson_id used by the unit tests above.
+// lesson_id equals the item id, one per exam, so the midterm and the final are
+// separate cells rather than one 130-point lump.
 const NET_EXAMS = {
   'exam-midterm': 40,
   'exam-practice-pilot': 40,
@@ -258,17 +265,17 @@ function buildRows() {
   // AP Networking unit tests (one per unit).
   for (const [unit, points] of Object.entries(NET_UNIT_TESTS)) {
     const n = unit.split('-')[1];
-    rows.push({ course: 'ap-networking', unit, lesson_id: 'test', item_id: `${n}-test`, item_type: 'quiz', points });
+    rows.push({ course: 'ap-networking', unit, lesson_id: `test-${n}`, item_id: `${n}-test`, item_type: 'quiz', points });
   }
 
   // AP Networking browser labs (one per unit).
   for (const [itemId, cfg] of Object.entries(NET_LABS)) {
-    rows.push({ course: 'ap-networking', unit: cfg.unit, lesson_id: 'lab', item_id: itemId, item_type: 'quiz', points: cfg.points });
+    rows.push({ course: 'ap-networking', unit: cfg.unit, lesson_id: itemId, item_id: itemId, item_type: 'quiz', points: cfg.points });
   }
 
   // AP Networking cumulative exams (course-wide, not tied to one unit).
   for (const [itemId, points] of Object.entries(NET_EXAMS)) {
-    rows.push({ course: 'ap-networking', unit: 'course', lesson_id: 'exam', item_id: itemId, item_type: 'quiz', points });
+    rows.push({ course: 'ap-networking', unit: 'course', lesson_id: itemId, item_id: itemId, item_type: 'quiz', points });
   }
 
   return rows;
