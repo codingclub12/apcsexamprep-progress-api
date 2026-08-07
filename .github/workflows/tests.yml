@@ -59,7 +59,7 @@ jobs:
       - name: Run offline smoke suites
         run: |
           set -uo pipefail
-          SUITES="command checks reset health teacheradmin gradebook export canvas quizparse wirelog denominators legacypoints exercises ungraded cyberdenoms reporter attemptrollup solo classroom shopify admin codegrade progressguard history gradereset quizvisibility gbagree retrymodes attemptretry manifestprune namesafety"
+          SUITES="command checks reset health teacheradmin gradebook export canvas quizparse wirelog denominators legacypoints exercises ungraded cyberdenoms reporter attemptrollup solo classroom shopify admin codegrade progressguard history gradereset quizvisibility gbagree contract retrymodes attemptretry manifestprune namesafety"
           failed=""
           for s in $SUITES; do
             echo "::group::smoke:$s"

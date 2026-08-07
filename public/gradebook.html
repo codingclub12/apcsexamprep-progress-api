@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>APCSExamPrep · Gradebook</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --plane:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --baseline:#c3c2b7; --border:rgba(11,11,11,0.10);
+    --good:#0ca30c; --critical:#d03b3b; --warnc:#eda100;
+    --csa:#2a78d6; --csp:#eb6834; --cyber:#1baf7a; --solo:#eda100;
+    --shadow:0 1px 2px rgba(11,11,11,0.04),0 1px 3px rgba(11,11,11,0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --plane:#0d0d0d; --surface:#1a1a19; --ink:#fff; --ink-2:#c3c2b7; --muted:#898781;
+      --grid:#2c2c2a; --baseline:#383835; --border:rgba(255,255,255,0.10);
+      --critical:#e66767; --warnc:#c98500;
+      --csa:#3987e5; --csp:#d95926; --cyber:#199e70; --solo:#c98500; --shadow:none;
+    }
+  }
+  :root[data-theme="dark"]{--plane:#0d0d0d;--surface:#1a1a19;--ink:#fff;--ink-2:#c3c2b7;--muted:#898781;--grid:#2c2c2a;--baseline:#383835;--border:rgba(255,255,255,0.10);--critical:#e66767;--warnc:#c98500;--csa:#3987e5;--csp:#d95926;--cyber:#199e70;--solo:#c98500;--shadow:none;}
+  :root[data-theme="light"]{--plane:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink-2:#52514e;--muted:#898781;--grid:#e1e0d9;--baseline:#c3c2b7;--border:rgba(11,11,11,0.10);--critical:#d03b3b;--warnc:#eda100;--csa:#2a78d6;--csp:#eb6834;--cyber:#1baf7a;--solo:#eda100;--shadow:0 1px 2px rgba(11,11,11,0.04),0 1px 3px rgba(11,11,11,0.06);}
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--plane); color: var(--ink); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: var(--csa); }
+  .wrap { max-width: 1600px; margin: 0 auto; padding: 20px 20px 64px; }
+
+  header.top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 16px; padding-bottom:16px; border-bottom:1px solid var(--border); margin-bottom:20px; }
+  header.top h1 { font-size:20px; margin:0; font-weight:650; letter-spacing:-0.01em; }
+  header.top .sub { color:var(--muted); font-size:13px; }
+  header.top .spacer { flex:1 1 auto; }
+  .navlink { color:var(--csa); text-decoration:none; font-size:13px; font-weight:600; }
+  .navlink:hover { text-decoration:underline; }
+  button, select { font:inherit; color:var(--ink); background:transparent; border:1px solid var(--border); border-radius:8px; padding:7px 11px; cursor:pointer; }
+  button:hover { border-color:var(--baseline); }
+  button.on { background:var(--ink); color:var(--plane); border-color:var(--ink); }
+
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 18px; margin-bottom:18px; box-shadow:var(--shadow); }
+  .card h3 { margin:0 0 4px; font-size:14px; font-weight:650; letter-spacing:0.01em; }
+  .hint { color:var(--muted); font-size:12.5px; margin:0 0 12px; max-width:78ch; }
+
+  .controls { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:16px; }
+
+  /* Integrity banner. A graded column with no authored "out of" is a data
+     failure, not a footnote, so it is loud and it sits above the grid. */
+  .banner { border-radius:12px; padding:14px 16px; margin-bottom:18px; border:1px solid; font-size:13.5px; }
+  .banner.bad { border-color:var(--critical); background:color-mix(in srgb, var(--critical) 9%, transparent); }
+  .banner.good { border-color:var(--good); background:color-mix(in srgb, var(--good) 8%, transparent); }
+  .banner b { display:block; font-size:14px; margin-bottom:4px; }
+  .banner ul { margin:8px 0 0; padding-left:20px; columns:3; font-size:12.5px; color:var(--ink-2); }
+  @media (max-width: 900px) { .banner ul { columns:1; } }
+
+  .tiles { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:18px; }
+  .tile { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:10px 14px; min-width:118px; box-shadow:var(--shadow); }
+  .tile b { display:block; font-size:19px; font-weight:650; font-variant-numeric:tabular-nums; }
+  .tile span { color:var(--muted); font-size:11.5px; text-transform:uppercase; letter-spacing:0.04em; }
+
+  .scroller { overflow-x:auto; border:1px solid var(--border); border-radius:12px; background:var(--surface); }
+  table.gb { border-collapse:separate; border-spacing:0; font-size:12.5px; width:max-content; min-width:100%; }
+  table.gb th, table.gb td { padding:5px 7px; border-bottom:1px solid var(--grid); white-space:nowrap; text-align:center; }
+  table.gb thead th { position:sticky; top:0; background:var(--surface); z-index:2; font-weight:600; color:var(--ink-2); border-bottom:1px solid var(--baseline); }
+  table.gb thead tr.units th { font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); border-bottom:1px solid var(--grid); }
+  table.gb .stick { position:sticky; left:0; background:var(--surface); text-align:left; z-index:3; border-right:1px solid var(--baseline); min-width:150px; }
+  table.gb thead .stick { z-index:4; }
+  table.gb tbody tr:hover td { background:color-mix(in srgb, var(--ink) 3%, transparent); }
+  table.gb td.num { font-variant-numeric:tabular-nums; }
+  table.gb .sep { border-left:1px solid var(--baseline); }
+
+  /* Blank is NOT attempted. A zero IS attempted and scored zero. These are
+     different facts about a student and must never look alike. */
+  td.blank { color:transparent; }
+  td.blank::after { content:"·"; color:var(--grid); }
+  td.zero { color:var(--critical); font-weight:650; }
+  td.pass { color:var(--good); }
+  td.fail { color:var(--critical); }
+  td.done { color:var(--muted); }
+  td.unpriced { color:var(--warnc); }
+
+  .pill { display:inline-block; font-size:10.5px; padding:1px 6px; border-radius:99px; border:1px solid var(--border); color:var(--muted); margin-left:6px; vertical-align:middle; }
+  .bar { height:5px; border-radius:3px; background:var(--grid); overflow:hidden; width:56px; display:inline-block; vertical-align:middle; }
+  .bar i { display:block; height:100%; background:var(--csa); }
+  .muted { color:var(--muted); }
+  .err { color:var(--critical); }
+  code { font:12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; background:color-mix(in srgb, var(--ink) 6%, transparent); padding:1px 5px; border-radius:4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Gradebook</h1>
+    <span class="sub">the teacher's own view, from <code>/api/admin/class/:id/gradebook/as-teacher</code></span>
+    <a class="navlink" href="/admin/dashboard">Dashboard →</a>
+    <a class="navlink" href="/admin/teachers">Teachers →</a>
+    <a class="navlink" href="/admin/command">Command →</a>
+    <span class="spacer"></span>
+    <button id="revealBtn" title="Show real student names">Names</button>
+    <button id="refreshBtn">Refresh</button>
+  </header>
+
+  <div class="card">
+    <h3>What you are looking at</h3>
+    <p class="hint">
+      This page renders the canonical gradebook contract, and it calls the same builder the teacher
+      route calls with the same arguments. It is not a second implementation of the teacher's
+      gradebook: it is that gradebook, so what you verify here is what they see. Names are hidden by
+      default because the numbers can be checked without them.
+      <br /><br />
+      The grade is <b>earned over graded</b>: points scored, over the points of the work actually
+      attempted. It is never divided by the whole course, because a student who has finished three
+      items perfectly is at 100 percent, not 3 percent. How much of the course has been reached is
+      <b>pace</b>, reported separately. A blank cell means not attempted. A <b>0</b> means attempted
+      and scored zero.
+    </p>
+    <div class="controls">
+      <select id="classSel"><option>Loading classes…</option></select>
+      <select id="courseSel" style="display:none"></select>
+      <span id="meta" class="muted"></span>
+    </div>
+  </div>
+
+  <div id="banner"></div>
+  <div id="tiles" class="tiles"></div>
+  <div id="grid"></div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var state = { classes: [], classId: null, course: null, reveal: false, doc: null };
+
+  function esc(s) {
+    return String(s === null || s === undefined ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+  function api(path) {
+    return fetch(path, { credentials: "same-origin" }).then(function (r) {
+      if (r.status === 401 || r.status === 403 || r.status === 503) { var e = new Error("auth"); e.auth = true; throw e; }
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    });
+  }
+  function toLogin() { window.location.href = "/admin/gradebook"; }
+  function onErr(e) {
+    if (e && e.auth) return toLogin();
+    console.error(e);
+    document.getElementById("grid").innerHTML = '<div class="card err">Could not load: ' + esc(e.message) + "</div>";
+  }
+  var n1 = function (v) { return v === null || v === undefined ? "" : String(Math.round(v * 10) / 10); };
+
+  // ── Class picker ──────────────────────────────────────────────────────────
+  function loadClasses() {
+    return api("/api/admin/classes").then(function (d) {
+      state.classes = (d.classes || []).slice().sort(function (a, b) {
+        return (b.student_count || 0) - (a.student_count || 0);
+      });
+      var sel = document.getElementById("classSel");
+      sel.innerHTML = state.classes.map(function (c) {
+        return '<option value="' + esc(c.id) + '">' + esc(c.class_code) + "  ·  " +
+          esc(c.class_name || "") + "  ·  " + esc(c.course) +
+          "  (" + (c.student_count || 0) + " students)</option>";
+      }).join("");
+      if (!state.classes.length) { sel.innerHTML = "<option>No classes</option>"; return; }
+      state.classId = state.classId || state.classes[0].id;
+      sel.value = state.classId;
+    });
+  }
+
+  // A solo system class carries course = 'solo', so which course to render is a
+  // choice rather than a property of the class.
+  function syncCoursePicker() {
+    var cls = state.classes.filter(function (c) { return c.id === state.classId; })[0];
+    var sel = document.getElementById("courseSel");
+    if (cls && cls.course === "solo") {
+      sel.style.display = "";
+      if (!sel.options.length) {
+        sel.innerHTML = ["ap-csa", "ap-csp", "ap-cybersecurity", "ap-networking"].map(function (c) {
+          return '<option value="' + c + '">' + c + "</option>";
+        }).join("");
+      }
+      state.course = sel.value;
+    } else {
+      sel.style.display = "none";
+      state.course = null;
+    }
+  }
+
+  function load() {
+    syncCoursePicker();
+    var qs = [];
+    if (state.reveal) qs.push("reveal=1");
+    if (state.course) qs.push("course=" + encodeURIComponent(state.course));
+    var url = "/api/admin/class/" + encodeURIComponent(state.classId) + "/gradebook/as-teacher" +
+      (qs.length ? "?" + qs.join("&") : "");
+    document.getElementById("grid").innerHTML = '<div class="card muted">Loading…</div>';
+    return api(url).then(function (d) { state.doc = d; render(); }).catch(onErr);
+  }
+
+  // ── Integrity banner ──────────────────────────────────────────────────────
+  //  Surfaced as a blocking banner and not a summary field on purpose. A graded
+  //  column with no authored denominator means the page decides the "out of",
+  //  which makes every percentage in that column a guess.
+  function renderBanner() {
+    var g = state.doc.integrity, el = document.getElementById("banner");
+    if (g.ok) {
+      el.innerHTML = '<div class="banner good"><b>Every graded column is priced.</b>' +
+        "Each one has an authored denominator, so every percentage on this page is computed " +
+        "against a number a human chose.</div>";
+      return;
+    }
+    var parts = [];
+    if (g.denominators_missing) {
+      parts.push("<b>" + g.denominators_missing + " graded column" +
+        (g.denominators_missing === 1 ? "" : "s") + " have no authored denominator.</b>" +
+        "Until an <code>out of</code> is authored for each, the page that reports them decides " +
+        "the denominator, and any percentage shown for that column is whatever the page happened " +
+        "to paint. Author them with <code>POST /api/admin/denominators/adopt</code>." +
+        '<ul>' + g.missing_denominators.slice(0, 60).map(function (m) {
+          return "<li>" + esc(m.item_key) + (m.scored_students ? " (" + m.scored_students + " scored)" : "") + "</li>";
+        }).join("") + "</ul>" +
+        (g.missing_denominators.length > 60 ? '<p class="hint">and ' + (g.missing_denominators.length - 60) + " more</p>" : ""));
+    }
+    if ((g.percent_only_items || []).length) {
+      parts.push("<b>" + g.percent_only_items.length + " column" +
+        (g.percent_only_items.length === 1 ? " is" : "s are") + " recorded as a percent with no points behind them.</b>" +
+        "Their cells are shown and marked, and they are counted in <code>items_percent_only</code>, " +
+        "but they cannot join a points total without a denominator, so they are excluded from the " +
+        "grade rather than folded in at a guessed weight.");
+    }
+    if ((g.unmapped_activities || []).length) {
+      parts.push("<b>Unmapped activity types: " + esc(g.unmapped_activities.join(", ")) + ".</b>" +
+        "They are being treated as practice. Add them to the normalizer's activity map deliberately.");
+    }
+    el.innerHTML = parts.map(function (p) { return '<div class="banner bad">' + p + "</div>"; }).join("");
+  }
+
+  function renderTiles() {
+    var d = state.doc, s = d.summary;
+    var t = [
+      ["Class grade", s.class_pct === null ? "not started" : n1(s.class_pct) + "%", "earned / graded"],
+      ["Points", n1(s.earned) + " / " + n1(s.graded), "attempted work"],
+      ["Course total", n1(s.possible), "all graded items"],
+      ["Students", s.students, s.students_with_scores + " with a grade"],
+      ["Graded items", s.items_total, s.items_shown + " columns"],
+      ["Lessons", s.lessons_shown, d.units.length + " units"]
+    ];
+    document.getElementById("tiles").innerHTML = t.map(function (x) {
+      return '<div class="tile"><b>' + esc(x[1]) + "</b><span>" + esc(x[0]) + "</span>" +
+        '<div class="muted" style="font-size:11px">' + esc(x[2]) + "</div></div>";
+    }).join("");
+  }
+
+  // ── The grid ──────────────────────────────────────────────────────────────
+  function cellHtml(c) {
+    if (!c) return '<td class="blank"></td>';                       // NOT ATTEMPTED
+    if (c.pct === null || c.pct === undefined) {
+      return '<td class="done" title="completed, no score recorded">✓</td>';
+    }
+    var cls = c.pct === 0 ? "zero" : (c.passed ? "pass" : "fail");
+    if (c.possible === null || c.possible === undefined) cls = "unpriced";
+    var pts = (c.earned === null || c.earned === undefined)
+      ? n1(c.pct) + "%"
+      : n1(c.earned) + "/" + n1(c.possible);
+    var title = n1(c.pct) + "%  ·  source " + c.source +
+      (c.tries ? "  ·  " + c.tries + " tries" : "") +
+      (c.possible === null ? "  ·  NO DENOMINATOR: percent only" : "");
+    return '<td class="num ' + cls + '" title="' + esc(title) + '">' + esc(pts) + "</td>";
+  }
+
+  function render() {
+    var d = state.doc;
+    document.getElementById("meta").innerHTML =
+      esc(d.class.class_code) + "  ·  " + esc(d.course_label) +
+      '<span class="pill">mastery ' + d.class.mastery_threshold + "%</span>" +
+      '<span class="pill">' + esc(d.class.retry_mode) + "</span>" +
+      (d.anonymized ? '<span class="pill">names hidden</span>' : "");
+
+    renderBanner();
+    renderTiles();
+
+    var items = d.items;
+    // Unit header spans, so a 200 column grid still reads as a course.
+    var spans = [], last = null;
+    items.forEach(function (it) {
+      if (last && last.unit === it.unit) { last.n++; return; }
+      last = { unit: it.unit, n: 1 }; spans.push(last);
+    });
+    var unitLabel = {};
+    d.units.forEach(function (u) { unitLabel[u.unit] = u.label; });
+
+    var h = ['<div class="scroller"><table class="gb"><thead>'];
+    h.push('<tr class="units"><th class="stick"></th><th colspan="4"></th>');
+    spans.forEach(function (s) {
+      h.push('<th class="sep" colspan="' + s.n + '">' + esc(unitLabel[s.unit] || s.unit) + "</th>");
+    });
+    h.push("</tr><tr><th class='stick'>Student</th>" +
+      "<th>Grade</th><th>Points</th><th>Pace</th><th>Passed</th>");
+    items.forEach(function (it, i) {
+      var sep = (i > 0 && items[i - 1].unit !== it.unit) ? " sep" : "";
+      var t = it.lesson_ref + " " + it.native_activity +
+        (it.possible === null ? "  (no denominator)" : "  out of " + it.possible) +
+        (it.graded ? "" : "  (not graded)");
+      h.push('<th class="' + sep.trim() + '" title="' + esc(t) + '">' + esc(it.label) +
+        (it.possible === null && it.graded ? '<span class="unpriced"> !</span>' : "") + "</th>");
+    });
+    h.push("</tr></thead><tbody>");
+
+    d.students.forEach(function (s) {
+      var o = s.overall;
+      h.push("<tr>");
+      h.push('<td class="stick">' + esc(s.label) + (s.active ? "" : ' <span class="pill">inactive</span>') + "</td>");
+      h.push('<td class="num">' + (o.pct === null ? '<span class="muted">not started</span>' : n1(o.pct) + "%") + "</td>");
+      h.push('<td class="num muted">' + n1(o.earned) + " / " + n1(o.graded) + "</td>");
+      h.push('<td class="num"><span class="bar"><i style="width:' + (s.pace.pct || 0) + '%"></i></span> ' +
+        '<span class="muted">' + s.pace.items_graded + "/" + s.pace.items_total + "</span></td>");
+      h.push('<td class="num muted">' + o.items_passed + "/" + o.items_graded + "</td>");
+      items.forEach(function (it, i) {
+        var sep = (i > 0 && items[i - 1].unit !== it.unit) ? ' class="sep"' : "";
+        var c = s.items[it.item_key];
+        h.push(cellHtml(c).replace("<td", "<td" + (sep ? " data-sep=1" : "")));
+      });
+      h.push("</tr>");
+    });
+
+    // Class average per column, on the same points basis as the rows above it.
+    h.push('<tr><td class="stick"><b>Class</b></td>');
+    h.push('<td class="num"><b>' + (d.summary.class_pct === null ? "not started" : n1(d.summary.class_pct) + "%") + "</b></td>");
+    h.push('<td class="num muted">' + n1(d.summary.earned) + " / " + n1(d.summary.graded) + "</td>");
+    h.push('<td colspan="2"></td>');
+    items.forEach(function (it) {
+      h.push('<td class="num muted" title="' + it.scored_students + ' scored">' +
+        (it.class_avg_pct === null ? "" : n1(it.class_avg_pct) + "%") + "</td>");
+    });
+    h.push("</tr></tbody></table></div>");
+    document.getElementById("grid").innerHTML = h.join("");
+  }
+
+  // ── Wiring ────────────────────────────────────────────────────────────────
+  document.getElementById("classSel").addEventListener("change", function (e) {
+    state.classId = e.target.value; load();
+  });
+  document.getElementById("courseSel").addEventListener("change", function (e) {
+    state.course = e.target.value; load();
+  });
+  document.getElementById("revealBtn").addEventListener("click", function (e) {
+    state.reveal = !state.reveal;
+    e.target.classList.toggle("on", state.reveal);
+    load();
+  });
+  document.getElementById("refreshBtn").addEventListener("click", load);
+
+  loadClasses().then(load).catch(onErr);
+})();
+</script>
+</body>
+</html>

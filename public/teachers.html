@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex, nofollow" />
-<title>APCSExamPrep · Teacher Inspector</title>
+<title>APCSExamPrep Â· Teacher Inspector</title>
 <style>
   :root {
     color-scheme: light dark;
@@ -152,9 +152,10 @@
   <header class="top">
     <h1>Teacher Inspector</h1>
     <span class="sub">live from <code>/api/admin</code></span>
-    <a class="navlink" href="/admin/dashboard">Dashboard →</a>
-    <a class="navlink" href="/admin/exec">Exec →</a>
-    <a class="navlink" href="/admin/analytics">Analytics →</a>
+    <a class="navlink" href="/admin/gradebook">Gradebook →</a>
+    <a class="navlink" href="/admin/dashboard">Dashboard â</a>
+    <a class="navlink" href="/admin/exec">Exec â</a>
+    <a class="navlink" href="/admin/analytics">Analytics â</a>
     <span class="spacer"></span>
     <button id="refreshBtn">Refresh</button>
     <button id="lockBtn">Sign out</button>
@@ -170,7 +171,7 @@
     </div>
 
     <div class="controls">
-      <input id="search" type="search" placeholder="Search teacher, email, school…" />
+      <input id="search" type="search" placeholder="Search teacher, email, schoolâ¦" />
       <select id="statusFilter">
         <option value="">All statuses</option>
         <option value="reporting">Reporting</option>
@@ -256,7 +257,7 @@
   function toLogin(){ window.location.href = "/admin/teachers"; }
   function onErr(e){ if (e && e.auth) return toLogin(); console.error(e); }
 
-  // ── Health ────────────────────────────────────────────────────────────────
+  // ââ Health ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
   function renderHealth() {
     var h = state.health; if (!h) return;
     var p = h.pipelines || {};
@@ -308,7 +309,7 @@
     return '<div class="tablewrap"><table class="minitable"><thead><tr>' + head + "</tr></thead><tbody>" + rows + "</tbody></table></div>" + more;
   }
 
-  // ── Teacher list ──────────────────────────────────────────────────────────
+  // ââ Teacher list ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
   var COLUMNS = [
     { key:"name", label:"Teacher", num:false },
     { key:"email", label:"Email", num:false },
@@ -350,7 +351,7 @@
 
   function renderList() {
     $("headRow").innerHTML = COLUMNS.map(function (c) {
-      var arrow = state.sort.key === c.key ? (state.sort.dir === 1 ? " ▲" : " ▼") : "";
+      var arrow = state.sort.key === c.key ? (state.sort.dir === 1 ? " â²" : " â¼") : "";
       return '<th class="' + (c.num ? "num " : "") + 'sortable" data-key="' + c.key + '" style="cursor:pointer">' + esc(c.label) + arrow + "</th>";
     }).join("");
     Array.prototype.forEach.call(document.querySelectorAll("th.sortable"), function (th) {
@@ -388,7 +389,7 @@
     });
   }
 
-  // ── Teacher detail ────────────────────────────────────────────────────────
+  // ââ Teacher detail ââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
   function renderDetail() {
     var d = state.detail; if (!d) return;
     var t = d.teacher, tot = d.totals;
@@ -407,13 +408,13 @@
 
     var ents = (d.entitlements || []).length
       ? d.entitlements.map(function (e) {
-          return '<span class="tag ' + (e.live ? "paid" : "") + '">' + esc(e.course) + " · " + esc(e.status) + (e.source ? " · " + esc(e.source) : "") + "</span>";
+          return '<span class="tag ' + (e.live ? "paid" : "") + '">' + esc(e.course) + " Â· " + esc(e.status) + (e.source ? " Â· " + esc(e.source) : "") + "</span>";
         }).join(" ")
       : '<span class="muted" style="font-size:13px">No entitlements (free).</span>';
 
     var adoption = (d.feature_usage || []).map(function (f) {
       return '<div class="row ' + (f.used ? "yes" : "no") + '">' +
-        '<span class="dot ' + (f.used ? "yes" : "no") + '">' + (f.used ? "✓" : "·") + "</span>" +
+        '<span class="dot ' + (f.used ? "yes" : "no") + '">' + (f.used ? "â" : "Â·") + "</span>" +
         '<span class="lab">' + esc(f.label) + "</span>" +
         '<span class="d2">' + esc(f.detail) + "</span></div>";
     }).join("");
@@ -453,12 +454,12 @@
     }).join("");
 
     el.innerHTML =
-      '<div class="backrow"><button id="backBtn">← All teachers</button>' +
+      '<div class="backrow"><button id="backBtn">â All teachers</button>' +
         '<div class="who"><h2>' + esc(t.name || "(no name)") + "</h2>" +
-        '<div class="meta">' + esc(t.email || "") + (t.school ? " · " + esc(t.school) : "") +
-          (t.school_guess ? " · " + esc(t.school_guess) : "") +
-          (t.state ? " · " + esc(t.state) : "") +
-          (t.expected_start ? " · starts " + esc(t.expected_start) + (t.expected_start_approx ? " (est)" : "") : "") +
+        '<div class="meta">' + esc(t.email || "") + (t.school ? " Â· " + esc(t.school) : "") +
+          (t.school_guess ? " Â· " + esc(t.school_guess) : "") +
+          (t.state ? " Â· " + esc(t.state) : "") +
+          (t.expected_start ? " Â· starts " + esc(t.expected_start) + (t.expected_start_approx ? " (est)" : "") : "") +
         "</div></div></div>" +
 
       '<div class="kpis">' + kpis + "</div>" +
@@ -541,12 +542,12 @@
       bars + labels + '<text x="' + padL + '" y="' + (padT+8) + '">peak ' + max + "</text></svg>";
   }
 
-  // ── Gradebook (the full picture, both grading pipelines) ──────────────────
+  // ââ Gradebook (the full picture, both grading pipelines) ââââââââââââââââââ
   function showGradebook(classId, code, course) {
     var card = $("gbCard"), body = $("gbBody");
     card.style.display = "";
-    $("gbTitle").textContent = "Gradebook · " + code;
-    body.innerHTML = '<p class="hint">Loading…</p>';
+    $("gbTitle").textContent = "Gradebook Â· " + code;
+    body.innerHTML = '<p class="hint">Loadingâ¦</p>';
     var qs = [];
     if (course === "solo") qs.push("course=ap-csa");
     if (state.reveal) qs.push("reveal=1");
@@ -691,9 +692,9 @@
     }
     var head = '<th class="stick">Student</th>' +
       items.map(function (i) {
-        var t = (i.unit ? i.unit + " · " : "") + i.lesson_id + " " + i.activity +
-          " · class avg " + (i.class_avg_pct == null ? "no data" : i.class_avg_pct + "%") +
-          " · " + i.scored_students + " scored" + (i.expected ? "" : " · not in course config");
+        var t = (i.unit ? i.unit + " Â· " : "") + i.lesson_id + " " + i.activity +
+          " Â· class avg " + (i.class_avg_pct == null ? "no data" : i.class_avg_pct + "%") +
+          " Â· " + i.scored_students + " scored" + (i.expected ? "" : " Â· not in course config");
         var cls = (i.expected && i.scored_students === 0 && i.graded_kind) ? " offman" : "";
         return '<th class="num' + cls + '" title="' + esc(t) + '">' + esc(i.label) + "</th>";
       }).join("") +
@@ -702,10 +703,10 @@
     var rows = (g.students || []).map(function (s) {
       var cells = items.map(function (i) {
         var c = s.items && s.items[i.key];
-        if (!c) return '<td class="num gbcell none">·</td>';
+        if (!c) return '<td class="num gbcell none">Â·</td>';
         if (c.pct == null) return '<td class="num gbcell none" title="Completed, no score recorded">done</td>';
         var tip = c.source === "attempt"
-          ? (c.earned + "/" + c.possible + " · " + c.tries + " attempt(s)")
+          ? (c.earned + "/" + c.possible + " Â· " + c.tries + " attempt(s)")
           : (i.activity + " " + c.pct + "%");
         return '<td class="num gbcell ' + gbClass(c.pct, th) + '" title="' + esc(tip) + '">' + c.pct + "%</td>";
       }).join("");
@@ -717,7 +718,7 @@
     var avg = '<tr class="avgrow"><td class="stick">Class average</td>' +
       items.map(function (i) {
         return '<td class="num gbcell ' + gbClass(i.class_avg_pct, th) + '">' +
-          (i.class_avg_pct == null ? "·" : i.class_avg_pct + "%") + "</td>";
+          (i.class_avg_pct == null ? "Â·" : i.class_avg_pct + "%") + "</td>";
       }).join("") + '<td class="num"></td></tr>';
 
     return '<div class="tablewrap gbwrap"><table class="minitable gbtable"><thead><tr>' + head +
@@ -734,15 +735,15 @@
 
     var head = '<th class="stick">Student</th><th class="num">Visits</th>' +
       lessons.map(function (l) {
-        var t = (l.unit ? l.unit + " · " : "") + "class avg " +
-          (l.class_avg_pct == null ? "no data" : l.class_avg_pct + "%") + (l.in_manifest ? "" : " · not in manifest");
+        var t = (l.unit ? l.unit + " Â· " : "") + "class avg " +
+          (l.class_avg_pct == null ? "no data" : l.class_avg_pct + "%") + (l.in_manifest ? "" : " Â· not in manifest");
         return '<th class="num' + (l.in_manifest ? "" : " offman") + '" title="' + esc(t) + '">' + esc(l.lesson_id) + "</th>";
       }).join("") + '<th class="num">Overall</th>';
 
     var rows = (g.students || []).map(function (s) {
       var cells = lessons.map(function (l) {
         var c = s.cells && s.cells[l.lesson_id];
-        if (!c || c.pct == null) return '<td class="num gbcell none">·</td>';
+        if (!c || c.pct == null) return '<td class="num gbcell none">Â·</td>';
         return '<td class="num gbcell ' + gbClass(c.pct, th) + '" title="' + esc("average of " + c.items + " assignment(s)") + '">' + c.pct + "%</td>";
       }).join("");
       var ov = s.overall || {};
@@ -754,7 +755,7 @@
     var avg = '<tr class="avgrow"><td class="stick">Class average</td><td class="num muted"></td>' +
       lessons.map(function (l) {
         return '<td class="num gbcell ' + gbClass(l.class_avg_pct, th) + '">' +
-          (l.class_avg_pct == null ? "·" : l.class_avg_pct + "%") + "</td>";
+          (l.class_avg_pct == null ? "Â·" : l.class_avg_pct + "%") + "</td>";
       }).join("") + '<td class="num"></td></tr>';
 
     return '<div class="tablewrap gbwrap"><table class="minitable gbtable"><thead><tr>' + head +
@@ -803,7 +804,7 @@
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
   }
 
-  // ── Routing ───────────────────────────────────────────────────────────────
+  // ââ Routing âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
   function currentId() {
     var m = (window.location.hash || "").match(/^#teacher\/(.+)$/);
     return m ? decodeURIComponent(m[1]) : null;
@@ -828,12 +829,12 @@
     }).catch(onErr);
   }
   function loadDetail(id) {
-    $("detailView").innerHTML = '<p class="empty">Loading…</p>';
+    $("detailView").innerHTML = '<p class="empty">Loadingâ¦</p>';
     api("/api/admin/teacher/" + encodeURIComponent(id) + (state.reveal ? "?reveal=1" : "")).then(function (d) {
       state.detail = d; renderDetail();
     }).catch(function (e) {
       if (e && e.auth) return toLogin();
-      $("detailView").innerHTML = '<div class="backrow"><button id="backBtn">← All teachers</button></div>' +
+      $("detailView").innerHTML = '<div class="backrow"><button id="backBtn">â All teachers</button></div>' +
         '<p class="empty">Could not load this teacher (' + esc(e.message) + ").</p>";
       var b = $("backBtn"); if (b) b.addEventListener("click", function(){ window.location.hash = ""; });
     });
