@@ -106,6 +106,42 @@ if (seeded) console.log(`course_manifest: ${seeded.changed} new of ${seeded.tota
 //
 //  Idempotent. Once the orphans are gone this logs "none" and does nothing, so
 //  leaving the variable set is harmless; unsetting it is still the tidy end.
+//  ONE-SHOT: the 44 dead AP Networking CFU rows.
+//  The flag above is the right general mechanism and it stays. But it needs
+//  dashboard access, and the specific cleanup it was introduced for should not
+//  wait on that. Every ap-networking topic page carries exactly one graded
+//  practice widget, tagged cfu-2; cfu-1 and cfu-3 are spoken checks with no page
+//  element, and they were seeded anyway. 22 topics times two = 44 points of
+//  denominator no student can earn.
+//
+//  So those rows, and ONLY those rows, are removed without the flag. This is an
+//  allowlist by exact item id, not a pattern and not a course-wide sweep: an
+//  orphan that is not on this list still waits for MANIFEST_PRUNE, so the
+//  general guard is intact. pruneManifest's own refusal to delete any row with a
+//  recorded attempt applies here too and is not bypassed.
+//
+//  Reversible: restore the ids to NET_GRADED in scripts/seed-manifest.js and the
+//  next boot seeds them back.
+//
+//  DELETE THIS BLOCK once a deploy has logged "no rows to clear". It is a
+//  migration, not a feature, and migrations that outlive their purpose become
+//  the thing nobody dares remove.
+//  Implemented in scripts/seed-manifest.js so a smoke suite can test it without
+//  booting the server. See the comment there for what it will and will not touch.
+runBootSeed('course_manifest dead-cfu cleanup', () => {
+  const { cleanDeadNetworkingCfus } = require('./scripts/seed-manifest');
+  const r = cleanDeadNetworkingCfus();
+  if (!r.candidates) {
+    console.log('course_manifest dead-cfu cleanup: no rows to clear. Safe to delete this block.');
+  } else {
+    console.log(`course_manifest dead-cfu cleanup: removed ${r.deleted} row(s), ${r.points} points of unearnable denominator.`);
+    for (const k of r.kept) {
+      console.log(`course_manifest dead-cfu cleanup: KEPT ${k.item_id}, has ${k.attempts} attempt(s), refusing to delete.`);
+    }
+  }
+  return r;
+});
+
 const MANIFEST_PRUNE = process.env.MANIFEST_PRUNE === '1';
 runBootSeed('course_manifest prune', () => {
   const { pruneManifest } = require('./scripts/seed-manifest');
