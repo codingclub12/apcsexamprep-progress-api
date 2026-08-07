@@ -175,6 +175,14 @@ app.get('/admin/exec', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', file));
 });
 
+// Unified analytics: the exec KPIs, the adoption summary, and the breakdown
+// deck on one page behind one fetch. Same cookie gate as every admin page.
+app.get('/admin/unified', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  const file = adminSession.isAuthed(req) ? 'unified.html' : 'login.html';
+  res.sendFile(path.join(__dirname, 'public', file));
+});
+
 // Teacher inspector: pipeline health plus a per-teacher drill-down (classes,
 // gradebook, feature adoption, roster). Same cookie gate as every admin page.
 app.get('/admin/teachers', (req, res) => {
