@@ -431,6 +431,16 @@ const migrations = [
   `ALTER TABLE progress  ADD COLUMN score_reset_at    TEXT DEFAULT NULL`,
   `ALTER TABLE attempts  ADD COLUMN duration_seconds  INTEGER`,
   `ALTER TABLE attempts  ADD COLUMN ua                TEXT`,
+  // Where an attempt came from. NULL (the only value any existing row has, and
+  // the value every student submission keeps) means the student reported it
+  // from the page. 'teacher' means a teacher typed it in for an instrument that
+  // is administered off the platform: the printed unit tests and the cumulative
+  // exams. Those are real manifest items with real denominators, so without a
+  // way to enter their scores they would mark every student down for work the
+  // gradebook simply never saw. A real column, not a detail JSON key, because
+  // the entry route filters on it in SQL: a re-entry replaces the teacher's own
+  // prior row and must never be able to touch a student-reported one.
+  `ALTER TABLE attempts  ADD COLUMN source            TEXT DEFAULT NULL`,
   // Acquisition on a session: the entry channel (Direct / Organic Search /
   // Social / Referral / Email / Paid / Other) and the referrer domain only.
   // Zero PII: an enum plus a hostname, never a full URL, query string, or IP.

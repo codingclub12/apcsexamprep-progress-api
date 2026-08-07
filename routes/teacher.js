@@ -1054,6 +1054,204 @@ router.patch('/classes/:code/students/:studentId', requireTeacher, async (req, r
   });
 });
 
+// ── OFF-PLATFORM SCORE ENTRY ──────────────────────────────────────────────────
+//  WHY THIS EXISTS
+//  A course_manifest row IS a denominator. smoke/manifest-prune.js pins the rule
+//  and the reason: an item no page can report does not sit harmlessly unused, it
+//  marks every student in the class down for something no teacher can see on
+//  screen. The fix there was to un-seed items that could never be earned.
+//
+//  The printed instruments are the other half of that problem, and un-seeding is
+//  the wrong answer for them. The four AP Networking unit tests and the three
+//  cumulative exams are real assessments a teacher really administers; they are
+//  simply administered on paper. Dropping them from the manifest would keep the
+//  denominator honest and leave the single largest block of assessment in the
+//  course permanently outside the gradebook. So instead the teacher enters the
+//  scores, and the manifest rows become true.
+//
+//  RULES
+//   • The manifest is the authority, exactly as it is for a student submission:
+//     it supplies lesson_id, item_type and max_score. The teacher sends a score.
+//   • Re-entry REPLACES the teacher's own prior row for that item rather than
+//     appending. A typo corrected from 34 to 43 must not leave 43 sitting in the
+//     bank as a "best attempt" under a retry-on class. This is the one place a
+//     row is deleted from attempts, and the DELETE is filtered to source =
+//     'teacher': a student-reported attempt can never be touched from here.
+//   • Student-reported attempts for the same item are left in place and still
+//     count toward attempt_no, so a paper retake entered after an online try
+//     numbers correctly.
+//   • passed is computed against the class threshold at write time, same as
+//     routes/progress.js, and is a snapshot: rollups recompute at read time.
+//   • detail, ua and duration_seconds stay NULL. There are no per-question
+//     results to record, and the request's User-Agent is the teacher's browser,
+//     which would be a misleading device signal on a student's row.
+//   • Zero PII: numbers and existing ids only. Nothing free-text is stored.
+const SCORES_MAX_ROWS = 300;
+
+const scoreEntryLimit = makeRateLimit({
+  windowMs: 60_000, max: 60,
+  message: 'Too many score submissions. Wait a minute and try again.',
+});
+
+const manifestItemStmt = db.prepare(
+  'SELECT lesson_id, item_type, points FROM course_manifest WHERE course = ? AND item_id = ?'
+);
+const classRosterStmt = db.prepare(
+  'SELECT id, display_name, student_ref, active FROM students WHERE class_id = ? ORDER BY display_name COLLATE NOCASE'
+);
+const deleteTeacherAttemptStmt = db.prepare(
+  "DELETE FROM attempts WHERE student_id = ? AND course = ? AND item_id = ? AND source = 'teacher'"
+);
+const countAttemptsStmt = db.prepare(
+  'SELECT COUNT(*) n FROM attempts WHERE student_id = ? AND course = ? AND item_id = ?'
+);
+const insertTeacherAttemptStmt = db.prepare(`
+  INSERT INTO attempts (student_id, class_id, course, lesson_id, item_id, item_type,
+    score, max_score, passed, attempt_no, duration_seconds, ua, detail, source)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, 'teacher')
+`);
+const itemAttemptsStmt = db.prepare(`
+  SELECT student_id, score, max_score, passed, attempt_no, source, created_at
+  FROM attempts WHERE class_id = ? AND course = ? AND item_id = ?
+  ORDER BY attempt_no
+`);
+
+// Resolve the class by code plus owner, and the manifest item, or explain which
+// one failed. Shared by the GET and the POST so they cannot drift apart.
+function resolveScoreTarget(req) {
+  const cls = db.prepare('SELECT * FROM classes WHERE class_code = ? AND teacher_id = ?')
+    .get(String(req.params.code || '').toUpperCase(), req.teacher.id);
+  if (!cls) return { error: [404, 'Class not found'] };
+
+  const src = req.method === 'GET' ? req.query : (req.body || {});
+  // Solo classes roam across courses; a teacher class is pinned to its own.
+  const course = cls.course === 'solo'
+    ? String(src.course || '').slice(0, 40)
+    : cls.course;
+  if (!course) return { error: [400, 'course required'] };
+  if (cls.course !== 'solo' && src.course !== undefined && src.course !== cls.course) {
+    return { error: [400, `course must be '${cls.course}' for this class`] };
+  }
+
+  const item_id = typeof src.item_id === 'string' ? src.item_id : '';
+  if (!item_id) return { error: [400, 'item_id required'] };
+
+  const item = manifestItemStmt.get(course, item_id);
+  if (!item || item.item_type === 'visit') {
+    return { error: [400, `Unknown item '${item_id}' for ${course}. Not in course_manifest.`] };
+  }
+  return { cls, course, item_id, item };
+}
+
+// GET /api/teacher/classes/:code/scores?course=&item_id=
+// The roster for one item: every student, what is currently recorded, and where
+// it came from. This is what a score-entry screen loads before the teacher types
+// anything, and it is how an entry is verified afterwards.
+router.get('/classes/:code/scores', requireTeacher, (req, res) => {
+  const t = resolveScoreTarget(req);
+  if (t.error) return res.status(t.error[0]).json({ error: t.error[1] });
+
+  const rows = itemAttemptsStmt.all(t.cls.id, t.course, t.item_id);
+  const byStudent = new Map();
+  for (const r of rows) {
+    const cur = byStudent.get(r.student_id) || { attempts: 0, entered: null, best: null };
+    cur.attempts++;
+    if (r.source === 'teacher') cur.entered = r;
+    if (!cur.best || (r.score / r.max_score) > (cur.best.score / cur.best.max_score)) cur.best = r;
+    byStudent.set(r.student_id, cur);
+  }
+
+  res.json({
+    class: { code: t.cls.class_code, course: t.course, mastery_threshold: t.cls.mastery_threshold },
+    item: { item_id: t.item_id, lesson_id: t.item.lesson_id, item_type: t.item.item_type, max_score: t.item.points },
+    students: classRosterStmt.all(t.cls.id).map((s) => {
+      const g = byStudent.get(s.id);
+      return {
+        id: s.id,
+        name: s.display_name,
+        ref: s.student_ref,
+        active: s.active,
+        attempts: g ? g.attempts : 0,
+        score: g && g.entered ? g.entered.score : null,
+        entered_by_teacher: !!(g && g.entered),
+        entered_at: g && g.entered ? g.entered.created_at : null,
+        best_score: g && g.best ? g.best.score : null,
+      };
+    }),
+  });
+});
+
+// POST /api/teacher/classes/:code/scores
+//   { course, item_id, scores: [ { student_id, score }, ... ] }
+// A score of null clears that student's teacher-entered row without writing a
+// new one, which is how a mis-entered student is undone. One transaction for the
+// whole class: thirty students is one write pass, not thirty round trips.
+router.post('/classes/:code/scores', requireTeacher, scoreEntryLimit, (req, res) => {
+  const t = resolveScoreTarget(req);
+  if (t.error) return res.status(t.error[0]).json({ error: t.error[1] });
+
+  const list = (req.body || {}).scores;
+  if (!Array.isArray(list) || !list.length) {
+    return res.status(400).json({ error: 'scores must be a non-empty array of {student_id, score}' });
+  }
+  if (list.length > SCORES_MAX_ROWS) {
+    return res.status(400).json({ error: `scores is capped at ${SCORES_MAX_ROWS} rows per request` });
+  }
+
+  const maxScore = t.item.points;
+  const roster = new Map(classRosterStmt.all(t.cls.id).map((s) => [s.id, s]));
+  const threshold = t.cls.mastery_threshold != null ? t.cls.mastery_threshold : 80;
+
+  // Validate the whole batch before writing any of it. A teacher entering a
+  // class set should not get half a gradebook and an error.
+  const planned = [];
+  const seen = new Set();
+  for (const raw of list) {
+    if (!raw || typeof raw !== 'object') {
+      return res.status(400).json({ error: 'each score must be an object {student_id, score}' });
+    }
+    const sid = typeof raw.student_id === 'string' ? raw.student_id : '';
+    if (!roster.has(sid)) {
+      return res.status(400).json({ error: `Student '${sid}' is not in this class` });
+    }
+    if (seen.has(sid)) {
+      return res.status(400).json({ error: `Student '${sid}' appears twice in scores` });
+    }
+    seen.add(sid);
+
+    if (raw.score === null) { planned.push({ sid, score: null }); continue; }
+    const score = Number(raw.score);
+    if (!Number.isFinite(score) || score < 0 || score > maxScore) {
+      return res.status(400).json({ error: `score for '${sid}' must be a number between 0 and ${maxScore} for '${t.item_id}'` });
+    }
+    planned.push({ sid, score });
+  }
+
+  const result = db.transaction(() => {
+    let written = 0, cleared = 0;
+    for (const p of planned) {
+      // Replace, never stack: drop this teacher's prior row for the item first.
+      const removed = deleteTeacherAttemptStmt.run(p.sid, t.course, t.item_id).changes;
+      if (p.score === null) { cleared += removed; continue; }
+      const attempt_no = countAttemptsStmt.get(p.sid, t.course, t.item_id).n + 1;
+      const passed = (p.score / maxScore) * 100 >= threshold ? 1 : 0;
+      insertTeacherAttemptStmt.run(
+        p.sid, t.cls.id, t.course, t.item.lesson_id, t.item_id, t.item.item_type,
+        p.score, maxScore, passed, attempt_no
+      );
+      written++;
+    }
+    return { written, cleared };
+  })();
+
+  res.json({
+    ok: true,
+    item: { item_id: t.item_id, lesson_id: t.item.lesson_id, item_type: t.item.item_type, max_score: maxScore },
+    recorded: result.written,
+    cleared: result.cleared,
+  });
+});
+
 // ── REDEEM AN ACCESS CODE (Phase 4: Teacher Command Center, slice 1) ──────────
 // A teacher redeems a single-use access code to gain (or refresh) an active
 // entitlement for that code's course. Idempotent for the same teacher. Light
