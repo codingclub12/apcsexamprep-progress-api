@@ -150,16 +150,25 @@ const near = (a, b, eps = 0.011) => a != null && b != null && Math.abs(a - b) < 
   ok(`  ${sv.body.progress.filter((r) => r.points_possible != null).length} cells compared, zero disagreements`,
     diffs.length === 0, diffs.length);
 
-  // ── 5. An unauthored column is null, never a guess ────────────────────────
-  console.log('5. No denominator means null, never an invented one');
+  // ── 5. An unauthored column still shows a pair, marked provisional ────────
+  //  Every graded cell carries points over points, on every course. Where
+  //  nobody has authored a total the percent is its own pair. The property that
+  //  makes this safe, and separates it from the constant table it replaced, is
+  //  that the displayed percentage is UNCHANGED: 55 out of 100 still reads 55.
+  //  Rescaling onto a wrong small constant did not have that property.
+  console.log('5. An unauthored column still shows a pair, and reads the same');
   await post('/api/student/progress',
     { course: COURSE, unit: 'unit-1', lesson: '1.4', activity_type: 'lab', score: 55, completed: true }, stok);
   const sv2 = await get('/api/student/progress', stok);
   const lab = sv2.body.progress.find((r) => r.lesson === '1.4' && r.activity_type === 'lab');
-  ok('  points_possible is null for an unauthored column', lab.points_possible === null, lab.points_possible);
-  ok('  and points_earned is null too, so no fraction can be rendered',
-    lab.points_earned === null, lab.points_earned);
-  ok('  the percent itself is still there to show', lab.score === 55, lab.score);
+  ok('  it is priced out of 100', lab.points_possible === 100, lab.points_possible);
+  ok('  earned equals the percent, so nothing is rescaled', lab.points_earned === 55, lab.points_earned);
+  ok('  the pair reads back as the same percentage it always did',
+    Math.round((lab.points_earned / lab.points_possible) * 100) === lab.score, lab.score);
+  ok('  and it is flagged provisional, not passed off as authored',
+    lab.denominator_source === 'percent', lab.denominator_source);
+  ok('  an authored column is still marked authored, not lumped in with it',
+    sv2.body.progress.find((r) => r.lesson === '1.1' && r.activity_type === 'quiz').denominator_source === 'authored');
 
   // ── 6. The existing shape is intact ───────────────────────────────────────
   console.log('6. Regression: nothing the page already reads has moved');

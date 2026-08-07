@@ -168,21 +168,36 @@ function loadPage() {
   ok('  1.2 exercise-1 shows 1.19/7, not the old 1/5', text('1.2', 'exercise-1') === '1.19/7',
     text('1.2', 'exercise-1'));
 
-  console.log('3. An unauthored column shows a percent, never an invented fraction');
+  //  Every graded cell shows a pair, on every course. Where nobody has authored
+  //  a total the percent is its own pair, marked with a * so a provisional
+  //  weight is never read as an authored one. The safety property: the
+  //  percentage a student reads does not move.
+  console.log('3. An unauthored column still shows a pair, marked provisional');
   const lab = cellOf('1.4', 'lab');
-  ok('  no denominator carried', lab.possible === null, lab.possible);
-  ok('  and the cell shows the bare percent', text('1.4', 'lab') === '55%', text('1.4', 'lab'));
+  ok('  priced out of 100', lab.possible === 100, lab.possible);
+  ok('  earned equals the percent, so nothing is rescaled', lab.earned === 55, lab.earned);
+  ok('  the cell renders 55/100', text('1.4', 'lab') === '55/100', text('1.4', 'lab'));
+  ok('  and it carries the provisional marker',
+    /sp-prov/.test(StProg.cellHtml('x', 'lab', lab)), StProg.cellHtml('x', 'lab', lab));
+  ok('  an authored cell carries no marker',
+    !/sp-prov/.test(StProg.cellHtml('x', 'quiz', cellOf('1.1', 'quiz'))));
 
   console.log('4. Totals are points over points, not a mean of percentages');
   const t = StProg.totals(Object.values(StProg.model[COURSE].units['unit-1'].lessons)
     .flatMap((L) => Object.values(L.acts)));
-  // 7 + 3.04 + 4 + 1.19 = 15.23 over 7 + 8 + 5 + 7 = 27.
-  ok('  earned 15.23 of 27', near(t.earned, 15.23) && near(t.graded, 27), [t.earned, t.graded]);
-  ok('  which is 56.4 percent', near(t.pct, 56.4, 0.06), t.pct);
-  // The mean of 100, 38, 80, 17 is 58.75. The points answer is not that.
-  ok('  and NOT the 58.8 a mean of percentages would give', !near(t.pct, 58.75, 0.3), t.pct);
-  ok('  the unpriced activity is counted and reported, not silently dropped',
+  // Authored: 7 + 3.04 + 4 + 1.19 = 15.23 over 7 + 8 + 5 + 7 = 27.
+  // Plus the provisional lab at 55/100. Every visible cell is in the total, so
+  // the fractions on screen add up to the number under them.
+  ok('  earned 70.23 of 127', near(t.earned, 70.23) && near(t.graded, 127), [t.earned, t.graded]);
+  ok('  which is 55.3 percent', near(t.pct, 55.3, 0.06), t.pct);
+  // The mean of 100, 38, 80, 17, 55 is 58. The points answer is not that.
+  ok('  and NOT the 58 a mean of percentages would give', !near(t.pct, 58, 0.3), t.pct);
+  ok('  the provisional activity is counted and reported',
     t.unpriced === 1 && t.priced === 4, [t.priced, t.unpriced]);
+  // The cost of a provisional weight, stated as a test so it is not forgotten:
+  // one unauthored column at 100 outweighs the four authored ones combined.
+  ok('  and a provisional 100 outweighs all four authored columns put together',
+    100 > 27, [100, 27]);
 
   console.log('5. Every cell matches the teacher gradebook');
   const g = buildCanonicalGradebook(code, { reveal: true });
