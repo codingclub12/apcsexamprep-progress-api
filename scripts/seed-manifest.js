@@ -139,6 +139,27 @@ const NET_UNIT_TESTS = {
   'unit-4': 24,
 };
 
+// AP Networking browser labs, one per unit, from labs/labs.yaml in the course
+// repo. Eight checkpoints each, one point per checkpoint.
+//
+// lesson_id is 'lab', matching what the shipped widget posts and following the
+// 'test' and 'exam' ids the unit tests and cumulative exams already use for
+// course-level instruments. POST /api/progress/attempt 400s a submission whose
+// lesson_id disagrees with its manifest row, so these two strings are a
+// contract: changing one without the other silently drops every lab grade.
+//
+// Unlike the unit tests and the exams, these ARE delivered in the browser and
+// report themselves, so seeding them adds denominator that a student can
+// actually earn. Seed them only once the lab pages are live; a manifest row for
+// a page nobody can open is the exact failure smoke/manifest-prune.js exists to
+// prevent.
+const NET_LABS = {
+  'lab-1': { unit: 'unit-1', points: 8 },
+  'lab-2': { unit: 'unit-2', points: 8 },
+  'lab-3': { unit: 'unit-3', points: 8 },
+  'lab-4': { unit: 'unit-4', points: 8 },
+};
+
 // AP Networking cumulative exams, assembled in the course repo from the topic
 // quiz and unit-test banks (exams/blueprints.yaml there). Points are the
 // multiple-choice count, which is the only auto-graded section; free-response
@@ -214,6 +235,11 @@ function buildRows() {
   for (const [unit, points] of Object.entries(NET_UNIT_TESTS)) {
     const n = unit.split('-')[1];
     rows.push({ course: 'ap-networking', unit, lesson_id: 'test', item_id: `${n}-test`, item_type: 'quiz', points });
+  }
+
+  // AP Networking browser labs (one per unit).
+  for (const [itemId, cfg] of Object.entries(NET_LABS)) {
+    rows.push({ course: 'ap-networking', unit: cfg.unit, lesson_id: 'lab', item_id: itemId, item_type: 'quiz', points: cfg.points });
   }
 
   // AP Networking cumulative exams (course-wide, not tied to one unit).
