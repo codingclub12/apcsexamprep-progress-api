@@ -268,6 +268,37 @@ db.exec(`
     PRIMARY KEY (course, lesson, activity_type)
   );
 
+  -- UNIT-SCOPED denominators, for the columns course_denominators structurally
+  -- cannot hold.
+  --
+  -- course_denominators is keyed (course, lesson, activity_type) with the unit
+  -- OUTSIDE the key. That is fine while a lesson id names exactly one lesson,
+  -- which it does for every numbered lesson in every course. It breaks for the
+  -- Cybersecurity pseudo-lessons: the COURSES config gives all five units a case
+  -- file at lesson 'case-file' and a unit exam at lesson 'exam', so those ten
+  -- columns collapse onto two rows. Authoring Unit 1's exam out of 20 and Unit
+  -- 2's out of 25 is not a value someone forgot to fill in; the second INSERT is
+  -- rejected by the primary key.
+  --
+  -- This table is ADDITIVE and separate rather than a widened key on the old
+  -- one, because changing a primary key in SQLite means rebuilding the table,
+  -- and rebuilding a production table to add ten rows is the kind of destructive
+  -- migration this repo does not do. Nothing here is copied or moved: the
+  -- existing table keeps every row it has and stays the authority for everything
+  -- a (lesson, activity) key CAN express.
+  --
+  -- Read order in lib/gradebook-contract.js is most specific first: this table,
+  -- then course_manifest, then course_denominators. Deleting a row here restores
+  -- the previous behaviour for that column exactly.
+  CREATE TABLE IF NOT EXISTS course_unit_denominators (
+    course        TEXT NOT NULL,
+    unit          TEXT NOT NULL,
+    lesson        TEXT NOT NULL,
+    activity_type TEXT NOT NULL,
+    possible      REAL NOT NULL DEFAULT 1,
+    PRIMARY KEY (course, unit, lesson, activity_type)
+  );
+
   -- Hidden test bank for server-side code grading (POST /api/student/code-grade).
   -- One row per test case for a graded code item, keyed by (course, lesson, item)
   -- with seq breaking ties so an item can hold many cases. All fields here are
