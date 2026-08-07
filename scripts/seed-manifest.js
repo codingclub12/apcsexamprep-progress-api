@@ -342,6 +342,56 @@ function pruneManifest({ apply = false } = {}) {
   return { orphans, removable, kept, deleted, applied: !!apply };
 }
 
+// ── ONE-SHOT: the 44 dead AP Networking CFU rows ─────────────────────────────
+//  Every ap-networking topic page carries exactly one graded practice widget,
+//  tagged cfu-2. cfu-1 and cfu-3 are spoken checks with no page element and were
+//  seeded anyway: 22 topics times two, 44 points of denominator no student can
+//  earn. Un-seeding them is not enough, because the boot seed never deletes.
+//
+//  The general MANIFEST_PRUNE flag is the right mechanism for orphans in the
+//  abstract, but it needs dashboard access. This clears these specific rows
+//  without it, and ONLY these:
+//
+//   • scoped to ap-networking, so the 30 legitimate ap-csa cfu-1/cfu-3 rows are
+//     untouched. A pattern match on the item id alone would have deleted them.
+//   • an exact id allowlist DERIVED from the seed, not typed. The topics that
+//     seed a cfu-2 are exactly the topics that used to seed cfu-1 and cfu-3.
+//   • only rows findOrphans() already considers orphaned, so an id that the
+//     seed starts producing again is immediately out of scope.
+//   • zero-attempt only. A row with recorded work is never deleted, matching
+//     pruneManifest's guarantee rather than working around it.
+//
+//  Reversible: put the ids back in NET_GRADED and the next boot re-seeds them.
+//  Remove this once a deploy logs zero. It is a migration, not a feature.
+function deadNetworkingCfuIds() {
+  const ids = new Set();
+  for (const r of buildRows()) {
+    if (r.course === 'ap-networking' && r.item_type === 'cfu') {
+      ids.add(`${r.lesson_id}-cfu-1`);
+      ids.add(`${r.lesson_id}-cfu-3`);
+    }
+  }
+  return ids;
+}
+
+function cleanDeadNetworkingCfus({ apply = true } = {}) {
+  const ids = deadNetworkingCfuIds();
+  const all = findOrphans().filter((o) => o.course === 'ap-networking' && ids.has(o.item_id));
+  const removable = all.filter((o) => o.attempts === 0);
+  const kept = all.filter((o) => o.attempts > 0);
+  let deleted = 0;
+  if (apply && removable.length) {
+    const del = db.prepare('DELETE FROM course_manifest WHERE course = ? AND item_id = ?');
+    deleted = db.transaction((rs) => {
+      let n = 0;
+      for (const r of rs) n += del.run(r.course, r.item_id).changes;
+      return n;
+    })(removable);
+  }
+  const points = removable.reduce((a, r) => a + r.points, 0);
+  return { candidates: all.length, removable, kept, deleted, points };
+}
+
 if (require.main === module) {
   const apply = process.argv.includes('--prune');
   const result = seedManifest({ update: process.argv.includes('--update') });
@@ -361,4 +411,5 @@ if (require.main === module) {
   }
 }
 
-module.exports = { seedManifest, buildRows, findOrphans, pruneManifest };
+module.exports = { seedManifest, buildRows, findOrphans, pruneManifest,
+  deadNetworkingCfuIds, cleanDeadNetworkingCfus };

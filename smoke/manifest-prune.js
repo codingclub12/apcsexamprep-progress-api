@@ -34,7 +34,8 @@ process.env.DB_PATH = path.join(__dirname, 'smoke-manifest-prune.db');
 for (const suf of ['', '-wal', '-shm']) { try { fs.unlinkSync(process.env.DB_PATH + suf); } catch (e) {} }
 
 const db = require('../db');
-const { seedManifest, buildRows, findOrphans, pruneManifest } = require('../scripts/seed-manifest');
+const { seedManifest, buildRows, findOrphans, pruneManifest,
+  deadNetworkingCfuIds, cleanDeadNetworkingCfus } = require('../scripts/seed-manifest');
 
 let pass = 0, fail = 0;
 const ok = (n, c, x) => {
@@ -200,6 +201,63 @@ console.log('\n6. The boot flag gates the delete, and only the exact value turns
   ok('  one per authored topic, not three', netCfu.length === 22, netCfu.length);
   ok('  no topic seeds cfu-1 or cfu-3',
     !netCfu.some((r) => /-cfu-(1|3)$/.test(r.item_id)));
+}
+
+// ── 8. THE ONE-SHOT DEAD-CFU CLEANUP ─────────────────────────────────────────
+//  Section 7 stops the 44 dead rows being CREATED. This is the other half:
+//  clearing the ones already live, without needing a shell or a dashboard flag.
+//
+//  The dangerous version of this is a pattern match on the item id, which would
+//  also delete ap-csa's legitimate cfu-1 and cfu-3 rows. That is the case worth
+//  pinning hardest.
+{
+  console.log('\n8. the one-shot dead-CFU cleanup is exact, scoped, and safe');
+
+  const lessons = [...new Set(buildRows()
+    .filter((r) => r.course === 'ap-networking' && r.item_type === 'cfu')
+    .map((r) => r.lesson_id))];
+  const mrow = (course, lesson, item, type, pts) =>
+    run(`INSERT OR IGNORE INTO course_manifest (course,unit,lesson_id,item_id,item_type,points)
+         VALUES (?,?,?,?,?,?)`, course, 'unit-' + lesson.split('.')[0], lesson, item, type, pts);
+
+  // Re-create the live state: every dead row back in the manifest.
+  for (const l of lessons) for (const k of [1, 3]) mrow('ap-networking', l, `${l}-cfu-${k}`, 'cfu', 1);
+  // A CSA row that a naive id match would destroy. 1.1-cfu-1 exists in BOTH
+  // courses, which is exactly why the course scope matters.
+  mrow('ap-csa', '1.1', '1.1-cfu-1', 'cfu', 1);
+  // One networking row with recorded work.
+  run(`INSERT INTO attempts (student_id,class_id,course,lesson_id,item_id,item_type,score,max_score,passed,attempt_no)
+       VALUES ('sA','cA','ap-networking','2.1','2.1-cfu-1','cfu',1,1,1,1)`);
+
+  const ids = deadNetworkingCfuIds();
+  ok('  the id list is derived, two per authored topic', ids.size === lessons.length * 2, ids.size);
+  ok('  it names no cfu-2', ![...ids].some((i) => i.endsWith('-cfu-2')));
+
+  const dry = cleanDeadNetworkingCfus({ apply: false });
+  ok('  a dry run deletes nothing', dry.deleted === 0 && dry.candidates > 0, dry.candidates);
+
+  const r = cleanDeadNetworkingCfus();
+  ok('  it removes the zero-attempt dead rows', r.deleted === lessons.length * 2 - 1, r.deleted);
+  ok('  and reports the points it reclaimed', r.points === r.deleted, r.points);
+  ok('  the row with an attempt is refused, not deleted',
+    r.kept.length === 1 && r.kept[0].item_id === '2.1-cfu-1', r.kept);
+  ok('  that row is still in the manifest',
+    !!one(`SELECT 1 x FROM course_manifest WHERE course='ap-networking' AND item_id='2.1-cfu-1'`));
+
+  ok('  ap-csa 1.1-cfu-1 is UNTOUCHED, which a pattern match would have deleted',
+    !!one(`SELECT 1 x FROM course_manifest WHERE course='ap-csa' AND item_id='1.1-cfu-1'`));
+  ok('  no ap-networking cfu-1 or cfu-3 survives except the attempted one',
+    one(`SELECT COUNT(*) n FROM course_manifest WHERE course='ap-networking'
+         AND (item_id LIKE '%-cfu-1' OR item_id LIKE '%-cfu-3')`).n === 1);
+  ok('  cfu-2 rows are all still there',
+    one(`SELECT COUNT(*) n FROM course_manifest WHERE course='ap-networking' AND item_id LIKE '%-cfu-2'`).n
+      === lessons.length);
+
+  // Idempotent, which is what makes it safe to ship as a boot step.
+  const again = cleanDeadNetworkingCfus();
+  ok('  a second run deletes nothing', again.deleted === 0, again.deleted);
+  ok('  and reports only the refused row', again.candidates === 1, again.candidates);
+  ok('  attempts are never touched', one(`SELECT COUNT(*) n FROM attempts WHERE item_id='2.1-cfu-1'`).n === 1);
 }
 
 console.log(`\n${pass} passed, ${fail} failed\n`);
