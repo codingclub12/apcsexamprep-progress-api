@@ -139,6 +139,24 @@ const NET_UNIT_TESTS = {
   'unit-4': 24,
 };
 
+// AP Networking cumulative exams, assembled in the course repo from the topic
+// quiz and unit-test banks (exams/blueprints.yaml there). Points are the
+// multiple-choice count, which is the only auto-graded section; free-response
+// prompts are scored offline against the performance-task rubrics, exactly as
+// the unit tests already work.
+//
+// The baseline diagnostic is deliberately absent. It runs in week 1 before any
+// instruction, it is not graded for marks, and seeding it would put 20 points
+// a student cannot yet earn into every denominator on every dashboard.
+//
+// lesson_id is 'exam' so these never collide with a topic row, mirroring the
+// 'test' lesson_id used by the unit tests above.
+const NET_EXAMS = {
+  'exam-midterm': 40,
+  'exam-practice-pilot': 40,
+  'exam-final': 50,
+};
+
 function buildRows() {
   const rows = [];
 
@@ -196,6 +214,11 @@ function buildRows() {
   for (const [unit, points] of Object.entries(NET_UNIT_TESTS)) {
     const n = unit.split('-')[1];
     rows.push({ course: 'ap-networking', unit, lesson_id: 'test', item_id: `${n}-test`, item_type: 'quiz', points });
+  }
+
+  // AP Networking cumulative exams (course-wide, not tied to one unit).
+  for (const [itemId, points] of Object.entries(NET_EXAMS)) {
+    rows.push({ course: 'ap-networking', unit: 'course', lesson_id: 'exam', item_id: itemId, item_type: 'quiz', points });
   }
 
   return rows;
