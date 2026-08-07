@@ -153,9 +153,10 @@
     <h1>Teacher Inspector</h1>
     <span class="sub">live from <code>/api/admin</code></span>
     <a class="navlink" href="/admin/gradebook">Gradebook →</a>
-    <a class="navlink" href="/admin/dashboard">Dashboard â</a>
-    <a class="navlink" href="/admin/exec">Exec â</a>
-    <a class="navlink" href="/admin/analytics">Analytics â</a>
+    <a class="navlink" href="/admin/dashboard">Dashboard →</a>
+    <a class="navlink" href="/admin/exec">Exec →</a>
+    <a class="navlink" href="/admin/analytics">Analytics →</a>
+    <a class="navlink" href="/admin/unified">Unified →</a>
     <span class="spacer"></span>
     <button id="refreshBtn">Refresh</button>
     <button id="lockBtn">Sign out</button>
@@ -454,7 +455,7 @@
     }).join("");
 
     el.innerHTML =
-      '<div class="backrow"><button id="backBtn">â All teachers</button>' +
+      '<div class="backrow"><button id="backBtn">← All teachers</button>' +
         '<div class="who"><h2>' + esc(t.name || "(no name)") + "</h2>" +
         '<div class="meta">' + esc(t.email || "") + (t.school ? " Â· " + esc(t.school) : "") +
           (t.school_guess ? " Â· " + esc(t.school_guess) : "") +
@@ -834,7 +835,7 @@
       state.detail = d; renderDetail();
     }).catch(function (e) {
       if (e && e.auth) return toLogin();
-      $("detailView").innerHTML = '<div class="backrow"><button id="backBtn">â All teachers</button></div>' +
+      $("detailView").innerHTML = '<div class="backrow"><button id="backBtn">← All teachers</button></div>' +
         '<p class="empty">Could not load this teacher (' + esc(e.message) + ").</p>";
       var b = $("backBtn"); if (b) b.addEventListener("click", function(){ window.location.hash = ""; });
     });

@@ -15,6 +15,7 @@
     "smoke:codegrade": "node smoke/code-grade.js",
     "smoke:reset": "node smoke/password-reset.js",
     "smoke:health": "node smoke/admin-health.js",
+    "smoke:unified": "node smoke/admin-unified.js",
     "smoke:teacheradmin": "node smoke/admin-teacher-admin.js",
     "smoke:gradebook": "node smoke/admin-gradebook.js",
     "smoke:export": "node smoke/teacher-export.js",

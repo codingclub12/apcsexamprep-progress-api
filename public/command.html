@@ -360,7 +360,7 @@
     api("/api/todo/" + id).then(function (body) {
       var parts = body.events.slice(0, 8).map(function (e) {
         return "<div>" + esc(e.at) + " Â· " + esc(e.actor) + " Â· " + esc(e.action)
-          + (e.to_value ? " â " + esc(e.to_value) : "") + "</div>";
+          + (e.to_value ? " → " + esc(e.to_value) : "") + "</div>";
       });
       body.claims.forEach(function (c) {
         parts.unshift("<div>claim " + esc(c.surface) + " " + esc(c.session_label || "") + " " + esc(c.claimed_at)
