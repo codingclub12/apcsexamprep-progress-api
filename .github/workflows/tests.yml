@@ -59,7 +59,40 @@ jobs:
       - name: Run offline smoke suites
         run: |
           set -uo pipefail
-          SUITES="command checks reset health unified teacheradmin gradebook export canvas quizparse wirelog denominators legacypoints exercises ungraded cyberdenoms cspdenoms unitdenoms studentagree myprogress reporter attemptrollup solo classroom shopify admin codegrade progressguard history gradereset quizvisibility gbagree contract retrymodes attemptretry manifestprune namesafety scoreentry"
+
+          # The suite list is DERIVED from package.json, not written out here.
+          #
+          # It used to be one long space-separated line, which made it a
+          # guaranteed merge conflict: every agent adding a suite edited the
+          # same line, so any two PRs open at once collided on it. One branch
+          # hit that three times in 45 minutes. Adding a suite is now nothing
+          # but its npm script, and CI picks it up with no workflow edit.
+          #
+          # EXCLUDE is the opposite list, and it is the one that needs a reason.
+          # These are the smoke:* scripts that must NOT run here:
+          #   install  - npm helper, not a suite
+          #   auth     - drives a real browser against the live storefront
+          #   teacher  - same, and needs credential secrets
+          #   pages    - hits the live Shopify Admin API
+          #   cleanup  - destructive live tool that deactivates real rows
+          # Everything else is offline, secret-free, and safe to gate a PR.
+          EXCLUDE="install auth teacher pages cleanup"
+
+          SUITES=$(node -e '
+            const scripts = Object.keys(require("./package.json").scripts);
+            const exclude = new Set(process.argv[1].split(" "));
+            const suites = scripts
+              .filter((k) => k.startsWith("smoke:"))
+              .map((k) => k.slice("smoke:".length))
+              .filter((s) => !exclude.has(s));
+            if (!suites.length) { console.error("no suites resolved"); process.exit(1); }
+            console.log(suites.join(" "));
+          ' "$EXCLUDE")
+
+          echo "Derived $(echo "$SUITES" | wc -w) suites from package.json:"
+          echo "  $SUITES"
+          echo
+
           failed=""
           for s in $SUITES; do
             echo "::group::smoke:$s"
