@@ -121,6 +121,7 @@
     <h1>Command Center</h1>
     <span class="sub" id="asof">loading</span>
     <span class="spacer"></span>
+    <a class="navlink" href="/admin/gradebook">Gradebook →</a>
     <a class="navlink" href="/admin/dashboard">dashboard</a>
     <a class="navlink" href="/admin/teachers">teachers</a>
     <button class="small" id="refresh">refresh</button>
@@ -233,7 +234,7 @@
     $("strip").innerHTML = cells.map(function (c) {
       return '<div class="m ' + c.cls + '"><b>' + esc(c.n) + "</b><span>" + esc(c.label) + "</span></div>";
     }).join("");
-    $("asof").textContent = "as of " + new Date(d.as_of).toLocaleTimeString() + " · " + d.task_count + " open";
+    $("asof").textContent = "as of " + new Date(d.as_of).toLocaleTimeString() + " Â· " + d.task_count + " open";
   }
 
   function inFlightFor(id) {
@@ -275,7 +276,7 @@
       + '<span class="ttl' + (t.closed ? " done" : "") + '" data-act="expand">' + esc(t.title) + "</span>"
       + chips.join("")
       + "</div>"
-      + (meta.length ? '<div class="meta">' + meta.join(" · ") + "</div>" : "")
+      + (meta.length ? '<div class="meta">' + meta.join(" Â· ") + "</div>" : "")
       + (state.open[t.id] ? expandHtml(t) : "")
       + "</div>";
   }
@@ -358,12 +359,12 @@
     if (!el) return;
     api("/api/todo/" + id).then(function (body) {
       var parts = body.events.slice(0, 8).map(function (e) {
-        return "<div>" + esc(e.at) + " · " + esc(e.actor) + " · " + esc(e.action)
-          + (e.to_value ? " → " + esc(e.to_value) : "") + "</div>";
+        return "<div>" + esc(e.at) + " Â· " + esc(e.actor) + " Â· " + esc(e.action)
+          + (e.to_value ? " â " + esc(e.to_value) : "") + "</div>";
       });
       body.claims.forEach(function (c) {
         parts.unshift("<div>claim " + esc(c.surface) + " " + esc(c.session_label || "") + " " + esc(c.claimed_at)
-          + (c.released_at ? " · " + esc(c.outcome) : " · live") + "</div>");
+          + (c.released_at ? " Â· " + esc(c.outcome) : " Â· live") + "</div>");
       });
       el.innerHTML = parts.join("") || "<div>no history yet</div>";
     }).catch(function () { el.textContent = "history unavailable"; });
