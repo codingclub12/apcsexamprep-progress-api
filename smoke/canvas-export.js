@@ -42,6 +42,17 @@ const app = express();
 app.use(express.json());
 app.use('/api/teacher', require('../routes/teacher'));
 
+// Column positions are looked up BY HEADER, never hardcoded. The identity block
+// grew a summary section (Letter Grade, %, Total Earned, Total Graded, Total
+// Possible) between Section and the graded columns, and every fixed index in
+// this suite silently pointed one section to the left the moment it landed:
+// twelve assertions read a letter grade where they expected a unit score.
+// A header lookup cannot drift when a column is inserted.
+const SUMMARY = ['Letter Grade', '%', 'Total Earned', 'Total Graded', 'Total Possible'];
+const IDENT = 5;                 // Student + 3 Canvas id columns + Section
+const FIRST_COL = IDENT + SUMMARY.length;   // where the graded columns start
+const colOf = (header, name) => header.indexOf(name);
+
 let pass = 0, fail = 0;
 const ok = (n, c, x) => {
   if (c) { pass++; console.log('  [PASS] ' + n); }
@@ -137,15 +148,20 @@ async function getCsv(url, opts) {
   // All three Canvas identity columns ship, blank where unknown, so a district
   // can match on a student number and never store an email here.
   ok('  header is Student, the three Canvas ID columns, Section, then one column per unit',
-    header.slice(0, 5).join('|') === 'Student|ID|SIS User ID|SIS Login ID|Section' && header.length === 10, header);
+    header.slice(0, 5).join('|') === 'Student|ID|SIS User ID|SIS Login ID|Section' && header.length === 15, header);
+  ok('  then the summary block, in CodeHS order',
+    header.slice(IDENT, FIRST_COL).join('|') === SUMMARY.join('|'), header.slice(IDENT, FIRST_COL));
   ok('  assignment headers carry the course prefix so they cannot collide in Canvas',
-    header[5] === 'Cyber Unit 1' && header[9] === 'Cyber Unit 5', header.slice(5));
+    header[FIRST_COL] === 'Cyber Unit 1' && header[FIRST_COL + 4] === 'Cyber Unit 5', header.slice(FIRST_COL));
 
   const points = splitCsv(lines[1]);
   ok('  row 2 is Points Possible (Canvas requires it second)', points[0] === 'Points Possible', points[0]);
   ok('  Points Possible leaves the ID columns and Section blank',
     points.slice(1, 5).every((c) => c === ''), points.slice(0, 5));
-  ok('  every assignment is out of 100', points.slice(5).every((p) => p === '100'), points.slice(5));
+  ok('  the summary columns are read only, not scoreable assignments',
+    points.slice(IDENT, FIRST_COL).every((p) => p === '(read only)'), points.slice(IDENT, FIRST_COL));
+  ok('  every assignment is out of 100',
+    points.slice(FIRST_COL).every((p) => p === '100'), points.slice(FIRST_COL));
 
   const dataRows = lines.slice(2).filter((l) => l.length).map(splitCsv);
   ok('  one row per ACTIVE student, no instruction row', dataRows.length === 5, dataRows.length);
@@ -156,7 +172,7 @@ async function getCsv(url, opts) {
   console.log('\n2. No cell Canvas would reject');
   {
     const bad = [];
-    for (const r of dataRows) for (const cell of r.slice(5)) if (!CANVAS_CELL_RE.test(cell)) bad.push(cell);
+    for (const r of dataRows) for (const cell of r.slice(FIRST_COL)) if (!CANVAS_CELL_RE.test(cell)) bad.push(cell);
     ok('  every grade cell matches /^$|^\\d+(\\.\\d{1,2})?$/', bad.length === 0, bad);
     ok('  no "Done" anywhere in the file', !/\bDone\b/.test(raw));
     ok('  no "earned/possible" fraction anywhere in the file', !/\d+\/\d+/.test(raw));
@@ -168,12 +184,13 @@ async function getCsv(url, opts) {
   {
     const jane = rowFor('Doe, Jane');
     ok('  Unit 1 is the points-weighted percent of the graded work (90 and 84 -> 87)',
-      jane[5] === '87', jane[5]);
-    ok('  a visited-but-ungraded unit is BLANK, never 0', jane[6] === '', jane[6]);
-    ok('  an untouched unit is blank', jane[7] === '' && jane[8] === '' && jane[9] === '', jane.slice(7));
-    ok('  a single graded item reports its own percent', rowFor('Chen')[5] === '71', rowFor('Chen')[5]);
+      jane[FIRST_COL] === '87', jane[FIRST_COL]);
+    ok('  a visited-but-ungraded unit is BLANK, never 0', jane[FIRST_COL + 1] === '', jane[FIRST_COL + 1]);
+    ok('  an untouched unit is blank',
+      jane.slice(FIRST_COL + 2, FIRST_COL + 5).every((c) => c === ''), jane.slice(FIRST_COL + 2));
+    ok('  a single graded item reports its own percent', rowFor('Chen')[FIRST_COL] === '71', rowFor('Chen')[FIRST_COL]);
     ok('  a student with no work at all is blank across every unit',
-      rowFor('D., Jane').slice(5).every((c) => c === ''), rowFor('D., Jane').slice(5));
+      rowFor('D., Jane').slice(FIRST_COL).every((c) => c === ''), rowFor('D., Jane').slice(FIRST_COL));
   }
 
   // ── 4. Identity ────────────────────────────────────────────────────────────
@@ -277,15 +294,61 @@ async function getCsv(url, opts) {
     // 1/2 CFU points + 8/10 quiz points = 9 of 12 authored points = 75.
     // The unattempted CFU counts against the denominator exactly as the
     // dashboard counts it, so teacher and Canvas cannot disagree.
-    ok('  points-weighted across item types (9 of 12 authored points -> 75)', ada[5] === '75', ada[5]);
-    ok('  no fraction leaks into the Canvas cell', CANVAS_CELL_RE.test(ada[5]), ada[5]);
-    ok('  units with no manifest items stay blank', ada.slice(6).every((c) => c === ''), ada.slice(6));
+    ok('  points-weighted across item types (9 of 12 authored points -> 75)', ada[FIRST_COL] === '75', ada[FIRST_COL]);
+    ok('  no fraction leaks into the Canvas cell', CANVAS_CELL_RE.test(ada[FIRST_COL]), ada[FIRST_COL]);
+    ok('  units with no manifest items stay blank', ada.slice(FIRST_COL + 1).every((c) => c === ''), ada.slice(FIRST_COL + 1));
 
     const natCsa = (await getCsv(base + '/api/teacher/classes/CSA-CNV/export', { headers: auth })).text;
     ok('  the native export still shows the raw points for the same cell', /9\/12|1\/2|8\/10/.test(natCsa),
       natCsa.split('\r\n')[1]);
   }
 
+  // ── 8b. The summary block ──────────────────────────────────────────────────
+  //  THE DISTINCTION IT EXISTS FOR
+  //  Ada has one unit graded at 75 and the rest untouched. AP CSA is the 4-unit
+  //  2025-2026 structure, so the course is 400 points. Over that she is 75 of
+  //  400, which reads as 19 percent and is a lie about her work: she has not
+  //  reached those units. Over GRADED work she is 75 of 100, which is 75 and is
+  //  true. The percent must be the second number, and Total Possible must still
+  //  report the 400 so nothing is hidden.
+  console.log('\n8b. The summary block (Letter Grade, %, Earned / Graded / Possible)');
+  {
+    const csaB = (await getCsv(base + '/api/teacher/classes/CSA-CNV/export?format=canvas&scope=unit',
+      { headers: auth })).text;
+    const lb = csaB.replace(/^\ufeff/, '').split('\r\n').filter((l) => l.length);
+    const hb = splitCsv(lb[0]);
+    const adaB = splitCsv(lb[2]);
+    const at = (n) => adaB[colOf(hb, n)];
+
+    ok('  % is earned over GRADED, not over possible', at('%') === '75%', at('%'));
+    ok('  Total Earned counts only graded work', at('Total Earned') === '75', at('Total Earned'));
+    ok('  Total Graded is the graded denominator', at('Total Graded') === '100', at('Total Graded'));
+    ok('  Total Possible still reports the whole course (CSA is 4 units)',
+      at('Total Possible') === '400', at('Total Possible'));
+    ok('  the letter follows the summary percent, not a column', at('Letter Grade') === 'C', at('Letter Grade'));
+    ok('  earned over possible would have read 19 percent, which is why it is not used',
+      Math.round((75 / 400) * 100) === 19);
+
+    // A student with nothing graded is blank across the block, never an F.
+    run(`INSERT INTO students (id,class_id,display_name,pin_hash) VALUES ('s_zoe_sum','c2','Zoe Null','x')`);
+    const csaC = (await getCsv(base + '/api/teacher/classes/CSA-CNV/export?format=canvas&scope=unit',
+      { headers: auth })).text;
+    const lc = csaC.replace(/^\ufeff/, '').split('\r\n').filter((l) => l.length);
+    const hc = splitCsv(lc[0]);
+    const zoe = lc.map(splitCsv).find((r) => r[0].indexOf('Zoe') !== -1);
+    ok('  nothing graded gets a BLANK letter, not an F', zoe[colOf(hc, 'Letter Grade')] === '');
+    ok('  and a blank percent', zoe[colOf(hc, '%')] === '');
+    ok('  but Total Possible still shows the course size', zoe[colOf(hc, 'Total Possible')] === '400');
+    ok('  and Total Graded is 0, which makes the blank percent legible',
+      zoe[colOf(hc, 'Total Graded')] === '0');
+
+    // The activity export carries the same block, so the two scopes agree.
+    const actB = (await getCsv(base + '/api/teacher/classes/CSA-CNV/export?format=canvas&scope=activity',
+      { headers: auth })).text;
+    const ha = splitCsv(actB.replace(/^\ufeff/, '').split('\r\n')[0]);
+    ok('  scope=activity carries the summary block too',
+      SUMMARY.every((n) => colOf(ha, n) !== -1), ha.slice(0, FIRST_COL));
+  }
   // ── 9. Setting the ref, which is what makes any of this reach Canvas ───────
   //  The export is inert until a teacher can actually set student_ref. Nothing
   //  wrote it before this route did, so the whole identity bridge was
@@ -348,12 +411,12 @@ async function getCsv(url, opts) {
     const aRows = aLines.slice(2).filter((l) => l.length).map(splitCsv);
 
     ok('  keeps the same identity columns as unit scope',
-      aHeader.slice(0, 5).join('|') === 'Student|ID|SIS User ID|SIS Login ID|Section', aHeader.slice(0, 5));
+      aHeader.slice(0, IDENT).join('|') === 'Student|ID|SIS User ID|SIS Login ID|Section', aHeader.slice(0, IDENT));
     ok('  has far more columns than the five unit ones', aHeader.length > 20, aHeader.length);
 
     // A Canvas assignment name is global to the course, so a bare "Case File"
     // would collide across all five units and silently overwrite grades.
-    const names = aHeader.slice(5);
+    const names = aHeader.slice(FIRST_COL);
     ok('  every assignment name is unique', new Set(names).size === names.length,
       names.filter((n, i) => names.indexOf(n) !== i));
     ok('  every assignment name carries the course prefix',
@@ -370,20 +433,20 @@ async function getCsv(url, opts) {
       names.slice(0, 4));
 
     ok('  Points Possible is 100 for every activity',
-      aPoints.slice(5).every((p) => p === '100'), aPoints.slice(5, 8));
+      aPoints.slice(FIRST_COL).every((p) => p === '100'), aPoints.slice(FIRST_COL, FIRST_COL + 3));
 
     // The rules that matter most survive the different column set.
     const bad = [];
-    for (const r of aRows) for (const c of r.slice(5)) if (!CANVAS_CELL_RE.test(c)) bad.push(c);
+    for (const r of aRows) for (const c of r.slice(FIRST_COL)) if (!CANVAS_CELL_RE.test(c)) bad.push(c);
     ok('  every cell is still a number or a blank', bad.length === 0, bad.slice(0, 5));
     ok('  no "Done" leaks into activity scope', !/\bDone\b/.test(act.text));
     const janeA = aRows.find((r) => r[0] === 'Doe, Jane');
     ok('  a graded quiz reports its own percent, not a unit average',
-      janeA.slice(5).indexOf('90') !== -1 && janeA.slice(5).indexOf('84') !== -1,
-      janeA.slice(5).filter(Boolean));
+      janeA.slice(FIRST_COL).indexOf('90') !== -1 && janeA.slice(FIRST_COL).indexOf('84') !== -1,
+      janeA.slice(FIRST_COL).filter(Boolean));
     ok('  the visited-but-ungraded lesson is still BLANK, never 0',
-      janeA.slice(5).filter((c) => c === '0').length === 0,
-      janeA.slice(5).filter(Boolean));
+      janeA.slice(FIRST_COL).filter((c) => c === '0').length === 0,
+      janeA.slice(FIRST_COL).filter(Boolean));
     ok('  deactivated students stay out of activity scope too',
       act.text.indexOf('Gone Student') === -1);
 
@@ -412,24 +475,24 @@ async function getCsv(url, opts) {
     const all = await head('?format=canvas&scope=activity');
     const quizOnly = await head('?format=canvas&scope=activity&include=quiz');
     ok('  include=quiz drops every non-quiz column',
-      quizOnly.cols.slice(5).every((c) => / Quiz$/.test(c) || /Case File$/.test(c)),
-      quizOnly.cols.slice(5).filter((c) => !/ Quiz$|Case File$/.test(c)).slice(0, 4));
+      quizOnly.cols.slice(FIRST_COL).every((c) => / Quiz$/.test(c) || /Case File$/.test(c)),
+      quizOnly.cols.slice(FIRST_COL).filter((c) => !/ Quiz$|Case File$/.test(c)).slice(0, 4));
     ok('  and is genuinely smaller than the unfiltered export',
       quizOnly.cols.length < all.cols.length, { filtered: quizOnly.cols.length, all: all.cols.length });
 
     // A case file has no toggle and always counts, exactly as the dashboard's
     // own counts() does by falling through to true.
     ok('  a case file survives even when nothing is included',
-      (await head('?format=canvas&scope=activity&include=')).cols.slice(5).every((c) => /Case File$/.test(c)));
+      (await head('?format=canvas&scope=activity&include=')).cols.slice(FIRST_COL).every((c) => /Case File$/.test(c)));
 
     const u1 = await head('?format=canvas&scope=activity&units=unit-1');
     ok('  units=unit-1 exports that unit only',
-      u1.cols.slice(5).every((c) => /^Cyber (1\.|Unit 1 )/.test(c)),
-      u1.cols.slice(5).filter((c) => !/^Cyber (1\.|Unit 1 )/.test(c)).slice(0, 4));
+      u1.cols.slice(FIRST_COL).every((c) => /^Cyber (1\.|Unit 1 )/.test(c)),
+      u1.cols.slice(FIRST_COL).filter((c) => !/^Cyber (1\.|Unit 1 )/.test(c)).slice(0, 4));
 
     const u13 = await head('?format=canvas&scope=unit&units=unit-1,unit-3');
     ok('  unit scope honours the same selection',
-      u13.cols.slice(5).join('|') === 'Cyber Unit 1|Cyber Unit 3', u13.cols.slice(5));
+      u13.cols.slice(FIRST_COL).join('|') === 'Cyber Unit 1|Cyber Unit 3', u13.cols.slice(FIRST_COL));
 
     // Filtering changes the denominator, so the unit grade has to move with it.
     const bothTypes = await getCsv(base + '/api/teacher/classes/CYBER-CNV/export?format=canvas&scope=unit',
@@ -439,8 +502,8 @@ async function getCsv(url, opts) {
       base + '/api/teacher/classes/CYBER-CNV/export?format=canvas&scope=unit&include=lesson', { headers: auth });
     const janeLesson = lessonOnly.text.split('\r\n').slice(2).map(splitCsv).find((r) => r[0] === 'Doe, Jane');
     ok('  excluding quizzes changes the unit grade rather than silently keeping it',
-      janeAll[5] === '87' && janeLesson[5] !== '87', { all: janeAll[5], lessonOnly: janeLesson[5] });
-    ok('  a unit with nothing included is blank, never 0', janeLesson[5] === '', janeLesson[5]);
+      janeAll[FIRST_COL] === '87' && janeLesson[FIRST_COL] !== '87', { all: janeAll[FIRST_COL], lessonOnly: janeLesson[FIRST_COL] });
+    ok('  a unit with nothing included is blank, never 0', janeLesson[FIRST_COL] === '', janeLesson[FIRST_COL]);
 
     // A typo would silently export a smaller gradebook, which is worse than an
     // error because the teacher would not know what was missing.
