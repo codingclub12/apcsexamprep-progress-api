@@ -10,7 +10,7 @@ const { makeRateLimit } = require('../lib/rate-limit');
 const mailer = require('../lib/mailer');
 const resetLib = require('../lib/password-reset');
 const { attemptRollup } = require('../lib/attempt-rollup');
-const { buildCanonicalGradebook } = require('../lib/gradebook-contract');
+const { buildCanonicalGradebook, canonicalActivity, isGradedActivity } = require('../lib/gradebook-contract');
 const {
   formatCell, buildCanvasUnitExport, buildCanvasActivityExport, canvasSisLoginId,
   INCLUDE_BUCKETS,
@@ -388,7 +388,23 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
     let earned = pt ? pt.points_earned : null;
     let possible = pt ? pt.points_possible : null;
     let denomSource = possible != null ? 'observed' : null;
-    if (authored != null) {
+    // An UNGRADED column carries no points, on any course. lib/gradebook-contract.js
+    // is the one authority on that line ('lesson' is a page visit, everything else
+    // can carry a grade), so it is asked here rather than restated.
+    //
+    // Without this the score_events sum leaks the synthetic 'lesson-score' row,
+    // which is a percent carrier stored as points = percent, max_points = 100.
+    // A lesson at 20 percent was reported as 20 out of 100, sourced 'observed' as
+    // though 100 were a counted total, while the contract reported the same cell
+    // as ungraded with no points at all. Two consequences, both visible:
+    // the dashboard printed a red 20/100 for a page visit and the row's own cells
+    // no longer summed to its total, and the teacher's include-lessons toggle
+    // would have weighted that page visit at 100, twenty times a real 5 point
+    // quiz. Graded columns are untouched: their percent-only pricing still comes
+    // from the contract's PERCENT_WEIGHT, not from here.
+    if (!isGradedActivity(canonicalActivity(p.activity_type).activity)) {
+      earned = null; possible = null; denomSource = null;
+    } else if (authored != null) {
       const ratio = (possible && possible > 0) ? (earned / possible)
                   : (p.score != null ? p.score / 100 : null);
       possible = authored;
