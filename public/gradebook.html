@@ -45,7 +45,15 @@
   .card h3 { margin:0 0 4px; font-size:14px; font-weight:650; letter-spacing:0.01em; }
   .hint { color:var(--muted); font-size:12.5px; margin:0 0 12px; max-width:78ch; }
 
-  .controls { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:16px; }
+  .controls { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:12px; }
+  /* A phone-width select must not push the card wider than the screen. */
+  .controls select { max-width:100%; }
+
+  details#explainer summary { cursor:pointer; font-size:13px; font-weight:650; color:var(--ink-2); list-style:none; }
+  details#explainer summary::-webkit-details-marker { display:none; }
+  details#explainer summary::before { content:"\25B8\00a0"; color:var(--muted); }
+  details#explainer[open] summary::before { content:"\25BE\00a0"; }
+  details#explainer .hint { margin-top:10px; margin-bottom:0; }
 
   /* Integrity banner. A graded column with no authored "out of" is a data
      failure, not a footnote, so it is loud and it sits above the grid. */
@@ -105,24 +113,30 @@
   </header>
 
   <div class="card">
-    <h3>What you are looking at</h3>
-    <p class="hint">
-      This page renders the canonical gradebook contract, and it calls the same builder the teacher
-      route calls with the same arguments. It is not a second implementation of the teacher's
-      gradebook: it is that gradebook, so what you verify here is what they see. Names are hidden by
-      default because the numbers can be checked without them.
-      <br /><br />
-      The grade is <b>earned over graded</b>: points scored, over the points of the work actually
-      attempted. It is never divided by the whole course, because a student who has finished three
-      items perfectly is at 100 percent, not 3 percent. How much of the course has been reached is
-      <b>pace</b>, reported separately. A blank cell means not attempted. A <b>0</b> means attempted
-      and scored zero.
-    </p>
+    <!-- The picker comes FIRST. On a phone the explainer used to fill the whole
+         first screen, so reaching a single number meant scrolling past roughly a
+         screen and a half of prose. It is still here, and still worth reading
+         once, but it is now a thing you open rather than a thing you scroll. -->
     <div class="controls">
       <select id="classSel"><option>Loading classes…</option></select>
       <select id="courseSel" style="display:none"></select>
       <span id="meta" class="muted"></span>
     </div>
+    <details id="explainer">
+      <summary>How to read this</summary>
+      <p class="hint">
+        This page renders the canonical gradebook contract, and it calls the same builder the teacher
+        route calls with the same arguments. It is not a second implementation of the teacher's
+        gradebook: it is that gradebook, so what you verify here is what they see. Names are hidden by
+        default because the numbers can be checked without them.
+        <br /><br />
+        The grade is <b>earned over graded</b>: points scored, over the points of the work actually
+        attempted. It is never divided by the whole course, because a student who has finished three
+        items perfectly is at 100 percent, not 3 percent. How much of the course has been reached is
+        <b>pace</b>, reported separately. A blank cell means not attempted. A <b>0</b> means attempted
+        and scored zero.
+      </p>
+    </details>
   </div>
 
   <div id="banner"></div>
@@ -354,6 +368,11 @@
     load();
   });
   document.getElementById("refreshBtn").addEventListener("click", load);
+
+  // Open on a wide screen where it costs nothing, closed on a phone where it
+  // would otherwise be the entire first screen. A <details> default state cannot
+  // be set from a media query, so it is set once here at load.
+  document.getElementById("explainer").open = window.innerWidth >= 900;
 
   loadClasses().then(load).catch(onErr);
 })();
