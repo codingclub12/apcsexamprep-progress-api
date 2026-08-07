@@ -4,9 +4,9 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex, nofollow" />
-<title>APCSExamPrep · Executive KPIs</title>
+<title>APCSExamPrep Â· Executive KPIs</title>
 <style>
-  /* ── Palette (validated dataviz reference: light + dark) ──────────────── */
+  /* ââ Palette (validated dataviz reference: light + dark) ââââââââââââââââ */
   :root {
     color-scheme: light dark;
     --plane:   #f9f9f7;
@@ -66,7 +66,7 @@
   a { color: var(--csa); }
   .wrap { max-width: 1100px; margin: 0 auto; padding: 20px 20px 64px; }
 
-  /* ── Header ──────────────────────────────────────────────────────────── */
+  /* ââ Header ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
   header.top {
     display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px;
     padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 20px;
@@ -85,7 +85,7 @@
   }
   button:hover { border-color: var(--baseline); }
 
-  /* ── KPI tiles ───────────────────────────────────────────────────────── */
+  /* ââ KPI tiles âââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
   .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 24px; }
   .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 15px 16px; box-shadow: var(--shadow); }
   .kpi .label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
@@ -96,11 +96,11 @@
   .meter { height: 6px; border-radius: 3px; margin-top: 10px; background: color-mix(in srgb, var(--ink) 8%, transparent); overflow: hidden; }
   .meter > i { display: block; height: 100%; border-radius: 3px; }
 
-  /* ── Section band ────────────────────────────────────────────────────── */
+  /* ââ Section band ââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
   .band-title { font-size: 13px; font-weight: 650; margin: 4px 0 12px; display: flex; align-items: baseline; gap: 8px; }
   .band-title .sub2 { font-size: 12px; font-weight: 400; color: var(--muted); }
 
-  /* ── Cards ───────────────────────────────────────────────────────────── */
+  /* ââ Cards âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow); margin-bottom: 22px; }
   .card h3 { margin: 0 0 2px; font-size: 14px; font-weight: 600; }
   .card .hint { color: var(--muted); font-size: 12px; margin: 0 0 12px; }
@@ -115,7 +115,7 @@
   svg { display: block; width: 100%; height: auto; overflow: visible; }
   svg text { font: 11px system-ui, sans-serif; fill: var(--muted); }
 
-  /* ── Lesson tables ───────────────────────────────────────────────────── */
+  /* ââ Lesson tables âââââââââââââââââââââââââââââââââââââââââââââââââââââ */
   .minitable { width: 100%; border-collapse: collapse; font-size: 13px; }
   .minitable th { text-align: left; font-weight: 600; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--border); white-space: nowrap; }
   .minitable th.num { text-align: right; }
@@ -142,6 +142,7 @@
   <header class="top">
     <h1>Executive KPIs</h1>
     <span class="sub">live from <code>/api/admin/exec</code></span>
+    <a class="navlink" href="/admin/gradebook">Gradebook →</a>
     <a class="navlink" href="/admin/dashboard">Dashboard →</a>
     <a class="navlink" href="/admin/analytics">Analytics →</a>
     <a class="navlink" href="/admin/teachers">Teachers →</a>
@@ -214,7 +215,7 @@
   function courseCss(c) { return (COURSE[c] && COURSE[c].css) || "var(--muted)"; }
   function courseLabel(c) { return (COURSE[c] && COURSE[c].label) || c; }
 
-  // ── Fetch (session cookie rides along; 401/403/503 bounces to login) ─────
+  // ââ Fetch (session cookie rides along; 401/403/503 bounces to login) âââââ
   function api(path) {
     return fetch(path, { credentials: "same-origin" }).then(function (r) {
       if (r.status === 401 || r.status === 403 || r.status === 503) {
@@ -237,7 +238,7 @@
     });
   }
 
-  // ── KPI tiles ────────────────────────────────────────────────────────────
+  // ââ KPI tiles ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
   function tile(label, value, foot, meterPct, meterColor) {
     var m = meterPct == null ? "" :
       '<div class="meter"><i style="width:' + Math.max(0, Math.min(100, meterPct)) + '%;background:' + meterColor + '"></i></div>';
@@ -256,7 +257,7 @@
       tile("Active teachers (7d)", fmt(k.active_teachers_7d),
         "with a student active this week", null, null),
       tile("Active students (7d)", fmt(k.active_students_7d),
-        fmt(k.active_students_1d) + " today · " + fmt(k.active_students_30d) + " in 30d · " + fmt(k.students_total) + " total", null, null),
+        fmt(k.active_students_1d) + " today Â· " + fmt(k.active_students_30d) + " in 30d Â· " + fmt(k.students_total) + " total", null, null),
       tile("New classrooms (7d)", fmt(k.new_classrooms_7d),
         fmt(k.new_classrooms_1d) + " in the last 24h", null, null),
       tile("Lesson completion rate", lc.pct + "%",
@@ -276,7 +277,7 @@
     $("kpis").innerHTML = tiles.join("");
   }
 
-  // ── Daily completions: summary strip + 30-day bar chart ──────────────────
+  // ââ Daily completions: summary strip + 30-day bar chart ââââââââââââââââââ
   function renderDaily() {
     var dc = state.exec.daily_completions;
     $("dcStrip").innerHTML =
@@ -321,7 +322,7 @@
       bars + labels + maxLabel + '</svg>';
   }
 
-  // ── Lesson tables ────────────────────────────────────────────────────────
+  // ââ Lesson tables ââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
   function lessonPill(course) {
     return '<span class="pill" style="background:color-mix(in srgb,' + courseCss(course) + ' 16%,transparent);color:var(--ink-2)">' +
       '<i class="swatch" style="background:' + courseCss(course) + '"></i>' + esc(courseLabel(course)) + '</span>';
@@ -388,7 +389,7 @@
     renderTopAbandon();
   }
 
-  // ── Live status + auto-refresh ───────────────────────────────────────────
+  // ââ Live status + auto-refresh âââââââââââââââââââââââââââââââââââââââââââ
   function markUpdated() {
     state.countdown = REFRESH_SECONDS;
     $("liveText").textContent = "Updated just now";
@@ -405,7 +406,7 @@
   }
   function onErr(e) {
     if (e && e.auth) { toLogin(); return; }
-    $("liveText").textContent = "Error loading. Retrying…";
+    $("liveText").textContent = "Error loading. Retryingâ¦";
   }
 
   $("pauseBtn").addEventListener("click", function () {

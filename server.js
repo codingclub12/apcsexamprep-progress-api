@@ -191,6 +191,15 @@ app.get('/admin/teachers', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', file));
 });
 
+// Gradebook. The canonical contract rendered exactly as the teacher's own route
+// returns it, because it is the same builder behind both. Anonymized unless the
+// operator asks for names. Same cookie gate as every other admin page.
+app.get('/admin/gradebook', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  const file = adminSession.isAuthed(req) ? 'gradebook.html' : 'login.html';
+  res.sendFile(path.join(__dirname, 'public', file));
+});
+
 // Command center. Same cookie gate as every other admin page: without a valid
 // session the login page is served, so neither the markup nor its data-fetching
 // JS reaches an unauthenticated visitor. The page never embeds TODO_KEY in any

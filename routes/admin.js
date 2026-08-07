@@ -23,6 +23,7 @@ const teacherView = require('../lib/admin-teacher');
 const resetLib = require('../lib/password-reset');
 const unified = require('../lib/admin-unified');
 const gradebook = require('../lib/admin-gradebook');
+const contract = require('../lib/gradebook-contract');
 const denominators = require('../lib/admin-denominators');
 const ungraded = require('../lib/admin-ungraded');
 const wire = require('../lib/wire-log');
@@ -94,6 +95,7 @@ router.get('/', (req, res) => {
       'GET /api/admin/class/:code         one class: meta + roster + recent activity',
       'GET /api/admin/student/:id         per-lesson visit status + grade-of-record per item, vs manifest',
       'GET /api/admin/class/:id/gradebook full gradebook: merges attempts + score_events rollups; ?reveal=1 for real names, ?course= for solo',
+      'GET /api/admin/class/:id/gradebook/as-teacher  the canonical contract, the same builder and the same output the teacher route returns; anonymized unless ?reveal=1',
       'GET /api/admin/denominators        which graded columns have an authored "out of"; ?course= required, proposes values where the data agrees',
       'GET /api/admin/ungraded-fallout   completed activities that were never scored, and how much real graded work sits alongside them; ?course=',
       'POST /api/admin/denominators/adopt author denominators (header key required); {course, adopt_proposed} or {course, values}, dry_run supported',
@@ -906,6 +908,30 @@ router.get('/class/:id/gradebook', (req, res) => {
     res.json(out);
   } catch (e) {
     console.error('admin/class/:id/gradebook:', e);
+    res.status(500).json({ error: 'gradebook failed', detail: e.message });
+  }
+});
+
+// ── THE CANONICAL GRADEBOOK, EXACTLY AS THE TEACHER SEES IT ──────────────────
+//  Same builder, same arguments, same output as GET /api/teacher/classes/:code/
+//  gradebook. Not a reimplementation of the teacher view: literally the function
+//  the teacher route calls, so the two cannot drift and "is the teacher seeing
+//  what I am seeing" stops being a question anyone has to answer by eye.
+//
+//  Anonymized by default (positional labels, "Student 1"), because an operator
+//  verifying that the numbers are right does not need a minor's name to do it.
+//  ?reveal=1 opts in to display names, same posture as every other admin route.
+//  ?course= picks the course for a solo system class.
+router.get('/class/:id/gradebook/as-teacher', (req, res) => {
+  try {
+    const out = contract.buildCanonicalGradebook(req.params.id, {
+      course: req.query.course,
+      reveal: req.query.reveal === '1',
+    });
+    if (!out) return res.status(404).json({ error: `No class with id or code ${req.params.id}` });
+    res.json(out);
+  } catch (e) {
+    console.error('admin/class/:id/gradebook/as-teacher:', e);
     res.status(500).json({ error: 'gradebook failed', detail: e.message });
   }
 });
