@@ -269,7 +269,7 @@ const samePoints = (a, b) => (a == null && b == null)
     tLesson.points_possible !== 100, tLesson.points_possible);
 
   ok('  while a real graded cell beside it keeps its authored pair',
-    tQuizCell.points_possible === 6 && Math.abs(tQuizCell.points_earned - 1.2) < 0.011,
+    tQuizCell.points_possible === 6 && tQuizCell.points_earned === 1,
     [tQuizCell.points_earned, tQuizCell.points_possible]);
 
   const cg = require('../lib/gradebook-contract').buildCanonicalGradebook(code, { reveal: true });
@@ -281,7 +281,7 @@ const samePoints = (a, b) => (a == null && b == null)
   ok('  and the two views now agree cell for cell on that column',
     cLesson.possible === (tLesson.points_possible == null ? null : tLesson.points_possible));
   ok('  the lesson contributes nothing to the row total',
-    cs.overall.graded === 6 && Math.abs(cs.overall.earned - 1.2) < 0.011,
+    cs.overall.graded === 6 && cs.overall.earned === 1,
     [cs.overall.earned, cs.overall.graded]);
 
   console.log('\n' + (fail === 0 ? `OK - all ${pass} checks passed` : `${fail} FAILED (${pass} passed)`));

@@ -10,7 +10,8 @@ const { makeRateLimit } = require('../lib/rate-limit');
 const mailer = require('../lib/mailer');
 const resetLib = require('../lib/password-reset');
 const { attemptRollup } = require('../lib/attempt-rollup');
-const { buildCanonicalGradebook, canonicalActivity, isGradedActivity } = require('../lib/gradebook-contract');
+const { buildCanonicalGradebook, canonicalActivity, isGradedActivity,
+  pointsFromRatio } = require('../lib/gradebook-contract');
 const {
   formatCell, buildCanvasUnitExport, buildCanvasActivityExport, canvasSisLoginId,
   INCLUDE_BUCKETS,
@@ -408,7 +409,7 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
       const ratio = (possible && possible > 0) ? (earned / possible)
                   : (p.score != null ? p.score / 100 : null);
       possible = authored;
-      earned = ratio == null ? null : Math.round(ratio * authored * 100) / 100;
+      earned = pointsFromRatio(ratio, authored);
       denomSource = 'authored';
     }
     progressMap[p.student_id][p.unit][p.lesson][p.activity_type] = {

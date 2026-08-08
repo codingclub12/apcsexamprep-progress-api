@@ -90,7 +90,11 @@ const near = (a, b, eps = 0.011) => a != null && b != null && Math.abs(a - b) < 
     ['1.1', 'exercise-1', 100],
     ['1.1', 'exercise-2', 38],
     ['1.1', 'quiz', 80],
-    ['1.2', 'exercise-1', 17],
+    // 29 is the 2-of-7 case. It must be a score a 7 mark item can actually
+    // produce (0, 14, 29, 43, 57, 71, 86, 100), because points are counts of
+    // right and wrong and the numerator is therefore a whole number. The old
+    // fixture used 17, which no 7 mark item can ever emit.
+    ['1.2', 'exercise-1', 29],
   ];
   for (const [lesson, act, score] of marks) {
     await post('/api/student/progress',
@@ -119,15 +123,18 @@ const near = (a, b, eps = 0.011) => a != null && b != null && Math.abs(a - b) < 
   const e1 = cell('1.1', 'exercise-1'), e2 = cell('1.1', 'exercise-2'), q = cell('1.1', 'quiz');
   ok('  100 percent of 7 is 7/7', near(e1.points_earned, 7) && e1.points_possible === 7,
     [e1.points_earned, e1.points_possible]);
-  ok('  38 percent of 8 is 3.04/8', near(e2.points_earned, 3.04) && e2.points_possible === 8,
+  ok('  38 percent of 8 is 3/8, a whole number of marks', e2.points_earned === 3 && e2.points_possible === 8,
     [e2.points_earned, e2.points_possible]);
   ok('  80 percent of 5 is 4/5', near(q.points_earned, 4) && q.points_possible === 5,
     [q.points_earned, q.points_possible]);
 
   // The regression that motivated all of this.
   const e12 = cell('1.2', 'exercise-1');
-  ok('  17 percent reads as 17, not the 20 a /5 rescale produced',
-    Math.round((e12.points_earned / e12.points_possible) * 100) === 17,
+  ok('  29 percent reads as 29, not the 40 a /5 rescale would produce',
+    Math.round((e12.points_earned / e12.points_possible) * 100) === 29,
+    [e12.points_earned, e12.points_possible]);
+  ok('  and it is 2 whole marks out of 7, with no decimal in sight',
+    e12.points_earned === 2 && e12.points_possible === 7,
     [e12.points_earned, e12.points_possible]);
 
   // ── 4. The student and the teacher agree, cell by cell ────────────────────

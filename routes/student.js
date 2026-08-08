@@ -178,7 +178,7 @@ router.get('/progress', requireStudent, (req, res) => {
     const d = contract.lookupDenominator(denoms, r.unit, r.lesson, r.activity_type);
     if (d) {
       r.points_possible = d.possible;
-      r.points_earned = r.score != null ? Math.round((r.score / 100) * d.possible * 100) / 100 : null;
+      r.points_earned = r.score != null ? contract.pointsFromRatio(r.score / 100, d.possible) : null;
       r.denominator_source = d.source;
     } else if (r.score != null) {
       r.points_possible = contract.PERCENT_WEIGHT;

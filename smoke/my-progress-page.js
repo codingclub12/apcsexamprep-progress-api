@@ -133,7 +133,8 @@ function loadPage() {
 
   for (const [lesson, act, score] of [
     ['1.1', 'exercise-1', 100], ['1.1', 'exercise-2', 38],
-    ['1.1', 'quiz', 80], ['1.2', 'exercise-1', 17],
+    // 29 is the 2-of-7 case: a score a 7 mark item can actually produce.
+    ['1.1', 'quiz', 80], ['1.2', 'exercise-1', 29],
     ['1.4', 'lab', 55],   // deliberately unauthored
   ]) {
     await post('/api/student/progress',
@@ -162,10 +163,10 @@ function loadPage() {
     return m ? m[1].trim() : h;
   };
   ok('  1.1 exercise-1 shows 7/7', text('1.1', 'exercise-1') === '7/7', text('1.1', 'exercise-1'));
-  ok('  1.1 exercise-2 shows 3.04/8', text('1.1', 'exercise-2') === '3.04/8', text('1.1', 'exercise-2'));
+  ok('  1.1 exercise-2 shows 3/8, in whole marks', text('1.1', 'exercise-2') === '3/8', text('1.1', 'exercise-2'));
   ok('  1.1 quiz shows 4/5', text('1.1', 'quiz') === '4/5', text('1.1', 'quiz'));
   // The regression, stated as the student sees it.
-  ok('  1.2 exercise-1 shows 1.19/7, not the old 1/5', text('1.2', 'exercise-1') === '1.19/7',
+  ok('  1.2 exercise-1 shows 2/7, not the old 1/5', text('1.2', 'exercise-1') === '2/7',
     text('1.2', 'exercise-1'));
 
   //  Every graded cell shows a pair, on every course. Where nobody has authored
@@ -185,13 +186,15 @@ function loadPage() {
   console.log('4. Totals are points over points, not a mean of percentages');
   const t = StProg.totals(Object.values(StProg.model[COURSE].units['unit-1'].lessons)
     .flatMap((L) => Object.values(L.acts)));
-  // Authored: 7 + 3.04 + 4 + 1.19 = 15.23 over 7 + 8 + 5 + 7 = 27.
+  // Authored, all in whole marks: 7 + 3 + 4 + 2 = 16 over 7 + 8 + 5 + 7 = 27.
   // Plus the provisional lab at 55/100. Every visible cell is in the total, so
   // the fractions on screen add up to the number under them.
-  ok('  earned 70.23 of 127', near(t.earned, 70.23) && near(t.graded, 127), [t.earned, t.graded]);
-  ok('  which is 55.3 percent', near(t.pct, 55.3, 0.06), t.pct);
-  // The mean of 100, 38, 80, 17, 55 is 58. The points answer is not that.
-  ok('  and NOT the 58 a mean of percentages would give', !near(t.pct, 58, 0.3), t.pct);
+  ok('  earned 71 of 127', t.earned === 71 && near(t.graded, 127), [t.earned, t.graded]);
+  ok('  which is 55.9 percent', near(t.pct, 55.9, 0.06), t.pct);
+  // Not one cell on screen carries a decimal, so neither does their sum.
+  ok('  and the total is itself a whole number of marks', Number.isInteger(t.earned), t.earned);
+  // The mean of 100, 38, 80, 29, 55 is 60.4. The points answer is not that.
+  ok('  and NOT the 60.4 a mean of percentages would give', !near(t.pct, 60.4, 0.3), t.pct);
   ok('  the provisional activity is counted and reported',
     t.unpriced === 1 && t.priced === 4, [t.priced, t.unpriced]);
   // The cost of a provisional weight, stated as a test so it is not forgotten:
