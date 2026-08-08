@@ -14,7 +14,7 @@ const { LESSON_SCORE_ITEM } = require('../scoring');
 const { buildCanonicalGradebook, canonicalActivity, isGradedActivity,
   pointsFromRatio } = require('../lib/gradebook-contract');
 const {
-  formatCell, buildCanvasUnitExport, buildCanvasActivityExport, canvasSisLoginId,
+  formatCell, buildCanvasUnitExport, buildCanvasActivityExport, buildSchoologyExport, canvasSisLoginId,
   INCLUDE_BUCKETS,
 } = require('../lib/export-format');
 const {
@@ -603,8 +603,8 @@ function csvCell(v, forceQuote) {
 router.get('/classes/:code/export', requireTeacher, (req, res) => {
   try {
     const format = String(req.query.format || 'native').toLowerCase();
-    if (format !== 'native' && format !== 'canvas') {
-      return res.status(400).json({ error: "format must be 'native' or 'canvas'" });
+    if (format !== 'native' && format !== 'canvas' && format !== 'schoology') {
+      return res.status(400).json({ error: "format must be 'native', 'canvas' or 'schoology'" });
     }
     // scope applies to the Canvas rendering only.
     //   unit     one column per unit, five Canvas assignments for Cyber
@@ -674,6 +674,32 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
       (map[p.student_id] = map[p.student_id] || {})[`${p.unit}|${p.lesson}|${p.activity_type}`] = p;
     }
 
+    // Score-events merge (System B): the REAL marks a page reported, "7/8".
+    //
+    // The progress row above carries only the derived percentage, so without
+    // this an exercise a student genuinely scored 7 of 8 on reached every export
+    // as the number 88, and any format that states marks had nothing to state.
+    // The 'lesson-score' carrier is excluded for the usual reason: it is a
+    // percent stored as points = percent, max_points = 100, so summing it would
+    // manufacture a mark out of 100 for an activity nobody assigned points to.
+    //
+    // Only `points` is set. The percentage already on the row is left alone, so
+    // the native and Canvas exports are byte for byte unchanged by this.
+    const eventPoints = db.prepare(`
+      SELECT student_id, unit, lesson, activity_type,
+             SUM(points) AS earned, SUM(max_points) AS possible
+      FROM score_events
+      WHERE class_id = ? AND course = ? AND item <> '${LESSON_SCORE_ITEM}'
+      GROUP BY student_id, unit, lesson, activity_type
+    `).all(cls.id, cls.course);
+    for (const e of eventPoints) {
+      if (!(e.possible > 0)) continue;
+      const sm = (map[e.student_id] = map[e.student_id] || {});
+      const k = `${e.unit}|${e.lesson}|${e.activity_type}`;
+      if (!sm[k]) sm[k] = { completed: 1, score: null };
+      if (sm[k].points == null) sm[k].points = `${e.earned}/${e.possible}`;
+    }
+
     // Attempts merge (System A): same fold as the dashboard endpoint, so the
     // CSV a teacher downloads can never disagree with the dashboard. Cells
     // carry real points ("8/10") plus a percent for the Avg Quiz summary.
@@ -693,6 +719,41 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
     // ── Canvas rendering ──────────────────────────────────────────────────────
     //  Same merged grid, different shape. Everything above this point is shared
     //  with the native export, so the two files can never disagree about a grade.
+    if (format === 'schoology') {
+      // Schoology imports by MAPPING columns onto assignments that already
+      // exist, so unlike Canvas there is no fixed identity schema to satisfy and
+      // the header text is not load bearing. What matters is the number: a
+      // Schoology assignment has a max points and the imported score is raw
+      // marks against it, so this file states MARKS, not percentages.
+      //
+      // Deactivated students are excluded for the same reason as Canvas: a
+      // withdrawn student becomes a row the teacher then has to clean up.
+      const roster = students.filter((s) => s.active !== 0);
+      const built = buildSchoologyExport({
+        course: cls.course,
+        courseConfig,
+        className: cls.class_name,
+        students: roster,
+        cellFor: (sid, unit, lesson, act) => (map[sid] || {})[`${unit}|${lesson}|${act}`],
+        filter: exportFilter,
+      });
+
+      // Preflight tells the teacher, BEFORE downloading, which columns cannot be
+      // exported because nobody has assigned points to that activity. A column
+      // that silently vanishes is how half a gradebook fails to import.
+      if (wantsPreflight) return res.json(built.preflight);
+
+      const lines = [
+        built.headers.map((c2) => csvCell(c2)).join(','),
+        built.pointsRow.map((c2) => csvCell(c2)).join(','),
+        ...built.rows.map((r) => r.map((c2, i) => csvCell(c2, i === 0)).join(',')),
+      ];
+      res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+      res.setHeader('Content-Disposition',
+        `attachment; filename="schoology-${cls.class_code}-${new Date().toISOString().split('T')[0]}.csv"`);
+      return res.send(lines.join('\r\n') + '\r\n');
+    }
+
     if (format === 'canvas') {
       // Deactivated students stay out of Canvas. Their history survives here and
       // in the native export, which is the teacher's own record, but pushing a
