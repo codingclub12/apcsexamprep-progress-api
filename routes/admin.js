@@ -25,6 +25,7 @@ const unified = require('../lib/admin-unified');
 const gradebook = require('../lib/admin-gradebook');
 const contract = require('../lib/gradebook-contract');
 const denominators = require('../lib/admin-denominators');
+const scoreSources = require('../lib/score-sources');
 const ungraded = require('../lib/admin-ungraded');
 const wire = require('../lib/wire-log');
 const { retrySqlExpr } = require('../retry-policy');
@@ -945,6 +946,35 @@ router.get('/class/:id/gradebook/as-teacher', (req, res) => {
 //  proposes the value to author.
 //  ?course= (required), ?min_students=, ?agreement= to tune what counts as
 //  agreement, ?status= to filter (e.g. ?status=proposed).
+// GET /api/admin/score-sources[?course=&detail=1]
+//   How much of the recorded work is a REAL PAIR (points earned out of how many)
+//   versus a bare percentage, and which columns have ever reported a pair.
+//
+//   Two questions, deliberately separated:
+//     cells   the ceiling on what any read-time fix can repair. A percent-only
+//             cell is permanently lossy; "3 of 8" cannot be recovered from "38".
+//     columns the work list. A column no student has ever produced a pair for is
+//             a page that needs the reporter.
+//
+//   Read-only and safe against production: every statement is a SELECT. Zero
+//   PII; student ids are counted, never returned. `detail=1` adds the per column
+//   breakdown, which is long, so it is off by default.
+router.get('/score-sources', (req, res) => {
+  try {
+    const out = scoreSources.audit({ course: req.query.course });
+    if (req.query.detail !== '1') {
+      out.courses = out.courses.map((c) => {
+        const { column_detail, ...rest } = c;
+        return rest;
+      });
+      out.note = 'Add &detail=1 for the per column breakdown, including which columns have never reported a pair.';
+    }
+    res.json(out);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 router.get('/denominators', (req, res) => {
   try {
     const course = req.query.course;

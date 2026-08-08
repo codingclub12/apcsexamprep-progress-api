@@ -50,7 +50,9 @@
     "smoke:scoreentry": "node smoke/teacher-score-entry.js",
     "smoke:namesafety": "node smoke/display-name-safety.js",
     "smoke:pages": "node smoke/shopify-pages.js",
-    "smoke:casefiles": "node smoke/cyber-case-files.js"
+    "smoke:casefiles": "node smoke/cyber-case-files.js",
+    "smoke:pairallcourses": "node smoke/reported-pair-all-courses.js",
+    "smoke:scoresources": "node smoke/score-sources.js"
   },
   "keywords": [],
   "author": "",
