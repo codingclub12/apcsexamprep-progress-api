@@ -246,6 +246,7 @@
               <button onclick="TCDash.pickExport('gradebook')"><b>Gradebook spreadsheet</b><span>Every activity, for Excel or Sheets</span></button>
               <button onclick="TCDash.pickExport('canvas')"><b>Canvas CSV by unit</b><span>Five Canvas assignments, a unit grade in each</span></button>
               <button onclick="TCDash.pickExport('canvas-activity')"><b>Canvas CSV by activity</b><span>Every lesson, quiz, case file and exam as its own assignment</span></button>
+              <button onclick="TCDash.pickExport('schoology')"><b>Schoology CSV</b><span>Points earned out of points possible, one column per assignment</span></button>
               <button onclick="TCDash.pickExport('full')"><b>Full data CSV</b><span>Raw scores and completion from the server</span></button>
             </div>
           </span>
@@ -801,6 +802,7 @@ window.TCDash = {
     if(which==='gradebook')return this.exportGradebook();
     if(which==='canvas')return this.exportCanvasCSV('unit');
     if(which==='canvas-activity')return this.exportCanvasCSV('activity');
+    if(which==='schoology')return this.exportSchoologyCSV();
     return this.exportCSV(); },
   // Set the Canvas SIS identifier for one student. The server validates it with
   // the same rule the export applies, so a ref that would silently export blank
@@ -832,6 +834,31 @@ window.TCDash = {
       if(!r.ok) throw new Error('status '+r.status);
       const blob=await r.blob(); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=this.classCode+'-canvas-'+sc+'.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1500);
     }catch(e){ alert(e.name==='AbortError' ? 'The Canvas export timed out. The API may be restarting after a deploy: wait a minute and try again.' : ('Could not export the Canvas CSV ('+(e.message||'unknown')+'). Refresh and try again.')); }
+  },
+
+  // Schoology imports by mapping columns onto assignments that already exist,
+  // and a Schoology assignment has its own max points, so this file states
+  // MARKS: "7" into an assignment created out of 8. An activity nobody has
+  // assigned points to has no max, so it cannot become an assignment at all;
+  // the preflight names those columns before the download rather than letting
+  // them go missing from the file silently.
+  async exportSchoologyCSV(){
+    const token=localStorage.getItem('apcse_teacher_token');
+    const q='?format=schoology'+this.exportFilterQuery();
+    try{
+      const pre=await this._fetchWithTimeout(API+'/api/teacher/classes/'+this.classCode+'/export'+q+'&preflight=1',{headers:{'Authorization':'Bearer '+token}});
+      if(pre.status===401){ localStorage.removeItem('apcse_teacher_token'); location.href='/pages/cyber-class'; return; }
+      if(pre.ok){
+        const p=await pre.json();
+        if(!p.columns){ alert('Nothing to export yet.\n\nNo assignment in this selection has points recorded, so there is no mark to send to Schoology.'); return; }
+        const skipped=(p.skipped||[]).length;
+        if(skipped && !confirm(p.columns+' assignment(s) will export.\n\n'+skipped+' are left out because no points have been assigned to them yet, so Schoology has no total to grade against:\n\n'+(p.skipped||[]).slice(0,8).join('\n')+(skipped>8?('\n...and '+(skipped-8)+' more'):'')+'\n\nContinue?')) return;
+      }
+      const r=await this._fetchWithTimeout(API+'/api/teacher/classes/'+this.classCode+'/export'+q,{headers:{'Authorization':'Bearer '+token}});
+      if(r.status===401){ localStorage.removeItem('apcse_teacher_token'); location.href='/pages/cyber-class'; return; }
+      if(!r.ok) throw new Error('status '+r.status);
+      const blob=await r.blob(); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=this.classCode+'-schoology.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1500);
+    }catch(e){ alert(e.name==='AbortError' ? 'The Schoology export timed out. The API may be restarting after a deploy: wait a minute and try again.' : ('Could not export the Schoology CSV ('+(e.message||'unknown')+'). Refresh and try again.')); }
   },
 
   // ---- roster tools (unchanged) ----
