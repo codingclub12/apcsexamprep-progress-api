@@ -107,9 +107,9 @@ const near = (a, b, eps = 0.051) => a != null && b != null && Math.abs(a - b) < 
 
   // Student 1 reproduces the measured live case exactly:
   //   exercise-1  0 / 7      a scored ZERO, which must never read as "blank"
-  //   lab         7.04 / 8
+  //   lab         7 / 8      (88 percent of 8, to the nearest whole mark)
   //   quiz        5 / 5
-  //   = 12.04 / 20 = 60.2 percent
+  //   = 12 / 20 = 60 percent
   const join = async (nm) => (await post('/api/student/join',
     { class_code: code, display_name: nm, pin: '1234' })).body.token;
   const score = (tok, lesson, act, item, earned, possible) => post('/api/student/score',
@@ -138,9 +138,9 @@ const near = (a, b, eps = 0.051) => a != null && b != null && Math.abs(a - b) < 
   console.log('1. The rollup sums points');
   let g = gb();
   const one = byLabel(g, 'GC1');
-  ok('  earned 12.04', near(one.overall.earned, 12.04), one.overall.earned);
+  ok('  earned 12, in whole marks', one.overall.earned === 12, one.overall.earned);
   ok('  graded 20', near(one.overall.graded, 20), one.overall.graded);
-  ok('  pct 60.2', near(one.overall.pct, 60.2), one.overall.pct);
+  ok('  pct 60', near(one.overall.pct, 60), one.overall.pct);
   // A mean of the three percentages would be (0 + 88 + 100) / 3 = 62.7.
   ok('  and it is NOT the mean of the percentages', !near(one.overall.pct, 62.7, 0.3), one.overall.pct);
 

@@ -113,14 +113,33 @@ async function progress() {
   {
     const s = await progress();
     const q = cell(s, 's1', '1.1', 'quiz');
-    // 80 percent of 6 is 4.8. This is the number a teacher will read.
+    // Points are counts of right and wrong, so the numerator is a whole number.
+    // 80 percent of 6 is 4.8, which is not a score anyone can earn; the nearest
+    // whole point is 5.
+    //
+    // This fixture is worth keeping exactly as it is, because 80 percent of 6 is
+    // IMPOSSIBLE. A 6 mark quiz can only produce 0, 17, 33, 50, 67, 83 or 100.
+    // A stored 80 therefore means the authored denominator and the page disagree,
+    // and the rounding is what makes that disagreement visible instead of hiding
+    // it inside a decimal. On a column where the two DO agree, which is every
+    // column a real page feeds, the reconstruction is exact and this is a no-op.
     ok('  points_possible is the AUTHORED 6', q.points_possible === 6, q.points_possible);
-    ok('  points_earned is 4.8 (80 percent of 6)', q.points_earned === 4.8, q.points_earned);
+    ok('  points_earned is a whole 5, not the impossible 4.8', q.points_earned === 5, q.points_earned);
+    ok('  and it is genuinely an integer, not 5.0 with a hidden fraction',
+      Number.isInteger(q.points_earned), q.points_earned);
     ok('  denominator_source reports "authored"', q.denominator_source === 'authored', q.denominator_source);
+    // The stored percent is still the grade of record, so no mastery decision
+    // moves when the numerator rounds.
     ok('  the percentage itself never moved', q.score === 80, q.score);
-    ok('  earned/possible agrees with the percentage',
-      Math.round((q.points_earned / q.points_possible) * 100) === q.score,
-      { e: q.points_earned, p: q.points_possible, s: q.score });
+    // The pair cannot read back as 80 here, because no whole number of 6 marks
+    // does. It lands on the closest achievable score, and the gap is bounded by
+    // half a point, which is the most a rounded numerator can ever be off by.
+    const pairPct = (q.points_earned / q.points_possible) * 100;
+    ok('  the pair reads as the nearest achievable score instead',
+      Math.round(pairPct) === 83, Math.round(pairPct));
+    ok('  and it is within half a point of the stored percent',
+      Math.abs(pairPct - q.score) <= (50 / q.points_possible) + 0.001,
+      { pairPct, stored: q.score, bound: 50 / q.points_possible });
   }
 
   // ── 3. A real zero must survive as a zero ─────────────────────────────────

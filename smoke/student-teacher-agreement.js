@@ -90,7 +90,11 @@ const near = (a, b, eps = 0.011) => a != null && b != null && Math.abs(a - b) < 
     ['1.1', 'exercise-1', 100],
     ['1.1', 'exercise-2', 38],
     ['1.1', 'quiz', 80],
-    ['1.2', 'exercise-1', 17],
+    // 29 is the 2-of-7 case. It must be a score a 7 mark item can actually
+    // produce (0, 14, 29, 43, 57, 71, 86, 100), because points are counts of
+    // right and wrong and the numerator is therefore a whole number. The old
+    // fixture used 17, which no 7 mark item can ever emit.
+    ['1.2', 'exercise-1', 29],
   ];
   for (const [lesson, act, score] of marks) {
     await post('/api/student/progress',
@@ -119,15 +123,18 @@ const near = (a, b, eps = 0.011) => a != null && b != null && Math.abs(a - b) < 
   const e1 = cell('1.1', 'exercise-1'), e2 = cell('1.1', 'exercise-2'), q = cell('1.1', 'quiz');
   ok('  100 percent of 7 is 7/7', near(e1.points_earned, 7) && e1.points_possible === 7,
     [e1.points_earned, e1.points_possible]);
-  ok('  38 percent of 8 is 3.04/8', near(e2.points_earned, 3.04) && e2.points_possible === 8,
+  ok('  38 percent of 8 is 3/8, a whole number of marks', e2.points_earned === 3 && e2.points_possible === 8,
     [e2.points_earned, e2.points_possible]);
   ok('  80 percent of 5 is 4/5', near(q.points_earned, 4) && q.points_possible === 5,
     [q.points_earned, q.points_possible]);
 
   // The regression that motivated all of this.
   const e12 = cell('1.2', 'exercise-1');
-  ok('  17 percent reads as 17, not the 20 a /5 rescale produced',
-    Math.round((e12.points_earned / e12.points_possible) * 100) === 17,
+  ok('  29 percent reads as 29, not the 40 a /5 rescale would produce',
+    Math.round((e12.points_earned / e12.points_possible) * 100) === 29,
+    [e12.points_earned, e12.points_possible]);
+  ok('  and it is 2 whole marks out of 7, with no decimal in sight',
+    e12.points_earned === 2 && e12.points_possible === 7,
     [e12.points_earned, e12.points_possible]);
 
   // ── 4. The student and the teacher agree, cell by cell ────────────────────
@@ -150,22 +157,28 @@ const near = (a, b, eps = 0.011) => a != null && b != null && Math.abs(a - b) < 
   ok(`  ${sv.body.progress.filter((r) => r.points_possible != null).length} cells compared, zero disagreements`,
     diffs.length === 0, diffs.length);
 
-  // ── 5. An unauthored column still shows a pair, marked provisional ────────
-  //  Every graded cell carries points over points, on every course. Where
-  //  nobody has authored a total the percent is its own pair. The property that
-  //  makes this safe, and separates it from the constant table it replaced, is
-  //  that the displayed percentage is UNCHANGED: 55 out of 100 still reads 55.
-  //  Rescaling onto a wrong small constant did not have that property.
-  console.log('5. An unauthored column still shows a pair, and reads the same');
+  // ── 5. An unauthored column shows NO pair, and none is invented ───────────
+  //  A denominator is the points possible on that page. Where nobody has
+  //  authored one, the points are unknown, and unknown is what gets reported.
+  //
+  //  This replaces a provisional 100. That fallback kept the percentage honest,
+  //  which is why it looked safe, but the WEIGHT was fiction: a column priced at
+  //  100 outweighs a real 5 mark quiz twenty to one, and it produced row totals
+  //  like "71 / 127" whose denominator appears on no page in the course.
+  //
+  //  The column is not hidden. It keeps its percentage, it is flagged 'percent'
+  //  so a reader can tell it from an authored one, and it is listed in
+  //  integrity.missing_denominators as the work needed to price it properly.
+  console.log('5. An unauthored column shows no pair, and none is invented');
   await post('/api/student/progress',
     { course: COURSE, unit: 'unit-1', lesson: '1.4', activity_type: 'lab', score: 55, completed: true }, stok);
   const sv2 = await get('/api/student/progress', stok);
   const lab = sv2.body.progress.find((r) => r.lesson === '1.4' && r.activity_type === 'lab');
-  ok('  it is priced out of 100', lab.points_possible === 100, lab.points_possible);
-  ok('  earned equals the percent, so nothing is rescaled', lab.points_earned === 55, lab.points_earned);
-  ok('  the pair reads back as the same percentage it always did',
-    Math.round((lab.points_earned / lab.points_possible) * 100) === lab.score, lab.score);
-  ok('  and it is flagged provisional, not passed off as authored',
+  ok('  it carries no points_possible, rather than a fabricated 100',
+    lab.points_possible === null, lab.points_possible);
+  ok('  and no points_earned to go with it', lab.points_earned === null, lab.points_earned);
+  ok('  but the percentage a student earned is still there', lab.score === 55, lab.score);
+  ok('  and it is flagged percent, not passed off as authored',
     lab.denominator_source === 'percent', lab.denominator_source);
   ok('  an authored column is still marked authored, not lumped in with it',
     sv2.body.progress.find((r) => r.lesson === '1.1' && r.activity_type === 'quiz').denominator_source === 'authored');

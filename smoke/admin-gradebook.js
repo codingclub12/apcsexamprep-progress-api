@@ -174,13 +174,14 @@ const qCol = gd.items.find((i) => i.lesson_id === '1.1' && i.activity === 'quiz'
 const cCol = gd.items.find((i) => i.lesson_id === '1.1' && i.activity === 'cfu');
 ok('column carries the authored denominator', qCol.denominator === 6 && qCol.denominator_source === 'authored', qCol);
 const d1 = gd.students[0];
-// student 1 scored 80 on the quiz; 80% of 6 = 4.8
+// student 1 scored 80 on the quiz. 80% of 6 is 4.8, and points are counts of
+// right and wrong, so the numerator is the nearest whole mark: 5.
 ok('rollup cell now shows an out-of', d1.items[qCol.key].possible === 6, d1.items[qCol.key]);
-ok('  earned rescaled to the authored total', d1.items[qCol.key].earned === 4.8, d1.items[qCol.key]);
+ok('  earned rescaled to the authored total, in whole marks', d1.items[qCol.key].earned === 5, d1.items[qCol.key]);
 ok('  percentage is unchanged by the rescale', d1.items[qCol.key].pct === 80, d1.items[qCol.key]);
 ok('  source labelled authored', d1.items[qCol.key].denominator_source === 'authored');
-// cfu 90% of 4 = 3.6
-ok('a second activity uses ITS own denominator', d1.items[cCol.key].possible === 4 && d1.items[cCol.key].earned === 3.6,
+// cfu 90% of 4 is 3.6, so the nearest whole mark is 4.
+ok('a second activity uses ITS own denominator', d1.items[cCol.key].possible === 4 && d1.items[cCol.key].earned === 4,
   d1.items[cCol.key]);
 ok('an activity with no authored row has none', (function () {
   const noD = gd.items.find((i) => i.activity === 'exercise-1');

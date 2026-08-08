@@ -226,9 +226,13 @@ window.StProg={
       let earned=(r.points_earned!=null)?r.points_earned
         :((possible!=null&&r.score!=null)?Math.round(r.score/100*possible*100)/100:null);
       let src=r.denominator_source||null;
-      // No authored total: the percent is its own pair. Marked provisional so a
-      // placeholder weight is never read as an authored one.
-      if(possible==null&&r.score!=null){ possible=100; earned=Math.round(r.score*100)/100; src='percent'; }
+      // No authored total means the points are UNKNOWN, and unknown is what is
+      // shown. An earlier version filled the gap with a provisional 100. The
+      // percentage stayed right, but the weight was fiction: a column priced at
+      // 100 outweighs a real 5 mark quiz twenty to one, and it produced course
+      // totals whose denominator appears on no page. The cell keeps its percent
+      // and is marked, so the missing total is visible rather than papered over.
+      if(possible==null&&r.score!=null){ earned=null; src='percent'; }
       U.lessons[l].acts[r.activity_type]={
         completed:!!r.completed,
         score:(r.score==null?null:r.score),
@@ -255,14 +259,17 @@ window.StProg={
   cellHtml(nm,a,c){ const S=this;
     if(c&&c.score!=null){
       const att=(c.attempts&&c.attempts>1)?("<span class='sp-att'>"+c.attempts+"x</span>"):"";
-      // Always points over points. A column with no authored total falls back to
-      // the percent as its own pair (17 percent is 17 out of 100), which changes
-      // no number, and is marked so a provisional weight is not mistaken for an
-      // authored one.
-      const prov=(c.source==='percent');
-      const text=S.num(c.earned)+"/"+S.num(c.possible)+(prov?"<span class='sp-prov' title='Points not assigned to this activity yet'>*</span>":"");
-      const label=S.num(c.earned)+" of "+S.num(c.possible)+" points"
-        +(prov?", provisional because points have not been assigned to this activity yet":"");
+      // Points earned over points possible whenever the points are known. Where
+      // nobody has assigned points to the activity yet, the percent is shown on
+      // its own and marked, rather than invented against a denominator that
+      // appears on no page.
+      const prov=(c.possible==null||c.earned==null);
+      const text=prov
+        ? S.num(c.score)+"%<span class='sp-prov' title='Points not assigned to this activity yet'>*</span>"
+        : S.num(c.earned)+"/"+S.num(c.possible);
+      const label=prov
+        ? S.num(c.score)+" percent, points not assigned to this activity yet"
+        : S.num(c.earned)+" of "+S.num(c.possible)+" points";
       return "<span class='sp-cell "+S.clsFor(c.score)+"' aria-label='"+S.esc(nm)+": "+label
         +((c.attempts&&c.attempts>1)?(", "+c.attempts+" attempts"):"")+"'>"+text+att+"</span>";
     }
