@@ -18,8 +18,10 @@
 //    2. It actually closes the gap, measured through the real gradebook
 //       contract: CSP goes from 53 unpriced graded columns to 0.
 //    3. It changes only what gradebooks DISPLAY. No score row is touched, and a
-//       student's PERCENTAGE is identical before and after; only the "out of"
-//       becomes authoritative.
+//       student's PERCENTAGE is identical before and after. Stronger still: for
+//       a lesson whose page REPORTS its own pair, the authored row changes
+//       nothing whatsoever, because a reported pair always wins. Authored values
+//       price the columns that report nothing.
 //
 //  Point 3 is the one that matters to a teacher mid-semester. Authoring a
 //  denominator must never move a grade that has already been reported home.
@@ -161,9 +163,23 @@ const COURSE = 'ap-csp';
   ok('  the percentage is identical with and without the authored row',
     withDenom.pct === withoutDenom.pct && withDenom.pct === 66.7,
     { with: withDenom.pct, without: withoutDenom.pct });
-  ok('  the authored row is what makes the "out of" authoritative',
-    withDenom.possible_source === 'authored' && withoutDenom.possible_source === 'observed',
+  //  This student REPORTED their pair: six items, one point each, posted through
+  //  /api/student/score. One question is one point, and the page counted them,
+  //  so the reported pair wins and the authored row is not consulted at all.
+  //
+  //  That is the strongest form of "authoring never regrades a class": not that
+  //  the percentage survives, but that for a class whose pages report properly
+  //  the authored row makes no difference to any number on screen. Authored
+  //  values exist to price columns that report NOTHING.
+  ok('  a reported pair is sourced observed, with or without the authored row',
+    withDenom.possible_source === 'observed' && withoutDenom.possible_source === 'observed',
     { with: withDenom.possible_source, without: withoutDenom.possible_source });
+  ok('  and the cell is byte for byte identical either way, not merely equal in percent',
+    JSON.stringify(withDenom) === JSON.stringify(withoutDenom),
+    { with: withDenom, without: withoutDenom });
+  ok('  the "out of" is the 6 the page actually asked',
+    withDenom.possible === 6 && withDenom.earned === 4,
+    [withDenom.earned, withDenom.possible]);
   ok('  no score row was touched by any of this',
     db.prepare('SELECT COUNT(*) n FROM score_events WHERE course = ?').get(COURSE).n === 6);
 
