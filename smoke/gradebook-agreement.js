@@ -284,6 +284,62 @@ const samePoints = (a, b) => (a == null && b == null)
     cs.overall.graded === 6 && cs.overall.earned === 1,
     [cs.overall.earned, cs.overall.graded]);
 
+  // ── 6. The two views must agree on the GRADE, not just the cells ──────────
+  //  Sections 3 and 4 compare cells. The overall was never compared, and it had
+  //  silently diverged: lib/admin-gradebook.js averaged PERCENTAGES while the
+  //  contract summed POINTS, so an operator checking a teacher's gradebook read
+  //  a different grade for the same student.
+  //
+  //  Measured on a live cyber class: a student on 0/7, 7/8 and 5/5 plus two
+  //  unpriced zeroes read 38 percent on the operator page and 60 percent on the
+  //  teacher's. The mean counted two columns nobody had assigned points to as if
+  //  each were a whole assignment worth as much as the quiz. Twelve marks out of
+  //  twenty is 60, and that is what both say now.
+  console.log('6. The two views agree on the overall grade, not only the cells');
+  const oTok = (await post('/api/student/join',
+    { class_code: code, display_name: 'GAO', pin: '1234' })).body.token;
+  const marksO = [
+    ['1.1', 'exercise-1', 0],    // authored 7 in this suite: 0/7
+    ['1.1', 'quiz', 100],        // authored 6: 6/6
+    ['1.1', 'lab', 0],           // UNPRICED: a zero with no denominator
+    ['1.3', 'lab', 0],           // UNPRICED
+  ];
+  for (const [lesson, act, sc] of marksO) {
+    await post('/api/student/progress',
+      { course: COURSE, unit: 'unit-1', lesson, activity_type: act, score: sc, completed: true }, oTok);
+  }
+
+  const { buildGradebook: bg } = require('../lib/admin-gradebook');
+  const adminO = bg(code, { reveal: true }).students.find((x) => (x.label || x.name) === 'GAO');
+  const contractO = require('../lib/gradebook-contract')
+    .buildCanonicalGradebook(code, { reveal: true }).students
+    .find((x) => (x.display_name || x.name || x.label) === 'GAO');
+
+  ok('  both views found the student', !!adminO && !!contractO);
+  // Both compute 6/13 = 46.15. The admin view rounds to a whole percent and the
+  // contract keeps one decimal, so they agree to within that rounding rather
+  // than byte for byte. The defect this replaces was not a rounding difference:
+  // it was 38 against 60.
+  ok('  the operator page and the teacher page report the SAME overall grade',
+    Math.abs(adminO.overall.pct - contractO.overall.pct) < 0.5,
+    { admin: adminO.overall.pct, contract: contractO.overall.pct });
+  ok('  and both are the same fraction, 6 of 13',
+    adminO.overall.earned === contractO.overall.earned
+    && adminO.overall.possible === contractO.overall.graded,
+    { admin: [adminO.overall.earned, adminO.overall.possible],
+      contract: [contractO.overall.earned, contractO.overall.graded] });
+  ok('  and it is 6 of 13 marks, the work that actually has points',
+    adminO.overall.earned === 6 && adminO.overall.possible === 13,
+    { earned: adminO.overall.earned, possible: adminO.overall.possible });
+  ok('  the admin grade is points based, not a mean of percentages',
+    adminO.overall.basis === 'points', adminO.overall.basis);
+  // The specific wrong answer this replaces: a mean over four columns, two of
+  // which have no points at all, is 25. Points say 46.
+  ok('  and NOT the 25 a mean of percentages would give',
+    adminO.overall.pct !== 25, adminO.overall.pct);
+  ok('  the points pair is populated, not the 0/0 it used to print',
+    adminO.overall.possible > 0, adminO.overall);
+
   console.log('\n' + (fail === 0 ? `OK - all ${pass} checks passed` : `${fail} FAILED (${pass} passed)`));
   server.close();
   process.exit(fail === 0 ? 0 : 1);
