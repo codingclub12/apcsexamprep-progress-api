@@ -164,16 +164,16 @@ router.get('/progress', requireStudent, (req, res) => {
   const denominators = {};
   for (const [key, v] of denoms) denominators[key] = v.possible;
 
-  //  Every graded record carries a pair, on every course. With an authored
-  //  total the percent is priced against it; without one the percent IS the
-  //  pair, because 17 percent is 17 out of 100. That substitution changes no
-  //  number, which is what separates it from the constant table it replaced:
-  //  rescaling 17 percent onto a /5 column produced "1/5", which reads as 20.
+  //  A denominator is the points possible on that page, and nothing else. With
+  //  an authored total the percent is priced against it, in whole marks. With
+  //  no authored total there is NO pair, and none is invented.
   //
-  //  denominator_source says 'percent' for the fallback so a reader can tell a
-  //  provisional weight from an authored one. It is a placeholder for a real
-  //  total, and until that total is authored the column carries more weight in
-  //  an average than it should.
+  //  An earlier pass filled that gap with a provisional 100. The percentage it
+  //  showed was right, but the weight was not: a column priced at 100 outweighs
+  //  a real 5 mark quiz twenty to one, and a row total like "71 / 127" had a
+  //  denominator that appears on no page. Unknown points are reported as
+  //  unknown; the record keeps its percentage, and denominator_source stays
+  //  'percent' so a reader can tell an unpriced column from an authored one.
   for (const r of records) {
     const d = contract.lookupDenominator(denoms, r.unit, r.lesson, r.activity_type);
     if (d) {
@@ -181,8 +181,8 @@ router.get('/progress', requireStudent, (req, res) => {
       r.points_earned = r.score != null ? contract.pointsFromRatio(r.score / 100, d.possible) : null;
       r.denominator_source = d.source;
     } else if (r.score != null) {
-      r.points_possible = contract.PERCENT_WEIGHT;
-      r.points_earned = Math.round(r.score * 100) / 100;
+      r.points_possible = null;
+      r.points_earned = null;
       r.denominator_source = 'percent';
     } else {
       r.points_possible = null;

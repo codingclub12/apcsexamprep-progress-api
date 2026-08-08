@@ -157,22 +157,28 @@ const near = (a, b, eps = 0.011) => a != null && b != null && Math.abs(a - b) < 
   ok(`  ${sv.body.progress.filter((r) => r.points_possible != null).length} cells compared, zero disagreements`,
     diffs.length === 0, diffs.length);
 
-  // ── 5. An unauthored column still shows a pair, marked provisional ────────
-  //  Every graded cell carries points over points, on every course. Where
-  //  nobody has authored a total the percent is its own pair. The property that
-  //  makes this safe, and separates it from the constant table it replaced, is
-  //  that the displayed percentage is UNCHANGED: 55 out of 100 still reads 55.
-  //  Rescaling onto a wrong small constant did not have that property.
-  console.log('5. An unauthored column still shows a pair, and reads the same');
+  // ── 5. An unauthored column shows NO pair, and none is invented ───────────
+  //  A denominator is the points possible on that page. Where nobody has
+  //  authored one, the points are unknown, and unknown is what gets reported.
+  //
+  //  This replaces a provisional 100. That fallback kept the percentage honest,
+  //  which is why it looked safe, but the WEIGHT was fiction: a column priced at
+  //  100 outweighs a real 5 mark quiz twenty to one, and it produced row totals
+  //  like "71 / 127" whose denominator appears on no page in the course.
+  //
+  //  The column is not hidden. It keeps its percentage, it is flagged 'percent'
+  //  so a reader can tell it from an authored one, and it is listed in
+  //  integrity.missing_denominators as the work needed to price it properly.
+  console.log('5. An unauthored column shows no pair, and none is invented');
   await post('/api/student/progress',
     { course: COURSE, unit: 'unit-1', lesson: '1.4', activity_type: 'lab', score: 55, completed: true }, stok);
   const sv2 = await get('/api/student/progress', stok);
   const lab = sv2.body.progress.find((r) => r.lesson === '1.4' && r.activity_type === 'lab');
-  ok('  it is priced out of 100', lab.points_possible === 100, lab.points_possible);
-  ok('  earned equals the percent, so nothing is rescaled', lab.points_earned === 55, lab.points_earned);
-  ok('  the pair reads back as the same percentage it always did',
-    Math.round((lab.points_earned / lab.points_possible) * 100) === lab.score, lab.score);
-  ok('  and it is flagged provisional, not passed off as authored',
+  ok('  it carries no points_possible, rather than a fabricated 100',
+    lab.points_possible === null, lab.points_possible);
+  ok('  and no points_earned to go with it', lab.points_earned === null, lab.points_earned);
+  ok('  but the percentage a student earned is still there', lab.score === 55, lab.score);
+  ok('  and it is flagged percent, not passed off as authored',
     lab.denominator_source === 'percent', lab.denominator_source);
   ok('  an authored column is still marked authored, not lumped in with it',
     sv2.body.progress.find((r) => r.lesson === '1.1' && r.activity_type === 'quiz').denominator_source === 'authored');
