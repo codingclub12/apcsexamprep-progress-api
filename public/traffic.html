@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>APCSExamPrep · Traffic</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --plane:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --baseline:#c3c2b7; --border:rgba(11,11,11,0.10);
+    --good:#0ca30c; --critical:#d03b3b;
+    --csa:#2a78d6; --csp:#eb6834; --cyber:#1baf7a; --solo:#eda100;
+    --shadow:0 1px 2px rgba(11,11,11,0.04),0 1px 3px rgba(11,11,11,0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --plane:#0d0d0d; --surface:#1a1a19; --ink:#fff; --ink-2:#c3c2b7; --muted:#898781;
+      --grid:#2c2c2a; --baseline:#383835; --border:rgba(255,255,255,0.10);
+      --critical:#e66767; --csa:#3987e5; --csp:#d95926; --cyber:#199e70; --solo:#c98500; --shadow:none;
+    }
+  }
+  :root[data-theme="dark"]{--plane:#0d0d0d;--surface:#1a1a19;--ink:#fff;--ink-2:#c3c2b7;--muted:#898781;--grid:#2c2c2a;--baseline:#383835;--border:rgba(255,255,255,0.10);--critical:#e66767;--csa:#3987e5;--csp:#d95926;--cyber:#199e70;--solo:#c98500;--shadow:none;}
+  :root[data-theme="light"]{--plane:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink-2:#52514e;--muted:#898781;--grid:#e1e0d9;--baseline:#c3c2b7;--border:rgba(11,11,11,0.10);--critical:#d03b3b;--csa:#2a78d6;--csp:#eb6834;--cyber:#1baf7a;--solo:#eda100;--shadow:0 1px 2px rgba(11,11,11,0.04),0 1px 3px rgba(11,11,11,0.06);}
+
+  * { box-sizing:border-box; }
+  html, body { margin:0; }
+  body { background:var(--plane); color:var(--ink); font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; -webkit-font-smoothing:antialiased; }
+  a { color:var(--csa); }
+  .wrap { max-width:1180px; margin:0 auto; padding:20px 20px 64px; }
+
+  header.top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 16px; padding-bottom:16px; border-bottom:1px solid var(--border); margin-bottom:20px; }
+  header.top h1 { font-size:20px; margin:0; font-weight:650; letter-spacing:-0.01em; }
+  header.top .sub { color:var(--muted); font-size:13px; }
+  header.top .spacer { flex:1 1 auto; }
+  .navlink { color:var(--csa); text-decoration:none; font-size:13px; font-weight:600; }
+  .navlink:hover { text-decoration:underline; }
+  button, select { font:inherit; color:var(--ink); background:transparent; border:1px solid var(--border); border-radius:8px; padding:7px 11px; cursor:pointer; }
+  button:hover { border-color:var(--baseline); }
+  button.on { border-color:var(--csa); color:var(--csa); font-weight:600; }
+  .controls { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:18px; }
+  .controls .grp { display:inline-flex; gap:6px; align-items:center; }
+  .controls .grp > span { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:0.04em; }
+  .controls button { padding:5px 10px; font-size:13px; }
+
+  .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(185px,1fr)); gap:12px; margin-bottom:22px; }
+  .kpi { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:15px 16px; box-shadow:var(--shadow); }
+  .kpi .label { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:0.04em; }
+  .kpi .value { font-size:30px; font-weight:650; line-height:1.1; margin-top:5px; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; }
+  .kpi .foot { font-size:12px; color:var(--ink-2); margin-top:6px; }
+  .up { color:var(--good); } .down { color:var(--critical); }
+
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 18px; box-shadow:var(--shadow); margin-bottom:20px; }
+  .card h3 { margin:0 0 2px; font-size:14px; font-weight:600; }
+  .card .hint { color:var(--muted); font-size:12px; margin:0 0 12px; }
+  .cols { display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start; }
+  @media (max-width:820px){ .cols { grid-template-columns:1fr; } }
+
+  svg { display:block; width:100%; height:auto; overflow:visible; }
+  svg text { font:11px system-ui,sans-serif; fill:var(--muted); }
+
+  .minitable { width:100%; border-collapse:collapse; font-size:13px; }
+  .minitable th { text-align:left; font-weight:600; color:var(--muted); padding:6px 8px; border-bottom:1px solid var(--border); white-space:nowrap; }
+  .minitable th.num { text-align:right; }
+  .minitable td { padding:7px 8px; border-bottom:1px solid var(--grid); white-space:nowrap; }
+  .minitable td.num { text-align:right; font-variant-numeric:tabular-nums; }
+  .minitable tr:last-child td { border-bottom:none; }
+  .scroller { overflow-x:auto; }
+  .lz { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12.5px; }
+  .empty { padding:26px; text-align:center; color:var(--muted); }
+  .banner { border-radius:10px; padding:10px 14px; font-size:13px; margin-bottom:18px; border:1px solid; }
+  .banner.warn { background:color-mix(in srgb,var(--solo) 12%,transparent); border-color:color-mix(in srgb,var(--solo) 30%,transparent); color:var(--ink-2); }
+  .banner.bad { background:color-mix(in srgb,var(--critical) 10%,transparent); border-color:color-mix(in srgb,var(--critical) 35%,transparent); color:var(--ink-2); }
+  .pill { display:inline-flex; align-items:center; gap:5px; padding:1px 8px; border-radius:999px; font-size:11px; font-weight:600; background:color-mix(in srgb,var(--ink) 7%,transparent); color:var(--ink-2); }
+  .foot-note { font-size:12px; color:var(--muted); margin-top:8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Traffic</h1>
+    <span class="sub">GA4 · Search Console · Clarity · Raptive</span>
+    <a class="navlink" href="/admin/unified">Unified →</a>
+    <a class="navlink" href="/admin/dashboard">Dashboard →</a>
+    <a class="navlink" href="/admin/command">Command →</a>
+    <span class="spacer"></span>
+    <button id="refreshBtn">Refresh</button>
+  </header>
+
+  <div id="banners"></div>
+
+  <div class="controls">
+    <span class="grp"><span>Metric</span><select id="metric"></select></span>
+    <span class="grp"><span>Source</span><select id="source"></select></span>
+    <span class="grp"><span>Window</span><span id="ranges"></span></span>
+  </div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <div class="card">
+    <h3 id="chartTitle">Daily</h3>
+    <p class="hint" id="chartHint"></p>
+    <div id="chart"></div>
+  </div>
+
+  <div class="cols">
+    <div class="card">
+      <h3>Pages gaining</h3>
+      <p class="hint" id="gainHint">Biggest movers versus the previous equal window.</p>
+      <div class="scroller" id="winners"></div>
+    </div>
+    <div class="card">
+      <h3>Pages losing</h3>
+      <p class="hint">Same window, moving the other way.</p>
+      <div class="scroller" id="losers"></div>
+    </div>
+  </div>
+
+  <div class="cols">
+    <div class="card">
+      <h3>Keyword rankings</h3>
+      <p class="hint" id="rankHint">Search Console average position. Negative movement means the query moved up the page.</p>
+      <div class="scroller" id="rankings"></div>
+    </div>
+    <div class="card">
+      <h3>Rank movement</h3>
+      <p class="hint">Largest gains and drops in average position.</p>
+      <div class="scroller" id="rankmove"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Source inventory</h3>
+    <p class="hint">What each source has actually delivered. A source that stopped reporting shows up here as days behind, not as a chart that quietly flattens.</p>
+    <div class="scroller" id="inventory"></div>
+  </div>
+
+  <p class="foot-note" id="provenance"></p>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var METRICS = [
+    ["pageviews","Pageviews"],["sessions","Sessions"],["users","Users"],["new_users","New users"],
+    ["engagement_rate","Engagement rate"],["bounce_rate","Bounce rate"],
+    ["clicks","Clicks (search)"],["impressions","Impressions"],["ctr","CTR"],["position","Avg position"],
+    ["revenue","Revenue"],["rpm","RPM"],["ad_impressions","Ad impressions"],
+    ["dead_clicks","Dead clicks"],["rage_clicks","Rage clicks"],["scroll_depth","Scroll depth"]
+  ];
+  var SOURCES = [["","All sources"],["ga4","GA4"],["gsc","Search Console"],["clarity","Clarity"],["raptive","Raptive"]];
+  var RANGES = [[30,"30d"],[90,"90d"],[180,"180d"],[365,"1y"]];
+  // Lower is better for these, so a fall is an improvement and must render green.
+  var LOWER_BETTER = { position:1, bounce_rate:1 };
+  var RATIO = { engagement_rate:1, bounce_rate:1, ctr:1, scroll_depth:1 };
+  var MONEY = { revenue:1, rpm:1 };
+
+  var state = { metric:"pageviews", source:"", days:90, data:null };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) {
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+      return { "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c];
+    });
+  };
+  function fmt(v, metric) {
+    if (v == null) return "-";
+    if (RATIO[metric]) return (v * 100).toFixed(1) + "%";
+    if (MONEY[metric]) return "$" + Number(v).toLocaleString(undefined,{maximumFractionDigits:2});
+    if (metric === "position") return Number(v).toFixed(1);
+    return Number(v).toLocaleString(undefined,{maximumFractionDigits:2});
+  }
+  function metricLabel(m) {
+    for (var i=0;i<METRICS.length;i++) if (METRICS[i][0]===m) return METRICS[i][1];
+    return m;
+  }
+  // One rule for direction colour, so no panel can disagree about what "better" is.
+  function dirClass(metric, delta) {
+    if (delta == null || delta === 0) return "";
+    var good = LOWER_BETTER[metric] ? delta < 0 : delta > 0;
+    return good ? "up" : "down";
+  }
+  function signed(v, metric) {
+    if (v == null) return "-";
+    return (v > 0 ? "+" : "") + fmt(v, metric);
+  }
+
+  function api(path) {
+    return fetch(path, { credentials:"same-origin" }).then(function (r) {
+      if (r.status === 401 || r.status === 403 || r.status === 503) { var e = new Error("auth"); e.auth = true; throw e; }
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    });
+  }
+
+  function load() {
+    var q = "/api/admin/traffic?metric=" + encodeURIComponent(state.metric) +
+            "&days=" + state.days + (state.source ? "&source=" + encodeURIComponent(state.source) : "");
+    return api(q).then(function (d) { state.data = d; render(); });
+  }
+
+  function table(rows, cols, emptyMsg) {
+    if (!rows || !rows.length) return '<div class="empty">' + esc(emptyMsg) + "</div>";
+    var head = cols.map(function (c) { return "<th" + (c.num?' class="num"':"") + ">" + esc(c.head) + "</th>"; }).join("");
+    var body = rows.map(function (r) {
+      return "<tr>" + cols.map(function (c) { return "<td" + (c.num?' class="num"':"") + ">" + c.cell(r) + "</td>"; }).join("") + "</tr>";
+    }).join("");
+    return '<table class="minitable"><thead><tr>' + head + "</tr></thead><tbody>" + body + "</tbody></table>";
+  }
+
+  // ── Line chart: observed, 7-day trend, and the projection as a dashed tail ──
+  function chart(points, trend, projection, metric) {
+    var all = points.concat(projection || []);
+    var vals = all.map(function (p) { return p.value; }).filter(function (v) { return v != null; });
+    if (!vals.length) return '<div class="empty">No data for this metric yet.</div>';
+
+    var W = 900, H = 260, padL = 44, padR = 12, padT = 12, padB = 24;
+    var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
+    // A rank axis reads correctly only when inverted: position 1 belongs at the top.
+    var invert = metric === "position";
+    if (lo === hi) { lo -= 1; hi += 1; }
+    var pad = (hi - lo) * 0.08; lo -= pad; hi += pad;
+    if (!RATIO[metric] && !invert && lo < 0) lo = 0;
+
+    var n = all.length;
+    var x = function (i) { return padL + (i / Math.max(1, n - 1)) * (W - padL - padR); };
+    var y = function (v) {
+      var t = (v - lo) / (hi - lo);
+      return invert ? padT + t * (H - padT - padB) : padT + (1 - t) * (H - padT - padB);
+    };
+
+    function path(series, offset) {
+      var d = "", started = false;
+      series.forEach(function (p, i) {
+        if (p.value == null) { started = false; return; }
+        var cmd = started ? "L" : "M";
+        d += cmd + x(i + (offset||0)).toFixed(1) + " " + y(p.value).toFixed(1) + " ";
+        started = true;
+      });
+      return d;
+    }
+
+    var gridLines = "", ticks = 4;
+    for (var g = 0; g <= ticks; g++) {
+      var v = lo + (hi - lo) * (g / ticks);
+      var yy = y(v);
+      gridLines += '<line x1="' + padL + '" y1="' + yy.toFixed(1) + '" x2="' + (W - padR) + '" y2="' + yy.toFixed(1) +
+                   '" stroke="var(--grid)" stroke-width="1"/>' +
+                   '<text x="' + (padL - 6) + '" y="' + (yy + 3).toFixed(1) + '" text-anchor="end">' + esc(fmt(v, metric)) + "</text>";
+    }
+
+    var labels = "";
+    if (points.length > 1) {
+      [0, Math.floor(points.length/2), points.length-1].forEach(function (i) {
+        var anchor = i === 0 ? "start" : (i === points.length-1 ? "middle" : "middle");
+        var p = points[i].date.split("-");
+        labels += '<text x="' + x(i).toFixed(1) + '" y="' + (H - 6) + '" text-anchor="' + anchor + '">' + (+p[1]) + "/" + (+p[2]) + "</text>";
+      });
+    }
+
+    var projPath = "";
+    if (projection && projection.length) {
+      // Join the projection to the last observed point so it reads as a
+      // continuation rather than a floating second line.
+      var lastIdx = points.length - 1;
+      var lastVal = null;
+      for (var k = points.length - 1; k >= 0; k--) { if (points[k].value != null) { lastVal = points[k].value; lastIdx = k; break; } }
+      var d = lastVal != null ? "M" + x(lastIdx).toFixed(1) + " " + y(lastVal).toFixed(1) + " " : "";
+      projection.forEach(function (p, i) { d += "L" + x(points.length + i).toFixed(1) + " " + y(p.value).toFixed(1) + " "; });
+      projPath = '<path d="' + d + '" fill="none" stroke="var(--solo)" stroke-width="2" stroke-dasharray="5 4"/>';
+    }
+
+    return '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' + esc(metricLabel(metric)) + ' over time">' +
+      gridLines +
+      '<path d="' + path(points) + '" fill="none" stroke="var(--csa)" stroke-width="1.5" opacity="0.45"/>' +
+      '<path d="' + path(trend) + '" fill="none" stroke="var(--csa)" stroke-width="2.5"/>' +
+      projPath + labels +
+      "</svg>" +
+      '<div style="display:flex;gap:16px;margin-top:8px;font-size:12px;color:var(--muted);flex-wrap:wrap">' +
+        '<span><i style="display:inline-block;width:14px;height:2px;background:var(--csa);opacity:.45;vertical-align:middle"></i> daily</span>' +
+        '<span><i style="display:inline-block;width:14px;height:3px;background:var(--csa);vertical-align:middle"></i> 7-day average</span>' +
+        (projection && projection.length ? '<span><i style="display:inline-block;width:14px;height:2px;background:var(--solo);vertical-align:middle"></i> 30-day projection</span>' : "") +
+      "</div>";
+  }
+
+  function renderBanners() {
+    var d = state.data, out = "";
+    var c = d.connectors || {};
+    if (!c.service_account) {
+      out += '<div class="banner warn"><b>Google connectors are not configured.</b> ' +
+        'Set <code>GOOGLE_SERVICE_ACCOUNT_JSON</code> plus <code>GA4_PROPERTY_ID</code> and <code>GSC_SITE_URL</code>, ' +
+        'then POST <code>/api/admin/traffic/pull</code>. Until then GA4 and Search Console report nothing, which is not the same as zero traffic.</div>';
+    } else if (!c.ga4_property || !c.gsc_site) {
+      out += '<div class="banner warn">Service account present, but ' +
+        (!c.ga4_property ? "<code>GA4_PROPERTY_ID</code> " : "") + (!c.gsc_site ? "<code>GSC_SITE_URL</code> " : "") +
+        "is not set, so that source will stay empty.</div>";
+    }
+    var stale = (d.inventory || []).filter(function (r) { return r.traffic_source && r.stale; });
+    if (stale.length) {
+      out += '<div class="banner bad"><b>' + stale.length + ' source(s) behind.</b> ' +
+        stale.map(function (r) { return esc(r.source) + " last reported " + esc(r.last_date) + " (" + r.days_behind + "d ago)"; }).join(", ") +
+        ". A daily pull has probably stopped running.</div>";
+    }
+    $("banners").innerHTML = out;
+  }
+
+  function renderKpis() {
+    var d = state.data, c = d.compare || {}, p = d.projection || {};
+    var m = state.metric;
+    var tiles = [];
+    tiles.push(tile(metricLabel(m) + " (" + (c.window_days||0) + "d)", fmt(c.current, m),
+      c.previous != null ? "was " + fmt(c.previous, m) : "no prior window"));
+    tiles.push(tile("Change", signed(c.delta, m) + (c.delta_pct != null ? " (" + (c.delta_pct>0?"+":"") + c.delta_pct + "%)" : ""),
+      c.complete ? "vs previous " + c.window_days + " days" : "partial coverage: " + c.current_days + "/" + c.window_days + " days",
+      dirClass(m, c.delta)));
+    tiles.push(tile("30-day projection", p.projection ? fmt(p.end_value, m) : "-",
+      p.projection ? "fit " + p.fit_quality + " (r2 " + p.r2 + ")" : esc(p.reason || "not enough data"),
+      p.projection ? dirClass(m, p.slope_per_day) : ""));
+    var rk = d.rankings || {};
+    tiles.push(tile("Queries on page 1", rk.page_1 != null ? rk.page_1 : "-",
+      rk.striking_distance != null ? rk.striking_distance + " in striking distance (11-20)" : ""));
+    $("kpis").innerHTML = tiles.join("");
+  }
+  function tile(label, value, foot, cls) {
+    return '<div class="kpi"><div class="label">' + esc(label) + '</div>' +
+      '<div class="value ' + (cls||"") + '">' + value + "</div>" +
+      (foot ? '<div class="foot">' + foot + "</div>" : "") + "</div>";
+  }
+
+  function renderChart() {
+    var d = state.data, m = state.metric;
+    $("chartTitle").textContent = metricLabel(m) + (state.source ? " · " + state.source : "");
+    var p = d.projection || {};
+    $("chartHint").textContent =
+      "Every window ends yesterday: today is a partial day at all of these sources and would draw a false cliff. " +
+      (p.projection ? "Projection is a straight-line trend fit (" + p.fit_quality + "), not a seasonal forecast." : "");
+    $("chart").innerHTML = chart(d.series || [], d.trend || [], (d.projection||{}).projection, m);
+  }
+
+  function renderMovers() {
+    var mv = state.data.movers || {}, m = state.metric;
+    $("gainHint").textContent = "Biggest movers versus the previous " + (mv.window_days||0) +
+      " days. Pages under " + (mv.min_base||0) + " " + metricLabel(m).toLowerCase() + " are excluded, because a percentage on a tiny number says nothing.";
+    var cols = [
+      { head:"Page", cell:function(r){ return '<span class="lz">' + esc(r.value || r.dimension) + "</span>"; } },
+      { head:"Now", num:true, cell:function(r){ return fmt(r.current, m); } },
+      { head:"Before", num:true, cell:function(r){ return fmt(r.previous, m); } },
+      { head:"Change", num:true, cell:function(r){
+          return '<span class="' + dirClass(m, r.delta) + '">' + signed(r.delta, m) +
+            (r.delta_pct != null ? " (" + (r.delta_pct>0?"+":"") + r.delta_pct + "%)" : "") + "</span>"; } }
+    ];
+    $("winners").innerHTML = table(mv.winners, cols, "No pages improved enough to rank yet.");
+    $("losers").innerHTML  = table(mv.losers,  cols, "No pages declined enough to rank yet.");
+  }
+
+  function renderRankings() {
+    var rk = state.data.rankings || {};
+    $("rankHint").textContent = "Search Console average position over " + (rk.window_days||0) +
+      " days, " + (rk.tracked||0) + " queries tracked. A negative change means the query moved up the page.";
+    $("rankings").innerHTML = table((rk.top||[]).slice(0,15), [
+      { head:"Query", cell:function(r){ return esc(r.query); } },
+      { head:"Position", num:true, cell:function(r){ return r.position.toFixed(1); } },
+      { head:"Move", num:true, cell:function(r){
+          return r.delta == null ? '<span class="pill">new</span>'
+            : '<span class="' + (r.delta < 0 ? "up" : r.delta > 0 ? "down" : "") + '">' + (r.delta>0?"+":"") + r.delta.toFixed(1) + "</span>"; } },
+      { head:"Clicks", num:true, cell:function(r){ return Number(r.clicks).toLocaleString(); } }
+    ], "No Search Console position data yet.");
+
+    var gains = (rk.biggest_gains||[]).map(function(r){ return Object.assign({dir:"gain"}, r); });
+    var drops = (rk.biggest_drops||[]).map(function(r){ return Object.assign({dir:"drop"}, r); });
+    $("rankmove").innerHTML = table(gains.concat(drops).slice(0,15), [
+      { head:"Query", cell:function(r){ return esc(r.query); } },
+      { head:"Now", num:true, cell:function(r){ return r.position.toFixed(1); } },
+      { head:"Was", num:true, cell:function(r){ return r.previous_position != null ? r.previous_position.toFixed(1) : "-"; } },
+      { head:"Move", num:true, cell:function(r){
+          return '<span class="' + (r.delta < 0 ? "up" : "down") + '">' + (r.delta>0?"+":"") + r.delta.toFixed(1) + "</span>"; } }
+    ], "Not enough history to show movement yet.");
+  }
+
+  function renderInventory() {
+    $("inventory").innerHTML = table(state.data.inventory || [], [
+      { head:"Source", cell:function(r){ return esc(r.source) + (r.traffic_source ? "" : ' <span class="pill">internal</span>'); } },
+      { head:"Metrics", num:true, cell:function(r){ return r.metrics; } },
+      { head:"Days", num:true, cell:function(r){ return r.days; } },
+      { head:"First", cell:function(r){ return esc(r.first_date); } },
+      { head:"Last", cell:function(r){ return esc(r.last_date); } },
+      { head:"Behind", num:true, cell:function(r){
+          if (r.days_behind == null) return "-";
+          return '<span class="' + (r.stale ? "down" : "") + '">' + r.days_behind + "d</span>"; } }
+    ], "Nothing has reported yet. Configure the Google connectors, or import a CSV export.");
+  }
+
+  function render() {
+    if (!state.data) return;
+    renderBanners(); renderKpis(); renderChart(); renderMovers(); renderRankings(); renderInventory();
+    $("provenance").textContent = "Generated " + new Date(state.data.generated_at).toLocaleString() +
+      " · daily aggregates from metrics_daily, 400-day retention · windows end yesterday";
+  }
+
+  function buildControls() {
+    $("metric").innerHTML = METRICS.map(function(m){ return '<option value="'+m[0]+'">'+esc(m[1])+"</option>"; }).join("");
+    $("metric").value = state.metric;
+    $("metric").addEventListener("change", function(){ state.metric = this.value; load().catch(onErr); });
+
+    $("source").innerHTML = SOURCES.map(function(s){ return '<option value="'+s[0]+'">'+esc(s[1])+"</option>"; }).join("");
+    $("source").value = state.source;
+    $("source").addEventListener("change", function(){ state.source = this.value; load().catch(onErr); });
+
+    $("ranges").innerHTML = RANGES.map(function(r){
+      return '<button data-days="'+r[0]+'"'+(r[0]===state.days?' class="on"':"")+">"+esc(r[1])+"</button>";
+    }).join(" ");
+    Array.prototype.forEach.call($("ranges").querySelectorAll("button"), function(b){
+      b.addEventListener("click", function(){
+        state.days = parseInt(b.getAttribute("data-days"),10);
+        Array.prototype.forEach.call($("ranges").querySelectorAll("button"), function(x){ x.classList.remove("on"); });
+        b.classList.add("on");
+        load().catch(onErr);
+      });
+    });
+  }
+
+  function onErr(e) {
+    if (e && e.auth) { window.location.href = "/admin/traffic"; return; }
+    $("banners").innerHTML = '<div class="banner bad">Error loading: ' + esc(e.message) + "</div>";
+  }
+
+  $("refreshBtn").addEventListener("click", function(){ load().catch(onErr); });
+  buildControls();
+  load().catch(onErr);
+})();
+</script>
+</body>
+</html>
