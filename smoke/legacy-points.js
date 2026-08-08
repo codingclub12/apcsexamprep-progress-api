@@ -177,16 +177,27 @@ async function progress() {
     ok('  denominator_source reports "observed"', q.denominator_source === 'observed', q.denominator_source);
   }
 
-  // ── 6. Authored denominator rescales ledger points too ───────────────────
-  console.log('\n6. Authored value also rescales real ledger points');
+  // ── 6. An authored value must NOT touch real ledger points ───────────────
+  //  One question is one point, and the ledger already holds both halves: this
+  //  student answered 3 of 4, which is what the page asked and what they earned.
+  //  An authored row is a guess about that page, so it does not get to rewrite
+  //  the pair.
+  //
+  //  This section used to assert the opposite, that 3/4 became 6/8. That made
+  //  every authored row a chance to overwrite a correct score, and it showed a
+  //  student a mark out of a paper that did not exist. The authored value still
+  //  prices columns that report nothing; it just cannot override one that does.
+  console.log('\n6. An authored value does not rescale real ledger points');
   {
     run(`INSERT INTO course_denominators (course,unit,lesson,activity_type,possible)
          VALUES ('ap-cybersecurity','unit-1','1.2','quiz',8)`);
     const s = await progress();
     const q = cell(s, 's1', '1.2', 'quiz');
-    // 3/4 rescaled onto 8 is 6.
-    ok('  points_possible becomes the authored 8', q.points_possible === 8, q.points_possible);
-    ok('  points_earned rescales 3/4 to 6/8', q.points_earned === 6, q.points_earned);
+    ok('  points_possible stays the reported 4, not the authored 8',
+      q.points_possible === 4, q.points_possible);
+    ok('  points_earned stays the 3 they actually scored', q.points_earned === 3, q.points_earned);
+    ok('  and it is still sourced observed, not authored',
+      q.denominator_source === 'observed', q.denominator_source);
     ok('  ratio is preserved exactly', q.points_earned / q.points_possible === 3 / 4);
   }
 

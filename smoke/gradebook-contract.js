@@ -107,7 +107,7 @@ const near = (a, b, eps = 0.051) => a != null && b != null && Math.abs(a - b) < 
 
   // Student 1 reproduces the measured live case exactly:
   //   exercise-1  0 / 7      a scored ZERO, which must never read as "blank"
-  //   lab         7 / 8      (88 percent of 8, to the nearest whole mark)
+  //   lab         7 / 8      reported by the page as a pair
   //   quiz        5 / 5
   //   = 12 / 20 = 60 percent
   const join = async (nm) => (await post('/api/student/join',
@@ -119,7 +119,8 @@ const near = (a, b, eps = 0.051) => a != null && b != null && Math.abs(a - b) < 
   await post('/api/student/progress',
     { course: CYBER, unit: 'unit-1', lesson: '1.1', activity_type: 'lesson', completed: true }, s1);
   await score(s1, '1.1', 'exercise-1', 'e1', 0, 7);
-  await score(s1, '1.1', 'lab', 'lab', 7.04, 8);
+  // A reporter posts whole marks: one question, one point. 7 of 8.
+  await score(s1, '1.1', 'lab', 'lab', 7, 8);
   await score(s1, '1.1', 'quiz', 'q1', 5, 5);
 
   // Student 2 has attempted nothing at all: the ungraded case.

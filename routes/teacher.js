@@ -10,6 +10,7 @@ const { makeRateLimit } = require('../lib/rate-limit');
 const mailer = require('../lib/mailer');
 const resetLib = require('../lib/password-reset');
 const { attemptRollup } = require('../lib/attempt-rollup');
+const { LESSON_SCORE_ITEM } = require('../scoring');
 const { buildCanonicalGradebook, canonicalActivity, isGradedActivity,
   pointsFromRatio } = require('../lib/gradebook-contract');
 const {
@@ -353,6 +354,15 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
       JOIN students s ON s.id = se.student_id
       JOIN classes  c ON c.id = se.class_id
       WHERE se.class_id = ? AND se.course = ?
+        -- 'lesson-score' is a percent carrier, not a reported pair. It is stored
+        -- as points = percent, max_points = 100, so summing it here produced a
+        -- fake "20 / 100" that looked exactly like a page reporting 20 of 100
+        -- real questions. Harmless while an authored total overrode it; once a
+        -- reported pair wins, the carrier would win instead and put a fabricated
+        -- 100 back on screen. lib/gradebook-contract.js excludes it for the same
+        -- reason. A percent with no pair behind it belongs in the authored
+        -- fallback below, not here.
+        AND se.item <> '${LESSON_SCORE_ITEM}'
     ) WHERE rn = 1
     GROUP BY student_id, unit, lesson, activity_type
   `).all(cls.id, cls.course);
@@ -405,9 +415,16 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
     // from the contract's PERCENT_WEIGHT, not from here.
     if (!isGradedActivity(canonicalActivity(p.activity_type).activity)) {
       earned = null; possible = null; denomSource = null;
+    } else if (possible != null && possible > 0) {
+      // A REPORTED pair wins. One question is one point, and the page already
+      // counted them: 3 of 8 is what the student saw and earned. An authored
+      // total is a guess about a page, so letting it override real points made
+      // every authored row a chance to overwrite a correct score.
+      denomSource = 'observed';
     } else if (authored != null) {
-      const ratio = (possible && possible > 0) ? (earned / possible)
-                  : (p.score != null ? p.score / 100 : null);
+      // Nothing reported, so fall back to the authored total and price the
+      // stored percent against it. This is for pages with no reporter yet.
+      const ratio = p.score != null ? p.score / 100 : null;
       possible = authored;
       earned = pointsFromRatio(ratio, authored);
       denomSource = 'authored';
