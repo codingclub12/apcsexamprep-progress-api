@@ -133,7 +133,8 @@ function loadPage() {
 
   for (const [lesson, act, score] of [
     ['1.1', 'exercise-1', 100], ['1.1', 'exercise-2', 38],
-    ['1.1', 'quiz', 80], ['1.2', 'exercise-1', 17],
+    // 29 is the 2-of-7 case: a score a 7 mark item can actually produce.
+    ['1.1', 'quiz', 80], ['1.2', 'exercise-1', 29],
     ['1.4', 'lab', 55],   // deliberately unauthored
   ]) {
     await post('/api/student/progress',
@@ -162,21 +163,25 @@ function loadPage() {
     return m ? m[1].trim() : h;
   };
   ok('  1.1 exercise-1 shows 7/7', text('1.1', 'exercise-1') === '7/7', text('1.1', 'exercise-1'));
-  ok('  1.1 exercise-2 shows 3.04/8', text('1.1', 'exercise-2') === '3.04/8', text('1.1', 'exercise-2'));
+  ok('  1.1 exercise-2 shows 3/8, in whole marks', text('1.1', 'exercise-2') === '3/8', text('1.1', 'exercise-2'));
   ok('  1.1 quiz shows 4/5', text('1.1', 'quiz') === '4/5', text('1.1', 'quiz'));
   // The regression, stated as the student sees it.
-  ok('  1.2 exercise-1 shows 1.19/7, not the old 1/5', text('1.2', 'exercise-1') === '1.19/7',
+  ok('  1.2 exercise-1 shows 2/7, not the old 1/5', text('1.2', 'exercise-1') === '2/7',
     text('1.2', 'exercise-1'));
 
-  //  Every graded cell shows a pair, on every course. Where nobody has authored
-  //  a total the percent is its own pair, marked with a * so a provisional
-  //  weight is never read as an authored one. The safety property: the
-  //  percentage a student reads does not move.
-  console.log('3. An unauthored column still shows a pair, marked provisional');
+  //  A cell shows points earned over points possible whenever the points are
+  //  known. Where nobody has assigned points to the activity, the percent is
+  //  shown alone and marked with a *, because a denominator has to be the points
+  //  possible on that page and there is no honest number to print.
+  //
+  //  This replaced a provisional 100. It kept the percentage right, which is why
+  //  it looked safe, but the weight was fiction and it put a denominator on
+  //  screen that appears on no page.
+  console.log('3. An unpriced column shows its percent alone, marked, with no invented pair');
   const lab = cellOf('1.4', 'lab');
-  ok('  priced out of 100', lab.possible === 100, lab.possible);
-  ok('  earned equals the percent, so nothing is rescaled', lab.earned === 55, lab.earned);
-  ok('  the cell renders 55/100', text('1.4', 'lab') === '55/100', text('1.4', 'lab'));
+  ok('  no points_possible is invented', lab.possible == null, lab.possible);
+  ok('  and no points_earned either', lab.earned == null, lab.earned);
+  ok('  the cell renders the percent alone', text('1.4', 'lab') === '55%', text('1.4', 'lab'));
   ok('  and it carries the provisional marker',
     /sp-prov/.test(StProg.cellHtml('x', 'lab', lab)), StProg.cellHtml('x', 'lab', lab));
   ok('  an authored cell carries no marker',
@@ -185,13 +190,19 @@ function loadPage() {
   console.log('4. Totals are points over points, not a mean of percentages');
   const t = StProg.totals(Object.values(StProg.model[COURSE].units['unit-1'].lessons)
     .flatMap((L) => Object.values(L.acts)));
-  // Authored: 7 + 3.04 + 4 + 1.19 = 15.23 over 7 + 8 + 5 + 7 = 27.
+  // Authored, all in whole marks: 7 + 3 + 4 + 2 = 16 over 7 + 8 + 5 + 7 = 27.
   // Plus the provisional lab at 55/100. Every visible cell is in the total, so
   // the fractions on screen add up to the number under them.
-  ok('  earned 70.23 of 127', near(t.earned, 70.23) && near(t.graded, 127), [t.earned, t.graded]);
-  ok('  which is 55.3 percent', near(t.pct, 55.3, 0.06), t.pct);
-  // The mean of 100, 38, 80, 17, 55 is 58. The points answer is not that.
-  ok('  and NOT the 58 a mean of percentages would give', !near(t.pct, 58, 0.3), t.pct);
+  ok('  earned 16 of 27, every point of it from a real page total',
+    t.earned === 16 && near(t.graded, 27), [t.earned, t.graded]);
+  ok('  which is 59.3 percent', near(t.pct, 59.3, 0.06), t.pct);
+  // The unpriced lab is NOT in that denominator. 127 was 27 real marks plus a
+  // fabricated 100, and no page in the course is worth 127.
+  ok('  and the old fabricated 127 denominator is gone', t.graded !== 127, t.graded);
+  // Not one cell on screen carries a decimal, so neither does their sum.
+  ok('  and the total is itself a whole number of marks', Number.isInteger(t.earned), t.earned);
+  // The mean of 100, 38, 80, 29, 55 is 60.4. The points answer is not that.
+  ok('  and NOT the 60.4 a mean of percentages would give', !near(t.pct, 60.4, 0.3), t.pct);
   ok('  the provisional activity is counted and reported',
     t.unpriced === 1 && t.priced === 4, [t.priced, t.unpriced]);
   // The cost of a provisional weight, stated as a test so it is not forgotten:

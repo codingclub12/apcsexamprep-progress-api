@@ -5,13 +5,18 @@ Measured 2026-08-07. Cyber is the last course with unpriced graded columns:
 because they do not all need the same thing and only one group was a counting
 problem.
 
+**Update, same day: 5 of the 15 are now priced.** The case files turned out to
+be reachable all along and are seeded out of their real totals. That leaves 10,
+and 5 of those 10 should stay unpriced permanently. See section 2, which also
+records why the original claim about them was wrong.
+
 ## The 15, grouped by what blocks them
 
-| group | columns | blocker |
-|---|---|---|
-| unit exams | `unit-{1..5}/exam/exam` | key collision, now fixed |
-| case files | `unit-{1..5}/case-file/case-file` | the page handle does not map, so no data can ever arrive |
-| Unit 1 leftovers | `1.2/exercise-1`, `1.2/exercise-2`, `1.3/exercise-1`, `1.3/exercise-2`, `1.3/quiz` | value unknown, and not resolvable by reading the page |
+| group | columns | blocker | status |
+|---|---|---|---|
+| case files | `unit-{1..5}/case-file/case-file` | none, the original blocker was misdiagnosed | **priced**, out of 15/14/11/12/11 |
+| unit exams | `unit-{1..5}/exam/exam` | key collision fixed, but the pages cannot report a score at all | **stays unpriced on purpose** |
+| Unit 1 leftovers | `1.2/exercise-1`, `1.2/exercise-2`, `1.3/exercise-1`, `1.3/exercise-2`, `1.3/quiz` | value unknown, and not resolvable by reading the page | open, needs live data |
 
 ## 1. The exams: a key collision, not a missing value
 
@@ -44,8 +49,16 @@ lesson still reads exactly as before.
 
 **The table ships empty.** It is a mechanism, not a set of values. See below.
 
-## 2. The case files cannot receive data at all
+## 2. The case files: RESOLVED, and the original claim here was wrong
 
+**Superseded 2026-08-07.** All five case files are now priced by
+`scripts/seed-cyber-case-file-denominators.js`, out of 15, 14, 11, 12 and 11
+respectively, read from each page's own `cfScoreText` element. The reasoning
+below is preserved because the error in it is instructive.
+
+### What this section used to claim
+
+That the case file columns "cannot receive data at all", because
 `pageFromHandle` returns `null` for every case file handle:
 
 ```
@@ -53,19 +66,48 @@ ap-cyber-unit-1-case-file-1  ->  null
 ap-cyber-unit-3-case-file-3  ->  null
 ```
 
-The Cyber rules match `ap-cyber-unit-{N}-exam` and
-`ap-cyber-unit-{N}-lesson-{M}`. A case-file handle matches neither, so `/track`
-no-ops and nothing is ever recorded. Meanwhile the `COURSES` config declares a
-case file for all five units, so the gradebook renders five columns that can
-never be attempted.
+That observation is correct. The conclusion drawn from it was not. It assumed
+`/track` is the only way a score can arrive, and never checked the pages.
 
-Pricing them would make it worse, not better. An unattempted item never enters
-`earned` or `graded`, so the grade is safe, but `possible` and `items_total` both
-grow, so **pace** silently reports every student as further behind than they are.
+### What the pages actually do
 
-The fix is a handle mapping, not a denominator. That is a change to what gets
-recorded, so it belongs in a deliberate change with the course owner rather than
-folded into a denominator pass.
+Each of the five case file pages carries a self-contained reporter that skips
+`/track` entirely and POSTs straight to the scoring endpoint:
+
+```js
+xhr.open('POST', API + '/api/student/progress', true);
+xhr.send(JSON.stringify({ course: 'ap-cybersecurity', unit: UNIT,
+  lesson: 'case-file', activity_type: 'case-file', completed: true, score: pct }));
+```
+
+All five declare their own correct `UNIT`, so nothing is misfiled. The columns
+were reachable the whole time, and were sitting in the percent-only bucket being
+shown out of a provisional 100 rather than out of real points.
+
+### Why the handles are still unmapped, deliberately
+
+Mapping them now would be a regression, not a completion. `/track` sets
+`completed = 1` on a bare page view, so a student who opened a case file and
+walked away would be marked complete with no score. `/track` already excludes
+`quiz` and `exam` for exactly this reason, and a case file is the same shape:
+its own flow reports it. `smoke/cyber-case-files.js` asserts the `null` return
+so it is not "fixed" later by someone reading it as an oversight.
+
+### Why the exams are not resolved the same way
+
+The same scan run against the five exam pages finds no `fetch`, no
+`XMLHttpRequest`, no `sendBeacon` and no token read: they cannot report a score
+by any path. So they stay unpriced. Pricing a column that cannot be earned is
+strictly harmful: an unattempted item never enters `earned` or `graded`, so the
+grade is safe, but `possible` and `items_total` both grow, and **pace** silently
+reports every student as further behind than they are.
+
+That scan was run **with controls this time**, which is the specific thing the
+earlier wrong claim in section 4 lacked. Two known-good pages of different
+shapes were included and both were correctly detected: the fetch-based
+`ap-cyber-unit-1-lesson-1-exercise-1`, and the XHR-based case files. A detector
+that finds both shapes and still returns zero on all five exam pages is
+distinguishing, not merely failing.
 
 ## 3. The Unit 1 leftovers cannot be settled by reading the page
 
@@ -106,28 +148,35 @@ belongs to.
 
 ## What to do next, in order
 
-1. **Ask the data, not the page.** `GET /api/admin/denominators?course=ap-cybersecurity`
-   proposes a value for every unpriced column from what students actually
-   submitted, and reports how strongly the class data agrees. That engine was
-   built for exactly this and needs live access. Adopt what it proposes with
+Two of the three items that used to be here are now answered. What is left:
+
+1. **Ask the data, not the page**, for the 5 Unit 1 leftovers.
+   `GET /api/admin/denominators?course=ap-cybersecurity` proposes a value for
+   every unpriced column from what students actually submitted, and reports how
+   strongly the class data agrees. That engine was built for exactly this and
+   needs live access. Adopt what it proposes with
    `POST /api/admin/denominators/adopt`; it refuses ambiguous columns unless told
    otherwise.
-2. **Confirm the exams record scores** before pricing them. One query settles it:
-   any `score_events` or `progress` row for `ap-cybersecurity` with
-   `lesson = 'exam'` and a non-null score. If yes, the page counts below are
-   ready to author into `course_unit_denominators`. If no, pricing them distorts
-   pace exactly as the case files would.
-3. **Decide on the case-file handles.** Either map them in `pageFromHandle` so
-   the columns can be earned, or drop the columns from the `COURSES` config so
-   they stop appearing. Leaving them as permanently blank priced columns is the
-   one option that is worse than both.
+2. **Fix the exam pages before pricing the exams.** The blocker is no longer a
+   missing number, it is that the pages have no reporter. Until one ships, the
+   right state for those five columns is exactly what they are now: rendered,
+   unpriced, contributing nothing to any grade. The question counts below are
+   ready to author into `course_unit_denominators` the day a reporter lands.
+
+### Answered, kept for the record
+
+- ~~Confirm the exams record scores.~~ They do not. Section 2 has the scan and
+  the controls it was run with.
+- ~~Decide on the case-file handles.~~ Leave them unmapped, and price the
+  columns anyway. Section 2 explains why those two are not in tension: the
+  scores arrive by the page's own reporter, not by `/track`.
 
 ### Exam question counts, for step 2
 
 Counted from the pages, corroborated across several independent signals per page
 (`ANSWERS` entries, distinct radio group names, a `totalQuestions` literal, a
 rendered `out of 20`, and `Q1..Qn` labels). Recorded here as evidence, not
-seeded:
+seeded, and **not ready to seed** until the pages can report:
 
 | unit | questions | signals that agreed |
 |---|---|---|

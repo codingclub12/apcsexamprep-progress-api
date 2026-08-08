@@ -174,13 +174,14 @@ const qCol = gd.items.find((i) => i.lesson_id === '1.1' && i.activity === 'quiz'
 const cCol = gd.items.find((i) => i.lesson_id === '1.1' && i.activity === 'cfu');
 ok('column carries the authored denominator', qCol.denominator === 6 && qCol.denominator_source === 'authored', qCol);
 const d1 = gd.students[0];
-// student 1 scored 80 on the quiz; 80% of 6 = 4.8
+// student 1 scored 80 on the quiz. 80% of 6 is 4.8, and points are counts of
+// right and wrong, so the numerator is the nearest whole mark: 5.
 ok('rollup cell now shows an out-of', d1.items[qCol.key].possible === 6, d1.items[qCol.key]);
-ok('  earned rescaled to the authored total', d1.items[qCol.key].earned === 4.8, d1.items[qCol.key]);
+ok('  earned rescaled to the authored total, in whole marks', d1.items[qCol.key].earned === 5, d1.items[qCol.key]);
 ok('  percentage is unchanged by the rescale', d1.items[qCol.key].pct === 80, d1.items[qCol.key]);
 ok('  source labelled authored', d1.items[qCol.key].denominator_source === 'authored');
-// cfu 90% of 4 = 3.6
-ok('a second activity uses ITS own denominator', d1.items[cCol.key].possible === 4 && d1.items[cCol.key].earned === 3.6,
+// cfu 90% of 4 is 3.6, so the nearest whole mark is 4.
+ok('a second activity uses ITS own denominator', d1.items[cCol.key].possible === 4 && d1.items[cCol.key].earned === 4,
   d1.items[cCol.key]);
 ok('an activity with no authored row has none', (function () {
   const noD = gd.items.find((i) => i.activity === 'exercise-1');
@@ -189,14 +190,26 @@ ok('an activity with no authored row has none', (function () {
 ok('summary counts authored vs missing denominators',
   gd.summary.denominators_authored === 2 && gd.summary.denominators_missing > 0, gd.summary);
 
-// The attempts path must respect the authored value too, not the summed max_score.
+// A REPORTED pair beats an authored total, on the attempts path too.
+//
+// One question is one point. The attempt already records how many points were
+// earned and out of how many, because the page counted its own questions. An
+// authored row is a guess ABOUT that page, so it must never rescale a real pair.
+//
+// This assertion used to say the opposite. Under the old rule an authored 20
+// rewrote a real 10/10 into 20/20, which meant every authored row was a chance
+// to overwrite a correct score with a number nobody had checked against the
+// page. The authored value still prices columns that report nothing; it simply
+// no longer overrides columns that do.
 run(`INSERT INTO course_denominators (course,unit,lesson,activity_type,possible) VALUES ('ap-csa','unit-1','1.2','quiz',20)`);
 const gd2 = buildGradebook('CSA-1');
 const q2 = gd2.items.find((i) => i.lesson_id === '1.2' && i.activity === 'quiz');
 const a2 = gd2.students[0];
-ok('attempts cell adopts the authored denominator (20, not the stored 10)',
-  a2.items[q2.key].possible === 20, a2.items[q2.key]);
-ok('  earned rescaled: 100% of 20', a2.items[q2.key].earned === 20, a2.items[q2.key]);
+ok('attempts cell keeps the REPORTED denominator (10), ignoring the authored 20',
+  a2.items[q2.key].possible === 10, a2.items[q2.key]);
+ok('  earned is the points actually scored, not rescaled', a2.items[q2.key].earned === 10, a2.items[q2.key]);
+ok('  and it is sourced observed, not authored',
+  a2.items[q2.key].denominator_source === 'observed', a2.items[q2.key].denominator_source);
 ok('  percentage still 100', a2.items[q2.key].pct === 100, a2.items[q2.key]);
 
 console.log('edge cases');

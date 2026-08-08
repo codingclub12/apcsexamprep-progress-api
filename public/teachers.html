@@ -128,6 +128,11 @@
   .gbcell.near { color:var(--warnc); font-weight:600; }
   .gbcell.fail { color:var(--critical); font-weight:600; }
   .gbcell.none { color:var(--muted); }
+  /* An activity nobody has assigned points to yet. The percentage is real; the
+     denominator does not exist, so none is invented. The marker says which. */
+  .gbprov { color:var(--warnc); font-weight:700; margin-left:1px; }
+  /* The points pair under a student's overall percentage. */
+  .gbsub { display:block; font-size:11px; color:var(--muted); font-weight:400; font-variant-numeric:tabular-nums; }
   /* Wide gradebook: cap the height, freeze the student column and the header so
      scrolling 53 lesson columns never loses the row or column you are reading. */
   .gbwrap { max-height:70vh; overflow:auto; }
@@ -230,6 +235,12 @@
     });
   };
   var fmt = function (n) { return (n == null ? 0 : n).toLocaleString(); };
+  // Points are counts of right and wrong, so a whole mark must read "3", not
+  // "3.0". A fractional denominator (a half point rubric) keeps its fraction.
+  var num = function (n) {
+    if (n == null) return "";
+    return String(Math.round(n * 100) / 100);
+  };
   function courseCss(c){ return (COURSE[c]&&COURSE[c].css)||"var(--muted)"; }
   function courseLabel(c){ return (COURSE[c]&&COURSE[c].label)||c||"-"; }
 
@@ -706,14 +717,28 @@
         var c = s.items && s.items[i.key];
         if (!c) return '<td class="num gbcell none">·</td>';
         if (c.pct == null) return '<td class="num gbcell none" title="Completed, no score recorded">done</td>';
-        var tip = c.source === "attempt"
-          ? (c.earned + "/" + c.possible + " · " + c.tries + " attempt(s)")
-          : (i.activity + " " + c.pct + "%");
-        return '<td class="num gbcell ' + gbClass(c.pct, th) + '" title="' + esc(tip) + '">' + c.pct + "%</td>";
+        // Points earned over points possible, the same pair the teacher and the
+        // student are shown. One question is one point, so this is the number a
+        // student can check against their own paper; a percentage is a
+        // derivation of it. Where nobody has assigned points to the activity
+        // yet there is no honest denominator to print, so the percentage is
+        // shown alone and marked, rather than invented against a made up total.
+        var priced = c.earned != null && c.possible != null;
+        var text = priced ? (num(c.earned) + "/" + num(c.possible))
+                          : (c.pct + "%<span class=\"gbprov\" title=\"Points not assigned to this activity yet\">*</span>");
+        var tip = (priced ? num(c.earned) + " of " + num(c.possible) + " points  ·  " + c.pct + "%"
+                          : c.pct + "%  ·  points not assigned to this activity yet")
+          + "  ·  " + i.activity
+          + (c.source === "attempt" && c.tries ? "  ·  " + c.tries + " attempt(s)" : "");
+        return '<td class="num gbcell ' + gbClass(c.pct, th) + '" title="' + esc(tip) + '">' + text + "</td>";
       }).join("");
       var ov = s.overall || {};
       return '<tr><td class="stick">' + esc(s.label) + "</td>" + cells +
-        '<td class="num gbcell ' + gbClass(ov.pct, th) + '"><b>' + (ov.pct == null ? "-" : ov.pct + "%") + "</b></td></tr>";
+        '<td class="num gbcell ' + gbClass(ov.pct, th) + '" title="' + esc(
+          ov.earned == null ? "" : num(ov.earned) + " of " + num(ov.graded != null ? ov.graded : ov.possible) + " points on attempted work"
+        ) + '"><b>' + (ov.pct == null ? "-" : ov.pct + "%") + "</b>" +
+        (ov.earned == null ? "" : '<span class="gbsub">' + num(ov.earned) + "/" + num(ov.graded != null ? ov.graded : ov.possible) + "</span>") +
+        "</td></tr>";
     }).join("");
 
     var avg = '<tr class="avgrow"><td class="stick">Class average</td>' +
@@ -745,7 +770,16 @@
       var cells = lessons.map(function (l) {
         var c = s.cells && s.cells[l.lesson_id];
         if (!c || c.pct == null) return '<td class="num gbcell none">·</td>';
-        return '<td class="num gbcell ' + gbClass(c.pct, th) + '" title="' + esc("average of " + c.items + " assignment(s)") + '">' + c.pct + "%</td>";
+        // Marks over marks for the lesson when every graded item in it is
+        // priced. When one is not, the sum would be a smaller, wronger claim
+        // than the percentage, so the percentage is shown and marked instead.
+        var lp = c.earned != null && c.possible != null;
+        var ltext = lp ? (num(c.earned) + "/" + num(c.possible))
+                       : (c.pct + "%<span class=\"gbprov\" title=\"Not every assignment in this lesson has points assigned yet\">*</span>");
+        var ltip = (lp ? num(c.earned) + " of " + num(c.possible) + " points  ·  " + c.pct + "%"
+                       : c.pct + "%  ·  " + (c.items_priced || 0) + " of " + c.items + " assignments have points assigned")
+          + "  ·  average of " + c.items + " assignment(s)";
+        return '<td class="num gbcell ' + gbClass(c.pct, th) + '" title="' + esc(ltip) + '">' + ltext + "</td>";
       }).join("");
       var ov = s.overall || {};
       return '<tr><td class="stick">' + esc(s.label) + "</td>" +
@@ -781,7 +815,13 @@
       var row = [s.label, (s.visits || {}).visited, (s.visits || {}).total];
       cols.forEach(function (c) {
         var cell = byItem ? (s.items && s.items[c.key]) : (s.cells && s.cells[c.key]);
-        row.push(cell && cell.pct != null ? cell.pct : (cell && cell.completed ? "done" : ""));
+        // Export the pair a teacher reads on screen. A percentage alone cannot
+        // be re-added into a total, and it hides how much an item was worth.
+        row.push(!cell ? ""
+          : cell.pct == null ? (cell.completed ? "done" : "")
+          : (cell.earned != null && cell.possible != null)
+            ? (num(cell.earned) + "/" + num(cell.possible))
+            : (cell.pct + "%"));
       });
       var ov = s.overall || {};
       row.push(ov.pct == null ? "" : ov.pct, ov.basis, ov.items_graded, ov.items_passed);

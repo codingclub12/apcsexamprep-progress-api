@@ -225,6 +225,65 @@ const samePoints = (a, b) => (a == null && b == null)
     r.detail['unit-1']['1.1'].quiz && r.detail['unit-1']['1.1'].quiz.score != null);
   ok('  teacher shows a quiz grade for every student', tQuiz);
 
+  // ── 5. An ungraded column carries no points, in every view ────────────────
+  //  A lesson is a page visit, not graded work, and lib/gradebook-contract.js is
+  //  the one authority on that line. The teacher route did not ask it, and the
+  //  disagreement was visible on a live dashboard: a lesson scored 20 percent
+  //  was reported as points_earned 20 out of points_possible 100, sourced
+  //  'observed' as though 100 had been counted, while the contract reported the
+  //  same cell as ungraded with no points at all.
+  //
+  //  The 100 came from the synthetic 'lesson-score' row, a percent carrier
+  //  stored as points = percent, max_points = 100. The contract excludes it;
+  //  this route summed it.
+  //
+  //  Two things went wrong, and the second is the dangerous one:
+  //    - the dashboard printed a red "20/100" for a page visit, so a row's own
+  //      cells no longer added up to the row's total
+  //    - the teacher's include-lessons toggle would have weighted that page
+  //      visit at 100 points, twenty times a real 5 point quiz
+  //
+  //  Section 1 posts its lesson with no score at all, which is why this went
+  //  unnoticed. A SCORED lesson is the case that matters.
+  console.log('5. A scored lesson is ungraded everywhere, and carries no points');
+  const sTok = (await post('/api/student/join',
+    { class_code: code, display_name: 'GAL', pin: '1234' })).body.token;
+  await post('/api/student/progress',
+    { course: COURSE, unit: 'unit-1', lesson: '1.1', activity_type: 'lesson', score: 20, completed: true }, sTok);
+  // A real graded cell alongside it, so this proves a targeted rule and not a
+  // blanket "stop reporting points".
+  await post('/api/student/progress',
+    { course: COURSE, unit: 'unit-1', lesson: '1.1', activity_type: 'quiz', score: 20, completed: true }, sTok);
+
+  const tv2 = await get(`/api/teacher/classes/${code}/progress`, teacherToken);
+  const row = tv2.body.summary.find((r) => r.student && r.student.name === 'GAL');
+  const tLesson = row.detail['unit-1']['1.1'].lesson;
+  const tQuizCell = row.detail['unit-1']['1.1'].quiz;
+
+  ok('  the teacher route still reports the lesson percent', tLesson.score === 20, tLesson.score);
+  ok('  but reports no points for it', tLesson.points_possible == null && tLesson.points_earned == null,
+    [tLesson.points_earned, tLesson.points_possible]);
+  ok('  and does not claim a denominator was observed',
+    tLesson.denominator_source == null, tLesson.denominator_source);
+  ok('  specifically not the 100 the lesson-score carrier would have leaked',
+    tLesson.points_possible !== 100, tLesson.points_possible);
+
+  ok('  while a real graded cell beside it keeps its authored pair',
+    tQuizCell.points_possible === 6 && tQuizCell.points_earned === 1,
+    [tQuizCell.points_earned, tQuizCell.points_possible]);
+
+  const cg = require('../lib/gradebook-contract').buildCanonicalGradebook(code, { reveal: true });
+  const cs = cg.students.find((s) => (s.display_name || s.name || s.label) === 'GAL');
+  const cLesson = cs.items['unit-1/1.1/lesson'];
+  ok('  the contract agrees the lesson has no points',
+    cLesson && cLesson.earned == null && cLesson.possible == null && cLesson.pct == null,
+    cLesson);
+  ok('  and the two views now agree cell for cell on that column',
+    cLesson.possible === (tLesson.points_possible == null ? null : tLesson.points_possible));
+  ok('  the lesson contributes nothing to the row total',
+    cs.overall.graded === 6 && cs.overall.earned === 1,
+    [cs.overall.earned, cs.overall.graded]);
+
   console.log('\n' + (fail === 0 ? `OK - all ${pass} checks passed` : `${fail} FAILED (${pass} passed)`));
   server.close();
   process.exit(fail === 0 ? 0 : 1);

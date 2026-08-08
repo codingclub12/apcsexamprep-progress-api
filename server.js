@@ -184,6 +184,15 @@ if (cyberDenoms) console.log(`cyber denominators: ${cyberDenoms.changed} new of 
 const cspDenoms = runBootSeed('csp_denominators', () => require('./scripts/seed-csp-denominators').seedCspDenominators());
 if (cspDenoms) console.log(`csp denominators: ${cspDenoms.changed} new of ${cspDenoms.total} rows`);
 
+// Cyber case file denominators. Separate from the cyber seed above because all
+// five case files sit at lesson 'case-file' and would collide on one
+// course_denominators row, so these go to course_unit_denominators instead.
+// Same insert-or-ignore posture;
+// `node scripts/seed-cyber-case-file-denominators.js --update` pushes edits.
+const cyberCaseFileDenoms = runBootSeed('cyber_case_file_denominators',
+  () => require('./scripts/seed-cyber-case-file-denominators').seedCyberCaseFileDenominators());
+if (cyberCaseFileDenoms) console.log(`cyber case file denominators: ${cyberCaseFileDenoms.changed} new of ${cyberCaseFileDenoms.total} rows`);
+
 
 // ── PUBLIC ENDPOINTS ──────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
