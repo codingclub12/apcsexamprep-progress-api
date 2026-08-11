@@ -555,7 +555,16 @@ router.post('/traffic/pull', async (req, res) => {
       try {
         const r = await fetcher(range);
         out[name] = r.configured
-          ? { ...trafficIngest.ingest(r.readings, { dryRun }), [label]: r[label] }
+          ? {
+              ...trafficIngest.ingest(r.readings, { dryRun }),
+              [label]: r[label],
+              // A pull is bounded to a window of days, so a long backfill needs
+              // to say where to resume. Silence here would look like the whole
+              // range had been covered.
+              days_covered: r.days_covered,
+              covered: r.covered,
+              next_start_date: r.next_start_date,
+            }
           : { configured: false, reason: r.reason };
       } catch (e) {
         console.error('admin/traffic/pull ' + name + ':', e.message);
@@ -567,7 +576,10 @@ router.post('/traffic/pull', async (req, res) => {
     await pull('gsc', trafficGoogle.fetchGsc, 'site');
 
     const failed = Object.entries(out).filter(([, v]) => v.error || v.configured === false).map(([k]) => k);
-    res.json({ ok: failed.length === 0, failed, dry_run: dryRun, ...out });
+    // If any source stopped short of the requested range, hand back the date to
+    // resume from so a backfill can be finished without arithmetic.
+    const more = Object.values(out).map((v) => v && v.next_start_date).filter(Boolean).sort()[0] || null;
+    res.json({ ok: failed.length === 0, failed, dry_run: dryRun, next_start_date: more, ...out });
   } catch (e) {
     console.error('admin/traffic/pull:', e);
     res.status(500).json({ error: 'traffic pull failed', detail: e.message });
