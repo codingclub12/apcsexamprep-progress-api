@@ -232,11 +232,152 @@ google.fetchGa4().then((r) => {
   return google.fetchGsc();
 }).then((r) => {
   ok('GSC says not configured instead of reporting zero traffic', r.configured === false && r.readings.length === 0, r.reason);
-  finish();
-}).catch((e) => {
+  return againstDocumentedShapes();
+}).then(finish).catch((e) => {
   ok('connectors do not throw when unconfigured', false, e.message);
   finish();
 });
+
+// ── Connectors against Google's DOCUMENTED response shapes ───────────────────
+//  There are no credentials in CI, so the connectors could otherwise only ever
+//  be tested on their failure path: "it correctly reports it is not configured"
+//  says nothing about whether it can read an actual answer.
+//
+//  So this drives the real code with a real RSA service-account key and a stubbed
+//  transport that replies with the exact JSON shapes Google documents. It proves
+//  the parts that would silently produce wrong numbers against a live API:
+//  the JWT is signed and exchanged, GA4's YYYYMMDD dates become ISO, string
+//  metric values become numbers, ratios are normalised, and GSC's keys array is
+//  read positionally. A field name that does not exist would surface here as a
+//  missing reading rather than as a quiet zero in production.
+async function againstDocumentedShapes() {
+  section("Connectors parse Google's documented response shapes");
+
+  const crypto = require('crypto');
+  const { privateKey } = crypto.generateKeyPairSync('rsa', { modulusLength: 2048 });
+  const pem = privateKey.export({ type: 'pkcs8', format: 'pem' });
+
+  const realFetch = global.fetch;
+  const seen = { token: 0, ga4: 0, gsc: 0 };
+
+  global.fetch = async (url, opts) => {
+    const u = String(url);
+    const json = (body) => ({ ok: true, status: 200, json: async () => body, text: async () => JSON.stringify(body) });
+
+    if (u.includes('oauth2.googleapis.com/token')) {
+      seen.token += 1;
+      return json({ access_token: 'stub-token', expires_in: 3600 });
+    }
+
+    if (u.includes('analyticsdata.googleapis.com')) {
+      seen.ga4 += 1;
+      const body = JSON.parse(opts.body);
+      const perPage = body.dimensions.length === 2;
+      // Shape copied from the Data API quickstart: metric values are STRINGS,
+      // dates arrive as YYYYMMDD, and every value is nested one level deep.
+      return json({
+        dimensionHeaders: body.dimensions.map((d) => ({ name: d.name })),
+        metricHeaders: body.metrics.map((m) => ({ name: m.name, type: 'TYPE_INTEGER' })),
+        rows: perPage
+          ? [{ dimensionValues: [{ value: '20260801' }, { value: '/ap-csa/1-2?utm=x' }],
+               metricValues: [{ value: '3242' }, { value: '1500' }] }]
+          : [{ dimensionValues: [{ value: '20260801' }],
+               metricValues: body.metrics.map((m) => ({
+                 // engagementRate and bounceRate come back as 0-1 fractions;
+                 // averageSessionDuration as seconds.
+                 value: /Rate$/.test(m.name) ? '0.6234' : m.name === 'averageSessionDuration' ? '95.5' : '3242',
+               })) }],
+        rowCount: 1,
+        kind: 'analyticsData#runReport',
+      });
+    }
+
+    if (u.includes('searchconsole.googleapis.com')) {
+      seen.gsc += 1;
+      const body = JSON.parse(opts.body);
+      const byDim = body.dimensions.length === 2;
+      // Search Console returns a positional `keys` array plus flat numerics,
+      // with ctr already a 0-1 fraction.
+      return json({
+        rows: byDim
+          ? [{ keys: ['2026-08-01', body.dimensions[1] === 'query' ? 'AP CSA Unit 1' : 'https://apcsexamprep.com/ap-csa/1-2'],
+               clicks: 12, impressions: 340, ctr: 0.0353, position: 7.4 }]
+          : [{ keys: ['2026-08-01'], clicks: 120, impressions: 5400, ctr: 0.0222, position: 11.8 }],
+      });
+    }
+    throw new Error('unexpected fetch to ' + u);
+  };
+
+  process.env.GOOGLE_SERVICE_ACCOUNT_JSON = JSON.stringify({
+    client_email: 'traffic@example.iam.gserviceaccount.com',
+    // Real deployments paste the key with literal \n, which is a genuine
+    // failure mode: PEM parsing dies on it with an error that never mentions
+    // newlines. Encoded that way here so the connector's unescaping is exercised.
+    private_key: pem.replace(/\n/g, '\\n'),
+  });
+  process.env.GA4_PROPERTY_ID = '123456789';
+  process.env.GSC_SITE_URL = 'sc-domain:apcsexamprep.com';
+
+  try {
+    ok('status reports ready once credentials are present', google.status().ready === true, google.status());
+
+    const ga = await google.fetchGa4({ startDate: '2026-08-01', endDate: '2026-08-01' });
+    ok('GA4 authenticates and reports configured', ga.configured === true, ga.reason);
+    ok('GA4 signs a JWT and exchanges it for a token', seen.token >= 1, seen);
+    ok('GA4 issues both the totals and the per-page report', seen.ga4 === 2, seen.ga4);
+
+    const pv = ga.readings.find((r) => r.metric === 'pageviews' && !r.dimension_namespace);
+    ok('GA4 YYYYMMDD becomes an ISO date', pv && pv.date === '2026-08-01', pv);
+    ok('GA4 string metric values become numbers', pv && pv.value === 3242 && typeof pv.value === 'number', pv);
+
+    const er = ga.readings.find((r) => r.metric === 'engagement_rate');
+    ok('GA4 rate metrics stay 0-1', er && er.value === 0.6234, er);
+    const dur = ga.readings.find((r) => r.metric === 'avg_engagement_seconds');
+    ok('GA4 duration is carried through as seconds', dur && dur.value === 95.5, dur);
+
+    const perPage = ga.readings.find((r) => r.dimension_namespace === 'page');
+    ok('GA4 per-page rows carry a page dimension', Boolean(perPage), perPage);
+    ok('a GA4 page dimension survives the contract with its query string stripped',
+      contract.normalize(perPage).row.dimension === 'page:/ap-csa/1-2',
+      contract.normalize(perPage));
+
+    const gaWrite = ingestLib.ingest(ga.readings, { dryRun: true });
+    ok('every GA4 reading is contract-valid', gaWrite.rejected === 0, gaWrite.rejections);
+
+    const gsc = await google.fetchGsc({ startDate: '2026-08-01', endDate: '2026-08-01' });
+    ok('GSC authenticates and reports configured', gsc.configured === true, gsc.reason);
+    ok('GSC issues the totals, query and page reports', seen.gsc === 3, seen.gsc);
+
+    const clicks = gsc.readings.find((r) => r.metric === 'clicks' && !r.dimension_namespace);
+    ok('GSC reads its positional keys array', clicks && clicks.date === '2026-08-01', clicks);
+    ok('GSC site totals come through', clicks && clicks.value === 120, clicks);
+
+    const posQ = gsc.readings.find((r) => r.metric === 'position' && r.dimension_namespace === 'query');
+    ok('GSC per-query position is captured', posQ && posQ.value === 7.4, posQ);
+    ok('a GSC query dimension is lowercased by the contract',
+      contract.normalize(posQ).row.dimension === 'query:ap csa unit 1', contract.normalize(posQ));
+
+    const posPage = gsc.readings.find((r) => r.metric === 'position' && r.dimension_namespace === 'page');
+    ok('a GSC page dimension reduces a full URL to a path',
+      contract.normalize(posPage).row.dimension === 'page:/ap-csa/1-2', contract.normalize(posPage));
+
+    const gscWrite = ingestLib.ingest(gsc.readings, { dryRun: true });
+    ok('every GSC reading is contract-valid', gscWrite.rejected === 0, gscWrite.rejections);
+
+    // An API error must surface, not read as "no traffic".
+    global.fetch = async (url) => String(url).includes('oauth2')
+      ? { ok: true, status: 200, json: async () => ({ access_token: 't', expires_in: 3600 }) }
+      : { ok: false, status: 403, text: async () => '{"error":{"message":"permission denied"}}' };
+    let threw = null;
+    await google.fetchGa4().catch((e) => { threw = e; });
+    ok('a GA4 API error throws rather than returning an empty success', threw !== null && /403/.test(threw.message), threw && threw.message);
+  } finally {
+    global.fetch = realFetch;
+    delete process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+    delete process.env.GA4_PROPERTY_ID;
+    delete process.env.GSC_SITE_URL;
+  }
+}
 
 function finish() {
   console.log('\n' + (fail ? (fail + ' FAILED, ' + pass + ' passed') : ('OK - all ' + pass + ' checks passed')));
