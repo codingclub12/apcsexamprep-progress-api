@@ -540,20 +540,34 @@ router.post('/traffic/pull', async (req, res) => {
     const dryRun = Boolean(req.body && req.body.dry_run);
     const out = {};
 
-    if (want === 'all' || want === 'ga4') {
-      const r = await trafficGoogle.fetchGa4(range);
-      out.ga4 = r.configured
-        ? { ...trafficIngest.ingest(r.readings, { dryRun }), property: r.property }
-        : { configured: false, reason: r.reason };
-    }
-    if (want === 'all' || want === 'gsc') {
-      const r = await trafficGoogle.fetchGsc(range);
-      out.gsc = r.configured
-        ? { ...trafficIngest.ingest(r.readings, { dryRun }), site: r.site }
-        : { configured: false, reason: r.reason };
-    }
+    // EACH SOURCE IS ISOLATED. Sharing one try/catch meant a failure in the
+    // second source discarded the first one's result: GA4 would fetch, ingest,
+    // and WRITE, then a GSC error would surface as a 500 and the caller would
+    // never learn GA4 had succeeded. A daily job would read as broken while
+    // actually half-working, which is the same "silence is indistinguishable
+    // from failure" problem this whole feature exists to avoid.
+    //
+    // So a source that throws records its own error and the others still run.
+    // The route reports 200 with a per-source verdict; ok:false says at least
+    // one source failed, without pretending the healthy ones did.
+    const pull = async (name, fetcher, label) => {
+      if (want !== 'all' && want !== name) return;
+      try {
+        const r = await fetcher(range);
+        out[name] = r.configured
+          ? { ...trafficIngest.ingest(r.readings, { dryRun }), [label]: r[label] }
+          : { configured: false, reason: r.reason };
+      } catch (e) {
+        console.error('admin/traffic/pull ' + name + ':', e.message);
+        out[name] = { configured: true, ok: false, error: e.message, written: 0 };
+      }
+    };
 
-    res.json({ ok: true, dry_run: dryRun, ...out });
+    await pull('ga4', trafficGoogle.fetchGa4, 'property');
+    await pull('gsc', trafficGoogle.fetchGsc, 'site');
+
+    const failed = Object.entries(out).filter(([, v]) => v.error || v.configured === false).map(([k]) => k);
+    res.json({ ok: failed.length === 0, failed, dry_run: dryRun, ...out });
   } catch (e) {
     console.error('admin/traffic/pull:', e);
     res.status(500).json({ error: 'traffic pull failed', detail: e.message });

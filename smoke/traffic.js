@@ -371,6 +371,61 @@ async function againstDocumentedShapes() {
     let threw = null;
     await google.fetchGa4().catch((e) => { threw = e; });
     ok('a GA4 API error throws rather than returning an empty success', threw !== null && /403/.test(threw.message), threw && threw.message);
+
+    // ── One source failing must not discard another's result ────────────────
+    //  These two sources were originally pulled inside one try/catch, so a
+    //  failure in the second threw away the first one's work: GA4 would fetch,
+    //  ingest and WRITE, then a GSC error surfaced as a 500 and the caller
+    //  never learned GA4 had succeeded. A daily job would read as broken while
+    //  actually half-working. This happened for real during setup, when the
+    //  Search Console API was enabled on a different project than GA4.
+    const express = require('express');
+    process.env.ADMIN_KEY = 'smoke-admin-key-long-enough-for-the-check';
+    const app = express();
+    app.use(express.json());
+    app.use('/api/admin', require('../routes/admin'));
+
+    global.fetch = async (url, opts) => {
+      const u = String(url);
+      if (u.includes('127.0.0.1')) return realFetch(url, opts);
+      if (u.includes('oauth2')) return { ok: true, status: 200, json: async () => ({ access_token: 't', expires_in: 3600 }) };
+      if (u.includes('analyticsdata')) {
+        const b = JSON.parse(opts.body);
+        const perPage = b.dimensions.length === 2;
+        return { ok: true, status: 200, json: async () => ({
+          rows: [{
+            dimensionValues: perPage ? [{ value: '20260810' }, { value: '/x' }] : [{ value: '20260810' }],
+            metricValues: b.metrics.map((m) => ({ value: /Rate$/.test(m.name) ? '0.5' : '100' })),
+          }],
+        }) };
+      }
+      // GSC fails exactly as it did in production.
+      return { ok: false, status: 403, text: async () => '{"error":{"code":403,"message":"Google Search Console API has not been used in project 490988961673 before or it is disabled."}}' };
+    };
+
+    await new Promise((resolve) => {
+      const server = app.listen(0, async () => {
+        try {
+          const port = server.address().port;
+          const res = await realFetch('http://127.0.0.1:' + port + '/api/admin/traffic/pull', {
+            method: 'POST',
+            headers: { 'x-admin-key': process.env.ADMIN_KEY, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ dry_run: true }),
+          });
+          const j = await res.json();
+          ok('a failing source does not 500 the whole pull', res.status === 200, res.status);
+          ok('the healthy source still reports its result', j.ga4 && j.ga4.would_write > 0, j.ga4);
+          ok('the failing source is named', Array.isArray(j.failed) && j.failed.includes('gsc') && !j.failed.includes('ga4'), j.failed);
+          ok('ok is false when any source failed', j.ok === false, j.ok);
+          ok("the failing source carries Google's error text", j.gsc && /403/.test(j.gsc.error), j.gsc);
+          ok('the error is not truncated before the useful part', j.gsc && /disabled/.test(j.gsc.error), j.gsc && j.gsc.error);
+        } catch (e) {
+          ok('per-source isolation check ran', false, e.message);
+        } finally {
+          server.close(resolve);
+        }
+      });
+    });
   } finally {
     global.fetch = realFetch;
     delete process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
