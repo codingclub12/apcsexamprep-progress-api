@@ -68,6 +68,12 @@ for (let i = 60; i >= 1; i--) {
   if (i !== 30) {                       // day 30 is deliberately missing
     readings.push({ date, source: 'ga4', metric: 'pageviews', value: 1000 + (60 - i) * 10 });
   }
+  // Site totals as well as the per-query breakdown. Real Search Console reports
+  // both, and the overview reads site totals, so a fixture with only breakdown
+  // rows would not exercise it.
+  readings.push({ date, source: 'gsc', metric: 'position', value: 18 - (60 - i) * 0.08 });
+  readings.push({ date, source: 'gsc', metric: 'clicks', value: 90 + (60 - i) * 2 });
+  readings.push({ date, source: 'gsc', metric: 'impressions', value: 4000 + (60 - i) * 30 });
   readings.push({ date, source: 'gsc', metric: 'position', value: 20 - (60 - i) * 0.1,
     dimension_namespace: 'query', dimension_value: 'ap csa unit 1' });
   readings.push({ date, source: 'gsc', metric: 'clicks', value: 40 + (60 - i),
@@ -238,6 +244,36 @@ ok('the resume date is the day after the last covered',
   google.nextStart(google.daysBetween('2026-08-01', '2026-08-05'), '2026-08-31') === '2026-08-06');
 ok('a finished range reports no resume date',
   google.nextStart(google.daysBetween('2026-08-01', '2026-08-05'), '2026-08-05') === null);
+
+section('Overview returns every metric that has data, in one pass');
+//  The page used to force a metric choice, which let you ask Search Console for
+//  pageviews and get a blank chart with no explanation. The overview returns
+//  only metric/source pairs that actually hold data, so an impossible pairing
+//  cannot be offered in the first place.
+{
+  const ov = analysis.overview({ days: 60 });
+  ok('returns metrics', ov.metrics.length > 0, ov.metrics.length);
+  ok('every entry carries its source', ov.metrics.every((m) => m.source));
+  ok('every entry has at least one observed day', ov.metrics.every((m) => m.observed_days > 0));
+  ok('no metric is offered for a source that does not report it',
+    !ov.metrics.some((m) => m.source === 'gsc' && m.metric === 'pageviews'),
+    ov.metrics.filter((m) => m.source === 'gsc').map((m) => m.metric));
+  ok('each entry carries every window at once',
+    ov.metrics.every((m) => Object.keys(m.windows).length >= 2), Object.keys(ov.metrics[0].windows));
+  ok('a window reports whether it had full coverage',
+    ov.metrics.every((m) => Object.values(m.windows).every((w) => typeof w.complete === 'boolean')));
+  ok('direction travels with the metric, so the page cannot disagree',
+    ov.metrics.find((m) => m.metric === 'position').lower_is_better === true);
+  ok('a count metric is not lower-is-better',
+    ov.metrics.find((m) => m.metric === 'pageviews').lower_is_better === false);
+  ok('a smoothed trend rides along for the chart',
+    ov.metrics.every((m) => Array.isArray(m.trend) && m.trend.length === m.series.length));
+  ok('the partial day is excluded here too',
+    ov.metrics.every((m) => m.series[m.series.length - 1].date === iso(1)));
+  ok('gaps stay null rather than becoming zero',
+    ov.metrics.find((m) => m.metric === 'pageviews' && m.source === 'ga4')
+      .series.some((p) => p.value === null));
+}
 
 section('Movers');
 const mv = analysis.movers('pageviews', { source: 'ga4', namespace: 'page', days: 28, minBase: 10 });

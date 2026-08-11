@@ -11,180 +11,140 @@
     --plane:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
     --grid:#e1e0d9; --baseline:#c3c2b7; --border:rgba(11,11,11,0.10);
     --good:#0ca30c; --critical:#d03b3b;
-    --csa:#2a78d6; --csp:#eb6834; --cyber:#1baf7a; --solo:#eda100;
+    --ga4:#2a78d6; --gsc:#1baf7a; --raptive:#eda100; --clarity:#8b5cf6;
     --shadow:0 1px 2px rgba(11,11,11,0.04),0 1px 3px rgba(11,11,11,0.06);
   }
   @media (prefers-color-scheme: dark) {
     :root {
       --plane:#0d0d0d; --surface:#1a1a19; --ink:#fff; --ink-2:#c3c2b7; --muted:#898781;
       --grid:#2c2c2a; --baseline:#383835; --border:rgba(255,255,255,0.10);
-      --critical:#e66767; --csa:#3987e5; --csp:#d95926; --cyber:#199e70; --solo:#c98500; --shadow:none;
+      --critical:#e66767; --ga4:#3987e5; --gsc:#199e70; --raptive:#c98500; --clarity:#a78bfa; --shadow:none;
     }
   }
-  :root[data-theme="dark"]{--plane:#0d0d0d;--surface:#1a1a19;--ink:#fff;--ink-2:#c3c2b7;--muted:#898781;--grid:#2c2c2a;--baseline:#383835;--border:rgba(255,255,255,0.10);--critical:#e66767;--csa:#3987e5;--csp:#d95926;--cyber:#199e70;--solo:#c98500;--shadow:none;}
-  :root[data-theme="light"]{--plane:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink-2:#52514e;--muted:#898781;--grid:#e1e0d9;--baseline:#c3c2b7;--border:rgba(11,11,11,0.10);--critical:#d03b3b;--csa:#2a78d6;--csp:#eb6834;--cyber:#1baf7a;--solo:#eda100;--shadow:0 1px 2px rgba(11,11,11,0.04),0 1px 3px rgba(11,11,11,0.06);}
+  :root[data-theme="dark"]{--plane:#0d0d0d;--surface:#1a1a19;--ink:#fff;--ink-2:#c3c2b7;--muted:#898781;--grid:#2c2c2a;--baseline:#383835;--border:rgba(255,255,255,0.10);--critical:#e66767;--ga4:#3987e5;--gsc:#199e70;--raptive:#c98500;--clarity:#a78bfa;--shadow:none;}
+  :root[data-theme="light"]{--plane:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink-2:#52514e;--muted:#898781;--grid:#e1e0d9;--baseline:#c3c2b7;--border:rgba(11,11,11,0.10);--critical:#d03b3b;--ga4:#2a78d6;--gsc:#1baf7a;--raptive:#eda100;--clarity:#8b5cf6;--shadow:0 1px 2px rgba(11,11,11,0.04),0 1px 3px rgba(11,11,11,0.06);}
 
   * { box-sizing:border-box; }
   html, body { margin:0; }
-  body { background:var(--plane); color:var(--ink); font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; -webkit-font-smoothing:antialiased; }
-  a { color:var(--csa); }
-  .wrap { max-width:1180px; margin:0 auto; padding:20px 20px 64px; }
+  body { background:var(--plane); color:var(--ink); font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif; -webkit-font-smoothing:antialiased; }
+  a { color:var(--ga4); }
+  .wrap { max-width:1680px; margin:0 auto; padding:16px 18px 56px; }
 
-  header.top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 16px; padding-bottom:16px; border-bottom:1px solid var(--border); margin-bottom:20px; }
-  header.top h1 { font-size:20px; margin:0; font-weight:650; letter-spacing:-0.01em; }
-  header.top .sub { color:var(--muted); font-size:13px; }
+  header.top { display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 14px; padding-bottom:12px; border-bottom:1px solid var(--border); margin-bottom:14px; }
+  header.top h1 { font-size:19px; margin:0; font-weight:650; letter-spacing:-0.01em; }
+  header.top .sub { color:var(--muted); font-size:12.5px; }
   header.top .spacer { flex:1 1 auto; }
-  .navlink { color:var(--csa); text-decoration:none; font-size:13px; font-weight:600; }
-  .navlink:hover { text-decoration:underline; }
-  button, select { font:inherit; color:var(--ink); background:transparent; border:1px solid var(--border); border-radius:8px; padding:7px 11px; cursor:pointer; }
+  .navlink { color:var(--ga4); text-decoration:none; font-size:12.5px; font-weight:600; }
+  button { font:inherit; font-size:12.5px; color:var(--ink); background:transparent; border:1px solid var(--border); border-radius:7px; padding:5px 10px; cursor:pointer; }
   button:hover { border-color:var(--baseline); }
-  button.on { border-color:var(--csa); color:var(--csa); font-weight:600; }
-  .controls { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:18px; }
-  .controls .grp { display:inline-flex; gap:6px; align-items:center; }
-  .controls .grp > span { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:0.04em; }
-  .controls button { padding:5px 10px; font-size:13px; }
+  button.on { border-color:var(--ga4); color:var(--ga4); font-weight:600; }
 
-  .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(185px,1fr)); gap:12px; margin-bottom:22px; }
-  .kpi { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:15px 16px; box-shadow:var(--shadow); }
-  .kpi .label { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:0.04em; }
-  .kpi .value { font-size:30px; font-weight:650; line-height:1.1; margin-top:5px; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; }
-  .kpi .foot { font-size:12px; color:var(--ink-2); margin-top:6px; }
-  .up { color:var(--good); } .down { color:var(--critical); }
+  /* ── Section bands ────────────────────────────────────────────────────── */
+  .band { margin:22px 0 10px; display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; padding-top:12px; border-top:1px solid var(--border); }
+  .band:first-of-type { margin-top:6px; padding-top:0; border-top:none; }
+  .band h2 { font-size:13px; font-weight:700; margin:0; letter-spacing:0.02em; text-transform:uppercase; }
+  .band .note { font-size:12px; color:var(--muted); font-weight:400; }
+  .dot { width:8px; height:8px; border-radius:2px; display:inline-block; }
 
-  .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 18px; box-shadow:var(--shadow); margin-bottom:20px; }
-  .card h3 { margin:0 0 2px; font-size:14px; font-weight:600; }
-  .card .hint { color:var(--muted); font-size:12px; margin:0 0 12px; }
-  .cols { display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start; }
-  @media (max-width:820px){ .cols { grid-template-columns:1fr; } }
+  /* ── Metric card grid: every metric, always visible ───────────────────── */
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(258px,1fr)); gap:10px; }
+  .m { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:11px 12px 8px; box-shadow:var(--shadow); }
+  .m .hd { display:flex; align-items:baseline; justify-content:space-between; gap:8px; }
+  .m .name { font-size:11.5px; color:var(--muted); text-transform:uppercase; letter-spacing:0.04em; font-weight:600; }
+  .m .src { font-size:10px; color:var(--muted); }
+  .m .val { font-size:25px; font-weight:650; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; margin:2px 0 0; line-height:1.15; }
+  .m .spark { margin:6px 0 4px; }
+  .m .wins { display:flex; gap:10px; border-top:1px solid var(--grid); padding-top:6px; }
+  .m .w { flex:1 1 0; min-width:0; }
+  .m .w .wl { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:0.03em; }
+  .m .w .wv { font-size:12.5px; font-variant-numeric:tabular-nums; font-weight:600; white-space:nowrap; }
+  .up { color:var(--good); } .down { color:var(--critical); } .flat { color:var(--muted); }
+  .partial { color:var(--muted); font-weight:400; }
 
+  /* ── Cards + tables ──────────────────────────────────────────────────── */
+  .cols { display:grid; gap:12px; align-items:start; }
+  .c2 { grid-template-columns:1fr 1fr; }
+  .c3 { grid-template-columns:1fr 1fr 1fr; }
+  @media (max-width:1180px){ .c3 { grid-template-columns:1fr 1fr; } }
+  @media (max-width:820px){ .c2,.c3 { grid-template-columns:1fr; } }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:12px 14px; box-shadow:var(--shadow); }
+  .card h3 { margin:0 0 1px; font-size:13px; font-weight:650; }
+  .card .hint { color:var(--muted); font-size:11.5px; margin:0 0 9px; }
+
+  table.t { width:100%; border-collapse:collapse; font-size:12.5px; }
+  table.t th { text-align:left; font-weight:600; color:var(--muted); padding:4px 6px; border-bottom:1px solid var(--border); white-space:nowrap; font-size:11px; text-transform:uppercase; letter-spacing:0.03em; }
+  table.t th.n { text-align:right; }
+  table.t td { padding:5px 6px; border-bottom:1px solid var(--grid); white-space:nowrap; }
+  table.t td.n { text-align:right; font-variant-numeric:tabular-nums; }
+  table.t tr:last-child td { border-bottom:none; }
+  .scroll { overflow-x:auto; }
+  .lz { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11.5px; }
+  .trunc { display:inline-block; max-width:280px; overflow:hidden; text-overflow:ellipsis; vertical-align:bottom; }
   svg { display:block; width:100%; height:auto; overflow:visible; }
-  svg text { font:11px system-ui,sans-serif; fill:var(--muted); }
-
-  .minitable { width:100%; border-collapse:collapse; font-size:13px; }
-  .minitable th { text-align:left; font-weight:600; color:var(--muted); padding:6px 8px; border-bottom:1px solid var(--border); white-space:nowrap; }
-  .minitable th.num { text-align:right; }
-  .minitable td { padding:7px 8px; border-bottom:1px solid var(--grid); white-space:nowrap; }
-  .minitable td.num { text-align:right; font-variant-numeric:tabular-nums; }
-  .minitable tr:last-child td { border-bottom:none; }
-  .scroller { overflow-x:auto; }
-  .lz { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12.5px; }
-  .empty { padding:26px; text-align:center; color:var(--muted); }
-  .banner { border-radius:10px; padding:10px 14px; font-size:13px; margin-bottom:18px; border:1px solid; }
-  .banner.warn { background:color-mix(in srgb,var(--solo) 12%,transparent); border-color:color-mix(in srgb,var(--solo) 30%,transparent); color:var(--ink-2); }
+  svg text { font:10px system-ui,sans-serif; fill:var(--muted); }
+  .empty { padding:18px; text-align:center; color:var(--muted); font-size:12px; }
+  .banner { border-radius:9px; padding:9px 12px; font-size:12.5px; margin-bottom:12px; border:1px solid; }
+  .banner.warn { background:color-mix(in srgb,var(--raptive) 12%,transparent); border-color:color-mix(in srgb,var(--raptive) 30%,transparent); color:var(--ink-2); }
   .banner.bad { background:color-mix(in srgb,var(--critical) 10%,transparent); border-color:color-mix(in srgb,var(--critical) 35%,transparent); color:var(--ink-2); }
-  .pill { display:inline-flex; align-items:center; gap:5px; padding:1px 8px; border-radius:999px; font-size:11px; font-weight:600; background:color-mix(in srgb,var(--ink) 7%,transparent); color:var(--ink-2); }
-  .foot-note { font-size:12px; color:var(--muted); margin-top:8px; }
+  .foot { font-size:11.5px; color:var(--muted); margin-top:10px; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="top">
     <h1>Traffic</h1>
-    <span class="sub">GA4 · Search Console · Clarity · Raptive</span>
+    <span class="sub" id="sub">loading…</span>
     <a class="navlink" href="/admin/unified">Unified →</a>
     <a class="navlink" href="/admin/dashboard">Dashboard →</a>
-    <a class="navlink" href="/admin/command">Command →</a>
     <span class="spacer"></span>
+    <span id="ranges"></span>
     <button id="refreshBtn">Refresh</button>
   </header>
 
   <div id="banners"></div>
-
-  <div class="controls">
-    <span class="grp"><span>Metric</span><select id="metric"></select></span>
-    <span class="grp"><span>Source</span><select id="source"></select></span>
-    <span class="grp"><span>Window</span><span id="ranges"></span></span>
-  </div>
-
-  <div class="kpis" id="kpis"></div>
-
-  <div class="card">
-    <h3 id="chartTitle">Daily</h3>
-    <p class="hint" id="chartHint"></p>
-    <div id="chart"></div>
-  </div>
-
-  <div class="cols">
-    <div class="card">
-      <h3>Pages gaining</h3>
-      <p class="hint" id="gainHint">Biggest movers versus the previous equal window.</p>
-      <div class="scroller" id="winners"></div>
-    </div>
-    <div class="card">
-      <h3>Pages losing</h3>
-      <p class="hint">Same window, moving the other way.</p>
-      <div class="scroller" id="losers"></div>
-    </div>
-  </div>
-
-  <div class="cols">
-    <div class="card">
-      <h3>Keyword rankings</h3>
-      <p class="hint" id="rankHint">Search Console average position. Negative movement means the query moved up the page.</p>
-      <div class="scroller" id="rankings"></div>
-    </div>
-    <div class="card">
-      <h3>Rank movement</h3>
-      <p class="hint">Largest gains and drops in average position.</p>
-      <div class="scroller" id="rankmove"></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h3>Source inventory</h3>
-    <p class="hint">What each source has actually delivered. A source that stopped reporting shows up here as days behind, not as a chart that quietly flattens.</p>
-    <div class="scroller" id="inventory"></div>
-  </div>
-
-  <p class="foot-note" id="provenance"></p>
+  <div id="sections"></div>
+  <p class="foot" id="prov"></p>
 </div>
 
 <script>
 (function () {
   "use strict";
 
-  var METRICS = [
-    ["pageviews","Pageviews"],["sessions","Sessions"],["users","Users"],["new_users","New users"],
-    ["engagement_rate","Engagement rate"],["bounce_rate","Bounce rate"],
-    ["clicks","Clicks (search)"],["impressions","Impressions"],["ctr","CTR"],["position","Avg position"],
-    ["revenue","Revenue"],["rpm","RPM"],["ad_impressions","Ad impressions"],
-    ["dead_clicks","Dead clicks"],["rage_clicks","Rage clicks"],["scroll_depth","Scroll depth"]
+  // Metrics are grouped by the source that reports them, so a source that has
+  // no data simply does not draw a section. Nothing to select, nothing to get
+  // wrong: the old dropdown let you ask Search Console for pageviews and get a
+  // blank chart with no explanation.
+  var SOURCES = [
+    { key:"ga4",     label:"Audience",  sub:"Google Analytics 4", css:"var(--ga4)" },
+    { key:"gsc",     label:"Search",    sub:"Search Console",     css:"var(--gsc)" },
+    { key:"raptive", label:"Revenue",   sub:"Raptive",            css:"var(--raptive)" },
+    { key:"clarity", label:"Behaviour", sub:"Clarity",            css:"var(--clarity)" }
   ];
-  var SOURCES = [["","All sources"],["ga4","GA4"],["gsc","Search Console"],["clarity","Clarity"],["raptive","Raptive"]];
   var RANGES = [[30,"30d"],[90,"90d"],[180,"180d"],[365,"1y"]];
-  // Lower is better for these, so a fall is an improvement and must render green.
-  var LOWER_BETTER = { position:1, bounce_rate:1 };
   var RATIO = { engagement_rate:1, bounce_rate:1, ctr:1, scroll_depth:1 };
   var MONEY = { revenue:1, rpm:1 };
 
-  var state = { metric:"pageviews", source:"", days:90, data:null };
-
+  var state = { days:90, data:null };
   var $ = function (id) { return document.getElementById(id); };
   var esc = function (s) {
     return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
       return { "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c];
     });
   };
+
   function fmt(v, metric) {
     if (v == null) return "-";
     if (RATIO[metric]) return (v * 100).toFixed(1) + "%";
-    if (MONEY[metric]) return "$" + Number(v).toLocaleString(undefined,{maximumFractionDigits:2});
+    if (MONEY[metric]) return "$" + Number(v).toLocaleString(undefined,{maximumFractionDigits: v < 100 ? 2 : 0});
     if (metric === "position") return Number(v).toFixed(1);
-    return Number(v).toLocaleString(undefined,{maximumFractionDigits:2});
+    if (metric === "avg_engagement_seconds") return Math.round(v) + "s";
+    return Number(v).toLocaleString(undefined,{maximumFractionDigits: Math.abs(v) < 10 ? 1 : 0});
   }
-  function metricLabel(m) {
-    for (var i=0;i<METRICS.length;i++) if (METRICS[i][0]===m) return METRICS[i][1];
-    return m;
-  }
-  // One rule for direction colour, so no panel can disagree about what "better" is.
-  function dirClass(metric, delta) {
-    if (delta == null || delta === 0) return "";
-    var good = LOWER_BETTER[metric] ? delta < 0 : delta > 0;
-    return good ? "up" : "down";
-  }
-  function signed(v, metric) {
-    if (v == null) return "-";
-    return (v > 0 ? "+" : "") + fmt(v, metric);
+  // One direction rule for the whole page. `lower_is_better` comes from the
+  // server so the page cannot disagree with the analysis about what "up" means.
+  function dirClass(lowerBetter, delta) {
+    if (delta == null || delta === 0) return "flat";
+    return (lowerBetter ? delta < 0 : delta > 0) ? "up" : "down";
   }
 
   function api(path) {
@@ -194,94 +154,109 @@
       return r.json();
     });
   }
-
   function load() {
-    var q = "/api/admin/traffic?metric=" + encodeURIComponent(state.metric) +
-            "&days=" + state.days + (state.source ? "&source=" + encodeURIComponent(state.source) : "");
-    return api(q).then(function (d) { state.data = d; render(); });
+    return api("/api/admin/traffic?days=" + state.days).then(function (d) { state.data = d; render(); });
+  }
+
+  // ── Sparkline: gaps break the line rather than being drawn through ──────
+  function spark(points, color, lowerBetter) {
+    var vals = points.map(function (p) { return p.value; }).filter(function (v) { return v != null; });
+    if (vals.length < 2) return '<div style="height:34px"></div>';
+    var W = 260, H = 34;
+    var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
+    if (lo === hi) { lo -= 1; hi += 1; }
+    var n = points.length;
+    var x = function (i) { return (i / (n - 1)) * W; };
+    // A rank axis is inverted: position 1 belongs at the top.
+    var y = function (v) { var t = (v - lo) / (hi - lo); return lowerBetter ? t * H : (1 - t) * H; };
+    var d = "", open = false;
+    points.forEach(function (p, i) {
+      if (p.value == null) { open = false; return; }
+      d += (open ? "L" : "M") + x(i).toFixed(1) + " " + y(p.value).toFixed(1) + " ";
+      open = true;
+    });
+    var lastIdx = -1;
+    for (var i = points.length - 1; i >= 0; i--) { if (points[i].value != null) { lastIdx = i; break; } }
+    var dot = lastIdx >= 0
+      ? '<circle cx="' + x(lastIdx).toFixed(1) + '" cy="' + y(points[lastIdx].value).toFixed(1) + '" r="2" fill="' + color + '"/>'
+      : "";
+    return '<svg viewBox="0 0 ' + W + " " + H + '" preserveAspectRatio="none" style="height:34px">' +
+      '<path d="' + d + '" fill="none" stroke="' + color + '" stroke-width="1.5" vector-effect="non-scaling-stroke"/>' + dot + "</svg>";
+  }
+
+  // ── Full chart with axis, used for the headline series of each source ───
+  function chart(points, color, lowerBetter, metric, trend) {
+    var vals = points.map(function (p) { return p.value; }).filter(function (v) { return v != null; });
+    if (!vals.length) return '<div class="empty">No data.</div>';
+    var W = 760, H = 150, padL = 46, padR = 6, padT = 8, padB = 18;
+    var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
+    if (lo === hi) { lo -= 1; hi += 1; }
+    var pad = (hi - lo) * 0.08; lo -= pad; hi += pad;
+    if (!RATIO[metric] && !lowerBetter && lo < 0) lo = 0;
+    var n = points.length;
+    var x = function (i) { return padL + (i / Math.max(1, n - 1)) * (W - padL - padR); };
+    var y = function (v) { var t = (v - lo) / (hi - lo); return lowerBetter ? padT + t * (H - padT - padB) : padT + (1 - t) * (H - padT - padB); };
+
+    var g = "";
+    for (var k = 0; k <= 3; k++) {
+      var v = lo + (hi - lo) * (k / 3), yy = y(v);
+      g += '<line x1="' + padL + '" y1="' + yy.toFixed(1) + '" x2="' + (W - padR) + '" y2="' + yy.toFixed(1) + '" stroke="var(--grid)"/>' +
+           '<text x="' + (padL - 5) + '" y="' + (yy + 3).toFixed(1) + '" text-anchor="end">' + esc(fmt(v, metric)) + "</text>";
+    }
+    var line = function (series) {
+      var d = "", open = false;
+      series.forEach(function (p, i) {
+        if (p.value == null) { open = false; return; }
+        d += (open ? "L" : "M") + x(i).toFixed(1) + " " + y(p.value).toFixed(1) + " ";
+        open = true;
+      });
+      return d;
+    };
+    var d = line(points);
+    var dTrend = trend && trend.length ? line(trend) : "";
+    var lab = "";
+    if (n > 1) {
+      [0, Math.floor(n / 2), n - 1].forEach(function (i) {
+        var pr = points[i].date.split("-");
+        lab += '<text x="' + x(i).toFixed(1) + '" y="' + (H - 4) + '" text-anchor="' + (i === 0 ? "start" : i === n - 1 ? "end" : "middle") + '">' + (+pr[1]) + "/" + (+pr[2]) + "</text>";
+      });
+    }
+    return '<svg viewBox="0 0 ' + W + " " + H + '">' + g +
+      '<path d="' + d + '" fill="none" stroke="' + color + '" stroke-width="1.2" opacity="0.35"/>' +
+      (dTrend ? '<path d="' + dTrend + '" fill="none" stroke="' + color + '" stroke-width="2.2"/>' : "") +
+      lab + "</svg>" +
+      '<div style="display:flex;gap:14px;margin-top:6px;font-size:11px;color:var(--muted)">' +
+        '<span><i style="display:inline-block;width:12px;height:2px;background:' + color + ';opacity:.35;vertical-align:middle"></i> daily</span>' +
+        (dTrend ? '<span><i style="display:inline-block;width:12px;height:3px;background:' + color + ';vertical-align:middle"></i> 7-day average</span>' : "") +
+      "</div>";
   }
 
   function table(rows, cols, emptyMsg) {
     if (!rows || !rows.length) return '<div class="empty">' + esc(emptyMsg) + "</div>";
-    var head = cols.map(function (c) { return "<th" + (c.num?' class="num"':"") + ">" + esc(c.head) + "</th>"; }).join("");
-    var body = rows.map(function (r) {
-      return "<tr>" + cols.map(function (c) { return "<td" + (c.num?' class="num"':"") + ">" + c.cell(r) + "</td>"; }).join("") + "</tr>";
-    }).join("");
-    return '<table class="minitable"><thead><tr>' + head + "</tr></thead><tbody>" + body + "</tbody></table>";
+    return '<table class="t"><thead><tr>' +
+      cols.map(function (c) { return "<th" + (c.n ? ' class="n"' : "") + ">" + esc(c.h) + "</th>"; }).join("") +
+      "</tr></thead><tbody>" +
+      rows.map(function (r) {
+        return "<tr>" + cols.map(function (c) { return "<td" + (c.n ? ' class="n"' : "") + ">" + c.f(r) + "</td>"; }).join("") + "</tr>";
+      }).join("") + "</tbody></table>";
   }
 
-  // ── Line chart: observed, 7-day trend, and the projection as a dashed tail ──
-  function chart(points, trend, projection, metric) {
-    var all = points.concat(projection || []);
-    var vals = all.map(function (p) { return p.value; }).filter(function (v) { return v != null; });
-    if (!vals.length) return '<div class="empty">No data for this metric yet.</div>';
-
-    var W = 900, H = 260, padL = 44, padR = 12, padT = 12, padB = 24;
-    var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
-    // A rank axis reads correctly only when inverted: position 1 belongs at the top.
-    var invert = metric === "position";
-    if (lo === hi) { lo -= 1; hi += 1; }
-    var pad = (hi - lo) * 0.08; lo -= pad; hi += pad;
-    if (!RATIO[metric] && !invert && lo < 0) lo = 0;
-
-    var n = all.length;
-    var x = function (i) { return padL + (i / Math.max(1, n - 1)) * (W - padL - padR); };
-    var y = function (v) {
-      var t = (v - lo) / (hi - lo);
-      return invert ? padT + t * (H - padT - padB) : padT + (1 - t) * (H - padT - padB);
-    };
-
-    function path(series, offset) {
-      var d = "", started = false;
-      series.forEach(function (p, i) {
-        if (p.value == null) { started = false; return; }
-        var cmd = started ? "L" : "M";
-        d += cmd + x(i + (offset||0)).toFixed(1) + " " + y(p.value).toFixed(1) + " ";
-        started = true;
-      });
-      return d;
-    }
-
-    var gridLines = "", ticks = 4;
-    for (var g = 0; g <= ticks; g++) {
-      var v = lo + (hi - lo) * (g / ticks);
-      var yy = y(v);
-      gridLines += '<line x1="' + padL + '" y1="' + yy.toFixed(1) + '" x2="' + (W - padR) + '" y2="' + yy.toFixed(1) +
-                   '" stroke="var(--grid)" stroke-width="1"/>' +
-                   '<text x="' + (padL - 6) + '" y="' + (yy + 3).toFixed(1) + '" text-anchor="end">' + esc(fmt(v, metric)) + "</text>";
-    }
-
-    var labels = "";
-    if (points.length > 1) {
-      [0, Math.floor(points.length/2), points.length-1].forEach(function (i) {
-        var anchor = i === 0 ? "start" : (i === points.length-1 ? "middle" : "middle");
-        var p = points[i].date.split("-");
-        labels += '<text x="' + x(i).toFixed(1) + '" y="' + (H - 6) + '" text-anchor="' + anchor + '">' + (+p[1]) + "/" + (+p[2]) + "</text>";
-      });
-    }
-
-    var projPath = "";
-    if (projection && projection.length) {
-      // Join the projection to the last observed point so it reads as a
-      // continuation rather than a floating second line.
-      var lastIdx = points.length - 1;
-      var lastVal = null;
-      for (var k = points.length - 1; k >= 0; k--) { if (points[k].value != null) { lastVal = points[k].value; lastIdx = k; break; } }
-      var d = lastVal != null ? "M" + x(lastIdx).toFixed(1) + " " + y(lastVal).toFixed(1) + " " : "";
-      projection.forEach(function (p, i) { d += "L" + x(points.length + i).toFixed(1) + " " + y(p.value).toFixed(1) + " "; });
-      projPath = '<path d="' + d + '" fill="none" stroke="var(--solo)" stroke-width="2" stroke-dasharray="5 4"/>';
-    }
-
-    return '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' + esc(metricLabel(metric)) + ' over time">' +
-      gridLines +
-      '<path d="' + path(points) + '" fill="none" stroke="var(--csa)" stroke-width="1.5" opacity="0.45"/>' +
-      '<path d="' + path(trend) + '" fill="none" stroke="var(--csa)" stroke-width="2.5"/>' +
-      projPath + labels +
-      "</svg>" +
-      '<div style="display:flex;gap:16px;margin-top:8px;font-size:12px;color:var(--muted);flex-wrap:wrap">' +
-        '<span><i style="display:inline-block;width:14px;height:2px;background:var(--csa);opacity:.45;vertical-align:middle"></i> daily</span>' +
-        '<span><i style="display:inline-block;width:14px;height:3px;background:var(--csa);vertical-align:middle"></i> 7-day average</span>' +
-        (projection && projection.length ? '<span><i style="display:inline-block;width:14px;height:2px;background:var(--solo);vertical-align:middle"></i> 30-day projection</span>' : "") +
+  // ── One metric card: value, sparkline, and EVERY window at once ─────────
+  function metricCard(m, color) {
+    var wins = Object.keys(m.windows).map(function (k) {
+      var w = m.windows[k];
+      var cls = dirClass(m.lower_is_better, w.delta);
+      var pct = w.delta_pct == null ? "-" : (w.delta_pct > 0 ? "+" : "") + w.delta_pct + "%";
+      // A window without full coverage on both sides is marked, so a partial
+      // comparison is never read as a real one.
+      return '<div class="w"><div class="wl">' + w.window_days + 'd' + (w.complete ? "" : " *") + "</div>" +
+        '<div class="wv ' + cls + '">' + pct + "</div></div>";
+    }).join("");
+    return '<div class="m">' +
+      '<div class="hd"><span class="name">' + esc(m.label) + '</span><span class="src">' + esc(m.source) + "</span></div>" +
+      '<div class="val">' + fmt(m.latest, m.metric) + "</div>" +
+      '<div class="spark">' + spark(m.trend && m.trend.length ? m.trend : m.series, color, m.lower_is_better) + "</div>" +
+      '<div class="wins">' + wins + "</div>" +
       "</div>";
   }
 
@@ -289,136 +264,132 @@
     var d = state.data, out = "";
     var c = d.connectors || {};
     if (!c.service_account) {
-      out += '<div class="banner warn"><b>Google connectors are not configured.</b> ' +
-        'Set <code>GOOGLE_SERVICE_ACCOUNT_JSON</code> plus <code>GA4_PROPERTY_ID</code> and <code>GSC_SITE_URL</code>, ' +
-        'then POST <code>/api/admin/traffic/pull</code>. Until then GA4 and Search Console report nothing, which is not the same as zero traffic.</div>';
-    } else if (!c.ga4_property || !c.gsc_site) {
-      out += '<div class="banner warn">Service account present, but ' +
-        (!c.ga4_property ? "<code>GA4_PROPERTY_ID</code> " : "") + (!c.gsc_site ? "<code>GSC_SITE_URL</code> " : "") +
-        "is not set, so that source will stay empty.</div>";
+      out += '<div class="banner warn"><b>Google connectors are not configured.</b> GA4 and Search Console will stay empty, which is not the same as zero traffic.</div>';
     }
     var stale = (d.inventory || []).filter(function (r) { return r.traffic_source && r.stale; });
     if (stale.length) {
       out += '<div class="banner bad"><b>' + stale.length + ' source(s) behind.</b> ' +
-        stale.map(function (r) { return esc(r.source) + " last reported " + esc(r.last_date) + " (" + r.days_behind + "d ago)"; }).join(", ") +
-        ". A daily pull has probably stopped running.</div>";
+        stale.map(function (r) { return esc(r.source) + " last reported " + esc(r.last_date) + " (" + r.days_behind + "d ago)"; }).join(", ") + ".</div>";
     }
     $("banners").innerHTML = out;
   }
 
-  function renderKpis() {
-    var d = state.data, c = d.compare || {}, p = d.projection || {};
-    var m = state.metric;
-    var tiles = [];
-    tiles.push(tile(metricLabel(m) + " (" + (c.window_days||0) + "d)", fmt(c.current, m),
-      c.previous != null ? "was " + fmt(c.previous, m) : "no prior window"));
-    tiles.push(tile("Change", signed(c.delta, m) + (c.delta_pct != null ? " (" + (c.delta_pct>0?"+":"") + c.delta_pct + "%)" : ""),
-      c.complete ? "vs previous " + c.window_days + " days" : "partial coverage: " + c.current_days + "/" + c.window_days + " days",
-      dirClass(m, c.delta)));
-    tiles.push(tile("30-day projection", p.projection ? fmt(p.end_value, m) : "-",
-      p.projection ? "fit " + p.fit_quality + " (r2 " + p.r2 + ")" : esc(p.reason || "not enough data"),
-      p.projection ? dirClass(m, p.slope_per_day) : ""));
-    var rk = d.rankings || {};
-    tiles.push(tile("Queries on page 1", rk.page_1 != null ? rk.page_1 : "-",
-      rk.striking_distance != null ? rk.striking_distance + " in striking distance (11-20)" : ""));
-    $("kpis").innerHTML = tiles.join("");
-  }
-  function tile(label, value, foot, cls) {
-    return '<div class="kpi"><div class="label">' + esc(label) + '</div>' +
-      '<div class="value ' + (cls||"") + '">' + value + "</div>" +
-      (foot ? '<div class="foot">' + foot + "</div>" : "") + "</div>";
+  function renderSections() {
+    var ov = state.data.overview || { metrics: [] };
+    var html = "";
+
+    SOURCES.forEach(function (src) {
+      var mine = ov.metrics.filter(function (m) { return m.source === src.key; });
+      if (!mine.length) return;   // no data, no section, no empty chart to explain
+
+      html += '<div class="band"><span class="dot" style="background:' + src.css + '"></span>' +
+        "<h2>" + esc(src.label) + "</h2>" +
+        '<span class="note">' + esc(src.sub) + " · " + mine.length + " metrics · " +
+        mine[0].observed_days + " days of data</span></div>";
+
+      html += '<div class="grid">' + mine.map(function (m) { return metricCard(m, src.css); }).join("") + "</div>";
+
+      // Headline chart for the source: its first metric, full size.
+      var head = mine[0];
+      html += '<div class="card" style="margin-top:10px"><h3>' + esc(head.label) + " · daily</h3>" +
+        '<p class="hint">Windows end yesterday: today is partial at every source and would draw a false cliff.</p>' +
+        chart(head.series, src.css, head.lower_is_better, head.metric, head.trend) + "</div>";
+    });
+
+    $("sections").innerHTML = html + tablesHtml();
   }
 
-  function renderChart() {
-    var d = state.data, m = state.metric;
-    $("chartTitle").textContent = metricLabel(m) + (state.source ? " · " + state.source : "");
-    var p = d.projection || {};
-    $("chartHint").textContent =
-      "Every window ends yesterday: today is a partial day at all of these sources and would draw a false cliff. " +
-      (p.projection ? "Projection is a straight-line trend fit (" + p.fit_quality + "), not a seasonal forecast." : "");
-    $("chart").innerHTML = chart(d.series || [], d.trend || [], (d.projection||{}).projection, m);
-  }
-
-  function renderMovers() {
-    var mv = state.data.movers || {}, m = state.metric;
-    $("gainHint").textContent = "Biggest movers versus the previous " + (mv.window_days||0) +
-      " days. Pages under " + (mv.min_base||0) + " " + metricLabel(m).toLowerCase() + " are excluded, because a percentage on a tiny number says nothing.";
-    var cols = [
-      { head:"Page", cell:function(r){ return '<span class="lz">' + esc(r.value || r.dimension) + "</span>"; } },
-      { head:"Now", num:true, cell:function(r){ return fmt(r.current, m); } },
-      { head:"Before", num:true, cell:function(r){ return fmt(r.previous, m); } },
-      { head:"Change", num:true, cell:function(r){
-          return '<span class="' + dirClass(m, r.delta) + '">' + signed(r.delta, m) +
-            (r.delta_pct != null ? " (" + (r.delta_pct>0?"+":"") + r.delta_pct + "%)" : "") + "</span>"; } }
+  function tablesHtml() {
+    var d = state.data;
+    var pm = d.page_movers || {}, cm = d.click_movers || {}, rk = d.rankings || {};
+    var moverCols = function (metric) { return [
+      { h:"Page", f:function(r){ return '<span class="lz trunc" title="' + esc(r.value) + '">' + esc(r.value) + "</span>"; } },
+      { h:"Now", n:true, f:function(r){ return fmt(r.current, metric); } },
+      { h:"Was", n:true, f:function(r){ return fmt(r.previous, metric); } },
+      { h:"Δ", n:true, f:function(r){ return '<span class="' + dirClass(false, r.delta) + '">' +
+          (r.delta_pct == null ? fmt(r.delta, metric) : (r.delta_pct > 0 ? "+" : "") + r.delta_pct + "%") + "</span>"; } }
+    ]; };
+    var queryCols = [
+      { h:"Query", f:function(r){ return '<span class="trunc" title="' + esc(r.value) + '">' + esc(r.value) + "</span>"; } },
+      { h:"Now", n:true, f:function(r){ return fmt(r.current, "clicks"); } },
+      { h:"Was", n:true, f:function(r){ return fmt(r.previous, "clicks"); } },
+      { h:"Δ", n:true, f:function(r){ return '<span class="' + dirClass(false, r.delta) + '">' +
+          (r.delta_pct == null ? fmt(r.delta,"clicks") : (r.delta_pct > 0 ? "+" : "") + r.delta_pct + "%") + "</span>"; } }
     ];
-    $("winners").innerHTML = table(mv.winners, cols, "No pages improved enough to rank yet.");
-    $("losers").innerHTML  = table(mv.losers,  cols, "No pages declined enough to rank yet.");
+
+    var h = '<div class="band"><span class="dot" style="background:var(--ink-2)"></span><h2>Movement</h2>' +
+      '<span class="note">' + (pm.window_days || 0) + "d vs the previous " + (pm.window_days || 0) +
+      "d · pages under " + (pm.min_base || 0) + " views excluded, because a percentage on a tiny number says nothing</span></div>";
+
+    h += '<div class="cols c2">' +
+      '<div class="card"><h3>Pages gaining</h3><p class="hint">By pageviews.</p><div class="scroll">' +
+        table((pm.winners||[]).slice(0,12), moverCols("pageviews"), "None yet.") + "</div></div>" +
+      '<div class="card"><h3>Pages losing</h3><p class="hint">By pageviews.</p><div class="scroll">' +
+        table((pm.losers||[]).slice(0,12), moverCols("pageviews"), "None yet.") + "</div></div>" +
+      "</div>";
+
+    h += '<div class="cols c2" style="margin-top:12px">' +
+      '<div class="card"><h3>Queries gaining clicks</h3><p class="hint">Search Console.</p><div class="scroll">' +
+        table((cm.winners||[]).slice(0,12), queryCols, "None yet.") + "</div></div>" +
+      '<div class="card"><h3>Queries losing clicks</h3><p class="hint">Search Console.</p><div class="scroll">' +
+        table((cm.losers||[]).slice(0,12), queryCols, "None yet.") + "</div></div>" +
+      "</div>";
+
+    h += '<div class="band"><span class="dot" style="background:var(--gsc)"></span><h2>Keyword rankings</h2>' +
+      '<span class="note">' + (rk.tracked||0) + " queries · " + (rk.page_1||0) + " on page 1 · " +
+      (rk.striking_distance||0) + " in striking distance (11-20) · sorted by clicks, because position alone surfaces one-impression long tail</span></div>";
+
+    var rankCols = [
+      { h:"Query", f:function(r){ return '<span class="trunc" title="' + esc(r.query) + '">' + esc(r.query) + "</span>"; } },
+      { h:"Pos", n:true, f:function(r){ return r.position.toFixed(1); } },
+      { h:"Move", n:true, f:function(r){ return r.delta == null ? '<span class="flat">new</span>'
+          : '<span class="' + (r.delta < 0 ? "up" : r.delta > 0 ? "down" : "flat") + '">' + (r.delta>0?"+":"") + r.delta.toFixed(1) + "</span>"; } },
+      { h:"Clicks", n:true, f:function(r){ return Number(r.clicks).toLocaleString(); } },
+      { h:"Impr", n:true, f:function(r){ return Number(r.impressions).toLocaleString(); } }
+    ];
+    h += '<div class="cols c3">' +
+      '<div class="card"><h3>Top queries</h3><p class="hint">By clicks earned.</p><div class="scroll">' +
+        table((rk.top||[]).slice(0,14), rankCols, "No Search Console data yet.") + "</div></div>" +
+      '<div class="card"><h3>Biggest rank gains</h3><p class="hint">Moved up the page.</p><div class="scroll">' +
+        table((rk.biggest_gains||[]).slice(0,14), rankCols, "Not enough history yet.") + "</div></div>" +
+      '<div class="card"><h3>Biggest rank drops</h3><p class="hint">Moved down.</p><div class="scroll">' +
+        table((rk.biggest_drops||[]).slice(0,14), rankCols, "Not enough history yet.") + "</div></div>" +
+      "</div>";
+
+    h += '<div class="band"><span class="dot" style="background:var(--ink-2)"></span><h2>Source inventory</h2>' +
+      '<span class="note">a source that stopped reporting shows up here as days behind, not as a chart that quietly flattens</span></div>';
+    h += '<div class="card"><div class="scroll">' + table(state.data.inventory || [], [
+      { h:"Source", f:function(r){ return esc(r.source); } },
+      { h:"Metrics", n:true, f:function(r){ return r.metrics; } },
+      { h:"Days", n:true, f:function(r){ return r.days; } },
+      { h:"First", f:function(r){ return esc(r.first_date); } },
+      { h:"Last", f:function(r){ return esc(r.last_date); } },
+      { h:"Behind", n:true, f:function(r){ return r.days_behind == null ? "-" :
+          '<span class="' + (r.stale ? "down" : "") + '">' + r.days_behind + "d</span>"; } }
+    ], "Nothing has reported yet.") + "</div></div>";
+
+    return h;
   }
 
-  function renderRankings() {
-    var rk = state.data.rankings || {};
-    $("rankHint").textContent = "Search Console average position over " + (rk.window_days||0) +
-      " days, " + (rk.tracked||0) + " queries tracked. A negative change means the query moved up the page.";
-    $("rankings").innerHTML = table((rk.top||[]).slice(0,15), [
-      { head:"Query", cell:function(r){ return esc(r.query); } },
-      { head:"Position", num:true, cell:function(r){ return r.position.toFixed(1); } },
-      { head:"Move", num:true, cell:function(r){
-          return r.delta == null ? '<span class="pill">new</span>'
-            : '<span class="' + (r.delta < 0 ? "up" : r.delta > 0 ? "down" : "") + '">' + (r.delta>0?"+":"") + r.delta.toFixed(1) + "</span>"; } },
-      { head:"Clicks", num:true, cell:function(r){ return Number(r.clicks).toLocaleString(); } }
-    ], "No Search Console position data yet.");
-
-    var gains = (rk.biggest_gains||[]).map(function(r){ return Object.assign({dir:"gain"}, r); });
-    var drops = (rk.biggest_drops||[]).map(function(r){ return Object.assign({dir:"drop"}, r); });
-    $("rankmove").innerHTML = table(gains.concat(drops).slice(0,15), [
-      { head:"Query", cell:function(r){ return esc(r.query); } },
-      { head:"Now", num:true, cell:function(r){ return r.position.toFixed(1); } },
-      { head:"Was", num:true, cell:function(r){ return r.previous_position != null ? r.previous_position.toFixed(1) : "-"; } },
-      { head:"Move", num:true, cell:function(r){
-          return '<span class="' + (r.delta < 0 ? "up" : "down") + '">' + (r.delta>0?"+":"") + r.delta.toFixed(1) + "</span>"; } }
-    ], "Not enough history to show movement yet.");
-  }
-
-  function renderInventory() {
-    $("inventory").innerHTML = table(state.data.inventory || [], [
-      { head:"Source", cell:function(r){ return esc(r.source) + (r.traffic_source ? "" : ' <span class="pill">internal</span>'); } },
-      { head:"Metrics", num:true, cell:function(r){ return r.metrics; } },
-      { head:"Days", num:true, cell:function(r){ return r.days; } },
-      { head:"First", cell:function(r){ return esc(r.first_date); } },
-      { head:"Last", cell:function(r){ return esc(r.last_date); } },
-      { head:"Behind", num:true, cell:function(r){
-          if (r.days_behind == null) return "-";
-          return '<span class="' + (r.stale ? "down" : "") + '">' + r.days_behind + "d</span>"; } }
-    ], "Nothing has reported yet. Configure the Google connectors, or import a CSV export.");
+  function renderRanges() {
+    $("ranges").innerHTML = RANGES.map(function (r) {
+      return '<button data-d="' + r[0] + '"' + (r[0] === state.days ? ' class="on"' : "") + ">" + esc(r[1]) + "</button>";
+    }).join(" ");
+    Array.prototype.forEach.call($("ranges").querySelectorAll("button"), function (b) {
+      b.addEventListener("click", function () {
+        state.days = parseInt(b.getAttribute("data-d"), 10);
+        renderRanges(); load().catch(onErr);
+      });
+    });
   }
 
   function render() {
     if (!state.data) return;
-    renderBanners(); renderKpis(); renderChart(); renderMovers(); renderRankings(); renderInventory();
-    $("provenance").textContent = "Generated " + new Date(state.data.generated_at).toLocaleString() +
-      " · daily aggregates from metrics_daily, 400-day retention · windows end yesterday";
-  }
-
-  function buildControls() {
-    $("metric").innerHTML = METRICS.map(function(m){ return '<option value="'+m[0]+'">'+esc(m[1])+"</option>"; }).join("");
-    $("metric").value = state.metric;
-    $("metric").addEventListener("change", function(){ state.metric = this.value; load().catch(onErr); });
-
-    $("source").innerHTML = SOURCES.map(function(s){ return '<option value="'+s[0]+'">'+esc(s[1])+"</option>"; }).join("");
-    $("source").value = state.source;
-    $("source").addEventListener("change", function(){ state.source = this.value; load().catch(onErr); });
-
-    $("ranges").innerHTML = RANGES.map(function(r){
-      return '<button data-days="'+r[0]+'"'+(r[0]===state.days?' class="on"':"")+">"+esc(r[1])+"</button>";
-    }).join(" ");
-    Array.prototype.forEach.call($("ranges").querySelectorAll("button"), function(b){
-      b.addEventListener("click", function(){
-        state.days = parseInt(b.getAttribute("data-days"),10);
-        Array.prototype.forEach.call($("ranges").querySelectorAll("button"), function(x){ x.classList.remove("on"); });
-        b.classList.add("on");
-        load().catch(onErr);
-      });
-    });
+    var n = (state.data.overview && state.data.overview.metrics.length) || 0;
+    $("sub").textContent = n + " metrics across " + (state.data.inventory || []).filter(function (r) { return r.traffic_source; }).length + " sources";
+    renderBanners(); renderSections();
+    $("prov").textContent = "Generated " + new Date(state.data.generated_at).toLocaleString() +
+      " · daily aggregates, 400-day retention · windows end yesterday · * marks a window without full coverage on both sides";
   }
 
   function onErr(e) {
@@ -426,8 +397,8 @@
     $("banners").innerHTML = '<div class="banner bad">Error loading: ' + esc(e.message) + "</div>";
   }
 
-  $("refreshBtn").addEventListener("click", function(){ load().catch(onErr); });
-  buildControls();
+  $("refreshBtn").addEventListener("click", function () { load().catch(onErr); });
+  renderRanges();
   load().catch(onErr);
 })();
 </script>

@@ -503,6 +503,8 @@ router.get('/traffic', (req, res) => {
     const days = parseInt(req.query.days, 10) || 90;
 
     const points = trafficAnalysis.series(metric, { source, days });
+    const moverWindow = Math.min(28, days);
+
     res.json({
       generated_at: new Date().toISOString(),
       metric,
@@ -510,12 +512,24 @@ router.get('/traffic', (req, res) => {
       days,
       inventory: trafficAnalysis.inventory(),
       connectors: trafficGoogle.status(),
+
+      // EVERY metric that has data, each with its own series and its
+      // comparisons at 7 / 28 / 90 days. The page draws all of it at once
+      // rather than making the reader pick one and guess which source has it.
+      overview: trafficAnalysis.overview({ days }),
+
+      // Page movers AND query movers, because a search deck that only shows
+      // pages cannot answer "which query lost us traffic".
+      movers: trafficAnalysis.movers(metric, { source, namespace: 'page', days: moverWindow }),
+      page_movers: trafficAnalysis.movers('pageviews', { source: 'ga4', namespace: 'page', days: moverWindow }),
+      click_movers: trafficAnalysis.movers('clicks', { source: 'gsc', namespace: 'query', days: moverWindow }),
+      rankings: trafficAnalysis.rankings({ days: moverWindow }),
+
+      // Kept for the single-metric view and for anything already calling this.
       series: points,
       trend: trafficAnalysis.movingAverage(points, 7),
-      compare: trafficAnalysis.compare(metric, { source, days: Math.min(28, days) }),
+      compare: trafficAnalysis.compare(metric, { source, days: moverWindow }),
       projection: trafficAnalysis.project(metric, { source, days, horizon: 30 }),
-      movers: trafficAnalysis.movers(metric, { source, namespace: 'page', days: Math.min(28, days) }),
-      rankings: trafficAnalysis.rankings({ days: Math.min(28, days) }),
     });
   } catch (e) {
     console.error('admin/traffic:', e);
