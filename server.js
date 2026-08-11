@@ -5,6 +5,7 @@ const express = require('express');
 const cors = require('cors');
 const adminSession = require('./lib/admin-session');
 const wireLog = require('./lib/wire-log');
+const posthog = require('./lib/posthog');
 const app = express();
 
 // Railway terminates TLS at its proxy and forwards the real client IP and
@@ -50,6 +51,11 @@ app.use(express.json({ limit: '1mb' }));
 // request that 400s or never reaches its handler is still recorded. Strict path
 // allowlist inside; auth routes carrying names and PINs are never captured.
 app.use(wireLog.middleware);
+
+// Product analytics. Records one api_request event per /api/* call on response
+// finish. Inert unless POSTHOG_API_KEY is set, and independently switchable via
+// POSTHOG_CAPTURE_REQUESTS=0 (see lib/posthog.js).
+app.use(posthog.middleware);
 
 // ── ROUTES ────────────────────────────────────────────────────────────────────
 app.use('/api/teacher', require('./routes/teacher'));
@@ -297,6 +303,16 @@ app.get('/heartbeat-reporter.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'heartbeat-reporter.js'));
 });
 
+// PostHog browser init, with the public project key substituted in from the
+// environment. Not sendFile: public/posthog-init.js is a template and must never
+// reach a browser with its placeholders intact. Serves an inert stub when no key
+// is configured, so every page can carry the script tag unconditionally.
+app.get('/posthog-init.js', (req, res) => {
+  res.set('Cache-Control', 'public, max-age=300');
+  res.type('application/javascript');
+  res.send(posthog.browserSnippet());
+});
+
 // Teacher self-service password reset pages (public, no gate). Two static pages:
 // /teacher/forgot collects an email and calls POST /api/teacher/forgot-password;
 // /teacher/reset-password reads the emailed ?token= and calls POST
@@ -347,9 +363,27 @@ app.use((err, req, res, next) => {
 
 // ── START ─────────────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`APCSExamPrep Progress API running on port ${PORT}`);
   console.log(`DB: ${process.env.DB_PATH || './progress.db'}`);
+  if (posthog.isEnabled()) console.log('PostHog: enabled');
 });
+
+// Railway sends SIGTERM on every redeploy. Without an explicit flush the events
+// buffered since the last interval die with the process, which reads in PostHog
+// as a traffic dip at exactly the moments a deploy is worth watching. Bounded by
+// a timer so a hung flush can never stop the container from exiting.
+let shuttingDown = false;
+function gracefulExit(signal) {
+  if (shuttingDown) return;
+  shuttingDown = true;
+  const hardStop = setTimeout(() => process.exit(0), 4000);
+  hardStop.unref();
+  posthog.shutdown().finally(() => {
+    server.close(() => process.exit(0));
+  });
+}
+process.once('SIGTERM', () => gracefulExit('SIGTERM'));
+process.once('SIGINT', () => gracefulExit('SIGINT'));
 
 module.exports = app;

@@ -40,6 +40,8 @@
   .msg.ok { color: var(--good); }
   .note { margin-top: 16px; font-size: 12px; color: var(--muted); }
 </style>
+<!-- Product analytics. Inert unless POSTHOG_API_KEY is set on the server. -->
+<script src="/posthog-init.js"></script>
 </head>
 <body>
   <form class="card" id="form">

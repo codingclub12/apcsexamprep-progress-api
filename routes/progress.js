@@ -20,6 +20,7 @@ const router = express.Router();
 const db = require('../db');
 const { requireStudent } = require('../middleware');
 const wireLog = require('../lib/wire-log');
+const posthog = require('../lib/posthog');
 const { resolveMode, retryAllowedFor } = require('../retry-policy');
 
 // ── PREPARED STATEMENTS (module scope, reused across requests) ────────────────
@@ -214,6 +215,29 @@ router.post('/attempt', requireStudent, rateLimit, (req, res) => {
         attempt_no: result.attempt_no,
         gor_score: result.gor.score, gor_max: result.gor.max_score,
       },
+    });
+
+    // Product analytics. Same reasoning as the wire-log call above: the generic
+    // middleware only knows a 200 happened, and "a submission landed" is a much
+    // weaker fact than "a quiz was graded 8/10 on the second try". Fire and
+    // forget; posthog.js swallows its own errors so this cannot fail the write
+    // that already committed.
+    posthog.capture('attempt_recorded', req.student.id, {
+      course,
+      lesson_id,
+      item_id,
+      item_type: b.item_type,
+      score,
+      max_score: maxScore,
+      pct: maxScore > 0 ? Math.round((score / maxScore) * 1000) / 10 : null,
+      passed: !!passed,
+      attempt_no: result.attempt_no,
+      is_retry: result.attempt_no > 1,
+      retry_allowed: !!retryOn,
+      duration_seconds: duration,
+      class_id: req.student.class_id,
+      gor_score: result.gor.score,
+      gor_max: result.gor.max_score,
     });
 
     res.json({
