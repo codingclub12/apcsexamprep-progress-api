@@ -140,7 +140,10 @@ const samePoints = (a, b) => (a == null && b == null)
   //  rather than imply a 100 point assignment. Reported, not failed, because
   //  silencing it would hide the day an authored denominator goes missing.
   //
-  //  Teacher: detail[unit][lesson][activity]. Admin: students[].items['lesson|activity'].
+  //  Teacher: detail[unit][lesson][activity]. Admin: students[].items[item.key].
+  //  The admin key is unit scoped, so it is read from the item rather than
+  //  rebuilt here: a hand built key that stops matching makes a suite compare
+  //  ZERO cells and still report success, which is how this nearly slipped.
   const adminByName = new Map(av.students.map((s) => [s.name || s.label, s]));
   const authored = new Set(db.prepare(
     'SELECT lesson, activity_type FROM course_denominators WHERE course = ?'
@@ -157,7 +160,8 @@ const samePoints = (a, b) => (a == null && b == null)
       for (const lesson of Object.keys(row.detail[unit] || {})) {
         for (const act of Object.keys(row.detail[unit][lesson] || {})) {
           const t = row.detail[unit][lesson][act];
-          const key = `${lesson}|${act}`;
+          const item = (av.items || []).find((i) => i.lesson_id === lesson && i.activity === act);
+          const key = item ? item.key : `${lesson}|${act}`;
           const cell = a.items[key];
           // A visit-only row carries no grade on either side; nothing to compare.
           if (t.score == null && !cell) continue;
@@ -219,7 +223,8 @@ const samePoints = (a, b) => (a == null && b == null)
   }
 
   console.log('4. The quiz cell in particular carries through to both');
-  const anyQuiz = av.students.every((s) => s.items['1.1|quiz'] && s.items['1.1|quiz'].pct != null);
+  const quizKey = (av.items || []).find((i) => i.lesson_id === '1.1' && i.activity === 'quiz').key;
+  const anyQuiz = av.students.every((s) => s.items[quizKey] && s.items[quizKey].pct != null);
   ok('  admin shows a quiz grade for every student', anyQuiz);
   const tQuiz = tv.body.summary.every((r) => r.detail['unit-1'] && r.detail['unit-1']['1.1'] &&
     r.detail['unit-1']['1.1'].quiz && r.detail['unit-1']['1.1'].quiz.score != null);
