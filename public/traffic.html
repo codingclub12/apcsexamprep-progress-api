@@ -100,6 +100,7 @@
     <a class="navlink" href="/admin/dashboard">Dashboard →</a>
     <span class="spacer"></span>
     <span id="ranges"></span>
+    <button id="copyBtn" title="Copy the whole page as labelled text">Copy for LLM</button>
     <button id="refreshBtn">Refresh</button>
   </header>
 
@@ -122,7 +123,10 @@
     { key:"raptive", label:"Revenue",   sub:"Raptive",            css:"var(--raptive)" },
     { key:"clarity", label:"Behaviour", sub:"Clarity",            css:"var(--clarity)" }
   ];
-  var RANGES = [[30,"30d"],[90,"90d"],[180,"180d"],[365,"1y"]];
+  // Today and 7d are here because they are what you look at when something just
+  // happened. Today is deliberately included even though every source reports it
+  // partially: refusing to show it is not more honest than showing it labelled.
+  var RANGES = [[1,"Today"],[7,"7d"],[30,"30d"],[90,"90d"],[180,"180d"],[365,"1y"]];
   var RATIO = { engagement_rate:1, bounce_rate:1, ctr:1, scroll_depth:1 };
   var MONEY = { revenue:1, rpm:1 };
 
@@ -370,7 +374,165 @@
           '<span class="' + (r.stale ? "down" : "") + '">' + r.days_behind + "d</span>"; } }
     ], "Nothing has reported yet.") + "</div></div>";
 
+    // ── What the traffic is MADE OF ────────────────────────────────────────
+    var bd = d.breakdowns || {};
+    var bdCols = function (metric, label) { return [
+      { h:label, f:function(r){ return '<span class="trunc" title="' + esc(r.value) + '">' + esc(r.value) + "</span>"; } },
+      { h:"Now", n:true, f:function(r){ return fmt(r.current, metric); } },
+      { h:"Share", n:true, f:function(r){ return r.share_pct == null ? "-" : r.share_pct + "%"; } },
+      { h:"Δ", n:true, f:function(r){ return r.delta_pct == null ? '<span class="flat">new</span>'
+          : '<span class="' + dirClass(false, r.delta) + '">' + (r.delta_pct>0?"+":"") + r.delta_pct + "%</span>"; } }
+    ]; };
+    var bdCard = function (title, hint, b, metric, label, n) {
+      if (!b || !b.rows || !b.rows.length) return "";
+      return '<div class="card"><h3>' + esc(title) + "</h3>" +
+        '<p class="hint">' + esc(hint) + " · " + b.distinct_values + " distinct" +
+        (b.total != null ? " · total " + fmt(b.total, metric) : "") + "</p>" +
+        '<div class="scroll">' + table(b.rows.slice(0, n || 15), bdCols(metric, label), "None.") + "</div></div>";
+    };
+
+    h += '<div class="band"><span class="dot" style="background:var(--ga4)"></span><h2>Composition</h2>' +
+      '<span class="note">what the traffic IS, not what changed · share of total in the window</span></div>';
+    h += '<div class="cols c3">' +
+      bdCard("Top pages", "By pageviews (GA4).", bd.pages, "pageviews", "Page", 20) +
+      bdCard("Top queries", "By clicks (Search Console).", bd.queries, "clicks", "Query", 20) +
+      bdCard("Top queries by impressions", "Reach, not clicks.", bd.landing_queries_by_impressions, "impressions", "Query", 20) +
+      "</div>";
+    h += '<div class="cols c3" style="margin-top:12px">' +
+      bdCard("Countries", "Sessions (GA4).", bd.countries, "sessions", "Country", 15) +
+      bdCard("Devices", "Sessions (GA4).", bd.devices, "sessions", "Device", 10) +
+      bdCard("Channels", "Sessions by first-touch channel (GA4).", bd.channels, "sessions", "Channel", 15) +
+      "</div>";
+    h += '<div class="cols c2" style="margin-top:12px">' +
+      bdCard("Search by country", "Clicks (Search Console).", bd.gsc_countries, "clicks", "Country", 15) +
+      bdCard("Search by device", "Clicks (Search Console).", bd.gsc_devices, "clicks", "Device", 10) +
+      "</div>";
+
+    // ── The product side, from the same table ──────────────────────────────
+    var internal = d.internal || [];
+    if (internal.length) {
+      h += '<div class="band"><span class="dot" style="background:var(--ink-2)"></span><h2>Product</h2>' +
+        '<span class="note">from the same daily table · traffic is only worth something if it turns into this</span></div>';
+      h += '<div class="grid">' + internal.map(function (m) { return metricCard(m, "var(--ink-2)"); }).join("") + "</div>";
+    }
+
     return h;
+  }
+
+  // ── The whole page as labelled text ──────────────────────────────────────
+  //  Charts do not survive copy and paste, so a screenshot or a page copy loses
+  //  exactly the numbers worth pasting. This emits every figure the page holds
+  //  as plain labelled text: units, dates, windows and coverage included, so a
+  //  reader with no other context can tell a rank from a count, a partial window
+  //  from a complete one, and an absent day from a zero.
+  function asTextFor(d) {
+    var L = [];
+    var pct = function (v) { return v == null ? "n/a" : (v > 0 ? "+" : "") + v + "%"; };
+
+    L.push("=".repeat(70));
+    L.push("RANGE: LAST " + d.days + " DAY" + (d.days === 1 ? "" : "S"));
+    L.push("=".repeat(70));
+    // Being explicit about what this block does and does not vary with, so the
+    // reader does not assume the 7/28/90 comparisons below were recomputed
+    // against this range. They are fixed by design.
+    L.push("This range controls the day-level series, the composition tables,");
+    L.push("and the movers below. The 7/28/90-day changes on each metric are FIXED");
+    L.push("and identical in every block, so they can be read as a stable baseline.");
+    L.push("");
+
+    // `internal` is a FILTERED VIEW of overview.metrics, not a separate list.
+    // Concatenating the two prints every product metric twice, which reads to a
+    // model like two independent sources agreeing, when it is one row echoed.
+    // So split on the same rule the server filtered by, and label each half.
+    var allMetrics = (d.overview && d.overview.metrics) || [];
+    var productKeys = {};
+    (d.internal || []).forEach(function (m) { productKeys[m.source + "/" + m.metric] = 1; });
+    var isProduct = function (m) { return productKeys[m.source + "/" + m.metric] === 1; };
+
+    var dumpMetric = function (m) {
+      var w = m.windows || {};
+      L.push("- [" + m.source + "] " + m.label + " = " + fmt(m.latest, m.metric) +
+        " (as of " + m.latest_date + ", " + m.observed_days + " days observed" +
+        (m.lower_is_better ? ", LOWER IS BETTER" : "") + ")");
+      Object.keys(w).forEach(function (k) {
+        var x = w[k];
+        L.push("    " + x.window_days + "d: " + fmt(x.current, m.metric) +
+          " vs " + fmt(x.previous, m.metric) + " prior = " + pct(x.delta_pct) +
+          (x.complete ? "" : "  [partial: " + x.current_days + "/" + x.window_days + " and " + x.previous_days + "/" + x.window_days + " days]"));
+      });
+    };
+
+    L.push("## traffic metrics (latest value, then change over 7/28/90 days)");
+    allMetrics.filter(function (m) { return !isProduct(m); }).forEach(dumpMetric);
+    L.push("");
+
+    var product = allMetrics.filter(isProduct);
+    if (product.length) {
+      L.push("## product metrics (same daily table, not traffic: what the traffic turned into)");
+      product.forEach(dumpMetric);
+      L.push("");
+    }
+
+    var bd = d.breakdowns || {};
+    var dumpBd = function (title, b, metric) {
+      if (!b || !b.rows || !b.rows.length) return;
+      L.push("## " + title + " (" + b.window_days + "d, " + b.distinct_values + " distinct" +
+        (b.total != null ? ", total " + fmt(b.total, metric) : "") + ")");
+      b.rows.forEach(function (r) {
+        L.push("- " + r.value + ": " + fmt(r.current, metric) +
+          (r.share_pct != null ? " (" + r.share_pct + "% of total)" : "") +
+          ", prior " + fmt(r.previous, metric) + ", " + pct(r.delta_pct));
+      });
+      L.push("");
+    };
+    dumpBd("top pages by pageviews", bd.pages, "pageviews");
+    dumpBd("top queries by clicks", bd.queries, "clicks");
+    dumpBd("top queries by impressions", bd.landing_queries_by_impressions, "impressions");
+    dumpBd("sessions by country", bd.countries, "sessions");
+    dumpBd("sessions by device", bd.devices, "sessions");
+    dumpBd("sessions by channel", bd.channels, "sessions");
+    dumpBd("search clicks by country", bd.gsc_countries, "clicks");
+    dumpBd("search clicks by device", bd.gsc_devices, "clicks");
+
+    var rk = d.rankings || {};
+    if (rk.top && rk.top.length) {
+      L.push("## keyword rankings (" + rk.window_days + "d, " + rk.tracked + " tracked, " +
+        rk.page_1 + " on page 1, " + rk.striking_distance + " at positions 11-20)");
+      L.push("format: query | avg position (lower better) | change in position | clicks | impressions");
+      rk.top.forEach(function (r) {
+        L.push("- " + r.query + " | " + r.position + " | " +
+          (r.delta == null ? "new" : (r.delta > 0 ? "+" : "") + r.delta) + " | " + r.clicks + " | " + r.impressions);
+      });
+      L.push("");
+    }
+
+    var mv = function (title, m, metric) {
+      if (!m) return;
+      var rows = (m.winners || []).concat(m.losers || []);
+      if (!rows.length) return;
+      L.push("## " + title + " (" + m.window_days + "d vs prior " + m.window_days + "d, min base " + m.min_base + ")");
+      rows.forEach(function (r) {
+        L.push("- " + (r.value || r.dimension) + ": " + fmt(r.current, metric) +
+          " vs " + fmt(r.previous, metric) + " = " + pct(r.delta_pct));
+      });
+      L.push("");
+    };
+    mv("pages that moved most", d.page_movers, "pageviews");
+    mv("queries that moved most by clicks", d.click_movers, "clicks");
+
+    var proj = d.projection || {};
+    if (proj.projection) {
+      L.push("## 30-day projection for " + d.metric);
+      L.push("- straight-line trend fit, NOT a seasonal forecast");
+      L.push("- slope " + proj.slope_per_day + "/day, r2 " + proj.r2 + " (" + proj.fit_quality + ")");
+      L.push("- value at horizon: " + fmt(proj.end_value, d.metric));
+      if (proj.outliers_detected) {
+        L.push("- " + proj.outliers_detected + " outlier day(s) excluded from the fit but kept in the data: " +
+          (proj.outliers_excluded || []).map(function (o) { return o.date + "=" + o.value; }).join(", "));
+      }
+      L.push("");
+    }
+    return L.join("\n");
   }
 
   function renderRanges() {
@@ -399,6 +561,62 @@
     $("banners").innerHTML = '<div class="banner bad">Error loading: ' + esc(e.message) + "</div>";
   }
 
+  // EVERY range, each in full, in one document. A single window answers "how is
+  // it doing now"; the set answers "is this a blip, a trend, or a season", which
+  // is the question a reader with no other context actually needs to settle.
+  function asTextAllRanges() {
+    var d0 = state.data;
+    return Promise.all(RANGES.map(function (r) {
+      return r[0] === state.days ? Promise.resolve(state.data) : api("/api/admin/traffic?days=" + r[0]);
+    })).then(function (payloads) {
+      var head = [];
+      head.push("# apcsexamprep.com full analytics snapshot");
+      head.push("generated: " + new Date(d0.generated_at).toISOString());
+      head.push("");
+      head.push("This document contains EVERY time window, each complete and independent:");
+      head.push("  " + RANGES.map(function (r) { return r[1]; }).join(", "));
+      head.push("Compare the same figure across windows to tell a blip from a trend.");
+      head.push("");
+      head.push("CONVENTIONS THAT CHANGE HOW THESE NUMBERS READ:");
+      head.push("- Every range ends YESTERDAY. Today is partial at all sources and is excluded,");
+      head.push("  so the 'Today' range means THE MOST RECENT COMPLETE DAY, not the day in progress.");
+      head.push("- 'position' is a Google search rank: LOWER IS BETTER, and a negative change is an improvement.");
+      head.push("  Every other metric improves by going up. 'bounce_rate' is also lower-is-better.");
+      head.push("- A day with no data is ABSENT, not zero. Aggregates say how many days they actually had.");
+      head.push("- '[partial: x/y days]' means the window did not have full coverage on both sides,");
+      head.push("  so its percentage change is comparing unequal periods and should not be trusted.");
+      head.push("- Ratios are shown as percentages. Money is USD.");
+      head.push("- Search Console restates the last ~3 days, so very recent search numbers still move.");
+      head.push("");
+      head.push("## sources and freshness");
+      (d0.inventory || []).forEach(function (r) {
+        head.push("- " + r.source + ": " + r.metrics + " metrics, " + r.days + " days held, " +
+          r.first_date + " to " + r.last_date + ", " + r.days_behind + " day(s) behind" +
+          (r.stale ? "  <-- STALE, the daily pull may have stopped" : ""));
+      });
+      head.push("");
+      return head.join("\n") + "\n" + payloads.map(asTextFor).join("\n");
+    });
+  }
+
+  $("copyBtn").addEventListener("click", function () {
+    var btn = this;
+    var done = function (msg) { btn.textContent = msg; setTimeout(function () { btn.textContent = "Copy for LLM"; }, 2200); };
+    btn.textContent = "Building…";
+    asTextAllRanges().then(function (text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied " + Math.round(text.length/1024) + "kb"); },
+          function () { done("Copy failed"); });
+      } else {
+        // Clipboard API needs a secure context; a plain-HTTP admin page would
+        // otherwise silently do nothing.
+        var ta = document.createElement("textarea");
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        try { document.execCommand("copy"); done("Copied"); } catch (e) { done("Copy failed"); }
+      document.body.removeChild(ta);
+      }
+    }).catch(function (e) { done("Failed: " + e.message); });
+  });
   $("refreshBtn").addEventListener("click", function () { load().catch(onErr); });
   renderRanges();
   load().catch(onErr);

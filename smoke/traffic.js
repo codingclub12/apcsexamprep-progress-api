@@ -281,6 +281,67 @@ ok('finds the rising page as a winner', mv.winners.some((w) => w.value === '/ap-
 ok('finds the falling page as a loser', mv.losers.some((w) => w.value === '/ap-csp/big-idea-1'), mv.losers.map((w) => w.value));
 ok('excludes pages below the minimum base', analysis.movers('pageviews', { source: 'ga4', days: 28, minBase: 1e9 }).considered === 0);
 
+section('Window boundaries: a range ends yesterday and covers exactly n days');
+//  Every window here ends YESTERDAY, because today is partial at every source.
+//  So "the last n days" is the half-open span (now-(n+1), now-1]. Writing the
+//  obvious (now-n, now-1] instead silently measures n-1 days, and at n=1 it is
+//  empty: the dashboard's "Today" range rendered no composition tables and zero
+//  tracked keywords, on a fixture holding both.
+//
+//  These assert against arithmetic done HERE, from the same formula that built
+//  the fixture, not against whatever the query returns. An off-by-one cannot
+//  hide behind the code that produced it.
+{
+  const pageOn = (i) => 300 + (60 - i) * 5;          // '/ap-csa/1-2' i days ago
+  const posOn = (i) => 20 - (60 - i) * 0.1;          // 'ap csa unit 1' i days ago
+  const sumDays = (from, to) => { let t = 0; for (let i = from; i <= to; i++) t += pageOn(i); return t; };
+  const findPage = (b) => b.rows.find((r) => r.value === '/ap-csa/1-2');
+
+  const b1 = analysis.breakdown('pageviews', { source: 'ga4', namespace: 'page', days: 1 });
+  const r1 = findPage(b1);
+  ok('a 1-day breakdown is not empty', b1.rows.length > 0, b1.rows.length);
+  ok('a 1-day window is yesterday alone', r1 && r1.current === pageOn(1), { got: r1 && r1.current, want: pageOn(1) });
+  ok('a 1-day window counts one day', r1 && r1.days === 1, r1 && r1.days);
+  ok('its comparison is the day before yesterday', r1 && r1.previous === pageOn(2), { got: r1 && r1.previous, want: pageOn(2) });
+
+  const b7 = analysis.breakdown('pageviews', { source: 'ga4', namespace: 'page', days: 7 });
+  const r7 = findPage(b7);
+  ok('a 7-day window covers seven days, not six', r7 && r7.days === 7, r7 && r7.days);
+  ok('a 7-day window sums exactly days 1 through 7',
+    r7 && r7.current === sumDays(1, 7), { got: r7 && r7.current, want: sumDays(1, 7) });
+  ok('its prior window sums exactly days 8 through 14',
+    r7 && r7.previous === sumDays(8, 14), { got: r7 && r7.previous, want: sumDays(8, 14) });
+  ok('the two windows do not overlap',
+    r7 && r7.current !== r7.previous && sumDays(1, 7) !== sumDays(8, 14));
+
+  // `considered > 0` alone is too weak: with an empty current window every page
+  // still shows up, as 'lost'. So assert a row that has BOTH sides, which is
+  // only possible if the current window actually contains a day.
+  const mv1 = analysis.movers('pageviews', { source: 'ga4', namespace: 'page', days: 1, minBase: 10 });
+  const mv1rows = mv1.winners.concat(mv1.losers);
+  ok('movers see a 1-day window', mv1.considered > 0, mv1.considered);
+  ok('a 1-day mover has both a current and a prior value, not just a prior',
+    mv1rows.some((m) => m.status === 'changed'), mv1rows.map((m) => m.value + ':' + m.status));
+  ok('the rising page wins over a 1-day window',
+    mv1.winners.some((m) => m.value === '/ap-csa/1-2'), mv1.winners.map((m) => m.value));
+
+  const rk1 = analysis.rankings({ days: 1 });
+  ok('rankings see a 1-day window', rk1.tracked >= 1, rk1.tracked);
+  const q1 = rk1.top.find((r) => r.query === 'ap csa unit 1');
+  ok('a 1-day ranking is yesterday\'s position',
+    q1 && Math.abs(q1.position - posOn(1)) < 0.05, { got: q1 && q1.position, want: posOn(1) });
+  ok('and compares against the day before that',
+    q1 && Math.abs(q1.previous_position - posOn(2)) < 0.05, { got: q1 && q1.previous_position, want: posOn(2) });
+
+  // series() uses an inclusive lower bound rather than an exclusive one, so it
+  // is a genuinely independent implementation of the same window. If the two
+  // ever disagree on how many days "7" is, one of them is wrong.
+  const s7 = analysis.series('pageviews', { source: 'ga4', days: 7 });
+  ok('the series agrees that a 7-day window is seven days', s7.length === 7, s7.length);
+  ok('the series ends yesterday, never today', s7[s7.length - 1].date === iso(1), s7[s7.length - 1].date);
+  ok('the series starts seven days back', s7[0].date === iso(7), s7[0].date);
+}
+
 section('Inventory');
 const inv = analysis.inventory();
 ok('lists the traffic sources', inv.some((r) => r.source === 'ga4') && inv.some((r) => r.source === 'gsc'));
@@ -332,7 +393,7 @@ google.fetchGa4().then((r) => {
   ok('GSC says not configured instead of reporting zero traffic', r.configured === false && r.readings.length === 0, r.reason);
   return againstDocumentedShapes();
 }).then(finish).catch((e) => {
-  ok('connectors do not throw when unconfigured', false, e.message);
+  ok("connectors do not throw when unconfigured", false, e.stack);
   finish();
 });
 
@@ -367,24 +428,39 @@ async function againstDocumentedShapes() {
       return json({ access_token: 'stub-token', expires_in: 3600 });
     }
 
+    // Both stubs answer the dimensions they were ASKED for rather than
+    // switching on a hardcoded expectation of what the connector requests. An
+    // earlier version guessed, and when the connectors grew country / device /
+    // channel reports the stub kept replying in the old shape: the connector
+    // read keys[1] off a one-key row and died with "cannot read property
+    // 'value' of undefined", which says nothing about what actually changed.
+    const dimValue = (name) => {
+      if (name === 'date') return '20260801';
+      if (name === 'pagePath') return '/ap-csa/1-2?utm=x';
+      if (name === 'country') return 'United States';
+      if (name === 'deviceCategory') return 'mobile';
+      if (name === 'sessionDefaultChannelGroup') return 'Organic Search';
+      return 'unknown:' + name;
+    };
+
     if (u.includes('analyticsdata.googleapis.com')) {
       seen.ga4 += 1;
       const body = JSON.parse(opts.body);
-      const perPage = body.dimensions.some((d) => d.name === 'pagePath');
       // Shape copied from the Data API quickstart: metric values are STRINGS,
       // dates arrive as YYYYMMDD, and every value is nested one level deep.
       return json({
         dimensionHeaders: body.dimensions.map((d) => ({ name: d.name })),
         metricHeaders: body.metrics.map((m) => ({ name: m.name, type: 'TYPE_INTEGER' })),
-        rows: perPage
-          ? [{ dimensionValues: [{ value: '/ap-csa/1-2?utm=x' }],
-               metricValues: [{ value: '3242' }, { value: '1500' }] }]
-          : [{ dimensionValues: [{ value: '20260801' }],
-               metricValues: body.metrics.map((m) => ({
-                 // engagementRate and bounceRate come back as 0-1 fractions;
-                 // averageSessionDuration as seconds.
-                 value: /Rate$/.test(m.name) ? '0.6234' : m.name === 'averageSessionDuration' ? '95.5' : '3242',
-               })) }],
+        rows: [{
+          dimensionValues: body.dimensions.map((d) => ({ value: dimValue(d.name) })),
+          metricValues: body.metrics.map((m) => ({
+            // engagementRate and bounceRate come back as 0-1 fractions;
+            // averageSessionDuration as seconds.
+            value: /Rate$/.test(m.name) ? '0.6234'
+              : m.name === 'averageSessionDuration' ? '95.5'
+              : m.name === 'sessions' ? '1500' : '3242',
+          })),
+        }],
         rowCount: 1,
         kind: 'analyticsData#runReport',
       });
@@ -393,14 +469,25 @@ async function againstDocumentedShapes() {
     if (u.includes('searchconsole.googleapis.com')) {
       seen.gsc += 1;
       const body = JSON.parse(opts.body);
-      const byDim = body.dimensions[0] !== 'date';
       // Search Console returns a positional `keys` array plus flat numerics,
       // with ctr already a 0-1 fraction.
+      const gscKey = (name) => {
+        if (name === 'date') return '2026-08-01';
+        if (name === 'query') return 'AP CSA Unit 1';
+        if (name === 'page') return 'https://apcsexamprep.com/ap-csa/1-2';
+        if (name === 'country') return 'usa';
+        if (name === 'device') return 'MOBILE';
+        return 'unknown:' + name;
+      };
+      const siteTotal = body.dimensions.length === 1 && body.dimensions[0] === 'date';
       return json({
-        rows: byDim
-          ? [{ keys: [body.dimensions[0] === 'query' ? 'AP CSA Unit 1' : 'https://apcsexamprep.com/ap-csa/1-2'],
-               clicks: 12, impressions: 340, ctr: 0.0353, position: 7.4 }]
-          : [{ keys: ['2026-08-01'], clicks: 120, impressions: 5400, ctr: 0.0222, position: 11.8 }],
+        rows: [{
+          keys: body.dimensions.map(gscKey),
+          clicks: siteTotal ? 120 : 12,
+          impressions: siteTotal ? 5400 : 340,
+          ctr: siteTotal ? 0.0222 : 0.0353,
+          position: siteTotal ? 11.8 : 7.4,
+        }],
       });
     }
     throw new Error('unexpected fetch to ' + u);
@@ -422,7 +509,12 @@ async function againstDocumentedShapes() {
     const ga = await google.fetchGa4({ startDate: '2026-08-01', endDate: '2026-08-01' });
     ok('GA4 authenticates and reports configured', ga.configured === true, ga.reason);
     ok('GA4 signs a JWT and exchanges it for a token', seen.token >= 1, seen);
-    ok('GA4 issues both the totals and the per-page report', seen.ga4 === 2, seen.ga4);
+    // Totals, per-page for the one day in range, then country / device /
+    // channel. Asserted as a count because a report silently dropped from the
+    // pull is invisible otherwise: the readings it would have produced simply
+    // never appear, and an empty breakdown reads as "no data" rather than "not
+    // requested".
+    ok('GA4 issues totals, per-page, and the three wide breakdowns', seen.ga4 === 5, seen.ga4);
 
     const pv = ga.readings.find((r) => r.metric === 'pageviews' && !r.dimension_namespace);
     ok('GA4 YYYYMMDD becomes an ISO date', pv && pv.date === '2026-08-01', pv);
@@ -439,12 +531,20 @@ async function againstDocumentedShapes() {
       contract.normalize(perPage).row.dimension === 'page:/ap-csa/1-2',
       contract.normalize(perPage));
 
+    for (const [ns, expected] of [['country', 'United States'], ['device', 'mobile'], ['channel', 'Organic Search']]) {
+      const r = ga.readings.find((x) => x.dimension_namespace === ns && x.metric === 'sessions');
+      ok('GA4 ' + ns + ' rows are read positionally, after the date',
+        r && r.dimension_value === expected && r.date === '2026-08-01', r);
+    }
+
     const gaWrite = ingestLib.ingest(ga.readings, { dryRun: true });
     ok('every GA4 reading is contract-valid', gaWrite.rejected === 0, gaWrite.rejections);
 
     const gsc = await google.fetchGsc({ startDate: '2026-08-01', endDate: '2026-08-01' });
     ok('GSC authenticates and reports configured', gsc.configured === true, gsc.reason);
-    ok('GSC issues the totals, query and page reports', seen.gsc === 3, seen.gsc);
+    // Totals, then query and page for the one day in range, then country and
+    // device over the range. Same reasoning as the GA4 count above.
+    ok('GSC issues totals, per-day query and page, and country and device', seen.gsc === 5, seen.gsc);
 
     const clicks = gsc.readings.find((r) => r.metric === 'clicks' && !r.dimension_namespace);
     ok('GSC reads its positional keys array', clicks && clicks.date === '2026-08-01', clicks);
@@ -458,6 +558,12 @@ async function againstDocumentedShapes() {
     const posPage = gsc.readings.find((r) => r.metric === 'position' && r.dimension_namespace === 'page');
     ok('a GSC page dimension reduces a full URL to a path',
       contract.normalize(posPage).row.dimension === 'page:/ap-csa/1-2', contract.normalize(posPage));
+
+    for (const [ns, expected] of [['country', 'usa'], ['device', 'MOBILE']]) {
+      const r = gsc.readings.find((x) => x.dimension_namespace === ns && x.metric === 'clicks');
+      ok('GSC ' + ns + ' rows read keys[1], with the date still in keys[0]',
+        r && r.dimension_value === expected && r.date === '2026-08-01', r);
+    }
 
     const gscWrite = ingestLib.ingest(gsc.readings, { dryRun: true });
     ok('every GSC reading is contract-valid', gscWrite.rejected === 0, gscWrite.rejections);
@@ -489,10 +595,14 @@ async function againstDocumentedShapes() {
       if (u.includes('oauth2')) return { ok: true, status: 200, json: async () => ({ access_token: 't', expires_in: 3600 }) };
       if (u.includes('analyticsdata')) {
         const b = JSON.parse(opts.body);
-        const perPage = b.dimensions.some((d) => d.name === 'pagePath');
+        // Answer whatever dimensions were requested, for the same reason as the
+        // stub above: a report the connector adds later must not crash a stub
+        // that assumed the old request shape.
         return { ok: true, status: 200, json: async () => ({
           rows: [{
-            dimensionValues: perPage ? [{ value: '/x' }] : [{ value: '20260810' }],
+            dimensionValues: b.dimensions.map((d) => ({
+              value: d.name === 'date' ? '20260810' : d.name === 'pagePath' ? '/x' : 'some-' + d.name,
+            })),
             metricValues: b.metrics.map((m) => ({ value: /Rate$/.test(m.name) ? '0.5' : '100' })),
           }],
         }) };

@@ -505,6 +505,12 @@ router.get('/traffic', (req, res) => {
     const points = trafficAnalysis.series(metric, { source, days });
     const moverWindow = Math.min(28, days);
 
+    // ONE overview pass, read twice. It scans up to 400 days of metrics_daily
+    // and builds every metric's series, so calling it again for the `internal`
+    // slice below would double the heaviest query on the route for a filter
+    // that costs nothing. This box has 1 vCPU.
+    const ov = trafficAnalysis.overview({ days });
+
     res.json({
       generated_at: new Date().toISOString(),
       metric,
@@ -516,7 +522,7 @@ router.get('/traffic', (req, res) => {
       // EVERY metric that has data, each with its own series and its
       // comparisons at 7 / 28 / 90 days. The page draws all of it at once
       // rather than making the reader pick one and guess which source has it.
-      overview: trafficAnalysis.overview({ days }),
+      overview: ov,
 
       // Page movers AND query movers, because a search deck that only shows
       // pages cannot answer "which query lost us traffic".
@@ -524,6 +530,25 @@ router.get('/traffic', (req, res) => {
       page_movers: trafficAnalysis.movers('pageviews', { source: 'ga4', namespace: 'page', days: moverWindow }),
       click_movers: trafficAnalysis.movers('clicks', { source: 'gsc', namespace: 'query', days: moverWindow }),
       rankings: trafficAnalysis.rankings({ days: moverWindow }),
+
+      // WHAT the traffic is made of, as opposed to what changed. A page can be
+      // the biggest on the site and never appear in movers because it is stable.
+      breakdowns: {
+        pages:      trafficAnalysis.breakdown('pageviews', { source: 'ga4', namespace: 'page',    days, limit: 40 }),
+        queries:    trafficAnalysis.breakdown('clicks',    { source: 'gsc', namespace: 'query',   days, limit: 40 }),
+        countries:  trafficAnalysis.breakdown('sessions',  { source: 'ga4', namespace: 'country', days, limit: 25 }),
+        devices:    trafficAnalysis.breakdown('sessions',  { source: 'ga4', namespace: 'device',  days, limit: 10 }),
+        channels:   trafficAnalysis.breakdown('sessions',  { source: 'ga4', namespace: 'channel', days, limit: 15 }),
+        gsc_countries: trafficAnalysis.breakdown('clicks', { source: 'gsc', namespace: 'country', days, limit: 25 }),
+        gsc_devices:   trafficAnalysis.breakdown('clicks', { source: 'gsc', namespace: 'device',  days, limit: 10 }),
+        landing_queries_by_impressions:
+          trafficAnalysis.breakdown('impressions', { source: 'gsc', namespace: 'query', days, limit: 40 }),
+      },
+
+      // The product side, already written into the same table by the command
+      // centre. Showing it here is what lets one page answer "traffic went up,
+      // did anything come of it".
+      internal: ov.metrics.filter((m) => !trafficAnalysis.TRAFFIC_SOURCES.includes(m.source)),
 
       // Kept for the single-metric view and for anything already calling this.
       series: points,
