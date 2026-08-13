@@ -503,6 +503,8 @@ router.get('/traffic', (req, res) => {
     const days = parseInt(req.query.days, 10) || 90;
 
     const points = trafficAnalysis.series(metric, { source, days });
+    const moverWindow = Math.min(28, days);
+
     res.json({
       generated_at: new Date().toISOString(),
       metric,
@@ -510,12 +512,24 @@ router.get('/traffic', (req, res) => {
       days,
       inventory: trafficAnalysis.inventory(),
       connectors: trafficGoogle.status(),
+
+      // EVERY metric that has data, each with its own series and its
+      // comparisons at 7 / 28 / 90 days. The page draws all of it at once
+      // rather than making the reader pick one and guess which source has it.
+      overview: trafficAnalysis.overview({ days }),
+
+      // Page movers AND query movers, because a search deck that only shows
+      // pages cannot answer "which query lost us traffic".
+      movers: trafficAnalysis.movers(metric, { source, namespace: 'page', days: moverWindow }),
+      page_movers: trafficAnalysis.movers('pageviews', { source: 'ga4', namespace: 'page', days: moverWindow }),
+      click_movers: trafficAnalysis.movers('clicks', { source: 'gsc', namespace: 'query', days: moverWindow }),
+      rankings: trafficAnalysis.rankings({ days: moverWindow }),
+
+      // Kept for the single-metric view and for anything already calling this.
       series: points,
       trend: trafficAnalysis.movingAverage(points, 7),
-      compare: trafficAnalysis.compare(metric, { source, days: Math.min(28, days) }),
+      compare: trafficAnalysis.compare(metric, { source, days: moverWindow }),
       projection: trafficAnalysis.project(metric, { source, days, horizon: 30 }),
-      movers: trafficAnalysis.movers(metric, { source, namespace: 'page', days: Math.min(28, days) }),
-      rankings: trafficAnalysis.rankings({ days: Math.min(28, days) }),
     });
   } catch (e) {
     console.error('admin/traffic:', e);
@@ -555,7 +569,16 @@ router.post('/traffic/pull', async (req, res) => {
       try {
         const r = await fetcher(range);
         out[name] = r.configured
-          ? { ...trafficIngest.ingest(r.readings, { dryRun }), [label]: r[label] }
+          ? {
+              ...trafficIngest.ingest(r.readings, { dryRun }),
+              [label]: r[label],
+              // A pull is bounded to a window of days, so a long backfill needs
+              // to say where to resume. Silence here would look like the whole
+              // range had been covered.
+              days_covered: r.days_covered,
+              covered: r.covered,
+              next_start_date: r.next_start_date,
+            }
           : { configured: false, reason: r.reason };
       } catch (e) {
         console.error('admin/traffic/pull ' + name + ':', e.message);
@@ -567,7 +590,10 @@ router.post('/traffic/pull', async (req, res) => {
     await pull('gsc', trafficGoogle.fetchGsc, 'site');
 
     const failed = Object.entries(out).filter(([, v]) => v.error || v.configured === false).map(([k]) => k);
-    res.json({ ok: failed.length === 0, failed, dry_run: dryRun, ...out });
+    // If any source stopped short of the requested range, hand back the date to
+    // resume from so a backfill can be finished without arithmetic.
+    const more = Object.values(out).map((v) => v && v.next_start_date).filter(Boolean).sort()[0] || null;
+    res.json({ ok: failed.length === 0, failed, dry_run: dryRun, next_start_date: more, ...out });
   } catch (e) {
     console.error('admin/traffic/pull:', e);
     res.status(500).json({ error: 'traffic pull failed', detail: e.message });
