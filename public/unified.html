@@ -159,6 +159,8 @@
   .empty { padding: 30px; text-align: center; color: var(--muted); }
   .banner { background: color-mix(in srgb, var(--solo) 12%, transparent); color: var(--ink-2); border: 1px solid color-mix(in srgb, var(--solo) 30%, transparent); border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-bottom: 20px; }
 </style>
+<!-- Product analytics. Inert unless POSTHOG_API_KEY is set on the server. -->
+<script src="/posthog-init.js"></script>
 </head>
 <body>
 

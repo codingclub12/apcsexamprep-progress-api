@@ -114,6 +114,8 @@
   .toast { position:fixed; left:50%; transform:translateX(-50%); bottom:16px; background:var(--ink); color:var(--plane); padding:9px 15px; border-radius:9px; font-size:13px; z-index:9; }
   .err { color:var(--critical); font-size:13px; }
 </style>
+<!-- Product analytics. Inert unless POSTHOG_API_KEY is set on the server. -->
+<script src="/posthog-init.js"></script>
 </head>
 <body>
 <div class="wrap">

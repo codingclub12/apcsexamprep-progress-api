@@ -16,6 +16,7 @@
     "smoke:reset": "node smoke/password-reset.js",
     "smoke:health": "node smoke/admin-health.js",
     "smoke:encoding": "node smoke/encoding-guard.js",
+    "smoke:traffic": "node smoke/traffic.js",
     "smoke:unified": "node smoke/admin-unified.js",
     "smoke:teacheradmin": "node smoke/admin-teacher-admin.js",
     "smoke:gradebook": "node smoke/admin-gradebook.js",
@@ -55,6 +56,7 @@
     "smoke:scoresources": "node smoke/score-sources.js",
     "smoke:admingbpage": "node smoke/admin-gradebook-page.js",
     "smoke:schoology": "node smoke/schoology-export.js",
+    "smoke:posthog": "node smoke/posthog.js",
     "smoke:answerkeys": "node smoke/answer-keys.js"
   },
   "keywords": [],
@@ -67,6 +69,7 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
+    "posthog-node": "^5.48.1",
     "uuid": "^14.0.0"
   },
   "engines": {

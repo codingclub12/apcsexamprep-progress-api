@@ -28,6 +28,10 @@ const denominators = require('../lib/admin-denominators');
 const scoreSources = require('../lib/score-sources');
 const ungraded = require('../lib/admin-ungraded');
 const wire = require('../lib/wire-log');
+const trafficAnalysis = require('../lib/traffic-analysis');
+const trafficIngest = require('../lib/traffic-ingest');
+const trafficGoogle = require('../lib/traffic-google');
+const trafficCsv = require('../lib/traffic-csv');
 const { retrySqlExpr } = require('../retry-policy');
 
 const router = express.Router();
@@ -89,6 +93,9 @@ router.get('/', (req, res) => {
       'DELETE /api/admin/teacher/:id      hard delete, guarded; no ?confirm= returns a dry-run impact report',
       'GET /api/admin/analytics           full deck: by-course, by-teacher, geography, funnel, device, trends, hardest items',
       'GET /api/admin/unified             exec + summary + analytics in one pass, plus a cross-deck agreement check; ?days= applies to the analytics deck only',
+      'GET /api/admin/traffic             GA4/GSC/Clarity/Raptive dailies: series, trend, compare, projection, movers, rankings; ?metric= ?source= ?days=',
+      'POST /api/admin/traffic/pull       fetch GA4 + Search Console now (header key required); idempotent, safe to schedule',
+      'POST /api/admin/traffic/import     import a Raptive or Clarity CSV export (header key required); {source, csv, date?, dry_run?}',
       'GET /api/admin/sessions            heartbeat/session pipeline diagnostic: counts + recent rows',
       'GET /api/admin/stats               adoption + growth rollup (external vs raw)',
       'GET /api/admin/classes             every class + teacher + student/completion counts',
@@ -477,6 +484,124 @@ router.get('/unified', (req, res) => {
   } catch (e) {
     console.error('admin/unified:', e);
     res.status(500).json({ error: 'unified failed', detail: e.message });
+  }
+});
+
+// ── TRAFFIC: the site-side deck (GA4, Search Console, Clarity, Raptive) ──────
+//  Backs /admin/traffic. Reads metrics_daily, which already carries the
+//  aggregates-only rule and 400-day retention, so nothing new is stored per
+//  request and the box cannot be grown into.
+//
+//  ?metric  canonical name (pageviews, clicks, position, revenue, ...)
+//  ?source  ga4 | gsc | clarity | raptive; omitted rolls sources up
+//  ?days    window; every window ends YESTERDAY, because today is a partial day
+//           at every one of these sources and charting it draws a daily cliff.
+router.get('/traffic', (req, res) => {
+  try {
+    const metric = String(req.query.metric || 'pageviews');
+    const source = req.query.source ? String(req.query.source) : null;
+    const days = parseInt(req.query.days, 10) || 90;
+
+    const points = trafficAnalysis.series(metric, { source, days });
+    res.json({
+      generated_at: new Date().toISOString(),
+      metric,
+      source,
+      days,
+      inventory: trafficAnalysis.inventory(),
+      connectors: trafficGoogle.status(),
+      series: points,
+      trend: trafficAnalysis.movingAverage(points, 7),
+      compare: trafficAnalysis.compare(metric, { source, days: Math.min(28, days) }),
+      projection: trafficAnalysis.project(metric, { source, days, horizon: 30 }),
+      movers: trafficAnalysis.movers(metric, { source, namespace: 'page', days: Math.min(28, days) }),
+      rankings: trafficAnalysis.rankings({ days: Math.min(28, days) }),
+    });
+  } catch (e) {
+    console.error('admin/traffic:', e);
+    res.status(500).json({ error: 'traffic failed', detail: e.message });
+  }
+});
+
+// Pull the Google sources now. POST, so the session cookie cannot trigger it;
+// the x-admin-key header is required, same as every other mutation here.
+//
+// Safe to call repeatedly and safe to call on a schedule: metrics_daily is keyed
+// on (date, source, metric, dimension), so re-pulling a day corrects it in place.
+// That is required rather than merely convenient, because GSC restates recent
+// days for about 72 hours and an append would inflate every number it touched.
+router.post('/traffic/pull', async (req, res) => {
+  try {
+    const want = String((req.body && req.body.source) || 'all');
+    const range = {
+      startDate: (req.body && req.body.start_date) || undefined,
+      endDate: (req.body && req.body.end_date) || undefined,
+    };
+    const dryRun = Boolean(req.body && req.body.dry_run);
+    const out = {};
+
+    // EACH SOURCE IS ISOLATED. Sharing one try/catch meant a failure in the
+    // second source discarded the first one's result: GA4 would fetch, ingest,
+    // and WRITE, then a GSC error would surface as a 500 and the caller would
+    // never learn GA4 had succeeded. A daily job would read as broken while
+    // actually half-working, which is the same "silence is indistinguishable
+    // from failure" problem this whole feature exists to avoid.
+    //
+    // So a source that throws records its own error and the others still run.
+    // The route reports 200 with a per-source verdict; ok:false says at least
+    // one source failed, without pretending the healthy ones did.
+    const pull = async (name, fetcher, label) => {
+      if (want !== 'all' && want !== name) return;
+      try {
+        const r = await fetcher(range);
+        out[name] = r.configured
+          ? { ...trafficIngest.ingest(r.readings, { dryRun }), [label]: r[label] }
+          : { configured: false, reason: r.reason };
+      } catch (e) {
+        console.error('admin/traffic/pull ' + name + ':', e.message);
+        out[name] = { configured: true, ok: false, error: e.message, written: 0 };
+      }
+    };
+
+    await pull('ga4', trafficGoogle.fetchGa4, 'property');
+    await pull('gsc', trafficGoogle.fetchGsc, 'site');
+
+    const failed = Object.entries(out).filter(([, v]) => v.error || v.configured === false).map(([k]) => k);
+    res.json({ ok: failed.length === 0, failed, dry_run: dryRun, ...out });
+  } catch (e) {
+    console.error('admin/traffic/pull:', e);
+    res.status(500).json({ error: 'traffic pull failed', detail: e.message });
+  }
+});
+
+// Import a Raptive or Clarity CSV export. These two have no unattended API path
+// we can rely on, so the dashboard export is the input. It goes through the same
+// contract, the same caps and the same upsert as an API pull, so an imported day
+// is indistinguishable downstream from a fetched one.
+router.post('/traffic/import', (req, res) => {
+  try {
+    const body = req.body || {};
+    const parsed = trafficCsv.parseExport(String(body.csv || ''), {
+      source: String(body.source || ''),
+      defaultDate: body.date ? String(body.date) : null,
+    });
+    if (!parsed.ok) return res.status(400).json({ error: 'csv not understood', ...parsed });
+
+    const written = trafficIngest.ingest(parsed.readings, { dryRun: Boolean(body.dry_run) });
+    res.json({
+      ok: true,
+      parsed: {
+        rows: parsed.rows,
+        mapped_metrics: parsed.mapped_metrics,
+        mapped_dimension: parsed.mapped_dimension,
+        unmapped_headers: parsed.unmapped_headers,
+        skipped_count: parsed.skipped_count,
+      },
+      ...written,
+    });
+  } catch (e) {
+    console.error('admin/traffic/import:', e);
+    res.status(500).json({ error: 'traffic import failed', detail: e.message });
   }
 });
 
