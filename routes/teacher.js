@@ -12,7 +12,7 @@ const resetLib = require('../lib/password-reset');
 const { attemptRollup } = require('../lib/attempt-rollup');
 const { LESSON_SCORE_ITEM } = require('../scoring');
 const { buildCanonicalGradebook, canonicalActivity, isGradedActivity,
-  pointsFromRatio } = require('../lib/gradebook-contract');
+  pointsFromRatio, denominatorMap } = require('../lib/gradebook-contract');
 const {
   formatCell, buildCanvasUnitExport, buildCanvasActivityExport, buildSchoologyExport, canvasSisLoginId,
   INCLUDE_BUCKETS,
@@ -510,7 +510,8 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
     };
   });
 
-  // The authored "out of" per column, keyed `lesson|activity_type`.
+  // The authored "out of" per column, keyed BOTH `unit|lesson|activity_type`
+  // and `lesson|activity_type`.
   //
   // A gradebook COLUMN HEADER needs a denominator before any student has
   // submitted, so it cannot come from a cell. Without this the page had nowhere
@@ -522,8 +523,16 @@ router.get('/classes/:code/progress', requireTeacher, (req, res) => {
   // Only authored values appear here. A column with no authored value is absent
   // rather than defaulted, so the page can tell "out of 7" from "unknown" and
   // show no denominator instead of a wrong one.
+  //
+  // The UNIT-scoped keys matter as much as the lesson ones. All five Cyber units
+  // have a lesson called 'case-file' and a lesson called 'exam', and four CSP Big
+  // Ideas name their test 'unit-test', so a lesson key alone addresses five
+  // different columns. Sending only lesson keys left the dashboard with one
+  // number for five case files really worth 15, 14, 11, 12 and 11.
+  // denominatorMap() is the same authority the student view and the canonical
+  // gradebook read, so the totals cannot drift apart.
   const denominators = {};
-  for (const [key, possible] of authoredDenom) denominators[key] = possible;
+  for (const [key, v] of denominatorMap(cls.course)) denominators[key] = v.possible;
   // Manifest-backed columns (the attempts path) override course_denominators:
   // for a System A course the manifest is the single denominator authority,
   // and the legacy CSA rows in course_denominators describe a page model that
