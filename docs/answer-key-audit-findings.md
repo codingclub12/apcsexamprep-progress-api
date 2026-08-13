@@ -85,10 +85,42 @@ e8 is the question whose key was corrected from A to B. Its two existing
 distractor notes are correct for the new key. C was never covered, before or after
 that change.
 
-## Not covered by this audit
+## Not covered by this audit, and what finishing it needs
 
-The CSA and CSP exam pages have not been swept. They are not saved in this repo,
-the storefront is unreachable from this environment, and pulling each body through
-the Shopify MCP tool costs roughly 75 KB of context per page. Setting
-`SHOPIFY_SHOP` and `SHOPIFY_ADMIN_TOKEN` would let the verifier fetch and audit
-every exam page in one offline pass.
+Only two pages were audited, because only two are saved in this repo. The
+storefront is blocked by the environment network policy, so the sole route to a
+page body here is the Shopify MCP tool, which costs roughly 75 KB of context per
+page.
+
+The audit universe is much larger than those two. A full-text page search for
+`fb-distractors` returns 71 pages with `hasNextPage: false`, so this is the
+complete set of pages carrying the widget:
+
+| Course and unit | Pages |
+|---|---|
+| Cyber unit 3 | 27 |
+| Cyber unit 2 | 21 |
+| Cyber unit 1 | 8 |
+| Cyber unit 4 | 5 |
+| CSP big ideas 2, 4, 5 | 5 |
+| Cyber unit 5 | 3 |
+| CSA lessons 1.1 and 1.2 | 2 |
+
+Seventy-one bodies is roughly 5 MB, which is not auditable through the MCP tool at
+any sensible cost. Setting `SHOPIFY_SHOP` and `SHOPIFY_ADMIN_TOKEN` in the
+environment (read scope is enough for the audit itself) would let the verifier
+fetch and check all 71 in one offline pass, the same way
+`tools/cyber-unit1-nav-repair/apply.js` already expects those two variables.
+
+That matters more than a coverage gap, because the one defect found so far is
+plausibly a template defect rather than a typo. The boilerplate `A,C,D` label set
+on the scenario practice page is not something a human types per question, and
+`ap-cyber-unit-3-scenario-practice` is built from the same template. Whether the
+other 70 pages share it is unknown and is the first thing the swept run would
+answer.
+
+The full handle list is in the audit output; regenerate it with:
+
+```
+pages(first: 250, query: "fb-distractors") { edges { node { handle } } }
+```
