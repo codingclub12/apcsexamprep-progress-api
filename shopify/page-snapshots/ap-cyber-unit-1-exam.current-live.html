@@ -1,0 +1,895 @@
+<script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "LearningResource",
+    "headline": "AP Cybersecurity Unit 1 Practice Exam: Introduction to Security",
+    "description": "20-question AP Cybersecurity Unit 1 practice exam covering social engineering, password attacks, wireless security, AI-based attacks, and AI in cyber defense.",
+    "author": {
+      "@type": "Person",
+      "name": "Tanner Crow",
+      "url": "https://www.apcsexamprep.com/pages/ap-computer-science-tutor"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "APCSExamPrep.com",
+      "url": "https://www.apcsexamprep.com"
+    },
+    "educationalLevel": "High School",
+    "inLanguage": "en-US"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.apcsexamprep.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "AP Cybersecurity",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Unit 1: Introduction to Security",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide#unit1"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": "AP Cybersecurity Unit 1 Practice Exam: Introduction to Security",
+        "item": "https://www.apcsexamprep.com/pages/ap-cyber-unit-1-exam"
+      }
+    ]
+  }
+]
+</script>
+<style>
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-lesson.locked{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;cursor:not-allowed!important;}
+#ucnav .ucn-lesson.locked:link,#ucnav .ucn-lesson.locked:visited,#ucnav .ucn-lesson.locked:hover{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;background:transparent!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-lock svg{opacity:.5!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+
+#cyber-exam{
+  all:initial!important;display:block!important;
+  font-family:Georgia,serif!important;
+  color:#1E1B4B!important;background:#fff!important;
+  line-height:1.65!important;-webkit-font-smoothing:antialiased!important;
+}
+#cyber-exam *{box-sizing:border-box!important;}
+#cyber-exam .qhero{
+  background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;
+  color:#fff!important;padding:40px 24px 32px!important;text-align:center!important;
+}
+#cyber-exam .qhero-badge{
+  display:inline-block!important;background:rgba(168,85,247,0.25)!important;
+  border:1px solid rgba(168,85,247,0.5)!important;color:#E9D5FF!important;
+  font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;
+  text-transform:uppercase!important;padding:5px 14px!important;border-radius:20px!important;
+  margin-bottom:14px!important;font-family:Georgia,serif!important;
+}
+#cyber-exam .qhero h1{
+  font-family:Georgia,serif!important;font-size:clamp(22px,4vw,34px)!important;
+  font-weight:700!important;color:#fff!important;margin:0 0 8px!important;
+}
+#cyber-exam .qhero p{
+  color:#C4B5FD!important;font-size:15px!important;font-family:Georgia,serif!important;
+  margin:0!important;
+}
+#cyber-exam .score-bar{
+  background:#F5F0FF!important;border-bottom:1px solid #DDD6FE!important;
+  padding:12px 20px!important;display:flex!important;align-items:center!important;
+  justify-content:space-between!important;flex-wrap:wrap!important;gap:8px!important;
+  font-family:Georgia,serif!important;font-size:14px!important;color:#4B5563!important;
+}
+#cyber-exam .score-val{
+  font-weight:700!important;color:#6B21A8!important;font-size:18px!important;
+}
+#cyber-exam .container{max-width:800px!important;margin:0 auto!important;padding:0 20px!important;}
+#cyber-exam .q-block{
+  border:1px solid #E5E7EB!important;border-radius:10px!important;
+  margin:28px auto!important;max-width:800px!important;overflow:hidden!important;
+  background:#fff!important;
+}
+#cyber-exam .q-block.answered-correct{border-color:#86EFAC!important;box-shadow:0 0 0 2px #DCFCE7!important;}
+#cyber-exam .q-block.answered-wrong{border-color:#FCA5A5!important;box-shadow:0 0 0 2px #FEE2E2!important;}
+#cyber-exam .q-header{
+  background:#F5F0FF!important;padding:14px 18px!important;
+  border-bottom:1px solid #DDD6FE!important;
+  display:flex!important;align-items:center!important;gap:10px!important;
+}
+#cyber-exam .q-num{
+  background:#6B21A8!important;color:#fff!important;font-weight:700!important;
+  font-size:12px!important;padding:3px 9px!important;border-radius:20px!important;
+  font-family:Georgia,serif!important;white-space:nowrap!important;
+}
+#cyber-exam .q-topic{
+  font-size:12px!important;color:#7C3AED!important;font-weight:600!important;
+  font-family:Georgia,serif!important;text-transform:uppercase!important;
+  letter-spacing:0.5px!important;
+}
+#cyber-exam .q-stem{
+  padding:18px 18px 4px!important;font-size:15px!important;
+  font-family:Georgia,serif!important;color:#1E1B4B!important;line-height:1.65!important;
+}
+#cyber-exam .q-stem .kw{
+  font-weight:700!important;text-decoration:underline!important;color:#6B21A8!important;
+}
+#cyber-exam .q-scenario{
+  margin:0 18px 10px!important;background:#F9FAFB!important;border-left:3px solid #A855F7!important;
+  padding:10px 14px!important;border-radius:0 6px 6px 0!important;
+  font-size:14px!important;font-family:Georgia,serif!important;color:#374151!important;
+  font-style:italic!important;
+}
+#cyber-exam .options{padding:4px 18px 16px!important;}
+#cyber-exam .option-label{
+  display:flex!important;align-items:flex-start!important;gap:10px!important;
+  padding:10px 14px!important;border:1px solid #E5E7EB!important;
+  border-radius:6px!important;margin-bottom:8px!important;cursor:pointer!important;
+  transition:border-color 0.15s,background 0.15s!important;
+  font-family:Georgia,serif!important;font-size:14px!important;color:#374151!important;
+}
+#cyber-exam .option-label:hover{background:#F5F0FF!important;border-color:#C4B5FD!important;}
+#cyber-exam .option-label input{margin-top:2px!important;flex-shrink:0!important;accent-color:#6B21A8!important;}
+#cyber-exam .option-label.correct-opt{
+  background:#DCFCE7!important;border-color:#86EFAC!important;color:#15803D!important;font-weight:600!important;
+}
+#cyber-exam .option-label.wrong-opt{
+  background:#FEE2E2!important;border-color:#FCA5A5!important;color:#B91C1C!important;
+}
+#cyber-exam .option-label.neutral-opt{opacity:0.55!important;}
+#cyber-exam .check-btn{
+  display:block!important;margin:0 18px 16px!important;
+  background:#6B21A8!important;color:#fff!important;border:none!important;
+  padding:10px 24px!important;border-radius:6px!important;font-weight:700!important;
+  font-size:14px!important;cursor:pointer!important;font-family:Georgia,serif!important;
+}
+#cyber-exam .check-btn:disabled{background:#C4B5FD!important;cursor:not-allowed!important;}
+#cyber-exam .feedback-box{
+  display:none!important;margin:0 18px 18px!important;border-radius:8px!important;
+  padding:14px 16px!important;font-family:Georgia,serif!important;font-size:14px!important;
+}
+#cyber-exam .feedback-box.show{display:block!important;}
+#cyber-exam .feedback-box.fb-correct{background:#DCFCE7!important;border:1px solid #86EFAC!important;}
+#cyber-exam .feedback-box.fb-wrong{background:#FEF2F2!important;border:1px solid #FCA5A5!important;}
+#cyber-exam .fb-verdict{font-weight:700!important;font-size:15px!important;margin-bottom:6px!important;}
+#cyber-exam .fb-correct .fb-verdict{color:#15803D!important;}
+#cyber-exam .fb-wrong .fb-verdict{color:#B91C1C!important;}
+#cyber-exam .fb-exp{color:#374151!important;line-height:1.6!important;margin-bottom:8px!important;}
+#cyber-exam .fb-distractors p{margin:4px 0!important;color:#4B5563!important;}
+#cyber-exam .fb-tip{
+  background:#EDE9FE!important;border-left:3px solid #7C3AED!important;
+  padding:8px 12px!important;border-radius:0 6px 6px 0!important;
+  color:#4B5563!important;font-size:13px!important;margin-top:8px!important;
+}
+#cyber-exam .section-break{
+  text-align:center!important;padding:20px!important;color:#9CA3AF!important;
+  font-size:13px!important;font-family:Georgia,serif!important;letter-spacing:1px!important;
+  text-transform:uppercase!important;
+}
+#cyber-exam .results-panel{
+  display:none!important;max-width:800px!important;margin:0 auto 32px!important;
+  background:linear-gradient(135deg,#1E1B4B,#3B0764)!important;
+  border-radius:12px!important;padding:32px 24px!important;text-align:center!important;
+  color:#fff!important;
+}
+#cyber-exam .results-panel.show{display:block!important;}
+#cyber-exam .results-score{font-size:48px!important;font-weight:700!important;color:#fff!important;
+  font-family:Georgia,serif!important;}
+#cyber-exam .results-label{color:#C4B5FD!important;font-size:14px!important;
+  font-family:Georgia,serif!important;margin-bottom:16px!important;}
+#cyber-exam .results-msg{color:#E9D5FF!important;font-size:15px!important;
+  font-family:Georgia,serif!important;margin-bottom:20px!important;}
+#cyber-exam .results-btn{
+  display:inline-block!important;background:#A855F7!important;color:#fff!important;
+  padding:12px 28px!important;border-radius:6px!important;font-weight:700!important;
+  text-decoration:none!important;font-family:Georgia,serif!important;font-size:14px!important;
+  margin:0 6px!important;
+}
+#cyber-exam a.results-btn:link,#cyber-exam a.results-btn:visited{
+  color:#fff!important;text-decoration:none!important;-webkit-text-fill-color:#fff!important;
+}
+#cyber-exam .submit-all-btn{
+  display:block!important;max-width:300px!important;margin:8px auto 32px!important;
+  background:#6B21A8!important;color:#fff!important;border:none!important;
+  padding:14px!important;border-radius:8px!important;font-weight:700!important;
+  font-size:15px!important;cursor:pointer!important;font-family:Georgia,serif!important;
+  text-align:center!important;
+}
+#cyber-exam .nav-links{
+  max-width:800px!important;margin:0 auto 40px!important;
+  display:flex!important;justify-content:space-between!important;
+  flex-wrap:wrap!important;gap:10px!important;padding:0 20px!important;
+}
+#cyber-exam .nav-link{
+  display:inline-block!important;padding:10px 20px!important;
+  border:1px solid #DDD6FE!important;border-radius:6px!important;
+  color:#6B21A8!important;text-decoration:none!important;
+  font-family:Georgia,serif!important;font-size:14px!important;font-weight:600!important;
+  background:#F5F0FF!important;
+}
+#cyber-exam a.nav-link:link,#cyber-exam a.nav-link:visited{
+  color:#6B21A8!important;text-decoration:none!important;
+}
+</style>
+<div id="ucnav">
+  <div class="ucn-rail" id="ucn-rail">
+    <a href="/pages/ap-cybersecurity-complete-course-guide" class="ucn-hub">AP Cyber Hub</a>
+    <span class="ucn-badge">Unit 1</span>
+    <a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-lesson open" onclick="ucnToggle(1);return false;" id="ucn-l1" title="Understanding Social Engineering">1.1 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps open" id="ucn-s1">
+      <a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-lesson open" onclick="ucnToggle(2);return false;" id="ucn-l2" title="Suspicious Website Logins">1.2 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps open" id="ucn-s2">
+      <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-exercise-2" class="ucn-step">Ex 2</a>
+      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Lab</span>
+      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-lesson open" onclick="ucnToggle(3);return false;" id="ucn-l3" title="Best Practices for Public Networks">1.3 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps open" id="ucn-s3">
+      <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-step">Lesson</a>
+      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 1</span>
+      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span>
+      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Lab</span>
+      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-lesson" title="AI-Based Cybersecurity Attacks" onclick="ucnToggle(4);return false;" id="ucn-l4">1.4 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s4">
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-step">Lesson</a>
+      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 1</span>
+      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span>
+      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Lab</span>
+      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-lesson" title="Leveraging AI in Cyber Defense" onclick="ucnToggle(5);return false;" id="ucn-l5">1.5 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s5">
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-step">Lesson</a>
+      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 1</span>
+      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span>
+      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Lab</span>
+      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span>
+    </span>
+  </div>
+</div>
+
+<script>
+function ucnToggle(num){var l=document.getElementById('ucn-l'+num),s=document.getElementById('ucn-s'+num);if(!l||!s)return;var o=l.classList.contains('open');document.querySelectorAll('#ucnav .ucn-lesson').forEach(function(e){e.classList.remove('open')});document.querySelectorAll('#ucnav .ucn-steps').forEach(function(e){e.classList.remove('open')});if(!o){l.classList.add('open');s.classList.add('open');setTimeout(function(){l.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},50)}}
+(function(){function pos(){var nav=document.getElementById('ucnav');if(!nav)return;if(nav.parentElement!==document.body){document.body.appendChild(nav)}var h=0;var headerEl=document.querySelector('.section-header header.header')||document.querySelector('sticky-header header')||document.querySelector('header.header');if(headerEl){h=Math.round(headerEl.getBoundingClientRect().bottom)}if(h<20||h>300)h=68;nav.style.setProperty('top',h+'px','important');var navH=nav.offsetHeight||42;var w=document.getElementById('cyber-exam');if(w)w.style.setProperty('padding-top',(h+navH+4)+'px','important')}requestAnimationFrame(pos);setTimeout(pos,150);setTimeout(pos,400);setTimeout(pos,800);setTimeout(pos,1500);setTimeout(pos,3000);window.addEventListener('resize',pos,{passive:true});setTimeout(function(){var _w=document.getElementById('cyber-exam');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}var _m=document.getElementById('MainContent');if(_m){_m.style.setProperty('padding-top','0','important');_m.style.setProperty('margin-top','0','important')}},50);setTimeout(function(){var _w=document.getElementById('cyber-exam');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}},500);var scrolled=false;window.addEventListener('scroll',function(){if(!scrolled){scrolled=true;requestAnimationFrame(pos)}},{passive:true});var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class','hidden']});setTimeout(function(){obs.disconnect()},15000)})();
+</script>
+
+<div id="cyber-exam">
+  <div class="qhero">
+    <div class="qhero-badge">Unit 1 • End-of-Unit Exam</div>
+    
+<nav aria-label="Breadcrumb" style="font-size:0.82rem;color:#6b7280;-webkit-text-fill-color:#6b7280;margin:0 0 16px;font-family:'Georgia',serif;padding:0;"><a href="/" style="color:#6b21a8;text-decoration:none;-webkit-text-fill-color:#6b21a8;">Home</a><span style="margin:0 6px;color:#d1d5db;">›</span><a href="/pages/ap-cybersecurity-complete-course-guide" style="color:#6b21a8;text-decoration:none;-webkit-text-fill-color:#6b21a8;">AP Cybersecurity</a><span style="margin:0 6px;color:#d1d5db;">›</span><span style="color:#374151;-webkit-text-fill-color:#374151;">Unit 1 Exam</span></nav>
+<h1>Unit 1 Exam: Introduction to Security</h1>
+    <p>20 questions covering all Unit 1 topics — Social Engineering, Password Attacks, AI Threats, and Wireless Security</p>
+  </div>
+  <div class="score-bar">
+    <span>Score: <span class="score-val" id="score-display">0 / 0</span></span>
+    <span style="font-size:13px;color:#6B7280;">Answer each question individually to see feedback</span>
+  </div>
+  <div style="max-width:800px;margin:0 auto;padding:0 20px;">
+    <div style="max-width:800px;margin:20px auto 0;padding:14px 18px;background:#FFF7ED;border:1px solid #FDE68A;border-radius:8px;font-family:Georgia,serif;font-size:14px;color:#92400E;">
+      <strong>Exam Instructions:</strong> Predict your answer before selecting an option. Use “slash the trash” — eliminate obviously wrong choices first. Key words are <strong><u>bolded and underlined</u></strong>.
+    </div>
+    <div class="q-block" id="q-e1">
+  <div class="q-header">
+    <span class="q-num">Q1</span>
+    <span class="q-topic">Social Engineering</span>
+  </div>
+  <div class="q-stem">Which of the following <span class="kw">BEST</span> describes social engineering in the context of cybersecurity?</div>
+  <div class="options">
+<label class="option-label"><input type="radio" name="qe1" value="A"> <span>(A) Exploiting unpatched software vulnerabilities to gain unauthorized system access</span></label>
+<label class="option-label"><input type="radio" name="qe1" value="B"> <span>(B) Manipulating individuals psychologically to disclose confidential information or perform insecure actions</span></label>
+<label class="option-label"><input type="radio" name="qe1" value="C"> <span>(C) Intercepting network traffic between two communicating parties without their knowledge</span></label>
+<label class="option-label"><input type="radio" name="qe1" value="D"> <span>(D) Flooding a server with requests until it becomes unavailable to legitimate users</span></label>
+</div>
+  <button class="check-btn" onclick="checkQ('e1')">Check Answer</button>
+  <div class="feedback-box" id="fb-e1">
+    <div class="fb-verdict"></div>
+    <div class="fb-exp">Social engineering targets the human element rather than technical vulnerabilities. Attackers exploit trust, authority, fear, and urgency to convince people to hand over credentials, click malicious links, or bypass security procedures. Options A and C describe technical attacks; D describes a denial-of-service attack.</div>
+    <div class="fb-distractors">
+<p><strong>(A)</strong> This describes exploitation of a software vulnerability, a technical attack unrelated to human manipulation.</p>
+<p><strong>(C)</strong> This describes a man-in-the-middle or eavesdropping attack, not social engineering.</p>
+<p><strong>(D)</strong> This describes a denial-of-service (DoS) attack targeting infrastructure availability.</p>
+</div>
+    <div class="fb-tip">
+<strong>AP Exam Tip:</strong> Social engineering definitions are frequently tested. The key distinguisher is that the target is a <em>person</em>, not a system or software.</div>
+  </div>
+</div>
+<div class="q-block" id="q-e2">
+  <div class="q-header">
+    <span class="q-num">Q2</span>
+    <span class="q-topic">Attack Types</span>
+  </div>
+  <div class="q-stem">A caller claims to be from the company’s IT department and tells an employee their account has been compromised. The caller asks the employee to read back their current password so it can be “verified and reset.” This is <span class="kw">MOST LIKELY</span> an example of:</div>
+  <div class="options">
+<label class="option-label"><input type="radio" name="qe2" value="A"> <span>(A) Phishing via email spoofing</span></label>
+<label class="option-label"><input type="radio" name="qe2" value="B"> <span>(B) A brute-force password attack</span></label>
+<label class="option-label"><input type="radio" name="qe2" value="C"> <span>(C) A man-in-the-middle interception</span></label>
+<label class="option-label"><input type="radio" name="qe2" value="D"> <span>(D) Pretexting combined with vishing</span></label>
+</div>
+  <button class="check-btn" onclick="checkQ('e2')">Check Answer</button>
+  <div class="feedback-box" id="fb-e2">
+    <div class="fb-verdict"></div>
+    <div class="fb-exp">The attacker constructed a fabricated scenario (pretext) — the fake IT identity and account compromise story — and delivered it over the phone (vishing = voice phishing). Phishing typically occurs via email. Brute-force and MitM attacks do not involve deceiving a human into voluntarily giving up a password.</div>
+    <div class="fb-distractors">
+<p><strong>(A)</strong> Phishing uses email; this attack occurs over a phone call, making vishing the correct channel term.</p>
+<p><strong>(B)</strong> Brute-force attacks are automated technical attempts; no human deception is involved.</p>
+<p><strong>(C)</strong> MitM intercepts existing communications; it does not involve tricking someone into revealing a password directly.</p>
+</div>
+    <div class="fb-tip">
+<strong>AP Exam Tip:</strong> Distinguish the delivery channel: phishing = email, vishing = voice/phone, smishing = SMS. Pretexting is the technique (fabricating a story); vishing is the medium.</div>
+  </div>
+</div>
+<div class="q-block" id="q-e3">
+  <div class="q-header">
+    <span class="q-num">Q3</span>
+    <span class="q-topic">Password Security</span>
+  </div>
+  <div class="q-stem">A company publishes the following password policy. Which rule is <span class="kw">INCORRECT</span> and would actually <span class="kw">REDUCE</span> security?</div>
+  <div class="options">
+<label class="option-label"><input type="radio" name="qe3" value="A"> <span>(A) Passwords must be at least 12 characters long.</span></label>
+<label class="option-label"><input type="radio" name="qe3" value="B"> <span>(B) Passwords must be changed every 30 days regardless of any detected breach.</span></label>
+<label class="option-label"><input type="radio" name="qe3" value="C"> <span>(C) Passwords must not be reused from the previous 10 passwords.</span></label>
+<label class="option-label"><input type="radio" name="qe3" value="D"> <span>(D) Multi-factor authentication is required for all administrative accounts.</span></label>
+</div>
+  <button class="check-btn" onclick="checkQ('e3')">Check Answer</button>
+  <div class="feedback-box" id="fb-e3">
+    <div class="fb-verdict"></div>
+    <div class="fb-exp">Mandatory periodic password resets (especially short intervals like 30 days) are now considered counterproductive by NIST guidelines. Users respond by creating predictable, weaker passwords (e.g., incrementing a number) and writing them down. Passwords should be changed when a compromise is <em>detected or suspected</em>, not on an arbitrary schedule. Options A, C, and D all describe practices that genuinely improve security.</div>
+    <div class="fb-distractors">
+<p><strong>(A)</strong> Correct policy — length is the single most important password strength factor.</p>
+<p><strong>(C)</strong> Correct policy — preventing reuse stops predictable password cycling.</p>
+<p><strong>(D)</strong> Correct policy — MFA on admin accounts is a critical control.</p>
+</div>
+    <div class="fb-tip">
+<strong>AP Exam Tip:</strong> NIST’s current guidance discourages forced periodic rotation. This is a high-value AP exam concept because it contradicts older “common sense” advice.</div>
+  </div>
+</div>
+<div class="q-block" id="q-e4">
+  <div class="q-header">
+    <span class="q-num">Q4</span>
+    <span class="q-topic">Wireless Security</span>
+  </div>
+  <div class="q-stem">Which of the following represent techniques attackers use to exploit users on public Wi-Fi networks?<br><br><strong>I.</strong> Setting up a rogue access point with an SSID that mimics a legitimate nearby network<br><strong>II.</strong> Using packet sniffers to capture unencrypted data transmitted over the network<br><strong>III.</strong> Physically destroying the legitimate router to force users onto the attacker’s network</div>
+  <div class="options">
+<label class="option-label"><input type="radio" name="qe4" value="A"> <span>(A) I and II only</span></label>
+<label class="option-label"><input type="radio" name="qe4" value="B"> <span>(B) I and III only</span></label>
+<label class="option-label"><input type="radio" name="qe4" value="C"> <span>(C) II and III only</span></label>
+<label class="option-label"><input type="radio" name="qe4" value="D"> <span>(D) I, II, and III</span></label>
+</div>
+  <button class="check-btn" onclick="checkQ('e4')">Check Answer</button>
+  <div class="feedback-box" id="fb-e4">
+    <div class="fb-verdict"></div>
+    <div class="fb-exp">Rogue access points (evil twin attacks) and packet sniffing are both documented, common wireless attacks. Physical destruction of infrastructure (Statement III) is not a practical or typical cyberattack technique — it is a physical attack that would be immediately obvious, noisy, and criminal in a highly visible way. AP Cybersecurity focuses on the realistic threat landscape.</div>
+    <div class="fb-distractors">
+<p><strong>(B)</strong> Incorrect — physical destruction is not a standard wireless attack technique on the AP exam.</p>
+<p><strong>(D)</strong> Incorrect — Statement III is not a realistic wireless attack scenario tested by AP Cybersecurity.</p>
+</div>
+    <div class="fb-tip">
+<strong>AP Exam Tip:</strong> Rogue access points and packet sniffing are the two wireless attack techniques most heavily tested. Know that HTTPS helps against sniffing but does not protect against all MitM scenarios.</div>
+  </div>
+</div>
+<div class="q-block" id="q-e5">
+  <div class="q-header">
+    <span class="q-num">Q5</span>
+    <span class="q-topic">Leveraging AI in Cyber Defense</span>
+  </div>
+  <div class="q-stem">A security operations center deploys an AI system that monitors network logs and automatically flags unusual login patterns at 3 AM from foreign IP addresses. This is an example of AI being used for:</div>
+  <div class="options">
+<label class="option-label"><input type="radio" name="qe5" value="A"> <span>(A) Automated threat generation to test defensive controls</span></label>
+<label class="option-label"><input type="radio" name="qe5" value="B"> <span>(B) Symmetric key encryption of log files</span></label>
+<label class="option-label"><input type="radio" name="qe5" value="C"> <span>(C) Social engineering simulation training</span></label>
+<label class="option-label"><input type="radio" name="qe5" value="D"> <span>(D) Anomaly-based intrusion detection</span></label>
+</div>
+  <button class="check-btn" onclick="checkQ('e5')">Check Answer</button>
+  <div class="feedback-box" id="fb-e5">
+    <div class="fb-verdict"></div>
+    <div class="fb-exp">The system is comparing observed behavior (3 AM logins from foreign IPs) against a baseline of normal behavior and flagging deviations — this is the definition of anomaly-based detection. It is a defensive application of AI. Option A describes offensive red-team testing. Options B and C describe unrelated security functions.</div>
+    <div class="fb-distractors">
+<p><strong>(A)</strong> Threat generation is an offensive technique used in penetration testing, not log analysis.</p>
+<p><strong>(B)</strong> Encryption protects data confidentiality; it has no connection to detecting login anomalies.</p>
+<p><strong>(C)</strong> Social engineering simulations train employees on recognizing attacks, not on log analysis.</p>
+</div>
+    <div class="fb-tip">
+<strong>AP Exam Tip:</strong> AI on the AP exam appears in both offensive contexts (generating personalized phishing) and defensive contexts (anomaly detection, threat intelligence). Know both sides.</div>
+  </div>
+</div>
+<div class="section-break">⎯ Part 2: Physical &amp; Wireless Security ⎯</div>
+<div class="q-block" id="q-e6">
+  <div class="q-header">
+    <span class="q-num">Q6</span>
+    <span class="q-topic">Physical Social Engineering</span>
+  </div>
+  <div class="q-stem">An attacker carries a large stack of boxes and waits near a secure door. When an authorized employee badges in, the attacker says “Could you hold that? My hands are full.” The employee holds the door open. This attack is called:</div>
+  <div class="options">
+<label class="option-label"><input type="radio" name="qe6" value="A"> <span>(A) Tailgating (piggybacking)</span></label>
+<label class="option-label"><input type="radio" name="qe6" value="B"> <span>(B) Phishing</span></label>
+<label class="option-label"><input type="radio" name="qe6" value="C"> <span>(C) Shoulder surfing</span></label>
+<label class="option-label"><input type="radio" name="qe6" value="D"> <span>(D) Dumpster diving</span></label>
+</div>
+  <button class="check-btn" onclick="checkQ('e6')">Check Answer</button>
+  <div class="feedback-box" id="fb-e6">
+    <div class="fb-verdict"></div>
+    <div class="fb-exp">Tailgating (also called piggybacking) is a physical social engineering attack in which an unauthorized person gains access to a restricted area by following an authorized person through a secured door. The attacker exploits the social norm of politeness. The other options are distinct attacks: phishing = deceptive emails, shoulder surfing = observing screens/keyboards, dumpster diving = searching discarded materials.</div>
+    <div class="fb-distractors">
+<p><strong>(B)</strong> Phishing uses deceptive digital communications, not physical presence.</p>
+<p><strong>(C)</strong> Shoulder surfing involves observing someone’s screen or keystrokes, not bypassing door access.</p>
+<p><strong>(D)</strong> Dumpster diving involves searching through discarded physical items for sensitive information.</p>
+</div>
+    <div class="fb-tip">
+<strong>AP Exam Tip:</strong> Physical social engineering attacks (tailgating, shoulder surfing, dumpster diving) are tested alongside digital ones on AP Cybersecurity. Know all three.</div>
+  </div>
+</div>
+<div class="q-block" id="q-e7">
+  <div class="q-header">
+    <span class="q-num">Q7</span>
+    <span class="q-topic">Authentication</span>
+  </div>
+  <div class="q-stem">A user logs into a system by entering a password and then receiving a one-time code via SMS that must also be entered. This authentication method is <span class="kw">BEST</span> described as:</div>
+  <div class="options">
+<label class="option-label"><input type="radio" name="qe7" value="A"> <span>(A) Single-factor authentication using two steps</span></label>
+<label class="option-label"><input type="radio" name="qe7" value="B"> <span>(B) Multi-factor authentication combining something you know and something you have</span></label>
+<label class="option-label"><input type="radio" name="qe7" value="C"> <span>(C) Multi-factor authentication combining something you know and something you are</span></label>
+<label class="option-label"><input type="radio" name="qe7" value="D"> <span>(D) Two-step verification using only something you know</span></label>
+</div>
+  <button class="check-btn" onclick="checkQ('e7')">Check Answer</button>
+  <div class="feedback-box" id="fb-e7">
+    <div class="fb-verdict"></div>
+    <div class="fb-exp">Multi-factor authentication (MFA) requires two or more different factor <em>categories</em>. A password is “something you know.” An SMS code delivered to a phone is “something you have” (the phone). Together they constitute true MFA. “Something you are” refers to biometrics (fingerprint, face scan). Two SMS codes would be two instances of the same factor, not MFA.</div>
+    <div class="fb-distractors">
+<p><strong>(A)</strong> Incorrect — two different factor categories are used, making this MFA not single-factor.</p>
+<p><strong>(C)</strong> Incorrect — “something you are” refers to biometrics; an SMS is “something you have.”</p>
+<p><strong>(D)</strong> Incorrect — an SMS code is “something you have,” not something you know.</p>
+</div>
+    <div class="fb-tip">
+<strong>AP Exam Tip:</strong> The three MFA factor categories appear on almost every practice exam: know (password, PIN), have (phone, hardware token, smart card), are (biometrics). Know which category each example falls into.</div>
+  </div>
+</div>
+<div class="q-block" id="q-e8">
+  <div class="q-header">
+    <span class="q-num">Q8</span>
+    <span class="q-topic">Phishing Defense</span>
+  </div>
+  <div class="q-stem">A company wants to reduce the risk of employees falling for phishing attacks. Which of the following measures would be effective?<br><br><strong>I.</strong> Training employees to verify sender domains before clicking links<br><strong>II.</strong> Deploying email filters that flag messages containing external links<br><strong>III.</strong> Requiring employees to use longer passwords on all accounts</div>
+  <div class="options">
+<label class="option-label"><input type="radio" name="qe8" value="A"> <span>(A) I only</span></label>
+<label class="option-label"><input type="radio" name="qe8" value="B"> <span>(B) I and II only</span></label>
+<label class="option-label"><input type="radio" name="qe8" value="C"> <span>(C) II and III only</span></label>
+<label class="option-label"><input type="radio" name="qe8" value="D"> <span>(D) I, II, and III</span></label>
+</div>
+  <button class="check-btn" onclick="checkQ('e8')">Check Answer</button>
+  <div class="feedback-box" id="fb-e8">
+    <div class="fb-verdict"></div>
+    <div class="fb-exp">Statement I directly addresses phishing: recognizing spoofed domains is the primary human defense. Statement II describes a technical control (email filtering) that reduces exposure to phishing links. Statement III is a password strength measure — longer passwords reduce brute-force risk but do nothing to prevent an employee from clicking a phishing link and voluntarily entering their credentials. Phishing and password attacks are separate threat vectors.</div>
+    <div class="fb-distractors">
+<p><strong>(A)</strong> Incomplete — email filtering (II) is also an effective anti-phishing control.</p>
+<p><strong>(D)</strong> Incorrect — password length (III) does not address the social engineering vector of phishing.</p>
+</div>
+    <div class="fb-tip">
+<strong>AP Exam Tip:</strong> Distinguish between defenses that address <em>social engineering</em> vs. defenses that address <em>technical credential attacks</em>. The exam frequently tests whether students can match a defense to the correct threat.</div>
+  </div>
+</div>
+<div class="q-block" id="q-e9">
+  <div class="q-header">
+    <span class="q-num">Q9</span>
+    <span class="q-topic">AI-Based Attacks</span>
+  </div>
+  <div class="q-stem">An attacker uses AI to generate a convincing audio clip of a CEO’s voice instructing the CFO to wire funds to a new account. The CFO complies. Which term <span class="kw">BEST</span> describes the AI technique used?</div>
+  <div class="options">
+<label class="option-label"><input type="radio" name="qe9" value="A"> <span>(A) Adversarial machine learning</span></label>
+<label class="option-label"><input type="radio" name="qe9" value="B"> <span>(B) Ransomware deployment</span></label>
+<label class="option-label"><input type="radio" name="qe9" value="C"> <span>(C) Packet injection</span></label>
+<label class="option-label"><input type="radio" name="qe9" value="D"> <span>(D) Deepfake audio synthesis</span></label>
+</div>
+  <button class="check-btn" onclick="checkQ('e9')">Check Answer</button>
+  <div class="feedback-box" id="fb-e9">
+    <div class="fb-verdict"></div>
+    <div class="fb-exp">AI-generated synthetic audio that realistically mimics a specific person’s voice is a deepfake (specifically, an audio deepfake). This is a documented attack technique used in business email compromise and executive impersonation fraud. Adversarial ML involves manipulating model inputs to cause misclassification. Ransomware encrypts files for extortion. Packet injection inserts forged packets into network streams.</div>
+    <div class="fb-distractors">
+<p><strong>(A)</strong> Adversarial ML manipulates AI model inputs/outputs; it doesn’t describe generating fake voice audio.</p>
+<p><strong>(B)</strong> Ransomware is malware that encrypts victim data and demands payment; no voice synthesis involved.</p>
+<p><strong>(C)</strong> Packet injection is a network-layer attack unrelated to audio impersonation.</p>
+</div>
+    <div class="fb-tip">
+<strong>AP Exam Tip:</strong> Deepfakes extend social engineering into audio and video. Treat them as a high-tech form of impersonation/pretexting on the AP exam.</div>
+  </div>
+</div>
+<div class="q-block" id="q-e10">
+  <div class="q-header">
+    <span class="q-num">Q10</span>
+    <span class="q-topic">AI Defense</span>
+  </div>
+  <div class="q-stem">A cybersecurity consultant makes four claims about using AI in cyber defense. Which claim is <span class="kw">INCORRECT</span>?</div>
+  <div class="options">
+<label class="option-label"><input type="radio" name="qe10" value="A"> <span>(A) AI can identify malware variants it has never seen before by analyzing behavioral patterns.</span></label>
+<label class="option-label"><input type="radio" name="qe10" value="B"> <span>(B) AI-powered systems can respond to detected intrusions faster than human analysts.</span></label>
+<label class="option-label"><input type="radio" name="qe10" value="C"> <span>(C) Once an AI security model is trained, it requires no further updates to remain effective against new threats.</span></label>
+<label class="option-label"><input type="radio" name="qe10" value="D"> <span>(D) AI can correlate data from thousands of log sources simultaneously to surface anomalies.</span></label>
+</div>
+  <button class="check-btn" onclick="checkQ('e10')">Check Answer</button>
+  <div class="feedback-box" id="fb-e10">
+    <div class="fb-verdict"></div>
+    <div class="fb-exp">A trained AI model is a snapshot of the threat landscape at the time of training. New malware, novel attack techniques, and evolving adversary behavior constantly emerge. An AI model that is never updated will become progressively less effective — this is why continuous model retraining and threat intelligence updates are essential. Options A, B, and D are genuine advantages of AI in security operations.</div>
+    <div class="fb-distractors">
+<p><strong>(A)</strong> True — behavioral analysis (heuristics) allows AI to detect zero-day malware it hasn’t seen before.</p>
+<p><strong>(B)</strong> True — automated response (SOAR) is faster than manual analyst workflows.</p>
+<p><strong>(D)</strong> True — AI’s ability to process large volumes of log data simultaneously is a core security advantage.</p>
+</div>
+    <div class="fb-tip">
+<strong>AP Exam Tip:</strong> AI limitations are as important as AI capabilities on the AP exam. Know that AI models require ongoing training, can produce false positives/negatives, and are themselves targets of adversarial attacks.</div>
+  </div>
+</div>
+<div class="section-break">⎯ Part 3: Wireless Attacks ⎯</div>
+<div class="q-block" id="q-e11">
+  <div class="q-header">
+    <span class="q-num">Q11</span>
+    <span class="q-topic">Wireless Security</span>
+  </div>
+  <div class="q-stem">A coffee shop’s legitimate network is named “CafeWifi.” An attacker nearby creates a network also named “CafeWifi” with a stronger signal. Customers connect to the attacker’s network thinking it is legitimate. This type of attack is called:</div>
+  <div class="options">
+<label class="option-label"><input type="radio" name="qe11" value="A"> <span>(A) A distributed denial-of-service (DDoS) attack</span></label>
+<label class="option-label"><input type="radio" name="qe11" value="B"> <span>(B) An evil twin attack</span></label>
+<label class="option-label"><input type="radio" name="qe11" value="C"> <span>(C) A DNS poisoning attack</span></label>
+<label class="option-label"><input type="radio" name="qe11" value="D"> <span>(D) A SQL injection attack</span></label>
+</div>
+  <button class="check-btn" onclick="checkQ('e11')">Check Answer</button>
+  <div class="feedback-box" id="fb-e11">
+    <div class="fb-verdict"></div>
+    <div class="fb-exp">An evil twin attack involves creating a rogue wireless access point that impersonates a legitimate one — same SSID, potentially stronger signal. Victims unknowingly connect to the attacker’s network, allowing traffic interception. DDoS overwhelms a server with traffic. DNS poisoning corrupts DNS records to redirect domain queries. SQL injection targets database-driven web applications.</div>
+    <div class="fb-distractors">
+<p><strong>(A)</strong> DDoS makes a service unavailable; it doesn’t involve impersonating a Wi-Fi network.</p>
+<p><strong>(C)</strong> DNS poisoning manipulates domain resolution records, not wireless access points.</p>
+<p><strong>(D)</strong> SQL injection exploits web application input validation; it is unrelated to wireless networks.</p>
+</div>
+    <div class="fb-tip">
+<strong>AP Exam Tip:</strong> Evil twin attacks are the primary wireless attack scenario tested in Unit 1. Always associate rogue AP + matching SSID + traffic interception with this term.</div>
+  </div>
+</div>
+<div class="q-block" id="q-e12">
+  <div class="q-header">
+    <span class="q-num">Q12</span>
+    <span class="q-topic">Defense Strategies</span>
+  </div>
+  <div class="q-stem">Which of the following are effective defenses against social engineering attacks?<br><br><strong>I.</strong> Implementing a call-back verification procedure before fulfilling unusual requests<br><strong>II.</strong> Training employees to recognize urgency and authority as social engineering triggers<br><strong>III.</strong> Installing the latest operating system security patches</div>
+  <div class="options">
+<label class="option-label"><input type="radio" name="qe12" value="A"> <span>(A) III only</span></label>
+<label class="option-label"><input type="radio" name="qe12" value="B"> <span>(B) II and III only</span></label>
+<label class="option-label"><input type="radio" name="qe12" value="C"> <span>(C) I, II, and III</span></label>
+<label class="option-label"><input type="radio" name="qe12" value="D"> <span>(D) I and II only</span></label>
+</div>
+  <button class="check-btn" onclick="checkQ('e12')">Check Answer</button>
+  <div class="feedback-box" id="fb-e12">
+    <div class="fb-verdict"></div>
+    <div class="fb-exp">Statements I and II both directly address the human-manipulation aspect of social engineering. Call-back verification breaks the attacker’s manufactured urgency by introducing an independent verification step. Employee training on psychological triggers is the foundation of any anti-social-engineering program. Statement III (OS patching) is a critical security practice but addresses software vulnerabilities, not human-targeted manipulation.</div>
+    <div class="fb-distractors">
+<p><strong>(A)</strong> Incomplete — patching alone does nothing to counter social engineering techniques.</p>
+<p><strong>(C)</strong> Incorrect — OS patches address software vulnerabilities; they do not prevent an employee from being deceived.</p>
+</div>
+    <div class="fb-tip">
+<strong>AP Exam Tip:</strong> Security awareness training is the primary defense against social engineering — technology alone cannot fully protect against human manipulation. The AP exam tests whether you understand this distinction.</div>
+  </div>
+</div>
+<div class="q-block" id="q-e13">
+  <div class="q-header">
+    <span class="q-num">Q13</span>
+    <span class="q-topic">Phishing Variants</span>
+  </div>
+  <div class="q-stem">A threat actor researches a target company on LinkedIn, identifies a specific employee’s name, role, and recent project, then sends that employee a tailored email referencing those details to appear credible. This attack is <span class="kw">BEST</span> described as:</div>
+  <div class="options">
+<label class="option-label"><input type="radio" name="qe13" value="A"> <span>(A) Generic phishing using a bulk email list</span></label>
+<label class="option-label"><input type="radio" name="qe13" value="B"> <span>(B) Smishing via SMS</span></label>
+<label class="option-label"><input type="radio" name="qe13" value="C"> <span>(C) Spear phishing targeting a specific individual</span></label>
+<label class="option-label"><input type="radio" name="qe13" value="D"> <span>(D) Whaling targeting a C-level executive</span></label>
+</div>
+  <button class="check-btn" onclick="checkQ('e13')">Check Answer</button>
+  <div class="feedback-box" id="fb-e13">
+    <div class="fb-verdict"></div>
+    <div class="fb-exp">Spear phishing is a targeted form of phishing directed at a specific individual or organization, using personalized details to appear credible. Generic phishing sends identical messages to large lists hoping someone clicks. Smishing uses SMS. Whaling is spear phishing <em>specifically</em> targeting high-value executives (C-suite) — the target here is not identified as an executive.</div>
+    <div class="fb-distractors">
+<p><strong>(A)</strong> Generic phishing is untargeted; this attack used specific research to personalize the message.</p>
+<p><strong>(B)</strong> Smishing uses text messages as the delivery channel, not email.</p>
+<p><strong>(D)</strong> Whaling specifically targets C-level executives; the scenario describes a general employee.</p>
+</div>
+    <div class="fb-tip">
+<strong>AP Exam Tip:</strong> Know the phishing hierarchy: phishing (bulk) → spear phishing (targeted individual/org) → whaling (targeted executive). AI has dramatically lowered the cost of spear phishing by automating the research step.</div>
+  </div>
+</div>
+<div class="q-block" id="q-e14">
+  <div class="q-header">
+    <span class="q-num">Q14</span>
+    <span class="q-topic">Password Attacks</span>
+  </div>
+  <div class="q-stem">A data breach at an online retailer exposes millions of username/password pairs. An attacker downloads this list and automatically tries each pair against a major bank’s login portal. This attack is called:</div>
+  <div class="options">
+<label class="option-label"><input type="radio" name="qe14" value="A"> <span>(A) A brute-force attack</span></label>
+<label class="option-label"><input type="radio" name="qe14" value="B"> <span>(B) A dictionary attack</span></label>
+<label class="option-label"><input type="radio" name="qe14" value="C"> <span>(C) Credential stuffing</span></label>
+<label class="option-label"><input type="radio" name="qe14" value="D"> <span>(D) A rainbow table attack</span></label>
+</div>
+  <button class="check-btn" onclick="checkQ('e14')">Check Answer</button>
+  <div class="feedback-box" id="fb-e14">
+    <div class="fb-verdict"></div>
+    <div class="fb-exp">Credential stuffing uses credentials <em>obtained from a previous breach</em> and tests them against other services, exploiting password reuse. It is effective because many users reuse the same password across multiple sites. Brute-force tries all possible combinations. Dictionary attacks use wordlists of common passwords (not previously breached real credentials). Rainbow tables precompute hashes.</div>
+    <div class="fb-distractors">
+<p><strong>(A)</strong> Brute-force generates combinations; it doesn’t rely on a stolen credential list.</p>
+<p><strong>(B)</strong> Dictionary attacks use common password wordlists, not real stolen credentials from a specific breach.</p>
+<p><strong>(D)</strong> Rainbow tables target password hashes; credential stuffing tests plaintext credentials against live logins.</p>
+</div>
+    <div class="fb-tip">
+<strong>AP Exam Tip:</strong> Credential stuffing is why password reuse is so dangerous. The AP exam will test whether you can distinguish it from brute-force and dictionary attacks.</div>
+  </div>
+</div>
+<div class="q-block" id="q-e15">
+  <div class="q-header">
+    <span class="q-num">Q15</span>
+    <span class="q-topic">Wireless + Encryption</span>
+  </div>
+  <div class="q-stem">A user connects to a rogue Wi-Fi access point and visits their bank’s website, which uses HTTPS. An attacker monitoring the rogue AP attempts to read the transmitted data. Which statement is <span class="kw">MOST ACCURATE</span>?</div>
+  <div class="options">
+<label class="option-label"><input type="radio" name="qe15" value="A"> <span>(A) HTTPS reduces the risk but does not eliminate it; attackers may use SSL stripping to downgrade the connection.</span></label>
+<label class="option-label"><input type="radio" name="qe15" value="B"> <span>(B) HTTPS fully eliminates the risk because the attacker cannot read any transmitted data.</span></label>
+<label class="option-label"><input type="radio" name="qe15" value="C"> <span>(C) HTTPS is irrelevant because the rogue AP can inject code directly into the browser.</span></label>
+<label class="option-label"><input type="radio" name="qe15" value="D"> <span>(D) The attacker can read all transmitted data because HTTPS only encrypts stored files.</span></label>
+</div>
+  <button class="check-btn" onclick="checkQ('e15')">Check Answer</button>
+  <div class="feedback-box" id="fb-e15">
+    <div class="fb-verdict"></div>
+    <div class="fb-exp">HTTPS encrypts data in transit, making it significantly harder for a passive eavesdropper to read the content. However, a MitM attacker on a rogue AP can attempt SSL stripping — a technique that downgrades the connection from HTTPS to HTTP before it reaches the user’s browser — if the site does not implement HTTP Strict Transport Security (HSTS). HTTPS is protective but not an absolute guarantee in a MitM scenario.</div>
+    <div class="fb-distractors">
+<p><strong>(B)</strong> Overstates protection — SSL stripping and certificate-based MitM attacks can defeat HTTPS in some configurations.</p>
+<p><strong>(C)</strong> Exaggerates the attack; code injection via a rogue AP is a separate, more complex attack not implied here.</p>
+<p><strong>(D)</strong> Fundamentally wrong — HTTPS encrypts data <em>in transit</em>, which is exactly the protection relevant here.</p>
+</div>
+    <div class="fb-tip">
+<strong>AP Exam Tip:</strong> HTTPS vs. no HTTPS on public Wi-Fi is a nuanced AP exam topic. The correct answer is almost always the qualified one: HTTPS helps significantly but does not provide absolute protection.</div>
+  </div>
+</div>
+<div class="section-break">⎯ Part 4: Defense Strategies ⎯</div>
+<div class="q-block" id="q-e16">
+  <div class="q-header">
+    <span class="q-num">Q16</span>
+    <span class="q-topic">Terminology</span>
+  </div>
+  <div class="q-stem">A student creates a study guide with the following definitions. Which definition is <span class="kw">INCORRECT</span>?</div>
+  <div class="options">
+<label class="option-label"><input type="radio" name="qe16" value="A"> <span>(A) Vulnerability: a weakness in a system that could be exploited by a threat actor.</span></label>
+<label class="option-label"><input type="radio" name="qe16" value="B"> <span>(B) Threat: any potential event or actor that could cause harm to an asset.</span></label>
+<label class="option-label"><input type="radio" name="qe16" value="C"> <span>(C) Risk: the likelihood that a threat will exploit a vulnerability multiplied by the potential impact.</span></label>
+<label class="option-label"><input type="radio" name="qe16" value="D"> <span>(D) Control: a weakness in a system intentionally introduced to allow authorized backdoor access.</span></label>
+</div>
+  <button class="check-btn" onclick="checkQ('e16')">Check Answer</button>
+  <div class="feedback-box" id="fb-e16">
+    <div class="fb-verdict"></div>
+    <div class="fb-exp">A control (or security control) is a safeguard or countermeasure designed to <em>reduce</em> risk — examples include firewalls, encryption, and access policies. The definition given in D describes a backdoor, not a control. Options A, B, and C are accurate definitions of core cybersecurity concepts (vulnerability, threat, and risk) that students must know for the AP exam.</div>
+    <div class="fb-distractors">
+<p><strong>(A)</strong> Correct definition of vulnerability.</p>
+<p><strong>(B)</strong> Correct definition of threat.</p>
+<p><strong>(C)</strong> Correct definition of risk (likelihood x impact framework).</p>
+</div>
+    <div class="fb-tip">
+<strong>AP Exam Tip:</strong> The risk equation (vulnerability + threat + likelihood + impact = risk) is fundamental. Controls reduce one or more of these variables. Know the precise definition of each term.</div>
+  </div>
+</div>
+<div class="q-block" id="q-e17">
+  <div class="q-header">
+    <span class="q-num">Q17</span>
+    <span class="q-topic">Wireless Defense</span>
+  </div>
+  <div class="q-stem">Which of the following <span class="kw">BEST</span> protects a user from an evil twin (rogue access point) attack when using public Wi-Fi?</div>
+  <div class="options">
+<label class="option-label"><input type="radio" name="qe17" value="A"> <span>(A) Using a longer and more complex Wi-Fi password</span></label>
+<label class="option-label"><input type="radio" name="qe17" value="B"> <span>(B) Routing all traffic through a trusted Virtual Private Network (VPN)</span></label>
+<label class="option-label"><input type="radio" name="qe17" value="C"> <span>(C) Disabling Bluetooth while connected to Wi-Fi</span></label>
+<label class="option-label"><input type="radio" name="qe17" value="D"> <span>(D) Clearing browser cookies before connecting</span></label>
+</div>
+  <button class="check-btn" onclick="checkQ('e17')">Check Answer</button>
+  <div class="feedback-box" id="fb-e17">
+    <div class="fb-verdict"></div>
+    <div class="fb-exp">A VPN encrypts all outbound traffic from the user’s device before it leaves for the network, creating an encrypted tunnel to a trusted server. Even if the user connects to a rogue access point, the attacker sees only encrypted VPN traffic. Password complexity only matters for protecting <em>the Wi-Fi password itself</em>, not for protecting traffic on an attacker-controlled network. Bluetooth and cookies are unrelated to this attack vector.</div>
+    <div class="fb-distractors">
+<p><strong>(A)</strong> A stronger Wi-Fi password prevents unauthorized connections to your own network; it doesn’t protect you on someone else’s rogue network.</p>
+<p><strong>(C)</strong> Bluetooth is a separate radio technology; disabling it has no effect on Wi-Fi interception.</p>
+<p><strong>(D)</strong> Cookies are stored session tokens; clearing them does not encrypt or protect network traffic.</p>
+</div>
+    <div class="fb-tip">
+<strong>AP Exam Tip:</strong> VPNs on public Wi-Fi is a classic exam pairing. Know that a VPN protects against rogue APs by encrypting traffic end-to-end regardless of which network you’re on.</div>
+  </div>
+</div>
+<div class="q-block" id="q-e18">
+  <div class="q-header">
+    <span class="q-num">Q18</span>
+    <span class="q-topic">AI: Benefits and Risks</span>
+  </div>
+  <div class="q-stem">Consider the following statements about AI in cybersecurity.<br><br><strong>I.</strong> AI can enable attackers to scale spear phishing attacks that previously required manual research.<br><strong>II.</strong> AI-powered security tools can reduce mean time to detect (MTTD) threats compared to manual analysis.<br><strong>III.</strong> AI completely eliminates the need for human security analysts in a modern SOC.</div>
+  <div class="options">
+<label class="option-label"><input type="radio" name="qe18" value="A"> <span>(A) I only</span></label>
+<label class="option-label"><input type="radio" name="qe18" value="B"> <span>(B) II only</span></label>
+<label class="option-label"><input type="radio" name="qe18" value="C"> <span>(C) I and II only</span></label>
+<label class="option-label"><input type="radio" name="qe18" value="D"> <span>(D) I, II, and III</span></label>
+</div>
+  <button class="check-btn" onclick="checkQ('e18')">Check Answer</button>
+  <div class="feedback-box" id="fb-e18">
+    <div class="fb-verdict"></div>
+    <div class="fb-exp">AI does enable scaled, automated spear phishing (I) and does reduce threat detection time compared to purely manual analysis (II). Statement III is false: AI augments but does not replace human analysts. AI generates false positives, lacks contextual judgment, and requires human oversight for decision-making, especially in incident response. The “AI replaces humans entirely” claim is a known distractor on this topic.</div>
+    <div class="fb-distractors">
+<p><strong>(D)</strong> Incorrect — Statement III overstates AI capabilities; human analysts remain essential for judgment and context.</p>
+</div>
+    <div class="fb-tip">
+<strong>AP Exam Tip:</strong> For any statement claiming AI ‘completely eliminates’ human involvement, the answer is almost always false. AI augments human judgment; it does not replace it.</div>
+  </div>
+</div>
+<div class="q-block" id="q-e19">
+  <div class="q-header">
+    <span class="q-num">Q19</span>
+    <span class="q-topic">Authentication</span>
+  </div>
+  <div class="q-stem">An employee authenticates to a corporate system using a PIN (entered on a keypad) and a fingerprint scan. This represents authentication using:</div>
+  <div class="options">
+<label class="option-label"><input type="radio" name="qe19" value="A"> <span>(A) Two instances of something you know</span></label>
+<label class="option-label"><input type="radio" name="qe19" value="B"> <span>(B) Something you know and something you have</span></label>
+<label class="option-label"><input type="radio" name="qe19" value="C"> <span>(C) Something you know and something you are</span></label>
+<label class="option-label"><input type="radio" name="qe19" value="D"> <span>(D) Something you have and something you are</span></label>
+</div>
+  <button class="check-btn" onclick="checkQ('e19')">Check Answer</button>
+  <div class="feedback-box" id="fb-e19">
+    <div class="fb-verdict"></div>
+    <div class="fb-exp">A PIN is “something you know” (memorized secret). A fingerprint is “something you are” (biometric). Together they constitute multi-factor authentication across two different categories. “Something you have” would be a physical token, smart card, or phone receiving an OTP code.</div>
+    <div class="fb-distractors">
+<p><strong>(A)</strong> Two PINs or two passwords are the same factor category; this would not be true MFA.</p>
+<p><strong>(B)</strong> “Something you have” is a physical device (phone, card, token); a fingerprint is biometric.</p>
+<p><strong>(D)</strong> Incorrect — the PIN is a known secret, not a physical possession.</p>
+</div>
+    <div class="fb-tip">
+<strong>AP Exam Tip:</strong> Fingerprint, retina scan, face ID, and voice recognition are all “something you are.” Physical devices (phone, YubiKey, smart card) are “something you have.” Memorized secrets (password, PIN, passphrase) are “something you know.”</div>
+  </div>
+</div>
+<div class="q-block" id="q-e20">
+  <div class="q-header">
+    <span class="q-num">Q20</span>
+    <span class="q-topic">Defense in Depth</span>
+  </div>
+  <div class="q-stem">A security manager wants to protect employees from the <span class="kw">widest range</span> of Unit 1 threats (social engineering, password attacks, and wireless risks). Which combination of controls is <span class="kw">MOST COMPREHENSIVE</span>?</div>
+  <div class="options">
+<label class="option-label"><input type="radio" name="qe20" value="A"> <span>(A) Security awareness training, multi-factor authentication, and a VPN policy for remote/public Wi-Fi use</span></label>
+<label class="option-label"><input type="radio" name="qe20" value="B"> <span>(B) Mandatory password rotation every 30 days and email spam filtering</span></label>
+<label class="option-label"><input type="radio" name="qe20" value="C"> <span>(C) Antivirus software installation and firewall configuration on all endpoints</span></label>
+<label class="option-label"><input type="radio" name="qe20" value="D"> <span>(D) Encrypting all files stored on employee laptops and disabling USB ports</span></label>
+</div>
+  <button class="check-btn" onclick="checkQ('e20')">Check Answer</button>
+  <div class="feedback-box" id="fb-e20">
+    <div class="fb-verdict"></div>
+    <div class="fb-exp">Option A provides layered coverage across all three threat categories: security awareness training addresses social engineering, MFA mitigates password-based attacks (even if credentials are stolen, the second factor blocks unauthorized login), and VPN policy protects against wireless interception. Option B includes a discredited password policy and only one technical control. Options C and D address endpoint/malware threats but not social engineering or wireless attacks specifically.</div>
+    <div class="fb-distractors">
+<p><strong>(B)</strong> Forced 30-day rotation is counterproductive per NIST; this combination also doesn’t address wireless threats.</p>
+<p><strong>(C)</strong> Antivirus and firewalls protect against malware and network intrusion but don’t defend against human manipulation or rogue APs.</p>
+<p><strong>(D)</strong> Disk encryption and USB controls address data loss; neither prevents phishing or Wi-Fi interception.</p>
+</div>
+    <div class="fb-tip">
+<strong>AP Exam Tip:</strong> Defense in depth questions require you to match controls to the <em>specific</em> threats described. Read the threat categories in the stem carefully before evaluating each option.</div>
+  </div>
+</div>
+  </div>
+  <div class="results-panel" id="results-panel">
+    <div style="font-size:14px;color:#C4B5FD;font-family:Georgia,serif;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;">Unit 1 Exam Complete</div>
+    <div class="results-score"></div>
+    <div class="results-label">out of 20</div>
+    <div class="results-msg"></div>
+    <a href="/pages/ap-cybersecurity-complete-course-guide" class="results-btn">Back to Course Hub</a>
+    <a href="/pages/ap-cybersecurity-unit-1-introduction-to-security" class="results-btn">Review Unit 1 Guide →</a>
+  </div>
+  <div class="nav-links">
+    <a class="nav-link" href="/pages/ap-cyber-unit-1-lesson-1-quiz">← Lesson 1 Quiz</a>
+    <a class="nav-link" href="/pages/ap-cybersecurity-complete-course-guide">Course Hub</a>
+    <a class="nav-link" href="/pages/ap-cybersecurity-unit-1-introduction-to-security">Unit 1 Study Guide →</a>
+  </div>
+</div>
+<script>
+(function(){
+  var ANSWERS = {"e1": "B", "e2": "D", "e3": "B", "e4": "A", "e5": "D", "e6": "A", "e7": "B", "e8": "B", "e9": "D", "e10": "C", "e11": "B", "e12": "D", "e13": "C", "e14": "C", "e15": "A", "e16": "D", "e17": "B", "e18": "C", "e19": "C", "e20": "A"};
+  var score = 0;
+  var total = Object.keys(ANSWERS).length;
+  var answered = {};
+
+  function checkQ(qid) {
+    var block = document.getElementById('q-' + qid);
+    var chosen = block.querySelector('input[name="q' + qid + '"]:checked');
+    if (!chosen) { alert('Please select an answer first.'); return; }
+    if (answered[qid]) return;
+    answered[qid] = true;
+
+    var val = chosen.value;
+    var correct = ANSWERS[qid];
+    var fb = document.getElementById('fb-' + qid);
+    var labels = block.querySelectorAll('.option-label');
+
+    labels.forEach(function(lbl) {
+      var inp = lbl.querySelector('input');
+      inp.disabled = true;
+      if (inp.value === correct) { lbl.classList.add('correct-opt'); }
+      else if (inp.value === val && val !== correct) { lbl.classList.add('wrong-opt'); }
+      else { lbl.classList.add('neutral-opt'); }
+    });
+
+    block.querySelector('.check-btn').disabled = true;
+    fb.classList.add('show');
+
+    if (val === correct) {
+      score++;
+      block.classList.add('answered-correct');
+      fb.classList.add('fb-correct');
+      fb.querySelector('.fb-verdict').textContent = 'Correct!';
+    } else {
+      block.classList.add('answered-wrong');
+      fb.classList.add('fb-wrong');
+      fb.querySelector('.fb-verdict').textContent = 'Incorrect — the correct answer is ' + correct + '.';
+    }
+
+    document.getElementById('score-display').textContent = score + ' / ' + Object.keys(answered).length;
+
+    if (Object.keys(answered).length === total) {
+      showResults();
+    }
+  }
+
+  function showResults() {
+    var panel = document.getElementById('results-panel');
+    panel.classList.add('show');
+    panel.querySelector('.results-score').textContent = score + '/' + total;
+    var pct = Math.round(score/total*100);
+    var msg = pct >= 80 ? 'Strong work! You are well prepared on this topic.' :
+              pct >= 60 ? 'Good effort. Review the questions you missed and try again.' :
+              'Keep studying. Revisit the lesson before retaking the quiz.';
+    panel.querySelector('.results-msg').textContent = msg;
+    panel.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  window.checkQ = checkQ;
+})();
+</script>
+<div style="background: linear-gradient(135deg, #1e3a8a 0%, #1f2937 100%); border-radius: 10px; padding: 1.75rem 2rem; margin: 2rem 0; display: block; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; box-sizing: border-box;">
+  <div style="font-size: 12px; font-weight: 700; color: #fbbf24; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 0.5rem; display: block;">Free Tool</div>
+  <div style="font-size: 20px; font-weight: 800; color: #ffffff; margin-bottom: 0.5rem; display: block; line-height: 1.3;">AP Cybersecurity Score Calculator</div>
+  <div style="font-size: 14px; color: #d1d5db; margin-bottom: 1.25rem; display: block; line-height: 1.6;">Enter your MCQ and FRQ raw scores to instantly see your predicted AP grade (1–5) with personalized study tips.</div>
+  <a href="/pages/ap-cybersecurity-score-calculator" style="display: inline-block; background: #fbbf24; color: #1e3a8a; padding: 12px 24px; border-radius: 6px; font-weight: 700; font-size: 14px; text-decoration: none; -webkit-text-fill-color: #1e3a8a;">Calculate My Score →</a>
+</div>
