@@ -22,6 +22,24 @@ Publish `ap-cyber-unit-1-exam.before-rebalance.html` back over the page body wit
 live body still matches the `after` snapshot, so a rollback cannot silently discard
 somebody else's later edit.
 
+## Known defect, still live: Q8 is mis-keyed
+
+`scripts/one-off/verify-cyber-unit-1-exam-key.js` reports one failure against both
+snapshots, so it predates the rebalance and the rebalance did not touch it.
+
+Q8 asks which measures reduce phishing risk. Statement I is domain-check training,
+II is email filtering, III is longer passwords. The stored key is `A` (`I only`),
+but the explanation argues I and II are both effective, and the distractor note on
+`(A)` reads "Incomplete - email filtering (II) is also an effective anti-phishing
+control." Every piece of feedback on the page says the answer is `B` (`I and II
+only`); only the key disagrees.
+
+A student who reasons correctly and picks B is marked wrong and then shown feedback
+telling them the option they did not pick was incomplete. The fix is a content
+decision, not a mechanical one, because flipping e8 to `B` moves the distribution
+off 5/5/5/5 to A:4 B:6 and a further reorder would be needed to restore it. Left
+as-is pending that call.
+
 ## Regenerating the patch
 
 `scripts/one-off/rebalance-cyber-unit-1-exam-answers.js` takes the before file and
