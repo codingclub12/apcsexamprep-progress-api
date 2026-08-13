@@ -7,49 +7,75 @@ page bodies, so these files are the rollback path.
 These are reference copies, not a source of truth. The live page always wins. Never
 edit a snapshot expecting it to reach the storefront.
 
-## Files
+## Unit 1 exam: three states, in order
 
-- `ap-cyber-unit-1-exam.before-rebalance.html` - Body HTML of
-  `gid://shopify/Page/132079550679` (`/pages/ap-cyber-unit-1-exam`) as of
-  `updatedAt` 2026-06-05T19:18:34Z, captured before the answer-letter rebalance.
-- `ap-cyber-unit-1-exam.after-rebalance.html` - the same body after the rebalance,
-  byte-identical to what was published.
+All three are the body of `gid://shopify/Page/132079550679`
+(`/pages/ap-cyber-unit-1-exam`).
 
-## Rolling back the Unit 1 exam rebalance
+1. `ap-cyber-unit-1-exam.before-rebalance.html` - original, `updatedAt`
+   2026-06-05T19:18:34Z. The key answered B on 11 of 20 questions.
+2. `ap-cyber-unit-1-exam.after-rebalance.html` - published 2026-08-13T03:10:44Z.
+   Seven questions reordered to a 5/5/5/5 spread.
+3. `ap-cyber-unit-1-exam.current-live.html` - published 2026-08-13T03:45:52Z, and
+   what is live now. Differs from state 2 by a single character: the Q8 key.
 
-Publish `ap-cyber-unit-1-exam.before-rebalance.html` back over the page body with
-`pageUpdate` on page id `gid://shopify/Page/132079550679`. Confirm first that the
-live body still matches the `after` snapshot, so a rollback cannot silently discard
-somebody else's later edit.
+Each file is byte-identical to what was actually served, confirmed by re-fetching
+the live body after each publish and diffing.
 
-## Known defect, still live: Q8 is mis-keyed
+## Rolling back
 
-`scripts/one-off/verify-cyber-unit-1-exam-key.js` reports one failure against both
-snapshots, so it predates the rebalance and the rebalance did not touch it.
+Publish the chosen snapshot back over the page body with `pageUpdate` on page id
+`gid://shopify/Page/132079550679`. Confirm first that the live body still matches
+`current-live.html`, so a rollback cannot silently discard somebody else's later
+edit.
 
-Q8 asks which measures reduce phishing risk. Statement I is domain-check training,
-II is email filtering, III is longer passwords. The stored key is `A` (`I only`),
-but the explanation argues I and II are both effective, and the distractor note on
-`(A)` reads "Incomplete - email filtering (II) is also an effective anti-phishing
-control." Every piece of feedback on the page says the answer is `B` (`I and II
-only`); only the key disagrees.
+## Q8 key correction
 
-A student who reasons correctly and picks B is marked wrong and then shown feedback
-telling them the option they did not pick was incomplete. The fix is a content
-decision, not a mechanical one, because flipping e8 to `B` moves the distribution
-off 5/5/5/5 to A:4 B:6 and a further reorder would be needed to restore it. Left
-as-is pending that call.
+State 2 carried a defect that predated the rebalance. Q8 asks which measures reduce
+phishing risk: I domain-check training, II email filtering, III longer passwords.
+The key said `A` (`I only`), but the explanation argued I and II are both effective
+and the distractor note on `(A)` read "Incomplete - email filtering (II) is also an
+effective anti-phishing control." Every piece of feedback on the page said `B`
+(`I and II only`); only the key disagreed, so a student who reasoned it out and
+picked B was marked wrong and then told the option they rejected was incomplete.
 
-## Regenerating the patch
+State 3 flips the key to `B`. Options are deliberately NOT reordered to compensate,
+so the spread is 4/6/5/5 rather than 5/5/5/5. One question of imbalance is cheaper
+than shuffling a question that is already correct, and the worst bubble-one-letter
+score is still 30%, down from the original 55%.
 
-`scripts/one-off/rebalance-cyber-unit-1-exam-answers.js` takes the before file and
-writes the after file. It reorders existing option markup rather than substituting
-new copy, and it aborts unless every invariant holds: option text is a pure
-permutation, the new key letter still carries the old correct answer text, the
-distribution is 5/5/5/5, no distractor lands on a correct answer, and no
-same-letter run exceeds two.
+Nothing else needed to change: the distractor notes sit on `(A)` and `(D)`, both
+still wrong answers, and the explanation already argued for I and II.
+
+## Scripts
+
+`scripts/one-off/rebalance-cyber-unit-1-exam-answers.js` turns state 1 into state 2.
+It reorders existing option markup rather than substituting new copy, and aborts
+unless option text is a pure permutation, each new key letter still carries the old
+correct answer text, the spread is 5/5/5/5, no distractor lands on a correct answer,
+and no same-letter run exceeds two.
+
+`scripts/one-off/fix-cyber-unit-1-exam-q8-key.js` turns state 2 into state 3. It
+aborts unless exactly one character changes and that character is the e8 letter
+going A to B.
+
+`scripts/one-off/verify-cyber-unit-1-exam-key.js` is the standalone checker: four
+options per question, radio value matching the visible letter, key letter present,
+and no distractor explanation sitting on a correct answer. Run it against a snapshot
+before publishing one. It exits non-zero on failure.
 
 ```
 node scripts/one-off/rebalance-cyber-unit-1-exam-answers.js \
-  shopify/page-snapshots/ap-cyber-unit-1-exam.before-rebalance.html /tmp/out.html
+  shopify/page-snapshots/ap-cyber-unit-1-exam.before-rebalance.html /tmp/step2.html
+node scripts/one-off/fix-cyber-unit-1-exam-q8-key.js /tmp/step2.html /tmp/step3.html
+node scripts/one-off/verify-cyber-unit-1-exam-key.js /tmp/step3.html
 ```
+
+## Still open
+
+Q12 has no distractor explanation for wrong option `B` ("II and III only"). It had
+none before the rebalance either; the reorder did not create the gap.
+
+Any printed or PDF answer key for this exam is stale as of 2026-08-13. If one ships
+in the Unit 1 Superpack or the teacher Drive folder it needs the same updates, or
+teachers will grade against the old letters.
