@@ -76,6 +76,9 @@
 #tcdash-wrap .gb-grid thead tr.grp th{top:0!important;height:34px!important;font-size:11.5px!important;font-weight:700!important;color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;border-bottom:1px solid #eef2f6!important;text-align:center!important;padding:0 8px!important;background:#fbfcfe!important;}
 #tcdash-wrap .gb-grid thead tr.sub th{top:34px!important;height:38px!important;font-size:11px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b;border-bottom:1px solid #e5e7eb!important;text-align:center!important;padding:4px 6px!important;background:#fff!important;}
 #tcdash-wrap .gb-grid thead tr.sub th .mx{display:block!important;font-size:10px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;font-weight:500!important;}
+/* Marks a score whose activity has no points assigned yet. The percent is real,
+   the fraction is unknown, and the star says which is which. */
+#tcdash-wrap .pv{opacity:.7!important;font-weight:700!important;margin-left:1px!important;}
 #tcdash-wrap .gb-grid tbody td{border-bottom:1px solid #eef2f6!important;height:46px!important;text-align:center!important;padding:4px 6px!important;}
 #tcdash-wrap .gb-grid tbody tr:hover td{background:#f9fbfd!important;}
 #tcdash-wrap .c-stick{position:sticky!important;background:#fff!important;z-index:10!important;}
@@ -431,12 +434,32 @@
 (function(){
 const API = 'https://progress.apcsexamprep.com';
 const ACTIVITIES = ['lesson','exercise-1','exercise-2','quiz'];
-    // Authored per-lesson totals from the API, keyed `lesson|activity`.
-    // Activities genuinely differ (1.1 Exercise 1 is out of 7, 2.1 is out of
-    // 6), so a per-activity constant cannot be right for more than a few.
-    // Only AUTHORED columns appear, so an absent key means unknown, not zero.
+    // Authored totals from the API, keyed `unit|lesson|activity` and
+    // `lesson|activity`. Activities genuinely differ (1.1 Exercise 1 is out of
+    // 7, 2.1 is out of 6), so a per-activity constant cannot be right for more
+    // than a few. Only AUTHORED columns appear, so an absent key means unknown,
+    // not zero.
     var DEN = {};
-const POINTS = {'lesson':10,'exercise-1':5,'exercise-2':5,'quiz':10,'exam':25,'case_file':10};
+    // What a column is out of, unit-scoped key first. Every Cyber unit has a
+    // lesson called 'exam' and one called 'case-file', so a lesson key alone
+    // addresses five different columns and the five case files are 15, 14, 11,
+    // 12 and 11 points.
+    //
+    // Returns null when nobody has authored a total, and null is what gets
+    // rendered: the percent alone, marked. This replaced a hardcoded
+    // per-activity table (lesson 10, quiz 10, exam 25, case file 10, else 100)
+    // whose numbers appear on no page. It priced a 7 point exercise at 5 and an
+    // 11 point case file at 10, it weighted every unpriced column at 100 against
+    // real 5 point quizzes in the class average, and it printed row totals whose
+    // denominator no student could see.
+    function denomFor(unit,lesson,act){
+      var u=DEN[unit+'|'+lesson+'|'+act]; if(u!=null) return u;
+      var k=DEN[lesson+'|'+act]; return k==null?null:k;
+    }
+    // A unit may declare ONE exam or SEVERAL. Cyber gives each unit a single
+    // unit exam; CSP Big Idea 3 sits its test in two parts, which are two
+    // columns. utils.js examsOf() is the server side of this same rule.
+    function examsOf(u){ if(!u||!u.exam) return []; return Array.isArray(u.exam)?u.exam:[u.exam]; }
 const ACT_LABEL = {'lesson':'Lesson','exercise-1':'Ex 1','exercise-2':'Ex 2','quiz':'Quiz','exam':'Exam','case_file':'Case File'};
 // Course-specific teacher pack the gradebook promo cross-sells
 const BUNDLE = {
@@ -495,21 +518,32 @@ window.TCDash = {
   buildModel(resp){
     const cfg = resp.course_config || {units:{}};
     const units = cfg.units || {}; const uids = Object.keys(units);
+    // BEFORE the columns are built. This assignment used to sit below the loop,
+    // so every column was priced against an empty map and no authored value the
+    // API sent ever reached a header. The whole authored-denominator path was
+    // dead code, which is why the fabricated constants below it looked fine.
+    DEN = (resp && resp.denominators) || {};
     const cols=[], groups=[];
     uids.forEach(uid=>{
       const u = units[uid]||{}; const acts = u.activities||ACTIVITIES; const lessons = u.lessons||[];
       const uLabel = String(u.label||uid).replace(/:.*$/,'');
       lessons.forEach(l=>{
         const g={key:uid+'|'+l,title:String(l),span:0,unit:uid}; groups.push(g);
-        acts.forEach(a=>{ cols.push({unit:uid,uLabel:uLabel,lesson:String(l),lessonName:String(l),activity:a,type:ACT_LABEL[a]||a,possible:(DEN[String(l)+'|'+a]!=null?DEN[String(l)+'|'+a]:(POINTS[a]||100)),authored:(DEN[String(l)+'|'+a]!=null),group:g.key,dl:String(l),da:a}); g.span++; });
+        acts.forEach(a=>{ const p=denomFor(uid,String(l),a);
+          cols.push({unit:uid,uLabel:uLabel,lesson:String(l),lessonName:String(l),activity:a,type:ACT_LABEL[a]||a,possible:p,authored:p!=null,group:g.key,dl:String(l),da:a}); g.span++; });
       });
       if(u.case_file){ const cl=(u.case_file&&u.case_file.label)||'Case File'; const g={key:uid+'|cf',title:cl,span:1,unit:uid}; groups.push(g);
-        cols.push({unit:uid,uLabel:uLabel,lesson:'case-file',lessonName:cl,activity:'case_file',type:'Case File',possible:POINTS.case_file,group:g.key,dl:'case-file',da:'case-file'}); }
-      if(u.exam){ const el=(u.exam&&u.exam.label)||'Unit Exam'; const g={key:uid+'|exam',title:el,span:1,unit:uid}; groups.push(g);
-        cols.push({unit:uid,uLabel:uLabel,lesson:'exam',lessonName:el,activity:'exam',type:'Exam',possible:POINTS.exam,group:g.key,dl:'exam',da:'exam'}); }
+        const p=denomFor(uid,'case-file','case-file');
+        cols.push({unit:uid,uLabel:uLabel,lesson:'case-file',lessonName:cl,activity:'case_file',type:'Case File',possible:p,authored:p!=null,group:g.key,dl:'case-file',da:'case-file'}); }
+      // Every exam the unit declares, at the lesson the config names. CSP sits
+      // its tests at lesson 'unit-test', so hardcoding 'exam' here looked up a
+      // lesson that course does not have and left the column permanently blank.
+      examsOf(u).forEach((ex,i)=>{ const el=ex.label||'Unit Exam'; const dl=ex.lesson||'exam';
+        const g={key:uid+'|exam'+(i?i:''),title:el,span:1,unit:uid}; groups.push(g);
+        const p=denomFor(uid,dl,'exam');
+        cols.push({unit:uid,uLabel:uLabel,lesson:dl,lessonName:el,activity:'exam',type:'Exam',possible:p,authored:p!=null,group:g.key,dl:dl,da:'exam'}); });
     });
     const unitList=uids.map(uid=>({id:uid,label:String((units[uid]&&units[uid].label)||uid).replace(/:.*$/,'')}));
-    DEN = (resp && resp.denominators) || {};
       const students=(resp.summary||[]).map(rec=>({
       id:rec.student.id, name:rec.student.name, ref:rec.student.ref,
       initials:(rec.student.name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(),
@@ -524,6 +558,19 @@ window.TCDash = {
   retryOn(a,stu){ const g=this.retryGroup(a); if(!g)return false; if(stu){ const o=this.STUDENT_RETRY[stu.id]; if(o&&o[g])return o[g]==='on'; } return !!this.state.retryTypes[g]; },
   retryEff(stu,g){ const o=this.STUDENT_RETRY[stu.id]; return (o&&o[g])?o[g]:'default'; },
   clsFor(p){ if(p===null)return'n'; if(p>=this.state.threshold)return'g'; if(p>=60)return'a'; return'r'; },
+  num(n){ return (Math.round(n*100)/100).toString(); },
+  // How a column is named to a teacher. An exam or a case file carries its own
+  // label ("Big Idea 3 Unit Test Part A"); everything else is lesson plus
+  // activity. Keyed on the activity, not on the lesson id, because CSP sits its
+  // exams at lesson 'unit-test' and Cyber sits them at lesson 'exam'.
+  colLabel(c){ return (c.activity==='exam'||c.activity==='case_file')?c.lessonName:(c.lesson+' '+c.type); },
+  // The ONE place a graded cell becomes text, so the grid, the student report,
+  // the assignment view and the spreadsheet cannot disagree about the same
+  // score. Points over points wherever the points are known; where they are
+  // not, the percent alone, marked with a star.
+  cellText(cd,plain){ if(!cd.started) return '–';
+    if(cd.priced) return this.num(cd.earned)+'/'+this.num(cd.possible);
+    return this.num(cd.pct)+'%'+(plain?'*':"<span class='pv' title='Points have not been assigned to this activity yet'>*</span>"); },
   letterFor(p){ if(p>=90)return'A'; if(p>=80)return'B'; if(p>=70)return'C'; if(p>=60)return'D'; return'F'; },
 
   cellData(stu,c){
@@ -541,14 +588,29 @@ window.TCDash = {
       // per-activity constant and re-rounded, where 6/7 and 5/7 both became 4/5.
       const pair = (d.points_possible!=null && d.points_possible>0 && d.points_earned!=null);
       const possible = pair ? d.points_possible : c.possible;
-      const earned = pair ? d.points_earned : Math.round(d.score/100*c.possible);
-      return {pct:d.score,earned:earned,possible:possible,started:true,granted:this.GRANT[k]||0};
+      // Whole marks when the total is whole. A question is right or wrong, so a
+      // 6 question quiz is scored out of 6 in ones, never 4.08.
+      const earned = pair ? d.points_earned
+        : (possible!=null ? (possible===Math.round(possible)
+            ? Math.round(d.score/100*possible)
+            : Math.round(d.score/100*possible*100)/100) : null);
+      // priced=false means nobody has authored a total and the page reported no
+      // pair. The percent is real and is shown; the points are unknown and are
+      // shown as unknown, not filled in.
+      return {pct:d.score,earned:earned,possible:possible,priced:(possible!=null&&earned!=null),started:true,granted:this.GRANT[k]||0};
   },
   totals(stu){
-    let earned=0,poss=0,done=0,total=0;
+    let earned=0,poss=0,done=0,total=0,unpriced=0;
     this.model.cols.forEach(c=>{ if(!this.counts(c.activity))return; total++; const cd=this.cellData(stu,c);
-      if(!cd.started){ if(this.state.calc==='possible') poss+=cd.possible; return; } done++; earned+=cd.earned; poss+=cd.possible; });
-    return {earned:earned,poss:poss,pct:poss>0?Math.round(earned/poss*100):0,done:done,total:total};
+      if(!cd.started){ if(this.state.calc==='possible'&&cd.possible!=null) poss+=cd.possible; return; }
+      done++;
+      // An unpriced column carries no points, so it adds nothing to either side
+      // of the fraction. Adding a made up 100 was worse than leaving it out: it
+      // outweighed a real 5 point quiz twenty to one and moved the grade.
+      if(!cd.priced){ unpriced++; return; }
+      earned+=cd.earned; poss+=cd.possible; });
+    return {earned:Math.round(earned*100)/100,poss:Math.round(poss*100)/100,
+            pct:poss>0?Math.round(earned/poss*100):0,done:done,total:total,unpriced:unpriced};
   },
 
   renderAll(){ this.renderStats(); this.renderGrid(); this.renderStudent(+document.getElementById('rep-picker').value||0); this.renderAssignment(+document.getElementById('ba-picker').value||0); },
@@ -594,7 +656,7 @@ window.TCDash = {
         else if(cd.granted) mk="<span class='mk open'>+"+cd.granted+"</span>";
         let inner;
         if(!cd.started) inner="–";
-        else if(this.state.view==='points') inner=cd.earned+"/"+cd.possible;
+        else if(this.state.view==='points') inner=this.cellText(cd);
         else { const lab=cd.pct>=this.state.threshold?"Mastered":(cd.pct>=60?"Approaching":"Not yet"); inner="<span class='ptxt'><span class='dot "+this.clsFor(cd.pct)+"'></span>"+lab+"</span>"; }
         const cl=cd.started?(cd.earned===0?'r':this.clsFor(cd.pct)):'n';
         const ttl=cd.started?(' title="'+cd.pct+'%"'):'';
@@ -609,7 +671,13 @@ window.TCDash = {
     document.getElementById('gb-table').innerHTML=h;
     const rL={lesson:'CFU',exercise:'Ex',quiz:'Quiz',exam:'Exam'};
     const rOn=['lesson','exercise','quiz','exam'].filter(k=>this.state.retryTypes[k]).map(k=>rL[k]);
-    document.getElementById('gb-calcnote').textContent=(this.state.calc==='graded'?'Earned / graded':'Earned / possible')+'  |  mastery '+this.state.threshold+'%  |  retry: '+(rOn.length?rOn.join(', '):'off');
+    // Name the unpriced columns rather than letting a star go unexplained. A
+    // teacher seeing "83%*" next to "6/7" is owed the reason: nobody has said
+    // what that activity is out of, so it shows its percent and sits out of the
+    // points total instead of being weighted at a made up number.
+    const nop=this.model.cols.filter(c=>c.possible==null&&S.counts(c.activity)
+      &&this.model.students.some(s=>S.cellData(s,c).started)).length;
+    document.getElementById('gb-calcnote').textContent=(this.state.calc==='graded'?'Earned / graded':'Earned / possible')+'  |  mastery '+this.state.threshold+'%  |  retry: '+(rOn.length?rOn.join(', '):'off')+(nop?('  |  '+nop+' column'+(nop===1?'':'s')+' with no points assigned yet, shown as a percent with a star and not counted'):'');
   },
   setSort(k){ if(this.state.sortKey===k)this.state.sortDir*=-1; else{this.state.sortKey=k;this.state.sortDir=1;} this.renderGrid(); },
   renderUnitFilter(){
@@ -641,12 +709,22 @@ window.TCDash = {
     const s=this.model.students[sidx], c=this.model.cols[cidx], cd=this.cellData(s,c);
     this.popCtx={sidx:sidx,cidx:cidx};
     const pop=document.getElementById('gb-pop');
+    // An override is a number of points, so it needs a total to be out of. A
+    // column with no authored total has none, and inventing one here would put
+    // the fabricated denominator straight back on screen through the edit box.
+    const priced=(c.possible!=null);
+    const outOf=priced?(" · out of "+c.possible):" · points not assigned yet";
+    const cur=cd.started?(cd.priced?(this.num(cd.earned)+"</b> <span class='thin'>/ "+this.num(cd.possible)+"  ("+cd.pct+"%)")
+                                   :("&ndash;</b> <span class='thin'>"+cd.pct+"% (points not assigned yet)"))
+                        :"–</b> <span class='thin'>not started";
     pop.innerHTML=
       "<button class='pc' onclick='TCDash.closePop()'>×</button>"+
-      "<h5>"+this.esc(s.name)+"</h5><div class='s'>"+this.esc((c.lesson==='exam'?c.lessonName:c.lesson+' '+c.type))+" · out of "+cd.possible+"</div>"+
-      "<div class='cur'>Current: <b>"+(cd.started?cd.earned:'–')+"</b> <span class='thin'>"+(cd.started?'/ '+c.possible+'  ('+cd.pct+'%)':'not started')+"</span>"+(cd.override?" <span class='flag ok'>override</span>":"")+"</div>"+
-      "<div class='fld'>Override to <input type='number' id='gb-ovin' min='0' max='"+c.possible+"' value='"+(cd.started?cd.earned:0)+"'> / "+c.possible+"</div>"+
-      "<div class='fld'><button class='gb-btn primary sm' style='width:100%' onclick='TCDash.applyOverride()'>Set score</button></div>"+
+      "<h5>"+this.esc(s.name)+"</h5><div class='s'>"+this.esc(this.colLabel(c))+outOf+"</div>"+
+      "<div class='cur'>Current: <b>"+cur+"</span>"+(cd.override?" <span class='flag ok'>override</span>":"")+"</div>"+
+      (priced
+        ? "<div class='fld'>Override to <input type='number' id='gb-ovin' min='0' max='"+c.possible+"' value='"+(cd.priced?cd.earned:0)+"'> / "+c.possible+"</div>"+
+          "<div class='fld'><button class='gb-btn primary sm' style='width:100%' onclick='TCDash.applyOverride()'>Set score</button></div>"
+        : "<div class='fld thin'>This activity has no points assigned yet, so there is nothing to score it out of. Set its total from the admin denominators page and the override opens up.</div>")+
       "<div class='row2'><button class='gb-btn sm' onclick='TCDash.applyGrant()'>Grant attempt</button><button class='gb-btn sm danger' onclick='TCDash.applyReset()'>Reset</button></div>"+
       "<div class='soon'>Preview only in this session. Saved overrides ship with the next update.</div>";
     pop.classList.remove('gb-hidden'); document.getElementById('gb-overlay').classList.remove('gb-hidden');
@@ -656,7 +734,7 @@ window.TCDash = {
     pop.style.top=top+'px'; pop.style.left=left+'px';
   },
   closePop(){ document.getElementById('gb-pop').classList.add('gb-hidden'); document.getElementById('gb-overlay').classList.add('gb-hidden'); this.popCtx=null; },
-  applyOverride(){ const s=this.model.students[this.popCtx.sidx],c=this.model.cols[this.popCtx.cidx]; const v=Math.max(0,Math.min(c.possible,+document.getElementById('gb-ovin').value||0)); this.OVER[this.keyOf(s.id,c)]=v; delete this.RESET[this.keyOf(s.id,c)]; /* TODO PATCH .../students/:id/score */ this.closePop(); this.renderAll(); },
+  applyOverride(){ const s=this.model.students[this.popCtx.sidx],c=this.model.cols[this.popCtx.cidx]; if(c.possible==null) return this.closePop(); const v=Math.max(0,Math.min(c.possible,+document.getElementById('gb-ovin').value||0)); this.OVER[this.keyOf(s.id,c)]=v; delete this.RESET[this.keyOf(s.id,c)]; /* TODO PATCH .../students/:id/score */ this.closePop(); this.renderAll(); },
   applyReset(){ const s=this.model.students[this.popCtx.sidx],c=this.model.cols[this.popCtx.cidx]; this.RESET[this.keyOf(s.id,c)]=true; delete this.OVER[this.keyOf(s.id,c)]; /* TODO DELETE .../students/:id/score */ this.closePop(); this.renderAll(); },
   applyGrant(){ const s=this.model.students[this.popCtx.sidx],c=this.model.cols[this.popCtx.cidx]; const k=this.keyOf(s.id,c); this.GRANT[k]=(this.GRANT[k]||0)+1; /* TODO POST .../students/:id/grant-attempt */ this.closePop(); this.renderAll(); },
 
@@ -678,12 +756,12 @@ window.TCDash = {
     this.model.cols.forEach(c=>{ const cd=S.cellData(s,c); let st,sc,pc;
       if(cd.ungraded){ st="<span class='flag'>Done, not graded</span>"; sc="–"; pc="–"; }
       else if(!cd.started){ st="<span class='flag miss'>Not started</span>"; sc="–"; pc="–"; }
-      else{ pc=cd.pct+'%'; sc=cd.earned+' / '+cd.possible;
+      else{ pc=cd.pct+'%'; sc=cd.priced?(S.num(cd.earned)+' / '+S.num(cd.possible)):('&ndash; <span class="thin">points not assigned</span>');
         if(cd.pct>=S.state.threshold) st="<span class='flag ok'>Mastered</span>";
         else if(S.retryOn(c.activity,s)) st="<span class='flag open'>Retry open</span>";
         else st="<span class='flag low'>"+(cd.earned===0?'Missing':'Below '+S.state.threshold)+"</span>";
         if(cd.override) st+=" <span class='flag ok'>override</span>"; }
-      rows+="<tr><td>"+S.esc((c.lesson==='exam'||c.lesson==='case-file')?c.lessonName:c.lesson)+"</td><td>"+S.esc(c.type)+"</td><td>"+sc+"</td><td>"+pc+"</td><td>"+st+(S.counts(c.activity)?"":" <span class='thin'>(not counted)</span>")+"</td></tr>"; });
+      rows+="<tr><td>"+S.esc((c.activity==='exam'||c.activity==='case_file')?c.lessonName:c.lesson)+"</td><td>"+S.esc(c.type)+"</td><td>"+sc+"</td><td>"+pc+"</td><td>"+st+(S.counts(c.activity)?"":" <span class='thin'>(not counted)</span>")+"</td></tr>"; });
     document.getElementById('rep-table').innerHTML=rows;
   },
   retryCard(idx,s){
@@ -698,19 +776,19 @@ window.TCDash = {
 
   renderAssignment(cidx){
     const c=this.model.cols[cidx]; if(!c)return; const S=this;
-    document.getElementById('ba-name').textContent=((c.lesson==='exam'||c.lesson==='case-file')?c.lessonName:c.lesson+' '+c.type);
+    document.getElementById('ba-name').textContent=this.colLabel(c);
     const cells=this.model.students.map(s=>({s:s,cd:S.cellData(s,c)}));
     const done=cells.filter(o=>o.cd.started);
     const avg=done.length?Math.round(done.reduce((a,b)=>a+b.cd.pct,0)/done.length):0;
     const mastered=done.filter(o=>o.cd.pct>=S.state.threshold).length;
-    document.getElementById('ba-meta').textContent='Out of '+c.possible+' points  |  '+(S.counts(c.activity)?'counts toward grade':'display only, not counted');
+    document.getElementById('ba-meta').textContent=(c.possible!=null?('Out of '+c.possible+' points'):'Points not assigned to this activity yet')+'  |  '+(S.counts(c.activity)?'counts toward grade':'display only, not counted');
     const mini=(l,v)=>"<div class='mini'><div class='l'>"+l+"</div><div class='v'>"+v+"</div></div>";
     document.getElementById('ba-mini').innerHTML=mini('Class average',avg+'%')+mini('Completed',done.length+' / '+cells.length)+mini('Mastered',mastered+' / '+cells.length)+mini('Missing',(cells.length-done.length));
     cells.sort((a,b)=>{ const av=a.cd.started?a.cd.pct:-1, bv=b.cd.started?b.cd.pct:-1; return bv-av; });
     let rows="<tr><th>Student</th><th>Score</th><th>Percent</th><th style='width:180px'>Distribution</th><th>Status</th></tr>";
     cells.forEach(o=>{ const cd=o.cd; let cell,pc,bar,st;
       if(!cd.started){ cell="–"; pc="–"; bar=0; st="<span class='flag miss'>Not started</span>"; }
-      else{ cell=cd.earned+' / '+c.possible; pc=cd.pct+'%'; bar=cd.pct; st=cd.pct>=S.state.threshold?"<span class='flag ok'>Mastered</span>":(S.retryOn(c.activity,o.s)?"<span class='flag open'>Retry open</span>":"<span class='flag low'>"+(cd.earned===0?'Missing':'Retry')+"</span>"); }
+      else{ cell=cd.priced?(S.num(cd.earned)+' / '+S.num(cd.possible)):(S.num(cd.pct)+'%*'); pc=cd.pct+'%'; bar=cd.pct; st=cd.pct>=S.state.threshold?"<span class='flag ok'>Mastered</span>":(S.retryOn(c.activity,o.s)?"<span class='flag open'>Retry open</span>":"<span class='flag low'>"+(cd.earned===0?'Missing':'Retry')+"</span>"); }
       rows+="<tr><td>"+S.esc(o.s.name)+"</td><td>"+cell+"</td><td>"+pc+"</td><td><div class='bar'><i style='width:"+bar+"%'></i></div></td><td>"+st+"</td></tr>"; });
     document.getElementById('ba-table').innerHTML=rows;
   },
@@ -722,7 +800,7 @@ window.TCDash = {
 
   initPickers(){
     const sp=document.getElementById('rep-picker'); sp.innerHTML=''; this.model.students.forEach((s,i)=>sp.add(new Option(s.name,i)));
-    const ap=document.getElementById('ba-picker'); ap.innerHTML=''; this.model.cols.forEach((c,i)=>ap.add(new Option((c.lesson==='exam'?c.lessonName:c.lesson+' '+c.type),i)));
+    const ap=document.getElementById('ba-picker'); ap.innerHTML=''; this.model.cols.forEach((c,i)=>ap.add(new Option(this.colLabel(c),i)));
     sp.onchange=()=>this.renderStudent(+sp.value); ap.onchange=()=>this.renderAssignment(+ap.value);
   },
   bindControls(){
@@ -755,23 +833,30 @@ window.TCDash = {
   copyCode(){ if(navigator.clipboard)navigator.clipboard.writeText(this.classCode); const e=document.getElementById('gb-copy'); e.textContent='copied'; setTimeout(()=>e.textContent='copy',1200); },
   copyJoinLink(){ const url='https://www.apcsexamprep.com/pages/join?code='+this.classCode; navigator.clipboard.writeText(url).catch(()=>prompt('Copy this link:',url)); },
 
-  // ---- exports (unchanged from prior dashboard) ----
+  // ---- exports ----
+  // The spreadsheet a teacher opens in Excel says the same thing the screen
+  // says: points earned over points possible, one column per activity, built
+  // from the SAME model and the same cellText() the grid renders from. It used
+  // to write a bare percent per cell and label a completion count "Overall %",
+  // so a teacher reconciling the file against the dashboard found two different
+  // numbers with no way to tell which was the grade.
   buildGradebookCSV(){
-    const d=this.data||{}, summary=d.summary||[], units=(d.course_config&&d.course_config.units)||{}, uids=Object.keys(units);
-    const headers=['Name','Student Ref','Last Active','Overall %'];
-    uids.forEach(uid=>{ const lbl=String((units[uid]&&units[uid].label)||uid).replace(/:.*$/,''); headers.push(lbl+' %',lbl+' Avg Score'); });
-    const cols=[];
-    uids.forEach(uid=>{ const u=units[uid]||{}, lessons=u.lessons||[], acts=u.activities||ACTIVITIES;
-      lessons.forEach(l=>acts.forEach(a=>{ cols.push({uid:uid,l:l,a:a}); headers.push(String(l)+' '+(ACT_LABEL[a]||a)); }));
-      if(u.case_file){ cols.push({uid:uid,l:'case-file',a:'case-file'}); headers.push((u.case_file.label)||'Case File'); }
-      if(u.exam){ cols.push({uid:uid,l:'exam',a:'exam'}); headers.push((u.exam.label)||'Unit Exam'); }
-    });
+    const S=this, m=this.model, d=this.data||{};
+    const headers=['Name','Student Ref','Last Active','Grade %','Points Earned','Points Possible','Completion %'];
+    m.cols.forEach(c=>{ headers.push(S.colLabel(c)+(c.possible!=null?(' (/'+S.num(c.possible)+')'):'')); });
     const lines=[headers];
-    summary.forEach(s=>{ let comp=0,tot=0; uids.forEach(uid=>{ const un=s.units&&s.units[uid]; if(un){comp+=un.completed||0;tot+=un.total||0;} });
-      const overall=tot>0?Math.round(100*comp/tot):0;
-      const row=[s.student.name||'',s.student.ref||'',s.student.last_active?this.formatDate(s.student.last_active):'Never',overall+'%'];
-      uids.forEach(uid=>{ const un=(s.units&&s.units[uid])||{}; row.push((un.pct!=null?un.pct:0)+'%',un.avg_score!=null?String(un.avg_score):''); });
-      cols.forEach(c=>{ const rec=s.detail&&s.detail[c.uid]&&s.detail[c.uid][c.l]?s.detail[c.uid][c.l][c.a]:null; let v=''; if(rec){ if(rec.score!=null)v=String(rec.score); else if(rec.completed)v='Complete'; } row.push(v); });
+    const uids=Object.keys((d.course_config&&d.course_config.units)||{});
+    const byId={}; (d.summary||[]).forEach(r=>{ byId[r.student.id]=r; });
+    m.students.forEach(stu=>{
+      const t=S.totals(stu); const rec=byId[stu.id]||{};
+      let comp=0,tot=0; uids.forEach(uid=>{ const un=rec.units&&rec.units[uid]; if(un){comp+=un.completed||0;tot+=un.total||0;} });
+      const row=[stu.name||'',stu.ref||'',stu.lastActive||'Never',t.pct+'%',S.num(t.earned),S.num(t.poss),(tot>0?Math.round(100*comp/tot):0)+'%'];
+      m.cols.forEach(c=>{ const cd=S.cellData(stu,c);
+        // Not started, completed but never graded, and scored are three
+        // different facts. Blank, "Complete" and a score, never all zero.
+        if(cd.ungraded){ row.push('Complete'); return; }
+        if(!cd.started){ row.push(''); return; }
+        row.push(S.cellText(cd,true)); });
       lines.push(row);
     });
     return lines.map(r=>r.map(f=>{ const x=(f==null)?'':String(f); return /[",\r\n]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x; }).join(',')).join('\r\n');

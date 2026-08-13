@@ -57,6 +57,43 @@ const TARGETS = {
   'ap-csp-course-bi3-nested-conditionals':   ['D', 'B', 'A', 'C', 'D', 'A'],
   'ap-csp-course-bi3-developing-algorithms': ['C', 'D', 'B', 'A', 'C', 'D'],
   'ap-csp-course-bi4-fault-tolerance':       ['A', 'C', 'D', 'B', 'A', 'D'],
+
+  // ── PASS TWO: the remaining 27 lesson quizzes ─────────────────────────────
+  //  Pass one fixed the eight worst and OVER-CORRECTED toward D, so these lean
+  //  back to B and C. Solved, not guessed: the seven unit test exams are already
+  //  even (27/27/23/23) and are left alone, so with those and the eight
+  //  rebalanced quizzes held fixed, these 162 questions must contribute
+  //  A 38, B 43, C 42, D 39 for the whole course to land on 25 percent each.
+  //
+  //  Dealt from that pool in an interleaved cycle, so no single quiz carries
+  //  more than three of any one letter and the sequence is reproducible.
+  'ap-csp-course-bi1-collaboration':             ['A', 'B', 'C', 'D', 'A', 'B'],
+  'ap-csp-course-bi1-identifying-correcting-errors': ['C', 'D', 'A', 'B', 'C', 'D'],
+  'ap-csp-course-bi1-program-design-development': ['A', 'B', 'C', 'D', 'A', 'B'],
+  'ap-csp-course-bi1-program-function-purpose':  ['C', 'D', 'A', 'B', 'C', 'D'],
+  'ap-csp-course-bi2-binary-numbers':            ['A', 'B', 'C', 'D', 'A', 'B'],
+  'ap-csp-course-bi2-data-compression':          ['C', 'D', 'A', 'B', 'C', 'D'],
+  'ap-csp-course-bi2-extracting-information':    ['A', 'B', 'C', 'D', 'A', 'B'],
+  'ap-csp-course-bi2-using-programs-with-data':  ['C', 'D', 'A', 'B', 'C', 'D'],
+  'ap-csp-course-bi3-algorithmic-efficiency':    ['A', 'B', 'C', 'D', 'A', 'B'],
+  'ap-csp-course-bi3-binary-search':             ['C', 'D', 'A', 'B', 'C', 'D'],
+  'ap-csp-course-bi3-boolean-expressions':       ['A', 'B', 'C', 'D', 'A', 'B'],
+  'ap-csp-course-bi3-calling-procedures':        ['C', 'D', 'A', 'B', 'C', 'D'],
+  'ap-csp-course-bi3-data-abstraction':          ['A', 'B', 'C', 'D', 'A', 'B'],
+  'ap-csp-course-bi3-developing-procedures':     ['C', 'D', 'A', 'B', 'C', 'D'],
+  'ap-csp-course-bi3-libraries':                 ['A', 'B', 'C', 'D', 'A', 'B'],
+  'ap-csp-course-bi3-mathematical-expressions':  ['C', 'D', 'A', 'B', 'C', 'D'],
+  'ap-csp-course-bi3-random-values':             ['A', 'B', 'C', 'D', 'A', 'B'],
+  'ap-csp-course-bi3-simulations':               ['C', 'D', 'A', 'B', 'C', 'D'],
+  'ap-csp-course-bi3-variables':                 ['A', 'B', 'C', 'D', 'A', 'B'],
+  'ap-csp-course-bi4-parallel-distributed-computing': ['C', 'D', 'A', 'B', 'C', 'D'],
+  'ap-csp-course-bi4-the-internet':              ['A', 'B', 'C', 'D', 'A', 'B'],
+  'ap-csp-course-bi5-beneficial-harmful-effects': ['C', 'D', 'A', 'B', 'C', 'D'],
+  'ap-csp-course-bi5-computing-bias':            ['A', 'B', 'C', 'D', 'A', 'B'],
+  'ap-csp-course-bi5-crowdsourcing':             ['C', 'D', 'A', 'B', 'C', 'D'],
+  'ap-csp-course-bi5-digital-divide':            ['A', 'B', 'C', 'D', 'A', 'B'],
+  'ap-csp-course-bi5-legal-ethical-concerns':    ['C', 'D', 'B', 'C', 'D', 'B'],
+  'ap-csp-course-bi5-safe-computing':            ['C', 'B', 'C', 'B', 'C', 'B'],
 };
 
 const QUESTION_RE = /<div class="mcq-options" id="([^"]+)-options">([\s\S]*?)<\/div>\s*((?:\s*<div id="\1-fb-[A-D]"[\s\S]*?<\/div>)+)/g;
@@ -190,7 +227,7 @@ function verify(handle, before, after) {
 }
 
 function rebalance(edges, outPath) {
-  const rows = [], bad = [];
+  const rows = [], bad = [], unchanged = [];
   console.log('\nREBALANCE\n');
   for (const e of edges) {
     const targets = TARGETS[e.node.handle];
@@ -200,6 +237,10 @@ function rebalance(edges, outPath) {
     console.log(`  ${e.node.handle.padEnd(42)}${r.questions} questions, ${r.moved} moved`
       + (problems.length ? `   PROBLEMS: ${problems.slice(0, 3).join('; ')}` : ''));
     bad.push(...problems);
+    // A page already sitting on its target needs no import row. Re-uploading an
+    // unchanged body is pure risk: it can clobber an edit made since the pull,
+    // and it pads the sheet with pages nobody needs to check.
+    if (r.moved === 0) { unchanged.push(e.node.handle); continue; }
     rows.push({ handle: e.node.handle, title: e.node.title, body: r.body });
   }
   if (bad.length) {
@@ -211,6 +252,9 @@ function rebalance(edges, outPath) {
     .concat(rows.map((r) => [cell(r.handle), cell('UPDATE'), cell(r.title), cell(r.body)].join(',')))
     .join('\r\n') + '\r\n';
   fs.writeFileSync(outPath, '﻿' + csv);
+  if (unchanged.length) {
+    console.log(`\n  ${unchanged.length} page(s) already on target, left out of the sheet.`);
+  }
   console.log(`\n  verified: the correct answer, its feedback and the option set are unchanged in every question.`);
   console.log(`  wrote ${outPath}  (${rows.length} pages, ${(csv.length / 1024).toFixed(0)} KB)\n`);
 }
