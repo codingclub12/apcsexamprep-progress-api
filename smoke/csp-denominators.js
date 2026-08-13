@@ -108,6 +108,10 @@ const COURSE = 'ap-csp';
   db.prepare(`UPDATE course_denominators SET possible = 99
               WHERE course = ? AND lesson = 'collaboration' AND activity_type = 'quiz'`).run(COURSE);
   seedCspDenominators();
+  // The six Big Idea unit tests are priced by their OWN seed, because four Big
+  // Ideas name their test 'unit-test' with different question counts and that
+  // cannot live in a lesson-keyed table. Run it too, or CSP reads as unpriced.
+  require('../scripts/seed-csp-unit-test-denominators').seedCspUnitTestDenominators();
   const handEdited = db.prepare(`SELECT possible FROM course_denominators
     WHERE course = ? AND lesson = 'collaboration' AND activity_type = 'quiz'`).get(COURSE).possible;
   ok('  a hand-corrected value is never clobbered by a re-run', handEdited === 99, handEdited);
@@ -134,9 +138,12 @@ const COURSE = 'ap-csp';
     unpriced.slice(0, 5).map((i) => i.item_key));
   ok('  and the contract agrees the gradebook is trustworthy', g.integrity.denominators_missing === 0,
     g.integrity.denominators_missing);
-  ok('  53 graded columns priced', graded.length === 53, graded.length);
-  ok('  the course total is 35*6 + 18*8 = 354',
-    g.summary.possible === 354, g.summary.possible);
+  ok('  59 graded columns priced', graded.length === 59, graded.length);
+  // 35 lesson quizzes out of 6, 18 Big Idea 3 exercises out of 8, and the six
+  // Big Idea unit tests (12 + 12 + 14 + 14 + 10 + 14 = 76).
+  const total = graded.reduce((n, i) => n + (i.possible || 0), 0);
+  ok('  the course total is 35*6 + 18*8 + 76 unit test marks = 430',
+    total === 430, total);
 
   // ── 4. No student's grade moves ───────────────────────────────────────────
   //  The whole point of authoring at read time: it corrects the "out of" a

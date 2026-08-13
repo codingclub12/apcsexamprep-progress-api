@@ -25,7 +25,7 @@ const {
 const RETRY_SQL = retrySqlExpr('c.retry_mode', 's.retry_override', 'se.activity_type', 'c.retry_allowed');
 const {
   newId, generateClassCode, signTeacherToken,
-  isValidEmail, isValidPin, sanitize, COURSES, COURSE_PREFIXES,
+  isValidEmail, isValidPin, sanitize, COURSES, COURSE_PREFIXES, examsOf,
 } = require('../utils');
 
 // Convert any pending Shopify entitlements for this email into real grants right
@@ -808,7 +808,7 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
         for (const act of u.activities)
           cols.push({ unit: unitId, lesson, activity: act, header: `${lesson} ${abbr(act)}` });
       if (u.case_file) cols.push({ unit: unitId, lesson: u.case_file.lesson, activity: 'case-file', header: u.case_file.label || 'Case File' });
-      if (u.exam)      cols.push({ unit: unitId, lesson: u.exam.lesson, activity: 'exam', header: u.exam.label || 'Unit Exam' });
+      for (const ex of examsOf(u)) cols.push({ unit: unitId, lesson: ex.lesson, activity: 'exam', header: ex.label || 'Unit Exam' });
     }
 
     // Lead: identity + Overall % + per-unit (% and Avg Quiz).
@@ -827,7 +827,7 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
           tot++; const r = sm[`${unitId}|${lesson}|${act}`]; if (r && r.completed) done++;
         }
         if (u.case_file) { tot++; const r = sm[`${unitId}|${u.case_file.lesson}|case-file`]; if (r && r.completed) done++; }
-        if (u.exam)      { tot++; const r = sm[`${unitId}|${u.exam.lesson}|exam`]; if (r && r.completed) done++; }
+        for (const ex of examsOf(u)) { tot++; const r = sm[`${unitId}|${ex.lesson}|exam`]; if (r && r.completed) done++; }
         for (const lesson of u.lessons) { const r = sm[`${unitId}|${lesson}|quiz`]; if (r && r.score != null) { qSum += r.score; qN++; } }
         allDone += done; allTot += tot;
         summaryCells.push(tot ? `${Math.round(done / tot * 100)}%` : '0%', qN ? Math.round(qSum / qN) : '');

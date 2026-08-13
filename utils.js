@@ -150,12 +150,18 @@ const COURSES = {
         // other big ideas emit exercise-2 (a practice game) plus a quiz, so
         // listing exercise-1 here only created a permanently empty gradebook column.
         activities: ['lesson', 'exercise-2', 'quiz'],
+        // The Big Idea unit test. Declared so it shows as a column even before
+        // anyone sits it: an assessment nobody has taken and an assessment that
+        // cannot be recorded look identical otherwise, which is exactly how
+        // these went unnoticed.
+        exam: { lesson: 'unit-test', label: 'Big Idea 1 Unit Test' },
       },
       'bi-2': {
         label: 'Big Idea 2: Data',
         lessons: ['binary-numbers', 'data-compression', 'extracting-information', 'using-programs-with-data'],
         // No exercise-1 (see bi-1): these lessons emit exercise-2 plus a quiz only.
         activities: ['lesson', 'exercise-2', 'quiz'],
+        exam: { lesson: 'unit-test', label: 'Big Idea 2 Unit Test' },
       },
       'bi-3': {
         label: 'Big Idea 3: Algorithms and Programming',
@@ -168,18 +174,26 @@ const COURSES = {
         ],
         // Big Idea 3 is the only one with guided code problems, so exercise-1 is real here.
         activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
+        // Two sittings, kept as separate columns: one handle post per page, and
+        // a shared lesson would let part B overwrite part A.
+        exam: [
+          { lesson: 'unit-test-part-a', label: 'Big Idea 3 Unit Test A' },
+          { lesson: 'unit-test-part-b', label: 'Big Idea 3 Unit Test B' },
+        ],
       },
       'bi-4': {
         label: 'Big Idea 4: Computer Systems and Networks',
         lessons: ['the-internet', 'fault-tolerance', 'parallel-distributed-computing'],
         // No exercise-1 (see bi-1): these lessons emit exercise-2 plus a quiz only.
         activities: ['lesson', 'exercise-2', 'quiz'],
+        exam: { lesson: 'unit-test', label: 'Big Idea 4 Unit Test' },
       },
       'bi-5': {
         label: 'Big Idea 5: Impact of Computing',
         lessons: ['beneficial-harmful-effects', 'digital-divide', 'computing-bias', 'crowdsourcing', 'legal-ethical-concerns', 'safe-computing'],
         // No exercise-1 (see bi-1): these lessons emit exercise-2 plus a quiz only.
         activities: ['lesson', 'exercise-2', 'quiz'],
+        exam: { lesson: 'unit-test', label: 'Big Idea 5 Unit Test' },
       },
     },
   },
@@ -295,6 +309,15 @@ function trailingActivity(h) {
   return 'lesson';
 }
 
+// A unit may declare ONE exam or SEVERAL. Cyber gives each unit a single unit
+// exam; CSP Big Idea 3 sits its unit test in two parts, which are two columns.
+// Every reader goes through this so a second exam can never be silently dropped
+// by code that assumed an object.
+function examsOf(unit) {
+  if (!unit || !unit.exam) return [];
+  return Array.isArray(unit.exam) ? unit.exam : [unit.exam];
+}
+
 function pageFromHandle(raw) {
   if (!raw) return null;
   const h = String(raw).split('/').filter(Boolean).pop() || '';
@@ -304,9 +327,35 @@ function pageFromHandle(raw) {
   // do not match bi{digit} and are correctly ignored.
   let m = h.match(/^ap-csp-course-bi(\d+)-(.+)$/);
   if (m) {
+    const slug = m[2];
+    const unit = 'bi-' + m[1];
+
+    // Big Idea unit tests are the highest stakes assessment in CSP, and they
+    // were landing as page VISITS. 'unit-test' ends in no activity token, so
+    // trailingActivity called it a lesson, and a lesson is ungraded: six tests,
+    // 84 authored questions with full answer keys, none of them able to carry a
+    // grade. The pages report fine, they were just filed somewhere ungradeable.
+    //
+    // Big Idea 3 is split across two sittings, part A and part B, and they stay
+    // SEPARATE lessons on purpose. A handle post with no item defaults to the
+    // item name 'item' (routes/student.js), so folding both parts into one
+    // lesson would have the second submission overwrite the first.
+    const ut = slug.match(/^unit-test(?:-part-([a-z]))?$/);
+    if (ut) {
+      return { course: 'ap-csp', unit, activity_type: 'exam',
+               lesson: ut[1] ? `unit-test-part-${ut[1]}` : 'unit-test' };
+    }
+
+    // Guided notes belong to their topic, they are not a topic of their own.
+    // Sixteen '<topic>-notes' pages were each minting a second lesson column
+    // beside the real one, so visiting the notes for 1.1 registered as progress
+    // on a topic called 'collaboration-notes' that appears in no course.
+    const notes = slug.match(/^(.+)-notes$/);
+    if (notes) return { course: 'ap-csp', unit, lesson: notes[1], activity_type: 'lesson' };
+
     const activity_type = trailingActivity(h);
-    const lesson = m[2].replace(new RegExp('-' + activity_type + '$'), '');
-    return { course: 'ap-csp', unit: 'bi-' + m[1], lesson, activity_type };
+    const lesson = slug.replace(new RegExp('-' + activity_type + '$'), '');
+    return { course: 'ap-csp', unit, lesson, activity_type };
   }
 
   // CSA course: ap-csa-lesson-{U}-{L}-{slug}   (lesson id = "U.L")
@@ -387,7 +436,7 @@ function pageFromHandle(raw) {
   return null; // unknown page, /track no-ops
 }
 
-module.exports = { pageFromHandle, trailingActivity, ACTIVITY_TOKENS,
+module.exports = { pageFromHandle, trailingActivity, ACTIVITY_TOKENS, examsOf,
   newId, generateClassCode, signTeacherToken, verifyTeacherToken,
   signStudentToken, verifyStudentToken, COURSES, COURSE_PREFIXES,
   isValidEmail, isValidPin, isValidClassCode, sanitize,

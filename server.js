@@ -190,6 +190,14 @@ if (cyberDenoms) console.log(`cyber denominators: ${cyberDenoms.changed} new of 
 const cspDenoms = runBootSeed('csp_denominators', () => require('./scripts/seed-csp-denominators').seedCspDenominators());
 if (cspDenoms) console.log(`csp denominators: ${cspDenoms.changed} new of ${cspDenoms.total} rows`);
 
+// CSP Big Idea unit test totals, counted from each test's own answer key. These
+// go to course_unit_denominators because four Big Ideas name their test
+// 'unit-test' with DIFFERENT question counts, which one lesson-keyed row cannot
+// hold. Same insert-or-ignore posture.
+const cspUnitTests = runBootSeed('csp_unit_test_denominators',
+  () => require('./scripts/seed-csp-unit-test-denominators').seedCspUnitTestDenominators());
+if (cspUnitTests) console.log(`csp unit test denominators: ${cspUnitTests.changed} new of ${cspUnitTests.total} rows`);
+
 // Cyber case file denominators. Separate from the cyber seed above because all
 // five case files sit at lesson 'case-file' and would collide on one
 // course_denominators row, so these go to course_unit_denominators instead.
