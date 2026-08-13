@@ -101,7 +101,10 @@ const post = (sid, item_id, item_type, score, max_score) => call('POST', '/api/p
 const gbScore = (classId, sid, activity) => {
   const g = buildGradebook(classId, {});
   const stu = (g.students || []).find((r) => r.id === sid);
-  const cell = stu && stu.items && stu.items[`1.1|${activity}`];
+  // Read the item's OWN key: the admin grid keys columns by unit, so a hand
+  // built "1.1|quiz" silently matched nothing and every assertion read null.
+  const item = (g.items || []).find((i) => i.lesson_id === '1.1' && i.activity === activity);
+  const cell = stu && stu.items && item && stu.items[item.key];
   return cell ? cell.earned : null;
 };
 

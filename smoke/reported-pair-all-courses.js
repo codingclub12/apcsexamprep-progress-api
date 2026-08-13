@@ -205,6 +205,44 @@ function expectsPoints(course, act, gamesOn) {
   console.log(`\n  ${String(grandTotal).padStart(4)} columns total across four courses  ` +
     `(${grandGraded} graded, ${grandUngraded} ungraded by policy)`);
 
+  // ── Every assignment reaches the OPERATOR grid too ────────────────────────
+  //  The matrix above proves the contract renders every column. The operator
+  //  page is built by a different function, lib/admin-gradebook.js, and it was
+  //  quietly losing columns: its key was `lesson|activity` with no unit, so
+  //  cyber's five unit exams (all at lesson 'exam') collapsed into ONE column
+  //  and its five case files into another. Eight of 114 columns never reached
+  //  the screen, and one unit's exam cell overwrote another's.
+  //
+  //  Column COUNT alone is not enough to catch that, since a lost column and an
+  //  added one cancel out, so the two sets are compared by identity.
+  console.log('\nEvery assignment also reaches the operator grid');
+  const { buildGradebook } = require('../lib/admin-gradebook');
+  for (const course of COURSE_LIST) {
+    const cls2 = await post('/api/teacher/classes', { class_name: 'Grid ' + course, course }, teacherToken);
+    const code2 = cls2.body && cls2.body.class && cls2.body.class.class_code;
+    if (!code2) { ok(`${course}: grid class created`, false, cls2.body); continue; }
+
+    const admin = buildGradebook(code2, { reveal: true });
+    const contract = buildCanonicalGradebook(code2, { reveal: true });
+    const aSet = new Set((admin.items || []).map((i) => `${i.unit}/${i.lesson_id}/${i.activity}`));
+    const cSet = new Set((contract.items || []).map((i) => `${i.unit}/${i.lesson_ref}/${i.native_activity}`));
+    const missing = [...cSet].filter((k) => !aSet.has(k));
+    const extra = [...aSet].filter((k) => !cSet.has(k));
+
+    ok(`${course}: the operator grid shows all ${cSet.size} columns, none collapsed`,
+      missing.length === 0, missing.slice(0, 6));
+    ok(`${course}: and invents none`, extra.length === 0, extra.slice(0, 6));
+    // The specific shape that was broken: five distinct exam columns, not one.
+    if (course === 'ap-cybersecurity') {
+      const exams = (admin.items || []).filter((i) => i.activity === 'exam');
+      const files = (admin.items || []).filter((i) => i.activity === 'case-file');
+      ok('  ap-cybersecurity: five separate unit exams, not one merged column',
+        exams.length === 5 && new Set(exams.map((e) => e.unit)).size === 5, exams.length);
+      ok('  ap-cybersecurity: five separate case files',
+        files.length === 5 && new Set(files.map((f) => f.unit)).size === 5, files.length);
+    }
+  }
+
   console.log(`\n${pass} passed, ${fail} failed\n`);
   server.close();
   process.exit(fail ? 1 : 0);
