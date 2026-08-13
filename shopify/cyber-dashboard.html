@@ -571,7 +571,9 @@ window.TCDash = {
   cellText(cd,plain){ if(!cd.started) return '–';
     if(cd.priced) return this.num(cd.earned)+'/'+this.num(cd.possible);
     return this.num(cd.pct)+'%'+(plain?'*':"<span class='pv' title='Points have not been assigned to this activity yet'>*</span>"); },
-  letterFor(p){ if(p>=90)return'A'; if(p>=80)return'B'; if(p>=70)return'C'; if(p>=60)return'D'; return'F'; },
+  letterFor(p){ if(p==null)return''; if(p>=90)return'A'; if(p>=80)return'B'; if(p>=70)return'C'; if(p>=60)return'D'; return'F'; },
+  // A grade with no priced work behind it prints as a dash, never as 0%.
+  pctText(p){ return p==null?'–':(p+'%'); },
 
   cellData(stu,c){
     const k=this.keyOf(stu.id,c);
@@ -609,8 +611,11 @@ window.TCDash = {
       // outweighed a real 5 point quiz twenty to one and moved the grade.
       if(!cd.priced){ unpriced++; return; }
       earned+=cd.earned; poss+=cd.possible; });
+    // NO PRICED WORK IS NOT A ZERO. With nothing priced there is no fraction to
+    // report, and 0 percent reads as a failing grade for work that was never
+    // graded. pct is null and every reader renders it as a dash.
     return {earned:Math.round(earned*100)/100,poss:Math.round(poss*100)/100,
-            pct:poss>0?Math.round(earned/poss*100):0,done:done,total:total,unpriced:unpriced};
+            pct:poss>0?Math.round(earned/poss*100):null,done:done,total:total,unpriced:unpriced};
   },
 
   renderAll(){ this.renderStats(); this.renderGrid(); this.renderStudent(+document.getElementById('rep-picker').value||0); this.renderAssignment(+document.getElementById('ba-picker').value||0); },
@@ -618,13 +623,16 @@ window.TCDash = {
   renderStats(){
     const arr=this.model.students.map(s=>this.totals(s));
     const n=arr.length||1;
-    const avg=Math.round(arr.reduce((a,b)=>a+b.pct,0)/n);
+    // Averaged over the students who HAVE a grade. Counting a student with no
+    // priced work as a zero drags the class average down for work nobody graded.
+    const graded_arr=arr.filter(x=>x.pct!=null);
+    const avg=graded_arr.length?Math.round(graded_arr.reduce((a,b)=>a+b.pct,0)/graded_arr.length):null;
     const comp=Math.round(arr.reduce((a,b)=>a+(b.total?b.done/b.total:0),0)/n*100);
     const active=this.model.students.filter(s=>/Today|Yesterday/.test(s.lastActive||'')).length;
     const graded=arr.reduce((a,b)=>a+b.done,0);
     const card=(l,v,f)=>'<div class="gb-stat"><div class="l">'+l+'</div><div class="v">'+v+'</div><div class="f">'+f+'</div></div>';
     document.getElementById('gb-statcards').innerHTML=
-      card('Class average',avg+'<small>%</small>',this.letterFor(avg)+' average')+
+      card('Class average',avg==null?'&ndash;':(avg+'<small>%</small>'),avg==null?'no graded work yet':(this.letterFor(avg)+' average'))+
       card('Completion',comp+'<small>%</small>','of assigned work')+
       card('Active recently',active+'<small>/'+this.model.students.length+'</small>','today or yesterday')+
       card('Graded items',graded,'submissions logged');
@@ -642,11 +650,12 @@ window.TCDash = {
     h+="</tr></thead><tbody>";
     let rows=this.model.students.map((s,idx)=>({s:s,idx:idx,t:this.totals(s)}))
       .filter(r=>r.s.name.toLowerCase().indexOf(this.state.search.toLowerCase())>-1);
-    rows.sort((a,b)=>{ const d=this.state.sortKey==='grade'?(a.t.pct-b.t.pct):a.s.name.localeCompare(b.s.name); return d*this.state.sortDir; });
+    rows.sort((a,b)=>{ const gv=x=>x.t.pct==null?-1:x.t.pct;
+      const d=this.state.sortKey==='grade'?(gv(a)-gv(b)):a.s.name.localeCompare(b.s.name); return d*this.state.sortDir; });
     rows.forEach(r=>{
       const s=r.s,t=r.t,lt=this.letterFor(t.pct);
       h+="<tr><td class='c-stick c-name'><div class='stu' onclick='TCDash.gotoStudent("+r.idx+")'><div class='ini'>"+s.initials+"</div><div><div class='nm'>"+S.esc(s.name)+"</div><div class='la'>"+S.esc(s.lastActive||'')+"</div></div></div></td>";
-      h+="<td class='c-stick c-grade'><div class='gcell'>"+(this.state.letters?"<span class='letter l-"+lt+"'>"+lt+"</span>":"")+"<span class='pct'>"+t.pct+"%</span></div></td>";
+      h+="<td class='c-stick c-grade'><div class='gcell'>"+((this.state.letters&&lt)?"<span class='letter l-"+lt+"'>"+lt+"</span>":"")+"<span class='pct'>"+this.pctText(t.pct)+"</span></div></td>";
       h+="<td class='c-stick c-pts'><div class='ptsb'>"+t.earned+"</div><div class='ptss'>/ "+t.poss+"</div></td>";
       vcols.forEach(o=>{ const c=o.c;
         const cd=this.cellData(s,c), off=!this.counts(c.activity), dim=off?" style='opacity:.45'":"";
@@ -750,7 +759,7 @@ window.TCDash = {
       "<button class='gb-btn sm danger' onclick=\"TCDash.removeStudent('"+s.id+"')\">Remove</button>";
     let miss=0,low=0; this.model.cols.forEach(c=>{ if(!S.counts(c.activity))return; const cd=S.cellData(s,c); if(!cd.started)miss++; else if(cd.pct<S.state.threshold)low++; });
     const mini=(l,v)=>"<div class='mini'><div class='l'>"+l+"</div><div class='v'>"+v+"</div></div>";
-    document.getElementById('rep-mini').innerHTML=mini('Overall',"<span class='letter l-"+lt+"' style='vertical-align:-5px'>"+lt+"</span> "+t.pct+'%')+mini('Points',t.earned+' / '+t.poss)+mini('Below mastery',low)+mini('Not started',miss);
+    document.getElementById('rep-mini').innerHTML=mini('Overall',(lt?("<span class='letter l-"+lt+"' style='vertical-align:-5px'>"+lt+"</span> "):'')+this.pctText(t.pct))+mini('Points',t.earned+' / '+t.poss)+mini('Below mastery',low)+mini('Not started',miss);
     document.getElementById('rep-retry').innerHTML=this.retryCard(idx,s);
     let rows="<tr><th>Lesson</th><th>Activity</th><th>Score</th><th>Percent</th><th>Status</th></tr>";
     this.model.cols.forEach(c=>{ const cd=S.cellData(s,c); let st,sc,pc;
@@ -850,7 +859,7 @@ window.TCDash = {
     m.students.forEach(stu=>{
       const t=S.totals(stu); const rec=byId[stu.id]||{};
       let comp=0,tot=0; uids.forEach(uid=>{ const un=rec.units&&rec.units[uid]; if(un){comp+=un.completed||0;tot+=un.total||0;} });
-      const row=[stu.name||'',stu.ref||'',stu.lastActive||'Never',t.pct+'%',S.num(t.earned),S.num(t.poss),(tot>0?Math.round(100*comp/tot):0)+'%'];
+      const row=[stu.name||'',stu.ref||'',stu.lastActive||'Never',(t.pct==null?'':t.pct+'%'),S.num(t.earned),S.num(t.poss),(tot>0?Math.round(100*comp/tot):0)+'%'];
       m.cols.forEach(c=>{ const cd=S.cellData(stu,c);
         // Not started, completed but never graded, and scored are three
         // different facts. Blank, "Complete" and a score, never all zero.
