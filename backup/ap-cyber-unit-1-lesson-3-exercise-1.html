@@ -1,0 +1,507 @@
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"LearningResource","headline":"Exercise 1: Public Wi-Fi Risk Classification Lab","description":"Classify wireless attack types, identify adversary skill levels, and recommend defenses for real-world public Wi-Fi scenarios. The three skills most t","author":{"@type":"Person","name":"Tanner Crow","url":"https://www.apcsexamprep.com/pages/ap-computer-science-tutor"},"publisher":{"@type":"Organization","name":"APCSExamPrep.com","url":"https://www.apcsexamprep.com"},"educationalLevel":"High School","inLanguage":"en-US"},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.apcsexamprep.com"},{"@type":"ListItem","position":2,"name":"AP Cybersecurity","item":"https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide"},{"@type":"ListItem","position":3,"name":"Unit 1","item":"https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide#unit1"},{"@type":"ListItem","position":4,"name":"Topic 1.3: Public Wi-Fi Dangers","item":"https://www.apcsexamprep.com/pages/ap-cybersecurity-unit-1-wireless-security"},{"@type":"ListItem","position":5,"name":"Exercise 1: Public Wi-Fi Risk Classification Lab","item":"https://www.apcsexamprep.com/pages/ap-cyber-unit-1-lesson-3-exercise-1"}]}]
+</script>
+<!-- ============================================================
+  AP CYBERSECURITY | Unit 1 Topic 1.2 | Exercise 1: Password Autopsy
+  Shopify Handle: ap-cyber-unit-1-lesson-2-exercise-1
+  data-lesson-id="1.2-ex1"
+
+  SHOPIFY NOTES:
+  - Unique wrapper: #cyber-ex1-12
+  - Purple theme, Georgia serif, ucnav, full CSS isolation
+  - NO raw emojis - HTML entities only
+  - All buttons: white text forced with :link/:visited/:hover/:active + -webkit-text-fill-color
+
+  CB ALIGNMENT: 1.2.A (signs of attack), 1.2.B (exploit weak auth), 1.2.C (strengthen auth)
+  TIME: 30-40 minutes
+============================================================ -->
+
+<style>
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-lesson.locked{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;cursor:not-allowed!important;}
+#ucnav .ucn-lesson.locked:link,#ucnav .ucn-lesson.locked:visited,#ucnav .ucn-lesson.locked:hover{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;background:transparent!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-lock svg{opacity:.5!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+
+
+/* ===== UNIT NAV ===== */
+@media(max-width:600px){}
+
+/* ===== WRAPPER ===== */
+#cyber-ex1-12{
+  all:initial!important;display:block!important;font-family:'Georgia',serif!important;
+  color:#1E1B4B!important;background:#ffffff!important;line-height:1.6!important;
+  -webkit-font-smoothing:antialiased!important;max-width:940px!important;
+  margin:0 auto!important;padding:20px 16px 60px!important;
+}
+#cyber-ex1-12 *{box-sizing:border-box!important;}
+#cyber-ex1-12{--purple:#6B21A8;--purple-mid:#7C3AED;--purple-light:#A855F7;--purple-bg:#F5F0FF;--purple-border:#DDD6FE;--dark:#1E1B4B;--gray:#6B7280;--gray-light:#F9FAFB;--gray-border:#E5E7EB;--green:#15803D;--green-bg:#F0FDF4;--green-border:#BBF7D0;}
+
+/* ===== HEADER ===== */
+#cyber-ex1-12 .ex-header{
+  background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;
+  border-radius:14px!important;padding:36px 32px!important;margin-bottom:20px!important;
+  color:#ffffff!important;position:relative!important;overflow:hidden!important;
+}
+#cyber-ex1-12 .ex-header::before{content:''!important;position:absolute!important;top:-60px!important;right:-60px!important;width:300px!important;height:300px!important;border-radius:50%!important;background:rgba(168,85,247,0.15)!important;pointer-events:none!important;}
+#cyber-ex1-12 .ex-header::after{content:''!important;position:absolute!important;bottom:-80px!important;left:-40px!important;width:250px!important;height:250px!important;border-radius:50%!important;background:rgba(124,58,237,0.12)!important;pointer-events:none!important;}
+#cyber-ex1-12 .ex-tag{display:inline-block!important;background:rgba(168,85,247,0.25)!important;border:1px solid rgba(168,85,247,0.5)!important;color:#E9D5FF!important;font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;text-transform:uppercase!important;padding:6px 16px!important;border-radius:20px!important;margin-bottom:16px!important;}
+#cyber-ex1-12 .ex-header h1{font-family:'Georgia',serif!important;font-size:28px!important;font-weight:700!important;color:#ffffff!important;margin:0 0 10px!important;line-height:1.3!important;position:relative!important;}
+#cyber-ex1-12 .ex-header p{font-family:'Georgia',serif!important;font-size:15px!important;color:rgba(255,255,255,0.85)!important;margin:0 0 20px!important;line-height:1.6!important;position:relative!important;}
+#cyber-ex1-12 .ex-badges{display:flex!important;flex-wrap:wrap!important;gap:10px!important;position:relative!important;}
+#cyber-ex1-12 .ex-badge{display:inline-flex!important;align-items:center!important;gap:5px!important;background:rgba(168,85,247,0.2)!important;border:1px solid rgba(168,85,247,0.4)!important;color:#E9D5FF!important;padding:5px 14px!important;border-radius:18px!important;font-family:'Georgia',serif!important;font-size:12px!important;font-weight:600!important;}
+
+/* ===== SCORE BAR ===== */
+#cyber-ex1-12 .score-bar{position:relative!important;z-index:50!important;background:linear-gradient(135deg,#1E1B4B,#3B0764)!important;color:#ffffff!important;padding:10px 20px!important;border-radius:10px!important;display:flex!important;justify-content:space-between!important;align-items:center!important;font-family:'Georgia',serif!important;font-size:13px!important;font-weight:600!important;box-shadow:0 4px 12px rgba(30,27,75,0.3)!important;margin-bottom:24px!important;}
+#cyber-ex1-12 .score-bar .score-num{background:var(--purple)!important;padding:4px 14px!important;border-radius:14px!important;font-size:14px!important;font-weight:800!important;color:#ffffff!important;}
+
+/* ===== SECTIONS ===== */
+#cyber-ex1-12 .section{background:#ffffff!important;border:1px solid var(--gray-border)!important;border-radius:12px!important;padding:28px 24px!important;margin-bottom:24px!important;box-shadow:0 2px 8px rgba(0,0,0,0.04)!important;}
+#cyber-ex1-12 .section h2{font-family:'Georgia',serif!important;font-size:18px!important;font-weight:700!important;color:var(--dark)!important;margin:0 0 12px!important;}
+#cyber-ex1-12 .section h3{font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;color:var(--purple)!important;margin:16px 0 8px!important;}
+#cyber-ex1-12 .section p{font-family:'Georgia',serif!important;font-size:14px!important;color:#374151!important;margin:0 0 12px!important;line-height:1.7!important;}
+#cyber-ex1-12 .section-label{display:inline-block!important;background:var(--purple-bg)!important;color:var(--purple)!important;font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1px!important;padding:4px 12px!important;border-radius:4px!important;margin-bottom:12px!important;}
+
+/* ===== PASSWORD SPECIMEN ===== */
+#cyber-ex1-12 .pw-specimen{background:#0f172a!important;border-radius:8px!important;padding:16px 20px!important;margin:12px 0!important;font-family:'Courier New',monospace!important;font-size:20px!important;font-weight:700!important;letter-spacing:2px!important;color:#a78bfa!important;text-align:center!important;border:2px solid #334155!important;}
+#cyber-ex1-12 .pw-context{background:var(--gray-light)!important;border:1px solid var(--gray-border)!important;border-radius:8px!important;padding:12px 16px!important;margin:8px 0 16px!important;font-family:'Georgia',serif!important;font-size:13px!important;color:#475569!important;}
+#cyber-ex1-12 .pw-context strong{color:var(--dark)!important;}
+
+/* ===== FORM FIELDS ===== */
+#cyber-ex1-12 .q-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:14px!important;margin:12px 0!important;}
+@media(max-width:600px){#cyber-ex1-12 .q-grid{grid-template-columns:1fr!important;}}
+#cyber-ex1-12 .q-field{display:flex!important;flex-direction:column!important;gap:4px!important;}
+#cyber-ex1-12 .q-field label{font-family:'Georgia',serif!important;font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:0.5px!important;color:#475569!important;}
+#cyber-ex1-12 .q-field select,#cyber-ex1-12 .q-field textarea{font-family:'Georgia',serif!important;font-size:13px!important;padding:8px 10px!important;border:1px solid var(--purple-border)!important;border-radius:6px!important;background:#ffffff!important;color:var(--dark)!important;resize:vertical!important;}
+#cyber-ex1-12 .q-field select:focus,#cyber-ex1-12 .q-field textarea:focus{outline:none!important;border-color:var(--purple)!important;box-shadow:0 0 0 2px rgba(107,33,168,0.15)!important;}
+#cyber-ex1-12 .q-full{grid-column:1/-1!important;}
+
+/* ===== LOG TABLE ===== */
+#cyber-ex1-12 .log-table{width:100%!important;border-collapse:collapse!important;margin:12px 0!important;font-family:'Courier New',monospace!important;font-size:12px!important;}
+#cyber-ex1-12 .log-table th{background:var(--dark)!important;color:#ffffff!important;padding:8px 10px!important;text-align:left!important;font-family:'Georgia',serif!important;font-size:11px!important;text-transform:uppercase!important;letter-spacing:0.5px!important;}
+#cyber-ex1-12 .log-table td{padding:6px 10px!important;border-bottom:1px solid var(--gray-border)!important;vertical-align:top!important;color:#1e293b!important;}
+#cyber-ex1-12 .log-table tr:nth-child(even) td{background:var(--gray-light)!important;}
+#cyber-ex1-12 .log-table tr.suspicious td{background:#fef2f2!important;color:#991b1b!important;font-weight:600!important;}
+
+/* ===== BUTTONS ===== */
+#cyber-ex1-12 .check-btn{display:inline-block!important;background:var(--purple)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;font-family:'Georgia',serif!important;font-size:14px!important;font-weight:700!important;padding:10px 24px!important;border:none!important;border-radius:8px!important;cursor:pointer!important;margin-top:12px!important;opacity:1!important;visibility:visible!important;text-decoration:none!important;}
+#cyber-ex1-12 .check-btn:hover{background:var(--purple-mid)!important;}
+#cyber-ex1-12 a.check-btn:link,#cyber-ex1-12 a.check-btn:visited,#cyber-ex1-12 a.check-btn:hover,#cyber-ex1-12 a.check-btn:active{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#cyber-ex1-12 .nav-btn-back{background:#475569!important;}
+#cyber-ex1-12 .nav-btn-back:hover{background:#334155!important;}
+
+/* ===== FEEDBACK ===== */
+#cyber-ex1-12 .feedback{display:none!important;border-radius:8px!important;padding:16px 18px!important;margin-top:14px!important;font-family:'Georgia',serif!important;font-size:13px!important;line-height:1.7!important;}
+#cyber-ex1-12 .feedback.show{display:block!important;}
+#cyber-ex1-12 .feedback.correct{background:var(--green-bg)!important;border:1px solid var(--green-border)!important;color:#166534!important;}
+#cyber-ex1-12 .feedback.partial{background:#FFFBEB!important;border:1px solid #FDE68A!important;color:#92400E!important;}
+#cyber-ex1-12 .feedback.incorrect{background:#FEF2F2!important;border:1px solid #FECACA!important;color:#991B1B!important;}
+
+/* ===== RESULTS ===== */
+#cyber-ex1-12 .results-panel{display:none!important;background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;border-radius:12px!important;padding:32px!important;text-align:center!important;color:#ffffff!important;margin-top:24px!important;position:relative!important;overflow:hidden!important;}
+#cyber-ex1-12 .results-panel::before{content:''!important;position:absolute!important;top:-40px!important;right:-40px!important;width:200px!important;height:200px!important;border-radius:50%!important;background:rgba(168,85,247,0.15)!important;pointer-events:none!important;}
+#cyber-ex1-12 .results-panel.show{display:block!important;}
+#cyber-ex1-12 .results-panel h2{font-family:'Georgia',serif!important;font-size:22px!important;color:#ffffff!important;margin:0 0 8px!important;position:relative!important;}
+#cyber-ex1-12 .results-score{font-family:'Georgia',serif!important;font-size:48px!important;font-weight:900!important;color:var(--purple-light)!important;margin:12px 0!important;position:relative!important;}
+#cyber-ex1-12 .results-panel p{font-family:'Georgia',serif!important;font-size:14px!important;color:rgba(255,255,255,0.85)!important;margin:8px 0!important;position:relative!important;}
+
+/* ===== EXAM TIP ===== */
+#cyber-ex1-12 .exam-tip{background:var(--purple-bg)!important;border-left:4px solid var(--purple)!important;border-radius:0 8px 8px 0!important;padding:16px 20px!important;margin:20px 0!important;font-family:'Georgia',serif!important;font-size:14px!important;color:var(--dark)!important;}
+#cyber-ex1-12 .exam-tip strong{color:var(--purple)!important;}
+
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+</style>
+<script>
+function ucnToggle(num){try{event.stopPropagation();}catch(x){}var l=document.getElementById('ucn-l'+num),s=document.getElementById('ucn-s'+num);if(!l||!s)return;var o=l.classList.contains('open');document.querySelectorAll('#ucnav .ucn-lesson').forEach(function(e){e.classList.remove('open')});document.querySelectorAll('#ucnav .ucn-steps').forEach(function(e){e.classList.remove('open')});if(!o){l.classList.add('open');s.classList.add('open');setTimeout(function(){l.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},50)}}
+(function(){
+function pos(){var nav=document.getElementById('ucnav');if(!nav)return;if(nav.parentElement!==document.body){document.body.appendChild(nav)}var h=0;var headerEl=document.querySelector('.section-header header.header')||document.querySelector('sticky-header header')||document.querySelector('header.header');if(headerEl){h=Math.round(headerEl.getBoundingClientRect().bottom)}if(h<20||h>300)h=68;nav.style.setProperty('top',h+'px','important');var navH=nav.offsetHeight||42;var w=document.getElementById('apcyber-wrapper')||document.querySelector('[data-lesson-id]')||document.querySelector('[id^="u3l"]')||document.querySelector('[id^="u1l"]')||document.querySelector('[id^="u2l"]');if(w)w.style.setProperty('padding-top',(h+navH+4)+'px','important')}
+function openCurrentSteps(){var ol=document.querySelector('#ucnav .ucn-lesson.open');if(ol&&ol.id){var n=ol.id.replace('ucn-l','');var s=document.getElementById('ucn-s'+n);if(s)s.classList.add('open');setTimeout(function(){ol.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},100)}}
+requestAnimationFrame(pos);setTimeout(pos,150);setTimeout(pos,400);setTimeout(pos,800);setTimeout(pos,1500);setTimeout(pos,3000);setTimeout(openCurrentSteps,200);
+window.addEventListener('resize',pos,{passive:true});
+setTimeout(function(){var _w=document.getElementById('apcyber-wrapper')||document.querySelector('[id^="u3l"]')||document.querySelector('[id^="u1l"]')||document.querySelector('[id^="u2l"]');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}var _m=document.getElementById('MainContent');if(_m){_m.style.setProperty('padding-top','0','important');_m.style.setProperty('margin-top','0','important')}},50);
+setTimeout(function(){var _w=document.getElementById('apcyber-wrapper')||document.querySelector('[id^="u3l"]');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}},500);
+var scrolled=false;window.addEventListener('scroll',function(){if(!scrolled){scrolled=true;requestAnimationFrame(pos)}},{passive:true});
+var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class','hidden']});setTimeout(function(){obs.disconnect()},15000);
+})();
+</script>
+<div id="ucnav"><div class="ucn-rail" id="ucn-rail">
+<a href="/pages/ap-cybersecurity-complete-course-guide" class="ucn-hub">AP Cyber Hub</a>
+<span class="ucn-badge">Unit 1</span>
+<a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-lesson" onclick="ucnToggle(1);" id="ucn-l1" title="Understanding Social Engineering">1.1 <span class="ucn-chevron">▼</span></a>
+<div class="ucn-steps" id="ucn-s1">
+<a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-step">Lesson</a>
+<a href="/pages/ap-cyber-unit-1-lesson-1-exercise-1" class="ucn-step">Ex 1</a>
+<a href="/pages/ap-cyber-unit-1-lesson-1-exercise-2" class="ucn-step">Ex 2</a>
+<a href="/pages/ap-cyber-unit-1-lesson-1-lab" class="ucn-step">Lab</a>
+<a href="/pages/ap-cyber-unit-1-lesson-1-quiz" class="ucn-step">Quiz</a>
+</div>
+<a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-lesson" onclick="ucnToggle(2);" id="ucn-l2" title="Suspicious Website Logins">1.2 <span class="ucn-chevron">▼</span></a>
+<div class="ucn-steps" id="ucn-s2">
+<a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-step">Lesson</a>
+<a href="/pages/ap-cyber-unit-1-lesson-2-exercise-1" class="ucn-step">Ex 1</a>
+<a href="/pages/ap-cyber-unit-1-lesson-2-exercise-2" class="ucn-step">Ex 2</a>
+<a href="/pages/ap-cyber-unit-1-lesson-2-lab" class="ucn-step">Lab</a>
+<a href="/pages/ap-cyber-unit-1-lesson-2-quiz" class="ucn-step">Quiz</a>
+</div>
+<a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-lesson open" onclick="ucnToggle(3);" id="ucn-l3" title="Public Wi-Fi Dangers">1.3 <span class="ucn-chevron">▼</span></a>
+<div class="ucn-steps open" id="ucn-s3">
+<a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-step">Lesson</a>
+<a href="/pages/ap-cyber-unit-1-lesson-3-exercise-1" class="ucn-step current">Ex 1</a>
+<a href="/pages/ap-cyber-unit-1-lesson-3-exercise-2" class="ucn-step">Ex 2</a>
+<a href="/pages/ap-cyber-unit-1-lesson-3-lab" class="ucn-step">Lab</a>
+<a href="/pages/ap-cyber-unit-1-lesson-3-quiz" class="ucn-step">Quiz</a>
+</div>
+<a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-lesson" onclick="ucnToggle(4);" id="ucn-l4" title="AI-Based Attacks">1.4 <span class="ucn-chevron">▼</span></a>
+<div class="ucn-steps" id="ucn-s4">
+<a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-step">Lesson</a>
+<a href="/pages/ap-cyber-unit-1-lesson-4-exercise-1" class="ucn-step">Ex 1</a>
+<a href="/pages/ap-cyber-unit-1-lesson-4-exercise-2" class="ucn-step">Ex 2</a>
+<a href="/pages/ap-cyber-unit-1-lesson-4-lab" class="ucn-step">Lab</a>
+<a href="/pages/ap-cyber-unit-1-lesson-4-quiz" class="ucn-step">Quiz</a>
+</div>
+<a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-lesson" onclick="ucnToggle(5);" id="ucn-l5" title="AI in Defense">1.5 <span class="ucn-chevron">▼</span></a>
+<div class="ucn-steps" id="ucn-s5">
+<a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-step">Lesson</a>
+<a href="/pages/ap-cyber-unit-1-lesson-5-exercise-1" class="ucn-step">Ex 1</a>
+<a href="/pages/ap-cyber-unit-1-lesson-5-exercise-2" class="ucn-step">Ex 2</a>
+<a href="/pages/ap-cyber-unit-1-lesson-5-lab" class="ucn-step">Lab</a>
+<a href="/pages/ap-cyber-unit-1-lesson-5-quiz" class="ucn-step">Quiz</a>
+</div>
+</div></div>
+<div style="max-width:860px;margin:0 auto;padding:0 16px 60px;">
+<nav aria-label="Breadcrumb" style="font-size:0.82rem;color:#6b7280;-webkit-text-fill-color:#6b7280;margin:16px 0 20px;font-family:'Georgia',serif;">
+  <a href="/" style="color:#6b21a8;text-decoration:none;-webkit-text-fill-color:#6b21a8;">Home</a><span style="margin:0 6px;color:#d1d5db;">›</span>
+  <a href="/pages/ap-cybersecurity-complete-course-guide" style="color:#6b21a8;text-decoration:none;-webkit-text-fill-color:#6b21a8;">AP Cybersecurity</a><span style="margin:0 6px;color:#d1d5db;">›</span>
+  <span style="color:#374151;-webkit-text-fill-color:#374151;">Topic 1.3 › Exercise 1</span>
+</nav>
+<div style="background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 60%,#7C3AED 100%);border-radius:14px;padding:28px 32px;margin-bottom:28px;">
+  <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#c4b5fd;margin-bottom:8px;font-family:'Georgia',serif;">AP Cybersecurity — Unit 1, Topic 1.3</div>
+  <h1 style="font-size:1.5rem;font-weight:800;color:#fff;-webkit-text-fill-color:#fff;margin:0 0 10px;font-family:'Georgia',serif;">Exercise 1: Public Wi-Fi Risk Classification Lab</h1>
+  <p style="font-size:0.92rem;color:rgba(255,255,255,.85);-webkit-text-fill-color:rgba(255,255,255,.85);margin:0 0 16px;line-height:1.6;font-family:'Georgia',serif;">Classify wireless attack types, identify adversary skill levels, and recommend defenses for real-world public Wi-Fi scenarios. The three skills most tested for Topic 1.3.</p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <span style="background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.78rem;font-weight:600;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">Skills 1.A, 1.B, 2.B</span>
+    <span style="background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.78rem;font-weight:600;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">~30–40 min • 3 Parts • 24 pts</span>
+  </div>
+</div>
+<div style="background:#f9fafb;border-radius:10px;padding:14px 18px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;border:1px solid #e5e7eb;">
+  <span style="font-size:0.85rem;font-weight:700;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">Progress: <span id="partsComplete" style="color:#6b21a8;-webkit-text-fill-color:#6b21a8;">0</span> / 3 Parts Complete</span>
+  <span style="font-size:0.85rem;font-weight:700;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;"><span id="totalScore" style="color:#6b21a8;-webkit-text-fill-color:#6b21a8;">0</span> / 24 pts</span>
+</div>
+<div id="part1-section" style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;margin-bottom:20px;">
+  <div style="background:linear-gradient(135deg,#1e1b4b,#3b0764);padding:16px 22px;display:flex;justify-content:space-between;align-items:center;">
+    <div>
+<div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#c4b5fd;font-family:'Georgia',serif;">Part 1</div>
+    <div style="font-size:1.05rem;font-weight:700;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">Attack Classification (12 pts)</div>
+</div>
+    <span style="background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.8rem;font-weight:700;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">12 pts</span>
+  </div>
+  <div style="padding:22px 24px;">
+<p style="font-size:0.9rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.65;margin:0 0 12px;font-family:'Georgia',serif;">Four wireless network incidents have been reported to the security team. For each one, identify the attack type, the adversary skill level, and what was compromised.</p>
+<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px 18px;margin-bottom:14px;">
+<div style="font-size:0.82rem;font-weight:700;color:#6b21a8;-webkit-text-fill-color:#6b21a8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;font-family:'Georgia',serif;">Incident A</div>
+<p style="font-size:0.9rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.65;margin:0 0 12px;font-family:'Georgia',serif;">A student at Maple Street High School connects to a Wi-Fi network called “MapleHS_Guest” at the school library. The school’s real network is called “Maple-Guest.” After 20 minutes, the student is locked out of their school Google account. The network the student connected to was broadcasting from a laptop in a backpack near the library entrance.</p>
+<p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">Attack type:</p>
+<select id="p1a-atk" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.88rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin:6px 0 14px;">
+<option value="">-- Select --</option>
+<option value="evil">Evil twin attack — rogue WAP with a deceptive SSID captured the student’s credentials</option>
+<option value="jam">Jamming attack — EM interference disrupted the legitimate network</option>
+<option value="war">War driving — the adversary mapped the school’s wireless infrastructure</option>
+<option value="dos">DoS attack — the adversary flooded the network to deny access</option>
+</select>
+<p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">Adversary skill level:</p>
+<select id="p1a-skill" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.88rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin:6px 0 14px;">
+<option value="">-- Select --</option>
+<option value="low">Low-skilled — used a pre-built tool to broadcast an evil twin; exploited known vulnerability</option>
+<option value="high">High-skilled — exploited a zero-day vulnerability in the school’s wireless authentication</option>
+</select>
+</div>
+<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px 18px;margin-bottom:14px;">
+<div style="font-size:0.82rem;font-weight:700;color:#6b21a8;-webkit-text-fill-color:#6b21a8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;font-family:'Georgia',serif;">Incident B</div>
+<p style="font-size:0.9rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.65;margin:0 0 12px;font-family:'Georgia',serif;">During a citywide event, first responders are unable to communicate over their emergency radio network. All wireless devices in a 200-meter radius are unable to connect to any network. The disruption lasts 45 minutes. No credentials or data are reported stolen.</p>
+<p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">Attack type:</p>
+<select id="p1b-atk" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.88rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin:6px 0 14px;">
+<option value="">-- Select --</option>
+<option value="jam">Jamming attack — EM signal flooding caused a denial of service for all wireless in the area</option>
+<option value="evil">Evil twin attack — a rogue network captured emergency traffic</option>
+<option value="war">War driving — the adversary was mapping wireless networks in the area</option>
+<option value="dos">Standard DoS — the adversary overloaded the emergency network’s servers</option>
+</select>
+<p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">What was the primary impact of this attack?</p>
+<select id="p1b-impact" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.88rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin:6px 0 14px;">
+<option value="">-- Select --</option>
+<option value="dos">Denial of service — communication was made unavailable to authorized users; no data theft occurred</option>
+<option value="theft">Data theft — all communications were captured by the adversary</option>
+<option value="recon">Reconnaissance — the adversary gathered information about the emergency network</option>
+<option value="credential">Credential harvesting — first responder login credentials were stolen</option>
+</select>
+</div>
+<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px 18px;margin-bottom:14px;">
+<div style="font-size:0.82rem;font-weight:700;color:#6b21a8;-webkit-text-fill-color:#6b21a8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;font-family:'Georgia',serif;">Incident C</div>
+<p style="font-size:0.9rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.65;margin:0 0 12px;font-family:'Georgia',serif;">A security researcher drives slowly through a downtown business district using a wireless scanning tool. The tool records SSIDs, encryption types, signal strengths, and GPS coordinates of 47 wireless networks. The researcher does not connect to any network or steal any data. They use this information to identify three businesses whose wireless signals extend to the sidewalk with no password protection.</p>
+<p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">Attack type:</p>
+<select id="p1c-atk" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.88rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin:6px 0 14px;">
+<option value="">-- Select --</option>
+<option value="war">War driving — passive scanning to gather wireless network intelligence for future targeting</option>
+<option value="evil">Evil twin attack — setting up a rogue network to capture traffic</option>
+<option value="jam">Jamming attack — disrupting the discovered networks</option>
+<option value="direct">Direct intrusion — accessing the unprotected networks immediately</option>
+</select>
+<p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">This attack is best described as:</p>
+<select id="p1c-phase" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.88rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin:6px 0 14px;">
+<option value="">-- Select --</option>
+<option value="recon">Reconnaissance — collecting information that enables a more targeted attack later; no active attack yet</option>
+<option value="active">An active attack — the adversary is currently compromising the discovered networks</option>
+<option value="harmless">Harmless — since no data was stolen, there is no security concern</option>
+<option value="defense">Defensive — the researcher is doing legitimate security research with business consent</option>
+</select>
+</div>
+<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px 18px;margin-bottom:14px;">
+<div style="font-size:0.82rem;font-weight:700;color:#6b21a8;-webkit-text-fill-color:#6b21a8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;font-family:'Georgia',serif;">Incident D</div>
+<p style="font-size:0.9rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.65;margin:0 0 12px;font-family:'Georgia',serif;">A hotel guest connects to “HiltonSuite_Free” in the hotel lobby. The real hotel network is “HiltonSuite_Guest.” The guest logs into their banking app. An hour later they notice $3,200 was transferred out of their account. The adversary’s MITM position allowed them to see the guest’s unencrypted banking credentials.</p>
+<p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">Which technical condition allowed the adversary to capture banking credentials?</p>
+<select id="p1d-why" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.88rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin:6px 0 14px;">
+<option value="">-- Select --</option>
+<option value="unencrypted">The guest connected without a VPN, so traffic between their device and the banking app server passed through the adversary’s evil twin unencrypted at the network layer</option>
+<option value="weak">The banking app had a weak password requirement</option>
+<option value="hotel">The hotel network had poor security controls</option>
+<option value="device">The guest’s device had malware installed</option>
+</select>
+</div>
+<p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">What single control, if in place, would have protected the guest EVEN after connecting to the evil twin? (2 pts)</p>
+<select id="p1-control" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.88rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin:6px 0 14px;">
+<option value="">-- Select --</option>
+<option value="vpn">VPN (Virtual Private Network) — encrypts all traffic between the device and a remote server regardless of what network is used, making MITM interception of credentials useless</option>
+<option value="strong">A strong banking password</option>
+<option value="2fa">Two-factor authentication on the banking account</option>
+<option value="avoid">Avoiding all public Wi-Fi networks</option>
+</select>
+
+    <button class="check-btn" onclick="checkPart(1)" style="background:#6b21a8;color:#fff;-webkit-text-fill-color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:0.9rem;font-weight:700;cursor:pointer;margin-top:18px;font-family:'Georgia',serif;">Check Part 1</button>
+    <div id="p1-feedback" style="display:none;margin-top:14px;padding:14px 16px;border-radius:8px;font-size:0.88rem;font-family:'Georgia',serif;line-height:1.6;"></div>
+  </div>
+</div>
+<div id="part2-section" style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;margin-bottom:20px;">
+  <div style="background:linear-gradient(135deg,#1e1b4b,#3b0764);padding:16px 22px;display:flex;justify-content:space-between;align-items:center;">
+    <div>
+<div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#c4b5fd;font-family:'Georgia',serif;">Part 2</div>
+    <div style="font-size:1.05rem;font-weight:700;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">Summit Wi-Fi Analysis (6 pts)</div>
+</div>
+    <span style="background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.8rem;font-weight:700;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">6 pts</span>
+  </div>
+  <div style="padding:22px 24px;">
+<p style="font-size:0.9rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.65;margin:0 0 12px;font-family:'Georgia',serif;">Vantex Financial Group sends employees to a three-day financial summit. Their security team issues guidelines for using hotel and conference Wi-Fi. Answer the questions using the network scenarios provided.</p>
+<div style="background:#1e1b4b;border-radius:8px;padding:18px 20px;margin-bottom:18px;">
+<div style="font-size:0.75rem;font-weight:700;color:#a78bfa;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;font-family:'Georgia',serif;">Available Networks at Summit Venue</div>
+<p style="font-size:0.88rem;color:rgba(255,255,255,.9);-webkit-text-fill-color:rgba(255,255,255,.9);margin:0 0 6px;font-family:'Georgia',serif;">● GrandHotel_Guest (Open, no password)</p>
+<p style="font-size:0.88rem;color:rgba(255,255,255,.9);-webkit-text-fill-color:rgba(255,255,255,.9);margin:0 0 6px;font-family:'Georgia',serif;">● FinanceSummit2026 (Open, no password)</p>
+<p style="font-size:0.88rem;color:rgba(255,255,255,.9);-webkit-text-fill-color:rgba(255,255,255,.9);margin:0 0 6px;font-family:'Georgia',serif;">● GrandHotel_Conference (WPA2, password provided at check-in)</p>
+<p style="font-size:0.88rem;color:rgba(255,255,255,.9);-webkit-text-fill-color:rgba(255,255,255,.9);margin:0 0 6px;font-family:'Georgia',serif;">● Vantex_Secure (WPA3, Vantex IT-issued credentials)</p>
+<p style="font-size:0.88rem;color:rgba(255,255,255,.9);-webkit-text-fill-color:rgba(255,255,255,.9);margin:0;font-family:'Georgia',serif;">● xfinitywifi (Public Comcast mobile hotspot)</p>
+</div>
+<p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">1. Which network is MOST likely to be an evil twin? (2 pts)</p>
+<select id="p2-evil" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.88rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin:6px 0 14px;">
+<option value="">-- Select --</option>
+<option value="summit">FinanceSummit2026 (open, no password, no hotel branding) — targeting financially valuable attendees at an event is high-value; an adversary would broadcast this SSID near the conference hall to capture traffic</option>
+<option value="guest">GrandHotel_Guest — this is a legitimate open hotel network</option>
+<option value="wpa2">GrandHotel_Conference (WPA2) — secured network with hotel-issued credentials is less likely a target</option>
+<option value="vantex">Vantex_Secure — company-issued secure network</option>
+</select>
+<p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">2. An employee must access Vantex’s internal systems. Which network + additional control is the correct approach? (2 pts)</p>
+<select id="p2-correct" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.88rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin:6px 0 14px;">
+<option value="">-- Select --</option>
+<option value="vantex_vpn">Connect to Vantex_Secure (company IT-issued credentials) AND enable Vantex VPN. Defense in depth: secure network + encrypted tunnel for all traffic.</option>
+<option value="any_vpn">Connect to any available network and enable VPN</option>
+<option value="wpa2_only">Connect to GrandHotel_Conference (WPA2) alone — WPA2 is sufficient</option>
+<option value="hotel_vpn">Connect to GrandHotel_Guest (open) with VPN</option>
+</select>
+<p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">3. An employee sees their device automatically connected to ‘GrandHotel_Guest’ before they opened their laptop. What attack risk does this behavior create, and what setting prevents it? (2 pts)</p>
+<textarea id="p2-auto" rows="3" placeholder="Explain the risk of auto-connect and what setting to change..." style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;resize:vertical;margin:6px 0 14px;"></textarea>
+    <button class="check-btn" onclick="checkPart(2)" style="background:#6b21a8;color:#fff;-webkit-text-fill-color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:0.9rem;font-weight:700;cursor:pointer;margin-top:18px;font-family:'Georgia',serif;">Check Part 2</button>
+    <div id="p2-feedback" style="display:none;margin-top:14px;padding:14px 16px;border-radius:8px;font-size:0.88rem;font-family:'Georgia',serif;line-height:1.6;"></div>
+  </div>
+</div>
+<div id="part3-section" style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;margin-bottom:20px;">
+  <div style="background:linear-gradient(135deg,#1e1b4b,#3b0764);padding:16px 22px;display:flex;justify-content:space-between;align-items:center;">
+    <div>
+<div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#c4b5fd;font-family:'Georgia',serif;">Part 3</div>
+    <div style="font-size:1.05rem;font-weight:700;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">Clinic Wi-Fi Configuration (6 pts)</div>
+</div>
+    <span style="background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.8rem;font-weight:700;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">6 pts</span>
+  </div>
+  <div style="padding:22px 24px;">
+<p style="font-size:0.9rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.65;margin:0 0 12px;font-family:'Georgia',serif;">Maple Street Veterinary Clinic wants to offer free guest Wi-Fi for clients in the waiting room. The office manager asks you to recommend a secure configuration. Answer the three questions to build the recommendation.</p>
+<p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">1. The clinic is considering using the SSID ‘MapleStreetVet_Free.’ An adversary could broadcast a competing SSID. List TWO SSID design choices that reduce the risk of clients connecting to an evil twin. (2 pts)</p>
+<textarea id="p3a" rows="3" placeholder="Choice 1: ...
+Choice 2: ..." style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;resize:vertical;margin:6px 0 14px;"></textarea><p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">2. The office manager wants to use the same password for both the staff network and the guest network to simplify management. Why is this a security risk, and what is the correct solution? (2 pts)</p>
+<select id="p3b" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.88rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin:6px 0 14px;">
+<option value="">-- Select --</option>
+<option value="separate">Critical risk: if a guest or attacker on the guest network knows the staff password, they can access the staff network which connects to the patient records system (HIPAA data). Correct solution: two completely separate networks — staff VLAN and guest VLAN — with different credentials and no routing between them.</option>
+<option value="ok">This is fine because the guest network is password-protected</option>
+<option value="weak">The only risk is password complexity; use a stronger shared password</option>
+<option value="monitor">Monitor guest network traffic to detect any abuse of the shared password</option>
+</select>
+<p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">3. Even with a properly separated guest network, what should the clinic remind clients to do on their own devices before connecting? (2 pts)</p>
+<select id="p3c" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.88rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin:6px 0 14px;">
+<option value="">-- Select --</option>
+<option value="vpn">Enable VPN before connecting to any public/guest Wi-Fi. VPN encrypts device traffic end-to-end regardless of network security, protecting any sensitive communications the client initiates.</option>
+<option value="disable">Disable Wi-Fi and use cellular only</option>
+<option value="password">Always ask the receptionist for the Wi-Fi password verbally</option>
+<option value="antivirus">Run an antivirus scan after connecting to the guest network</option>
+</select>
+<div style="background:#ede9fe;border-left:4px solid #6b21a8;border-radius:8px;padding:16px 18px;margin:20px 0;">
+<div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6b21a8;-webkit-text-fill-color:#6b21a8;margin-bottom:6px;font-family:'Georgia',serif;">✎ AP Exam Tip</div>
+<p style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.65;margin:0;font-family:'Georgia',serif;">AP exam wireless questions always give you a scenario and ask: (1) which attack type matches (evil twin vs. jamming vs. war driving), (2) which protection would have prevented it (VPN is almost always the answer for data theft; network segmentation for insider/guest threats), and (3) whether the adversary is low-skilled or high-skilled. Know all three cold: evil twin = credential theft + VPN defense; jamming = DoS + no data theft; war driving = reconnaissance only + no active attack yet.</p>
+</div>
+    <button class="check-btn" onclick="checkPart(3)" style="background:#6b21a8;color:#fff;-webkit-text-fill-color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:0.9rem;font-weight:700;cursor:pointer;margin-top:18px;font-family:'Georgia',serif;">Check Part 3</button>
+    <div id="p3-feedback" style="display:none;margin-top:14px;padding:14px 16px;border-radius:8px;font-size:0.88rem;font-family:'Georgia',serif;line-height:1.6;"></div>
+  </div>
+</div>
+<div id="resultsPanel" style="display:none;background:#f5f0ff;border:1px solid #ddd6fe;border-radius:12px;padding:24px;text-align:center;margin-bottom:24px;">
+  <div style="font-size:2rem;font-weight:800;color:#6b21a8;-webkit-text-fill-color:#6b21a8;font-family:'Georgia',serif;">
+<span id="finalScore">0</span> / 24 pts</div>
+  <p id="resultsMsg" style="font-size:0.92rem;color:#374151;-webkit-text-fill-color:#374151;margin:12px 0 0;font-family:'Georgia',serif;"></p>
+</div>
+<div style="display:flex;gap:12px;justify-content:space-between;margin-top:32px;padding-top:24px;border-top:1px solid #e5e7eb;">
+  <a href="/pages/ap-cybersecurity-unit-1-wireless-security" style="display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;font-size:0.88rem;font-weight:700;text-decoration:none;border:2px solid #6b21a8;color:#6b21a8;-webkit-text-fill-color:#6b21a8;font-family:'Georgia',serif;">← Back to Lesson 1.3</a>
+  <a href="/pages/ap-cyber-unit-1-lesson-3-exercise-2" style="display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;font-size:0.88rem;font-weight:700;text-decoration:none;background:#6b21a8;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">Exercise 2 →</a>
+</div>
+</div>
+<script>
+(function(){
+  var scores={1:0,2:0,3:0},checked={1:false,2:false,3:false};
+  function tc(v,ks){var l=v.toLowerCase(),c=0;for(var i=0;i<ks.length;i++)if(l.indexOf(ks[i].toLowerCase())!==-1)c++;return c;}
+  function dis(n){document.querySelectorAll('#part'+n+'-section select,#part'+n+'-section textarea,#part'+n+'-section .check-btn').forEach(function(e){e.disabled=true;if(e.classList&&e.classList.contains('check-btn'))e.style.opacity='0.5';});}
+  function fb(n,pts,max,html){var el=document.getElementById('p'+n+'-feedback');el.style.display='block';el.style.background=pts>=max*0.8?'#d1fae5':pts>=max*0.5?'#fef3c7':'#fee2e2';el.style.borderLeft=pts>=max*0.8?'3px solid #059669':pts>=max*0.5?'3px solid #d97706':'3px solid #dc2626';el.style.color='#374151';el.style.webkitTextFillColor='#374151';el.innerHTML='<strong>Part Score: '+pts+' / '+max+'</strong><br><br>'+html;}
+  function upd(){var t=scores[1]+scores[2]+scores[3],d=(checked[1]?1:0)+(checked[2]?1:0)+(checked[3]?1:0);document.getElementById('totalScore').textContent=t;document.getElementById('partsComplete').textContent=d;if(d===3){var rp=document.getElementById('resultsPanel');rp.style.display='block';document.getElementById('finalScore').textContent=t;document.getElementById('resultsMsg').textContent=t>=22?'Excellent. Full mastery of wireless attack classification and Public Wi-Fi defenses.':t>=16?'Good. Review the evil twin vs. jamming distinction and VPN defense rationale.':t>=10?'Developing. Re-read Topic 1.3 sections on wireless attack types.':'Needs review. Return to Lesson 1.3.';rp.scrollIntoView({behavior:'smooth'});}}
+  window.checkPart=function(n){
+    if(checked[n])return;checked[n]=true;var pts=0,det=[];
+    if(n===1){
+      var aa=document.getElementById('p1a-atk').value,as=document.getElementById('p1a-skill').value;
+      var ba=document.getElementById('p1b-atk').value,bi=document.getElementById('p1b-impact').value;
+      var ca=document.getElementById('p1c-atk').value,cp=document.getElementById('p1c-phase').value;
+      var dw=document.getElementById('p1d-why').value,ctrl=document.getElementById('p1-control').value;
+      if(aa==='evil'){pts++;det.push('<strong>A type:</strong> +1 — Correct. Evil twin attack using deceptive SSID.');}
+      else det.push('<strong>A type:</strong> 0 — Evil twin: rogue WAP with SSID matching or mimicking the real network.');
+      if(as==='low'){pts++;det.push('<strong>A skill:</strong> +1 — Correct. Pre-built tool, known vulnerability = low-skilled.');}
+      else det.push('<strong>A skill:</strong> 0 — Low-skilled: used a pre-built evil twin tool, exploited a known (not zero-day) vulnerability.');
+      if(ba==='jam'){pts++;det.push('<strong>B type:</strong> +1 — Correct. Jamming = EM flooding causing DoS.');}
+      else det.push('<strong>B type:</strong> 0 — Jamming attack: EM signal flooding preventing all wireless communication in the area.');
+      if(bi==='dos'){pts++;det.push('<strong>B impact:</strong> +1 — Correct. DoS only — no data theft in jamming attacks.');}
+      else det.push('<strong>B impact:</strong> 0 — Denial of service only. Jamming disrupts communication; it does not capture data.');
+      if(ca==='war'){pts++;det.push('<strong>C type:</strong> +1 — Correct. War driving = passive wireless reconnaissance.');}
+      else det.push('<strong>C type:</strong> 0 — War driving: scanning for wireless beacons while mobile to map networks and find vulnerabilities.');
+      if(cp==='recon'){pts++;det.push('<strong>C phase:</strong> +1 — Correct. Reconnaissance only — no active attack yet.');}
+      else det.push('<strong>C phase:</strong> 0 — Reconnaissance: collecting information for future targeting. The adversary has not yet attacked any network.');
+      if(dw==='unencrypted'){pts++;det.push('<strong>D why:</strong> +1 — Correct. Traffic passed through the adversary’s MITM position without encryption.');}
+      else det.push('<strong>D why:</strong> 0 — The evil twin MITM position intercepted traffic that was not encrypted at the network layer. VPN would have prevented this.');
+      if(ctrl==='vpn'){pts++;det.push('<strong>Control:</strong> +1 — Correct. VPN encrypts all traffic regardless of network, making MITM interception useless.');}
+      else det.push('<strong>Control:</strong> 0 — VPN: encrypts traffic end-to-end so the adversary’s MITM position captures only ciphertext, not credentials.');
+      scores[1]=Math.min(Math.round(pts*1.5),12);
+    }
+    if(n===2){
+      var ev=document.getElementById('p2-evil').value,cor=document.getElementById('p2-correct').value;
+      var auto=document.getElementById('p2-auto').value.trim();
+      if(ev==='summit'){pts+=2;det.push('<strong>Evil twin:</strong> +2 — Correct. Open network targeting high-value financial summit attendees.');}
+      else det.push('<strong>Evil twin:</strong> 0 — FinanceSummit2026 is most likely: open network, targeting financially valuable attendees, event-specific SSID easy to spoof.');
+      if(cor==='vantex_vpn'){pts+=2;det.push('<strong>Correct approach:</strong> +2 — Correct. Company network + VPN = defense in depth.');}
+      else det.push('<strong>Correct approach:</strong> 0 — Vantex_Secure + VPN: company-issued credentials on a known-secure network, plus VPN for encrypted tunnel on all traffic.');
+      var autoPts=tc(auto,['auto','connect','automatic','remember','forget','known','saved','setting','disable','turn off','wi-fi','automatically'])>=2?2:tc(auto,['auto','automatic','connect','setting'])>=1?1:0;
+      pts+=autoPts;
+      if(autoPts>=2)det.push('<strong>Auto-connect:</strong> +2 — Correct risk and setting identified.');
+      else if(autoPts===1)det.push('<strong>Auto-connect:</strong> +1 — Partial. Risk: devices remember known SSIDs and connect automatically, which means connecting to an evil twin with a matching SSID without user action. Fix: disable auto-connect for all non-home networks in device Wi-Fi settings.');
+      else det.push('<strong>Auto-connect:</strong> 0 — Risk: device connects to any matching SSID automatically. Fix: disable auto-connect / “remember this network” for public networks in Wi-Fi settings.');
+      scores[2]=Math.min(pts,6);
+    }
+    if(n===3){
+      var ss=document.getElementById('p3a').value.trim(),sp=document.getElementById('p3b').value,sc=document.getElementById('p3c').value;
+      var ssPts=tc(ss,['unique','specific','address','exact','verify','qr','confirm','staff','sign','post','tell','announce','advertise','print','card','consistent'])>=2?2:tc(ss,['specific','unique','verify','confirm'])>=1?1:0;
+      pts+=ssPts;
+      if(ssPts>=2)det.push('<strong>SSID design:</strong> +2 — Good choices. Uniqueness + active communication prevents evil twin confusion.');
+      else if(ssPts===1)det.push('<strong>SSID design:</strong> +1 — Partial. Key choices: (1) Use a highly specific, hard-to-guess SSID (e.g., MapleVetClinic2026-Waiting); (2) Post the exact SSID and password on printed cards at reception so clients can verify the name before connecting.');
+      else det.push('<strong>SSID design:</strong> 0 — Two choices: specific/unique SSID hard to guess, and actively communicating the correct SSID (printed cards, QR code) so clients can verify.');
+      if(sp==='separate'){pts+=2;det.push('<strong>Network separation:</strong> +2 — Correct. Shared credentials = guest access to staff network = HIPAA violation risk.');}
+      else det.push('<strong>Network separation:</strong> 0 — Separate staff and guest VLANs with different credentials. Guest network must not be able to reach staff systems or patient data.');
+      if(sc==='vpn'){pts+=2;det.push('<strong>Client advice:</strong> +2 — Correct. VPN protects the client regardless of network security.');}
+      else det.push('<strong>Client advice:</strong> 0 — Enable VPN before connecting. Even a perfectly configured guest network cannot protect traffic after it leaves the clinic network. VPN encrypts the client’s traffic end-to-end.');
+      scores[3]=Math.min(pts,6);
+    }
+    fb(n,scores[n],n===1?12:6,det.join('<br>'));dis(n);upd();
+  };
+})();
+</script>
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id="apcyber-activity-nav"><div class="aan-card">
+<span class="aan-eyebrow">AP Cybersecurity · Unit 1 · Lesson 1.3 · Exercise 1</span><div class="aan-strip">
+<a class="aan-chip" href="/pages/ap-cybersecurity-unit-1-ai-driven-threats">Lesson</a><span class="aan-sep">•</span><span class="aan-chip cur">Exercise 1</span><span class="aan-sep">•</span><a class="aan-chip next" href="/pages/ap-cyber-unit-1-lesson-3-exercise-2">Exercise 2 →</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-1-lesson-3-lab">Lab</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-1-lesson-3-quiz">Quiz</a>
+</div>
+<div class="aan-up">
+<span class="aan-lbl">Back to:</span><a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats">Lesson 1.3</a><a href="/pages/ap-cybersecurity-unit-1-introduction-to-security">Unit 1 Study Guide</a><a href="/pages/ap-cybersecurity-complete-course-guide">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->
