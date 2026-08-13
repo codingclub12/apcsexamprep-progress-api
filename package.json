@@ -58,7 +58,8 @@
     "smoke:schoology": "node smoke/schoology-export.js",
     "smoke:posthog": "node smoke/posthog.js",
     "smoke:answerkeys": "node smoke/answer-keys.js",
-    "smoke:cspunittests": "node smoke/csp-unit-tests.js"
+    "smoke:cspunittests": "node smoke/csp-unit-tests.js",
+    "smoke:tchdashpage": "node smoke/teacher-dashboard-page.js"
   },
   "keywords": [],
   "author": "",

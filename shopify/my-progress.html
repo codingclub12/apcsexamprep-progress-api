@@ -28,16 +28,14 @@
   a new item without answering anything differently. Points are summed now:
   earned over the possible of the work actually attempted.
 
-  EVERY graded cell shows a pair, on every course. Where nobody has authored a
-  total, the percent is its own pair: 17 percent is 17 out of 100. That
-  substitution changes no number, which is exactly what separates it from the
-  constant table above. Rescaling 17 onto a /5 column produced "1/5", which
-  reads as 20; showing 17/100 still reads as 17.
+  A graded cell shows a pair wherever the points are known. Where nobody has
+  authored a total, the cell shows its PERCENT ALONE, marked with a *, and is
+  left out of the points total on both sides.
 
-  Those cells are marked with a * and counted under the table, because a
-  provisional 100 is a placeholder for an authored total, not a substitute for
-  one. Until the real total is authored the column carries more weight in an
-  average than it should.
+  An interim version printed those cells as "17/100" instead. The percentage was
+  right, but the 100 was not a number anyone chose: it outweighed a real 5 mark
+  quiz twenty to one in the total, and it produced course totals like "71 / 127"
+  whose denominator appears on no page. Unknown points are shown as unknown.
 -->
 <style>
 #stprog-wrap{all:initial!important;display:block!important;}
@@ -363,7 +361,12 @@ window.StProg={
     if(pn){
       const t=this.totals(this.allActivityCells());
       let note="Passing mark: <b>"+this.threshold+"%</b>. Each score is points earned out of points possible. A blue check means completed but not yet graded.";
-      if(t.unpriced) note+=" A * marks "+t.unpriced+" activit"+(t.unpriced===1?"y whose":"ies whose")+" points have not been assigned yet; "+(t.unpriced===1?"it counts":"they count")+" out of 100 until then.";
+      // What the total actually does with those activities. It used to say they
+      // "count out of 100 until then", which was the old behaviour and is no
+      // longer true: an unpriced activity is left out of the points total
+      // entirely, on both sides. Saying otherwise told a student their grade was
+      // computed one way while it was computed another.
+      if(t.unpriced) note+=" A * marks "+t.unpriced+" activit"+(t.unpriced===1?"y whose":"ies whose")+" points have not been assigned yet. "+(t.unpriced===1?"Its percent is shown, and it is":"Their percents are shown, and they are")+" not counted in the points total.";
       pn.innerHTML=note;
     }
   },
