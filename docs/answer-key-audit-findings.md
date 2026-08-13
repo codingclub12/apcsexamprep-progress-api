@@ -9,14 +9,33 @@ who answers wrong is shown the wrong explanation or none at all.
 
 ## How to re-run
 
+Offline, against saved bodies:
+
 ```
-node scripts/one-off/verify-exam-key.js <file.html> [more.html ...]
+node scripts/one-off/verify-exam-key.js backup/*.html
 ```
 
-It reads a saved page body, so it runs offline and in CI. It understands the
-`var ANSWERS = {...}` radio widget and skips drag-and-drop exercises, which use
-`var ANSWERS = [` and have no letter to audit. A page it cannot parse is a FAIL,
-never a silent pass.
+Against the live store, which is the only way to reach all 71 pages:
+
+```
+SHOPIFY_SHOP=... SHOPIFY_ADMIN_TOKEN=... \
+  node scripts/one-off/verify-exam-key.js --fetch "fb-distractors"
+```
+
+`--fetch` takes a Shopify page search query, pulls every match with cursor
+pagination, caches each body under `.work/page-cache/` (already gitignored) and
+audits the lot, printing a summary ranked by defect count. Re-run with `--cached`
+to audit that cache without touching the API, and `--verbose` for per-question
+detail. Read scope is enough; the script never writes to Shopify.
+
+It understands the `var ANSWERS = {...}` radio widget and skips drag-and-drop
+exercises, which use `var ANSWERS = [` and have no letter to audit. A page it
+cannot parse is a FAIL, never a silent pass.
+
+Run against the three exam snapshots kept in this repo, the checker reports
+`correct-letter-as-distractor: 1` for the two pre-fix states and `0` for
+`current-live`, which is an independent confirmation that the Q8 correction
+landed and that this defect class is detected rather than assumed.
 
 ## Finding 1: scenario practice, distractor labels are boilerplate
 
