@@ -11,5 +11,10 @@ progress.db-*
 *.db-shm
 *.db-wal
 
+# Matrixify import sheets are generated from live page bodies by
+# scripts/answer-key-audit.js --rebalance. They are a snapshot of Shopify
+# content, not source: regenerate rather than commit a stale megabyte.
+*-rebalance.csv
+
 # cyber unit 1 nav repair: generated bodies and scratch
 .work/

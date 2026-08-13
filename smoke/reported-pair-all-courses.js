@@ -40,7 +40,7 @@ process.env.JWT_SECRET = 'smoke-pair-all-courses-secret-long-enough';
 
 const express = require('express');
 const db = require('../db');
-const { COURSES } = require('../utils');
+const { COURSES, examsOf } = require('../utils');
 const { buildCanonicalGradebook } = require('../lib/gradebook-contract');
 
 let pass = 0, fail = 0;
@@ -78,7 +78,10 @@ function columnsFor(course) {
       for (const act of (u.activities || [])) out.push({ unit: unitId, lesson, act });
     }
     if (u.case_file) out.push({ unit: unitId, lesson: u.case_file.lesson, act: 'case-file' });
-    if (u.exam) out.push({ unit: unitId, lesson: u.exam.lesson, act: 'exam' });
+    // examsOf, not u.exam: a unit may declare SEVERAL exams (CSP Big Idea 3
+    // sits its unit test in two parts) and `u.exam.lesson` on an array is
+    // undefined, which this suite caught as a NOT NULL violation.
+    for (const ex of examsOf(u)) out.push({ unit: unitId, lesson: ex.lesson, act: 'exam' });
   }
   return out;
 }

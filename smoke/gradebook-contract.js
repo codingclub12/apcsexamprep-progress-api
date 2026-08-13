@@ -246,10 +246,16 @@ const near = (a, b, eps = 0.051) => a != null && b != null && Math.abs(a - b) < 
   ok('  every CSP item carries an integer lesson_seq',
     csp.items.every((i) => Number.isInteger(i.lesson_seq)));
   const bi1 = csp.lessons.filter((l) => l.unit === 'bi-1').map((l) => l.lesson_ref);
-  const { COURSES } = require('../utils');
+  const { COURSES, examsOf } = require('../utils');
   const bi1Authored = COURSES['ap-csp'].units['bi-1'].lessons;
+  //  The Big Idea unit test is a lesson too, and it sorts LAST: exams carry
+  //  lesson_seq 901, above every authored topic, so a test always ends the unit
+  //  rather than landing wherever its slug falls alphabetically.
+  const bi1Want = bi1Authored.concat(examsOf(COURSES['ap-csp'].units['bi-1']).map((e) => e.lesson));
   ok('  CSP slug lessons sort in curriculum order, not alphabetically',
-    JSON.stringify(bi1) === JSON.stringify(bi1Authored), { got: bi1, want: bi1Authored });
+    JSON.stringify(bi1) === JSON.stringify(bi1Want), { got: bi1, want: bi1Want });
+  ok('  and the Big Idea unit test sorts last, after every topic',
+    bi1[bi1.length - 1] === 'unit-test', bi1);
   ok('  and alphabetical order would have been different',
     JSON.stringify(bi1) !== JSON.stringify([...bi1].sort()), bi1);
 
