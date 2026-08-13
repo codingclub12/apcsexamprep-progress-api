@@ -1,0 +1,567 @@
+<script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "Quiz",
+    "headline": "AP Cybersecurity Topic 1.2 Quiz: Password Attacks",
+    "description": "5-question timed quiz covering password attack techniques, authentication weaknesses, and multi-factor authentication. AP Cybersecurity exam format.",
+    "author": {
+      "@type": "Person",
+      "name": "Tanner Crow",
+      "url": "https://www.apcsexamprep.com/pages/ap-computer-science-tutor"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "APCSExamPrep.com",
+      "url": "https://www.apcsexamprep.com"
+    },
+    "educationalLevel": "High School",
+    "inLanguage": "en-US"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.apcsexamprep.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "AP Cybersecurity",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Unit 1: Introduction to Security",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide#unit1"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": "Topic 1.2: Suspicious Website Logins",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-unit-1-password-attacks"
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "name": "AP Cybersecurity Topic 1.2 Quiz: Password Attacks",
+        "item": "https://www.apcsexamprep.com/pages/ap-cyber-unit-1-lesson-2-quiz"
+      }
+    ]
+  }
+]
+</script>
+<style>
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-lesson.locked{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;cursor:not-allowed!important;}
+#ucnav .ucn-lesson.locked:link,#ucnav .ucn-lesson.locked:visited,#ucnav .ucn-lesson.locked:hover{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;background:transparent!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-lock svg{opacity:.5!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+
+/* ===== WRAPPER ===== */
+#cyber-quiz-12{all:initial!important;display:block!important;font-family:'Georgia',serif!important;color:#1E1B4B!important;background:#ffffff!important;line-height:1.6!important;-webkit-font-smoothing:antialiased!important;max-width:940px!important;margin:0 auto!important;padding:20px 16px 60px!important;}
+#cyber-quiz-12 *{box-sizing:border-box!important;}
+#cyber-quiz-12{--purple:#6B21A8;--purple-mid:#7C3AED;--purple-light:#A855F7;--purple-bg:#F5F0FF;--purple-border:#DDD6FE;--dark:#1E1B4B;--gray:#6B7280;--gray-light:#F9FAFB;--gray-border:#E5E7EB;--green:#15803D;--green-bg:#F0FDF4;--green-border:#BBF7D0;}
+
+/* ===== HEADER ===== */
+#cyber-quiz-12 .ex-header{background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;border-radius:14px!important;padding:36px 32px!important;margin-bottom:20px!important;color:#ffffff!important;position:relative!important;overflow:hidden!important;}
+#cyber-quiz-12 .ex-header::before{content:''!important;position:absolute!important;top:-60px!important;right:-60px!important;width:300px!important;height:300px!important;border-radius:50%!important;background:rgba(168,85,247,0.15)!important;pointer-events:none!important;}
+#cyber-quiz-12 .ex-header::after{content:''!important;position:absolute!important;bottom:-80px!important;left:-40px!important;width:250px!important;height:250px!important;border-radius:50%!important;background:rgba(124,58,237,0.12)!important;pointer-events:none!important;}
+#cyber-quiz-12 .ex-tag{display:inline-block!important;background:rgba(168,85,247,0.25)!important;border:1px solid rgba(168,85,247,0.5)!important;color:#E9D5FF!important;font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;text-transform:uppercase!important;padding:6px 16px!important;border-radius:20px!important;margin-bottom:16px!important;}
+#cyber-quiz-12 .ex-header h1{font-family:'Georgia',serif!important;font-size:28px!important;font-weight:700!important;color:#ffffff!important;margin:0 0 10px!important;line-height:1.3!important;position:relative!important;}
+#cyber-quiz-12 .ex-header p{font-family:'Georgia',serif!important;font-size:15px!important;color:rgba(255,255,255,0.85)!important;margin:0 0 20px!important;line-height:1.6!important;position:relative!important;}
+#cyber-quiz-12 .ex-badges{display:flex!important;flex-wrap:wrap!important;gap:10px!important;position:relative!important;}
+#cyber-quiz-12 .ex-badge{display:inline-flex!important;align-items:center!important;gap:5px!important;background:rgba(168,85,247,0.2)!important;border:1px solid rgba(168,85,247,0.4)!important;color:#E9D5FF!important;padding:5px 14px!important;border-radius:18px!important;font-family:'Georgia',serif!important;font-size:12px!important;font-weight:600!important;}
+
+/* ===== SCORE BAR ===== */
+#cyber-quiz-12 .score-bar{position:relative!important;z-index:50!important;background:linear-gradient(135deg,#1E1B4B,#3B0764)!important;color:#ffffff!important;padding:10px 20px!important;border-radius:10px!important;display:flex!important;justify-content:space-between!important;align-items:center!important;font-family:'Georgia',serif!important;font-size:13px!important;font-weight:600!important;box-shadow:0 4px 12px rgba(30,27,75,0.3)!important;margin-bottom:24px!important;}
+#cyber-quiz-12 .score-bar .score-num{background:var(--purple)!important;padding:4px 14px!important;border-radius:14px!important;font-size:14px!important;font-weight:800!important;color:#ffffff!important;}
+
+/* ===== SECTIONS ===== */
+#cyber-quiz-12 .section{background:#ffffff!important;border:1px solid var(--gray-border)!important;border-radius:12px!important;padding:28px 24px!important;margin-bottom:24px!important;box-shadow:0 2px 8px rgba(0,0,0,0.04)!important;}
+#cyber-quiz-12 .section h2{font-family:'Georgia',serif!important;font-size:18px!important;font-weight:700!important;color:var(--dark)!important;margin:0 0 12px!important;}
+#cyber-quiz-12 .section h3{font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;color:var(--purple)!important;margin:16px 0 8px!important;}
+#cyber-quiz-12 .section p{font-family:'Georgia',serif!important;font-size:14px!important;color:#374151!important;margin:0 0 12px!important;line-height:1.7!important;}
+#cyber-quiz-12 .section-label{display:inline-block!important;background:var(--purple-bg)!important;color:var(--purple)!important;font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1px!important;padding:4px 12px!important;border-radius:4px!important;margin-bottom:12px!important;}
+
+/* ===== SCENARIO BOX ===== */
+#cyber-quiz-12 .scenario-box{background:var(--gray-light)!important;border:2px solid var(--gray-border)!important;border-radius:10px!important;padding:20px!important;margin:12px 0 16px!important;font-family:'Georgia',serif!important;font-size:14px!important;color:#374151!important;line-height:1.7!important;}
+#cyber-quiz-12 .scenario-box strong{color:var(--dark)!important;}
+
+/* ===== PREDICT TIP ===== */
+#cyber-quiz-12 .predict-tip{background:var(--purple-bg)!important;border-left:3px solid var(--purple)!important;border-radius:0 6px 6px 0!important;padding:9px 14px!important;margin-bottom:14px!important;font-family:'Georgia',serif!important;font-size:13px!important;font-style:italic!important;color:#4C1D95!important;}
+
+/* ===== MCQ OPTIONS ===== */
+#cyber-quiz-12 .mcq-options{list-style:none!important;padding:0!important;margin:12px 0!important;display:flex!important;flex-direction:column!important;gap:8px!important;}
+#cyber-quiz-12 .mcq-opt{display:flex!important;align-items:flex-start!important;gap:10px!important;padding:12px 16px!important;border:2px solid var(--gray-border)!important;border-radius:8px!important;cursor:pointer!important;transition:all .15s!important;font-family:'Georgia',serif!important;font-size:14px!important;color:var(--dark)!important;background:#ffffff!important;}
+#cyber-quiz-12 .mcq-opt:hover{border-color:var(--purple-border)!important;background:var(--purple-bg)!important;}
+#cyber-quiz-12 .mcq-opt.selected{border-color:var(--purple)!important;background:var(--purple-bg)!important;font-weight:600!important;}
+#cyber-quiz-12 .mcq-opt.correct{border-color:#15803D!important;background:var(--green-bg)!important;}
+#cyber-quiz-12 .mcq-opt.incorrect{border-color:#DC2626!important;background:#FEF2F2!important;}
+#cyber-quiz-12 .mcq-opt.reveal{border-color:#15803D!important;background:var(--green-bg)!important;opacity:0.8!important;}
+#cyber-quiz-12 .mcq-opt .opt-letter{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:28px!important;height:28px!important;border-radius:50%!important;background:var(--gray-light)!important;border:1px solid var(--gray-border)!important;font-size:13px!important;font-weight:700!important;color:var(--gray)!important;flex-shrink:0!important;}
+#cyber-quiz-12 .mcq-opt.selected .opt-letter{background:var(--purple)!important;color:#ffffff!important;border-color:var(--purple)!important;}
+#cyber-quiz-12 .mcq-opt.correct .opt-letter{background:#15803D!important;color:#ffffff!important;border-color:#15803D!important;}
+#cyber-quiz-12 .mcq-opt.incorrect .opt-letter{background:#DC2626!important;color:#ffffff!important;border-color:#DC2626!important;}
+#cyber-quiz-12 .mcq-opt.reveal .opt-letter{background:#15803D!important;color:#ffffff!important;border-color:#15803D!important;}
+#cyber-quiz-12 .mcq-opt .opt-text{flex:1!important;padding-top:3px!important;}
+
+/* ===== BUTTONS ===== */
+#cyber-quiz-12 .check-btn{display:inline-block!important;background:var(--purple)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;font-family:'Georgia',serif!important;font-size:14px!important;font-weight:700!important;padding:10px 24px!important;border:none!important;border-radius:8px!important;cursor:pointer!important;margin-top:12px!important;opacity:1!important;visibility:visible!important;text-decoration:none!important;}
+#cyber-quiz-12 .check-btn:hover{background:var(--purple-mid)!important;}
+#cyber-quiz-12 a.check-btn:link,#cyber-quiz-12 a.check-btn:visited,#cyber-quiz-12 a.check-btn:hover,#cyber-quiz-12 a.check-btn:active{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#cyber-quiz-12 .nav-btn-back{background:#475569!important;}
+#cyber-quiz-12 .nav-btn-back:hover{background:#334155!important;}
+
+/* ===== FEEDBACK ===== */
+#cyber-quiz-12 .feedback{display:none!important;border-radius:8px!important;padding:16px 18px!important;margin-top:14px!important;font-family:'Georgia',serif!important;font-size:13px!important;line-height:1.7!important;}
+#cyber-quiz-12 .feedback.show{display:block!important;}
+#cyber-quiz-12 .feedback.correct{background:var(--green-bg)!important;border:1px solid var(--green-border)!important;color:#166534!important;}
+#cyber-quiz-12 .feedback.incorrect{background:#FEF2F2!important;border:1px solid #FECACA!important;color:#991B1B!important;}
+#cyber-quiz-12 .feedback .fb-head{font-family:'Georgia',serif!important;font-size:14px!important;font-weight:700!important;margin-bottom:8px!important;}
+#cyber-quiz-12 .feedback p{font-family:'Georgia',serif!important;font-size:13px!important;margin:6px 0!important;color:inherit!important;}
+#cyber-quiz-12 .feedback .why-not{margin-top:10px!important;padding-top:10px!important;border-top:1px solid rgba(0,0,0,0.08)!important;}
+
+/* ===== RESULTS ===== */
+#cyber-quiz-12 .results-panel{display:none!important;background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;border-radius:12px!important;padding:32px!important;text-align:center!important;color:#ffffff!important;margin-top:24px!important;position:relative!important;overflow:hidden!important;}
+#cyber-quiz-12 .results-panel::before{content:''!important;position:absolute!important;top:-40px!important;right:-40px!important;width:200px!important;height:200px!important;border-radius:50%!important;background:rgba(168,85,247,0.15)!important;pointer-events:none!important;}
+#cyber-quiz-12 .results-panel.show{display:block!important;}
+#cyber-quiz-12 .results-panel h2{font-family:'Georgia',serif!important;font-size:22px!important;color:#ffffff!important;margin:0 0 8px!important;position:relative!important;}
+#cyber-quiz-12 .results-score{font-family:'Georgia',serif!important;font-size:48px!important;font-weight:900!important;color:var(--purple-light)!important;margin:12px 0!important;position:relative!important;}
+#cyber-quiz-12 .results-panel p{font-family:'Georgia',serif!important;font-size:14px!important;color:rgba(255,255,255,0.85)!important;margin:8px 0!important;position:relative!important;}
+#cyber-quiz-12 .results-btns{display:flex!important;justify-content:center!important;gap:12px!important;flex-wrap:wrap!important;margin-top:20px!important;position:relative!important;}
+#cyber-quiz-12 .results-next{display:inline-block!important;background:var(--purple-light)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;padding:11px 26px!important;border-radius:8px!important;font-family:'Georgia',serif!important;font-size:14px!important;font-weight:700!important;text-decoration:none!important;border:none!important;cursor:pointer!important;}
+#cyber-quiz-12 a.results-next:link,#cyber-quiz-12 a.results-next:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#cyber-quiz-12 .results-retry{display:inline-block!important;background:rgba(255,255,255,0.15)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;padding:11px 26px!important;border-radius:8px!important;font-family:'Georgia',serif!important;font-size:14px!important;font-weight:700!important;text-decoration:none!important;border:1px solid rgba(255,255,255,0.3)!important;cursor:pointer!important;}
+
+/* ===== EXAM TIP ===== */
+#cyber-quiz-12 .exam-tip{background:var(--purple-bg)!important;border-left:4px solid var(--purple)!important;border-radius:0 8px 8px 0!important;padding:16px 20px!important;margin:20px 0!important;font-family:'Georgia',serif!important;font-size:14px!important;color:var(--dark)!important;}
+#cyber-quiz-12 .exam-tip strong{color:var(--purple)!important;}
+
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+</style>
+
+<!-- UNIT ACCORDION NAV -->
+
+<div id="ucnav">
+  <div class="ucn-rail" id="ucn-rail">
+    <a href="/pages/ap-cybersecurity-complete-course-guide" class="ucn-hub">AP Cyber Hub</a>
+    <span class="ucn-badge">Unit 1</span>
+    <a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-lesson" onclick="ucnToggle(1);" id="ucn-l1" title="Understanding Social Engineering">1.1 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s1">
+      <a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-lesson open" onclick="ucnToggle(2);" id="ucn-l2" title="Suspicious Website Logins">1.2 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps open" id="ucn-s2">
+      <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-lab" class="ucn-step">Lab</a>
+      <span class="ucn-step current">Quiz</span>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-lesson" onclick="ucnToggle(3);" id="ucn-l3" title="Best Practices for Public Networks">1.3 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s3">
+      <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-lesson" onclick="ucnToggle(4);" id="ucn-l4" title="AI-Based Cybersecurity Attacks">1.4 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s4">
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-lesson" onclick="ucnToggle(5);" id="ucn-l5" title="Leveraging AI in Cyber Defense">1.5 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s5">
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-quiz" class="ucn-step">Quiz</a>
+    </span>
+  </div>
+</div>
+
+<script>
+function ucnToggle(num){var l=document.getElementById('ucn-l'+num),s=document.getElementById('ucn-s'+num);if(!l||!s)return;var o=l.classList.contains('open');document.querySelectorAll('#ucnav .ucn-lesson').forEach(function(e){e.classList.remove('open')});document.querySelectorAll('#ucnav .ucn-steps').forEach(function(e){e.classList.remove('open')});if(!o){l.classList.add('open');s.classList.add('open');setTimeout(function(){l.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},50)}}
+(function(){function pos(){var nav=document.getElementById('ucnav');if(!nav)return;if(nav.parentElement!==document.body){document.body.appendChild(nav)}var h=0;var headerEl=document.querySelector('.section-header header.header')||document.querySelector('sticky-header header')||document.querySelector('header.header');if(headerEl){h=Math.round(headerEl.getBoundingClientRect().bottom)}if(h<20||h>300)h=68;nav.style.setProperty('top',h+'px','important');var navH=nav.offsetHeight||42;var w=document.getElementById('apcyber-wrapper');if(w)w.style.setProperty('padding-top',(h+navH+4)+'px','important')}requestAnimationFrame(pos);setTimeout(pos,150);setTimeout(pos,400);setTimeout(pos,800);setTimeout(pos,1500);setTimeout(pos,3000);window.addEventListener('resize',pos,{passive:true});setTimeout(function(){var _w=document.getElementById('apcyber-wrapper');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}var _m=document.getElementById('MainContent');if(_m){_m.style.setProperty('padding-top','0','important');_m.style.setProperty('margin-top','0','important')}},50);setTimeout(function(){var _w=document.getElementById('apcyber-wrapper');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}},500);var scrolled=false;window.addEventListener('scroll',function(){if(!scrolled){scrolled=true;requestAnimationFrame(pos)}},{passive:true});var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class','hidden']});setTimeout(function(){obs.disconnect()},15000)})();
+</script>
+
+
+
+<!-- UCNAV -->
+
+<p> </p>
+
+<div id="cyber-quiz-12" data-lesson-id="1.2-quiz">
+
+<!-- HEADER -->
+<div class="ex-header">
+<span class="ex-tag">AP Cybersecurity — Unit 1, Topic 1.2</span>
+
+<nav aria-label="Breadcrumb" style="font-size:0.82rem;color:#6b7280;-webkit-text-fill-color:#6b7280;margin:0 0 16px;font-family:'Georgia',serif;padding:0;"><a href="/" style="color:#6b21a8;text-decoration:none;-webkit-text-fill-color:#6b21a8;">Home</a><span style="margin:0 6px;color:#d1d5db;">›</span><a href="/pages/ap-cybersecurity-complete-course-guide" style="color:#6b21a8;text-decoration:none;-webkit-text-fill-color:#6b21a8;">AP Cybersecurity</a><span style="margin:0 6px;color:#d1d5db;">›</span><span style="color:#374151;-webkit-text-fill-color:#374151;">Topic 1.2 › Quiz</span></nav>
+<h1>Topic 1.2 Quiz — Password Attacks</h1>
+<p>5 questions covering attack classification, hash storage vulnerabilities, NIST password policy, and layered defense analysis. Use the predict-first strategy on every question before reading the choices.</p>
+<div class="ex-badges">
+<span class="ex-badge">5 Questions</span> <span class="ex-badge">Skills 1.A, 1.B, 2.A</span> <span class="ex-badge">~12 min</span> <span class="ex-badge">Instant Feedback</span>
+</div>
+</div>
+
+<!-- SCORE BAR -->
+<div class="score-bar">
+<span>Score: <span id="scoreCount">0</span> / 5 Correct</span> <span class="score-num" id="scoreDisplay">0 / 5</span>
+</div>
+
+<!-- Q1: Credential stuffing vs lockout | Correct: C -->
+<div class="section" id="qb1">
+<span class="section-label">Question 1 of 5</span>
+<div class="predict-tip">✎ Predict first: Identify the attack type before reading the choices.</div>
+<div class="scenario-box">An attacker obtains a text file containing 300 million email-and-password pairs leaked in the 2023 breach of a fitness-tracking app. Over the next 72 hours, the attacker submits one login attempt per account to a major online bank, using the exact credentials from the leak. The bank’s security team notices no lockout events and no unusual failed-login spikes — only a steady stream of successful logins from new devices.</div>
+<h3>Which attack type is described, and why does the bank’s account lockout policy NOT prevent it?</h3>
+<ul class="mcq-options" id="q1-opts">
+<li class="mcq-opt" data-val="A">
+<span class="opt-letter">A</span><span class="opt-text">Dictionary attack, because the attacker is using a wordlist of probable passwords that bypasses lockout by staying below the threshold</span>
+</li>
+<li class="mcq-opt" data-val="B">
+<span class="opt-letter">B</span><span class="opt-text">Password spraying, because only one password is tested per account, making it architecturally immune to per-account lockout</span>
+</li>
+<li class="mcq-opt" data-val="C">
+<span class="opt-letter">C</span><span class="opt-text">Credential stuffing, because the attacker submits one confirmed-working credential pair per account — never triggering lockout — and exploits password reuse rather than guessing</span>
+</li>
+<li class="mcq-opt" data-val="D">
+<span class="opt-letter">D</span><span class="opt-text">Brute force, because the attacker is systematically testing every possible combination of credentials from the leaked dataset at one attempt per account</span>
+</li>
+</ul>
+<input type="hidden" id="q1-val" value="">
+<button class="check-btn" onclick="checkQ(1,'C')">Check Answer</button>
+<div class="feedback" id="fb1">
+<div class="fb-head" id="fb1-head"></div>
+<p id="fb1-exp"></p>
+<div class="why-not" id="fb1-why"></div>
+</div>
+</div>
+
+<!-- Q2: Deterministic salt + SHA-256 speed | Correct: B -->
+<div class="section" id="qb2">
+<span class="section-label">Question 2 of 5</span>
+<div class="predict-tip">✎ Predict first: Identify the error in the developer’s implementation before reading the choices.</div>
+<div class="scenario-box">A startup’s lead developer announces: <em>“We store all passwords by hashing them with SHA-256 before saving to the database. Because we also prepend the user’s username to the password before hashing — for example, hash(‘jsmith’ + ‘mypassword’) — our system is fully protected against both rainbow table attacks and offline brute force cracking.”</em>
+</div>
+<h3>A security auditor flags this implementation as flawed. Which of the following BEST identifies the weakness?</h3>
+<ul class="mcq-options" id="q2-opts">
+<li class="mcq-opt" data-val="A">
+<span class="opt-letter">A</span><span class="opt-text">The implementation is correct — prepending the username creates a unique value for each user, which is functionally equivalent to a proper salt and fully protects against precomputed attacks</span>
+</li>
+<li class="mcq-opt" data-val="B">
+<span class="opt-letter">B</span><span class="opt-text">Usernames are deterministic and publicly known, so an attacker can precompute a targeted rainbow table per username — and SHA-256’s speed makes offline brute force practical; a randomly generated per-user salt and a slow algorithm like bcrypt are both required</span>
+</li>
+<li class="mcq-opt" data-val="C">
+<span class="opt-letter">C</span><span class="opt-text">The flaw is that SHA-256 should be replaced with MD5, which is a more modern algorithm designed specifically for password storage</span>
+</li>
+<li class="mcq-opt" data-val="D">
+<span class="opt-letter">D</span><span class="opt-text">The username prepend is insecure only because usernames contain special characters that corrupt the hash function input</span>
+</li>
+</ul>
+<input type="hidden" id="q2-val" value="">
+<button class="check-btn" onclick="checkQ(2,'B')">Check Answer</button>
+<div class="feedback" id="fb2">
+<div class="fb-head" id="fb2-head"></div>
+<p id="fb2-exp"></p>
+<div class="why-not" id="fb2-why"></div>
+</div>
+</div>
+
+<!-- Q3: NIST forced rotation | Correct: D -->
+<div class="section" id="qb3">
+<span class="section-label">Question 3 of 5</span>
+<div class="predict-tip">✎ Predict first: Which specific NIST SP 800-63B guideline is violated here?</div>
+<div class="scenario-box">A corporate IT policy requires all employees to change passwords every 60 days. Employees must use at least 10 characters including one uppercase letter, one number, and one special symbol. New passwords cannot match the previous five passwords. After implementing this policy, the IT team discovers that 78% of employees are cycling through patterns like “Company1!”, “Company2!”, “Company3!”.</div>
+<h3>Which statement MOST accurately identifies the policy flaw and its security consequence?</h3>
+<ul class="mcq-options" id="q3-opts">
+<li class="mcq-opt" data-val="A">
+<span class="opt-letter">A</span><span class="opt-text">The policy is sound; the employees are failing to comply, so the solution is stricter enforcement and disciplinary action for predictable passwords</span>
+</li>
+<li class="mcq-opt" data-val="B">
+<span class="opt-letter">B</span><span class="opt-text">The flaw is the 10-character minimum; NIST recommends exactly 8 characters with maximum complexity requirements to prevent guessing</span>
+</li>
+<li class="mcq-opt" data-val="C">
+<span class="opt-letter">C</span><span class="opt-text">The policy is flawed only because it permits special symbols, which actually reduce keyspace by narrowing what characters users choose</span>
+</li>
+<li class="mcq-opt" data-val="D">
+<span class="opt-letter">D</span><span class="opt-text">The forced 60-day rotation violates NIST SP 800-63B, which recommends against periodic rotation because it predictably causes users to make minimal incremental changes that an attacker who knows the pattern can easily enumerate</span>
+</li>
+</ul>
+<input type="hidden" id="q3-val" value="">
+<button class="check-btn" onclick="checkQ(3,'D')">Check Answer</button>
+<div class="feedback" id="fb3">
+<div class="fb-head" id="fb3-head"></div>
+<p id="fb3-exp"></p>
+<div class="why-not" id="fb3-why"></div>
+</div>
+</div>
+
+<!-- Q4: I II III - bcrypt / rotation / salts | Correct: C -->
+<div class="section" id="qb4">
+<span class="section-label">Question 4 of 5</span>
+<div class="predict-tip">✎ Predict first: Evaluate each statement independently before reading the choices.</div>
+<p style="font-family:'Georgia',serif!important;font-size:14px!important;color:#374151!important;margin:0 0 12px!important;">A security engineer proposes three changes after a breach:</p>
+<div class="scenario-box">
+<strong>I.</strong> Replace MD5 password hashing with bcrypt at cost factor 12, which reduces offline cracking from ~10 billion guesses per second to ~300 per second on the same hardware.<br><br><strong>II.</strong> Add a mandatory 90-day password rotation policy so that even if a password is cracked from the stolen hash database, the cracked credential will only be valid for a maximum of 90 days.<br><br><strong>III.</strong> Deploy per-user randomly generated salts so that two users with identical passwords produce completely different stored hashes, defeating precomputed lookup table attacks.</div>
+<h3>Which statements describe changes that would genuinely improve resistance to the attacks they claim to address?</h3>
+<ul class="mcq-options" id="q4-opts">
+<li class="mcq-opt" data-val="A">
+<span class="opt-letter">A</span><span class="opt-text">I only — bcrypt is the only meaningful improvement; salting and rotation have no impact on offline cracking</span>
+</li>
+<li class="mcq-opt" data-val="B">
+<span class="opt-letter">B</span><span class="opt-text">I and II only — bcrypt slows offline cracking and rotation limits credential validity windows</span>
+</li>
+<li class="mcq-opt" data-val="C">
+<span class="opt-letter">C</span><span class="opt-text">I and III only — bcrypt genuinely slows offline brute force and random salts genuinely defeat rainbow table precomputation; forced rotation is counterproductive per NIST SP 800-63B because it drives predictable incremental passwords</span>
+</li>
+<li class="mcq-opt" data-val="D">
+<span class="opt-letter">D</span><span class="opt-text">I, II, and III — all three changes provide independent layers of defense against offline cracking attacks</span>
+</li>
+</ul>
+<input type="hidden" id="q4-val" value="">
+<button class="check-btn" onclick="checkQ(4,'C')">Check Answer</button>
+<div class="feedback" id="fb4">
+<div class="fb-head" id="fb4-head"></div>
+<p id="fb4-exp"></p>
+<div class="why-not" id="fb4-why"></div>
+</div>
+</div>
+
+<!-- Q5: Hospital integrative scenario | Correct: D -->
+<div class="section" id="qb5">
+<span class="section-label">Question 5 of 5</span>
+<div class="predict-tip">✎ Predict first: For each attacker resource listed, name the attack type and the control that stops it.</div>
+<div class="scenario-box">A penetration tester is hired to assess a mid-sized hospital’s authentication posture. The tester discovers:<br><br>• Passwords are stored as bcrypt hashes with unique per-user salts (cost factor 10)<br>• Employee accounts have no MFA<br>• The default onboarding password is “Welcome2026!” and 23% of accounts have never changed it<br>• 61% of employees reuse their hospital password for personal email, based on a voluntary survey<br>• Account lockout triggers after 8 failed attempts per account<br><br>The tester has: (a) a LinkedIn scrape of all 1,400 employee emails, and (b) 400 million credential pairs from the 2024 breach of a national pharmacy chain.</div>
+<h3>Which MOST accurately identifies the attacks available to the tester AND the single control with the broadest impact across all viable attacks?</h3>
+<ul class="mcq-options" id="q5-opts">
+<li class="mcq-opt" data-val="A">
+<span class="opt-letter">A</span><span class="opt-text">Rainbow table attack against the bcrypt hashes and credential stuffing using the pharmacy breach data; switching to Argon2 would defend against both</span>
+</li>
+<li class="mcq-opt" data-val="B">
+<span class="opt-letter">B</span><span class="opt-text">Brute force against the bcrypt hashes and password spraying using the default credential; increasing the lockout threshold from 8 to 3 attempts would defend against both</span>
+</li>
+<li class="mcq-opt" data-val="C">
+<span class="opt-letter">C</span><span class="opt-text">Password spraying using the default credential and dictionary attack against weak passwords; deploying bcrypt would defend against both since it slows all password-based attacks</span>
+</li>
+<li class="mcq-opt" data-val="D">
+<span class="opt-letter">D</span><span class="opt-text">Password spraying using “Welcome2026!” against all 1,400 accounts and credential stuffing using the pharmacy breach data; MFA is the broadest single defense because it stops both attacks even when the attacker has the correct password</span>
+</li>
+</ul>
+<input type="hidden" id="q5-val" value="">
+<button class="check-btn" onclick="checkQ(5,'D')">Check Answer</button>
+<div class="feedback" id="fb5">
+<div class="fb-head" id="fb5-head"></div>
+<p id="fb5-exp"></p>
+<div class="why-not" id="fb5-why"></div>
+</div>
+</div>
+
+<!-- RESULTS -->
+<div class="results-panel" id="resultsPanel">
+<h2>Quiz Complete — 1.2 Password Attacks</h2>
+<div class="results-score" id="finalScore">0/5</div>
+<p id="resultsMsg"></p>
+<div class="results-btns">
+<a class="results-next" href="/pages/ap-cybersecurity-unit-1-ai-driven-threats">Next Lesson: 1.3 AI-Driven Threats →</a>
+<button class="results-retry" onclick="retryQuiz()">↻ Retry Quiz</button>
+</div>
+</div>
+
+<!-- EXAM TIP -->
+<div class="exam-tip">
+<strong>AP Exam Tip:</strong> Always match the defense precisely to the attack: salting defeats rainbow tables, bcrypt defeats offline brute force, MFA defeats credential stuffing and spraying, rate limiting defeats online brute force. Generic defenses like “use a stronger password” are almost never the best answer when a targeted control is available.</div>
+
+<!-- NAV -->
+<div style="display: flex!important; justify-content: space-between!important; margin-top: 24px!important; flex-wrap: wrap!important; gap: 12px!important;">
+<a class="check-btn nav-btn-back" href="/pages/ap-cyber-unit-1-lesson-2-exercise-2">← Back to Exercise 2</a> <a class="check-btn" href="/pages/ap-cybersecurity-unit-1-ai-driven-threats">Next Lesson: 1.3 →</a>
+</div>
+
+</div><!-- end #cyber-quiz-12 -->
+<p> </p>
+
+<script>
+(function(){
+  var score=0,answered={},TOTAL=5;
+  var DATA={
+    1:{correct:'C',exp:'Correct. This is credential stuffing — the attacker is replaying confirmed username-password pairs from a prior breach (fitness app) against a different service (bank). Because exactly one attempt per account uses a credential that actually works, the lockout policy never triggers. No guessing is involved.',why:{A:'A dictionary attack tests a wordlist of probable passwords — it does not use confirmed pairs from a prior breach.',B:'Password spraying tests one common password across many accounts. Here each account receives its own unique confirmed credential, not a single shared guess.',D:'Brute force systematically enumerates all possible combinations. The attacker here is using specific confirmed credentials, not computing combinations.'}},
+    2:{correct:'B',exp:'Correct. Two flaws exist: (1) The username is deterministic and publicly known, so an attacker can precompute a targeted rainbow table per username. (2) SHA-256 is a fast hash function, allowing billions of offline guesses per second. A proper implementation requires a randomly generated per-user salt plus bcrypt or Argon2.',why:{A:'A salt must be randomly generated. The username is deterministic and known to the attacker, so they can build targeted precomputed tables for each user.',C:'MD5 is older and weaker than SHA-256. Replacing SHA-256 with MD5 would make the system significantly worse.',D:'The flaw is the predictability of the username, not special characters in it.'}},
+    3:{correct:'D',exp:'Correct. NIST SP 800-63B explicitly recommends against mandatory periodic rotation. Forced rotation predictably drives users to make minimal incremental changes (Company1! → Company2!) that are trivially guessable. The employee behavior is the expected rational response to an unworkable policy, not a compliance failure.',why:{A:'The problem is the policy itself. NIST SP 800-63B identifies forced rotation as the root cause of predictable sequential passwords. Stricter enforcement would worsen the outcome.',B:'NIST recommends a minimum of 15–16 characters and does not recommend 8-character complex passwords.',C:'Special symbols are permitted and contribute modestly to keyspace. The primary flaw is forced rotation.'}},
+    4:{correct:'C',exp:'Correct. Statement I is accurate: bcrypt at cost factor 12 reduces offline cracking from ~10 billion to ~300 hashes/second — a genuine 33-million-fold improvement. Statement III is accurate: per-user random salts ensure identical passwords produce different hashes, defeating precomputed rainbow tables entirely. Statement II is counterproductive per NIST SP 800-63B: forced rotation causes predictable cycling patterns that partially negate the benefit of bcrypt.',why:{A:'Salting (III) is also a genuine improvement — it directly defeats rainbow table attacks. Both I and III should be implemented.',B:'Statement II (forced rotation) is counterproductive. Users adopt predictable cycling patterns making the cracked credential guessable before expiration.',D:'Statement II is counterproductive, not beneficial, per NIST SP 800-63B.'}},
+    5:{correct:'D',exp:'Correct. The tester has two viable attacks: (1) Password spraying — the LinkedIn list provides 1,400 valid emails and the default “Welcome2026!” is active on 23% of accounts; one attempt per account evades the 8-attempt lockout. (2) Credential stuffing — the pharmacy breach data can be tested with a 61% employee reuse rate. The bcrypt + salt implementation eliminates offline hash attacks. MFA stops both viable attacks because even a correct password cannot complete authentication without the second factor.',why:{A:'Rainbow table attacks are defeated by the bcrypt + per-user salt already in place. Switching to Argon2 does not address the actual viable threats.',B:'Brute force against bcrypt cost factor 10 is computationally impractical. Reducing lockout to 3 does not stop spraying sending exactly 1 attempt per account.',C:'bcrypt is already deployed and does not address spraying or stuffing, which never interact with the hash database.'}}
+  };
+
+  document.querySelectorAll('#cyber-quiz-12 .mcq-options').forEach(function(ul){
+    ul.querySelectorAll('.mcq-opt').forEach(function(li){
+      li.addEventListener('click',function(){
+        var qid=ul.id.replace('-opts','').replace('q','');
+        if(answered[qid])return;
+        ul.querySelectorAll('.mcq-opt').forEach(function(o){o.classList.remove('selected');});
+        li.classList.add('selected');
+        document.getElementById('q'+qid+'-val').value=li.dataset.val;
+      });
+    });
+  });
+
+  window.checkQ=function(qNum,correct){
+    if(answered[qNum])return;
+    var chosen=document.getElementById('q'+qNum+'-val').value;
+    if(!chosen){alert('Please select an answer first.');return;}
+    answered[qNum]=true;
+    var isCorrect=(chosen===correct);
+    if(isCorrect)score++;
+    document.querySelectorAll('#q'+qNum+'-opts .mcq-opt').forEach(function(opt){
+      var v=opt.dataset.val;opt.style.cursor='default';
+      if(v===correct){opt.classList.remove('selected');opt.classList.add('correct');}
+      else if(v===chosen&&!isCorrect){opt.classList.remove('selected');opt.classList.add('incorrect');}
+      else{opt.classList.remove('selected');}
+    });
+    var btn=document.querySelector('#qb'+qNum+' .check-btn');
+    if(btn)btn.disabled=true;
+    var fb=document.getElementById('fb'+qNum),d=DATA[qNum];
+    fb.classList.add('show');
+    if(isCorrect){fb.classList.add('correct');document.getElementById('fb'+qNum+'-head').textContent='Correct!';}
+    else{fb.classList.add('incorrect');document.getElementById('fb'+qNum+'-head').textContent='Not quite. The correct answer is '+correct+'.';}
+    document.getElementById('fb'+qNum+'-exp').innerHTML=d.exp;
+    if(!isCorrect&&d.why[chosen])document.getElementById('fb'+qNum+'-why').innerHTML='<p><strong>Why not '+chosen+'?</strong> '+d.why[chosen]+'</p>';
+    var done=Object.keys(answered).length;
+    document.getElementById('scoreCount').textContent=score;
+    document.getElementById('scoreDisplay').textContent=score+' / '+done;
+    if(done===TOTAL)setTimeout(showResults,700);
+  };
+
+  function showResults(){
+    var panel=document.getElementById('resultsPanel');
+    panel.classList.add('show');
+    document.getElementById('finalScore').textContent=score+'/5';
+    var msg='';
+    if(score===5)msg='Outstanding! Perfect score — you have mastered password attack classification and defense.';
+    else if(score===4)msg='Excellent work! Review the question(s) you missed and you are exam-ready.';
+    else if(score===3)msg='Good foundation. Re-read sections 1.2.4 and 1.2.7, then retry.';
+    else msg='Keep going — re-read the full lesson focusing on the attack classification framework, then retry.';
+    document.getElementById('resultsMsg').innerHTML=msg;
+    panel.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  window.retryQuiz=function(){
+    score=0;answered={};
+    document.getElementById('scoreCount').textContent='0';
+    document.getElementById('scoreDisplay').textContent='0 / 5';
+    document.getElementById('resultsPanel').classList.remove('show');
+    [1,2,3,4,5].forEach(function(n){
+      document.getElementById('q'+n+'-val').value='';
+      document.querySelectorAll('#q'+n+'-opts .mcq-opt').forEach(function(o){o.classList.remove('selected','correct','incorrect','reveal');o.style.cursor='';});
+      var fb=document.getElementById('fb'+n);fb.className='feedback';
+      document.getElementById('fb'+n+'-head').textContent='';
+      document.getElementById('fb'+n+'-exp').innerHTML='';
+      document.getElementById('fb'+n+'-why').innerHTML='';
+      var btn=document.querySelector('#qb'+n+' .check-btn');if(btn)btn.disabled=false;
+    });
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+
+  document.querySelectorAll('#ucnav .ucn-lesson').forEach(function(btn){
+    btn.addEventListener('click',function(e){
+      var stepsId='ucn-s'+btn.id.replace('ucn-l','');
+      var steps=document.getElementById(stepsId);
+      var isOpen=btn.classList.contains('open');
+      if(!isOpen)e.preventDefault();
+      document.querySelectorAll('#ucnav .ucn-lesson').forEach(function(b){b.classList.remove('open');});
+      document.querySelectorAll('#ucnav .ucn-steps').forEach(function(s){s.classList.remove('open');});
+      if(!isOpen&&steps){btn.classList.add('open');steps.classList.add('open');}
+    });
+  });
+})();
+</script>
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id="apcyber-activity-nav"><div class="aan-card">
+<span class="aan-eyebrow">AP Cybersecurity · Unit 1 · Lesson 1.2 · Quiz</span><div class="aan-strip">
+<a class="aan-chip" href="/pages/ap-cybersecurity-unit-1-password-attacks">Lesson</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-1-lesson-2-exercise-1">Exercise 1</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-1-lesson-2-exercise-2">Exercise 2</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-1-lesson-2-lab">Lab</a><span class="aan-sep">•</span><span class="aan-chip cur">Quiz</span><span class="aan-sep">•</span><a class="aan-chip next" href="/pages/ap-cybersecurity-unit-1-ai-driven-threats">Next: 1.3 Best Practices for Public Networks →</a>
+</div>
+<div class="aan-up">
+<span class="aan-lbl">Back to:</span><a href="/pages/ap-cybersecurity-unit-1-password-attacks">Lesson 1.2</a><a href="/pages/ap-cybersecurity-unit-1-introduction-to-security">Unit 1 Study Guide</a><a href="/pages/ap-cybersecurity-complete-course-guide">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->

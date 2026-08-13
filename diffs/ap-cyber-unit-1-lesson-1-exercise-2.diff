@@ -1,0 +1,71 @@
+--- a/ap-cyber-unit-1-lesson-1-exercise-2#ucnav
++++ b/ap-cyber-unit-1-lesson-1-exercise-2#ucnav
+@@ -3,44 +3,44 @@
+     <a href="/pages/ap-cybersecurity-complete-course-guide" class="ucn-hub">AP Cyber Hub</a>
+     <span class="ucn-badge">Unit 1</span>
+     <a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-lesson open" onclick="ucnToggle(1);" id="ucn-l1" title="Understanding Social Engineering">1.1 <span class="ucn-chevron">▼</span></a>
+-    <span class="ucn-steps open" id="ucn-s1">
++    <div class="ucn-steps open" id="ucn-s1">
+       <a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-step">Lesson</a>
+       <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-1" class="ucn-step">Ex 1</a>
+       <span class="ucn-step current">Ex 2</span>
+       <a href="/pages/ap-cyber-unit-1-lesson-1-lab" class="ucn-step">Lab</a>
+       <a href="/pages/ap-cyber-unit-1-lesson-1-quiz" class="ucn-step">Quiz</a>
+-    </span>
++    </div>
+     <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-lesson" onclick="ucnToggle(2);" id="ucn-l2" title="Suspicious Website Logins">1.2 <span class="ucn-chevron">▼</span></a>
+-    <span class="ucn-steps" id="ucn-s2">
++    <div class="ucn-steps" id="ucn-s2">
+       <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-step">Lesson</a>
+       <a href="/pages/ap-cyber-unit-1-lesson-2-exercise-1" class="ucn-step">Ex 1</a>
+       <a href="/pages/ap-cyber-unit-1-lesson-2-exercise-2" class="ucn-step">Ex 2</a>
+       <a href="/pages/ap-cyber-unit-1-lesson-2-lab" class="ucn-step">Lab</a>
+-      <a href="/pages/ap-cybersecurity-unit-1-password-attacks-quiz" class="ucn-step">Quiz</a>
+-    </span>
+-    <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-lesson" onclick="ucnToggle(3);" id="ucn-l3" title="Best Practices for Public Networks">1.3 <span class="ucn-chevron">▼</span></a>
+-    <span class="ucn-steps" id="ucn-s3">
+-      <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-step">Lesson</a>
++      <a href="/pages/ap-cyber-unit-1-lesson-2-quiz" class="ucn-step">Quiz</a>
++    </div>
++    <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-lesson" onclick="ucnToggle(3);" id="ucn-l3" title="Public Wi-Fi Dangers">1.3 <span class="ucn-chevron">▼</span></a>
++    <div class="ucn-steps" id="ucn-s3">
++      <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-step">Lesson</a>
+       <a href="/pages/ap-cyber-unit-1-lesson-3-exercise-1" class="ucn-step">Ex 1</a>
+       <a href="/pages/ap-cyber-unit-1-lesson-3-exercise-2" class="ucn-step">Ex 2</a>
+       <a href="/pages/ap-cyber-unit-1-lesson-3-lab" class="ucn-step">Lab</a>
+       <a href="/pages/ap-cyber-unit-1-lesson-3-quiz" class="ucn-step">Quiz</a>
+-    </span>
+-    <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-lesson" onclick="ucnToggle(4);" id="ucn-l4" title="AI-Based Cybersecurity Attacks">1.4 <span class="ucn-chevron">▼</span></a>
+-    <span class="ucn-steps" id="ucn-s4">
+-      <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-step">Lesson</a>
+-      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-exercise-1" class="ucn-step">Ex 1</a>
+-      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-exercise-2" class="ucn-step">Ex 2</a>
+-      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-lab" class="ucn-step">Lab</a>
+-      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-quiz" class="ucn-step">Quiz</a>
+-    </span>
+-    <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-lesson" onclick="ucnToggle(5);" id="ucn-l5" title="Leveraging AI in Cyber Defense">1.5 <span class="ucn-chevron">▼</span></a>
+-    <span class="ucn-steps" id="ucn-s5">
++    </div>
++    <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-lesson" onclick="ucnToggle(4);" id="ucn-l4" title="AI-Based Attacks">1.4 <span class="ucn-chevron">▼</span></a>
++    <div class="ucn-steps" id="ucn-s4">
++      <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-step">Lesson</a>
++      <a href="/pages/ap-cyber-unit-1-lesson-4-exercise-1" class="ucn-step">Ex 1</a>
++      <a href="/pages/ap-cyber-unit-1-lesson-4-exercise-2" class="ucn-step">Ex 2</a>
++      <a href="/pages/ap-cyber-unit-1-lesson-4-lab" class="ucn-step">Lab</a>
++      <a href="/pages/ap-cyber-unit-1-lesson-4-quiz" class="ucn-step">Quiz</a>
++    </div>
++    <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-lesson" onclick="ucnToggle(5);" id="ucn-l5" title="AI in Defense">1.5 <span class="ucn-chevron">▼</span></a>
++    <div class="ucn-steps" id="ucn-s5">
+       <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-step">Lesson</a>
+-      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-exercise-1" class="ucn-step">Ex 1</a>
+-      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-exercise-2" class="ucn-step">Ex 2</a>
+-      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-lab" class="ucn-step">Lab</a>
+-      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-quiz" class="ucn-step">Quiz</a>
+-    </span>
++      <a href="/pages/ap-cyber-unit-1-lesson-5-exercise-1" class="ucn-step">Ex 1</a>
++      <a href="/pages/ap-cyber-unit-1-lesson-5-exercise-2" class="ucn-step">Ex 2</a>
++      <a href="/pages/ap-cyber-unit-1-lesson-5-lab" class="ucn-step">Lab</a>
++      <a href="/pages/ap-cyber-unit-1-lesson-5-quiz" class="ucn-step">Quiz</a>
++    </div>
+   </div>
+ </div>

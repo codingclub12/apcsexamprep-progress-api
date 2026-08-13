@@ -1,0 +1,749 @@
+<script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "LearningResource",
+    "headline": "AP Cybersecurity Topic 1.2 Lab: Password Attack Simulation",
+    "description": "Four escalating password attack specimens from basic dictionary attack to advanced credential stuffing with MFA bypass. AP Cybersecurity analyst-role lab.",
+    "author": {
+      "@type": "Person",
+      "name": "Tanner Crow",
+      "url": "https://www.apcsexamprep.com/pages/ap-computer-science-tutor"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "APCSExamPrep.com",
+      "url": "https://www.apcsexamprep.com"
+    },
+    "educationalLevel": "High School",
+    "inLanguage": "en-US"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.apcsexamprep.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "AP Cybersecurity",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Unit 1: Introduction to Security",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide#unit1"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": "Topic 1.2: Suspicious Website Logins",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-unit-1-password-attacks"
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "name": "AP Cybersecurity Topic 1.2 Lab: Password Attack Simulation",
+        "item": "https://www.apcsexamprep.com/pages/ap-cyber-unit-1-lesson-2-lab"
+      }
+    ]
+  }
+]
+</script>
+<style>
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-lesson.locked{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;cursor:not-allowed!important;}
+#ucnav .ucn-lesson.locked:link,#ucnav .ucn-lesson.locked:visited,#ucnav .ucn-lesson.locked:hover{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;background:transparent!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-lock svg{opacity:.5!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+
+/* ===== WRAPPER ===== */
+#cyber-lab-12{all:initial!important;display:block!important;font-family:'Georgia',serif!important;color:#1E1B4B!important;background:#ffffff!important;line-height:1.6!important;-webkit-font-smoothing:antialiased!important;max-width:940px!important;margin:0 auto!important;padding:20px 16px 60px!important;}
+#cyber-lab-12 *{box-sizing:border-box!important;}
+#cyber-lab-12{--purple:#6B21A8;--purple-mid:#7C3AED;--purple-light:#A855F7;--purple-bg:#F5F0FF;--purple-border:#DDD6FE;--dark:#1E1B4B;--gray:#6B7280;--gray-light:#F9FAFB;--gray-border:#E5E7EB;--green:#15803D;--green-bg:#F0FDF4;--green-border:#BBF7D0;--red:#DC2626;--red-bg:#FEF2F2;--red-border:#FECACA;--amber:#D97706;--amber-bg:#FFFBEB;--amber-border:#FDE68A;}
+
+/* ===== HEADER ===== */
+#cyber-lab-12 .ex-header{background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;border-radius:14px!important;padding:36px 32px!important;margin-bottom:20px!important;color:#ffffff!important;position:relative!important;overflow:hidden!important;}
+#cyber-lab-12 .ex-header::before{content:''!important;position:absolute!important;top:-60px!important;right:-60px!important;width:300px!important;height:300px!important;border-radius:50%!important;background:rgba(168,85,247,0.15)!important;pointer-events:none!important;}
+#cyber-lab-12 .ex-header::after{content:''!important;position:absolute!important;bottom:-80px!important;left:-40px!important;width:250px!important;height:250px!important;border-radius:50%!important;background:rgba(124,58,237,0.12)!important;pointer-events:none!important;}
+#cyber-lab-12 .ex-tag{display:inline-block!important;background:rgba(168,85,247,0.25)!important;border:1px solid rgba(168,85,247,0.5)!important;color:#E9D5FF!important;font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;text-transform:uppercase!important;padding:6px 16px!important;border-radius:20px!important;margin-bottom:16px!important;}
+#cyber-lab-12 .ex-header h1{font-family:'Georgia',serif!important;font-size:28px!important;font-weight:700!important;color:#ffffff!important;margin:0 0 10px!important;line-height:1.3!important;position:relative!important;}
+#cyber-lab-12 .ex-header p{font-family:'Georgia',serif!important;font-size:15px!important;color:rgba(255,255,255,0.85)!important;margin:0 0 20px!important;line-height:1.6!important;position:relative!important;}
+#cyber-lab-12 .ex-badges{display:flex!important;flex-wrap:wrap!important;gap:10px!important;position:relative!important;}
+#cyber-lab-12 .ex-badge{display:inline-flex!important;align-items:center!important;gap:5px!important;background:rgba(168,85,247,0.2)!important;border:1px solid rgba(168,85,247,0.4)!important;color:#E9D5FF!important;padding:5px 14px!important;border-radius:18px!important;font-family:'Georgia',serif!important;font-size:12px!important;font-weight:600!important;}
+
+/* ===== SCORE BAR ===== */
+#cyber-lab-12 .score-bar{position:relative!important;z-index:50!important;background:linear-gradient(135deg,#1E1B4B,#3B0764)!important;color:#ffffff!important;padding:10px 20px!important;border-radius:10px!important;display:flex!important;justify-content:space-between!important;align-items:center!important;font-family:'Georgia',serif!important;font-size:13px!important;font-weight:600!important;box-shadow:0 4px 12px rgba(30,27,75,0.3)!important;margin-bottom:24px!important;}
+#cyber-lab-12 .score-bar .score-num{background:var(--purple)!important;padding:4px 14px!important;border-radius:14px!important;font-size:14px!important;font-weight:800!important;color:#ffffff!important;}
+
+/* ===== SECTIONS ===== */
+#cyber-lab-12 .section{background:#ffffff!important;border:1px solid var(--gray-border)!important;border-radius:12px!important;padding:28px 24px!important;margin-bottom:24px!important;box-shadow:0 2px 8px rgba(0,0,0,0.04)!important;}
+#cyber-lab-12 .section h2{font-family:'Georgia',serif!important;font-size:18px!important;font-weight:700!important;color:var(--dark)!important;margin:0 0 12px!important;}
+#cyber-lab-12 .section h3{font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;color:var(--purple)!important;margin:16px 0 8px!important;}
+#cyber-lab-12 .section p{font-family:'Georgia',serif!important;font-size:14px!important;color:#374151!important;margin:0 0 12px!important;line-height:1.7!important;}
+#cyber-lab-12 .section-label{display:inline-block!important;background:var(--purple-bg)!important;color:var(--purple)!important;font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1px!important;padding:4px 12px!important;border-radius:4px!important;margin-bottom:12px!important;}
+
+/* ===== SCENARIO CONTEXT BOX ===== */
+#cyber-lab-12 .scenario-box{background:var(--gray-light)!important;border:2px solid var(--gray-border)!important;border-radius:10px!important;padding:20px!important;margin:12px 0 16px!important;font-family:'Georgia',serif!important;font-size:14px!important;color:#374151!important;line-height:1.7!important;}
+#cyber-lab-12 .scenario-box strong{color:var(--dark)!important;}
+
+/* ===== TERMINAL / LOG BOX ===== */
+#cyber-lab-12 .terminal{background:#0F0F23!important;border-radius:10px!important;padding:20px!important;margin:12px 0 16px!important;font-family:'Courier New',monospace!important;font-size:12px!important;line-height:1.8!important;overflow-x:auto!important;border:1px solid #2D2B55!important;}
+#cyber-lab-12 .terminal .log-line{display:block!important;white-space:pre!important;padding:1px 0!important;}
+#cyber-lab-12 .terminal .log-normal{color:#A8B2D8!important;}
+#cyber-lab-12 .terminal .log-warn{color:#FCD34D!important;}
+#cyber-lab-12 .terminal .log-danger{color:#F87171!important;}
+#cyber-lab-12 .terminal .log-ok{color:#6EE7B7!important;}
+#cyber-lab-12 .terminal .log-label{color:#C4B5FD!important;font-weight:700!important;}
+
+/* ===== HASH TABLE ===== */
+#cyber-lab-12 .hash-table{width:100%!important;border-collapse:collapse!important;font-family:'Georgia',serif!important;font-size:13px!important;margin:12px 0 16px!important;}
+#cyber-lab-12 .hash-table th{background:var(--dark)!important;color:#ffffff!important;padding:10px 12px!important;text-align:left!important;font-size:12px!important;font-weight:700!important;letter-spacing:0.5px!important;}
+#cyber-lab-12 .hash-table td{padding:10px 12px!important;border-bottom:1px solid var(--gray-border)!important;color:#374151!important;vertical-align:top!important;}
+#cyber-lab-12 .hash-table tr:nth-child(even) td{background:var(--gray-light)!important;}
+#cyber-lab-12 .hash-table .hash-val{font-family:'Courier New',monospace!important;font-size:11px!important;color:#4C1D95!important;word-break:break-all!important;}
+#cyber-lab-12 .hash-table select{font-family:'Georgia',serif!important;font-size:12px!important;padding:5px 8px!important;border:1px solid var(--purple-border)!important;border-radius:5px!important;background:#ffffff!important;color:var(--dark)!important;width:100%!important;min-width:120px!important;}
+#cyber-lab-12 .hash-table select:focus{outline:none!important;border-color:var(--purple)!important;}
+
+/* ===== MCQ OPTIONS ===== */
+#cyber-lab-12 .mcq-options{list-style:none!important;padding:0!important;margin:12px 0!important;display:flex!important;flex-direction:column!important;gap:8px!important;}
+#cyber-lab-12 .mcq-opt{display:flex!important;align-items:flex-start!important;gap:10px!important;padding:12px 16px!important;border:2px solid var(--gray-border)!important;border-radius:8px!important;cursor:pointer!important;transition:all .15s!important;font-family:'Georgia',serif!important;font-size:14px!important;color:var(--dark)!important;background:#ffffff!important;}
+#cyber-lab-12 .mcq-opt:hover{border-color:var(--purple-border)!important;background:var(--purple-bg)!important;}
+#cyber-lab-12 .mcq-opt.selected{border-color:var(--purple)!important;background:var(--purple-bg)!important;font-weight:600!important;}
+#cyber-lab-12 .mcq-opt.correct{border-color:#15803D!important;background:var(--green-bg)!important;}
+#cyber-lab-12 .mcq-opt.incorrect{border-color:var(--red)!important;background:var(--red-bg)!important;}
+#cyber-lab-12 .mcq-opt .opt-letter{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:28px!important;height:28px!important;border-radius:50%!important;background:var(--gray-light)!important;border:1px solid var(--gray-border)!important;font-size:13px!important;font-weight:700!important;color:var(--gray)!important;flex-shrink:0!important;}
+#cyber-lab-12 .mcq-opt.selected .opt-letter{background:var(--purple)!important;color:#ffffff!important;border-color:var(--purple)!important;}
+#cyber-lab-12 .mcq-opt.correct .opt-letter{background:#15803D!important;color:#ffffff!important;border-color:#15803D!important;}
+#cyber-lab-12 .mcq-opt.incorrect .opt-letter{background:var(--red)!important;color:#ffffff!important;border-color:var(--red)!important;}
+#cyber-lab-12 .mcq-opt .opt-text{flex:1!important;padding-top:3px!important;}
+
+/* ===== POLICY AUDIT ROWS ===== */
+#cyber-lab-12 .policy-row{display:grid!important;grid-template-columns:1fr auto!important;gap:16px!important;align-items:center!important;padding:14px 16px!important;border:2px solid var(--gray-border)!important;border-radius:8px!important;margin-bottom:10px!important;background:#ffffff!important;transition:border-color .15s!important;}
+#cyber-lab-12 .policy-row.graded-correct{border-color:#15803D!important;background:var(--green-bg)!important;}
+#cyber-lab-12 .policy-row.graded-wrong{border-color:var(--red)!important;background:var(--red-bg)!important;}
+#cyber-lab-12 .policy-row .policy-text{font-family:'Georgia',serif!important;font-size:14px!important;color:var(--dark)!important;line-height:1.6!important;}
+#cyber-lab-12 .policy-row .policy-text em{font-size:12px!important;color:var(--gray)!important;font-style:normal!important;display:block!important;margin-top:3px!important;}
+#cyber-lab-12 .policy-row select{font-family:'Georgia',serif!important;font-size:13px!important;padding:7px 10px!important;border:1px solid var(--purple-border)!important;border-radius:6px!important;background:#ffffff!important;color:var(--dark)!important;min-width:140px!important;}
+#cyber-lab-12 .policy-row select:focus{outline:none!important;border-color:var(--purple)!important;}
+@media(max-width:600px){#cyber-lab-12 .policy-row{grid-template-columns:1fr!important;}}
+
+/* ===== BUTTONS ===== */
+#cyber-lab-12 .check-btn{display:inline-block!important;background:var(--purple)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;font-family:'Georgia',serif!important;font-size:14px!important;font-weight:700!important;padding:10px 24px!important;border:none!important;border-radius:8px!important;cursor:pointer!important;margin-top:12px!important;opacity:1!important;visibility:visible!important;text-decoration:none!important;}
+#cyber-lab-12 .check-btn:hover{background:var(--purple-mid)!important;}
+#cyber-lab-12 a.check-btn:link,#cyber-lab-12 a.check-btn:visited,#cyber-lab-12 a.check-btn:hover,#cyber-lab-12 a.check-btn:active{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#cyber-lab-12 .nav-btn-back{background:#475569!important;}
+#cyber-lab-12 .nav-btn-back:hover{background:#334155!important;}
+
+/* ===== FEEDBACK ===== */
+#cyber-lab-12 .feedback{display:none!important;border-radius:8px!important;padding:16px 18px!important;margin-top:14px!important;font-family:'Georgia',serif!important;font-size:13px!important;line-height:1.7!important;}
+#cyber-lab-12 .feedback.show{display:block!important;}
+#cyber-lab-12 .feedback.correct{background:var(--green-bg)!important;border:1px solid var(--green-border)!important;color:#166534!important;}
+#cyber-lab-12 .feedback.partial{background:var(--amber-bg)!important;border:1px solid var(--amber-border)!important;color:#92400E!important;}
+#cyber-lab-12 .feedback.incorrect{background:var(--red-bg)!important;border:1px solid var(--red-border)!important;color:#991B1B!important;}
+#cyber-lab-12 .feedback .fb-head{font-family:'Georgia',serif!important;font-size:14px!important;font-weight:700!important;margin-bottom:8px!important;}
+#cyber-lab-12 .feedback p{font-family:'Georgia',serif!important;font-size:13px!important;margin:6px 0!important;color:inherit!important;}
+#cyber-lab-12 .feedback ul{margin:8px 0 0 18px!important;padding:0!important;}
+#cyber-lab-12 .feedback ul li{font-family:'Georgia',serif!important;font-size:13px!important;margin-bottom:5px!important;color:inherit!important;}
+
+/* ===== INLINE VERDICT BADGES ===== */
+#cyber-lab-12 .verdict{display:inline-block!important;font-size:11px!important;font-weight:700!important;padding:2px 9px!important;border-radius:10px!important;margin-left:8px!important;font-family:'Georgia',serif!important;}
+#cyber-lab-12 .verdict.v-correct{background:var(--green-bg)!important;color:#15803D!important;border:1px solid var(--green-border)!important;}
+#cyber-lab-12 .verdict.v-wrong{background:var(--red-bg)!important;color:var(--red)!important;border:1px solid var(--red-border)!important;}
+
+/* ===== RESULTS ===== */
+#cyber-lab-12 .results-panel{display:none!important;background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;border-radius:12px!important;padding:32px!important;text-align:center!important;color:#ffffff!important;margin-top:24px!important;position:relative!important;overflow:hidden!important;}
+#cyber-lab-12 .results-panel::before{content:''!important;position:absolute!important;top:-40px!important;right:-40px!important;width:200px!important;height:200px!important;border-radius:50%!important;background:rgba(168,85,247,0.15)!important;pointer-events:none!important;}
+#cyber-lab-12 .results-panel.show{display:block!important;}
+#cyber-lab-12 .results-panel h2{font-family:'Georgia',serif!important;font-size:22px!important;color:#ffffff!important;margin:0 0 8px!important;position:relative!important;}
+#cyber-lab-12 .results-score{font-family:'Georgia',serif!important;font-size:48px!important;font-weight:900!important;color:var(--purple-light)!important;margin:12px 0!important;position:relative!important;}
+#cyber-lab-12 .results-panel p{font-family:'Georgia',serif!important;font-size:14px!important;color:rgba(255,255,255,0.85)!important;margin:8px 0!important;position:relative!important;}
+#cyber-lab-12 .results-btns{display:flex!important;justify-content:center!important;gap:12px!important;flex-wrap:wrap!important;margin-top:20px!important;position:relative!important;}
+#cyber-lab-12 .results-next{display:inline-block!important;background:var(--purple-light)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;padding:11px 26px!important;border-radius:8px!important;font-family:'Georgia',serif!important;font-size:14px!important;font-weight:700!important;text-decoration:none!important;border:none!important;cursor:pointer!important;}
+#cyber-lab-12 a.results-next:link,#cyber-lab-12 a.results-next:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+
+/* ===== EXAM TIP / EXTENSION ===== */
+#cyber-lab-12 .exam-tip{background:var(--purple-bg)!important;border-left:4px solid var(--purple)!important;border-radius:0 8px 8px 0!important;padding:16px 20px!important;margin:20px 0!important;font-family:'Georgia',serif!important;font-size:14px!important;color:var(--dark)!important;}
+#cyber-lab-12 .exam-tip strong{color:var(--purple)!important;}
+#cyber-lab-12 .extension{background:var(--amber-bg)!important;border-left:4px solid var(--amber)!important;border-radius:0 8px 8px 0!important;padding:16px 20px!important;margin:20px 0!important;font-family:'Georgia',serif!important;font-size:14px!important;color:#92400E!important;}
+#cyber-lab-12 .extension strong{color:#B45309!important;}
+</style>
+
+<!-- UCNAV -->
+<div id="ucnav">
+<div class="ucn-rail" id="ucn-rail">
+<a href="/pages/ap-cybersecurity-complete-course-guide" class="ucn-hub">AP Cyber Hub</a> <span class="ucn-badge">Unit 1</span> <a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-lesson" id="ucn-l1" title="Understanding Social Engineering">1.1 <span class="ucn-chevron">▼</span></a> <span class="ucn-steps" id="ucn-s1"> <a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-step">Lesson</a> <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-1" class="ucn-step">Ex 1</a> <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-2" class="ucn-step">Ex 2</a> <a href="/pages/ap-cyber-unit-1-lesson-1-lab" class="ucn-step">Lab</a> <a href="/pages/ap-cyber-unit-1-lesson-1-quiz" class="ucn-step">Quiz</a> </span> <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-lesson open" id="ucn-l2" title="Suspicious Website Logins">1.2 <span class="ucn-chevron">▼</span></a> <span class="ucn-steps open" id="ucn-s2"> <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-step">Lesson</a> <a href="/pages/ap-cyber-unit-1-lesson-2-exercise-1" class="ucn-step">Ex 1</a> <a href="/pages/ap-cyber-unit-1-lesson-2-exercise-2" class="ucn-step">Ex 2</a> <span class="ucn-step current">Lab</span> <a href="/pages/ap-cyber-unit-1-lesson-2-quiz" class="ucn-step">Quiz</a> </span> <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-lesson" id="ucn-l3" title="Best Practices for Public Networks">1.3 <span class="ucn-chevron">▼</span></a> <span class="ucn-steps" id="ucn-s3"> <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-step">Lesson</a> <span class="ucn-step" style="opacity: 0.4!important; cursor: not-allowed!important;">Ex 1</span> <span class="ucn-step" style="opacity: 0.4!important; cursor: not-allowed!important;">Ex 2</span> <span class="ucn-step" style="opacity: 0.4!important; cursor: not-allowed!important;">Lab</span> <span class="ucn-step" style="opacity: 0.4!important; cursor: not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-lesson" title="AI-Based Cybersecurity Attacks" id="ucn-l4">1.4 <span class="ucn-chevron">▼</span></a> <span class="ucn-steps" id="ucn-s4"> <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-step">Lesson</a> <span class="ucn-step" style="opacity: 0.4!important; cursor: not-allowed!important;">Ex 1</span> <span class="ucn-step" style="opacity: 0.4!important; cursor: not-allowed!important;">Ex 2</span> <span class="ucn-step" style="opacity: 0.4!important; cursor: not-allowed!important;">Lab</span> <span class="ucn-step" style="opacity: 0.4!important; cursor: not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-lesson" title="Leveraging AI in Cyber Defense" id="ucn-l5">1.5 <span class="ucn-chevron">▼</span></a> <span class="ucn-steps" id="ucn-s5"> <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-step">Lesson</a> <span class="ucn-step" style="opacity: 0.4!important; cursor: not-allowed!important;">Ex 1</span> <span class="ucn-step" style="opacity: 0.4!important; cursor: not-allowed!important;">Ex 2</span> <span class="ucn-step" style="opacity: 0.4!important; cursor: not-allowed!important;">Lab</span> <span class="ucn-step" style="opacity: 0.4!important; cursor: not-allowed!important;">Quiz</span> </span>
+</div>
+</div>
+<p> </p>
+
+<div id="cyber-lab-12" data-lesson-id="1.2-lab">
+
+<!-- HEADER -->
+<div class="ex-header">
+<span class="ex-tag">AP Cybersecurity — Unit 1, Topic 1.2</span>
+
+<nav aria-label="Breadcrumb" style="font-size:0.82rem;color:#6b7280;-webkit-text-fill-color:#6b7280;margin:0 0 16px;font-family:'Georgia',serif;padding:0;"><a href="/" style="color:#6b21a8;text-decoration:none;-webkit-text-fill-color:#6b21a8;">Home</a><span style="margin:0 6px;color:#d1d5db;">›</span><a href="/pages/ap-cybersecurity-complete-course-guide" style="color:#6b21a8;text-decoration:none;-webkit-text-fill-color:#6b21a8;">AP Cybersecurity</a><span style="margin:0 6px;color:#d1d5db;">›</span><span style="color:#374151;-webkit-text-fill-color:#374151;">Topic 1.2 › Lab</span></nav>
+<h1>Lab: Password Attack Simulation</h1>
+<p>You are a cybersecurity analyst at SecureBank Corp. The CISO has handed you three analysis stations after a suspected authentication breach. Complete each station using the skills and concepts from Lesson 1.2.</p>
+<div class="ex-badges">
+<span class="ex-badge">Lab</span> <span class="ex-badge">Skills 1.A, 1.B, 2.A</span> <span class="ex-badge">~45 min</span> <span class="ex-badge">3 Stations • 30 pts</span>
+</div>
+</div>
+
+<!-- SCORE BAR -->
+<div class="score-bar">
+<span>Stations Complete: <span id="stationsDone">0</span> / 3</span> <span class="score-num"><span id="totalScore">0</span> / 30 pts</span>
+</div>
+
+<!-- ============================================================
+     STATION 1: HASH DATABASE TRIAGE (10 pts)
+     5 rows x 2 pts each
+     ============================================================ -->
+<div class="section" id="s1-section">
+<span class="section-label">Station 1 — Hash Database Triage (10 pts)</span>
+<h2>Breach Containment: Classify the Damage</h2>
+<p>The DBA has exported 5 rows from the <code>users</code> table. Each row uses a different password storage implementation. For each entry, classify the storage method and identify the most effective attack an attacker who has this data would use.</p>
+<div class="scenario-box">
+<strong>Context:</strong> The database was exfiltrated by an attacker. You do not know what hardware the attacker has, but you should assume modern GPU-based cracking capability (~10 billion MD5 hashes/sec, ~300 bcrypt hashes/sec at cost 12). Your job is to classify each entry so the incident response team knows which accounts are at the highest risk of immediate compromise.</div>
+
+<table class="hash-table" id="s1-table">
+<thead>
+<tr>
+<th>#</th>
+<th>Stored Value</th>
+<th>Storage Method</th>
+<th>Best Attack Strategy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1</strong></td>
+<td class="hash-val">hunter2</td>
+<td><select id="s1r1-method"><option value="">-- Select --</option>
+<option value="plain">Plaintext</option>
+<option value="md5">Unsalted MD5</option>
+<option value="md5salt">MD5 + Random Salt</option>
+<option value="sha256det">SHA-256 w/ Deterministic Salt</option>
+<option value="bcrypt">bcrypt (random salt)</option></select></td>
+<td><select id="s1r1-attack"><option value="">-- Select --</option>
+<option value="none">No attack needed — already readable</option>
+<option value="rainbow">Rainbow table (precomputed MD5)</option>
+<option value="targeted">Targeted rainbow table per user</option>
+<option value="brute-fast">Fast offline brute force (MD5 speed)</option>
+<option value="brute-slow">Slow offline brute force (bcrypt speed)</option></select></td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td class="hash-val">5f4dcc3b5aa765d61d8327deb882cf99</td>
+<td><select id="s1r2-method"><option value="">-- Select --</option>
+<option value="plain">Plaintext</option>
+<option value="md5">Unsalted MD5</option>
+<option value="md5salt">MD5 + Random Salt</option>
+<option value="sha256det">SHA-256 w/ Deterministic Salt</option>
+<option value="bcrypt">bcrypt (random salt)</option></select></td>
+<td><select id="s1r2-attack"><option value="">-- Select --</option>
+<option value="none">No attack needed — already readable</option>
+<option value="rainbow">Rainbow table (precomputed MD5)</option>
+<option value="targeted">Targeted rainbow table per user</option>
+<option value="brute-fast">Fast offline brute force (MD5 speed)</option>
+<option value="brute-slow">Slow offline brute force (bcrypt speed)</option></select></td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td class="hash-val">jsmith:8d969eef6ecad3c29a3a629280e686cf</td>
+<td><select id="s1r3-method"><option value="">-- Select --</option>
+<option value="plain">Plaintext</option>
+<option value="md5">Unsalted MD5</option>
+<option value="md5salt">MD5 + Random Salt</option>
+<option value="sha256det">SHA-256 w/ Deterministic Salt</option>
+<option value="bcrypt">bcrypt (random salt)</option></select></td>
+<td><select id="s1r3-attack"><option value="">-- Select --</option>
+<option value="none">No attack needed — already readable</option>
+<option value="rainbow">Rainbow table (precomputed MD5)</option>
+<option value="targeted">Targeted rainbow table per user</option>
+<option value="brute-fast">Fast offline brute force (MD5 speed)</option>
+<option value="brute-slow">Slow offline brute force (bcrypt speed)</option></select></td>
+</tr>
+<tr>
+<td><strong>4</strong></td>
+<td class="hash-val">b3f0:a8e2d4f17c9b3e1a24f6c0d5e2b7f9a4<br><small style="font-size:10px;color:#6B7280;">(random_salt:MD5(salt+password))</small>
+</td>
+<td><select id="s1r4-method"><option value="">-- Select --</option>
+<option value="plain">Plaintext</option>
+<option value="md5">Unsalted MD5</option>
+<option value="md5salt">MD5 + Random Salt</option>
+<option value="sha256det">SHA-256 w/ Deterministic Salt</option>
+<option value="bcrypt">bcrypt (random salt)</option></select></td>
+<td><select id="s1r4-attack"><option value="">-- Select --</option>
+<option value="none">No attack needed — already readable</option>
+<option value="rainbow">Rainbow table (precomputed MD5)</option>
+<option value="targeted">Targeted rainbow table per user</option>
+<option value="brute-fast">Fast offline brute force (MD5 speed)</option>
+<option value="brute-slow">Slow offline brute force (bcrypt speed)</option></select></td>
+</tr>
+<tr>
+<td><strong>5</strong></td>
+<td class="hash-val">$2a$12$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy</td>
+<td><select id="s1r5-method"><option value="">-- Select --</option>
+<option value="plain">Plaintext</option>
+<option value="md5">Unsalted MD5</option>
+<option value="md5salt">MD5 + Random Salt</option>
+<option value="sha256det">SHA-256 w/ Deterministic Salt</option>
+<option value="bcrypt">bcrypt (random salt)</option></select></td>
+<td><select id="s1r5-attack"><option value="">-- Select --</option>
+<option value="none">No attack needed — already readable</option>
+<option value="rainbow">Rainbow table (precomputed MD5)</option>
+<option value="targeted">Targeted rainbow table per user</option>
+<option value="brute-fast">Fast offline brute force (MD5 speed)</option>
+<option value="brute-slow">Slow offline brute force (bcrypt speed)</option></select></td>
+</tr>
+</tbody>
+</table>
+
+<button class="check-btn" onclick="checkStation1()">Submit Station 1</button>
+<div class="feedback" id="s1-feedback">
+<div class="fb-head" id="s1-head"></div>
+<div id="s1-detail"></div>
+</div>
+</div>
+
+<!-- ============================================================
+     STATION 2: LIVE ATTACK LOG ANALYSIS (10 pts)
+     4 MCQ x 2.5 pts each (rounded to whole)
+     ============================================================ -->
+<div class="section" id="s2-section">
+<span class="section-label">Station 2 — Live Attack Log Analysis (10 pts)</span>
+<h2>Incident Response: Read the Attack Log</h2>
+<p>The SIEM has flagged unusual authentication activity. Below is a 16-line excerpt from the auth log. Three distinct attack patterns are embedded. Read carefully before answering the questions.</p>
+
+<div class="terminal">
+<span class="log-line log-label">[SecureBank Auth Log — 2026-03-09 02:38:00 to 02:44:00 UTC]</span>
+<span class="log-line log-normal">02:38:01 AUTH_FAIL  user=ellen.park@securebank.com     ip=185.220.101.47  pw_attempt=#1  reason=wrong_password</span>
+<span class="log-line log-normal">02:38:04 AUTH_FAIL  user=ellen.park@securebank.com     ip=185.220.101.47  pw_attempt=#2  reason=wrong_password</span>
+<span class="log-line log-normal">02:38:07 AUTH_FAIL  user=ellen.park@securebank.com     ip=185.220.101.47  pw_attempt=#3  reason=wrong_password</span>
+<span class="log-line log-warn">02:38:12 AUTH_FAIL  user=ellen.park@securebank.com     ip=185.220.101.47  pw_attempt=#4  reason=wrong_password</span>
+<span class="log-line log-warn">02:38:16 AUTH_FAIL  user=ellen.park@securebank.com     ip=185.220.101.47  pw_attempt=#5  reason=wrong_password</span>
+<span class="log-line log-warn">02:38:19 AUTH_FAIL  user=ellen.park@securebank.com     ip=185.220.101.47  pw_attempt=#6  reason=wrong_password</span>
+<span class="log-line log-danger">02:38:23 AUTH_FAIL  user=ellen.park@securebank.com     ip=185.220.101.47  pw_attempt=#7  reason=wrong_password</span>
+<span class="log-line log-danger">02:38:26 AUTH_FAIL  user=ellen.park@securebank.com     ip=185.220.101.47  pw_attempt=#8  reason=wrong_password</span>
+<span class="log-line log-danger">02:38:29 LOCKOUT    user=ellen.park@securebank.com     ip=185.220.101.47  after=8_attempts</span>
+<span class="log-line log-normal">02:40:01 AUTH_FAIL  user=alice.chen@securebank.com     ip=45.33.32.156    pw_attempt=#1  password=Summer2026!</span>
+<span class="log-line log-normal">02:40:02 AUTH_FAIL  user=bob.martinez@securebank.com   ip=45.33.32.156    pw_attempt=#1  password=Summer2026!</span>
+<span class="log-line log-normal">02:40:03 AUTH_FAIL  user=carol.jones@securebank.com    ip=45.33.32.156    pw_attempt=#1  password=Summer2026!</span>
+<span class="log-line log-warn">02:40:04 AUTH_OK    user=david.kim@securebank.com      ip=45.33.32.156    pw_attempt=#1  password=Summer2026!</span>
+<span class="log-line log-normal">02:40:05 AUTH_FAIL  user=emma.wilson@securebank.com    ip=45.33.32.156    pw_attempt=#1  password=Summer2026!</span>
+<span class="log-line log-ok">02:42:17 AUTH_OK    user=frank.liu@securebank.com      ip=203.0.113.88    pw_attempt=#1  reason=valid_credential</span>
+<span class="log-line log-ok">02:44:03 AUTH_OK    user=grace.taylor@securebank.com   ip=198.51.100.42   pw_attempt=#1  reason=valid_credential</span>
+</div>
+
+<h3>Question 1 (2 pts): Lines 1–9 show which attack type targeting ellen.park?</h3>
+<ul class="mcq-options" id="s2q1-opts">
+<li class="mcq-opt" data-val="A">
+<span class="opt-letter">A</span><span class="opt-text">Credential stuffing — the attacker has a confirmed valid credential for ellen.park from a prior breach</span>
+</li>
+<li class="mcq-opt" data-val="B">
+<span class="opt-letter">B</span><span class="opt-text">Online brute force — the attacker is making repeated failed attempts against a single account from one IP, triggering lockout after 8 attempts</span>
+</li>
+<li class="mcq-opt" data-val="C">
+<span class="opt-letter">C</span><span class="opt-text">Password spraying — the attacker is using one common password across multiple accounts to avoid lockout</span>
+</li>
+<li class="mcq-opt" data-val="D">
+<span class="opt-letter">D</span><span class="opt-text">Rainbow table attack — the attacker is attempting to match ellen.park’s hash to a precomputed table</span>
+</li>
+</ul>
+<input type="hidden" id="s2q1-val" value="">
+
+<h3>Question 2 (2 pts): Lines 10–15 show which attack type?</h3>
+<ul class="mcq-options" id="s2q2-opts">
+<li class="mcq-opt" data-val="A">
+<span class="opt-letter">A</span><span class="opt-text">Online brute force — the attacker is testing many passwords against each account from the same IP</span>
+</li>
+<li class="mcq-opt" data-val="B">
+<span class="opt-letter">B</span><span class="opt-text">Credential stuffing — the attacker has breach data with working passwords for each account</span>
+</li>
+<li class="mcq-opt" data-val="C">
+<span class="opt-letter">C</span><span class="opt-text">Password spraying — the same password “Summer2026!” is tested once per account from one IP, and line 13 shows it succeeded against david.kim</span>
+</li>
+<li class="mcq-opt" data-val="D">
+<span class="opt-letter">D</span><span class="opt-text">Dictionary attack — the attacker is trying a pre-defined wordlist of common passwords against one account</span>
+</li>
+</ul>
+<input type="hidden" id="s2q2-val" value="">
+
+<h3>Question 3 (3 pts): Lines 15–16 are flagged by the SIEM as suspicious. What attack type do they suggest, and why is it MORE dangerous than the attacks on lines 1–15?</h3>
+<ul class="mcq-options" id="s2q3-opts">
+<li class="mcq-opt" data-val="A">
+<span class="opt-letter">A</span><span class="opt-text">Brute force — it is more dangerous because it uses multiple IPs to avoid lockout</span>
+</li>
+<li class="mcq-opt" data-val="B">
+<span class="opt-letter">B</span><span class="opt-text">Credential stuffing — each login succeeds on the first attempt from different IPs with no failures, generating no alerts; the attacker has valid credentials from a prior breach and the lockout policy provides zero protection</span>
+</li>
+<li class="mcq-opt" data-val="C">
+<span class="opt-letter">C</span><span class="opt-text">Password spraying — it is more dangerous because it uses a different common password per account</span>
+</li>
+<li class="mcq-opt" data-val="D">
+<span class="opt-letter">D</span><span class="opt-text">Insider threat — the accounts are logging in from internal IPs during off-hours, suggesting employees with legitimate access are misusing credentials</span>
+</li>
+</ul>
+<input type="hidden" id="s2q3-val" value="">
+
+<h3>Question 4 (3 pts): The CISO asks: “What single control would have prevented david.kim’s account (line 13) from being compromised, even though ‘Summer2026!’ was his actual password?”</h3>
+<ul class="mcq-options" id="s2q4-opts">
+<li class="mcq-opt" data-val="A">
+<span class="opt-letter">A</span><span class="opt-text">Lower the lockout threshold from 8 attempts to 3 attempts per account</span>
+</li>
+<li class="mcq-opt" data-val="B">
+<span class="opt-letter">B</span><span class="opt-text">Require a minimum 16-character password, making “Summer2026!” non-compliant at registration</span>
+</li>
+<li class="mcq-opt" data-val="C">
+<span class="opt-letter">C</span><span class="opt-text">Deploy multi-factor authentication — even with the correct password, the attacker cannot pass the second factor without access to david.kim’s device or app</span>
+</li>
+<li class="mcq-opt" data-val="D">
+<span class="opt-letter">D</span><span class="opt-text">Block the IP 45.33.32.156 after three failed attempts across any accounts in a 60-second window</span>
+</li>
+</ul>
+<input type="hidden" id="s2q4-val" value="">
+
+<button class="check-btn" onclick="checkStation2()">Submit Station 2</button>
+<div class="feedback" id="s2-feedback">
+<div class="fb-head" id="s2-head"></div>
+<div id="s2-detail"></div>
+</div>
+</div>
+
+<!-- ============================================================
+     STATION 3: NIST POLICY AUDIT (10 pts)
+     5 items x 2 pts each
+     ============================================================ -->
+<div class="section" id="s3-section">
+<span class="section-label">Station 3 — NIST Policy Audit (10 pts)</span>
+<h2>Post-Breach: Fix the Password Policy</h2>
+<p>The CISO shares SecureBank’s current password policy. Using NIST SP 800-63B as your reference, classify each policy item as <strong>Compliant</strong> or a <strong>Violation</strong>. Two items are compliant; three are violations.</p>
+<div class="scenario-box">
+<strong>Reference — NIST SP 800-63B Key Guidelines:</strong> (1) No mandatory periodic rotation unless evidence of compromise. (2) Minimum 8 characters required; support up to 64 characters. (3) Block passwords found in known breach datasets at registration. (4) No complexity rules (uppercase/number/symbol mandates). (5) Do NOT block paste in password fields. (6) No security questions or knowledge-based hints.</div>
+
+<div id="s3-items">
+<div class="policy-row" id="pr1">
+<div class="policy-text">All employee passwords must be changed every 90 days. New passwords cannot match any of the previous 8 passwords.
+<em>SecureBank Policy Section 4.2</em>
+</div>
+<select id="pr1-sel"><option value="">-- Classify --</option>
+<option value="compliant">Compliant</option>
+<option value="violation">Violation</option></select>
+</div>
+<div class="policy-row" id="pr2">
+<div class="policy-text">At account creation, passwords are checked against a list of 1 billion known-breached passwords. If matched, the user is asked to choose a different password.
+<em>SecureBank Policy Section 4.5</em>
+</div>
+<select id="pr2-sel"><option value="">-- Classify --</option>
+<option value="compliant">Compliant</option>
+<option value="violation">Violation</option></select>
+</div>
+<div class="policy-row" id="pr3">
+<div class="policy-text">Passwords must contain at least one uppercase letter, one number, and one special character. Minimum length is 8 characters.
+<em>SecureBank Policy Section 4.1</em>
+</div>
+<select id="pr3-sel"><option value="">-- Classify --</option>
+<option value="compliant">Compliant</option>
+<option value="violation">Violation</option></select>
+</div>
+<div class="policy-row" id="pr4">
+<div class="policy-text">The password field on the login page has the “paste” attribute disabled to prevent automated credential manager tools from filling in passwords.
+<em>SecureBank Policy Section 4.8</em>
+</div>
+<select id="pr4-sel"><option value="">-- Classify --</option>
+<option value="compliant">Compliant</option>
+<option value="violation">Violation</option></select>
+</div>
+<div class="policy-row" id="pr5">
+<div class="policy-text">Users may create passwords up to 64 characters in length, including spaces, emojis, and all printable Unicode characters.
+<em>SecureBank Policy Section 4.3</em>
+</div>
+<select id="pr5-sel"><option value="">-- Classify --</option>
+<option value="compliant">Compliant</option>
+<option value="violation">Violation</option></select>
+</div>
+</div>
+
+<button class="check-btn" onclick="checkStation3()">Submit Station 3</button>
+<div class="feedback" id="s3-feedback">
+<div class="fb-head" id="s3-head"></div>
+<div id="s3-detail"></div>
+</div>
+</div>
+
+<!-- RESULTS -->
+<div class="results-panel" id="resultsPanel">
+<h2>Lab Complete — 1.2 Password Attack Simulation</h2>
+<div class="results-score" id="finalScore">0/30</div>
+<p id="resultsMsg"></p>
+<div class="results-btns">
+<a class="results-next" href="/pages/ap-cyber-unit-1-lesson-2-quiz">Take the Quiz →</a>
+</div>
+</div>
+
+<!-- EXAM TIP -->
+<div class="exam-tip">
+<strong>AP Exam Tip:</strong> The exam frequently gives you a log or scenario and asks you to name the attack type AND the appropriate control. The three-attack pattern in this lab (brute force / spraying / stuffing) appears together on real exams. Know all three distinguishing features cold: brute force = many attempts, one account; spraying = one password, many accounts; stuffing = prior breach data, one attempt per account with known-good credentials.</div>
+
+<!-- EXTENSION -->
+<div class="extension">
+<strong>Extension Challenge:</strong> The log shows that lines 15–16 (credential stuffing) generated <em>zero</em> alerts in the SIEM. Design a behavioral detection rule that would flag credential stuffing without also flagging legitimate users who travel frequently (new IPs are expected). What signals would you monitor, and what thresholds would you set? Write your rule in plain English.</div>
+
+<!-- NAV -->
+<div style="display: flex!important; justify-content: space-between!important; margin-top: 24px!important; flex-wrap: wrap!important; gap: 12px!important;">
+<a class="check-btn nav-btn-back" href="/pages/ap-cyber-unit-1-lesson-2-exercise-2">← Back to Exercise 2</a> <a class="check-btn" href="/pages/ap-cyber-unit-1-lesson-2-quiz">Continue to Quiz →</a>
+</div>
+
+</div><!-- end #cyber-lab-12 -->
+<p> </p>
+
+<script>
+(function(){
+  var totalScore = 0;
+  var stationsDone = 0;
+  var s1done = false, s2done = false, s3done = false;
+
+  function updateBar(){
+    document.getElementById('stationsDone').textContent = stationsDone;
+    document.getElementById('totalScore').textContent = totalScore;
+  }
+
+  /* ===== STATION 1 ===== */
+  var s1answers = {
+    's1r1-method': 'plain',    's1r1-attack': 'none',
+    's1r2-method': 'md5',      's1r2-attack': 'rainbow',
+    's1r3-method': 'sha256det','s1r3-attack': 'targeted',
+    's1r4-method': 'md5salt',  's1r4-attack': 'brute-fast',
+    's1r5-method': 'bcrypt',   's1r5-attack': 'brute-slow'
+  };
+  var s1explain = [
+    '<strong>Row 1 (hunter2):</strong> Stored as plaintext. No attack needed — the attacker reads it directly. Immediate forced reset required.',
+    '<strong>Row 2 (5f4dcc3b...):</strong> Unsalted MD5 of “password”. This exact hash appears in every MD5 rainbow table — cracked instantly. No GPU needed.',
+    '<strong>Row 3 (jsmith:...):</strong> MD5 hashed with the username as the salt — deterministic. The attacker knows the username (jsmith), so they precompute a rainbow table for “jsmith:” + wordlist and crack it per-user. Still very fast.',
+    '<strong>Row 4 (b3f0:...):</strong> MD5 with a randomly generated salt. Rainbow tables are defeated (the attacker cannot precompute), but MD5 is still extremely fast. The attacker must brute force each hash individually, but at ~10 billion MD5/sec, short passwords fall in minutes.',
+    '<strong>Row 5 ($2a$12$...):</strong> bcrypt with random salt and cost factor 12. Both rainbow tables and fast brute force are defeated. At ~300 bcrypt/sec, a 10-character random password would take centuries to crack. Safest of the five.'
+  ];
+
+  window.checkStation1 = function(){
+    if(s1done)return;
+    var ids = ['s1r1-method','s1r1-attack','s1r2-method','s1r2-attack','s1r3-method','s1r3-attack','s1r4-method','s1r4-attack','s1r5-method','s1r5-attack'];
+    for(var i=0;i<ids.length;i++){
+      if(!document.getElementById(ids[i]).value){alert('Please classify all 5 rows before submitting.');return;}
+    }
+    s1done = true;
+    var pts = 0;
+    Object.keys(s1answers).forEach(function(id){
+      if(document.getElementById(id).value === s1answers[id]) pts++;
+    });
+    // pts out of 10 (each dropdown = 1 pt, 10 dropdowns)
+    totalScore += pts;
+    stationsDone++;
+    updateBar();
+
+    var fb = document.getElementById('s1-feedback');
+    var detail = document.getElementById('s1-detail');
+    detail.innerHTML = '<ul>' + s1explain.map(function(e){return '<li style="margin-bottom:8px">'+e+'</li>';}).join('') + '</ul><p style="margin-top:10px"><strong>Your score: '+pts+'/10</strong></p>';
+    fb.classList.add('show');
+    if(pts >= 9) fb.classList.add('correct');
+    else if(pts >= 6) fb.classList.add('partial');
+    else fb.classList.add('incorrect');
+    document.getElementById('s1-head').textContent = pts===10 ? 'Perfect! All 10 classifications correct.' : pts>=6 ? 'Good work. Review the explanations below.' : 'Keep going. Read the explanations carefully then revisit the lesson.';
+
+    // Disable all selects
+    ['s1r1-method','s1r1-attack','s1r2-method','s1r2-attack','s1r3-method','s1r3-attack','s1r4-method','s1r4-attack','s1r5-method','s1r5-attack'].forEach(function(id){
+      document.getElementById(id).disabled = true;
+    });
+    document.querySelector('#s1-section .check-btn').disabled = true;
+    checkAllDone();
+  };
+
+  /* ===== MCQ CLICK HANDLER ===== */
+  document.querySelectorAll('#cyber-lab-12 .mcq-options').forEach(function(ul){
+    ul.querySelectorAll('.mcq-opt').forEach(function(li){
+      li.addEventListener('click',function(){
+        var qid=ul.id.replace('-opts','');
+        if(s2done)return;
+        ul.querySelectorAll('.mcq-opt').forEach(function(o){o.classList.remove('selected');});
+        li.classList.add('selected');
+        document.getElementById(qid+'-val').value=li.dataset.val;
+      });
+    });
+  });
+
+  /* ===== STATION 2 ===== */
+  var s2answers = {q1:'B', q2:'C', q3:'B', q4:'C'};
+  var s2pts_map = {q1:2, q2:2, q3:3, q4:3};
+  var s2explain = {
+    q1: '<strong>Q1: Online brute force (B).</strong> Lines 1–9 show 8 sequential failed attempts against <em>one account</em> (ellen.park) from <em>one IP</em> (185.220.101.47), culminating in a lockout. This is classic online brute force. The lockout policy worked here.',
+    q2: '<strong>Q2: Password spraying (C).</strong> Lines 10–15 show the same password (“Summer2026!”) attempted exactly once per account, across five different accounts, from the same IP. Line 13 shows it succeeded for david.kim. Because only 1 attempt is made per account, no lockout triggers.',
+    q3: '<strong>Q3: Credential stuffing (B).</strong> Lines 15–16 show two successful logins from two completely different IPs, each succeeding on the very first attempt. There are no failures, no pattern, and no lockout. This is the signature of credential stuffing — the attacker has valid credentials from a prior breach. It is more dangerous because the normal defenses (lockout, rate limiting) produce zero alerts.',
+    q4: '<strong>Q4: MFA (C).</strong> “Summer2026!” <em>was</em> david.kim’s real password — the attacker guessed correctly. Lowering the lockout threshold (A) would not help because spraying only makes 1 attempt per account. A longer password requirement (B) would not help retroactively for existing accounts. Blocking the IP (D) is a good reactive measure but would not have prevented this specific login. Only MFA stops an attacker who has the correct password.'
+  };
+
+  window.checkStation2 = function(){
+    if(s2done)return;
+    var allSet = ['s2q1','s2q2','s2q3','s2q4'].every(function(id){return document.getElementById(id+'-val').value;});
+    if(!allSet){alert('Please answer all 4 questions before submitting.');return;}
+    s2done = true;
+    var pts = 0;
+    ['q1','q2','q3','q4'].forEach(function(q){
+      var chosen = document.getElementById('s2'+q+'-val').value;
+      var correct = s2answers[q];
+      var qPts = s2pts_map[q];
+      if(chosen===correct) pts += qPts;
+      // Style options
+      document.querySelectorAll('#s2'+q+'-opts .mcq-opt').forEach(function(opt){
+        opt.style.cursor='default';
+        if(opt.dataset.val===correct) opt.classList.add('correct');
+        else if(opt.dataset.val===chosen && chosen!==correct) opt.classList.add('incorrect');
+        else opt.classList.remove('selected');
+      });
+    });
+    totalScore += pts;
+    stationsDone++;
+    updateBar();
+
+    var fb = document.getElementById('s2-feedback');
+    var detail = document.getElementById('s2-detail');
+    detail.innerHTML = Object.keys(s2explain).map(function(q){return '<p>'+s2explain[q]+'</p>';}).join('') + '<p style="margin-top:10px"><strong>Your score: '+pts+'/10</strong></p>';
+    fb.classList.add('show');
+    if(pts >= 9) fb.classList.add('correct');
+    else if(pts >= 6) fb.classList.add('partial');
+    else fb.classList.add('incorrect');
+    document.getElementById('s2-head').textContent = pts===10 ? 'Perfect score on the log analysis!' : pts>=6 ? 'Good. Check the explanations for the questions you missed.' : 'Review the log carefully and re-read section 1.2.4 on attack identification.';
+    document.querySelector('#s2-section .check-btn').disabled = true;
+    checkAllDone();
+  };
+
+  /* ===== STATION 3 ===== */
+  var s3answers = {pr1:'violation', pr2:'compliant', pr3:'violation', pr4:'violation', pr5:'compliant'};
+  var s3explain = {
+    pr1: '<strong>Policy 1 — 90-day rotation: VIOLATION.</strong> NIST SP 800-63B explicitly states that verifiers SHOULD NOT require periodic password changes. Forced rotation predictably causes users to choose sequential patterns (Password1!, Password2!) that are trivially guessable. Rotation is only appropriate when evidence of compromise exists.',
+    pr2: '<strong>Policy 2 — Breach-list check: COMPLIANT.</strong> NIST SP 800-63B requires that passwords be checked against lists of known-compromised values (breach databases, dictionary words, context-specific terms) at registration and change. This is correct.',
+    pr3: '<strong>Policy 3 — Complexity rules: VIOLATION.</strong> NIST SP 800-63B recommends against mandatory complexity rules (uppercase/number/symbol). These requirements cause users to choose the minimum compliant value (“Password1!”) rather than long passphrases. The minimum length requirement (8 chars) is technically compliant, but the complexity mandate makes this policy a net violation.',
+    pr4: '<strong>Policy 4 — Paste disabled: VIOLATION.</strong> NIST SP 800-63B explicitly states that verifiers SHALL allow paste in password fields. Disabling paste prevents credential managers from working, which leads users to choose shorter, memorizable (weaker) passwords and undermines good security practice.',
+    pr5: '<strong>Policy 5 — 64-char max with all Unicode: COMPLIANT.</strong> NIST SP 800-63B requires that verifiers support a minimum of 64 characters. Supporting full Unicode including spaces and emojis is encouraged as it enables strong passphrases. This is correct.'
+  };
+
+  window.checkStation3 = function(){
+    if(s3done)return;
+    var allSet = ['pr1','pr2','pr3','pr4','pr5'].every(function(id){return document.getElementById(id+'-sel').value;});
+    if(!allSet){alert('Please classify all 5 policy items before submitting.');return;}
+    s3done = true;
+    var pts = 0;
+    ['pr1','pr2','pr3','pr4','pr5'].forEach(function(id){
+      var chosen = document.getElementById(id+'-sel').value;
+      var correct = s3answers[id];
+      var row = document.getElementById(id);
+      if(chosen===correct){pts+=2;row.classList.add('graded-correct');}
+      else{row.classList.add('graded-wrong');}
+      document.getElementById(id+'-sel').disabled = true;
+    });
+    totalScore += pts;
+    stationsDone++;
+    updateBar();
+
+    var fb = document.getElementById('s3-feedback');
+    var detail = document.getElementById('s3-detail');
+    detail.innerHTML = Object.keys(s3explain).map(function(k){return '<p>'+s3explain[k]+'</p>';}).join('') + '<p style="margin-top:10px"><strong>Your score: '+pts+'/10</strong></p>';
+    fb.classList.add('show');
+    if(pts >= 9) fb.classList.add('correct');
+    else if(pts >= 6) fb.classList.add('partial');
+    else fb.classList.add('incorrect');
+    document.getElementById('s3-head').textContent = pts===10 ? 'Perfect! You know NIST SP 800-63B cold.' : pts>=6 ? 'Good work. Review the flagged items above.' : 'Re-read the NIST reference in the scenario box and the section 1.2.7 defense strategies.';
+    document.querySelector('#s3-section .check-btn').disabled = true;
+    checkAllDone();
+  };
+
+  function checkAllDone(){
+    if(stationsDone === 3){
+      setTimeout(function(){
+        var panel = document.getElementById('resultsPanel');
+        panel.classList.add('show');
+        document.getElementById('finalScore').textContent = totalScore + '/30';
+        var msg = '';
+        if(totalScore >= 28) msg = 'Outstanding performance. You are fully prepared on password attack analysis and defense.';
+        else if(totalScore >= 22) msg = 'Strong work. Review the station(s) where you lost points and you will be exam-ready.';
+        else if(totalScore >= 16) msg = 'Good foundation. Re-read sections 1.2.4 (attack types) and 1.2.7 (NIST policy) before the quiz.';
+        else msg = 'Keep going. Re-read the full lesson and retry the lab before moving to the quiz.';
+        document.getElementById('resultsMsg').textContent = msg;
+        panel.scrollIntoView({behavior:'smooth', block:'start'});
+      }, 700);
+    }
+  }
+
+  // Accordion toggle
+  document.querySelectorAll('#ucnav .ucn-lesson').forEach(function(btn){
+    btn.addEventListener('click',function(e){
+      var stepsId='ucn-s'+btn.id.replace('ucn-l','');
+      var steps=document.getElementById(stepsId);
+      var isOpen=btn.classList.contains('open');
+      if(!isOpen)e.preventDefault();
+      document.querySelectorAll('#ucnav .ucn-lesson').forEach(function(b){b.classList.remove('open');});
+      document.querySelectorAll('#ucnav .ucn-steps').forEach(function(s){s.classList.remove('open');});
+      if(!isOpen&&steps){btn.classList.add('open');steps.classList.add('open');}
+    });
+  });
+})();
+</script>
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id="apcyber-activity-nav"><div class="aan-card">
+<span class="aan-eyebrow">AP Cybersecurity · Unit 1 · Lesson 1.2 · Lab</span><div class="aan-strip">
+<a class="aan-chip" href="/pages/ap-cybersecurity-unit-1-password-attacks">Lesson</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-1-lesson-2-exercise-1">Exercise 1</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-1-lesson-2-exercise-2">Exercise 2</a><span class="aan-sep">•</span><span class="aan-chip cur">Lab</span><span class="aan-sep">•</span><a class="aan-chip next" href="/pages/ap-cyber-unit-1-lesson-2-quiz">Quiz →</a>
+</div>
+<div class="aan-up">
+<span class="aan-lbl">Back to:</span><a href="/pages/ap-cybersecurity-unit-1-password-attacks">Lesson 1.2</a><a href="/pages/ap-cybersecurity-unit-1-introduction-to-security">Unit 1 Study Guide</a><a href="/pages/ap-cybersecurity-complete-course-guide">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->

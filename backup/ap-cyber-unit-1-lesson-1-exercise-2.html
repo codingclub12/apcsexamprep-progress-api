@@ -1,0 +1,877 @@
+<script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "LearningResource",
+    "headline": "AP Cybersecurity Topic 1.1 Exercise 2: Attack Type Classifier",
+    "description": "Classify social engineering attack types, analyze psychological tactics, and recommend defensive training programs. Applied AP Cybersecurity exam practice.",
+    "author": {
+      "@type": "Person",
+      "name": "Tanner Crow",
+      "url": "https://www.apcsexamprep.com/pages/ap-computer-science-tutor"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "APCSExamPrep.com",
+      "url": "https://www.apcsexamprep.com"
+    },
+    "educationalLevel": "High School",
+    "inLanguage": "en-US"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.apcsexamprep.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "AP Cybersecurity",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Unit 1: Introduction to Security",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide#unit1"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": "Topic 1.1: Understanding Social Engineering",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-unit-1-social-engineering"
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "name": "AP Cybersecurity Topic 1.1 Exercise 2: Attack Type Classifier",
+        "item": "https://www.apcsexamprep.com/pages/ap-cyber-unit-1-lesson-1-exercise-2"
+      }
+    ]
+  }
+]
+</script>
+<style>
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-lesson.locked{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;cursor:not-allowed!important;}
+#ucnav .ucn-lesson.locked:link,#ucnav .ucn-lesson.locked:visited,#ucnav .ucn-lesson.locked:hover{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;background:transparent!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-lock svg{opacity:.5!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+
+/* RESET SHOPIFY TITLE */
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none !important;}
+
+#apcyber-ex2{
+  --dark:#1E1B4B;
+  --purple:#6B21A8;
+  --purple-mid:#7C3AED;
+  --accent:#A855F7;
+  --warn:#92400E;
+  --green:#15803D;
+  --red:#B91C1C;
+  --gold:#F59E0B;
+  --light:#F5F0FF;
+  --light-border:#DDD6FE;
+  --gray-50:#F9FAFB;
+  --gray-100:#F3F4F6;
+  --gray-200:#E5E7EB;
+  --gray-600:#4B5563;
+  --gray-700:#374151;
+  --gray-800:#1F2937;
+  --white:#ffffff;
+  --radius-sm:6px;
+  --radius-md:10px;
+  --radius-lg:16px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.1);
+  --shadow-md:0 4px 12px rgba(0,0,0,0.12);
+  --shadow-lg:0 8px 24px rgba(0,0,0,0.15);
+  font-family:Georgia,serif;
+  line-height:1.7;
+  color:var(--gray-800);
+  max-width:960px;
+  margin:0 auto;
+  padding:20px 16px 60px;
+}
+#apcyber-ex2 *{box-sizing:border-box !important;}
+
+/* COURSE HEADER */
+#apcyber-ex2 .cyber-course-header{
+  background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%);
+  border-radius:var(--radius-lg);
+  padding:36px 40px;margin-bottom:8px;
+  color:var(--white) !important;
+}
+#apcyber-ex2 .cyber-course-label{
+  font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;
+  color:#C4B5FD !important;margin-bottom:8px;
+  font-family:Georgia,serif;
+}
+#apcyber-ex2 .cyber-course-header h1{
+  font-size:26px;font-weight:800;color:var(--white) !important;
+  margin:0 0 8px 0;line-height:1.3;font-family:Georgia,serif;
+}
+#apcyber-ex2 .cyber-course-header p{
+  font-size:15px;color:rgba(255,255,255,0.85) !important;margin:0 0 20px 0;
+  font-family:Georgia,serif;
+}
+#apcyber-ex2 .cyber-header-meta{display:flex;flex-wrap:wrap;gap:12px;}
+#apcyber-ex2 .cyber-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(168,85,247,0.2);border:1px solid rgba(168,85,247,0.4);
+  color:var(--white) !important;padding:6px 14px;border-radius:20px;
+  font-size:13px;font-weight:500;font-family:Georgia,serif;
+}
+
+/* PAGE NAV */
+#apcyber-ex2 .cyber-page-nav{
+  background:var(--white);border:1px solid var(--light-border);
+  border-radius:var(--radius-md);padding:16px 20px;margin-bottom:28px;
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+}
+#apcyber-ex2 .cyber-nav-step{
+  display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gray-600);
+  text-decoration:none;padding:4px 8px;border-radius:var(--radius-sm);transition:background 0.2s;
+  font-family:Georgia,serif;
+}
+#apcyber-ex2 a.cyber-nav-step,
+#apcyber-ex2 a.cyber-nav-step:link,
+#apcyber-ex2 a.cyber-nav-step:visited{color:var(--purple) !important;text-decoration:none !important;}
+#apcyber-ex2 a.cyber-nav-step:hover{background:var(--light);}
+#apcyber-ex2 .cyber-nav-step.active{background:var(--dark);color:var(--white) !important;font-weight:600;}
+#apcyber-ex2 .cyber-nav-sep{color:var(--light-border);font-size:18px;}
+#apcyber-ex2 .cyber-nav-step .step-num{
+  width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;background:var(--gray-200);color:var(--gray-700) !important;flex-shrink:0;
+}
+#apcyber-ex2 .cyber-nav-step.active .step-num{background:var(--accent);color:var(--white) !important;}
+#apcyber-ex2 a.cyber-nav-step .step-num{background:var(--light);color:var(--purple) !important;}
+
+/* PREDICT BOX */
+#apcyber-ex2 .intro-card{
+  background:linear-gradient(135deg,#FFFBEB,#FEF3C7);
+  border:2px solid #F59E0B;border-radius:var(--radius-md);
+  padding:24px 28px;margin-bottom:24px;
+}
+#apcyber-ex2 .intro-card h2{
+  font-size:20px;font-weight:700;color:var(--dark);margin:0 0 10px 0;
+  font-family:Georgia,serif;
+}
+#apcyber-ex2 .intro-card p{font-size:15px;color:var(--gray-700);margin:0 0 10px 0;font-family:Georgia,serif;}
+#apcyber-ex2 .predict-box{
+  background:linear-gradient(135deg,#1E1B4B,#3B0764);
+  color:var(--white) !important;
+  border-radius:var(--radius-md);padding:16px 20px;margin-top:16px;
+}
+#apcyber-ex2 .predict-box p{
+  color:rgba(255,255,255,0.9) !important;margin:0 0 10px 0;font-size:14px;
+  font-family:Georgia,serif;
+}
+
+/* PROGRESS BAR */
+#apcyber-ex2 .progress-wrap{
+  background:var(--white);border:1px solid var(--light-border);
+  border-radius:var(--radius-md);padding:16px 24px;margin-bottom:24px;display:none;
+}
+#apcyber-ex2 .progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+#apcyber-ex2 .progress-label{font-size:14px;font-weight:600;color:var(--gray-700);font-family:Georgia,serif;}
+#apcyber-ex2 .progress-count{font-size:20px;font-weight:800;color:var(--dark);font-family:Georgia,serif;}
+#apcyber-ex2 .progress-track{height:8px;background:var(--gray-200);border-radius:4px;overflow:hidden;}
+#apcyber-ex2 .progress-fill{
+  height:100%;background:linear-gradient(90deg,#6B21A8,#A855F7);
+  border-radius:4px;transition:width 0.4s ease;width:0%;
+}
+
+/* CARDS GRID */
+#apcyber-ex2 .cards-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:16px;margin-bottom:28px;
+}
+
+/* SCENARIO CARD */
+#apcyber-ex2 .scenario-card{
+  background:var(--white);border:2px solid var(--gray-200);
+  border-radius:var(--radius-md);padding:0;
+  transition:all 0.2s;cursor:default;overflow:hidden;
+  box-shadow:var(--shadow-sm);
+}
+#apcyber-ex2 .scenario-card.active{
+  border-color:var(--accent);box-shadow:0 0 0 3px rgba(168,85,247,0.15);
+  transform:translateY(-2px);
+}
+#apcyber-ex2 .scenario-card.correct{border-color:#86EFAC;box-shadow:0 0 0 3px rgba(134,239,172,0.3);}
+#apcyber-ex2 .scenario-card.wrong{border-color:#FCA5A5;box-shadow:0 0 0 3px rgba(252,165,165,0.3);}
+#apcyber-ex2 .card-num{
+  background:linear-gradient(135deg,#1E1B4B,#3B0764);color:var(--white) !important;
+  font-size:11px;font-weight:700;padding:6px 14px;
+  letter-spacing:0.5px;text-transform:uppercase;font-family:Georgia,serif;
+}
+#apcyber-ex2 .card-scenario{
+  padding:16px;font-size:14px;color:var(--gray-700);line-height:1.6;
+  border-bottom:1px solid var(--gray-100);min-height:90px;font-family:Georgia,serif;
+}
+#apcyber-ex2 .card-dropzone{
+  padding:12px 16px;background:var(--gray-50);
+  font-size:13px;color:var(--gray-600);
+  transition:background 0.2s;min-height:48px;
+  display:flex;align-items:center;font-family:Georgia,serif;
+}
+#apcyber-ex2 .card-dropzone.drag-over{background:var(--light);}
+#apcyber-ex2 .card-dropzone .placed-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  background:linear-gradient(135deg,#6B21A8,#7C3AED);
+  color:var(--white) !important;
+  font-size:12px;font-weight:700;padding:5px 12px;
+  border-radius:20px;letter-spacing:0.3px;font-family:Georgia,serif;
+}
+#apcyber-ex2 .card-result{display:none;padding:12px 16px;font-size:13px;line-height:1.5;font-family:Georgia,serif;}
+#apcyber-ex2 .card-result.correct-result{background:#DCFCE7;color:#15803D;}
+#apcyber-ex2 .card-result.wrong-result{background:#FEF2F2;color:#B91C1C;}
+#apcyber-ex2 .card-result.visible{display:block;}
+
+/* ATTACK TYPE PALETTE */
+#apcyber-ex2 .palette-section{
+  background:var(--white);border:2px solid var(--light-border);
+  border-radius:var(--radius-lg);padding:24px;margin-bottom:28px;display:none;
+}
+#apcyber-ex2 .palette-section.visible{display:block;}
+#apcyber-ex2 .palette-title{
+  font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+  color:var(--gray-600);margin-bottom:16px;font-family:Georgia,serif;
+}
+#apcyber-ex2 .palette-grid{display:flex;flex-wrap:wrap;gap:10px;}
+#apcyber-ex2 .attack-chip{
+  padding:10px 18px;border-radius:24px;font-size:13px;font-weight:700;
+  cursor:grab;user-select:none;border:2px solid transparent;
+  transition:all 0.15s;letter-spacing:0.3px;font-family:Georgia,serif;
+}
+#apcyber-ex2 .attack-chip:active{cursor:grabbing;transform:scale(0.97);}
+#apcyber-ex2 .attack-chip.selected{
+  box-shadow:0 0 0 3px rgba(168,85,247,0.5);transform:scale(1.05);
+  outline:2px solid #6B21A8;
+}
+#apcyber-ex2 .attack-chip.used{opacity:0.4;cursor:not-allowed;}
+
+/* chip colors - keep distinct for readability */
+#apcyber-ex2 .chip-phishing{background:#EDE9FE;color:#4C1D95;border-color:#C4B5FD;}
+#apcyber-ex2 .chip-spear{background:#E8F5E9;color:#1b5e20;border-color:#A5D6A7;}
+#apcyber-ex2 .chip-vishing{background:#FCE4EC;color:#880E4F;border-color:#F48FB1;}
+#apcyber-ex2 .chip-smishing{background:#FFF3E0;color:#E65100;border-color:#FFCC80;}
+#apcyber-ex2 .chip-pretexting{background:#F5F0FF;color:#6B21A8;border-color:#DDD6FE;}
+#apcyber-ex2 .chip-baiting{background:#E0F7FA;color:#006064;border-color:#80DEEA;}
+#apcyber-ex2 .chip-whaling{background:#FBE9E7;color:#BF360C;border-color:#FFAB91;}
+#apcyber-ex2 .chip-quid{background:#EDE9FE;color:#3730A3;border-color:#A5B4FC;}
+
+/* MOBILE TAP HINT */
+#apcyber-ex2 .tap-hint{
+  font-size:13px;color:var(--gray-600);font-style:italic;
+  margin-bottom:12px;text-align:center;font-family:Georgia,serif;
+}
+
+/* BUTTONS - nuclear protection */
+#apcyber-ex2 .btn-check{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#15803D !important;color:#fff !important;-webkit-text-fill-color:#fff !important;
+  border:none;border-radius:var(--radius-sm);padding:13px 28px;
+  font-size:15px;font-weight:700;cursor:pointer;transition:background 0.2s;
+  font-family:Georgia,serif;
+}
+#apcyber-ex2 .btn-check:hover{background:#14532D !important;}
+#apcyber-ex2 .btn-check:link,
+#apcyber-ex2 .btn-check:visited{color:#fff !important;-webkit-text-fill-color:#fff !important;}
+#apcyber-ex2 .btn-check:disabled{background:#9CA3AF !important;cursor:not-allowed;}
+
+#apcyber-ex2 .btn-reveal{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#6B21A8 !important;color:#fff !important;-webkit-text-fill-color:#fff !important;
+  border:none;border-radius:var(--radius-sm);padding:10px 22px;
+  font-size:14px;font-weight:700;cursor:pointer;transition:background 0.2s;
+  font-family:Georgia,serif;margin-top:12px;
+}
+#apcyber-ex2 .btn-reveal:hover{background:#4C1D95 !important;}
+#apcyber-ex2 .btn-reveal:link,
+#apcyber-ex2 .btn-reveal:visited{color:#fff !important;-webkit-text-fill-color:#fff !important;}
+#apcyber-ex2 .btn-reveal:disabled{background:#C4B5FD !important;cursor:not-allowed;opacity:0.7;}
+
+#apcyber-ex2 .btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#6B21A8 !important;color:#fff !important;-webkit-text-fill-color:#fff !important;
+  border:none;border-radius:var(--radius-sm);padding:12px 24px;
+  font-size:14px;font-weight:700;cursor:pointer;text-decoration:none !important;
+  transition:background 0.2s;font-family:Georgia,serif;
+}
+#apcyber-ex2 .btn-primary:link,
+#apcyber-ex2 .btn-primary:visited{color:#fff !important;-webkit-text-fill-color:#fff !important;}
+#apcyber-ex2 .btn-primary:hover{background:#4C1D95 !important;}
+
+#apcyber-ex2 .btn-secondary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#fff !important;color:#1E1B4B !important;-webkit-text-fill-color:#1E1B4B !important;
+  border:2px solid #DDD6FE !important;border-radius:var(--radius-sm);
+  padding:12px 24px;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none !important;
+  transition:all 0.2s;font-family:Georgia,serif;
+}
+#apcyber-ex2 .btn-secondary:link,
+#apcyber-ex2 .btn-secondary:visited{color:#1E1B4B !important;-webkit-text-fill-color:#1E1B4B !important;}
+#apcyber-ex2 .btn-secondary:hover{border-color:#6B21A8 !important;background:#F5F0FF !important;}
+
+#apcyber-ex2 .btn-retry{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#7C3AED !important;color:#fff !important;-webkit-text-fill-color:#fff !important;
+  border:none;border-radius:var(--radius-sm);padding:12px 24px;
+  font-size:14px;font-weight:700;cursor:pointer;text-decoration:none !important;
+  transition:background 0.2s;font-family:Georgia,serif;
+}
+#apcyber-ex2 .btn-retry:link,
+#apcyber-ex2 .btn-retry:visited{color:#fff !important;-webkit-text-fill-color:#fff !important;}
+#apcyber-ex2 .btn-retry:hover{background:#6B21A8 !important;}
+
+/* RESULTS PANEL */
+#apcyber-ex2 .results-panel{
+  display:none;background:var(--white);border:2px solid var(--light-border);
+  border-radius:var(--radius-lg);padding:28px;margin-bottom:28px;
+}
+#apcyber-ex2 .results-panel.visible{display:block;}
+#apcyber-ex2 .results-score-big{
+  font-size:64px;font-weight:900;color:#6B21A8;line-height:1;
+  text-align:center;margin-bottom:4px;font-family:Georgia,serif;
+}
+#apcyber-ex2 .results-score-label{
+  text-align:center;font-size:16px;color:var(--gray-600);
+  margin-bottom:20px;font-family:Georgia,serif;
+}
+#apcyber-ex2 .results-message{
+  background:var(--light);border-radius:var(--radius-md);
+  border:1px solid var(--light-border);padding:16px 20px;margin-bottom:20px;
+}
+#apcyber-ex2 .results-message p{
+  margin:0;font-size:15px;color:var(--dark);font-weight:500;font-family:Georgia,serif;
+}
+
+/* ANSWER KEY */
+#apcyber-ex2 .answer-key{margin-top:20px;}
+#apcyber-ex2 .answer-key h3{
+  font-size:16px;font-weight:700;color:var(--dark);margin:0 0 14px 0;font-family:Georgia,serif;
+}
+#apcyber-ex2 .answer-row{
+  display:flex;align-items:flex-start;gap:14px;padding:12px 0;
+  border-bottom:1px solid var(--gray-100);
+}
+#apcyber-ex2 .answer-row:last-child{border-bottom:none;}
+#apcyber-ex2 .answer-icon{
+  width:28px;height:28px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:14px;font-weight:900;flex-shrink:0;margin-top:2px;
+}
+#apcyber-ex2 .answer-icon.correct-icon{background:#DCFCE7;color:#15803D;}
+#apcyber-ex2 .answer-icon.wrong-icon{background:#FEF2F2;color:#B91C1C;}
+#apcyber-ex2 .answer-body{flex:1;}
+#apcyber-ex2 .answer-tag{
+  display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;
+  border-radius:20px;margin-bottom:4px;letter-spacing:0.3px;font-family:Georgia,serif;
+}
+#apcyber-ex2 .answer-explanation{font-size:13px;color:var(--gray-600);font-family:Georgia,serif;}
+#apcyber-ex2 .answer-your{font-size:12px;color:#B91C1C;font-weight:600;font-family:Georgia,serif;}
+
+/* EXAM TIP */
+#apcyber-ex2 .exam-tip{
+  background:linear-gradient(135deg,#1E1B4B,#3B0764);
+  color:var(--white) !important;border-radius:var(--radius-md);
+  padding:20px 24px;margin-bottom:28px;
+}
+#apcyber-ex2 .exam-tip h3{
+  font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+  color:#C4B5FD !important;margin:0 0 10px 0;font-family:Georgia,serif;
+}
+#apcyber-ex2 .exam-tip p{
+  color:rgba(255,255,255,0.9) !important;font-size:14px;
+  margin:0 0 8px 0;font-family:Georgia,serif;
+}
+#apcyber-ex2 .exam-tip p:last-child{margin:0;}
+
+/* NAV BUTTONS */
+#apcyber-ex2 .nav-buttons{display:flex;gap:12px;flex-wrap:wrap;}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  #apcyber-ex2 .cyber-course-header{padding:24px 20px;}
+  #apcyber-ex2 .cards-grid{grid-template-columns:1fr;}
+}
+
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+</style>
+
+<!-- UNIT ACCORDION NAV -->
+
+<div id="ucnav">
+  <div class="ucn-rail" id="ucn-rail">
+    <a href="/pages/ap-cybersecurity-complete-course-guide" class="ucn-hub">AP Cyber Hub</a>
+    <span class="ucn-badge">Unit 1</span>
+    <a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-lesson open" onclick="ucnToggle(1);" id="ucn-l1" title="Understanding Social Engineering">1.1 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps open" id="ucn-s1">
+      <a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-1" class="ucn-step">Ex 1</a>
+      <span class="ucn-step current">Ex 2</span>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-lesson" onclick="ucnToggle(2);" id="ucn-l2" title="Suspicious Website Logins">1.2 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s2">
+      <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cybersecurity-unit-1-password-attacks-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-lesson" onclick="ucnToggle(3);" id="ucn-l3" title="Best Practices for Public Networks">1.3 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s3">
+      <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-lesson" onclick="ucnToggle(4);" id="ucn-l4" title="AI-Based Cybersecurity Attacks">1.4 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s4">
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-lesson" onclick="ucnToggle(5);" id="ucn-l5" title="Leveraging AI in Cyber Defense">1.5 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s5">
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-quiz" class="ucn-step">Quiz</a>
+    </span>
+  </div>
+</div>
+
+<script>
+function ucnToggle(num){var l=document.getElementById('ucn-l'+num),s=document.getElementById('ucn-s'+num);if(!l||!s)return;var o=l.classList.contains('open');document.querySelectorAll('#ucnav .ucn-lesson').forEach(function(e){e.classList.remove('open')});document.querySelectorAll('#ucnav .ucn-steps').forEach(function(e){e.classList.remove('open')});if(!o){l.classList.add('open');s.classList.add('open');setTimeout(function(){l.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},50)}}
+(function(){function pos(){var nav=document.getElementById('ucnav');if(!nav)return;if(nav.parentElement!==document.body){document.body.appendChild(nav)}var h=0;var headerEl=document.querySelector('.section-header header.header')||document.querySelector('sticky-header header')||document.querySelector('header.header');if(headerEl){h=Math.round(headerEl.getBoundingClientRect().bottom)}if(h<20||h>300)h=68;nav.style.setProperty('top',h+'px','important');var navH=nav.offsetHeight||42;var w=document.getElementById('apcyber-wrapper');if(w)w.style.setProperty('padding-top',(h+navH+4)+'px','important')}requestAnimationFrame(pos);setTimeout(pos,150);setTimeout(pos,400);setTimeout(pos,800);setTimeout(pos,1500);setTimeout(pos,3000);window.addEventListener('resize',pos,{passive:true});setTimeout(function(){var _w=document.getElementById('apcyber-wrapper');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}var _m=document.getElementById('MainContent');if(_m){_m.style.setProperty('padding-top','0','important');_m.style.setProperty('margin-top','0','important')}},50);setTimeout(function(){var _w=document.getElementById('apcyber-wrapper');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}},500);var scrolled=false;window.addEventListener('scroll',function(){if(!scrolled){scrolled=true;requestAnimationFrame(pos)}},{passive:true});var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class','hidden']});setTimeout(function(){obs.disconnect()},15000)})();
+</script>
+
+<div id="apcyber-ex2">
+
+  <!-- COURSE HEADER -->
+  <div class="cyber-course-header">
+    <div class="cyber-course-label">AP Cybersecurity — Unit 1 • Topic 1.1</div>
+    
+<nav aria-label="Breadcrumb" style="font-size:0.82rem;color:#6b7280;-webkit-text-fill-color:#6b7280;margin:0 0 16px;font-family:'Georgia',serif;padding:0;"><a href="/" style="color:#6b21a8;text-decoration:none;-webkit-text-fill-color:#6b21a8;">Home</a><span style="margin:0 6px;color:#d1d5db;">›</span><a href="/pages/ap-cybersecurity-complete-course-guide" style="color:#6b21a8;text-decoration:none;-webkit-text-fill-color:#6b21a8;">AP Cybersecurity</a><span style="margin:0 6px;color:#d1d5db;">›</span><span style="color:#374151;-webkit-text-fill-color:#374151;">Topic 1.1 › Exercise 2</span></nav>
+<h1>Attack Type Classifier</h1>
+    <p>Match each real-world scenario to the correct social engineering attack type.</p>
+    <div class="cyber-header-meta">
+      <span class="cyber-badge">Exercise 2 of 2</span>
+      <span class="cyber-badge">Skill 1.A — Analyze Risk</span>
+      <span class="cyber-badge">~10 minutes</span>
+    </div>
+  </div>
+
+  <!-- PAGE NAV -->
+  <div class="cyber-page-nav">
+    <a href="/pages/ap-cybersecurity-complete-course-guide" class="cyber-nav-step">
+      <span class="step-num">H</span>Course Hub
+    </a>
+    <span class="cyber-nav-sep">›</span>
+    <a href="/pages/ap-cyber-unit-1-lesson-1" class="cyber-nav-step">
+      <span class="step-num">1</span>Lesson
+    </a>
+    <span class="cyber-nav-sep">›</span>
+    <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-1" class="cyber-nav-step">
+      <span class="step-num">2</span>Exercise 1
+    </a>
+    <span class="cyber-nav-sep">›</span>
+    <span class="cyber-nav-step active">
+      <span class="step-num">3</span>Exercise 2
+    </span>
+    <span class="cyber-nav-sep">›</span>
+    <a href="/pages/ap-cyber-unit-1-lesson-1-quiz" class="cyber-nav-step">
+      <span class="step-num">4</span>Quiz
+    </a>
+  </div>
+
+  <!-- ATTACK TYPE PALETTE -->
+  <div class="palette-section visible" id="paletteSection">
+    <div class="palette-title">Attack Types — Click to Select, Then Click a Card to Place</div>
+    <div class="tap-hint">On mobile: tap an attack type below, then tap the card you want to classify.</div>
+    <div class="palette-grid" id="paletteGrid">
+      <div class="attack-chip chip-phishing" data-type="Phishing" onclick="selectChip(this)">Phishing</div>
+      <div class="attack-chip chip-spear" data-type="Spear Phishing" onclick="selectChip(this)">Spear Phishing</div>
+      <div class="attack-chip chip-vishing" data-type="Vishing" onclick="selectChip(this)">Vishing</div>
+      <div class="attack-chip chip-smishing" data-type="Smishing" onclick="selectChip(this)">Smishing</div>
+      <div class="attack-chip chip-pretexting" data-type="Pretexting" onclick="selectChip(this)">Pretexting</div>
+      <div class="attack-chip chip-baiting" data-type="Baiting" onclick="selectChip(this)">Baiting</div>
+      <div class="attack-chip chip-whaling" data-type="Whaling" onclick="selectChip(this)">Whaling</div>
+      <div class="attack-chip chip-quid" data-type="Quid Pro Quo" onclick="selectChip(this)">Quid Pro Quo</div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap" id="progressWrap" style="display:block;">
+    <div class="progress-top">
+      <span class="progress-label">Cards Classified</span>
+      <span class="progress-count"><span id="classifiedCount">0</span> / 8</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <!-- SCENARIO CARDS -->
+  <div class="cards-grid" id="cardsGrid" style="display:grid;">
+
+    <div class="scenario-card" id="card-0">
+      <div class="card-num">Scenario 1</div>
+      <div class="card-scenario">You receive an email from “<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="97e4e2e7e7f8e5e3d7e7f6eee7f6a6b9f4f8fa">[email protected]</a>” warning that your account has been suspended and you must click a link to verify your identity within 24 hours.</div>
+      <div class="card-dropzone" id="drop-0" onclick="placeOnCard(0)">
+        <span style="color:#9CA3AF;font-style:italic;">Click here after selecting an attack type above</span>
+      </div>
+      <div class="card-result" id="result-0"></div>
+    </div>
+
+    <div class="scenario-card" id="card-1">
+      <div class="card-num">Scenario 2</div>
+      <div class="card-scenario">The CFO of TechCorp gets an email addressed to her by name, referencing last quarter’s merger deal and asking her to approve a wire transfer to a new vendor account she does not recognize.</div>
+      <div class="card-dropzone" id="drop-1" onclick="placeOnCard(1)">
+        <span style="color:#9CA3AF;font-style:italic;">Click here after selecting an attack type above</span>
+      </div>
+      <div class="card-result" id="result-1"></div>
+    </div>
+
+    <div class="scenario-card" id="card-2">
+      <div class="card-num">Scenario 3</div>
+      <div class="card-scenario">You get a phone call from someone claiming to be from the IRS. They say you owe back taxes and will be arrested unless you provide your Social Security number to “verify your identity” right now.</div>
+      <div class="card-dropzone" id="drop-2" onclick="placeOnCard(2)">
+        <span style="color:#9CA3AF;font-style:italic;">Click here after selecting an attack type above</span>
+      </div>
+      <div class="card-result" id="result-2"></div>
+    </div>
+
+    <div class="scenario-card" id="card-3">
+      <div class="card-num">Scenario 4</div>
+      <div class="card-scenario">A text message arrives: “USPS: Your package could not be delivered. Update your address now or it will be returned: [link].” You were not expecting any packages.</div>
+      <div class="card-dropzone" id="drop-3" onclick="placeOnCard(3)">
+        <span style="color:#9CA3AF;font-style:italic;">Click here after selecting an attack type above</span>
+      </div>
+      <div class="card-result" id="result-3"></div>
+    </div>
+
+    <div class="scenario-card" id="card-4">
+      <div class="card-num">Scenario 5</div>
+      <div class="card-scenario">A person calls your company’s help desk claiming to be a new IT contractor who urgently needs a password reset for a server — and they already know the server’s hostname and the name of your IT manager.</div>
+      <div class="card-dropzone" id="drop-4" onclick="placeOnCard(4)">
+        <span style="color:#9CA3AF;font-style:italic;">Click here after selecting an attack type above</span>
+      </div>
+      <div class="card-result" id="result-4"></div>
+    </div>
+
+    <div class="scenario-card" id="card-5">
+      <div class="card-num">Scenario 6</div>
+      <div class="card-scenario">A USB drive labeled “Q4 Salary Report” is left in a company parking lot. An employee finds it, plugs it in out of curiosity, and malware is silently installed on their workstation.</div>
+      <div class="card-dropzone" id="drop-5" onclick="placeOnCard(5)">
+        <span style="color:#9CA3AF;font-style:italic;">Click here after selecting an attack type above</span>
+      </div>
+      <div class="card-result" id="result-5"></div>
+    </div>
+
+    <div class="scenario-card" id="card-6">
+      <div class="card-num">Scenario 7</div>
+      <div class="card-scenario">The CEO receives a lawsuit notification email from a law firm, addressed to her by full name and title, referencing a specific contract dispute involving her company’s actual product line. It asks her to click a link to review the filing.</div>
+      <div class="card-dropzone" id="drop-6" onclick="placeOnCard(6)">
+        <span style="color:#9CA3AF;font-style:italic;">Click here after selecting an attack type above</span>
+      </div>
+      <div class="card-result" id="result-6"></div>
+    </div>
+
+    <div class="scenario-card" id="card-7">
+      <div class="card-num">Scenario 8</div>
+      <div class="card-scenario">A caller tells an employee: “Hi, I’m from IT support. I’ll fix your slow computer remotely if you give me your login credentials. Think of it as a trade — I help you, you help me.”</div>
+      <div class="card-dropzone" id="drop-7" onclick="placeOnCard(7)">
+        <span style="color:#9CA3AF;font-style:italic;">Click here after selecting an attack type above</span>
+      </div>
+      <div class="card-result" id="result-7"></div>
+    </div>
+
+  </div>
+
+  <!-- CHECK ANSWERS BUTTON -->
+  <div style="text-align:center;margin-bottom:28px;display:block;" id="checkBtnWrap">
+    <button class="btn-check" id="checkBtn" onclick="checkAnswers()" disabled>
+      ✓ Check All Answers
+    </button>
+  </div>
+
+  <!-- RESULTS PANEL -->
+  <div class="results-panel" id="resultsPanel">
+    <div class="results-score-big" id="finalScore">0</div>
+    <div class="results-score-label">out of 8 correct</div>
+    <div class="results-message" id="resultsMessage"><p></p></div>
+    <div class="answer-key" id="answerKey"></div>
+    <div class="nav-buttons" style="justify-content:center;margin-top:24px;">
+      <button class="btn-retry" onclick="retryClassifier()">↻ Try Again</button>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-quiz" class="btn-primary">Take the Quiz ›</a>
+    </div>
+  </div>
+
+  <!-- EXAM TIP (shown after results) -->
+  <div class="exam-tip" id="examTip2" style="display:none;">
+    <h3>AP Exam Strategy — Identifying Attack Types</h3>
+    <p>The AP exam will describe a social engineering scenario and ask you to identify the attack type. Use this mental checklist:</p>
+    <p><strong>Channel first:</strong> Email = Phishing family. Phone call = Vishing. Text = Smishing. In-person = Pretexting or Baiting.</p>
+    <p><strong>Then specificity:</strong> Does the email know your name, role, and specific details about you? That upgrades it to Spear Phishing. Targeting a C-suite executive specifically? That’s Whaling (a subtype of Spear Phishing).</p>
+    <p><strong>The “something for something” offer</strong> is the signature of Quid Pro Quo — the attacker offers a service in exchange for credentials or access.</p>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="nav-buttons" id="bottomNav2">
+    <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-1" class="btn-secondary">← Exercise 1: Red Flags</a>
+    <a href="/pages/ap-cyber-unit-1-lesson-1-quiz" class="btn-primary">Take the Quiz ›</a>
+  </div>
+
+</div>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+(function(){
+  var ANSWERS = [
+    {
+      correct:'Phishing',chipClass:'chip-phishing',
+      explanation:'This is classic Phishing — a mass email using a spoofed domain (paypa1.com) with urgency tactics. The key: it is generic (not personalized) and delivered by email.',
+      trap:null
+    },
+    {
+      correct:'Spear Phishing',chipClass:'chip-spear',
+      explanation:'Spear Phishing targets a specific individual with personalized details (her name, the merger). The detail about the merger makes this clearly targeted research, not a mass email.',
+      trap:'Many choose Whaling here. Whaling specifically targets C-suite executives (CEO, CFO, etc.) and this does target a CFO — so Whaling is also acceptable. Spear Phishing is the broader correct category.'
+    },
+    {
+      correct:'Vishing',chipClass:'chip-vishing',
+      explanation:'Vishing (Voice Phishing) uses phone calls. The IRS scam is one of the most common real-world vishing attacks. The combination of authority (IRS), intimidation (arrest), and urgency (right now) are textbook vishing tactics.',
+      trap:null
+    },
+    {
+      correct:'Smishing',chipClass:'chip-smishing',
+      explanation:'Smishing is phishing via SMS text message. The fake USPS delivery notification is one of the most common smishing campaigns in the real world. The link would steal credentials or install malware.',
+      trap:null
+    },
+    {
+      correct:'Pretexting',chipClass:'chip-pretexting',
+      explanation:'Pretexting involves creating a fabricated scenario (a pretext) to manipulate the target. Here the attacker invented a role (IT contractor) and used researched details (server hostname, manager name) to make the story credible.',
+      trap:'This could be confused with Vishing since it is a phone call. The distinction: Vishing typically focuses on emotional pressure. Pretexting focuses on building a detailed false identity and backstory.'
+    },
+    {
+      correct:'Baiting',chipClass:'chip-baiting',
+      explanation:'Baiting uses physical media (USB drives, CDs) or enticing content to lure victims into taking an action that compromises their system. The labeled USB in the parking lot is the textbook Baiting example.',
+      trap:null
+    },
+    {
+      correct:'Whaling',chipClass:'chip-whaling',
+      explanation:'Whaling is Spear Phishing specifically targeting high-value executives (the “big fish”). Targeting a CEO by name, with company-specific details, and a high-stakes pretext (lawsuit) is classic Whaling.',
+      trap:'Spear Phishing is also technically correct since Whaling is a subtype of it. On the AP exam, if Whaling is an option and the target is clearly a C-suite executive, choose Whaling for the most precise answer.'
+    },
+    {
+      correct:'Quid Pro Quo',chipClass:'chip-quid',
+      explanation:'Quid Pro Quo (“something for something”) attacks offer a service or benefit in exchange for information or access. The signature phrase: “I help you, you help me.” IT support scams are the most common real-world example.',
+      trap:null
+    }
+  ];
+
+  var placements=new Array(8).fill(null);
+  var selectedChip=null;
+  var revealed=true;
+  var checked=false;
+
+
+  window.revealClassifier=function(){
+    revealed=true;
+    document.getElementById('paletteSection').classList.add('visible');
+    document.getElementById('progressWrap').style.display='block';
+    document.getElementById('cardsGrid').style.display='grid';
+    document.getElementById('checkBtnWrap').style.display='block';
+    document.getElementById('revealBtn2').style.display='none';
+  };
+
+  window.selectChip=function(el){
+    if(!revealed||checked)return;
+    var chips=document.querySelectorAll('#apcyber-ex2 .attack-chip');
+    for(var i=0;i<chips.length;i++){chips[i].classList.remove('selected');}
+    if(selectedChip===el){selectedChip=null;return;}
+    selectedChip=el;
+    el.classList.add('selected');
+  };
+
+  window.placeOnCard=function(cardIdx){
+    if(!revealed||checked||!selectedChip)return;
+    if(placements[cardIdx]!==null)return;
+    var type=selectedChip.getAttribute('data-type');
+    placements[cardIdx]=type;
+    var dz=document.getElementById('drop-'+cardIdx);
+    dz.innerHTML='<span class="placed-tag">'+type+'</span>';
+    document.getElementById('card-'+cardIdx).classList.add('active');
+    selectedChip.classList.remove('selected');
+    selectedChip=null;
+    var count=placements.filter(function(p){return p!==null;}).length;
+    document.getElementById('classifiedCount').textContent=count;
+    document.getElementById('progressFill').style.width=(count/8*100)+'%';
+    if(count===8){document.getElementById('checkBtn').disabled=false;}
+  };
+
+  window.checkAnswers=function(){
+    checked=true;
+    var correct=0;
+    for(var i=0;i<8;i++){
+      var placed=placements[i];
+      var isCorrect=placed===ANSWERS[i].correct;
+      if(i===1&&placed==='Whaling')isCorrect=true;
+      if(i===6&&placed==='Spear Phishing')isCorrect=true;
+      if(isCorrect)correct++;
+      var card=document.getElementById('card-'+i);
+      card.classList.remove('active');
+      card.classList.add(isCorrect?'correct':'wrong');
+      var resultEl=document.getElementById('result-'+i);
+      resultEl.classList.add('visible');
+      resultEl.classList.add(isCorrect?'correct-result':'wrong-result');
+      if(isCorrect){
+        resultEl.innerHTML='<strong style="color:#15803D;">Correct: '+ANSWERS[i].correct+'</strong><br>'+ANSWERS[i].explanation;
+      } else {
+        resultEl.innerHTML='<strong style="color:#B91C1C;">Your answer: '+placed+'</strong><br>'+
+          '<strong>Correct: '+ANSWERS[i].correct+'</strong><br>'+ANSWERS[i].explanation+
+          (ANSWERS[i].trap?'<br><br><em>'+ANSWERS[i].trap+'</em>':'');
+      }
+    }
+    document.getElementById('finalScore').textContent=correct;
+    var msg='';
+    if(correct===8){
+      msg='Perfect score! You can distinguish between all 8 social engineering attack types. This level of precision is exactly what the AP exam requires.';
+    } else if(correct>=6){
+      msg='Strong work! You correctly classified '+correct+' of 8 scenarios. Review the ones you missed — pay close attention to the distinctions between Phishing / Spear Phishing / Whaling and Vishing / Pretexting.';
+    } else if(correct>=4){
+      msg='Good start! '+correct+' correct. The trickiest distinctions are: (1) Phishing vs. Spear Phishing vs. Whaling (channel is the same, specificity differs), and (2) Vishing vs. Pretexting (both use phone, but Pretexting involves a detailed fabricated identity). Study those and retry.';
+    } else {
+      msg=correct+' correct. Review the Exam Tip below and the individual card explanations carefully. Focus on: what channel was used? How personalized was the attack? Was there a fabricated identity or a trade offered?';
+    }
+    document.getElementById('resultsMessage').querySelector('p').textContent=msg;
+    var ak=document.getElementById('answerKey');
+    ak.innerHTML='<h3>Full Answer Key:</h3>';
+    for(var j=0;j<8;j++){
+      var placed2=placements[j];
+      var isCorrect2=placed2===ANSWERS[j].correct;
+      if(j===1&&placed2==='Whaling')isCorrect2=true;
+      if(j===6&&placed2==='Spear Phishing')isCorrect2=true;
+      var row=document.createElement('div');
+      row.className='answer-row';
+      row.innerHTML='<div class="answer-icon '+(isCorrect2?'correct-icon':'wrong-icon')+'">'+(isCorrect2?'✓':'✗')+'</div>'+
+        '<div class="answer-body">'+
+        '<span class="answer-tag '+ANSWERS[j].chipClass+'">Scenario '+(j+1)+' — '+ANSWERS[j].correct+'</span>'+
+        (isCorrect2?'':'<div class="answer-your">You answered: '+placed2+'</div>')+
+        '<div class="answer-explanation">'+ANSWERS[j].explanation+'</div>'+
+        (ANSWERS[j].trap?'<div class="answer-explanation" style="margin-top:6px;font-style:italic;">'+ANSWERS[j].trap+'</div>':'')+
+        '</div>';
+      ak.appendChild(row);
+    }
+    document.getElementById('resultsPanel').classList.add('visible');
+    document.getElementById('examTip2').style.display='block';
+    document.getElementById('checkBtnWrap').style.display='none';
+    document.getElementById('resultsPanel').scrollIntoView({behavior:'smooth',block:'start'});
+  };
+
+  window.retryClassifier=function(){
+    placements=new Array(8).fill(null);
+    selectedChip=null;
+    checked=false;
+    for(var i=0;i<8;i++){
+      var card=document.getElementById('card-'+i);
+      card.classList.remove('active','correct','wrong');
+      document.getElementById('drop-'+i).innerHTML='<span style="color:#9CA3AF;font-style:italic;">Click here after selecting an attack type above</span>';
+      var res=document.getElementById('result-'+i);
+      res.className='card-result';
+      res.innerHTML='';
+    }
+    var chips=document.querySelectorAll('#apcyber-ex2 .attack-chip');
+    for(var j=0;j<chips.length;j++){chips[j].classList.remove('selected','used');}
+    document.getElementById('classifiedCount').textContent='0';
+    document.getElementById('progressFill').style.width='0%';
+    document.getElementById('checkBtn').disabled=true;
+    document.getElementById('checkBtnWrap').style.display='block';
+  };
+})();
+</script>
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id="apcyber-activity-nav"><div class="aan-card">
+<span class="aan-eyebrow">AP Cybersecurity · Unit 1 · Lesson 1.1 · Exercise 2</span><div class="aan-strip">
+<a class="aan-chip" href="/pages/ap-cybersecurity-unit-1-social-engineering">Lesson</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-1-lesson-1-exercise-1">Exercise 1</a><span class="aan-sep">•</span><span class="aan-chip cur">Exercise 2</span><span class="aan-sep">•</span><a class="aan-chip next" href="/pages/ap-cyber-unit-1-lesson-1-lab">Lab →</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-1-lesson-1-quiz">Quiz</a>
+</div>
+<div class="aan-up">
+<span class="aan-lbl">Back to:</span><a href="/pages/ap-cybersecurity-unit-1-social-engineering">Lesson 1.1</a><a href="/pages/ap-cybersecurity-unit-1-introduction-to-security">Unit 1 Study Guide</a><a href="/pages/ap-cybersecurity-complete-course-guide">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->
