@@ -68,8 +68,32 @@ per unit:
 
 Most of the Command Center values are 2, which reads as an unfilled default rather than a
 considered number. The workbook is sourced from the Full-Year Pacing Guide in the teacher
-bundle, so it is the one to trust. Only Unit 1 has been reconciled so far; the other four
-units are a follow-up.
+bundle, so it is the one to trust.
+
+`transform-command-center.js` reconciles all five units against it:
+
+```
+node tools/cyber-pacing/run-dry-command-center.js   # writes diffs/, nothing remote
+```
+
+The page computes `lessonDays(l) = l.days + l.act` and every lesson carries `act:1`. The
+workbook is built the same way, "each lesson = its teaching days plus one quiz day", so the
+two models line up and `unitDays()` reproduces the workbook total exactly once the numbers
+are corrected. Course total goes from 111 to 143.
+
+Two renderer fixes ride along, both forced by the corrected numbers rather than chosen:
+
+- `frqDays` becomes 0 for every unit, because the workbook folds FRQ practice into the AP
+  review block and assigns no separate unit review day. The chip row now skips a zero-day
+  entry instead of rendering "0d".
+- `planText` had a three-or-more branch that printed Day 1, Day 2 and then jumped to the
+  last day. It previously caught two lessons; with real day counts it catches seventeen, so
+  an eight-day lesson would have silently skipped five days. The middle is now a range.
+
+Assertions cover all of it, including that the UNITS array still evaluates as valid JS, that
+lesson identity/materials/links are untouched, that the two renderer blocks are the only
+change outside the array, and that the rendered plan text names every day of every lesson
+with no gap.
 
 ## Reserved days
 

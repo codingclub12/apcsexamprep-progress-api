@@ -1,0 +1,137 @@
+--- a/cyber-command-center
++++ b/cyber-command-center
+@@ -199,14 +199,14 @@
+   var D = CFG.DRIVE, P = CFG.SITE;
+   var Q = "/pages/ap-cybersecurity-question-of-the-day?q=";
+   var UNITS = [
+-    { n:1, name:"Introduction to Security", frqDays:2, labDays:3, testDays:2, lessons:[
++    { n:1, name:"Introduction to Security", frqDays:0, labDays:2, testDays:1, lessons:[
+       { id:"1.1", title:"Understanding Social Engineering", days:2, act:1, folder:D+"1FShfCr-fi_GosCgPRwYdkSvK9o-sDWSf",
+         mats:{ deck:D+"1hWne2xW1pUqwraKeW6m-qz8Z7Lshl0P_", notes:D+"1CWGTg8T4T_Fq-20AC0WsaYaEvM7VKa5_", quiz:D+"1s2RU5AHWa_y4Y1RfUblKqzzdTUcXNv38", supp:D+"18oWIx8lqE2tbRPpmwWH5XhSO_RN_t6Jt", guide:"https://drive.google.com/file/d/1Pyc8Tri1K8pG6bBeRV0V5X3_Rx5gzoXd/view" },
+         site:{ ex1:P+"ap-cyber-unit-1-lesson-1-exercise-1", ex2:P+"ap-cyber-unit-1-lesson-1-exercise-2" }, qotd:[Q+"C1-101", Q+"C1-102"] },
+-      { id:"1.2", title:"Suspicious Website Logins", days:2, act:1, folder:D+"1yuSq4-lvdjg9puB9r5nse4djlB02B9ji",
++      { id:"1.2", title:"Suspicious Website Logins", days:4, act:1, folder:D+"1yuSq4-lvdjg9puB9r5nse4djlB02B9ji",
+         mats:{ deck:D+"1NILk1hiPU9Hl3g4lNaL0MQzU_8ymtL2-", notes:D+"1NTdrcKvShimfJL2d_K_SnOtsRuFPlmdI", quiz:D+"16ix8nD1DmeOXCnissLHCudO_xfTplE0n", supp:D+"1ZMVZpsFVWeRIpi_lFd-TaJ8VfoOJunI4", guide:"https://drive.google.com/file/d/1AQCavROy1CoF-3A5XmqRyuqlqaV6gK6p/view" },
+         site:{ ex1:P+"ap-cyber-unit-1-lesson-2-exercise-1", ex2:P+"ap-cyber-unit-1-lesson-2-exercise-2" }, qotd:[Q+"C1-110", Q+"C1-111", Q+"C1-112", Q+"C1-113"] },
+-      { id:"1.3", title:"Best Practices for Public Networks", days:1, act:1, folder:D+"1-MXKxGlNrw5EPMSjY0W4iqDMSKSAsqVC",
++      { id:"1.3", title:"Best Practices for Public Networks", days:4, act:1, folder:D+"1-MXKxGlNrw5EPMSjY0W4iqDMSKSAsqVC",
+         mats:{ deck:D+"1w4InIh0v_J6aBS8bvo_6EA_jtl5QYs9B", notes:D+"16QI2u0FvOMRo7x9Wr1p9aT5vtreKjFE6", quiz:D+"1mDg1I5ZO8SWj4k4e8NS7eCAk9DA11w6o", supp:D+"1DHpfP_y6HXXHk2ApBqgBx3-4iJLKwMHg", guide:"https://drive.google.com/file/d/1f57Km-wGUgfjff2ik5kWx9oMb_nRCke-/view" },
+         site:{ ex1:P+"ap-cyber-unit-1-lesson-3-exercise-1", ex2:P+"ap-cyber-unit-1-lesson-3-exercise-2" }, qotd:[Q+"C1-116", Q+"C1-117", Q+"C1-118", Q+"C1-119"] },
+       { id:"1.4", title:"AI-Based Cybersecurity Attacks", days:2, act:1, folder:D+"1Djfmah2h8ZKf0LTzrko66EgTXNW1oWUB",
+@@ -216,27 +216,27 @@
+         mats:{ deck:D+"1Q572xvzJqxkiCIcSjKVk_PHr5zv8K0xo", notes:D+"1DPV2WuBJiv_-EjdMcZUSVnLUSCrRmWcT", quiz:D+"1i9X8rdhUtyMfOfhJnqPAJxBWKn_kzyT5", supp:D+"15t_FXbZO2-KxMSyDGEysIMZobxF_i2d_", guide:"https://drive.google.com/file/d/1Uw2FlrX9S252y-f8aFOV8IQwI7XSRLaK/view" },
+         site:{ ex1:P+"ap-cyber-unit-1-lesson-5-exercise-1", ex2:P+"ap-cyber-unit-1-lesson-5-exercise-2" }, qotd:[Q+"C1-125", Q+"C1-126"] },
+     ]},
+-    { n:2, name:"Securing Spaces", frqDays:2, labDays:3, testDays:2, lessons:[
+-      { id:"2.1", title:"Cyber Foundations", days:2, act:1, folder:D+"1dz2bkfhkt1kOiX6POldf0Ndq8TL05Vyc",
++    { n:2, name:"Securing Spaces", frqDays:0, labDays:3, testDays:1, lessons:[
++      { id:"2.1", title:"Cyber Foundations", days:8, act:1, folder:D+"1dz2bkfhkt1kOiX6POldf0Ndq8TL05Vyc",
+         mats:{ deck:D+"1phuJUbDsIb6GC5_yfSp6ibn7GTz7j16M", notes:D+"1q23ENmIbaSikYaqBIHPp5GQ6u49sBaxD", quiz:D+"1yuSz66ph7HulybpUi8OLz9b3puL3VIVO", supp:D+"1zV7TlYpIQwFF4nMMhgGqoQa_LSprKRBC", guide:"https://drive.google.com/file/d/1cC-jQ-SlBRFymGTayaF58We-6BSvwcId/view" },
+         site:{ ex1:P+"ap-cyber-unit-2-lesson-1-exercise-1", ex2:P+"ap-cyber-unit-2-lesson-1-exercise-2" }, qotd:[Q+"C2-101", Q+"C2-102", Q+"C2-103", Q+"C2-104", Q+"C2-105", Q+"C2-107", Q+"C2-123", Q+"C2-125"] },
+-      { id:"2.2", title:"Physical Vulnerabilities", days:2, act:1, folder:D+"1xC0_B4qSaHqNdjrvf1RKnTWrHuRM6nxA",
++      { id:"2.2", title:"Physical Vulnerabilities", days:5, act:1, folder:D+"1xC0_B4qSaHqNdjrvf1RKnTWrHuRM6nxA",
+         mats:{ deck:D+"1_879YPUQbqGk4uG_TGBpdwwnLuKbCzZu", notes:D+"1reJO5JWGHFkEwlE4NrRJ-K02Ec1752jS", quiz:D+"12W4wU3m7DmsMZEB-W2dUd8ouzccrcuy2", supp:D+"1RGWSEe79XG2aX9xiwGXlVwh1wzIoJmmf", guide:"https://drive.google.com/file/d/1ANWwMvOP0GAlmA26BfEL1n6sSgFB8tyn/view" },
+         site:{ ex1:P+"ap-cyber-unit-2-lesson-2-exercise-1", ex2:P+"ap-cyber-unit-2-lesson-2-exercise-2" }, qotd:[Q+"C2-108", Q+"C2-109", Q+"C2-110", Q+"C2-111", Q+"C2-112"] },
+-      { id:"2.3", title:"Protecting Physical Spaces", days:2, act:1, folder:D+"1eufkO6zMuLNltI4HwpMVk1S63We3hzsz",
++      { id:"2.3", title:"Protecting Physical Spaces", days:4, act:1, folder:D+"1eufkO6zMuLNltI4HwpMVk1S63We3hzsz",
+         mats:{ deck:D+"1yLKzGFKjNclivYugQpp-iBm4d6GIE6WS", notes:D+"1mSsLYX7Ny6V8o5lYLMsA989PK6BvK2Ug", quiz:D+"1xnLCaeT0Rn8E4iZlgb5-rWhrW9CE3bZ3", supp:D+"1O1Vt04FFwbtNiilkvRsJVqzbypl0KpDj", guide:"https://drive.google.com/file/d/1qRPLyx33pc-huZYCN2bFaWwS-2YHAF1K/view" },
+         site:{ ex1:P+"ap-cyber-unit-2-lesson-3-exercise-1", ex2:P+"ap-cyber-unit-2-lesson-3-exercise-2" }, qotd:[Q+"C2-113", Q+"C2-114", Q+"C2-115", Q+"C2-116"] },
+-      { id:"2.4", title:"Detecting Physical Attacks", days:2, act:1, folder:D+"1HIR86oraRN_PGaAuQd-HDSLgUmCOGNC8",
++      { id:"2.4", title:"Detecting Physical Attacks", days:4, act:1, folder:D+"1HIR86oraRN_PGaAuQd-HDSLgUmCOGNC8",
+         mats:{ deck:D+"1QYBbDfmfN3jfrJf3bT5cCmGvnjuM68s1", notes:D+"13BWE6agb937e9YawyO_EHDUJUNlAxX4E", quiz:D+"1RB2WcU1Zh_HCSrU0dXECgZRLoMyBL1Ho", supp:D+"15U51FXebENnIFa7iy9JCfiFmwASOXbF-", guide:"https://drive.google.com/file/d/1lGbBAiyGusZu3Pa4-F5hdrRruCrCrxyJ/view" },
+         site:{ ex1:P+"ap-cyber-unit-2-lesson-4-exercise-1", ex2:P+"ap-cyber-unit-2-lesson-4-exercise-2" }, qotd:[Q+"C2-118", Q+"C2-119", Q+"C2-120", Q+"C2-121"] },
+     ]},
+-    { n:3, name:"Securing Networks", frqDays:2, labDays:4, testDays:2,
++    { n:3, name:"Securing Networks", frqDays:0, labDays:2, testDays:2,
+       note:"Unit 3 is taught in a flow-optimized sequence that differs from the CED's topic order — every lesson is tagged with the CED topic it covers, and all of CED 3.1–3.5 is included. Lessons 3.1 (Network Fundamentals) and 3.2 (Network Attacks) both sit under CED 3.1 (Network Vulnerabilities & Attacks) and share the same CED 3.1 teacher deck and notes.",
+       lessons:[
+-      { id:"3.1", title:"Network Fundamentals & Attack Surface", ced:"CED 3.1", days:2, act:1, folder:D+"1xe8mJbOnSsyI5RlYmL95mZDxCALWHj5I",
++      { id:"3.1", title:"Network Fundamentals & Attack Surface", ced:"CED 3.1", days:3, act:1, folder:D+"1xe8mJbOnSsyI5RlYmL95mZDxCALWHj5I",
+         mats:{ deck:D+"1RrbKsEcCsQdjDR4ogVJVa4MGTzYDEJJp", notes:D+"1PATWMur-VUnMmfWPb9qXHSltMLteREPo", quiz:D+"18yyPt_bWAJRdIsw9TY8iqah-wS3XoRVb", supp:D+"1rjRB-wk9EbrvV8j0S_E-ycXpsjmLrGCu", guide:"https://drive.google.com/file/d/1cBUK8OPbsOXUBIcTzK6N69SXnI-jSslS/view" },
+         site:{ ex1:P+"ap-cyber-unit-3-lesson-1-exercise-1", ex2:P+"ap-cyber-unit-3-lesson-1-exercise-2" }, qotd:[Q+"C3-101", Q+"C3-102", Q+"C3-103"] },
+-      { id:"3.2", title:"Network Attacks", ced:"CED 3.1", days:2, act:1, folder:D+"1xe8mJbOnSsyI5RlYmL95mZDxCALWHj5I",
++      { id:"3.2", title:"Network Attacks", ced:"CED 3.1", days:3, act:1, folder:D+"1xe8mJbOnSsyI5RlYmL95mZDxCALWHj5I",
+         mats:{ deck:D+"1RrbKsEcCsQdjDR4ogVJVa4MGTzYDEJJp", notes:D+"1PATWMur-VUnMmfWPb9qXHSltMLteREPo", quiz:D+"18yyPt_bWAJRdIsw9TY8iqah-wS3XoRVb", supp:D+"1rjRB-wk9EbrvV8j0S_E-ycXpsjmLrGCu", guide:"https://drive.google.com/file/d/1cBUK8OPbsOXUBIcTzK6N69SXnI-jSslS/view" },
+         site:{ ex1:P+"ap-cyber-unit-3-lesson-2-exercise-1", ex2:P+"ap-cyber-unit-3-lesson-2-exercise-2" }, qotd:[Q+"C3-104", Q+"C3-106", Q+"C3-126"] },
+       { id:"3.3", title:"Firewalls & Packet Filtering", ced:"CED 3.4", days:2, act:1, folder:D+"1eZwUIYIsf53gBsFP-1w6fYWX9ieC5RAO",
+@@ -245,18 +245,18 @@
+       { id:"3.4", title:"Network Segmentation & VLANs", ced:"CED 3.3", days:2, act:1, folder:D+"1pwYji4afMo-bA3ghFyiAaHl6Okdhb0tN",
+         mats:{ deck:D+"1Ul2Wpg2lgjYei0FUsoqrgWZ3WPJigaeb", notes:D+"1CMtq1RrZSGEhpb7zN4ykaa7MXHkvf6Pz", quiz:D+"1XkMMhG4HfMwweY1KuWNnJztf4SF8qobB", supp:D+"1f7qAJR9OB09D3Lt-1zx1CcC-tIQavfmx", guide:"https://drive.google.com/file/d/1xnfyfXR-_dwOkOUAk1LEjhNvyJA2ODwe/view" },
+         site:{ ex1:P+"ap-cyber-unit-3-lesson-4-exercise-1", ex2:P+"ap-cyber-unit-3-lesson-4-exercise-2" }, qotd:[Q+"C3-111", Q+"C3-112"] },
+-      { id:"3.5", title:"IDS, IPS & SIEM", ced:"CED 3.5", days:2, act:1, folder:D+"1oco0hRuYkvftWHS0VI1hnlmFlumPHR5R",
++      { id:"3.5", title:"IDS, IPS & SIEM", ced:"CED 3.5", days:7, act:1, folder:D+"1oco0hRuYkvftWHS0VI1hnlmFlumPHR5R",
+         mats:{ deck:D+"13OKXGi7tQp3N_TbDEYrR_OUqqMZqsPug", notes:D+"1Q-ZI2A2qlxs8t_EhDwNcfNaHzccBO31p", quiz:D+"1z52y1IaKzvL3bG0F9hvpeaOItTA2Rebm", supp:D+"1OSFFeCHWJkWZ4AKAc1_hdB2bI6jrR7cE", guide:"https://drive.google.com/file/d/16DRFx8VKowNqg26PsNpezctlOXThxViB/view" },
+         site:{ ex1:P+"ap-cyber-unit-3-lesson-5-exercise-1", ex2:P+"ap-cyber-unit-3-lesson-5-exercise-2" }, qotd:[Q+"C3-119", Q+"C3-120", Q+"C3-121", Q+"C3-123", Q+"C3-124", Q+"C3-125", Q+"C3-122"] },
+-      { id:"3.6", title:"Network Security Policies & Wireless", ced:"CED 3.2", days:1, act:1, folder:D+"1USQlTsM-rJOPT-SklmM4y0TJ49V6Ub36",
++      { id:"3.6", title:"Network Security Policies & Wireless", ced:"CED 3.2", days:3, act:1, folder:D+"1USQlTsM-rJOPT-SklmM4y0TJ49V6Ub36",
+         mats:{ deck:D+"1g4n14lAYV_YcQSSE-NZ8zNdlFoRY1X8R", notes:D+"11R-o82dvTCHztNwnKNEaXw7_HPmFVDp5", quiz:D+"11dC01znXvJtS1P8nMtPFZ6Ph5iP1cXWe", supp:D+"13Qf-Na-NsD5DKMedSV6UG8Lf_kGkQFRO", guide:"https://drive.google.com/file/d/1QwO0EWkhP65qTYuVAChVcEaIVthVex-6/view" },
+         site:{ ex1:P+"ap-cyber-unit-3-lesson-6-exercise-1", ex2:P+"ap-cyber-unit-3-lesson-6-exercise-2" }, qotd:[Q+"C3-107", Q+"C3-108", Q+"C3-109"] },
+     ]},
+-    { n:4, name:"Securing Devices", frqDays:2, labDays:3, testDays:2, lessons:[
+-      { id:"4.1", title:"Device Vulnerabilities", days:2, act:1, folder:D+"1pEK_20MjVbogrpPY1W9iAXoV3BvExaF3",
++    { n:4, name:"Securing Devices", frqDays:0, labDays:3, testDays:1, lessons:[
++      { id:"4.1", title:"Device Vulnerabilities", days:6, act:1, folder:D+"1pEK_20MjVbogrpPY1W9iAXoV3BvExaF3",
+         mats:{ deck:D+"1MTaut6qQcDBxZLssBGhamgn6bypUQunt", notes:D+"1g6K_5aNsJnayRBzfYEj5oj5viVtI_Gud", quiz:D+"1GIio9ed7DpZRZ5HJQIG2jrFGwQVebXlg", supp:D+"1iPd5zR5S3C9B9N61UuMPLC1QcHMitE9W", guide:"https://drive.google.com/file/d/1dMRvsAzJKVn7arxGfL47brlLsLHHfcRr/view" },
+         site:{ ex1:P+"ap-cyber-unit-4-lesson-1-exercise-1", ex2:P+"ap-cyber-unit-4-lesson-1-exercise-2" }, qotd:[Q+"C4-101", Q+"C4-102", Q+"C4-103", Q+"C4-104", Q+"C4-105", Q+"C4-107"] },
+-      { id:"4.2", title:"Authentication", days:2, act:1, folder:D+"1tlGVczvEu-FsuUbDa4nU5LzytJrjJHjg",
++      { id:"4.2", title:"Authentication", days:5, act:1, folder:D+"1tlGVczvEu-FsuUbDa4nU5LzytJrjJHjg",
+         mats:{ deck:D+"1Ho3jY4NfQJwKfJ9wrGj2Ix4fl5oWZSza", notes:D+"1GilrRjmDZpMXWXxUYeJow6I1Fzk42fIb", quiz:D+"1KRJef0WsT845LZuzDANq4FHJLFMPRmWZ", supp:D+"1-LXO34dkFDLtl0r8Lka5isLeNu6kBSRY", guide:"https://drive.google.com/file/d/1AHgZiSpQF2dydrmaWBP-gGBH5vRiXdQB/view" },
+         site:{ ex1:P+"ap-cyber-unit-4-lesson-2-exercise-1", ex2:P+"ap-cyber-unit-4-lesson-2-exercise-2" }, qotd:[Q+"C4-108", Q+"C4-109", Q+"C4-110", Q+"C4-111", Q+"C4-112"] },
+       { id:"4.3", title:"Protecting Devices", days:2, act:1, folder:D+"1xT4VuU-dGerxJdVvV1hs6Y4k5xxmfBmj",
+@@ -266,23 +266,23 @@
+         mats:{ deck:D+"10ghnb9uCFq-4pv6qqR4qBpa0DkJtg2PP", notes:D+"1YMHQfARMozerT1Nllz6y1zLVXxg3JtjD", quiz:D+"13r-LXeXANd_-kjdORQF4IQdefy2qChw0", supp:D+"1PbeUyFKoLKajS4c6a88XSKAl-LCcWEmf", guide:"https://drive.google.com/file/d/1UobAGto1CMMp_lO0rn7LmEOaijiVJB6s/view" },
+         site:{ ex1:P+"ap-cyber-unit-4-lesson-4-exercise-1", ex2:P+"ap-cyber-unit-4-lesson-4-exercise-2" }, qotd:[Q+"C4-118", Q+"C4-119"] },
+     ]},
+-    { n:5, name:"Securing Applications and Data", frqDays:2, labDays:4, testDays:2, lessons:[
+-      { id:"5.1", title:"Application and Data Vulnerabilities", days:2, act:1, folder:D+"11WIPeFqZ4e0rhVsp1_m9YIHIcoBlQ99g",
++    { n:5, name:"Securing Applications and Data", frqDays:0, labDays:2, testDays:1, lessons:[
++      { id:"5.1", title:"Application and Data Vulnerabilities", days:5, act:1, folder:D+"11WIPeFqZ4e0rhVsp1_m9YIHIcoBlQ99g",
+         mats:{ deck:D+"1-irY5CDKOB6SMR-BpycWKgvxj0eFSgKG", notes:D+"1_lfvAACkUZi_0E9OsNE4TxPq245mamSU", quiz:D+"1p9XPZ2Odw0kjf_MF-PSmUZN3S3MRu8mG", supp:D+"1N0nSo5KKEcNw9W14FWbytCvW8Du5yWmP", guide:"https://drive.google.com/file/d/1MXrxg9QyrVb6xfIyIiMvWvg43qmUa1UW/view" },
+         site:{ ex1:P+"ap-cyber-unit-5-lesson-1-exercise-1", ex2:P+"ap-cyber-unit-5-lesson-1-exercise-2" }, qotd:[Q+"C5-101", Q+"C5-102", Q+"C5-103", Q+"C5-104", Q+"C5-106"] },
+-      { id:"5.2", title:"Protecting Data: Managerial Controls", days:1, act:1, folder:D+"1z6nURUm7qfo9rzkUHI9IglcZQIuTkPin",
++      { id:"5.2", title:"Protecting Data: Managerial Controls", days:7, act:1, folder:D+"1z6nURUm7qfo9rzkUHI9IglcZQIuTkPin",
+         mats:{ deck:D+"1a_jhKpNZvPVygX9lWYCfiVeFPkFeDpuH", notes:D+"1NiV-7rW2sLr2Y1kYt99837phqIbn19x3", quiz:D+"11dfXeF9e0L3WT8VvvmYym_E1FEOKgUCc", supp:D+"1b8IC6Yc7S4t8EdEuxuIkTyPJDQO14Qnk", guide:"https://drive.google.com/file/d/1WPVr1fAUWChObYBMvidZpt_hJAF92bz3/view" },
+         site:{ ex1:P+"ap-cyber-unit-5-lesson-2-exercise-1", ex2:P+"ap-cyber-unit-5-lesson-2-exercise-2" }, qotd:[Q+"C5-107", Q+"C5-108", Q+"C5-109", Q+"C5-110", Q+"C5-133", Q+"C5-137", Q+"C5-140"] },
+-      { id:"5.3", title:"Stored Data Encryption", days:3, act:1, folder:D+"1zo99YNwgYadHsWss6FhpHT8cNhW4oL1l",
++      { id:"5.3", title:"Stored Data Encryption", days:4, act:1, folder:D+"1zo99YNwgYadHsWss6FhpHT8cNhW4oL1l",
+         mats:{ deck:D+"14-UDXss7U-J5r0ekn6GGsZrGyKFNz5in", notes:D+"1qERHlF2Z2TMFjtoS_YJUTR9NaeUDVXDV", quiz:D+"1z_LKIW4bSvlMMPz3yx1fLxwq7IfvpiyM", supp:D+"1EnQHi4_1rQzbCEL0nspCXNUccHZkm5Ss", guide:"https://drive.google.com/file/d/1P9HqGGlLfs3pYx20FuPuokwpw0TI_Ws-/view" },
+         site:{ ex1:P+"ap-cyber-unit-5-lesson-3-exercise-1", ex2:P+"ap-cyber-unit-5-lesson-3-exercise-2" }, qotd:[Q+"C5-111", Q+"C5-112", Q+"C5-113", Q+"C5-114"] },
+-      { id:"5.4", title:"Asymmetric Encryption", days:3, act:1, folder:D+"1lH1KkH917Z1F_FFeQsYMAs28-TVYVGJf",
++      { id:"5.4", title:"Asymmetric Encryption", days:5, act:1, folder:D+"1lH1KkH917Z1F_FFeQsYMAs28-TVYVGJf",
+         mats:{ deck:D+"1dDfzMFIV7H335MkBupQw4yJ5YRspkrH-", notes:D+"1S4669wDYpKtb_VL4jzzjXZq9688PS3Xm", quiz:D+"19OFkuJmmIgAfGaTMc4-LIvt1ttq7RutI", supp:D+"1bXgdPI0HNZCRXYFXMzFCt2F8Qadg-HHU", guide:"https://drive.google.com/file/d/1ZylPMBToKm3dwGF8l7O1Y1draKh-9wHo/view" },
+         site:{ ex1:P+"ap-cyber-unit-5-lesson-4-exercise-1", ex2:P+"ap-cyber-unit-5-lesson-4-exercise-2" }, qotd:[Q+"C5-116", Q+"C5-118", Q+"C5-120", Q+"C5-117", Q+"C5-119"] },
+       { id:"5.5", title:"Protecting Applications", days:2, act:1, folder:D+"1i5EjNfS4W-FIKPKQUoK6t2AhdqmUSYoc",
+         mats:{ deck:D+"1CWbolkQvY1cTEOl41wk85m0_uhiijNDE", notes:D+"1Xsua0-SVST1t0o4RA75kMXjAUfKFcJi7", quiz:D+"1yiy3tWSP5RDEXBE2VaYYFTzVBhFNsUr_", supp:D+"1KOfD2fU74xnS6wsLvFXNslUpkWpbeLtU", guide:"https://drive.google.com/file/d/1aVlApjSEah5jqzc65ansOW33KJ4xSoYa/view" },
+         site:{ ex1:P+"ap-cyber-unit-5-lesson-5-exercise-1", ex2:P+"ap-cyber-unit-5-lesson-5-exercise-2" }, qotd:[Q+"C5-121", Q+"C5-122"] },
+-      { id:"5.6", title:"Detecting Attacks on Data", days:2, act:1, folder:D+"1_bxzWFXeKIqXx3IkgoL5FILd_OV6UTXO",
++      { id:"5.6", title:"Detecting Attacks on Data", days:7, act:1, folder:D+"1_bxzWFXeKIqXx3IkgoL5FILd_OV6UTXO",
+         mats:{ deck:D+"1XZwI4iKUmvROxO1TugEKuKksWol1SzVh", notes:D+"1UThSqn8TSvGVtY6f4O6qDjtitzkF0rfs", quiz:D+"1zzuL0r5zsK-l9alzZ-2niPVHsiLFKeDB", supp:D+"18TLVYIcNv0fa7iW1oqeWx-KiKcehtSm-", guide:"https://drive.google.com/file/d/1fCHOvvXfEkK33cndR3KctV6rhV65jXfK/view" },
+         site:{ ex1:P+"ap-cyber-unit-5-lesson-6-exercise-1", ex2:P+"ap-cyber-unit-5-lesson-6-exercise-2" }, qotd:[Q+"C5-126", Q+"C5-127", Q+"C5-128", Q+"C5-129", Q+"C5-139", Q+"C5-141", Q+"C5-130"] },
+     ]},
+@@ -367,7 +367,8 @@
+       : ' Assign the Quiz as an exit ticket.';
+     if(l.days<=1) return '<b>Day 1:</b> Slide Deck and Guided Notes.'+act;
+     if(l.days===2) return '<b>Day 1:</b> Slide Deck and Guided Notes. <b>Day 2:</b> Supplements and worked examples.'+act;
+-    return '<b>Day 1:</b> Slide Deck and Guided Notes. <b>Day 2:</b> Worked examples from Supplements. <b>Day '+l.days+':</b> Review.'+act;
++    if(l.days===3) return '<b>Day 1:</b> Slide Deck and Guided Notes. <b>Day 2:</b> Worked examples from Supplements. <b>Day 3:</b> Review.'+act;
++    return '<b>Day 1:</b> Slide Deck and Guided Notes. <b>Days 2-'+(l.days-1)+':</b> Worked examples and Supplements. <b>Day '+l.days+':</b> Review.'+act;
+   }
+   function lessonDays(l){ return l.days + (l.act||0); }
+   function unitDays(u){
+@@ -614,10 +615,13 @@
+       var unlocked = STATE.entitled || unitFree(u);
+       var uStart=runningDay, uEnd=runningDay+unitDays(u)-1; runningDay=uEnd+1;
+       var lessons = u.lessons.map(function(l){ return lessonHTML(l, unlocked); }).join("");
++      var chip = function(ico, label, n){
++        return n > 0 ? '<span class="wp">'+ico+' '+label+' · '+n+'d</span>' : '';
++      };
+       var wrap = '<div class="uwrap">'
+-        + '<span class="wp">📝 Free-response & review · '+(u.frqDays||0)+'d</span>'
+-        + '<span class="wp">🔧 Lab / project · '+(u.labDays||0)+'d</span>'
+-        + '<span class="wp">✅ Review & unit test · '+(u.testDays||0)+'d</span>'
++        + chip('📝', 'Free-response & review', u.frqDays||0)
++        + chip('🔧', 'Lab / project', u.labDays||0)
++        + chip('✅', 'Review & unit test', u.testDays||0)
+         + '</div>';
+       var noteHTML = u.note ? '<div class="u-note"><span>📌</span><span>'+u.note+'</span></div>' : '';
+       var body = noteHTML + lessons + wrap
