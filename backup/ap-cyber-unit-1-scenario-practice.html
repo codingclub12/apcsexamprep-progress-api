@@ -1,0 +1,960 @@
+<script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "Quiz",
+    "headline": "AP Cybersecurity Unit 1 Scenario-Based Practice: Cross-Topic MCQ Challenge",
+    "description": "15-question scenario-based practice covering all 5 Unit 1 topics. Three real-world security breach scenarios with linked multi-question analysis. AP Cybersecurity exam format.",
+    "author": {
+      "@type": "Person",
+      "name": "Tanner Crow",
+      "url": "https://www.apcsexamprep.com/pages/ap-computer-science-tutor"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "APCSExamPrep.com",
+      "url": "https://www.apcsexamprep.com"
+    },
+    "educationalLevel": "High School",
+    "inLanguage": "en-US"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.apcsexamprep.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "AP Cybersecurity",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Unit 1: Introduction to Security",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide#unit1"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": "Scenario-Based Practice",
+        "item": "https://www.apcsexamprep.com/pages/ap-cyber-unit-1-scenario-practice"
+      }
+    ]
+  }
+]
+</script>
+<style>
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+
+/* ===== MAIN QUIZ WRAPPER ===== */
+#cyber-scenario{
+  all:initial!important;display:block!important;
+  font-family:Georgia,serif!important;
+  color:#1E1B4B!important;background:#fff!important;
+  line-height:1.65!important;-webkit-font-smoothing:antialiased!important;
+}
+#cyber-scenario *{box-sizing:border-box!important;}
+#cyber-scenario .qhero{
+  background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;
+  color:#fff!important;padding:40px 24px 32px!important;text-align:center!important;
+}
+#cyber-scenario .qhero-badge{
+  display:inline-block!important;background:rgba(168,85,247,0.25)!important;
+  border:1px solid rgba(168,85,247,0.5)!important;color:#E9D5FF!important;
+  font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;
+  text-transform:uppercase!important;padding:5px 14px!important;border-radius:20px!important;
+  margin-bottom:14px!important;font-family:Georgia,serif!important;
+}
+#cyber-scenario .qhero h1{
+  font-family:Georgia,serif!important;font-size:clamp(22px,4vw,34px)!important;
+  font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 8px!important;
+}
+#cyber-scenario .qhero p{
+  color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;font-size:15px!important;font-family:Georgia,serif!important;margin:0!important;
+}
+#cyber-scenario .score-bar{
+  background:#F5F0FF!important;border-bottom:1px solid #DDD6FE!important;
+  padding:12px 20px!important;display:flex!important;align-items:center!important;
+  justify-content:space-between!important;flex-wrap:wrap!important;gap:8px!important;
+  font-family:Georgia,serif!important;font-size:14px!important;color:#4B5563!important;
+}
+#cyber-scenario .score-val{
+  font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:18px!important;
+}
+/* scenario banner */
+#cyber-scenario .scenario-banner{
+  max-width:800px!important;margin:32px auto 0!important;padding:0 20px!important;
+}
+#cyber-scenario .scenario-card{
+  background:linear-gradient(135deg,#F5F0FF,#EDE9FE)!important;
+  border:2px solid #C4B5FD!important;border-radius:12px!important;
+  padding:24px!important;position:relative!important;
+}
+#cyber-scenario .scenario-label{
+  display:inline-block!important;background:#6B21A8!important;color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  font-size:11px!important;font-weight:700!important;letter-spacing:1.5px!important;
+  text-transform:uppercase!important;padding:4px 12px!important;border-radius:20px!important;
+  margin-bottom:12px!important;font-family:Georgia,serif!important;
+}
+#cyber-scenario .scenario-title{
+  font-family:Georgia,serif!important;font-size:20px!important;font-weight:700!important;
+  color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 12px!important;
+}
+#cyber-scenario .scenario-text{
+  font-family:Georgia,serif!important;font-size:14px!important;color:#374151!important;
+  -webkit-text-fill-color:#374151!important;line-height:1.7!important;
+}
+#cyber-scenario .scenario-text p{margin:0 0 10px!important;}
+#cyber-scenario .scenario-text p:last-child{margin:0!important;}
+/* question blocks */
+#cyber-scenario .q-block{
+  border:1px solid #E5E7EB!important;border-radius:10px!important;
+  margin:28px auto!important;max-width:800px!important;overflow:hidden!important;background:#fff!important;
+}
+#cyber-scenario .q-block.answered-correct{border-color:#86EFAC!important;box-shadow:0 0 0 2px #DCFCE7!important;}
+#cyber-scenario .q-block.answered-wrong{border-color:#FCA5A5!important;box-shadow:0 0 0 2px #FEE2E2!important;}
+#cyber-scenario .q-header{
+  background:#F5F0FF!important;padding:14px 18px!important;
+  border-bottom:1px solid #DDD6FE!important;
+  display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important;
+}
+#cyber-scenario .q-num{
+  background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:700!important;
+  font-size:12px!important;padding:3px 9px!important;border-radius:20px!important;
+  font-family:Georgia,serif!important;white-space:nowrap!important;
+}
+#cyber-scenario .q-topic{
+  font-size:12px!important;color:#7C3AED!important;-webkit-text-fill-color:#7C3AED!important;font-weight:600!important;
+  font-family:Georgia,serif!important;text-transform:uppercase!important;letter-spacing:0.5px!important;
+}
+#cyber-scenario .q-stem{
+  padding:18px 18px 4px!important;font-size:15px!important;
+  font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.65!important;
+}
+#cyber-scenario .q-stem .kw{
+  font-weight:700!important;text-decoration:underline!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;
+}
+#cyber-scenario .options{padding:4px 18px 16px!important;}
+#cyber-scenario .option-label{
+  display:flex!important;align-items:flex-start!important;gap:10px!important;
+  padding:10px 14px!important;border:1px solid #E5E7EB!important;
+  border-radius:6px!important;margin-bottom:8px!important;cursor:pointer!important;
+  transition:border-color 0.15s,background 0.15s!important;
+  font-family:Georgia,serif!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;
+}
+#cyber-scenario .option-label:hover{background:#F5F0FF!important;border-color:#C4B5FD!important;}
+#cyber-scenario .option-label input{margin-top:2px!important;flex-shrink:0!important;accent-color:#6B21A8!important;}
+#cyber-scenario .option-label.correct-opt{
+  background:#DCFCE7!important;border-color:#86EFAC!important;color:#15803D!important;-webkit-text-fill-color:#15803D!important;font-weight:600!important;
+}
+#cyber-scenario .option-label.wrong-opt{
+  background:#FEE2E2!important;border-color:#FCA5A5!important;color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;
+}
+#cyber-scenario .option-label.neutral-opt{opacity:0.55!important;}
+#cyber-scenario .check-btn{
+  display:block!important;margin:0 18px 16px!important;
+  background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;
+  padding:10px 24px!important;border-radius:6px!important;font-weight:700!important;
+  font-size:14px!important;cursor:pointer!important;font-family:Georgia,serif!important;
+}
+#cyber-scenario .check-btn:link,#cyber-scenario .check-btn:visited,#cyber-scenario button.check-btn{color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#cyber-scenario .check-btn:disabled{background:#C4B5FD!important;cursor:not-allowed!important;}
+#cyber-scenario .feedback-box{
+  display:none!important;margin:0 18px 18px!important;border-radius:8px!important;
+  padding:14px 16px!important;font-family:Georgia,serif!important;font-size:14px!important;
+}
+#cyber-scenario .feedback-box.show{display:block!important;}
+#cyber-scenario .feedback-box.fb-correct{background:#DCFCE7!important;border:1px solid #86EFAC!important;}
+#cyber-scenario .feedback-box.fb-wrong{background:#FEF2F2!important;border:1px solid #FCA5A5!important;}
+#cyber-scenario .fb-verdict{font-weight:700!important;font-size:15px!important;margin-bottom:6px!important;}
+#cyber-scenario .fb-correct .fb-verdict{color:#15803D!important;-webkit-text-fill-color:#15803D!important;}
+#cyber-scenario .fb-wrong .fb-verdict{color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#cyber-scenario .fb-exp{color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.6!important;margin-bottom:8px!important;}
+#cyber-scenario .fb-distractors p{margin:4px 0!important;color:#4B5563!important;-webkit-text-fill-color:#4B5563!important;}
+#cyber-scenario .fb-tip{
+  background:#EDE9FE!important;border-left:3px solid #7C3AED!important;
+  padding:8px 12px!important;border-radius:0 6px 6px 0!important;
+  color:#4B5563!important;-webkit-text-fill-color:#4B5563!important;font-size:13px!important;margin-top:8px!important;
+}
+#cyber-scenario .section-break{
+  text-align:center!important;padding:24px 20px!important;color:#9CA3AF!important;
+  font-size:13px!important;font-family:Georgia,serif!important;letter-spacing:1px!important;
+  text-transform:uppercase!important;
+}
+/* results */
+#cyber-scenario .results-panel{
+  display:none!important;max-width:800px!important;margin:0 auto 32px!important;
+  background:linear-gradient(135deg,#1E1B4B,#3B0764)!important;
+  border-radius:12px!important;padding:32px 24px!important;text-align:center!important;color:#fff!important;
+}
+#cyber-scenario .results-panel.show{display:block!important;}
+#cyber-scenario .results-score{font-size:48px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:Georgia,serif!important;}
+#cyber-scenario .results-label{color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;font-size:14px!important;font-family:Georgia,serif!important;margin-bottom:16px!important;}
+#cyber-scenario .results-msg{color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;font-size:15px!important;font-family:Georgia,serif!important;margin-bottom:20px!important;}
+#cyber-scenario .results-breakdown{
+  display:flex!important;justify-content:center!important;gap:24px!important;flex-wrap:wrap!important;margin-bottom:20px!important;
+}
+#cyber-scenario .rb-item{
+  background:rgba(168,85,247,0.2)!important;border:1px solid rgba(168,85,247,0.4)!important;
+  border-radius:8px!important;padding:10px 16px!important;min-width:120px!important;
+}
+#cyber-scenario .rb-label{font-size:11px!important;color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;text-transform:uppercase!important;letter-spacing:1px!important;font-family:Georgia,serif!important;}
+#cyber-scenario .rb-val{font-size:22px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:Georgia,serif!important;}
+#cyber-scenario .results-btn{
+  display:inline-block!important;background:#A855F7!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  padding:12px 28px!important;border-radius:6px!important;font-weight:700!important;
+  text-decoration:none!important;font-family:Georgia,serif!important;font-size:14px!important;margin:0 6px!important;
+}
+#cyber-scenario a.results-btn:link,#cyber-scenario a.results-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;}
+/* nav links */
+#cyber-scenario .nav-links{
+  max-width:800px!important;margin:0 auto 40px!important;
+  display:flex!important;justify-content:space-between!important;
+  flex-wrap:wrap!important;gap:10px!important;padding:0 20px!important;
+}
+#cyber-scenario .nav-link{
+  display:inline-block!important;padding:10px 20px!important;
+  border:1px solid #DDD6FE!important;border-radius:6px!important;
+  color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-decoration:none!important;
+  font-family:Georgia,serif!important;font-size:14px!important;font-weight:600!important;background:#F5F0FF!important;
+}
+#cyber-scenario a.nav-link:link,#cyber-scenario a.nav-link:visited{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-decoration:none!important;}
+/* exam overview box */
+#cyber-scenario .exam-overview{
+  max-width:800px!important;margin:24px auto!important;padding:0 20px!important;
+}
+#cyber-scenario .eo-card{
+  background:#F9FAFB!important;border:1px solid #E5E7EB!important;border-radius:10px!important;
+  padding:20px 24px!important;
+}
+#cyber-scenario .eo-card h3{
+  font-family:Georgia,serif!important;font-size:16px!important;font-weight:700!important;
+  color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 12px!important;
+}
+#cyber-scenario .eo-grid{
+  display:grid!important;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))!important;gap:10px!important;
+}
+#cyber-scenario .eo-item{
+  background:#fff!important;border:1px solid #E5E7EB!important;border-radius:6px!important;
+  padding:10px 14px!important;
+}
+#cyber-scenario .eo-label{font-size:11px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;text-transform:uppercase!important;letter-spacing:.5px!important;font-family:Georgia,serif!important;font-weight:600!important;}
+#cyber-scenario .eo-val{font-size:16px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;font-family:Georgia,serif!important;}
+</style>
+
+<!-- UNIT ACCORDION NAV -->
+<div id="ucnav">
+  <div class="ucn-rail" id="ucn-rail">
+    <a href="/pages/ap-cybersecurity-complete-course-guide" class="ucn-hub">AP Cyber Hub</a>
+    <span class="ucn-badge">Unit 1</span>
+    <a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-lesson" onclick="ucnToggle(1);" id="ucn-l1" title="Understanding Social Engineering">1.1 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s1">
+      <a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-lesson" onclick="ucnToggle(2);" id="ucn-l2" title="Suspicious Website Logins">1.2 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s2">
+      <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cybersecurity-unit-1-password-attacks-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-lesson" onclick="ucnToggle(3);" id="ucn-l3" title="Public Wi-Fi">1.3 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s3">
+      <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-lesson" onclick="ucnToggle(4);" id="ucn-l4" title="AI-Based Attacks">1.4 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s4">
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-lesson" onclick="ucnToggle(5);" id="ucn-l5" title="AI in Defense">1.5 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s5">
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-quiz" class="ucn-step">Quiz</a>
+    </span>
+  </div>
+</div>
+
+<script>
+function ucnToggle(num){var l=document.getElementById('ucn-l'+num),s=document.getElementById('ucn-s'+num);if(!l||!s)return;var o=l.classList.contains('open');document.querySelectorAll('#ucnav .ucn-lesson').forEach(function(e){e.classList.remove('open')});document.querySelectorAll('#ucnav .ucn-steps').forEach(function(e){e.classList.remove('open')});if(!o){l.classList.add('open');s.classList.add('open');setTimeout(function(){l.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},50)}}
+(function(){function pos(){var nav=document.getElementById('ucnav');if(!nav)return;if(nav.parentElement!==document.body){document.body.appendChild(nav)}var h=0;var headerEl=document.querySelector('.section-header header.header')||document.querySelector('sticky-header header')||document.querySelector('header.header');if(headerEl){h=Math.round(headerEl.getBoundingClientRect().bottom)}if(h<20||h>300)h=68;nav.style.setProperty('top',h+'px','important');var navH=nav.offsetHeight||42;var w=document.getElementById('cyber-scenario');if(w)w.style.setProperty('padding-top',(h+navH+4)+'px','important')}requestAnimationFrame(pos);setTimeout(pos,150);setTimeout(pos,400);setTimeout(pos,800);setTimeout(pos,1500);setTimeout(pos,3000);window.addEventListener('resize',pos,{passive:true});var scrolled=false;window.addEventListener('scroll',function(){if(!scrolled){scrolled=true;requestAnimationFrame(pos)}},{passive:true});var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class','hidden']});setTimeout(function(){obs.disconnect()},15000)})();
+</script>
+
+<div id="cyber-scenario" data-lesson-id="u1-scenario">
+
+  <div class="qhero">
+    <div class="qhero-badge">Unit 1 • Scenario-Based Practice</div>
+    <nav aria-label="Breadcrumb" style="font-size:0.82rem;color:#6b7280;-webkit-text-fill-color:#6b7280;margin:0 0 16px;font-family:'Georgia',serif;padding:0;"><a href="/" style="color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;">Home</a><span style="margin:0 6px;color:#d1d5db;">›</span><a href="/pages/ap-cybersecurity-complete-course-guide" style="color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;">AP Cybersecurity</a><span style="margin:0 6px;color:#d1d5db;">›</span><span style="color:#e9d5ff;-webkit-text-fill-color:#e9d5ff;">Unit 1 › Scenario Practice</span></nav>
+    <h1>Scenario-Based MCQ Challenge</h1>
+    <p>15 questions across 3 real-world breach scenarios — all 5 Unit 1 topics integrated</p>
+  </div>
+
+  <div class="score-bar">
+    <span>Score: <span class="score-val" id="score-display">0 / 0</span></span>
+    <span style="font-size:13px;color:#6B7280;-webkit-text-fill-color:#6B7280;">Read each scenario carefully before answering</span>
+  </div>
+
+  <!-- EXAM OVERVIEW -->
+  <div class="exam-overview">
+    <div class="eo-card">
+      <h3>Exam Overview</h3>
+      <div class="eo-grid">
+        <div class="eo-item">
+<div class="eo-label">Questions</div>
+<div class="eo-val">15 MCQ</div>
+</div>
+        <div class="eo-item">
+<div class="eo-label">Format</div>
+<div class="eo-val">3 Linked Scenarios</div>
+</div>
+        <div class="eo-item">
+<div class="eo-label">Topics</div>
+<div class="eo-val">All 5 (1.1–1.5)</div>
+</div>
+        <div class="eo-item">
+<div class="eo-label">Difficulty</div>
+<div class="eo-val">Cross-Topic Synthesis</div>
+</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SCENARIO 1 ==================== -->
+  <div class="scenario-banner">
+    <div class="scenario-card">
+      <div class="scenario-label">Scenario 1 of 3</div>
+      <div class="scenario-title">Greenfield Medical Associates</div>
+      <div class="scenario-text">
+        <p>Greenfield Medical Associates is a 12-person medical practice with two locations. Last Tuesday, the office manager, Dana, received an email appearing to come from the practice’s electronic health records (EHR) vendor. The email stated that a critical security patch required her to log into a portal using a link provided in the message. Dana clicked the link and entered her credentials on a page that closely resembled the vendor’s login screen.</p>
+        <p>Later that week, the IT consultant discovered that an attacker had used Dana’s credentials to access the practice’s patient scheduling system. Logs showed the unauthorized access originated from an IP address associated with a public coffee shop network. The attacker had also created a secondary admin account with the password <code style="background:#EDE9FE!important;padding:2px 6px!important;border-radius:3px!important;font-size:13px!important;">Greenfield2026!</code>. Further investigation revealed that several other staff members were using passwords based on the practice name followed by the current year.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q1 -->
+  <div class="q-block" id="q-q1" style="max-width:800px;margin:28px auto;padding:0 0;"><div style="padding:0 20px;">
+    <div class="q-block" id="q-q1-inner">
+      <div class="q-header">
+        <span class="q-num">Q1</span>
+        <span class="q-topic">Topic 1.1 — Social Engineering</span>
+      </div>
+      <div class="q-stem">The attack on Dana is <span class="kw">BEST</span> classified as which type of social engineering technique?</div>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="qq1" value="A"> <span>(A) Vishing — the attacker used a voice call to impersonate a trusted vendor and request login credentials</span></label>
+        <label class="option-label"><input type="radio" name="qq1" value="B"> <span>(B) Baiting — the attacker left a malware-infected USB device in the office for an employee to find and use</span></label>
+        <label class="option-label"><input type="radio" name="qq1" value="C"> <span>(C) Tailgating — the attacker followed an authorized employee through a secure entrance to gain physical access</span></label>
+        <label class="option-label"><input type="radio" name="qq1" value="D"> <span>(D) Spear phishing — the attacker crafted a targeted email impersonating a specific vendor the practice uses</span></label>
+      </div>
+      <button class="check-btn" onclick="checkQ('q1')">Check Answer</button>
+      <div class="feedback-box" id="fb-q1">
+        <div class="fb-verdict"></div>
+        <div class="fb-exp">The email was crafted specifically for Greenfield’s EHR vendor — not a generic mass phishing blast. The targeting of a specific organization with a contextually relevant lure (a “security patch” from their actual vendor) makes this spear phishing.</div>
+        <div class="fb-distractors">
+          <p><strong>(A)</strong> Incorrect — no voice communication occurred in this scenario.</p>
+          <p><strong>(C)</strong> Incorrect — tailgating is a physical access attack, not an email-based attack.</p>
+          <p><strong>(D)</strong> Incorrect — baiting involves physical media like USB drives, not targeted emails.</p>
+        </div>
+        <div class="fb-tip">
+<strong>Exam Tip:</strong> Spear phishing = targeted at a specific person or organization. Regular phishing = generic mass blast. The specificity of the lure is the distinguishing factor.</div>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- Q2 -->
+  <div style="max-width:800px;margin:28px auto;padding:0 20px;">
+    <div class="q-block" id="q-q2">
+      <div class="q-header">
+        <span class="q-num">Q2</span>
+        <span class="q-topic">Topic 1.2 — Password Attacks</span>
+      </div>
+      <div class="q-stem">The IT consultant discovers that six staff members use passwords following the pattern <code style="background:#EDE9FE!important;padding:2px 6px!important;border-radius:3px!important;font-size:13px!important;">Greenfield</code> + four-digit year + special character. Which of the following statements about this vulnerability are correct?<br><br>I. A dictionary attack using common organizational password patterns could compromise these accounts efficiently.<br>II. Adding a special character at the end makes these passwords resistant to most automated cracking tools.<br>III. A credential stuffing attack using Dana’s stolen credentials could succeed if she reuses the same password on other systems.</div>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="qq2" value="A"> <span>(A) I only</span></label>
+        <label class="option-label"><input type="radio" name="qq2" value="B"> <span>(B) III only</span></label>
+        <label class="option-label"><input type="radio" name="qq2" value="C"> <span>(C) I, II, and III</span></label>
+        <label class="option-label"><input type="radio" name="qq2" value="D"> <span>(D) I and III only</span></label>
+      </div>
+      <button class="check-btn" onclick="checkQ('q2')">Check Answer</button>
+      <div class="feedback-box" id="fb-q2">
+        <div class="fb-verdict"></div>
+        <div class="fb-exp">Statement I is correct — predictable patterns based on the organization name are prime dictionary attack targets. Statement II is incorrect — a single trailing special character on a predictable base provides minimal protection against tools that account for common appending patterns. Statement III is correct — credential stuffing exploits password reuse across services.</div>
+        <div class="fb-distractors">
+          <p><strong>(A)</strong> Incomplete — Statement III is also correct.</p>
+          <p><strong>(B)</strong> Incomplete — Statement I is also correct.</p>
+          <p><strong>(D)</strong> Incorrect — Statement II overstates the protection of a single appended character.</p>
+        </div>
+        <div class="fb-tip">
+<strong>Exam Tip:</strong> In I/II/III questions, evaluate each statement independently before looking at the answer choices. One false statement eliminates multiple options.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div style="max-width:800px;margin:28px auto;padding:0 20px;">
+    <div class="q-block" id="q-q3">
+      <div class="q-header">
+        <span class="q-num">Q3</span>
+        <span class="q-topic">Topics 1.2 + 1.3 — Cross-Topic</span>
+      </div>
+      <div class="q-stem">The unauthorized access originated from a public coffee shop network. Which of the following <span class="kw">BEST</span> explains why the attacker likely chose to route the intrusion through this type of network?</div>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="qq3" value="A"> <span>(A) Public networks make it more difficult to trace the attacker’s true identity because many users share the same external IP address</span></label>
+        <label class="option-label"><input type="radio" name="qq3" value="B"> <span>(B) Public networks encrypt all traffic by default, making it easier for the attacker to transmit stolen data without detection</span></label>
+        <label class="option-label"><input type="radio" name="qq3" value="C"> <span>(C) Public networks automatically bypass corporate firewalls, allowing direct access to internal systems from any connected device</span></label>
+        <label class="option-label"><input type="radio" name="qq3" value="D"> <span>(D) Public networks provide faster upload speeds than residential connections, enabling quicker exfiltration of patient records</span></label>
+      </div>
+      <button class="check-btn" onclick="checkQ('q3')">Check Answer</button>
+      <div class="feedback-box" id="fb-q3">
+        <div class="fb-verdict"></div>
+        <div class="fb-exp">Public Wi-Fi networks typically route all connected users through shared IP addresses via NAT, making it significantly harder for investigators to identify a specific individual.</div>
+        <div class="fb-distractors">
+          <p><strong>(A)</strong> Incorrect — public networks do not encrypt traffic by default; they are notoriously insecure.</p>
+          <p><strong>(C)</strong> Incorrect — connecting to a public network does not bypass a target organization’s firewall.</p>
+          <p><strong>(D)</strong> Incorrect — public networks do not inherently provide faster speeds than other connection types.</p>
+        </div>
+        <div class="fb-tip">
+<strong>Exam Tip:</strong> Shared IP addresses on public Wi-Fi = anonymity for attackers. This is a key concept linking wireless security to forensic investigation challenges.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div style="max-width:800px;margin:28px auto;padding:0 20px;">
+    <div class="q-block" id="q-q4">
+      <div class="q-header">
+        <span class="q-num">Q4</span>
+        <span class="q-topic">Topics 1.1 + 1.2 — Cross-Topic</span>
+      </div>
+      <div class="q-stem">The practice wants to prevent a similar attack in the future. Which combination of countermeasures would <span class="kw">MOST</span> effectively address the specific vulnerabilities exploited in this incident?</div>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="qq4" value="A"> <span>(A) Install antivirus software on all workstations and require passwords to be changed every 30 days</span></label>
+        <label class="option-label"><input type="radio" name="qq4" value="B"> <span>(B) Block all external email at the network level and restrict internet access to a single supervised workstation</span></label>
+        <label class="option-label"><input type="radio" name="qq4" value="C"> <span>(C) Implement email filtering and require all staff to complete phishing awareness training, then enforce multi-factor authentication on all accounts</span></label>
+        <label class="option-label"><input type="radio" name="qq4" value="D"> <span>(D) Require all passwords to contain at least 20 characters and deploy a network intrusion detection system at each office location</span></label>
+      </div>
+      <button class="check-btn" onclick="checkQ('q4')">Check Answer</button>
+      <div class="feedback-box" id="fb-q4">
+        <div class="fb-verdict"></div>
+        <div class="fb-exp">This incident exploited two specific vectors: a phishing email (social engineering) and single-factor credential use. Option B directly targets both — email filtering + training addresses the phishing vector, and MFA neutralizes stolen credentials.</div>
+        <div class="fb-distractors">
+          <p><strong>(A)</strong> Incorrect — antivirus would not catch a credential phishing page, and forced rotation encourages weaker passwords.</p>
+          <p><strong>(C)</strong> Incorrect — blocking all external email is operationally impractical for a medical practice.</p>
+          <p><strong>(D)</strong> Incorrect — addresses password strength but not the phishing vector that initiated the compromise.</p>
+        </div>
+        <div class="fb-tip">
+<strong>Exam Tip:</strong> “Most effective” countermeasure questions require matching the solution to the specific attack vectors in the scenario — not just picking the most technically impressive option.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div style="max-width:800px;margin:28px auto;padding:0 20px;">
+    <div class="q-block" id="q-q5">
+      <div class="q-header">
+        <span class="q-num">Q5</span>
+        <span class="q-topic">Topic 1.5 — AI in Cyber Defense</span>
+      </div>
+      <div class="q-stem">After the breach, Greenfield’s IT consultant recommends deploying an AI-powered email security tool. The office manager asks how it would differ from the practice’s existing spam filter, which uses a static list of blocked senders and keywords. Which of the following <span class="kw">BEST</span> describes a capability unique to the AI-based solution?</div>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="qq5" value="A"> <span>(A) It analyzes patterns in email metadata and content to flag messages that deviate from normal communication behavior, even from previously unseen senders</span></label>
+        <label class="option-label"><input type="radio" name="qq5" value="B"> <span>(B) It blocks all emails from external senders not on an approved contact list, eliminating the possibility of phishing entirely</span></label>
+        <label class="option-label"><input type="radio" name="qq5" value="C"> <span>(C) It requires each sender to solve a CAPTCHA before their email is delivered, preventing automated phishing campaigns</span></label>
+        <label class="option-label"><input type="radio" name="qq5" value="D"> <span>(D) It encrypts all incoming email attachments so that malicious payloads cannot execute when opened by staff members</span></label>
+      </div>
+      <button class="check-btn" onclick="checkQ('q5')">Check Answer</button>
+      <div class="feedback-box" id="fb-q5">
+        <div class="fb-verdict"></div>
+        <div class="fb-exp">AI-powered email security uses behavioral analysis and anomaly detection — identifying unusual patterns like a first-time sender impersonating a known vendor, atypical urgency language, or suspicious link structures. This is fundamentally different from static rule-based filtering.</div>
+        <div class="fb-distractors">
+          <p><strong>(A)</strong> Incorrect — describes an allowlist approach, not AI behavioral analysis.</p>
+          <p><strong>(C)</strong> Incorrect — describes a challenge-response mechanism, not AI analysis.</p>
+          <p><strong>(D)</strong> Incorrect — encryption protects data in transit; it does not prevent phishing attacks.</p>
+        </div>
+        <div class="fb-tip">
+<strong>Exam Tip:</strong> AI-based tools detect anomalies by learning “normal” patterns. Static tools match against known-bad signatures. The key difference = AI catches novel, previously unseen threats.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-break">— End of Scenario 1 —</div>
+
+  <!-- ==================== SCENARIO 2 ==================== -->
+  <div class="scenario-banner">
+    <div class="scenario-card">
+      <div class="scenario-label">Scenario 2 of 3</div>
+      <div class="scenario-title">Apex Event Staffing</div>
+      <div class="scenario-text">
+        <p>Apex Event Staffing is a temporary staffing agency that provides workers for concerts, festivals, and corporate events. Employees use a mobile app to view schedules, accept shifts, and submit timesheets. The app authenticates users with an email address and password only.</p>
+        <p>During a large outdoor music festival, an Apex supervisor named Marcus connected to what appeared to be the venue’s free Wi-Fi network, labeled “FestivalGuest_Free.” He logged into the Apex app and approved payroll for 40 workers. The following Monday, several employees reported that their direct deposit bank account numbers had been changed without authorization.</p>
+        <p>An investigation revealed that the “FestivalGuest_Free” network was not operated by the venue. The attacker had intercepted data transmitted over the fraudulent network, including session tokens used by the Apex app. Separately, Apex’s IT team found that three corporate accounts had been accessed using credentials obtained from an unrelated data breach at a fitness tracking service where employees had registered with their work email addresses.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div style="max-width:800px;margin:28px auto;padding:0 20px;">
+    <div class="q-block" id="q-q6">
+      <div class="q-header">
+        <span class="q-num">Q6</span>
+        <span class="q-topic">Topic 1.3 — Public Wi-Fi</span>
+      </div>
+      <div class="q-stem">The fraudulent “FestivalGuest_Free” network is an example of which type of wireless attack?</div>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="qq6" value="A"> <span>(A) A denial-of-service attack — the attacker overwhelmed the venue’s legitimate network, forcing users onto an alternative connection</span></label>
+        <label class="option-label"><input type="radio" name="qq6" value="B"> <span>(B) A brute force attack — the attacker systematically guessed the venue’s Wi-Fi password to gain administrative control of the router</span></label>
+        <label class="option-label"><input type="radio" name="qq6" value="C"> <span>(C) An evil twin attack — the attacker created a network with a name designed to appear legitimate so that users would connect to it voluntarily</span></label>
+        <label class="option-label"><input type="radio" name="qq6" value="D"> <span>(D) A SQL injection attack — the attacker inserted malicious commands into the venue’s Wi-Fi login portal to redirect traffic</span></label>
+      </div>
+      <button class="check-btn" onclick="checkQ('q6')">Check Answer</button>
+      <div class="feedback-box" id="fb-q6">
+        <div class="fb-verdict"></div>
+        <div class="fb-exp">An evil twin is a rogue access point configured to mimic a legitimate network name, tricking users into connecting. Once connected, the attacker can intercept unencrypted traffic.</div>
+        <div class="fb-distractors">
+          <p><strong>(A)</strong> Incorrect — a DoS attack disrupts availability rather than intercepting data.</p>
+          <p><strong>(B)</strong> Incorrect — brute force targets password cracking, not creating fake networks.</p>
+          <p><strong>(D)</strong> Incorrect — SQL injection is a web application attack unrelated to Wi-Fi spoofing.</p>
+        </div>
+        <div class="fb-tip">
+<strong>Exam Tip:</strong> Evil twin = fake Wi-Fi that looks real. The name is the trap — users connect voluntarily because the SSID appears legitimate.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div style="max-width:800px;margin:28px auto;padding:0 20px;">
+    <div class="q-block" id="q-q7">
+      <div class="q-header">
+        <span class="q-num">Q7</span>
+        <span class="q-topic">Topics 1.3 + 1.2 — Cross-Topic</span>
+      </div>
+      <div class="q-stem">The attacker intercepted session tokens rather than Marcus’s actual password. Which of the following <span class="kw">BEST</span> explains why session tokens present a security risk even when a user’s password is strong?</div>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="qq7" value="A"> <span>(A) Session tokens contain the user’s password in an encoded format that any attacker can easily reverse</span></label>
+        <label class="option-label"><input type="radio" name="qq7" value="B"> <span>(B) Session tokens grant authenticated access to an account without requiring the password to be entered again, allowing an attacker to impersonate the user</span></label>
+        <label class="option-label"><input type="radio" name="qq7" value="C"> <span>(C) Session tokens are permanently valid and can never be revoked by the application server once they are issued</span></label>
+        <label class="option-label"><input type="radio" name="qq7" value="D"> <span>(D) Session tokens disable multi-factor authentication for the remainder of the browsing session, removing all secondary protections</span></label>
+      </div>
+      <button class="check-btn" onclick="checkQ('q7')">Check Answer</button>
+      <div class="feedback-box" id="fb-q7">
+        <div class="fb-verdict"></div>
+        <div class="fb-exp">Session tokens represent an already-authenticated state. An attacker who captures a valid token can access the account as if they had logged in, bypassing the password entirely.</div>
+        <div class="fb-distractors">
+          <p><strong>(A)</strong> Incorrect — tokens are not encoded passwords; they are separate authentication artifacts.</p>
+          <p><strong>(C)</strong> Incorrect — tokens typically have expiration times and can be invalidated server-side.</p>
+          <p><strong>(D)</strong> Incorrect — MFA status and session tokens are managed independently.</p>
+        </div>
+        <div class="fb-tip">
+<strong>Exam Tip:</strong> Session hijacking bypasses authentication entirely. Even strong passwords and MFA cannot protect against an already-captured valid session token.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div style="max-width:800px;margin:28px auto;padding:0 20px;">
+    <div class="q-block" id="q-q8">
+      <div class="q-header">
+        <span class="q-num">Q8</span>
+        <span class="q-topic">Topic 1.2 — Password Attacks</span>
+      </div>
+      <div class="q-stem">Three Apex corporate accounts were compromised using credentials from an unrelated fitness tracking service breach. This attack technique is <span class="kw">BEST</span> described as:</div>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="qq8" value="A"> <span>(A) A rainbow table attack — the attacker used precomputed hash values to reverse-engineer the employees’ passwords from the fitness service database</span></label>
+        <label class="option-label"><input type="radio" name="qq8" value="B"> <span>(B) Credential stuffing — the attacker used email and password pairs leaked from one service to attempt logins on a different, unrelated service</span></label>
+        <label class="option-label"><input type="radio" name="qq8" value="C"> <span>(C) Keylogging — the attacker installed software on employee devices that recorded keystrokes and transmitted the captured passwords</span></label>
+        <label class="option-label"><input type="radio" name="qq8" value="D"> <span>(D) Shoulder surfing — the attacker observed employees entering their credentials at the fitness tracking service and later replayed them on the Apex system</span></label>
+      </div>
+      <button class="check-btn" onclick="checkQ('q8')">Check Answer</button>
+      <div class="feedback-box" id="fb-q8">
+        <div class="fb-verdict"></div>
+        <div class="fb-exp">Credential stuffing specifically exploits password reuse across services — leaked credentials from one breach are systematically tested against other platforms.</div>
+        <div class="fb-distractors">
+          <p><strong>(A)</strong> Incorrect — rainbow tables crack password hashes, not exploit cross-service reuse.</p>
+          <p><strong>(C)</strong> Incorrect — keylogging requires malware on the victim’s device, which is not described.</p>
+          <p><strong>(D)</strong> Incorrect — shoulder surfing requires physical proximity, which does not match this scenario.</p>
+        </div>
+        <div class="fb-tip">
+<strong>Exam Tip:</strong> Credential stuffing vs. brute force: stuffing uses known valid credentials from other breaches; brute force guesses unknown passwords. The attack vector is password <em>reuse</em>.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div style="max-width:800px;margin:28px auto;padding:0 20px;">
+    <div class="q-block" id="q-q9">
+      <div class="q-header">
+        <span class="q-num">Q9</span>
+        <span class="q-topic">Topic 1.4 — AI-Based Attacks</span>
+      </div>
+      <div class="q-stem">Following the breach, an Apex executive receives a voicemail that sounds exactly like the CEO instructing her to wire emergency funds to a vendor. The voice was generated using publicly available recordings from conference presentations. This attack is <span class="kw">BEST</span> classified as:</div>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="qq9" value="A"> <span>(A) A social engineering attack using AI-generated voice cloning to impersonate a trusted authority figure</span></label>
+        <label class="option-label"><input type="radio" name="qq9" value="B"> <span>(B) A man-in-the-middle attack using intercepted phone calls to alter the CEO’s spoken instructions in real time</span></label>
+        <label class="option-label"><input type="radio" name="qq9" value="C"> <span>(C) A denial-of-service attack that floods the executive’s voicemail system to prevent her from receiving legitimate messages</span></label>
+        <label class="option-label"><input type="radio" name="qq9" value="D"> <span>(D) A brute force attack that cycles through pre-recorded voice samples until one bypasses the voicemail system’s caller ID verification</span></label>
+      </div>
+      <button class="check-btn" onclick="checkQ('q9')">Check Answer</button>
+      <div class="feedback-box" id="fb-q9">
+        <div class="fb-verdict"></div>
+        <div class="fb-exp">AI voice cloning (deepfake audio) uses machine learning models trained on samples of a target’s speech to generate convincing synthetic audio. This is a social engineering attack because it relies on the victim trusting the apparent source.</div>
+        <div class="fb-distractors">
+          <p><strong>(A)</strong> Incorrect — the audio was generated from scratch, not intercepted and modified in real time.</p>
+          <p><strong>(C)</strong> Incorrect — a DoS attack targets availability, not impersonation.</p>
+          <p><strong>(D)</strong> Incorrect — this fabricates a technique that does not exist in practice.</p>
+        </div>
+        <div class="fb-tip">
+<strong>Exam Tip:</strong> AI-generated deepfakes (voice, video, text) are a form of social engineering because they exploit human trust. The AI is the tool; the manipulation of trust is the attack.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div style="max-width:800px;margin:28px auto;padding:0 20px;">
+    <div class="q-block" id="q-q10">
+      <div class="q-header">
+        <span class="q-num">Q10</span>
+        <span class="q-topic">Topics 1.5 + 1.1 — Cross-Topic</span>
+      </div>
+      <div class="q-stem">Apex decides to deploy an AI-powered threat detection platform across its systems. During the first month, the platform flags a legitimate bulk payroll email from the HR director as a potential phishing attempt. This type of error is known as a false positive. Which of the following <span class="kw">BEST</span> explains why false positives are a significant concern when deploying AI-based security tools?</div>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="qq10" value="A"> <span>(A) False positives prove that the AI system is fundamentally unreliable and should be replaced with manual security reviews for all communications</span></label>
+        <label class="option-label"><input type="radio" name="qq10" value="B"> <span>(B) False positives only occur when AI security tools are used without encryption, so enabling TLS on all communications would eliminate them entirely</span></label>
+        <label class="option-label"><input type="radio" name="qq10" value="C"> <span>(C) False positives are impossible to reduce once an AI system has been deployed because the model cannot be retrained on new data</span></label>
+        <label class="option-label"><input type="radio" name="qq10" value="D"> <span>(D) False positives can cause employees to distrust or ignore security alerts over time, potentially leading them to overlook genuine threats</span></label>
+      </div>
+      <button class="check-btn" onclick="checkQ('q10')">Check Answer</button>
+      <div class="feedback-box" id="fb-q10">
+        <div class="fb-verdict"></div>
+        <div class="fb-exp">Alert fatigue from excessive false positives is a well-documented problem in security operations. When users repeatedly encounter incorrect warnings, they begin dismissing alerts reflexively — including real threats.</div>
+        <div class="fb-distractors">
+          <p><strong>(A)</strong> Incorrect — false positives are expected and manageable; they do not prove fundamental unreliability.</p>
+          <p><strong>(C)</strong> Incorrect — AI models are routinely retrained and fine-tuned to reduce false positives.</p>
+          <p><strong>(D)</strong> Incorrect — encryption (data protection) and detection accuracy (classification) are unrelated concepts.</p>
+        </div>
+        <div class="fb-tip">
+<strong>Exam Tip:</strong> Alert fatigue is the #1 practical risk of false positives. The danger is not that the AI is wrong once — it is that repeated false alarms train <em>humans</em> to stop paying attention.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-break">— End of Scenario 2 —</div>
+
+  <!-- ==================== SCENARIO 3 ==================== -->
+  <div class="scenario-banner">
+    <div class="scenario-card">
+      <div class="scenario-label">Scenario 3 of 3</div>
+      <div class="scenario-title">Ridgeway School District</div>
+      <div class="scenario-text">
+        <p>Ridgeway School District serves 8,000 students across 12 schools. The district recently adopted a cloud-based learning management system (LMS) where teachers post assignments, grades, and student records. Teachers authenticate using their district email and a password they create during onboarding. The district does not require multi-factor authentication.</p>
+        <p>A parent reported that her child’s grades had been altered in the LMS. The district’s technology coordinator investigated and found that a teacher’s account had been compromised. Access logs showed the unauthorized changes were made from a device connected to the public Wi-Fi network at a local library. Further analysis revealed that the compromised teacher had clicked a link in a text message claiming her district email storage was full and required immediate action. The link led to a convincing replica of the district’s email login page.</p>
+        <p>Additionally, the technology coordinator discovered that an AI-powered chatbot on a third-party tutoring website had been collecting student names and grade levels from publicly shared LMS links that teachers had posted on social media. The chatbot used this data to generate personalized phishing messages sent to parents, requesting “tuition verification payments.”</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q11 -->
+  <div style="max-width:800px;margin:28px auto;padding:0 20px;">
+    <div class="q-block" id="q-q11">
+      <div class="q-header">
+        <span class="q-num">Q11</span>
+        <span class="q-topic">Topic 1.1 — Social Engineering</span>
+      </div>
+      <div class="q-stem">The text message sent to the teacher is an example of which social engineering technique?</div>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="qq11" value="A"> <span>(A) Vishing — the attacker made a phone call impersonating district IT support to obtain the teacher’s credentials</span></label>
+        <label class="option-label"><input type="radio" name="qq11" value="B"> <span>(B) Whaling — the attacker targeted a high-ranking district executive with a carefully crafted email requesting financial information</span></label>
+        <label class="option-label"><input type="radio" name="qq11" value="C"> <span>(C) Smishing — the attacker sent a fraudulent text message containing a malicious link to harvest login credentials</span></label>
+        <label class="option-label"><input type="radio" name="qq11" value="D"> <span>(D) Pretexting — the attacker created a false identity as a fellow teacher to build a long-term relationship before requesting sensitive information</span></label>
+      </div>
+      <button class="check-btn" onclick="checkQ('q11')">Check Answer</button>
+      <div class="feedback-box" id="fb-q11">
+        <div class="fb-verdict"></div>
+        <div class="fb-exp">Smishing (SMS + phishing) is a social engineering attack delivered via text message. The attack used a fabricated urgency trigger (“storage full”) and a malicious link — classic phishing tactics delivered through the SMS channel.</div>
+        <div class="fb-distractors">
+          <p><strong>(A)</strong> Incorrect — vishing uses voice calls, not text messages.</p>
+          <p><strong>(C)</strong> Incorrect — whaling targets senior executives, and the attack used a text, not an email.</p>
+          <p><strong>(D)</strong> Incorrect — pretexting involves building a fabricated scenario over time; this was a one-shot text attack.</p>
+        </div>
+        <div class="fb-tip">
+<strong>Exam Tip:</strong> Phishing = email. Smishing = SMS/text. Vishing = voice/phone. The delivery channel determines the classification, even though the manipulation tactics are similar.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q12 -->
+  <div style="max-width:800px;margin:28px auto;padding:0 20px;">
+    <div class="q-block" id="q-q12">
+      <div class="q-header">
+        <span class="q-num">Q12</span>
+        <span class="q-topic">Topics 1.3 + 1.2 — Cross-Topic</span>
+      </div>
+      <div class="q-stem">The unauthorized grade changes were made from a public library Wi-Fi network. Which of the following countermeasures would have been <span class="kw">MOST</span> effective at preventing the attacker from using the stolen credentials to access the LMS?</div>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="qq12" value="A"> <span>(A) Requiring all LMS users to connect through a VPN that encrypts traffic between the user’s device and the district’s network</span></label>
+        <label class="option-label"><input type="radio" name="qq12" value="B"> <span>(B) Enforcing multi-factor authentication so that a stolen password alone is not sufficient to gain account access</span></label>
+        <label class="option-label"><input type="radio" name="qq12" value="C"> <span>(C) Installing a firewall at the public library to filter malicious traffic before it reaches the district’s servers</span></label>
+        <label class="option-label"><input type="radio" name="qq12" value="D"> <span>(D) Configuring the library’s Wi-Fi router to block access to all educational websites during non-school hours</span></label>
+      </div>
+      <button class="check-btn" onclick="checkQ('q12')">Check Answer</button>
+      <div class="feedback-box" id="fb-q12">
+        <div class="fb-verdict"></div>
+        <div class="fb-exp">The attacker already had valid credentials. The question asks what prevents use of stolen credentials specifically. MFA ensures that possessing the password alone is insufficient — a second factor (phone, token, biometric) would also be required, blocking the attacker.</div>
+        <div class="fb-distractors">
+          <p><strong>(A)</strong> Incorrect — a VPN protects data in transit but would not prevent an attacker who already has valid credentials from logging in from any location.</p>
+          <p><strong>(C)</strong> Incorrect — the district has no authority to install firewalls at a public library.</p>
+          <p><strong>(D)</strong> Incorrect — blocking websites by time is impractical and does not address credential theft.</p>
+        </div>
+        <div class="fb-tip">
+<strong>Exam Tip:</strong> VPN protects traffic in transit. MFA protects the account itself. When credentials are already stolen, MFA is the correct countermeasure — not VPN.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q13 -->
+  <div style="max-width:800px;margin:28px auto;padding:0 20px;">
+    <div class="q-block" id="q-q13">
+      <div class="q-header">
+        <span class="q-num">Q13</span>
+        <span class="q-topic">Topic 1.4 — AI-Based Attacks</span>
+      </div>
+      <div class="q-stem">The AI chatbot collected student data from publicly shared LMS links and used it to generate personalized phishing messages to parents. Which of the following statements about this attack are correct?<br><br>I. The chatbot performed automated reconnaissance by scraping publicly accessible data to build targeted victim profiles.<br>II. The personalized messages are more likely to succeed than generic phishing because they reference specific, verifiable details about the recipient’s child.<br>III. This attack would have been prevented entirely if the district had installed antivirus software on all teacher devices.</div>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="qq13" value="A"> <span>(A) I only</span></label>
+        <label class="option-label"><input type="radio" name="qq13" value="B"> <span>(B) I and II only</span></label>
+        <label class="option-label"><input type="radio" name="qq13" value="C"> <span>(C) II and III only</span></label>
+        <label class="option-label"><input type="radio" name="qq13" value="D"> <span>(D) I, II, and III</span></label>
+      </div>
+      <button class="check-btn" onclick="checkQ('q13')">Check Answer</button>
+      <div class="feedback-box" id="fb-q13">
+        <div class="fb-verdict"></div>
+        <div class="fb-exp">Statement I is correct — the chatbot performed automated OSINT (open-source intelligence) gathering from publicly accessible links. Statement II is correct — personalization dramatically increases phishing success rates because recipients see specific details that appear legitimate. Statement III is incorrect — antivirus software on teacher devices would not prevent an external chatbot from scraping publicly shared links on social media.</div>
+        <div class="fb-distractors">
+          <p><strong>(A)</strong> Incomplete — Statement II is also correct.</p>
+          <p><strong>(C)</strong> Incorrect — includes the false Statement III.</p>
+          <p><strong>(D)</strong> Incorrect — Statement III is false; antivirus does not prevent external data scraping.</p>
+        </div>
+        <div class="fb-tip">
+<strong>Exam Tip:</strong> AI lowers the cost and effort of reconnaissance. What once required manual research can now be automated at scale — making targeted attacks accessible to less sophisticated attackers.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q14 -->
+  <div style="max-width:800px;margin:28px auto;padding:0 20px;">
+    <div class="q-block" id="q-q14">
+      <div class="q-header">
+        <span class="q-num">Q14</span>
+        <span class="q-topic">Topics 1.1 + 1.4 — Cross-Topic</span>
+      </div>
+      <div class="q-stem">The phishing messages sent to parents referenced their children by name and grade level. Compared to a generic phishing campaign that sends identical messages to thousands of recipients, this AI-assisted approach is <span class="kw">MOST</span> accurately described as:</div>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="qq14" value="A"> <span>(A) A brute force attack, because the chatbot generated thousands of message variations to find one that works</span></label>
+        <label class="option-label"><input type="radio" name="qq14" value="B"> <span>(B) A man-in-the-middle attack, because the chatbot positioned itself between the parents and the district’s communication system</span></label>
+        <label class="option-label"><input type="radio" name="qq14" value="C"> <span>(C) A denial-of-service attack, because the volume of personalized messages overwhelmed the parents’ email systems</span></label>
+        <label class="option-label"><input type="radio" name="qq14" value="D"> <span>(D) Automated spear phishing at scale, because AI enabled individually tailored messages targeting specific recipients using harvested personal data</span></label>
+      </div>
+      <button class="check-btn" onclick="checkQ('q14')">Check Answer</button>
+      <div class="feedback-box" id="fb-q14">
+        <div class="fb-verdict"></div>
+        <div class="fb-exp">Traditionally, spear phishing required manual effort to research and customize each message, limiting its scale. AI enables the same level of personalization to be applied automatically to thousands of targets simultaneously — creating spear phishing at mass scale.</div>
+        <div class="fb-distractors">
+          <p><strong>(A)</strong> Incorrect — brute force refers to systematically guessing passwords or keys, not message variation.</p>
+          <p><strong>(C)</strong> Incorrect — DoS attacks target system availability, not individual deception.</p>
+          <p><strong>(D)</strong> Incorrect — MITM intercepts communications between two parties; the chatbot sent new messages, it did not intercept existing ones.</p>
+        </div>
+        <div class="fb-tip">
+<strong>Exam Tip:</strong> AI’s biggest impact on social engineering = it makes targeted attacks scalable. What was once expensive, one-at-a-time spear phishing can now be automated for thousands of targets.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q15 -->
+  <div style="max-width:800px;margin:28px auto;padding:0 20px;">
+    <div class="q-block" id="q-q15">
+      <div class="q-header">
+        <span class="q-num">Q15</span>
+        <span class="q-topic">Topic 1.5 — AI in Cyber Defense</span>
+      </div>
+      <div class="q-stem">The district’s technology coordinator proposes deploying an AI-based anomaly detection system that monitors LMS access patterns. Which of the following scenarios would this system be <span class="kw">LEAST</span> likely to detect as suspicious?</div>
+      <div class="options">
+        <label class="option-label"><input type="radio" name="qq15" value="A"> <span>(A) A teacher’s account accessing the LMS from an unfamiliar IP address in a different state at 2:00 AM on a Saturday</span></label>
+        <label class="option-label"><input type="radio" name="qq15" value="B"> <span>(B) A single account downloading the complete grade records for every student in the district within a 10-minute window</span></label>
+        <label class="option-label"><input type="radio" name="qq15" value="C"> <span>(C) A teacher logging in during normal school hours from the same device and location she uses every day, then modifying grades for her own students</span></label>
+        <label class="option-label"><input type="radio" name="qq15" value="D"> <span>(D) Five failed login attempts on a teacher’s account within 30 seconds, followed by a successful login from an IP address that has never previously accessed the system</span></label>
+      </div>
+      <button class="check-btn" onclick="checkQ('q15')">Check Answer</button>
+      <div class="feedback-box" id="fb-q15">
+        <div class="fb-verdict"></div>
+        <div class="fb-exp">AI anomaly detection works by identifying deviations from established behavioral baselines. Option B describes activity that perfectly matches the teacher’s normal pattern — same time, same device, same location, same type of action. If an attacker uses stolen credentials in a way that mimics the legitimate user’s exact behavior, anomaly detection has the least signal to flag it.</div>
+        <div class="fb-distractors">
+          <p><strong>(A)</strong> Likely flagged — unusual time, unusual location, and unusual IP address are strong anomaly signals.</p>
+          <p><strong>(C)</strong> Likely flagged — bulk data access far exceeds normal teacher behavior and triggers volume-based alerts.</p>
+          <p><strong>(D)</strong> Likely flagged — rapid failed attempts followed by success from a new IP is a classic brute force pattern.</p>
+        </div>
+        <div class="fb-tip">
+<strong>Exam Tip:</strong> “LEAST likely to detect” questions test whether you understand the limitations of a technology. AI anomaly detection is powerful but struggles when malicious activity perfectly mimics legitimate behavior.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-break">— End of Scenario 3 —</div>
+
+  <!-- RESULTS PANEL -->
+  <div style="max-width:800px;margin:0 auto;padding:0 20px;">
+    <div class="results-panel" id="results-panel">
+      <div class="results-score" id="r-score"></div>
+      <div class="results-label">Questions Correct</div>
+      <div class="results-breakdown">
+        <div class="rb-item">
+<div class="rb-label">Scenario 1</div>
+<div class="rb-val" id="r-s1">-</div>
+</div>
+        <div class="rb-item">
+<div class="rb-label">Scenario 2</div>
+<div class="rb-val" id="r-s2">-</div>
+</div>
+        <div class="rb-item">
+<div class="rb-label">Scenario 3</div>
+<div class="rb-val" id="r-s3">-</div>
+</div>
+      </div>
+      <div class="results-msg" id="r-msg"></div>
+      <a href="/pages/ap-cyber-unit-1-exam" class="results-btn">Take Unit 1 Exam →</a>
+      <a href="/pages/ap-cybersecurity-complete-course-guide" class="results-btn">Back to Course Hub</a>
+    </div>
+  </div>
+
+  <!-- NAV LINKS -->
+  <div class="nav-links">
+    <a href="/pages/ap-cyber-unit-1-exam" class="nav-link">← Unit 1 Exam (20 MCQ)</a>
+    <a href="/pages/ap-cybersecurity-complete-course-guide" class="nav-link">Course Hub →</a>
+  </div>
+
+  <div style="text-align:center!important;padding:20px!important;font-size:12px!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;font-family:'Georgia',serif!important;">
+    AP Cybersecurity Unit 1 Scenario Practice | APCSExamPrep.com | Built by Tanner Crow, AP CS Teacher (11+ years)<br>
+    AP® is a registered trademark of the College Board, which was not involved in the production of this content.
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var ANSWERS = {"q1":"D","q2":"D","q3":"A","q4":"C","q5":"A","q6":"C","q7":"B","q8":"B","q9":"A","q10":"D","q11":"C","q12":"B","q13":"B","q14":"D","q15":"C"};
+  var score = 0;
+  var total = Object.keys(ANSWERS).length;
+  var answered = {};
+  var scenarioScores = {s1:0,s2:0,s3:0};
+
+  function checkQ(qid){
+    var block = document.getElementById('q-'+qid);
+    if(!block) block = document.getElementById('q-'+qid+'-inner');
+    if(!block) return;
+    var chosen = block.querySelector('input[name="q'+qid+'"]:checked');
+    if(!chosen){alert('Please select an answer first.');return;}
+    if(answered[qid])return;
+    answered[qid]=true;
+
+    var val=chosen.value;
+    var correct=ANSWERS[qid];
+    var fb=document.getElementById('fb-'+qid);
+    var labels=block.querySelectorAll('.option-label');
+
+    labels.forEach(function(lbl){
+      var inp=lbl.querySelector('input');
+      inp.disabled=true;
+      if(inp.value===correct){lbl.classList.add('correct-opt');}
+      else if(inp.value===val&&val!==correct){lbl.classList.add('wrong-opt');}
+      else{lbl.classList.add('neutral-opt');}
+    });
+
+    block.querySelector('.check-btn').disabled=true;
+    fb.classList.add('show');
+
+    var qNum=parseInt(qid.replace('q',''));
+    if(val===correct){
+      score++;
+      block.classList.add('answered-correct');
+      fb.classList.add('fb-correct');
+      fb.querySelector('.fb-verdict').textContent='Correct!';
+      if(qNum<=5)scenarioScores.s1++;
+      else if(qNum<=10)scenarioScores.s2++;
+      else scenarioScores.s3++;
+    } else {
+      block.classList.add('answered-wrong');
+      fb.classList.add('fb-wrong');
+      fb.querySelector('.fb-verdict').textContent='Incorrect \u2014 the correct answer is '+correct+'.';
+    }
+
+    document.getElementById('score-display').textContent=score+' / '+Object.keys(answered).length;
+
+    if(Object.keys(answered).length===total){
+      showResults();
+    }
+  }
+
+  function showResults(){
+    var panel=document.getElementById('results-panel');
+    panel.classList.add('show');
+    document.getElementById('r-score').textContent=score+'/'+total;
+    document.getElementById('r-s1').textContent=scenarioScores.s1+'/5';
+    document.getElementById('r-s2').textContent=scenarioScores.s2+'/5';
+    document.getElementById('r-s3').textContent=scenarioScores.s3+'/5';
+    var pct=Math.round(score/total*100);
+    var msg=pct>=87?'Excellent! You demonstrate strong cross-topic analytical skills.':
+            pct>=67?'Good work. Review the scenarios where you missed questions \u2014 focus on the connections between topics.':
+            pct>=47?'Keep practicing. Re-read each scenario carefully and trace how multiple vulnerabilities interact.':
+            'This material needs more review. Return to the individual topic lessons before retrying.';
+    document.getElementById('r-msg').textContent=msg;
+    panel.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  window.checkQ=checkQ;
+})();
+</script>

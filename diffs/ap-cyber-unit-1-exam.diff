@@ -1,0 +1,241 @@
+--- a/ap-cyber-unit-1-exam#ucnav
++++ b/ap-cyber-unit-1-exam#ucnav
+@@ -3,44 +3,44 @@
+     <a href="/pages/ap-cybersecurity-complete-course-guide" class="ucn-hub">AP Cyber Hub</a>
+     <span class="ucn-badge">Unit 1</span>
+     <a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-lesson open" onclick="ucnToggle(1);return false;" id="ucn-l1" title="Understanding Social Engineering">1.1 <span class="ucn-chevron">▼</span></a>
+-    <span class="ucn-steps open" id="ucn-s1">
++    <div class="ucn-steps open" id="ucn-s1">
+       <a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-step">Lesson</a>
+       <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-1" class="ucn-step">Ex 1</a>
+       <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-2" class="ucn-step">Ex 2</a>
+       <a href="/pages/ap-cyber-unit-1-lesson-1-lab" class="ucn-step">Lab</a>
+       <a href="/pages/ap-cyber-unit-1-lesson-1-quiz" class="ucn-step">Quiz</a>
+-    </span>
++    </div>
+     <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-lesson open" onclick="ucnToggle(2);return false;" id="ucn-l2" title="Suspicious Website Logins">1.2 <span class="ucn-chevron">▼</span></a>
+-    <span class="ucn-steps open" id="ucn-s2">
++    <div class="ucn-steps open" id="ucn-s2">
+       <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-step">Lesson</a>
+       <a href="/pages/ap-cyber-unit-1-lesson-2-exercise-1" class="ucn-step">Ex 1</a>
+       <a href="/pages/ap-cyber-unit-1-lesson-2-exercise-2" class="ucn-step">Ex 2</a>
+-      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Lab</span>
+-      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span>
+-    </span>
+-    <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-lesson open" onclick="ucnToggle(3);return false;" id="ucn-l3" title="Best Practices for Public Networks">1.3 <span class="ucn-chevron">▼</span></a>
+-    <span class="ucn-steps open" id="ucn-s3">
+-      <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-step">Lesson</a>
+-      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 1</span>
+-      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span>
+-      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Lab</span>
+-      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span>
+-    </span>
+-    <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-lesson" title="AI-Based Cybersecurity Attacks" onclick="ucnToggle(4);return false;" id="ucn-l4">1.4 <span class="ucn-chevron">▼</span></a>
+-    <span class="ucn-steps" id="ucn-s4">
++      <a href="/pages/ap-cyber-unit-1-lesson-2-lab" class="ucn-step">Lab</a>
++      <a href="/pages/ap-cyber-unit-1-lesson-2-quiz" class="ucn-step">Quiz</a>
++    </div>
++    <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-lesson open" onclick="ucnToggle(3);return false;" id="ucn-l3" title="Public Wi-Fi Dangers">1.3 <span class="ucn-chevron">▼</span></a>
++    <div class="ucn-steps open" id="ucn-s3">
+       <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-step">Lesson</a>
+-      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 1</span>
+-      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span>
+-      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Lab</span>
+-      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span>
+-    </span>
+-    <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-lesson" title="Leveraging AI in Cyber Defense" onclick="ucnToggle(5);return false;" id="ucn-l5">1.5 <span class="ucn-chevron">▼</span></a>
+-    <span class="ucn-steps" id="ucn-s5">
++      <a href="/pages/ap-cyber-unit-1-lesson-3-exercise-1" class="ucn-step">Ex 1</a>
++      <a href="/pages/ap-cyber-unit-1-lesson-3-exercise-2" class="ucn-step">Ex 2</a>
++      <a href="/pages/ap-cyber-unit-1-lesson-3-lab" class="ucn-step">Lab</a>
++      <a href="/pages/ap-cyber-unit-1-lesson-3-quiz" class="ucn-step">Quiz</a>
++    </div>
++    <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-lesson" title="AI-Based Attacks" onclick="ucnToggle(4);return false;" id="ucn-l4">1.4 <span class="ucn-chevron">▼</span></a>
++    <div class="ucn-steps" id="ucn-s4">
++      <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-step">Lesson</a>
++      <a href="/pages/ap-cyber-unit-1-lesson-4-exercise-1" class="ucn-step">Ex 1</a>
++      <a href="/pages/ap-cyber-unit-1-lesson-4-exercise-2" class="ucn-step">Ex 2</a>
++      <a href="/pages/ap-cyber-unit-1-lesson-4-lab" class="ucn-step">Lab</a>
++      <a href="/pages/ap-cyber-unit-1-lesson-4-quiz" class="ucn-step">Quiz</a>
++    </div>
++    <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-lesson" title="AI in Defense" onclick="ucnToggle(5);return false;" id="ucn-l5">1.5 <span class="ucn-chevron">▼</span></a>
++    <div class="ucn-steps" id="ucn-s5">
+       <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-step">Lesson</a>
+-      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 1</span>
+-      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span>
+-      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Lab</span>
+-      <span class="ucn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span>
+-    </span>
++      <a href="/pages/ap-cyber-unit-1-lesson-5-exercise-1" class="ucn-step">Ex 1</a>
++      <a href="/pages/ap-cyber-unit-1-lesson-5-exercise-2" class="ucn-step">Ex 2</a>
++      <a href="/pages/ap-cyber-unit-1-lesson-5-lab" class="ucn-step">Lab</a>
++      <a href="/pages/ap-cyber-unit-1-lesson-5-quiz" class="ucn-step">Quiz</a>
++    </div>
+   </div>
+ </div>
+
+--- a/ap-cyber-unit-1-exam#questions
++++ b/ap-cyber-unit-1-exam#questions
+@@ -31,9 +31,9 @@
+   <div class="q-stem">A caller claims to be from the company’s IT department and tells an employee their account has been compromised. The caller asks the employee to read back their current password so it can be “verified and reset.” This is <span class="kw">MOST LIKELY</span> an example of:</div>
+   <div class="options">
+ <label class="option-label"><input type="radio" name="qe2" value="A"> <span>(A) Phishing via email spoofing</span></label>
+-<label class="option-label"><input type="radio" name="qe2" value="B"> <span>(B) Pretexting combined with vishing</span></label>
+-<label class="option-label"><input type="radio" name="qe2" value="C"> <span>(C) A brute-force password attack</span></label>
+-<label class="option-label"><input type="radio" name="qe2" value="D"> <span>(D) A man-in-the-middle interception</span></label>
++<label class="option-label"><input type="radio" name="qe2" value="B"> <span>(B) A brute-force password attack</span></label>
++<label class="option-label"><input type="radio" name="qe2" value="C"> <span>(C) A man-in-the-middle interception</span></label>
++<label class="option-label"><input type="radio" name="qe2" value="D"> <span>(D) Pretexting combined with vishing</span></label>
+ </div>
+   <button class="check-btn" onclick="checkQ('e2')">Check Answer</button>
+   <div class="feedback-box" id="fb-e2">
+@@ -41,8 +41,8 @@
+     <div class="fb-exp">The attacker constructed a fabricated scenario (pretext) — the fake IT identity and account compromise story — and delivered it over the phone (vishing = voice phishing). Phishing typically occurs via email. Brute-force and MitM attacks do not involve deceiving a human into voluntarily giving up a password.</div>
+     <div class="fb-distractors">
+ <p><strong>(A)</strong> Phishing uses email; this attack occurs over a phone call, making vishing the correct channel term.</p>
+-<p><strong>(C)</strong> Brute-force attacks are automated technical attempts; no human deception is involved.</p>
+-<p><strong>(D)</strong> MitM intercepts existing communications; it does not involve tricking someone into revealing a password directly.</p>
++<p><strong>(B)</strong> Brute-force attacks are automated technical attempts; no human deception is involved.</p>
++<p><strong>(C)</strong> MitM intercepts existing communications; it does not involve tricking someone into revealing a password directly.</p>
+ </div>
+     <div class="fb-tip">
+ <strong>AP Exam Tip:</strong> Distinguish the delivery channel: phishing = email, vishing = voice/phone, smishing = SMS. Pretexting is the technique (fabricating a story); vishing is the medium.</div>
+@@ -105,18 +105,18 @@
+   <div class="q-stem">A security operations center deploys an AI system that monitors network logs and automatically flags unusual login patterns at 3 AM from foreign IP addresses. This is an example of AI being used for:</div>
+   <div class="options">
+ <label class="option-label"><input type="radio" name="qe5" value="A"> <span>(A) Automated threat generation to test defensive controls</span></label>
+-<label class="option-label"><input type="radio" name="qe5" value="B"> <span>(B) Anomaly-based intrusion detection</span></label>
+-<label class="option-label"><input type="radio" name="qe5" value="C"> <span>(C) Symmetric key encryption of log files</span></label>
+-<label class="option-label"><input type="radio" name="qe5" value="D"> <span>(D) Social engineering simulation training</span></label>
++<label class="option-label"><input type="radio" name="qe5" value="B"> <span>(B) Symmetric key encryption of log files</span></label>
++<label class="option-label"><input type="radio" name="qe5" value="C"> <span>(C) Social engineering simulation training</span></label>
++<label class="option-label"><input type="radio" name="qe5" value="D"> <span>(D) Anomaly-based intrusion detection</span></label>
+ </div>
+   <button class="check-btn" onclick="checkQ('e5')">Check Answer</button>
+   <div class="feedback-box" id="fb-e5">
+     <div class="fb-verdict"></div>
+-    <div class="fb-exp">The system is comparing observed behavior (3 AM logins from foreign IPs) against a baseline of normal behavior and flagging deviations — this is the definition of anomaly-based detection. It is a defensive application of AI. Option A describes offensive red-team testing. Options C and D describe unrelated security functions.</div>
++    <div class="fb-exp">The system is comparing observed behavior (3 AM logins from foreign IPs) against a baseline of normal behavior and flagging deviations — this is the definition of anomaly-based detection. It is a defensive application of AI. Option A describes offensive red-team testing. Options B and C describe unrelated security functions.</div>
+     <div class="fb-distractors">
+ <p><strong>(A)</strong> Threat generation is an offensive technique used in penetration testing, not log analysis.</p>
+-<p><strong>(C)</strong> Encryption protects data confidentiality; it has no connection to detecting login anomalies.</p>
+-<p><strong>(D)</strong> Social engineering simulations train employees on recognizing attacks, not on log analysis.</p>
++<p><strong>(B)</strong> Encryption protects data confidentiality; it has no connection to detecting login anomalies.</p>
++<p><strong>(C)</strong> Social engineering simulations train employees on recognizing attacks, not on log analysis.</p>
+ </div>
+     <div class="fb-tip">
+ <strong>AP Exam Tip:</strong> AI on the AP exam appears in both offensive contexts (generating personalized phishing) and defensive contexts (anomaly detection, threat intelligence). Know both sides.</div>
+@@ -130,8 +130,8 @@
+   </div>
+   <div class="q-stem">An attacker carries a large stack of boxes and waits near a secure door. When an authorized employee badges in, the attacker says “Could you hold that? My hands are full.” The employee holds the door open. This attack is called:</div>
+   <div class="options">
+-<label class="option-label"><input type="radio" name="qe6" value="A"> <span>(A) Phishing</span></label>
+-<label class="option-label"><input type="radio" name="qe6" value="B"> <span>(B) Tailgating (piggybacking)</span></label>
++<label class="option-label"><input type="radio" name="qe6" value="A"> <span>(A) Tailgating (piggybacking)</span></label>
++<label class="option-label"><input type="radio" name="qe6" value="B"> <span>(B) Phishing</span></label>
+ <label class="option-label"><input type="radio" name="qe6" value="C"> <span>(C) Shoulder surfing</span></label>
+ <label class="option-label"><input type="radio" name="qe6" value="D"> <span>(D) Dumpster diving</span></label>
+ </div>
+@@ -140,7 +140,7 @@
+     <div class="fb-verdict"></div>
+     <div class="fb-exp">Tailgating (also called piggybacking) is a physical social engineering attack in which an unauthorized person gains access to a restricted area by following an authorized person through a secured door. The attacker exploits the social norm of politeness. The other options are distinct attacks: phishing = deceptive emails, shoulder surfing = observing screens/keyboards, dumpster diving = searching discarded materials.</div>
+     <div class="fb-distractors">
+-<p><strong>(A)</strong> Phishing uses deceptive digital communications, not physical presence.</p>
++<p><strong>(B)</strong> Phishing uses deceptive digital communications, not physical presence.</p>
+ <p><strong>(C)</strong> Shoulder surfing involves observing someone’s screen or keystrokes, not bypassing door access.</p>
+ <p><strong>(D)</strong> Dumpster diving involves searching through discarded physical items for sensitive information.</p>
+ </div>
+@@ -205,9 +205,9 @@
+   <div class="q-stem">An attacker uses AI to generate a convincing audio clip of a CEO’s voice instructing the CFO to wire funds to a new account. The CFO complies. Which term <span class="kw">BEST</span> describes the AI technique used?</div>
+   <div class="options">
+ <label class="option-label"><input type="radio" name="qe9" value="A"> <span>(A) Adversarial machine learning</span></label>
+-<label class="option-label"><input type="radio" name="qe9" value="B"> <span>(B) Deepfake audio synthesis</span></label>
+-<label class="option-label"><input type="radio" name="qe9" value="C"> <span>(C) Ransomware deployment</span></label>
+-<label class="option-label"><input type="radio" name="qe9" value="D"> <span>(D) Packet injection</span></label>
++<label class="option-label"><input type="radio" name="qe9" value="B"> <span>(B) Ransomware deployment</span></label>
++<label class="option-label"><input type="radio" name="qe9" value="C"> <span>(C) Packet injection</span></label>
++<label class="option-label"><input type="radio" name="qe9" value="D"> <span>(D) Deepfake audio synthesis</span></label>
+ </div>
+   <button class="check-btn" onclick="checkQ('e9')">Check Answer</button>
+   <div class="feedback-box" id="fb-e9">
+@@ -215,8 +215,8 @@
+     <div class="fb-exp">AI-generated synthetic audio that realistically mimics a specific person’s voice is a deepfake (specifically, an audio deepfake). This is a documented attack technique used in business email compromise and executive impersonation fraud. Adversarial ML involves manipulating model inputs to cause misclassification. Ransomware encrypts files for extortion. Packet injection inserts forged packets into network streams.</div>
+     <div class="fb-distractors">
+ <p><strong>(A)</strong> Adversarial ML manipulates AI model inputs/outputs; it doesn’t describe generating fake voice audio.</p>
+-<p><strong>(C)</strong> Ransomware is malware that encrypts victim data and demands payment; no voice synthesis involved.</p>
+-<p><strong>(D)</strong> Packet injection is a network-layer attack unrelated to audio impersonation.</p>
++<p><strong>(B)</strong> Ransomware is malware that encrypts victim data and demands payment; no voice synthesis involved.</p>
++<p><strong>(C)</strong> Packet injection is a network-layer attack unrelated to audio impersonation.</p>
+ </div>
+     <div class="fb-tip">
+ <strong>AP Exam Tip:</strong> Deepfakes extend social engineering into audio and video. Treat them as a high-tech form of impersonation/pretexting on the AP exam.</div>
+@@ -280,18 +280,18 @@
+   </div>
+   <div class="q-stem">Which of the following are effective defenses against social engineering attacks?<br><br><strong>I.</strong> Implementing a call-back verification procedure before fulfilling unusual requests<br><strong>II.</strong> Training employees to recognize urgency and authority as social engineering triggers<br><strong>III.</strong> Installing the latest operating system security patches</div>
+   <div class="options">
+-<label class="option-label"><input type="radio" name="qe12" value="A"> <span>(A) I and II only</span></label>
++<label class="option-label"><input type="radio" name="qe12" value="A"> <span>(A) III only</span></label>
+ <label class="option-label"><input type="radio" name="qe12" value="B"> <span>(B) II and III only</span></label>
+ <label class="option-label"><input type="radio" name="qe12" value="C"> <span>(C) I, II, and III</span></label>
+-<label class="option-label"><input type="radio" name="qe12" value="D"> <span>(D) III only</span></label>
++<label class="option-label"><input type="radio" name="qe12" value="D"> <span>(D) I and II only</span></label>
+ </div>
+   <button class="check-btn" onclick="checkQ('e12')">Check Answer</button>
+   <div class="feedback-box" id="fb-e12">
+     <div class="fb-verdict"></div>
+     <div class="fb-exp">Statements I and II both directly address the human-manipulation aspect of social engineering. Call-back verification breaks the attacker’s manufactured urgency by introducing an independent verification step. Employee training on psychological triggers is the foundation of any anti-social-engineering program. Statement III (OS patching) is a critical security practice but addresses software vulnerabilities, not human-targeted manipulation.</div>
+     <div class="fb-distractors">
++<p><strong>(A)</strong> Incomplete — patching alone does nothing to counter social engineering techniques.</p>
+ <p><strong>(C)</strong> Incorrect — OS patches address software vulnerabilities; they do not prevent an employee from being deceived.</p>
+-<p><strong>(D)</strong> Incomplete — patching alone does nothing to counter social engineering techniques.</p>
+ </div>
+     <div class="fb-tip">
+ <strong>AP Exam Tip:</strong> Security awareness training is the primary defense against social engineering — technology alone cannot fully protect against human manipulation. The AP exam tests whether you understand this distinction.</div>
+@@ -354,8 +354,8 @@
+   </div>
+   <div class="q-stem">A user connects to a rogue Wi-Fi access point and visits their bank’s website, which uses HTTPS. An attacker monitoring the rogue AP attempts to read the transmitted data. Which statement is <span class="kw">MOST ACCURATE</span>?</div>
+   <div class="options">
+-<label class="option-label"><input type="radio" name="qe15" value="A"> <span>(A) HTTPS fully eliminates the risk because the attacker cannot read any transmitted data.</span></label>
+-<label class="option-label"><input type="radio" name="qe15" value="B"> <span>(B) HTTPS reduces the risk but does not eliminate it; attackers may use SSL stripping to downgrade the connection.</span></label>
++<label class="option-label"><input type="radio" name="qe15" value="A"> <span>(A) HTTPS reduces the risk but does not eliminate it; attackers may use SSL stripping to downgrade the connection.</span></label>
++<label class="option-label"><input type="radio" name="qe15" value="B"> <span>(B) HTTPS fully eliminates the risk because the attacker cannot read any transmitted data.</span></label>
+ <label class="option-label"><input type="radio" name="qe15" value="C"> <span>(C) HTTPS is irrelevant because the rogue AP can inject code directly into the browser.</span></label>
+ <label class="option-label"><input type="radio" name="qe15" value="D"> <span>(D) The attacker can read all transmitted data because HTTPS only encrypts stored files.</span></label>
+ </div>
+@@ -364,7 +364,7 @@
+     <div class="fb-verdict"></div>
+     <div class="fb-exp">HTTPS encrypts data in transit, making it significantly harder for a passive eavesdropper to read the content. However, a MitM attacker on a rogue AP can attempt SSL stripping — a technique that downgrades the connection from HTTPS to HTTP before it reaches the user’s browser — if the site does not implement HTTP Strict Transport Security (HSTS). HTTPS is protective but not an absolute guarantee in a MitM scenario.</div>
+     <div class="fb-distractors">
+-<p><strong>(A)</strong> Overstates protection — SSL stripping and certificate-based MitM attacks can defeat HTTPS in some configurations.</p>
++<p><strong>(B)</strong> Overstates protection — SSL stripping and certificate-based MitM attacks can defeat HTTPS in some configurations.</p>
+ <p><strong>(C)</strong> Exaggerates the attack; code injection via a rogue AP is a separate, more complex attack not implied here.</p>
+ <p><strong>(D)</strong> Fundamentally wrong — HTTPS encrypts data <em>in transit</em>, which is exactly the protection relevant here.</p>
+ </div>
+@@ -478,17 +478,17 @@
+   </div>
+   <div class="q-stem">A security manager wants to protect employees from the <span class="kw">widest range</span> of Unit 1 threats (social engineering, password attacks, and wireless risks). Which combination of controls is <span class="kw">MOST COMPREHENSIVE</span>?</div>
+   <div class="options">
+-<label class="option-label"><input type="radio" name="qe20" value="A"> <span>(A) Mandatory password rotation every 30 days and email spam filtering</span></label>
+-<label class="option-label"><input type="radio" name="qe20" value="B"> <span>(B) Security awareness training, multi-factor authentication, and a VPN policy for remote/public Wi-Fi use</span></label>
++<label class="option-label"><input type="radio" name="qe20" value="A"> <span>(A) Security awareness training, multi-factor authentication, and a VPN policy for remote/public Wi-Fi use</span></label>
++<label class="option-label"><input type="radio" name="qe20" value="B"> <span>(B) Mandatory password rotation every 30 days and email spam filtering</span></label>
+ <label class="option-label"><input type="radio" name="qe20" value="C"> <span>(C) Antivirus software installation and firewall configuration on all endpoints</span></label>
+ <label class="option-label"><input type="radio" name="qe20" value="D"> <span>(D) Encrypting all files stored on employee laptops and disabling USB ports</span></label>
+ </div>
+   <button class="check-btn" onclick="checkQ('e20')">Check Answer</button>
+   <div class="feedback-box" id="fb-e20">
+     <div class="fb-verdict"></div>
+-    <div class="fb-exp">Option B provides layered coverage across all three threat categories: security awareness training addresses social engineering, MFA mitigates password-based attacks (even if credentials are stolen, the second factor blocks unauthorized login), and VPN policy protects against wireless interception. Option A includes a discredited password policy and only one technical control. Options C and D address endpoint/malware threats but not social engineering or wireless attacks specifically.</div>
++    <div class="fb-exp">Option A provides layered coverage across all three threat categories: security awareness training addresses social engineering, MFA mitigates password-based attacks (even if credentials are stolen, the second factor blocks unauthorized login), and VPN policy protects against wireless interception. Option B includes a discredited password policy and only one technical control. Options C and D address endpoint/malware threats but not social engineering or wireless attacks specifically.</div>
+     <div class="fb-distractors">
+-<p><strong>(A)</strong> Forced 30-day rotation is counterproductive per NIST; this combination also doesn’t address wireless threats.</p>
++<p><strong>(B)</strong> Forced 30-day rotation is counterproductive per NIST; this combination also doesn’t address wireless threats.</p>
+ <p><strong>(C)</strong> Antivirus and firewalls protect against malware and network intrusion but don’t defend against human manipulation or rogue APs.</p>
+ <p><strong>(D)</strong> Disk encryption and USB controls address data loss; neither prevents phishing or Wi-Fi interception.</p>
+ </div>
+
+--- a/ap-cyber-unit-1-exam#answer-key
++++ b/ap-cyber-unit-1-exam#answer-key
+@@ -1 +1 @@
+-var ANSWERS = {"e1": "B", "e2": "B", "e3": "B", "e4": "A", "e5": "B", "e6": "B", "e7": "B", "e8": "A", "e9": "B", "e10": "C", "e11": "B", "e12": "A", "e13": "C", "e14": "C", "e15": "B", "e16": "D", "e17": "B", "e18": "C", "e19": "C", "e20": "B"};
++var ANSWERS = {"e1": "B", "e2": "D", "e3": "B", "e4": "A", "e5": "D", "e6": "A", "e7": "B", "e8": "A", "e9": "D", "e10": "C", "e11": "B", "e12": "D", "e13": "C", "e14": "C", "e15": "A", "e16": "D", "e17": "B", "e18": "C", "e19": "C", "e20": "A"};

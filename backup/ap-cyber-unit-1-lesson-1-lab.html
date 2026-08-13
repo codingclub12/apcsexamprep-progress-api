@@ -1,0 +1,967 @@
+<script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "LearningResource",
+    "headline": "AP Cybersecurity Topic 1.1 Lab: Phishing Email Dissection",
+    "description": "Dissect four phishing email specimens with escalating difficulty. Identify indicators of compromise, psychological tactics, and effective countermeasures for the AP Cybersecurity exam.",
+    "author": {
+      "@type": "Person",
+      "name": "Tanner Crow",
+      "url": "https://www.apcsexamprep.com/pages/ap-computer-science-tutor"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "APCSExamPrep.com",
+      "url": "https://www.apcsexamprep.com"
+    },
+    "educationalLevel": "High School",
+    "inLanguage": "en-US"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.apcsexamprep.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "AP Cybersecurity",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Unit 1: Introduction to Security",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide#unit1"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": "Topic 1.1: Understanding Social Engineering",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-unit-1-social-engineering"
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "name": "AP Cybersecurity Topic 1.1 Lab: Phishing Email Dissection",
+        "item": "https://www.apcsexamprep.com/pages/ap-cyber-unit-1-lesson-1-lab"
+      }
+    ]
+  }
+]
+</script>
+<!-- ============================================================
+  AP CYBERSECURITY | Unit 1 Topic 1.1 | Lab: Phishing Email Dissection
+  Shopify Handle: ap-cyber-unit-1-lesson-1-lab
+  data-lesson-id="1.1-lab"
+  
+  SHOPIFY NOTES:
+  - Unique wrapper: #cyber-lab-11
+  - All CSS scoped with !important nuclear overrides
+  - NO raw emojis - HTML entities only
+  - Button text forced white with :link/:visited/:hover/:active
+  - -webkit-text-fill-color overrides included
+  - Purple theme matching course hub + all lesson pages
+  
+  CB ALIGNMENT: 1.1.A, 1.1.B, 1.1.C
+  TIME: 40-50 minutes
+============================================================ -->
+
+<style>
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-lesson.locked{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;cursor:not-allowed!important;}
+#ucnav .ucn-lesson.locked:link,#ucnav .ucn-lesson.locked:visited,#ucnav .ucn-lesson.locked:hover{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;background:transparent!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-lock svg{opacity:.5!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+
+
+/* ===== HEADER ===== */
+#cyber-lab-11 .lab-header{
+  background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;
+  border-radius:14px!important;
+  padding:36px 32px!important;
+  margin-bottom:8px!important;
+  color:#ffffff!important;
+  position:relative!important;
+  overflow:hidden!important;
+}
+#cyber-lab-11 .lab-header::before{
+  content:''!important;
+  position:absolute!important;
+  top:-60px!important;right:-60px!important;
+  width:300px!important;height:300px!important;
+  border-radius:50%!important;
+  background:rgba(168,85,247,0.15)!important;
+  pointer-events:none!important;
+}
+#cyber-lab-11 .lab-header::after{
+  content:''!important;
+  position:absolute!important;
+  bottom:-80px!important;left:-40px!important;
+  width:250px!important;height:250px!important;
+  border-radius:50%!important;
+  background:rgba(124,58,237,0.12)!important;
+  pointer-events:none!important;
+}
+#cyber-lab-11 .lab-tag{
+  display:inline-block!important;
+  background:rgba(168,85,247,0.25)!important;
+  border:1px solid rgba(168,85,247,0.5)!important;
+  color:#E9D5FF!important;
+  font-family:'Georgia',serif!important;
+  font-size:11px!important;font-weight:700!important;
+  letter-spacing:2px!important;text-transform:uppercase!important;
+  padding:6px 16px!important;border-radius:20px!important;
+  margin-bottom:16px!important;
+}
+#cyber-lab-11 .lab-header h1{
+  font-family:'Georgia',serif!important;
+  font-size:28px!important;font-weight:700!important;color:#ffffff!important;
+  margin:0 0 10px!important;line-height:1.3!important;
+  position:relative!important;
+}
+#cyber-lab-11 .lab-header p{
+  font-family:'Georgia',serif!important;
+  font-size:15px!important;color:rgba(255,255,255,0.85)!important;
+  margin:0 0 20px!important;line-height:1.6!important;
+  position:relative!important;
+}
+#cyber-lab-11 .lab-badges{display:flex!important;flex-wrap:wrap!important;gap:10px!important;position:relative!important;}
+#cyber-lab-11 .lab-badge{
+  display:inline-flex!important;align-items:center!important;gap:5px!important;
+  background:rgba(168,85,247,0.2)!important;border:1px solid rgba(168,85,247,0.4)!important;
+  color:#E9D5FF!important;padding:5px 14px!important;border-radius:18px!important;
+  font-family:'Georgia',serif!important;font-size:12px!important;font-weight:600!important;
+}
+
+/* ===== SCORE BAR ===== */
+#cyber-lab-11 .score-bar{
+  position:relative!important;z-index:50!important;
+  background:linear-gradient(135deg,#1E1B4B,#3B0764)!important;
+  color:#ffffff!important;padding:10px 20px!important;
+  border-radius:10px!important;
+  display:flex!important;justify-content:space-between!important;align-items:center!important;
+  font-family:'Georgia',serif!important;font-size:13px!important;font-weight:600!important;
+  box-shadow:0 4px 12px rgba(30,27,75,0.3)!important;
+}
+#cyber-lab-11 .score-bar .score-num{
+  background:var(--purple)!important;padding:4px 14px!important;border-radius:14px!important;
+  font-size:14px!important;font-weight:800!important;color:#ffffff!important;
+}
+
+/* ===== SECTION CARDS ===== */
+#cyber-lab-11 .lab-section{
+  background:#ffffff!important;border:1px solid var(--gray-border)!important;
+  border-radius:12px!important;padding:28px 24px!important;margin-bottom:24px!important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.04)!important;
+}
+#cyber-lab-11 .lab-section h2{
+  font-family:'Georgia',serif!important;
+  font-size:18px!important;font-weight:700!important;color:var(--dark)!important;
+  margin:0 0 12px!important;line-height:1.4!important;
+}
+#cyber-lab-11 .lab-section h3{
+  font-family:'Georgia',serif!important;
+  font-size:15px!important;font-weight:700!important;color:var(--purple)!important;
+  margin:16px 0 8px!important;
+}
+#cyber-lab-11 .lab-section p{
+  font-family:'Georgia',serif!important;
+  font-size:14px!important;color:#374151!important;margin:0 0 12px!important;line-height:1.7!important;
+}
+
+/* ===== EMAIL SPECIMENS ===== */
+#cyber-lab-11 .email-specimen{
+  background:var(--gray-light)!important;border:2px solid var(--gray-border)!important;
+  border-radius:10px!important;margin:16px 0!important;overflow:hidden!important;
+}
+#cyber-lab-11 .email-bar{
+  background:var(--dark)!important;padding:10px 16px!important;
+  display:flex!important;align-items:center!important;gap:8px!important;
+}
+#cyber-lab-11 .email-dot{width:10px!important;height:10px!important;border-radius:50%!important;}
+#cyber-lab-11 .email-dot.r{background:#ef4444!important;}
+#cyber-lab-11 .email-dot.y{background:#eab308!important;}
+#cyber-lab-11 .email-dot.g{background:#22c55e!important;}
+#cyber-lab-11 .email-bar-title{
+  font-family:'Georgia',serif!important;
+  font-size:12px!important;color:#94a3b8!important;margin-left:8px!important;font-weight:500!important;
+}
+#cyber-lab-11 .email-meta{
+  padding:14px 18px!important;border-bottom:1px solid var(--gray-border)!important;
+  font-family:'Georgia',serif!important;font-size:13px!important;color:#475569!important;
+}
+#cyber-lab-11 .email-meta strong{color:var(--dark)!important;}
+#cyber-lab-11 .email-body{
+  padding:18px!important;font-family:'Georgia',serif!important;
+  font-size:14px!important;color:var(--dark)!important;line-height:1.7!important;
+}
+#cyber-lab-11 .email-body .e-link{
+  color:var(--purple)!important;text-decoration:underline!important;cursor:help!important;
+}
+#cyber-lab-11 .email-body .e-bold{font-weight:700!important;}
+
+/* ===== ANALYSIS FORM ===== */
+#cyber-lab-11 .analysis-grid{
+  display:grid!important;grid-template-columns:1fr 1fr!important;gap:14px!important;margin:16px 0!important;
+}
+@media(max-width:600px){#cyber-lab-11 .analysis-grid{grid-template-columns:1fr!important;}}
+#cyber-lab-11 .analysis-field{display:flex!important;flex-direction:column!important;gap:4px!important;}
+#cyber-lab-11 .analysis-field label{
+  font-family:'Georgia',serif!important;
+  font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;
+  letter-spacing:0.5px!important;color:#475569!important;
+}
+#cyber-lab-11 .analysis-field select,
+#cyber-lab-11 .analysis-field textarea{
+  font-family:'Georgia',serif!important;font-size:13px!important;padding:8px 10px!important;
+  border:1px solid var(--purple-border)!important;border-radius:6px!important;
+  background:#ffffff!important;color:var(--dark)!important;resize:vertical!important;
+}
+#cyber-lab-11 .analysis-field select:focus,
+#cyber-lab-11 .analysis-field textarea:focus{
+  outline:none!important;border-color:var(--purple)!important;
+  box-shadow:0 0 0 2px rgba(107,33,168,0.15)!important;
+}
+#cyber-lab-11 .analysis-full{grid-column:1/-1!important;}
+
+/* ===== CHECK BUTTONS ===== */
+#cyber-lab-11 .check-btn{
+  display:inline-block!important;
+  background:var(--purple)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;
+  font-family:'Georgia',serif!important;font-size:14px!important;font-weight:700!important;
+  padding:10px 24px!important;border:none!important;border-radius:8px!important;
+  cursor:pointer!important;margin-top:12px!important;
+  opacity:1!important;visibility:visible!important;text-decoration:none!important;
+}
+#cyber-lab-11 .check-btn:hover{background:var(--purple-mid)!important;}
+#cyber-lab-11 a.check-btn:link,
+#cyber-lab-11 a.check-btn:visited,
+#cyber-lab-11 a.check-btn:hover,
+#cyber-lab-11 a.check-btn:active{
+  color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;
+}
+
+/* ===== FEEDBACK ===== */
+#cyber-lab-11 .feedback{
+  display:none!important;border-radius:8px!important;padding:16px 18px!important;
+  margin-top:14px!important;font-family:'Georgia',serif!important;
+  font-size:13px!important;line-height:1.7!important;
+}
+#cyber-lab-11 .feedback.show{display:block!important;}
+#cyber-lab-11 .feedback.correct{
+  background:var(--green-bg)!important;border:1px solid var(--green-border)!important;color:#166534!important;
+}
+#cyber-lab-11 .feedback.partial{
+  background:#FFFBEB!important;border:1px solid #FDE68A!important;color:#92400E!important;
+}
+#cyber-lab-11 .feedback.incorrect{
+  background:#FEF2F2!important;border:1px solid #FECACA!important;color:#991B1B!important;
+}
+
+/* ===== RESULTS PANEL ===== */
+#cyber-lab-11 .results-panel{
+  display:none!important;
+  background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;
+  border-radius:12px!important;padding:32px!important;text-align:center!important;
+  color:#ffffff!important;margin-top:24px!important;position:relative!important;overflow:hidden!important;
+}
+#cyber-lab-11 .results-panel::before{
+  content:''!important;position:absolute!important;top:-40px!important;right:-40px!important;
+  width:200px!important;height:200px!important;border-radius:50%!important;
+  background:rgba(168,85,247,0.15)!important;pointer-events:none!important;
+}
+#cyber-lab-11 .results-panel.show{display:block!important;}
+#cyber-lab-11 .results-panel h2{
+  font-family:'Georgia',serif!important;font-size:22px!important;color:#ffffff!important;
+  margin:0 0 8px!important;position:relative!important;
+}
+#cyber-lab-11 .results-score{
+  font-family:'Georgia',serif!important;font-size:48px!important;font-weight:900!important;
+  color:var(--purple-light)!important;margin:12px 0!important;position:relative!important;
+}
+#cyber-lab-11 .results-panel p{
+  font-family:'Georgia',serif!important;font-size:14px!important;
+  color:rgba(255,255,255,0.85)!important;margin:8px 0!important;position:relative!important;
+}
+
+/* ===== EXAM TIP ===== */
+#cyber-lab-11 .exam-tip{
+  background:var(--purple-bg)!important;border-left:4px solid var(--purple)!important;
+  border-radius:0 8px 8px 0!important;padding:16px 20px!important;margin:20px 0!important;
+  font-family:'Georgia',serif!important;font-size:14px!important;color:var(--dark)!important;
+}
+#cyber-lab-11 .exam-tip strong{color:var(--purple)!important;}
+
+/* ===== RUBRIC TABLE ===== */
+#cyber-lab-11 .rubric-table{
+  width:100%!important;border-collapse:collapse!important;margin:12px 0!important;
+  font-family:'Georgia',serif!important;font-size:13px!important;
+}
+#cyber-lab-11 .rubric-table th{
+  background:var(--dark)!important;color:#ffffff!important;padding:10px 12px!important;
+  text-align:left!important;font-weight:700!important;font-size:12px!important;
+  text-transform:uppercase!important;letter-spacing:0.5px!important;
+}
+#cyber-lab-11 .rubric-table td{
+  padding:10px 12px!important;border-bottom:1px solid var(--gray-border)!important;vertical-align:top!important;
+}
+#cyber-lab-11 .rubric-table tr:nth-child(even) td{background:var(--gray-light)!important;}
+
+/* ===== BOTTOM NAV ===== */
+#cyber-lab-11 .bottom-nav{
+  display:flex!important;justify-content:space-between!important;
+  margin-top:24px!important;flex-wrap:wrap!important;gap:12px!important;
+}
+#cyber-lab-11 .nav-btn-back{background:#475569!important;}
+#cyber-lab-11 .nav-btn-back:hover{background:#334155!important;}
+
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+</style>
+
+<!-- UNIT ACCORDION NAV -->
+
+<div id="ucnav">
+  <div class="ucn-rail" id="ucn-rail">
+    <a href="/pages/ap-cybersecurity-complete-course-guide" class="ucn-hub">AP Cyber Hub</a>
+    <span class="ucn-badge">Unit 1</span>
+    <a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-lesson open" onclick="ucnToggle(1);" id="ucn-l1" title="Understanding Social Engineering">1.1 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps open" id="ucn-s1">
+      <a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-2" class="ucn-step">Ex 2</a>
+      <span class="ucn-step current">Lab</span>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-lesson" onclick="ucnToggle(2);" id="ucn-l2" title="Suspicious Website Logins">1.2 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s2">
+      <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cybersecurity-unit-1-password-attacks-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-lesson" onclick="ucnToggle(3);" id="ucn-l3" title="Best Practices for Public Networks">1.3 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s3">
+      <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-lesson" onclick="ucnToggle(4);" id="ucn-l4" title="AI-Based Cybersecurity Attacks">1.4 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s4">
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-lesson" onclick="ucnToggle(5);" id="ucn-l5" title="Leveraging AI in Cyber Defense">1.5 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s5">
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-quiz" class="ucn-step">Quiz</a>
+    </span>
+  </div>
+</div>
+
+<script>
+function ucnToggle(num){var l=document.getElementById('ucn-l'+num),s=document.getElementById('ucn-s'+num);if(!l||!s)return;var o=l.classList.contains('open');document.querySelectorAll('#ucnav .ucn-lesson').forEach(function(e){e.classList.remove('open')});document.querySelectorAll('#ucnav .ucn-steps').forEach(function(e){e.classList.remove('open')});if(!o){l.classList.add('open');s.classList.add('open');setTimeout(function(){l.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},50)}}
+(function(){function pos(){var nav=document.getElementById('ucnav');if(!nav)return;if(nav.parentElement!==document.body){document.body.appendChild(nav)}var h=0;var headerEl=document.querySelector('.section-header header.header')||document.querySelector('sticky-header header')||document.querySelector('header.header');if(headerEl){h=Math.round(headerEl.getBoundingClientRect().bottom)}if(h<20||h>300)h=68;nav.style.setProperty('top',h+'px','important');var navH=nav.offsetHeight||42;var w=document.getElementById('apcyber-wrapper');if(w)w.style.setProperty('padding-top',(h+navH+4)+'px','important')}requestAnimationFrame(pos);setTimeout(pos,150);setTimeout(pos,400);setTimeout(pos,800);setTimeout(pos,1500);setTimeout(pos,3000);window.addEventListener('resize',pos,{passive:true});setTimeout(function(){var _w=document.getElementById('apcyber-wrapper');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}var _m=document.getElementById('MainContent');if(_m){_m.style.setProperty('padding-top','0','important');_m.style.setProperty('margin-top','0','important')}},50);setTimeout(function(){var _w=document.getElementById('apcyber-wrapper');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}},500);var scrolled=false;window.addEventListener('scroll',function(){if(!scrolled){scrolled=true;requestAnimationFrame(pos)}},{passive:true});var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class','hidden']});setTimeout(function(){obs.disconnect()},15000)})();
+</script>
+
+<div id="cyber-lab-11" data-lesson-id="1.1-lab">
+
+  <!-- HEADER -->
+  <div class="lab-header">
+    <span class="lab-tag">AP Cybersecurity — Unit 1, Topic 1.1</span>
+    
+<nav aria-label="Breadcrumb" style="font-size:0.82rem;color:#6b7280;-webkit-text-fill-color:#6b7280;margin:0 0 16px;font-family:'Georgia',serif;padding:0;"><a href="/" style="color:#6b21a8;text-decoration:none;-webkit-text-fill-color:#6b21a8;">Home</a><span style="margin:0 6px;color:#d1d5db;">›</span><a href="/pages/ap-cybersecurity-complete-course-guide" style="color:#6b21a8;text-decoration:none;-webkit-text-fill-color:#6b21a8;">AP Cybersecurity</a><span style="margin:0 6px;color:#d1d5db;">›</span><span style="color:#374151;-webkit-text-fill-color:#374151;">Topic 1.1 › Lab</span></nav>
+<h1>Lab: Phishing Email Dissection</h1>
+    <p>You are a junior security analyst reviewing 4 suspicious emails flagged by your organization’s email gateway. For each email, identify the attack indicators, classify the tactics used, and assess the risk level.</p>
+    <div class="lab-badges">
+      <span class="lab-badge">🔬 Hands-On Lab</span>
+      <span class="lab-badge">Skills 1.A, 1.B, 1.C</span>
+      <span class="lab-badge">~40–50 min</span>
+      <span class="lab-badge">4 Email Specimens</span>
+    </div>
+  </div>
+
+  <!-- SCORE BAR -->
+  <div class="score-bar">
+    <span>Lab Progress: <span id="completedCount">0</span> / 4 Emails Analyzed</span>
+    <span class="score-num"><span id="totalScore">0</span> / 24 pts</span>
+  </div>
+
+  <!-- RUBRIC -->
+  <div class="lab-section">
+    <h2>Scoring Rubric</h2>
+    <p>Each email analysis is worth 6 points. Review the criteria before you begin.</p>
+    <table class="rubric-table">
+      <tr>
+<th>Category</th>
+<th>Points</th>
+<th>What You Need</th>
+</tr>
+      <tr>
+<td>Sender Verification</td>
+<td>1 pt</td>
+<td>Correctly identify what is suspicious about the sender address or display name</td>
+</tr>
+      <tr>
+<td>Psychological Tactics</td>
+<td>1 pt</td>
+<td>Identify the primary tactic (urgency, intimidation, authority, scarcity, etc.)</td>
+</tr>
+      <tr>
+<td>Suspicious Elements</td>
+<td>1 pt</td>
+<td>Identify at least 2 suspicious elements in the email body</td>
+</tr>
+      <tr>
+<td>Attack Classification</td>
+<td>1 pt</td>
+<td>Correctly classify the attack type (phishing, spear phishing, vishing, smishing, etc.)</td>
+</tr>
+      <tr>
+<td>Potential Impact</td>
+<td>1 pt</td>
+<td>Identify what the adversary is trying to obtain or achieve</td>
+</tr>
+      <tr>
+<td>Recommended Action</td>
+<td>1 pt</td>
+<td>Describe what the recipient should do</td>
+</tr>
+    </table>
+  </div>
+
+  <!-- ============ EMAIL 1 ============ -->
+  <div class="lab-section" id="email1-section">
+    <h2>Email Specimen #1 — Difficulty: Introductory</h2>
+    <div class="email-specimen">
+      <div class="email-bar">
+        <span class="email-dot r"></span><span class="email-dot y"></span><span class="email-dot g"></span>
+        <span class="email-bar-title">Flagged Email — Received 9:14 AM</span>
+      </div>
+      <div class="email-meta">
+        <strong>From:</strong> do-not-reply@g00gle.com<br>
+        <strong>To:</strong> ljones@school.edu<br>
+        <strong>Subject:</strong> [Urgent!] Access Requested<br>
+        <strong>Date:</strong> March 3, 2026 9:14 AM
+      </div>
+      <div class="email-body">
+        <p>One of your students has requested access to make a copy of a document. <span class="e-link" title="Hover: http://g00gle-docs.malsite.ru/auth">Click this link</span> to authorize your student to copy your document.</p>
+        <p>If you don’t click the link, your student won’t be able to copy the document and complete their assignment.</p>
+        <p>Research shows that the faster teachers respond to students’ document-sharing requests, the more likely students are to submit assignments on-time.</p>
+        <p>— The Google Drive Team</p>
+      </div>
+    </div>
+
+    <h3>Your Analysis</h3>
+    <div class="analysis-grid">
+      <div class="analysis-field">
+        <label>1. Sender Verification — What is suspicious about the sender?</label>
+        <textarea id="e1-sender" rows="2" placeholder="Look carefully at the email address..."></textarea>
+      </div>
+      <div class="analysis-field">
+        <label>2. Primary Psychological Tactic</label>
+        <select id="e1-tactic">
+          <option value="">-- Select --</option>
+          <option value="urgency">Urgency</option>
+          <option value="intimidation">Intimidation</option>
+          <option value="authority">Authority / Trust</option>
+          <option value="scarcity">Scarcity</option>
+          <option value="social-proof">Social Proof</option>
+          <option value="reciprocity">Reciprocity</option>
+        </select>
+      </div>
+      <div class="analysis-field analysis-full">
+        <label>3. Suspicious Elements (list at least 2)</label>
+        <textarea id="e1-elements" rows="2" placeholder="What else in the email body raises red flags?"></textarea>
+      </div>
+      <div class="analysis-field">
+        <label>4. Attack Classification</label>
+        <select id="e1-type">
+          <option value="">-- Select --</option>
+          <option value="phishing">Phishing (mass email)</option>
+          <option value="spear">Spear Phishing (targeted)</option>
+          <option value="whaling">Whaling (executive-targeted)</option>
+          <option value="vishing">Vishing (voice call)</option>
+          <option value="smishing">Smishing (text/SMS)</option>
+        </select>
+      </div>
+      <div class="analysis-field">
+        <label>5. What is the adversary trying to obtain?</label>
+        <textarea id="e1-impact" rows="2" placeholder="What happens if the victim clicks?"></textarea>
+      </div>
+      <div class="analysis-field analysis-full">
+        <label>6. Recommended Action for the Recipient</label>
+        <textarea id="e1-action" rows="2" placeholder="What should the teacher do?"></textarea>
+      </div>
+    </div>
+    <button class="check-btn" onclick="checkEmail(1)">Check Email #1 Analysis</button>
+    <div class="feedback" id="e1-feedback"></div>
+  </div>
+
+  <!-- ============ EMAIL 2 ============ -->
+  <div class="lab-section" id="email2-section">
+    <h2>Email Specimen #2 — Difficulty: Moderate</h2>
+    <div class="email-specimen">
+      <div class="email-bar">
+        <span class="email-dot r"></span><span class="email-dot y"></span><span class="email-dot g"></span>
+        <span class="email-bar-title">Flagged Email — Received 2:47 PM</span>
+      </div>
+      <div class="email-meta">
+        <strong>From:</strong> IT-Security@yourcompany-helpdesk.net<br>
+        <strong>To:</strong> all-staff@yourcompany.com<br>
+        <strong>Subject:</strong> MANDATORY: Password Reset Required Within 2 Hours<br>
+        <strong>Date:</strong> March 5, 2026 2:47 PM
+      </div>
+      <div class="email-body">
+        <p>Dear Employee,</p>
+        <p>Our security team has detected suspicious activity on your company account. As part of our incident response protocol, <span class="e-bold">all employees must reset their passwords within the next 2 hours</span> or their accounts will be temporarily suspended.</p>
+        <p><span class="e-link" title="Hover: http://yourcompany-helpdesk.net/reset?id=38271">Reset Your Password Now</span></p>
+        <p>This is a mandatory action required by company policy. Failure to comply will result in account suspension and you will need to contact IT in person with two forms of identification to restore access.</p>
+        <p>Thank you for your cooperation,<br>
+        IT Security Department<br>
+        YourCompany, Inc.</p>
+      </div>
+    </div>
+
+    <h3>Your Analysis</h3>
+    <div class="analysis-grid">
+      <div class="analysis-field">
+        <label>1. Sender Verification</label>
+        <textarea id="e2-sender" rows="2" placeholder="Check the domain carefully..."></textarea>
+      </div>
+      <div class="analysis-field">
+        <label>2. Primary Psychological Tactic</label>
+        <select id="e2-tactic">
+          <option value="">-- Select --</option>
+          <option value="urgency">Urgency</option>
+          <option value="intimidation">Intimidation</option>
+          <option value="authority">Authority / Trust</option>
+          <option value="scarcity">Scarcity</option>
+          <option value="social-proof">Social Proof</option>
+          <option value="reciprocity">Reciprocity</option>
+        </select>
+      </div>
+      <div class="analysis-field analysis-full">
+        <label>3. Suspicious Elements (list at least 2)</label>
+        <textarea id="e2-elements" rows="2" placeholder="Think about the threats, timeline, and link..."></textarea>
+      </div>
+      <div class="analysis-field">
+        <label>4. Attack Classification</label>
+        <select id="e2-type">
+          <option value="">-- Select --</option>
+          <option value="phishing">Phishing (mass email)</option>
+          <option value="spear">Spear Phishing (targeted)</option>
+          <option value="whaling">Whaling (executive-targeted)</option>
+          <option value="vishing">Vishing (voice call)</option>
+          <option value="smishing">Smishing (text/SMS)</option>
+        </select>
+      </div>
+      <div class="analysis-field">
+        <label>5. What is the adversary trying to obtain?</label>
+        <textarea id="e2-impact" rows="2" placeholder="What credentials or access would be compromised?"></textarea>
+      </div>
+      <div class="analysis-field analysis-full">
+        <label>6. Recommended Action</label>
+        <textarea id="e2-action" rows="2" placeholder="How should the employee respond?"></textarea>
+      </div>
+    </div>
+    <button class="check-btn" onclick="checkEmail(2)">Check Email #2 Analysis</button>
+    <div class="feedback" id="e2-feedback"></div>
+  </div>
+
+  <!-- ============ EMAIL 3 ============ -->
+  <div class="lab-section" id="email3-section">
+    <h2>Email Specimen #3 — Difficulty: Challenging</h2>
+    <div class="email-specimen">
+      <div class="email-bar">
+        <span class="email-dot r"></span><span class="email-dot y"></span><span class="email-dot g"></span>
+        <span class="email-bar-title">Flagged Email — Received 8:02 AM</span>
+      </div>
+      <div class="email-meta">
+        <strong>From:</strong> sarah.chen@vendorsolutions.com<br>
+        <strong>To:</strong> mike.johnson@yourcompany.com<br>
+        <strong>Subject:</strong> Re: Q1 Invoice #4892 — Payment Overdue<br>
+        <strong>Date:</strong> March 6, 2026 8:02 AM
+      </div>
+      <div class="email-body">
+        <p>Hi Mike,</p>
+        <p>Following up on my voicemail from yesterday. Invoice #4892 for the January consulting engagement ($12,400) is now 15 days past due. I know things get busy on your end, but our accounting team is flagging this.</p>
+        <p>Could you process the payment today? Our updated banking details are in the <span class="e-link" title="Hover: http://vendorsolutions-invoices.com/inv4892.pdf">attached invoice</span>. We recently switched banks, so please use the new routing number on the document.</p>
+        <p>If there are any issues with the PO, just let me know and I can loop in your procurement contact.</p>
+        <p>Thanks,<br>
+        Sarah Chen<br>
+        Account Manager, Vendor Solutions<br>
+        (555) 314-2289</p>
+      </div>
+    </div>
+
+    <h3>Your Analysis</h3>
+    <div class="analysis-grid">
+      <div class="analysis-field">
+        <label>1. Sender Verification</label>
+        <textarea id="e3-sender" rows="2" placeholder="The sender looks legitimate at first glance. Dig deeper..."></textarea>
+      </div>
+      <div class="analysis-field">
+        <label>2. Primary Psychological Tactic</label>
+        <select id="e3-tactic">
+          <option value="">-- Select --</option>
+          <option value="urgency">Urgency</option>
+          <option value="intimidation">Intimidation</option>
+          <option value="authority">Authority / Trust</option>
+          <option value="scarcity">Scarcity</option>
+          <option value="social-proof">Social Proof</option>
+          <option value="reciprocity">Reciprocity</option>
+        </select>
+      </div>
+      <div class="analysis-field analysis-full">
+        <label>3. Suspicious Elements (list at least 2)</label>
+        <textarea id="e3-elements" rows="2" placeholder="What makes this harder to detect than the first two?"></textarea>
+      </div>
+      <div class="analysis-field">
+        <label>4. Attack Classification</label>
+        <select id="e3-type">
+          <option value="">-- Select --</option>
+          <option value="phishing">Phishing (mass email)</option>
+          <option value="spear">Spear Phishing (targeted)</option>
+          <option value="whaling">Whaling (executive-targeted)</option>
+          <option value="vishing">Vishing (voice call)</option>
+          <option value="smishing">Smishing (text/SMS)</option>
+        </select>
+      </div>
+      <div class="analysis-field">
+        <label>5. What is the adversary trying to obtain?</label>
+        <textarea id="e3-impact" rows="2" placeholder="This is not about passwords. What is the adversary after?"></textarea>
+      </div>
+      <div class="analysis-field analysis-full">
+        <label>6. Recommended Action</label>
+        <textarea id="e3-action" rows="2" placeholder="How should Mike verify this before acting?"></textarea>
+      </div>
+    </div>
+    <button class="check-btn" onclick="checkEmail(3)">Check Email #3 Analysis</button>
+    <div class="feedback" id="e3-feedback"></div>
+  </div>
+
+  <!-- ============ EMAIL 4 ============ -->
+  <div class="lab-section" id="email4-section">
+    <h2>Email Specimen #4 — Difficulty: Expert</h2>
+    <div class="email-specimen">
+      <div class="email-bar">
+        <span class="email-dot r"></span><span class="email-dot y"></span><span class="email-dot g"></span>
+        <span class="email-bar-title">Flagged Email — Received 6:33 PM</span>
+      </div>
+      <div class="email-meta">
+        <strong>From:</strong> ceo@yourcompany.com<br>
+        <strong>To:</strong> lisa.park@yourcompany.com<br>
+        <strong>Subject:</strong> Quick favor — confidential<br>
+        <strong>Date:</strong> March 6, 2026 6:33 PM
+      </div>
+      <div class="email-body">
+        <p>Lisa,</p>
+        <p>Are you still at the office? I need a favor and it’s time-sensitive. I’m in a board meeting and can’t make a call right now.</p>
+        <p>We need to send a wire transfer of $28,500 to a vendor before end of business today to secure a discounted rate on our Q2 contract renewal. I’ve already approved it with finance but they’ve left for the day.</p>
+        <p>Can you initiate the transfer using the company account? I’ll send the vendor’s bank details in my next email. Please keep this between us for now — the board hasn’t announced the Q2 partnership yet.</p>
+        <p>Thanks,<br>
+        David<br>
+        <em>Sent from my iPhone</em></p>
+      </div>
+    </div>
+
+    <h3>Your Analysis</h3>
+    <div class="analysis-grid">
+      <div class="analysis-field">
+        <label>1. Sender Verification</label>
+        <textarea id="e4-sender" rows="2" placeholder="The From address looks real. Can you still verify?"></textarea>
+      </div>
+      <div class="analysis-field">
+        <label>2. Primary Psychological Tactic</label>
+        <select id="e4-tactic">
+          <option value="">-- Select --</option>
+          <option value="urgency">Urgency</option>
+          <option value="intimidation">Intimidation</option>
+          <option value="authority">Authority / Trust</option>
+          <option value="scarcity">Scarcity</option>
+          <option value="social-proof">Social Proof</option>
+          <option value="reciprocity">Reciprocity</option>
+        </select>
+      </div>
+      <div class="analysis-field analysis-full">
+        <label>3. Suspicious Elements (list at least 2)</label>
+        <textarea id="e4-elements" rows="2" placeholder="Multiple red flags are layered together. Identify as many as you can."></textarea>
+      </div>
+      <div class="analysis-field">
+        <label>4. Attack Classification</label>
+        <select id="e4-type">
+          <option value="">-- Select --</option>
+          <option value="phishing">Phishing (mass email)</option>
+          <option value="spear">Spear Phishing (targeted)</option>
+          <option value="whaling">Whaling (executive-targeted)</option>
+          <option value="bec">Business Email Compromise (BEC)</option>
+          <option value="vishing">Vishing (voice call)</option>
+          <option value="smishing">Smishing (text/SMS)</option>
+        </select>
+      </div>
+      <div class="analysis-field">
+        <label>5. What is the adversary trying to obtain?</label>
+        <textarea id="e4-impact" rows="2" placeholder="What is the end goal of this attack?"></textarea>
+      </div>
+      <div class="analysis-field analysis-full">
+        <label>6. Recommended Action</label>
+        <textarea id="e4-action" rows="2" placeholder="What should Lisa do before taking any action?"></textarea>
+      </div>
+    </div>
+    <button class="check-btn" onclick="checkEmail(4)">Check Email #4 Analysis</button>
+    <div class="feedback" id="e4-feedback"></div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-panel" id="resultsPanel">
+    <h2>Lab Complete</h2>
+    <div class="results-score">
+<span id="finalScore">0</span> / 24</div>
+    <p id="resultsMsg"></p>
+  </div>
+
+  <!-- EXAM TIP -->
+  <div class="exam-tip">
+    <strong>AP Exam Tip:</strong> The AP Cybersecurity exam presents email and message scenarios and asks you to identify attack types, psychological tactics, and potential impacts. Practice reading emails character-by-character — adversaries rely on you scanning quickly. Always check sender addresses, hover over links before clicking, and verify requests through a separate communication channel. The exam specifically tests whether you can distinguish phishing from spear phishing and identify layered tactics.
+  </div>
+
+  <!-- NAV FOOTER -->
+  <div class="bottom-nav">
+    <a class="check-btn nav-btn-back" href="/pages/ap-cyber-unit-1-lesson-1-exercise-2">← Back to Exercise 2</a>
+    <a class="check-btn" href="/pages/ap-cyber-unit-1-lesson-1-quiz">Continue to Quiz →</a>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var answers = {
+    1: {
+      tactic: 'urgency',
+      type: 'phishing',
+      senderKey: ['g00gle','zero','0','00'],
+      elementsKey: ['link','assignment','research','google drive','click'],
+      impactKey: ['credential','password','login','malware','install'],
+      actionKey: ['report','delete','verify','do not click','don\'t click','ignore','IT']
+    },
+    2: {
+      tactic: 'intimidation',
+      type: 'phishing',
+      senderKey: ['helpdesk.net','not the real','external','different domain','fake domain','outside'],
+      elementsKey: ['2 hour','suspend','mandatory','two forms','in person','threat','failure'],
+      impactKey: ['password','credential','login','account access','company account'],
+      actionKey: ['contact IT','verify','call IT','report','do not click','separate channel','phone']
+    },
+    3: {
+      tactic: 'authority',
+      type: 'spear',
+      senderKey: ['vendorsolutions-invoices','different domain','link domain','hover','verify vendor','mismatch'],
+      elementsKey: ['bank','routing','switched bank','changed bank','new banking','invoice link','voicemail'],
+      impactKey: ['money','wire','payment','financial','$12,400','funds','bank transfer','redirect'],
+      actionKey: ['call sarah','verify','phone','known number','independent','procurement','separate channel']
+    },
+    4: {
+      tactic: 'authority',
+      type: 'bec',
+      senderKey: ['spoof','forge','display name','header','verify','could be spoofed','impersonat','fake'],
+      elementsKey: ['wire transfer','confidential','keep this between','after hours','board meeting','can\'t call','end of business','bypass','finance left','secret'],
+      impactKey: ['money','$28,500','wire','financial','funds','steal','transfer'],
+      actionKey: ['call','verify','phone','separate channel','ceo directly','walk over','do not send','don\'t wire']
+    }
+  };
+
+  var scores = {1:0, 2:0, 3:0, 4:0};
+  var checked = {1:false, 2:false, 3:false, 4:false};
+
+  function textMatch(input, keys){
+    var lower = input.toLowerCase();
+    for(var i=0; i<keys.length; i++){
+      if(lower.indexOf(keys[i].toLowerCase()) !== -1) return true;
+    }
+    return false;
+  }
+
+  window.checkEmail = function(num){
+    if(checked[num]) return;
+    checked[num] = true;
+
+    var a = answers[num];
+    var pts = 0;
+    var details = [];
+    var prefix = 'e' + num + '-';
+
+    var senderVal = document.getElementById(prefix + 'sender').value.trim();
+    if(senderVal.length > 5 && textMatch(senderVal, a.senderKey)){
+      pts++; details.push('<strong>Sender:</strong> +1 pt — Correct identification.');
+    } else if(senderVal.length > 5){
+      details.push('<strong>Sender:</strong> 0 pts — Key indicator: ' + a.senderKey[0]);
+    } else {
+      details.push('<strong>Sender:</strong> 0 pts — No analysis provided.');
+    }
+
+    var tacticVal = document.getElementById(prefix + 'tactic').value;
+    if(tacticVal === a.tactic){
+      pts++; details.push('<strong>Tactic:</strong> +1 pt — Correct.');
+    } else {
+      details.push('<strong>Tactic:</strong> 0 pts — The primary tactic was <em>' + a.tactic + '</em>.');
+    }
+
+    var elemVal = document.getElementById(prefix + 'elements').value.trim();
+    if(elemVal.length > 10 && textMatch(elemVal, a.elementsKey)){
+      pts++; details.push('<strong>Elements:</strong> +1 pt — Good identification of suspicious elements.');
+    } else if(elemVal.length > 10){
+      details.push('<strong>Elements:</strong> 0 pts — Key elements: ' + a.elementsKey.slice(0,2).join(', '));
+    } else {
+      details.push('<strong>Elements:</strong> 0 pts — No analysis provided.');
+    }
+
+    var typeVal = document.getElementById(prefix + 'type').value;
+    if(typeVal === a.type){
+      pts++; details.push('<strong>Classification:</strong> +1 pt — Correct.');
+    } else {
+      details.push('<strong>Classification:</strong> 0 pts — This was <em>' + a.type + '</em>.');
+    }
+
+    var impactVal = document.getElementById(prefix + 'impact').value.trim();
+    if(impactVal.length > 5 && textMatch(impactVal, a.impactKey)){
+      pts++; details.push('<strong>Impact:</strong> +1 pt — Correct identification of adversary goal.');
+    } else if(impactVal.length > 5){
+      details.push('<strong>Impact:</strong> 0 pts — The adversary was after: ' + a.impactKey[0]);
+    } else {
+      details.push('<strong>Impact:</strong> 0 pts — No analysis provided.');
+    }
+
+    var actionVal = document.getElementById(prefix + 'action').value.trim();
+    if(actionVal.length > 5 && textMatch(actionVal, a.actionKey)){
+      pts++; details.push('<strong>Action:</strong> +1 pt — Correct recommended response.');
+    } else if(actionVal.length > 5){
+      details.push('<strong>Action:</strong> 0 pts — Best action: ' + a.actionKey[0]);
+    } else {
+      details.push('<strong>Action:</strong> 0 pts — No response provided.');
+    }
+
+    scores[num] = pts;
+
+    var fb = document.getElementById('e' + num + '-feedback');
+    var cls = pts >= 5 ? 'correct' : (pts >= 3 ? 'partial' : 'incorrect');
+    fb.className = 'feedback show ' + cls;
+    fb.innerHTML = '<strong>Email #' + num + ' Score: ' + pts + ' / 6</strong><br>' + details.join('<br>');
+
+    var section = document.getElementById('email' + num + '-section');
+    var inputs = section.querySelectorAll('textarea,select');
+    for(var i=0;i<inputs.length;i++) inputs[i].disabled = true;
+    var btn = section.querySelector('.check-btn');
+    if(btn){btn.disabled = true; btn.style.opacity = '0.5';}
+
+    var total = scores[1] + scores[2] + scores[3] + scores[4];
+    var completed = (checked[1]?1:0) + (checked[2]?1:0) + (checked[3]?1:0) + (checked[4]?1:0);
+    document.getElementById('totalScore').textContent = total;
+    document.getElementById('completedCount').textContent = completed;
+
+    if(completed === 4){
+      var rp = document.getElementById('resultsPanel');
+      rp.className = 'results-panel show';
+      document.getElementById('finalScore').textContent = total;
+      var msg = '';
+      if(total >= 22) msg = 'Outstanding. You demonstrated expert-level phishing analysis skills across all difficulty levels.';
+      else if(total >= 18) msg = 'Strong performance. You caught most indicators. Review the ones you missed \u2014 adversaries count on analysts overlooking subtle details.';
+      else if(total >= 12) msg = 'Solid foundation. You identified key patterns but missed some nuanced attacks. Re-read the Lesson 1.1 sections on psychological tactics and review Emails 3-4.';
+      else msg = 'Keep practicing. Phishing analysis is a skill that improves with repetition. Review the lesson content and try Exercises 1 and 2 again before retaking this lab.';
+      document.getElementById('resultsMsg').textContent = msg;
+      rp.scrollIntoView({behavior:'smooth'});
+    }
+  };
+})();
+</script>
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id="apcyber-activity-nav"><div class="aan-card">
+<span class="aan-eyebrow">AP Cybersecurity · Unit 1 · Lesson 1.1 · Lab</span><div class="aan-strip">
+<a class="aan-chip" href="/pages/ap-cybersecurity-unit-1-social-engineering">Lesson</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-1-lesson-1-exercise-1">Exercise 1</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-1-lesson-1-exercise-2">Exercise 2</a><span class="aan-sep">•</span><span class="aan-chip cur">Lab</span><span class="aan-sep">•</span><a class="aan-chip next" href="/pages/ap-cyber-unit-1-lesson-1-quiz">Quiz →</a>
+</div>
+<div class="aan-up">
+<span class="aan-lbl">Back to:</span><a href="/pages/ap-cybersecurity-unit-1-social-engineering">Lesson 1.1</a><a href="/pages/ap-cybersecurity-unit-1-introduction-to-security">Unit 1 Study Guide</a><a href="/pages/ap-cybersecurity-complete-course-guide">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->

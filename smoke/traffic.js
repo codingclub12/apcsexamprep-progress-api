@@ -68,6 +68,12 @@ for (let i = 60; i >= 1; i--) {
   if (i !== 30) {                       // day 30 is deliberately missing
     readings.push({ date, source: 'ga4', metric: 'pageviews', value: 1000 + (60 - i) * 10 });
   }
+  // Site totals as well as the per-query breakdown. Real Search Console reports
+  // both, and the overview reads site totals, so a fixture with only breakdown
+  // rows would not exercise it.
+  readings.push({ date, source: 'gsc', metric: 'position', value: 18 - (60 - i) * 0.08 });
+  readings.push({ date, source: 'gsc', metric: 'clicks', value: 90 + (60 - i) * 2 });
+  readings.push({ date, source: 'gsc', metric: 'impressions', value: 4000 + (60 - i) * 30 });
   readings.push({ date, source: 'gsc', metric: 'position', value: 20 - (60 - i) * 0.1,
     dimension_namespace: 'query', dimension_value: 'ap csa unit 1' });
   readings.push({ date, source: 'gsc', metric: 'clicks', value: 40 + (60 - i),
@@ -177,6 +183,98 @@ ok('no query appears in both gains and drops', (() => {
   return rk.biggest_drops.every((r) => !g.has(r.query));
 })());
 
+section('Projection ignores an outlier without hiding it');
+//  A single freak day dragged the first real production fit to r2 = 0.002.
+//  The point is real traffic and must stay in the series; only the FIT skips it.
+{
+  const spikeDay = iso(15);
+  ingestLib.ingest([{ date: spikeDay, source: 'ga4', metric: 'pageviews', value: 500000 }]);
+  const withSpike = analysis.project('pageviews', { source: 'ga4', days: 60, horizon: 30 });
+  ok('the outlier is detected', withSpike.outliers_detected >= 1, withSpike.outliers_detected);
+  ok('the outlier is named, not silently dropped',
+    withSpike.outliers_excluded.some((o) => o.date === spikeDay), withSpike.outliers_excluded);
+  ok('the fit survives it and stays strong',
+    withSpike.fit_quality === 'strong' && withSpike.r2 > 0.9, { r2: withSpike.r2, fit: withSpike.fit_quality });
+  ok('the slope still reflects the real trend, not the spike',
+    Math.abs(withSpike.slope_per_day - 10) < 1, withSpike.slope_per_day);
+  ok('the spike REMAINS visible in the series',
+    analysis.series('pageviews', { source: 'ga4', days: 60 }).some((p) => p.value === 500000));
+  // Restore so later sections see the clean fixture.
+  ingestLib.ingest([{ date: spikeDay, source: 'ga4', metric: 'pageviews', value: 1000 + (60 - 15) * 10 }]);
+}
+
+section('Rankings surface what earns traffic, not what merely ranks');
+//  Sorting by position put a wall of 1-impression long-tail queries at the top
+//  and buried the query actually earning clicks. That is what production showed.
+{
+  const day = iso(2);
+  const rows = [];
+  for (let i = 0; i < 12; i++) {
+    rows.push({ date: day, source: 'gsc', metric: 'position', value: 1,
+      dimension_namespace: 'query', dimension_value: 'longtail ' + i });
+    rows.push({ date: day, source: 'gsc', metric: 'clicks', value: 1,
+      dimension_namespace: 'query', dimension_value: 'longtail ' + i });
+  }
+  rows.push({ date: day, source: 'gsc', metric: 'position', value: 6,
+    dimension_namespace: 'query', dimension_value: 'the one that earns' });
+  rows.push({ date: day, source: 'gsc', metric: 'clicks', value: 500,
+    dimension_namespace: 'query', dimension_value: 'the one that earns' });
+  ingestLib.ingest(rows);
+
+  const rk2 = analysis.rankings({ days: 28, limit: 5 });
+  const earnsAt = rk2.top.findIndex((r) => r.query === 'the one that earns');
+  const firstLongtail = rk2.top.findIndex((r) => /^longtail/.test(r.query));
+  ok('a 500-click query at position 6 outranks twelve 1-click queries at position 1',
+    earnsAt >= 0 && (firstLongtail === -1 || earnsAt < firstLongtail),
+    rk2.top.slice(0, 3).map((r) => r.query + ':' + r.clicks + '@' + r.position));
+  ok('one-click position-1 long tail does not crowd out the top',
+    !rk2.top.slice(0, 1).some((r) => /^longtail/.test(r.query)), rk2.top[0]);
+}
+
+section('Pulls are bounded per day and say where to resume');
+//  The row limit used to apply to the whole RANGE, so a backfill returned the
+//  busiest (date, page) pairs and left older days empty. Downstream that read
+//  as every page exploding and none declining, which is what production showed.
+ok('a day list is capped at the per-pull maximum',
+  google.daysBetween('2025-01-01', '2026-01-01').length === google.MAX_DAYS_PER_PULL,
+  google.daysBetween('2025-01-01', '2026-01-01').length);
+ok('a short range is not padded',
+  google.daysBetween('2026-08-01', '2026-08-05').length === 5);
+ok('the resume date is the day after the last covered',
+  google.nextStart(google.daysBetween('2026-08-01', '2026-08-05'), '2026-08-31') === '2026-08-06');
+ok('a finished range reports no resume date',
+  google.nextStart(google.daysBetween('2026-08-01', '2026-08-05'), '2026-08-05') === null);
+
+section('Overview returns every metric that has data, in one pass');
+//  The page used to force a metric choice, which let you ask Search Console for
+//  pageviews and get a blank chart with no explanation. The overview returns
+//  only metric/source pairs that actually hold data, so an impossible pairing
+//  cannot be offered in the first place.
+{
+  const ov = analysis.overview({ days: 60 });
+  ok('returns metrics', ov.metrics.length > 0, ov.metrics.length);
+  ok('every entry carries its source', ov.metrics.every((m) => m.source));
+  ok('every entry has at least one observed day', ov.metrics.every((m) => m.observed_days > 0));
+  ok('no metric is offered for a source that does not report it',
+    !ov.metrics.some((m) => m.source === 'gsc' && m.metric === 'pageviews'),
+    ov.metrics.filter((m) => m.source === 'gsc').map((m) => m.metric));
+  ok('each entry carries every window at once',
+    ov.metrics.every((m) => Object.keys(m.windows).length >= 2), Object.keys(ov.metrics[0].windows));
+  ok('a window reports whether it had full coverage',
+    ov.metrics.every((m) => Object.values(m.windows).every((w) => typeof w.complete === 'boolean')));
+  ok('direction travels with the metric, so the page cannot disagree',
+    ov.metrics.find((m) => m.metric === 'position').lower_is_better === true);
+  ok('a count metric is not lower-is-better',
+    ov.metrics.find((m) => m.metric === 'pageviews').lower_is_better === false);
+  ok('a smoothed trend rides along for the chart',
+    ov.metrics.every((m) => Array.isArray(m.trend) && m.trend.length === m.series.length));
+  ok('the partial day is excluded here too',
+    ov.metrics.every((m) => m.series[m.series.length - 1].date === iso(1)));
+  ok('gaps stay null rather than becoming zero',
+    ov.metrics.find((m) => m.metric === 'pageviews' && m.source === 'ga4')
+      .series.some((p) => p.value === null));
+}
+
 section('Movers');
 const mv = analysis.movers('pageviews', { source: 'ga4', namespace: 'page', days: 28, minBase: 10 });
 ok('finds the rising page as a winner', mv.winners.some((w) => w.value === '/ap-csa/1-2'), mv.winners.map((w) => w.value));
@@ -272,14 +370,14 @@ async function againstDocumentedShapes() {
     if (u.includes('analyticsdata.googleapis.com')) {
       seen.ga4 += 1;
       const body = JSON.parse(opts.body);
-      const perPage = body.dimensions.length === 2;
+      const perPage = body.dimensions.some((d) => d.name === 'pagePath');
       // Shape copied from the Data API quickstart: metric values are STRINGS,
       // dates arrive as YYYYMMDD, and every value is nested one level deep.
       return json({
         dimensionHeaders: body.dimensions.map((d) => ({ name: d.name })),
         metricHeaders: body.metrics.map((m) => ({ name: m.name, type: 'TYPE_INTEGER' })),
         rows: perPage
-          ? [{ dimensionValues: [{ value: '20260801' }, { value: '/ap-csa/1-2?utm=x' }],
+          ? [{ dimensionValues: [{ value: '/ap-csa/1-2?utm=x' }],
                metricValues: [{ value: '3242' }, { value: '1500' }] }]
           : [{ dimensionValues: [{ value: '20260801' }],
                metricValues: body.metrics.map((m) => ({
@@ -295,12 +393,12 @@ async function againstDocumentedShapes() {
     if (u.includes('searchconsole.googleapis.com')) {
       seen.gsc += 1;
       const body = JSON.parse(opts.body);
-      const byDim = body.dimensions.length === 2;
+      const byDim = body.dimensions[0] !== 'date';
       // Search Console returns a positional `keys` array plus flat numerics,
       // with ctr already a 0-1 fraction.
       return json({
         rows: byDim
-          ? [{ keys: ['2026-08-01', body.dimensions[1] === 'query' ? 'AP CSA Unit 1' : 'https://apcsexamprep.com/ap-csa/1-2'],
+          ? [{ keys: [body.dimensions[0] === 'query' ? 'AP CSA Unit 1' : 'https://apcsexamprep.com/ap-csa/1-2'],
                clicks: 12, impressions: 340, ctr: 0.0353, position: 7.4 }]
           : [{ keys: ['2026-08-01'], clicks: 120, impressions: 5400, ctr: 0.0222, position: 11.8 }],
       });
@@ -391,10 +489,10 @@ async function againstDocumentedShapes() {
       if (u.includes('oauth2')) return { ok: true, status: 200, json: async () => ({ access_token: 't', expires_in: 3600 }) };
       if (u.includes('analyticsdata')) {
         const b = JSON.parse(opts.body);
-        const perPage = b.dimensions.length === 2;
+        const perPage = b.dimensions.some((d) => d.name === 'pagePath');
         return { ok: true, status: 200, json: async () => ({
           rows: [{
-            dimensionValues: perPage ? [{ value: '20260810' }, { value: '/x' }] : [{ value: '20260810' }],
+            dimensionValues: perPage ? [{ value: '/x' }] : [{ value: '20260810' }],
             metricValues: b.metrics.map((m) => ({ value: /Rate$/.test(m.name) ? '0.5' : '100' })),
           }],
         }) };
