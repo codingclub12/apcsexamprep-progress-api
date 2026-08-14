@@ -62,7 +62,8 @@
     "smoke:cspunittests": "node smoke/csp-unit-tests.js",
     "smoke:tchdashpage": "node smoke/teacher-dashboard-page.js",
     "smoke:verify": "node smoke/verify-artifact.js",
-    "smoke:apcs": "node smoke/apcs-cli.js"
+    "smoke:apcs": "node smoke/apcs-cli.js",
+    "smoke:dispatch": "node smoke/command-dispatch.js"
   },
   "keywords": [],
   "author": "",
