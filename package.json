@@ -59,7 +59,9 @@
     "smoke:posthog": "node smoke/posthog.js",
     "smoke:answerkeys": "node smoke/answer-keys.js",
     "smoke:cspunittests": "node smoke/csp-unit-tests.js",
-    "smoke:tchdashpage": "node smoke/teacher-dashboard-page.js"
+    "smoke:tchdashpage": "node smoke/teacher-dashboard-page.js",
+    "smoke:verify": "node smoke/verify-artifact.js",
+    "smoke:apcs": "node smoke/apcs-cli.js"
   },
   "keywords": [],
   "author": "",
@@ -76,5 +78,8 @@
   },
   "engines": {
     "node": "22.x"
+  },
+  "bin": {
+    "apcs": "./scripts/apcs.js"
   }
 }
