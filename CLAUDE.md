@@ -2,6 +2,22 @@
 
 ## Read before starting work
 
+Every session opens with the digest and closes with an artifact. The Command
+Center was built and then parked, and the reason was friction rather than
+features: a board you have to remember to open loses to the terminal you are
+already in. So the ledger is the first thing a session touches and the last.
+
+```
+apcs digest                     # start here. scripts/apcs.js, or npm link once
+apcs next                       # what to work on now
+apcs prompt <id> | pbcopy       # the compiled prompt, hazards injected
+apcs claim <id> --lock repo:path
+apcs evidence <id>              # what is ACTUALLY live, not what a report says
+apcs done <id> --artifact <url> # returns the claim AND records the proof
+```
+
+Without the CLI, the same thing over HTTP:
+
 ```
 GET https://progress.apcsexamprep.com/api/command/digest  (bearer TODO_KEY)
 Chat, no headers available: /api/command/digest/r/<read_token>  (read-only, no PII)
@@ -12,6 +28,46 @@ Claim before you touch a file. Return with an artifact. Never trust this file fo
 live state - query the source: Shopify Admin API for pages, progress API for the
 manifest, git for branch heads. Claims about live state decay; claims about method
 survive.
+
+### The four rules that make the ledger worth having
+
+1. **Open with the digest.** Not with the file you think needs changing.
+2. **Claim before you touch a file.** Locks are `(repo, file)` pairs and a
+   conflict is a 409 naming the holder. `apcs claim 70 --lock theme:assets/x.js`.
+   A claim with no `--lock` protects nothing.
+3. **Close with an artifact.** A PR URL, a live curl result, a Shopify
+   `updatedAt` delta, an md5. `apcs done` refuses without one, locally, before it
+   writes anything. Agent reports are not evidence.
+4. **`verified` is not yours to set.** It is cookie-auth only, so the agent that
+   did the work can never be the one that closes the loop on it. `apcs verify`
+   exists solely to say so and hand you the URL. This is not a limitation to
+   route around; it is the whole reason the number means anything.
+
+Leave a run note in `docs/runs/YYYY-MM-DD-<agent>-<slug>.md`: what changed, the
+evidence, what is still open, what was learned. Institutional memory lives in the
+repo, not in a chat history.
+
+### What may run without a human
+
+`auto_dispatch` needs two separate facts to line up, and they are deliberately
+not the same thing:
+
+- **Capability** - `lib/command-router.js` says this kind of task could run:
+  repo-reachable, open, unblocked, off the `NEVER_AUTO` list, and no larger than
+  `AUTO_DISPATCH_MAX_SIZES` (currently `xs`, `s`, `m`; `l` and `xl` are large
+  multi-file changes and stay hand-driven).
+- **Consent** - the `auto_dispatch` column reads `eligible`, which is Tanner
+  ticking the box on that particular task.
+
+Consent is stored. **Capability is recomputed on every read**, the same way the
+gradebook recomputes `passed` against the class's current `mastery_threshold`
+rather than trusting the stored flag. Narrowing the size ceiling or adding a
+`NEVER_AUTO` rule therefore retires every stale tick on the next run, with no
+migration and nothing to hunt down.
+
+`GET /api/command/dispatch-queue` shows what would be handed out and why
+everything else was left. The overnight workflow reads it and reports; it does
+not execute.
 
 ## What this repo is
 

@@ -1,0 +1,147 @@
+name: Overnight dispatch check
+
+# The overnight half of the dispatch policy: "anything double-checked that does
+# not make major large multi-page changes, or done overnight with a morning
+# check."
+#
+# WHAT THIS DOES TODAY: reads the dispatch queue and writes what it WOULD have
+# handed out into the run summary. Nothing is claimed, nothing is executed,
+# nothing is merged. It is the morning check without the overnight work.
+#
+# WHY IT STOPS THERE, ON PURPOSE: a queue that has never been watched is not a
+# queue you should let run unattended. This produces a fortnight of "here is
+# what I would have dispatched" that can be read against what actually needed
+# doing, and only then is it worth wiring the execute half. The brief asks for
+# exactly that ordering - Phase 3 waits on Phase 2 running clean for two weeks -
+# and this is the same argument one level down.
+#
+# TO GO LIVE: set the repository variable DISPATCH_EXECUTE to "true" and add the
+# execute step. Until that variable exists, this workflow cannot do anything but
+# read and report, which is a property of the file rather than a promise.
+
+on:
+  schedule:
+    # 06:00 UTC is 02:00 US Eastern in summer, 01:00 in winter. Eastern is the
+    # clock this business runs on - lib/command-router.js already hardcodes it
+    # as "the only clock that matters here" for the time-of-day weighting.
+    # Cron cannot follow daylight saving, so this drifts by an hour twice a year
+    # and that is fine for an overnight read.
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+# Never two at once. A dispatch queue read twice concurrently is not harmful
+# today, but it will be the moment the execute half lands.
+concurrency:
+  group: overnight-dispatch
+  cancel-in-progress: false
+
+jobs:
+  dispatch-check:
+    name: Read the dispatch queue
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read the queue
+        id: queue
+        env:
+          TODO_KEY: ${{ secrets.TODO_KEY }}
+          BASE: ${{ vars.PROGRESS_BASE_URL || 'https://progress.apcsexamprep.com' }}
+        run: |
+          if [ -z "$TODO_KEY" ]; then
+            echo "### Overnight dispatch check: skipped" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "No \`TODO_KEY\` secret is configured, so the queue could not be read." >> "$GITHUB_STEP_SUMMARY"
+            echo "Add it in Settings > Secrets and variables > Actions." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          # --fail-with-body so a 4xx/5xx is an error AND still prints what the
+          # server said. A silent empty body read as "nothing to dispatch" is
+          # the failure mode worth spending a flag on.
+          http=$(curl -sS --fail-with-body -m 30 \
+            -H "Authorization: Bearer $TODO_KEY" \
+            -o queue.json -w '%{http_code}' \
+            "$BASE/api/command/dispatch-queue") || {
+              echo "### Overnight dispatch check: FAILED" >> "$GITHUB_STEP_SUMMARY"
+              echo '```' >> "$GITHUB_STEP_SUMMARY"
+              cat queue.json 2>/dev/null | head -20 >> "$GITHUB_STEP_SUMMARY"
+              echo '```' >> "$GITHUB_STEP_SUMMARY"
+              echo "queue read failed with HTTP $http"
+              exit 1
+            }
+          echo "read ok, HTTP $http"
+
+      - name: Report what it would have dispatched
+        if: ${{ hashFiles('queue.json') != '' }}
+        run: |
+          node -e '
+            const fs = require("fs");
+            const q = JSON.parse(fs.readFileSync("queue.json", "utf8"));
+            const L = [];
+            const p = (s) => L.push(s);
+
+            p("### Overnight dispatch check");
+            p("");
+            p(`Read at ${q.generated_at}. **Nothing was dispatched** - this run only looks.`);
+            p("");
+            p(`Eligible: **${q.eligible_count}**  |  would dispatch: **${q.dispatch.length}**  |  cap: ${q.max_per_run}`);
+            p("");
+
+            if (q.dispatch.length) {
+              p("#### Would have been handed out");
+              p("");
+              p("| # | Task | Surface | Size | Why |");
+              p("|---|---|---|---|---|");
+              for (const t of q.dispatch) {
+                p(`| ${t.id} | ${t.title} | ${t.surface || "-"} | ${t.size || "-"} | ${t.reason} |`);
+              }
+              p("");
+            } else {
+              p("Nothing was eligible and ticked. That is the normal state of a quiet night.");
+              p("");
+            }
+
+            if (q.deferred.length) {
+              p(`#### Held back by the per-run cap (${q.deferred.length})`);
+              p("");
+              for (const t of q.deferred) p(`- **#${t.id}** ${t.title}`);
+              p("");
+            }
+
+            // Stale ticks are the interesting output: a box ticked when the task
+            // was small, then the task changed. Worth a human eye in the morning.
+            const stale = (q.skipped || []).filter((s) => s.stale_consent);
+            if (stale.length) {
+              p(`#### Ticked but no longer eligible (${stale.length}) - worth a look`);
+              p("");
+              for (const t of stale) p(`- **#${t.id}** ${t.title} - ${t.reason}`);
+              p("");
+            }
+
+            const inflight = (q.skipped || []).filter((s) => !s.stale_consent);
+            if (inflight.length) {
+              p(`#### In flight or already taken (${inflight.length})`);
+              p("");
+              for (const t of inflight) p(`- **#${t.id}** ${t.title} - ${t.reason}`);
+              p("");
+            }
+
+            p("---");
+            p(`Policy in force: sizes \`${q.policy.dispatchable_sizes.join("`, `")}\`; `
+              + `${q.policy.never_auto.length} never-auto rules; `
+              + `theme CI ${q.policy.theme_ci_exists ? "exists" : "does not exist"}.`);
+            p("");
+            p("_Consent is stored on the task; capability is recomputed on every read, "
+              + "so narrowing the policy retires stale ticks with no migration._");
+
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, L.join("\n") + "\n");
+            console.log(L.join("\n"));
+          '
+
+      - name: Refuse to execute
+        run: |
+          if [ "${{ vars.DISPATCH_EXECUTE }}" = "true" ]; then
+            echo "::warning title=Execute not implemented::DISPATCH_EXECUTE is set, but the execute half has not been built. This workflow still only reads."
+          fi
+          echo "Read-only run complete. No task was claimed, executed, or merged."

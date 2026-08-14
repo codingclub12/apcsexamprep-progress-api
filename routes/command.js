@@ -15,6 +15,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 const express = require('express');
 const store = require('../lib/command-store');
+const dispatch = require('../lib/command-dispatch');
 const write = require('../lib/command-write');
 const auth = require('../lib/command-auth');
 const digest = require('../lib/command-digest');
@@ -290,6 +291,16 @@ router.post('/read-token/rotate', auth.requireCookieAuth, (req, res) => {
   const token = auth.rotateReadToken(db);
   store.logEvent(null, req.command.actor, 'read_token_rotated', null, null);
   res.json({ token, url: `${baseUrl(req)}/api/command/digest/r/${token}`, rotated: true });
+});
+
+// ── DISPATCH QUEUE ───────────────────────────────────────────────────────────
+//  What a scheduled run may pick up, and why everything else was left. Read
+//  only: this endpoint selects and explains, it never claims or writes. The
+//  claim protocol still applies to whoever acts on it, so two runs cannot both
+//  take the same file.
+router.get('/dispatch-queue', (req, res) => {
+  const max = Number(req.query.max);
+  res.json(dispatch.dispatchQueue({ max: Number.isFinite(max) && max > 0 ? max : undefined }));
 });
 
 // ── CONFIG ───────────────────────────────────────────────────────────────────
