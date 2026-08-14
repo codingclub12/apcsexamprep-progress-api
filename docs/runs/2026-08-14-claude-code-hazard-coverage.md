@@ -5,7 +5,8 @@ Agent: Claude Code. Branch: `claude/github-oauth-connect-vaw0hu`. PR only, nothi
 ## What changed
 
 `lib/command-hazards.js` stops being a chain of `if` gates and becomes a table with a
-total function over courses. `smoke/hazard-coverage.js` is new, 105 assertions, offline.
+total function over courses. `smoke/hazard-coverage.js` is new and offline. It began at 105 assertions and is 129
+after the reconciliation described in the addendum below.
 
 1. **Content coverage is table-driven and total.** `CONTENT_COVERAGE` carries one row per
    course, each with exactly one disposition: `block`, `pending`, `exempt`, or `fanout`.
@@ -41,7 +42,7 @@ total function over courses. `smoke/hazard-coverage.js` is new, 105 assertions, 
 ## Evidence
 
 ```
-npm run smoke:hazards     105 passed, 0 failed
+npm run smoke:hazards     129 passed, 0 failed
 npm run smoke:command      58 passed, 0 failed   (unchanged, not edited)
 npm run smoke:checks       25 passed, 0 failed
 ```
@@ -57,8 +58,9 @@ PRESENT "NEVER an HTML entity inside"
 MCQ block injected on this product-name task: false
 ```
 
-`hazardsFor({surface:'content', course:'cyber'})` returns 1 block, titled
-`AP Cybersecurity content - NO RULEBOOK YET`. It was 0 before this change.
+`hazardsFor({surface:'content', course:'cyber'})` returned 1 block where it returned 0
+before this change. In the first pass that block was a STOP placeholder; after the
+reconciliation it is the real cyber rulebook from the canonical patch.
 
 The live check named in the brief, `GET /api/command/task/70/prompt`, was NOT run: this
 session has no `TODO_KEY`. The offline compile above exercises the same
@@ -71,19 +73,17 @@ Worth re-running against production after deploy.
   `exempt`, so a content task on it now stops instead of proceeding blind. Inventing the
   rules would inject invented curriculum verbatim into every future prompt, which is worse
   than the empty block it replaces. Open question 1.
-- **No AP Cybersecurity rules.** Same posture, same reason. Nothing in the brief describes
-  the cyber rulebook, so there was nothing to encode.
-- **`CONTENT_CSP` is a flagged draft.** Written from the CED, not from practice. Five Big
-  Ideas, and the pseudocode notation gotchas: 1-indexed lists against Java's 0-indexed
-  arrays, MOD not `%`, left-arrow assignment, DISPLAY / INPUT / PROCEDURE, RANDOM inclusive
-  at both ends. The injected title says `DRAFT, unreviewed` and the body's first line
-  repeats it. Open question 2.
+- ~~**No AP Cybersecurity rules.**~~ SUPERSEDED: the canonical patch carried a real,
+  sourced cyber block, and it is now in. See the addendum.
+- **`CONTENT_CSP` is thinner than the other course blocks** and was written from the CED
+  rather than from practice. Its coverage row carries a `review` flag so that stays
+  visible. Open question 2.
 - **Greenfoot stays exempt**, with the reason written into the table where it can be
   argued with rather than assumed. Open question 3.
-- **The Matrixify and theme wording is a faithful restatement, not a copy.** The theme repo
-  is not in this session's GitHub scope, so the canonical text in
-  `APCSExamPrep-theme/CLAUDE.md` could not be read. Reconcile the wording against that file
-  before this is treated as verbatim.
+- ~~**The Matrixify and theme wording is a faithful restatement, not a copy.**~~
+  SUPERSEDED: the canonical patch supplied the real wording and it is now in. The theme
+  repo is still outside this session's GitHub scope, so a final read against
+  `APCSExamPrep-theme/CLAUDE.md` is still worth doing, but the text is no longer mine.
 
 ## Surfaced by the new suite
 
@@ -95,8 +95,9 @@ constraints (list hygiene, deliverability, template rules). Worth a decision.
 
 1. AP Networking rules. Source-of-truth document, superseded documents, lesson titles that
    get gotten wrong, notation conventions, anything that has bitten.
-2. AP Cybersecurity rules. Same list. Largest active track.
-3. Review `CONTENT_CSP` and drop the DRAFT flag, or correct it.
+2. Review `CONTENT_CSP`. It is the thinnest course block and is CED-sourced; extend it as
+   rules get paid for. Clear the `review` flag when it has had a pass.
+3. Decide whether to fix and land the CLI and verifier defects in the addendum.
 4. Confirm Greenfoot is correctly exempt.
 5. Decide whether klaviyo needs a block.
 6. Reconcile Matrixify and theme wording against the theme repo.
