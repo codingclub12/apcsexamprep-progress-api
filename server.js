@@ -6,6 +6,10 @@ const cors = require('cors');
 const adminSession = require('./lib/admin-session');
 const wireLog = require('./lib/wire-log');
 const posthog = require('./lib/posthog');
+const trafficGoogle = require('./lib/traffic-google');
+const trafficShopify = require('./lib/traffic-shopify');
+const trafficSchedule = require('./lib/traffic-schedule');
+const trafficPull = require('./lib/traffic-pull');
 const app = express();
 
 // Railway terminates TLS at its proxy and forwards the real client IP and
@@ -375,7 +379,34 @@ const server = app.listen(PORT, () => {
   console.log(`APCSExamPrep Progress API running on port ${PORT}`);
   console.log(`DB: ${process.env.DB_PATH || './progress.db'}`);
   if (posthog.isEnabled()) console.log('PostHog: enabled');
+  startTrafficSchedule();
 });
+
+// ── SCHEDULED TRAFFIC PULLS ───────────────────────────────────────────────────
+//  Four times a day, in this process, so no external caller has to hold the
+//  admin key. Silent unless a source is actually configured: a box with no
+//  Google or Shopify credentials should not log a failed pull every six hours,
+//  because a log that cries wolf is one nobody reads.
+//
+//  TRAFFIC_PULL_SCHEDULE=off disables it without a redeploy of anything else.
+let trafficScheduler = null;
+function startTrafficSchedule() {
+  if (String(process.env.TRAFFIC_PULL_SCHEDULE || '').toLowerCase() === 'off') {
+    console.log('[traffic-schedule] disabled by TRAFFIC_PULL_SCHEDULE=off');
+    return;
+  }
+  const google = trafficGoogle.status();
+  const shopify = trafficShopify.status();
+  if (!google.ready && !shopify.ready) {
+    console.log('[traffic-schedule] no source configured; not scheduling');
+    return;
+  }
+  trafficScheduler = trafficSchedule.createScheduler({
+    runPull: (range) => trafficPull.runPull(range),
+  });
+  trafficScheduler.start();
+}
+module.exports.trafficSchedulerStatus = () => (trafficScheduler ? trafficScheduler.status() : { scheduled: false });
 
 // Railway sends SIGTERM on every redeploy. Without an explicit flush the events
 // buffered since the last interval die with the process, which reads in PostHog

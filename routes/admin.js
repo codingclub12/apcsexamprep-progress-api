@@ -31,6 +31,8 @@ const wire = require('../lib/wire-log');
 const trafficAnalysis = require('../lib/traffic-analysis');
 const trafficIngest = require('../lib/traffic-ingest');
 const trafficGoogle = require('../lib/traffic-google');
+const trafficShopify = require('../lib/traffic-shopify');
+const trafficPull = require('../lib/traffic-pull');
 const trafficCsv = require('../lib/traffic-csv');
 const { retrySqlExpr } = require('../retry-policy');
 
@@ -517,7 +519,7 @@ router.get('/traffic', (req, res) => {
       source,
       days,
       inventory: trafficAnalysis.inventory(),
-      connectors: trafficGoogle.status(),
+      connectors: { ...trafficGoogle.status(), shopify: trafficShopify.status() },
 
       // EVERY metric that has data, each with its own series and its
       // comparisons at 7 / 28 / 90 days. The page draws all of it at once
@@ -571,54 +573,13 @@ router.get('/traffic', (req, res) => {
 // days for about 72 hours and an append would inflate every number it touched.
 router.post('/traffic/pull', async (req, res) => {
   try {
-    const want = String((req.body && req.body.source) || 'all');
-    const range = {
+    const out = await trafficPull.runPull({
+      source: (req.body && req.body.source) || 'all',
       startDate: (req.body && req.body.start_date) || undefined,
       endDate: (req.body && req.body.end_date) || undefined,
-    };
-    const dryRun = Boolean(req.body && req.body.dry_run);
-    const out = {};
-
-    // EACH SOURCE IS ISOLATED. Sharing one try/catch meant a failure in the
-    // second source discarded the first one's result: GA4 would fetch, ingest,
-    // and WRITE, then a GSC error would surface as a 500 and the caller would
-    // never learn GA4 had succeeded. A daily job would read as broken while
-    // actually half-working, which is the same "silence is indistinguishable
-    // from failure" problem this whole feature exists to avoid.
-    //
-    // So a source that throws records its own error and the others still run.
-    // The route reports 200 with a per-source verdict; ok:false says at least
-    // one source failed, without pretending the healthy ones did.
-    const pull = async (name, fetcher, label) => {
-      if (want !== 'all' && want !== name) return;
-      try {
-        const r = await fetcher(range);
-        out[name] = r.configured
-          ? {
-              ...trafficIngest.ingest(r.readings, { dryRun }),
-              [label]: r[label],
-              // A pull is bounded to a window of days, so a long backfill needs
-              // to say where to resume. Silence here would look like the whole
-              // range had been covered.
-              days_covered: r.days_covered,
-              covered: r.covered,
-              next_start_date: r.next_start_date,
-            }
-          : { configured: false, reason: r.reason };
-      } catch (e) {
-        console.error('admin/traffic/pull ' + name + ':', e.message);
-        out[name] = { configured: true, ok: false, error: e.message, written: 0 };
-      }
-    };
-
-    await pull('ga4', trafficGoogle.fetchGa4, 'property');
-    await pull('gsc', trafficGoogle.fetchGsc, 'site');
-
-    const failed = Object.entries(out).filter(([, v]) => v.error || v.configured === false).map(([k]) => k);
-    // If any source stopped short of the requested range, hand back the date to
-    // resume from so a backfill can be finished without arithmetic.
-    const more = Object.values(out).map((v) => v && v.next_start_date).filter(Boolean).sort()[0] || null;
-    res.json({ ok: failed.length === 0, failed, dry_run: dryRun, next_start_date: more, ...out });
+      dryRun: Boolean(req.body && req.body.dry_run),
+    });
+    res.json(out);
   } catch (e) {
     console.error('admin/traffic/pull:', e);
     res.status(500).json({ error: 'traffic pull failed', detail: e.message });

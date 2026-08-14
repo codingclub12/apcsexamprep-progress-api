@@ -17,6 +17,7 @@
     "smoke:health": "node smoke/admin-health.js",
     "smoke:encoding": "node smoke/encoding-guard.js",
     "smoke:traffic": "node smoke/traffic.js",
+    "smoke:trafficsources": "node smoke/traffic-sources.js",
     "smoke:unified": "node smoke/admin-unified.js",
     "smoke:teacheradmin": "node smoke/admin-teacher-admin.js",
     "smoke:gradebook": "node smoke/admin-gradebook.js",
