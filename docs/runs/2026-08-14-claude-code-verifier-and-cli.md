@@ -172,3 +172,31 @@ Seven assertions, including the two real mis-closure shapes: a phrase that lives
 only in an HTML comment is reported as comment-only and explicitly NOT as
 something a reader sees, and a non-URL artifact ("emailed the district on the
 12th") is reported as not machine-checkable rather than as a failure.
+
+## 6. Flagged, not changed: "read-only" is a convention, not an enforced property
+
+`.claude/agents/verifier.md` grants `Read, Grep, Glob, Bash, WebFetch` and says
+the agent is read-only and "never edits, never marks anything verified."
+
+`Bash` is not read-only. It can POST, write files, and run anything on the box.
+The agent needs it for the method the file documents (`node
+scripts/verify-artifact.js`, and curl for whatever the script does not cover), so
+removing it would break the agent as written.
+
+The load-bearing half of the restriction is safe regardless: `verified` is in
+`AGENT_FORBIDDEN_FIELDS` and gated on cookie auth, so no bearer-credentialled
+agent can set it no matter what tools it holds. `smoke/apcs-cli.js` 5.4 asserts
+the server refuses it.
+
+The other half, "never edits", currently rests on the prompt rather than on the
+tool grant. That is a real gap in a system whose whole posture is that the agent
+which builds is never the agent which checks. Two ways to close it, and it is
+Tanner's call which:
+
+1. Drop `Bash` and give the agent `WebFetch` only, then teach the sweep to call
+   `scripts/verify-artifact.js` from outside the agent rather than inside it.
+2. Keep `Bash` and accept that the restriction is a convention, documented as
+   such rather than asserted as a property.
+
+Left as-is in this pass, because changing it changes what the agent can do, and
+that is a design decision rather than a defect fix.
