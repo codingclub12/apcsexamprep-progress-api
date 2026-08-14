@@ -48,6 +48,21 @@ const PAGES = [
   { handle: 'cyber-class',     title: 'Teacher Portal',    file: 'shopify/cyber-class.html' },
 ];
 
+// Shopify DECODES entities when it stores a body: `&#9662;` comes back as the
+// character itself. A raw comparison against the repo file therefore never
+// matches after an import, which quietly defeated the already-matches check and
+// would have re-shipped every page on every run. Both sides are normalised to
+// the characters before comparing, so the check compares what a browser renders
+// rather than how it was spelled.
+function renderable(s) {
+  return String(s == null ? '' : s)
+    .replace(/&#(\d+);/g, (m, d) => String.fromCodePoint(Number(d)))
+    .split('&ndash;').join('–')
+    .split('&mdash;').join('—')
+    .replace(/\r\n/g, '\n')
+    .replace(/\s+$/, '');
+}
+
 function readLive(file) {
   const j = JSON.parse(fs.readFileSync(file, 'utf8'));
   const p = j && j.data && j.data.pages;
@@ -87,7 +102,7 @@ function main(argv) {
         problems.push(`${p.handle}: live title is ${JSON.stringify(n.title)}, sheet would set ${JSON.stringify(p.title)}`);
         continue;
       }
-      if ((n.body || '').replace(/\r\n/g, '\n') === body.replace(/\r\n/g, '\n')) {
+      if (renderable(n.body) === renderable(body)) {
         unchanged.push(p.handle);
         continue;
       }

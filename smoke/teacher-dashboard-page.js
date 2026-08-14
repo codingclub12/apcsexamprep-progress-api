@@ -246,5 +246,33 @@ ok('  the row carries the same points total the screen shows',
 ok('  and the grade column is a grade, not a completion count',
   head[3] === 'Grade %' && head[6] === 'Completion %', head.slice(0, 7));
 
+console.log('\n10. A class with nothing priced is not a class of zeros');
+//  The failure this closes: once fabricated denominators were removed, a course
+//  with no authored totals had poss === 0, and the grade column printed "0%"
+//  with an F beside it for work that was never graded at all. A grade with no
+//  priced work behind it has no value, and none is invented.
+const BARE = {
+  class: { class_name: 'Bare', course: 'ap-networking' },
+  course_config: { units: { 'unit-1': { label: 'Unit 1', lessons: ['1.1'], activities: ['lesson', 'quiz'] } } },
+  denominators: {},
+  summary: [{ student: { id: 's1', name: 'A', ref: '', last_active: null }, units: {},
+    detail: { 'unit-1': { '1.1': { quiz: { score: 70 } } } } }],
+};
+T.data = BARE;
+T.model = T.buildModel(BARE);
+const bare = T.totals(T.model.students[0]);
+ok('  the points total is genuinely empty', bare.earned === 0 && bare.poss === 0, bare);
+ok('  the grade is null, not 0', bare.pct === null, bare.pct);
+ok('  and it prints as a dash', T.pctText(bare.pct) === '–', T.pctText(bare.pct));
+ok('  no letter grade is assigned to it, so no F appears',
+  T.letterFor(bare.pct) === '', T.letterFor(bare.pct));
+ok('  a real 0 percent still prints 0% and still earns its F',
+  T.pctText(0) === '0%' && T.letterFor(0) === 'F');
+ok('  the attempted work is still counted as done', bare.done === 1, bare.done);
+ok('  and the unpriced column is named', bare.unpriced === 1, bare.unpriced);
+const bareCsv = T.buildGradebookCSV().split('\r\n')[1].split(',');
+ok('  the spreadsheet leaves the grade blank rather than writing 0%',
+  bareCsv[3] === '', bareCsv.slice(0, 7));
+
 console.log('\n' + (fail === 0 ? 'ALL PASS' : 'FAILURES: ' + fail) + '  (' + pass + ' passed)\n');
 process.exit(fail === 0 ? 0 : 1);
