@@ -79,6 +79,7 @@ function layers(html) {
   const comments = (html.match(/<!--[\s\S]*?-->/g) || []).join('\n');
   const scripts = (html.match(/<script[\s\S]*?<\/script>/gi) || []).join('\n');
   const styles = (html.match(/<style[\s\S]*?<\/style>/gi) || []).join('\n');
+  const ranges = layerRanges(html);
 
   let rest = html
     .replace(/<!--[\s\S]*?-->/g, ' ')
@@ -86,7 +87,7 @@ function layers(html) {
     .replace(/<style[\s\S]*?<\/style>/gi, ' ');
 
   const visible = decode(rest.replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim();
-  return { visible, comment: comments, script: scripts, style: styles };
+  return { visible, comment: comments, script: scripts, style: styles, ranges };
 }
 
 function decode(s) {
@@ -133,15 +134,46 @@ function checkMojibake(html) {
   return hits;
 }
 
+// Which layer does a given OFFSET fall in? Attribution is the whole promise of
+// this tool, so it is done by position rather than by pattern-matching a window
+// of surrounding text.
+//
+// The earlier version sliced 40 characters either side of a hit and asked
+// whether that string appeared inside the concatenated script/style/comment
+// blocks. A hit near the opening of a <script> produced a window straddling the
+// tag boundary, which appears in no block, and got attributed to `body`. That
+// turns a version pin into a P1 "stale copy in body" finding, which is precisely
+// the false alarm this tool exists to stop someone chasing.
+function layerRanges(html) {
+  const ranges = [];
+  const collect = (re, layer) => {
+    const r = new RegExp(re.source, re.flags.includes('g') ? re.flags : re.flags + 'g');
+    let m;
+    while ((m = r.exec(html)) !== null) {
+      ranges.push({ start: m.index, end: m.index + m[0].length, layer });
+      if (m.index === r.lastIndex) r.lastIndex += 1;
+    }
+  };
+  collect(/<!--[\s\S]*?-->/g, 'comment');
+  collect(/<script[\s\S]*?<\/script>/gi, 'script');
+  collect(/<style[\s\S]*?<\/style>/gi, 'style');
+  // Earliest start first, so a commented-out <script> is reported as the comment
+  // it actually is rather than as executable script.
+  ranges.sort((a, b) => a.start - b.start || b.end - a.end);
+  return ranges;
+}
+
+function layerOf(L, index) {
+  for (const r of L.ranges || []) {
+    if (r.start > index) break;
+    if (index >= r.start && index < r.end) return r.layer;
+  }
+  return 'body';
+}
+
 // Dates in the shipped markup that have already passed. This is the check that
 // would have caught the bootcamp banner: the copy is stale, the page renders
 // fine, and nothing else flags it.
-function layerOf(L, snippet) {
-  if (L.script.includes(snippet)) return 'script';
-  if (L.style.includes(snippet)) return 'style';
-  if (L.comment.includes(snippet)) return 'comment';
-  return 'body';
-}
 
 function checkStaleDates(html, now, L) {
   const found = new Map();
@@ -162,7 +194,7 @@ function checkStaleDates(html, now, L) {
       if (!found.has(key)) {
         const raw = html.slice(Math.max(0, m.index - 90), m.index + 90);
         const ctx = raw.replace(/\s+/g, ' ');
-        const layer = layerOf(L, html.slice(Math.max(0, m.index - 40), m.index + 40));
+        const layer = layerOf(L, m.index);
         // An API version pin is not stale copy.
         const versionPin = /revision|version|api[-_ ]?date|@\d|schema/i.test(ctx);
         found.set(key, {

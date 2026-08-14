@@ -43,6 +43,18 @@ function section(t) { console.log('\n' + t); }
 
 const app = express();
 app.use(express.json({ limit: '1mb' }));
+// A fixture storefront page, served from the same throwaway app so `apcs
+// evidence` can be driven end to end with no network. It carries the two shapes
+// the verifier exists for: a phrase that only lives in an HTML comment, and a
+// stale date in real body copy.
+app.get('/fixture/page', (req, res) => {
+  res.type('html').send('<!DOCTYPE html><html><head><title>Fixture</title>'
+    + '<meta name="description" content="' + 'd'.repeat(100) + '"></head><body>'
+    + '<!-- Paste this code in Shopify Admin: Online Store > Themes -->'
+    + '<h1>Fixture Page</h1><p>Doors open 2026-03-27, see you there.</p>'
+    + '</body></html>');
+});
+
 app.use('/api/command', require('../routes/command'));
 app.use('/api/todo', require('../routes/todo'));
 const server = app.listen(0);
@@ -219,6 +231,45 @@ const liveFor = (taskId) => store.liveClaims().filter((c) => c.task_id === taskI
   ok('5.4 the server rejects a bearer-auth attempt to set verified',
     sneaky.status === 403 || (sneaky.status === 200 && !store.getTask(1).verified),
     { status: sneaky.status, verified: store.getTask(1).verified });
+
+  // ── 5b. evidence: the ledger reaches reality ───────────────────────────────
+  //  This is the path the whole Command Center turns on: a task carries an
+  //  artifact, and `apcs evidence` goes and looks at it rather than trusting the
+  //  report. It shells out to scripts/verify-artifact.js, so this also proves the
+  //  two files are wired together and found on disk.
+  section('5b. evidence goes and looks at the artifact');
+
+  await call('POST', '/api/todo', {
+    title: 'Fixture page task', bucket: 'now', surface: 'shopify', size: 's',
+  });
+  const fixtureTask = 5;
+  await call('PATCH', `/api/todo/${fixtureTask}`, {
+    status: 'done', artifact_url: `${BASE}/fixture/page`,
+  });
+
+  const ev = await apcs('evidence', String(fixtureTask));
+  ok('5b.1 evidence fetches the artifact and reports a status',
+    ev.code === 0 && /200/.test(ev.out), ev.out.trim().slice(0, 200));
+  ok('5b.2 it flags the stale date in body copy',
+    /in BODY COPY/.test(ev.out), ev.out.trim().slice(0, 300));
+  ok('5b.3 it states it is evidence, not a verdict',
+    /reports evidence, not a verdict/.test(ev.out));
+
+  const evPhrase = await apcs('evidence', String(fixtureTask), '--phrase', 'Paste this code');
+  ok('5b.4 --phrase reaches the verifier and reports the LAYER',
+    /shipped in comment only/.test(evPhrase.out), evPhrase.out.trim().slice(0, 300));
+  ok('5b.5 and it refuses to claim a reader sees it',
+    /invisible to a reader/.test(evPhrase.out));
+
+  await call('POST', '/api/todo', { title: 'Chase the PO', bucket: 'now', size: 's' });
+  await call('PATCH', '/api/todo/6', { status: 'done', artifact_url: 'emailed the district on the 12th' });
+  const evNote = await apcs('evidence', '6');
+  ok('5b.6 a non-URL artifact is reported as not machine-checkable, not as a failure',
+    evNote.code === 0 && /not a URL/.test(evNote.out), evNote.out.trim().slice(0, 200));
+
+  const evNone = await apcs('evidence', '4');
+  ok('5b.7 a task with no artifact says so rather than inventing one',
+    evNone.code !== 0 && /no artifact_url/.test(evNone.out), evNone.out.trim().slice(0, 160));
 
   // ── 6. Failure modes are legible ───────────────────────────────────────────
   section('6. Failures say what to do next');

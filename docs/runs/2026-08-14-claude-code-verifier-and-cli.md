@@ -18,8 +18,8 @@ Separate from the Phase 0.1 branch on purpose, so the hazard patch can merge on 
 ## Evidence
 
 ```
-npm run smoke:verify    21 passed, 0 failed   (was 17 in the zip)
-npm run smoke:apcs      37 passed, 0 failed   (new)
+npm run smoke:verify    27 passed, 0 failed   (was 17 in the zip)
+npm run smoke:apcs      44 passed, 0 failed   (new)
 npm run smoke:command   58 passed, 0 failed   (untouched)
 npm run smoke:checks    25 passed, 0 failed   (untouched)
 ```
@@ -126,12 +126,49 @@ and is commented to say why, since the mistake is an easy one to repeat.
 - **Nothing was run against production.** This session has no `TODO_KEY`, so
   every measurement here is offline against throwaway databases. The CLI's real
   first run against `progress.apcsexamprep.com` is still worth doing by hand.
-- **`checkStaleDates` layer attribution is approximate.** It classifies a hit by
-  slicing 40 characters either side of the match and asking which layer contains
-  that slice. A date near the opening of a `<script>` block produces a window
-  that straddles the boundary and gets attributed to `body`, which would read as
-  a P1 rather than as noise. Not fixed: it needs an index-based layer map rather
-  than a substring search, and that is a larger change than this pass warrants.
-  Flagged rather than silently carried.
+- ~~**`checkStaleDates` layer attribution is approximate.**~~ FIXED, see section
+  4 below. It was worth doing after all: attribution is the tool's whole promise.
 - **No agent definitions beyond `verifier`.** The roster in the brief is
   deliberately one at a time.
+
+## 4. Layer attribution was producing false P1s (fixed in this branch)
+
+Flagged as out of scope in the first draft of this note, then fixed, because
+reporting WHICH LAYER a hit lives in is the entire promise of the tool.
+
+`checkStaleDates` classified a hit by slicing 40 characters either side of the
+match and asking whether that window appeared inside the concatenated
+script/style/comment blocks. A hit near the opening of a `<script>` produced a
+window straddling the tag, which appears in no block, and fell through to
+`body`. Measured on a fixture holding a date just inside a script tag:
+
+```
+OLD (40-char window):   [P1] 1 past date(s) in BODY COPY:
+NEW (positional):       [info] 1 past date(s) in script/style/comment ... probably fine
+```
+
+That is a false "stale copy is shipping" alarm, on the exact shape the tool was
+built for: the bootcamp banner hides itself with an inline date check, so a date
+sitting inside a `<script>` is the normal case, not the exception.
+
+The fix builds an index range map of comment, script and style spans and asks
+which range contains the match offset. Ranges are sorted earliest-start-first, so
+a commented-out `<script>` is reported as the comment it actually is rather than
+as executable script.
+
+Six assertions cover it, including the one that keeps the fix honest: the same
+date in real body copy must still be a P1, or "fixed" would be indistinguishable
+from "silenced".
+
+## 5. End-to-end: the ledger reaching reality
+
+`smoke/apcs-cli.js` now serves a fixture storefront page from the same throwaway
+app and drives `apcs evidence` against it. That exercises the path the whole
+Command Center turns on: a task carries an artifact, and the CLI goes and looks
+at the artifact rather than trusting the report. It also proves the CLI and the
+verifier are wired together and find each other on disk.
+
+Seven assertions, including the two real mis-closure shapes: a phrase that lives
+only in an HTML comment is reported as comment-only and explicitly NOT as
+something a reader sees, and a non-URL artifact ("emailed the district on the
+12th") is reported as not machine-checkable rather than as a failure.

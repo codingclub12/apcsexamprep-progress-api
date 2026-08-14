@@ -153,6 +153,50 @@ ok('every run states it is not a verdict', [out1, out2, out3, out4, out5]
 ok('never emits the word VERIFIED as a conclusion', ![out1, out2, out4]
   .some((o) => /\bVERIFIED\b/.test(o)));
 
+// -- fixture 8: layer attribution is positional --------------------------------
+//  Reporting WHICH LAYER a hit lives in is the whole promise of this tool, so it
+//  gets its own section. The earlier implementation sliced 40 characters either
+//  side of a hit and asked whether that window appeared inside the concatenated
+//  blocks. A hit near the opening of a <script> produced a window straddling the
+//  tag, which appears in no block, and was attributed to `body` - turning script
+//  internals into a P1 "stale copy is shipping" finding. That is a false alarm of
+//  exactly the kind this tool exists to prevent someone chasing.
+console.log('\n8. Layer attribution is by position, not by a text window');
+
+const meta100 = `<meta name="description" content="${'d'.repeat(100)}">`;
+
+// A date immediately after the <script> open tag, with no version-pin keyword to
+// rescue it. This is the bootcamp banner's own shape.
+const dateInScript = `<!DOCTYPE html><html><head><title>S</title>${meta100}</head><body><h1>H</h1>`
+  + `<script>var bannerEnds="2026-03-27";if(new Date()>bannerEnds){hide();}</scr` + `ipt>`
+  + `<p>Clean body copy.</p></body></html>`;
+const out8a = run(fixture('date-in-script.html', dateInScript));
+ok('a date just inside <script> is NOT reported as body copy', !/in BODY COPY/.test(out8a));
+ok('and it is reported as script-layer noise instead', /probably fine/.test(out8a));
+
+// The same date in real body copy must still be a P1, or the fix above would be
+// indistinguishable from silencing the check.
+const dateInBody = `<!DOCTYPE html><html><head><title>B</title>${meta100}</head><body><h1>H</h1>`
+  + `<p>Doors open 2026-03-27, see you there.</p></body></html>`;
+const out8b = run(fixture('date-in-body.html', dateInBody));
+ok('the same date in body copy IS still a P1', /in BODY COPY/.test(out8b));
+
+// A commented-out script is a comment, not executable script.
+const commentedScript = `<!DOCTYPE html><html><head><title>C</title>${meta100}</head><body><h1>H</h1>`
+  + `<!-- <script>var old="2024-02-02";</scr` + `ipt> -->`
+  + `<p>Body copy.</p></body></html>`;
+const out8c = run(fixture('commented-script.html', commentedScript), '--json');
+const parsed8c = JSON.parse(out8c)[0];
+ok('a commented-out script is attributed to comment, not script',
+  (parsed8c.stale_dates.find((d) => d.date === '2024-02-02') || {}).layer === 'comment');
+ok('and it is treated as noise', (parsed8c.stale_dates.find((d) => d.date === '2024-02-02') || {}).noise === true);
+
+// The layer must be named in the JSON, since the nightly sweep reads that and
+// not the human report.
+ok('every stale-date finding carries a layer',
+  parsed8c.stale_dates.every((d) => ['body', 'comment', 'script', 'style'].includes(d.layer)),
+  parsed8c.stale_dates.map((d) => d.layer));
+
 fs.rmSync(DIR, { recursive: true, force: true });
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail === 0 ? 0 : 1);
