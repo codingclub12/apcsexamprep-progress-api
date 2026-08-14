@@ -43,6 +43,7 @@
     "smoke:quizvisibility": "node smoke/quiz-grade-visibility.js",
     "smoke:command": "node smoke/command-center.js",
     "smoke:checks": "node smoke/command-checks.js",
+    "smoke:hazards": "node smoke/hazard-coverage.js",
     "smoke:gbagree": "node smoke/gradebook-agreement.js",
     "smoke:contract": "node smoke/gradebook-contract.js",
     "smoke:retrymodes": "node smoke/retry-modes.js",
