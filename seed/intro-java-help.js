@@ -142,6 +142,38 @@ const ERRORS = [
       'What a NullPointerException means in Greenfoot, the three usual causes, and how to find the '
       + 'line that is actually at fault.'),
   },
+  {
+    code: 'E-08', after: '2.1',
+    handle: 'intro-java-help-error-variable-already-defined',
+    title: 'Java error: variable is already defined',
+    message: 'variable X is already defined in method Y',
+    means: 'You declared the same variable name twice in the same place. The second declaration is '
+      + 'trying to make a box that already exists.',
+    causes: [
+      'Writing the type again on a later line: `int score = 0;` then `int score = 10;`.',
+      'Two variables with the same name in the same method.',
+      'A parameter and a local variable sharing a name.',
+    ],
+    seo: SEO('java variable is already defined',
+      'Why Java says a variable is already defined, why the fix is usually deleting the type on '
+      + 'the second line, and how to spot it.'),
+  },
+  {
+    code: 'E-09', after: '2.3',
+    handle: 'intro-java-help-error-int-cannot-be-converted-to-boolean',
+    title: 'Java error: int cannot be converted to boolean',
+    message: 'incompatible types: int cannot be converted to boolean',
+    means: 'Something that needed a true or false question was given a number or an instruction '
+      + 'instead. In an if condition this almost always means = was typed where == was meant.',
+    causes: [
+      'Using a single = inside an if: `if (score = 10)` instead of `if (score == 10)`.',
+      'Using a number as a condition, such as `if (lives)` instead of `if (lives > 0)`.',
+      'Assigning to a boolean from an int.',
+    ],
+    seo: SEO('int cannot be converted to boolean java if',
+      'Why Java says int cannot be converted to boolean, why it usually means you typed = instead '
+      + 'of ==, and how to fix the condition.'),
+  },
 ];
 
 // ── Greenfoot behaviour problems: it compiled, and it is still wrong ──────────
@@ -220,6 +252,77 @@ const GOTCHAS = [
       'Why Greenfoot locks up when you press Run, why a loop inside act causes it, and how to fix '
       + 'it without losing your work.'),
   },
+  {
+    code: 'G-06', after: '2.2',
+    handle: 'intro-java-help-my-maths-is-wrong',
+    title: 'My maths gives the wrong answer and there is no error',
+    means: 'Almost always integer division. When both numbers are whole numbers Java throws the '
+      + 'remainder away instead of rounding.',
+    causes: [
+      'Dividing two ints and expecting a decimal: 7 / 2 gives 3, not 3.5.',
+      'Storing a decimal result into an int, which truncates it.',
+      'Expecting Java to round. It does not; it cuts.',
+    ],
+    seo: SEO('java division wrong answer no error',
+      'Why Java arithmetic silently gives the wrong answer, how integer division truncates, and '
+      + 'the one-character fix.'),
+  },
+  {
+    code: 'G-07', after: '2.4',
+    handle: 'intro-java-help-my-if-always-runs',
+    title: 'My if statement always runs',
+    means: 'The if is probably not controlling the block you think it is.',
+    causes: [
+      'A semicolon straight after the condition: `if (x > 5);` ends the if immediately.',
+      'Missing braces, so only the first line below is controlled by the if.',
+      'The condition is not what you think, often = instead of ==.',
+    ],
+    seo: SEO('java if statement always runs',
+      'Why a Java if statement runs every time, the stray semicolon that causes it, and why there '
+      + 'is never an error message for it.'),
+  },
+  {
+    code: 'G-08', after: '2.5',
+    handle: 'intro-java-help-my-else-if-never-runs',
+    title: 'One of my else if branches never runs',
+    means: 'A condition earlier in the chain is catching everything that branch was meant to catch.',
+    causes: [
+      'A wide condition placed before a narrow one, so the narrow one is unreachable.',
+      'Overlapping ranges, where the first match wins and the rest never get tested.',
+      'Expecting every condition to be checked. The chain stops at the first true one.',
+    ],
+    seo: SEO('java else if branch never runs',
+      'Why an else if branch is unreachable, how condition order decides which one catches, and '
+      + 'the rule for ordering ranges.'),
+  },
+  {
+    code: 'G-09', after: '2.6',
+    handle: 'intro-java-help-too-many-things-spawning',
+    title: 'Far too many things are spawning',
+    means: 'A percentage chance checked inside act() is a chance PER FRAME, and act() runs many '
+      + 'times a second.',
+    causes: [
+      'A spawn chance that sounds rare, like 5 percent, firing dozens of times a second.',
+      'No counter or timer limiting how often the spawn can happen.',
+      'Spawning in the world act() and in an actor act() at the same time.',
+    ],
+    seo: SEO('greenfoot too many objects spawning',
+      'Why a small random spawn chance floods a Greenfoot scenario, how per-frame probability '
+      + 'works, and how to slow it down.'),
+  },
+  {
+    code: 'G-10', after: '2.7',
+    handle: 'intro-java-help-cannot-move-diagonally',
+    title: 'My player cannot move diagonally',
+    means: 'The key checks are in an else if chain, which stops at the first key it finds.',
+    causes: [
+      'Using else if between the direction checks instead of separate if statements.',
+      'Returning out of act() after the first key match.',
+    ],
+    seo: SEO('greenfoot diagonal movement not working',
+      'Why a Greenfoot player cannot move diagonally, why an else if chain blocks it, and the '
+      + 'one-word change that fixes it.'),
+  },
 ];
 
 // ── How-to recipes: the game-design surface ──────────────────────────────────
@@ -247,6 +350,22 @@ const RECIPES = [
     seo: SEO('greenfoot keep actor inside world',
       'How to stop a Greenfoot actor walking off the edge, using isAtEdge and setLocation. Beginner '
       + 'recipe with working code.'),
+  },
+  {
+    code: 'R-04', after: '2.6',
+    handle: 'intro-java-help-recipe-random-spawning',
+    title: 'How to spawn things at random',
+    seo: SEO('greenfoot spawn objects randomly',
+      'How to spawn Greenfoot actors at random positions and at a controlled rate, with working '
+      + 'code and the per-frame trap explained.'),
+  },
+  {
+    code: 'R-05', after: '2.7',
+    handle: 'intro-java-help-recipe-arrow-key-movement',
+    title: 'How to move a player with the arrow keys',
+    seo: SEO('greenfoot arrow key movement code',
+      'Working Greenfoot code for four-direction arrow key movement, including diagonals, and why '
+      + 'separate if statements are required.'),
   },
 ];
 
