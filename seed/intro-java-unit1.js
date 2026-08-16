@@ -31,6 +31,7 @@
 
 const COURSE = 'intro-java';
 const UNIT = 'unit-1';
+const LABEL = 'Unit 1: Meet Greenfoot';
 
 // Screenshots are referenced, not embedded. Path convention is fixed by
 // docs/intro-java-course-spec.md so any single shot can be retaken without
@@ -1544,4 +1545,4 @@ const LESSONS = [
   },
 ];
 
-module.exports = { course: COURSE, unit: UNIT, lessons: LESSONS };
+module.exports = { course: COURSE, unit: UNIT, label: LABEL, lessons: LESSONS };

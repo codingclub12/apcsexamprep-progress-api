@@ -17,6 +17,7 @@
 const BANKS = [
   require('./intro-java-unit1'),
   require('./intro-java-unit2'),
+  require('./intro-java-unit3'),
 ];
 
 /** Every lesson across every unit, in course order. */

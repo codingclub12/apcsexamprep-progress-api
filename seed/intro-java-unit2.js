@@ -23,6 +23,7 @@
 
 const COURSE = 'intro-java';
 const UNIT = 'unit-2';
+const LABEL = 'Unit 2: Variables, Decisions, and Input';
 
 const SHOT = (lesson, n, alt) => ({ src: `intro-java/${lesson}/step-${n}.png`, alt });
 
@@ -1787,4 +1788,4 @@ const LESSONS = [
   },
 ];
 
-module.exports = { course: COURSE, unit: UNIT, lessons: LESSONS };
+module.exports = { course: COURSE, unit: UNIT, label: LABEL, lessons: LESSONS };
