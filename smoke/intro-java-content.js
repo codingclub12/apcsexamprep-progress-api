@@ -48,8 +48,7 @@ for (const b of BANKS) for (const l of b.lessons) UNIT_OF.set(l.lesson, b);
 const pages = LESSONS.map((l, i) => renderLesson(l, {
   prev: LESSONS[i - 1] ? { handle: handleFor(LESSONS[i - 1]), lesson: LESSONS[i - 1].lesson, title: LESSONS[i - 1].title } : null,
   next: LESSONS[i + 1] ? { handle: handleFor(LESSONS[i + 1]), lesson: LESSONS[i + 1].lesson, title: LESSONS[i + 1].title } : null,
-  unitLabel: UNIT_OF.get(l.lesson).unit === 'unit-1'
-    ? 'Unit 1: Meet Greenfoot' : 'Unit 2: Variables, Decisions, and Input',
+  unitLabel: UNIT_OF.get(l.lesson).label,
   unitKey: UNIT_OF.get(l.lesson).unit,
   helpIndex: help.INDEX,
 }));
@@ -64,6 +63,14 @@ ok('1.2 Unit 1 is 1.1 through 1.6 in order',
 ok('1.3 Unit 2 is 2.1 through 2.7 in order',
   BANKS[1].lessons.map((l) => l.lesson).join(',') === '2.1,2.2,2.3,2.4,2.5,2.6,2.7',
   BANKS[1].lessons.map((l) => l.lesson));
+ok('1.3b Unit 3 is 3.1 through 3.9 in order',
+  BANKS[2].lessons.map((l) => l.lesson).join(',') === '3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8,3.9',
+  BANKS[2].lessons.map((l) => l.lesson));
+ok('1.3c every bank declares a human label for its unit',
+  BANKS.every((b) => typeof b.label === 'string' && b.label.length > 8),
+  BANKS.map((b) => b.label));
+ok('1.3d every lesson number matches the unit it is filed under',
+  BANKS.every((b) => b.lessons.every((l) => `unit-${l.lesson.split('.')[0]}` === b.unit)));
 ok('1.4 no lesson id is used twice across units',
   new Set(LESSONS.map((l) => l.lesson)).size === LESSONS.length);
 ok('1.5 no slug is used twice, which would collide as a page handle',

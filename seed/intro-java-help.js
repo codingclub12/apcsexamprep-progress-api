@@ -361,6 +361,82 @@ const GOTCHAS = [
       'Why a Greenfoot player cannot move diagonally, why an else if chain blocks it, and the '
       + 'one-word change that fixes it.'),
   },
+  {
+    code: 'G-11', after: '3.2',
+    handle: 'intro-java-help-my-method-never-runs',
+    title: 'I wrote a method and nothing happens',
+    means: 'Writing a method defines it. Something still has to call it by name, and nothing does.',
+    causes: [
+      'Nothing calls the method. act() or the constructor has to invoke it.',
+      'The call is missing its brackets, so it is not a call at all.',
+      'The method was accidentally written inside another method, so it never became a method.',
+    ],
+    fix:
+      'Find the place the method should run from, usually act() for per-frame behaviour or the '
+      + 'constructor for one-off setup, and add a call with brackets and a semicolon. Then check '
+      + 'the method sits beside act() rather than inside it.',
+    seo: SEO('java method written but not running',
+      'Why a Java method you wrote does nothing, why defining is not calling, and where the call '
+      + 'belongs in a Greenfoot class.'),
+  },
+  {
+    code: 'G-12', after: '3.8',
+    handle: 'intro-java-help-my-score-stays-zero',
+    title: 'My score always stays at zero',
+    means: 'The score variable is declared inside act(), so it is rebuilt from scratch every frame '
+      + 'and never remembers anything.',
+    causes: [
+      'The declaration is inside act(). Every frame starts by setting it back to zero.',
+      'The variable is declared inside an if block, so it disappears when the block ends.',
+      'The score is being displayed from a different object than the one counting.',
+    ],
+    fix:
+      'Move the declaration out of act() and into the class body, beside the other fields and '
+      + 'outside every method. That one move is usually the whole fix. Assign the starting value '
+      + 'there or in the constructor.',
+    seo: SEO('greenfoot score always 0 not updating',
+      'Why a Greenfoot score never rises above zero, how a local variable resets every frame, and '
+      + 'the one-line fix.'),
+  },
+  {
+    code: 'G-13', after: '3.5',
+    handle: 'intro-java-help-my-actor-moves-too-far',
+    title: 'My actor jumps across the screen',
+    means: 'move counts CELLS, not pixels, so a large cell size turns a small move into a big jump.',
+    causes: [
+      'The world has a large cell size, so each cell is many pixels on screen.',
+      'The move distance is simply too large for the size of the world.',
+      'setLocation is being given pixel values where cell coordinates were expected.',
+    ],
+    fix:
+      'Look at the third number in your super call. If it is large, either reduce the move '
+      + 'distance to suit or rebuild the world with a cell size of 1 for smooth movement. Grid '
+      + 'games want big cells; action games want a cell size of 1.',
+    seo: SEO('greenfoot actor moves too far cell size',
+      'Why a Greenfoot actor leaps across the screen, how cell size changes what move means, and '
+      + 'which cell size suits which game.'),
+  },
+  {
+    code: 'G-14', after: '3.9',
+    handle: 'intro-java-help-constructor-cannot-be-applied',
+    title: 'Java error: constructor cannot be applied to given types',
+    message: 'constructor X in class X cannot be applied to given types',
+    means: 'You created an object with a different set of arguments than any of its constructors '
+      + 'accepts. Usually this appears the moment you add your first constructor.',
+    causes: [
+      'You wrote a constructor with parameters, which removes the free no-argument one, and old '
+        + 'new Enemy() calls no longer match.',
+      'The number of arguments does not match the constructor.',
+      'The arguments are in the wrong order or the wrong types.',
+    ],
+    fix:
+      'Either pass the arguments the constructor asks for at every creation site, or add a second '
+      + 'no-argument constructor that supplies sensible defaults. Both constructors can coexist and '
+      + 'Java picks by what you pass.',
+    seo: SEO('java constructor cannot be applied to given types',
+      'Why adding a constructor breaks existing new calls, what the free no-argument constructor '
+      + 'was, and the two ways to fix it.'),
+  },
 ];
 
 // ── How-to recipes: the game-design surface ──────────────────────────────────
@@ -414,6 +490,37 @@ const RECIPES = [
     seo: SEO('greenfoot arrow key movement code',
       'Working Greenfoot code for four-direction arrow key movement, including diagonals, and why '
       + 'separate if statements are required.'),
+  },
+  {
+    code: 'R-06', after: '3.8',
+    handle: 'intro-java-help-recipe-show-a-score',
+    title: 'How to show a score on screen',
+    snippet:
+      'public class ScoreWorld extends World\n{\n'
+      + '    private int score = 0;   // instance variable, so it survives\n\n'
+      + '    public void addScore(int points)\n    {\n'
+      + '        score = score + points;\n'
+      + '        showText("Score: " + score, 3, 1);\n'
+      + '    }\n}',
+    seo: SEO('greenfoot show score on screen',
+      'How to display and update a score in Greenfoot with showText, and why the score must be an '
+      + 'instance variable to survive.'),
+  },
+  {
+    code: 'R-07', after: '3.7',
+    handle: 'intro-java-help-recipe-set-up-the-opening-scene',
+    title: 'How to set up the opening scene',
+    snippet:
+      'public MyWorld()\n{\n'
+      + '    super(20, 15, 30);\n'
+      + '    prepare();          // without this line, nothing appears\n'
+      + '}\n\n'
+      + 'public void prepare()\n{\n'
+      + '    addObject(new Player(), 10, 7);\n'
+      + '    addObject(new Coin(), 3, 3);\n}',
+    seo: SEO('greenfoot set up starting actors prepare',
+      'How to place Greenfoot actors in code so the opening scene rebuilds itself every time you '
+      + 'press Reset.'),
   },
 ];
 
