@@ -71,7 +71,8 @@
     "smoke:dispatch": "node smoke/command-dispatch.js",
     "smoke:ijreporter": "node smoke/intro-java-reporter.js",
     "smoke:ijcsv": "node smoke/intro-java-pages-csv.js",
-    "ijpages": "node scripts/intro-java-pages-csv.js"
+    "ijpages": "node scripts/intro-java-pages-csv.js",
+    "smoke:verifyboard": "node smoke/verify-board.js"
   },
   "keywords": [],
   "author": "",
