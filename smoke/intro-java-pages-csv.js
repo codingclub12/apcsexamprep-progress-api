@@ -30,7 +30,36 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 
 const { allPages } = require('../lib/intro-java-build');
-const { PUBLISHED_AT } = require('../scripts/intro-java-pages-csv');
+const { PUBLISHED_AT, INHERITED, snapshotFor } = require('../scripts/intro-java-pages-csv');
+
+// ── SETUP: the takeover row's rollback snapshot ──────────────────────────────
+// The course hub replaces a live page, and the generator refuses to write ANY
+// sheet until that page's rollback snapshot is on disk. That guard is doing its
+// job in the repo right now, which means this suite has to stand one up itself
+// to test anything else at all.
+//
+// The fake is removed in a finally block, and process exit handlers on top of
+// that. A fake rollback file left behind would satisfy the guard on a real run
+// with a body nobody could actually roll back to, which is worse than the guard
+// never existing.
+const TAKEOVER = [...INHERITED.keys()][0];
+const SNAP = snapshotFor(TAKEOVER);
+const SNAP_PREEXISTING = fs.existsSync(SNAP);
+const FAKE_SNAP = '<h1>pretend live body</h1><p>' + 'x'.repeat(900) + '</p>';
+
+function putFakeSnapshot() {
+  fs.mkdirSync(path.dirname(SNAP), { recursive: true });
+  fs.writeFileSync(SNAP, FAKE_SNAP);
+}
+function removeFakeSnapshot() {
+  // Never delete a REAL snapshot somebody committed. Only ever our own fake.
+  if (SNAP_PREEXISTING) return;
+  try {
+    if (fs.existsSync(SNAP) && fs.readFileSync(SNAP, 'utf8') === FAKE_SNAP) fs.rmSync(SNAP);
+  } catch (e) { /* nothing left to do at exit */ }
+}
+process.on('exit', removeFakeSnapshot);
+process.on('uncaughtException', (e) => { removeFakeSnapshot(); console.error(e); process.exit(1); });
 
 let pass = 0, fail = 0;
 function ok(name, cond, detail) {
@@ -68,6 +97,9 @@ const out = path.join(tmp, 'pages.csv');
 const script = path.join(__dirname, '..', 'scripts', 'intro-java-pages-csv.js');
 
 section('1. The sheet generates at all');
+ok('1.0 no real rollback snapshot is committed, so the guard is live in the repo',
+  !SNAP_PREEXISTING, SNAP);
+putFakeSnapshot();
 let stdout = '';
 try {
   stdout = execFileSync(process.execPath, [script, out], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
@@ -138,11 +170,16 @@ ok('4.3 Published At is a fixed past date, never now()',
 ok('4.4 every page is published', body.every((r) => col(r, 'Published') === 'TRUE'));
 
 section('5. The generator refuses rather than shipping a bad sheet');
-// A handle that already exists live is the dangerous case for a NEW-pages
-// import: MERGE would replace a page nobody meant to touch.
+
+// Exactly one page is a deliberate takeover of an existing slug. Every OTHER
+// collision has to stay fatal, so the victim for this test is picked from the
+// pages that are not on that list.
+const victim = pages.find((p) => !INHERITED.has(p.handle));
+ok('5.0 there is a page that is not an intentional takeover', !!victim);
+
 const livePath = path.join(tmp, 'live.json');
 fs.writeFileSync(livePath, JSON.stringify({
-  data: { pages: { nodes: [{ handle: pages[0].handle, title: 'Something Else', body: '<p>live</p>' }] } },
+  data: { pages: { nodes: [{ handle: victim.handle, title: 'Something Else', body: '<p>live</p>' }] } },
 }));
 const guarded = path.join(tmp, 'guarded.csv');
 let refused = false, reason = '';
@@ -153,17 +190,77 @@ try {
   reason = String(e.stderr || '');
 }
 ok('5.1 a handle that already exists live aborts the run', refused, reason.slice(0, 200));
-ok('5.2 the abort names the page it would have replaced', reason.includes(pages[0].handle));
+ok('5.2 the abort names the page it would have replaced', reason.includes(victim.handle));
 ok('5.3 nothing is written when a check fails', !fs.existsSync(guarded));
 
-section('6. Selecting part of the course');
+section('6. The one intentional takeover');
+// The course hub adopts a live slug to inherit its authority. That single row
+// replaces a body Shopify keeps no history of, so it carries two extra rules:
+// the rollback snapshot must exist first, and it must never be silent.
+ok('6.1 exactly one handle is allowed to already exist', INHERITED.size === 1, [...INHERITED.keys()]);
+const takeover = TAKEOVER;
+ok('6.2 that handle is a page this build actually produces',
+  pages.some((p) => p.handle === takeover), takeover);
+ok('6.3 it is the course hub, not a lesson or a help page',
+  pages.find((p) => p.handle === takeover).kind === 'course-hub');
+
+// Pull the snapshot back out to prove the refusal, then restore it. This is the
+// repo's real state: the import cannot run until somebody saves that page.
+const snapPath = SNAP;
+removeFakeSnapshot();
+ok('6.4 with no snapshot on disk the guard is armed', !fs.existsSync(snapPath), snapPath);
+const noSnap = path.join(tmp, 'nosnap.csv');
+let snapRefused = false, snapReason = '';
+try {
+  execFileSync(process.execPath, [script, noSnap], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+} catch (e) {
+  snapRefused = true;
+  snapReason = String(e.stderr || '');
+}
+ok('6.5 replacing a live page with no rollback path aborts', snapRefused);
+ok('6.6 the abort says where to put the snapshot', snapReason.includes('page-snapshots'));
+ok('6.7 and says why it matters', /no version history/i.test(snapReason));
+ok('6.8 nothing is written', !fs.existsSync(noSnap));
+
+// With a snapshot present the run proceeds, and announces the takeover loudly.
+putFakeSnapshot();
+
+const LIVE_TITLE = 'Greenfoot Basics: Java Game Programming - Projects and Tutorials';
+const takeoverLive = path.join(tmp, 'live-takeover.json');
+fs.writeFileSync(takeoverLive, JSON.stringify({
+  data: { pages: { nodes: [{ handle: takeover, title: LIVE_TITLE, body: '<p>live</p>' }] } },
+}));
+
+const withSnap = path.join(tmp, 'withsnap.csv');
+let takeoverOut = '';
+try {
+  takeoverOut = execFileSync(process.execPath, [script, withSnap, '--live', takeoverLive],
+    { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+  ok('6.9 with a snapshot present, the sheet writes', fs.existsSync(withSnap));
+} catch (e) {
+  ok('6.9 with a snapshot present, the sheet writes', false, String(e.stderr || '').slice(0, 300));
+}
+ok('6.10 the takeover is announced, never silent', /TAKEOVER/.test(takeoverOut));
+ok('6.11 the rename is printed so it cannot happen by accident',
+  takeoverOut.includes(LIVE_TITLE) && takeoverOut.includes('Intro to Java with Greenfoot'),
+  takeoverOut.slice(0, 300));
+ok('6.12 the rollback file is named in the output', takeoverOut.includes('page-snapshots'));
+
+// Leave no fake snapshot behind: a bogus rollback file in the repo would let a
+// real import proceed with nothing worth rolling back to.
+removeFakeSnapshot();
+ok('6.13 the test cleans up its fake snapshot', !fs.existsSync(snapPath), snapPath);
+
+section('7. Selecting part of the course');
+putFakeSnapshot();
 for (const [kind, expected] of [['hub', 7], ['lesson', 42], ['help', 41]]) {
   const f = path.join(tmp, `${kind}.csv`);
   execFileSync(process.execPath, [script, f, '--kind', kind], { stdio: ['ignore', 'pipe', 'pipe'] });
   const n = parseCsv(fs.readFileSync(f, 'utf8').slice(1)).slice(1).filter((r) => r.length > 1).length;
-  ok(`6.x --kind ${kind} writes ${expected} rows`, n === expected, n);
+  ok(`7.x --kind ${kind} writes ${expected} rows`, n === expected, n);
 }
 
+removeFakeSnapshot();
 fs.rmSync(tmp, { recursive: true, force: true });
 console.log(`\n  ${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);

@@ -72,7 +72,8 @@
     "smoke:ijreporter": "node smoke/intro-java-reporter.js",
     "smoke:ijcsv": "node smoke/intro-java-pages-csv.js",
     "ijpages": "node scripts/intro-java-pages-csv.js",
-    "smoke:verifyboard": "node smoke/verify-board.js"
+    "smoke:verifyboard": "node smoke/verify-board.js",
+    "snapshot": "node scripts/snapshot-live-page.js"
   },
   "keywords": [],
   "author": "",

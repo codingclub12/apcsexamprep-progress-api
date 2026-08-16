@@ -34,7 +34,7 @@ const ERRORS = [
   {
     code: 'E-01', after: '1.1',
     handle: 'intro-java-help-error-cannot-find-symbol',
-    title: 'Java error: cannot find symbol',
+    title: 'Java error in Greenfoot: cannot find symbol',
     message: 'cannot find symbol',
     means: 'You used a name Java has never been told about. Almost always a typo, a missing '
       + 'declaration, or the wrong capital letter.',
@@ -46,14 +46,14 @@ const ERRORS = [
     ],
     fix:
       'Read the name Java printed and search your file for it. Compare it letter by letter with where you declared it, including capitals. If the name looks right, check you have compiled since you created the class, and check a method call has its parentheses.',
-    seo: SEO('java cannot find symbol greenfoot',
-      'What the Java error cannot find symbol means in Greenfoot, the four usual causes ranked, '
-      + 'and how to fix each one. Written for beginners.'),
+    seo: SEO('greenfoot cannot find symbol',
+      'You compiled in Greenfoot and got cannot find symbol. What Java is telling you, the four '
+      + 'usual causes ranked, and how to fix each one. Written for beginners.'),
   },
   {
     code: 'E-02', after: '1.2',
     handle: 'intro-java-help-error-semicolon-expected',
-    title: "Java error: ';' expected",
+    title: "Java error in Greenfoot: ';' expected",
     message: "';' expected",
     means: 'A statement was not finished off. Java reached the end of what looked like an '
       + 'instruction and found no semicolon.',
@@ -64,14 +64,14 @@ const ERRORS = [
     ],
     fix:
       'Look at the line ABOVE the one Java names. Java reports the point where it noticed, not the point where you slipped. Add the missing semicolon there, or close the parenthesis you left open.',
-    seo: SEO('java semicolon expected error',
-      'Why Java says semicolon expected, why the real mistake is usually on the line above, and '
-      + 'how to find it fast. Beginner friendly.'),
+    seo: SEO('greenfoot semicolon expected',
+      'Greenfoot says semicolon expected and points at the wrong line. Why the real mistake is '
+      + 'usually the line above it, and how to find it fast. Beginner friendly.'),
   },
   {
     code: 'E-03', after: '1.4',
     handle: 'intro-java-help-error-incompatible-types',
-    title: 'Java error: incompatible types',
+    title: 'Java error in Greenfoot: incompatible types',
     message: 'incompatible types: X cannot be converted to Y',
     means: 'You tried to put a value of one kind into a slot built for another kind.',
     causes: [
@@ -81,14 +81,14 @@ const ERRORS = [
     ],
     fix:
       'Read the two types Java names: it wanted the first and got the second. Then ask which half is wrong. Storing a void result means deleting the assignment; text where a number belongs means removing the quotes; a condition means you probably typed = instead of ==',
-    seo: SEO('java incompatible types error beginner',
-      'What incompatible types means in Java, with the three causes beginners hit most and a '
-      + 'worked fix for each.'),
+    seo: SEO('greenfoot incompatible types',
+      'What incompatible types means when you compile a Greenfoot scenario, the three causes '
+      + 'beginners hit most, and a worked fix for each one.'),
   },
   {
     code: 'E-04', after: '1.4',
     handle: 'intro-java-help-error-illegal-start-of-expression',
-    title: 'Java error: illegal start of expression',
+    title: 'Java error in Greenfoot: illegal start of expression',
     means: 'Java found something in a place where that kind of thing is not allowed. Usually a '
       + 'brace problem rather than a problem on the line named.',
     message: 'illegal start of expression',
@@ -99,14 +99,14 @@ const ERRORS = [
     ],
     fix:
       'Ignore the line number and count your braces instead. Every { needs a }. Re-indent the whole method: the place where the indentation stops making sense is where the brace is missing.',
-    seo: SEO('illegal start of expression java',
-      'Why Java reports illegal start of expression, why the cause is usually a brace and not the '
-      + 'line shown, and how to fix it.'),
+    seo: SEO('greenfoot illegal start of expression',
+      'Why Greenfoot reports illegal start of expression, why the cause is nearly always a missing '
+      + 'brace rather than the line shown, and how to find it.'),
   },
   {
     code: 'E-05', after: '1.5',
     handle: 'intro-java-help-error-missing-return-statement',
-    title: 'Java error: missing return statement',
+    title: 'Java error in Greenfoot: missing return statement',
     message: 'missing return statement',
     means: 'A method promised to hand back a value and there is a path through it that hands back '
       + 'nothing.',
@@ -117,9 +117,9 @@ const ERRORS = [
     ],
     fix:
       'Trace every path through the method and check each one ends in a return. An if with a return but no else is the usual cause. Either add a return after the if, or give the else one of its own.',
-    seo: SEO('java missing return statement fix',
-      'What missing return statement means, why an if without an else causes it, and how to fix '
-      + 'it. Beginner Java help.'),
+    seo: SEO('greenfoot missing return statement',
+      'What missing return statement means when a Greenfoot method promises a value, why an if '
+      + 'without an else causes it, and how to fix it. Beginner help.'),
   },
   {
     code: 'E-06', after: '1.5',

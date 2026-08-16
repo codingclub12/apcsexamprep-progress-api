@@ -126,3 +126,119 @@ added to the renderer that nobody wired up.
 No live check was possible: this container's network policy returns 403 for
 `progress.apcsexamprep.com`, confirmed against the proxy status endpoint. Every
 number above is from local runs against a local SQLite file.
+
+---
+
+## Follow-up in the same session: the import target, decided against live data
+
+Before generating the sheet I pulled the store's full page list (728 pages) to
+check for handle collisions. Two findings changed what the sheet contains.
+
+### No collision, confirmed twice
+
+`handle:intro-java*` returns nothing, and the operator was verified working
+first by running `handle:ap-csa-frq*`, which returns matches. The full page
+listing contains no handle beginning with `intro-java`. All 90 handles were free.
+
+### The Java-errors cluster already exists
+
+`ap-csa-java-errors-hub` plus 11 `java-errors-*-ap-csa` pages, updated
+2026-06-18. Five of the ten new error help pages target the identical compiler
+error. Two pages of ours on one head term means Google picks one, and it would
+have picked the older, better-linked CSA page, burying the beginner version that
+is the one a student in this course actually needs.
+
+Tanner chose to differentiate rather than drop or duplicate. Those five are
+retitled `Java error in Greenfoot: X` with Greenfoot-led SEO descriptions, so
+they answer "greenfoot cannot find symbol" while the CSA pages keep
+"java cannot find symbol ap csa". The other five have no competitor and keep
+their shorter titles.
+
+### The course hub takes over a legacy slug
+
+`greenfoot-basics-beginner-greenfoot-projects-and-tutorials` has existed since
+2025-09-15 carrying a library of Greenfoot project tutorials. Tanner's call was
+to reuse its accumulated authority rather than start a new `intro-java` handle
+from zero.
+
+Reading the page first changed how that was done. It was not a thin page: 11
+projects, 11 YouTube tutorial links and 7 Google Drive starter-file folders,
+none of which existed anywhere in this repo. A Matrixify import replaces a body
+rather than merging into it, so a straight overwrite would have destroyed all of
+it and reported success.
+
+So `seed/intro-java-projects-library.js` carries the projects into the repo and
+the hub renders them as a section, filed under the unit whose material each one
+uses. Same URL, same authority, nothing lost. Unit hubs keep the clean
+`intro-java-unit-N` prefix: they are new pages with nothing to inherit, and
+deriving them from the course handle would have produced
+`greenfoot-basics-beginner-greenfoot-projects-and-tutorials-unit-1`.
+
+Three broken links were found on that page while reading it, and the rebuild
+fixes all three:
+
+| Link | Status |
+|---|---|
+| `/pages/ap-computer-science-a`, in the breadcrumb AND the primary CTA button | 404, real handle is `ap-csa` |
+| `/pages/ap-csa-study-guide` | 404, real handle is `ap-csa-study-guides` |
+| `/pages/ap-csa-frq-solutions` | 404, real is `ap-csa-frq-archive` |
+
+Its main call to action had been dead for some time.
+
+### The takeover is the sheet's most dangerous row, so it is fenced
+
+`scripts/intro-java-pages-csv.js` aborts on any handle that already exists live.
+The course hub now needs to collide on purpose, so it is named in an `INHERITED`
+map. Being on that list is the only way to collide, and it costs two extra
+requirements:
+
+1. A rollback snapshot must exist at
+   `shopify/page-snapshots/<handle>.before-intro-java.html` before the sheet
+   will write at all. Shopify keeps no version history for page bodies, so that
+   file is the only way back from a replacement Matrixify reports as a success.
+2. The takeover and its title change are printed on every run. A rename nobody
+   noticed is how a link in somebody's syllabus quietly starts pointing at a
+   differently named thing.
+
+`scripts/snapshot-live-page.js` writes that snapshot byte for byte out of a raw
+Admin API response. It never retypes or reconstructs a body, because a snapshot
+that is almost right is worse than none: a rollback would restore something
+subtly different and nobody would know.
+
+## Evidence, second pass
+
+```
+npm run smoke:introjava     3587 passed, 0 failed
+npm run smoke:ijreporter      81 passed, 0 failed
+npm run smoke:ijcsv           37 passed, 0 failed
+npm run smoke:gapgrade        37 passed, 0 failed
+npm run smoke:greenfoot       36 passed, 0 failed
+npm run smoke:manifestprune   56 passed, 0 failed
+npm run smoke:hazards        149 passed, 0 failed
+npm run smoke:encoding        13 passed, 0 failed
+npm run smoke:pages            9 passed, 0 failed
+npm run smoke:denominators    65 passed, 0 failed
+```
+
+Hub renders 11 projects, 11 video links and 7 Drive links, one h1. Sheet is 90
+rows and 1471 KB.
+
+## The blocker, stated plainly
+
+**The sheet cannot be generated right now, and that is the guard working.** The
+rollback snapshot for the takeover page does not exist, so the generator refuses.
+`smoke/intro-java-pages-csv.js` check 1.0 asserts that is still true, so the day
+somebody commits a real snapshot the suite says so.
+
+Producing it needs one Admin API read, which this container cannot make: the
+network policy returns 403 for the store, and the read was done through an MCP
+client that cannot write to disk here.
+
+```
+# whoever has API access:
+#   query { pages(first: 5, query: "handle:greenfoot-basics-beginner-greenfoot-projects-and-tutorials") {
+#     nodes { id handle title updatedAt body } } }
+node scripts/snapshot-live-page.js pages.json     # writes the snapshot
+git add shopify/page-snapshots/ && git commit
+node scripts/intro-java-pages-csv.js pages.csv --live pages.json
+```
