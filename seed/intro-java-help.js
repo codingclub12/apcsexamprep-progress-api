@@ -437,6 +437,63 @@ const GOTCHAS = [
       'Why adding a constructor breaks existing new calls, what the free no-argument constructor '
       + 'was, and the two ways to fix it.'),
   },
+  {
+    code: 'G-15', after: '4.1',
+    handle: 'intro-java-help-my-loop-never-ends',
+    title: 'My loop never ends',
+    means: 'Nothing inside the loop moves the condition towards false, so it stays true forever.',
+    causes: [
+      'The counter is never changed inside the loop body.',
+      'The counter changes in the wrong direction, moving away from the exit.',
+      'The condition can never be false for the values the counter takes.',
+    ],
+    fix:
+      'Find the line that should change the counter. If it is missing, add it. If it is there, '
+      + 'check it moves the counter TOWARDS the condition failing rather than away from it. A for '
+      + 'loop puts the update in the header where it is much harder to lose.',
+    seo: SEO('java loop never ends infinite',
+      'Why a Java loop never ends, the three causes, and why a for loop makes the missing update '
+      + 'obvious. Beginner help.'),
+  },
+  {
+    code: 'G-16', after: '4.4',
+    handle: 'intro-java-help-collision-not-detected',
+    title: 'My collision is not being detected',
+    means: 'Either the actors never actually overlap, or the check is looking for the wrong thing.',
+    causes: [
+      'The class named in isTouching is not the class of the thing you are hitting.',
+      'The actor moves so far each frame that it jumps straight over the target.',
+      'The check is not inside act(), so it only ever ran once.',
+      'One of the actors was already removed from the world.',
+    ],
+    fix:
+      'Press Act one frame at a time and watch the two actors approach. If they pass through each '
+      + 'other in a single frame, reduce the move distance. If they visibly overlap and nothing '
+      + 'happens, check the class name in the isTouching call.',
+    seo: SEO('greenfoot collision not detected istouching',
+      'Why a Greenfoot collision is never detected, including actors that jump over each other in '
+      + 'one frame, and how to test it a frame at a time.'),
+  },
+  {
+    code: 'G-17', after: '4.5',
+    handle: 'intro-java-help-concurrent-modification-exception',
+    title: 'Java error: ConcurrentModificationException',
+    message: 'java.util.ConcurrentModificationException',
+    means: 'You changed a collection while looping over it. In Greenfoot that is almost always '
+      + 'removing actors from the world inside a loop over the list you got from the world.',
+    causes: [
+      'Calling removeObject inside a loop over getObjects.',
+      'Adding actors to the world inside a loop over its own list.',
+      'Removing from any list while an enhanced for is walking it.',
+    ],
+    fix:
+      'Remove them all at once with removeObjects(getObjects(Thing.class)). If you need to pick '
+      + 'and choose, collect the ones to remove into a separate list inside the loop, then remove '
+      + 'them after the loop has finished. The alarming name hides a one-line fix.',
+    seo: SEO('greenfoot concurrentmodificationexception fix',
+      'What ConcurrentModificationException means in Greenfoot, why removing actors inside a loop '
+      + 'causes it, and the one-line fix.'),
+  },
 ];
 
 // ── How-to recipes: the game-design surface ──────────────────────────────────
@@ -521,6 +578,25 @@ const RECIPES = [
     seo: SEO('greenfoot set up starting actors prepare',
       'How to place Greenfoot actors in code so the opening scene rebuilds itself every time you '
       + 'press Reset.'),
+  },
+  {
+    code: 'R-08', after: '4.7',
+    handle: 'intro-java-help-recipe-spawn-a-wave',
+    title: 'How to spawn a wave of enemies',
+    snippet:
+      'public void startWave()\n{\n'
+      + '    // One loop, any size. Change the 8 to change the wave.\n'
+      + '    for (int i = 0; i < 8; i++)\n    {\n'
+      + '        addObject(new Enemy(2), i * 2, 0);\n'
+      + '    }\n}\n\n'
+      + 'public void act()\n{\n'
+      + '    // Guarded, so it runs once per wave and not once per frame.\n'
+      + '    if (getObjects(Enemy.class).size() == 0)\n    {\n'
+      + '        startWave();\n'
+      + '    }\n}',
+    seo: SEO('greenfoot spawn wave of enemies loop',
+      'Working Greenfoot code to spawn an evenly spaced wave of enemies with one loop, and why the '
+      + 'loop must not live in act.'),
   },
 ];
 
