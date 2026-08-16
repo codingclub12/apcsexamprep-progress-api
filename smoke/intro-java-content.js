@@ -50,6 +50,11 @@ for (const b of BANKS) for (const l of b.lessons) UNIT_OF.set(l.lesson, b);
 // renderer with different neighbours, and no check could see the difference.
 const build = require('../lib/intro-java-build');
 const pages = build.lessonPages();
+// Memoised, because sections 11.5, 11 and 12 all want these and rendering the
+// whole course three times over is pure waste.
+let _hp = null, _hb = null;
+function helpPagesForLinks() { if (!_hp) _hp = build.helpPages(); return _hp; }
+function hubsForLinks() { if (!_hb) _hb = build.hubPages(); return _hb; }
 
 // ── 1. The bank is structurally complete ─────────────────────────────────────
 section('1. Every lesson is structurally complete');
@@ -496,6 +501,68 @@ ok('11.z the catalog covers errors, gotchas and recipes',
   [...new Set(helpPages.map((h) => h.helpKind))]);
 ok('11.z helpKind agrees with the catalog classifier',
   helpPages.every((h) => h.helpKind === kindOf(help.INDEX[h.code])));
+
+// ── 11.5 EVERY INTERNAL LINK RESOLVES ────────────────────────────────────────
+//  The defect this exists for shipped to the live store and had to be found by
+//  auditing Shopify afterwards. Three separate causes, one shape: a URL built
+//  from a handle that nobody checked against the handles the build produces.
+//
+//    - The course hub took over a legacy slug, and three renderers still had
+//      `/pages/intro-java` hardcoded. 83 pages pointed at a 404.
+//    - Every lesson breadcrumb linked to `intro-java-unit-1` regardless of its
+//      unit, so a Unit 6 crumb said "Unit 6" and went to Unit 1.
+//    - All 41 help pages had a crumb to `/pages/intro-java-help`, an index page
+//      that was never built.
+//
+//  None of these break a page, none throw, and none are visible in a diff. The
+//  only thing that catches them is checking every link target against the set of
+//  handles the build actually produces, which is what this does.
+section('11.5 Every internal link points at a page this build produces');
+
+const ijBuiltHandles = new Set([...pages, ...helpPagesForLinks(), ...hubsForLinks()].map((p) => p.handle));
+const IJ_LINK_RE = /https:\/\/apcsexamprep\.com\/pages\/([a-z0-9-]+)/g;
+
+// Only intro-java links are this build's responsibility. A link out to an
+// existing AP CSA page is legitimate and cannot be checked from here.
+const ijDangling = [];
+for (const p of [...pages, ...helpPagesForLinks(), ...hubsForLinks()]) {
+  for (const m of p.bodyHtml.match(IJ_LINK_RE) || []) {
+    const h = m.split('/pages/')[1];
+    if (h.startsWith('intro-java') || ijBuiltHandles.has(h)) {
+      if (!ijBuiltHandles.has(h)) ijDangling.push(`${p.handle} -> ${h}`);
+    }
+  }
+}
+ok('11.5a no page links to an intro-java handle this build does not produce',
+  ijDangling.length === 0, ijDangling.slice(0, 8));
+
+// The course hub is the one link every page makes, and its handle is a legacy
+// slug that reads like a mistake. Pin it so nobody "tidies" it back.
+const IJ_COURSE_HANDLE = require('../lib/intro-java-page').COURSE_HANDLE;
+ok('11.5b the course handle is the inherited slug, defined in one place',
+  IJ_COURSE_HANDLE === 'greenfoot-basics-beginner-greenfoot-projects-and-tutorials', IJ_COURSE_HANDLE);
+ok('11.5c a page with that handle is actually built', ijBuiltHandles.has(IJ_COURSE_HANDLE));
+
+// Breadcrumb positions must run 1..n. Deleting a crumb and leaving the numbering
+// alone is how structured data silently stops validating.
+let ijCrumbSeq = 0;
+for (const p of [...pages, ...helpPagesForLinks(), ...hubsForLinks()]) {
+  for (const m of p.bodyHtml.match(/"@type":"BreadcrumbList"[\s\S]*?\]/g) || []) {
+    const pos = (m.match(/"position":(\d+)/g) || []).map((x) => Number(x.split(':')[1]));
+    if (pos.join(',') !== pos.map((_, i) => i + 1).join(',')) ijCrumbSeq++;
+  }
+}
+ok('11.5d every breadcrumb numbers its items 1..n with no gaps', ijCrumbSeq === 0, ijCrumbSeq);
+
+// And the lesson crumb must name the unit it actually links to.
+let ijCrumbUnit = [];
+for (const p of pages) {
+  const lid = (p.bodyHtml.match(/data-lesson-id="([0-9.]+)"/) || [])[1];
+  const unit = (p.bodyHtml.match(/pages\/intro-java-unit-(\d)/) || [])[1];
+  if (!lid || !unit || lid.split('.')[0] !== unit) ijCrumbUnit.push(`${p.handle}: lesson ${lid}, crumb unit ${unit}`);
+}
+ok('11.5e every lesson breadcrumb links to its OWN unit hub',
+  ijCrumbUnit.length === 0, ijCrumbUnit.slice(0, 5));
 
 // ── 12. This is a PRE-AP course, and the pages must read like one ────────────
 //  intro-java is the on-ramp, not AP CSA. Most students taking it will never
