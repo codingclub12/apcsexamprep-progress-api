@@ -109,6 +109,10 @@
   .ledger div:last-child { border-bottom:0; }
   .card { background:var(--surface); border:1px solid var(--border); border-radius:11px; padding:13px; box-shadow:var(--shadow); margin-bottom:14px; }
   .card h3 { margin:0 0 6px; font-size:13px; font-weight:650; }
+  /* An anchor styled as a button. It is an <a> and not a <button> on purpose:
+     it navigates to GitHub, and a middle-click or long-press should open a tab
+     the way any other link does. */
+  .btnlink { display:inline-block; text-decoration:none; text-align:center; }
   .hint { color:var(--muted); font-size:12px; margin:0 0 8px; }
   code.url { font-size:11.5px; word-break:break-all; color:var(--ink-2); }
   .toast { position:fixed; left:50%; transform:translateX(-50%); bottom:16px; background:var(--ink); color:var(--plane); padding:9px 15px; border-radius:9px; font-size:13px; z-index:9; }
@@ -160,6 +164,20 @@
 
     <div id="list"></div>
 
+    <div class="card" id="reconcilecard">
+      <h3>Reconcile the board</h3>
+      <p class="hint">Runs the verifier over every task in needs_verification and reports what is
+        actually live: a stale date still shipping, a phrase that only lives in an HTML comment, a
+        404. It runs on a GitHub runner rather than here, because fetching a dozen storefront pages
+        with backoff would tie up this box and put its IP in front of Cloudflare's rate limiter.
+        It writes nothing. <strong>verified</strong> stays yours to click.</p>
+      <div class="acts">
+        <a class="small btnlink" id="runreconcile" target="_blank" rel="noopener">Run it on GitHub</a>
+        <a class="small btnlink" id="lastreconcile" target="_blank" rel="noopener" hidden>Last run</a>
+      </div>
+      <p class="hint" id="reconcilestatus" style="margin:8px 0 0">checking the last run...</p>
+    </div>
+
     <div class="card" id="chatcard">
       <h3>Chat read URL</h3>
       <p class="hint">Chat has web_fetch and nothing else: no headers, no POST body, so it can never send a
@@ -193,6 +211,66 @@
   var $ = function (id) { return document.getElementById(id); };
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
     return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  // ── Reconcile the board ────────────────────────────────────────────────────
+  //  The button is here because this is where the verify click already is, but
+  //  the WORK runs on a GitHub runner. Fetching a dozen storefront pages with
+  //  1.2s pacing and backoff would hold a request open on a 1 vCPU box that also
+  //  serves students, and would put the API's own IP in front of Cloudflare's
+  //  rate limiter. Shared fate with the thing students use is not worth one tap.
+  //
+  //  The last-run lookup runs in the BROWSER against GitHub's public API: the
+  //  repo is public so no credential is needed, nothing is added to this page's
+  //  render path, and the rate limit spent is the operator's rather than one
+  //  shared by every request the server handles.
+  var GH_OWNER = "codingclub12";
+  var GH_REPO = "apcsexamprep-progress-api";
+  var GH_WORKFLOW = "verify-board.yml";
+
+  function initReconcile() {
+    var runBtn = $("runreconcile");
+    var lastBtn = $("lastreconcile");
+    var status = $("reconcilestatus");
+    if (!runBtn) return;
+
+    runBtn.href = "https://github.com/" + GH_OWNER + "/" + GH_REPO
+      + "/actions/workflows/" + GH_WORKFLOW;
+
+    // Degrade quietly. A failed lookup means no last-run line, never a broken
+    // panel: GitHub rate-limits anonymous callers at 60/hour per IP, and this
+    // is decoration on top of a button that works regardless.
+    fetch("https://api.github.com/repos/" + GH_OWNER + "/" + GH_REPO
+      + "/actions/workflows/" + GH_WORKFLOW + "/runs?per_page=1")
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        var run = d && d.workflow_runs && d.workflow_runs[0];
+        if (!run) {
+          status.textContent = "No run yet. Press the button, then read the summary on the run page.";
+          return;
+        }
+        var when = new Date(run.created_at);
+        var ok = run.conclusion === "success";
+        var verdict = run.status !== "completed"
+          ? "running now"
+          : (ok ? "completed" : "FAILED (" + (run.conclusion || "unknown") + ")");
+        // textContent, never interpolation into innerHTML. Every field here
+        // comes from an external API, and this page already had one stored-XSS
+        // hole through exactly that pattern.
+        status.textContent = "Last run: " + verdict + ", " + when.toLocaleString() + ".";
+        // Validate before assigning to href. run.html_url comes from an external
+        // API, and an href is executable surface: a javascript: URL there runs.
+        // It is always a github.com URL in practice, so require that rather than
+        // trusting practice.
+        if (/^https:\/\/github\.com\//.test(String(run.html_url || ""))) {
+          lastBtn.href = run.html_url;
+          lastBtn.hidden = false;
+        }
+        lastBtn.textContent = ok ? "Last run" : "Last run (failed)";
+      })
+      .catch(function () {
+        status.textContent = "Could not reach GitHub to check the last run. The button still works.";
+      });
+  }
+
   function toast(msg) { var t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(t._h); t._h = setTimeout(function () { t.hidden = true; }, 2600); }
 
   // Every call rides the cookie. A 401 means the session died, which shows the
@@ -479,6 +557,7 @@
 
   syncControls();
   load();
+  initReconcile();
 })();
 </script>
 </body>

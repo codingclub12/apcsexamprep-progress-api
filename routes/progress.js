@@ -23,6 +23,7 @@ const wireLog = require('../lib/wire-log');
 const posthog = require('../lib/posthog');
 const { resolveMode, retryAllowedFor } = require('../retry-policy');
 const gapGrader = require('../lib/gap-grader');
+const choiceGrader = require('../lib/choice-grader');
 
 // ── PREPARED STATEMENTS (module scope, reused across requests) ────────────────
 const getClassStmt = db.prepare(
@@ -90,6 +91,8 @@ function rateLimit(req, res, next) {
 // the only way a gap attempt can be written, and it computes the score itself.
 const ITEM_TYPES = new Set(['cfu', 'quiz', 'exercise-1', 'exercise-2', 'exercise-3']);
 const GAP_ITEM_TYPE = 'gap';
+// Server-graded multiple choice: the concept checks and the lesson quiz.
+const CHOICE_ITEM_TYPES = new Set(['cfu', 'quiz']);
 
 // ── DETAIL SANITIZER (zero PII enforcement) ───────────────────────────────────
 // Per-question results: [{"q":1,"sel":2,"ok":true}]. Objects are rebuilt so no
@@ -525,6 +528,152 @@ router.post('/gap', requireStudent, rateLimit, (req, res) => {
   } catch (e) {
     console.error('Gap grade error:', e);
     res.status(500).json({ error: 'Failed to record gap attempt' });
+  }
+});
+
+// ── POST /api/progress/choice ─────────────────────────────────────────────────
+//  Concept checks and quizzes for intro-java, graded server side.
+//
+//  WHY THIS EXISTS RATHER THAN REUSING /attempt
+//  /attempt takes the score the PAGE worked out, which is right for CSA, whose
+//  widgets carry their own key. intro-java pages deliberately do not ship the
+//  key (lib/intro-java-page.js copies only id, stem and options; the smoke suite
+//  greps every page to prove it). A browser with no key cannot compute a score,
+//  so the score is computed here. There is no third option that does not involve
+//  putting the answers in the page.
+//
+//  Unlike /gap, the selection IS stored. An option index is a number chosen from
+//  a fixed list, not free text, and it is the documented detail shape. It is also
+//  the thing that lets a teacher see eleven students picking the same wrong
+//  option, which is a fact about the question rather than about the students.
+router.post('/choice', requireStudent, rateLimit, (req, res) => {
+  try {
+    const b = req.body || {};
+
+    const cls = getClassStmt.get(req.student.class_id);
+    if (!cls) return res.status(401).json({ error: 'Class not found for student' });
+
+    let course;
+    if (cls.course === 'solo') {
+      course = typeof b.course === 'string' ? b.course.slice(0, 40) : '';
+    } else if (b.course === cls.course) {
+      course = cls.course;
+    } else {
+      return res.status(400).json({ error: `course must be '${cls.course}' for this class` });
+    }
+
+    const item_id = typeof b.item_id === 'string' ? b.item_id : '';
+    if (!course || !item_id) return res.status(400).json({ error: 'course and item_id required' });
+
+    // Bounded before anything touches it. Selections are small integers; anything
+    // else is not a student answering a question.
+    const sel = b.selections;
+    if (!sel || typeof sel !== 'object') {
+      return res.status(400).json({ error: 'selections must be an object or an array' });
+    }
+    const vals = Array.isArray(sel) ? sel : Object.values(sel);
+    if (vals.length > 100) return res.status(400).json({ error: 'too many selections' });
+    for (const v of vals) {
+      if (v !== null && v !== undefined && !Number.isInteger(v)) {
+        return res.status(400).json({ error: 'every selection must be an integer option index' });
+      }
+    }
+
+    const manifest = getManifestStmt.get(course, item_id);
+    if (!manifest || !CHOICE_ITEM_TYPES.has(manifest.item_type)) {
+      return res.status(400).json({ error: `Unknown choice item '${item_id}' for ${course}. Not in course_manifest.` });
+    }
+    if (!choiceGrader.hasKey(course, item_id)) {
+      return res.status(404).json({ error: `No answer key for '${item_id}'. The page is live but the key is missing.` });
+    }
+
+    const graded = choiceGrader.gradeSubmission(course, item_id, sel);
+
+    // The manifest is the points authority. A key that has drifted from it must
+    // not silently regrade the class out of a different denominator.
+    if (graded.max_score !== manifest.points) {
+      console.error(`[choice] key/manifest mismatch for ${course} ${item_id}: `
+        + `key has ${graded.max_score} questions, manifest says ${manifest.points} points`);
+      return res.status(500).json({ error: 'This item is misconfigured. Your work was not scored.' });
+    }
+
+    const lesson_id = manifest.lesson_id;
+    const maxScore = manifest.points;
+    const score = graded.score;
+
+    const duration = Number.isInteger(b.duration_seconds) && b.duration_seconds >= 0
+      ? Math.min(b.duration_seconds, 86400)
+      : null;
+    const ua = (req.get('user-agent') || '').slice(0, 120) || null;
+
+    const threshold = cls.mastery_threshold != null ? cls.mastery_threshold : 80;
+    const passed = (score / maxScore) * 100 >= threshold ? 1 : 0;
+
+    const override = getRetryOverrideStmt.get(req.student.id);
+    const retryOn = retryAllowedFor(
+      resolveMode(cls), manifest.item_type,
+      (override && override.retry_override != null) ? override.retry_override : null
+    ) ? 1 : 0;
+
+    const detailJson = JSON.stringify(graded.detail);
+
+    const result = db.transaction(() => {
+      const attempt_no = countPriorStmt.get(req.student.id, item_id, course).n + 1;
+      insertAttemptStmt.run(
+        req.student.id, req.student.class_id, course, lesson_id, item_id, manifest.item_type,
+        score, maxScore, passed, attempt_no, duration, ua, detailJson
+      );
+      const gor = gradeOfRecordStmt.get(retryOn, req.student.id, item_id, course);
+      return { attempt_no, gor };
+    })();
+
+    wireLog.recordOnce(req, {
+      endpoint: 'POST /api/progress/choice',
+      student_id: req.student.id,
+      status: 200,
+      body: { course, item_id, answered: vals.length },
+      course,
+      result: {
+        score, max_score: maxScore, passed: !!passed,
+        attempt_no: result.attempt_no,
+        gor_score: result.gor.score, gor_max: result.gor.max_score,
+      },
+    });
+
+    posthog.capture('choice_recorded', req.student.id, {
+      course,
+      lesson_id,
+      item_id,
+      item_type: manifest.item_type,
+      score,
+      max_score: maxScore,
+      pct: maxScore > 0 ? Math.round((score / maxScore) * 1000) / 10 : null,
+      passed: !!passed,
+      attempt_no: result.attempt_no,
+      is_retry: result.attempt_no > 1,
+      class_id: req.student.class_id,
+    });
+
+    res.json({
+      recorded: true,
+      score,
+      max_score: maxScore,
+      passed: !!passed,
+      attempt_no: result.attempt_no,
+      // Which questions were right, so the page can mark them. NOT which option
+      // was correct: telling a student the answer would turn every concept check
+      // into a reveal button and make retrying pointless.
+      questions: graded.questions.map((q) => ({ id: q.id, ok: q.ok })),
+      grade_of_record: {
+        score: result.gor.score,
+        max_score: result.gor.max_score,
+        attempt_no: result.gor.attempt_no,
+      },
+      retry_allowed: !!retryOn,
+    });
+  } catch (e) {
+    console.error('Choice grade error:', e);
+    res.status(500).json({ error: 'Failed to record attempt' });
   }
 });
 

@@ -234,8 +234,12 @@ const INTRO_JAVA_PAGES_LIVE = false;
 
 const { BANKS: INTRO_JAVA_BANKS } = require('../seed/intro-java-banks');
 
-function introJavaGradedRows() {
-  if (!INTRO_JAVA_PAGES_LIVE) return [];
+// The derivation and the shipping gate are two separate facts, so they are two
+// separate functions. smoke/intro-java-reporter.js needs to check that every
+// item id the rendered pages post to has a manifest row waiting for it, and it
+// needs that answer NOW, months before the gate flips. Folding the gate into the
+// derivation would have made that check impossible to write without a mock.
+function introJavaRows() {
   const rows = [];
   for (const bank of INTRO_JAVA_BANKS) {
     const unit = bank.unit;
@@ -255,6 +259,10 @@ function introJavaGradedRows() {
     }
   }
   return rows;
+}
+
+function introJavaGradedRows() {
+  return INTRO_JAVA_PAGES_LIVE ? introJavaRows() : [];
 }
 
 // Unit projects. Only the auto-graded TASK half of a project can ever be a
@@ -492,4 +500,5 @@ if (require.main === module) {
 }
 
 module.exports = { seedManifest, buildRows, findOrphans, pruneManifest,
-  deadNetworkingCfuIds, cleanDeadNetworkingCfus };
+  deadNetworkingCfuIds, cleanDeadNetworkingCfus,
+  introJavaRows, introJavaGradedRows, INTRO_JAVA_PAGES_LIVE };
