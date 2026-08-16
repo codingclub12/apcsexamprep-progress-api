@@ -16,6 +16,10 @@ apcs evidence <id>              # what is ACTUALLY live, not what a report says
 apcs done <id> --artifact <url> # returns the claim AND records the proof
 ```
 
+New here, or unsure what runs where? `docs/where-jarvis-lives.md` answers the
+question this file assumes you already know: there is no persistent session, and
+committing a file is how you change what every future session knows.
+
 Without the CLI, the same thing over HTTP:
 
 ```

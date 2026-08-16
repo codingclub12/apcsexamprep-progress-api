@@ -1,0 +1,99 @@
+name: Reconcile the board
+
+# Phase 0.3 as a button. Runs the verifier across every task sitting in
+# needs_verification and writes the evidence into the run summary, so
+# reconciling the ledger is "tap Run workflow, read it on your phone, tap verify
+# on the ones that check out" rather than "sit at a laptop with a token".
+#
+# READ-ONLY, AND IT CANNOT BE OTHERWISE. It never PATCHes and never sets
+# `verified` - that bit is cookie-auth only, so the thing that did the work can
+# never be the thing that closes the loop on it. smoke/verify-board.js records
+# every request the script makes and fails if any of them is not a GET.
+#
+# MANUAL ONLY, on purpose. There is no schedule here. The overnight sweep that
+# files findings as tasks is Phase 2.2 and is a different job with different
+# risks; this one exists to be pressed by a human who is about to read it.
+#
+# It fails loudly for the same reason auto-dispatch.yml does: a green tick on a
+# run that read nothing is worse than no run at all.
+
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'How many tasks to check this run (the storefront rate-limits)'
+        required: false
+        default: '12'
+      task:
+        description: 'Check a single task id instead of the whole board'
+        required: false
+        default: ''
+
+concurrency:
+  group: verify-board
+  cancel-in-progress: false
+
+jobs:
+  reconcile:
+    name: Verify what the board claims
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run the verifier across needs_verification
+        env:
+          TODO_KEY: ${{ secrets.TODO_KEY }}
+          APCS_BASE: ${{ vars.PROGRESS_BASE_URL || 'https://progress.apcsexamprep.com' }}
+          LIMIT: ${{ inputs.limit }}
+          ONLY: ${{ inputs.task }}
+        run: |
+          # pipefail, or the `node ... | tee` below reports TEE's exit status and
+          # a dead script lands as a green tick. Found by running this step with
+          # an unreachable endpoint: it exited 0 and said nothing was wrong.
+          set -o pipefail
+
+          if [ -z "$TODO_KEY" ]; then
+            {
+              echo "### Reconcile the board: NOT CONFIGURED"
+              echo ""
+              echo "No \`TODO_KEY\` secret is set, so the board was never read."
+              echo ""
+              echo "Add it in Settings > Secrets and variables > Actions. It must match the"
+              echo "\`TODO_KEY\` environment variable the API runs with on Railway, character"
+              echo "for character, or the read comes back 401."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error title=TODO_KEY not configured::Cannot read the board without it."
+            exit 1
+          fi
+
+          args=""
+          [ -n "$LIMIT" ] && args="$args --limit $LIMIT"
+          [ -n "$ONLY" ] && args="$args --task $ONLY"
+
+          # Tee, so the report lands in the summary AND in the log. If the script
+          # exits non-zero the summary still carries whatever it managed to say.
+          if node scripts/verify-board.js $args | tee report.md; then
+            cat report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            {
+              echo "### Reconcile the board: FAILED"
+              echo ""
+              echo '```'
+              tail -20 report.md 2>/dev/null || echo "(no output)"
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error title=Board reconciliation failed::See the job log."
+            exit 1
+          fi
+
+      - name: Say what happens next
+        if: always()
+        run: |
+          {
+            echo ""
+            echo "---"
+            echo ""
+            echo "**Nothing here was written to the ledger.** To close any of these, open"
+            echo "the board and click verify: that path is cookie-auth only, which is the"
+            echo "whole reason the number means anything."
+          } >> "$GITHUB_STEP_SUMMARY"
