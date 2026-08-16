@@ -38,6 +38,9 @@ const { execFileSync } = require('child_process');
 
 const BASE = process.env.APCS_BASE || 'https://progress.apcsexamprep.com';
 const VERIFIER = path.join(__dirname, 'verify-artifact.js');
+// Severity comes from the verifier, never from a second copy of the rule here.
+// A duplicate of this rule already shipped one wrong P0 to the board.
+const { classifyStatus } = require('./verify-artifact.js');
 
 // The storefront rate-limits, and verify-artifact already paces itself and backs
 // off on 429. This is the second brake: a sweep of thirty tasks in one run is
@@ -85,8 +88,19 @@ function runVerifier(url) {
 function readSignals(v) {
   const signals = [];
   if (!v.usable) {
-    if (v.status === 429) signals.push({ level: 'P1', text: `rate limited after ${v.attempts} attempts, NOT broken - re-run slower` });
-    else signals.push({ level: 'P0', text: `status ${v.status}, not 200` });
+    const kind = classifyStatus(v.status);
+    if (kind === 'rate-limit') {
+      signals.push({ level: 'P1', text: `rate limited after ${v.attempts} attempts, NOT broken - re-run slower` });
+    } else if (kind === 'needs-human') {
+      signals.push({
+        level: 'needs-human',
+        text: `responded ${v.status}. This carries no credential, so that is CORRECT `
+          + 'for an endpoint meant to require auth, and a fault only if it is meant '
+          + 'to be public. No severity is claimed.',
+      });
+    } else {
+      signals.push({ level: 'P0', text: `status ${v.status}, not 200` });
+    }
     return signals;
   }
   if (v.mojibake && v.mojibake.length) {
@@ -171,7 +185,14 @@ async function main() {
     checked: results.length,
     limit,
     quiet: results.filter((r) => r.signals.length === 0).map((r) => r.task.id),
-    findings: results.filter((r) => r.signals.length > 0),
+    // A task whose ONLY signal is needs-human belongs in neither bucket. It is
+    // not a finding (nothing is known to be wrong) and it is emphatically not
+    // "nothing flagged" (that reads as clean). Filing it under either one is
+    // the same mistake in opposite directions.
+    findings: results.filter((r) => r.signals.length > 0
+      && !r.signals.every((s) => s.level === 'needs-human')),
+    undecidable: results.filter((r) => r.signals.length > 0
+      && r.signals.every((s) => s.level === 'needs-human')),
     not_machine_checkable: notCheckable,
     over_cap: overCap.map((t) => ({ id: t.id, title: t.title })),
   };
@@ -196,6 +217,21 @@ async function main() {
     p(`#### Look at these first (${report.findings.length})`);
     p('');
     for (const f of report.findings) {
+      p(`**#${f.task.id} ${f.task.title}**`);
+      p('');
+      p(`- artifact: ${f.task.url}`);
+      for (const s of f.signals) p(`- **${s.level}** ${s.text}`);
+      p('');
+    }
+  }
+
+  if (report.undecidable.length) {
+    p(`#### Fetched, but no verdict is possible (${report.undecidable.length})`);
+    p('');
+    p('The artifact answered, but this tool holds no credential for it, so a 401 or');
+    p('403 is indistinguishable from the endpoint working exactly as designed.');
+    p('');
+    for (const f of report.undecidable) {
       p(`**#${f.task.id} ${f.task.title}**`);
       p('');
       p(`- artifact: ${f.task.url}`);
