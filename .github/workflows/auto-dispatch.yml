@@ -18,6 +18,11 @@ name: Overnight dispatch check
 # TO GO LIVE: set the repository variable DISPATCH_EXECUTE to "true" and add the
 # execute step. Until that variable exists, this workflow cannot do anything but
 # read and report, which is a property of the file rather than a promise.
+#
+# IT FAILS LOUDLY. A missing secret, an unreachable endpoint, or a 200 carrying a
+# body that is not a queue all exit non-zero. A nightly job that quietly does
+# nothing is worse than no job, because every morning looks the same whether it
+# worked or not.
 
 on:
   schedule:
@@ -48,12 +53,22 @@ jobs:
           TODO_KEY: ${{ secrets.TODO_KEY }}
           BASE: ${{ vars.PROGRESS_BASE_URL || 'https://progress.apcsexamprep.com' }}
         run: |
+          # A missing secret is a FAILURE, not a skip. The first scheduled run of
+          # this workflow exited 0 with an empty TODO_KEY and reported a green
+          # tick for a night on which it did nothing at all. A job that cannot
+          # do its job must be red, or every morning looks identical whether it
+          # worked or not - which is the exact failure this workflow exists to
+          # catch in the ledger.
           if [ -z "$TODO_KEY" ]; then
-            echo "### Overnight dispatch check: skipped" >> "$GITHUB_STEP_SUMMARY"
+            echo "### Overnight dispatch check: NOT CONFIGURED" >> "$GITHUB_STEP_SUMMARY"
             echo "" >> "$GITHUB_STEP_SUMMARY"
-            echo "No \`TODO_KEY\` secret is configured, so the queue could not be read." >> "$GITHUB_STEP_SUMMARY"
-            echo "Add it in Settings > Secrets and variables > Actions." >> "$GITHUB_STEP_SUMMARY"
-            exit 0
+            echo "No \`TODO_KEY\` secret is set, so the queue was never read." >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "Add it in Settings > Secrets and variables > Actions. It must match the" >> "$GITHUB_STEP_SUMMARY"
+            echo "\`TODO_KEY\` environment variable the API is running with on Railway," >> "$GITHUB_STEP_SUMMARY"
+            echo "character for character, or the read comes back 401." >> "$GITHUB_STEP_SUMMARY"
+            echo "::error title=TODO_KEY not configured::The overnight dispatch check cannot read the queue without it."
+            exit 1
           fi
 
           # --fail-with-body so a 4xx/5xx is an error AND still prints what the
@@ -71,6 +86,38 @@ jobs:
               exit 1
             }
           echo "read ok, HTTP $http"
+
+          # A 200 is not proof of a usable body. Validate the shape before the
+          # report step trusts it, so a truncated or unexpected response fails
+          # here with the body attached rather than rendering an empty table.
+          node -e '
+            const fs = require("fs");
+            let q;
+            try {
+              q = JSON.parse(fs.readFileSync("queue.json", "utf8"));
+            } catch (e) {
+              console.error("queue.json is not valid JSON: " + e.message);
+              process.exit(1);
+            }
+            const missing = ["generated_at", "dispatch", "deferred", "skipped", "policy"]
+              .filter((k) => q[k] === undefined);
+            if (missing.length) {
+              console.error("queue.json is missing expected keys: " + missing.join(", "));
+              process.exit(1);
+            }
+            console.log("queue shape ok: " + q.dispatch.length + " to dispatch, "
+              + q.eligible_count + " eligible");
+          ' || {
+            echo "### Overnight dispatch check: UNREADABLE RESPONSE" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "The endpoint answered HTTP $http but the body was not a usable queue." >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+            head -c 500 queue.json >> "$GITHUB_STEP_SUMMARY" 2>/dev/null || true
+            echo '' >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+            echo "::error title=Unreadable dispatch queue::HTTP $http, but the body did not parse as a queue."
+            exit 1
+          }
 
       - name: Report what it would have dispatched
         if: ${{ hashFiles('queue.json') != '' }}
