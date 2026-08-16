@@ -221,16 +221,28 @@ const NET_EXAMS = {
 // CFU, one point per gap HOLE (ONE item worth N points, never N items, so a
 // class of 30 is 30 inserts and not 300), one point per quiz question.
 //
-// ── WHY THIS IS STILL GATED ─────────────────────────────────────────────────
+// ── THE GATE, NOW OPEN ──────────────────────────────────────────────────────
 // Content existing in this repo is NOT the same fact as a student being able to
-// open it. Unit 1's pages have not shipped to Shopify yet, so seeding these rows
-// now would put earnable-looking points in every denominator that nobody can
-// reach, which marks every student down for a reason no teacher can see. That is
-// exactly what smoke/manifest-prune.js exists to catch, and it is the same flag
-// shape CODE_ITEMS_ENABLED already uses above.
+// open it, which is why these rows waited. Seeding them early would have put
+// earnable-looking points in every denominator that nobody could reach, marking
+// every student down for a reason no teacher can see.
 //
-// Flip to true in the SAME pass that imports the pages, then run --update.
-const INTRO_JAVA_PAGES_LIVE = false;
+// All 90 pages were imported to Shopify on 2026-08-16 and verified live against
+// the Admin API: every handle present, published, and carrying the data-item-id
+// attributes these rows are the denominators for. So the condition the gate was
+// waiting on is met and it is open.
+//
+// ONE THING IS STILL NOT TRUE, and it is deliberate rather than overlooked. The
+// reporter has not shipped to the theme yet, so a student can open every page
+// but cannot yet submit anything. That does not make these rows wrong: the
+// gradebook contract computes a grade as earned over ATTEMPTED work, so an item
+// nobody has attempted is `pct: null` and drags nothing down. It shows up as
+// pace, which correctly reads as "none of the course done yet".
+//
+// The boot seed is insert-or-ignore, so the deploy that carries this flag
+// inserts these rows on its own. `--update` is only needed to push edits to rows
+// that already exist.
+const INTRO_JAVA_PAGES_LIVE = true;
 
 const { BANKS: INTRO_JAVA_BANKS } = require('../seed/intro-java-banks');
 

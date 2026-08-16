@@ -405,11 +405,40 @@ ok('10.1b every authored lesson has a visit row',
   LESSONS.every((l) => ijRows.some((r) => r.item_id === `${l.lesson}-visit`)),
   LESSONS.filter((l) => !ijRows.some((r) => r.item_id === `${l.lesson}-visit`)).map((l) => l.lesson));
 
-ok('10.2 NO graded row is seeded while the pages are not live',
-  ijRows.every((r) => r.item_type === 'visit'),
-  ijRows.filter((r) => r.item_type !== 'visit').map((r) => r.item_id));
+// The gate opened on 2026-08-16, when all 90 pages went live on Shopify. This
+// check used to assert the mirror of itself: that NO graded row was seeded while
+// the pages did not exist. Now the rows ARE the denominators every student is
+// graded against, so what matters is that they exist and that every one of them
+// is reachable.
+//
+// The direction that actually protects a student is the second one below. A row
+// nothing can post to is an unreachable denominator, which marks the whole class
+// down for a reason no teacher can see, and it is invisible unless something
+// compares the two sets.
+const { INTRO_JAVA_PAGES_LIVE } = require('../scripts/seed-manifest');
+ok('10.2 the gate is open, because the pages are live', INTRO_JAVA_PAGES_LIVE === true);
 
-// What flipping the flag will produce, computed straight from the bank.
+const gradedRows = ijRows.filter((r) => r.item_type !== 'visit');
+ok('10.2a graded rows are seeded', gradedRows.length > 0, gradedRows.length);
+
+// Every id the rendered pages actually post to, scraped from the HTML rather
+// than recomputed from the bank, so this compares the PAGE against the MANIFEST
+// rather than the bank against itself.
+const ijPosted = new Set();
+for (const p of [...pages, ...helpPagesForLinks(), ...hubsForLinks()]) {
+  for (const m of p.bodyHtml.match(/data-item-id="([^"]+)"/g) || []) ijPosted.add(m.split('"')[1]);
+}
+const ijRowIds = new Set(gradedRows.map((r) => r.item_id));
+const unreachable = [...ijRowIds].filter((id) => !ijPosted.has(id));
+const unseeded = [...ijPosted].filter((id) => !ijRowIds.has(id));
+ok('10.2b every graded row has a page that can post to it',
+  unreachable.length === 0, unreachable.slice(0, 8));
+ok('10.2c every item a page posts to has a manifest row',
+  unseeded.length === 0, unseeded.slice(0, 8));
+ok('10.2d the two sets are the same size, so neither hides a swap',
+  ijRowIds.size === ijPosted.size, { rows: ijRowIds.size, posted: ijPosted.size });
+
+// What the flag produces, computed straight from the bank.
 let expCfu = 0, expGapItems = 0, expGapPts = 0, expQuizItems = 0, expQuizPts = 0;
 for (const l of LESSONS) {
   expCfu += l.cfus.length;
