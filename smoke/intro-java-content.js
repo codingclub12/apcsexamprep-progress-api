@@ -44,14 +44,12 @@ const LESSONS = BANKS.flatMap((b) => b.lessons);
 const UNIT_OF = new Map();
 for (const b of BANKS) for (const l of b.lessons) UNIT_OF.set(l.lesson, b);
 
-// Render every lesson once, the same way the build script will.
-const pages = LESSONS.map((l, i) => renderLesson(l, {
-  prev: LESSONS[i - 1] ? { handle: handleFor(LESSONS[i - 1]), lesson: LESSONS[i - 1].lesson, title: LESSONS[i - 1].title } : null,
-  next: LESSONS[i + 1] ? { handle: handleFor(LESSONS[i + 1]), lesson: LESSONS[i + 1].lesson, title: LESSONS[i + 1].title } : null,
-  unitLabel: UNIT_OF.get(l.lesson).label,
-  unitKey: UNIT_OF.get(l.lesson).unit,
-  helpIndex: help.INDEX,
-}));
+// Render every lesson once, through the SAME builder the import script uses.
+// Assembling them a second time here would let the suite prove one page correct
+// while the importer shipped a slightly different one, built from the same
+// renderer with different neighbours, and no check could see the difference.
+const build = require('../lib/intro-java-build');
+const pages = build.lessonPages();
 
 // ── 1. The bank is structurally complete ─────────────────────────────────────
 section('1. Every lesson is structurally complete');
@@ -434,10 +432,7 @@ ok('10.5 the authored units are worth a sane number of points, not thousands',
 section('11. Help pages render, rank their causes, and are never tracked');
 
 const { renderHelp, kindOf } = require('../lib/intro-java-help-page');
-const helpPages = help.ALL.map((h) => renderHelp(h, {
-  related: help.ALL.filter((x) => x.after === h.after && x.code !== h.code).slice(0, 3),
-  lessonHandle: null,
-}));
+const helpPages = build.helpPages();
 
 ok('11.1 every catalog entry renders', helpPages.length === help.ALL.length);
 
@@ -493,8 +488,14 @@ ok('11.z every help page title is unique',
   new Set(helpPages.map((h) => h.title)).size === helpPages.length);
 ok('11.z every help description is unique',
   new Set(helpPages.map((h) => h.seoDescription)).size === helpPages.length);
+// The builder calls every one of these a 'help' page; `helpKind` is the axis
+// that separates a compiler error from a game-design recipe. All three have to
+// be present, because they answer three different kinds of stuck.
 ok('11.z the catalog covers errors, gotchas and recipes',
-  new Set(helpPages.map(kindOf ? (h) => h.kind : () => 1)).size === 3);
+  new Set(helpPages.map((h) => h.helpKind)).size === 3,
+  [...new Set(helpPages.map((h) => h.helpKind))]);
+ok('11.z helpKind agrees with the catalog classifier',
+  helpPages.every((h) => h.helpKind === kindOf(help.INDEX[h.code])));
 
 // ── 12. This is a PRE-AP course, and the pages must read like one ────────────
 //  intro-java is the on-ramp, not AP CSA. Most students taking it will never
@@ -545,7 +546,7 @@ ok('12.1 no LESSON or HELP page mentions the AP exam or AP CSA', apLeaks.length 
 //  delete the reason a teacher finds the course at all.
 const { renderAllHubs, PREAP_LINE, COURSE_HANDLE, unitHandle } =
   require('../lib/intro-java-hub-page');
-const hubs = renderAllHubs(BANKS, help);
+const hubs = build.hubPages();
 
 ok('12.4 the course hub and one hub per unit are rendered',
   hubs.length === BANKS.length + 1, hubs.length);
