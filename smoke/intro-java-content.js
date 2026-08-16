@@ -535,7 +535,89 @@ for (const hp of helpPages) {
     if (m) apLeaks.push(`${hp.code} contains "${m[0]}"`);
   }
 }
-ok('12.1 no rendered page mentions the AP exam or AP CSA', apLeaks.length === 0, apLeaks);
+ok('12.1 no LESSON or HELP page mentions the AP exam or AP CSA', apLeaks.length === 0, apLeaks);
+
+// ── And the other direction ─────────────────────────────────────────────────
+//  The hubs are the teacher-facing surface. A teacher choosing a first-year
+//  course needs to know it feeds AP CSA, and that is the search they actually
+//  run. So the AP relationship is REQUIRED here, and asserted, because an
+//  over-zealous future cleanup that strips it from these pages would quietly
+//  delete the reason a teacher finds the course at all.
+const { renderAllHubs, PREAP_LINE, COURSE_HANDLE, unitHandle } =
+  require('../lib/intro-java-hub-page');
+const hubs = renderAllHubs(BANKS, help);
+
+ok('12.4 the course hub and one hub per unit are rendered',
+  hubs.length === BANKS.length + 1, hubs.length);
+
+const courseHub = hubs[0];
+ok('12.5 the course hub names the AP CSA relationship in its title',
+  /AP Computer Science A|AP CSA/i.test(courseHub.seoTitle), courseHub.seoTitle);
+ok('12.6 and in its meta description',
+  /AP Computer Science A|AP CSA/i.test(courseHub.seoDescription), courseHub.seoDescription);
+ok('12.7 and in the visible h1',
+  /AP CSA|AP Computer Science/i.test((courseHub.bodyHtml.match(/<h1[^>]*>([\s\S]*?)<\/h1>/) || ['', ''])[1]));
+
+// The relationship is described, never branded. "Pre-AP Computer Science" as a
+// course NAME would imply a College Board program this is not.
+ok('12.8 the hub never uses Pre-AP as the course name or with a trademark mark',
+  !/Pre-?AP\s+(Computer Science|CSA|Java)/i.test(courseHub.bodyHtml)
+  && !/Pre-?AP\s*[(R)\u00ae\u2122]/i.test(courseHub.bodyHtml),
+  (courseHub.bodyHtml.match(/.{0,40}Pre-?AP.{0,40}/gi) || []));
+ok('12.9 any pre-AP mention describes how the course is USED, in one isolated line',
+  PREAP_LINE === null || (courseHub.bodyHtml.includes(PREAP_LINE)
+    && (courseHub.bodyHtml.match(/pre-?AP/gi) || []).length === 1),
+  (courseHub.bodyHtml.match(/pre-?AP/gi) || []).length);
+
+ok('12.10 no hub claims College Board affiliation or endorsement',
+  !hubs.some((h) => /College Board|official AP|endorsed by|authorized by/i.test(h.bodyHtml)));
+
+// Hubs are held to the same page quality bar as everything else.
+for (const h of hubs) {
+  ok(`12.h ${h.handle} has exactly one h1`,
+    (h.bodyHtml.match(/<h1[\s>]/g) || []).length === 1);
+  ok(`12.h ${h.handle} meta description is 70 to 160 characters`,
+    h.seoDescription.length >= 70 && h.seoDescription.length <= 160, h.seoDescription.length);
+  ok(`12.h ${h.handle} seo title is at most 65 characters`,
+    h.seoTitle.length <= 65, { len: h.seoTitle.length, t: h.seoTitle });
+  ok(`12.h ${h.handle} carries no tracking attributes`,
+    !/data-item-id|data-lesson-id/.test(h.bodyHtml));
+  ok(`12.h ${h.handle} handle cannot be mistaken for a lesson`,
+    !/^intro-java-lesson-\d+-\d+-/.test(h.handle), h.handle);
+  const blocks = [...h.bodyHtml.matchAll(
+    /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => m[1]);
+  let valid = true;
+  for (const b of blocks) { try { JSON.parse(b); } catch (e) { valid = false; } }
+  ok(`12.h ${h.handle} structured data parses`, valid && blocks.length >= 2, blocks.length);
+  ok(`12.h ${h.handle} no HTML entity inside a script block`,
+    !blocks.some((b) => /&(amp|quot|lt|gt|#\d+);/.test(b)));
+  ok(`12.h ${h.handle} is pure ASCII with no em-dash`,
+    // eslint-disable-next-line no-control-regex
+    !/[^\x00-\x7F]/.test(h.bodyHtml + h.seoTitle + h.seoDescription));
+}
+
+ok('12.11 hub titles and descriptions are all unique',
+  new Set(hubs.map((h) => h.seoTitle)).size === hubs.length
+  && new Set(hubs.map((h) => h.seoDescription)).size === hubs.length);
+
+// The whole point of building these: every lesson now has a parent that links
+// to it, and the breadcrumbs on every lesson finally resolve.
+const hubHtml = hubs.map((h) => h.bodyHtml).join('');
+let unlinked = LESSONS.filter((l) => !hubHtml.includes(`/pages/${handleFor(l)}`));
+ok('12.12 every one of the 42 lessons is linked from its unit hub',
+  unlinked.length === 0, unlinked.map((l) => l.lesson));
+
+let unlinkedHelp = help.ALL.filter((h) => !hubHtml.includes(`/pages/${h.handle}`));
+ok('12.13 every help page is linked from a hub', unlinkedHelp.length === 0,
+  unlinkedHelp.map((h) => h.code));
+
+ok('12.14 the breadcrumb targets on lesson pages now resolve to real hubs',
+  pages.every((p) => {
+    const crumbs = (p.bodyHtml.match(/\/pages\/(intro-java[a-z0-9-]*)/g) || [])
+      .map((u) => u.replace('/pages/', ''));
+    return crumbs.filter((c) => c === COURSE_HANDLE || /^intro-java-unit-\d+$/.test(c))
+      .every((c) => hubs.some((h) => h.handle === c));
+  }));
 
 // The alignment claim is allowed, and expected, in the internal spec.
 const fsMod = require('fs');
