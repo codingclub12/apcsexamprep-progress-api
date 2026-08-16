@@ -1,0 +1,380 @@
+<style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: #fafafa;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #1a1a2e;
+            margin-bottom: 0.5rem;
+            border-bottom: 3px solid #4a7c59;
+            padding-bottom: 0.75rem;
+        }
+
+        .intro {
+            color: #555;
+            font-size: 1.05rem;
+            margin-bottom: 2rem;
+            padding: 1rem 0;
+        }
+
+        .project-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .project-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border-left: 4px solid #4a7c59;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .project-card:hover {
+            box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+        }
+
+        .project-header {
+            display: flex;
+            align-items: baseline;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-number {
+            background: #4a7c59;
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .project-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .project-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .project-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .project-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            color: #4a7c59;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0.35rem 0.65rem;
+            background: #f0f7f2;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+
+        .project-links a:hover {
+            background: #e0efe4;
+            text-decoration: none;
+        }
+
+        .project-links a::before {
+            content: '';
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        .link-files::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%234a7c59'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z'/%3E%3C/svg%3E");
+        }
+
+        .link-video::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%234a7c59'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 12a9 9 0 11-18 0 9 9 0 0118 0z'/%3E%3C/svg%3E");
+        }
+
+        .video-only {
+            font-style: italic;
+            color: #888;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+
+        .coming-soon {
+            background: #f5f5f5;
+            border-left-color: #ccc;
+        }
+
+        .coming-soon .project-number {
+            background: #999;
+        }
+
+        .coming-soon .project-title {
+            color: #888;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .project-header {
+                flex-direction: column;
+                gap: 0.35rem;
+            }
+
+            .project-links {
+                flex-direction: column;
+            }
+
+            .project-links a {
+                justify-content: center;
+            }
+
+            .cta-box {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Breadcrumb styles */
+        .breadcrumb {
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            color: #666;
+        }
+
+        .breadcrumb a {
+            color: #4a7c59;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb .separator {
+            margin: 0 0.5rem;
+            color: #999;
+        }
+
+        .breadcrumb .current {
+            color: #888;
+        }
+
+        /* CTA Box styles */
+        .cta-section {
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, #f0f7f2 0%, #e8f4eb 100%);
+            border: 1px solid #c8dece;
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-box h3 {
+            font-size: 1.1rem;
+            color: #1a1a2e;
+            margin-bottom: 0.35rem;
+        }
+
+        .cta-box p {
+            font-size: 0.9rem;
+            color: #555;
+            margin: 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #4a7c59;
+            color: #fff;
+            text-decoration: none;
+            padding: 0.65rem 1.25rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            transition: background 0.2s ease;
+        }
+
+        .cta-button:hover {
+            background: #3d6a4a;
+        }
+
+        .related-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .related-links a {
+            color: #4a7c59;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .related-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+<!-- Breadcrumb Navigation --><nav aria-label="Breadcrumb" class="breadcrumb"><a href="https://apcsexamprep.com">Home</a> <span class="separator">›</span> <a href="https://apcsexamprep.com/pages/ap-computer-science-a">AP CSA</a> <span class="separator">›</span> <span class="current">Greenfoot Basics</span></nav>
+<h1>Greenfoot Basics: Java Game Programming</h1>
+<p class="intro">A progressive series of hands-on projects teaching Java programming fundamentals through game development in Greenfoot. Each project builds on previous concepts while introducing new programming techniques.</p>
+<div class="project-grid">
+<div class="project-card">
+<div class="project-header">
+<span class="project-number">Project 1</span> <span class="project-title">The Hungry Bee</span>
+</div>
+<p class="project-description">Introduction to Greenfoot basics — movement, collision detection, and simple game mechanics.</p>
+<div class="project-links">
+<a rel="noopener" class="link-files" href="https://drive.google.com/drive/folders/1mWnYNUOYOGmwK8pwzka5zyvFJuLJeDAO?usp=sharing" target="_blank">Starter Files</a> <a rel="noopener" class="link-video" href="https://youtu.be/M3KHUqeFjyY?si=QHVLeOuO35Neh9Gb" target="_blank">Tutorial Video</a>
+</div>
+</div>
+<div class="project-card">
+<div class="project-header">
+<span class="project-number">Project 2</span> <span class="project-title">Catch The Apple</span>
+</div>
+<p class="project-description">Keyboard controls, scoring systems, and working with random object spawning.</p>
+<div class="project-links">
+<a rel="noopener" class="link-files" href="https://drive.google.com/drive/folders/1d1UbYJP3e-Gtud9p6z45HEpeMQ1J46mb?usp=sharing" target="_blank">Starter Files</a> <a rel="noopener" class="link-video" href="https://youtu.be/dUcS70rFH98?si=Wvi-sNI2Xb3e7kKo" target="_blank">Tutorial Video</a>
+</div>
+</div>
+<div class="project-card">
+<div class="project-header">
+<span class="project-number">Project 3</span> <span class="project-title">Piano Project</span>
+</div>
+<p class="project-description">Sound integration, keyboard mapping, and creating interactive musical instruments.</p>
+<div class="project-links">
+<a rel="noopener" class="link-files" href="https://drive.google.com/drive/folders/1uKZYSCFxWMsS9nIowAMBC8EaVlde7gDJ?usp=sharing" target="_blank">Starter Files</a> <a rel="noopener" class="link-video" href="https://youtu.be/8BhcMXIUE5Y" target="_blank">Tutorial Video</a>
+</div>
+</div>
+<div class="project-card">
+<div class="project-header">
+<span class="project-number">Project 4</span> <span class="project-title">Movement Essentials</span>
+</div>
+<p class="project-description">Four movement patterns in one tutorial: slide around, move and rotate, steering mechanics, and gravity with jumping.</p>
+<div class="project-links">
+<a rel="noopener" class="link-video" href="https://youtu.be/PSRUVhYON6Q?si=vFSVjoCLTTlzIo5e" target="_blank">Tutorial Video</a> <span class="video-only">Video tutorial only — no starter files</span>
+</div>
+</div>
+<div class="project-card">
+<div class="project-header">
+<span class="project-number">Project 5</span> <span class="project-title">Fire Projectile</span>
+</div>
+<p class="project-description">Spacebar shooting and point-click-shoot mechanics for action games.</p>
+<div class="project-links">
+<a rel="noopener" class="link-files" href="https://drive.google.com/drive/folders/1jp62iIQfB4r1gU47BagEd4xdZH1nr5t_?usp=sharing" target="_blank">Starter Files</a> <a rel="noopener" class="link-video" href="https://youtu.be/7UV7RBYJuug?si=JzBDUzDjKyticnsl" target="_blank">Tutorial Video</a>
+</div>
+</div>
+<div class="project-card">
+<div class="project-header">
+<span class="project-number">Project 6</span> <span class="project-title">Changing Worlds</span>
+</div>
+<p class="project-description">World transitions on collision while maintaining player data across scenes.</p>
+<div class="project-links">
+<a rel="noopener" class="link-files" href="https://drive.google.com/drive/folders/1ylu3W0dZhLmpq89ggPx3d4O99IVcX_R4?usp=sharing" target="_blank">Starter Files</a> <a rel="noopener" class="link-video" href="https://www.youtube.com/watch?v=ZOlLNL4vCL0" target="_blank">Tutorial Video</a>
+</div>
+</div>
+<div class="project-card">
+<div class="project-header">
+<span class="project-number">Project 7</span> <span class="project-title">Endless Runner &amp; Open World</span>
+</div>
+<p class="project-description">Scrolling backgrounds, procedural generation, and open-world exploration mechanics.</p>
+<div class="project-links">
+<a rel="noopener" class="link-files" href="https://drive.google.com/drive/folders/1HaHS8udEj08UNLJc9gEd-77Q423-PmwB?usp=sharing" target="_blank">Starter Files</a> <a rel="noopener" class="link-video" href="https://youtu.be/kdBr38-kmuc" target="_blank">Tutorial Video</a>
+</div>
+</div>
+<div class="project-card">
+<div class="project-header">
+<span class="project-number">Project 8</span> <span class="project-title">Tower Defense</span>
+</div>
+<p class="project-description">Path-following enemies, tower placement, and targeting systems. A two-part series.</p>
+<div class="project-links">
+<a rel="noopener" class="link-video" href="https://youtu.be/QQor1191x_k?si=yKpBFg5IeEAjS7O5" target="_blank">Part 1</a> <a rel="noopener" class="link-video" href="https://youtu.be/aniROv5zvhw?si=tWMZTq4r1csGkwfF" target="_blank">Part 2</a> <span class="video-only">Video tutorials only</span>
+</div>
+</div>
+<div class="project-card">
+<div class="project-header">
+<span class="project-number">Project 9</span> <span class="project-title">Interactive Calendar</span>
+</div>
+<p class="project-description">Switch statements, drawing images, and building interactive UI elements. A two-part series.</p>
+<div class="project-links">
+<a rel="noopener" class="link-video" href="https://youtu.be/n2K3RU1L-lE?si=KFJSfUTiWFTSeK_4" target="_blank">Part 1</a> <a rel="noopener" class="link-video" href="https://youtu.be/dWXfQO2t2OU?si=bllVJd8TdP3HKTPX" target="_blank">Part 2</a> <span class="video-only">Video tutorials only</span>
+</div>
+</div>
+<div class="project-card coming-soon">
+<div class="project-header">
+<span class="project-number">Project 10</span> <span class="project-title">Array Racing</span>
+</div>
+<p class="project-description">Working with arrays to manage multiple game objects and racing mechanics.</p>
+<div class="project-links"><span class="video-only">Starter code and video coming soon</span></div>
+</div>
+<div class="project-card">
+<div class="project-header">
+<span class="project-number">Project 10</span> <span class="project-title">Movie Theater</span>
+</div>
+<p class="project-description">2D array implementation for seat management and booking systems.</p>
+<div class="project-links"><a rel="noopener" class="link-files" href="https://drive.google.com/file/d/1TzLZ5drYIMxU_KcVIuYgiEQUEcNDVnU6/view?usp=sharing" target="_blank">Starter Files</a></div>
+</div>
+</div>
+<!-- Call-to-Action Section -->
+<section class="cta-section">
+<div class="cta-box">
+<div>
+<h3>Ready for the AP CSA Exam?</h3>
+<p>Explore our complete study guides, practice FRQs, and exam prep materials.</p>
+</div>
+<a class="cta-button" href="https://apcsexamprep.com/pages/ap-computer-science-a">View AP CSA Resources</a>
+</div>
+<div class="cta-box">
+<div>
+<h3>Need 1-on-1 Help?</h3>
+<p>Book a tutoring session for personalized guidance on Java and AP CSA concepts.</p>
+</div>
+<a class="cta-button" href="https://apcsexamprep.com/pages/tutoring">Book Tutoring</a>
+</div>
+<div class="related-links">
+<strong>Related Resources:</strong> <a href="https://apcsexamprep.com/pages/ap-csa-study-guide">AP CSA Study Guide</a> <a href="https://apcsexamprep.com/pages/ap-csa-frq-solutions">FRQ Solutions Archive</a> <a href="https://apcsexamprep.com/pages/ap-csa-practice-exams">Practice Exams</a> <a href="https://www.youtube.com/@APCSExamPrep">YouTube Channel</a>
+</div>
+</section>
