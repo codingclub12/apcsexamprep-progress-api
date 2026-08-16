@@ -66,7 +66,13 @@ jobs:
             exit 1
           fi
 
-          args=""
+          # --redact is NOT optional and is NOT an input. This repo is public,
+          # and so is this log: anyone can read it with no login. Board titles
+          # are free text a human typed about their own business, and the first
+          # five runs published a person's name and an unpaid PO number here
+          # before anyone noticed. Task ids are enough to act on; the titles
+          # live on the board, behind a credential.
+          args="--redact"
           [ -n "$LIMIT" ] && args="$args --limit $LIMIT"
           [ -n "$ONLY" ] && args="$args --task $ONLY"
 

@@ -221,6 +221,53 @@ function run(extraEnv, args) {
   ok('10.7 nor as a finding',
     !!p9 && !p9.findings.some((f) => f.task.id === 75));
 
+  // ── 11. titles never reach a public surface ────────────────────────────
+  //  This repo is PUBLIC and so are its Actions logs. Five live runs published
+  //  a teacher's name and an unpaid PO number into a log anyone can read with
+  //  no login, because the report prints task titles and nobody had asked where
+  //  that text ends up. Zero-PII is the product's posture; its tooling does not
+  //  get an exemption.
+  section('11. --redact keeps free text off public logs');
+  const plain = await run({}, []);
+  const red = await run({}, ['--redact']);
+
+  ok('11.1 without --redact, titles are present (local terminal use)',
+    /Chase the district PO/.test(plain.out));
+  ok('11.2 with --redact, no task title survives',
+    !/Chase the district PO/.test(red.out) && !/Fix the join page/.test(red.out)
+    && !/Retire the old landing page/.test(red.out), red.out);
+  ok('11.3 but the ids do, so it is still actionable',
+    /#71/.test(red.out) && /#73/.test(red.out) && /#75/.test(red.out));
+  ok('11.4 and the signals do', /duplicated block|past date/.test(red.out));
+  ok('11.5 and the reason a task could not be checked does',
+    /artifact is a note, not a URL/.test(red.out));
+  ok('11.6 artifact URLs still appear, they are already public',
+    /\/pages\/stale/.test(red.out));
+
+  //  --json carries whole task objects. Redacting only the markdown would leave
+  //  the flag decorative on the output most likely to be piped somewhere else.
+  const jr = await run({}, ['--json', '--redact']);
+  let pj = null;
+  try { pj = JSON.parse(jr.out); } catch (_) { /* asserted below */ }
+  ok('11.7 --json --redact strips titles too', !!pj
+    && !JSON.stringify(pj).includes('Chase the district PO')
+    && !JSON.stringify(pj).includes('Fix the join page'), jr.out.slice(0, 200));
+  ok('11.8 and still carries the ids', !!pj
+    && pj.not_machine_checkable.every((t) => typeof t.id === 'number'));
+
+  //  The durable guard. The script defaults to titles ON for local terminal
+  //  use, so the ONLY thing keeping them out of the public log is the workflow
+  //  passing the flag. That makes the workflow the thing worth pinning.
+  const wf = require('fs').readFileSync(
+    path.join(__dirname, '..', '.github', 'workflows', 'verify-board.yml'), 'utf8');
+  ok('11.9 the workflow passes --redact', /args="--redact"/.test(wf));
+  //  Scoped to the inputs block. A greedy match over the whole file hits the
+  //  word in the comment that explains the flag, which would fail this test for
+  //  documenting itself.
+  const inputsBlock = wf.slice(wf.indexOf('inputs:'), wf.indexOf('concurrency:'));
+  ok('11.10 and does not make it an optional input a run can drop',
+    inputsBlock.length > 0 && !/redact/i.test(inputsBlock), inputsBlock.length);
+
   console.log(`\n${'-'.repeat(70)}`);
   console.log(`verify-board: ${pass} passed, ${fail} failed`);
   if (fail) {

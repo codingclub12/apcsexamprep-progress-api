@@ -28,6 +28,7 @@
 //    node scripts/verify-board.js --limit 5          # cap the run
 //    node scripts/verify-board.js --task 70          # one task
 //    node scripts/verify-board.js --json             # machine-readable
+//    node scripts/verify-board.js --redact           # drop titles (public logs)
 //
 //  Credential: TODO_KEY in the environment. Base URL: APCS_BASE, defaulting to
 //  production.
@@ -54,6 +55,22 @@ function arg(name, fallback) {
   return i >= 0 && process.argv[i + 1] !== undefined ? process.argv[i + 1] : fallback;
 }
 const wantJson = process.argv.includes('--json');
+
+// --redact drops task TITLES from the output. Everything else stays: ids,
+// artifact URLs, signals, and the reason a task could not be checked.
+//
+// WHY THIS EXISTS. This repo is PUBLIC, and so are its Actions logs - anyone
+// can read a job log with no login. The board's titles are free text a human
+// typed about their own business, and the first five live runs published
+// "Personal follow-up to <person>", "Chase <person>'s unpaid PO #<number>" and
+// an internal incident description into that public log. The whole product
+// posture here is zero PII; the tooling around it does not get an exemption.
+//
+// A task id is enough to act on. The reader owns the board and can look up the
+// title there, behind a credential, which is where free text belongs.
+const redact = process.argv.includes('--redact');
+// Titles are the only free-text field in a task, so this is the whole guard.
+const title = (t) => (redact ? '' : ` ${t.title}`);
 
 function die(msg, code = 1) {
   console.error(`verify-board: ${msg}`);
@@ -194,8 +211,17 @@ async function main() {
     undecidable: results.filter((r) => r.signals.length > 0
       && r.signals.every((s) => s.level === 'needs-human')),
     not_machine_checkable: notCheckable,
-    over_cap: overCap.map((t) => ({ id: t.id, title: t.title })),
+    over_cap: overCap.map((t) => ({ id: t.id, ...(redact ? {} : { title: t.title }) })),
   };
+
+  // --json carries whole task objects, so redaction has to reach them too or
+  // the flag is decorative on the one output most likely to be piped somewhere.
+  if (redact) {
+    const strip = (t) => { if (t && 'title' in t) delete t.title; };
+    for (const f of report.findings) strip(f.task);
+    for (const f of report.undecidable) strip(f.task);
+    for (const t of report.not_machine_checkable) strip(t);
+  }
 
   if (wantJson) {
     console.log(JSON.stringify(report, null, 2));
@@ -217,7 +243,7 @@ async function main() {
     p(`#### Look at these first (${report.findings.length})`);
     p('');
     for (const f of report.findings) {
-      p(`**#${f.task.id} ${f.task.title}**`);
+      p(`**#${f.task.id}${title(f.task)}**`);
       p('');
       p(`- artifact: ${f.task.url}`);
       for (const s of f.signals) p(`- **${s.level}** ${s.text}`);
@@ -232,7 +258,7 @@ async function main() {
     p('403 is indistinguishable from the endpoint working exactly as designed.');
     p('');
     for (const f of report.undecidable) {
-      p(`**#${f.task.id} ${f.task.title}**`);
+      p(`**#${f.task.id}${title(f.task)}**`);
       p('');
       p(`- artifact: ${f.task.url}`);
       for (const s of f.signals) p(`- **${s.level}** ${s.text}`);
@@ -247,7 +273,7 @@ async function main() {
     p('a static fetch cannot run JavaScript, so a thing hidden by a script still ships.');
     p('');
     for (const r of results.filter((x) => x.signals.length === 0)) {
-      p(`- **#${r.task.id}** ${r.task.title}`);
+      p(`- **#${r.task.id}**${title(r.task)}`);
     }
     p('');
   }
@@ -258,7 +284,7 @@ async function main() {
     p('These need a human. Chasing an invoice and deleting a draft leave no trace a');
     p('script can read, and saying so is better than inventing a signal.');
     p('');
-    for (const t of notCheckable) p(`- **#${t.id}** ${t.title} - ${t.why}`);
+    for (const t of notCheckable) p(`- **#${t.id}**${title(t)} - ${t.why}`);
     p('');
   }
 
@@ -268,7 +294,7 @@ async function main() {
     p(`Over the per-run cap of ${limit}, which exists because the storefront rate-limits.`);
     p('Re-run with a higher `--limit`, or check one with `--task <id>`.');
     p('');
-    for (const t of overCap) p(`- **#${t.id}** ${t.title}`);
+    for (const t of overCap) p(`- **#${t.id}**${title(t)}`);
     p('');
   }
 
