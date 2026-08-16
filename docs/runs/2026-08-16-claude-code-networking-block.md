@@ -1,4 +1,4 @@
-# 2026-08-16 - AP Networking, composed from the other courses
+# 2026-08-16 - AP Networking, read off the shipped configuration
 
 Agent: Claude Code. Branch: `claude/networking-rules-vaw0hu`, off `main`.
 
@@ -79,3 +79,75 @@ property rather than to pass:
 
 That second one is the more useful lesson: a test bound to whichever example
 happens to be in a state today stops testing the moment that example moves.
+
+
+---
+
+# Addendum: most of it was already in the repo
+
+"Can you find those?" - largely yes, and not by inference. AP Networking is
+SHIPPED, so its structure exists as DATA in this repo even though nobody had
+written it down as rules. The block no longer composes anything from the other
+courses' shapes; it quotes the configuration that actually drives the product.
+
+## Found, with sources
+
+| Fact | Source |
+|---|---|
+| 4 units, 22 topics, and the four unit titles | `COURSES` in `utils.js` |
+| Activities are `lesson`/`cfu`/`quiz` only, no `gap`, no `code` | same |
+| One cfu per topic, item id ends `-cfu-2` not `-cfu-1` | `scripts/seed-manifest.js` |
+| Topic quiz worth 8, uniform across all 22 | same, verified row by row |
+| Unit tests `{n}-test`, lesson_id `test-{n}`, 16 for Unit 1 and 24 for Units 2-4 | same |
+| Four browser labs `lab-1`..`lab-4`, 8 checkpoints each | same |
+| Exams: midterm 40, practice-pilot 40, final 50 | same |
+| MC is the only auto-graded section; free response scored offline | same |
+| Authored content lives in the COURSE REPO: `labs/labs.yaml`, `exams/blueprints.yaml` | same |
+| Teacher bundle SKU `APNET-TEACHER-BUNDLE`, Units 1-4 | `config/shopify-skus.js` |
+
+## The two hazards that were sitting in comments
+
+Both are the "silent failure" shape, and neither was in any rulebook:
+
+**lesson_id is a contract, not a label.** `POST /api/progress/attempt` 400s a
+submission whose lesson_id disagrees with its manifest row. For labs and exams
+lesson_id EQUALS item_id, which is why the widget derives one from the other.
+Change one side and every lab grade is silently dropped: rejected submission,
+nothing shown to the student, empty cell.
+
+**Never add an ungraded thing to the manifest.** The baseline diagnostic is
+deliberately absent - week 1, before instruction, not graded for marks - because
+seeding it would put 20 unearnable points into every denominator on every
+dashboard. And visit denominators list all 22 topics on purpose, including
+unshipped ones, so they cannot move under students who already started.
+
+## Still not found, still not guessed
+
+Terminology and notation conventions, which titles get gotten wrong in practice,
+and whether a College Board document governs this course the way a CED governs
+CSA and CSP. The block says so explicitly and forbids importing AP
+Cybersecurity's structure to fill the gap. Assertion 4.2c still fails the suite
+if anyone writes a source-document filename while that stays true.
+
+## The guard that keeps the quote honest
+
+Quoting shipped config is only worth something while the quote stays true. Six
+new assertions read `utils.js` as text and check the block agrees on the unit
+count, the topic count, and each of the four unit titles. Renaming Unit 3 in
+`utils.js` and leaving the block alone:
+
+```
+[FAIL] 4.2k the block carries the shipped title: Managing Multiple Connections
+148 passed, 1 failed
+```
+
+Restored: 149 passed, 0 failed. Without that, a rename would leave the compiled
+prompt telling every future agent a unit title that no longer exists.
+
+Two assertions I wrote earlier today failed on this rewrite because their wording
+changed, and were updated to defend the property rather than the old string. That
+is the third time in two days a test bound to a specific phrasing has needed
+rewording; the drift guard above is bound to the DATA instead, which is why it is
+the more durable of the two.
+
+`smoke:hazards` 149 passed (was 140). All 57 offline suites pass.

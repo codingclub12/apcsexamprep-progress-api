@@ -160,9 +160,9 @@ ok('4.2 networking is NOT exempt: it is shipped',
 // rather than the whole task being stopped. The stop is narrower but must still
 // be there: authoring lesson CONTENT is what is forbidden while the curriculum
 // half is unrecorded.
-ok('4.2b networking still stops lesson authoring while its curriculum is unrecorded',
-  /NOT RECORDED HERE YET/.test(H.CONTENT_COVERAGE.networking.block)
-  && /do not infer/i.test(H.CONTENT_COVERAGE.networking.block));
+ok('4.2b networking still names what is NOT recorded and forbids inferring it',
+  /NOT RECORDED YET/.test(H.CONTENT_COVERAGE.networking.block)
+  && /ask rather than infer/i.test(H.CONTENT_COVERAGE.networking.block));
 // The guard that matters most on this block: no invented source document. A
 // plausible-looking filename injected verbatim is worse than an admitted gap,
 // because an agent will cite it and nobody checks whether it exists.
@@ -180,8 +180,45 @@ ok('4.2f networking carries the server-side answer key rule',
   /SERVER-SIDE/.test(H.CONTENT_COVERAGE.networking.block));
 ok('4.2g networking carries the single-source speaker-notes rule',
   /student-addressed voice/i.test(H.CONTENT_COVERAGE.networking.block));
-ok('4.2h networking forbids importing another course structure',
-  /unit numbering/i.test(H.CONTENT_COVERAGE.networking.block));
+ok('4.2h networking forbids importing another course structure to fill the gap',
+  /Do not import AP Cybersecurity/i.test(H.CONTENT_COVERAGE.networking.block));
+
+// The block quotes the shipped structure rather than authoring it, which is only
+// worth anything if the quote stays true. utils.js COURSES is what the visit
+// denominators are generated from, so if a unit is renamed there and the block
+// is not updated, the compiled prompt starts telling every agent a title that no
+// longer exists. Read as TEXT, like the write-guard enums above, so this suite
+// keeps running with nothing installed.
+function networkingUnitsFromUtils() {
+  const src = fs.readFileSync(path.join(__dirname, '..', 'utils.js'), 'utf8');
+  const start = src.indexOf("'ap-networking': {");
+  if (start < 0) throw new Error("could not find 'ap-networking' in utils.js");
+  const chunk = src.slice(start, start + 2000);
+  const labels = [...chunk.matchAll(/label: '(Unit \d+: [^']+)'/g)].map((m) => m[1]);
+  const lessonLists = [...chunk.matchAll(/lessons: \[([^\]]*)\]/g)]
+    .map((m) => m[1].split(',').filter((x) => x.trim()).length);
+  return { labels, topics: lessonLists.reduce((a, b) => a + b, 0), unitCount: labels.length };
+}
+const netCfg = networkingUnitsFromUtils();
+const netBlock = H.CONTENT_COVERAGE.networking.block;
+
+ok('4.2i the block agrees with utils.js on the unit COUNT',
+  new RegExp(`\\b(FOUR|${netCfg.unitCount})\\b`, 'i').test(netBlock) && netCfg.unitCount === 4,
+  netCfg.unitCount);
+ok('4.2j the block agrees with utils.js on the TOPIC count',
+  netBlock.includes(String(netCfg.topics)) && netCfg.topics === 22, netCfg.topics);
+for (const label of netCfg.labels) {
+  // The block writes "Unit 1 Managing My Connections" where utils.js writes
+  // "Unit 1: Managing My Connections", so compare on the title half.
+  const title = label.split(':').slice(1).join(':').trim();
+  ok(`4.2k the block carries the shipped title: ${title}`, netBlock.includes(title), title);
+}
+ok('4.2l the block cites where the structure came from, so a reader can check',
+  /utils\.js/.test(netBlock) && /seed-manifest\.js/.test(netBlock));
+ok('4.2m the block carries the lesson_id contract that silently drops grades',
+  /LESSON_ID IS A CONTRACT/.test(netBlock) && /silently dropped/i.test(netBlock));
+ok('4.2n the block warns off seeding ungraded items into the denominator',
+  /baseline diagnostic/i.test(netBlock) && /NEVER ADD AN UNGRADED THING/.test(netBlock));
 ok('4.3 cyber has a real rulebook now, not an exemption',
   H.contentCoverageFor('cyber') === 'covered', H.contentCoverageFor('cyber'));
 ok('4.4 a course in the block map is never also on the exempt list',
