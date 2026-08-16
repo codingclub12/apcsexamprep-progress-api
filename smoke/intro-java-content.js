@@ -633,5 +633,76 @@ ok('12.3 the course description in structured data makes no AP claim',
   !pages.some((p) => /"AP |Advanced Placement/.test(
     (p.bodyHtml.match(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g) || []).join(''))));
 
+// ── 13. Screenshots: shippable now, upgradeable later ────────────────────────
+//  158 screenshots are referenced and almost none are taken. That must not block
+//  the course, and it must not ship broken image icons either.
+//
+//  So a shot that is not in seed/intro-java-shots.js is not rendered as an image
+//  at all: its alt text becomes an "On your screen" instruction, pointing the
+//  student at their own Greenfoot window. The alt text was written to describe
+//  what matters in the frame, which is the only reason that reads as teaching
+//  rather than as an apology.
+//
+//  The check that earns its keep is 13.4: a path in the AVAILABLE list that no
+//  step actually references. That is a typo during upload, and without this it
+//  fails silently, showing the instruction forever while somebody is certain
+//  they uploaded the picture.
+section('13. Screenshot availability and the shot list');
+
+const shots = require('../seed/intro-java-shots');
+const shotList = require('../scripts/intro-java-shot-list');
+const allShots = shotList.collect();
+
+ok('13.1 every screenshot in the bank appears in the generated shot list',
+  allShots.length === LESSONS.reduce((n, l) => n + l.steps.filter((s) => s.shot).length, 0),
+  allShots.length);
+
+ok('13.2 the shot list names both the path and the flattened upload name',
+  allShots.every((r) => r.src.includes('/') && r.upload === r.src.split('/').join('-')));
+
+// Nothing renders a broken image. Either the file exists and is an img, or it
+// does not and the step explains what to look at instead.
+let brokenImgs = [];
+for (let i = 0; i < pages.length; i++) {
+  const imgs = [...pages[i].bodyHtml.matchAll(/<img[^>]*src="([^"]*)"/g)].map((m) => m[1]);
+  for (const src of imgs) {
+    const bare = src.split('/').pop();
+    if (!shots.AVAILABLE.some((a) => a.split('/').join('-') === bare)) {
+      brokenImgs.push(`${LESSONS[i].lesson} renders ${bare} which is not in AVAILABLE`);
+    }
+  }
+}
+ok('13.3 no page renders an image that has not been taken', brokenImgs.length === 0, brokenImgs);
+
+// The failure this exists for: a path uploaded and listed, but misspelled, so it
+// never matches and the instruction shows forever.
+const referenced = new Set(allShots.map((r) => r.src));
+const orphans = shots.AVAILABLE.filter((a) => !referenced.has(a));
+ok('13.4 every path in AVAILABLE matches a screenshot the bank actually references',
+  orphans.length === 0, orphans);
+
+// Every step that has no image must still be teachable on its own.
+let mute = [];
+for (let i = 0; i < pages.length; i++) {
+  const l = LESSONS[i];
+  const shotSteps = l.steps.filter((s) => s.shot).length;
+  const looks = (pages[i].bodyHtml.match(/class="ij-look"/g) || []).length;
+  const imgs = (pages[i].bodyHtml.match(/<img/g) || []).length;
+  if (looks + imgs !== shotSteps) {
+    mute.push(`${l.lesson}: ${shotSteps} shots, ${imgs} images, ${looks} instructions`);
+  }
+}
+ok('13.5 every screenshot step renders either an image or an on-screen instruction',
+  mute.length === 0, mute);
+
+ok('13.6 an on-screen instruction carries the full description, not a filename',
+  pages.every((p) => {
+    const looks = [...p.bodyHtml.matchAll(/<p class="ij-look">([\s\S]*?)<\/p>/g)]
+      .map((m) => m[1].replace(/<[^>]+>/g, '').trim());
+    return looks.every((t) => t.length > 40 && !/\.png/i.test(t));
+  }));
+
+console.log(`         ${shots.AVAILABLE.length} of ${allShots.length} screenshots taken`);
+
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);
