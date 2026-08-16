@@ -535,6 +535,28 @@ const raw = (sql, ...args) => db.prepare(sql).run(...args);
   ok('the page greys the auto-dispatch toggle with the router reason',
     /auto_dispatch_eligible \? "" : " disabled"/.test(page) && /auto_dispatch_reason/.test(page));
 
+  // ── Reconcile panel ────────────────────────────────────────────────────────
+  //  The button lives here because the verify click already does. The WORK runs
+  //  on a GitHub runner, and the page must keep saying so: someone who reads
+  //  this panel as "the API will go and fetch a dozen pages" would be wrong in a
+  //  way that matters on a 1 vCPU box.
+  ok('the reconcile panel is on the page and points at the workflow',
+    /id="reconcilecard"/.test(page) && /verify-board\.yml/.test(page));
+  ok('it says the work runs on a runner, not here',
+    /GitHub runner rather than here/.test(page));
+  ok('it says it writes nothing and that verified stays a human click',
+    /writes nothing/i.test(page) && /verified<\/strong> stays yours/.test(page));
+  // Every value in that panel comes from an external API. This page already had
+  // one stored-XSS hole through innerHTML interpolation, so the panel is held to
+  // textContent, and an href taken from the API is pattern-checked first.
+  ok('the panel writes external values with textContent, never innerHTML',
+    /status\.textContent = "Last run: "/.test(page)
+    && !/innerHTML[^\n]*run\./.test(page));
+  ok('an href taken from the GitHub API is validated before it is assigned',
+    /\^https:\\\/\\\/github\\\.com\\\//.test(page) && /lastBtn\.href = run\.html_url/.test(page));
+  ok('the panel degrades to a working button if GitHub cannot be reached',
+    /Could not reach GitHub/.test(page) && /The button still works/.test(page));
+
   // ── Chat cannot claim ─────────────────────────────────────────────────────
   const chatClaim = await call('POST', `/api/command/task/${csaContent.body.task.id}/claim`, {
     as: 'agent', body: { surface: 'chat', session_label: 'chat session', locks: ['theme:assets/x.js'] },
