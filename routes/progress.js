@@ -22,6 +22,7 @@ const { requireStudent } = require('../middleware');
 const wireLog = require('../lib/wire-log');
 const posthog = require('../lib/posthog');
 const { resolveMode, retryAllowedFor } = require('../retry-policy');
+const gapGrader = require('../lib/gap-grader');
 
 // ── PREPARED STATEMENTS (module scope, reused across requests) ────────────────
 const getClassStmt = db.prepare(
@@ -83,7 +84,12 @@ function rateLimit(req, res, next) {
 }
 
 // Accepted item types. Must stay in step with what seed-manifest.js writes.
+// 'gap' is the intro-java fill-in-the-code item. It is deliberately NOT
+// postable through /attempt: a gap is graded from a server-side key, so a
+// client-supplied score for one would be a forgeable grade. POST /gap below is
+// the only way a gap attempt can be written, and it computes the score itself.
 const ITEM_TYPES = new Set(['cfu', 'quiz', 'exercise-1', 'exercise-2', 'exercise-3']);
+const GAP_ITEM_TYPE = 'gap';
 
 // ── DETAIL SANITIZER (zero PII enforcement) ───────────────────────────────────
 // Per-question results: [{"q":1,"sel":2,"ok":true}]. Objects are rebuilt so no
@@ -361,6 +367,164 @@ router.post('/heartbeat', requireStudent, heartbeatRateLimit, (req, res) => {
   } catch (e) {
     console.error('Heartbeat error:', e);
     res.status(500).json({ error: 'Failed to record heartbeat' });
+  }
+});
+
+// ── POST /api/progress/gap ────────────────────────────────────────────────────
+//  Fill-in-the-code grading. The student sends the tokens they typed; the server
+//  compares them against a key that lives in lib/gap-grader.js and has never
+//  been sent to a browser.
+//
+//  WHY THIS IS NOT JUST /attempt WITH item_type 'gap'
+//  /attempt trusts the client's score, which is right for a widget that graded
+//  an MCQ against a key the server also holds and re-checks at rollup. For a gap
+//  there IS no client-side key, so a client-supplied score would simply be a
+//  student telling us their own grade. The score here is computed server-side
+//  and the request has no score field at all.
+//
+//  THE SUBMITTED TEXT IS NEVER STORED. It is graded in transit and discarded.
+//  What is written is per-hole booleans, which is what `detail` carries. There is
+//  no diagnostics mode, no truncated copy, and no hash: a filled hole is
+//  student-typed free text and this product does not keep student free text.
+router.post('/gap', requireStudent, rateLimit, (req, res) => {
+  try {
+    const b = req.body || {};
+
+    const cls = getClassStmt.get(req.student.class_id);
+    if (!cls) return res.status(401).json({ error: 'Class not found for student' });
+
+    let course;
+    if (cls.course === 'solo') {
+      course = typeof b.course === 'string' ? b.course.slice(0, 40) : '';
+    } else if (b.course === cls.course) {
+      course = cls.course;
+    } else {
+      return res.status(400).json({ error: `course must be '${cls.course}' for this class` });
+    }
+
+    const item_id = typeof b.item_id === 'string' ? b.item_id : '';
+    if (!course || !item_id) return res.status(400).json({ error: 'course and item_id required' });
+
+    // Bounded input before anything else touches it. A gap exercise has a handful
+    // of short blanks; anything past these limits is not a student answering a
+    // question, and unbounded request bodies are how a 1 GB box falls over.
+    const answers = b.answers;
+    const isObj = answers && typeof answers === 'object';
+    if (!isObj) return res.status(400).json({ error: 'answers must be an object or an array' });
+    const submittedCount = Array.isArray(answers) ? answers.length : Object.keys(answers).length;
+    if (submittedCount > 40) return res.status(400).json({ error: 'too many blanks submitted' });
+    for (const v of Array.isArray(answers) ? answers : Object.values(answers)) {
+      if (v !== undefined && v !== null && typeof v !== 'string') {
+        return res.status(400).json({ error: 'every answer must be a string' });
+      }
+      if (typeof v === 'string' && v.length > 200) {
+        return res.status(400).json({ error: 'an answer is too long' });
+      }
+    }
+
+    // The manifest gates what is real, exactly as it does for /attempt.
+    const manifest = getManifestStmt.get(course, item_id);
+    if (!manifest || manifest.item_type !== GAP_ITEM_TYPE) {
+      return res.status(400).json({ error: `Unknown gap item '${item_id}' for ${course}. Not in course_manifest.` });
+    }
+    // And the key gates what can be graded. A manifest row with no key is an
+    // authoring mistake, and a 404 says so rather than silently scoring zero and
+    // making a working page look like a failing student.
+    if (!gapGrader.hasKey(course, item_id)) {
+      return res.status(404).json({ error: `No gap key for '${item_id}'. The page is live but the key is missing.` });
+    }
+
+    const graded = gapGrader.gradeSubmission(course, item_id, answers);
+
+    // The manifest is the points authority everywhere else, so a key that has
+    // drifted from it must not silently regrade the class out of a different
+    // denominator.
+    if (graded.max_score !== manifest.points) {
+      console.error(`[gap] key/manifest mismatch for ${course} ${item_id}: `
+        + `key has ${graded.max_score} holes, manifest says ${manifest.points} points`);
+      return res.status(500).json({ error: 'This exercise is misconfigured. Your work was not scored.' });
+    }
+
+    const lesson_id = manifest.lesson_id;
+    const maxScore = manifest.points;
+    const score = graded.score;
+
+    const duration = Number.isInteger(b.duration_seconds) && b.duration_seconds >= 0
+      ? Math.min(b.duration_seconds, 86400)
+      : null;
+    const ua = (req.get('user-agent') || '').slice(0, 120) || null;
+
+    const threshold = cls.mastery_threshold != null ? cls.mastery_threshold : 80;
+    const passed = (score / maxScore) * 100 >= threshold ? 1 : 0;
+
+    const override = getRetryOverrideStmt.get(req.student.id);
+    const retryOn = retryAllowedFor(
+      resolveMode(cls), GAP_ITEM_TYPE,
+      (override && override.retry_override != null) ? override.retry_override : null
+    ) ? 1 : 0;
+
+    const detailJson = JSON.stringify(graded.detail);
+
+    const result = db.transaction(() => {
+      const attempt_no = countPriorStmt.get(req.student.id, item_id, course).n + 1;
+      insertAttemptStmt.run(
+        req.student.id, req.student.class_id, course, lesson_id, item_id, GAP_ITEM_TYPE,
+        score, maxScore, passed, attempt_no, duration, ua, detailJson
+      );
+      const gor = gradeOfRecordStmt.get(retryOn, req.student.id, item_id, course);
+      return { attempt_no, gor };
+    })();
+
+    // NOTE what is logged: counts and booleans. `b` is NOT passed as the body
+    // here, unlike /attempt, because for this route the body IS the student's
+    // typed text and the wire log persists what it is given.
+    wireLog.recordOnce(req, {
+      endpoint: 'POST /api/progress/gap',
+      student_id: req.student.id,
+      status: 200,
+      body: { course, item_id, blanks: submittedCount },
+      course,
+      result: {
+        score, max_score: maxScore, passed: !!passed,
+        attempt_no: result.attempt_no,
+        gor_score: result.gor.score, gor_max: result.gor.max_score,
+      },
+    });
+
+    posthog.capture('gap_recorded', req.student.id, {
+      course,
+      lesson_id,
+      item_id,
+      score,
+      max_score: maxScore,
+      pct: maxScore > 0 ? Math.round((score / maxScore) * 1000) / 10 : null,
+      passed: !!passed,
+      attempt_no: result.attempt_no,
+      is_retry: result.attempt_no > 1,
+      // Which KINDS of mistake, never the text. This is the number that says
+      // whether a blank is badly worded or the lesson above it is not landing.
+      near_misses: graded.holes.filter((h) => !h.ok && h.reason).map((h) => h.reason),
+      class_id: req.student.class_id,
+    });
+
+    res.json({
+      recorded: true,
+      score,
+      max_score: maxScore,
+      passed: !!passed,
+      attempt_no: result.attempt_no,
+      // Per-hole feedback names the KIND of mistake and never the answer.
+      holes: graded.holes.map((h) => ({ n: h.n, ok: h.ok, message: h.message })),
+      grade_of_record: {
+        score: result.gor.score,
+        max_score: result.gor.max_score,
+        attempt_no: result.gor.attempt_no,
+      },
+      retry_allowed: !!retryOn,
+    });
+  } catch (e) {
+    console.error('Gap grade error:', e);
+    res.status(500).json({ error: 'Failed to record gap attempt' });
   }
 });
 
