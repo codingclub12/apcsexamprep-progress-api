@@ -496,5 +496,60 @@ ok('11.z every help description is unique',
 ok('11.z the catalog covers errors, gotchas and recipes',
   new Set(helpPages.map(kindOf ? (h) => h.kind : () => 1)).size === 3);
 
+// ── 12. This is a PRE-AP course, and the pages must read like one ────────────
+//  intro-java is the on-ramp, not AP CSA. Most students taking it will never
+//  sit the exam: it is sold to intro and pre-AP classes, and to teachers who
+//  want a first-year course that happens to feed CSA.
+//
+//  So AP framing must not appear in anything a STUDENT reads. "This is a
+//  favourite of AP exam questions" is demotivating to a beginner who is not
+//  taking that exam, and it quietly changes what the course is promising. The
+//  skill is worth having because it is useful, not because of a test.
+//
+//  Four such lines had leaked into lesson prose before this check existed.
+//
+//  The CSA ALIGNMENT ITSELF is real and stays: it is the business case, it is
+//  why Unit 3 is shaped the way it is, and it belongs in the spec, the file
+//  headers and the commit messages. Those are code comments and internal docs,
+//  never rendered, which is exactly why this check runs against the RENDERED
+//  HTML rather than against the source.
+section('12. No AP framing reaches a student-facing page');
+
+const AP_PATTERNS = [/AP exam/i, /AP CSA/i, /Advanced Placement/i, /College Board/i,
+  /AP Computer Science/i];
+
+let apLeaks = [];
+for (let i = 0; i < pages.length; i++) {
+  for (const re of AP_PATTERNS) {
+    const m = pages[i].bodyHtml.match(re);
+    if (m) apLeaks.push(`${LESSONS[i].lesson} contains "${m[0]}"`);
+  }
+  const meta = pages[i].seoTitle + ' ' + pages[i].seoDescription;
+  for (const re of AP_PATTERNS) {
+    if (re.test(meta)) apLeaks.push(`${LESSONS[i].lesson} seo metadata mentions AP`);
+  }
+}
+for (const hp of helpPages) {
+  for (const re of AP_PATTERNS) {
+    const m = hp.bodyHtml.match(re);
+    if (m) apLeaks.push(`${hp.code} contains "${m[0]}"`);
+  }
+}
+ok('12.1 no rendered page mentions the AP exam or AP CSA', apLeaks.length === 0, apLeaks);
+
+// The alignment claim is allowed, and expected, in the internal spec.
+const fsMod = require('fs');
+const specPath = require('path').join(__dirname, '..', 'docs', 'intro-java-course-spec.md');
+if (fsMod.existsSync(specPath)) {
+  const spec = fsMod.readFileSync(specPath, 'utf8');
+  ok('12.2 the internal spec still records the CSA alignment, which is the business case',
+    /CSA/.test(spec));
+}
+
+// And the course must describe itself as a beginner course, not an AP one.
+ok('12.3 the course description in structured data makes no AP claim',
+  !pages.some((p) => /"AP |Advanced Placement/.test(
+    (p.bodyHtml.match(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g) || []).join(''))));
+
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);

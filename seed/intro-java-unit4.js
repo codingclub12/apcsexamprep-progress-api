@@ -651,8 +651,8 @@ const LESSONS = [
           'Draw the table. Two columns, i and total, one row per pass.\n\n'
           + 'i=1, total=1. i=2, total=3. i=3, total=6. i=4, total=10. i=5, total=15.\n\n'
           + 'When a loop gives an answer you did not expect, do this before changing anything. Nine '
-          + 'times out of ten the table shows you the off-by-one immediately, and you will do this '
-          + 'on paper in the AP exam too.',
+          + 'times out of ten the table shows you the off-by-one immediately. Tracing on paper is '
+          + 'the skill that stays useful in every language you ever pick up.',
       },
     ],
 

@@ -955,8 +955,8 @@ const LESSONS = [
     },
 
     hook:
-      'Five algorithms cover almost everything you will ever do to an array, on this course and in '
-      + 'the AP exam. Each is a traversal with a different accumulator, and each has one trap.',
+      'Five algorithms cover almost everything you will ever do to an array, here and in whatever '
+      + 'you write next. Each is a traversal with a different accumulator, and each has one trap.',
 
     objectives: [
       'Write the sum, maximum, minimum, search and count algorithms',
@@ -1301,7 +1301,7 @@ const LESSONS = [
           + 'means editing five numbers.\n\n'
           + 'One caution: when `level` reaches 5 this throws, because the last valid index is 4. '
           + 'Either stop the game at the last level or clamp the index. That is a real design '
-          + 'decision, not an oversight, and it is the sort of boundary the AP exam asks about.',
+          + 'decision, not an oversight, and boundaries like it are where most real bugs live.',
       },
     ],
 
