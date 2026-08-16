@@ -219,7 +219,10 @@ const samePoints = (a, b) => (a == null && b == null)
       : '  NOTE: at least one of these is NOT the known unauthored-column case. Look.\n');
     ok('  every presentation difference is the known unauthored-column case', knownShape);
   } else {
-    ok('  no presentation differences at all', true);
+    // Derived from the data, not a constant. Being in the else branch already
+    // implies it, which is exactly why a hardcoded `true` here was worthless:
+    // restructure the condition above and this line keeps passing regardless.
+    ok('  no presentation differences at all', presentation.length === 0, presentation.length);
   }
 
   console.log('4. The quiz cell in particular carries through to both');

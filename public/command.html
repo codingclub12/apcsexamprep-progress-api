@@ -172,7 +172,12 @@
         with backoff would tie up this box and put its IP in front of Cloudflare's rate limiter.
         It writes nothing. <strong>verified</strong> stays yours to click.</p>
       <div class="acts">
-        <a class="small btnlink" id="runreconcile" target="_blank" rel="noopener">Run it on GitHub</a>
+        <!-- "Open", not "Run". This link navigates; the run needs two more taps
+             on GitHub (Run workflow, then the green Run workflow inside the
+             dropdown). The old label read as though tapping it started the
+             sweep, and a button that looks pressed is not a workflow that
+             ran. -->
+        <a class="small btnlink" id="runreconcile" target="_blank" rel="noopener">Open the workflow on GitHub</a>
         <a class="small btnlink" id="lastreconcile" target="_blank" rel="noopener" hidden>Last run</a>
       </div>
       <p class="hint" id="reconcilestatus" style="margin:8px 0 0">checking the last run...</p>

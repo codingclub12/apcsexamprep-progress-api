@@ -231,7 +231,12 @@ const attemptsFor = (sid, item) =>
     ok('  the row is gone', attemptsFor('s3', 'exam-midterm').length === 0);
     ok('  clearing again is harmless', (await call('POST', '/api/teacher/classes/NET-0001/scores',
       { course: 'ap-networking', item_id: 'exam-midterm', scores: [{ student_id: 's3', score: null }] }, OWNER)).body.cleared === 0);
-    ok('  a zero is a real score, not a clear', true);
+    // A heading, not a check. It always passed and it read in the output
+    // exactly like a verified claim about one of this repo's core invariants
+    // (not-attempted and scored-zero are different facts). The invariant IS
+    // tested, by the two lines below: a clear would leave 0 recorded and no
+    // row, so recorded === 1 with a surviving row is the distinction.
+    console.log('  a zero is a real score, not a clear:');
     const zero = await call('POST', '/api/teacher/classes/NET-0001/scores',
       { course: 'ap-networking', item_id: 'exam-midterm', scores: [{ student_id: 's3', score: 0 }] }, OWNER);
     ok('  entering 0 writes a row', zero.body.recorded === 1 && attemptsFor('s3', 'exam-midterm').length === 1);
