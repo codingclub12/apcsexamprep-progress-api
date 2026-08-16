@@ -57,6 +57,27 @@ function toRawUrl(url) {
   return `https://raw.githubusercontent.com/${m[1]}/${m[2]}/${m[3].split('#')[0]}`;
 }
 
+// THE severity rule for an HTTP status. It lives here and is exported, because
+// it used to live here AND in verify-board.js, and the two drifted: fixing the
+// 401 case in report() left the board still printing "[P0] status 401" from its
+// own copy. Same failure the gradebook contract exists to prevent - one
+// normalizer, everything downstream reads it. Do not re-derive this from
+// `status` anywhere else.
+//
+//   ok          - 200, run the content checks
+//   rate-limit  - 429, NOT broken, re-run slower
+//   needs-human - 401/403. This tool carries no credential, so a fail-closed
+//                 endpoint answering 401 is the endpoint WORKING. It cannot be
+//                 told apart from a page that should be public and is not, so
+//                 no severity is claimed either way.
+//   broken      - everything else
+function classifyStatus(status) {
+  if (status === 200) return 'ok';
+  if (status === 429) return 'rate-limit';
+  if (status === 401 || status === 403) return 'needs-human';
+  return 'broken';
+}
+
 // HTML checks against a non-HTML body invent findings. A .env.example has no
 // meta description and no <h1>, and reporting that as damage is noise.
 function looksHtml(body) {
@@ -302,7 +323,7 @@ async function inspect(url, phrases, now) {
   // run called a 401 on /api/student/history a P0; a 200 there would have been
   // the emergency. It cannot be told apart from a page that should be public
   // and is not, so it is routed to a human rather than given a severity.
-  const authGated = r.status === 401 || r.status === 403;
+  const authGated = classifyStatus(r.status) === 'needs-human';
   // HTML-shaped checks only run against HTML.
   const html = usable && looksHtml(r.body);
   return {
@@ -394,7 +415,7 @@ function report(x) {
 // Exported so the smoke suite can exercise the pure helpers directly. The CLI
 // only runs when this file IS the entry point, so requiring it is side-effect
 // free.
-module.exports = { toRawUrl, looksHtml };
+module.exports = { toRawUrl, looksHtml, classifyStatus };
 
 if (require.main !== module) return;
 
