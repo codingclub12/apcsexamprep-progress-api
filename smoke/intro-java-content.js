@@ -593,6 +593,37 @@ for (const p of pages) {
 ok('11.5e every lesson breadcrumb links to its OWN unit hub',
   ijCrumbUnit.length === 0, ijCrumbUnit.slice(0, 5));
 
+// ── 11.6 GENERATED QUESTION TEXT READS LIKE ENGLISH ──────────────────────────
+//  FAQ questions are built by stripping a known prefix off the page title. When
+//  five error pages were retitled to "Java error in Greenfoot: X" the pattern
+//  stopped matching, and every one of them shipped structured data asking
+//  "What usually causes Java error in Greenfoot: cannot find symbol?".
+//
+//  Nothing breaks, no check failed, and it is the kind of text that would go out
+//  in a rich result. A generated string that embeds a title prefix is fragile by
+//  nature, so it gets a check rather than a promise.
+section('11.6 Generated FAQ questions read like questions');
+
+const ijFaqNames = [];
+for (const p of helpPagesForLinks()) {
+  for (const m of p.bodyHtml.match(/"@type":"FAQPage"[\s\S]*?<\/script>/g) || []) {
+    for (const n of m.match(/"name":"((?:[^"\\]|\\.)*)"/g) || []) {
+      ijFaqNames.push({ page: p.handle, q: n.slice(8, -1) });
+    }
+  }
+}
+ok('11.6a help pages emit FAQ questions', ijFaqNames.length > 40, ijFaqNames.length);
+
+// A leftover title prefix inside the question is the defect.
+const ijLeftover = ijFaqNames.filter((x) => /causes Java error|causes How to|^How do I How /.test(x.q));
+ok('11.6b no question embeds a title prefix it meant to strip',
+  ijLeftover.length === 0, ijLeftover.slice(0, 5));
+
+// And no question should contain a colon, which is what a stripped-prefix
+// failure always leaves behind.
+const ijColon = ijFaqNames.filter((x) => /causes [^?]*:/.test(x.q));
+ok('11.6c no cause-question carries a stray colon', ijColon.length === 0, ijColon.slice(0, 5));
+
 // ── 12. This is a PRE-AP course, and the pages must read like one ────────────
 //  intro-java is the on-ramp, not AP CSA. Most students taking it will never
 //  sit the exam: it is sold to intro and pre-AP classes, and to teachers who
