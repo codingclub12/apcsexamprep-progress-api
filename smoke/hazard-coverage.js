@@ -154,8 +154,34 @@ for (const [course, entry] of Object.entries(H.CONTENT_COVERAGE)) {
 
 // A SHIPPED course must never sit on the exempt list. Exempt asserts that nothing
 // is being authored against the course, and for networking that is false.
-ok('4.2 networking is NOT exempt: it is shipped, so an unguarded task must stop',
-  H.contentCoverageFor('networking') === 'pending', H.contentCoverageFor('networking'));
+ok('4.2 networking is NOT exempt: it is shipped',
+  H.contentCoverageFor('networking') !== 'exempt', H.contentCoverageFor('networking'));
+// It now carries the cross-course production rules, so the block is injected
+// rather than the whole task being stopped. The stop is narrower but must still
+// be there: authoring lesson CONTENT is what is forbidden while the curriculum
+// half is unrecorded.
+ok('4.2b networking still stops lesson authoring while its curriculum is unrecorded',
+  /NOT RECORDED HERE YET/.test(H.CONTENT_COVERAGE.networking.block)
+  && /do not infer/i.test(H.CONTENT_COVERAGE.networking.block));
+// The guard that matters most on this block: no invented source document. A
+// plausible-looking filename injected verbatim is worse than an admitted gap,
+// because an agent will cite it and nobody checks whether it exists.
+ok('4.2c networking names NO source-of-truth document, because none is recorded',
+  !/course-and-exam-description|\.pdf\b/i.test(H.CONTENT_COVERAGE.networking.block),
+  (H.CONTENT_COVERAGE.networking.block.match(/\S*\.pdf\S*/i) || [])[0]);
+ok('4.2d networking is flagged for review until the curriculum lands',
+  typeof H.CONTENT_COVERAGE.networking.review === 'string'
+  && H.CONTENT_COVERAGE.networking.review.length > 40);
+// The transferable half is the whole point of composing this block from the
+// others. If these stop being injected, networking work loses the posture rules.
+ok('4.2e networking carries the zero-PII rule',
+  /NEVER STORE STUDENT FREE TEXT/.test(H.CONTENT_COVERAGE.networking.block));
+ok('4.2f networking carries the server-side answer key rule',
+  /SERVER-SIDE/.test(H.CONTENT_COVERAGE.networking.block));
+ok('4.2g networking carries the single-source speaker-notes rule',
+  /student-addressed voice/i.test(H.CONTENT_COVERAGE.networking.block));
+ok('4.2h networking forbids importing another course structure',
+  /unit numbering/i.test(H.CONTENT_COVERAGE.networking.block));
 ok('4.3 cyber has a real rulebook now, not an exemption',
   H.contentCoverageFor('cyber') === 'covered', H.contentCoverageFor('cyber'));
 ok('4.4 a course in the block map is never also on the exempt list',
@@ -175,10 +201,16 @@ for (const course of COURSES) {
 
 ok('5.1 ACCEPTANCE: surface=content course=cyber returns a non-empty hazard array',
   H.hazardsFor({ surface: 'content', course: 'cyber', title: 'Draft 3.2' }).length > 0);
-ok('5.2 a pending course compiles a STOP that forbids guessing',
-  /STOP/.test(bodies({ surface: 'content', course: 'networking', title: 'x' }))
-  && /source-of-truth/.test(bodies({ surface: 'content', course: 'networking', title: 'x' }))
-  && /from memory/.test(bodies({ surface: 'content', course: 'networking', title: 'x' })));
+// The pending machinery is tested directly. It used to be exercised through
+// networking, which has since gained a block; binding this assertion to whichever
+// course happens to be uncovered today means it silently stops testing anything
+// the moment that course is covered.
+const pendingSample = H.pendingBlock('some-new-course', 'Reason the rulebook is missing.');
+ok('5.2 the pending mechanism still compiles a STOP that forbids guessing',
+  /STOP/.test(pendingSample)
+  && /source-of-truth/.test(pendingSample)
+  && /from memory/.test(pendingSample)
+  && /some-new-course/.test(pendingSample), pendingSample.slice(0, 80));
 ok('5.3 an UNKNOWN course compiles a louder STOP rather than nothing',
   H.hazardsFor({ surface: 'content', course: 'ap-basketweaving', title: 'x' }).length > 0
   && /no row in CONTENT_COVERAGE/.test(bodies({ surface: 'content', course: 'ap-basketweaving', title: 'x' })));
