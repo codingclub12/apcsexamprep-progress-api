@@ -1,10 +1,12 @@
 'use strict';
 // ─────────────────────────────────────────────────────────────────────────────
-//  COURSE MANIFEST SEED — the denominator authority for ap-csa and ap-csp.
+//  COURSE MANIFEST SEED - the denominator authority for every course whose
+//  grades arrive through POST /api/progress/attempt.
 //
 //  Visit items are generated straight from the COURSES config in utils.js
 //  (CSA: 53 lessons across Units 1-4, 2025-2026 CED; CSP: 35 lessons across
-//  Big Ideas 1-5), so the manifest can never drift from what /track records.
+//  Big Ideas 1-5; networking: 22 topics; intro-java: 42 lessons across 6
+//  units), so the manifest can never drift from what /track records.
 //
 //  Graded (cfu/quiz) items are seeded for the CSA Unit 1 pilot only. The
 //  manifest grows as reporters go live on more units.
@@ -23,7 +25,7 @@ const { COURSES } = require('../utils');
 
 // Courses whose visit items come from the COURSES config. Cyber keeps its
 // existing grade-reporting path and is intentionally not seeded here.
-const VISIT_COURSES = ['ap-csa', 'ap-csp', 'ap-networking'];
+const VISIT_COURSES = ['ap-csa', 'ap-csp', 'ap-networking', 'intro-java'];
 
 // CSA Unit 1 pilot: graded items per lesson, counted from the 2026-07-07
 // Matrixify pages export. cfus = auto-graded apcs-ex widgets in the lesson
@@ -209,6 +211,34 @@ const NET_EXAMS = {
   'exam-final': 50,
 };
 
+// Intro to Java with Greenfoot graded items. EMPTY on purpose: no lesson page
+// exists yet, so there is nothing a student could open and earn. Visit rows for
+// all 42 lessons are generated from the COURSES config above (so visit
+// denominators never move once students start), but a graded row is a promise
+// that the points are earnable in the browser, and seeding one before its page
+// ships is the exact failure smoke/manifest-prune.js exists to catch.
+//
+// Fill this in UNIT BY UNIT as pages go live, then run --update. Shape, per the
+// item table in docs/intro-java-course-spec.md:
+//
+//   '1.1': { cfus: 4, gap_holes: 3, quiz: 5 }          // Unit 1 has no code items
+//   '2.4': { cfus: 4, gap_holes: 5, code: 1, quiz: 6 } // Units 2-6 do
+//
+// gap_holes is ONE item worth that many points, not one item per hole: the page
+// posts a single attempt for the whole gap-fill exercise with per-hole booleans
+// in its detail JSON. That is the same row-per-activity model CSA Unit 3 uses,
+// and it is what keeps a 30-student class at 30 inserts rather than 300.
+const INTRO_JAVA_GRADED = {};
+
+// Unit projects. Also EMPTY, and for a second reason on top of the first: only
+// the auto-graded worksheet half of a project ('project-{U}-gap') can ever be a
+// manifest row. The built Greenfoot scenario runs on the desktop, cannot report
+// itself, and is teacher-scored through POST /api/teacher/classes/:code/scores.
+// Never add a row for the scenario itself.
+//
+//   'project-1': { gap_holes: 8 }
+const INTRO_JAVA_PROJECTS = {};
+
 function buildRows() {
   const rows = [];
 
@@ -276,6 +306,31 @@ function buildRows() {
   // AP Networking cumulative exams (course-wide, not tied to one unit).
   for (const [itemId, points] of Object.entries(NET_EXAMS)) {
     rows.push({ course: 'ap-networking', unit: 'course', lesson_id: itemId, item_id: itemId, item_type: 'quiz', points });
+  }
+
+  // Intro to Java graded items (authored lessons only; empty until pages ship).
+  for (const [lesson, cfg] of Object.entries(INTRO_JAVA_GRADED)) {
+    const unit = `unit-${lesson.split('.')[0]}`;
+    for (let i = 1; i <= (cfg.cfus || 0); i++) {
+      rows.push({ course: 'intro-java', unit, lesson_id: lesson, item_id: `${lesson}-cfu-${i}`, item_type: 'cfu', points: 1 });
+    }
+    if (cfg.gap_holes > 0) {
+      rows.push({ course: 'intro-java', unit, lesson_id: lesson, item_id: `${lesson}-gap`, item_type: 'gap', points: cfg.gap_holes });
+    }
+    if (cfg.code > 0) {
+      rows.push({ course: 'intro-java', unit, lesson_id: lesson, item_id: `${lesson}-code`, item_type: 'code', points: cfg.code });
+    }
+    if (cfg.quiz > 0) {
+      rows.push({ course: 'intro-java', unit, lesson_id: lesson, item_id: `${lesson}-quiz`, item_type: 'quiz', points: cfg.quiz });
+    }
+  }
+
+  // Intro to Java project worksheets. lesson_id is its own instrument id
+  // ('project-1'), never a lesson number, so a project can never share a
+  // gradebook cell with a lesson the way the networking unit tests once did.
+  for (const [lessonId, cfg] of Object.entries(INTRO_JAVA_PROJECTS)) {
+    const unit = `unit-${lessonId.split('-')[1]}`;
+    rows.push({ course: 'intro-java', unit, lesson_id: lessonId, item_id: `${lessonId}-gap`, item_type: 'gap', points: cfg.gap_holes });
   }
 
   return rows;

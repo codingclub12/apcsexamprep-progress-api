@@ -26,6 +26,10 @@ const DEFAULT_SKU_MAP = {
   // AP CSP Teacher Course Bundle has no line-item SKU, so it is mapped by its numeric
   // Shopify product_id (courseForLineItem falls back to product_id when sku is absent).
   '9278941888727':         'ap-csp',            // AP CSP Teacher Course Bundle
+  // intro-java has no Shopify product yet, so it deliberately has no row here.
+  // Add its teacher bundle SKU when the product goes live; until then the
+  // course is granted by access code only, which is the same path every other
+  // course used before its bundle existed.
 };
 
 function loadEnvMap() {

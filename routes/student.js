@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const router = express.Router();
 const db = require('../db');
 const wire = require('../lib/wire-log');
+const { expandCase } = require('../lib/greenfoot-stub');
 const { requireStudent } = require('../middleware');
 const { makeRateLimit } = require('../lib/rate-limit');
 const { newId, signStudentToken, isValidPin, sanitize, COURSES, pageFromHandle } = require('../utils');
@@ -1501,7 +1502,13 @@ router.post('/code-grade', requireStudent, async (req, res) => {
       // Inject this case's inputs and wrap the student's bare segment into a
       // runnable program. Different (often hidden) preludes are what make
       // hardcoding the visible output fail.
-      const program = buildProgram(languageId, c.prelude || '', source, c.postlude || '');
+      // expandCase is a no-op on any case without the @greenfoot-stub sentinel,
+      // so every existing CSA case assembles byte-for-byte as before. A case
+      // that opts in gets the headless Greenfoot classes declared at top level
+      // and its assertions wrapped into a harness entry point; see
+      // lib/greenfoot-stub.js for the brace arithmetic.
+      const gf = expandCase(c);
+      const program = buildProgram(languageId, gf.prelude, source, gf.postlude);
       let result;
       try {
         result = await runOneCase(baseUrl, req.student.id, languageId, program, String(c.stdin || ''));
