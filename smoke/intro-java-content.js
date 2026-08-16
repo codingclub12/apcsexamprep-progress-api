@@ -26,7 +26,7 @@
 //  Run: npm run smoke:introjava
 // ─────────────────────────────────────────────────────────────────────────────
 
-const unit1 = require('../seed/intro-java-unit1');
+const { BANKS } = require('../seed/intro-java-banks');
 const help = require('../seed/intro-java-help');
 const { renderLesson, handleFor } = require('../lib/intro-java-page');
 
@@ -37,24 +37,37 @@ function ok(name, cond, detail) {
 }
 function section(t) { console.log(`\n${t}`); }
 
-const LESSONS = unit1.lessons;
+// Every lesson across every authored unit. The suite is unit-agnostic on
+// purpose: adding a unit to seed/intro-java-banks.js must bring it under all of
+// these checks with no edit here, or the newest content is the least tested.
+const LESSONS = BANKS.flatMap((b) => b.lessons);
+const UNIT_OF = new Map();
+for (const b of BANKS) for (const l of b.lessons) UNIT_OF.set(l.lesson, b);
 
 // Render every lesson once, the same way the build script will.
 const pages = LESSONS.map((l, i) => renderLesson(l, {
   prev: LESSONS[i - 1] ? { handle: handleFor(LESSONS[i - 1]), lesson: LESSONS[i - 1].lesson, title: LESSONS[i - 1].title } : null,
   next: LESSONS[i + 1] ? { handle: handleFor(LESSONS[i + 1]), lesson: LESSONS[i + 1].lesson, title: LESSONS[i + 1].title } : null,
-  unitLabel: 'Unit 1: Meet Greenfoot',
-  unitKey: 'unit-1',
+  unitLabel: UNIT_OF.get(l.lesson).unit === 'unit-1'
+    ? 'Unit 1: Meet Greenfoot' : 'Unit 2: Variables, Decisions, and Input',
+  unitKey: UNIT_OF.get(l.lesson).unit,
   helpIndex: help.INDEX,
 }));
 
 // ── 1. The bank is structurally complete ─────────────────────────────────────
 section('1. Every lesson is structurally complete');
 
-ok('1.1 all six Unit 1 lessons are present', LESSONS.length === 6, LESSONS.length);
-ok('1.2 lesson ids are 1.1 through 1.6 in order',
-  LESSONS.map((l) => l.lesson).join(',') === '1.1,1.2,1.3,1.4,1.5,1.6',
-  LESSONS.map((l) => l.lesson));
+ok('1.1 every authored unit is registered in the bank index', BANKS.length >= 2, BANKS.length);
+ok('1.2 Unit 1 is 1.1 through 1.6 in order',
+  BANKS[0].lessons.map((l) => l.lesson).join(',') === '1.1,1.2,1.3,1.4,1.5,1.6',
+  BANKS[0].lessons.map((l) => l.lesson));
+ok('1.3 Unit 2 is 2.1 through 2.7 in order',
+  BANKS[1].lessons.map((l) => l.lesson).join(',') === '2.1,2.2,2.3,2.4,2.5,2.6,2.7',
+  BANKS[1].lessons.map((l) => l.lesson));
+ok('1.4 no lesson id is used twice across units',
+  new Set(LESSONS.map((l) => l.lesson)).size === LESSONS.length);
+ok('1.5 no slug is used twice, which would collide as a page handle',
+  new Set(LESSONS.map((l) => l.slug)).size === LESSONS.length);
 
 for (const l of LESSONS) {
   const need = ['slug', 'title', 'seo', 'hook', 'objectives', 'vocab', 'steps',
@@ -375,9 +388,12 @@ process.env.DB_PATH = process.env.DB_PATH
 const { buildRows } = require('../scripts/seed-manifest');
 const ijRows = buildRows().filter((r) => r.course === 'intro-java');
 
-ok('10.1 visit rows exist for all 42 lessons',
+ok('10.1 visit rows exist for all 42 lessons of the course',
   ijRows.filter((r) => r.item_type === 'visit').length === 42,
   ijRows.filter((r) => r.item_type === 'visit').length);
+ok('10.1b every authored lesson has a visit row',
+  LESSONS.every((l) => ijRows.some((r) => r.item_id === `${l.lesson}-visit`)),
+  LESSONS.filter((l) => !ijRows.some((r) => r.item_id === `${l.lesson}-visit`)).map((l) => l.lesson));
 
 ok('10.2 NO graded row is seeded while the pages are not live',
   ijRows.every((r) => r.item_type === 'visit'),
@@ -392,13 +408,13 @@ for (const l of LESSONS) {
 }
 const totalPoints = expCfu + expGapPts + expQuizPts;
 console.log(`         when live: ${expCfu} cfu + ${expGapItems} gap (${expGapPts} pts)`
-  + ` + ${expQuizItems} quiz (${expQuizPts} pts) = ${totalPoints} points across Unit 1`);
+  + ` + ${expQuizItems} quiz (${expQuizPts} pts) = ${totalPoints} points across ${BANKS.length} units`);
 
 ok('10.3 every lesson contributes a quiz', expQuizItems === LESSONS.length, expQuizItems);
 ok('10.4 gap items are one row per lesson, not one row per hole',
   expGapItems === LESSONS.filter((l) => l.gap).length, expGapItems);
-ok('10.5 Unit 1 is worth a sane number of points, not hundreds',
-  totalPoints > 40 && totalPoints < 120, totalPoints);
+ok('10.5 the authored units are worth a sane number of points, not thousands',
+  totalPoints > 40 && totalPoints < 400, totalPoints);
 
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);

@@ -232,7 +232,7 @@ const NET_EXAMS = {
 // Flip to true in the SAME pass that imports the pages, then run --update.
 const INTRO_JAVA_PAGES_LIVE = false;
 
-const INTRO_JAVA_BANKS = [require('../seed/intro-java-unit1')];
+const { BANKS: INTRO_JAVA_BANKS } = require('../seed/intro-java-banks');
 
 function introJavaGradedRows() {
   if (!INTRO_JAVA_PAGES_LIVE) return [];
