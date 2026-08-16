@@ -1692,7 +1692,8 @@ const LESSONS = [
           + 'Move that declaration inside the outer loop and you get the count for the LAST ROW '
           + 'ONLY, because it resets on every row. Move it inside the inner loop and you get 1.\n\n'
           + 'Three positions, three different answers, and only one of them is what you asked for. '
-          + 'This is the 3.8 idea at its most demanding, and it is a favourite of AP exam questions.',
+          + 'This is the 3.8 idea at its most demanding, and getting it right is what separates code '
+          + 'that works from code that happens to work.',
       },
       {
         shot: SHOT('6.7', 4, 'Per-row totals printed for each row, with the accumulator reset '
