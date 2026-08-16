@@ -17,6 +17,100 @@ const { execFileSync } = require('child_process');
 const SCRIPT = path.join(__dirname, '..', 'scripts', 'verify-artifact.js');
 const DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'verify-smoke-'));
 
+// ── section 10: the two false positives the FIRST LIVE RUN produced ──────────
+//  Run 2 of "Reconcile the board" (2026-08-16) reported four things to look at
+//  first. Two of them were the verifier being wrong, and both were wrong in the
+//  direction that costs the most: they spend a human's attention on a
+//  non-problem, which is how a board full of P0s stops being read at all.
+//
+//  10a. /api/student/history answered 401 and was called a [P0]. It is a JWT
+//       student endpoint and this script carries no student token, so 401 is
+//       the endpoint working. A 200 there would have been the emergency.
+//  10b. A .env.example artifact was given as a github.com /blob/ link, which is
+//       GitHub's HTML VIEWER. The "2 <h1> tags" finding described GitHub's own
+//       chrome, and the file itself was never read - so the task's actual claim
+//       (are these five keys present?) went unexamined while the run looked
+//       like it had checked something.
+function serve(handler) {
+  const http = require('http');
+  const srv = http.createServer(handler);
+  return new Promise((res) => srv.listen(0, '127.0.0.1', () => res({
+    url: `http://127.0.0.1:${srv.address().port}/`,
+    close: () => srv.close(),
+  })));
+}
+
+// execFileSync would DEADLOCK here: it blocks this process's event loop, so the
+// server above can never answer the child it is waiting on. The child times out
+// and the failure looks like "the verifier cannot fetch", which is a lie about
+// the verifier. Every request served from this process must use async spawn.
+function runAsync(...args) {
+  const { spawn } = require('child_process');
+  return new Promise((res, rej) => {
+    const c = spawn('node', [SCRIPT, ...args], { encoding: 'utf8' });
+    let out = '';
+    c.stdout.on('data', (d) => { out += d; });
+    c.stderr.on('data', (d) => { out += d; });
+    c.on('error', rej);
+    c.on('close', () => res(out));
+  });
+}
+
+async function section10() {
+  const { toRawUrl, looksHtml } = require(SCRIPT);
+
+  // 10b is pure, so it is tested directly.
+  ok('10b a /blob/ link is rewritten to the raw file',
+    toRawUrl('https://github.com/codingclub12/apcsexamprep-progress-api/blob/main/.env.example')
+    === 'https://raw.githubusercontent.com/codingclub12/apcsexamprep-progress-api/main/.env.example');
+  ok('10b a non-blob URL is left alone',
+    toRawUrl('https://apcsexamprep.com/pages/join') === null);
+  ok('10b a raw URL is not rewritten twice',
+    toRawUrl('https://raw.githubusercontent.com/a/b/main/x') === null);
+  ok('10b an env file is not mistaken for HTML',
+    looksHtml('RAPIDAPI_KEY=\nRESEND_API_KEY=\n') === false);
+  ok('10b a real page still reads as HTML',
+    looksHtml('<!doctype html><html><body><h1>x</h1></body></html>') === true);
+
+  // 10a needs a real non-200, so a loopback server provides one. Still offline.
+  const gated = await serve((req, res) => { res.statusCode = 401; res.end('Unauthorized'); });
+  const out401 = await runAsync(gated.url);
+  gated.close();
+  ok('10a a 401 is NOT reported as a P0', !/\[P0\]/.test(out401));
+  ok('10a a 401 is routed to a human instead', /\[needs-human\]/.test(out401));
+  ok('10a and it says WHY it cannot judge (no credential)', /holds no credential/i.test(out401));
+  ok('10a it names both readings rather than picking one',
+    /CORRECT for an endpoint meant to require auth/.test(out401)
+    && /fault only if it is meant to be public/.test(out401));
+
+  const forbidden = await serve((req, res) => { res.statusCode = 403; res.end('Forbidden'); });
+  const out403 = await runAsync(forbidden.url);
+  forbidden.close();
+  ok('10a 403 is treated the same way as 401',
+    !/\[P0\]/.test(out403) && /\[needs-human\]/.test(out403));
+
+  // A genuine break must STILL be a P0, or the fix above has traded one silent
+  // failure for another.
+  const broken = await serve((req, res) => { res.statusCode = 500; res.end('boom'); });
+  const out500 = await runAsync(broken.url);
+  broken.close();
+  ok('10a a 500 is STILL a P0', /\[P0\] status is 500/.test(out500));
+
+  // Page-shaped checks against a text file invent findings.
+  const textFile = await serve((req, res) => {
+    res.setHeader('content-type', 'text/plain');
+    res.end('RAPIDAPI_KEY=\nRESEND_API_KEY=\nSELF_BASE_URL=\n');
+  });
+  const outText = await runAsync(textFile.url);
+  textFile.close();
+  ok('10b a non-HTML body is not scolded for a missing meta description',
+    !/no meta description/.test(outText));
+  ok('10b a non-HTML body is not scolded for its <h1> count',
+    !/<h1> tags/.test(outText));
+  ok('10b and the report SAYS the page checks were skipped',
+    /body is not HTML/.test(outText));
+}
+
 let pass = 0, fail = 0;
 const ok = (label, cond) => {
   if (cond) { pass++; console.log(`  ok    ${label}`); }
@@ -197,6 +291,16 @@ ok('every stale-date finding carries a layer',
   parsed8c.stale_dates.every((d) => ['body', 'comment', 'script', 'style'].includes(d.layer)),
   parsed8c.stale_dates.map((d) => d.layer));
 
-fs.rmSync(DIR, { recursive: true, force: true });
-console.log(`\n${pass} passed, ${fail} failed`);
-process.exit(fail === 0 ? 0 : 1);
+// Section 10 binds a loopback socket, so it is async and must finish before the
+// tally is printed. Awaiting it is the difference between testing it and only
+// appearing to.
+section10().then(() => {
+  fs.rmSync(DIR, { recursive: true, force: true });
+  console.log(`\n${pass} passed, ${fail} failed`);
+  process.exit(fail === 0 ? 0 : 1);
+}).catch((e) => {
+  console.log(`  FAIL  section 10 threw: ${e && e.message}`);
+  fs.rmSync(DIR, { recursive: true, force: true });
+  console.log(`\n${pass} passed, ${fail + 1} failed`);
+  process.exit(1);
+});

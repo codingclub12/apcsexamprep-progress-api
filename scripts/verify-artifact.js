@@ -45,8 +45,31 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const fs = require('fs');
 
+// A github.com /blob/ link is GitHub's HTML VIEWER, not the file. Fetching it
+// and running page checks against it measures GitHub's chrome: the first live
+// run reported "2 <h1> tags" for a .env.example artifact, which was GitHub's
+// own markup, and said nothing about whether the file contained what the task
+// claimed. A pass there would have been worse than the false flag - it would
+// have meant "verified" on a file nobody opened.
+function toRawUrl(url) {
+  const m = /^https?:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/(.+)$/i.exec(url);
+  if (!m) return null;
+  return `https://raw.githubusercontent.com/${m[1]}/${m[2]}/${m[3].split('#')[0]}`;
+}
+
+// HTML checks against a non-HTML body invent findings. A .env.example has no
+// meta description and no <h1>, and reporting that as damage is noise.
+function looksHtml(body) {
+  return /<\s*(!doctype\s+html|html|head|body|div|p|h1)[\s>]/i.test(body.slice(0, 4000));
+}
+
 async function get(url) {
   const started = Date.now();
+  const raw = toRawUrl(url);
+  if (raw) {
+    const r = await get(raw);
+    return { ...r, url, final_url: raw, rewrote_to_raw: raw };
+  }
 
   // A local path is treated as an already-fetched body. Lets the smoke suite
   // exercise every check offline, and lets a saved page be re-examined without
@@ -274,9 +297,20 @@ async function inspect(url, phrases, now) {
   // An error page is not the page. Running meta/heading checks against a 429
   // body invents findings about a document nobody was asked about.
   const usable = r.status === 200;
+  // 401/403 is not a defect on its own. This script carries no credential, so a
+  // fail-closed endpoint answering 401 is the endpoint WORKING. The first live
+  // run called a 401 on /api/student/history a P0; a 200 there would have been
+  // the emergency. It cannot be told apart from a page that should be public
+  // and is not, so it is routed to a human rather than given a severity.
+  const authGated = r.status === 401 || r.status === 403;
+  // HTML-shaped checks only run against HTML.
+  const html = usable && looksHtml(r.body);
   return {
     url,
-    final_url: r.url,
+    final_url: r.rewrote_to_raw || r.url,
+    rewrote_to_raw: r.rewrote_to_raw || null,
+    auth_gated: authGated,
+    is_html: html,
     status: r.status,
     bytes: r.body.length,
     ms: r.ms,
@@ -286,9 +320,9 @@ async function inspect(url, phrases, now) {
     visible_chars: L.visible.length,
     mojibake: usable ? checkMojibake(r.body) : [],
     stale_dates: usable ? checkStaleDates(r.body, now, L) : [],
-    duplicate_blocks: usable ? checkDuplicateBlocks(r.body) : [],
-    headings: usable ? checkHeadings(r.body) : { count: 1, texts: [] },
-    meta: usable ? checkMeta(r.body) : { title: null, description: 'n/a', description_len: 100 },
+    duplicate_blocks: html ? checkDuplicateBlocks(r.body) : [],
+    headings: html ? checkHeadings(r.body) : { count: 1, texts: [] },
+    meta: html ? checkMeta(r.body) : { title: null, description: 'n/a', description_len: 100 },
     phrases: usable ? phrases.map((p) => locate(r.body, L, p)) : [],
   };
 }
@@ -303,9 +337,15 @@ function report(x) {
   P(`     ${x.bytes} bytes shipped, ${x.visible_chars} chars visible, ${x.ms}ms`
     + (x.attempts > 1 ? `, ${x.attempts} attempts (rate limited)` : ''));
 
-  if (!x.usable && x.status !== 429) P('     content checks skipped: not a 200 response');
+  if (x.rewrote_to_raw) P(`     a /blob/ link is GitHub's viewer, so the FILE was read instead`);
+  if (!x.usable && x.status !== 429 && !x.auth_gated) P('     content checks skipped: not a 200 response');
   if (x.status === 429) P(`  [P1] still 429 after ${x.attempts} attempts - rate limited, NOT broken. Re-run slower.`);
-  else if (x.status !== 200) P(`  [P0] status is ${x.status}, not 200`);
+  else if (x.auth_gated) {
+    P(`  [needs-human] responded ${x.status}. This script holds no credential, so`);
+    P(`         that is CORRECT for an endpoint meant to require auth, and a real`);
+    P(`         fault only if it is meant to be public. No severity is claimed.`);
+  } else if (x.status !== 200) P(`  [P0] status is ${x.status}, not 200`);
+  if (x.usable && !x.is_html) P('     body is not HTML, so page-shaped checks were skipped');
 
   if (x.mojibake.length) {
     P(`  [P0] mojibake on ${x.mojibake.length} line(s):`);
@@ -350,6 +390,13 @@ function report(x) {
   }
   return out.join('\n');
 }
+
+// Exported so the smoke suite can exercise the pure helpers directly. The CLI
+// only runs when this file IS the entry point, so requiring it is side-effect
+// free.
+module.exports = { toRawUrl, looksHtml };
+
+if (require.main !== module) return;
 
 (async () => {
   const argv = process.argv.slice(2);
