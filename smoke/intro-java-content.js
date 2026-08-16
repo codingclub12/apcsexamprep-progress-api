@@ -624,6 +624,69 @@ ok('11.6b no question embeds a title prefix it meant to strip',
 const ijColon = ijFaqNames.filter((x) => /causes [^?]*:/.test(x.q));
 ok('11.6c no cause-question carries a stray colon', ijColon.length === 0, ijColon.slice(0, 5));
 
+// ── 11.7 US ENGLISH, BECAUSE THE AUDIENCE IS US ──────────────────────────────
+//  The course shipped with British spelling throughout: behaviour, labelled,
+//  maths, neighbours, capitalisation, and "marked" where a US teacher says
+//  "graded". It reads as foreign to the students and teachers this is sold to,
+//  and one of them was in a lesson TITLE and its URL.
+//
+//  The technical half matters more than the spelling. In US usage `()` are
+//  PARENTHESES and `[]` are BRACKETS. The content called `()` "round brackets"
+//  and `[]` "square brackets", so it used one word for both in a Java course
+//  where a beginner meets both in the same week. That is a teaching defect, not
+//  a dialect preference.
+//
+//  Deliberately NOT checked here: lib/greenfoot-stub.js, which implements the
+//  real Greenfoot API. `turnTowards(int, int)` is a genuine method name and
+//  "correcting" it would break every scenario that calls it.
+section('11.7 US English throughout');
+
+const BRITISH = [
+  'behaviour', 'colour', 'favour', 'honour', 'labour', 'neighbour', 'flavour',
+  'centre', 'metre', 'theatre', 'fibre',
+  'capitalis', 'recognis', 'organis', 'normalis', 'optimis', 'realis',
+  'labelled', 'travelled', 'cancelled', 'modelling',
+  'whilst', 'amongst', 'learnt', 'spelt',
+  'towards', 'afterwards', 'upwards', 'downwards', 'forwards',
+  'grey', 'defence', 'licence',
+];
+const ijBritHits = [];
+for (const p of [...pages, ...helpPagesForLinks(), ...hubsForLinks()]) {
+  const text = p.bodyHtml.replace(/<[^>]+>/g, ' ');
+  for (const w of BRITISH) {
+    const re = new RegExp('\\b' + w + '[a-z]*', 'gi');
+    for (const m of text.match(re) || []) ijBritHits.push(`${p.handle}: ${m}`);
+  }
+}
+ok('11.7a no British spelling in any rendered page', ijBritHits.length === 0, ijBritHits.slice(0, 8));
+
+// "maths" is its own check: the word is a plural in British usage and a
+// substring of nothing useful, so a bare word-boundary match is exact.
+const ijMaths = [];
+for (const p of [...pages, ...helpPagesForLinks(), ...hubsForLinks()]) {
+  if (/\bmaths\b/i.test(p.bodyHtml.replace(/<[^>]+>/g, ' '))) ijMaths.push(p.handle);
+}
+ok('11.7b the subject is math, not maths', ijMaths.length === 0, ijMaths);
+
+// British education register. Work is graded, not marked.
+const ijMarked = [];
+for (const p of [...pages, ...helpPagesForLinks(), ...hubsForLinks()]) {
+  const t = p.bodyHtml.replace(/<[^>]+>/g, ' ');
+  if (/\b(marked|marking)\b/i.test(t)) ijMarked.push(p.handle);
+}
+ok('11.7c work is graded, not marked', ijMarked.length === 0, ijMarked.slice(0, 5));
+
+// The technical one. `()` are parentheses; only `[]` may be called brackets.
+const ijBrackets = [];
+for (const p of [...pages, ...helpPagesForLinks(), ...hubsForLinks()]) {
+  const t = p.bodyHtml.replace(/<[^>]+>/g, ' ');
+  if (/round brackets?/i.test(t)) ijBrackets.push(`${p.handle}: round bracket`);
+  // A bare "bracket" not preceded by "square" is ambiguous to a US reader.
+  for (const m of t.match(/(?<!square )brackets?/gi) || []) ijBrackets.push(`${p.handle}: bare ${m}`);
+}
+ok('11.7d parentheses are called parentheses, and only [] are brackets',
+  ijBrackets.length === 0, ijBrackets.slice(0, 6));
+
 // ── 12. This is a PRE-AP course, and the pages must read like one ────────────
 //  intro-java is the on-ramp, not AP CSA. Most students taking it will never
 //  sit the exam: it is sold to intro and pre-AP classes, and to teachers who

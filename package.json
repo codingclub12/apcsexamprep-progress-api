@@ -74,7 +74,8 @@
     "ijpages": "node scripts/intro-java-pages-csv.js",
     "smoke:verifyboard": "node smoke/verify-board.js",
     "smoke:assertions": "node smoke/assertion-integrity.js",
-    "snapshot": "node scripts/snapshot-live-page.js"
+    "snapshot": "node scripts/snapshot-live-page.js",
+    "ijredirects": "node scripts/intro-java-redirects-csv.js"
   },
   "keywords": [],
   "author": "",

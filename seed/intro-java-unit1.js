@@ -111,7 +111,7 @@ const LESSONS = [
         term: 'Actor',
         plain: 'A thing on the stage. The player, an enemy, a coin, a wall.',
         formal: 'A subclass of Greenfoot\'s Actor class. It has a position in the world, an image, '
-          + 'and behaviour of its own.',
+          + 'and behavior of its own.',
       },
     ],
 
@@ -136,11 +136,11 @@ const LESSONS = [
       {
         shot: SHOT('1.1', 3, 'A close-up of one actor class in the diagram, showing the class name '
           + 'above a small preview of its image.'),
-        code: 'public class Crab extends Actor\n{\n    // behaviour goes here, later\n}',
+        code: 'public class Crab extends Actor\n{\n    // behavior goes here, later\n}',
         note:
           'Double-clicking an actor class opens its code, and the first line says the same thing '
           + 'the diagram did. `extends Actor` is Java for "this is a kind of Actor". You are not '
-          + 'expected to write this line yet. You are expected to recognise it, because it is how '
+          + 'expected to write this line yet. You are expected to recognize it, because it is how '
           + 'you tell what something is when the diagram is not in front of you.',
       },
       {
@@ -356,7 +356,7 @@ const LESSONS = [
 
     steps: [
       {
-        shot: SHOT('1.2', 1, 'The full Greenfoot window with three regions outlined and labelled: '
+        shot: SHOT('1.2', 1, 'The full Greenfoot window with three regions outlined and labeled: '
           + 'world view on the left, class diagram on the right, execution controls along the bottom.'),
         note:
           'Three regions, and you will use all three constantly. Left is the world view, where the '
@@ -390,7 +390,7 @@ const LESSONS = [
           + 'starting arrangement.'),
         note:
           'Reset does not undo your code. It rebuilds the world from scratch, which means any actor '
-          + 'you dragged in by hand disappears. That is correct behaviour. In Unit 3 you will learn '
+          + 'you dragged in by hand disappears. That is correct behavior. In Unit 3 you will learn '
           + 'to place actors in code so they come back automatically every time.',
       },
     ],
@@ -428,7 +428,7 @@ const LESSONS = [
       },
       {
         id: 'cfu-2',
-        stem: 'You edit your code, press Run, and the behaviour is exactly the same as before. What '
+        stem: 'You edit your code, press Run, and the behavior is exactly the same as before. What '
           + 'is the FIRST thing to check?',
         options: [
           'Whether you compiled',
@@ -561,7 +561,7 @@ const LESSONS = [
       {
         term: 'Class',
         plain: 'The plan for a kind of thing. Written once.',
-        formal: 'A class defines the state and behaviour that every object of that type will have.',
+        formal: 'A class defines the state and behavior that every object of that type will have.',
       },
       {
         term: 'Object',
@@ -595,7 +595,7 @@ const LESSONS = [
           + 'they were.'),
         note:
           'Now drag one crab somewhere else. The other two do not follow. This is the whole point: '
-          + 'each object carries its own position. They share behaviour, because that comes from the '
+          + 'each object carries its own position. They share behavior, because that comes from the '
           + 'class. They do not share state.',
       },
       {
@@ -735,7 +735,7 @@ const LESSONS = [
     recap: [
       'A class is the plan. An object is one thing built from that plan.',
       '`new Crab()` builds one crab.',
-      'Objects share behaviour, because that comes from the class.',
+      'Objects share behavior, because that comes from the class.',
       'Objects do NOT share state. Each keeps its own position.',
     ],
   },
@@ -841,8 +841,8 @@ const LESSONS = [
         note:
           'setLocation is different. It ignores which way the crab is facing and puts it at exact '
           + 'coordinates. setLocation(0, 0) is the TOP LEFT corner, not the middle and not the '
-          + 'bottom. In Greenfoot, x grows to the right and y grows DOWNWARDS, which surprises '
-          + 'everyone who remembers graphs from maths.',
+          + 'bottom. In Greenfoot, x grows to the right and y grows DOWNWARD, which surprises '
+          + 'everyone who remembers graphs from math.',
       },
     ],
 
@@ -853,7 +853,7 @@ const LESSONS = [
         why: 'Getting this wrong makes every movement bug impossible to reason about.',
       },
       {
-        wrong: 'y gets bigger as you go up, like in maths.',
+        wrong: 'y gets bigger as you go up, like in math.',
         right: 'In Greenfoot, y gets bigger going DOWN. y = 0 is the top edge.',
         why: 'This causes the classic "my jump goes the wrong way" bug in Unit 2.',
       },
@@ -882,10 +882,10 @@ const LESSONS = [
       {
         id: 'cfu-3',
         stem: 'In Greenfoot, where is the point (0, 0)?',
-        options: ['The centre of the world', 'The bottom left corner', 'The top left corner',
+        options: ['The center of the world', 'The bottom left corner', 'The top left corner',
           'Wherever the first actor was placed'],
         answer: 2,
-        why: 'x grows to the right and y grows downwards, so (0, 0) is the top left.',
+        why: 'x grows to the right and y grows downward, so (0, 0) is the top left.',
       },
       {
         id: 'cfu-4',
@@ -900,7 +900,7 @@ const LESSONS = [
         stem: 'Why does `move(4)` need parentheses?',
         options: [
           'To make it a call rather than just a mention, and to hold the 4',
-          'Java requires brackets on every line',
+          'Java requires parentheses on every line',
           'To make it run faster',
           'They are optional',
         ],
@@ -961,7 +961,7 @@ const LESSONS = [
         options: ['Moves it to (6, 4)', 'Moves it to (4, 6)', 'Moves it to (2, 4)',
           'Moves it to (4, 2)'],
         answer: 1,
-        why: 'Facing down means y increases, because y grows downwards in Greenfoot.',
+        why: 'Facing down means y increases, because y grows downward in Greenfoot.',
       },
     ],
 
@@ -972,7 +972,7 @@ const LESSONS = [
       'move(n) goes n cells in the direction the actor faces.',
       'turn(d) rotates by d degrees clockwise.',
       'setLocation(x, y) places by exact coordinates and ignores facing.',
-      'y grows DOWNWARDS. (0, 0) is the top left corner.',
+      'y grows DOWNWARD. (0, 0) is the top left corner.',
     ],
   },
 
@@ -1175,7 +1175,7 @@ const LESSONS = [
         },
         {
           n: 3,
-          hint: 'y grows downwards, so moving down means adding this much.',
+          hint: 'y grows downward, so moving down means adding this much.',
           accept: ['1'],
         },
       ],
@@ -1206,7 +1206,7 @@ const LESSONS = [
         stem: 'An actor is at (2, 8). After `setLocation(getX(), getY() - 1);` where is it?',
         options: ['(2, 7)', '(2, 9)', '(1, 8)', '(3, 8)'],
         answer: 0,
-        why: 'y goes from 8 to 7. Since y grows downwards, that is one cell UP the screen.',
+        why: 'y goes from 8 to 7. Since y grows downward, that is one cell UP the screen.',
       },
       {
         id: 'q4',
@@ -1278,7 +1278,7 @@ const LESSONS = [
 
     objectives: [
       'Explain when Greenfoot calls act() and how often',
-      'Write behaviour inside act() by filling in the gaps',
+      'Write behavior inside act() by filling in the gaps',
       'Explain why a forever loop inside act() freezes the scenario',
     ],
 
@@ -1354,7 +1354,7 @@ const LESSONS = [
         note:
           'Now it patrols. Each frame: move 2, then ask "am I at the edge?", and if so turn around.\n\n'
           + 'You have not formally met `if` yet, that is Unit 2. Read it as plain English for now: '
-          + 'IF the thing in the brackets is true, do what is in the braces. `isAtEdge()` is a '
+          + 'IF the thing in the parentheses is true, do what is in the braces. `isAtEdge()` is a '
           + 'method that hands back true or false, which is exactly the shape of thing an if needs.',
       },
     ],
@@ -1375,7 +1375,7 @@ const LESSONS = [
       {
         wrong: 'I should call act() myself to make things happen.',
         right: 'Greenfoot calls it. You only write what goes inside it.',
-        why: 'Calling act() by hand produces confusing double-speed behaviour and hides real bugs.',
+        why: 'Calling act() by hand produces confusing double-speed behavior and hides real bugs.',
       },
       {
         wrong: 'A bigger number in move() makes the animation smoother.',
@@ -1396,7 +1396,7 @@ const LESSONS = [
       {
         id: 'cfu-2',
         stem: 'An act() method contains only `move(3);`. You press Act four times. How far has the '
-          + 'actor travelled in total?',
+          + 'actor traveled in total?',
         options: ['3 cells', '4 cells', '12 cells', 'It does not move without Run'],
         answer: 2,
         why: 'Four frames, 3 cells each, is 12.',
@@ -1524,7 +1524,7 @@ const LESSONS = [
         stem: 'Why should you NOT call act() yourself from your own code?',
         options: [
           'It is private',
-          'Greenfoot already calls it every frame, so calling it again makes behaviour double up',
+          'Greenfoot already calls it every frame, so calling it again makes behavior double up',
           'It does not compile',
           'It would delete the actor',
         ],

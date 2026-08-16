@@ -118,7 +118,7 @@ const LESSONS = [
           + '    maybeSpawnEnemy();\n'
           + '}',
         note:
-          'Same behaviour. Now read it: handle the keys, collect coins, maybe spawn an enemy. That '
+          'Same behavior. Now read it: handle the keys, collect coins, maybe spawn an enemy. That '
           + 'is the whole game in three lines and you understood it without decoding anything.\n\n'
           + 'The detail has not vanished; it moved into three methods below. But you only open the '
           + 'one you care about.',
@@ -236,7 +236,7 @@ const LESSONS = [
       holes: [
         { n: 1, hint: 'A name describing the block that reads the keyboard. Two words joined, '
             + 'starting lower case.', accept: ['handleKeys'] },
-        { n: 2, hint: 'Finish the call: the empty brackets and the character that ends a statement.',
+        { n: 2, hint: 'Finish the call: the empty parentheses and the character that ends a statement.',
           accept: ['();'] },
       ],
     },
@@ -271,7 +271,7 @@ const LESSONS = [
           'Half of it',
         ],
         answer: 2,
-        why: 'Extraction moves code and names it. The behaviour is identical.',
+        why: 'Extraction moves code and names it. The behavior is identical.',
       },
     ],
 
@@ -303,7 +303,7 @@ const LESSONS = [
       faq: [
         {
           q: 'How do I write my own method in Java?',
-          a: 'Write public void, then a name, then empty brackets, then a body in braces. Put it '
+          a: 'Write public void, then a name, then empty parentheses, then a body in braces. Put it '
             + 'inside the class but outside every other method.',
         },
         {
@@ -341,7 +341,7 @@ const LESSONS = [
     steps: [
       {
         shot: SHOT('3.2', 1, 'A newly written void method in an editor with each part of the '
-          + 'signature labelled.'),
+          + 'signature labeled.'),
         code:
           'public void turnAtEdge()\n'
           + '{\n'
@@ -370,7 +370,7 @@ const LESSONS = [
           'Writing a method does NOT run it. Something has to call it, and here that is act().\n\n'
           + 'This is the most common first confusion: the method is written, compiled, correct, '
           + 'and nothing happens, because nothing ever calls it.\n\n'
-          + 'Note the empty brackets on the call too. `turnAtEdge;` is not a call.',
+          + 'Note the empty parentheses on the call too. `turnAtEdge;` is not a call.',
       },
       {
         shot: SHOT('3.2', 3, 'A class diagram view showing act and turnAtEdge as sibling methods '
@@ -430,8 +430,8 @@ const LESSONS = [
           + 'diagnose without knowing the rule.',
       },
       {
-        wrong: 'You can call a method without the brackets.',
-        right: 'The empty brackets are required: turnAtEdge(), never turnAtEdge.',
+        wrong: 'You can call a method without the parentheses.',
+        right: 'The empty parentheses are required: turnAtEdge(), never turnAtEdge.',
         why: 'Without them Java looks for a variable of that name and reports cannot find symbol.',
       },
       {
@@ -471,7 +471,7 @@ const LESSONS = [
         stem: 'Which is a correct call to `public void reset()`?',
         options: ['reset;', 'reset()', 'reset();', 'public void reset();'],
         answer: 2,
-        why: 'Name, empty brackets, semicolon. You never repeat the signature when calling.',
+        why: 'Name, empty parentheses, semicolon. You never repeat the signature when calling.',
       },
       {
         id: 'cfu-4',
@@ -504,7 +504,7 @@ const LESSONS = [
         + '}',
       holes: [
         { n: 1, hint: 'It hands nothing back to whoever called it.', accept: ['void'] },
-        { n: 2, hint: 'Call the method above by name. Do not forget the brackets and the semicolon.',
+        { n: 2, hint: 'Call the method above by name. Do not forget the parentheses and the semicolon.',
           accept: ['resetToStart();'] },
       ],
     },
@@ -532,7 +532,7 @@ const LESSONS = [
           'public void jump { }',
         ],
         answer: 0,
-        why: 'Modifier, return type, name, brackets, then the body.',
+        why: 'Modifier, return type, name, parentheses, then the body.',
       },
       {
         id: 'q3',
@@ -550,23 +550,23 @@ const LESSONS = [
         id: 'q4',
         stem: 'Why is `turnAtEdge;` not a call?',
         options: [
-          'It is missing the brackets that make it a call',
+          'It is missing the parentheses that make it a call',
           'It is missing the return type',
           'The name is wrong',
           'It needs to be public',
         ],
         answer: 0,
-        why: 'Without brackets Java looks for a variable by that name.',
+        why: 'Without parentheses Java looks for a variable by that name.',
       },
     ],
 
     stuck: ['E-01', 'E-04', 'G-11'],
 
     recap: [
-      'A method is public, a return type, a name, brackets, and a body.',
+      'A method is public, a return type, a name, parentheses, and a body.',
       'Methods sit inside the class, side by side, never nested.',
       'Writing a method does not run it. Something must call it.',
-      'A call always has brackets, even when empty.',
+      'A call always has parentheses, even when empty.',
     ],
   },
 
@@ -606,7 +606,7 @@ const LESSONS = [
 
     hook:
       'A method that always does exactly the same thing is useful. A method you can aim is far more '
-      + 'useful, and the difference is one word inside the brackets.',
+      + 'useful, and the difference is one word inside the parentheses.',
 
     objectives: [
       'Write a method that takes a parameter',
@@ -631,7 +631,7 @@ const LESSONS = [
           + '    score = score + points;\n'
           + '}',
         note:
-          '`int points` inside the brackets is the parameter. It declares a variable that only '
+          '`int points` inside the parentheses is the parameter. It declares a variable that only '
           + 'exists inside this method, and whoever calls decides what goes in it.\n\n'
           + 'Inside the body you use it like any other variable.',
       },
@@ -642,7 +642,7 @@ const LESSONS = [
           + 'addScore(10);   // a gem\n'
           + 'addScore(50);   // the treasure chest',
         note:
-          'One method, three behaviours. That is the whole point.\n\n'
+          'One method, three behaviors. That is the whole point.\n\n'
           + 'Without the parameter you would need addOne(), addTen() and addFifty(), and a fourth '
           + 'method the moment you invent a new pickup.',
       },
@@ -751,7 +751,7 @@ const LESSONS = [
 
     gap: {
       intro:
-        'Write a method that makes the actor jump upwards by a chosen amount. Remember which '
+        'Write a method that makes the actor jump upward by a chosen amount. Remember which '
         + 'direction y grows in.',
       code:
         'public void jump(___1___ height)\n'
@@ -761,7 +761,7 @@ const LESSONS = [
       holes: [
         { n: 1, hint: 'A whole number of cells.', accept: ['int'] },
         { n: 2, hint: 'Up the screen is a SMALLER y.', accept: ['-'] },
-        { n: 3, hint: 'The name of the slot declared in the brackets above.', accept: ['height'] },
+        { n: 3, hint: 'The name of the slot declared in the parentheses above.', accept: ['height'] },
       ],
     },
 
@@ -919,7 +919,7 @@ const LESSONS = [
           + 'change it once.',
       },
       {
-        shot: SHOT('3.4', 4, 'A method with a return inside an if and no return afterwards, with '
+        shot: SHOT('3.4', 4, 'A method with a return inside an if and no return afterward, with '
           + 'the missing return statement error shown.'),
         code:
           '// WRONG. Java: missing return statement\n'
@@ -1160,7 +1160,7 @@ const LESSONS = [
           + 'class is its constructor, which is the next lesson. For now, look at super.',
       },
       {
-        shot: SHOT('3.5', 2, 'A diagram of a world grid with width, height and cell size labelled.'),
+        shot: SHOT('3.5', 2, 'A diagram of a world grid with width, height and cell size labeled.'),
         code: 'super(20, 15, 30);',
         note:
           'Three numbers, in this order, always:\n\n'
@@ -1205,8 +1205,8 @@ const LESSONS = [
         why: 'The same off-by-one that governs arrays, and worth meeting twice before Unit 5.',
       },
       {
-        wrong: 'The world is where actor behaviour goes.',
-        right: 'Actor behaviour goes in the actor. The world sets the scene and tracks what is '
+        wrong: 'The world is where actor behavior goes.',
+        right: 'Actor behavior goes in the actor. The world sets the scene and tracks what is '
           + 'shared, like the score.',
         why: 'Putting everything in the world produces one enormous class and no reusable actors.',
       },
@@ -1309,7 +1309,7 @@ const LESSONS = [
           'The player image',
         ],
         answer: 0,
-        why: 'The world owns the scene and what is shared; actors own their own behaviour.',
+        why: 'The world owns the scene and what is shared; actors own their own behavior.',
       },
     ],
 
@@ -1363,7 +1363,7 @@ const LESSONS = [
       + 'question Unit 1 left hanging.',
 
     objectives: [
-      'Recognise a constructor and say how it differs from a method',
+      'Recognize a constructor and say how it differs from a method',
       'Explain when a constructor runs',
       'Explain why super must be the first statement',
     ],
@@ -1447,7 +1447,7 @@ const LESSONS = [
     cfus: [
       {
         id: 'cfu-1',
-        stem: 'How do you recognise a constructor?',
+        stem: 'How do you recognize a constructor?',
         options: [
           'It is called act',
           'It is the first method in the file',
@@ -1667,7 +1667,7 @@ const LESSONS = [
           + 'From inside an ACTOR you usually want `removeTouching(Coin.class)`, which finds what '
           + 'you are overlapping and removes it. From inside the WORLD you use removeObject with a '
           + 'specific actor.\n\n'
-          + 'A removed actor is gone. Calling getX() on it afterwards is the NullPointerException '
+          + 'A removed actor is gone. Calling getX() on it afterward is the NullPointerException '
           + 'from E-07.',
       },
     ],
@@ -1762,7 +1762,7 @@ const LESSONS = [
 
     gap: {
       intro:
-        'Set up an opening scene with one player at the centre-ish cell (10, 7) and one coin at '
+        'Set up an opening scene with one player at the center-ish cell (10, 7) and one coin at '
         + '(3, 3), and make sure it runs when the world is built.',
       code:
         'public OceanWorld()\n'
@@ -1777,7 +1777,7 @@ const LESSONS = [
         + '    addObject(___3___ Coin(), 3, 3);\n'
         + '}',
       holes: [
-        { n: 1, hint: 'Call the setup method below. Brackets required.', accept: ['prepare()'] },
+        { n: 1, hint: 'Call the setup method below. Parentheses required.', accept: ['prepare()'] },
         { n: 2, hint: 'The world method that puts an actor into the world.', accept: ['addObject'] },
         { n: 3, hint: 'The keyword that builds one object from a class.', accept: ['new'] },
       ],
@@ -1949,7 +1949,7 @@ const LESSONS = [
         note:
           'And each OBJECT gets its own. Two players in the world means two separate scores, '
           + 'counting independently.\n\n'
-          + 'That is 1.3 coming back: objects share behaviour, because that comes from the class, '
+          + 'That is 1.3 coming back: objects share behavior, because that comes from the class, '
           + 'but they do not share state. An instance variable is exactly the state that is not '
           + 'shared.',
       },
@@ -2237,7 +2237,7 @@ const LESSONS = [
           + '    addObject(new Enemy(7), 15, 9);   // very fast\n'
           + '}',
         note:
-          'One class, three different enemies. The value goes in the brackets of `new`, exactly '
+          'One class, three different enemies. The value goes in the parentheses of `new`, exactly '
           + 'like an argument to any other method, because a constructor IS a method that runs at '
           + 'creation.\n\n'
           + 'Compare this with what you would need without a constructor: three classes, or a '
@@ -2331,7 +2331,7 @@ const LESSONS = [
         stem: 'How do you create a fast enemy given `public Enemy(int enemySpeed)`?',
         options: ['new Enemy();', 'new Enemy(6);', 'Enemy(6);', 'new Enemy.speed(6);'],
         answer: 1,
-        why: 'The argument goes in the brackets of new.',
+        why: 'The argument goes in the parentheses of new.',
       },
       {
         id: 'cfu-3',
@@ -2409,7 +2409,7 @@ const LESSONS = [
       },
       {
         id: 'q3',
-        stem: 'What is the advantage of a constructor parameter over setting values afterwards?',
+        stem: 'What is the advantage of a constructor parameter over setting values afterward?',
         options: [
           'The object is correctly set up from the moment it exists, and you cannot forget',
           'It runs faster',
@@ -2439,7 +2439,7 @@ const LESSONS = [
     recap: [
       'An actor constructor has the class name, no return type, and runs once at creation.',
       'A parameter carries the value in; an assignment to an instance variable makes it last.',
-      'Arguments go in the brackets of new, positionally.',
+      'Arguments go in the parentheses of new, positionally.',
       'Writing any constructor removes the free no-argument one.',
       'Actor subclasses do not normally need super.',
     ],

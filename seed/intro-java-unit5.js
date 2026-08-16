@@ -15,7 +15,7 @@
 //  pattern and makes it explicit, which is why those callbacks are in the text.
 //
 //  ── THE ONE INCONSISTENCY WORTH WARNING ABOUT ───────────────────────────────
-//  A List uses size() with brackets. An array uses length with none. That is
+//  A List uses size() with parentheses. An array uses length with none. That is
 //  Java being inconsistent, not the student misremembering, and saying so is
 //  worth more than letting them assume they are wrong.
 //
@@ -144,7 +144,7 @@ const LESSONS = [
         why: 'This is the reason to reach for a List instead when the count is unknown.',
       },
       {
-        wrong: 'The brackets go after the name, like `int scores[]`.',
+        wrong: 'The parentheses go after the name, like `int scores[]`.',
         right: 'Java allows both, but this course always writes `int[] scores`.',
         why: 'One consistent form is easier to read, and `int[]` keeps the type together.',
       },
@@ -156,7 +156,7 @@ const LESSONS = [
         stem: 'How many slots does `new int[4]` create?',
         options: ['4', '3', '5', 'It depends'],
         answer: 0,
-        why: 'The number in the brackets is the count of slots.',
+        why: 'The number in the parentheses is the count of slots.',
       },
       {
         id: 'cfu-2',
@@ -263,10 +263,10 @@ const LESSONS = [
       h1: 'Array Index and length in Java',
       title: 'Java Array Index Out of Bounds Explained | Intro to Java',
       description:
-        'Why the last index of a Java array is length minus one, why length has no brackets, and '
+        'Why the last index of a Java array is length minus one, why length has no parentheses, and '
         + 'how to read an ArrayIndexOutOfBoundsException.',
       primary: 'java array index out of bounds explained',
-      related: ['java array length no brackets', 'java last index of array',
+      related: ['java array length no parentheses', 'java last index of array',
         'arrayindexoutofboundsexception beginner', 'java array off by one'],
       faq: [
         {
@@ -275,8 +275,8 @@ const LESSONS = [
             + 'past the end.',
         },
         {
-          q: 'Why does Java array length have no brackets?',
-          a: 'For an array it is a field, not a method. A List uses size() with brackets. That '
+          q: 'Why does Java array length have no parentheses?',
+          a: 'For an array it is a field, not a method. A List uses size() with parentheses. That '
             + 'inconsistency is Java being awkward, not you misremembering.',
         },
         {
@@ -293,7 +293,7 @@ const LESSONS = [
 
     objectives: [
       'Read and write a single element by index',
-      'Use length correctly, without brackets',
+      'Use length correctly, without parentheses',
       'Explain the last valid index and read an out-of-bounds message',
     ],
 
@@ -301,12 +301,12 @@ const LESSONS = [
       { term: 'Index', plain: 'Which slot. Counting from 0.',
         formal: 'The integer position of an element, from 0 to length-1.' },
       { term: 'length', plain: 'How many slots. A field, not a method.',
-        formal: 'The fixed number of elements, accessed as a.length with no brackets.' },
+        formal: 'The fixed number of elements, accessed as a.length with no parentheses.' },
     ],
 
     steps: [
       {
-        shot: SHOT('5.2', 1, 'An array diagram with each slot labelled with its index below it.'),
+        shot: SHOT('5.2', 1, 'An array diagram with each slot labeled with its index below it.'),
         code:
           'int[] lanes = {3, 7, 2, 9};\n'
           + 'lanes[0]   // 3\n'
@@ -333,14 +333,14 @@ const LESSONS = [
           + 'List.'),
         code:
           'int[] lanes = {3, 7, 2, 9};\n'
-          + 'lanes.length      // 4, NO brackets\n'
+          + 'lanes.length      // 4, NO parentheses\n'
           + '\n'
           + 'List<Enemy> es = getObjects(Enemy.class);\n'
-          + 'es.size()         // brackets, because it is a method',
+          + 'es.size()         // parentheses, because it is a method',
         note:
-          'Arrays use `length` with NO brackets. Lists use `size()` WITH brackets.\n\n'
+          'Arrays use `length` with NO parentheses. Lists use `size()` WITH parentheses.\n\n'
           + 'There is no logic to remember here that would help you. It is an inconsistency in '
-          + 'Java, and everybody gets it wrong sometimes. If `length()` fails, drop the brackets; '
+          + 'Java, and everybody gets it wrong sometimes. If `length()` fails, drop the parentheses; '
           + 'if `size` fails, add them.',
       },
       {
@@ -366,7 +366,7 @@ const LESSONS = [
         why: 'The single most common array error there is.',
       },
       {
-        wrong: 'length is a method, so it needs brackets.',
+        wrong: 'length is a method, so it needs parentheses.',
         right: 'For an array it is a field: `a.length`. Lists use `size()`.',
         why: 'Java is genuinely inconsistent, and students assume they are misremembering.',
       },
@@ -402,7 +402,7 @@ const LESSONS = [
         stem: 'How do you get the number of slots in an array called grid?',
         options: ['grid.size()', 'grid.length()', 'grid.length', 'length(grid)'],
         answer: 2,
-        why: 'A field, so no brackets.',
+        why: 'A field, so no parentheses.',
       },
       {
         id: 'cfu-4',
@@ -433,7 +433,7 @@ const LESSONS = [
         + 'int last  = lanes[lanes.___2___ ___3___ 1];',
       holes: [
         { n: 1, hint: 'How far along from the start is the very first element?', accept: ['0'] },
-        { n: 2, hint: 'The number of slots. Remember whether it takes brackets.',
+        { n: 2, hint: 'The number of slots. Remember whether it takes parentheses.',
           accept: ['length'] },
         { n: 3, hint: 'The last index is one less than that.', accept: ['-'] },
       ],
@@ -480,7 +480,7 @@ const LESSONS = [
     recap: [
       'Index 0 is the first element. Think "how far along from the start".',
       'The last valid index is length - 1.',
-      'Arrays use `length` with NO brackets. Lists use `size()` WITH brackets.',
+      'Arrays use `length` with NO parentheses. Lists use `size()` WITH parentheses.',
       'An index equal to the length is the classic off-by-one.',
     ],
   },
@@ -652,7 +652,7 @@ const LESSONS = [
         + '}',
       holes: [
         { n: 1, hint: 'Stop one before the end. One character.', accept: ['<'] },
-        { n: 2, hint: 'How many slots. Remember: no brackets on an array.', accept: ['length'] },
+        { n: 2, hint: 'How many slots. Remember: no parentheses on an array.', accept: ['length'] },
         { n: 3, hint: 'The loop counter, which is also the slot number.', accept: ['i'] },
       ],
     },
@@ -776,7 +776,7 @@ const LESSONS = [
       },
       {
         shot: SHOT('5.4', 2, 'An attempt to assign to the loop variable, with the array unchanged '
-          + 'afterwards.'),
+          + 'afterward.'),
         code:
           '// Does NOT change the array.\n'
           + 'for (int lane : lanes)\n'
@@ -1014,7 +1014,7 @@ const LESSONS = [
           + '    return false;      // only if the loop finished without finding it\n'
           + '}',
         note:
-          'LINEAR SEARCH, and it uses the return behaviour from 3.4: return stops the method '
+          'LINEAR SEARCH, and it uses the return behavior from 3.4: return stops the method '
           + 'immediately, so finding the target early skips the rest of the array.\n\n'
           + 'The `return false` at the bottom is essential. It runs only when the loop finished '
           + 'without finding anything, and Java will not compile the method without it, because '
@@ -1248,7 +1248,7 @@ const LESSONS = [
 
     vocab: [
       { term: 'Data driven', plain: 'The numbers decide what happens, not the code.',
-        formal: 'Behaviour determined by data rather than control flow.' },
+        formal: 'Behavior determined by data rather than control flow.' },
     ],
 
     steps: [
@@ -1327,7 +1327,7 @@ const LESSONS = [
       {
         id: 'cfu-1',
         stem: 'In `addObject(new Wall(), i, heights[i])`, what does the index i provide?',
-        options: ['The height', 'The x position', 'The number of walls', 'The colour'],
+        options: ['The height', 'The x position', 'The number of walls', 'The color'],
         answer: 1,
         why: 'The index is the position across; the value is the height.',
       },
@@ -1380,7 +1380,7 @@ const LESSONS = [
         + '    addObject(new Wall(), ___2___, heights[___3___]);\n'
         + '}',
       holes: [
-        { n: 1, hint: 'How many columns there are. No brackets on an array.', accept: ['length'] },
+        { n: 1, hint: 'How many columns there are. No parentheses on an array.', accept: ['length'] },
         { n: 2, hint: 'The column position is the loop counter itself.', accept: ['i'] },
         { n: 3, hint: 'Look up the height for this column.', accept: ['i'] },
       ],

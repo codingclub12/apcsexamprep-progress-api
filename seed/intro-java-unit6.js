@@ -94,7 +94,7 @@ const LESSONS = [
           + 'containing zero.'),
         code: 'int[][] grid = new int[3][4];',
         note:
-          'Two pairs of brackets: an array of arrays.\n\n'
+          'Two pairs of parentheses: an array of arrays.\n\n'
           + '`new int[3][4]` builds 3 ROWS of 4 COLUMNS. Rows first, always.\n\n'
           + 'Every cell starts at zero, just as with a 1D array. Twelve cells, all zero.',
       },
@@ -208,7 +208,7 @@ const LESSONS = [
         + 'int rows = map.___1___;\n'
         + 'int cols = map[___2___].___3___;',
       holes: [
-        { n: 1, hint: 'The outer array holds rows. No brackets on an array.', accept: ['length'] },
+        { n: 1, hint: 'The outer array holds rows. No parentheses on an array.', accept: ['length'] },
         { n: 2, hint: 'Ask the first row how long it is.', accept: ['0'] },
         { n: 3, hint: 'A row is a 1D array, so it has the same thing.', accept: ['length'] },
       ],
@@ -301,7 +301,7 @@ const LESSONS = [
     objectives: [
       'Read and write a single cell with the correct index order',
       'Explain why row comes first',
-      'Recognise a transposed grid and say why a square test map hides it',
+      'Recognize a transposed grid and say why a square test map hides it',
     ],
 
     vocab: [
@@ -313,7 +313,7 @@ const LESSONS = [
 
     steps: [
       {
-        shot: SHOT('6.2', 1, 'A grid with row and column numbers labelled on the edges, and one '
+        shot: SHOT('6.2', 1, 'A grid with row and column numbers labeled on the edges, and one '
           + 'cell highlighted at row 2 column 1.'),
         code:
           'int[][] map = {\n'
@@ -381,7 +381,7 @@ const LESSONS = [
       },
       {
         wrong: 'Row is the horizontal one.',
-        right: 'A row is a horizontal LINE, but the row NUMBER counts downwards.',
+        right: 'A row is a horizontal LINE, but the row NUMBER counts downward.',
         why: 'A genuinely confusing bit of English, and worth stating plainly.',
       },
       {
@@ -895,7 +895,7 @@ const LESSONS = [
         why: 'Getting this wrong makes the world the wrong shape for the map it holds.',
       },
       {
-        wrong: 'The conversion needs complicated maths.',
+        wrong: 'The conversion needs complicated math.',
         right: 'With one cell per grid square it is just a swap. Cell size only enters if you use '
           + 'pixel coordinates.',
         why: 'Students overcomplicate this and introduce bugs that were not there.',
@@ -1311,18 +1311,18 @@ const LESSONS = [
   // ── 6.6 ────────────────────────────────────────────────────────────────────
   {
     lesson: '6.6',
-    slug: 'bounds-and-neighbours',
-    title: 'Bounds and Neighbours',
+    slug: 'bounds-and-neighbors',
+    title: 'Bounds and Neighbors',
     minutes: 35,
     seo: {
-      h1: 'Bounds Checking and Neighbours in a 2D Array',
-      title: 'Java 2D Array Bounds Check and Neighbours | Intro to Java',
+      h1: 'Bounds Checking and Neighbors in a 2D Array',
+      title: 'Java 2D Array Bounds Check and Neighbors | Intro to Java',
       description:
         'How to check a grid cell exists before reading it, why the order of the checks matters, '
-        + 'and how to look at the neighbours of a cell safely.',
+        + 'and how to look at the neighbors of a cell safely.',
       primary: 'java 2d array bounds check',
       related: ['java check array index before access', 'java short circuit bounds check',
-        'greenfoot wall collision grid', 'java neighbours 2d array'],
+        'greenfoot wall collision grid', 'java neighbors 2d array'],
       faq: [
         {
           q: 'How do I check a cell exists before reading a 2D array?',
@@ -1343,7 +1343,7 @@ const LESSONS = [
     },
 
     hook:
-      'Every grid game asks "what is next to me", and every edge cell has neighbours that do not '
+      'Every grid game asks "what is next to me", and every edge cell has neighbors that do not '
       + 'exist. Handling that is one method, and the order of two tests inside it is the difference '
       + 'between working and crashing.',
 
@@ -1394,7 +1394,7 @@ const LESSONS = [
           + 'Same two tests, opposite results, purely because of order.',
       },
       {
-        shot: SHOT('6.6', 3, 'A grid with a highlighted cell and its four orthogonal neighbours, '
+        shot: SHOT('6.6', 3, 'A grid with a highlighted cell and its four orthogonal neighbors, '
           + 'two of which are outside the grid.'),
         code:
           'int walls = 0;\n'
@@ -1403,9 +1403,9 @@ const LESSONS = [
           + 'if (inBounds(row, col - 1) && map[row][col - 1] == 1) { walls++; }  // left\n'
           + 'if (inBounds(row, col + 1) && map[row][col + 1] == 1) { walls++; }  // right\n',
         note:
-          'The four orthogonal neighbours. Up is row minus one, because row counts DOWNWARDS, which '
+          'The four orthogonal neighbors. Up is row minus one, because row counts DOWNWARD, which '
           + 'is the same rule as y from 1.4.\n\n'
-          + 'A corner cell has two neighbours that do not exist, and the guard on every line is '
+          + 'A corner cell has two neighbors that do not exist, and the guard on every line is '
           + 'what stops that throwing. It is repetitive on purpose: at this stage clear beats '
           + 'clever.',
       },
@@ -1445,7 +1445,7 @@ const LESSONS = [
       },
       {
         wrong: 'Up is row plus one.',
-        right: 'Up is row MINUS one, because rows count downwards.',
+        right: 'Up is row MINUS one, because rows count downward.',
         why: 'The same inversion as y in 1.4, and it catches people again here.',
       },
       {
@@ -1473,7 +1473,7 @@ const LESSONS = [
         stem: 'Which is the cell ABOVE map[3][5]?',
         options: ['map[4][5]', 'map[2][5]', 'map[3][6]', 'map[3][4]'],
         answer: 1,
-        why: 'Rows count downwards, so up is one less.',
+        why: 'Rows count downward, so up is one less.',
       },
       {
         id: 'cfu-3',
@@ -1484,7 +1484,7 @@ const LESSONS = [
       },
       {
         id: 'cfu-4',
-        stem: 'A corner cell is asked for its four neighbours. What happens without guards?',
+        stem: 'A corner cell is asked for its four neighbors. What happens without guards?',
         options: [
           'Nothing, corners are fine',
           'Two of the lookups throw, because those cells do not exist',
@@ -1492,7 +1492,7 @@ const LESSONS = [
           'It returns zero',
         ],
         answer: 1,
-        why: 'A corner has two neighbours outside the grid.',
+        why: 'A corner has two neighbors outside the grid.',
       },
       {
         id: 'cfu-5',
@@ -1553,7 +1553,7 @@ const LESSONS = [
       },
       {
         id: 'q3',
-        stem: 'The four neighbours of map[row][col] are at:',
+        stem: 'The four neighbors of map[row][col] are at:',
         options: [
           'row+1, row-1, col+1, col-1, each with the other index unchanged',
           'row+1 and col+1 only',
@@ -1561,7 +1561,7 @@ const LESSONS = [
           'The four corners',
         ],
         answer: 0,
-        why: 'Orthogonal neighbours change exactly one index by one.',
+        why: 'Orthogonal neighbors change exactly one index by one.',
       },
       {
         id: 'q4',
@@ -1582,7 +1582,7 @@ const LESSONS = [
     recap: [
       'inBounds needs all four tests: row and column, lower and upper.',
       'The bounds check must come FIRST in the &&, or the lookup throws anyway.',
-      'Up is row MINUS one. Rows count downwards.',
+      'Up is row MINUS one. Rows count downward.',
       'Grid collision means checking the destination cell, not detecting overlap.',
     ],
   },

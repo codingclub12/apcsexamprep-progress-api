@@ -19,7 +19,7 @@
 //
 //  Each error page follows the same four-block shape, which is what makes them
 //  usable at 11pm by a panicking beginner:
-//    1. the message, verbatim, so it is searchable and recognisable
+//    1. the message, verbatim, so it is searchable and recognizable
 //    2. what it actually means, in plain language
 //    3. the usual causes, RANKED by how often they are the answer
 //    4. a worked fix
@@ -39,7 +39,7 @@ const ERRORS = [
     means: 'You used a name Java has never been told about. Almost always a typo, a missing '
       + 'declaration, or the wrong capital letter.',
     causes: [
-      'A spelling or capitalisation difference. Java thinks Crab and crab are two different things.',
+      'A spelling or capitalization difference. Java thinks Crab and crab are two different things.',
       'You used a variable before declaring it.',
       'The class exists but you have not compiled since you created it.',
       'You meant a method and forgot the parentheses, so Java looked for a variable by that name.',
@@ -187,7 +187,7 @@ const ERRORS = [
       'Assigning to a boolean from an int.',
     ],
     fix:
-      'Look inside the round brackets of your if and count the equals signs. One means you are assigning; you almost certainly want two, which compares. If there is no equals sign at all, you may be using a number where a true or false question belongs.',
+      'Look inside the parentheses of your if and count the equals signs. One means you are assigning; you almost certainly want two, which compares. If there is no equals sign at all, you may be using a number where a true or false question belongs.',
     seo: SEO('int cannot be converted to boolean java if',
       'Why Java says int cannot be converted to boolean, why it usually means you typed = instead '
       + 'of ==, and how to fix the condition.'),
@@ -215,7 +215,7 @@ const ERRORS = [
   },
 ];
 
-// ── Greenfoot behaviour problems: it compiled, and it is still wrong ──────────
+// ── Greenfoot behavior problems: it compiled, and it is still wrong ──────────
 // These are where beginners actually lose afternoons, and no error message
 // exists to search for, which is exactly why the pages have to exist.
 const GOTCHAS = [
@@ -247,14 +247,14 @@ const GOTCHAS = [
     fix:
       'This is working as designed. To make actors appear every time, put the addObject calls in the world\'s prepare() method, which Unit 3 covers. Until then, drag them in again after each Reset.',
     seo: SEO('greenfoot actors disappear on reset',
-      'Why Greenfoot actors vanish when you press Reset, why that is correct behaviour, and how to '
+      'Why Greenfoot actors vanish when you press Reset, why that is correct behavior, and how to '
       + 'make them come back automatically.'),
   },
   {
     code: 'G-03', after: '1.3',
     handle: 'intro-java-help-changing-one-actor-changes-all',
     title: 'Changing one actor seems to change all of them',
-    means: 'Usually it does not, and what you are seeing is every object running the same behaviour '
+    means: 'Usually it does not, and what you are seeing is every object running the same behavior '
       + 'at the same time.',
     causes: [
       'Every object of a class runs the same act() body, so they all move identically.',
@@ -262,7 +262,7 @@ const GOTCHAS = [
       'They all started in the same place, so they look like one actor.',
     ],
     fix:
-      'Check whether they are really identical or just doing the same thing. Every object of a class runs the same act() body, so identical behaviour is expected. If you need them to differ, give each one its own instance variable, which is lesson 3.8.',
+      'Check whether they are really identical or just doing the same thing. Every object of a class runs the same act() body, so identical behavior is expected. If you need them to differ, give each one its own instance variable, which is lesson 3.8.',
     seo: SEO('greenfoot all actors move the same',
       'Why every actor in a Greenfoot class behaves identically, and how per-object state makes '
       + 'them differ. Beginner explanation.'),
@@ -303,8 +303,8 @@ const GOTCHAS = [
   },
   {
     code: 'G-06', after: '2.2',
-    handle: 'intro-java-help-my-maths-is-wrong',
-    title: 'My maths gives the wrong answer and there is no error',
+    handle: 'intro-java-help-my-math-is-wrong',
+    title: 'My math gives the wrong answer and there is no error',
     means: 'Almost always integer division. When both numbers are whole numbers Java throws the '
       + 'remainder away instead of rounding.',
     causes: [
@@ -329,7 +329,7 @@ const GOTCHAS = [
       'The condition is not what you think, often = instead of ==.',
     ],
     fix:
-      'Look for a semicolon straight after the closing round bracket of the condition and delete it. If there is none, check the braces really wrap the lines you meant, and check the condition uses == rather than =.',
+      'Look for a semicolon straight after the closing parenthesis of the condition and delete it. If there is none, check the braces really wrap the lines you meant, and check the condition uses == rather than =.',
     seo: SEO('java if statement always runs',
       'Why a Java if statement runs every time, the stray semicolon that causes it, and why there '
       + 'is never an error message for it.'),
@@ -345,7 +345,7 @@ const GOTCHAS = [
       'Expecting every condition to be checked. The chain stops at the first true one.',
     ],
     fix:
-      'Write the conditions out in order and ask, for each one, whether anything above it would already have caught that value. Reorder so the narrowest condition comes first and the chain widens downwards.',
+      'Write the conditions out in order and ask, for each one, whether anything above it would already have caught that value. Reorder so the narrowest condition comes first and the chain widens downward.',
     seo: SEO('java else if branch never runs',
       'Why an else if branch is unreachable, how condition order decides which one catches, and '
       + 'the rule for ordering ranges.'),
@@ -389,12 +389,12 @@ const GOTCHAS = [
     means: 'Writing a method defines it. Something still has to call it by name, and nothing does.',
     causes: [
       'Nothing calls the method. act() or the constructor has to invoke it.',
-      'The call is missing its brackets, so it is not a call at all.',
+      'The call is missing its parentheses, so it is not a call at all.',
       'The method was accidentally written inside another method, so it never became a method.',
     ],
     fix:
-      'Find the place the method should run from, usually act() for per-frame behaviour or the '
-      + 'constructor for one-off setup, and add a call with brackets and a semicolon. Then check '
+      'Find the place the method should run from, usually act() for per-frame behavior or the '
+      + 'constructor for one-off setup, and add a call with parentheses and a semicolon. Then check '
       + 'the method sits beside act() rather than inside it.',
     seo: SEO('java method written but not running',
       'Why a Java method you wrote does nothing, why defining is not calling, and where the call '
@@ -462,7 +462,7 @@ const GOTCHAS = [
     code: 'G-15', after: '4.1',
     handle: 'intro-java-help-my-loop-never-ends',
     title: 'My loop never ends',
-    means: 'Nothing inside the loop moves the condition towards false, so it stays true forever.',
+    means: 'Nothing inside the loop moves the condition toward false, so it stays true forever.',
     causes: [
       'The counter is never changed inside the loop body.',
       'The counter changes in the wrong direction, moving away from the exit.',
@@ -470,7 +470,7 @@ const GOTCHAS = [
     ],
     fix:
       'Find the line that should change the counter. If it is missing, add it. If it is there, '
-      + 'check it moves the counter TOWARDS the condition failing rather than away from it. A for '
+      + 'check it moves the counter TOWARD the condition failing rather than away from it. A for '
       + 'loop puts the update in the header where it is much harder to lose.',
     seo: SEO('java loop never ends infinite',
       'Why a Java loop never ends, the three causes, and why a for loop makes the missing update '
