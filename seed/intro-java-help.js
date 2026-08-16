@@ -44,6 +44,8 @@ const ERRORS = [
       'The class exists but you have not compiled since you created it.',
       'You meant a method and forgot the parentheses, so Java looked for a variable by that name.',
     ],
+    fix:
+      'Read the name Java printed and search your file for it. Compare it letter by letter with where you declared it, including capitals. If the name looks right, check you have compiled since you created the class, and check a method call has its parentheses.',
     seo: SEO('java cannot find symbol greenfoot',
       'What the Java error cannot find symbol means in Greenfoot, the four usual causes ranked, '
       + 'and how to fix each one. Written for beginners.'),
@@ -60,6 +62,8 @@ const ERRORS = [
       'A missing closing parenthesis, which makes Java read the rest of the line as part of the call.',
       'A stray word left over from an edit.',
     ],
+    fix:
+      'Look at the line ABOVE the one Java names. Java reports the point where it noticed, not the point where you slipped. Add the missing semicolon there, or close the parenthesis you left open.',
     seo: SEO('java semicolon expected error',
       'Why Java says semicolon expected, why the real mistake is usually on the line above, and '
       + 'how to find it fast. Beginner friendly.'),
@@ -75,6 +79,8 @@ const ERRORS = [
       'Passing text where a number was wanted, such as move("4") instead of move(4).',
       'Mixing up int and boolean, often by using = where you meant ==.',
     ],
+    fix:
+      'Read the two types Java names: it wanted the first and got the second. Then ask which half is wrong. Storing a void result means deleting the assignment; text where a number belongs means removing the quotes; a condition means you probably typed = instead of ==',
     seo: SEO('java incompatible types error beginner',
       'What incompatible types means in Java, with the three causes beginners hit most and a '
       + 'worked fix for each.'),
@@ -91,6 +97,8 @@ const ERRORS = [
       'A method declared inside another method, which Java does not allow.',
       'A missing parenthesis in an if condition.',
     ],
+    fix:
+      'Ignore the line number and count your braces instead. Every { needs a }. Re-indent the whole method: the place where the indentation stops making sense is where the brace is missing.',
     seo: SEO('illegal start of expression java',
       'Why Java reports illegal start of expression, why the cause is usually a brace and not the '
       + 'line shown, and how to fix it.'),
@@ -107,6 +115,8 @@ const ERRORS = [
       'The method should have been void and was declared with a type by mistake.',
       'A return that is unreachable because it sits after a loop that always exits earlier.',
     ],
+    fix:
+      'Trace every path through the method and check each one ends in a return. An if with a return but no else is the usual cause. Either add a return after the if, or give the else one of its own.',
     seo: SEO('java missing return statement fix',
       'What missing return statement means, why an if without an else causes it, and how to fix '
       + 'it. Beginner Java help.'),
@@ -122,6 +132,8 @@ const ERRORS = [
       'Passing two arguments to a method that takes one.',
       'Passing a decimal where a whole number was wanted.',
     ],
+    fix:
+      'Compare the required and found lines Java prints. Count the arguments on each side, then check their types. move() needs one whole number; move(4) is right and move() is not.',
     seo: SEO('java cannot be applied to given types',
       'Why Java says a method cannot be applied to given types, how to read the required and found '
       + 'lines, and how to fix the call.'),
@@ -138,6 +150,8 @@ const ERRORS = [
       'Using a variable that was declared but never assigned.',
       'Using the result of a get method that found nothing and handed back null.',
     ],
+    fix:
+      'Find the line Java names and ask which thing on it could be missing. In Greenfoot the usual answer is an actor that was removed from the world and is still trying to act. Guard it with a check before you use it.',
     seo: SEO('greenfoot nullpointerexception beginner',
       'What a NullPointerException means in Greenfoot, the three usual causes, and how to find the '
       + 'line that is actually at fault.'),
@@ -154,6 +168,8 @@ const ERRORS = [
       'Two variables with the same name in the same method.',
       'A parameter and a local variable sharing a name.',
     ],
+    fix:
+      'Delete the type from the SECOND line. `int score = 0;` then `score = 10;` is correct. The type appears once, when the box is made.',
     seo: SEO('java variable is already defined',
       'Why Java says a variable is already defined, why the fix is usually deleting the type on '
       + 'the second line, and how to spot it.'),
@@ -170,6 +186,8 @@ const ERRORS = [
       'Using a number as a condition, such as `if (lives)` instead of `if (lives > 0)`.',
       'Assigning to a boolean from an int.',
     ],
+    fix:
+      'Look inside the round brackets of your if and count the equals signs. One means you are assigning; you almost certainly want two, which compares. If there is no equals sign at all, you may be using a number where a true or false question belongs.',
     seo: SEO('int cannot be converted to boolean java if',
       'Why Java says int cannot be converted to boolean, why it usually means you typed = instead '
       + 'of ==, and how to fix the condition.'),
@@ -190,6 +208,8 @@ const GOTCHAS = [
       'You edited a different class from the one in the world.',
       'You pressed Run without pressing Reset, so the old objects are still there.',
     ],
+    fix:
+      'Press Compile and wait for the stripes to clear from the class diagram, then press Reset, then Run. In that order. If the stripes will not clear, there is a compiler error to fix first.',
     seo: SEO('greenfoot changes not taking effect',
       'Why editing code in Greenfoot seems to do nothing, what the hatched class diagram means, '
       + 'and the order to press the buttons in.'),
@@ -203,6 +223,8 @@ const GOTCHAS = [
       'The actors were dragged in by hand rather than created in code.',
       'The world has no prepare() method yet, which is Unit 3.',
     ],
+    fix:
+      'This is working as designed. To make actors appear every time, put the addObject calls in the world\'s prepare() method, which Unit 3 covers. Until then, drag them in again after each Reset.',
     seo: SEO('greenfoot actors disappear on reset',
       'Why Greenfoot actors vanish when you press Reset, why that is correct behaviour, and how to '
       + 'make them come back automatically.'),
@@ -218,6 +240,8 @@ const GOTCHAS = [
       'You used a value shared by the class rather than per-object state.',
       'They all started in the same place, so they look like one actor.',
     ],
+    fix:
+      'Check whether they are really identical or just doing the same thing. Every object of a class runs the same act() body, so identical behaviour is expected. If you need them to differ, give each one its own instance variable, which is lesson 3.8.',
     seo: SEO('greenfoot all actors move the same',
       'Why every actor in a Greenfoot class behaves identically, and how per-object state makes '
       + 'them differ. Beginner explanation.'),
@@ -233,6 +257,8 @@ const GOTCHAS = [
       'The actor is at the edge and is being pushed back to the same cell.',
       'You compiled a different class.',
     ],
+    fix:
+      'Press Act once. If the actor moves, the scenario simply was not running. If it does not, check the move call is inside act(), check you compiled, and check the actor is not pinned against the edge being clamped back to the same cell.',
     seo: SEO('greenfoot actor not moving fix',
       'Why a Greenfoot actor does not move, the four causes ranked by how often they are the '
       + 'answer, and how to test each one.'),
@@ -248,6 +274,8 @@ const GOTCHAS = [
       'A loop whose condition can never become false.',
       'A method that calls itself with no stopping case.',
     ],
+    fix:
+      'Force-quit Greenfoot, reopen it, and look inside act() for a loop. act() must FINISH every frame. Delete the loop: act() is already the repetition, so one small step per frame is all you need.',
     seo: SEO('greenfoot freezes when i press run',
       'Why Greenfoot locks up when you press Run, why a loop inside act causes it, and how to fix '
       + 'it without losing your work.'),
@@ -263,6 +291,8 @@ const GOTCHAS = [
       'Storing a decimal result into an int, which truncates it.',
       'Expecting Java to round. It does not; it cuts.',
     ],
+    fix:
+      'Decide whether you want a whole number. If you do, use % to catch the remainder rather than losing it. If you do not, make one side a decimal: 7.0 / 2 gives 3.5.',
     seo: SEO('java division wrong answer no error',
       'Why Java arithmetic silently gives the wrong answer, how integer division truncates, and '
       + 'the one-character fix.'),
@@ -277,6 +307,8 @@ const GOTCHAS = [
       'Missing braces, so only the first line below is controlled by the if.',
       'The condition is not what you think, often = instead of ==.',
     ],
+    fix:
+      'Look for a semicolon straight after the closing round bracket of the condition and delete it. If there is none, check the braces really wrap the lines you meant, and check the condition uses == rather than =.',
     seo: SEO('java if statement always runs',
       'Why a Java if statement runs every time, the stray semicolon that causes it, and why there '
       + 'is never an error message for it.'),
@@ -291,6 +323,8 @@ const GOTCHAS = [
       'Overlapping ranges, where the first match wins and the rest never get tested.',
       'Expecting every condition to be checked. The chain stops at the first true one.',
     ],
+    fix:
+      'Write the conditions out in order and ask, for each one, whether anything above it would already have caught that value. Reorder so the narrowest condition comes first and the chain widens downwards.',
     seo: SEO('java else if branch never runs',
       'Why an else if branch is unreachable, how condition order decides which one catches, and '
       + 'the rule for ordering ranges.'),
@@ -306,6 +340,8 @@ const GOTCHAS = [
       'No counter or timer limiting how often the spawn can happen.',
       'Spawning in the world act() and in an actor act() at the same time.',
     ],
+    fix:
+      'Raise the number you pass to getRandomNumber, remembering the check runs every frame. One in fifty per frame is still several a second. For real control, count frames and spawn only when the counter comes round.',
     seo: SEO('greenfoot too many objects spawning',
       'Why a small random spawn chance floods a Greenfoot scenario, how per-frame probability '
       + 'works, and how to slow it down.'),
@@ -319,6 +355,8 @@ const GOTCHAS = [
       'Using else if between the direction checks instead of separate if statements.',
       'Returning out of act() after the first key match.',
     ],
+    fix:
+      'Change every `else if` between your key checks to a plain `if`. Separate ifs are each checked, so holding two keys moves the player both ways in the same frame.',
     seo: SEO('greenfoot diagonal movement not working',
       'Why a Greenfoot player cannot move diagonally, why an else if chain blocks it, and the '
       + 'one-word change that fixes it.'),
@@ -331,6 +369,8 @@ const RECIPES = [
     code: 'R-01', after: '1.1',
     handle: 'intro-java-help-recipe-open-and-run-a-scenario',
     title: 'How to open and run a Greenfoot scenario',
+    snippet:
+      '// Scenario menu, then Open. Pick a folder that contains a\n// greenfoot.project file. Then press Run.\n// Act  = one frame.  Run = many.  Reset = start over.',
     seo: SEO('how to open a greenfoot scenario',
       'Step by step: open an existing Greenfoot scenario, run it, pause it, and reset it. The '
       + 'first thing to do in the course.'),
@@ -339,6 +379,8 @@ const RECIPES = [
     code: 'R-02', after: '1.4',
     handle: 'intro-java-help-recipe-move-an-actor',
     title: 'How to make an actor move',
+    snippet:
+      '// Two ways, and they are not interchangeable.\n\n// 1. Direction based: goes whichever way the actor faces.\nturn(90);\nmove(4);\n\n// 2. Coordinate based: ignores facing entirely.\nsetLocation(getX() + 4, getY());',
     seo: SEO('how to move an actor in greenfoot',
       'Two ways to move a Greenfoot actor: move and turn for direction-based movement, and '
       + 'setLocation for exact coordinates.'),
@@ -347,6 +389,8 @@ const RECIPES = [
     code: 'R-03', after: '1.6',
     handle: 'intro-java-help-recipe-keep-an-actor-in-the-world',
     title: 'How to stop an actor leaving the world',
+    snippet:
+      'public void act()\n{\n    move(3);\n    if (isAtEdge())\n    {\n        turn(180);\n    }\n}',
     seo: SEO('greenfoot keep actor inside world',
       'How to stop a Greenfoot actor walking off the edge, using isAtEdge and setLocation. Beginner '
       + 'recipe with working code.'),
@@ -355,6 +399,8 @@ const RECIPES = [
     code: 'R-04', after: '2.6',
     handle: 'intro-java-help-recipe-random-spawning',
     title: 'How to spawn things at random',
+    snippet:
+      'public void act()\n{\n    // Roughly one frame in fifty. Remember act() runs\n    // many times a second, so this is still frequent.\n    if (Greenfoot.getRandomNumber(50) < 1)\n    {\n        int x = Greenfoot.getRandomNumber(getWidth());\n        addObject(new Coin(), x, 0);\n    }\n}',
     seo: SEO('greenfoot spawn objects randomly',
       'How to spawn Greenfoot actors at random positions and at a controlled rate, with working '
       + 'code and the per-frame trap explained.'),
@@ -363,6 +409,8 @@ const RECIPES = [
     code: 'R-05', after: '2.7',
     handle: 'intro-java-help-recipe-arrow-key-movement',
     title: 'How to move a player with the arrow keys',
+    snippet:
+      'public void act()\n{\n    // SEPARATE ifs, never else if, or diagonals stop working.\n    if (Greenfoot.isKeyDown("left"))  { setLocation(getX() - 3, getY()); }\n    if (Greenfoot.isKeyDown("right")) { setLocation(getX() + 3, getY()); }\n    if (Greenfoot.isKeyDown("up"))    { setLocation(getX(), getY() - 3); }\n    if (Greenfoot.isKeyDown("down"))  { setLocation(getX(), getY() + 3); }\n}',
     seo: SEO('greenfoot arrow key movement code',
       'Working Greenfoot code for four-direction arrow key movement, including diagonals, and why '
       + 'separate if statements are required.'),

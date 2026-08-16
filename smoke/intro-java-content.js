@@ -416,5 +416,75 @@ ok('10.4 gap items are one row per lesson, not one row per hole',
 ok('10.5 the authored units are worth a sane number of points, not thousands',
   totalPoints > 40 && totalPoints < 400, totalPoints);
 
+// ── 11. The getting-unstuck pages render correctly ───────────────────────────
+//  These are the pages a stranger finds by searching their error message, so
+//  they are the largest SEO surface in the course and the one most likely to be
+//  someone's first contact with the site. They are also the pages that must
+//  never be tracked as progress.
+section('11. Help pages render, rank their causes, and are never tracked');
+
+const { renderHelp, kindOf } = require('../lib/intro-java-help-page');
+const helpPages = help.ALL.map((h) => renderHelp(h, {
+  related: help.ALL.filter((x) => x.after === h.after && x.code !== h.code).slice(0, 3),
+  lessonHandle: null,
+}));
+
+ok('11.1 every catalog entry renders', helpPages.length === help.ALL.length);
+
+for (const hp of helpPages) {
+  const h1s = (hp.bodyHtml.match(/<h1[\s>]/g) || []).length;
+  ok(`11.x ${hp.code} has exactly one h1`, h1s === 1, h1s);
+  ok(`11.x ${hp.code} meta description is 70 to 160 characters`,
+    hp.seoDescription.length >= 70 && hp.seoDescription.length <= 160, hp.seoDescription.length);
+  ok(`11.x ${hp.code} seo title is at most 60 characters`, hp.seoTitle.length <= 60, hp.seoTitle.length);
+
+  // Never trackable. No item ids, no lesson id, and a handle the tracker's
+  // regex cannot match.
+  ok(`11.x ${hp.code} carries no tracking attributes`,
+    !/data-item-id|data-lesson-id/.test(hp.bodyHtml));
+  ok(`11.x ${hp.code} handle cannot be mistaken for a lesson`,
+    !/^intro-java-lesson-\d+-\d+-/.test(hp.handle), hp.handle);
+
+  const blocks = [...hp.bodyHtml.matchAll(
+    /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => m[1]);
+  let valid = true; const types = [];
+  for (const b of blocks) { try { types.push(JSON.parse(b)['@type']); } catch (e) { valid = false; } }
+  ok(`11.x ${hp.code} structured data parses`, valid && blocks.length >= 2, types);
+  ok(`11.x ${hp.code} declares TechArticle and a FAQ`,
+    types.includes('TechArticle') && types.includes('FAQPage'), types);
+  ok(`11.x ${hp.code} no HTML entity inside a script block`,
+    !blocks.some((b) => /&(amp|quot|lt|gt|#\d+);/.test(b)));
+
+  ok(`11.x ${hp.code} is pure ASCII with no em-dash`,
+    // eslint-disable-next-line no-control-regex
+    !/[^\x00-\x7F]/.test(hp.bodyHtml + hp.seoTitle + hp.seoDescription));
+}
+
+// The error message must appear VERBATIM, because it is the exact string
+// somebody pastes into a search box.
+for (const e of [...help.ERRORS, ...help.GOTCHAS]) {
+  const hp = helpPages.find((x) => x.code === e.code);
+  if (e.message) {
+    ok(`11.m ${e.code} renders its message verbatim and searchable`,
+      hp.bodyHtml.includes(`<code>${e.message.replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')}</code>`),
+      e.message);
+  }
+  ok(`11.m ${e.code} ranks at least two causes`, e.causes.length >= 2, e.causes.length);
+  ok(`11.m ${e.code} gives a worked fix`, !!e.fix && e.fix.length > 60);
+}
+
+for (const r of help.RECIPES) {
+  const hp = helpPages.find((x) => x.code === r.code);
+  ok(`11.r ${r.code} ships working code`, !!r.snippet && hp.bodyHtml.includes('ij-code'));
+}
+
+ok('11.z every help page title is unique',
+  new Set(helpPages.map((h) => h.title)).size === helpPages.length);
+ok('11.z every help description is unique',
+  new Set(helpPages.map((h) => h.seoDescription)).size === helpPages.length);
+ok('11.z the catalog covers errors, gotchas and recipes',
+  new Set(helpPages.map(kindOf ? (h) => h.kind : () => 1)).size === 3);
+
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);
