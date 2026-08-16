@@ -279,13 +279,126 @@ Handles follow the CSA shape so `pageFromHandle` needs one rule:
 | Lesson visit | `{U}.{L}-visit` | `visit` | 1 |
 | Concept check | `{U}.{L}-cfu-{n}` | `cfu` | 1 each |
 | Gap-fill | `{U}.{L}-gap` | `gap` | 1 per hole |
-| Code exercise | `{U}.{L}-code` | `code` | 1 |
+| Code exercise | `{U}.{L}-code-1` | `code` | 1 |
 | Lesson quiz | `{U}.{L}-quiz` | `quiz` | 1 per question |
+
+The trailing `-1` on the code item is not decoration. `routes/student.js` buckets
+a student's own progress view with `saIsCode = /-code-\d+$/`, so `{U}.{L}-code`
+would have been silently filed as a concept check on the student's page. The id
+matches the pattern rather than the pattern being loosened, because CSA's code
+items are seeded with `item_type: 'cfu'` and rebucketing by `item_type` would
+move them.
 
 Projects get their own lesson id per instrument, `project-{U}`, so a project can
 never share a gradebook cell with a lesson, which is the collapse that AP
-Networking's unit tests hit. The auto-graded worksheet is `project-{U}-gap`; the
-built scenario is teacher-entered and has no manifest row.
+Networking's unit tests hit. Task items are `project-{U}-task-{n}`, one per
+checkable task; the built scenario is teacher-entered and has no manifest row.
+
+**When gap grading lands**, add a `gap` bucket to `GET /api/student/attempts`.
+Today the `kind` ternary there falls through to `cfu` for anything that is not a
+quiz or a code item, so gap results would be folded into the concept-check
+number on the student's own progress page. The `items[]` array carries
+`item_type` verbatim and is unaffected, which is why the project page below can
+be built before that fix.
+
+## What a lesson page looks like
+
+The format is a **build walkthrough**: the scenario is constructed in front of
+the student in numbered steps, each one showing what changed and why, rather than
+presenting a finished listing and explaining it afterwards.
+
+Each step is four blocks, always in this order:
+
+1. **Screenshot** of the Greenfoot window at that moment: the class diagram, the
+   world, whatever the step is actually about.
+2. **The code**, as real selectable text, with the lines this step adds marked.
+3. **The annotation**: what changed, and why it was needed. One idea per step.
+4. **Optionally a check**: a gap to fill or a concept check on the step just
+   taken.
+
+### The rule that makes a walkthrough work
+
+**Every step must leave a scenario that compiles and runs.** A student who stops
+after step 4 of 9 has a working, if unfinished, game. This is the difference
+between a walkthrough a student can follow alone and one where a single missed
+line produces a wall of compiler errors twenty minutes later with no way back.
+
+It is also the constraint that costs the most to retrofit, so it is a rule about
+authoring, not a review note: build the scenario for real, screenshotting as you
+go, and let the steps fall where the code actually ran. Steps invented after the
+fact from a finished listing are where non-compiling intermediate states come
+from.
+
+### Screenshot the IDE, never the code
+
+Code goes in the page as text, always. A screenshot of code cannot be copied,
+cannot be searched, cannot be read by a screen reader, cannot be translated, and
+cannot be diffed against what the student actually has. Screenshots are for what
+text cannot show: the class diagram, the world, a dialog, a menu, the red error
+squiggle and where it appears.
+
+Practical requirements, because a screenshot set ages badly:
+
+- Path `intro-java/{U}.{L}/step-{n}.png`, so any single shot can be retaken
+  without hunting for it.
+- Fixed window size and zoom across a whole unit. A set shot at three sizes reads
+  as sloppy even when each shot is fine.
+- **Alt text is required, not optional.** These pages are used in schools, by
+  minors, under district accessibility policy. A screenshot with no alt text is a
+  step a student using a screen reader cannot take at all.
+- Screenshots go stale when Greenfoot's UI changes or the scenario art changes.
+  Treat a Greenfoot version bump as a reshoot task for the affected steps, and
+  note the version the set was shot against.
+
+## What a project page looks like
+
+A project is a **guided build**: the site walks the student task by task, and each
+task is a small, checkable piece of the scenario. It is the lesson walkthrough
+stretched over a whole game, with the student writing more of it.
+
+Each task carries: a goal in one sentence, the code with holes where this task's
+new thinking goes, a check, and a link to the recipe or error page most likely to
+be needed.
+
+### What "complete" means, and what it is worth
+
+Tasks come in two kinds, and conflating them is how a gradebook starts lying:
+
+| Kind | Example | Advances the walkthrough | Manifest row |
+|---|---|---|---|
+| **Checked** | Fill the holes in `act()`; write `inBounds` | Yes, when the check passes | Yes |
+| **Attested** | "Import the crab image into your scenario" | Yes, on the student's word | **No** |
+
+Attested tasks are real and necessary: some steps happen in the Greenfoot desktop
+app and cannot be observed from a browser. They are allowed to move the student
+forward. They are never worth points, because a checkbox is not evidence, and a
+course that scores self-attestation is a course whose grades mean nothing. Only
+checked tasks get a `project-{U}-task-{n}` manifest row.
+
+### Resume state is derived, never stored
+
+The page does not persist "student is on task 6". It calls
+`GET /api/student/attempts`, filters to items matching `project-{U}-task-`, and
+opens at the first one without a passing attempt.
+
+This is worth doing the harder-sounding way for three reasons: it needs no new
+table, no new writes, and no new endpoint; it cannot drift out of sync with the
+grades, because it IS the grades; and a student who starts on a Chromebook at
+school and continues on a phone at home resumes in the right place with no
+session to carry.
+
+Attested tasks are the one gap in that, since they record nothing. They are
+resolved by position rather than state: an attested task sits between checked
+tasks and is re-shown when the student lands on the checked task after it, which
+costs a student five seconds and costs the system nothing.
+
+### The teacher signal this produces
+
+Because each checked task is its own item, the gradebook answers a question it
+could not answer before: not "did they do the project" but **"which task is the
+class stuck on"**. Fifteen students failing task 6 of Tile Dungeon is a
+diagnosis, and it is the single most useful number this course can hand a
+teacher.
 
 ## Build order
 
@@ -296,6 +409,8 @@ built scenario is teacher-entered and has no manifest row.
 4. Gap-fill grading route and bank, following the code-grading contract.
 5. Unit 1 authored end to end as the pilot, including its six error pages and the
    first four recipes. Nothing else ships until a real student gets through Unit 1.
+   Build the scenario for real and screenshot as you go; the steps come out of
+   that, not out of a finished listing.
 6. Units 2 to 6, one unit at a time, manifest rows added as each unit's pages go
    live and not before.
 
