@@ -198,6 +198,56 @@ const COURSES = {
     },
   },
   // AP Networking (AP Career Kickstart pilot, for use beginning 2026-2027).
+  // Intro to Java with Greenfoot: the pre-AP CSA on-ramp. 6 units, 42 lessons,
+  // beginner through 2D array tile mapping. Full spec in
+  // docs/intro-java-course-spec.md.
+  //
+  // All 42 lessons are listed now, before their pages exist, for the same
+  // reason networking lists all 22 topics: visit denominators must not move
+  // under students who have already started. GRADED rows are a different
+  // matter and are seeded per unit as pages ship (see scripts/seed-manifest.js).
+  //
+  // 'gap' is the fill-in-the-holes activity, the format this course leans on
+  // hardest, because Greenfoot cannot run in Judge0 and a beginner cannot be
+  // handed a blank screen. 'code' is the pure-logic method graded headless
+  // against lib/greenfoot-stub.js. The unit PROJECT is deliberately not an
+  // activity here: it is built in Greenfoot on the desktop, cannot report
+  // itself, and is teacher-scored through the existing score-entry route.
+  'intro-java': {
+    label: 'Intro to Java with Greenfoot',
+    units: {
+      'unit-1': {
+        label: 'Unit 1: Meet Greenfoot',
+        lessons: ['1.1', '1.2', '1.3', '1.4', '1.5', '1.6'],
+        activities: ['lesson', 'cfu', 'gap', 'quiz'],
+      },
+      'unit-2': {
+        label: 'Unit 2: Variables, Decisions, and Input',
+        lessons: ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6', '2.7'],
+        activities: ['lesson', 'cfu', 'gap', 'code', 'quiz'],
+      },
+      'unit-3': {
+        label: 'Unit 3: Methods, Worlds, and Constructors',
+        lessons: ['3.1', '3.2', '3.3', '3.4', '3.5', '3.6', '3.7', '3.8', '3.9'],
+        activities: ['lesson', 'cfu', 'gap', 'code', 'quiz'],
+      },
+      'unit-4': {
+        label: 'Unit 4: Loops and Collections of Actors',
+        lessons: ['4.1', '4.2', '4.3', '4.4', '4.5', '4.6', '4.7'],
+        activities: ['lesson', 'cfu', 'gap', 'code', 'quiz'],
+      },
+      'unit-5': {
+        label: 'Unit 5: Arrays',
+        lessons: ['5.1', '5.2', '5.3', '5.4', '5.5', '5.6'],
+        activities: ['lesson', 'cfu', 'gap', 'code', 'quiz'],
+      },
+      'unit-6': {
+        label: 'Unit 6: 2D Arrays and Tile Maps',
+        lessons: ['6.1', '6.2', '6.3', '6.4', '6.5', '6.6', '6.7'],
+        activities: ['lesson', 'cfu', 'gap', 'code', 'quiz'],
+      },
+    },
+  },
   // 4 units, 22 topics. Unit/lesson keys ('unit-N', 'U.T') match pageFromHandle
   // and the course_manifest seed exactly, so visit denominators line up with
   // what the reporter sends. Content ships unit by unit; all 22 topics are
@@ -299,9 +349,14 @@ const COURSE_PREFIXES = {
   'ap-csa':           'CSA',
   'ap-csp':           'CSP',
   'ap-networking':    'NET',
+  'intro-java':       'JAVA',
 };
 
-const ACTIVITY_TOKENS = ['exercise-1', 'exercise-2', 'exercise-3', 'lab', 'quiz', 'exam', 'code'];
+// 'gap' is the intro-java fill-in-the-holes activity. Added at the END of the
+// list only for readability; order does not matter here because trailingActivity
+// anchors every token at the end of the handle. No other course has a handle
+// ending in '-gap', so adding it cannot reclassify an existing page.
+const ACTIVITY_TOKENS = ['exercise-1', 'exercise-2', 'exercise-3', 'lab', 'quiz', 'exam', 'code', 'gap'];
 
 function trailingActivity(h) {
   // anchored at the end so a slug like "collaboration" never trips "lab"
@@ -370,6 +425,29 @@ function pageFromHandle(raw) {
   m = h.match(/^ap-networking-lesson-(\d+)-(\d+)-/);
   if (m) {
     return { course: 'ap-networking', unit: 'unit-' + m[1], lesson: m[1] + '.' + m[2], activity_type: trailingActivity(h) };
+  }
+
+  // Intro to Java: intro-java-lesson-{U}-{L}-{slug}   (lesson id = "U.L")
+  //
+  // Only LESSON pages are matched, and that is the whole point of the rule
+  // being this narrow:
+  //
+  //   intro-java-help-error-{slug}  and  intro-java-help-recipe-{slug}
+  //
+  // are the getting-unstuck pages, and they must never register as progress.
+  // They are reference material a struggling student is meant to reach for
+  // freely, so counting a visit would mean the students who need them most
+  // look the most productive, and would put lesson ids like 'error-npe' in the
+  // gradebook. They carry no manifest row either.
+  //
+  // Project pages are likewise unmatched. A project's auto-graded worksheet
+  // reports through POST /api/progress/attempt with an explicit item_id
+  // ('project-{U}-gap'), which never goes through this function, and the built
+  // Greenfoot scenario is teacher-scored. Matching them here would mint a
+  // 'project-1' visit column that no manifest row backs.
+  m = h.match(/^intro-java-lesson-(\d+)-(\d+)-/);
+  if (m) {
+    return { course: 'intro-java', unit: 'unit-' + m[1], lesson: m[1] + '.' + m[2], activity_type: trailingActivity(h) };
   }
 
   // Cyber CANONICAL lesson pages: ap-cybersecurity-unit-{N}-{slug}[-{activity}]

@@ -191,9 +191,16 @@ ok('5.5 course=all fans out to every non-exempt course',
 ok('5.6 course=all still carries the CSA 4-unit rule and the cyber titles',
   /4-unit/.test(bodies({ surface: 'content', course: 'all', title: 'x' }))
   && /Understanding Social Engineering/.test(bodies({ surface: 'content', course: 'all', title: 'x' })));
-ok('5.7 an exempt course is empty on purpose, not by accident',
-  H.hazardsFor({ surface: 'content', course: 'greenfoot', title: 'x' }).length === 0
-  && H.contentCoverageFor('greenfoot') === 'exempt');
+ok('5.7 intro-java carries a real rulebook, not an exemption',
+  H.hazardsFor({ surface: 'content', course: 'intro-java', title: 'x' }).length > 0
+  && H.contentCoverageFor('intro-java') === 'covered');
+ok('5.8 the legacy greenfoot alias compiles the same intro-java rulebook',
+  bodies({ surface: 'content', course: 'greenfoot', title: 'x' })
+    === bodies({ surface: 'content', course: 'intro-java', title: 'x' })
+  && /intro-java-course-spec/.test(bodies({ surface: 'content', course: 'greenfoot', title: 'x' })));
+ok('5.9 intro-java names the Judge0 limit that decides what can be auto-graded',
+  /GREENFOOT CANNOT RUN IN JUDGE0/.test(bodies({ surface: 'content', course: 'intro-java', title: 'x' }))
+  && /never store student free text/i.test(bodies({ surface: 'content', course: 'intro-java', title: 'x' })));
 
 // ── 6. Course blocks name their own source of truth ──────────────────────────
 //  Every wrong-PDF incident traces back to a prompt that did not name the file.
