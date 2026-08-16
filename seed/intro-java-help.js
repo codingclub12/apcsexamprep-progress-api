@@ -192,6 +192,27 @@ const ERRORS = [
       'Why Java says int cannot be converted to boolean, why it usually means you typed = instead '
       + 'of ==, and how to fix the condition.'),
   },
+  {
+    code: 'E-10', after: '5.1',
+    handle: 'intro-java-help-error-array-index-out-of-bounds',
+    title: 'Java error: ArrayIndexOutOfBoundsException',
+    message: 'java.lang.ArrayIndexOutOfBoundsException: Index 5 out of bounds for length 5',
+    means: 'You asked an array for a slot it does not have. The array is fine; the index is wrong.',
+    causes: [
+      'A loop using <= instead of <, so it runs one past the end. The message shows an index '
+        + 'exactly equal to the length.',
+      'Using a.length as an index instead of a.length - 1.',
+      'On a 2D array, the two subscripts are swapped and the grid is not square.',
+      'A level or wave counter that has grown past the last entry in its array.',
+    ],
+    fix:
+      'Read the message: it names the index you tried AND the length. If the index equals the '
+      + 'length exactly, change <= to < in the loop, or use a.length - 1 for the last element. On '
+      + 'a 2D array, check that row is the FIRST subscript.',
+    seo: SEO('arrayindexoutofboundsexception java fix',
+      'What ArrayIndexOutOfBoundsException means, how to read the index and length in the message, '
+      + 'and the four usual causes ranked.'),
+  },
 ];
 
 // ── Greenfoot behaviour problems: it compiled, and it is still wrong ──────────
@@ -437,6 +458,119 @@ const GOTCHAS = [
       'Why adding a constructor breaks existing new calls, what the free no-argument constructor '
       + 'was, and the two ways to fix it.'),
   },
+  {
+    code: 'G-15', after: '4.1',
+    handle: 'intro-java-help-my-loop-never-ends',
+    title: 'My loop never ends',
+    means: 'Nothing inside the loop moves the condition towards false, so it stays true forever.',
+    causes: [
+      'The counter is never changed inside the loop body.',
+      'The counter changes in the wrong direction, moving away from the exit.',
+      'The condition can never be false for the values the counter takes.',
+    ],
+    fix:
+      'Find the line that should change the counter. If it is missing, add it. If it is there, '
+      + 'check it moves the counter TOWARDS the condition failing rather than away from it. A for '
+      + 'loop puts the update in the header where it is much harder to lose.',
+    seo: SEO('java loop never ends infinite',
+      'Why a Java loop never ends, the three causes, and why a for loop makes the missing update '
+      + 'obvious. Beginner help.'),
+  },
+  {
+    code: 'G-16', after: '4.4',
+    handle: 'intro-java-help-collision-not-detected',
+    title: 'My collision is not being detected',
+    means: 'Either the actors never actually overlap, or the check is looking for the wrong thing.',
+    causes: [
+      'The class named in isTouching is not the class of the thing you are hitting.',
+      'The actor moves so far each frame that it jumps straight over the target.',
+      'The check is not inside act(), so it only ever ran once.',
+      'One of the actors was already removed from the world.',
+    ],
+    fix:
+      'Press Act one frame at a time and watch the two actors approach. If they pass through each '
+      + 'other in a single frame, reduce the move distance. If they visibly overlap and nothing '
+      + 'happens, check the class name in the isTouching call.',
+    seo: SEO('greenfoot collision not detected istouching',
+      'Why a Greenfoot collision is never detected, including actors that jump over each other in '
+      + 'one frame, and how to test it a frame at a time.'),
+  },
+  {
+    code: 'G-17', after: '4.5',
+    handle: 'intro-java-help-concurrent-modification-exception',
+    title: 'Java error: ConcurrentModificationException',
+    message: 'java.util.ConcurrentModificationException',
+    means: 'You changed a collection while looping over it. In Greenfoot that is almost always '
+      + 'removing actors from the world inside a loop over the list you got from the world.',
+    causes: [
+      'Calling removeObject inside a loop over getObjects.',
+      'Adding actors to the world inside a loop over its own list.',
+      'Removing from any list while an enhanced for is walking it.',
+    ],
+    fix:
+      'Remove them all at once with removeObjects(getObjects(Thing.class)). If you need to pick '
+      + 'and choose, collect the ones to remove into a separate list inside the loop, then remove '
+      + 'them after the loop has finished. The alarming name hides a one-line fix.',
+    seo: SEO('greenfoot concurrentmodificationexception fix',
+      'What ConcurrentModificationException means in Greenfoot, why removing actors inside a loop '
+      + 'causes it, and the one-line fix.'),
+  },
+  {
+    code: 'G-18', after: '5.2',
+    handle: 'intro-java-help-my-loop-misses-the-last-item',
+    title: 'My loop misses the last item, or one too many',
+    means: 'The loop boundary is off by one. Either it stops too early and misses an element, or '
+      + 'goes one past and throws.',
+    causes: [
+      'Using a hardcoded size that no longer matches the array.',
+      'Starting at 1 instead of 0, which silently skips the first element.',
+      'Using <= where < was needed, which goes one past the end.',
+    ],
+    fix:
+      'Use the standard shape and nothing else: for (int i = 0; i < a.length; i++). Start at 0, '
+      + 'stop before the length, and read the length from the array rather than typing a number '
+      + 'that can go stale.',
+    seo: SEO('java loop misses last element off by one',
+      'Why a Java loop skips the first or last element of an array, the three boundary mistakes, '
+      + 'and the one loop shape that avoids them.'),
+  },
+  {
+    code: 'G-19', after: '5.4',
+    handle: 'intro-java-help-my-array-changes-do-nothing',
+    title: 'My changes to the array do nothing',
+    means: 'You are almost certainly assigning to the loop variable of an enhanced for, which is a '
+      + 'copy of the value rather than the slot itself.',
+    causes: [
+      'Assigning to the variable in a for-each loop, which changes the copy and not the array.',
+      'Building a new array and never storing it anywhere.',
+      'Changing a local copy that was never written back.',
+    ],
+    fix:
+      'Use an index loop and assign into the slot: a[i] = something. An enhanced for can read '
+      + 'values but can never write them, and it fails silently rather than complaining.',
+    seo: SEO('java for each not changing array',
+      'Why assigning inside a Java for-each loop does not change the array, why it fails silently, '
+      + 'and the index loop that works.'),
+  },
+  {
+    code: 'G-20', after: '6.2',
+    handle: 'intro-java-help-my-tile-map-is-sideways',
+    title: 'My tile map renders sideways or mirrored',
+    means: 'The row and column indexes are swapped somewhere, so the grid renders transposed.',
+    causes: [
+      'addObject is being called with row and col the wrong way round. The world wants x first, '
+        + 'and x is the COLUMN.',
+      'The array is being read as map[col][row] instead of map[row][col].',
+      'The world is sized with rows as the width instead of columns.',
+    ],
+    fix:
+      'Check three places in order: the array read is map[row][col], the placement is '
+      + 'addObject(a, col, row), and the world is super(map[0].length, map.length, cell). Then '
+      + 'test with a map that is NOT square, because a square map hides this bug completely.',
+    seo: SEO('greenfoot tile map rendering sideways transposed',
+      'Why a Greenfoot tile map renders rotated or mirrored, the three places to check the index '
+      + 'order, and why a square test map hides it.'),
+  },
 ];
 
 // ── How-to recipes: the game-design surface ──────────────────────────────────
@@ -521,6 +655,79 @@ const RECIPES = [
     seo: SEO('greenfoot set up starting actors prepare',
       'How to place Greenfoot actors in code so the opening scene rebuilds itself every time you '
       + 'press Reset.'),
+  },
+  {
+    code: 'R-08', after: '4.7',
+    handle: 'intro-java-help-recipe-spawn-a-wave',
+    title: 'How to spawn a wave of enemies',
+    snippet:
+      'public void startWave()\n{\n'
+      + '    // One loop, any size. Change the 8 to change the wave.\n'
+      + '    for (int i = 0; i < 8; i++)\n    {\n'
+      + '        addObject(new Enemy(2), i * 2, 0);\n'
+      + '    }\n}\n\n'
+      + 'public void act()\n{\n'
+      + '    // Guarded, so it runs once per wave and not once per frame.\n'
+      + '    if (getObjects(Enemy.class).size() == 0)\n    {\n'
+      + '        startWave();\n'
+      + '    }\n}',
+    seo: SEO('greenfoot spawn wave of enemies loop',
+      'Working Greenfoot code to spawn an evenly spaced wave of enemies with one loop, and why the '
+      + 'loop must not live in act.'),
+  },
+  {
+    code: 'R-09', after: '5.6',
+    handle: 'intro-java-help-recipe-level-data-in-an-array',
+    title: 'How to put level data in an array',
+    snippet:
+      '// The index is WHERE, the value is WHAT.\n'
+      + 'int[] heights = {2, 5, 1, 4, 3};\n\n'
+      + 'for (int i = 0; i < heights.length; i++)\n{\n'
+      + '    addObject(new Wall(), i, heights[i]);\n}\n\n'
+      + '// A new level is now numbers, not code.',
+    seo: SEO('greenfoot level layout in an array',
+      'How to drive a Greenfoot level from array data so designing a new level means editing '
+      + 'numbers rather than writing code.'),
+  },
+  {
+    code: 'R-10', after: '6.5',
+    handle: 'intro-java-help-recipe-render-a-tile-map',
+    title: 'How to render a tile map',
+    snippet:
+      '// 0 floor, 1 wall, 2 coin\n'
+      + 'private int[][] map = {\n'
+      + '    {1, 1, 1, 1},\n'
+      + '    {1, 0, 2, 1},\n'
+      + '    {1, 1, 1, 1}\n'
+      + '};\n\n'
+      + 'public void buildMap()\n{\n'
+      + '    for (int row = 0; row < map.length; row++)\n    {\n'
+      + '        for (int col = 0; col < map[row].length; col++)\n        {\n'
+      + '            int code = map[row][col];\n'
+      + '            // col is x, row is y. They swap.\n'
+      + '            if (code == 1)      { addObject(new Wall(), col, row); }\n'
+      + '            else if (code == 2) { addObject(new Coin(), col, row); }\n'
+      + '        }\n    }\n}',
+    seo: SEO('greenfoot render tile map from 2d array',
+      'Working Greenfoot code to turn a 2D array of tile codes into a level, with the coordinate '
+      + 'swap and the legend comment.'),
+  },
+  {
+    code: 'R-11', after: '6.6',
+    handle: 'intro-java-help-recipe-grid-wall-collision',
+    title: 'How to stop a player walking through walls',
+    snippet:
+      '// Check the destination cell BEFORE moving.\n'
+      + 'public void tryMove(int dRow, int dCol)\n{\n'
+      + '    int newRow = getY() + dRow;\n'
+      + '    int newCol = getX() + dCol;\n\n'
+      + '    // inBounds FIRST, or the lookup throws.\n'
+      + '    if (inBounds(newRow, newCol) && map[newRow][newCol] != 1)\n    {\n'
+      + '        setLocation(newCol, newRow);\n'
+      + '    }\n}',
+    seo: SEO('greenfoot grid wall collision 2d array',
+      'How to stop a Greenfoot player walking through walls by checking the destination cell in a '
+      + '2D array, with the bounds check in the right order.'),
   },
 ];
 

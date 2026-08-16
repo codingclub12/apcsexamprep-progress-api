@@ -420,8 +420,11 @@ console.log(`         when live: ${expCfu} cfu + ${expGapItems} gap (${expGapPts
 ok('10.3 every lesson contributes a quiz', expQuizItems === LESSONS.length, expQuizItems);
 ok('10.4 gap items are one row per lesson, not one row per hole',
   expGapItems === LESSONS.filter((l) => l.gap).length, expGapItems);
+// The upper bound is a smoke alarm for a runaway generator, not a design limit.
+// The full six-unit course lands near 480 points, which is about 80 per unit and
+// is what a year-long course should be worth.
 ok('10.5 the authored units are worth a sane number of points, not thousands',
-  totalPoints > 40 && totalPoints < 400, totalPoints);
+  totalPoints > 40 && totalPoints < 900, totalPoints);
 
 // ── 11. The getting-unstuck pages render correctly ───────────────────────────
 //  These are the pages a stranger finds by searching their error message, so
