@@ -11,7 +11,7 @@
 //  1. `=` and `==` are different, and the difference is invisible until it is
 //     catastrophic. Every lesson from 2.3 onwards repeats it.
 //  2. Integer division truncates. 7 / 2 is 3, and a student who does not know
-//     that will chase a "wrong maths" bug that is not a bug.
+//     that will chase a "wrong math" bug that is not a bug.
 //
 //  Unit 2 is also where the course stops being safe. In Unit 1 every wrong
 //  answer was a compiler error. From `if` onwards a program can be perfectly
@@ -159,7 +159,7 @@ const LESSONS = [
       {
         wrong: 'Assigning a new value adds to the old one.',
         right: 'Assigning REPLACES. `score = 10;` throws away whatever was there.',
-        why: 'Adding is `score = score + 10;`, which looks like nonsense as maths and is the next '
+        why: 'Adding is `score = score + 10;`, which looks like nonsense as math and is the next '
           + 'lesson.',
       },
     ],
@@ -262,7 +262,7 @@ const LESSONS = [
         stem: 'Which line correctly changes an EXISTING variable called lives to 2?',
         options: ['lives = 2;', 'int lives = 2;', 'lives == 2;', 'set lives 2;'],
         answer: 0,
-        why: 'The type appears only at the declaration; afterwards you use the name alone.',
+        why: 'The type appears only at the declaration; afterward you use the name alone.',
       },
     ],
 
@@ -365,7 +365,7 @@ const LESSONS = [
           'int score = 10;\n'
           + 'score = score + 1;   // score is now 11',
         note:
-          'As maths, `score = score + 1` is nonsense. As Java it is an instruction, and the order '
+          'As math, `score = score + 1` is nonsense. As Java it is an instruction, and the order '
           + 'is what makes it work:\n\n'
           + '1. Work out the RIGHT side using the current value: 10 + 1 is 11.\n'
           + '2. Put that result into the box on the LEFT.\n\n'
@@ -412,7 +412,7 @@ const LESSONS = [
         stem: 'What is the value of `9 / 2` in Java, when both are ints?',
         options: ['4.5', '5', '4', '4.0'],
         answer: 2,
-        why: 'Integer division truncates towards zero, so the .5 is discarded.',
+        why: 'Integer division truncates toward zero, so the .5 is discarded.',
       },
       {
         id: 'cfu-2',
@@ -590,7 +590,7 @@ const LESSONS = [
       },
       {
         shot: SHOT('2.3', 2, 'A side-by-side comparison of a single equals and a double equals '
-          + 'with their meanings labelled.'),
+          + 'with their meanings labeled.'),
         code:
           'score = 10;   // PUTS 10 into score\n'
           + 'score == 10;  // ASKS whether score is 10',
@@ -740,7 +740,7 @@ const LESSONS = [
           'They assigned instead of comparing, so it is an instruction where a question was needed',
           'score cannot be 10',
           'if cannot use numbers',
-          'The brackets are wrong',
+          'The parentheses are wrong',
         ],
         answer: 0,
         why: 'One = assigns. An if needs something that is true or false.',
@@ -780,7 +780,7 @@ const LESSONS = [
         },
         {
           q: 'Why does my if statement always run?',
-          a: 'Check for a semicolon straight after the closing bracket. `if (x > 5);` ends the if '
+          a: 'Check for a semicolon straight after the closing parenthesis. `if (x > 5);` ends the if '
             + 'immediately, so the block after it always runs.',
         },
         {
@@ -813,7 +813,7 @@ const LESSONS = [
     steps: [
       {
         shot: SHOT('2.4', 1, 'A simple if statement in an editor with the condition and body '
-          + 'labelled.'),
+          + 'labeled.'),
         code:
           'if (score > 100)\n'
           + '{\n'
@@ -821,7 +821,7 @@ const LESSONS = [
           + '}',
         note:
           'Read it as one sentence: IF score is greater than 100, play the sound.\n\n'
-          + 'The condition goes in round brackets. The body goes in curly braces. If the condition '
+          + 'The condition goes in parentheses. The body goes in curly braces. If the condition '
           + 'is false, the whole body is skipped and the program carries straight on.',
       },
       {
@@ -980,9 +980,9 @@ const LESSONS = [
       {
         id: 'q3',
         stem: 'Where does the condition of an if statement go?',
-        options: ['In curly braces', 'After the body', 'In square brackets', 'In round brackets'],
+        options: ['In curly braces', 'After the body', 'In square brackets', 'In parentheses'],
         answer: 3,
-        why: 'Round brackets hold the condition; curly braces hold the body.',
+        why: 'Parentheses hold the condition; curly braces hold the body.',
       },
       {
         id: 'q4',
@@ -1001,7 +1001,7 @@ const LESSONS = [
     stuck: ['E-04', 'E-09', 'G-07'],
 
     recap: [
-      'Condition in round brackets, body in curly braces.',
+      'Condition in parentheses, body in curly braces.',
       'Exactly one branch of an if/else runs.',
       'Code after the closing brace runs either way.',
       'A semicolon after the condition silently breaks the if. No error, ever.',
@@ -1086,7 +1086,7 @@ const LESSONS = [
       },
       {
         shot: SHOT('2.5', 2, 'The same chain with the conditions in the wrong order, and the '
-          + 'unreachable branches marked.'),
+          + 'unreachable branches graded.'),
         code:
           '// WRONG. Everything after the first branch is unreachable.\n'
           + 'if (score >= 60)\n'
@@ -1336,7 +1336,7 @@ const LESSONS = [
           + 'right: valid x values run from 0 to getWidth() - 1, and that is precisely what this '
           + 'produces.\n\n'
           + 'If the bound had been inclusive, this line would occasionally place a coin one cell '
-          + 'outside the world. The exclusive rule is doing you a favour here.',
+          + 'outside the world. The exclusive rule is doing you a favor here.',
       },
       {
         shot: SHOT('2.6', 4, 'A rare event triggered by comparing a random number to a small '
@@ -1575,7 +1575,7 @@ const LESSONS = [
           + '    if (Greenfoot.isKeyDown("down"))  { setLocation(getX(), getY() + 3); }\n'
           + '}',
         note:
-          'All four directions. Note "up" SUBTRACTS from y, because y grows downwards. That is the '
+          'All four directions. Note "up" SUBTRACTS from y, because y grows downward. That is the '
           + 'rule from 1.4 finally paying off.\n\n'
           + 'Look carefully at what these are: four SEPARATE if statements. Not a chain. That is '
           + 'deliberate and it is the next step.',
@@ -1628,11 +1628,11 @@ const LESSONS = [
       },
       {
         wrong: '"up" should increase y.',
-        right: 'y grows downwards, so up SUBTRACTS.',
+        right: 'y grows downward, so up SUBTRACTS.',
         why: 'The single most common inverted-control bug, straight out of 1.4.',
       },
       {
-        wrong: 'Key names can be capitalised however you like.',
+        wrong: 'Key names can be capitalized however you like.',
         right: 'They are lower case strings: "left", "right", "up", "down", "space", "a".',
         why: 'A wrong key name is not an error. It simply never matches, and the key does nothing.',
       },
@@ -1649,7 +1649,7 @@ const LESSONS = [
           'move(-3);',
         ],
         answer: 1,
-        why: 'y grows downwards, so a smaller y is higher up the screen.',
+        why: 'y grows downward, so a smaller y is higher up the screen.',
       },
       {
         id: 'cfu-2',

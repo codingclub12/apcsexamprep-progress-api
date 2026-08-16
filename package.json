@@ -73,7 +73,8 @@
     "smoke:ijcsv": "node smoke/intro-java-pages-csv.js",
     "ijpages": "node scripts/intro-java-pages-csv.js",
     "smoke:verifyboard": "node smoke/verify-board.js",
-    "snapshot": "node scripts/snapshot-live-page.js"
+    "snapshot": "node scripts/snapshot-live-page.js",
+    "ijredirects": "node scripts/intro-java-redirects-csv.js"
   },
   "keywords": [],
   "author": "",
