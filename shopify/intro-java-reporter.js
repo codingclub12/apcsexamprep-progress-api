@@ -4,7 +4,7 @@
  * Drop on intro-java lesson pages. Owns every graded interaction on them:
  * concept checks, the fill-in-the-code exercise, and the lesson quiz.
  *
- * ── WHY THIS IS NOT apcs-reporter.js ────────────────────────────────────────
+ * -- WHY THIS IS NOT apcs-reporter.js ----------------------------------------
  * apcs-reporter.js binds the CSA widget system (.apcs-ex / .apcsa-mastery) and
  * posts a score the PAGE worked out, because CSA pages carry their own answer
  * key in the markup.
@@ -20,7 +20,7 @@
  * That is a different contract from the CSA reporter, not a variation on it,
  * which is why it is a separate file rather than a branch inside that one.
  *
- * ── WHAT IT HOOKS, WITH NO PAGE JS AT ALL ───────────────────────────────────
+ * -- WHAT IT HOOKS, WITH NO PAGE JS AT ALL -----------------------------------
  *   [data-role="check-cfu"]   grades every concept check on the page, one
  *                             attempt per check (each is its own manifest item)
  *   [data-role="check-gap"]   grades the gap exercise, one attempt
@@ -30,7 +30,7 @@
  * renderer changes its class names, this file changes with it; smoke/
  * intro-java-reporter.js asserts the two agree.
  *
- * ── WHAT IT NEVER DOES ──────────────────────────────────────────────────────
+ * -- WHAT IT NEVER DOES ------------------------------------------------------
  * It does not know any answer, so it cannot reveal one. It does not grade
  * anything locally. It never posts a score field; the server ignores one
  * anyway. Gap text is sent for grading and never stored by anything.
@@ -117,7 +117,7 @@
   // slot carries `.ij-summary` and is the ONLY one a whole-item message goes to.
   function summaryOf(section) { return section.querySelector('.ij-summary'); }
 
-  // ── Concept checks ──────────────────────────────────────────────────────────
+  // -- Concept checks ----------------------------------------------------------
   // Each check is its own manifest item worth one point, so each posts its own
   // attempt. They are sent in parallel and the button re-enables when all settle.
   function checkCfus(btn) {
@@ -168,7 +168,7 @@
     });
   }
 
-  // ── Fill in the code ────────────────────────────────────────────────────────
+  // -- Fill in the code --------------------------------------------------------
   // One attempt for the whole exercise. The typed text is sent for grading and
   // is never stored by anything at either end.
   function checkGap(btn) {
@@ -215,7 +215,7 @@
     });
   }
 
-  // ── Quiz ────────────────────────────────────────────────────────────────────
+  // -- Quiz --------------------------------------------------------------------
   // One attempt for the whole quiz, one point per question.
   function submitQuiz(btn) {
     var section = btn.closest('.ij-quiz');
