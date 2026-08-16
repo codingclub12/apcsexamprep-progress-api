@@ -110,13 +110,9 @@ added to the renderer that nobody wired up.
 - **Screenshots: 0 of 158 taken.** Pages render an "On your screen" instruction
   in place of each missing image, so this does not block the import. Each shot
   added is one line in `seed/intro-java-shots.js`.
-- **`INTRO_JAVA_PAGES_LIVE` is still `false`** in `scripts/seed-manifest.js`.
-  It must flip in the same pass that imports the pages, then the seed runs with
-  `--update`. Flipping it early puts earnable-looking points in every denominator
-  that nobody can reach.
-- **The reporter is not deployed.** It has to land in the theme repo at
-  `assets/intro-java-reporter.js` and be included on intro-java page templates.
-  Until then the buttons are still inert. `shopify/` here is a mirror.
+- ~~`INTRO_JAVA_PAGES_LIVE` is still `false`~~ **Done later the same day.** See
+  the closing section.
+- ~~The reporter is not deployed.~~ **Done later the same day**, theme PR #47.
 - **Nav.** The course hub is not linked from the main menu.
 - **Not built, previously flagged:** Judge0 test cases for the code band, and the
   six project pages.
@@ -242,3 +238,67 @@ node scripts/snapshot-live-page.js pages.json     # writes the snapshot
 git add shopify/page-snapshots/ && git commit
 node scripts/intro-java-pages-csv.js pages.csv --live pages.json
 ```
+
+
+---
+
+## Closing status, end of 2026-08-16
+
+Everything below was verified against the live Shopify Admin API or the theme
+repo, not against this repo's own output.
+
+### Shipped
+
+| Piece | State |
+|---|---|
+| 90 pages | Live. Imported, then re-imported twice for the link and FAQ fixes |
+| `POST /api/progress/choice` | Deployed, Railway boot confirmed |
+| Manifest gate | Open. 318 intro-java rows, 476 graded points |
+| Reporter | Live. Theme `main` `1b1f142`, deploys via Shopify GitHub sync |
+| Visit tracking | Fixed in the same theme PR. See below |
+
+### The visit gate, which is the finding worth remembering
+
+The sitewide track block in `layout/theme.liquid` read:
+
+```js
+if (!/^ap-/.test(seg)) return;
+```
+
+Every course handle starts `ap-` except this one, whose lessons are
+`intro-java-lesson-{U}-{L}-{slug}`. So no intro-java page had ever recorded a
+visit, while `course_manifest` carried 42 intro-java visit rows as denominators.
+
+Two things about how that was found are worth keeping. First, it was found by
+reading the theme to answer a different question ("how do I ship the reporter"),
+not by any check. Second, the sequencing was wrong: the manifest gate was opened
+after verifying the GRADED items were reachable in both directions, and the
+visit path was never checked. The rows predate this session, but the commit that
+opened the gate asserted the live pages made them correct, and for visits that
+was not true until theme PR #47.
+
+The general shape: a denominator nothing can post to fails silently at both
+ends. No error in the theme, no error in the API, and the only symptom is a
+class marked down for a reason no teacher can see.
+
+### Still open
+
+- **Screenshots: 0 of 158.** Missing shots render as "On your screen"
+  instructions, so nothing is blocked. Each one added is a line in
+  `seed/intro-java-shots.js`.
+- **Nav.** The course hub is not linked from the main menu.
+- **End-to-end proof.** Nobody has yet opened a lesson in a browser, answered a
+  concept check, and seen the row land. Every check in both repos is static
+  analysis or an Admin API read; storefront egress is blocked from the agent
+  container, so this one is Tanner's to do.
+- **Help index page.** The help breadcrumb dropped to two levels because
+  `/pages/intro-java-help` was never built. Adding it would give 41 pages a
+  parent and let the middle crumb come back.
+- **Not built, previously flagged:** Judge0 test cases for the code band, and
+  the six project pages.
+
+### What no longer needs saying
+
+Three defect classes now have permanent checks rather than a note here:
+dangling internal links (11.5), generated FAQ question text (11.6), and the
+reporter drifting from either the page renderer or its theme copy (1.5 to 1.23).
