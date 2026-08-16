@@ -154,8 +154,71 @@ for (const [course, entry] of Object.entries(H.CONTENT_COVERAGE)) {
 
 // A SHIPPED course must never sit on the exempt list. Exempt asserts that nothing
 // is being authored against the course, and for networking that is false.
-ok('4.2 networking is NOT exempt: it is shipped, so an unguarded task must stop',
-  H.contentCoverageFor('networking') === 'pending', H.contentCoverageFor('networking'));
+ok('4.2 networking is NOT exempt: it is shipped',
+  H.contentCoverageFor('networking') !== 'exempt', H.contentCoverageFor('networking'));
+// It now carries the cross-course production rules, so the block is injected
+// rather than the whole task being stopped. The stop is narrower but must still
+// be there: authoring lesson CONTENT is what is forbidden while the curriculum
+// half is unrecorded.
+ok('4.2b networking still names what is NOT recorded and forbids inferring it',
+  /NOT RECORDED YET/.test(H.CONTENT_COVERAGE.networking.block)
+  && /ask rather than infer/i.test(H.CONTENT_COVERAGE.networking.block));
+// The guard that matters most on this block: no invented source document. A
+// plausible-looking filename injected verbatim is worse than an admitted gap,
+// because an agent will cite it and nobody checks whether it exists.
+ok('4.2c networking names NO source-of-truth document, because none is recorded',
+  !/course-and-exam-description|\.pdf\b/i.test(H.CONTENT_COVERAGE.networking.block),
+  (H.CONTENT_COVERAGE.networking.block.match(/\S*\.pdf\S*/i) || [])[0]);
+ok('4.2d networking is flagged for review until the curriculum lands',
+  typeof H.CONTENT_COVERAGE.networking.review === 'string'
+  && H.CONTENT_COVERAGE.networking.review.length > 40);
+// The transferable half is the whole point of composing this block from the
+// others. If these stop being injected, networking work loses the posture rules.
+ok('4.2e networking carries the zero-PII rule',
+  /NEVER STORE STUDENT FREE TEXT/.test(H.CONTENT_COVERAGE.networking.block));
+ok('4.2f networking carries the server-side answer key rule',
+  /SERVER-SIDE/.test(H.CONTENT_COVERAGE.networking.block));
+ok('4.2g networking carries the single-source speaker-notes rule',
+  /student-addressed voice/i.test(H.CONTENT_COVERAGE.networking.block));
+ok('4.2h networking forbids importing another course structure to fill the gap',
+  /Do not import AP Cybersecurity/i.test(H.CONTENT_COVERAGE.networking.block));
+
+// The block quotes the shipped structure rather than authoring it, which is only
+// worth anything if the quote stays true. utils.js COURSES is what the visit
+// denominators are generated from, so if a unit is renamed there and the block
+// is not updated, the compiled prompt starts telling every agent a title that no
+// longer exists. Read as TEXT, like the write-guard enums above, so this suite
+// keeps running with nothing installed.
+function networkingUnitsFromUtils() {
+  const src = fs.readFileSync(path.join(__dirname, '..', 'utils.js'), 'utf8');
+  const start = src.indexOf("'ap-networking': {");
+  if (start < 0) throw new Error("could not find 'ap-networking' in utils.js");
+  const chunk = src.slice(start, start + 2000);
+  const labels = [...chunk.matchAll(/label: '(Unit \d+: [^']+)'/g)].map((m) => m[1]);
+  const lessonLists = [...chunk.matchAll(/lessons: \[([^\]]*)\]/g)]
+    .map((m) => m[1].split(',').filter((x) => x.trim()).length);
+  return { labels, topics: lessonLists.reduce((a, b) => a + b, 0), unitCount: labels.length };
+}
+const netCfg = networkingUnitsFromUtils();
+const netBlock = H.CONTENT_COVERAGE.networking.block;
+
+ok('4.2i the block agrees with utils.js on the unit COUNT',
+  new RegExp(`\\b(FOUR|${netCfg.unitCount})\\b`, 'i').test(netBlock) && netCfg.unitCount === 4,
+  netCfg.unitCount);
+ok('4.2j the block agrees with utils.js on the TOPIC count',
+  netBlock.includes(String(netCfg.topics)) && netCfg.topics === 22, netCfg.topics);
+for (const label of netCfg.labels) {
+  // The block writes "Unit 1 Managing My Connections" where utils.js writes
+  // "Unit 1: Managing My Connections", so compare on the title half.
+  const title = label.split(':').slice(1).join(':').trim();
+  ok(`4.2k the block carries the shipped title: ${title}`, netBlock.includes(title), title);
+}
+ok('4.2l the block cites where the structure came from, so a reader can check',
+  /utils\.js/.test(netBlock) && /seed-manifest\.js/.test(netBlock));
+ok('4.2m the block carries the lesson_id contract that silently drops grades',
+  /LESSON_ID IS A CONTRACT/.test(netBlock) && /silently dropped/i.test(netBlock));
+ok('4.2n the block warns off seeding ungraded items into the denominator',
+  /baseline diagnostic/i.test(netBlock) && /NEVER ADD AN UNGRADED THING/.test(netBlock));
 ok('4.3 cyber has a real rulebook now, not an exemption',
   H.contentCoverageFor('cyber') === 'covered', H.contentCoverageFor('cyber'));
 ok('4.4 a course in the block map is never also on the exempt list',
@@ -175,10 +238,16 @@ for (const course of COURSES) {
 
 ok('5.1 ACCEPTANCE: surface=content course=cyber returns a non-empty hazard array',
   H.hazardsFor({ surface: 'content', course: 'cyber', title: 'Draft 3.2' }).length > 0);
-ok('5.2 a pending course compiles a STOP that forbids guessing',
-  /STOP/.test(bodies({ surface: 'content', course: 'networking', title: 'x' }))
-  && /source-of-truth/.test(bodies({ surface: 'content', course: 'networking', title: 'x' }))
-  && /from memory/.test(bodies({ surface: 'content', course: 'networking', title: 'x' })));
+// The pending machinery is tested directly. It used to be exercised through
+// networking, which has since gained a block; binding this assertion to whichever
+// course happens to be uncovered today means it silently stops testing anything
+// the moment that course is covered.
+const pendingSample = H.pendingBlock('some-new-course', 'Reason the rulebook is missing.');
+ok('5.2 the pending mechanism still compiles a STOP that forbids guessing',
+  /STOP/.test(pendingSample)
+  && /source-of-truth/.test(pendingSample)
+  && /from memory/.test(pendingSample)
+  && /some-new-course/.test(pendingSample), pendingSample.slice(0, 80));
 ok('5.3 an UNKNOWN course compiles a louder STOP rather than nothing',
   H.hazardsFor({ surface: 'content', course: 'ap-basketweaving', title: 'x' }).length > 0
   && /no row in CONTENT_COVERAGE/.test(bodies({ surface: 'content', course: 'ap-basketweaving', title: 'x' })));
