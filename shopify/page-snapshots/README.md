@@ -22,6 +22,49 @@ All three are the body of `gid://shopify/Page/132079550679`
 Each file is byte-identical to what was actually served, confirmed by re-fetching
 the live body after each publish and diffing.
 
+## Greenfoot Basics, before the intro-java course hub takes the slug
+
+`greenfoot-basics-beginner-greenfoot-projects-and-tutorials.before-intro-java.html`
+is the body of `gid://shopify/Page/126393549015` as it stood on 2026-08-16,
+`createdAt` 2025-09-15T05:13:56Z, `updatedAt` 2026-04-02T22:42:41Z.
+
+The intro-java course hub takes that handle over to inherit its search
+authority, and `scripts/intro-java-pages-csv.js` refuses to write a sheet
+containing that row until this file exists.
+
+**Read this before trusting it as a rollback.** Unlike the Unit 1 exam
+snapshots above, this one is NOT byte-identical. It was written out of an Admin
+API read during the session that built the course, rather than piped through
+`scripts/snapshot-live-page.js`, because that session had no network route to
+the store from its container. Blank lines inside the `<style>` block carried
+trailing spaces on the live page and do not here. Nothing else differs, and the
+difference is insignificant to CSS, so publishing this file would restore a
+functionally identical page.
+
+What it is verified to contain: 11 project cards, all 11 project titles, 11
+tutorial video links, 7 Google Drive starter-file folders, one h1.
+
+To replace it with a true byte copy before importing:
+
+```
+# query { pages(first: 5, query: "handle:greenfoot-basics-beginner-greenfoot-projects-and-tutorials") {
+#   nodes { id handle title updatedAt body } } }
+node scripts/snapshot-live-page.js pages.json --force
+```
+
+`--force` is required precisely because a differing snapshot already exists; the
+script will not discard one silently.
+
+Separately, the projects on that page do not depend on this file surviving.
+`seed/intro-java-projects-library.js` holds all 11 with their links, and the new
+hub renders them, so the assets are safe even if a rollback never happens.
+
+Three links on the live page are 404s and the replacement fixes all three:
+`/pages/ap-computer-science-a` (in the breadcrumb and the primary CTA button,
+real handle `ap-csa`), `/pages/ap-csa-study-guide` (real handle
+`ap-csa-study-guides`), and `/pages/ap-csa-frq-solutions` (real
+`ap-csa-frq-archive`).
+
 ## Rolling back
 
 Publish the chosen snapshot back over the page body with `pageUpdate` on page id

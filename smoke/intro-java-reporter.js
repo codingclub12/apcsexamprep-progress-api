@@ -246,9 +246,30 @@ const ATTRS_READ = literals(REPORTER, ['getAttribute']);
   ok('1.20 a failed submission is reported, never swallowed',
     /function reportFailure/.test(REPORTER)
     && (REPORTER.match(/reportFailure\(/g) || []).length >= 4);
-  ok('1.21 pure ASCII and no em-dashes, per repo convention',
+  // STRICT ASCII, with no exemption for the box-drawing banners the rest of this
+  // repo uses. This file also ships to the theme repo as assets/
+  // intro-java-reporter.js, and that repo requires pure ASCII in every file:
+  // every reporter already there has zero non-ASCII bytes. One file has to
+  // satisfy both conventions, so it satisfies the stricter one.
+  ok('1.21 strictly pure ASCII, because the theme repo requires it',
     // eslint-disable-next-line no-control-regex
-    !/[^\x00-\x7F]/.test(REPORTER.replace(/[─-╿]/g, '')) && !REPORTER.includes('—'));
+    !/[^\x00-\x7F]/.test(REPORTER), (REPORTER.match(/[^\x00-\x7F]/g) || []).slice(0, 5));
+  ok('1.22 no em-dashes, per repo convention', !REPORTER.includes('—'));
+
+  // ── The two copies ─────────────────────────────────────────────────────────
+  // This file ships to the theme repo as assets/intro-java-reporter.js and that
+  // is the copy the storefront actually loads. shopify/ here is the mirror.
+  // Editing one and not the other means the tests pin a file no browser runs,
+  // which is the single most useless place a green suite can be. Checked only
+  // when the theme repo is checked out beside this one; skipped, loudly, when it
+  // is not, because a check that silently passes on absence is not a check.
+  const THEME_ASSET = '/workspace/apcsexamprep-theme/assets/intro-java-reporter.js';
+  if (fs.existsSync(THEME_ASSET)) {
+    ok('1.23 the theme asset is byte-identical to this mirror',
+      fs.readFileSync(THEME_ASSET, 'utf8') === REPORTER);
+  } else {
+    console.log('  [SKIP] 1.23 theme repo not checked out, mirror sync unverified');
+  }
 
   // ── 2. POST /api/progress/choice ───────────────────────────────────────────
   section('2. POST /api/progress/choice');

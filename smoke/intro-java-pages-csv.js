@@ -34,32 +34,44 @@ const { PUBLISHED_AT, INHERITED, snapshotFor } = require('../scripts/intro-java-
 
 // ── SETUP: the takeover row's rollback snapshot ──────────────────────────────
 // The course hub replaces a live page, and the generator refuses to write ANY
-// sheet until that page's rollback snapshot is on disk. That guard is doing its
-// job in the repo right now, which means this suite has to stand one up itself
-// to test anything else at all.
+// sheet until that page's rollback snapshot is on disk.
 //
-// The fake is removed in a finally block, and process exit handlers on top of
-// that. A fake rollback file left behind would satisfy the guard on a real run
-// with a body nobody could actually roll back to, which is worse than the guard
-// never existing.
+// The snapshot is now committed, so most of this suite runs against the real
+// one. Testing the REFUSAL still needs it gone, so section 6 hides it and puts
+// it back. That is the only file operation here that could lose real work, so
+// the original bytes are held in memory and restored from an exit handler as
+// well as inline: a crashed run must not leave the repo without its only
+// rollback path.
 const TAKEOVER = [...INHERITED.keys()][0];
 const SNAP = snapshotFor(TAKEOVER);
-const SNAP_PREEXISTING = fs.existsSync(SNAP);
+const SNAP_EXISTS = fs.existsSync(SNAP);
+const SNAP_BYTES = SNAP_EXISTS ? fs.readFileSync(SNAP) : null;
+// Used only when no real snapshot is committed, so the suite still runs on a
+// checkout that predates it.
 const FAKE_SNAP = '<h1>pretend live body</h1><p>' + 'x'.repeat(900) + '</p>';
 
-function putFakeSnapshot() {
+function putSnapshot() {
   fs.mkdirSync(path.dirname(SNAP), { recursive: true });
-  fs.writeFileSync(SNAP, FAKE_SNAP);
+  fs.writeFileSync(SNAP, SNAP_BYTES === null ? FAKE_SNAP : SNAP_BYTES);
 }
-function removeFakeSnapshot() {
-  // Never delete a REAL snapshot somebody committed. Only ever our own fake.
-  if (SNAP_PREEXISTING) return;
+function hideSnapshot() {
+  try { if (fs.existsSync(SNAP)) fs.rmSync(SNAP); } catch (e) { /* nothing to do */ }
+}
+function restoreSnapshot() {
   try {
-    if (fs.existsSync(SNAP) && fs.readFileSync(SNAP, 'utf8') === FAKE_SNAP) fs.rmSync(SNAP);
+    if (SNAP_BYTES !== null) {
+      // Put the committed bytes back exactly, always.
+      fs.mkdirSync(path.dirname(SNAP), { recursive: true });
+      fs.writeFileSync(SNAP, SNAP_BYTES);
+    } else if (fs.existsSync(SNAP) && fs.readFileSync(SNAP, 'utf8') === FAKE_SNAP) {
+      // Never leave our fake behind: it would satisfy the guard on a real run
+      // with a body nobody could actually roll back to.
+      fs.rmSync(SNAP);
+    }
   } catch (e) { /* nothing left to do at exit */ }
 }
-process.on('exit', removeFakeSnapshot);
-process.on('uncaughtException', (e) => { removeFakeSnapshot(); console.error(e); process.exit(1); });
+process.on('exit', restoreSnapshot);
+process.on('uncaughtException', (e) => { restoreSnapshot(); console.error(e); process.exit(1); });
 
 let pass = 0, fail = 0;
 function ok(name, cond, detail) {
@@ -97,9 +109,21 @@ const out = path.join(tmp, 'pages.csv');
 const script = path.join(__dirname, '..', 'scripts', 'intro-java-pages-csv.js');
 
 section('1. The sheet generates at all');
-ok('1.0 no real rollback snapshot is committed, so the guard is live in the repo',
-  !SNAP_PREEXISTING, SNAP);
-putFakeSnapshot();
+// The rollback path for the one destructive row. Its absence used to be the
+// thing asserted here; now that it is committed, what matters is that it is a
+// real page body and not a placeholder somebody dropped in to get past the guard.
+ok('1.0 the takeover rollback snapshot is committed', SNAP_EXISTS, SNAP);
+if (SNAP_EXISTS) {
+  const snap = SNAP_BYTES.toString('utf8');
+  ok('1.0a it is a substantial page body, not a stub', snap.length > 5000, snap.length);
+  ok('1.0b it still holds the project tutorial links that exist nowhere else',
+    (snap.match(/youtu/g) || []).length >= 11
+    && (snap.match(/drive\.google/g) || []).length >= 7,
+    { youtube: (snap.match(/youtu/g) || []).length,
+      drive: (snap.match(/drive\.google/g) || []).length });
+  ok('1.0c it is one page, with a single h1', (snap.match(/<h1[\s>]/g) || []).length === 1);
+}
+putSnapshot();
 let stdout = '';
 try {
   stdout = execFileSync(process.execPath, [script, out], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
@@ -207,7 +231,7 @@ ok('6.3 it is the course hub, not a lesson or a help page',
 // Pull the snapshot back out to prove the refusal, then restore it. This is the
 // repo's real state: the import cannot run until somebody saves that page.
 const snapPath = SNAP;
-removeFakeSnapshot();
+hideSnapshot();
 ok('6.4 with no snapshot on disk the guard is armed', !fs.existsSync(snapPath), snapPath);
 const noSnap = path.join(tmp, 'nosnap.csv');
 let snapRefused = false, snapReason = '';
@@ -222,8 +246,8 @@ ok('6.6 the abort says where to put the snapshot', snapReason.includes('page-sna
 ok('6.7 and says why it matters', /no version history/i.test(snapReason));
 ok('6.8 nothing is written', !fs.existsSync(noSnap));
 
-// With a snapshot present the run proceeds, and announces the takeover loudly.
-putFakeSnapshot();
+// With the snapshot back the run proceeds, and announces the takeover loudly.
+putSnapshot();
 
 const LIVE_TITLE = 'Greenfoot Basics: Java Game Programming - Projects and Tutorials';
 const takeoverLive = path.join(tmp, 'live-takeover.json');
@@ -246,13 +270,16 @@ ok('6.11 the rename is printed so it cannot happen by accident',
   takeoverOut.slice(0, 300));
 ok('6.12 the rollback file is named in the output', takeoverOut.includes('page-snapshots'));
 
-// Leave no fake snapshot behind: a bogus rollback file in the repo would let a
-// real import proceed with nothing worth rolling back to.
-removeFakeSnapshot();
-ok('6.13 the test cleans up its fake snapshot', !fs.existsSync(snapPath), snapPath);
+// The committed snapshot must come back byte for byte. This suite briefly
+// deletes the repo's only rollback path, so proving it restored it is not
+// optional.
+restoreSnapshot();
+ok('6.13 the committed snapshot is restored byte for byte',
+  SNAP_EXISTS ? fs.readFileSync(snapPath).equals(SNAP_BYTES) : !fs.existsSync(snapPath),
+  snapPath);
 
 section('7. Selecting part of the course');
-putFakeSnapshot();
+putSnapshot();
 for (const [kind, expected] of [['hub', 7], ['lesson', 42], ['help', 41]]) {
   const f = path.join(tmp, `${kind}.csv`);
   execFileSync(process.execPath, [script, f, '--kind', kind], { stdio: ['ignore', 'pipe', 'pipe'] });
@@ -260,7 +287,7 @@ for (const [kind, expected] of [['hub', 7], ['lesson', 42], ['help', 41]]) {
   ok(`7.x --kind ${kind} writes ${expected} rows`, n === expected, n);
 }
 
-removeFakeSnapshot();
+restoreSnapshot();
 fs.rmSync(tmp, { recursive: true, force: true });
 console.log(`\n  ${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);
