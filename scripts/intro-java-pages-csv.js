@@ -5,10 +5,13 @@
 //  WHAT THIS SHIPS
 //  Ninety pages, built from the bank by lib/intro-java-build.js:
 //
-//      1  course hub      intro-java-with-greenfoot
-//      6  unit hubs       intro-java-unit-N-...
+//      1  course hub      greenfoot-basics-beginner-greenfoot-projects-and-tutorials
+//      6  unit hubs       intro-java-unit-N
 //     42  lessons         intro-java-lesson-U-L-slug
 //     41  help pages      intro-java-help-{error,gotcha,recipe}-slug
+//
+//  The course hub handle is a legacy slug it takes over on purpose. See
+//  INHERITED below and the comment on COURSE_HANDLE in lib/intro-java-hub-page.js.
 //
 //  WHY IT IS NOT scripts/page-body-csv.js
 //  That script UPDATES three pages that already exist, and its whole safety
@@ -48,8 +51,33 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 const fs = require('fs');
+const path = require('path');
 const { allPages } = require('../lib/intro-java-build');
 const { pageFromHandle } = require('../utils');
+
+const ROOT = path.join(__dirname, '..');
+
+// ── HANDLES THAT ARE SUPPOSED TO ALREADY EXIST ───────────────────────────────
+// Exactly one page here is a takeover rather than a creation. The course hub
+// adopts a slug that has carried a Greenfoot project library since 2025-09-15,
+// to inherit its links and its age rather than start from nothing.
+//
+// That makes it the single most dangerous row in the sheet, so it is the only
+// one allowed to collide, it has to be named here to be allowed, and it drags
+// two extra requirements with it (below): a snapshot on disk first, and the
+// live title printed so a rename cannot happen by accident.
+//
+// Everything else colliding is still fatal.
+const INHERITED = new Map([
+  ['greenfoot-basics-beginner-greenfoot-projects-and-tutorials',
+    'course hub takeover: seed/intro-java-projects-library.js carries the 11 projects forward'],
+]);
+
+// Shopify keeps no usable version history for a page body, so the snapshot in
+// the repo IS the rollback path. Requiring it before the sheet will write is
+// the difference between that being a practice and being a rule.
+const snapshotFor = (handle) =>
+  path.join(ROOT, 'shopify', 'page-snapshots', `${handle}.before-intro-java.html`);
 
 // Past-dated on purpose, per the house Matrixify rule. A fixed literal rather
 // than a computed date so two runs a month apart produce the same sheet.
@@ -150,6 +178,7 @@ function main(argv) {
   if (!pages.length) { console.error('no pages selected'); process.exit(2); }
 
   const problems = [];
+  const takeovers = [];
 
   // Handle uniqueness across the whole set, not just the selection: two pages
   // sharing a handle means the second import silently overwrites the first, and
@@ -164,10 +193,30 @@ function main(argv) {
     for (const c of checkPage(p)) problems.push(`${p.handle}: ${c}`);
     const routing = checkHandleRouting(p);
     if (routing) problems.push(`${p.handle}: ${routing}`);
+    const inherited = INHERITED.get(p.handle);
+
+    // A takeover replaces a live body that nothing else has a copy of. Refuse
+    // until the rollback path actually exists on disk.
+    if (inherited) {
+      const snap = snapshotFor(p.handle);
+      if (!fs.existsSync(snap) || fs.statSync(snap).size < 500) {
+        problems.push(`${p.handle}: this row REPLACES a live page and no snapshot exists.`
+          + ` Save the current live body to ${path.relative(ROOT, snap)} first.`
+          + ' Shopify keeps no version history for page bodies, so that file is the only way back.');
+      }
+    }
+
     if (live && live.has(p.handle)) {
       const n = live.get(p.handle);
-      problems.push(`${p.handle}: a live page ALREADY uses this handle`
-        + ` (title ${JSON.stringify(n.title)}). Importing would replace its body.`);
+      if (!inherited) {
+        problems.push(`${p.handle}: a live page ALREADY uses this handle`
+          + ` (title ${JSON.stringify(n.title)}). Importing would replace its body.`);
+      } else {
+        // Expected, but never silent: a takeover also renames the page, and a
+        // rename nobody noticed is how a link in somebody's course syllabus
+        // starts pointing at a differently named thing.
+        takeovers.push({ handle: p.handle, why: inherited, from: n.title, to: p.title });
+      }
     }
   }
 
@@ -199,6 +248,13 @@ function main(argv) {
   const bytes = pages.reduce((n, p) => n + Buffer.byteLength(p.bodyHtml), 0);
 
   console.log('');
+  for (const t of takeovers) {
+    console.log(`  TAKEOVER  ${t.handle}`);
+    console.log(`            ${t.why}`);
+    console.log(`            title ${JSON.stringify(t.from)}  ->  ${JSON.stringify(t.to)}`);
+    console.log(`            rollback: ${path.relative(ROOT, snapshotFor(t.handle))}`);
+    console.log('');
+  }
   for (const [k, n] of Object.entries(counts)) console.log(`    ${String(n).padStart(3)}  ${k}`);
   console.log(`    ${String(pages.length).padStart(3)}  total  (of ${total} in the course)`);
   console.log(`\n  wrote ${out}`);
@@ -209,4 +265,4 @@ function main(argv) {
 }
 
 if (require.main === module) main(process.argv.slice(2));
-module.exports = { checkPage, checkHandleRouting, PUBLISHED_AT };
+module.exports = { checkPage, checkHandleRouting, PUBLISHED_AT, INHERITED, snapshotFor };
