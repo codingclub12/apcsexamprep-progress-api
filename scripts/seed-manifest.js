@@ -211,32 +211,60 @@ const NET_EXAMS = {
   'exam-final': 50,
 };
 
-// Intro to Java with Greenfoot graded items. EMPTY on purpose: no lesson page
-// exists yet, so there is nothing a student could open and earn. Visit rows for
-// all 42 lessons are generated from the COURSES config above (so visit
-// denominators never move once students start), but a graded row is a promise
-// that the points are earnable in the browser, and seeding one before its page
-// ships is the exact failure smoke/manifest-prune.js exists to catch.
+// Intro to Java with Greenfoot graded items, DERIVED from the authored content
+// bank rather than counted by hand. seed/intro-java-unit1.js is the single
+// source of truth for what actually exists on a lesson, so a denominator here
+// cannot drift from the page the way a hand-maintained count does. Add a unit
+// to INTRO_JAVA_BANKS as its bank lands.
 //
-// Fill this in UNIT BY UNIT as pages go live, then run --update. Shape, per the
-// item table in docs/intro-java-course-spec.md:
+// Points follow the item table in docs/intro-java-course-spec.md: one point per
+// CFU, one point per gap HOLE (ONE item worth N points, never N items, so a
+// class of 30 is 30 inserts and not 300), one point per quiz question.
 //
-//   '1.1': { cfus: 4, gap_holes: 3, quiz: 5 }          // Unit 1 has no code items
-//   '2.4': { cfus: 4, gap_holes: 5, code: 1, quiz: 6 } // Units 2-6 do
+// ── WHY THIS IS STILL GATED ─────────────────────────────────────────────────
+// Content existing in this repo is NOT the same fact as a student being able to
+// open it. Unit 1's pages have not shipped to Shopify yet, so seeding these rows
+// now would put earnable-looking points in every denominator that nobody can
+// reach, which marks every student down for a reason no teacher can see. That is
+// exactly what smoke/manifest-prune.js exists to catch, and it is the same flag
+// shape CODE_ITEMS_ENABLED already uses above.
 //
-// gap_holes is ONE item worth that many points, not one item per hole: the page
-// posts a single attempt for the whole gap-fill exercise with per-hole booleans
-// in its detail JSON. That is the same row-per-activity model CSA Unit 3 uses,
-// and it is what keeps a 30-student class at 30 inserts rather than 300.
-const INTRO_JAVA_GRADED = {};
+// Flip to true in the SAME pass that imports the pages, then run --update.
+const INTRO_JAVA_PAGES_LIVE = false;
 
-// Unit projects. Also EMPTY, and for a second reason on top of the first: only
-// the auto-graded worksheet half of a project ('project-{U}-gap') can ever be a
-// manifest row. The built Greenfoot scenario runs on the desktop, cannot report
-// itself, and is teacher-scored through POST /api/teacher/classes/:code/scores.
-// Never add a row for the scenario itself.
+const INTRO_JAVA_BANKS = [require('../seed/intro-java-unit1')];
+
+function introJavaGradedRows() {
+  if (!INTRO_JAVA_PAGES_LIVE) return [];
+  const rows = [];
+  for (const bank of INTRO_JAVA_BANKS) {
+    const unit = bank.unit;
+    for (const l of bank.lessons) {
+      for (const c of l.cfus) {
+        rows.push({ course: 'intro-java', unit, lesson_id: l.lesson,
+          item_id: `${l.lesson}-${c.id}`, item_type: 'cfu', points: 1 });
+      }
+      if (l.gap && l.gap.holes.length) {
+        rows.push({ course: 'intro-java', unit, lesson_id: l.lesson,
+          item_id: `${l.lesson}-gap`, item_type: 'gap', points: l.gap.holes.length });
+      }
+      if (l.quiz && l.quiz.length) {
+        rows.push({ course: 'intro-java', unit, lesson_id: l.lesson,
+          item_id: `${l.lesson}-quiz`, item_type: 'quiz', points: l.quiz.length });
+      }
+    }
+  }
+  return rows;
+}
+
+// Unit projects. Only the auto-graded TASK half of a project can ever be a
+// manifest row, one row per checked task so the gradebook can answer "which
+// task is the class stuck on". The built Greenfoot scenario runs on the desktop,
+// cannot report itself, and is teacher-scored through
+// POST /api/teacher/classes/:code/scores. Never add a row for the scenario, and
+// never add one for a self-attested task: a checkbox is not evidence.
 //
-//   'project-1': { gap_holes: 8 }
+//   'project-1': { tasks: 8 }
 const INTRO_JAVA_PROJECTS = {};
 
 function buildRows() {
@@ -308,29 +336,19 @@ function buildRows() {
     rows.push({ course: 'ap-networking', unit: 'course', lesson_id: itemId, item_id: itemId, item_type: 'quiz', points });
   }
 
-  // Intro to Java graded items (authored lessons only; empty until pages ship).
-  for (const [lesson, cfg] of Object.entries(INTRO_JAVA_GRADED)) {
-    const unit = `unit-${lesson.split('.')[0]}`;
-    for (let i = 1; i <= (cfg.cfus || 0); i++) {
-      rows.push({ course: 'intro-java', unit, lesson_id: lesson, item_id: `${lesson}-cfu-${i}`, item_type: 'cfu', points: 1 });
-    }
-    if (cfg.gap_holes > 0) {
-      rows.push({ course: 'intro-java', unit, lesson_id: lesson, item_id: `${lesson}-gap`, item_type: 'gap', points: cfg.gap_holes });
-    }
-    if (cfg.code > 0) {
-      rows.push({ course: 'intro-java', unit, lesson_id: lesson, item_id: `${lesson}-code`, item_type: 'code', points: cfg.code });
-    }
-    if (cfg.quiz > 0) {
-      rows.push({ course: 'intro-java', unit, lesson_id: lesson, item_id: `${lesson}-quiz`, item_type: 'quiz', points: cfg.quiz });
-    }
-  }
+  // Intro to Java graded items, derived from the content bank. Empty until
+  // INTRO_JAVA_PAGES_LIVE is flipped in the pass that ships the pages.
+  for (const r of introJavaGradedRows()) rows.push(r);
 
-  // Intro to Java project worksheets. lesson_id is its own instrument id
+  // Intro to Java project tasks. lesson_id is its own instrument id
   // ('project-1'), never a lesson number, so a project can never share a
   // gradebook cell with a lesson the way the networking unit tests once did.
   for (const [lessonId, cfg] of Object.entries(INTRO_JAVA_PROJECTS)) {
     const unit = `unit-${lessonId.split('-')[1]}`;
-    rows.push({ course: 'intro-java', unit, lesson_id: lessonId, item_id: `${lessonId}-gap`, item_type: 'gap', points: cfg.gap_holes });
+    for (let i = 1; i <= cfg.tasks; i++) {
+      rows.push({ course: 'intro-java', unit, lesson_id: lessonId,
+        item_id: `${lessonId}-task-${i}`, item_type: 'gap', points: 1 });
+    }
   }
 
   return rows;
