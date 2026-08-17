@@ -1332,7 +1332,10 @@ const LESSONS = [
           'int x = Greenfoot.getRandomNumber(getWidth());\n'
           + 'addObject(new Coin(), x, 0);',
         note:
-          'A random position across the world. Because the upper bound is exclusive this is exactly '
+          'One line here is from later: `addObject` belongs to the world and Unit 3 covers it '
+          + 'properly. For now read it as "put this new coin into the world at that spot". The '
+          + 'random number is the part this lesson is about.\n\n'
+          + 'A random position across the world. Because the upper bound is exclusive this is exactly '
           + 'right: valid x values run from 0 to getWidth() - 1, and that is precisely what this '
           + 'produces.\n\n'
           + 'If the bound had been inclusive, this line would occasionally place a coin one cell '

@@ -912,7 +912,10 @@ const LESSONS = [
           + '    move(3);\n'
           + '}',
         note:
-          'A boolean return is the most useful kind in this course, because it slots straight into '
+          '`isTouching` is from Unit 4 and you have not met it yet. Read it as "am I overlapping a '
+          + 'Spike right now", which is a question with a yes or no answer. That is the only '
+          + 'property of it this lesson needs.\n\n'
+          + 'A boolean return is the most useful kind in this course, because it slots straight into '
           + 'an if.\n\n'
           + 'And look at what it did to the calling code: `if (isSafe())` says what it means. The '
           + 'detail of what "safe" means lives in one place, and if the definition changes you '
@@ -1915,6 +1918,9 @@ const LESSONS = [
           + '}',
         note:
           'Read this carefully, because it looks completely reasonable.\n\n'
+          + '`isTouching` and `removeTouching` are Unit 4. For now read the if as "when I run into '
+          + 'a coin, take it away and add one". The bug in this code has nothing to do with '
+          + 'collisions; it is entirely about where the variable lives.\n\n'
           + 'act() runs every frame. Every frame, the FIRST thing it does is `int score = 0;`, '
           + 'building a brand new box and putting zero in it. Whatever last frame counted is gone '
           + 'before this frame even checks for a coin.\n\n'

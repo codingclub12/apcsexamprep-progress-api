@@ -1076,7 +1076,10 @@ const LESSONS = [
           + 'Greenfoot result dialog.'),
         code: 'int where = getX();',
         note:
-          'One way to listen: store the answer. `getX()` runs and produces a number; `int where =` '
+          'You have not met `int where =` yet, that is Unit 2. For now read it as a labeled box: '
+          + 'the answer comes out of getX() and goes into a box named `where`, and you can use the '
+          + 'box as many times as you like.\n\n'
+          + 'One way to listen: store the answer. `getX()` runs and produces a number; `int where =` '
           + 'catches it and gives it a name. Now you can use `where` as many times as you like.',
       },
       {
