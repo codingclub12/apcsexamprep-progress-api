@@ -74,6 +74,7 @@
     "ijpages": "node scripts/intro-java-pages-csv.js",
     "smoke:verifyboard": "node smoke/verify-board.js",
     "smoke:assertions": "node smoke/assertion-integrity.js",
+    "smoke:boarddelta": "node smoke/board-delta.js",
     "snapshot": "node scripts/snapshot-live-page.js",
     "ijredirects": "node scripts/intro-java-redirects-csv.js"
   },

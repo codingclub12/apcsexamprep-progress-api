@@ -1,0 +1,157 @@
+name: Overnight board sweep
+
+# Phase 2.2. Runs the verifier over needs_verification while nobody is awake and
+# reports WHAT CHANGED since the last sweep.
+#
+# WHY A DELTA AND NOT THE REPORT
+#   A job that reprints the same fourteen tasks every morning is wallpaper
+#   inside a week, and an unread green tick is the exact failure this system
+#   exists to catch. "Nothing changed" is one line and is the honest answer most
+#   mornings. Anything else is worth reading.
+#
+# IT STILL WRITES NOTHING. It does not file findings as tasks, it does not
+# dispatch, and it cannot set `verified` - that path is cookie-auth only, so the
+# thing that did the work is never the thing that closes the loop on it. This is
+# deliberately narrower than "the overnight sweep that files findings as tasks":
+# reading unattended and writing unattended are different risks, and only the
+# first one is being taken tonight.
+#
+# --redact is not optional here for the same reason it is not optional in
+# verify-board.yml: this repo is public and so is this log.
+
+on:
+  schedule:
+    # 08:00 UTC, which is 03:00 US Central. Chosen to sit clear of the two jobs
+    # already on the clock: auto-dispatch at 06:00 and the browser smoke test at
+    # 07:00. Stacking them would drive the storefront three times in an hour and
+    # trip its bot protection, which is the same mistake smoke.yml documents.
+    #
+    # schedule only fires from the DEFAULT BRANCH, so nothing runs from a
+    # feature branch and this line does nothing until it is merged.
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'How many tasks to check this run (the storefront rate-limits)'
+        required: false
+        default: '12'
+
+# Shares a group with verify-board.yml ON PURPOSE. Concurrency groups are
+# matched by name across workflows, so a nightly sweep and a hand-pressed
+# reconcile can never hit the storefront at the same time.
+concurrency:
+  group: verify-board
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  sweep:
+    name: What changed on the board
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      # The previous sweep's state. A miss is normal on the first run and after
+      # a week of inactivity, and board-delta.js reports "no baseline" rather
+      # than treating every task as new - a false alarm on the one morning with
+      # nothing to compare against would teach someone to ignore mornings.
+      - name: Restore the last sweep's state
+        uses: actions/cache/restore@v4
+        with:
+          path: previous.json
+          key: board-state-${{ github.run_id }}
+          restore-keys: |
+            board-state-
+
+      - name: Sweep the board
+        env:
+          TODO_KEY: ${{ secrets.TODO_KEY }}
+          APCS_BASE: ${{ vars.PROGRESS_BASE_URL || 'https://progress.apcsexamprep.com' }}
+          LIMIT: ${{ inputs.limit || '12' }}
+        run: |
+          # pipefail everywhere a pipeline carries a real exit status. Without
+          # it `node ... | tee` reports TEE's status and a dead script lands as
+          # a green tick, which is how this workflow's sibling shipped broken.
+          set -o pipefail
+
+          # A missing secret is a FAILURE, not a skip. A green tick on a night
+          # that read nothing is worse than no run at all, because every morning
+          # then looks identical whether it worked or not.
+          if [ -z "$TODO_KEY" ]; then
+            {
+              echo "### Overnight board sweep: NOT CONFIGURED"
+              echo ""
+              echo "No \`TODO_KEY\` secret is set, so the board was never read."
+              echo ""
+              echo "Add it in Settings > Secrets and variables > Actions. It must match the"
+              echo "\`TODO_KEY\` the API runs with on Railway, character for character, or the"
+              echo "read comes back 401."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error title=TODO_KEY not configured::The sweep cannot read the board without it."
+            exit 1
+          fi
+
+          if ! node scripts/verify-board.js --redact --json --limit "$LIMIT" > current.json; then
+            {
+              echo "### Overnight board sweep: FAILED"
+              echo ""
+              echo "The verifier could not read the board. Nothing was compared."
+              echo '```'
+              head -c 2000 current.json 2>/dev/null || echo "(no output)"
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error title=Sweep failed::The board could not be read. See the job log."
+            exit 1
+          fi
+
+          # A 0-byte or unparseable report must not become a quiet morning. The
+          # delta script exits 1 on an unreadable CURRENT report for this reason;
+          # this check just makes the message specific.
+          if ! node -e 'JSON.parse(require("fs").readFileSync("current.json","utf8"))'; then
+            echo "::error title=Unreadable report::verify-board produced output that is not JSON."
+            exit 1
+          fi
+
+          if [ -f previous.json ]; then
+            node scripts/board-delta.js previous.json current.json | tee delta.md
+          else
+            node scripts/board-delta.js --none current.json | tee delta.md
+          fi
+          cat delta.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Say what happens next
+        if: success()
+        run: |
+          {
+            echo ""
+            echo "---"
+            echo ""
+            echo "**Nothing here was written to the ledger.** This sweep reads. To close"
+            echo "anything, open the board and click verify: that path is cookie-auth only,"
+            echo "which is the whole reason the number means anything."
+            echo ""
+            echo "The full report, not just the diff, is one manual run away:"
+            echo "**Actions > Reconcile the board > Run workflow**."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # Cached under the SAME FILENAME the restore step expects. actions/cache
+      # restores a file to the path it was saved from, so caching current.json
+      # would restore current.json - previous.json would never exist, every
+      # morning would report "no baseline", and the run would be GREEN every
+      # single night while comparing nothing. Caught before shipping; it is the
+      # same shape as the tee bug and the duplicated severity rule.
+      #
+      # Saved only on success, so a failed night cannot poison the baseline and
+      # make the next morning report phantom changes against a half-written file.
+      - name: Save this sweep's state
+        if: success()
+        run: cp current.json previous.json
+
+      - uses: actions/cache/save@v4
+        if: success()
+        with:
+          path: previous.json
+          key: board-state-${{ github.run_id }}
