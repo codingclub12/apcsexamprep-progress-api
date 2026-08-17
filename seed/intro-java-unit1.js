@@ -301,8 +301,8 @@ const LESSONS = [
       h1: 'The Greenfoot Window: Controls and Class Diagram',
       title: 'Greenfoot Window, Act, Run and Reset Explained | Intro to Java',
       description:
-        'A tour of the Greenfoot window for beginners: the class diagram, the world view, and what '
-        + 'the Act, Run, Pause and Reset buttons actually do.',
+        'A tour of the Greenfoot window for beginners: the class diagram, the world view, what the '
+        + 'Act, Run and Reset buttons do, and why an edit needs compiling.',
       primary: 'greenfoot act vs run',
       related: [
         'greenfoot reset button',
