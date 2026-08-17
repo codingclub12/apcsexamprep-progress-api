@@ -60,7 +60,7 @@ const LESSONS = [
         },
         {
           q: 'Why does my while loop never stop?',
-          a: 'Something inside the loop has to move the condition towards false. If the counter is '
+          a: 'Something inside the loop has to move the condition toward false. If the counter is '
             + 'never increased, the condition stays true forever.',
         },
       ],
@@ -88,7 +88,7 @@ const LESSONS = [
 
     steps: [
       {
-        shot: SHOT('4.1', 1, 'A while loop in an editor with the condition and body labelled, and '
+        shot: SHOT('4.1', 1, 'A while loop in an editor with the condition and body labeled, and '
           + 'the counter increment highlighted.'),
         code:
           'int count = 0;\n'
@@ -101,7 +101,7 @@ const LESSONS = [
           'Three parts, and all three are required.\n\n'
           + 'A starting value: `int count = 0;`\n'
           + 'A condition: `count < 5`, checked BEFORE each pass.\n'
-          + 'A change: `count = count + 1;`, which moves the condition towards false.\n\n'
+          + 'A change: `count = count + 1;`, which moves the condition toward false.\n\n'
           + 'This places five coins, at x values 0, 1, 2, 3 and 4. Note it stops at 4, not 5, '
           + 'because the check happens first and 5 < 5 is false.',
       },
@@ -237,7 +237,7 @@ const LESSONS = [
       holes: [
         { n: 1, hint: 'The first x value you want a wall at.', accept: ['0'] },
         { n: 2, hint: 'Keep going while i has not yet reached 4. One character.', accept: ['<'] },
-        { n: 3, hint: 'Move the counter towards the end.', accept: ['+'] },
+        { n: 3, hint: 'Move the counter toward the end.', accept: ['+'] },
       ],
     },
 
@@ -344,7 +344,7 @@ const LESSONS = [
 
     steps: [
       {
-        shot: SHOT('4.2', 1, 'A for loop header with the three parts separated and labelled.'),
+        shot: SHOT('4.2', 1, 'A for loop header with the three parts separated and labeled.'),
         code: 'for (int i = 0; i < 5; i++)\n{\n    addObject(new Coin(), i, 0);\n}',
         note:
           'The three parts, separated by semicolons, in the same order as always.\n\n'
@@ -363,14 +363,14 @@ const LESSONS = [
           + 'int i = 0;\n'
           + 'while (i < 5) { doSomething(); i++; }',
         note:
-          'Identical behaviour. The for version is preferred for counting for one reason: you '
+          'Identical behavior. The for version is preferred for counting for one reason: you '
           + 'cannot forget the update, because it is sitting in the header where its absence is '
           + 'obvious.\n\n'
           + 'The while version puts the update at the bottom of the body, where it is easy to omit, '
           + 'and omitting it freezes the scenario.',
       },
       {
-        shot: SHOT('4.2', 3, 'A for loop counting downwards.'),
+        shot: SHOT('4.2', 3, 'A for loop counting downward.'),
         code: 'for (int i = 5; i > 0; i--)\n{\n    addObject(new Star(), i, 2);\n}',
         note:
           'Counting down. The start is 5, the condition is `i > 0`, and the update subtracts.\n\n'
@@ -393,7 +393,7 @@ const LESSONS = [
           + 'one, and `<` gives you precisely that. Using `<=` here would place one wall outside '
           + 'the world.\n\n'
           + 'This is the shape you will use constantly from here to the end of the course, so it '
-          + 'is worth recognising instantly.',
+          + 'is worth recognizing instantly.',
       },
     ],
 
@@ -1055,7 +1055,7 @@ const LESSONS = [
         {
           q: 'What causes ConcurrentModificationException in Greenfoot?',
           a: 'Removing actors from the world while looping over the list you got from it. Copy the '
-            + 'list first, or collect what to remove and remove it afterwards.',
+            + 'list first, or collect what to remove and remove it afterward.',
         },
       ],
     },
@@ -1086,9 +1086,9 @@ const LESSONS = [
           + 'int howMany = enemies.size();',
         note:
           '`getObjects(Enemy.class)` hands back every Enemy currently in the world.\n\n'
-          + '`List<Enemy>` is the type. Read the angle brackets as "of": a List of Enemy. It is new '
+          + '`List<Enemy>` is the type. Read the angle parentheses as "of": a List of Enemy. It is new '
           + 'punctuation but not a new idea.\n\n'
-          + '`.size()` tells you how many. Note the brackets: it is a method, not a field, unlike '
+          + '`.size()` tells you how many. Note the parentheses: it is a method, not a field, unlike '
           + 'the array length you meet in Unit 5. That inconsistency is Java\'s fault, not yours, '
           + 'and it catches everybody.',
       },
@@ -1146,8 +1146,8 @@ const LESSONS = [
     misconceptions: [
       {
         wrong: 'size is a field, like length.',
-        right: 'It is a method: `size()` with brackets.',
-        why: 'Java is genuinely inconsistent here, and Unit 5 uses `length` with no brackets.',
+        right: 'It is a method: `size()` with parentheses.',
+        why: 'Java is genuinely inconsistent here, and Unit 5 uses `length` with no parentheses.',
       },
       {
         wrong: 'getObjects returns actors that have been removed.',
@@ -1190,7 +1190,7 @@ const LESSONS = [
           'getObjects(Enemy.class).size()',
         ],
         answer: 3,
-        why: 'size() is a method, with brackets.',
+        why: 'size() is a method, with parentheses.',
       },
       {
         id: 'cfu-3',
@@ -1248,7 +1248,7 @@ const LESSONS = [
         stem: '`List<Enemy>` is read as:',
         options: ['A List of Enemy', 'Enemy list index', 'A list called Enemy', 'An enemy array'],
         answer: 0,
-        why: 'The angle brackets say what kind of thing is in the list.',
+        why: 'The angle parentheses say what kind of thing is in the list.',
       },
       {
         id: 'q2',
@@ -1292,7 +1292,7 @@ const LESSONS = [
 
     recap: [
       'getObjects(Thing.class) hands back a List of everything of that kind in the world.',
-      'size() is a METHOD with brackets. Indexes run 0 to size() minus 1.',
+      'size() is a METHOD with parentheses. Indexes run 0 to size() minus 1.',
       'The world has an act() too, and game-wide logic belongs there.',
       'Never remove from the world while looping over its list. Use removeObjects, or collect first.',
     ],
@@ -1322,7 +1322,7 @@ const LESSONS = [
         {
           q: 'When should I not use an enhanced for loop?',
           a: 'When you need the position of each item, and when you need to remove items while '
-            + 'looping. Use an index loop or collect and remove afterwards.',
+            + 'looping. Use an index loop or collect and remove afterward.',
         },
         {
           q: 'Is the enhanced for loop faster?',
@@ -1350,7 +1350,7 @@ const LESSONS = [
 
     steps: [
       {
-        shot: SHOT('4.6', 1, 'An enhanced for loop with its parts labelled: the type, the variable '
+        shot: SHOT('4.6', 1, 'An enhanced for loop with its parts labeled: the type, the variable '
           + 'name, the colon, and the collection.'),
         code:
           'for (Enemy e : getObjects(Enemy.class))\n'
