@@ -243,6 +243,23 @@ const ATTRS_READ = literals(REPORTER, ['getAttribute']);
     !/\.answer\b|correct_option|\bkey\b\s*=/.test(REPORTER));
   ok('1.19 the reporter never computes a score itself',
     !/score\s*\+\+|score\s*\+=/.test(REPORTER));
+  // ── Developer strings must never reach a student ───────────────────────────
+  // A student on a live lesson page was shown "Not saved: course must be
+  // 'ap-cybersecurity' for this class". That is a good wire-log line and a
+  // terrible thing to put in front of a fourteen year old. The route's other
+  // strings are worse: "detail must be an array of {q, sel, ok}".
+  //
+  // The fix is structural rather than a rewording. The reporter does not render
+  // res.body.error AT ALL, so a new server error added later cannot leak onto a
+  // page just because nobody remembered to translate it. It renders
+  // student_message when the server supplies one, and otherwise says one honest
+  // sentence.
+  ok('1.19b the reporter never renders the server error string',
+    !/body\s*&&\s*res\.body\.error|say\([^)]*\.error/.test(REPORTER)
+    && !/'Not saved: '/.test(REPORTER));
+  ok('1.19c it renders student_message when the server sends one',
+    REPORTER.includes('student_message'));
+
   ok('1.20 a failed submission is reported, never swallowed',
     /function reportFailure/.test(REPORTER)
     && (REPORTER.match(/reportFailure\(/g) || []).length >= 4);
