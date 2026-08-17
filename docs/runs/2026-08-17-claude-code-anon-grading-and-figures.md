@@ -88,11 +88,21 @@ Two content bugs surfaced by drawing them, neither visible in prose:
 
 - **Rotate the RapidAPI key.** Served publicly from Shopify's CDN for ten
   days. Deleting the file did not un-leak it.
-- **The Railway deploy from #174 never landed.** `/api/health` returns 200
-  but `/figures/*.png` still 404s more than twenty minutes after the merge,
-  and the route works locally. Did not block the figures, which reached
-  Shopify by raw GitHub URL instead, but it means merges are not reliably
-  deploying and the last few may not be live.
+- ~~**The Railway deploy from #174 never landed.**~~ **WRONG, and worth
+  reading before trusting any deploy claim in this file.** It had landed. I
+  set `Cache-Control: public, max-age=86400` on `/figures/*` BEFORE knowing
+  the response would succeed, Cloudflare cached the 500, and I then read that
+  same cached 500 four separate times over several hours and reported the
+  deploy dead each time. Railway's own dashboard said `#182 ACTIVE, deployment
+  successful`. Fixed in #183: never cache an error, and probe with a cache
+  buster. The general lesson is that a stale edge cache is indistinguishable
+  from a dead origin unless you go out of your way to tell them apart.
+- **There is still no way to ask the API which commit is live.**
+  `/api/health` returns `{status, ts}` and nothing else, so "did that merge
+  deploy" is unanswerable from outside, which is what made the above possible.
+  Railway injects `RAILWAY_GIT_COMMIT_SHA` into every container; surfacing it
+  on the health payload turns that question into one curl. Not done, three
+  lines, worth doing.
 - **The theme still tracks a feature branch**, not `main`, so every theme
   merge needs a manual fast-forward.
 - **`/pages/cyber-class` has no source of truth in git.** The repo mirror
@@ -101,6 +111,109 @@ Two content bugs surfaced by drawing them, neither visible in prose:
   would destroy the nav. Two known defects live there: no Intro to Java
   option in the create-class dropdown, and `formatCourse` maps only three
   courses so existing AP Networking classes render the raw slug.
-- **143 images still unmade**, all category 1 and 2 above. The nine base
-  captures that would unlock most of them are listed in the chat log; the
-  figure generator is built to composite against them.
+- **13 images still unmade**, down from 143. `scripts/intro-java-figures.js`
+  now generates 145 of the 158 the bank references, and all 145 are live on
+  the Shopify CDN at 1920x1200. The remaining 13 are category 1 only, the
+  ones a mockup would make worse rather than better: 1.1 step-1, all four of
+  1.2, 1.3 steps 1 to 3, 1.4 step-1, 1.6 step-3, 3.6 step-2, 3.7 step-3 and
+  3.8 step-3. They need real captures of the Greenfoot window and of the Unit
+  1 crab scenario, which only Tanner's machine can take.
+- ~~**An orphaned duplicate of lesson 6.6 is live and indexable.**~~ Done,
+  and there were TWO. See the section below.
+
+## A second day, and a pattern in what broke
+
+Two more content bugs landed after the figures did, and both have the same
+shape, which is why they are worth writing down together rather than as two
+lines in a changelog.
+
+Lesson 1.2 spends a paragraph explaining that Greenfoot has no separate Pause
+button, because Run turns into Pause while it is running. Its meta description
+promised a tour of "the Act, Run, Pause and Reset buttons".
+
+Lesson 5.1 teaches that a new array's default depends on its type: zeros for
+int, false for boolean, null for objects. Its own FAQ answer on the same page
+says so. Its meta description said "why every slot starts at zero", and one of
+its target keywords is "java array default values".
+
+In both cases the lesson body was right and a RESTATEMENT of the body in the
+metadata was wrong. That is the risk `seo.description` carries and nothing
+else in the bank does: `lib/intro-java-page.js` emits it twice, once as the
+meta tag and once as the `description` of the `LearningResource` JSON-LD. So
+it is simultaneously what a search result shows, what a model summarising the
+page reads, and in 5.1's case a direct contradiction of the FAQ sitting six
+lines below it in the same JSON-LD block.
+
+Every check was green on both. The strings passed the 70 to 160 character
+gate, the encoding scan, and all 3607 `smoke:introjava` assertions.
+
+I tried to automate the catch and could not. A sweep for capitalised terms
+asserted in metadata but absent from the lesson body returned 27 hits across
+42 lessons, and all 27 were Title Case in the SEO title. It is not committed,
+because a checker that fires 27 times on nothing will bury the one time it
+fires on something.
+
+What DID work was checking the countable claims by hand, since a number is
+cheap to verify: 1.1 three ideas, 2.1 four types, 3.5 three numbers in super,
+4.6 two jobs the enhanced for cannot do, 5.4 two jobs still needing an index
+loop, 5.5 five array algorithms. All six hold against their own recaps.
+
+So the honest conclusion is that this class of defect is found by reading, and
+the 42 descriptions have now been read. If a lesson's SEO block is edited, or
+a lesson is added, someone has to read the description against the body. There
+is no check standing behind it and pretending otherwise would be worse than
+the gap.
+
+## Two orphaned pages, and a plan nobody had run
+
+Auditing an import turned up a page that should not exist:
+`intro-java-lesson-6-6-bounds-and-neighbours`, published, unlinked, with no
+redirect, sitting alongside the American-spelled page that every nav link
+actually points at.
+
+Deleting it and diffing the survivors found a second one,
+`intro-java-help-my-maths-is-wrong`. The check was cheap and worth reusing:
+90 live `intro-java-*` handles against the 89 `allPages()` produces. One extra.
+
+Both had the same cause, and it is a property of the import tool rather than a
+mistake anybody made. **Matrixify cannot rename a page.** Change a slug and the
+import creates a new page and leaves the old one published, which is duplicate
+content pointing at itself.
+
+The part worth being embarrassed about: this was already known and already
+written down. `scripts/intro-java-redirects-csv.js` names both renames in its
+header and spells out the order:
+
+    1. import the pages CSV
+    2. verify both new handles resolve
+    3. DELETE the two old pages
+    4. import this redirects CSV
+
+Steps 1 and 2 ran days ago. Steps 3 and 4 never did, and nothing anywhere
+noticed, because a finished-looking import leaves no trace of the two steps it
+did not include. A plan in a script header is not a plan that runs.
+
+Done now, by API rather than by CSV, which is equivalent:
+
+    /pages/intro-java-lesson-6-6-bounds-and-neighbours -> 301 -> ...-neighbors
+    /pages/intro-java-help-my-maths-is-wrong           -> 301 -> ...-my-math-is-wrong
+
+Two notes for whoever hits this next.
+
+**The script's ordering warning is overstated.** It says a redirect created
+while the old page still exists "does nothing at all, and looks like it
+worked". Both of these were created BEFORE the delete and both fire correctly
+now, so the page only shadows the redirect while it exists. The script's order
+is still the safe one; it is just not a trap that poisons the redirect
+permanently.
+
+**The verification nearly went wrong in the way this whole file is about.**
+The second redirect read as a plain 200 on first probe and was about to be
+reported broken. It was a cached response. Cache-busted, it 301s. Third time
+in one day that a stale cache impersonated a broken system.
+
+Also worth correcting, because it was stated confidently and repeatedly during
+this work: `apcsexamprep.com` is NOT egress-blocked from the agent container.
+It is reachable, and the apex 301s to `www`. Every storefront claim made
+earlier in the session on the grounds that it could not be checked could in
+fact have been checked.
