@@ -118,14 +118,8 @@ Two content bugs surfaced by drawing them, neither visible in prose:
   1.2, 1.3 steps 1 to 3, 1.4 step-1, 1.6 step-3, 3.6 step-2, 3.7 step-3 and
   3.8 step-3. They need real captures of the Greenfoot window and of the Unit
   1 crab scenario, which only Tanner's machine can take.
-- **An orphaned duplicate of lesson 6.6 is live and indexable.** The bank's
-  spelling was Americanised at some point, and the import created a second
-  page rather than renaming the first, so both
-  `intro-java-lesson-6-6-bounds-and-neighbours` and
-  `...-neighbors` are published. The British one is unlinked (6.5's Next and
-  6.7's Prev both point at the American handle) and has no URL redirect, so it
-  is an unmaintained copy of a lesson competing with its own canonical. Fix is
-  delete plus a 301, awaiting a go-ahead because it deletes a live page.
+- ~~**An orphaned duplicate of lesson 6.6 is live and indexable.**~~ Done,
+  and there were TWO. See the section below.
 
 ## A second day, and a pattern in what broke
 
@@ -169,3 +163,57 @@ the 42 descriptions have now been read. If a lesson's SEO block is edited, or
 a lesson is added, someone has to read the description against the body. There
 is no check standing behind it and pretending otherwise would be worse than
 the gap.
+
+## Two orphaned pages, and a plan nobody had run
+
+Auditing an import turned up a page that should not exist:
+`intro-java-lesson-6-6-bounds-and-neighbours`, published, unlinked, with no
+redirect, sitting alongside the American-spelled page that every nav link
+actually points at.
+
+Deleting it and diffing the survivors found a second one,
+`intro-java-help-my-maths-is-wrong`. The check was cheap and worth reusing:
+90 live `intro-java-*` handles against the 89 `allPages()` produces. One extra.
+
+Both had the same cause, and it is a property of the import tool rather than a
+mistake anybody made. **Matrixify cannot rename a page.** Change a slug and the
+import creates a new page and leaves the old one published, which is duplicate
+content pointing at itself.
+
+The part worth being embarrassed about: this was already known and already
+written down. `scripts/intro-java-redirects-csv.js` names both renames in its
+header and spells out the order:
+
+    1. import the pages CSV
+    2. verify both new handles resolve
+    3. DELETE the two old pages
+    4. import this redirects CSV
+
+Steps 1 and 2 ran days ago. Steps 3 and 4 never did, and nothing anywhere
+noticed, because a finished-looking import leaves no trace of the two steps it
+did not include. A plan in a script header is not a plan that runs.
+
+Done now, by API rather than by CSV, which is equivalent:
+
+    /pages/intro-java-lesson-6-6-bounds-and-neighbours -> 301 -> ...-neighbors
+    /pages/intro-java-help-my-maths-is-wrong           -> 301 -> ...-my-math-is-wrong
+
+Two notes for whoever hits this next.
+
+**The script's ordering warning is overstated.** It says a redirect created
+while the old page still exists "does nothing at all, and looks like it
+worked". Both of these were created BEFORE the delete and both fire correctly
+now, so the page only shadows the redirect while it exists. The script's order
+is still the safe one; it is just not a trap that poisons the redirect
+permanently.
+
+**The verification nearly went wrong in the way this whole file is about.**
+The second redirect read as a plain 200 on first probe and was about to be
+reported broken. It was a cached response. Cache-busted, it 301s. Third time
+in one day that a stale cache impersonated a broken system.
+
+Also worth correcting, because it was stated confidently and repeatedly during
+this work: `apcsexamprep.com` is NOT egress-blocked from the agent container.
+It is reachable, and the apex 301s to `www`. Every storefront claim made
+earlier in the session on the grounds that it could not be checked could in
+fact have been checked.
