@@ -315,6 +315,28 @@ app.get('/heartbeat-reporter.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'heartbeat-reporter.js'));
 });
 
+// Course figures: the generated diagrams for intro-java, drawn by
+// scripts/intro-java-figures.js and committed under public/figures.
+//
+// WHY THE API SERVES THESE AT ALL, WHEN THE PAGES LOAD THEM FROM SHOPIFY'S CDN
+// The lesson pages reference /cdn/shop/files/<name>.png, so this route is not
+// what a student hits. It exists so Shopify can PULL each figure by URL when it
+// is added to Files (fileCreate takes an originalSource URL), which beats
+// uploading fifteen binaries by hand and makes a re-render a repeatable step
+// rather than an afternoon.
+//
+// Explicit and name-validated, matching the rest of this file: a blanket static
+// mount here would also expose the gated dashboard markup one directory up. The
+// pattern is the exact shape the renderer emits, so nothing else is reachable
+// and no traversal is expressible.
+const FIGURE_NAME = /^intro-java-\d+\.\d+-step-\d+\.png$/;
+app.get('/figures/:name', (req, res) => {
+  if (!FIGURE_NAME.test(req.params.name)) return res.status(404).end();
+  res.set('Cache-Control', 'public, max-age=86400');
+  res.type('image/png');
+  res.sendFile(path.join(__dirname, 'public', 'figures', req.params.name));
+});
+
 // PostHog browser init, with the public project key substituted in from the
 // environment. Not sendFile: public/posthog-init.js is a template and must never
 // reach a browser with its placeholders intact. Serves an inert stub when no key
