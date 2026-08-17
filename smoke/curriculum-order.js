@@ -49,6 +49,27 @@
 //  ALLOW is the narrow second door, for code the student reads rather than
 //  writes. Each entry needs a reason.
 //
+//  ── ONLY STRUCTURAL CONCEPTS ARE TRACKED ────────────────────────────────────
+//  An earlier version of this file tracked library calls too, and flagged
+//  `addObject`, `isTouching` and friends as out of sequence. That is the wrong
+//  standard, and the teacher's rule is better:
+//
+//      "Small things that complete a game a little bit early is actually fine.
+//       I just don't want big concepts done too early or out of sequence.
+//       showText would be fine for example. 1 line and necessary to show score
+//       or end of game."
+//
+//  That is exactly right. `getWorld().showText("Score: " + score, 50, 50)`
+//  teaches nothing new: it is a method call with arguments, which is lesson 1.4.
+//  Refusing to let a game show its score until Unit 6 would make every example
+//  before then worse in order to satisfy a rule about nothing.
+//
+//  So TEACHES holds only the constructs that change what a student has to
+//  UNDERSTAND: storing values, making decisions, repeating, naming your own
+//  code, holding collections. The API calls listed in SMALL_API are deliberately
+//  untracked, and the list is written out so that "not tracked" is a decision
+//  rather than an omission.
+//
 //  Run: npm run smoke:order
 //  No em-dashes, per repo convention.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -71,6 +92,15 @@ for (const b of BANKS) {
 const idx = (id) => ORDER.indexOf(id);
 
 // Construct -> the lesson that introduces it. Ordered roughly by when they land.
+// Untracked on purpose: one line each, no new idea, and a game feels unfinished
+// without them. Listed rather than merely absent so the decision is visible.
+const SMALL_API = [
+  'showText', 'playSound', 'stop', 'setImage', 'getWorld', 'getWidth', 'getHeight',
+  'addObject', 'removeObject', 'isTouching', 'removeTouching', 'getOneIntersectingObject',
+  'getRandomNumber', 'isKeyDown', 'isAtEdge', 'getX', 'getY', 'setLocation', 'move', 'turn',
+];
+
+// Structural concepts only. Each one changes what a student has to understand.
 const TEACHES = [
   { what: 'a local variable', at: '2.1', re: /\b(?:int|double|boolean|String)\s+[a-z]\w*\s*=/ },
   { what: 'an arithmetic operator', at: '2.2', re: /[a-z0-9_)]\s*[*/%]\s*[a-z0-9_(]|\+\+|--|[-+*/%]=/ },
@@ -78,16 +108,12 @@ const TEACHES = [
   { what: 'a boolean operator', at: '2.3', re: /&&|\|\||![a-zA-Z(]/ },
   { what: 'an if statement', at: '2.4', re: /\bif\s*\(/ },
   { what: 'an else branch', at: '2.4', re: /\belse\b/ },
-  { what: 'getRandomNumber', at: '2.6', re: /getRandomNumber/ },
-  { what: 'keyboard input', at: '2.7', re: /isKeyDown/ },
   { what: 'a method you write yourself', at: '3.1', re: /\b(?:public|private)\s+(?:void|int|boolean|double|String)\s+(?!act\b)[a-z]\w*\s*\(/ },
   { what: 'a return statement', at: '3.4', re: /\breturn\b/ },
   { what: 'a World subclass', at: '3.5', re: /extends\s+World/ },
-  { what: 'addObject', at: '3.7', re: /addObject/ },
   { what: 'an instance variable', at: '3.8', re: /\bprivate\s+(?:int|double|boolean|String)\s+\w+/ },
   { what: 'a while loop', at: '4.1', re: /\bwhile\s*\(/ },
   { what: 'a for loop', at: '4.2', re: /\bfor\s*\(/ },
-  { what: 'touching another actor', at: '4.4', re: /isTouching|removeTouching|getOneIntersecting/ },
   { what: 'a List of actors', at: '4.5', re: /\bList\s*<|getObjects\s*\(/ },
   { what: 'an array', at: '5.1', re: /\[\s*\]/ },
 ];
@@ -113,21 +139,6 @@ const ALLOW = [
     why: 'Lesson 1.1 is called Scenarios, Worlds and Actors. Showing a class that '
       + 'extends World is the subject of the lesson, not a forward reference; the '
       + 'student reads it and writes nothing.',
-  },
-  {
-    lesson: '3.1', what: 'addObject',
-    why: 'The long act() method in 3.1 is deliberately overgrown, and exists to be '
-      + 'refactored in 3.2. Every line is scaffolding the student reads.',
-  },
-  {
-    lesson: '3.1', what: 'touching another actor',
-    why: 'Same overgrown act() method. Read, not written.',
-  },
-  {
-    lesson: '3.7', what: 'touching another actor',
-    why: 'One labelled aside contrasting removeObject with removeTouching, marked '
-      + '"from inside an actor" in the code itself. A signpost, not a skill the '
-      + 'step asks for.',
   },
 ];
 
@@ -176,6 +187,9 @@ const allowed = (lesson, what) => ALLOW.some((a) => a.lesson === lesson && a.wha
     || !TEACHES.some((t) => t.what === a.what));
   ok('1.4 every written exception names a real lesson and a real construct',
     stale.length === 0, stale);
+  ok('1.4b no small API call is also tracked as a structural concept',
+    !TEACHES.some((t) => SMALL_API.some((a) => t.re.test(a + '(') && t.re.test(a))),
+    TEACHES.filter((t) => SMALL_API.some((a) => t.re.test(a))).map((t) => t.what));
   ok('1.5 every exception carries a reason',
     ALLOW.every((a) => a.why && a.why.length > 20),
     ALLOW.filter((a) => !a.why || a.why.length <= 20).map((a) => a.lesson));

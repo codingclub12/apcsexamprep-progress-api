@@ -10,8 +10,9 @@ and 3.2), if statements (2.4), keyboard input (2.7) and touching another actor
 Start from your Unit 3 file. By now the bee already flies and already has a
 score field, so the new work is one method: `checkCollisionWithFlower()`.
 
-## Before this ships
+## showText
 
-`displayScore()` uses `getWorld().showText(...)`, and `showText` appears in this
-course only in lesson 6.7. Either teach it in 3.8, where the score first exists,
-or drop `displayScore()` from this assignment. See `docs/intro-java-projects.md`.
+`displayScore()` uses `getWorld().showText(...)`. That call appears in the lesson
+text only in 6.7, and that is fine: it is one line, it teaches nothing new beyond
+lesson 1.4's "a method call can take arguments", and a game with an invisible
+score is a worse thing to hand a student than a slightly early library call.
