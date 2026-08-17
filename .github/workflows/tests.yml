@@ -126,8 +126,17 @@ jobs:
       # and an observer that can break the build is a liability. Skipped
       # entirely when the secret is absent, so a fork or an unconfigured repo
       # sees no difference.
+      #
+      # NOT on a cancelled job. `always()` fires on cancellation too, and
+      # job.status is then `cancelled`, which is not `success`, so the old
+      # one-line ternary below reported `fail` and opened #88 against a run that
+      # never finished a single suite. GitHub cancels the older run whenever two
+      # merges land on main close together, so a normal afternoon of merging
+      # reported CI broken four times over. A cancelled run knows NOTHING about
+      # whether the suites pass; pass and fail are both lies, and silence is the
+      # only honest report.
       - name: Report suite results to the command center
-        if: always() && github.ref == 'refs/heads/main'
+        if: always() && github.ref == 'refs/heads/main' && job.status != 'cancelled'
         continue-on-error: true
         env:
           TODO_KEY: ${{ secrets.TODO_KEY }}
@@ -136,6 +145,7 @@ jobs:
             echo "TODO_KEY not configured; skipping command center report."
             exit 0
           fi
+          # Only two states can reach here: success and failure.
           state=$([ "${{ job.status }}" = "success" ] && echo pass || echo fail)
           curl -sS -X POST https://progress.apcsexamprep.com/api/command/checks \
             -H "Authorization: Bearer $TODO_KEY" \

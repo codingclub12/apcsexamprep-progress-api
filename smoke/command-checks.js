@@ -172,6 +172,26 @@ function ageFailure(source, checkId, days) {
   });
   ok('an unauthenticated check report is 401', unauth.status === 401);
 
+  // ── the reporter that feeds this endpoint ──────────────────────────────────
+  //  Everything above tests what the board does with a report. This tests the
+  //  only thing that sends one, because the bug was never in the endpoint.
+  //
+  //  `always()` fires on cancellation as well as on success and failure, and
+  //  job.status is then `cancelled`. Against a plain `= success` test that came
+  //  out as `fail`, so a run that executed no suite at all told the board CI was
+  //  broken. GitHub cancels the older run whenever two merges land on main close
+  //  together, which is a normal afternoon, and #88 was opened four times by it.
+  //  Asserted against the workflow text because no node suite runs the YAML.
+  const wf = require('fs').readFileSync(
+    require('path').join(__dirname, '..', '.github', 'workflows', 'tests.yml'), 'utf8',
+  );
+  const reportIf = (wf.split('\n')
+    .find((l) => l.includes('if:') && l.includes("github.ref == 'refs/heads/main'")) || '');
+  ok('the CI reporter is guarded against cancelled runs',
+    /job\.status\s*!=\s*'cancelled'/.test(reportIf), reportIf.trim());
+  ok('and it still only reports from main',
+    /refs\/heads\/main/.test(reportIf), reportIf.trim());
+
   server.close();
   console.log(`\n${pass} passed, ${fail} failed`);
   if (fail) { console.log('\nFailed:'); for (const f of failures) console.log('  - ' + f); }
