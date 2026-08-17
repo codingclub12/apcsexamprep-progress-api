@@ -44,7 +44,9 @@ function run(env) {
   return new Promise((res) => {
     const c = spawn('bash', [HOOK], {
       cwd: ROOT,
-      env: { ...process.env, CLAUDE_PROJECT_DIR: ROOT, TODO_KEY: '', ...env },
+      env: {
+        ...process.env, CLAUDE_PROJECT_DIR: ROOT, TODO_KEY: '', COMMAND_READ_TOKEN: '', ...env,
+      },
     });
     let out = '';
     c.stdout.on('data', (d) => { out += d; });
@@ -138,6 +140,63 @@ const DIGEST = {
   ok('6.1 it authorises as a bearer token', seenAuth === 'Bearer super-secret-key-value', seenAuth);
   ok('6.2 and never prints the key into context',
     !e.out.includes('super-secret-key-value'), 'KEY LEAKED INTO SESSION CONTEXT');
+
+  section('7. The read token is preferred, and never printed');
+  //  Environment configuration is not a secrets store, and a session can echo a
+  //  variable into its own transcript at any time - which already happened once
+  //  with TODO_KEY. So the credential left in readable config should be the one
+  //  that cannot write. The read token travels IN THE URL rather than a header,
+  //  which makes every path that prints a URL a place it can leak.
+  const TOK = 'read-token-abcdefghijklmnop';
+
+  let sawPath = null;
+  const rt = await serve((q, r) => {
+    sawPath = q.url;
+    r.writeHead(200, { 'Content-Type': 'application/json' });
+    r.end(JSON.stringify(DIGEST));
+  });
+  const g = await run({ COMMAND_READ_TOKEN: TOK, TODO_KEY: 'full-write-key-value', APCS_BASE: rt.base });
+  rt.close();
+  ok('7.1 with both set, the READ TOKEN is used', sawPath === `/api/command/digest/r/${TOK}`, sawPath);
+  ok('7.2 and the report says which credential it used', /read-only, PII-stripped/.test(g.out), g.out.slice(0, 300));
+  ok('7.3 the token is not printed on success', !g.out.includes(TOK), 'TOKEN LEAKED');
+  ok('7.4 nor is the write key it did not use', !g.out.includes('full-write-key-value'));
+
+  //  The failure path prints the URL it tried, and the token lives in that URL.
+  //  This is where the fix would swap one leak for a fresher one.
+  const h = await run({ COMMAND_READ_TOKEN: TOK, APCS_BASE: 'http://127.0.0.1:1' });
+  ok('7.5 an unreachable board still reports the failure', /DIGEST UNREACHABLE/.test(h.out));
+  ok('7.6 and the token is REDACTED from the URL it names',
+    !h.out.includes(TOK) && /<token redacted>/.test(h.out), h.out.slice(0, 400));
+
+  //  A server that echoes the request URL back in an error body is a second
+  //  route to the same leak, so the response is scrubbed as well.
+  const echoer = await serve((q, r) => {
+    r.writeHead(500, { 'Content-Type': 'text/plain' });
+    r.end(`upstream error for http://x${q.url}`);
+  });
+  const i2 = await run({ COMMAND_READ_TOKEN: TOK, APCS_BASE: echoer.base });
+  echoer.close();
+  ok('7.7 a server echoing the URL back cannot leak it either',
+    !i2.out.includes(TOK), i2.out.slice(0, 400));
+
+  //  Falling back matters: someone who has only ever set TODO_KEY must not
+  //  silently lose board state because a better option now exists.
+  let sawAuth = null;
+  const bearer = await serve((q, r) => {
+    sawAuth = q.headers.authorization || '';
+    r.writeHead(200, { 'Content-Type': 'application/json' });
+    r.end(JSON.stringify(DIGEST));
+  });
+  const j2 = await run({ TODO_KEY: 'fallback-key-value-here', APCS_BASE: bearer.base });
+  bearer.close();
+  ok('7.8 with no read token it falls back to the bearer', sawAuth === 'Bearer fallback-key-value-here', sawAuth);
+  ok('7.9 and says so, so the operator knows which one is exposed',
+    /full read\/write/.test(j2.out), j2.out.slice(0, 300));
+
+  const k2 = await run({});
+  ok('7.10 with neither, it names the read token as the one to set',
+    /COMMAND_READ_TOKEN/.test(k2.out) && /NO LIVE STATE/.test(k2.out), k2.out.slice(0, 300));
 
   console.log(`\n${'-'.repeat(70)}`);
   console.log(`session-hook: ${pass} passed, ${fail} failed`);
