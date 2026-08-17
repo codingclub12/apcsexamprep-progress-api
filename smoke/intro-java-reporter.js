@@ -260,6 +260,16 @@ const ATTRS_READ = literals(REPORTER, ['getAttribute']);
   ok('1.19c it renders student_message when the server sends one',
     REPORTER.includes('student_message'));
 
+  // The signed-out line must not promise marking this reporter cannot do. It
+  // graded nothing locally by design, so "your answers are still marked below"
+  // was a straight falsehood inherited from the CSA reporter's wording.
+  // Checked against the CODE with comments stripped: the comment above the fix
+  // quotes the old wording to explain it, and a naive grep flags that as the
+  // defect it is documenting.
+  const REPORTER_CODE = REPORTER.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+  ok('1.19d the signed-out message does not claim answers were marked',
+    !/still marked below/.test(REPORTER_CODE));
+
   ok('1.20 a failed submission is reported, never swallowed',
     /function reportFailure/.test(REPORTER)
     && (REPORTER.match(/reportFailure\(/g) || []).length >= 4);

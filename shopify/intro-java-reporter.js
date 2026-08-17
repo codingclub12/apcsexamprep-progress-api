@@ -96,7 +96,14 @@
   // is how a student does the work twice and a teacher sees an empty gradebook.
   function reportFailure(feedback, res) {
     if (res && res.noSession) {
-      say(feedback, 'Not signed in, so this was not saved. Your answers are still marked below.', '');
+      // This used to end "Your answers are still marked below", which was a
+      // sentence carried over from a reporter that graded in the browser. THIS
+      // one cannot: the page ships no answer key, so with no token there is no
+      // post, no grading, and nothing appears. Telling a signed-out student
+      // their work was marked when the page then shows them nothing is worse
+      // than telling them nothing at all.
+      say(feedback, 'Sign in to check your answers. Without an account these cannot be '
+        + 'marked, because the answers are kept on the server and not in this page.', '');
       return true;
     }
     if (res && res.networkError) {
@@ -118,7 +125,7 @@
       // remembered to translate it.
       var msg = (res && res.body && res.body.student_message)
         ? res.body.student_message
-        : 'Something went wrong on our end, so this was not saved. Your answers are still marked below.';
+        : 'Something went wrong on our end. This was not saved and could not be marked. Try again in a moment.';
       say(feedback, msg, 'bad');
       return true;
     }
