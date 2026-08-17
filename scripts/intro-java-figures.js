@@ -225,7 +225,7 @@ const CSS = `
 `;
 
 function html(spec, lesson) {
-  return `<!doctype html><meta charset="utf-8"><style>${CSS}</style>
+  return `<!doctype html><meta charset="utf-8"><style>${CSS}${CODE_CSS}</style>
 <div class="fig">
   <div class="eyebrow">Lesson ${esc(spec.lesson)} &middot; ${esc(lesson.title)} &middot; Step ${spec.step}</div>
   <h1>${esc(spec.heading)}</h1>
@@ -389,6 +389,167 @@ const SPECS = [
   },
 ];
 
+// ── Code windows ─────────────────────────────────────────────────────────────
+//  Every step that carries `code` in the bank also gets a figure: the snippet in
+//  a Greenfoot-style editor frame.
+//
+//  ── THE OBJECTION, AND WHAT ANSWERS IT ──────────────────────────────────────
+//  lib/intro-java-page.js already prints `s.code` as a <pre> right beneath the
+//  image, so a bare picture of the same code is the same thing twice, and the
+//  text copy is the better one: selectable, copyable, and read correctly aloud.
+//  A picture only earns its place by carrying what the <pre> cannot.
+//
+//  So these are not screenshots of code, they are ANNOTATED code. The frame says
+//  which file you are looking at, the gutter gives line numbers the prose can
+//  refer to, and the line the step is actually about is highlighted. The <pre>
+//  below stays exactly as it is and remains the copyable version.
+//
+//  Nothing here is hand authored. The snippet, the filename and the highlight
+//  are all derived from the bank, so a lesson edit changes the figure on the
+//  next run rather than silently leaving a stale picture behind.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Small on purpose. A full Java tokenizer would be a liability in a drawing
+// script: the input is a handful of teaching snippets, and the failure mode of
+// a miscolored token is cosmetic.
+const JAVA_KW = /\b(public|private|protected|class|extends|implements|void|int|double|boolean|char|String|new|return|if|else|while|for|true|false|null|this|super|static|final|break|continue)\b/g;
+
+function javaHighlight(src) {
+  // Comments first, then masked out, so a keyword inside a comment is not
+  // recolored and a comment containing a quote does not open a string.
+  const comments = [];
+  // Private-use code points, NOT \u0000. A NUL placeholder is silently dropped
+  // when the HTML is parsed, which left the bare index digit sitting in the
+  // code and destroyed the very arrow comment the step was drawing attention to.
+  // The index is encoded as LETTERS. With digits, the number highlighter three
+  // lines down matched the index inside the placeholder and wrapped it in <u>,
+  // so the unmask below no longer matched and the arrow comment the step was
+  // built around rendered as tofu.
+  const tag = (i) => '\uE000' + String(i).replace(/\d/g, (d) => 'abcdefghij'[Number(d)]) + '\uE001';
+  let out = esc(src).replace(/(\/\/[^\n]*)/g, (m) => {
+    comments.push(m);
+    return tag(comments.length - 1);
+  });
+  out = out
+    .replace(/(&quot;|")([^"\n]*)(&quot;|")/g, '<s>$&</s>')
+    .replace(JAVA_KW, '<b>$&</b>')
+    .replace(/\b(\d+)\b/g, '<u>$1</u>');
+  return out.replace(/\uE000([a-j]+)\uE001/g, (_, k) => {
+    const i = Number(k.replace(/[a-j]/g, (c) => String('abcdefghij'.indexOf(c))));
+    return `<i>${comments[i]}</i>`;
+  });
+}
+
+// Which line the step is really about. The banks mark it with an arrow comment
+// where one exists; that is authored intent, not a guess, so it is the only
+// signal used. A snippet with no marker gets no highlight rather than an
+// invented one.
+function markedLines(code) {
+  const hit = [];
+  code.split('\n').forEach((l, i) => { if (/<--|<-|&lt;--/.test(l)) hit.push(i); });
+  return hit;
+}
+
+// What to write on the editor tab. Greenfoot opens one class per window, so the
+// honest label is the class the snippet belongs to. When the snippet is a bare
+// method or expression the class name is carried forward from earlier steps in
+// the same lesson, which is where the student actually is.
+function fileNameFor(code, lesson, upto) {
+  const own = code.match(/\bclass\s+([A-Z]\w*)/);
+  if (own) return own[1] + '.java';
+  for (let i = upto - 1; i >= 0; i--) {
+    const prev = (lesson.steps || [])[i];
+    const m = prev && prev.code && prev.code.match(/\bclass\s+([A-Z]\w*)/);
+    if (m) return m[1] + '.java';
+  }
+  return 'Editor';
+}
+
+// The heading is the step's own first sentence. Using the bank's words rather
+// than inventing a caption is what keeps the figure and the prose beneath it
+// saying the same thing after an edit.
+function headingFrom(note, fallback) {
+  if (!note) return fallback;
+  // The whole first PARAGRAPH, not the first sentence. These notes open in short
+  // declaratives that only mean something together: "This compiles." on its own
+  // reads as reassurance, when the point being made is "This compiles. It runs.
+  // It is wrong, and it will not tell you."
+  const para = String(note).split(/\n\n/)[0].replace(/`/g, '').replace(/\s+/g, ' ').trim();
+  if (para.length <= 104) return para;
+  // Too long: keep whole sentences up to the limit, and never cut mid-word.
+  let kept = '';
+  for (const part of para.match(/[^.!?]+[.!?]*/g) || []) {
+    if ((kept + part).length > 104) break;
+    kept += part;
+  }
+  if (kept.trim()) return kept.trim();
+  return para.slice(0, 101).replace(/[,;: ]+\S*$/, '') + '...';
+}
+
+function codeFigure(code, lesson, stepIndex) {
+  const lines = code.split('\n');
+  const marked = new Set(markedLines(code));
+  // One size fits the whole course: the longest snippet in the bank is 14 lines
+  // and 76 characters, both inside the frame at this size. Measured, not hoped.
+  const rows = lines.map((l, i) => `<tr class="${marked.has(i) ? 'hl' : ''}">`
+    + `<td class="n">${i + 1}</td>`
+    + `<td class="c">${javaHighlight(l) || '&nbsp;'}</td></tr>`).join('');
+  // Type scales with the snippet. A fixed size was measured against the longest
+  // snippet's line COUNT and still clipped it, because the frame is more than
+  // its lines: tab, padding and border all eat the same 430px of stage. Sizing
+  // per figure is the version that cannot be wrong by a few pixels.
+  const n = lines.length;
+  const fs = n <= 10 ? 14.5 : n <= 12 ? 13 : 11.5;
+  const lh = n <= 10 ? 1.72 : n <= 12 ? 1.6 : 1.5;
+  return `<div class="ed" style="font-size:${fs}px;line-height:${lh}">
+    <div class="tab"><span class="dot"></span>${esc(fileNameFor(code, lesson, stepIndex))}</div>
+    <div class="edbody"><table class="code">${rows}</table></div>
+  </div>`;
+}
+
+const CODE_CSS = `
+  .ed { border: 1px solid ${RULE}; border-radius: 8px; overflow: hidden;
+        box-shadow: 0 1px 3px rgba(20,33,46,.07); background: #fff; }
+  .tab { background: #eef2f5; border-bottom: 1px solid ${RULE}; padding: 8px 13px;
+         font-size: 12.5px; font-weight: 700; color: #41535f;
+         font-family: "SF Mono", Menlo, Consolas, monospace; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+         background: ${AMBER}; margin-right: 8px; vertical-align: middle; }
+  .edbody { background: #fbfcfd; padding: 11px 0; }
+  table.code { border-collapse: collapse; }
+  table.code td { font-family: "SF Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+        font-size: inherit; line-height: inherit; padding: 0; }
+  table.code td.n { width: 44px; text-align: right; padding-right: 15px; color: #9aa8b4; }
+  table.code td.c { color: #1c2733; white-space: pre; padding-right: 20px; }
+  table.code tr.hl { background: #fdf5e7; }
+  table.code tr.hl td.n { color: ${AMBER}; font-weight: 700; }
+  table.code b { color: #7a3ea8; font-weight: 700; }
+  table.code i { color: #5b7285; font-style: italic; }
+  table.code u { color: #1c6b52; text-decoration: none; }
+  table.code s { color: #a8442a; text-decoration: none; }
+`;
+
+// Auto specs: one per step that has code and is not already claimed by a hand
+// written spec above. Built at module load so --check lists them too.
+function autoSpecs(claimed) {
+  const out = [];
+  for (const b of BANKS) {
+    for (const l of b.lessons) {
+      (l.steps || []).forEach((step, i) => {
+        if (!step.shot || !step.code) return;
+        if (claimed.has(`${l.lesson}|${i + 1}`)) return;
+        out.push({
+          lesson: l.lesson,
+          step: i + 1,
+          heading: headingFrom(step.note, `Lesson ${l.lesson}, step ${i + 1}`),
+          draw: () => codeFigure(step.code, l, i),
+        });
+      });
+    }
+  }
+  return out;
+}
+
 // ── Validation ───────────────────────────────────────────────────────────────
 // A spec must point at a step that exists and that actually asks for a picture.
 // This is what stops a figure surviving an edit to the lesson it illustrates.
@@ -402,7 +563,9 @@ function resolve() {
   const byId = lessonsById();
   const out = [];
   const problems = [];
-  for (const spec of SPECS) {
+  const claimed = new Set(SPECS.map((x) => `${x.lesson}|${x.step}`));
+  const all = SPECS.concat(autoSpecs(claimed));
+  for (const spec of all) {
     const l = byId.get(spec.lesson);
     if (!l) { problems.push(`${spec.lesson}: no such lesson in the bank`); continue; }
     const step = (l.steps || [])[spec.step - 1];
