@@ -10,5 +10,15 @@
         ]
       }
     ]
+  },
+  "permissions": {
+    "allow": [
+      "mcp__bdd095c7-24f7-42cc-8543-0569f5294a0f__graphql_query",
+      "mcp__github__pull_request_read",
+      "Bash(git fetch *)",
+      "mcp__github__get_job_logs",
+      "Bash(npm run smoke:introjava)",
+      "Bash(npm run smoke:encoding)"
+    ]
   }
 }
