@@ -39,8 +39,8 @@ const LESSONS = [
       h1: 'Declaring an Array in Java',
       title: 'Java Arrays: How to Declare and Create One | Intro to Java',
       description:
-        'How to declare a Java array, the two ways to create one, and why every slot starts at '
-        + 'zero. Beginner lesson with practice and a quiz.',
+        'How to declare a Java array, the two ways to create one, and the default value Java '
+        + 'puts in every slot. Beginner lesson with practice and a quiz.',
       primary: 'how to declare an array in java',
       related: ['java array initializer list', 'java new int array',
         'java array default values', 'greenfoot array of values'],
