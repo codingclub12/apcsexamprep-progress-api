@@ -331,8 +331,9 @@ app.get('/heartbeat-reporter.js', (req, res) => {
 // and no traversal is expressible.
 const FIGURE_NAME = /^intro-java-\d+\.\d+-step-\d+\.png$/;
 app.get('/figures/:name', (req, res) => {
-  if (!FIGURE_NAME.test(req.params.name)) return res.status(404).end();
-  res.set('Cache-Control', 'public, max-age=86400');
+  if (!FIGURE_NAME.test(req.params.name)) {
+    return res.set('Cache-Control', 'no-store').status(404).end();
+  }
   res.type('image/png');
   // A well formed name for a figure this build does not have is a 404, not a
   // 500. Without the callback, sendFile hands the ENOENT to the error handler
@@ -340,8 +341,24 @@ app.get('/figures/:name', (req, res) => {
   // somebody asked for a file that is not here yet. That is exactly the state a
   // half-deployed container is in, and it is worth being able to tell the two
   // apart from the outside.
-  res.sendFile(path.join(__dirname, 'public', 'figures', req.params.name), (err) => {
-    if (err && !res.headersSent) res.status(err.code === 'ENOENT' ? 404 : 500).end();
+  // The long cache lives in sendFile's options, so it is attached ONLY to a
+  // response that actually carries a file.
+  //
+  // It used to be set on the way in, before anything was known about the
+  // outcome, which meant every error inherited "cache me publicly for a day".
+  // A container that briefly 500'd on a figure it did not have yet got that 500
+  // pinned in Cloudflare for 24 hours, and the endpoint went on reporting a
+  // failure long after the deploy that fixed it. I read that stale 500 four
+  // separate times and concluded the deploy had never landed. It had.
+  //
+  // An error must never be cacheable: it is a statement about one moment, and
+  // the whole point of checking an endpoint is to learn the current one.
+  const opts = { headers: { 'Cache-Control': 'public, max-age=86400' } };
+  res.sendFile(path.join(__dirname, 'public', 'figures', req.params.name), opts, (err) => {
+    if (err && !res.headersSent) {
+      res.set('Cache-Control', 'no-store');
+      res.status(err.code === 'ENOENT' ? 404 : 500).end();
+    }
   });
 });
 
