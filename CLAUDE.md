@@ -11,8 +11,21 @@ A `SessionStart` hook fetches the digest and puts it in context before your firs
 message, so rule 1 below is true by construction rather than by memory. If it
 could not reach the board it says so loudly instead of injecting nothing; a
 session that starts with no state banner has state, and one that starts with a
-NO LIVE STATE block must not assume the board is empty or unclaimed. It needs
-`TODO_KEY` set as an environment variable on the Claude Code environment.
+NO LIVE STATE block must not assume the board is empty or unclaimed.
+
+Set `COMMAND_READ_TOKEN` on the Claude Code environment, not `TODO_KEY`. The
+read token is read-only and PII-stripped, and environment configuration is not
+a secrets store: anyone who can use the environment can read it, and a session
+can echo a variable into its own transcript at any time. That has already
+happened once. `TODO_KEY` still works as a fallback and can WRITE to the ledger,
+so it belongs in Railway and the Actions secret and nowhere else. Get the read
+token from `GET /api/command/read-token` while signed in, rotate it with
+`POST /api/command/read-token/rotate`.
+
+The session's container must also be able to REACH the board:
+`progress.apcsexamprep.com` has to be in the environment's Custom allowed
+domains, or every session opens with DIGEST UNREACHABLE no matter which
+credential is set.
 
 ```
 apcs digest                     # start here. scripts/apcs.js, or npm link once
