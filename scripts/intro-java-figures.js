@@ -103,6 +103,7 @@ function grid(rows, opts) {
     const cls = ['gc'];
     if (cell.mark) cls.push('mark');
     if (cell.dim) cls.push('dim');
+    if (cell.cls) cls.push(cell.cls);
     if (o.path && o.path.some(([pr, pc]) => pr === r && pc === c)) cls.push('onpath');
     return `<td class="${cls.join(' ')}">${cell.v === null || cell.v === undefined ? '' : esc(cell.v)}</td>`;
   }).join('')}
@@ -188,6 +189,21 @@ const CSS = `
   table.grid td.mark { border-color: ${AMBER}; background: #fdf3e6; color: ${AMBER}; }
   table.grid td.onpath { border-color: ${BLUE}; background: #eaf1fd; color: ${BLUE}; }
   table.grid td.dim { opacity: .38; border-style: dashed; }
+  /* Tile tones for the rendered-level figure. Deliberately not photographic:
+     the point is which code became which tile, not what the art looks like. */
+  table.grid td.t-wall { background: #41535f; border-color: #2b3a45; color: #fff; }
+  table.grid td.t-coin { background: #fdf3e6; border-color: ${AMBER}; color: ${AMBER}; }
+  table.grid td.t-player { background: #eaf1fd; border-color: ${BLUE}; color: ${BLUE}; }
+  table.grid td.t-floor { background: #fff; border-color: #e4e9ed; color: #b8c3cc; }
+  .seq { display: flex; flex-wrap: wrap; gap: 6px 4px; max-width: 780px;
+         align-items: center; justify-content: center; }
+  .seq .c { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 14px;
+            font-weight: 700; background: ${WASH}; border: 1.5px solid ${RULE};
+            border-radius: 5px; padding: 4px 8px; color: ${INK}; }
+  .seq .c.row0 { border-color: ${BLUE}; color: ${BLUE}; }
+  .seq .c.row1 { border-color: ${AMBER}; color: ${AMBER}; }
+  .seq .c.row2 { border-color: #14603c; color: #14603c; }
+  .seq .a { color: #b8c3cc; font-size: 13px; }
 
   /* panels */
   .twoup { display: flex; gap: 20px; width: 100%; align-items: stretch; }
@@ -388,6 +404,99 @@ const SPECS = [
     ], { rowLabels: true, colLabels: true }),
   },
 ];
+
+// ── The five remaining figures that are drawings rather than captures ────────
+// These were in the "no code, needs a screenshot" pile, and four of them never
+// did: a trace table, a decision table, a visiting order and a comment becoming
+// a method name are all relationships, and the fifth is a map array beside the
+// level it produces. None of them is a picture of Greenfoot.
+SPECS.push(
+  {
+    lesson: '3.1', step: 4,
+    heading: 'The comment you already wrote is the method name',
+    draw: () => twoUp(
+      {
+        title: 'before',
+        body: `<div class="ed" style="font-size:13px;line-height:1.6">
+          <div class="edbody"><table class="code">
+          <tr class="hl"><td class="n">1</td><td class="c"><i>// collect coins</i></td></tr>
+          <tr><td class="n">2</td><td class="c">${javaHighlight('if (isTouching(Coin.class))')}</td></tr>
+          <tr><td class="n">3</td><td class="c">{</td></tr>
+          <tr><td class="n">4</td><td class="c">    ${javaHighlight('removeTouching(Coin.class);')}</td></tr>
+          <tr><td class="n">5</td><td class="c">    ${javaHighlight('score = score + 1;')}</td></tr>
+          <tr><td class="n">6</td><td class="c">}</td></tr>
+          </table></div></div>`,
+      },
+      {
+        title: 'after',
+        body: `<div class="ed" style="font-size:13px;line-height:1.6">
+          <div class="edbody"><table class="code">
+          <tr class="hl"><td class="n">1</td><td class="c">${javaHighlight('public void collectCoins()')}</td></tr>
+          <tr><td class="n">2</td><td class="c">{</td></tr>
+          <tr><td class="n">3</td><td class="c">    ${javaHighlight('if (isTouching(Coin.class))')}</td></tr>
+          <tr><td class="n">4</td><td class="c">    {</td></tr>
+          <tr><td class="n">5</td><td class="c">        ...</td></tr>
+          <tr><td class="n">6</td><td class="c">    }</td></tr>
+          </table></div></div>`,
+        tone: 'good',
+      }
+    ),
+  },
+  {
+    lesson: '4.3', step: 4,
+    heading: 'What the accumulator holds after each pass',
+    draw: () => table(
+      ['pass', 'i', 'total = total + i', 'total after'],
+      [['1', '1', '0 + 1', '1'], ['2', '2', '1 + 2', '3'], ['3', '3', '3 + 3', '6'],
+       ['4', '4', '6 + 4', '10'], ['5', '5', '10 + 5', '15']]
+    ),
+  },
+  {
+    lesson: '5.4', step: 3,
+    heading: 'Which loop to reach for',
+    draw: () => table(
+      ['What you need', 'Which loop', 'Why'],
+      [['Read each value', 'enhanced for', 'Shortest, and no index to get wrong'],
+       ['Know the position', 'index for', 'The enhanced for never tells you where you are'],
+       ['Change what is stored', 'index for', 'Assigning to the loop variable changes nothing']]
+    ),
+  },
+  {
+    lesson: '6.3', step: 2,
+    heading: 'Every cell of a 3 by 4 grid, in the order the loops reach it',
+    draw: () => {
+      const cells = [];
+      for (let r = 0; r < 3; r++) {
+        for (let c = 0; c < 4; c++) {
+          cells.push(`<span class="c row${r}">(${r}, ${c})</span>`);
+          if (!(r === 2 && c === 3)) cells.push('<span class="a">&rarr;</span>');
+        }
+      }
+      return `<div class="seq">${cells.join('')}</div>`;
+    },
+  },
+  {
+    lesson: '6.5', step: 3,
+    heading: 'Each code in the array becomes one actor in the world',
+    draw: () => {
+      const MAP = [
+        [1, 1, 1, 1, 1, 1],
+        [1, 3, 0, 2, 0, 1],
+        [1, 0, 1, 1, 0, 1],
+        [1, 2, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1],
+      ];
+      const TILE = { 0: ['.', 't-floor'], 1: ['#', 't-wall'], 2: ['o', 't-coin'], 3: ['P', 't-player'] };
+      const codes = MAP.map((row) => row.map((v) => ({ v })));
+      const level = MAP.map((row) => row.map((v) => ({ v: TILE[v][0], cls: TILE[v][1] })));
+      return `<div class="row">
+        <div class="stack">${grid(codes, {})}<div class="tag">the map array</div></div>
+        <div class="arrow">&rarr;</div>
+        <div class="stack">${grid(level, {})}<div class="tag">buildMap() output</div></div>
+      </div>`;
+    },
+  }
+);
 
 // ── Code windows ─────────────────────────────────────────────────────────────
 //  Every step that carries `code` in the bank also gets a figure: the snippet in

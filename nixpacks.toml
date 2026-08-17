@@ -1,8 +1,29 @@
 [phases.setup]
-nixPkgs = ["nodejs_22", "npm-9_x"]
+# python3, gcc and gnumake are here for better-sqlite3, which is the only native
+# dependency in the tree.
+#
+# It ships prebuilt binaries and normally never compiles: `prebuild-install`
+# downloads one and npm moves on in a couple of seconds. That download is a
+# network call, though, and on 2026-08-17 it timed out. npm then did what its
+# install script says and fell back to `node-gyp rebuild`, which needs a
+# toolchain, and the image had none:
+#
+#     prebuild-install warn install Request timed out
+#     gyp ERR! find Python Could not find any Python installation to use
+#     Build Failed
+#
+# So a transient network blip took the whole deploy down, and it does it
+# silently from the outside: /api/health keeps answering from the last good
+# container while every new merge quietly fails to ship. These three packages
+# make the fallback actually work, which turns a failed deploy into a slow one.
+nixPkgs = ["nodejs_22", "npm-9_x", "python3", "gcc", "gnumake"]
 
 [phases.install]
-cmds = ["npm ci"]
+# --prefer-offline uses the local cache before the network where it can, and
+# --no-audit --no-fund drop two registry round trips that have nothing to do
+# with producing a working container. Fewer network calls, fewer chances to
+# time out on the one that matters.
+cmds = ["npm ci --prefer-offline --no-audit --no-fund"]
 
 [start]
 cmd = "node server.js"
