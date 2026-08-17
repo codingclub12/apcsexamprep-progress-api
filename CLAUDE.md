@@ -7,6 +7,13 @@ Center was built and then parked, and the reason was friction rather than
 features: a board you have to remember to open loses to the terminal you are
 already in. So the ledger is the first thing a session touches and the last.
 
+A `SessionStart` hook fetches the digest and puts it in context before your first
+message, so rule 1 below is true by construction rather than by memory. If it
+could not reach the board it says so loudly instead of injecting nothing; a
+session that starts with no state banner has state, and one that starts with a
+NO LIVE STATE block must not assume the board is empty or unclaimed. It needs
+`TODO_KEY` set as an environment variable on the Claude Code environment.
+
 ```
 apcs digest                     # start here. scripts/apcs.js, or npm link once
 apcs next                       # what to work on now

@@ -75,6 +75,7 @@
     "smoke:verifyboard": "node smoke/verify-board.js",
     "smoke:assertions": "node smoke/assertion-integrity.js",
     "smoke:boarddelta": "node smoke/board-delta.js",
+    "smoke:sessionhook": "node smoke/session-hook.js",
     "snapshot": "node scripts/snapshot-live-page.js",
     "ijredirects": "node scripts/intro-java-redirects-csv.js"
   },
