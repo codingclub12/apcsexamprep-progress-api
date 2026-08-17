@@ -35,12 +35,33 @@
 //  edit rather than a re-think.
 //
 //  WHAT IS DELIBERATELY ABSENT
-//  The Big Idea unit tests (ap-csp-course-bi{N}-unit-test) and the exercise-2
-//  games. The unit tests are their own pages and do not map onto the
-//  lesson|activity key this table uses, and CSP games are practice by default
-//  (games_graded is off for CSP), so a denominator would price a column that
-//  does not count. An absent column keeps today's behaviour; a guessed one
-//  silently regrades a class.
+//  The Big Idea unit tests (ap-csp-course-bi{N}-unit-test). They are their own
+//  pages and do not map onto the lesson|activity key this table uses.
+//
+//  EXERCISE 2, AND WHY IT IS GATED
+//  Until 2026-08-17 exercise-2 was absent here too, on the reasoning that a
+//  denominator would price a column that does not count. Half of that reasoning
+//  was about grading and half was about the pages: there were no exercise-2
+//  pages anywhere in CSP, so there was nothing to denominate.
+//
+//  The pages now exist in the repo (lib/csp-course-pages.js, 35 of them, six
+//  MCQs each) and ship through scripts/csp-pages-csv.js. Their denominators are
+//  DERIVED from the bank rather than scanned off a page, which is stronger
+//  evidence than a scan: the page is generated from the bank, so the count
+//  cannot drift from what the page paints.
+//
+//  They stay behind CSP_EXERCISE_2_PAGES_LIVE because a denominator seeded
+//  before the import lands would give every CSP class 35 columns reading 0 of 6
+//  for work no student could possibly have done yet. That is the same failure
+//  the unit-test columns were added to prevent, pointed the other way: an
+//  assessment that does not exist must not look like one nobody has taken.
+//  Flip the flag after the Matrixify import is verified live, then run with
+//  --update.
+//
+//  Seeding these changes what gradebooks DISPLAY, not what they count. CSP
+//  resolves games_graded to false by default (lib/gradebook-contract.js), so an
+//  exercise-2 column keeps its cell and its number and stays out of the grade
+//  until a teacher opts in per class.
 //
 //  SAFETY
 //  Insert-or-ignore by default, so a value authored by hand is never clobbered
@@ -125,6 +146,20 @@ const POINTS = {
   'legal-ethical-concerns|quiz':               6,   // 6 <div class="mcq-item" data-activity="quiz">
   'safe-computing|quiz':                       6,   // 6 <div class="mcq-item" data-activity="quiz">
 };
+
+// ── EXERCISE 2 ───────────────────────────────────────────────────────────────
+// Flip to true once scripts/csp-pages-csv.js has been imported and the pages
+// are verified live. See the header for why this is gated rather than seeded
+// straight away.
+const CSP_EXERCISE_2_PAGES_LIVE = false;
+
+if (CSP_EXERCISE_2_PAGES_LIVE) {
+  // Derived from the bank that generates the page, so the denominator and the
+  // number of graded items on the page are the same value by construction.
+  for (const bank of require('../seed/csp-exercise-2')) {
+    POINTS[`${bank.slug}|exercise-2`] = bank.questions.length;
+  }
+}
 
 // Lesson -> unit, from the COURSES config. course_denominators requires a unit
 // column but its primary key does not include one, so this only has to be
