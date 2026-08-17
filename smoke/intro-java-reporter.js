@@ -134,6 +134,17 @@ const ATTRS_READ = literals(REPORTER, ['getAttribute']);
   const UNCHECKABLE = new Set(['input[type="radio"]:checked']);
   for (const sel of SELECTORS) {
     if (UNCHECKABLE.has(sel)) continue;
+    // A bare element selector with a literal attribute value, e.g.
+    // input[type="radio"], which is how the reporter walks a question's options
+    // to put a cached selection back. Checked as a tag rather than a class.
+    const tagSel = sel.match(/^([a-z]+)\[([a-z-]+)="([^"]+)"\]$/i);
+    if (tagSel) {
+      const [, tag, at, val] = tagSel;
+      const hits = SAMPLE_HTML.filter((p) => p.html.includes(`<${tag} ${at}="${val}"`));
+      ok(`1.5 selector ${sel} matches rendered markup`, hits.length > 0,
+        { selector: sel, matchedLessons: hits.length });
+      continue;
+    }
     const m = sel.match(/^\.([a-z0-9-]+)((?:\[[a-z-]+\])*)$/i);
     if (!m) { ok(`1.5 selector ${sel} is a shape this test understands`, false, sel); continue; }
     const cls = m[1];
@@ -269,6 +280,32 @@ const ATTRS_READ = literals(REPORTER, ['getAttribute']);
   const REPORTER_CODE = REPORTER.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
   ok('1.19d the signed-out message does not claim answers were marked',
     !/still marked below/.test(REPORTER_CODE));
+
+  // ── Signed out, v2 ─────────────────────────────────────────────────────────
+  // v1 told a signed-out student to sign in and graded nothing, which made a
+  // free course impossible to try before joining it. These pin the replacement,
+  // and every one of them is a property that fails silently: a reporter that
+  // stopped using the anonymous routes, or started caching typed text, or
+  // started overstating where the work lives, would still look like it worked.
+  ok('1.19e signed out, it grades against the anonymous routes',
+    /'\/api\/progress\/anon\/'/.test(REPORTER_CODE) && /function submit\(/.test(REPORTER_CODE));
+  ok('1.19f it never tells a signed-out student to go away',
+    !/Sign in to check your answers\./.test(REPORTER_CODE));
+  ok('1.19g the device-local note says device, and claims no server copy',
+    /Saved on this device/.test(REPORTER_CODE)
+    && !/(saved|kept) (on|to) (our|the) server/i.test(REPORTER_CODE));
+
+  // The gap route's promise is that typed text is graded in transit and stored
+  // by nothing. A localStorage cache is a store. Receipts and scores may be
+  // cached; the words a student typed may not.
+  const REMEMBER_CALLS = REPORTER_CODE.match(/remember\([\s\S]*?\}\);/g) || [];
+  ok('1.19h every cache write is receipt and score only',
+    REMEMBER_CALLS.length >= 3
+    && REMEMBER_CALLS.every((c) => !/answers|\.value\b|input/.test(c)), REMEMBER_CALLS.length);
+  ok('1.19i the cache is bounded, like every other map in this codebase',
+    /CACHE_MAX/.test(REPORTER_CODE) && /Object\.keys\([\s\S]{0,40}items\)/.test(REPORTER_CODE));
+  ok('1.19j receipts are cleared once the server has ruled on them',
+    /clearCache\(\)/.test(REPORTER_CODE) && /'\/api\/progress\/import'/.test(REPORTER_CODE));
 
   ok('1.20 a failed submission is reported, never swallowed',
     /function reportFailure/.test(REPORTER)

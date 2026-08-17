@@ -24,6 +24,8 @@ const posthog = require('../lib/posthog');
 const { resolveMode, retryAllowedFor } = require('../retry-policy');
 const gapGrader = require('../lib/gap-grader');
 const choiceGrader = require('../lib/choice-grader');
+const receipt = require('../lib/anon-receipt');
+const { makeRateLimit } = require('../lib/rate-limit');
 
 // ── PREPARED STATEMENTS (module scope, reused across requests) ────────────────
 const getClassStmt = db.prepare(
@@ -682,6 +684,318 @@ router.post('/choice', requireStudent, rateLimit, (req, res) => {
   } catch (e) {
     console.error('Choice grade error:', e);
     res.status(500).json({ error: 'Failed to record attempt' });
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  ANONYMOUS GRADING — a signed-out student gets marked, and nothing is stored.
+//
+//  ── WHY ─────────────────────────────────────────────────────────────────────
+//  intro-java is a free course whose pages ship no answer key, so before this a
+//  signed-out reader clicked "Check my answers" and got told to sign in. That is
+//  a course that cannot be tried before it is joined. These two routes grade the
+//  work and return a signed receipt; POST /import below is what turns a pile of
+//  receipts into a real gradebook the moment an account exists.
+//
+//  ── WHAT "RECORDS NOTHING" MEANS HERE, LITERALLY ────────────────────────────
+//  No attempts row. No session row. No wire-log entry. No PostHog event, because
+//  PostHog needs a distinct id and inventing one for a signed-out student is
+//  exactly the tracking this product does not do. Not even a counter. The rate
+//  limiter holds an IP for at most one window and never writes it down; that is
+//  the whole of the state these routes touch.
+//
+//  ── WHY THE COURSE IS ALLOWLISTED ───────────────────────────────────────────
+//  Today the graders only hold intro-java banks, so nothing else COULD be graded
+//  here. The allowlist is for the day someone adds a bank for a paid course and
+//  does not think about this file: free-to-try is a decision per course, not a
+//  side effect of where the answer keys happen to live.
+const ANON_COURSES = new Set(['intro-java']);
+
+// Per IP, not per student, because there is no student. Generous for a human
+// working through a lesson (a lesson is a handful of checks plus a quiz) and
+// still a brake on someone walking the option space to extract a key.
+const anonRateLimit = makeRateLimit({
+  windowMs: 60_000,
+  max: 40,
+  maxKeys: 5000,
+  message: 'Too many checks from this connection. Wait a minute and try again.',
+});
+
+// Shared front half of both anonymous routes: what may be graded, and out of
+// what. Returns the manifest row or sends the response itself.
+function anonManifest(req, res, itemTypes) {
+  const b = req.body || {};
+  const course = typeof b.course === 'string' ? b.course.slice(0, 40) : '';
+  const item_id = typeof b.item_id === 'string' ? b.item_id : '';
+  if (!course || !item_id) {
+    res.status(400).json({ error: 'course and item_id required' });
+    return null;
+  }
+  if (!ANON_COURSES.has(course)) {
+    res.status(403).json({
+      error: `course '${course}' cannot be graded without an account`,
+      student_message: 'Sign in to check your answers on this course.',
+    });
+    return null;
+  }
+  const manifest = getManifestStmt.get(course, item_id);
+  if (!manifest || !itemTypes.has(manifest.item_type)) {
+    res.status(400).json({ error: `Unknown item '${item_id}' for ${course}. Not in course_manifest.` });
+    return null;
+  }
+  return { course, item_id, manifest };
+}
+
+// ── POST /api/progress/anon/choice ────────────────────────────────────────────
+router.post('/anon/choice', anonRateLimit, (req, res) => {
+  try {
+    const found = anonManifest(req, res, CHOICE_ITEM_TYPES);
+    if (!found) return;
+    const { course, item_id, manifest } = found;
+
+    const sel = (req.body || {}).selections;
+    if (!sel || typeof sel !== 'object') {
+      return res.status(400).json({ error: 'selections must be an object or an array' });
+    }
+    const vals = Array.isArray(sel) ? sel : Object.values(sel);
+    if (vals.length > 100) return res.status(400).json({ error: 'too many selections' });
+    for (const v of vals) {
+      if (v !== null && v !== undefined && !Number.isInteger(v)) {
+        return res.status(400).json({ error: 'every selection must be an integer option index' });
+      }
+    }
+
+    if (!choiceGrader.hasKey(course, item_id)) {
+      return res.status(404).json({ error: `No answer key for '${item_id}'. The page is live but the key is missing.` });
+    }
+    const graded = choiceGrader.gradeSubmission(course, item_id, sel);
+    if (graded.max_score !== manifest.points) {
+      console.error(`[anon/choice] key/manifest mismatch for ${course} ${item_id}`);
+      return res.status(500).json({ error: 'This item is misconfigured. Your work was not scored.' });
+    }
+
+    res.json({
+      // Not `recorded`. The signed-in routes say recorded:true and mean it; this
+      // one must not be able to be mistaken for them by a reader or by a client.
+      graded: true,
+      stored: false,
+      score: graded.score,
+      max_score: graded.max_score,
+      questions: graded.questions.map((q) => ({ id: q.id, ok: q.ok })),
+      receipt: receipt.sign({
+        course, item_id, item_type: manifest.item_type,
+        score: graded.score, max_score: graded.max_score, detail: graded.detail,
+      }),
+    });
+  } catch (e) {
+    console.error('Anon choice error:', e);
+    res.status(500).json({ error: 'Failed to grade' });
+  }
+});
+
+// ── POST /api/progress/anon/gap ───────────────────────────────────────────────
+//  Same promise as POST /gap about the typed text: graded in transit, discarded,
+//  never stored. Here there is not even a row it could have been stored on.
+router.post('/anon/gap', anonRateLimit, (req, res) => {
+  try {
+    const found = anonManifest(req, res, new Set([GAP_ITEM_TYPE]));
+    if (!found) return;
+    const { course, item_id, manifest } = found;
+
+    const answers = (req.body || {}).answers;
+    if (!answers || typeof answers !== 'object') {
+      return res.status(400).json({ error: 'answers must be an object or an array' });
+    }
+    const submitted = Array.isArray(answers) ? answers.length : Object.keys(answers).length;
+    if (submitted > 40) return res.status(400).json({ error: 'too many blanks submitted' });
+    for (const v of Array.isArray(answers) ? answers : Object.values(answers)) {
+      if (v !== undefined && v !== null && typeof v !== 'string') {
+        return res.status(400).json({ error: 'every answer must be a string' });
+      }
+      if (typeof v === 'string' && v.length > 200) {
+        return res.status(400).json({ error: 'an answer is too long' });
+      }
+    }
+
+    if (!gapGrader.hasKey(course, item_id)) {
+      return res.status(404).json({ error: `No gap key for '${item_id}'. The page is live but the key is missing.` });
+    }
+    const graded = gapGrader.gradeSubmission(course, item_id, answers);
+    if (graded.max_score !== manifest.points) {
+      console.error(`[anon/gap] key/manifest mismatch for ${course} ${item_id}`);
+      return res.status(500).json({ error: 'This exercise is misconfigured. Your work was not scored.' });
+    }
+
+    res.json({
+      graded: true,
+      stored: false,
+      score: graded.score,
+      max_score: graded.max_score,
+      holes: graded.holes.map((h) => ({ n: h.n, ok: h.ok, message: h.message })),
+      receipt: receipt.sign({
+        course, item_id, item_type: GAP_ITEM_TYPE,
+        score: graded.score, max_score: graded.max_score, detail: graded.detail,
+      }),
+    });
+  } catch (e) {
+    console.error('Anon gap error:', e);
+    res.status(500).json({ error: 'Failed to grade' });
+  }
+});
+
+// ── POST /api/progress/import ─────────────────────────────────────────────────
+//  Carry work done signed out into the account that was just made.
+//
+//  ── WHY AN IMPORTED ATTEMPT IS NOT AS GOOD AS A LIVE ONE, AND WHAT FOLLOWS ──
+//  A receipt proves the server graded that item at that score. It does not prove
+//  it was the student's first try, because a signed-out student can grade the
+//  same item as often as they like and keep only the receipt they liked. That is
+//  not a flaw to patch; it is what "no account, nothing stored" costs, and it is
+//  worth paying for a free course.
+//
+//  It does mean an import is exactly as strong as an unlimited retry, so it may
+//  only land where unlimited retries are already the policy:
+//
+//    • retry on for that item type  -> import, because best-of-N already governs
+//      the grade and a cherry-picked receipt is arithmetically just another try.
+//    • retry off                    -> refuse, and say so. Retry-off exists so
+//      the first attempt is the one that counts, and an imported receipt has no
+//      first attempt to speak of. Silently importing here would quietly repeal a
+//      teacher's setting.
+//
+//  Solo (ME-) accounts have retry on, so the acquisition path this was built for
+//  works, and a teacher's grading policy is never overridden to make it work.
+//
+//  The second guard is simpler: an item the student has ALREADY attempted while
+//  signed in is skipped. Real supervised work always beats a receipt, and it
+//  makes a repeated import idempotent instead of stacking duplicate rows.
+const MAX_RECEIPTS = 200;
+const countAnyStmt = db.prepare(
+  'SELECT COUNT(*) n FROM attempts WHERE student_id = ? AND item_id = ? AND course = ?'
+);
+const insertImportedStmt = db.prepare(`
+  INSERT INTO attempts (student_id, class_id, course, lesson_id, item_id, item_type,
+    score, max_score, passed, attempt_no, duration_seconds, ua, detail, source)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'imported')
+`);
+
+router.post('/import', requireStudent, rateLimit, (req, res) => {
+  try {
+    const b = req.body || {};
+    const list = b.receipts;
+    if (!Array.isArray(list)) return res.status(400).json({ error: 'receipts must be an array' });
+    if (list.length > MAX_RECEIPTS) {
+      return res.status(400).json({ error: `too many receipts (max ${MAX_RECEIPTS})` });
+    }
+
+    const cls = getClassStmt.get(req.student.class_id);
+    if (!cls) return res.status(401).json({ error: 'Class not found for student' });
+
+    const override = getRetryOverrideStmt.get(req.student.id);
+    const overrideVal = (override && override.retry_override != null) ? override.retry_override : null;
+    const mode = resolveMode(cls);
+    const threshold = cls.mastery_threshold != null ? cls.mastery_threshold : 80;
+    const ua = (req.get('user-agent') || '').slice(0, 120) || null;
+
+    // Decide everything first, write once. Two receipts for the same item in one
+    // payload is the client sending a stale copy alongside a fresh one; the first
+    // decision wins and the rest are skipped as duplicates.
+    const decided = [];
+    const seen = new Set();
+    for (const raw of list) {
+      const v = receipt.verify(raw);
+      if (!v.ok) {
+        decided.push({ ok: false, item_id: null, reason: v.reason });
+        continue;
+      }
+      const p = v.value;
+      if (seen.has(p.i)) {
+        decided.push({ ok: false, item_id: p.i, reason: 'duplicate' });
+        continue;
+      }
+      seen.add(p.i);
+
+      // Same course rule as every other write on this router.
+      if (cls.course !== 'solo' && p.c !== cls.course) {
+        decided.push({ ok: false, item_id: p.i, reason: 'wrong-course' });
+        continue;
+      }
+      const manifest = getManifestStmt.get(p.c, p.i);
+      if (!manifest || manifest.item_type === 'visit') {
+        decided.push({ ok: false, item_id: p.i, reason: 'not-in-manifest' });
+        continue;
+      }
+      // A receipt signed before a manifest edit must not import out of a stale
+      // denominator; the manifest is the points authority here as everywhere.
+      if (p.m !== manifest.points) {
+        decided.push({ ok: false, item_id: p.i, reason: 'stale-denominator' });
+        continue;
+      }
+      if (!retryAllowedFor(mode, manifest.item_type, overrideVal)) {
+        decided.push({ ok: false, item_id: p.i, reason: 'retry-off' });
+        continue;
+      }
+      if (countAnyStmt.get(req.student.id, p.i, p.c).n > 0) {
+        decided.push({ ok: false, item_id: p.i, reason: 'already-attempted' });
+        continue;
+      }
+      decided.push({
+        ok: true, item_id: p.i, course: p.c, lesson_id: manifest.lesson_id,
+        item_type: manifest.item_type, score: p.s, max_score: manifest.points,
+        detail: p.d,
+      });
+    }
+
+    const toWrite = decided.filter((d) => d.ok);
+    if (toWrite.length) {
+      db.transaction(() => {
+        for (const d of toWrite) {
+          const passed = (d.score / d.max_score) * 100 >= threshold ? 1 : 0;
+          // attempt_no is 1 by construction: already-attempted items were filtered
+          // out above, so nothing imported can be landing on top of prior work.
+          insertImportedStmt.run(
+            req.student.id, req.student.class_id, d.course, d.lesson_id, d.item_id,
+            d.item_type, d.score, d.max_score, passed, 1, null, ua,
+            JSON.stringify(d.detail)
+          );
+        }
+      })();
+    }
+
+    // The one place a signed-in student id exists for this work, so the one place
+    // it can be measured. This is the number that says whether free-to-try turns
+    // into accounts.
+    posthog.capture('anon_work_imported', req.student.id, {
+      class_id: req.student.class_id,
+      course: cls.course,
+      offered: list.length,
+      imported: toWrite.length,
+      skipped: decided.length - toWrite.length,
+      points: toWrite.reduce((n, d) => n + d.score, 0),
+    });
+
+    // A partial import is the COMMON case, not the edge one: the default class
+    // mode is 'practice', so a student arriving with a unit's worth of work gets
+    // their concept checks and not their quizzes. Saying only half of that would
+    // leave them hunting for a quiz grade that was never going to appear.
+    const n = toWrite.length;
+    const added = `Added ${n} ${n === 1 ? 'item' : 'items'} you finished before signing in.`;
+    const held = 'Your class counts your first try at a quiz, so quiz work done '
+      + 'before you signed in was not added. You can take it here.';
+    const retryOff = decided.some((d) => d.reason === 'retry-off');
+    res.json({
+      imported: n,
+      skipped: decided.length - n,
+      results: decided.map((d) => (d.ok
+        ? { item_id: d.item_id, imported: true, score: d.score, max_score: d.max_score }
+        : { item_id: d.item_id, imported: false, reason: d.reason })),
+      student_message: n && retryOff ? `${added} ${held}`
+        : (retryOff ? held
+          : (n ? added : 'Nothing new to add. Anything you had already done here was kept.')),
+    });
+  } catch (e) {
+    console.error('Import error:', e);
+    res.status(500).json({ error: 'Failed to import' });
   }
 });
 

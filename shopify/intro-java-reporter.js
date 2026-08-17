@@ -1,5 +1,5 @@
 /**
- * Intro to Java attempt reporter v1  (intro-java only)
+ * Intro to Java attempt reporter v2  (intro-java only)
  *
  * Drop on intro-java lesson pages. Owns every graded interaction on them:
  * concept checks, the fill-in-the-code exercise, and the lesson quiz.
@@ -20,6 +20,25 @@
  * That is a different contract from the CSA reporter, not a variation on it,
  * which is why it is a separate file rather than a branch inside that one.
  *
+ * -- SIGNED OUT (v2) ---------------------------------------------------------
+ * v1 told a signed-out student to sign in and marked nothing, which made a free
+ * course impossible to try before joining it. There are now anonymous twins of
+ * both routes:
+ *
+ *   POST /api/progress/anon/choice
+ *   POST /api/progress/anon/gap
+ *
+ * They grade and store NOTHING, and return a signed receipt. This file keeps the
+ * receipts in localStorage, restores the marks on the next visit, and posts them
+ * to /api/progress/import the first time it sees a token. So work done before an
+ * account follows the student into one.
+ *
+ * TWO THINGS THE CACHE IS NOT. It is not a grade: the server holds no record of
+ * it until an import, and the page says so in those words rather than implying
+ * permanence it does not have. And it is not a copy of anything typed: option
+ * indices are cached, gap text never is, matching the server's own posture that
+ * student free text is not kept anywhere.
+ *
  * -- WHAT IT HOOKS, WITH NO PAGE JS AT ALL -----------------------------------
  *   [data-role="check-cfu"]   grades every concept check on the page, one
  *                             attempt per check (each is its own manifest item)
@@ -35,8 +54,8 @@
  * anything locally. It never posts a score field; the server ignores one
  * anyway. Gap text is sent for grading and never stored by anything.
  *
- * SESSION: same localStorage token apcs-tracker.js uses. No token, no posts,
- *   and the page still works as a readable lesson.
+ * SESSION: same localStorage token apcs-tracker.js uses. With no token the page
+ *   still grades, anonymously, and nothing is recorded.
  *
  * No em-dashes, pure ASCII, per repo convention.
  */
@@ -46,6 +65,11 @@
 
   var API = 'https://progress.apcsexamprep.com';
   var TOKEN_KEYS = ['apcse_token', 'apcs_token', 'apcsToken'];
+  var CACHE_KEY = 'ij_anon_v1';
+  // Bounded on purpose. The whole course is a few hundred items; a cache that
+  // can only ever grow is how a browser tab gets slow and how a bug becomes a
+  // support ticket nobody can reproduce.
+  var CACHE_MAX = 300;
 
   function token() {
     for (var i = 0; i < TOKEN_KEYS.length; i++) {
@@ -70,12 +94,54 @@
     return Math.max(0, Math.min(86400, Math.round((Date.now() - started) / 1000)));
   }
 
-  function post(path, body) {
-    var t = token();
-    if (!t) return Promise.resolve({ noSession: true });
+  // -- Device-local cache ------------------------------------------------------
+  // Every read is defensive: this is a string another version of this file wrote
+  // up to a month ago, in a browser that may have had storage disabled since.
+  function readCache() {
+    try {
+      var raw = window.localStorage.getItem(CACHE_KEY);
+      if (!raw) return { v: 1, items: {} };
+      var c = JSON.parse(raw);
+      if (!c || typeof c !== 'object' || !c.items || typeof c.items !== 'object') {
+        return { v: 1, items: {} };
+      }
+      return c;
+    } catch (e) {
+      return { v: 1, items: {} };
+    }
+  }
+
+  function writeCache(c) {
+    try {
+      var ids = Object.keys(c.items);
+      if (ids.length > CACHE_MAX) {
+        // Drop the oldest first. `at` is set on every write below, so a missing
+        // one is from a build that predates it and is the safest thing to evict.
+        ids.sort(function (a, b) { return (c.items[a].at || 0) - (c.items[b].at || 0); });
+        for (var i = 0; i < ids.length - CACHE_MAX; i++) delete c.items[ids[i]];
+      }
+      window.localStorage.setItem(CACHE_KEY, JSON.stringify(c));
+    } catch (e) { /* storage full or blocked; the page still works */ }
+  }
+
+  function remember(itemId, entry) {
+    if (!itemId) return;
+    var c = readCache();
+    entry.at = Date.now();
+    c.items[itemId] = entry;
+    writeCache(c);
+  }
+
+  function clearCache() {
+    try { window.localStorage.removeItem(CACHE_KEY); } catch (e) { /* nothing to do */ }
+  }
+
+  function request(path, body, tok) {
+    var headers = { 'content-type': 'application/json' };
+    if (tok) headers.authorization = 'Bearer ' + tok;
     return fetch(API + path, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', authorization: 'Bearer ' + t },
+      headers: headers,
       body: JSON.stringify(body)
     }).then(function (r) {
       return r.json().then(function (j) { return { status: r.status, body: j }; })
@@ -85,6 +151,17 @@
     });
   }
 
+  // One call site for both worlds. `kind` is 'choice' or 'gap'; with no token it
+  // goes to the anonymous twin, which grades the same way and records nothing.
+  function submit(kind, body) {
+    var t = token();
+    return request((t ? '/api/progress/' : '/api/progress/anon/') + kind, body, t)
+      .then(function (res) {
+        res.anonymous = !t;
+        return res;
+      });
+  }
+
   function say(el, text, tone) {
     if (!el) return;
     el.textContent = text;
@@ -92,19 +169,16 @@
     el.style.webkitTextFillColor = el.style.color;
   }
 
+  // Said once per graded item while signed out, and deliberately not dressed up
+  // as a saved grade. An earlier draft of this feature proposed making the marks
+  // "seem permanent" so students would not realise clearing storage resets them.
+  // That is the same defect as the two false messages v1 shipped: the page would
+  // be telling a student something about their record that is not true.
+  var LOCAL_NOTE = ' Saved on this device. Make a free account to keep it anywhere.';
+
   // A submission that could not be recorded must SAY so. Silently swallowing it
   // is how a student does the work twice and a teacher sees an empty gradebook.
   function reportFailure(feedback, res) {
-    if (res && res.noSession) {
-      // This used to end "Your answers are still marked below", which was a
-      // sentence carried over from a reporter that graded in the browser. THIS
-      // one cannot: the page ships no answer key, so with no token there is no
-      // post, no grading, and nothing appears. Telling a signed-out student
-      // their work was marked when the page then shows them nothing is worse
-      // than telling them nothing at all.
-      say(feedback, 'Sign in to check your answers. Without an account these cannot be marked.', '');
-      return true;
-    }
     if (res && res.networkError) {
       say(feedback, 'Could not reach the server. Nothing was saved. Check your connection and try again.', 'bad');
       return true;
@@ -156,18 +230,25 @@
         say(feedback, 'Pick an answer first.', '');
         return Promise.resolve(null);
       }
+      var picked = parseInt(chosen.value, 10);
       say(feedback, 'Checking...', '');
-      return post('/api/progress/choice', {
+      return submit('choice', {
         course: COURSE,
         item_id: itemId,
-        selections: [parseInt(chosen.value, 10)],
+        selections: [picked],
         duration_seconds: elapsed()
       }).then(function (res) {
         if (reportFailure(feedback, res)) return null;
         var ok = res.body.questions && res.body.questions[0] && res.body.questions[0].ok;
         say(feedback, ok ? 'Correct.' : 'Not quite. Read the step above again and try another answer.',
           ok ? 'good' : 'bad');
-        return res.body;
+        if (res.anonymous && res.body.receipt) {
+          remember(itemId, {
+            r: res.body.receipt, s: res.body.score, m: res.body.max_score,
+            q: res.body.questions, sel: [picked]
+          });
+        }
+        return res;
       });
     });
 
@@ -178,19 +259,21 @@
       // its own slot and must not be silently scored as wrong here.
       var graded = results.filter(Boolean);
       if (!graded.length) return;
-      var right = 0;
-      graded.forEach(function (b) {
-        if (b.questions && b.questions[0] && b.questions[0].ok) right++;
-      });
+      var right = graded.filter(function (res) {
+        return res.body.questions && res.body.questions[0] && res.body.questions[0].ok;
+      }).length;
+      var anon = graded.some(function (res) { return res.anonymous; });
       say(summary, right + ' of ' + graded.length + ' correct.'
-        + (right === graded.length ? ' Keep going.' : ' Reread the step above, then try again.'),
+        + (right === graded.length ? ' Keep going.' : ' Reread the step above, then try again.')
+        + (anon ? LOCAL_NOTE : ''),
         right === graded.length ? 'good' : 'bad');
     });
   }
 
   // -- Fill in the code --------------------------------------------------------
   // One attempt for the whole exercise. The typed text is sent for grading and
-  // is never stored by anything at either end.
+  // is never stored by anything at either end, INCLUDING this cache: the receipt
+  // and the score are kept, the words the student typed are not.
   function checkGap(btn) {
     var section = btn.closest('.ij-gap');
     if (!section) return;
@@ -198,15 +281,16 @@
     var inputs = [].slice.call(section.querySelectorAll('.ij-hole[data-hole]'));
     if (!inputs.length) return;
 
+    var itemId = section.getAttribute('data-item-id');
     var answers = {};
     inputs.forEach(function (i) { answers[i.getAttribute('data-hole')] = i.value; });
 
     btn.disabled = true;
     say(feedback, 'Checking...', '');
 
-    post('/api/progress/gap', {
+    submit('gap', {
       course: COURSE,
-      item_id: section.getAttribute('data-item-id'),
+      item_id: itemId,
       answers: answers,
       duration_seconds: elapsed()
     }).then(function (res) {
@@ -230,8 +314,13 @@
         .map(function (h) { return 'Blank ' + h.n + ': ' + h.message; });
 
       var head = body.score + ' of ' + body.max_score + ' blanks correct.';
-      say(feedback, hints.length ? head + ' ' + hints.join(' ') : head,
+      say(feedback, (hints.length ? head + ' ' + hints.join(' ') : head)
+        + (res.anonymous ? LOCAL_NOTE : ''),
         body.score === body.max_score ? 'good' : 'bad');
+
+      if (res.anonymous && body.receipt) {
+        remember(itemId, { r: body.receipt, s: body.score, m: body.max_score, gap: true });
+      }
     });
   }
 
@@ -244,6 +333,7 @@
     var qs = [].slice.call(section.querySelectorAll('.ij-q'));
     if (!qs.length) return;
 
+    var itemId = section.getAttribute('data-item-id');
     var selections = [];
     var unanswered = 0;
     qs.forEach(function (q) {
@@ -261,9 +351,9 @@
     btn.disabled = true;
     say(out, 'Submitting...', '');
 
-    post('/api/progress/choice', {
+    submit('choice', {
       course: COURSE,
-      item_id: section.getAttribute('data-item-id'),
+      item_id: itemId,
       selections: selections,
       duration_seconds: elapsed()
     }).then(function (res) {
@@ -271,19 +361,127 @@
       if (reportFailure(out, res)) return;
 
       var body = res.body;
-      var byId = {};
-      (body.questions || []).forEach(function (q) { byId[q.id] = q.ok; });
-      qs.forEach(function (q) {
-        var ok = byId[q.getAttribute('data-q-id')];
-        if (ok === undefined) return;
-        var fb = q.querySelector('.ij-feedback');
-        say(fb, ok ? 'Correct.' : 'Not correct.', ok ? 'good' : 'bad');
-      });
+      markQuestions(qs, body.questions);
 
       say(out, body.score + ' out of ' + body.max_score + '.'
         + (body.passed ? ' Passed.' : '')
-        + (body.retry_allowed ? ' You can take it again.' : ''),
-        body.passed ? 'good' : 'bad');
+        + (body.retry_allowed ? ' You can take it again.' : '')
+        + (res.anonymous ? LOCAL_NOTE : ''),
+        body.score === body.max_score ? 'good' : 'bad');
+
+      if (res.anonymous && body.receipt) {
+        remember(itemId, {
+          r: body.receipt, s: body.score, m: body.max_score,
+          q: body.questions, sel: selections
+        });
+      }
+    });
+  }
+
+  // Mark each question from the server's per-question verdicts. Shared by the
+  // live path and the restore path so the two can never drift apart.
+  function markQuestions(qs, verdicts) {
+    var byId = {};
+    (verdicts || []).forEach(function (q) { byId[q.id] = q.ok; });
+    qs.forEach(function (q) {
+      var ok = byId[q.getAttribute('data-q-id')];
+      if (ok === undefined) return;
+      say(q.querySelector('.ij-feedback'), ok ? 'Correct.' : 'Not correct.', ok ? 'good' : 'bad');
+    });
+  }
+
+  // -- Restoring a previous visit ----------------------------------------------
+  // Put back what this device already has for the items on THIS page, so a
+  // signed-out student who comes back does not face a blank lesson they have
+  // already done. The wording says where it lives; it does not pretend to be a
+  // grade on a server that has never seen it.
+  function restore() {
+    var cache = readCache();
+    var ids = Object.keys(cache.items);
+    if (!ids.length) return;
+
+    // Concept checks: one item per question wrapper.
+    [].slice.call(wrap.querySelectorAll('.ij-q[data-item-id]')).forEach(function (q) {
+      var e = cache.items[q.getAttribute('data-item-id')];
+      if (!e || !e.q) return;
+      restoreSelections(q, e.sel);
+      var ok = e.q[0] && e.q[0].ok;
+      say(q.querySelector('.ij-feedback'), ok ? 'Correct.' : 'Not correct.', ok ? 'good' : 'bad');
+    });
+
+    [].slice.call(wrap.querySelectorAll('.ij-cfu')).forEach(function (section) {
+      var done = [].slice.call(section.querySelectorAll('.ij-q[data-item-id]'))
+        .filter(function (q) { return cache.items[q.getAttribute('data-item-id')]; });
+      if (!done.length) return;
+      say(summaryOf(section), 'Checked on this device already.' + LOCAL_NOTE, '');
+    });
+
+    // Quiz: one item for the whole section.
+    [].slice.call(wrap.querySelectorAll('.ij-quiz[data-item-id]')).forEach(function (section) {
+      var e = cache.items[section.getAttribute('data-item-id')];
+      if (!e) return;
+      var qs = [].slice.call(section.querySelectorAll('.ij-q'));
+      restoreSelections(section, e.sel);
+      markQuestions(qs, e.q);
+      say(summaryOf(section), e.s + ' out of ' + e.m + '.' + LOCAL_NOTE, '');
+    });
+
+    // Gap: the score line only. Nothing the student typed was cached, so the
+    // blanks come back empty and the message has to be honest about that rather
+    // than leaving green borders around boxes with nothing in them.
+    [].slice.call(wrap.querySelectorAll('.ij-gap[data-item-id]')).forEach(function (section) {
+      var e = cache.items[section.getAttribute('data-item-id')];
+      if (!e) return;
+      say(summaryOf(section), e.s + ' of ' + e.m + ' blanks correct last time on this device. '
+        + 'Type your answers again to check them.', '');
+    });
+  }
+
+  // Selections are option INDICES, which is why they can be cached at all. Radio
+  // values are the same indices the page rendered.
+  function restoreSelections(root, sel) {
+    if (!sel || !sel.length) return;
+    var qs = [].slice.call(root.querySelectorAll('.ij-q'));
+    var list = root.classList && root.classList.contains('ij-q') ? [root] : qs;
+    list.forEach(function (q, i) {
+      var v = sel[i];
+      if (v === null || v === undefined) return;
+      // Matched by reading each radio's value rather than by building a selector
+      // string around it. A concatenated selector would be the only place in this
+      // file where the markup contract is not a whole literal, which is exactly
+      // what smoke/intro-java-reporter.js reads this source for.
+      [].slice.call(q.querySelectorAll('input[type="radio"]')).some(function (input) {
+        if (parseInt(input.value, 10) !== v) return false;
+        input.checked = true;
+        return true;
+      });
+    });
+  }
+
+  // -- Carrying it into an account ---------------------------------------------
+  // The point of the whole feature. On the first page load after a student has a
+  // token, everything this device graded anonymously is offered to the server,
+  // which decides what may count (see the import route: it refuses to overwrite
+  // live work, and refuses outright where the class counts first attempts).
+  function importCached() {
+    var t = token();
+    if (!t) return;
+    var cache = readCache();
+    var receipts = Object.keys(cache.items)
+      .map(function (id) { return cache.items[id].r; })
+      .filter(Boolean);
+    if (!receipts.length) return;
+
+    request('/api/progress/import', { receipts: receipts.slice(0, 200) }, t).then(function (res) {
+      if (!res || res.status !== 200 || !res.body) return;
+      // Cleared whatever the verdict was. A receipt the server has ruled on is
+      // finished: keeping it would re-offer it on every page load forever.
+      clearCache();
+      var note = document.createElement('p');
+      note.className = 'ij-feedback ij-import-note';
+      note.setAttribute('role', 'status');
+      say(note, res.body.student_message || '', res.body.imported ? 'good' : '');
+      if (note.textContent) wrap.insertBefore(note, wrap.firstChild);
     });
   }
 
@@ -298,10 +496,12 @@
     else if (role === 'submit-quiz') submitQuiz(btn);
   });
 
+  if (token()) importCached(); else restore();
+
   // Exposed for the code-editor widgets that arrive with Units 2 to 6, so they
   // have one documented way in rather than each inventing its own.
   window.INTROJAVA_reportGap = function (itemId, answers) {
-    return post('/api/progress/gap', { course: COURSE, item_id: itemId, answers: answers });
+    return submit('gap', { course: COURSE, item_id: itemId, answers: answers });
   };
   window.INTROJAVA_page = { course: COURSE, lesson: LESSON };
 })();
