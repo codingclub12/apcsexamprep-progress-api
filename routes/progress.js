@@ -402,7 +402,11 @@ router.post('/gap', requireStudent, rateLimit, (req, res) => {
     } else if (b.course === cls.course) {
       course = cls.course;
     } else {
-      return res.status(400).json({ error: `course must be '${cls.course}' for this class` });
+      return res.status(400).json({
+        error: `course must be '${cls.course}' for this class`,
+        student_message: 'This lesson is not part of your class, so nothing was saved. '
+          + 'You can still read it and answer along.',
+      });
     }
 
     const item_id = typeof b.item_id === 'string' ? b.item_id : '';
@@ -559,7 +563,11 @@ router.post('/choice', requireStudent, rateLimit, (req, res) => {
     } else if (b.course === cls.course) {
       course = cls.course;
     } else {
-      return res.status(400).json({ error: `course must be '${cls.course}' for this class` });
+      return res.status(400).json({
+        error: `course must be '${cls.course}' for this class`,
+        student_message: 'This lesson is not part of your class, so nothing was saved. '
+          + 'You can still read it and answer along.',
+      });
     }
 
     const item_id = typeof b.item_id === 'string' ? b.item_id : '';

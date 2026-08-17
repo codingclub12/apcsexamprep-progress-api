@@ -96,7 +96,13 @@
   // is how a student does the work twice and a teacher sees an empty gradebook.
   function reportFailure(feedback, res) {
     if (res && res.noSession) {
-      say(feedback, 'Not signed in, so this was not saved. Your answers are still marked below.', '');
+      // This used to end "Your answers are still marked below", which was a
+      // sentence carried over from a reporter that graded in the browser. THIS
+      // one cannot: the page ships no answer key, so with no token there is no
+      // post, no grading, and nothing appears. Telling a signed-out student
+      // their work was marked when the page then shows them nothing is worse
+      // than telling them nothing at all.
+      say(feedback, 'Sign in to check your answers. Without an account these cannot be marked.', '');
       return true;
     }
     if (res && res.networkError) {
@@ -104,8 +110,22 @@
       return true;
     }
     if (!res || res.status !== 200 || !res.body) {
-      var msg = (res && res.body && res.body.error) ? res.body.error : 'Something went wrong.';
-      say(feedback, 'Not saved: ' + msg, 'bad');
+      // NEVER render res.body.error. Those strings are written for a developer
+      // reading a wire log and they say things like "course must be
+      // 'ap-cybersecurity' for this class" or "detail must be an array of
+      // {q, sel, ok}". A student saw the first of those on a live page, which is
+      // how this rule got written.
+      //
+      // The server supplies student_message where a student can genuinely reach
+      // the condition. Anything else is a bug on our side rather than something
+      // they did, so it gets one honest sentence and no jargon. Showing `error`
+      // is deliberately not a fallback: a NEW server error added later must not
+      // be able to leak developer text onto a lesson page just because nobody
+      // remembered to translate it.
+      var msg = (res && res.body && res.body.student_message)
+        ? res.body.student_message
+        : 'Something went wrong on our end. This was not saved and could not be marked. Try again in a moment.';
+      say(feedback, msg, 'bad');
       return true;
     }
     return false;
