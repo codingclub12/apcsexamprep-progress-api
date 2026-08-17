@@ -102,8 +102,7 @@
       // post, no grading, and nothing appears. Telling a signed-out student
       // their work was marked when the page then shows them nothing is worse
       // than telling them nothing at all.
-      say(feedback, 'Sign in to check your answers. Without an account these cannot be '
-        + 'marked, because the answers are kept on the server and not in this page.', '');
+      say(feedback, 'Sign in to check your answers. Without an account these cannot be marked.', '');
       return true;
     }
     if (res && res.networkError) {
