@@ -1,0 +1,165 @@
+{
+  "_comment": [
+    "The watch list for scripts/ced-watch.js. Every entry is a FIRST-PARTY College",
+    "Board URL. Secondary coverage (blogs, vendor summaries, teacher forums) is",
+    "deliberately excluded: it restates AP Central late and paraphrases it wrong,",
+    "so it generates churn without adding a single fact you could act on.",
+    "",
+    "Every URL here was confirmed to resolve before it was added. Do not add a URL",
+    "you have not opened. A permanently 404ing source reports UNREACHABLE every",
+    "week, and a weekly alarm that is always wrong is how a watcher gets ignored.",
+    "",
+    "kind:  'html' stores normalized visible text, so the PR diff is readable.",
+    "       'pdf'  stores sha256 + length only, because parsing PDFs would mean a",
+    "              dependency and the only question worth asking of these files is",
+    "              'did it change, go read it'.",
+    "critical: surfaces at the top of the report. Reserve it for documents whose",
+    "       revision would invalidate published course content."
+  ],
+  "sources": [
+    {
+      "id": "networking-framework-pdf",
+      "label": "AP Networking Course Framework (PDF)",
+      "course": "ap-networking",
+      "kind": "pdf",
+      "critical": true,
+      "url": "https://apcentral.collegeboard.org/media/pdf/ap-networking-course-framework.pdf",
+      "why": "The single highest-value signal in this file. AP Networking is still in pilot until the 2027-28 national launch, so this framework can still be revised. A revision here is the one event that can invalidate the 22 published topic pages."
+    },
+    {
+      "id": "networking-about",
+      "label": "About AP Networking",
+      "course": "ap-networking",
+      "kind": "html",
+      "critical": true,
+      "url": "https://apcentral.collegeboard.org/courses/ap-networking/about",
+      "why": "Unit titles, skill categories, and launch timing. First page to change when the framework moves."
+    },
+    {
+      "id": "networking-adopt",
+      "label": "Adopt AP Networking",
+      "course": "ap-networking",
+      "kind": "html",
+      "critical": false,
+      "url": "https://apcentral.collegeboard.org/courses/ap-networking/adopt",
+      "why": "Adoption requirements and equipment expectations. Changes here are buying-decision changes for a teacher."
+    },
+    {
+      "id": "networking-credential",
+      "label": "AP Networking Credential",
+      "course": "ap-networking",
+      "kind": "html",
+      "critical": false,
+      "url": "https://apcentral.collegeboard.org/courses/ap-career-kickstart/credentials/ap-networking",
+      "why": "Industry certification alignment (CompTIA Network+, Cisco CCNA and CCST). The stable, fully public part of the spec."
+    },
+    {
+      "id": "kickstart-pilots",
+      "label": "AP Career Kickstart pilots",
+      "course": "ap-networking",
+      "kind": "html",
+      "critical": true,
+      "url": "https://apcentral.collegeboard.org/courses/ap-career-kickstart/pilots",
+      "why": "Carries pilot ELIGIBILITY, which is the current ceiling on the AP Networking market. The 2026-27 pilot is restricted to prior AP Networking and AP Cybersecurity pilot schools. Any widening of that rule is a direct revenue event."
+    },
+    {
+      "id": "kickstart-hub",
+      "label": "AP Career Kickstart hub",
+      "course": "ap-networking",
+      "kind": "html",
+      "critical": false,
+      "url": "https://apcentral.collegeboard.org/courses/ap-career-kickstart",
+      "why": "Where a fourth Career Kickstart course would be announced first."
+    },
+    {
+      "id": "cyber-ced-pdf",
+      "label": "AP Cybersecurity Course and Exam Description (PDF)",
+      "course": "ap-cybersecurity",
+      "kind": "pdf",
+      "critical": true,
+      "url": "https://apcentral.collegeboard.org/media/pdf/ap-cybersecurity-course-and-exam-description.pdf",
+      "why": "AP Cybersecurity reached national launch in 2026-27, so this is a live CED against a course already sold."
+    },
+    {
+      "id": "cyber-course",
+      "label": "AP Cybersecurity course page",
+      "course": "ap-cybersecurity",
+      "kind": "html",
+      "critical": true,
+      "url": "https://apcentral.collegeboard.org/courses/ap-cybersecurity",
+      "why": "Five units and the three spiralled skills (Analyze Risk, Mitigate Risk, Detect Attacks)."
+    },
+    {
+      "id": "cyber-exam",
+      "label": "AP Cybersecurity Exam",
+      "course": "ap-cybersecurity",
+      "kind": "html",
+      "critical": false,
+      "url": "https://apcentral.collegeboard.org/courses/ap-cybersecurity/exam",
+      "why": "Exam format and weighting for a first-national-launch course, which is exactly where College Board still adjusts."
+    },
+    {
+      "id": "cyber-classroom-resources",
+      "label": "AP Cybersecurity classroom resources",
+      "course": "ap-cybersecurity",
+      "kind": "html",
+      "critical": false,
+      "url": "https://apcentral.collegeboard.org/courses/ap-cybersecurity/classroom-resources",
+      "why": "What College Board gives teachers for free. It sets the floor the paid Teacher Bundle has to clear."
+    },
+    {
+      "id": "csa-future-revisions",
+      "label": "AP CSA future revisions",
+      "course": "ap-csa",
+      "kind": "html",
+      "critical": true,
+      "url": "https://apcentral.collegeboard.org/courses/ap-computer-science-a/future-revisions",
+      "why": "The page that announced the 10-unit to 4-unit rebuild. If CSA moves again, it says so here first."
+    },
+    {
+      "id": "csa-course",
+      "label": "AP Computer Science A course page",
+      "course": "ap-csa",
+      "kind": "html",
+      "critical": false,
+      "url": "https://apcentral.collegeboard.org/courses/ap-computer-science-a",
+      "why": "Course-level framing and links to the current CED."
+    },
+    {
+      "id": "csp-course",
+      "label": "AP Computer Science Principles course page",
+      "course": "ap-csp",
+      "kind": "html",
+      "critical": false,
+      "url": "https://apcentral.collegeboard.org/courses/ap-computer-science-principles",
+      "why": "Five big ideas and the Create performance task framing."
+    },
+    {
+      "id": "csp-ced-pdf",
+      "label": "AP CSP Course and Exam Description (PDF)",
+      "course": "ap-csp",
+      "kind": "pdf",
+      "critical": false,
+      "url": "https://apcentral.collegeboard.org/media/pdf/ap-computer-science-principles-course-and-exam-description.pdf",
+      "why": "CSP is a mature course and this rarely moves, which is exactly why a change is worth hearing about."
+    },
+    {
+      "id": "course-changes-overview",
+      "label": "AP course and exam changes (program-wide)",
+      "course": "all",
+      "kind": "html",
+      "critical": true,
+      "url": "https://apcentral.collegeboard.org/courses/how-ap-develops-courses-and-exams/course-changes-overview",
+      "why": "The program-wide announcement page. Catches a course revision that has not reached the per-course pages yet."
+    },
+    {
+      "id": "exam-dates",
+      "label": "AP exam dates",
+      "course": "all",
+      "kind": "html",
+      "critical": false,
+      "url": "https://apcentral.collegeboard.org/exam-administration-ordering-scores/exam-dates",
+      "why": "Drives the promo calendar. Task 70 exists because a stale seasonal date sat live on the storefront."
+    }
+  ]
+}
