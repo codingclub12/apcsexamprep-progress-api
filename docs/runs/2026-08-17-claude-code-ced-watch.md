@@ -96,8 +96,12 @@ trailing newline appeared as a phantom removed blank line in every diff.
   and opens the first PR. Until then there is nothing to compare against.
 - The watcher detects change. It does not decide what a change means for the
   published pages, and deliberately does not write to the ledger.
-- The depth question is unanswered by this pass. The 22 published AP Networking
-  topics have not been audited against the framework's own learning objectives
-  or against the CompTIA Network+, Cisco CCNA and CCST overlap, which is where
-  non-speculative depth actually lives.
+- The depth audit was asked for after the watcher shipped and is now in
+  `docs/ap-networking-depth-audit.md`. Headline: the topic structure already
+  matches the framework, so no new pages are warranted, but Unit 1 is the
+  weakest unit on two independent measures, half of all cited EK groups skip
+  their first item, and zero of the 22 pages mention the certification
+  alignment that College Board itself leads with. It was measured from the
+  pages only, because the framework PDF is egress-blocked here, so the gap
+  counts are floors rather than totals.
 - Decision task 15 is the right home for the distribution strategy above.
