@@ -19,7 +19,12 @@
 //  AUTH, in order of precedence:
 //    APCS_TOKEN environment variable
 //    ~/.apcsrc            one line: the token, nothing else
+//    TODO_KEY environment variable   what a Claude Code environment already sets
 //  The token is never printed, never logged, and never passed as a querystring.
+//
+//  BEHIND A PROXY: this re-execs itself with --use-env-proxy when HTTPS_PROXY is
+//  set, because Node's fetch ignores that variable before Node 24. See
+//  reexecForProxy below.
 //
 //  WHAT THIS CANNOT DO, on purpose: mark a task verified. That is cookie-auth
 //  only (`AGENT_FORBIDDEN_FIELDS`), so an agent cannot close the loop on its own
@@ -39,9 +44,50 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { execFileSync } = require('child_process');
+const { execFileSync, spawnSync } = require('child_process');
 
 const BASE = process.env.APCS_BASE || 'https://progress.apcsexamprep.com';
+
+// ── egress proxy ─────────────────────────────────────────────────────────────
+//  Node's global fetch does not read HTTPS_PROXY. Reading it automatically
+//  arrived in Node 24; this repo pins 22, and a remote agent container routes
+//  every outbound connection through a local CONNECT proxy. So the CLI sent its
+//  requests around the proxy, the proxy refused them, and the refusal it printed
+//  was the proxy's own: "add this host to your network egress settings". That
+//  advice can never work, because the host was already allowed. The request was
+//  simply never tunneled. A whole session was spent on the allowlist before the
+//  bypass was found, which is the cost this comment exists to prevent.
+//
+//  undici reads the flag when it initialises, which happens before the first
+//  line of this file runs, so no assignment to process.env here can matter. The
+//  only fix available from inside the process is to hand the flag to a new one.
+//  Re-exec once, guarded against recursion, and only when there is a proxy to
+//  use: with no proxy configured this is a no-op and the CLI runs in-process.
+//
+//  NO_PROXY still applies inside the child, so the smoke suite driving this CLI
+//  against 127.0.0.1 stays direct and offline.
+function reexecForProxy() {
+  if (process.env.APCS_PROXY_REEXEC === '1') return;        // this IS the child
+  if (!(process.env.HTTPS_PROXY || process.env.https_proxy)) return;
+  // Node 22.x and older without the flag: nothing to re-exec into. Fall through
+  // rather than fail, so a direct-egress machine is unaffected.
+  if (!process.allowedNodeEnvironmentFlags.has('--use-env-proxy')) return;
+
+  const r = spawnSync(
+    process.execPath,
+    // The env-proxy agent is flagged experimental and warns on every run. One
+    // warning per ledger command is noise that trains people to ignore stderr.
+    // Silenced by warning CODE: --disable-warning=ExperimentalWarning does not
+    // match this one, which is emitted under the code UNDICI-EHPA.
+    ['--use-env-proxy', '--disable-warning=UNDICI-EHPA',
+      __filename, ...process.argv.slice(2)],
+    { stdio: 'inherit', env: { ...process.env, APCS_PROXY_REEXEC: '1' } },
+  );
+  // Could not spawn: fall through and let the direct attempt report honestly.
+  if (r.error) return;
+  process.exit(r.status === null ? 1 : r.status);
+}
+reexecForProxy();
 
 const C = process.stdout.isTTY ? {
   dim: (s) => `\x1b[2m${s}\x1b[0m`,
@@ -52,6 +98,11 @@ const C = process.stdout.isTTY ? {
   cyan: (s) => `\x1b[36m${s}\x1b[0m`,
 } : new Proxy({}, { get: () => (s) => s });
 
+//  TODO_KEY is last and deliberately additive: it changes nothing for anyone who
+//  already works today. It is here because the SessionStart hook reads TODO_KEY
+//  and this CLI read only APCS_TOKEN, so a remote session could open with a
+//  digest in context and still be told "No credential" by every verb that
+//  follows it. Same credential, two names, and the ledger unusable in between.
 function token() {
   if (process.env.APCS_TOKEN) return process.env.APCS_TOKEN.trim();
   const rc = path.join(os.homedir(), '.apcsrc');
@@ -59,8 +110,10 @@ function token() {
     const t = fs.readFileSync(rc, 'utf8').trim();
     if (t) return t;
   }
+  if (process.env.TODO_KEY) return process.env.TODO_KEY.trim();
   die('No credential. Set APCS_TOKEN, or put the token on one line in ~/.apcsrc\n'
-    + '  echo "YOUR_TOKEN" > ~/.apcsrc && chmod 600 ~/.apcsrc');
+    + '  echo "YOUR_TOKEN" > ~/.apcsrc && chmod 600 ~/.apcsrc\n'
+    + '  TODO_KEY is also accepted, which is what a Claude Code environment sets.');
 }
 
 function die(msg, code = 1) {
@@ -89,6 +142,17 @@ async function api(method, p, body) {
   const r = await raw(method, p, body);
   if (r.status === 401) die('401 - credential rejected. Token expired or rotated?');
   if (r.status === 403) {
+    // A 403 from the egress proxy and a 403 from the board mean opposite things,
+    // and answering the first with the second's advice is what cost a session.
+    // The board always answers JSON; the proxy answers text/plain.
+    if (!r.json && /not in allowlist/i.test(r.text)) {
+      die(`403 - blocked before the request reached the board.\n`
+        + `  ${r.text.slice(0, 200)}\n`
+        + `  ${C.dim('This is the container egress proxy, not the API, so no board')}\n`
+        + `  ${C.dim('credential or permission is involved. Either the host really is')}\n`
+        + `  ${C.dim('missing from this environment\'s allowlist, or the request went')}\n`
+        + `  ${C.dim('around the proxy: re-run with APCS_PROXY_REEXEC unset.')}`);
+    }
     die(`403 - forbidden.\n  ${r.json?.error || r.text.slice(0, 200)}\n`
       + `  ${C.dim('Agent credentials cannot touch: due_date, cost_per_day, promised_by, verified.')}`);
   }
@@ -350,8 +414,9 @@ ${C.bold('apcs')} - Command Center from the terminal
 ${C.dim(`Task ids and claim ids are different numbers. Every command above takes the
 TASK id and resolves the claim itself. Override with --claim <claim_id>.
 
-auth: APCS_TOKEN env var, or one line in ~/.apcsrc
-base: ${BASE}  (override with APCS_BASE)`)}
+auth: APCS_TOKEN env var, one line in ~/.apcsrc, or TODO_KEY
+base: ${BASE}  (override with APCS_BASE)
+proxy: HTTPS_PROXY is honoured by re-exec (Node fetch ignores it before Node 24)`)}
 `);
 };
 

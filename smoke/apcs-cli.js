@@ -55,6 +55,16 @@ app.get('/fixture/page', (req, res) => {
     + '</body></html>');
 });
 
+// Stands in for the container egress proxy refusing a host. The real proxy
+// answers text/plain with this exact sentence, where the board always answers
+// JSON, and that difference is the only thing distinguishing "your request never
+// left the container" from "your credential may not do that".
+app.use('/proxy403', (req, res) => {
+  res.status(403).type('text/plain')
+    .send('Host not in allowlist: progress.apcsexamprep.com. '
+      + 'Add this host to your network egress settings to allow access.');
+});
+
 app.use('/api/command', require('../routes/command'));
 app.use('/api/todo', require('../routes/todo'));
 const server = app.listen(0);
@@ -274,9 +284,26 @@ const liveFor = (taskId) => store.liveClaims().filter((c) => c.task_id === taskI
   // ── 6. Failure modes are legible ───────────────────────────────────────────
   section('6. Failures say what to do next');
 
-  const noCred = await apcsEnv({ APCS_TOKEN: '', HOME: path.join(__dirname, 'no-such-home') }, ['digest']);
+  // TODO_KEY has to be cleared alongside APCS_TOKEN for this run to have no
+  // credential at all: it is the third accepted source, and this suite sets it
+  // process-wide so the throwaway server can authenticate.
+  const noCred = await apcsEnv(
+    { APCS_TOKEN: '', TODO_KEY: '', HOME: path.join(__dirname, 'no-such-home') }, ['digest'],
+  );
   ok('6.1 a missing credential explains where to put one',
     noCred.code !== 0 && /APCS_TOKEN|\.apcsrc/.test(noCred.out), noCred.out.trim().slice(0, 160));
+  ok('6.1b and it names TODO_KEY, which is what a Claude Code environment sets',
+    /TODO_KEY/.test(noCred.out), noCred.out.trim().slice(0, 160));
+
+  // The bug this covers: the SessionStart hook authenticates with TODO_KEY and
+  // injects a digest, then every verb after it died with "No credential"
+  // because the CLI read only APCS_TOKEN. Same secret, two names, and the
+  // ledger unusable in exactly the sessions that had just read from it.
+  const todoKeyOnly = await apcsEnv(
+    { APCS_TOKEN: '', HOME: path.join(__dirname, 'no-such-home') }, ['digest'],
+  );
+  ok('6.1c TODO_KEY alone authenticates, so a hooked session can also claim',
+    todoKeyOnly.code === 0 && /open/.test(todoKeyOnly.out), todoKeyOnly.out.trim().slice(0, 160));
 
   const badCred = await apcsEnv({ APCS_TOKEN: 'wrong-token-entirely' }, ['digest']);
   ok('6.2 a rejected credential says so rather than printing a stack trace',
@@ -291,6 +318,54 @@ const liveFor = (taskId) => store.liveClaims().filter((c) => c.task_id === taskI
 
   const missingId = await apcs('show');
   ok('6.5 a missing argument prints usage', missingId.code !== 0 && /usage: apcs show/.test(missingId.out));
+
+  // ── 7. the egress proxy ────────────────────────────────────────────────────
+  //  Node's fetch ignores HTTPS_PROXY before Node 24, so in a remote container
+  //  every ledger verb went around the proxy and came back 403. The CLI then
+  //  printed the proxy's own advice - "add this host to your egress settings" -
+  //  for a host that was already allowed, which sent a session chasing the
+  //  allowlist instead of the bypass. Both halves are covered here: the request
+  //  now goes through the proxy, and a proxy 403 no longer reads like an API one.
+  section('7. The egress proxy is honoured, and its refusals are not misread');
+
+  // A proxy that does not exist. NO_PROXY covers 127.0.0.1, so the re-exec'd
+  // child must still reach the throwaway server directly. If the CLI ever
+  // started proxying loopback, this hangs or fails rather than passing quietly.
+  const viaProxy = await apcsEnv({
+    HTTPS_PROXY: 'http://127.0.0.1:9',
+    NO_PROXY: '127.0.0.1,localhost',
+    no_proxy: '127.0.0.1,localhost',
+  }, ['digest']);
+  ok('7.1 a configured proxy does not break a NO_PROXY loopback call',
+    viaProxy.code === 0 && /open/.test(viaProxy.out), viaProxy.out.trim().slice(0, 160));
+
+  // The recursion guard, exercised from the side the child sees. A child that
+  // re-execs again re-execs forever, and the symptom is a verb that never
+  // returns rather than one that fails, so drive the guarded path directly.
+  const guarded = await apcsEnv({
+    HTTPS_PROXY: 'http://127.0.0.1:9',
+    NO_PROXY: '127.0.0.1,localhost',
+    no_proxy: '127.0.0.1,localhost',
+    APCS_PROXY_REEXEC: '1',
+  }, ['digest']);
+  ok('7.2 the recursion guard short-circuits instead of re-execing forever',
+    guarded.code === 0 && /open/.test(guarded.out), guarded.out.trim().slice(0, 160));
+
+  // Silenced by code, not by type: the flag emits under UNDICI-EHPA, so
+  // --disable-warning=ExperimentalWarning misses it and every command carries a
+  // warning. Noise on every ledger verb is how people learn to ignore stderr.
+  ok('7.3 and it does not print an experimental-feature warning',
+    !/UNDICI-EHPA|ExperimentalWarning/.test(viaProxy.out), viaProxy.out.trim().slice(0, 160));
+
+  // A text/plain 403 is the proxy refusing before the board is reached. The
+  // board answers JSON. Answering the first with the second's advice - "agent
+  // credentials cannot touch verified" - is the misdirection worth a test.
+  const proxy403 = await apcsEnv({ APCS_BASE: `${BASE}/proxy403` }, ['digest']);
+  ok('7.4 a proxy 403 is reported as an egress block, not a credential problem',
+    proxy403.code !== 0 && /blocked before the request reached the board/.test(proxy403.out),
+    proxy403.out.trim().slice(0, 200));
+  ok('7.5 and it does not blame agent field permissions for it',
+    !/cannot touch/.test(proxy403.out), proxy403.out.trim().slice(0, 200));
 
   // ── summary ────────────────────────────────────────────────────────────────
   console.log(`\n${'-'.repeat(70)}`);
