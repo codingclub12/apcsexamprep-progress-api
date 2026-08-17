@@ -40,8 +40,29 @@
 
 // Paths exactly as the bank writes them: intro-java/{lesson}/step-{n}.png
 const AVAILABLE = [
-  // Nothing shot yet. Add paths here as they land, for example:
-  //   'intro-java/1.1/step-1.png',
+  // Generated diagrams, not screenshots. scripts/intro-java-figures.js draws
+  // these from the bank and rasterises them; they are the images whose job is
+  // to show a RELATIONSHIP (an array as boxes, a grid and its indexes, the
+  // visiting order of a nested loop) rather than to show what Greenfoot looks
+  // like on screen. Re-run `npm run figures` after editing a spec.
+  'intro-java/1.1/step-2.png',
+  'intro-java/3.5/step-2.png',
+  'intro-java/3.5/step-3.png',
+  'intro-java/5.1/step-1.png',
+  'intro-java/5.1/step-2.png',
+  'intro-java/5.2/step-1.png',
+  'intro-java/6.1/step-1.png',
+  'intro-java/6.2/step-1.png',
+  'intro-java/6.2/step-2.png',
+  'intro-java/6.2/step-3.png',
+  'intro-java/6.3/step-1.png',
+  'intro-java/6.4/step-1.png',
+  'intro-java/6.6/step-3.png',
+  'intro-java/6.7/step-1.png',
+  'intro-java/6.7/step-2.png',
+
+  // Still to come: everything showing the Greenfoot window itself, and every
+  // running scenario. Those are real captures and cannot be drawn.
 ];
 
 const SET = new Set(AVAILABLE);
