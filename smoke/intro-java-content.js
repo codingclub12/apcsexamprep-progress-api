@@ -624,6 +624,41 @@ ok('11.6b no question embeds a title prefix it meant to strip',
 const ijColon = ijFaqNames.filter((x) => /causes [^?]*:/.test(x.q));
 ok('11.6c no cause-question carries a stray colon', ijColon.length === 0, ijColon.slice(0, 5));
 
+// ── 11.6d EVERY FIGURE URL IS ONE SHOPIFY ACTUALLY SERVES ────────────────────
+//  This shipped broken. The renderer built figure URLs as
+//  https://apcsexamprep.com/cdn/shop/files/<name>.png, which looks entirely
+//  plausible, is the path Shopify uses in plenty of other stores, and 404s on
+//  this one. Nothing caught it: the pages imported cleanly, the <img> tags were
+//  present and correct, the smoke suite was green, and every figure rendered as
+//  a broken image with its alt text sitting in the box.
+//
+//  The two images that have always worked on this site (the logo and the profile
+//  picture) both use the cdn.shopify.com form with the shop id in the path, so
+//  that is the shape pinned here. A URL is only correct if a server agrees, and
+//  the closest this suite can get to asking one is to require the same shape as
+//  the images already known to load.
+section('11.6d Figure URLs use the form this store serves');
+
+const SERVED_PREFIX = 'https://cdn.shopify.com/s/files/1/0778/8403/1191/files/';
+const ijImgSrcs = [];
+// Lessons, hubs and help pages: a figure URL is wrong wherever it appears.
+for (const p of pages.concat(hubsForLinks(), helpPagesForLinks())) {
+  for (const m of p.bodyHtml.matchAll(/<img[^>]+src="([^"]+)"/g)) {
+    ijImgSrcs.push({ page: p.handle, src: m[1] });
+  }
+}
+ok('11.6d1 the course renders figures at all', ijImgSrcs.length > 100, ijImgSrcs.length);
+const badHost = ijImgSrcs.filter((x) => !x.src.startsWith(SERVED_PREFIX));
+ok('11.6d2 every figure URL uses the prefix this store serves',
+  badHost.length === 0, badHost.slice(0, 4));
+// The exact form that shipped broken, named so the failure message says why.
+const proxied = ijImgSrcs.filter((x) => /\/cdn\/shop\/files\//.test(x.src));
+ok('11.6d3 no figure uses the storefront-proxied path, which 404s here',
+  proxied.length === 0, proxied.slice(0, 4));
+// A baked-in ?v= would pin each figure to the version it had on import day.
+const versioned = ijImgSrcs.filter((x) => x.src.includes('?'));
+ok('11.6d4 no figure URL carries a cache-busting query', versioned.length === 0, versioned.slice(0, 4));
+
 // ── 11.7 US ENGLISH, BECAUSE THE AUDIENCE IS US ──────────────────────────────
 //  The course shipped with British spelling throughout: behaviour, labelled,
 //  maths, neighbours, capitalisation, and "marked" where a US teacher says
