@@ -14,6 +14,9 @@ const { resolveMode, retryAllowedFor } = require('../retry-policy');
 // through the same function the teacher and admin views use, so the three can
 // never print different fractions for the same work.
 const contract = require('../lib/gradebook-contract');
+// The single definition of "this teacher has paid for this course", shared with
+// the gate check and the admin views (see lib/entitlements.js).
+const entitlements = require('../lib/entitlements');
 
 // ── CREDENTIAL RATE LIMITS ────────────────────────────────────────────────────
 //  The four unauthenticated entry points below are the only places a caller can
@@ -120,6 +123,72 @@ router.post('/login', loginLimit, async (req, res) => {
 router.get('/me', requireStudent, (req, res) => {
   const cls = db.prepare('SELECT class_code, class_name, course FROM classes WHERE id = ?').get(req.student.class_id);
   res.json({ student: req.student, class: cls });
+});
+
+// ── ENTITLEMENT (site-wide ad gate + future paid gating) ──────────────────────
+//  The theme.liquid script "APCS student entitlement + ad gate" calls this on
+//  EVERY storefront page for any visitor holding a student token, and it fails
+//  open to ads on anything that is not a 200 with parseable JSON. It has been
+//  404ing since it shipped, so it has always taken the fail-open path.
+//
+//  Client contract, fixed by the deployed script (do not rename these keys):
+//    GET /api/student/entitlement   Authorization: Bearer <student token>
+//    200 -> { teacherTier: "paid"|"free"|null,
+//             unitsUnlocked: { "ap-csa": [1,2] },   // course keys are alias
+//             courses: ["ap-csa"] }                 // tolerant, full id is fine
+//  The script suppresses ads when the page's (course, unit) is in unitsUnlocked,
+//  or when the unit is 1 and teacherTier is non-null. Nothing else it reads can
+//  turn ads off, so those two fields ARE the ad policy.
+//
+//  WHY THIS SHIPS NEUTRAL BY DEFAULT: whether students in a paid course get an
+//  ad-free experience is an open business question, not a settled one, so this
+//  route does not decide it. STUDENT_AD_GATE (default off) is the switch. With
+//  it off, the two ad-policy fields are returned empty and ads behave exactly as
+//  they do today, with the plumbing in place; flipping the Railway variable to
+//  "on" turns on ad-free-for-paid-students with no code change.
+//
+//  The honest facts (course, enrolled, entitled) are returned either way, so a
+//  future paid-content gate can read this endpoint without waiting on the ad
+//  decision. Zero PII: no name, no id, nothing the student typed.
+const AD_GATE_ON = /^(on|true|1|yes)$/i.test(String(process.env.STUDENT_AD_GATE || '').trim());
+//  Fires once per page view, so the bucket is deliberately loose: a whole school
+//  behind one NAT IP browsing normally must never trip it. It exists only to cap
+//  a runaway client loop, which would arrive thousands per minute, not hundreds.
+const entitlementLimit = makeRateLimit({
+  windowMs: 60 * 1000, max: 300, maxKeys: 2000,
+  message: 'Too many requests. Please wait a moment and try again.',
+});
+router.get('/entitlement', entitlementLimit, requireStudent, (req, res) => {
+  const access = entitlements.resolveStudentAccess(req.student.id);
+
+  // teacherTier: 'paid' when the class teacher holds a live entitlement for the
+  // class course, 'free' for an enrolled student whose teacher has not paid,
+  // null for a solo (ME-) account, which has no teacher and no seat.
+  let teacherTier = null;
+  if (access.enrolled) teacherTier = access.entitled ? 'paid' : 'free';
+
+  // The whole course unlocks with the seat: the teacher buys a course, not a
+  // unit. Units come from the structure authority in utils.js, so adding a unit
+  // there unlocks it here with no second list to update.
+  const unitsUnlocked = {};
+  if (access.entitled) unitsUnlocked[access.course] = entitlements.unitsForCourse(access.course);
+
+  // Never cached by the browser. The URL is identical for every student and the
+  // HTTP cache does not key on the Authorization header, so on a shared school
+  // machine a cached copy would answer the next student with the last one's
+  // entitlement.
+  res.set('Cache-Control', 'no-store');
+  res.json({
+    // Ad-policy projection, suppressed while the gate is off.
+    teacherTier: AD_GATE_ON ? teacherTier : null,
+    unitsUnlocked: AD_GATE_ON ? unitsUnlocked : {},
+    courses: access.enrolled ? [access.course] : [],
+    // Facts, always honest, additive to the client contract.
+    adGate: AD_GATE_ON ? 'on' : 'off',
+    course: access.course,
+    enrolled: access.enrolled,
+    entitled: access.entitled,
+  });
 });
 
 // ── GET ALL PROGRESS ──────────────────────────────────────────────────────────
