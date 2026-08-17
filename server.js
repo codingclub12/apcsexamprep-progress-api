@@ -334,7 +334,15 @@ app.get('/figures/:name', (req, res) => {
   if (!FIGURE_NAME.test(req.params.name)) return res.status(404).end();
   res.set('Cache-Control', 'public, max-age=86400');
   res.type('image/png');
-  res.sendFile(path.join(__dirname, 'public', 'figures', req.params.name));
+  // A well formed name for a figure this build does not have is a 404, not a
+  // 500. Without the callback, sendFile hands the ENOENT to the error handler
+  // and the response says the server broke, when what actually happened is that
+  // somebody asked for a file that is not here yet. That is exactly the state a
+  // half-deployed container is in, and it is worth being able to tell the two
+  // apart from the outside.
+  res.sendFile(path.join(__dirname, 'public', 'figures', req.params.name), (err) => {
+    if (err && !res.headersSent) res.status(err.code === 'ENOENT' ? 404 : 500).end();
+  });
 });
 
 // PostHog browser init, with the public project key substituted in from the
