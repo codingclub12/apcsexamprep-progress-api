@@ -364,14 +364,19 @@ const LESSONS = [
           + 'Along the bottom are the execution controls.',
       },
       {
-        shot: SHOT('1.2', 2, 'Close-up of the execution controls: Act, Run, Pause, Reset, and a '
-          + 'speed slider.'),
+        // Greenfoot shows THREE buttons, not four: Act, Run and Reset, plus the
+        // speed slider. Pause is not a button of its own; Run turns into Pause
+        // while a scenario is running. The alt text used to list four, which
+        // sends a beginner hunting the toolbar for something that is not there.
+        shot: SHOT('1.2', 2, 'Close-up of the execution controls: the Act, Run and Reset buttons, '
+          + 'with the speed slider to their right.'),
         note:
           'ACT runs exactly one frame. Every actor gets one turn and then everything stops. This is '
           + 'the most useful button in Greenfoot and beginners almost never use it. When something '
           + 'is behaving strangely, pressing Act repeatedly lets you watch it happen one step at a '
           + 'time instead of guessing at full speed.\n\n'
-          + 'RUN is Act on repeat until you press Pause. RESET throws the world away and builds a '
+          + 'RUN is Act on repeat. While it is running the Run button itself turns into PAUSE, '
+          + 'which is why you will not find a separate pause button. RESET throws the world away and builds a '
           + 'fresh one. The SPEED SLIDER changes how fast frames go by; it changes nothing about '
           + 'your code.',
       },

@@ -40,17 +40,6 @@
 
 // Paths exactly as the bank writes them: intro-java/{lesson}/step-{n}.png
 const AVAILABLE = [
-  // Generated figures, not screenshots. scripts/intro-java-figures.js draws
-  // these from the bank and rasterises them, so a lesson edit changes the
-  // picture on the next run rather than leaving a stale one behind.
-  //
-  // Two kinds. A handful are DIAGRAMS of a relationship the page cannot carry
-  // in prose: an array as boxes, a grid and its indexes, the visiting order of
-  // a nested loop. The rest are CODE WINDOWS: the step snippet in an editor
-  // frame with line numbers and the marked line highlighted. The <pre> the
-  // renderer prints below each one is still the copyable version.
-  //
-  // Re-run `npm run figures` after editing a spec or a snippet.
   'intro-java/1.1/step-2.png',
   'intro-java/1.1/step-3.png',
   'intro-java/1.1/step-4.png',
@@ -95,6 +84,7 @@ const AVAILABLE = [
   'intro-java/3.1/step-1.png',
   'intro-java/3.1/step-2.png',
   'intro-java/3.1/step-3.png',
+  'intro-java/3.1/step-4.png',
   'intro-java/3.2/step-1.png',
   'intro-java/3.2/step-2.png',
   'intro-java/3.2/step-3.png',
@@ -133,6 +123,7 @@ const AVAILABLE = [
   'intro-java/4.3/step-1.png',
   'intro-java/4.3/step-2.png',
   'intro-java/4.3/step-3.png',
+  'intro-java/4.3/step-4.png',
   'intro-java/4.4/step-1.png',
   'intro-java/4.4/step-2.png',
   'intro-java/4.4/step-3.png',
@@ -160,6 +151,7 @@ const AVAILABLE = [
   'intro-java/5.3/step-3.png',
   'intro-java/5.4/step-1.png',
   'intro-java/5.4/step-2.png',
+  'intro-java/5.4/step-3.png',
   'intro-java/5.5/step-1.png',
   'intro-java/5.5/step-2.png',
   'intro-java/5.5/step-3.png',
@@ -174,6 +166,7 @@ const AVAILABLE = [
   'intro-java/6.2/step-2.png',
   'intro-java/6.2/step-3.png',
   'intro-java/6.3/step-1.png',
+  'intro-java/6.3/step-2.png',
   'intro-java/6.3/step-3.png',
   'intro-java/6.3/step-4.png',
   'intro-java/6.4/step-1.png',
@@ -182,6 +175,7 @@ const AVAILABLE = [
   'intro-java/6.4/step-4.png',
   'intro-java/6.5/step-1.png',
   'intro-java/6.5/step-2.png',
+  'intro-java/6.5/step-3.png',
   'intro-java/6.5/step-4.png',
   'intro-java/6.6/step-1.png',
   'intro-java/6.6/step-2.png',
@@ -192,8 +186,8 @@ const AVAILABLE = [
   'intro-java/6.7/step-3.png',
   'intro-java/6.7/step-4.png',
 
-  // Still missing: the Greenfoot window itself, its menus and dialogs, and
-  // every running scenario. Those are real captures and cannot be drawn.
+  // Still missing: the Greenfoot window, its menus and dialogs, and every
+  // running scenario. Those are captures, not drawings.
 ];
 
 const SET = new Set(AVAILABLE);
@@ -201,4 +195,21 @@ const SET = new Set(AVAILABLE);
 /** Has this screenshot been taken and uploaded? */
 function hasShot(src) { return SET.has(String(src)); }
 
-module.exports = { AVAILABLE, SET, hasShot };
+// ── HOW BIG EACH IMAGE ACTUALLY IS ───────────────────────────────────────────
+//  Every generated figure is drawn at 960x600 and rasterised at 2x, so that is
+//  the default and most entries never need a line here.
+//
+//  Real screenshots are whatever shape the window was. The renderer writes
+//  width and height onto every <img>, and a wrong pair is not cosmetic: the
+//  browser reserves that box before the image loads, so a mis-declared aspect
+//  ratio is a visible jump on a phone. A captured shot therefore records its
+//  true size below, taken from the file rather than assumed.
+const DEFAULT_SIZE = { w: 960, h: 600 };
+const SIZES = {
+  // 'intro-java/1.1/step-1.png': { w: 1914, h: 1030 },
+};
+
+/** Declared size for a shot. Generated figures use the default. */
+function sizeOf(src) { return SIZES[String(src)] || DEFAULT_SIZE; }
+
+module.exports = { AVAILABLE, SET, hasShot, sizeOf, SIZES, DEFAULT_SIZE };
