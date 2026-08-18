@@ -2,34 +2,34 @@
 
 Written overnight 2026-08-18 for a first-period AP CSA class the same morning.
 
-## READ THIS FIRST: Railway has not deployed since 05:15 UTC
+## READ THIS FIRST: the deploy landed. Run the two curls.
 
-Checked at 09:10 UTC. `GET /api/health` still reports commit `4e84c2e` while
-main is six merges ahead. **This is an infrastructure stall, not a broken
-build**: the current main HEAD was checked out and booted locally and every
-route answered correctly, so there is nothing to fix in the code and nothing to
-re-merge.
+The stall cleared. Re-checked at 09:54 UTC: `GET /api/health` reports `26fe1e3`,
+and that commit was inspected directly rather than assumed. It contains
+`routes/admin.js` with both `/code-tests/seed` and `/csa-exercise-pages/publish`,
+and it contains `lib/csa-code-modes.js`, which is what makes program and driver
+mode grading work at all.
 
-What that means for this morning:
+Everything still queued behind the deploy is documentation plus the build-cache
+fix and the drift workflow. None of it is needed for a class.
 
 | | status |
 |---|---|
-| Both grading modes, the `mode` column, raised Judge0 limits | **LIVE** (they shipped in the earlier deploy) |
-| Five exercise pages, 1.1 to 1.5 | **LIVE** (created by hand, verified) |
-| `POST /api/admin/code-tests/seed` | **NOT live** until Railway deploys |
-| `POST /api/admin/csa-exercise-pages/publish` | **NOT live** until Railway deploys |
+| Both grading modes, the `mode` column, raised Judge0 limits | **LIVE** |
+| Fifteen exercise pages, all of Unit 1 | **LIVE** (created by hand, each verified) |
+| `POST /api/admin/code-tests/seed` | **LIVE** |
+| `POST /api/admin/csa-exercise-pages/publish` | **LIVE** |
 
-So the two curls below will 404 until the deploy lands. **Use the fallbacks in
-"If the endpoints are not there yet" instead.** Check first with:
+The fallbacks further down are kept, but they are now insurance rather than the
+plan. The one thing still genuinely unknown is whether the Railway Shopify token
+carries `write_content`; see "If step 2 refuses with a scope error".
 
-```sh
-curl -s https://progress.apcsexamprep.com/api/health
-```
+An earlier version of this file led with a stall banner telling you the
+endpoints were missing. That was true when it was written and is not true now.
+The habit worth keeping is the one that caught it: check `/api/health` and
+compare, rather than trusting a document about live state.
 
-If `commit` is `4e84c2e`, the deploy still has not arrived. If it is anything
-newer, the endpoints are live and the two curls work.
-
-## TL;DR, two curls (once the deploy lands)
+## TL;DR, two curls
 
 Both need `ADMIN_KEY` (the header key, not the dashboard cookie: these are
 mutations). Run them in this order.
@@ -59,16 +59,28 @@ is safe.
 
 ## What is already live, before you touch anything
 
-**Five pages, created by hand overnight and each verified against the live
-storefront.** These work right now, with no action from you:
+**All fifteen Unit 1 pages, created by hand overnight and each verified against
+the live storefront.** These work right now, with no action from you. Unit 1 is
+the pilot unit and it is complete, so a first period class has a full unit of
+graded exercises even if step 2 below never runs:
 
-| lesson | page |
+| lesson | handle under `/pages/` |
 |---|---|
-| 1.1 Algorithms | `/pages/ap-csa-lesson-1-1-intro-algorithms-exercise-1` |
-| 1.2 Variables and Data Types | `/pages/ap-csa-lesson-1-2-variables-data-types-exercise-1` |
-| 1.3 Expressions and Output | `/pages/ap-csa-lesson-1-3-expressions-assignment-exercise-1` |
-| 1.4 Assignment and Input | `/pages/ap-csa-lesson-1-4-assignment-statements-input-exercise-1` |
-| 1.5 Casting and Range | `/pages/ap-csa-lesson-1-5-casting-range-exercise-1` |
+| 1.1 Algorithms | `ap-csa-lesson-1-1-intro-algorithms-exercise-1` |
+| 1.2 Variables and Data Types | `ap-csa-lesson-1-2-variables-data-types-exercise-1` |
+| 1.3 Expressions and Output | `ap-csa-lesson-1-3-expressions-assignment-exercise-1` |
+| 1.4 Assignment and Input | `ap-csa-lesson-1-4-assignment-statements-input-exercise-1` |
+| 1.5 Casting and Range | `ap-csa-lesson-1-5-casting-range-exercise-1` |
+| 1.6 Compound Assignment | `ap-csa-lesson-1-6-compound-assignment-exercise-1` |
+| 1.7 API and Libraries | `ap-csa-lesson-1-7-api-libraries-exercise-1` |
+| 1.8 Documentation and Comments | `ap-csa-lesson-1-8-documentation-comments-exercise-1` |
+| 1.9 Method Signatures | `ap-csa-lesson-1-9-method-signatures-exercise-1` |
+| 1.10 Calling Class Methods | `ap-csa-lesson-1-10-calling-class-methods-exercise-1` |
+| 1.11 Math Class | `ap-csa-lesson-1-11-math-class-exercise-1` |
+| 1.12 Objects and Instances | `ap-csa-lesson-1-12-objects-instances-exercise-1` |
+| 1.13 Object Creation | `ap-csa-lesson-1-13-object-creation-exercise-1` |
+| 1.14 Calling Instance Methods | `ap-csa-lesson-1-14-calling-instance-methods-exercise-1` |
+| 1.15 String Manipulation | `ap-csa-lesson-1-15-string-manipulation-exercise-1` |
 
 Verified on each: the routing attributes the grade call reads, exactly one h1,
 the editor and both endpoints present, the starter in the editor matching the
@@ -164,25 +176,35 @@ get right.
 - Nothing records a zero on any failure path. A 429, a 404 and a runner outage
   all record nothing at all, so a bad ten minutes cannot damage a grade.
 
-## If the two admin routes 404 or the seed says the route is unknown
+## The deploy queue is still slow, and that is now a separate problem
 
-The merge of #196 went in at 05:15 UTC. Railway was running behind a queue of
-other merges at the time this was written, and the deploy had not picked it up
-yet. My commits ARE an ancestor of main's head, so they ship with whatever
-Railway deploys next; there is nothing to re-merge.
+`26fe1e3` is serving. Main is `ffe06b9`, merged around 09:37 UTC and polled every
+twenty seconds until 09:54: not deployed. That is well past the thirty minute
+grace the drift check allows, so the scheduled check would now be failing, which
+is exactly what it was built to do.
 
-The code was proven good independently of the deploy: the merged tree was booted
-locally and all three endpoints answered correctly (`code-tests` reported the
-honest empty state, the seed dry run reported 54 items and 274 cases without
-writing, and the pages route correctly reported missing Shopify credentials
-rather than crashing). So a 404 in the morning means the deploy has not landed,
-not that the code is wrong. Check `GET /api/health` and compare `commit` against
-main.
+Nothing in that gap blocks a class. `ffe06b9` and `fb98aa3` are this runbook,
+the page verification notes, the npm cache fix in `nixpacks.toml` and the drift
+workflow itself. The irony is worth naming: the fix that should stop deploys
+from silently dying cannot land until a deploy succeeds.
+
+What is worth doing when you are awake, in order:
+
+1. Railway Deployments tab, for the window 05:15 to now. If a build **failed**,
+   the log line to look for is `prebuild-install warn install Request timed out`
+   followed by a node-gyp Python error. That is the documented failure mode here
+   and the `cacheDirectories` change in `nixpacks.toml` is the fix for it.
+2. Turn on Railway's deploy failure notifications. Four hours of invisible
+   failure happened because nothing was watching, and the drift workflow is only
+   half the answer: it tells you the deploy did not land, while Railway can tell
+   you why.
 
 ## Still open after this
 
-- The other 48 pages exist only as generated bodies until step 2 runs.
+- Units 2, 3 and 4 (38 pages) exist only as generated bodies until step 2 runs.
+  Unit 1 is complete and live, so step 2 is a widening, not a rescue.
 - No student has actually submitted through the graded path in production. The
   first real submission is the last untested link, and it is the one thing worth
   doing yourself before class: sign in as a test student on 1.1 and submit.
 - 1.6 `exercise-3` (the FRQ) has a test bank and no page.
+- `ffe06b9` has not deployed. See the section above.
