@@ -1,6 +1,7 @@
 # The weekly course blog
 
-Four posts a week, one per course, published live without human review.
+Twelve posts a week, three per course, each course in its own blog, published
+live without human review.
 
 That last clause is the whole reason this document exists. Everything here is
 downstream of one decision: the posts go live automatically, so the controls
@@ -10,16 +11,51 @@ that would normally live in a person's judgement have to live in code instead.
 
 | | |
 |---|---|
-| Volume | 4 posts a week, one each for ap-csa, ap-csp, ap-cybersecurity, ap-networking |
+| Volume | 12 posts a week: 3 each for ap-csa, ap-csp, ap-cybersecurity, ap-networking |
 | Day | Tuesday, 14:00 UTC, mid-morning US Central |
-| Destination | `/blogs/news/<handle>` for all four courses |
-| Queue | `content/editorial-calendar.js`, 12 weeks planned at a time |
+| Destination | one blog per course, see the routing table below |
+| Queue | `content/editorial-calendar.js`, 12 weeks x 4 courses x 3 tracks |
 | Posts | `content/blog/*.js`, one file per post |
 
-All four courses publish into the `news` blog rather than into their own. The
-daily-practice blogs are drip content and a different genre; splitting a weekly
-series across four blogs would give it four URL namespaces and no coherence.
-Course separation is carried by tags, which is what tags are for.
+### Routing
+
+| Course | Blog | Path |
+|---|---|---|
+| ap-csa | `ap-csa` | `/blogs/ap-csa/<handle>` |
+| ap-csp | `ap-csp` | `/blogs/ap-csp/<handle>` |
+| ap-cybersecurity | `ap-cybersecurity` | `/blogs/ap-cybersecurity/<handle>` |
+| ap-networking | `ap-networking` | `/blogs/ap-networking/<handle>` |
+
+The mapping is `COURSE_BLOGS` in `lib/blog-validate.js`, and the validator
+refuses a post whose `blogHandle` disagrees with its course. Keeping it in one
+place means a post cannot be filed in the wrong blog by a typo, and moving a
+course is a one line change rather than a sweep through `content/blog`.
+
+Note what is deliberately NOT in that table: `ap-csa-daily-practice` and
+`ap-csp-daily-practice`. Those hold the daily drip questions, a different genre
+on a different cadence. Filing weekly guides in among 429 practice items would
+bury them.
+
+### The three tracks
+
+Three posts a week for one course is enough volume that "what do we write
+about" stops being answerable one topic at a time. Left as a flat list it
+drifts, and the blog reads like a feed rather than a body of work. So each
+course runs three parallel tracks and publishes one from each, every week.
+
+| Track | What it is | How it earns |
+|---|---|---|
+| `brief` | What changed and what it means. News pegged. | Ranks for a while, then decays. The reason to visit today. |
+| `concept` | One idea taught properly. Evergreen. | Ranks for years, widest search volume, often beyond AP students. The compounding one. |
+| `drill` | Practice and method. Worked problems, exam mechanics. | Ranks least, converts best. Somebody searching how to practise is already committed. |
+
+The ratio is the point. Only concept posts builds traffic that never converts.
+Only drills builds a site nobody discovers.
+
+`brief` posts are made of pegs, and pegs decay. A peg written in August is a
+claim about August. Re-verify before writing and rewrite the slot if it has gone
+stale, rather than publishing on a dead hook. This matters most on the two
+Career Kickstart courses, where College Board is still publishing detail.
 
 ## Why the posts are JavaScript and not Markdown
 
@@ -100,8 +136,11 @@ node scripts/blog.js publish            # publishes what is due
 ```
 
 `.github/workflows/weekly-blog.yml` runs `validate` then `publish` every
-Tuesday, and always prints the authoring backlog to the job summary so an empty
-queue is visible a week before it becomes an empty Tuesday.
+Tuesday, and always prints week health and the authoring backlog to the job
+summary so a short week is visible before it becomes a published gap.
+
+At twelve posts a week, publishing by hand is not an option. The secrets below
+are not a nice-to-have; without them there is no cadence.
 
 **Required Actions secrets:** `SHOPIFY_SHOP` and `SHOPIFY_ADMIN_TOKEN`. The
 token needs `write_content`. The analytics connector token only reads, so it
@@ -110,7 +149,9 @@ once per post.
 
 ## Writing a post
 
-1. `node scripts/blog.js queue` and take the next slot for the course.
+1. `node scripts/blog.js queue`. It prints week health first, because a short
+   week is easy to miss inside a 140 slot backlog and is the thing worth
+   reacting to. Take the next slot for the course and track.
 2. **Re-verify the news peg.** Pegs decay. A peg written in August is a claim
    about August, and publishing on a dead hook is worse than publishing nothing.
    If it has gone stale, rewrite the slot rather than forcing the post.

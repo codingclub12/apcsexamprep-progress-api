@@ -20,7 +20,7 @@ const SECTIONS = [
 const meta = {
   title: 'AP Cybersecurity Launches This Fall: The Complete 2026-27 Guide',
   handle: 'ap-cybersecurity-launch-2026-27-guide',
-  blogHandle: 'news',
+  blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'ap cybersecurity',
   publishOn: '2026-08-18',

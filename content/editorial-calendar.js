@@ -1,228 +1,273 @@
 'use strict';
 // ─────────────────────────────────────────────────────────────────────────────
-//  THE EDITORIAL CALENDAR: one slot per course per week.
+//  THE EDITORIAL CALENDAR: three posts per course per week, twelve a week.
 //
-//  This file is the QUEUE, not the posts. A slot says what next week's post for
-//  a course is about and which query it is aimed at; the post itself lands in
-//  content/blog/ and is what actually publishes. Keeping them separate means
-//  the plan can be argued about cheaply, before anybody writes 2,000 words.
+//  WHY TRACKS RATHER THAN A LIST OF 144 TOPICS
+//  Three posts a week for one course is enough volume that "what do we write
+//  about" stops being answerable one topic at a time. Left as a flat list it
+//  drifts: three news posts one week, three concept explainers the next, and a
+//  course blog that reads like a feed rather than a body of work.
 //
-//  WHY THE SLOTS ARE SEASONAL RATHER THAN EVERGREEN
-//  Search intent for AP courses is violently seasonal and the calendar follows
-//  it. August and September are course-selection and getting-started intent.
-//  October and November are first-assessment panic. Spring is exam prep. A post
-//  about pacing published in August does nothing; the same post in April is the
-//  most useful thing on the site. Publishing evergreen guides on a fixed cadence
-//  ignores the one thing about this audience that is genuinely predictable.
+//  So each course runs three parallel tracks and publishes one from each, every
+//  week. The mix is fixed even when the topics are not, which is what makes the
+//  blog legible to a returning reader and to a crawler deciding what the site
+//  is about.
 //
-//  ONE NEWS PEG PER SLOT, AND IT MUST BE CHECKED
-//  Every slot names the peg it hangs on. Pegs decay: a peg written in August is
-//  a claim about August. Whoever writes the post re-verifies the peg before
-//  writing, and if it has gone stale the slot gets rewritten rather than
-//  published on a dead hook.
+//  THE THREE TRACKS EARN THEIR PLACE DIFFERENTLY
+//  - brief   ranks for a while and then decays. It is the reason to visit today.
+//  - concept ranks for years and carries the largest search volume, usually
+//            from an audience wider than AP students. It is the compounding one.
+//  - drill   ranks least and converts best, because somebody searching for how
+//            to practise is already committed.
+//
+//  Publishing only concept posts would build traffic that never converts.
+//  Publishing only drills would build a site nobody discovers. The ratio is the
+//  point.
+//
+//  PEGS DECAY, AND THE brief TRACK IS MADE OF THEM
+//  A peg written in August is a claim about August. Whoever writes the post
+//  re-verifies it first, and rewrites the slot rather than publishing on a dead
+//  hook. This matters most on the two Career Kickstart courses, where College
+//  Board is still publishing detail and a confident claim can go stale in weeks.
 // ─────────────────────────────────────────────────────────────────────────────
 
-// Tuesdays. One post per course per week, four posts a week.
+// Tuesdays. Twelve weeks planned at a time.
 const WEEKS = [
   '2026-08-18', '2026-08-25', '2026-09-01', '2026-09-08',
   '2026-09-15', '2026-09-22', '2026-09-29', '2026-10-06',
   '2026-10-13', '2026-10-20', '2026-10-27', '2026-11-03',
 ];
 
-// Slots are listed course by course so a single course's arc reads as an arc.
-const SLOTS = [
-  // ── AP CSA ────────────────────────────────────────────────────────────────
-  { week: 0, course: 'ap-csa', status: 'published', handle: 'ap-csa-score-distribution-2026-analysis',
-    targetKeyword: 'ap csa score distribution', peg: '2026 scores released, first 4-unit cohort' },
-  { week: 1, course: 'ap-csa', targetKeyword: 'ap csa unit 1',
-    workingTitle: 'AP CSA Unit 1 in a Week: Objects and Methods Without the Fog',
-    peg: 'First unit is being taught right now in most schools',
-    angle: 'The reference-vs-value confusion that Unit 1 creates and never resolves, fixed early. Highest-traffic beginner query of the fall.',
-    links: ['/pages/ap-csa-qotd-hub', '/pages/ap-csa-unit-1-ultimate-study-guide'] },
-  { week: 2, course: 'ap-csa', targetKeyword: 'java vs python',
-    workingTitle: 'Why AP CSA Uses Java When Everyone Learns Python First',
-    peg: 'Students arriving from AP CSP or a Python elective hit this wall in September',
-    angle: 'Translation table for the ten constructs that trip Python natives. Captures a large query that no AP site owns.' },
-  { week: 3, course: 'ap-csa', targetKeyword: 'ap csa for loops',
-    workingTitle: 'Loop Tracing: The Skill the Whole AP CSA Exam Rests On',
-    peg: 'Unit 2 lands in most pacing guides around here',
-    angle: 'The variable-table method, taught properly, with ten traces of increasing nastiness.' },
-  { week: 4, course: 'ap-csa', targetKeyword: 'ap csa practice test',
-    workingTitle: 'How to Use an AP CSA Practice Test in September Without Wasting It',
-    peg: 'First unit tests are being returned',
-    angle: 'Diagnostic use versus rehearsal use. Most students burn practice material by taking it too early.' },
-  { week: 5, course: 'ap-csa', targetKeyword: 'ap csa frq',
-    workingTitle: 'Writing Your First AP CSA FRQ by Hand',
-    peg: 'Too early for exam panic, exactly right for building the habit',
-    angle: 'Closing the laptop. The single highest-leverage habit and nobody starts it in September.' },
-  { week: 6, course: 'ap-csa', targetKeyword: 'ap csa arraylist',
-    workingTitle: 'ArrayList vs Array: The Distinction the Exam Tests Every Year',
-    peg: 'Unit 4 is the largest slice of the exam',
-    angle: 'Ties directly to the heaviest-weighted unit. Strong evergreen search volume.' },
-  { week: 7, course: 'ap-csa', targetKeyword: 'ap csa recursion',
-    workingTitle: 'Recursion Without the Mysticism',
-    peg: 'Recursion questions appear in every released exam',
-    angle: 'Complements the existing recursion pillar rather than repeating it: this one is purely call-stack tracing drills.' },
-  { week: 8, course: 'ap-csa', targetKeyword: 'ap csa score calculator',
-    workingTitle: 'What Score Do You Actually Need on AP CSA to Get a 5',
-    peg: 'Midterm season, students want a target number',
-    angle: 'Raw-score-to-AP-score reasoning against the current 42-question format. Funnels to the calculator.' },
-  { week: 9, course: 'ap-csa', targetKeyword: 'ap csa 2d array',
-    workingTitle: '2D Arrays: Row-Major, Column-Major, and the Traversal Students Get Backwards',
-    peg: 'Hardest reliably-tested topic in Unit 4', angle: 'Diagram-led. Highly linkable.' },
-  { week: 10, course: 'ap-csa', targetKeyword: 'ap csa study plan',
-    workingTitle: 'The AP CSA Study Plan for Students Already Behind',
-    peg: 'Semester one is ending and some students know they are in trouble',
-    angle: 'Triage, honestly. Which units to abandon and which to rescue. Genuinely useful, rarely written.' },
-  { week: 11, course: 'ap-csa', targetKeyword: 'ap csa inheritance',
-    workingTitle: 'Inheritance Is No Longer Its Own Unit. It Is Still on the Exam.',
-    peg: 'The redesign removed the standalone unit and confused everyone',
-    angle: 'Corrects a widespread misconception. High-authority explainer.' },
-
-  // ── AP CSP ────────────────────────────────────────────────────────────────
-  { week: 0, course: 'ap-csp', status: 'published', handle: 'ap-csp-create-performance-task-what-changed',
-    targetKeyword: 'ap csp create performance task', peg: 'Written responses moved into the proctored exam' },
-  { week: 1, course: 'ap-csp', targetKeyword: 'ap csp pseudocode',
-    workingTitle: 'The AP CSP Pseudocode Drill: 30 Minutes to Fluency',
-    peg: 'Taught early, tested all year',
-    angle: 'Drill companion to the existing pseudocode pillar. Links up to it rather than competing.' },
-  { week: 2, course: 'ap-csp', targetKeyword: 'ap csp create task ideas',
-    workingTitle: 'Create Task Project Ideas That Are Easy to Write About in the Exam',
-    peg: 'Project selection happens in the autumn and now determines exam performance',
-    angle: 'Reframes project choice around the new proctored writing. Very high intent.' },
-  { week: 3, course: 'ap-csp', targetKeyword: 'ap csp binary',
-    workingTitle: 'Binary, Bits and Overflow: The Big Idea 2 Questions Students Miss',
-    peg: 'Data unit lands here in most pacing guides', angle: 'Worked conversions plus the range-of-values question type.' },
-  { week: 4, course: 'ap-csp', targetKeyword: 'ap csp vs ap csa',
-    workingTitle: 'AP CSP or AP CSA: Choosing Correctly, Not Comfortably',
-    peg: 'Spring course registration conversations begin', angle: 'Decision guide. Perennial high-volume comparison query.' },
-  { week: 5, course: 'ap-csp', targetKeyword: 'ap csp algorithms',
-    workingTitle: 'Algorithm Efficiency in AP CSP Without the Computer Science Degree',
-    peg: 'Big Idea 3 is the heaviest tested idea',
-    angle: 'Reasonable-vs-unreasonable time, which the exam tests and textbooks explain badly.' },
-  { week: 6, course: 'ap-csp', targetKeyword: 'ap csp personalized project reference',
-    workingTitle: 'Building a Personalized Project Reference You Can Actually Write From',
-    peg: 'Follows directly from the week 0 format change',
-    angle: 'The screenshot-choice decision, made concrete. Nobody else is covering this yet.' },
-  { week: 7, course: 'ap-csp', targetKeyword: 'ap csp practice exam',
-    workingTitle: 'Where AP CSP Practice Questions Mislead You',
-    peg: 'Students begin practice testing around midterms',
-    angle: 'Critical look at question quality. Trust-building, links to our own bank honestly.' },
-  { week: 8, course: 'ap-csp', targetKeyword: 'ap csp internet',
-    workingTitle: 'How the Internet Works, at Exactly the Depth AP CSP Tests',
-    peg: 'Big Idea 4 is where students over-study', angle: 'Scope control. Explicitly says what NOT to learn.' },
-  { week: 9, course: 'ap-csp', targetKeyword: 'ap csp data privacy',
-    workingTitle: 'Data, Privacy and the Impact Questions That Look Like Opinion but Are Not',
-    peg: 'Big Idea 5 is heavily tested and casually studied',
-    angle: 'Teaches the answer structure graders reward.' },
-  { week: 10, course: 'ap-csp', targetKeyword: 'ap csp score',
-    workingTitle: 'What a 5 on AP CSP Actually Requires',
-    peg: 'Midterm target-setting', angle: 'Score composition under the current format.' },
-  { week: 11, course: 'ap-csp', targetKeyword: 'ap csp written response',
-    workingTitle: 'Four Written Responses, Four Different Sentences',
-    peg: 'Ties the whole autumn CSP arc together', angle: 'Category-by-category answer templates.' },
-
-  // ── AP Cybersecurity ──────────────────────────────────────────────────────
-  { week: 0, course: 'ap-cybersecurity', status: 'published', handle: 'ap-cybersecurity-launch-2026-27-guide',
-    targetKeyword: 'ap cybersecurity', peg: 'National launch, 2026-27' },
-  { week: 1, course: 'ap-cybersecurity', targetKeyword: 'cia triad',
-    workingTitle: 'The CIA Triad Is Not Vocabulary, It Is the Exam\'s Grading Rubric',
-    peg: 'Unit 1 is being taught now',
-    angle: 'Reframes Unit 1 as the lens every later question uses. Large non-AP search volume too.' },
-  { week: 2, course: 'ap-cybersecurity', targetKeyword: 'ap cybersecurity units',
-    workingTitle: 'AP Cybersecurity Unit 1: Every Term, Ranked by How Often It Is Tested',
-    peg: 'No released exams means vocabulary triage is genuinely valuable', angle: 'Reference asset, highly linkable.' },
-  { week: 3, course: 'ap-cybersecurity', targetKeyword: 'social engineering',
-    workingTitle: 'Social Engineering: Why the Human Layer Is the Most Tested Attack Surface',
-    peg: 'Unit 2 timing', angle: 'Story-led. The most shareable topic in the course.' },
-  { week: 4, course: 'ap-cybersecurity', targetKeyword: 'ap cybersecurity exam',
-    workingTitle: 'The AP Cybersecurity Free Response: Writing a Device Security Analysis',
-    peg: 'One FRQ, 30 percent of the score, no released examples',
-    angle: 'The single highest-value asset we can build for this course.' },
-  { week: 5, course: 'ap-cybersecurity', targetKeyword: 'network segmentation',
-    workingTitle: 'Why Networks Are Divided: Segmentation Explained for Unit 3',
-    peg: 'Hardest unit, arriving now', angle: 'Diagram-led. Cross-links to AP Networking.' },
-  { week: 6, course: 'ap-cybersecurity', targetKeyword: 'cybersecurity careers',
-    workingTitle: 'What a Cybersecurity Career Actually Looks Like at 22',
-    peg: 'Millions of unfilled roles, and a CS job market students are frightened of',
-    angle: 'Career post. Reaches parents, which is the audience that decides course selection.' },
-  { week: 7, course: 'ap-cybersecurity', targetKeyword: 'encryption explained',
-    workingTitle: 'Encryption for AP Cybersecurity: Symmetric, Asymmetric, and What the Exam Asks',
-    peg: 'Unit 5 timing', angle: 'Evergreen with volume well beyond the AP audience.' },
-  { week: 8, course: 'ap-cybersecurity', targetKeyword: 'ap cybersecurity practice test',
-    workingTitle: 'Practising for an Exam That Has Never Been Given',
-    peg: 'Midterm season, first cohort, no past papers',
-    angle: 'Honest methodology piece. Strong trust signal, and true of the whole first year.' },
-  { week: 9, course: 'ap-cybersecurity', targetKeyword: 'phishing',
-    workingTitle: 'Phishing: The Attack Every Student Has Already Survived',
-    peg: 'Perennially topical', angle: 'Accessible entry point with large general search volume.' },
-  { week: 10, course: 'ap-cybersecurity', targetKeyword: 'ap cybersecurity study guide',
-    workingTitle: 'The Half-Year AP Cybersecurity Review',
-    peg: 'Semester one ends', angle: 'Consolidation asset covering Units 1 to 3.' },
-  { week: 11, course: 'ap-cybersecurity', targetKeyword: 'zero trust',
-    workingTitle: 'Zero Trust, Least Privilege, and Defence in Depth: Three Ideas, One Exam Question',
-    peg: 'Principles recur across every unit', angle: 'Synthesis piece tying the course together.' },
-
-  // ── AP Networking ─────────────────────────────────────────────────────────
-  { week: 0, course: 'ap-networking', status: 'published', handle: 'ap-networking-2026-27-pilot-year-guide',
-    targetKeyword: 'ap networking', peg: 'Third and final pilot year' },
-  { week: 1, course: 'ap-networking', targetKeyword: 'ip address explained',
-    workingTitle: 'What an IP Address Actually Is, for AP Networking Unit 1',
-    peg: 'Unit 1 timing', angle: 'Foundational. Enormous general search volume, near-zero AP competition.' },
-  { week: 2, course: 'ap-networking', targetKeyword: 'how to troubleshoot wifi',
-    workingTitle: 'Troubleshooting Method: The Skill the AP Networking Exam Is Built Around',
-    peg: 'Troubleshoot is one of four assessed skills',
-    angle: 'Teaches elimination reasoning on a home network. Wide appeal beyond students.' },
-  { week: 3, course: 'ap-networking', targetKeyword: 'dns explained',
-    workingTitle: 'DNS: The Thing That Breaks When Nothing Else Has',
-    peg: 'Unit 2 timing', angle: 'Classic explainer, big volume, links to the troubleshooting post.' },
-  { week: 4, course: 'ap-networking', targetKeyword: 'router vs switch',
-    workingTitle: 'Router, Switch, Access Point: Three Boxes People Call the Same Thing',
-    peg: 'Unit 3 opens here', angle: 'Very high-volume confusion query with weak existing answers.' },
-  { week: 5, course: 'ap-networking', targetKeyword: 'subnetting explained',
-    workingTitle: 'Subnetting Without Tears',
-    peg: 'The topic pilot students report as hardest', angle: 'Worked method. The definitive-guide opportunity for this course.' },
-  { week: 6, course: 'ap-networking', targetKeyword: 'ap networking exam',
-    workingTitle: 'What the AP Networking Pilot Exam Looks Like, and What Comes After It',
-    peg: 'Pilot exam is multiple choice only, the launched exam is not',
-    angle: 'Follows up week 0 with detail as College Board publishes more.' },
-  { week: 7, course: 'ap-networking', targetKeyword: 'ipv6',
-    workingTitle: 'IPv6: Why It Exists and Why Unit 4 Cares',
-    peg: 'Unit 4 timing', angle: 'Explains the motivation, which every textbook skips.' },
-  { week: 8, course: 'ap-networking', targetKeyword: 'network security basics',
-    workingTitle: 'Where AP Networking and AP Cybersecurity Actually Overlap',
-    peg: 'Students take both and conflate them', angle: 'Cross-course hub post. Strong internal linking value.' },
-  { week: 9, course: 'ap-networking', targetKeyword: 'it career without degree',
-    workingTitle: 'The IT Career Path AP Networking Points At',
-    peg: 'Career Kickstart is explicitly career-framed',
-    angle: 'Parent-facing. Certifications, roles, and honest salary framing.' },
-  { week: 10, course: 'ap-networking', targetKeyword: 'ap networking study guide',
-    workingTitle: 'Half-Year AP Networking Review: Units 1 to 3',
-    peg: 'Semester one ends', angle: 'Consolidation asset.' },
-  { week: 11, course: 'ap-networking', targetKeyword: 'network latency',
-    workingTitle: 'Why the Network Is Slow: Bandwidth, Latency and Contention',
-    peg: 'Recurs across Units 3 and 4', angle: 'Explains the distinction most people never learn.' },
+const TRACKS = [
+  { key: 'brief', label: 'Brief', genre: 'What changed and what it means. News pegged, time sensitive, re-verify before writing.' },
+  { key: 'concept', label: 'Concept', genre: 'One idea taught properly. Evergreen, widest search volume, the compounding asset.' },
+  { key: 'drill', label: 'Drill', genre: 'Practice and method. Worked problems, study technique, exam mechanics.' },
 ];
 
-const COURSES = ['ap-csa', 'ap-csp', 'ap-cybersecurity', 'ap-networking'];
+// Each entry is [targetKeyword, workingTitle] or [targetKeyword, workingTitle,
+// publishedHandle] once the post exists. Index in the array is the week index.
+const STREAMS = {
+  'ap-csa': {
+    brief: [
+      ['ap csa score distribution', 'The 2026 AP CSA Score Distribution', 'ap-csa-score-distribution-2026-analysis'],
+      ['ap csa exam format', 'The 2025 Redesign: What Was Removed and What Got Heavier'],
+      ['ap csa vs ap csp', 'AP CSA or AP CSP: Which One Colleges Actually Read'],
+      ['ap csa college credit', 'Which Colleges Give Credit for AP CSA, and What Score They Want'],
+      ['computer science major', 'Should You Still Major in CS? What to Tell a Junior in 2026'],
+      ['ap csa frq scoring', 'How AP CSA Free Response Is Actually Graded, Point by Point'],
+      ['ap csa difficulty', 'Is AP CSA Hard? Reading the Score Data Honestly'],
+      ['ap classroom', 'Using AP Classroom for CSA Without Wasting Your Time'],
+      ['ai coding tools', 'Using AI to Learn Java Without Learning Nothing'],
+      ['ap csa exam date', 'Nine Months to the AP CSA Exam: What to Do With Them'],
+      ['ap csa semester exam', 'What a Good First Semester AP CSA Exam Covers'],
+      ['ap csa inheritance', 'Inheritance Lost Its Unit. It Did Not Leave the Exam.'],
+    ],
+    concept: [
+      ['ap csa objects and methods', 'Objects, References, and the Thing Unit 1 Never Says Out Loud'],
+      ['java vs python', 'Why AP CSA Uses Java When You Learned Python First'],
+      ['ap csa boolean expressions', 'Compound Booleans and Short Circuit Evaluation'],
+      ['ap csa for loops', 'For Loops, While Loops, and Knowing Which the Question Wants'],
+      ['ap csa string methods', 'The String Methods AP CSA Tests, and the Off by One That Follows'],
+      ['ap csa class creation', 'Writing a Class From Scratch: Constructors, Fields and this'],
+      ['ap csa arraylist', 'Array vs ArrayList: The Distinction Tested Every Single Year'],
+      ['ap csa 2d array', '2D Arrays: Row Major, Column Major, and the Traversal Students Reverse'],
+      ['ap csa recursion', 'Recursion as a Call Stack, Not as Magic'],
+      ['ap csa searching sorting', 'Binary Search and the Sorts You Must Be Able to Trace'],
+      ['ap csa static methods', 'Static vs Instance: The Distinction Behind a Third of Compile Errors'],
+      ['java integer division', 'Integer Division, Modulus, and the Arithmetic Traps in Every Exam'],
+    ],
+    drill: [
+      ['how to trace code', 'The Variable Table: Tracing Code the Way Fives Do It'],
+      ['ap csa practice test', 'Using a Practice Test in September Without Wasting It'],
+      ['ap csa mcq strategy', 'Ninety Seconds a Question: Pacing the Multiple Choice'],
+      ['ap csa frq practice', 'Writing Your First FRQ With the Laptop Closed'],
+      ['debugging java', 'Reading a Java Error Message Instead of Guessing'],
+      ['ap csa reference sheet', 'The AP CSA Reference Sheet: What It Gives You and What It Does Not'],
+      ['ap csa score calculator', 'What Raw Score You Need for a 5 on the 42 Question Exam'],
+      ['ap csa common mistakes', 'The Nine Mistakes That Cost the Most Points'],
+      ['ap csa unit 4 practice', 'Twelve Data Collections Questions, Hardest Last'],
+      ['ap csa flashcards', 'Why Flashcards Fail for AP CSA, and What Replaces Them'],
+      ['ap csa study plan', 'A Study Plan for Students Already Behind'],
+      ['ap csa final review', 'The Half Year AP CSA Review: Units 1 to 4'],
+    ],
+  },
 
-function weekOf(date) { return WEEKS.indexOf(date); }
+  'ap-csp': {
+    brief: [
+      ['ap csp create performance task', 'What Happened to the Create Performance Task', 'ap-csp-create-performance-task-what-changed'],
+      ['ap csp exam format', 'The AP CSP Exam: Every Section, Every Weighting'],
+      ['ap csp create task ideas', 'Create Task Projects That Are Easy to Write About Under Timer'],
+      ['ap csp ai policy', 'What College Board Actually Permits With AI on the Create Task'],
+      ['ap csp vs ap csa', 'AP CSP or AP CSA First: A Teacher Answers'],
+      ['ap csp college credit', 'Which Colleges Give Credit for AP CSP'],
+      ['ap csp score distribution', 'What the CSP Score Distribution Says About Written Responses'],
+      ['ap csp for beginners', 'Taking AP CSP With No Coding Background'],
+      ['ap csp deadline', 'The April Project Reference Deadline, and How Students Miss It'],
+      ['ap csp teacher', 'What Changed for AP CSP Teachers This Year'],
+      ['ap csp exam day', 'AP CSP Exam Day: What You Bring and What You Are Given'],
+      ['ap csp written response', 'Four Prompts, Four Different Sentences'],
+    ],
+    concept: [
+      ['ap csp pseudocode', 'College Board Pseudocode: The Whole Syntax in One Sitting'],
+      ['ap csp binary', 'Binary, Bits, and Why Overflow Is Really a Range Question'],
+      ['ap csp abstraction', 'Abstraction in AP CSP: Data, Procedural, and the Difference'],
+      ['ap csp algorithms', 'Reasonable and Unreasonable Time, Without a CS Degree'],
+      ['lossy vs lossless', 'Lossy and Lossless Compression: The Trade Off the Exam Tests'],
+      ['ap csp internet', 'How the Internet Works, at Exactly the Depth AP CSP Tests'],
+      ['ap csp data privacy', 'Cookies, Metadata and PII: Big Idea 5 Without the Hand Waving'],
+      ['ap csp lists', 'List Operations and the Index Shift That Breaks Student Code'],
+      ['ap csp procedures', 'Procedures, Parameters and Return: Scope Made Concrete'],
+      ['ap csp conditionals', 'Nested Conditionals and Compound Boolean Logic'],
+      ['digital divide', 'The Digital Divide and Computing Bias as Exam Answers'],
+      ['ap csp simulations', 'Simulations, Models, and What They Deliberately Leave Out'],
+    ],
+    drill: [
+      ['ap csp practice exam', 'Where AP CSP Practice Questions Mislead You'],
+      ['ap csp mcq', 'Pacing the AP CSP Multiple Choice Section'],
+      ['ap csp robot grid', 'Robot Grid Problems: A Method That Always Works'],
+      ['ap csp written response practice', 'Twenty Written Response Prompts in the Current Format'],
+      ['ap csp personalized project reference', 'Choosing the Two Code Segments for Your Project Reference'],
+      ['ap csp bug log', 'The Bug Log That Answers Your Errors and Testing Prompt'],
+      ['ap csp score calculator', 'What a 5 on AP CSP Actually Requires'],
+      ['ap csp vocabulary', 'The Forty AP CSP Terms That Carry the Exam'],
+      ['ap csp common mistakes', 'The Answers That Look Right and Earn Nothing'],
+      ['ap csp study guide', 'A Big Idea by Big Idea Study Guide'],
+      ['ap csp code segment', 'Explaining Your Own Code Out Loud as Practice'],
+      ['ap csp final review', 'The Half Year AP CSP Review'],
+    ],
+  },
 
-function slotsFor(date) {
-  const i = weekOf(date);
-  return i < 0 ? [] : SLOTS.filter((s) => s.week === i).map((s) => ({ ...s, date: WEEKS[s.week] }));
+  'ap-cybersecurity': {
+    brief: [
+      ['ap cybersecurity', 'AP Cybersecurity Launches This Fall', 'ap-cybersecurity-launch-2026-27-guide'],
+      ['ap cybersecurity exam', 'The AP Cybersecurity Exam Format, Section by Section'],
+      ['ap cybersecurity units', 'All Five Units, Ranked by What the Exam Asks For'],
+      ['cybersecurity careers', 'What a Cybersecurity Career Actually Looks Like at 22'],
+      ['ap cybersecurity vs ap csp', 'AP Cybersecurity or AP CSP: Choosing for the Right Reason'],
+      ['ap career kickstart', 'AP Career Kickstart: What College Board Is Actually Building'],
+      ['ap cybersecurity college credit', 'Will Colleges Give Credit for a Brand New AP?'],
+      ['cisco networking academy', 'What the Cisco Partnership Gives Your Classroom'],
+      ['cybersecurity certifications', 'AP Cybersecurity and the Certifications That Follow It'],
+      ['ap cybersecurity teacher', 'Teaching AP Cybersecurity in Its First Year'],
+      ['ap cybersecurity practice test', 'Practising for an Exam That Has Never Been Given'],
+      ['ap cybersecurity study guide', 'The Half Year AP Cybersecurity Review'],
+    ],
+    concept: [
+      ['cia triad', 'The CIA Triad Is Not Vocabulary, It Is the Grading Rubric'],
+      ['social engineering', 'Social Engineering: The Most Tested Attack Surface'],
+      ['phishing', 'Phishing: The Attack Every Student Has Already Survived'],
+      ['access control', 'Least Privilege, Access Control, and Who Gets the Keys'],
+      ['network segmentation', 'Why Networks Are Divided: Segmentation for Unit 3'],
+      ['firewall', 'Firewalls, and What They Genuinely Cannot Stop'],
+      ['endpoint security', 'Hardening a Device: Unit 4 Made Practical'],
+      ['encryption explained', 'Symmetric, Asymmetric, and What the Exam Asks'],
+      ['application security', 'Application Vulnerabilities Without Writing an Exploit'],
+      ['data backup', 'Backups, Recovery, and the Availability Nobody Studies'],
+      ['zero trust', 'Zero Trust, Defence in Depth, Least Privilege: One Question, Three Ideas'],
+      ['risk assessment', 'Risk Assessment: Likelihood, Impact, and the Decision'],
+    ],
+    drill: [
+      ['ap cybersecurity frq', 'Writing a Device Security Analysis, Step by Step'],
+      ['ap cybersecurity unit 1', 'Unit 1 Vocabulary, Ranked by How Often It Is Tested'],
+      ['security scenario questions', 'Reading a Security Scenario for the Evidence It Gives You'],
+      ['ap cybersecurity mcq', 'Eighty Seconds a Question: Pacing Section I'],
+      ['threat modeling', 'Threat Modelling Your Own Phone as Practice'],
+      ['incident response', 'Incident Response as an Answer Structure'],
+      ['password security', 'Passwords, MFA, and Why the Advice Changed'],
+      ['ap cybersecurity unit 3', 'Ten Network Security Questions, Hardest Last'],
+      ['security controls', 'Matching the Control to the Layer the Attack Targets'],
+      ['ap cybersecurity glossary', 'The Running Glossary That Carries the Whole Course'],
+      ['ap cybersecurity common mistakes', 'The Plausible Wrong Answer Pattern'],
+      ['ap cybersecurity exam day', 'Exam Day for the First Cohort Ever'],
+    ],
+  },
+
+  'ap-networking': {
+    brief: [
+      ['ap networking', 'AP Networking in 2026-27: Inside the Final Pilot Year', 'ap-networking-2026-27-pilot-year-guide'],
+      ['ap networking exam', 'The Pilot Exam and the One That Follows It'],
+      ['ap networking units', 'All Four Units and 22 Topics'],
+      ['it career without degree', 'The IT Career Path AP Networking Points At'],
+      ['ap networking vs ap cybersecurity', 'Where AP Networking and AP Cybersecurity Actually Overlap'],
+      ['network engineer salary', 'What Network and Infrastructure Work Actually Pays'],
+      ['ap networking pilot', 'Being in a Pilot Year: What Your School Signed Up For'],
+      ['comptia network plus', 'AP Networking and the Certifications Next Door'],
+      ['ap networking college credit', 'Credit for AP Networking: What Is Knowable Yet'],
+      ['ap networking teacher', 'Teaching AP Networking Without a Lab Budget'],
+      ['ap networking practice test', 'Practising Without Released Questions'],
+      ['ap networking study guide', 'The Half Year AP Networking Review'],
+    ],
+    concept: [
+      ['ip address explained', 'What an IP Address Actually Is'],
+      ['dns explained', 'DNS: The Thing That Breaks When Nothing Else Has'],
+      ['router vs switch', 'Router, Switch, Access Point: Three Boxes People Confuse'],
+      ['subnetting explained', 'Subnetting Without Tears'],
+      ['mac address', 'MAC Addresses, ARP, and the Layer Below the One You Know'],
+      ['dhcp', 'DHCP: How Your Laptop Gets an Address It Never Asked For'],
+      ['wifi channels', 'Wireless, Channels, and Why the Cafe Wifi Is Slow'],
+      ['vlan', 'VLANs: One Switch, Many Networks'],
+      ['tcp vs udp', 'TCP and UDP: Reliability Versus Speed'],
+      ['ipv6', 'IPv6: Why It Exists and Why Unit 4 Cares'],
+      ['nat', 'NAT, and the Address Shortage It Papered Over'],
+      ['network latency', 'Bandwidth, Latency and Contention: Three Reasons for Slow'],
+    ],
+    drill: [
+      ['how to troubleshoot wifi', 'Troubleshooting Method: Eliminate, Do Not Guess'],
+      ['ping traceroute', 'Ping and Traceroute as Reasoning Tools'],
+      ['ap networking scenarios', 'Reading a Network Scenario for What Still Works'],
+      ['network diagram', 'Drawing the Network Before You Fix It'],
+      ['ap networking unit 1', 'Ten Single Device Questions'],
+      ['explain technical to non technical', 'The Collaborate Skill Nobody Practises'],
+      ['fault log', 'The Fault Log That Becomes Your Revision Guide'],
+      ['ap networking unit 3', 'Ten Segmented LAN Questions, Hardest Last'],
+      ['home lab', 'Building a Home Lab From What You Already Own'],
+      ['network commands', 'The Command Line Tools Worth Knowing Cold'],
+      ['ap networking common mistakes', 'The Alarming Answer Versus the Mundane One'],
+      ['ap networking exam day', 'AP Networking Exam Day'],
+    ],
+  },
+};
+
+const COURSES = Object.keys(STREAMS);
+const POSTS_PER_COURSE_PER_WEEK = TRACKS.length;
+
+// Flattened view. Generated rather than written out, so the shape cannot drift
+// from the tracks and a thirteenth week is a date plus four topics per track.
+function allSlots() {
+  const out = [];
+  for (const course of COURSES) {
+    for (const track of TRACKS) {
+      const stream = STREAMS[course][track.key] || [];
+      stream.forEach(([targetKeyword, workingTitle, handle], week) => {
+        if (week >= WEEKS.length) return;
+        out.push({
+          week, date: WEEKS[week], course, track: track.key,
+          targetKeyword, workingTitle, handle: handle || null,
+        });
+      });
+    }
+  }
+  return out.sort((a, b) => a.week - b.week || COURSES.indexOf(a.course) - COURSES.indexOf(b.course));
 }
 
-// Every slot that has no post written for it yet, soonest first. This is the
-// authoring backlog, and the weekly workflow reports it so an empty queue is
-// noticed a week early rather than on the morning nothing publishes.
+function slotsFor(date) { return allSlots().filter((s) => s.date === date); }
+
+// The authoring backlog: every slot with no post written for it, soonest first.
 function unwritten(writtenHandles, fromDate) {
-  return SLOTS
-    .filter((s) => WEEKS[s.week] >= fromDate)
-    .filter((s) => !(s.handle && writtenHandles.has(s.handle)))
-    .filter((s) => s.status !== 'published')
-    .sort((a, b) => a.week - b.week)
-    .map((s) => ({ ...s, date: WEEKS[s.week] }));
+  return allSlots()
+    .filter((s) => s.date >= fromDate)
+    .filter((s) => !(s.handle && writtenHandles.has(s.handle)));
 }
 
-module.exports = { WEEKS, SLOTS, COURSES, slotsFor, unwritten, weekOf };
+// A planned week is complete only when all twelve slots have posts. Reported
+// weekly so a short week is visible before it is a published gap.
+function weekStatus(writtenHandles, date) {
+  const slots = slotsFor(date);
+  const written = slots.filter((s) => s.handle && writtenHandles.has(s.handle));
+  return { date, planned: slots.length, written: written.length, missing: slots.length - written.length };
+}
+
+module.exports = {
+  WEEKS, TRACKS, STREAMS, COURSES, POSTS_PER_COURSE_PER_WEEK,
+  allSlots, slotsFor, unwritten, weekStatus,
+};

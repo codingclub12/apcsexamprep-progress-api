@@ -60,16 +60,25 @@ async function main() {
   }
 
   if (cmd === 'queue') {
-    const { unwritten } = require('../content/editorial-calendar');
+    const { unwritten, weekStatus, WEEKS } = require('../content/editorial-calendar');
     const from = rest[0] || today();
     const written = new Set(posts.map((p) => p.meta.handle));
-    const todo = unwritten(written, from);
-    // The next four are what an authoring session should pick up. Anything
-    // further out is planning, not backlog.
-    for (const s of todo.slice(0, 12)) {
-      console.log(`${s.date}  ${s.course.padEnd(17)}  ${s.targetKeyword.padEnd(32)}  ${s.workingTitle || ''}`);
+
+    // Week health first. Twelve slots a week means a short week is easy to miss
+    // in a long backlog list, and a short week is the thing worth reacting to.
+    for (const w of WEEKS.filter((d) => d >= from).slice(0, 4)) {
+      const st = weekStatus(written, w);
+      const flag = st.missing === 0 ? 'complete' : `${st.missing} MISSING`;
+      console.log(`${st.date}  ${st.written}/${st.planned} written  ${flag}`);
     }
-    if (!todo.length) console.log('(queue empty, every planned slot has a post)');
+
+    const todo = unwritten(written, from);
+    if (!todo.length) { console.log('\n(queue empty, every planned slot has a post)'); return; }
+    // One week of backlog. Anything beyond that is planning, not work to pick up.
+    console.log(`\nNext up (${todo.length} slots unwritten in total):`);
+    for (const s of todo.slice(0, 12)) {
+      console.log(`  ${s.date}  ${s.course.padEnd(17)} ${s.track.padEnd(8)} ${s.targetKeyword.padEnd(34)} ${s.workingTitle || ''}`);
+    }
     return;
   }
 
