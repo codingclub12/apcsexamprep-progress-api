@@ -5,6 +5,7 @@ const router = express.Router();
 const db = require('../db');
 const wire = require('../lib/wire-log');
 const { expandCase } = require('../lib/greenfoot-stub');
+const codeModes = require('../lib/csa-code-modes');
 const { requireStudent } = require('../middleware');
 const { makeRateLimit } = require('../lib/rate-limit');
 const { newId, signStudentToken, isValidPin, sanitize, COURSES, pageFromHandle } = require('../utils');
@@ -1406,7 +1407,7 @@ const codeDenominatorStmt = db.prepare(
   'SELECT possible FROM course_denominators WHERE course = ? AND lesson = ? AND activity_type = ?'
 );
 const codeCasesStmt = db.prepare(
-  'SELECT seq, prelude, postlude, stdin, expected_stdout, hidden FROM code_test_cases WHERE course = ? AND lesson = ? AND item = ? ORDER BY seq'
+  'SELECT seq, prelude, postlude, stdin, mode, expected_stdout, hidden FROM code_test_cases WHERE course = ? AND lesson = ? AND item = ? ORDER BY seq'
 );
 const codeDupeStmt = db.prepare(
   'SELECT answers FROM score_events WHERE student_id = ? AND client_event_id = ?'
@@ -1432,18 +1433,13 @@ function resolveLanguageId(language) {
   return id && CODE_ALLOWED_LANGUAGE_IDS.has(id) ? id : null;
 }
 
-// Assemble the program actually run for one case. The student submits a BARE CODE
-// SEGMENT (AP style); the case injects inputs as `prelude` (before) and `postlude`
-// (after). For Java we wrap prelude + segment + postlude in a class/main so the
-// segment compiles. Python/JS have no class ceremony, so we just concatenate.
-// The student segment is used in transit only and never stored.
-function buildProgram(languageId, prelude, segment, postlude) {
-  const body = (prelude ? prelude + '\n' : '') + segment + '\n' + (postlude ? postlude + '\n' : '');
-  if (languageId === 62) {
-    return 'public class Main {\n  public static void main(String[] args) {\n' + body + '  }\n}\n';
-  }
-  return body;
-}
+// Assembling the program actually run for one case now lives in
+// lib/csa-code-modes.js, for every mode including the original bare-segment
+// wrap, which moved there byte for byte. It is shared so that
+// scripts/verify-csa-exercises.js can build a program exactly the way this route
+// does; a second copy here would eventually disagree with it, and the
+// disagreement would surface as a student failing a case that passed in CI.
+// The student's source is used in transit only and never stored.
 
 // Rate limit per (student, item): Judge0 is the expensive call, so this is the
 // primary guard. Same bounded-map shape as routes/progress.js: fixed window, no
@@ -1546,6 +1542,25 @@ router.post('/code-grade', requireStudent, async (req, res) => {
     }
     if (cases.length > CODE_MAX_CASES) cases.length = CODE_MAX_CASES;
 
+    // How this item's submissions become a compilable file. The mode belongs to
+    // the ITEM, not to a case: mixing shapes within one item would mean the same
+    // submission is assembled two different ways and the pass count would be
+    // meaningless. The seeder enforces that they agree; this reads case 0 and
+    // refuses rather than guessing if the bank ever disagrees.
+    const mode = codeModes.normalizeMode(cases[0].mode);
+    if (!mode || cases.some((c) => codeModes.normalizeMode(c.mode) !== mode)) {
+      console.error('code-grade: inconsistent or unknown mode', course, lesson, item);
+      return res.status(500).json({ error: 'This exercise is misconfigured and was not graded. Nothing was recorded.' });
+    }
+
+    // Shape problems the student can actually fix, said in a sentence, before a
+    // single Judge0 call is spent. Judge0 would report a missing Main as
+    // "Could not find or load main class Main", which teaches nothing.
+    const shapeProblem = codeModes.validateSource(mode, languageId, source);
+    if (shapeProblem) {
+      return res.status(400).json({ error: shapeProblem, not_graded: true });
+    }
+
     // Manifest is the max_score authority: no denominator, no grade (surface drift
     // rather than invent a scale).
     const denom = codeDenominatorStmt.get(course, lesson, item);
@@ -1568,16 +1583,22 @@ router.post('/code-grade', requireStudent, async (req, res) => {
     // output after normalization. Compile or runtime errors fail the case.
     let passed = 0;
     for (const c of cases) {
-      // Inject this case's inputs and wrap the student's bare segment into a
-      // runnable program. Different (often hidden) preludes are what make
-      // hardcoding the visible output fail.
+      // Build the runnable program for this case. Different (often hidden)
+      // inputs are what make hardcoding the visible output fail.
+      //
+      // segment: the case's prelude/postlude wrap around the student's segment
+      // and the whole thing becomes the body of main, exactly as before.
+      // program: the student's whole file, run as written, fed the case's stdin.
+      // driver: the student's classes plus the case's hidden harness.
+      //
       // expandCase is a no-op on any case without the @greenfoot-stub sentinel,
-      // so every existing CSA case assembles byte-for-byte as before. A case
+      // so every existing segment case assembles byte for byte as before. A case
       // that opts in gets the headless Greenfoot classes declared at top level
       // and its assertions wrapped into a harness entry point; see
-      // lib/greenfoot-stub.js for the brace arithmetic.
-      const gf = expandCase(c);
-      const program = buildProgram(languageId, gf.prelude, source, gf.postlude);
+      // lib/greenfoot-stub.js for the brace arithmetic. Only segment cases can
+      // carry the sentinel, so the other modes skip it.
+      const parts = mode === 'segment' ? expandCase(c) : { prelude: '', postlude: c.postlude };
+      const program = codeModes.assemble(mode, languageId, source, parts);
       let result;
       try {
         result = await runOneCase(baseUrl, req.student.id, languageId, program, String(c.stdin || ''));

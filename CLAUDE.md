@@ -96,7 +96,7 @@ not execute.
 ## What this repo is
 
 Railway-hosted progress tracking API for apcsexamprep.com, served at progress.apcsexamprep.com.
-Stack: Node + Express + better-sqlite3. JWT auth for students. Fail-closed admin auth on /api/admin/* (already implemented, reuse the existing pattern). This repo also proxies Judge0 for code execution (language IDs 62/71/63). Do not modify the Judge0 subsystem.
+Stack: Node + Express + better-sqlite3. JWT auth for students. Fail-closed admin auth on /api/admin/* (already implemented, reuse the existing pattern). This repo also proxies Judge0 for code execution (language IDs 62/71/63). Do not modify the Judge0 subsystem without Tanner saying so explicitly for that change; the run limits in routes/judge0.js were raised on 2026-08-18 under exactly that exception, and docs/csa-exercise-pages.md carries the arithmetic and the cost model. Everything else in there stays closed.
 
 Serves two account types:
 - Teacher classes: codes like CSA-XXXX, CSP-XXXX, CYBER-XXXX. Each class row has course, mastery_threshold, retry_allowed.

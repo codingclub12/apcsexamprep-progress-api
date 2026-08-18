@@ -27,42 +27,25 @@
 // item is the graded code item, which is also its activity_type. The manifest
 // points for (course, lesson, activity_type) are the denominator the ratio scales
 // into: exercise-1 = 1, exercise-3 (FRQ) = 4 (see seed/csa-course-manifest.js).
+// ── WHAT MOVED, AND WHY ──────────────────────────────────────────────────────
+// The exercise-1 items for 1.3, 1.5 and 1.6 used to live here as bare segments.
+// They were authored for `-exercise-1` pages that were never built, so no page
+// ever posted to them. When the 53 exercise pages were built, those three
+// lessons got real exercises in `program` mode (the student writes the whole
+// program and reads its input), which is a strictly better fit for lessons about
+// output, casting and compound assignment, and they now live with the other 50
+// in seed/csa-exercises/unit1.js. Their tasks carried over; only the shape
+// changed.
+//
+// They are not duplicated here, deliberately: code_test_cases is keyed
+// (course, lesson, item, seq), so two definitions of ap-csa 1.3 exercise-1 would
+// race, and whichever lost would grade a page assembled the other way. The
+// seeder deletes any leftover rows past the seeded case count for exactly this
+// reason, so an --update run cannot leave one item holding cases from both.
+//
+// 1.6 exercise-3 (the FRQ) is a DIFFERENT item and is untouched. It keeps its
+// bare-segment shape, which is what the AP free-response question actually is.
 const ITEMS = [
-  {
-    course: 'ap-csa', lesson: '1.3', item: 'exercise-1',
-    // Expressions and Output: given ints a and b (b > 0), print a+b, a-b, a/b, a%b.
-    cases: [
-      { prelude: 'int a = 17;\nint b = 5;',   expected_stdout: '22\n12\n3\n2\n',   hidden: 0 },
-      { prelude: 'int a = 9;\nint b = 3;',    expected_stdout: '12\n6\n3\n0\n',    hidden: 0 },
-      { prelude: 'int a = 4;\nint b = 9;',    expected_stdout: '13\n-5\n0\n4\n',   hidden: 1 },
-      { prelude: 'int a = 6;\nint b = 6;',    expected_stdout: '12\n0\n1\n0\n',    hidden: 1 },
-      { prelude: 'int a = 100;\nint b = 7;',  expected_stdout: '107\n93\n14\n2\n', hidden: 1 },
-    ],
-  },
-  {
-    course: 'ap-csa', lesson: '1.5', item: 'exercise-1',
-    // Casting and Range: given ints total and count (count > 0), print the integer
-    // average, then the exact average as a double (cast BEFORE dividing).
-    cases: [
-      { prelude: 'int total = 7;\nint count = 2;',   expected_stdout: '3\n3.5\n',    hidden: 0 },
-      { prelude: 'int total = 10;\nint count = 4;',  expected_stdout: '2\n2.5\n',    hidden: 0 },
-      { prelude: 'int total = 9;\nint count = 3;',   expected_stdout: '3\n3.0\n',    hidden: 1 },
-      { prelude: 'int total = 1;\nint count = 8;',   expected_stdout: '0\n0.125\n',  hidden: 1 },
-      { prelude: 'int total = 100;\nint count = 8;', expected_stdout: '12\n12.5\n',  hidden: 1 },
-    ],
-  },
-  {
-    course: 'ap-csa', lesson: '1.6', item: 'exercise-1',
-    // Compound Assignment: given int score, apply += 10, *= 3, -= 4, %= 7 in order,
-    // printing score after each step.
-    cases: [
-      { prelude: 'int score = 5;',   expected_stdout: '15\n45\n41\n6\n',      hidden: 0 },
-      { prelude: 'int score = 0;',   expected_stdout: '10\n30\n26\n5\n',      hidden: 0 },
-      { prelude: 'int score = -3;',  expected_stdout: '7\n21\n17\n3\n',       hidden: 1 },
-      { prelude: 'int score = 100;', expected_stdout: '110\n330\n326\n4\n',   hidden: 1 },
-      { prelude: 'int score = 4;',   expected_stdout: '14\n42\n38\n3\n',      hidden: 1 },
-    ],
-  },
   {
     course: 'ap-csa', lesson: '1.6', item: 'exercise-3',
     // FRQ Practice (4 points): Register Receipt. Given a,b,c,d (item prices in
