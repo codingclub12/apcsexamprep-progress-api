@@ -37,8 +37,9 @@ the 70 references to it in the lesson text stand.
 
 ## The progression
 
-One file grows across three units, which is the point. A student sees the same
-Bee.java get better rather than meeting three unrelated games.
+One file grows across four units, which is the point. A student sees the same
+Bee.java get better rather than meeting four unrelated games. Unit 6 is the one
+deliberate exception, and the reason is below.
 
 ### Unit 1: the crab. Provided, complete, nothing to fill in.
 
@@ -70,8 +71,58 @@ the lesson performed on the student's own code rather than on an example.
 ### Unit 4: the bee eats. The capstone, as already written.
 
 4.4 is `isTouching` and `removeTouching`. That is `checkCollisionWithFlower()`.
-`projects/unit-4-bee/Bee.java` is the existing Hungry Bee assignment, unchanged,
-now sitting where its prerequisites are behind it rather than ahead of it.
+`projects/unit-4-bee/Bee.java` is the Hungry Bee assignment, now sitting where
+its prerequisites are behind it rather than ahead of it.
+
+An earlier version of this file said that starter "is the existing Hungry Bee
+assignment, unchanged". It was not, because the file did not exist. The
+sentence and the missing file were written in the same pass, and `git log --all
+-- projects/unit-4-bee/Bee.java` was empty until 2026-08-18. It exists now, and
+it opens from the Unit 3 file rather than from the original assignment, so the
+student continues their own code instead of being handed somebody else's.
+
+### Unit 5: the bee gets levels. The world takes over.
+
+Nothing about the Bee class changes. The work moves into the world, because
+placing things and setting difficulty are jobs the world owns, which is where
+4.7 leaves off.
+
+`projects/unit-5-bee/BeeWorld.java` drives flower placement from one array and
+difficulty from another. Before this unit, adding a flower is a line of code.
+After it, adding a flower is a number.
+
+### Unit 6: the maze. A new scenario, and the only one.
+
+`projects/unit-6-maze/` is the one place the course starts fresh. A tile map is
+not a feature you bolt onto an existing game, it is a different way of
+describing a world, and attaching it to the bee would hide exactly that.
+
+## Why arrays stay in Units 5 and 6
+
+Considered on 2026-08-18 and rejected: moving arrays to Unit 2 or 3, which is
+where they sat in the original course. Recorded because it will come up again.
+
+The pressure behind the idea is real. Games built only from Units 1 and 2 are
+boring, and the instinct is that arrays are what unlock better ones.
+
+They are not, and the lesson list says so. **4.5 Lists of Actors** gives
+`getObjects()` and `List<Actor>` in Unit 4, and that is what a Greenfoot game
+actually uses to manage many things. A Unit 4 game can already spawn waves,
+track enemies and remove them. Arrays are not the collection tool here.
+
+What Unit 5 adds is data that DRIVES the game, which is why 5.6 is called
+"Arrays that Drive a Game": level layouts, lane positions, difficulty
+schedules. That needs a game to already exist before it means anything.
+Teaching arrays at Unit 2 teaches a structure with nothing to put in it.
+
+The cost of changing course is also worth stating plainly, because it is not
+proportionate to the benefit. Renumbering would touch 42 lesson pages, 158
+figure filenames, roughly 193 CFU item ids, every manifest row, 42 live Shopify
+handles plus redirects for each, and every JSON-LD block. That is a rebuild,
+not a re-order.
+
+The cheap version of the same goal is what the Unit 5 and Unit 6 projects now
+do: keep the sequence, and let the projects get harder.
 
 ## showText, and the rule about small things
 
