@@ -2,7 +2,34 @@
 
 Written overnight 2026-08-18 for a first-period AP CSA class the same morning.
 
-## TL;DR, two curls
+## READ THIS FIRST: Railway has not deployed since 05:15 UTC
+
+Checked at 09:10 UTC. `GET /api/health` still reports commit `4e84c2e` while
+main is six merges ahead. **This is an infrastructure stall, not a broken
+build**: the current main HEAD was checked out and booted locally and every
+route answered correctly, so there is nothing to fix in the code and nothing to
+re-merge.
+
+What that means for this morning:
+
+| | status |
+|---|---|
+| Both grading modes, the `mode` column, raised Judge0 limits | **LIVE** (they shipped in the earlier deploy) |
+| Five exercise pages, 1.1 to 1.5 | **LIVE** (created by hand, verified) |
+| `POST /api/admin/code-tests/seed` | **NOT live** until Railway deploys |
+| `POST /api/admin/csa-exercise-pages/publish` | **NOT live** until Railway deploys |
+
+So the two curls below will 404 until the deploy lands. **Use the fallbacks in
+"If the endpoints are not there yet" instead.** Check first with:
+
+```sh
+curl -s https://progress.apcsexamprep.com/api/health
+```
+
+If `commit` is `4e84c2e`, the deploy still has not arrived. If it is anything
+newer, the endpoints are live and the two curls work.
+
+## TL;DR, two curls (once the deploy lands)
 
 Both need `ADMIN_KEY` (the header key, not the dashboard cookie: these are
 mutations). Run them in this order.
@@ -57,6 +84,34 @@ column, the raised Judge0 ceilings, and the two admin routes above.
 
 The publisher **skips handles that already exist**, so running it will not touch
 these five.
+
+## If the endpoints are not there yet
+
+Both fallbacks are the original paths and neither needs the deploy.
+
+**Seed the bank (this is the one that matters).** Open a shell on the Railway
+service and run:
+
+```sh
+node scripts/seed-code-tests.js --update
+```
+
+That is exactly what the endpoint would have called. It is idempotent and it
+prunes stale cases. Once it finishes, the five live pages grade immediately.
+
+**More pages.** Build the validated Matrixify sheet and import it:
+
+```sh
+node scripts/csa-exercise-pages-csv.js out.csv --live pages.json
+```
+
+MERGE mode, QUOTE_ALL, utf-8-sig, one import at a time. `--live pages.json`
+takes a fresh Admin API pages dump and aborts if any handle already exists, so
+it cannot overwrite the five that are already there. You can also pass
+`--unit unit-1` to import just Unit 1 first.
+
+If you only have five minutes, do the seed and skip the extra pages. Five
+working graded exercises beat fifty ungraded ones.
 
 ## If step 2 refuses with a scope error
 
