@@ -2,7 +2,34 @@
 
 Written overnight 2026-08-18 for a first-period AP CSA class the same morning.
 
-## TL;DR, two curls
+## READ THIS FIRST: Railway has not deployed since 05:15 UTC
+
+Checked at 09:10 UTC. `GET /api/health` still reports commit `4e84c2e` while
+main is six merges ahead. **This is an infrastructure stall, not a broken
+build**: the current main HEAD was checked out and booted locally and every
+route answered correctly, so there is nothing to fix in the code and nothing to
+re-merge.
+
+What that means for this morning:
+
+| | status |
+|---|---|
+| Both grading modes, the `mode` column, raised Judge0 limits | **LIVE** (they shipped in the earlier deploy) |
+| Five exercise pages, 1.1 to 1.5 | **LIVE** (created by hand, verified) |
+| `POST /api/admin/code-tests/seed` | **NOT live** until Railway deploys |
+| `POST /api/admin/csa-exercise-pages/publish` | **NOT live** until Railway deploys |
+
+So the two curls below will 404 until the deploy lands. **Use the fallbacks in
+"If the endpoints are not there yet" instead.** Check first with:
+
+```sh
+curl -s https://progress.apcsexamprep.com/api/health
+```
+
+If `commit` is `4e84c2e`, the deploy still has not arrived. If it is anything
+newer, the endpoints are live and the two curls work.
+
+## TL;DR, two curls (once the deploy lands)
 
 Both need `ADMIN_KEY` (the header key, not the dashboard cookie: these are
 mutations). Run them in this order.
@@ -32,20 +59,59 @@ is safe.
 
 ## What is already live, before you touch anything
 
-- All the code. Both grading modes, the `mode` column, the raised Judge0
-  ceilings, and both admin routes above.
-- **Three pages**, created by hand overnight and verified end to end:
-  - `/pages/ap-csa-lesson-1-1-intro-algorithms-exercise-1`
-  - `/pages/ap-csa-lesson-1-2-variables-data-types-exercise-1`
-  - `/pages/ap-csa-lesson-1-3-expressions-assignment-exercise-1`
+**Five pages, created by hand overnight and each verified against the live
+storefront.** These work right now, with no action from you:
 
-1.1 was checked properly: the starter in the editor matches the authored source
-byte for byte after entity decoding, no hidden case is on the page, and posting
-the reference solution to the live `/api/judge0/run` returned exactly the
-expected output. The Run loop works right now.
+| lesson | page |
+|---|---|
+| 1.1 Algorithms | `/pages/ap-csa-lesson-1-1-intro-algorithms-exercise-1` |
+| 1.2 Variables and Data Types | `/pages/ap-csa-lesson-1-2-variables-data-types-exercise-1` |
+| 1.3 Expressions and Output | `/pages/ap-csa-lesson-1-3-expressions-assignment-exercise-1` |
+| 1.4 Assignment and Input | `/pages/ap-csa-lesson-1-4-assignment-statements-input-exercise-1` |
+| 1.5 Casting and Range | `/pages/ap-csa-lesson-1-5-casting-range-exercise-1` |
+
+Verified on each: the routing attributes the grade call reads, exactly one h1,
+the editor and both endpoints present, the starter in the editor matching the
+authored source after entity decoding, the `&lt;` entities inside the textareas
+still encoded, the right number of sample cases, and **no hidden case, reference
+solution or grading harness anywhere in the body**.
+
+On 1.1, 1.2 and 1.3 the loop was also proven end to end: posting the reference
+solution to the live `/api/judge0/run` returned exactly the expected output.
+
+The code is live too, as of the merge of #196: both grading modes, the `mode`
+column, the raised Judge0 ceilings, and the two admin routes above.
 
 The publisher **skips handles that already exist**, so running it will not touch
-those three.
+these five.
+
+## If the endpoints are not there yet
+
+Both fallbacks are the original paths and neither needs the deploy.
+
+**Seed the bank (this is the one that matters).** Open a shell on the Railway
+service and run:
+
+```sh
+node scripts/seed-code-tests.js --update
+```
+
+That is exactly what the endpoint would have called. It is idempotent and it
+prunes stale cases. Once it finishes, the five live pages grade immediately.
+
+**More pages.** Build the validated Matrixify sheet and import it:
+
+```sh
+node scripts/csa-exercise-pages-csv.js out.csv --live pages.json
+```
+
+MERGE mode, QUOTE_ALL, utf-8-sig, one import at a time. `--live pages.json`
+takes a fresh Admin API pages dump and aborts if any handle already exists, so
+it cannot overwrite the five that are already there. You can also pass
+`--unit unit-1` to import just Unit 1 first.
+
+If you only have five minutes, do the seed and skip the extra pages. Five
+working graded exercises beat fifty ungraded ones.
 
 ## If step 2 refuses with a scope error
 
@@ -64,8 +130,8 @@ Two ways out:
    `node scripts/csa-exercise-pages-csv.js out.csv` then import with MERGE mode,
    QUOTE_ALL, utf-8-sig, one import at a time.
 
-Either way, the three pages above are already live and gradeable, which covers
-1.1 to 1.3 for first period.
+Either way, the five pages above are already live, which covers 1.1 to 1.5. They
+become gradeable the moment step 1 runs, whatever happens with step 2.
 
 ## What a student sees before and after the seed
 
@@ -98,9 +164,24 @@ get right.
 - Nothing records a zero on any failure path. A 429, a 404 and a runner outage
   all record nothing at all, so a bad ten minutes cannot damage a grade.
 
+## If the two admin routes 404 or the seed says the route is unknown
+
+The merge of #196 went in at 05:15 UTC. Railway was running behind a queue of
+other merges at the time this was written, and the deploy had not picked it up
+yet. My commits ARE an ancestor of main's head, so they ship with whatever
+Railway deploys next; there is nothing to re-merge.
+
+The code was proven good independently of the deploy: the merged tree was booted
+locally and all three endpoints answered correctly (`code-tests` reported the
+honest empty state, the seed dry run reported 54 items and 274 cases without
+writing, and the pages route correctly reported missing Shopify credentials
+rather than crashing). So a 404 in the morning means the deploy has not landed,
+not that the code is wrong. Check `GET /api/health` and compare `commit` against
+main.
+
 ## Still open after this
 
-- The other 50 pages exist only as generated bodies until step 2 runs.
+- The other 48 pages exist only as generated bodies until step 2 runs.
 - No student has actually submitted through the graded path in production. The
   first real submission is the last untested link, and it is the one thing worth
   doing yourself before class: sign in as a test student on 1.1 and submit.
