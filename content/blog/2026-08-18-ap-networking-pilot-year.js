@@ -20,7 +20,7 @@ const SECTIONS = [
 const meta = {
   title: 'AP Networking in 2026-27: Inside the Final Pilot Year',
   handle: 'ap-networking-2026-27-pilot-year-guide',
-  blogHandle: 'news',
+  blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'ap networking',
   publishOn: '2026-08-18',

@@ -20,7 +20,7 @@ const SECTIONS = [
 const meta = {
   title: 'The 2026 AP CSA Score Distribution Tells a Story Nobody Expected',
   handle: 'ap-csa-score-distribution-2026-analysis',
-  blogHandle: 'news',
+  blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa score distribution',
   publishOn: '2026-08-18',

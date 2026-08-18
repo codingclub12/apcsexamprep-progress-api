@@ -20,7 +20,7 @@ const SECTIONS = [
 const meta = {
   title: 'What Happened to the AP CSP Create Performance Task',
   handle: 'ap-csp-create-performance-task-what-changed',
-  blogHandle: 'news',
+  blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp create performance task',
   publishOn: '2026-08-18',
