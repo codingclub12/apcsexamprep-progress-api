@@ -48,6 +48,13 @@ const GAMES = {
     topic: '3.11',
     seoDescription: 'Find the hidden number in as few guesses as binary search would need, and learn why doubling the list adds only one more guess. AP CSP Topic 3.11.',
   },
+  'odds-maker': {
+    title: 'AP CSP Odds Maker Game | RANDOM Ranges and Probability | Topic 3.15',
+    shareName: 'Odds Maker',
+    label: 'points',
+    topic: '3.15',
+    seoDescription: 'Call the odds on a RANDOM expression, then watch two thousand trials settle on the answer. Free AP CSP Topic 3.15 random values practice game.',
+  },
   'list-surgeon': {
     title: 'AP CSP List Surgeon Game | One-Indexed Lists and REMOVE | Topic 3.10',
     shareName: 'List Surgeon',

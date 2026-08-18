@@ -117,7 +117,37 @@ for (const id of ids) {
   }
 }
 
-section('8. Handles and titles are distinct');
+section('8. No script-set style property is locked by an !important rule');
+// Odds Maker's progress bar never moved: the script set el.fill.style.width on
+// every batch of trials, and the stylesheet declared width:0 !important on the
+// same element, which an inline style cannot beat. Nothing structural could see
+// it. The page was valid, the script ran, and the bar stayed empty. Only a
+// screenshot caught it, so this is the check that would have.
+//
+// The games all resolve elements as el[key] = getElementById(prefix + '-' + key),
+// so a script writing el.fill.style.width names the rule that must not lock it:
+// #prefix-fill or .prefix-fill.
+for (const id of ids) {
+  const src = fs.readFileSync(path.join(GAMES_DIR, id + '.html'), 'utf8');
+  const prefixes = [...new Set([...src.matchAll(/getElementById\('([a-z]+)-' \+/g)].map((m) => m[1]))];
+  const sets = [...src.matchAll(/\bel\.([A-Za-z]+)\.style\.([A-Za-z]+)\s*=/g)]
+    .map((m) => ({ key: m[1], prop: m[2].replace(/[A-Z]/g, (c) => '-' + c.toLowerCase()) }));
+  const clashes = [];
+  for (const { key, prop } of sets) {
+    for (const pre of prefixes) {
+      // The rule body for this element, from either an id or a class selector.
+      const rule = new RegExp('[#.]' + pre + '-' + key + '\\{([^}]*)\\}', 'g');
+      let m;
+      while ((m = rule.exec(src))) {
+        const decl = new RegExp('(^|;)\\s*' + prop + '\\s*:[^;]*!important');
+        if (decl.test(m[1])) clashes.push(`${pre}-${key} sets ${prop} from script but the rule declares it !important`);
+      }
+    }
+  }
+  ok(`${id} has no script-set property locked by !important`, clashes.length === 0, [...new Set(clashes)]);
+}
+
+section('9. Handles and titles are distinct');
 const handles = pages.map((p) => p.handle);
 ok('handles are unique', new Set(handles).size === handles.length, handles);
 const titles = pages.map((p) => p.title);
