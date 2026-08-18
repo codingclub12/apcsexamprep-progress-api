@@ -326,6 +326,7 @@ db.exec(`
     prelude         TEXT NOT NULL DEFAULT '',   -- Java prepended before the student segment (injects inputs)
     postlude        TEXT NOT NULL DEFAULT '',   -- Java appended after the student segment
     stdin           TEXT NOT NULL DEFAULT '',   -- optional: stdin for a Scanner-style item (usually empty)
+    mode            TEXT NOT NULL DEFAULT '',   -- '' or 'segment' | 'program' | 'driver' (lib/csa-code-modes.js)
     expected_stdout TEXT NOT NULL,
     hidden          INTEGER NOT NULL DEFAULT 0,   -- 1 = never surfaced to the client, even in a failure summary
     created_at      TEXT DEFAULT (datetime('now')),
@@ -481,6 +482,14 @@ const migrations = [
   // rows default to empty (equivalent to the old stdin-only behavior).
   `ALTER TABLE code_test_cases ADD COLUMN prelude  TEXT NOT NULL DEFAULT ''`,
   `ALTER TABLE code_test_cases ADD COLUMN postlude TEXT NOT NULL DEFAULT ''`,
+  // How the student's submission becomes the file Judge0 compiles. Empty (the
+  // column default) is 'segment', the original bare-segment wrap, so every row
+  // written before this column existed keeps assembling byte for byte as before.
+  // 'program' takes a complete program and feeds it the case's stdin, which is
+  // what makes a Scanner lesson gradeable as itself. 'driver' takes class
+  // definitions with no main and appends a hidden harness that exercises them,
+  // which is what makes Unit 3 gradeable at all. See lib/csa-code-modes.js.
+  `ALTER TABLE code_test_cases ADD COLUMN mode TEXT NOT NULL DEFAULT ''`,
   // Whether the exercise-2 "game" activity counts toward the class grade.
   // NULL = use the course default (CSP games are practice/not counted; other
   // courses count them, unchanged), so no backfill is needed and a teacher's

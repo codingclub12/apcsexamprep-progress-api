@@ -4,18 +4,21 @@
 //  auto-gradable.
 //
 //  WHY THIS EXISTS
-//  The stub gets its top-level classes past buildProgram's class/main wrap by
-//  closing main and Main itself and reopening a harness class, which means it
-//  depends on buildProgram appending EXACTLY two closing braces. That is a real
-//  coupling to a function this file does not own. Left unpinned, a change to
-//  the wrap would not break loudly; it would make every intro-java code
-//  exercise fail to compile, which the grader reports to students as a failed
-//  test case. Every kid in the class gets a zero and the page looks fine.
+//  The stub gets its top-level classes past the class/main wrap by closing main
+//  and Main itself and reopening a harness class, which means it depends on the
+//  wrap appending EXACTLY two closing braces. That is a real coupling to a
+//  function this file does not own. Left unpinned, a change to the wrap would
+//  not break loudly; it would make every intro-java code exercise fail to
+//  compile, which the grader reports to students as a failed test case. Every
+//  kid in the class gets a zero and the page looks fine.
 //
-//  So this asserts against the REAL buildProgram, imported from routes/student.js,
-//  never a copy of it. And where a JDK is present it goes further and actually
-//  compiles and runs the assembled program, because "the braces balance" is not
-//  the same claim as "javac accepts this".
+//  So this asserts against the REAL wrap, never a copy of it. That wrap used to
+//  be a private buildProgram inside routes/student.js and had to be read out of
+//  the source; it now lives in lib/csa-code-modes.js as assemble('segment', ...)
+//  and is imported directly, which is the same guarantee with less ceremony. And
+//  where a JDK is present it goes further and actually compiles and runs the
+//  assembled program, because "the braces balance" is not the same claim as
+//  "javac accepts this".
 //
 //  Also pinned here: determinism (the seeded LCG), because a flaky case fails
 //  students at random for code that is correct.
@@ -31,6 +34,7 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 
 const { expandCase, usesStub, STUB_JAVA } = require('../lib/greenfoot-stub');
+const codeModes = require('../lib/csa-code-modes');
 
 let pass = 0, fail = 0;
 function ok(name, cond, detail) {
@@ -39,22 +43,20 @@ function ok(name, cond, detail) {
 }
 function section(t) { console.log(`\n${t}`); }
 
-// ── The real buildProgram, not a copy ────────────────────────────────────────
-// routes/student.js does not export it (it is internal to the route), so it is
-// read out of the source. Reading it is deliberate: a local reimplementation
-// would keep passing after the real wrap changed, which is the one failure this
-// file exists to catch.
+// ── The real wrap, not a copy ────────────────────────────────────────────────
+// A local reimplementation would keep passing after the real wrap changed,
+// which is the one failure this file exists to catch. So the shared assembler is
+// called directly, and the route is checked to still be calling the same one.
+const buildProgram = (languageId, prelude, segment, postlude) =>
+  codeModes.assemble('segment', languageId, segment, { prelude, postlude });
+
 const studentSrc = fs.readFileSync(path.join(__dirname, '..', 'routes', 'student.js'), 'utf8');
-const fnMatch = studentSrc.match(/function buildProgram\(languageId, prelude, segment, postlude\) \{[\s\S]*?\n\}/);
 
 section('1. The wrap this stub is coupled to still looks the way it did');
-ok('1.1 buildProgram is still present in routes/student.js', !!fnMatch);
-if (!fnMatch) {
-  console.log('\nCannot continue without buildProgram.\n');
-  process.exit(1);
-}
-// eslint-disable-next-line no-new-func
-const buildProgram = new Function(`${fnMatch[0]}; return buildProgram;`)();
+ok('1.1 the grade route still assembles through the shared assembler',
+  /codeModes\.assemble\(/.test(studentSrc) && !/function buildProgram\(/.test(studentSrc));
+ok('1.1b the grade route still expands the stub sentinel before assembling',
+  /expandCase\(/.test(studentSrc));
 
 const JAVA = 62;
 ok('1.2 it still wraps Java in class Main with a main method',

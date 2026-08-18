@@ -115,13 +115,21 @@ const COURSES = {
       'unit-1': {
         // Unit 1 pages are the apcs-ex pilot: auto-graded CFU widgets (the
         // Judge0 code editor items also report as cfu) plus a short mastery
-        // quiz. No exercise-1/2/3 pages exist for these lessons, so declaring
-        // them only created permanently empty gradebook columns (the same fix
-        // CSP bi-1 got). Grades arrive via POST /api/progress/attempt and are
-        // denominated by course_manifest, not course_denominators.
+        // quiz, which arrive via POST /api/progress/attempt and are denominated
+        // by course_manifest.
+        //
+        // exercise-1 was previously left OUT of this list, correctly, because no
+        // exercise page existed for any Unit 1 lesson and declaring the column
+        // would only have created fifteen permanently empty ones. That is no
+        // longer true: lib/csa-exercise-pages.js builds an exercise-1 page for
+        // all fifteen, graded server side against hidden test cases. The column
+        // is declared now because the page that fills it exists now.
+        //
+        // exercise-2 and exercise-3 stay out for the same original reason. No
+        // Unit 1 page emits either.
         label: 'Unit 1: Using Objects and Methods',
         lessons: ['1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', '1.8', '1.9', '1.10', '1.11', '1.12', '1.13', '1.14', '1.15'],
-        activities: ['lesson', 'cfu', 'quiz'],
+        activities: ['lesson', 'cfu', 'exercise-1', 'quiz'],
       },
       'unit-2': {
         label: 'Unit 2: Selection and Iteration',
