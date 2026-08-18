@@ -178,15 +178,40 @@ get right.
 
 ## The deploy queue is still slow, and that is now a separate problem
 
-`26fe1e3` is serving. Main is `ffe06b9`, merged around 09:37 UTC and polled every
-twenty seconds until 09:54: not deployed. That is well past the thirty minute
-grace the drift check allows, so the scheduled check would now be failing, which
-is exactly what it was built to do.
+`26fe1e3` is serving and has been since about 09:45 UTC. As of 10:55 the deploy
+has been behind for **99 minutes**, with four merges stacked up: `fb98aa3`,
+`ffe06b9`, `9297e11`, `e965049`.
 
-Nothing in that gap blocks a class. `ffe06b9` and `fb98aa3` are this runbook,
-the page verification notes, the npm cache fix in `nixpacks.toml` and the drift
-workflow itself. The irony is worth naming: the fix that should stop deploys
-from silently dying cannot land until a deploy succeeds.
+Nothing in that gap blocks a class. Those four are this runbook, the page
+verification notes, the npm cache fix in `nixpacks.toml`, the drift workflow and
+an unrelated blog change. The morning curls run against `26fe1e3` and work.
+
+**Correction to an earlier version of this section, which said the drift check
+"would now be failing, which is exactly what it was built to do".** It was not
+failing. It ran on schedule at 10:15 and 10:51 and reported success both times,
+straight through a stall of an hour and a half. It also does not depend on
+Railway at all, contrary to what was written here: GitHub Actions runs it from
+`main` on GitHub's own runners, so it went live the moment `ffe06b9` merged.
+
+The bug was in the grace clause, which measured the age of **main's head**
+rather than how long the deploy had been behind:
+
+```
+main head : e965049  (merged 13m ago)
+serving   : 26fe1e3
+Behind by design: main is only 13m old and a build takes a few minutes.
+```
+
+Every merge reset that clock. On a night like this one, with something landing
+every twenty to forty minutes, the head is essentially never older than the
+thirty minute grace, so the check could only ever fire during a quiet spell and
+never during a busy stall. Exactly backwards, and worse than no monitor, because
+a green check reads as "in sync".
+
+The fix measures from the oldest undeployed commit on `main`, a clock that
+starts when the deploy first falls behind and that later merges cannot reset.
+Verified by running both versions against this same real state: the old script
+exits 0 with "main is only 0m old", the new one exits 1 with "behind for 99m".
 
 What is worth doing when you are awake, in order:
 
