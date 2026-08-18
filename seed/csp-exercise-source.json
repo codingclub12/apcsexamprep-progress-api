@@ -1,0 +1,3068 @@
+{
+ "ap-csp-topic-1-1-exercise-1": {
+  "exercise": 1,
+  "topic": "1.1",
+  "title": "Collaboration Post-Mortem",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-1-1-exercise-1",
+  "intro": "You are the consultant hired to explain why CampusNight - a student-built event-planning app - flopped on launch night. The team worked hard, wrote plenty of code, and still shipped an app that locked out part of the school. Your evidence is the team's own project log. For each entry you will name the collaboration principle that was violated, diagnose what it did to the product, and prescribe what should have happened instead. Part A works the log; Part B extends the same skills. Everything maps to CB Learning Objectives CRD-1.A, CRD-1.B, and CRD-1.C.",
+  "cb": "",
+  "source": "AP-CSP_1-1_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "A classmate reviews the same log and concludes: 'The real problem was talent - four stronger programmers would have shipped a great app.' Argue the CED's counterpoint: what do four even-stronger copies of the SAME perspective still fail to produce?"
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "The team gets one semester to build CampusNight 2.0. Design their user-consultation plan: whom should they gather information from, when, and what does the CED say that information is actually used for?"
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: Open-source projects like the Python language are built by thousands of contributors who never meet. Explain how a pull request satisfies EK CRD-1.B.1's description of what online tools do - and name two EK CRD-1.C.1 interpersonal skills that appear, in written form, in a typical code-review thread."
+   }
+  ]
+ },
+ "ap-csp-topic-1-1-exercise-2": {
+  "exercise": 2,
+  "topic": "1.1",
+  "title": "The Collaboration Clinic",
+  "timing": "25 minutes - 4 cases - diagnose and prescribe",
+  "handle": "ap-csp-topic-1-1-exercise-2",
+  "intro": "You run the collaboration clinic. Four development teams arrive, each with a project in trouble. For each case: read the signs and name the collaboration principle at risk, explain what is actually going wrong and prescribe the CED-backed fix, and - for enrichment - classify the innovation being built or name the one interpersonal skill the team most needs. Vague 'work together better' advice scores zero.",
+  "cb": "CB Standard (required): the principle at risk + what is going wrong + the prescription, grounded in CED language, for all 4 cases. Enrichment (optional): also classify the team's innovation (physical / software / concept) or name the single most-needed interpersonal skill.",
+  "source": "AP-CSP_1-1_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "A team of four seniors - all in the same friend group, all varsity athletes with the latest phones - is building a fitness-challenge app for the whole school. They skipped interviews 'to save time,' reasoning that 'we ARE the users.' Early testers who don't play sports say the app makes them feel out of place, and students with older phones can't run it at all.",
+    "prompts": [
+     "Signs (what in the case tells you which principle is at risk):",
+     "Diagnosis + prescription (what is going wrong and the CED-backed fix):",
+     "Enrichment (innovation type, or the one interpersonal skill this team needs most):"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "Two students pair program every day: the stronger coder always drives 'to keep the speed up' while the other watches in silence. The quiet partner has privately noticed several bugs but feels pointing them out 'isn't my place.' The program grows quickly - and so does its bug list.",
+    "prompts": [
+     "Signs (what in the case tells you which principle is at risk):",
+     "Diagnosis + prescription (what is going wrong and the CED-backed fix):",
+     "Enrichment (innovation type, or the one interpersonal skill this team needs most):"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "Six students from three different schools won a grant to build a community-garden sensor kit - a soil-moisture probe whose onboard program texts volunteers when garden beds need water. They can meet in person only once a month, so they've been mailing a USB drive back and forth; whoever holds the drive owns 'the real version,' and everyone else waits.",
+    "prompts": [
+     "Signs (what in the case tells you which principle is at risk):",
+     "Diagnosis + prescription (what is going wrong and the CED-backed fix):",
+     "Enrichment (innovation type, or the one interpersonal skill this team needs most):"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "A five-person team is designing SwapShelf, a school-wide system where students trade used books through QR codes and an online credit balance. The team is deadlocked 3-2 on the credit rules, and the majority plans to simply outvote the minority and 'move on.' The two sides now talk only through a group chat where messages keep getting misread - and nobody has asked the students or librarians who would actually run the swaps.",
+    "prompts": [
+     "Signs (what in the case tells you which principle is at risk):",
+     "Diagnosis + prescription (what is going wrong and the CED-backed fix):",
+     "Enrichment (innovation type, or the one interpersonal skill this team needs most):"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-1-2-exercise-1": {
+  "exercise": 1,
+  "topic": "1.2",
+  "title": "Behavior Detective - The LunchDash Log",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-1-2-exercise-1",
+  "intro": "You are the new developer assigned to LunchDash, the school's (fictional) lunch pre-ordering app - and your onboarding task is to understand it purely from its behavior log. For each logged moment you will identify the inputs (source and form), the events that supplied them, and the outputs (form and destination device) - then describe the program's function at both CED description levels. Part A works the log table; Part B extends the same skills. Everything maps to CB Learning Objectives CRD-2.B, CRD-2.C, and CRD-2.D.",
+  "cb": "",
+  "source": "AP-CSP_1-2_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "You now understand LunchDash from its log alone. Describe the program at BOTH CED description levels: (a) one broad sentence saying what it does; (b) a 3-4 step detailed version that says what it does AND how its statements accomplish it."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "Classify each artifact with the precise CED term - program, code segment, or behavior: (a) the entire installed LunchDash app; (b) the 9 lines inside it that gray out a sold-out tile; (c) the sentence 'when a student taps a tile, a confirmation appears and the phone buzzes.'"
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: During row 4's idle window the app looked like it was running 'no code at all' - yet it answered the 11:00 tap instantly. Using the event-loop deep dive, explain what was actually running during those 20 minutes, and why a 'frozen' app is different from an idle one."
+   }
+  ]
+ },
+ "ap-csp-topic-1-2-exercise-2": {
+  "exercise": 2,
+  "topic": "1.2",
+  "title": "Trigger Tracer",
+  "timing": "25 minutes - 4 traces - LO CRD-2.C, CRD-2.D",
+  "handle": "ap-csp-topic-1-2-exercise-2",
+  "intro": "You are the systems analyst on call. Four programs arrive with their behavior described - and your job is to trace the data. For each trace, identify every input (source: user or other program; form: tactile, audio, visual, or text) and every output (form and destination device), then rule on the execution model: sequential or event-driven, naming the trigger if there is one. Advanced students also layer the prior-state question: could this program answer the same input differently tomorrow, and what remembered value would explain it? Vague answers like 'the user gives input and gets output' score zero.",
+  "cb": "CB Standard (required): every input named with source + form, every output named with form, and the execution model ruled sequential or event-driven with the trigger identified, for all 4 traces. Enrichment (optional): also state whether the output depends on prior state, naming the internal value the program must remember.",
+  "source": "AP-CSP_1-2_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "At a crosswalk, a pedestrian presses the metal button. The controller program lights the WALK symbol and plays a chirping tone for pedestrians who can't see the signal. Between presses, the crosswalk program keeps running the normal traffic-light cycle.",
+    "prompts": [
+     "Inputs and outputs traced (source, form, destination):",
+     "Execution model + trigger (sequential or event-driven, and why):",
+     "Prior-state layer (enrichment):"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "Every night at 2:00 a.m., the district gradebook software transmits the day's grades to the student portal program. The portal recalculates each student's average and emails a summary to families who turned on notifications. No person is awake, and nothing appears on any screen.",
+    "prompts": [
+     "Inputs and outputs traced (source, form, destination):",
+     "Execution model + trigger (sequential or event-driven, and why):",
+     "Prior-state layer (enrichment):"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "A smart doorbell detects motion on the porch. Its program records a 10-second clip, sends a notification to the homeowner's phone, and - only when the household set 'night mode' earlier that evening - also switches on the porch spotlight. The same raccoon at 2 p.m. gets no spotlight.",
+    "prompts": [
+     "Inputs and outputs traced (source, form, destination):",
+     "Execution model + trigger (sequential or event-driven, and why):",
+     "Prior-state layer (enrichment):"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "In a rhythm game, a streaming server delivers each week's new song data to the game. During play, the player taps falling notes on the touchscreen; hits make the phone flash the note, buzz briefly, and raise a combo multiplier that makes later notes worth more. Two players tapping identical patterns can end with different scores if one started the song with a 'streak bonus' from yesterday.",
+    "prompts": [
+     "Inputs and outputs traced (source, form, destination):",
+     "Execution model + trigger (sequential or event-driven, and why):",
+     "Prior-state layer (enrichment):"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-1-3-exercise-1": {
+  "exercise": 1,
+  "topic": "1.3",
+  "title": "Process Autopsy - The StudyStreak Project Log",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-1-3-exercise-1",
+  "intro": "A student team spent six weeks building StudyStreak, a flashcard app - and the demo flopped. You are the process consultant hired to do the autopsy. Their complete development log is below. For each week you will name the phase (or the missing phase), spot where iteration and testing never happened, and rule on the documentation and credit failures. Part A works the log; Part B extends the same skills. Everything maps to CB Learning Objectives CRD-2.E, CRD-2.F, CRD-2.G, and CRD-2.H.",
+  "cb": "",
+  "source": "AP-CSP_1-3_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam and Create PT Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "Week 5: rule on 'basically ours now.' What does the CED require for the forum code segment, exactly where must it go, and what would this exact move cost on the Create Performance Task?"
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "Week 6: comments were added, so why does the log still show a documentation failure? Use the CED's WHEN and WHY of documentation in your ruling."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: Rewrite the six-week log as a healthy plan - one line per week - that is BOTH iterative and incremental, includes an investigation method, a specification, a testing strategy, ongoing documentation, and a properly credited borrowed segment."
+   }
+  ]
+ },
+ "ap-csp-topic-1-3-exercise-2": {
+  "exercise": 2,
+  "topic": "1.3",
+  "title": "Process Doctor - Rescue the Build",
+  "timing": "25 minutes - 4 cases - LO CRD-2.E, CRD-2.F, CRD-2.G, CRD-2.H",
+  "handle": "ap-csp-topic-1-3-exercise-2",
+  "intro": "You are the process doctor on call. Four troubled projects arrive. For each, name the process problem WITH CED VOCABULARY (skipped investigation, missing specification, not incremental, not iterative, documentation failure, missing acknowledgement), prescribe the fix, and justify it from the relevant EK. Advanced students also flag a second-layer issue hiding in the same story. Vague 'plan better' advice scores zero.",
+  "cb": "CB Standard (required): process problem named with CED vocabulary + fix + justification, for all 4 cases. Enrichment (optional): also flag the second-layer issue hiding in the same story for a more complete rescue.",
+  "source": "AP-CSP_1-3_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "A student spends a month building a locker-organizer app for teachers - layout, colors, and features all chosen because 'they seemed obvious.' At launch, zero teachers adopt it: it assumes teachers assign lockers alphabetically, but at this school lockers are assigned by grade and hallway. No teacher was ever consulted at any point.",
+    "prompts": [
+     "Diagnosis (name the process problem with CED vocabulary):",
+     "Prescription + justification (the fix, and the EK rule that makes it the fix):",
+     "Second-layer issue to flag (enrichment):"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "A pair divides an escape-room game: one partner writes the entire 700-line game in a four-day marathon, then runs it for the first time. It crashes instantly. Every fix reveals two new failures - the timer breaks the puzzle logic, the puzzle logic breaks the scoring - and after a week of whack-a-mole they can't even say which parts have ever worked.",
+    "prompts": [
+     "Diagnosis (name the process problem with CED vocabulary):",
+     "Prescription + justification (the fix, and the EK rule that makes it the fix):",
+     "Second-layer issue to flag (enrichment):"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "A club's event app gets its first real users at the fall fair. Feedback is loud and consistent: the sign-up flow confuses everyone - people tap the poster image expecting it to be a button. The team logs every comment, thanks everyone warmly... and ships the spring version with the sign-up flow untouched, because 'the design phase ended in October and we're in the testing phase now.'",
+    "prompts": [
+     "Diagnosis (name the process problem with CED vocabulary):",
+     "Prescription + justification (the fix, and the EK rule that makes it the fix):",
+     "Second-layer issue to flag (enrichment):"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "A solo student builds their Create PT project in a block-based environment with no comment feature, so they keep no documentation of any kind - 'not possible in this language.' The program's cleverest procedure was generated by an AI assistant; it appears nowhere in any write-up, and when asked how it works, the student shrugs: 'It works, that's what matters.' Submission is in three weeks.",
+    "prompts": [
+     "Diagnosis (name the process problem with CED vocabulary):",
+     "Prescription + justification (the fix, and the EK rule that makes it the fix):",
+     "Second-layer issue to flag (enrichment):"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-1-4-exercise-1": {
+  "exercise": 1,
+  "topic": "1.4",
+  "title": "Error Hunt - The Bug Report Log",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-1-4-exercise-1",
+  "intro": "You are the triage lead at your school's student help desk. Five bug reports are waiting in the queue. For each report you will classify the error by its CED name - logic, syntax, run-time, or overflow - and prescribe the discovery method from the CED's five ways that would have caught it. Part A works the log; Part B extends the same skills. Everything maps to CB Learning Objectives CRD-2.I and CRD-2.J.",
+  "cb": "",
+  "source": "AP-CSP_1-4_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "Two situations: (a) a value goes wrong SOMEWHERE in a 40-line program, location unknown; (b) you suspect ONE specific formula line. Choose the better tool from the five ways for each situation, and explain the difference in one sentence each."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "GradePro's formula gets fixed to divide by 3. Write ONE complete test case that confirms the fix - defined input, expected output - and state what the team must do if the test fails anyway (cite the CED's testing loop)."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: Modern code editors underline illegal statements as you type, and 'fuzzers' hammer programs with millions of random inputs hunting for crashes. Map each tool onto the CED error type it catches best - then name the error type NEITHER can reliably catch, and explain what a human must supply to catch it."
+   }
+  ]
+ },
+ "ap-csp-topic-1-4-exercise-2": {
+  "exercise": 2,
+  "topic": "1.4",
+  "title": "Boundary Patrol",
+  "timing": "25 minutes - 4 patrols - LO CRD-2.J",
+  "handle": "ap-csp-topic-1-4-exercise-2",
+  "intro": "You are the quality gatekeeper. Four programs claim they are ready to ship, each backed by a handful of passing tests. For each patrol: pull the extremes out of the requirements, build the test set at AND just beyond them, and state the expected outcome for every input. Advanced students also name the subtler second boundary each scenario hides. Vague 'try some numbers' plans score zero.",
+  "cb": "CB Standard (required): extremes named from the requirements + a test set at AND just beyond them + the expected outcome for every input, for all 4 patrols. Enrichment (optional): also name the subtler second boundary the scenario hides.",
+  "source": "AP-CSP_1-4_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "A gradebook accepts quiz scores as whole numbers from 0 to 100 and prints a letter grade. The developer tested 85, 92, and 74 - all three produced correct grades - and wants to ship this afternoon.",
+    "prompts": [
+     "Extremes named (the minimum and maximum the requirements define, and what is measured):",
+     "Test set + expected outcome for each input (at and just beyond the extremes):",
+     "Enrichment - the subtler second boundary this scenario hides:"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "A review site lets users rate films from 1 to 5 stars, and the average rating shows on every film's page. The rating box is free-type - users can enter any number. The lead developer says the star range 'is obvious, so nobody will type anything else.'",
+    "prompts": [
+     "Extremes named (the minimum and maximum the requirements define, and what is measured):",
+     "Test set + expected outcome for each input (at and just beyond the extremes):",
+     "Enrichment - the subtler second boundary this scenario hides:"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "A sign-up page requires passwords of 8 to 16 characters. The intern tested 'sunshine12' - ten characters, accepted, works - and marked the story done.",
+    "prompts": [
+     "Extremes named (the minimum and maximum the requirements define, and what is measured):",
+     "Test set + expected outcome for each input (at and just beyond the extremes):",
+     "Enrichment - the subtler second boundary this scenario hides:"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "A wellness app logs nightly sleep in whole minutes, from 0 to 1440 (a full day). It stores each night AND a running lifetime total in the same size of numeric storage, and a school pilot will run it for a full semester. The developer tested 420 and 480 minutes - a good night's sleep either way - and both worked.",
+    "prompts": [
+     "Extremes named (the minimum and maximum the requirements define, and what is measured):",
+     "Test set + expected outcome for each input (at and just beyond the extremes):",
+     "Enrichment - the subtler second boundary this scenario hides:"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-2-1-exercise-1": {
+  "exercise": 1,
+  "topic": "2.1",
+  "title": "The Wraparound Bug",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-2-1-exercise-1",
+  "intro": "You are the newest member of the QA team for the StrideTrak fitness-tracker beta. Overnight, five incident reports landed in the queue - a step count that mysteriously restarted, a distance total with a suspicious tail of digits, and raw binary values nobody has decoded yet. For each incident you will read the evidence, convert the binary where needed, and name the failure mode - or prove there isn't one. Part A works the incident log; Part B extends the same skills. Everything maps to CB Learning Objectives DAT-1.A, DAT-1.B, and DAT-1.C.",
+  "cb": "",
+  "source": "AP-CSP_2-1_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "Incident 5: order LOW (110), MED (1001), and HIGH (1100) from least to greatest WITHOUT fully converting - name the shortcut used for each comparison. Then write the new SEVERE level (decimal 22) in binary and state where it lands in the order."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "The tracker's optical sensor watches your pulse - a signal that rises and falls smoothly, with infinitely many in-between values - yet the device stores only a list of binary numbers. Name what kind of data the pulse is, name the technique that turns it into bits, and state what the tracker gains by measuring MORE often."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: The firmware team proposes fixing Incident 1 by widening the step field from 8 bits to 16 bits (maximum 65,535). State the general ceiling for an n-bit field, show what the display would read after an ultramarathoner logs 70,000 steps on the NEW firmware, and explain why 'just add more bits' raises the ceiling but never abolishes overflow as a category."
+   }
+  ]
+ },
+ "ap-csp-topic-2-1-exercise-2": {
+  "exercise": 2,
+  "topic": "2.1",
+  "title": "Binary Help Desk",
+  "timing": "25 minutes - 5 tickets - convert, diagnose, order",
+  "handle": "ap-csp-topic-2-1-exercise-2",
+  "intro": "You are on call at the device lab's binary help desk. Five tickets arrive from five different gadgets, each stuck on a number. For each ticket, decide what it is asking (a conversion, a diagnosis, or an ordering), write the place values under every binary number before reading it, show the arithmetic, and - where something went wrong - name the failure mode BY NAME (integer overflow or round-off error). Advanced students also name the sub-type or shortcut behind the answer. Vague 'the computer glitched' rulings score zero.",
+  "cb": "CB Standard (required): the conversion or ordering shown with place values, or the failure mode named with the arithmetic that proves it, for all 5 tickets. Enrichment (optional): also name the sub-type or shortcut involved (range vs. precision failure, digit-count ordering shortcut, the 2^n - 1 ceiling).",
+  "source": "AP-CSP_2-1_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "A smart thermostat's install log records the current room temperature as the binary value 10011. The installer needs the decimal temperature to confirm the sensor is reading sanely - and warns that the last trainee reported it as 'ten thousand eleven degrees.'",
+    "prompts": [
+     "What this ticket asks (conversion, diagnosis, or ordering) + your predicted answer:",
+     "Work shown (place values / repeated subtraction / wrap arithmetic) + final answer or failure mode named:",
+     "Enrichment - sub-type or shortcut named (range vs. precision, digit-count, 2^n - 1):"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "A delivery drone must transmit its approved ceiling altitude - decimal 45 meters - to a ground station that accepts only binary. Write the exact bit sequence the drone should send, and prove the sequence decodes back to 45 before it is transmitted.",
+    "prompts": [
+     "What this ticket asks (conversion, diagnosis, or ordering) + your predicted answer:",
+     "Work shown (place values / repeated subtraction / wrap arithmetic) + final answer or failure mode named:",
+     "Enrichment - sub-type or shortcut named (range vs. precision, digit-count, 2^n - 1):"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "A retro arcade cabinet stores the high score in 8 bits. A player sitting at 250 points clears a 15-point bonus and the marquee proudly displays 9. The player files a ticket demanding the missing points back.",
+    "prompts": [
+     "What this ticket asks (conversion, diagnosis, or ordering) + your predicted answer:",
+     "Work shown (place values / repeated subtraction / wrap arithmetic) + final answer or failure mode named:",
+     "Enrichment - sub-type or shortcut named (range vs. precision, digit-count, 2^n - 1):"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "A budgeting app adds a $0.10 transit fare to a $0.20 coffee and the running total displays $0.30000000000000004. A one-star review claims the app 'invented money out of nowhere,' and a teammate proposes fixing it by moving the math to a bigger, more expensive processor.",
+    "prompts": [
+     "What this ticket asks (conversion, diagnosis, or ordering) + your predicted answer:",
+     "Work shown (place values / repeated subtraction / wrap arithmetic) + final answer or failure mode named:",
+     "Enrichment - sub-type or shortcut named (range vs. precision, digit-count, 2^n - 1):"
+    ]
+   },
+   {
+    "n": 5,
+    "level": "Challenge",
+    "text": "A warehouse sensor network assigns each device a binary priority code: DOOR = 1001, FAN = 110, CAMERA = 1100. A new SIREN must be inserted at decimal priority 22. Order the three existing codes from least to greatest WITHOUT fully converting (name the shortcut used at each step), then write the SIREN's code in binary and state where it lands in the order.",
+    "prompts": [
+     "What this ticket asks (conversion, diagnosis, or ordering) + your predicted answer:",
+     "Work shown (place values / repeated subtraction / wrap arithmetic) + final answer or failure mode named:",
+     "Enrichment - sub-type or shortcut named (range vs. precision, digit-count, 2^n - 1):"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-2-2-exercise-1": {
+  "exercise": 1,
+  "topic": "2.2",
+  "title": "Compression Triage",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-2-2-exercise-1",
+  "intro": "You are the storage-and-transfer consultant for your school's student media team. Five files are waiting for a decision before the team's shared drive fills up. For each file you will read what is inside it and what its owner needs, then reason about redundancy, choose lossless or lossy compression, and justify the choice. Part A works the file log; Part B extends the same skills. Everything maps to CB Learning Objective DAT-1.D.",
+  "cb": "",
+  "source": "AP-CSP_2-2_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "Lossy algorithms can usually reduce the number of bits MORE than lossless algorithms. Explain why that advantage follows directly from what each family is allowed to do with the original data."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "A classmate zips a folder of vacation .jpg photos expecting it to halve in size, but the zip is barely smaller than the originals. Using EK DAT-1.D.3, explain the result - and what it reveals about files that have already been compressed."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: Run-length encoding stores each run of identical values as a count plus the value (the pixel row W W W W W W W W W W W W B B B W W W W W W W W W W W W becomes 12W 3B 12W). Is RLE lossless or lossy, and how do you know? Then describe one input that would make RLE ENLARGE a file instead of shrinking it, and connect that to EK DAT-1.D.3."
+   }
+  ]
+ },
+ "ap-csp-topic-2-2-exercise-2": {
+  "exercise": 2,
+  "topic": "2.2",
+  "title": "Bandwidth Budget Advisor",
+  "timing": "25 minutes - 3 contexts - choose and justify",
+  "handle": "ap-csp-topic-2-2-exercise-2",
+  "intro": "You are the technology advisor for three clients, each stuck on a compression decision. For each context, name what matters most (perfect reconstruction vs. minimum size/transmission time), recommend LOSSLESS or LOSSY by name, and state the trade-off your choice accepts. Advanced students also predict which data would shrink the most, reasoning from redundancy. Vague 'just compress it' advice scores zero.",
+  "cb": "CB Standard (required): what matters most in the context + the compression family (lossless or lossy) + the trade-off accepted, for all 3 contexts. Enrichment (optional): also predict the size reduction using redundancy (EK DAT-1.D.3).",
+  "source": "AP-CSP_2-2_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "An author has finished a 900-page novel and must email the manuscript to an editor tonight, but the attachment is over the mail server's size limit. Every character of the manuscript must arrive exactly as written - the editor's contract requires the submitted text to be the text. Recommend a compression approach.",
+    "prompts": [
+     "What matters most in this context (perfect reconstruction vs. size/time):",
+     "Compression choice (lossless or lossy) + the trade-off accepted:",
+     "Enrichment - which data shrinks most, and why (redundancy):"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "A school is live-streaming its graduation ceremony to relatives overseas on a weak uplink connection. During a test run, the full-quality stream kept freezing and dropping out. Families care that the stream keeps moving in real time; nobody will study individual frames. Recommend a compression approach.",
+    "prompts": [
+     "What matters most in this context (perfect reconstruction vs. size/time):",
+     "Compression choice (lossless or lossy) + the trade-off accepted:",
+     "Enrichment - which data shrinks most, and why (redundancy):"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Challenge",
+    "text": "A student's phone storage is nearly full. Two things are eating the space: a folder of scanned legal documents for a family court case (the lawyer says every page must remain exact), and about 2,000 vacation photos the student browses on the phone screen. One compression setting will not fit both. Recommend a complete plan.",
+    "prompts": [
+     "What matters most in this context (perfect reconstruction vs. size/time):",
+     "Compression choice (lossless or lossy) + the trade-off accepted:",
+     "Enrichment - which data shrinks most, and why (redundancy):"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-2-3-exercise-1": {
+  "exercise": 1,
+  "topic": "2.3",
+  "title": "Claim Checker - The Streaming Survey",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-2-3-exercise-1",
+  "intro": "You are the fact-checker for the school news site, reviewing five rows pulled from the (fictional) student music-streaming survey workbook. For each row you will decide what is data, what is information, what is metadata - and which claims are honest extractions versus leaps. Part A works the log table; Part B extends the same skills. Everything maps to CB Learning Objectives DAT-2.A and DAT-2.B.",
+  "cb": "",
+  "source": "AP-CSP_2-3_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "Row 5: the app re-ordered 1,400 songs in an instant without opening a single audio file. Name what made that possible and which metadata job - finding, organizing, or managing - the sort performed."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "Using the full survey workbook, give one TREND the school could identify, one CONNECTION it could make, and one PROBLEM it could address - one sentence each."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: A student posts a phone photo of the survey whiteboard. List two pieces of metadata that photo probably carries, one thing a stranger could learn from them, and why stripping that metadata leaves the image pixel-for-pixel identical."
+   }
+  ]
+ },
+ "ap-csp-topic-2-3-exercise-2": {
+  "exercise": 2,
+  "topic": "2.3",
+  "title": "Messy Dataset Rescue",
+  "timing": "25 minutes - 3 rescues - LO DAT-2.C",
+  "handle": "ap-csp-topic-2-3-exercise-2",
+  "intro": "You are the data consultant on call. Three datasets arrive in trouble. For each, name the CED challenge BY NAME (non-uniform, incomplete, invalid, combining sources, bias, size/parallel/scalability), prescribe the fix, and justify why it works. Advanced students also name a second consideration to layer on the same rescue. Vague 'fix the data' advice scores zero.",
+  "cb": "CB Standard (required): challenge named with CED vocabulary + fix + justification, for all 3 rescues. Enrichment (optional): also name a second consideration to layer (a limit of the fix, or a follow-on challenge) for a more complete rescue.",
+  "source": "AP-CSP_2-3_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "The robotics club's sign-up spreadsheet has an open 'grade level' field. The column contains: 9, 9th, ninth, Freshman, 10, tenth, and two empty cells. The club president needs an accurate count of students per grade by Friday.",
+    "prompts": [
+     "Challenge named (which CED problem is this):",
+     "Fix + justification (what you would do and why it's allowed):",
+     "Second consideration to layer (enrichment):"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "The cafeteria surveys students about new menu options - but the survey link is posted only in the athletics team app. 900 responses arrive, overwhelmingly requesting high-protein options. The cafeteria director, thrilled with the turnout, proposes extending the survey two more weeks to 'make the data even stronger.'",
+    "prompts": [
+     "Challenge named (which CED problem is this):",
+     "Fix + justification (what you would do and why it's allowed):",
+     "Second consideration to layer (enrichment):"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Challenge",
+    "text": "A statewide fitness study collects 200 million sensor readings. The lead researcher's laptop crashes every time the file opens, and the team debates two proposals: (a) delete 90% of the readings so the laptop can cope, or (b) find a better way to process all of them. The grant also requires the study to keep growing for five more years.",
+    "prompts": [
+     "Challenge named (which CED problem is this):",
+     "Fix + justification (what you would do and why it's allowed):",
+     "Second consideration to layer (enrichment):"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-2-4-exercise-1": {
+  "exercise": 1,
+  "topic": "2.4",
+  "title": "Extraction Process Identifier",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-2-4-exercise-1",
+  "intro": "You are the student data assistant for the school's activities office. A program ran five operations on office datasets this week. For each operation you will name the extraction process from the CED - transforming every element, filtering, combining/comparing, or visualizing - or identify the tool at work (search, filter, spreadsheet), and connect it to the question it answered. Part A works the operations log; Part B extends the same skills. Everything maps to CB Learning Objectives DAT-2.D and DAT-2.E.",
+  "cb": "",
+  "source": "AP-CSP_2-4_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "After the bar chart shows 9th grade under-participating, the principal asks: 'Is that true for after-school clubs specifically?' Name the property of insight-seeking this illustrates, and list the steps of the next pass."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "Signup forms list the same club as 'Robotics,' 'robotics club,' and 'FIRST Robotics.' Explain what filtering and cleaning contribute here, and what a per-club total computed WITHOUT cleaning would get wrong."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: The four extraction processes look like a menu, but real analyses chain them into a pipeline whose ORDER matters. Give one concrete example from this exercise where swapping two steps changes the answer."
+   }
+  ]
+ },
+ "ap-csp-topic-2-4-exercise-2": {
+  "exercise": 2,
+  "topic": "2.4",
+  "title": "Insight Pipeline Designer",
+  "timing": "25 minutes - 3 datasets - design the passes",
+  "handle": "ap-csp-topic-2-4-exercise-2",
+  "intro": "You are the student data analyst for three clients. Each brings a messy dataset and a vague question. For each client, design pass 1 of the pipeline: name the moves IN ORDER using CED process names (clean, transform, combine sources, filter, classify/cluster, combine/compare, visualize), state the insight the pass yields, and write the follow-up question that triggers the next pass. Vague 'analyze the data' advice scores zero.",
+  "cb": "CB Standard (required): first-pass pipeline (named moves in order) + the insight it yields + the follow-up question it raises, for all 3 datasets. Enrichment (optional): also state the one move you would add or swap on pass 2, and why the order matters.",
+  "source": "AP-CSP_2-4_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "The student council has a clean spreadsheet of 1,850 spirit-wear orders (date, item, size, price). Their question: 'What actually sells?' Design pass 1.",
+    "prompts": [
+     "Pass 1 pipeline (moves in order, CED names):",
+     "Insight pass 1 yields + the follow-up question it raises:",
+     "Pass 2 change - the one move you add or swap, and why order matters (enrichment):"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "The library's checkout log lists genres as 'SciFi,' 'sci-fi,' and 'Science Fiction,' and some books were scanned twice at checkout. The librarian's question: 'Which genres should we expand?'",
+    "prompts": [
+     "Pass 1 pipeline (moves in order, CED names):",
+     "Insight pass 1 yields + the follow-up question it raises:",
+     "Pass 2 change - the one move you add or swap, and why order matters (enrichment):"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Challenge",
+    "text": "The athletics director has fall game attendance from the ticket scanners and a separate weather log from the district. The question: 'Does weather actually hurt our gate?'",
+    "prompts": [
+     "Pass 1 pipeline (moves in order, CED names):",
+     "Insight pass 1 yields + the follow-up question it raises:",
+     "Pass 2 change - the one move you add or swap, and why order matters (enrichment):"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-3-10-exercise-1": {
+  "exercise": 1,
+  "topic": "3.10",
+  "title": "Trace the Step Log",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-3-10-exercise-1",
+  "intro": "You are a debugging partner watching a program reshape a list of daily step counts. The program below is a sequence of list operations in exam pseudocode. Your job is to TRACE it - write the full list and its LENGTH after each operation - and then answer questions about indexing and how the neighbors shift. This is the single most tested skill for LO AAP-2.N: track how INSERT, APPEND, and REMOVE move the other elements and change the length, and remember the reference sheet is 1-indexed.",
+  "cb": "",
+  "source": "AP-CSP_3-10_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "Write your own two-operation sequence on a list scores <- [50, 60, 70] where the FIRST operation changes the length and the SECOND does not. State the list and LENGTH after each, and label which operation resized the list."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "A program tries to read aList[0] to get the first element of a list. On the exam reference sheet, what actually happens, and what is the correct expression for the first and last elements?"
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: The reference sheet writes APPEND(aList, value), but Python writes aList.append(value) and JavaScript writes aList.push(value). Explain, using EK AAP-2.N.2, why these are all correct even though the syntax differs."
+   },
+   {
+    "id": "Q4",
+    "pts": 0,
+    "text": "Next step: you traced these operations by hand. Now head to the Topic 3.10 page and type and run the harder versions, where the computer checks your output for you."
+   }
+  ]
+ },
+ "ap-csp-topic-3-10-exercise-2": {
+  "exercise": 2,
+  "topic": "3.10",
+  "title": "Traverse and Search",
+  "timing": "25 minutes - Predict the output of 5 traversal and search algorithms",
+  "handle": "ap-csp-topic-3-10-exercise-2",
+  "intro": "You are testing five short algorithms that all traverse the same step log, steps <- [8000, 12000, 9000, 15000, 11000]. For each one, PREDICT what it displays by tracing the loop one element at a time - no computer yet. The algorithms that trip people up are the ones where the loop variable is a VALUE (not an index), where a linear search stops early, and where an average must divide by LENGTH. Vague answers score zero; show the running value after each pass.",
+  "cb": "CB Standard (required): for each algorithm, the running value after each pass + the final displayed output, traced by hand. Enrichment (optional): note a complete-vs-partial traversal or best-vs-worst-case observation (EK AAP-2.O.1, O.5).",
+  "source": "AP-CSP_3-10_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "total <- 0; FOR EACH day IN steps { total <- total + day }; DISPLAY(total). What is displayed?",
+    "prompts": [
+     "The running value and its starting value:",
+     "The running value after each pass (trace it):",
+     "Final displayed output (+ enrichment note):"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "count <- 0; FOR EACH day IN steps { IF(day >= 10000) { count <- count + 1 } }; DISPLAY(count). What is displayed?",
+    "prompts": [
+     "The running value and its starting value:",
+     "The running value after each pass (trace it):",
+     "Final displayed output (+ enrichment note):"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "best <- steps[1]; FOR EACH day IN steps { IF(day > best) { best <- day } }; DISPLAY(best). What is displayed?",
+    "prompts": [
+     "The running value and its starting value:",
+     "The running value after each pass (trace it):",
+     "Final displayed output (+ enrichment note):"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "A linear search scans steps in order for the value 9000, stopping as soon as it is found, and displays the 1-indexed position. What is displayed, and how many elements were examined?",
+    "prompts": [
+     "The running value and its starting value:",
+     "The running value after each pass (trace it):",
+     "Final displayed output (+ enrichment note):"
+    ]
+   },
+   {
+    "n": 5,
+    "level": "Challenge",
+    "text": "total <- 0; FOR EACH day IN steps { total <- total + day }; DISPLAY(total / LENGTH(steps)). What is displayed, and why is dividing by LENGTH better than dividing by 5?",
+    "prompts": [
+     "The running value and its starting value:",
+     "The running value after each pass (trace it):",
+     "Final displayed output (+ enrichment note):"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-3-11-exercise-1": {
+  "exercise": 1,
+  "topic": "3.11",
+  "title": "Trace the Shelf",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-3-11-exercise-1",
+  "intro": "You are a library clerk searching a shelf of books that are already sorted by call number. Instead of scanning every book, you use binary search: check the MIDDLE book of the section still in play, then throw away the half that cannot contain your book. Your job is to TRACE the search on paper - record the region, the middle checked, and the half eliminated at each step - and then COUNT the iterations. This is the single most tested skill for LO AAP-2.P part a: find the middle, eliminate half, and count the checks.",
+  "cb": "",
+  "source": "AP-CSP_3-11_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "Suppose the shelf had NOT been sorted first. Explain, using iteration 1 as an example, why binary search could then throw away the half that actually contains book 47."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "Linear search would also find book 47 on this shelf. State the worst-case number of checks for each search on the 15-book shelf, and explain what makes binary search often more efficient here."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: The shelf grows from 15 books to 31 books (still sorted). Predict the new worst-case number of binary search checks by halving, and explain why roughly doubling the shelf added so few checks."
+   },
+   {
+    "id": "Q4",
+    "pts": 0,
+    "text": "Next step: you traced these searches by hand. Now head to the Topic 3.11 page and type and run the harder versions, where the computer checks your output for you."
+   }
+  ]
+ },
+ "ap-csp-topic-3-11-exercise-2": {
+  "exercise": 2,
+  "topic": "3.11",
+  "title": "Sorted or Not?",
+  "timing": "25 minutes - 5 data sets - can you binary search it, and what does it cost?",
+  "handle": "ap-csp-topic-3-11-exercise-2",
+  "intro": "You are deciding, for five different data sets, whether binary search can even be used - and if it can, how many checks it costs compared with linear search. The decisions that trip people up are data sets that LOOK ready but are not truly sorted, and estimating iteration counts by halving instead of counting elements. Answers like 'binary is always faster' score zero - you must check the sorted requirement first and justify the count.",
+  "cb": "CB Standard (required): for each data set, (1) can binary search be used - is the data sorted? (2) if yes, the worst-case binary checks by halving, and (3) the worst-case linear checks (n) for comparison. Enrichment (optional): note a subtler ordering or efficiency consideration (EK AAP-2.P.3).",
+  "source": "AP-CSP_3-11_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "A sorted list of 8 exam scores: [55, 61, 68, 72, 79, 85, 90, 96]. You need to find whether 79 is present.",
+    "prompts": [
+     "Can binary search be used (is it sorted)? Yes / No + why:",
+     "If yes: worst-case binary checks (by halving) vs worst-case linear checks (n):",
+     "Enrichment - a subtler ordering or efficiency consideration:"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "An unsorted list of 8 scores as they were entered: [72, 55, 90, 61, 96, 68, 85, 79]. A teammate wants to binary search it for 79 immediately.",
+    "prompts": [
+     "Can binary search be used (is it sorted)? Yes / No + why:",
+     "If yes: worst-case binary checks (by halving) vs worst-case linear checks (n):",
+     "Enrichment - a subtler ordering or efficiency consideration:"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "A sorted list of 63 product IDs (already in ascending order). You need the worst-case number of checks to find any single ID.",
+    "prompts": [
+     "Can binary search be used (is it sorted)? Yes / No + why:",
+     "If yes: worst-case binary checks (by halving) vs worst-case linear checks (n):",
+     "Enrichment - a subtler ordering or efficiency consideration:"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "A list of 16 temperatures sorted from HIGHEST to lowest: [98, 95, 91, 88, ...]. A student says binary search is impossible because it is 'backward.'",
+    "prompts": [
+     "Can binary search be used (is it sorted)? Yes / No + why:",
+     "If yes: worst-case binary checks (by halving) vs worst-case linear checks (n):",
+     "Enrichment - a subtler ordering or efficiency consideration:"
+    ]
+   },
+   {
+    "n": 5,
+    "level": "Challenge",
+    "text": "A list that is almost sorted, with one value out of place: [10, 20, 30, 85, 50, 60, 70, 40]. A teammate says 'close enough' to binary search for 50.",
+    "prompts": [
+     "Can binary search be used (is it sorted)? Yes / No + why:",
+     "If yes: worst-case binary checks (by halving) vs worst-case linear checks (n):",
+     "Enrichment - a subtler ordering or efficiency consideration:"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-3-12-exercise-1": {
+  "exercise": 1,
+  "topic": "3.12",
+  "title": "Trace the Call",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-3-12-exercise-1",
+  "intro": "You are a debugging partner reading a snack-bar program that CALLS procedures. Two procedures are already written for you (a black box each). Your job is to TRACE the calls by hand - follow the flow of control as it interrupts the main program, matches arguments to parameters by position, runs the procedure, and returns - and determine exactly what is displayed and what each variable holds. This is the single most tested skill for LO AAP-3.A: read the call, send the arguments to the parameters, run the detour, and catch any RETURNed value.",
+  "cb": "",
+  "source": "AP-CSP_3-12_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "In your own words, explain what 'flow of control is returned to the point immediately following where the procedure was called' means, using the idea of a detour or round trip. Why is it useful that control comes back to exactly that spot?"
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "A classmate says, 'To call showItem I have to name my arguments item and price, or the computer won't know where they go.' Correct this precisely, and give an example call using arguments that are NOT named item or price."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: Suppose line 4 read count <- INPUT() instead, and then total <- costFor(count). Explain how INPUT() and costFor are ALIKE in one important way, and predict how the output could differ from one run to the next."
+   },
+   {
+    "id": "Q4",
+    "pts": 0,
+    "text": "Next step: you traced these calls by hand. Now head to the Topic 3.12 page and type and run the harder versions, where the computer checks your output for you."
+   }
+  ]
+ },
+ "ap-csp-topic-3-12-exercise-2": {
+  "exercise": 2,
+  "topic": "3.12",
+  "title": "Effect or Value?",
+  "timing": "25 minutes - 5 calls - decide what each produces and what the program can reuse",
+  "handle": "ap-csp-topic-3-12-exercise-2",
+  "intro": "You are reviewing a snack-bar program that uses procedures. For each call, decide whether it produces an EFFECT (it DISPLAYs something on screen and hands nothing back) or a VALUE (it RETURNs something the program can capture and reuse), state exactly what ends up on screen, and say whether the program still has a value to use afterward. The calls that trip people up are the ones that LOOK like they produce a usable answer but only display it. Vague answers like 'it just prints the number' score zero.",
+  "cb": "CB Standard (required): effect or value + what appears on screen + whether a value is available to reuse afterward, for all 5 calls. Enrichment (optional): note a subtler flow-of-control or return-value consideration (EK AAP-3.A.4, A.6-A.8).",
+  "source": "AP-CSP_3-12_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "PROCEDURE showItem(item, price) runs DISPLAY(item) then DISPLAY(price). The program runs the bare call showItem(\"Soda\", 2).",
+    "prompts": [
+     "Effect or value (does it DISPLAY or RETURN):",
+     "Exactly what appears on screen:",
+     "Enrichment - a subtler flow-of-control or return consideration:"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "PROCEDURE costFor(count) runs RETURN(count * 3). The program runs total <- costFor(4).",
+    "prompts": [
+     "Effect or value (does it DISPLAY or RETURN):",
+     "Exactly what appears on screen:",
+     "Enrichment - a subtler flow-of-control or return consideration:"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "Using the same costFor(count) that runs RETURN(count * 3), the program runs the bare line DISPLAY(costFor(4)).",
+    "prompts": [
+     "Effect or value (does it DISPLAY or RETURN):",
+     "Exactly what appears on screen:",
+     "Enrichment - a subtler flow-of-control or return consideration:"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "The program runs count <- INPUT(), and the user types 5. Then it runs total <- costFor(count), where costFor(count) runs RETURN(count * 3).",
+    "prompts": [
+     "Effect or value (does it DISPLAY or RETURN):",
+     "Exactly what appears on screen:",
+     "Enrichment - a subtler flow-of-control or return consideration:"
+    ]
+   },
+   {
+    "n": 5,
+    "level": "Challenge",
+    "text": "PROCEDURE mystery(count) runs RETURN(count * 3) and then, on the line after the RETURN, DISPLAY(\"done\"). The program runs x <- mystery(2).",
+    "prompts": [
+     "Effect or value (does it DISPLAY or RETURN):",
+     "Exactly what appears on screen:",
+     "Enrichment - a subtler flow-of-control or return consideration:"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-3-13-exercise-1": {
+  "exercise": 1,
+  "topic": "3.13",
+  "title": "Trace the Procedures",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-3-13-exercise-1",
+  "intro": "You are a code reviewer for the school store's label program. The program DEFINES a small procedure and then calls it several times; some calls hit an early RETURN. Your job is to TRACE it by hand - determine what each call returns or displays, and which RETURN fires - then answer questions about how procedural abstraction is working. This is the core reasoning behind LO AAP-3.B and AAP-3.C: a procedure is used by knowing WHAT it does, and RETURN hands a value back and exits immediately.",
+  "cb": "",
+  "source": "AP-CSP_3-13_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "Write your own short procedure (in exam pseudocode) that uses an early RETURN as a guard - for example, returns a fixed value for a special input before doing the main calculation. Show two calls: one that hits the guard and one that does not, and give each returned value."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "Explain the difference between a procedure that ends with DISPLAY(total) and one that ends with RETURN(total). Give one situation where only the RETURN version works, and say why."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: The store program is being split so that validating input, computing totals, and formatting labels each become their own procedure. Name the CED term for this subdivision and explain one way it makes the program easier for a human to read."
+   },
+   {
+    "id": "Q4",
+    "pts": 0,
+    "text": "Next step: you traced these procedures by hand. Now head to the Topic 3.13 page and type and run the harder versions, where the computer checks your output for you."
+   }
+  ]
+ },
+ "ap-csp-topic-3-13-exercise-2": {
+  "exercise": 2,
+  "topic": "3.13",
+  "title": "Design the Procedure",
+  "timing": "25 minutes - 5 tasks - decide the header, the body, and whether it RETURNs",
+  "handle": "ap-csp-topic-3-13-exercise-2",
+  "intro": "You are designing procedures for the school store's program. For each task, decide the procedure's NAME, its PARAMETERS (the header), what the BODY does, and - the decision that trips people up - whether it should DISPLAY (no return) or RETURN a value. Vague answers like 'just make a procedure' score zero; name the header and say whether a value comes back.",
+  "cb": "CB Standard (required): a meaningful name + the parameter list + what the body does + whether it RETURNs a value or only DISPLAYs, for all 5 tasks. Enrichment (optional): note a subtler design choice such as an early-RETURN guard or a hidden-internals change (EK AAP-3.C.2).",
+  "source": "AP-CSP_3-13_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "The store needs a procedure that takes a unit price and a quantity and gives back the total so the caller can add it to a running cart total.",
+    "prompts": [
+     "Header (name + parameters):",
+     "RETURN a value or DISPLAY only? Why:",
+     "Enrichment - a subtler design choice (guard, single job, hidden internals):"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "The store needs a procedure that prints a product's name and price on a label. Nothing else in the program uses the result - the whole point is what appears on screen.",
+    "prompts": [
+     "Header (name + parameters):",
+     "RETURN a value or DISPLAY only? Why:",
+     "Enrichment - a subtler design choice (guard, single job, hidden internals):"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "The store gives free samples: a procedure takes a price and a quantity, but if the quantity is 0 it should immediately give back 0 without doing any multiplication.",
+    "prompts": [
+     "Header (name + parameters):",
+     "RETURN a value or DISPLAY only? Why:",
+     "Enrichment - a subtler design choice (guard, single job, hidden internals):"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "The store needs a procedure that gives back a discounted price: it takes a price and a discount, and returns price minus discount - but a discount can never make the price go below 0.",
+    "prompts": [
+     "Header (name + parameters):",
+     "RETURN a value or DISPLAY only? Why:",
+     "Enrichment - a subtler design choice (guard, single job, hidden internals):"
+    ]
+   },
+   {
+    "n": 5,
+    "level": "Challenge",
+    "text": "A teammate wants to speed up lineTotal from Task 1 by rewriting HOW it computes the total, but every call in the program must keep working unchanged. Describe what they may change and what they must keep.",
+    "prompts": [
+     "Header (name + parameters):",
+     "RETURN a value or DISPLAY only? Why:",
+     "Enrichment - a subtler design choice (guard, single job, hidden internals):"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-3-14-exercise-1": {
+  "exercise": 1,
+  "topic": "3.14",
+  "title": "Read the GradeKit Doc",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-3-14-exercise-1",
+  "intro": "You are a developer handed a library called GradeKit. You will NEVER see the code inside its procedures - only the documentation below. Your job is to use that documentation the way a real programmer does: predict what each call returns, spot calls that misuse the API, and explain how the docs let you use code you cannot see. This is the single most tested skill for LO AAP-3.D: an API is a specification, and documentation is necessary to use it correctly.",
+  "cb": "",
+  "source": "AP-CSP_3-14_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "A programmer needs to average a list, find its highest value, and check a pass/fail cutoff. Explain how using GradeKit rather than writing all three procedures from scratch 'simplifies the task of creating complex programs.'"
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "GradeKit is an EXTERNAL library. Give an example of an INTERNAL source of existing code the same programmer might reuse in this project, and state the difference between the two sources."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: Imagine GradeKit shipped with NO documentation - just the procedure names Average, Highest, Passing, and Curve. Identify two specific things you would be unable to know, and explain why that makes the documentation 'necessary.'"
+   },
+   {
+    "id": "Q4",
+    "pts": 0,
+    "text": "Next step: you predicted these calls on paper using the doc. Now head to the Topic 3.14 page and type and run the harder versions, where GradeKit is provided for you and the computer checks your output."
+   }
+  ]
+ },
+ "ap-csp-topic-3-14-exercise-2": {
+  "exercise": 2,
+  "topic": "3.14",
+  "title": "Pick the Library",
+  "timing": "25 minutes - 5 tasks - choose reuse-or-build and the source",
+  "handle": "ap-csp-topic-3-14-exercise-2",
+  "intro": "You are planning a new app and deciding, for each task, whether to REUSE existing code or write it yourself - and if you reuse, whether the code comes from an internal or an external source. The judgment that trips people up is treating 'existing code' as only downloaded libraries, or assuming you can use a library without its documentation. Vague answers like 'just find a library' score zero - name the source and say what documentation you would need.",
+  "cb": "CB Standard (required): reuse-or-build decision + the source (internal / external) + what the API/documentation must tell you, for all 5 tasks. Enrichment (optional): note a subtler trade-off or trust consideration (EK AAP-3.D.2, D.4, D.5).",
+  "source": "AP-CSP_3-14_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "Your app must sort a list of student names alphabetically before displaying them. Reliable, well-tested sorting libraries already exist for your language.",
+    "prompts": [
+     "Reuse or build (and why):",
+     "Source if reused (internal / external) + what the API must specify:",
+     "Enrichment - a subtler trade-off or trust consideration:"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "Last month, for a different screen in THIS same project, you wrote a procedure formatName(first, last) that returns a nicely formatted full name. The new screen needs the same formatting.",
+    "prompts": [
+     "Reuse or build (and why):",
+     "Source if reused (internal / external) + what the API must specify:",
+     "Enrichment - a subtler trade-off or trust consideration:"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "Your app must compute the number of days between two calendar dates, correctly handling leap years and month lengths. A well-documented external date library provides a daysBetween procedure.",
+    "prompts": [
+     "Reuse or build (and why):",
+     "Source if reused (internal / external) + what the API must specify:",
+     "Enrichment - a subtler trade-off or trust consideration:"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "Your app needs a very specific feature unique to your project: matching students to lab partners using your school's own custom fairness rules. No existing library does this.",
+    "prompts": [
+     "Reuse or build (and why):",
+     "Source if reused (internal / external) + what the API must specify:",
+     "Enrichment - a subtler trade-off or trust consideration:"
+    ]
+   },
+   {
+    "n": 5,
+    "level": "Challenge",
+    "text": "Your app must draw charts of student progress. A popular external charting library exists, but its documentation is sparse and you are unsure of the parameter order for its drawBar procedure.",
+    "prompts": [
+     "Reuse or build (and why):",
+     "Source if reused (internal / external) + what the API must specify:",
+     "Enrichment - a subtler trade-off or trust consideration:"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-3-15-exercise-1": {
+  "exercise": 1,
+  "topic": "3.15",
+  "title": "Read the Random Rolls",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-3-15-exercise-1",
+  "intro": "You are testing GameNight, a board-game companion app that uses RANDOM(a, b) all over the place - a die, a color spinner, an event picker, a bonus-point roll, and a coin flip. Your job is NOT to predict the exact numbers (you cannot - each run may differ). It is to determine, for each RANDOM call, the complete SET of values it could return and how many there are. This is the single most tested skill for LO AAP-3.E: read the two bounds, list every value from a to b inclusive, and count them as b - a + 1.",
+  "cb": "",
+  "source": "AP-CSP_3-15_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "Before GameNight picks an event with RANDOM(1, 3), a player asks, 'which event will it choose?' Explain what you CAN say for certain and what you CANNOT, using the words 'set of possible results' and 'each execution.'"
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "A tester must verify that the die NEVER returns 0 or 7 - only 1 through 6. Since the die's value changes every run, printing the raw roll gives no fixed answer to check. Describe what PROPERTY the test program should print instead, and why that output is predictable."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: GameNight wants a random EVEN bonus of 2, 4, 6, or 8. A student writes bonus <- RANDOM(2, 8) and is surprised to see 5 appear. Explain why, and design a correct expression using RANDOM plus arithmetic."
+   },
+   {
+    "id": "Q4",
+    "pts": 0,
+    "text": "Next step: you determined these possible results by hand. Now head to the Topic 3.15 page and type and run the harder versions, where the computer checks a property of each random result for you."
+   }
+  ]
+ },
+ "ap-csp-topic-3-15-exercise-2": {
+  "exercise": 2,
+  "topic": "3.15",
+  "title": "Design the Random Range",
+  "timing": "25 minutes - 5 game features - choose the RANDOM call and list its outcomes",
+  "handle": "ap-csp-topic-3-15-exercise-2",
+  "intro": "You are building the random features of the GameNight app. For each feature, decide the exact RANDOM(a, b) call that produces the outcomes it needs, list every value that call could return, and count them with b - a + 1. The decisions that trip people up are the endpoints: does the feature start at 0 or 1, and is the highest value actually reachable? Vague answers like 'just use RANDOM' score zero - you must give the exact bounds.",
+  "cb": "CB Standard (required): the exact RANDOM(a, b) call + the complete list of possible results + the count (b - a + 1), for all 5 features. Enrichment (optional): note a subtler bounds or variability consideration (EK AAP-3.E.1-E.2).",
+  "source": "AP-CSP_3-15_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "A single six-sided die roll: the app needs any whole number from 1 to 6, and a player must be able to roll a 6.",
+    "prompts": [
+     "The lowest and highest value this feature needs:",
+     "The exact RANDOM(a, b) call + every possible result + the count (b - a + 1):",
+     "Enrichment - a subtler bounds or variability consideration:"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "A coin flip stored as a number: the app needs exactly two outcomes, 0 for heads and 1 for tails.",
+    "prompts": [
+     "The lowest and highest value this feature needs:",
+     "The exact RANDOM(a, b) call + every possible result + the count (b - a + 1):",
+     "Enrichment - a subtler bounds or variability consideration:"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "An event picker that chooses one of three story events, numbered 1, 2, and 3.",
+    "prompts": [
+     "The lowest and highest value this feature needs:",
+     "The exact RANDOM(a, b) call + every possible result + the count (b - a + 1):",
+     "Enrichment - a subtler bounds or variability consideration:"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "A random floor for an elevator mini-game: any floor from 10 to 20 inclusive, where both 10 and 20 must be reachable.",
+    "prompts": [
+     "The lowest and highest value this feature needs:",
+     "The exact RANDOM(a, b) call + every possible result + the count (b - a + 1):",
+     "Enrichment - a subtler bounds or variability consideration:"
+    ]
+   },
+   {
+    "n": 5,
+    "level": "Challenge",
+    "text": "A random EVEN power-up value of 2, 4, 6, or 8 - no odd numbers allowed.",
+    "prompts": [
+     "The lowest and highest value this feature needs:",
+     "The exact RANDOM(a, b) call + every possible result + the count (b - a + 1):",
+     "Enrichment - a subtler bounds or variability consideration:"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-3-16-exercise-1": {
+  "exercise": 1,
+  "topic": "3.16",
+  "title": "Trace the Rain Simulation",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-3-16-exercise-1",
+  "intro": "You are a quality tester for the weather app built in class. The simulation reduces all of real weather to a single 'chance of rain' number and lets RANDOM decide each day. Your job is to TRACE it by hand - determine each day's outcome and the running rainy-day count from the given rolls - then reason about what is PREDICTABLE and what is not. This is the core LO AAP-3.F part-a skill: a single trial varies, but properties across many trials (like the rainy fraction) are stable and let you draw inferences.",
+  "cb": "",
+  "source": "AP-CSP_3-16_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "Suppose you change chanceOfRain from 40 to 70 and rerun the 1000-day simulation. Predict how the rainy fraction changes, and explain how this single change lets you test a hypothesis without any real weather."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "The chanceOfRain of 40 came from ONE weather station downtown, using ONLY last summer's data. Name one real-world element this excludes, and explain the bias it could introduce when the app is used across the whole city in winter."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: Give one real phenomenon where a rain-style simulation would be the RIGHT tool because the real experiment is impractical, and name which of the CED's reasons (too big, small, fast, slow, expensive, or dangerous) applies."
+   },
+   {
+    "id": "Q4",
+    "pts": 0,
+    "text": "Next step: you traced this simulation by hand. Now head to the Topic 3.16 page and type and run the harder versions, where the computer checks a deterministic property of your simulation for you."
+   }
+  ]
+ },
+ "ap-csp-topic-3-16-exercise-2": {
+  "exercise": 2,
+  "topic": "3.16",
+  "title": "Audit for Bias",
+  "timing": "25 minutes - 5 simulations - find what was left out and how it biases the result",
+  "handle": "ap-csp-topic-3-16-exercise-2",
+  "intro": "You are on a review board that signs off on simulations before anyone acts on their results. For each simulation below, your job is to COMPARE it to the real world it claims to represent: decide whether a simulation is even the right tool, name a real-world element the designers left out, and state how that exclusion biases the results. This is LO AAP-3.F part b. Vague answers like 'it's not accurate' score zero - name the excluded element and the direction of the bias.",
+  "cb": "CB Standard (required): is a simulation appropriate here + one specific EXCLUDED real-world element + how that exclusion biases the result, for all 5 cases. Enrichment (optional): note how the SAME simplification is both reasonable (F.4) and a bias risk (F.5).",
+  "source": "AP-CSP_3-16_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "A car company simulates a new bumper in 10,000 virtual crashes at different speeds before building a single physical prototype, to decide which shapes to test for real.",
+    "prompts": [
+     "Is a simulation the right tool here? (impractical because...):",
+     "One real-world element the model EXCLUDES:",
+     "Enrichment - how that same cut is both reasonable and a bias risk:"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "A city simulates evacuation traffic using data collected only on ordinary weekday mornings, then uses it to plan for a hurricane evacuation.",
+    "prompts": [
+     "Is a simulation the right tool here? (impractical because...):",
+     "One real-world element the model EXCLUDES:",
+     "Enrichment - how that same cut is both reasonable and a bias risk:"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "A team decides whether a pocket coin is fair by writing a program that flips a simulated RANDOM coin a million times and reports the fraction of heads.",
+    "prompts": [
+     "Is a simulation the right tool here? (impractical because...):",
+     "One real-world element the model EXCLUDES:",
+     "Enrichment - how that same cut is both reasonable and a bias risk:"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "A health agency simulates how a new disease spreads to decide on school closures, using a model based only on how the disease spread in a single dense downtown neighborhood.",
+    "prompts": [
+     "Is a simulation the right tool here? (impractical because...):",
+     "One real-world element the model EXCLUDES:",
+     "Enrichment - how that same cut is both reasonable and a bias risk:"
+    ]
+   },
+   {
+    "n": 5,
+    "level": "Challenge",
+    "text": "A streaming app simulates which new shows to greenlight by modeling viewer behavior using only the watch histories of its current subscribers.",
+    "prompts": [
+     "Is a simulation the right tool here? (impractical because...):",
+     "One real-world element the model EXCLUDES:",
+     "Enrichment - how that same cut is both reasonable and a bias risk:"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-3-17-exercise-1": {
+  "exercise": 1,
+  "topic": "3.17",
+  "title": "Count the Operations",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-3-17-exercise-1",
+  "intro": "You are a performance reviewer on a software team. Four algorithms have landed on your desk, each with a note about what it does and a loop structure to read. Your job is NOT to time them - it is to COUNT them: determine how many times the key statement executes as the input size n grows, describe that growth in plain words (constant, linear, square, cube), and rule on whether each runs in reasonable or unreasonable time. This is the single most tested skill for LO AAP-4.A: read the loops, count the executions, and never once reach for a stopwatch or a Big-O formula (both are outside this course).",
+  "cb": "",
+  "source": "AP-CSP_3-17_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "Algorithms 1 and 2 could both be used to answer 'does this list contain a duplicate?' - Algorithm 1's style runs about n times, Algorithm 2's about n x n. Both are correct. Explain, using the CED's own idea, why you would prefer one over the other for a large list, and how you decided WITHOUT running either."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "A teammate reruns Algorithm 2 on a computer twice as fast, sees it finish in half the time, and writes 'I made the algorithm more efficient.' Explain what is wrong, using the CED's definition of efficiency."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: Rank Algorithms 1-4 from most to least efficient for large n using only the words constant, linear, square, and cube - and state why ALL FOUR still count as running in a reasonable amount of time."
+   }
+  ]
+ },
+ "ap-csp-topic-3-17-exercise-2": {
+  "exercise": 2,
+  "topic": "3.17",
+  "title": "Reasonable, Unreasonable, or Heuristic?",
+  "timing": "25 minutes - 5 situations - classify the growth, then rule on the strategy",
+  "handle": "ap-csp-topic-3-17-exercise-2",
+  "intro": "You advise a product team deciding how to tackle five different tasks. For each situation you will name the growth of the exact approach (constant, linear, square, cube, exponential, or factorial), rule whether that exact approach runs in a REASONABLE or UNREASONABLE amount of time, and then decide whether a HEURISTIC is the appropriate strategy - and if so, say why. Remember the two CED guardrails: describe growth in words, never as a Big-O formula, and never name or apply a specific heuristic algorithm - the exam tests WHEN a heuristic fits, not which one. Vague answers like 'it's kind of slow' score zero.",
+  "cb": "CB Standard (required): the growth named in words + the reasonable/unreasonable ruling + a correct decision on whether a heuristic is appropriate and why, for all 5 situations. Enrichment (optional): explain why faster hardware does or does not change the ruling (EK AAP-4.A.3).",
+  "source": "AP-CSP_3-17_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "An app must check whether a specific username already exists in a list of n registered users by scanning the list once from the top.",
+    "prompts": [
+     "Growth of the exact approach (constant / linear / square / cube / exponential / factorial):",
+     "Reasonable or unreasonable + is a heuristic appropriate here? Why or why not:",
+     "Enrichment - would faster hardware change your ruling? Why or why not:"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "A logistics tool must find the single shortest route that visits all n delivery stops exactly once and returns to the depot, by examining every possible ordering of the stops.",
+    "prompts": [
+     "Growth of the exact approach (constant / linear / square / cube / exponential / factorial):",
+     "Reasonable or unreasonable + is a heuristic appropriate here? Why or why not:",
+     "Enrichment - would faster hardware change your ruling? Why or why not:"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "A password-audit tool tries to guarantee it can crack any n-character password by generating and testing every possible combination of characters.",
+    "prompts": [
+     "Growth of the exact approach (constant / linear / square / cube / exponential / factorial):",
+     "Reasonable or unreasonable + is a heuristic appropriate here? Why or why not:",
+     "Enrichment - would faster hardware change your ruling? Why or why not:"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "A gradebook must compute the average of n test scores by summing them in one pass and dividing by n.",
+    "prompts": [
+     "Growth of the exact approach (constant / linear / square / cube / exponential / factorial):",
+     "Reasonable or unreasonable + is a heuristic appropriate here? Why or why not:",
+     "Enrichment - would faster hardware change your ruling? Why or why not:"
+    ]
+   },
+   {
+    "n": 5,
+    "level": "Challenge",
+    "text": "A tournament scheduler compares every team against every other team once to build a full head-to-head grid for n teams.",
+    "prompts": [
+     "Growth of the exact approach (constant / linear / square / cube / exponential / factorial):",
+     "Reasonable or unreasonable + is a heuristic appropriate here? Why or why not:",
+     "Enrichment - would faster hardware change your ruling? Why or why not:"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-3-18-exercise-1": {
+  "exercise": 1,
+  "topic": "3.18",
+  "title": "Decidable or Not?",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-3-18-exercise-1",
+  "intro": "You are a 'Yes/No Machine Inspector.' Your job is to look at each decision problem and judge whether ONE algorithm could answer it correctly for every possible input (decidable) or whether it has been established that no such algorithm can exist (undecidable). This is the core skill for LO AAP-4.B: reason precisely from the definitions. Two rules of the job - you apply the definitions to well-established cases, and you are NEVER asked to prove undecidability of a new problem yourself (that is outside the AP scope).",
+  "cb": "",
+  "source": "AP-CSP_3-18_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "Write your OWN example of a decidable decision problem that is not already in the log, and name the single algorithm that answers it correctly for every input."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "Explain the difference between a problem that is UNDECIDABLE and a problem that simply takes an UNREASONABLE amount of time. Give one example of each, and say which one still has a correct algorithm."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: A classmate says, 'Since the Halting Problem is undecidable, it is pointless - a computer can't tell us anything about whether programs halt.' Using the idea of solvable instances, explain what is right and what is wrong about this claim."
+   },
+   {
+    "id": "Q4",
+    "pts": 0,
+    "text": "Next step: you classified and explained these by hand. Now head to the Topic 3.18 page, confirm your reasoning on the auto-graded version of this exercise, and bring your best explanation to the class discussion."
+   }
+  ]
+ },
+ "ap-csp-topic-3-18-exercise-2": {
+  "exercise": 2,
+  "topic": "3.18",
+  "title": "Explain Why",
+  "timing": "25 minutes - 5 decision problems - classify and justify",
+  "handle": "ap-csp-topic-3-18-exercise-2",
+  "intro": "Still wearing your Inspector's badge, you now write the REASONING behind each verdict. For each decision problem, decide whether it is decidable or undecidable and explain WHY in the CED's vocabulary. The judgments that trip people up are the ones that mix up impossibility with slowness, or that forget an undecidable problem can still have solvable instances. Vague answers like 'a computer can't do it' score zero - name the reason.",
+  "cb": "CB Standard (required): confirm it is a decision problem (yes/no) + classify as decidable or undecidable + a correct one-sentence reason, for all 5 problems. Enrichment (optional): note a subtler point, such as a solvable instance or the contrast with unreasonable running time (EK AAP-4.B.3).",
+  "source": "AP-CSP_3-18_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "Problem: 'Is a given whole number positive?' You must answer yes or no for any integer someone provides.",
+    "prompts": [
+     "Decidable or undecidable + a one-sentence reason:",
+     "Enrichment - a subtler point (solvable instance, or slow vs impossible):"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "Problem: 'Is a given word a palindrome (reads the same forward and backward)?' for any word provided.",
+    "prompts": [
+     "Decidable or undecidable + a one-sentence reason:",
+     "Enrichment - a subtler point (solvable instance, or slow vs impossible):"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "Problem: 'For ANY program and its input, will the program eventually stop, or will it run forever?' This is the Halting Problem, which computer scientists have PROVEN cannot be solved by any algorithm.",
+    "prompts": [
+     "Decidable or undecidable + a one-sentence reason:",
+     "Enrichment - a subtler point (solvable instance, or slow vs impossible):"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "Problem instance: 'Does this exact program halt? - number <- 0; REPEAT 3 TIMES { number <- number + 1 }; DISPLAY(number).' Just this one specific program.",
+    "prompts": [
+     "Decidable or undecidable + a one-sentence reason:",
+     "Enrichment - a subtler point (solvable instance, or slow vs impossible):"
+    ]
+   },
+   {
+    "n": 5,
+    "level": "Challenge",
+    "text": "Problem: 'Given a list of cities, is there a route visiting all of them whose total distance is below a given limit?' A correct algorithm exists (check every possible ordering), but for many cities it would take an astronomically long time.",
+    "prompts": [
+     "Decidable or undecidable + a one-sentence reason:",
+     "Enrichment - a subtler point (solvable instance, or slow vs impossible):"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-3-1-exercise-1": {
+  "exercise": 1,
+  "topic": "3.1",
+  "title": "Trace the Log",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-3-1-exercise-1",
+  "intro": "You are a debugging partner reading a program's execution log. The program below is a sequence of assignments in exam pseudocode; the log shows each line in order. Your job is to TRACE it - determine the value of every variable after each line runs - and then answer questions about what the program finally displays. This is the single most tested skill for LO AAP-1.B: read line by line, evaluate the right side first, and remember that a variable keeps its most recent value.",
+  "cb": "",
+  "source": "AP-CSP_3-1_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "Write your own three-line assignment sequence (using two variables) that ends by DISPLAYing a value that surprises someone who thinks assignment creates a link. State the displayed value and why it surprises them."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "To swap the values of two variables you generally need a THIRD (temporary) variable. Using a <- 4 and b <- 9, write the swap with a temp and explain what would go wrong if you tried a <- b; b <- a with no temp."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: In the log, points <- goals copied a number. If instead a variable roster held a LIST and you wrote copyRoster <- roster, the exam reference sheet says this assigns a copy of the list. Explain how that connects to the idea that a variable holds exactly ONE value, and predict whether changing roster later would change copyRoster."
+   },
+   {
+    "id": "Q4",
+    "pts": 0,
+    "text": "Next step: you traced these values by hand. Now head to the Topic 3.1 page and type and run the harder versions, where the computer checks your output for you."
+   }
+  ]
+ },
+ "ap-csp-topic-3-1-exercise-2": {
+  "exercise": 2,
+  "topic": "3.1",
+  "title": "Pick the Type",
+  "timing": "25 minutes - 5 values - choose the type and name",
+  "handle": "ap-csp-topic-3-1-exercise-2",
+  "intro": "You are designing the variables for a new app. For each value the app must store, decide WHAT KIND of value it is, choose the type that best represents it (number, Boolean, list, or string), and give the variable a meaningful name. The decisions that trip people up are values that look like one type but behave like another - a phone number full of digits that is really a label, or a yes/no fact that is really a Boolean. Vague answers like 'just use a number' score zero.",
+  "cb": "CB Standard (required): what kind of value it is + the best type (number / Boolean / list / string) + a meaningful variable name, for all 5 values. Enrichment (optional): note a subtler type or naming consideration (EK AAP-1.A.4).",
+  "source": "AP-CSP_3-1_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "The app must store a player's current score in a game, which goes up and down as they play and is compared against a high score.",
+    "prompts": [
+     "What kind of value is this (quantity / yes-no / text / collection):",
+     "Best type (number / Boolean / list / string) + a meaningful variable name:",
+     "Enrichment - a subtler type or naming consideration:"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "The app must remember whether the user has accepted the terms of service, so it can show or hide a reminder banner.",
+    "prompts": [
+     "What kind of value is this (quantity / yes-no / text / collection):",
+     "Best type (number / Boolean / list / string) + a meaningful variable name:",
+     "Enrichment - a subtler type or naming consideration:"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "The app must store the user's phone number, entered as 5551234567, which is only ever displayed and texted, never used in any calculation.",
+    "prompts": [
+     "What kind of value is this (quantity / yes-no / text / collection):",
+     "Best type (number / Boolean / list / string) + a meaningful variable name:",
+     "Enrichment - a subtler type or naming consideration:"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "The app must store the titles of all the songs in a user's playlist so it can show them in order and let the user scroll through them.",
+    "prompts": [
+     "What kind of value is this (quantity / yes-no / text / collection):",
+     "Best type (number / Boolean / list / string) + a meaningful variable name:",
+     "Enrichment - a subtler type or naming consideration:"
+    ]
+   },
+   {
+    "n": 5,
+    "level": "Challenge",
+    "text": "The app must store a product's price, like 19.99, because it will be summed into a cart total and multiplied by a tax rate.",
+    "prompts": [
+     "What kind of value is this (quantity / yes-no / text / collection):",
+     "Best type (number / Boolean / list / string) + a meaningful variable name:",
+     "Enrichment - a subtler type or naming consideration:"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-3-2-exercise-1": {
+  "exercise": 1,
+  "topic": "3.2",
+  "title": "Trace the List",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-3-2-exercise-1",
+  "intro": "You are the weather station's data checker, reading a program's execution log. The program below builds and grows a list of daily high temperatures in exam pseudocode; the log shows each line in order. Your job is to TRACE it - determine the contents of the list and the value at each index after each line runs - and then answer questions about what specific positions hold. This is the core skill for LO AAP-1.C: read line by line, and remember the exam sheet numbers positions from 1, so temps[1] is always the first reading.",
+  "cb": "",
+  "source": "AP-CSP_3-2_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "Write your own four-line pseudocode sequence that creates a list of three song titles (strings) and then DISPLAYs the SECOND title. State exactly what prints, and show you used the exam sheet's 1-indexed rule."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "Each element of the songs list above is itself a string. Explain what makes \"Signal\" a string, and why \"Signal\" and \"Signl\" - or \"Signal\" and \"signaL\" - count as different strings."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: The temps list let five readings be treated as one value under one name. Other languages call this an array. In one or two sentences, explain the phrase 'treated as a single value,' and note what the CED explicitly says is OUTSIDE the scope of this course."
+   },
+   {
+    "id": "Q4",
+    "pts": 0,
+    "text": "Next step: you traced this list by hand. Now head to the Topic 3.2 page and type and run the harder versions, where the computer checks your output for you."
+   }
+  ]
+ },
+ "ap-csp-topic-3-2-exercise-2": {
+  "exercise": 2,
+  "topic": "3.2",
+  "title": "One Name for Many",
+  "timing": "25 minutes - 5 designs - separate variables or a list, and why",
+  "handle": "ap-csp-topic-3-2-exercise-2",
+  "intro": "You are reviewing five small program designs. For each one, decide whether the data should stay in SEPARATE VARIABLES or be developed into a LIST data abstraction, and - the part that earns credit - explain HOW the choice manages complexity. This is LO AAP-1.D in both of its parts: developing the abstraction (part a) and explaining why it helps (part b). Vague answers like 'a list is just better' score zero; name the specific benefit, using the CED's language of one name, easier to develop and maintain, and separating abstract properties from representation.",
+  "cb": "CB Standard (required): the better design (separate variables / list) + how it manages complexity, using CED vocabulary, for all 5 designs. Enrichment (optional): note a subtler abstraction consideration such as mixed element types or copying (EK AAP-1.D.5, D.7).",
+  "source": "AP-CSP_3-2_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "A program tracks the daily high temperature for every day of a month so it can later find the hottest day and the average.",
+    "prompts": [
+     "Better design (separate variables / list) and why this is one collection or not:",
+     "How it manages complexity (one name / easier to develop & maintain / works for any size):",
+     "Enrichment - a subtler abstraction consideration (mixed types, copying, the array name):"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "A game program stores a single player's current health and, separately, the current level number. These two values are unrelated and used in different parts of the code.",
+    "prompts": [
+     "Better design (separate variables / list) and why this is one collection or not:",
+     "How it manages complexity (one name / easier to develop & maintain / works for any size):",
+     "Enrichment - a subtler abstraction consideration (mixed types, copying, the array name):"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "A quiz app currently uses grade1, grade2, grade3, ... grade30 for a class of 30 students, and the teacher wants to add a 31st student mid-semester.",
+    "prompts": [
+     "Better design (separate variables / list) and why this is one collection or not:",
+     "How it manages complexity (one name / easier to develop & maintain / works for any size):",
+     "Enrichment - a subtler abstraction consideration (mixed types, copying, the array name):"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "A weather record must store, for one day, a mix of values: the location name (\"Denver\"), the high temperature (91), and whether it rained (false).",
+    "prompts": [
+     "Better design (separate variables / list) and why this is one collection or not:",
+     "How it manages complexity (one name / easier to develop & maintain / works for any size):",
+     "Enrichment - a subtler abstraction consideration (mixed types, copying, the array name):"
+    ]
+   },
+   {
+    "n": 5,
+    "level": "Challenge",
+    "text": "A program has a list masterScores and needs a separate working copy it can experiment with, so that changes to the copy do not disturb the original list.",
+    "prompts": [
+     "Better design (separate variables / list) and why this is one collection or not:",
+     "How it manages complexity (one name / easier to develop & maintain / works for any size):",
+     "Enrichment - a subtler abstraction consideration (mixed types, copying, the array name):"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-3-3-exercise-1": {
+  "exercise": 1,
+  "topic": "3.3",
+  "title": "Evaluate the Order Slip",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-3-3-exercise-1",
+  "intro": "You are the planner for a class pizza party, working the numbers by hand before you touch a computer. The order slip below is a worked reference showing how each arithmetic expression evaluates. Your job is to TRACE the arithmetic - evaluate expressions to a single value, apply the order of operations, and tell the / operator (exact value) apart from MOD (remainder). This is the single most tested skill for LO AAP-2.C: read the operators, respect precedence, and never truncate a division on your own.",
+  "cb": "",
+  "source": "AP-CSP_3-3_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "Explain why 17 / 5 does NOT give 3 on the AP reference sheet, and state the value it does give. Then name the operator that would give a whole number related to the split, and say what that number represents."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "A word problem asks 'how many pizza slices are left over.' Which operator answers it, which operator does NOT, and why?"
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: EK AAP-2.C.2 requires b to be an integer greater than 0 in a MOD b. Explain what 'the amount left over' would even mean if b were 0, and why the exam rules that case out."
+   },
+   {
+    "id": "Q4",
+    "pts": 0,
+    "text": "Next step: you evaluated these by hand. Now head to the Topic 3.3 page and type and run the harder versions of the Pizza Party Planner, where the computer checks your output for you."
+   }
+  ]
+ },
+ "ap-csp-topic-3-3-exercise-2": {
+  "exercise": 2,
+  "topic": "3.3",
+  "title": "Fix the Pizza Math",
+  "timing": "25 minutes - 5 broken expressions - name the goal, pick the operator, fix it",
+  "handle": "ap-csp-topic-3-3-exercise-2",
+  "intro": "You are reviewing a classmate's Pizza Party Planner, and every calculation below reaches for the wrong operator or breaks the order of operations. For each one, decide WHAT the goal is (a total? a leftover? an exact share?), pick the operator that matches, and write the corrected expression and its value. Vague fixes like 'just divide' score zero - name the operator and show the result.",
+  "cb": "CB Standard (required): the goal + the correct operator (+, -, *, /, or MOD) + the fixed expression and its value, for all 5 items. Enrichment (optional): note the order-of-operations or division-type subtlety at work (EK AAP-2.C.3, C.4).",
+  "source": "AP-CSP_3-3_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "Goal: the TOTAL number of slices from 4 pizzas cut into 8 slices each. The planner wrote: total <- 4 + 8, and got 12.",
+    "prompts": [
+     "What is the goal, and which operator matches it (+, -, *, /, MOD):",
+     "The corrected expression and its single value:",
+     "Enrichment - the order-of-operations or division-type subtlety:"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "Goal: the LEFTOVER slices when 26 slices are shared equally among 5 friends. The planner wrote: leftover <- 26 / 5, and reported 5.2 slices left over.",
+    "prompts": [
+     "What is the goal, and which operator matches it (+, -, *, /, MOD):",
+     "The corrected expression and its single value:",
+     "Enrichment - the order-of-operations or division-type subtlety:"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "Goal: each friend's EXACT share when 26 slices are split among 5 friends, fractional slices allowed. The planner wrote: share <- 26 MOD 5, and reported a share of 1.",
+    "prompts": [
+     "What is the goal, and which operator matches it (+, -, *, /, MOD):",
+     "The corrected expression and its single value:",
+     "Enrichment - the order-of-operations or division-type subtlety:"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "Goal: evaluate 2 * 6 MOD 4 correctly. The planner insists the answer is 4, computing 6 MOD 4 = 2 first and then 2 * 2.",
+    "prompts": [
+     "What is the goal, and which operator matches it (+, -, *, /, MOD):",
+     "The corrected expression and its single value:",
+     "Enrichment - the order-of-operations or division-type subtlety:"
+    ]
+   },
+   {
+    "n": 5,
+    "level": "Challenge",
+    "text": "Goal: evaluate 17 / 5 on the AP reference sheet. The planner claims 17 / 5 = 3, reasoning that 'code always drops the decimal.'",
+    "prompts": [
+     "What is the goal, and which operator matches it (+, -, *, /, MOD):",
+     "The corrected expression and its single value:",
+     "Enrichment - the order-of-operations or division-type subtlety:"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-3-4-exercise-1": {
+  "exercise": 1,
+  "topic": "3.4",
+  "title": "Evaluate the String Builder",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-3-4-exercise-1",
+  "intro": "You are testing a coding club's 'badge builder' - a small program that assembles handles, display names, and labels out of string pieces. The program below is a sequence of string expressions in exam conventions; the log shows what each line evaluates to. Your job is to TRACE it - determine the exact string each expression produces - and then answer questions about the results. This is the core skill for LO AAP-2.D: read a string expression and give its exact value, remembering that concatenation adds no spaces of its own and that a substring is a piece of an existing string.",
+  "cb": "",
+  "source": "AP-CSP_3-4_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "Using first, last, and string literals, write a single expression that outputs Lovelace, Ada (last name, a comma, a space, then first name). Show the exact literal you place between the names."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "In Python, last[2] returns 'v', not the 2nd character of \"Lovelace\". Explain the off-by-one cause, and give the index that returns the 2nd character 'o'."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: The club wants a score equal to the number of vowels (a, e, i, o, u) in \"Lovelace\". Count them by hand, give the number, and describe in one sentence how a program could compute it by examining each character."
+   },
+   {
+    "id": "Q4",
+    "pts": 0,
+    "text": "Next step: you evaluated these strings by hand. Now head to the Topic 3.4 page and type and run the harder versions, where the computer checks your output for you."
+   }
+  ]
+ },
+ "ap-csp-topic-3-4-exercise-2": {
+  "exercise": 2,
+  "topic": "3.4",
+  "title": "Build the Badge",
+  "timing": "25 minutes - 5 targets - write the string expression that builds each one",
+  "handle": "ap-csp-topic-3-4-exercise-2",
+  "intro": "You are finishing the coding club's badge builder. For each target output below, decide WHICH operation you need - concatenation to JOIN pieces, or a substring to TAKE a piece - write the expression that produces the target exactly, and account for every space, separator, and position. The decisions that trip people up are the spaces that concatenation will not add for you, and the character positions that differ between the exam (from 1) and code (from 0). Vague answers like 'just add the strings' score zero.",
+  "cb": "CB Standard (required): name the operation (concatenation and/or substring) + write the exact expression using the given pieces and string literals + verify it character-by-character against the target, for all 5 targets. Enrichment (optional): note a subtler separator, order, or position consideration (EK AAP-2.D.1 / AAP-2.D.2).",
+  "source": "AP-CSP_3-4_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "From first = \"Ada\" and last = \"Lovelace\", build the short username AdaL (the whole first name, then just the first letter of the last name).",
+    "prompts": [
+     "The pieces you have and the exact target output (written character by character):",
+     "The operation (concatenation and/or substring) and the expression that builds it:",
+     "Enrichment - a subtler separator, order, or position consideration:"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "From label = \"Score\" and the value 8, build the display string Score: 8 (the word, a colon, one space, then the digit).",
+    "prompts": [
+     "The pieces you have and the exact target output (written character by character):",
+     "The operation (concatenation and/or substring) and the expression that builds it:",
+     "Enrichment - a subtler separator, order, or position consideration:"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "From word = \"clever\", build the substring eve (the middle three letters).",
+    "prompts": [
+     "The pieces you have and the exact target output (written character by character):",
+     "The operation (concatenation and/or substring) and the expression that builds it:",
+     "Enrichment - a subtler separator, order, or position consideration:"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "From cheer = \"GO\", build the chant GO-GO (the cheer, a hyphen, then the cheer again).",
+    "prompts": [
+     "The pieces you have and the exact target output (written character by character):",
+     "The operation (concatenation and/or substring) and the expression that builds it:",
+     "Enrichment - a subtler separator, order, or position consideration:"
+    ]
+   },
+   {
+    "n": 5,
+    "level": "Challenge",
+    "text": "A teammate's Python code tries to grab the 4th character of word = \"rainbow\" with word[4], but it prints the wrong letter. Identify the bug and give the corrected expression.",
+    "prompts": [
+     "The pieces you have and the exact target output (written character by character):",
+     "The operation (concatenation and/or substring) and the expression that builds it:",
+     "Enrichment - a subtler separator, order, or position consideration:"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-3-5-exercise-1": {
+  "exercise": 1,
+  "topic": "3.5",
+  "title": "Trace the Gate",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-3-5-exercise-1",
+  "intro": "You are the operator at The Gauntlet's entry gate, reading each rider's data off their wristband and evaluating the ride's rules by hand. The table below lists comparisons and logical expressions in exam pseudocode; the rider's values are given. Your job is to EVALUATE each expression to true or false - substitute the values, then decide - and answer questions about who boards. This is the core skill for LO AAP-2.E and AAP-2.F: read a Boolean expression and determine its single true-or-false value.",
+  "cb": "",
+  "source": "AP-CSP_3-5_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "A classmate says 'if isVIP and hasFastPass are BOTH true, then isVIP OR hasFastPass must be false, because you can't use both perks.' Explain precisely why this is wrong using the reference-sheet definition of OR."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "Write an expression that is true exactly when a rider is NOT tall enough (the minimum is 48 inches). Then evaluate it for a rider whose height is 45, showing every step."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: The full boarding rule is height >= 48 AND hasTicket AND rideOpen. Explain why one false operand anywhere makes the whole rule false, and contrast that with how an OR of the same three operands would behave."
+   },
+   {
+    "id": "Q4",
+    "pts": 0,
+    "text": "Next step: you evaluated these by hand. Now head to the Topic 3.5 page and type and run the harder versions, where the computer checks each Boolean result for you."
+   }
+  ]
+ },
+ "ap-csp-topic-3-5-exercise-2": {
+  "exercise": 2,
+  "topic": "3.5",
+  "title": "Write the Rule",
+  "timing": "25 minutes - 5 gate rules - write the Boolean expression",
+  "handle": "ap-csp-topic-3-5-exercise-2",
+  "intro": "You are programming the entry gate for The Gauntlet. For each posted rule below, WRITE the Boolean expression that decides who is allowed, using the reference-sheet operators (=, !=, >, <, >=, <=, NOT, AND, OR) and the variable names given. The decisions that trip people up are the boundary words - 'at least' versus 'more than' - and choosing AND versus OR. Vague answers like 'check the height' score zero; write the actual expression.",
+  "cb": "CB Standard (required): the correct Boolean expression for each rule, using the right relational and/or logical operator and the given variable names, for all 5 rules. Enrichment (optional): note a boundary or inclusive/exclusive subtlety that would change the expression (EK AAP-2.E.2 / AAP-2.F.4).",
+  "source": "AP-CSP_3-5_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "Rule: a rider may board only if they are AT LEAST 48 inches tall. Variable: height.",
+    "prompts": [
+     "The relational/logical operator the boundary word points to:",
+     "The Boolean expression (using the given variable names):",
+     "Enrichment - a boundary or inclusive/exclusive subtlety:"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "Rule: the wait-time sign should light up only when the wait is MORE THAN 30 minutes. Variable: waitTime.",
+    "prompts": [
+     "The relational/logical operator the boundary word points to:",
+     "The Boolean expression (using the given variable names):",
+     "Enrichment - a boundary or inclusive/exclusive subtlety:"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "Rule: a rider may board only if they are tall enough AND they hold a ticket. Variables: tallEnough (Boolean), hasTicket (Boolean).",
+    "prompts": [
+     "The relational/logical operator the boundary word points to:",
+     "The Boolean expression (using the given variable names):",
+     "Enrichment - a boundary or inclusive/exclusive subtlety:"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "Rule: a guest may use the express lane if they are a VIP OR they hold a fast pass (having both is fine). Variables: isVIP (Boolean), hasFastPass (Boolean).",
+    "prompts": [
+     "The relational/logical operator the boundary word points to:",
+     "The Boolean expression (using the given variable names):",
+     "Enrichment - a boundary or inclusive/exclusive subtlety:"
+    ]
+   },
+   {
+    "n": 5,
+    "level": "Challenge",
+    "text": "Rule: the gate should stay SHUT whenever the ride is NOT open. Variable: rideOpen (Boolean).",
+    "prompts": [
+     "The relational/logical operator the boundary word points to:",
+     "The Boolean expression (using the given variable names):",
+     "Enrichment - a boundary or inclusive/exclusive subtlety:"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-3-6-exercise-1": {
+  "exercise": 1,
+  "topic": "3.6",
+  "title": "Trace the Gate",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-3-6-exercise-1",
+  "intro": "You are quality-testing the ride gate before the park opens. The gate runs a conditional on each rider's height. Your job is to TRACE it - for each rider, evaluate the condition FIRST, decide which branch runs, and state exactly what the gate displays. No typing: read the pseudocode and reason. This is the single most tested skill for LO AAP-2.H - determine the result of a conditional - so work the condition to true or false before you look at either block.",
+  "cb": "",
+  "source": "AP-CSP_3-6_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "Express the gate's decision WITHOUT any programming language - as a plain-language rule a new gate attendant could follow. Name the condition and state what happens for true and for false."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "Write your own three-line IF-ELSE (in exam pseudocode) for a DIFFERENT gate - for example, an age check for a driving-simulator ride - and give one input that runs the IF branch and one that runs the ELSE branch. State what each displays."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: The gate could be written as a plain IF that displays 'Board the ride' on true and does nothing on false, OR as an IF-ELSE that also handles false. Explain which design is correct for a gate that must give EVERY rider feedback, and why the other would be a bug."
+   },
+   {
+    "id": "Q4",
+    "pts": 0,
+    "text": "Next step: you traced these gates by hand. Now head to the Topic 3.6 page and type and run the harder versions - a single IF, an IF-ELSE, a computed condition, and one you build from scratch - where the computer checks your output for you."
+   }
+  ]
+ },
+ "ap-csp-topic-3-6-exercise-2": {
+  "exercise": 2,
+  "topic": "3.6",
+  "title": "Write the Rule",
+  "timing": "25 minutes - 5 decisions - choose IF or IF-ELSE, write it, and spot the bug",
+  "handle": "ap-csp-topic-3-6-exercise-2",
+  "intro": "You are designing the decisions for the park's app. For each situation, decide whether it needs a plain IF (do something only on true) or an IF-ELSE (a defined outcome for both true and false), then write the conditional in exam pseudocode with a clear condition. Two of the items contain a bug to diagnose. Vague answers like 'just use an if' score zero - name the condition, choose the construct, and justify it.",
+  "cb": "CB Standard (required): the right construct (IF vs IF-ELSE) + a correctly written conditional with a clear Boolean condition + the output for a given input, for all 5 items. Enrichment (optional): note a boundary case or an equivalent way to write the decision (EK AAP-2.H.2-H.3).",
+  "source": "AP-CSP_3-6_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "The app should display 'Free water station ahead' ONLY when the temperature is at least 90 degrees. On cooler days it should show nothing extra.",
+    "prompts": [
+     "Condition (a Boolean expression using a relational operator):",
+     "Construct (plain IF or IF-ELSE) + the conditional written in pseudocode:",
+     "Enrichment - a boundary case or an equivalent way to write it:"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "At checkout the app must label every order: 'Free shipping' when the cart total is at least 35 dollars, and 'Add $4 shipping' otherwise. Every order gets exactly one label.",
+    "prompts": [
+     "Condition (a Boolean expression using a relational operator):",
+     "Construct (plain IF or IF-ELSE) + the conditional written in pseudocode:",
+     "Enrichment - a boundary case or an equivalent way to write it:"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "SPOT THE BUG. A developer wanted every rider to get a message, but wrote: IF(height >= 48){ DISPLAY(\"Board the ride\") }. Testers report that short riders see nothing. Diagnose and fix it.",
+    "prompts": [
+     "Condition (a Boolean expression using a relational operator):",
+     "Construct (plain IF or IF-ELSE) + the conditional written in pseudocode:",
+     "Enrichment - a boundary case or an equivalent way to write it:"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "A locker is FREE when the number of items is 0, and costs money otherwise. The app must show 'Free locker' when count = 0 and 'Locker fee applies' otherwise.",
+    "prompts": [
+     "Condition (a Boolean expression using a relational operator):",
+     "Construct (plain IF or IF-ELSE) + the conditional written in pseudocode:",
+     "Enrichment - a boundary case or an equivalent way to write it:"
+    ]
+   },
+   {
+    "n": 5,
+    "level": "Challenge",
+    "text": "SPOT THE BUG. This should print 'Adult' for age 18 and up: IF(age > 18){ DISPLAY(\"Adult\") } ELSE { DISPLAY(\"Minor\") }. A tester enters 18 and gets 'Minor'. Diagnose and fix it.",
+    "prompts": [
+     "Condition (a Boolean expression using a relational operator):",
+     "Construct (plain IF or IF-ELSE) + the conditional written in pseudocode:",
+     "Enrichment - a boundary case or an equivalent way to write it:"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-3-7-exercise-1": {
+  "exercise": 1,
+  "topic": "3.7",
+  "title": "Trace the Gate",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-3-7-exercise-1",
+  "intro": "You are the attendant at The Vortex ride gate, and the gate's rule is a nested conditional. Your job is to TRACE it - for each rider, work OUTSIDE-IN: test the outer height condition first, decide whether the program even enters the height branch, and only then look at the inner age condition. This is the single most tested skill for LO AAP-2.I part b: determine the result of a nested conditional, remembering that the inner condition is checked only when the outer branch is taken.",
+  "cb": "",
+  "source": "AP-CSP_3-7_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "Invent your own rider (a height and an age) that makes the INNER ELSE run, so the gate displays 'Ride with an adult'. State both conditions that must hold and confirm the outer is checked first."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "A classmate says, 'The gate checks age for every rider.' Using the CED definition of nested conditional statements, explain precisely what is wrong."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: Add a nested rule for short riders: any rider UNDER 48 inches who is at least 18 should instead see 'Staff entrance only'. Write where the new inner conditional goes and give its pseudocode. Which branch must it live in, and why?"
+   },
+   {
+    "id": "Q4",
+    "pts": 0,
+    "text": "Next step: you traced these by hand. Now head to the Topic 3.7 page and type and run the harder versions, where the computer checks your output for you - including a three-level nest and a gate you write from scratch."
+   }
+  ]
+ },
+ "ap-csp-topic-3-7-exercise-2": {
+  "exercise": 2,
+  "topic": "3.7",
+  "title": "Design the Gate",
+  "timing": "25 minutes - 4 rule sets - write the nested conditional",
+  "handle": "ap-csp-topic-3-7-exercise-2",
+  "intro": "Now you WRITE the gates instead of tracing them (LO AAP-2.I part a). For each rule set, decide which question must be answered FIRST - the gating question that the others depend on - make it the outer condition, and nest the dependent question inside the correct branch. Put every outcome's message in exactly one branch. Vague answers like 'just use two IFs' score zero when the rules require nesting.",
+  "cb": "CB Standard (required): correct nested IF/ELSE pseudocode for each rule set, with the right message in each branch and the gating question as the OUTER condition. Enrichment (optional): state whether the rule genuinely requires nesting or whether separate IFs would also work, and why (EK AAP-2.I.1).",
+  "source": "AP-CSP_3-7_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "The Vortex gate: a rider must be at least 48 inches tall to ride. Among tall-enough riders, those at least age 12 see 'Enjoy the ride'; those under 12 see 'Ride with an adult'. Riders under 48 inches see 'Too short to ride'.",
+    "prompts": [
+     "The gating question (your OUTER condition):",
+     "Your nested IF/ELSE pseudocode (put each message in one branch):"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "A social site shows the 'Post' button only to users who are logged in. Among logged-in users, only those whose email is verified see 'Post'; logged-in users without a verified email see 'Verify your email'. Anyone not logged in sees 'Please log in'.",
+    "prompts": [
+     "The gating question (your OUTER condition):",
+     "Your nested IF/ELSE pseudocode (put each message in one branch):"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Challenge",
+    "text": "A grader: a score of at least 60 is passing. Among passing scores, a score of at least 90 earns 'A', otherwise 'Pass'. A score under 60 earns 'Fail'.",
+    "prompts": [
+     "The gating question (your OUTER condition):",
+     "Your nested IF/ELSE pseudocode (put each message in one branch):"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "An online store: free shipping is offered only to members. Among members, orders over $50 see 'Free shipping'; members with orders of $50 or less see 'Add more for free shipping'. Anyone who is not a member sees 'Members only'.",
+    "prompts": [
+     "The gating question (your OUTER condition):",
+     "Your nested IF/ELSE pseudocode (put each message in one branch):"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-3-8-exercise-1": {
+  "exercise": 1,
+  "topic": "3.8",
+  "title": "Trace the Savings Loop",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-3-8-exercise-1",
+  "intro": "You are Maya's coding partner, checking her savings loops by hand before she runs them. Each program below is written in exam pseudocode and uses her savings jar. Your job is to TRACE each loop pass by pass - determine the value of every variable after each pass, and how many passes run - then answer what the program finally displays. This is the single most tested skill for LO AAP-2.K part b: check the condition first, run the body, repeat, and read off the result. No typing yet - trace it on paper.",
+  "cb": "",
+  "source": "AP-CSP_3-8_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "Loops C and D are BOTH REPEAT UNTIL(savings >= 20) loops, yet one runs zero times and one runs forever. Using their starting values and bodies, explain what makes the difference."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "Loop A (REPEAT 4 TIMES) and Loop B (REPEAT UNTIL) both end with savings = 20. Are they interchangeable? Give one situation where you could use REPEAT n TIMES and one where you would be forced to use REPEAT UNTIL."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: A REPEAT UNTIL loop can run many times, exactly once, or zero times. Explain how all three are consistent with the CED statement that iteration repeats 'a set of statements zero or more times.'"
+   },
+   {
+    "id": "Q4",
+    "pts": 0,
+    "text": "Next step: you traced these by hand. Now head to the Topic 3.8 page and type and run the harder versions, where the computer checks your output for you."
+   }
+  ]
+ },
+ "ap-csp-topic-3-8-exercise-2": {
+  "exercise": 2,
+  "topic": "3.8",
+  "title": "How Many Passes?",
+  "timing": "25 minutes - 5 loops - decide how many times the body runs",
+  "handle": "ap-csp-topic-3-8-exercise-2",
+  "intro": "For each loop below, decide HOW MANY TIMES the body runs and what the program finally displays. The loops that trip people up are the two edge cases: a REPEAT UNTIL whose condition is already true (it runs zero times) and one whose condition can never become true (it runs forever). Apply the same check every time - test the condition BEFORE each pass. Vague answers like 'a few times' score zero; give an exact count (or 'never stops') and the final value.",
+  "cb": "CB Standard (required): the exact number of passes the body runs + the final displayed value, for all 5 loops, with the condition checked before each pass. Enrichment (optional): note which CED case each edge loop illustrates (EK AAP-2.K.4 infinite / AAP-2.K.5 zero-times).",
+  "source": "AP-CSP_3-8_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "count <- 0; REPEAT 3 TIMES { count <- count + 1 }; DISPLAY(count)",
+    "prompts": [
+     "Loop type (REPEAT n TIMES / REPEAT UNTIL):",
+     "How many times the body runs + final displayed value:",
+     "Enrichment - which CED case, if any (infinite / zero-times / normal):"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "x <- 0; REPEAT UNTIL(x >= 3) { x <- x + 1 }; DISPLAY(x)",
+    "prompts": [
+     "Loop type (REPEAT n TIMES / REPEAT UNTIL):",
+     "How many times the body runs + final displayed value:",
+     "Enrichment - which CED case, if any (infinite / zero-times / normal):"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "temp <- 50; REPEAT UNTIL(temp >= 40) { temp <- temp + 5 }; DISPLAY(temp)",
+    "prompts": [
+     "Loop type (REPEAT n TIMES / REPEAT UNTIL):",
+     "How many times the body runs + final displayed value:",
+     "Enrichment - which CED case, if any (infinite / zero-times / normal):"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "y <- 1; REPEAT UNTIL(y = 10) { y <- y + 2 }; DISPLAY(y)",
+    "prompts": [
+     "Loop type (REPEAT n TIMES / REPEAT UNTIL):",
+     "How many times the body runs + final displayed value:",
+     "Enrichment - which CED case, if any (infinite / zero-times / normal):"
+    ]
+   },
+   {
+    "n": 5,
+    "level": "Challenge",
+    "text": "n <- 10; count <- 0; REPEAT UNTIL(n <= 0) { n <- n - 3; count <- count + 1 }; DISPLAY(count)",
+    "prompts": [
+     "Loop type (REPEAT n TIMES / REPEAT UNTIL):",
+     "How many times the body runs + final displayed value:",
+     "Enrichment - which CED case, if any (infinite / zero-times / normal):"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-3-9-exercise-1": {
+  "exercise": 1,
+  "topic": "3.9",
+  "title": "Trace and Compare the Algorithms",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-3-9-exercise-1",
+  "intro": "You are QA-testing two versions of the 'report the top score' routine for the Level Up game. Both are supposed to display the higher of two scores, and at a glance they look almost the same. Your job is to TRACE both on the same inputs - including the boundary cases - and decide whether they yield the same result and the same side effect. This is the single most tested skill for LO AAP-2.L: never trust that similar-looking algorithms behave the same; trace them.",
+  "cb": "",
+  "source": "AP-CSP_3-9_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "Write your own two short algorithms that compute the SAME result but produce DIFFERENT side effects. Describe the shared result and the differing side effects precisely."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "Expand this Boolean expression into an equivalent conditional statement, then explain when you might prefer the longer conditional form even though it is equivalent: eligible <- score >= 100."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: Algorithm B (the >= with ELSE) is correct. Using it as a building block, describe the smallest MODIFICATION that turns 'report the higher score' into 'report the LOWER score,' and state why modifying beats rewriting."
+   },
+   {
+    "id": "Q4",
+    "pts": 0,
+    "text": "Next step: you traced and compared these by hand. Now head to the Topic 3.9 page and type and run the harder versions - build the average, combine it with a pass/fail check, and modify find-max into find-min - where the computer checks your output for you."
+   }
+  ]
+ },
+ "ap-csp-topic-3-9-exercise-2": {
+  "exercise": 2,
+  "topic": "3.9",
+  "title": "Build It from Blocks",
+  "timing": "25 minutes - 5 tasks - choose, combine, or modify the building blocks",
+  "handle": "ap-csp-topic-3-9-exercise-2",
+  "intro": "You are the lead builder on the Level Up game. For each new feature, you do NOT start from scratch - you reach for the standard building blocks (max/min, sum/average, divisibility via MOD, robot maze path) and decide whether to use one as-is, COMBINE several, or MODIFY one. For each task, name the block(s), say whether you are using, combining, or modifying, and sketch the algorithm in words or pseudocode. Vague answers like 'just loop through it' score zero.",
+  "cb": "CB Standard (required): name the building block(s) + whether you use / combine / modify + a short algorithm sketch, for all 5 tasks. Enrichment (optional): note a boundary case to test or a subtler design choice (EK AAP-2.M.3).",
+  "source": "AP-CSP_3-9_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "Show the higher of the current player's score and the stored high score, so the leaderboard always displays the best of the two.",
+    "prompts": [
+     "Building block(s) this task uses:",
+     "Use / combine / modify - and the algorithm sketch:",
+     "Enrichment - a boundary case to test or a subtler choice:"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "A coin should appear on every 5th tile. Given a tile number, decide whether that tile has a coin.",
+    "prompts": [
+     "Building block(s) this task uses:",
+     "Use / combine / modify - and the algorithm sketch:",
+     "Enrichment - a boundary case to test or a subtler choice:"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "Report the average of a playtester's three level scores, and then state whether that average earns a passing grade of at least 60.",
+    "prompts": [
+     "Building block(s) this task uses:",
+     "Use / combine / modify - and the algorithm sketch:",
+     "Enrichment - a boundary case to test or a subtler choice:"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "Find the LOWEST of a playtester's three level scores so you can flag their weakest level.",
+    "prompts": [
+     "Building block(s) this task uses:",
+     "Use / combine / modify - and the algorithm sketch:",
+     "Enrichment - a boundary case to test or a subtler choice:"
+    ]
+   },
+   {
+    "n": 5,
+    "level": "Challenge",
+    "text": "The hero must get from the start of a straight corridor to a wall two squares ahead, then turn and step once into the room on its right. Describe the algorithm as robot commands.",
+    "prompts": [
+     "Building block(s) this task uses:",
+     "Use / combine / modify - and the algorithm sketch:",
+     "Enrichment - a boundary case to test or a subtler choice:"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-4-1-exercise-1": {
+  "exercise": 1,
+  "topic": "4.1",
+  "title": "Packet Journey - The Photo That Arrived in Pieces",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-4-1-exercise-1",
+  "intro": "You are the network engineer reviewing last night's transfer log: one photo, five packets, sent from a laptop to a phone across six devices - with a link failure in the middle of the transfer. For each log entry you will name what traveled, how it was labeled, and why delivery still succeeded. Part A works the log table; Part B extends the same skills. Everything maps to CB Learning Objectives CSN-1.A, CSN-1.B, and CSN-1.C.",
+  "cb": "",
+  "source": "AP-CSP_4-1_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "The link between R4 and the phone has a bandwidth of 8 million bits per second, and the photo is 2 MB (about 16 million bits). What is the FASTEST the photo could cross that link, and why might the real transfer take longer? Use the CED's definition of bandwidth."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "The laptop and the phone were built by different companies and run different operating systems, yet their packets interoperated perfectly. Explain how, using the CED definitions of protocol and of open protocols."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: If this had been a live video call instead of a photo, re-sending #3 two seconds later would be useless - that moment of the call has already passed. Of the protocols named in EK CSN-1.C.4, which fits each job (photo vs. live call), and what does each choice trade away?"
+   }
+  ]
+ },
+ "ap-csp-topic-4-1-exercise-2": {
+  "exercise": 2,
+  "topic": "4.1",
+  "title": "Network Diagnosis Clinic",
+  "timing": "25 minutes - 5 diagnoses - LO CSN-1.A, CSN-1.B, CSN-1.C, CSN-1.D",
+  "handle": "ap-csp-topic-4-1-exercise-2",
+  "intro": "You are the on-call network consultant. Five confident-sounding claims arrive from around the school, and every one of them is wrong or half-wrong. For each, name the CED concept it touches BY NAME (path, routing, bandwidth, open protocols, dynamic routing, scalability, packets and metadata, Internet vs. Web), correct the claim, and justify the correction with the mechanism. Advanced students also layer a deeper protocol or design connection. Vague 'the network is fine' verdicts score zero.",
+  "cb": "CB Standard (required): concept named with CED vocabulary + corrected diagnosis + mechanism, for all 5 claims. Enrichment (optional): also add the deeper layer (a protocol-level or design-level connection) for a more complete diagnosis.",
+  "source": "AP-CSP_4-1_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "The school Wi-Fi goes down during first period. A freshman announces: 'The Internet is broken - like, the WHOLE Internet, for everyone. It's probably down worldwide right now.'",
+    "prompts": [
+     "Concept named (which CED idea is in play):",
+     "Corrected diagnosis + mechanism (what's really happening and why):",
+     "Deeper layer (enrichment):"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "A family upgrades to a '200 Mbps' internet plan. Dad complains: 'We were promised 200 megabits every second. My 50-megabyte download took six seconds instead of a quarter of one. We should sue.'",
+    "prompts": [
+     "Concept named (which CED idea is in play):",
+     "Corrected diagnosis + mechanism (what's really happening and why):",
+     "Deeper layer (enrichment):"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "Mid-match, a gamer's stats overlay shows packets arriving out of order. She posts: 'Proof my ISP's network is defective - packets are supposed to arrive in the order they were sent.'",
+    "prompts": [
+     "Concept named (which CED idea is in play):",
+     "Corrected diagnosis + mechanism (what's really happening and why):",
+     "Deeper layer (enrichment):"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "A startup pitches the school district: 'Ditch the open Internet. Our proprietary NetPro protocol is licensed only to our certified devices - a private network whose rules we control end-to-end. It will be the next Internet, but better.'",
+    "prompts": [
+     "Concept named (which CED idea is in play):",
+     "Corrected diagnosis + mechanism (what's really happening and why):",
+     "Deeper layer (enrichment):"
+    ]
+   },
+   {
+    "n": 5,
+    "level": "Challenge",
+    "text": "A senior's tech-club presentation declares: 'The Web and the Internet are the same thing. Everything online - your games, your smart speaker, your email - runs on the World Wide Web. That's why it's called being ON the web.'",
+    "prompts": [
+     "Concept named (which CED idea is in play):",
+     "Corrected diagnosis + mechanism (what's really happening and why):",
+     "Deeper layer (enrichment):"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-4-2-exercise-1": {
+  "exercise": 1,
+  "topic": "4.2",
+  "title": "Outage Post-Mortem: The SnackDash Blackout",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-4-2-exercise-1",
+  "intro": "You are the reliability consultant hired after SnackDash - a snack-delivery startup - lost four hours of business to a single backhoe. The company's incident timeline is below. For each stage you will find the single point of failure that let the outage spread, and name the redundancy that would have saved that stage. Part A works the timeline; Part B extends the same skills. Everything maps to CB Learning Objective CSN-1.E.",
+  "cb": "",
+  "source": "AP-CSP_4-2_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "During the whole outage, customers across the country could still BROWSE the SnackDash website, hosted on cloud servers far from the warehouse - packets kept arriving even while a regional fiber line was down. Explain how the Internet's engineering made that possible, and name the TWO payoffs EK CSN-1.E.7 says redundant routing provides."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "A teammate proposes buying the second fiber line but laying it in the same trench as the first, 'so the crew only has to dig once.' Rule on the proposal."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: In graph terms, a link whose removal disconnects part of a network is called a bridge. Identify the bridge in SnackDash's original network, explain how the stage-4 hotspot changed the graph, and describe the cheapest set of additions that would leave the company with NO bridges."
+   }
+  ]
+ },
+ "ap-csp-topic-4-2-exercise-2": {
+  "exercise": 2,
+  "topic": "4.2",
+  "title": "Redundancy Audit",
+  "timing": "25 minutes - 4 systems - audit and prescribe",
+  "handle": "ap-csp-topic-4-2-exercise-2",
+  "intro": "You are the reliability auditor. Four organizations below believe their systems are safe. For each one, find the vulnerability (the single point of failure), deliver the fault-tolerance verdict, then prescribe the redundancy that fixes it - naming the resource cost the client must accept. Advanced students also state the reliability-and-scale payoff of the fix. Vague 'add more equipment' advice scores zero.",
+  "cb": "CB Standard (required): the vulnerability named + a fault-tolerance verdict + a redundancy prescription with its resource cost, for all 4 systems. Enrichment (optional): also state the reliability/scaling payoff of the fix (EK CSN-1.E.7).",
+  "source": "AP-CSP_4-2_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "Jefferson Middle School's morning announcements, bell schedule, and hallway clocks all run through one control box in the main office. Every classroom speaker is wired directly to that box in a star layout. Last week, the failure of a single power strip silenced the entire building for a day. The principal asks whether the system is fault-tolerant.",
+    "prompts": [
+     "Vulnerability found (the single point of failure + the fault-tolerance verdict):",
+     "Redundancy prescription + the resource cost accepted:",
+     "Enrichment - the reliability/scaling payoff of your fix:"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "County General Hospital proudly reports 'full network redundancy': two separate fiber lines run from the building to two different Internet providers. Walking the property, an auditor notices that both lines exit the hospital through the same utility conduit under the parking-lot entrance - the exact spot where a contractor is scheduled to dig next month.",
+    "prompts": [
+     "Vulnerability found (the single point of failure + the fault-tolerance verdict):",
+     "Redundancy prescription + the resource cost accepted:",
+     "Enrichment - the reliability/scaling payoff of your fix:"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "A rural county links its six mountain fire-lookout towers by point-to-point radio in a chain: Tower 1 relays to Tower 2, Tower 2 to Tower 3, and so on down the line until Tower 6 reaches the ranger station. During last summer's storms, Tower 3 lost power - and every report from Towers 1 and 2 vanished for six hours at the height of fire season.",
+    "prompts": [
+     "Vulnerability found (the single point of failure + the fault-tolerance verdict):",
+     "Redundancy prescription + the resource cost accepted:",
+     "Enrichment - the reliability/scaling payoff of your fix:"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "A delivery startup brags that it is 'redundant everywhere': two web servers, two Internet providers, two power feeds, and servers in two cities. But every customer login flows through one authentication database in the Dallas office - and the CFO, pointing at the bills, wants to cancel the second Internet provider, arguing that it 'carried almost no traffic all year.'",
+    "prompts": [
+     "Vulnerability found (the single point of failure + the fault-tolerance verdict):",
+     "Redundancy prescription + the resource cost accepted:",
+     "Enrichment - the reliability/scaling payoff of your fix:"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-4-3-exercise-1": {
+  "exercise": 1,
+  "topic": "4.3",
+  "title": "Render Farm Dispatcher",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-4-3-exercise-1",
+  "intro": "You are the dispatcher for an animation studio's render farm - a rack of identical computers ('nodes') that turn scene files into finished video frames. Five jobs are in tonight's queue. For each job you will compute the sequential completion time (one node doing everything), the parallel completion time (the CED model: sequential tasks + the LONGEST parallel task), and the speedup. Part A works the job list; Part B extends the same skills. Everything maps to CB Learning Objectives CSN-2.A and CSN-2.B.",
+  "cb": "",
+  "source": "AP-CSP_4-3_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "The studio's producer asks for proof that the farm beats the old single-node workflow. Per the CED, what is the ONE legitimate way to compare the efficiency of the two solutions - and why will the farm's advantage GROW as the studio's films get longer?"
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "Job 5 (trailer_4k.job) is different in kind, not just in size. Explain why renting 500 cloud machines makes this a DISTRIBUTED computing solution, and name the TWO single-computer limits from the CED that this job runs into."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: Suppose every frame batch in Jobs 1-4 could be split into arbitrarily small pieces across unlimited nodes, but the sequential tasks (and Job 4's one-shot credit roll) can never be split. Compute the minimum possible time for each job, then write the single sentence that describes the pattern you found."
+   }
+  ]
+ },
+ "ap-csp-topic-4-3-exercise-2": {
+  "exercise": 2,
+  "topic": "4.3",
+  "title": "The Scheduling Consultant",
+  "timing": "25 minutes - 5 scenarios - classify, compute, defend",
+  "handle": "ap-csp-topic-4-3-exercise-2",
+  "intro": "You are the consultant clients call before they buy hardware. Five scheduling scenarios follow. For each one: identify the computing model in play (sequential, parallel, or distributed) and the sign that gives it away; then do the arithmetic - total times and speedup where numbers are given, or the governing CED rule where they are not - and defend your verdict. Advanced students also tag each scenario with its deeper pattern: ceiling, scaling, or distributed-wins. Vague 'just add more computers' advice scores zero.",
+  "cb": "CB Standard (required): the model identified with its giveaway sign + the time/speedup arithmetic (or the CED rule) + a defense of the verdict, for all 5 scenarios. Enrichment (optional): also tag the deeper pattern - ceiling (EK CSN-2.B.5), scaling (EK CSN-2.B.2), or distributed-wins (EK CSN-2.B.3-B.4).",
+  "source": "AP-CSP_4-3_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "The yearbook app must export 400 finished pages. On one core, the export runs as a single 20-minute layout pass that must run alone, followed by four batches of 45 minutes each. A student claims the school's 4-core laptop will finish everything in 50 minutes flat ('200 minutes divided by 4 cores'). Rule on the claim.",
+    "prompts": [
+     "Sign check - the model in play (sequential, parallel, distributed) and its giveaway:",
+     "Mechanism + defense - the arithmetic (times, speedup) or CED rule, and why the verdict holds:",
+     "Enrichment sub-type - ceiling, scaling, or distributed-wins (and why):"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "A biology teacher's phone edits one video using all 8 cores of its chip at once. That evening, the same teacher's citizen-science app joins 2 million other phones overnight, all running one protein-folding program. The teacher calls both setups 'distributed computing.' Rule on the label.",
+    "prompts": [
+     "Sign check - the model in play (sequential, parallel, distributed) and its giveaway:",
+     "Mechanism + defense - the arithmetic (times, speedup) or CED rule, and why the verdict holds:",
+     "Enrichment sub-type - ceiling, scaling, or distributed-wins (and why):"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "A robotics team parallelized its vision code: it took 100 seconds sequentially and now takes 60 seconds. Three log entries disagree: one member wrote 'speedup = 40,' another wrote 'speedup about 1.67,' and a third predicted 'the speedup will double as soon as we double the cores.' Rule on all three entries.",
+    "prompts": [
+     "Sign check - the model in play (sequential, parallel, distributed) and its giveaway:",
+     "Mechanism + defense - the arithmetic (times, speedup) or CED rule, and why the verdict holds:",
+     "Enrichment sub-type - ceiling, scaling, or distributed-wins (and why):"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "A vendor pitches a game studio: 'Your build takes 30 seconds of setup that can't be split, then 60 seconds of compiling that splits perfectly across cores. Buy our 64-core box and your builds run 64 times faster.' Price the pitch honestly: what does the 64-core box actually deliver?",
+    "prompts": [
+     "Sign check - the model in play (sequential, parallel, distributed) and its giveaway:",
+     "Mechanism + defense - the arithmetic (times, speedup) or CED rule, and why the verdict holds:",
+     "Enrichment sub-type - ceiling, scaling, or distributed-wins (and why):"
+    ]
+   },
+   {
+    "n": 5,
+    "level": "Challenge",
+    "text": "A genomics nonprofit holds 2 petabytes of DNA readings. No single computer it could ever buy will store the dataset, and the best single machine would need roughly 80 years to process it. The board is split between 'wait a few years for a bigger computer' and 'redesign the analysis to run across thousands of machines.' Advise the board.",
+    "prompts": [
+     "Sign check - the model in play (sequential, parallel, distributed) and its giveaway:",
+     "Mechanism + defense - the arithmetic (times, speedup) or CED rule, and why the verdict holds:",
+     "Enrichment sub-type - ceiling, scaling, or distributed-wins (and why):"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-5-1-exercise-1": {
+  "exercise": 1,
+  "topic": "5.1",
+  "title": "Innovation Effects Dossier - The ShortCut File",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-5-1-exercise-1",
+  "intro": "You are the effects analyst for a consumer-technology review board. The (fictional) navigation app ShortCut is up for its annual review, and five documented effects have landed on your desk. For each you will tag the effect beneficial, harmful, or BOTH; rule on whether it was anticipated; and name who is affected. Part A works the dossier; Part B extends the same skills. Everything maps to CB Learning Objectives IOC-1.A and IOC-1.B.",
+  "cb": "",
+  "source": "AP-CSP_5-1_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "Of the five effects, which ONE could ShortCut's programmers most reasonably have considered before launch, and which one was practically impossible to foresee? Use the CED's standard for responsible programmers - and its limit."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "ShortCut had 10,000 users its first year and Maple Street never noticed. At 20 million users, the petition arrived. Explain what scale changed, citing the CED's point about running a program with a large number of users."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: Using the Collingridge dilemma from the Day 1 deep dive, explain why the moment ShortCut could most easily have changed its routing rules was also the moment it had the least evidence that any change was needed."
+   }
+  ]
+ },
+ "ap-csp-topic-5-1-exercise-2": {
+  "exercise": 2,
+  "topic": "5.1",
+  "title": "Impact Court",
+  "timing": "25 minutes - 4 cases - LO IOC-1.A, IOC-1.B",
+  "handle": "ap-csp-topic-5-1-exercise-2",
+  "intro": "You are the judge of Impact Court. Four cases arrive, each an innovation accused of causing harm - or suspiciously praised for surprise benefits. For each case, run the sign check (which CED principle is in play and how you know), rule on the mechanism and the creators' defense (what responsible programmers could reasonably have done), and - for advanced credit - name the sub-type of unintended impact. Vague 'technology is good/bad' verdicts score zero.",
+  "cb": "CB Standard (required): sign check + mechanism-and-defense ruling using CED vocabulary, for all 4 cases. Enrichment (optional): also name the sub-type of unintended impact (dual-view effect, cross-field spillover, scale amplification, or aggregate data misuse).",
+  "source": "AP-CSP_5-1_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "A district rolls out an attendance app that texts parents the moment a student misses any class. Parents call it the district's best purchase in years. School counselors report a spike in students afraid to seek morning counseling help - the instant text reaches volatile homes before any adult can add context. The district asks the court: is the alert feature good or bad?",
+    "prompts": [
+     "Sign check (which CED principle is in play, and what in the case tells you):",
+     "Mechanism + defense (how the impact happened, and what responsible creators could reasonably have done):",
+     "Enrichment sub-type (which flavor of unintended impact - and does a second one stack?):"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "Two students build a free flashcard app for their AP classes. A celebrity study-influencer features it, and it jumps from 3,000 to 15 million users in ten days. Servers buckle, the shared-deck feature fills with pirated textbook scans, and copyright notices arrive addressed to two teenagers. Their defense: 'We built it for our school.'",
+    "prompts": [
+     "Sign check (which CED principle is in play, and what in the case tells you):",
+     "Mechanism + defense (how the impact happened, and what responsible creators could reasonably have done):",
+     "Enrichment sub-type (which flavor of unintended impact - and does a second one stack?):"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "A programmer builds an ad-matching service to help neighborhood shops find nearby customers. A payday-loan chain becomes its biggest client, aiming ads at users whose recent searches include 'overdue rent' and 'car repossessed' - and, across the city, poorer zip codes see loan ads where richer ones see credit-union offers.",
+    "prompts": [
+     "Sign check (which CED principle is in play, and what in the case tells you):",
+     "Mechanism + defense (how the impact happened, and what responsible creators could reasonably have done):",
+     "Enrichment sub-type (which flavor of unintended impact - and does a second one stack?):"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "A startup trains a resume-screening model on ten years of its clients' hiring records to 'find candidates like your best employees.' Independent audits later show it downgrades applicants from two zip codes and one women's college. Meanwhile the same core engine, licensed to a medical lab, is flagging early-stage tumors that radiologists miss. The CEO asks the court: 'So is our technology beneficial or harmful?'",
+    "prompts": [
+     "Sign check (which CED principle is in play, and what in the case tells you):",
+     "Mechanism + defense (how the impact happened, and what responsible creators could reasonably have done):",
+     "Enrichment sub-type (which flavor of unintended impact - and does a second one stack?):"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-5-2-exercise-1": {
+  "exercise": 1,
+  "topic": "5.2",
+  "title": "The Maple Hollow Access Audit",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-5-2-exercise-1",
+  "intro": "You are the digital-inclusion auditor hired by the (fictional) town of Maple Hollow. Five households and institutions are on your audit log. For each entry you will diagnose which characteristic of the digital divide is at work - socioeconomic, geographic, or demographic - and propose actions at the individual, organization, and government levels. Part A works the audit log; Part B extends the same skills. Everything maps to CB Learning Objective IOC-1.C.",
+  "cb": "",
+  "source": "AP-CSP_5-2_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "The town council proposes one complete fix: 'an identical tablet for every household in Maple Hollow.' Using equity vs. equality and at least two audit entries, evaluate the proposal."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "The mayor says: 'Our country ranks among the most connected in the world, so Maple Hollow does not have a digital divide - that is a problem for developing nations.' Use the full text of EK IOC-1.C.1 and the audit log to correct the mayor."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: Researchers sort divide cases into finer sub-types: availability (no service exists), affordability (service exists, price blocks it), skills (service and devices exist, know-how blocks use), and quality (connected, but too capped or slow for real work). Classify entries 1, 2, 3, and 5 - and explain why the CED's characteristic labels are still required on the exam."
+   }
+  ]
+ },
+ "ap-csp-topic-5-2-exercise-2": {
+  "exercise": 2,
+  "topic": "5.2",
+  "title": "Divide Diagnosis Clinic",
+  "timing": "25 minutes - 4 consults - diagnose and prescribe",
+  "handle": "ap-csp-topic-5-2-exercise-2",
+  "intro": "You are the digital-inclusion consultant on call. Four clients arrive, each describing an access gap. For each consult, name the characteristic driving the gap using CED vocabulary (socioeconomic, geographic, or demographic - or a between-countries gap), then prescribe who could act - an individual, an organization, or a government - with a concrete action matched to the barrier. Advanced students also name the sub-type of divide for a sharper diagnosis. Vague 'get them online' advice scores zero.",
+  "cb": "CB Standard (required): characteristic named with CED vocabulary + one actor level and a concrete action, for all 4 consults. Enrichment (optional): also name the sub-type (availability, affordability, skills, or quality) and what it changes about the prescription.",
+  "source": "AP-CSP_5-2_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "Pine Ridge, a town of 900 in a mountain valley, has cell coverage on one hilltop and no wired provider at all. Students park outside the gas station in the evening to use its Wi-Fi for homework, and the clinic cannot offer video appointments. Median income in Pine Ridge matches the state average. Diagnose the gap and prescribe who should act.",
+    "prompts": [
+     "Characteristic driving the gap (socioeconomic, geographic, demographic, between countries):",
+     "Who could act (individual, organization, government) + the concrete action:",
+     "Enrichment - sub-type of divide (availability, affordability, skills, quality):"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "In the city of Harborview, every block is served by three competing providers, yet the school district's survey shows a third of households rely on phone-only plans. The map of phone-only homes matches the map of lowest household incomes almost exactly. A council member argues the survey must be wrong, since 'the whole city is wired.' Diagnose the gap and answer the council member.",
+    "prompts": [
+     "Characteristic driving the gap (socioeconomic, geographic, demographic, between countries):",
+     "Who could act (individual, organization, government) + the concrete action:",
+     "Enrichment - sub-type of divide (availability, affordability, skills, quality):"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "An international education nonprofit runs the same online curriculum in two partner schools. In Country A, 95% of students have home broadband and the class forum is busy every night. In Country B, 12% of homes are connected; students copy lessons by hand from one shared computer, and none of them have ever posted to the forum where the curriculum gets revised. Diagnose the gap and state what the forum detail proves.",
+    "prompts": [
+     "Characteristic driving the gap (socioeconomic, geographic, demographic, between countries):",
+     "Who could act (individual, organization, government) + the concrete action:",
+     "Enrichment - sub-type of divide (availability, affordability, skills, quality):"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "Westbrook Towers is a subsidized apartment complex where the city already pays for free gigabit service in every unit and a local charity donated a laptop to each household. Sign-in data shows most residents over 70, and several families who recently immigrated and are still learning English, almost never connect. The city calls the project 'done.' Audit that claim.",
+    "prompts": [
+     "Characteristic driving the gap (socioeconomic, geographic, demographic, between countries):",
+     "Who could act (individual, organization, government) + the concrete action:",
+     "Enrichment - sub-type of divide (availability, affordability, skills, quality):"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-5-3-exercise-1": {
+  "exercise": 1,
+  "topic": "5.3",
+  "title": "Bias Auditor - The Incident Log",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-5-3-exercise-1",
+  "intro": "You are the district's independent bias auditor. Five deployed systems have been reported for unfair results, and each incident file tells you what the system does, what went wrong, and how it was built. For each one you will name the channel the bias came through, locate the development level where it entered, and prescribe a deliberate reduction action. Part A works the incident log; Part B extends the same skills. Everything maps to CB Learning Objective IOC-1.D.",
+  "cb": "",
+  "source": "AP-CSP_5-3_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "Row 5 was built by a solo developer. Using the collaboration principle from Topic 1.1, explain how a different kind of team would likely have caught FitStreak's bias - and at which level it would have been caught."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "Explain why 'which channel did the bias come through?' and 'which level did it enter at?' are two different questions. Use one row of the log to show a case where the answers point at different things."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: Design a fairness audit for GlowCam in the style of the 2018 face-analysis benchmark. What would your test set contain, what number would you compute for each group, and why can a single overall accuracy score hide the exact skew in Row 3?"
+   }
+  ]
+ },
+ "ap-csp-topic-5-3-exercise-2": {
+  "exercise": 2,
+  "topic": "5.3",
+  "title": "The Bias Reduction Clinic",
+  "timing": "25 minutes - 4 cases - LO IOC-1.D",
+  "handle": "ap-csp-topic-5-3-exercise-2",
+  "intro": "You are the consultant on call at the bias clinic. Four computing innovations arrive accused of treating groups unfairly. For each case, name the channel the bias came through (algorithm or data), locate the development level where it entered, and prescribe one deliberate reduction action with a justification. Advanced students also state the limit of the fix - what it cannot repair. Vague 'fix the data' advice scores zero.",
+  "cb": "CB Standard (required): channel (algorithm or data) + development level + one deliberate reduction action with justification, for all 4 cases. Enrichment (optional): also state the limit of your fix - what it cannot repair.",
+  "source": "AP-CSP_5-3_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "A translation app renders the gender-neutral sentence 'my friend is a doctor' as 'he is a doctor,' and 'my friend is a nurse' as 'she is a nurse' - every time. The app learned translation patterns from millions of published books and articles spanning several decades.",
+    "prompts": [
+     "Channel + level (algorithm or data; where in development it entered):",
+     "Reduction action + justification (the deliberate step and why it combats the bias):",
+     "Limit to layer (enrichment - what your fix cannot repair):"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "A scholarship-matching site contains an eligibility filter its developers wrote by hand: applications without a permanent home address are automatically set aside 'to reduce fraud.' Counselors notice that students in temporary housing - often the students who most need scholarships - never appear in any match list. No machine learning is involved.",
+    "prompts": [
+     "Channel + level (algorithm or data; where in development it entered):",
+     "Reduction action + justification (the deliberate step and why it combats the bias):",
+     "Limit to layer (enrichment - what your fix cannot repair):"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Stretch",
+    "text": "A city pilots sidewalk-monitoring cameras that flag 'suspicious loitering.' The system passed every accuracy check - all run on daytime footage from the business district, where the pilot team works. Deployed citywide and overnight, it generates false alarms overwhelmingly in a few residential neighborhoods. The vendor's response: 'give it time - every month of new footage makes the model smarter.'",
+    "prompts": [
+     "Channel + level (algorithm or data; where in development it entered):",
+     "Reduction action + justification (the deliberate step and why it combats the bias):",
+     "Limit to layer (enrichment - what your fix cannot repair):"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "A wellness-chat app for teenagers escalates messages to a counselor when it detects 'crisis language.' It was framed, designed, coded, and tested by one small, homogeneous team; its phrase list came from transcripts of that team's own role-played conversations. Reviewers find it over-escalates slang from some communities as 'aggression' while missing genuine distress phrased in dialects the team never wrote. The company asks you for a complete reduction plan - not a patch.",
+    "prompts": [
+     "Channel + level (algorithm or data; where in development it entered):",
+     "Reduction action + justification (the deliberate step and why it combats the bias):",
+     "Limit to layer (enrichment - what your fix cannot repair):"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-5-4-exercise-1": {
+  "exercise": 1,
+  "topic": "5.4",
+  "title": "Crowd Project Triage",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-5-4-exercise-1",
+  "intro": "You are the intake reviewer for a website that showcases crowd-powered projects. Five submissions are waiting for a ruling before the next feature goes live. For each submission you will read how it works and who participates, then decide whether it is genuinely crowdsourcing, name its model, identify what the crowd contributes, and explain why scale matters. Part A works the submission log; Part B extends the same skills. Everything maps to CB Learning Objective IOC-1.E.",
+  "cb": "",
+  "source": "AP-CSP_5-4_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "The city where SkyCount is based releases its air-quality sensor records as free public data. Describe one problem the public could IDENTIFY, one solution someone could DEVELOP, and one way results could be DISSEMINATED - and name the EK principle that makes all three easier."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "A skeptic says: 'These crowd projects don't enhance anything - people could always count birds and donate money.' Use one submission from the log to explain what collaboration VIA COMPUTING adds that was impossible before."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: SkyCount's dataset feeds real published research, yet anyone - including careless or dishonest users - can upload sightings. Describe two quality-control mechanisms a citizen-science platform can use to keep bad data out WITHOUT requiring contributors to be experts, and explain why that requirement would defeat the whole model."
+   }
+  ]
+ },
+ "ap-csp-topic-5-4-exercise-2": {
+  "exercise": 2,
+  "topic": "5.4",
+  "title": "The Crowd Consultant",
+  "timing": "25 minutes - 4 clients - classify and justify",
+  "handle": "ap-csp-topic-5-4-exercise-2",
+  "intro": "You are the consultant four clients call when they want 'one of those crowd things.' For each scenario, test the CED definition (a large number of people? via the Internet?), rule crowdsourcing or not, name the model and what the crowd contributes, and explain why scale matters. Advanced students also state what the crowd accomplishes that a small hired team never could. Vague 'just put it online' advice scores zero.",
+  "cb": "CB Standard (required): the definition test (large numbers + the Internet) + the model + what the crowd contributes, for all 4 scenarios. Enrichment (optional): also explain why the project succeeds only at scale (EK IOC-1.E.5).",
+  "source": "AP-CSP_5-4_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "A seismology lab wants earlier earthquake warnings. It releases a free app that quietly uses each phone's motion sensor: when thousands of phones in one area shake at the same moment, the lab's servers detect the quake seconds before it spreads. Two hundred thousand people have installed the app. Rule on the project.",
+    "prompts": [
+     "Definition test (a large number of people? via the Internet?) + your ruling:",
+     "Model + what the crowd contributes (data, money, or other input):",
+     "Enrichment - why only a crowd can do this (what scale buys):"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "A rural clinic needs a solar-powered vaccine refrigerator that no local funder will pay for. A nurse posts the project on a platform where anyone can pledge money; 4,800 strangers pledge an average of $9 each, and the refrigerator ships within a month. Rule on the project.",
+    "prompts": [
+     "Definition test (a large number of people? via the Internet?) + your ruling:",
+     "Model + what the crowd contributes (data, money, or other input):",
+     "Enrichment - why only a crowd can do this (what scale buys):"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Stretch",
+    "text": "A television network announces its cooking competition will be 'judged by the crowd': five celebrity chefs, selected by producers, will score each dish through a private scoring website that only the five of them can access. Rule on the project.",
+    "prompts": [
+     "Definition test (a large number of people? via the Internet?) + your ruling:",
+     "Model + what the crowd contributes (data, money, or other input):",
+     "Enrichment - why only a crowd can do this (what scale buys):"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "After a hurricane, a relief agency posts fresh satellite images of the flooded region on an open mapping site. Overnight, 11,000 volunteers around the world - students, gamers, retirees - trace the passable roads and mark damaged bridges tile by tile. By morning, rescue drivers are navigating with the volunteer-built map, and the agency publishes it for every other relief group to reuse. Rule on the project.",
+    "prompts": [
+     "Definition test (a large number of people? via the Internet?) + your ruling:",
+     "Model + what the crowd contributes (data, money, or other input):",
+     "Enrichment - why only a crowd can do this (what scale buys):"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-5-5-exercise-1": {
+  "exercise": 1,
+  "topic": "5.5",
+  "title": "Portfolio Rights Audit",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-5-5-exercise-1",
+  "intro": "A classmate is about to publish a personal portfolio website and has asked you to audit it first. Five of the site's assets were borrowed from somewhere else. For each asset you will read where it came from and how it is used, then rule: which legal route covers it (Creative Commons, open source, open access), or is it a violation - and what fix and citation would make it right? Part A works the audit log; Part B extends the same skills. Everything maps to CB Learning Objective IOC-1.F.",
+  "cb": "",
+  "source": "AP-CSP_5-5_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "The CED says Creative Commons, open source, and open access 'have enabled broad access to digital information.' Using two assets from the audit log, explain what this portfolio could and could not legally contain in a world where none of the three routes existed."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "The finished portfolio is itself intellectual property. Name two realistic measures the classmate should take to safeguard it once published, and explain - using EK IOC-1.F.2 - why publishing online makes those measures worth taking."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: The music archive offers the same loop under three tags: CC BY, CC BY-ND, and CC BY-NC-SA. The classmate wants to shorten the loop, layer a beat under it, and maybe sell the remix later. Which tag(s) permit that plan, which forbid it, and what does every one of the three tags require no matter what?"
+   }
+  ]
+ },
+ "ap-csp-topic-5-5-exercise-2": {
+  "exercise": 2,
+  "topic": "5.5",
+  "title": "Rights Route Advisor",
+  "timing": "25 minutes - 5 consults - rule and prescribe",
+  "handle": "ap-csp-topic-5-5-exercise-2",
+  "intro": "You are the on-call advisor for five clients, each stuck on a legal-or-ethical computing question. For each consult, name the legal route (Creative Commons, open source, open access) or the violation or concern - using CED vocabulary - then prescribe the fix and the credit still owed. Advanced students also layer a second concern (harm, bias, monitoring, or the digital divide) onto the same consult. Vague 'just don't steal' advice scores zero.",
+  "cb": "CB Standard (required): the route, violation, or concern named with CED vocabulary + the fix and required credit, for all 5 consults. Enrichment (optional): also layer a second concern from EK IOC-1.F.8-F.11 for a more complete ruling.",
+  "source": "AP-CSP_5-5_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "A student drops a CC-tagged illustration into a history presentation. The Creative Commons tag clearly allows reuse in schoolwork, so the student figures the legal side is handled and lists no sources at all. Advise the student.",
+    "prompts": [
+     "Ruling (route, violation, or concern - named with CED vocabulary):",
+     "Fix + required credit (what makes it legitimate):",
+     "Enrichment - second concern to layer (harm, bias, monitoring, divide):"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Core",
+    "text": "A gaming channel re-uploads another creator's highlight video, found 'free online,' with new thumbnails and a monetized ad slot. The channel owner argues: the original was posted publicly, views are free, and re-uploading is 'how the Internet works.' Advise the channel.",
+    "prompts": [
+     "Ruling (route, violation, or concern - named with CED vocabulary):",
+     "Fix + required credit (what makes it legitimate):",
+     "Enrichment - second concern to layer (harm, bias, monitoring, divide):"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "A robotics team finds another team's autopilot code published under an open-source license. They want to modify it heavily for their own robot and enter regional competition with it. One member objects: 'Changing someone's code without asking is stealing.' Advise the team.",
+    "prompts": [
+     "Ruling (route, violation, or concern - named with CED vocabulary):",
+     "Fix + required credit (what makes it legitimate):",
+     "Enrichment - second concern to layer (harm, bias, monitoring, divide):"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Challenge",
+    "text": "A startup builds a paid study-summary app. Its pipeline ingests two feeds: (a) open-access research papers, and (b) articles scraped from a subscription journal by borrowing a university's login. Summaries appear in the app with no sources listed 'to keep the interface clean.' Advise the startup before launch.",
+    "prompts": [
+     "Ruling (route, violation, or concern - named with CED vocabulary):",
+     "Fix + required credit (what makes it legitimate):",
+     "Enrichment - second concern to layer (harm, bias, monitoring, divide):"
+    ]
+   },
+   {
+    "n": 5,
+    "level": "Challenge",
+    "text": "A district accepts free 'engagement analytics' software for school laptops. It runs continuously - logging keystrokes, webcam attention checks, and app usage at home and school - and flags 'low-engagement students' with an algorithm trained on last year's top-performing classes, which skewed wealthy. Families without district laptops must install it on personal devices to submit homework. Advise the district.",
+    "prompts": [
+     "Ruling (route, violation, or concern - named with CED vocabulary):",
+     "Fix + required credit (what makes it legitimate):",
+     "Enrichment - second concern to layer (harm, bias, monitoring, divide):"
+    ]
+   }
+  ]
+ },
+ "ap-csp-topic-5-6-exercise-1": {
+  "exercise": 1,
+  "topic": "5.6",
+  "title": "The Dossier Reconstruction",
+  "timing": "25 minutes",
+  "handle": "ap-csp-topic-5-6-exercise-1",
+  "intro": "You are the privacy auditor for the school's security-awareness week. A volunteer, 'Jordan,' agreed to let the class reconstruct what a stranger could learn from Jordan's public data trails - none of which Jordan considered private. For each artifact you will name what was collected, what it reveals alone, and what it reveals only when AGGREGATED with the rest. Part A works the trail log; Part B extends the same skills. Everything maps to CB Learning Objective IOC-2.A.",
+  "cb": "",
+  "source": "AP-CSP_5-6_Exercise1_Student_k7q2m9.docx",
+  "partB_heading": "Part B - Reflect (AP Exam Application)",
+  "partB": [
+   {
+    "id": "Q1",
+    "pts": 3,
+    "text": "Row 4 is convenience and danger in one artifact. State the benefits the CED names for stored PII, the harms it names, and the one-sentence advice you would give Jordan about keeping the account as-is."
+   },
+   {
+    "id": "Q2",
+    "pts": 3,
+    "text": "Row 5: Jordan pressed delete in 2023, yet the post is still readable. Explain why, and give one 'unintended use' of information like this that EK IOC-2.A.11 warns about."
+   },
+   {
+    "id": "Q3",
+    "pts": 2,
+    "text": "ENRICHMENT: Data brokers do your audit at industrial scale, for sale. Name one plausible buyer of Jordan's assembled dossier, one decision that buyer might make with it, and why EK IOC-2.A.10's warning about curated information applies."
+   }
+  ]
+ },
+ "ap-csp-topic-5-6-exercise-2": {
+  "exercise": 2,
+  "topic": "5.6",
+  "title": "Attack Triage",
+  "timing": "25 minutes - 5 incidents - LO IOC-2.B, IOC-2.C",
+  "handle": "ap-csp-topic-5-6-exercise-2",
+  "intro": "You are the on-call security analyst for the district help desk, and five incident reports land in one afternoon. For each: run the sign check, name the attack with CED vocabulary, explain its mechanism, and prescribe the defense that actually blocks it. Advanced students also name the specific sub-type at work. Vague 'be careful online' advice scores zero.",
+  "cb": "CB Standard (required): the tell-tale signs + the attack named with CED vocabulary + mechanism and blocking defense, for all 5 incidents. Enrichment (optional): also name the specific sub-type or variant at work.",
+  "source": "AP-CSP_5-6_Exercise2_Student_k7q2m9.docx",
+  "scenarios": [
+   {
+    "n": 1,
+    "level": "Foundational",
+    "text": "An email from 'IT-Support@schooI-district.com' (look closely at that capital I) warns that mailboxes over quota will be deleted tonight, and links to a login page that mirrors the district portal pixel for pixel. Three staff members entered their passwords before lunch.",
+    "prompts": [
+     "Sign check (the tells in this report):",
+     "Mechanism + defense (CED attack name, how it works, what blocks it):",
+     "Enrichment sub-type (the specific variant at work):"
+    ]
+   },
+   {
+    "n": 2,
+    "level": "Foundational",
+    "text": "A student installed a free 'FPS booster' from a shareware site. Since then the gaming account, then the email, then a streaming account have each been hijacked - in exactly the order the student logged into them after the install.",
+    "prompts": [
+     "Sign check (the tells in this report):",
+     "Mechanism + defense (CED attack name, how it works, what blocks it):",
+     "Enrichment sub-type (the specific variant at work):"
+    ]
+   },
+   {
+    "n": 3,
+    "level": "Core",
+    "text": "At an away debate tournament, students find two networks: 'GuestWiFi' and 'GuestWiFi_FAST.' The second has full bars and no password. A coach later reports that pages submitted over it - including a payment form - threw odd certificate warnings.",
+    "prompts": [
+     "Sign check (the tells in this report):",
+     "Mechanism + defense (CED attack name, how it works, what blocks it):",
+     "Enrichment sub-type (the specific variant at work):"
+    ]
+   },
+   {
+    "n": 4,
+    "level": "Core",
+    "text": "The robotics captain's account emails the whole team 'our updated parts list' as an attachment named parts_list.pdf.exe. The captain is standing in the room and sent nothing. Two members already opened it.",
+    "prompts": [
+     "Sign check (the tells in this report):",
+     "Mechanism + defense (CED attack name, how it works, what blocks it):",
+     "Enrichment sub-type (the specific variant at work):"
+    ]
+   },
+   {
+    "n": 5,
+    "level": "Challenge",
+    "text": "Hunting for a free PDF converter, a teacher gets a pop-up: 'Your video player is 3 versions out of date - Update Now,' which downloads player_update.exe. The real player updates itself through the OS store. Meanwhile, the district has postponed all OS security updates for a month to 'avoid disruption.'",
+    "prompts": [
+     "Sign check (the tells in this report):",
+     "Mechanism + defense (CED attack name, how it works, what blocks it):",
+     "Enrichment sub-type (the specific variant at work):"
+    ]
+   }
+  ]
+ }
+}
