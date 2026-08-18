@@ -1,0 +1,309 @@
+<style>
+#nt-game{all:initial!important;display:block!important;box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.55!important;max-width:900px!important;margin:0 auto!important;padding:0 0 8px!important}
+#nt-game *,#nt-game *::before,#nt-game *::after{box-sizing:border-box!important}
+#nt-game .nt-card{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden!important}
+#nt-game .nt-hero{background:linear-gradient(135deg,#164e63,#0891b2)!important;padding:22px 24px!important}
+#nt-game .nt-title{font-size:26px!important;font-weight:800!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1.15!important}
+#nt-game .nt-sub{font-size:15px!important;margin:8px 0 0!important;color:#cffafe!important;-webkit-text-fill-color:#cffafe!important}
+#nt-game .nt-bar{display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:14px 24px!important;background:#f8fafc!important;border-bottom:1px solid #e2e8f0!important}
+#nt-game .nt-chip{display:inline-block!important;font-size:13px!important;font-weight:700!important;padding:5px 12px!important;border-radius:100px!important;background:#fff!important;border:1px solid #cbd5e1!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#nt-game .nt-chip.nt-scorechip{background:#0891b2!important;border-color:#0891b2!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#nt-game .nt-body{padding:18px 24px 24px!important}
+#nt-game .nt-how{font-size:14px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;margin:0 0 14px!important}
+#nt-game .nt-brief{background:#ecfeff!important;border:1px solid #a5f3fc!important;border-radius:12px!important;padding:12px 16px!important;margin-bottom:14px!important;font-size:15px!important;font-weight:700!important;color:#164e63!important;-webkit-text-fill-color:#164e63!important}
+#nt-game .nt-code{background:#0f172a!important;border-radius:10px!important;padding:14px 12px!important;margin:0 0 14px!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:14px!important;line-height:2!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;overflow-x:auto!important}
+#nt-game .nt-line{display:block!important;padding:2px 10px!important;border-radius:5px!important;white-space:pre!important}
+#nt-game .nt-line.broke{background:#7f1d1d!important}
+#nt-game .nt-line.overreach{background:#78350f!important}
+#nt-game .nt-line.decl{color:#5eead4!important;-webkit-text-fill-color:#5eead4!important}
+#nt-game .nt-lit{display:inline-block!important;padding:2px 9px!important;border-radius:6px!important;background:#334155!important;color:#fbbf24!important;-webkit-text-fill-color:#fbbf24!important;border:0!important;font-family:inherit!important;font-size:14px!important;font-weight:800!important;cursor:pointer!important}
+#nt-game .nt-lit:hover:enabled{background:#475569!important}
+#nt-game .nt-lit.named{background:#0891b2!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#nt-game .nt-lit:disabled{cursor:default!important}
+#nt-game .nt-flag{display:inline-block!important;margin-left:8px!important;font-family:-apple-system,BlinkMacSystemFont,sans-serif!important;font-size:11px!important;font-weight:700!important;padding:2px 8px!important;border-radius:100px!important;background:#fecaca!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important}
+#nt-game .nt-flag.warn{background:#fed7aa!important;color:#7c2d12!important;-webkit-text-fill-color:#7c2d12!important}
+#nt-game .nt-req{border:2px dashed #f59e0b!important;background:#fffbeb!important;border-radius:12px!important;padding:12px 16px!important;margin-bottom:14px!important;font-size:15px!important;font-weight:700!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important}
+#nt-game .nt-go{background:#0891b2!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:0!important;font-family:inherit!important;font-size:15px!important;font-weight:700!important;padding:11px 18px!important;border-radius:10px!important;cursor:pointer!important;margin-right:8px!important}
+#nt-game .nt-go:disabled{opacity:.5!important;cursor:default!important}
+#nt-game .nt-small{background:#fff!important;color:#475569!important;-webkit-text-fill-color:#475569!important;border:2px solid #cbd5e1!important;font-family:inherit!important;font-size:13px!important;font-weight:700!important;padding:9px 14px!important;border-radius:8px!important;cursor:pointer!important}
+#nt-game .nt-note{font-size:14px!important;margin:12px 0 0!important;color:#334155!important;-webkit-text-fill-color:#334155!important;min-height:22px!important}
+#nt-game .nt-verdict{font-weight:800!important}
+#nt-game .nt-verdict.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important}
+#nt-game .nt-verdict.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#nt-game .nt-end{text-align:center!important;padding:8px 0!important}
+#nt-game .nt-end h2{font-size:24px!important;font-weight:800!important;margin:0 0 8px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#nt-game .nt-teach{background:#ecfeff!important;border-left:5px solid #0891b2!important;border-radius:0 10px 10px 0!important;padding:12px 16px!important;margin:14px 0 0!important;font-size:14px!important;text-align:left!important;color:#164e63!important;-webkit-text-fill-color:#164e63!important}
+</style>
+
+<div class="nt-game" id="nt-game">
+  <div class="nt-card">
+    <div class="nt-hero">
+      <h1 class="nt-title">Name the Thing</h1>
+      <p class="nt-sub">Give the repeated value a name, then let the change request decide whether you named the right ones</p>
+    </div>
+    <div class="nt-bar">
+      <span class="nt-chip" id="nt-round">Program 1 / 7</span>
+      <span class="nt-chip" id="nt-clean">Clean: 0</span>
+      <span class="nt-chip nt-scorechip" id="nt-score">Score: 0</span>
+    </div>
+    <div class="nt-body" id="nt-play">
+      <p class="nt-how">How to play: click a highlighted value to replace it with the named constant, and click again to put the raw value back. When you are done, apply the change request: the named value changes in one place, and every line that still hardcoded it breaks in front of you. Not every copy of a number is the same thing, so read what each one means.</p>
+      <div class="nt-brief" id="nt-brief"></div>
+      <div class="nt-req" id="nt-req"></div>
+      <div class="nt-code" id="nt-code"></div>
+      <button class="nt-go" id="nt-applybtn" type="button">Apply the change request</button>
+      <button class="nt-small" id="nt-resetbtn" type="button">Put it all back</button>
+      <button class="nt-go" id="nt-nextbtn" type="button" style="display:none">Next program</button>
+      <p class="nt-note" id="nt-note"></p>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Name the Thing - AP CSP Topic 3.2.
+     Abstraction is usually taught as "use a name instead of a number", which is
+     true and does not stick, because nothing goes wrong when you ignore it. So
+     here something goes wrong: the change request alters the named value in one
+     place and every line that still hardcoded it visibly breaks.
+     The other half is the part that is normally left out. Two copies of the same
+     number are not always the same THING, and renaming one that merely happens
+     to be equal is its own bug. Programs 3, 5 and 7 each contain a decoy that
+     must be left alone, and over-naming is scored as a mistake exactly like
+     under-naming. */
+
+  var ROUNDS = [
+    { brief: 'The sales tax rate appears three times.',
+      name: 'TAX_RATE', value: '0.07', newValue: '0.09',
+      request: 'The state raised the sales tax to 0.09.',
+      lines: [
+        [{ t: 'subtotal ' }, { t: '\u2190 price * quantity' }],
+        [{ t: 'tax ' }, { t: '\u2190 subtotal * ' }, { lit: '0.07', target: true }],
+        [{ t: 'shipTax ' }, { t: '\u2190 shipping * ' }, { lit: '0.07', target: true }],
+        [{ t: 'estimate ' }, { t: '\u2190 subtotal + subtotal * ' }, { lit: '0.07', target: true }]
+      ],
+      why: 'Three copies means three edits, and the day one of them is missed the program charges two different tax rates and still runs.' },
+
+    { brief: 'A game rule: five lives, used in four places.',
+      name: 'START_LIVES', value: '5', newValue: '3',
+      request: 'Playtesting says the game is too easy. Start with 3 lives.',
+      lines: [
+        [{ t: 'lives ' }, { t: '\u2190 ' }, { lit: '5', target: true }],
+        [{ t: 'DISPLAY("You have " + ' }, { lit: '5', target: true }, { t: ' + " lives")' }],
+        [{ t: 'IF (lives = ' }, { lit: '5', target: true }, { t: ')' }],
+        [{ t: '  DISPLAY("Full health")' }]
+      ],
+      why: 'The display line is the one people forget, because it is not logic. A program that plays with three lives and announces five is worse than one that is simply wrong.' },
+
+    { brief: 'CAREFUL. The number 12 appears three times and does not always mean months.',
+      name: 'MONTHS_IN_YEAR', value: '12', newValue: '10',
+      request: 'The report switches to a ten month school year.',
+      lines: [
+        [{ t: 'yearlyTotal ' }, { t: '\u2190 monthly * ' }, { lit: '12', target: true }],
+        [{ t: 'average ' }, { t: '\u2190 yearlyTotal / ' }, { lit: '12', target: true }],
+        [{ t: 'boxCount ' }, { t: '\u2190 pencils / ' }, { lit: '12', target: false, means: 'pencils per box' }]
+      ],
+      why: 'Pencils still come twelve to a box no matter how long the school year is. Two values that happen to be equal are not the same thing, and naming the pencil one MONTHS_IN_YEAR would have changed it the moment the year did.' },
+
+    { brief: 'A passing threshold used across a gradebook.',
+      name: 'PASS_MARK', value: '70', newValue: '65',
+      request: 'The department lowers the passing mark to 65.',
+      lines: [
+        [{ t: 'IF (score >= ' }, { lit: '70', target: true }, { t: ')' }],
+        [{ t: '  passed ' }, { t: '\u2190 true' }],
+        [{ t: 'gap ' }, { t: '\u2190 ' }, { lit: '70', target: true }, { t: ' - score' }],
+        [{ t: 'DISPLAY("You need " + ' }, { lit: '70', target: true }, { t: ' + " to pass")' }]
+      ],
+      why: 'When one number decides a rule, every place that mentions the rule has to move together. Naming it makes that automatic instead of careful.' },
+
+    { brief: 'CAREFUL AGAIN. The 100 in the percentage formula is not the same 100 as the class size cap.',
+      name: 'CLASS_CAP', value: '100', newValue: '150',
+      request: 'The cap on students in a class rises to 150.',
+      lines: [
+        [{ t: 'IF (enrolled > ' }, { lit: '100', target: true }, { t: ')' }],
+        [{ t: '  DISPLAY("Class is full, limit is " + ' }, { lit: '100', target: true }, { t: ')' }],
+        [{ t: 'percent ' }, { t: '\u2190 earned / possible * ' }, { lit: '100', target: false, means: 'converting a fraction to a percentage' }]
+      ],
+      why: 'The 100 in a percentage is arithmetic, not a policy. It will never change, and tying it to the class cap would have turned a bigger class into a broken grade.' },
+
+    { brief: 'SPOT THE HALF-DONE JOB. Someone already named one of these. Finish it.',
+      name: 'SHIPPING_FEE', value: '6', newValue: '4',
+      request: 'Shipping drops to 4.',
+      lines: [
+        [{ t: 'total ' }, { t: '\u2190 subtotal + SHIPPING_FEE' }],
+        [{ t: 'DISPLAY("Shipping: " + ' }, { lit: '6', target: true }, { t: ')' }],
+        [{ t: 'estimate ' }, { t: '\u2190 subtotal + ' }, { lit: '6', target: true }]
+      ],
+      why: 'A half-finished rename is more dangerous than none at all. The named line moves and the others do not, so the receipt and the total disagree and the code looks like it was already handled.' },
+
+    { brief: 'LAST ONE. Three 3s, and only two of them are the retry limit.',
+      name: 'MAX_TRIES', value: '3', newValue: '5',
+      request: 'Support wants users to get 5 attempts.',
+      lines: [
+        [{ t: 'IF (attempts >= ' }, { lit: '3', target: true }, { t: ')' }],
+        [{ t: '  DISPLAY("Locked after " + ' }, { lit: '3', target: true }, { t: ' + " tries")' }],
+        [{ t: 'initials ' }, { t: '\u2190 SUBSTRING(name, 1, ' }, { lit: '3', target: false, means: 'the length of an initials code' }]
+      ],
+      why: 'Initials stay three characters long however many attempts you allow. Deciding which copies of a value are the same thing is the actual work of abstraction, and no tool can do it for you.' }
+  ];
+
+  var el = {};
+  ['round','clean','score','brief','req','code','applybtn','resetbtn','nextbtn','note','play']
+    .forEach(function (k) { el[k] = document.getElementById('nt-' + k); });
+
+  var i = 0, score = 0, clean = 0;
+  var named = [], applied = false, done = false;
+
+  function tokens() {
+    var out = [];
+    ROUNDS[i].lines.forEach(function (line, li) {
+      line.forEach(function (tok, ti) {
+        if (tok.lit !== undefined) out.push({ li: li, ti: ti, tok: tok });
+      });
+    });
+    return out;
+  }
+
+  function keyOf(t) { return t.li + ':' + t.ti; }
+
+  function render() {
+    var r = ROUNDS[i];
+    el.round.textContent = 'Program ' + (i + 1) + ' / ' + ROUNDS.length;
+    el.clean.textContent = 'Clean: ' + clean;
+    el.score.textContent = 'Score: ' + score;
+    el.brief.textContent = r.brief;
+    el.req.textContent = 'Change request: ' + r.request;
+
+    el.code.innerHTML = '';
+    var decl = document.createElement('span');
+    decl.className = 'nt-line decl';
+    decl.textContent = r.name + ' \u2190 ' + (applied ? r.newValue : r.value);
+    el.code.appendChild(decl);
+    var blank = document.createElement('span');
+    blank.className = 'nt-line';
+    blank.textContent = ' ';
+    el.code.appendChild(blank);
+
+    r.lines.forEach(function (line, li) {
+      var span = document.createElement('span');
+      span.className = 'nt-line';
+      var brokeHere = false, overHere = false;
+      line.forEach(function (tok, ti) {
+        if (tok.lit === undefined) {
+          span.appendChild(document.createTextNode(tok.t));
+          return;
+        }
+        var isNamed = named.indexOf(keyOf({ li: li, ti: ti })) !== -1;
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'nt-lit' + (isNamed ? ' named' : '');
+        b.textContent = isNamed ? r.name : tok.lit;
+        b.disabled = done;
+        b.addEventListener('click', function () { toggle(li, ti); });
+        span.appendChild(b);
+        if (applied) {
+          if (tok.target && !isNamed) brokeHere = true;
+          if (!tok.target && isNamed) overHere = true;
+        }
+      });
+      if (applied && brokeHere) {
+        span.className = 'nt-line broke';
+        var f = document.createElement('span');
+        f.className = 'nt-flag';
+        f.textContent = 'still says ' + r.value;
+        span.appendChild(f);
+      } else if (applied && overHere) {
+        span.className = 'nt-line overreach';
+        var w = document.createElement('span');
+        w.className = 'nt-flag warn';
+        w.textContent = 'this one just changed too, and it should not have';
+        span.appendChild(w);
+      }
+      el.code.appendChild(span);
+    });
+
+    el.applybtn.disabled = done;
+    el.resetbtn.disabled = done;
+  }
+
+  function toggle(li, ti) {
+    if (done) return;
+    var k = keyOf({ li: li, ti: ti });
+    var at = named.indexOf(k);
+    if (at === -1) named.push(k); else named.splice(at, 1);
+    render();
+  }
+
+  el.resetbtn.addEventListener('click', function () {
+    if (done) return;
+    named = [];
+    render();
+  });
+
+  el.applybtn.addEventListener('click', function () {
+    if (done) return;
+    applied = true;
+    done = true;
+    var all = tokens();
+    var missed = all.filter(function (t) { return t.tok.target && named.indexOf(keyOf(t)) === -1; }).length;
+    var over = all.filter(function (t) { return !t.tok.target && named.indexOf(keyOf(t)) !== -1; }).length;
+    var wrong = missed + over;
+    var award = wrong === 0 ? 100 : (wrong === 1 ? 50 : 0);
+    score += award;
+    if (wrong === 0) clean++;
+    render();
+    var head;
+    if (wrong === 0) head = 'One edit, whole program moved. 100 points. ';
+    else if (missed && over) head = missed + ' left hardcoded and ' + over + ' renamed that should not have been. ';
+    else if (missed) head = missed + ' place' + (missed === 1 ? '' : 's') + ' still hardcoded, so the program now disagrees with itself. ';
+    else head = over + ' value' + (over === 1 ? '' : 's') + ' renamed that meant something else, so the change request broke a line it had nothing to do with. ';
+    el.note.innerHTML = '<span class="nt-verdict ' + (wrong === 0 ? 'good' : 'bad') + '">' + head + '</span>' + ROUNDS[i].why;
+    el.nextbtn.textContent = (i < ROUNDS.length - 1) ? 'Next program' : 'See your result';
+    el.nextbtn.style.display = 'inline-block';
+    el.applybtn.style.display = 'none';
+    el.resetbtn.style.display = 'none';
+  });
+
+  el.nextbtn.addEventListener('click', function () {
+    if (i < ROUNDS.length - 1) { i++; startRound(); } else { finish(); }
+  });
+
+  function startRound() {
+    named = [];
+    applied = false;
+    done = false;
+    el.note.textContent = '';
+    el.nextbtn.style.display = 'none';
+    el.applybtn.style.display = 'inline-block';
+    el.resetbtn.style.display = 'inline-block';
+    render();
+  }
+
+  function finish() {
+    el.play.innerHTML =
+      '<div class="nt-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + clean + ' of ' + ROUNDS.length + ' programs that survived their change request.</p>' +
+        '<div class="nt-teach">' +
+          '<b>A name is not decoration, it is the thing that makes one edit enough.</b> ' +
+          'Every hardcoded copy of a value is a place a future change can be forgotten, and ' +
+          'the forgetting is silent: the program still runs, it just quietly disagrees with ' +
+          'itself, charging one tax rate and printing another. The harder half is deciding ' +
+          'WHICH copies are the same thing. The 100 in a percentage and the 100 in a class ' +
+          'cap are equal today and have nothing to do with each other, so tying them ' +
+          'together turns one policy change into a broken calculation. Read what a value ' +
+          'MEANS, not what it equals. That judgement is the whole of abstraction, and it is ' +
+          'the part no tool will do for you.' +
+        '</div>' +
+        '<p><button class="nt-go" id="nt-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('nt-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  startRound();
+})();
+</script>

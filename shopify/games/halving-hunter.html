@@ -1,0 +1,193 @@
+<style>
+#hh-game{all:initial!important;display:block!important;box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.55!important;max-width:900px!important;margin:0 auto!important;padding:0 0 8px!important}
+#hh-game *,#hh-game *::before,#hh-game *::after{box-sizing:border-box!important}
+#hh-game .hh-card{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden!important}
+#hh-game .hh-hero{background:linear-gradient(135deg,#166534,#16a34a)!important;padding:22px 24px!important}
+#hh-game .hh-title{font-size:26px!important;font-weight:800!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1.15!important}
+#hh-game .hh-sub{font-size:15px!important;margin:8px 0 0!important;color:#dcfce7!important;-webkit-text-fill-color:#dcfce7!important}
+#hh-game .hh-bar{display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:14px 24px!important;background:#f8fafc!important;border-bottom:1px solid #e2e8f0!important}
+#hh-game .hh-chip{display:inline-block!important;font-size:13px!important;font-weight:700!important;padding:5px 12px!important;border-radius:100px!important;background:#fff!important;border:1px solid #cbd5e1!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#hh-game .hh-chip.hh-score{background:#16a34a!important;border-color:#16a34a!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#hh-game .hh-chip.hh-par{background:#dcfce7!important;border-color:#86efac!important;color:#15803d!important;-webkit-text-fill-color:#15803d!important}
+#hh-game .hh-body{padding:18px 24px 24px!important}
+#hh-game .hh-how{font-size:14px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;margin:0 0 14px!important}
+#hh-game .hh-range{font-size:17px!important;font-weight:700!important;text-align:center!important;margin:0 0 8px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#hh-game .hh-track{position:relative!important;height:36px!important;background:#f1f5f9!important;border:1px solid #e2e8f0!important;border-radius:8px!important;overflow:hidden!important;margin-bottom:6px!important}
+#hh-game .hh-live{position:absolute!important;top:0!important;bottom:0!important;background:linear-gradient(90deg,#86efac,#16a34a)!important;transition:left .25s ease,right .25s ease!important}
+#hh-game .hh-ticks{display:flex!important;justify-content:space-between!important;font-size:12px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:14px!important}
+#hh-game .hh-input{display:flex!important;flex-wrap:wrap!important;gap:10px!important;align-items:center!important;margin-bottom:12px!important}
+#hh-game input[type=number]{font-family:inherit!important;font-size:17px!important;font-weight:700!important;padding:10px 14px!important;border:2px solid #cbd5e1!important;border-radius:10px!important;width:150px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;background:#fff!important}
+#hh-game .hh-btn{font-family:inherit!important;font-size:15px!important;font-weight:700!important;padding:11px 18px!important;border-radius:10px!important;border:0!important;cursor:pointer!important;background:#16a34a!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#hh-game .hh-btn.hh-ghost{background:#fff!important;color:#15803d!important;-webkit-text-fill-color:#15803d!important;border:2px solid #86efac!important}
+#hh-game .hh-btn:disabled{opacity:.45!important;cursor:default!important}
+#hh-game .hh-log{display:flex!important;flex-wrap:wrap!important;gap:6px!important;margin:10px 0 0!important;min-height:30px!important}
+#hh-game .hh-g{font-size:13px!important;font-weight:700!important;padding:5px 10px!important;border-radius:8px!important;background:#f1f5f9!important;color:#334155!important;-webkit-text-fill-color:#334155!important;border:1px solid #e2e8f0!important}
+#hh-game .hh-g.hi{background:#eff6ff!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;border-color:#bfdbfe!important}
+#hh-game .hh-g.lo{background:#fef3c7!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border-color:#fde68a!important}
+#hh-game .hh-g.hit{background:#16a34a!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:#16a34a!important}
+#hh-game .hh-status{margin-top:12px!important;font-size:15px!important;font-weight:600!important;min-height:24px!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#hh-game .hh-status.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important}
+#hh-game .hh-status.warn{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#hh-game .hh-table{width:100%!important;border-collapse:collapse!important;margin:14px 0 0!important;font-size:14px!important}
+#hh-game .hh-table th{background:#166534!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:7px 10px!important;text-align:left!important;font-size:12px!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#hh-game .hh-table td{border-bottom:1px solid #e2e8f0!important;padding:7px 10px!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#hh-game .hh-end{text-align:center!important;padding:8px 0!important}
+#hh-game .hh-end h2{font-size:24px!important;font-weight:800!important;margin:0 0 8px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#hh-game .hh-teach{background:#f0fdf4!important;border-left:5px solid #16a34a!important;border-radius:0 10px 10px 0!important;padding:12px 16px!important;margin:14px 0 0!important;font-size:14px!important;text-align:left!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important}
+</style>
+
+<div class="hh-game" id="hh-game">
+  <div class="hh-card">
+    <div class="hh-hero">
+      <h1 class="hh-title">Halving Hunter</h1>
+      <p class="hh-sub">Find the number the way binary search would - and see why a list twice as long costs one more guess</p>
+    </div>
+    <div class="hh-bar">
+      <span class="hh-chip" id="hh-round">Round 1 / 5</span>
+      <span class="hh-chip" id="hh-guesses">Guesses: 0</span>
+      <span class="hh-chip hh-par" id="hh-parchip">Par: 4</span>
+      <span class="hh-chip hh-score" id="hh-score">Score: 0</span>
+    </div>
+    <div class="hh-body" id="hh-play">
+      <p class="hh-how">How to play: a number is hidden in the range below. Guess, and the range narrows to whatever is still possible. Par is the number of guesses binary search needs in the worst case, which is how many times you can halve the range before one value is left.</p>
+      <p class="hh-range" id="hh-rangetext">Somewhere from 1 to 16</p>
+      <div class="hh-track"><div class="hh-live" id="hh-live"></div></div>
+      <div class="hh-ticks"><span id="hh-lo">1</span><span id="hh-hi">16</span></div>
+      <div class="hh-input">
+        <input type="number" id="hh-num" min="1" step="1" aria-label="your guess">
+        <button class="hh-btn" id="hh-guess" type="button">Guess</button>
+        <button class="hh-btn hh-ghost" id="hh-mid" type="button">Guess the midpoint</button>
+      </div>
+      <div class="hh-log" id="hh-loglist"></div>
+      <p class="hh-status" id="hh-status"></p>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Halving Hunter - AP CSP Topic 3.11.
+     Par is ceil(log2(size)), which is exactly the worst case for binary search.
+     The rounds double in size on purpose: 16, 32, 64, 128, and then a jump to
+     1000. Par moves 4, 5, 6, 7, 10. A student who notices that doubling the
+     range costs ONE more guess has understood the topic, so the closing panel
+     puts those numbers side by side. */
+
+  var ROUNDS = [16, 32, 64, 128, 1000];
+  var el = {};
+  ['round','guesses','parchip','score','rangetext','live','lo','hi','num','guess','mid',
+   'loglist','status','play'].forEach(function (k) { el[k] = document.getElementById('hh-' + k); });
+
+  var r = 0, score = 0, lo = 1, hi = 16, target = 1, used = 0, history = [], done = false;
+
+  /* Worst case for binary search is ceil(log2(n + 1)), NOT ceil(log2(n)).
+     The last comparison still has to be made when one value remains, so a
+     16 value range needs 5 guesses, not 4. Verified by simulating perfect
+     midpoint play against every possible target for each round size. Getting
+     this wrong made par unreachable and taught the opposite of the lesson. */
+  function par(n) { return Math.ceil(Math.log(n + 1) / Math.log(2)); }
+  function size() { return ROUNDS[r]; }
+
+  function startRound() {
+    lo = 1; hi = size(); used = 0; history = [];
+    target = Math.floor(Math.random() * size()) + 1;
+    el.round.textContent = 'Round ' + (r + 1) + ' / ' + ROUNDS.length;
+    el.parchip.textContent = 'Par: ' + par(size());
+    el.num.min = 1; el.num.max = size(); el.num.value = '';
+    el.num.disabled = false; el.guess.disabled = false; el.mid.disabled = false;
+    el.status.textContent = ''; el.status.className = 'hh-status';
+    el.loglist.innerHTML = '';
+    paint();
+  }
+
+  function paint() {
+    el.guesses.textContent = 'Guesses: ' + used;
+    el.score.textContent = 'Score: ' + score;
+    el.rangetext.textContent = lo === hi
+      ? 'It must be ' + lo
+      : 'Somewhere from ' + lo + ' to ' + hi;
+    el.lo.textContent = lo; el.hi.textContent = hi;
+    var n = size();
+    el.live.style.left = ((lo - 1) / n * 100) + '%';
+    el.live.style.right = ((n - hi) / n * 100) + '%';
+  }
+
+  function log(v, kind, label) {
+    var s = document.createElement('span');
+    s.className = 'hh-g ' + kind;
+    s.textContent = v + ' ' + label;
+    el.loglist.appendChild(s);
+  }
+
+  function submit(v) {
+    if (done) return;
+    v = parseInt(v, 10);
+    if (!isFinite(v) || v < lo || v > hi) {
+      el.status.className = 'hh-status warn';
+      el.status.textContent = 'Guess inside the range that is still possible: ' + lo + ' to ' + hi + '.';
+      return;
+    }
+    used++;
+    if (v === target) {
+      log(v, 'hit', 'found it');
+      finishRound();
+      return;
+    }
+    if (v < target) { lo = v + 1; log(v, 'hi', 'too low'); }
+    else { hi = v - 1; log(v, 'lo', 'too high'); }
+    el.num.value = '';
+    el.status.className = 'hh-status';
+    el.status.textContent = 'Range left: ' + (hi - lo + 1) + ' value' + ((hi - lo + 1) === 1 ? '' : 's') + '.';
+    paint();
+  }
+
+  function finishRound() {
+    var p = par(size());
+    var gained = used <= p ? 100 : used === p + 1 ? 60 : used <= p + 2 ? 30 : 10;
+    score += gained;
+    el.num.disabled = true; el.guess.disabled = true; el.mid.disabled = true;
+    el.status.className = 'hh-status ' + (used <= p ? 'good' : 'warn');
+    el.status.textContent = (used <= p ? 'Par or better. ' : '') + 'Found ' + target
+      + ' in ' + used + ' guess' + (used === 1 ? '' : 'es') + ', par is ' + p + '. +' + gained;
+    paint();
+    setTimeout(function () {
+      if (r < ROUNDS.length - 1) { r++; startRound(); } else { finish(); }
+    }, 1500);
+  }
+
+  el.guess.addEventListener('click', function () { submit(el.num.value); });
+  el.num.addEventListener('keydown', function (e) { if (e.key === 'Enter') submit(el.num.value); });
+  el.mid.addEventListener('click', function () { submit(Math.floor((lo + hi) / 2)); });
+
+  function finish() {
+    done = true;
+    var rows = ROUNDS.map(function (n) {
+      return '<tr><td>1 to ' + n + '</td><td>' + n + '</td><td><b>' + par(n) + '</b></td></tr>';
+    }).join('');
+    el.play.innerHTML =
+      '<div class="hh-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<table class="hh-table"><tr><th>Range</th><th>Values to search</th><th>Par</th></tr>' + rows + '</table>' +
+        '<div class="hh-teach">' +
+          '<b>Look at that last column.</b> The range doubled every round from ' +
+          ROUNDS[0] + ' to ' + ROUNDS[3] + ', and par went ' +
+          ROUNDS.slice(0, 4).map(par).join(', ') +
+          ' - exactly one more guess per doubling. Then the range jumped to ' +
+          ROUNDS[4].toLocaleString('en-US') + ', nearly eight times ' + ROUNDS[3] +
+          ', and par only reached ' + par(ROUNDS[4]) + '. That is what halving buys you: ' +
+          'each guess throws away half of what is left, so the cost grows by one step every ' +
+          'time the list doubles. Sequential search would have needed up to ' +
+          ROUNDS[4].toLocaleString('en-US') + ' guesses on that last round.' +
+        '</div>' +
+        '<p><button class="hh-btn" id="hh-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('hh-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  startRound();
+})();
+</script>

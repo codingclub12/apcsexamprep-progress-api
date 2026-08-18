@@ -1,0 +1,288 @@
+<style>
+#ss-game{all:initial!important;display:block!important;box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.55!important;max-width:900px!important;margin:0 auto!important;padding:0 0 8px!important}
+#ss-game *,#ss-game *::before,#ss-game *::after{box-sizing:border-box!important}
+#ss-game .ss-card{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden!important}
+#ss-game .ss-hero{background:linear-gradient(135deg,#0c4a6e,#0284c7)!important;padding:22px 24px!important}
+#ss-game .ss-title{font-size:26px!important;font-weight:800!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1.15!important}
+#ss-game .ss-sub{font-size:15px!important;margin:8px 0 0!important;color:#e0f2fe!important;-webkit-text-fill-color:#e0f2fe!important}
+#ss-game .ss-bar{display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:14px 24px!important;background:#f8fafc!important;border-bottom:1px solid #e2e8f0!important}
+#ss-game .ss-chip{display:inline-block!important;font-size:13px!important;font-weight:700!important;padding:5px 12px!important;border-radius:100px!important;background:#fff!important;border:1px solid #cbd5e1!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#ss-game .ss-chip.ss-scorechip{background:#0284c7!important;border-color:#0284c7!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#ss-game .ss-body{padding:18px 24px 24px!important}
+#ss-game .ss-how{font-size:14px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;margin:0 0 14px!important}
+#ss-game .ss-brief{background:#f0f9ff!important;border:1px solid #bae6fd!important;border-radius:12px!important;padding:12px 16px!important;margin-bottom:14px!important;font-size:15px!important;font-weight:700!important;color:#0c4a6e!important;-webkit-text-fill-color:#0c4a6e!important}
+#ss-game .ss-boxes{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:10px!important;margin-bottom:14px!important}
+@media (max-width:640px){#ss-game .ss-boxes{grid-template-columns:repeat(2,1fr)!important}}
+#ss-game .ss-box{border:2px solid #cbd5e1!important;border-radius:12px!important;padding:10px 8px!important;text-align:center!important;background:#fff!important}
+#ss-game .ss-box.ok{border-color:#16a34a!important;background:#f0fdf4!important}
+#ss-game .ss-box.moved{border-color:#0284c7!important;background:#f0f9ff!important}
+#ss-game .ss-bname{display:block!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:13px!important;font-weight:700!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important}
+#ss-game .ss-bval{display:block!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:26px!important;font-weight:800!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.25!important}
+#ss-game .ss-bwant{display:block!important;font-size:11px!important;font-weight:700!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important}
+#ss-game .ss-ops{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:9px!important;margin-bottom:12px!important}
+@media (max-width:640px){#ss-game .ss-ops{grid-template-columns:repeat(2,1fr)!important}}
+#ss-game .ss-op{font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:15px!important;font-weight:700!important;padding:11px 8px!important;border-radius:10px!important;border:2px solid #bae6fd!important;cursor:pointer!important;background:#fff!important;color:#0369a1!important;-webkit-text-fill-color:#0369a1!important}
+#ss-game .ss-op:hover:enabled{background:#f0f9ff!important;border-color:#0284c7!important}
+#ss-game .ss-op:disabled{opacity:.5!important;cursor:default!important}
+#ss-game .ss-small{background:#fff!important;color:#475569!important;-webkit-text-fill-color:#475569!important;border:2px solid #cbd5e1!important;font-family:inherit!important;font-size:13px!important;font-weight:700!important;padding:8px 14px!important;border-radius:8px!important;cursor:pointer!important;margin-right:8px!important}
+#ss-game .ss-small.ss-cant{border-color:#fca5a5!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#ss-game .ss-small:disabled{opacity:.5!important;cursor:default!important}
+#ss-game .ss-log{border:1px solid #e2e8f0!important;border-radius:10px!important;padding:10px 14px!important;margin:12px 0 0!important;min-height:44px!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#ss-game .ss-logline{display:block!important}
+#ss-game .ss-go{background:#0284c7!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:0!important;font-family:inherit!important;font-size:15px!important;font-weight:700!important;padding:11px 18px!important;border-radius:10px!important;cursor:pointer!important;margin-top:12px!important}
+#ss-game .ss-note{font-size:14px!important;margin:12px 0 0!important;color:#334155!important;-webkit-text-fill-color:#334155!important;min-height:22px!important}
+#ss-game .ss-verdict{font-weight:800!important}
+#ss-game .ss-verdict.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important}
+#ss-game .ss-verdict.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#ss-game .ss-end{text-align:center!important;padding:8px 0!important}
+#ss-game .ss-end h2{font-size:24px!important;font-weight:800!important;margin:0 0 8px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#ss-game .ss-teach{background:#f0f9ff!important;border-left:5px solid #0284c7!important;border-radius:0 10px 10px 0!important;padding:12px 16px!important;margin:14px 0 0!important;font-size:14px!important;text-align:left!important;color:#0c4a6e!important;-webkit-text-fill-color:#0c4a6e!important}
+</style>
+
+<div class="ss-game" id="ss-game">
+  <div class="ss-card">
+    <div class="ss-hero">
+      <h1 class="ss-title">Swap Shop</h1>
+      <p class="ss-sub">Move values between variables one assignment at a time, and find out how fast a value disappears for good</p>
+    </div>
+    <div class="ss-bar">
+      <span class="ss-chip" id="ss-round">Job 1 / 7</span>
+      <span class="ss-chip" id="ss-par">Par: 1</span>
+      <span class="ss-chip" id="ss-used">Used: 0</span>
+      <span class="ss-chip ss-scorechip" id="ss-score">Score: 0</span>
+    </div>
+    <div class="ss-body" id="ss-play">
+      <p class="ss-how">How to play: click assignments to run them. An assignment COPIES the right side into the left side and the old value on the left is gone. Hitting the target at par is 100 points, over par is 50. One of these jobs cannot be done at all, and saying so is worth full marks.</p>
+      <div class="ss-brief" id="ss-brief"></div>
+      <div class="ss-boxes" id="ss-boxes"></div>
+      <div class="ss-ops" id="ss-ops"></div>
+      <button class="ss-small" id="ss-undo" type="button">Undo</button>
+      <button class="ss-small" id="ss-reset" type="button">Start over</button>
+      <button class="ss-small ss-cant" id="ss-cant" type="button">No sequence can do this</button>
+      <div class="ss-log" id="ss-log"></div>
+      <p class="ss-note" id="ss-note"></p>
+      <button class="ss-go" id="ss-nextbtn" type="button" style="display:none">Next job</button>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Swap Shop - AP CSP Topic 3.1.
+     One idea, stated as a machine rather than a sentence: an assignment copies
+     the right side into the left and destroys what the left was holding. Job 3
+     is the swap, job 5 is the same swap attempted after the value is already
+     gone, and job 5 is unreachable no matter what you click. That is why the
+     "no sequence can do this" button exists, and why it is worth full marks:
+     recognising that a value has been destroyed is the actual skill. Par on
+     every job was proved minimal by searching every shorter sequence. */
+
+  var ROUNDS = [
+    { brief: 'Put a copy of a into temp, without changing a.',
+      vars: ['a', 'b', 'temp'], start: { a: 3, b: 8, temp: 0 }, target: { a: 3, b: 8, temp: 3 },
+      ops: [['temp', 'a'], ['a', 'temp'], ['temp', 'b'], ['b', 'temp']],
+      par: 1,
+      why: 'Assignment copies. After temp gets a, BOTH hold 3: reading a does not empty it.' },
+
+    { brief: 'Make a hold what b holds.',
+      vars: ['a', 'b', 'temp'], start: { a: 3, b: 8, temp: 0 }, target: { a: 8, b: 8, temp: 0 },
+      ops: [['a', 'b'], ['b', 'a'], ['temp', 'a'], ['temp', 'b']],
+      par: 1,
+      why: 'One assignment, and the 3 that was in a is now gone from the program entirely. Nothing kept a copy.' },
+
+    { brief: 'Swap them. a must end with 8 and b with 3.',
+      vars: ['a', 'b', 'temp'], start: { a: 3, b: 8, temp: 0 }, target: { a: 8, b: 3, temp: 3 },
+      ops: [['a', 'b'], ['b', 'a'], ['temp', 'a'], ['temp', 'b'], ['a', 'temp'], ['b', 'temp']],
+      par: 3,
+      why: 'Park a value before you overwrite it. temp gets a, a gets b, b gets temp. Going straight for a gets b first would destroy the 3 with nothing holding it.' },
+
+    { brief: 'Swap a and b, and leave temp holding what b started with.',
+      vars: ['a', 'b', 'temp'], start: { a: 2, b: 7, temp: 0 }, target: { a: 7, b: 2, temp: 7 },
+      ops: [['a', 'b'], ['b', 'a'], ['temp', 'a'], ['temp', 'b'], ['a', 'temp'], ['b', 'temp']],
+      par: 3,
+      why: 'Same three moves, started from the other side: temp gets b, b gets a, a gets temp. Which value you park decides what temp is left holding.' },
+
+    { brief: 'A student tried to swap with a becomes b, then b becomes a. Both ended at 8. From here, get a to 8 and b to 3.',
+      vars: ['a', 'b', 'temp'], start: { a: 8, b: 8, temp: 0 }, target: { a: 8, b: 3, temp: 0 },
+      ops: [['a', 'b'], ['b', 'a'], ['temp', 'a'], ['temp', 'b'], ['a', 'temp'], ['b', 'temp']],
+      par: 0,
+      impossible: true,
+      why: 'There is no 3 left anywhere. The first assignment overwrote it and nothing had a copy, so no sequence of moves can bring it back. This is why the swap needs a temporary variable BEFORE the first overwrite, not after.' },
+
+    { brief: 'Rotate the values: a takes c, b takes a, c takes b.',
+      vars: ['a', 'b', 'c', 'temp'], start: { a: 1, b: 2, c: 3, temp: 0 }, target: { a: 3, b: 1, c: 2, temp: 1 },
+      ops: [['temp', 'a'], ['a', 'c'], ['c', 'b'], ['b', 'temp'], ['b', 'a'], ['a', 'temp']],
+      par: 4,
+      why: 'Three variables, still one parking space. Park the one you are about to overwrite first, then move around the circle in the direction that never lands on a value you still need.' },
+
+    { brief: 'SPOT THE BUG. A rotation written as a takes b, b takes c, c takes a produced 2, 3, 2. Get to a is 2, b is 3, c is 1.',
+      vars: ['a', 'b', 'c', 'temp'], start: { a: 1, b: 2, c: 3, temp: 0 }, target: { a: 2, b: 3, c: 1, temp: 1 },
+      ops: [['temp', 'a'], ['a', 'b'], ['b', 'c'], ['c', 'temp'], ['c', 'a'], ['b', 'temp']],
+      par: 4,
+      why: 'Their version overwrote a on the first line, so by the time c reached for it the 1 was already gone and c copied the 2 instead. Parking a into temp first costs one extra line and saves the value.' }
+  ];
+
+  var CAP = 9;
+
+  var el = {};
+  ['round','par','used','score','brief','boxes','ops','undo','reset','cant','log','note','nextbtn','play']
+    .forEach(function (k) { el[k] = document.getElementById('ss-' + k); });
+
+  var i = 0, score = 0, solved = 0;
+  var state = {}, history = [], used = 0, done = false;
+
+  function same(s, t, vars) {
+    return vars.every(function (v) { return s[v] === t[v]; });
+  }
+
+  function paintBoxes(touched) {
+    var r = ROUNDS[i];
+    el.boxes.innerHTML = '';
+    r.vars.forEach(function (v) {
+      var d = document.createElement('div');
+      var hit = state[v] === r.target[v];
+      d.className = 'ss-box' + (hit ? ' ok' : '') + (v === touched ? ' moved' : '');
+      d.innerHTML = '<span class="ss-bname">' + v + '</span>'
+        + '<span class="ss-bval">' + state[v] + '</span>'
+        + '<span class="ss-bwant">wants ' + r.target[v] + '</span>';
+      el.boxes.appendChild(d);
+    });
+  }
+
+  function renderOps() {
+    var r = ROUNDS[i];
+    el.ops.innerHTML = '';
+    r.ops.forEach(function (op) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ss-op';
+      b.textContent = op[0] + ' \u2190 ' + op[1];
+      b.disabled = done;
+      b.addEventListener('click', function () { runOp(op); });
+      el.ops.appendChild(b);
+    });
+  }
+
+  function logLine(t) {
+    var s = document.createElement('span');
+    s.className = 'ss-logline';
+    s.textContent = t;
+    el.log.appendChild(s);
+    el.log.scrollTop = el.log.scrollHeight;
+  }
+
+  function snapshot() {
+    return ROUNDS[i].vars.map(function (v) { return v + '=' + state[v]; }).join('  ');
+  }
+
+  function paint(touched) {
+    var r = ROUNDS[i];
+    el.round.textContent = 'Job ' + (i + 1) + ' / ' + ROUNDS.length;
+    el.par.textContent = r.impossible ? 'Par: none' : 'Par: ' + r.par;
+    el.used.textContent = 'Used: ' + used;
+    el.score.textContent = 'Score: ' + score;
+    el.brief.textContent = r.brief;
+    paintBoxes(touched);
+    renderOps();
+    el.undo.disabled = done || !history.length;
+    el.reset.disabled = done || !history.length;
+    el.cant.disabled = done;
+  }
+
+  function runOp(op) {
+    if (done) return;
+    history.push(JSON.parse(JSON.stringify(state)));
+    state[op[0]] = state[op[1]];
+    used++;
+    logLine(op[0] + ' \u2190 ' + op[1] + '     ' + snapshot());
+    paint(op[0]);
+    var r = ROUNDS[i];
+    if (same(state, r.target, r.vars)) {
+      var atPar = used <= r.par;
+      var award = atPar ? 100 : 50;
+      score += award;
+      solved++;
+      endRound(true, (atPar ? 'Done at par. ' : 'Done in ' + used + ' moves, par was ' + r.par + '. ') + award + ' points.');
+    } else if (used >= CAP) {
+      endRound(false, 'That is ' + CAP + ' assignments without getting there.');
+    }
+  }
+
+  el.cant.addEventListener('click', function () {
+    if (done) return;
+    var r = ROUNDS[i];
+    if (r.impossible) {
+      score += 100;
+      solved++;
+      endRound(true, 'Correct, and that is the point. 100 points.');
+    } else {
+      endRound(false, 'It can be done, in ' + r.par + '.');
+    }
+  });
+
+  function endRound(won, msg) {
+    done = true;
+    paint(null);
+    el.note.innerHTML = '<span class="ss-verdict ' + (won ? 'good' : 'bad') + '">' + msg + '</span> ' + ROUNDS[i].why;
+    el.nextbtn.textContent = (i < ROUNDS.length - 1) ? 'Next job' : 'See your result';
+    el.nextbtn.style.display = 'inline-block';
+  }
+
+  el.undo.addEventListener('click', function () {
+    if (done || !history.length) return;
+    state = history.pop();
+    used--;
+    logLine('undo               ' + snapshot());
+    paint(null);
+  });
+
+  el.reset.addEventListener('click', function () {
+    if (done) return;
+    startRound(true);
+  });
+
+  el.nextbtn.addEventListener('click', function () {
+    if (i < ROUNDS.length - 1) { i++; startRound(false); } else { finish(); }
+  });
+
+  function startRound(isReset) {
+    done = false;
+    used = 0;
+    history = [];
+    state = JSON.parse(JSON.stringify(ROUNDS[i].start));
+    el.log.innerHTML = '';
+    logLine((isReset ? 'back to the start  ' : 'starting values    ') + snapshot());
+    if (!isReset) {
+      el.note.textContent = '';
+      el.nextbtn.style.display = 'none';
+    }
+    paint(null);
+  }
+
+  function finish() {
+    el.play.innerHTML =
+      '<div class="ss-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + solved + ' of ' + ROUNDS.length + ' jobs handled.</p>' +
+        '<div class="ss-teach">' +
+          '<b>An assignment copies, and it destroys.</b> The right side is read and the ' +
+          'left side is overwritten, so reading a variable never empties it and writing to ' +
+          'one always loses whatever it held. That is the whole reason a swap takes three ' +
+          'lines and a temporary variable: park the value you are about to overwrite BEFORE ' +
+          'you overwrite it. Do it in the wrong order and both variables end up holding the ' +
+          'same thing, which you saw, and no amount of further assignment brings the lost ' +
+          'value back, which you also saw. When you trace assignments on the exam, redraw ' +
+          'every variable after every single line.' +
+        '</div>' +
+        '<p><button class="ss-go" id="ss-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('ss-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  startRound(false);
+})();
+</script>

@@ -1,0 +1,318 @@
+<style>
+#sl-game{all:initial!important;display:block!important;box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.55!important;max-width:900px!important;margin:0 auto!important;padding:0 0 8px!important}
+#sl-game *,#sl-game *::before,#sl-game *::after{box-sizing:border-box!important}
+#sl-game .sl-card{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden!important}
+#sl-game .sl-hero{background:linear-gradient(135deg,#7f1d1d,#dc2626)!important;padding:22px 24px!important}
+#sl-game .sl-title{font-size:26px!important;font-weight:800!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1.15!important}
+#sl-game .sl-sub{font-size:15px!important;margin:8px 0 0!important;color:#fee2e2!important;-webkit-text-fill-color:#fee2e2!important}
+#sl-game .sl-bar{display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:14px 24px!important;background:#f8fafc!important;border-bottom:1px solid #e2e8f0!important}
+#sl-game .sl-chip{display:inline-block!important;font-size:13px!important;font-weight:700!important;padding:5px 12px!important;border-radius:100px!important;background:#fff!important;border:1px solid #cbd5e1!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#sl-game .sl-chip.sl-scorechip{background:#dc2626!important;border-color:#dc2626!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#sl-game .sl-body{padding:18px 24px 24px!important}
+#sl-game .sl-how{font-size:14px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;margin:0 0 14px!important}
+#sl-game .sl-brief{background:#fef2f2!important;border:1px solid #fecaca!important;border-radius:12px!important;padding:12px 16px!important;margin-bottom:14px!important;font-size:15px!important;font-weight:700!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important}
+#sl-game .sl-ruler{margin-bottom:14px!important}
+#sl-game .sl-rlabel{font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;display:block!important;margin-bottom:6px!important}
+#sl-game .sl-chars{display:flex!important;flex-wrap:wrap!important;gap:4px!important}
+#sl-game .sl-ch{border:2px solid #cbd5e1!important;border-radius:6px!important;min-width:34px!important;padding:3px 0 1px!important;text-align:center!important;background:#f8fafc!important}
+#sl-game .sl-ch.lit{border-color:#dc2626!important;background:#fee2e2!important}
+#sl-game .sl-chv{display:block!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:17px!important;font-weight:800!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#sl-game .sl-chi{display:block!important;font-size:10px!important;font-weight:700!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important}
+#sl-game .sl-target{font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:20px!important;font-weight:800!important;background:#0f172a!important;color:#fca5a5!important;-webkit-text-fill-color:#fca5a5!important;border-radius:10px!important;padding:14px 16px!important;text-align:center!important;margin-bottom:14px!important;word-break:break-all!important}
+#sl-game .sl-ops{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:10px!important;margin-bottom:14px!important}
+@media (max-width:640px){#sl-game .sl-ops{grid-template-columns:repeat(1,1fr)!important}}
+#sl-game .sl-op{font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:14px!important;font-weight:700!important;padding:12px 10px!important;border-radius:10px!important;border:2px solid #fecaca!important;cursor:pointer!important;background:#fff!important;color:#991b1b!important;-webkit-text-fill-color:#991b1b!important;text-align:left!important}
+#sl-game .sl-op:hover:enabled{background:#fef2f2!important;border-color:#dc2626!important}
+#sl-game .sl-op:disabled{opacity:.5!important;cursor:default!important}
+#sl-game .sl-op.right{background:#16a34a!important;border-color:#16a34a!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#sl-game .sl-op.wrong{background:#dc2626!important;border-color:#dc2626!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#sl-game .sl-bench{display:none!important;border:1px solid #e2e8f0!important;border-radius:12px!important;overflow:hidden!important}
+#sl-game .sl-bench.show{display:block!important}
+#sl-game .sl-bhead{background:#f8fafc!important;padding:8px 14px!important;font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;border-bottom:1px solid #e2e8f0!important}
+#sl-game .sl-row{display:flex!important;align-items:center!important;gap:12px!important;padding:8px 14px!important;border-bottom:1px solid #f1f5f9!important;font-size:13px!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;flex-wrap:wrap!important}
+#sl-game .sl-row:last-child{border-bottom:0!important}
+#sl-game .sl-expr{flex:1 1 220px!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#sl-game .sl-res{font-weight:800!important;color:#991b1b!important;-webkit-text-fill-color:#991b1b!important}
+#sl-game .sl-tag{font-size:11px!important;font-weight:700!important;padding:3px 9px!important;border-radius:100px!important;font-family:-apple-system,BlinkMacSystemFont,sans-serif!important}
+#sl-game .sl-tag.ok{background:#dcfce7!important;color:#15803d!important;-webkit-text-fill-color:#15803d!important}
+#sl-game .sl-tag.no{background:#fee2e2!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#sl-game .sl-go{background:#dc2626!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:0!important;font-family:inherit!important;font-size:15px!important;font-weight:700!important;padding:11px 18px!important;border-radius:10px!important;cursor:pointer!important;margin-top:12px!important}
+#sl-game .sl-note{font-size:14px!important;margin:12px 0 0!important;color:#334155!important;-webkit-text-fill-color:#334155!important;min-height:22px!important}
+#sl-game .sl-verdict{font-weight:800!important}
+#sl-game .sl-verdict.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important}
+#sl-game .sl-verdict.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#sl-game .sl-end{text-align:center!important;padding:8px 0!important}
+#sl-game .sl-end h2{font-size:24px!important;font-weight:800!important;margin:0 0 8px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#sl-game .sl-teach{background:#fef2f2!important;border-left:5px solid #dc2626!important;border-radius:0 10px 10px 0!important;padding:12px 16px!important;margin:14px 0 0!important;font-size:14px!important;text-align:left!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important}
+</style>
+
+<div class="sl-game" id="sl-game">
+  <div class="sl-card">
+    <div class="sl-hero">
+      <h1 class="sl-title">String Lab</h1>
+      <p class="sl-sub">Cut the exact piece of text the job asks for, on a ruler that counts from one</p>
+    </div>
+    <div class="sl-bar">
+      <span class="sl-chip" id="sl-round">Cut 1 / 7</span>
+      <span class="sl-chip" id="sl-right">Correct: 0</span>
+      <span class="sl-chip sl-scorechip" id="sl-score">Score: 0</span>
+    </div>
+    <div class="sl-body" id="sl-play">
+      <p class="sl-how">How to play: the ruler under the text is the index of every character, starting at 1. Pick the expression that produces exactly the target. All four are then run for real, so a call that is one character short shows you which character it missed.</p>
+      <div class="sl-brief" id="sl-brief"></div>
+      <div class="sl-ruler">
+        <span class="sl-rlabel" id="sl-srclabel">word</span>
+        <div class="sl-chars" id="sl-chars"></div>
+      </div>
+      <div class="sl-target" id="sl-target"></div>
+      <div class="sl-ops" id="sl-ops"></div>
+      <div class="sl-bench" id="sl-bench">
+        <div class="sl-bhead">Every candidate, actually run</div>
+        <div id="sl-rows"></div>
+      </div>
+      <p class="sl-note" id="sl-note"></p>
+      <button class="sl-go" id="sl-nextbtn" type="button" style="display:none">Next cut</button>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* String Lab - AP CSP Topic 3.4.
+     AP pseudocode strings are ONE indexed and SUBSTRING(str, start, length)
+     takes a LENGTH, not an end position. Both facts are off-by-one factories,
+     so the ruler above the text prints the index under every character and every
+     candidate is executed rather than described. Nothing here stores an expected
+     answer: the target is computed by running the correct call, and each
+     candidate is compared against that. */
+
+  /* SUBSTRING REFUSES a call that runs past the end or starts before index 1,
+     rather than quietly clamping it. Clamping is what a JavaScript substring
+     does, and it made a distractor return the right answer while the
+     explanation underneath said that call was not valid. In AP pseudocode
+     asking for six characters when five remain is not a shorter string, it is
+     a call that does not work, and the tester has to say so. */
+  function bad(v) { return v !== null && typeof v === 'object'; }
+  function SUBSTRING(s, start, length) {
+    if (start < 1) return { bad: 'there is no index ' + start + ', so it has nowhere to start' };
+    if (length < 0) return { bad: 'a length cannot be negative' };
+    if (start + length - 1 > s.length) {
+      var left = s.length - start + 1;
+      return { bad: 'it asks for ' + plural(length) + ' from index ' + start + ', but only '
+        + (left === 1 ? '1 is' : left + ' are') + ' left' };
+    }
+    return s.substring(start - 1, start - 1 + length);
+  }
+  function CONCAT(a, b) {
+    if (bad(a)) return a;
+    if (bad(b)) return b;
+    return a + b;
+  }
+  function LEN(s) { return s.length; }
+  function show(v) { return bad(v) ? 'not a valid call' : '"' + v + '"'; }
+  function plural(n) { return n + ' character' + (n === 1 ? '' : 's'); }
+
+  var ROUNDS = [
+    { brief: 'Cut the first four characters.',
+      src: 'COMPUTER',
+      correct: { label: 'SUBSTRING(word, 1, 4)', f: function (w) { return SUBSTRING(w, 1, 4); } },
+      others: [
+        { label: 'SUBSTRING(word, 0, 4)', f: function (w) { return SUBSTRING(w, 0, 4); } },
+        { label: 'SUBSTRING(word, 1, 5)', f: function (w) { return SUBSTRING(w, 1, 5); } },
+        { label: 'SUBSTRING(word, 4, 1)', f: function (w) { return SUBSTRING(w, 4, 1); } }
+      ],
+      why: 'The first character is at index 1, and the third argument is a LENGTH. Four characters starting at one. There is no index 0 to start from, so that call is not valid at all.' },
+
+    { brief: 'Cut the three characters in the middle: PUT.',
+      src: 'COMPUTER',
+      correct: { label: 'SUBSTRING(word, 4, 3)', f: function (w) { return SUBSTRING(w, 4, 3); } },
+      others: [
+        { label: 'SUBSTRING(word, 4, 6)', f: function (w) { return SUBSTRING(w, 4, 6); } },
+        { label: 'SUBSTRING(word, 3, 3)', f: function (w) { return SUBSTRING(w, 3, 3); } },
+        { label: 'SUBSTRING(word, 5, 3)', f: function (w) { return SUBSTRING(w, 5, 3); } }
+      ],
+      why: 'P sits at index 4 and you want three characters. Passing 6 asks for a length of six, which is the classic mistake of giving an END position where a LENGTH is expected.' },
+
+    { brief: 'Cut the last two characters.',
+      src: 'COMPUTER',
+      correct: { label: 'SUBSTRING(word, LEN(word) - 1, 2)', f: function (w) { return SUBSTRING(w, LEN(w) - 1, 2); } },
+      others: [
+        { label: 'SUBSTRING(word, LEN(word), 2)', f: function (w) { return SUBSTRING(w, LEN(w), 2); } },
+        { label: 'SUBSTRING(word, LEN(word) - 2, 2)', f: function (w) { return SUBSTRING(w, LEN(w) - 2, 2); } },
+        { label: 'SUBSTRING(word, 2, LEN(word))', f: function (w) { return SUBSTRING(w, 2, LEN(w)); } }
+      ],
+      why: 'To take the last two you start one BEFORE the last, at LEN minus 1. Starting at LEN asks for two characters when only one remains, so that call does not work at all rather than quietly returning a short answer.' },
+
+    { brief: 'Cut everything except the first character.',
+      src: 'SCRIPT',
+      correct: { label: 'SUBSTRING(word, 2, LEN(word) - 1)', f: function (w) { return SUBSTRING(w, 2, LEN(w) - 1); } },
+      others: [
+        { label: 'SUBSTRING(word, 2, LEN(word))', f: function (w) { return SUBSTRING(w, 2, LEN(w)); } },
+        { label: 'SUBSTRING(word, 1, LEN(word) - 1)', f: function (w) { return SUBSTRING(w, 1, LEN(w) - 1); } },
+        { label: 'SUBSTRING(word, 2, 1)', f: function (w) { return SUBSTRING(w, 2, 1); } }
+      ],
+      why: 'Dropping one character from the front leaves LEN minus 1 characters. Asking for LEN of them from index 2 runs off the end, and in AP pseudocode that call is not valid.' },
+
+    { brief: 'Build the word backwards in two halves: put the last three characters in front of the first three.',
+      src: 'CODING',
+      correct: { label: 'CONCAT(SUBSTRING(word, 4, 3), SUBSTRING(word, 1, 3))', f: function (w) { return CONCAT(SUBSTRING(w, 4, 3), SUBSTRING(w, 1, 3)); } },
+      others: [
+        { label: 'CONCAT(SUBSTRING(word, 1, 3), SUBSTRING(word, 4, 3))', f: function (w) { return CONCAT(SUBSTRING(w, 1, 3), SUBSTRING(w, 4, 3)); } },
+        { label: 'CONCAT(SUBSTRING(word, 3, 3), SUBSTRING(word, 1, 3))', f: function (w) { return CONCAT(SUBSTRING(w, 3, 3), SUBSTRING(w, 1, 3)); } },
+        { label: 'CONCAT(SUBSTRING(word, 4, 3), SUBSTRING(word, 1, 4))', f: function (w) { return CONCAT(SUBSTRING(w, 4, 3), SUBSTRING(w, 1, 4)); } }
+      ],
+      why: 'CONCAT joins in the order you write the arguments, and swapping them is a different word. Neither piece is changed by being joined.' },
+
+    { brief: 'Cut the single character at the middle of a five character word.',
+      src: 'CLOUD',
+      correct: { label: 'SUBSTRING(word, 3, 1)', f: function (w) { return SUBSTRING(w, 3, 1); } },
+      others: [
+        { label: 'SUBSTRING(word, 2, 1)', f: function (w) { return SUBSTRING(w, 2, 1); } },
+        { label: 'SUBSTRING(word, 3, 0)', f: function (w) { return SUBSTRING(w, 3, 0); } },
+        { label: 'SUBSTRING(word, 1, 3)', f: function (w) { return SUBSTRING(w, 1, 3); } }
+      ],
+      why: 'A length of 1 takes one character. A length of 0 takes nothing at all, which is an empty string rather than an error, and that is a bug you can stare straight past.' },
+
+    { brief: 'SPOT THE BUG. This was written to take the first half of an eight character word and it produced five characters.',
+      src: 'DATABASE',
+      correct: { label: 'SUBSTRING(word, 1, 4)', f: function (w) { return SUBSTRING(w, 1, 4); } },
+      others: [
+        { label: 'SUBSTRING(word, 1, 5)', f: function (w) { return SUBSTRING(w, 1, 5); } },
+        { label: 'SUBSTRING(word, 0, 4)', f: function (w) { return SUBSTRING(w, 0, 4); } },
+        { label: 'SUBSTRING(word, 2, 4)', f: function (w) { return SUBSTRING(w, 2, 4); } }
+      ],
+      why: 'They counted the end position instead of the length: the first half ends at index 4, and the length is also 4, but writing 5 is what happens when you count "one through four" and then pass the number after it. Half of eight is four characters, starting at one.' }
+  ];
+
+  var el = {};
+  ['round','right','score','brief','srclabel','chars','target','ops','bench','rows','note','nextbtn','play']
+    .forEach(function (k) { el[k] = document.getElementById('sl-' + k); });
+
+  var i = 0, score = 0, correct = 0, answered = false, cands = [];
+
+  /* Candidates are ordered by a per-round rotation so the right answer is not
+     always in the same slot, and the order is fixed rather than random so a
+     round always looks the same to everyone playing it. */
+  function orderFor(r, index) {
+    var all = [r.correct].concat(r.others);
+    var shift = index % all.length;
+    var out = [];
+    for (var k = 0; k < all.length; k++) out.push(all[(k + shift) % all.length]);
+    return out;
+  }
+
+  function render() {
+    answered = false;
+    var r = ROUNDS[i];
+    cands = orderFor(r, i);
+    el.round.textContent = 'Cut ' + (i + 1) + ' / ' + ROUNDS.length;
+    el.right.textContent = 'Correct: ' + correct;
+    el.score.textContent = 'Score: ' + score;
+    el.brief.textContent = r.brief;
+    el.srclabel.textContent = 'word = "' + r.src + '"     LEN(word) = ' + r.src.length;
+    el.chars.innerHTML = '';
+    r.src.split('').forEach(function (c, k) {
+      var d = document.createElement('div');
+      d.className = 'sl-ch';
+      d.innerHTML = '<span class="sl-chv">' + c + '</span><span class="sl-chi">' + (k + 1) + '</span>';
+      el.chars.appendChild(d);
+    });
+    el.target.textContent = 'target:  ' + show(r.correct.f(r.src));
+    el.ops.innerHTML = '';
+    cands.forEach(function (c) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'sl-op';
+      b.textContent = c.label;
+      b.addEventListener('click', function () { choose(c, b); });
+      el.ops.appendChild(b);
+    });
+    el.bench.classList.remove('show');
+    el.rows.innerHTML = '';
+    el.note.textContent = '';
+    el.nextbtn.style.display = 'none';
+  }
+
+  function lightRange(text) {
+    var r = ROUNDS[i];
+    var at = bad(text) ? -1 : r.src.indexOf(text);
+    if (bad(text)) text = '';
+    Array.prototype.forEach.call(el.chars.children, function (d, k) {
+      var on = text.length > 0 && at >= 0 && k >= at && k < at + text.length;
+      d.className = 'sl-ch' + (on ? ' lit' : '');
+    });
+  }
+
+  function choose(cand, btn) {
+    if (answered) return;
+    answered = true;
+    var r = ROUNDS[i];
+    var want = r.correct.f(r.src);
+    var got = cand.f(r.src);
+    var right = (got === want);
+    if (right) { score += 100; correct++; }
+
+    Array.prototype.forEach.call(el.ops.children, function (b, k) {
+      b.disabled = true;
+      if (cands[k].f(r.src) === want) b.className = 'sl-op right';
+    });
+    if (!right) btn.className = 'sl-op wrong';
+
+    el.rows.innerHTML = '';
+    cands.forEach(function (c) {
+      var out = c.f(r.src);
+      var hit = (out === want);
+      var d = document.createElement('div');
+      d.className = 'sl-row';
+      d.innerHTML = '<span class="sl-expr">' + c.label + '</span>'
+        + '<span class="sl-res">' + show(out) + '</span>'
+        + '<span class="sl-tag ' + (hit ? 'ok' : 'no') + '">'
+        + (hit ? 'matches the target'
+               : (bad(out) ? out.bad
+                  : (out.length === 0 ? 'empty string' : plural(out.length)))) + '</span>';
+      el.rows.appendChild(d);
+    });
+    el.bench.classList.add('show');
+    lightRange(got);
+
+    el.score.textContent = 'Score: ' + score;
+    el.right.textContent = 'Correct: ' + correct;
+    el.note.innerHTML = '<span class="sl-verdict ' + (right ? 'good' : 'bad') + '">'
+      + (right ? 'Exact cut. 100 points. '
+               : (bad(got) ? 'That call does not work: ' + got.bad + '. '
+                           : 'That gives "' + got + '". ')) + '</span>' + r.why;
+    el.nextbtn.textContent = (i < ROUNDS.length - 1) ? 'Next cut' : 'See your result';
+    el.nextbtn.style.display = 'inline-block';
+  }
+
+  el.nextbtn.addEventListener('click', function () {
+    if (i < ROUNDS.length - 1) { i++; render(); } else { finish(); }
+  });
+
+  function finish() {
+    el.play.innerHTML =
+      '<div class="sl-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + correct + ' of ' + ROUNDS.length + ' cuts made exactly.</p>' +
+        '<div class="sl-teach">' +
+          '<b>The third argument is a length, not an end position.</b> That single confusion ' +
+          'produces most SUBSTRING mistakes, and it is easy to check: the piece you get back ' +
+          'always has exactly as many characters as the number you passed. Strings in AP ' +
+          'pseudocode also start at index 1, so the last character is at LEN and taking the ' +
+          'final two means starting at LEN minus 1. And a length of zero is not an error, it ' +
+          'is an empty string, which will sail through a program and surface somewhere else ' +
+          'entirely. When a question hands you a string, write the index under every ' +
+          'character before you write anything else.' +
+        '</div>' +
+        '<p><button class="sl-go" id="sl-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('sl-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  render();
+})();
+</script>

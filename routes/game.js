@@ -50,6 +50,26 @@ const REGISTRY = {
   'guess-the-purpose':          { metric: 'score', higher: true, min: 0, max: 10000 },
   'design-sprint':              { metric: 'score', higher: true, min: 0, max: 10000 },
   'bug-squasher':               { metric: 'score', higher: true, min: 0, max: 10000 },
+  // Big Idea 3 study games. None of these topics has a game embedded in its
+  // lesson page, so each ships as its own page.
+  'big-o-race':                 { metric: 'score', higher: true, min: 0, max: 10000 },
+  'halving-hunter':             { metric: 'score', higher: true, min: 0, max: 10000 },
+  'boundary-patrol':            { metric: 'score', higher: true, min: 0, max: 10000 },
+  'gate-keeper':                { metric: 'score', higher: true, min: 0, max: 10000 },
+  'iteration-station':          { metric: 'score', higher: true, min: 0, max: 10000 },
+  'list-surgeon':               { metric: 'score', higher: true, min: 0, max: 10000 },
+  'odds-maker':                 { metric: 'score', higher: true, min: 0, max: 10000 },
+  'halt-or-not':                { metric: 'score', higher: true, min: 0, max: 10000 },
+  'swap-shop':                  { metric: 'score', higher: true, min: 0, max: 10000 },
+  'mod-machine':                { metric: 'score', higher: true, min: 0, max: 10000 },
+  'branch-runner':              { metric: 'score', higher: true, min: 0, max: 10000 },
+  'string-lab':                 { metric: 'score', higher: true, min: 0, max: 10000 },
+  'call-sheet':                 { metric: 'score', higher: true, min: 0, max: 10000 },
+  'name-the-thing':             { metric: 'score', higher: true, min: 0, max: 10000 },
+  'doc-detective':              { metric: 'score', higher: true, min: 0, max: 10000 },
+  'sim-lab':                    { metric: 'score', higher: true, min: 0, max: 10000 },
+  'algorithm-assembler':        { metric: 'score', higher: true, min: 0, max: 10000 },
+  'procedure-shop':             { metric: 'score', higher: true, min: 0, max: 10000 },
 };
 
 const WINDOWS = new Set(['today', 'week', 'month', 'year', 'all']);

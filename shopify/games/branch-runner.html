@@ -1,0 +1,314 @@
+<style>
+#br-game{all:initial!important;display:block!important;box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.55!important;max-width:900px!important;margin:0 auto!important;padding:0 0 8px!important}
+#br-game *,#br-game *::before,#br-game *::after{box-sizing:border-box!important}
+#br-game .br-card{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden!important}
+#br-game .br-hero{background:linear-gradient(135deg,#134e4a,#0f766e)!important;padding:22px 24px!important}
+#br-game .br-title{font-size:26px!important;font-weight:800!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1.15!important}
+#br-game .br-sub{font-size:15px!important;margin:8px 0 0!important;color:#ccfbf1!important;-webkit-text-fill-color:#ccfbf1!important}
+#br-game .br-bar{display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:14px 24px!important;background:#f8fafc!important;border-bottom:1px solid #e2e8f0!important}
+#br-game .br-chip{display:inline-block!important;font-size:13px!important;font-weight:700!important;padding:5px 12px!important;border-radius:100px!important;background:#fff!important;border:1px solid #cbd5e1!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#br-game .br-chip.br-scorechip{background:#0f766e!important;border-color:#0f766e!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#br-game .br-body{padding:18px 24px 24px!important}
+#br-game .br-how{font-size:14px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;margin:0 0 14px!important}
+#br-game .br-brief{background:#f0fdfa!important;border:1px solid #99f6e4!important;border-radius:12px!important;padding:12px 16px!important;margin-bottom:12px!important;font-size:15px!important;font-weight:700!important;color:#134e4a!important;-webkit-text-fill-color:#134e4a!important}
+#br-game .br-vars{display:flex!important;flex-wrap:wrap!important;gap:8px!important;margin-bottom:14px!important}
+#br-game .br-var{font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:14px!important;font-weight:700!important;padding:7px 13px!important;border-radius:8px!important;background:#ecfeff!important;border:2px solid #67e8f9!important;color:#155e75!important;-webkit-text-fill-color:#155e75!important}
+#br-game .br-code{background:#0f172a!important;border-radius:10px!important;padding:14px 10px!important;margin:0 0 14px!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:14px!important;line-height:1.65!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;overflow-x:auto!important}
+#br-game .br-line{display:block!important;padding:1px 10px!important;border-radius:4px!important;white-space:pre!important}
+#br-game .br-line.live{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important}
+#br-game .br-line.hot{background:#0f766e!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:700!important}
+#br-game .br-line.taken{color:#5eead4!important;-webkit-text-fill-color:#5eead4!important}
+#br-game .br-line.dead{color:#475569!important;-webkit-text-fill-color:#475569!important}
+#br-game .br-qa{border:2px solid #99f6e4!important;border-radius:12px!important;padding:12px 14px!important;margin-bottom:12px!important;background:#f0fdfa!important}
+#br-game .br-q{font-size:15px!important;font-weight:700!important;margin:0 0 10px!important;color:#134e4a!important;-webkit-text-fill-color:#134e4a!important}
+#br-game .br-picks{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:10px!important}
+@media (max-width:560px){#br-game .br-picks{grid-template-columns:repeat(1,1fr)!important}}
+#br-game .br-pick{font-family:inherit!important;font-size:14px!important;font-weight:700!important;padding:12px 10px!important;border-radius:10px!important;border:2px solid #cbd5e1!important;cursor:pointer!important;background:#fff!important;color:#134e4a!important;-webkit-text-fill-color:#134e4a!important}
+#br-game .br-pick:hover:enabled{background:#ccfbf1!important;border-color:#0f766e!important}
+#br-game .br-pick:disabled{opacity:.55!important;cursor:default!important}
+#br-game .br-path{border:1px solid #e2e8f0!important;border-radius:10px!important;padding:10px 14px!important;margin-bottom:12px!important;min-height:42px!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#br-game .br-pline{display:block!important}
+#br-game .br-pline.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#br-game .br-out{border-radius:10px!important;padding:12px 16px!important;margin-bottom:12px!important;font-size:16px!important;font-weight:800!important;background:#134e4a!important;color:#fff!important;-webkit-text-fill-color:#fff!important;display:none!important}
+#br-game .br-out.show{display:block!important}
+#br-game .br-go{background:#0f766e!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:0!important;font-family:inherit!important;font-size:15px!important;font-weight:700!important;padding:11px 18px!important;border-radius:10px!important;cursor:pointer!important;margin-top:4px!important}
+#br-game .br-note{font-size:14px!important;margin:12px 0 0!important;color:#334155!important;-webkit-text-fill-color:#334155!important;min-height:22px!important}
+#br-game .br-verdict{font-weight:800!important}
+#br-game .br-verdict.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important}
+#br-game .br-verdict.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#br-game .br-end{text-align:center!important;padding:8px 0!important}
+#br-game .br-end h2{font-size:24px!important;font-weight:800!important;margin:0 0 8px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#br-game .br-teach{background:#f0fdfa!important;border-left:5px solid #0f766e!important;border-radius:0 10px 10px 0!important;padding:12px 16px!important;margin:14px 0 0!important;font-size:14px!important;text-align:left!important;color:#134e4a!important;-webkit-text-fill-color:#134e4a!important}
+</style>
+
+<div class="br-game" id="br-game">
+  <div class="br-card">
+    <div class="br-hero">
+      <h1 class="br-title">Branch Runner</h1>
+      <p class="br-sub">Walk one input down a nest of conditions, one decision at a time, and land where the code actually sends it</p>
+    </div>
+    <div class="br-bar">
+      <span class="br-chip" id="br-round">Run 1 / 7</span>
+      <span class="br-chip" id="br-clean">Clean runs: 0</span>
+      <span class="br-chip br-scorechip" id="br-score">Score: 0</span>
+    </div>
+    <div class="br-body" id="br-play">
+      <p class="br-how">How to play: the highlighted condition is the one being evaluated right now. Say whether it is true or false for these values, and the code walks. A wrong turn is corrected on the spot and the run continues, so you always see where the input really lands.</p>
+      <div class="br-brief" id="br-brief"></div>
+      <div class="br-vars" id="br-vars"></div>
+      <div class="br-code" id="br-code"></div>
+      <div class="br-qa" id="br-qa">
+        <p class="br-q" id="br-q"></p>
+        <div class="br-picks" id="br-picks"></div>
+      </div>
+      <div class="br-path" id="br-path"></div>
+      <div class="br-out" id="br-out"></div>
+      <p class="br-note" id="br-note"></p>
+      <button class="br-go" id="br-nextbtn" type="button" style="display:none">Next run</button>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Branch Runner - AP CSP Topic 3.7.
+     The pseudocode on screen is GENERATED from the same tree the walk evaluates,
+     so the code and the behaviour cannot disagree. A node is either a test with
+     a yes branch and an optional no branch, or a leaf that displays something.
+     A leaf with out set to null displays nothing, which is the only honest way
+     to show run 5: an inner IF with no ELSE does not fall through to the outer
+     ELSE, it falls out of the structure entirely and the program says nothing.
+     Run 7 is the unreachable branch: a condition ordered above a stricter one
+     swallows every input the stricter one was written for. */
+
+  function leaf(out) { return { out: out === undefined ? null : out }; }
+
+  var ROUNDS = [
+    { brief: 'One condition. Where does this customer land?',
+      vars: { age: 15 },
+      tree: { cond: 'age >= 18', test: function (v) { return v.age >= 18; },
+        yes: leaf('Adult ticket'), no: leaf('Youth ticket') },
+      why: 'With one IF and one ELSE, exactly one of the two branches runs. Never both, never neither.' },
+
+    { brief: 'A nest on the ELSE side.',
+      vars: { age: 15, member: true },
+      tree: { cond: 'age >= 18', test: function (v) { return v.age >= 18; },
+        yes: leaf('Adult ticket'),
+        no: { cond: 'member', test: function (v) { return v.member; },
+          yes: leaf('Youth member rate'), no: leaf('Youth ticket') } },
+      why: 'The inner IF is only ever reached when the outer one was false. A nested condition is a question asked inside an answer.' },
+
+    { brief: 'A nest on the true side this time.',
+      vars: { temp: 90, raining: true },
+      tree: { cond: 'temp > 75', test: function (v) { return v.temp > 75; },
+        yes: { cond: 'raining', test: function (v) { return v.raining; },
+          yes: leaf('Hot and wet, stay in'), no: leaf('Beach day') },
+        no: leaf('Bring a sweater') },
+      why: 'Nesting on the true side means the inner question is only asked of inputs that already passed the outer one. Rain never even gets checked when it is cold.' },
+
+    { brief: 'Three levels deep. Take it one condition at a time.',
+      vars: { score: 85, late: true, retake: false },
+      tree: { cond: 'score >= 60', test: function (v) { return v.score >= 60; },
+        yes: { cond: 'late', test: function (v) { return v.late; },
+          yes: { cond: 'retake', test: function (v) { return v.retake; },
+            yes: leaf('Passed, late, retake counted'), no: leaf('Passed, late penalty applied') },
+          no: leaf('Passed, full credit') },
+        no: leaf('Not passing') },
+      why: 'Depth is not difficulty. Each condition is answered with the values in front of you, and only one path exists through any nest.' },
+
+    { brief: 'CAREFUL. The inner IF has no ELSE of its own.',
+      vars: { loggedIn: true, admin: false },
+      /* The inner node deliberately has NO no branch, so the generated code
+         carries no inner ELSE and the walk falls out of the structure. */
+      tree: { cond: 'loggedIn', test: function (v) { return v.loggedIn; },
+        yes: { cond: 'admin', test: function (v) { return v.admin; },
+          yes: leaf('Admin dashboard') },
+        no: leaf('Please sign in') },
+      why: 'The ELSE belongs to the OUTER IF, so a logged-in non-admin does not reach it. The inner IF simply had nothing to do, and the program displayed nothing at all. A user seeing a blank screen is a real bug, and it comes from an ELSE that looks like it covers a case it does not.' },
+
+    { brief: 'A shipping rule with two nests.',
+      vars: { total: 40, member: false, weight: 12 },
+      tree: { cond: 'total >= 35', test: function (v) { return v.total >= 35; },
+        yes: { cond: 'weight > 10', test: function (v) { return v.weight > 10; },
+          yes: leaf('Free shipping, heavy item surcharge'), no: leaf('Free shipping') },
+        no: { cond: 'member', test: function (v) { return v.member; },
+          yes: leaf('Member flat rate'), no: leaf('Standard shipping charge') } },
+      why: 'Four possible endings and the input only ever visits two conditions. That is the point of nesting: questions that do not apply are never asked.' },
+
+    { brief: 'SPOT THE BUG. This is meant to award an A for 90 and above. Walk a 95 through it.',
+      vars: { score: 95 },
+      tree: { cond: 'score >= 60', test: function (v) { return v.score >= 60; },
+        yes: leaf('Pass'),
+        no: { cond: 'score >= 90', test: function (v) { return v.score >= 90; },
+          yes: leaf('A'), no: leaf('Fail') } },
+      why: 'The A branch can never run. Anything scoring 90 or more also scores 60 or more, so the looser condition catches it first and the stricter one below is unreachable code. When conditions overlap, the strictest has to be tested FIRST.' }
+  ];
+
+  var el = {};
+  ['round','clean','score','brief','vars','code','qa','q','picks','path','out','note','nextbtn','play']
+    .forEach(function (k) { el[k] = document.getElementById('br-' + k); });
+
+  var i = 0, score = 0, clean = 0;
+  var node = null, wrongTurns = 0, lines = [], finished = false;
+
+  /* Build the pseudocode from the tree, tagging each line with the node it
+     belongs to so the walk can highlight without a second source of truth. */
+  function build(n, depth, path, out) {
+    var pad = '  '.repeat(depth);
+    if (!n.cond) {
+      out.push({ text: pad + (n.out === null ? '(nothing happens here)' : 'DISPLAY("' + n.out + '")'), path: path, leaf: true });
+      return out;
+    }
+    out.push({ text: pad + 'IF (' + n.cond + ')', path: path, cond: true });
+    out.push({ text: pad + '{', path: path });
+    build(n.yes, depth + 1, path + 'y', out);
+    out.push({ text: pad + '}', path: path });
+    if (n.no) {
+      out.push({ text: pad + 'ELSE', path: path, els: true });
+      out.push({ text: pad + '{', path: path });
+      build(n.no, depth + 1, path + 'n', out);
+      out.push({ text: pad + '}', path: path });
+    }
+    return out;
+  }
+
+  var here = '';
+
+  function nodeAt(p) {
+    var n = ROUNDS[i].tree;
+    for (var k = 0; k < p.length; k++) n = (p[k] === 'y') ? n.yes : n.no;
+    return n;
+  }
+
+  function paintCode() {
+    el.code.innerHTML = lines.map(function (l) {
+      var cls = 'br-line';
+      if (l.path === here && l.cond) cls += ' hot';
+      else if (here.indexOf(l.path) === 0 && l.path.length <= here.length) cls += ' taken';
+      else if (l.path.indexOf(here) === 0) cls += ' live';
+      else cls += ' dead';
+      return '<span class="' + cls + '">' + l.text + '</span>';
+    }).join('');
+  }
+
+  function pathLine(t, bad) {
+    var s = document.createElement('span');
+    s.className = 'br-pline' + (bad ? ' bad' : '');
+    s.textContent = t;
+    el.path.appendChild(s);
+  }
+
+  function askOrFinish() {
+    var n = nodeAt(here);
+    if (!n.cond) {
+      finishRun(n);
+      return;
+    }
+    el.qa.style.display = 'block';
+    el.q.textContent = 'Is  ' + n.cond + '  true or false for these values?';
+    el.picks.innerHTML = '';
+    [['true, go inside the IF', true], ['false, take the ELSE', false]].forEach(function (c) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'br-pick';
+      b.textContent = c[0];
+      b.addEventListener('click', function () { answer(c[1]); });
+      el.picks.appendChild(b);
+    });
+    if (!n.no) el.picks.children[1].textContent = 'false, and there is no ELSE here';
+    paintCode();
+  }
+
+  function answer(saidTrue) {
+    var r = ROUNDS[i];
+    var n = nodeAt(here);
+    var truth = n.test(r.vars);
+    if (saidTrue !== truth) {
+      wrongTurns++;
+      pathLine(n.cond + '  you said ' + saidTrue + ', it is ' + truth, true);
+    } else {
+      pathLine(n.cond + '  is ' + truth, false);
+    }
+    if (truth) here += 'y';
+    else if (n.no) here += 'n';
+    else { finishRun(leaf()); return; }
+    askOrFinish();
+  }
+
+  function finishRun(leafNode) {
+    finished = true;
+    el.qa.style.display = 'none';
+    paintCode();
+    el.out.className = 'br-out show';
+    el.out.textContent = leafNode.out === null
+      ? 'The program displays nothing at all.'
+      : 'The program displays: ' + leafNode.out;
+    var award = wrongTurns === 0 ? 100 : (wrongTurns === 1 ? 50 : 0);
+    score += award;
+    if (wrongTurns === 0) clean++;
+    el.score.textContent = 'Score: ' + score;
+    el.clean.textContent = 'Clean runs: ' + clean;
+    el.note.innerHTML = '<span class="br-verdict ' + (wrongTurns === 0 ? 'good' : 'bad') + '">'
+      + (wrongTurns === 0 ? 'Clean run. 100 points. '
+         : wrongTurns + ' wrong turn' + (wrongTurns === 1 ? '' : 's') + '. ' + award + ' points. ')
+      + '</span>' + ROUNDS[i].why;
+    el.nextbtn.textContent = (i < ROUNDS.length - 1) ? 'Next run' : 'See your result';
+    el.nextbtn.style.display = 'inline-block';
+  }
+
+  function render() {
+    var r = ROUNDS[i];
+    here = '';
+    wrongTurns = 0;
+    finished = false;
+    lines = build(r.tree, 0, '', []);
+    el.round.textContent = 'Run ' + (i + 1) + ' / ' + ROUNDS.length;
+    el.clean.textContent = 'Clean runs: ' + clean;
+    el.score.textContent = 'Score: ' + score;
+    el.brief.textContent = r.brief;
+    el.vars.innerHTML = '';
+    Object.keys(r.vars).forEach(function (k) {
+      var d = document.createElement('span');
+      d.className = 'br-var';
+      d.textContent = k + ' = ' + r.vars[k];
+      el.vars.appendChild(d);
+    });
+    el.path.innerHTML = '';
+    el.out.className = 'br-out';
+    el.out.textContent = '';
+    el.note.textContent = '';
+    el.nextbtn.style.display = 'none';
+    askOrFinish();
+  }
+
+  el.nextbtn.addEventListener('click', function () {
+    if (i < ROUNDS.length - 1) { i++; render(); } else { finish(); }
+  });
+
+  function finish() {
+    el.play.innerHTML =
+      '<div class="br-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + clean + ' of ' + ROUNDS.length + ' runs walked without a wrong turn.</p>' +
+        '<div class="br-teach">' +
+          '<b>An ELSE belongs to exactly one IF, and it is not always the one you meant.</b> ' +
+          'An inner IF with no ELSE of its own does not fall through to the outer ELSE: it ' +
+          'falls out of the structure and the program does nothing, which is a blank screen ' +
+          'rather than an error message. The other trap is order. When two conditions ' +
+          'overlap, whichever is tested first wins every input they share, so a loose ' +
+          'condition placed above a strict one makes the strict branch unreachable code. ' +
+          'Test the strictest condition first. And when you trace a nest on paper, follow ' +
+          'ONE path down: an input never visits both sides of an IF.' +
+        '</div>' +
+        '<p><button class="br-go" id="br-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('br-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  render();
+})();
+</script>

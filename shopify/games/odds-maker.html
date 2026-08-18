@@ -1,0 +1,271 @@
+<style>
+#om-game{all:initial!important;display:block!important;box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.55!important;max-width:900px!important;margin:0 auto!important;padding:0 0 8px!important}
+#om-game *,#om-game *::before,#om-game *::after{box-sizing:border-box!important}
+#om-game .om-card{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden!important}
+#om-game .om-hero{background:linear-gradient(135deg,#7c2d12,#f59e0b)!important;padding:22px 24px!important}
+#om-game .om-title{font-size:26px!important;font-weight:800!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1.15!important}
+#om-game .om-sub{font-size:15px!important;margin:8px 0 0!important;color:#fef3c7!important;-webkit-text-fill-color:#fef3c7!important}
+#om-game .om-bar{display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:14px 24px!important;background:#f8fafc!important;border-bottom:1px solid #e2e8f0!important}
+#om-game .om-chip{display:inline-block!important;font-size:13px!important;font-weight:700!important;padding:5px 12px!important;border-radius:100px!important;background:#fff!important;border:1px solid #cbd5e1!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#om-game .om-chip.om-scorechip{background:#f59e0b!important;border-color:#f59e0b!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a!important}
+#om-game .om-body{padding:18px 24px 24px!important}
+#om-game .om-how{font-size:14px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;margin:0 0 14px!important}
+#om-game .om-ask{font-size:16px!important;font-weight:700!important;margin:0 0 12px!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important}
+#om-game .om-code{background:#0f172a!important;border-radius:10px!important;padding:16px 18px!important;margin:0 0 14px!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:14px!important;line-height:1.7!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;overflow-x:auto!important}
+#om-game .om-codeline{display:block!important;white-space:pre!important}
+#om-game .om-guess{display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:8px!important;margin-bottom:14px!important}
+#om-game .om-step{font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:15px!important;font-weight:700!important;padding:10px 14px!important;border-radius:8px!important;border:2px solid #fde68a!important;cursor:pointer!important;background:#fff!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important}
+#om-game .om-step:hover:enabled{background:#fffbeb!important}
+#om-game .om-step:disabled{opacity:.5!important;cursor:default!important}
+#om-game .om-readout{font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:24px!important;font-weight:800!important;min-width:110px!important;text-align:center!important;padding:8px 14px!important;border-radius:10px!important;background:#fffbeb!important;border:2px solid #f59e0b!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important}
+#om-game .om-track{position:relative!important;height:44px!important;border:1px solid #e2e8f0!important;border-radius:10px!important;background:#f8fafc!important;overflow:hidden!important;margin-bottom:6px!important}
+/* width is set from script as the trials run, so it must NOT be !important
+   here: an inline style loses to an !important rule and the bar would stay
+   empty at every trial count. */
+#om-game .om-fill{position:absolute!important;left:0!important;top:0!important;bottom:0!important;width:0;background:linear-gradient(90deg,#f59e0b,#d97706)!important}
+#om-game .om-mark{position:absolute!important;top:0!important;bottom:0!important;width:3px!important;background:#1d4ed8!important}
+#om-game .om-marklab{position:absolute!important;top:2px!important;font-size:10px!important;font-weight:800!important;color:#1d4ed8!important;-webkit-text-fill-color:#1d4ed8!important;transform:translateX(-50%)!important}
+#om-game .om-live{position:absolute!important;right:10px!important;top:11px!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:16px!important;font-weight:800!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a!important}
+#om-game .om-scale{display:grid!important;grid-template-columns:repeat(5,1fr)!important;font-size:11px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:14px!important}
+#om-game .om-scale span{text-align:left!important}
+#om-game .om-trials{font-size:13px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:0 0 10px!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important}
+#om-game .om-go{background:#f59e0b!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a!important;border:0!important;font-family:inherit!important;font-size:15px!important;font-weight:800!important;padding:11px 18px!important;border-radius:10px!important;cursor:pointer!important;margin-right:8px!important}
+#om-game .om-go:disabled{opacity:.5!important;cursor:default!important}
+#om-game .om-note{font-size:14px!important;margin:12px 0 0!important;color:#334155!important;-webkit-text-fill-color:#334155!important;min-height:22px!important}
+#om-game .om-verdict{font-weight:800!important}
+#om-game .om-verdict.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important}
+#om-game .om-verdict.near{color:#a16207!important;-webkit-text-fill-color:#a16207!important}
+#om-game .om-verdict.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#om-game .om-end{text-align:center!important;padding:8px 0!important}
+#om-game .om-end h2{font-size:24px!important;font-weight:800!important;margin:0 0 8px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#om-game .om-teach{background:#fffbeb!important;border-left:5px solid #f59e0b!important;border-radius:0 10px 10px 0!important;padding:12px 16px!important;margin:14px 0 0!important;font-size:14px!important;text-align:left!important;color:#7c2d12!important;-webkit-text-fill-color:#7c2d12!important}
+</style>
+
+<div class="om-game" id="om-game">
+  <div class="om-card">
+    <div class="om-hero">
+      <h1 class="om-title">Odds Maker</h1>
+      <p class="om-sub">Call the odds before the machine runs, then watch two thousand trials decide whether you were right</p>
+    </div>
+    <div class="om-bar">
+      <span class="om-chip" id="om-round">Bet 1 / 7</span>
+      <span class="om-chip" id="om-exact">Exact: 0</span>
+      <span class="om-chip om-scorechip" id="om-score">Score: 0</span>
+    </div>
+    <div class="om-body" id="om-play">
+      <p class="om-how">How to play: work out what share of runs the code prints HIT, dial it in, then start the trials. Exact is 100 points, within five points is 50. The bar is what actually happened; the blue line is what you called. Watch how far the bar swings early and how it settles.</p>
+      <p class="om-ask" id="om-ask"></p>
+      <div class="om-code" id="om-code"></div>
+      <div class="om-guess">
+        <button class="om-step" id="om-m25" type="button">-25</button>
+        <button class="om-step" id="om-m5" type="button">-5</button>
+        <span class="om-readout" id="om-readout">50%</span>
+        <button class="om-step" id="om-p5" type="button">+5</button>
+        <button class="om-step" id="om-p25" type="button">+25</button>
+      </div>
+      <div class="om-track" id="om-track">
+        <div class="om-fill" id="om-fill"></div>
+        <div class="om-mark" id="om-mark"></div>
+        <span class="om-marklab" id="om-marklab">you</span>
+        <span class="om-live" id="om-live"></span>
+      </div>
+      <div class="om-scale"><span>0%</span><span>20%</span><span>40%</span><span>60%</span><span>80%</span></div>
+      <p class="om-trials" id="om-trials">trials run: 0</p>
+      <button class="om-go" id="om-runbtn" type="button">Run 2000 trials</button>
+      <button class="om-go" id="om-nextbtn" type="button" style="display:none">Next bet</button>
+      <p class="om-note" id="om-note"></p>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Odds Maker - AP CSP Topic 3.15.
+     Every round's true probability is a clean multiple of 5 so the answer is
+     reachable on a five point dial and there is no rounding to argue with. The
+     simulation is not decoration: the bar swings hard for the first few hundred
+     trials and settles near the true value by two thousand, which is the only
+     honest way to show what "random" means for a single run versus many.
+     RANDOM(a, b) INCLUDES both ends. That one fact decides rounds 1, 5 and 6,
+     and it is the single most common mistake on this topic. */
+
+  function rnd(a, b) {
+    return a + Math.floor(Math.random() * (b - a + 1));
+  }
+
+  var ROUNDS = [
+    { ask: 'What share of runs prints HIT?',
+      code: ['n \u2190 RANDOM(1, 4)', 'IF (n = 1)', '{', '  DISPLAY("HIT")', '}'],
+      trial: function () { return rnd(1, 4) === 1; },
+      pct: 25,
+      why: 'RANDOM(1, 4) can return 1, 2, 3 or 4. That is four outcomes, each equally likely, and one of them is a hit.' },
+
+    { ask: 'What share of runs prints HIT?',
+      code: ['n \u2190 RANDOM(1, 10)', 'IF (n \u2265 8)', '{', '  DISPLAY("HIT")', '}'],
+      trial: function () { return rnd(1, 10) >= 8; },
+      pct: 30,
+      why: 'Eight, nine and ten are hits. Three out of ten. Counting 10 minus 8 and saying two is the trap.' },
+
+    { ask: 'What share of runs prints HIT?',
+      code: ['n \u2190 RANDOM(1, 6)', 'IF (n MOD 2 = 0)', '{', '  DISPLAY("HIT")', '}'],
+      trial: function () { return rnd(1, 6) % 2 === 0; },
+      pct: 50,
+      why: 'Three of the six faces are even. A die is a fair coin if you only ask it one yes-or-no question.' },
+
+    { ask: 'Two separate draws. What share of runs prints HIT?',
+      code: ['a \u2190 RANDOM(1, 2)', 'b \u2190 RANDOM(1, 2)', 'IF (a = 1 AND b = 1)', '{', '  DISPLAY("HIT")', '}'],
+      trial: function () { return rnd(1, 2) === 1 && rnd(1, 2) === 1; },
+      pct: 25,
+      why: 'Each draw is a coin, and the second one has no memory of the first. Half of a half is a quarter, which is why two independent conditions multiply rather than add.' },
+
+    { ask: 'What share of runs prints HIT?',
+      code: ['n \u2190 RANDOM(1, 5)', 'IF (NOT (n = 3))', '{', '  DISPLAY("HIT")', '}'],
+      trial: function () { return !(rnd(1, 5) === 3); },
+      pct: 80,
+      why: 'Four of the five values are not 3. When the miss is easier to count than the hit, count the miss and subtract.' },
+
+    { ask: 'Careful with the range. What share of runs prints HIT?',
+      code: ['n \u2190 RANDOM(0, 4)', 'IF (n = 0)', '{', '  DISPLAY("HIT")', '}'],
+      trial: function () { return rnd(0, 4) === 0; },
+      pct: 20,
+      why: 'RANDOM(0, 4) has FIVE outcomes, not four: zero counts. The number of values from a to b is b minus a plus one, and forgetting the plus one is the most common error on this topic.' },
+
+    { ask: 'SPOT THE BUG. This was meant to be a fair coin. What share of runs actually prints HIT?',
+      code: ['IF (RANDOM(1, 2) = 1 OR RANDOM(1, 2) = 1)', '{', '  DISPLAY("HIT")', '}'],
+      trial: function () { return rnd(1, 2) === 1 || rnd(1, 2) === 1; },
+      pct: 75,
+      why: 'Writing RANDOM twice rolls twice. The coin only comes up tails when BOTH draws miss, which is a quarter of the time, so it prints HIT three runs in four. Store a random value in a variable if you intend to use it twice.' }
+  ];
+
+  var TRIALS = 2000;
+  var CHUNK = 25;
+
+  var el = {};
+  ['round','exact','score','ask','code','readout','track','fill','mark','marklab','live','trials',
+   'runbtn','nextbtn','note','play','m25','m5','p5','p25'].forEach(function (k) {
+    el[k] = document.getElementById('om-' + k);
+  });
+
+  var i = 0, score = 0, exact = 0, guess = 50, running = false, decided = false, timer = null;
+
+  function setSteps(on) {
+    [el.m25, el.m5, el.p5, el.p25].forEach(function (b) { b.disabled = !on; });
+  }
+
+  function placeMark() {
+    el.mark.style.left = guess + '%';
+    el.marklab.style.left = guess + '%';
+  }
+
+  function render() {
+    running = false; decided = false; guess = 50;
+    if (timer) { clearInterval(timer); timer = null; }
+    el.round.textContent = 'Bet ' + (i + 1) + ' / ' + ROUNDS.length;
+    el.exact.textContent = 'Exact: ' + exact;
+    el.score.textContent = 'Score: ' + score;
+    el.ask.textContent = ROUNDS[i].ask;
+    el.code.innerHTML = ROUNDS[i].code.map(function (l) {
+      return '<span class="om-codeline">' + l + '</span>';
+    }).join('');
+    el.readout.textContent = '50%';
+    el.fill.style.width = '0%';
+    el.live.textContent = '';
+    el.trials.textContent = 'trials run: 0';
+    el.note.textContent = '';
+    el.runbtn.disabled = false;
+    el.runbtn.style.display = 'inline-block';
+    el.nextbtn.style.display = 'none';
+    setSteps(true);
+    placeMark();
+  }
+
+  function bump(d) {
+    if (running || decided) return;
+    guess += d;
+    if (guess > 100) guess = 100;
+    if (guess < 0) guess = 0;
+    el.readout.textContent = guess + '%';
+    placeMark();
+  }
+  el.m25.addEventListener('click', function () { bump(-25); });
+  el.m5.addEventListener('click', function () { bump(-5); });
+  el.p5.addEventListener('click', function () { bump(5); });
+  el.p25.addEventListener('click', function () { bump(25); });
+
+  el.runbtn.addEventListener('click', function () {
+    if (running || decided) return;
+    running = true;
+    setSteps(false);
+    el.runbtn.disabled = true;
+    var hits = 0, n = 0;
+    var r = ROUNDS[i];
+    timer = setInterval(function () {
+      for (var k = 0; k < CHUNK && n < TRIALS; k++) {
+        if (r.trial()) hits++;
+        n++;
+      }
+      var pct = (hits / n) * 100;
+      el.fill.style.width = pct.toFixed(1) + '%';
+      el.live.textContent = pct.toFixed(1) + '%';
+      el.trials.textContent = 'trials run: ' + n;
+      if (n >= TRIALS) {
+        clearInterval(timer);
+        timer = null;
+        settle(pct);
+      }
+    }, 24);
+  });
+
+  function settle(observed) {
+    running = false;
+    decided = true;
+    var r = ROUNDS[i];
+    var off = Math.abs(guess - r.pct);
+    var cls = off === 0 ? 'good' : (off <= 5 ? 'near' : 'bad');
+    var award = off === 0 ? 100 : (off <= 5 ? 50 : 0);
+    score += award;
+    if (off === 0) exact++;
+    el.score.textContent = 'Score: ' + score;
+    el.exact.textContent = 'Exact: ' + exact;
+    var head = off === 0 ? 'Exact. 100 points. '
+      : (off <= 5 ? 'Within five points. 50 points. ' : 'You called ' + guess + '%. ');
+    el.note.innerHTML = '<span class="om-verdict ' + cls + '">' + head + '</span>'
+      + 'The true figure is ' + r.pct + '%, and 2000 trials landed on '
+      + observed.toFixed(1) + '%. ' + r.why;
+    el.runbtn.style.display = 'none';
+    el.nextbtn.textContent = (i < ROUNDS.length - 1) ? 'Next bet' : 'See your result';
+    el.nextbtn.style.display = 'inline-block';
+  }
+
+  el.nextbtn.addEventListener('click', function () {
+    if (i < ROUNDS.length - 1) { i++; render(); } else { finish(); }
+  });
+
+  function finish() {
+    if (timer) { clearInterval(timer); timer = null; }
+    el.play.innerHTML =
+      '<div class="om-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + exact + ' of ' + ROUNDS.length + ' called exactly.</p>' +
+        '<div class="om-teach">' +
+          '<b>Count the outcomes, then count the hits.</b> RANDOM(a, b) includes both ' +
+          'ends, so it has b minus a plus one outcomes, and dropping that plus one is the ' +
+          'error this topic is built to catch. Conditions on separate draws multiply, ' +
+          'because the second draw has never heard of the first. And writing RANDOM twice ' +
+          'in one line rolls twice: if you mean to use one random value in two places, put ' +
+          'it in a variable. You also watched the bar swing wildly for the first few hundred ' +
+          'trials and settle by two thousand. That is what a probability actually claims. It ' +
+          'says nothing at all about the next single run.' +
+        '</div>' +
+        '<p><button class="om-go" id="om-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('om-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  render();
+})();
+</script>

@@ -1,0 +1,311 @@
+<style>
+#dd-game{all:initial!important;display:block!important;box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.55!important;max-width:900px!important;margin:0 auto!important;padding:0 0 8px!important}
+#dd-game *,#dd-game *::before,#dd-game *::after{box-sizing:border-box!important}
+#dd-game .dd-card{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden!important}
+#dd-game .dd-hero{background:linear-gradient(135deg,#3f3f46,#71717a)!important;padding:22px 24px!important}
+#dd-game .dd-title{font-size:26px!important;font-weight:800!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1.15!important}
+#dd-game .dd-sub{font-size:15px!important;margin:8px 0 0!important;color:#e4e4e7!important;-webkit-text-fill-color:#e4e4e7!important}
+#dd-game .dd-bar{display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:14px 24px!important;background:#f8fafc!important;border-bottom:1px solid #e2e8f0!important}
+#dd-game .dd-chip{display:inline-block!important;font-size:13px!important;font-weight:700!important;padding:5px 12px!important;border-radius:100px!important;background:#fff!important;border:1px solid #cbd5e1!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#dd-game .dd-chip.dd-scorechip{background:#52525b!important;border-color:#52525b!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#dd-game .dd-body{padding:18px 24px 24px!important}
+#dd-game .dd-how{font-size:14px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;margin:0 0 14px!important}
+#dd-game .dd-brief{background:#fafafa!important;border:1px solid #d4d4d8!important;border-left:5px solid #52525b!important;border-radius:0 12px 12px 0!important;padding:12px 16px!important;margin-bottom:14px!important;font-size:15px!important;font-weight:700!important;color:#27272a!important;-webkit-text-fill-color:#27272a!important}
+#dd-game .dd-doc{border:1px solid #e2e8f0!important;border-radius:12px!important;overflow:hidden!important;margin-bottom:14px!important}
+#dd-game .dd-dochead{background:#f4f4f5!important;padding:8px 14px!important;font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#52525b!important;-webkit-text-fill-color:#52525b!important;border-bottom:1px solid #e2e8f0!important}
+#dd-game .dd-entry{padding:10px 14px!important;border-bottom:1px solid #f4f4f5!important}
+#dd-game .dd-entry:last-child{border-bottom:0!important}
+#dd-game .dd-sig{font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:14px!important;font-weight:800!important;color:#18181b!important;-webkit-text-fill-color:#18181b!important;display:block!important}
+#dd-game .dd-desc{font-size:13px!important;color:#52525b!important;-webkit-text-fill-color:#52525b!important;display:block!important;margin-top:2px!important}
+#dd-game .dd-opts{display:grid!important;grid-template-columns:repeat(1,1fr)!important;gap:9px!important;margin-bottom:12px!important}
+#dd-game .dd-opt{font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:14px!important;font-weight:700!important;padding:12px 12px!important;border-radius:10px!important;border:2px solid #d4d4d8!important;cursor:pointer!important;background:#fff!important;color:#27272a!important;-webkit-text-fill-color:#27272a!important;text-align:left!important}
+#dd-game .dd-opt:hover:enabled{background:#fafafa!important;border-color:#71717a!important}
+#dd-game .dd-opt:disabled{opacity:.55!important;cursor:default!important}
+#dd-game .dd-opt.right{background:#16a34a!important;border-color:#16a34a!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#dd-game .dd-opt.wrong{background:#dc2626!important;border-color:#dc2626!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#dd-game .dd-run{display:none!important;background:#18181b!important;border-radius:10px!important;padding:12px 16px!important;margin-bottom:12px!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:14px!important;color:#e4e4e7!important;-webkit-text-fill-color:#e4e4e7!important}
+#dd-game .dd-run.show{display:block!important}
+#dd-game .dd-runline{display:block!important}
+#dd-game .dd-runline.ok{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important}
+#dd-game .dd-runline.no{color:#f87171!important;-webkit-text-fill-color:#f87171!important}
+#dd-game .dd-go{background:#52525b!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:0!important;font-family:inherit!important;font-size:15px!important;font-weight:700!important;padding:11px 18px!important;border-radius:10px!important;cursor:pointer!important;margin-top:4px!important}
+#dd-game .dd-note{font-size:14px!important;margin:12px 0 0!important;color:#334155!important;-webkit-text-fill-color:#334155!important;min-height:22px!important}
+#dd-game .dd-verdict{font-weight:800!important}
+#dd-game .dd-verdict.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important}
+#dd-game .dd-verdict.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#dd-game .dd-end{text-align:center!important;padding:8px 0!important}
+#dd-game .dd-end h2{font-size:24px!important;font-weight:800!important;margin:0 0 8px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#dd-game .dd-teach{background:#fafafa!important;border-left:5px solid #52525b!important;border-radius:0 10px 10px 0!important;padding:12px 16px!important;margin:14px 0 0!important;font-size:14px!important;text-align:left!important;color:#27272a!important;-webkit-text-fill-color:#27272a!important}
+</style>
+
+<div class="dd-game" id="dd-game">
+  <div class="dd-card">
+    <div class="dd-hero">
+      <h1 class="dd-title">Doc Detective</h1>
+      <p class="dd-sub">You did not write this library and you cannot see inside it. The documentation is all you get, so read it</p>
+    </div>
+    <div class="dd-bar">
+      <span class="dd-chip" id="dd-round">Job 1 / 7</span>
+      <span class="dd-chip" id="dd-right">Correct: 0</span>
+      <span class="dd-chip dd-scorechip" id="dd-score">Score: 0</span>
+    </div>
+    <div class="dd-body" id="dd-play">
+      <p class="dd-how">How to play: read the library documentation, then pick the call that does the job. The call is then actually run against the library, so a wrong pick shows you what it really returned rather than what its name suggested.</p>
+      <div class="dd-brief" id="dd-brief"></div>
+      <div class="dd-doc">
+        <div class="dd-dochead" id="dd-dochead">Library documentation</div>
+        <div id="dd-entries"></div>
+      </div>
+      <div class="dd-opts" id="dd-opts"></div>
+      <div class="dd-run" id="dd-run"></div>
+      <p class="dd-note" id="dd-note"></p>
+      <button class="dd-go" id="dd-nextbtn" type="button" style="display:none">Next job</button>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Doc Detective - AP CSP Topic 3.14.
+     Using a library means trusting a description of behaviour you cannot see,
+     so every option here is EXECUTED against a real implementation and the
+     result printed. The name of a procedure is the least reliable thing about
+     it: job 3 has one whose name reads backwards from what it does, job 5
+     needs two calls composed because no single entry covers the job, and job 7
+     is a call that succeeds and returns the wrong thing, which documentation
+     would have caught and testing one convenient input would not. */
+
+  var ROUNDS = [
+    { brief: 'You need the number of items in the list.',
+      doc: [
+        { sig: 'SIZE(list)', desc: 'Returns how many elements the list contains.' },
+        { sig: 'FIRST(list)', desc: 'Returns the element at position 1.' },
+        { sig: 'TOTAL(list)', desc: 'Returns the sum of all the elements.' }
+      ],
+      given: 'list = 4, 4, 4',
+      opts: [
+        { call: 'SIZE(list)', f: function (L) { return L.length; } },
+        { call: 'TOTAL(list)', f: function (L) { return L.reduce(function (a, b) { return a + b; }, 0); } },
+        { call: 'FIRST(list)', f: function (L) { return L[0]; } }
+      ],
+      want: 3, answer: 'SIZE(list)',
+      why: 'A list of three 4s makes SIZE, TOTAL and FIRST return 3, 12 and 4. Any list where they would all agree is a list that cannot tell you which one you called.' },
+
+    { brief: 'You need the average of the list.',
+      doc: [
+        { sig: 'SIZE(list)', desc: 'Returns how many elements the list contains.' },
+        { sig: 'TOTAL(list)', desc: 'Returns the sum of all the elements.' },
+        { sig: 'MIDDLE(list)', desc: 'Returns the element in the middle position. This is NOT the average.' }
+      ],
+      given: 'list = 2, 100, 3',
+      opts: [
+        { call: 'TOTAL(list) / SIZE(list)', f: function (L) { return L.reduce(function (a, b) { return a + b; }, 0) / L.length; } },
+        { call: 'MIDDLE(list)', f: function (L) { return L[Math.floor(L.length / 2)]; } },
+        { call: 'SIZE(list) / TOTAL(list)', f: function (L) { return L.length / L.reduce(function (a, b) { return a + b; }, 0); } }
+      ],
+      want: 35, answer: 'TOTAL(list) / SIZE(list)',
+      why: 'The library has no average, so you build one from the parts it does have. MIDDLE is a positional idea that has nothing to do with the average, and the documentation says so outright.' },
+
+    { brief: 'CAREFUL. You need the price with the discount taken OFF.',
+      doc: [
+        { sig: 'DISCOUNT(price, pct)', desc: 'Returns the SIZE OF THE DISCOUNT, not the new price. Read this twice.' },
+        { sig: 'REDUCE(price, pct)', desc: 'Returns the price after the discount has been subtracted.' },
+        { sig: 'MARKUP(price, pct)', desc: 'Returns the price with the percentage added on.' }
+      ],
+      given: 'price = 80, pct = 25',
+      opts: [
+        { call: 'REDUCE(price, pct)', f: function (p, c) { return p - p * c / 100; } },
+        { call: 'DISCOUNT(price, pct)', f: function (p, c) { return p * c / 100; } },
+        { call: 'MARKUP(price, pct)', f: function (p, c) { return p + p * c / 100; } }
+      ],
+      args: [80, 25],
+      want: 60, answer: 'REDUCE(price, pct)',
+      why: 'DISCOUNT sounds exactly like the thing you wanted and returns something else entirely. A name is a hint written by someone else; the description is the contract.' },
+
+    { brief: 'You need the last element of the list.',
+      doc: [
+        { sig: 'SIZE(list)', desc: 'Returns how many elements the list contains.' },
+        { sig: 'AT(list, index)', desc: 'Returns the element at that position. The first element is at index 1.' },
+        { sig: 'FIRST(list)', desc: 'Returns the element at position 1.' }
+      ],
+      given: 'list = 7, 9, 2, 5',
+      opts: [
+        { call: 'AT(list, SIZE(list))', f: function (L) { return L[L.length - 1]; } },
+        { call: 'AT(list, SIZE(list) - 1)', f: function (L) { return L[L.length - 2]; } },
+        { call: 'AT(list, 0)', f: function () { return 'error: there is no index 0'; } }
+      ],
+      want: 5, answer: 'AT(list, SIZE(list))',
+      why: 'The documentation says indexing starts at 1, so the last element sits at SIZE, not at SIZE minus 1 and certainly not at 0. Every library states this somewhere, and it is the first thing to look up.' },
+
+    { brief: 'You need the number of MINUTES left over after whole hours. There is no single call for it.',
+      doc: [
+        { sig: 'HOURS(mins)', desc: 'Returns the number of whole hours in that many minutes.' },
+        { sig: 'TIMES(a, b)', desc: 'Returns a multiplied by b.' },
+        { sig: 'MINUS(a, b)', desc: 'Returns a minus b.' }
+      ],
+      given: 'mins = 135',
+      opts: [
+        { call: 'MINUS(mins, TIMES(HOURS(mins), 60))', f: function (m) { return m - Math.floor(m / 60) * 60; } },
+        { call: 'MINUS(mins, HOURS(mins))', f: function (m) { return m - Math.floor(m / 60); } },
+        { call: 'HOURS(mins)', f: function (m) { return Math.floor(m / 60); } }
+      ],
+      args: [135],
+      want: 15, answer: 'MINUS(mins, TIMES(HOURS(mins), 60))',
+      why: 'No entry does this, so you compose the ones that do: take the whole hours, turn them back into minutes, and subtract. Most real library work is joining two calls that each do half the job.' },
+
+    { brief: 'You need to know whether the word contains the letter E. The library returns positions, not answers.',
+      doc: [
+        { sig: 'FIND(text, letter)', desc: 'Returns the position of the first occurrence, or 0 if the letter is not there.' },
+        { sig: 'LENGTH(text)', desc: 'Returns how many characters the text has.' },
+        { sig: 'UPPER(text)', desc: 'Returns the text in capitals.' }
+      ],
+      given: 'word = "CODE"',
+      opts: [
+        { call: 'FIND(word, "E") > 0', f: function (w) { return w.indexOf('E') + 1 > 0; } },
+        { call: 'FIND(word, "E")', f: function (w) { return w.indexOf('E') + 1; } },
+        { call: 'LENGTH(word) > 0', f: function (w) { return w.length > 0; } }
+      ],
+      args: ['CODE'],
+      want: true, answer: 'FIND(word, "E") > 0',
+      why: 'FIND answers "where", and the job asked "whether". Comparing the position to 0 converts one into the other. Notice that LENGTH(word) > 0 is also true here and would be true for every non-empty word, which makes it right by accident and wrong as an answer.' },
+
+    { brief: 'SPOT THE BUG. This should tell you the percentage scored. One call runs happily and returns the wrong number.',
+      doc: [
+        { sig: 'RATIO(part, whole)', desc: 'Returns part divided by whole, as a decimal between 0 and 1.' },
+        { sig: 'PERCENT(part, whole)', desc: 'Returns part divided by whole, multiplied by 100.' },
+        { sig: 'SCALE(n, factor)', desc: 'Returns n multiplied by factor.' }
+      ],
+      given: 'earned = 16, possible = 20',
+      opts: [
+        { call: 'PERCENT(earned, possible)', f: function (e, p) { return e / p * 100; } },
+        { call: 'RATIO(earned, possible)', f: function (e, p) { return e / p; } },
+        { call: 'SCALE(RATIO(possible, earned), 100)', f: function (e, p) { return p / e * 100; } }
+      ],
+      args: [16, 20],
+      want: 80, answer: 'PERCENT(earned, possible)',
+      why: 'RATIO returns 0.8, which is correct arithmetic and the wrong answer to the question asked. The third option swaps the arguments and returns 125, a number that looks like a percentage and cannot be one. Both run without complaint, which is why the documentation is the test.' }
+  ];
+
+  var el = {};
+  ['round','right','score','brief','dochead','entries','opts','run','note','nextbtn','play']
+    .forEach(function (k) { el[k] = document.getElementById('dd-' + k); });
+
+  var i = 0, score = 0, correct = 0, answered = false;
+
+  function argsFor(r) {
+    if (r.args) return r.args;
+    return [r.given.indexOf('list = ') === 0
+      ? r.given.slice(7).split(', ').map(Number)
+      : r.given];
+  }
+
+  function fmt(v) {
+    if (typeof v === 'boolean') return v ? 'true' : 'false';
+    if (typeof v === 'number') return String(Math.round(v * 1000) / 1000);
+    return String(v);
+  }
+
+  function render() {
+    answered = false;
+    var r = ROUNDS[i];
+    el.round.textContent = 'Job ' + (i + 1) + ' / ' + ROUNDS.length;
+    el.right.textContent = 'Correct: ' + correct;
+    el.score.textContent = 'Score: ' + score;
+    el.brief.textContent = r.brief;
+    el.dochead.textContent = 'Library documentation    (you are given ' + r.given + ')';
+    el.entries.innerHTML = '';
+    r.doc.forEach(function (d) {
+      var e = document.createElement('div');
+      e.className = 'dd-entry';
+      e.innerHTML = '<span class="dd-sig">' + d.sig + '</span><span class="dd-desc">' + d.desc + '</span>';
+      el.entries.appendChild(e);
+    });
+    el.opts.innerHTML = '';
+    r.opts.forEach(function (o) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'dd-opt';
+      b.textContent = o.call;
+      b.addEventListener('click', function () { choose(o, b); });
+      el.opts.appendChild(b);
+    });
+    el.run.className = 'dd-run';
+    el.run.innerHTML = '';
+    el.note.textContent = '';
+    el.nextbtn.style.display = 'none';
+  }
+
+  function choose(opt, btn) {
+    if (answered) return;
+    answered = true;
+    var r = ROUNDS[i];
+    var a = argsFor(r);
+    var got = opt.f.apply(null, a);
+    /* Scored on the CALL, not on the value it happens to return. Job 6 offers
+       LENGTH(word) > 0, which is true here and true for every non-empty word,
+       so it returns the wanted value without answering the question. Marking by
+       value would have awarded full marks for the accident the round exists to
+       expose. */
+    var right = (opt.call === r.answer);
+    if (right) { score += 100; correct++; }
+
+    Array.prototype.forEach.call(el.opts.children, function (b, k) {
+      b.disabled = true;
+      if (r.opts[k].call === r.answer) b.className = 'dd-opt right';
+    });
+    if (!right) btn.className = 'dd-opt wrong';
+
+    // Run EVERY option, so the near-misses are visible next to the right one.
+    el.run.innerHTML = '';
+    r.opts.forEach(function (o) {
+      var v = o.f.apply(null, a);
+      var line = document.createElement('span');
+      var isAnswer = (o.call === r.answer);
+      line.className = 'dd-runline ' + (isAnswer ? 'ok' : 'no');
+      line.textContent = o.call + '   returns   ' + fmt(v)
+        + (!isAnswer && v === r.want ? '   (the right value, by accident)' : '');
+      el.run.appendChild(line);
+    });
+    el.run.className = 'dd-run show';
+
+    el.score.textContent = 'Score: ' + score;
+    el.right.textContent = 'Correct: ' + correct;
+    el.note.innerHTML = '<span class="dd-verdict ' + (right ? 'good' : 'bad') + '">'
+      + (right ? 'That is the one. 100 points. '
+               : (got === r.want ? 'That returns ' + fmt(got) + ', which is the right value for the wrong reason. '
+                                 : 'That returns ' + fmt(got) + '. ')) + '</span>' + r.why;
+    el.nextbtn.textContent = (i < ROUNDS.length - 1) ? 'Next job' : 'See your result';
+    el.nextbtn.style.display = 'inline-block';
+  }
+
+  el.nextbtn.addEventListener('click', function () {
+    if (i < ROUNDS.length - 1) { i++; render(); } else { finish(); }
+  });
+
+  function finish() {
+    el.play.innerHTML =
+      '<div class="dd-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + correct + ' of ' + ROUNDS.length + ' jobs done with the right call.</p>' +
+        '<div class="dd-teach">' +
+          '<b>The name is a hint. The description is the contract.</b> A library is code you ' +
+          'did not write and cannot see inside, so the only thing you actually know about it ' +
+          'is what the documentation promises, and a procedure called DISCOUNT is perfectly ' +
+          'entitled to return the size of the discount rather than the new price. Look up ' +
+          'three things every time: what it returns, what order the arguments go in, and ' +
+          'whether positions start at 0 or 1. Expect to compose calls, because no library ' +
+          'has an entry for exactly your problem. And be suspicious of a call that runs ' +
+          'happily and returns a plausible number, since that is what a wrong one looks like.' +
+        '</div>' +
+        '<p><button class="dd-go" id="dd-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('dd-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  render();
+})();
+</script>

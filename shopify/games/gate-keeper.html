@@ -1,0 +1,288 @@
+<style>
+#gk-game{all:initial!important;display:block!important;box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.55!important;max-width:900px!important;margin:0 auto!important;padding:0 0 8px!important}
+#gk-game *,#gk-game *::before,#gk-game *::after{box-sizing:border-box!important}
+#gk-game .gk-card{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden!important}
+#gk-game .gk-hero{background:linear-gradient(135deg,#065f46,#0d9488)!important;padding:22px 24px!important}
+#gk-game .gk-title{font-size:26px!important;font-weight:800!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1.15!important}
+#gk-game .gk-sub{font-size:15px!important;margin:8px 0 0!important;color:#ccfbf1!important;-webkit-text-fill-color:#ccfbf1!important}
+#gk-game .gk-bar{display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:14px 24px!important;background:#f8fafc!important;border-bottom:1px solid #e2e8f0!important}
+#gk-game .gk-chip{display:inline-block!important;font-size:13px!important;font-weight:700!important;padding:5px 12px!important;border-radius:100px!important;background:#fff!important;border:1px solid #cbd5e1!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#gk-game .gk-chip.gk-score{background:#0d9488!important;border-color:#0d9488!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#gk-game .gk-body{padding:18px 24px 24px!important}
+#gk-game .gk-how{font-size:14px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;margin:0 0 14px!important}
+#gk-game .gk-rule{background:#ecfdf5!important;border:1px solid #a7f3d0!important;border-radius:12px!important;padding:14px 16px!important;margin-bottom:14px!important}
+#gk-game .gk-rulelabel{font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.06em!important;color:#065f46!important;-webkit-text-fill-color:#065f46!important;margin:0 0 4px!important}
+#gk-game .gk-ruletext{font-size:17px!important;font-weight:700!important;margin:0!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#gk-game .gk-code{background:#0f172a!important;border-radius:8px!important;padding:16px!important;margin:0 0 14px!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:15px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;text-align:center!important;word-break:break-word!important}
+#gk-game .gk-tok{display:inline-block!important;padding:3px 9px!important;border-radius:6px!important;background:#1e293b!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important}
+#gk-game .gk-tok.on{background:#fbbf24!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a!important;font-weight:700!important}
+#gk-game .gk-tok.op{background:#0d9488!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:700!important}
+#gk-game .gk-ctrls{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:10px!important;margin-bottom:14px!important}
+@media (max-width:560px){#gk-game .gk-ctrls{grid-template-columns:repeat(1,1fr)!important}}
+#gk-game .gk-ctrl{border:2px solid #a7f3d0!important;border-radius:10px!important;padding:10px!important;text-align:center!important;background:#fff!important}
+#gk-game .gk-ctrllabel{font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:0 0 7px!important;display:block!important}
+#gk-game .gk-btn{font-family:inherit!important;font-size:14px!important;font-weight:700!important;padding:9px 12px!important;border-radius:8px!important;border:2px solid #cbd5e1!important;cursor:pointer!important;background:#fff!important;color:#334155!important;-webkit-text-fill-color:#334155!important;margin:0 3px!important}
+#gk-game .gk-btn.sel{background:#0d9488!important;border-color:#0d9488!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#gk-game .gk-btn:disabled{opacity:.55!important;cursor:default!important}
+#gk-game .gk-tt{border:1px solid #e2e8f0!important;border-radius:12px!important;overflow:hidden!important;margin-bottom:14px!important}
+#gk-game .gk-tthead,#gk-game .gk-ttrow{display:grid!important;grid-template-columns:repeat(4,1fr)!important;align-items:center!important}
+#gk-game .gk-tthead{background:#f8fafc!important;border-bottom:1px solid #e2e8f0!important}
+#gk-game .gk-tthead span{font-size:11px!important;font-weight:700!important;letter-spacing:.04em!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;padding:8px 10px!important;text-align:center!important;word-break:break-word!important}
+#gk-game .gk-ttrow{border-bottom:1px solid #f1f5f9!important;font-size:14px!important}
+#gk-game .gk-ttrow:last-child{border-bottom:0!important}
+#gk-game .gk-ttrow span{padding:9px 10px!important;text-align:center!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-weight:700!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#gk-game .gk-ttrow.miss{background:#fef2f2!important}
+#gk-game .gk-ttrow.hit{background:#f0fdf4!important}
+#gk-game .gk-t{color:#15803d!important;-webkit-text-fill-color:#15803d!important}
+#gk-game .gk-f{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#gk-game .gk-dim{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important}
+#gk-game .gk-run{background:#0d9488!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:0!important;font-family:inherit!important;font-size:15px!important;font-weight:700!important;padding:11px 18px!important;border-radius:10px!important;cursor:pointer!important;margin-right:8px!important}
+#gk-game .gk-run:disabled{opacity:.5!important;cursor:default!important}
+#gk-game .gk-note{font-size:14px!important;margin:12px 0 0!important;color:#334155!important;-webkit-text-fill-color:#334155!important;min-height:22px!important}
+#gk-game .gk-end{text-align:center!important;padding:8px 0!important}
+#gk-game .gk-end h2{font-size:24px!important;font-weight:800!important;margin:0 0 8px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#gk-game .gk-teach{background:#ecfdf5!important;border-left:5px solid #0d9488!important;border-radius:0 10px 10px 0!important;padding:12px 16px!important;margin:14px 0 0!important;font-size:14px!important;text-align:left!important;color:#065f46!important;-webkit-text-fill-color:#065f46!important}
+</style>
+
+<div class="gk-game" id="gk-game">
+  <div class="gk-card">
+    <div class="gk-hero">
+      <h1 class="gk-title">Gate Keeper</h1>
+      <p class="gk-sub">Build the boolean expression that matches the specification on every row, not just most of them</p>
+    </div>
+    <div class="gk-bar">
+      <span class="gk-chip" id="gk-round">Gate 1 / 7</span>
+      <span class="gk-chip" id="gk-tries">Runs left: 3</span>
+      <span class="gk-chip gk-score" id="gk-score">Score: 0</span>
+    </div>
+    <div class="gk-body" id="gk-play">
+      <p class="gk-how">How to play: the table is the specification. Set the three controls so your expression produces the specified output on all four rows, then run it. First run correct is worth 100, second is worth 50. A row you get wrong is highlighted.</p>
+      <div class="gk-rule">
+        <p class="gk-rulelabel">The requirement</p>
+        <p class="gk-ruletext" id="gk-ruletext"></p>
+      </div>
+      <div class="gk-code" id="gk-codeline"></div>
+      <div class="gk-ctrls" id="gk-ctrls"></div>
+      <div class="gk-tt">
+        <div class="gk-tthead" id="gk-tthead"></div>
+        <div id="gk-ttrows"></div>
+      </div>
+      <button class="gk-run" id="gk-runbtn" type="button">Run it</button>
+      <button class="gk-run" id="gk-nextbtn" type="button" style="display:none">Next gate</button>
+      <p class="gk-note" id="gk-note"></p>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Gate Keeper - AP CSP Topic 3.5.
+     The expression form is fixed at  [NOT] a  (AND|OR)  [NOT] b , which is
+     exactly eight expressions. Every requirement below is reachable inside that
+     form, INCLUDING the De Morgan round, where the English says "not both" and
+     the only way to write it here is (NOT a) OR (NOT b). That round is the whole
+     point of the game: the shape of the English and the shape of the code differ.
+     The specification is shown as a truth table because that is how a spec
+     actually arrives, and because a student who tries to match "sounds right"
+     rather than the table will miss exactly one row. */
+
+  function evalExpr(s, a, b) {
+    var l = s.notA ? !a : a;
+    var r = s.notB ? !b : b;
+    return s.op === 'AND' ? (l && r) : (l || r);
+  }
+
+  var ROUNDS = [
+    { rule: 'Sound the alert when the door is open AND the system is armed.',
+      a: 'doorOpen', b: 'armed', want: { notA: false, op: 'AND', notB: false },
+      why: 'Both conditions must hold, so AND with neither side negated.' },
+    { rule: 'Offer the help panel when the user is new OR the page failed to load.',
+      a: 'isNew', b: 'loadFailed', want: { notA: false, op: 'OR', notB: false },
+      why: 'Either one is enough, which is what OR means.' },
+    { rule: 'Show the retry button when the upload did NOT succeed and the network is up.',
+      a: 'uploaded', b: 'online', want: { notA: true, op: 'AND', notB: false },
+      why: 'Negate only the upload. Retrying with no network would fail again, so the network side stays positive.' },
+    { rule: 'Let the student into the room when they are not banned and not already checked in.',
+      a: 'banned', b: 'checkedIn', want: { notA: true, op: 'AND', notB: true },
+      why: 'Two independent blockers, so negate both and require both to be clear.' },
+    { rule: 'Warn the office when it is NOT true that both forms are signed. (Read that carefully.)',
+      a: 'formA', b: 'formB', want: { notA: true, op: 'OR', notB: true },
+      why: 'NOT (formA AND formB) is the same as (NOT formA) OR (NOT formB). The AND flips to OR when the NOT moves inside. That is the De Morgan rule, and the row it decides is the one where exactly one form is missing.' },
+    { rule: 'Charge the fee when the visitor is an adult and does not have a pass.',
+      a: 'isAdult', b: 'hasPass', want: { notA: false, op: 'AND', notB: true },
+      why: 'Only the pass is negated. An adult WITH a pass must not be charged.' },
+    { rule: 'SPOT THE BUG. Send the reminder when the task is not done OR it is overdue. The shipped code used AND, so a task that is simply unfinished never gets a reminder. Write it correctly.',
+      a: 'done', b: 'overdue', want: { notA: true, op: 'OR', notB: false },
+      why: 'AND required both, so an unfinished task that was not yet overdue was silently skipped. OR sends on either signal.' }
+  ];
+
+  var ROWS = [[false, false], [false, true], [true, false], [true, true]];
+
+  var el = {};
+  ['round','tries','score','ruletext','codeline','ctrls','tthead','ttrows','runbtn','nextbtn','note','play']
+    .forEach(function (k) { el[k] = document.getElementById('gk-' + k); });
+
+  var i = 0, score = 0, solved = 0, runsLeft = 3, done = false;
+  var state = { notA: false, op: 'AND', notB: false };
+
+  function tf(v) {
+    return '<span class="' + (v ? 'gk-t' : 'gk-f') + '">' + (v ? 'true' : 'false') + '</span>';
+  }
+
+  function codeLine() {
+    var c = ROUNDS[i];
+    return 'IF ('
+      + '<span class="gk-tok' + (state.notA ? ' on' : '') + '">' + (state.notA ? 'NOT ' : '') + c.a + '</span> '
+      + '<span class="gk-tok op">' + state.op + '</span> '
+      + '<span class="gk-tok' + (state.notB ? ' on' : '') + '">' + (state.notB ? 'NOT ' : '') + c.b + '</span>'
+      + ')';
+  }
+
+  function button(label, on, handler) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'gk-btn' + (on ? ' sel' : '');
+    b.textContent = label;
+    b.disabled = done;
+    b.addEventListener('click', handler);
+    return b;
+  }
+
+  function ctrl(label, children) {
+    var d = document.createElement('div');
+    d.className = 'gk-ctrl';
+    var s = document.createElement('span');
+    s.className = 'gk-ctrllabel';
+    s.textContent = label;
+    d.appendChild(s);
+    children.forEach(function (c) { d.appendChild(c); });
+    return d;
+  }
+
+  function renderControls() {
+    var c = ROUNDS[i];
+    el.ctrls.innerHTML = '';
+    el.ctrls.appendChild(ctrl('left side', [
+      button(c.a, !state.notA, function () { state.notA = false; paint(); }),
+      button('NOT ' + c.a, state.notA, function () { state.notA = true; paint(); })
+    ]));
+    el.ctrls.appendChild(ctrl('operator', [
+      button('AND', state.op === 'AND', function () { state.op = 'AND'; paint(); }),
+      button('OR', state.op === 'OR', function () { state.op = 'OR'; paint(); })
+    ]));
+    el.ctrls.appendChild(ctrl('right side', [
+      button(c.b, !state.notB, function () { state.notB = false; paint(); }),
+      button('NOT ' + c.b, state.notB, function () { state.notB = true; paint(); })
+    ]));
+  }
+
+  /* shownMine: only after a run. Before that the your-output column stays blank,
+     so the round is solved by reasoning about the requirement rather than by
+     watching a live column and flipping switches until it lines up. */
+  function renderTable(shownMine) {
+    var c = ROUNDS[i];
+    el.tthead.innerHTML = '<span>' + c.a + '</span><span>' + c.b + '</span>'
+      + '<span>spec says</span><span>your code</span>';
+    el.ttrows.innerHTML = '';
+    ROWS.forEach(function (r) {
+      var want = evalExpr(c.want, r[0], r[1]);
+      var mine = evalExpr(state, r[0], r[1]);
+      var div = document.createElement('div');
+      div.className = 'gk-ttrow' + (shownMine ? (mine === want ? ' hit' : ' miss') : '');
+      div.innerHTML = '<span>' + tf(r[0]) + '</span><span>' + tf(r[1]) + '</span>'
+        + '<span>' + tf(want) + '</span>'
+        + '<span>' + (shownMine ? tf(mine) : '<span class="gk-dim">-</span>') + '</span>';
+      el.ttrows.appendChild(div);
+    });
+  }
+
+  function paint(shownMine) {
+    el.round.textContent = 'Gate ' + (i + 1) + ' / ' + ROUNDS.length;
+    el.tries.textContent = 'Runs left: ' + runsLeft;
+    el.score.textContent = 'Score: ' + score;
+    el.ruletext.textContent = ROUNDS[i].rule;
+    el.codeline.innerHTML = codeLine();
+    renderControls();
+    renderTable(!!shownMine);
+  }
+
+  function matches() {
+    var c = ROUNDS[i];
+    return ROWS.every(function (r) {
+      return evalExpr(state, r[0], r[1]) === evalExpr(c.want, r[0], r[1]);
+    });
+  }
+
+  function endRound(won, msg) {
+    done = true;
+    el.runbtn.disabled = true;
+    el.runbtn.style.display = 'none';
+    el.nextbtn.style.display = 'inline-block';
+    el.nextbtn.textContent = (i < ROUNDS.length - 1) ? 'Next gate' : 'See your result';
+    if (won) solved++;
+    paint(true);
+    el.note.textContent = msg + ' ' + ROUNDS[i].why;
+  }
+
+  el.runbtn.addEventListener('click', function () {
+    if (done) return;
+    runsLeft--;
+    if (matches()) {
+      var award = runsLeft === 2 ? 100 : (runsLeft === 1 ? 50 : 25);
+      score += award;
+      endRound(true, 'Correct, ' + award + ' points.');
+      return;
+    }
+    if (runsLeft <= 0) {
+      var c = ROUNDS[i];
+      state = { notA: c.want.notA, op: c.want.op, notB: c.want.notB };
+      endRound(false, 'Out of runs. The correct expression is now shown.');
+      return;
+    }
+    paint(true);
+    var wrong = ROWS.filter(function (r) {
+      return evalExpr(state, r[0], r[1]) !== evalExpr(ROUNDS[i].want, r[0], r[1]);
+    }).length;
+    el.note.textContent = wrong + ' of 4 rows disagree with the spec. Look at which ones.';
+  });
+
+  el.nextbtn.addEventListener('click', function () {
+    if (i < ROUNDS.length - 1) {
+      i++; runsLeft = 3; done = false;
+      state = { notA: false, op: 'AND', notB: false };
+      el.runbtn.disabled = false;
+      el.runbtn.style.display = 'inline-block';
+      el.nextbtn.style.display = 'none';
+      el.note.textContent = '';
+      paint(false);
+    } else {
+      finish();
+    }
+  });
+
+  function finish() {
+    el.play.innerHTML =
+      '<div class="gk-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + solved + ' of ' + ROUNDS.length + ' gates built correctly.</p>' +
+        '<div class="gk-teach">' +
+          '<b>The English and the code do not have the same shape.</b> "Not both signed" ' +
+          'reads like one NOT over an AND, and it has to be written as OR between two ' +
+          'NOTs. Moving a NOT inside a pair of conditions flips AND to OR and OR to AND, ' +
+          'every time. When a condition has two inputs there are only four cases, so write ' +
+          'all four down and check the expression against every one. Three out of four ' +
+          'matching is the most expensive kind of wrong: it works in testing and fails on ' +
+          'the case nobody tried.' +
+        '</div>' +
+        '<p><button class="gk-run" id="gk-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('gk-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  paint(false);
+})();
+</script>

@@ -31,15 +31,151 @@ const GAMES_DIR = path.join(ROOT, 'shopify', 'games');
 const PUBLISHED_AT = '2026-03-01 12:00:00';
 
 // Title, subtitle and the topic each game belongs to. The handle is derived.
+// Games that ship as their OWN page. Handle is 'ap-csp-game-' + the key, and the
+// key must exist in the routes/game.js registry.
 const GAMES = {
-  'parallel-scheduler': {
-    title: 'AP CSP Parallel Scheduler Game | Speedup and Dependency Chains',
-    shareName: 'Parallel Scheduler',
+  'big-o-race': {
+    title: 'AP CSP Big-O Race Game | Linear vs Nested Growth | Topic 3.17',
+    shareName: 'Big-O Race',
     label: 'points',
-    topic: '4.3',
-    seoDescription: 'Schedule jobs across processors and watch speedup rise, then hit the wall a dependency chain creates. Free AP CSP Topic 4.3 practice game.',
+    topic: '3.17',
+    seoDescription: 'Race two algorithms as the input grows and watch nested loops fall off a cliff while a single pass keeps up. Free AP CSP Topic 3.17 practice game.',
+  },
+  'halving-hunter': {
+    title: 'AP CSP Halving Hunter Game | Binary Search in log2(n) Guesses | Topic 3.11',
+    shareName: 'Halving Hunter',
+    label: 'points',
+    topic: '3.11',
+    seoDescription: 'Find the hidden number in as few guesses as binary search would need, and learn why doubling the list adds only one more guess. AP CSP Topic 3.11.',
+  },
+  'procedure-shop': {
+    title: 'AP CSP Procedure Shop Game | Choosing Parameters | Topic 3.13',
+    shareName: 'Procedure Shop',
+    label: 'points',
+    topic: '3.13',
+    seoDescription: 'Decide what varies between the callers, because that and only that becomes a parameter. Free AP CSP Topic 3.13 developing procedures game.',
+  },
+  'algorithm-assembler': {
+    title: 'AP CSP Algorithm Assembler Game | Before, Inside or After the Loop | Topic 3.9',
+    shareName: 'Algorithm Assembler',
+    label: 'points',
+    topic: '3.9',
+    seoDescription: 'Every statement is correct. Placing it before, inside or after the loop is the whole job. Free AP CSP Topic 3.9 developing algorithms game.',
+  },
+  'sim-lab': {
+    title: 'AP CSP Sim Lab Game | What a Simulation Leaves Out | Topic 3.16',
+    shareName: 'Sim Lab',
+    label: 'points',
+    topic: '3.16',
+    seoDescription: 'Choose what a model must include and what it can drop, then run it and see what the simplification cost. AP CSP Topic 3.16 simulations game.',
+  },
+  'doc-detective': {
+    title: 'AP CSP Doc Detective Game | Reading Library Documentation | Topic 3.14',
+    shareName: 'Doc Detective',
+    label: 'points',
+    topic: '3.14',
+    seoDescription: 'Pick the library call that does the job, then watch every option run for real. Free AP CSP Topic 3.14 libraries and documentation game.',
+  },
+  'name-the-thing': {
+    title: 'AP CSP Name the Thing Game | Data Abstraction and Named Constants | Topic 3.2',
+    shareName: 'Name the Thing',
+    label: 'points',
+    topic: '3.2',
+    seoDescription: 'Name the repeated value, then let a change request prove which copies you should have named. Free AP CSP Topic 3.2 data abstraction game.',
+  },
+  'call-sheet': {
+    title: 'AP CSP Call Sheet Game | Arguments, Parameters and RETURN | Topic 3.12',
+    shareName: 'Call Sheet',
+    label: 'points',
+    topic: '3.12',
+    seoDescription: 'Fill the arguments, run the call and see which parameter each one landed in. Free AP CSP Topic 3.12 calling procedures practice game.',
+  },
+  'string-lab': {
+    title: 'AP CSP String Lab Game | SUBSTRING Length vs End Position | Topic 3.4',
+    shareName: 'String Lab',
+    label: 'points',
+    topic: '3.4',
+    seoDescription: 'Cut the exact piece of text a job asks for on a ruler that counts from one, and see why the third argument is a length. AP CSP Topic 3.4.',
+  },
+  'branch-runner': {
+    title: 'AP CSP Branch Runner Game | Nested Conditionals and Dangling ELSE | Topic 3.7',
+    shareName: 'Branch Runner',
+    label: 'points',
+    topic: '3.7',
+    seoDescription: 'Walk one input down a nest of conditions and find out which IF the ELSE really belongs to. Free AP CSP Topic 3.7 nested conditionals game.',
+  },
+  'mod-machine': {
+    title: 'AP CSP Mod Machine Game | MOD and Integer Division | Topic 3.3',
+    shareName: 'Mod Machine',
+    label: 'points',
+    topic: '3.3',
+    seoDescription: 'Pick the expression that turns every input into the right output, and watch a near-miss pass three rows and fail the fourth. AP CSP Topic 3.3.',
+  },
+  'swap-shop': {
+    title: 'AP CSP Swap Shop Game | Assignment, Swaps and Lost Values | Topic 3.1',
+    shareName: 'Swap Shop',
+    label: 'points',
+    topic: '3.1',
+    seoDescription: 'Move values between variables one assignment at a time and watch a value vanish the moment you overwrite it. AP CSP Topic 3.1 practice game.',
+  },
+  'halt-or-not': {
+    title: 'AP CSP Halt or Not Game | Decidable vs Undecidable | Topic 3.18',
+    shareName: 'Halt or Not',
+    label: 'points',
+    topic: '3.18',
+    seoDescription: 'Sort problems into the ones an algorithm can always answer and the ones no algorithm can. Free AP CSP Topic 3.18 undecidable problems game.',
+  },
+  'odds-maker': {
+    title: 'AP CSP Odds Maker Game | RANDOM Ranges and Probability | Topic 3.15',
+    shareName: 'Odds Maker',
+    label: 'points',
+    topic: '3.15',
+    seoDescription: 'Call the odds on a RANDOM expression, then watch two thousand trials settle on the answer. Free AP CSP Topic 3.15 random values practice game.',
+  },
+  'list-surgeon': {
+    title: 'AP CSP List Surgeon Game | One-Indexed Lists and REMOVE | Topic 3.10',
+    shareName: 'List Surgeon',
+    label: 'points',
+    topic: '3.10',
+    seoDescription: 'Reshape lists with real AP pseudocode operations and watch the indices renumber under your hands. Free AP CSP Topic 3.10 list practice game.',
+  },
+  'iteration-station': {
+    title: 'AP CSP Iteration Station Game | Trace the Loop | Topic 3.8',
+    shareName: 'Iteration Station',
+    label: 'points',
+    topic: '3.8',
+    seoDescription: 'Predict where each loop ends, then watch every pass run and see exactly where you drifted. Free AP CSP Topic 3.8 iteration tracing practice.',
+  },
+  'gate-keeper': {
+    title: 'AP CSP Gate Keeper Game | Build the Boolean Expression | Topic 3.5',
+    shareName: 'Gate Keeper',
+    label: 'points',
+    topic: '3.5',
+    seoDescription: 'Build the AND, OR and NOT expression that matches the spec on all four rows, including the De Morgan case. AP CSP Topic 3.5 boolean practice.',
+  },
+  'boundary-patrol': {
+    title: 'AP CSP Boundary Patrol Game | Conditionals and Off-by-One | Topic 3.6',
+    shareName: 'Boundary Patrol',
+    label: 'points',
+    topic: '3.6',
+    seoDescription: 'Pick the comparison operator that puts the cutoff in exactly the right place, then watch the test bench prove it. AP CSP Topic 3.6 conditionals practice.',
   },
 };
+
+// Topics whose game is EMBEDDED in the lesson page already. A standalone page
+// for one of these would be a SECOND implementation dispatching apcsGameScore
+// under the same leaderboard id on a different scoring scale, which is exactly
+// what happened with parallel-scheduler: a game had shipped inside the Topic 4.3
+// lesson page and a separate one was built without noticing. Measured from the
+// live lesson pages on 2026-08-18: 19 of the 35 embed a game.
+const EMBEDDED_IN_LESSON = new Set([
+  'team-roles', 'guess-the-purpose', 'design-sprint', 'bug-squasher',
+  'compression-challenge', 'trend-hunter', 'filter-sort-detective',
+  'packet-assembler', 'parallel-scheduler',
+  'binary-conversion-race', 'robot-director', 'redundant-routing',
+  'internet-routing-simulator', 'two-sides', 'bridge-the-divide',
+  'spot-the-bias', 'crowd-power', 'license-match', 'phishing-net',
+]);
 
 function registryIds() {
   const src = fs.readFileSync(path.join(ROOT, 'routes', 'game.js'), 'utf8');
@@ -109,6 +245,11 @@ function main(argv) {
     if (!reg.has(id)) {
       problems.push(`${id}: not in the routes/game.js registry, so the server would reject its scores`);
     }
+    if (EMBEDDED_IN_LESSON.has(id)) {
+      problems.push(`${id}: a game for this topic is ALREADY EMBEDDED in its lesson page.`
+        + ' A standalone page would post to the same leaderboard id on a different scale.'
+        + ' Reuse the embedded game verbatim or pick a different topic.');
+    }
     return build(id);
   });
   for (const p of pages) for (const c of checkPage(p)) problems.push(`${p.handle}: ${c}`);
@@ -137,4 +278,4 @@ function main(argv) {
 }
 
 if (require.main === module) main(process.argv.slice(2));
-module.exports = { build, checkPage, GAMES, PUBLISHED_AT };
+module.exports = { build, checkPage, registryIds, GAMES, EMBEDDED_IN_LESSON, GAMES_DIR, PUBLISHED_AT };

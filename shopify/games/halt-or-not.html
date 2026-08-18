@@ -1,0 +1,276 @@
+<style>
+#hn-game{all:initial!important;display:block!important;box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.55!important;max-width:900px!important;margin:0 auto!important;padding:0 0 8px!important}
+#hn-game *,#hn-game *::before,#hn-game *::after{box-sizing:border-box!important}
+#hn-game .hn-card{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden!important}
+#hn-game .hn-hero{background:linear-gradient(135deg,#1e293b,#475569)!important;padding:22px 24px!important}
+#hn-game .hn-title{font-size:26px!important;font-weight:800!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1.15!important}
+#hn-game .hn-sub{font-size:15px!important;margin:8px 0 0!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important}
+#hn-game .hn-bar{display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:14px 24px!important;background:#f8fafc!important;border-bottom:1px solid #e2e8f0!important}
+#hn-game .hn-chip{display:inline-block!important;font-size:13px!important;font-weight:700!important;padding:5px 12px!important;border-radius:100px!important;background:#fff!important;border:1px solid #cbd5e1!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#hn-game .hn-chip.hn-scorechip{background:#334155!important;border-color:#334155!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#hn-game .hn-body{padding:18px 24px 24px!important}
+#hn-game .hn-how{font-size:14px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;margin:0 0 14px!important}
+#hn-game .hn-brief{background:#f8fafc!important;border:1px solid #cbd5e1!important;border-left:5px solid #475569!important;border-radius:0 12px 12px 0!important;padding:14px 16px!important;margin-bottom:14px!important}
+#hn-game .hn-blabel{font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.06em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:0 0 4px!important}
+#hn-game .hn-btext{font-size:17px!important;font-weight:700!important;margin:0!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#hn-game .hn-probepanel{border:1px solid #e2e8f0!important;border-radius:12px!important;overflow:hidden!important;margin-bottom:14px!important}
+#hn-game .hn-probehead{background:#f8fafc!important;padding:8px 14px!important;font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;border-bottom:1px solid #e2e8f0!important;display:flex!important;justify-content:space-between!important;gap:10px!important;flex-wrap:wrap!important}
+#hn-game .hn-proberows{padding:4px 0!important;min-height:46px!important}
+#hn-game .hn-prow{display:block!important;padding:7px 14px!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;border-bottom:1px solid #f1f5f9!important}
+#hn-game .hn-prow:last-child{border-bottom:0!important}
+#hn-game .hn-prow.spin{color:#b45309!important;-webkit-text-fill-color:#b45309!important;background:#fffbeb!important}
+#hn-game .hn-prow.settled{color:#15803d!important;-webkit-text-fill-color:#15803d!important}
+#hn-game .hn-hint{padding:8px 14px!important;font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;font-style:italic!important}
+#hn-game .hn-choices{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:10px!important;margin-bottom:12px!important}
+@media (max-width:640px){#hn-game .hn-choices{grid-template-columns:repeat(1,1fr)!important}}
+#hn-game .hn-choice{font-family:inherit!important;font-size:14px!important;font-weight:700!important;padding:14px 14px!important;border-radius:10px!important;border:2px solid #cbd5e1!important;cursor:pointer!important;background:#fff!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;text-align:left!important;line-height:1.4!important}
+#hn-game .hn-choice:hover:enabled{background:#f8fafc!important;border-color:#475569!important}
+#hn-game .hn-choice:disabled{opacity:.55!important;cursor:default!important}
+#hn-game .hn-choice.right{background:#16a34a!important;border-color:#16a34a!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#hn-game .hn-choice.wrong{background:#dc2626!important;border-color:#dc2626!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#hn-game .hn-probe{background:#fff!important;color:#475569!important;-webkit-text-fill-color:#475569!important;border:2px solid #cbd5e1!important;font-family:inherit!important;font-size:13px!important;font-weight:700!important;padding:8px 14px!important;border-radius:8px!important;cursor:pointer!important;margin-bottom:12px!important}
+#hn-game .hn-probe:disabled{opacity:.5!important;cursor:default!important}
+#hn-game .hn-go{background:#334155!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:0!important;font-family:inherit!important;font-size:15px!important;font-weight:700!important;padding:11px 18px!important;border-radius:10px!important;cursor:pointer!important;margin-top:4px!important}
+#hn-game .hn-note{font-size:14px!important;margin:12px 0 0!important;color:#334155!important;-webkit-text-fill-color:#334155!important;min-height:22px!important}
+#hn-game .hn-verdict{font-weight:800!important}
+#hn-game .hn-verdict.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important}
+#hn-game .hn-verdict.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#hn-game .hn-end{text-align:center!important;padding:8px 0!important}
+#hn-game .hn-end h2{font-size:24px!important;font-weight:800!important;margin:0 0 8px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#hn-game .hn-teach{background:#f8fafc!important;border-left:5px solid #475569!important;border-radius:0 10px 10px 0!important;padding:12px 16px!important;margin:14px 0 0!important;font-size:14px!important;text-align:left!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important}
+</style>
+
+<div class="hn-game" id="hn-game">
+  <div class="hn-card">
+    <div class="hn-hero">
+      <h1 class="hn-title">Halt or Not</h1>
+      <p class="hn-sub">Some questions a program can always answer. Some no program can answer for every input, no matter how long you let it run</p>
+    </div>
+    <div class="hn-bar">
+      <span class="hn-chip" id="hn-round">Problem 1 / 7</span>
+      <span class="hn-chip" id="hn-right">Correct: 0</span>
+      <span class="hn-chip hn-scorechip" id="hn-score">Score: 0</span>
+    </div>
+    <div class="hn-body" id="hn-play">
+      <p class="hn-how">How to play: read the problem, then decide whether an algorithm could be written that always gives the right yes-or-no answer for every possible input. You can test it on example inputs first. The tests are free, and they are also a trap: passing examples proves nothing at all, which is the thing this topic is about.</p>
+      <div class="hn-brief">
+        <p class="hn-blabel">The problem</p>
+        <p class="hn-btext" id="hn-btext"></p>
+      </div>
+      <button class="hn-probe" id="hn-probebtn" type="button">Test it on an example input</button>
+      <div class="hn-probepanel">
+        <div class="hn-probehead"><span>The tester</span><span id="hn-probecount">0 examples tried</span></div>
+        <div class="hn-proberows" id="hn-proberows">
+          <p class="hn-hint">No examples tried yet.</p>
+        </div>
+      </div>
+      <div class="hn-choices" id="hn-choices"></div>
+      <p class="hn-note" id="hn-note"></p>
+      <button class="hn-go" id="hn-nextbtn" type="button" style="display:none">Next problem</button>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Halt or Not - AP CSP Topic 3.18.
+     The tester is the whole design. A student can try example inputs before
+     answering, and on the undecidable problems the tester ANSWERS most of them
+     and then hits one where it just keeps counting. That is the honest picture:
+     undecidable does not mean every instance is impossible, it means no single
+     algorithm is correct on every instance, so no amount of examples settles it.
+     Problem 7 is the reverse trap. Bounding the halting question to 1000 steps
+     makes it decidable, because you can simply run 1000 steps and look. The word
+     "undecidable" attaches to a problem, not to a topic. */
+
+  var ROUNDS = [
+    { text: 'Given a list of numbers, decide whether the value 42 appears anywhere in it.',
+      decidable: true,
+      probes: [
+        { input: 'list = 7, 42, 9', out: 'yes, found at index 2', spin: false },
+        { input: 'list = 1, 2, 3', out: 'no, not present', spin: false },
+        { input: 'list of 10000 numbers', out: 'no, checked all 10000', spin: false }
+      ],
+      why: 'The list ends, so the search ends. Any question you can settle by walking a finite amount of data has an algorithm.' },
+
+    { text: 'Given any program and any input, decide whether that program eventually stops rather than running forever.',
+      decidable: false,
+      probes: [
+        { input: 'a program that counts to 10', out: 'yes, it stopped', spin: false },
+        { input: 'a program with WHILE (true)', out: 'no, it never stops', spin: false },
+        { input: 'a program searching for a counterexample', out: null, spin: true }
+      ],
+      why: 'This is the halting problem, and it is the classic undecidable one. Easy cases are easy. The tester still runs on the hard one, and waiting longer never turns "not stopped yet" into "never stops".' },
+
+    { text: 'Given two whole numbers, decide whether the first divides the second evenly.',
+      decidable: true,
+      probes: [
+        { input: '4 and 12', out: 'yes, 12 MOD 4 = 0', spin: false },
+        { input: '5 and 12', out: 'no, 12 MOD 5 = 2', spin: false },
+        { input: '99991 and 7', out: 'no, one operation', spin: false }
+      ],
+      why: 'One arithmetic operation decides it for every pair of inputs there will ever be. Big numbers are not the same thing as undecidable.' },
+
+    { text: 'Given any program, decide whether there is some input that would make it print the word HELLO.',
+      decidable: false,
+      probes: [
+        { input: 'a program whose first line prints HELLO', out: 'yes, obviously', spin: false },
+        { input: 'a program with no DISPLAY at all', out: 'no, it never prints anything', spin: false },
+        { input: 'a program that prints HELLO only if a search succeeds', out: null, spin: true }
+      ],
+      why: 'To answer this in general you would have to know whether that search ever finishes, which is the halting problem wearing a different hat. Most interesting questions about what a program does in general are undecidable for exactly this reason.' },
+
+    { text: 'Given a maze drawn on a grid of fixed size, decide whether a path exists from the entrance to the exit.',
+      decidable: true,
+      probes: [
+        { input: 'a 5 by 5 maze with an open path', out: 'yes, path found', spin: false },
+        { input: 'a 5 by 5 maze fully walled off', out: 'no, every route blocked', spin: false },
+        { input: 'a 200 by 200 maze', out: 'yes, took longer, still finished', spin: false }
+      ],
+      why: 'A fixed grid has a finite number of squares, so a search either finds a route or runs out of squares. Slow is not the same as undecidable.' },
+
+    { text: 'Given any two programs, decide whether they produce the same output as each other on every possible input.',
+      decidable: false,
+      probes: [
+        { input: 'two identical programs', out: 'yes, they match', spin: false },
+        { input: 'one prints 1, the other prints 2', out: 'no, they differ on the first input', spin: false },
+        { input: 'two very different programs that look equivalent', out: null, spin: true }
+      ],
+      why: 'There are infinitely many possible inputs, so testing can only ever find a difference, never prove there is none. In general this one is undecidable too.' },
+
+    { text: 'CAREFUL. Given any program and any input, decide whether that program stops WITHIN 1000 STEPS.',
+      decidable: true,
+      probes: [
+        { input: 'a program that counts to 10', out: 'yes, stopped at step 31', spin: false },
+        { input: 'a program with WHILE (true)', out: 'no, still going at step 1000', spin: false },
+        { input: 'a program searching for a counterexample', out: 'no, still going at step 1000', spin: false }
+      ],
+      why: 'Run it for 1000 steps and look. The bound is what changes everything: the tester never has to wait forever, so it always answers. Undecidable attaches to a specific problem, not to a subject area, and adding a limit can turn one into the other.' }
+  ];
+
+  var el = {};
+  ['round','right','score','btext','probebtn','probecount','proberows','choices','note','nextbtn','play']
+    .forEach(function (k) { el[k] = document.getElementById('hn-' + k); });
+
+  var i = 0, score = 0, correct = 0, probed = 0, answered = false, spinTimer = null;
+
+  function stopSpin() {
+    if (spinTimer) { clearInterval(spinTimer); spinTimer = null; }
+  }
+
+  function renderChoices() {
+    el.choices.innerHTML = '';
+    [['An algorithm can always answer this correctly, for every input.', true],
+     ['No algorithm can be correct on every input. This one is undecidable.', false]
+    ].forEach(function (c) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'hn-choice';
+      b.textContent = c[0];
+      b.disabled = answered;
+      b.addEventListener('click', function () { choose(c[1], b); });
+      el.choices.appendChild(b);
+    });
+  }
+
+  function render() {
+    stopSpin();
+    answered = false;
+    probed = 0;
+    el.round.textContent = 'Problem ' + (i + 1) + ' / ' + ROUNDS.length;
+    el.right.textContent = 'Correct: ' + correct;
+    el.score.textContent = 'Score: ' + score;
+    el.btext.textContent = ROUNDS[i].text;
+    el.probecount.textContent = '0 examples tried';
+    el.proberows.innerHTML = '<p class="hn-hint">No examples tried yet.</p>';
+    el.probebtn.disabled = false;
+    el.note.textContent = '';
+    el.nextbtn.style.display = 'none';
+    renderChoices();
+  }
+
+  el.probebtn.addEventListener('click', function () {
+    var r = ROUNDS[i];
+    if (probed >= r.probes.length) return;
+    if (probed === 0) el.proberows.innerHTML = '';
+    var p = r.probes[probed];
+    probed++;
+    el.probecount.textContent = probed + ' example' + (probed === 1 ? '' : 's') + ' tried';
+    if (probed >= r.probes.length) el.probebtn.disabled = true;
+
+    var row = document.createElement('span');
+    row.className = 'hn-prow' + (p.spin ? ' spin' : ' settled');
+    el.proberows.appendChild(row);
+
+    if (!p.spin) {
+      row.textContent = p.input + '  ->  ' + p.out;
+      return;
+    }
+    /* The tester does not stall or error. It runs, and keeps running, and the
+       step count keeps climbing. Nothing about that display ever becomes an
+       answer, which is the only way to show what waiting longer buys you. */
+    stopSpin();
+    var steps = 0;
+    row.textContent = p.input + '  ->  running... 0 steps, no answer yet';
+    spinTimer = setInterval(function () {
+      steps += 137 + (steps >> 3);
+      row.textContent = p.input + '  ->  running... ' + steps.toLocaleString('en-US')
+        + ' steps, no answer yet';
+    }, 120);
+  });
+
+  function choose(saidDecidable, btn) {
+    if (answered) return;
+    answered = true;
+    stopSpin();
+    var r = ROUNDS[i];
+    var good = (saidDecidable === r.decidable);
+    if (good) { score += 100; correct++; }
+    Array.prototype.forEach.call(el.choices.children, function (b, k) {
+      b.disabled = true;
+      var isDecidableButton = (k === 0);
+      if (isDecidableButton === r.decidable) b.className = 'hn-choice right';
+    });
+    if (!good) btn.className = 'hn-choice wrong';
+    el.probebtn.disabled = true;
+    el.score.textContent = 'Score: ' + score;
+    el.right.textContent = 'Correct: ' + correct;
+    el.note.innerHTML = '<span class="hn-verdict ' + (good ? 'good' : 'bad') + '">'
+      + (good ? 'Correct. 100 points. ' : 'Not this one. ') + '</span>'
+      + (r.decidable ? 'This one IS decidable. ' : 'This one is UNDECIDABLE. ') + r.why;
+    el.nextbtn.textContent = (i < ROUNDS.length - 1) ? 'Next problem' : 'See your result';
+    el.nextbtn.style.display = 'inline-block';
+  }
+
+  el.nextbtn.addEventListener('click', function () {
+    if (i < ROUNDS.length - 1) { i++; render(); } else { finish(); }
+  });
+
+  function finish() {
+    stopSpin();
+    el.play.innerHTML =
+      '<div class="hn-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + correct + ' of ' + ROUNDS.length + ' called correctly.</p>' +
+        '<div class="hn-teach">' +
+          '<b>Undecidable does not mean hard, slow, or unsolved.</b> A 200 by 200 maze is ' +
+          'slow and perfectly decidable. Undecidable means no algorithm can be written that ' +
+          'gives the correct yes-or-no answer for EVERY input, and that is a proved fact ' +
+          'rather than a gap someone might close later. Two things follow, and both were on ' +
+          'screen. Individual cases of an undecidable problem can still be easy, so answering ' +
+          'examples proves nothing. And a bound changes the problem: "does this stop" is ' +
+          'undecidable, while "does this stop within 1000 steps" is decided by running 1000 ' +
+          'steps and looking.' +
+        '</div>' +
+        '<p><button class="hn-go" id="hn-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('hn-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  render();
+})();
+</script>

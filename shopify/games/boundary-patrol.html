@@ -1,0 +1,202 @@
+<style>
+#bp-game{all:initial!important;display:block!important;box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.55!important;max-width:900px!important;margin:0 auto!important;padding:0 0 8px!important}
+#bp-game *,#bp-game *::before,#bp-game *::after{box-sizing:border-box!important}
+#bp-game .bp-card{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden!important}
+#bp-game .bp-hero{background:linear-gradient(135deg,#9a3412,#ea580c)!important;padding:22px 24px!important}
+#bp-game .bp-title{font-size:26px!important;font-weight:800!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1.15!important}
+#bp-game .bp-sub{font-size:15px!important;margin:8px 0 0!important;color:#ffedd5!important;-webkit-text-fill-color:#ffedd5!important}
+#bp-game .bp-bar{display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:14px 24px!important;background:#f8fafc!important;border-bottom:1px solid #e2e8f0!important}
+#bp-game .bp-chip{display:inline-block!important;font-size:13px!important;font-weight:700!important;padding:5px 12px!important;border-radius:100px!important;background:#fff!important;border:1px solid #cbd5e1!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#bp-game .bp-chip.bp-score{background:#ea580c!important;border-color:#ea580c!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#bp-game .bp-body{padding:18px 24px 24px!important}
+#bp-game .bp-how{font-size:14px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;margin:0 0 14px!important}
+#bp-game .bp-rule{background:#fff7ed!important;border:1px solid #fed7aa!important;border-radius:12px!important;padding:14px 16px!important;margin-bottom:14px!important}
+#bp-game .bp-rulelabel{font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.06em!important;color:#9a3412!important;-webkit-text-fill-color:#9a3412!important;margin:0 0 4px!important}
+#bp-game .bp-ruletext{font-size:17px!important;font-weight:700!important;margin:0!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#bp-game .bp-code{background:#0f172a!important;border-radius:8px!important;padding:14px 16px!important;margin:0 0 14px!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:16px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;text-align:center!important}
+#bp-game .bp-slot{display:inline-block!important;min-width:56px!important;padding:2px 10px!important;border-radius:6px!important;background:#fbbf24!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a!important;font-weight:700!important}
+#bp-game .bp-ops{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:10px!important;margin-bottom:14px!important}
+@media (max-width:520px){#bp-game .bp-ops{grid-template-columns:repeat(2,1fr)!important}}
+#bp-game .bp-op{font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:20px!important;font-weight:700!important;padding:14px 8px!important;border-radius:10px!important;border:2px solid #fed7aa!important;cursor:pointer!important;background:#fff!important;color:#9a3412!important;-webkit-text-fill-color:#9a3412!important}
+#bp-game .bp-op:hover:enabled{border-color:#ea580c!important;background:#fff7ed!important}
+#bp-game .bp-op:disabled{opacity:.5!important;cursor:default!important}
+#bp-game .bp-op.right{background:#16a34a!important;border-color:#16a34a!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#bp-game .bp-op.wrong{background:#dc2626!important;border-color:#dc2626!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#bp-game .bp-bench{display:none!important;border:1px solid #e2e8f0!important;border-radius:12px!important;overflow:hidden!important;margin-top:4px!important}
+#bp-game .bp-bench.show{display:block!important}
+#bp-game .bp-benchhead{background:#f8fafc!important;padding:8px 14px!important;font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;border-bottom:1px solid #e2e8f0!important}
+#bp-game .bp-row{display:flex!important;align-items:center!important;gap:12px!important;padding:9px 14px!important;border-bottom:1px solid #f1f5f9!important;font-size:14px!important}
+#bp-game .bp-row:last-child{border-bottom:0!important}
+#bp-game .bp-val{font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-weight:700!important;min-width:56px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#bp-game .bp-tag{font-size:12px!important;font-weight:700!important;padding:3px 9px!important;border-radius:100px!important}
+#bp-game .bp-tag.ok{background:#dcfce7!important;color:#15803d!important;-webkit-text-fill-color:#15803d!important}
+#bp-game .bp-tag.no{background:#fee2e2!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#bp-game .bp-row.edge{background:#fffbeb!important}
+#bp-game .bp-edge{font-size:11px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#bp-game .bp-note{font-size:14px!important;margin:12px 0 0!important;color:#334155!important;-webkit-text-fill-color:#334155!important;min-height:22px!important}
+#bp-game .bp-next{margin-top:12px!important;background:#ea580c!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:0!important;font-family:inherit!important;font-size:15px!important;font-weight:700!important;padding:11px 18px!important;border-radius:10px!important;cursor:pointer!important}
+#bp-game .bp-end{text-align:center!important;padding:8px 0!important}
+#bp-game .bp-end h2{font-size:24px!important;font-weight:800!important;margin:0 0 8px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#bp-game .bp-teach{background:#fff7ed!important;border-left:5px solid #ea580c!important;border-radius:0 10px 10px 0!important;padding:12px 16px!important;margin:14px 0 0!important;font-size:14px!important;text-align:left!important;color:#7c2d12!important;-webkit-text-fill-color:#7c2d12!important}
+</style>
+
+<div class="bp-game" id="bp-game">
+  <div class="bp-card">
+    <div class="bp-hero">
+      <h1 class="bp-title">Boundary Patrol</h1>
+      <p class="bp-sub">Pick the operator that admits exactly the right values - including the one sitting on the line</p>
+    </div>
+    <div class="bp-bar">
+      <span class="bp-chip" id="bp-round">Rule 1 / 7</span>
+      <span class="bp-chip" id="bp-streak">Correct: 0</span>
+      <span class="bp-chip bp-score" id="bp-score">Score: 0</span>
+    </div>
+    <div class="bp-body" id="bp-play">
+      <p class="bp-how">How to play: read the rule in plain English, then choose the operator that makes the condition match it exactly. The test bench runs real values afterwards, and the highlighted row is the boundary - the value the exam always asks about.</p>
+      <div class="bp-rule">
+        <p class="bp-rulelabel">The rule</p>
+        <p class="bp-ruletext" id="bp-ruletext"></p>
+      </div>
+      <div class="bp-code" id="bp-codeline"></div>
+      <div class="bp-ops" id="bp-ops"></div>
+      <div class="bp-bench" id="bp-bench">
+        <div class="bp-benchhead">Test bench</div>
+        <div id="bp-rows"></div>
+      </div>
+      <p class="bp-note" id="bp-note"></p>
+      <button class="bp-next" id="bp-nextbtn" type="button" style="display:none">Next rule</button>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Boundary Patrol - AP CSP Topic 3.6.
+     Every round is decided by whether the boundary value itself is included.
+     The test bench always contains the boundary and marks it, because that is
+     the row the exam builds its distractors from. Round 7 inverts the task:
+     the operator is given and the student has to spot that it is wrong. */
+
+  var OPS = ['>', '>=', '<', '<='];
+  function test(op, v, t) {
+    if (op === '>') return v > t;
+    if (op === '>=') return v >= t;
+    if (op === '<') return v < t;
+    return v <= t;
+  }
+
+  var RULES = [
+    { rule: 'Riders at least 48 inches tall may board.',
+      varName: 'height', t: 48, correct: '>=', values: [46, 47, 48, 52],
+      why: '"At least" includes the number itself, so 48 must board.' },
+    { rule: 'Charge extra when the cart weighs more than 20 kilograms.',
+      varName: 'weight', t: 20, correct: '>', values: [18, 20, 21, 30],
+      why: '"More than" excludes the number itself, so exactly 20 is not charged.' },
+    { rule: 'Show the child menu when the age is under 12.',
+      varName: 'age', t: 12, correct: '<', values: [9, 11, 12, 15],
+      why: '"Under" excludes the number itself, so a 12 year old gets the normal menu.' },
+    { rule: 'Free shipping applies at 35 dollars and above.',
+      varName: 'total', t: 35, correct: '>=', values: [30, 34, 35, 40],
+      why: '"And above" includes the number, so a 35 dollar order ships free.' },
+    { rule: 'Give the small class discount when a class has at most 15 students.',
+      varName: 'students', t: 15, correct: '<=', values: [10, 15, 16, 22],
+      why: '"At most" includes the number itself, so a class of exactly 15 still gets the discount.' },
+    { rule: 'A password is rejected when it is shorter than 8 characters.',
+      varName: 'length', t: 8, correct: '<', values: [6, 7, 8, 12],
+      why: '"Shorter than" excludes the number, so an 8 character password is accepted.' },
+    { rule: 'SPOT THE BUG. This should display Adult for age 18 and up, but a tester enters 18 and gets Minor. Pick the operator that fixes it.',
+      varName: 'age', t: 18, correct: '>=', values: [16, 17, 18, 21],
+      why: 'The shipped code used > , which excludes 18 itself. "And up" needs >= .' }
+  ];
+
+  var el = {};
+  ['round','streak','score','ruletext','codeline','ops','bench','rows','note','nextbtn','play']
+    .forEach(function (k) { el[k] = document.getElementById('bp-' + k); });
+
+  var i = 0, score = 0, right = 0, answered = false;
+
+  function render() {
+    var c = RULES[i];
+    answered = false;
+    el.round.textContent = 'Rule ' + (i + 1) + ' / ' + RULES.length;
+    el.streak.textContent = 'Correct: ' + right;
+    el.score.textContent = 'Score: ' + score;
+    el.ruletext.textContent = c.rule;
+    el.codeline.innerHTML = 'IF (' + c.varName + ' <span class="bp-slot" id="bp-slot">?</span> ' + c.t + ')';
+    el.ops.innerHTML = '';
+    OPS.forEach(function (op) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'bp-op'; b.textContent = op;
+      b.addEventListener('click', function () { choose(op, b); });
+      el.ops.appendChild(b);
+    });
+    el.bench.classList.remove('show');
+    el.rows.innerHTML = '';
+    el.note.textContent = '';
+    el.nextbtn.style.display = 'none';
+  }
+
+  function choose(op, btn) {
+    if (answered) return;
+    answered = true;
+    var c = RULES[i];
+    var correct = (op === c.correct);
+    if (correct) { score += 100; right++; }
+    Array.prototype.forEach.call(el.ops.children, function (b) {
+      b.disabled = true;
+      if (b.textContent === c.correct) b.className = 'bp-op right';
+    });
+    if (!correct) btn.className = 'bp-op wrong';
+    var slot = document.getElementById('bp-slot');
+    if (slot) slot.textContent = op;
+
+    /* Run the chosen operator against real values, marking the boundary row.
+       Seeing exactly one row flip is what makes the lesson stick. */
+    el.rows.innerHTML = '';
+    c.values.forEach(function (v) {
+      var mine = test(op, v, c.t), want = test(c.correct, v, c.t);
+      var row = document.createElement('div');
+      row.className = 'bp-row' + (v === c.t ? ' edge' : '');
+      row.innerHTML = '<span class="bp-val">' + v + '</span>'
+        + '<span class="bp-tag ' + (mine ? 'ok' : 'no') + '">' + (mine ? 'passes' : 'blocked') + '</span>'
+        + (mine === want ? '' : '<span class="bp-tag no">rule says ' + (want ? 'passes' : 'blocked') + '</span>')
+        + (v === c.t ? '<span class="bp-edge">the boundary</span>' : '');
+      el.rows.appendChild(row);
+    });
+    el.bench.classList.add('show');
+    el.note.textContent = (correct ? 'Correct. ' : 'Not quite. ') + c.why;
+    el.score.textContent = 'Score: ' + score;
+    el.streak.textContent = 'Correct: ' + right;
+    el.nextbtn.textContent = (i < RULES.length - 1) ? 'Next rule' : 'See your result';
+    el.nextbtn.style.display = 'inline-block';
+  }
+
+  el.nextbtn.addEventListener('click', function () {
+    if (i < RULES.length - 1) { i++; render(); } else { finish(); }
+  });
+
+  function finish() {
+    el.play.innerHTML =
+      '<div class="bp-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + right + ' of ' + RULES.length + ' rules written correctly.</p>' +
+        '<div class="bp-teach">' +
+          '<b>Every one of these turned on a single value.</b> "At least", "and above" and ' +
+          '"at most" include the number itself and need >= or <=. "More than", "under" and ' +
+          '"shorter than" exclude it and need > or <. Get the direction right and the boundary ' +
+          'wrong and the program is correct for every input except one, which is exactly where ' +
+          'the exam and your users will find it. Test three values on every condition you write: ' +
+          'one below the line, one exactly on it, one above.' +
+        '</div>' +
+        '<p><button class="bp-next" id="bp-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('bp-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  render();
+})();
+</script>

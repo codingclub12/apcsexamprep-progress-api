@@ -1,0 +1,282 @@
+<style>
+#mm-game{all:initial!important;display:block!important;box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.55!important;max-width:900px!important;margin:0 auto!important;padding:0 0 8px!important}
+#mm-game *,#mm-game *::before,#mm-game *::after{box-sizing:border-box!important}
+#mm-game .mm-card{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden!important}
+#mm-game .mm-hero{background:linear-gradient(135deg,#4c1d95,#7c3aed)!important;padding:22px 24px!important}
+#mm-game .mm-title{font-size:26px!important;font-weight:800!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1.15!important}
+#mm-game .mm-sub{font-size:15px!important;margin:8px 0 0!important;color:#ede9fe!important;-webkit-text-fill-color:#ede9fe!important}
+#mm-game .mm-bar{display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:14px 24px!important;background:#f8fafc!important;border-bottom:1px solid #e2e8f0!important}
+#mm-game .mm-chip{display:inline-block!important;font-size:13px!important;font-weight:700!important;padding:5px 12px!important;border-radius:100px!important;background:#fff!important;border:1px solid #cbd5e1!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#mm-game .mm-chip.mm-scorechip{background:#7c3aed!important;border-color:#7c3aed!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#mm-game .mm-body{padding:18px 24px 24px!important}
+#mm-game .mm-how{font-size:14px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;margin:0 0 14px!important}
+#mm-game .mm-brief{background:#f5f3ff!important;border:1px solid #ddd6fe!important;border-radius:12px!important;padding:12px 16px!important;margin-bottom:14px!important;font-size:15px!important;font-weight:700!important;color:#4c1d95!important;-webkit-text-fill-color:#4c1d95!important}
+#mm-game .mm-code{background:#0f172a!important;border-radius:10px!important;padding:18px!important;margin:0 0 14px!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:18px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;text-align:center!important;word-break:break-word!important}
+#mm-game .mm-slot{display:inline-block!important;min-width:64px!important;padding:2px 10px!important;border-radius:6px!important;background:#a78bfa!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;font-weight:800!important}
+#mm-game .mm-slot.blank{background:#334155!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important}
+#mm-game .mm-ops{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:9px!important;margin-bottom:14px!important}
+@media (max-width:600px){#mm-game .mm-ops{grid-template-columns:repeat(2,1fr)!important}}
+#mm-game .mm-op{font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:16px!important;font-weight:700!important;padding:12px 6px!important;border-radius:10px!important;border:2px solid #ddd6fe!important;cursor:pointer!important;background:#fff!important;color:#5b21b6!important;-webkit-text-fill-color:#5b21b6!important}
+#mm-game .mm-op:hover:enabled{background:#f5f3ff!important;border-color:#7c3aed!important}
+#mm-game .mm-op:disabled{opacity:.5!important;cursor:default!important}
+#mm-game .mm-op.right{background:#16a34a!important;border-color:#16a34a!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#mm-game .mm-op.wrong{background:#dc2626!important;border-color:#dc2626!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#mm-game .mm-bench{display:none!important;border:1px solid #e2e8f0!important;border-radius:12px!important;overflow:hidden!important}
+#mm-game .mm-bench.show{display:block!important}
+#mm-game .mm-benchhead{background:#f8fafc!important;padding:8px 14px!important;font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;border-bottom:1px solid #e2e8f0!important}
+#mm-game .mm-row{display:flex!important;align-items:center!important;gap:12px!important;padding:8px 14px!important;border-bottom:1px solid #f1f5f9!important;font-size:14px!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important}
+#mm-game .mm-row:last-child{border-bottom:0!important}
+#mm-game .mm-in{min-width:74px!important;font-weight:700!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#mm-game .mm-arrow{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important}
+#mm-game .mm-out{font-weight:800!important;color:#5b21b6!important;-webkit-text-fill-color:#5b21b6!important}
+#mm-game .mm-tag{font-size:11px!important;font-weight:700!important;padding:3px 9px!important;border-radius:100px!important;font-family:-apple-system,BlinkMacSystemFont,sans-serif!important}
+#mm-game .mm-tag.ok{background:#dcfce7!important;color:#15803d!important;-webkit-text-fill-color:#15803d!important}
+#mm-game .mm-tag.no{background:#fee2e2!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#mm-game .mm-go{background:#7c3aed!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:0!important;font-family:inherit!important;font-size:15px!important;font-weight:700!important;padding:11px 18px!important;border-radius:10px!important;cursor:pointer!important;margin-top:12px!important}
+#mm-game .mm-note{font-size:14px!important;margin:12px 0 0!important;color:#334155!important;-webkit-text-fill-color:#334155!important;min-height:22px!important}
+#mm-game .mm-verdict{font-weight:800!important}
+#mm-game .mm-verdict.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important}
+#mm-game .mm-verdict.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#mm-game .mm-end{text-align:center!important;padding:8px 0!important}
+#mm-game .mm-end h2{font-size:24px!important;font-weight:800!important;margin:0 0 8px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#mm-game .mm-teach{background:#f5f3ff!important;border-left:5px solid #7c3aed!important;border-radius:0 10px 10px 0!important;padding:12px 16px!important;margin:14px 0 0!important;font-size:14px!important;text-align:left!important;color:#4c1d95!important;-webkit-text-fill-color:#4c1d95!important}
+</style>
+
+<div class="mm-game" id="mm-game">
+  <div class="mm-card">
+    <div class="mm-hero">
+      <h1 class="mm-title">Mod Machine</h1>
+      <p class="mm-sub">Pick the expression that turns every input into the output the machine demands, not just the first one</p>
+    </div>
+    <div class="mm-bar">
+      <span class="mm-chip" id="mm-round">Machine 1 / 7</span>
+      <span class="mm-chip" id="mm-right">Correct: 0</span>
+      <span class="mm-chip mm-scorechip" id="mm-score">Score: 0</span>
+    </div>
+    <div class="mm-body" id="mm-play">
+      <p class="mm-how">How to play: the machine has to turn every input in the table into its output. Pick the expression that does it. All four are then run against every input, so a choice that works on the first row and fails on the fourth shows you exactly where.</p>
+      <div class="mm-brief" id="mm-brief"></div>
+      <div class="mm-code" id="mm-code"></div>
+      <div class="mm-ops" id="mm-ops"></div>
+      <div class="mm-bench" id="mm-bench">
+        <div class="mm-benchhead" id="mm-benchhead">The machine, run on every input</div>
+        <div id="mm-rows"></div>
+      </div>
+      <p class="mm-note" id="mm-note"></p>
+      <button class="mm-go" id="mm-nextbtn" type="button" style="display:none">Next machine</button>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Mod Machine - AP CSP Topic 3.3.
+     MOD is the operator students meet once and then guess at forever, so every
+     round here is a JOB rather than an arithmetic drill: turn these inputs into
+     these outputs. The four candidate expressions are all real functions, and
+     the wrong ones are wrong on SOME inputs rather than all of them, which is
+     why the whole table runs after the choice. A candidate that matches on the
+     first two rows and misses the third is the exact shape of the mistake this
+     topic produces.
+     Expressions are declared as functions and the table is computed from them,
+     so no expected output is written down anywhere and none can drift. */
+
+  var ROUNDS = [
+    { brief: 'Turn any number into its last digit.',
+      inputs: [7, 42, 130, 2589],
+      want: function (n) { return n % 10; },
+      cands: [
+        { label: 'n MOD 10', f: function (n) { return n % 10; } },
+        { label: 'n / 10', f: function (n) { return Math.floor(n / 10); } },
+        { label: 'n MOD 100', f: function (n) { return n % 100; } },
+        { label: '10 MOD n', f: function (n) { return 10 % n; } }
+      ],
+      why: 'MOD gives the REMAINDER after dividing. Dividing by ten shifts a digit off the right end and the remainder is exactly the digit that fell off.' },
+
+    { brief: 'Throw away the last digit. 2589 becomes 258.',
+      inputs: [7, 42, 130, 2589],
+      want: function (n) { return Math.floor(n / 10); },
+      cands: [
+        { label: 'n MOD 10', f: function (n) { return n % 10; } },
+        { label: 'n / 10 rounded down', f: function (n) { return Math.floor(n / 10); } },
+        { label: 'n - 10', f: function (n) { return n - 10; } },
+        { label: 'n MOD 1000', f: function (n) { return n % 1000; } }
+      ],
+      why: 'Division rounded down keeps everything except the last digit, and MOD keeps only the last digit. They are the two halves of the same operation, which is why they turn up together.' },
+
+    { brief: 'Answer 1 when the number is odd and 0 when it is even.',
+      inputs: [4, 7, 100, 2589],
+      want: function (n) { return n % 2; },
+      cands: [
+        { label: 'n MOD 2', f: function (n) { return n % 2; } },
+        { label: '2 MOD n', f: function (n) { return 2 % n; } },
+        { label: 'n MOD 3', f: function (n) { return n % 3; } },
+        { label: 'n / 2 rounded down', f: function (n) { return Math.floor(n / 2); } }
+      ],
+      why: 'Dividing by two leaves a remainder of 0 or 1 and nothing else, so MOD 2 is the standard odd-or-even test. Note that 2 MOD n is a completely different question and happens to look right for small n.' },
+
+    { brief: 'A clock face. Turn an hour count into a position from 0 to 11.',
+      inputs: [5, 12, 13, 25],
+      want: function (n) { return n % 12; },
+      cands: [
+        { label: 'n MOD 12', f: function (n) { return n % 12; } },
+        { label: 'n MOD 11', f: function (n) { return n % 11; } },
+        { label: 'n - 12', f: function (n) { return n - 12; } },
+        { label: 'n MOD 13', f: function (n) { return n % 13; } }
+      ],
+      why: 'MOD is how anything that wraps around is written: clocks, days of the week, positions in a list. MOD 12 gives 0 through 11, which is twelve positions, not eleven.' },
+
+    { brief: 'Total minutes into whole hours. 135 minutes is 2 hours.',
+      inputs: [45, 60, 135, 600],
+      want: function (n) { return Math.floor(n / 60); },
+      cands: [
+        { label: 'n / 60 rounded down', f: function (n) { return Math.floor(n / 60); } },
+        { label: 'n MOD 60', f: function (n) { return n % 60; } },
+        { label: 'n / 100 rounded down', f: function (n) { return Math.floor(n / 100); } },
+        { label: '60 MOD n', f: function (n) { return 60 % n; } }
+      ],
+      why: 'Division counts how many whole groups fit. MOD 60 is the other half of this pair, and it gives the leftover minutes, which the next machine asks for.' },
+
+    { brief: 'The minutes left over after the whole hours are taken out.',
+      inputs: [45, 60, 135, 600],
+      want: function (n) { return n % 60; },
+      cands: [
+        { label: 'n MOD 60', f: function (n) { return n % 60; } },
+        { label: 'n / 60 rounded down', f: function (n) { return Math.floor(n / 60); } },
+        { label: 'n - 60', f: function (n) { return n - 60; } },
+        { label: 'n MOD 100', f: function (n) { return n % 100; } }
+      ],
+      why: 'Whole hours and leftover minutes are division and MOD on the same pair of numbers. Together they never lose anything: hours times 60 plus the remainder is exactly the number you started with.' },
+
+    { brief: 'SPOT THE BUG. This should be 0 when a number divides evenly by 4. One candidate is right on three of the four inputs.',
+      inputs: [8, 12, 14, 100],
+      want: function (n) { return n % 4; },
+      cands: [
+        { label: 'n MOD 4', f: function (n) { return n % 4; } },
+        { label: 'n MOD 2', f: function (n) { return n % 2; } },
+        { label: '4 MOD n', f: function (n) { return 4 % n; } },
+        { label: 'n / 4 rounded down', f: function (n) { return Math.floor(n / 4); } }
+      ],
+      why: 'MOD 2 answers 0 for 8, 12 and 100, and 0 for 14 as well when the question was whether 4 divides it. Every even number passes a MOD 2 test, so three matching rows proved nothing. That is why the table has a row the near-miss gets wrong.' }
+  ];
+
+  var el = {};
+  ['round','right','score','brief','code','ops','bench','benchhead','rows','note','nextbtn','play']
+    .forEach(function (k) { el[k] = document.getElementById('mm-' + k); });
+
+  var i = 0, score = 0, correct = 0, answered = false;
+
+  function render() {
+    answered = false;
+    var r = ROUNDS[i];
+    el.round.textContent = 'Machine ' + (i + 1) + ' / ' + ROUNDS.length;
+    el.right.textContent = 'Correct: ' + correct;
+    el.score.textContent = 'Score: ' + score;
+    el.brief.textContent = r.brief;
+    el.code.innerHTML = 'result \u2190 <span class="mm-slot blank" id="mm-slot">?</span>';
+    el.ops.innerHTML = '';
+    r.cands.forEach(function (c) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'mm-op';
+      b.textContent = c.label;
+      b.addEventListener('click', function () { choose(c, b); });
+      el.ops.appendChild(b);
+    });
+    el.bench.classList.remove('show');
+    el.rows.innerHTML = '';
+    el.note.textContent = '';
+    el.nextbtn.style.display = 'none';
+    showWanted();
+  }
+
+  /* The wanted column is shown BEFORE the choice: it is the specification, not
+     the answer. What is hidden is what each candidate would actually produce. */
+  function showWanted() {
+    var r = ROUNDS[i];
+    el.benchhead.textContent = 'What the machine has to produce';
+    el.rows.innerHTML = '';
+    r.inputs.forEach(function (n) {
+      var d = document.createElement('div');
+      d.className = 'mm-row';
+      d.innerHTML = '<span class="mm-in">n = ' + n + '</span>'
+        + '<span class="mm-arrow">must give</span>'
+        + '<span class="mm-out">' + r.want(n) + '</span>';
+      el.rows.appendChild(d);
+    });
+    el.bench.classList.add('show');
+  }
+
+  function choose(cand, btn) {
+    if (answered) return;
+    answered = true;
+    var r = ROUNDS[i];
+    var right = r.inputs.every(function (n) { return cand.f(n) === r.want(n); });
+    if (right) { score += 100; correct++; }
+
+    // Mark the candidate that matches on every input, whichever button it is.
+    Array.prototype.forEach.call(el.ops.children, function (b, k) {
+      b.disabled = true;
+      var c = r.cands[k];
+      if (r.inputs.every(function (n) { return c.f(n) === r.want(n); })) b.className = 'mm-op right';
+    });
+    if (!right) btn.className = 'mm-op wrong';
+
+    var slot = document.getElementById('mm-slot');
+    if (slot) { slot.textContent = cand.label; slot.className = 'mm-slot'; }
+
+    el.benchhead.textContent = 'Your choice, run on every input';
+    el.rows.innerHTML = '';
+    r.inputs.forEach(function (n) {
+      var got = cand.f(n), need = r.want(n);
+      var d = document.createElement('div');
+      d.className = 'mm-row';
+      d.innerHTML = '<span class="mm-in">n = ' + n + '</span>'
+        + '<span class="mm-arrow">gives</span>'
+        + '<span class="mm-out">' + got + '</span>'
+        + (got === need ? '<span class="mm-tag ok">wanted ' + need + '</span>'
+                        : '<span class="mm-tag no">wanted ' + need + '</span>');
+      el.rows.appendChild(d);
+    });
+
+    el.score.textContent = 'Score: ' + score;
+    el.right.textContent = 'Correct: ' + correct;
+    var missed = r.inputs.filter(function (n) { return cand.f(n) !== r.want(n); }).length;
+    el.note.innerHTML = '<span class="mm-verdict ' + (right ? 'good' : 'bad') + '">'
+      + (right ? 'Correct on all four. 100 points. '
+               : 'Wrong on ' + missed + ' of the four inputs. ') + '</span>' + r.why;
+    el.nextbtn.textContent = (i < ROUNDS.length - 1) ? 'Next machine' : 'See your result';
+    el.nextbtn.style.display = 'inline-block';
+  }
+
+  el.nextbtn.addEventListener('click', function () {
+    if (i < ROUNDS.length - 1) { i++; render(); } else { finish(); }
+  });
+
+  function finish() {
+    el.play.innerHTML =
+      '<div class="mm-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + correct + ' of ' + ROUNDS.length + ' machines built correctly.</p>' +
+        '<div class="mm-teach">' +
+          '<b>Division and MOD are two halves of one operation.</b> Dividing and rounding ' +
+          'down tells you how many whole groups fit; MOD tells you what was left over. ' +
+          'Together they lose nothing, which is why they show up in pairs: hours and ' +
+          'minutes, tens and ones, whole boxes and the remainder. MOD is also how anything ' +
+          'that wraps is written, so a clock, a day of the week and a position in a list all ' +
+          'end up as MOD. And the order matters: n MOD 10 and 10 MOD n are different ' +
+          'questions that happen to agree on a few small numbers, which is exactly how a ' +
+          'wrong expression survives testing.' +
+        '</div>' +
+        '<p><button class="mm-go" id="mm-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('mm-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  render();
+})();
+</script>
