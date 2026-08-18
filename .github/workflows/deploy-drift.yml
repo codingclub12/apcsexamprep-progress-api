@@ -1,0 +1,119 @@
+name: Deploy drift
+
+# WHAT THIS CATCHES
+# A deploy that never landed. Railway builds on every push to main, but a failed
+# or stalled build is invisible from outside: /api/health keeps answering 200
+# from the last good container, so the site looks healthy while the merge you
+# just made is not running anywhere.
+#
+# That happened on 2026-08-18. A merge at 05:15 UTC was still not serving at
+# 09:13, four hours and six merges later, and the only reason anybody noticed
+# was that somebody happened to compare two strings by hand.
+#
+# /api/health has reported which commit is serving since PR #191, precisely so
+# this question could be answered. Nothing was asking it on a schedule. This
+# does.
+#
+# WHY IT IS NOT JUST "deployed != main"
+# Right after a merge they always differ, for as long as the build takes, and an
+# alarm that fires on every healthy deploy is an alarm people turn off. So the
+# check is time based: main's head has to have been sitting undeployed for
+# longer than a build could reasonably take.
+
+on:
+  schedule:
+    # Every 30 minutes. A stalled deploy is worth knowing about inside the hour,
+    # and this job is a curl and some arithmetic.
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    name: Is main actually serving
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Need real history so the head commit's timestamp is available.
+          fetch-depth: 20
+
+      - name: Compare the serving commit against main
+        env:
+          HEALTH_URL: https://progress.apcsexamprep.com/api/health
+          # How long a build is allowed to take before silence is a problem.
+          GRACE_MINUTES: '30'
+        run: |
+          set -uo pipefail
+
+          head_sha=$(git rev-parse HEAD)
+          head_short=${head_sha:0:7}
+          head_epoch=$(git log -1 --format=%ct "$head_sha")
+          now_epoch=$(date -u +%s)
+          age_min=$(( (now_epoch - head_epoch) / 60 ))
+
+          # A transient blip must not read as a failed deploy, so the fetch gets
+          # three tries before it is believed.
+          body=""
+          for attempt in 1 2 3; do
+            body=$(curl -sS --max-time 20 "$HEALTH_URL" || true)
+            [ -n "$body" ] && break
+            sleep 10
+          done
+
+          if [ -z "$body" ]; then
+            echo "::error title=Health endpoint unreachable::$HEALTH_URL did not answer after 3 tries."
+            echo "That is a bigger problem than drift: the API may be down."
+            exit 1
+          fi
+
+          served=$(printf '%s' "$body" | sed -n 's/.*"commit":"\([^"]*\)".*/\1/p')
+          echo "main head : $head_short  (merged ${age_min}m ago)"
+          echo "serving   : ${served:-<none>}"
+          echo "grace     : ${GRACE_MINUTES}m"
+
+          if [ -z "$served" ]; then
+            echo "::error title=No commit in health response::/api/health answered but reported no commit."
+            echo "Body: $body"
+            exit 1
+          fi
+
+          if [ "$served" = "unknown" ]; then
+            echo "::error title=Serving container is not a Railway build::commit reported as 'unknown'."
+            echo "RAILWAY_GIT_COMMIT_SHA is unset in the running container."
+            exit 1
+          fi
+
+          if [ "$served" = "$head_short" ]; then
+            echo "In sync."
+            exit 0
+          fi
+
+          # Different, which is normal while a build runs. Only a stale head is a
+          # problem, and the commit that is NOT serving is the one to name.
+          if [ "$age_min" -le "${GRACE_MINUTES}" ]; then
+            echo "Behind by design: main is only ${age_min}m old and a build takes a few minutes."
+            exit 0
+          fi
+
+          # Is the serving commit even an ancestor? If not, something stranger
+          # than a slow build is going on (a rollback, or a different branch).
+          relation="behind"
+          if ! git merge-base --is-ancestor "$served" "$head_sha" 2>/dev/null; then
+            relation="NOT AN ANCESTOR of main, which suggests a rollback or a deploy from another branch"
+          fi
+
+          echo "::error title=Deploy has not landed::main is $head_short, merged ${age_min}m ago, but production is serving $served ($relation)."
+          echo ""
+          echo "A failed Railway build looks exactly like this from outside: /api/health"
+          echo "keeps answering 200 from the last good container."
+          echo ""
+          echo "Check, in order:"
+          echo "  1. Railway Deployments tab for a failed or stuck build."
+          echo "  2. The build log for 'prebuild-install warn install Request timed out',"
+          echo "     which is the documented failure mode for better-sqlite3 here."
+          echo "  3. Whether the push that should have triggered it actually reached main."
+          exit 1
