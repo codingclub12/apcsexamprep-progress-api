@@ -183,13 +183,30 @@ a game id the server registry does not know, a game file no builder entry
 builds, a script block that does not compile, and any style property a script
 sets that the stylesheet locks with `!important`.
 
+## The hub
+
+`scripts/csp-games-hub-patch.js` generates the hub update rather than editing
+it: stored body in, generated Big Idea 3 section inserted at one anchor, tiles
+for shipped games retired, Matrixify sheet out. It refuses a body that is a
+scrape of the rendered page rather than the stored one, an anchor that is not
+unique, any lost `/pages/` link, unbalanced div tags, or an output smaller than
+the input. That last check is the important one: a Matrixify import with an
+empty Body HTML wipes the page and reports success.
+
+The body-shape check exists because I made that mistake writing it. The first
+extraction started at the wrapper div and dropped the page's own stylesheet,
+which would have imported cleanly and rendered an unstyled hub.
+
+Verified against the live body: 10 KB in, 15 KB out, 28 cards where there were
+10, six coming-soon tiles where there were eight, no link lost, and the result
+rendered in a browser with all eighteen cards in topic order.
+
 ## Still open
 
-- **Nothing has been imported to Shopify.** The CSV builds cleanly and every
+- **Nothing has been imported to Shopify.** Both CSVs build cleanly and every
   page has been played in a browser, but no import has been run. That is a
-  deliberate stop: imports are one at a time and want a human watching.
-- **The hub does not link any of these.** A game page nothing points at is a
-  page nobody finds. That is the next piece of work.
+  deliberate stop: imports are one at a time and want a human watching. Snapshot
+  the hub before importing the hub sheet.
 - **The two-page bridge defect** still awaits the Shopify-side pipeline. See
   `docs/csp-game-bridge-fix.md`.
 - **PR #182's 18 notes pages must not be imported.** They duplicate pages that
