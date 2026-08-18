@@ -34,7 +34,6 @@ const meta = {
 };
 
 const body = H.article([
-  H.h1('AP Cybersecurity Launches This Fall: The Complete 2026-27 Guide'),
   H.dek('The newest AP is not a rebranded computer science course. It is a career course with a device security free response, an industry framework underneath it, and no released exams to practice on. Here is what that actually means for your fall.'),
   H.byline({
     author: 'Tanner Crow', role: 'AP Computer Science Teacher',

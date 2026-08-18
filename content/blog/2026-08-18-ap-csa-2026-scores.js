@@ -35,7 +35,6 @@ const meta = {
 };
 
 const body = H.article([
-  H.h1('The 2026 AP CSA Score Distribution Tells a Story Nobody Expected'),
   H.dek('A quarter of students earned the top score. Nearly as many earned the lowest. On an exam where the middle is supposed to be crowded, that is not noise, and it tells you exactly how to prepare.'),
   H.byline({
     author: 'Tanner Crow', role: 'AP Computer Science Teacher',

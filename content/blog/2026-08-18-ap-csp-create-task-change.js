@@ -32,7 +32,6 @@ const meta = {
 };
 
 const body = H.article([
-  H.h1('What Happened to the AP CSP Create Performance Task'),
   H.dek('The part you used to write at home, over weeks, with your notes open, is now written in a proctored room in under an hour. If you are preparing from a guide written before this change, you are preparing for an exam that no longer exists.'),
   H.byline({
     author: 'Tanner Crow', role: 'AP Computer Science Teacher',

@@ -32,7 +32,6 @@ const meta = {
 };
 
 const body = H.article([
-  H.h1('AP Networking in 2026-27: Inside the Final Pilot Year'),
   H.dek('This is the year before the course goes national, which makes it the strangest year to be in it. The exam you sit is not the exam future students will sit, and almost nothing written about this course makes that distinction.'),
   H.byline({
     author: 'Tanner Crow', role: 'AP Computer Science Teacher',
