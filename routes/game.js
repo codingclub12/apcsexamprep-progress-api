@@ -64,6 +64,7 @@ const REGISTRY = {
   'mod-machine':                { metric: 'score', higher: true, min: 0, max: 10000 },
   'branch-runner':              { metric: 'score', higher: true, min: 0, max: 10000 },
   'string-lab':                 { metric: 'score', higher: true, min: 0, max: 10000 },
+  'call-sheet':                 { metric: 'score', higher: true, min: 0, max: 10000 },
 };
 
 const WINDOWS = new Set(['today', 'week', 'month', 'year', 'all']);

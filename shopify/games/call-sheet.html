@@ -1,0 +1,353 @@
+<style>
+#cs-game{all:initial!important;display:block!important;box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.55!important;max-width:900px!important;margin:0 auto!important;padding:0 0 8px!important}
+#cs-game *,#cs-game *::before,#cs-game *::after{box-sizing:border-box!important}
+#cs-game .cs-card{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden!important}
+#cs-game .cs-hero{background:linear-gradient(135deg,#1e3a8a,#3b82f6)!important;padding:22px 24px!important}
+#cs-game .cs-title{font-size:26px!important;font-weight:800!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1.15!important}
+#cs-game .cs-sub{font-size:15px!important;margin:8px 0 0!important;color:#dbeafe!important;-webkit-text-fill-color:#dbeafe!important}
+#cs-game .cs-bar{display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:14px 24px!important;background:#f8fafc!important;border-bottom:1px solid #e2e8f0!important}
+#cs-game .cs-chip{display:inline-block!important;font-size:13px!important;font-weight:700!important;padding:5px 12px!important;border-radius:100px!important;background:#fff!important;border:1px solid #cbd5e1!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#cs-game .cs-chip.cs-scorechip{background:#3b82f6!important;border-color:#3b82f6!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#cs-game .cs-body{padding:18px 24px 24px!important}
+#cs-game .cs-how{font-size:14px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;margin:0 0 14px!important}
+#cs-game .cs-brief{background:#eff6ff!important;border:1px solid #bfdbfe!important;border-radius:12px!important;padding:12px 16px!important;margin-bottom:14px!important;font-size:15px!important;font-weight:700!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important}
+#cs-game .cs-def{background:#0f172a!important;border-radius:10px!important;padding:14px 16px!important;margin:0 0 14px!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:14px!important;line-height:1.65!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;overflow-x:auto!important}
+#cs-game .cs-defline{display:block!important;white-space:pre!important}
+#cs-game .cs-callrow{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:6px!important;background:#1e293b!important;border-radius:10px!important;padding:14px 16px!important;margin-bottom:12px!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:17px!important;font-weight:700!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important}
+#cs-game .cs-slot{min-width:62px!important;padding:5px 12px!important;border-radius:8px!important;background:#334155!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:2px dashed #64748b!important;cursor:pointer!important;font-family:inherit!important;font-size:16px!important;font-weight:800!important;text-align:center!important}
+#cs-game .cs-slot.filled{background:#60a5fa!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a!important;border:2px solid #60a5fa!important}
+#cs-game .cs-slot.sel{outline:3px solid #fbbf24!important}
+#cs-game .cs-slot:disabled{cursor:default!important;opacity:.8!important}
+#cs-game .cs-pal{display:grid!important;grid-template-columns:repeat(6,1fr)!important;gap:8px!important;margin-bottom:12px!important}
+@media (max-width:640px){#cs-game .cs-pal{grid-template-columns:repeat(3,1fr)!important}}
+#cs-game .cs-val{font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:16px!important;font-weight:800!important;padding:11px 4px!important;border-radius:10px!important;border:2px solid #bfdbfe!important;cursor:pointer!important;background:#fff!important;color:#1d4ed8!important;-webkit-text-fill-color:#1d4ed8!important}
+#cs-game .cs-val:hover:enabled{background:#eff6ff!important;border-color:#3b82f6!important}
+#cs-game .cs-val:disabled{opacity:.5!important;cursor:default!important}
+#cs-game .cs-bind{display:none!important;border:1px solid #e2e8f0!important;border-radius:12px!important;overflow:hidden!important;margin-bottom:12px!important}
+#cs-game .cs-bind.show{display:block!important}
+#cs-game .cs-bhead{background:#f8fafc!important;padding:8px 14px!important;font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;border-bottom:1px solid #e2e8f0!important}
+#cs-game .cs-row{display:flex!important;align-items:center!important;gap:12px!important;padding:8px 14px!important;border-bottom:1px solid #f1f5f9!important;font-size:14px!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important}
+#cs-game .cs-row:last-child{border-bottom:0!important}
+#cs-game .cs-pos{font-size:11px!important;font-weight:700!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;min-width:64px!important;font-family:-apple-system,BlinkMacSystemFont,sans-serif!important}
+#cs-game .cs-bindv{font-weight:800!important;color:#1d4ed8!important;-webkit-text-fill-color:#1d4ed8!important}
+#cs-game .cs-result{border-radius:10px!important;padding:12px 16px!important;margin-bottom:12px!important;font-size:16px!important;font-weight:800!important;background:#1e3a8a!important;color:#fff!important;-webkit-text-fill-color:#fff!important;display:none!important}
+#cs-game .cs-result.show{display:block!important}
+#cs-game .cs-go{background:#3b82f6!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:0!important;font-family:inherit!important;font-size:15px!important;font-weight:700!important;padding:11px 18px!important;border-radius:10px!important;cursor:pointer!important;margin-right:8px!important}
+#cs-game .cs-go:disabled{opacity:.5!important;cursor:default!important}
+#cs-game .cs-cant{border-color:#fca5a5!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#cs-game .cs-small{background:#fff!important;color:#475569!important;-webkit-text-fill-color:#475569!important;border:2px solid #cbd5e1!important;font-family:inherit!important;font-size:13px!important;font-weight:700!important;padding:9px 14px!important;border-radius:8px!important;cursor:pointer!important;margin-right:8px!important}
+#cs-game .cs-note{font-size:14px!important;margin:12px 0 0!important;color:#334155!important;-webkit-text-fill-color:#334155!important;min-height:22px!important}
+#cs-game .cs-verdict{font-weight:800!important}
+#cs-game .cs-verdict.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important}
+#cs-game .cs-verdict.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#cs-game .cs-end{text-align:center!important;padding:8px 0!important}
+#cs-game .cs-end h2{font-size:24px!important;font-weight:800!important;margin:0 0 8px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#cs-game .cs-teach{background:#eff6ff!important;border-left:5px solid #3b82f6!important;border-radius:0 10px 10px 0!important;padding:12px 16px!important;margin:14px 0 0!important;font-size:14px!important;text-align:left!important;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important}
+</style>
+
+<div class="cs-game" id="cs-game">
+  <div class="cs-card">
+    <div class="cs-hero">
+      <h1 class="cs-title">Call Sheet</h1>
+      <p class="cs-sub">Fill the arguments and run the call, then watch which parameter each one actually landed in</p>
+    </div>
+    <div class="cs-bar">
+      <span class="cs-chip" id="cs-round">Call 1 / 7</span>
+      <span class="cs-chip" id="cs-first">First try: 0</span>
+      <span class="cs-chip cs-scorechip" id="cs-score">Score: 0</span>
+    </div>
+    <div class="cs-body" id="cs-play">
+          <p class="cs-how">How to play: click an argument slot, then click a value to drop it in. Run the call and the binding table shows which parameter each argument landed in, by position. First run correct is 100 points, second is 50. One of these calls cannot do what is asked at all, and saying so is worth full marks.</p>
+      <div class="cs-brief" id="cs-brief"></div>
+      <div class="cs-def" id="cs-def"></div>
+      <div class="cs-callrow" id="cs-callrow"></div>
+      <div class="cs-pal" id="cs-pal"></div>
+      <div class="cs-bind" id="cs-bind">
+        <div class="cs-bhead">Arguments bound to parameters, left to right</div>
+        <div id="cs-bindrows"></div>
+      </div>
+      <div class="cs-result" id="cs-result"></div>
+      <button class="cs-go" id="cs-runbtn" type="button">Run the call</button>
+      <button class="cs-small" id="cs-clearbtn" type="button">Clear the slots</button>
+      <button class="cs-small cs-cant" id="cs-cantbtn" type="button">It cannot return anything</button>
+      <button class="cs-go" id="cs-nextbtn" type="button" style="display:none">Next call</button>
+      <p class="cs-note" id="cs-note"></p>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Call Sheet - AP CSP Topic 3.12.
+     Arguments bind to parameters BY POSITION, and nothing about the names
+     involved changes that. The binding table is drawn from the actual call, so
+     a student who drops the right values in the wrong order sees which
+     parameter each one landed in rather than just a wrong number.
+     Call 4 has a procedure with no RETURN: it displays and hands nothing back,
+     so assigning its result gives you nothing. Call 6 shadows an outer variable
+     with a parameter of the same name. Call 7 is the argument-order bug that
+     happens to look right for one pair of inputs and wrong for every other. */
+
+  var ROUNDS = [
+    { brief: 'Make this call return 12.',
+      def: ['PROCEDURE addUp(a, b)', '{', '  RETURN a + b', '}'],
+      name: 'addUp', params: ['a', 'b'],
+      pal: [3, 4, 5, 7, 9, 12],
+      run: function (v) { return { value: v[0] + v[1] }; },
+      goal: function (r) { return r.value === 12; },
+      goalText: 'returns 12',
+      why: 'Two arguments, two parameters, matched left to right. Several pairs work here, and any of them is a correct call.' },
+
+    { brief: 'Make this call return 6. Order matters now.',
+      def: ['PROCEDURE minus(a, b)', '{', '  RETURN a - b', '}'],
+      name: 'minus', params: ['a', 'b'],
+      pal: [2, 4, 6, 8, 10, 12],
+      run: function (v) { return { value: v[0] - v[1] }; },
+      goal: function (r) { return r.value === 6; },
+      goalText: 'returns 6',
+      why: 'The first argument becomes a and the second becomes b, always. Swapping them here gives the negative of the answer, which is the cheapest possible demonstration that position is what binds.' },
+
+    { brief: 'Make this call return 20.',
+      def: ['PROCEDURE scale(value, factor)', '{', '  RETURN value * factor', '}'],
+      name: 'scale', params: ['value', 'factor'],
+      pal: [2, 4, 5, 6, 10, 20],
+      run: function (v) { return { value: v[0] * v[1] }; },
+      goal: function (r) { return r.value === 20; },
+      goalText: 'returns 20',
+      why: 'Helpful parameter names do not enforce anything. The procedure multiplies whatever arrives, in whatever role the position gave it.' },
+
+    { brief: 'CAREFUL. Make this call hand a value back to be stored. Any values will do.',
+      def: ['PROCEDURE announce(n)', '{', '  DISPLAY(n)', '}'],
+      name: 'announce', params: ['n'],
+      pal: [1, 2, 3, 4, 5, 6],
+      run: function (v) { return { displayed: v[0] }; },
+      goal: function () { return false; },
+      goalText: 'hands a value back',
+      impossible: true,
+      why: 'It cannot be done. This procedure DISPLAYS and never RETURNS, so there is nothing to store. Displaying is something the program does for the person watching; returning is something it does for the rest of the code. A procedure with no RETURN hands back nothing at all.' },
+
+    { brief: 'A call inside a call. Make the whole thing return 30.',
+      def: ['PROCEDURE addUp(a, b)', '{', '  RETURN a + b', '}', '', 'result \u2190 scale(addUp(FIRST, SECOND), THIRD)'],
+      name: 'call', params: ['FIRST', 'SECOND', 'THIRD'],
+      pal: [2, 3, 5, 6, 10, 15],
+      run: function (v) { return { value: (v[0] + v[1]) * v[2] }; },
+      goal: function (r) { return r.value === 30; },
+      goalText: 'returns 30',
+      why: 'The inner call finishes first and its RETURNED value becomes the argument to the outer one. Nesting calls is how a returned value gets used without ever being stored in a variable.' },
+
+    { brief: 'The parameter is named count, and so is a variable outside. Make the call return 8.',
+      def: ['count \u2190 100', '', 'PROCEDURE twice(count)', '{', '  RETURN count * 2', '}'],
+      name: 'twice', params: ['count'],
+      pal: [2, 4, 8, 16, 50, 100],
+      run: function (v) { return { value: v[0] * 2 }; },
+      goal: function (r) { return r.value === 8; },
+      goalText: 'returns 8',
+      why: 'The parameter is a separate box that only exists during the call, and it holds whatever the argument gave it. The outer count is untouched and irrelevant, which is exactly why the same name can safely appear in both places.' },
+
+    { brief: 'SPOT THE BUG. This should give the percentage scored. A tester passed 50 and 50 and it looked fine. Make it return 25.',
+      def: ['PROCEDURE percent(earned, possible)', '{', '  RETURN earned * 100 / possible', '}'],
+      name: 'percent', params: ['earned', 'possible'],
+      pal: [4, 5, 16, 20, 25, 80],
+      run: function (v) { return { value: v[0] * 100 / v[1] }; },
+      goal: function (r) { return r.value === 25; },
+      goalText: 'returns 25',
+      why: 'Equal arguments hide an order bug completely: 50 and 50 gives 100 either way round. Test a call with arguments that are different from each other, or a swapped pair will pass and ship.' }
+  ];
+
+  var el = {};
+  ['round','first','score','brief','def','callrow','pal','bind','bindrows','result','runbtn','clearbtn','cantbtn','nextbtn','note','play']
+    .forEach(function (k) { el[k] = document.getElementById('cs-' + k); });
+
+  var i = 0, score = 0, firsts = 0;
+  var slots = [], selected = 0, runs = 0, done = false;
+
+  function renderCall() {
+    var r = ROUNDS[i];
+    el.callrow.innerHTML = '';
+    var open = document.createElement('span');
+    open.textContent = (r.name === 'call' ? 'scale(addUp(' : r.name + '(');
+    el.callrow.appendChild(open);
+    r.params.forEach(function (p, k) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'cs-slot' + (slots[k] === null ? '' : ' filled') + (selected === k && !done ? ' sel' : '');
+      b.textContent = slots[k] === null ? p : String(slots[k]);
+      b.disabled = done;
+      b.addEventListener('click', function () { selected = k; paint(); });
+      el.callrow.appendChild(b);
+      if (k < r.params.length - 1) {
+        var comma = document.createElement('span');
+        comma.textContent = (r.name === 'call' && k === 1) ? '), ' : ', ';
+        el.callrow.appendChild(comma);
+      }
+    });
+    var close = document.createElement('span');
+    close.textContent = ')';
+    el.callrow.appendChild(close);
+  }
+
+  function renderPal() {
+    var r = ROUNDS[i];
+    el.pal.innerHTML = '';
+    r.pal.forEach(function (v) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'cs-val';
+      b.textContent = String(v);
+      b.disabled = done;
+      b.addEventListener('click', function () { drop(v); });
+      el.pal.appendChild(b);
+    });
+  }
+
+  function drop(v) {
+    if (done) return;
+    slots[selected] = v;
+    // Move to the next empty slot so filling left to right needs no extra clicks.
+    var next = slots.indexOf(null);
+    selected = next === -1 ? selected : next;
+    paint();
+  }
+
+  function paint() {
+    var r = ROUNDS[i];
+    el.round.textContent = 'Call ' + (i + 1) + ' / ' + ROUNDS.length;
+    el.first.textContent = 'First try: ' + firsts;
+    el.score.textContent = 'Score: ' + score;
+    el.brief.textContent = r.brief;
+    el.def.innerHTML = r.def.map(function (l) {
+      return '<span class="cs-defline">' + (l === '' ? ' ' : l) + '</span>';
+    }).join('');
+    renderCall();
+    renderPal();
+    el.runbtn.disabled = done || slots.indexOf(null) !== -1;
+    el.clearbtn.disabled = done;
+    el.cantbtn.disabled = done;
+  }
+
+  /* Working out that a procedure with no RETURN can never hand a value back is
+     the point of call 4, so it has to be worth the same as solving a call. A
+     round that can only ever be lost teaches the lesson and then punishes you
+     for learning it. Claiming it wrongly loses the round, which is what stops
+     the button being a free guess. */
+  el.cantbtn.addEventListener('click', function () {
+    if (done) return;
+    var r = ROUNDS[i];
+    if (r.impossible) {
+      score += 100;
+      firsts++;
+      endRound(true, 'Correct, and that is the answer. 100 points.');
+    } else {
+      endRound(false, 'It can return what was asked for.');
+    }
+  });
+
+  el.clearbtn.addEventListener('click', function () {
+    if (done) return;
+    slots = ROUNDS[i].params.map(function () { return null; });
+    selected = 0;
+    el.bind.classList.remove('show');
+    el.result.className = 'cs-result';
+    paint();
+  });
+
+  el.runbtn.addEventListener('click', function () {
+    if (done || slots.indexOf(null) !== -1) return;
+    runs++;
+    var r = ROUNDS[i];
+    var out = r.run(slots);
+
+    el.bindrows.innerHTML = '';
+    r.params.forEach(function (p, k) {
+      var d = document.createElement('div');
+      d.className = 'cs-row';
+      d.innerHTML = '<span class="cs-pos">argument ' + (k + 1) + '</span>'
+        + '<span class="cs-bindv">' + slots[k] + '</span>'
+        + '<span class="cs-pos">binds to</span>'
+        + '<span class="cs-bindv">' + p + '</span>';
+      el.bindrows.appendChild(d);
+    });
+    el.bind.classList.add('show');
+
+    el.result.className = 'cs-result show';
+    el.result.textContent = out.value === undefined
+      ? 'The call displayed ' + out.displayed + ' and returned nothing.'
+      : 'The call returned ' + out.value + '.';
+
+    if (r.goal(out)) {
+      var award = runs === 1 ? 100 : (runs === 2 ? 50 : 25);
+      score += award;
+      if (runs === 1) firsts++;
+      endRound(true, 'That ' + r.goalText + '. ' + award + ' points.');
+      return;
+    }
+    if (runs >= 3) {
+      endRound(false, 'Out of runs.');
+      return;
+    }
+    paint();
+    el.note.textContent = ROUNDS[i].impossible
+      ? 'It ran, and nothing came back. If no values can work, say so.'
+      : 'Not there yet. Look at which parameter each argument landed in.';
+  });
+
+  function endRound(won, msg) {
+    done = true;
+    paint();
+    el.runbtn.style.display = 'none';
+    el.clearbtn.style.display = 'none';
+    el.cantbtn.style.display = 'none';
+    el.note.innerHTML = '<span class="cs-verdict ' + (won ? 'good' : 'bad') + '">' + msg + '</span> ' + ROUNDS[i].why;
+    el.nextbtn.textContent = (i < ROUNDS.length - 1) ? 'Next call' : 'See your result';
+    el.nextbtn.style.display = 'inline-block';
+  }
+
+  el.nextbtn.addEventListener('click', function () {
+    if (i < ROUNDS.length - 1) { i++; startRound(); } else { finish(); }
+  });
+
+  function startRound() {
+    done = false;
+    runs = 0;
+    selected = 0;
+    slots = ROUNDS[i].params.map(function () { return null; });
+    el.bind.classList.remove('show');
+    el.bindrows.innerHTML = '';
+    el.result.className = 'cs-result';
+    el.result.textContent = '';
+    el.note.textContent = '';
+    el.runbtn.style.display = 'inline-block';
+    el.clearbtn.style.display = 'inline-block';
+    el.cantbtn.style.display = 'inline-block';
+    el.nextbtn.style.display = 'none';
+    paint();
+  }
+
+  function finish() {
+    el.play.innerHTML =
+      '<div class="cs-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + firsts + ' of ' + ROUNDS.length + ' calls right on the first run.</p>' +
+        '<div class="cs-teach">' +
+          '<b>Arguments bind to parameters by position, and nothing else.</b> Names are for ' +
+          'people: a parameter called possible will happily hold the score, and the ' +
+          'procedure will return a confident wrong number. A parameter is also a fresh box ' +
+          'that exists only during the call, so it can share a name with a variable outside ' +
+          'without touching it. The other half of this topic is RETURN. A procedure that ' +
+          'only displays gives the rest of the program nothing to work with, and no amount ' +
+          'of calling it will produce a value to store. And when you test a call, use ' +
+          'arguments that differ from each other: passing 50 and 50 makes a swapped pair ' +
+          'look perfect.' +
+        '</div>' +
+        '<p><button class="cs-go" id="cs-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('cs-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  startRound();
+})();
+</script>

@@ -48,6 +48,13 @@ const GAMES = {
     topic: '3.11',
     seoDescription: 'Find the hidden number in as few guesses as binary search would need, and learn why doubling the list adds only one more guess. AP CSP Topic 3.11.',
   },
+  'call-sheet': {
+    title: 'AP CSP Call Sheet Game | Arguments, Parameters and RETURN | Topic 3.12',
+    shareName: 'Call Sheet',
+    label: 'points',
+    topic: '3.12',
+    seoDescription: 'Fill the arguments, run the call and see which parameter each one landed in. Free AP CSP Topic 3.12 calling procedures practice game.',
+  },
   'string-lab': {
     title: 'AP CSP String Lab Game | SUBSTRING Length vs End Position | Topic 3.4',
     shareName: 'String Lab',
