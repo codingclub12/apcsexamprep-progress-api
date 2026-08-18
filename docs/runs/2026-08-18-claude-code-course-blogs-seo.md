@@ -67,15 +67,44 @@ unsourced figures and four meta descriptions over the SERP truncation limit.
 That is nine things a reviewer would have had to catch by hand, every week,
 forever.
 
+## Migration to per-course blogs
+
+Done later the same day, after the cadence changed to three posts per course per
+week and each course got its own blog.
+
+Three blogs created: `ap-csa`, `ap-csp`, `ap-networking`, with moderated
+comments. `ap-cybersecurity` already existed. The four posts were moved out of
+`news` with `articleUpdate { blogId }`, which relocates an article without
+touching its body, and each old path got a `urlRedirect`.
+
+Evidence, measured against the live site after the move:
+
+| Blog | New URL | Old URL |
+|---|---|---|
+| ap-cybersecurity | 200 | 301 |
+| ap-csa | 200 | 301 |
+| ap-csp | 200 | 301 |
+| ap-networking | 200 | 301 |
+
+Content re-diffed against the repo source at the new URLs: one h1 each, FAQPage
+JSON-LD present, 320 of 320 prose chunks found. The move did not disturb the
+bodies, which is the property `blogId` buys over delete-and-recreate.
+
+The redirects matter more than they look. The posts had been live and
+indexable at the `news` paths for about five hours, so the old URLs may already
+be in an index or a shared link.
+
 ## Still open
 
 - **`SHOPIFY_SHOP` and `SHOPIFY_ADMIN_TOKEN` are not set as Actions secrets**,
   so `.github/workflows/weekly-blog.yml` cannot publish yet. This week's four
   were published through the authenticated Shopify connector in-session instead.
-  Until the secrets exist the weekly cadence does not run by itself. The token
+  At four posts a week that was awkward; at twelve it is the binding
+  constraint, because hand publishing means transcribing roughly 300KB of HTML
+  a week and every character is a chance to corrupt a live post. The token
   needs `write_content`; the analytics connector token only reads.
-- **44 of the 48 calendar slots have no post written.** `node scripts/blog.js
-  queue` lists them. Next Tuesday needs four.
+- **140 of the 144 calendar slots have no post written**, including 8 of this
+  week's 12. `node scripts/blog.js queue` lists them and leads with week health.
 - **The other 632 articles have never been checked for the duplicate-h1
   pattern.** The pillar guides in particular look likely to carry a body h1 on
   top of the theme's. Worth a sweep, and it is a separate task from this one.
