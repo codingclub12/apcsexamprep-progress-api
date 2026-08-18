@@ -2,7 +2,7 @@
 <style>#apcs-ccx{all:initial!important;display:block!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;}#apcs-ccx *{box-sizing:border-box!important;}#apcs-ccx .ccx-bar{display:flex!important;gap:8px!important;align-items:center!important;background:#0f1f3d!important;padding:10px 14px!important;border-radius:10px!important;margin:0 0 18px!important;flex-wrap:wrap!important;}#apcs-ccx .ccx-lbl{font-size:11px!important;font-weight:700!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin-right:2px!important;}#apcs-ccx a.ccx-link{display:inline-block!important;padding:7px 13px!important;border-radius:7px!important;font-size:14px!important;font-weight:600!important;line-height:1.2!important;text-decoration:none!important;color:#e5edff!important;-webkit-text-fill-color:#e5edff!important;background:rgba(255,255,255,.08)!important;border:1px solid rgba(255,255,255,.16)!important;}#apcs-ccx a.ccx-link:hover{background:rgba(255,255,255,.16)!important;}#apcs-ccx a.ccx-active{background:#2563eb!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-color:#2563eb!important;cursor:default!important;}#apcs-ccx .ccx-soon{font-size:12px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;padding:0 4px!important;}#apcs-ccx .ccx-sep{width:1px!important;height:20px!important;background:rgba(255,255,255,.2)!important;margin:0 4px!important;}</style>
 <nav class="ccx-bar" aria-label="Teacher hubs"><span class="ccx-lbl">Hubs</span><a class="ccx-link" href="/pages/cyber-command-center">Cyber</a><a class="ccx-link" href="/pages/csp-command-center">CSP</a><a class="ccx-link" href="/pages/csa-command-center">CSA</a><a class="ccx-link" href="/pages/ap-networking-command-center">Networking</a><span class="ccx-sep"></span><a class="ccx-link" href="/pages/cyber-dashboard">Gradebook</a></nav>
 </div>
-<!-- APCSExamPrep Teacher Class Portal - /pages/cyber-class -->
+<!-- APCSExamPrep Teacher Class Portal — /pages/cyber-class -->
 <style>
 #tcportal-wrap{all:initial!important;display:block!important;font-family:'Georgia',serif!important;color:#1a1a1a!important;-webkit-text-fill-color:#1a1a1a!important;}
 #tcportal-wrap *{box-sizing:border-box!important;font-family:'Georgia',serif!important;}
@@ -92,7 +92,7 @@
 
       <!-- Value prop -->
       <div style="background:#1E1B4B!important;border-radius:10px!important;padding:20px 24px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;">
-        <div style="font-weight:700!important;font-size:15px!important;margin-bottom:10px!important;color:#E8A020!important;-webkit-text-fill-color:#E8A020!important;">What you get - free</div>
+        <div style="font-weight:700!important;font-size:15px!important;margin-bottom:10px!important;color:#E8A020!important;-webkit-text-fill-color:#E8A020!important;">What you get — free</div>
         <div style="font-size:14px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;line-height:1.8!important;">
           • Create unlimited class codes<br>
           • Students join without email accounts<br>
@@ -126,7 +126,6 @@
             <option value="ap-csa">AP Computer Science A</option>
             <option value="ap-csp">AP Computer Science Principles</option>
             <option value="ap-networking">AP Networking</option>
-            <option value="intro-java">Intro to Java with Greenfoot</option>
           </select>
         </div>
         <div class="tcp-error" id="createError"></div>
@@ -327,7 +326,7 @@ window.TCP = {
   },
 
   formatCourse(c) {
-    return { 'ap-cybersecurity':'AP Cybersecurity', 'ap-csa':'AP Computer Science A', 'ap-csp':'AP Computer Science Principles', 'ap-networking':'AP Networking', 'intro-java':'Intro to Java with Greenfoot' }[c] || c;
+    return { 'ap-cybersecurity':'AP Cybersecurity', 'ap-csa':'AP Computer Science A', 'ap-csp':'AP Computer Science Principles' }[c] || c;
   },
 
   showError(id, msg) { const el = document.getElementById(id); if(el){el.textContent=msg;el.style.display='block';} },
