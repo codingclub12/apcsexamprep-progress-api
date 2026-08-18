@@ -1,0 +1,167 @@
+name: CED watch
+
+# Weekly change detection over College Board's own pages.
+#
+# WHY THIS RUNS AT ALL
+#   Two of the five courses in this product aim at frameworks that are not
+#   finished. AP Cybersecurity reached national launch in 2026-27 and AP
+#   Networking is still in its third and final pilot until the 2027-28 launch,
+#   so both CEDs can still be revised underneath content that is already
+#   published and already sold. The alternative to this job is finding out from
+#   a teacher, in the fall, after they bought.
+#
+# WHY IT RUNS HERE AND NOT IN A SESSION
+#   Actions runners have open egress. Claude Code sessions go through the agent
+#   proxy, where apcentral.collegeboard.org is not on the allowed-domains list
+#   and every fetch returns 403. Verified: the real watch list scored 16 of 16
+#   forbidden from a session. So a Routine or a scheduled session could not do
+#   this job today, and this workflow can.
+#
+# WHY THE ARTIFACT IS A PULL REQUEST
+#   The snapshot is committed, so git history IS the record of what College
+#   Board said and when. A PR also means an unacknowledged CED change keeps
+#   standing there rather than scrolling out of an Actions log, and nothing has
+#   to push to main unreviewed.
+#
+# IT DOES NOT TOUCH THE LEDGER. Same line nightly-sweep.yml draws: reading
+# unattended and writing unattended are different risks, and only the first one
+# is being taken here.
+
+on:
+  schedule:
+    # Mondays, 09:30 UTC (04:30 US Central). Deliberately clear of the three
+    # jobs already on the clock: auto-dispatch at 06:00, the browser smoke at
+    # 07:00, and the board sweep at 08:00.
+    #
+    # schedule only fires from the DEFAULT BRANCH, so this line does nothing
+    # until it is merged.
+    - cron: '30 9 * * 1'
+  workflow_dispatch:
+
+concurrency:
+  group: ced-watch
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  watch:
+    name: What changed at College Board
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Read College Board
+        id: watch
+        run: |
+          # Not piped into tee. A pipeline reports TEE's status, which is how
+          # this workflow's sibling once shipped a dead script as a green tick.
+          set +e
+          node scripts/ced-watch.js > report.md 2> watch-err.log
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+          set -e
+          cat report.md
+          cat watch-err.log >&2 || true
+
+      - name: Put the report in the job summary
+        if: always()
+        run: |
+          if [ -s report.md ]; then
+            cat report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            {
+              echo "### CED watch produced no report"
+              echo ""
+              echo '```'
+              head -c 2000 watch-err.log 2>/dev/null || echo "(no output at all)"
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      # Exit 1 means the run compared nothing. A green tick on a week that read
+      # nothing is worse than no run at all, because every week then looks
+      # identical whether it worked or not.
+      - name: Fail loudly if nothing was read
+        if: steps.watch.outputs.code == '1'
+        run: |
+          echo "::error title=CED watch read nothing::All sources failed. See the summary."
+          exit 1
+
+      # Keyed on real file changes, NOT on the exit code, and on purpose. The
+      # first run writes a whole baseline and exits 0, and keying the commit on
+      # exit 10 would throw that baseline away and re-create it every week
+      # forever. Conversely a week whose only event is an unreachable source
+      # exits 10 and changes no file, and must not open an empty PR.
+      - name: Is there anything to commit
+        id: diff
+        run: |
+          if [ -n "$(git status --porcelain -- docs/ced-snapshot)" ]; then
+            echo "dirty=yes" >> "$GITHUB_OUTPUT"
+          else
+            echo "dirty=no" >> "$GITHUB_OUTPUT"
+            echo "The snapshot is byte-identical to last week. Nothing to open." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Open or update the snapshot PR
+        if: steps.diff.outputs.dirty == 'yes'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          BRANCH=ced-watch/snapshot
+
+          git config user.name  "ced-watch"
+          git config user.email "ced-watch@users.noreply.github.com"
+
+          # One long-lived branch, force-pushed. A new branch per week would
+          # leave a graveyard of stale PRs, and the interesting question is
+          # always "what does College Board say now", never "what did it say in
+          # week 34".
+          # Fetched before the lease is taken. actions/checkout leaves a shallow
+          # clone with no remote-tracking ref for this branch, and
+          # --force-with-lease against a ref it has never seen fails as stale.
+          git fetch origin "$BRANCH" || true
+
+          # Rebuilt from the checked-out default branch every week rather than
+          # extended, so the PR is always "main plus this week's snapshot" and
+          # never carries a stale merge base.
+          git checkout -B "$BRANCH"
+          git add docs/ced-snapshot
+          git commit \
+            -m "CED watch: College Board snapshot changed" \
+            -m "Machine-written by scripts/ced-watch.js. The PR body carries the change detected on College Board's own pages this week."
+
+          git push --force-with-lease -u origin "$BRANCH"
+
+          # Body is the report itself, capped well under GitHub's 65536 limit.
+          head -c 55000 report.md > pr-body.md
+          {
+            echo ""
+            echo "---"
+            echo ""
+            echo "Opened by \`.github/workflows/ced-watch.yml\`. Merging accepts the new"
+            echo "snapshot as the baseline for next week. Leaving it open keeps the change"
+            echo "visible until someone decides what it means for the published pages."
+            echo ""
+            echo "_Generated by [Claude Code](https://claude.ai/code)_"
+          } >> pr-body.md
+
+          EXISTING=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING" ]; then
+            gh pr edit "$EXISTING" --body-file pr-body.md
+            echo "Updated existing PR #$EXISTING." >> "$GITHUB_STEP_SUMMARY"
+          else
+            gh pr create \
+              --head "$BRANCH" \
+              --title "CED watch: College Board snapshot changed" \
+              --body-file pr-body.md \
+              --draft
+            echo "Opened a new snapshot PR." >> "$GITHUB_STEP_SUMMARY"
+          fi
