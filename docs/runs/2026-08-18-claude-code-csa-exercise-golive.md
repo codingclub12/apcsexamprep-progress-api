@@ -32,20 +32,31 @@ is safe.
 
 ## What is already live, before you touch anything
 
-- All the code. Both grading modes, the `mode` column, the raised Judge0
-  ceilings, and both admin routes above.
-- **Three pages**, created by hand overnight and verified end to end:
-  - `/pages/ap-csa-lesson-1-1-intro-algorithms-exercise-1`
-  - `/pages/ap-csa-lesson-1-2-variables-data-types-exercise-1`
-  - `/pages/ap-csa-lesson-1-3-expressions-assignment-exercise-1`
+**Five pages, created by hand overnight and each verified against the live
+storefront.** These work right now, with no action from you:
 
-1.1 was checked properly: the starter in the editor matches the authored source
-byte for byte after entity decoding, no hidden case is on the page, and posting
-the reference solution to the live `/api/judge0/run` returned exactly the
-expected output. The Run loop works right now.
+| lesson | page |
+|---|---|
+| 1.1 Algorithms | `/pages/ap-csa-lesson-1-1-intro-algorithms-exercise-1` |
+| 1.2 Variables and Data Types | `/pages/ap-csa-lesson-1-2-variables-data-types-exercise-1` |
+| 1.3 Expressions and Output | `/pages/ap-csa-lesson-1-3-expressions-assignment-exercise-1` |
+| 1.4 Assignment and Input | `/pages/ap-csa-lesson-1-4-assignment-statements-input-exercise-1` |
+| 1.5 Casting and Range | `/pages/ap-csa-lesson-1-5-casting-range-exercise-1` |
+
+Verified on each: the routing attributes the grade call reads, exactly one h1,
+the editor and both endpoints present, the starter in the editor matching the
+authored source after entity decoding, the `&lt;` entities inside the textareas
+still encoded, the right number of sample cases, and **no hidden case, reference
+solution or grading harness anywhere in the body**.
+
+On 1.1, 1.2 and 1.3 the loop was also proven end to end: posting the reference
+solution to the live `/api/judge0/run` returned exactly the expected output.
+
+The code is live too, as of the merge of #196: both grading modes, the `mode`
+column, the raised Judge0 ceilings, and the two admin routes above.
 
 The publisher **skips handles that already exist**, so running it will not touch
-those three.
+these five.
 
 ## If step 2 refuses with a scope error
 
@@ -64,8 +75,8 @@ Two ways out:
    `node scripts/csa-exercise-pages-csv.js out.csv` then import with MERGE mode,
    QUOTE_ALL, utf-8-sig, one import at a time.
 
-Either way, the three pages above are already live and gradeable, which covers
-1.1 to 1.3 for first period.
+Either way, the five pages above are already live, which covers 1.1 to 1.5. They
+become gradeable the moment step 1 runs, whatever happens with step 2.
 
 ## What a student sees before and after the seed
 
@@ -98,9 +109,24 @@ get right.
 - Nothing records a zero on any failure path. A 429, a 404 and a runner outage
   all record nothing at all, so a bad ten minutes cannot damage a grade.
 
+## If the two admin routes 404 or the seed says the route is unknown
+
+The merge of #196 went in at 05:15 UTC. Railway was running behind a queue of
+other merges at the time this was written, and the deploy had not picked it up
+yet. My commits ARE an ancestor of main's head, so they ship with whatever
+Railway deploys next; there is nothing to re-merge.
+
+The code was proven good independently of the deploy: the merged tree was booted
+locally and all three endpoints answered correctly (`code-tests` reported the
+honest empty state, the seed dry run reported 54 items and 274 cases without
+writing, and the pages route correctly reported missing Shopify credentials
+rather than crashing). So a 404 in the morning means the deploy has not landed,
+not that the code is wrong. Check `GET /api/health` and compare `commit` against
+main.
+
 ## Still open after this
 
-- The other 50 pages exist only as generated bodies until step 2 runs.
+- The other 48 pages exist only as generated bodies until step 2 runs.
 - No student has actually submitted through the graded path in production. The
   first real submission is the last untested link, and it is the one thing worth
   doing yourself before class: sign in as a test student on 1.1 and submit.
