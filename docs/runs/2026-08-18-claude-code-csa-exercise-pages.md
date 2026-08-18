@@ -122,24 +122,48 @@ Two supporting decisions worth recording:
 - Full offline suite set (every `smoke:*` CI runs) - green.
 - `npm run csax1 -- out.csv` - 53 rows, 1094 KB sheet, refused nothing.
 
-## The one thing that will stop a classroom, and was deliberately not fixed
+## The classroom blocker, raised on the owner's call
 
-`/api/judge0/run` is limited to 40 runs per hour **per IP**. The Submit path is
-fine: the grade route sets `X-Forwarded-For: codegrade:<studentId>`, so it is
-partitioned per student. The **Run** button goes straight from the browser, so a
-school NAT puts a whole class behind one public IP: thirty students share 40 runs
-an hour, which is about one Run each per period, and Run is the debugging loop
-these pages are built around.
+`/api/judge0/run` was limited to 40 runs per hour **per IP**. Submit was fine (the
+grade route sets `X-Forwarded-For: codegrade:<studentId>`, partitioning per
+student), but **Run** goes straight from the browser, so a school NAT put a whole
+class behind one public IP: thirty students sharing 40 runs an hour, about one Run
+each per period, and Run is the debugging loop these pages are built around.
 
-This is pre-existing and already applies to the in-lesson CSA editors. 53
-exercise pages make it certain to be hit rather than merely possible. It was not
-fixed here because CLAUDE.md says not to modify the Judge0 subsystem, and that is
-the right call to leave with its owner rather than to make quietly inside a
-content build. No data is harmed by it (a 429 records nothing, so nobody is
-marked down), but the pages stop working partway through a lesson.
-`docs/csa-exercise-pages.md` carries the numbers and the two obvious fix shapes.
+This was first written up as a blocker and left alone, because CLAUDE.md says not
+to modify the Judge0 subsystem. Tanner overrode that directly: 500 would not cost
+much and would be very unlikely to bite even three classes of twenty, which is the
+worst realistic case. That arithmetic holds - 60 students at eight Runs each while
+debugging is 480 - so the ceiling now covers the worst hour while doing nothing,
+which is what a ceiling is for. The same number fixes grading, which was quietly
+tight too at about eight submissions of a five case exercise per student per hour.
 
-**Treat this as a blocker on the pilot, not a footnote on it.**
+Two things came with it rather than being asked for, both because the raise made
+them load bearing:
+
+- **A global backstop, 3000 runs/hour.** Raising per-identity 12.5x raises what one
+  runaway client can burn from $0.07/hour to $0.85/hour, and nothing bounded the
+  TOTAL before: ten bad identities cost ten times as much, indefinitely. Against a
+  $169 spike in this repo's history that is not hypothetical. 3000 is about 3x a
+  genuinely busy day's peak hour, so real classes never reach it and a runaway
+  stops at ~$5/hour. The tradeoff (at the ceiling, one abuser degrades everyone) is
+  accepted on purpose and the two ceilings return DIFFERENT messages, so a student
+  who did nothing wrong is told so instead of waiting out a limit that is not
+  theirs.
+- **A hard key cap on the limiter map.** It grows one entry per unique identity and
+  is swept only every ten minutes, so a burst of unique addresses between sweeps
+  grew it without bound. Same class of per-request growth as the leak that caused
+  the spike, and the code-grade limiter already had the cap.
+
+Writing the test for this found a third thing: the global-ceiling `console.error`
+fired on every refused request, which is thousands of identical lines a minute
+during exactly the incident it exists to report. It logs once per window now.
+
+Cost, for the record. Judge0 is ~$0.0017 a run. A saturated hour at the per-IP
+ceiling is $0.85. 60 students doing two exercises a week is ~11k runs a month,
+about $19. All 53 exercises for that many students over a semester is ~73k runs,
+~$124, about $31/month across four months. It fits the ~$30/month target without
+much room, so the **aggregate on the bill** is the number to watch, not the burst.
 
 ## Still open
 

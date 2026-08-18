@@ -130,39 +130,70 @@ signed out; it is the compiler feedback loop. Submit is the graded path and need
 a student token. Keeping them apart means a student can debug for twenty minutes
 without spending a grade attempt.
 
-## The Judge0 rate limit is a pre-pilot blocker, and it is not fixed here
+## The Judge0 run limits
 
-`routes/judge0.js` limits `/api/judge0/run` to **40 runs per hour per IP**, and
-CLAUDE.md says not to modify the Judge0 subsystem, so this build does not touch
-it. It has to be resolved before a classroom uses these pages, because of how the
-two buttons are identified:
+These pages are the reason the limits changed. Both paths go through
+`/api/judge0/run`, but they are identified differently:
 
-| path | identified by | effective limit |
+| path | identified by | limit |
 |---|---|---|
-| Submit (`/api/student/code-grade`) | `X-Forwarded-For: codegrade:<studentId>`, set by the route | 40 Judge0 runs/hour **per student**, so roughly 7 submissions/hour of a 5 case exercise |
-| Run (`/api/judge0/run`, straight from the browser) | the browser's real IP | 40 runs/hour **per public IP** |
+| Submit (`/api/student/code-grade`) | `X-Forwarded-For: codegrade:<studentId>`, set by the route | 500 runs/hour **per student**, so ~100 submissions/hour of a 5 case exercise |
+| Run (`/api/judge0/run`, straight from the browser) | the browser's real IP | 500 runs/hour **per public IP** |
 
-A school NAT puts a whole class behind one public IP. Thirty students sharing 40
-runs an hour is a little over one Run each per period, and the Run button is the
-debugging loop these pages are built around. This is pre-existing behaviour that
-already applies to the in-lesson CSA editors; 53 exercise pages make it certain
-to be hit rather than merely possible.
+The old ceiling was 40 on both. It was sized for a handful of in-lesson editors
+and became a classroom blocker here: a school NAT puts a whole class behind one
+public IP, so thirty students shared 40 runs an hour, a little over one Run each
+per period, and Run is the debugging loop these pages are built around. The
+grading side was quietly tight too, at about eight submissions of a 5 case
+exercise per student per hour.
 
-Nothing here is harmed by the limit in a data sense: a 429 records nothing, so no
-student is marked down for it. The failure is that the pages stop being usable
-partway through a lesson.
+**500 is sized against the worst realistic hour, not picked round.** Three classes
+of twenty behind one IP is 60 students, and a student debugging hard runs their
+code maybe eight times while working an exercise: 480. The ceiling covers that
+while doing nothing, which is what a ceiling is for.
 
-The obvious shapes for a fix, none of them started: identify Run by student token
-where one is present and fall back to IP only for signed-out visitors; or raise
-the per-IP ceiling with a per-token sub-limit underneath it. Both are changes to
-the Judge0 subsystem and belong to whoever owns it.
+### The global backstop
 
-Cost, for whoever picks that up: Judge0 is about $0.0017 a run against a ~$30 a
-month target, and a prior leak already caused a $169 spike. A class of 30 each
-submitting a 5 case exercise five times is 750 runs, about $1.28. The per-identity
-caps are what keep that bounded, so raising them is a spend decision and not only
-a usability one.
+Raising the per-identity ceiling 12.5x raises what a single runaway client can
+burn from $0.07/hour to $0.85/hour, and **nothing bounded the total before**: ten
+bad identities cost ten times as much, indefinitely. Given the $169 spike in this
+repo's history, that was not a hypothetical.
 
+`GLOBAL_LIMIT` is 3000 runs/hour across everything, roughly 3x what a genuinely
+busy day peaks at (five schools of 60 students spread over a school day is about
+1100 runs in the worst hour). Real classes never reach it; a runaway stops at
+about $5/hour instead of never.
+
+The tradeoff is accepted deliberately: at the global ceiling one abuser can deny
+service to everyone. At this budget a bill that cannot run away is worth more
+than an hour of degraded service a person can see and act on. The two ceilings
+return **different** messages for that reason, so "the site is at capacity" is
+never mistaken for "you clicked too fast", and a student who did nothing wrong is
+told so rather than left waiting out a limit that is not theirs.
+
+The limiter map also gained the hard key cap the code-grade limiter already had.
+It grows one entry per unique identity and is only swept every ten minutes, so a
+burst of unique addresses between sweeps grew it without bound: the same class of
+per-request growth as the leak that caused the spike.
+
+### What it actually costs
+
+Judge0 is about $0.0017 a run. The hourly burst is not the number to watch; the
+monthly total is.
+
+| scenario | runs | cost |
+|---|---|---|
+| one saturated hour at the per-IP ceiling | 500 | $0.85 |
+| 60 students, 2 exercises/week, ~23 runs each | ~11k/month | ~$19/month |
+| 60 students working all 53 exercises over a semester | ~73k | ~$124, about $31/month over four months |
+
+That fits the ~$30/month target, but without much room. **The aggregate is worth
+watching on the bill**, and it is why the global backstop exists rather than
+trusting the per-identity caps alone.
+
+`npm run smoke:judge0limits` pins both ceilings against the arithmetic above, the
+two messages being different, that an identity over its own ceiling stops
+charging the shared budget, and that the map cannot grow without bound.
 ## Gradebook wiring
 
 `exercise-1` was already in the canonical activity map (it normalizes to
