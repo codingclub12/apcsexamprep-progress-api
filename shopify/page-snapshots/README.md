@@ -122,3 +122,16 @@ none before the rebalance either; the reorder did not create the gap.
 Any printed or PDF answer key for this exam is stale as of 2026-08-13. If one ships
 in the Unit 1 Superpack or the teacher Drive folder it needs the same updates, or
 teachers will grade against the old letters.
+
+## Study games hub, before the Big Idea 3 links
+
+`ap-csp-study-games-hub.before-bi3-links.html` is the stored Body HTML of
+`/pages/ap-csp-study-games-hub` as it stood on 2026-08-18, `updatedAt`
+2026-07-10T01:45:51Z. Ten game cards and eight coming-soon tiles, two of which
+named games that had since shipped.
+
+This is the rollback path for the hub import that adds the eighteen Big Idea 3
+cards. It is the body from the Admin API, not a scrape of the rendered page: an
+earlier extraction started at the wrapper div and lost both the page's own
+`<!-- PAGE: -->` header and its stylesheet, which would have imported cleanly
+and rendered an unstyled page.
