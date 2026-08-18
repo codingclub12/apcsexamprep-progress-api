@@ -48,6 +48,13 @@ const GAMES = {
     topic: '3.11',
     seoDescription: 'Find the hidden number in as few guesses as binary search would need, and learn why doubling the list adds only one more guess. AP CSP Topic 3.11.',
   },
+  'swap-shop': {
+    title: 'AP CSP Swap Shop Game | Assignment, Swaps and Lost Values | Topic 3.1',
+    shareName: 'Swap Shop',
+    label: 'points',
+    topic: '3.1',
+    seoDescription: 'Move values between variables one assignment at a time and watch a value vanish the moment you overwrite it. AP CSP Topic 3.1 practice game.',
+  },
   'halt-or-not': {
     title: 'AP CSP Halt or Not Game | Decidable vs Undecidable | Topic 3.18',
     shareName: 'Halt or Not',
