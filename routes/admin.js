@@ -1457,4 +1457,44 @@ router.post('/code-tests/seed', (req, res) => {
   }
 });
 
+// ── CSA EXERCISE PAGES ────────────────────────────────────────────────────────
+//  The 53 Shopify pages that make the code exercises reachable. Same posture as
+//  the code test bank above: GET to look, header key to change. See
+//  lib/csa-exercise-publish.js for why this exists next to the Matrixify sheet
+//  rather than instead of it, and for the three safety properties (never
+//  overwrite, all-or-nothing validation, scope checked first).
+
+// GET /api/admin/csa-exercise-pages
+// What is live, what is missing, and whether the token can write at all.
+router.get('/csa-exercise-pages', async (req, res) => {
+  try {
+    res.json(await require('../lib/csa-exercise-publish').statusReport());
+  } catch (e) {
+    console.error('admin/csa-exercise-pages:', e);
+    res.status(500).json({ error: 'status failed', detail: e.message });
+  }
+});
+
+// POST /api/admin/csa-exercise-pages/publish     header key required (mutation)
+// body { dry_run?: boolean, unit?: 'unit-1', limit?: number }
+// Creates the pages that do not exist yet. Never updates one that does, so it is
+// idempotent and cannot overwrite a page somebody made by hand.
+router.post('/csa-exercise-pages/publish', async (req, res) => {
+  try {
+    const b = req.body || {};
+    const out = await require('../lib/csa-exercise-publish').publish({
+      dryRun: !!b.dry_run,
+      unit: b.unit || null,
+      limit: b.limit || null,
+    });
+    // A refusal is a 200 with ok:false on purpose: it is a report the caller
+    // needs to read, not a transport failure.
+    if (out.created) console.log(`admin: published ${out.created} CSA exercise pages`);
+    res.json(out);
+  } catch (e) {
+    console.error('admin/csa-exercise-pages publish:', e);
+    res.status(500).json({ error: 'publish failed', detail: e.message });
+  }
+});
+
 module.exports = router;
