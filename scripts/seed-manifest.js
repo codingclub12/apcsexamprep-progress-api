@@ -277,12 +277,23 @@ function introJavaGradedRows() {
   return INTRO_JAVA_PAGES_LIVE ? introJavaRows() : [];
 }
 
-// Unit projects. Only the auto-graded TASK half of a project can ever be a
-// manifest row, one row per checked task so the gradebook can answer "which
-// task is the class stuck on". The built Greenfoot scenario runs on the desktop,
-// cannot report itself, and is teacher-scored through
-// POST /api/teacher/classes/:code/scores. Never add a row for the scenario, and
-// never add one for a self-attested task: a checkbox is not evidence.
+// Unit projects. THIS IS EMPTY ON PURPOSE AND IS MEANT TO STAY EMPTY.
+//
+// Decided 2026-08-18 by Tanner: intro-java projects are not worth grading into
+// the gradebook. Read that as a teaching judgment, not a missing feature, and
+// do not "finish" this map on the assumption that somebody ran out of time.
+//
+// The reasoning is in the shape of the work. A Greenfoot project is a built
+// scenario on a desktop. It cannot report itself, so the only things a manifest
+// row could ever track are the checked TASKS around it, and a task that a
+// student ticks is a self-report. A checkbox is not evidence, so the row would
+// carry a number that looks like a grade and is not one. Projects are scored by
+// the teacher through POST /api/teacher/classes/:code/scores, where a human is
+// the one making the claim, which is the honest place for it.
+//
+// The mechanism below still works if that call is ever revisited, one row per
+// checked task, so the gradebook could answer "which task is the class stuck
+// on". Never add a row for the scenario itself.
 //
 //   'project-1': { tasks: 8 }
 const INTRO_JAVA_PROJECTS = {};
