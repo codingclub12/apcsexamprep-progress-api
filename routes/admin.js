@@ -1368,4 +1368,133 @@ router.post('/entitlements/revoke', (req, res) => {
   }
 });
 
+// ── CODE TEST BANK ────────────────────────────────────────────────────────────
+//  The hidden test cases behind POST /api/student/code-grade. They are seeded
+//  MANUALLY and never on boot (see db.js and scripts/seed-code-tests.js): a fresh
+//  deploy grades nothing until somebody loads the authoritative cases, so a
+//  half-authored bank can never silently start scoring a live class.
+//
+//  That posture is right and is unchanged. What these two routes remove is the
+//  operational cost of it. Loading the bank used to mean opening a Railway shell
+//  and running a CLI, which is a five minute job at a laptop and not one you can
+//  do from a phone at 7am. The 53 CSA exercise pages made that gap matter: the
+//  pages are inert without the bank, and the person who has to close the gap is
+//  the person about to teach the lesson.
+//
+//  GET is read-only, so the dashboard session cookie is enough to CHECK what is
+//  loaded. POST is a mutation and therefore needs the x-admin-key header, exactly
+//  like every other write on this router. That asymmetry is deliberate: looking
+//  should be easy, changing should not.
+
+// GET /api/admin/code-tests
+// What is actually loaded, per (course, item), and which lessons are covered.
+// Answers "did the seed run" without a shell and without a mutation.
+router.get('/code-tests', (req, res) => {
+  try {
+    const rows = db.prepare(`
+      SELECT course, item, mode,
+             COUNT(*)                      AS cases,
+             COUNT(DISTINCT lesson)        AS lessons,
+             SUM(hidden)                   AS hidden_cases
+      FROM code_test_cases
+      GROUP BY course, item, mode
+      ORDER BY course, item, mode
+    `).all();
+    const total = db.prepare('SELECT COUNT(*) AS n FROM code_test_cases').get().n;
+    // The gradeable surface is (course, lesson, item); the page 404s without it.
+    const lessons = db.prepare(`
+      SELECT course, item, lesson FROM code_test_cases
+      GROUP BY course, item, lesson ORDER BY course, item, lesson
+    `).all();
+    res.json({
+      ok: true,
+      total_cases: total,
+      seeded: total > 0,
+      by_item: rows,
+      gradeable: lessons.map((r) => `${r.course} ${r.lesson} ${r.item}`),
+      note: total === 0
+        ? 'Nothing is loaded. Every code-grade submission will 404 until POST /api/admin/code-tests/seed runs.'
+        : undefined,
+    });
+  } catch (e) {
+    console.error('admin/code-tests:', e);
+    res.status(500).json({ error: 'read failed', detail: e.message });
+  }
+});
+
+// POST /api/admin/code-tests/seed        header key required (mutation)
+// body { dry_run?: boolean }
+// Loads the authoritative bank from the seed files. Idempotent: it rewrites every
+// case from source and prunes any row left past an item's current case count, so
+// running it twice is the same as running it once, and shrinking an item cannot
+// leave a stale case behind at the old seq.
+router.post('/code-tests/seed', (req, res) => {
+  try {
+    const dryRun = !!(req.body && req.body.dry_run);
+    const before = db.prepare('SELECT COUNT(*) AS n FROM code_test_cases').get().n;
+
+    if (dryRun) {
+      // Load and validate the seed WITHOUT writing, so the shape of the bank can
+      // be checked from a phone before anything touches a live class.
+      const { items } = require('../seed/csa-exercises').codeTestItems();
+      const legacy = require('../seed/csa-code-tests').items;
+      const all = legacy.concat(items);
+      return res.json({
+        ok: true, dry_run: true, cases_before: before,
+        would_load: { items: all.length, cases: all.reduce((n, it) => n + it.cases.length, 0) },
+      });
+    }
+
+    const { seedCodeTests } = require('../scripts/seed-code-tests');
+    const r = seedCodeTests({ update: true });
+    const after = db.prepare('SELECT COUNT(*) AS n FROM code_test_cases').get().n;
+    console.log(`admin: code test bank seeded, ${r.cases} cases across ${r.items} items`
+      + ` (${before} -> ${after} rows, ${r.pruned} pruned)`);
+    res.json({ ok: true, cases_before: before, cases_after: after, ...r });
+  } catch (e) {
+    console.error('admin/code-tests seed:', e);
+    res.status(500).json({ error: 'seed failed', detail: e.message });
+  }
+});
+
+// ── CSA EXERCISE PAGES ────────────────────────────────────────────────────────
+//  The 53 Shopify pages that make the code exercises reachable. Same posture as
+//  the code test bank above: GET to look, header key to change. See
+//  lib/csa-exercise-publish.js for why this exists next to the Matrixify sheet
+//  rather than instead of it, and for the three safety properties (never
+//  overwrite, all-or-nothing validation, scope checked first).
+
+// GET /api/admin/csa-exercise-pages
+// What is live, what is missing, and whether the token can write at all.
+router.get('/csa-exercise-pages', async (req, res) => {
+  try {
+    res.json(await require('../lib/csa-exercise-publish').statusReport());
+  } catch (e) {
+    console.error('admin/csa-exercise-pages:', e);
+    res.status(500).json({ error: 'status failed', detail: e.message });
+  }
+});
+
+// POST /api/admin/csa-exercise-pages/publish     header key required (mutation)
+// body { dry_run?: boolean, unit?: 'unit-1', limit?: number }
+// Creates the pages that do not exist yet. Never updates one that does, so it is
+// idempotent and cannot overwrite a page somebody made by hand.
+router.post('/csa-exercise-pages/publish', async (req, res) => {
+  try {
+    const b = req.body || {};
+    const out = await require('../lib/csa-exercise-publish').publish({
+      dryRun: !!b.dry_run,
+      unit: b.unit || null,
+      limit: b.limit || null,
+    });
+    // A refusal is a 200 with ok:false on purpose: it is a report the caller
+    // needs to read, not a transport failure.
+    if (out.created) console.log(`admin: published ${out.created} CSA exercise pages`);
+    res.json(out);
+  } catch (e) {
+    console.error('admin/csa-exercise-pages publish:', e);
+    res.status(500).json({ error: 'publish failed', detail: e.message });
+  }
+});
+
 module.exports = router;
