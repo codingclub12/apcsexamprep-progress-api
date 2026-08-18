@@ -1,0 +1,214 @@
+<style>
+#bo-game{all:initial!important;display:block!important;box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.55!important;max-width:900px!important;margin:0 auto!important;padding:0 0 8px!important}
+#bo-game *,#bo-game *::before,#bo-game *::after{box-sizing:border-box!important}
+#bo-game .bo-card{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden!important}
+#bo-game .bo-hero{background:linear-gradient(135deg,#5b21b6,#7c3aed)!important;padding:22px 24px!important}
+#bo-game .bo-title{font-size:26px!important;font-weight:800!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1.15!important}
+#bo-game .bo-sub{font-size:15px!important;margin:8px 0 0!important;color:#ede9fe!important;-webkit-text-fill-color:#ede9fe!important}
+#bo-game .bo-bar{display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:14px 24px!important;background:#f8fafc!important;border-bottom:1px solid #e2e8f0!important}
+#bo-game .bo-chip{display:inline-block!important;font-size:13px!important;font-weight:700!important;padding:5px 12px!important;border-radius:100px!important;background:#fff!important;border:1px solid #cbd5e1!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#bo-game .bo-chip.bo-score{background:#7c3aed!important;border-color:#7c3aed!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#bo-game .bo-body{padding:18px 24px 24px!important}
+#bo-game .bo-how{font-size:14px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;margin:0 0 14px!important}
+#bo-game .bo-case{background:#faf5ff!important;border:1px solid #ddd6fe!important;border-radius:12px!important;padding:16px 18px!important;margin-bottom:14px!important}
+#bo-game .bo-n{font-size:13px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.06em!important;color:#6d28d9!important;-webkit-text-fill-color:#6d28d9!important;margin:0 0 6px!important}
+#bo-game .bo-alg{font-size:18px!important;font-weight:700!important;margin:0 0 4px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#bo-game .bo-desc{font-size:14px!important;margin:0!important;color:#475569!important;-webkit-text-fill-color:#475569!important}
+#bo-game .bo-ask{font-size:16px!important;font-weight:700!important;margin:0 0 10px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#bo-game .bo-choices{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:10px!important;margin-bottom:12px!important}
+@media (max-width:520px){#bo-game .bo-choices{grid-template-columns:repeat(1,1fr)!important}}
+#bo-game .bo-btn{font-family:inherit!important;font-size:16px!important;font-weight:700!important;padding:14px 18px!important;border-radius:10px!important;border:2px solid #ddd6fe!important;cursor:pointer!important;background:#fff!important;color:#5b21b6!important;-webkit-text-fill-color:#5b21b6!important}
+#bo-game .bo-btn:hover:enabled{border-color:#7c3aed!important;background:#faf5ff!important}
+#bo-game .bo-btn:disabled{opacity:.5!important;cursor:default!important}
+#bo-game .bo-btn.right{background:#16a34a!important;border-color:#16a34a!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#bo-game .bo-btn.wrong{background:#dc2626!important;border-color:#dc2626!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#bo-game .bo-reveal{display:none!important;background:#fff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:14px 16px!important;margin-top:4px!important}
+#bo-game .bo-reveal.show{display:block!important}
+#bo-game .bo-steps{font-size:22px!important;font-weight:800!important;color:#5b21b6!important;-webkit-text-fill-color:#5b21b6!important;margin:0 0 2px!important}
+#bo-game .bo-anchor{font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;margin:0 0 10px!important}
+#bo-game .bo-scale{height:14px!important;background:#f1f5f9!important;border-radius:100px!important;overflow:hidden!important;margin-bottom:6px!important}
+#bo-game .bo-fill{height:100%!important;background:linear-gradient(90deg,#a78bfa,#7c3aed)!important}
+#bo-game .bo-budget{font-size:12px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:0!important}
+#bo-game .bo-next{margin-top:12px!important;background:#7c3aed!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:0!important;font-family:inherit!important;font-size:15px!important;font-weight:700!important;padding:11px 18px!important;border-radius:10px!important;cursor:pointer!important}
+#bo-game .bo-end{text-align:center!important;padding:8px 0!important}
+#bo-game .bo-end h2{font-size:24px!important;font-weight:800!important;margin:0 0 8px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#bo-game .bo-teach{background:#faf5ff!important;border-left:5px solid #7c3aed!important;border-radius:0 10px 10px 0!important;padding:12px 16px!important;margin:14px 0 0!important;font-size:14px!important;text-align:left!important;color:#3b0764!important;-webkit-text-fill-color:#3b0764!important}
+</style>
+
+<div class="bo-game" id="bo-game">
+  <div class="bo-card">
+    <div class="bo-hero">
+      <h1 class="bo-title">Big-O Race</h1>
+      <p class="bo-sub">One machine, one billion steps. Decide which algorithms finish and which never will</p>
+    </div>
+    <div class="bo-bar">
+      <span class="bo-chip" id="bo-round">Case 1 / 7</span>
+      <span class="bo-chip" id="bo-streak">Correct: 0</span>
+      <span class="bo-chip bo-score" id="bo-score">Score: 0</span>
+    </div>
+    <div class="bo-body" id="bo-play">
+      <p class="bo-how">How to play: your computer manages about a billion steps before the answer stops being useful. For each job, decide whether the algorithm finishes inside that budget. The step count is revealed either way.</p>
+      <div class="bo-case">
+        <p class="bo-n" id="bo-n"></p>
+        <p class="bo-alg" id="bo-alg"></p>
+        <p class="bo-desc" id="bo-desc"></p>
+      </div>
+      <p class="bo-ask">Does it finish within a billion steps?</p>
+      <div class="bo-choices">
+        <button class="bo-btn" id="bo-yes" type="button">Yes, it finishes</button>
+        <button class="bo-btn" id="bo-no" type="button">No, far too slow</button>
+      </div>
+      <div class="bo-reveal" id="bo-reveal">
+        <p class="bo-steps" id="bo-stepct"></p>
+        <p class="bo-anchor" id="bo-anchortext"></p>
+        <div class="bo-scale"><div class="bo-fill" id="bo-fill"></div></div>
+        <p class="bo-budget">Budget: 1,000,000,000 steps</p>
+        <button class="bo-next" id="bo-nextbtn" type="button">Next case</button>
+      </div>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Big-O Race - AP CSP Topic 3.17.
+     The CED draws its line between polynomial growth (reasonable) and
+     exponential or factorial growth (unreasonable), so the cases are chosen so
+     that the SHAPE decides the answer, not the input size. Case 3 is the one
+     that does the teaching: a million items solved in twenty steps by halving,
+     right after fifty items proved impossible by subsets. */
+
+  var BUDGET = 1e9;
+  var CASES = [
+    { n: 1000, alg: 'Check every item once',
+      desc: 'Scan a list of 1,000 customer records looking for one id.',
+      steps: 1000, shape: 'linear' },
+    { n: 10000, alg: 'Compare every pair',
+      desc: 'Check 10,000 photos against each other for duplicates.',
+      steps: 1e8, shape: 'quadratic' },
+    { n: 1000000, alg: 'Halve the range each step',
+      desc: 'Find one entry in a sorted index of a million names.',
+      steps: 20, shape: 'logarithmic' },
+    { n: 50, alg: 'Try every possible subset',
+      desc: 'Pick the best combination from 50 optional features.',
+      steps: Math.pow(2, 50), shape: 'exponential' },
+    { n: 100000, alg: 'Check every item once',
+      desc: 'Total up 100,000 daily sales rows.',
+      steps: 100000, shape: 'linear' },
+    { n: 20, alg: 'Try every possible order',
+      desc: 'Find the guaranteed shortest route through 20 cities.',
+      steps: 2.43e18, shape: 'factorial' },
+    { n: 30000, alg: 'Compare every pair',
+      desc: 'Cross-check 30,000 sensor readings against each other.',
+      steps: 9e8, shape: 'quadratic' }
+  ];
+
+  var el = {};
+  ['round','streak','score','n','alg','desc','yes','no','reveal','stepct','anchortext',
+   'fill','nextbtn','play'].forEach(function (k) { el[k] = document.getElementById('bo-' + k); });
+
+  var i = 0, score = 0, right = 0, answered = false;
+
+  function fmt(x) {
+    if (x < 1e6) return Math.round(x).toLocaleString('en-US');
+    if (x < 1e9) return (x / 1e6).toFixed(x < 1e7 ? 1 : 0) + ' million';
+    if (x < 1e12) return (x / 1e9).toFixed(x < 1e10 ? 1 : 0) + ' billion';
+    if (x < 1e15) return (x / 1e12).toFixed(1) + ' trillion';
+    return x.toExponential(1).replace('e+', ' x 10^');
+  }
+
+  /* Anchors turn an unreadable number into something a student can feel, so the
+     unit has to scale with the value. An honest 13 days beats a correct but
+     meaningless "18765.0 minutes". */
+  function anchor(steps) {
+    var sec = steps / 1e9;   /* a billion steps per second */
+    if (steps <= BUDGET) {
+      return sec < 0.001 ? 'Effectively instant.'
+        : 'About ' + sec.toFixed(3) + ' seconds at a billion steps per second.';
+    }
+    var UNITS = [
+      [60, 'seconds'], [3600, 'minutes'], [86400, 'hours'], [86400 * 365, 'days'],
+      [86400 * 365 * 1000, 'years'], [86400 * 365 * 1e6, 'thousand years'],
+      [86400 * 365 * 1e9, 'million years'], [Infinity, 'billion years']
+    ];
+    var div = [1, 60, 3600, 86400, 86400 * 365, 86400 * 365 * 1000,
+               86400 * 365 * 1e6, 86400 * 365 * 1e9];
+    for (var u = 0; u < UNITS.length; u++) {
+      if (sec < UNITS[u][0]) {
+        var v = sec / div[u];
+        return 'About ' + (v < 10 ? v.toFixed(1) : Math.round(v).toLocaleString('en-US'))
+          + ' ' + UNITS[u][1] + ' at a billion steps per second.'
+          + (u >= 5 ? ' This answer never arrives.' : '');
+      }
+    }
+    return 'Longer than the age of the universe. This answer never arrives.';
+  }
+
+  function render() {
+    var c = CASES[i];
+    el.round.textContent = 'Case ' + (i + 1) + ' / ' + CASES.length;
+    el.streak.textContent = 'Correct: ' + right;
+    el.score.textContent = 'Score: ' + score;
+    el.n.textContent = 'n = ' + c.n.toLocaleString('en-US') + ' items';
+    el.alg.textContent = c.alg;
+    el.desc.textContent = c.desc;
+    el.yes.disabled = false; el.no.disabled = false;
+    el.yes.className = 'bo-btn'; el.no.className = 'bo-btn';
+    el.reveal.classList.remove('show');
+    answered = false;
+  }
+
+  function answer(saidYes) {
+    if (answered) return;
+    answered = true;
+    var c = CASES[i];
+    var fits = c.steps <= BUDGET;
+    var correct = (saidYes === fits);
+    if (correct) { score += 100; right++; }
+    el.yes.disabled = true; el.no.disabled = true;
+    (fits ? el.yes : el.no).className = 'bo-btn right';
+    if (!correct) (saidYes ? el.yes : el.no).className = 'bo-btn wrong';
+    el.stepct.textContent = fmt(c.steps) + ' steps';
+    el.anchortext.textContent = anchor(c.steps);
+    /* log scale, or every polynomial case would render as an invisible sliver
+       next to 2^50 */
+    var pct = Math.max(2, Math.min(100, (Math.log10(c.steps) / Math.log10(BUDGET)) * 100));
+    el.fill.style.width = pct + '%';
+    el.reveal.classList.add('show');
+    el.score.textContent = 'Score: ' + score;
+    el.streak.textContent = 'Correct: ' + right;
+    el.nextbtn.textContent = (i < CASES.length - 1) ? 'Next case' : 'See your result';
+  }
+
+  el.yes.addEventListener('click', function () { answer(true); });
+  el.no.addEventListener('click', function () { answer(false); });
+  el.nextbtn.addEventListener('click', function () {
+    if (i < CASES.length - 1) { i++; render(); } else { finish(); }
+  });
+
+  function finish() {
+    el.play.innerHTML =
+      '<div class="bo-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + right + ' of ' + CASES.length + ' called correctly.</p>' +
+        '<div class="bo-teach">' +
+          '<b>Size was never the deciding factor. Shape was.</b> A million items got searched in ' +
+          'twenty steps because halving throws away half the work each time. Fifty items were ' +
+          'impossible because every extra item DOUBLES the number of subsets. Twenty cities were ' +
+          'worse still, because every extra city multiplies the orderings. ' +
+          'Checking each item once, or even every pair, grows as a polynomial and stays reasonable. ' +
+          'Subsets and orderings grow exponentially and never become reasonable, which is why real ' +
+          'software uses a heuristic and settles for a good answer that actually arrives.' +
+        '</div>' +
+        '<p><button class="bo-next" id="bo-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('bo-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  render();
+})();
+</script>

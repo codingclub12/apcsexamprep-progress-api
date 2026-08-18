@@ -31,15 +31,39 @@ const GAMES_DIR = path.join(ROOT, 'shopify', 'games');
 const PUBLISHED_AT = '2026-03-01 12:00:00';
 
 // Title, subtitle and the topic each game belongs to. The handle is derived.
+// Games that ship as their OWN page. Handle is 'ap-csp-game-' + the key, and the
+// key must exist in the routes/game.js registry.
 const GAMES = {
-  'parallel-scheduler': {
-    title: 'AP CSP Parallel Scheduler Game | Speedup and Dependency Chains',
-    shareName: 'Parallel Scheduler',
+  'big-o-race': {
+    title: 'AP CSP Big-O Race Game | Linear vs Nested Growth | Topic 3.17',
+    shareName: 'Big-O Race',
     label: 'points',
-    topic: '4.3',
-    seoDescription: 'Schedule jobs across processors and watch speedup rise, then hit the wall a dependency chain creates. Free AP CSP Topic 4.3 practice game.',
+    topic: '3.17',
+    seoDescription: 'Race two algorithms as the input grows and watch nested loops fall off a cliff while a single pass keeps up. Free AP CSP Topic 3.17 practice game.',
+  },
+  'halving-hunter': {
+    title: 'AP CSP Halving Hunter Game | Binary Search in log2(n) Guesses | Topic 3.11',
+    shareName: 'Halving Hunter',
+    label: 'points',
+    topic: '3.11',
+    seoDescription: 'Find the hidden number in as few guesses as binary search would need, and learn why doubling the list adds only one more guess. AP CSP Topic 3.11.',
   },
 };
+
+// Topics whose game is EMBEDDED in the lesson page already. A standalone page
+// for one of these would be a SECOND implementation dispatching apcsGameScore
+// under the same leaderboard id on a different scoring scale, which is exactly
+// what happened with parallel-scheduler: a game had shipped inside the Topic 4.3
+// lesson page and a separate one was built without noticing. Measured from the
+// live lesson pages on 2026-08-18: 19 of the 35 embed a game.
+const EMBEDDED_IN_LESSON = new Set([
+  'team-roles', 'guess-the-purpose', 'design-sprint', 'bug-squasher',
+  'compression-challenge', 'trend-hunter', 'filter-sort-detective',
+  'packet-assembler', 'parallel-scheduler',
+  'binary-conversion-race', 'robot-director', 'redundant-routing',
+  'internet-routing-simulator', 'two-sides', 'bridge-the-divide',
+  'spot-the-bias', 'crowd-power', 'license-match', 'phishing-net',
+]);
 
 function registryIds() {
   const src = fs.readFileSync(path.join(ROOT, 'routes', 'game.js'), 'utf8');
@@ -108,6 +132,11 @@ function main(argv) {
   const pages = ids.map((id) => {
     if (!reg.has(id)) {
       problems.push(`${id}: not in the routes/game.js registry, so the server would reject its scores`);
+    }
+    if (EMBEDDED_IN_LESSON.has(id)) {
+      problems.push(`${id}: a game for this topic is ALREADY EMBEDDED in its lesson page.`
+        + ' A standalone page would post to the same leaderboard id on a different scale.'
+        + ' Reuse the embedded game verbatim or pick a different topic.');
     }
     return build(id);
   });
