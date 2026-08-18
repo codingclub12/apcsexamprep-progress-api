@@ -38,8 +38,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          # Need real history so the head commit's timestamp is available.
-          fetch-depth: 20
+          # Full history, not a shallow slice. The ancestry check below asks
+          # whether the SERVING commit is on main, and during a long stall that
+          # commit can be many merges back. With a shallow clone the object is
+          # simply absent, `--is-ancestor` errors, and the check would report
+          # "not an ancestor" (a rollback) when the real answer is an ordinary
+          # slow deploy. A monitor that gives the wrong diagnosis is worse than
+          # one that gives none.
+          fetch-depth: 0
 
       - name: Compare the serving commit against main
         env:
@@ -101,8 +107,16 @@ jobs:
 
           # Is the serving commit even an ancestor? If not, something stranger
           # than a slow build is going on (a rollback, or a different branch).
-          relation="behind"
-          if ! git merge-base --is-ancestor "$served" "$head_sha" 2>/dev/null; then
+          #
+          # "Not an ancestor" and "I have never heard of that commit" are
+          # different findings and must not collapse into one message: the first
+          # is a rollback, the second usually means the deploy predates this
+          # clone or the sha is not from this repo at all.
+          if ! git cat-file -e "${served}^{commit}" 2>/dev/null; then
+            relation="a commit this repository does not contain, so it is not from main at all"
+          elif git merge-base --is-ancestor "$served" "$head_sha" 2>/dev/null; then
+            relation="behind"
+          else
             relation="NOT AN ANCESTOR of main, which suggests a rollback or a deploy from another branch"
           fi
 
