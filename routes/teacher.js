@@ -17,6 +17,7 @@ const {
   formatCell, buildCanvasUnitExport, buildCanvasActivityExport, buildSchoologyExport, canvasSisLoginId,
   INCLUDE_BUCKETS,
 } = require('../lib/export-format');
+const { buildCanvasCoursePackage } = require('../lib/canvas-course-package');
 const {
   normalizeMode, legacyFromMode, DEFAULT_MODE, MODE_LABELS, MODE_DESCRIPTIONS, retrySqlExpr,
 } = require('../retry-policy');
@@ -591,6 +592,45 @@ function csvCell(v, forceQuote) {
   return (forceQuote || /[",\n\r]/.test(str)) ? `"${str.replace(/"/g, '""')}"` : str;
 }
 
+// ── SHARED EXPORT FILTERS ─────────────────────────────────────────────────────
+//  include= and units= are parsed in exactly one place because two routes now
+//  answer questions about the same course: the gradebook CSV and the Canvas
+//  course package. If they disagreed about what units=unit-1 selects, a teacher
+//  would import a course package holding four units of assignments and then a
+//  CSV holding one, and the mismatch would look like missing grades rather than
+//  like a filter. Returns { filter } or { error } for the caller to 400 with.
+const csvList = (v) => String(v).split(',').map((x) => x.trim()).filter(Boolean);
+const isTruthy = (v) => ['1', 'true', 'yes'].includes(String(v || '').toLowerCase());
+
+function parseExportFilter(req, courseConfig) {
+  let includeFilter = null;
+  if (req.query.include !== undefined) {
+    const wanted = csvList(req.query.include);
+    const unknown = wanted.filter((w) => !INCLUDE_BUCKETS.includes(w));
+    if (unknown.length) {
+      return { error: {
+        error: `include must be a comma separated list of ${INCLUDE_BUCKETS.join(', ')}`,
+        unknown,
+      } };
+    }
+    includeFilter = {};
+    for (const bucket of INCLUDE_BUCKETS) includeFilter[bucket] = wanted.includes(bucket);
+  }
+
+  // A typo'd unit would silently export a smaller gradebook, which is worse
+  // than an error: the teacher would not know what was missing.
+  let unitFilter = null;
+  if (req.query.units !== undefined) {
+    const wanted = csvList(req.query.units);
+    const known = Object.keys(courseConfig.units);
+    const unknown = wanted.filter((u) => !known.includes(u));
+    if (unknown.length) return { error: { error: 'unknown unit in units', unknown, known } };
+    unitFilter = wanted;
+  }
+
+  return { filter: (includeFilter || unitFilter) ? { include: includeFilter, units: unitFilter } : null };
+}
+
 // ── CSV EXPORT (Wide gradebook, CodeHS-style) — SINGLE canonical export ─────────
 // Rows = students. Columns = identity + per-unit summary + every lesson/activity.
 // A cell shows its SCORE whenever one was recorded, otherwise "Done" if the
@@ -630,23 +670,10 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
     // include= and units= mirror what the dashboard is currently showing, so a
     // teacher exports the gradebook on their screen rather than a different one.
     // Both are opt-in: absent means the whole course, which is what every
-    // existing caller already gets.
-    const csvList = (v) => String(v).split(',').map((x) => x.trim()).filter(Boolean);
-
-    let includeFilter = null;
-    if (req.query.include !== undefined) {
-      const wanted = csvList(req.query.include);
-      const unknown = wanted.filter((w) => !INCLUDE_BUCKETS.includes(w));
-      if (unknown.length) {
-        return res.status(400).json({
-          error: `include must be a comma separated list of ${INCLUDE_BUCKETS.join(', ')}`,
-          unknown,
-        });
-      }
-      includeFilter = {};
-      for (const bucket of INCLUDE_BUCKETS) includeFilter[bucket] = wanted.includes(bucket);
-    }
-    const wantsPreflight = ['1', 'true', 'yes'].includes(String(req.query.preflight || '').toLowerCase());
+    // existing caller already gets. Parsed by the shared helper above, which the
+    // Canvas course package route also calls: the two files describe the same
+    // course and must not disagree about what "units=unit-1" selects.
+    const wantsPreflight = isTruthy(req.query.preflight);
 
     const cls = db.prepare('SELECT * FROM classes WHERE class_code = ? AND teacher_id = ?')
       .get(req.params.code.toUpperCase(), req.teacher.id);
@@ -655,21 +682,9 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
     const courseConfig = COURSES[cls.course];
     if (!courseConfig) return res.status(400).json({ error: `Course ${cls.course} not in manifest` });
 
-    // A typo'd unit would silently export a smaller gradebook, which is worse
-    // than an error: the teacher would not know what was missing.
-    let unitFilter = null;
-    if (req.query.units !== undefined) {
-      const wanted = csvList(req.query.units);
-      const known = Object.keys(courseConfig.units);
-      const unknown = wanted.filter((u) => !known.includes(u));
-      if (unknown.length) {
-        return res.status(400).json({ error: 'unknown unit in units', unknown, known });
-      }
-      unitFilter = wanted;
-    }
-    const exportFilter = (includeFilter || unitFilter)
-      ? { include: includeFilter, units: unitFilter }
-      : null;
+    const parsed = parseExportFilter(req, courseConfig);
+    if (parsed.error) return res.status(400).json(parsed.error);
+    const exportFilter = parsed.filter;
 
     const students = db.prepare(
       'SELECT id, display_name, student_ref, last_active, active FROM students WHERE class_id = ? ORDER BY display_name'
@@ -861,6 +876,74 @@ router.get('/classes/:code/export', requireTeacher, (req, res) => {
   } catch (e) {
     console.error('Export error:', e);
     res.status(500).json({ error: 'Failed to export gradebook' });
+  }
+});
+
+// ── CANVAS COURSE PACKAGE (.imscc) ────────────────────────────────────────────
+//  The other half of the Canvas story. /export moves the GRADES; this moves the
+//  COURSE: modules per unit, a link per lesson, and one already-named assignment
+//  per gradebook column, so the CSV import lands on assignments that exist
+//  instead of asking the teacher to confirm 250 new ones by hand.
+//
+//  scope, include and units mean exactly what they mean on /export, parsed by
+//  the same helper, so the package and the CSV a teacher downloads in the same
+//  sitting describe the same course.
+//
+//  It is a TEACHER route on a class for two reasons and neither is the data: the
+//  package holds no class data at all, only public course structure. Teacher
+//  ownership of a class is (a) the entitlement gate, since a class exists only
+//  where a bundle was bought, and (b) how the route knows which course to build.
+//
+//  ?preflight=1 returns the summary as JSON instead of the file, so the portal
+//  can show what is about to be imported before a 500 KB download.
+//
+//  Light rate limiting. Building the activity-scope CSA package is 615 files and
+//  about 470 KB of deflate, measured at 50 ms on this box: cheap once, and rude
+//  in a loop on one vCPU. 30 a minute is far more than a teacher clicking
+//  download can produce and far less than a loop can spend.
+const canvasPackageLimit = makeRateLimit({
+  windowMs: 60 * 1000, max: 30,
+  message: 'Too many course package downloads. Please wait a minute and try again.',
+});
+
+router.get('/classes/:code/canvas-course', requireTeacher, canvasPackageLimit, (req, res) => {
+  try {
+    const scope = String(req.query.scope || 'unit').toLowerCase();
+    if (scope !== 'unit' && scope !== 'activity') {
+      return res.status(400).json({ error: "scope must be 'unit' or 'activity'" });
+    }
+
+    const cls = db.prepare('SELECT * FROM classes WHERE class_code = ? AND teacher_id = ?')
+      .get(req.params.code.toUpperCase(), req.teacher.id);
+    if (!cls) return res.status(404).json({ error: 'Class not found' });
+
+    // A solo class carries course 'solo', which is a grouping and not a
+    // curriculum: there are no units to build modules from. Say so rather than
+    // handing back an empty cartridge.
+    const courseConfig = COURSES[cls.course];
+    if (!courseConfig) {
+      return res.status(400).json({ error: `No course package for ${cls.course}`, course: cls.course });
+    }
+
+    const parsed = parseExportFilter(req, courseConfig);
+    if (parsed.error) return res.status(400).json(parsed.error);
+
+    const pkg = buildCanvasCoursePackage({
+      course: cls.course,
+      courseConfig,
+      scope,
+      filter: parsed.filter,
+    });
+
+    if (isTruthy(req.query.preflight)) return res.json(pkg.summary);
+
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', `attachment; filename="${pkg.filename}"`);
+    res.setHeader('Content-Length', String(pkg.buffer.length));
+    return res.send(pkg.buffer);
+  } catch (e) {
+    console.error('teacher canvas-course:', e);
+    return res.status(500).json({ error: 'Failed to build the Canvas course package' });
   }
 });
 
