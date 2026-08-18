@@ -48,6 +48,13 @@ const GAMES = {
     topic: '3.11',
     seoDescription: 'Find the hidden number in as few guesses as binary search would need, and learn why doubling the list adds only one more guess. AP CSP Topic 3.11.',
   },
+  'halt-or-not': {
+    title: 'AP CSP Halt or Not Game | Decidable vs Undecidable | Topic 3.18',
+    shareName: 'Halt or Not',
+    label: 'points',
+    topic: '3.18',
+    seoDescription: 'Sort problems into the ones an algorithm can always answer and the ones no algorithm can. Free AP CSP Topic 3.18 undecidable problems game.',
+  },
   'odds-maker': {
     title: 'AP CSP Odds Maker Game | RANDOM Ranges and Probability | Topic 3.15',
     shareName: 'Odds Maker',
