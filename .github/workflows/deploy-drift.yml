@@ -17,8 +17,13 @@ name: Deploy drift
 # WHY IT IS NOT JUST "deployed != main"
 # Right after a merge they always differ, for as long as the build takes, and an
 # alarm that fires on every healthy deploy is an alarm people turn off. So the
-# check is time based: main's head has to have been sitting undeployed for
-# longer than a build could reasonably take.
+# check is time based.
+#
+# The subtlety, and the thing this got wrong on its first day: the clock has to
+# run from the OLDEST undeployed commit, not from main's head. Head age resets on
+# every merge, so on a busy repo it is almost always inside the grace window and
+# the alarm can only fire when the repo is quiet, which is the opposite of what
+# is wanted. See the long comment on stale_min below.
 
 on:
   schedule:
@@ -98,15 +103,11 @@ jobs:
             exit 0
           fi
 
-          # Different, which is normal while a build runs. Only a stale head is a
-          # problem, and the commit that is NOT serving is the one to name.
-          if [ "$age_min" -le "${GRACE_MINUTES}" ]; then
-            echo "Behind by design: main is only ${age_min}m old and a build takes a few minutes."
-            exit 0
-          fi
-
-          # Is the serving commit even an ancestor? If not, something stranger
-          # than a slow build is going on (a rollback, or a different branch).
+          # Different, which is normal while a build runs. Classify BEFORE applying
+          # any grace: grace is a statement about how long a build takes, and it
+          # only makes sense when the serving commit is genuinely an older point on
+          # main. A rollback or a foreign commit is not a slow build and must never
+          # be waved through by a timer.
           #
           # "Not an ancestor" and "I have never heard of that commit" are
           # different findings and must not collapse into one message: the first
@@ -120,7 +121,41 @@ jobs:
             relation="NOT AN ANCESTOR of main, which suggests a rollback or a deploy from another branch"
           fi
 
-          echo "::error title=Deploy has not landed::main is $head_short, merged ${age_min}m ago, but production is serving $served ($relation)."
+          # HOW LONG HAS THE DEPLOY ACTUALLY BEEN BEHIND?
+          #
+          # Not the age of main's head. That was the original bug and it made this
+          # check useless in the exact situation it exists for. On 2026-08-18
+          # production sat on one commit for over four hours while four merges
+          # piled up behind it, and both scheduled runs reported success:
+          #
+          #     main head : e965049  (merged 13m ago)
+          #     serving   : 26fe1e3
+          #     Behind by design: main is only 13m old and a build takes a few minutes.
+          #
+          # Every merge reset the clock. On an active repo the head is almost
+          # always younger than the grace window, so the alarm could only fire
+          # during a quiet spell, never during a busy stall. Backwards.
+          #
+          # The honest clock starts when the deploy FIRST fell behind, and later
+          # merges must not touch it: the age of the OLDEST commit that is not
+          # deployed yet. --first-parent keeps this to commits as they landed on
+          # main, so a branch whose commits were authored last week does not read
+          # as a week-long outage the moment it merges.
+          stale_min="$age_min"
+          if [ "$relation" = "behind" ]; then
+            first_undeployed=$(git rev-list --first-parent "${served}..${head_sha}" | tail -1)
+            if [ -n "$first_undeployed" ]; then
+              stale_min=$(( (now_epoch - $(git log -1 --format=%ct "$first_undeployed")) / 60 ))
+              echo "undeployed since: $(git rev-parse --short "$first_undeployed") (${stale_min}m)"
+            fi
+
+            if [ "$stale_min" -le "${GRACE_MINUTES}" ]; then
+              echo "Behind by design: the deploy has been behind for only ${stale_min}m and a build takes a few minutes."
+              exit 0
+            fi
+          fi
+
+          echo "::error title=Deploy has not landed::production is serving $served ($relation) and has been behind for ${stale_min}m. main is $head_short, merged ${age_min}m ago."
           echo ""
           echo "A failed Railway build looks exactly like this from outside: /api/health"
           echo "keeps answering 200 from the last good container."
