@@ -50,11 +50,11 @@ const REGISTRY = {
   'guess-the-purpose':          { metric: 'score', higher: true, min: 0, max: 10000 },
   'design-sprint':              { metric: 'score', higher: true, min: 0, max: 10000 },
   'bug-squasher':               { metric: 'score', higher: true, min: 0, max: 10000 },
-  // Big Idea 3 study games. Both are named as coming on the live study games
-  // hub, and neither topic has a game embedded in its lesson page, so these
-  // ship as their own pages.
+  // Big Idea 3 study games. None of these topics has a game embedded in its
+  // lesson page, so each ships as its own page.
   'big-o-race':                 { metric: 'score', higher: true, min: 0, max: 10000 },
   'halving-hunter':             { metric: 'score', higher: true, min: 0, max: 10000 },
+  'boundary-patrol':            { metric: 'score', higher: true, min: 0, max: 10000 },
 };
 
 const WINDOWS = new Set(['today', 'week', 'month', 'year', 'all']);

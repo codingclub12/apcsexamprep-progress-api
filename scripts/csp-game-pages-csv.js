@@ -48,6 +48,13 @@ const GAMES = {
     topic: '3.11',
     seoDescription: 'Find the hidden number in as few guesses as binary search would need, and learn why doubling the list adds only one more guess. AP CSP Topic 3.11.',
   },
+  'boundary-patrol': {
+    title: 'AP CSP Boundary Patrol Game | Conditionals and Off-by-One | Topic 3.6',
+    shareName: 'Boundary Patrol',
+    label: 'points',
+    topic: '3.6',
+    seoDescription: 'Pick the comparison operator that puts the cutoff in exactly the right place, then watch the test bench prove it. AP CSP Topic 3.6 conditionals practice.',
+  },
 };
 
 // Topics whose game is EMBEDDED in the lesson page already. A standalone page
@@ -166,4 +173,4 @@ function main(argv) {
 }
 
 if (require.main === module) main(process.argv.slice(2));
-module.exports = { build, checkPage, GAMES, PUBLISHED_AT };
+module.exports = { build, checkPage, registryIds, GAMES, EMBEDDED_IN_LESSON, GAMES_DIR, PUBLISHED_AT };
