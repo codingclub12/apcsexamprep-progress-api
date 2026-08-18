@@ -1,0 +1,191 @@
+{
+  "_comment": [
+    "AP Networking topic to industry certification crosswalk.",
+    "",
+    "WHY THIS FILE EXISTS",
+    "  College Board's own framing for AP Networking is that it was developed with",
+    "  industry partners including Cisco and aligns to CompTIA Network+, Cisco CCNA",
+    "  and Cisco CCST Networking. As of the 2026-08-17 depth audit, zero of the 22",
+    "  published topic pages mentioned any of them. That is the largest gap in the",
+    "  course AND the only one that cannot be invalidated by a CED revision, because",
+    "  certification objectives are published, stable, and owned by someone else.",
+    "",
+    "  It is also the argument that reaches an administrator rather than a student.",
+    "  'Aligned to AP' is a sentence. 'Aligned to AP and maps to Network+ and CCST'",
+    "  is a budget line.",
+    "",
+    "MAPPING GRANULARITY, AND WHY IT STOPS WHERE IT DOES",
+    "  This maps at DOMAIN level, not sub-objective level. Domain names and the",
+    "  Network+ weightings were corroborated across multiple independent sources.",
+    "  Sub-objective numbers (for example 'N10-009 2.1') live in the official",
+    "  blueprints on comptia.org and cisco.com, both of which are blocked by this",
+    "  environment's egress proxy, so they could not be read first-hand.",
+    "",
+    "  Publishing a sub-objective number sourced from a third-party summary would be",
+    "  the same failure the AP Networking hazard block already forbids: a wrong",
+    "  identifier is worse than an absent one, because it gets quoted onward as if",
+    "  it were checked. Domain level is what could be verified, so domain level is",
+    "  what ships. See docs/ap-networking-cert-crosswalk.md to deepen it later.",
+    "",
+    "PRIMARY vs SECONDARY",
+    "  primary   the domain a teacher would name if asked what this topic is for",
+    "  secondary genuinely covered, but not the topic's centre of gravity",
+    "  Every claim is deliberately conservative. Over-claiming coverage is how a",
+    "  crosswalk stops being trusted."
+  ],
+
+  "sources": {
+    "checked_on": "2026-08-18",
+    "comptia_network_plus": {
+      "exam_code": "N10-009",
+      "note": "Five domains with published weightings. Weightings corroborated across multiple independent summaries.",
+      "official_blueprint": "https://www.comptia.org (blocked by this environment's egress proxy, not read first-hand)"
+    },
+    "cisco_ccst_networking": {
+      "exam_code": "100-150",
+      "note": "Six domains. Cisco does not publish per-domain percentage weightings for this exam, so none are claimed here.",
+      "official_blueprint": "https://www.cisco.com (blocked by this environment's egress proxy, not read first-hand)"
+    },
+    "cisco_ccna": {
+      "note": "Named in College Board's alignment statement but deliberately NOT mapped here. CCNA is a professional-level exam well beyond a first-year high school course, and claiming topic-level alignment to it would be the kind of over-claim that gets a crosswalk dismissed. It is mentioned in prose as the onward path, not mapped as coverage."
+    }
+  },
+
+  "certs": {
+    "netplus": {
+      "label": "CompTIA Network+",
+      "exam_code": "N10-009",
+      "domains": {
+        "concepts":       { "name": "Networking Concepts",     "weight": 23 },
+        "implementation": { "name": "Network Implementation",  "weight": 20 },
+        "operations":     { "name": "Network Operations",      "weight": 19 },
+        "security":       { "name": "Network Security",        "weight": 14 },
+        "troubleshooting":{ "name": "Network Troubleshooting", "weight": 24 }
+      }
+    },
+    "ccst": {
+      "label": "Cisco CCST Networking",
+      "exam_code": "100-150",
+      "domains": {
+        "standards":  { "name": "Standards and Concepts" },
+        "addressing": { "name": "Addressing and Subnet Formats" },
+        "endpoints":  { "name": "Endpoints and Media Types" },
+        "infra":      { "name": "Infrastructure" },
+        "diagnosing": { "name": "Diagnosing Problems" },
+        "security":   { "name": "Security" }
+      }
+    }
+  },
+
+  "topics": [
+    { "id": "1.1", "title": "Troubleshooting issues on my device",
+      "netplus": { "primary": ["troubleshooting"], "secondary": ["concepts"] },
+      "ccst": { "primary": ["diagnosing"], "secondary": ["endpoints"] },
+      "note": "The course opens on the same skill Network+ weights most heavily. Worth saying out loud on the page." },
+
+    { "id": "1.2", "title": "Connecting and optimizing my device",
+      "netplus": { "primary": ["implementation"], "secondary": ["concepts", "security"] },
+      "ccst": { "primary": ["endpoints"], "secondary": ["infra", "security"] },
+      "note": "Secure wireless connectivity sits in both the implementation and security halves of Network+." },
+
+    { "id": "1.3", "title": "Security needs of my device",
+      "netplus": { "primary": ["security"], "secondary": [] },
+      "ccst": { "primary": ["security"], "secondary": ["endpoints"] },
+      "note": "" },
+
+    { "id": "1.4", "title": "Securing my device",
+      "netplus": { "primary": ["security"], "secondary": ["operations"] },
+      "ccst": { "primary": ["security"], "secondary": ["endpoints"] },
+      "note": "" },
+
+    { "id": "2.1", "title": "Troubleshooting a SOHO network",
+      "netplus": { "primary": ["troubleshooting"], "secondary": ["implementation"] },
+      "ccst": { "primary": ["diagnosing"], "secondary": ["infra"] },
+      "note": "" },
+
+    { "id": "2.2", "title": "MAC and IP addresses",
+      "netplus": { "primary": ["concepts"], "secondary": [] },
+      "ccst": { "primary": ["addressing"], "secondary": ["standards"] },
+      "note": "The clearest one-to-one match in the course. CCST devotes an entire domain to it." },
+
+    { "id": "2.3", "title": "Upgrading a SOHO network",
+      "netplus": { "primary": ["implementation"], "secondary": ["concepts"] },
+      "ccst": { "primary": ["infra"], "secondary": ["endpoints"] },
+      "note": "" },
+
+    { "id": "2.4", "title": "Adding a media server and AI devices to the network",
+      "netplus": { "primary": ["implementation"], "secondary": ["operations"] },
+      "ccst": { "primary": ["infra"], "secondary": ["endpoints"] },
+      "note": "" },
+
+    { "id": "2.5", "title": "SOHO security vulnerabilities",
+      "netplus": { "primary": ["security"], "secondary": [] },
+      "ccst": { "primary": ["security"], "secondary": ["infra"] },
+      "note": "" },
+
+    { "id": "2.6", "title": "Firewalls and network segmentation",
+      "netplus": { "primary": ["security"], "secondary": ["implementation"] },
+      "ccst": { "primary": ["security"], "secondary": ["infra"] },
+      "note": "" },
+
+    { "id": "3.1", "title": "Planning network devices",
+      "netplus": { "primary": ["implementation"], "secondary": ["concepts"] },
+      "ccst": { "primary": ["infra"], "secondary": ["standards"] },
+      "note": "" },
+
+    { "id": "3.2", "title": "Switching and network topologies",
+      "netplus": { "primary": ["concepts"], "secondary": ["implementation"] },
+      "ccst": { "primary": ["standards"], "secondary": ["infra"] },
+      "note": "Topologies are named explicitly in the CCST standards domain." },
+
+    { "id": "3.3", "title": "Configuring and verifying access",
+      "netplus": { "primary": ["implementation"], "secondary": ["operations", "security"] },
+      "ccst": { "primary": ["infra"], "secondary": ["security"] },
+      "note": "The topic with the most uncited EK codes in the depth audit, and the one that reaches the most cert domains. Worth authoring first." },
+
+    { "id": "3.4", "title": "Network segmentation and security",
+      "netplus": { "primary": ["security"], "secondary": ["implementation"] },
+      "ccst": { "primary": ["security"], "secondary": ["infra"] },
+      "note": "" },
+
+    { "id": "3.5", "title": "Firewalls and traffic filtering",
+      "netplus": { "primary": ["security"], "secondary": [] },
+      "ccst": { "primary": ["security"], "secondary": ["infra"] },
+      "note": "" },
+
+    { "id": "3.6", "title": "Troubleshooting a segmented LAN",
+      "netplus": { "primary": ["troubleshooting"], "secondary": ["implementation"] },
+      "ccst": { "primary": ["diagnosing"], "secondary": ["infra"] },
+      "note": "" },
+
+    { "id": "4.1", "title": "Network failures and the CIA triad",
+      "netplus": { "primary": ["security"], "secondary": ["operations"] },
+      "ccst": { "primary": ["security"], "secondary": ["diagnosing"] },
+      "note": "CIA is named directly in the CCST security domain." },
+
+    { "id": "4.2", "title": "Protocols and the OSI and TCP/IP models",
+      "netplus": { "primary": ["concepts"], "secondary": [] },
+      "ccst": { "primary": ["standards"], "secondary": [] },
+      "note": "Network+ objective 1.1 is the OSI model. This topic is as close to a direct hit as the course gets." },
+
+    { "id": "4.3", "title": "CLI commands",
+      "netplus": { "primary": ["troubleshooting"], "secondary": ["operations"] },
+      "ccst": { "primary": ["diagnosing"], "secondary": ["infra"] },
+      "note": "" },
+
+    { "id": "4.4", "title": "Routing and data paths",
+      "netplus": { "primary": ["concepts"], "secondary": ["implementation"] },
+      "ccst": { "primary": ["standards"], "secondary": ["infra"] },
+      "note": "" },
+
+    { "id": "4.5", "title": "Monitoring and defending the network",
+      "netplus": { "primary": ["operations"], "secondary": ["security"] },
+      "ccst": { "primary": ["security"], "secondary": ["diagnosing"] },
+      "note": "The only topic whose primary Network+ domain is Operations, which is 19 percent of that exam and otherwise thin across this course." },
+
+    { "id": "4.6", "title": "IPv6, reliability and growth",
+      "netplus": { "primary": ["concepts"], "secondary": ["implementation"] },
+      "ccst": { "primary": ["addressing"], "secondary": ["standards"] },
+      "note": "" }
+  ]
+}
