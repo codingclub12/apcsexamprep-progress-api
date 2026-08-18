@@ -121,6 +121,13 @@ Two supporting decisions worth recording:
   round trip, and a three exercise spot check against a real JVM.
 - Full offline suite set (every `smoke:*` CI runs) - green.
 - `npm run csax1 -- out.csv` - 53 rows, 1094 KB sheet, refused nothing.
+- `npm run smoke:judge0limits` - 17 passed, 0 failed.
+- PR #190 merged by Tanner at 2026-08-18 01:00Z as `7d75b3c`. Railway deployed it
+  (`GET /api/health` rolled from `316784f` to `cbdc3cf`, which contains the merge,
+  and reports `status: ok`, so the `mode` column migration booted clean).
+- `POST /api/judge0/run` with an empty body returns `400 bad_request` on
+  production, which places the request past the rate limiter and short of Judge0.
+  The route is live and costs nothing to confirm.
 
 ## The classroom blocker, raised on the owner's call
 
@@ -167,13 +174,31 @@ much room, so the **aggregate on the bill** is the number to watch, not the burs
 
 ## Still open
 
-- **Nothing is live.** The sheet is built and validated; the Matrixify import has
-  not been run, and neither has the seed against production. Order matters:
-  `node scripts/seed-code-tests.js --update` FIRST, then the import. A page whose
-  cases are not seeded answers every submission with a 404 and grades nothing.
-- Run `node scripts/csa-exercise-pages-csv.js out.csv --live pages.json` against a
-  fresh Admin API pages dump before importing. Every handle in this set must be
-  new, and the script aborts on any that is not.
+**The code is deployed. The content is not.** Those are different things and the
+distinction is the whole of what is left:
+
+- **Live now, from the merge alone:** the two new grading modes, the `mode`
+  column, and the raised Judge0 ceilings. Nothing about a student's experience
+  changes from these on their own, except that Run and Submit stop being
+  rate limited at 40 an hour.
+- **Not live:** every one of the 53 pages, and every one of the 268 test cases.
+
+Two steps remain, in this order, and the order is not cosmetic:
+
+1. `node scripts/seed-code-tests.js --update` against the PRODUCTION database
+   (a Railway shell; it cannot be run from a session container, which has no
+   production DB). Until this runs, `code_test_cases` holds nothing for the new
+   items and every submission 404s.
+2. Then the Matrixify import. Run
+   `node scripts/csa-exercise-pages-csv.js out.csv --live pages.json` against a
+   fresh Admin API pages dump first: every handle in this set must be new, and
+   the script aborts on any that is not.
+
+Importing before seeding gives 53 pages that look finished and grade nothing,
+which is the failure this ordering exists to prevent.
+
+Everything else that is open:
+
 - No browser check of a real Submit against production has happened, because
   nothing is imported yet. That is the verification step after the import.
 - 1.6 `exercise-3` still has a test bank and no page. It is the only CSA FRQ item
