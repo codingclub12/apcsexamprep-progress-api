@@ -1,0 +1,287 @@
+<style>
+#is-game{all:initial!important;display:block!important;box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.55!important;max-width:900px!important;margin:0 auto!important;padding:0 0 8px!important}
+#is-game *,#is-game *::before,#is-game *::after{box-sizing:border-box!important}
+#is-game .is-card{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden!important}
+#is-game .is-hero{background:linear-gradient(135deg,#3730a3,#6366f1)!important;padding:22px 24px!important}
+#is-game .is-title{font-size:26px!important;font-weight:800!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1.15!important}
+#is-game .is-sub{font-size:15px!important;margin:8px 0 0!important;color:#e0e7ff!important;-webkit-text-fill-color:#e0e7ff!important}
+#is-game .is-bar{display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:14px 24px!important;background:#f8fafc!important;border-bottom:1px solid #e2e8f0!important}
+#is-game .is-chip{display:inline-block!important;font-size:13px!important;font-weight:700!important;padding:5px 12px!important;border-radius:100px!important;background:#fff!important;border:1px solid #cbd5e1!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#is-game .is-chip.is-scorechip{background:#6366f1!important;border-color:#6366f1!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#is-game .is-body{padding:18px 24px 24px!important}
+#is-game .is-how{font-size:14px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;margin:0 0 14px!important}
+#is-game .is-ask{font-size:16px!important;font-weight:700!important;margin:0 0 12px!important;color:#3730a3!important;-webkit-text-fill-color:#3730a3!important}
+#is-game .is-code{background:#0f172a!important;border-radius:10px!important;padding:16px 18px!important;margin:0 0 14px!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:14px!important;line-height:1.7!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;overflow-x:auto!important}
+#is-game .is-line{display:block!important;padding:1px 8px!important;border-radius:4px!important;white-space:pre!important}
+#is-game .is-line.hot{background:#4338ca!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#is-game .is-guess{display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:8px!important;margin-bottom:14px!important}
+#is-game .is-step{font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:15px!important;font-weight:700!important;padding:10px 14px!important;border-radius:8px!important;border:2px solid #c7d2fe!important;cursor:pointer!important;background:#fff!important;color:#3730a3!important;-webkit-text-fill-color:#3730a3!important}
+#is-game .is-step:hover:enabled{background:#eef2ff!important}
+#is-game .is-step:disabled{opacity:.5!important;cursor:default!important}
+#is-game .is-readout{font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:24px!important;font-weight:800!important;min-width:110px!important;text-align:center!important;padding:8px 14px!important;border-radius:10px!important;background:#eef2ff!important;border:2px solid #6366f1!important;color:#3730a3!important;-webkit-text-fill-color:#3730a3!important}
+#is-game .is-trace{display:none!important;border:1px solid #e2e8f0!important;border-radius:12px!important;overflow:hidden!important;margin-bottom:12px!important}
+#is-game .is-trace.show{display:block!important}
+#is-game .is-tracehead{background:#f8fafc!important;padding:8px 14px!important;font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;border-bottom:1px solid #e2e8f0!important}
+#is-game .is-row{display:flex!important;align-items:center!important;gap:12px!important;padding:8px 14px!important;border-bottom:1px solid #f1f5f9!important;font-size:14px!important}
+#is-game .is-row:last-child{border-bottom:0!important}
+#is-game .is-pass{font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;min-width:78px!important}
+#is-game .is-expr{font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;color:#334155!important;-webkit-text-fill-color:#334155!important;flex:1 1 auto!important}
+#is-game .is-val{font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-weight:800!important;color:#3730a3!important;-webkit-text-fill-color:#3730a3!important}
+#is-game .is-row.last{background:#eef2ff!important}
+#is-game .is-go{background:#6366f1!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:0!important;font-family:inherit!important;font-size:15px!important;font-weight:700!important;padding:11px 18px!important;border-radius:10px!important;cursor:pointer!important;margin-right:8px!important}
+#is-game .is-go:disabled{opacity:.5!important;cursor:default!important}
+#is-game .is-note{font-size:14px!important;margin:12px 0 0!important;color:#334155!important;-webkit-text-fill-color:#334155!important;min-height:22px!important}
+#is-game .is-verdict{font-weight:800!important}
+#is-game .is-verdict.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important}
+#is-game .is-verdict.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#is-game .is-end{text-align:center!important;padding:8px 0!important}
+#is-game .is-end h2{font-size:24px!important;font-weight:800!important;margin:0 0 8px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#is-game .is-teach{background:#eef2ff!important;border-left:5px solid #6366f1!important;border-radius:0 10px 10px 0!important;padding:12px 16px!important;margin:14px 0 0!important;font-size:14px!important;text-align:left!important;color:#3730a3!important;-webkit-text-fill-color:#3730a3!important}
+</style>
+
+<div class="is-game" id="is-game">
+  <div class="is-card">
+    <div class="is-hero">
+      <h1 class="is-title">Iteration Station</h1>
+      <p class="is-sub">Predict what the loop leaves behind, then watch every pass run and find out where you drifted</p>
+    </div>
+    <div class="is-bar">
+      <span class="is-chip" id="is-round">Loop 1 / 7</span>
+      <span class="is-chip" id="is-hits">Exact: 0</span>
+      <span class="is-chip is-scorechip" id="is-score">Score: 0</span>
+    </div>
+    <div class="is-body" id="is-play">
+      <p class="is-how">How to play: read the loop, dial in the value you think it ends with, and lock it in. The trace then runs one pass at a time. An exact answer is 100 points. Being close is worth nothing here, which is the point: a loop is off by one or it is not.</p>
+      <p class="is-ask" id="is-ask"></p>
+      <div class="is-code" id="is-code"></div>
+      <div class="is-guess">
+        <button class="is-step" id="is-m10" type="button">-10</button>
+        <button class="is-step" id="is-m1" type="button">-1</button>
+        <span class="is-readout" id="is-readout">0</span>
+        <button class="is-step" id="is-p1" type="button">+1</button>
+        <button class="is-step" id="is-p10" type="button">+10</button>
+      </div>
+      <div class="is-trace" id="is-trace">
+        <div class="is-tracehead">What actually happened</div>
+        <div id="is-rows"></div>
+      </div>
+      <button class="is-go" id="is-lockbtn" type="button">Lock it in</button>
+      <button class="is-go" id="is-nextbtn" type="button" style="display:none">Next loop</button>
+      <p class="is-note" id="is-note"></p>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Iteration Station - AP CSP Topic 3.8.
+     Every round is a real trace, not a stored answer: run() executes the loop
+     and records one row per pass, and the expected value IS the last row. So a
+     round cannot drift out of agreement with its own answer key, because it does
+     not have one. The rounds are ordered by the specific mistake they punish:
+     a countdown that goes negative, a nested loop that multiplies rather than
+     adds, a body that only fires on some passes, a REPEAT UNTIL that runs one
+     more time PAST the limit, and an accumulator reset inside the loop. */
+
+  var ROUNDS = [
+    {
+      ask: 'What does DISPLAY show?',
+      code: ['total \u2190 0', 'REPEAT 5 TIMES', '{', '  total \u2190 total + 3', '}', 'DISPLAY(total)'],
+      run: function () {
+        var rows = [], total = 0;
+        for (var k = 1; k <= 5; k++) { total = total + 3; rows.push({ pass: 'pass ' + k, expr: 'total = ' + (total - 3) + ' + 3', val: total }); }
+        return rows;
+      },
+      why: 'Five passes of plus three. Nothing surprising here, which is the point of starting with it.'
+    },
+    {
+      ask: 'What does DISPLAY show?',
+      code: ['n \u2190 20', 'REPEAT 4 TIMES', '{', '  n \u2190 n - 6', '}', 'DISPLAY(n)'],
+      run: function () {
+        var rows = [], n = 20;
+        for (var k = 1; k <= 4; k++) { n = n - 6; rows.push({ pass: 'pass ' + k, expr: 'n = ' + (n + 6) + ' - 6', val: n }); }
+        return rows;
+      },
+      why: 'The loop has no idea it passed zero. A REPEAT runs its count and stops there, so the value goes negative and stays.'
+    },
+    {
+      ask: 'What does DISPLAY show?',
+      code: ['hits \u2190 0', 'REPEAT 3 TIMES', '{', '  REPEAT 4 TIMES', '  {', '    hits \u2190 hits + 1', '  }', '}', 'DISPLAY(hits)'],
+      run: function () {
+        var rows = [], hits = 0;
+        for (var o = 1; o <= 3; o++) {
+          for (var k = 1; k <= 4; k++) { hits++; }
+          rows.push({ pass: 'outer ' + o, expr: 'inner ran 4 times', val: hits });
+        }
+        return rows;
+      },
+      why: 'Nested loops multiply. Three outer passes times four inner passes is twelve runs of the body, not seven.'
+    },
+    {
+      ask: 'What does DISPLAY show?',
+      code: ['score \u2190 0', 'i \u2190 1', 'REPEAT 6 TIMES', '{', '  IF (i MOD 2 = 0)', '  {', '    score \u2190 score + 10', '  }', '  i \u2190 i + 1', '}', 'DISPLAY(score)'],
+      run: function () {
+        var rows = [], score = 0, i = 1;
+        for (var k = 1; k <= 6; k++) {
+          var fired = (i % 2 === 0);
+          if (fired) score = score + 10;
+          rows.push({ pass: 'pass ' + k, expr: 'i = ' + i + (fired ? ', even, add 10' : ', odd, skip'), val: score });
+          i = i + 1;
+        }
+        return rows;
+      },
+      why: 'The loop ran six times but the body inside the IF fired three times. Counting passes is not the same as counting the work.'
+    },
+    {
+      ask: 'What does DISPLAY show?',
+      code: ['x \u2190 1', 'REPEAT UNTIL (x > 40)', '{', '  x \u2190 x * 2', '}', 'DISPLAY(x)'],
+      run: function () {
+        var rows = [], x = 1;
+        while (!(x > 40)) { x = x * 2; rows.push({ pass: 'pass ' + (rows.length + 1), expr: 'x = ' + (x / 2) + ' * 2', val: x }); }
+        return rows;
+      },
+      why: 'The condition is checked BEFORE the pass, not during it. At 32 the loop had not passed 40 yet, so it ran once more and landed on 64. The answer is always the first value past the limit, never the limit itself.'
+    },
+    {
+      ask: 'What does DISPLAY show?',
+      code: ['v \u2190 2', 'REPEAT 4 TIMES', '{', '  v \u2190 v * 2 + 1', '}', 'DISPLAY(v)'],
+      run: function () {
+        var rows = [], v = 2;
+        for (var k = 1; k <= 4; k++) { var p = v; v = v * 2 + 1; rows.push({ pass: 'pass ' + k, expr: 'v = ' + p + ' * 2 + 1', val: v }); }
+        return rows;
+      },
+      why: 'Each pass feeds on the last one. Doubling grows fast enough that guessing the shape instead of tracing it goes wrong by pass three.'
+    },
+    {
+      ask: 'SPOT THE BUG. This was meant to add 5 four times. What does it actually show?',
+      code: ['REPEAT 4 TIMES', '{', '  total \u2190 0', '  total \u2190 total + 5', '}', 'DISPLAY(total)'],
+      run: function () {
+        var rows = [], total = 0;
+        for (var k = 1; k <= 4; k++) { total = 0; total = total + 5; rows.push({ pass: 'pass ' + k, expr: 'reset to 0, then + 5', val: total }); }
+        return rows;
+      },
+      why: 'The accumulator is reset INSIDE the loop, so every pass throws away the last one. Where a variable is initialised decides whether a loop accumulates or just repeats.'
+    }
+  ];
+
+  var el = {};
+  ['round','hits','score','ask','code','readout','trace','rows','lockbtn','nextbtn','note','play',
+   'm10','m1','p1','p10'].forEach(function (k) { el[k] = document.getElementById('is-' + k); });
+
+  var i = 0, score = 0, exact = 0, guess = 0, locked = false, timer = null;
+
+  function renderCode(hot) {
+    el.code.innerHTML = ROUNDS[i].code.map(function (line, k) {
+      return '<span class="is-line' + (k === hot ? ' hot' : '') + '">' + line + '</span>';
+    }).join('');
+  }
+
+  function setStepEnabled(on) {
+    [el.m10, el.m1, el.p1, el.p10].forEach(function (b) { b.disabled = !on; });
+  }
+
+  function render() {
+    locked = false; guess = 0;
+    el.round.textContent = 'Loop ' + (i + 1) + ' / ' + ROUNDS.length;
+    el.hits.textContent = 'Exact: ' + exact;
+    el.score.textContent = 'Score: ' + score;
+    el.ask.textContent = ROUNDS[i].ask;
+    el.readout.textContent = '0';
+    renderCode(-1);
+    el.trace.classList.remove('show');
+    el.rows.innerHTML = '';
+    el.note.textContent = '';
+    el.lockbtn.disabled = false;
+    el.lockbtn.style.display = 'inline-block';
+    el.nextbtn.style.display = 'none';
+    setStepEnabled(true);
+  }
+
+  function bump(d) {
+    if (locked) return;
+    guess += d;
+    if (guess > 999) guess = 999;
+    if (guess < -999) guess = -999;
+    el.readout.textContent = String(guess);
+  }
+  el.m10.addEventListener('click', function () { bump(-10); });
+  el.m1.addEventListener('click', function () { bump(-1); });
+  el.p1.addEventListener('click', function () { bump(1); });
+  el.p10.addEventListener('click', function () { bump(10); });
+
+  el.lockbtn.addEventListener('click', function () {
+    if (locked) return;
+    locked = true;
+    setStepEnabled(false);
+    el.lockbtn.disabled = true;
+    var rows = ROUNDS[i].run();
+    var answer = rows[rows.length - 1].val;
+    el.trace.classList.add('show');
+    el.rows.innerHTML = '';
+    /* The trace is drawn one row at a time. A wall of rows appearing at once is
+       read as a result; rows arriving in order are read as a loop running. */
+    var k = 0;
+    timer = setInterval(function () {
+      if (k >= rows.length) {
+        clearInterval(timer);
+        timer = null;
+        finishRound(answer);
+        return;
+      }
+      var r = rows[k];
+      var div = document.createElement('div');
+      div.className = 'is-row' + (k === rows.length - 1 ? ' last' : '');
+      div.innerHTML = '<span class="is-pass">' + r.pass + '</span>'
+        + '<span class="is-expr">' + r.expr + '</span>'
+        + '<span class="is-val">' + r.val + '</span>';
+      el.rows.appendChild(div);
+      renderCode(Math.min(3, ROUNDS[i].code.length - 2));
+      k++;
+    }, 260);
+  });
+
+  function finishRound(answer) {
+    renderCode(-1);
+    var good = (guess === answer);
+    if (good) { score += 100; exact++; }
+    el.score.textContent = 'Score: ' + score;
+    el.hits.textContent = 'Exact: ' + exact;
+    el.note.innerHTML = '<span class="is-verdict ' + (good ? 'good' : 'bad') + '">'
+      + (good ? 'Exact. 100 points. ' : 'You said ' + guess + '. It ends at ' + answer + '. ')
+      + '</span>' + ROUNDS[i].why;
+    el.nextbtn.textContent = (i < ROUNDS.length - 1) ? 'Next loop' : 'See your result';
+    el.nextbtn.style.display = 'inline-block';
+    el.lockbtn.style.display = 'none';
+  }
+
+  el.nextbtn.addEventListener('click', function () {
+    if (i < ROUNDS.length - 1) { i++; render(); } else { finish(); }
+  });
+
+  function finish() {
+    if (timer) { clearInterval(timer); timer = null; }
+    el.play.innerHTML =
+      '<div class="is-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + exact + ' of ' + ROUNDS.length + ' loops traced exactly.</p>' +
+        '<div class="is-teach">' +
+          '<b>A loop is off by one or it is not.</b> Three things decide where it lands, and ' +
+          'all three are cheap to check on paper: how many passes actually run, whether the ' +
+          'body fires on every pass or only some, and where the accumulator was initialised. ' +
+          'REPEAT UNTIL tests its condition before each pass, so it always overshoots by one ' +
+          'pass and ends past the limit rather than on it. When a trace is more than a few ' +
+          'passes, write the first two and the last two: the mistake is nearly always at one ' +
+          'end, not in the middle.' +
+        '</div>' +
+        '<p><button class="is-go" id="is-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('is-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  render();
+})();
+</script>

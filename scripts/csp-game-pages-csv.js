@@ -48,6 +48,20 @@ const GAMES = {
     topic: '3.11',
     seoDescription: 'Find the hidden number in as few guesses as binary search would need, and learn why doubling the list adds only one more guess. AP CSP Topic 3.11.',
   },
+  'iteration-station': {
+    title: 'AP CSP Iteration Station Game | Trace the Loop | Topic 3.8',
+    shareName: 'Iteration Station',
+    label: 'points',
+    topic: '3.8',
+    seoDescription: 'Predict where each loop ends, then watch every pass run and see exactly where you drifted. Free AP CSP Topic 3.8 iteration tracing practice.',
+  },
+  'gate-keeper': {
+    title: 'AP CSP Gate Keeper Game | Build the Boolean Expression | Topic 3.5',
+    shareName: 'Gate Keeper',
+    label: 'points',
+    topic: '3.5',
+    seoDescription: 'Build the AND, OR and NOT expression that matches the spec on all four rows, including the De Morgan case. AP CSP Topic 3.5 boolean practice.',
+  },
   'boundary-patrol': {
     title: 'AP CSP Boundary Patrol Game | Conditionals and Off-by-One | Topic 3.6',
     shareName: 'Boundary Patrol',

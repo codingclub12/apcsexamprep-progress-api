@@ -1,3 +1,37 @@
+<!-- The leaderboard component's stylesheet, copied verbatim from the live
+     Two Sides game page along with the script below it. It is NOT optional:
+     every class the script emits is styled here and nowhere else, so a page
+     that ships the script without this block renders an unstyled list. That
+     was true of the first five standalone game pages until it was caught in a
+     browser screenshot before any of them were imported. -->
+<style>
+  #apcs-lb{font-family:"DM Sans",sans-serif;max-width:520px;margin:18px auto 0;border:1px solid #e2e8f0!important;border-radius:14px!important;overflow:hidden;background:#fff!important;}
+  #apcs-lb .lb-head{background:#0f1f3d!important;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+  #apcs-lb .lb-title{font-family:"DM Serif Display",serif!important;font-size:18px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  #apcs-lb .lb-you{font-size:12px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:600;}
+  #apcs-lb .lb-tabs{display:flex;gap:4px;padding:10px 12px;background:#f8fafc!important;border-bottom:1px solid #e2e8f0;overflow-x:auto;}
+  #apcs-lb .lb-tab{flex:1;min-width:64px;padding:7px 8px;border:none;background:transparent;border-radius:8px;font-family:inherit;font-size:12px!important;font-weight:700;color:#64748b!important;-webkit-text-fill-color:#64748b!important;cursor:pointer;white-space:nowrap;}
+  #apcs-lb .lb-tab.on{background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  #apcs-lb .lb-rows{padding:8px 12px 4px;min-height:120px;}
+  #apcs-lb .lb-row{display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:8px;font-size:14px!important;}
+  #apcs-lb .lb-row:nth-child(even){background:#f8fafc!important;}
+  #apcs-lb .lb-row .rk{width:26px;font-weight:800;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;text-align:center;}
+  #apcs-lb .lb-row.top1 .rk{color:#d97706!important;-webkit-text-fill-color:#d97706!important;}
+  #apcs-lb .lb-row.me{background:#eff6ff!important;border:1px solid #bfdbfe;}
+  #apcs-lb .lb-row .nm{flex:1;font-weight:600;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;}
+  #apcs-lb .lb-row .vl{font-weight:800;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;font-variant-numeric:tabular-nums;}
+  #apcs-lb .lb-empty{padding:26px 12px;text-align:center;font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;line-height:1.6;}
+  #apcs-lb .lb-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-top:1px solid #e2e8f0;background:#f8fafc!important;flex-wrap:wrap;}
+  #apcs-lb .lb-best{font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;font-weight:600;}
+  #apcs-lb .lb-best b{color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;}
+  #apcs-lb .lb-btn{background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none;border-radius:8px;font-family:inherit;font-size:13px!important;font-weight:700;padding:9px 16px;cursor:pointer;}
+  #apcs-lb .lb-btn.ghost{background:#fff!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;border:1px solid #bfdbfe;}
+  #apcs-lb .lb-name{font-size:12px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;padding:8px 16px;background:#fff!important;border-top:1px solid #f1f5f9;}
+  #apcs-lb .lb-name a{color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;font-weight:700;cursor:pointer;text-decoration:underline;}
+  #apcs-lb .lb-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0f1f3d!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px!important;font-weight:600;padding:10px 18px;border-radius:100px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9999;}
+  #apcs-lb .lb-toast.show{opacity:1;}
+</style>
+
 <script>
 window.APCSLeaderboard = (function(){
   var API = 'https://progress.apcsexamprep.com';

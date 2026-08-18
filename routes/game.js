@@ -55,6 +55,8 @@ const REGISTRY = {
   'big-o-race':                 { metric: 'score', higher: true, min: 0, max: 10000 },
   'halving-hunter':             { metric: 'score', higher: true, min: 0, max: 10000 },
   'boundary-patrol':            { metric: 'score', higher: true, min: 0, max: 10000 },
+  'gate-keeper':                { metric: 'score', higher: true, min: 0, max: 10000 },
+  'iteration-station':          { metric: 'score', higher: true, min: 0, max: 10000 },
 };
 
 const WINDOWS = new Set(['today', 'week', 'month', 'year', 'all']);
