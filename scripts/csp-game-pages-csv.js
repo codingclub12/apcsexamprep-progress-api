@@ -48,6 +48,13 @@ const GAMES = {
     topic: '3.11',
     seoDescription: 'Find the hidden number in as few guesses as binary search would need, and learn why doubling the list adds only one more guess. AP CSP Topic 3.11.',
   },
+  'name-the-thing': {
+    title: 'AP CSP Name the Thing Game | Data Abstraction and Named Constants | Topic 3.2',
+    shareName: 'Name the Thing',
+    label: 'points',
+    topic: '3.2',
+    seoDescription: 'Name the repeated value, then let a change request prove which copies you should have named. Free AP CSP Topic 3.2 data abstraction game.',
+  },
   'call-sheet': {
     title: 'AP CSP Call Sheet Game | Arguments, Parameters and RETURN | Topic 3.12',
     shareName: 'Call Sheet',
