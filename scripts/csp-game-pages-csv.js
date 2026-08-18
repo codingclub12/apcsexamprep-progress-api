@@ -48,6 +48,13 @@ const GAMES = {
     topic: '3.11',
     seoDescription: 'Find the hidden number in as few guesses as binary search would need, and learn why doubling the list adds only one more guess. AP CSP Topic 3.11.',
   },
+  'doc-detective': {
+    title: 'AP CSP Doc Detective Game | Reading Library Documentation | Topic 3.14',
+    shareName: 'Doc Detective',
+    label: 'points',
+    topic: '3.14',
+    seoDescription: 'Pick the library call that does the job, then watch every option run for real. Free AP CSP Topic 3.14 libraries and documentation game.',
+  },
   'name-the-thing': {
     title: 'AP CSP Name the Thing Game | Data Abstraction and Named Constants | Topic 3.2',
     shareName: 'Name the Thing',
