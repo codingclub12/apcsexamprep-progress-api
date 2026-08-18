@@ -48,6 +48,13 @@ const GAMES = {
     topic: '3.11',
     seoDescription: 'Find the hidden number in as few guesses as binary search would need, and learn why doubling the list adds only one more guess. AP CSP Topic 3.11.',
   },
+  'string-lab': {
+    title: 'AP CSP String Lab Game | SUBSTRING Length vs End Position | Topic 3.4',
+    shareName: 'String Lab',
+    label: 'points',
+    topic: '3.4',
+    seoDescription: 'Cut the exact piece of text a job asks for on a ruler that counts from one, and see why the third argument is a length. AP CSP Topic 3.4.',
+  },
   'branch-runner': {
     title: 'AP CSP Branch Runner Game | Nested Conditionals and Dangling ELSE | Topic 3.7',
     shareName: 'Branch Runner',
