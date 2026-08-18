@@ -25,5 +25,26 @@ nixPkgs = ["nodejs_22", "npm-9_x", "python3", "gcc", "gnumake"]
 # time out on the one that matters.
 cmds = ["npm ci --prefer-offline --no-audit --no-fund"]
 
+# PERSIST THE NPM CACHE ACROSS BUILDS.
+#
+# --prefer-offline can only prefer a cache that survives, and without this the
+# cache is thrown away with the build container, so every cache-invalidating
+# push re-downloads everything including the better-sqlite3 prebuilt binary.
+# That download is the exact network call the setup phase above exists to
+# survive, and on 2026-08-18 it cost two and a half hours: the two merges that
+# were slow or never shipped were the only two that touched package.json, and a
+# package.json change invalidates this layer even when no DEPENDENCY changed.
+# Both were script-only edits.
+#
+# /root/.npm holds both halves of the problem: the npm registry tarballs and
+# _prebuilds, where prebuild-install caches the native binary it downloads. With
+# the directory persisted, a rebuild after a scripts-only edit resolves from disk
+# and never makes the call that times out.
+#
+# npm ci stays deterministic regardless: it installs from the lockfile and
+# verifies every integrity hash, so a stale or partial cache is a slow build and
+# never a wrong one.
+cacheDirectories = ["/root/.npm"]
+
 [start]
 cmd = "node server.js"
