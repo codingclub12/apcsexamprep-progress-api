@@ -4,6 +4,14 @@ Pull a CSV from the APCSExamPrep gradebook and upload it straight into the Canva
 gradebook. It is a manual process, but it is quick, and it moves a whole class of
 grades in one step.
 
+**Do `docs/canvas-course-import.md` first.** That downloads the whole course as a
+`.imscc` a teacher imports into Canvas once, which creates the modules, the
+lesson links and every assignment this file's CSV columns land on. Without it,
+Canvas asks the teacher to confirm each new assignment by hand on the first
+import, and a course with grading periods enabled refuses to create them from a
+CSV at all. Assignment names in the package come from the same call that writes
+the headers below, so the two files cannot disagree.
+
 ## What a teacher does (the part that decides whether this works)
 
 The CSV is the easy half. The identity match is the half that fails silently, so
@@ -128,6 +136,7 @@ is a 400: a typo would otherwise export a quietly smaller gradebook, which is
 worse than an error because nobody would know what was missing.
 
 ```
+GET /api/teacher/classes/:code/canvas-course?scope=unit         # the course package, imported ONCE first
 GET /api/teacher/classes/:code/export                          # unchanged: the wide human CSV
 GET /api/teacher/classes/:code/export?format=canvas&scope=unit     # the Canvas file above
 GET /api/teacher/classes/:code/export?format=canvas&scope=activity # one column per activity
@@ -161,5 +170,6 @@ same rule when it is set, this should never be a surprise at export time.
 
 - Per-assignment due dates, and splitting one class into Canvas sections.
 - A Canvas API push over OAuth or LTI. This is a file a teacher uploads, on
-  purpose: no app install, no admin approval, no integration to maintain.
+  purpose: no app install, no admin approval, no integration to maintain. The
+  course package in `docs/canvas-course-import.md` is a file for the same reason.
 - Storing emails to make matching easier. The zero PII posture is the product.
