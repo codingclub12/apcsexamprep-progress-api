@@ -7,6 +7,7 @@
 //   node scripts/blog.js list                # what is queued, and for when
 //   node scripts/blog.js preview <handle>    # write the rendered HTML to /tmp
 //   node scripts/blog.js due [YYYY-MM-DD]    # posts whose publishOn has arrived
+//   node scripts/blog.js queue [YYYY-MM-DD]  # calendar slots with no post written yet
 //   node scripts/blog.js publish [--dry-run] [--on YYYY-MM-DD]
 
 const fs = require('fs');
@@ -55,6 +56,20 @@ async function main() {
     const on = rest[0] || today();
     const due = posts.filter((p) => p.meta.publishOn <= on);
     console.log(due.length ? due.map((p) => p.meta.handle).join('\n') : '(nothing due)');
+    return;
+  }
+
+  if (cmd === 'queue') {
+    const { unwritten } = require('../content/editorial-calendar');
+    const from = rest[0] || today();
+    const written = new Set(posts.map((p) => p.meta.handle));
+    const todo = unwritten(written, from);
+    // The next four are what an authoring session should pick up. Anything
+    // further out is planning, not backlog.
+    for (const s of todo.slice(0, 12)) {
+      console.log(`${s.date}  ${s.course.padEnd(17)}  ${s.targetKeyword.padEnd(32)}  ${s.workingTitle || ''}`);
+    }
+    if (!todo.length) console.log('(queue empty, every planned slot has a post)');
     return;
   }
 
