@@ -62,6 +62,7 @@ const REGISTRY = {
   'halt-or-not':                { metric: 'score', higher: true, min: 0, max: 10000 },
   'swap-shop':                  { metric: 'score', higher: true, min: 0, max: 10000 },
   'mod-machine':                { metric: 'score', higher: true, min: 0, max: 10000 },
+  'branch-runner':              { metric: 'score', higher: true, min: 0, max: 10000 },
 };
 
 const WINDOWS = new Set(['today', 'week', 'month', 'year', 'all']);

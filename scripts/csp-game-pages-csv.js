@@ -48,6 +48,13 @@ const GAMES = {
     topic: '3.11',
     seoDescription: 'Find the hidden number in as few guesses as binary search would need, and learn why doubling the list adds only one more guess. AP CSP Topic 3.11.',
   },
+  'branch-runner': {
+    title: 'AP CSP Branch Runner Game | Nested Conditionals and Dangling ELSE | Topic 3.7',
+    shareName: 'Branch Runner',
+    label: 'points',
+    topic: '3.7',
+    seoDescription: 'Walk one input down a nest of conditions and find out which IF the ELSE really belongs to. Free AP CSP Topic 3.7 nested conditionals game.',
+  },
   'mod-machine': {
     title: 'AP CSP Mod Machine Game | MOD and Integer Division | Topic 3.3',
     shareName: 'Mod Machine',
