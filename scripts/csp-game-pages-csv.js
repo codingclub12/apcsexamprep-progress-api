@@ -48,6 +48,13 @@ const GAMES = {
     topic: '3.11',
     seoDescription: 'Find the hidden number in as few guesses as binary search would need, and learn why doubling the list adds only one more guess. AP CSP Topic 3.11.',
   },
+  'mod-machine': {
+    title: 'AP CSP Mod Machine Game | MOD and Integer Division | Topic 3.3',
+    shareName: 'Mod Machine',
+    label: 'points',
+    topic: '3.3',
+    seoDescription: 'Pick the expression that turns every input into the right output, and watch a near-miss pass three rows and fail the fourth. AP CSP Topic 3.3.',
+  },
   'swap-shop': {
     title: 'AP CSP Swap Shop Game | Assignment, Swaps and Lost Values | Topic 3.1',
     shareName: 'Swap Shop',
