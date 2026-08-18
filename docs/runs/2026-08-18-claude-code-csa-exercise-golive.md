@@ -2,27 +2,20 @@
 
 Written overnight 2026-08-18 for a first-period AP CSA class the same morning.
 
-## READ THIS FIRST: class is fine. The deploy pipeline is not.
+## READ THIS FIRST: caught up. Run the two curls.
 
-Two separate facts, and they must not be collapsed into one.
+Checked 15:06 UTC. `GET /api/health` reports `97ca238`, which is exactly
+`origin/main`. The stall cleared and the queue drained; there is nothing
+undeployed.
 
-**Class is fine.** `GET /api/health` reports `26fe1e3`, and that commit was
-inspected directly rather than assumed. It contains `routes/admin.js` with both
-`/code-tests/seed` and `/csa-exercise-pages/publish`, and it contains
-`lib/csa-code-modes.js`, which is what makes program and driver mode grading
-work at all. The two curls below run against `26fe1e3` and work. Unit 1 is
-complete and live. Nothing about first period is blocked.
+The two curls below are still the job, and they work. Unit 1 is complete and
+live. `97ca238` contains everything `26fe1e3` did, so the endpoints and
+`lib/csa-code-modes.js` that make program and driver mode grading work are all
+present, plus everything that was stuck behind the stall.
 
-**The deploy pipeline is a hard finding, not a note.** As of 11:48 UTC, no
-successful deploy has landed since roughly 09:15. That is two and a half hours
-and five merges, and this is the second stall of the same shape today. It is
-now a standing production problem in its own right, independent of the class:
-see "The deploy pipeline has not shipped in over two hours" below, which is the
-one thing on this page that needs a human.
-
-Everything queued behind the deploy is documentation plus the build-cache fix
-and the drift workflow. None of it is needed for a class, which is exactly why
-this can sit broken without anyone noticing.
+The deploy stall that dominated this page for most of the morning is resolved
+and recorded below as history, not as a live problem. The drift check caught
+it, held failing through it, and went green on its own when the deploy landed.
 
 | | status |
 |---|---|
@@ -35,10 +28,12 @@ The fallbacks further down are kept, but they are now insurance rather than the
 plan. The one thing still genuinely unknown is whether the Railway Shopify token
 carries `write_content`; see "If step 2 refuses with a scope error".
 
-An earlier version of this file led with a stall banner telling you the
-endpoints were missing. That was true when it was written and is not true now.
-The habit worth keeping is the one that caught it: check `/api/health` and
-compare, rather than trusting a document about live state.
+This opening section has now carried four different leads: "the endpoints are
+missing", then "the deploy landed", then "the pipeline is a hard finding", and
+now "caught up". Every one of those was true when written. That
+is the point rather than an embarrassment, and it is the habit worth copying:
+check `/api/health`, compare it to `origin/main`, and believe the comparison
+over any document about live state, this one included.
 
 ## TL;DR, two curls
 
@@ -106,11 +101,12 @@ The code is live too, as of the merge of #196: both grading modes, the `mode`
 column, the raised Judge0 ceilings, and the two admin routes above.
 
 The publisher **skips handles that already exist**, so running it will not touch
-these five.
+any of these fifteen.
 
-## If the endpoints are not there yet
+## Fallbacks, if an endpoint ever refuses
 
-Both fallbacks are the original paths and neither needs the deploy.
+Both endpoints are live and the deploy is caught up, so these are insurance
+rather than a plan. They are the original paths and neither needs a deploy.
 
 **Seed the bank (this is the one that matters).** Open a shell on the Railway
 service and run:
@@ -120,7 +116,7 @@ node scripts/seed-code-tests.js --update
 ```
 
 That is exactly what the endpoint would have called. It is idempotent and it
-prunes stale cases. Once it finishes, the five live pages grade immediately.
+prunes stale cases. Once it finishes, all fifteen live pages grade immediately.
 
 **More pages.** Build the validated Matrixify sheet and import it:
 
@@ -130,10 +126,10 @@ node scripts/csa-exercise-pages-csv.js out.csv --live pages.json
 
 MERGE mode, QUOTE_ALL, utf-8-sig, one import at a time. `--live pages.json`
 takes a fresh Admin API pages dump and aborts if any handle already exists, so
-it cannot overwrite the five that are already there. You can also pass
+it cannot overwrite the fifteen that are already there. You can also pass
 `--unit unit-1` to import just Unit 1 first.
 
-If you only have five minutes, do the seed and skip the extra pages. Five
+If you only have five minutes, do the seed and skip the extra pages. Fifteen
 working graded exercises beat fifty ungraded ones.
 
 ## If step 2 refuses with a scope error
@@ -153,8 +149,9 @@ Two ways out:
    `node scripts/csa-exercise-pages-csv.js out.csv` then import with MERGE mode,
    QUOTE_ALL, utf-8-sig, one import at a time.
 
-Either way, the five pages above are already live, which covers 1.1 to 1.5. They
-become gradeable the moment step 1 runs, whatever happens with step 2.
+Either way, the fifteen pages above are already live, which is all of Unit 1,
+1.1 through 1.15. They become gradeable the moment step 1 runs, whatever
+happens with step 2.
 
 ## What a student sees before and after the seed
 
@@ -187,27 +184,26 @@ get right.
 - Nothing records a zero on any failure path. A 429, a 404 and a runner outage
   all record nothing at all, so a bad ten minutes cannot damage a grade.
 
-## The deploy pipeline has not shipped in over two hours
+## The deploy stall: what happened, and how it ended
 
-**Hard finding, 11:48 UTC.** `26fe1e3` is still the serving commit and has been
-since about 09:45. The deploy has been behind since `fb98aa3` merged at roughly
-09:15, which the drift check now measures at **151 minutes**. Five merges are
-stacked up: `fb98aa3`, `ffe06b9`, `9297e11`, `e965049`, `80960c1`.
+**Resolved 15:06 UTC.** Production serves `97ca238`, equal to `origin/main`.
+Nothing is undeployed. What follows is the record, kept because the same shape
+recurred twice in one night and will recur again.
 
-Re-checked at 11:48 and unchanged from the 10:55 reading except that it is
-fifty minutes worse. This is no longer "the queue is slow". Two and a half
-hours with nothing landing, after a four hour invisible failure earlier the
-same night, is a broken deploy pipeline, and it should be treated as a
-production problem in its own right rather than as a footnote to a go-live that
-happens not to need it.
+The shape: `26fe1e3` served from about 09:45, and the deploy had been behind
+since `fb98aa3` merged at roughly 09:15. It stayed behind for close to five
+hours while merges stacked up: `fb98aa3`, `ffe06b9`, `9297e11`, `e965049`,
+`80960c1`, then `a8090e3`, `4d242e6` and `97ca238` on top. Throughout, the API
+answered 200 and the class path was entirely inside `26fe1e3`, so from the
+outside nothing looked wrong. Everything stuck in the queue was documentation,
+the npm cache fix in `nixpacks.toml`, the drift workflow and blog changes.
 
-What is NOT in doubt: the API is up and answering, `/api/health` returned 200
-at 11:47, and the class path is entirely inside `26fe1e3`. The damage so far is
-confined to undeployed documentation, the npm cache fix in `nixpacks.toml`, the
-drift workflow and an unrelated blog change. The risk is what happens the first
-time something that DOES matter is in that queue.
+That is the whole hazard in one sentence: a stalled deploy is invisible from
+the storefront, and it only costs anything on the day something that matters is
+in the queue. It was worth treating as a production problem while it was open
+even though nothing about first period was ever blocked.
 
-### The drift check is live and is now reporting this correctly
+### The drift check detected it, held, and cleared itself
 
 Worth stating plainly, because it was wrong in both directions earlier on this
 page: the drift workflow is **not** undeployed. It runs on GitHub Actions from
@@ -215,7 +211,21 @@ page: the drift workflow is **not** undeployed. It runs on GitHub Actions from
 the moment `ffe06b9` merged. The problem was never that it could not run; it
 was that its grace clause made it report success.
 
-Run 4, 11:46 UTC, on `80960c1`, conclusion failure:
+The full run history is the cleanest evidence that `80960c1` did what it
+claimed, so leave all eight runs on the record:
+
+| run | time UTC | on | result | |
+|---|---|---|---|---|
+| 1 | 10:15 | `9297e11` | success | false green, old clock |
+| 2 | 10:51 | `e965049` | success | false green, old clock |
+| 3 | 11:13 | `80960c1` | **failure** | first run of the fixed clock |
+| 4 | 11:46 | `80960c1` | **failure** | |
+| 5 | 12:18 | `80960c1` | **failure** | |
+| 6 | 13:14 | `a8090e3` | **failure** | |
+| 7 | 14:02 | `a8090e3` | **failure** | |
+| 8 | 14:57 | `97ca238` | success | genuine, deploy caught up |
+
+Run 4's output, as an example of what the failures said:
 
 ```
 grace     : 30m
@@ -224,17 +234,18 @@ production is serving 26fe1e3 (behind) and has been behind for 151m.
 main is 80960c1, merged 46m ago.
 ```
 
-That is the fix working against real state, not a test fixture. Note the last
-line: under the old clock, "merged 46m ago" was the number being compared to
-the 30 minute grace, and 46 would have passed only by luck. The 151 is the
-honest number.
+Note the last line: under the old clock, "merged 46m ago" was the number being
+compared to the 30 minute grace, and 46 would have passed only by luck. The 151
+is the honest number.
 
-Runs 1 and 2 (10:15 and 10:51) are the false greens. Leave them; they are the
-evidence that a green check meant nothing before `80960c1`.
+Three things this proves that an offline test could not. It fired on the first
+scheduled run after merging. It stayed failing across five consecutive runs and
+across two merges to `main`, which is exactly where the old clock reset itself.
+And it went green on its own at 14:57 with nobody touching it, so the failures
+were tracking the deploy rather than latching. Detect, hold, self-clear.
 
 The bug it had until `80960c1` was in the grace clause, which measured the age
-of **main's head**
-rather than how long the deploy had been behind:
+of **main's head** rather than how long the deploy had been behind:
 
 ```
 main head : e965049  (merged 13m ago)
@@ -254,27 +265,32 @@ Verified twice: first offline, by running both versions against the same real
 state (old script exits 0 with "main is only 0m old", new one exits 1 with
 "behind for 99m"), and then in production at 11:46, quoted above.
 
-### What only a human can do here
+### What is still worth doing, and what to do next time
 
-Every remaining step needs the Railway dashboard, which no session can reach.
-In order:
+The stall is over, but the cause was never established from inside a session
+and the drift check only ever reports that a deploy did not land, never why.
+Two things remain, both needing the Railway dashboard:
 
-1. **Railway Deployments tab, window 05:15 to now.** This is the blocking one.
-   If a build **failed**, the log line to look for is `prebuild-install warn
-   install Request timed out` followed by a node-gyp Python error. That is the
-   documented failure mode here and the `cacheDirectories` change in
-   `nixpacks.toml` is the fix for it, sitting undeployed in the very queue it
-   would unblock. If instead the tab shows no builds at all since 09:15, the
-   problem is the GitHub integration rather than the build, and the check to
-   run is whether Railway is still watching `main`.
-2. **Turn on Railway's deploy failure notifications.** Four hours of invisible
-   failure happened because nothing was watching, and the drift workflow is
-   only half the answer: it tells you the deploy did not land, while Railway
-   can tell you why.
+1. **Turn on Railway's deploy failure notifications.** This is the one that
+   matters and it is the only unfinished item from the whole episode. Two
+   stalls in one night, one of them four hours long, went unnoticed because
+   nothing was watching. The drift check is half the answer; Railway is the
+   half that says why.
+2. **Look back at the Deployments tab for the 09:15 to 15:00 window** while it
+   is still in retention, and write down which of the two it was. If a build
+   **failed**, the line to look for is `prebuild-install warn install Request
+   timed out` followed by a node-gyp Python error, which is the documented
+   failure mode here and what the `cacheDirectories` change in `nixpacks.toml`
+   addresses; note that fix was itself stuck in the queue it would have
+   unblocked, and has now shipped. If instead there were no builds at all in
+   that window, the fault was the GitHub integration rather than the build, and
+   that is a completely different fix.
 
-Until step 1 happens, expect the drift check to fail every 30 minutes. That is
-correct behaviour and not a second problem. It goes green on its own the moment
-a deploy lands.
+Next time this happens, the runbook procedure is: `curl /api/health`, compare
+against `origin/main`, and check the Deploy drift run history. If the check is
+failing, believe it. It is now proven to detect, hold and self-clear, so a red
+drift check means the deploy is genuinely behind, and a green one after a red
+streak means it caught up on its own.
 
 ## Still open after this
 
@@ -284,7 +300,11 @@ a deploy lands.
   first real submission is the last untested link, and it is the one thing worth
   doing yourself before class: sign in as a test student on 1.1 and submit.
 - 1.6 `exercise-3` (the FRQ) has a test bank and no page.
-- **Nothing has deployed since `26fe1e3`.** Five merges are queued and the
-  pipeline has been behind for over two and a half hours. This is the only item
-  on this list that is a production problem rather than a content gap, and it is
-  the only one that cannot be worked from a session. See the section above.
+- Railway deploy failure notifications are still off. The stall resolved on its
+  own, so this is no longer urgent, but it is the one durable fix the whole
+  episode argues for and the only item here that is about the pipeline rather
+  than content. See the section above.
+
+**Closed:** the deploy stall. Production served `26fe1e3` from 09:45 and was
+behind from 09:15; as of 15:06 it serves `97ca238`, equal to `origin/main`,
+with nothing queued.
