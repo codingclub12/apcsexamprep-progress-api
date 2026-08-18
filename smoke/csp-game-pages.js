@@ -156,6 +156,32 @@ for (const p of pages) {
   ok(`${p.handle} title names its topic`, /Topic \d+\.\d+/.test(p.title), p.title);
 }
 
+section('10. Every Big Idea 3 game has a hub card');
+// The hub is what makes these pages reachable at all, and the card table lives
+// beside the builder rather than inside it. A game added without a card would
+// build, publish and then be linked by nothing, which is the failure the whole
+// hub patch exists to prevent.
+const hub = require('../scripts/csp-games-hub-patch');
+const bi3 = hub.bigIdea3Ids();
+ok('the hub patch sees the Big Idea 3 games', bi3.length > 0, bi3.length);
+for (const id of bi3) {
+  ok(`${id} has a hub card`, !!hub.CARDS[id]);
+}
+const generated = hub.section(bi3);
+// eslint-disable-next-line no-control-regex
+ok('the generated hub section is pure ASCII',
+  !/[^\x09\x0A\x0D\x20-\x7E]/.test(generated));
+ok('the generated hub section has balanced divs',
+  (generated.match(/<div[\s>]/g) || []).length === (generated.match(/<\/div>/g) || []).length);
+for (const id of bi3) {
+  ok(`${id} is linked from the generated section`,
+    generated.indexOf('/pages/ap-csp-game-' + id) !== -1);
+}
+// A card entry for a game that no longer exists would render a link to nothing.
+for (const id of Object.keys(hub.CARDS)) {
+  ok(`the hub card for ${id} names a game that is built`, ids.includes(id));
+}
+
 console.log(`\n${'-'.repeat(60)}`);
 console.log(`${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
