@@ -330,6 +330,63 @@ const namesFrom = (files) => [...files]
     [...actFiles].filter(([n]) => n.endsWith('/assignment_settings.xml'))
       .every(([, t]) => /<due_at\/>/.test(t)));
 
+  // ── 5b. It matches the shape of a REAL Canvas export ───────────────────────
+  //  Every assertion in this block was read out of an actual Canvas course
+  //  export (a CodeHS course exported from a district Canvas on 2026-08-17)
+  //  rather than guessed from the Common Cartridge spec. The file itself is a
+  //  real school's course and is NOT in this repo: it names a district, a
+  //  teacher and an account uuid, and none of that belongs in a zero PII
+  //  codebase. What is committed is what it taught, as checks.
+  //
+  //  Two of these caught real bugs in the first draft, and the rest of the
+  //  suite passed straight through both:
+  //    - the manifest declared Common Cartridge 1.3. Canvas exports 1.1, and
+  //      this file is imported as a Canvas Course Export Package.
+  //    - organization items were suffixed "_o" to keep them unique against the
+  //      module_meta items. Canvas uses the SAME identifier in both files and
+  //      correlates them by it, so unique meant duplicated: every module and
+  //      every assignment would have imported twice.
+  console.log('\n5b. Shape of a real Canvas export');
+  ok('  the manifest declares Common Cartridge 1.1, which is what Canvas exports',
+    manifest.includes('<schemaversion>1.1.0</schemaversion>')
+      && manifest.includes('xmlns="http://www.imsglobal.org/xsd/imsccv1p1/imscp_v1p1"'));
+  ok('  web link resources are 1.1 too, so the cartridge is not mixed version',
+    !manifest.includes('imswl_xmlv1p3') && manifest.includes('type="imswl_xmlv1p1"')
+      && links.every(([, t]) => t.includes('imsccv1p1/imswl_v1p1')));
+
+  // The duplicate-import bug, asserted from both directions.
+  const orgItemIds = new Set(attrs(manifest, 'item', 'identifier')
+    .filter((i) => i !== 'LearningModules'));
+  const metaItemIds = new Set(attrs(meta, 'item', 'identifier'));
+  const metaModuleIds = new Set(attrs(meta, 'module', 'identifier'));
+  ok('  every module_meta item identifier appears in the organization tree, unsuffixed',
+    metaItemIds.size > 0 && [...metaItemIds].every((i) => orgItemIds.has(i)),
+    [...metaItemIds].filter((i) => !orgItemIds.has(i)).slice(0, 3));
+  ok('  every module identifier appears in both files, unsuffixed',
+    metaModuleIds.size > 0 && [...metaModuleIds].every((i) => orgItemIds.has(i)),
+    [...metaModuleIds].filter((i) => !orgItemIds.has(i)).slice(0, 3));
+  ok('  the organization tree introduces no identifier module_meta does not know',
+    [...orgItemIds].every((i) => metaItemIds.has(i) || metaModuleIds.has(i)),
+    [...orgItemIds].filter((i) => !metaItemIds.has(i) && !metaModuleIds.has(i)).slice(0, 3));
+
+  // A real non-quiz assignment carries no quiz_identifierref at all. An empty
+  // one points Canvas at a quiz that does not exist.
+  ok('  no assignment carries a quiz_identifierref',
+    settingsFiles.every(([, t]) => !t.includes('quiz_identifierref')));
+  ok('  assignment_group_identifierref comes before workflow_state, as Canvas writes it',
+    settingsFiles.every(([, t]) =>
+      t.indexOf('<assignment_group_identifierref>') < t.indexOf('<workflow_state>')));
+  for (const el of ['all_day', 'turnitin_enabled', 'vericite_enabled', 'post_policy']) {
+    ok(`  assignments carry <${el}>, which a real export has`,
+      settingsFiles.every(([, t]) => t.includes(`<${el}>`)));
+  }
+  ok('  the course_settings resource is href-ed at the canvas_export.txt marker',
+    /href="course_settings\/canvas_export\.txt"/.test(manifest));
+  ok('  and lists files_meta and media_tracks, which Canvas writes in every export',
+    unitFiles.has('course_settings/files_meta.xml') && unitFiles.has('course_settings/media_tracks.xml'));
+  ok('  but NOT context.xml, which would carry a source account and domain',
+    !unitFiles.has('course_settings/context.xml'));
+
   // ── 6. Zero PII, and reproducible ──────────────────────────────────────────
   console.log('\n6. Zero PII and reproducible');
   const all = [...unitFiles.values()].join('\n') + [...actFiles.values()].join('\n');

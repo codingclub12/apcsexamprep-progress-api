@@ -57,15 +57,23 @@ both places rather than a quietly smaller course.
 For AP CSA, `scope=unit`, 84 KB:
 
 ```
-imsmanifest.xml
+imsmanifest.xml                            Common Cartridge 1.1, as Canvas exports
 course_settings/canvas_export.txt          the marker that makes Canvas read the rest
 course_settings/course_settings.xml
 course_settings/assignment_groups.xml      one group, "AP CSA (APCSExamPrep)"
 course_settings/module_meta.xml            4 modules, 114 items
+course_settings/files_meta.xml             empty, but Canvas writes one in every export
+course_settings/media_tracks.xml           same
 <resource-id>/<name>.xml                   110 web links, one per lesson and exercise page
 <resource-id>/<name>.html                  4 assignment descriptions
 <resource-id>/assignment_settings.xml      4 assignments, 100 points each
 ```
+
+`context.xml` and `late_policy.xml` are the two files a real Canvas export has
+that this deliberately does not write. The first carries the source Canvas
+account id, domain and district name, which is meaningless in a generated
+package and is exactly the kind of thing that should not travel. The second
+would impose a late penalty policy on a teacher who never asked for one.
 
 - **Modules are the units.** Unit 1 through Unit 4 for CSA, Big Idea 1 through 5
   for CSP, in curriculum order, with the unit hub page linked first.
@@ -177,14 +185,40 @@ What is checked offline, on every CI run, by `npm run smoke:canvascourse`:
 - no student name, student ref, class code or teacher email is in the bytes
 - the same request returns byte identical bytes
 
-**What no offline check can prove is that Canvas accepts it.** The cartridge is
-built to the Canvas course export format (Common Cartridge 1.3 plus the
-`course_settings/` files Canvas writes in its own exports, keyed by the
-`canvas_export.txt` marker), but a real import into a real Canvas course is the
-only evidence that counts. Do that once, in a Canvas Free-for-Teacher sandbox,
-before this is offered to a teacher. Import the package, then import a
-`format=canvas` CSV for the same class, and check that Canvas maps every column
-to an existing assignment and offers to create none.
+Plus, since 2026-08-18, a block of assertions read out of a **real Canvas course
+export** rather than out of the Common Cartridge spec (a CodeHS course exported
+from a district Canvas). That file is not in this repo and must not be: it names
+a school district, a teacher and an account uuid, and none of that belongs in a
+zero PII codebase. What is committed is what it taught, as checks.
+
+It taught two things this was getting wrong, and every other check in the suite
+passed straight through both:
+
+- **The cartridge declared Common Cartridge 1.3.** Canvas exports **1.1**, and
+  this file is imported as a Canvas Course Export Package, so 1.1 is the dialect
+  its importer is built around. Fixed, and the web link resources moved from
+  `imswl_xmlv1p3` to `imswl_xmlv1p1` with it so the cartridge is not mixed
+  version.
+- **The organization tree suffixed its item identifiers with `_o`** to keep them
+  unique against the `module_meta.xml` items. Canvas uses the **same** identifier
+  in both files and correlates them by it, so "unique" meant "duplicated": every
+  module and every assignment would have imported twice. This is the bug that
+  would have been discovered by a teacher, on their real course, after they had
+  already committed to the import.
+
+Smaller things it settled: a real non-quiz assignment carries no
+`quiz_identifierref` at all (this emitted an empty one, pointing Canvas at a
+quiz that does not exist), `assignment_group_identifierref` comes **before**
+`workflow_state`, and `all_day`, `turnitin_enabled`, `vericite_enabled` and
+`post_policy` are part of the element set. `assignment_settings.xml` is now
+element-for-element identical in order and set to the real file.
+
+**What still no offline check can prove is that Canvas accepts it.** A real
+import into a real Canvas course is the only evidence that counts. Do that once,
+in a Canvas Free-for-Teacher sandbox, before this is offered to a teacher.
+Import the package, then import a `format=canvas` CSV for the same class, and
+check that Canvas maps every column to an existing assignment and offers to
+create none.
 
 ## Deliberately not built
 

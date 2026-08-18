@@ -27,14 +27,14 @@ Nothing moved the COURSE. That is what this adds.
   with a $169 memory spike in its history. Entries carry a fixed DOS timestamp,
   so output is byte-reproducible.
 - `lib/canvas-course-package.js`. Builds a Canvas course export cartridge:
-  `imsmanifest.xml` (Common Cartridge 1.3), plus the `course_settings/` files
+  `imsmanifest.xml` (Common Cartridge 1.1), plus the `course_settings/` files
   Canvas writes in its own exports, keyed by the `canvas_export.txt` marker.
   Modules are units, every lesson is a web link out to its live page, and every
   gradebook column is one no-submission assignment worth 100 points.
 - `GET /api/teacher/classes/:code/canvas-course` in `routes/teacher.js`.
   `scope`, `include`, `units` and `preflight` all mean exactly what they mean on
   `/export`. Rate limited 30/min.
-- `smoke/canvas-course-package.js`, 62 checks. Auto-discovered by CI.
+- `smoke/canvas-course-package.js`, 76 checks. Auto-discovered by CI.
 - `docs/canvas-course-import.md`, and a pointer at the top of
   `docs/canvas-export.md` telling a teacher to do this first.
 
@@ -64,20 +64,63 @@ it is not the same as checking it.
 - All 73 offline smoke suites pass, including the 101-check `smoke:canvas` and
   the 12-check `smoke:export`, so the existing CSV exports are unchanged by the
   `export-format.js` refactor.
-- `npm run smoke:canvascourse`: 62 checks pass.
+- `npm run smoke:canvascourse`: 76 checks pass, including the 14 read out of the
+  real Canvas export.
 - The generated CSA packages open under the system `unzip -t` with no CRC
   errors, and every XML file in them passes `xmllint --noout`.
-- Package sizes: CSA unit scope 84 KB / 123 files / 4 assignments / 110 links;
+- Package sizes: CSA unit scope 85 KB / 125 files / 4 assignments / 110 links;
   CSA activity scope 470 KB / 615 files / 250 assignments. Build cost measured
   at 50 ms for the largest.
 - Every course builds: CSP 129 assignments with 35 links, Cyber 114, Networking
   66, Intro Java 204, the last three structure-only until their link tables land.
 
+## A real Canvas export changed the answer
+
+Tanner handed over a real `.imscc`: a CodeHS "Software Development / Game
+Design" course exported from a district Canvas. That is the ground truth this
+was written without, and reading it field by field found two bugs that the
+entire suite passed straight through.
+
+1. **The cartridge declared Common Cartridge 1.3.** Canvas exports **1.1**
+   (`imsccv1p1` namespaces, `<schemaversion>1.1.0</schemaversion>`), and this
+   file is imported as a Canvas Course Export Package, so 1.1 is the dialect its
+   importer is built around. The web link resources moved from `imswl_xmlv1p3`
+   to `imswl_xmlv1p1` with it, so the cartridge is not mixed version.
+2. **The organization tree suffixed its item identifiers with `_o`.** The
+   reasoning was that an identifier has to be unique within the manifest. The
+   real export shows Canvas using the **same** identifier for a module and for
+   an item in both `imsmanifest.xml` and `module_meta.xml`, and correlating them
+   by it. So "unique" meant "duplicated": every module and every assignment
+   would have imported twice. That is a bug a teacher would have found on their
+   own course, after committing to the import.
+
+Smaller things it settled, all now element-for-element identical to the real
+file: a real non-quiz assignment carries **no** `quiz_identifierref` at all
+(this emitted an empty one, pointing Canvas at a quiz that does not exist),
+`assignment_group_identifierref` comes **before** `workflow_state`, and
+`all_day`, `turnitin_enabled`, `vericite_enabled` and `post_policy` are part of
+the element set. Module items carry `<link_settings_json>null</link_settings_json>`
+and write `<new_tab/>` rather than `<new_tab>false</new_tab>`. `files_meta.xml`
+and `media_tracks.xml` are now written, empty, because Canvas writes them in
+every export.
+
+`context.xml` and `late_policy.xml` are the two files the real export has that
+this deliberately still does not write. `context.xml` carries the source Canvas
+account id, domain and district name; `late_policy.xml` would impose a late
+penalty policy on a teacher who never asked for one.
+
+**The file itself is NOT in this repo and must not be.** It names a school
+district, a teacher and a root account uuid. What is committed is what it
+taught, as 14 assertions in section 5b of the smoke suite, each negative-tested
+by reintroducing the bug it guards: the `_o` suffix fails three of them, the 1.3
+version fails one.
+
 ## What is NOT proven, and what closes it
 
-**No offline check can prove Canvas accepts the file.** The cartridge is built
-to the Canvas course export format, but the only evidence that counts is a real
-import. Before this is offered to a teacher, someone has to:
+**No offline check can prove Canvas accepts the file.** The cartridge now
+matches a real Canvas export field for field, which is much stronger than
+matching a spec, but the only evidence that counts is a real import. Before this
+is offered to a teacher, someone has to:
 
 1. Create a Canvas Free-for-Teacher sandbox course.
 2. Settings, Import Course Content, type "Canvas Course Export Package", upload
