@@ -1,0 +1,327 @@
+<style>
+#sm-game{all:initial!important;display:block!important;box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.55!important;max-width:900px!important;margin:0 auto!important;padding:0 0 8px!important}
+#sm-game *,#sm-game *::before,#sm-game *::after{box-sizing:border-box!important}
+#sm-game .sm-card{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden!important}
+#sm-game .sm-hero{background:linear-gradient(135deg,#365314,#65a30d)!important;padding:22px 24px!important}
+#sm-game .sm-title{font-size:26px!important;font-weight:800!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1.15!important}
+#sm-game .sm-sub{font-size:15px!important;margin:8px 0 0!important;color:#ecfccb!important;-webkit-text-fill-color:#ecfccb!important}
+#sm-game .sm-bar{display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:14px 24px!important;background:#f8fafc!important;border-bottom:1px solid #e2e8f0!important}
+#sm-game .sm-chip{display:inline-block!important;font-size:13px!important;font-weight:700!important;padding:5px 12px!important;border-radius:100px!important;background:#fff!important;border:1px solid #cbd5e1!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#sm-game .sm-chip.sm-scorechip{background:#65a30d!important;border-color:#65a30d!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#sm-game .sm-body{padding:18px 24px 24px!important}
+#sm-game .sm-how{font-size:14px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;margin:0 0 14px!important}
+#sm-game .sm-q{background:#f7fee7!important;border:1px solid #d9f99d!important;border-radius:12px!important;padding:12px 16px!important;margin-bottom:14px!important}
+#sm-game .sm-qlabel{font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.06em!important;color:#4d7c0f!important;-webkit-text-fill-color:#4d7c0f!important;margin:0 0 4px!important}
+#sm-game .sm-qtext{font-size:17px!important;font-weight:700!important;margin:0!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#sm-game .sm-facts{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:9px!important;margin-bottom:12px!important}
+@media (max-width:640px){#sm-game .sm-facts{grid-template-columns:repeat(1,1fr)!important}}
+#sm-game .sm-fact{font-family:inherit!important;font-size:14px!important;font-weight:700!important;padding:11px 12px!important;border-radius:10px!important;border:2px solid #d4d4d8!important;cursor:pointer!important;background:#fff!important;color:#3f3f46!important;-webkit-text-fill-color:#3f3f46!important;text-align:left!important}
+#sm-game .sm-fact:hover:enabled{background:#f7fee7!important;border-color:#65a30d!important}
+#sm-game .sm-fact.on{background:#65a30d!important;border-color:#65a30d!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#sm-game .sm-fact:disabled{opacity:.6!important;cursor:default!important}
+#sm-game .sm-fact.missed{border-color:#dc2626!important;background:#fee2e2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important}
+#sm-game .sm-fact.spare{border-color:#f59e0b!important;background:#fef3c7!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important}
+#sm-game .sm-out{display:none!important;border:1px solid #e2e8f0!important;border-radius:12px!important;overflow:hidden!important;margin-bottom:12px!important}
+#sm-game .sm-out.show{display:block!important}
+#sm-game .sm-ohead{background:#f8fafc!important;padding:8px 14px!important;font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;border-bottom:1px solid #e2e8f0!important}
+#sm-game .sm-orow{display:flex!important;gap:12px!important;padding:10px 14px!important;border-bottom:1px solid #f1f5f9!important;font-size:14px!important;flex-wrap:wrap!important}
+#sm-game .sm-orow:last-child{border-bottom:0!important}
+#sm-game .sm-olab{min-width:112px!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important}
+#sm-game .sm-oval{flex:1 1 240px!important;font-weight:700!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#sm-game .sm-oval.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#sm-game .sm-oval.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important}
+#sm-game .sm-go{background:#65a30d!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:0!important;font-family:inherit!important;font-size:15px!important;font-weight:700!important;padding:11px 18px!important;border-radius:10px!important;cursor:pointer!important;margin-right:8px!important}
+#sm-game .sm-go:disabled{opacity:.5!important;cursor:default!important}
+#sm-game .sm-small{background:#fff!important;color:#475569!important;-webkit-text-fill-color:#475569!important;border:2px solid #fca5a5!important;font-family:inherit!important;font-size:13px!important;font-weight:700!important;padding:9px 14px!important;border-radius:8px!important;cursor:pointer!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#sm-game .sm-small:disabled{opacity:.5!important;cursor:default!important}
+#sm-game .sm-note{font-size:14px!important;margin:12px 0 0!important;color:#334155!important;-webkit-text-fill-color:#334155!important;min-height:22px!important}
+#sm-game .sm-verdict{font-weight:800!important}
+#sm-game .sm-verdict.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important}
+#sm-game .sm-verdict.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#sm-game .sm-end{text-align:center!important;padding:8px 0!important}
+#sm-game .sm-end h2{font-size:24px!important;font-weight:800!important;margin:0 0 8px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#sm-game .sm-teach{background:#f7fee7!important;border-left:5px solid #65a30d!important;border-radius:0 10px 10px 0!important;padding:12px 16px!important;margin:14px 0 0!important;font-size:14px!important;text-align:left!important;color:#365314!important;-webkit-text-fill-color:#365314!important}
+</style>
+
+<div class="sm-game" id="sm-game">
+  <div class="sm-card">
+    <div class="sm-hero">
+      <h1 class="sm-title">Sim Lab</h1>
+      <p class="sm-sub">Decide what a model has to include and what it can safely leave out, then run it and see what the simplification cost you</p>
+    </div>
+    <div class="sm-bar">
+      <span class="sm-chip" id="sm-round">Model 1 / 7</span>
+      <span class="sm-chip" id="sm-clean">Clean: 0</span>
+      <span class="sm-chip sm-scorechip" id="sm-score">Score: 0</span>
+    </div>
+    <div class="sm-body" id="sm-play">
+      <p class="sm-how">How to play: switch on the factors the model needs to answer THIS question, and leave the rest off. Then run it. Leaving out something the answer depends on gives a confidently wrong result; switching on things the question does not need costs time and detail for nothing. One of these questions cannot be answered by a simulation at all.</p>
+      <div class="sm-q">
+        <p class="sm-qlabel">The question</p>
+        <p class="sm-qtext" id="sm-qtext"></p>
+      </div>
+      <div class="sm-facts" id="sm-facts"></div>
+      <div class="sm-out" id="sm-out">
+        <div class="sm-ohead">Run</div>
+        <div id="sm-outrows"></div>
+      </div>
+      <button class="sm-go" id="sm-runbtn" type="button">Run the simulation</button>
+      <button class="sm-small" id="sm-cantbtn" type="button">A simulation cannot answer this</button>
+      <button class="sm-go" id="sm-nextbtn" type="button" style="display:none">Next model</button>
+      <p class="sm-note" id="sm-note"></p>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Sim Lab - AP CSP Topic 3.16.
+     A simulation is a model, and a model is a set of decisions about what to
+     leave out. So the game is those decisions rather than the arithmetic.
+     Leaving out something the answer depends on produces a confident wrong
+     number, which is printed next to what actually happens. Switching on
+     everything is scored as a mistake too: a model that includes every detail
+     is no cheaper or faster than the thing it was standing in for, which is the
+     entire reason simulations exist. Model 6 is the question a simulation
+     cannot settle, and claiming that is worth full marks. */
+
+  var ROUNDS = [
+    { q: 'Over 1000 rolls of a fair six-sided die, roughly what share come up 6?',
+      facts: [
+        { t: 'the randomness of each roll', need: true },
+        { t: 'the colour of the die', need: false },
+        { t: 'the material of the table', need: false },
+        { t: 'the number of faces', need: true }
+      ],
+      wrong: 'without knowing how many faces it has, the model guesses 50 percent',
+      right: 'about 16.7 percent, and it settles closer the longer it runs',
+      why: 'A die model needs exactly two things: how many equally likely outcomes there are, and a source of randomness. Colour and table material are real, and they are not part of this question.' },
+
+    { q: 'How long will the checkout queue be at five in the afternoon?',
+      facts: [
+        { t: 'how often customers arrive', need: true },
+        { t: 'how long one checkout takes', need: true },
+        { t: 'the number of open registers', need: true },
+        { t: 'the colour of the shopping baskets', need: false }
+      ],
+      wrong: 'with one of those three missing, the model reports no queue at all',
+      right: 'a queue that grows through the rush and clears afterwards',
+      why: 'A queue is arrivals against service capacity. Drop any one of the three and the model cannot even form a line, which is exactly the kind of confidently empty answer a missing factor produces.' },
+
+    { q: 'Which of two paper aeroplane designs flies farther?',
+      facts: [
+        { t: 'wing shape', need: true },
+        { t: 'air resistance', need: true },
+        { t: 'gravity', need: true },
+        { t: 'the colour of the paper', need: false },
+        { t: 'the name written on the wing', need: false }
+      ],
+      wrong: 'with no air resistance the model has both designs flying the same distance forever',
+      right: 'the wider wing glides farther at low speed',
+      why: 'Take air out and you are no longer modelling flight. The factors that matter are the ones the ANSWER depends on, not the ones that are easy to measure.' },
+
+    { q: 'How many years until this savings account doubles?',
+      facts: [
+        { t: 'the interest rate', need: true },
+        { t: 'how often interest is added', need: true },
+        { t: 'the name of the bank', need: false },
+        { t: 'the starting balance', need: false }
+      ],
+      wrong: 'without the compounding frequency the model is out by years',
+      right: 'a little over 14 years at 5 percent compounded yearly',
+      why: 'The starting balance is the interesting one. Doubling time does not depend on it at all, so including it adds a dial that changes nothing, and a model with dials that do nothing invites false confidence.' },
+
+    { q: 'How will traffic flow through this junction if the light timing changes?',
+      facts: [
+        { t: 'how many cars arrive per minute', need: true },
+        { t: 'the light timing', need: true },
+        { t: 'how long a car takes to clear the junction', need: true },
+        { t: 'the make and model of each car', need: false },
+        { t: 'what music the drivers are playing', need: false }
+      ],
+      wrong: 'without the clearing time the model lets every car through instantly and reports no delay',
+      right: 'a longer green on the main road, and a queue building on the side street',
+      why: 'This is why simulations exist. Retiming a real junction to find out costs weeks and risks crashes; the model answers in seconds and can be re-run with a hundred different timings.' },
+
+    { q: 'Will this new medicine be safe for humans?',
+      facts: [
+        { t: 'how the drug behaves in a test tube', need: false },
+        { t: 'results from animal studies', need: false },
+        { t: 'every interaction in human biology', need: false }
+      ],
+      impossible: true,
+      wrong: 'the model reports "safe", which is a claim it has no standing to make',
+      right: 'nothing a model produces can settle this',
+      why: 'A simulation can only contain what is already understood well enough to describe. Human biology is not, so a model of it would be a summary of our assumptions, and running it would confirm those assumptions rather than test them. This one needs real trials, which is why they exist and why they are slow.' },
+
+    { q: 'LAST ONE. A weather model that includes every air molecule on Earth. What is wrong with it?',
+      facts: [
+        { t: 'large scale air pressure patterns', need: true },
+        { t: 'temperature across the region', need: true },
+        { t: 'the position of every individual air molecule', need: false },
+        { t: 'the exact shape of every leaf on every tree', need: false }
+      ],
+      wrong: 'the model is still running, and the weather it was predicting has already happened',
+      right: 'a forecast in minutes, accurate for the next few days',
+      why: 'A model that includes everything is not a model, it is the thing itself, and it takes as long as the thing. Simplifying is not a compromise a simulation makes, it is the point of one. The skill is choosing what to drop.' }
+  ];
+
+  var el = {};
+  ['round','clean','score','qtext','facts','out','outrows','runbtn','cantbtn','nextbtn','note','play']
+    .forEach(function (k) { el[k] = document.getElementById('sm-' + k); });
+
+  var i = 0, score = 0, clean = 0;
+  var on = [], done = false;
+
+  function render() {
+    var r = ROUNDS[i];
+    el.round.textContent = 'Model ' + (i + 1) + ' / ' + ROUNDS.length;
+    el.clean.textContent = 'Clean: ' + clean;
+    el.score.textContent = 'Score: ' + score;
+    el.qtext.textContent = r.q;
+    el.facts.innerHTML = '';
+    r.facts.forEach(function (f, k) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      var isOn = on.indexOf(k) !== -1;
+      var cls = 'sm-fact' + (isOn ? ' on' : '');
+      if (done) {
+        if (f.need && !isOn) cls = 'sm-fact missed';
+        else if (!f.need && isOn) cls = 'sm-fact spare';
+      }
+      b.className = cls;
+      b.textContent = (isOn ? 'IN   ' : 'out  ') + f.t
+        + (done ? (f.need ? '   (the answer depends on it)' : '   (not needed here)') : '');
+      b.disabled = done;
+      b.addEventListener('click', function () { toggle(k); });
+      el.facts.appendChild(b);
+    });
+    el.runbtn.disabled = done;
+    el.cantbtn.disabled = done;
+  }
+
+  function toggle(k) {
+    if (done) return;
+    var at = on.indexOf(k);
+    if (at === -1) on.push(k); else on.splice(at, 1);
+    render();
+  }
+
+  function outRow(label, text, cls) {
+    var d = document.createElement('div');
+    d.className = 'sm-orow';
+    d.innerHTML = '<span class="sm-olab">' + label + '</span>'
+      + '<span class="sm-oval ' + (cls || '') + '">' + text + '</span>';
+    el.outrows.appendChild(d);
+  }
+
+  el.runbtn.addEventListener('click', function () {
+    if (done) return;
+    var r = ROUNDS[i];
+    var missing = r.facts.filter(function (f, k) { return f.need && on.indexOf(k) === -1; }).length;
+    var spare = r.facts.filter(function (f, k) { return !f.need && on.indexOf(k) !== -1; }).length;
+    var wrong = missing + spare;
+    done = true;
+
+    el.outrows.innerHTML = '';
+    if (r.impossible) {
+      outRow('the model says', r.wrong, 'bad');
+      outRow('what is true', r.right, 'good');
+    } else if (missing > 0) {
+      outRow('the model says', r.wrong, 'bad');
+      outRow('what happens', r.right, 'good');
+    } else {
+      outRow('the model says', r.right, 'good');
+      outRow('what happens', r.right, 'good');
+      if (spare > 0) {
+        outRow('the cost', spare + ' factor' + (spare === 1 ? '' : 's')
+          + ' the answer does not depend on, each one more thing to measure, get wrong and wait for');
+      }
+    }
+    el.out.className = 'sm-out show';
+
+    var award;
+    if (r.impossible) award = 0;
+    else award = wrong === 0 ? 100 : (wrong === 1 ? 50 : 0);
+    score += award;
+    if (award === 100) clean++;
+    endRound(award === 100,
+      r.impossible ? 'It ran, and produced an answer it has no standing to give. '
+        : (wrong === 0 ? 'The model answered the question. 100 points. '
+           : (missing && spare ? missing + ' factor the answer depends on left out, and ' + spare + ' included for nothing. '
+              : (missing ? missing + ' factor' + (missing === 1 ? '' : 's') + ' the answer depends on left out. '
+                 : spare + ' factor' + (spare === 1 ? '' : 's') + ' included that the question does not need. '))
+           + award + ' points. '));
+  });
+
+  el.cantbtn.addEventListener('click', function () {
+    if (done) return;
+    done = true;
+    var r = ROUNDS[i];
+    el.outrows.innerHTML = '';
+    outRow('your call', 'no model can settle this question', r.impossible ? 'good' : 'bad');
+    outRow('what is true', r.impossible ? r.right : 'a model of the right factors answers it well', 'good');
+    el.out.className = 'sm-out show';
+    if (r.impossible) {
+      score += 100;
+      clean++;
+      endRound(true, 'Correct, and knowing that is the point. 100 points. ');
+    } else {
+      endRound(false, 'This one a model handles well. ');
+    }
+  });
+
+  function endRound(good, msg) {
+    render();
+    el.runbtn.style.display = 'none';
+    el.cantbtn.style.display = 'none';
+    el.note.innerHTML = '<span class="sm-verdict ' + (good ? 'good' : 'bad') + '">' + msg + '</span>' + ROUNDS[i].why;
+    el.nextbtn.textContent = (i < ROUNDS.length - 1) ? 'Next model' : 'See your result';
+    el.nextbtn.style.display = 'inline-block';
+  }
+
+  el.nextbtn.addEventListener('click', function () {
+    if (i < ROUNDS.length - 1) { i++; startRound(); } else { finish(); }
+  });
+
+  function startRound() {
+    on = [];
+    done = false;
+    el.out.className = 'sm-out';
+    el.outrows.innerHTML = '';
+    el.note.textContent = '';
+    el.runbtn.style.display = 'inline-block';
+    el.cantbtn.style.display = 'inline-block';
+    el.nextbtn.style.display = 'none';
+    render();
+  }
+
+  function finish() {
+    el.play.innerHTML =
+      '<div class="sm-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + clean + ' of ' + ROUNDS.length + ' models built well.</p>' +
+        '<div class="sm-teach">' +
+          '<b>A simulation is a set of decisions about what to leave out.</b> That is not a ' +
+          'weakness of the technique, it is the technique: a model that included everything ' +
+          'would cost exactly what the real thing costs, and the weather forecast would ' +
+          'arrive after the weather. So the skill is choosing. Keep what the ANSWER depends ' +
+          'on and drop the rest, remembering that a factor can be real, measurable and ' +
+          'completely irrelevant to the question in front of you. Leave out something that ' +
+          'matters and the model still returns a number, stated just as confidently as a ' +
+          'right one. And some questions are not for models at all: when the thing you would ' +
+          'have to describe is not yet understood, running the model only confirms your own ' +
+          'assumptions back at you.' +
+        '</div>' +
+        '<p><button class="sm-go" id="sm-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('sm-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  startRound();
+})();
+</script>

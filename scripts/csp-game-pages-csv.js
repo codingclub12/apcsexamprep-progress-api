@@ -48,6 +48,13 @@ const GAMES = {
     topic: '3.11',
     seoDescription: 'Find the hidden number in as few guesses as binary search would need, and learn why doubling the list adds only one more guess. AP CSP Topic 3.11.',
   },
+  'sim-lab': {
+    title: 'AP CSP Sim Lab Game | What a Simulation Leaves Out | Topic 3.16',
+    shareName: 'Sim Lab',
+    label: 'points',
+    topic: '3.16',
+    seoDescription: 'Choose what a model must include and what it can drop, then run it and see what the simplification cost. AP CSP Topic 3.16 simulations game.',
+  },
   'doc-detective': {
     title: 'AP CSP Doc Detective Game | Reading Library Documentation | Topic 3.14',
     shareName: 'Doc Detective',
