@@ -48,6 +48,13 @@ const GAMES = {
     topic: '3.11',
     seoDescription: 'Find the hidden number in as few guesses as binary search would need, and learn why doubling the list adds only one more guess. AP CSP Topic 3.11.',
   },
+  'list-surgeon': {
+    title: 'AP CSP List Surgeon Game | One-Indexed Lists and REMOVE | Topic 3.10',
+    shareName: 'List Surgeon',
+    label: 'points',
+    topic: '3.10',
+    seoDescription: 'Reshape lists with real AP pseudocode operations and watch the indices renumber under your hands. Free AP CSP Topic 3.10 list practice game.',
+  },
   'iteration-station': {
     title: 'AP CSP Iteration Station Game | Trace the Loop | Topic 3.8',
     shareName: 'Iteration Station',

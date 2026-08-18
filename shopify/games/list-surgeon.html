@@ -1,0 +1,347 @@
+<style>
+#ls-game{all:initial!important;display:block!important;box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.55!important;max-width:900px!important;margin:0 auto!important;padding:0 0 8px!important}
+#ls-game *,#ls-game *::before,#ls-game *::after{box-sizing:border-box!important}
+#ls-game .ls-card{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden!important}
+#ls-game .ls-hero{background:linear-gradient(135deg,#831843,#db2777)!important;padding:22px 24px!important}
+#ls-game .ls-title{font-size:26px!important;font-weight:800!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1.15!important}
+#ls-game .ls-sub{font-size:15px!important;margin:8px 0 0!important;color:#fce7f3!important;-webkit-text-fill-color:#fce7f3!important}
+#ls-game .ls-bar{display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:14px 24px!important;background:#f8fafc!important;border-bottom:1px solid #e2e8f0!important}
+#ls-game .ls-chip{display:inline-block!important;font-size:13px!important;font-weight:700!important;padding:5px 12px!important;border-radius:100px!important;background:#fff!important;border:1px solid #cbd5e1!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#ls-game .ls-chip.ls-scorechip{background:#db2777!important;border-color:#db2777!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#ls-game .ls-body{padding:18px 24px 24px!important}
+#ls-game .ls-how{font-size:14px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;margin:0 0 14px!important}
+#ls-game .ls-brief{background:#fdf2f8!important;border:1px solid #fbcfe8!important;border-radius:12px!important;padding:12px 16px!important;margin-bottom:14px!important;font-size:15px!important;font-weight:700!important;color:#831843!important;-webkit-text-fill-color:#831843!important}
+#ls-game .ls-lists{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important;margin-bottom:14px!important}
+@media (max-width:640px){#ls-game .ls-lists{grid-template-columns:repeat(1,1fr)!important}}
+#ls-game .ls-panel{border:2px solid #e2e8f0!important;border-radius:12px!important;padding:12px!important;background:#fff!important}
+#ls-game .ls-panel.match{border-color:#16a34a!important;background:#f0fdf4!important}
+#ls-game .ls-plabel{font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:0 0 8px!important;display:block!important}
+#ls-game .ls-cells{display:flex!important;flex-wrap:wrap!important;gap:6px!important;min-height:52px!important}
+#ls-game .ls-cell{border:2px solid #cbd5e1!important;border-radius:8px!important;padding:4px 0 2px!important;min-width:46px!important;text-align:center!important;background:#f8fafc!important}
+#ls-game .ls-cell.tgt{border-color:#fbcfe8!important;background:#fdf2f8!important}
+#ls-game .ls-cval{display:block!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:17px!important;font-weight:800!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#ls-game .ls-cidx{display:block!important;font-size:10px!important;font-weight:700!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important}
+#ls-game .ls-empty{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;font-style:italic!important}
+#ls-game .ls-ops{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:10px!important;margin-bottom:12px!important}
+@media (max-width:640px){#ls-game .ls-ops{grid-template-columns:repeat(1,1fr)!important}}
+#ls-game .ls-op{font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:14px!important;font-weight:700!important;padding:12px 10px!important;border-radius:10px!important;border:2px solid #fbcfe8!important;cursor:pointer!important;background:#fff!important;color:#9d174d!important;-webkit-text-fill-color:#9d174d!important;text-align:left!important}
+#ls-game .ls-op:hover:enabled{background:#fdf2f8!important;border-color:#db2777!important}
+#ls-game .ls-op:disabled{opacity:.5!important;cursor:default!important}
+#ls-game .ls-small{background:#fff!important;color:#475569!important;-webkit-text-fill-color:#475569!important;border:2px solid #cbd5e1!important;font-family:inherit!important;font-size:13px!important;font-weight:700!important;padding:8px 14px!important;border-radius:8px!important;cursor:pointer!important;margin-right:8px!important}
+#ls-game .ls-small:disabled{opacity:.5!important;cursor:default!important}
+#ls-game .ls-log{border:1px solid #e2e8f0!important;border-radius:10px!important;padding:10px 14px!important;margin:12px 0 0!important;min-height:44px!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#ls-game .ls-logline{display:block!important}
+#ls-game .ls-logline.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#ls-game .ls-go{background:#db2777!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:0!important;font-family:inherit!important;font-size:15px!important;font-weight:700!important;padding:11px 18px!important;border-radius:10px!important;cursor:pointer!important;margin-top:12px!important}
+#ls-game .ls-note{font-size:14px!important;margin:12px 0 0!important;color:#334155!important;-webkit-text-fill-color:#334155!important;min-height:22px!important}
+#ls-game .ls-verdict{font-weight:800!important}
+#ls-game .ls-verdict.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important}
+#ls-game .ls-verdict.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#ls-game .ls-end{text-align:center!important;padding:8px 0!important}
+#ls-game .ls-end h2{font-size:24px!important;font-weight:800!important;margin:0 0 8px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#ls-game .ls-teach{background:#fdf2f8!important;border-left:5px solid #db2777!important;border-radius:0 10px 10px 0!important;padding:12px 16px!important;margin:14px 0 0!important;font-size:14px!important;text-align:left!important;color:#831843!important;-webkit-text-fill-color:#831843!important}
+</style>
+
+<div class="ls-game" id="ls-game">
+  <div class="ls-card">
+    <div class="ls-hero">
+      <h1 class="ls-title">List Surgeon</h1>
+      <p class="ls-sub">Reshape the list with real AP pseudocode operations, where the first element is index 1 and every removal renumbers what is left</p>
+    </div>
+    <div class="ls-bar">
+      <span class="ls-chip" id="ls-round">Case 1 / 7</span>
+      <span class="ls-chip" id="ls-par">Par: 1</span>
+      <span class="ls-chip" id="ls-used">Used: 0</span>
+      <span class="ls-chip ls-scorechip" id="ls-score">Score: 0</span>
+    </div>
+    <div class="ls-body" id="ls-play">
+      <p class="ls-how">How to play: click operations to run them on the list. Solving at par is 100 points, solving over par is 50. An operation with an index that does not exist is refused and costs nothing, because the list tells you why. Undo and reset are free.</p>
+      <div class="ls-brief" id="ls-brief"></div>
+      <div class="ls-lists">
+        <div class="ls-panel" id="ls-curpanel">
+          <span class="ls-plabel">list, right now</span>
+          <div class="ls-cells" id="ls-cur"></div>
+        </div>
+        <div class="ls-panel">
+          <span class="ls-plabel">what it has to become</span>
+          <div class="ls-cells" id="ls-tgt"></div>
+        </div>
+      </div>
+      <div class="ls-ops" id="ls-ops"></div>
+      <button class="ls-small" id="ls-undo" type="button">Undo</button>
+      <button class="ls-small" id="ls-reset" type="button">Start over</button>
+      <div class="ls-log" id="ls-log"></div>
+      <p class="ls-note" id="ls-note"></p>
+      <button class="ls-go" id="ls-nextbtn" type="button" style="display:none">Next case</button>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* List Surgeon - AP CSP Topic 3.10.
+     AP pseudocode lists are ONE indexed and every REMOVE renumbers everything
+     after it. Those two facts produce most of the list mistakes on the exam, and
+     neither survives being told once. So the list is drawn with its index under
+     every element and it renumbers in front of you.
+     An operation with an out of range index is REFUSED rather than silently
+     ignored, and refusing costs no moves: the message is the lesson, and
+     charging for it would only teach students not to try. Case 5 is built so
+     that removing from the front first walks into exactly that refusal. */
+
+  function plural(n) { return n + ' element' + (n === 1 ? '' : 's'); }
+
+  // An empty list has NO valid index at all, so it gets its own sentence rather
+  // than the range one, which would otherwise read "the valid indices are 1 to 0".
+  function range(n) {
+    return n === 0 ? 'The list is empty, so no index is valid.'
+                   : 'The list has ' + plural(n) + ', so the valid indices are 1 to ' + n + '.';
+  }
+
+  function apply(list, op) {
+    var l = list.slice();
+    if (op.k === 'append') { l.push(op.v); return { list: l }; }
+    if (op.k === 'appendAt') {
+      if (op.i < 1 || op.i > l.length) {
+        return { err: 'list[' + op.i + '] does not exist. ' + range(l.length) };
+      }
+      l.push(l[op.i - 1]); return { list: l };
+    }
+    if (op.k === 'remove') {
+      if (op.i < 1 || op.i > l.length) {
+        return { err: 'There is no index ' + op.i + ' to remove. ' + range(l.length) };
+      }
+      l.splice(op.i - 1, 1); return { list: l };
+    }
+    // insert: index may be one past the end, which appends
+    if (op.i < 1 || op.i > l.length + 1) {
+      return { err: 'Cannot insert at index ' + op.i + '. With ' + plural(l.length)
+        + ' you can insert at 1 through ' + (l.length + 1) + '.' };
+    }
+    l.splice(op.i - 1, 0, op.v); return { list: l };
+  }
+
+  function label(op) {
+    if (op.k === 'append') return 'APPEND(list, ' + op.v + ')';
+    if (op.k === 'appendAt') return 'APPEND(list, list[' + op.i + '])';
+    if (op.k === 'remove') return 'REMOVE(list, ' + op.i + ')';
+    return 'INSERT(list, ' + op.i + ', ' + op.v + ')';
+  }
+
+  var ROUNDS = [
+    { brief: 'Add 7 to the end of the list.',
+      start: [3, 8, 5], target: [3, 8, 5, 7],
+      ops: [{ k: 'append', v: 7 }, { k: 'remove', i: 1 }, { k: 'insert', i: 1, v: 7 }],
+      solution: [0],
+      why: 'APPEND always adds at the end and never needs an index. INSERT at 1 would have put 7 at the front.' },
+
+    { brief: 'Delete the 9.',
+      start: [4, 9, 2, 6], target: [4, 2, 6],
+      ops: [{ k: 'remove', i: 2 }, { k: 'remove', i: 9 }, { k: 'remove', i: 1 }, { k: 'append', v: 9 }],
+      solution: [0],
+      why: 'REMOVE takes a POSITION, not a value. The 9 sits at position 2, and REMOVE(list, 9) asks for a ninth element that does not exist.' },
+
+    { brief: 'Put a 5 between the 1 and the 2.',
+      start: [1, 2, 3], target: [1, 5, 2, 3],
+      ops: [{ k: 'insert', i: 2, v: 5 }, { k: 'insert', i: 1, v: 5 }, { k: 'append', v: 5 }],
+      solution: [0],
+      why: 'INSERT puts the value AT that index and shifts everything from there to the right. To land second, you insert at 2, not after 2.' },
+
+    { brief: 'Swap the two elements so the 4 comes first.',
+      start: [7, 4], target: [4, 7],
+      ops: [{ k: 'append', v: 7 }, { k: 'remove', i: 1 }, { k: 'append', v: 4 }, { k: 'remove', i: 2 }],
+      solution: [1, 0],
+      why: 'There is no swap operation in AP pseudocode. A swap is built out of the ones that exist, and the order you build it in is the whole job.' },
+
+    { brief: 'Cut this down to just the 1 and the 9.',
+      start: [5, 1, 9, 3], target: [1, 9],
+      ops: [{ k: 'remove', i: 1 }, { k: 'remove', i: 4 }, { k: 'append', v: 3 }, { k: 'insert', i: 1, v: 5 }],
+      solution: [1, 0],
+      why: 'Remove from the BACK first. Taking element 1 out immediately renumbers everything after it, so the 3 you meant to delete at index 4 is now at index 3 and index 4 no longer exists.' },
+
+    { brief: 'Make the list repeat itself.',
+      start: [6, 7], target: [6, 7, 6, 7],
+      ops: [{ k: 'appendAt', i: 1 }, { k: 'appendAt', i: 2 }, { k: 'remove', i: 1 }],
+      solution: [0, 1],
+      why: 'list[2] is read at the moment the operation runs, not when you planned it. After the first append the list is 6, 7, 6, so list[2] is still 7 and the copy completes.' },
+
+    { brief: 'SPOT THE BUG. A student wrote REMOVE(list, 2) then REMOVE(list, 3) to delete the 4 and the 8. It deleted the wrong things. Get to 2 and 6.',
+      start: [2, 4, 6, 8], target: [2, 6],
+      ops: [{ k: 'remove', i: 2 }, { k: 'remove', i: 3 }, { k: 'remove', i: 4 }, { k: 'append', v: 8 }],
+      solution: [2, 0],
+      why: 'Their first removal shifted the 8 from index 4 to index 3, so the second removal took the 6 instead. Going back to front means no index you still need ever moves.' }
+  ];
+
+  var CAP = 8;
+
+  var el = {};
+  ['round','par','used','score','brief','cur','tgt','curpanel','ops','undo','reset','log','note','nextbtn','play']
+    .forEach(function (k) { el[k] = document.getElementById('ls-' + k); });
+
+  var i = 0, score = 0, solved = 0;
+  var list = [], history = [], used = 0, done = false;
+
+  function cells(host, arr, isTarget) {
+    host.innerHTML = '';
+    if (!arr.length) {
+      host.innerHTML = '<span class="ls-empty">the list is empty</span>';
+      return;
+    }
+    arr.forEach(function (v, k) {
+      var d = document.createElement('div');
+      d.className = 'ls-cell' + (isTarget ? ' tgt' : '');
+      d.innerHTML = '<span class="ls-cval">' + v + '</span><span class="ls-cidx">' + (k + 1) + '</span>';
+      host.appendChild(d);
+    });
+  }
+
+  function same(a, b) {
+    return a.length === b.length && a.every(function (v, k) { return v === b[k]; });
+  }
+
+  function logLine(text, bad) {
+    var s = document.createElement('span');
+    s.className = 'ls-logline' + (bad ? ' bad' : '');
+    s.textContent = text;
+    el.log.appendChild(s);
+    el.log.scrollTop = el.log.scrollHeight;
+  }
+
+  function renderOps() {
+    var r = ROUNDS[i];
+    el.ops.innerHTML = '';
+    r.ops.forEach(function (op) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ls-op';
+      b.textContent = label(op);
+      b.disabled = done;
+      b.addEventListener('click', function () { runOp(op); });
+      el.ops.appendChild(b);
+    });
+  }
+
+  function paint() {
+    var r = ROUNDS[i];
+    el.round.textContent = 'Case ' + (i + 1) + ' / ' + ROUNDS.length;
+    el.par.textContent = 'Par: ' + r.solution.length;
+    el.used.textContent = 'Used: ' + used;
+    el.score.textContent = 'Score: ' + score;
+    el.brief.textContent = r.brief;
+    cells(el.cur, list, false);
+    cells(el.tgt, r.target, true);
+    el.curpanel.className = 'ls-panel' + (same(list, r.target) ? ' match' : '');
+    el.undo.disabled = done || !history.length;
+    el.reset.disabled = done || !history.length;
+    renderOps();
+  }
+
+  function runOp(op) {
+    if (done) return;
+    var res = apply(list, op);
+    if (res.err) {
+      logLine(label(op) + '  ->  refused. ' + res.err, true);
+      // Refusals are free, so a list on which no operation is legal would leave
+      // the round with no way to end. Name the exit rather than letting the
+      // student click into a wall.
+      var anyLegal = ROUNDS[i].ops.some(function (o) { return !apply(list, o).err; });
+      if (!anyLegal) logLine('No operation on offer is legal on this list. Use Start over.', true);
+      return;
+    }
+    history.push(list.slice());
+    list = res.list;
+    used++;
+    logLine(label(op) + '  ->  [' + list.join(', ') + ']', false);
+    paint();
+    var r = ROUNDS[i];
+    if (same(list, r.target)) {
+      var atPar = used <= r.solution.length;
+      var award = atPar ? 100 : 50;
+      score += award;
+      solved++;
+      finishRound(true, (atPar ? 'Solved at par. ' : 'Solved in ' + used + ' moves, par was ' + r.solution.length + '. ') + award + ' points.');
+    } else if (used >= CAP) {
+      finishRound(false, 'That is ' + CAP + ' operations without reaching the target. Here is the shortest route.');
+    }
+  }
+
+  function finishRound(won, msg) {
+    done = true;
+    if (!won) {
+      // Replay the shortest route so the case never ends without showing it.
+      var r = ROUNDS[i];
+      var l = r.start.slice();
+      logLine('shortest route:', false);
+      r.solution.forEach(function (k) {
+        var res = apply(l, r.ops[k]);
+        l = res.list;
+        logLine('  ' + label(r.ops[k]) + '  ->  [' + l.join(', ') + ']', false);
+      });
+      list = l;
+    }
+    paint();
+    el.note.innerHTML = '<span class="ls-verdict ' + (won ? 'good' : 'bad') + '">' + msg + '</span> ' + ROUNDS[i].why;
+    el.nextbtn.textContent = (i < ROUNDS.length - 1) ? 'Next case' : 'See your result';
+    el.nextbtn.style.display = 'inline-block';
+  }
+
+  el.undo.addEventListener('click', function () {
+    if (done || !history.length) return;
+    list = history.pop();
+    used--;
+    logLine('undo  ->  [' + list.join(', ') + ']', false);
+    paint();
+  });
+
+  el.reset.addEventListener('click', function () {
+    if (done) return;
+    list = ROUNDS[i].start.slice();
+    history = [];
+    used = 0;
+    el.log.innerHTML = '';
+    logLine('back to the start  ->  [' + list.join(', ') + ']', false);
+    paint();
+  });
+
+  el.nextbtn.addEventListener('click', function () {
+    if (i < ROUNDS.length - 1) { i++; startRound(); } else { finish(); }
+  });
+
+  function startRound() {
+    done = false;
+    used = 0;
+    history = [];
+    list = ROUNDS[i].start.slice();
+    el.log.innerHTML = '';
+    el.note.textContent = '';
+    el.nextbtn.style.display = 'none';
+    paint();
+  }
+
+  function finish() {
+    el.play.innerHTML =
+      '<div class="ls-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + solved + ' of ' + ROUNDS.length + ' cases solved.</p>' +
+        '<div class="ls-teach">' +
+          '<b>Two facts cause most list bugs, and you just met both.</b> AP pseudocode ' +
+          'lists start at index 1, so the third element is list[3] and there is no list[0]. ' +
+          'And every REMOVE or INSERT renumbers everything after the point you touched, ' +
+          'which is why deleting several elements has to run from the back to the front: ' +
+          'go the other way and the second index you wrote is pointing at a different ' +
+          'element by the time it runs. When a question hands you a list and a sequence of ' +
+          'operations, redraw the whole list after every single one. It is slower on paper ' +
+          'and faster overall.' +
+        '</div>' +
+        '<p><button class="ls-go" id="ls-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('ls-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  startRound();
+})();
+</script>

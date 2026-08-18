@@ -57,6 +57,7 @@ const REGISTRY = {
   'boundary-patrol':            { metric: 'score', higher: true, min: 0, max: 10000 },
   'gate-keeper':                { metric: 'score', higher: true, min: 0, max: 10000 },
   'iteration-station':          { metric: 'score', higher: true, min: 0, max: 10000 },
+  'list-surgeon':               { metric: 'score', higher: true, min: 0, max: 10000 },
 };
 
 const WINDOWS = new Set(['today', 'week', 'month', 'year', 'all']);
