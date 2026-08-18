@@ -1,0 +1,347 @@
+<style>
+#ps-game{all:initial!important;display:block!important;box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.55!important;max-width:900px!important;margin:0 auto!important;padding:0 0 8px!important}
+#ps-game *,#ps-game *::before,#ps-game *::after{box-sizing:border-box!important}
+#ps-game .ps-card{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden!important}
+#ps-game .ps-hero{background:linear-gradient(135deg,#7c2d12,#c2410c)!important;padding:22px 24px!important}
+#ps-game .ps-title{font-size:26px!important;font-weight:800!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1.15!important}
+#ps-game .ps-sub{font-size:15px!important;margin:8px 0 0!important;color:#ffedd5!important;-webkit-text-fill-color:#ffedd5!important}
+#ps-game .ps-bar{display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:14px 24px!important;background:#f8fafc!important;border-bottom:1px solid #e2e8f0!important}
+#ps-game .ps-chip{display:inline-block!important;font-size:13px!important;font-weight:700!important;padding:5px 12px!important;border-radius:100px!important;background:#fff!important;border:1px solid #cbd5e1!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#ps-game .ps-chip.ps-scorechip{background:#c2410c!important;border-color:#c2410c!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#ps-game .ps-body{padding:18px 24px 24px!important}
+#ps-game .ps-how{font-size:14px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;margin:0 0 14px!important}
+#ps-game .ps-brief{background:#fff7ed!important;border:1px solid #fed7aa!important;border-radius:12px!important;padding:12px 16px!important;margin-bottom:14px!important;font-size:15px!important;font-weight:700!important;color:#7c2d12!important;-webkit-text-fill-color:#7c2d12!important}
+#ps-game .ps-sites{border:1px solid #e2e8f0!important;border-radius:12px!important;overflow:hidden!important;margin-bottom:14px!important;overflow-x:auto!important}
+#ps-game .ps-srow{display:flex!important;border-bottom:1px solid #f1f5f9!important}
+#ps-game .ps-srow:last-child{border-bottom:0!important}
+#ps-game .ps-srow.head{background:#f8fafc!important}
+#ps-game .ps-cell{flex:1 1 0!important;min-width:110px!important;padding:9px 10px!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:13px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;border-right:1px solid #f1f5f9!important;text-align:center!important}
+#ps-game .ps-cell:last-child{border-right:0!important}
+#ps-game .ps-cell.lbl{flex:0 0 116px!important;text-align:left!important;font-family:-apple-system,BlinkMacSystemFont,sans-serif!important;font-size:12px!important;font-weight:700!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important}
+#ps-game .ps-cell.param{background:#fff7ed!important}
+#ps-game .ps-colbtn{width:100%!important;font-family:-apple-system,BlinkMacSystemFont,sans-serif!important;font-size:12px!important;font-weight:700!important;padding:8px 6px!important;border-radius:8px!important;border:2px solid #fed7aa!important;cursor:pointer!important;background:#fff!important;color:#9a3412!important;-webkit-text-fill-color:#9a3412!important}
+#ps-game .ps-colbtn:hover:enabled{background:#fff7ed!important;border-color:#c2410c!important}
+#ps-game .ps-colbtn.on{background:#c2410c!important;border-color:#c2410c!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#ps-game .ps-colbtn:disabled{opacity:.7!important;cursor:default!important}
+#ps-game .ps-colbtn.missed{background:#fee2e2!important;border-color:#dc2626!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important}
+#ps-game .ps-colbtn.spare{background:#fef3c7!important;border-color:#f59e0b!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important}
+#ps-game .ps-proc{background:#0f172a!important;border-radius:10px!important;padding:14px 16px!important;margin-bottom:12px!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:13px!important;line-height:1.7!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;overflow-x:auto!important}
+#ps-game .ps-pline{display:block!important;white-space:pre!important}
+#ps-game .ps-out{display:none!important;border:1px solid #e2e8f0!important;border-radius:12px!important;overflow:hidden!important;margin-bottom:12px!important}
+#ps-game .ps-out.show{display:block!important}
+#ps-game .ps-ohead{background:#f8fafc!important;padding:8px 14px!important;font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;border-bottom:1px solid #e2e8f0!important}
+#ps-game .ps-orow{display:flex!important;gap:12px!important;align-items:center!important;padding:8px 14px!important;border-bottom:1px solid #f1f5f9!important;font-size:13px!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;flex-wrap:wrap!important}
+#ps-game .ps-orow:last-child{border-bottom:0!important}
+#ps-game .ps-ocall{flex:1 1 240px!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#ps-game .ps-tag{font-size:11px!important;font-weight:700!important;padding:3px 9px!important;border-radius:100px!important;font-family:-apple-system,BlinkMacSystemFont,sans-serif!important}
+#ps-game .ps-tag.ok{background:#dcfce7!important;color:#15803d!important;-webkit-text-fill-color:#15803d!important}
+#ps-game .ps-tag.no{background:#fee2e2!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#ps-game .ps-tag.warn{background:#fef3c7!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important}
+#ps-game .ps-go{background:#c2410c!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:0!important;font-family:inherit!important;font-size:15px!important;font-weight:700!important;padding:11px 18px!important;border-radius:10px!important;cursor:pointer!important;margin-right:8px!important}
+#ps-game .ps-note{font-size:14px!important;margin:12px 0 0!important;color:#334155!important;-webkit-text-fill-color:#334155!important;min-height:22px!important}
+#ps-game .ps-verdict{font-weight:800!important}
+#ps-game .ps-verdict.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important}
+#ps-game .ps-verdict.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#ps-game .ps-end{text-align:center!important;padding:8px 0!important}
+#ps-game .ps-end h2{font-size:24px!important;font-weight:800!important;margin:0 0 8px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#ps-game .ps-teach{background:#fff7ed!important;border-left:5px solid #c2410c!important;border-radius:0 10px 10px 0!important;padding:12px 16px!important;margin:14px 0 0!important;font-size:14px!important;text-align:left!important;color:#7c2d12!important;-webkit-text-fill-color:#7c2d12!important}
+</style>
+
+<div class="ps-game" id="ps-game">
+  <div class="ps-card">
+    <div class="ps-hero">
+      <h1 class="ps-title">Procedure Shop</h1>
+      <p class="ps-sub">Three lines that nearly repeat. Decide what varies, because that and only that becomes a parameter</p>
+    </div>
+    <div class="ps-bar">
+      <span class="ps-chip" id="ps-round">Job 1 / 7</span>
+      <span class="ps-chip" id="ps-clean">Clean: 0</span>
+      <span class="ps-chip ps-scorechip" id="ps-score">Score: 0</span>
+    </div>
+    <div class="ps-body" id="ps-play">
+      <p class="ps-how">How to play: these call sites do nearly the same thing. Switch on the parts that CHANGE between them, since those are the parameters, and leave the parts that never change to be written once inside the procedure. Extract it and every call site is rebuilt from your procedure to see whether it still works.</p>
+      <div class="ps-brief" id="ps-brief"></div>
+      <div class="ps-sites" id="ps-sites"></div>
+      <div class="ps-proc" id="ps-proc"></div>
+      <div class="ps-out" id="ps-out">
+        <div class="ps-ohead">Every call site, rebuilt from your procedure</div>
+        <div id="ps-outrows"></div>
+      </div>
+      <button class="ps-go" id="ps-extractbtn" type="button">Extract the procedure</button>
+      <button class="ps-go" id="ps-nextbtn" type="button" style="display:none">Next job</button>
+      <p class="ps-note" id="ps-note"></p>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Procedure Shop - AP CSP Topic 3.13.
+     A parameter exists because something VARIES between the callers. Nothing
+     else. So the answer key here is not written down: a column is a parameter
+     if and only if its values differ across the call sites, computed from the
+     data at run time. That means a round cannot disagree with its own key, and
+     it also means the rule is visible on screen rather than asserted.
+     Under-parameterising loses a call site, which is shown as the call that can
+     no longer be expressed. Over-parameterising is scored as a mistake too: a
+     parameter that every caller passes the same value to is a dial nobody can
+     turn, and it moves a decision out of the procedure and into every single
+     call. */
+
+  var ROUNDS = [
+    { brief: 'Three greeting lines. What has to be a parameter?',
+      name: 'greet',
+      cols: ['who', 'the greeting word', 'the punctuation'],
+      sites: [
+        ['Ada', 'Hello', '!'],
+        ['Grace', 'Hello', '!'],
+        ['Alan', 'Hello', '!']
+      ],
+      shape: function (v) { return 'DISPLAY("' + v[1] + ', " + ' + v[0] + ' + "' + v[2] + '")'; },
+      why: 'Only the name changes, so the procedure takes one parameter and the word Hello is written once inside it. Passing "Hello" from every call site would mean changing the greeting in three places instead of one.' },
+
+    { brief: 'Rectangle areas.',
+      name: 'area',
+      cols: ['width', 'height'],
+      sites: [
+        [3, 4],
+        [10, 2],
+        [7, 7]
+      ],
+      shape: function (v) { return 'area \u2190 ' + v[0] + ' * ' + v[1]; },
+      why: 'Both change, so both are parameters. Two callers happening to pass equal values, as the third does, is not the same as a value that never varies.' },
+
+    { brief: 'Applying the same sales tax to three prices.',
+      name: 'withTax',
+      cols: ['price', 'tax rate'],
+      sites: [
+        [20, 0.07],
+        [45, 0.07],
+        [8, 0.07]
+      ],
+      shape: function (v) { return 'total \u2190 ' + v[0] + ' * (1 + ' + v[1] + ')'; },
+      why: 'The rate is the same everywhere, so it belongs inside the procedure where a change touches one line. Making it a parameter looks flexible and quietly gives three call sites the power to disagree about the tax rate.' },
+
+    { brief: 'CAREFUL. The company opens a second store with its own tax rate.',
+      name: 'withTax',
+      cols: ['price', 'tax rate'],
+      sites: [
+        [20, 0.07],
+        [45, 0.07],
+        [8, 0.09]
+      ],
+      shape: function (v) { return 'total \u2190 ' + v[0] + ' * (1 + ' + v[1] + ')'; },
+      why: 'Same procedure, same columns, different answer, because the callers changed. What belongs in a parameter is decided by the callers you actually have, not by the shape of the code.' },
+
+    { brief: 'Drawing a border of stars around three different words.',
+      name: 'banner',
+      cols: ['the word', 'the border character', 'how many lines of border'],
+      sites: [
+        ['SAVE', '*', 1],
+        ['LOAD', '*', 1],
+        ['QUIT', '*', 1]
+      ],
+      shape: function (v) { return 'banner: ' + v[1] + ' x' + v[2] + ' around "' + v[0] + '"'; },
+      why: 'Two constants dressed up as options. Every extra parameter is one more thing every caller has to know and get right, which is the opposite of what a procedure is for.' },
+
+    { brief: 'Scoring three quizzes out of different totals.',
+      name: 'percent',
+      cols: ['earned', 'possible', 'how many decimal places'],
+      sites: [
+        [16, 20, 0],
+        [9, 12, 0],
+        [45, 50, 0]
+      ],
+      shape: function (v) { return 'DISPLAY(ROUND(' + v[0] + ' / ' + v[1] + ' * 100, ' + v[2] + '))'; },
+      why: 'Two parameters, not three. Rounding to zero places is a house style, and house style lives inside the procedure. The moment one report wants two places, it becomes a parameter, and not one moment earlier.' },
+
+    { brief: 'SPOT THE BUG. This procedure was written with four parameters and one of them is a dial nobody turns.',
+      name: 'sendAlert',
+      cols: ['message', 'urgency', 'the channel', 'the retry count'],
+      sites: [
+        ['Disk full', 'high', 'email', 3],
+        ['Login failed', 'low', 'email', 3],
+        ['Backup done', 'low', 'email', 3]
+      ],
+      shape: function (v) { return 'sendAlert("' + v[0] + '", ' + v[1] + ', ' + v[2] + ', ' + v[3] + ')'; },
+      why: 'Two of the four never vary. They are not doing any harm today, and they are why the day someone changes the channel they change it in three places and miss one. A parameter is a promise that callers may differ; make that promise only where they do.' }
+  ];
+
+  var el = {};
+  ['round','clean','score','brief','sites','proc','out','outrows','extractbtn','nextbtn','note','play']
+    .forEach(function (k) { el[k] = document.getElementById('ps-' + k); });
+
+  var i = 0, score = 0, clean = 0;
+  var on = [], done = false;
+
+  /* The key is DERIVED: a column is a parameter exactly when the call sites do
+     not all agree on it. Nothing to keep in sync, and nothing to get wrong. */
+  function varies(r, c) {
+    var first = r.sites[0][c];
+    return r.sites.some(function (s) { return s[c] !== first; });
+  }
+
+  function render() {
+    var r = ROUNDS[i];
+    el.round.textContent = 'Job ' + (i + 1) + ' / ' + ROUNDS.length;
+    el.clean.textContent = 'Clean: ' + clean;
+    el.score.textContent = 'Score: ' + score;
+    el.brief.textContent = r.brief;
+
+    el.sites.innerHTML = '';
+    var head = document.createElement('div');
+    head.className = 'ps-srow head';
+    var corner = document.createElement('div');
+    corner.className = 'ps-cell lbl';
+    corner.textContent = 'make a parameter?';
+    head.appendChild(corner);
+    r.cols.forEach(function (c, ci) {
+      var cell = document.createElement('div');
+      cell.className = 'ps-cell';
+      var b = document.createElement('button');
+      b.type = 'button';
+      var isOn = on.indexOf(ci) !== -1;
+      var cls = 'ps-colbtn' + (isOn ? ' on' : '');
+      if (done) {
+        if (varies(r, ci) && !isOn) cls = 'ps-colbtn missed';
+        else if (!varies(r, ci) && isOn) cls = 'ps-colbtn spare';
+      }
+      b.className = cls;
+      b.textContent = c + (done ? (varies(r, ci) ? '  (it varies)' : '  (never varies)') : '');
+      b.disabled = done;
+      b.addEventListener('click', function () { toggle(ci); });
+      cell.appendChild(b);
+      head.appendChild(cell);
+    });
+    el.sites.appendChild(head);
+
+    r.sites.forEach(function (s, si) {
+      var row = document.createElement('div');
+      row.className = 'ps-srow';
+      var lab = document.createElement('div');
+      lab.className = 'ps-cell lbl';
+      lab.textContent = 'call site ' + (si + 1);
+      row.appendChild(lab);
+      s.forEach(function (v, ci) {
+        var cell = document.createElement('div');
+        cell.className = 'ps-cell' + (on.indexOf(ci) !== -1 ? ' param' : '');
+        cell.textContent = String(v);
+        row.appendChild(cell);
+      });
+      el.sites.appendChild(row);
+    });
+
+    // The procedure header and the call sites, written from the current choice.
+    var params = r.cols.filter(function (c, ci) { return on.indexOf(ci) !== -1; })
+      .map(function (c) { return c.replace(/[^A-Za-z]/g, ''); });
+    var lines = ['PROCEDURE ' + r.name + '(' + params.join(', ') + ')', '{'];
+    r.cols.forEach(function (c, ci) {
+      if (on.indexOf(ci) === -1) lines.push('  ' + c + ' is fixed at ' + JSON.stringify(r.sites[0][ci]) + ' in here');
+    });
+    lines.push('  ' + '...the shared work...');
+    lines.push('}');
+    el.proc.innerHTML = lines.map(function (l) {
+      return '<span class="ps-pline">' + l + '</span>';
+    }).join('');
+
+    el.extractbtn.disabled = done;
+  }
+
+  function toggle(ci) {
+    if (done) return;
+    var at = on.indexOf(ci);
+    if (at === -1) on.push(ci); else on.splice(at, 1);
+    render();
+  }
+
+  el.extractbtn.addEventListener('click', function () {
+    if (done) return;
+    done = true;
+    var r = ROUNDS[i];
+    var missed = r.cols.filter(function (c, ci) { return varies(r, ci) && on.indexOf(ci) === -1; }).length;
+    var spare = r.cols.filter(function (c, ci) { return !varies(r, ci) && on.indexOf(ci) !== -1; }).length;
+
+    /* Rebuild each call site from the procedure: fixed columns take the value
+       from call site 1, because that is what got written inside the procedure. */
+    el.outrows.innerHTML = '';
+    r.sites.forEach(function (s, si) {
+      var rebuilt = s.map(function (v, ci) {
+        return on.indexOf(ci) === -1 ? r.sites[0][ci] : v;
+      });
+      var same = rebuilt.every(function (v, ci) { return v === s[ci]; });
+      var d = document.createElement('div');
+      d.className = 'ps-orow';
+      d.innerHTML = '<span class="ps-ocall">' + r.shape(rebuilt) + '</span>'
+        + '<span class="ps-tag ' + (same ? 'ok' : 'no') + '">'
+        + (same ? 'call site ' + (si + 1) + ' still works' : 'call site ' + (si + 1) + ' cannot be expressed') + '</span>';
+      el.outrows.appendChild(d);
+    });
+    if (spare > 0) {
+      var w = document.createElement('div');
+      w.className = 'ps-orow';
+      w.innerHTML = '<span class="ps-ocall">every caller passes the same value for '
+        + spare + ' of these</span><span class="ps-tag warn">a dial nobody turns</span>';
+      el.outrows.appendChild(w);
+    }
+    el.out.className = 'ps-out show';
+
+    var wrong = missed + spare;
+    var award = wrong === 0 ? 100 : (wrong === 1 ? 50 : 0);
+    score += award;
+    if (wrong === 0) clean++;
+    render();
+    el.extractbtn.style.display = 'none';
+    var head;
+    if (wrong === 0) head = 'Exactly the parts that vary. 100 points. ';
+    else if (missed && spare) head = missed + ' varying part left out and ' + spare + ' constant made into a parameter. ';
+    else if (missed) head = missed + ' part' + (missed === 1 ? '' : 's') + ' that varies left out, so a call site can no longer be written. ';
+    else head = spare + ' parameter' + (spare === 1 ? '' : 's') + ' that never varies. ';
+    el.note.innerHTML = '<span class="ps-verdict ' + (wrong === 0 ? 'good' : 'bad') + '">'
+      + head + (wrong === 0 ? '' : award + ' points. ') + '</span>' + r.why;
+    el.nextbtn.textContent = (i < ROUNDS.length - 1) ? 'Next job' : 'See your result';
+    el.nextbtn.style.display = 'inline-block';
+  });
+
+  el.nextbtn.addEventListener('click', function () {
+    if (i < ROUNDS.length - 1) { i++; startRound(); } else { finish(); }
+  });
+
+  function startRound() {
+    on = [];
+    done = false;
+    el.out.className = 'ps-out';
+    el.outrows.innerHTML = '';
+    el.note.textContent = '';
+    el.extractbtn.style.display = 'inline-block';
+    el.nextbtn.style.display = 'none';
+    render();
+  }
+
+  function finish() {
+    el.play.innerHTML =
+      '<div class="ps-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + clean + ' of ' + ROUNDS.length + ' procedures with exactly the right parameters.</p>' +
+        '<div class="ps-teach">' +
+          '<b>A parameter exists because callers differ. That is the whole rule.</b> Leave ' +
+          'out something that varies and a call site can no longer be written at all, which ' +
+          'at least fails loudly. Add a parameter for something that never varies and ' +
+          'nothing fails today: you have simply moved a decision out of the procedure and ' +
+          'into every call, so the day it changes you change it everywhere and miss one. ' +
+          'Notice that jobs 3 and 4 had identical code and different answers, because the ' +
+          'callers were different. Parameters are designed from the callers you have, and ' +
+          'the honest move when a new caller needs to vary something is to add the parameter ' +
+          'then, not to guess years early.' +
+        '</div>' +
+        '<p><button class="ps-go" id="ps-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('ps-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  startRound();
+})();
+</script>

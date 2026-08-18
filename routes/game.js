@@ -68,6 +68,8 @@ const REGISTRY = {
   'name-the-thing':             { metric: 'score', higher: true, min: 0, max: 10000 },
   'doc-detective':              { metric: 'score', higher: true, min: 0, max: 10000 },
   'sim-lab':                    { metric: 'score', higher: true, min: 0, max: 10000 },
+  'algorithm-assembler':        { metric: 'score', higher: true, min: 0, max: 10000 },
+  'procedure-shop':             { metric: 'score', higher: true, min: 0, max: 10000 },
 };
 
 const WINDOWS = new Set(['today', 'week', 'month', 'year', 'all']);

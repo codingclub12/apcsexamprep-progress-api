@@ -48,6 +48,20 @@ const GAMES = {
     topic: '3.11',
     seoDescription: 'Find the hidden number in as few guesses as binary search would need, and learn why doubling the list adds only one more guess. AP CSP Topic 3.11.',
   },
+  'procedure-shop': {
+    title: 'AP CSP Procedure Shop Game | Choosing Parameters | Topic 3.13',
+    shareName: 'Procedure Shop',
+    label: 'points',
+    topic: '3.13',
+    seoDescription: 'Decide what varies between the callers, because that and only that becomes a parameter. Free AP CSP Topic 3.13 developing procedures game.',
+  },
+  'algorithm-assembler': {
+    title: 'AP CSP Algorithm Assembler Game | Before, Inside or After the Loop | Topic 3.9',
+    shareName: 'Algorithm Assembler',
+    label: 'points',
+    topic: '3.9',
+    seoDescription: 'Every statement is correct. Placing it before, inside or after the loop is the whole job. Free AP CSP Topic 3.9 developing algorithms game.',
+  },
   'sim-lab': {
     title: 'AP CSP Sim Lab Game | What a Simulation Leaves Out | Topic 3.16',
     shareName: 'Sim Lab',

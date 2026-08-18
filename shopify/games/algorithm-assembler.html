@@ -1,0 +1,364 @@
+<style>
+#aa-game{all:initial!important;display:block!important;box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.55!important;max-width:900px!important;margin:0 auto!important;padding:0 0 8px!important}
+#aa-game *,#aa-game *::before,#aa-game *::after{box-sizing:border-box!important}
+#aa-game .aa-card{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden!important}
+#aa-game .aa-hero{background:linear-gradient(135deg,#581c87,#a855f7)!important;padding:22px 24px!important}
+#aa-game .aa-title{font-size:26px!important;font-weight:800!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1.15!important}
+#aa-game .aa-sub{font-size:15px!important;margin:8px 0 0!important;color:#f3e8ff!important;-webkit-text-fill-color:#f3e8ff!important}
+#aa-game .aa-bar{display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:14px 24px!important;background:#f8fafc!important;border-bottom:1px solid #e2e8f0!important}
+#aa-game .aa-chip{display:inline-block!important;font-size:13px!important;font-weight:700!important;padding:5px 12px!important;border-radius:100px!important;background:#fff!important;border:1px solid #cbd5e1!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#aa-game .aa-chip.aa-scorechip{background:#a855f7!important;border-color:#a855f7!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#aa-game .aa-body{padding:18px 24px 24px!important}
+#aa-game .aa-how{font-size:14px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;margin:0 0 14px!important}
+#aa-game .aa-brief{background:#faf5ff!important;border:1px solid #e9d5ff!important;border-radius:12px!important;padding:12px 16px!important;margin-bottom:14px!important;font-size:15px!important;font-weight:700!important;color:#581c87!important;-webkit-text-fill-color:#581c87!important}
+#aa-game .aa-pal{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:8px!important;margin-bottom:14px!important}
+@media (max-width:640px){#aa-game .aa-pal{grid-template-columns:repeat(1,1fr)!important}}
+#aa-game .aa-piece{font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:13px!important;font-weight:700!important;padding:10px 12px!important;border-radius:9px!important;border:2px solid #e9d5ff!important;cursor:pointer!important;background:#fff!important;color:#6b21a8!important;-webkit-text-fill-color:#6b21a8!important;text-align:left!important}
+#aa-game .aa-piece:hover:enabled{background:#faf5ff!important;border-color:#a855f7!important}
+#aa-game .aa-piece.sel{border-color:#f59e0b!important;background:#fffbeb!important}
+#aa-game .aa-piece:disabled{opacity:.35!important;cursor:default!important}
+#aa-game .aa-prog{background:#0f172a!important;border-radius:10px!important;padding:12px 10px!important;margin-bottom:14px!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;font-size:13px!important;line-height:1.7!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;overflow-x:auto!important}
+#aa-game .aa-fixed{display:block!important;padding:2px 10px!important;white-space:pre!important;color:#7dd3fc!important;-webkit-text-fill-color:#7dd3fc!important}
+#aa-game .aa-zone{display:block!important;margin:3px 6px!important;padding:6px 8px!important;border-radius:8px!important;border:2px dashed #475569!important;min-height:38px!important}
+#aa-game .aa-zone.here{border-color:#f59e0b!important;background:#1e293b!important}
+#aa-game .aa-zonelab{display:block!important;font-family:-apple-system,BlinkMacSystemFont,sans-serif!important;font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.06em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;cursor:pointer!important}
+#aa-game .aa-slot{display:block!important;padding:2px 6px!important;white-space:pre!important;color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;cursor:pointer!important}
+#aa-game .aa-tests{display:none!important;border:1px solid #e2e8f0!important;border-radius:12px!important;overflow:hidden!important;margin-bottom:12px!important}
+#aa-game .aa-tests.show{display:block!important}
+#aa-game .aa-thead{background:#f8fafc!important;padding:8px 14px!important;font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;border-bottom:1px solid #e2e8f0!important}
+#aa-game .aa-trow{display:flex!important;gap:12px!important;align-items:center!important;padding:8px 14px!important;border-bottom:1px solid #f1f5f9!important;font-size:13px!important;font-family:"SFMono-Regular",Consolas,Menlo,monospace!important;flex-wrap:wrap!important}
+#aa-game .aa-trow:last-child{border-bottom:0!important}
+#aa-game .aa-tin{flex:1 1 190px!important;color:#334155!important;-webkit-text-fill-color:#334155!important}
+#aa-game .aa-tgot{font-weight:800!important;color:#6b21a8!important;-webkit-text-fill-color:#6b21a8!important}
+#aa-game .aa-tag{font-size:11px!important;font-weight:700!important;padding:3px 9px!important;border-radius:100px!important;font-family:-apple-system,BlinkMacSystemFont,sans-serif!important}
+#aa-game .aa-tag.ok{background:#dcfce7!important;color:#15803d!important;-webkit-text-fill-color:#15803d!important}
+#aa-game .aa-tag.no{background:#fee2e2!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#aa-game .aa-go{background:#a855f7!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:0!important;font-family:inherit!important;font-size:15px!important;font-weight:700!important;padding:11px 18px!important;border-radius:10px!important;cursor:pointer!important;margin-right:8px!important}
+#aa-game .aa-go:disabled{opacity:.5!important;cursor:default!important}
+#aa-game .aa-small{background:#fff!important;color:#475569!important;-webkit-text-fill-color:#475569!important;border:2px solid #cbd5e1!important;font-family:inherit!important;font-size:13px!important;font-weight:700!important;padding:9px 14px!important;border-radius:8px!important;cursor:pointer!important}
+#aa-game .aa-note{font-size:14px!important;margin:12px 0 0!important;color:#334155!important;-webkit-text-fill-color:#334155!important;min-height:22px!important}
+#aa-game .aa-verdict{font-weight:800!important}
+#aa-game .aa-verdict.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important}
+#aa-game .aa-verdict.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important}
+#aa-game .aa-end{text-align:center!important;padding:8px 0!important}
+#aa-game .aa-end h2{font-size:24px!important;font-weight:800!important;margin:0 0 8px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important}
+#aa-game .aa-teach{background:#faf5ff!important;border-left:5px solid #a855f7!important;border-radius:0 10px 10px 0!important;padding:12px 16px!important;margin:14px 0 0!important;font-size:14px!important;text-align:left!important;color:#581c87!important;-webkit-text-fill-color:#581c87!important}
+</style>
+
+<div class="aa-game" id="aa-game">
+  <div class="aa-card">
+    <div class="aa-hero">
+      <h1 class="aa-title">Algorithm Assembler</h1>
+      <p class="aa-sub">The statements are all correct. Putting them before, inside or after the loop is the entire job</p>
+    </div>
+    <div class="aa-bar">
+      <span class="aa-chip" id="aa-round">Build 1 / 7</span>
+      <span class="aa-chip" id="aa-clean">Clean: 0</span>
+      <span class="aa-chip aa-scorechip" id="aa-score">Score: 0</span>
+    </div>
+    <div class="aa-body" id="aa-play">
+      <p class="aa-how">How to play: click a statement, then click the zone it belongs in. Every statement has to be placed exactly once. Run it and your algorithm executes against three real lists, including the awkward one that catches an algorithm that only works on friendly data.</p>
+      <div class="aa-brief" id="aa-brief"></div>
+      <div class="aa-pal" id="aa-pal"></div>
+      <div class="aa-prog" id="aa-prog"></div>
+      <div class="aa-tests" id="aa-tests">
+        <div class="aa-thead">Your algorithm, run on three lists</div>
+        <div id="aa-trows"></div>
+      </div>
+      <button class="aa-go" id="aa-runbtn" type="button">Run it</button>
+      <button class="aa-small" id="aa-clearbtn" type="button">Take it apart</button>
+      <button class="aa-go" id="aa-nextbtn" type="button" style="display:none">Next build</button>
+      <p class="aa-note" id="aa-note"></p>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Algorithm Assembler - AP CSP Topic 3.9.
+     Every statement offered is correct on its own. What decides whether the
+     algorithm works is which of the three zones it goes in, which is the actual
+     content of "developing algorithms": initialise before the loop, accumulate
+     inside it, report after it.
+     Nothing is compared against a stored answer. The placement is EXECUTED
+     against three lists and the result compared to a reference function written
+     separately, and one of the three lists is always the awkward case that a
+     plausible wrong placement passes the other two on. */
+
+  function runPlan(round, list) {
+    var st = { total: 0, count: 0, best: null, out: [], list: list };
+    round.before.forEach(function (id) { round.ops[id].f(st, null); });
+    for (var k = 0; k < list.length; k++) {
+      st.n = list[k];
+      round.inside.forEach(function (id) { round.ops[id].f(st, list[k]); });
+    }
+    round.after.forEach(function (id) { round.ops[id].f(st, null); });
+    return st.out.length ? st.out.join(', ') : 'nothing was displayed';
+  }
+
+  var ROUNDS = [
+    { brief: 'Add up every number in the list and display the total once, at the end.',
+      ops: {
+        init: { t: 'total \u2190 0', f: function (st) { st.total = 0; } },
+        add: { t: 'total \u2190 total + n', f: function (st, n) { st.total += n; } },
+        show: { t: 'DISPLAY(total)', f: function (st) { st.out.push(String(st.total)); } }
+      },
+      want: function (L) { return String(L.reduce(function (a, b) { return a + b; }, 0)); },
+      tests: [[3, 4, 5], [10], [-2, -3, -5]],
+      key: { init: 'before', add: 'inside', show: 'after' },
+      why: 'Initialise before, accumulate inside, report after. Move the reset inside and every pass throws away the last one; move the display inside and it prints a running total instead of an answer.' },
+
+    { brief: 'Count how many numbers in the list are greater than 10.',
+      ops: {
+        init: { t: 'count \u2190 0', f: function (st) { st.count = 0; } },
+        test: { t: 'IF (n > 10) { count \u2190 count + 1 }', f: function (st, n) { if (n > 10) st.count++; } },
+        show: { t: 'DISPLAY(count)', f: function (st) { st.out.push(String(st.count)); } }
+      },
+      want: function (L) { return String(L.filter(function (n) { return n > 10; }).length); },
+      tests: [[4, 20, 11], [1, 2, 3], [50, 60]],
+      key: { init: 'before', test: 'inside', show: 'after' },
+      why: 'A counter is an accumulator that only sometimes increases. The IF belongs inside the loop because it has to look at each element; the counter belongs outside because it has to survive them all.' },
+
+    { brief: 'Find the LARGEST number and display it. Careful: the list can be all negative.',
+      ops: {
+        seed: { t: 'best \u2190 list[1]', f: function (st) { st.best = st.list[0]; } },
+        cmp: { t: 'IF (n > best) { best \u2190 n }', f: function (st, n) { if (n > st.best) st.best = n; } },
+        show: { t: 'DISPLAY(best)', f: function (st) { st.out.push(String(st.best)); } }
+      },
+      want: function (L) { return String(Math.max.apply(null, L)); },
+      tests: [[3, 9, 4], [-8, -2, -30], [7]],
+      key: { seed: 'before', cmp: 'inside', show: 'after' },
+      why: 'Seeding with the first element rather than with zero is what makes this work on negative data. An algorithm that only works on friendly numbers is the most common wrong answer in this topic.' },
+
+    { brief: 'Display the running total after every number, then nothing at the end.',
+      ops: {
+        init: { t: 'total \u2190 0', f: function (st) { st.total = 0; } },
+        add: { t: 'total \u2190 total + n', f: function (st, n) { st.total += n; } },
+        show: { t: 'DISPLAY(total)', f: function (st) { st.out.push(String(st.total)); } }
+      },
+      want: function (L) { var t = 0; return L.map(function (n) { t += n; return String(t); }).join(', '); },
+      tests: [[3, 4, 5], [10], [-2, -3, -5]],
+      key: { init: 'before', add: 'inside', show: 'inside' },
+      why: 'Same three statements as the first build, one of them moved. Where a statement sits decides whether you get one answer or a commentary, and the statements themselves never changed.' },
+
+    { brief: 'Add up the list and display the AVERAGE at the end.',
+      ops: {
+        initT: { t: 'total \u2190 0', f: function (st) { st.total = 0; } },
+        initC: { t: 'count \u2190 0', f: function (st) { st.count = 0; } },
+        add: { t: 'total \u2190 total + n', f: function (st, n) { st.total += n; } },
+        bump: { t: 'count \u2190 count + 1', f: function (st) { st.count++; } },
+        show: { t: 'DISPLAY(total / count)', f: function (st) { st.out.push(String(st.count ? st.total / st.count : 0)); } }
+      },
+      want: function (L) { return String(L.reduce(function (a, b) { return a + b; }, 0) / L.length); },
+      tests: [[2, 4, 6], [5], [10, 20, 30, 40]],
+      key: { initT: 'before', initC: 'before', add: 'inside', bump: 'inside', show: 'after' },
+      why: 'An average needs two accumulators running together and one division at the end. Divide inside the loop and you get an average of the part of the list you have seen so far, which is a different and usually unwanted thing.' },
+
+    { brief: 'SPOT THE BUG. This is meant to say how many items are in the list, once.',
+      ops: {
+        init: { t: 'count \u2190 0', f: function (st) { st.count = 0; } },
+        bump: { t: 'count \u2190 count + 1', f: function (st) { st.count++; } },
+        show: { t: 'DISPLAY(count)', f: function (st) { st.out.push(String(st.count)); } }
+      },
+      want: function (L) { return String(L.length); },
+      tests: [[8, 8, 8], [4], [1, 2, 3, 4, 5]],
+      key: { init: 'before', bump: 'inside', show: 'after' },
+      why: 'A single-element list is the reason this bug survives testing: with one item, printing inside the loop and printing after it look identical. Always test with a list of several items and a list of one.' },
+
+    { brief: 'LAST ONE. Display the total, then reset the total to zero ready for the next list.',
+      ops: {
+        init: { t: 'total \u2190 0', f: function (st) { st.total = 0; } },
+        add: { t: 'total \u2190 total + n', f: function (st, n) { st.total += n; } },
+        show: { t: 'DISPLAY(total)', f: function (st) { st.out.push(String(st.total)); } },
+        reset: { t: 'total \u2190 0', f: function (st) { st.total = 0; } }
+      },
+      want: function (L) { return String(L.reduce(function (a, b) { return a + b; }, 0)); },
+      tests: [[3, 4, 5], [10], [-2, -3, -5]],
+      key: { init: 'before', add: 'inside', show: 'after', reset: 'after' },
+      why: 'Two identical statements, and only the order of the two AFTER the loop is in question. Reset before the display and you print zero every time, having done all the work correctly and thrown it away on the last line.' }
+  ];
+
+  var ZONES = [['before', 'before the loop'], ['inside', 'inside the loop, once per element'], ['after', 'after the loop']];
+
+  var el = {};
+  ['round','clean','score','brief','pal','prog','tests','trows','runbtn','clearbtn','nextbtn','note','play']
+    .forEach(function (k) { el[k] = document.getElementById('aa-' + k); });
+
+  var i = 0, score = 0, clean = 0;
+  var placed = {}, order = [], selected = null, done = false;
+
+  /* order is the click sequence, and a zone lists its statements in that
+     sequence. Filtering the declaration order instead would have made build 7
+     unloseable: its two after-the-loop statements would always run in the order
+     they happen to appear in the source, whatever the student clicked. */
+  function idsIn(zone) {
+    return order.filter(function (id) { return placed[id] === zone; });
+  }
+
+  function planFor(order) {
+    var r = ROUNDS[i];
+    return { ops: r.ops, before: order.before, inside: order.inside, after: order.after };
+  }
+
+  function currentPlan() {
+    return planFor({ before: idsIn('before'), inside: idsIn('inside'), after: idsIn('after') });
+  }
+
+  function render() {
+    var r = ROUNDS[i];
+    el.round.textContent = 'Build ' + (i + 1) + ' / ' + ROUNDS.length;
+    el.clean.textContent = 'Clean: ' + clean;
+    el.score.textContent = 'Score: ' + score;
+    el.brief.textContent = r.brief;
+
+    el.pal.innerHTML = '';
+    Object.keys(r.ops).forEach(function (id) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'aa-piece' + (selected === id ? ' sel' : '');
+      b.textContent = r.ops[id].t;
+      b.disabled = done || placed[id] !== undefined;
+      b.addEventListener('click', function () { selected = id; render(); });
+      el.pal.appendChild(b);
+    });
+
+    el.prog.innerHTML = '';
+    ZONES.forEach(function (z, zi) {
+      if (zi === 1) {
+        var head = document.createElement('span');
+        head.className = 'aa-fixed';
+        head.textContent = 'FOR EACH n IN list';
+        el.prog.appendChild(head);
+        var brace = document.createElement('span');
+        brace.className = 'aa-fixed';
+        brace.textContent = '{';
+        el.prog.appendChild(brace);
+      }
+      var zone = document.createElement('span');
+      zone.className = 'aa-zone' + (selected && !done ? ' here' : '');
+      var lab = document.createElement('span');
+      lab.className = 'aa-zonelab';
+      lab.textContent = z[1];
+      zone.appendChild(lab);
+      idsIn(z[0]).forEach(function (id) {
+        var line = document.createElement('span');
+        line.className = 'aa-slot';
+        line.textContent = (zi === 1 ? '    ' : '  ') + r.ops[id].t;
+        line.addEventListener('click', function (ev) {
+          ev.stopPropagation();
+          if (done) return;
+          delete placed[id];
+          order = order.filter(function (x) { return x !== id; });
+          render();
+        });
+        zone.appendChild(line);
+      });
+      zone.addEventListener('click', function () {
+        if (done || !selected) return;
+        placed[selected] = z[0];
+        if (order.indexOf(selected) === -1) order.push(selected);
+        selected = null;
+        render();
+      });
+      el.prog.appendChild(zone);
+      if (zi === 1) {
+        var close = document.createElement('span');
+        close.className = 'aa-fixed';
+        close.textContent = '}';
+        el.prog.appendChild(close);
+      }
+    });
+
+    el.runbtn.disabled = done || Object.keys(r.ops).length !== Object.keys(placed).length;
+    el.clearbtn.disabled = done;
+  }
+
+  el.clearbtn.addEventListener('click', function () {
+    if (done) return;
+    placed = {};
+    order = [];
+    selected = null;
+    el.tests.classList.remove('show');
+    render();
+  });
+
+  el.runbtn.addEventListener('click', function () {
+    if (done) return;
+    var r = ROUNDS[i];
+    if (Object.keys(placed).length !== Object.keys(r.ops).length) return;
+    done = true;
+    var plan = currentPlan();
+    var passes = 0;
+    el.trows.innerHTML = '';
+    r.tests.forEach(function (L) {
+      var got = runPlan(plan, L);
+      var want = r.want(L);
+      var ok = (got === want);
+      if (ok) passes++;
+      var d = document.createElement('div');
+      d.className = 'aa-trow';
+      d.innerHTML = '<span class="aa-tin">list = ' + L.join(', ') + '</span>'
+        + '<span class="aa-tgot">' + got + '</span>'
+        + '<span class="aa-tag ' + (ok ? 'ok' : 'no') + '">' + (ok ? 'correct' : 'wanted ' + want) + '</span>';
+      el.trows.appendChild(d);
+    });
+    el.tests.classList.add('show');
+
+    var award = passes === r.tests.length ? 100 : (passes === r.tests.length - 1 ? 50 : 0);
+    score += award;
+    if (award === 100) clean++;
+    render();
+    el.runbtn.style.display = 'none';
+    el.clearbtn.style.display = 'none';
+    el.note.innerHTML = '<span class="aa-verdict ' + (award === 100 ? 'good' : 'bad') + '">'
+      + (award === 100 ? 'All three lists. 100 points. '
+         : passes + ' of ' + r.tests.length + ' lists. ' + award + ' points. ') + '</span>' + r.why;
+    el.nextbtn.textContent = (i < ROUNDS.length - 1) ? 'Next build' : 'See your result';
+    el.nextbtn.style.display = 'inline-block';
+  });
+
+  el.nextbtn.addEventListener('click', function () {
+    if (i < ROUNDS.length - 1) { i++; startRound(); } else { finish(); }
+  });
+
+  function startRound() {
+    placed = {};
+    order = [];
+    selected = null;
+    done = false;
+    el.tests.classList.remove('show');
+    el.trows.innerHTML = '';
+    el.note.textContent = '';
+    el.runbtn.style.display = 'inline-block';
+    el.clearbtn.style.display = 'inline-block';
+    el.nextbtn.style.display = 'none';
+    render();
+  }
+
+  function finish() {
+    el.play.innerHTML =
+      '<div class="aa-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + clean + ' of ' + ROUNDS.length + ' algorithms correct on every list.</p>' +
+        '<div class="aa-teach">' +
+          '<b>Initialise before, accumulate inside, report after.</b> That one sentence ' +
+          'decides most of these builds, and you saw the same three statements produce an ' +
+          'answer or a running commentary depending only on where they sat. Two more habits ' +
+          'come out of this: seed a maximum with the first element rather than zero, because ' +
+          'zero is a guess about the data that negative numbers punish, and test with a list ' +
+          'of one as well as a list of several, because those are the two cases where a ' +
+          'misplaced display looks identical to a correct one. When an algorithm passes on ' +
+          'friendly data, that is the moment to go looking for the awkward list.' +
+        '</div>' +
+        '<p><button class="aa-go" id="aa-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('aa-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  startRound();
+})();
+</script>
