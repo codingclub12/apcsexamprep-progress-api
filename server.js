@@ -213,8 +213,25 @@ if (cyberCaseFileDenoms) console.log(`cyber case file denominators: ${cyberCaseF
 
 
 // ── PUBLIC ENDPOINTS ──────────────────────────────────────────────────────────
+// `commit` answers the one question this endpoint could not: WHICH BUILD is
+// serving. On 2026-08-17 a figure route returned a Cloudflare-cached 500 for
+// hours; /api/health answered 200 the whole time, so the 200 was read as proof
+// the container was fine and the 500 as proof the deploy had never landed. Both
+// readings were wrong, the deploy HAD landed, and it cost most of a day and four
+// repeat diagnoses of the same stale response.
+//
+// A 200 here only ever meant "some container is up". It could not distinguish a
+// container running the merge you just made from one running last week's, which
+// is precisely what you want to know after a merge. Railway injects
+// RAILWAY_GIT_COMMIT_SHA into every container, so the answer was already present
+// and simply never surfaced.
+//
+// Short sha, and 'unknown' off-platform rather than an empty string, so a local
+// or test run is visibly not a deploy instead of looking like an unlabelled one.
+const BUILD_COMMIT = (process.env.RAILWAY_GIT_COMMIT_SHA || '').slice(0, 7) || 'unknown';
+
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', ts: new Date().toISOString() });
+  res.json({ status: 'ok', ts: new Date().toISOString(), commit: BUILD_COMMIT });
 });
 
 // ── ADMIN CLASS DASHBOARD (gated page) ────────────────────────────────────────
