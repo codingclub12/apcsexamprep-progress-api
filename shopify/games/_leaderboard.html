@@ -1,0 +1,136 @@
+<script>
+window.APCSLeaderboard = (function(){
+  var API = 'https://progress.apcsexamprep.com';
+  var cfg = null, curWin = 'today', root = null, apiUp = true;
+  var WINDOWS = [['today','Today'],['week','Week'],['month','Month'],['year','Year'],['all','All-time']];
+
+  function ls(get, key, val){
+    try{ if(get){ return window.localStorage.getItem(key); } window.localStorage.setItem(key, val); }catch(e){ return null; }
+  }
+  function token(){ return ls(true,'apcse_token') || null; }
+  function playerName(){
+    var t = ls(true,'apcse_name');
+    return t || '';
+  }
+  function setPlayerName(n){ ls(false,'apcse_name', n); }
+  function bestKey(){ return 'apcse_lb_best_' + cfg.game; }
+  function localBest(){ var v = ls(true, bestKey()); return v===null ? null : Number(v); }
+  function setLocalBest(v){
+    var b = localBest();
+    if(b===null || (cfg.higherIsBetter ? v>b : v<b)) ls(false, bestKey(), String(v));
+  }
+  function fmt(v){ return (typeof v==='number' && isFinite(v)) ? v : v; }
+
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&','<':'<','>':'>','"':'"'}[c]; }); }
+
+  function toast(msg){
+    var t = document.createElement('div'); t.className='lb-toast'; t.textContent=msg; root.appendChild(t);
+    setTimeout(function(){ t.classList.add('show'); }, 20);
+    setTimeout(function(){ t.classList.remove('show'); setTimeout(function(){ t.remove(); },300); }, 2200);
+  }
+
+  function shell(){
+    root.innerHTML =
+      '<div class="lb-head"><div class="lb-title">\uD83C\uDFC6 Leaderboard</div><div class="lb-you" id="lb-you"></div></div>'+
+      '<div class="lb-tabs" id="lb-tabs"></div>'+
+      '<div class="lb-rows" id="lb-rows"></div>'+
+      '<div class="lb-foot"><div class="lb-best" id="lb-best"></div><button class="lb-btn" id="lb-share">\uD83D\uDD17 Challenge a friend</button></div>'+
+      '<div class="lb-name" id="lb-name"></div>';
+    var tabs = root.querySelector('#lb-tabs');
+    WINDOWS.forEach(function(w){
+      var b=document.createElement('button'); b.className='lb-tab'+(w[0]===curWin?' on':''); b.textContent=w[1];
+      b.onclick=function(){ curWin=w[0]; Array.prototype.forEach.call(tabs.children,function(c){c.classList.remove('on');}); b.classList.add('on'); loadBoard(); };
+      tabs.appendChild(b);
+    });
+    root.querySelector('#lb-share').onclick = share;
+    renderName(); renderBest();
+  }
+
+  function renderName(){
+    var el = root.querySelector('#lb-name');
+    if(token()){ el.innerHTML = 'Signed in - your scores post under your class name.'; return; }
+    var n = playerName();
+    el.innerHTML = n ? ('Playing as <b>'+esc(n)+'</b> \u2022 <a id="lb-chn">change</a>')
+                     : 'Add initials to appear on the board \u2022 <a id="lb-chn">set name</a>';
+    var a = el.querySelector('#lb-chn'); if(a) a.onclick = askName;
+  }
+  function askName(cb){
+    var n = window.prompt('Enter a name or initials for the leaderboard (3-16 characters):', playerName()||'');
+    if(n){ n = n.trim().slice(0,16); if(n.length>=1){ setPlayerName(n); renderName(); if(typeof cb==='function') cb(n); return n; } }
+    return null;
+  }
+  function renderBest(){
+    var b = localBest();
+    root.querySelector('#lb-best').innerHTML = b===null ? 'No personal best yet - play a round!' :
+      ('Your best: <b>'+fmt(b)+'</b> '+esc(cfg.label||''));
+  }
+
+  function loadBoard(){
+    var rows = root.querySelector('#lb-rows');
+    rows.innerHTML = '<div class="lb-empty">Loading...</div>';
+    var url = API+'/api/game/leaderboard?game='+encodeURIComponent(cfg.game)+'&window='+curWin+'&limit=10';
+    var opts = {}; var tk = token(); if(tk) opts.headers = {'Authorization':'Bearer '+tk};
+    fetch(url, opts).then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(d){
+      apiUp = true; renderRows(d.entries||[], d.you||null);
+    }).catch(function(){
+      apiUp = false; renderRows(null, null);
+    });
+  }
+  function renderRows(entries, you){
+    var rows = root.querySelector('#lb-rows');
+    var youEl = root.querySelector('#lb-you');
+    if(entries===null){
+      rows.innerHTML = '<div class="lb-empty">Global leaderboards are warming up.<br>Your personal best is saved below and will post automatically once boards are live.</div>';
+      youEl.textContent=''; return;
+    }
+    if(!entries.length){ rows.innerHTML = '<div class="lb-empty">No scores yet for this window. Be the first!</div>'; }
+    else {
+      rows.innerHTML = entries.map(function(e,i){
+        var rk = e.rank||i+1; var me = you && you.rank===rk && e.name===you.name;
+        return '<div class="lb-row'+(rk===1?' top1':'')+(me?' me':'')+'"><div class="rk">'+(rk===1?'\uD83E\uDD47':rk)+'</div>'+
+               '<div class="nm">'+esc(e.name||'anon')+'</div><div class="vl">'+fmt(e.value)+'</div></div>';
+      }).join('');
+    }
+    if(you && you.rank){ youEl.textContent = 'You are #'+you.rank+(you.percentile!=null?(' \u00b7 top '+you.percentile+'%'):''); }
+    else youEl.textContent='';
+  }
+
+  function submit(value){
+    if(cfg==null) return;
+    value = Number(value); if(!isFinite(value)) return;
+    setLocalBest(value); renderBest();
+    var name = playerName();
+    if(!token() && !name){ name = askName() || ''; }
+    var body = { game: cfg.game, metric: cfg.metric, value: value, name: name };
+    var opts = { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) };
+    var tk = token(); if(tk) opts.headers['Authorization'] = 'Bearer '+tk;
+    fetch(API+'/api/game/score', opts).then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(d){
+      apiUp = true;
+      if(d.you && d.you.rank) toast('New score! You are #'+d.you.rank+' '+ (curWin==='today'?'today':'') );
+      loadBoard();
+    }).catch(function(){ apiUp=false; renderRows(null,null); });
+  }
+
+  function share(){
+    var b = localBest();
+    var msg = b===null ? ('Try '+ (cfg.shareName||'this AP CSP game') +' on APCSExamPrep:')
+                       : ('I scored '+fmt(b)+' '+(cfg.label||'')+' on '+(cfg.shareName||'this AP CSP game')+'. Beat me:');
+    var url = location.href;
+    if(navigator.share){ navigator.share({title:cfg.shareName||'AP CSP Game', text:msg, url:url}).catch(function(){}); return; }
+    var full = msg+' '+url;
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(full).then(function(){ toast('Challenge link copied!'); }).catch(function(){ window.prompt('Copy your challenge link:', full); }); }
+    else window.prompt('Copy your challenge link:', full);
+  }
+
+  function init(options){
+    cfg = Object.assign({ game:'game', metric:'score', label:'', higherIsBetter:true, shareName:'', mount:'#apcs-lb' }, options||{});
+    root = (options && options.mount && document.querySelector(options.mount)) || document.getElementById('apcs-lb');
+    if(!root) return;
+    root.id = 'apcs-lb';
+    shell(); loadBoard();
+    document.addEventListener('apcsGameScore', function(e){ if(e && e.detail && e.detail.value!=null) submit(e.detail.value); });
+  }
+
+  return { init: init, submit: submit, refresh: loadBoard };
+})();
+</script>
