@@ -16,10 +16,16 @@ public class CrabWorld extends World
 {
     /**
      * A world 600 by 400 pixels, one pixel per cell.
+     *
+     * The crab starts in the middle. The two worms are there so that lesson
+     * 1.3 has more than one object of the same class to point at, which is the
+     * entire difference between a class and an object.
      */
     public CrabWorld()
     {
         super(600, 400, 1);
         addObject(new Crab(), 300, 200);
+        addObject(new Worm(), 120, 90);
+        addObject(new Worm(), 480, 310);
     }
 }
