@@ -1,0 +1,159 @@
+<!--
+  PAGE: /pages/ap-csp-study-games-hub
+  TITLE: AP CSP Study Games | Free Interactive AP CSP Practice | APCSExamPrep.com
+  META: Free interactive AP Computer Science Principles study games. Binary Conversion Race, Robot Director, Redundant Routing, Internet Routing Simulator, and more, one game per topic across all 5 Big Ideas.
+-->
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap');
+  #cspgh *{box-sizing:border-box;margin:0;padding:0;}
+  #cspgh{font-family:"DM Sans",sans-serif;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;background:#f8fafc;line-height:1.55;padding-bottom:56px;}
+  #cspgh .hero{background:#0f1f3d!important;background-image:radial-gradient(ellipse 60% 70% at 85% 12%,rgba(26,86,219,.32) 0%,transparent 60%)!important;padding:48px 24px 44px;text-align:center;}
+  #cspgh .eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin-bottom:10px;}
+  #cspgh .hero h1{font-family:"DM Serif Display",serif!important;font-size:clamp(28px,5vw,44px)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:12px!important;}
+  #cspgh .hero p{font-size:16px!important;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;max-width:640px;margin:0 auto;}
+  #cspgh .hero .free{display:inline-block;margin-top:16px;background:rgba(74,222,128,.15)!important;border:1px solid rgba(74,222,128,.4)!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;font-size:13px;font-weight:700;padding:7px 18px;border-radius:100px;}
+  #cspgh .main{max-width:1040px;margin:0 auto;padding:36px 24px 0;}
+  #cspgh .sec-label{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;margin:8px 0 16px;}
+  #cspgh .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin-bottom:36px;}
+  #cspgh .card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:22px;display:flex;flex-direction:column;transition:box-shadow .15s,transform .15s;text-decoration:none;}
+  #cspgh a.card:hover{box-shadow:0 10px 30px rgba(26,86,219,.14);transform:translateY(-2px);border-color:#bfdbfe;}
+  #cspgh .card .bi{display:inline-block;align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 10px;border-radius:100px;margin-bottom:12px;}
+  #cspgh .bi2{background:#dbeafe!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;}
+  #cspgh .bi3{background:#dcfce7!important;color:#166534!important;-webkit-text-fill-color:#166534!important;}
+  #cspgh .bi4{background:#fef3c7!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;}
+  #cspgh .bi5{background:#ede9fe!important;color:#5b21b6!important;-webkit-text-fill-color:#5b21b6!important;}
+  #cspgh .bi1{background:#ffe4e6!important;color:#9f1239!important;-webkit-text-fill-color:#9f1239!important;}
+  #cspgh .card .icon{font-size:34px;line-height:1;margin-bottom:10px;}
+  #cspgh .card h3{font-family:"DM Serif Display",serif!important;font-size:20px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin-bottom:6px!important;}
+  #cspgh .card p{font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;margin-bottom:16px!important;flex:1;}
+  #cspgh .card .play{align-self:flex-start;background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:14px;font-weight:700;padding:9px 20px;border-radius:9px;}
+  #cspgh .card.soon{opacity:.72;}
+  #cspgh .card.soon .icon{filter:grayscale(1);opacity:.7;}
+  #cspgh .card .soon-tag{align-self:flex-start;font-size:12px;font-weight:700;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;background:#f1f5f9!important;padding:7px 16px;border-radius:9px;}
+  #cspgh .soon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-bottom:20px;}
+  #cspgh .mini{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;}
+  #cspgh .mini .bi{font-size:10px;}
+  #cspgh .mini h4{font-size:14px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin:6px 0 3px!important;}
+  #cspgh .mini span{font-size:12.5px;color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+  #cspgh .note{text-align:center;font-size:13px;color:#64748b!important;-webkit-text-fill-color:#64748b!important;max-width:640px;margin:8px auto 0;}
+</style>
+<div id="cspgh">
+  <div class="hero">
+    <div class="eyebrow">APCSExamPrep.com</div>
+    <h1>AP CSP Study Games</h1>
+    <p>Learn the AP Computer Science Principles concepts by playing. One focused game per topic, built to the real exam skills, all free.</p>
+    <div class="free">🎉 100% free • no login to play</div>
+  </div>
+  <div class="main">
+    <div class="sec-label">🎮 Play now</div>
+    <div class="grid">
+      <a class="card" href="/pages/ap-csp-game-binary-conversion-race">
+        <span class="bi bi2">Big Idea 2 • Data</span>
+        <div class="icon">🔢</div>
+        <h3>Binary Conversion Race</h3>
+        <p>Beat the clock converting decimal to 8-bit binary and back, using the place values 128 down to 1. Build streaks for bonus points.</p>
+        <span class="play">Play →</span>
+      </a>
+      <a class="card" href="/pages/ap-csp-game-robot-director">
+        <span class="bi bi3">Big Idea 3 • Algorithms</span>
+        <div class="icon">🤖</div>
+        <h3>Robot Director</h3>
+        <p>Program the AP robot with MOVE_FORWARD and ROTATE commands to reach the flag in the fewest steps. The robot problems, made playable.</p>
+        <span class="play">Play →</span>
+      </a>
+      <a class="card" href="/pages/ap-csp-game-redundant-routing">
+        <span class="bi bi4">Big Idea 4 • Networks</span>
+        <div class="icon">🔌</div>
+        <h3>Redundant Routing</h3>
+        <p>Cut the connections and watch the network reroute. Find the fewest cuts that sever the link, and learn why the Internet is fault tolerant.</p>
+        <span class="play">Play →</span>
+      </a>
+      <a class="card" href="/pages/ap-csp-game-internet-routing-simulator">
+        <span class="bi bi4">Big Idea 4 • Networks</span>
+        <div class="icon">📡</div>
+        <h3>Internet Routing Simulator</h3>
+        <p>Hop a packet router to router toward the server, then reroute around failures. See what a real outage looks like when every path is cut.</p>
+        <span class="play">Play →</span>
+      </a>
+      <a class="card" href="/pages/ap-csp-game-two-sides">
+        <span class="bi bi5">Big Idea 5 • Impact</span>
+        <div class="icon">⚖</div>
+        <h3>Two Sides</h3>
+        <p>Sort each effect of a computing innovation into beneficial or harmful. Most have both, and some are never intended.</p>
+        <span class="play">Play →</span>
+      </a>
+      <a class="card" href="/pages/ap-csp-game-bridge-the-divide">
+        <span class="bi bi5">Big Idea 5 • Impact</span>
+        <div class="icon">🌐</div>
+        <h3>Bridge the Divide</h3>
+        <p>Spend a limited budget to connect the most people and learn what really drives the digital divide.</p>
+        <span class="play">Play →</span>
+      </a>
+      <a class="card" href="/pages/ap-csp-game-spot-the-bias">
+        <span class="bi bi5">Big Idea 5 • Impact</span>
+        <div class="icon">🔍</div>
+        <h3>Spot the Bias</h3>
+        <p>Find where bias entered each system, in the data or the design, and see how computing amplifies it.</p>
+        <span class="play">Play →</span>
+      </a>
+      <a class="card" href="/pages/ap-csp-game-crowd-power">
+        <span class="bi bi5">Big Idea 5 • Impact</span>
+        <div class="icon">👥</div>
+        <h3>Crowd Power</h3>
+        <p>Decide when the crowd beats an expert, then rally enough contributions to hit the goal.</p>
+        <span class="play">Play →</span>
+      </a>
+      <a class="card" href="/pages/ap-csp-game-license-match">
+        <span class="bi bi5">Big Idea 5 • Impact</span>
+        <div class="icon">📄</div>
+        <h3>License Match</h3>
+        <p>Match each use to copyright, Creative Commons, open source, or public domain, and handle PII the right way.</p>
+        <span class="play">Play →</span>
+      </a>
+      <a class="card" href="/pages/ap-csp-game-phishing-net">
+        <span class="bi bi5">Big Idea 5 • Impact</span>
+        <div class="icon">🎣</div>
+        <h3>Phishing Net</h3>
+        <p>Catch phishing before it catches you, then lock down the account with strong passwords and MFA.</p>
+        <span class="play">Play →</span>
+      </a>
+    </div>
+
+    <div class="sec-label">🔧 More games coming</div>
+    <div class="soon-grid">
+      <div class="mini">
+<span class="bi bi1">BI1</span><h4>Bug Squasher</h4>
+<span>Classify and fix syntax, logic, and runtime errors.</span>
+</div>
+      <div class="mini">
+<span class="bi bi1">BI1</span><h4>Design Sprint</h4>
+<span>Order the program development process.</span>
+</div>
+      <div class="mini">
+<span class="bi bi2">BI2</span><h4>Compression Challenge</h4>
+<span>Lossless vs lossy, and the size you save.</span>
+</div>
+      <div class="mini">
+<span class="bi bi2">BI2</span><h4>Trend Hunter</h4>
+<span>Read data, dodge correlation-vs-causation traps.</span>
+</div>
+      <div class="mini">
+<span class="bi bi3">BI3</span><h4>Big-O Race</h4>
+<span>Linear vs nested growth as input scales.</span>
+</div>
+      <div class="mini">
+<span class="bi bi3">BI3</span><h4>Halving Hunter</h4>
+<span>Find the number in log2(n) guesses.</span>
+</div>
+      <div class="mini">
+<span class="bi bi4">BI4</span><h4>Parallel Scheduler</h4>
+<span>Split work across processors for speedup.</span>
+</div>
+      <div class="mini">
+<span class="bi bi4">BI4</span><h4>Packet Assembler</h4>
+<span>Reassemble out-of-order packets, TCP style.</span>
+</div>
+    </div>
+    <p class="note">Every game is also built into its matching lesson, where it counts toward your class gradebook. New games ship every week.</p>
+  </div>
+</div>
