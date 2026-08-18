@@ -103,3 +103,98 @@ Big Idea 3 still has 14 topics with no game: 3.1 to 3.8, 3.10, 3.12, 3.14, 3.15,
 4. **The paid bundle's 780 files, including 222 answer keys, are downloadable
    with no authentication.** Flagged repeatedly this session and still the
    largest open item on the CSP surface.
+
+---
+
+# Continued: a game for every Big Idea 3 topic
+
+Same unattended run, later. The two games above left Big Idea 3 with sixteen
+topics still uncovered. This section covers finishing them.
+
+## What shipped in the continuation
+
+Sixteen more standalone games, one per remaining topic. Every one was checked
+offline against its own logic and then played through in a real browser on at
+least two paths (a perfect run and a deliberately wrong one), with the score
+event and the POST to `/api/game/score` confirmed each time.
+
+| Topic | Game | The specific thing it punishes |
+|---|---|---|
+| 3.1 | Swap Shop | overwriting a value with nothing holding a copy |
+| 3.2 | Name the Thing | a half-finished rename, and naming a value that merely happens to be equal |
+| 3.3 | Mod Machine | a near-miss that is right on three inputs of four |
+| 3.4 | String Lab | passing an end position where a length is expected |
+| 3.5 | Gate Keeper | reading "not both" as one NOT over an AND |
+| 3.6 | Boundary Patrol | the value sitting exactly on the line |
+| 3.7 | Branch Runner | an ELSE that belongs to the outer IF, and an unreachable branch |
+| 3.8 | Iteration Station | REPEAT UNTIL overshooting by one pass |
+| 3.9 | Algorithm Assembler | initialising or reporting in the wrong zone |
+| 3.10 | List Surgeon | removing front to back and renumbering the index you still need |
+| 3.12 | Call Sheet | argument order, hidden by a tester passing equal values |
+| 3.13 | Procedure Shop | a parameter every caller passes the same value to |
+| 3.14 | Doc Detective | a name that reads backwards from what the call does |
+| 3.15 | Odds Maker | forgetting that RANDOM(a, b) includes both ends |
+| 3.16 | Sim Lab | leaving out a factor the answer depends on |
+| 3.18 | Halt or Not | mistaking slow for undecidable |
+
+Three games carry an explicit "this cannot be done" claim worth full marks
+(Swap Shop, Call Sheet, Sim Lab). A round that can only ever be lost teaches
+the lesson and then punishes the student for learning it.
+
+## Two corrections to things stated earlier in this run
+
+1. **3.9 and 3.13 did not have games.** The earlier note treated them as
+   covered. Reading the live lesson pages shows both embed the SAME game, Robot
+   Director, and neither mounts a leaderboard component, so the score it
+   dispatches goes nowhere. Both now have a topic-specific standalone game.
+2. **`shopify/games/_leaderboard.html` was an incomplete mirror.** It carried
+   the component's script and not the `#apcs-lb` style block that sits above it
+   on the live page, and every class the script emits is styled there and
+   nowhere else. All five standalone pages that existed at that point would
+   have shipped an unstyled list. The stylesheet is now in the file.
+
+## What the checks caught, and what they did not
+
+Worth recording, because the pattern is the useful part.
+
+Caught by the offline checks before a browser ever ran: an unescaped apostrophe
+in "De Morgan's law" that was a hard syntax error; pass labels reading
+"pass 01" from a missing pair of parentheses; a String Lab cut with two correct
+answers because SUBSTRING clamped instead of refusing; a Doc Detective option
+that returned the right value for the wrong reason and would have scored full
+marks; an Algorithm Assembler build that ran statements in declaration order
+rather than placement order, making it unloseable.
+
+Caught only by a screenshot: the Odds Maker progress bar never moved, because
+the script set the fill width on every batch while the stylesheet declared
+`width:0 !important` on that same element. The page was valid, the script ran,
+the hazard checks passed, and the bar stayed empty. That one is now a static
+check in the smoke suite, confirmed by reintroducing the bug and watching CI
+go red.
+
+Caught by the new orphan check: `doc-detective.html` sitting in the games
+directory before it was registered anywhere.
+
+## The new suite
+
+`smoke/csp-game-pages.js`, wired into the derived CI list, now 184 assertions.
+It refuses a standalone page that duplicates a game embedded in a lesson page,
+a game id the server registry does not know, a game file no builder entry
+builds, a script block that does not compile, and any style property a script
+sets that the stylesheet locks with `!important`.
+
+## Still open
+
+- **Nothing has been imported to Shopify.** The CSV builds cleanly and every
+  page has been played in a browser, but no import has been run. That is a
+  deliberate stop: imports are one at a time and want a human watching.
+- **The hub does not link any of these.** A game page nothing points at is a
+  page nobody finds. That is the next piece of work.
+- **The two-page bridge defect** still awaits the Shopify-side pipeline. See
+  `docs/csp-game-bridge-fix.md`.
+- **PR #182's 18 notes pages must not be imported.** They duplicate pages that
+  already exist at `ap-csp-topic-3-{N}-guided-notes`.
+- **The paid bundle's 780 files, including 222 answer keys, are still
+  downloadable with no authentication.** Flagged repeatedly across this run and
+  unaddressed. It is not in scope for this branch, and it is the largest open
+  problem I have seen.
