@@ -83,7 +83,7 @@ async function citedCodes(topic, slug) {
       const stray = [...cited].filter((c) => !framework.has(c));
       const hit = [...cited].filter((c) => framework.has(c));
       const missing = [...framework].filter((c) => !cited.has(c));
-      rows.push({ topic, framework: framework.size, cited: hit.length, missing, stray });
+      rows.push({ topic, slug, framework: framework.size, cited: hit.length, missing, stray });
     } catch (e) {
       failures.push({ topic, error: e.message });
     }
