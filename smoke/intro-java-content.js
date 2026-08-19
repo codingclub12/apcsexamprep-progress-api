@@ -630,6 +630,62 @@ ok('11.6b no question embeds a title prefix it meant to strip',
 const ijColon = ijFaqNames.filter((x) => /causes [^?]*:/.test(x.q));
 ok('11.6c no cause-question carries a stray colon', ijColon.length === 0, ijColon.slice(0, 5));
 
+// ── 11.6e EVERY PAGE HAS A WAY BACK UP ───────────────────────────────────────
+//  A lesson page had Previous and Next and nothing else. That is fine for a
+//  student walking the course in order and useless for the one who arrived on
+//  lesson 4.4 from a search result: no link to the unit, no link to the course,
+//  no way to see what else exists. The site nav is not a substitute, because
+//  these are Shopify pages whose body is the whole experience.
+//
+//  Prev/next is not a way up. It moves sideways, and on the first and last page
+//  of a unit it does not even do that. So this checks for an actual upward
+//  link, by target rather than by presence of a nav.
+//
+//  Project pages point at the project LIST on the hub rather than the hub's
+//  top, which is the anchor PROJECTS_ANCHOR exists to keep honest: the id on
+//  the hub and the fragment on ten project pages come from one constant, and
+//  this check fails if the hub ever stops emitting it.
+section('11.6e Every page has a link back up to its hub');
+
+const IJ_PAGE = require('../lib/intro-java-page');
+
+// Structured data is stripped first, and that is the whole point of the check.
+// Every lesson page already carried its unit hub URL inside a BreadcrumbList,
+// so a naive substring test passed on pages that gave the reader nothing to
+// click. A crumb in JSON-LD is for Google. A student needs an anchor.
+const visible = (p) => p.bodyHtml.replace(/<script[\s\S]*?<\/script>/g, '');
+
+const ijNoWayUp = [];
+for (const p of pages) {
+  const unit = (p.bodyHtml.match(/data-unit="(unit-\d)"/) || [])[1];
+  if (!unit || !visible(p).includes(`/pages/${IJ_PAGE.unitHandle(unit)}"`)) {
+    ijNoWayUp.push(`${p.handle}: no href to ${unit ? IJ_PAGE.unitHandle(unit) : 'any unit hub'}`);
+  }
+}
+ok('11.6e1 every lesson page links to its own unit hub',
+  ijNoWayUp.length === 0, ijNoWayUp.slice(0, 5));
+
+const ijHelpNoUp = helpPagesForLinks()
+  .filter((p) => !visible(p).includes(`/pages/${IJ_PAGE.COURSE_HANDLE}`))
+  .map((p) => p.handle);
+ok('11.6e2 every help page links to the course hub', ijHelpNoUp.length === 0, ijHelpNoUp.slice(0, 5));
+
+const ijProjNoUp = projectPagesForLinks()
+  .filter((p) => !visible(p).includes(IJ_PAGE.PROJECTS_URL))
+  .map((p) => p.handle);
+ok('11.6e3 every project page links back to the project list, not just the hub top',
+  ijProjNoUp.length === 0, ijProjNoUp.slice(0, 5));
+
+// The fragment is worthless if nothing on the hub answers to it.
+const ijCourseHub = hubsForLinks().find((p) => p.handle === IJ_PAGE.COURSE_HANDLE);
+ok('11.6e4 the course hub emits the anchor those project links point at',
+  !!ijCourseHub && ijCourseHub.bodyHtml.includes(`id="${IJ_PAGE.PROJECTS_ANCHOR}"`));
+
+// One definition, two callers. Copying the formula into a second file is how
+// 83 pages once ended up pointing at a handle nobody built.
+ok('11.6e5 the unit handle formula is shared, not copied',
+  require('../lib/intro-java-hub-page').unitHandle === IJ_PAGE.unitHandle);
+
 // ── 11.6d EVERY FIGURE URL IS ONE SHOPIFY ACTUALLY SERVES ────────────────────
 //  This shipped broken. The renderer built figure URLs as
 //  https://apcsexamprep.com/cdn/shop/files/<name>.png, which looks entirely
