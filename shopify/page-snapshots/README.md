@@ -135,3 +135,15 @@ cards. It is the body from the Admin API, not a scrape of the rendered page: an
 earlier extraction started at the wrapper div and lost both the page's own
 `<!-- PAGE: -->` header and its stylesheet, which would have imported cleanly
 and rendered an unstyled page.
+
+## CSP Command Center, before Big Idea 3 got its page links
+
+`csp-command-center.before-bi3-pagelinks.html` is the stored Body HTML of
+`/pages/csp-command-center` as it stood on 2026-08-19, `updatedAt`
+2026-08-04T22:42:42Z. Big Ideas 1, 2, 4 and 5 each carried a Lesson page and a
+Guided notes link per topic; all eighteen Big Idea 3 topics carried an empty
+`pageLinks` array.
+
+Rollback path for the import that fills those eighteen. The page is 132 KB and
+most of it is a minified `var DATA` blob, so a hand edit is not recoverable by
+eye; this file is.
