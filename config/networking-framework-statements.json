@@ -1,0 +1,1262 @@
+{
+ "_comment": [
+  "Essential Knowledge and Learning Objective STATEMENTS from College Board's",
+  "published AP Networking course framework. This is the authoring source: the",
+  "text of each of the 284 EK statements, so a missing code can be written",
+  "against what it actually says rather than what its number suggests.",
+  "",
+  "HOW IT WAS EXTRACTED, AND WHY THAT MATTERS",
+  "  The framework is a two-column PDF and a naive linear text extraction gets it",
+  "  wrong in three separate ways, each of which silently attributes the wrong",
+  "  text to a code:",
+  "    1. On some pages the statement text is emitted BEFORE its code.",
+  "    2. Topic-start pages render their first row twice, so a box arrives as",
+  "       '4.2.A.1 4.2.A.1'.",
+  "    3. The page geometry is not constant. Most pages put the objective column",
+  "       at x0~70 and knowledge at x0~225; others use x0~201 and x0~355. A single",
+  "       hardcoded split swallows the first statement of a topic.",
+  "  scripts/ that produced this reads each page column-aware, deriving the split",
+  "  from where the codes actually sit on that page.",
+  "",
+  "VALIDATION",
+  "  284 of 284 EK and 60 of 60 LO extracted, none missing, none extra, none",
+  "  shorter than 73 characters. Every word of every statement was confirmed to",
+  "  appear in the raw text of that statement's own page, so nothing was mixed",
+  "  across pages.",
+  "",
+  "KNOWN LIMITATION",
+  "  The five codes in word_order_disturbed contain all their words but in a",
+  "  scrambled order, because inline monospace command names sit in separate text",
+  "  boxes and get pulled ahead of the sentence. They are usable as a checklist of",
+  "  what the statement covers. Do NOT quote them verbatim; read the page instead.",
+  "  Every EK carries its PDF page number for exactly that purpose.",
+  "",
+  "PUNCTUATION IS VERBATIM. 25 statements contain en or em dashes because",
+  "College Board wrote them that way. The repo's no-em-dash rule governs prose",
+  "this project authors, not quotations of someone else's document. Normalizing",
+  "them would corrupt the quote, which is the one thing this file exists to",
+  "preserve."
+ ],
+ "source": {
+  "url": "https://apcentral.collegeboard.org/media/pdf/ap-networking-course-framework.pdf",
+  "extracted_on": "2026-08-19",
+  "pages": 102,
+  "sha256": "2dd45c6fc59c90533a1570102a3be0ec9fcae4bf731b389525fe25a80c80bd8f"
+ },
+ "totals": {
+  "essential_knowledge": 284,
+  "learning_objectives": 60
+ },
+ "word_order_disturbed": [
+  "4.3.A.6",
+  "4.3.A.7",
+  "4.4.C.1",
+  "4.4.C.2",
+  "4.4.C.3"
+ ],
+ "learning_objectives": {
+  "1.1.A": "Explain how to troubleshoot common device and network issues.",
+  "1.1.B": "Identify likely root causes of a device issue using diagnostic tools and techniques.",
+  "1.1.C": "Determine an appropriate solution to resolve a device issue.",
+  "1.2.A": "Configure a device for secure wireless connectivity to a network.",
+  "1.2.B": "Determine strategies to improve speed, reliability, or performance based on task requirements such as working, streaming, and gaming.",
+  "1.3.A": "Identify the impacts of digital and physical attacks on individual devices.",
+  "1.3.B": "Determine appropriate security controls to limit the impacts of common device attacks.",
+  "1.4.A": "Implement strong passwords to help prevent unauthorized access.",
+  "1.4.B": "Implement device- and account-level security practices to prevent phishing, credential compromise, and data loss.",
+  "1.4.C": "Configure wireless network security features.",
+  "2.1.A": "Identify likely root causes of a SOHO network issue using diagnostic tools and techniques.",
+  "2.1.B": "Determine an appropriate solution to resolve a SOHO network issue.",
+  "2.2.A": "Explain how MAC addresses are structured and used to identify devices.",
+  "2.2.B": "Explain how IP addresses are structured and used to identify devices. Explain how IP addresses are structured and used to identify devices. Explain how IP addresses are structured and used to identify devices.",
+  "2.2.C": "Identify different types of IPv4 addresses.",
+  "2.2.D": "Document an existing network including devices, addresses, and connections.",
+  "2.3.A": "Determine appropriate endpoint devices to meet user needs in a SOHO network.",
+  "2.3.B": "Determine appropriate data transmission media to meet specified user needs.",
+  "2.3.C": "Explain why dynamic or static IP addressing should be used in a given scenario.",
+  "2.4.A": "Evaluate an AI-generated network design, configuration, or troubleshooting suggestion.",
+  "2.4.B": "Configure a media server for local file storage, gaming, or streaming.",
+  "2.5.A": "Identify impacts of potential security vulnerabilities in a SOHO network.",
+  "2.5.B": "Determine appropriate security controls to mitigate vulnerabilities in a SOHO network.",
+  "2.6.A": "Explain how firewalls and network segmentation can be used to improve network security.",
+  "2.6.B": "Determine appropriate device grouping for network segmentation to improve performance and security.",
+  "3.1.A": "Determine the endpoint devices required for a given scenario.",
+  "3.1.B": "Determine the number and type of network connections required for a given scenario.",
+  "3.2.A": "Explain how data travel through a segmented network.",
+  "3.2.B": "Determine appropriate network segmentation methods for a given scenario.",
+  "3.2.C": "Explain why a specific wired network topology would be selected in a given scenario.",
+  "3.2.D": "Evaluate an AI-generated network configuration for a LAN with multiple segments.",
+  "3.3.A": "Configure an IP address on a device and verify the settings.",
+  "3.3.B": "Determine whether two devices are on the same network based on their IP addresses and subnet masks.",
+  "3.3.C": "Configure a local area network (LAN).",
+  "3.3.D": "Configure a wireless access point to support a guest network and an internal network.",
+  "3.4.A": "Identify the impacts of common threats and vulnerabilities in a segmented LAN.",
+  "3.4.B": "Determine appropriate security Determine appropriate security controls to limit the impacts controls to limit the impacts of common threats and of common threats and vulnerabilities in a segmented vulnerabilities in a segmented LAN. LAN.",
+  "3.4.C": "subnetting to Configure subnetting to Configure subnetting to appropriately segment a appropriately segment a appropriately segment a network. network. network. Configure subnetting to appropriately segment a network. Configure subnetting to appropriately segment a network.",
+  "3.5.A": "Explain how MAC filtering can increase security.",
+  "3.5.B": "Determine an appropriate firewall for a scenario.",
+  "3.5.C": "Configure firewall rules for different network segments. Configure firewall rules for different network segments. Configure firewall rules for different network segments.",
+  "3.6.A": "Document the network design, including IP configuration, devices, and connections.",
+  "3.6.B": "Identify likely root causes of Identify likely root causes of an issue in a LAN with multiple an issue in a LAN with multiple segments using diagnostic segments using diagnostic tools and techniques. tools and techniques. Identify likely root causes of an issue in a LAN with multiple segments using diagnostic tools and techniques.",
+  "3.6.C": "Determine an appropriate solution to resolve an issue in a LAN with multiple segments.",
+  "4.1.A": "Identify evidence of compromised confidentiality, integrity, or availability.",
+  "4.1.B": "Explain how unreliable connectivity impacts organizations.",
+  "4.2.A": "Describe the purpose of common network protocols.",
+  "4.2.B": "Describe the purpose and organization of the OSI and TCP/IP models.",
+  "4.2.C": "Explain how to use the OSI and TCP/IP models when troubleshooting.",
+  "4.3.A": "Apply appropriate commands using a CLI to navigate computer systems. Apply appropriate commands using a CLI to navigate computer systems. Apply appropriate commands using a CLI to navigate computer systems.",
+  "4.3.B": "Apply CLI commands to securely transfer files.",
+  "4.4.A": "Explain how data travel between different networks.",
+  "4.4.B": "Explain how routing protocols and metrics influence the path of data.",
+  "4.4.C": "Determine the path of data using a routing tool.",
+  "4.5.A": "Identify the impacts of common threats and vulnerabilities in a managed network.",
+  "4.5.B": "Determine appropriate security controls to limit the impacts of common threats and vulnerabilities in a managed network.",
+  "4.5.C": "Identify indicators in intrusion detection system (IDS) or intrusion prevention system (IPS) logs that may suggest potential threats or network issues.",
+  "4.5.D": "Explain how to configure a VLAN.",
+  "4.6.A": "Explain how IPv6 addresses support modern networks.",
+  "4.6.B": "Identify ways to improve the reliability and availability of networked systems."
+ },
+ "essential_knowledge": {
+  "1.1.A.1": {
+   "page": 20,
+   "statement": "Users often encounter devices and networks with performance or connectivity issues. Solutions to these issues may not be immediately evident because computers and networks involve many interconnected hardware and software layers."
+  },
+  "1.1.A.2": {
+   "page": 20,
+   "statement": "The first step in the troubleshooting process is gathering information to identify an issue. This can include user reports about unexpected behavior, loss of functionality, and the circumstances under which an issue occurs. Many connectivity and performance issues can often be resolved with simple, well-known fixes, such as restarting or checking physical connections, that should be applied before launching the troubleshooting process to save time, effort, and resources."
+  },
+  "1.1.A.3": {
+   "page": 20,
+   "statement": "Diagnostic tools and techniques can be used to establish a theory of probable cause for the loss of functionality in devices and networks. This can save time while troubleshooting by narrowing the potential solutions. Many devices have embedded troubleshooting tools that can check settings to identify issues."
+  },
+  "1.1.A.4": {
+   "page": 20,
+   "statement": "When determining potential solutions, simple and nondisruptive options should be tested first. Solutions can be ranked by time, difficulty, and expense to implement, with priority given to simple and cost-effective solutions like closing applications and restarting devices, before moving to more complex solutions like replacing hardware and upgrading software."
+  },
+  "1.1.A.5": {
+   "page": 21,
+   "statement": "After selecting an appropriate solution, it should be implemented and then verified to confirm that the issue is resolved. Verification includes checking that the device or system is functioning normally."
+  },
+  "1.1.A.6": {
+   "page": 21,
+   "statement": "If functionality is not restored after the implementation of a solution, there could be more than one issue causing a loss of functionality, or the root cause might have been misidentified. The troubleshooting process should continue by implementing other potential solutions, documenting the steps taken, and verifying results."
+  },
+  "1.1.A.7": {
+   "page": 21,
+   "statement": "AI tools can assist in the troubleshooting process and enhance troubleshooting efficiency but should be used alongside traditional diagnostic methods and human judgment. Solutions suggested by an AI tool should be manually verified to ensure functionality has been restored. AI tools can be used to: \n-  suggest potential causes based on error messages and patterns in user-reported issues \n-  identify appropriate solutions by analyzing diagnostic data, error messages, and system behavior \n-  assist in implementing solutions for common issues by providing suggestions and verification methods based on diagnostic data"
+  },
+  "1.1.B.1": {
+   "page": 21,
+   "statement": "Common issues on endpoint devices include slow or no network connectivity, delays in opening files, and applications that are slow to respond or that freeze or crash. These can often be resolved by implementing common solutions. If functionality is not restored, the troubleshooting process should continue with gathering diagnostic information. Common solutions for device issues include: \n-  restarting the device \n-  closing unnecessary applications or programs \n-  disconnecting and reconnecting to the network"
+  },
+  "1.1.B.2": {
+   "page": 22,
+   "statement": "High processor (central processing unit, or CPU) or memory (random access memory, or RAM) usage can cause applications to become slow or unresponsive. Task manager applications can be used to check resource usage. \n-  Sustained CPU usage above 80\u201390% indicates the processor is overloaded and may cause slow or unresponsive performance. \n-  Sustained RAM usage above 80\u201390% indicates the system is using a significant amount of available short-term memory, which is needed to keep applications running smoothly."
+  },
+  "1.1.B.3": {
+   "page": 22,
+   "statement": "Insufficient available storage space can lead to slow file access and degraded application performance. System storage levels below 10% indicate that the device may not have enough space to perform reliably, which can lead to slower performance and limited functionality."
+  },
+  "1.1.B.4": {
+   "page": 22,
+   "statement": "A weak wireless signal or disconnection from the access point can cause applications to fail to load content or sync data. This can be identified by checking the network icon in the notification bar, which displays signal strength and network connection status."
+  },
+  "1.1.B.5": {
+   "page": 22,
+   "statement": "Overheating can cause a device to slow down, shut down unexpectedly, or lose connectivity as a protective measure. Devices may overheat when ventilation is poor, the processor is overloaded for an extended period, or the device is used in a hot or sunny environment. Many devices display temperature warnings or automatically reduce performance to cool down."
+  },
+  "1.1.C.1": {
+   "page": 23,
+   "statement": "Solutions for high CPU usage include ending high-usage or unresponsive tasks or processes."
+  },
+  "1.1.C.2": {
+   "page": 23,
+   "statement": "Solutions for high RAM usage include: \n-  deleting temporary files \n-  installing more RAM if the problem is persistent"
+  },
+  "1.1.C.3": {
+   "page": 23,
+   "statement": "Solutions for low available storage include: \n-  deleting temporary and unused files and applications \n-  moving files to external or cloud storage \n-  installing additional storage if the problem is persistent"
+  },
+  "1.1.C.4": {
+   "page": 23,
+   "statement": "Solutions for limited or lost network connectivity include: \n-  verifying the network name and password \n-  moving closer to the wireless access point"
+  },
+  "1.1.C.5": {
+   "page": 23,
+   "statement": "Solutions for overheating include: \n-  checking for appropriate ventilation \n-  ending high-usage tasks or processes \n-  moving a device to a cooler area or out of direct sunlight"
+  },
+  "1.1.C.6": {
+   "page": 23,
+   "statement": "After implementing a solution, users should verify that functionality has been restored by confirming that applications respond normally or that the internet and network resources are accessible."
+  },
+  "1.2.A.1": {
+   "page": 24,
+   "statement": "Before connecting to a wireless network, a device must have wireless capability enabled. This includes turning on Wi-Fi or ensuring the wireless adapter is active."
+  },
+  "1.2.A.2": {
+   "page": 24,
+   "statement": "To connect to a wireless network, the user must know the network name\u2014also called the service-set identifier (SSID)\u2014and password if required. Available wireless networks can be viewed by opening the network settings for a device, often accessible through the notification area or settings menu. Users should connect only to trusted networks and avoid unknown or unprotected networks, which may allow unauthorized access to data or devices."
+  },
+  "1.2.A.3": {
+   "page": 24,
+   "statement": "A connection to a wireless network can be initiated by selecting the desired SSID from the list of available networks. If the network is protected, the device will prompt the user to enter the password. Wireless network passwords are case-sensitive."
+  },
+  "1.2.A.4": {
+   "page": 24,
+   "statement": "After connecting to a wireless network, users should verify the connection by checking the network icon for any errors and confirming that they are able to access the internet and network resources."
+  },
+  "1.2.B.1": {
+   "page": 25,
+   "statement": "Different tasks require different levels of device performance and network speed. Users can take steps to improve their device performance."
+  },
+  "1.2.B.2": {
+   "page": 25,
+   "statement": "Network bandwidth is the amount of data that can move through a network at a specific time. Bandwidth is important for the speed of a network connection. Users can improve available bandwidth by: \n-  disconnecting other devices from the network \n-  pausing large updates or downloads"
+  },
+  "1.2.B.3": {
+   "page": 25,
+   "statement": "Network connection strength is important for reliability. Low signal strength can cause lag. Users can improve device connection strength by: \n-  moving a device closer to the router or wireless access point \n-  reducing signal interference from solid objects such as walls \n-  switching to a wired Ethernet connection when available"
+  },
+  "1.2.B.4": {
+   "page": 25,
+   "statement": "Device processing and available storage are important for device performance during high-usage tasks. Users can improve device performance by: \n-  closing unused applications and browser tabs \n-  deleting unused or temporary files and applications"
+  },
+  "1.3.A.1": {
+   "page": 26,
+   "statement": "Digital and physical attacks are designed to gain unauthorized access to accounts, data, or devices. Unauthorized access can result in exposure of sensitive or personal information, including financial records, health data, and personally identifiable information (PII). Exposed data may be leaked or sold."
+  },
+  "1.3.A.2": {
+   "page": 26,
+   "statement": "Information gathered from compromised accounts or exposed credentials can be used to commit fraud, make purchases, or apply for loans. Victims may experience credit score damage, financial debt, or long-term identity misuse."
+  },
+  "1.3.A.3": {
+   "page": 26,
+   "statement": "Unauthorized access to devices and data used by a small business or organization can damage its reputation and disrupt operations. Leaked client information, unprofessional communication, or service interruptions can lead to erosion of trust, negative publicity, and loss of customers."
+  },
+  "1.3.A.4": {
+   "page": 26,
+   "statement": "Malware can cause devices to behave abnormally, slow down, crash, or become unusable. Malware can allow attackers to access files, monitor activity, or take remote control of a device. Infected devices may also be used to spread malware to other systems."
+  },
+  "1.3.B.1": {
+   "page": 27,
+   "statement": "Security controls are implemented to mitigate vulnerabilities. Selecting an appropriate security control requires understanding specific device vulnerabilities and their potential impacts."
+  },
+  "1.3.B.2": {
+   "page": 27,
+   "statement": "Security controls to mitigate weak authentication include: \n-  implementing strong passwords that are harder to guess \n-  enabling multifactor authentication (MFA) to add additional layers of security beyond passwords \n-  using biometric verification methods, such as fingerprint scans and facial recognition, that authenticate users based on unique physical characteristics"
+  },
+  "1.3.B.3": {
+   "page": 27,
+   "statement": "Phishing refers to an adversary sending deceptive communications, like spoofed emails, fake websites, or urgent messages, to mislead users into revealing credentials or downloading malware. Security controls to limit the impact of phishing can include enabling email filtering to block malicious messages and training users to detect and report phishing messages."
+  },
+  "1.3.B.4": {
+   "page": 27,
+   "statement": "Shoulder surfing refers to an unauthorized individual observing or recording a user\u2019s screen or keyboard to gather information. Security controls to limit the impact of shoulder surfing can include: \n-  installing privacy screens that limit viewing angles, making displays visible only to users directly in front of them \n-  positioning screens away from high-traffic areas to reduce visibility to others"
+  },
+  "1.3.B.5": {
+   "page": 27,
+   "statement": "Security controls to limit the impact of malware can include: \n-  installing and regularly updating antivirus and antimalware software \n-  keeping operating systems and applications updated to patch known vulnerabilities"
+  },
+  "1.4.A.1": {
+   "page": 28,
+   "statement": "Implementing complexity in passwords includes using at least one character from each character set. Passwords with characters from each character set are significantly harder for an adversary to guess or compromise than passwords that use characters from only one or two character sets. The character sets often required are: \n-  uppercase letters (A\u2013Z) \n-  lowercase letters (a\u2013z) \n-  numeric digits (0\u20139) \n-  special characters (!\u201d#$%&\u2019()*+,-./:;<=>?@ [ \\ ] ^_`{|}~)"
+  },
+  "1.4.A.2": {
+   "page": 28,
+   "statement": "Implementing a minimum password length means that users must have at least a certain number of characters in their password. The longer and more complex a password is, the longer it will take an automated tool to find the password."
+  },
+  "1.4.A.3": {
+   "page": 28,
+   "statement": "Implementing a lockout period after a certain number of invalid login attempts prevents an adversary from continuously guessing passwords. Many organizations lock a user\u2019s account after 3\u20135 invalid login attempts. The lockout duration varies."
+  },
+  "1.4.A.4": {
+   "page": 28,
+   "statement": "Strong passwords should not include common or easily guessed words or personal information like birthdates, pet names, or usernames."
+  },
+  "1.4.A.5": {
+   "page": 29,
+   "statement": "Implementing a passphrase involves using a sequence of words or a sentence that is easy for the user to remember but difficult for an adversary to guess. Passphrases are typically longer than passwords, increasing the total number of possible combinations and making them more resistant to automated attacks."
+  },
+  "1.4.B.1": {
+   "page": 29,
+   "statement": "To prevent phishing-based account compromise, users should verify message sources and use caution before interacting with emails or messages, especially those requesting sensitive information. Users should: \n-  verify the sender\u2019s email address \n-  hover over links to inspect their destination before clicking \n-  contact organizations directly through official websites or phone numbers"
+  },
+  "1.4.B.2": {
+   "page": 29,
+   "statement": "To reduce the risk of credential or data exposure over untrusted networks, users should use secure connections when accessing sensitive data. Users should: \n-  connect through secure networks, such as a virtual private network (VPN) \n-  avoid using unknown public networks \n-  ensure websites use the HTTPS protocol, which encrypts traffic"
+  },
+  "1.4.B.3": {
+   "page": 29,
+   "statement": "To prevent exploitation of known vulnerabilities that can lead to device compromise or data loss, users should keep all software and firmware current. Software refers to applications and operating systems, while firmware is embedded software that controls hardware components. Users should enable automatic updates to maintain the latest patches."
+  },
+  "1.4.B.4": {
+   "page": 29,
+   "statement": "To prevent unauthorized account access through credential reuse or guessing, users should use strong, unique passwords for each account to prevent access if any single set of credentials is compromised."
+  },
+  "1.4.B.5": {
+   "page": 30,
+   "statement": "To prevent unauthorized access through known default credentials on devices, users should update login information during initial setup. Users should: \n-  change default usernames and passwords on devices like routers and cameras \n-  recognize that Internet of Things (IoT) devices, such as smart speakers and thermostats, often have insecure default settings that should be changed"
+  },
+  "1.4.B.6": {
+   "page": 30,
+   "statement": "To protect devices and accounts from unauthorized access, users should configure strong security settings. Users should: \n-  enable MFA \n-  enable screen lock with a strong PIN, password, or biometric authentication \n-  disable automatic connection to open or public wireless networks \n-  disable application permissions when not in use to limit data exposure"
+  },
+  "1.4.C.1": {
+   "page": 30,
+   "statement": "Wireless networks are convenient but vulnerable to security attacks involving unauthorized access and data interception."
+  },
+  "1.4.C.2": {
+   "page": 30,
+   "statement": "Encrypting data before transmission makes it more difficult for an adversary to read captured data. Wireless networks should be configured to use the highest level of encryption available in the router or wireless access point settings. WPA3 is recommended; WPA2 is the minimum requirement. WEP and WPA are insecure and should not be used. Wi-Fi Protected Setup (WPS) should be disabled."
+  },
+  "1.4.C.3": {
+   "page": 30,
+   "statement": "Creating a unique service set identifier (SSID) and strong authentication measures for a wireless network prevents unauthorized users from accessing the network by compromising passwords."
+  },
+  "1.4.C.4": {
+   "page": 30,
+   "statement": "Password-protected networks should be configured with long, complex, and unique passwords."
+  },
+  "2.1.A.1": {
+   "page": 34,
+   "statement": "Slow or no network connectivity is a common issue in a small office/home office (SOHO) network. Networks contain multiple devices and physical connections, any of which can be the source of connectivity issues. Many issues can be resolved by implementing common solutions. If functionality is not restored, troubleshooting should continue by gathering diagnostic information. Common solutions for SOHO network connectivity include: \n-  restarting the network router or wireless access point \n-  reseating, or removing and reinserting, a loose or unplugged cable \n-  replacing damaged cables or connectors"
+  },
+  "2.1.A.2": {
+   "page": 34,
+   "statement": "A hardware failure or disconnection can prevent a device from accessing a network. This can be identified by observing the indicator lights on the router or access point. The device manual or label should be referenced to interpret the indicator lights. \n-  Steady or flashing green lights typically indicate normal operation. \n-  Red or orange lights may indicate a hardware issue or connection failure. \n-  Unlit indicator lights may indicate a faulty port or cable, or an unplugged cable."
+  },
+  "2.1.A.3": {
+   "page": 35,
+   "statement": "Network congestion or hardware failures can cause slow or failed connectivity to applications, websites, and services. This can be identified using the command-line interface (CLI) tool ping to check network connectivity and response times. The command ping 8.8.8.8 can be used to test external connectivity by sending a connection request to one of Google\u2019s public servers. \n-  High response times over 100ms or lost packets may indicate network congestion or hardware issues. \n-  No response or 100% packet loss may indicate a local disconnection or failure."
+  },
+  "2.1.A.4": {
+   "page": 35,
+   "statement": "Incorrect IP configuration can prevent a device from communicating on a network. This can be identified using the CLI command (Windows) or device\u2019s configuration and troubleshoot local network issues. ipconfig ifconfig (Linux) to check a \n-  IP addresses in the 169.254.0.0\u2013 169.254.255.255 range are Automatic Private IP Addressing (APIPA) addresses, indicating there was a problem assigning the device address. \n-  A loopback address of 127.0.0.1 indicates the device may not be connected to any network and can only send data to itself."
+  },
+  "2.1.B.1": {
+   "page": 35,
+   "statement": "Solutions for a network hardware issue or connection failure indicated by red, orange, or unlit lights on a router or switch include: \n-  using a different Ethernet cable \n-  plugging the cable into a different port"
+  },
+  "2.1.B.2": {
+   "page": 35,
+   "statement": "Solutions for poor network performance or congestion indicated by ping results that show response times over 100ms, or more than 1\u20132% packet loss include: \n-  changing a wireless connection to a wired connection \n-  pausing large downloads \n-  moving a device closer to a wireless access point"
+  },
+  "2.1.B.3": {
+   "page": 36,
+   "statement": "Solutions for a device that is not connected to a network and displays an APIPA address include: \n-  disconnecting and reconnecting to the network \n-  releasing and renewing the IP address with ipconfig the commands /renew ipconfig and /release"
+  },
+  "2.1.B.4": {
+   "page": 36,
+   "statement": "Solutions for a device that is not connected to a network and displays only a loopback address include: \n-  ensuring the device Wi-Fi and network adapter are enabled \n-  restarting the device"
+  },
+  "2.1.B.5": {
+   "page": 36,
+   "statement": "To verify that network connectivity has been restored, users should confirm that the devices can successfully access the internet or network resources like shared drives, printers, or servers and that websites and network services load without delay. If network access or response times have not improved, users should gather new diagnostic information and implement additional solutions."
+  },
+  "2.2.A.1": {
+   "page": 37,
+   "statement": "A network node is any device connected to a network, while a host is a type of node that sends or receives data on the network, such as a computer or printer. Hosts are often referred to as endpoints. Network devices such as switches, routers, and access points are not considered hosts."
+  },
+  "2.2.A.2": {
+   "page": 37,
+   "statement": "A device needs a network interface card (NIC) to connect to a network. Media access control (MAC) addresses, also known as physical or hardware addresses, are assigned directly to a NIC. A MAC address identifies the device with the associated NIC. MAC addresses are hardcoded into a NIC and remain the same even if a device switches to a different network."
+  },
+  "2.2.A.3": {
+   "page": 37,
+   "statement": "Each MAC address is a 48-bit identifier. The first half of the address, called the Organizationally Unique Identifier (OUI), identifies the manufacturer, and the second half identifies the specific device. MAC addresses can be represented in three hexadecimal formats: \n-  6F72696F6E2A \n-  6F:72:69:6F:6E:2A \n-  6F-72-69-6F-6E-2A"
+  },
+  "2.2.A.4": {
+   "page": 38,
+   "statement": "Hexadecimal refers to base-16 numbers and uses the characters 0\u20139 and A\u2013F. Hexadecimal is more compact than binary, allowing humans to more easily read, write, and understand large binary numbers. ILLUSTRATIVE EXAMPLE To convert a number from decimal to hexadecimal, divide the number by 16 and find the quotient. Use the remainder for the hex digit and divide the quotient by 16 again. Repeat the steps until the quotient is equal to 0. For example, the decimal number 79 is represented in hexadecimal as 4F: 1. 79/16 = 4, remainder 15 2. 15 \u2192 F 3. 4/16 = 0, remainder 4 4. 4 \u2192 4 5. 79 = 4F"
+  },
+  "2.2.A.5": {
+   "page": 38,
+   "statement": "MAC addresses of the devices physically connected to a network switch are stored in the content addressable memory (CAM) table of the switch. The CAM table allows the switch to direct data to the correct device instead of broadcasting to all ports. ILLUSTRATIVE EXAMPLE A network switch shows the following entries in the CAM table: \n-  Device A: 6D:6F:72:69:61:68 --> port 1 Device B: 4F:72:69:6F:6E:2A --> port 2 Device C: 70:6F:6C:61:72:24 --> port 3 \n-  \n-  When device A sends data to device B, the switch uses the CAM table to forward the data only to port 2, instead of broadcasting the data to all ports."
+  },
+  "2.2.B.1": {
+   "page": 38,
+   "statement": "An Internet Protocol (IP) address is a logical address assigned to a device on a specific network. When a device switches networks, its IP address typically changes."
+  },
+  "2.2.B.2": {
+   "page": 39,
+   "statement": "An IPv4 address is a 32-bit number divided into four 8-bit sections called octets. IPv4 addresses are typically written in dotted decimal format, where each octet is expressed as a decimal number from 0 to 255, and octets are separated by a period. IPv4 addresses consist of a network ID, shared by all devices on a local network, and a host ID, which uniquely identifies each device. ILLUSTRATIVE EXAMPLE The dotted decimal notation of an IPv4 address condenses its 32-bit binary representation into a more readable format. Each group of 8 bits, or octet, is converted to a decimal value between 0 and 255. The binary IPv4 address 10001110.11111010.10111111.01001110 is written in dotted decimal notation as 142.250.191.78."
+  },
+  "2.2.B.3": {
+   "page": 39,
+   "statement": "The network ID of an IPv4 address may be 1\u20133 octets depending on the class of the network. The size of the host ID indicates the number of unique host addresses available on a network."
+  },
+  "2.2.B.4": {
+   "page": 39,
+   "statement": "Classful addressing divides the IPv4 address space into five classes. \n-  Class A allows around 17 million possible hosts. \n-  \n-  Class B allows around 65,000 hosts. Class C allows around 254 hosts. Class D and Class E are reserved for other purposes."
+  },
+  "2.2.B.5": {
+   "page": 39,
+   "statement": "IPv4 addresses must be paired with subnet masks, which are commonly represented in dotted decimal format. The subnet mask is used to determine the network bits and the host bits. Common subnet masks include: \n-  255.0.0.0 Class A to indicate the first octet is the network ID \n-  255.255.0.0 Class B to indicate the first two octets are the network ID \n-  255.255.255.0 Class C to indicate the first three octets are the network ID ILLUSTRATIVE EXAMPLES \n-  With a subnet mask of 255.255.0.0, the first two octets of an IP address are network bits and the second two are host bits. \n-  With a subnet mask of 255.255.255.0, the first three octets are network bits and the fourth octet is the space available for host addresses."
+  },
+  "2.2.B.6": {
+   "page": 40,
+   "statement": "The Address Resolution Protocol (ARP) maps a device\u2019s IP address to its MAC address, ensuring that data are delivered to the correct destination. When a device needs to send data to another device on the same local network, an ARP request containing the known destination IP address is sent to all devices on the network. The device with the corresponding IP address sends an ARP reply that contains its MAC address."
+  },
+  "2.2.C.1": {
+   "page": 40,
+   "statement": "Public addresses are addresses that can be assigned to organizations to be used externally. A public IP address is unique and assigned by the ISP to identify devices that are directly reachable from the internet. This address is used to communicate on the internet and to other networks."
+  },
+  "2.2.C.2": {
+   "page": 40,
+   "statement": "Private addresses are used within a local area network (LAN) only; routers drop any data addressed to private IP addresses. Private addresses add a layer of security, as privately addressed devices cannot be directly accessed from an external source. Private IP addresses fall into these ranges: \n-  Class A: 10.0.0.0\u201310.255.255.255 \n-  Class B: 172.16.0.0\u2013172.31.255.255 \n-  Class C: 192.168.0.0\u2013192.168.255.255"
+  },
+  "2.2.C.3": {
+   "page": 40,
+   "statement": "APIPA can be used to automatically address hosts if the Dynamic Host Configuration Protocol (DHCP) server, which automates IP assignment and configuration, is unavailable or misconfigured. When APIPA is used, hosts will have an IP address in the range 169.254.0.0\u2013169.254.255.255."
+  },
+  "2.2.C.4": {
+   "page": 40,
+   "statement": "Loopback addresses are used by a device to send data for testing purposes. The most common loopback address is 127.0.0.1, which refers to the local machine."
+  },
+  "2.2.D.1": {
+   "page": 41,
+   "statement": "Network diagrams can be created to plan a network configuration and document a network after setup is complete. Network maps and diagrams create visual representations of the equipment that exists in a network, including routers, switches, access points, servers, and endpoints, with solid lines for wired connections and dashed lines for wireless connections. Device MAC and IP addresses should be included in the diagram to assist in troubleshooting and expansion."
+  },
+  "2.2.D.2": {
+   "page": 41,
+   "statement": "A SOHO network serves a small number of users on a single LAN, typically in a home or small business. SOHO networks commonly include routers, switches, access points, endpoints, firewalls, and cabling."
+  },
+  "2.2.D.3": {
+   "page": 41,
+   "statement": "A router directs data between the local network and other networks. It is often combined with a modem in a single device to provide access to the internet through an internet service provider (ISP)."
+  },
+  "2.2.D.4": {
+   "page": 41,
+   "statement": "A switch connects wired devices and manages network traffic within a LAN."
+  },
+  "2.2.D.5": {
+   "page": 41,
+   "statement": "A wireless access point (WAP) enables wireless connectivity by connecting to a router or switch. Many SOHO networks use a wireless gateway, which is a single device that combines the functionality of a modem, router, switch, and WAP."
+  },
+  "2.2.D.6": {
+   "page": 41,
+   "statement": "Endpoints are devices that connect to a network to send and receive data, such as laptops, PCs, printers, network attached storage (NAS), servers, 3D printers, voice over IP (VoIP) phones, IoT devices, and mobile phones."
+  },
+  "2.2.D.7": {
+   "page": 41,
+   "statement": "Common cable types used in a SOHO network include twisted pair (Ethernet), coaxial, and fiber optic, with twisted pair being the most common for internal wired connections. Coaxial and fiber optic cables are often used by ISPs to externally connect to the SOHO router."
+  },
+  "2.3.A.1": {
+   "page": 42,
+   "statement": "Computers, including desktops, laptops, and servers, are ideal for tasks that require high interactivity, multitasking, or processing power, such as content creation, software development, and data analysis."
+  },
+  "2.3.A.2": {
+   "page": 42,
+   "statement": "Internet of Things (IoT) devices are common items, such as thermostats, appliances, smart TVs, security systems, and wearable technology like fitness trackers and medical monitors, that are capable of connecting to other devices and the internet. These devices are ideal for automating tasks, monitoring environments, streaming media, or enabling remote control in SOHO networks."
+  },
+  "2.3.A.3": {
+   "page": 42,
+   "statement": "Mobile devices, including smartphones, handheld gaming devices, and tablets, are small and lightweight network endpoints that connect wirelessly to networks. These are ideal for flexible, on-the-go communication, quick data entry, and mobile access to applications."
+  },
+  "2.3.A.4": {
+   "page": 42,
+   "statement": "Organizations and small businesses use specialized endpoint devices for specific needs. Specialized endpoint devices include: \n-  printers and scanners for handling documents \n-  voice over IP (VoIP) phones that enable voice calls over an internet connection \n-  point-of-sale (POS) terminals for transaction processing and inventory management"
+  },
+  "2.3.B.1": {
+   "page": 43,
+   "statement": "When determining the most appropriate transmission medium for a LAN, users should consider factors such as device location, performance needs, susceptibility to interference, ease of installation, and cost. The best option balances performance, reliability, and budget based on user needs."
+  },
+  "2.3.B.2": {
+   "page": 43,
+   "statement": "Twisted pair cabling can come in shielded (STP) or unshielded (UTP), with shielded offering more protection against interference. Twisted pair is suitable for devices that need a faster and more stable connection than wireless, such as desktop computers, printers, or NAS devices. Considerations for using twisted pair include: \n-  Cost: affordable \n-  Ease of installation: easy \n-  Connection speed: supports high-speed connections of up to 10Gbps, up to 100 meters \n-  Susceptibility to interference: STP should be used in environments with high EMI, such as near HVAC equipment, fluorescent lighting, or other electronic devices that emit radio signals, while UTP is sufficient for most standard installations"
+  },
+  "2.3.B.3": {
+   "page": 43,
+   "statement": "Wireless connections, such as Wi-Fi, are ideal for devices that need mobile access like smartphones, tablets, laptops, and IoT devices. Considerations for using wireless connections include: \n-  Cost: affordable \n-  Ease of installation: easy, especially in environments where installing cables would be difficult \n-  Connection speed: varies with signal strength but can support 500Mbps\u20131Gbps \n-  Susceptibility to interference: more susceptible than wired connections to interference and signal degradation due to walls, other devices, or network congestion"
+  },
+  "2.3.B.4": {
+   "page": 44,
+   "statement": "Coaxial cable may be used when upgrading or maintaining existing networks that already use coaxial connectors. Coaxial cable is less common in modern LANs but may be used in older buildings for cable-based internet connections. Considerations for using coaxial include: \n-  Cost: moderate, typically more expensive than twisted pair but cheaper than fiber optic cabling \n-  Ease of installation: more rigid and harder to install than twisted pair \n-  Connection speed: supports high- speed connections of up to 1Gbps, with significant signal loss over 450 meters \n-  Susceptibility to interference: offers better shielding from interference than twisted pair"
+  },
+  "2.3.B.5": {
+   "page": 44,
+   "statement": "Fiber optic cable should be used when there is a need for ultra-high bandwidth, complete EMI resistance, or maximum connection stability and speed. Fiber optic cable is not commonly used inside SOHO LANs. Considerations for using fiber include: \n-  Cost: more expensive than wireless, coaxial, or twisted pair \n-  Ease of installation: fragile and requires special tools for installation \n-  Connection speed: supports high-speed connections of up to 1\u2013100Gbps, with transmission distances of up to 100 km \n-  Susceptibility to interference: immune to EMI because the signal is carried by light instead of electrical pulses"
+  },
+  "2.3.C.1": {
+   "page": 44,
+   "statement": "IP addresses can be configured as dynamic or static to meet the needs of users or organizations. Dynamic IP addresses are assigned automatically and may change when a device reconnects to the network or after a set period. Static IP addresses remain constant."
+  },
+  "2.3.C.2": {
+   "page": 45,
+   "statement": "Dynamic addressing is preferred for networks that require flexibility and efficient use of IP addressing space. Dynamic Host Configuration Protocol (DHCP) automates IP assignment and configuration, assigning addresses only to devices that are currently connected to the network."
+  },
+  "2.3.C.3": {
+   "page": 45,
+   "statement": "Static addressing is appropriate for devices that need a consistent address on a network, such as servers, printers, remote services, or security systems. Dynamic addressing is better suited for mobile or temporary devices like tablets, laptops, or guest devices."
+  },
+  "2.3.C.4": {
+   "page": 45,
+   "statement": "Dynamic addressing is easier to manage on networks with limited administrative support; it is common in homes and small offices. Static addressing may be preferred when precise control is needed, but it requires manual setup and careful tracking to prevent IP address conflicts."
+  },
+  "2.4.A.1": {
+   "page": 46,
+   "statement": "AI tools can be used to generate suggestions for SOHO network design, configuration, or troubleshooting. Effective prompts should include details such as the number of users, types of devices, internet usage patterns, and budget constraints. Vague prompts may lead to impractical or overly complex recommendations."
+  },
+  "2.4.A.2": {
+   "page": 46,
+   "statement": "Suggestions generated by AI may include unrealistic device recommendations, overcomplicated setups, and incorrect IP addressing schemes. Some suggestions might be technically accurate but inappropriate for a specific network."
+  },
+  "2.4.A.3": {
+   "page": 46,
+   "statement": "When evaluating AI-generated SOHO network suggestions, consider whether the design meets requirements for performance, ease of setup, wireless coverage, and cost- effectiveness. Recommendations should align with the simplicity and manageability expected in a small or home office environment and should be realistic, secure, and user-friendly."
+  },
+  "2.4.B.1": {
+   "page": 46,
+   "statement": "A media server is a device on a network that can be used to stream content to other devices, store shared files, and host multiplayer games. Hosting a local media server provides more control, faster access, and higher privacy than utilizing a cloud-based or subscription media service; it is often more cost effective."
+  },
+  "2.4.B.2": {
+   "page": 47,
+   "statement": "When configuring a media server on a network, a host device such as a computer, gaming console, or NAS must be selected. The host device will store, process, and share data with other devices on the network. The host device needs enough processing power, storage, and memory to handle the requests from devices on the network. This device must be connected to the network; a wired connection is recommended for speed and reliability."
+  },
+  "2.4.B.3": {
+   "page": 47,
+   "statement": "To allow other devices in a network to access shared data on a media server, file-sharing software must be installed or enabled. This may include applications for media streaming, game hosting, or file sharing, depending on how the server will be used."
+  },
+  "2.4.B.4": {
+   "page": 47,
+   "statement": "To enable the media server to access media, game files, or shared documents, these files must be stored on the host device. Folders should be organized and stored where the server software or file-sharing service is configured to share them with other devices on the network."
+  },
+  "2.4.B.5": {
+   "page": 47,
+   "statement": "A static IP address or hostname can be configured for a media server to ensure it can be consistently located on the network by other devices."
+  },
+  "2.4.B.6": {
+   "page": 47,
+   "statement": "Verification of successful configuration of a media server involves connecting to the server from another device and confirming access to shared files, media, or games."
+  },
+  "2.5.A.1": {
+   "page": 48,
+   "statement": "Unauthorized access, exposure or loss of sensitive data, and disruption of services such as internet, file sharing, or printing can occur when a SOHO network lacks proper security controls. Common vulnerabilities such as weak passwords, default configurations, or unmonitored devices increase the risk of these impacts."
+  },
+  "2.5.A.2": {
+   "page": 48,
+   "statement": "Unauthorized access to a network can allow an adversary to change network configurations or disable security controls. This can occur when routers and access points use default usernames, passwords, or settings that are widely known or easily guessed."
+  },
+  "2.5.A.3": {
+   "page": 48,
+   "statement": "Data loss, device compromise, or malware infection can result when network devices are not updated or secured. These impacts may occur due to outdated firmware or the connection of untrusted devices with known vulnerabilities."
+  },
+  "2.5.A.4": {
+   "page": 48,
+   "statement": "Unauthorized access to additional systems or devices can occur when an adversary moves laterally through a network. This often occurs through insecure IoT devices or unknown guest devices with weak credentials or unmonitored access."
+  },
+  "2.5.B.1": {
+   "page": 49,
+   "statement": "Security controls can be implemented to mitigate vulnerabilities in SOHO networks, which often stem from misconfigurations, outdated software, or insecure devices. To determine an appropriate control, users must first identify the vulnerability and consider how it could affect data, devices, or services."
+  },
+  "2.5.B.2": {
+   "page": 49,
+   "statement": "Security controls to mitigate the risk of default configurations on routers and access points include: \n-  changing default login credentials on routers and access points \n-  enabling WPA2 or WPA3 wireless encryption \n-  disabling WPS"
+  },
+  "2.5.B.3": {
+   "page": 49,
+   "statement": "Security controls to mitigate firmware vulnerabilities include regularly installing firmware updates to apply security patches and enabling automatic updates if available to ensure devices have the latest firmware version."
+  },
+  "2.5.B.4": {
+   "page": 49,
+   "statement": "Security controls to mitigate the risk of IoT vulnerabilities include: \n-  changing default login credentials on IoT devices \n-  applying firmware and software patches regularly \n-  isolating IoT devices on a network segment separate from critical devices and data to limit lateral movement"
+  },
+  "2.5.B.5": {
+   "page": 49,
+   "statement": "Security controls to mitigate the risk of unknown devices include establishing a guest network that is separate from the main network; this allows visitors to access the internet while isolating internal devices and data."
+  },
+  "2.6.A.1": {
+   "page": 50,
+   "statement": "Technical controls like firewalls and network segmentation are important security strategies that limit unauthorized access by restricting traffic flow through a network."
+  },
+  "2.6.A.2": {
+   "page": 50,
+   "statement": "Firewalls and network segmentation can be used to create different zones of security in a network, such as separating guest traffic from internal systems, which helps prevent malware or adversaries from moving laterally through a network."
+  },
+  "2.6.A.3": {
+   "page": 50,
+   "statement": "Firewalls can be used to limit the traffic allowed in or out of a network by applying rules that evaluate information such as IP addresses, ports, and protocols. By limiting the allowed traffic, firewalls reduce the risk of data exposure."
+  },
+  "2.6.A.4": {
+   "page": 50,
+   "statement": "Network segmentation can be used to divide a network into smaller segments, isolating sensitive or high-risk devices and data, reducing unnecessary traffic, and creating distinct security zones."
+  },
+  "2.6.B.1": {
+   "page": 50,
+   "statement": "Network segmentation allows devices to be grouped into zones based on shared roles, security risk levels, or performance needs. When determining device groups for segmentation, consideration should be given to the function of a device, the potential security risks, and the performance requirements."
+  },
+  "2.6.B.2": {
+   "page": 51,
+   "statement": "Devices can be grouped by their roles to simplify troubleshooting and expansion. Device groups based on roles could include: \n-  security camera systems \n-  media devices, including game consoles and streaming servers \n-  family devices, such as laptops, tablets, and phones"
+  },
+  "2.6.B.3": {
+   "page": 51,
+   "statement": "Devices can be grouped by their risk level to isolate vulnerable or untrusted devices and prevent threats from spreading across the network. Device groups based on risk levels could include: \n-  office computers and servers that need high security \n-  IoT devices, such as thermostats, speakers, and smart TVs, which are often vulnerable \n-  guest devices placed on a separate wireless segment to limit access to internal resources"
+  },
+  "2.6.B.4": {
+   "page": 51,
+   "statement": "Devices can be grouped by their performance needs to prioritize the traffic of high- bandwidth or low-latency tasks. Device groups based on performance needs could include: \n-  gaming consoles and computers used for online play \n-  media servers used for streaming \n-  devices used for high-demand remote video editing or rendering"
+  },
+  "2.6.B.5": {
+   "page": 51,
+   "statement": "Devices can be grouped by the type of user to reduce unnecessary traffic and simplify access control to data and network resources. Device groups based on user types could include: \n-  office departments, such as sales and accounting \n-  education users, such as teachers, students, and technicians"
+  },
+  "3.1.A.1": {
+   "page": 56,
+   "statement": "The devices needed for a segmented network can vary based on the user role and performance required. Several different types of devices are often needed."
+  },
+  "3.1.A.2": {
+   "page": 56,
+   "statement": "Laptops are preferred for users that need to interact with multiple browser-based platforms, type frequently, or multitask across applications."
+  },
+  "3.1.A.3": {
+   "page": 56,
+   "statement": "Tablets and smartphones are suitable for mobile access to forms or dashboards to view and update data quickly."
+  },
+  "3.1.A.4": {
+   "page": 56,
+   "statement": "Gaming consoles, desktops, or high- performance laptops are necessary for environments where high frame rates and low input latency are required, such as in esports or cybersecurity competitions, video editing and rendering, and large data analysis."
+  },
+  "3.1.A.5": {
+   "page": 56,
+   "statement": "Desktops or high-performance laptops with wired Ethernet ports should be used for management workstations or local servers to provide reliability and consistent access to administrative tools such as file hosting and streaming."
+  },
+  "3.1.B.1": {
+   "page": 57,
+   "statement": "The device connections needed for a segmented network can vary based on the primary function and performance required."
+  },
+  "3.1.B.2": {
+   "page": 57,
+   "statement": "Wireless networks can provide scalable access for many devices. Wireless networks should be used to create: \n-  guest networks for visitors that need basic internet access but should not access internal resources \n-  internal networks for standard users with access to tools and platforms \n-  administrator networks for secure, mobile access to administrative tools and data"
+  },
+  "3.1.B.3": {
+   "page": 57,
+   "statement": "One wireless access point (WAP) can typically support 30\u201350 mobile devices or up to 20 computers or laptops. Because wireless signal strength decreases with distance and obstacles such as walls or EMI, large or irregular spaces may require multiple WAPs to maintain reliable connectivity for all users."
+  },
+  "3.1.B.4": {
+   "page": 57,
+   "statement": "Wired connections should be used for devices that require high-reliability, low-latency, or large data transfers, including: \n-  high-performance or gaming computers on an internal user network \n-  management workstations, servers, and livestreaming equipment on an internal staff network"
+  },
+  "3.1.B.5": {
+   "page": 57,
+   "statement": "Each wired connection requires a port on a network switch. To properly equip a network, consideration should be given to: \n-  the total number of wired devices \n-  the available ports on each switch \n-  the number and length of cables needed \n-  the number of switches needed"
+  },
+  "3.1.B.6": {
+   "page": 57,
+   "statement": "Routers connect different network segments together and direct data between them based on IP addresses. Each device in a segmented network must be assigned a default gateway, the router, so that it can send data to devices in other segments or to the internet."
+  },
+  "3.2.A.1": {
+   "page": 58,
+   "statement": "A segmented network divides devices into groups to improve performance, management, and security. Each segment has its own range of IP addresses and is typically used to separate user types, functions, or resources. Networks can be segmented physically with network hardware or logically with software configurations."
+  },
+  "3.2.A.2": {
+   "page": 58,
+   "statement": "When preparing data to be sent, a packet is created with a header that contains fields for the source IP address, the destination IP address, and other information to properly route the data. A sending host will compare its own IPv4 address and subnet mask with the destination address. \n-  If the destination is on the same network segment, the data are sent directly to the destination MAC address through a switch. \n-  If the destination IP address is on a different network or segment, the data are sent to the default gateway, or router, to be directed to the correct network."
+  },
+  "3.2.A.3": {
+   "page": 58,
+   "statement": "A router contains a routing table that shows possible routes that packets can travel. When a router receives data, the destination IP address is compared to the routing table entries to determine the segment the data should be sent to, and the router forwards the packet to a switch on the correct segment to be delivered to the destination device."
+  },
+  "3.2.B.1": {
+   "page": 59,
+   "statement": "Devices, applications, and services should be grouped based on their sensitivity, access requirements, and traffic needs. Segmenting guest access, IoT devices, user workstations, and internal services reduces congestion from broadcast messages and limits an adversary\u2019s ability to move laterally."
+  },
+  "3.2.B.2": {
+   "page": 59,
+   "statement": "Physical segmentation should be used when maximum isolation and security are needed, such as in restricted zones or separate departments. Physical segmentation uses separate switches, routers, or cabling to build isolated subnetworks. It increases complexity and cost but provides strong separation. ILLUSTRATIVE EXAMPLE A university computer science department designed a testing lab that is connected to its own switch and router, separate from the switches and routers used by the university\u2019s classrooms and offices. Because the lab uses separate network hardware, traffic is physically isolated from the rest of the network."
+  },
+  "3.2.B.3": {
+   "page": 59,
+   "statement": "Virtual local area networks (VLANs) should be used to provide a flexible way to separate network traffic and devices without requiring extra physical hardware. VLANs allow flexible grouping of devices connected to the same switch, making them ideal for separating departments, device types, or user roles on shared hardware. ILLUSTRATIVE EXAMPLE An office connects employee computers, VoIP phones, and printers to the same managed switch, while their switch ports are assigned to different VLANs. So all devices share the same physical switch, but the VLAN assignments keep employee data traffic, voice traffic, and printing traffic logically separated."
+  },
+  "3.2.B.4": {
+   "page": 59,
+   "statement": "Subnetting should be used to organize devices by IP range and support routing, access control, or efficient address allocation. Subnetting is well suited for environments that require firewall enforcement between IP groups or broadcast control across multiple segments. Subnetting divides a large network into smaller, logically separated address ranges."
+  },
+  "3.2.B.5": {
+   "page": 60,
+   "statement": "Wireless segmentation using multiple SSIDs should be used when different user groups need separate wireless access, such as staff and guests. These SSIDs can be assigned to separate VLANs or subnets, providing both traffic isolation and access control."
+  },
+  "3.2.C.1": {
+   "page": 60,
+   "statement": "Network topologies are selected based on the specific needs of a network, including reliability, cost, and ease of maintenance. These factors influence how devices are connected and how traffic flows across the network. Modern networks typically use star, mesh, and hybrid, while topologies like bus and ring are generally avoided due to their limited fault tolerance and scalability."
+  },
+  "3.2.C.2": {
+   "page": 60,
+   "statement": "In a star topology, each node is connected indirectly to every other node through a central network device, typically a network switch. All data pass through this central point, making the network easy to scale and troubleshoot."
+  },
+  "3.2.C.3": {
+   "page": 60,
+   "statement": "In a mesh topology, each node is connected directly to every other node, providing multiple paths for data to travel. This topology has a high fault tolerance but requires more cabling, devices, and management."
+  },
+  "3.2.C.4": {
+   "page": 60,
+   "statement": "Hybrid topologies are often used in larger networks to combine elements of star and mesh to balance performance, reliability, and cost. They are commonly used in large LANs where different segments of the network have different needs or constraints."
+  },
+  "3.2.C.5": {
+   "page": 60,
+   "statement": "Reliability is a key factor in networks where uptime is essential. \n-  Star topology is reliable because all nodes are independently connected, but the central switch is a single point of failure. \n-  Mesh topology is more reliable and offers higher fault tolerance because multiple data paths exist, allowing communication to continue even if one connection fails."
+  },
+  "3.2.C.6": {
+   "page": 61,
+   "statement": "Cost to install and maintain often influences topology choice. \n-  Star topology is relatively cost-effective due to the minimal cabling and hardware requirements. \n-  Mesh topology is more expensive and complex due to the number of connections and cabling required."
+  },
+  "3.2.C.7": {
+   "page": 61,
+   "statement": "Ease of setup and maintenance is important for long-term network management. \n-  Star topology is easy to install, scale, and troubleshoot, as each device connects independently; this is ideal for networks with limited resources. \n-  Mesh topology is more complex to install, scale, and maintain due to redundant connections; this is ideal for networks with dedicated support."
+  },
+  "3.2.D.1": {
+   "page": 61,
+   "statement": "AI tools can be used to generate suggestions for topologies, segmentation strategies, and devices needed for a segmented LAN. Prompts should clearly define technical requirements such as traffic flow, security policies, redundancy needs, and physical layout constraints. Incomplete prompts may result in flawed or partial designs."
+  },
+  "3.2.D.2": {
+   "page": 61,
+   "statement": "Suggestions generated by AI may include missing or incomplete segments, suggestions that only address some of the identified requirements, and devices or connections that are not the best solution. Suggestions can be technically accurate while adding unnecessary complexity or cost."
+  },
+  "3.2.D.3": {
+   "page": 61,
+   "statement": "AI tools are valuable for generating ideas and identifying potential areas of concern or opportunities for improvement, but any AI output should be evaluated and verified before being implemented to ensure it aligns with the needs, goals, and constraints of the network."
+  },
+  "3.3.A.1": {
+   "page": 62,
+   "statement": "A static IP address is assigned manually, while dynamic addresses are leased by a DHCP server that manages a pool of available IP addresses."
+  },
+  "3.3.A.2": {
+   "page": 62,
+   "statement": "A static IP address can be configured on a host device by accessing the network settings and manually entering the IP address, subnet mask, and default gateway. Every IP address in a LAN must be unique and within the IP address range of the network."
+  },
+  "3.3.A.3": {
+   "page": 62,
+   "statement": "The DHCP server, typically built into a router or switch, manages and automatically assigns hosts a range of IP addresses from the DHCP pool. To configure a DHCP pool users: \n-  access the web interface or CLI of the network device \n-  define the IP address range of the DHCP pool \n-  set the subnet mask, default gateway, and network address \n-  specify the IP address renewal frequency, often referred to as a lease"
+  },
+  "3.3.A.4": {
+   "page": 62,
+   "statement": "DHCP can be enabled on a host device by selecting the option to obtain IP addresses automatically in the network settings."
+  },
+  "3.3.A.5": {
+   "page": 63,
+   "statement": "Verify that the IP configuration, subnet mask, default gateway, and MAC address ipconfig match intended settings using , ifconfig , or network settings. MAC addresses may appear as \u201cPhysical Address,\u201d \u201cHardware Address,\u201d or \u201cEther Address.\u201d"
+  },
+  "3.3.B.1": {
+   "page": 63,
+   "statement": "IPv4 address and subnet mask notation simplifies binary notation for ease of human use; each octet is a set of eight bits, or binary digits. In dotted decimal format, each octet is converted into a decimal number between 0 and 255."
+  },
+  "3.3.B.2": {
+   "page": 63,
+   "statement": "The 32 bits of an IPv4 address are divided into two sections: network bits and host bits. The subnet mask paired with the IPv4 address is used to determine the network and host bits of the IPv4 address. A subnet mask is a sequence of ones (1) followed by a sequence of zeros (0). The ones designate the network bits, while the trailing sequence of zeros designates the host bits."
+  },
+  "3.3.B.3": {
+   "page": 63,
+   "statement": "Classless Inter-Domain Routing (CIDR) notation uses a forward slash followed by the number of 1 bits in the subnet mask. ILLUSTRATIVE EXAMPLES \n-  /24 = 11111111.11111111.11111111.0000 0000 = 255.255.255.0 \n-  /16 = 11111111.11111111.00000000.0000 0000 = 255.255.0.0 \n-  /26 = 11111111.11111111.11111111.1100 0000 = 255.255.255.192"
+  },
+  "3.3.B.4": {
+   "page": 64,
+   "statement": "Two IPv4 addresses belong to the same network when they have matching network bits and subnet masks. To determine this, the network portion of each address should be compared using the subnet mask. If the network portions are the same, the devices are on the same network. ILLUSTRATIVE EXAMPLE With a subnet mask 255.255.255.0, the first three octets are the network bits and the last octet consists of the host bits. For example: \n-  IP Address 1: 192.168.1.10 \n-  IP Address 2: 192.168.1.20 \n-  IP Address 3: 192.168.2.30 The network bits match on the first two IP addresses as they are on the same network, but the third address is on a different network."
+  },
+  "3.3.C.1": {
+   "page": 64,
+   "statement": "To physically connect and configure a LAN, a variety of tools and devices are needed, including: \n-  appropriate cabling to connect devices \n-  cable stripper or wire stripper to remove insulation jackets from cables \n-  connectors, such as RJ45, to connect Ethernet cables to devices \n-  crimping tool to attach connectors to cables \n-  cable management and labeling tools to organize and secure cables and power cords \n-  network devices and endpoints \n-  personal safety equipment like safety glasses and gloves"
+  },
+  "3.3.C.2": {
+   "page": 64,
+   "statement": "When connecting and configuring a LAN, the devices, cabling, and network needs must be identified to determine the appropriate topologies and settings. Network design should be completed before connecting and configuring devices."
+  },
+  "3.3.C.3": {
+   "page": 64,
+   "statement": "Settings on a network switch like the password, IP address, and subnet mask can be manually assigned using the CLI or the graphical user interface (GUI) of the switch\u2019s management console. The management console can be accessed by connecting through a console cable."
+  },
+  "3.3.C.4": {
+   "page": 65,
+   "statement": "A router or gateway is required to provide access to external networks, including the internet. The router must be configured with an IP address and subnet mask to act as the default gateway for devices on the local network."
+  },
+  "3.3.C.5": {
+   "page": 65,
+   "statement": "Wireless connectivity can be added to a LAN by installing a wireless access point or enabling wireless features on a wireless router. The WAP should be configured with an SSID, wireless security settings, an IP address, and a subnet mask."
+  },
+  "3.3.C.6": {
+   "page": 65,
+   "statement": "Endpoints on the network must have their IP addresses and subnet masks configured to meet the requirements of the network. IP addresses can be assigned individually using static addressing or automatically using DHCP."
+  },
+  "3.3.C.7": {
+   "page": 65,
+   "statement": "To verify connectivity of devices on a network, ping can be used to send Internet Control Message Protocol (ICMP) packets to a specific IP address. If successfully connected, the target device will respond to the ICMP request. For example, will send ICMP packets to the device with the IP address 192.168.1.127. ping 192.168.1.127"
+  },
+  "3.3.D.1": {
+   "page": 65,
+   "statement": "Most wireless access points allow a guest network to be created to provide internet access without access to the internal network. This provides a level of protection for the main network."
+  },
+  "3.3.D.2": {
+   "page": 65,
+   "statement": "An internal wireless network should be configured first to ensure the settings are correct and the internal devices and resources can communicate. This includes creating an SSID with a strong password, enabling WPA2 or WPA3 encryption, and disabling WPS."
+  },
+  "3.3.D.3": {
+   "page": 65,
+   "statement": "A guest network can be enabled through the router or access point settings. The settings can typically be accessed by entering the IP address of the router or access point in a web browser and logging in with the administrator credentials."
+  },
+  "3.3.D.4": {
+   "page": 66,
+   "statement": "When the guest network feature is enabled on a router or access point, the guest network configuration is available and is similar to configuring a standard wireless network. A separate SSID must be created with a strong password and WPA2 or WPA3 encryption enabled."
+  },
+  "3.3.D.5": {
+   "page": 66,
+   "statement": "Additional measures that can be implemented on a guest network include: \n-  limiting the number of devices \n-  disabling access to the internal network \n-  setting access hours or session time limits \n-  enabling a captive portal that requires users to log in and agree to terms of use"
+  },
+  "3.3.D.6": {
+   "page": 66,
+   "statement": "Correct configuration of a guest wireless network can be verified by connecting a device to the network. The device should have access to the internet without access to internal network resources."
+  },
+  "3.4.A.1": {
+   "page": 67,
+   "statement": "Unauthorized access, unverified device connections, and data exposure are common impacts in segmented networks with multiple user types and devices. These risks highlight the need for appropriate access controls to ensure confidentiality, integrity, and availability of data."
+  },
+  "3.4.A.2": {
+   "page": 67,
+   "statement": "Unauthorized access to administrative systems or confidential data can occur when user groups, devices, or resources are not properly separated by access controls. This lack of segmentation may also lead to interference with shared resources or user productivity."
+  },
+  "3.4.A.3": {
+   "page": 67,
+   "statement": "Sensitive data and network resources may be accessed by unauthorized users when wireless networks use weak security methods, such as simple passwords, outdated encryption like WEP, or no encryption at all."
+  },
+  "3.4.A.4": {
+   "page": 67,
+   "statement": "Sensitive systems and internal data may be compromised if unknown or unverified devices are allowed to connect to the network. These devices may intercept traffic, spread malware, or bypass internal security controls."
+  },
+  "3.4.A.5": {
+   "page": 67,
+   "statement": "An adversary may move laterally across a network and gain access to multiple systems or segments where firewall rules are weak or misconfigured."
+  },
+  "3.4.B.1": {
+   "page": 68,
+   "statement": "Segmented networks use security controls to reduce the impact of unauthorized access. Security controls should be implemented to follow the principle of least privilege, allowing users and devices only the minimum access necessary to perform their tasks."
+  },
+  "3.4.B.2": {
+   "page": 68,
+   "statement": "Security controls to limit unauthorized access include: \n-  creating isolated guest wireless networks \n-  assigning distinct IP address ranges or DHCP pools for device groups \n-  segmenting devices physically with separate network hardware"
+  },
+  "3.4.B.3": {
+   "page": 68,
+   "statement": "Security controls to limit the impact of weak wireless network security include: \n-  configuring the wireless segment with a unique SSID \n-  strong password protection \n-  WPA2 or WPA3 encryption"
+  },
+  "3.4.B.4": {
+   "page": 68,
+   "statement": "Security controls to limit connections from unknown or unverified devices can include: \n-  enabling MAC address filtering to allow only approved devices \n-  setting unused ports to down \n-  using DHCP reservations to limit address leasing to only known devices"
+  },
+  "3.4.B.5": {
+   "page": 68,
+   "statement": "Security controls to limit lateral movement or unintended communication between segments can include: \n-  allowing only essential services, such as printing, to communicate across segments \n-  deny-by-default firewall or access policies that block traffic between subnets"
+  },
+  "3.4.C.1": {
+   "page": 68,
+   "statement": "Subnetting is a method of network segmentation that divides a network into smaller sections called subnets. Subnetting can help with network congestion, security, and management."
+  },
+  "3.4.C.2": {
+   "page": 69,
+   "statement": "A subnet mask is used to determine the network and host bits. In the process of subnetting, host bits are re-assigned as network bits, reducing the number of available host addresses and creating the range of subnet addresses. ILLUSTRATIVE EXAMPLE In a network with IP address 192.168.1.0, with a subnet mask 255.255.255.0, there are 256 total addresses in one network with 254 usable host addresses in the last octet. To create two subnets in this network to improve performance or create segments, the subnet mask can be changed to 255.255.255.128, creating two subnets: \n-  Subnet 1: 192.168.1.0- 192.168.1.127 \n-  Subnet 2: 192.168.1.128- 192.168.1.255"
+  },
+  "3.4.C.3": {
+   "page": 69,
+   "statement": "The number of hosts a network can accommodate is 2n\u22122 where n is the number of host bits. The first and last addresses on a network are reserved for the network address and broadcast address, respectively, and cannot be assigned to hosts. \n-  The network address is the first address in a subnet; it\u2019s used to identify the subnet. \n-  The broadcast address is the last address in a subnet; it\u2019s used to send messages to all devices in that subnet. \n-  The usable host range includes the IP addresses between the network and broadcast addresses that can be assigned to devices. ILLUSTRATIVE EXAMPLES \n-  A network with 8 host bits has 28 = 256 total addresses. The first address is the network address and the last is the broadcast address, leaving 254 usable host addresses. \n-  A network with 5 host bits has 25 = 32 total addresses. After reserving the network and broadcast addresses, 30 addresses can be assigned to hosts."
+  },
+  "3.4.C.4": {
+   "page": 70,
+   "statement": "An appropriate subnet size is the smallest possible network size that accommodates the required number of hosts on a network. IP address blocks should be large enough to fit all hosts plus two reserved addresses. ILLUSTRATIVE EXAMPLES \n-  Subnet A has 27 hosts, which will require 29 addresses, and the next power of 2 is 32, requiring 5 host bits. \n-  Subnet B has 12 hosts, which will require 14 addresses, and the next power or 2 is 16, requiring 4 host bits."
+  },
+  "3.4.C.5": {
+   "page": 70,
+   "statement": "Once subnets have been created, they can be assigned to different VLANs or segments to isolate traffic and create zones of security. Each subnet should have a nonoverlapping IP address range and subnet mask. Subnet blocks are configured on routers or switches through the CLI or network settings."
+  },
+  "3.4.C.6": {
+   "page": 70,
+   "statement": "After subnets have been assigned, connectivity between devices on the same subnet should be verified to ensure the configuration is correct."
+  },
+  "3.5.A.1": {
+   "page": 71,
+   "statement": "MAMAC filtering r approved MAC addresses. A switch port can be configured to permit a limited or specific set of MAC addresses; all others are denied. C estricts access by allowing only"
+  },
+  "3.5.A.2": {
+   "page": 71,
+   "statement": "Limiting the number and range of MAC addresses associated with a physical switch port can prevent unauthorized devices from physically connecting to the network."
+  },
+  "3.5.A.3": {
+   "page": 71,
+   "statement": "MAC filtering can be used to prevent MAC flooding. MAC flooding occurs when a switch receives many unique MAC addresses and overflows the CAM table, causing the CAM table to run out of memory. MAC flooding can force the switch into a fail-open state, which broadcasts all network traffic to all nodes. This can lead to network congestion and interception of data intended for other devices."
+  },
+  "3.5.B.1": {
+   "page": 71,
+   "statement": "Firewalls are used to create areas of different access levels in a network and prevent unauthorized access or movement between zones. When determining which firewall to use considerations include: \n-  the level of traffic inspection needed, such as simple filtering or deep packet inspection \n-  whether the firewall protects a device, a zone, or an entire organization \n-  whether the network is exposed to the internet, contains sensitive data, or involves untrusted users or devices"
+  },
+  "3.5.B.2": {
+   "page": 72,
+   "statement": "Firewalls can be chosen based on their level of filtering. \n-  A stateless firewall filters traffic based on fixed rules, like IP addresses, ports, or protocols, but does not log or track connections. It is appropriate for simple or low-risk network segments. \n-  A stateful firewall tracks active connections and can track and log suspicious traffic. This is ideal for zones that need connection awareness and logging. \n-  A next-generation firewall (NGFW) includes advanced features like intrusion prevention and application-based filtering. NGFWs are suitable for high-risk zones or where detailed traffic inspection is needed."
+  },
+  "3.5.B.3": {
+   "page": 72,
+   "statement": "A perimeter firewall protects the boundary between internal and external networks and serves as the first line of defense against external threats. It handles high traffic volumes and applies broad security policies to all incoming and outgoing traffic."
+  },
+  "3.5.B.4": {
+   "page": 72,
+   "statement": "An internal firewall is deployed within a network to isolate sensitive devices or departments and prevent lateral movement. Internal firewalls can be used to create a screened subnet (also known as a demilitarized zone, or DMZ) between public networks and internal resources. Screened subnets are lower-security zones that are used to host public-facing services."
+  },
+  "3.5.B.5": {
+   "page": 72,
+   "statement": "A host-based firewall is software installed on individual devices to add more security and customization. These are typically used to secure endpoints that move between networks or require tailored security settings."
+  },
+  "3.5.C.1": {
+   "page": 72,
+   "statement": "Firewalls use rules to permit or deny inbound and outbound network traffic. Lists of firewall rules are known as access control lists (ACLs). ACLs are checked in order, top to bottom, and the first rule that matches the criteria will be executed for the specified data."
+  },
+  "3.5.C.2": {
+   "page": 73,
+   "statement": "A typical ACL will specify the direction of traffic on an interface (inbound or outbound), the criterion to filter by (IP addresses, logical port, service, or application), and action (permit or deny). Different firewalls will use different criteria to filter traffic. Common ports and protocols used in ACLs include: \n-  Hypertext Transfer Protocol Secure (HTTPS) port 443 \u2013 secure web traffic \n-  Domain Name System (DNS) port 53 \u2013 domain name resolution \n-  Secure Shell (SSH) port 22 \u2013 secure remote CLI access \n-  Secure File Transfer Protocol (SFTP) port 22 \u2013 secure file transfer over SSH"
+  },
+  "3.5.C.3": {
+   "page": 73,
+   "statement": "ACLs should be created to limit opportunities for malicious traffic, closing unused and vulnerable ports whenever possible while prioritizing services needed. Vulnerable ports and protocols include: \n-  Hypertext Transfer Protocol (HTTP) port 80 \u2013 unencrypted web traffic \n-  Telnet port 23 \u2013 unencrypted remote CLI access \n-  File Transfer Protocol (FTP) port 21 \u2013 unencrypted file transfer ILLUSTRATIVE EXAMPLE The following rule configuration prioritizes necessary services (ports 443, 22, and 53) while closing unused and vulnerable ports (ports 80 and 23): \n-  101 ALLOW inbound TCP port 443 from ALL; 102 ALLOW inbound TCP port 22 from ALL; 103 DENY inbound TCP port 80 from ALL; 104 DENY inbound TCP port 23 from ALL; 105 ALLOW inbound UDP port 53 from ALL; \n-  \n-  \n-  \n- "
+  },
+  "3.5.C.4": {
+   "page": 74,
+   "statement": "Firewall rules are implemented in order, and changing the order of a set of rules can change which traffic is allowed or denied. Consideration must be given to filtering priorities when establishing the order of rules. More specific rules should be placed above broad, general rules. ILLUSTRATIVE EXAMPLE The following rule configuration would allow SSH traffic and deny all other inbound TCP traffic: \n-  101 ALLOW inbound TCP port 22 from ALL; 102 DENY inbound TCP ALL from ALL; \n-  Reversing the order of those rules would deny all inbound TCP traffic, including SSH traffic."
+  },
+  "3.5.C.5": {
+   "page": 74,
+   "statement": "After configuring firewall rules, users should verify that the intended access is allowed and that unauthorized access is blocked. to access Verification can include using other segments and ensure continued access to network resources. ping"
+  },
+  "3.6.A.1": {
+   "page": 75,
+   "statement": "Documentation of a network enables efficient network management and troubleshooting. Complete and clear documentation should be provided for all users, including updates whenever changes occur."
+  },
+  "3.6.A.2": {
+   "page": 75,
+   "statement": "Network topologies, including physical and logical segmentation, can be represented in a visual diagram with labeled devices and wired and wireless connections."
+  },
+  "3.6.A.3": {
+   "page": 75,
+   "statement": "Devices should be labeled with consistent and clear names and roles to support identification and troubleshooting."
+  },
+  "3.6.A.4": {
+   "page": 75,
+   "statement": "IP addressing schemes should be recorded, with any statically addressed devices identified."
+  },
+  "3.6.A.5": {
+   "page": 75,
+   "statement": "To ensure appropriate security is applied, segments with specific firewall rules or access control requirements should be noted."
+  },
+  "3.6.B.1": {
+   "page": 76,
+   "statement": "Common issues in a LAN with multiple segments include devices failing to connect, limited access to internal resources, or slow performance. Many connectivity and performance issues in a large network can be resolved by implementing common solutions. If functionality is not restored, gathering diagnostic information facilitates the troubleshooting process. Common solutions for segmented LAN connectivity include: \n-  restarting the network router, switch, or wireless access point \n-  restarting affected devices \n-  disconnecting and reconnecting to the network \n-  ensuring the device is connected to the correct SSID and the password is correct"
+  },
+  "3.6.B.2": {
+   "page": 76,
+   "statement": "An unavailable DHCP server or exhausted DHCP pool can cause devices to be assigned APIPA addresses, which prevent communication outside of the local network. This can be identified by checking the IP address configuration."
+  },
+  "3.6.B.3": {
+   "page": 76,
+   "statement": "A missing or incorrect gateway or subnet mask will prevent network access. Properly configured devices will have an IP address, subnet mask, and default gateway that matches the network settings. This can be identified by comparing the network settings to the IP configuration"
+  },
+  "3.6.B.4": {
+   "page": 76,
+   "statement": "Firewall rules or restrictions can block internal and external device communication. This can be identified using the internal and external reachability. ping command to test"
+  },
+  "3.6.B.5": {
+   "page": 76,
+   "statement": "Weak wireless signal strength or high interference can cause degraded wireless performance. This can be identified using wireless signal analyzer tools, available as mobile apps or standalone devices. \n-  Weak signal strength (below \u201370 dBm) may indicate that the WAP is too far or is being obstructed by walls or objects. \n-  High noise or interference may indicate EMI from other devices."
+  },
+  "3.6.B.6": {
+   "page": 77,
+   "statement": "Fluctuating or unstable power supply can cause network devices to reboot unexpectedly or lose connectivity. Frequent short outages, less than 5 seconds, may not trigger software alerts but can disrupt routing tables or DHCP leases. This can be identified using a power analyzer that logs voltage levels and interruptions. \n-  Voltage levels below 110V or above 125V (in a 120V system) may cause network devices to restart or malfunction. \n-  Power logs that show multiple brief dropouts across devices may indicate a shared electrical issue or overloaded power source."
+  },
+  "3.6.C.1": {
+   "page": 77,
+   "statement": "Solutions for an unavailable DHCP server or exhausted DHCP pool include: \n-  restarting the DHCP server \n-  expanding the IP address range of the DHCP pool to support more addresses \n-  limiting the lease time to force IP assignments to recycle more quickly"
+  },
+  "3.6.C.2": {
+   "page": 77,
+   "statement": "Solutions for devices with missing or incorrect default gateway or subnet mask include: \n-  assigning the correct default gateway and subnet mask \n-  ensuring the DHCP server settings include network information"
+  },
+  "3.6.C.3": {
+   "page": 77,
+   "statement": "Solutions for improperly configured access control rules or firewall restrictions include: \n-  reordering ACL rules to place allow rules before broad deny rules \n-  checking deny rules to avoid unintentionally blocking necessary traffic \n-  ensuring the ACL rules are correct regarding direction, ports, and protocols \n-  changing firewall rules to allow necessary outbound traffic to external networks"
+  },
+  "3.6.C.4": {
+   "page": 78,
+   "statement": "Solutions for weak wireless signal strength or high interference include: \n-  moving the access point to improve the coverage radius \n-  reducing physical obstructions between the access point and devices \n-  relocating the access point away from sources of EMI like microwaves and Bluetooth devices"
+  },
+  "3.6.C.5": {
+   "page": 78,
+   "statement": "Solutions for voltage drops or power delivery problems include: \n-  replacing or relocating devices to a different power circuit \n-  installing an uninterruptible power supply (UPS)"
+  },
+  "3.6.C.6": {
+   "page": 78,
+   "statement": "To verify that functionality has been restored, users should confirm that devices can maintain a stable connection to the network and reach both internal and external resources as needed."
+  },
+  "4.1.A.1": {
+   "page": 82,
+   "statement": "Confidentiality, integrity, and availability are the basis of secure and reliable network communication and are collectively referred to as the CIA triad. \n-  Confidentiality means that only authorized individuals, systems, or processes access data. \n-  Integrity means that data are accurate, trustworthy, and have not been altered. \n-  Availability means that data and services are accessible to authorized entities."
+  },
+  "4.1.A.2": {
+   "page": 82,
+   "statement": "Violations of the CIA triad often occur together, resulting in greater impact. Understanding the full scope of an incident requires investigating what happened, who was affected, and how data or services were impacted. Incident investigation involves reviewing: \n-  access logs \n-  alerts from firewalls or network monitoring tools \n-  error reports \n-  missing or corrupted files \n-  network outages or slowdowns"
+  },
+  "4.1.A.3": {
+   "page": 83,
+   "statement": "When confidentiality is compromised, systems are vulnerable to having sensitive data exposed or stolen. A breach of confidentiality can be identified by: \n-  unauthorized access \n-  network traffic showing exfiltration of sensitive data \n-  exposed credentials \n-  unusual activity on sensitive data"
+  },
+  "4.1.A.4": {
+   "page": 83,
+   "statement": "When integrity is compromised, systems may contain false or inaccurate data. A breach of integrity can be identified by: \n-  unauthorized data changes \n-  inconsistencies in logs \n-  unauthorized software installations \n-  corruption of data"
+  },
+  "4.1.A.5": {
+   "page": 83,
+   "statement": "When availability is compromised, systems have unexpected periods of time when they are out of service. A breach of availability can be identified by: \n-  an inability to access systems, networks, or resources \n-  slow or dropped connections \n-  unexpected high volume of network traffic \n-  frequent error messages"
+  },
+  "4.1.B.1": {
+   "page": 83,
+   "statement": "Network connectivity supports essential tasks such as communication, data access, and service delivery. When connectivity is unreliable, users or employees may lose access to essential systems, which can lead to delays, errors, or lost productivity."
+  },
+  "4.1.B.2": {
+   "page": 83,
+   "statement": "The impacts of a loss of connectivity vary based on the timing of the disruption and the type of system affected. Outages during peak activity cause greater impacts than those occurring during low-usage periods. There can be severe consequences when critical infrastructure systems, such as emergency response, power, or water, are disrupted at any time."
+  },
+  "4.1.B.3": {
+   "page": 84,
+   "statement": "In some sectors, such as the food supply chain, healthcare, and the military, connectivity disruptions can cause serious functional or public safety consequences."
+  },
+  "4.1.B.4": {
+   "page": 84,
+   "statement": "Extended or repeated network outages can cause long-term consequences, including: \n-  financial loss from missed transactions or reduced productivity \n-  reputational damage that discourages customers or investors \n-  erosion of public trust, especially for public institutions or critical services"
+  },
+  "4.2.A.1": {
+   "page": 85,
+   "statement": "Network protocols define rules that ensure data are recognized and properly handled during transmission."
+  },
+  "4.2.A.2": {
+   "page": 85,
+   "statement": "Network protocols are used for identifying devices and networks to ensure data are directed to the correct destination. \n-  MAC addresses and ARP are used to identify devices on a local network. \n-  IP addresses identify local and remote devices. \n-  DHCP automatically assigns IP addresses to devices. \n-  DNS translates domain names into IP addresses. ILLUSTRATIVE EXAMPLE Entering the URL google.com uses the DNS protocol to translate into one of Google\u2019s public IP addresses, such as 172.253.63.100. This translation allows for simplified communication and resolution of web requests."
+  },
+  "4.2.A.3": {
+   "page": 86,
+   "statement": "Network protocols are used to define how data are packaged and verified. \n-  ICMP reports transmission time and errors during data transmission; ICMP is used in tools like ping traceroute and . \n-  Transmission Control Protocol (TCP) is a connection-oriented protocol that tracks acknowledgements and resends missing data; TCP is used when complete and accurate transmission is essential. \n-  User Datagram Protocol (UDP) is a connectionless protocol that is used when transmission speed is more important than accuracy, such as in streaming or online gaming."
+  },
+  "4.2.A.4": {
+   "page": 86,
+   "statement": "Network protocols allow users to interact with content or services by defining how data are requested, sent, and received. \n-  FTP and SFTP are used to transfer files between devices. \n-  HTTP and HTTPS are used to load webpages. \n-  Simple Mail Transfer Protocol (SMTP), Post Office Protocol (POP3), and Internet Message Access Protocol (IMAP) are used in email communications."
+  },
+  "4.2.B.1": {
+   "page": 86,
+   "statement": "The Open Systems Interconnection (OSI) and Transmission Control Protocol/Internet Protocol (TCP/IP) networking models describe how computers communicate on a network and allow for a common language around network devices, protocols, and data."
+  },
+  "4.2.B.2": {
+   "page": 87,
+   "statement": "A protocol data unit (PDU) is a single unit of information transmitted over a network. It contains the data and protocol information needed for transmission. The PDU at each layer of the OSI and TCP/IP model changes as it is encapsulated with more information to assist with the transmission of the data. Protocol data units at each OSI model layer: \n-  layer 1\u2013 physical layer: bits \n-  layer 2 \u2013 data link layer: frames \n-  layer 3 \u2013 network layer: packets \n-  layer 4 \u2013 transport layer: segments \n-  layer 5 \u2013 session layer: data \n-  layer 6 \u2013 presentation layer: data \n-  layer 7 \u2013 application layer: data Protocol data units at each TCP/IP model layer: \n-  network access layer: bits and frames \n-  internet layer: packets \n-  transport layer: segments \n-  application layer: data"
+  },
+  "4.2.B.3": {
+   "page": 87,
+   "statement": "The OSI model has seven layers that correspond to the four layers of the TCP/IP model. \n-  OSI layers 1\u20132 correlate with the TCP/IP network access layer. \n-  OSI layer 3 correlates with the TCP/IP internet layer. \n-  OSI layer 4 correlates with the TCP/IP transport layer. \n-  OSI layers 5\u20137 are often collectively referred to as the upper layers and correlate with the TCP/IP application layer."
+  },
+  "4.2.B.4": {
+   "page": 87,
+   "statement": "The OSI model organizes network protocols into layers based on their functions, defining how data are formatted, transmitted, and interpreted at each stage. This includes: \n-  layer 1 physical: bits and physical transmission media \n-  layer 2 data link: Ethernet, MAC addresses \n-  layer 3 network: IP addresses, ICMP \n-  layer 4 transport: TCP, UDP \n-  layers 5\u20137 upper layers: application layer protocols, such as DNS and HTTPS"
+  },
+  "4.2.C.1": {
+   "page": 88,
+   "statement": "The OSI and TCP/IP model layers can be used to structure the troubleshooting process. Using the model helps isolate issues to a specific layer, such as identifying a cable problem at the physical layer or a firewall issue at the transport layer. A layered approach helps organize where to begin and what to check next. \n-  The physical layer includes cables, connectors, and wireless transmitters. \n-  The data link layer includes NICs, MAC addresses, and layer-2 switches. \n-  The network layer includes routers, IP addresses, and layer-3 capable switches. \n-  The transport layer includes gateways and firewalls. \n-  The upper layers include software, operating systems, and endpoint devices."
+  },
+  "4.2.C.2": {
+   "page": 88,
+   "statement": "Troubleshooting can follow different structured approaches depending on the symptoms. \n-  A bottom-up approach starts with physical connection checks. \n-  A top-down approach begins with applications. \n-  A middle-out approach may begin in the middle with the network settings and move up or down."
+  },
+  "4.3.A.1": {
+   "page": 89,
+   "statement": "While GUIs can be more intuitive for users, CLIs allow for simplified automation and repetition of tasks or commands. Many devices only have a CLI, because CLIs take up less space than GUIs and CLIs use less processing power than GUIs, leaving more storage and processing available to the user for tasks, applications, and storage."
+  },
+  "4.3.A.2": {
+   "page": 89,
+   "statement": "In Linux-based operating systems, the location often begins with the root directory, followed by the names of nested directories. Many modern CLI shells use a dollar sign, indicate the prompt for user entry. The tilde, indicates the current user\u2019s home directory. / , $ , to ~ , ILLUSTRATIVE EXAMPLES \n-  /home/user/Desktop , In Linux file path home user is a directory in the root directory, is a directory in user . user@hostname / Desktop home , is a directory in \n-  The Linux prompt home/user/Desktop $ represents that the command line interface is ready for input in the Desktop directory. user@hostname ~ $ \n-  The Linux prompt represents that the command line interface is ready for input in the user\u2019s home directory."
+  },
+  "4.3.A.3": {
+   "page": 90,
+   "statement": "Command Prompt is a proprietary Windows CLI, and it lists the working directory starting with a drive letter followed by the names of nested directories. The system is ready to accept a command when it displays the right-angle bracket, > , at the end of the directory path. ILLUSTRATIVE EXAMPLES C:\\Users\\ \n-  In Windows file path username\\Desktop Users , username C: , Desktop is a directory Users , username . in and is a directory in is a directory in C:\\Users\\user\\ \n-  In Windows prompt /home/user/Desktop Desktop , Desktop is a an absolute path, whereas relative path. If the current working directory is relative path Desktop for /home/user , then referencing the Desktop will assume to look /home/user . in"
+  },
+  "4.3.A.4": {
+   "page": 90,
+   "statement": "CLI commands follow a standard syntax pattern: command, options, arguments. \n-  Commands are the name of the program cd ls to be executed, such as or . \n-  Options are optional parameters that modify how the command operates or the output of the command. Options are often denoted with a dash, referred to as switches or flags. \u2013 , and are also \n-  Arguments provide specific information the command needs to operate such as a file or path. Some commands require arguments, while others can run with no additional input. ls To illustrate this structure, the command can be used in several ways on a Linux system. ls ls \n-  This execution of is without options or arguments. When no argument is provided, the working directory is the default argument. It will list or display the contents of the working directory excluding hidden files. ls \u2013a ls \n-  specifies the option . This option displays all content in the working directory, including hidden files and directories. ls user1 This execution of \u2013a ls \n-  This use of has no options user1 but specifies an argument of will display the contents of the directory excluding hidden files. ls ls \u2013a user1 . It user1 \n-  specifies and an argument of . It will display the contents of the directory including any hidden files. This use of \u2013a both an option of user1 user1"
+  },
+  "4.3.A.5": {
+   "page": 91,
+   "statement": "In a CLI users need to move between directories, view directory contents, and determine their current location within the file system. Commands to perform these actions include: cd ls \n-  \u2013 change the working directory \n-  \u2013 list the contents of a directory (Mac/Linux) dir \n-  \u2013 view the contents of a directory (Windows) pwd \n-  \u2013 view the current working directory (Mac/Linux)"
+  },
+  "4.3.A.6": {
+   "page": 91,
+   "statement": "cd The directories in a file system. Usage of the command includes: command is a useful tool for changing cd cd subdirectory_name \n-  \u2013 change to a subdirectory in your current location cd .. cd ~ cd / \n-  \u2013 move toward the root directory \n-  \u2013 move to the home directory \n-  \u2013 move to the root directory",
+   "verbatim": false
+  },
+  "4.3.A.7": {
+   "page": 91,
+   "statement": "help man The commands can be used to gain information about other commands. help is useful for providing an overview of or man provides detailed a command, while documentation about options and usage.",
+   "verbatim": false
+  },
+  "4.3.B.1": {
+   "page": 91,
+   "statement": "The CLI allows users to perform tasks efficiently, including system management and file transfers. Secure Shell (SSH) is a protocol used in CLI environments to securely connect to remote systems. It encrypts all data exchanged between the user and the remote device."
+  },
+  "4.3.B.2": {
+   "page": 91,
+   "statement": "Secure File Transfer Protocol (SFTP) can be used to transfer data between devices. SFTP uses SSH to establish a secure connection ensuring that all data, including login credentials, are encrypted during the transfer. SSH and SFTP both use port 22."
+  },
+  "4.3.B.3": {
+   "page": 92,
+   "statement": "An SFTP session is established by connecting to a remote host or target device by entering the command username>@<remote_hostname_or_ IP_address> . sftp <remote_ ILLUSTRATIVE EXAMPLE To access user 192.168.1.15 sftp panda @192.1 68.1.15 panda on location , the command would be . To complete the SFTP connection, the user must enter the credentials. As a security feature, nothing will be displayed while typing the password."
+  },
+  "4.3.B.4": {
+   "page": 92,
+   "statement": "Within an SFTP session the remote device can be navigated using CLI commands including: ls \n-  \u2013 list the contents of the current remote directory cd pwd \n-  \u2013 change the remote directory \n-  \u2013 view the current remote working directory"
+  },
+  "4.3.B.5": {
+   "page": 92,
+   "statement": "CLI commands to transfer files within an SFTP session include: get filename \n-  \u2013 downloads a file from the remote device to the local device put filename \n-  \u2013 uploads a file from the local device to the remote device"
+  },
+  "4.4.A.1": {
+   "page": 93,
+   "statement": "When addressing data to be sent, a sending host will compare its own IPv4 address and subnet mask with that of the destination host. If the destination is on a different network, the data are sent to the default gateway and must travel through one or more routers."
+  },
+  "4.4.A.2": {
+   "page": 93,
+   "statement": "Network address translation (NAT) is used to allow traffic from internal devices with private IP addresses to send and receive data to and from external devices. NAT helps conserve public IP addresses and adds a layer of security. When using NAT, the default gateway replaces the source IP address in outgoing packets with the gateway\u2019s single external IP address. This allows multiple devices to share a single public IP address. ILLUSTRATIVE EXAMPLE A device on a local network has the private IP address 192.168.1.25 and sends data to a web server on the internet. \n-  Internal device source IP: 192.168.1.25 \n-  Router public IP: 203.0.113.10 When traffic leaves the local network, the router replaces 192.168.1.25 with 203.0.113.10. Return traffic from the web server is addressed to 203.0.113.10, and the router translates the destination back to 192.168.1.25 to deliver data to the correct device."
+  },
+  "4.4.A.3": {
+   "page": 94,
+   "statement": "Routers and routing-capable switches use a routing table to determine where to send packets. The table lists known networks and the best path to reach each one."
+  },
+  "4.4.A.4": {
+   "page": 94,
+   "statement": "A hop occurs each time a packet is forwarded from one router to another. The first hop goes through the gateway, while additional hops pass through routers often operated by ISPs."
+  },
+  "4.4.A.5": {
+   "page": 94,
+   "statement": "Once a packet reaches the destination network, the router forwards it directly to the destination device using the device\u2019s private IP address."
+  },
+  "4.4.B.1": {
+   "page": 94,
+   "statement": "A typical routing table entry will contain the following information: \n-  address and subnet mask of the destination network \n-  the address of the next hop \n-  the physical interface associated with the next hop \n-  the metric, which is a measure of the cost such as number of hops or time associated with the route to the next hop"
+  },
+  "4.4.B.2": {
+   "page": 94,
+   "statement": "Routes can be set statically, or they can be set dynamically using a routing protocol. Routing protocols determine how routers communicate and select paths for data to travel."
+  },
+  "4.4.B.3": {
+   "page": 94,
+   "statement": "Dynamic routing protocols use different algorithms to choose the best path based on metrics. Metric values reflect network conditions such as distance, speed, or bandwidth. Lower metrics indicate more efficient routes. \n-  Routing Information Protocol (RIP) uses hop count to choose the path with the fewest routers, or hops, between the source and destination. \n-  Open Shortest Path First (OSPF) uses link speed and bandwidth and reroutes as needed to use the shortest path. \n-  Border Gateway Protocol (BGP) routes packets between large sections of the internet operated by ISPs. \n-  Intermediate System to Intermediate System (IS-IS) uses link state to calculate the most reliable path for data to travel."
+  },
+  "4.4.B.4": {
+   "page": 95,
+   "statement": "When multiple next hops are available, the route with the lowest metric is chosen. Metrics can change over time based on network conditions such as congestion, device failure, or changes in link speed, which may cause data to take different paths. Different routing protocols calculate metrics in different ways."
+  },
+  "4.4.C.1": {
+   "page": 95,
+   "statement": "traceroute tracert (Mac/Linux) and (Windows) are command line tools that display a packet\u2019s path from the source network to the destination network by showing the IPv4 addresses of each hop in the path.",
+   "verbatim": false
+  },
+  "4.4.C.2": {
+   "page": 95,
+   "statement": "traceroute/tracert Each line of shows a hop and includes the IP address or domain name of the hop and the response time to that hop. output",
+   "verbatim": false
+  },
+  "4.4.C.3": {
+   "page": 95,
+   "statement": "traceroute/tracert The output of be used to count hops and identify delays and points of failure. This can help diagnose network issues and understand routing paths. can",
+   "verbatim": false
+  },
+  "4.5.A.1": {
+   "page": 96,
+   "statement": "Unauthorized access, data exposure, or disruption of services can result from accidental or intentional misuse of systems by users. These impacts may occur when individuals access resources beyond their role, mishandle data, or fail to follow secure procedures."
+  },
+  "4.5.A.2": {
+   "page": 96,
+   "statement": "Direct access to network-connected devices, data theft, or equipment tampering may occur when an unauthorized individual gains physical access to secure areas. Tactics such as tailgating, piggybacking, or theft of laptops and servers bypass physical access controls and increase the risk of internal compromise."
+  },
+  "4.5.A.3": {
+   "page": 96,
+   "statement": "Widespread data compromise, service outages, or loss of administrative control can occur when an adversary or malicious software moves laterally across a network. These impacts are more likely in segmented or large networks that lack internal monitoring, access control boundaries, or containment strategies."
+  },
+  "4.5.B.1": {
+   "page": 97,
+   "statement": "Organizations apply a combination of security controls to reduce the impact of different types of vulnerabilities. To determine appropriate security controls, administrators evaluate the likelihood and impact of specific threats and select controls that are cost- effective, scalable, and appropriate for the managed environment."
+  },
+  "4.5.B.2": {
+   "page": 97,
+   "statement": "Security policies and procedures help reduce user-related vulnerabilities by defining acceptable behaviors and standardizing how systems and data are used. These controls can reduce misconfiguration, mishandling, or improper access. Common policies include: \n-  acceptable use policies (AUPs) that define how network resources may be used \n-  password and access control policies that establish strong authentication and user permission levels \n-  data handling guidelines for the storage, transmission, and deletion of sensitive data"
+  },
+  "4.5.B.3": {
+   "page": 97,
+   "statement": "Physical security controls to reduce the impact of direct access to network-connected devices include: \n-  installing fencing, cameras, and on-site security to deter unauthorized access \n-  using card readers and access control vestibules to control physical access \n-  locking devices in secure rooms or server cabinets \n-  using cable locks to secure desktop and laptop equipment \n-  training staff to recognize and respond to social engineering tactics"
+  },
+  "4.5.B.4": {
+   "page": 97,
+   "statement": "Security controls to limit the impact of unauthorized access include: \n-  enforcing strong password policies and account lockout settings \n-  applying the principle of least privilege \n-  implementing segmentation to restrict access between device groups and limit lateral movement \n-  using firewalls to block unauthorized traffic from accessing protected systems \n-  enabling network monitoring to detect and create alerts about suspicious activity"
+  },
+  "4.5.C.1": {
+   "page": 98,
+   "statement": "Regular review of IDS and IPS logs helps identify unusual or suspicious activity early, allowing for faster response to potential threats. Reviewing these logs also supports refining security policies and reducing false alerts."
+  },
+  "4.5.C.2": {
+   "page": 98,
+   "statement": "IDS and IPS tools monitor and analyze network traffic for signs of suspicious or malicious behavior. IDSs monitor traffic and generate alerts if a threat is detected. IPSs inspect traffic and can take immediate action to block suspicious traffic."
+  },
+  "4.5.C.3": {
+   "page": 98,
+   "statement": "IDS and IPS logs and alerts can be reviewed for indicators of security threats that suggest potential unauthorized access or malicious activity. These can include: \n-  repeated failed login attempts \n-  access attempts outside of business hours \n-  connections to known malicious IP addresses \n-  alerts for malware signatures or suspicious files \n-  unauthorized network scans"
+  },
+  "4.5.C.4": {
+   "page": 98,
+   "statement": "IDS and IPS logs and alerts can be reviewed for indicators of network performance or configuration issues. These suggest technical problems or service disruptions, not necessarily caused by an adversary, that can impact system availability and reliability. These can include: \n-  sudden increases in traffic volume or packet rates \n-  frequent packet drops or timeout errors \n-  misuse of protocols or unexpected service behavior \n-  repeated failed connections or service disruptions"
+  },
+  "4.5.D.1": {
+   "page": 98,
+   "statement": "VLANs improve network security and performance by logically separating devices into isolated groups, such as departments, user roles, or device types. Devices in different VLANs cannot communicate unless routing is enabled. VLANs limit broadcast traffic, reduce network congestion, and help restrict access to sensitive systems."
+  },
+  "4.5.D.2": {
+   "page": 99,
+   "statement": "VLAN implementation starts with a segmentation plan that groups users or devices based on function or security level. Each VLAN is assigned a unique VLAN ID and can be named for clear identification. Devices are assigned to VLANs by connecting them to designated switch ports that are configured with the corresponding VLAN ID. ILLUSTRATIVE EXAMPLE A home network includes many devices and uses VLANs to segment traffic for security and performance. Devices are grouped by function, and switch ports are configured with VLAN IDs to control network access: \n-  VLAN 10 (ports 1\u20132): Home office devices, including work computers and printers \n-  VLAN 20 (ports 3\u20134): Smart and IoT devices, including thermostats, cameras, and televisions \n-  VLAN 30 (ports 5\u20136): Media devices, including game systems and a media server \n-  VLAN 40 (ports 7\u201310): Family devices, including laptops, tablets, and phones"
+  },
+  "4.5.D.3": {
+   "page": 99,
+   "statement": "Switch ports are configured as either access ports, which connect individual devices to a single VLAN, or trunk ports, which carry traffic from multiple VLANs between switches or routers."
+  },
+  "4.5.D.4": {
+   "page": 99,
+   "statement": "VLANs are configured on a switch by creating the VLAN and assigning switch ports through the CLI or GUI. Devices connected to those ports automatically become part of the VLAN. Basic configuration of VLANs includes creating the VLAN, assigning the VLAN ID, and assigning the ports."
+  },
+  "4.5.D.5": {
+   "page": 99,
+   "statement": "Devices on the same VLAN should be able to communicate; devices on different VLANs should be able to communicate only if routing is configured. Correct configuration of VLANs can be verified using tools like: ping traceroute \n-  to test communication between devices show vlan brief and \n-  to verify VLAN creation and port assignments"
+  },
+  "4.6.A.1": {
+   "page": 100,
+   "statement": "IPv6 was created to support the rapid increase in the number of internet-connected devices and to address the anticipated exhaustion of the IPv4 address space."
+  },
+  "4.6.A.2": {
+   "page": 100,
+   "statement": "An IPv6 address consists of 128 bits, typically grouped as 8 hextets (groups of 16 bits) written with hexadecimal digits separated by colons. The IPv6 address space allows for 2128 possible addresses, allowing every device to have a globally unique and routable IP address. ILLUSTRATIVE EXAMPLES IPv6 addresses can be written in full or compressed formats. In the compressed format, leading zeros are removed and sequences of all-zero hextets are replaced with two colons, \n-  :: . For example: 2003:AB00:CDEF:000A:0000:0000:0000: 0001 \u2192 2003:AB00:CDEF:A :: 1 \n-  2001:0DB8:0000:0000:0000:0000:0000: :: 1234 \u2192 2001:DB8 1234 \n-  FE80:0000:0000:0000:01FF:FE23:4567: 890A \u2192 FE80 :: 1FF:FE23:4567:890A"
+  },
+  "4.6.A.3": {
+   "page": 100,
+   "statement": "IPv6 enables more efficient transmission of data than IPv4 because of simplified headers and routing processes."
+  },
+  "4.6.B.1": {
+   "page": 101,
+   "statement": "Redundancy improves network reliability by ensuring backup solutions are available if a primary system fails. Common redundancy strategies include: \n-  implementing backup power through generators or UPS \n-  connecting secondary routers and switches \n-  deploying mobile or satellite internet during primary ISP outages \n-  backing up critical data regularly"
+  },
+  "4.6.B.2": {
+   "page": 101,
+   "statement": "Monitoring and alerting tools help ensure availability by enabling rapid detection of failures or suspicious activity."
+  },
+  "4.6.B.3": {
+   "page": 101,
+   "statement": "Security controls such as firewalls, intrusion prevention systems (IPS), and access controls can reduce the risk of outages caused by attacks or misconfigurations."
+  },
+  "4.6.B.4": {
+   "page": 101,
+   "statement": "Applying and documenting software updates and patches reduces the risk of failure and reduces recovery time if an outage occurs."
+  }
+ }
+}
