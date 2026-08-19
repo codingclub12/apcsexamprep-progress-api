@@ -192,7 +192,7 @@ const METHODS = {
     uses: [
       { call: 'int[][] seats', at: '6.1', why: 'a grid of seats is the clearest 2D array there is' },
       { call: 'seats[row][col]', at: '6.2', why: 'row first, always' },
-      { call: 'nested for loops', at: '6.3', why: 'draw the whole theatre' },
+      { call: 'nested for loops', at: '6.3', why: 'draw the whole theater' },
       { call: 'addObject(new Ticket(), col, row)', at: '6.4', why: 'column becomes x, row becomes y' },
       { call: 'public Ticket(int row, int col)', at: '3.9', why: 'each seat knows where it is' },
     ],
