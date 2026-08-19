@@ -55,6 +55,12 @@ const pages = build.lessonPages();
 let _hp = null, _hb = null;
 function helpPagesForLinks() { if (!_hp) _hp = build.helpPages(); return _hp; }
 function hubsForLinks() { if (!_hb) _hb = build.hubPages(); return _hb; }
+let _pp = null;
+// Project pages joined the build on 2026-08-19 and the hub links to all ten
+// of them. Without this the link-integrity check below reports every one as
+// dangling, which is the check being right about a universe that had not
+// been told the new page kind exists.
+function projectPagesForLinks() { if (!_pp) _pp = build.projectPages(); return _pp; }
 
 // ── 1. The bank is structurally complete ─────────────────────────────────────
 section('1. Every lesson is structurally complete');
@@ -425,7 +431,7 @@ ok('10.2a graded rows are seeded', gradedRows.length > 0, gradedRows.length);
 // than recomputed from the bank, so this compares the PAGE against the MANIFEST
 // rather than the bank against itself.
 const ijPosted = new Set();
-for (const p of [...pages, ...helpPagesForLinks(), ...hubsForLinks()]) {
+for (const p of [...pages, ...helpPagesForLinks(), ...hubsForLinks(), ...projectPagesForLinks()]) {
   for (const m of p.bodyHtml.match(/data-item-id="([^"]+)"/g) || []) ijPosted.add(m.split('"')[1]);
 }
 const ijRowIds = new Set(gradedRows.map((r) => r.item_id));
@@ -548,13 +554,13 @@ ok('11.z helpKind agrees with the catalog classifier',
 //  handles the build actually produces, which is what this does.
 section('11.5 Every internal link points at a page this build produces');
 
-const ijBuiltHandles = new Set([...pages, ...helpPagesForLinks(), ...hubsForLinks()].map((p) => p.handle));
+const ijBuiltHandles = new Set([...pages, ...helpPagesForLinks(), ...hubsForLinks(), ...projectPagesForLinks()].map((p) => p.handle));
 const IJ_LINK_RE = /https:\/\/apcsexamprep\.com\/pages\/([a-z0-9-]+)/g;
 
 // Only intro-java links are this build's responsibility. A link out to an
 // existing AP CSA page is legitimate and cannot be checked from here.
 const ijDangling = [];
-for (const p of [...pages, ...helpPagesForLinks(), ...hubsForLinks()]) {
+for (const p of [...pages, ...helpPagesForLinks(), ...hubsForLinks(), ...projectPagesForLinks()]) {
   for (const m of p.bodyHtml.match(IJ_LINK_RE) || []) {
     const h = m.split('/pages/')[1];
     if (h.startsWith('intro-java') || ijBuiltHandles.has(h)) {
@@ -575,7 +581,7 @@ ok('11.5c a page with that handle is actually built', ijBuiltHandles.has(IJ_COUR
 // Breadcrumb positions must run 1..n. Deleting a crumb and leaving the numbering
 // alone is how structured data silently stops validating.
 let ijCrumbSeq = 0;
-for (const p of [...pages, ...helpPagesForLinks(), ...hubsForLinks()]) {
+for (const p of [...pages, ...helpPagesForLinks(), ...hubsForLinks(), ...projectPagesForLinks()]) {
   for (const m of p.bodyHtml.match(/"@type":"BreadcrumbList"[\s\S]*?\]/g) || []) {
     const pos = (m.match(/"position":(\d+)/g) || []).map((x) => Number(x.split(':')[1]));
     if (pos.join(',') !== pos.map((_, i) => i + 1).join(',')) ijCrumbSeq++;
@@ -686,7 +692,7 @@ const BRITISH = [
   'grey', 'defence', 'licence',
 ];
 const ijBritHits = [];
-for (const p of [...pages, ...helpPagesForLinks(), ...hubsForLinks()]) {
+for (const p of [...pages, ...helpPagesForLinks(), ...hubsForLinks(), ...projectPagesForLinks()]) {
   const text = p.bodyHtml.replace(/<[^>]+>/g, ' ');
   for (const w of BRITISH) {
     const re = new RegExp('\\b' + w + '[a-z]*', 'gi');
@@ -698,14 +704,14 @@ ok('11.7a no British spelling in any rendered page', ijBritHits.length === 0, ij
 // "maths" is its own check: the word is a plural in British usage and a
 // substring of nothing useful, so a bare word-boundary match is exact.
 const ijMaths = [];
-for (const p of [...pages, ...helpPagesForLinks(), ...hubsForLinks()]) {
+for (const p of [...pages, ...helpPagesForLinks(), ...hubsForLinks(), ...projectPagesForLinks()]) {
   if (/\bmaths\b/i.test(p.bodyHtml.replace(/<[^>]+>/g, ' '))) ijMaths.push(p.handle);
 }
 ok('11.7b the subject is math, not maths', ijMaths.length === 0, ijMaths);
 
 // British education register. Work is graded, not marked.
 const ijMarked = [];
-for (const p of [...pages, ...helpPagesForLinks(), ...hubsForLinks()]) {
+for (const p of [...pages, ...helpPagesForLinks(), ...hubsForLinks(), ...projectPagesForLinks()]) {
   const t = p.bodyHtml.replace(/<[^>]+>/g, ' ');
   if (/\b(marked|marking)\b/i.test(t)) ijMarked.push(p.handle);
 }
@@ -713,7 +719,7 @@ ok('11.7c work is graded, not marked', ijMarked.length === 0, ijMarked.slice(0, 
 
 // The technical one. `()` are parentheses; only `[]` may be called brackets.
 const ijBrackets = [];
-for (const p of [...pages, ...helpPagesForLinks(), ...hubsForLinks()]) {
+for (const p of [...pages, ...helpPagesForLinks(), ...hubsForLinks(), ...projectPagesForLinks()]) {
   const t = p.bodyHtml.replace(/<[^>]+>/g, ' ');
   if (/round brackets?/i.test(t)) ijBrackets.push(`${p.handle}: round bracket`);
   // A bare "bracket" not preceded by "square" is ambiguous to a US reader.
