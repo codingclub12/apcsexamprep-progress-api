@@ -44,6 +44,7 @@ lesson | practice | exercise | lab | quiz | exam | project
 | `quiz` | `quiz` | |
 | `exam` | `exam` | |
 | `case-file` | `project` | |
+| `project` | `project` | |
 
 `native_activity` is always carried alongside, so nothing is lost and a course can
 rename its own vocabulary without a downstream change. An unrecognised type is

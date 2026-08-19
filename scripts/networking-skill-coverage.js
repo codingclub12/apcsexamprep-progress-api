@@ -94,5 +94,32 @@ console.log(`     ${handsOn.join(' ')}`);
 console.log(`  hands-on share of the grade                 : ${pct(labPts, total)}  (${labCount} labs, one per unit)`);
 console.log(`\n  topics needing Collaborate (skill 4)        : ${collab.length} of ${topics.length}  (${collab.join(' ')})`);
 console.log(`  collaborative share of the grade            : 0%  (no collaborative asset exists)`);
+
+// ── AND WHAT WOULD CHANGE IF THE HANDS-ON WORK SHIPPED ──────────────────────
+//  config/networking-hands-on.json is the authored answer to the gap above. It
+//  is read here rather than summarised, so this report can never claim a fix
+//  the spec does not actually contain. The flag in seed-manifest.js is the
+//  difference between proposed and live, and this says which one it is looking
+//  at rather than letting the reader assume.
+const HO = require('../config/networking-hands-on.json');
+const { NET_HANDS_ON_LIVE } = require('./seed-manifest.js');
+
+const newLabPts = HO.configuration_activities.reduce((n, a) => n + a.points, 0);
+const newDocPts = HO.documentation_items.reduce((n, d) => n + d.points, 0);
+const teamPts = HO.collaboration.points;
+const newTotal = total + newLabPts + newDocPts + teamPts;
+const newHandsOn = labPts + newLabPts + newDocPts;
+
+console.log('\nWhat config/networking-hands-on.json would change:');
+console.log(NET_HANDS_ON_LIVE
+  ? '  STATUS: LIVE. The items below are seeded and the numbers above include them.'
+  : '  STATUS: PROPOSED. NET_HANDS_ON_LIVE is false, so none of this is seeded yet.');
+console.log(`  ${('+ ' + HO.configuration_activities.length + ' per-topic configuration activities').padEnd(38)}${String(newLabPts).padStart(4)} pts`);
+console.log(`  ${('+ ' + HO.documentation_items.length + ' unit documentation records').padEnd(38)}${String(newDocPts).padStart(4)} pts  (teacher-scored)`);
+console.log(`  ${'+ 1 collaborative team task'.padEnd(38)}${String(teamPts).padStart(4)} pts  (teacher-scored)`);
+console.log(`  ${'NEW TOTAL'.padEnd(38)}${String(newTotal).padStart(4)} pts`);
+console.log(`  hands-on share      ${pct(labPts, total)} -> ${pct(newHandsOn, newTotal)}   (framework asks ${pct(byVerb.C + byVerb.D, assigned.length)})`);
+console.log(`  collaborative share  0% -> ${pct(teamPts, newTotal)}   (framework asks ${pct(byCat[4], assigned.length)})`);
+
 console.log('\nEvery number above is measured. The judgement of whether that is enough');
 console.log('for a full year is not, and belongs to a teacher.');

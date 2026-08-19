@@ -1,0 +1,411 @@
+{
+  "_comment": [
+    "The hands-on and collaborative work AP Networking needs in order to assess the",
+    "verbs its own framework asks for, and the manifest items that let a gradebook",
+    "hold that work.",
+    "",
+    "WHY THIS FILE EXISTS",
+    "  docs/ap-networking-full-year-readiness.md measured a gap that is not about",
+    "  content coverage. Every framework skill resolves to one of four verbs:",
+    "    .A identify or explain      a page can teach this",
+    "    .B determine or analyse     a scenario question can assess this",
+    "    .C IMPLEMENT and document   requires configuring something",
+    "    .D VERIFY                   requires checking the configuration works",
+    "  .C and .D are 13 of the 55 skill assignments, or 24%, and appear in 10 of",
+    "  the 22 topics, but the course answers them with four browser labs worth 32",
+    "  of 448 points, or 7%. Skill category 4, Collaborate, is required in topics",
+    "  1.4 and 2.4 and has no asset at all.",
+    "",
+    "  Note the rounding trap: .C rounds to 18% and .D to 5%, which reads as 23%.",
+    "  The combined share is 13/55 = 23.6%, so 24% is the honest figure and the one",
+    "  the design targets.",
+    "",
+    "THE DESIGN RULE",
+    "  Weight the gradebook the way the framework weights its verbs. The target is",
+    "  not 'more labs'; it is hands-on points at roughly the .C+.D share (24%) and",
+    "  collaborative points at roughly the category-4 share (5%). See `design`.",
+    "",
+    "THE ZERO-PII SPLIT, WHICH DRIVES EVERY DESIGN DECISION HERE",
+    "  The framework verb is 'implement AND DOCUMENT'. Documentation is free text,",
+    "  and this API never stores free text from a student. So every activity is cut",
+    "  in two along that seam:",
+    "    implement -> structured widget, graded in the browser, POSTed to",
+    "                 /api/progress/attempt with detail of [{q,sel,ok}] only.",
+    "    document  -> a student artefact a teacher reads and scores through",
+    "                 POST /api/teacher/classes/:code/scores, which already exists,",
+    "                 already validates against course_manifest, and already",
+    "                 replaces rather than stacks.",
+    "  Nothing here needs new write surface. It needs manifest rows and pages.",
+    "",
+    "  The CLI activity (4.3) is the one that will be got wrong if this is not said",
+    "  out loud: a terminal emulator collects typed strings. Those strings are free",
+    "  text. Grade them client-side and report the check index and its boolean, never",
+    "  the command the student typed.",
+    "",
+    "STATUS",
+    "  Nothing here is seeded. scripts/seed-manifest.js carries these rows behind",
+    "  NET_HANDS_ON_LIVE = false, on the INTRO_JAVA_PAGES_LIVE precedent, because a",
+    "  denominator for a page that does not exist marks every student down for work",
+    "  nobody can do. Flip the flag in the pass that ships the pages."
+  ],
+
+  "source": {
+    "framework": "https://apcentral.collegeboard.org/media/pdf/ap-networking-course-framework.pdf",
+    "sha256": "2dd45c6fc59c90533a1570102a3be0ec9fcae4bf731b389525fe25a80c80bd8f",
+    "skills": "config/networking-framework-skills.json",
+    "statements": "config/networking-framework-statements.json",
+    "authored_on": "2026-08-19"
+  },
+
+  "design": {
+    "framework_demand": {
+      "implement_and_verify_share_of_skill_assignments": 0.236,
+      "collaborate_share_of_skill_assignments": 0.05,
+      "topics_carrying_implement_or_verify": 10,
+      "topics_carrying_collaborate": 2
+    },
+    "before": {
+      "total_points": 448,
+      "hands_on_points": 32,
+      "hands_on_share": 0.071,
+      "collaborative_points": 0,
+      "collaborative_share": 0
+    },
+    "after": {
+      "total_points": 576,
+      "hands_on_points": 136,
+      "hands_on_share": 0.236,
+      "collaborative_points": 24,
+      "collaborative_share": 0.042,
+      "note": "hands_on counts the 4 existing unit labs (32), the 10 new configuration activities (80), and the 4 unit documentation items (24)."
+    },
+    "why_four_documentation_items_and_not_ten": [
+      "Ten teacher-scored documentation items is 300 manual entries for a class of",
+      "30, which is a feature teachers will not use. One documentation item per unit",
+      "collects the configuration records from that unit's activities together: 4",
+      "entries per student, which a teacher will actually do. The documentation half",
+      "of the .C verb is assessed either way."
+    ],
+    "known_tension": [
+      "INTRO_JAVA_PROJECTS in scripts/seed-manifest.js is deliberately empty because",
+      "Tanner decided on 2026-08-18 that projects are not worth grading into the",
+      "gradebook. This file proposes a graded team project anyway, and the difference",
+      "is not a reversal: intro-java answers to nobody, while AP Networking has to",
+      "evidence skill category 4 to carry the Advanced Placement label. If the team",
+      "project is scored outside the gradebook, category 4 has no evidence in the",
+      "system of record. That is the trade, and it is Tanner's call, not mine."
+    ]
+  },
+
+  "collaboration": {
+    "item_id": "team-project-1",
+    "lesson_id": "team-project-1",
+    "unit": "course",
+    "item_type": "project",
+    "points": 24,
+    "scored_by": "teacher",
+    "title": "The household network build",
+    "anchors_topics": ["1.4", "2.4"],
+    "subskills": ["4.A", "4.B", "4.C", "4.D", "2.C", "2.D", "1.C"],
+    "learning_objectives": ["1.4.A", "1.4.B", "1.4.C", "2.4.A", "2.4.B"],
+    "ek_anchors": ["1.4.A.1", "1.4.A.3", "1.4.B.5", "1.4.C.2", "1.4.C.3", "2.4.A.1", "2.4.A.2", "2.4.A.3", "2.4.B.2", "2.4.B.3", "2.4.B.5", "2.4.B.6"],
+    "why_this_shape": [
+      "Only 4.A and 4.B are named in any topic's Suggested Skills rail, and only in",
+      "1.4 and 2.4. But 2.4's own objective is 'evaluate an AI-generated network",
+      "design', which is 4.C in all but name, and no team task is real without 4.D.",
+      "One task carries all four rather than four tasks carrying one each.",
+      "",
+      "The three roles are the framework's own skill categories 1, 2 and 3. A student",
+      "who holds the Security role is doing skill 2 for a week, and the role rotation",
+      "on a second run is how every student reaches every category."
+    ],
+    "team_size": 3,
+    "scheduled_after": "2.4",
+    "roles": [
+      {
+        "name": "Connectivity lead",
+        "maps_to_skill_category": "1 Connect and Configure",
+        "owns": [
+          "the device inventory: every node, its role, and whether it is wired or wireless",
+          "the addressing plan: network ID, subnet mask, the DHCP pool, and the static reservations",
+          "the media server host choice and its static address or hostname (EK 2.4.B.2, 2.4.B.5)"
+        ]
+      },
+      {
+        "name": "Security lead",
+        "maps_to_skill_category": "2 Secure",
+        "owns": [
+          "the password and lockout policy, stated as rules not as passwords (EK 1.4.A.1, 1.4.A.3)",
+          "replacing every default credential on every device (EK 1.4.B.5)",
+          "wireless: SSID, encryption choice, and why the weaker option was rejected (EK 1.4.C.2, 1.4.C.3)",
+          "who may reach the media server's shared files, and who may not (EK 2.4.B.3)"
+        ]
+      },
+      {
+        "name": "Verification lead",
+        "maps_to_skill_category": "3 Troubleshoot",
+        "owns": [
+          "a test for each control the Security lead specified, written BEFORE it is applied",
+          "running each test and recording pass or fail with the evidence",
+          "the availability check: name one thing that legitimately stopped working, and say whether that cost is acceptable (this is the whole of sub-skill 2.D)",
+          "connecting to the media server from a second device to prove it works (EK 2.4.B.6)"
+        ]
+      }
+    ],
+    "the_ai_step": {
+      "why": "EK 2.4.A.2 says AI suggestions 'may include unrealistic device recommendations, overcomplicated setups, and incorrect configurations'. A team that only reads about that has not done 4.C.",
+      "steps": [
+        "Each member independently asks an AI tool for a design meeting the brief, and keeps the response.",
+        "The team compares the three responses and marks every point where they disagree.",
+        "For each disagreement the team decides which is right and records how they checked, citing the course pages rather than a fourth AI answer.",
+        "The team names at least two specific defects in the AI designs and says what the correct configuration is instead."
+      ],
+      "note": "The AI output is the raw material to be criticised, not the deliverable. A team that submits an unedited AI design has demonstrated the failure mode 2.4.A.2 describes."
+    },
+    "deliverables": [
+      "One network diagram with every device, address and connection (EK 2.2.D.1)",
+      "One addressing table",
+      "One security decision record: each control, the vulnerability it addresses, and the access cost it carries",
+      "One test log: each test, its result, and what was done about the failures",
+      "One AI critique: the disagreements found and the defects named",
+      "One shared objective statement of no more than half a page, written first and dated (sub-skill 4.A)",
+      "One role sheet naming who held which role and what each produced (sub-skill 4.B)"
+    ],
+    "rubric": {
+      "note": "Four criteria at 6 points each. Deliberately weighted so a strong technical build with no team structure cannot score full marks, because category 4 is the thing being assessed.",
+      "criteria": [
+        {"points": 6, "name": "Shared objective and roles", "subskills": ["4.A", "4.B"], "full_marks": "The objective statement is specific enough to fail against, was written before the build, and every deliverable traces to a named role."},
+        {"points": 6, "name": "Configuration quality", "subskills": ["1.C", "2.C"], "full_marks": "The addressing plan is internally consistent, every default credential is replaced, wireless encryption is the strongest the scenario's devices support, and the media server is reachable by hostname or static address."},
+        {"points": 6, "name": "Verification and the availability cost", "subskills": ["2.D"], "full_marks": "Tests were written before the controls were applied, every control has a result, and the team names something that legitimately broke and argues about whether that cost is worth paying."},
+        {"points": 6, "name": "AI critique", "subskills": ["4.C"], "full_marks": "At least two specific defects named in the AI-generated designs, each with the correct configuration and how the team established it."}
+      ]
+    },
+    "if_there_is_no_class": [
+      "A solo (ME-) student has no team. The task still runs with the three roles held",
+      "in sequence by one student, which exercises 4.A, 4.B and 4.C but not 4.D. Say",
+      "that in the student-facing copy rather than pretending otherwise: sub-skill 4.D",
+      "is 'complete assigned work to accomplish a collaborative task', and there is no",
+      "honest solo substitute for it."
+    ]
+  },
+
+  "documentation_items": [
+    {"item_id": "doc-1", "lesson_id": "doc-1", "unit": "unit-1", "item_type": "project", "points": 6, "scored_by": "teacher",
+     "title": "Unit 1 configuration record", "collects": ["1.4"],
+     "asks_for": "The password and lockout policy you set, the wireless settings you chose, and one sentence per choice saying which vulnerability it addresses."},
+    {"item_id": "doc-2", "lesson_id": "doc-2", "unit": "unit-2", "item_type": "project", "points": 6, "scored_by": "teacher",
+     "title": "Unit 2 configuration record", "collects": ["2.2", "2.4", "2.6"],
+     "asks_for": "Your network diagram and address table, your media server settings, and your segment plan with the reason each device group sits where it does."},
+    {"item_id": "doc-3", "lesson_id": "doc-3", "unit": "unit-3", "item_type": "project", "points": 6, "scored_by": "teacher",
+     "title": "Unit 3 configuration record", "collects": ["3.3", "3.4", "3.5"],
+     "asks_for": "Your LAN configuration, your subnet calculations with the working shown, and your firewall rule list in the order it is applied."},
+    {"item_id": "doc-4", "lesson_id": "doc-4", "unit": "unit-4", "item_type": "project", "points": 6, "scored_by": "teacher",
+     "title": "Unit 4 configuration record", "collects": ["4.3", "4.4", "4.5"],
+     "asks_for": "The commands you used and what each returned, your traced path with the hop that was slowest, and your VLAN plan with the ports assigned."}
+  ],
+
+  "configuration_activities": [
+    {
+      "item_id": "1.4-lab", "topic": "1.4", "unit": "unit-1", "item_type": "lab", "points": 8, "scored_by": "browser",
+      "title": "Harden an account and a wireless network",
+      "subskills": ["2.C", "2.D"],
+      "learning_objectives": ["1.4.A", "1.4.B", "1.4.C"],
+      "ek_anchors": ["1.4.A.1", "1.4.A.2", "1.4.A.3", "1.4.A.5", "1.4.B.5", "1.4.C.2", "1.4.C.3", "1.4.C.4"],
+      "student_configures": "A simulated router admin page and account settings page: password policy, lockout, the admin credential, SSID, encryption mode, and the guest network toggle.",
+      "auto_graded_checks": [
+        "Set a minimum password length that satisfies the policy in the brief (EK 1.4.A.2)",
+        "Set the complexity requirement across the four character sets (EK 1.4.A.1)",
+        "Set a lockout threshold and duration that stops brute force without locking out a fumbling user (EK 1.4.A.3)",
+        "Pick the stronger of two offered credentials, one a passphrase and one a short complex string (EK 1.4.A.5)",
+        "Replace the device's default administrator credential (EK 1.4.B.5)",
+        "Choose the strongest encryption mode the scenario's devices support (EK 1.4.C.2)",
+        "Set an SSID that does not disclose the make of the router or the owner's name (EK 1.4.C.3)",
+        "VERIFY: after applying the settings, pick which of four listed outcomes is the access that legitimately broke (sub-skill 2.D)"
+      ],
+      "verify_step": "Check 8 is the .D verb and is the reason this activity is not just a quiz. It has a correct answer, and the correct answer is a cost, not a success.",
+      "documents_into": "doc-1"
+    },
+    {
+      "item_id": "2.2-lab", "topic": "2.2", "unit": "unit-2", "item_type": "lab", "points": 8, "scored_by": "browser",
+      "title": "Document an existing network",
+      "subskills": ["1.C"],
+      "learning_objectives": ["2.2.A", "2.2.B", "2.2.C", "2.2.D"],
+      "ek_anchors": ["2.2.A.3", "2.2.A.4", "2.2.B.2", "2.2.B.4", "2.2.B.5", "2.2.C.2", "2.2.C.3", "2.2.C.4", "2.2.D.1"],
+      "student_configures": "An address table for a rendered SOHO topology of eight devices. This is the one topic whose objective is documentation itself (LO 2.2.D), so the artefact is the point.",
+      "auto_graded_checks": [
+        "Identify the OUI half of a given MAC address (EK 2.2.A.3)",
+        "Convert one octet of a MAC address between hexadecimal and binary (EK 2.2.A.4)",
+        "Fill the network ID and host ID for an address given its class (EK 2.2.B.4)",
+        "Select the subnet mask that matches the stated network size (EK 2.2.B.5)",
+        "Classify four addresses as public or private (EK 2.2.C.2)",
+        "Identify the APIPA address and say what its presence means about DHCP (EK 2.2.C.3)",
+        "Identify the loopback address and what it tests (EK 2.2.C.4)",
+        "Match each of five devices in the diagram to its role: router, switch, WAP, endpoint, modem (EK 2.2.D.3 to 2.2.D.6)"
+      ],
+      "verify_step": "The APIPA check is the diagnostic one: a student who knows 169.254.x.x means the DHCP server did not answer has learned to read an address as evidence.",
+      "documents_into": "doc-2"
+    },
+    {
+      "item_id": "2.4-lab", "topic": "2.4", "unit": "unit-2", "item_type": "lab", "points": 8, "scored_by": "browser",
+      "title": "Configure a media server, and audit an AI design",
+      "subskills": ["1.B", "1.C"],
+      "learning_objectives": ["2.4.A", "2.4.B"],
+      "ek_anchors": ["2.4.A.2", "2.4.A.3", "2.4.B.2", "2.4.B.3", "2.4.B.4", "2.4.B.5", "2.4.B.6"],
+      "student_configures": "A media server host: storage location, file-sharing service, static address or hostname, and access permissions. Then an AI-generated design for the same brief, carrying three planted defects of exactly the kinds EK 2.4.A.2 names.",
+      "auto_graded_checks": [
+        "Choose a host device that can stay powered and reachable (EK 2.4.B.2)",
+        "Enable the file-sharing service rather than only creating the folder (EK 2.4.B.3)",
+        "Place the media files on a volume the service actually serves (EK 2.4.B.4)",
+        "Assign a static address or hostname and say why DHCP alone is not enough (EK 2.4.B.5)",
+        "VERIFY: pick the check that proves the server works, which is connecting from a second device, not seeing the folder locally (EK 2.4.B.6)",
+        "Find the unrealistic device recommendation in the AI design (EK 2.4.A.2)",
+        "Find the overcomplicated element and say what it should be replaced with (EK 2.4.A.2)",
+        "Find the incorrect configuration value and give the correct one (EK 2.4.A.2)"
+      ],
+      "verify_step": "The three planted defects are one of each kind the framework names, so the activity assesses the taxonomy and not just carefulness.",
+      "documents_into": "doc-2",
+      "feeds": "team-project-1"
+    },
+    {
+      "item_id": "2.6-lab", "topic": "2.6", "unit": "unit-2", "item_type": "lab", "points": 8, "scored_by": "browser",
+      "title": "Group devices into segments",
+      "subskills": ["2.A", "2.C"],
+      "learning_objectives": ["2.6.A", "2.6.B"],
+      "ek_anchors": ["2.6.A.2", "2.6.A.3", "2.6.A.4", "2.6.B.1", "2.6.B.2", "2.6.B.3", "2.6.B.4", "2.6.B.5"],
+      "student_configures": "Twelve devices dragged into four zones, then the allow or deny posture between each pair of zones.",
+      "auto_graded_checks": [
+        "Place the guest devices in the isolated zone (EK 2.6.A.2)",
+        "Place the IoT devices by risk level, not by who owns them (EK 2.6.B.3)",
+        "Place the two servers by role (EK 2.6.B.2)",
+        "Place the video device by performance need (EK 2.6.B.4)",
+        "Set guest-to-internal traffic to deny (EK 2.6.A.4)",
+        "Set IoT-to-internal traffic to deny while leaving IoT-to-internet allowed",
+        "Set internal-to-server traffic to allow on the required service only (EK 2.6.A.3)",
+        "Identify which single misplacement in a shown alternative plan breaks the isolation"
+      ],
+      "verify_step": "The last check is the analysis verb applied to someone else's plan, which is how a student learns that segmentation fails on one bad placement.",
+      "documents_into": "doc-2"
+    },
+    {
+      "item_id": "3.3-lab", "topic": "3.3", "unit": "unit-3", "item_type": "lab", "points": 8, "scored_by": "browser",
+      "title": "Configure a LAN and verify it",
+      "subskills": ["1.C", "1.D"],
+      "learning_objectives": ["3.3.A", "3.3.B", "3.3.C", "3.3.D"],
+      "ek_anchors": ["3.3.A.2", "3.3.A.5", "3.3.B.3", "3.3.B.4", "3.3.C.6", "3.3.C.7", "3.3.D.1", "3.3.D.6"],
+      "student_configures": "A host's IP settings, then a wireless access point carrying both an internal and a guest network. The largest of the ten, and the one that carries both .C and .D.",
+      "auto_graded_checks": [
+        "Enter a static address, mask, gateway and DNS that are mutually consistent (EK 3.3.A.2)",
+        "Read an ipconfig or ifconfig output and say which field is wrong (EK 3.3.A.5)",
+        "Convert a mask between dotted decimal and CIDR (EK 3.3.B.3)",
+        "Decide for three address pairs whether they are on the same network (EK 3.3.B.4)",
+        "Set the endpoint addresses so all of them fall inside the stated range (EK 3.3.C.6)",
+        "VERIFY: choose ping and read its output to say whether the failure is address, gateway or DNS (EK 3.3.C.7)",
+        "Enable the guest network with internal access turned off (EK 3.3.D.1)",
+        "VERIFY: pick the test that proves guest isolation, which is reaching an internal device and failing, not reaching the internet and succeeding (EK 3.3.D.6)"
+      ],
+      "verify_step": "Two .D checks, both of the same shape: the proof of a security control is the thing that must NOT work.",
+      "documents_into": "doc-3"
+    },
+    {
+      "item_id": "3.4-lab", "topic": "3.4", "unit": "unit-3", "item_type": "lab", "points": 8, "scored_by": "browser",
+      "title": "Subnet a network to fit its groups",
+      "subskills": ["2.B", "2.C"],
+      "learning_objectives": ["3.4.A", "3.4.B", "3.4.C"],
+      "ek_anchors": ["3.4.B.2", "3.4.B.4", "3.4.C.1", "3.4.C.2", "3.4.C.3", "3.4.C.4", "3.4.C.5", "3.4.C.6"],
+      "student_configures": "A /24 divided to fit four groups of stated sizes. Subnetting is the most objectively auto-gradable work in the entire course: every answer is a number that is right or wrong.",
+      "auto_graded_checks": [
+        "Choose the number of host bits for the largest group (EK 3.4.C.3)",
+        "Choose the smallest subnet that fits the second group, not merely a subnet that fits (EK 3.4.C.4)",
+        "Give the network address of the third subnet",
+        "Give the broadcast address of the third subnet (EK 3.4.C.3)",
+        "Give the usable host range of the fourth subnet",
+        "Assign each subnet to a segment or VLAN (EK 3.4.C.5)",
+        "Pick the control that limits unverified devices joining a segment (EK 3.4.B.4)",
+        "VERIFY: choose the test that confirms two devices in the same subnet can reach each other (EK 3.4.C.6)"
+      ],
+      "verify_step": "Check 2 is the one that separates understanding from arithmetic. A /24 fits everything; the objective is the SMALLEST size that fits.",
+      "documents_into": "doc-3"
+    },
+    {
+      "item_id": "3.5-lab", "topic": "3.5", "unit": "unit-3", "item_type": "lab", "points": 8, "scored_by": "browser",
+      "title": "Build an ordered firewall rule set",
+      "subskills": ["2.B", "2.C"],
+      "learning_objectives": ["3.5.A", "3.5.B", "3.5.C"],
+      "ek_anchors": ["3.5.A.2", "3.5.A.3", "3.5.B.2", "3.5.B.3", "3.5.C.1", "3.5.C.2", "3.5.C.4", "3.5.C.5"],
+      "student_configures": "An access control list for the segments built in 2.6 and 3.4. Rules are placed in order, and the order is graded, because EK 3.5.C.4 says reordering changes which traffic is permitted.",
+      "auto_graded_checks": [
+        "Give each rule its direction, criterion and action (EK 3.5.C.2)",
+        "Place the deny rule for external traffic to the internal segment",
+        "Place the allow rule for the one service that must cross segments",
+        "Order the two rules above so the allow is not shadowed by the deny (EK 3.5.C.4)",
+        "Identify the unused open port that should be closed (EK 3.5.C.3)",
+        "Choose stateless or stateful for the stated scenario and say why (EK 3.5.B.2)",
+        "Choose perimeter, internal or host-based for a second scenario (EK 3.5.B.3 to 3.5.B.5)",
+        "VERIFY: pick the pair of tests that together prove the rule set, one that must succeed and one that must fail (EK 3.5.C.5)"
+      ],
+      "verify_step": "Rule shadowing is the single most common real-world firewall defect and cannot be assessed by a question that does not have ordering in it.",
+      "documents_into": "doc-3"
+    },
+    {
+      "item_id": "4.3-lab", "topic": "4.3", "unit": "unit-4", "item_type": "lab", "points": 8, "scored_by": "browser",
+      "title": "Navigate and transfer files from a CLI",
+      "subskills": ["1.C", "1.D"],
+      "learning_objectives": ["4.3.A", "4.3.B"],
+      "ek_anchors": ["4.3.A.2", "4.3.A.4", "4.3.A.5", "4.3.B.2", "4.3.B.3", "4.3.B.4", "4.3.B.5"],
+      "student_configures": "A browser terminal emulator over a fixed pretend filesystem and a pretend remote host.",
+      "auto_graded_checks": [
+        "Report the working directory (EK 4.3.A.5)",
+        "Move to a named directory and list it (EK 4.3.A.2)",
+        "Break a given command into command, option and argument (EK 4.3.A.4)",
+        "Find what a command does without leaving the terminal (EK 4.3.A.7)",
+        "Open an SFTP session to the remote host (EK 4.3.B.3)",
+        "Navigate the remote side rather than the local side (EK 4.3.B.4)",
+        "Transfer a file in the direction the brief asks for, get versus put (EK 4.3.B.5)",
+        "VERIFY: confirm the transfer landed, by listing the destination rather than by the absence of an error"
+      ],
+      "verify_step": "Check 8 exists because 'no error' is the most common false proof a student accepts.",
+      "pii_constraint": "A terminal collects typed strings, and a typed string is free text. Grade every check in the browser and POST only the check index and its boolean. The command line the student typed must never leave the page. This is the one activity here where the obvious implementation violates the zero-PII posture.",
+      "documents_into": "doc-4"
+    },
+    {
+      "item_id": "4.4-lab", "topic": "4.4", "unit": "unit-4", "item_type": "lab", "points": 8, "scored_by": "browser",
+      "title": "Trace the path data takes",
+      "subskills": ["1.A", "1.C"],
+      "learning_objectives": ["4.4.A", "4.4.B", "4.4.C"],
+      "ek_anchors": ["4.4.A.1", "4.4.A.3", "4.4.A.4", "4.4.B.1", "4.4.B.3", "4.4.B.4", "4.4.C.2", "4.4.C.3"],
+      "student_configures": "A routing table and a traceroute output over a fixed six-router topology.",
+      "auto_graded_checks": [
+        "Decide whether the destination is local or remote from the address and mask (EK 4.4.A.1)",
+        "Pick the next hop from a routing table for a given destination (EK 4.4.A.3)",
+        "Count the hops to the destination (EK 4.4.A.4)",
+        "Name each field of a routing table entry (EK 4.4.B.1)",
+        "Choose between two available routes by metric (EK 4.4.B.4)",
+        "Read a traceroute output and identify the slowest hop (EK 4.4.C.2)",
+        "Identify the hop where the trace stops and say what that suggests (EK 4.4.C.3)",
+        "Say which of three explanations the output does NOT support"
+      ],
+      "verify_step": "The last check is the discipline of the whole topic: a traceroute tells you where a path stopped, not why.",
+      "documents_into": "doc-4"
+    },
+    {
+      "item_id": "4.5-lab", "topic": "4.5", "unit": "unit-4", "item_type": "lab", "points": 8, "scored_by": "browser",
+      "title": "Configure VLANs and read the logs",
+      "subskills": ["2.B", "2.C"],
+      "learning_objectives": ["4.5.A", "4.5.B", "4.5.C", "4.5.D"],
+      "ek_anchors": ["4.5.B.3", "4.5.B.4", "4.5.C.3", "4.5.C.4", "4.5.D.2", "4.5.D.3", "4.5.D.4", "4.5.D.5"],
+      "student_configures": "A VLAN plan on a twelve-port switch, then an IDS log of twenty lines.",
+      "auto_graded_checks": [
+        "Group the devices into VLANs by function or security need (EK 4.5.D.2)",
+        "Set each port as access or trunk (EK 4.5.D.3)",
+        "Assign each access port to its VLAN (EK 4.5.D.4)",
+        "Decide whether two named devices can communicate as configured (EK 4.5.D.5)",
+        "VERIFY: choose the command that confirms the VLAN assignments (EK 4.5.D.5)",
+        "Flag the log lines that indicate a possible intrusion (EK 4.5.C.3)",
+        "Flag the log lines that indicate a performance or configuration problem instead (EK 4.5.C.4)",
+        "Choose the control that addresses the flagged intrusion indicator (EK 4.5.B.4)"
+      ],
+      "verify_step": "Checks 6 and 7 are the pair that matters: the framework separates security indicators from performance indicators, and a log reader who treats every anomaly as an attack is not doing 4.5.C.",
+      "documents_into": "doc-4"
+    }
+  ]
+}
