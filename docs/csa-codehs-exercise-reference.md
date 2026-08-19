@@ -43,8 +43,12 @@ CodeHS's own lesson numbering is denser than this platform's: 17/14/11/19 = 61
 lessons across Units 1-4, against this platform's 15/12/9/17 = 53. That
 discrepancy resolves cleanly for three of four units: every CodeHS unit ends
 with two of its own checkpoint lessons, "Mid-Unit Assessment" and "End of Unit
-Assessment" (61 − 8 = 53), and every other lesson 1.1-3.9 matches this
+Assessment" (61 - 8 = 53), and every other lesson 1.1-3.9 matches this
 platform's titles 1:1, same order, same wording.
+
+**Units 1, 2 and 3 also checked directly against the real CED text, not just
+against CodeHS as a proxy: all 36 lessons are exact, verbatim matches.** No
+work needed on those three units.
 
 **RESOLVED, 2026-08-19: this platform's Unit 4 is misaligned with the current
 official CED past lesson 4.4, and CodeHS's sequence is the one that matches.**
