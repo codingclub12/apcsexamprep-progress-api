@@ -106,42 +106,96 @@ was invented, nothing was mistyped. The problem is entirely omission, never
 fabrication, which is the cheaper of the two problems to fix and says the existing
 authoring process is trustworthy as far as it goes.
 
-## Finding 5: the certification crosswalk does not exist
+## Finding 5: the certification crosswalk existed nowhere, and now exists
 
-Zero of the 22 pages mention CompTIA Network+, Cisco CCNA, or Cisco CCST
-Networking. Not once.
+When this audit was first run, zero of the 22 pages mentioned CompTIA Network+,
+Cisco CCNA or Cisco CCST Networking. Not once, despite College Board's own
+framing naming them.
 
-This is the largest missed opportunity in the audit, and it is the only one with
-no revision risk attached. College Board's own framing for the course is that it
-was developed with industry partners including Cisco and aligns with those three
-credentials. Those objective lists are public, stable, and will not be rewritten
-by a pilot revision, which is exactly what makes them safe to build against now
-while the CED itself can still move.
+All 22 topics are now mapped to Network+ and CCST domains in
+`docs/ap-networking-cert-crosswalk.md`. It is the one body of depth that a
+framework revision cannot invalidate, because those objectives are published,
+stable and owned by someone else. It is also the argument a teacher takes to an
+administrator: "aligned to AP" is a sentence, "aligned to AP and maps to
+Network+ and CCST" is a budget line.
 
-It is also the argument a teacher takes to an administrator. "Aligned to AP" is
-one sentence. "Aligned to AP and maps to Network+ and CCST" is a budget line.
+The crosswalk stops at domain level. Sub-objective identifiers were not
+published from third-party summaries, and a later attempt to reach the primary
+sources directly failed too: comptia.org serves its objectives from a JavaScript
+application and cisco.com returns 403 to automated clients, so neither could be
+read first-hand. That gap is honest rather than filled with a guess.
+
+## Finding 6: most of the gap is a citing job, not a writing job
+
+118 uncited statements reads as 118 things to write. It is not.
+
+The pages are structurally near-identical to one another: 10 to 13 h2 headings,
+222 to 237 list items, 385 to 405 KB, whether the topic sits at 33 percent or
+100 percent. Completeness is not a structural property of these pages, so it
+cannot be fixed structurally, and "write more" is the wrong instinct.
+
+Comparing each uncited statement's vocabulary against the prose already on its
+page bands them like this:
+
+| Band | Count | Share |
+|------|------:|------:|
+| Already on the page, just uncited | 24 | 20% |
+| Mostly present, check and cite | 58 | 49% |
+| Partly present, needs a paragraph | 33 | 28% |
+| **Genuinely absent** | **3** | **3%** |
+
+**About 69 percent looks like annotation rather than authoring.** That is a
+different size of job, and a different person's afternoon.
+
+Term overlap is a proxy for conceptual coverage, not proof of it. A page can
+share vocabulary without teaching the idea, and can teach an idea in words the
+framework did not use. `scripts/networking-gap-triage.js` reports bands rather
+than a score for exactly that reason: it is a queue, not a verdict.
+
+The three genuinely absent statements are a coherent gap rather than scattered
+noise. All three are about **endpoint device categories**: 2.2.D.6 on what an
+endpoint is, and 2.3.A.3 and 2.3.A.4 on mobile and specialized endpoint devices.
+That is one afternoon of real writing, in one place.
+
+## Finding 7: the two complete topics get there two different ways
+
+3.6 and 4.5 are both at 100 percent and neither is a template for the other.
+
+- **4.5 cites in prose.** Codes appear inline in the body and in tables, as
+  `(EK 4.5.A.1)` next to the sentence that teaches it. 18 such citations.
+- **3.6 cites in its widget data.** Its troubleshooting scenarios each carry
+  three codes, `ek`, `fixek` and `docek`, so one interactive item covers the
+  symptom, the fix and the documentation knowledge at once. Zero prose citations.
+
+The weak topics do neither at density: 1.4 tags one `ek` per widget item and
+cites nothing in prose. So the lever is citation density and placement, not
+volume, and either of the two proven patterns works.
 
 ## Priorities
 
-1. **Unit 1, and 1.4 first.** Unit 1 is 42 percent covered, the lowest of the
-   four, and 1.4 is the single worst topic in the course at 33 percent with ten
-   codes missing. 1.2 and 1.3 follow. Restoring the A-group objectives on 1.1
-   through 1.3 is the highest-value single edit in the audit.
-2. **Topic 3.3.** Thirteen codes missing, the largest absolute gap anywhere, and
-   the topic that touches the most certification domains.
-3. **2.1, at 33 percent**, which drags an otherwise reasonable Unit 2.
-4. **The certification crosswalk**, now shipped in
-   `docs/ap-networking-cert-crosswalk.md`.
+1. **Annotate before authoring.** 82 of the 118 are likely already taught. Work
+   the CITE and CITE? bands first with `scripts/networking-gap-triage.js`: it is
+   the cheapest coverage available and it lifts every topic at once.
+2. **Write the three real gaps.** 2.2.D.6, 2.3.A.3 and 2.3.A.4, all about
+   endpoint device categories. One coherent afternoon.
+3. **Unit 1, and topic 1.4 first.** Unit 1 is 42 percent covered and 1.4 is the
+   worst topic at 33 percent. Restoring the A-group objectives on 1.1 through 1.3
+   is the highest-value single edit, because the A objective is the one College
+   Board leads with.
+4. **Topic 3.3**, 13 codes missing, the largest absolute gap.
+5. **The certification crosswalk**, shipped in `docs/ap-networking-cert-crosswalk.md`.
 
-Deliberately still not on this list: publishing more topic pages. The topic
-structure matches the framework exactly, so a new page would have to be
-speculative, and the measured gap is entirely inside the pages that exist.
+Deliberately still not on this list: publishing more topic pages. The structure
+matches the framework exactly, and the measured gap is entirely inside the pages
+that already exist.
 
 ## Reproducing this
 
 ```
-node scripts/networking-ek-coverage.js          # live pages vs the framework
-node scripts/networking-ek-coverage.js --json   # machine-readable
+node scripts/networking-ek-coverage.js       # live pages vs the framework
+node scripts/networking-missing-ek.js        # the 118 statements, worst topic first
+node scripts/networking-gap-triage.js        # cite / deepen / write, banded
+node scripts/networking-gap-triage.js --full # every item, per topic
 ```
 
 The denominator is `config/networking-framework-ek.json`, pinned by sha256 to the
