@@ -35,7 +35,18 @@
   "College Board wrote them that way. The repo's no-em-dash rule governs prose",
   "this project authors, not quotations of someone else's document. Normalizing",
   "them would corrupt the quote, which is the one thing this file exists to",
-  "preserve."
+  "preserve.",
+  "",
+  "REPAIR 2026-08-19",
+  "  The PDF paints every line of the Learning Objective column twice: once",
+  "  plain, once with \\x08 separating the words (a shadow text layer). The",
+  "  first extraction kept both copies for 6 of the 60 LOs, so those six read",
+  "  as the objective repeated two or three times. Repaired to the plain copy:",
+  "  2.2.B, 3.4.B, 3.4.C, 3.5.C, 3.6.B, 4.3.A. Each repair was checked to be a",
+  "  subsequence of the damaged text, so it collapses duplication and never",
+  "  introduces a word the extraction did not have. A re-extraction should drop",
+  "  any line equal to the previous line once \\x08 is stripped, which fixes the",
+  "  class of defect at source. EK statements were unaffected."
  ],
  "source": {
   "url": "https://apcentral.collegeboard.org/media/pdf/ap-networking-course-framework.pdf",
@@ -48,6 +59,7 @@
   "learning_objectives": 60
  },
  "word_order_disturbed": [
+  "3.5.A.1",
   "4.3.A.6",
   "4.3.A.7",
   "4.4.C.1",
@@ -68,7 +80,7 @@
   "2.1.A": "Identify likely root causes of a SOHO network issue using diagnostic tools and techniques.",
   "2.1.B": "Determine an appropriate solution to resolve a SOHO network issue.",
   "2.2.A": "Explain how MAC addresses are structured and used to identify devices.",
-  "2.2.B": "Explain how IP addresses are structured and used to identify devices. Explain how IP addresses are structured and used to identify devices. Explain how IP addresses are structured and used to identify devices.",
+  "2.2.B": "Explain how IP addresses are structured and used to identify devices.",
   "2.2.C": "Identify different types of IPv4 addresses.",
   "2.2.D": "Document an existing network including devices, addresses, and connections.",
   "2.3.A": "Determine appropriate endpoint devices to meet user needs in a SOHO network.",
@@ -91,20 +103,20 @@
   "3.3.C": "Configure a local area network (LAN).",
   "3.3.D": "Configure a wireless access point to support a guest network and an internal network.",
   "3.4.A": "Identify the impacts of common threats and vulnerabilities in a segmented LAN.",
-  "3.4.B": "Determine appropriate security Determine appropriate security controls to limit the impacts controls to limit the impacts of common threats and of common threats and vulnerabilities in a segmented vulnerabilities in a segmented LAN. LAN.",
-  "3.4.C": "subnetting to Configure subnetting to Configure subnetting to appropriately segment a appropriately segment a appropriately segment a network. network. network. Configure subnetting to appropriately segment a network. Configure subnetting to appropriately segment a network.",
+  "3.4.B": "Determine appropriate security controls to limit the impacts of common threats and vulnerabilities in a segmented LAN.",
+  "3.4.C": "Configure subnetting to appropriately segment a network.",
   "3.5.A": "Explain how MAC filtering can increase security.",
   "3.5.B": "Determine an appropriate firewall for a scenario.",
-  "3.5.C": "Configure firewall rules for different network segments. Configure firewall rules for different network segments. Configure firewall rules for different network segments.",
+  "3.5.C": "Configure firewall rules for different network segments.",
   "3.6.A": "Document the network design, including IP configuration, devices, and connections.",
-  "3.6.B": "Identify likely root causes of Identify likely root causes of an issue in a LAN with multiple an issue in a LAN with multiple segments using diagnostic segments using diagnostic tools and techniques. tools and techniques. Identify likely root causes of an issue in a LAN with multiple segments using diagnostic tools and techniques.",
+  "3.6.B": "Identify likely root causes of an issue in a LAN with multiple segments using diagnostic tools and techniques.",
   "3.6.C": "Determine an appropriate solution to resolve an issue in a LAN with multiple segments.",
   "4.1.A": "Identify evidence of compromised confidentiality, integrity, or availability.",
   "4.1.B": "Explain how unreliable connectivity impacts organizations.",
   "4.2.A": "Describe the purpose of common network protocols.",
   "4.2.B": "Describe the purpose and organization of the OSI and TCP/IP models.",
   "4.2.C": "Explain how to use the OSI and TCP/IP models when troubleshooting.",
-  "4.3.A": "Apply appropriate commands using a CLI to navigate computer systems. Apply appropriate commands using a CLI to navigate computer systems. Apply appropriate commands using a CLI to navigate computer systems.",
+  "4.3.A": "Apply appropriate commands using a CLI to navigate computer systems.",
   "4.3.B": "Apply CLI commands to securely transfer files.",
   "4.4.A": "Explain how data travel between different networks.",
   "4.4.B": "Explain how routing protocols and metrics influence the path of data.",
@@ -151,7 +163,7 @@
   },
   "1.1.B.2": {
    "page": 22,
-   "statement": "High processor (central processing unit, or CPU) or memory (random access memory, or RAM) usage can cause applications to become slow or unresponsive. Task manager applications can be used to check resource usage. \n-  Sustained CPU usage above 80\u201390% indicates the processor is overloaded and may cause slow or unresponsive performance. \n-  Sustained RAM usage above 80\u201390% indicates the system is using a significant amount of available short-term memory, which is needed to keep applications running smoothly."
+   "statement": "High processor (central processing unit, or CPU) or memory (random access memory, or RAM) usage can cause applications to become slow or unresponsive. Task manager applications can be used to check resource usage. \n-  Sustained CPU usage above 80–90% indicates the processor is overloaded and may cause slow or unresponsive performance. \n-  Sustained RAM usage above 80–90% indicates the system is using a significant amount of available short-term memory, which is needed to keep applications running smoothly."
   },
   "1.1.B.3": {
    "page": 22,
@@ -195,7 +207,7 @@
   },
   "1.2.A.2": {
    "page": 24,
-   "statement": "To connect to a wireless network, the user must know the network name\u2014also called the service-set identifier (SSID)\u2014and password if required. Available wireless networks can be viewed by opening the network settings for a device, often accessible through the notification area or settings menu. Users should connect only to trusted networks and avoid unknown or unprotected networks, which may allow unauthorized access to data or devices."
+   "statement": "To connect to a wireless network, the user must know the network name—also called the service-set identifier (SSID)—and password if required. Available wireless networks can be viewed by opening the network settings for a device, often accessible through the notification area or settings menu. Users should connect only to trusted networks and avoid unknown or unprotected networks, which may allow unauthorized access to data or devices."
   },
   "1.2.A.3": {
    "page": 24,
@@ -251,7 +263,7 @@
   },
   "1.3.B.4": {
    "page": 27,
-   "statement": "Shoulder surfing refers to an unauthorized individual observing or recording a user\u2019s screen or keyboard to gather information. Security controls to limit the impact of shoulder surfing can include: \n-  installing privacy screens that limit viewing angles, making displays visible only to users directly in front of them \n-  positioning screens away from high-traffic areas to reduce visibility to others"
+   "statement": "Shoulder surfing refers to an unauthorized individual observing or recording a user’s screen or keyboard to gather information. Security controls to limit the impact of shoulder surfing can include: \n-  installing privacy screens that limit viewing angles, making displays visible only to users directly in front of them \n-  positioning screens away from high-traffic areas to reduce visibility to others"
   },
   "1.3.B.5": {
    "page": 27,
@@ -259,7 +271,7 @@
   },
   "1.4.A.1": {
    "page": 28,
-   "statement": "Implementing complexity in passwords includes using at least one character from each character set. Passwords with characters from each character set are significantly harder for an adversary to guess or compromise than passwords that use characters from only one or two character sets. The character sets often required are: \n-  uppercase letters (A\u2013Z) \n-  lowercase letters (a\u2013z) \n-  numeric digits (0\u20139) \n-  special characters (!\u201d#$%&\u2019()*+,-./:;<=>?@ [ \\ ] ^_`{|}~)"
+   "statement": "Implementing complexity in passwords includes using at least one character from each character set. Passwords with characters from each character set are significantly harder for an adversary to guess or compromise than passwords that use characters from only one or two character sets. The character sets often required are: \n-  uppercase letters (A–Z) \n-  lowercase letters (a–z) \n-  numeric digits (0–9) \n-  special characters (!”#$%&’()*+,-./:;<=>?@ [ \\ ] ^_`{|}~)"
   },
   "1.4.A.2": {
    "page": 28,
@@ -267,7 +279,7 @@
   },
   "1.4.A.3": {
    "page": 28,
-   "statement": "Implementing a lockout period after a certain number of invalid login attempts prevents an adversary from continuously guessing passwords. Many organizations lock a user\u2019s account after 3\u20135 invalid login attempts. The lockout duration varies."
+   "statement": "Implementing a lockout period after a certain number of invalid login attempts prevents an adversary from continuously guessing passwords. Many organizations lock a user’s account after 3–5 invalid login attempts. The lockout duration varies."
   },
   "1.4.A.4": {
    "page": 28,
@@ -279,7 +291,7 @@
   },
   "1.4.B.1": {
    "page": 29,
-   "statement": "To prevent phishing-based account compromise, users should verify message sources and use caution before interacting with emails or messages, especially those requesting sensitive information. Users should: \n-  verify the sender\u2019s email address \n-  hover over links to inspect their destination before clicking \n-  contact organizations directly through official websites or phone numbers"
+   "statement": "To prevent phishing-based account compromise, users should verify message sources and use caution before interacting with emails or messages, especially those requesting sensitive information. Users should: \n-  verify the sender’s email address \n-  hover over links to inspect their destination before clicking \n-  contact organizations directly through official websites or phone numbers"
   },
   "1.4.B.2": {
    "page": 29,
@@ -327,11 +339,11 @@
   },
   "2.1.A.3": {
    "page": 35,
-   "statement": "Network congestion or hardware failures can cause slow or failed connectivity to applications, websites, and services. This can be identified using the command-line interface (CLI) tool ping to check network connectivity and response times. The command ping 8.8.8.8 can be used to test external connectivity by sending a connection request to one of Google\u2019s public servers. \n-  High response times over 100ms or lost packets may indicate network congestion or hardware issues. \n-  No response or 100% packet loss may indicate a local disconnection or failure."
+   "statement": "Network congestion or hardware failures can cause slow or failed connectivity to applications, websites, and services. This can be identified using the command-line interface (CLI) tool ping to check network connectivity and response times. The command ping 8.8.8.8 can be used to test external connectivity by sending a connection request to one of Google’s public servers. \n-  High response times over 100ms or lost packets may indicate network congestion or hardware issues. \n-  No response or 100% packet loss may indicate a local disconnection or failure."
   },
   "2.1.A.4": {
    "page": 35,
-   "statement": "Incorrect IP configuration can prevent a device from communicating on a network. This can be identified using the CLI command (Windows) or device\u2019s configuration and troubleshoot local network issues. ipconfig ifconfig (Linux) to check a \n-  IP addresses in the 169.254.0.0\u2013 169.254.255.255 range are Automatic Private IP Addressing (APIPA) addresses, indicating there was a problem assigning the device address. \n-  A loopback address of 127.0.0.1 indicates the device may not be connected to any network and can only send data to itself."
+   "statement": "Incorrect IP configuration can prevent a device from communicating on a network. This can be identified using the CLI command (Windows) or device’s configuration and troubleshoot local network issues. ipconfig ifconfig (Linux) to check a \n-  IP addresses in the 169.254.0.0– 169.254.255.255 range are Automatic Private IP Addressing (APIPA) addresses, indicating there was a problem assigning the device address. \n-  A loopback address of 127.0.0.1 indicates the device may not be connected to any network and can only send data to itself."
   },
   "2.1.B.1": {
    "page": 35,
@@ -339,7 +351,7 @@
   },
   "2.1.B.2": {
    "page": 35,
-   "statement": "Solutions for poor network performance or congestion indicated by ping results that show response times over 100ms, or more than 1\u20132% packet loss include: \n-  changing a wireless connection to a wired connection \n-  pausing large downloads \n-  moving a device closer to a wireless access point"
+   "statement": "Solutions for poor network performance or congestion indicated by ping results that show response times over 100ms, or more than 1–2% packet loss include: \n-  changing a wireless connection to a wired connection \n-  pausing large downloads \n-  moving a device closer to a wireless access point"
   },
   "2.1.B.3": {
    "page": 36,
@@ -367,7 +379,7 @@
   },
   "2.2.A.4": {
    "page": 38,
-   "statement": "Hexadecimal refers to base-16 numbers and uses the characters 0\u20139 and A\u2013F. Hexadecimal is more compact than binary, allowing humans to more easily read, write, and understand large binary numbers. ILLUSTRATIVE EXAMPLE To convert a number from decimal to hexadecimal, divide the number by 16 and find the quotient. Use the remainder for the hex digit and divide the quotient by 16 again. Repeat the steps until the quotient is equal to 0. For example, the decimal number 79 is represented in hexadecimal as 4F: 1. 79/16 = 4, remainder 15 2. 15 \u2192 F 3. 4/16 = 0, remainder 4 4. 4 \u2192 4 5. 79 = 4F"
+   "statement": "Hexadecimal refers to base-16 numbers and uses the characters 0–9 and A–F. Hexadecimal is more compact than binary, allowing humans to more easily read, write, and understand large binary numbers. ILLUSTRATIVE EXAMPLE To convert a number from decimal to hexadecimal, divide the number by 16 and find the quotient. Use the remainder for the hex digit and divide the quotient by 16 again. Repeat the steps until the quotient is equal to 0. For example, the decimal number 79 is represented in hexadecimal as 4F: 1. 79/16 = 4, remainder 15 2. 15 → F 3. 4/16 = 0, remainder 4 4. 4 → 4 5. 79 = 4F"
   },
   "2.2.A.5": {
    "page": 38,
@@ -383,7 +395,7 @@
   },
   "2.2.B.3": {
    "page": 39,
-   "statement": "The network ID of an IPv4 address may be 1\u20133 octets depending on the class of the network. The size of the host ID indicates the number of unique host addresses available on a network."
+   "statement": "The network ID of an IPv4 address may be 1–3 octets depending on the class of the network. The size of the host ID indicates the number of unique host addresses available on a network."
   },
   "2.2.B.4": {
    "page": 39,
@@ -395,7 +407,7 @@
   },
   "2.2.B.6": {
    "page": 40,
-   "statement": "The Address Resolution Protocol (ARP) maps a device\u2019s IP address to its MAC address, ensuring that data are delivered to the correct destination. When a device needs to send data to another device on the same local network, an ARP request containing the known destination IP address is sent to all devices on the network. The device with the corresponding IP address sends an ARP reply that contains its MAC address."
+   "statement": "The Address Resolution Protocol (ARP) maps a device’s IP address to its MAC address, ensuring that data are delivered to the correct destination. When a device needs to send data to another device on the same local network, an ARP request containing the known destination IP address is sent to all devices on the network. The device with the corresponding IP address sends an ARP reply that contains its MAC address."
   },
   "2.2.C.1": {
    "page": 40,
@@ -403,11 +415,11 @@
   },
   "2.2.C.2": {
    "page": 40,
-   "statement": "Private addresses are used within a local area network (LAN) only; routers drop any data addressed to private IP addresses. Private addresses add a layer of security, as privately addressed devices cannot be directly accessed from an external source. Private IP addresses fall into these ranges: \n-  Class A: 10.0.0.0\u201310.255.255.255 \n-  Class B: 172.16.0.0\u2013172.31.255.255 \n-  Class C: 192.168.0.0\u2013192.168.255.255"
+   "statement": "Private addresses are used within a local area network (LAN) only; routers drop any data addressed to private IP addresses. Private addresses add a layer of security, as privately addressed devices cannot be directly accessed from an external source. Private IP addresses fall into these ranges: \n-  Class A: 10.0.0.0–10.255.255.255 \n-  Class B: 172.16.0.0–172.31.255.255 \n-  Class C: 192.168.0.0–192.168.255.255"
   },
   "2.2.C.3": {
    "page": 40,
-   "statement": "APIPA can be used to automatically address hosts if the Dynamic Host Configuration Protocol (DHCP) server, which automates IP assignment and configuration, is unavailable or misconfigured. When APIPA is used, hosts will have an IP address in the range 169.254.0.0\u2013169.254.255.255."
+   "statement": "APIPA can be used to automatically address hosts if the Dynamic Host Configuration Protocol (DHCP) server, which automates IP assignment and configuration, is unavailable or misconfigured. When APIPA is used, hosts will have an IP address in the range 169.254.0.0–169.254.255.255."
   },
   "2.2.C.4": {
    "page": 40,
@@ -467,7 +479,7 @@
   },
   "2.3.B.3": {
    "page": 43,
-   "statement": "Wireless connections, such as Wi-Fi, are ideal for devices that need mobile access like smartphones, tablets, laptops, and IoT devices. Considerations for using wireless connections include: \n-  Cost: affordable \n-  Ease of installation: easy, especially in environments where installing cables would be difficult \n-  Connection speed: varies with signal strength but can support 500Mbps\u20131Gbps \n-  Susceptibility to interference: more susceptible than wired connections to interference and signal degradation due to walls, other devices, or network congestion"
+   "statement": "Wireless connections, such as Wi-Fi, are ideal for devices that need mobile access like smartphones, tablets, laptops, and IoT devices. Considerations for using wireless connections include: \n-  Cost: affordable \n-  Ease of installation: easy, especially in environments where installing cables would be difficult \n-  Connection speed: varies with signal strength but can support 500Mbps–1Gbps \n-  Susceptibility to interference: more susceptible than wired connections to interference and signal degradation due to walls, other devices, or network congestion"
   },
   "2.3.B.4": {
    "page": 44,
@@ -475,7 +487,7 @@
   },
   "2.3.B.5": {
    "page": 44,
-   "statement": "Fiber optic cable should be used when there is a need for ultra-high bandwidth, complete EMI resistance, or maximum connection stability and speed. Fiber optic cable is not commonly used inside SOHO LANs. Considerations for using fiber include: \n-  Cost: more expensive than wireless, coaxial, or twisted pair \n-  Ease of installation: fragile and requires special tools for installation \n-  Connection speed: supports high-speed connections of up to 1\u2013100Gbps, with transmission distances of up to 100 km \n-  Susceptibility to interference: immune to EMI because the signal is carried by light instead of electrical pulses"
+   "statement": "Fiber optic cable should be used when there is a need for ultra-high bandwidth, complete EMI resistance, or maximum connection stability and speed. Fiber optic cable is not commonly used inside SOHO LANs. Considerations for using fiber include: \n-  Cost: more expensive than wireless, coaxial, or twisted pair \n-  Ease of installation: fragile and requires special tools for installation \n-  Connection speed: supports high-speed connections of up to 1–100Gbps, with transmission distances of up to 100 km \n-  Susceptibility to interference: immune to EMI because the signal is carried by light instead of electrical pulses"
   },
   "2.3.C.1": {
    "page": 44,
@@ -631,7 +643,7 @@
   },
   "3.1.B.3": {
    "page": 57,
-   "statement": "One wireless access point (WAP) can typically support 30\u201350 mobile devices or up to 20 computers or laptops. Because wireless signal strength decreases with distance and obstacles such as walls or EMI, large or irregular spaces may require multiple WAPs to maintain reliable connectivity for all users."
+   "statement": "One wireless access point (WAP) can typically support 30–50 mobile devices or up to 20 computers or laptops. Because wireless signal strength decreases with distance and obstacles such as walls or EMI, large or irregular spaces may require multiple WAPs to maintain reliable connectivity for all users."
   },
   "3.1.B.4": {
    "page": 57,
@@ -659,11 +671,11 @@
   },
   "3.2.B.1": {
    "page": 59,
-   "statement": "Devices, applications, and services should be grouped based on their sensitivity, access requirements, and traffic needs. Segmenting guest access, IoT devices, user workstations, and internal services reduces congestion from broadcast messages and limits an adversary\u2019s ability to move laterally."
+   "statement": "Devices, applications, and services should be grouped based on their sensitivity, access requirements, and traffic needs. Segmenting guest access, IoT devices, user workstations, and internal services reduces congestion from broadcast messages and limits an adversary’s ability to move laterally."
   },
   "3.2.B.2": {
    "page": 59,
-   "statement": "Physical segmentation should be used when maximum isolation and security are needed, such as in restricted zones or separate departments. Physical segmentation uses separate switches, routers, or cabling to build isolated subnetworks. It increases complexity and cost but provides strong separation. ILLUSTRATIVE EXAMPLE A university computer science department designed a testing lab that is connected to its own switch and router, separate from the switches and routers used by the university\u2019s classrooms and offices. Because the lab uses separate network hardware, traffic is physically isolated from the rest of the network."
+   "statement": "Physical segmentation should be used when maximum isolation and security are needed, such as in restricted zones or separate departments. Physical segmentation uses separate switches, routers, or cabling to build isolated subnetworks. It increases complexity and cost but provides strong separation. ILLUSTRATIVE EXAMPLE A university computer science department designed a testing lab that is connected to its own switch and router, separate from the switches and routers used by the university’s classrooms and offices. Because the lab uses separate network hardware, traffic is physically isolated from the rest of the network."
   },
   "3.2.B.3": {
    "page": 59,
@@ -735,7 +747,7 @@
   },
   "3.3.A.5": {
    "page": 63,
-   "statement": "Verify that the IP configuration, subnet mask, default gateway, and MAC address ipconfig match intended settings using , ifconfig , or network settings. MAC addresses may appear as \u201cPhysical Address,\u201d \u201cHardware Address,\u201d or \u201cEther Address.\u201d"
+   "statement": "Verify that the IP configuration, subnet mask, default gateway, and MAC address ipconfig match intended settings using , ifconfig , or network settings. MAC addresses may appear as “Physical Address,” “Hardware Address,” or “Ether Address.”"
   },
   "3.3.B.1": {
    "page": 63,
@@ -763,7 +775,7 @@
   },
   "3.3.C.3": {
    "page": 64,
-   "statement": "Settings on a network switch like the password, IP address, and subnet mask can be manually assigned using the CLI or the graphical user interface (GUI) of the switch\u2019s management console. The management console can be accessed by connecting through a console cable."
+   "statement": "Settings on a network switch like the password, IP address, and subnet mask can be manually assigned using the CLI or the graphical user interface (GUI) of the switch’s management console. The management console can be accessed by connecting through a console cable."
   },
   "3.3.C.4": {
    "page": 65,
@@ -855,7 +867,7 @@
   },
   "3.4.C.3": {
    "page": 69,
-   "statement": "The number of hosts a network can accommodate is 2n\u22122 where n is the number of host bits. The first and last addresses on a network are reserved for the network address and broadcast address, respectively, and cannot be assigned to hosts. \n-  The network address is the first address in a subnet; it\u2019s used to identify the subnet. \n-  The broadcast address is the last address in a subnet; it\u2019s used to send messages to all devices in that subnet. \n-  The usable host range includes the IP addresses between the network and broadcast addresses that can be assigned to devices. ILLUSTRATIVE EXAMPLES \n-  A network with 8 host bits has 28 = 256 total addresses. The first address is the network address and the last is the broadcast address, leaving 254 usable host addresses. \n-  A network with 5 host bits has 25 = 32 total addresses. After reserving the network and broadcast addresses, 30 addresses can be assigned to hosts."
+   "statement": "The number of hosts a network can accommodate is 2n−2 where n is the number of host bits. The first and last addresses on a network are reserved for the network address and broadcast address, respectively, and cannot be assigned to hosts. \n-  The network address is the first address in a subnet; it’s used to identify the subnet. \n-  The broadcast address is the last address in a subnet; it’s used to send messages to all devices in that subnet. \n-  The usable host range includes the IP addresses between the network and broadcast addresses that can be assigned to devices. ILLUSTRATIVE EXAMPLES \n-  A network with 8 host bits has 28 = 256 total addresses. The first address is the network address and the last is the broadcast address, leaving 254 usable host addresses. \n-  A network with 5 host bits has 25 = 32 total addresses. After reserving the network and broadcast addresses, 30 addresses can be assigned to hosts."
   },
   "3.4.C.4": {
    "page": 70,
@@ -907,11 +919,11 @@
   },
   "3.5.C.2": {
    "page": 73,
-   "statement": "A typical ACL will specify the direction of traffic on an interface (inbound or outbound), the criterion to filter by (IP addresses, logical port, service, or application), and action (permit or deny). Different firewalls will use different criteria to filter traffic. Common ports and protocols used in ACLs include: \n-  Hypertext Transfer Protocol Secure (HTTPS) port 443 \u2013 secure web traffic \n-  Domain Name System (DNS) port 53 \u2013 domain name resolution \n-  Secure Shell (SSH) port 22 \u2013 secure remote CLI access \n-  Secure File Transfer Protocol (SFTP) port 22 \u2013 secure file transfer over SSH"
+   "statement": "A typical ACL will specify the direction of traffic on an interface (inbound or outbound), the criterion to filter by (IP addresses, logical port, service, or application), and action (permit or deny). Different firewalls will use different criteria to filter traffic. Common ports and protocols used in ACLs include: \n-  Hypertext Transfer Protocol Secure (HTTPS) port 443 – secure web traffic \n-  Domain Name System (DNS) port 53 – domain name resolution \n-  Secure Shell (SSH) port 22 – secure remote CLI access \n-  Secure File Transfer Protocol (SFTP) port 22 – secure file transfer over SSH"
   },
   "3.5.C.3": {
    "page": 73,
-   "statement": "ACLs should be created to limit opportunities for malicious traffic, closing unused and vulnerable ports whenever possible while prioritizing services needed. Vulnerable ports and protocols include: \n-  Hypertext Transfer Protocol (HTTP) port 80 \u2013 unencrypted web traffic \n-  Telnet port 23 \u2013 unencrypted remote CLI access \n-  File Transfer Protocol (FTP) port 21 \u2013 unencrypted file transfer ILLUSTRATIVE EXAMPLE The following rule configuration prioritizes necessary services (ports 443, 22, and 53) while closing unused and vulnerable ports (ports 80 and 23): \n-  101 ALLOW inbound TCP port 443 from ALL; 102 ALLOW inbound TCP port 22 from ALL; 103 DENY inbound TCP port 80 from ALL; 104 DENY inbound TCP port 23 from ALL; 105 ALLOW inbound UDP port 53 from ALL; \n-  \n-  \n-  \n- "
+   "statement": "ACLs should be created to limit opportunities for malicious traffic, closing unused and vulnerable ports whenever possible while prioritizing services needed. Vulnerable ports and protocols include: \n-  Hypertext Transfer Protocol (HTTP) port 80 – unencrypted web traffic \n-  Telnet port 23 – unencrypted remote CLI access \n-  File Transfer Protocol (FTP) port 21 – unencrypted file transfer ILLUSTRATIVE EXAMPLE The following rule configuration prioritizes necessary services (ports 443, 22, and 53) while closing unused and vulnerable ports (ports 80 and 23): \n-  101 ALLOW inbound TCP port 443 from ALL; 102 ALLOW inbound TCP port 22 from ALL; 103 DENY inbound TCP port 80 from ALL; 104 DENY inbound TCP port 23 from ALL; 105 ALLOW inbound UDP port 53 from ALL; \n-  \n-  \n-  \n- "
   },
   "3.5.C.4": {
    "page": 74,
@@ -959,7 +971,7 @@
   },
   "3.6.B.5": {
    "page": 76,
-   "statement": "Weak wireless signal strength or high interference can cause degraded wireless performance. This can be identified using wireless signal analyzer tools, available as mobile apps or standalone devices. \n-  Weak signal strength (below \u201370 dBm) may indicate that the WAP is too far or is being obstructed by walls or objects. \n-  High noise or interference may indicate EMI from other devices."
+   "statement": "Weak wireless signal strength or high interference can cause degraded wireless performance. This can be identified using wireless signal analyzer tools, available as mobile apps or standalone devices. \n-  Weak signal strength (below –70 dBm) may indicate that the WAP is too far or is being obstructed by walls or objects. \n-  High noise or interference may indicate EMI from other devices."
   },
   "3.6.B.6": {
    "page": 77,
@@ -1031,7 +1043,7 @@
   },
   "4.2.A.2": {
    "page": 85,
-   "statement": "Network protocols are used for identifying devices and networks to ensure data are directed to the correct destination. \n-  MAC addresses and ARP are used to identify devices on a local network. \n-  IP addresses identify local and remote devices. \n-  DHCP automatically assigns IP addresses to devices. \n-  DNS translates domain names into IP addresses. ILLUSTRATIVE EXAMPLE Entering the URL google.com uses the DNS protocol to translate into one of Google\u2019s public IP addresses, such as 172.253.63.100. This translation allows for simplified communication and resolution of web requests."
+   "statement": "Network protocols are used for identifying devices and networks to ensure data are directed to the correct destination. \n-  MAC addresses and ARP are used to identify devices on a local network. \n-  IP addresses identify local and remote devices. \n-  DHCP automatically assigns IP addresses to devices. \n-  DNS translates domain names into IP addresses. ILLUSTRATIVE EXAMPLE Entering the URL google.com uses the DNS protocol to translate into one of Google’s public IP addresses, such as 172.253.63.100. This translation allows for simplified communication and resolution of web requests."
   },
   "4.2.A.3": {
    "page": 86,
@@ -1047,15 +1059,15 @@
   },
   "4.2.B.2": {
    "page": 87,
-   "statement": "A protocol data unit (PDU) is a single unit of information transmitted over a network. It contains the data and protocol information needed for transmission. The PDU at each layer of the OSI and TCP/IP model changes as it is encapsulated with more information to assist with the transmission of the data. Protocol data units at each OSI model layer: \n-  layer 1\u2013 physical layer: bits \n-  layer 2 \u2013 data link layer: frames \n-  layer 3 \u2013 network layer: packets \n-  layer 4 \u2013 transport layer: segments \n-  layer 5 \u2013 session layer: data \n-  layer 6 \u2013 presentation layer: data \n-  layer 7 \u2013 application layer: data Protocol data units at each TCP/IP model layer: \n-  network access layer: bits and frames \n-  internet layer: packets \n-  transport layer: segments \n-  application layer: data"
+   "statement": "A protocol data unit (PDU) is a single unit of information transmitted over a network. It contains the data and protocol information needed for transmission. The PDU at each layer of the OSI and TCP/IP model changes as it is encapsulated with more information to assist with the transmission of the data. Protocol data units at each OSI model layer: \n-  layer 1– physical layer: bits \n-  layer 2 – data link layer: frames \n-  layer 3 – network layer: packets \n-  layer 4 – transport layer: segments \n-  layer 5 – session layer: data \n-  layer 6 – presentation layer: data \n-  layer 7 – application layer: data Protocol data units at each TCP/IP model layer: \n-  network access layer: bits and frames \n-  internet layer: packets \n-  transport layer: segments \n-  application layer: data"
   },
   "4.2.B.3": {
    "page": 87,
-   "statement": "The OSI model has seven layers that correspond to the four layers of the TCP/IP model. \n-  OSI layers 1\u20132 correlate with the TCP/IP network access layer. \n-  OSI layer 3 correlates with the TCP/IP internet layer. \n-  OSI layer 4 correlates with the TCP/IP transport layer. \n-  OSI layers 5\u20137 are often collectively referred to as the upper layers and correlate with the TCP/IP application layer."
+   "statement": "The OSI model has seven layers that correspond to the four layers of the TCP/IP model. \n-  OSI layers 1–2 correlate with the TCP/IP network access layer. \n-  OSI layer 3 correlates with the TCP/IP internet layer. \n-  OSI layer 4 correlates with the TCP/IP transport layer. \n-  OSI layers 5–7 are often collectively referred to as the upper layers and correlate with the TCP/IP application layer."
   },
   "4.2.B.4": {
    "page": 87,
-   "statement": "The OSI model organizes network protocols into layers based on their functions, defining how data are formatted, transmitted, and interpreted at each stage. This includes: \n-  layer 1 physical: bits and physical transmission media \n-  layer 2 data link: Ethernet, MAC addresses \n-  layer 3 network: IP addresses, ICMP \n-  layer 4 transport: TCP, UDP \n-  layers 5\u20137 upper layers: application layer protocols, such as DNS and HTTPS"
+   "statement": "The OSI model organizes network protocols into layers based on their functions, defining how data are formatted, transmitted, and interpreted at each stage. This includes: \n-  layer 1 physical: bits and physical transmission media \n-  layer 2 data link: Ethernet, MAC addresses \n-  layer 3 network: IP addresses, ICMP \n-  layer 4 transport: TCP, UDP \n-  layers 5–7 upper layers: application layer protocols, such as DNS and HTTPS"
   },
   "4.2.C.1": {
    "page": 88,
@@ -1071,7 +1083,7 @@
   },
   "4.3.A.2": {
    "page": 89,
-   "statement": "In Linux-based operating systems, the location often begins with the root directory, followed by the names of nested directories. Many modern CLI shells use a dollar sign, indicate the prompt for user entry. The tilde, indicates the current user\u2019s home directory. / , $ , to ~ , ILLUSTRATIVE EXAMPLES \n-  /home/user/Desktop , In Linux file path home user is a directory in the root directory, is a directory in user . user@hostname / Desktop home , is a directory in \n-  The Linux prompt home/user/Desktop $ represents that the command line interface is ready for input in the Desktop directory. user@hostname ~ $ \n-  The Linux prompt represents that the command line interface is ready for input in the user\u2019s home directory."
+   "statement": "In Linux-based operating systems, the location often begins with the root directory, followed by the names of nested directories. Many modern CLI shells use a dollar sign, indicate the prompt for user entry. The tilde, indicates the current user’s home directory. / , $ , to ~ , ILLUSTRATIVE EXAMPLES \n-  /home/user/Desktop , In Linux file path home user is a directory in the root directory, is a directory in user . user@hostname / Desktop home , is a directory in \n-  The Linux prompt home/user/Desktop $ represents that the command line interface is ready for input in the Desktop directory. user@hostname ~ $ \n-  The Linux prompt represents that the command line interface is ready for input in the user’s home directory."
   },
   "4.3.A.3": {
    "page": 90,
@@ -1079,15 +1091,15 @@
   },
   "4.3.A.4": {
    "page": 90,
-   "statement": "CLI commands follow a standard syntax pattern: command, options, arguments. \n-  Commands are the name of the program cd ls to be executed, such as or . \n-  Options are optional parameters that modify how the command operates or the output of the command. Options are often denoted with a dash, referred to as switches or flags. \u2013 , and are also \n-  Arguments provide specific information the command needs to operate such as a file or path. Some commands require arguments, while others can run with no additional input. ls To illustrate this structure, the command can be used in several ways on a Linux system. ls ls \n-  This execution of is without options or arguments. When no argument is provided, the working directory is the default argument. It will list or display the contents of the working directory excluding hidden files. ls \u2013a ls \n-  specifies the option . This option displays all content in the working directory, including hidden files and directories. ls user1 This execution of \u2013a ls \n-  This use of has no options user1 but specifies an argument of will display the contents of the directory excluding hidden files. ls ls \u2013a user1 . It user1 \n-  specifies and an argument of . It will display the contents of the directory including any hidden files. This use of \u2013a both an option of user1 user1"
+   "statement": "CLI commands follow a standard syntax pattern: command, options, arguments. \n-  Commands are the name of the program cd ls to be executed, such as or . \n-  Options are optional parameters that modify how the command operates or the output of the command. Options are often denoted with a dash, referred to as switches or flags. – , and are also \n-  Arguments provide specific information the command needs to operate such as a file or path. Some commands require arguments, while others can run with no additional input. ls To illustrate this structure, the command can be used in several ways on a Linux system. ls ls \n-  This execution of is without options or arguments. When no argument is provided, the working directory is the default argument. It will list or display the contents of the working directory excluding hidden files. ls –a ls \n-  specifies the option . This option displays all content in the working directory, including hidden files and directories. ls user1 This execution of –a ls \n-  This use of has no options user1 but specifies an argument of will display the contents of the directory excluding hidden files. ls ls –a user1 . It user1 \n-  specifies and an argument of . It will display the contents of the directory including any hidden files. This use of –a both an option of user1 user1"
   },
   "4.3.A.5": {
    "page": 91,
-   "statement": "In a CLI users need to move between directories, view directory contents, and determine their current location within the file system. Commands to perform these actions include: cd ls \n-  \u2013 change the working directory \n-  \u2013 list the contents of a directory (Mac/Linux) dir \n-  \u2013 view the contents of a directory (Windows) pwd \n-  \u2013 view the current working directory (Mac/Linux)"
+   "statement": "In a CLI users need to move between directories, view directory contents, and determine their current location within the file system. Commands to perform these actions include: cd ls \n-  – change the working directory \n-  – list the contents of a directory (Mac/Linux) dir \n-  – view the contents of a directory (Windows) pwd \n-  – view the current working directory (Mac/Linux)"
   },
   "4.3.A.6": {
    "page": 91,
-   "statement": "cd The directories in a file system. Usage of the command includes: command is a useful tool for changing cd cd subdirectory_name \n-  \u2013 change to a subdirectory in your current location cd .. cd ~ cd / \n-  \u2013 move toward the root directory \n-  \u2013 move to the home directory \n-  \u2013 move to the root directory",
+   "statement": "cd The directories in a file system. Usage of the command includes: command is a useful tool for changing cd cd subdirectory_name \n-  – change to a subdirectory in your current location cd .. cd ~ cd / \n-  – move toward the root directory \n-  – move to the home directory \n-  – move to the root directory",
    "verbatim": false
   },
   "4.3.A.7": {
@@ -1109,11 +1121,11 @@
   },
   "4.3.B.4": {
    "page": 92,
-   "statement": "Within an SFTP session the remote device can be navigated using CLI commands including: ls \n-  \u2013 list the contents of the current remote directory cd pwd \n-  \u2013 change the remote directory \n-  \u2013 view the current remote working directory"
+   "statement": "Within an SFTP session the remote device can be navigated using CLI commands including: ls \n-  – list the contents of the current remote directory cd pwd \n-  – change the remote directory \n-  – view the current remote working directory"
   },
   "4.3.B.5": {
    "page": 92,
-   "statement": "CLI commands to transfer files within an SFTP session include: get filename \n-  \u2013 downloads a file from the remote device to the local device put filename \n-  \u2013 uploads a file from the local device to the remote device"
+   "statement": "CLI commands to transfer files within an SFTP session include: get filename \n-  – downloads a file from the remote device to the local device put filename \n-  – uploads a file from the local device to the remote device"
   },
   "4.4.A.1": {
    "page": 93,
@@ -1121,7 +1133,7 @@
   },
   "4.4.A.2": {
    "page": 93,
-   "statement": "Network address translation (NAT) is used to allow traffic from internal devices with private IP addresses to send and receive data to and from external devices. NAT helps conserve public IP addresses and adds a layer of security. When using NAT, the default gateway replaces the source IP address in outgoing packets with the gateway\u2019s single external IP address. This allows multiple devices to share a single public IP address. ILLUSTRATIVE EXAMPLE A device on a local network has the private IP address 192.168.1.25 and sends data to a web server on the internet. \n-  Internal device source IP: 192.168.1.25 \n-  Router public IP: 203.0.113.10 When traffic leaves the local network, the router replaces 192.168.1.25 with 203.0.113.10. Return traffic from the web server is addressed to 203.0.113.10, and the router translates the destination back to 192.168.1.25 to deliver data to the correct device."
+   "statement": "Network address translation (NAT) is used to allow traffic from internal devices with private IP addresses to send and receive data to and from external devices. NAT helps conserve public IP addresses and adds a layer of security. When using NAT, the default gateway replaces the source IP address in outgoing packets with the gateway’s single external IP address. This allows multiple devices to share a single public IP address. ILLUSTRATIVE EXAMPLE A device on a local network has the private IP address 192.168.1.25 and sends data to a web server on the internet. \n-  Internal device source IP: 192.168.1.25 \n-  Router public IP: 203.0.113.10 When traffic leaves the local network, the router replaces 192.168.1.25 with 203.0.113.10. Return traffic from the web server is addressed to 203.0.113.10, and the router translates the destination back to 192.168.1.25 to deliver data to the correct device."
   },
   "4.4.A.3": {
    "page": 94,
@@ -1133,7 +1145,7 @@
   },
   "4.4.A.5": {
    "page": 94,
-   "statement": "Once a packet reaches the destination network, the router forwards it directly to the destination device using the device\u2019s private IP address."
+   "statement": "Once a packet reaches the destination network, the router forwards it directly to the destination device using the device’s private IP address."
   },
   "4.4.B.1": {
    "page": 94,
@@ -1153,7 +1165,7 @@
   },
   "4.4.C.1": {
    "page": 95,
-   "statement": "traceroute tracert (Mac/Linux) and (Windows) are command line tools that display a packet\u2019s path from the source network to the destination network by showing the IPv4 addresses of each hop in the path.",
+   "statement": "traceroute tracert (Mac/Linux) and (Windows) are command line tools that display a packet’s path from the source network to the destination network by showing the IPv4 addresses of each hop in the path.",
    "verbatim": false
   },
   "4.4.C.2": {
@@ -1216,7 +1228,7 @@
   },
   "4.5.D.2": {
    "page": 99,
-   "statement": "VLAN implementation starts with a segmentation plan that groups users or devices based on function or security level. Each VLAN is assigned a unique VLAN ID and can be named for clear identification. Devices are assigned to VLANs by connecting them to designated switch ports that are configured with the corresponding VLAN ID. ILLUSTRATIVE EXAMPLE A home network includes many devices and uses VLANs to segment traffic for security and performance. Devices are grouped by function, and switch ports are configured with VLAN IDs to control network access: \n-  VLAN 10 (ports 1\u20132): Home office devices, including work computers and printers \n-  VLAN 20 (ports 3\u20134): Smart and IoT devices, including thermostats, cameras, and televisions \n-  VLAN 30 (ports 5\u20136): Media devices, including game systems and a media server \n-  VLAN 40 (ports 7\u201310): Family devices, including laptops, tablets, and phones"
+   "statement": "VLAN implementation starts with a segmentation plan that groups users or devices based on function or security level. Each VLAN is assigned a unique VLAN ID and can be named for clear identification. Devices are assigned to VLANs by connecting them to designated switch ports that are configured with the corresponding VLAN ID. ILLUSTRATIVE EXAMPLE A home network includes many devices and uses VLANs to segment traffic for security and performance. Devices are grouped by function, and switch ports are configured with VLAN IDs to control network access: \n-  VLAN 10 (ports 1–2): Home office devices, including work computers and printers \n-  VLAN 20 (ports 3–4): Smart and IoT devices, including thermostats, cameras, and televisions \n-  VLAN 30 (ports 5–6): Media devices, including game systems and a media server \n-  VLAN 40 (ports 7–10): Family devices, including laptops, tablets, and phones"
   },
   "4.5.D.3": {
    "page": 99,
@@ -1236,7 +1248,7 @@
   },
   "4.6.A.2": {
    "page": 100,
-   "statement": "An IPv6 address consists of 128 bits, typically grouped as 8 hextets (groups of 16 bits) written with hexadecimal digits separated by colons. The IPv6 address space allows for 2128 possible addresses, allowing every device to have a globally unique and routable IP address. ILLUSTRATIVE EXAMPLES IPv6 addresses can be written in full or compressed formats. In the compressed format, leading zeros are removed and sequences of all-zero hextets are replaced with two colons, \n-  :: . For example: 2003:AB00:CDEF:000A:0000:0000:0000: 0001 \u2192 2003:AB00:CDEF:A :: 1 \n-  2001:0DB8:0000:0000:0000:0000:0000: :: 1234 \u2192 2001:DB8 1234 \n-  FE80:0000:0000:0000:01FF:FE23:4567: 890A \u2192 FE80 :: 1FF:FE23:4567:890A"
+   "statement": "An IPv6 address consists of 128 bits, typically grouped as 8 hextets (groups of 16 bits) written with hexadecimal digits separated by colons. The IPv6 address space allows for 2128 possible addresses, allowing every device to have a globally unique and routable IP address. ILLUSTRATIVE EXAMPLES IPv6 addresses can be written in full or compressed formats. In the compressed format, leading zeros are removed and sequences of all-zero hextets are replaced with two colons, \n-  :: . For example: 2003:AB00:CDEF:000A:0000:0000:0000: 0001 → 2003:AB00:CDEF:A :: 1 \n-  2001:0DB8:0000:0000:0000:0000:0000: :: 1234 → 2001:DB8 1234 \n-  FE80:0000:0000:0000:01FF:FE23:4567: 890A → FE80 :: 1FF:FE23:4567:890A"
   },
   "4.6.A.3": {
    "page": 100,

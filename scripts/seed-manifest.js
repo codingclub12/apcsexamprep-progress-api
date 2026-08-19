@@ -211,6 +211,70 @@ const NET_EXAMS = {
   'exam-final': 50,
 };
 
+// ── AP NETWORKING HANDS-ON WORK. NOT SEEDED YET, ON PURPOSE ──────────────────
+//
+// WHY THESE EXIST
+//   docs/ap-networking-full-year-readiness.md measured the course against the
+//   verbs its own framework uses. Sub-skills ending .C ("implement and
+//   document") and .D ("verify") are 13 of the 55 skill assignments, or 24%,
+//   and appear in 10 of the 22 topics, and the course answered them with four
+//   browser labs worth 32 of 448 points, or 7%. Skill category 4, Collaborate,
+//   is required in topics 1.4 and 2.4 and had no asset at all.
+//
+//   config/networking-hands-on.json is the authored spec: what the student
+//   configures, which EK statement each check is anchored to, and which half is
+//   auto-graded versus teacher-scored. These constants are only the manifest
+//   side of it.
+//
+// WHY THE FLAG IS FALSE
+//   Same reason NET_LABS carries its warning and INTRO_JAVA_PAGES_LIVE exists: a
+//   denominator for a page nobody can open marks every student down for work
+//   that does not exist, and smoke/manifest-prune.js exists to catch exactly
+//   that. Flip this in the pass that ships the pages, not before.
+//
+// THE TWO KINDS
+//   NET_CONFIG_LABS report themselves from the page, like every other graded
+//   widget. NET_UNIT_DOCS and NET_TEAM_PROJECT cannot: they assess documentation
+//   and teamwork, which are free text, and this API never stores free text from
+//   a student. They are entered by the teacher through the score-entry route
+//   that already exists (POST /api/teacher/classes/:code/scores), which already
+//   validates the item against this manifest. No new write surface is needed;
+//   the rows are.
+const NET_HANDS_ON_LIVE = false;
+
+// One configuration activity per topic that carries a .C or .D sub-skill.
+// lesson_id is the topic, and item_type 'lab' keeps it in its own gradebook cell
+// rather than sharing the topic's quiz cell.
+const NET_CONFIG_LABS = {
+  '1.4': 8, '2.2': 8, '2.4': 8, '2.6': 8, '3.3': 8,
+  '3.4': 8, '3.5': 8, '4.3': 8, '4.4': 8, '4.5': 8,
+};
+
+// One documentation record per unit, teacher-scored. Per unit and not per topic
+// because ten of these is 300 hand entries for a class of thirty, which is a
+// feature nobody uses; four is one a teacher will actually complete.
+//
+// lesson_id is its own instrument id, never a topic number, for the reason given
+// on INTRO_JAVA_PROJECTS below.
+const NET_UNIT_DOCS = {
+  'doc-1': { unit: 'unit-1', points: 6 },
+  'doc-2': { unit: 'unit-2', points: 6 },
+  'doc-3': { unit: 'unit-3', points: 6 },
+  'doc-4': { unit: 'unit-4', points: 6 },
+};
+
+// The collaborative task, teacher-scored. unit 'course' because it draws on 1.4
+// and 2.4 and is scheduled after 2.4, so it belongs to neither unit alone.
+//
+// This runs against the judgment recorded on INTRO_JAVA_PROJECTS, that projects
+// are not worth grading into the gradebook. The difference is that intro-java
+// answers to nobody, while AP Networking has to evidence skill category 4 to
+// carry the Advanced Placement label, and a task scored outside the gradebook
+// leaves category 4 with no evidence in the system of record. Tanner's call.
+const NET_TEAM_PROJECT = {
+  'team-project-1': { unit: 'course', points: 24 },
+};
+
 // Intro to Java with Greenfoot graded items, DERIVED from the authored content
 // bank rather than counted by hand. seed/intro-java-unit1.js is the single
 // source of truth for what actually exists on a lesson, so a denominator here
@@ -360,6 +424,23 @@ function buildRows() {
   // AP Networking browser labs (one per unit).
   for (const [itemId, cfg] of Object.entries(NET_LABS)) {
     rows.push({ course: 'ap-networking', unit: cfg.unit, lesson_id: itemId, item_id: itemId, item_type: 'quiz', points: cfg.points });
+  }
+
+  // AP Networking hands-on work. Empty until NET_HANDS_ON_LIVE is flipped in
+  // the pass that ships the pages; see the block above for why.
+  if (NET_HANDS_ON_LIVE) {
+    for (const [lesson, points] of Object.entries(NET_CONFIG_LABS)) {
+      rows.push({ course: 'ap-networking', unit: `unit-${lesson.split('.')[0]}`,
+        lesson_id: lesson, item_id: `${lesson}-lab`, item_type: 'lab', points });
+    }
+    for (const [itemId, cfg] of Object.entries(NET_UNIT_DOCS)) {
+      rows.push({ course: 'ap-networking', unit: cfg.unit, lesson_id: itemId,
+        item_id: itemId, item_type: 'project', points: cfg.points });
+    }
+    for (const [itemId, cfg] of Object.entries(NET_TEAM_PROJECT)) {
+      rows.push({ course: 'ap-networking', unit: cfg.unit, lesson_id: itemId,
+        item_id: itemId, item_type: 'project', points: cfg.points });
+    }
   }
 
   // AP Networking cumulative exams (course-wide, not tied to one unit).
@@ -524,4 +605,5 @@ if (require.main === module) {
 
 module.exports = { seedManifest, buildRows, findOrphans, pruneManifest,
   deadNetworkingCfuIds, cleanDeadNetworkingCfus,
-  introJavaRows, introJavaGradedRows, INTRO_JAVA_PAGES_LIVE };
+  introJavaRows, introJavaGradedRows, INTRO_JAVA_PAGES_LIVE,
+  NET_HANDS_ON_LIVE, NET_CONFIG_LABS, NET_UNIT_DOCS, NET_TEAM_PROJECT };

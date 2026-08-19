@@ -1,0 +1,172 @@
+{
+ "_comment": [
+  "Which course SKILLS each AP Networking topic is meant to develop, taken from the",
+  "Suggested Skills rail on every topic page of the published course framework.",
+  "",
+  "WHY SKILLS AND NOT JUST KNOWLEDGE",
+  "  Essential Knowledge coverage answers 'does the page mention the content'.",
+  "  It cannot answer 'does the course make students DO the thing'. The framework",
+  "  splits every skill into four verbs, and only the first two are satisfiable by",
+  "  reading and answering questions:",
+  "    .A Identify or explain      a page can teach this",
+  "    .B Determine or analyse     a scenario question can assess this",
+  "    .C IMPLEMENT and document   requires configuring something real",
+  "    .D VERIFY                   requires checking that the config works",
+  "  Skill category 4, Collaborate, is a further step again: it is about team",
+  "  objectives, roles and shared work, which a self-paced website cannot deliver",
+  "  at all without a teacher-facing structure around it.",
+  "",
+  "  Sub-skill wording for 1.B, 2.A and 3.B is reconstructed from the topic pages",
+  "  rather than lifted from a single skills table, so treat those three as",
+  "  paraphrase; the codes and their per-topic assignment are exact.",
+  "",
+  "EXTRACTION",
+  "  The Suggested Skills rail moves horizontally between page geometries, so it is",
+  "  anchored on the position of the SUGGESTED SKILLS label on each page rather",
+  "  than a fixed x coordinate. 22 of 22 topics captured."
+ ],
+ "source": {
+  "url": "https://apcentral.collegeboard.org/media/pdf/ap-networking-course-framework.pdf",
+  "extracted_on": "2026-08-19",
+  "sha256": "2dd45c6fc59c90533a1570102a3be0ec9fcae4bf731b389525fe25a80c80bd8f"
+ },
+ "skills": {
+  "1": {
+   "name": "Connect and Configure",
+   "subskills": {
+    "1.A": "Identify common device and network components, protocols, and configurations, and explain processes and relationships in computer networks.",
+    "1.B": "Determine an appropriate configuration or component for a given networking need.",
+    "1.C": "Implement and document device and network configurations to establish and maintain connectivity.",
+    "1.D": "Verify connectivity and configurations of devices and networks, and apply the troubleshooting skills to resolve any problems."
+   }
+  },
+  "2": {
+   "name": "Secure",
+   "subskills": {
+    "2.A": "Identify device and network vulnerabilities and the security needs they create.",
+    "2.B": "Determine, with and without the support of AI, mitigation strategies to address device and network vulnerabilities.",
+    "2.C": "Implement and document security controls to address potential vulnerabilities and monitor networks.",
+    "2.D": "Verify that security controls mitigate the intended vulnerability while maintaining access and availability, and apply troubleshooting skills to resolve any problems."
+   }
+  },
+  "3": {
+   "name": "Troubleshoot",
+   "subskills": {
+    "3.A": "Identify common device and network problems, and explain how tools, including AI, can be used to diagnose the causes of the problems.",
+    "3.B": "Determine the likely cause of a device or network problem.",
+    "3.C": "Implement and document a potential solution to solve a problem.",
+    "3.D": "Verify the success of a solution and continue applying troubleshooting skills if needed."
+   }
+  },
+  "4": {
+   "name": "Collaborate",
+   "subskills": {
+    "4.A": "Develop clear, shared team objectives related to a networking task.",
+    "4.B": "Determine clear roles and responsibilities for members of a team working to accomplish a networking task.",
+    "4.C": "Implement AI as a collaboration tool individually and as a group.",
+    "4.D": "Complete assigned work to accomplish a collaborative networking task."
+   }
+  }
+ },
+ "by_topic": {
+  "1.1": [
+   "1.A",
+   "3.A",
+   "3.B"
+  ],
+  "1.2": [
+   "1.A",
+   "1.B",
+   "2.A"
+  ],
+  "1.3": [
+   "2.A",
+   "2.B",
+   "3.A"
+  ],
+  "1.4": [
+   "2.C",
+   "2.D",
+   "4.A"
+  ],
+  "2.1": [
+   "1.A",
+   "3.A",
+   "3.B"
+  ],
+  "2.2": [
+   "1.A",
+   "1.C"
+  ],
+  "2.3": [
+   "1.A",
+   "1.B",
+   "3.A"
+  ],
+  "2.4": [
+   "1.B",
+   "1.C",
+   "4.A",
+   "4.B"
+  ],
+  "2.5": [
+   "2.A",
+   "2.B"
+  ],
+  "2.6": [
+   "2.A",
+   "2.C"
+  ],
+  "3.1": [
+   "1.A",
+   "1.B"
+  ],
+  "3.2": [
+   "1.A",
+   "1.B",
+   "2.A"
+  ],
+  "3.3": [
+   "1.C",
+   "1.D",
+   "3.A"
+  ],
+  "3.4": [
+   "2.B",
+   "2.C"
+  ],
+  "3.5": [
+   "2.B",
+   "2.C"
+  ],
+  "3.6": [
+   "3.A",
+   "3.B"
+  ],
+  "4.1": [
+   "1.A",
+   "2.A",
+   "3.A"
+  ],
+  "4.2": [
+   "1.A",
+   "3.B"
+  ],
+  "4.3": [
+   "1.C",
+   "1.D"
+  ],
+  "4.4": [
+   "1.A",
+   "1.C"
+  ],
+  "4.5": [
+   "2.B",
+   "2.C"
+  ],
+  "4.6": [
+   "1.A",
+   "3.B"
+  ]
+ }
+}
