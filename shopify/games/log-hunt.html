@@ -1,0 +1,213 @@
+<style>
+  #lh-game{font-family:"DM Sans",-apple-system,BlinkMacSystemFont,sans-serif;max-width:640px;margin:0 auto;}
+  #lh-game *{box-sizing:border-box;}
+  .lh-card{border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden;background:#fff!important;}
+  .lh-hero{background:#0f1f3d!important;padding:22px 20px;text-align:center;}
+  .lh-title{font-family:"DM Serif Display",Georgia,serif!important;font-size:26px!important;line-height:1.15!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 6px!important;}
+  .lh-sub{font-size:14px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0!important;line-height:1.5!important;}
+  .lh-bar{display:flex;gap:8px;padding:12px;background:#f8fafc!important;border-bottom:1px solid #e2e8f0;flex-wrap:wrap;justify-content:center;}
+  .lh-chip{font-size:12px!important;font-weight:700;color:#475569!important;-webkit-text-fill-color:#475569!important;background:#fff!important;border:1px solid #e2e8f0;border-radius:100px;padding:6px 12px;}
+  .lh-chip.lh-score{background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:#1a56db;}
+  .lh-body{padding:20px;}
+  .lh-how{font-size:13px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;line-height:1.6!important;background:#f8fafc!important;border-radius:10px;padding:12px 14px;margin:0 0 18px!important;}
+  .lh-line{background:#0b1220!important;border-radius:12px;padding:18px 16px;margin-bottom:14px;}
+  .lh-raw{font-family:ui-monospace,SFMono-Regular,Menlo,monospace!important;font-size:13px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.6!important;margin:0!important;word-break:break-word;}
+  .lh-raw .ts{color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+  .lh-ask{font-size:14px!important;font-weight:700;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin:0 0 10px!important;}
+  .lh-opts{display:grid;grid-template-columns:1fr;gap:8px;}
+  .lh-opt{padding:13px 14px;border:2px solid #e2e8f0;border-radius:12px;background:#fff!important;font-family:inherit;font-size:14px!important;font-weight:700;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;cursor:pointer;text-align:left;line-height:1.35!important;}
+  .lh-opt small{display:block;font-size:11px!important;font-weight:600;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:3px;}
+  .lh-opt:hover{border-color:#1a56db;}
+  .lh-opt.lh-right{border-color:#16a34a;background:#f0fdf4!important;}
+  .lh-opt.lh-wrong{border-color:#dc2626;background:#fef2f2!important;}
+  .lh-reveal{display:none;margin-top:14px;padding-top:14px;border-top:1px solid #e2e8f0;}
+  .lh-reveal.on{display:block;}
+  .lh-verdict{font-size:15px!important;font-weight:700;margin:0 0 8px!important;}
+  .lh-verdict.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important;}
+  .lh-verdict.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;}
+  .lh-why{font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;line-height:1.65!important;margin:0 0 8px!important;}
+  .lh-do{font-size:13px!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;background:#eff6ff!important;border-radius:8px;padding:10px 12px;line-height:1.6!important;margin:0 0 12px!important;}
+  .lh-next{width:100%;padding:13px;border:none;border-radius:10px;background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:inherit;font-size:15px!important;font-weight:700;cursor:pointer;}
+  .lh-end{text-align:center;}
+  .lh-end h2{font-family:"DM Serif Display",Georgia,serif!important;font-size:30px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin:0 0 6px!important;}
+  .lh-end p{font-size:14px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:0 0 16px!important;}
+  .lh-tally{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;text-align:left;}
+  .lh-tl{background:#f8fafc!important;border-radius:8px;padding:10px 12px;}
+  .lh-tl b{display:block;font-size:10px!important;text-transform:uppercase;letter-spacing:.05em;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:2px;}
+  .lh-tl span{font-size:15px!important;font-weight:700;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;}
+  .lh-teach{text-align:left;background:#eff6ff!important;border-left:3px solid #1a56db;border-radius:0 10px 10px 0;padding:14px 16px;font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;line-height:1.7!important;margin-bottom:16px;}
+  .lh-teach b{color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;}
+  @media(max-width:480px){.lh-tally{grid-template-columns:1fr;}}
+</style>
+
+<div id="lh-game">
+  <div class="lh-card">
+    <div class="lh-hero">
+      <h1 class="lh-title">Log Hunt</h1>
+      <p class="lh-sub">Ten lines from an intrusion detection system. Not every alarm is an attacker, and treating them alike is the mistake</p>
+    </div>
+    <div class="lh-bar">
+      <span class="lh-chip" id="lh-round">Line 1 / 10</span>
+      <span class="lh-chip" id="lh-streak">Correct: 0</span>
+      <span class="lh-chip lh-score" id="lh-score">Score: 0</span>
+    </div>
+    <div class="lh-body" id="lh-play">
+      <p class="lh-how">How to play: an IDS reports anything unusual, and unusual covers two very different things. Some lines are a security indicator and some are a network telling you it is unwell. Sorting them is the job, because the response to each is completely different.</p>
+      <div class="lh-line"><p class="lh-raw" id="lh-raw"></p></div>
+      <p class="lh-ask">What is this line telling you?</p>
+      <div class="lh-opts" id="lh-opts"></div>
+      <div class="lh-reveal" id="lh-reveal">
+        <p class="lh-verdict" id="lh-verdict"></p>
+        <p class="lh-why" id="lh-why"></p>
+        <p class="lh-do" id="lh-do"></p>
+        <button class="lh-next" id="lh-nextbtn" type="button">Next line</button>
+      </div>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Log Hunt - AP Networking Topic 4.5, sub-skills 2.B and 2.C.
+     The framework splits log reading into two separate Essential Knowledge
+     statements and the split is the point. EK 4.5.C.3 covers indicators of a
+     SECURITY threat; EK 4.5.C.4 covers indicators of a PERFORMANCE or
+     CONFIGURATION problem. A student who reads every anomaly as an attack raises
+     false alarms and misses real faults, and a student who reads every anomaly
+     as noise misses the intrusion. Three buckets, because "normal" has to be
+     available or the game teaches that everything logged is a problem. */
+
+  var KINDS = [
+    { k: 'threat', label: 'Security indicator', hint: 'someone is probing, guessing or exfiltrating' },
+    { k: 'fault',  label: 'Performance or configuration problem', hint: 'the network is unwell, not attacked' },
+    { k: 'normal', label: 'Routine, no action', hint: 'expected behaviour on a healthy network' }
+  ];
+
+  var ROUNDS = [
+    { ts: '02:14:07', raw: '412 failed logins for user admin from 203.0.113.9 in 60s', k: 'threat',
+      why: 'Hundreds of failures against one account inside a minute is a password guessing attack, and the hour makes it less likely to be a person fumbling a keyboard.',
+      act: 'Lock the account, block the source, and check whether any attempt succeeded.' },
+    { ts: '09:31:55', raw: 'interface gi0/4 CRC errors 1,209 in last hour', k: 'fault',
+      why: 'CRC errors are corrupted frames. That is a physical problem: a damaged cable, a bad port or interference. No attacker is involved and blocking anything will not help.',
+      act: 'Reseat or replace the cable, then move the device to a different port to isolate it.' },
+    { ts: '11:02:13', raw: 'connection 10.0.1.30 -> 10.0.5.10 tcp/445 permitted', k: 'normal',
+      why: 'An internal workstation reaching the file server on the file sharing port, permitted by a rule that exists for exactly this. A log line is not an alert.',
+      act: 'Nothing. Recognising ordinary traffic is what stops a real alert from being buried.' },
+    { ts: '03:48:22', raw: 'host 10.0.3.14 connected to 40 internal hosts on tcp/22 in 5 min', k: 'threat',
+      why: 'One internal machine sweeping forty others on the SSH port is lateral movement. The traffic is internal, which is why a perimeter firewall never saw it and why segmentation is the control that limits it.',
+      act: 'Isolate that host, then look at what it reached and what it was doing before.' },
+    { ts: '14:20:41', raw: 'DHCP pool scope 192.168.4.0/24 exhausted, 0 leases available', k: 'fault',
+      why: 'The address pool ran out. Devices arriving now will fail to get a lease and will self-assign a 169.254 address, so this line predicts the support calls you are about to receive.',
+      act: 'Widen the scope or shorten the lease time, and check for devices holding leases they no longer need.' },
+    { ts: '23:57:09', raw: '2.4 GB outbound from 10.0.2.51 to 198.51.100.7 over 20 min', k: 'threat',
+      why: 'A large sustained transfer to an external address, from a workstation, at midnight. Volume alone is not proof, but the combination of size, hour and destination is the classic exfiltration shape.',
+      act: 'Check what that host is, confirm whether the destination is a known service, and preserve the log before anything is cleaned up.' },
+    { ts: '08:15:33', raw: 'spanning tree topology change on switch sw-02, port gi0/9', k: 'fault',
+      why: 'A topology change means a link came up or went down and the switches recalculated the loop-free path. One is routine. Repeating changes point at a flapping link.',
+      act: 'Look at how often it repeats. A single change is normal, a change every few seconds is a failing port.' },
+    { ts: '10:44:02', raw: 'blocked inbound tcp/23 from 198.51.100.4, matched deny rule', k: 'threat',
+      why: 'Somebody probed telnet from outside and the firewall stopped it. It was blocked, which is the control working, but a probe still tells you that you are being scanned.',
+      act: 'No emergency, because it was denied. Note the source, and confirm telnet is closed everywhere and not just here.' },
+    { ts: '16:05:17', raw: 'VLAN 30 port gi0/12 configured as access, expected trunk', k: 'fault',
+      why: 'A configuration mismatch, not an attack. A port carrying several VLANs must be a trunk. Set as an access port it carries one VLAN and silently drops the rest.',
+      act: 'Correct the port mode, then verify the VLANs actually cross the link.' },
+    { ts: '12:30:00', raw: 'scheduled backup job completed, 18,402 files, 0 errors', k: 'normal',
+      why: 'A successful scheduled job at midday. Worth logging so that its ABSENCE is noticeable, which is the real reason routine successes are recorded at all.',
+      act: 'Nothing today. If this line stops appearing, that is the alert.' }
+  ];
+
+  var el = {};
+  ['round','streak','score','raw','opts','reveal','verdict','why','do','nextbtn','play']
+    .forEach(function (k) { el[k] = document.getElementById('lh-' + k); });
+
+  var i = 0, score = 0, right = 0, locked = false;
+  var tally = { threat: 0, fault: 0, normal: 0 };
+
+  function render() {
+    locked = false;
+    var r = ROUNDS[i];
+    el.round.textContent = 'Line ' + (i + 1) + ' / ' + ROUNDS.length;
+    el.streak.textContent = 'Correct: ' + right;
+    el.score.textContent = 'Score: ' + score;
+    el.raw.innerHTML = '<span class="ts">' + r.ts + '</span>  ' + r.raw;
+    el.reveal.className = 'lh-reveal';
+    el.opts.innerHTML = '';
+    KINDS.forEach(function (kind) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'lh-opt';
+      b.setAttribute('data-k', kind.k);
+      b.innerHTML = kind.label + '<small>' + kind.hint + '</small>';
+      b.addEventListener('click', function () { answer(kind.k, b); });
+      el.opts.appendChild(b);
+    });
+  }
+
+  function answer(picked, btn) {
+    if (locked) return;
+    locked = true;
+    var r = ROUNDS[i];
+    var good = picked === r.k;
+    if (good) {
+      right++; score += 130; tally[r.k]++;
+      btn.className = 'lh-opt lh-right';
+      el.verdict.className = 'lh-verdict good';
+      el.verdict.textContent = 'Correct.';
+    } else {
+      btn.className = 'lh-opt lh-wrong';
+      el.verdict.className = 'lh-verdict bad';
+      var nodes = el.opts.querySelectorAll('.lh-opt');
+      for (var n = 0; n < nodes.length; n++) {
+        if (nodes[n].getAttribute('data-k') === r.k) nodes[n].className = 'lh-opt lh-right';
+      }
+      var lbl = KINDS.filter(function (x) { return x.k === r.k; })[0].label.toLowerCase();
+      el.verdict.textContent = picked === 'threat' && r.k === 'fault'
+        ? 'A false alarm. This one is a ' + lbl + '.'
+        : (picked === 'fault' && r.k === 'threat'
+            ? 'This one really was an attacker. You logged it as a ' + KINDS.filter(function (x) { return x.k === picked; })[0].label.toLowerCase() + '.'
+            : 'Not quite. This is a ' + lbl + '.');
+    }
+    el.why.textContent = r.why;
+    el.do.textContent = 'What you do about it: ' + r.act;
+    el.reveal.className = 'lh-reveal on';
+    el.score.textContent = 'Score: ' + score;
+    el.streak.textContent = 'Correct: ' + right;
+  }
+
+  el.nextbtn.addEventListener('click', function () {
+    if (i < ROUNDS.length - 1) { i++; render(); } else { finish(); }
+  });
+
+  function finish() {
+    var threats = ROUNDS.filter(function (r) { return r.k === 'threat'; }).length;
+    var faults = ROUNDS.filter(function (r) { return r.k === 'fault'; }).length;
+    el.play.innerHTML =
+      '<div class="lh-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + right + ' of ' + ROUNDS.length + ' lines sorted correctly.</p>' +
+        '<div class="lh-tally">' +
+          '<div class="lh-tl"><b>Security indicators caught</b><span>' + tally.threat + ' of ' + threats + '</span></div>' +
+          '<div class="lh-tl"><b>Faults caught</b><span>' + tally.fault + ' of ' + faults + '</span></div>' +
+        '</div>' +
+        '<div class="lh-teach">' +
+          '<b>Half of these lines were the network complaining, not an attacker.</b> CRC errors, an ' +
+          'exhausted DHCP pool, a flapping link and an access port that should have been a trunk are ' +
+          'all faults, and no firewall rule fixes any of them. Reading them as attacks wastes the ' +
+          'hours you needed for the four lines that really were hostile. Two habits carry: ask what ' +
+          'the line would look like on a HEALTHY network, and notice that the strongest signals here ' +
+          'came from combinations rather than single facts. Two gigabytes leaving a machine is a ' +
+          'backup. Two gigabytes leaving a workstation at midnight to an address nobody recognises ' +
+          'is something else.' +
+        '</div>' +
+        '<p><button class="lh-next" id="lh-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('lh-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  render();
+})();
+</script>

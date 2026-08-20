@@ -1,0 +1,205 @@
+<style>
+  #aa-game{font-family:"DM Sans",-apple-system,BlinkMacSystemFont,sans-serif;max-width:640px;margin:0 auto;}
+  #aa-game *{box-sizing:border-box;}
+  .aa-card{border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden;background:#fff!important;}
+  .aa-hero{background:#0f1f3d!important;padding:22px 20px;text-align:center;}
+  .aa-title{font-family:"DM Serif Display",Georgia,serif!important;font-size:26px!important;line-height:1.15!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 6px!important;}
+  .aa-sub{font-size:14px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0!important;line-height:1.5!important;}
+  .aa-bar{display:flex;gap:8px;padding:12px;background:#f8fafc!important;border-bottom:1px solid #e2e8f0;flex-wrap:wrap;justify-content:center;}
+  .aa-chip{font-size:12px!important;font-weight:700;color:#475569!important;-webkit-text-fill-color:#475569!important;background:#fff!important;border:1px solid #e2e8f0;border-radius:100px;padding:6px 12px;}
+  .aa-chip.aa-score{background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:#1a56db;}
+  .aa-body{padding:20px;}
+  .aa-how{font-size:13px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;line-height:1.6!important;background:#f8fafc!important;border-radius:10px;padding:12px 14px;margin:0 0 18px!important;}
+  .aa-stage{background:#0f1f3d!important;border-radius:14px;padding:26px 16px;text-align:center;margin-bottom:14px;}
+  .aa-addr{font-family:ui-monospace,SFMono-Regular,Menlo,monospace!important;font-size:30px!important;font-weight:700;color:#fff!important;-webkit-text-fill-color:#fff!important;letter-spacing:.02em;margin:0 0 6px!important;line-height:1.2!important;}
+  .aa-ctx{font-size:13px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0!important;line-height:1.5!important;}
+  .aa-timer{height:6px;border-radius:100px;background:#e2e8f0!important;overflow:hidden;margin-bottom:14px;}
+  .aa-tfill{height:100%;background:#1a56db;border-radius:100px;width:100%;}
+  .aa-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .aa-opt{padding:14px 8px;border:2px solid #e2e8f0;border-radius:12px;background:#fff!important;font-family:inherit;font-size:14px!important;font-weight:700;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;cursor:pointer;line-height:1.3!important;}
+  .aa-opt small{display:block;font-size:10px!important;font-weight:600;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:3px;}
+  .aa-opt:hover{border-color:#1a56db;}
+  .aa-opt.aa-right{border-color:#16a34a;background:#f0fdf4!important;}
+  .aa-opt.aa-wrong{border-color:#dc2626;background:#fef2f2!important;}
+  .aa-reveal{display:none;margin-top:14px;padding-top:14px;border-top:1px solid #e2e8f0;}
+  .aa-reveal.on{display:block;}
+  .aa-verdict{font-size:15px!important;font-weight:700;margin:0 0 8px!important;}
+  .aa-verdict.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important;}
+  .aa-verdict.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;}
+  .aa-why{font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;line-height:1.65!important;margin:0 0 12px!important;}
+  .aa-next{width:100%;padding:13px;border:none;border-radius:10px;background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:inherit;font-size:15px!important;font-weight:700;cursor:pointer;}
+  .aa-end{text-align:center;}
+  .aa-end h2{font-family:"DM Serif Display",Georgia,serif!important;font-size:30px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin:0 0 6px!important;}
+  .aa-end p{font-size:14px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:0 0 16px!important;}
+  .aa-teach{text-align:left;background:#eff6ff!important;border-left:3px solid #1a56db;border-radius:0 10px 10px 0;padding:14px 16px;font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;line-height:1.7!important;margin-bottom:16px;}
+  .aa-teach b{color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;}
+  @media(max-width:480px){.aa-addr{font-size:23px!important;}}
+</style>
+
+<div id="aa-game">
+  <div class="aa-card">
+    <div class="aa-hero">
+      <h1 class="aa-title">Address Autopsy</h1>
+      <p class="aa-sub">Ten addresses off a live network. Read each one and say what it tells you before the clock runs down</p>
+    </div>
+    <div class="aa-bar">
+      <span class="aa-chip" id="aa-round">Address 1 / 10</span>
+      <span class="aa-chip" id="aa-streak">Correct: 0</span>
+      <span class="aa-chip aa-score" id="aa-score">Score: 0</span>
+    </div>
+    <div class="aa-body" id="aa-play">
+      <p class="aa-how">How to play: an address alone tells you where a device can talk and often what has already gone wrong. Answer fast for more points. The clock only affects the bonus, never whether you are right.</p>
+      <div class="aa-stage">
+        <p class="aa-addr" id="aa-addr"></p>
+        <p class="aa-ctx" id="aa-ctx"></p>
+      </div>
+      <div class="aa-timer"><div class="aa-tfill" id="aa-tfill"></div></div>
+      <div class="aa-opts" id="aa-opts"></div>
+      <div class="aa-reveal" id="aa-reveal">
+        <p class="aa-verdict" id="aa-verdict"></p>
+        <p class="aa-why" id="aa-why"></p>
+        <button class="aa-next" id="aa-nextbtn" type="button">Next address</button>
+      </div>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Address Autopsy - AP Networking Topic 2.2, sub-skill 1.C.
+     EK 2.2.C.1 to 2.2.C.4 name the four kinds a student must tell apart:
+     public, private, APIPA and loopback. The APIPA rounds are the ones that
+     matter most, because 169.254.x.x is not trivia. It is the address a device
+     gives ITSELF when no DHCP server answered, so recognising it is already a
+     diagnosis. The loopback round does the same job for "the network stack
+     works, the network does not". */
+
+  var KINDS = [
+    { k: 'public',   label: 'Public',   hint: 'routable on the internet' },
+    { k: 'private',  label: 'Private',  hint: 'LAN only, routers drop it' },
+    { k: 'apipa',    label: 'APIPA',    hint: 'self-assigned, no DHCP' },
+    { k: 'loopback', label: 'Loopback', hint: 'the device itself' }
+  ];
+
+  var ROUNDS = [
+    { a: '192.168.1.15', k: 'private', ctx: 'A laptop on a home network',
+      why: 'The whole of 192.168.0.0 to 192.168.255.255 is private. A router will not forward it to the internet, which is why a home network can reuse it in every house on the street.' },
+    { a: '169.254.8.204', k: 'apipa', ctx: 'A PC that just reported "no internet"',
+      why: 'This is the diagnosis, not just a classification. 169.254.x.x means the device asked for a DHCP lease and nothing answered, so it assigned itself an address. Check the DHCP server or the link before you check anything else.' },
+    { a: '8.8.8.8', k: 'public', ctx: 'The DNS server configured on a workstation',
+      why: 'A public address, reachable from anywhere on the internet. Public addresses are assigned to organisations rather than chosen, which is exactly why you cannot invent one for your own LAN.' },
+    { a: '127.0.0.1', k: 'loopback', ctx: 'A ping that succeeded instantly',
+      why: 'The loopback address never leaves the device. A successful ping here proves the network software is working and proves nothing whatsoever about the cable, the switch or the router.' },
+    { a: '10.4.22.9', k: 'private', ctx: 'A server in a company data centre',
+      why: 'All of 10.0.0.0 to 10.255.255.255 is private, and it is the biggest of the three private ranges, which is why large organisations use it internally.' },
+    { a: '172.16.40.3', k: 'private', ctx: 'A printer in a branch office',
+      why: 'The private range here is 172.16.0.0 to 172.31.255.255, and this is the one people get wrong. 172.15.x.x and 172.32.x.x are both PUBLIC. Only the middle sixteen blocks are private.' },
+    { a: '169.254.201.7', k: 'apipa', ctx: 'One machine of thirty on a working network',
+      why: 'Twenty-nine machines have leases and this one does not. That points at this device or its port, not at the DHCP server, which is a different repair from the one you would start if every machine showed 169.254.' },
+    { a: '203.0.113.42', k: 'public', ctx: 'The address a website sees you arrive from',
+      why: 'Public. Note that a whole office can appear at the internet as one public address, because network address translation maps many private addresses onto it.' },
+    { a: '172.32.5.1', k: 'public', ctx: 'An address on a supplier network',
+      why: 'The trap. It looks private because it starts with 172, but the private block stops at 172.31.255.255. 172.32.x.x is public address space belonging to somebody else.' },
+    { a: '192.168.100.254', k: 'private', ctx: 'The default gateway on a guest network',
+      why: 'Private, and the .254 is a convention rather than a rule: many networks put the gateway at the top or the bottom of the range so that people can find it.' }
+  ];
+
+  var el = {};
+  ['round','streak','score','addr','ctx','tfill','opts','reveal','verdict','why','nextbtn','play']
+    .forEach(function (k) { el[k] = document.getElementById('aa-' + k); });
+
+  var i = 0, score = 0, right = 0, locked = false, left = 0, timer = null;
+  var SPAN = 8000, TICK = 100;
+
+  function render() {
+    locked = false;
+    left = SPAN;
+    var r = ROUNDS[i];
+    el.round.textContent = 'Address ' + (i + 1) + ' / ' + ROUNDS.length;
+    el.streak.textContent = 'Correct: ' + right;
+    el.score.textContent = 'Score: ' + score;
+    el.addr.textContent = r.a;
+    el.ctx.textContent = r.ctx;
+    el.reveal.className = 'aa-reveal';
+    el.tfill.style.width = '100%';
+    el.opts.innerHTML = '';
+    KINDS.forEach(function (kind) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'aa-opt';
+      b.setAttribute('data-k', kind.k);
+      b.innerHTML = kind.label + '<small>' + kind.hint + '</small>';
+      b.addEventListener('click', function () { answer(kind.k, b); });
+      el.opts.appendChild(b);
+    });
+    if (timer) clearInterval(timer);
+    timer = setInterval(function () {
+      left -= TICK;
+      if (left <= 0) { left = 0; el.tfill.style.width = '0%'; clearInterval(timer); return; }
+      el.tfill.style.width = Math.round((left / SPAN) * 100) + '%';
+    }, TICK);
+  }
+
+  function answer(picked, btn) {
+    if (locked) return;
+    locked = true;
+    if (timer) clearInterval(timer);
+    var r = ROUNDS[i];
+    var good = picked === r.k;
+    /* Speed changes the bonus only. A fast wrong answer is still wrong and a
+       slow right answer still scores, because the point is reading the address
+       correctly, not reflexes. */
+    var bonus = Math.round((left / SPAN) * 60);
+    if (good) {
+      right++;
+      score += 100 + bonus;
+      btn.className = 'aa-opt aa-right';
+      el.verdict.className = 'aa-verdict good';
+      el.verdict.textContent = 'Correct, plus ' + bonus + ' for the clock.';
+    } else {
+      btn.className = 'aa-opt aa-wrong';
+      el.verdict.className = 'aa-verdict bad';
+      var nodes = el.opts.querySelectorAll('.aa-opt');
+      for (var n = 0; n < nodes.length; n++) {
+        if (nodes[n].getAttribute('data-k') === r.k) nodes[n].className = 'aa-opt aa-right';
+      }
+      var lbl = KINDS.filter(function (x) { return x.k === r.k; })[0].label;
+      el.verdict.textContent = 'Not quite. That address is ' + lbl + '.';
+    }
+    el.why.textContent = r.why;
+    el.reveal.className = 'aa-reveal on';
+    el.score.textContent = 'Score: ' + score;
+    el.streak.textContent = 'Correct: ' + right;
+  }
+
+  el.nextbtn.addEventListener('click', function () {
+    if (i < ROUNDS.length - 1) { i++; render(); } else { finish(); }
+  });
+
+  function finish() {
+    if (timer) clearInterval(timer);
+    el.play.innerHTML =
+      '<div class="aa-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + right + ' of ' + ROUNDS.length + ' read correctly.</p>' +
+        '<div class="aa-teach">' +
+          '<b>Two of these addresses were already a diagnosis.</b> 169.254 anything means the device ' +
+          'asked for a DHCP lease and nothing answered, so it named itself. If one machine shows it, ' +
+          'suspect that machine or its port. If every machine shows it, suspect the DHCP server. ' +
+          'And 127.0.0.1 answering a ping only proves the networking software on that computer is ' +
+          'alive, which is why it is the first test to run and the last one to trust. ' +
+          'The 172 boundary is worth memorising on its own: private stops at 172.31.255.255, so ' +
+          '172.32.0.0 belongs to somebody else.' +
+        '</div>' +
+        '<p><button class="aa-next" id="aa-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('aa-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  render();
+})();
+</script>

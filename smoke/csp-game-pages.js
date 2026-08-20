@@ -74,13 +74,23 @@ for (const id of ids) {
 
 section('4. No orphaned game file in shopify/games/');
 // A leading underscore marks a shared fragment rather than a game.
+//
+// shopify/games/ is shared with the AP Networking games, which have their own
+// builder and their own suite. Their files are NOT orphans, so they are read
+// from that builder rather than listed here: a hardcoded skip list would go
+// stale the first time a networking game was added and would quietly start
+// reporting a real orphan as expected.
+const NET_IDS = Object.keys(require('../scripts/networking-game-pages-csv.js').GAMES);
 const files = fs.readdirSync(GAMES_DIR)
   .filter((f) => f.endsWith('.html') && !f.startsWith('_'))
-  .map((f) => f.replace(/\.html$/, ''));
+  .map((f) => f.replace(/\.html$/, ''))
+  .filter((f) => !NET_IDS.includes(f));
 for (const f of files) {
   ok(`${f}.html is built by an entry in GAMES`, ids.includes(f),
     'a game file nobody builds is either unfinished or a duplicate that came back');
 }
+ok('every networking game file is built by the networking builder',
+  NET_IDS.every((id) => fs.existsSync(path.join(GAMES_DIR, id + '.html'))), NET_IDS);
 ok('the shared leaderboard fragment exists',
   fs.existsSync(path.join(GAMES_DIR, '_leaderboard.html')));
 

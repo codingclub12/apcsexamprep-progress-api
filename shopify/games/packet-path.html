@@ -1,0 +1,280 @@
+<style>
+  #pp-game{font-family:"DM Sans",-apple-system,BlinkMacSystemFont,sans-serif;max-width:640px;margin:0 auto;}
+  #pp-game *{box-sizing:border-box;}
+  .pp-card{border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden;background:#fff!important;}
+  .pp-hero{background:#0f1f3d!important;padding:22px 20px;text-align:center;}
+  .pp-title{font-family:"DM Serif Display",Georgia,serif!important;font-size:26px!important;line-height:1.15!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 6px!important;}
+  .pp-sub{font-size:14px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0!important;line-height:1.5!important;}
+  .pp-bar{display:flex;gap:8px;padding:12px;background:#f8fafc!important;border-bottom:1px solid #e2e8f0;flex-wrap:wrap;justify-content:center;}
+  .pp-chip{font-size:12px!important;font-weight:700;color:#475569!important;-webkit-text-fill-color:#475569!important;background:#fff!important;border:1px solid #e2e8f0;border-radius:100px;padding:6px 12px;}
+  .pp-chip.pp-score{background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:#1a56db;}
+  .pp-body{padding:20px;}
+  .pp-how{font-size:13px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;line-height:1.6!important;background:#f8fafc!important;border-radius:10px;padding:12px 14px;margin:0 0 18px!important;}
+  .pp-dest{background:#eff6ff!important;border:1px solid #bfdbfe;border-radius:12px;padding:13px 16px;margin-bottom:12px;}
+  .pp-dest b{display:block;font-size:12px!important;text-transform:uppercase;letter-spacing:.06em;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin-bottom:4px;}
+  .pp-dest span{font-family:ui-monospace,SFMono-Regular,Menlo,monospace!important;font-size:19px!important;font-weight:700;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;}
+  .pp-hops{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:14px;}
+  .pp-hop{font-size:11px!important;font-weight:800;padding:5px 9px;border-radius:100px;background:#e2e8f0!important;color:#475569!important;-webkit-text-fill-color:#475569!important;}
+  .pp-hop.done{background:#dcfce7!important;color:#15803d!important;-webkit-text-fill-color:#15803d!important;}
+  .pp-hop.now{background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .pp-hop.dead{background:#fee2e2!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;}
+  .pp-at{font-size:14px!important;font-weight:700;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin:0 0 8px!important;}
+  .pp-tbl{border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;margin-bottom:12px;}
+  .pp-th{display:flex;gap:8px;padding:8px 12px;background:#f8fafc!important;border-bottom:1px solid #e2e8f0;font-size:10px!important;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;}
+  .pp-row{display:flex;gap:8px;align-items:center;width:100%;padding:11px 12px;border-bottom:1px solid #f1f5f9;background:#fff!important;border-left:none;border-right:none;border-top:none;font-family:inherit;cursor:pointer;text-align:left;}
+  .pp-row:last-child{border-bottom:none;}
+  .pp-row:hover{background:#f8fafc!important;}
+  .pp-row.right{background:#f0fdf4!important;}
+  .pp-row.wrong{background:#fef2f2!important;}
+  .pp-c1{flex:1.4;font-family:ui-monospace,SFMono-Regular,Menlo,monospace!important;font-size:12.5px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;}
+  .pp-c2{flex:1;font-family:ui-monospace,SFMono-Regular,Menlo,monospace!important;font-size:12.5px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;}
+  .pp-c3{width:42px;font-size:12px!important;font-weight:700;color:#64748b!important;-webkit-text-fill-color:#64748b!important;text-align:right;font-variant-numeric:tabular-nums;}
+  .pp-reveal{display:none;margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;}
+  .pp-reveal.on{display:block;}
+  .pp-verdict{font-size:15px!important;font-weight:700;margin:0 0 8px!important;}
+  .pp-verdict.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important;}
+  .pp-verdict.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;}
+  .pp-why{font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;line-height:1.65!important;margin:0 0 12px!important;}
+  .pp-next{width:100%;padding:13px;border:none;border-radius:10px;background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:inherit;font-size:15px!important;font-weight:700;cursor:pointer;}
+  .pp-end{text-align:center;}
+  .pp-end h2{font-family:"DM Serif Display",Georgia,serif!important;font-size:30px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin:0 0 6px!important;}
+  .pp-end p{font-size:14px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:0 0 16px!important;}
+  .pp-teach{text-align:left;background:#eff6ff!important;border-left:3px solid #1a56db;border-radius:0 10px 10px 0;padding:14px 16px;font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;line-height:1.7!important;margin-bottom:16px;}
+  .pp-teach b{color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;}
+</style>
+
+<div id="pp-game">
+  <div class="pp-card">
+    <div class="pp-hero">
+      <h1 class="pp-title">Packet Path</h1>
+      <p class="pp-sub">Four journeys, one hop at a time. Read the routing table the way a router reads it</p>
+    </div>
+    <div class="pp-bar">
+      <span class="pp-chip" id="pp-round">Journey 1 / 4</span>
+      <span class="pp-chip" id="pp-streak">Hops right: 0</span>
+      <span class="pp-chip pp-score" id="pp-score">Score: 0</span>
+    </div>
+    <div class="pp-body" id="pp-play">
+      <p class="pp-how">How to play: a router compares the destination against every route it holds and uses the one that matches with the LONGEST prefix, because that is the most specific route it has. A default route of 0.0.0.0/0 matches everything, so it only wins when nothing else matched at all.</p>
+      <div class="pp-dest"><b>Packet destined for</b><span id="pp-desttxt"></span></div>
+      <div class="pp-hops" id="pp-hopbar"></div>
+      <p class="pp-at" id="pp-attxt"></p>
+      <div class="pp-tbl">
+        <div class="pp-th"><span class="pp-c1">Destination</span><span class="pp-c2">Next hop</span><span class="pp-c3">Metric</span></div>
+        <div id="pp-rows"></div>
+      </div>
+      <div class="pp-reveal" id="pp-reveal">
+        <p class="pp-verdict" id="pp-verdict"></p>
+        <p class="pp-why" id="pp-why"></p>
+        <button class="pp-next" id="pp-nextbtn" type="button">Continue</button>
+      </div>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Packet Path - AP Networking Topic 4.4, sub-skills 1.A and 1.C.
+     EK 4.4.A.3 says routers use a routing table to decide where to send packets,
+     EK 4.4.B.1 lists what an entry contains, and EK 4.4.B.4 says the lowest
+     metric wins when several next hops are available. What sits underneath all
+     of it, and what students miss, is that specificity is decided BEFORE metric:
+     a /24 beats a /16 even if the /16 has a better metric, and the default route
+     is simply the least specific route there is.
+
+     The correct choice is COMPUTED by longest-prefix match on real 32-bit
+     arithmetic, never stored on the round, so the data cannot drift away from
+     the rule the game is teaching. */
+
+  function ipToInt(ip) {
+    var p = ip.split('.');
+    return (((+p[0] * 256 + +p[1]) * 256 + +p[2]) * 256 + +p[3]) >>> 0;
+  }
+  function maskOf(bits) {
+    return bits === 0 ? 0 : (0xFFFFFFFF << (32 - bits)) >>> 0;
+  }
+  function matches(dest, route) {
+    var m = maskOf(route.bits);
+    return ((ipToInt(dest) & m) >>> 0) === ((ipToInt(route.net) & m) >>> 0);
+  }
+  /* Longest prefix first, then lowest metric as the tie break, which is the
+     order a real router applies and the order EK 4.4.B.4 describes. */
+  function bestRoute(dest, table) {
+    var best = -1, bestIdx = -1;
+    for (var k = 0; k < table.length; k++) {
+      if (!matches(dest, table[k])) continue;
+      if (table[k].bits > best) { best = table[k].bits; bestIdx = k; }
+      else if (table[k].bits === best && table[k].metric < table[bestIdx].metric) bestIdx = k;
+    }
+    return bestIdx;
+  }
+
+  var JOURNEYS = [
+    {
+      dest: '10.2.7.40',
+      hops: [
+        { at: 'R1, the office gateway', table: [
+          { net: '0.0.0.0', bits: 0, via: 'R2 (203.0.113.1)', metric: 10 },
+          { net: '10.2.0.0', bits: 16, via: 'R3 (172.31.0.9)', metric: 4 },
+          { net: '192.168.0.0', bits: 16, via: 'local switch', metric: 1 }
+        ], why: 'The destination sits inside 10.2.0.0/16, which is far more specific than the default route, so the default never gets considered.' },
+        { at: 'R3, the branch router', table: [
+          { net: '0.0.0.0', bits: 0, via: 'R1 (172.31.0.1)', metric: 8 },
+          { net: '10.2.7.0', bits: 24, via: 'directly connected', metric: 1 },
+          { net: '10.2.0.0', bits: 16, via: 'R4 (172.31.5.2)', metric: 3 }
+        ], why: 'Two routes match. The /24 is longer than the /16, so it wins on specificity, and here it also happens to be the directly connected network the packet was looking for.' }
+      ],
+      end: 'Delivered on the local segment at R3.'
+    },
+    {
+      dest: '8.8.4.4',
+      hops: [
+        { at: 'R1, the office gateway', table: [
+          { net: '10.0.0.0', bits: 8, via: 'R3 (172.31.0.9)', metric: 2 },
+          { net: '192.168.1.0', bits: 24, via: 'local switch', metric: 1 },
+          { net: '0.0.0.0', bits: 0, via: 'ISP (203.0.113.1)', metric: 10 }
+        ], why: 'Nothing internal matches a public address, so the default route is the only route left. This is the case the default route exists for and the reason it is sometimes called the gateway of last resort.' }
+      ],
+      end: 'Handed to the ISP and out to the internet.'
+    },
+    {
+      dest: '172.20.9.11',
+      hops: [
+        { at: 'R5, the core router', table: [
+          { net: '172.20.0.0', bits: 16, via: 'R6 (10.10.0.2)', metric: 2 },
+          { net: '172.20.9.0', bits: 24, via: 'R7 (10.10.0.6)', metric: 9 },
+          { net: '0.0.0.0', bits: 0, via: 'ISP', metric: 10 }
+        ], why: 'The trap. The /16 has a much better metric of 2 against 9, and it still loses. Specificity is decided first and metric only breaks ties between routes of the SAME prefix length.' },
+        { at: 'R7, the distribution router', table: [
+          { net: '172.20.9.0', bits: 24, via: 'directly connected', metric: 1 },
+          { net: '0.0.0.0', bits: 0, via: 'R5 (10.10.0.5)', metric: 6 }
+        ], why: 'One specific match against the default. The packet has arrived on the network it was addressed to.' }
+      ],
+      end: 'Delivered at R7.'
+    },
+    {
+      dest: '10.9.1.5',
+      hops: [
+        { at: 'R2, the regional router', table: [
+          { net: '10.9.1.0', bits: 24, via: 'R8 (10.0.9.2)', metric: 5 },
+          { net: '10.9.1.0', bits: 24, via: 'R9 (10.0.9.6)', metric: 2 },
+          { net: '10.0.0.0', bits: 8, via: 'R5 (10.0.0.1)', metric: 1 }
+        ], why: 'Now metric decides, because the two best routes have the SAME prefix length. Between equally specific routes the lower metric wins, so R9 at 2 beats R8 at 5, and the /8 with the best metric of all is still too broad to be considered.' },
+        { at: 'R9, the far end', table: [
+          { net: '10.9.1.0', bits: 24, via: 'directly connected', metric: 1 },
+          { net: '0.0.0.0', bits: 0, via: 'R2 (10.0.9.5)', metric: 7 }
+        ], why: 'Arrived. The route it matched is the network attached to this router.' }
+      ],
+      end: 'Delivered at R9.'
+    }
+  ];
+
+  var el = {};
+  ['round','streak','score','desttxt','hopbar','attxt','rows','reveal','verdict','why','nextbtn','play']
+    .forEach(function (k) { el[k] = document.getElementById('pp-' + k); });
+
+  var j = 0, h = 0, score = 0, hits = 0, locked = false, dead = false;
+
+  function render() {
+    locked = false;
+    var J = JOURNEYS[j], H = J.hops[h];
+    el.round.textContent = 'Journey ' + (j + 1) + ' / ' + JOURNEYS.length;
+    el.streak.textContent = 'Hops right: ' + hits;
+    el.score.textContent = 'Score: ' + score;
+    el.desttxt.textContent = J.dest;
+    el.attxt.textContent = 'The packet is at ' + H.at + '. Which route does it take?';
+    el.reveal.className = 'pp-reveal';
+    paintHops(-1);
+    el.rows.innerHTML = '';
+    H.table.forEach(function (r, idx) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'pp-row';
+      b.setAttribute('data-i', String(idx));
+      b.innerHTML = '<span class="pp-c1">' + r.net + '/' + r.bits + '</span>' +
+                    '<span class="pp-c2">' + r.via + '</span>' +
+                    '<span class="pp-c3">' + r.metric + '</span>';
+      b.addEventListener('click', function () { choose(idx, b); });
+      el.rows.appendChild(b);
+    });
+  }
+
+  function paintHops(state) {
+    var J = JOURNEYS[j];
+    var out = '';
+    J.hops.forEach(function (H, idx) {
+      var cls = idx < h ? 'done' : (idx === h ? (state === 0 ? 'dead' : 'now') : '');
+      out += '<span class="pp-hop ' + cls + '">' + H.at.split(',')[0] + '</span>';
+    });
+    out += '<span class="pp-hop ' + (state === 1 ? 'done' : '') + '">destination</span>';
+    el.hopbar.innerHTML = out;
+  }
+
+  function choose(idx, btn) {
+    if (locked) return;
+    locked = true;
+    var J = JOURNEYS[j], H = J.hops[h];
+    var want = bestRoute(J.dest, H.table);
+    var good = idx === want;
+    if (good) {
+      hits++; score += 110;
+      btn.className = 'pp-row right';
+      el.verdict.className = 'pp-verdict good';
+      var r = H.table[want];
+      el.verdict.textContent = 'Correct. ' + r.net + '/' + r.bits + ' via ' + r.via + '.';
+      dead = false;
+    } else {
+      btn.className = 'pp-row wrong';
+      var nodes = el.rows.querySelectorAll('.pp-row');
+      for (var n = 0; n < nodes.length; n++) {
+        if (Number(nodes[n].getAttribute('data-i')) === want) nodes[n].className = 'pp-row right';
+      }
+      el.verdict.className = 'pp-verdict bad';
+      var picked = H.table[idx];
+      el.verdict.textContent = matches(J.dest, picked)
+        ? 'That route does match, but it is not the longest prefix that matches.'
+        : 'That route does not match this destination at all, so the packet would go the wrong way.';
+      dead = true;
+    }
+    paintHops(good ? 1 : 0);
+    el.why.textContent = H.why;
+    el.nextbtn.textContent = (h < J.hops.length - 1) ? 'Forward the packet' : 'Next journey';
+    el.reveal.className = 'pp-reveal on';
+    el.score.textContent = 'Score: ' + score;
+    el.streak.textContent = 'Hops right: ' + hits;
+  }
+
+  el.nextbtn.addEventListener('click', function () {
+    var J = JOURNEYS[j];
+    if (h < J.hops.length - 1) { h++; render(); return; }
+    if (j < JOURNEYS.length - 1) { j++; h = 0; render(); return; }
+    finish();
+  });
+
+  function finish() {
+    var total = JOURNEYS.reduce(function (n, J) { return n + J.hops.length; }, 0);
+    el.play.innerHTML =
+      '<div class="pp-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + hits + ' of ' + total + ' hops routed correctly.</p>' +
+        '<div class="pp-teach">' +
+          '<b>Specificity first, metric second.</b> A router does not pick the route with the best ' +
+          'metric. It picks the route that matches with the longest prefix, and only compares ' +
+          'metrics between routes that are equally specific. Journey three was the proof: a /16 with ' +
+          'a metric of 2 lost to a /24 with a metric of 9, because a longer prefix is a more exact ' +
+          'statement about where the destination actually is. The default route, 0.0.0.0/0, is not a ' +
+          'special case at all once you see this. It is simply the least specific route possible, ' +
+          'which is why it matches everything and wins nothing until every other route has failed.' +
+        '</div>' +
+        '<p><button class="pp-next" id="pp-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('pp-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  render();
+})();
+</script>
