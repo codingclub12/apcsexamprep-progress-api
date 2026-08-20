@@ -29,7 +29,7 @@ const path = require('path');
 const vm = require('vm');
 
 const {
-  build, GAMES, GAMES_DIR, frameworkTopics, checkPage, registryIds,
+  build, buildHub, checkHub, GAMES, GAMES_DIR, frameworkTopics, checkPage, registryIds,
 } = require('../scripts/networking-game-pages-csv.js');
 const csp = require('../scripts/csp-game-pages-csv.js');
 const seed = require('../scripts/seed-manifest.js');
@@ -80,6 +80,19 @@ const claimed = ids.map((id) => GAMES[id].topic);
 ok('no two games claim the same topic', new Set(claimed).size === claimed.length, claimed);
 const units = new Set(ids.map((id) => GAMES[id].unit));
 ok('all four units have at least one game', units.size === 4, [...units].sort());
+
+// The set of topics with a game is not a taste judgement, it is derived. A game
+// exists for exactly the topics whose framework skills ask a student to
+// IMPLEMENT or VERIFY, which is where a page and a quiz stop being enough.
+{
+  const skills = require('../config/networking-framework-skills.json');
+  const handsOn = Object.entries(skills.by_topic)
+    .filter(([, subs]) => subs.some((c) => /\.[CD]$/.test(c)))
+    .map(([t]) => t).sort();
+  ok('there is a game for exactly the topics carrying an implement or verify sub-skill',
+    JSON.stringify(handsOn) === JSON.stringify([...claimed].sort()),
+    { handsOn, withGames: [...claimed].sort() });
+}
 
 section('3. Structural hazards (shared with the CSP suite)');
 for (const p of pages) {
@@ -240,6 +253,93 @@ for (const [id, arr, kindArr] of [['address-autopsy', 'ROUNDS', 'KINDS'], ['log-
   ok(`${id}: every round maps to an offered answer`, orphan.length === 0, orphan);
   ok(`${id}: no offered answer is never the correct one`, unused.length === 0, unused);
   ok(`${id}: every round explains itself`, rounds.every((r) => r.why && r.why.length > 40));
+}
+
+// GUEST GATE. Two phases per job, and every verify step must offer exactly one
+// test that could have failed. The teaching claim is that the three wrong tests
+// pass on a broken build, so a job with two "correct" tests has lost its point.
+{
+  const jobs = data('guest-gate', 'JOBS');
+  const broken = [];
+  jobs.forEach((j, n) => {
+    const c = j.cfg.filter((o) => o.ok).length;
+    const v = j.ver.filter((o) => o.ok).length;
+    if (c !== 1) broken.push(`job ${n + 1} has ${c} correct configuration options, not 1`);
+    if (v !== 1) broken.push(`job ${n + 1} has ${v} proving tests, not 1`);
+    if (j.cfg.length < 3 || j.ver.length < 3) broken.push(`job ${n + 1} does not offer enough alternatives`);
+    if (!j.cfgWhy || !j.verWhy) broken.push(`job ${n + 1} is missing an explanation`);
+  });
+  ok('guest-gate: every job has one right setting and exactly one test that proves it',
+    broken.length === 0, broken);
+}
+
+// SEGMENT SORT. Every device must land in a real zone, every zone must be used,
+// and a misplacement has to cost something the game can name.
+{
+  const devices = data('segment-sort', 'DEVICES');
+  const zones = data('segment-sort', 'ZONES').map((z) => z.z);
+  const orphan = devices.filter((d) => zones.indexOf(d.z) === -1).map((d) => d.n);
+  const unused = zones.filter((z) => !devices.some((d) => d.z === z));
+  const noBlast = devices.filter((d) => !d.blast || !d.why).map((d) => d.n);
+  ok('segment-sort: every device maps to a real zone', orphan.length === 0, orphan);
+  ok('segment-sort: no zone is never correct', unused.length === 0, unused);
+  ok('segment-sort: every device names what a misplacement costs', noBlast.length === 0, noBlast);
+}
+
+// SHELL HOP. The zero-PII rule for this game is structural, not a convention:
+// a terminal is the obvious place to collect a typed string and a typed string
+// is free text, which this site never stores. There must be no text input.
+{
+  const steps = data('shell-hop', 'STEPS');
+  const broken = [];
+  steps.forEach((st, n) => {
+    const okCount = st.opts.filter((o) => o.ok).length;
+    if (okCount !== 1) broken.push(`step ${n + 1} has ${okCount} correct commands, not 1`);
+    if (st.opts.length < 3) broken.push(`step ${n + 1} offers only ${st.opts.length} commands`);
+    if (!st.why) broken.push(`step ${n + 1} has no explanation`);
+  });
+  ok('shell-hop: every step has exactly one correct command', broken.length === 0, broken);
+  ok('shell-hop: the page has NO free-text input, because a typed command is free text',
+    !/<input|<textarea|contenteditable/i.test(src['shell-hop']));
+}
+
+// AI AUDIT. EK 2.4.A.2 names three failure modes, and the game claims to plant
+// one of each in every design. If that stops being true the debrief lies.
+{
+  const designs = data('ai-audit', 'DESIGNS');
+  const broken = [];
+  designs.forEach((d, n) => {
+    const defects = d.lines.filter((l) => l.bad);
+    const kinds = defects.map((l) => l.bad).sort().join(',');
+    if (kinds !== 'complex,unreal,wrong') {
+      broken.push(`design ${n + 1} plants [${kinds}] instead of one of each framework failure mode`);
+    }
+    if (defects.length >= d.lines.length) broken.push(`design ${n + 1} has no correct lines to leave alone`);
+    if (d.lines.some((l) => !l.note)) broken.push(`design ${n + 1} has a line with no explanation`);
+  });
+  ok('ai-audit: every design plants one unrealistic, one overcomplicated and one incorrect line',
+    broken.length === 0, broken);
+  // False positives must cost something, or the game rewards flagging everything.
+  ok('ai-audit: wrongly flagging a correct line is penalised', /falses \* \d+/.test(src['ai-audit']));
+}
+
+section('5b. The hub links every game and nothing else');
+{
+  const hub = buildHub();
+  const handles = Object.keys(GAMES).map((g) => 'ap-networking-game-' + g);
+  ok('the hub passes its own hazard checks', checkHub(hub, handles).length === 0, checkHub(hub, handles));
+  const linked = [...hub.bodyHtml.matchAll(/href="\/pages\/(ap-networking-game-[a-z0-9-]+)"/g)].map((m) => m[1]);
+  ok('the hub links every game exactly once',
+    linked.length === handles.length && new Set(linked).size === handles.length,
+    { linked: linked.length, games: handles.length });
+  ok('every game appears on the hub', handles.every((h) => linked.includes(h)),
+    handles.filter((h) => !linked.includes(h)));
+  // A card carries the topic, which is what makes the hub navigable by syllabus.
+  for (const id of ids) {
+    ok(`${id} has a hub card naming its topic`,
+      hub.bodyHtml.includes('Topic ' + GAMES[id].topic) && hub.bodyHtml.includes(GAMES[id].shareName));
+  }
+  ok('the hub is not itself in the game registry', !registryIds().has('_hub'));
 }
 
 section('6. These are leaderboard games and never gradebook items');
