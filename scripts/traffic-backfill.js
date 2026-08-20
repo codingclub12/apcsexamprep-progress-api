@@ -41,7 +41,7 @@
 //    --to   YYYY-MM-DD   default yesterday (today is partial at every source)
 //    --chunk N           days per request, default 3
 //    --base URL          default https://progress.apcsexamprep.com
-//    --source ga4|gsc    default both
+//    --source ga4|gsc|shopify  default all
 //    --dry-run           fetch and count, write nothing
 //    --resume            skip chunks already fully covered in metrics_daily
 // ─────────────────────────────────────────────────────────────────────────────
@@ -49,6 +49,32 @@
 const DEFAULT_BASE = 'https://progress.apcsexamprep.com';
 const DEFAULT_CHUNK = 3;
 const MAX_ATTEMPTS = 5;
+
+// A 403 is not automatically an auth failure, and saying so sends whoever ran
+// this to check a credential that was never the problem. The first real run of
+// this script hit a corporate egress proxy that answers 403 with "Host not in
+// allowlist", and the script confidently reported "authentication rejected.
+// Check ADMIN_KEY matches the deployed key." The key was fine.
+//
+// The API's own rejection is a JSON body with a known message, so match on that
+// and treat every other 403 as a transport problem worth retrying.
+function isApiAuthFailure(message) {
+  const m = String(message || '');
+  if (/\b401\b/.test(m)) return true;
+  return /\b403\b/.test(m) && /invalid or missing admin key/i.test(m);
+}
+
+// Node's built-in fetch ignores HTTPS_PROXY unless told otherwise, which fails
+// in exactly the confusing direction: curl works, this script does not, and the
+// error is a 403 from a proxy the script never knew it was talking to.
+function proxyHint(message) {
+  if (!/not in allowlist|proxy|ENOTFOUND|ECONNREFUSED|EAI_AGAIN/i.test(String(message || ''))) return null;
+  return [
+    'This looks like a network/proxy problem rather than a bad key.',
+    'If you are behind a proxy, Node does not read HTTPS_PROXY for fetch by default. Try:',
+    '  NODE_USE_ENV_PROXY=1 node scripts/traffic-backfill.js ...',
+  ].join('\n');
+}
 
 function arg(name, fallback) {
   const i = process.argv.indexOf('--' + name);
@@ -96,8 +122,9 @@ async function main() {
   console.log(`  ${windows.length} requests of up to ${chunk} day(s) each, against ${base}`);
   console.log(`  ${dryRun ? 'DRY RUN, nothing will be written' : 'writing'}\n`);
 
-  const totals = { written: 0, capped: 0, dropped: 0, failed: 0 };
+  const totals = { written: 0, capped: 0, dropped: 0, failed: 0, rejected: 0 };
   const capped = [];
+  const rejectedWindows = [];
 
   for (let i = 0; i < windows.length; i++) {
     const w = windows[i];
@@ -115,7 +142,7 @@ async function main() {
         lastErr = e;
         // A transient network failure mid-backfill should not lose the run.
         // A 401/403 will not fix itself, so it is not retried.
-        if (/\b(401|403)\b/.test(e.message)) break;
+        if (isApiAuthFailure(e.message)) break;
         if (attempt < MAX_ATTEMPTS) {
           const wait = 2000 * Math.pow(2, attempt - 1);
           console.log(`${label}  ${e.message}; retry ${attempt}/${MAX_ATTEMPTS - 1} in ${wait / 1000}s`);
@@ -127,24 +154,39 @@ async function main() {
     if (!res) {
       totals.failed++;
       console.log(`${label}  FAILED: ${lastErr && lastErr.message}`);
-      if (/\b(401|403)\b/.test((lastErr && lastErr.message) || '')) {
-        fail('authentication rejected. Check ADMIN_KEY matches the deployed key.');
+      const msg = (lastErr && lastErr.message) || '';
+      if (isApiAuthFailure(msg)) {
+        fail('the API rejected the admin key. Check ADMIN_KEY matches the deployed key.');
       }
+      const hint = proxyHint(msg);
+      if (hint) fail(hint);
       continue;
     }
 
-    let wrote = 0, cap = 0, drop = 0;
+    let wrote = 0, cap = 0, drop = 0, rej = 0;
     const parts = [];
-    for (const name of ['ga4', 'gsc']) {
+    for (const name of ['ga4', 'gsc', 'shopify']) {
       const r = res[name];
       if (!r) continue;
       if (r.configured === false) { parts.push(`${name}: not configured (${r.reason})`); continue; }
-      if (r.ok === false) { parts.push(`${name}: ERROR ${r.error}`); continue; }
+
+      // A FETCH failure and a REJECTED READING are different things, and
+      // ingest() reports both through `ok: false`. Treating them alike printed
+      // "gsc: ERROR undefined" for six windows that had in fact stored all
+      // 1,812 of their rows and merely dropped three readings the contract
+      // refused. The rows were not counted either, so the run under-reported
+      // its own total. A fetch failure carries an `error`; a rejection does not.
+      if (r.error) { parts.push(`${name}: FETCH FAILED ${r.error}`); continue; }
+
       const w2 = dryRun ? (r.would_write || 0) : (r.written || 0);
       wrote += w2; cap += r.run_capped || 0; drop += r.dimension_rows_dropped || 0;
-      parts.push(`${name}: ${w2}${r.run_capped ? ` CAPPED+${r.run_capped}` : ''}`);
+      rej += r.rejected || 0;
+      parts.push(`${name}: ${w2}` +
+        (r.run_capped ? ` CAPPED+${r.run_capped}` : '') +
+        (r.rejected ? ` (${r.rejected} rejected)` : ''));
     }
-    totals.written += wrote; totals.capped += cap; totals.dropped += drop;
+    totals.written += wrote; totals.capped += cap; totals.dropped += drop; totals.rejected += rej;
+    if (rej > 0) rejectedWindows.push({ ...w, count: rej });
     if (cap > 0) capped.push(w);
 
     console.log(`${label}  ${parts.join('  ')}`);
@@ -154,6 +196,15 @@ async function main() {
   console.log(`${dryRun ? 'would write' : 'wrote'}: ${totals.written} rows`);
   if (totals.dropped) {
     console.log(`per-day dimension cap trimmed ${totals.dropped} low-traffic rows (expected; the cap keeps the top 200 per metric per day).`);
+  }
+  if (totals.rejected) {
+    // Not a failure, but not silence either: a reading the contract refuses is
+    // real data that will never appear on any dashboard, and the reason is
+    // worth someone's attention if the count is not tiny.
+    console.log(`contract rejected ${totals.rejected} readings across ${rejectedWindows.length} window(s).`);
+    console.log('Inspect one with:  curl -H "x-admin-key: $ADMIN_KEY" -X POST -d \'{"start_date":"' +
+      rejectedWindows[0].start + '","end_date":"' + rejectedWindows[0].end + '","dry_run":true}\' \\');
+    console.log('       -H "Content-Type: application/json" <base>/api/admin/traffic/pull | jq .gsc.rejections');
   }
   if (totals.failed) console.log(`FAILED requests: ${totals.failed}`);
   if (totals.capped) {
@@ -186,4 +237,10 @@ async function post(base, key, body) {
 
 function fail(msg) { console.error('error: ' + msg); process.exit(1); }
 
-main().catch((e) => fail(e.message));
+// Exported so the error classification above can be tested. It is the part
+// most likely to be wrong and the part whose wrongness is most expensive: a
+// misclassified failure sends someone to check the wrong thing entirely.
+module.exports = { isApiAuthFailure, proxyHint, addDays };
+
+// Only run when invoked directly, never when required by a test.
+if (require.main === module) main().catch((e) => fail(e.message));

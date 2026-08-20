@@ -56,6 +56,79 @@ ok('  and null stays null', shopify.num(null) === null && shopify.num(undefined)
 ok('a real zero is still zero', shopify.num('0') === 0);
 ok('nonsense is rejected rather than becoming NaN', shopify.num('n/a') === null);
 
+// ── The PII guard versus the site's own subject matter ───────────────────────
+section('Search queries that only LOOK like personal data survive');
+//  Found in a production backfill: the phone-like heuristic was dropping real
+//  Search Console queries. On a site that teaches networking, an IP address is
+//  the subject, not an identifier, and "2025-2026" is the product year.
+{
+  const keep = [
+    ['192.168.1.256', 'the classic invalid-IP teaching example'],
+    ['185.220.101.47', 'a routable address, still just a query'],
+    ['172.16.50.5', 'private range, ap-cybersecurity content'],
+    ['10.0.0.1', 'short dotted quad'],
+    ['2025-2026', 'the school year'],
+    ['2025-26', 'the school year, abbreviated'],
+    ['2026', 'a bare year'],
+  ];
+  for (const [q, why] of keep) {
+    ok(`query "${q}" is kept (${why})`,
+      contract.normalizeDimension('query', q) === 'query:' + q.toLowerCase(),
+      contract.normalizeDimension('query', q));
+  }
+
+  // The exemption is narrow ON PURPOSE. It must not become a hole.
+  const drop = [
+    ['user@example.com', 'an email is never subject matter'],
+    ['+1 (555) 123-4567', 'an actual phone number'],
+    ['5551234567', 'ten bare digits'],
+    ['3f2504e0-4f89-11d3-9a0c-0305e82c3301', 'a uuid'],
+    ['1234567890.1234567890', 'a GA client id'],
+  ];
+  for (const [q, why] of drop) {
+    ok(`query "${q}" is STILL rejected (${why})`, contract.normalizeDimension('query', q) === null,
+      contract.normalizeDimension('query', q));
+  }
+
+  // Scoped to `query` only. A search term is an aggregate; an IP arriving in
+  // any other namespace has no such excuse.
+  ok('an IP is still rejected outside the query namespace',
+    contract.normalizeDimension('page', '192.168.1.1') === null,
+    contract.normalizeDimension('page', '192.168.1.1'));
+  ok('  and so is a year range',
+    contract.normalizeDimension('country', '2025-2026') === null);
+}
+
+// ── Backfill error classification ────────────────────────────────────────────
+section('The backfill tells you which thing is actually broken');
+//  The first real production run of the backfill hit an egress proxy that
+//  answers 403 with "Host not in allowlist". The script reported
+//  "authentication rejected. Check ADMIN_KEY matches the deployed key."
+//  The key was fine, and the message sent the reader to the one place the
+//  problem was not. A wrong diagnosis costs more than no diagnosis.
+{
+  const bf = require('../scripts/traffic-backfill');
+
+  ok('the API\'s own rejection IS an auth failure',
+    bf.isApiAuthFailure('HTTP 403: {"error":"Invalid or missing admin key."}') === true);
+  ok('a 401 is an auth failure whatever the body says',
+    bf.isApiAuthFailure('HTTP 401: nope') === true);
+  ok('a PROXY 403 is NOT an auth failure',
+    bf.isApiAuthFailure('HTTP 403: Host not in allowlist: progress.apcsexamprep.com.') === false);
+  ok('a 502 is not an auth failure', bf.isApiAuthFailure('HTTP 502: bad gateway') === false);
+
+  ok('a proxy rejection offers the proxy fix',
+    /NODE_USE_ENV_PROXY/.test(bf.proxyHint('HTTP 403: Host not in allowlist: x') || ''));
+  ok('  and DNS failure does too', /NODE_USE_ENV_PROXY/.test(bf.proxyHint('fetch failed: ENOTFOUND') || ''));
+  // A real auth failure must not be muddied with networking advice.
+  ok('a genuine auth failure gets no proxy advice',
+    bf.proxyHint('HTTP 403: {"error":"Invalid or missing admin key."}') === null);
+
+  // Chunk arithmetic: an off-by-one here silently skips or re-fetches days.
+  ok('day stepping is inclusive and correct', bf.addDays('2026-02-28', 1) === '2026-03-01');
+  ok('  and handles a leap year', bf.addDays('2028-02-28', 1) === '2028-02-29');
+}
+
 section('Connector fails closed');
 delete process.env.SHOPIFY_SHOP;
 delete process.env.SHOPIFY_ADMIN_TOKEN;
