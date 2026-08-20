@@ -186,9 +186,9 @@ const STREAMS = {
     brief: [
       ['ap networking', 'AP Networking in 2026-27: Inside the Final Pilot Year', 'ap-networking-2026-27-pilot-year-guide'],
       ['ap networking exam', 'The Four Skills Every AP Networking Question Is Actually Testing', 'ap-networking-four-skills-explained'],
-      ['ap networking units', 'All Four Units and 22 Topics'],
-      ['it career without degree', 'The IT Career Path AP Networking Points At'],
       ['ap networking vs ap cybersecurity', 'Where AP Networking and AP Cybersecurity Actually Overlap'],
+      ['it career without degree', 'The IT Career Path AP Networking Points At'],
+      ['ap networking units', 'All Four Units and 22 Topics'],
       ['network engineer salary', 'What Network and Infrastructure Work Actually Pays'],
       ['ap networking pilot', 'Being in a Pilot Year: What Your School Signed Up For'],
       ['comptia network plus', 'AP Networking and the Certifications Next Door'],
