@@ -80,6 +80,10 @@ const REGISTRY = {
   'rule-order':                 { metric: 'score', higher: true, min: 0, max: 10000 },
   'packet-path':                { metric: 'score', higher: true, min: 0, max: 10000 },
   'log-hunt':                   { metric: 'score', higher: true, min: 0, max: 10000 },
+  'guest-gate':                 { metric: 'score', higher: true, min: 0, max: 10000 },
+  'segment-sort':               { metric: 'score', higher: true, min: 0, max: 10000 },
+  'shell-hop':                  { metric: 'score', higher: true, min: 0, max: 10000 },
+  'ai-audit':                   { metric: 'score', higher: true, min: 0, max: 10000 },
 };
 
 const WINDOWS = new Set(['today', 'week', 'month', 'year', 'all']);

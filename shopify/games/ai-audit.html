@@ -1,0 +1,289 @@
+<style>
+  #ai-game{font-family:"DM Sans",-apple-system,BlinkMacSystemFont,sans-serif;max-width:640px;margin:0 auto;}
+  #ai-game *{box-sizing:border-box;}
+  .ai-card{border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden;background:#fff!important;}
+  .ai-hero{background:#0f1f3d!important;padding:22px 20px;text-align:center;}
+  .ai-title{font-family:"DM Serif Display",Georgia,serif!important;font-size:26px!important;line-height:1.15!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 6px!important;}
+  .ai-sub{font-size:14px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0!important;line-height:1.5!important;}
+  .ai-bar{display:flex;gap:8px;padding:12px;background:#f8fafc!important;border-bottom:1px solid #e2e8f0;flex-wrap:wrap;justify-content:center;}
+  .ai-chip{font-size:12px!important;font-weight:700;color:#475569!important;-webkit-text-fill-color:#475569!important;background:#fff!important;border:1px solid #e2e8f0;border-radius:100px;padding:6px 12px;}
+  .ai-chip.ai-score{background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:#1a56db;}
+  .ai-chip.ai-flags{background:#fef3c7!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border-color:#fde68a;}
+  .ai-body{padding:20px;}
+  .ai-how{font-size:13px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;line-height:1.6!important;background:#f8fafc!important;border-radius:10px;padding:12px 14px;margin:0 0 18px!important;}
+  .ai-brief{background:#eff6ff!important;border:1px solid #bfdbfe;border-radius:12px;padding:13px 16px;margin-bottom:12px;}
+  .ai-brief b{display:block;font-size:12px!important;text-transform:uppercase;letter-spacing:.06em;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin-bottom:4px;}
+  .ai-brief span{font-size:14.5px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.5!important;}
+  .ai-spec{border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;margin-bottom:12px;}
+  .ai-sh{padding:9px 13px;background:#f1f5f9!important;border-bottom:1px solid #e2e8f0;font-size:11px!important;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+  .ai-line{display:flex;gap:10px;align-items:flex-start;width:100%;padding:11px 13px;border:none;border-bottom:1px solid #f1f5f9;background:#fff!important;font-family:inherit;cursor:pointer;text-align:left;}
+  .ai-line:last-child{border-bottom:none;}
+  .ai-line:hover{background:#f8fafc!important;}
+  .ai-line.on{background:#fffbeb!important;}
+  .ai-line.hit{background:#f0fdf4!important;}
+  .ai-line.miss{background:#fef2f2!important;}
+  .ai-line.false{background:#fef2f2!important;}
+  .ai-mk{width:20px;height:20px;border-radius:5px;border:2px solid #cbd5e1;flex:0 0 auto;margin-top:1px;font-size:11px!important;font-weight:800;line-height:16px;text-align:center;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .ai-line.on .ai-mk{background:#d97706!important;border-color:#d97706;}
+  .ai-line.hit .ai-mk{background:#16a34a!important;border-color:#16a34a;}
+  .ai-line.miss .ai-mk{background:#dc2626!important;border-color:#dc2626;}
+  .ai-line.false .ai-mk{background:#dc2626!important;border-color:#dc2626;}
+  .ai-lt{flex:1;font-size:13.5px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.5!important;}
+  .ai-tag{display:block;font-size:11px!important;font-weight:700;margin-top:4px;}
+  .ai-tag.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;}
+  .ai-tag.fine{color:#15803d!important;-webkit-text-fill-color:#15803d!important;}
+  .ai-go{width:100%;padding:13px;border:none;border-radius:10px;background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:inherit;font-size:15px!important;font-weight:700;cursor:pointer;}
+  .ai-go:disabled{background:#cbd5e1!important;cursor:not-allowed;}
+  .ai-reveal{display:none;margin-top:14px;padding-top:14px;border-top:1px solid #e2e8f0;}
+  .ai-reveal.on{display:block;}
+  .ai-verdict{font-size:15px!important;font-weight:700;margin:0 0 10px!important;}
+  .ai-verdict.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important;}
+  .ai-verdict.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;}
+  .ai-why{font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;line-height:1.65!important;margin:0 0 12px!important;}
+  .ai-end{text-align:center;}
+  .ai-end h2{font-family:"DM Serif Display",Georgia,serif!important;font-size:30px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin:0 0 6px!important;}
+  .ai-end p{font-size:14px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:0 0 16px!important;}
+  .ai-teach{text-align:left;background:#eff6ff!important;border-left:3px solid #1a56db;border-radius:0 10px 10px 0;padding:14px 16px;font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;line-height:1.7!important;margin-bottom:16px;}
+  .ai-teach b{color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;}
+</style>
+
+<div id="ai-game">
+  <div class="ai-card">
+    <div class="ai-hero">
+      <h1 class="ai-title">AI Audit</h1>
+      <p class="ai-sub">Four network designs written by an AI. Most of every one is fine, which is exactly the problem</p>
+    </div>
+    <div class="ai-bar">
+      <span class="ai-chip" id="ai-round">Design 1 / 4</span>
+      <span class="ai-chip ai-flags" id="ai-flagchip">Flagged: 0</span>
+      <span class="ai-chip ai-score" id="ai-score">Score: 0</span>
+    </div>
+    <div class="ai-body" id="ai-play">
+      <p class="ai-how">How to play: an AI was given the brief and produced the specification below. Click every line you would not sign off. Flagging a line that is actually correct costs you, because an audit that objects to everything is no more useful than one that objects to nothing.</p>
+      <div class="ai-brief"><b>The brief given to the AI</b><span id="ai-brieftxt"></span></div>
+      <div class="ai-spec">
+        <div class="ai-sh">AI-generated specification</div>
+        <div id="ai-lines"></div>
+      </div>
+      <button class="ai-go" id="ai-gobtn" type="button">Submit the audit</button>
+      <div class="ai-reveal" id="ai-reveal">
+        <p class="ai-verdict" id="ai-verdict"></p>
+        <p class="ai-why" id="ai-why"></p>
+        <button class="ai-go" id="ai-nextbtn" type="button">Next design</button>
+      </div>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* AI Audit - AP Networking Topic 2.4, sub-skills 1.B and 1.C.
+     LO 2.4.A is "evaluate an AI-generated network design, configuration, or
+     troubleshooting suggestion", and EK 2.4.A.2 names the three failure modes
+     precisely: unrealistic device recommendations, overcomplicated setups, and
+     incorrect configurations. Each design below carries one of each, planted
+     among lines that are genuinely correct.
+
+     False positives are scored, deliberately. A student who flags every line
+     scores zero, because the skill being assessed is discrimination and not
+     suspicion. That is also the honest lesson about AI output: most of it is
+     right, which is what makes the wrong parts hard to see. */
+
+  var KIND = {
+    unreal: 'Unrealistic recommendation',
+    complex: 'Overcomplicated',
+    wrong: 'Incorrect configuration'
+  };
+
+  var DESIGNS = [
+    {
+      brief: 'A four-person design studio wants shared file storage, wireless for laptops, and a guest network.',
+      lines: [
+        { t: 'Deploy a redundant pair of enterprise core switches with 10 Gb uplinks', bad: 'unreal',
+          note: 'Four people do not need a redundant core. This is data-centre hardware for a room with four laptops.' },
+        { t: 'Use a single router with an integrated wireless access point', bad: null,
+          note: 'Appropriate for a SOHO network of this size.' },
+        { t: 'Assign the file server a static address of 192.168.1.300', bad: 'wrong',
+          note: 'There is no such address. Each octet stops at 255, so this configuration cannot be applied at all.' },
+        { t: 'Create a guest wireless network isolated from the internal network', bad: null,
+          note: 'Exactly what the brief asked for and correctly described.' },
+        { t: 'Configure OSPF between the router and the switch for dynamic route selection', bad: 'complex',
+          note: 'A dynamic routing protocol on a single-subnet office. There are no alternative paths for it to choose between.' },
+        { t: 'Enable WPA3 on the wireless network with a unique passphrase', bad: null,
+          note: 'Correct and current.' }
+      ],
+      why: 'Three defects, one of each kind the framework names. The address is the easiest to catch because it is impossible. The OSPF line is the hardest, because it is real technology, correctly spelled, doing nothing.'
+    },
+    {
+      brief: 'A school library needs 40 public catalogue terminals on their own segment, kept away from staff systems.',
+      lines: [
+        { t: 'Allocate 192.168.20.0/24 to the terminal segment', bad: null,
+          note: 'A /24 gives 254 usable addresses for 40 terminals. Roomy, but a reasonable standard block.' },
+        { t: 'Place the terminals in their own VLAN with no route to the staff VLAN', bad: null,
+          note: 'Correct segmentation for the requirement.' },
+        { t: 'Give each terminal a public IP address so it can be managed remotely', bad: 'wrong',
+          note: 'Public addresses on 40 catalogue terminals exposes every one of them to the internet, and the addresses are not yours to assign.' },
+        { t: 'Install a dedicated hardware firewall appliance at each terminal', bad: 'unreal',
+          note: 'Forty firewalls for forty terminals. The segment boundary needs one, not one per device.' },
+        { t: 'Allow the terminals outbound access to the catalogue server only', bad: null,
+          note: 'Least privilege, correctly applied to the actual requirement.' },
+        { t: 'Implement a RADIUS server with per-terminal certificate authentication', bad: 'complex',
+          note: 'Certificate infrastructure for public terminals that anyone may walk up to and use. It protects nothing here and someone has to run it forever.' }
+      ],
+      why: 'Notice that the public address line reads as helpful. Remote management is a real need, and the suggestion satisfies it in the way that causes the most harm.'
+    },
+    {
+      brief: 'A small clinic needs its two subnets to talk to each other, with patient records restricted to clinical staff.',
+      lines: [
+        { t: 'Subnet A 10.1.1.0/24 for clinical, subnet B 10.1.2.0/24 for reception', bad: null,
+          note: 'Two clean, non-overlapping subnets.' },
+        { t: 'Configure the router with an interface in each subnet to route between them', bad: null,
+          note: 'This is how two subnets are made to talk. Correct.' },
+        { t: 'Set the subnet mask on the clinical side to 255.255.255.0 and on reception to 255.0.0.0', bad: 'wrong',
+          note: 'A /8 mask on reception makes it believe the entire 10.x.x.x space is local, including the clinical subnet, so it stops routing to it and the restriction silently fails.' },
+        { t: 'Permit reception to reach the appointment server, deny reception to the records server', bad: null,
+          note: 'The access rule the brief actually asked for.' },
+        { t: 'Deploy a full SIEM platform with 90 day log retention and a daily analyst review', bad: 'unreal',
+          note: 'A clinic with two subnets does not have an analyst to do a daily review. Recommending a control nobody will operate is the same as recommending nothing.' },
+        { t: 'Build an overlay network with encrypted tunnels between every pair of devices', bad: 'complex',
+          note: 'A mesh of tunnels inside one small building, replacing a job the router already does correctly.' }
+      ],
+      why: 'The mask line is the dangerous one and the quietest. Nothing errors, nothing alerts, and the restriction the clinic is relying on simply does not apply.'
+    },
+    {
+      brief: 'A cafe wants faster wireless. Customers complain that video calls stutter at busy times.',
+      lines: [
+        { t: 'Replace the single access point with two, placed to cover the seating areas', bad: null,
+          note: 'A reasonable answer to a coverage and capacity problem.' },
+        { t: 'Put guest traffic on its own network with a bandwidth limit per device', bad: null,
+          note: 'Stops one heavy user degrading everyone, which matches the symptom.' },
+        { t: 'Upgrade the internet connection from 50 Mbps to 10 Gbps', bad: 'unreal',
+          note: 'A cafe cannot buy or use a 10 Gbps connection, and the complaint is about stutter at busy times, which points at the wireless rather than the line.' },
+        { t: 'Set both access points to wireless channel 6 for consistency', bad: 'wrong',
+          note: 'Two access points on the same channel interfere with each other. Overlapping coverage needs non-overlapping channels, so this makes the reported problem worse.' },
+        { t: 'Deploy a wireless controller with automated radio resource management and heat mapping', bad: 'complex',
+          note: 'Controller infrastructure to manage two access points in one room.' },
+        { t: 'Monitor which times of day the congestion occurs before making further changes', bad: null,
+          note: 'Measure before changing. The most valuable line in the whole specification.' }
+      ],
+      why: 'The channel line is worth remembering. It sounds tidy, it uses the right vocabulary, and it is the one change here that would make the customer complaint worse rather than better.'
+    }
+  ];
+
+  var el = {};
+  ['round','flagchip','score','brieftxt','lines','gobtn','reveal','verdict','why','nextbtn','play']
+    .forEach(function (k) { el[k] = document.getElementById('ai-' + k); });
+
+  var i = 0, score = 0, flagged = [], locked = false, caughtAll = 0;
+
+  function render() {
+    locked = false;
+    flagged = [];
+    var D = DESIGNS[i];
+    el.round.textContent = 'Design ' + (i + 1) + ' / ' + DESIGNS.length;
+    el.score.textContent = 'Score: ' + score;
+    el.brieftxt.textContent = D.brief;
+    el.reveal.className = 'ai-reveal';
+    el.gobtn.style.display = '';
+    el.gobtn.disabled = false;
+    el.gobtn.textContent = 'Submit the audit';
+    el.lines.innerHTML = '';
+    D.lines.forEach(function (L, idx) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ai-line';
+      b.setAttribute('data-i', String(idx));
+      b.innerHTML = '<span class="ai-mk"></span><span class="ai-lt">' + L.t + '</span>';
+      b.addEventListener('click', function () { toggle(idx, b); });
+      el.lines.appendChild(b);
+    });
+    updateChip();
+  }
+
+  function toggle(idx, btn) {
+    if (locked) return;
+    var at = flagged.indexOf(idx);
+    if (at !== -1) { flagged.splice(at, 1); btn.className = 'ai-line'; }
+    else { flagged.push(idx); btn.className = 'ai-line on'; }
+    updateChip();
+  }
+
+  function updateChip() {
+    el.flagchip.textContent = 'Flagged: ' + flagged.length;
+  }
+
+  function submit() {
+    if (locked) return;
+    locked = true;
+    var D = DESIGNS[i];
+    var hits = 0, misses = 0, falses = 0;
+
+    var nodes = el.lines.querySelectorAll('.ai-line');
+    for (var n = 0; n < nodes.length; n++) {
+      var idx = Number(nodes[n].getAttribute('data-i'));
+      var L = D.lines[idx];
+      var chosen = flagged.indexOf(idx) !== -1;
+      var cls, tag;
+      if (L.bad && chosen) { hits++; cls = 'hit'; tag = '<span class="ai-tag bad">' + KIND[L.bad] + '. ' + L.note + '</span>'; }
+      else if (L.bad && !chosen) { misses++; cls = 'miss'; tag = '<span class="ai-tag bad">MISSED. ' + KIND[L.bad] + '. ' + L.note + '</span>'; }
+      else if (!L.bad && chosen) { falses++; cls = 'false'; tag = '<span class="ai-tag fine">This line was correct. ' + L.note + '</span>'; }
+      else { cls = ''; tag = '<span class="ai-tag fine">Correct, and rightly left alone. ' + L.note + '</span>'; }
+      nodes[n].className = 'ai-line ' + cls;
+      nodes[n].querySelector('.ai-lt').innerHTML = L.t + tag;
+    }
+
+    var defects = D.lines.filter(function (L) { return L.bad; }).length;
+    /* False positives subtract. An audit that objects to every line has not
+       found anything, and scoring it as though it had would teach suspicion in
+       place of judgement. */
+    var gained = hits * 100 - falses * 60;
+    if (gained < 0) gained = 0;
+    if (hits === defects && falses === 0) { gained += 80; caughtAll++; }
+    score += gained;
+
+    el.verdict.className = (hits === defects && falses === 0) ? 'ai-verdict good' : 'ai-verdict bad';
+    el.verdict.textContent = hits + ' of ' + defects + ' defects found'
+      + (falses ? ', ' + falses + ' correct line' + (falses === 1 ? '' : 's') + ' wrongly flagged' : '')
+      + (misses && !falses ? ', ' + misses + ' missed' : '') + '.';
+    el.why.textContent = D.why;
+    el.gobtn.style.display = 'none';
+    el.nextbtn.textContent = i < DESIGNS.length - 1 ? 'Next design' : 'See results';
+    el.reveal.className = 'ai-reveal on';
+    el.score.textContent = 'Score: ' + score;
+  }
+
+  el.gobtn.addEventListener('click', submit);
+  el.nextbtn.addEventListener('click', function () {
+    if (i < DESIGNS.length - 1) { i++; render(); } else { finish(); }
+  });
+
+  function finish() {
+    el.play.innerHTML =
+      '<div class="ai-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + caughtAll + ' of ' + DESIGNS.length + ' designs audited cleanly.</p>' +
+        '<div class="ai-teach">' +
+          '<b>Half of every specification here was correct, and that is what makes this hard.</b> ' +
+          'AI output is not wrong in the way a bad student is wrong. It is fluent, it uses the right ' +
+          'vocabulary, and most of it is genuinely good, so the defects sit inside sentences that read ' +
+          'exactly like the ones either side of them. ' +
+          'Three shapes recur, and they are the three the course framework names. Hardware nobody that ' +
+          'size could buy or run. Real technology solving a problem the network does not have. And ' +
+          'settings that are quietly impossible or quietly harmful, like an octet above 255 or two ' +
+          'access points sharing a channel. ' +
+          'The habit worth keeping: read every line against the BRIEF rather than against your sense ' +
+          'of whether it sounds professional. Most of these defects sounded more professional than the ' +
+          'correct lines did.' +
+        '</div>' +
+        '<p><button class="ai-go" id="ai-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('ai-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  render();
+})();
+</script>
