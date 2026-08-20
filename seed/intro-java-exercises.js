@@ -176,11 +176,11 @@ const EXERCISES = [
       '}',
     ].join('\n'),
     cases: [
-      { hidden: 0, setup: 'World w = new World(12, 6, 32);\n    Harness h = new Harness();\n    w.addObject(h, 2, 3);\n    for (int i = 0; i < 4; i++) { h.act(); }\n    System.out.println(h.getX() + "," + h.getRotation());' },
-      { hidden: 0, setup: 'World w = new World(12, 6, 32);\n    Harness h = new Harness();\n    w.addObject(h, 2, 3);\n    for (int i = 0; i < 8; i++) { h.act(); }\n    System.out.println(h.getX() + "," + h.getRotation());' },
+      { hidden: 0, setup: 'World w = new World(12, 6, 32);\n    Harness h = new Harness();\n    w.addObject(h, 2, 3);\n    for (int i = 0; i < 4; i++)\n    {\n        h.act();\n    }\n    System.out.println(h.getX() + "," + h.getRotation());' },
+      { hidden: 0, setup: 'World w = new World(12, 6, 32);\n    Harness h = new Harness();\n    w.addObject(h, 2, 3);\n    for (int i = 0; i < 8; i++)\n    {\n        h.act();\n    }\n    System.out.println(h.getX() + "," + h.getRotation());' },
       // Long enough to require the turn to have happened and to walk back.
-      { hidden: 1, setup: 'World w = new World(21, 6, 32);\n    Harness h = new Harness();\n    w.addObject(h, 1, 2);\n    for (int i = 0; i < 16; i++) { h.act(); }\n    System.out.println(h.getX() + "," + h.getRotation());' },
-      { hidden: 1, setup: 'World w = new World(9, 9, 32);\n    Harness h = new Harness();\n    w.addObject(h, 4, 4);\n    for (int i = 0; i < 25; i++) { h.act(); }\n    System.out.println(h.getX() + "," + h.getRotation());' },
+      { hidden: 1, setup: 'World w = new World(21, 6, 32);\n    Harness h = new Harness();\n    w.addObject(h, 1, 2);\n    for (int i = 0; i < 16; i++)\n    {\n        h.act();\n    }\n    System.out.println(h.getX() + "," + h.getRotation());' },
+      { hidden: 1, setup: 'World w = new World(9, 9, 32);\n    Harness h = new Harness();\n    w.addObject(h, 4, 4);\n    for (int i = 0; i < 25; i++)\n    {\n        h.act();\n    }\n    System.out.println(h.getX() + "," + h.getRotation());' },
     ],
     scene: {
       world: { width: 20, height: 10, cell: 40 },
@@ -384,8 +384,8 @@ const EXERCISES = [
       { hidden: 0, setup: 'World w = new World(12, 6, 32);\n    Harness h = new Harness();\n    w.addObject(h, 2, 3);\n    w.addObject(new Spike(), 2, 3);\n    h.act();\n    System.out.println(h.getX() + "," + h.lives);' },
       // Walks onto a spike part way through, so a submission that only ever
       // takes one branch fails.
-      { hidden: 1, setup: 'World w = new World(20, 6, 32);\n    Harness h = new Harness();\n    w.addObject(h, 0, 3);\n    w.addObject(new Spike(), 6, 3);\n    for (int i = 0; i < 5; i++) { h.act(); }\n    System.out.println(h.getX() + "," + h.lives);' },
-      { hidden: 1, setup: 'World w = new World(20, 6, 32);\n    Harness h = new Harness();\n    w.addObject(h, 5, 3);\n    w.addObject(new Spike(), 5, 3);\n    for (int i = 0; i < 3; i++) { h.act(); }\n    System.out.println(h.getX() + "," + h.lives);' },
+      { hidden: 1, setup: 'World w = new World(20, 6, 32);\n    Harness h = new Harness();\n    w.addObject(h, 0, 3);\n    w.addObject(new Spike(), 6, 3);\n    for (int i = 0; i < 5; i++)\n    {\n        h.act();\n    }\n    System.out.println(h.getX() + "," + h.lives);' },
+      { hidden: 1, setup: 'World w = new World(20, 6, 32);\n    Harness h = new Harness();\n    w.addObject(h, 5, 3);\n    w.addObject(new Spike(), 5, 3);\n    for (int i = 0; i < 3; i++)\n    {\n        h.act();\n    }\n    System.out.println(h.getX() + "," + h.lives);' },
     ],
     scene: {
       world: { width: 18, height: 8, cell: 40 },
@@ -446,7 +446,7 @@ const EXERCISES = [
       { hidden: 0, setup: 'Harness h = new Harness();\n    System.out.println(h.rankFor(120));\n    System.out.println(h.rankFor(70));\n    System.out.println(h.rankFor(5));' },
       { hidden: 0, setup: 'Harness h = new Harness();\n    System.out.println(h.rankFor(100));\n    System.out.println(h.rankFor(50));' },
       { hidden: 1, setup: 'Harness h = new Harness();\n    System.out.println(h.rankFor(99));\n    System.out.println(h.rankFor(49));\n    System.out.println(h.rankFor(0));' },
-      { hidden: 1, setup: 'Harness h = new Harness();\n    for (int c = 45; c <= 105; c = c + 5) { System.out.println(c + " " + h.rankFor(c)); }' },
+      { hidden: 1, setup: 'Harness h = new Harness();\n    for (int c = 45; c <= 105; c = c + 5)\n    {\n        System.out.println(c + " " + h.rankFor(c));\n    }' },
     ],
     scene: null,
   },
@@ -483,10 +483,10 @@ const EXERCISES = [
     // the wrong range, comes apart. The last case checks the RANGE over many
     // rolls rather than the values, which is the property that actually matters.
     cases: [
-      { hidden: 0, setup: 'Greenfoot.__seed(20260816L);\n    Harness h = new Harness();\n    for (int i = 0; i < 6; i++) { System.out.println(h.roll()); }' },
-      { hidden: 0, setup: 'Greenfoot.__seed(7L);\n    Harness h = new Harness();\n    for (int i = 0; i < 4; i++) { System.out.println(h.roll()); }' },
-      { hidden: 1, setup: 'Greenfoot.__seed(999L);\n    Harness h = new Harness();\n    for (int i = 0; i < 10; i++) { System.out.println(h.roll()); }' },
-      { hidden: 1, setup: 'Greenfoot.__seed(31337L);\n    Harness h = new Harness();\n    int lo = 99;\n    int hi = -99;\n    for (int i = 0; i < 400; i++) { int r = h.roll(); if (r < lo) { lo = r; } if (r > hi) { hi = r; } }\n    System.out.println(lo + " to " + hi);' },
+      { hidden: 0, setup: 'Greenfoot.__seed(20260816L);\n    Harness h = new Harness();\n    for (int i = 0; i < 6; i++)\n    {\n        System.out.println(h.roll());\n    }' },
+      { hidden: 0, setup: 'Greenfoot.__seed(7L);\n    Harness h = new Harness();\n    for (int i = 0; i < 4; i++)\n    {\n        System.out.println(h.roll());\n    }' },
+      { hidden: 1, setup: 'Greenfoot.__seed(999L);\n    Harness h = new Harness();\n    for (int i = 0; i < 10; i++)\n    {\n        System.out.println(h.roll());\n    }' },
+      { hidden: 1, setup: 'Greenfoot.__seed(31337L);\n    Harness h = new Harness();\n    int lo = 99;\n    int hi = -99;\n    for (int i = 0; i < 400; i++)\n    {\n        int r = h.roll();\n        if (r < lo)\n        {\n            lo = r;\n        }\n        if (r > hi)\n        {\n            hi = r;\n        }\n    }\n    System.out.println(lo + " to " + hi);' },
     ],
     scene: null,
   },
@@ -539,7 +539,7 @@ const EXERCISES = [
       { hidden: 0, setup: 'Greenfoot.__keys("left");\n    World w = new World(30, 30, 32);\n    Harness h = new Harness();\n    w.addObject(h, 15, 15);\n    h.act();\n    System.out.println(h.getX() + "," + h.getY());' },
       { hidden: 0, setup: 'Greenfoot.__keys("down");\n    World w = new World(30, 30, 32);\n    Harness h = new Harness();\n    w.addObject(h, 15, 15);\n    h.act();\n    System.out.println(h.getX() + "," + h.getY());' },
       { hidden: 1, setup: 'Greenfoot.__keys("up", "left");\n    World w = new World(30, 30, 32);\n    Harness h = new Harness();\n    w.addObject(h, 15, 15);\n    h.act();\n    System.out.println(h.getX() + "," + h.getY());' },
-      { hidden: 1, setup: 'Greenfoot.__keys("right", "down");\n    World w = new World(30, 30, 32);\n    Harness h = new Harness();\n    w.addObject(h, 4, 4);\n    for (int i = 0; i < 3; i++) { h.act(); }\n    System.out.println(h.getX() + "," + h.getY());' },
+      { hidden: 1, setup: 'Greenfoot.__keys("right", "down");\n    World w = new World(30, 30, 32);\n    Harness h = new Harness();\n    w.addObject(h, 4, 4);\n    for (int i = 0; i < 3; i++)\n    {\n        h.act();\n    }\n    System.out.println(h.getX() + "," + h.getY());' },
       { hidden: 1, setup: 'Greenfoot.__keys();\n    World w = new World(30, 30, 32);\n    Harness h = new Harness();\n    w.addObject(h, 9, 9);\n    h.act();\n    System.out.println(h.getX() + "," + h.getY());' },
     ],
     scene: {
