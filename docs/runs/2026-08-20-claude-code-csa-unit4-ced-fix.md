@@ -141,10 +141,26 @@ so the next pass does not have to re-derive any of this.
   surfaces are untouched, as expected: no wiring files changed, only content.
 - `node -e` structural check on all 36 exercise-2 questions: clean.
 
+## Update: the exercise-2 page renderer shipped too
+
+`lib/csa-exercise-2-pages.js` and `scripts/csa-exercise-2-pages-csv.js`, mirroring
+`lib/csp-course-pages.js` and `scripts/csp-game-pages-csv.js`, scoped to the same
+six lessons. `npm run csax2 -- out.csv` produces a Matrixify-ready sheet; importing
+it into Shopify is still a separate pipeline, same division of labor exercise-1's
+own CSV already has.
+
+Caught before it shipped: the authored bank puts 33 of 36 correct answers on
+option B (checked against the data, not assumed). Fixed the same way CSP's build
+fixed the identical bug: options are rotated at render time to a deterministic
+per-question target letter, so the content itself is untouched but no student
+could pass the course by always picking B. `smoke/csa-exercise-2-pages.js`
+(`npm run smoke:csax2pages`, 64 assertions) pins this, the handle routing, the
+CSV round trip, and that every item reports `exercise-2` and never a hardcoded
+`quiz`. `npm run smoke:csax1`, `smoke:contract` and `smoke:exercises` all still
+pass clean.
+
 ## What is still open
 
-- The exercise-2 page renderer and CSV export for these six lessons (or all of
-  Unit 4).
 - Debugging-mode items: needs a name (`debug` proposed) and a rollout-scope
   decision (all 17 Unit 4 lessons vs a stated partial set) before any content
   is authored against it.

@@ -14,11 +14,11 @@
 //  incrementally, and course_denominators already carries exercise-2 for every
 //  CSA lesson regardless of whether a bank exists yet.
 //
-//  NOT YET CONSUMED BY A PAGE RENDERER. lib/csa-exercise-pages.js and
-//  scripts/csa-exercise-pages-csv.js build the exercise-1 pages; an equivalent
-//  exercise-2 renderer and CSV export (mirroring lib/csp-course-pages.js and
-//  scripts/csp-game-pages-csv.js) has not been built yet. This file exists so
-//  that work has content to render the moment it starts.
+//  RENDERED BY lib/csa-exercise-2-pages.js, exported to Matrixify by
+//  scripts/csa-exercise-2-pages-csv.js (npm run csax2 -- out.csv), and checked
+//  by smoke/csa-exercise-2-pages.js (npm run smoke:csax2pages). Importing the
+//  sheet into Shopify is a separate pipeline, same division of labor as
+//  exercise-1's own CSV.
 //
 //  Pure ASCII, no em-dashes. Zero PII: author content only.
 // ─────────────────────────────────────────────────────────────────────────────
