@@ -1,0 +1,300 @@
+<style>
+  #hf-game{font-family:"DM Sans",-apple-system,BlinkMacSystemFont,sans-serif;max-width:640px;margin:0 auto;}
+  #hf-game *{box-sizing:border-box;}
+  .hf-card{border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden;background:#fff!important;}
+  .hf-hero{background:#0f1f3d!important;padding:22px 20px;text-align:center;}
+  .hf-title{font-family:"DM Serif Display",Georgia,serif!important;font-size:26px!important;line-height:1.15!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 6px!important;}
+  .hf-sub{font-size:14px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0!important;line-height:1.5!important;}
+  .hf-bar{display:flex;gap:8px;padding:12px;background:#f8fafc!important;border-bottom:1px solid #e2e8f0;flex-wrap:wrap;justify-content:center;}
+  .hf-chip{font-size:12px!important;font-weight:700;color:#475569!important;-webkit-text-fill-color:#475569!important;background:#fff!important;border:1px solid #e2e8f0;border-radius:100px;padding:6px 12px;}
+  .hf-chip.hf-score{background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:#1a56db;}
+  .hf-chip.hf-left{background:#fef3c7!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border-color:#fde68a;}
+  .hf-body{padding:20px;}
+  .hf-how{font-size:13px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;line-height:1.6!important;background:#f8fafc!important;border-radius:10px;padding:12px 14px;margin:0 0 18px!important;}
+  .hf-scene{background:#eff6ff!important;border:1px solid #bfdbfe;border-radius:12px;padding:14px 16px;margin-bottom:14px;}
+  .hf-scene b{display:block;font-size:12px!important;text-transform:uppercase;letter-spacing:.06em;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin-bottom:5px;}
+  .hf-scene span{font-size:15px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.5!important;}
+  .hf-list{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:14px;}
+  .hf-fix{display:flex;align-items:flex-start;gap:11px;padding:12px 13px;border:2px solid #e2e8f0;border-radius:12px;background:#fff!important;cursor:pointer;text-align:left;font-family:inherit;width:100%;}
+  .hf-fix:hover{border-color:#1a56db;}
+  .hf-fix.on{border-color:#1a56db;background:#eff6ff!important;}
+  .hf-fix.hit{border-color:#dc2626;background:#fef2f2!important;}
+  .hf-fix.safe{border-color:#16a34a;background:#f0fdf4!important;}
+  .hf-box{width:19px;height:19px;border-radius:5px;border:2px solid #cbd5e1;flex:0 0 auto;margin-top:1px;font-size:11px!important;font-weight:800;color:#fff!important;-webkit-text-fill-color:#fff!important;text-align:center;line-height:15px;}
+  .hf-fix.on .hf-box{background:#1a56db!important;border-color:#1a56db;}
+  .hf-tx{flex:1;}
+  .hf-tx b{display:block;font-size:14px!important;font-weight:700;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.35!important;}
+  .hf-tx small{display:block;font-size:12px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-top:2px;line-height:1.45!important;}
+  .hf-go{width:100%;padding:13px;border:none;border-radius:10px;background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:inherit;font-size:15px!important;font-weight:700;cursor:pointer;}
+  .hf-go:disabled{background:#cbd5e1!important;cursor:not-allowed;}
+  .hf-reveal{display:none;margin-top:16px;padding-top:16px;border-top:1px solid #e2e8f0;}
+  .hf-reveal.on{display:block;}
+  .hf-verdict{font-size:16px!important;font-weight:700;margin:0 0 12px!important;}
+  .hf-verdict.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important;}
+  .hf-verdict.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;}
+  .hf-att{border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;margin-bottom:12px;}
+  .hf-ar{padding:10px 12px;border-bottom:1px solid #f1f5f9;font-size:12.5px!important;line-height:1.5!important;}
+  .hf-ar:last-child{border-bottom:none;}
+  .hf-ar.blocked{background:#f0fdf4!important;color:#15803d!important;-webkit-text-fill-color:#15803d!important;}
+  .hf-ar.landed{background:#fef2f2!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;}
+  .hf-why{font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;line-height:1.65!important;margin:0 0 14px!important;}
+  .hf-end{text-align:center;}
+  .hf-end h2{font-family:"DM Serif Display",Georgia,serif!important;font-size:30px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin:0 0 6px!important;}
+  .hf-end p{font-size:14px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:0 0 16px!important;}
+  .hf-teach{text-align:left;background:#eff6ff!important;border-left:3px solid #1a56db;border-radius:0 10px 10px 0;padding:14px 16px;font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;line-height:1.7!important;margin-bottom:16px;}
+  .hf-teach b{color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;}
+</style>
+
+<div id="hf-game">
+  <div class="hf-card">
+    <div class="hf-hero">
+      <h1 class="hf-title">Harden First</h1>
+      <p class="hf-sub">Six weaknesses, three changes, one night. Fix the ones the attacker was actually going to use</p>
+    </div>
+    <div class="hf-bar">
+      <span class="hf-chip" id="hf-round">Site 1 / 5</span>
+      <span class="hf-chip hf-left" id="hf-left">Changes left: 3</span>
+      <span class="hf-chip hf-score" id="hf-score">Score: 0</span>
+    </div>
+    <div class="hf-body" id="hf-play">
+      <p class="hf-how">How to play: every weakness on the list is real and every one is worth fixing eventually. You only get three changes before the attack. Pick the three that block it. Anything you leave undone gets used, or turns out not to have mattered tonight.</p>
+      <div class="hf-scene"><b>Tonight</b><span id="hf-scenetxt"></span></div>
+      <div class="hf-list" id="hf-list"></div>
+      <button class="hf-go" id="hf-gobtn" type="button" disabled>Pick 3 changes</button>
+      <div class="hf-reveal" id="hf-reveal">
+        <p class="hf-verdict" id="hf-verdict"></p>
+        <div class="hf-att" id="hf-att"></div>
+        <p class="hf-why" id="hf-why"></p>
+        <button class="hf-go" id="hf-nextbtn" type="button">Next site</button>
+      </div>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Harden First - AP Networking Topic 1.4, sub-skills 2.C and 2.D.
+     Topic 1.4 lists a dozen things a user "should" do, and a list like that
+     teaches nothing about priority. Real hardening is triage: limited time,
+     everything is worth doing, and only some of it blocks tonight's attack.
+     So the scarcity is the mechanic. Three of the six weaknesses on each site
+     are on the attack path and three are genuinely lower priority THAT NIGHT,
+     which is a different claim from "not worth fixing" and the debrief says so.
+     EK 1.4.B.5 (default credentials) is the one that recurs, because it is the
+     single highest-value fix and students consistently rank it below password
+     complexity. */
+
+  var SITES = [
+    {
+      scene: 'A new wireless router was plugged in this afternoon and left on its factory settings. Someone is sitting in the car park.',
+      fixes: [
+        { t: 'Change the router admin password from the default', d: 'It is still the password printed in the manual', key: true },
+        { t: 'Switch wireless encryption from WPA2 to WPA3', d: 'The hardware supports it', key: true },
+        { t: 'Set a long unique wireless passphrase', d: 'Currently eight lowercase letters', key: true },
+        { t: 'Rename the SSID so it does not say the router model', d: 'It broadcasts the make and model', key: false },
+        { t: 'Turn on the monthly firmware update check', d: 'Firmware is current as of today', key: false },
+        { t: 'Enable the guest network for visitors', d: 'No visitors are expected this week', key: false }
+      ],
+      attacks: [
+        { needs: 0, txt: 'Opened the admin page and logged in with the default credentials from the manual' },
+        { needs: 1, txt: 'Captured the WPA2 handshake and cracked it offline' },
+        { needs: 2, txt: 'Guessed the eight-character passphrase from a wordlist in under a minute' }
+      ],
+      why: 'The three that mattered were the three on the way in: the admin password, the encryption, and the passphrase. Renaming the SSID and updating firmware are both good practice and neither would have stopped anything tonight, because the attacker never needed to know the model and the firmware was already current.'
+    },
+    {
+      scene: 'A staff member clicked a convincing invoice email this morning and typed their password into the page it opened.',
+      fixes: [
+        { t: 'Turn on multi-factor authentication for staff accounts', d: 'Currently password only', key: true },
+        { t: 'Force a password reset for the account that was phished', d: 'The password is now known to someone else', key: true },
+        { t: 'Check whether that password was reused on other systems', d: 'Reuse is common', key: true },
+        { t: 'Increase the minimum password length to 14', d: 'Currently 10', key: false },
+        { t: 'Add a lockout after 5 failed attempts', d: 'Currently unlimited attempts', key: false },
+        { t: 'Enable full disk encryption on the laptop', d: 'The laptop stays in the building', key: false }
+      ],
+      attacks: [
+        { needs: 0, txt: 'Signed in as the user with the stolen password, from a country away' },
+        { needs: 1, txt: 'Kept using the stolen password because it was never changed' },
+        { needs: 2, txt: 'Used the same password to open the finance system as well' }
+      ],
+      why: 'When a password is already stolen, length and lockout do nothing at all: the attacker is not guessing, they are typing the correct password. Multi-factor blocks them, a reset invalidates what they hold, and checking reuse finds the other doors that same password opens.'
+    },
+    {
+      scene: 'The office wireless is open with no passphrase because the previous manager thought it was easier. A neighbour has been on it for weeks.',
+      fixes: [
+        { t: 'Put a passphrase and WPA3 on the wireless network', d: 'Currently open, no encryption', key: true },
+        { t: 'Move printers and cameras off the staff network', d: 'Everything is on one flat network', key: true },
+        { t: 'Change the credentials on the network camera', d: 'Still admin / admin', key: true },
+        { t: 'Hide the SSID from broadcast', d: 'Anyone scanning still sees it', key: false },
+        { t: 'Set the DHCP lease time to 24 hours', d: 'Currently 7 days', key: false },
+        { t: 'Buy a second access point for coverage', d: 'One dead spot in the back office', key: false }
+      ],
+      attacks: [
+        { needs: 0, txt: 'Joined the open network from the flat upstairs and read unencrypted traffic' },
+        { needs: 1, txt: 'Reached the file share directly, because nothing separated devices from each other' },
+        { needs: 2, txt: 'Logged in to the camera with admin and admin and watched the office' }
+      ],
+      why: 'Hiding an SSID is the fix people reach for first and it is close to worthless, because a scanner sees the network anyway. Encryption keeps outsiders off, segmentation stops whoever does get on from reaching everything, and default camera credentials are the reason a camera is usually the first device an intruder owns.'
+    },
+    {
+      scene: 'A laptop is being taken to a conference and will spend three days on hotel and airport wireless.',
+      fixes: [
+        { t: 'Require a VPN for anything work related off site', d: 'Untrusted networks between here and there', key: true },
+        { t: 'Turn on the host firewall', d: 'Currently off because it blocked a printer once', key: true },
+        { t: 'Install the pending operating system updates', d: 'Two months behind, one is a remote flaw', key: true },
+        { t: 'Change the wireless passphrase back at the office', d: 'The office network is not travelling', key: false },
+        { t: 'Add the laptop to the asset register', d: 'Paperwork, worth doing', key: false },
+        { t: 'Set a screensaver timeout of 15 minutes', d: 'Better than nothing, slow to matter', key: false }
+      ],
+      attacks: [
+        { needs: 0, txt: 'Read the session from the hotel network because nothing was encrypted in transit' },
+        { needs: 1, txt: 'Connected straight to an open service on the laptop, with no firewall in the way' },
+        { needs: 2, txt: 'Exploited the two month old flaw that a patch had already fixed' }
+      ],
+      why: 'On an untrusted network the device has to defend itself, because you no longer control anything between it and the internet. Encrypt the traffic, close the ports, and patch the known hole. A screensaver timeout helps against the person walking past, which is a real threat but not this one.'
+    },
+    {
+      scene: 'A contractor needs access to one shared folder for two weeks. IT is about to hand them a normal staff account.',
+      fixes: [
+        { t: 'Give access to that one folder and nothing else', d: 'Least privilege', key: true },
+        { t: 'Set the account to expire in two weeks', d: 'Nobody remembers to remove accounts', key: true },
+        { t: 'Give them their own account, not a shared one', d: 'A shared login was suggested', key: true },
+        { t: 'Require a 16 character password on their account', d: 'Longer is better', key: false },
+        { t: 'Ask them to sign the acceptable use policy', d: 'Should happen, is not a control', key: false },
+        { t: 'Give them a company laptop instead of their own', d: 'Costly, slow, arguable', key: false }
+      ],
+      attacks: [
+        { needs: 0, txt: 'Browsed payroll and HR, because a normal staff account reaches them' },
+        { needs: 1, txt: 'Still had a working login four months after the contract ended' },
+        { needs: 2, txt: 'Nobody could tell which of three people using the shared login did any of it' }
+      ],
+      why: 'This site has no attacker at all, and that is the lesson. The damage comes from access that is too broad, that outlives its reason, and that cannot be traced to a person. A long password on an account that can see everything forever protects nobody.'
+    }
+  ];
+
+  var BUDGET = 3;
+
+  var el = {};
+  ['round','left','score','scenetxt','list','gobtn','reveal','verdict','att','why','nextbtn','play']
+    .forEach(function (k) { el[k] = document.getElementById('hf-' + k); });
+
+  var i = 0, score = 0, clean = 0, picked = [], locked = false;
+
+  function render() {
+    locked = false;
+    picked = [];
+    var s = SITES[i];
+    el.round.textContent = 'Site ' + (i + 1) + ' / ' + SITES.length;
+    el.score.textContent = 'Score: ' + score;
+    el.scenetxt.textContent = s.scene;
+    el.reveal.className = 'hf-reveal';
+    el.gobtn.style.display = '';
+    el.list.innerHTML = '';
+    /* The list is dealt in the authored order, which alternates key and non-key
+       entries rather than grouping them, so position is never a hint. */
+    s.fixes.forEach(function (f, idx) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'hf-fix';
+      b.setAttribute('data-i', String(idx));
+      b.innerHTML = '<span class="hf-box"></span><span class="hf-tx"><b>' + f.t + '</b><small>' + f.d + '</small></span>';
+      b.addEventListener('click', function () { toggle(idx, b); });
+      el.list.appendChild(b);
+    });
+    updateBar();
+  }
+
+  function toggle(idx, btn) {
+    if (locked) return;
+    var at = picked.indexOf(idx);
+    if (at !== -1) { picked.splice(at, 1); btn.className = 'hf-fix'; }
+    else {
+      if (picked.length >= BUDGET) return;
+      picked.push(idx);
+      btn.className = 'hf-fix on';
+    }
+    updateBar();
+  }
+
+  function updateBar() {
+    var remaining = BUDGET - picked.length;
+    el.left.textContent = 'Changes left: ' + remaining;
+    el.gobtn.disabled = picked.length !== BUDGET;
+    el.gobtn.textContent = picked.length === BUDGET ? 'Apply and wait' : 'Pick ' + remaining + ' more';
+  }
+
+  function go() {
+    if (locked || picked.length !== BUDGET) return;
+    locked = true;
+    var s = SITES[i];
+    var keyIdx = [];
+    s.fixes.forEach(function (f, idx) { if (f.key) keyIdx.push(idx); });
+
+    /* An attack step is blocked when the fix it needs was applied. `needs` is an
+       index into the site's key fixes, so the mapping is explicit and a fix can
+       never accidentally block a step it has nothing to do with. */
+    var rows = '', landed = 0;
+    s.attacks.forEach(function (a) {
+      var fixIdx = keyIdx[a.needs];
+      var blocked = picked.indexOf(fixIdx) !== -1;
+      if (!blocked) landed++;
+      rows += '<div class="hf-ar ' + (blocked ? 'blocked' : 'landed') + '">' +
+        (blocked ? 'BLOCKED. ' : 'GOT IN. ') + a.txt + '</div>';
+    });
+    el.att.innerHTML = rows;
+
+    var nodes = el.list.querySelectorAll('.hf-fix');
+    for (var n = 0; n < nodes.length; n++) {
+      var idx = Number(nodes[n].getAttribute('data-i'));
+      var isKey = s.fixes[idx].key;
+      var chosen = picked.indexOf(idx) !== -1;
+      if (isKey && chosen) nodes[n].className = 'hf-fix safe';
+      else if (isKey && !chosen) nodes[n].className = 'hf-fix hit';
+      else nodes[n].className = 'hf-fix';
+    }
+
+    var stopped = s.attacks.length - landed;
+    score += stopped * 90;
+    if (landed === 0) { clean++; score += 60; }
+    el.verdict.className = landed === 0 ? 'hf-verdict good' : 'hf-verdict bad';
+    el.verdict.textContent = landed === 0
+      ? 'Nothing got through. All three changes were on the path.'
+      : landed + ' of ' + s.attacks.length + ' got through.';
+    el.why.textContent = s.why;
+    el.gobtn.style.display = 'none';
+    el.reveal.className = 'hf-reveal on';
+    el.score.textContent = 'Score: ' + score;
+  }
+
+  el.gobtn.addEventListener('click', go);
+  el.nextbtn.addEventListener('click', function () {
+    if (i < SITES.length - 1) { i++; render(); } else { finish(); }
+  });
+
+  function finish() {
+    el.play.innerHTML =
+      '<div class="hf-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + clean + ' of ' + SITES.length + ' sites came through untouched.</p>' +
+        '<div class="hf-teach">' +
+          '<b>Every option in this game was worth doing. That was the difficulty.</b> Security ' +
+          'advice arrives as a flat list, and a flat list hides the fact that on any given night ' +
+          'only some of it is load bearing. Default credentials showed up on three sites and are ' +
+          'close to the highest value fix there is, because they need no skill to use and they are ' +
+          'printed in a manual anyone can download. Notice too that a longer password does nothing ' +
+          'once the password has been stolen rather than guessed, and that the last site had no ' +
+          'attacker at all: access that is too broad, outlives its reason, and cannot be traced to ' +
+          'a person does damage without anybody breaking in.' +
+        '</div>' +
+        '<p><button class="hf-go" id="hf-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('hf-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  render();
+})();
+</script>

@@ -1,0 +1,234 @@
+<style>
+  #ss-game{font-family:"DM Sans",-apple-system,BlinkMacSystemFont,sans-serif;max-width:640px;margin:0 auto;}
+  #ss-game *{box-sizing:border-box;}
+  .ss-card{border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden;background:#fff!important;}
+  .ss-hero{background:#0f1f3d!important;padding:22px 20px;text-align:center;}
+  .ss-title{font-family:"DM Serif Display",Georgia,serif!important;font-size:26px!important;line-height:1.15!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 6px!important;}
+  .ss-sub{font-size:14px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0!important;line-height:1.5!important;}
+  .ss-bar{display:flex;gap:8px;padding:12px;background:#f8fafc!important;border-bottom:1px solid #e2e8f0;flex-wrap:wrap;justify-content:center;}
+  .ss-chip{font-size:12px!important;font-weight:700;color:#475569!important;-webkit-text-fill-color:#475569!important;background:#fff!important;border:1px solid #e2e8f0;border-radius:100px;padding:6px 12px;}
+  .ss-chip.ss-score{background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:#1a56db;}
+  .ss-body{padding:20px;}
+  .ss-how{font-size:13px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;line-height:1.6!important;background:#f8fafc!important;border-radius:10px;padding:12px 14px;margin:0 0 18px!important;}
+  .ss-brief{background:#eff6ff!important;border:1px solid #bfdbfe;border-radius:12px;padding:16px;margin-bottom:16px;}
+  .ss-who{font-size:12px!important;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:0 0 6px!important;}
+  .ss-need{font-size:19px!important;font-weight:700;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin:0 0 4px!important;line-height:1.35!important;}
+  .ss-base{font-size:13px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;margin:0!important;font-variant-numeric:tabular-nums;}
+  .ss-ask{font-size:14px!important;font-weight:700;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin:0 0 10px!important;}
+  .ss-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .ss-opt{padding:14px 10px;border:2px solid #e2e8f0;border-radius:12px;background:#fff!important;font-family:inherit;font-size:16px!important;font-weight:700;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;cursor:pointer;font-variant-numeric:tabular-nums;}
+  .ss-opt small{display:block;font-size:11px!important;font-weight:600;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:3px;}
+  .ss-opt:hover{border-color:#1a56db;}
+  .ss-opt.ss-right{border-color:#16a34a;background:#f0fdf4!important;}
+  .ss-opt.ss-wrong{border-color:#dc2626;background:#fef2f2!important;}
+  .ss-reveal{display:none;margin-top:16px;padding-top:16px;border-top:1px solid #e2e8f0;}
+  .ss-reveal.on{display:block;}
+  .ss-verdict{font-size:16px!important;font-weight:700;margin:0 0 10px!important;}
+  .ss-verdict.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important;}
+  .ss-verdict.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;}
+  .ss-facts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+  .ss-fact{background:#f8fafc!important;border-radius:8px;padding:9px 11px;}
+  .ss-fact b{display:block;font-size:10px!important;text-transform:uppercase;letter-spacing:.05em;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:2px;}
+  .ss-fact span{font-size:14px!important;font-weight:700;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;font-variant-numeric:tabular-nums;}
+  .ss-waste{height:12px;border-radius:100px;background:#e2e8f0!important;overflow:hidden;margin-bottom:6px;}
+  .ss-fill{height:100%;background:#1a56db;border-radius:100px;width:0;}
+  .ss-wastetxt{font-size:12px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:0 0 12px!important;line-height:1.5!important;}
+  .ss-why{font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;line-height:1.65!important;margin:0 0 14px!important;}
+  .ss-next{width:100%;padding:13px;border:none;border-radius:10px;background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:inherit;font-size:15px!important;font-weight:700;cursor:pointer;}
+  .ss-end{text-align:center;}
+  .ss-end h2{font-family:"DM Serif Display",Georgia,serif!important;font-size:30px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin:0 0 6px!important;}
+  .ss-end p{font-size:14px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:0 0 16px!important;}
+  .ss-teach{text-align:left;background:#eff6ff!important;border-left:3px solid #1a56db;border-radius:0 10px 10px 0;padding:14px 16px;font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;line-height:1.7!important;margin-bottom:16px;}
+  .ss-teach b{color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;}
+  @media(max-width:480px){.ss-opts{grid-template-columns:1fr;}.ss-facts{grid-template-columns:1fr;}}
+</style>
+
+<div id="ss-game">
+  <div class="ss-card">
+    <div class="ss-hero">
+      <h1 class="ss-title">Subnet Sprint</h1>
+      <p class="ss-sub">Eight builds, eight address blocks. Give each one room to grow and not one address more</p>
+    </div>
+    <div class="ss-bar">
+      <span class="ss-chip" id="ss-round">Build 1 / 8</span>
+      <span class="ss-chip" id="ss-streak">Correct: 0</span>
+      <span class="ss-chip ss-score" id="ss-score">Score: 0</span>
+    </div>
+    <div class="ss-body" id="ss-play">
+      <p class="ss-how">How to play: each build tells you how many hosts a segment must hold. Pick the smallest subnet that fits them. A block that is too small strands devices with no address. A block that is too big is not wrong on the day, but it burns addresses you cannot get back and it is the answer the exam marks down.</p>
+      <div class="ss-brief">
+        <p class="ss-who" id="ss-who"></p>
+        <p class="ss-need" id="ss-need"></p>
+        <p class="ss-base" id="ss-basetxt"></p>
+      </div>
+      <p class="ss-ask">Which prefix do you assign?</p>
+      <div class="ss-opts" id="ss-opts"></div>
+      <div class="ss-reveal" id="ss-reveal">
+        <p class="ss-verdict" id="ss-verdict"></p>
+        <div class="ss-facts">
+          <div class="ss-fact"><b>Usable hosts</b><span id="ss-usable"></span></div>
+          <div class="ss-fact"><b>You needed</b><span id="ss-needed"></span></div>
+        </div>
+        <div class="ss-waste"><div class="ss-fill" id="ss-fill"></div></div>
+        <p class="ss-wastetxt" id="ss-wastetxt"></p>
+        <p class="ss-why" id="ss-why"></p>
+        <button class="ss-next" id="ss-nextbtn" type="button">Next build</button>
+      </div>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Subnet Sprint - AP Networking Topic 3.4, sub-skill 2.C.
+     EK 3.4.C.3 gives the host count as 2^n - 2, and EK 3.4.C.4 says the right
+     subnet is "the smallest possible network size that accommodates the required
+     number of hosts". That second sentence is the whole game. A /24 fits nearly
+     every case offered here, so a student who only checks "does it fit" scores
+     badly and finds out why. The two reserved addresses are the network address
+     and the broadcast address, which is where the minus two comes from and why
+     a segment of exactly 30 hosts does NOT fit in a /27. */
+
+  var ROUNDS = [
+    { who: 'Ground floor office', need: 12, base: '192.168.10.0',
+      opts: [28, 27, 26, 24],
+      why: 'A /28 leaves 16 addresses and 14 usable, which covers 12 with two spare. A /27 would also fit, but it hands out 30 usable addresses to a room that needs 12.' },
+    { who: 'Warehouse scanners', need: 30, base: '10.4.2.0',
+      opts: [27, 26, 25, 24],
+      why: 'This is the trap. A /27 gives 32 addresses but only 30 USABLE, and the first and last are the network and broadcast addresses. Thirty devices need thirty usable, so exactly 30 fits only if you have 30 usable, and you do. A /27 is correct here and a /26 wastes half the block.' },
+    { who: 'Student laptops, one wing', need: 100, base: '172.16.8.0',
+      opts: [26, 25, 24, 23],
+      why: 'A /25 gives 128 addresses and 126 usable. A /26 gives only 62 and strands 38 laptops with no address at all.' },
+    { who: 'Two security cameras', need: 2, base: '192.168.50.0',
+      opts: [30, 29, 28, 24],
+      why: 'A /30 gives exactly 2 usable addresses. It is the smallest useful subnet and it is what point-to-point links use for the same reason.' },
+    { who: 'Guest wireless at an event', need: 400, base: '10.20.0.0',
+      opts: [24, 23, 22, 21],
+      why: 'A /23 gives 512 addresses and 510 usable. A /24 caps out at 254 and would turn away more than a third of the guests.' },
+    { who: 'Printers and copiers', need: 6, base: '192.168.30.0',
+      opts: [29, 28, 27, 24],
+      why: 'A /29 gives 8 addresses and 6 usable, which is exactly six printers. Tight, correct, and the reason to leave growth room in the PLAN rather than in every subnet.' },
+    { who: 'Lab benches, every seat wired', need: 63, base: '172.20.4.0',
+      opts: [26, 25, 24, 22],
+      why: 'One short. A /26 gives 64 addresses but only 62 usable, and 63 benches need 63. Losing the network and broadcast addresses is exactly what pushes this over the line into a /25, and it is the commonest off-by-one in subnetting.' },
+    { who: 'One router-to-router link', need: 2, base: '10.255.255.0',
+      opts: [30, 29, 28, 26],
+      why: 'Two routers, two addresses, a /30. Handing a link a /24 is the single commonest waste in a real address plan.' }
+  ];
+
+  var el = {};
+  ['round','streak','score','who','need','basetxt','opts','reveal','verdict','usable',
+   'needed','fill','wastetxt','why','nextbtn','play'].forEach(function (k) {
+    el[k] = document.getElementById('ss-' + k);
+  });
+
+  var i = 0, score = 0, right = 0, locked = false;
+
+  function usable(prefix) {
+    var hostBits = 32 - prefix;
+    return hostBits >= 2 ? Math.pow(2, hostBits) - 2 : 0;
+  }
+
+  /* The intended answer is never stored on the round. It is DERIVED as the
+     smallest offered prefix that still fits, so the data cannot drift out of
+     step with the rule the game is teaching. */
+  function correctPrefix(r) {
+    var fits = r.opts.filter(function (p) { return usable(p) >= r.need; });
+    if (!fits.length) return null;
+    return Math.max.apply(null, fits);
+  }
+
+  function render() {
+    locked = false;
+    var r = ROUNDS[i];
+    el.round.textContent = 'Build ' + (i + 1) + ' / ' + ROUNDS.length;
+    el.streak.textContent = 'Correct: ' + right;
+    el.score.textContent = 'Score: ' + score;
+    el.who.textContent = r.who;
+    el.need.textContent = 'Needs addresses for ' + r.need + (r.need === 1 ? ' device' : ' devices');
+    el.basetxt.textContent = 'Block starts at ' + r.base;
+    el.reveal.className = 'ss-reveal';
+    el.opts.innerHTML = '';
+    r.opts.slice().sort(function (a, b) { return b - a; }).forEach(function (p) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ss-opt';
+      b.setAttribute('data-p', String(p));
+      b.innerHTML = '/' + p + '<small>' + usable(p) + ' usable</small>';
+      b.addEventListener('click', function () { answer(p, b); });
+      el.opts.appendChild(b);
+    });
+  }
+
+  function answer(picked, btn) {
+    if (locked) return;
+    locked = true;
+    var r = ROUNDS[i];
+    var want = correctPrefix(r);
+    var u = usable(picked);
+    var good = picked === want;
+
+    if (good) {
+      right++;
+      score += 120;
+      btn.className = 'ss-opt ss-right';
+      el.verdict.className = 'ss-verdict good';
+      el.verdict.textContent = 'Correct. Smallest block that fits.';
+    } else {
+      btn.className = 'ss-opt ss-wrong';
+      el.verdict.className = 'ss-verdict bad';
+      el.verdict.textContent = u < r.need
+        ? 'Too small. ' + (r.need - u) + ' device' + (r.need - u === 1 ? '' : 's') + ' would get no address.'
+        : 'It fits, but it is not the smallest that fits. A /' + want + ' was enough.';
+      var nodes = el.opts.querySelectorAll('.ss-opt');
+      for (var k = 0; k < nodes.length; k++) {
+        if (Number(nodes[k].getAttribute('data-p')) === want) nodes[k].className = 'ss-opt ss-right';
+      }
+    }
+
+    el.usable.textContent = String(u);
+    el.needed.textContent = String(r.need);
+
+    var used = u > 0 ? Math.min(100, Math.round((r.need / u) * 100)) : 0;
+    el.fill.style.width = used + '%';
+    if (u < r.need) {
+      el.wastetxt.textContent = 'The block is short by ' + (r.need - u) + ' usable address'
+        + (r.need - u === 1 ? '' : 'es') + '.';
+    } else {
+      el.wastetxt.textContent = used + '% of the block is used. ' + (u - r.need)
+        + ' usable address' + (u - r.need === 1 ? '' : 'es') + ' left spare.';
+    }
+    el.why.textContent = r.why;
+    el.reveal.className = 'ss-reveal on';
+  }
+
+  el.nextbtn.addEventListener('click', function () {
+    if (i < ROUNDS.length - 1) { i++; render(); } else { finish(); }
+  });
+
+  function finish() {
+    el.play.innerHTML =
+      '<div class="ss-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + right + ' of ' + ROUNDS.length + ' sized correctly.</p>' +
+        '<div class="ss-teach">' +
+          '<b>Fitting is easy. Fitting exactly is the skill.</b> Every subnet loses two addresses ' +
+          'before anyone plugs anything in: the first is the network address and the last is the ' +
+          'broadcast address, which is where 2 to the power of the host bits, minus two, comes from. ' +
+          'A /24 would have fitted six of these eight builds, and choosing it every time is how an ' +
+          'address plan runs out of room in year two while most of its addresses have never been ' +
+          'handed to anything. Size the segment to the requirement, then leave the growth room in ' +
+          'the PLAN, where you can see it.' +
+        '</div>' +
+        '<p><button class="ss-next" id="ss-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('ss-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  render();
+})();
+</script>
