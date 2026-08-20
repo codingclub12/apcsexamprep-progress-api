@@ -93,7 +93,7 @@ run(`INSERT INTO entitlements (id,teacher_id,course,source,status) VALUES ('ent1
   j = await r.json();
   ok('returns 200', r.status === 200, r.status);
   ok('returns a reset link', /\/teacher\/reset-password\?token=/.test(j.reset_link || ''), j.reset_link);
-  ok('reports an expiry', !!j.expires_at && j.ttl_minutes === 45, { e: j.expires_at, t: j.ttl_minutes });
+  ok('reports an expiry', !!j.expires_at && j.ttl_minutes === require('../lib/password-reset').RESET_TTL_MIN, { e: j.expires_at, t: j.ttl_minutes });
   const linkTok = new URL(j.reset_link).searchParams.get('token');
   ok('raw token is NOT stored (only its hash)',
     count('password_reset_tokens', 'token_hash = ?', linkTok) === 0);
