@@ -51,7 +51,7 @@ const STREAMS = {
     brief: [
       ['ap csa score distribution', 'The 2026 AP CSA Score Distribution', 'ap-csa-score-distribution-2026-analysis'],
       ['ap csa exam format', 'The 2025 Redesign: What Was Removed and What Got Heavier', 'ap-csa-2025-redesign-what-changed'],
-      ['ap csa vs ap csp', 'AP CSA or AP CSP: Which One Colleges Actually Read'],
+      ['ap csa vs ap csp', 'AP CSA or AP CSP: Which One Colleges Actually Read', 'ap-csa-vs-ap-csp-college-recognition'],
       ['ap csa college credit', 'Which Colleges Give Credit for AP CSA, and What Score They Want'],
       ['computer science major', 'Should You Still Major in CS? What to Tell a Junior in 2026'],
       ['ap csa frq scoring', 'How AP CSA Free Response Is Actually Graded, Point by Point'],
@@ -65,7 +65,7 @@ const STREAMS = {
     concept: [
       ['ap csa objects and methods', 'Objects, References, and the Thing Unit 1 Never Says Out Loud', 'ap-csa-objects-references-explained'],
       ['java vs python', 'Why AP CSA Uses Java When You Learned Python First', 'ap-csa-java-vs-python'],
-      ['ap csa boolean expressions', 'Compound Booleans and Short Circuit Evaluation'],
+      ['ap csa boolean expressions', 'Compound Booleans and Short Circuit Evaluation', 'ap-csa-compound-booleans-short-circuit'],
       ['ap csa for loops', 'For Loops, While Loops, and Knowing Which the Question Wants'],
       ['ap csa string methods', 'The String Methods AP CSA Tests, and the Off by One That Follows'],
       ['ap csa class creation', 'Writing a Class From Scratch: Constructors, Fields and this'],
@@ -79,7 +79,7 @@ const STREAMS = {
     drill: [
       ['how to trace code', 'The Variable Table: Tracing Code the Way Fives Do It', 'ap-csa-variable-table-tracing-method'],
       ['ap csa practice test', 'Using a Practice Test in September Without Wasting It', 'ap-csa-practice-test-september-guide'],
-      ['ap csa mcq strategy', 'Ninety Seconds a Question: Pacing the Multiple Choice'],
+      ['ap csa mcq strategy', 'Ninety Seconds a Question: Pacing the Multiple Choice', 'ap-csa-mcq-pacing-ninety-seconds'],
       ['ap csa frq practice', 'Writing Your First FRQ With the Laptop Closed'],
       ['debugging java', 'Reading a Java Error Message Instead of Guessing'],
       ['ap csa reference sheet', 'The AP CSA Reference Sheet: What It Gives You and What It Does Not'],
@@ -96,7 +96,7 @@ const STREAMS = {
     brief: [
       ['ap csp create performance task', 'What Happened to the Create Performance Task', 'ap-csp-create-performance-task-what-changed'],
       ['ap csp exam format', 'The AP CSP Exam: Every Section, Every Weighting', 'ap-csp-exam-format-every-section'],
-      ['ap csp create task ideas', 'Create Task Projects That Are Easy to Write About Under Timer'],
+      ['ap csp create task ideas', 'Create Task Projects That Are Easy to Write About Under Timer', 'ap-csp-create-task-project-ideas'],
       ['ap csp ai policy', 'What College Board Actually Permits With AI on the Create Task'],
       ['ap csp vs ap csa', 'AP CSP or AP CSA First: A Teacher Answers'],
       ['ap csp college credit', 'Which Colleges Give Credit for AP CSP'],
@@ -110,7 +110,7 @@ const STREAMS = {
     concept: [
       ['ap csp pseudocode', 'College Board Pseudocode: The Whole Syntax in One Sitting', 'ap-csp-pseudocode-complete-syntax-guide'],
       ['ap csp binary', 'Binary, Bits, and Why Overflow Is Really a Range Question', 'ap-csp-binary-bits-overflow'],
-      ['ap csp abstraction', 'Abstraction in AP CSP: Data, Procedural, and the Difference'],
+      ['ap csp abstraction', 'Abstraction in AP CSP: Data, Procedural, and the Difference', 'ap-csp-abstraction-data-procedural'],
       ['ap csp algorithms', 'Reasonable and Unreasonable Time, Without a CS Degree'],
       ['lossy vs lossless', 'Lossy and Lossless Compression: The Trade Off the Exam Tests'],
       ['ap csp internet', 'How the Internet Works, at Exactly the Depth AP CSP Tests'],
@@ -124,7 +124,7 @@ const STREAMS = {
     drill: [
       ['ap csp practice exam', 'Where AP CSP Practice Questions Mislead You', 'ap-csp-practice-exam-common-mistakes'],
       ['ap csp mcq', 'Pacing the AP CSP Multiple Choice Section', 'ap-csp-mcq-pacing-strategy'],
-      ['ap csp robot grid', 'Robot Grid Problems: A Method That Always Works'],
+      ['ap csp robot grid', 'Robot Grid Problems: A Method That Always Works', 'ap-csp-robot-grid-problems-method'],
       ['ap csp written response practice', 'Twenty Written Response Prompts in the Current Format'],
       ['ap csp personalized project reference', 'Choosing the Two Code Segments for Your Project Reference'],
       ['ap csp bug log', 'The Bug Log That Answers Your Errors and Testing Prompt'],
@@ -141,7 +141,7 @@ const STREAMS = {
     brief: [
       ['ap cybersecurity', 'AP Cybersecurity Launches This Fall', 'ap-cybersecurity-launch-2026-27-guide'],
       ['ap career kickstart', 'AP Career Kickstart Explained: What College Board Is Actually Building', 'ap-career-kickstart-explained'],
-      ['ap cybersecurity units', 'All Five Units, Ranked by What the Exam Asks For'],
+      ['ap cybersecurity units', 'All Five Units, Ranked by What the Exam Asks For', 'ap-cybersecurity-five-units-ranked'],
       ['cybersecurity careers', 'What a Cybersecurity Career Actually Looks Like at 22'],
       ['ap cybersecurity vs ap csp', 'AP Cybersecurity or AP CSP: Choosing for the Right Reason'],
       ['ap cybersecurity exam', 'The AP Cybersecurity Exam Format, Section by Section'],
@@ -155,7 +155,7 @@ const STREAMS = {
     concept: [
       ['cia triad', 'The CIA Triad Is Not Vocabulary, It Is the Grading Rubric', 'ap-cybersecurity-cia-triad-explained'],
       ['social engineering', 'Social Engineering: The Most Tested Attack Surface', 'ap-cybersecurity-social-engineering'],
-      ['phishing', 'Phishing: The Attack Every Student Has Already Survived'],
+      ['phishing', 'Phishing: The Attack Every Student Has Already Survived', 'ap-cybersecurity-phishing-deep-dive'],
       ['access control', 'Least Privilege, Access Control, and Who Gets the Keys'],
       ['network segmentation', 'Why Networks Are Divided: Segmentation for Unit 3'],
       ['firewall', 'Firewalls, and What They Genuinely Cannot Stop'],
@@ -169,7 +169,7 @@ const STREAMS = {
     drill: [
       ['ap cybersecurity frq', 'Writing a Device Security Analysis, Step by Step', 'ap-cybersecurity-device-security-frq-guide'],
       ['ap cybersecurity unit 1', 'Unit 1 Vocabulary, Ranked by How Often It Is Tested', 'ap-cybersecurity-unit-1-vocabulary-ranked'],
-      ['security scenario questions', 'Reading a Security Scenario for the Evidence It Gives You'],
+      ['security scenario questions', 'Reading a Security Scenario for the Evidence It Gives You', 'ap-cybersecurity-scenario-question-evidence'],
       ['ap cybersecurity mcq', 'Eighty Seconds a Question: Pacing Section I'],
       ['threat modeling', 'Threat Modelling Your Own Phone as Practice'],
       ['incident response', 'Incident Response as an Answer Structure'],
@@ -186,7 +186,7 @@ const STREAMS = {
     brief: [
       ['ap networking', 'AP Networking in 2026-27: Inside the Final Pilot Year', 'ap-networking-2026-27-pilot-year-guide'],
       ['ap networking exam', 'The Four Skills Every AP Networking Question Is Actually Testing', 'ap-networking-four-skills-explained'],
-      ['ap networking vs ap cybersecurity', 'Where AP Networking and AP Cybersecurity Actually Overlap'],
+      ['ap networking vs ap cybersecurity', 'Where AP Networking and AP Cybersecurity Actually Overlap', 'ap-networking-vs-ap-cybersecurity-overlap'],
       ['it career without degree', 'The IT Career Path AP Networking Points At'],
       ['ap networking units', 'All Four Units and 22 Topics'],
       ['network engineer salary', 'What Network and Infrastructure Work Actually Pays'],
@@ -200,7 +200,7 @@ const STREAMS = {
     concept: [
       ['ip address explained', 'What an IP Address Actually Is', 'ap-networking-ip-address-explained'],
       ['dns explained', 'DNS: The Thing That Breaks When Nothing Else Has', 'ap-networking-dns-explained'],
-      ['router vs switch', 'Router, Switch, Access Point: Three Boxes People Confuse'],
+      ['router vs switch', 'Router, Switch, Access Point: Three Boxes People Confuse', 'ap-networking-router-switch-access-point'],
       ['subnetting explained', 'Subnetting Without Tears'],
       ['mac address', 'MAC Addresses, ARP, and the Layer Below the One You Know'],
       ['dhcp', 'DHCP: How Your Laptop Gets an Address It Never Asked For'],
@@ -214,7 +214,7 @@ const STREAMS = {
     drill: [
       ['how to troubleshoot wifi', 'Troubleshooting Method: Eliminate, Do Not Guess', 'ap-networking-troubleshooting-method'],
       ['ping traceroute', 'Ping and Traceroute as Reasoning Tools', 'ap-networking-ping-traceroute-tools'],
-      ['ap networking scenarios', 'Reading a Network Scenario for What Still Works'],
+      ['ap networking scenarios', 'Anatomy of an AP Networking Scenario Question', 'ap-networking-scenario-question-anatomy'],
       ['network diagram', 'Drawing the Network Before You Fix It'],
       ['ap networking unit 1', 'Ten Single Device Questions'],
       ['explain technical to non technical', 'The Collaborate Skill Nobody Practises'],

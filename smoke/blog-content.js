@@ -62,13 +62,19 @@ function checkArticlePayload(article, label) {
   ok(`${label}: no blogId leaked into the payload`, !('blogId' in article));
 }
 
+// Node's execFileSync default maxBuffer is 1MB. `plan` on a far-future date
+// emits every post's full rendered HTML as JSON in one shot, and this batch
+// crossed that ceiling for real at 36 posts (ENOBUFS, not a flake) well short
+// of the 144-post full calendar. Sized with wide headroom past that.
+const EXEC_OPTS = { cwd: ROOT, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 };
+
 if (posts.length) {
   const first = posts[0].meta.handle;
-  const emitted = JSON.parse(execFileSync('node', ['scripts/blog.js', 'emit', first], { cwd: ROOT, encoding: 'utf8' }));
+  const emitted = JSON.parse(execFileSync('node', ['scripts/blog.js', 'emit', first], EXEC_OPTS));
   ok('emit: names the right course and blog', typeof emitted.course === 'string' && typeof emitted.blogHandle === 'string');
   checkArticlePayload(emitted.article || {}, 'emit');
 
-  const planned = execFileSync('node', ['scripts/blog.js', 'plan', '2099-01-01'], { cwd: ROOT, encoding: 'utf8' })
+  const planned = execFileSync('node', ['scripts/blog.js', 'plan', '2099-01-01'], EXEC_OPTS)
     .trim().split('\n').filter(Boolean).map((l) => JSON.parse(l));
   ok('plan: a far-future date includes every post', planned.length === posts.length, `${planned.length}/${posts.length}`);
   for (const p of planned) checkArticlePayload(p.article, `plan:${p.handle}`);
