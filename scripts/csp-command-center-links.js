@@ -73,6 +73,16 @@ function notesHandle(topic) {
   return 'ap-csp-topic-' + topic.replace('.', '-') + '-guided-notes';
 }
 
+function codeHandle(topic) {
+  return 'ap-csp-topic-' + topic.replace('.', '-') + '-code';
+}
+
+// Coding practice pages exist for 3.1 through 3.16. Topics 3.17 and 3.18 have
+// none, so they get no link rather than a link to a 404. Listed rather than
+// derived from a range, because "the last two" is exactly the kind of fact that
+// silently stops being true when someone authors the missing pages.
+const NO_CODE_PAGE = new Set(['3.17', '3.18']);
+
 // Topic -> game id, taken from the same table that builds the game pages and the
 // study games hub, so a game cannot appear in one place and not another.
 function gameFor(topic) {
@@ -91,6 +101,9 @@ function linksFor(topic) {
   const out = [];
   out.push({ href: '/pages/' + LESSONS[topic][0], label: 'Lesson page' });
   out.push({ href: '/pages/' + notesHandle(topic), label: 'Guided notes (student digital copy)' });
+  if (!NO_CODE_PAGE.has(topic)) {
+    out.push({ href: '/pages/' + codeHandle(topic), label: 'Coding practice (run and check)' });
+  }
   const g = gameFor(topic);
   if (g) out.push({ href: '/pages/ap-csp-game-' + g, label: GAME_LABEL });
   return out;
@@ -113,11 +126,16 @@ function build(inBody, verified) {
     const at = body.indexOf(anchor);
     if (at === -1) throw new Error(`${topic} (${title}) was not found with an unchanged title`);
     if (body.indexOf(anchor, at + 1) !== -1) throw new Error(`${topic} appears more than once`);
-    const empty = '"pageLinks":[]';
-    const emptyAt = body.indexOf(empty, at);
-    if (emptyAt === -1 || emptyAt > at + anchor.length + 12) {
-      throw new Error(`${topic} does not have an empty pageLinks immediately after its title`);
+    // Match whatever pageLinks the topic currently carries, empty or populated,
+    // so this is idempotent and can be re-run after an earlier pass has already
+    // landed. The array is found immediately after the days value, and the
+    // search is bounded so it can never run on into the next topic.
+    const pm = /"pageLinks":(\[(?:[^[\]]|\[[^\]]*\])*\])/.exec(body.slice(at, at + 4000));
+    if (!pm || pm.index > anchor.length + 12) {
+      throw new Error(`${topic} does not have a pageLinks array immediately after its title`);
     }
+    const emptyAt = at + pm.index;
+    const empty = pm[0];
     const links = linksFor(topic);
     for (const l of links) {
       const h = l.href.replace('/pages/', '');
@@ -133,14 +151,24 @@ function build(inBody, verified) {
   return { body, added, problems };
 }
 
+function countEmptyBi3(body) {
+  let n = 0;
+  for (const topic of Object.keys(LESSONS)) {
+    const anchor = `"id":"${topic}","title":"${LESSONS[topic][1]}","days":`;
+    const at = body.indexOf(anchor);
+    if (at > -1 && body.slice(at, at + 200).indexOf('"pageLinks":[]') > -1) n++;
+  }
+  return n;
+}
+
 function check(inBody, outBody, added) {
   const problems = [];
   if (Buffer.byteLength(outBody) <= Buffer.byteLength(inBody)) {
     problems.push('the output is not larger than the input, so nothing was added');
   }
-  const before = (inBody.match(/"pageLinks":\[\]/g) || []).length;
-  const after = (outBody.match(/"pageLinks":\[\]/g) || []).length;
-  if (before - after !== 18) problems.push(`${before - after} empty pageLinks were filled, expected 18`);
+  if ((outBody.match(/"pageLinks":\[\]/g) || []).length !== (inBody.match(/"pageLinks":\[\]/g) || []).length - countEmptyBi3(inBody)) {
+    problems.push('the number of empty pageLinks did not fall by the Big Idea 3 count');
+  }
 
   // DATA must still be valid JSON, or the page renders nothing at all.
   const m = outBody.match(/var DATA = (\{[\s\S]*?\});\s*\n/) || outBody.match(/var DATA = (\{[\s\S]*?\})\s*;/);
@@ -152,8 +180,9 @@ function check(inBody, outBody, added) {
       const bi3 = d.bigIdeas.find((b) => b.n === 3);
       const empty = bi3.topics.filter((t) => !t.pageLinks || !t.pageLinks.length);
       if (empty.length) problems.push(`${empty.length} Big Idea 3 topics still have no page links`);
+      const expected = Object.keys(LESSONS).reduce((n, t) => n + linksFor(t).length, 0);
       const totals = d.bigIdeas.map((b) => b.topics.reduce((n, t) => n + (t.pageLinks || []).length, 0));
-      if (totals[2] !== 54) problems.push(`Big Idea 3 has ${totals[2]} page links, expected 54`);
+      if (totals[2] !== expected) problems.push(`Big Idea 3 has ${totals[2]} page links, expected ${expected}`);
     }
   }
   // Nothing that was linked before may have stopped being linked.
@@ -199,9 +228,10 @@ function main(argv) {
   lines.push([HANDLE, 'MERGE', res.body, 'TRUE', PUBLISHED_AT].map(cell).join(','));
   fs.writeFileSync(out, '﻿' + lines.join('\r\n') + '\r\n');
 
-  const withGame = res.added.filter((a) => a.links.length === 3).length;
+  const withGame = res.added.filter((a) => a.links.some((l) => l.href.indexOf('/ap-csp-game-') > -1)).length;
+  const withCode = res.added.filter((a) => a.links.some((l) => l.href.endsWith('-code'))).length;
   console.log(`\n    filled ${res.added.length} Big Idea 3 topics`);
-  console.log(`    ${res.added.reduce((n, a) => n + a.links.length, 0)} links added, ${withGame} of them including a study game`);
+  console.log(`    ${res.added.reduce((n, a) => n + a.links.length, 0)} links total: ${withGame} topics with a game, ${withCode} with coding practice`);
   console.log(`    body ${(Buffer.byteLength(inBody) / 1024).toFixed(0)} KB in, ${(Buffer.byteLength(res.body) / 1024).toFixed(0)} KB out`);
   console.log(`\n  wrote ${out}`);
   console.log('\n  Import settings: MERGE, QUOTE_ALL, utf-8-sig. Snapshot the live page first.\n');
