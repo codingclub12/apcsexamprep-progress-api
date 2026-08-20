@@ -84,12 +84,18 @@ forwarded to a class.
 
 What it enforces, and why each one is there:
 
-- **Exactly one h1 in the body.** Article pages on this theme render no h1 at
-  all: the Dawn article template does not emit `article.title` as a heading.
-  Measured 2026-08-18 against a live daily-practice article and a live pillar
-  guide, both returned zero h1 tags. Post bodies therefore carry their own.
-  Note this is backwards from `/pages/`, where the board tracks a three-h1
-  defect. Do not copy a page pattern into an article.
+- **Zero h1 in the body.** The Dawn article template DOES emit
+  `article.title` as `<h1 class="article-template__title">`. It is easy to
+  measure wrong: the Liquid writes it across several lines, so a naive
+  single-line `grep '<h1[^>]*>'` finds nothing and looks like the theme
+  renders no h1 at all. An earlier version of this engine measured it that
+  way, had post bodies carry their own h1, and shipped the AP Cybersecurity
+  post live with two h1 tags for about ten minutes before the live page was
+  checked properly and it was caught. `meta.title` is the h1; the target
+  keyword is checked against `meta.title`, not against anything in the body.
+  This is backwards from `/pages/`, where the board tracks a three-h1 defect
+  from the opposite mistake. Do not copy a page pattern into an article, and
+  do not copy an article pattern into a page.
 - **Unsourced figures in prose.** The rule above, enforced. The escape hatch is
   `meta.allowedInlineNumbers`, for cases where a number restates something
   already sourced visibly on the same page, such as an FAQ answer repeating the
@@ -110,19 +116,93 @@ What it enforces, and why each one is there:
   the failure mode is a model reaching for pre-2025 training data.
 - **No email addresses.** Zero PII posture.
 
-## Publishing
+## Publishing without a token
 
-`lib/blog-publish.js` mirrors `lib/csa-exercise-publish.js` deliberately. Same
-three safety properties: never overwrite, all-or-nothing on validation, scope
-checked first and reported in a sentence. There is no force flag. Adding one
-would defeat the only control standing between a generated draft and a reader.
+At twelve posts a week, publishing by hand is not an option, and a raw
+`SHOPIFY_ADMIN_TOKEN` in GitHub Actions turned out not to be either: the
+Shopify custom-app token flow has a documented history of not working for
+this account (see `docs/runs/2026-08-18-claude-code-csa-exercise-golive.md`,
+which hit the identical scope problem for the CSA exercise-page publisher a
+day earlier and never actually resolved it). So this does not run as a plain
+CI job with a secret. It runs as a scheduled Claude Code session that already
+has a write-capable Shopify connection through the account's Shopify
+connector, the same one used to create the four course blogs and move the
+launch posts into them.
 
-Re-running is a no-op: a handle that already exists is skipped, never updated.
-That means a post corrected by hand in the Shopify admin will not be silently
-reverted by the next run.
+That still needs the same safety properties a token-based publisher would
+have needed, and they still live in code rather than in the session's
+judgement, because an unattended agent freehandedly constructing Shopify
+mutations from a prompt is exactly the failure mode this design avoids:
 
-To correct a live post, edit it in Shopify, then bring the repo file into line
-so the next person reads the same thing the reader does.
+- **The session never types or reconstructs a post.** `scripts/blog.js emit
+  <handle>` and `scripts/blog.js plan [date]` are the ONLY source of the
+  JSON handed to `articleCreate`. Both call `articlePayload()` in
+  `lib/blog-publish.js`, the same function a token-based publish would have
+  used, so there are not two implementations of what an article looks like
+  on the wire to drift apart. The session's job is to pass that JSON through
+  to the connector's `graphql_mutation` tool, not to build it.
+- **Validated before anything is planned.** Both commands run the full
+  `lib/blog-validate.js` gate first and refuse to emit an invalid post.
+- **Never overwrite.** The session checks live handles with a `graphql_query`
+  before creating anything, exactly like `lib/blog-publish.js`'s
+  `liveHandles()` did for the token path. A handle that already exists is
+  skipped.
+- **Verified after every write**, not assumed from a 200. `scripts/blog.js
+  verify <handle>` takes the live rendered page on stdin and diffs it against
+  the repo source: exactly one h1 (the theme's own, see the h1 rule above),
+  every prose chunk present, FAQ schema present. This is
+  `lib/blog-verify.js`, extracted from the manual Python check run by hand
+  during the first publish so the unattended session runs the identical
+  check every week rather than improvising one. Covered offline by
+  `smoke/blog-content.js`, which pins the exact tag-gluing bug that check
+  had on its first version as a regression test.
+
+### The weekly Routine
+
+A Routine (`create_trigger`, cron `0 14 * * 2`) fires a fresh Claude Code
+session every Tuesday. Fresh, not a resumed conversation: this repo's
+standing rule is that sessions are disposable and state lives in the repo and
+the ledger, not in a chat (`docs/where-jarvis-lives.md`), and a publish job
+that depended on one particular conversation staying alive for twelve weeks
+would quietly violate that the first time the conversation didn't survive.
+The Routine's prompt is the full procedure, self-contained, since a fresh
+session has no memory of this one:
+
+1. `git pull`, then `node scripts/blog.js validate`. Stop and report if red.
+2. `node scripts/blog.js due` for today's date.
+3. `graphql_query` the four course blogs for their ids, and the live articles
+   in each, to find which due handles are already published. Skip those.
+4. For each remaining due post: `node scripts/blog.js emit <handle>`, then
+   `graphql_mutation` an `articleCreate` with that JSON verbatim plus the
+   `blogId` from step 3. No editing the payload in between.
+5. Fetch each newly created article's live URL and pipe it to
+   `node scripts/blog.js verify <handle>`. A verify failure is reported, not
+   silently accepted.
+6. Write a run note under `docs/runs/` recording what published and the
+   verify output, and commit it. That note is the artifact CLAUDE.md's third
+   rule asks for.
+
+Re-running is still a no-op by construction: step 3's live check means a
+retried or re-fired week skips whatever already made it out.
+
+### Correcting a live post
+
+Edit it in Shopify, then bring the matching file in `content/blog/` into line
+so the next person reads the same thing the reader does. Nothing here
+overwrites automatically, so a hand correction is never reverted by the next
+Tuesday.
+
+### If a token-based path is ever wanted instead
+
+`lib/blog-publish.js` still exists and still works as a self-contained
+publisher: `publish()` validates, checks the `write_content` scope up front
+and says so in a sentence rather than failing per post, never overwrites, and
+creates via a plain `SHOPIFY_SHOP` / `SHOPIFY_ADMIN_TOKEN` token, same as
+`lib/csa-exercise-publish.js` does for pages. Nothing about the Routine
+depends on it being wired up, and nothing stops someone from adding a CI
+workflow that calls `node scripts/blog.js publish` later if a token ever does
+end up working cleanly for this account. It just is not the path this repo
+runs on.
 
 ## Running it
 
@@ -131,21 +211,12 @@ node scripts/blog.js validate           # the gate, over everything
 node scripts/blog.js list               # what is written, and for when
 node scripts/blog.js queue              # calendar slots with no post yet
 node scripts/blog.js preview <handle>   # rendered HTML to /tmp
-node scripts/blog.js publish --dry-run  # what would go live today
-node scripts/blog.js publish            # publishes what is due
+node scripts/blog.js emit <handle>      # one post's ArticleCreateInput as JSON, no blogId
+node scripts/blog.js plan [date]        # every due post's payload, one JSON line each
+node scripts/blog.js verify <handle>    # diff live HTML (stdin) against the repo source
+node scripts/blog.js publish --dry-run  # token path only, see above
+node scripts/blog.js publish            # token path only, see above
 ```
-
-`.github/workflows/weekly-blog.yml` runs `validate` then `publish` every
-Tuesday, and always prints week health and the authoring backlog to the job
-summary so a short week is visible before it becomes a published gap.
-
-At twelve posts a week, publishing by hand is not an option. The secrets below
-are not a nice-to-have; without them there is no cadence.
-
-**Required Actions secrets:** `SHOPIFY_SHOP` and `SHOPIFY_ADMIN_TOKEN`. The
-token needs `write_content`. The analytics connector token only reads, so it
-will not work here and the publisher says so explicitly rather than failing
-once per post.
 
 ## Writing a post
 

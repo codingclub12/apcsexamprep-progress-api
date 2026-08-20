@@ -9,6 +9,9 @@
 //   node scripts/blog.js due [YYYY-MM-DD]    # posts whose publishOn has arrived
 //   node scripts/blog.js queue [YYYY-MM-DD]  # calendar slots with no post written yet
 //   node scripts/blog.js publish [--dry-run] [--on YYYY-MM-DD]
+//   node scripts/blog.js emit <handle>          # one post's ArticleCreateInput as JSON, no blogId
+//   node scripts/blog.js plan [YYYY-MM-DD]       # every due post's payload, one JSON object per line
+//   node scripts/blog.js verify <handle>         # diff live HTML (stdin) against the repo source
 
 const fs = require('fs');
 const path = require('path');
@@ -79,6 +82,44 @@ async function main() {
     for (const s of todo.slice(0, 12)) {
       console.log(`  ${s.date}  ${s.course.padEnd(17)} ${s.track.padEnd(8)} ${s.targetKeyword.padEnd(34)} ${s.workingTitle || ''}`);
     }
+    return;
+  }
+
+  if (cmd === 'emit') {
+    // The bridge to the connector-based publish path: an unattended session
+    // with a live Shopify MCP connector but no SHOPIFY_ADMIN_TOKEN calls this,
+    // takes the JSON verbatim as the `article` variable on articleCreate, and
+    // never types or reconstructs the body itself. See docs/content-engine.md,
+    // "Publishing without a token".
+    const { articlePayload } = require('../lib/blog-publish');
+    const post = posts.find((p) => p.meta.handle === rest[0]);
+    if (!post) { console.error(`no post with handle "${rest[0]}"`); process.exit(1); }
+    const problems = validateBatch([post]);
+    if (problems.length) { console.error('refusing to emit an invalid post:\n' + problems.join('\n')); process.exit(1); }
+    console.log(JSON.stringify({ course: post.meta.course, blogHandle: post.meta.blogHandle, article: articlePayload(post) }));
+    return;
+  }
+
+  if (cmd === 'verify') {
+    const { verifyLive } = require('../lib/blog-verify');
+    const post = posts.find((p) => p.meta.handle === rest[0]);
+    if (!post) { console.error(`no post with handle "${rest[0]}"`); process.exit(1); }
+    const html = fs.readFileSync(0, 'utf8');
+    const result = verifyLive(post, html);
+    console.log(JSON.stringify(result, null, 2));
+    return process.exit(result.ok ? 0 : 1);
+  }
+
+  if (cmd === 'plan') {
+    const { articlePayload } = require('../lib/blog-publish');
+    const problems = validateBatch(posts);
+    if (problems.length) { console.error('batch does not validate, fix before planning:\n' + problems.join('\n')); process.exit(1); }
+    const on = rest[0] || today();
+    const due = posts.filter((p) => p.meta.publishOn <= on);
+    for (const p of due) {
+      console.log(JSON.stringify({ course: p.meta.course, blogHandle: p.meta.blogHandle, handle: p.meta.handle, article: articlePayload(p) }));
+    }
+    if (!due.length) console.error('(nothing due)');
     return;
   }
 
