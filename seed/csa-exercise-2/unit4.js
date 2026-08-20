@@ -48,10 +48,10 @@ module.exports = [
         scenario: 'A program needs to read all integers from a text file of unknown length representing exam scores.',
         stem: 'Which loop control correctly reads every score without knowing the count ahead of time?',
         options: [
-          'for (int i = 0; i < 100; i++) { scores[i] = input.nextInt(); }',
-          'while (input.hasNextInt()) { int score = input.nextInt(); ... }',
-          'while (true) { int score = input.nextInt(); ... }',
-          'int score = input.nextInt(); while (score != 0) { ... score = input.nextInt(); }',
+          'for (int i = 0; i < 100; i++) {\n  scores[i] = input.nextInt();\n}',
+          'while (input.hasNextInt()) {\n  int score = input.nextInt();\n  ...\n}',
+          'while (true) {\n  int score = input.nextInt();\n  ...\n}',
+          'int score = input.nextInt();\nwhile (score != 0) {\n  ...\n  score = input.nextInt();\n}',
         ],
         correct: 'B',
         why: {
@@ -282,10 +282,10 @@ module.exports = [
         scenario: 'A program needs the sum of every value in row 2 of a 2D array grid.',
         stem: 'Which loop correctly computes it?',
         options: [
-          'for (int c = 0; c < grid.length; c++) { sum += grid[2][c]; }',
-          'for (int c = 0; c < grid[2].length; c++) { sum += grid[2][c]; }',
-          'for (int r = 0; r < grid.length; r++) { sum += grid[r][2]; }',
-          'for (int c = 0; c < grid[0].length; c++) { sum += grid[c][2]; }',
+          'for (int c = 0; c < grid.length; c++) {\n  sum += grid[2][c];\n}',
+          'for (int c = 0; c < grid[2].length; c++) {\n  sum += grid[2][c];\n}',
+          'for (int r = 0; r < grid.length; r++) {\n  sum += grid[r][2];\n}',
+          'for (int c = 0; c < grid[0].length; c++) {\n  sum += grid[c][2];\n}',
         ],
         correct: 'B',
         why: {
@@ -372,10 +372,10 @@ module.exports = [
         scenario: 'A method needs to find the row and column of the largest value in a grid, breaking ties by keeping the FIRST occurrence in row major order.',
         stem: 'Which comparison correctly enforces "first occurrence wins" on a tie?',
         options: [
-          'if (grid[r][c] >= maxValue) { update }',
-          'if (grid[r][c] > maxValue) { update }',
-          'if (grid[r][c] == maxValue) { update }',
-          'if (grid[r][c] != maxValue) { update }',
+          'if (grid[r][c] >= maxValue) {\n  update\n}',
+          'if (grid[r][c] > maxValue) {\n  update\n}',
+          'if (grid[r][c] == maxValue) {\n  update\n}',
+          'if (grid[r][c] != maxValue) {\n  update\n}',
         ],
         correct: 'B',
         why: {
