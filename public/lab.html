@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Lab</title>
+<style>
+  body { margin: 0; padding: 24px 16px; background: #f5f7f9;
+         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+  #lab { }
+  .boot { max-width: 640px; margin: 60px auto; text-align: center; color: #5a6b7a; }
+</style>
+</head>
+<body>
+<div id="lab"><div class="boot">Loading the lab...</div></div>
+<script>
+  // Same origin as the API, so the base is empty and the student token is read
+  // from this origin's storage. A lab embedded on a lesson page does NOT use
+  // this file: it loads /lab-player.js and calls APCSLab.mountById itself, so
+  // the token comes from wherever that page already keeps it.
+  window.APCS_LAB = { base: '' };
+</script>
+<script src="/lab-player.js"></script>
+<script>
+  (function () {
+    var parts = location.pathname.split('/').filter(Boolean); // ['lab', course, item]
+    var course = decodeURIComponent(parts[1] || '');
+    var item = decodeURIComponent(parts[2] || '');
+    var preview = /(^|[?&])preview=(1|true)(&|$)/.test(location.search);
+    document.title = item + ' lab';
+    APCSLab.mountById(document.getElementById('lab'), course, item, { preview: preview });
+  })();
+</script>
+</body>
+</html>

@@ -22,6 +22,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 const db = require('../db');
 const { COURSES } = require('../utils');
+const labSpecs = require('../lib/lab-spec');
 
 // Courses whose visit items come from the COURSES config. Cyber keeps its
 // existing grade-reporting path and is intentionally not seeded here.
@@ -496,6 +497,35 @@ function buildRows() {
     for (let i = 1; i <= cfg.tasks; i++) {
       rows.push({ course: 'intro-java', unit, lesson_id: lessonId,
         item_id: `${lessonId}-task-${i}`, item_type: 'gap', points: 1 });
+    }
+  }
+
+  // Interactive terminal labs, derived from their own spec files.
+  //
+  // The row comes FROM config/labs/*.json rather than from a constant here, so
+  // the denominator and the lab a student plays cannot disagree: points equal
+  // the check count, lib/lab-spec.js refuses a spec where they do not, and the
+  // smoke suite refuses a lab whose row and spec have drifted apart.
+  //
+  // Only `graded: true` specs are seeded. That is the same rule NET_LABS and
+  // INTRO_JAVA_PAGES_LIVE carry: a manifest row is a denominator, and a
+  // denominator for work a student cannot do marks the whole class down for a
+  // reason no teacher can see on screen. A practice lab is playable and scores
+  // nothing, so it gets no row.
+  //
+  // A lab that is ALSO listed in a constant above (4.3 is in NET_CONFIG_LABS)
+  // must not produce a second row, so this skips anything already built. The
+  // two agree today and the smoke suite pins that they keep agreeing.
+  {
+    const seen = new Set(rows.map((r) => `${r.course}|${r.item_id}`));
+    for (const spec of labSpecs.graded()) {
+      const k = `${spec.course}|${spec.item_id}`;
+      if (seen.has(k)) continue;
+      seen.add(k);
+      rows.push({
+        course: spec.course, unit: spec.unit, lesson_id: spec.lesson_id,
+        item_id: spec.item_id, item_type: 'lab', points: spec.points,
+      });
     }
   }
 

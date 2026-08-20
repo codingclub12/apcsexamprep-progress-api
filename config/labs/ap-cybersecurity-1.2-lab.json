@@ -1,0 +1,115 @@
+{
+  "_comment": [
+    "AP Cybersecurity 1.2: find what a filesystem is willing to tell you.",
+    "",
+    "WHY THIS ONE IS graded:false",
+    "  scripts/seed-manifest.js deliberately does not seed ap-cybersecurity: that",
+    "  course carries its own denominators (course_denominators and",
+    "  course_unit_denominators, see docs/cyber-denominator-gaps.md). A lone",
+    "  manifest row here would add points to every cyber student's denominator",
+    "  through a second path, which is the exact failure smoke/manifest-prune.js",
+    "  exists to prevent.",
+    "  So this lab is playable and self-checking, and records nothing. Flipping it",
+    "  to graded is this one field plus a seed run, once the cyber denominator",
+    "  work in docs/cyber-denominator-gaps.md closes.",
+    "",
+    "No em-dashes, per repo convention."
+  ],
+
+  "course": "ap-cybersecurity",
+  "item_id": "1.2-lab",
+  "lesson_id": "1.2",
+  "unit": "unit-1",
+  "item_type": "lab",
+  "graded": false,
+  "points": 6,
+  "est_minutes": 10,
+  "title": "Find the tournament code",
+
+  "brief": [
+    "The esports club is running a tournament after school and the join code is written down somewhere in the club's folders on the shared machine. Nobody remembers where.",
+    "You have a terminal and no file browser. That is the whole exercise: a filesystem will tell you what it holds if you ask it correctly.",
+    "",
+    "**Find the join code.**",
+    "1. `pwd` tells you where you are standing.",
+    "2. `ls` shows what is here. `ls -a` also shows the hidden entries.",
+    "3. `cd` moves you. `cd ..` moves you back up.",
+    "4. `cat` reads a file once you have found it.",
+    "5. When you are tired of guessing, `find . -name tournament_info.txt` searches for you.",
+    "",
+    "Then answer the question below. Notice what else you could read on the way, and who left it readable.",
+    "",
+    "Type `help` for the command list."
+  ],
+
+  "questions": [
+    {
+      "id": "code",
+      "prompt": "What is the tournament join code?",
+      "options": ["MC-4417", "MC-1174", "ESPORTS-2026", "JOIN-8890"],
+      "answer": 0,
+      "explain": "It is in clubs/esports/tournament/tournament_info.txt. The other three appear elsewhere on the machine, which is the point: a filesystem full of readable leftovers is a filesystem that leaks."
+    },
+    {
+      "id": "exposure",
+      "prompt": "On the way you could also read clubs/esports/roster_private.txt. What does that tell you about this machine?",
+      "options": [
+        "Nothing, private files are always safe on a school machine",
+        "Any account that can reach the folder can read the roster, so the file is only as private as its permissions",
+        "The file is encrypted because it says private in the name",
+        "The roster cannot be read without a password"
+      ],
+      "answer": 1,
+      "explain": "Naming a file private does nothing. Confidentiality comes from permissions and placement, not from the filename, and 'anyone who can open the folder can read it' is the default a lot of shared machines are left in."
+    }
+  ],
+
+  "hosts": {
+    "local": {
+      "label": "student@shared",
+      "prompt": "student@shared:~/project$",
+      "home": "/home/student/project",
+      "cwd": "/home/student/project",
+      "fs": {
+        "/home/student/project": {
+          "README.txt": "Shared club machine. Each club keeps its own folder under clubs/.\nDo not delete anything you did not put here.\n",
+          "clubs": {
+            "chess": {
+              "ladder.txt": "1. Priya\n2. Marcus\n3. Dee\n",
+              "meeting_notes.txt": "Tuesdays, room 214. Boards are in the closet.\nOld esports code from last year was MC-1174, expired.\n"
+            },
+            "esports": {
+              "roster_private.txt": "esports roster, do not share\ncaptain: Dee\nsubs: 4\nseason: spring\n",
+              "tournament": {
+                "tournament_info.txt": "MINECRAFT TOURNAMENT  Friday 3:30pm  lab 2\n\njoin code: MC-4417\n\nbring your own headset. server opens at 3:15.\n",
+                "bracket_draft.txt": "round 1: Dee vs Marcus\nround 1: Priya vs bye\n"
+              },
+              "old": { "signup_2025.txt": "last year's signup sheet. code JOIN-8890, dead.\n" }
+            },
+            "robotics": { "parts_order.txt": "2x servo, 1x battery, promo code ESPORTS-2026 (unrelated, ignore)\n" }
+          },
+          ".club_backup": { "notes.txt": "hidden folder. ls -a finds it. nothing secret in here, which is the lesson.\n" }
+        }
+      }
+    }
+  },
+
+  "solution": [
+    "pwd",
+    "ls",
+    "find . -name tournament_info.txt",
+    "cd clubs/esports",
+    "cat tournament/tournament_info.txt",
+    { "answer": "code" },
+    { "answer": "exposure" }
+  ],
+
+  "checks": [
+    { "n": 1, "label": "Confirm where you are", "match": { "event": "cmd", "cmd": "pwd", "host": "local" } },
+    { "n": 2, "label": "List what is available", "match": { "event": "cmd", "cmd": "ls", "host": "local" } },
+    { "n": 3, "label": "Navigate into the esports folder", "match": { "event": "cmd", "cmd": "cd", "host": "local", "cwdAfter": "/home/student/project/clubs/esports" } },
+    { "n": 4, "label": "Read tournament_info.txt", "match": { "event": "read", "file": "tournament_info.txt" } },
+    { "n": 5, "label": "Report the join code", "match": { "event": "answer", "question": "code" } },
+    { "n": 6, "label": "Say what the readable roster means", "match": { "event": "answer", "question": "exposure" } }
+  ]
+}

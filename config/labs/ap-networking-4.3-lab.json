@@ -1,0 +1,158 @@
+{
+  "_comment": [
+    "AP Networking 4.3: navigate and transfer files from a CLI.",
+    "",
+    "The authored source for this lab is config/networking-hands-on.json, entry",
+    "item_id 4.3-lab. Everything here implements that entry: eight checks, one",
+    "point each, anchored to the EK statements it names, with check 8 as the",
+    "VERIFY step that exists because 'no error appeared' is the false proof",
+    "students accept.",
+    "",
+    "ZERO PII, AND THE ONE PLACE IT IS EASY TO BREAK",
+    "  A terminal collects typed strings and a typed string is free text. The",
+    "  player evaluates every check in the browser and posts the check index and",
+    "  its boolean, never the command line. See docs/lab-contract.md.",
+    "",
+    "No em-dashes, per repo convention."
+  ],
+
+  "course": "ap-networking",
+  "item_id": "4.3-lab",
+  "lesson_id": "4.3",
+  "unit": "unit-4",
+  "item_type": "lab",
+  "graded": true,
+  "points": 8,
+  "est_minutes": 20,
+  "title": "Move a site survey to the file server",
+  "subskills": ["1.C", "1.D"],
+
+  "brief": [
+    "You finished a wireless site survey for the school library and saved it on your own machine. The network team keeps every survey on the file server at files.school.net so the next person can find it. Yours is still sitting in your home folder.",
+    "Get it onto the server, in the right year folder, and then prove it actually landed.",
+    "",
+    "**Work through these in the terminal.**",
+    "1. Use `pwd` to confirm where you are.",
+    "2. `cd reports` and `ls` to find the survey.",
+    "3. Answer the question about command parts below.",
+    "4. You will need `put`. Read what it does with `help put` before you use it.",
+    "5. Open the server with `sftp files.school.net`.",
+    "6. On the server, `cd 2026`, then `ls`.",
+    "7. Send the file with `put`.",
+    "8. Prove it arrived. `ls` the folder you sent it to. An upload that printed no error is not evidence.",
+    "",
+    "Type `help` at any time for the command list."
+  ],
+
+  "questions": [
+    {
+      "id": "parts",
+      "prompt": "In the command `cp -r reports backup`, which part is the option?",
+      "options": ["cp", "-r", "reports", "backup"],
+      "answer": 1,
+      "explain": "The command is `cp`. An option starts with a dash and changes how the command behaves; `-r` tells cp to copy a whole directory. `reports` and `backup` are the arguments it acts on."
+    }
+  ],
+
+  "hosts": {
+    "local": {
+      "label": "student@lab",
+      "prompt": "student@lab:~$",
+      "home": "/home/student",
+      "cwd": "/home/student",
+      "fs": {
+        "/home/student": {
+          "reports": {
+            "site-survey.txt": "LIBRARY WIRELESS SITE SURVEY  2026-03-14\nsurveyed by: student\n\nAP-LIB-01  ch 1   -52 dBm  ok\nAP-LIB-02  ch 6   -61 dBm  ok\nAP-LIB-03  ch 11  -78 dBm  weak, back stacks\n\nrecommendation: move AP-LIB-03 two shelves north, recheck.\n",
+            "notes.txt": "remember: the server keeps surveys by year, not by building.\n"
+          },
+          "configs": {
+            "switch-lab.cfg": "hostname lab-sw-1\nvlan 10 name students\nvlan 20 name staff\ninterface range gi0/1-8\n switchport access vlan 10\n"
+          },
+          "readme.txt": "Lab machine. Your work lives in reports/.\nThe file server is files.school.net (use sftp).\n"
+        }
+      }
+    },
+    "remote": {
+      "label": "files.school.net",
+      "prompt": "sftp>",
+      "hostname": "files.school.net",
+      "home": "/srv/site-surveys",
+      "cwd": "/srv/site-surveys",
+      "fs": {
+        "/srv/site-surveys": {
+          "2024": { "gym-survey.txt": "archived\n" },
+          "2025": { "cafeteria-survey.txt": "archived\n" },
+          "2026": { "gym-survey.txt": "GYM WIRELESS SITE SURVEY 2026-02-02\n" },
+          "README": "One folder per year. Put the survey in the year it was taken.\n"
+        }
+      }
+    }
+  },
+
+  "_solution_comment": "The reference run. smoke/labs.js plays exactly these steps against the real player and fails if all eight checks do not tick, so a spec can never ship as an unfinishable lab.",
+  "solution": [
+    "pwd",
+    "cd reports",
+    "ls",
+    { "answer": "parts" },
+    "help put",
+    "sftp files.school.net",
+    "cd 2026",
+    "ls",
+    "put site-survey.txt",
+    "ls"
+  ],
+
+  "checks": [
+    {
+      "n": 1,
+      "label": "Report which directory you are working in",
+      "ek": "4.3.A.5",
+      "match": { "event": "cmd", "cmd": "pwd", "host": "local" }
+    },
+    {
+      "n": 2,
+      "label": "Move into reports/ and list it",
+      "ek": "4.3.A.2",
+      "match": { "event": "cmd", "cmd": "ls", "host": "local", "cwd": "/home/student/reports" }
+    },
+    {
+      "n": 3,
+      "label": "Break a command into command, option and argument",
+      "ek": "4.3.A.4",
+      "match": { "event": "answer", "question": "parts" }
+    },
+    {
+      "n": 4,
+      "label": "Find out what a command does without leaving the terminal",
+      "ek": "4.3.A.7",
+      "match": { "event": "help", "topicIn": ["put", "get", "sftp", "cp", "ls", "cd", "pwd"] }
+    },
+    {
+      "n": 5,
+      "label": "Open an SFTP session to files.school.net",
+      "ek": "4.3.B.3",
+      "match": { "event": "sftp-open" }
+    },
+    {
+      "n": 6,
+      "label": "Navigate the server side, not your own machine",
+      "ek": "4.3.B.4",
+      "match": { "event": "cmd", "cmd": "ls", "host": "remote", "cwd": "/srv/site-surveys/2026" }
+    },
+    {
+      "n": 7,
+      "label": "Transfer the survey in the right direction (put, not get)",
+      "ek": "4.3.B.5",
+      "match": { "event": "transfer", "direction": "put", "file": "site-survey.txt", "to": "/srv/site-surveys/2026" }
+    },
+    {
+      "n": 8,
+      "label": "VERIFY: list the destination and see the file there",
+      "ek": "4.3.B.5",
+      "verify": true,
+      "match": { "event": "cmd", "cmd": "ls", "host": "remote", "cwd": "/srv/site-surveys/2026", "after": 7 }
+    }
+  ]
+}
