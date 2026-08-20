@@ -63,7 +63,7 @@ const STREAMS = {
       ['ap csa inheritance', 'Inheritance Lost Its Unit. It Did Not Leave the Exam.'],
     ],
     concept: [
-      ['ap csa objects and methods', 'Objects, References, and the Thing Unit 1 Never Says Out Loud'],
+      ['ap csa objects and methods', 'Objects, References, and the Thing Unit 1 Never Says Out Loud', 'ap-csa-objects-references-explained'],
       ['java vs python', 'Why AP CSA Uses Java When You Learned Python First'],
       ['ap csa boolean expressions', 'Compound Booleans and Short Circuit Evaluation'],
       ['ap csa for loops', 'For Loops, While Loops, and Knowing Which the Question Wants'],
@@ -77,7 +77,7 @@ const STREAMS = {
       ['java integer division', 'Integer Division, Modulus, and the Arithmetic Traps in Every Exam'],
     ],
     drill: [
-      ['how to trace code', 'The Variable Table: Tracing Code the Way Fives Do It'],
+      ['how to trace code', 'The Variable Table: Tracing Code the Way Fives Do It', 'ap-csa-variable-table-tracing-method'],
       ['ap csa practice test', 'Using a Practice Test in September Without Wasting It'],
       ['ap csa mcq strategy', 'Ninety Seconds a Question: Pacing the Multiple Choice'],
       ['ap csa frq practice', 'Writing Your First FRQ With the Laptop Closed'],
@@ -108,7 +108,7 @@ const STREAMS = {
       ['ap csp written response', 'Four Prompts, Four Different Sentences'],
     ],
     concept: [
-      ['ap csp pseudocode', 'College Board Pseudocode: The Whole Syntax in One Sitting'],
+      ['ap csp pseudocode', 'College Board Pseudocode: The Whole Syntax in One Sitting', 'ap-csp-pseudocode-complete-syntax-guide'],
       ['ap csp binary', 'Binary, Bits, and Why Overflow Is Really a Range Question'],
       ['ap csp abstraction', 'Abstraction in AP CSP: Data, Procedural, and the Difference'],
       ['ap csp algorithms', 'Reasonable and Unreasonable Time, Without a CS Degree'],
@@ -122,7 +122,7 @@ const STREAMS = {
       ['ap csp simulations', 'Simulations, Models, and What They Deliberately Leave Out'],
     ],
     drill: [
-      ['ap csp practice exam', 'Where AP CSP Practice Questions Mislead You'],
+      ['ap csp practice exam', 'Where AP CSP Practice Questions Mislead You', 'ap-csp-practice-exam-common-mistakes'],
       ['ap csp mcq', 'Pacing the AP CSP Multiple Choice Section'],
       ['ap csp robot grid', 'Robot Grid Problems: A Method That Always Works'],
       ['ap csp written response practice', 'Twenty Written Response Prompts in the Current Format'],
@@ -153,7 +153,7 @@ const STREAMS = {
       ['ap cybersecurity study guide', 'The Half Year AP Cybersecurity Review'],
     ],
     concept: [
-      ['cia triad', 'The CIA Triad Is Not Vocabulary, It Is the Grading Rubric'],
+      ['cia triad', 'The CIA Triad Is Not Vocabulary, It Is the Grading Rubric', 'ap-cybersecurity-cia-triad-explained'],
       ['social engineering', 'Social Engineering: The Most Tested Attack Surface'],
       ['phishing', 'Phishing: The Attack Every Student Has Already Survived'],
       ['access control', 'Least Privilege, Access Control, and Who Gets the Keys'],
@@ -167,7 +167,7 @@ const STREAMS = {
       ['risk assessment', 'Risk Assessment: Likelihood, Impact, and the Decision'],
     ],
     drill: [
-      ['ap cybersecurity frq', 'Writing a Device Security Analysis, Step by Step'],
+      ['ap cybersecurity frq', 'Writing a Device Security Analysis, Step by Step', 'ap-cybersecurity-device-security-frq-guide'],
       ['ap cybersecurity unit 1', 'Unit 1 Vocabulary, Ranked by How Often It Is Tested'],
       ['security scenario questions', 'Reading a Security Scenario for the Evidence It Gives You'],
       ['ap cybersecurity mcq', 'Eighty Seconds a Question: Pacing Section I'],
@@ -198,7 +198,7 @@ const STREAMS = {
       ['ap networking study guide', 'The Half Year AP Networking Review'],
     ],
     concept: [
-      ['ip address explained', 'What an IP Address Actually Is'],
+      ['ip address explained', 'What an IP Address Actually Is', 'ap-networking-ip-address-explained'],
       ['dns explained', 'DNS: The Thing That Breaks When Nothing Else Has'],
       ['router vs switch', 'Router, Switch, Access Point: Three Boxes People Confuse'],
       ['subnetting explained', 'Subnetting Without Tears'],
@@ -212,7 +212,7 @@ const STREAMS = {
       ['network latency', 'Bandwidth, Latency and Contention: Three Reasons for Slow'],
     ],
     drill: [
-      ['how to troubleshoot wifi', 'Troubleshooting Method: Eliminate, Do Not Guess'],
+      ['how to troubleshoot wifi', 'Troubleshooting Method: Eliminate, Do Not Guess', 'ap-networking-troubleshooting-method'],
       ['ping traceroute', 'Ping and Traceroute as Reasoning Tools'],
       ['ap networking scenarios', 'Reading a Network Scenario for What Still Works'],
       ['network diagram', 'Drawing the Network Before You Fix It'],
