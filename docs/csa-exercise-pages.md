@@ -6,10 +6,13 @@ graded server side against hidden test cases.
 Read this before adding an exercise, changing a test bank, or touching
 `lib/csa-code-modes.js`.
 
-**Unit 4, lessons 4.6, 4.7, 4.13, 4.14, 4.15 and 4.17, are authored against the
-wrong topic.** Confirmed against the actual 2025-2026 CED text: see
-`docs/csa-codehs-exercise-reference.md` for the specifics before touching any
-of those six.
+**Unit 4, lessons 4.6, 4.7, 4.13, 4.14, 4.15 and 4.17, were authored against the
+wrong topic and have been recontented (2026-08-20).** See
+`docs/runs/2026-08-20-claude-code-csa-unit4-ced-fix.md` for what changed and
+`docs/csa-codehs-exercise-reference.md` for how the mismatch was originally
+confirmed against the real CED text. The storefront page titles for these six
+still need to be relabeled to match before they publish; that half is out of
+scope for this repo.
 
 ## The gap these fill
 
