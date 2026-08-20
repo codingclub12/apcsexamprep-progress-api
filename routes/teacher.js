@@ -108,7 +108,7 @@ router.post('/login', async (req, res) => {
 //  The token contract itself (TTL, hashing, one live token per teacher) lives in
 //  lib/password-reset.js so the owner-generated link from /api/admin cannot drift
 //  from the emailed one.
-const RESET_TTL_MIN = resetLib.RESET_TTL_MIN;
+const RESET_TTL_LABEL = resetLib.RESET_TTL_LABEL;
 
 // Same generic 200 whether or not the email exists: this endpoint must not be
 // usable to enumerate which addresses have a teacher account.
@@ -146,7 +146,7 @@ router.post('/forgot-password', forgotLimit, async (req, res) => {
     const text =
       `Hi ${name},\n\n` +
       `We received a request to reset the password for your APCSExamPrep teacher account.\n` +
-      `Open this link within ${RESET_TTL_MIN} minutes to choose a new password:\n\n` +
+      `Open this link within ${RESET_TTL_LABEL} to choose a new password:\n\n` +
       `${link}\n\n` +
       `If you did not request this, you can ignore this email. Your password will not change ` +
       `and the link above will expire on its own.\n`;
@@ -156,7 +156,7 @@ router.post('/forgot-password', forgotLimit, async (req, res) => {
       `<p>We received a request to reset the password for your APCSExamPrep teacher account.</p>` +
       `<p><a href="${link}" style="display:inline-block;background:#2a78d6;color:#fff;` +
       `text-decoration:none;padding:10px 18px;border-radius:8px;font-weight:600">Choose a new password</a></p>` +
-      `<p style="color:#52514e;font-size:13px">This link expires in ${RESET_TTL_MIN} minutes. ` +
+      `<p style="color:#52514e;font-size:13px">This link expires in ${RESET_TTL_LABEL}. ` +
       `If you did not request it, you can safely ignore this email; your password will not change.</p>` +
       `<p style="color:#898781;font-size:12px">If the button does not work, paste this into your browser:<br>${link}</p>` +
       `</div>`;
