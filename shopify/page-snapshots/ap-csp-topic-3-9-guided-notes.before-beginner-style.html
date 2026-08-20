@@ -1,0 +1,459 @@
+<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#apcsp-notes{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:860px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.6!important;font-size:17px!important;background:#fff!important}
+#apcsp-notes *,#apcsp-notes *::before,#apcsp-notes *::after{box-sizing:border-box!important}
+#apcsp-notes .hero{background:linear-gradient(135deg,#065F46,#10B981)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 24px!important}
+#apcsp-notes .hero .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;margin:0 0 8px!important}
+#apcsp-notes h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#apcsp-notes .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#ECFDF5!important;-webkit-text-fill-color:#ECFDF5!important}
+#apcsp-notes h2{font-size:23px!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:34px 0 8px!important;font-weight:800!important;border-bottom:3px solid #10B981!important;padding-bottom:6px!important}
+#apcsp-notes h3{font-size:18px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;margin:22px 0 6px!important;font-weight:700!important}
+#apcsp-notes p{margin:8px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes ul,#apcsp-notes ol{margin:8px 0!important;padding-left:24px!important}
+#apcsp-notes li{margin:6px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes .card{border:1px solid #BBE5D2!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important;background:#ECFDF5!important}
+#apcsp-notes .warn{border-left:5px solid #DC2626!important;background:#FEF2F2!important;border-radius:0 12px 12px 0!important;padding:12px 16px!important;margin:16px 0!important}
+#apcsp-notes .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 4px!important}
+#apcsp-notes .dd{border:1px solid #BFDBFE!important;background:#EFF6FF!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important}
+#apcsp-notes .dd .label{color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important}
+#apcsp-notes table{border-collapse:collapse!important;width:100%!important;margin:12px 0!important;font-size:15px!important}
+#apcsp-notes th{background:#065F46!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:1px solid #065F46!important;padding:8px 10px!important;text-align:left!important}
+#apcsp-notes td{border:1px solid #BBE5D2!important;padding:8px 10px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;vertical-align:top!important}
+#apcsp-notes .wline{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:30px!important;margin:8px 0!important}
+#apcsp-notes .wcell{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:26px!important}
+#apcsp-notes .gap{display:inline-block!important;min-width:170px!important;border-bottom:1.5px solid #A7C4B8!important;height:1.1em!important;vertical-align:baseline!important}
+#apcsp-notes .chk{list-style:none!important;padding-left:4px!important}
+#apcsp-notes .chk li{padding-left:0!important}
+#apcsp-notes pre.code{font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace!important;font-size:14px!important;background:#F0F7F4!important;border:1px solid #BBE5D2!important;border-radius:10px!important;padding:12px 14px!important;margin:6px 0 12px!important;overflow-x:auto!important;white-space:pre!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.45!important}
+#apcsp-notes pre.code.out{background:#022C22!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;border-color:#022C22!important}
+#apcsp-notes .muted{color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;font-size:14px!important}
+#apcsp-notes a,#apcsp-notes a:link,#apcsp-notes a:visited{color:#065F46!important;-webkit-text-fill-color:#065F46!important;text-decoration:underline!important}
+#apcsp-notes .btn,#apcsp-notes .btn:link,#apcsp-notes .btn:visited{display:inline-block!important;background:#10B981!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+@media print{#apcsp-notes .noprint{display:none!important} #apcsp-notes .hero{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+</style>
+<div id="apcsp-notes">
+<div class="hero">
+<p class="eyebrow">Big Idea 3: Algorithms and Programming · Topic 3.9 · Guided Notes (Student)</p>
+<h1>Developing Algorithms — Guided Notes</h1>
+<p class="sub">Fill these in during class or catch up here if you were absent. Print this page or work on paper — then check yourself with the CFUs on the Topic 3.9 page.</p>
+</div>
+<p class="noprint"><a class="btn" href="javascript:window.print()">Print these notes</a><a class="btn" href="/pages/ap-csp-course">All CSP topics</a></p>
+<h2>Day 1: Same Answer, Different Path</h2>
+<div class="card">
+<p class="label">Today’s objectives</p>
+<ul>
+<li>Compare two algorithms to decide whether they yield the same result, the same side effect, both, or neither — and explain why similar-looking algorithms can still differ (LO AAP-2.L)</li>
+<li>Rewrite a conditional statement as an equivalent Boolean expression, and a Boolean expression as an equivalent conditional statement (LO AAP-2.L)</li>
+</ul>
+</div>
+<div class="card">
+<p class="label">Bell ringer</p>
+<p>Two teammates each wrote a snippet to award a 'Perfect Run' badge. Both start with finished ← true and noDamage ← true. Snippet A: IF(finished) { IF(noDamage) { badge ← true } }. Snippet B: IF(finished) { badge ← true } IF(noDamage) { badge ← true }. Trace both with those values, then trace both again with finished ← true, noDamage ← false.</p>
+<p class="muted">Write 2–4 sentences: For which inputs do A and B agree, and for which do they DISAGREE? The two snippets look almost the same — what one structural difference makes them behave differently?</p>
+<span class="wline"></span><span class="wline"></span><span class="wline"></span><span class="wline"></span>
+</div>
+<h2>01. Same Result, Same Side Effect?</h2>
+<h3>Key Vocabulary (LO AAP-2.L)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style="width:30%!important"><strong>Algorithm</strong></td>
+<td>
+<span class="wcell"></span><span class="wcell"></span>
+</td>
+</tr>
+<tr>
+<td style="width:30%!important"><strong>Result</strong></td>
+<td>
+<span class="wcell"></span><span class="wcell"></span>
+</td>
+</tr>
+<tr>
+<td style="width:30%!important"><strong>Side effect</strong></td>
+<td>
+<span class="wcell"></span><span class="wcell"></span>
+</td>
+</tr>
+<tr>
+<td style="width:30%!important"><strong>Equivalent algorithms</strong></td>
+<td>
+<span class="wcell"></span><span class="wcell"></span>
+</td>
+</tr>
+<tr>
+<td style="width:30%!important"><strong>Boolean expression</strong></td>
+<td>
+<span class="wcell"></span><span class="wcell"></span>
+</td>
+</tr>
+</table>
+<h3>One Task, Many Algorithms — Result vs Side Effect</h3>
+<ul>
+<li>To compare two algorithms you must check two things: whether they compute the same <span class="gap"></span>.</li>
+<li>The CED states that different algorithms can be developed or used to <span class="gap"></span>.</li>
+<li>Two algorithms can agree on the result yet still differ because <span class="gap"></span>.</li>
+</ul>
+<h3>Result Is the Value; Side Effect Is What Happens</h3>
+<p><strong>Result</strong></p>
+<p><strong>Side effect</strong></p>
+<ul>
+<li>The RESULT of an algorithm is <span class="gap"></span>.</li>
+<li>A SIDE EFFECT is <span class="gap"></span>.</li>
+</ul>
+<div class="card"><p>AP TIP: 'Same result' means same final value. 'Same side effect' means same observable behavior (usually what is displayed). A question can turn on either one.</p></div>
+<h3>Find the Higher Score</h3>
+<p class="muted">One concrete algorithm: compare two scores and display the larger. Its RESULT is 95; its SIDE EFFECT is printing 95.</p>
+<p class="label">AP Pseudocode (what the exam tests)</p>
+<pre class="code ps">scoreA ← 88
+scoreB ← 95
+IF(scoreA &gt; scoreB) { higher ← scoreA }
+ELSE { higher ← scoreB }
+DISPLAY(higher)</pre>
+<p class="label">Python (the runnable version)</p>
+<pre class="code py">scoreA = 88
+scoreB = 95
+if scoreA &gt; scoreB:
+    higher = scoreA
+else:
+    higher = scoreB
+print(higher)</pre>
+<p class="label">Output</p>
+<pre class="code out">95</pre>
+<p class="muted">Run and edit this yourself in the coding exercises for this topic.</p>
+<h3>Similar-Looking, Different Behavior</h3>
+<p class="muted">Two snippets each try to report the higher score. Algo A: IF(a &gt; b){DISPLAY(a)} IF(b &gt; a){DISPLAY(b)}. Algo B: IF(a ≥ b){DISPLAY(a)} ELSE {DISPLAY(b)}. Fill in what each DISPLAYs for each input — watch the tie.</p>
+<p class="muted">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Input (a, b)</th>
+<th>Algo A displays</th>
+<th>Algo B displays</th>
+<th>Same behavior?</th>
+</tr>
+<tr>
+<td>(88, 95)</td>
+<td><span class="wcell"></span></td>
+<td>95</td>
+<td>Yes — both print 95</td>
+</tr>
+<tr>
+<td>(95, 88)</td>
+<td>95</td>
+<td>95</td>
+<td>Yes — both print 95</td>
+</tr>
+<tr>
+<td>(70, 70)</td>
+<td><span class="wcell"></span></td>
+<td><span class="wcell"></span></td>
+<td>No — A prints nothing on a tie</td>
+</tr>
+</table>
+<div class="warn">
+<p class="label">Watch out — “If Two Algorithms Look Alike, They Behave Alike”</p>
+<p><strong>Myth:</strong> When two algorithms are structured almost identically, you can assume they produce the same result and the same side effects.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class="wline"></span><span class="wline"></span>
+</div>
+<div class="card">
+<p class="label">Stop and think</p>
+<ol>
+<li>In your own words, give the difference between an algorithm's RESULT and its SIDE EFFECT, using the higher-score example.<span class="wline"></span><span class="wline"></span>
+</li>
+<li>Algorithm X computes the average and DISPLAYs it. Algorithm Y computes the same average but DISPLAYs each score first, then the average. Do they share a result? A side effect? Explain both answers.<span class="wline"></span><span class="wline"></span>
+</li>
+<li>A classmate says 'these two loops look identical, so they must do the same thing.' State the one move that actually settles whether two algorithms behave the same, and name a boundary input worth testing.<span class="wline"></span><span class="wline"></span>
+</li>
+</ol>
+<p class="muted">Answer in complete sentences. Then check yourself with the matching CFUs on the Topic 3.9 page.</p>
+</div>
+<h2>02. Conditionals ⟷ Boolean Expressions</h2>
+<h3>When an IF Is Just a Boolean in Disguise</h3>
+<ul>
+<li>The CED says some conditional statements can be written as <span class="gap"></span>.</li>
+<li>IF(cond) { flag ← true } ELSE { flag ← false } is exactly equivalent to <span class="gap"></span>.</li>
+<li>The give-away pattern for this equivalence is a conditional whose only job is <span class="gap"></span>.</li>
+</ul>
+<h3>Four Lines That Are Really One</h3>
+<p class="muted">This IF/ELSE is equivalent to the single line passed ← (score ≥ 60). Same result, same side effect.</p>
+<p class="label">AP Pseudocode (what the exam tests)</p>
+<pre class="code ps">score ← 72
+IF(score ≥ 60) { passed ← true }
+ELSE { passed ← false }
+DISPLAY(passed)</pre>
+<p class="label">Python (the runnable version)</p>
+<pre class="code py">score = 72
+if score &gt;= 60:
+    passed = True
+else:
+    passed = False
+print(passed)</pre>
+<p class="label">Output</p>
+<pre class="code out">true</pre>
+<p class="muted">Run and edit this yourself in the coding exercises for this topic.</p>
+<h3>Collapse It, or Expand It</h3>
+<p><strong>Conditional form</strong></p>
+<p><strong>Boolean form</strong></p>
+<ul>
+<li>To COLLAPSE a conditional into a Boolean expression (L.3) you <span class="gap"></span>.</li>
+<li>To EXPAND a Boolean expression into a conditional (L.4) you <span class="gap"></span>.</li>
+</ul>
+<div class="card"><p>AP TIP: To expand a Boolean back to a conditional (L.4), wrap it: IF(expr) { x ← true } ELSE { x ← false }. To collapse a conditional to a Boolean (L.3), keep just the condition.</p></div>
+<h3>Match Each Conditional to Its Boolean</h3>
+<p class="muted">Each row is one equivalence. Fill in the missing equivalent form — the two forms must give the same result for every input.</p>
+<p class="muted">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Conditional form</th>
+<th>Equivalent Boolean expression</th>
+</tr>
+<tr>
+<td>IF(score ≥ 60) { passed ← true } ELSE { passed ← false }</td>
+<td>passed ← score ≥ 60</td>
+</tr>
+<tr>
+<td>IF(lives = 0) { gameOver ← true } ELSE { gameOver ← false }</td>
+<td><span class="wcell"></span></td>
+</tr>
+<tr>
+<td>IF(coins ≥ 100) { win ← true } ELSE { win ← false }</td>
+<td>win ← coins ≥ 100</td>
+</tr>
+<tr>
+<td>IF(NOT ready) { waiting ← true } ELSE { waiting ← false }</td>
+<td><span class="wcell"></span></td>
+</tr>
+</table>
+<div class="card">
+<p class="label">Stop and think</p>
+<ol>
+<li>Collapse this conditional to a single Boolean expression: IF(health &gt; 0) { alive ← true } ELSE { alive ← false }.<span class="wline"></span><span class="wline"></span>
+</li>
+<li>Expand this Boolean expression into an equivalent IF/ELSE that stores true or false: eligible ← age ≥ 13.<span class="wline"></span><span class="wline"></span>
+</li>
+<li>A classmate rewrites IF(x &gt; 5) { y ← true } ELSE { y ← false } as y ← x &gt; 5 and claims it is a DIFFERENT algorithm because it looks nothing alike. Explain why the two are equivalent — name the result and the side effect they share.<span class="wline"></span><span class="wline"></span>
+</li>
+</ol>
+<p class="muted">Answer in complete sentences. Then check yourself with the matching CFUs on the Topic 3.9 page.</p>
+</div>
+<div class="card">
+<p class="label">Today in one box</p>
+<ul>
+<li>Comparing algorithms means checking TWO things: same result (value computed) and same side effect (what is displayed/changed)</li>
+<li>Different algorithms can solve the same problem, and algorithms that LOOK alike can behave differently — trace boundary cases</li>
+<li>A conditional that only sets true/false collapses to an equivalent Boolean expression</li>
+<li>A Boolean expression expands back into an equivalent IF/ELSE</li>
+</ul>
+<p><strong>Before next class:</strong> Before tomorrow: you already wrote 'find the higher of two scores.' In one line, what would you change to make it find the LOWER score instead? Write it down.</p>
+</div>
+<h2>Day 2: Building New from Old</h2>
+<div class="card">
+<p class="label">Today’s objectives</p>
+<ul>
+<li>Create an algorithm from an idea, using the standard building blocks — max/min, sum/average, divisibility via MOD, and a robot's maze path (LO AAP-2.M)</li>
+<li>Combine and modify existing algorithms to solve a new problem, and explain how reusing correct building blocks reduces development time, testing, and errors (LO AAP-2.M)</li>
+</ul>
+</div>
+<div class="card">
+<p class="label">Bell ringer</p>
+<p>Here is a correct algorithm that finds the larger of two scores: IF(a &gt; b) { result ← a } ELSE { result ← b }. Do NOT rewrite it from scratch. Change as little as possible to make it find the SMALLER score instead.</p>
+<p class="muted">Write 1–3 sentences: What is the single change you made, and why did modifying the working algorithm beat starting over? What did you get to keep — the structure, the variable names, the tested shape?</p>
+<span class="wline"></span><span class="wline"></span><span class="wline"></span><span class="wline"></span>
+</div>
+<h2>01. The Building Blocks You Already Know</h2>
+<h3>Knowing Existing Algorithms Helps You Build New Ones</h3>
+<ul>
+<li>Says that knowledge of existing algorithms can help in <span class="gap"></span>.</li>
+<li>The four building blocks the CED names are max/min, sum/average, <span class="gap"></span>.</li>
+<li>You test whether one integer is evenly divisible by another using <span class="gap"></span>.</li>
+</ul>
+<h3>Largest and Smallest of Two Numbers</h3>
+<p class="muted">The same compare, flipped: &gt; gives the max, &lt; gives the min. With a=88, b=95 the max is 95 and the min is 88.</p>
+<p class="label">AP Pseudocode (what the exam tests)</p>
+<pre class="code ps">a ← 88
+b ← 95
+IF(a &gt; b) { largest ← a } ELSE { largest ← b }
+IF(a &lt; b) { smallest ← a } ELSE { smallest ← b }
+DISPLAY(largest)
+DISPLAY(smallest)</pre>
+<p class="label">Python (the runnable version)</p>
+<pre class="code py">a = 88
+b = 95
+largest = a if a &gt; b else b
+smallest = a if a &lt; b else b
+print(largest)
+print(smallest)</pre>
+<p class="label">Output</p>
+<pre class="code out">95 88</pre>
+<p class="muted">Run and edit this yourself in the coding exercises for this topic.</p>
+<h3>Total and Average of the Scores</h3>
+<p class="muted">Sum first, then divide by how many. Average = 270 / 3 = 90.</p>
+<p class="label">AP Pseudocode (what the exam tests)</p>
+<pre class="code ps">a ← 80
+b ← 90
+c ← 100
+sum ← a + b + c
+average ← sum / 3
+DISPLAY(average)</pre>
+<p class="label">Python (the runnable version)</p>
+<pre class="code py">a = 80
+b = 90
+c = 100
+total = a + b + c
+average = total / 3
+print(average)</pre>
+<p class="label">Output</p>
+<pre class="code out">90</pre>
+<p class="muted">Run and edit this yourself in the coding exercises for this topic.</p>
+<h3>Does a Coin Appear on This Tile?</h3>
+<p class="muted">A coin sits on every 3rd tile. tile MOD 3 = 0 means 3 divides the tile number evenly.</p>
+<p class="label">AP Pseudocode (what the exam tests)</p>
+<pre class="code ps">tile ← 12
+IF(tile MOD 3 = 0)
+{ DISPLAY("coin") }
+ELSE
+{ DISPLAY("no coin") }</pre>
+<p class="label">Python (the runnable version)</p>
+<pre class="code py">tile = 12
+if tile % 3 == 0:
+    print("coin")
+else:
+    print("no coin")</pre>
+<p class="label">Output</p>
+<pre class="code out">coin</pre>
+<p class="muted">Run and edit this yourself in the coding exercises for this topic.</p>
+<h3>Trace the Robot's Path Through the Maze</h3>
+<p class="muted">The hero starts at (1,1) facing East (Right). Run the commands in order and fill in the facing and position AFTER each command. On this grid, moving East increases the column; a right turn from East faces South (row increases when moving).</p>
+<p class="muted">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Step</th>
+<th>Command</th>
+<th>Facing after</th>
+<th>Position after (row, col)</th>
+</tr>
+<tr>
+<td>start</td>
+<td>—</td>
+<td>East</td>
+<td>(1, 1)</td>
+</tr>
+<tr>
+<td>1</td>
+<td>MOVE_FORWARD()</td>
+<td>East</td>
+<td>(1, 2)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>MOVE_FORWARD()</td>
+<td>East</td>
+<td><span class="wcell"></span></td>
+</tr>
+<tr>
+<td>3</td>
+<td>ROTATE_RIGHT()</td>
+<td><span class="wcell"></span></td>
+<td>(1, 3)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>MOVE_FORWARD()</td>
+<td>South</td>
+<td><span class="wcell"></span></td>
+</tr>
+</table>
+<div class="card">
+<p class="label">Stop and think</p>
+<ol>
+<li>Write the divisibility test that displays 'even' when a number n is even and 'odd' otherwise. Which building block did you reuse, and what did you change?<span class="wline"></span><span class="wline"></span>
+</li>
+<li>The average building block 'contains' the sum building block. Explain what that means, and why computing an average is really two algorithms working together.<span class="wline"></span><span class="wline"></span>
+</li>
+<li>The robot is at (2,3) facing South and executes ROTATE_LEFT() then MOVE_FORWARD(). Give its new facing and position, stating the rule for each command.<span class="wline"></span><span class="wline"></span>
+</li>
+</ol>
+<p class="muted">Answer in complete sentences. Then check yourself with the matching CFUs on the Topic 3.9 page.</p>
+</div>
+<h2>02. Create, Combine, and Modify</h2>
+<h3>Three Ways to Make an Algorithm</h3>
+<ul>
+<li>The three ways to create an algorithm are from an idea, by <span class="gap"></span>.</li>
+<li>Flipping a working find-max into find-min is an example of creating an algorithm by <span class="gap"></span>.</li>
+<li>Feeding a computed sum into a division to get an average is an example of <span class="gap"></span>.</li>
+</ul>
+<h3>Combine Blocks: Average, Then Pass/Fail</h3>
+<p class="muted">The average building block feeds a comparison block: compute the average, then decide pass or fail.</p>
+<p class="label">AP Pseudocode (what the exam tests)</p>
+<pre class="code ps">s1 ← 80
+s2 ← 90
+s3 ← 100
+avg ← (s1 + s2 + s3) / 3
+IF(avg ≥ 60) { DISPLAY("pass") }
+ELSE { DISPLAY("fail") }</pre>
+<p class="label">Python (the runnable version)</p>
+<pre class="code py">s1, s2, s3 = 80, 90, 100
+avg = (s1 + s2 + s3) / 3
+if avg &gt;= 60:
+    print("pass")
+else:
+    print("fail")</pre>
+<p class="label">Output</p>
+<pre class="code out">pass</pre>
+<p class="muted">Run and edit this yourself in the coding exercises for this topic.</p>
+<h3>Modify Blocks: From Max to Min</h3>
+<p><strong>Original: find the MAX</strong></p>
+<p><strong>Modified: find the MIN</strong></p>
+<ul>
+<li>To modify find-max into find-min you change only <span class="gap"></span>.</li>
+<li>Modifying a correct algorithm shrinks your testing because <span class="gap"></span>.</li>
+</ul>
+<div class="card"><p>AP TIP: Modifying keeps the structure and names, so you only re-check what you touched — far less than rewriting from scratch.</p></div>
+<h3>Why Build from Existing Blocks</h3>
+<ul>
+<li>The three benefits of reusing correct building blocks are reducing development time, reducing testing, and <span class="gap"></span>.</li>
+<li>Errors in a program built from trusted blocks are most likely to be found <span class="gap"></span>.</li>
+</ul>
+<div class="warn">
+<p class="label">Watch out — “Reusing Tested Blocks Means No Testing Needed”</p>
+<p><strong>Myth:</strong> If every building block was already tested and correct, the new program built from them needs no testing at all.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class="wline"></span><span class="wline"></span>
+</div>
+<div class="card">
+<p class="label">Stop and think</p>
+<ol>
+<li>You need an algorithm that displays the average of three scores only if none of them is below 50. Name which building blocks you would COMBINE and describe the order you would connect them.<span class="wline"></span><span class="wline"></span>
+</li>
+<li>Start from find-max of two numbers. MODIFY it so it displays 'tie' when the two numbers are equal and otherwise displays the larger. State every change you made.<span class="wline"></span><span class="wline"></span>
+</li>
+<li>A classmate reuses a correct 'compute the average' block in a new program and says 'it was already tested, so I don't need to test my program.', explain what still must be tested and why.<span class="wline"></span><span class="wline"></span>
+</li>
+</ol>
+<p class="muted">Answer in complete sentences. Then check yourself with the matching CFUs on the Topic 3.9 page.</p>
+</div>
+<h3>Common AP Traps</h3>
+<p class="muted">Three ways Topic 3.9 loses points on the exam — one minute now, real points in May.</p>
+<p><strong>Result and side effect are not the same</strong> — in your own words:</p>
+<span class="wline"></span><p><strong>Trace similar-looking code; don't eyeball it</strong> — in your own words:</p>
+<span class="wline"></span><p><strong>Reuse reduces testing — it does not remove it</strong> — in your own words:</p>
+<span class="wline"></span><h3>Developing Algorithms, in One Slide</h3>
+<ul>
+<li>Compare algorithms on TWO axes — same result (value) and same side effect (what is displayed/changed); similar-looking code can still differ.</li>
+<li>A conditional that only stores true/false equals a Boolean expression, and back again.</li>
+<li>Create algorithms from an idea, by combining, or by modifying existing ones; know the building blocks — max/min, sum/average, divisibility via MOD, robot maze path.</li>
+<li>Reusing correct blocks reduces development time, testing, and errors — but the new combination still must be tested.</li>
+</ul>
+<div class="card">
+<p class="label">Exit check — I can…</p>
+<ul class="chk">
+<li>☐  compare two algorithms for the same result and the same side effect, and explain why similar-looking algorithms can differ (LO AAP-2.L)</li>
+<li>☐  rewrite a conditional as an equivalent Boolean expression and back again (LO AAP-2.L)</li>
+<li>☐  create an algorithm from an idea using the standard building blocks — max/min, sum/average, divisibility via MOD, and a robot's maze path (LO AAP-2.M)</li>
+<li>☐  combine and modify existing algorithms, and explain how reusing correct blocks reduces development time, testing, and errors (LO AAP-2.M)</li>
+</ul>
+</div>
+</div>

@@ -1493,10 +1493,10 @@ const LESSONS = [
         id: 'q2',
         stem: 'Which act() body makes an actor move continuously and smoothly?',
         options: [
-          'while (true) { move(1); }',
+          'while (true)\n{\n    move(1);\n}',
           'move(1);',
           'move(100);',
-          'for (int i = 0; i < 1000; i++) { move(1); }',
+          'for (int i = 0; i < 1000; i++)\n{\n    move(1);\n}',
         ],
         answer: 1,
         why: 'One small step per frame. The other three either freeze the scenario or jump.',

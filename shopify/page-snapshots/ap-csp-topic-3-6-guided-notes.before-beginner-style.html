@@ -1,0 +1,368 @@
+<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#apcsp-notes{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:860px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.6!important;font-size:17px!important;background:#fff!important}
+#apcsp-notes *,#apcsp-notes *::before,#apcsp-notes *::after{box-sizing:border-box!important}
+#apcsp-notes .hero{background:linear-gradient(135deg,#065F46,#10B981)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 24px!important}
+#apcsp-notes .hero .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;margin:0 0 8px!important}
+#apcsp-notes h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#apcsp-notes .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#ECFDF5!important;-webkit-text-fill-color:#ECFDF5!important}
+#apcsp-notes h2{font-size:23px!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:34px 0 8px!important;font-weight:800!important;border-bottom:3px solid #10B981!important;padding-bottom:6px!important}
+#apcsp-notes h3{font-size:18px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;margin:22px 0 6px!important;font-weight:700!important}
+#apcsp-notes p{margin:8px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes ul,#apcsp-notes ol{margin:8px 0!important;padding-left:24px!important}
+#apcsp-notes li{margin:6px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes .card{border:1px solid #BBE5D2!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important;background:#ECFDF5!important}
+#apcsp-notes .warn{border-left:5px solid #DC2626!important;background:#FEF2F2!important;border-radius:0 12px 12px 0!important;padding:12px 16px!important;margin:16px 0!important}
+#apcsp-notes .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 4px!important}
+#apcsp-notes .dd{border:1px solid #BFDBFE!important;background:#EFF6FF!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important}
+#apcsp-notes .dd .label{color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important}
+#apcsp-notes table{border-collapse:collapse!important;width:100%!important;margin:12px 0!important;font-size:15px!important}
+#apcsp-notes th{background:#065F46!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:1px solid #065F46!important;padding:8px 10px!important;text-align:left!important}
+#apcsp-notes td{border:1px solid #BBE5D2!important;padding:8px 10px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;vertical-align:top!important}
+#apcsp-notes .wline{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:30px!important;margin:8px 0!important}
+#apcsp-notes .wcell{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:26px!important}
+#apcsp-notes .gap{display:inline-block!important;min-width:170px!important;border-bottom:1.5px solid #A7C4B8!important;height:1.1em!important;vertical-align:baseline!important}
+#apcsp-notes .chk{list-style:none!important;padding-left:4px!important}
+#apcsp-notes .chk li{padding-left:0!important}
+#apcsp-notes pre.code{font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace!important;font-size:14px!important;background:#F0F7F4!important;border:1px solid #BBE5D2!important;border-radius:10px!important;padding:12px 14px!important;margin:6px 0 12px!important;overflow-x:auto!important;white-space:pre!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.45!important}
+#apcsp-notes pre.code.out{background:#022C22!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;border-color:#022C22!important}
+#apcsp-notes .muted{color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;font-size:14px!important}
+#apcsp-notes a,#apcsp-notes a:link,#apcsp-notes a:visited{color:#065F46!important;-webkit-text-fill-color:#065F46!important;text-decoration:underline!important}
+#apcsp-notes .btn,#apcsp-notes .btn:link,#apcsp-notes .btn:visited{display:inline-block!important;background:#10B981!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+@media print{#apcsp-notes .noprint{display:none!important} #apcsp-notes .hero{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+</style>
+<div id="apcsp-notes">
+<div class="hero">
+<p class="eyebrow">Big Idea 3: Algorithms and Programming · Topic 3.6 · Guided Notes (Student)</p>
+<h1>Conditionals — Guided Notes</h1>
+<p class="sub">Fill these in during class or catch up here if you were absent. Print this page or work on paper — then check yourself with the CFUs on the Topic 3.6 page.</p>
+</div>
+<p class="noprint"><a class="btn" href="javascript:window.print()">Print these notes</a><a class="btn" href="/pages/ap-csp-course">All CSP topics</a></p>
+<h2>Day 1: Teaching a Program to Decide</h2>
+<div class="card">
+<p class="label">Today’s objectives</p>
+<ul>
+<li>Express a selection decision without using a programming language, showing how a condition being true or false chooses which steps run (LO AAP-2.G)</li>
+<li>Write an IF statement and determine its result — the block runs when the condition is true, and no action is taken when it is false (LO AAP-2.H)</li>
+</ul>
+</div>
+<div class="card">
+<p class="label">Bell ringer</p>
+<p>You are the gatekeeper at a concert, and you must train a substitute to take your place while you step away. The rule you follow: guests wearing a green wristband go to the VIP lounge; everyone else goes to general admission. Write the rule as numbered steps a stranger could follow with zero judgment calls.</p>
+<p class="muted">Write 2–4 sentences: What did you have to name so the substitute knew what to check? Then decide what your steps do for a guest with a green band and for a guest with a blue band. Where in your steps does the path split?</p>
+<span class="wline"></span><span class="wline"></span><span class="wline"></span><span class="wline"></span>
+</div>
+<h2>01. Selection Without a Language</h2>
+<h3>Key Vocabulary (LO AAP-2.G, AAP-2.H)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style="width:30%!important"><strong>Selection</strong></td>
+<td>
+<span class="wcell"></span><span class="wcell"></span>
+</td>
+</tr>
+<tr>
+<td style="width:30%!important"><strong>Condition</strong></td>
+<td>
+<span class="wcell"></span><span class="wcell"></span>
+</td>
+</tr>
+<tr>
+<td style="width:30%!important"><strong>Conditional statement</strong></td>
+<td>
+<span class="wcell"></span><span class="wcell"></span>
+</td>
+</tr>
+<tr>
+<td style="width:30%!important"><strong>IF statement</strong></td>
+<td>
+<span class="wcell"></span><span class="wcell"></span>
+</td>
+</tr>
+<tr>
+<td style="width:30%!important"><strong>Flow of control</strong></td>
+<td>
+<span class="wcell"></span><span class="wcell"></span>
+</td>
+</tr>
+</table>
+<h3>What Selection Is</h3>
+<ul>
+<li>Selection determines <span class="gap"></span> based on whether a condition is true or false.</li>
+<li>You can express a selection decision without any programming language by using <span class="gap"></span>.</li>
+<li>Selection is powerful because one algorithm can now <span class="gap"></span> depending on the input.</li>
+</ul>
+<h3>Two Ways to Express a Decision — No Code Needed</h3>
+<p><strong>Plain-language rule</strong></p>
+<p><strong>Flowchart / diagram</strong></p>
+<ul>
+<li>Expressing selection without code still requires you to name the <span class="gap"></span> that decides which steps run.</li>
+<li>In a flowchart, a decision is drawn as a branch point with separate arrows for <span class="gap"></span>.</li>
+</ul>
+<div class="card"><p>AP TIP: On free-response and multiple-choice, selection can appear as pseudocode OR as a plain description of a decision — recognize both as the same construct.</p></div>
+<div class="card">
+<p class="label">Stop and think</p>
+<ol>
+<li>In plain language (no code), write a selection rule for: a store posts a 'bring a jacket' note only when the forecast temperature is below 40. Name the condition clearly.<span class="wline"></span><span class="wline"></span>
+</li>
+<li>Describe, in words, how you would draw the rule above as a flowchart: what goes in the decision shape, and where do the true and false arrows lead?<span class="wline"></span><span class="wline"></span>
+</li>
+<li>Explain, in two sentences, how selection lets a single algorithm behave differently for two different inputs. Use the word condition.<span class="wline"></span><span class="wline"></span>
+</li>
+</ol>
+<p class="muted">Answer in complete sentences. Then check yourself with the matching CFUs on the Topic 3.6 page.</p>
+</div>
+<h2>02. The IF Statement</h2>
+<h3>The IF Statement</h3>
+<ul>
+<li>A plain IF is a one-way detour: after its block runs or is skipped, the program <span class="gap"></span>.</li>
+<li>When the condition is false in a plain IF, the block is <span class="gap"></span> (there is no hidden ELSE).</li>
+<li>A conditional statement changes the sequential flow of control based on the value of <span class="gap"></span>.</li>
+</ul>
+<h3>Run a Block When the Condition Is True</h3>
+<p class="muted">height is 50, so height ≥ 48 is true and the block runs.</p>
+<p class="label">AP Pseudocode (what the exam tests)</p>
+<pre class="code ps">height ← 50
+IF(height ≥ 48)
+{
+  DISPLAY("Board the ride")
+}</pre>
+<p class="label">Python (the runnable version)</p>
+<pre class="code py">height = 50
+if height &gt;= 48:
+    print("Board the ride")</pre>
+<p class="label">Output</p>
+<pre class="code out">Board the ride</pre>
+<p class="muted">Run and edit this yourself in the coding exercises for this topic.</p>
+<h3>Does the Block Run? Trace the IF</h3>
+<p class="muted">For the statement IF(height ≥ 48){ DISPLAY("Board the ride") }, evaluate the condition for each height, then decide whether the block runs and what is displayed. '(nothing)' means no action was taken.</p>
+<p class="muted">Complete the empty cells.</p>
+<table>
+<tr>
+<th>height</th>
+<th>height ≥ 48 ?</th>
+<th>Does the block run?</th>
+<th>What is displayed</th>
+</tr>
+<tr>
+<td>52</td>
+<td>true</td>
+<td>yes</td>
+<td><span class="wcell"></span></td>
+</tr>
+<tr>
+<td>48</td>
+<td>true</td>
+<td>yes</td>
+<td>Board the ride</td>
+</tr>
+<tr>
+<td>47</td>
+<td><span class="wcell"></span></td>
+<td>no</td>
+<td>(nothing)</td>
+</tr>
+<tr>
+<td>40</td>
+<td>false</td>
+<td><span class="wcell"></span></td>
+<td>(nothing)</td>
+</tr>
+</table>
+<div class="warn">
+<p class="label">Watch out — “Every IF Needs Something to Happen on False”</p>
+<p><strong>Myth:</strong> A plain IF must still do something when its condition is false — there is always a hidden default action.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class="wline"></span><span class="wline"></span>
+</div>
+<div class="card">
+<p class="label">Stop and think</p>
+<ol>
+<li>Write an IF statement in exam pseudocode that displays "Free shipping" when a variable total is at least 50. Use the ≥ operator.<span class="wline"></span><span class="wline"></span>
+</li>
+<li>Trace your statement for total = 50 and for total = 49. For each, state whether the block runs and what is displayed.<span class="wline"></span><span class="wline"></span>
+</li>
+<li>A classmate writes IF(score &lt; 60){ DISPLAY("Study more") } and asks what happens when score is 72. Answer precisely, and name the rule you used.<span class="wline"></span><span class="wline"></span>
+</li>
+</ol>
+<p class="muted">Answer in complete sentences. Then check yourself with the matching CFUs on the Topic 3.6 page.</p>
+</div>
+<div class="card">
+<p class="label">Today in one box</p>
+<ul>
+<li>Selection determines which parts of an algorithm run based on a condition being true or false</li>
+<li>You can express a decision with no code — plain language or a flowchart captures the same logic</li>
+<li>A conditional statement changes the sequential flow of control based on a Boolean expression</li>
+<li>IF(condition){ block } runs the block when the condition is true, and takes NO action when it is false</li>
+</ul>
+<p><strong>Before next class:</strong> Before tomorrow, predict it: score ← 55, then IF(score ≥ 60){ DISPLAY("Pass") } ELSE { DISPLAY("Retake") }. Write down what is displayed, and why.</p>
+</div>
+<h2>Day 2: The Two-Way Fork</h2>
+<div class="card">
+<p class="label">Today’s objectives</p>
+<ul>
+<li>Write an IF-ELSE statement in exam pseudocode so that exactly one of two blocks runs, depending on the condition (LO AAP-2.H)</li>
+<li>Determine the result of an IF or IF-ELSE by evaluating the condition first, then tracing which branch executes (LO AAP-2.H)</li>
+</ul>
+</div>
+<div class="card">
+<p class="label">Bell ringer</p>
+<p>Yesterday's teaser, now decide it. The program runs: score ← 55, then IF(score ≥ 60){ DISPLAY("Pass") } ELSE { DISPLAY("Retake") }. Three classmates predict the output will be Pass, Retake, and 'both Pass and Retake.'</p>
+<p class="muted">Who is right, and exactly why? Write down the value of the condition score ≥ 60 first, then the single branch that runs. Name the mistake each wrong classmate made.</p>
+<span class="wline"></span><span class="wline"></span><span class="wline"></span><span class="wline"></span>
+</div>
+<h2>01. Adding ELSE — The Two-Way Fork</h2>
+<h3>IF-ELSE: Exactly One Branch Runs</h3>
+<ul>
+<li>In an IF-ELSE, the second block runs whenever the condition is <span class="gap"></span>.</li>
+<li>On any single pass of an IF-ELSE, the number of blocks that execute is <span class="gap"></span>.</li>
+<li>ELSE does not test its own condition; it runs for <span class="gap"></span>.</li>
+</ul>
+<h3>The Second Block Runs on False</h3>
+<p class="muted">height is 44, so height ≥ 48 is false and the ELSE block runs.</p>
+<p class="label">AP Pseudocode (what the exam tests)</p>
+<pre class="code ps">height ← 44
+IF(height ≥ 48)
+{
+  DISPLAY("Board the ride")
+}
+ELSE
+{
+  DISPLAY("Grow a bit more")
+}</pre>
+<p class="label">Python (the runnable version)</p>
+<pre class="code py">height = 44
+if height &gt;= 48:
+    print("Board the ride")
+else:
+    print("Grow a bit more")</pre>
+<p class="label">Output</p>
+<pre class="code out">Grow a bit more</pre>
+<p class="muted">Run and edit this yourself in the coding exercises for this topic.</p>
+<h3>IF Alone vs IF-ELSE</h3>
+<p><strong>IF alone</strong></p>
+<p><strong>IF-ELSE</strong></p>
+<ul>
+<li>A plain IF may run <span class="gap"></span> block(s) on a pass; an IF-ELSE always runs exactly one.</li>
+<li>Reach for IF-ELSE instead of a lone IF whenever the false case <span class="gap"></span>.</li>
+</ul>
+<div class="card"><p>AP TIP: If the question's false case must produce something, a lone IF is a bug — the missing ELSE is a classic exam trap.</p></div>
+<div class="card">
+<p class="label">Stop and think</p>
+<ol>
+<li>Write an IF-ELSE in exam pseudocode that displays "Adult ticket" when age ≥ 18 and "Youth ticket" otherwise. Use the ≥ operator and braces.<span class="wline"></span><span class="wline"></span>
+</li>
+<li>Explain in one sentence why your statement can never display both ticket messages on the same run.<span class="wline"></span><span class="wline"></span>
+</li>
+<li>Rewrite this plain IF so the false case is handled: IF(balance &lt; 0){ DISPLAY("Overdrawn") }. Add an ELSE that displays "OK", and state which branch runs when balance is 25.<span class="wline"></span><span class="wline"></span>
+</li>
+</ol>
+<p class="muted">Answer in complete sentences. Then check yourself with the matching CFUs on the Topic 3.6 page.</p>
+</div>
+<h2>02. Determining the Result</h2>
+<h3>Determining the Result: Which Branch?</h3>
+<ul>
+<li>The first step in tracing any conditional is to <span class="gap"></span>.</li>
+<li>When the condition is true, the ELSE block is <span class="gap"></span>.</li>
+<li>Boundary inputs are tricky because <span class="gap"></span>.</li>
+</ul>
+<h3>Same Code, Two Inputs, Two Branches</h3>
+<p class="muted">The only change is temp; the condition's value decides which branch runs.</p>
+<p class="label">AP Pseudocode (what the exam tests)</p>
+<pre class="code ps">temp ← 70
+IF(temp ≥ 65)
+{
+  DISPLAY("Warm")
+}
+ELSE
+{
+  DISPLAY("Cool")
+}</pre>
+<p class="label">Python (the runnable version)</p>
+<pre class="code py">temp = 70
+if temp &gt;= 65:
+    print("Warm")
+else:
+    print("Cool")</pre>
+<p class="label">Output</p>
+<pre class="code out">Warm</pre>
+<p class="muted">Run and edit this yourself in the coding exercises for this topic.</p>
+<h3>Trace the Branch, Line by Line</h3>
+<p class="muted">For IF(height ≥ 48){ DISPLAY("Board the ride") } ELSE { DISPLAY("Grow a bit more") }, evaluate the condition for each height, name the branch taken, and give what is displayed.</p>
+<p class="muted">Complete the empty cells.</p>
+<table>
+<tr>
+<th>height</th>
+<th>height ≥ 48 ?</th>
+<th>Branch taken</th>
+<th>What is displayed</th>
+</tr>
+<tr>
+<td>60</td>
+<td>true</td>
+<td>IF (first block)</td>
+<td><span class="wcell"></span></td>
+</tr>
+<tr>
+<td>48</td>
+<td><span class="wcell"></span></td>
+<td>IF (first block)</td>
+<td>Board the ride</td>
+</tr>
+<tr>
+<td>47</td>
+<td>false</td>
+<td><span class="wcell"></span></td>
+<td>Grow a bit more</td>
+</tr>
+<tr>
+<td>30</td>
+<td>false</td>
+<td>ELSE (second block)</td>
+<td>Grow a bit more</td>
+</tr>
+</table>
+<div class="warn">
+<p class="label">Watch out — “Both Branches of an IF-ELSE Run”</p>
+<p><strong>Myth:</strong> In IF(condition){ first block } ELSE { second block }, both blocks execute — or the ELSE runs as a follow-up after the IF.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class="wline"></span><span class="wline"></span>
+</div>
+<div class="card">
+<p class="label">Stop and think</p>
+<ol>
+<li>Trace: n ← 12, IF(n MOD 2 = 0){ DISPLAY("Even") } ELSE { DISPLAY("Odd") }. Evaluate the condition first, then give the output.<span class="wline"></span><span class="wline"></span>
+</li>
+<li>For IF(price ≤ 20){ DISPLAY("Budget") } ELSE { DISPLAY("Premium") }, give the output when price = 20 and when price = 21, and explain what the boundary shows.<span class="wline"></span><span class="wline"></span>
+</li>
+<li>A classmate insists the statement in prompt 2 could display both "Budget" and "Premium" for one price. In one sentence, explain why that is impossible.<span class="wline"></span><span class="wline"></span>
+</li>
+</ol>
+<p class="muted">Show every step. Then check yourself with the matching CFUs on the Topic 3.6 page.</p>
+</div>
+<h3>Common AP Traps</h3>
+<p class="muted">Three ways Topic 3.6 loses points on the exam — one minute now, real points in May.</p>
+<p><strong>A plain IF does nothing on false</strong> — in your own words:</p>
+<span class="wline"></span><p><strong>IF-ELSE runs exactly one block</strong> — in your own words:</p>
+<span class="wline"></span><p><strong>≥ and ≤ include the boundary</strong> — in your own words:</p>
+<span class="wline"></span><h3>Conditionals, in One Slide</h3>
+<ul>
+<li>Selection determines which parts of an algorithm run based on a condition being true or false, and can be expressed with no code — plain language or a flowchart.</li>
+<li>A conditional statement changes the sequential flow of control based on a Boolean expression.</li>
+<li>IF(condition){ block } runs the block on true and takes NO action on false.</li>
+<li>IF(condition){ first block } ELSE { second block } runs exactly one block — the first on true, the second otherwise; trace by evaluating the condition first.</li>
+</ul>
+<div class="card">
+<p class="label">Exit check — I can…</p>
+<ul class="chk">
+<li>☐  express a selection decision without any programming language, naming the condition and both branches (LO AAP-2.G)</li>
+<li>☐  write an IF statement and determine its result — block runs on true, no action on false (LO AAP-2.H)</li>
+<li>☐  write an IF-ELSE so exactly one of two blocks runs depending on the condition (LO AAP-2.H)</li>
+<li>☐  determine the result of any conditional by evaluating the condition first, then tracing the branch (LO AAP-2.H)</li>
+</ul>
+</div>
+</div>
