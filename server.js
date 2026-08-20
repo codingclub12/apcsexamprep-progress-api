@@ -68,6 +68,7 @@ app.use('/api/progress', require('./routes/progress'));
 app.use('/api/quiz', require('./routes/quiz'));
 app.use('/api/game', require('./routes/game'));
 app.use('/api/judge0', require('./routes/judge0'));
+app.use('/api/sandbox', require('./routes/sandbox'));
 // The Run button on an intro-java lesson exercise. Assembles the student's
 // method against the headless Greenfoot stub and returns the recorded frames,
 // so the page can animate them. Grades nothing, stores nothing, and calls the
@@ -328,6 +329,25 @@ app.post('/admin/login', adminSession.loginRateLimit, (req, res) => {
 app.post('/admin/logout', (req, res) => {
   adminSession.clear(res);
   res.json({ ok: true });
+});
+
+// ── CODE SANDBOX ────────────────────────────────────────────────────────────
+// Free-practice editor for AP CSA (multi class Java) and AP CSP (Python and
+// JavaScript for the Create Task). Public by design: a student can write and RUN
+// code with no account, and only needs to sign in to SAVE. Gating the page
+// itself would put a login in front of the thing that demonstrates the product.
+//
+// Rendered rather than served from public/, matching the other generated pages
+// in lib/: the limits are baked into the markup from the same config object the
+// API returns, so the editor cannot enforce a different ceiling than the server.
+//
+// No-store because the config travels inside the HTML. A cached copy would keep
+// serving yesterday's limits after they changed.
+const sandboxPage = require('./lib/sandbox-page');
+const sandboxRoute = require('./routes/sandbox');
+app.get('/sandbox', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  res.type('html').send(sandboxPage.render(sandboxRoute.config()));
 });
 
 // Public client asset: the session heartbeat reporter. Served explicitly (not via

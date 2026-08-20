@@ -102,7 +102,15 @@ Serves two account types:
 - Teacher classes: codes like CSA-XXXX, CSP-XXXX, CYBER-XXXX. Each class row has course, mastery_threshold, retry_allowed.
 - Solo student accounts: ME-XXXX codes, grouped under system classes with course = 'solo' and retry_allowed = 1.
 
-Students are minors on name + PIN only. Zero PII posture: no emails, no free-text student input stored anywhere, ever. This constraint shapes the detail JSON spec below.
+Students are minors on name + PIN only. Zero PII posture: no emails, and no free-text student input stored anywhere, with exactly ONE named exception (the code sandbox, below). This constraint shapes the detail JSON spec below.
+
+The exception, so it is never rediscovered as a surprise: `sandbox_programs` stores
+the code a student writes in the free-practice sandbox, plus the name they give
+it. Approved 2026-08-20 for that feature only, because a sandbox whose work
+cannot be reopened tomorrow is a scratch pad. It is bounded on purpose: owner-only
+reads and writes, no teacher or admin path to it, capped lengths, and nothing
+logged. Every OTHER path in this repo still stores no student-typed text, and
+adding a second exception is a decision, not a patch. See docs/sandbox.md.
 
 ## Current mission
 
@@ -134,7 +142,7 @@ CREATE INDEX idx_attempts_student_item ON attempts(student_id, item_id);
 CREATE INDEX idx_attempts_class ON attempts(class_id);
 ```
 
-Per-question results live inside the detail JSON, never as separate rows. Format: array of objects with question index, selected option index, and correct flag, e.g. `[{"q":1,"sel":2,"ok":true}]`. Option indices and booleans only. No answer text, no student-typed strings. If Judge0-backed code exercises ever report grades, store test-case pass counts only, never student source code (code is free text, and free text is never stored). Thirty students finishing a 10-question quiz is 30 inserts, not 300.
+Per-question results live inside the detail JSON, never as separate rows. Format: array of objects with question index, selected option index, and correct flag, e.g. `[{"q":1,"sel":2,"ok":true}]`. Option indices and booleans only. No answer text, no student-typed strings. If Judge0-backed code exercises ever report grades, store test-case pass counts only, never student source code. GRADED code is never stored; the sandbox exception above covers ungraded practice work only, and the two must not be merged. Thirty students finishing a 10-question quiz is 30 inserts, not 300.
 
 Column vs JSON rule: real columns are for fields aggregated in SQL (duration_seconds gets queried constantly). Exploratory or per-question extras ride inside detail JSON at zero schema cost: per-question tries where a widget allows in-item retries, and a focus_lost counter later if a tab-switching integrity signal is wanted. Do not pre-add speculative columns; ALTER TABLE ADD COLUMN in SQLite is trivial later.
 
