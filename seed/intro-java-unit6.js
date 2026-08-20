@@ -698,7 +698,10 @@ const LESSONS = [
         + '{\n'
         + '    for (int col = 0; col < map[___2___].length; col++)\n'
         + '    {\n'
-        + '        if (map[row][___3___] == 1) { walls++; }\n'
+        + '        if (map[row][___3___] == 1)\n'
+        + '        {\n'
+        + '            walls++;\n'
+        + '        }\n'
         + '    }\n'
         + '}',
       holes: [
@@ -1109,9 +1112,18 @@ const LESSONS = [
           + '        for (int col = 0; col < map[row].length; col++)\n'
           + '        {\n'
           + '            int code = map[row][col];\n'
-          + '            if (code == 1)      { addObject(new Wall(),   col, row); }\n'
-          + '            else if (code == 2) { addObject(new Coin(),   col, row); }\n'
-          + '            else if (code == 3) { addObject(new Player(), col, row); }\n'
+          + '            if (code == 1)\n'
+          + '            {\n'
+          + '                addObject(new Wall(),   col, row);\n'
+          + '            }\n'
+          + '            else if (code == 2)\n'
+          + '            {\n'
+          + '                addObject(new Coin(),   col, row);\n'
+          + '            }\n'
+          + '            else if (code == 3)\n'
+          + '            {\n'
+          + '                addObject(new Player(), col, row);\n'
+          + '            }\n'
           + '        }\n'
           + '    }\n'
           + '}',
@@ -1381,10 +1393,13 @@ const LESSONS = [
           + 'version with them the other way round.'),
         code:
           '// SAFE: the guard runs first\n'
-          + 'if (inBounds(r, c) && map[r][c] == 1) { ... }\n'
+          + 'if (inBounds(r, c) && map[r][c] == 1)\n'
+          + '{\n'
+          + '    ...\n'
+          + '}\n'
           + '\n'
           + '// THROWS: the lookup happens before the guard can help\n'
-          + 'if (map[r][c] == 1 && inBounds(r, c)) { ... }',
+          + 'if (map[r][c] == 1 && inBounds(r, c))\n{\n    ...\n}',
         note:
           'This is the payoff for short-circuit evaluation from 2.3, and it is a lovely piece of '
           + 'machinery.\n\n'
@@ -1398,10 +1413,22 @@ const LESSONS = [
           + 'two of which are outside the grid.'),
         code:
           'int walls = 0;\n'
-          + 'if (inBounds(row - 1, col) && map[row - 1][col] == 1) { walls++; }  // up\n'
-          + 'if (inBounds(row + 1, col) && map[row + 1][col] == 1) { walls++; }  // down\n'
-          + 'if (inBounds(row, col - 1) && map[row][col - 1] == 1) { walls++; }  // left\n'
-          + 'if (inBounds(row, col + 1) && map[row][col + 1] == 1) { walls++; }  // right\n',
+          + 'if (inBounds(row - 1, col) && map[row - 1][col] == 1)  // up\n'
+          + '{\n'
+          + '    walls++;\n'
+          + '}\n'
+          + 'if (inBounds(row + 1, col) && map[row + 1][col] == 1)  // down\n'
+          + '{\n'
+          + '    walls++;\n'
+          + '}\n'
+          + 'if (inBounds(row, col - 1) && map[row][col - 1] == 1)  // left\n'
+          + '{\n'
+          + '    walls++;\n'
+          + '}\n'
+          + 'if (inBounds(row, col + 1) && map[row][col + 1] == 1)  // right\n'
+          + '{\n'
+          + '    walls++;\n'
+          + '}\n',
         note:
           'The four orthogonal neighbors. Up is row minus one, because row counts DOWNWARD, which '
           + 'is the same rule as y from 1.4.\n\n'
@@ -1683,7 +1710,10 @@ const LESSONS = [
           + '{\n'
           + '    for (int col = 0; col < map[row].length; col++)\n'
           + '    {\n'
-          + '        if (map[row][col] == 2) { coins++; }\n'
+          + '        if (map[row][col] == 2)\n'
+          + '        {\n'
+          + '            coins++;\n'
+          + '        }\n'
           + '    }\n'
           + '}',
         note:
@@ -1801,7 +1831,10 @@ const LESSONS = [
         + '{\n'
         + '    for (int col = 0; col < map[row].length; col++)\n'
         + '    {\n'
-        + '        if (map[___2___][___3___] == 2) { coins++; }\n'
+        + '        if (map[___2___][___3___] == 2)\n'
+        + '        {\n'
+        + '            coins++;\n'
+        + '        }\n'
         + '    }\n'
         + '}',
       holes: [

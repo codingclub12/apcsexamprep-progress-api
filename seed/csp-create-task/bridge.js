@@ -51,7 +51,9 @@ const JS_INPUT_PRELUDE = [
   "// Read the input the page sends. Node has no prompt(), so this is the way.",
   "const LINES = require('fs').readFileSync(0, 'utf8').split('\\n');",
   "let _i = 0;",
-  "function INPUT() { return LINES[_i++].trim(); }",
+  "function INPUT() {",
+  "  return LINES[_i++].trim();",
+  "}",
   "",
 ].join('\n');
 
@@ -102,8 +104,14 @@ module.exports = {
         'best <- 0',
         'FOR EACH day IN steps',
         '{',
-        '  IF(day > goal) { over <- over + 1 }',
-        '  IF(day > best) { best <- day }',
+        '  IF(day > goal)',
+        '  {',
+        '    over <- over + 1',
+        '  }',
+        '  IF(day > best)',
+        '  {',
+        '    best <- day',
+        '  }',
         '}',
         'DISPLAY("Days over goal: " + over)',
         'DISPLAY("Best day: " + best)',
@@ -115,7 +123,7 @@ module.exports = {
       },
       solution: {
         python: STEPS_PY + '\ngoal = int(input())\nover = 0\nbest = 0\nfor day in steps:\n    if day > goal:\n        over = over + 1\n    if day > best:\n        best = day\nprint("Days over goal: " + str(over))\nprint("Best day: " + str(best))\n',
-        javascript: JS_INPUT_PRELUDE + STEPS_JS + '\nconst goal = Number(INPUT());\nlet over = 0;\nlet best = 0;\nfor (let d = 0; d < steps.length; d++) {\n  if (steps[d] > goal) { over = over + 1; }\n  if (steps[d] > best) { best = steps[d]; }\n}\nconsole.log("Days over goal: " + over);\nconsole.log("Best day: " + best);\n',
+        javascript: JS_INPUT_PRELUDE + STEPS_JS + '\nconst goal = Number(INPUT());\nlet over = 0;\nlet best = 0;\nfor (let d = 0; d < steps.length; d++) {\n  if (steps[d] > goal) {\n    over = over + 1;\n  }\n  if (steps[d] > best) {\n    best = steps[d];\n  }\n}\nconsole.log("Days over goal: " + over);\nconsole.log("Best day: " + best);\n',
       },
     },
     {
@@ -133,7 +141,10 @@ module.exports = {
         '  over <- 0',
         '  FOR EACH day IN dayList',
         '  {',
-        '    IF(day > goal) { over <- over + 1 }',
+        '    IF(day > goal)',
+        '    {',
+        '      over <- over + 1',
+        '    }',
         '  }',
         '  RETURN(over)',
         '}',
@@ -149,7 +160,7 @@ module.exports = {
       },
       solution: {
         python: 'def daysOverGoal(dayList, goal):\n    over = 0\n    for day in dayList:\n        if day > goal:\n            over = over + 1\n    return over\n\n' + STEPS_PY + '\ngoal = int(input())\nprint("Days over " + str(goal) + ": " + str(daysOverGoal(steps, goal)))\nprint("Days over 10000: " + str(daysOverGoal(steps, 10000)))\n',
-        javascript: JS_INPUT_PRELUDE + 'function daysOverGoal(dayList, goal) {\n  let over = 0;\n  for (let d = 0; d < dayList.length; d++) {\n    if (dayList[d] > goal) { over = over + 1; }\n  }\n  return over;\n}\n\n' + STEPS_JS + '\nconst goal = Number(INPUT());\nconsole.log("Days over " + goal + ": " + daysOverGoal(steps, goal));\nconsole.log("Days over 10000: " + daysOverGoal(steps, 10000));\n',
+        javascript: JS_INPUT_PRELUDE + 'function daysOverGoal(dayList, goal) {\n  let over = 0;\n  for (let d = 0; d < dayList.length; d++) {\n    if (dayList[d] > goal) {\n      over = over + 1;\n    }\n  }\n  return over;\n}\n\n' + STEPS_JS + '\nconst goal = Number(INPUT());\nconsole.log("Days over " + goal + ": " + daysOverGoal(steps, goal));\nconsole.log("Days over 10000: " + daysOverGoal(steps, 10000));\n',
       },
     },
     {
@@ -167,7 +178,10 @@ module.exports = {
         '{',
         '  FOR EACH item IN aList',
         '  {',
-        '    IF(some test) { do something }',
+        '    IF(some test)',
+        '    {',
+        '      do something',
+        '    }',
         '  }',
         '  RETURN(result)',
         '}',
@@ -184,7 +198,7 @@ module.exports = {
       // lights all six on a real program rather than on a fixture.
       solution: {
         python: 'def aboveCutoff(scores, cutoff):\n    n = 0\n    for s in scores:\n        if s > cutoff:\n            n = n + 1\n    return n\n\ncutoff = int(input())\nscores = [3, 7, 2, 9, 5]\nprint("Above cutoff: " + str(aboveCutoff(scores, cutoff)))\n',
-        javascript: JS_INPUT_PRELUDE + 'function aboveCutoff(scores, cutoff) {\n  let n = 0;\n  for (let i = 0; i < scores.length; i++) {\n    if (scores[i] > cutoff) { n = n + 1; }\n  }\n  return n;\n}\n\nconst cutoff = Number(INPUT());\nconst scores = [3, 7, 2, 9, 5];\nconsole.log("Above cutoff: " + aboveCutoff(scores, cutoff));\n',
+        javascript: JS_INPUT_PRELUDE + 'function aboveCutoff(scores, cutoff) {\n  let n = 0;\n  for (let i = 0; i < scores.length; i++) {\n    if (scores[i] > cutoff) {\n      n = n + 1;\n    }\n  }\n  return n;\n}\n\nconst cutoff = Number(INPUT());\nconst scores = [3, 7, 2, 9, 5];\nconsole.log("Above cutoff: " + aboveCutoff(scores, cutoff));\n',
       },
     },
   ],

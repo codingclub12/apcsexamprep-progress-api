@@ -125,3 +125,90 @@ screenshot. That is why the browser pass is not optional here either.
   gated only by a client-side `FREE_BI: [1]`. Verified anonymously, live since
   at least 23 July, raised repeatedly, still open. Largest known problem on the
   board and unrelated to this pass.
+
+---
+
+# Second pass: code that reads as machine-written
+
+"One line ifs and functions need to be reformatted to be multi line like a
+beginner would write them."
+
+Correct, and it was in the bridge I had just shipped:
+`if (steps[d] > goal) { over = over + 1; }`. A first-year student puts the brace
+on its own line, because that is how they were taught and how every worked
+example they have seen is laid out. Code on this site is read as a model to
+copy, so a one-line body teaches a habit no AP reader expects.
+
+## Scope, measured rather than guessed
+
+Repo seeds, by detector: 3 CSP coding seeds and 11 Intro Java seed modules,
+90 occurrences.
+
+Live pages: 156 swept. The real count is 58, on six page groups. An early sweep
+said 934, which was my own bug: the theme leaves a `<pre>` unclosed in its search
+overlay, so the first `<pre>` match on any page swallows the whole document. Any
+extraction from a rendered page has to bound the match or it reports the theme.
+
+## How it was done
+
+Detection is automated and lives in `lib/beginner-style.js`. Transformation of
+the Java seeds was scripted but treated as unsafe by default, and the script
+refuses anything it does not fully understand. That was the right posture:
+
+- The first run put real newlines inside a single-quoted string and broke
+  `intro-java-unit1.js` outright. The cause was a one-liner sitting inside an
+  inline code span in a sentence, where `` `while (true) { move(1); }` `` is
+  being talked ABOUT rather than shown as a model. `node --check` caught it.
+- The fix was to read the newline encoding from the newline that FOLLOWS the
+  one-liner, which is certainly inside the same string, rather than guessing it
+  from the delimiter in front.
+- The same trap caught the whole-string rule a second time, because a pair of
+  backticks around an inline code span looks exactly like a template literal.
+  That one is now gated on the last non-space character before the delimiter
+  being punctuation that opens an expression rather than the end of a word.
+- The detector had two holes of its own, both found by transformation results
+  rather than by review: a bare `else if (...) { ... }` at line start, and a
+  braceless `else if (...) stmt;`. One chain shipped mid-edit with its first
+  branch expanded and its second still on one line.
+- Two one-liners were split across a JavaScript string concatenation
+  (`'...else if (score >= 80) ' + 'grade = "B";'`), so they never appear
+  contiguously in the source and no textual pass could see them. Hand-edited.
+
+Every change was proved to be layout-only: 61 strings reformatted, zero whose
+content changed, comparing code with comments stripped and comments separately,
+allowing braces to be added to a braceless body and a trailing comment to move
+onto the head line it labels.
+
+## Evidence
+
+- 0 one-liners remain across every seed module in the repo.
+- All 11 Intro Java seeds and all 3 CSP seeds parse.
+- `scripts/verify-csp-code-pages.js`: every reference solution re-run through the
+  live Judge0 proxy in both languages after reformatting, every output identical.
+- The bridge page re-exercised in Chromium: four problems pass, five wrong-answer
+  cases still correctly rejected, requirement detection unchanged.
+- Full offline suite: 77 suites, all passing.
+
+`npm run smoke:beginnerstyle` is the gate. It enumerates `seed/` rather than
+listing files, so a seed added next month is covered on the day it lands.
+
+## Still open: the live pages
+
+The source is clean; the pages built from it are not, and no import has run.
+
+| Page group | One-liners | Fix |
+|---|---|---|
+| Intro Java lesson pages (11 pages) | 19 | Regenerate from the fixed seeds and import |
+| CSP 3.17 and 3.18 coding pages | 9 | Regenerate from the fixed seeds and import |
+| CSP 3.14 coding page | 16 | Not in this repo. Surgical patch on the stored body |
+| CSP 3.9 coding page | 5 | Not in this repo. Same |
+| CSP 3.4 coding page | 1 | Not in this repo. Same |
+| CSP 3.9 guided notes | 8 pseudocode | Not in this repo. Same |
+
+The three CSP coding pages and the guided notes were authored outside this repo,
+so they need the stored Body HTML from the Admin API, a snapshot, and a surgical
+replacement, the same shape as `scripts/csp-command-center-links.js`. A scrape
+will not do: it drops the page's own style block and comment header.
+
+Separately, the 3.14 GradeKit block contains an em-dash, which is a house rule
+violation that has been live for as long as the page has.

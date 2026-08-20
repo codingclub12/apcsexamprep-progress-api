@@ -39,7 +39,7 @@ module.exports = {
       },
       solution: {
         python: 'data = [4, 8, 15, 16, 23, 42, 7, 9]\ntarget = 9\ncount = 0\nfor item in data:\n    count += 1\n    if item == target:\n        print(count)\n        break\n',
-        javascript: 'let data = [4, 8, 15, 16, 23, 42, 7, 9];\nlet target = 9;\nlet count = 0;\nfor (const item of data) {\n  count++;\n  if (item === target) { console.log(count); break; }\n}\n',
+        javascript: 'let data = [4, 8, 15, 16, 23, 42, 7, 9];\nlet target = 9;\nlet count = 0;\nfor (const item of data) {\n  count++;\n  if (item === target) {\n    console.log(count);\n    break;\n  }\n}\n',
       },
     },
     {
@@ -63,7 +63,7 @@ module.exports = {
       },
       solution: {
         python: 'n = 6\ncount = 0\nfor i in range(n):\n    for j in range(n):\n        count += 1\nprint(count)\n',
-        javascript: 'let n = 6;\nlet count = 0;\nfor (let i = 0; i < n; i++) {\n  for (let j = 0; j < n; j++) { count++; }\n}\nconsole.log(count);\n',
+        javascript: 'let n = 6;\nlet count = 0;\nfor (let i = 0; i < n; i++) {\n  for (let j = 0; j < n; j++) {\n    count++;\n  }\n}\nconsole.log(count);\n',
       },
     },
     {
