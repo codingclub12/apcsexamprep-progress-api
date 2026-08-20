@@ -16,6 +16,24 @@
 //  Admin API response, which makes fidelity a property of the process rather
 //  than of whoever ran it.
 //
+//  ── THERE IS NOW A SECOND WAY, AND IT IS CHEAPER ────────────────────────────
+//  This header used to imply a rendered page could not be trusted as a source,
+//  because a scrape was believed to drop the page's own <style> block and its
+//  leading HTML comment. That is testable, and it is false for this theme:
+//  page.content is dropped verbatim inside
+//  <div class="rte scroll-trigger animate--slide-in"> and both survive.
+//
+//  scripts/extract-live-body.js recovers a body from a rendered page and proves
+//  it on the hardest case available. csp-command-center was rebuilt from its
+//  rendered HTML and compared against cc3.csv, which holds the byte-exact body
+//  imported into it: 138,154 bytes, identical, once three characters of trailing
+//  whitespace the theme adds are removed. That page opens with a managed HTML
+//  comment, carries its own <style>, and holds a 103 KB minified JSON blob.
+//
+//  The Admin API is still the authority and still the check before an import.
+//  What the extractor removes is the transcription step needed to get a large
+//  body onto disk, which is its own source of error.
+//
 //  Getting the dump is one query. From the Shopify Admin API, or any MCP client
 //  pointed at the store:
 //
