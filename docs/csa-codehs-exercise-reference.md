@@ -1,15 +1,17 @@
 # CSA exercise counts per lesson: what CodeHS's own course shows
 
-## READ THIS FIRST: Unit 4 has a real content-accuracy problem, not just an open question
+## UPDATE 2026-08-20: the six mismatched lessons are fixed in seed content
 
-Six lessons (4.6, 4.7, 4.13, 4.14, 4.15, 4.17) have exercises authored against
+Six lessons (4.6, 4.7, 4.13, 4.14, 4.15, 4.17) had exercises authored against
 the wrong AP CSA topic, confirmed against the actual 2025-2026 CED. See "The
-CED-alignment finding" below for the specifics. This is independent of, and
-comes before, the exercise-count decision this doc was originally written
-for: counting how many exercises a lesson needs is not useful while six of
-Unit 4's lessons are teaching the wrong content. Flagged directly to Tanner;
-no code or content changed here pending a decision on how to fix it (relabel
-and recontent the six lessons on the storefront, or something larger).
+CED-alignment finding" below for how that was confirmed. `seed/csa-exercises/unit4.js`
+now tests the correct topic at each of those six positions; verified against a
+real JDK (`node scripts/verify-csa-exercises.js --write`, 268 case outputs,
+0 refused). See `docs/runs/2026-08-20-claude-code-csa-unit4-ced-fix.md` for
+what changed and why. This was a draft-content fix, not a live migration: none
+of Unit 4 had shipped to a storefront page yet. The storefront page titles
+themselves (out of scope for this repo) still need to be relabeled to match
+before these six lessons publish.
 
 Reference data for the "how many exercises does each CSA lesson need" decision
 (not yet made; see `docs/csa-exercise-pages.md` for what is currently live,
