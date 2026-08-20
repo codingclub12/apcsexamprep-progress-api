@@ -45,32 +45,45 @@ function parseData(body) {
   return JSON.parse(body.slice(i + 'var DATA = '.length, j));
 }
 
+// Walk the WHOLE structure rather than the paths somebody happened to know.
+// The first version of this walked bigIdeas -> topics -> teacherFiles and missed
+// bigIdeas -> exam -> teacherFiles, which is where the five Big Idea exam keys
+// live, including the one used to demonstrate the leak in the first place. A
+// recursive walk cannot miss a section that gets added later either.
 function build(body) {
   const data = parseData(body);
   const files = {};
   let teacher = 0, student = 0, keys = 0;
 
-  for (const bi of data.bigIdeas) {
-    for (const topic of bi.topics) {
-      for (const f of topic.teacherFiles || []) {
-        teacher++;
-        const id = fileId(f.href);
-        if (/answer|key|solution|rubric/i.test(f.href)) keys++;
-        files[id] = {
-          path: f.href,
-          label: f.label,
-          course: 'ap-csp',
-          bigIdea: bi.n,
-          topic: topic.id,
-          // Big Idea 1 is the published free sample. Keeping that true through
-          // the endpoint preserves the page's current behavior rather than
-          // quietly making the free tier paid.
-          free: bi.n === 1,
-        };
+  data.bigIdeas.forEach((bi) => {
+    (function walk(node, topicId) {
+      if (Array.isArray(node)) return node.forEach((x) => walk(x, topicId));
+      if (!node || typeof node !== 'object') return;
+      const here = typeof node.id === 'string' ? node.id : topicId;
+      for (const k of Object.keys(node)) {
+        if (k === 'studentFiles' && Array.isArray(node[k])) { student += node[k].length; continue; }
+        if (k === 'teacherFiles' && Array.isArray(node[k])) {
+          for (const f of node[k]) {
+            teacher++;
+            if (/answer|key|solution|rubric/i.test(f.href)) keys++;
+            files[fileId(f.href)] = {
+              path: f.href,
+              label: f.label,
+              course: 'ap-csp',
+              bigIdea: bi.n,
+              topic: here || ('BI' + bi.n),
+              // Big Idea 1 is the published free sample. Keeping that true
+              // through the endpoint preserves the page's current behavior
+              // rather than quietly making the free tier paid.
+              free: bi.n === 1,
+            };
+          }
+          continue;
+        }
+        walk(node[k], here);
       }
-      student += (topic.studentFiles || []).length;
-    }
-  }
+    })(bi, null);
+  });
   return { files, stats: { teacher, student, keys, unique: Object.keys(files).length } };
 }
 
@@ -82,8 +95,8 @@ function main(argv) {
   }
   const r = build(fs.readFileSync(src, 'utf8'));
   const problems = [];
-  if (r.stats.teacher < 400) problems.push(`only ${r.stats.teacher} teacher files; the page carries 434`);
-  if (r.stats.keys < 200) problems.push(`only ${r.stats.keys} answer keys found; the page carries 217`);
+  if (r.stats.teacher < 439) problems.push(`only ${r.stats.teacher} teacher files; the page carries 439`);
+  if (r.stats.keys < 222) problems.push(`only ${r.stats.keys} answer keys found; the page carries 222`);
   for (const [id, f] of Object.entries(r.files)) {
     if (!/^\/cdn\/shop\/files\//.test(f.path)) problems.push(`${id} is not a Shopify file path: ${f.path}`);
     if (!f.label) problems.push(`${id} has no label`);

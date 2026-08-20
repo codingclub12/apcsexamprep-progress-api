@@ -80,9 +80,16 @@ function pick(predicate) {
 (async () => {
   section('1. The manifest is the thing the leak was about');
   const ids = Object.keys(MANIFEST);
-  ok('the manifest has entries', ids.length > 400, ids.length);
+  // Exact counts, not thresholds. The first manifest built here walked
+  // bigIdeas -> topics -> teacherFiles and quietly missed
+  // bigIdeas -> exam -> teacherFiles, so it held 434 of 439 files and 217 of 222
+  // keys. A "> 400" assertion passed happily on that. The five it missed were
+  // the Big Idea exam keys, including the one used to demonstrate the leak.
+  ok('the manifest holds every teacher file the page carries', ids.length === 439, ids.length);
   const keys = ids.filter((id) => /answer|key|solution|rubric/i.test(MANIFEST[id].path));
-  ok('it holds the answer keys', keys.length > 200, keys.length);
+  ok('and all 222 answer keys', keys.length === 222, keys.length);
+  const examKeys = ids.filter((id) => /BigIdea\d_Exam_KEY/i.test(MANIFEST[id].path));
+  ok('including the five Big Idea exam keys', examKeys.length === 5, examKeys.length);
   ok('every id is a 16 hex digit token', ids.every((i) => /^[0-9a-f]{16}$/.test(i)));
   ok('every path is a Shopify file path',
     ids.every((i) => /^\/cdn\/shop\/files\//.test(MANIFEST[i].path)));
@@ -181,6 +188,45 @@ function pick(predicate) {
   ok('an entitled teacher sees more', body.entitled === true && body.files.length > anonCount,
     { anon: anonCount, teacher: body.files.length });
   ok('and still gets no URLs', !JSON.stringify(body).includes('/cdn/shop/files/'));
+
+  section('9. The Command Center rewrite removes the URLs and keeps the student ones');
+  // Step 2 of the fix. The page is what published the URLs, so a rewrite that
+  // half worked would leave keys in the HTML while looking correct on screen.
+  const ccSnap = path.join(__dirname, '..', 'shopify', 'page-snapshots', 'csp-command-center.before-file-gate.html');
+  if (!fs.existsSync(ccSnap)) {
+    ok('the Command Center snapshot exists', false, ccSnap);
+  } else {
+    ok('the Command Center snapshot exists', true);
+    const { rewrite } = require('../scripts/csp-command-center-gate-files');
+    const before = fs.readFileSync(ccSnap, 'utf8');
+    const rw = rewrite(before);
+    ok('every teacher file href was swapped', rw.swapped === rw.teacherHrefs.length,
+      { swapped: rw.swapped, expected: rw.teacherHrefs.length });
+    ok('there are 439 of them', rw.teacherHrefs.length === 439, rw.teacherHrefs.length);
+    ok('fileBtn was patched to render ids as buttons', rw.patchedBtn);
+
+    const survivors = [...new Set(rw.teacherHrefs)].filter((h) => rw.body.includes(h));
+    ok('not one teacher file URL survives in the page', survivors.length === 0, survivors.slice(0, 3));
+    const keysLeft = (rw.body.match(/\/cdn\/shop\/files\/[^"]*/g) || [])
+      .filter((u) => /answer|key|solution|rubric/i.test(u));
+    ok('and no answer key URL is anywhere in the HTML', keysLeft.length === 0, keysLeft.slice(0, 3));
+
+    const lostStudent = [...new Set(rw.studentHrefs)].filter((h) => !rw.body.includes(h));
+    ok('every student handout URL is still there', lostStudent.length === 0, lostStudent.slice(0, 3));
+
+    // Each id in the page has to be one the API will actually resolve, or the
+    // rewrite produces links that 403 for everyone including a paying teacher.
+    const pageIds = [...rw.body.matchAll(/"href":"api:([0-9a-f]{16})"/g)].map((m) => m[1]);
+    ok('the page carries one id per teacher file', pageIds.length === rw.teacherHrefs.length, pageIds.length);
+    const unknown = [...new Set(pageIds)].filter((i) => !Object.prototype.hasOwnProperty.call(MANIFEST, i));
+    ok('and every id is one the manifest resolves', unknown.length === 0, unknown.slice(0, 3));
+
+    const vm = require('vm');
+    const blocks = [...rw.body.matchAll(/<script>([\s\S]*?)<\/script>/g)].map((m) => m[1]);
+    let broke = null;
+    blocks.forEach((b) => { try { new vm.Script(b); } catch (e) { broke = e.message; } });
+    ok('the page script still parses', broke === null, broke);
+  }
 
   server.close();
   console.log(`\n${'-'.repeat(60)}`);
