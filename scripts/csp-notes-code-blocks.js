@@ -15,21 +15,27 @@
 //  keeps its meaning and loses the code; the code gets the layout a beginner
 //  would actually write.
 //
+//  ── WHAT IS DELIBERATELY LEFT ALONE ─────────────────────────────────────────
+//  Metasyntax. `IF(condition){ block }` in a summary bullet, or an <h3> reading
+//  `PROCEDURE name(params) { block }`, is the GRAMMAR being named, the way a
+//  textbook writes "the form is if (cond) { ... }". No student writes those, so
+//  there is nothing to model, and expanding a heading into four lines destroys
+//  the heading. Only concrete code, the kind a student traces or copies, is
+//  lifted out.
+//
 //  ── WHY EVERY EDIT IS SPELLED OUT ───────────────────────────────────────────
 //  These are editorial rewrites of author prose, not a mechanical
 //  transformation, so there is no rule that produces them. Each one is written
 //  here in full and asserted to apply exactly once. A page that changed under us
 //  fails loudly rather than being half-edited.
 //
-//  Run: node scripts/csp-notes-code-blocks.js <patched-body.html> <out.csv>
+//  Run: node scripts/csp-notes-code-blocks.js <patched-body.html> <out.csv> [handle]
 // -----------------------------------------------------------------------------
 
 const fs = require('fs');
 const path = require('path');
 const { findOneLiners } = require('../lib/beginner-style');
 
-const HANDLE = 'ap-csp-topic-3-9-guided-notes';
-const TITLE = 'AP CSP Topic 3.9 Guided Notes - Developing Algorithms';
 const PUBLISHED_AT = '2026-03-01 12:00:00';
 
 // A pseudocode block in this page's own house style.
@@ -97,10 +103,83 @@ const EDITS = [
     + `<p>Do NOT rewrite it from scratch. Change as little as possible to make it find the SMALLER score instead.</p>`],
 ];
 
-function apply(body) {
+// 3.6, Conditionals. Twelve one-liners, eight of them concrete and four of them
+// metasyntax that stays. Every one sits inside a sentence.
+const EDITS_3_6 = [
+  [`<p class="muted">For the statement IF(height ≥ 48){ DISPLAY("Board the ride") }, evaluate the condition for each height, then decide whether the block runs and what is displayed. '(nothing)' means no action was taken.</p>`,
+    `<p class="muted">For this statement:</p>\n` + ps(['IF(height ≥ 48)', '{', '  DISPLAY("Board the ride")', '}'])
+    + `\n<p class="muted">evaluate the condition for each height, then decide whether the block runs and what is displayed. '(nothing)' means no action was taken.</p>`],
+
+  [`<li>A classmate writes IF(score &lt; 60){ DISPLAY("Study more") } and asks what happens when score is 72. Answer precisely, and name the rule you used.<span class="wline"></span>`,
+    `<li>A classmate writes this:\n` + ps(['IF(score &lt; 60)', '{', '  DISPLAY("Study more")', '}'])
+    + `\nand asks what happens when score is 72. Answer precisely, and name the rule you used.<span class="wline"></span>`],
+
+  [`<p><strong>Before next class:</strong> Before tomorrow, predict it: score ← 55, then IF(score ≥ 60){ DISPLAY("Pass") } ELSE { DISPLAY("Retake") }. Write down what is displayed, and why.</p>`,
+    `<p><strong>Before next class:</strong> Before tomorrow, predict it. With score ← 55:</p>\n`
+    + ps(ifElse('score ≥ 60', 'DISPLAY("Pass")', 'DISPLAY("Retake")'))
+    + `\n<p>Write down what is displayed, and why.</p>`],
+
+  [`<p>Yesterday's teaser, now decide it. The program runs: score ← 55, then IF(score ≥ 60){ DISPLAY("Pass") } ELSE { DISPLAY("Retake") }. Three classmates predict the output will be Pass, Retake, and 'both Pass and Retake.'</p>`,
+    `<p>Yesterday's teaser, now decide it. The program runs, with score ← 55:</p>\n`
+    + ps(ifElse('score ≥ 60', 'DISPLAY("Pass")', 'DISPLAY("Retake")'))
+    + `\n<p>Three classmates predict the output will be Pass, Retake, and 'both Pass and Retake.'</p>`],
+
+  [`<li>Rewrite this plain IF so the false case is handled: IF(balance &lt; 0){ DISPLAY("Overdrawn") }. Add an ELSE that displays "OK", and state which branch runs when balance is 25.<span class="wline"></span>`,
+    `<li>Rewrite this plain IF so the false case is handled:\n` + ps(['IF(balance &lt; 0)', '{', '  DISPLAY("Overdrawn")', '}'])
+    + `\nAdd an ELSE that displays "OK", and state which branch runs when balance is 25.<span class="wline"></span>`],
+
+  [`<p class="muted">For IF(height ≥ 48){ DISPLAY("Board the ride") } ELSE { DISPLAY("Grow a bit more") }, evaluate the condition for each height, name the branch taken, and give what is displayed.</p>`,
+    `<p class="muted">For this statement:</p>\n`
+    + ps(ifElse('height ≥ 48', 'DISPLAY("Board the ride")', 'DISPLAY("Grow a bit more")'))
+    + `\n<p class="muted">evaluate the condition for each height, name the branch taken, and give what is displayed.</p>`],
+
+  [`<li>Trace: n ← 12, IF(n MOD 2 = 0){ DISPLAY("Even") } ELSE { DISPLAY("Odd") }. Evaluate the condition first, then give the output.<span class="wline"></span>`,
+    `<li>Trace it with n ← 12:\n` + ps(ifElse('n MOD 2 = 0', 'DISPLAY("Even")', 'DISPLAY("Odd")'))
+    + `\nEvaluate the condition first, then give the output.<span class="wline"></span>`],
+
+  [`<li>For IF(price ≤ 20){ DISPLAY("Budget") } ELSE { DISPLAY("Premium") }, give the output when price = 20 and when price = 21, and explain what the boundary shows.<span class="wline"></span>`,
+    `<li>For this statement:\n` + ps(ifElse('price ≤ 20', 'DISPLAY("Budget")', 'DISPLAY("Premium")'))
+    + `\ngive the output when price = 20 and when price = 21, and explain what the boundary shows.<span class="wline"></span>`],
+];
+
+// 3.13, Developing Procedures. Three concrete one-liners; the reference-sheet
+// PROCEDURE forms in the headings and summary bullets are metasyntax and stay.
+const EDITS_3_13 = [
+  [`<p><strong>Before next class:</strong> Before tomorrow, predict it: a procedure runs IF(quantity = 0){ RETURN(0) } and then RETURN(price * quantity). What does it return for charge(5, 0), and does the second RETURN ever run? Write your answer and your reasoning.</p>`,
+    `<p><strong>Before next class:</strong> Before tomorrow, predict it. A procedure runs:</p>\n`
+    + ps(['IF(quantity = 0)', '{', '  RETURN(0)', '}', 'RETURN(price * quantity)'])
+    + `\n<p>What does it return for charge(5, 0), and does the second RETURN ever run? Write your answer and your reasoning.</p>`],
+
+  [`<p>Yesterday's teaser, now decide it. A procedure runs: IF(quantity = 0) { RETURN(0) } and then, below that, RETURN(price * quantity). Consider two calls: charge(5, 0) and charge(5, 3).</p>`,
+    `<p>Yesterday's teaser, now decide it. A procedure runs:</p>\n`
+    + ps(['IF(quantity = 0)', '{', '  RETURN(0)', '}', 'RETURN(price * quantity)'])
+    + `\n<p>Consider two calls: charge(5, 0) and charge(5, 3).</p>`],
+
+  [`<p class="muted">The procedure is: PROCEDURE charge(price, quantity) { IF(quantity = 0) { RETURN(0) } RETURN(price * quantity) }. For each call, name which RETURN fires and the value returned. The last column is yours to complete.</p>`,
+    `<p class="muted">The procedure is:</p>\n`
+    + ps(['PROCEDURE charge(price, quantity)', '{', '  IF(quantity = 0)', '  {', '    RETURN(0)', '  }', '  RETURN(price * quantity)', '}'])
+    + `\n<p class="muted">For each call, name which RETURN fires and the value returned. The last column is yours to complete.</p>`],
+];
+
+const PAGES = {
+  'ap-csp-topic-3-9-guided-notes': {
+    title: 'AP CSP Topic 3.9 Guided Notes - Developing Algorithms',
+    edits: EDITS,
+  },
+  'ap-csp-topic-3-6-guided-notes': {
+    title: 'AP CSP Topic 3.6 Guided Notes - Conditionals',
+    edits: EDITS_3_6,
+  },
+  'ap-csp-topic-3-13-guided-notes': {
+    title: 'AP CSP Topic 3.13 Guided Notes - Developing Procedures',
+    edits: EDITS_3_13,
+  },
+};
+
+function apply(body, edits) {
   let out = body;
   const missed = [];
-  for (const [before, after] of EDITS) {
+  for (const [before, after] of (edits || EDITS)) {
     const n = out.split(before).length - 1;
     if (n !== 1) { missed.push(`${n} occurrence(s) of: ${before.slice(0, 70)}`); continue; }
     out = out.replace(before, after);
@@ -109,19 +188,32 @@ function apply(body) {
 }
 
 function main(argv) {
-  const [src, out] = argv;
+  const [src, out, handleArg] = argv;
+  const handle = handleArg || 'ap-csp-topic-3-9-guided-notes';
   if (!src || !out) {
-    console.error('usage: node scripts/csp-notes-code-blocks.js <patched-body.html> <out.csv>');
+    console.error('usage: node scripts/csp-notes-code-blocks.js <patched-body.html> <out.csv> [handle]');
+    console.error('handles: ' + Object.keys(PAGES).join(', '));
     process.exit(2);
   }
+  const page = PAGES[handle];
+  if (!page) {
+    console.error(`\n  Refused: no edit table for ${handle}. Known: ${Object.keys(PAGES).join(', ')}\n`);
+    process.exit(1);
+  }
   const body = fs.readFileSync(src, 'utf8');
-  const r = apply(body);
+  const r = apply(body, page.edits);
   const problems = [...r.missed];
 
-  // Nothing may be left outside a code block once this has run.
+  // Nothing CONCRETE may be left outside a code block. Metasyntax stays, so a
+  // block whose body is a placeholder word rather than a statement does not
+  // count: `IF(condition){ block }` is grammar being named, not code to copy.
   const outside = r.body.replace(/<pre[^>]*>[\s\S]*?<\/pre>/g, '');
-  const left = (outside.match(/IF\([^)]*\)\s*\{/g) || []).length;
-  if (left) problems.push(`${left} pseudocode one-liner(s) still outside a code block`);
+  const PLACEHOLDER = /^\s*(first |second )?(block|statement|expression|\.\.\.)\s*$/;
+  const left = [...outside.matchAll(/IF\s*\([^)]*\)\s*\{([^{}]*)\}/g)]
+    .filter((m) => !PLACEHOLDER.test(m[1]));
+  if (left.length) {
+    problems.push(`${left.length} concrete one-liner(s) still outside a code block: ${left[0][0].slice(0, 60)}`);
+  }
 
   // And every code block has to be properly laid out.
   const inBlocks = [];
@@ -146,11 +238,11 @@ function main(argv) {
   const cell = (s) => '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"';
   const header = ['Handle', 'Command', 'Title', 'Body HTML', 'Published', 'Published At'];
   const lines = [header.map(cell).join(',')];
-  lines.push([HANDLE, 'MERGE', TITLE, r.body, 'TRUE', PUBLISHED_AT].map(cell).join(','));
+  lines.push([handle, 'MERGE', page.title, r.body, 'TRUE', PUBLISHED_AT].map(cell).join(','));
   fs.writeFileSync(out, '﻿' + lines.join('\r\n') + '\r\n');
-  console.log(`    ${HANDLE}  ${EDITS.length} prose and table edits  ->  ${(Buffer.byteLength(r.body) / 1024).toFixed(0)} KB`);
+  console.log(`    ${handle}  ${page.edits.length} prose and table edits  ->  ${(Buffer.byteLength(r.body) / 1024).toFixed(0)} KB`);
   console.log(`\n  wrote ${out}\n`);
 }
 
 if (require.main === module) main(process.argv.slice(2));
-module.exports = { apply, EDITS };
+module.exports = { apply, EDITS, PAGES };

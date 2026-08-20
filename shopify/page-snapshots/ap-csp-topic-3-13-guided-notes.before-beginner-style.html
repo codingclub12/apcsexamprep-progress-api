@@ -1,0 +1,375 @@
+<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#apcsp-notes{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:860px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.6!important;font-size:17px!important;background:#fff!important}
+#apcsp-notes *,#apcsp-notes *::before,#apcsp-notes *::after{box-sizing:border-box!important}
+#apcsp-notes .hero{background:linear-gradient(135deg,#065F46,#10B981)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:16px!important;padding:26px 24px!important;margin:8px 0 24px!important}
+#apcsp-notes .hero .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;margin:0 0 8px!important}
+#apcsp-notes h1{font-size:28px!important;line-height:1.2!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#apcsp-notes .hero .sub{font-size:16px!important;margin:10px 0 0!important;color:#ECFDF5!important;-webkit-text-fill-color:#ECFDF5!important}
+#apcsp-notes h2{font-size:23px!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:34px 0 8px!important;font-weight:800!important;border-bottom:3px solid #10B981!important;padding-bottom:6px!important}
+#apcsp-notes h3{font-size:18px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;margin:22px 0 6px!important;font-weight:700!important}
+#apcsp-notes p{margin:8px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes ul,#apcsp-notes ol{margin:8px 0!important;padding-left:24px!important}
+#apcsp-notes li{margin:6px 0!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-notes .card{border:1px solid #BBE5D2!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important;background:#ECFDF5!important}
+#apcsp-notes .warn{border-left:5px solid #DC2626!important;background:#FEF2F2!important;border-radius:0 12px 12px 0!important;padding:12px 16px!important;margin:16px 0!important}
+#apcsp-notes .label{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 4px!important}
+#apcsp-notes .dd{border:1px solid #BFDBFE!important;background:#EFF6FF!important;border-radius:14px!important;padding:16px 18px!important;margin:14px 0!important}
+#apcsp-notes .dd .label{color:#1D4ED8!important;-webkit-text-fill-color:#1D4ED8!important}
+#apcsp-notes table{border-collapse:collapse!important;width:100%!important;margin:12px 0!important;font-size:15px!important}
+#apcsp-notes th{background:#065F46!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:1px solid #065F46!important;padding:8px 10px!important;text-align:left!important}
+#apcsp-notes td{border:1px solid #BBE5D2!important;padding:8px 10px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;vertical-align:top!important}
+#apcsp-notes .wline{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:30px!important;margin:8px 0!important}
+#apcsp-notes .wcell{display:block!important;border-bottom:1.5px solid #A7C4B8!important;height:26px!important}
+#apcsp-notes .gap{display:inline-block!important;min-width:170px!important;border-bottom:1.5px solid #A7C4B8!important;height:1.1em!important;vertical-align:baseline!important}
+#apcsp-notes .chk{list-style:none!important;padding-left:4px!important}
+#apcsp-notes .chk li{padding-left:0!important}
+#apcsp-notes pre.code{font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace!important;font-size:14px!important;background:#F0F7F4!important;border:1px solid #BBE5D2!important;border-radius:10px!important;padding:12px 14px!important;margin:6px 0 12px!important;overflow-x:auto!important;white-space:pre!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.45!important}
+#apcsp-notes pre.code.out{background:#022C22!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;border-color:#022C22!important}
+#apcsp-notes .muted{color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;font-size:14px!important}
+#apcsp-notes a,#apcsp-notes a:link,#apcsp-notes a:visited{color:#065F46!important;-webkit-text-fill-color:#065F46!important;text-decoration:underline!important}
+#apcsp-notes .btn,#apcsp-notes .btn:link,#apcsp-notes .btn:visited{display:inline-block!important;background:#10B981!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;font-weight:700!important;border-radius:10px!important;padding:10px 16px!important;border:0!important;cursor:pointer!important;font-size:15px!important;margin:4px 8px 4px 0!important}
+@media print{#apcsp-notes .noprint{display:none!important} #apcsp-notes .hero{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+</style>
+<div id="apcsp-notes">
+<div class="hero">
+<p class="eyebrow">Big Idea 3: Algorithms and Programming · Topic 3.13 · Guided Notes (Student)</p>
+<h1>Developing Procedures — Guided Notes</h1>
+<p class="sub">Fill these in during class or catch up here if you were absent. Print this page or work on paper — then check yourself with the CFUs on the Topic 3.13 page.</p>
+</div>
+<p class="noprint"><a class="btn" href="javascript:window.print()">Print these notes</a><a class="btn" href="/pages/ap-csp-course">All CSP topics</a></p>
+<h2>Day 1: One Name, Many Uses</h2>
+<div class="card">
+<p class="label">Today’s objectives</p>
+<ul>
+<li>Explain how procedural abstraction manages complexity by naming a process, dividing a program into modules, and reusing shared code instead of duplicating it (LO AAP-3.B)</li>
+<li>Explain how parameters generalize a procedure so it works for many inputs, how procedures aid readability, and why the internals can change without notifying callers (LO AAP-3.B)</li>
+</ul>
+</div>
+<div class="card">
+<p class="label">Bell ringer</p>
+<p>The school store prints a price label for every product. The program below computes each label's total the SAME way, copied three times: pencilTotal ← 3 * 12, then eraserTotal ← 2 * 30, then notebookTotal ← 5 * 8. Tomorrow the store adds a 6th, 7th, and 8th product — and the manager wants to switch every total to charge by the dozen.</p>
+<p class="muted">Write 2–4 sentences: What is painful about this design as the store grows? If the pricing rule changes, how many places must you edit, and what could go wrong? Sketch a better design where the 'multiply unit price by quantity' idea lives in exactly ONE place.</p>
+<span class="wline"></span><span class="wline"></span><span class="wline"></span><span class="wline"></span>
+</div>
+<h2>01. Why Procedures: Naming, Modularity, Reuse</h2>
+<h3>Key Vocabulary (LO AAP-3.B)</h3>
+<table>
+<tr>
+<th>Term</th>
+<th>Definition (write it)</th>
+</tr>
+<tr>
+<td style="width:30%!important"><strong>Procedure</strong></td>
+<td>
+<span class="wcell"></span><span class="wcell"></span>
+</td>
+</tr>
+<tr>
+<td style="width:30%!important"><strong>Procedural abstraction</strong></td>
+<td>
+<span class="wcell"></span><span class="wcell"></span>
+</td>
+</tr>
+<tr>
+<td style="width:30%!important"><strong>Modularity</strong></td>
+<td>
+<span class="wcell"></span><span class="wcell"></span>
+</td>
+</tr>
+<tr>
+<td style="width:30%!important"><strong>Code reuse</strong></td>
+<td>
+<span class="wcell"></span><span class="wcell"></span>
+</td>
+</tr>
+<tr>
+<td style="width:30%!important"><strong>Parameter</strong></td>
+<td>
+<span class="wcell"></span><span class="wcell"></span>
+</td>
+</tr>
+</table>
+<h3>Use It Knowing WHAT, Not HOW</h3>
+<ul>
+<li>Procedural abstraction lets a procedure be used knowing only <span class="gap"></span>.</li>
+<li>It lets the solution to a large problem be built from <span class="gap"></span>.</li>
+<li>You already rely on this when you call DISPLAY or RANDOM because <span class="gap"></span>.</li>
+</ul>
+<h3>The Store's Pricing Rule, Named Once</h3>
+<p class="muted">labelTotal wraps 'unit price times quantity' in one name; the program just calls it.</p>
+<p class="label">AP Pseudocode (what the exam tests)</p>
+<pre class="code ps">PROCEDURE labelTotal(unitPrice, quantity)
+{
+    RETURN(unitPrice * quantity)
+}
+DISPLAY(labelTotal(3, 12))</pre>
+<p class="label">Python (the runnable version)</p>
+<pre class="code py">def labelTotal(unitPrice, quantity):
+    return unitPrice * quantity
+
+print(labelTotal(3, 12))</pre>
+<p class="label">Output</p>
+<pre class="code out">36</pre>
+<p class="muted">Run and edit this yourself in the coding exercises for this topic.</p>
+<h3>Copy the Formula vs. Call One Procedure</h3>
+<p><strong>Duplicated code</strong></p>
+<p><strong>One procedure, reused</strong></p>
+<ul>
+<li>The design on the right survives a rule change because the shared logic lives <span class="gap"></span>.</li>
+<li>With the duplicated design, changing the pricing rule forces you to <span class="gap"></span>.</li>
+<li>Two designs can print identical output today yet behave very differently when <span class="gap"></span>.</li>
+</ul>
+<div class="card"><p>AP TIP: Modularity = splitting the program into subprograms; reuse = one procedure instead of duplicated code. Both manage complexity.</p></div>
+<div class="card">
+<p class="label">Stop and think</p>
+<ol>
+<li>In two sentences, explain what it means to use a procedure 'knowing only what it does, not how it does it.' Use DISPLAY as your example.<span class="wline"></span><span class="wline"></span>
+</li>
+<li>The store copies its pricing formula into 8 products. Explain, using the words modularity and reuse, why moving the formula into one labelTotal procedure manages complexity.<span class="wline"></span><span class="wline"></span>
+</li>
+<li>A classmate says 'duplicating the formula and calling one procedure are the same — both print the right totals.' They print the same now; explain the situation in which the two designs behave very differently.<span class="wline"></span><span class="wline"></span>
+</li>
+</ol>
+<p class="muted">Answer in complete sentences. Then check yourself with the matching CFUs on the Topic 3.13 page.</p>
+</div>
+<h2>02. Parameters, Readability, Hidden Internals</h2>
+<h3>Parameters Generalize; Internals Stay Hidden</h3>
+<ul>
+<li>Adding parameters generalizes a procedure so it can <span class="gap"></span>.</li>
+<li>Beyond correctness, naming the process improves <span class="gap"></span>.</li>
+<li>You may rewrite a procedure's internals without notifying callers as long as <span class="gap"></span>.</li>
+</ul>
+<h3>One Definition, Many Products</h3>
+<p class="muted">The same labelTotal serves every product; only the arguments change.</p>
+<p class="label">AP Pseudocode (what the exam tests)</p>
+<pre class="code ps">DISPLAY(labelTotal(3, 12))
+DISPLAY(labelTotal(2, 30))
+DISPLAY(labelTotal(5, 8))</pre>
+<p class="label">Python (the runnable version)</p>
+<pre class="code py">print(labelTotal(3, 12))
+print(labelTotal(2, 30))
+print(labelTotal(5, 8))</pre>
+<p class="label">Output</p>
+<pre class="code out">36 60 40</pre>
+<p class="muted">Run and edit this yourself in the coding exercises for this topic.</p>
+<h3>What Each Design Move Buys You</h3>
+<p class="muted">Each row is a move you make when you build a procedure. Fill in what complexity it manages, then name the CED idea. The middle column is yours to complete.</p>
+<p class="muted">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Move in the code</th>
+<th>What it buys you (fill in)</th>
+<th>CED idea</th>
+</tr>
+<tr>
+<td>Wrap the pricing formula in a named procedure</td>
+<td>You use it by name, knowing what it does, not how</td>
+<td>Procedural abstraction (B.1)</td>
+</tr>
+<tr>
+<td>Split the program into small procedures</td>
+<td><span class="wcell"></span></td>
+<td>Modularity (B.3)</td>
+</tr>
+<tr>
+<td>Call one procedure instead of copying the formula</td>
+<td><span class="wcell"></span></td>
+<td>Code reuse (B.4)</td>
+</tr>
+<tr>
+<td>Add a parameter like quantity</td>
+<td>One procedure serves a whole range of inputs</td>
+<td>Generalization (B.5)</td>
+</tr>
+<tr>
+<td>Rewrite the formula inside to round differently</td>
+<td><span class="wcell"></span></td>
+<td>Hidden internals (B.7)</td>
+</tr>
+</table>
+<div class="warn">
+<p class="label">Watch out — “Change the Inside, Update Every Call”</p>
+<p><strong>Myth:</strong> If you change what is inside a procedure, you must go update every place in the program that calls it.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class="wline"></span><span class="wline"></span>
+</div>
+<div class="card">
+<p class="label">Stop and think</p>
+<ol>
+<li>Explain in one or two sentences how the parameters of labelTotal(unitPrice, quantity) let a single procedure price a pencil, an eraser, and any future product.<span class="wline"></span><span class="wline"></span>
+</li>
+<li>A teammate speeds up a procedure's internals but keeps its result identical. Explain why nobody who calls it has to change their code, using the phrase 'what it does is preserved.'<span class="wline"></span><span class="wline"></span>
+</li>
+<li>Give one concrete way that replacing duplicated code with a well-named procedure improves the READABILITY of a program.<span class="wline"></span><span class="wline"></span>
+</li>
+</ol>
+<p class="muted">Answer in complete sentences. Then check yourself with the matching CFUs on the Topic 3.13 page.</p>
+</div>
+<div class="card">
+<p class="label">Today in one box</p>
+<ul>
+<li>Procedural abstraction names a process so you use it knowing WHAT it does, not how</li>
+<li>It builds a large solution from smaller subproblems, and modularity is that subdivision into subprograms</li>
+<li>Reuse means one procedure instead of duplicated code; parameters generalize it to a range of inputs</li>
+<li>Procedures improve readability, and hidden internals can change without notifying callers if the behavior is preserved</li>
+</ul>
+<p><strong>Before next class:</strong> Before tomorrow, predict it: a procedure runs IF(quantity = 0){ RETURN(0) } and then RETURN(price * quantity). What does it return for charge(5, 0), and does the second RETURN ever run? Write your answer and your reasoning.</p>
+</div>
+<h2>Day 2: Writing the Procedure</h2>
+<div class="card">
+<p class="label">Today’s objectives</p>
+<ul>
+<li>Write a PROCEDURE with parameters and no RETURN, using the reference-sheet form PROCEDURE procName(p1, p2) { block } (LO AAP-3.C)</li>
+<li>Write a PROCEDURE that returns a value with RETURN(expression), knowing RETURN may appear anywhere and causes an immediate return to the caller (LO AAP-3.C)</li>
+</ul>
+</div>
+<div class="card">
+<p class="label">Bell ringer</p>
+<p>Yesterday's teaser, now decide it. A procedure runs: IF(quantity = 0) { RETURN(0) } and then, below that, RETURN(price * quantity). Consider two calls: charge(5, 0) and charge(5, 3).</p>
+<p class="muted">Write down: What does charge(5, 0) return, and does the RETURN(price * quantity) line ever run for that call? What does charge(5, 3) return? In one sentence, state the rule about when a RETURN stops the rest of the procedure.</p>
+<span class="wline"></span><span class="wline"></span><span class="wline"></span><span class="wline"></span>
+</div>
+<h2>01. Writing a PROCEDURE (No Return)</h2>
+<h3>PROCEDURE name(params) { block }</h3>
+<ul>
+<li>The first line of a procedure — keyword, name, and parameter list — is called the <span class="gap"></span>.</li>
+<li>The block of statements inside the braces is called the <span class="gap"></span>.</li>
+<li>The reference-sheet form PROCEDURE procName(...) { block } defines a procedure that takes <span class="gap"></span>.</li>
+</ul>
+<h3>A Procedure That Prints a Label</h3>
+<p class="muted">printLabel takes two parameters and DISPLAYs them; it returns no value.</p>
+<p class="label">AP Pseudocode (what the exam tests)</p>
+<pre class="code ps">PROCEDURE printLabel(item, price)
+{
+    DISPLAY(item)
+    DISPLAY(price)
+}
+printLabel("Pencil", 3)</pre>
+<p class="label">Python (the runnable version)</p>
+<pre class="code py">def printLabel(item, price):
+    print(item, end=" ")
+    print(price)
+
+printLabel("Pencil", 3)</pre>
+<p class="label">Output</p>
+<pre class="code out">Pencil 3</pre>
+<p class="muted">Run and edit this yourself in the coding exercises for this topic.</p>
+<h3>Parameters (in the Header) vs. Arguments (at the Call)</h3>
+<p><strong>Parameters</strong></p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li>A parameter is a placeholder in the header that stays empty until <span class="gap"></span>.</li>
+<li>The first supplied value fills the first parameter and the second fills the second — the matching is done by <span class="gap"></span>.</li>
+<li>Supplying different values on each call is exactly what lets one procedure <span class="gap"></span>.</li>
+</ul>
+<div class="card"><p>AP TIP: Parameters are named ONCE in the header; arguments are supplied EACH time you call. Position matters — first argument fills the first parameter.</p></div>
+<div class="card">
+<p class="label">Stop and think</p>
+<ol>
+<li>Write, in exam pseudocode, a PROCEDURE greet(name) with no return that DISPLAYs the name. Label the header and the body.<span class="wline"></span><span class="wline"></span>
+</li>
+<li>In greet("Ada"), identify the parameter and the argument, and state which one is named in the header and which is supplied at the call.<span class="wline"></span><span class="wline"></span>
+</li>
+<li>A classmate writes PROCEDURE printLabel { DISPLAY(item) } with no parentheses and no parameters, then calls printLabel("Pencil", 3). Explain what is wrong with the header.<span class="wline"></span><span class="wline"></span>
+</li>
+</ol>
+<p class="muted">Answer in complete sentences. Then check yourself with the matching CFUs on the Topic 3.13 page.</p>
+</div>
+<h2>02. Writing a PROCEDURE with RETURN</h2>
+<h3>PROCEDURE name(params) { block RETURN(expression) }</h3>
+<ul>
+<li>RETURN(expression) evaluates the expression and then <span class="gap"></span>.</li>
+<li>Within a procedure, a RETURN statement may appear <span class="gap"></span>.</li>
+<li>The instant a RETURN runs, it causes <span class="gap"></span>.</li>
+</ul>
+<h3>A Procedure That Returns a Total</h3>
+<p class="muted">finalPrice computes the total and RETURNs it; the caller stores the value.</p>
+<p class="label">AP Pseudocode (what the exam tests)</p>
+<pre class="code ps">PROCEDURE finalPrice(price, quantity)
+{
+    total ← price * quantity
+    RETURN(total)
+}
+receipt ← finalPrice(3, 12)
+DISPLAY(receipt)</pre>
+<p class="label">Python (the runnable version)</p>
+<pre class="code py">def finalPrice(price, quantity):
+    total = price * quantity
+    return total
+
+receipt = finalPrice(3, 12)
+print(receipt)</pre>
+<p class="label">Output</p>
+<pre class="code out">36</pre>
+<p class="muted">Run and edit this yourself in the coding exercises for this topic.</p>
+<h3>Trace an Early RETURN, Call by Call</h3>
+<p class="muted">The procedure is: PROCEDURE charge(price, quantity) { IF(quantity = 0) { RETURN(0) } RETURN(price * quantity) }. For each call, name which RETURN fires and the value returned. The last column is yours to complete.</p>
+<p class="muted">Complete the empty cells.</p>
+<table>
+<tr>
+<th>Call</th>
+<th>Which RETURN fires</th>
+<th>Value returned (fill in)</th>
+</tr>
+<tr>
+<td>charge(5, 0)</td>
+<td>the first RETURN — quantity = 0, immediate exit</td>
+<td>0</td>
+</tr>
+<tr>
+<td>charge(5, 3)</td>
+<td>the second RETURN — guard skipped</td>
+<td><span class="wcell"></span></td>
+</tr>
+<tr>
+<td>charge(4, 1)</td>
+<td>the second RETURN — guard skipped</td>
+<td><span class="wcell"></span></td>
+</tr>
+<tr>
+<td>charge(10, 0)</td>
+<td>the first RETURN — quantity = 0, immediate exit</td>
+<td><span class="wcell"></span></td>
+</tr>
+</table>
+<div class="warn">
+<p class="label">Watch out — “DISPLAY and RETURN Do the Same Thing”</p>
+<p><strong>Myth:</strong> A procedure that DISPLAYs its result has effectively given that value back to whoever called it.</p>
+<p><strong>Explain why this is wrong:</strong></p>
+<span class="wline"></span><span class="wline"></span>
+</div>
+<div class="card">
+<p class="label">Stop and think</p>
+<ol>
+<li>Write, in exam pseudocode, a PROCEDURE doublePrice(price) that RETURNs price times 2. Then write one line that stores doublePrice(9) in a variable and DISPLAYs it.<span class="wline"></span><span class="wline"></span>
+</li>
+<li>Rewrite charge so it RETURNs 0 when quantity is 0. Explain why the RETURN(price * quantity) line is never reached when quantity is 0.<span class="wline"></span><span class="wline"></span>
+</li>
+<li>A procedure ends with DISPLAY(total) instead of RETURN(total). Explain what breaks when a caller writes cost ← thatProcedure(5, 4) and why.<span class="wline"></span><span class="wline"></span>
+</li>
+</ol>
+<p class="muted">Show your procedures. Then check yourself with the matching CFUs on the Topic 3.13 page.</p>
+</div>
+<h3>Common AP Traps</h3>
+<p class="muted">Three ways Topic 3.13 loses points on the exam — one minute now, real points in May.</p>
+<p><strong>RETURN is not DISPLAY</strong> — in your own words:</p>
+<span class="wline"></span><p><strong>RETURN exits immediately</strong> — in your own words:</p>
+<span class="wline"></span><p><strong>Change the HOW, keep the callers</strong> — in your own words:</p>
+<span class="wline"></span><h3>Developing Procedures, in One Slide</h3>
+<ul>
+<li>Procedural abstraction manages complexity: it names a process, enables modularity and reuse, generalizes with parameters, aids readability, and hides internals.</li>
+<li>The no-return form: PROCEDURE procName(parameter1, parameter2...) { block } — a header naming parameters, a body of statements, no value returned.</li>
+<li>The return form: PROCEDURE procName(...) { block RETURN(expression) } — RETURN evaluates the expression and hands its value back to the caller.</li>
+<li>RETURN may appear anywhere and causes an IMMEDIATE return; DISPLAY only prints, RETURN hands a value back to be stored or reused.</li>
+</ul>
+<div class="card">
+<p class="label">Exit check — I can…</p>
+<ul class="chk">
+<li>☐  explain how procedural abstraction manages complexity through naming, modularity, reuse, and hidden internals (LO AAP-3.B)</li>
+<li>☐  explain how parameters generalize a procedure so it works for a range of inputs (LO AAP-3.B)</li>
+<li>☐  write a PROCEDURE with parameters and no RETURN using the reference-sheet form (LO AAP-3.C)</li>
+<li>☐  write a PROCEDURE that RETURNs a value, and place a RETURN so it exits at the right moment (LO AAP-3.C)</li>
+</ul>
+</div>
+</div>

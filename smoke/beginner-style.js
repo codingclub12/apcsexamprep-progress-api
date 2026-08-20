@@ -155,22 +155,40 @@ section('5. The 3.9 guided notes has no pseudocode left inside a sentence');
 // them out into real code blocks instead. Every edit is a literal before/after
 // pair, so this asserts each still applies exactly once against the snapshot.
 const { patch: patchLive } = require('../scripts/beginner-style-patch');
-const { apply, EDITS } = require('../scripts/csp-notes-code-blocks');
-const notesSnap = path.join(SNAP_DIR, 'ap-csp-topic-3-9-guided-notes.before-beginner-style.html');
-if (fs.existsSync(notesSnap)) {
-  const staged = patchLive(fs.readFileSync(notesSnap, 'utf8')).body;
-  const res = apply(staged);
-  ok('every prose and table edit still applies exactly once', res.missed.length === 0, res.missed);
-  ok(`there are ${EDITS.length} edits`, EDITS.length === 11, EDITS.length);
+const { apply, PAGES } = require('../scripts/csp-notes-code-blocks');
+// Metasyntax survives on purpose: `IF(condition){ block }` in a summary bullet
+// is the grammar being named, not code a student writes. A block whose body is
+// a placeholder word rather than a statement is therefore not a finding.
+const PLACEHOLDER = /^\s*(first |second )?(block|statement|expression|\.\.\.)\s*$/;
+const EXPECTED_EDITS = {
+  'ap-csp-topic-3-9-guided-notes': 11,
+  'ap-csp-topic-3-6-guided-notes': 8,
+  'ap-csp-topic-3-13-guided-notes': 3,
+};
+for (const [handle, page] of Object.entries(PAGES)) {
+  const snap = path.join(SNAP_DIR, handle + '.before-beginner-style.html');
+  if (!fs.existsSync(snap)) { ok(`${handle} has a snapshot`, false, snap); continue; }
+  ok(`${handle} has a snapshot`, true);
+  const staged = patchLive(fs.readFileSync(snap, 'utf8')).body;
+  const res = apply(staged, page.edits);
+  ok(`${handle}: every prose edit still applies exactly once`, res.missed.length === 0, res.missed);
+  ok(`${handle}: has ${EXPECTED_EDITS[handle]} edits`,
+    page.edits.length === EXPECTED_EDITS[handle], page.edits.length);
+
   const outside = res.body.replace(/<pre[^>]*>[\s\S]*?<\/pre>/g, '');
-  ok('no pseudocode is left outside a code block',
-    (outside.match(/IF\([^)]*\)\s*\{/g) || []).length === 0);
+  const left = [...outside.matchAll(/IF\s*\([^)]*\)\s*\{([^{}]*)\}/g)]
+    .filter((m) => !PLACEHOLDER.test(m[1]));
+  ok(`${handle}: no concrete pseudocode is left inside a sentence`, left.length === 0,
+    left.slice(0, 2).map((m) => m[0]));
+
   const inside = [];
   (res.body.match(/<pre class="[^"]*\bps\b[^"]*">[\s\S]*?<\/pre>/g) || [])
     .forEach((b) => findOneLiners(b, 'pseudo').forEach((h) => inside.push(h.text)));
-  ok('no one-liner is left inside a code block', inside.length === 0, inside.slice(0, 3));
-  ok('the div tags still balance',
+  ok(`${handle}: no one-liner is left inside a code block`, inside.length === 0, inside.slice(0, 3));
+  ok(`${handle}: the div tags still balance`,
     (res.body.match(/<div/g) || []).length === (res.body.match(/<\/div>/g) || []).length);
+  ok(`${handle}: the page grew, so something was actually expanded`,
+    Buffer.byteLength(res.body) > Buffer.byteLength(staged));
 }
 
 console.log(`\n${'-'.repeat(60)}`);
