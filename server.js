@@ -70,6 +70,7 @@ app.use('/api/game', require('./routes/game'));
 app.use('/api/judge0', require('./routes/judge0'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/gate', require('./routes/gate'));
+app.use('/api/files', require('./routes/files'));
 app.use('/api/slides', require('./routes/slides'));
 // Command center (Phase 1). Dual auth inside each router (browser cookie OR
 // Authorization: Bearer TODO_KEY); the one public route is the PII-stripped
