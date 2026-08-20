@@ -34,7 +34,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa exam format',
-  publishOn: '2026-08-25',
+  publishOn: '2026-08-24',
   seoTitle: 'AP CSA Exam Format 2026: What the Redesign Changed',
   seoDescription: 'Two years into the AP CSA exam format redesign: what was actually removed, what got heavier, and what old-curriculum teachers need to unlearn.',
   summary: 'A second cohort has now moved through the redesigned four unit AP CSA course. This is a retrospective on what the redesign actually did: the standalone inheritance and polymorphism unit is gone, Data Collections absorbed the weight it left behind, and teachers pacing from old habits are quietly under-teaching the biggest part of the exam.',

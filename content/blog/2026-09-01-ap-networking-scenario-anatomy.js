@@ -23,7 +23,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'ap networking scenarios',
-  publishOn: '2026-09-01',
+  publishOn: '2026-09-04',
   seoTitle: 'AP Networking Scenarios: How to Read the Question',
   seoDescription: 'How AP Networking scenarios are built: the setup, the evidence, and the actual question, so you stop losing points to misreading rather than misunderstanding.',
   summary: 'Two earlier posts on this blog taught how to reason about a network problem once you understand what is being asked. This one teaches how to correctly parse what is actually being asked in the first place. A breakdown of scenario structure, a common reading trap around FIRST and MOST LIKELY questions, how to spot which of the four skills a question is testing from its phrasing, and two fully worked examples.',

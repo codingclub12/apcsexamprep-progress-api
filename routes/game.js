@@ -70,6 +70,20 @@ const REGISTRY = {
   'sim-lab':                    { metric: 'score', higher: true, min: 0, max: 10000 },
   'algorithm-assembler':        { metric: 'score', higher: true, min: 0, max: 10000 },
   'procedure-shop':             { metric: 'score', higher: true, min: 0, max: 10000 },
+  // AP Networking study games. Each ships as its own page and belongs to one
+  // topic of the published course framework. These are leaderboard games, not
+  // gradebook items: nothing here touches attempts, progress or score_events,
+  // and no manifest row exists for any of them.
+  'harden-first':               { metric: 'score', higher: true, min: 0, max: 10000 },
+  'address-autopsy':            { metric: 'score', higher: true, min: 0, max: 10000 },
+  'subnet-sprint':              { metric: 'score', higher: true, min: 0, max: 10000 },
+  'rule-order':                 { metric: 'score', higher: true, min: 0, max: 10000 },
+  'packet-path':                { metric: 'score', higher: true, min: 0, max: 10000 },
+  'log-hunt':                   { metric: 'score', higher: true, min: 0, max: 10000 },
+  'guest-gate':                 { metric: 'score', higher: true, min: 0, max: 10000 },
+  'segment-sort':               { metric: 'score', higher: true, min: 0, max: 10000 },
+  'shell-hop':                  { metric: 'score', higher: true, min: 0, max: 10000 },
+  'ai-audit':                   { metric: 'score', higher: true, min: 0, max: 10000 },
 };
 
 const WINDOWS = new Set(['today', 'week', 'month', 'year', 'all']);

@@ -1,0 +1,267 @@
+<style>
+  #sh-game{font-family:"DM Sans",-apple-system,BlinkMacSystemFont,sans-serif;max-width:640px;margin:0 auto;}
+  #sh-game *{box-sizing:border-box;}
+  .sh-card{border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden;background:#fff!important;}
+  .sh-hero{background:#0f1f3d!important;padding:22px 20px;text-align:center;}
+  .sh-title{font-family:"DM Serif Display",Georgia,serif!important;font-size:26px!important;line-height:1.15!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 6px!important;}
+  .sh-sub{font-size:14px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0!important;line-height:1.5!important;}
+  .sh-bar{display:flex;gap:8px;padding:12px;background:#f8fafc!important;border-bottom:1px solid #e2e8f0;flex-wrap:wrap;justify-content:center;}
+  .sh-chip{font-size:12px!important;font-weight:700;color:#475569!important;-webkit-text-fill-color:#475569!important;background:#fff!important;border:1px solid #e2e8f0;border-radius:100px;padding:6px 12px;}
+  .sh-chip.sh-score{background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:#1a56db;}
+  .sh-body{padding:20px;}
+  .sh-how{font-size:13px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;line-height:1.6!important;background:#f8fafc!important;border-radius:10px;padding:12px 14px;margin:0 0 18px!important;}
+  .sh-goal{background:#eff6ff!important;border:1px solid #bfdbfe;border-radius:12px;padding:13px 16px;margin-bottom:12px;}
+  .sh-goal b{display:block;font-size:12px!important;text-transform:uppercase;letter-spacing:.06em;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin-bottom:4px;}
+  .sh-goal span{font-size:14.5px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.5!important;}
+  .sh-term{background:#0b1220!important;border-radius:12px;padding:16px;margin-bottom:12px;min-height:110px;}
+  .sh-ln{font-family:ui-monospace,SFMono-Regular,Menlo,monospace!important;font-size:12.5px!important;line-height:1.65!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;margin:0!important;white-space:pre-wrap;word-break:break-word;}
+  .sh-ln.cmd{color:#7dd3fc!important;-webkit-text-fill-color:#7dd3fc!important;}
+  .sh-ln.err{color:#fca5a5!important;-webkit-text-fill-color:#fca5a5!important;}
+  .sh-where{font-size:12px!important;font-weight:700;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:0 0 8px!important;font-family:ui-monospace,SFMono-Regular,Menlo,monospace!important;}
+  .sh-ask{font-size:14px!important;font-weight:700;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin:0 0 10px!important;}
+  .sh-opts{display:grid;grid-template-columns:1fr;gap:8px;}
+  .sh-opt{padding:12px 14px;border:2px solid #e2e8f0;border-radius:12px;background:#fff!important;font-family:ui-monospace,SFMono-Regular,Menlo,monospace!important;font-size:13.5px!important;font-weight:700;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;cursor:pointer;text-align:left;line-height:1.4!important;}
+  .sh-opt small{display:block;font-family:"DM Sans",sans-serif!important;font-size:11.5px!important;font-weight:600;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:4px;line-height:1.45!important;}
+  .sh-opt:hover{border-color:#1a56db;}
+  .sh-opt.sh-right{border-color:#16a34a;background:#f0fdf4!important;}
+  .sh-opt.sh-wrong{border-color:#dc2626;background:#fef2f2!important;}
+  .sh-reveal{display:none;margin-top:14px;padding-top:14px;border-top:1px solid #e2e8f0;}
+  .sh-reveal.on{display:block;}
+  .sh-verdict{font-size:15px!important;font-weight:700;margin:0 0 8px!important;}
+  .sh-verdict.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important;}
+  .sh-verdict.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;}
+  .sh-why{font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;line-height:1.65!important;margin:0 0 12px!important;}
+  .sh-next{width:100%;padding:13px;border:none;border-radius:10px;background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:"DM Sans",sans-serif!important;font-size:15px!important;font-weight:700;cursor:pointer;}
+  .sh-end{text-align:center;}
+  .sh-end h2{font-family:"DM Serif Display",Georgia,serif!important;font-size:30px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin:0 0 6px!important;}
+  .sh-end p{font-size:14px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:0 0 16px!important;}
+  .sh-teach{text-align:left;background:#eff6ff!important;border-left:3px solid #1a56db;border-radius:0 10px 10px 0;padding:14px 16px;font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;line-height:1.7!important;margin-bottom:16px;}
+  .sh-teach b{color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;}
+</style>
+
+<div id="sh-game">
+  <div class="sh-card">
+    <div class="sh-hero">
+      <h1 class="sh-title">Shell Hop</h1>
+      <p class="sh-sub">One transfer, start to finish. Every step is a command, and the last one is the one people skip</p>
+    </div>
+    <div class="sh-bar">
+      <span class="sh-chip" id="sh-round">Step 1 / 9</span>
+      <span class="sh-chip" id="sh-streak">Correct: 0</span>
+      <span class="sh-chip sh-score" id="sh-score">Score: 0</span>
+    </div>
+    <div class="sh-body" id="sh-play">
+      <p class="sh-how">How to play: you are moving a log file off a remote server, one command at a time. The terminal shows what has happened so far. Pick the command that does the next step, and watch what it prints.</p>
+      <div class="sh-goal"><b>The task</b><span id="sh-goaltxt"></span></div>
+      <p class="sh-where" id="sh-wheretxt"></p>
+      <div class="sh-term" id="sh-term"></div>
+      <p class="sh-ask" id="sh-asktxt"></p>
+      <div class="sh-opts" id="sh-opts"></div>
+      <div class="sh-reveal" id="sh-reveal">
+        <p class="sh-verdict" id="sh-verdict"></p>
+        <p class="sh-why" id="sh-why"></p>
+        <button class="sh-next" id="sh-nextbtn" type="button">Next step</button>
+      </div>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Shell Hop - AP Networking Topic 4.3, sub-skills 1.C and 1.D.
+     EK 4.3.A.5 covers moving around and listing, EK 4.3.B.2 to 4.3.B.5 cover
+     SFTP and the get and put direction. The step that matters most is the last
+     one: confirming the file arrived by LISTING the destination rather than by
+     the absence of an error message, which is EK 4.3.B.4 doing the work of
+     sub-skill .D.
+
+     ZERO PII NOTE FOR ANYONE EXTENDING THIS. A terminal is the obvious place to
+     collect a typed string, and a typed string is free text, which this site
+     never stores. Every step here is a CHOICE between fixed commands. There is
+     no text input on this page and there must never be one. */
+
+  var TASK = 'Collect yesterday\'s log from the remote server and bring it back to your own machine.';
+
+  var STEPS = [
+    { where: 'local: ~', ask: 'Where are you right now?',
+      opts: [
+        { c: 'pwd', d: 'print working directory', ok: true, out: '/home/student' },
+        { c: 'ls', d: 'list this directory', ok: false, out: 'Documents  Downloads  logs' },
+        { c: 'cd', d: 'change directory', ok: false, out: '' },
+        { c: 'whoami', d: 'print the current user', ok: false, out: 'student' }
+      ],
+      why: 'Knowing where you are is the first move in any CLI task, because every relative path you type afterwards depends on it. ls tells you what is here, not where here is.' },
+    { where: 'local: /home/student', ask: 'Move into the folder where the file should end up.',
+      opts: [
+        { c: 'cd logs', d: 'move into logs', ok: true, out: '' },
+        { c: 'ls logs', d: 'look inside logs without moving', ok: false, out: 'old.log' },
+        { c: 'cd /logs', d: 'move to logs at the root of the filesystem', ok: false, out: 'cd: /logs: No such file or directory' },
+        { c: 'mkdir logs', d: 'create the folder', ok: false, out: 'mkdir: cannot create directory: File exists' },
+      ],
+      why: 'A leading slash means start at the root of the filesystem, so /logs is a completely different place from logs here. That single character is the commonest CLI mistake there is.' },
+    { where: 'local: /home/student/logs', ask: 'Open a secure session to the server at 10.0.4.20 as user netops.',
+      opts: [
+        { c: 'sftp netops@10.0.4.20', d: 'secure file transfer session', ok: true, out: 'Connected to 10.0.4.20.\nsftp>' },
+        { c: 'ftp 10.0.4.20', d: 'plain file transfer', ok: false, out: 'Connected. Warning: credentials sent in the clear.' },
+        { c: 'ping 10.0.4.20', d: 'check the host answers', ok: false, out: '64 bytes from 10.0.4.20: time=0.8 ms' },
+        { c: 'telnet 10.0.4.20', d: 'remote terminal', ok: false, out: 'Connected. Warning: session is unencrypted.' }
+      ],
+      why: 'SFTP runs over SSH, so the credentials and the file contents are both encrypted. Plain FTP and telnet send everything readable to anyone on the path, which is why neither belongs on a real transfer.' },
+    { where: 'sftp session, remote: /home/netops', ask: 'List what is on the REMOTE side.',
+      opts: [
+        { c: 'ls', d: 'list the remote directory', ok: true, out: 'app.log  archive/  yesterday.log' },
+        { c: 'lls', d: 'list the local directory', ok: false, out: 'old.log' },
+        { c: 'dir /remote', d: 'list a path', ok: false, out: 'Couldn\'t stat remote file: No such file' },
+        { c: 'cat yesterday.log', d: 'print the file', ok: false, out: 'Invalid command.' }
+      ],
+      why: 'Inside an SFTP session the plain commands act on the REMOTE machine and the ones beginning with l act on your local one. ls and lls differ by a single letter and by which computer they are talking about.' },
+    { where: 'sftp session, remote: /home/netops', ask: 'Check where the file will land on YOUR machine.',
+      opts: [
+        { c: 'lpwd', d: 'local working directory', ok: true, out: 'Local working directory: /home/student/logs' },
+        { c: 'pwd', d: 'remote working directory', ok: false, out: 'Remote working directory: /home/netops' },
+        { c: 'ls -l', d: 'long listing of the remote side', ok: false, out: '-rw-r--r-- 1 netops 4096 yesterday.log' },
+        { c: 'lcd', d: 'change local directory', ok: false, out: '' }
+      ],
+      why: 'A download lands in whatever your LOCAL directory currently is. Checking it before transferring is how you avoid the file appearing somewhere you then have to hunt for.' },
+    { where: 'sftp session, remote: /home/netops', ask: 'Bring yesterday.log down to your machine.',
+      opts: [
+        { c: 'get yesterday.log', d: 'download from remote to local', ok: true, out: 'Fetching /home/netops/yesterday.log to yesterday.log\n100%  4096 bytes' },
+        { c: 'put yesterday.log', d: 'upload from local to remote', ok: false, out: 'stat yesterday.log: No such file or directory' },
+        { c: 'cp yesterday.log .', d: 'copy', ok: false, out: 'Invalid command.' },
+        { c: 'mv yesterday.log local', d: 'move', ok: false, out: 'Couldn\'t rename file' }
+      ],
+      why: 'get pulls toward you and put pushes away from you. They are the same length, they sit next to each other in every guide, and choosing the wrong one either fails loudly or overwrites something quietly.' },
+    { where: 'sftp session, remote: /home/netops', ask: 'Close the session.',
+      opts: [
+        { c: 'bye', d: 'end the sftp session', ok: true, out: 'Connection closed.' },
+        { c: 'close', d: 'not an sftp command', ok: false, out: 'Invalid command.' },
+        { c: 'end', d: 'not an sftp command', ok: false, out: 'Invalid command.' },
+        { c: 'kill', d: 'terminate a process', ok: false, out: 'usage: kill [pid]' }
+      ],
+      why: 'bye and quit both end an SFTP session cleanly. Nothing dramatic rests on this step, which is exactly why it is worth knowing rather than closing the window.' },
+    { where: 'local: /home/student/logs', ask: 'Now prove the file actually arrived.',
+      opts: [
+        { c: 'ls -l', d: 'list the local folder with sizes', ok: true, out: '-rw-r--r-- 1 student 4096 yesterday.log\n-rw-r--r-- 1 student  812 old.log' },
+        { c: 'echo done', d: 'print a message', ok: false, out: 'done' },
+        { c: 'history', d: 'show what you ran', ok: false, out: '1 pwd\n2 cd logs\n3 sftp netops@10.0.4.20' },
+        { c: 'ping 10.0.4.20', d: 'check the server again', ok: false, out: '64 bytes from 10.0.4.20: time=0.8 ms' }
+      ],
+      why: 'This is the step people skip, because the transfer already said 100% and no error appeared. No error is not evidence. Listing the destination and seeing the file with a plausible size is evidence.' },
+    { where: 'local: /home/student/logs', ask: 'The file is 4096 bytes here and was 4096 bytes there. What does that establish?',
+      opts: [
+        { c: 'the sizes match, so nothing was truncated', d: 'a real but limited claim', ok: true, out: '' },
+        { c: 'the file is definitely uncorrupted', d: 'stronger than the evidence', ok: false, out: '' },
+        { c: 'the transfer used encryption', d: 'unrelated to size', ok: false, out: '' },
+        { c: 'the remote copy can now be deleted', d: 'a decision, not a finding', ok: false, out: '' }
+      ],
+      why: 'Matching sizes rule out a truncated transfer and nothing more. Two different files can share a size, which is why anything that really matters gets checked with a hash rather than a byte count. Knowing the limit of your evidence is part of verifying.' }
+  ];
+
+  var el = {};
+  ['round','streak','score','goaltxt','wheretxt','term','asktxt','opts','reveal','verdict','why','nextbtn','play']
+    .forEach(function (k) { el[k] = document.getElementById('sh-' + k); });
+
+  var i = 0, score = 0, right = 0, locked = false;
+  var log = [];
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function paintTerm() {
+    if (!log.length) {
+      el.term.innerHTML = '<p class="sh-ln">Ready.</p>';
+      return;
+    }
+    el.term.innerHTML = log.map(function (l) {
+      return '<p class="sh-ln ' + l.cls + '">' + esc(l.txt) + '</p>';
+    }).join('');
+  }
+
+  function render() {
+    locked = false;
+    var s = STEPS[i];
+    el.round.textContent = 'Step ' + (i + 1) + ' / ' + STEPS.length;
+    el.streak.textContent = 'Correct: ' + right;
+    el.score.textContent = 'Score: ' + score;
+    el.goaltxt.textContent = TASK;
+    el.wheretxt.textContent = s.where;
+    el.asktxt.textContent = s.ask;
+    el.reveal.className = 'sh-reveal';
+    paintTerm();
+    el.opts.innerHTML = '';
+    s.opts.forEach(function (o, idx) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'sh-opt';
+      b.setAttribute('data-i', String(idx));
+      b.innerHTML = esc(o.c) + '<small>' + esc(o.d) + '</small>';
+      b.addEventListener('click', function () { run(idx, b); });
+      el.opts.appendChild(b);
+    });
+  }
+
+  function run(idx, btn) {
+    if (locked) return;
+    locked = true;
+    var s = STEPS[i];
+    var o = s.opts[idx];
+    var good = o.ok === true;
+
+    log.push({ cls: 'cmd', txt: '$ ' + o.c });
+    if (o.out) log.push({ cls: good ? '' : 'err', txt: o.out });
+    if (log.length > 10) log = log.slice(log.length - 10);
+    paintTerm();
+
+    if (good) {
+      right++; score += 110;
+      btn.className = 'sh-opt sh-right';
+      el.verdict.className = 'sh-verdict good';
+      el.verdict.textContent = 'Correct.';
+    } else {
+      btn.className = 'sh-opt sh-wrong';
+      var nodes = el.opts.querySelectorAll('.sh-opt');
+      for (var n = 0; n < nodes.length; n++) {
+        if (s.opts[Number(nodes[n].getAttribute('data-i'))].ok) nodes[n].className = 'sh-opt sh-right';
+      }
+      el.verdict.className = 'sh-verdict bad';
+      el.verdict.textContent = 'Not that one.';
+    }
+    el.why.textContent = s.why;
+    el.nextbtn.textContent = i < STEPS.length - 1 ? 'Next step' : 'See results';
+    el.reveal.className = 'sh-reveal on';
+    el.score.textContent = 'Score: ' + score;
+    el.streak.textContent = 'Correct: ' + right;
+  }
+
+  el.nextbtn.addEventListener('click', function () {
+    if (i < STEPS.length - 1) { i++; render(); } else { finish(); }
+  });
+
+  function finish() {
+    el.play.innerHTML =
+      '<div class="sh-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + right + ' of ' + STEPS.length + ' commands correct.</p>' +
+        '<div class="sh-teach">' +
+          '<b>The last two steps were the point.</b> The transfer printed 100% and no error appeared, ' +
+          'and that is not evidence that anything arrived. Listing the destination is. Then the size ' +
+          'matching tells you the file was not truncated and tells you nothing about whether it is the ' +
+          'right file, which is why real verification uses a hash. ' +
+          'The rest is muscle memory worth building: a leading slash changes a path completely, ' +
+          'commands beginning with l act on your own machine inside an SFTP session, get pulls toward ' +
+          'you and put pushes away, and SFTP encrypts what plain FTP and telnet hand to anyone ' +
+          'listening.' +
+        '</div>' +
+        '<p><button class="sh-next" id="sh-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('sh-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  render();
+})();
+</script>

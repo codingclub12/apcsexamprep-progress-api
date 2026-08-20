@@ -24,7 +24,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'vlan',
-  publishOn: '2026-10-06',
+  publishOn: '2026-10-07',
   seoTitle: 'VLANs Explained: One Switch, Many Networks',
   seoDescription: 'A VLAN lets one physical switch act like several separate networks. Learn how port assignment works and why VLANs need a router to reach each other.',
   summary: 'A physical switch does not have to mean one network. A VLAN lets a single switch be configured, in software, to behave like several separate logical networks at once, each one unable to reach the others without a router in between. This guide walks through the problem VLANs solve, how port assignment actually works, a worked example of guest wifi and staff traffic sharing one switch, why devices on different VLANs cannot talk directly, the cost and cabling case against buying a second physical switch instead, and the explicit connection to network segmentation as covered on the AP Cybersecurity side of the same idea.',

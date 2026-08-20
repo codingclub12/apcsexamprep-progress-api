@@ -28,7 +28,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa vs ap csp',
-  publishOn: '2026-09-01',
+  publishOn: '2026-08-31',
   seoTitle: 'AP CSA vs AP CSP: Which Colleges Actually Read',
   seoDescription: 'AP CSA vs AP CSP, explained honestly: what each exam actually tests, what credit-policy data shows about how colleges treat them, and which fits your goals.',
   summary: 'The AP CSA vs AP CSP question usually gets a one-line answer that is not very useful. Here is what each exam structurally tests, an honest look at how colleges actually treat the two, and specific guidance for three different kinds of students.',

@@ -40,7 +40,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ai coding tools',
-  publishOn: '2026-10-13',
+  publishOn: '2026-10-12',
   seoTitle: 'AI Coding Tools for AP CSA: Use Them Without Cheating',
   seoDescription: 'How to use AI coding tools like ChatGPT and Copilot to actually learn Java for AP CSA, plus a one-hour closed-laptop test that proves whether you learned it.',
   summary: 'AI coding tools can explain a stack trace, generate practice problems on a weak topic, and check a hand-traced answer, which all build real skill. They can also hand over a finished solution before a student has struggled with it at all, which builds nothing, because AP CSA is graded entirely on MCQs and closed-laptop FRQs where no AI is available. This guide covers the real risk of AI use on AP CSA, four productive ways to use it that build skill instead of replacing it, and a concrete one-hour self-test that tells a student honestly whether they learned a concept or just copied a correct answer.',

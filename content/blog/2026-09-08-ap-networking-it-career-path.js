@@ -26,7 +26,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'it career without degree',
-  publishOn: '2026-09-08',
+  publishOn: '2026-09-07',
   seoTitle: 'The IT Career Without Degree Requirements',
   seoDescription: 'IT is one of the few tech fields where certifications and demonstrated skill can outweigh a diploma. Here is the real entry path AP Networking sets up.',
   summary: 'AP Networking is not just an elective, it is a first real step on one of the more accessible on-ramps into tech: an IT career that does not require a four-year degree. This guide names the actual entry-level titles (help desk and support, network technician, junior network administrator), the certification path that typically follows, how the course\'s own troubleshooting and configuration skills map onto what those jobs ask of you day to day, and the honest trade-offs in pay and ceiling that come with skipping the degree.',

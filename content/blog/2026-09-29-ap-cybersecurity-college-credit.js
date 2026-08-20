@@ -49,7 +49,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'ap cybersecurity college credit',
-  publishOn: '2026-09-29',
+  publishOn: '2026-09-28',
   seoTitle: 'AP Cybersecurity College Credit: The Honest Answer',
   seoDescription: 'AP Cybersecurity college credit policy barely exists yet, and here is exactly why, what College Board has said, and what to actually do about it as a student.',
   summary: 'AP Cybersecurity is brand new: no released scores, no first administration until May 2027, and essentially no published college credit policy yet. This is not a gap in reporting, it is a timeline. Here is honestly why that timeline exists, what a recent case study (AP Precalculus) shows about how long new-course credit policy actually takes to build, what College Board has said specifically about credit and the stackable industry credential, and what a current student should realistically do while the picture is still forming.',

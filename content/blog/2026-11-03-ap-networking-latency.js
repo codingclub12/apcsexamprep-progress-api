@@ -26,7 +26,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'network latency',
-  publishOn: '2026-11-03',
+  publishOn: '2026-11-04',
   seoTitle: 'Bandwidth vs Network Latency vs Contention Explained',
   seoDescription: 'Bandwidth, network latency, and contention are three separate reasons a connection feels slow. Learn what each one measures and how to tell them apart.',
   summary: 'A conceptual explanation of three distinct causes of a slow connection that students often lump together as one problem: bandwidth, the capacity ceiling on how much data can move at once, network latency, the one-way or round-trip delay a single piece of data takes to travel, and contention, multiple things competing for the same limited capacity at the same time. Distinguishes them with a satellite versus small-connection example and a video call scenario where each cause produces a different, recognizable symptom.',

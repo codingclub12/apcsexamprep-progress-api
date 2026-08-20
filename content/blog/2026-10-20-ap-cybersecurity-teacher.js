@@ -38,7 +38,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'ap cybersecurity teacher',
-  publishOn: '2026-10-20',
+  publishOn: '2026-10-19',
   seoTitle: 'AP Cybersecurity Teacher: A First-Year Survival Guide',
   seoDescription: 'Honest, practical guidance for the AP Cybersecurity teacher facing a course with no released exam, no score data, and thin community precedent.',
   summary: 'A practical guide for the teacher assigned to AP Cybersecurity this year: why the course genuinely lacks the calibration points an established AP has, how to lean on the Course and Exam Description as the one real anchor, where the scenario-question patterns actually come from, how to find other first-year and pilot teachers, and why grading conservatively in year one protects your students rather than shortchanging them.',

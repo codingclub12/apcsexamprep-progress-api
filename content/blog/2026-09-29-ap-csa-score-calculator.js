@@ -39,7 +39,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa score calculator',
-  publishOn: '2026-09-29',
+  publishOn: '2026-10-02',
   seoTitle: 'AP CSA Score Calculator: Raw Score Needed for a 5',
   seoDescription: 'How every AP CSA score calculator actually works: the raw MCQ and FRQ math behind your composite, and the historical raw score territory that has meant a 5.',
   summary: 'College Board never publishes an official raw-to-scaled conversion table before the exam. This guide walks through exactly how the AP CSA composite score is built from the 42 multiple choice questions and 36 raw free response points, gives an honest, sourced estimate of the historical territory that has meant a 5, and shows with a concrete example why a student does not need a perfect score to land one.',

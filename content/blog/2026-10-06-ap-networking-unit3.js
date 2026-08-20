@@ -26,7 +26,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'ap networking unit 3',
-  publishOn: '2026-10-06',
+  publishOn: '2026-10-09',
   seoTitle: 'AP Networking Unit 3: Ten Segmented LAN Questions',
   seoDescription: 'Ten AP Networking Unit 3 practice scenarios on segmentation, subnetting, DHCP across segments, and multi-device troubleshooting, easiest to hardest.',
   summary: 'Ten scenario-style practice questions scoped specifically to AP Networking Unit 3, Managing Many Connections: why a LAN gets segmented at all, subnetting a network built from more than one segment, DHCP once there is more than one segment to serve, and troubleshooting the harder failures that only show up once segments start interacting. Ordered easiest to hardest, with three presented as interactive practice questions and the rest as worked walkthroughs.',

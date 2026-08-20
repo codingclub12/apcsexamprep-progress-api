@@ -24,7 +24,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'ap cybersecurity glossary',
-  publishOn: '2026-10-20',
+  publishOn: '2026-10-23',
   seoTitle: 'AP Cybersecurity Glossary: All Five Units',
   seoDescription: 'A running AP Cybersecurity glossary across all five units: precise definitions, why each term matters, and links to the deeper guide where one exists.',
   summary: 'A full-course AP Cybersecurity glossary organized by unit rather than the alphabet: Introduction to Security, Securing Spaces, Securing Networks, Securing Devices, and Securing Applications and Data. Unit 1 gets a brief reminder of its most load-bearing terms and a link to the dedicated, ranked Unit 1 vocabulary post rather than a repeated list. Units 2 through 5 get full treatment: precise one-line definitions, a short note on why each term specifically matters, and links to the dedicated deep-dive post on this blog wherever one already exists, so nothing gets explained twice.',

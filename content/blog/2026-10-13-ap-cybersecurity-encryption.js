@@ -22,7 +22,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'encryption explained',
-  publishOn: '2026-10-13',
+  publishOn: '2026-10-14',
   seoTitle: 'Encryption Explained: Symmetric vs Asymmetric',
   seoDescription: 'Encryption explained the way AP Cybersecurity tests it: symmetric keys, asymmetric key pairs, the key distribution problem, and how HTTPS uses both.',
   summary: 'A conceptual walkthrough of encryption for AP Cybersecurity: what encryption fundamentally does to data, how symmetric encryption works and why sharing one key is the hard part, how asymmetric encryption solves that problem with a public and private key pair, a worked example of two people exchanging a secret message, why real systems like HTTPS combine both approaches, a comparison table, and two new practice questions.',

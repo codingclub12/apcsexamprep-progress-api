@@ -21,7 +21,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa boolean expressions',
-  publishOn: '2026-09-01',
+  publishOn: '2026-09-02',
   seoTitle: 'AP CSA Boolean Expressions: Short-Circuit Guide',
   seoDescription: 'AP CSA boolean expressions get tested on tracing. Learn truth tables, short-circuit evaluation, and the bounds-check pattern with worked examples.',
   summary: 'AP CSA Unit 2 tests whether you can trace a compound boolean expression term by term and say which parts actually run. This guide builds truth tables up to short-circuit evaluation, the bounds-check pattern, and De Morgan equivalence, with two worked practice questions.',

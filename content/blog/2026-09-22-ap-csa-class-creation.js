@@ -21,7 +21,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa class creation',
-  publishOn: '2026-09-22',
+  publishOn: '2026-09-23',
   seoTitle: 'AP CSA Class Creation: Constructors, Fields and this',
   seoDescription: 'AP CSA class creation walked through step by step: instance fields, constructors, accessor and mutator methods, and exactly when the this keyword is required.',
   summary: 'AP CSA class creation asks students to do something genuinely new: build a class instead of just using one. This guide builds a Book class from nothing, field by field and method by method, explains why private fields and accessor methods exist even when they feel redundant, and isolates the one situation where the this keyword stops being optional, a constructor parameter that shadows a field name.',

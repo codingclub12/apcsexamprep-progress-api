@@ -19,7 +19,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'how to trace code',
-  publishOn: '2026-08-18',
+  publishOn: '2026-08-21',
   seoTitle: 'How to Trace Code in AP CSA: The Variable Table Method',
   seoDescription: 'Learn how to trace code the way AP CSA students who score 5s do it: a variable table you fill in by hand, with two fully worked examples and practice.',
   summary: 'Most students who miss AP CSA tracing questions know the Java, they just lose the thread three lines into a loop. The variable table method fixes that by moving the trace out of your head and onto paper, one row at a time. Two fully worked examples included.',

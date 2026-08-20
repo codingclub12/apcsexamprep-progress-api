@@ -33,7 +33,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'ap networking units',
-  publishOn: '2026-09-15',
+  publishOn: '2026-09-14',
   seoTitle: 'AP Networking Units: Every Unit and Topic',
   seoDescription: 'A unit-by-unit, topic-by-topic map of what AP Networking actually teaches: all four units, all 22 topics, and the skill each unit leans on most.',
   summary: 'AP Networking is four units and 22 topics, per the College Board framework, but "four units" alone does not tell a student or a teacher much. This is a syllabus-shaped map: what each unit actually covers topic by topic, a table pairing each unit with the skill it leans on hardest, and an honest note on what College Board has and has not published about how much each unit is worth on the exam.',

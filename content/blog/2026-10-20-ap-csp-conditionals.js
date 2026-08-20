@@ -21,7 +21,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp conditionals',
-  publishOn: '2026-10-20',
+  publishOn: '2026-10-21',
   seoTitle: 'AP CSP Conditionals: Nested IF vs. Compound AND/OR',
   seoDescription: 'AP CSP conditionals explained: one example as nested IFs and as a compound AND, plus the AND vs OR trap that changes what gets included.',
   summary: 'AP CSP conditionals get tested well past the basic IF, ELSE IF, ELSE chain. This guide takes one worked example, a number that must fall in a range and also be divisible by a target value, and writes it two different ways: as an IF nested inside another IF, and as a single IF built from a compound boolean condition. Both versions are traced against real inputs so the reader sees exactly when they behave the same and when nesting is the only tool that actually works, then the guide covers the trap that costs the most points on the exam: swapping AND for OR in a compound condition and silently changing which cases the program actually accepts.',

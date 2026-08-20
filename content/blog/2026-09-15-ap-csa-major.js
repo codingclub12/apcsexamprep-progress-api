@@ -54,7 +54,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'computer science major',
-  publishOn: '2026-09-15',
+  publishOn: '2026-09-14',
   seoTitle: 'Computer Science Major in 2026: Still Worth It?',
   seoDescription: 'A computer science major is harder to land a first job with in 2026. Here is the honest data, and what a junior with AP CSA should do next.',
   summary: 'Entry-level tech hiring really has gotten harder, and the data backing that is not a 2023 overreaction, it is current. Here is what a computer science major still gets you in 2026, what has changed, and how a junior who just took AP CSA should actually think about the decision.',

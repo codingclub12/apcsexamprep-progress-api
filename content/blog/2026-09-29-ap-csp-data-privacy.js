@@ -23,7 +23,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp data privacy',
-  publishOn: '2026-09-29',
+  publishOn: '2026-09-30',
   seoTitle: 'AP CSP Data Privacy: Cookies, Metadata, and PII Explained',
   seoDescription: 'AP CSP data privacy guide: what a cookie does, metadata versus content, PII, and a real re-identification example, with practice questions.',
   summary: 'AP CSP Big Idea 5 tests data privacy at a specific level of precision, not a vague sense that data collection is concerning. This guide defines what a cookie technically is and how the same mechanism that keeps you logged in also enables cross-site tracking, distinguishes metadata (data about data) from content, defines PII with concrete examples of what counts and what is ambiguous, and walks through a real, sourced re-identification case showing why anonymized data is not automatically safe. Two scenario-based practice questions test metadata versus content and PII versus not.',

@@ -19,7 +19,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa practice test',
-  publishOn: '2026-08-25',
+  publishOn: '2026-08-28',
   seoTitle: 'AP CSA Practice Test in September: How to Use It Right',
   seoDescription: 'An AP CSA practice test in September is a diagnostic tool, not a rehearsal. How to time it, take it in sections, and mine every wrong answer for signal.',
   summary: 'A practice test is a resource that runs out: once you have seen its questions, it can never diagnose you again. Most students burn their first one in the opening weeks of the course and get almost nothing back for it. Here is how to use a September practice test as a diagnostic instead, plus the process for turning a wrong answer into an actual fix.',

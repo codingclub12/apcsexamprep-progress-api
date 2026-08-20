@@ -30,7 +30,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp score distribution',
-  publishOn: '2026-09-29',
+  publishOn: '2026-09-28',
   seoTitle: 'AP CSP Score Distribution 2026: The Full Breakdown',
   seoDescription: 'The current AP CSP score distribution, sourced to College Board, and an honest look at what it does and does not reveal about written response performance.',
   summary: 'The 2026 AP CSP score distribution alongside the 2025 comparison, both sourced to College Board, plus a straight answer to whether written-response-specific performance data exists publicly. It does not, in the granular form students want, and this post explains why that is and what to do about it anyway.',

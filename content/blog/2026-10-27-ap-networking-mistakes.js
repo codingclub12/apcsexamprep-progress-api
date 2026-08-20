@@ -25,7 +25,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'ap networking common mistakes',
-  publishOn: '2026-10-27',
+  publishOn: '2026-10-30',
   seoTitle: 'AP Networking Common Mistakes: The Distractor Pattern',
   seoDescription: 'One of the most common AP Networking mistakes is picking the dramatic answer over the mundane one. Four worked scenarios that drill the pattern.',
   summary: 'A specific, recurring AP Networking distractor pattern gets its own name and its own drill in this post: a dramatic, alarming-sounding wrong answer sitting next to a boring, mundane, evidence-matching correct one. Four fresh worked scenarios walk through the reasoning, tied back to the elimination method and the question-reading skill covered elsewhere on this blog, followed by two practice questions built the same way.',

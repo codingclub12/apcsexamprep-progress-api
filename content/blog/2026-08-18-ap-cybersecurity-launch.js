@@ -23,7 +23,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'ap cybersecurity',
-  publishOn: '2026-08-18',
+  publishOn: '2026-08-17',
   seoTitle: 'AP Cybersecurity 2026-27: Course, Exam and Prep Guide',
   seoDescription: 'AP Cybersecurity launches nationally this fall, first exam May 2027. The five units, the exam format, who should take it, and how to prepare.',
   summary: 'AP Cybersecurity goes national in 2026-27 and the first exam is May 2027. A teacher breakdown of the five units, the 60 question multiple choice section, the device security free response, and an honest look at what taking an AP in its first year actually costs you.',

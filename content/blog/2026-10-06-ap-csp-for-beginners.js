@@ -21,7 +21,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp for beginners',
-  publishOn: '2026-10-06',
+  publishOn: '2026-10-05',
   seoTitle: 'AP CSP for Beginners: A Real Starting Plan',
   seoDescription: 'AP CSP for beginners with zero prior coding: what the course actually assumes, where students get stuck first, and concrete habits to build in week one.',
   summary: 'A practical guide for a student starting AP CSP with no prior coding experience: what the course is actually built to assume, why the exact pseudocode syntax trips up beginners more than the logic underneath it does, why the Create task usually means learning a real coding environment, and why the abstraction material deserves just as much attention as anything code-adjacent.',

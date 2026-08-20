@@ -40,7 +40,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'ap cybersecurity exam',
-  publishOn: '2026-09-22',
+  publishOn: '2026-09-21',
   seoTitle: 'AP Cybersecurity Exam Format, Section by Section',
   seoDescription: 'A section by section breakdown of the AP Cybersecurity exam format: multiple choice timing, the free response artifacts, total time, and score weighting.',
   summary: 'A mechanics-first walkthrough of the AP Cybersecurity exam format: what Section I actually asks question by question, what the artifacts in the Section II free response look like, total exam time, how the two sections weigh on the final score, what remains unpublished by College Board as of this writing, and how this exam differs structurally from AP CSP and AP CSA.',

@@ -21,7 +21,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'ping traceroute',
-  publishOn: '2026-08-25',
+  publishOn: '2026-08-28',
   seoTitle: 'Ping Traceroute: Generate Diagnostic Evidence Fast',
   seoDescription: 'A beginner walkthrough of ping traceroute: what each command actually does, a worked scenario combining both, and how to run them on any device today.',
   summary: 'The troubleshooting method teaches you to eliminate causes using whatever evidence you already have. Ping and traceroute let you actively generate more of it. This piece explains both tools plainly, walks through a worked scenario combining them, and includes a practical box on running them on your own device right now.',

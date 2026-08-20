@@ -1,0 +1,210 @@
+<style>
+  #sg-game{font-family:"DM Sans",-apple-system,BlinkMacSystemFont,sans-serif;max-width:640px;margin:0 auto;}
+  #sg-game *{box-sizing:border-box;}
+  .sg-card{border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden;background:#fff!important;}
+  .sg-hero{background:#0f1f3d!important;padding:22px 20px;text-align:center;}
+  .sg-title{font-family:"DM Serif Display",Georgia,serif!important;font-size:26px!important;line-height:1.15!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 6px!important;}
+  .sg-sub{font-size:14px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0!important;line-height:1.5!important;}
+  .sg-bar{display:flex;gap:8px;padding:12px;background:#f8fafc!important;border-bottom:1px solid #e2e8f0;flex-wrap:wrap;justify-content:center;}
+  .sg-chip{font-size:12px!important;font-weight:700;color:#475569!important;-webkit-text-fill-color:#475569!important;background:#fff!important;border:1px solid #e2e8f0;border-radius:100px;padding:6px 12px;}
+  .sg-chip.sg-score{background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:#1a56db;}
+  .sg-body{padding:20px;}
+  .sg-how{font-size:13px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;line-height:1.6!important;background:#f8fafc!important;border-radius:10px;padding:12px 14px;margin:0 0 18px!important;}
+  .sg-dev{background:#0f1f3d!important;border-radius:14px;padding:20px 16px;text-align:center;margin-bottom:12px;}
+  .sg-dname{font-size:20px!important;font-weight:700;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 5px!important;line-height:1.25!important;}
+  .sg-dnote{font-size:13px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0!important;line-height:1.5!important;}
+  .sg-ask{font-size:14px!important;font-weight:700;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin:0 0 10px!important;}
+  .sg-zones{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .sg-zone{padding:13px 11px;border:2px solid #e2e8f0;border-radius:12px;background:#fff!important;font-family:inherit;font-size:14px!important;font-weight:700;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;cursor:pointer;text-align:left;line-height:1.3!important;}
+  .sg-zone small{display:block;font-size:11px!important;font-weight:600;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:3px;line-height:1.4!important;}
+  .sg-zone:hover{border-color:#1a56db;}
+  .sg-zone.sg-right{border-color:#16a34a;background:#f0fdf4!important;}
+  .sg-zone.sg-wrong{border-color:#dc2626;background:#fef2f2!important;}
+  .sg-reveal{display:none;margin-top:14px;padding-top:14px;border-top:1px solid #e2e8f0;}
+  .sg-reveal.on{display:block;}
+  .sg-verdict{font-size:15px!important;font-weight:700;margin:0 0 8px!important;}
+  .sg-verdict.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important;}
+  .sg-verdict.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;}
+  .sg-blast{background:#fef2f2!important;border-left:3px solid #dc2626;border-radius:0 8px 8px 0;padding:10px 12px;font-size:12.5px!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;line-height:1.55!important;margin:0 0 10px!important;}
+  .sg-why{font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;line-height:1.65!important;margin:0 0 12px!important;}
+  .sg-next{width:100%;padding:13px;border:none;border-radius:10px;background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:inherit;font-size:15px!important;font-weight:700;cursor:pointer;}
+  .sg-end{text-align:center;}
+  .sg-end h2{font-family:"DM Serif Display",Georgia,serif!important;font-size:30px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin:0 0 6px!important;}
+  .sg-end p{font-size:14px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:0 0 16px!important;}
+  .sg-teach{text-align:left;background:#eff6ff!important;border-left:3px solid #1a56db;border-radius:0 10px 10px 0;padding:14px 16px;font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;line-height:1.7!important;margin-bottom:16px;}
+  .sg-teach b{color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;}
+  @media(max-width:480px){.sg-zones{grid-template-columns:1fr;}}
+</style>
+
+<div id="sg-game">
+  <div class="sg-card">
+    <div class="sg-hero">
+      <h1 class="sg-title">Segment Sort</h1>
+      <p class="sg-sub">Twelve devices, four zones. Group them by what they would cost you, not by who owns them</p>
+    </div>
+    <div class="sg-bar">
+      <span class="sg-chip" id="sg-round">Device 1 / 12</span>
+      <span class="sg-chip" id="sg-streak">Placed right: 0</span>
+      <span class="sg-chip sg-score" id="sg-score">Score: 0</span>
+    </div>
+    <div class="sg-body" id="sg-play">
+      <p class="sg-how">How to play: segmentation groups devices by shared role, risk level or user type so that one compromised device cannot reach everything. Place each device in the zone that limits what it could reach if somebody took it over.</p>
+      <div class="sg-dev">
+        <p class="sg-dname" id="sg-dname"></p>
+        <p class="sg-dnote" id="sg-dnote"></p>
+      </div>
+      <p class="sg-ask">Which zone?</p>
+      <div class="sg-zones" id="sg-zones"></div>
+      <div class="sg-reveal" id="sg-reveal">
+        <p class="sg-verdict" id="sg-verdict"></p>
+        <p class="sg-blast" id="sg-blasttxt"></p>
+        <p class="sg-why" id="sg-why"></p>
+        <button class="sg-next" id="sg-nextbtn" type="button">Next device</button>
+      </div>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Segment Sort - AP Networking Topic 2.6, sub-skills 2.A and 2.C.
+     EK 2.6.B.1 to 2.6.B.5 give four grounds for grouping: role, risk level,
+     performance need and user type. Students reliably group by OWNER instead,
+     which is the intuitive answer and the wrong one: the receptionist's PC and
+     the lobby smart TV belong to the same person's floor and to completely
+     different risk levels. Each round names the blast radius of getting it
+     wrong, because segmentation is only ever justified by what it contains. */
+
+  var ZONES = [
+    { z: 'trusted', label: 'Trusted internal', hint: 'staff computers, managed and patched' },
+    { z: 'iot', label: 'IoT and untrusted', hint: 'devices you cannot patch or log in to' },
+    { z: 'servers', label: 'Servers', hint: 'shared systems holding data' },
+    { z: 'guest', label: 'Guest', hint: 'visitors, internet only' }
+  ];
+
+  var DEVICES = [
+    { n: 'Reception desktop', note: 'Managed laptop, staff login, patched weekly', z: 'trusted',
+      blast: 'Placed with guests, reception loses access to the booking system it exists to run.',
+      why: 'A managed, patched machine used by staff for work belongs on the internal network. The person sitting at reception is not the risk factor. The device being managed is what puts it here.' },
+    { n: 'Lobby smart TV', note: 'Runs vendor firmware, no updates since 2023', z: 'iot',
+      blast: 'On the staff network it becomes a permanent foothold that nobody can patch.',
+      why: 'This is the one people get wrong because it belongs to the office. It cannot be patched, cannot be logged into and nobody monitors it, which is the definition of an untrusted device no matter who bought it.' },
+    { n: 'Payroll file server', note: 'Holds salary records, accessed by two people', z: 'servers',
+      blast: 'On a flat network every compromised laptop can reach payroll directly.',
+      why: 'Grouped by role, per EK 2.6.B.2. A server holding sensitive data sits behind its own boundary so that access is a decision rather than a default.' },
+    { n: 'Visitor laptop', note: 'Unknown device, contractor here for one afternoon', z: 'guest',
+      blast: 'Anywhere internal, an unmanaged outside machine gets a route to your data.',
+      why: 'You know nothing about its patch level, its owner or what is running on it. The guest zone exists exactly for devices you cannot vouch for.' },
+    { n: 'Security camera', note: 'Default credentials until last week, IP-connected', z: 'iot',
+      blast: 'Cameras are a favourite first foothold precisely because they are forgotten.',
+      why: 'A camera is a small computer running vendor firmware. It is the device most likely to still have default credentials, and the one nobody checks.' },
+    { n: 'Warehouse barcode scanner', note: 'Old wireless, cannot do WPA3', z: 'iot',
+      blast: 'To keep it working on the staff network you would have to weaken the whole network.',
+      why: 'When one device cannot meet the security standard, segment it rather than lowering the standard for everyone. That is the trade in EK 2.6.A.4.' },
+    { n: 'Accounts laptop', note: 'Staff device, full disk encryption, managed', z: 'trusted',
+      blast: 'In the guest zone it cannot reach the finance server it needs.',
+      why: 'Managed, patched, staff-owned. Handling sensitive data is a reason for careful ACCESS rules, not a reason to move the laptop out of the internal zone.' },
+    { n: 'Conference room speakerphone', note: 'Network connected, vendor cloud service', z: 'iot',
+      blast: 'It phones home constantly and you cannot inspect what it sends.',
+      why: 'Anything that maintains its own connection to a vendor cloud and cannot be inspected is untrusted, however ordinary it looks in a meeting room.' },
+    { n: 'Internal wiki server', note: 'Shared documentation, all staff read it', z: 'servers',
+      blast: 'Left in the trusted pool it is reachable from every device including the ones you forgot.',
+      why: 'Shared systems go in the server zone even when the data is not secret, because the point is controlling what can reach them, not how sensitive they are.' },
+    { n: 'Personal phone on the staff wifi', note: 'Employee owned, unmanaged, whatever apps they like', z: 'guest',
+      blast: 'On the internal network an unmanaged personal device is a hole with a friendly name.',
+      why: 'Grouped by user type per EK 2.6.B.5. Being an employee is not the question. Whether the ORGANISATION manages the device is the question, and here it does not.' },
+    { n: 'Backup appliance', note: 'Holds a copy of everything, restores the business', z: 'servers',
+      blast: 'Reachable from a compromised laptop, the backups get encrypted along with the originals.',
+      why: 'The most valuable box in the building. If ransomware reaches both the live data and the backups, there is nothing to restore from, which is why backups are segmented hardest of all.' },
+    { n: 'Smart thermostat', note: 'Wifi, vendor app, installed by the landlord', z: 'iot',
+      blast: 'You do not control its updates and you cannot see its traffic.',
+      why: 'Somebody else installed it, somebody else updates it, and it sits on your network. Untrusted is not an insult here, it is an accurate statement about who controls the device.' }
+  ];
+
+  var el = {};
+  ['round','streak','score','dname','dnote','zones','reveal','verdict','blasttxt','why','nextbtn','play']
+    .forEach(function (k) { el[k] = document.getElementById('sg-' + k); });
+
+  var i = 0, score = 0, right = 0, locked = false;
+
+  function render() {
+    locked = false;
+    var d = DEVICES[i];
+    el.round.textContent = 'Device ' + (i + 1) + ' / ' + DEVICES.length;
+    el.streak.textContent = 'Placed right: ' + right;
+    el.score.textContent = 'Score: ' + score;
+    el.dname.textContent = d.n;
+    el.dnote.textContent = d.note;
+    el.reveal.className = 'sg-reveal';
+    el.zones.innerHTML = '';
+    ZONES.forEach(function (Z) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'sg-zone';
+      b.setAttribute('data-z', Z.z);
+      b.innerHTML = Z.label + '<small>' + Z.hint + '</small>';
+      b.addEventListener('click', function () { place(Z.z, b); });
+      el.zones.appendChild(b);
+    });
+  }
+
+  function place(z, btn) {
+    if (locked) return;
+    locked = true;
+    var d = DEVICES[i];
+    var good = z === d.z;
+    if (good) {
+      right++; score += 100;
+      btn.className = 'sg-zone sg-right';
+      el.verdict.className = 'sg-verdict good';
+      el.verdict.textContent = 'Correct zone.';
+      el.blasttxt.style.display = 'none';
+    } else {
+      btn.className = 'sg-zone sg-wrong';
+      var nodes = el.zones.querySelectorAll('.sg-zone');
+      for (var n = 0; n < nodes.length; n++) {
+        if (nodes[n].getAttribute('data-z') === d.z) nodes[n].className = 'sg-zone sg-right';
+      }
+      el.verdict.className = 'sg-verdict bad';
+      var lbl = ZONES.filter(function (x) { return x.z === d.z; })[0].label;
+      el.verdict.textContent = 'This one belongs in ' + lbl + '.';
+      el.blasttxt.style.display = '';
+      el.blasttxt.textContent = 'What it costs: ' + d.blast;
+    }
+    el.why.textContent = d.why;
+    el.reveal.className = 'sg-reveal on';
+    el.score.textContent = 'Score: ' + score;
+    el.streak.textContent = 'Placed right: ' + right;
+  }
+
+  el.nextbtn.addEventListener('click', function () {
+    if (i < DEVICES.length - 1) { i++; render(); } else { finish(); }
+  });
+
+  function finish() {
+    el.play.innerHTML =
+      '<div class="sg-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + right + ' of ' + DEVICES.length + ' placed correctly.</p>' +
+        '<div class="sg-teach">' +
+          '<b>Ownership is the wrong axis, and it is the one everybody reaches for first.</b> ' +
+          'The lobby television, the conference speakerphone and the thermostat all belong to the ' +
+          'office, and all three are untrusted, because nobody can patch them, log in to them or see ' +
+          'what they send. Meanwhile the employee\'s own phone is not a staff device in any sense ' +
+          'that matters, because the organisation does not manage it. ' +
+          'The question that sorts every device correctly is not who owns it or where it sits. It is: ' +
+          'if somebody took this over tonight, what should they be able to reach? Answer that, and ' +
+          'the zone chooses itself.' +
+        '</div>' +
+        '<p><button class="sg-next" id="sg-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('sg-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  render();
+})();
+</script>

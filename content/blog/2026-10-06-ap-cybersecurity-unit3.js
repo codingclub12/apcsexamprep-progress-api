@@ -25,7 +25,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'ap cybersecurity unit 3',
-  publishOn: '2026-10-06',
+  publishOn: '2026-10-09',
   seoTitle: 'AP Cybersecurity Unit 3: Network Security Questions',
   seoDescription: 'Ten AP Cybersecurity Unit 3 scenario questions, grouped by attack recognition, firewalls and NAT, IDS and SIEM, and VLANs and wireless, hardest last.',
   summary: 'Ten scenario-style practice questions scoped to AP Cybersecurity Unit 3, Securing Networks, grouped by which piece of the network is actually doing the work: naming the attack itself, the firewall and NAT boundary and the DMZ, detection with IDS, IPS, and SIEM, and finally VLANs and wireless design flaws, ordered from a straightforward recognition call to a closing scenario that stacks several ideas from across the unit at once. Three are presented as fully interactive practice questions and the rest as worked scenario walkthroughs, and none of the ten repeats a scenario already used on this blog\'s segmentation or firewalls guides.',

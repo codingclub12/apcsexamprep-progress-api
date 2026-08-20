@@ -22,7 +22,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'ipv6',
-  publishOn: '2026-10-20',
+  publishOn: '2026-10-21',
   seoTitle: 'IPv6 Explained: Why It Exists, Not Just What It Is',
   seoDescription: 'IPv6 explained from the problem it solves: IPv4 running out of room. What an IPv6 address looks like, why it matters for Unit 4, and why both still run today.',
   summary: 'An explanation of IPv6 that starts from the problem it solves rather than the notation: IPv4 only has room for about 4.3 billion addresses, which is nowhere near enough for a world of billions of connected devices. Covers what an IPv6 address looks like at a glance, how it connects to AP Networking Unit 4, why network address translation was partly a workaround for IPv4 scarcity, and why IPv4 and IPv6 run side by side today rather than one having replaced the other.',

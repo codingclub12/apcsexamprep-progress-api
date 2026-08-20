@@ -19,7 +19,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp create task ideas',
-  publishOn: '2026-09-01',
+  publishOn: '2026-08-31',
   seoTitle: 'AP CSP Create Task Ideas: Projects Easy to Explain',
   seoDescription: 'AP CSP Create task ideas that will still make sense to you seven months from now, evaluated for how easy each one is to explain in the proctored exam.',
   summary: 'Not every good Create task project idea is a good Create task project idea to write about later. A practical framework for choosing a project you can still explain from memory, plus six concrete concepts that fit it.',

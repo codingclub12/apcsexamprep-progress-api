@@ -23,7 +23,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp personalized project reference',
-  publishOn: '2026-09-15',
+  publishOn: '2026-09-18',
   seoTitle: 'Choosing Your AP CSP Personalized Project Reference',
   seoDescription: 'How to pick the two strongest code segments for your AP CSP Personalized Project Reference, with the four selection criteria and a worked example.',
   summary: 'A practical guide to the selection decision behind the AP CSP Personalized Project Reference: what makes a list segment or a procedure segment worth choosing, the mistakes that weaken a pair of segments, and a worked comparison of candidate segments from a sample hiking tracker project.',

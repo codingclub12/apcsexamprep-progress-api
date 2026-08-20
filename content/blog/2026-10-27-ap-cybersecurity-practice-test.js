@@ -41,7 +41,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'ap cybersecurity practice test',
-  publishOn: '2026-10-27',
+  publishOn: '2026-10-26',
   seoTitle: 'AP Cybersecurity Practice Test: What Actually Exists',
   seoDescription: 'No official AP Cybersecurity practice test exists yet. Here is how a student builds real calibrated practice from the CED, scenario patterns, and pacing.',
   summary: 'AP Cybersecurity has no released full-length exam, so a student searching for an ap cybersecurity practice test will not find one from College Board. This guide shows what to use instead: the CED\'s own published sample questions as the closest thing to real calibration, the evidence-first scenario reading method applied to new self-written scenarios, checkpoint pacing timed against the real 80 minute clock, and a concrete method for assembling calibrated practice from real course materials rather than waiting for a mock exam that does not exist.',

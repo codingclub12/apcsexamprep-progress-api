@@ -24,7 +24,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa frq scoring',
-  publishOn: '2026-09-22',
+  publishOn: '2026-09-21',
   seoTitle: 'AP CSA FRQ Scoring: How Points Are Actually Earned',
   seoDescription: 'AP CSA FRQ scoring gives partial credit for specific skills, not a working program. Here is how the rubric actually reads a flawed solution, point by point.',
   summary: 'Most students assume a free response answer that would not compile or run is worth close to nothing. AP CSA FRQ scoring does not work that way. Rubrics award points for specific demonstrated skills, independent of whether the whole program would run, and this post walks through a flawed worked example to show exactly which points survive a mistake and which do not, plus the "uses the method appropriately" rule that catches strong students who solve a problem a valid but different way.',

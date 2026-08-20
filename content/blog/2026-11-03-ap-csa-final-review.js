@@ -31,7 +31,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa final review',
-  publishOn: '2026-11-03',
+  publishOn: '2026-11-06',
   seoTitle: 'AP CSA Final Review: Units 1 to 4',
   seoDescription: 'An AP CSA final review organized unit by unit, with concrete checklists linking to the exact posts on this blog, an exam mechanics section, and a time split.',
   summary: 'A navigation-style AP CSA final review organized by the four CED units: Using Objects and Methods, Selection and Iteration, Class Creation, and Data Collections. For each unit, a checklist of concrete review actions, linked to the specific dedicated posts already on this blog rather than re-explaining any of their content, plus a cross-cutting exam strategy and mechanics section and a suggested time allocation across the four units.',

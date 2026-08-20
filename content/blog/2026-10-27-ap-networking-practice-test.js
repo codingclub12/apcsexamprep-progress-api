@@ -28,7 +28,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'ap networking practice test',
-  publishOn: '2026-10-27',
+  publishOn: '2026-10-26',
   seoTitle: 'AP Networking Practice Test: What Exists Right Now',
   seoDescription: 'There is no released AP Networking practice test yet. Here is what actually exists to practice with, and how to build a real practice bank in the meantime.',
   summary: 'A student searching for an AP Networking practice test will not find one, and will not find one for a while: the course is in its third and final pilot year, a full year further from national launch than AP Cybersecurity was when it faced the same gap. This post is honest about what actually exists, a handful of sample items buried in a pilot guide most students cannot open, and lays out the real strategy: treat this blog\'s scenario-based drills, built specifically in the four-skill format, as the closest thing to calibrated practice, and build a personal question bank straight from the course objectives rather than waiting on a released exam.',

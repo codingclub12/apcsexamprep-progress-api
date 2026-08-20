@@ -1,0 +1,286 @@
+<style>
+  #ro-game{font-family:"DM Sans",-apple-system,BlinkMacSystemFont,sans-serif;max-width:640px;margin:0 auto;}
+  #ro-game *{box-sizing:border-box;}
+  .ro-card{border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden;background:#fff!important;}
+  .ro-hero{background:#0f1f3d!important;padding:22px 20px;text-align:center;}
+  .ro-title{font-family:"DM Serif Display",Georgia,serif!important;font-size:26px!important;line-height:1.15!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 6px!important;}
+  .ro-sub{font-size:14px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0!important;line-height:1.5!important;}
+  .ro-bar{display:flex;gap:8px;padding:12px;background:#f8fafc!important;border-bottom:1px solid #e2e8f0;flex-wrap:wrap;justify-content:center;}
+  .ro-chip{font-size:12px!important;font-weight:700;color:#475569!important;-webkit-text-fill-color:#475569!important;background:#fff!important;border:1px solid #e2e8f0;border-radius:100px;padding:6px 12px;}
+  .ro-chip.ro-score{background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:#1a56db;}
+  .ro-body{padding:20px;}
+  .ro-how{font-size:13px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;line-height:1.6!important;background:#f8fafc!important;border-radius:10px;padding:12px 14px;margin:0 0 18px!important;}
+  .ro-goal{background:#eff6ff!important;border:1px solid #bfdbfe;border-radius:12px;padding:14px 16px;margin-bottom:16px;}
+  .ro-goal b{display:block;font-size:12px!important;text-transform:uppercase;letter-spacing:.06em;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin-bottom:5px;}
+  .ro-goal span{font-size:15px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.5!important;}
+  .ro-acl{border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;margin-bottom:14px;}
+  .ro-rule{display:flex;align-items:center;gap:10px;padding:11px 12px;border-bottom:1px solid #f1f5f9;background:#fff!important;}
+  .ro-rule:last-child{border-bottom:none;}
+  .ro-n{width:22px;height:22px;border-radius:6px;background:#0f1f3d!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:11px!important;font-weight:800;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+  .ro-txt{flex:1;font-size:13px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.45!important;font-variant-numeric:tabular-nums;}
+  .ro-act{font-size:10px!important;font-weight:800;text-transform:uppercase;letter-spacing:.06em;border-radius:5px;padding:3px 7px;flex:0 0 auto;}
+  .ro-act.permit{background:#dcfce7!important;color:#15803d!important;-webkit-text-fill-color:#15803d!important;}
+  .ro-act.deny{background:#fee2e2!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;}
+  .ro-mv{display:flex;flex-direction:column;gap:2px;flex:0 0 auto;}
+  .ro-mvb{width:24px;height:16px;border:1px solid #e2e8f0;border-radius:4px;background:#f8fafc!important;color:#475569!important;-webkit-text-fill-color:#475569!important;font-family:inherit;font-size:9px!important;font-weight:800;cursor:pointer;padding:0;line-height:1;}
+  .ro-mvb:hover{border-color:#1a56db;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;}
+  .ro-run{width:100%;padding:13px;border:none;border-radius:10px;background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:inherit;font-size:15px!important;font-weight:700;cursor:pointer;}
+  .ro-reveal{display:none;margin-top:16px;padding-top:16px;border-top:1px solid #e2e8f0;}
+  .ro-reveal.on{display:block;}
+  .ro-verdict{font-size:16px!important;font-weight:700;margin:0 0 12px!important;}
+  .ro-verdict.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important;}
+  .ro-verdict.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;}
+  .ro-trace{border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;margin-bottom:12px;}
+  .ro-tr{display:flex;align-items:center;gap:9px;padding:9px 11px;border-bottom:1px solid #f1f5f9;font-size:12px!important;}
+  .ro-tr:last-child{border-bottom:none;}
+  .ro-tr .pk{flex:1;color:#334155!important;-webkit-text-fill-color:#334155!important;font-variant-numeric:tabular-nums;}
+  .ro-tr .rs{font-weight:800;font-size:11px!important;}
+  .ro-tr.pass .rs{color:#15803d!important;-webkit-text-fill-color:#15803d!important;}
+  .ro-tr.fail .rs{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;}
+  .ro-why{font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;line-height:1.65!important;margin:0 0 14px!important;}
+  .ro-end{text-align:center;}
+  .ro-end h2{font-family:"DM Serif Display",Georgia,serif!important;font-size:30px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin:0 0 6px!important;}
+  .ro-end p{font-size:14px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:0 0 16px!important;}
+  .ro-teach{text-align:left;background:#eff6ff!important;border-left:3px solid #1a56db;border-radius:0 10px 10px 0;padding:14px 16px;font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;line-height:1.7!important;margin-bottom:16px;}
+  .ro-teach b{color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;}
+</style>
+
+<div id="ro-game">
+  <div class="ro-card">
+    <div class="ro-hero">
+      <h1 class="ro-title">Rule Order</h1>
+      <p class="ro-sub">The rules are all correct. Only the order is wrong, and the order is what decides who gets in</p>
+    </div>
+    <div class="ro-bar">
+      <span class="ro-chip" id="ro-round">Case 1 / 5</span>
+      <span class="ro-chip" id="ro-streak">Clean: 0</span>
+      <span class="ro-chip ro-score" id="ro-score">Score: 0</span>
+    </div>
+    <div class="ro-body" id="ro-play">
+      <p class="ro-how">How to play: a firewall reads its list from the top and stops at the FIRST rule that matches. Every rule below a broader one that already matched is dead. Move the rules with the arrows until the traffic below behaves the way the goal asks, then run it.</p>
+      <div class="ro-goal"><b>Goal</b><span id="ro-goaltxt"></span></div>
+      <div class="ro-acl" id="ro-acl"></div>
+      <button class="ro-run" id="ro-runbtn" type="button">Run the traffic</button>
+      <div class="ro-reveal" id="ro-reveal">
+        <p class="ro-verdict" id="ro-verdict"></p>
+        <div class="ro-trace" id="ro-trace"></div>
+        <p class="ro-why" id="ro-why"></p>
+        <button class="ro-run" id="ro-nextbtn" type="button">Next case</button>
+      </div>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Rule Order - AP Networking Topic 3.5, sub-skill 2.C.
+     EK 3.5.C.4: "Firewall rules are implemented in order, and changing the order
+     of a set of rules can change which traffic is permitted." That sentence
+     cannot be assessed by a question with no ordering in it, which is why this
+     game exists and why the quiz version of this topic cannot replace it.
+     Every case ships with rules that are individually correct. The only defect
+     is sequence, so a student cannot score by spotting a "wrong" rule. */
+
+  var CASES = [
+    {
+      goal: 'Let the office subnet reach the file server on port 445, and block every other machine from it.',
+      rules: [
+        { id: 'a', txt: 'deny any -> 10.0.5.10 port 445', act: 'deny', hits: ['t1', 't2'] },
+        { id: 'b', txt: 'permit 10.0.1.0/24 -> 10.0.5.10 port 445', act: 'permit', hits: ['t1'] }
+      ],
+      traffic: [
+        { id: 't1', pk: 'Office PC 10.0.1.44 -> file server :445', want: 'permit' },
+        { id: 't2', pk: 'Guest laptop 10.0.9.7 -> file server :445', want: 'deny' }
+      ],
+      why: 'A deny that names "any" matches the office PC too. Placed first, it shadows the permit completely and the file server becomes unreachable for everyone, which reads as a broken server rather than a firewall problem. The specific permit has to sit above the broad deny.'
+    },
+    {
+      goal: 'Block the one compromised host, but leave the rest of its subnet working normally.',
+      rules: [
+        { id: 'a', txt: 'permit 172.16.4.0/24 -> any', act: 'permit', hits: ['t1', 't2'] },
+        { id: 'b', txt: 'deny 172.16.4.99 -> any', act: 'deny', hits: ['t1'] }
+      ],
+      traffic: [
+        { id: 't1', pk: 'Infected host 172.16.4.99 -> internet', want: 'deny' },
+        { id: 't2', pk: 'Clean host 172.16.4.20 -> internet', want: 'permit' }
+      ],
+      why: 'The subnet-wide permit matches the infected host as well, because .99 is inside 172.16.4.0/24. Quarantine rules are always more specific than the rule they carve an exception out of, so they always go above it.'
+    },
+    {
+      goal: 'Allow web traffic out, allow the mail server out, and deny everything else leaving the network.',
+      rules: [
+        { id: 'a', txt: 'deny any -> any', act: 'deny', hits: ['t1', 't2', 't3'] },
+        { id: 'b', txt: 'permit any -> any port 443', act: 'permit', hits: ['t1'] },
+        { id: 'c', txt: 'permit 10.0.2.25 -> any port 25', act: 'permit', hits: ['t2'] }
+      ],
+      traffic: [
+        { id: 't1', pk: 'Any host -> internet :443', want: 'permit' },
+        { id: 't2', pk: 'Mail server 10.0.2.25 -> internet :25', want: 'permit' },
+        { id: 't3', pk: 'Unknown service -> internet :4444', want: 'deny' }
+      ],
+      why: 'The catch-all deny is not wrong, it is just last. Its whole job is to be the rule nothing else matched, which is why it is called the implicit deny and why writing it at the top switches the network off. The two permits do not overlap, so either of them may come first.'
+    },
+    {
+      goal: 'Let the IT admin subnet manage the switch over SSH. Nobody else may reach the switch at all.',
+      rules: [
+        { id: 'a', txt: 'deny any -> 10.0.0.2 any port', act: 'deny', hits: ['t1', 't2', 't3'] },
+        { id: 'b', txt: 'permit 10.0.7.0/24 -> 10.0.0.2 port 22', act: 'permit', hits: ['t1'] }
+      ],
+      traffic: [
+        { id: 't1', pk: 'Admin 10.0.7.3 -> switch :22', want: 'permit' },
+        { id: 't2', pk: 'Student 10.0.3.88 -> switch :22', want: 'deny' },
+        { id: 't3', pk: 'Student 10.0.3.88 -> switch :80', want: 'deny' }
+      ],
+      why: 'Note the third packet. Because the permit names only port 22, the broad deny below it still catches every other port on the same device, which is exactly what you want. Specific permit first, broad deny second, and the deny keeps doing useful work.'
+    },
+    {
+      goal: 'Guests reach the internet. Guests never reach anything internal. Internal machines talk to each other freely.',
+      rules: [
+        { id: 'a', txt: 'permit 192.168.100.0/24 -> any', act: 'permit', hits: ['t1', 't2'] },
+        { id: 'b', txt: 'deny 192.168.100.0/24 -> 10.0.0.0/8', act: 'deny', hits: ['t1'] },
+        { id: 'c', txt: 'permit 10.0.0.0/8 -> 10.0.0.0/8', act: 'permit', hits: ['t3'] }
+      ],
+      traffic: [
+        { id: 't1', pk: 'Guest 192.168.100.6 -> internal 10.0.5.10', want: 'deny' },
+        { id: 't2', pk: 'Guest 192.168.100.6 -> internet', want: 'permit' },
+        { id: 't3', pk: 'Internal 10.0.5.10 -> internal 10.0.1.4', want: 'permit' }
+      ],
+      why: 'This is the guest network in three lines. "Permit guests to any" includes the internal network, because internal addresses are part of any. The narrower deny has to come first, and then the broad permit does what people assume it does.'
+    }
+  ];
+
+  var el = {};
+  ['round','streak','score','goaltxt','acl','runbtn','reveal','verdict','trace','why','nextbtn','play']
+    .forEach(function (k) { el[k] = document.getElementById('ro-' + k); });
+
+  var i = 0, score = 0, clean = 0, order = [], locked = false;
+
+  function render() {
+    locked = false;
+    var c = CASES[i];
+    el.round.textContent = 'Case ' + (i + 1) + ' / ' + CASES.length;
+    el.streak.textContent = 'Clean: ' + clean;
+    el.score.textContent = 'Score: ' + score;
+    el.goaltxt.textContent = c.goal;
+    el.reveal.className = 'ro-reveal';
+    el.runbtn.style.display = '';
+    order = c.rules.map(function (r) { return r.id; });
+    paint();
+  }
+
+  function ruleById(id) {
+    var c = CASES[i];
+    for (var k = 0; k < c.rules.length; k++) if (c.rules[k].id === id) return c.rules[k];
+    return null;
+  }
+
+  function paint() {
+    el.acl.innerHTML = '';
+    order.forEach(function (id, idx) {
+      var r = ruleById(id);
+      var row = document.createElement('div');
+      row.className = 'ro-rule';
+      row.innerHTML =
+        '<span class="ro-n">' + (idx + 1) + '</span>' +
+        '<span class="ro-txt">' + r.txt + '</span>' +
+        '<span class="ro-act ' + r.act + '">' + r.act + '</span>';
+      var mv = document.createElement('span');
+      mv.className = 'ro-mv';
+      var up = document.createElement('button');
+      up.type = 'button'; up.className = 'ro-mvb'; up.textContent = 'UP';
+      up.addEventListener('click', function () { move(idx, -1); });
+      var dn = document.createElement('button');
+      dn.type = 'button'; dn.className = 'ro-mvb'; dn.textContent = 'DN';
+      dn.addEventListener('click', function () { move(idx, 1); });
+      mv.appendChild(up); mv.appendChild(dn);
+      row.appendChild(mv);
+      el.acl.appendChild(row);
+    });
+  }
+
+  function move(idx, d) {
+    if (locked) return;
+    var j = idx + d;
+    if (j < 0 || j >= order.length) return;
+    var t = order[idx]; order[idx] = order[j]; order[j] = t;
+    paint();
+  }
+
+  /* The verdict is SIMULATED, never compared against a stored answer. Each packet
+     walks the list the student built and takes the action of the FIRST rule that
+     matches it, exactly as a firewall does. Every rule declares the traffic it
+     matches, so this is exact rather than a heuristic.
+
+     An earlier version inferred "which rule is broader" from a stored ideal
+     order. It accepted orderings a real firewall would have blocked, because a
+     broad rule was assumed to match any packet whose intended rule sat below it.
+     Exhaustive permutation testing caught it. If a case has more than one correct
+     ordering, this model says so honestly instead of insisting on one answer. */
+  function firstMatch(pk) {
+    for (var k = 0; k < order.length; k++) {
+      var r = ruleById(order[k]);
+      if (r.hits.indexOf(pk.id) !== -1) return r.act;
+    }
+    return 'deny';
+  }
+
+  function run() {
+    if (locked) return;
+    locked = true;
+    var c = CASES[i];
+    var rows = '', allGood = true;
+    c.traffic.forEach(function (pk) {
+      var got = firstMatch(pk);
+      var good = got === pk.want;
+      if (!good) allGood = false;
+      rows += '<div class="ro-tr ' + (good ? 'pass' : 'fail') + '">' +
+        '<span class="pk">' + pk.pk + '</span>' +
+        '<span class="rs">' + got.toUpperCase() + (good ? ' as intended' : ' but should ' + pk.want) + '</span>' +
+        '</div>';
+    });
+    el.trace.innerHTML = rows;
+    if (allGood) {
+      clean++; score += 150;
+      el.verdict.className = 'ro-verdict good';
+      el.verdict.textContent = 'Every packet landed the way the goal asked.';
+    } else {
+      el.verdict.className = 'ro-verdict bad';
+      el.verdict.textContent = 'A rule above shadowed the one that was meant to match.';
+    }
+    el.why.textContent = c.why;
+    el.runbtn.style.display = 'none';
+    el.reveal.className = 'ro-reveal on';
+    el.score.textContent = 'Score: ' + score;
+    el.streak.textContent = 'Clean: ' + clean;
+  }
+
+  el.runbtn.addEventListener('click', run);
+  el.nextbtn.addEventListener('click', function () {
+    if (i < CASES.length - 1) { i++; render(); } else { finish(); }
+  });
+
+  function finish() {
+    el.play.innerHTML =
+      '<div class="ro-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + clean + ' of ' + CASES.length + ' rule sets behaved correctly.</p>' +
+        '<div class="ro-teach">' +
+          '<b>Not one rule in this game was wrong.</b> Every list you were handed contained exactly ' +
+          'the right rules, and every failure came from sequence alone. A firewall stops at the first ' +
+          'match, so a broad rule placed above a specific one makes the specific one unreachable, and ' +
+          'a shadowed rule looks completely fine in a review because reading it tells you nothing ' +
+          'about whether it is ever reached. The habit that survives: specific rules above general ' +
+          'ones, and the catch-all deny stays at the bottom where it belongs.' +
+        '</div>' +
+        '<p><button class="ro-run" id="ro-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('ro-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  render();
+})();
+</script>

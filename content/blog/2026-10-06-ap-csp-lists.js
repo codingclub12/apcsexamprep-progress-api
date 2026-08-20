@@ -18,7 +18,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp lists',
-  publishOn: '2026-10-06',
+  publishOn: '2026-10-07',
   seoTitle: 'AP CSP Lists: The 1-Indexed Trap, Fully Traced',
   seoDescription: 'AP CSP lists start at index 1, not 0. A full trace of APPEND, INSERT, and REMOVE shows exactly how every later index shifts, plus the loop bounds trap.',
   summary: 'AP CSP lists look exactly like the arrays or lists a student already knows from Python or Java, right up until the first index comes back one number off. This guide goes deep on list operations specifically: creating a list, APPEND, INSERT, REMOVE, and indexing, with a full step by step trace of how INSERT and REMOVE shift every later index by one, and the loop bounds trap that catches students who write 1-indexed loops out of 0-indexed habit.',

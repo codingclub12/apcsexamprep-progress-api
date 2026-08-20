@@ -17,7 +17,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'phishing',
-  publishOn: '2026-09-01',
+  publishOn: '2026-09-02',
   seoTitle: 'Phishing Explained: How to Spot It, AP Cybersecurity Guide',
   seoDescription: 'What phishing actually is, the difference between broad and spear phishing, and the concrete signals that identify an attempt before you click.',
   summary: 'Nearly every reader has already received a phishing message, whether they recognized it as an attack or not. This guide goes deep on phishing specifically: the difference between broad phishing and spear phishing, the channel variants the exam names separately, and the concrete signals, mismatched sender addresses, urgency language, mismatched links, that identify an attempt before anyone clicks.',

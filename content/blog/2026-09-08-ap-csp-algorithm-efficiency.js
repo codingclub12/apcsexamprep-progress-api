@@ -23,7 +23,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp algorithms',
-  publishOn: '2026-09-08',
+  publishOn: '2026-09-09',
   seoTitle: 'AP CSP Algorithms: Reasonable vs Unreasonable Time',
   seoDescription: 'A conceptual guide to AP CSP algorithm efficiency: how to tell reasonable time algorithms from unreasonable ones without Big-O notation or a CS degree.',
   summary: 'AP CSP asks students to judge whether an algorithm runs in a reasonable or unreasonable amount of time, and it does this without ever requiring formal Big-O notation. That framing trips students up in both directions: some panic and try to learn complexity theory that was never being tested, others dismiss the topic as not real content and lose points on it anyway. This guide teaches the actual skill being tested, a practical sense of how work scales as input grows, with concrete examples, a doubling comparison table, and two worked practice questions in the description-based style the exam actually uses.',

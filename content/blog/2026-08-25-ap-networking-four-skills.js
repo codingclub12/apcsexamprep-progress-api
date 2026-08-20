@@ -26,7 +26,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'ap networking exam',
-  publishOn: '2026-08-25',
+  publishOn: '2026-08-24',
   seoTitle: 'AP Networking Exam: The Four Skills It Actually Tests',
   seoDescription: 'The AP Networking exam is weighted around four skills, not the four units. What Connect and Configure, Secure, Troubleshoot, and Collaborate each really test.',
   summary: 'AP Networking is weighted around four assessed skills rather than around its four units: Connect and Configure, Secure, Troubleshoot, and Collaborate. A deep look at what each one actually tests, worked examples of what a question testing each skill looks like, and why that structure should change how you study.',

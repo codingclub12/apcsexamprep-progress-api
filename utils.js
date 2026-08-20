@@ -232,7 +232,13 @@ const COURSES = {
       'unit-1': {
         label: 'Unit 1: Meet Greenfoot',
         lessons: ['1.1', '1.2', '1.3', '1.4', '1.5', '1.6'],
-        activities: ['lesson', 'cfu', 'gap', 'quiz'],
+        // 'code' was left out here while Units 2 to 6 declared it, correctly:
+        // no Unit 1 lesson had a code exercise, and declaring the column would
+        // have created six permanently empty ones. That is no longer true.
+        // 1.4, 1.5 and 1.6 have authored, verified exercises now; 1.1 to 1.3
+        // still do not and never will, because nothing in them is typed. The
+        // column is declared because the pages that fill it exist.
+        activities: ['lesson', 'cfu', 'gap', 'code', 'quiz'],
       },
       'unit-2': {
         label: 'Unit 2: Variables, Decisions, and Input',

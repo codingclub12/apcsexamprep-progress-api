@@ -20,7 +20,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp procedures',
-  publishOn: '2026-10-13',
+  publishOn: '2026-10-14',
   seoTitle: 'AP CSP Procedures: Parameters, RETURN, and Scope',
   seoDescription: 'AP CSP procedures traced fully: how a parameter becomes a local variable, what RETURN really does, and why a reused name outside stays a separate variable.',
   summary: 'AP CSP procedures look simple on the reference sheet, a name, a parameter list, a RETURN statement, but the concept most students get wrong is scope: whether a variable defined inside a procedure exists anywhere else. This guide traces a worked example where the same variable name is used both inside a procedure and outside it, showing exactly what each one holds at every point in the program, then covers what RETURN actually does to control flow and the two exam traps built on top of that misunderstanding.',

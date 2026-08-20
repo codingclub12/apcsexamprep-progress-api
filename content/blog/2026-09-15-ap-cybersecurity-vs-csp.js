@@ -32,7 +32,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'ap cybersecurity vs ap csp',
-  publishOn: '2026-09-15',
+  publishOn: '2026-09-14',
   seoTitle: 'AP Cybersecurity vs AP CSP: How to Choose',
   seoDescription: 'AP Cybersecurity and AP CSP look similar on a course catalog page. Here is what each one actually asks of you day to day, and a real answer for which fits.',
   summary: 'AP Cybersecurity vs AP CSP is a different question than it looks like from the catalog description. CSP is a broad, long-standing computing literacy course built around a required coding project. Cybersecurity is a newer, narrower, defense-focused Career Kickstart course with no coding requirement at all. This guide covers what each actually demands day to day, which kind of student fits which course, how each is viewed for an early workforce credential versus a broad CS foundation, and a concrete answer rather than just it depends.',

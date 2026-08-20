@@ -23,7 +23,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa score distribution',
-  publishOn: '2026-08-18',
+  publishOn: '2026-08-17',
   seoTitle: '2026 AP CSA Score Distribution: What the Numbers Mean',
   seoDescription: 'The 2026 AP CSA score distribution is unusually polarized: a quarter earned 5s and nearly as many earned 1s. A teacher explains why, and what it means for you',
   summary: 'The first cohort tested on the redesigned four unit AP CSA course produced one of the most polarized score distributions of any AP exam. Here is what drives the split, what the redesign actually changed, and how to land on the right side of it.',

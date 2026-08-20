@@ -24,7 +24,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'network commands',
-  publishOn: '2026-10-20',
+  publishOn: '2026-10-23',
   seoTitle: 'Network Commands Every Student Should Know',
   seoDescription: 'A working reference to the network commands worth knowing: ipconfig, nslookup, netstat, and arp, what each one answers, and when to actually reach for it.',
   summary: 'A command line reference covering ipconfig and ifconfig, nslookup and dig, netstat, and arp -a, organized by the question each command answers rather than as a flat list. Each entry includes an illustrative example of its output and the moment during troubleshooting when a student would actually reach for it, tied back to the elimination method and the fault log habit covered elsewhere on this blog. Ping and traceroute, which already have a dedicated post, are linked rather than re-taught.',

@@ -24,7 +24,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp pseudocode',
-  publishOn: '2026-08-18',
+  publishOn: '2026-08-19',
   seoTitle: 'AP CSP Pseudocode: The Complete Syntax Guide',
   seoDescription: 'Every keyword and symbol in College Board AP CSP pseudocode, taught with worked examples and a Python comparison table, in one sitting.',
   summary: 'AP CSP does not test a real programming language. It tests College Board own invented pseudocode, and nearly every point students lose comes from a syntax detail they never actually drilled. This is the full reference: assignment, output, conditionals, both loop forms, boolean and comparison operators, lists, and procedures, taught side by side with the Python most students already know.',

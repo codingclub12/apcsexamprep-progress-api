@@ -19,7 +19,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'ap cybersecurity unit 1',
-  publishOn: '2026-08-25',
+  publishOn: '2026-08-28',
   seoTitle: 'AP Cybersecurity Unit 1 Vocabulary Ranked',
   seoDescription: 'A tiered guide to AP Cybersecurity Unit 1 vocabulary: which terms to know cold and why, and which ones matter far less than a flat glossary suggests.',
   summary: 'AP Cybersecurity has no released exams yet, so there is no real percentage for how often any term gets tested. This guide ranks Unit 1 vocabulary into tiers instead, based on how heavily later units and free response scenarios lean on each term, with worked reasoning for why the CIA triad and the threat, vulnerability, and risk trio sit at the top and several other terms sit well below them.',

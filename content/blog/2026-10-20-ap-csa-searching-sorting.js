@@ -27,7 +27,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa searching sorting',
-  publishOn: '2026-10-20',
+  publishOn: '2026-10-21',
   seoTitle: 'AP CSA Searching Sorting: Binary Search Guide',
   seoDescription: 'Trace AP CSA searching sorting the way the exam asks: a full binary search walkthrough plus selection and insertion sort pass by pass.',
   summary: 'AP CSA searching sorting questions reward tracing over writing code. This guide walks binary search step by step through low, high, and mid, covers the unsorted-array trap and off-by-one bounds errors, then traces selection sort and insertion sort pass by pass on a concrete array the way the exam actually asks for it.',

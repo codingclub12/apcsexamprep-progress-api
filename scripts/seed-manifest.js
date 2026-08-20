@@ -309,6 +309,7 @@ const NET_TEAM_PROJECT = {
 const INTRO_JAVA_PAGES_LIVE = true;
 
 const { BANKS: INTRO_JAVA_BANKS } = require('../seed/intro-java-banks');
+const { EXERCISES: INTRO_JAVA_EXERCISES, itemId: exerciseItemId } = require('../seed/intro-java-exercises');
 
 // The derivation and the shipping gate are two separate facts, so they are two
 // separate functions. smoke/intro-java-reporter.js needs to check that every
@@ -337,8 +338,43 @@ function introJavaRows() {
   return rows;
 }
 
+// ── THE EXERCISE GATE, DELIBERATELY STILL SHUT ───────────────────────────────
+// The code exercises are authored and verified (seed/intro-java-exercises.js,
+// proved by scripts/verify-intro-java-exercises.js), but their PAGES have not
+// been imported to Shopify and the run endpoint does not exist yet. Content
+// existing in this repo is not the same fact as a student being able to reach
+// it, which is the whole lesson INTRO_JAVA_PAGES_LIVE above records.
+//
+// Seeding these rows now would put one earnable-looking point per exercise into
+// every intro-java denominator with nothing on earth able to fill it, marking
+// every student down for a reason no teacher could see or explain.
+//
+// Flip this to true in the SAME pass that imports the exercise pages, and run
+// the seed with --update. Not before.
+const INTRO_JAVA_EXERCISES_LIVE = false;
+
+// One point per exercise. Not more: an exercise is one submission and one row,
+// the same shape as a gap-fill, and weighting it above a quiz would make a
+// single lesson's coding task worth more than its whole quiz for no reason
+// anybody could defend to a parent.
+function introJavaExerciseRows() {
+  const unitOf = {};
+  for (const bank of INTRO_JAVA_BANKS) {
+    for (const l of bank.lessons) unitOf[l.lesson] = bank.unit;
+  }
+  return INTRO_JAVA_EXERCISES.map((e) => {
+    const unit = unitOf[e.lesson];
+    if (!unit) throw new Error(`intro-java exercise ${e.lesson} has no lesson in any bank`);
+    return { course: 'intro-java', unit, lesson_id: e.lesson,
+      item_id: exerciseItemId(e.lesson), item_type: 'code', points: 1 };
+  });
+}
+
 function introJavaGradedRows() {
-  return INTRO_JAVA_PAGES_LIVE ? introJavaRows() : [];
+  if (!INTRO_JAVA_PAGES_LIVE) return [];
+  return INTRO_JAVA_EXERCISES_LIVE
+    ? [...introJavaRows(), ...introJavaExerciseRows()]
+    : introJavaRows();
 }
 
 // Unit projects. THIS IS EMPTY ON PURPOSE AND IS MEANT TO STAY EMPTY.
@@ -605,5 +641,6 @@ if (require.main === module) {
 
 module.exports = { seedManifest, buildRows, findOrphans, pruneManifest,
   deadNetworkingCfuIds, cleanDeadNetworkingCfus,
-  introJavaRows, introJavaGradedRows, INTRO_JAVA_PAGES_LIVE,
+  introJavaRows, introJavaGradedRows, introJavaExerciseRows,
+  INTRO_JAVA_PAGES_LIVE, INTRO_JAVA_EXERCISES_LIVE,
   NET_HANDS_ON_LIVE, NET_CONFIG_LABS, NET_UNIT_DOCS, NET_TEAM_PROJECT };

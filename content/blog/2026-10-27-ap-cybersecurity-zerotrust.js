@@ -25,7 +25,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'zero trust',
-  publishOn: '2026-10-27',
+  publishOn: '2026-10-28',
   seoTitle: 'Zero Trust and Defense in Depth Explained',
   seoDescription: 'Zero trust, defense in depth, and least privilege explained as one coherent security philosophy, with a worked school system scenario and practice.',
   summary: 'Zero trust, defense in depth, and least privilege sound like three separate vocabulary terms, but AP Cybersecurity treats them as one coherent way of thinking about why security is designed the way it is. This guide connects them directly: zero trust is the mindset, refusing to assume a device or user is safe just because it is already inside the network. Defense in depth is the structure, layering different kinds of controls so that one failure never means total compromise. Least privilege, already covered in depth in this blog\'s access control guide, is the practical rule that implements both by minimizing what any single compromised credential or device can ever reach. A worked scenario applies all three to a school\'s student information system, and two practice questions test identifying a principle from a described decision and explaining why a single strong control fails once it is bypassed.',

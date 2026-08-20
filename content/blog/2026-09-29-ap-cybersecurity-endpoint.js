@@ -18,7 +18,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'endpoint security',
-  publishOn: '2026-09-29',
+  publishOn: '2026-09-30',
   seoTitle: 'Endpoint Security: Device Hardening for AP Cybersecurity',
   seoDescription: 'Endpoint security explained: patching, disabling unnecessary services, full disk encryption, and screen lock timeouts, with a worked hardening example.',
   summary: 'Endpoint security is about making a single device more resistant to compromise, independent of who is allowed to use it. This guide walks through the five practices that actually do that work: keeping software patched, disabling unnecessary services and features, encrypting the disk, setting a short auto-lock timeout, and understanding what antivirus software can and cannot catch. A full before and after example hardens one unhardened laptop step by step, reasoning through what each change defends against, and a table maps every hardening step to the specific threat it mitigates.',

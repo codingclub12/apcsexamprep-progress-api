@@ -49,7 +49,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'ap networking college credit',
-  publishOn: '2026-10-13',
+  publishOn: '2026-10-12',
   seoTitle: 'AP Networking College Credit: The Honest Timeline',
   seoDescription: 'AP Networking college credit does not really exist yet. Here is the honest reason why, what College Board has said about credit, and what to do right now.',
   summary: 'AP Networking college credit is not a settled question, and it is genuinely further from being settled than AP Cybersecurity\'s own still-forming credit picture. The course is in its third and final pilot year in 2026-27, national launch is not until 2027-28, and the first national exam is not until May 2028, so no college has real score data to evaluate yet. Here is the honest timeline, what a recent comparable case (AP Precalculus) suggests about how long new-course credit policy actually takes, what College Board has specifically said about credit and the CompTIA and Cisco credential alignment, and what a current student should realistically do while the picture is still forming.',

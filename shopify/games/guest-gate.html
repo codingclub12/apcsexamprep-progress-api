@@ -1,0 +1,276 @@
+<style>
+  #gg-game{font-family:"DM Sans",-apple-system,BlinkMacSystemFont,sans-serif;max-width:640px;margin:0 auto;}
+  #gg-game *{box-sizing:border-box;}
+  .gg-card{border:1px solid #e2e8f0!important;border-radius:16px!important;overflow:hidden;background:#fff!important;}
+  .gg-hero{background:#0f1f3d!important;padding:22px 20px;text-align:center;}
+  .gg-title{font-family:"DM Serif Display",Georgia,serif!important;font-size:26px!important;line-height:1.15!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 6px!important;}
+  .gg-sub{font-size:14px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0!important;line-height:1.5!important;}
+  .gg-bar{display:flex;gap:8px;padding:12px;background:#f8fafc!important;border-bottom:1px solid #e2e8f0;flex-wrap:wrap;justify-content:center;}
+  .gg-chip{font-size:12px!important;font-weight:700;color:#475569!important;-webkit-text-fill-color:#475569!important;background:#fff!important;border:1px solid #e2e8f0;border-radius:100px;padding:6px 12px;}
+  .gg-chip.gg-score{background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:#1a56db;}
+  .gg-chip.gg-phase{background:#fef3c7!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border-color:#fde68a;}
+  .gg-body{padding:20px;}
+  .gg-how{font-size:13px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;line-height:1.6!important;background:#f8fafc!important;border-radius:10px;padding:12px 14px;margin:0 0 18px!important;}
+  .gg-brief{background:#eff6ff!important;border:1px solid #bfdbfe;border-radius:12px;padding:14px 16px;margin-bottom:14px;}
+  .gg-brief b{display:block;font-size:12px!important;text-transform:uppercase;letter-spacing:.06em;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin-bottom:5px;}
+  .gg-brief span{font-size:15px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.5!important;}
+  .gg-ask{font-size:14px!important;font-weight:700;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin:0 0 10px!important;}
+  .gg-opts{display:grid;grid-template-columns:1fr;gap:8px;}
+  .gg-opt{padding:13px 14px;border:2px solid #e2e8f0;border-radius:12px;background:#fff!important;font-family:inherit;font-size:14px!important;font-weight:700;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;cursor:pointer;text-align:left;line-height:1.4!important;}
+  .gg-opt small{display:block;font-size:11.5px!important;font-weight:600;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:3px;line-height:1.45!important;}
+  .gg-opt:hover{border-color:#1a56db;}
+  .gg-opt.gg-right{border-color:#16a34a;background:#f0fdf4!important;}
+  .gg-opt.gg-wrong{border-color:#dc2626;background:#fef2f2!important;}
+  .gg-done{background:#f0fdf4!important;border:1px solid #bbf7d0;border-radius:10px;padding:11px 13px;margin-bottom:12px;font-size:13px!important;color:#15803d!important;-webkit-text-fill-color:#15803d!important;line-height:1.5!important;}
+  .gg-reveal{display:none;margin-top:14px;padding-top:14px;border-top:1px solid #e2e8f0;}
+  .gg-reveal.on{display:block;}
+  .gg-verdict{font-size:15px!important;font-weight:700;margin:0 0 8px!important;}
+  .gg-verdict.good{color:#15803d!important;-webkit-text-fill-color:#15803d!important;}
+  .gg-verdict.bad{color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;}
+  .gg-why{font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;line-height:1.65!important;margin:0 0 12px!important;}
+  .gg-next{width:100%;padding:13px;border:none;border-radius:10px;background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:inherit;font-size:15px!important;font-weight:700;cursor:pointer;}
+  .gg-end{text-align:center;}
+  .gg-end h2{font-family:"DM Serif Display",Georgia,serif!important;font-size:30px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin:0 0 6px!important;}
+  .gg-end p{font-size:14px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:0 0 16px!important;}
+  .gg-teach{text-align:left;background:#eff6ff!important;border-left:3px solid #1a56db;border-radius:0 10px 10px 0;padding:14px 16px;font-size:13px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;line-height:1.7!important;margin-bottom:16px;}
+  .gg-teach b{color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;}
+</style>
+
+<div id="gg-game">
+  <div class="gg-card">
+    <div class="gg-hero">
+      <h1 class="gg-title">Guest Gate</h1>
+      <p class="gg-sub">Configure it, then prove it. The proof of a security control is the thing that must NOT work</p>
+    </div>
+    <div class="gg-bar">
+      <span class="gg-chip" id="gg-round">Job 1 / 5</span>
+      <span class="gg-chip gg-phase" id="gg-phasechip">Configure</span>
+      <span class="gg-chip gg-score" id="gg-score">Score: 0</span>
+    </div>
+    <div class="gg-body" id="gg-play">
+      <p class="gg-how">How to play: every job has two halves. First choose the setting that does the work. Then choose the ONE test that proves it, out of four tests that all pass on a correctly built network. Only one of them would have failed if you had got the configuration wrong, and that is the only one that proves anything.</p>
+      <div class="gg-brief"><b>The job</b><span id="gg-brieftxt"></span></div>
+      <div class="gg-done" id="gg-donetxt"></div>
+      <p class="gg-ask" id="gg-asktxt"></p>
+      <div class="gg-opts" id="gg-opts"></div>
+      <div class="gg-reveal" id="gg-reveal">
+        <p class="gg-verdict" id="gg-verdict"></p>
+        <p class="gg-why" id="gg-why"></p>
+        <button class="gg-next" id="gg-nextbtn" type="button">Continue</button>
+      </div>
+    </div>
+  </div>
+  <div id="apcs-lb"></div>
+</div>
+
+<script>
+(function () {
+  /* Guest Gate - AP Networking Topic 3.3, sub-skills 1.C and 1.D.
+     Sub-skill .D is the one nothing else in this course assesses: "verify
+     connectivity and configurations". EK 3.3.D.6 says a guest network is
+     verified by connecting a device to it, and the sentence students skip is
+     what you then try to REACH. Getting to the internet proves the guest network
+     works as a network. It proves nothing at all about isolation, which is the
+     entire reason the guest network exists.
+
+     So every verify step offers four tests that all SUCCEED on a correct build.
+     Three of them would also have succeeded on a broken one, which makes them
+     worthless as proof. That distinction is the whole game. */
+
+  var JOBS = [
+    {
+      brief: 'A cafe wants visitors online without letting them reach the till system or the office file share.',
+      cfgAsk: 'Which setting does the isolating work?',
+      cfg: [
+        { t: 'Enable the guest network with client isolation and no access to the local network', d: 'Separate SSID, blocked from internal subnets', ok: true },
+        { t: 'Give the guest network its own password', d: 'A different passphrase from the staff network', ok: false },
+        { t: 'Set the guest network to a different wireless channel', d: 'Channel 11 instead of channel 6', ok: false },
+        { t: 'Limit the guest network to 20 devices', d: 'Caps how many can join at once', ok: false }
+      ],
+      cfgWhy: 'A separate password and a separate channel both create a separate NETWORK, and neither creates separation. Guests with their own password on a flat network still reach the till. The setting that matters is the one that blocks access to the local network.',
+      verAsk: 'You are on a guest device. Which single test proves the isolation works?',
+      ver: [
+        { t: 'Try to open the office file share by its address, and fail', d: 'Expect a timeout', ok: true },
+        { t: 'Load a website successfully', d: 'Confirms internet access', ok: false },
+        { t: 'Check the device received an IP address', d: 'Confirms DHCP answered', ok: false },
+        { t: 'Confirm the guest SSID appears in the list', d: 'Confirms the network is broadcasting', ok: false }
+      ],
+      verWhy: 'All four tests pass on a correct build. Three of them also pass on a completely unsegmented network, so they prove the guest network exists and nothing more. Only the attempt that must FAIL can tell the two apart.'
+    },
+    {
+      brief: 'A static address was configured on a server that must be reachable from another subnet.',
+      cfgAsk: 'Which field being wrong would break cross-subnet access while leaving local access working?',
+      cfg: [
+        { t: 'The default gateway', d: 'The router the device sends off-subnet traffic to', ok: true },
+        { t: 'The IP address', d: 'The address of the device itself', ok: false },
+        { t: 'The DNS server', d: 'Resolves names to addresses', ok: false },
+        { t: 'The hostname', d: 'What the device calls itself', ok: false }
+      ],
+      cfgWhy: 'A wrong gateway is the classic half-broken configuration. Devices on the same subnet are reached directly and keep working, so everything looks fine locally. Anything off-subnet has nowhere to go.',
+      verAsk: 'Which test distinguishes a bad gateway from a bad address?',
+      ver: [
+        { t: 'Ping a device on a DIFFERENT subnet', d: 'Succeeds only if the gateway is right', ok: true },
+        { t: 'Ping a device on the same subnet', d: 'Succeeds either way', ok: false },
+        { t: 'Ping 127.0.0.1', d: 'Tests the local network stack', ok: false },
+        { t: 'Check the link light on the switch port', d: 'Confirms a physical connection', ok: false }
+      ],
+      verWhy: 'Loopback and same-subnet pings both succeed with a completely wrong gateway, which is why a technician who runs only those two reports the server as healthy. Off-subnet is the first test that needs the gateway to be right.'
+    },
+    {
+      brief: 'MAC filtering has just been enabled on a switch port so that only one approved laptop may use it.',
+      cfgAsk: 'What has to be true for the filter to do anything?',
+      cfg: [
+        { t: 'The port permits only the approved MAC address and denies the rest', d: 'An allow list of one', ok: true },
+        { t: 'The approved laptop has a static IP address', d: 'Fixed address rather than DHCP', ok: false },
+        { t: 'The port is set to the correct VLAN', d: 'VLAN 20 for staff', ok: false },
+        { t: 'The switch has the latest firmware', d: 'Good practice generally', ok: false }
+      ],
+      cfgWhy: 'A VLAN decides which network a port belongs to and a static address decides what the device is called. Neither decides WHICH devices may use the port, which is what MAC filtering is for.',
+      verAsk: 'Which test proves the filter is enforcing?',
+      ver: [
+        { t: 'Plug in a different laptop and confirm it gets no connection', d: 'The unapproved device must fail', ok: true },
+        { t: 'Plug in the approved laptop and confirm it works', d: 'The approved device succeeds', ok: false },
+        { t: 'Confirm the port shows as up on the switch', d: 'The interface is live', ok: false },
+        { t: 'Confirm the approved laptop can reach the internet', d: 'Full connectivity for the allowed device', ok: false }
+      ],
+      verWhy: 'The approved laptop works whether or not the filter is on, so testing it proves only that you have not broken anything. A control that permits is verified by what it REFUSES.'
+    },
+    {
+      brief: 'A firewall rule was added to stop an internal camera network from reaching the internet.',
+      cfgAsk: 'Which rule expresses that, given cameras must still be viewable from inside?',
+      cfg: [
+        { t: 'Deny camera subnet to any external address, permit camera subnet to the internal viewing server', d: 'Blocks outbound, keeps internal access', ok: true },
+        { t: 'Deny any to the camera subnet', d: 'Blocks traffic toward the cameras', ok: false },
+        { t: 'Deny camera subnet to any address', d: 'Blocks all camera traffic', ok: false },
+        { t: 'Permit camera subnet to any external address on port 443 only', d: 'Restricts outbound to encrypted web', ok: false }
+      ],
+      cfgWhy: 'The third option is the near miss and it is worth sitting with. It does block the internet, and it also blocks the viewing server, so the cameras go dark for the people who need them. Availability is half of the requirement.',
+      verAsk: 'Which pair of results together prove the rule?',
+      ver: [
+        { t: 'A camera cannot reach an outside address, AND the viewing server still shows its feed', d: 'One failure and one success', ok: true },
+        { t: 'A camera cannot reach an outside address', d: 'The block works', ok: false },
+        { t: 'The viewing server still shows the feed', d: 'Nothing broke', ok: false },
+        { t: 'The firewall log shows the deny rule matching', d: 'The rule is being hit', ok: false }
+      ],
+      verWhy: 'Either half alone is passed by a wrong configuration: blocking everything satisfies the first, and changing nothing satisfies the second. Sub-skill 2.D asks you to confirm a control mitigates the threat WHILE maintaining access, and that is two tests, not one.'
+    },
+    {
+      brief: 'A wireless access point was set to WPA3 and an old barcode scanner has stopped connecting.',
+      cfgAsk: 'What is the honest way to handle this?',
+      cfg: [
+        { t: 'Keep WPA3 for the main network and put the scanner on a separate restricted network', d: 'Segregate what cannot be upgraded', ok: true },
+        { t: 'Switch the whole network back to WPA2', d: 'Restores the scanner immediately', ok: false },
+        { t: 'Turn off wireless encryption for the scanner network', d: 'Simplest fix', ok: false },
+        { t: 'Leave the scanner disconnected', d: 'Security first', ok: false }
+      ],
+      cfgWhy: 'This is the trade-off the framework keeps asking about. Rolling the whole network back to WPA2 lets one old device set the security of every device. Leaving it disconnected is not a fix either, because the business still needs to scan barcodes. Segregation keeps both facts true.',
+      verAsk: 'Which test proves you did it properly?',
+      ver: [
+        { t: 'The scanner works on its own network AND cannot reach the main network', d: 'Works, but reaches nothing else', ok: true },
+        { t: 'The scanner connects and scans', d: 'Business need restored', ok: false },
+        { t: 'The main network still shows WPA3', d: 'Security preserved', ok: false },
+        { t: 'Both networks appear in a wireless scan', d: 'Both are broadcasting', ok: false }
+      ],
+      verWhy: 'A segregated device that can still reach everything is not segregated, it has just been moved. The proof needs both halves again: the thing that must work, and the thing that must not.'
+    }
+  ];
+
+  var el = {};
+  ['round','phasechip','score','brieftxt','donetxt','asktxt','opts','reveal','verdict','why','nextbtn','play']
+    .forEach(function (k) { el[k] = document.getElementById('gg-' + k); });
+
+  var i = 0, score = 0, right = 0, phase = 0, locked = false;
+
+  function render() {
+    locked = false;
+    var J = JOBS[i];
+    el.round.textContent = 'Job ' + (i + 1) + ' / ' + JOBS.length;
+    el.phasechip.textContent = phase === 0 ? 'Configure' : 'Verify';
+    el.score.textContent = 'Score: ' + score;
+    el.brieftxt.textContent = J.brief;
+    el.reveal.className = 'gg-reveal';
+    if (phase === 0) {
+      el.donetxt.style.display = 'none';
+      el.asktxt.textContent = J.cfgAsk;
+      paint(J.cfg);
+    } else {
+      el.donetxt.style.display = '';
+      el.donetxt.textContent = 'Configured: ' + J.cfg.filter(function (o) { return o.ok; })[0].t;
+      el.asktxt.textContent = J.verAsk;
+      paint(J.ver);
+    }
+  }
+
+  function paint(opts) {
+    el.opts.innerHTML = '';
+    opts.forEach(function (o, idx) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'gg-opt';
+      b.setAttribute('data-i', String(idx));
+      b.innerHTML = o.t + '<small>' + o.d + '</small>';
+      b.addEventListener('click', function () { answer(opts, idx, b); });
+      el.opts.appendChild(b);
+    });
+  }
+
+  function answer(opts, idx, btn) {
+    if (locked) return;
+    locked = true;
+    var J = JOBS[i];
+    var good = opts[idx].ok === true;
+    if (good) {
+      right++; score += 120;
+      btn.className = 'gg-opt gg-right';
+      el.verdict.className = 'gg-verdict good';
+      el.verdict.textContent = phase === 0 ? 'Correct setting.' : 'Correct. That is the test that could have failed.';
+    } else {
+      btn.className = 'gg-opt gg-wrong';
+      var nodes = el.opts.querySelectorAll('.gg-opt');
+      for (var n = 0; n < nodes.length; n++) {
+        if (opts[Number(nodes[n].getAttribute('data-i'))].ok) nodes[n].className = 'gg-opt gg-right';
+      }
+      el.verdict.className = 'gg-verdict bad';
+      el.verdict.textContent = phase === 0
+        ? 'That does not do the isolating work.'
+        : 'That test passes even when the configuration is wrong, so it proves nothing.';
+    }
+    el.why.textContent = phase === 0 ? J.cfgWhy : J.verWhy;
+    el.nextbtn.textContent = phase === 0 ? 'Now prove it' : (i < JOBS.length - 1 ? 'Next job' : 'See results');
+    el.reveal.className = 'gg-reveal on';
+    el.score.textContent = 'Score: ' + score;
+  }
+
+  el.nextbtn.addEventListener('click', function () {
+    if (phase === 0) { phase = 1; render(); return; }
+    if (i < JOBS.length - 1) { i++; phase = 0; render(); return; }
+    finish();
+  });
+
+  function finish() {
+    el.play.innerHTML =
+      '<div class="gg-end">' +
+        '<h2>Final score: ' + score + '</h2>' +
+        '<p>' + right + ' of ' + (JOBS.length * 2) + ' steps correct.</p>' +
+        '<div class="gg-teach">' +
+          '<b>Every wrong test in this game passed.</b> That is what made them wrong. A test that ' +
+          'succeeds whether or not you configured anything tells you nothing, and it is exactly the ' +
+          'test people run, because a green result feels like proof. Loading a website from the guest ' +
+          'network, pinging a machine on your own subnet, plugging in the laptop you already approved: ' +
+          'all of them pass on a completely broken build. ' +
+          'Two habits come out of this. Ask what result would have appeared if you had done nothing, ' +
+          'and if the answer is the same result, the test is worthless. And for anything that both ' +
+          'blocks and permits, you need two tests, because blocking everything and changing nothing ' +
+          'each satisfy exactly half the requirement.' +
+        '</div>' +
+        '<p><button class="gg-next" id="gg-again" type="button">Play again</button></p>' +
+      '</div>';
+    document.getElementById('gg-again').addEventListener('click', function () { location.reload(); });
+    try {
+      document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+    } catch (e) {}
+  }
+
+  render();
+})();
+</script>

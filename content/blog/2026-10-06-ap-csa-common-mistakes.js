@@ -44,7 +44,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa common mistakes',
-  publishOn: '2026-10-06',
+  publishOn: '2026-10-09',
   seoTitle: 'AP CSA Common Mistakes Beyond Syntax and Code',
   seoDescription: 'AP CSA common mistakes that are not about code at all: skipping MCQs, running out of FRQ time, and answering the wrong part of a multi-part prompt.',
   summary: 'Most AP CSA advice about losing points focuses on code: a missing semicolon, an off-by-one index, a rubric point missed. This guide covers three mistakes that have nothing to do with the code you write, because they happen before you write a single line or after you have already written a correct one: leaving multiple choice questions unanswered when there is no penalty for guessing, running out of section time before ever opening the fourth free-response question, and answering the wrong part of a multi-part prompt. Each one is explained with why it costs real points and what to actually do instead.',

@@ -32,7 +32,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp ai policy',
-  publishOn: '2026-09-08',
+  publishOn: '2026-09-07',
   seoTitle: "AP CSP AI Policy: What's Actually Permitted",
   seoDescription: "College Board's actual AP CSP AI policy allows AI for learning and debugging but not for producing your submitted work. Here's the practical nuance.",
   summary: 'The AP CSP AI policy is not just don\'t use AI to cheat. It draws a specific line between using AI to learn and using AI to produce the work you submit, and it requires attribution documented a specific way. This guide walks the nuance with concrete scenarios, explains what attribution actually looks like in the AP Digital Portfolio, and connects the policy to why the new written-response exam format makes doing your own work a practical necessity as well as an integrity one.',

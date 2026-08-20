@@ -43,7 +43,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa exam date',
-  publishOn: '2026-10-20',
+  publishOn: '2026-10-19',
   seoTitle: 'AP CSA Exam Date 2027: The 7-Month Study Plan',
   seoDescription: 'The AP CSA exam date is May 12, 2027, about seven months from this post. Here is the phase-by-phase study plan for the months in between.',
   summary: 'The AP CSA exam date for the 2027 administration is Wednesday, May 12, 2027, which puts a post published in late October at roughly seven months out, not the nine months an earlier working title assumed. This guide breaks that stretch into three phases scaled to what is actually left: finishing the remaining new content between now and winter break, since most CSA classes are still teaching new units this far out; interleaved review and timed practice once most content is covered, starting in the new year; and intensive FRQ and MCQ practice with full timed exams in the final four to six weeks before May. It points to this blog\'s existing guides on the reference sheet, debugging, FRQ scoring, and MCQ pacing for the techniques themselves, so the job here stays the timeline.',

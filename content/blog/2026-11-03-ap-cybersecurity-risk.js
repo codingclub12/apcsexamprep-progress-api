@@ -23,7 +23,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'risk assessment',
-  publishOn: '2026-11-03',
+  publishOn: '2026-11-04',
   seoTitle: 'Risk Assessment: Likelihood, Impact, Decision',
   seoDescription: 'A risk assessment guide for AP Cybersecurity covering likelihood times impact, a risk matrix, and the accept, mitigate, transfer, avoid decision.',
   summary: 'Risk assessment gets taught as a vocabulary term when it is really a decision framework, and this guide treats it that way. It walks through risk as a function of two separate questions, how likely is this threat to actually happen and how bad would it be if it did, and shows how those two answers combine on a qualitative low, medium, high matrix into an overall priority. From there it covers the actual decision that follows an assessment: accept a risk that is small enough to live with, mitigate one by adding a control, transfer one to a third party such as an insurer, or avoid one by stopping the risky activity entirely. A worked example, a school deciding how to handle the risk of a lost staff laptop holding student records, applies all four responses to the same risk so the differences are concrete rather than definitional. The guide closes by connecting risk assessment to the resource allocation reasoning behind defense in depth: a team cannot apply every control everywhere, and risk assessment is the step that decides where the effort actually goes.',

@@ -17,7 +17,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'security scenario questions',
-  publishOn: '2026-09-01',
+  publishOn: '2026-09-04',
   seoTitle: 'Security Scenario Questions: Read the Evidence First',
   seoDescription: 'Security scenario questions reward the choice the facts support, not the alarming one. A step by step reading method with worked examples and practice.',
   summary: 'AP Cybersecurity does not test scenario reasoning topic by topic. It tests one repeatable skill across every unit: separate the facts a scenario actually states from the assumptions an answer choice wants you to make, then pick the choice the facts support rather than the one that sounds dramatic. This guide names that skill directly, teaches a two pass reading method, and walks through four worked scenarios to make the elimination process concrete.',

@@ -24,7 +24,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'mac address',
-  publishOn: '2026-09-15',
+  publishOn: '2026-09-16',
   seoTitle: 'MAC Address Explained: What It Is and What ARP Does',
   seoDescription: 'MAC address explained alongside ARP: what a hardware address is, why a network needs both an IP and a MAC address, and how ARP turns one into the other.',
   summary: 'A conceptual explanation of MAC addresses and ARP: what a hardware-burned MAC address is and why it is flat rather than hierarchical, why a device on a local network needs both an IP address and a MAC address, and a step by step walkthrough of how ARP resolves a known IP address into the MAC address needed to actually deliver a frame, including a worked ARP cache example.',

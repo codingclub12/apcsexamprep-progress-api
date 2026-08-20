@@ -24,7 +24,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'ap cybersecurity units',
-  publishOn: '2026-09-01',
+  publishOn: '2026-08-31',
   seoTitle: 'AP Cybersecurity Units Ranked: Study Priority Guide',
   seoDescription: 'There are no released AP Cybersecurity exams yet. This teacher guide ranks all five units by difficulty, dependency, and study time payoff instead.',
   summary: 'AP Cybersecurity has no released exams to rank units against, so this guide reasons from the course framework instead: how conceptually hard each of the five units is, how much it depends on the units before it in a genuinely cumulative course, and roughly how much study time it deserves relative to the others. Includes a summary table, an honest three-of-five triage recommendation, and two worked practice questions from Securing Networks and Securing Applications and Data.',

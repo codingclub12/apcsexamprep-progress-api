@@ -27,7 +27,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa flashcards',
-  publishOn: '2026-10-20',
+  publishOn: '2026-10-23',
   seoTitle: 'AP CSA Flashcards: Why They Fail and What Works Instead',
   seoDescription: 'AP CSA flashcards drill recall, but the exam grades tracing and reasoning about code. Here is where flashcards still help and what to do instead.',
   summary: 'Flashcards are the default study tool for most high school classes because most high school classes are graded on recall: can you state what a term means. AP CSA is graded on something else almost entirely, tracing code line by line and reasoning about what it does, and a stack of term-definition cards never rehearses that skill no matter how many hours go into it. This post makes the case for why flashcards underperform for CSA specifically, names the narrow places where quick recall genuinely still helps, and lays out the three practice habits, variable-table tracing, self-written broken code, and closed-laptop FRQ writing, that actually build what the exam grades.',

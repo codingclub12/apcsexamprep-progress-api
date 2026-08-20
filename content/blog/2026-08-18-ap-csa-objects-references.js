@@ -18,7 +18,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa objects and methods',
-  publishOn: '2026-08-18',
+  publishOn: '2026-08-19',
   seoTitle: 'AP CSA Objects and Methods Explained',
   seoDescription: 'AP CSA objects and methods hide one idea Unit 1 never states directly: a variable holds a reference, not the object. Here is the fix, with traced examples.',
   summary: 'AP CSA teaches object syntax in Unit 1 without ever naming the reference model underneath it. This is the mental model that fixes aliasing, equals, and pass by value confusion for the rest of the course.',

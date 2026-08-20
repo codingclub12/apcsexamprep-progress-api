@@ -29,7 +29,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'network engineer salary',
-  publishOn: '2026-09-22',
+  publishOn: '2026-09-21',
   seoTitle: 'Network Engineer Salary Progression Explained',
   seoDescription: 'A network engineer salary is not one number, it is a ladder. Here is what moves someone up it, sourced from BLS and industry salary data, entry to senior.',
   summary: 'A network engineer salary is not a single figure, it is a progression, and the jumps between rungs are driven by specific, identifiable things: certifications like CCNP after CCNA, years of hands-on experience, and an expanding scope of responsibility. This guide walks the ladder from entry-level support through network administrator to network engineer and network architect, with a table showing typical experience and pay range at each rung, sourced BLS and industry salary data for the mid and senior tiers, and an honest look at why the same title pays differently by region and industry.',

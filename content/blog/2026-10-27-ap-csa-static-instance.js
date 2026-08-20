@@ -20,7 +20,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa static methods',
-  publishOn: '2026-10-27',
+  publishOn: '2026-10-28',
   seoTitle: 'AP CSA Static Methods vs Instance Methods Explained',
   seoDescription: 'AP CSA static methods versus instance methods, explained with one Counter class and the exact compile error each mix-up produces on the AP exam.',
   summary: 'AP CSA static methods and instance methods look almost identical on the page, one keyword apart, and that similarity is exactly what causes a large share of Unit 3 compile errors. This guide builds one small Counter class with an instance field alongside a static field, shows the two kinds of code that fail to compile when the distinction is ignored, and lays out a table for telling static and instance apart on sight.',

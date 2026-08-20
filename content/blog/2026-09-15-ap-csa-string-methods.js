@@ -20,7 +20,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa string methods',
-  publishOn: '2026-09-15',
+  publishOn: '2026-09-16',
   seoTitle: 'AP CSA String Methods: Off-By-One Traps Explained',
   seoDescription: 'AP CSA string methods trip students at the same two spots: charAt zero-indexing and substring exclusive upper bound. Trace both with a worked example.',
   summary: 'AP CSA string methods look easy to memorize until charAt and substring start losing points for reasons that feel arbitrary. This guide traces length(), charAt(index), substring(from), substring(from, to), and indexOf() character by character on an actual string, builds real intuition for why the upper bound is exclusive, and covers the equals() versus == comparison trap that shows up on nearly every exam.',

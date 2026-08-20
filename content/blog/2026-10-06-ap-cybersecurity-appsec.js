@@ -20,7 +20,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'application security',
-  publishOn: '2026-10-06',
+  publishOn: '2026-10-07',
   seoTitle: 'Application Security Vulnerabilities, Explained',
   seoDescription: 'Learn application security the way AP Cybersecurity Unit 5 tests it: reasoning about vulnerability classes and defenses, not writing exploit code.',
   summary: 'A conceptual walkthrough of AP Cybersecurity Unit 5, Securing Applications and Data: why untrusted input is dangerous when trusted blindly, how SQL injection and cross site scripting share the same root cause, why validation belongs on the server and not just the browser, how encryption at rest and in transit protects application data differently, a vulnerability class reference table, and two new scenario based practice questions.',

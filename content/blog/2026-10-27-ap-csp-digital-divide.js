@@ -26,7 +26,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'digital divide',
-  publishOn: '2026-10-27',
+  publishOn: '2026-10-28',
   seoTitle: 'AP CSP Digital Divide and Computing Bias Explained',
   seoDescription: 'AP CSP digital divide and computing bias guide: unequal access, compounding effects, and a sourced facial recognition example naming the exact bias mechanism.',
   summary: 'AP CSP Big Idea 5 grades the digital divide and computing bias on precision, not on a general sense that inequality or bias is bad. This guide defines the digital divide as unequal access to computing devices and reliable internet, explains why that gap compounds inequality in education, job access, and information access rather than sitting on its own, and walks through a real, sourced facial recognition study to teach the actual mechanism behind computing bias: unrepresentative training data producing unrepresentative output. Two practice questions test mechanism-naming precision and digital divide reasoning.',

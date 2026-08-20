@@ -21,7 +21,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa arraylist',
-  publishOn: '2026-09-29',
+  publishOn: '2026-09-30',
   seoTitle: 'AP CSA ArrayList vs Array: The Full Comparison Guide',
   seoDescription: 'AP CSA ArrayList vs array explained: fixed size vs dynamic size, wrapper classes, and the removal-during-iteration trap the exam tests yearly.',
   summary: 'AP CSA ArrayList and array look like two ways to store a list of values, and the exam spends real points on exactly where they stop being interchangeable. This guide builds the same small collection both ways, explains why ArrayList needs Integer instead of int, compares the syntax that trips students up under time pressure, and walks through the single most common Unit 4 bug: removing an element from an ArrayList inside a for-each loop.',

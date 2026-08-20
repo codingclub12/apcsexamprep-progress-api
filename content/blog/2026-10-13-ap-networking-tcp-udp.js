@@ -22,7 +22,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'tcp vs udp',
-  publishOn: '2026-10-13',
+  publishOn: '2026-10-14',
   seoTitle: 'TCP vs UDP Explained: Reliability Versus Speed',
   seoDescription: 'TCP vs UDP compared step by step: how TCP guarantees delivery with acknowledgments and resends, how UDP skips that for speed, and which one real apps need.',
   summary: 'Every piece of data crossing a network travels under one of two different promises. TCP promises that every piece arrives, in order, or the sender finds out and tries again. UDP makes no such promise: it sends the data and moves on, whether or not any of it arrives. This guide walks through exactly how TCP keeps its promise, why keeping it costs time, how UDP skips that cost entirely, a worked comparison of the same small file transfer under both protocols, and why loading a webpage and a live video call each need the opposite answer to the same question.',

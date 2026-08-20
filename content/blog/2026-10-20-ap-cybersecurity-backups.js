@@ -16,7 +16,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'data backup',
-  publishOn: '2026-10-20',
+  publishOn: '2026-10-21',
   seoTitle: 'Data Backup Strategy: AP Cybersecurity Guide',
   seoDescription: 'What a real data backup strategy requires: the 3-2-1 rule explained by reasoning, tested recovery, and RTO and RPO for the AP Cybersecurity exam.',
   summary: 'Availability is one third of the CIA triad, but it gets a fraction of the study time confidentiality and integrity receive, and the exam does not grade it any lighter. This guide teaches data backups as the concrete mechanism behind availability: the 3-2-1 rule explained by reasoning rather than recited, why a backup that exists is not the same fact as a backup that restores, and recovery time and recovery point as questions a plan has to answer before an incident, not during one.',

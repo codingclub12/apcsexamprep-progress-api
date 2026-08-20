@@ -26,7 +26,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap classroom',
-  publishOn: '2026-10-06',
+  publishOn: '2026-10-05',
   seoTitle: 'AP Classroom for CSA: Use It Without Wasting Time',
   seoDescription: 'AP Classroom has real Progress Checks and video lessons built for AP CSA. Here is what to actually use, what to skip, and how to run it after each unit.',
   summary: 'AP Classroom is College Board\'s own platform for AP CSA, and it is genuinely useful: Personal Progress Checks with real released-style questions tied to the current four-unit course, plus short video lessons mapped to specific topics. Most students still waste time on it by watching videos passively, treating a Progress Check as a one-time score instead of a tool to retry, and skipping the explanation on every question they miss. This post covers what to actually use it for and a concrete routine to run right after finishing a unit.',

@@ -23,7 +23,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'network diagram',
-  publishOn: '2026-09-08',
+  publishOn: '2026-09-11',
   seoTitle: 'Network Diagram First: A Troubleshooting Habit',
   seoDescription: 'Why sketching a quick network diagram before troubleshooting makes evidence gaps visible, with a worked example and two practice questions.',
   summary: 'The earlier posts on this blog teach how to reason about network evidence verbally and how to read a scenario question precisely. This one teaches a different, complementary habit: draw a simple network diagram before you troubleshoot, so gaps and contradictions in the evidence become visible instead of staying buried in your head or scattered across a written list.',

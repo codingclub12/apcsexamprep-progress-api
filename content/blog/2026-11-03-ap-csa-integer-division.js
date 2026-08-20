@@ -26,7 +26,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'java integer division',
-  publishOn: '2026-11-03',
+  publishOn: '2026-11-04',
   seoTitle: 'Java Integer Division and Modulus in AP CSA',
   seoDescription: 'Java integer division truncates rather than rounds, and modulus returns a remainder. Learn both rules plus the classic double assignment trap for AP CSA.',
   summary: 'Java integer division and the modulus operator look like ordinary arithmetic, but int divided by int truncates rather than rounds, and that truncation happens before any later cast or assignment ever sees the value. This guide walks through the truncation rule, several worked modulus examples, the classic double result = 7 / 2 trap and its fix, the exact sign rule Java uses for negative modulus, and the everyday even, odd, and divisibility checks modulus is built for.',
