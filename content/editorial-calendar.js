@@ -176,7 +176,7 @@ const STREAMS = {
       ['password security', 'Passwords, MFA, and Why the Advice Changed', 'ap-cybersecurity-passwords-mfa-advice-changed'],
       ['ap cybersecurity unit 3', 'Ten Network Security Questions, Hardest Last', 'ap-cybersecurity-unit-3-network-security-questions'],
       ['security controls', 'Matching the Control to the Layer the Attack Targets', 'ap-cybersecurity-matching-controls-to-layers'],
-      ['ap cybersecurity glossary', 'The Running Glossary That Carries the Whole Course'],
+      ['ap cybersecurity glossary', 'The Running Glossary That Carries the Whole Course', 'ap-cybersecurity-running-glossary-all-units'],
       ['ap cybersecurity common mistakes', 'The Plausible Wrong Answer Pattern'],
       ['ap cybersecurity exam day', 'Exam Day for the First Cohort Ever'],
     ],
