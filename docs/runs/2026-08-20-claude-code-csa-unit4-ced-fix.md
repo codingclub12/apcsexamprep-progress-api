@@ -141,15 +141,79 @@ so the next pass does not have to re-derive any of this.
   surfaces are untouched, as expected: no wiring files changed, only content.
 - `node -e` structural check on all 36 exercise-2 questions: clean.
 
+## Update: the exercise-2 page renderer shipped too
+
+`lib/csa-exercise-2-pages.js` and `scripts/csa-exercise-2-pages-csv.js`, mirroring
+`lib/csp-course-pages.js` and `scripts/csp-game-pages-csv.js`, scoped to the same
+six lessons. `npm run csax2 -- out.csv` produces a Matrixify-ready sheet; importing
+it into Shopify is still a separate pipeline, same division of labor exercise-1's
+own CSV already has.
+
+Caught before it shipped: the authored bank puts 33 of 36 correct answers on
+option B (checked against the data, not assumed). Fixed the same way CSP's build
+fixed the identical bug: options are rotated at render time to a deterministic
+per-question target letter, so the content itself is untouched but no student
+could pass the course by always picking B. `smoke/csa-exercise-2-pages.js`
+(`npm run smoke:csax2pages`, 64 assertions) pins this, the handle routing, the
+CSV round trip, and that every item reports `exercise-2` and never a hardcoded
+`quiz`. `npm run smoke:csax1`, `smoke:contract` and `smoke:exercises` all still
+pass clean.
+
+## Update: Debugging-mode items, proof of concept shipped for one lesson
+
+Item id `debug`, denominated at 1 point (same weight class as exercise-1, same
+kind of activity) for all 53 CSA lessons in `seed/csa-course-manifest.js`, same
+bootstrap-ahead-of-content posture the file already takes with exercise-1/2/3.
+Declared in Unit 4's `activities` list in `utils.js`, and in `ACTIVITY_TOKENS`
+so a handle ending `-debug` routes correctly (`pageFromHandle` checked directly).
+
+One lesson authored end to end: 4.4 (Array Traversals), "Find the Off-By-One".
+The starter is not a skeleton, it is a plausible attempt with two real bugs
+planted in it (an off-by-one that crashes, and a `>=` that breaks ties toward
+the wrong index), which the prior "where do we stand against CodeHS" analysis
+identified as the one exercise TYPE this course had zero of. Same grading
+pipeline as exercise-1 (`code_test_cases`, `POST /api/student/code-grade`), so
+nothing in the grading route changed.
+
+Full parallel pipeline built and verified, since a page cannot be graded
+without one: `seed/csa-debug-exercises.js` (content, mirrors
+`seed/csa-exercises/index.js`'s own shape check), `scripts/verify-csa-debug-exercises.js`
+(compiles and runs the fix through real javac/java, and separately proves the
+buggy starter fails at least one case, or there is no real bug to find),
+wired into `scripts/seed-code-tests.js`'s sources, `lib/csa-debug-pages.js`
+(reuses `lib/csa-exercise-pages.js`'s own CSS and page script rather than a
+second copy), `scripts/csa-debug-pages-csv.js` (same answer-leak detector
+class as exercise-1's own CSV script, checked against a deliberate leak), and
+`smoke/csa-debug-pages.js` (21 assertions). All clean; `npm run smoke:csax1`,
+`smoke:exercises`, `smoke:contract`, `smoke:unitdenoms`, `smoke:admincodetests`
+and `smoke:beginnerstyle` all still pass with the new denominator and activity
+token in place.
+
+Scaling to more lessons is now templated: another entry in
+`seed/csa-debug-exercises.js`, `--write` the expected file, rerun the seeder
+and the CSV. Deliberately stayed at one lesson in this pass: the ask was to
+prove the mechanism, and three parallel content+pipeline builds
+(exercise-1 fix, exercise-2, debug) in one sitting is already a lot to review
+at once. More lessons is a content decision for a follow-up pass, not an
+infrastructure one.
+
+## Task 4, the third Applied variant: deliberately not started
+
+Explicitly the lowest priority of the four, framed as "consider" rather than
+"build" in the original ask. Given a third code item needs the exact same
+scale of parallel infrastructure just proven for `debug` (a new item id, its
+own denominator, its own page renderer, its own CSV, its own smoke suite), and
+given three such builds already landed in this one sitting, adding a fourth
+without a specific lesson and a specific pedagogical reason picked out first
+would be scope for its own sake. No schema question is open here anymore
+(the `debug` build proves the mechanism generalizes to a fourth item cleanly
+if wanted); what is missing is a decision about which lesson and what the
+variant would actually test, which is a content call, not an engineering one.
+
 ## What is still open
 
-- The exercise-2 page renderer and CSV export for these six lessons (or all of
-  Unit 4).
-- Debugging-mode items: needs a name (`debug` proposed) and a rollout-scope
-  decision (all 17 Unit 4 lessons vs a stated partial set) before any content
-  is authored against it.
-- A third Applied variant on the highest-weight topics: same open question,
-  lower priority, per the original ask's own ordering.
+- Scaling `debug` past 4.4, once a specific set of lessons is chosen.
+- The third Applied variant, once a specific lesson and topic is chosen.
 - Everything the prior run note already listed as open: whether to CED-check
   Units 1-3 directly, and the 1.6 FRQ page / `exercise-2` for Unit 1 gaps
   noted in `docs/csa-exercise-pages.md`.

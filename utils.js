@@ -144,7 +144,12 @@ const COURSES = {
       'unit-4': {
         label: 'Unit 4: Data Collections',
         lessons: ['4.1', '4.2', '4.3', '4.4', '4.5', '4.6', '4.7', '4.8', '4.9', '4.10', '4.11', '4.12', '4.13', '4.14', '4.15', '4.16', '4.17'],
-        activities: ['lesson', 'exercise-1', 'exercise-2', 'exercise-3', 'quiz'],
+        // debug (2026-08-20): a second graded code exercise, a debugging task
+        // rather than a from-scratch one. See seed/csa-debug-exercises.js.
+        // Only 4.4 has authored content so far; declared unit-wide anyway,
+        // same posture exercise-2/exercise-3 already took here before every
+        // lesson had a bank.
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'exercise-3', 'quiz', 'debug'],
       },
     },
   },
@@ -370,7 +375,7 @@ const COURSE_PREFIXES = {
 // list only for readability; order does not matter here because trailingActivity
 // anchors every token at the end of the handle. No other course has a handle
 // ending in '-gap', so adding it cannot reclassify an existing page.
-const ACTIVITY_TOKENS = ['exercise-1', 'exercise-2', 'exercise-3', 'lab', 'quiz', 'exam', 'code', 'gap'];
+const ACTIVITY_TOKENS = ['exercise-1', 'exercise-2', 'exercise-3', 'lab', 'quiz', 'exam', 'code', 'gap', 'debug'];
 
 function trailingActivity(h) {
   // anchored at the end so a slug like "collaboration" never trips "lab"

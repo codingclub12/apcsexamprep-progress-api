@@ -11,13 +11,24 @@
 //  content ships unit by unit, because changing a denominator later retroactively
 //  moves every student's percentage.
 //
-//  Per lesson: lesson (visit) 1, exercise-1 1, exercise-2 6, exercise-3 4, quiz 6.
-//  These point values match the authored content weighting (a code exercise is
-//  worth 1, the FRQ exercise-3 is worth 4). exercise-3 is the free-response item;
-//  it is its own activity_type, not folded into exercise-1. Lesson ids and unit
-//  keys match utils.js COURSES and pageFromHandle exactly (unit 'unit-N', lesson
-//  'U.L'), so course_denominators keys line up with the (course, unit, lesson) the
-//  reporter and the grade routes send.
+//  Per lesson: lesson (visit) 1, exercise-1 1, exercise-2 6, exercise-3 4, quiz 6,
+//  debug 1. These point values match the authored content weighting (a code
+//  exercise is worth 1, the FRQ exercise-3 is worth 4). exercise-3 is the
+//  free-response item; it is its own activity_type, not folded into exercise-1.
+//  Lesson ids and unit keys match utils.js COURSES and pageFromHandle exactly
+//  (unit 'unit-N', lesson 'U.L'), so course_denominators keys line up with the
+//  (course, unit, lesson) the reporter and the grade routes send.
+//
+//  debug (2026-08-20): a second graded code exercise, item id `debug`, weighted
+//  the same as exercise-1 since it is the same kind of activity (one graded
+//  code submission), just a debugging task instead of a from-scratch one. See
+//  seed/csa-debug-exercises.js for what it is and why it is not folded into
+//  exercise-2 or exercise-3, both of which are already spoken for. Denominated
+//  for all 53 lessons now, same bootstrap-ahead-of-content posture this file
+//  already takes with exercise-1/2/3, even though only one lesson (4.4) has
+//  authored content so far: changing a denominator later retroactively moves
+//  every student's percentage, so the number is fixed now while the column is
+//  still empty everywhere else.
 //
 //  Loaded by scripts/seed-csa-bank.js into course_denominators. Not a grade source.
 //  No em-dashes.
@@ -26,8 +37,9 @@ const { COURSES } = require('../utils');
 
 // Per-lesson possible points by activity_type, aligned to the authored content:
 // exercise-1 (code exercise) 1, exercise-2 (game, 6 rounds) 6, exercise-3 (FRQ) 4,
-// quiz 6. The code grader scales cases-passed / total into these points.
-const DENOMINATORS = { lesson: 1, 'exercise-1': 1, 'exercise-2': 6, 'exercise-3': 4, quiz: 6 };
+// quiz 6, debug (second code exercise) 1. The code grader scales cases-passed /
+// total into these points.
+const DENOMINATORS = { lesson: 1, 'exercise-1': 1, 'exercise-2': 6, 'exercise-3': 4, quiz: 6, debug: 1 };
 
 // Generated from the COURSES config so the manifest can never drift from the
 // 53-lesson, four-unit structure defined there.
