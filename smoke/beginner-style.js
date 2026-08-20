@@ -105,6 +105,49 @@ for (const file of seedFiles) {
     [...new Set(hits)].slice(0, 5));
 }
 
+section('4. The four live pages this repo does not own stay fixed');
+// These four were authored outside this repo, so there is no seed to protect.
+// What is on disk is the snapshot taken before the fix, which means the guard
+// available here is: running the patcher over the snapshot must still produce a
+// body with no one-liners left in the regions the patcher owns. If a rule in
+// the patcher stops matching, this goes red even though no seed changed.
+const { patch } = require('../scripts/beginner-style-patch');
+const SNAPSHOTS = [
+  ['ap-csp-topic-3-4-code', 1],
+  ['ap-csp-topic-3-9-code', 6],
+  ['ap-csp-topic-3-14-code', 20],
+  ['ap-csp-topic-3-9-guided-notes', 10],
+];
+const SNAP_DIR = path.join(__dirname, '..', 'shopify', 'page-snapshots');
+for (const [handle, expected] of SNAPSHOTS) {
+  const file = path.join(SNAP_DIR, handle + '.before-beginner-style.html');
+  if (!fs.existsSync(file)) { ok(`${handle} has a rollback snapshot`, false, file); continue; }
+  ok(`${handle} has a rollback snapshot`, true);
+  const before = fs.readFileSync(file, 'utf8');
+  const r = patch(before);
+  ok(`${handle} still rewrites ${expected} one-liner(s)`, r.starters + r.pseudo === expected,
+    { starters: r.starters, pseudo: r.pseudo });
+  ok(`${handle} leaves nothing it does not understand`, r.refused === 0, r.refused);
+
+  const hits = [];
+  const m = r.body.match(/var STARTERS = (\[[\s\S]*?\]);\n/);
+  if (m) {
+    const arr = JSON.parse(m[1]
+      .replace(/\\u003c/g, '<').replace(/\\u003e/g, '>')
+      .replace(/\\u([0-9a-f]{4})/g, (x, h) => String.fromCharCode(parseInt(h, 16))));
+    arr.forEach((o) => Object.keys(o).forEach((l) => findOneLiners(o[l], l).forEach((h) => hits.push(h.text))));
+  }
+  (r.body.match(/<pre class="[^"]*\bps\b[^"]*">[\s\S]*?<\/pre>/g) || [])
+    .forEach((b) => findOneLiners(b, 'pseudo').forEach((h) => hits.push(h.text)));
+  ok(`${handle} has no one-liner left in the code a student reads`, hits.length === 0, hits.slice(0, 3));
+
+  // The patcher is only allowed inside the starter blob and the pseudocode
+  // blocks. Anything else moving means it reached somewhere it should not.
+  const strip = (b) => b.replace(/var STARTERS = \[[\s\S]*?\];\n/, 'S')
+    .replace(/<pre class="[^"]*\bps\b[^"]*">[\s\S]*?<\/pre>/g, 'P');
+  ok(`${handle} is untouched outside those two regions`, strip(before) === strip(r.body));
+}
+
 console.log(`\n${'-'.repeat(60)}`);
 console.log(`${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

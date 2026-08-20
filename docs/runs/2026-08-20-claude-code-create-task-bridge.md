@@ -212,3 +212,73 @@ will not do: it drops the page's own style block and comment header.
 
 Separately, the 3.14 GradeKit block contains an em-dash, which is a house rule
 violation that has been live for as long as the page has.
+
+## Third pass: the four live pages with no seed
+
+The source fix covered everything this repo generates. Four pages were authored
+elsewhere, so the only copy of their content is the live page body:
+CSP coding pages 3.4, 3.9 and 3.14, and the 3.9 guided notes.
+
+`scripts/beginner-style-patch.js` handles them. It touches exactly two regions,
+the `var STARTERS` blob and `<pre>` blocks carrying the `ps` class, and proves it:
+everything outside those two regions has to compare byte-identical or it refuses
+to write. It also refuses without a rollback snapshot on disk, refuses if the
+snapshot is not the body being patched, refuses a run that changes nothing, and
+refuses any one-liner it does not fully understand.
+
+| Page | Rewritten | Where |
+|---|---|---|
+| 3.4 code | 1 | AP pseudocode |
+| 3.9 code | 6 | AP pseudocode |
+| 3.14 code | 20 | JavaScript starters |
+| 3.9 guided notes | 10 | AP pseudocode |
+
+3.14 was the interesting one. Its visible editor shows the Python GradeKit,
+properly multi-line; the one-line functions are in the JavaScript starters, which
+a student only sees after switching the language dropdown. Its `Average` is also
+a one-line function containing a one-line loop, which broke the statement
+splitter twice: a closing brace at depth zero has to end a statement, and
+expansion has to repeat to a fixed point or the inner loop stays on one line.
+
+The starter blob is re-encoded the way these pages already write it, with angle
+brackets and every non-ASCII character as `\uXXXX`. The em-dash in the GradeKit
+banner arrived as `—` and leaves as `—`; a page that was pure ASCII does
+not stop being so for a change about indentation.
+
+### Bodies came from the Admin API, and the disk copies were proved equal to them
+
+The repo rule is that a live body comes from the Admin API and never from a
+scrape. Both were used here, deliberately: the Admin API is the authority, and
+the copy on disk came from the render so nothing was retyped. Each was then
+proved equal to the other by matching exact fragments spread from the first line
+of the stylesheet to the last line of the script, plus a check for theme
+leakage. 3.4 matched on 12 fragments, 3.9 on 10, 3.14 on 9, the notes page on 9.
+
+Two apparent mismatches were my own transcription, not the extraction: a line
+I copied with six spaces of indent instead of four, and a checkbox where what
+looked like two spaces is a non-breaking space followed by a space.
+
+The naive extraction also grabbed the wrong thing at first. The theme's own
+stylesheet comes before the page's on most pages, so anchoring on the first
+`<style>` returned 318 KB of document. The anchor has to be the page's own first
+rule, and the guided-notes page needed its wrapper div balanced instead.
+
+### Left alone on purpose
+
+15 one-liners remain on the guided-notes page, in the bell-ringer prose and in
+the "match each conditional to its Boolean" table. Those are code being
+discussed inside a sentence, or one half of a two-column comparison where
+expanding one side to nine lines destroys the pairing. That is a layout decision
+rather than a teaching one, so it stays as it is until somebody decides
+otherwise.
+
+### Evidence
+
+- 0 one-liners left in the starter blobs and pseudocode blocks of all four pages.
+- Everything outside those two regions is byte-identical on all four.
+- Non-ASCII character counts unchanged on every page.
+- Four rollback snapshots committed under `shopify/page-snapshots/`.
+- `npm run smoke:beginnerstyle` now re-runs the patcher over each snapshot and
+  asserts the exact rewrite count, so a rule that stops matching goes red even
+  though no seed changed. 64 assertions.
+- Full offline suite: 77 suites green.

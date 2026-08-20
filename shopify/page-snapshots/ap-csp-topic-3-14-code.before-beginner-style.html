@@ -1,0 +1,244 @@
+<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#apcsp-code{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.55!important;font-size:16px!important;background:#fff!important}
+#apcsp-code *,#apcsp-code *::before,#apcsp-code *::after{box-sizing:border-box!important}
+#apcsp-code .hero{background:linear-gradient(135deg,#065F46,#10B981)!important;border-radius:16px!important;padding:24px!important;margin:8px 0 22px!important}
+#apcsp-code .hero .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;margin:0 0 8px!important}
+#apcsp-code h1{font-size:26px!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#apcsp-code .hero .sub{font-size:15px!important;margin:10px 0 0!important;color:#ECFDF5!important;-webkit-text-fill-color:#ECFDF5!important}
+#apcsp-code .prob{border:1px solid #BBE5D2!important;border-radius:14px!important;padding:16px 18px!important;margin:16px 0!important;background:#fff!important}
+#apcsp-code .pn{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 6px!important}
+#apcsp-code .prompt{font-size:16px!important;margin:0 0 10px!important}
+#apcsp-code code{font-family:Consolas,Menlo,monospace!important;background:#F0F7F4!important;padding:1px 5px!important;border-radius:4px!important;font-size:14px!important}
+#apcsp-code details.ref{margin:8px 0!important}
+#apcsp-code details.ref summary{cursor:pointer!important;font-weight:700!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;font-size:14px!important}
+#apcsp-code pre.ps{font-family:Consolas,Menlo,monospace!important;background:#F0F7F4!important;border:1px solid #BBE5D2!important;border-radius:8px!important;padding:10px 12px!important;white-space:pre!important;overflow-x:auto!important;font-size:13px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;margin:6px 0!important}
+#apcsp-code .toolbar{display:flex!important;align-items:center!important;gap:8px!important;margin:6px 0!important;flex-wrap:wrap!important}
+#apcsp-code .toolbar label{font-size:13px!important;color:#5B7268!important;-webkit-text-fill-color:#5B7268!important}
+#apcsp-code select.lang{font-family:inherit!important;font-size:14px!important;padding:5px 8px!important;border:1px solid #BBE5D2!important;border-radius:8px!important;background:#fff!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-code textarea.ed{width:100%!important;min-height:130px!important;font-family:Consolas,Menlo,monospace!important;font-size:14px!important;line-height:1.5!important;background:#022C22!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;border:1px solid #0B3B2E!important;border-radius:10px!important;padding:12px!important;resize:vertical!important;white-space:pre!important;tab-size:4!important}
+#apcsp-code button.run,#apcsp-code button.hint{font-family:inherit!important;font-weight:700!important;font-size:14px!important;border:0!important;border-radius:9px!important;padding:9px 16px!important;cursor:pointer!important;margin:8px 8px 0 0!important}
+#apcsp-code button.run{background:#10B981!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#apcsp-code button.hint{background:#ECFDF5!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;border:1px solid #BBE5D2!important}
+#apcsp-code .result{margin-top:10px!important;border-radius:9px!important;padding:10px 12px!important;font-family:Consolas,Menlo,monospace!important;font-size:13px!important;white-space:pre-wrap!important;display:none!important}
+#apcsp-code .result.pass{background:#DCFCE7!important;border:1px solid #16A34A!important;color:#14532D!important;-webkit-text-fill-color:#14532D!important;display:block!important}
+#apcsp-code .result.fail{background:#FEF2F2!important;border:1px solid #DC2626!important;color:#7F1D1D!important;-webkit-text-fill-color:#7F1D1D!important;display:block!important}
+#apcsp-code .result.wait{background:#F0F7F4!important;border:1px solid #BBE5D2!important;color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;display:block!important}
+#apcsp-code .hintbox{margin-top:8px!important;background:#FFFBEB!important;border-left:4px solid #F59E0B!important;padding:8px 12px!important;font-size:14px!important;display:none!important}
+#apcsp-code .hintbox.show{display:block!important}
+#apcsp-code .flow{background:#ECFDF5!important;border:1px solid #BBE5D2!important;border-left:5px solid #10B981!important;border-radius:0 12px 12px 0!important;padding:12px 16px!important;margin:0 0 18px!important;font-size:15px!important}
+#apcsp-code .flow b{color:#065F46!important;-webkit-text-fill-color:#065F46!important}
+#apcsp-code .muted{color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;font-size:13px!important}
+</style>
+<div id="apcsp-code">
+<div class="hero">
+<p class="eyebrow">Big Idea 3: Algorithms and Programming · Topic 3.14 · Coding Practice</p>
+<h1>Libraries — Code It Yourself</h1>
+<p class="sub">Write real code and check it against the expected output. Pick Python or JavaScript; the AP pseudocode reference is there when you need it.</p>
+</div>
+<div class="flow">You read the GradeKit API doc on paper in the Read the GradeKit Doc and Pick the Library exercises. Now use the real library: GradeKit is already written for you at the top of each problem — do NOT rewrite it, just CALL its procedures. The problems get harder as you go, ending with a grade report you build from scratch. Predict the output first, then run it.</div>
+<div class="prob" data-i="0">
+  <p class="pn">Problem 1 of 4</p>
+  <p class="prompt">GradeKit is provided for you. Call its <code>Average</code> procedure on the list <code>[80, 90, 100]</code> and print the class average. Do NOT rewrite the averaging logic yourself.</p>
+  <p class="muted">Expected output: <code>90</code></p>
+  <details class="ref"><summary>Show AP pseudocode reference</summary><pre class="ps">scores ← [80, 90, 100]
+classAvg ← Average(scores)
+DISPLAY(classAvg)</pre></details>
+  <div class="toolbar">
+<label>Language</label>
+    <select class="lang"><option value="python">Python</option>
+<option value="javascript">JavaScript</option></select>
+  </div>
+  <textarea class="ed" spellcheck="false"># ===== GradeKit library (provided) — do NOT change this. Just CALL its procedures. =====
+def Average(scores):
+    return sum(scores) // len(scores)
+def Highest(scores):
+    return max(scores)
+def Passing(score, cutoff):
+    return score &gt;= cutoff
+def Curve(score, points):
+    return min(score + points, 100)
+# =======================================================================================
+
+scores = [80, 90, 100]
+# call Average(scores) and print the result
+</textarea>
+  <div>
+<button class="run">▶ Run &amp; Check</button><button class="hint">Hint</button>
+</div>
+  <div class="hintbox">The doc says Average(scores) returns the average rounded down to a whole number. You do not write the math — just pass the list to Average and print what it returns. (80 + 90 + 100) / 3 = 90.</div>
+  <div class="result"></div>
+</div>
+<div class="prob" data-i="1">
+  <p class="pn">Problem 2 of 4</p>
+  <p class="prompt">Using the provided GradeKit, print the highest score in <code>[72, 95, 88]</code> on the first line. Then, on the second line, print <code>PASS</code> if that top score meets a cutoff of 90 (use <code>Passing</code>), otherwise <code>FAIL</code>.</p>
+  <p class="muted">Expected output: <code>95
+PASS</code></p>
+  <details class="ref"><summary>Show AP pseudocode reference</summary><pre class="ps">scores ← [72, 95, 88]
+top ← Highest(scores)
+DISPLAY(top)
+IF(Passing(top, 90))
+{
+  DISPLAY("PASS")
+}
+ELSE
+{
+  DISPLAY("FAIL")
+}</pre></details>
+  <div class="toolbar">
+<label>Language</label>
+    <select class="lang"><option value="python">Python</option>
+<option value="javascript">JavaScript</option></select>
+  </div>
+  <textarea class="ed" spellcheck="false"># ===== GradeKit library (provided) — do NOT change this. Just CALL its procedures. =====
+def Average(scores):
+    return sum(scores) // len(scores)
+def Highest(scores):
+    return max(scores)
+def Passing(score, cutoff):
+    return score &gt;= cutoff
+def Curve(score, points):
+    return min(score + points, 100)
+# =======================================================================================
+
+scores = [72, 95, 88]
+# 1) call Highest(scores) and print it
+# 2) use Passing(top, 90) to print PASS or FAIL
+</textarea>
+  <div>
+<button class="run">▶ Run &amp; Check</button><button class="hint">Hint</button>
+</div>
+  <div class="hintbox">Highest([72, 95, 88]) returns 95. Then Passing(95, 90) checks 95 ≥ 90, which is true — so print PASS. Print the boolean as PASS/FAIL with an if-statement; do not print the raw true/false.</div>
+  <div class="result"></div>
+</div>
+<div class="prob" data-i="2">
+  <p class="pn">Problem 3 of 4</p>
+  <p class="prompt">A student scored 68. Using the provided GradeKit, first <code>Curve</code> their score by 5 points and print the curved score. Then print <code>PASS</code> or <code>FAIL</code> for the curved score against a cutoff of 70 (use <code>Passing</code>). Watch the documented parameter order.</p>
+  <p class="muted">Expected output: <code>73
+PASS</code></p>
+  <details class="ref"><summary>Show AP pseudocode reference</summary><pre class="ps">score ← 68
+curved ← Curve(score, 5)
+DISPLAY(curved)
+IF(Passing(curved, 70))
+{
+  DISPLAY("PASS")
+}
+ELSE
+{
+  DISPLAY("FAIL")
+}</pre></details>
+  <div class="toolbar">
+<label>Language</label>
+    <select class="lang"><option value="python">Python</option>
+<option value="javascript">JavaScript</option></select>
+  </div>
+  <textarea class="ed" spellcheck="false"># ===== GradeKit library (provided) — do NOT change this. Just CALL its procedures. =====
+def Average(scores):
+    return sum(scores) // len(scores)
+def Highest(scores):
+    return max(scores)
+def Passing(score, cutoff):
+    return score &gt;= cutoff
+def Curve(score, points):
+    return min(score + points, 100)
+# =======================================================================================
+
+score = 68
+# 1) curved = Curve(score, 5); print curved
+# 2) use Passing(curved, 70) to print PASS or FAIL
+</textarea>
+  <div>
+<button class="run">▶ Run &amp; Check</button><button class="hint">Hint</button>
+</div>
+  <div class="hintbox">Curve(68, 5) returns 68 + 5 = 73 (below the 100 cap). Then Passing(curved, 70) must be called in the order (score, cutoff): Passing(73, 70) checks 73 ≥ 70 → true → PASS.</div>
+  <div class="result"></div>
+</div>
+<div class="prob" data-i="3">
+  <p class="pn">Problem 4 of 4</p>
+  <p class="prompt">Build a grade report from scratch using ONLY the provided GradeKit procedures. For the list <code>[55, 91, 78, 64]</code>, print three lines: (1) the average, (2) the highest score, and (3) <code>PASS</code> if the average meets a cutoff of 70, otherwise <code>FAIL</code>.</p>
+  <p class="muted">Expected output: <code>72
+91
+PASS</code></p>
+  <details class="ref"><summary>Show AP pseudocode reference</summary><pre class="ps">scores ← [55, 91, 78, 64]
+avg ← Average(scores)
+DISPLAY(avg)
+DISPLAY(Highest(scores))
+IF(Passing(avg, 70))
+{
+  DISPLAY("PASS")
+}
+ELSE
+{
+  DISPLAY("FAIL")
+}</pre></details>
+  <div class="toolbar">
+<label>Language</label>
+    <select class="lang"><option value="python">Python</option>
+<option value="javascript">JavaScript</option></select>
+  </div>
+  <textarea class="ed" spellcheck="false"># ===== GradeKit library (provided) — do NOT change this. Just CALL its procedures. =====
+def Average(scores):
+    return sum(scores) // len(scores)
+def Highest(scores):
+    return max(scores)
+def Passing(score, cutoff):
+    return score &gt;= cutoff
+def Curve(score, points):
+    return min(score + points, 100)
+# =======================================================================================
+
+scores = [55, 91, 78, 64]
+# Print three lines using GradeKit:
+#   1) the average of scores
+#   2) the highest score
+#   3) PASS or FAIL for the average vs a cutoff of 70
+</textarea>
+  <div>
+<button class="run">▶ Run &amp; Check</button><button class="hint">Hint</button>
+</div>
+  <div class="hintbox">Average([55, 91, 78, 64]) = 288 // 4 = 72. Highest is 91. Passing(72, 70) checks 72 ≥ 70 → true → PASS. Call each GradeKit procedure once and print its result on its own line; never reimplement them.</div>
+  <div class="result"></div>
+</div>
+<p class="muted">Your code runs on a secure external service. Answers are checked automatically — nothing is stored.</p>
+</div>
+<script>
+(function(){
+  var CFG = {"proxyUrl":"https://progress.apcsexamprep.com/api/judge0/run","langIds":{"python":71,"javascript":63}};
+  var STARTERS = [{"python":"# ===== GradeKit library (provided) \u2014 do NOT change this. Just CALL its procedures. =====\ndef Average(scores):\n    return sum(scores) // len(scores)\ndef Highest(scores):\n    return max(scores)\ndef Passing(score, cutoff):\n    return score \u003e= cutoff\ndef Curve(score, points):\n    return min(score + points, 100)\n# =======================================================================================\n\nscores = [80, 90, 100]\n# call Average(scores) and print the result\n","javascript":"// ===== GradeKit library (provided) \u2014 do NOT change this. Just CALL its procedures. =====\nfunction Average(scores){ let s = 0; for (let v of scores){ s += v; } return Math.floor(s / scores.length); }\nfunction Highest(scores){ return Math.max(...scores); }\nfunction Passing(score, cutoff){ return score \u003e= cutoff; }\nfunction Curve(score, points){ return Math.min(score + points, 100); }\n// =======================================================================================\n\nlet scores = [80, 90, 100];\n// call Average(scores) and print the result\n"},{"python":"# ===== GradeKit library (provided) \u2014 do NOT change this. Just CALL its procedures. =====\ndef Average(scores):\n    return sum(scores) // len(scores)\ndef Highest(scores):\n    return max(scores)\ndef Passing(score, cutoff):\n    return score \u003e= cutoff\ndef Curve(score, points):\n    return min(score + points, 100)\n# =======================================================================================\n\nscores = [72, 95, 88]\n# 1) call Highest(scores) and print it\n# 2) use Passing(top, 90) to print PASS or FAIL\n","javascript":"// ===== GradeKit library (provided) \u2014 do NOT change this. Just CALL its procedures. =====\nfunction Average(scores){ let s = 0; for (let v of scores){ s += v; } return Math.floor(s / scores.length); }\nfunction Highest(scores){ return Math.max(...scores); }\nfunction Passing(score, cutoff){ return score \u003e= cutoff; }\nfunction Curve(score, points){ return Math.min(score + points, 100); }\n// =======================================================================================\n\nlet scores = [72, 95, 88];\n// 1) call Highest(scores) and print it\n// 2) use Passing(top, 90) to print PASS or FAIL\n"},{"python":"# ===== GradeKit library (provided) \u2014 do NOT change this. Just CALL its procedures. =====\ndef Average(scores):\n    return sum(scores) // len(scores)\ndef Highest(scores):\n    return max(scores)\ndef Passing(score, cutoff):\n    return score \u003e= cutoff\ndef Curve(score, points):\n    return min(score + points, 100)\n# =======================================================================================\n\nscore = 68\n# 1) curved = Curve(score, 5); print curved\n# 2) use Passing(curved, 70) to print PASS or FAIL\n","javascript":"// ===== GradeKit library (provided) \u2014 do NOT change this. Just CALL its procedures. =====\nfunction Average(scores){ let s = 0; for (let v of scores){ s += v; } return Math.floor(s / scores.length); }\nfunction Highest(scores){ return Math.max(...scores); }\nfunction Passing(score, cutoff){ return score \u003e= cutoff; }\nfunction Curve(score, points){ return Math.min(score + points, 100); }\n// =======================================================================================\n\nlet score = 68;\n// 1) curved = Curve(score, 5); print curved\n// 2) use Passing(curved, 70) to print PASS or FAIL\n"},{"python":"# ===== GradeKit library (provided) \u2014 do NOT change this. Just CALL its procedures. =====\ndef Average(scores):\n    return sum(scores) // len(scores)\ndef Highest(scores):\n    return max(scores)\ndef Passing(score, cutoff):\n    return score \u003e= cutoff\ndef Curve(score, points):\n    return min(score + points, 100)\n# =======================================================================================\n\nscores = [55, 91, 78, 64]\n# Print three lines using GradeKit:\n#   1) the average of scores\n#   2) the highest score\n#   3) PASS or FAIL for the average vs a cutoff of 70\n","javascript":"// ===== GradeKit library (provided) \u2014 do NOT change this. Just CALL its procedures. =====\nfunction Average(scores){ let s = 0; for (let v of scores){ s += v; } return Math.floor(s / scores.length); }\nfunction Highest(scores){ return Math.max(...scores); }\nfunction Passing(score, cutoff){ return score \u003e= cutoff; }\nfunction Curve(score, points){ return Math.min(score + points, 100); }\n// =======================================================================================\n\nlet scores = [55, 91, 78, 64];\n// Print three lines using GradeKit:\n//   1) the average of scores\n//   2) the highest score\n//   3) PASS or FAIL for the average vs a cutoff of 70\n"}];
+  var EXPECTED = ["90","95\nPASS","73\nPASS","72\n91\nPASS"];
+  var root = document.getElementById("apcsp-code");
+  if(!root) return;
+  function norm(s){ return String(s==null?'':s).replace(/\r/g,'').replace(/[ \t]+$/gm,'').replace(/\n+$/,''); }
+  function submit(lang, code, cb){
+    var body = JSON.stringify({ code: code, language_id: CFG.langIds[lang] });
+    var headers = {'Content-Type':'application/json'};
+    fetch(CFG.proxyUrl, { method:'POST', headers: headers, body: body })
+      .then(function(r){ return r.json(); })
+      .then(function(d){ cb(null, d); })
+      .catch(function(e){ cb(e); });
+  }
+  Array.prototype.forEach.call(root.querySelectorAll('.prob'), function(box){
+    var i = +box.getAttribute('data-i');
+    var ed = box.querySelector('.ed'), lang = box.querySelector('.lang');
+    var res = box.querySelector('.result'), runBtn = box.querySelector('.run');
+    var hintBtn = box.querySelector('.hint'), hintBox = box.querySelector('.hintbox');
+    lang.addEventListener('change', function(){
+      var st = STARTERS[i] || {}; ed.value = st[lang.value] || st.python || ed.value;
+    });
+    if(hintBtn){ hintBtn.addEventListener('click', function(){ hintBox.classList.toggle('show'); }); }
+    runBtn.addEventListener('click', function(){
+      res.className = 'result wait'; res.textContent = 'Running your code...';
+      submit(lang.value, ed.value, function(err, d){
+        if(err){ res.className='result fail'; res.textContent='Could not reach the code runner. Check your connection and try again.'; return; }
+        var out = (d.stdout!=null)? d.stdout : '';
+        var errText = d.stderr || d.compile_output || '';
+        var exp = EXPECTED[i];
+        if(errText && !out){ res.className='result fail'; res.textContent='Your code hit an error:\n'+errText; return; }
+        if(exp==null){ res.className='result pass'; res.textContent='Output:\n'+out; return; }
+        if(norm(out)===norm(exp)){ res.className='result pass'; res.textContent='Correct! Output:\n'+out; }
+        else { res.className='result fail'; res.textContent='Not quite.\nExpected:\n'+exp+'\nGot:\n'+(out||'(no output)')+(errText?('\n'+errText):''); }
+      });
+    });
+  });
+})();
+</script>
