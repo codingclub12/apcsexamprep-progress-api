@@ -50,6 +50,7 @@
     "smoke:checks": "node smoke/command-checks.js",
     "smoke:hazards": "node smoke/hazard-coverage.js",
     "smoke:greenfoot": "node smoke/greenfoot-stub.js",
+    "smoke:gftrace": "node smoke/greenfoot-trace.js",
     "smoke:introjava": "node smoke/intro-java-content.js",
     "shotlist": "node scripts/intro-java-shot-list.js",
     "smoke:gapgrade": "node smoke/gap-grade.js",
