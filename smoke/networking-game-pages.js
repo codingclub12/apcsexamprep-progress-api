@@ -367,6 +367,83 @@ for (const f of suspects) {
     'no GAMES entry builds it, so it would never become a page');
 }
 
+section('8. The course-page patch refuses to damage the page');
+// scripts/networking-course-games-link.js edits a LIVE, ranking page. Its whole
+// value is the set of things it refuses to do, so those refusals are what is
+// tested here.
+//
+// The fixture is synthetic on purpose. Committing a copy of the live body would
+// go stale the first time anyone edits the page in Shopify, and a stale copy in
+// a repo gets mistaken for the source of truth. What matters is that the script
+// behaves correctly on a body with the right SHAPE.
+{
+  const link = require('../scripts/networking-course-games-link.js');
+  const fixture = [
+    '<style>.main-page-title.page-title{display:none!important;}</style>',
+    '<div id="apnet-hub" data-course="ap-networking" data-unit="hub">',
+    '  <style>#apnet-hub .unit { border: 1px solid #dfe7f0; }</style>',
+    '  <ul class="toc">',
+    '    <li><a href="#units">The four units and 22 topics</a></li>',
+    '  </ul>',
+    '  <h2 id="units">The four units and 22 topics</h2>',
+    '  <div class="unit"><a href="/pages/ap-networking-unit-1">Unit 1</a></div>',
+    // Filler, so the fixture clears the 4096-byte floor that protects against a
+    // truncated body. The floor is real protection and must not be lowered to
+    // suit a test; the test is what gets made realistic.
+    '  <p>' + 'Body text that stands in for the real page. '.repeat(120) + '</p>',
+    '  <h2 id="exam">The exam and the credential</h2>',
+    '  <script type="application/ld+json">{}</' + 'script>',
+    '</div>',
+  ].join('\n');
+
+  const patched = link.build(fixture);
+  ok('the patch applies cleanly to a well-formed body', link.check(fixture, patched).length === 0,
+    link.check(fixture, patched));
+  ok('the patched body is larger than the original',
+    Buffer.byteLength(patched) > Buffer.byteLength(fixture));
+  ok('the existing unit link survives', patched.includes('href="/pages/ap-networking-unit-1"'));
+  ok('the structured data block survives', patched.includes('application/ld+json'));
+  ok('div opens and closes stay balanced',
+    (patched.match(/<div[\s>]/g) || []).length === (patched.match(/<\/div>/g) || []).length);
+
+  // Every game and the hub end up linked exactly once.
+  const linked = [...patched.matchAll(/href="\/pages\/(ap-networking-[a-z0-9-]+)"/g)].map((m) => m[1]);
+  for (const id of ids) {
+    const h = 'ap-networking-game-' + id;
+    ok(`the course page links ${id}`, linked.filter((l) => l === h).length === 1);
+  }
+  ok('the course page links the hub',
+    linked.filter((l) => l === 'ap-networking-study-games-hub').length === 1);
+
+  // The refusals. Each of these is a way a live page gets damaged.
+  const refuses = (name, body) => {
+    let threw = false;
+    try { link.build(body); } catch (e) { threw = true; }
+    ok(`refuses ${name}`, threw);
+  };
+  refuses('a body with no exam anchor', fixture.replace('<h2 id="exam">The exam and the credential</h2>', ''));
+  refuses('a body with the anchor twice',
+    fixture.replace('<h2 id="exam">The exam and the credential</h2>',
+      '<h2 id="exam">The exam and the credential</h2><h2 id="exam">The exam and the credential</h2>'));
+  refuses('a body already carrying a games section',
+    fixture.replace('<h2 id="exam">', '<h2 id="games">Free practice games</h2><h2 id="exam">'));
+  refuses('a body scraped from the rendered page, missing the stored style tag',
+    fixture.replace('<style>.main-page-title.page-title{display:none!important;}</style>\n', ''));
+  refuses('a body that is not this page at all', '<div>some other page entirely</div>');
+
+  // And the generated markup obeys the house rules.
+  const sec = link.section();
+  // eslint-disable-next-line no-control-regex
+  ok('the generated section is pure ASCII', !/[^\x09\x0A\x0D\x20-\x7E]/.test(sec));
+  ok('the generated section uses no auto-fit grid', !/auto-fit|auto-fill/.test(sec));
+  // It must not invent CSS: every class it uses has to already exist on the page.
+  const used = [...sec.matchAll(/class="([a-z0-9 -]+)"/g)].flatMap((m) => m[1].split(/\s+/));
+  const known = new Set(['unit', 'u-eyebrow', 'u-focus', 'badge', 'live']);
+  const invented = [...new Set(used)].filter((c) => !known.has(c));
+  ok('the generated section invents no CSS class the page does not define',
+    invented.length === 0, invented);
+}
+
 console.log('\n──────────────────────────────────────────');
 console.log(`  ${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

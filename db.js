@@ -450,6 +450,45 @@ db.exec(`
   );
   CREATE INDEX IF NOT EXISTS idx_prt_token   ON password_reset_tokens(token_hash);
   CREATE INDEX IF NOT EXISTS idx_prt_teacher ON password_reset_tokens(teacher_id);
+
+  -- ── SANDBOX PROGRAMS ───────────────────────────────────────────────────────
+  -- Free-practice code the student writes outside any graded exercise: multi
+  -- class Java for AP CSA, single file Python or JavaScript for the CSP Create
+  -- Task. One row per program; the files live in the files column as a JSON
+  -- array of {name, source}.
+  --
+  -- THIS TABLE IS AN EXPLICIT, NAMED EXCEPTION TO THE ZERO FREE TEXT RULE.
+  -- Everywhere else in this schema, student typed text is never stored: the
+  -- attempts detail JSON is rebuilt field by field so only a question index, an
+  -- option index and a boolean can survive, and the code grader deliberately
+  -- keeps test case pass counts rather than source. A sandbox cannot work that
+  -- way. Its entire purpose is to keep what the student wrote, and a program a
+  -- student cannot get back tomorrow is a scratch pad, not a sandbox.
+  --
+  -- So the exception is bounded rather than open. Two columns can hold student
+  -- typed characters and no others: title and the source values inside
+  -- files. Both are length capped at write time in routes/sandbox.js. Nothing
+  -- here is indexed for search, nothing is exported by the gradebook, and no
+  -- admin or teacher endpoint reads this table. It is the student's own work,
+  -- readable by that student's own token and nothing else.
+  --
+  -- The operational consequence, stated plainly because it does not go away: a
+  -- student can type anything into a program body, so this table can hold text
+  -- no one has reviewed, written by a minor. Deleting a student's row set is the
+  -- remedy and is a plain DELETE by student_id.
+  CREATE TABLE IF NOT EXISTS sandbox_programs (
+    id         TEXT PRIMARY KEY,
+    student_id TEXT NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+    title      TEXT NOT NULL,
+    language   TEXT NOT NULL,          -- 'java' | 'python' | 'javascript'
+    files      TEXT NOT NULL,          -- JSON array of {name, source}
+    stdin      TEXT NOT NULL DEFAULT '',
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now'))
+  );
+  -- The only two access paths that exist: list mine (newest first) and open one
+  -- of mine. Both are covered by this index.
+  CREATE INDEX IF NOT EXISTS idx_sandbox_student ON sandbox_programs(student_id, updated_at DESC);
 `);
 
 // Migrations — safe to re-run on every boot, ignored if column already exists

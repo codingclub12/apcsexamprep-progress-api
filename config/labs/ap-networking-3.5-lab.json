@@ -1,0 +1,206 @@
+{
+  "_comment": [
+    "AP Networking Topic 3.5, Firewalls and filtering. Sub-skills 2.B and 2.C.",
+    "",
+    "WHY A FILE AND NOT A RULE BUILDER",
+    "  EK 3.5.C.4 says the ORDER of a rule set decides which traffic is permitted.",
+    "  A firewall rule set is a text file read top to bottom, so reading one in a",
+    "  terminal is not a metaphor for the work, it is the work. The Rule Order",
+    "  game teaches the same idea by letting a student rearrange rules; this lab",
+    "  teaches the half that comes first in real life, which is finding the",
+    "  shadowed rule in somebody else's list while a service is down.",
+    "",
+    "THE SHAPE OF THE PUZZLE",
+    "  Nothing in acl-current.txt is a wrong rule. Rule 20 is correct, rule 30 is",
+    "  correct, and rule 20 sits above rule 30 and matches everything rule 30 was",
+    "  written for. Diffing against last week's working copy is what makes it",
+    "  visible, which is why check 6 exists and why check 7 is gated behind the",
+    "  diagnosis rather than offered alongside it."
+  ],
+  "course": "ap-networking",
+  "item_id": "3.5-lab",
+  "lesson_id": "3.5",
+  "unit": "unit-3",
+  "item_type": "lab",
+  "graded": true,
+  "points": 8,
+  "est_minutes": 25,
+  "title": "Finance cannot reach the reporting server",
+  "page_handle": "ap-networking-lab-3-5",
+  "page_title": "AP Networking Lab: Find the Shadowed Firewall Rule | Topic 3.5",
+  "seo_description": "A service went down after a firewall change and every rule in the list is correct. Find the one that shadows another and fix the order. AP Networking Topic 3.5.",
+  "subskills": [
+    "2.B",
+    "2.C"
+  ],
+  "brief": [
+    "Since Tuesday, nobody in finance can open the reporting server. Everything else works. The firewall was changed on Monday evening and the person who changed it is on leave.",
+    "",
+    "You have the current rule set, last week's copy, the ticket, and the segment map.",
+    "",
+    "1. Read the ticket before the rules. It tells you which traffic is supposed to work.",
+    "2. Find out which subnet finance actually is.",
+    "3. Read the rule set the way the firewall reads it: top to bottom, first match wins.",
+    "4. Compare it against last week, when this worked.",
+    "",
+    "No rule in this list is wrong. That is the difficulty."
+  ],
+  "questions": [
+    {
+      "id": "shadow",
+      "prompt": "Which rule stops finance reaching the reporting server?",
+      "options": [
+        "Rule 30, because it permits the wrong port",
+        "Rule 20, because it matches finance traffic first and denies it",
+        "Rule 40, because a catch-all deny always blocks everything",
+        "Rule 10, because it permits the wrong subnet"
+      ],
+      "answer": 1,
+      "explain": "EK 3.5.C.4. Rule 20 denies the whole 10.20.0.0/16 range to the server segment, and finance at 10.20.30.0/24 sits inside it. A firewall stops at the first rule that matches, so rule 30, which was written to permit exactly this traffic, is never reached. Rule 30 is not wrong. It is unreachable, and a rule set review that reads each rule on its own cannot tell the difference."
+    },
+    {
+      "id": "fix",
+      "prompt": "What is the correct change?",
+      "options": [
+        "Delete rule 20",
+        "Move rule 30 above rule 20",
+        "Delete rule 40, the catch-all deny",
+        "Change rule 30 to permit any source"
+      ],
+      "answer": 1,
+      "explain": "Move the specific permit above the broad deny. Deleting rule 20 would also open the rest of 10.20.0.0/16 to the server segment, which is the isolation somebody deliberately added on Monday. Deleting the catch-all deny would open the firewall generally. Widening rule 30 to any source gives every subnet the access only finance was meant to have. Specific rules go above general ones, and the general rule keeps doing its job underneath."
+    },
+    {
+      "id": "verify",
+      "prompt": "After the change, which pair of results together proves it?",
+      "options": [
+        "Finance reaches the reporting server, and the change was saved",
+        "Finance reaches the reporting server, and a host elsewhere in 10.20.0.0/16 still cannot",
+        "The firewall log shows rule 30 matching",
+        "No error appears in the firewall console"
+      ],
+      "answer": 1,
+      "explain": "One thing that must now work and one that must still fail. Testing only that finance got in would also pass if you had deleted rule 20 and opened the whole range, which is the failure you were trying to avoid. A control that both permits and blocks needs a test for each half."
+    }
+  ],
+  "hosts": {
+    "local": {
+      "prompt": "student@fw-admin",
+      "home": "/home/student",
+      "cwd": "/home/student",
+      "fs": {
+        "/home/student": {
+          "firewall": {
+            "tickets.txt": "TICKET 4471   opened Tuesday 09:12\nreported by: finance team lead\n\nSince yesterday evening nobody in finance can open the reporting\nserver at 10.50.10.20 on port 443. It worked on Monday afternoon.\nEmail, file shares and internet all still work normally.\n\nnote from IT: firewall rules were edited Monday evening to isolate\nthe wider 10.20 range from the server segment after an incident.\n",
+            "segments.txt": "SEGMENT MAP\n\n10.20.10.0/24    reception\n10.20.20.0/24    warehouse\n10.20.30.0/24    finance\n10.20.40.0/24    guest wireless\n10.50.10.0/24    servers (reporting server is 10.50.10.20)\n",
+            "acl-current.txt": "# firewall rules - applied Monday 18:40\n# read top to bottom, first match wins\n\n10  permit 10.20.10.0/24 -> 10.50.10.0/24 port 443\n20  deny   10.20.0.0/16   -> 10.50.10.0/24 any\n30  permit 10.20.30.0/24 -> 10.50.10.20   port 443\n40  deny   any            -> any\n",
+            "acl-previous.txt": "# firewall rules - last week, working\n# read top to bottom, first match wins\n\n10  permit 10.20.10.0/24 -> 10.50.10.0/24 port 443\n30  permit 10.20.30.0/24 -> 10.50.10.20   port 443\n40  deny   any            -> any\n"
+          },
+          "readme.txt": "Firewall admin box. The rule sets live in firewall/.\n"
+        }
+      }
+    }
+  },
+  "_solution_comment": [
+    "Played by smoke/labs.js through the real player, so a check that can never",
+    "tick fails the build instead of a class."
+  ],
+  "solution": [
+    "cd firewall",
+    "cat tickets.txt",
+    "cat segments.txt",
+    "cat acl-current.txt",
+    "grep 10.20.30.0 acl-current.txt",
+    {
+      "answer": "shadow"
+    },
+    "cat acl-previous.txt",
+    {
+      "answer": "fix"
+    },
+    {
+      "answer": "verify"
+    }
+  ],
+  "checks": [
+    {
+      "n": 1,
+      "label": "Read the ticket before touching the rules",
+      "ek": "3.5.C.5",
+      "match": {
+        "event": "read",
+        "file": "tickets.txt",
+        "host": "local"
+      }
+    },
+    {
+      "n": 2,
+      "label": "Find out which subnet finance actually is",
+      "ek": "3.5.C.2",
+      "match": {
+        "event": "read",
+        "file": "segments.txt",
+        "host": "local"
+      }
+    },
+    {
+      "n": 3,
+      "label": "Read the rule set that is applied now",
+      "ek": "3.5.C.1",
+      "match": {
+        "event": "read",
+        "file": "acl-current.txt",
+        "host": "local"
+      }
+    },
+    {
+      "n": 4,
+      "label": "Search the rules for the finance subnet rather than skimming",
+      "ek": "3.5.C.2",
+      "match": {
+        "event": "cmd",
+        "cmd": "grep",
+        "host": "local"
+      }
+    },
+    {
+      "n": 5,
+      "label": "Name the rule that shadows the one written for finance",
+      "ek": "3.5.C.4",
+      "match": {
+        "event": "answer",
+        "question": "shadow"
+      }
+    },
+    {
+      "n": 6,
+      "label": "Compare against last week, when it worked",
+      "ek": "3.5.C.4",
+      "match": {
+        "event": "read",
+        "file": "acl-previous.txt",
+        "host": "local"
+      }
+    },
+    {
+      "n": 7,
+      "label": "Choose the fix that keeps Monday's isolation",
+      "ek": "3.5.C.3",
+      "match": {
+        "event": "answer",
+        "question": "fix",
+        "after": 5
+      }
+    },
+    {
+      "n": 8,
+      "label": "VERIFY: pick the pair of results that proves it",
+      "ek": "3.5.C.5",
+      "match": {
+        "event": "answer",
+        "question": "verify",
+        "after": 7
+      }
+    }
+  ]
+}

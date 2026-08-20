@@ -91,7 +91,14 @@ function rateLimit(req, res, next) {
 // postable through /attempt: a gap is graded from a server-side key, so a
 // client-supplied score for one would be a forgeable grade. POST /gap below is
 // the only way a gap attempt can be written, and it computes the score itself.
-const ITEM_TYPES = new Set(['cfu', 'quiz', 'exercise-1', 'exercise-2', 'exercise-3']);
+// 'lab' is the interactive terminal lab (config/labs/*.json, played by
+// public/lab-player.js). It posts here rather than through a server-graded
+// route for one reason: a terminal collects typed strings, a typed string is
+// free text, and this API never stores free text from a student. So the checks
+// are evaluated in the browser and only the check index and its boolean arrive.
+// That does mean the score is client-computed, exactly as it already is for
+// every CSA widget. See docs/lab-contract.md.
+const ITEM_TYPES = new Set(['cfu', 'quiz', 'exercise-1', 'exercise-2', 'exercise-3', 'lab']);
 const GAP_ITEM_TYPE = 'gap';
 // Server-graded multiple choice: the concept checks and the lesson quiz.
 const CHOICE_ITEM_TYPES = new Set(['cfu', 'quiz']);
@@ -146,7 +153,7 @@ router.post('/attempt', requireStudent, rateLimit, (req, res) => {
     // (exercise-1 code problems, exercise-2 game, exercise-3 FRQ). The
     // manifest match below still gates which types are real for an item.
     if (!ITEM_TYPES.has(b.item_type)) {
-      return res.status(400).json({ error: "item_type must be one of 'cfu', 'quiz', 'exercise-1', 'exercise-2', 'exercise-3'" });
+      return res.status(400).json({ error: `item_type must be one of ${[...ITEM_TYPES].join(', ')}` });
     }
 
     // Manifest is the gate: unknown (course, item_id) means a junk write or a
