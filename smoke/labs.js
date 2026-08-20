@@ -216,6 +216,46 @@ console.log('\nMATRIXIFY SHEET');
   ok(handles.length === new Set(handles).size, 'no two labs claim the same page handle');
 }
 
+// ── the hub and command center links ─────────────────────────────────────────
+//  scripts/cyber-lab-links.js edits two live pages that this repo does not own a
+//  copy of, so CI runs it against fixtures carrying the exact anchors the live
+//  bodies carry. The fixtures are the contract: if the live page drifts away
+//  from them the script refuses at run time, which is the intended behaviour.
+console.log('\nHUB AND COMMAND CENTER LINKS');
+{
+  const links = require(path.join(__dirname, '..', 'scripts', 'cyber-lab-links.js'));
+  const spec = links.theLab();
+
+  const GUIDE = '<div id="apcyber-course-hub">\n'
+    + '              <a class="exercise-row" href="/pages/ap-cyber-unit-1-lesson-2-lab"><div class="ex-dot"></div>\n'
+    + '<span class="ex-label">Lab</span><span class="ex-tag">Start \u2192</span></a>\n'
+    + '              <a class="exercise-row quiz-row" href="/pages/ap-cyber-unit-1-lesson-2-quiz"></a>\n</div>';
+  const CC = 'var STU = {\n'
+    + '    "1.2":{page:"/pages/ap-cybersecurity-unit-1-password-attacks",quiz:"/pages/ap-cyber-unit-1-lesson-2-quiz",'
+    + 'ex1:"/pages/ap-cyber-unit-1-lesson-2-exercise-1",ex2:"/pages/ap-cyber-unit-1-lesson-2-exercise-2"},\n};\n'
+    + "    var dests = [ ['page','Lesson page'], ['quiz','Quiz'], ['ex1','Scenario 1'], ['ex2','Scenario 2'] ];";
+
+  const g = links.patchGuide(GUIDE, spec);
+  ok(g.changed && g.body.indexOf('/pages/' + spec.page_handle) !== -1, 'the course guide gains a link to the lab page');
+  ok(g.body.indexOf('/pages/ap-cyber-unit-1-lesson-2-lab') !== -1,
+    'and the EXISTING password-attack lab link survives, because that is a different lab');
+  ok(links.patchGuide(g.body, spec).changed === false, 'a second guide run is a no-op, so a re-import is safe');
+
+  const c = links.patchCommandCenter(CC, spec);
+  ok(c.changed && c.body.indexOf('termlab:"/pages/' + spec.page_handle + '"') !== -1,
+    'the command center 1.2 row gains the destination');
+  ok(c.body.indexOf("['termlab','" + links.LABEL + "']") !== -1,
+    'and the label that renders it, because either half alone renders nothing');
+  ok(links.patchCommandCenter(c.body, spec).changed === false, 'a second command center run is a no-op');
+
+  let refused = null;
+  try { links.patchGuide('<div id="apcyber-course-hub"></div>', spec); } catch (e) { refused = e.message; }
+  ok(!!refused, 'a body without the 1.2 card is refused, not silently left alone', refused);
+
+  ok(spec.page_handle !== 'ap-cyber-unit-1-lesson-2-lab',
+    'the terminal lab never claims the handle the password-attack lab already holds');
+}
+
 console.log(`\n${pass} passed, ${fail} failed`);
 try { fs.unlinkSync(process.env.DB_PATH); } catch (e) {}
 process.exit(fail ? 1 : 0);

@@ -107,3 +107,47 @@ checks that are events rather than prose, gets most of the assessment value and
 keeps the zero-PII posture. What it costs is the reasoning question, which is
 real, and the honest answer is that reasoning belongs in a teacher-scored
 documentation item, which `config/networking-hands-on.json` already anticipated.
+
+## Follow-up: the Matrixify sheets and the two links
+
+### What shipped
+
+`scripts/lab-pages-csv.js` writes the pages sheet. One page per lab. The body is
+a heading, real prose, a mount point and three script tags; the lab itself is
+rendered by `/lab-player.js` from `/api/labs`. A lab content edit is therefore a
+commit, not another import. That is the whole reason it ships this way.
+
+`scripts/cyber-lab-links.js` patches the two pages that decide whether anyone
+opens it: the student course guide and the teacher command center. Both edits
+are one exact anchor replaced once, against a body read from the Admin API.
+
+### The collision that was nearly shipped
+
+`ap-cyber-unit-1-lesson-2-lab` already exists and is a 62 KB graded lab,
+Password Attack Simulation, three stations and a points total. The first cut of
+the spec claimed that handle, and the sheet uses MERGE, so importing it would
+have replaced a real lab with the terminal one and left no copy behind.
+
+Caught by reading the live body before writing to it. The terminal lab now ships
+as `ap-cyber-unit-1-lesson-2-terminal-lab` and is linked ALONGSIDE the existing
+lab, labelled Terminal Lab. `theLab()` refuses to run if the spec ever names the
+old handle again, and smoke:labs asserts the existing link survives the patch.
+
+The course guide already carried a Lab row pointing at the password lab, so no
+dead link was involved either way.
+
+### Import order (it matters)
+
+1. `lab-pages.csv` first. This creates the lab page.
+2. `links.csv` second. Importing this first publishes two links to a 404.
+
+One import at a time, MERGE, QUOTE_ALL, utf-8-sig.
+
+### What is still open
+
+The networking 4.3 lab has a page in the sheet and nothing linking it. Its home
+is `ap-networking-command-center`, which was out of scope for this pass: the two
+targets asked for were both cyber. That page is untouched.
+
+Neither sheet has been imported. Nothing is live yet, so there is no live
+evidence to attach to this note, only the generated sheets and a green CI run.
