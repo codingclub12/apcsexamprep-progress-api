@@ -189,6 +189,33 @@ console.log('\nZERO PII');
   ok(/sel: null/.test(src), 'detail is [{q, sel: null, ok}] as the contract specifies');
 }
 
+// ── the Matrixify sheet ──────────────────────────────────────────────────────
+//  The sheet is how a lab reaches a student, and a bad row does not fail loudly:
+//  it publishes a page that renders prose and grades nothing. Build every page
+//  and run the hazard rules over it here, so a broken embed is a red CI run
+//  rather than a live page a class opens on Monday.
+console.log('\nMATRIXIFY SHEET');
+{
+  const sheet = require(path.join(__dirname, '..', 'scripts', 'lab-pages-csv.js'));
+  const specs = labs.all();
+  const handles = [];
+  for (const spec of specs) {
+    let page = null;
+    let err = null;
+    try { page = sheet.build(spec); } catch (e) { err = e.message; }
+    ok(!!page, `${spec.item_id}: a page builds`, err);
+    if (!page) continue;
+    handles.push(page.handle);
+    const bad = sheet.checkPage(page, spec);
+    ok(bad.length === 0, `${spec.item_id}: the page passes every hazard rule`, bad.join('; '));
+    ok(page.handle === spec.page_handle,
+      `${spec.item_id}: the page uses the handle the spec declares`);
+    ok(page.bodyHtml.indexOf(sheet.API + '/lab-player.js') !== -1,
+      `${spec.item_id}: the player is loaded from the API origin, not the storefront`);
+  }
+  ok(handles.length === new Set(handles).size, 'no two labs claim the same page handle');
+}
+
 console.log(`\n${pass} passed, ${fail} failed`);
 try { fs.unlinkSync(process.env.DB_PATH); } catch (e) {}
 process.exit(fail ? 1 : 0);

@@ -45,7 +45,11 @@
       base: c.base || global.APCS_API_BASE || "",
       getToken: typeof c.getToken === "function" ? c.getToken : function () {
         try {
+          // apcse_token is the key apcs-tracker.js and apcs-reporter.js already
+          // use on the storefront, so a lab embedded on a lesson page finds the
+          // signed-in student with no configuration at all.
           return global.APCS_STUDENT_TOKEN ||
+            localStorage.getItem("apcse_token") ||
             localStorage.getItem("apcs_student_token") ||
             localStorage.getItem("student_token") || "";
         } catch (e) { return ""; }
