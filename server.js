@@ -68,6 +68,11 @@ app.use('/api/progress', require('./routes/progress'));
 app.use('/api/quiz', require('./routes/quiz'));
 app.use('/api/game', require('./routes/game'));
 app.use('/api/judge0', require('./routes/judge0'));
+// The Run button on an intro-java lesson exercise. Assembles the student's
+// method against the headless Greenfoot stub and returns the recorded frames,
+// so the page can animate them. Grades nothing, stores nothing, and calls the
+// judge0 proxy above over loopback rather than reaching Judge0 itself.
+app.use('/api/intro-java', require('./routes/intro-java'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/gate', require('./routes/gate'));
 app.use('/api/files', require('./routes/files'));

@@ -196,7 +196,7 @@ for (const e of EXERCISES) {
   scened++;
   try {
     traceCase(Object.assign({}, e.scene, {
-      helpers: e.scene.helpers || e.helpers || '',
+      helpers: e.helpers || '',
       base: e.base,
     }));
   } catch (err) {
@@ -211,7 +211,7 @@ ok('4.2 the exercises that move something have a scene', scened >= 5, scened);
 const undeclared = [];
 for (const e of EXERCISES) {
   if (!e.scene) continue;
-  const helpers = e.scene.helpers || e.helpers || '';
+  const helpers = e.helpers || '';
   for (const a of e.scene.actors) {
     if (a.type === 'Harness') continue;
     if (!new RegExp(`class\\s+${a.type}\\b`).test(helpers)) {
@@ -267,9 +267,31 @@ const rows = manifest.introJavaExerciseRows();
 ok('6.1 there is one manifest row per exercise', rows.length === EXERCISES.length,
   { rows: rows.length, exercises: EXERCISES.length });
 ok('6.2 every row is worth one point', rows.every((r) => r.points === 1));
-ok('6.3 every row is typed as an exercise', rows.every((r) => r.item_type === 'exercise'));
-ok('6.4 item ids match what the page will post',
-  rows.every((r) => r.item_id === `${r.lesson_id}-exercise`));
+// 'code', not 'exercise'. docs/intro-java-course-spec.md specified this item
+// before it was built, and the rest of the system already reads that name:
+// utils.js has 'code' in ACTIVITY_TOKENS and Units 2 to 6 already declared a
+// code activity. Inventing a parallel 'exercise' type would have left the
+// gradebook with a column nothing renders.
+ok('6.3 every row is typed `code`, the name the rest of the system already uses',
+  rows.every((r) => r.item_type === 'code'));
+
+// The trailing -1 is load bearing. routes/student.js buckets a student's own
+// progress view with /-code-\d+$/, so an id ending plain `-code` would show up
+// on their page as a concept check rather than a code exercise.
+ok('6.4 item ids match the spec, including the -1 the student view buckets on',
+  rows.every((r) => r.item_id === `${r.lesson_id}-code-1`
+    && /-code-\d+$/.test(r.item_id)));
+
+// The gradebook only renders a column an activity list declares. Unit 1 used to
+// omit `code` because no Unit 1 lesson had one; three do now.
+const { COURSES } = require('../utils');
+const noCodeColumn = [];
+for (const r of rows) {
+  const acts = ((COURSES['intro-java'].units[r.unit] || {}).activities) || [];
+  if (!acts.includes('code')) noCodeColumn.push(`${r.unit} does not declare a code activity`);
+}
+ok('6.4b every unit holding an exercise declares the code activity',
+  noCodeColumn.length === 0, Array.from(new Set(noCodeColumn)));
 
 // The gate itself. A student cannot reach an exercise page yet, so seeding the
 // denominator would mark every one of them down for a column that does not
@@ -277,8 +299,28 @@ ok('6.4 item ids match what the page will post',
 // is the one to update, deliberately.
 ok('6.5 the exercise gate is still shut, so nothing is seeded yet',
   manifest.INTRO_JAVA_EXERCISES_LIVE === false);
-ok('6.6 and no exercise row reaches the seeded set while it is shut',
-  manifest.introJavaGradedRows().filter((r) => r.item_type === 'exercise').length === 0);
+// ── THE COUPLING, WHICH IS THE POINT OF THE GATE ─────────────────────────────
+// Pages and denominators fail in opposite directions, so they must move
+// together. Pages without rows means a student submits correct work and is told
+// it is not graded; rows without pages marks the whole class down for a column
+// nobody can open. One switch has to control both, and this proves it does in
+// both positions rather than only the one we happen to be in.
+const build = require('../lib/intro-java-build');
+const pagesLive = build.allPages().filter((p) => p.kind === 'code').length;
+const rowsLive = manifest.introJavaGradedRows().filter((r) => r.item_type === 'code').length;
+
+ok('6.6 pages and denominators are both on, or both off, never one of each',
+  (pagesLive > 0) === (rowsLive > 0), { pagesLive, rowsLive });
+ok('6.7 and when they are on there is exactly one row per page',
+  pagesLive === 0 || pagesLive === rowsLive, { pagesLive, rowsLive });
+ok('6.8 the gate agrees with what it actually produced',
+  manifest.INTRO_JAVA_EXERCISES_LIVE === (pagesLive > 0),
+  { gate: manifest.INTRO_JAVA_EXERCISES_LIVE, pagesLive });
+
+// The exercises exist and are buildable either way. Only their PUBLICATION is
+// gated, so the import CSV can be generated before the gate opens.
+ok('6.9 the pages are buildable even while the gate is shut',
+  build.exercisePages().length === EXERCISES.length, build.exercisePages().length);
 
 // ── 7. House style ───────────────────────────────────────────────────────────
 section('7. House style');

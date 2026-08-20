@@ -167,11 +167,22 @@ function main(argv) {
   // this wrong costs the SEO fields on the import, never the page body.
   const seoMetafields = argv.includes('--seo-metafields');
 
-  let pages = allPages();
+  // `--kind code` sources from the builder directly rather than from allPages().
+  //
+  // The code exercise pages are gated: allPages() leaves them out until
+  // INTRO_JAVA_EXERCISES_LIVE is on, because a page live without its manifest
+  // row tells a student their correct work is not graded. But the CSV has to be
+  // produced BEFORE the gate opens, since importing it is what makes opening the
+  // gate correct. So this one kind is fetched around the gate, deliberately and
+  // loudly, and the reminder printed at the end says what has to follow.
+  const gatedCode = kind === 'code';
+  let pages = gatedCode
+    ? require('../lib/intro-java-build').exercisePages()
+    : allPages();
   const total = pages.length;
   // 'hub' selects both hub kinds, since importing the course hub without its
   // unit hubs would ship a landing page whose every link is a 404.
-  if (kind) {
+  if (kind && !gatedCode) {
     pages = pages.filter((p) => (kind === 'hub' ? p.kind.endsWith('-hub') : p.kind === kind));
   }
   if (only) pages = pages.filter((p) => only.has(p.handle));
@@ -262,6 +273,16 @@ function main(argv) {
   console.log('\n  Import settings: MERGE mode, QUOTE_ALL quoting, utf-8-sig encoding. One import at a time.');
   console.log('  After the import lands, flip INTRO_JAVA_PAGES_LIVE in scripts/seed-manifest.js');
   console.log('  and run the seed with --update, or the graded items have no denominators.\n');
+  if (gatedCode) {
+    console.log('  THESE PAGES ARE GATED. They are not in allPages() and their gradebook');
+    console.log('  denominators are not seeded, because a page live without its manifest row');
+    console.log('  tells a student their correct work is not graded.\n');
+    console.log('  After this import lands and is verified live, in ONE pass:');
+    console.log('    1. set INTRO_JAVA_EXERCISES_LIVE = true in scripts/seed-manifest.js');
+    console.log('    2. node scripts/seed-manifest.js --update');
+    console.log('    3. node scripts/seed-code-tests.js --update   (seeds the hidden cases)');
+    console.log('    4. update smoke/intro-java-exercises.js 6.5, which pins the gate shut\n');
+  }
 }
 
 if (require.main === module) main(process.argv.slice(2));

@@ -45,6 +45,15 @@
 //  It never grades anything and a graded case never records a trace. See
 //  docs/greenfoot-trace.md.
 //
+//  A SCENE HAS NO HELPERS OF ITS OWN. Helper classes are declared once, on the
+//  exercise, and both the Run program and the graded program compile all of
+//  them. The first version let a scene add its own, and smoke/intro-java-run.js
+//  caught what that costs on its very first run: 1.6's scene declared a Worm the
+//  graded cases could not see, so a student who wrote isTouching(Worm.class)
+//  would have watched it work under Run and hit a compile error under Submit.
+//  Two buttons disagreeing about a student's own code is the worst bug this
+//  system could have, so there is now one list and both paths read it.
+//
 //  Zero PII: author content only. No em-dashes, per repo convention.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -52,13 +61,16 @@
 // by the lesson it sits on, and the honest exceptions are named per exercise
 // rather than waved through. `isTouching` in 2.4 is the notable one, and it is
 // there because lesson 2.4's own gap-fill already uses it.
+const fs = require('fs');
+const path = require('path');
+
 const EXERCISES = [
   // ── 1.4 Calling a Method ───────────────────────────────────────────────────
   {
     lesson: '1.4', unit: 'unit-1',
     name: 'Three calls, in order',
     base: 'actor',
-    brief: 'A method call is a name, a pair of brackets, and whatever you put between them. '
+    brief: 'A method call is a name, a pair of parentheses, and whatever you put between them. '
       + 'Three of them in a row, and the order is the whole answer.',
     task: [
       'Move the crab 4 forward.',
@@ -154,8 +166,10 @@ const EXERCISES = [
       'When it reaches the edge of the world, turn it 180 degrees so it walks back.',
     ],
     note: 'You have not formally met `if` yet, and that is fine. Read it as English: '
-      + 'IF the thing in the brackets is true, do what is in the braces. Unit 2 covers it properly.',
-    helpers: '',
+      + 'IF the thing in the parentheses is true, do what is in the braces. Unit 2 covers it properly.',
+    // Declared here rather than on the scene, so the GRADED program compiles the
+    // same classes the animated one does. See the note above EXERCISES.
+    helpers: 'class Worm extends Actor { }',
     starter: [
       'public void act()',
       '{',
@@ -184,7 +198,6 @@ const EXERCISES = [
     ],
     scene: {
       world: { width: 20, height: 10, cell: 40 },
-      helpers: 'class Worm extends Actor { }',
       actors: [
         { type: 'Harness', x: 2, y: 5 },
         { type: 'Worm', x: 12, y: 5 },
@@ -389,7 +402,6 @@ const EXERCISES = [
     ],
     scene: {
       world: { width: 18, height: 8, cell: 40 },
-      helpers: 'class Spike extends Actor { }',
       actors: [
         { type: 'Harness', x: 0, y: 4 },
         { type: 'Spike', x: 9, y: 4 },
@@ -564,7 +576,73 @@ const NO_EXERCISE = {
 const BY_LESSON = {};
 for (const e of EXERCISES) BY_LESSON[e.lesson] = e;
 
-/** The graded item id for a lesson, matching the manifest and the page. */
-function itemId(lesson) { return `${lesson}-exercise`; }
+/**
+ * The graded item id for a lesson.
+ *
+ * `{U}.{L}-code-1`, from docs/intro-java-course-spec.md, and the trailing `-1`
+ * is load bearing rather than decoration: routes/student.js buckets a student's
+ * own progress view with `saIsCode = /-code-\d+$/`, so `{U}.{L}-code` would be
+ * filed on their page as a concept check. The id matches the pattern rather
+ * than the pattern being loosened, because CSA's code items are seeded with
+ * item_type 'cfu' and rebucketing by item_type would move those.
+ */
+function itemId(lesson) { return `${lesson}-code-1`; }
 
-module.exports = { EXERCISES, BY_LESSON, NO_EXERCISE, itemId };
+const COURSE = 'intro-java';
+const EXPECTED_FILE = path.join(__dirname, 'intro-java-expected.generated.json');
+
+/** Read the verified outputs, with a message aimed at whoever has to fix it. */
+function readExpected() {
+  if (!fs.existsSync(EXPECTED_FILE)) {
+    throw new Error('intro-java exercises have no generated expected output. '
+      + 'Run: node scripts/verify-intro-java-exercises.js --write');
+  }
+  return JSON.parse(fs.readFileSync(EXPECTED_FILE, 'utf8'));
+}
+
+/**
+ * The rows scripts/seed-code-tests.js writes into code_test_cases.
+ *
+ * Shaped to the same contract seed/csa-exercises exposes, so the seeder picks
+ * this up with one line added to its `sources()` and no other change. The
+ * grading route then needs nothing new at all: it already calls expandCase on
+ * every prelude, and every prelude below carries the @greenfoot-stub sentinel.
+ *
+ * The expected output is READ, never computed here. If the generated file is
+ * missing or short, this throws rather than seeding a guess, because a wrong
+ * expected output in this table fails a student whose code is correct.
+ */
+function codeTestItems() {
+  const expected = readExpected();
+  const items = EXERCISES.map((e) => {
+    const key = `${e.lesson}:${itemId(e.lesson)}`;
+    const entry = expected[key];
+    if (!entry) {
+      throw new Error(`intro-java ${e.lesson}: no generated expected output. `
+        + 'Run: node scripts/verify-intro-java-exercises.js --write');
+    }
+    if (entry.expected.length !== e.cases.length) {
+      throw new Error(`intro-java ${e.lesson}: ${entry.expected.length} generated outputs `
+        + `for ${e.cases.length} cases. Run: node scripts/verify-intro-java-exercises.js --write`);
+    }
+    return {
+      course: COURSE,
+      lesson: e.lesson,
+      item: itemId(e.lesson),
+      mode: 'segment',
+      cases: e.cases.map((c, i) => ({
+        stdin: '',
+        // The sentinel has to LEAD the prelude; expandCase drops anything above
+        // it. Helper actor classes go after it, as top-level declarations.
+        prelude: `// @greenfoot-stub ${e.base}\n${e.helpers || ''}`,
+        postlude: `    ${c.setup}`,
+        expected_stdout: `${entry.expected[i]}\n`,
+        hidden: c.hidden ? 1 : 0,
+      })),
+    };
+  });
+  return { items };
+}
+
+module.exports = { EXERCISES, BY_LESSON, NO_EXERCISE, itemId,
+  codeTestItems, readExpected, COURSE, EXPECTED_FILE };
