@@ -159,6 +159,19 @@ mutations from a prompt is exactly the failure mode this design avoids:
 
 ### The weekly Routine
 
+**Status as of 2026-08-20: created, not yet wired.** The Routine exists
+(`trig_01SQ1u5W29s4jUJNbsVj39tc`, "apcsexamprep-progress-api — weekly course
+blog publish") but was created from an API path that cannot attach the
+account's Shopify connector to a session it schedules; `create_trigger`
+returned that limitation explicitly rather than silently dropping it. Until
+someone attaches the Shopify connector to this Routine from the claude.ai
+Routines UI (connector picker there, not exposed to this API), every firing
+will hit the prompt's own "connector unavailable" guardrail: it writes a
+one-line skip note and does nothing else. That is a safe failure, not a
+publish with no verification, but it is also not yet a working cadence.
+Check `docs/runs/` for a `-weekly-blog-skipped.md` note dated after the next
+Tuesday to know whether this has been resolved.
+
 A Routine (`create_trigger`, cron `0 14 * * 2`) fires a fresh Claude Code
 session every Tuesday. Fresh, not a resumed conversation: this repo's
 standing rule is that sessions are disposable and state lives in the repo and
