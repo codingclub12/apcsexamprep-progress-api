@@ -148,6 +148,31 @@ for (const [handle, expected] of SNAPSHOTS) {
   ok(`${handle} is untouched outside those two regions`, strip(before) === strip(r.body));
 }
 
+section('5. The 3.9 guided notes has no pseudocode left inside a sentence');
+// Eleven one-liners on that page were inside prose or in one column of a
+// comparison table, so reformatting them in place would have dropped a nine-line
+// block into the middle of a sentence. scripts/csp-notes-code-blocks.js lifts
+// them out into real code blocks instead. Every edit is a literal before/after
+// pair, so this asserts each still applies exactly once against the snapshot.
+const { patch: patchLive } = require('../scripts/beginner-style-patch');
+const { apply, EDITS } = require('../scripts/csp-notes-code-blocks');
+const notesSnap = path.join(SNAP_DIR, 'ap-csp-topic-3-9-guided-notes.before-beginner-style.html');
+if (fs.existsSync(notesSnap)) {
+  const staged = patchLive(fs.readFileSync(notesSnap, 'utf8')).body;
+  const res = apply(staged);
+  ok('every prose and table edit still applies exactly once', res.missed.length === 0, res.missed);
+  ok(`there are ${EDITS.length} edits`, EDITS.length === 11, EDITS.length);
+  const outside = res.body.replace(/<pre[^>]*>[\s\S]*?<\/pre>/g, '');
+  ok('no pseudocode is left outside a code block',
+    (outside.match(/IF\([^)]*\)\s*\{/g) || []).length === 0);
+  const inside = [];
+  (res.body.match(/<pre class="[^"]*\bps\b[^"]*">[\s\S]*?<\/pre>/g) || [])
+    .forEach((b) => findOneLiners(b, 'pseudo').forEach((h) => inside.push(h.text)));
+  ok('no one-liner is left inside a code block', inside.length === 0, inside.slice(0, 3));
+  ok('the div tags still balance',
+    (res.body.match(/<div/g) || []).length === (res.body.match(/<\/div>/g) || []).length);
+}
+
 console.log(`\n${'-'.repeat(60)}`);
 console.log(`${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
