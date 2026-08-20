@@ -41,7 +41,7 @@
 //    --to   YYYY-MM-DD   default yesterday (today is partial at every source)
 //    --chunk N           days per request, default 3
 //    --base URL          default https://progress.apcsexamprep.com
-//    --source ga4|gsc    default both
+//    --source ga4|gsc|shopify  default all
 //    --dry-run           fetch and count, write nothing
 //    --resume            skip chunks already fully covered in metrics_daily
 // ─────────────────────────────────────────────────────────────────────────────
@@ -49,6 +49,32 @@
 const DEFAULT_BASE = 'https://progress.apcsexamprep.com';
 const DEFAULT_CHUNK = 3;
 const MAX_ATTEMPTS = 5;
+
+// A 403 is not automatically an auth failure, and saying so sends whoever ran
+// this to check a credential that was never the problem. The first real run of
+// this script hit a corporate egress proxy that answers 403 with "Host not in
+// allowlist", and the script confidently reported "authentication rejected.
+// Check ADMIN_KEY matches the deployed key." The key was fine.
+//
+// The API's own rejection is a JSON body with a known message, so match on that
+// and treat every other 403 as a transport problem worth retrying.
+function isApiAuthFailure(message) {
+  const m = String(message || '');
+  if (/\b401\b/.test(m)) return true;
+  return /\b403\b/.test(m) && /invalid or missing admin key/i.test(m);
+}
+
+// Node's built-in fetch ignores HTTPS_PROXY unless told otherwise, which fails
+// in exactly the confusing direction: curl works, this script does not, and the
+// error is a 403 from a proxy the script never knew it was talking to.
+function proxyHint(message) {
+  if (!/not in allowlist|proxy|ENOTFOUND|ECONNREFUSED|EAI_AGAIN/i.test(String(message || ''))) return null;
+  return [
+    'This looks like a network/proxy problem rather than a bad key.',
+    'If you are behind a proxy, Node does not read HTTPS_PROXY for fetch by default. Try:',
+    '  NODE_USE_ENV_PROXY=1 node scripts/traffic-backfill.js ...',
+  ].join('\n');
+}
 
 function arg(name, fallback) {
   const i = process.argv.indexOf('--' + name);
@@ -115,7 +141,7 @@ async function main() {
         lastErr = e;
         // A transient network failure mid-backfill should not lose the run.
         // A 401/403 will not fix itself, so it is not retried.
-        if (/\b(401|403)\b/.test(e.message)) break;
+        if (isApiAuthFailure(e.message)) break;
         if (attempt < MAX_ATTEMPTS) {
           const wait = 2000 * Math.pow(2, attempt - 1);
           console.log(`${label}  ${e.message}; retry ${attempt}/${MAX_ATTEMPTS - 1} in ${wait / 1000}s`);
@@ -127,15 +153,18 @@ async function main() {
     if (!res) {
       totals.failed++;
       console.log(`${label}  FAILED: ${lastErr && lastErr.message}`);
-      if (/\b(401|403)\b/.test((lastErr && lastErr.message) || '')) {
-        fail('authentication rejected. Check ADMIN_KEY matches the deployed key.');
+      const msg = (lastErr && lastErr.message) || '';
+      if (isApiAuthFailure(msg)) {
+        fail('the API rejected the admin key. Check ADMIN_KEY matches the deployed key.');
       }
+      const hint = proxyHint(msg);
+      if (hint) fail(hint);
       continue;
     }
 
     let wrote = 0, cap = 0, drop = 0;
     const parts = [];
-    for (const name of ['ga4', 'gsc']) {
+    for (const name of ['ga4', 'gsc', 'shopify']) {
       const r = res[name];
       if (!r) continue;
       if (r.configured === false) { parts.push(`${name}: not configured (${r.reason})`); continue; }
@@ -186,4 +215,10 @@ async function post(base, key, body) {
 
 function fail(msg) { console.error('error: ' + msg); process.exit(1); }
 
-main().catch((e) => fail(e.message));
+// Exported so the error classification above can be tested. It is the part
+// most likely to be wrong and the part whose wrongness is most expensive: a
+// misclassified failure sends someone to check the wrong thing entirely.
+module.exports = { isApiAuthFailure, proxyHint, addDays };
+
+// Only run when invoked directly, never when required by a test.
+if (require.main === module) main().catch((e) => fail(e.message));

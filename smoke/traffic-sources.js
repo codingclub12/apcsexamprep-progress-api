@@ -56,6 +56,36 @@ ok('  and null stays null', shopify.num(null) === null && shopify.num(undefined)
 ok('a real zero is still zero', shopify.num('0') === 0);
 ok('nonsense is rejected rather than becoming NaN', shopify.num('n/a') === null);
 
+// ── Backfill error classification ────────────────────────────────────────────
+section('The backfill tells you which thing is actually broken');
+//  The first real production run of the backfill hit an egress proxy that
+//  answers 403 with "Host not in allowlist". The script reported
+//  "authentication rejected. Check ADMIN_KEY matches the deployed key."
+//  The key was fine, and the message sent the reader to the one place the
+//  problem was not. A wrong diagnosis costs more than no diagnosis.
+{
+  const bf = require('../scripts/traffic-backfill');
+
+  ok('the API\'s own rejection IS an auth failure',
+    bf.isApiAuthFailure('HTTP 403: {"error":"Invalid or missing admin key."}') === true);
+  ok('a 401 is an auth failure whatever the body says',
+    bf.isApiAuthFailure('HTTP 401: nope') === true);
+  ok('a PROXY 403 is NOT an auth failure',
+    bf.isApiAuthFailure('HTTP 403: Host not in allowlist: progress.apcsexamprep.com.') === false);
+  ok('a 502 is not an auth failure', bf.isApiAuthFailure('HTTP 502: bad gateway') === false);
+
+  ok('a proxy rejection offers the proxy fix',
+    /NODE_USE_ENV_PROXY/.test(bf.proxyHint('HTTP 403: Host not in allowlist: x') || ''));
+  ok('  and DNS failure does too', /NODE_USE_ENV_PROXY/.test(bf.proxyHint('fetch failed: ENOTFOUND') || ''));
+  // A real auth failure must not be muddied with networking advice.
+  ok('a genuine auth failure gets no proxy advice',
+    bf.proxyHint('HTTP 403: {"error":"Invalid or missing admin key."}') === null);
+
+  // Chunk arithmetic: an off-by-one here silently skips or re-fetches days.
+  ok('day stepping is inclusive and correct', bf.addDays('2026-02-28', 1) === '2026-03-01');
+  ok('  and handles a leap year', bf.addDays('2028-02-28', 1) === '2028-02-29');
+}
+
 section('Connector fails closed');
 delete process.env.SHOPIFY_SHOP;
 delete process.env.SHOPIFY_ADMIN_TOKEN;
