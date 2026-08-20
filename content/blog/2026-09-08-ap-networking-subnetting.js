@@ -22,7 +22,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'subnetting explained',
-  publishOn: '2026-09-08',
+  publishOn: '2026-09-09',
   seoTitle: 'Subnetting Explained: Subnetting Without Tears',
   seoDescription: 'Subnetting explained the way it should be taught: why one flat network breaks down, what a subnet mask actually does, and why schools split networks by group.',
   summary: 'A conceptual, no-binary-math explanation of subnetting: the problem it solves, a small worked example of splitting one network into two groups, what a subnet mask means intuitively, and why a school would subnet in practice.',

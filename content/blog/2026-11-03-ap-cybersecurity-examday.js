@@ -50,7 +50,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'ap cybersecurity exam day',
-  publishOn: '2026-11-03',
+  publishOn: '2026-11-06',
   seoTitle: 'AP Cybersecurity Exam Day: The First Cohort Guide',
   seoDescription: 'A verified AP Cybersecurity exam day guide: photo ID, the Bluebook device policy, the in-exam Device Security Analysis FRQ, and a first cohort checklist.',
   summary: 'What an AP Cybersecurity student actually needs on exam day: the same photo ID, Bluebook device, and prohibited items rules that apply across every AP exam, the course-specific fact that Section II is a live, in-exam Device Security Analysis free response built from provided artifacts rather than a pre-submitted project, honest guidance for sitting an exam with no prior test-takers to learn from, and a night before and morning of checklist.',

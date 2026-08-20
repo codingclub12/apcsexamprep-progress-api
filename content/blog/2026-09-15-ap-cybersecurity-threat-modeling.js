@@ -23,7 +23,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'threat modeling',
-  publishOn: '2026-09-15',
+  publishOn: '2026-09-18',
   seoTitle: 'Threat Modeling Your Phone: AP Cybersecurity Practice',
   seoDescription: 'Threat modeling your own phone is a ten minute exercise that turns CIA triad vocabulary into reasoning practice for AP Cybersecurity scenario questions.',
   summary: 'Threat modeling sounds like a term you memorize for a multiple choice question, but it works far better as something you actually do, on a device you already own. This guide walks through modeling threats to your own phone: naming what is actually worth protecting, listing the realistic ways it could be attacked, and for each threat, reasoning through which CIA property is at risk and what control closes the gap. That asset, threat, property, control chain is the exact reasoning AP Cybersecurity scenario questions are built to score, so practicing it on your own phone is rehearsal for the real exam, not a detour from it.',

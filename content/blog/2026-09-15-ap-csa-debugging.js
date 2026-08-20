@@ -20,7 +20,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'debugging java',
-  publishOn: '2026-09-15',
+  publishOn: '2026-09-18',
   seoTitle: 'Debugging Java: How to Read a Compiler Error',
   seoDescription: 'Debugging Java code starts with reading the error, not guessing. A method for compile-time errors and the runtime exceptions AP CSA actually tests.',
   summary: 'Most students facing a wall of red text respond by changing a random line and recompiling, which wastes far more time than it saves. Debugging Java code well is a specific, learnable method: read the line number, read the exact message, then reason backward from message to cause. This walks through the compile-time errors and runtime exceptions that show up constantly in AP CSA code, with real broken snippets, the actual error text, and the reasoning path from one to the other.',

@@ -25,7 +25,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'explain technical to non technical',
-  publishOn: '2026-09-22',
+  publishOn: '2026-09-25',
   seoTitle: 'Explain Technical to Non Technical: AP Networking Collaborate',
   seoDescription: 'A method for the AP Networking Collaborate skill: how to explain technical to non technical people, with a worked DHCP example and practice questions.',
   summary: 'Collaborate is one of the four skills the AP Networking exam explicitly assesses, and it is the one students drill the least, because it does not feel like real networking content. This post treats it as a practiceable method rather than a soft-skill checkbox: figure out what the audience actually needs, translate the technical terms without losing accuracy, and confirm they understood. A worked example takes a DHCP address pool running out of addresses and writes both a bad, jargon-heavy explanation and a good one side by side, with the reasoning for what separates them.',

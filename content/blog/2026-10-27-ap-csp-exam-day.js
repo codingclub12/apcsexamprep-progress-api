@@ -34,7 +34,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp exam day',
-  publishOn: '2026-10-27',
+  publishOn: '2026-10-26',
   seoTitle: 'AP CSP Exam Day: What to Bring and What Is Given',
   seoDescription: 'A verified AP CSP exam day checklist: photo ID rules, the Bluebook device policy, what is prohibited, and why exam day is not a project defense.',
   summary: 'What an AP CSP student actually needs on exam day: the photo ID rule, the Bluebook device and connectivity policy, what the school and proctor provide including the printed Personalized Project Reference, the full list of prohibited items, and a plain answer to the most common exam day misconception, that there is no live defense of the Create project. Closes with a night before and morning of checklist.',

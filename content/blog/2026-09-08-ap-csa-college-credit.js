@@ -30,7 +30,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa college credit',
-  publishOn: '2026-09-08',
+  publishOn: '2026-09-07',
   seoTitle: 'AP CSA College Credit: What Score Do You Need',
   seoDescription: 'AP CSA college credit is not automatic at a 4 or 5. How colleges set score thresholds, the credit-vs-placement split, and how to check your school.',
   summary: 'A 4 or 5 on the AP CSA exam can mean skipping an intro programming course in college, but only if the specific school you are applying to actually grants credit at that score. Here is how AP CSA credit policy actually works, the honest difference between credit and placement, and how to check a real school instead of guessing.',

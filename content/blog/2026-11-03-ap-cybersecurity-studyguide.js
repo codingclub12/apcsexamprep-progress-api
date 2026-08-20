@@ -26,7 +26,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'ap cybersecurity study guide',
-  publishOn: '2026-11-03',
+  publishOn: '2026-11-02',
   seoTitle: 'AP Cybersecurity Study Guide: The Half Year Review',
   seoDescription: 'An AP Cybersecurity study guide organized by all five units: a checklist of what to actually do in each one, linked to the specific posts on this blog.',
   summary: 'A navigation-style AP Cybersecurity study guide built for the halfway point of the course, organized by the five units: Introduction to Security, Securing Spaces, Securing Networks, Securing Devices, and Securing Applications and Data. For each unit, a concrete checklist of review actions, linked to the specific dedicated post already on this blog rather than re-explaining any of it, plus a cross-cutting exam strategy checklist covering pacing, the free response, scenario reading, and practicing without a released exam. Distinct from the running glossary, which is a term reference, this is a planning tool.',

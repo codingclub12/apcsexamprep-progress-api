@@ -16,7 +16,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'incident response',
-  publishOn: '2026-09-22',
+  publishOn: '2026-09-25',
   seoTitle: 'Incident Response: The AP Cybersecurity Answer Structure',
   seoDescription: 'Learn the incident response lifecycle as a real security process and a reusable structure for AP Cybersecurity scenario questions, with a worked example.',
   summary: 'Incident response is a five stage lifecycle, identify, contain, eradicate, recover, and document, that security teams actually use, and it doubles as a ready made structure for answering any AP Cybersecurity scenario question that asks what should happen next. This guide teaches both halves at once: the real meaning of each stage, and how to use that same order to organize a written answer. A full worked scenario walks a phishing email through every stage to a compromised staff account, and two practice questions ask students to identify which stage a described action belongs to.',

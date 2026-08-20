@@ -33,7 +33,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp college credit',
-  publishOn: '2026-09-22',
+  publishOn: '2026-09-21',
   seoTitle: 'AP CSP College Credit: Which Colleges Give It',
   seoDescription: 'AP CSP college credit is real but smaller than people assume, and often elective credit rather than major credit. Here is the honest, sourced breakdown.',
   summary: 'AP CSP college credit exists at a real, checkable number of colleges, but it is a genuinely different landscape than AP CSA credit: fewer colleges publish a policy, and even where a policy exists it often counts as general elective or gen-ed credit rather than credit toward a computer science major. Here is what the current data actually shows, why CS departments treat CSP differently than CSA, and how to check a specific school instead of guessing.',

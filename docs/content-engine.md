@@ -12,7 +12,7 @@ that would normally live in a person's judgement have to live in code instead.
 | | |
 |---|---|
 | Volume | 12 posts a week: 3 each for ap-csa, ap-csp, ap-cybersecurity, ap-networking |
-| Day | Tuesday, 14:00 UTC, mid-morning US Central |
+| Days | Monday, Wednesday, Friday, 14:00 UTC -- one track a day, not all 12 at once |
 | Destination | one blog per course, see the routing table below |
 | Queue | `content/editorial-calendar.js`, 12 weeks x 4 courses x 3 tracks |
 | Posts | `content/blog/*.js`, one file per post |
@@ -43,14 +43,23 @@ about" stops being answerable one topic at a time. Left as a flat list it
 drifts, and the blog reads like a feed rather than a body of work. So each
 course runs three parallel tracks and publishes one from each, every week.
 
-| Track | What it is | How it earns |
-|---|---|---|
-| `brief` | What changed and what it means. News pegged. | Ranks for a while, then decays. The reason to visit today. |
-| `concept` | One idea taught properly. Evergreen. | Ranks for years, widest search volume, often beyond AP students. The compounding one. |
-| `drill` | Practice and method. Worked problems, exam mechanics. | Ranks least, converts best. Somebody searching how to practise is already committed. |
+| Track | Publishes | What it is | How it earns |
+|---|---|---|---|
+| `brief` | Monday | What changed and what it means. News pegged. | Ranks for a while, then decays. The reason to visit today. |
+| `concept` | Wednesday | One idea taught properly. Evergreen. | Ranks for years, widest search volume, often beyond AP students. The compounding one. |
+| `drill` | Friday | Practice and method. Worked problems, exam mechanics. | Ranks least, converts best. Somebody searching how to practise is already committed. |
 
 The ratio is the point. Only concept posts builds traffic that never converts.
 Only drills builds a site nobody discovers.
+
+Each track lands on its own day rather than all twelve posts going out
+together. A Tuesday dump of four courses' worth of new pages at once reads
+as a spam burst, both to a returning reader and plausibly to a crawler;
+spreading brief/concept/drill across Monday/Wednesday/Friday keeps a steady
+weekly presence instead. Each post's `publishOn` in `content/blog/*.js` is
+computed from its week anchor in `WEEKS` (`content/editorial-calendar.js`)
+offset by its track: brief is the week's Monday, concept its Wednesday,
+drill its Friday.
 
 `brief` posts are made of pegs, and pegs decay. A peg written in August is a
 claim about August. Re-verify before writing and rewrite the slot if it has gone
@@ -157,29 +166,27 @@ mutations from a prompt is exactly the failure mode this design avoids:
   `smoke/blog-content.js`, which pins the exact tag-gluing bug that check
   had on its first version as a regression test.
 
-### The weekly Routine
+### The publish Routine
 
-**Status as of 2026-08-20: created, not yet wired.** The Routine exists
-(`trig_01SQ1u5W29s4jUJNbsVj39tc`, "apcsexamprep-progress-api — weekly course
-blog publish") but was created from an API path that cannot attach the
-account's Shopify connector to a session it schedules; `create_trigger`
-returned that limitation explicitly rather than silently dropping it. Until
-someone attaches the Shopify connector to this Routine from the claude.ai
-Routines UI (connector picker there, not exposed to this API), every firing
-will hit the prompt's own "connector unavailable" guardrail: it writes a
-one-line skip note and does nothing else. That is a safe failure, not a
-publish with no verification, but it is also not yet a working cadence.
-Check `docs/runs/` for a `-weekly-blog-skipped.md` note dated after the next
-Tuesday to know whether this has been resolved.
+A Routine, cron `0 14 * * 1,3,5`, fires a fresh Claude Code session every
+Monday, Wednesday, and Friday. Fresh, not a resumed conversation: this
+repo's standing rule is that sessions are disposable and state lives in the
+repo and the ledger, not in a chat (`docs/where-jarvis-lives.md`), and a
+publish job that depended on one particular conversation staying alive for
+twelve weeks would quietly violate that the first time the conversation
+didn't survive. The Routine's prompt is the full procedure, self-contained,
+since a fresh session has no memory of this one.
 
-A Routine (`create_trigger`, cron `0 14 * * 2`) fires a fresh Claude Code
-session every Tuesday. Fresh, not a resumed conversation: this repo's
-standing rule is that sessions are disposable and state lives in the repo and
-the ledger, not in a chat (`docs/where-jarvis-lives.md`), and a publish job
-that depended on one particular conversation staying alive for twelve weeks
-would quietly violate that the first time the conversation didn't survive.
-The Routine's prompt is the full procedure, self-contained, since a fresh
-session has no memory of this one:
+It has to be created through the claude.ai Routines UI, not the
+`create_trigger` tool: the first attempt via `create_trigger` (recorded as
+`trig_01SQ1u5W29s4jUJNbsVj39tc`) returned an explicit warning that its API
+path cannot attach the account's Shopify connector to a session it
+schedules, and the UI's routine-creation flow is the only place that
+exposes a connector picker at creation time. That original, connector-less
+Routine was retired once the UI-created replacement existed and could
+actually publish.
+
+The Routine's prompt covers:
 
 1. `git pull`, then `node scripts/blog.js validate`. Stop and report if red.
 2. `node scripts/blog.js due` for today's date.
@@ -203,7 +210,7 @@ retried or re-fired week skips whatever already made it out.
 Edit it in Shopify, then bring the matching file in `content/blog/` into line
 so the next person reads the same thing the reader does. Nothing here
 overwrites automatically, so a hand correction is never reverted by the next
-Tuesday.
+Monday, Wednesday, or Friday run.
 
 ### If a token-based path is ever wanted instead
 

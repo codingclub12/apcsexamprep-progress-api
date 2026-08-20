@@ -22,7 +22,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'home lab',
-  publishOn: '2026-10-13',
+  publishOn: '2026-10-16',
   seoTitle: 'Home Lab: Build One From What You Already Own',
   seoDescription: 'Build a real home lab for AP Networking using your router, an old phone, and free simulator software. Four exercises, no purchase required.',
   summary: 'A practical guide to building a home lab for AP Networking practice using equipment most students already own: a home router, a spare phone or laptop, and free simulator software. Includes four concrete exercises tied to IP addressing, DHCP, VLANs, and ping and traceroute, each linked to the concept post that already covers it.',

@@ -21,7 +21,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'ap cybersecurity frq',
-  publishOn: '2026-08-18',
+  publishOn: '2026-08-21',
   seoTitle: 'AP Cybersecurity FRQ: How to Write It Step by Step',
   seoDescription: 'A paragraph by paragraph method for the AP Cybersecurity FRQ, the device security analysis, with a full worked example and a 50 minute time plan.',
   summary: 'The AP Cybersecurity FRQ is a device security analysis with no released exams to study from. A teacher breakdown of the four paragraph structure that earns reasoning marks, a full worked example on a school issued laptop, a 50 minute time budget, and two scenarios to practice writing on your own.',

@@ -20,7 +20,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'java vs python',
-  publishOn: '2026-08-25',
+  publishOn: '2026-08-26',
   seoTitle: 'Java vs Python for AP CSA Students',
   seoDescription: 'Java vs Python for AP CSA: a full comparison table plus the exact == versus .equals() trap that costs Python natives the most exam points.',
   summary: 'Most AP CSA students learned Python first, and Java syntax reads as a wall. This is the translation guide: a full java vs python comparison table, the == versus .equals() trap that costs Python natives the most exam points, and worked practice on both.',

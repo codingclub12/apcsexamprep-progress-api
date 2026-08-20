@@ -30,7 +30,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'ap cybersecurity mcq',
-  publishOn: '2026-09-08',
+  publishOn: '2026-09-11',
   seoTitle: 'AP Cybersecurity MCQ Pacing: Eighty Seconds a Question',
   seoDescription: 'AP Cybersecurity MCQ pacing means 80 seconds a question on average. Checkpoint pacing, fast versus slow triage, and two worked practice questions.',
   summary: 'Section I of AP Cybersecurity gives you 60 questions in 80 minutes, which averages out to roughly 80 seconds a question, tight for a section built on reading scenarios. This guide teaches checkpoint pacing, a fast read on which question type is in front of you, and how to avoid the trap of over-analyzing a scenario the evidence-first method already answered.',

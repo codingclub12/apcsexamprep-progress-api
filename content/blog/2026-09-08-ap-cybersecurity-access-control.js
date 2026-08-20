@@ -15,7 +15,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'access control',
-  publishOn: '2026-09-08',
+  publishOn: '2026-09-09',
   seoTitle: 'Access Control and Least Privilege Explained',
   seoDescription: 'Access control explained: authentication versus authorization, the principle of least privilege, and role-based access for AP Cybersecurity Unit 2.',
   summary: 'Access control is something everyone already understands physically: not everyone gets a key to every room. This guide grounds the digital version of that same idea in the principle of least privilege, teaches the difference between authentication and authorization that students routinely conflate, explains why role-based access scales better than access tied to individuals, and works through a scenario with a front desk employee, an IT administrator, and a finance employee to show exactly what each one should and should not be able to touch.',

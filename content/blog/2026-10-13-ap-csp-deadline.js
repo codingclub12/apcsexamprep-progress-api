@@ -35,7 +35,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp deadline',
-  publishOn: '2026-10-13',
+  publishOn: '2026-10-12',
   seoTitle: 'AP CSP Deadline: How Students Miss the Window',
   seoDescription: 'The AP CSP deadline is not one date but three. Here is the verified current submission window and exactly how prepared students still miss it.',
   summary: 'The AP CSP Create performance task deadline gets missed less by students who never finish their project and more by students who finish it late, then discover the submission itself, uploading files, drafting written material, and clicking submit as final, takes real time they no longer have. This guide verifies the current Digital Portfolio deadline, walks through the specific ways students lose points to the calendar rather than the content, and lays out a backward-planned timeline with buffer days built in.',

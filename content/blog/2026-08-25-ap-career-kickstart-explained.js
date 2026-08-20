@@ -29,7 +29,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'ap career kickstart',
-  publishOn: '2026-08-25',
+  publishOn: '2026-08-24',
   seoTitle: 'AP Career Kickstart Explained: Courses and Credit',
   seoDescription: 'AP Career Kickstart explained: which courses belong to it, how it differs from a traditional AP, and what college credit looks like today.',
   summary: 'AP Career Kickstart is College Board\'s new career-focused AP category, and AP Cybersecurity is one course inside it, not the whole label. This guide covers what the initiative is, which courses belong to it and when each launches, how its purpose differs from a traditional AP built around college credit, what to actually expect from college credit policy today, and how AP Cybersecurity and AP Networking relate as two courses in the same family.',

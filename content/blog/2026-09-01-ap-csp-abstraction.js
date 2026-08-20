@@ -20,7 +20,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp abstraction',
-  publishOn: '2026-09-01',
+  publishOn: '2026-09-02',
   seoTitle: 'AP CSP Abstraction: Data vs Procedural Explained',
   seoDescription: 'A precise, exam-ready explanation of AP CSP abstraction: procedural abstraction with parameters, data abstraction with lists, worked in code.',
   summary: 'Abstraction is one of the most-used and least-precisely-understood words in AP CSP, and the exam wants a specific, demonstrable answer, not the word hiding complexity. This guide teaches procedural abstraction through a parameterized procedure called twice with different results, teaches data abstraction through a list that replaces many separate variables, and contrasts the two directly so a student can write a strong written response about their own project instead of a vague one.',

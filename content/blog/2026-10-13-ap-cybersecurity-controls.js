@@ -21,7 +21,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'security controls',
-  publishOn: '2026-10-13',
+  publishOn: '2026-10-16',
   seoTitle: 'Security Controls: Matching Control to Layer',
   seoDescription: 'A practice guide for matching security controls to the layer an attack actually targets, with worked scenarios and wrong-layer distractors.',
   summary: 'This guide is a synthesis and practice piece that connects every control this blog has already covered in depth: access control and least privilege, network segmentation, firewalls, endpoint hardening, and application security. Rather than re-teaching any one of them, it builds the reusable exam skill scenario questions actually test, identifying which layer a described attack targets (identity and permissions, network architecture, device, application, or physical and human) and therefore which control category is genuinely relevant, since the exam likes to offer a plausible but wrong-layer control as a distractor. A reference table maps every control to its layer and its limits, and six worked scenarios, several with a tempting wrong-layer distractor, put the method into practice.',

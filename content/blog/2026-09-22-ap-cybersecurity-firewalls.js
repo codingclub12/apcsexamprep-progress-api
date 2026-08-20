@@ -19,7 +19,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'firewall',
-  publishOn: '2026-09-22',
+  publishOn: '2026-09-23',
   seoTitle: 'Firewalls Explained: What They Do and Cannot Stop',
   seoDescription: 'What a firewall actually filters, the conceptual types the exam tests, and the specific attacks a firewall alone can never stop, from phishing to a USB drive.',
   summary: 'A firewall is rule based traffic filtering at a boundary, deciding what is allowed to cross based on criteria like source and destination address and port. This guide goes deep on what a firewall actually checks, the conceptual difference between packet filtering and stateful or application aware inspection, and then spends most of its time on the harder and more testable half of the idea: the specific, real categories of attack a firewall genuinely cannot stop, including phishing, encrypted payload content, an already authenticated insider, and malware that never crosses the network boundary at all.',

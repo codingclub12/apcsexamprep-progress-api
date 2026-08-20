@@ -25,7 +25,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'wifi channels',
-  publishOn: '2026-09-29',
+  publishOn: '2026-09-30',
   seoTitle: 'Wifi Channels Explained: Why Public Wifi Slows Down',
   seoDescription: 'Wifi channels explained: why wireless networks share airtime, why crowded cafes suffer more than home networks, and how channel choice and 5GHz help.',
   summary: 'A conceptual explanation of wifi channels and interference: why wireless splits into specific frequency bands and channels, why nearby networks on the same channel have to share airtime instead of each getting a dedicated path, why a crowded public space suffers more from that than a quiet home network, and the two practical fixes: choosing a less crowded channel or moving to the 5GHz band.',

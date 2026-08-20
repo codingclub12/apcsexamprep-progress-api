@@ -20,7 +20,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'how to troubleshoot wifi',
-  publishOn: '2026-08-18',
+  publishOn: '2026-08-21',
   seoTitle: 'How to Troubleshoot Wifi: A Real Method',
   seoDescription: 'Learn how to troubleshoot wifi the way a network technician does: use what still works to eliminate causes, worked through two real scenarios step by step.',
   summary: 'Most people troubleshoot wifi by restarting things at random. This piece teaches the actual method: use what still works to eliminate possible causes, walked through two fully worked scenarios, and connected directly to how AP Networking builds its scenario questions.',

@@ -20,7 +20,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp written response practice',
-  publishOn: '2026-09-08',
+  publishOn: '2026-09-11',
   seoTitle: 'AP CSP Written Response Practice: 16 Prompts',
   seoDescription: 'Sixteen AP CSP written response practice prompts across all four exam categories, plus a fully worked sample answer and two category identification drills.',
   summary: 'A rehearsal bank of sixteen written response prompts covering program design, algorithm development, errors and testing, and data and procedural abstraction, meant to be answered from your own Create task project under a timer.',

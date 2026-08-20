@@ -20,7 +20,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa for loops',
-  publishOn: '2026-09-08',
+  publishOn: '2026-09-09',
   seoTitle: 'AP CSA For Loops vs While Loops: Which One',
   seoDescription: 'AP CSA for loops and while loops both get taught early. Learn the real distinguishing question, with worked examples and a trace.',
   summary: 'AP CSA students can usually write a for loop or a while loop when told which to use, but the exam rewards choosing the right structure on your own. This guide teaches the real distinguishing question, shows the mechanical translation between the two forms, and walks through the classic off-by-one trap with a worked trace.',

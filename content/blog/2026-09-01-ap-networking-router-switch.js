@@ -24,7 +24,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'router vs switch',
-  publishOn: '2026-09-01',
+  publishOn: '2026-09-02',
   seoTitle: 'Router vs Switch: What Each One Actually Does',
   seoDescription: 'Router vs switch, explained plainly, plus where a wireless access point fits in. What each device connects and why home gear combines all three into one box.',
   summary: 'A plain language explanation of the difference between a router, a switch, and a wireless access point, three distinct functions that most home internet equipment quietly combines into one box. Covers what each device connects, a building analogy that makes the distinction concrete, why school and business networks keep the three as separate physical devices, and two worked AP Networking practice scenarios.',

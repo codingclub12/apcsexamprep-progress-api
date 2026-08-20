@@ -36,7 +36,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'ap networking exam day',
-  publishOn: '2026-11-03',
+  publishOn: '2026-11-06',
   seoTitle: 'AP Networking Exam Day: Pilot Year Guide',
   seoDescription: 'AP Networking exam day logistics, plus what is genuinely different in the final pilot year: it is not the exam future national test-takers see.',
   summary: 'Standard AP exam-day logistics for AP Networking, covered briefly since they are the same College Board-wide policies detailed elsewhere: photo ID, the Bluebook device policy, and prohibited items. The real subject is what is different because this is a pilot exam rather than the national one: pilot students sit a different, multiple choice only assessment administered only at participating pilot schools, this year\'s data and results feed into building the eventual national exam rather than being the historically comparable administration future cohorts get scored against, and why doing genuine, honest work on this exam still matters even though it is not the final national version. Closes with a night before and morning of checklist.',

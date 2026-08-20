@@ -28,7 +28,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp study guide',
-  publishOn: '2026-10-20',
+  publishOn: '2026-10-23',
   seoTitle: 'AP CSP Study Guide: A Big Idea by Big Idea Plan',
   seoDescription: 'An AP CSP study guide organized by all five Big Ideas: a checklist of what to actually do in each one, linked to the specific posts and practice on this blog.',
   summary: 'A navigation-style AP CSP study guide organized by the five Big Ideas: Creative Development, Data, Algorithms and Programming, Computer Systems and Networks, and Impact of Computing. For each Big Idea, a checklist of concrete review actions, linked to the specific dedicated posts already on this blog rather than re-explaining any of their content, plus a suggested time allocation across the five and two quick comprehension-check questions.',

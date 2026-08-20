@@ -19,7 +19,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa reference sheet',
-  publishOn: '2026-09-22',
+  publishOn: '2026-09-25',
   seoTitle: 'AP CSA Reference Sheet: What It Actually Covers',
   seoDescription: 'What the AP CSA reference sheet actually prints, the String, Math, and List methods on it, and the gaps students hit by assuming too much or too little.',
   summary: 'Students treat the AP CSA reference sheet two wrong ways: ignoring it completely, or trusting it to cover everything Java can do. Both cost points. This walks through what the official Java Quick Reference actually contains, the specific method signatures printed on it, the ordinary syntax and methods it leaves out, and a concrete plan for finding those gaps weeks before the exam rather than mid-FRQ.',

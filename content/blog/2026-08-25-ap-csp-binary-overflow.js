@@ -24,7 +24,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp binary',
-  publishOn: '2026-08-25',
+  publishOn: '2026-08-26',
   seoTitle: 'AP CSP Binary: Bits, Range, and Overflow Explained',
   seoDescription: 'A full walkthrough of AP CSP binary representation: place value, the range formula behind 2^n, and why overflow is a capacity problem, not a rounding error.',
   summary: 'Most students who struggle with AP CSP binary questions can already convert a decimal number to binary by hand. What trips them up is a different skill entirely: reasoning about how many values a fixed number of bits can hold, and what happens when an operation tries to produce a value outside that range. This guide teaches binary representation from place value up, derives the range formula instead of handing it over as a fact to memorize, and walks through overflow with a worked example so the idea sticks.',

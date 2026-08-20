@@ -27,7 +27,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp final review',
-  publishOn: '2026-11-03',
+  publishOn: '2026-11-06',
   seoTitle: 'AP CSP Final Review: A Timed Mixed Practice Set',
   seoDescription: 'An AP CSP final review built as one timed, mixed practice set: six original questions across all five Big Ideas, answers revealed after you attempt them.',
   summary: 'A cumulative, timed AP CSP final review practice set rather than a study plan: six original multiple choice questions pulled across all five Big Ideas, Creative Development, Data, Algorithms and Programming, Computer Systems and Networks, and Impact of Computing, presented together with a suggested time budget the way the real exam mixes topics back to back, plus two bonus questions worked through immediately and guidance on where to go next based on which Big Idea trips you up.',

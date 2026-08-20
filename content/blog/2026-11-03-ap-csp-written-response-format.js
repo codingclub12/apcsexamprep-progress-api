@@ -28,7 +28,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp written response',
-  publishOn: '2026-11-03',
+  publishOn: '2026-11-02',
   seoTitle: 'AP CSP Written Response: Four Sentence Shapes',
   seoDescription: 'Every AP CSP written response category wants a different sentence shape. Get all four templates plus practice matching an answer to the right shape.',
   summary: 'The four AP CSP written response categories do not just cover different topics, they ask for four genuinely different sentence shapes. This guide gives one fill-in-the-blank template per category, so a student has something concrete to reach for instead of writing the same generic sentence four times.',

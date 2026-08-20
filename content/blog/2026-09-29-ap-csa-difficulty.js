@@ -25,7 +25,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa difficulty',
-  publishOn: '2026-09-29',
+  publishOn: '2026-09-28',
   seoTitle: 'AP CSA Difficulty: What the Score Data Shows',
   seoDescription: 'AP CSA difficulty is more than one question. This post puts its 2026 pass rate next to other AP exams and separates workload, concepts, and grading honestly.',
   summary: 'AP CSA difficulty gets asked as if it has one answer. It does not. This post puts the 2026 pass rate next to Calculus BC and US History for context, separates conceptual difficulty from pace from how forgiving the FRQ rubric actually is, and is honest about the fact that a self-selected group of students taking the exam skews the raw numbers.',

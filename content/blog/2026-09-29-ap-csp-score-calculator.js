@@ -54,7 +54,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp score calculator',
-  publishOn: '2026-09-29',
+  publishOn: '2026-10-02',
   seoTitle: 'AP CSP Score Calculator: What a 5 Requires',
   seoDescription: 'How the AP CSP score calculator math actually works: the real weighting between the exam and the Create Task, and what level on each earns a 5.',
   summary: 'Most AP CSP score calculator tools just take two numbers and spit out a 1-5 estimate without explaining why. This post walks through the actual weighting between the multiple choice exam and the Create Performance Task, what performance level on each is generally understood to correlate with a 5 (clearly framed as estimates, since College Board does not publish an exact formula), and the concrete planning consequence: a strong project cannot be skipped even if the exam feels easy, and strong exam prep cannot be skipped even if the project turned out great.',

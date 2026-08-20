@@ -19,7 +19,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'ip address explained',
-  publishOn: '2026-08-18',
+  publishOn: '2026-08-19',
   seoTitle: 'IP Address Explained: What It Is and How It Works',
   seoDescription: 'IP address explained in plain language: what the numbers mean, why devices need one, and why your private and public address are not the same thing.',
   summary: 'A plain language explanation of what an IP address is, why devices need one at all, how an IPv4 address is structured, why your private and public address are different numbers, and how your device gets assigned one automatically.',

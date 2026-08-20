@@ -36,7 +36,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa semester exam',
-  publishOn: '2026-10-27',
+  publishOn: '2026-10-26',
   seoTitle: 'AP CSA Semester Exam: What It Should Cover',
   seoDescription: 'What does a good AP CSA semester exam cover. A realistic content scope, the format it usually takes, and a review plan scoped to a first-semester final.',
   summary: 'An AP CSA semester exam is not the AP exam. It is a school\'s own first-semester final, and its exact content, format, and weight are set by the individual teacher, so this guide is deliberately general rather than prescriptive. It lays out the content scope a well-designed first-semester final should reasonably cover given typical four-unit CED pacing by late October, meaning object and method usage, boolean logic, loops, string methods, and basic variable tracing, while honestly noting that a class running ahead or behind that pace will vary. It also covers the mixed multiple-choice-and-short-FRQ format these exams commonly take, contrasts that against the real AP exam\'s fixed structure, and gives a review plan narrower than full-course review, pointing to this blog\'s existing guides on variable tracing, string methods, and for/while loops for the technique itself. The one instruction that matters most is also the simplest: confirm the actual scope with your own teacher before treating this guide as the syllabus.',

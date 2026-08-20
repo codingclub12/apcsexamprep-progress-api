@@ -39,7 +39,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa inheritance',
-  publishOn: '2026-11-03',
+  publishOn: '2026-11-02',
   seoTitle: 'AP CSA Inheritance: What the 2025-26 CED Says',
   seoDescription: 'AP CSA inheritance lost its standalone unit in the 2025-26 redesign. Here is exactly what that means for the exam, and why the concept still matters.',
   summary: 'AP CSA inheritance used to be a full standalone unit. In the current four-unit CED it is gone, and the specific mechanics, extends, super, method overriding, and interfaces, are marked not tested on the redesigned exam rather than merely folded elsewhere. This post verifies that claim against the College Board revisions overview and our own CED guide, then teaches the concept anyway with a worked Shape and Circle example, because understanding it still pays off for anyone continuing past this course.',

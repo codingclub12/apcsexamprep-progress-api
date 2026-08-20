@@ -15,7 +15,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'social engineering',
-  publishOn: '2026-08-25',
+  publishOn: '2026-08-26',
   seoTitle: 'Social Engineering Explained: AP Cybersecurity Guide',
   seoDescription: 'What social engineering actually is, the named techniques the AP Cybersecurity exam tests separately, and why the effective controls are human, not technical.',
   summary: 'Social engineering is the attack category almost every reader has already lived through, whether they recognized it or not. This guide opens with the kind of scenario a phone or a text has probably already run on you, then teaches the exam skill underneath the vocabulary: telling phishing, pretexting, baiting, and tailgating apart by what each one actually does, and understanding why the fix for a human vulnerability is a human control.',

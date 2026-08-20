@@ -22,7 +22,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'lossy vs lossless',
-  publishOn: '2026-09-15',
+  publishOn: '2026-09-16',
   seoTitle: 'Lossy vs Lossless Compression for AP CSP, Explained',
   seoDescription: 'A clear AP CSP guide to lossy vs lossless compression: the core trade-off, a worked run-length encoding example, real formats, and two practice questions.',
   summary: 'AP CSP asks students to reason about the trade-off between lossy and lossless compression, not to memorize codec internals. This guide builds that reasoning directly: what compression is for, why lossless can always rebuild the original exactly while lossy cannot, a hand-worked run-length encoding example, the formats students already recognize sorted into each camp, why compression is invisible from the outside, and two practice questions in the scenario-based style the exam actually uses.',

@@ -20,7 +20,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'nat',
-  publishOn: '2026-10-27',
+  publishOn: '2026-10-28',
   seoTitle: 'NAT Explained: The Address Shortage Workaround',
   seoDescription: 'NAT explained with a worked example: how one public address covers a dozen home devices, why IPv6 reduces the need for it, and why port forwarding exists.',
   summary: 'A concept explainer on network address translation, the mechanism that lets a whole household or office share one public IPv4 address while every device inside keeps its own private address. Walks through a worked example with a laptop, phone, and smart TV, connects NAT directly to the address-shortage framing from the IPv6 post, and covers why a device behind NAT normally cannot be reached directly from outside without port forwarding.',

@@ -19,7 +19,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'ap cybersecurity common mistakes',
-  publishOn: '2026-10-27',
+  publishOn: '2026-10-30',
   seoTitle: 'AP Cybersecurity Common Mistakes: Wrong Answer Pattern',
   seoDescription: 'The single most common AP Cybersecurity mistake: picking the dramatic-sounding answer over the boring one the evidence actually supports. Four worked drills.',
   summary: 'Among AP Cybersecurity common mistakes, one pattern accounts for more missed points than any single vocabulary gap: choosing the answer choice that sounds dramatic, technical, or alarming over the plainer choice that actually matches every fact the scenario gave you. This guide names that pattern directly, explains why the exam is built to offer it on purpose, and drills it across four fresh worked scenarios plus two practice questions, each pairing an exotic-sounding wrong answer or a maximalist wrong response against the specific, mundane answer the evidence actually supports.',

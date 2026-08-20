@@ -29,7 +29,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa mcq strategy',
-  publishOn: '2026-09-01',
+  publishOn: '2026-09-04',
   seoTitle: 'AP CSA MCQ Strategy: Pace the Multiple Choice Section',
   seoDescription: 'Learn an AP CSA MCQ strategy built on pacing checkpoints and fast-versus-slow question triage, with two worked examples so you finish on time.',
   summary: 'Knowing the material is not the same as finishing the AP CSA multiple choice section on time. This guide teaches checkpoint pacing and a five-second triage habit that tells you which questions deserve a full trace and which do not, before you have burned the time to find out the hard way.',

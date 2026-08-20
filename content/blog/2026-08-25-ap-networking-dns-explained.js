@@ -22,7 +22,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'dns explained',
-  publishOn: '2026-08-25',
+  publishOn: '2026-08-26',
   seoTitle: 'DNS Explained: Why One Site Won’t Load',
   seoDescription: 'DNS explained in plain language: what it does, why a working numeric address next to a broken domain name points straight at it, and what flushing DNS means.',
   summary: 'A plain language explanation of what DNS is and does, using a phonebook analogy grounded in the actual mechanics of a DNS query and resolver. Covers the specific symptom pattern of a DNS failure, how it differs from a genuine connectivity failure, and why flushing DNS is sometimes real troubleshooting advice.',

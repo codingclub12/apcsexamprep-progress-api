@@ -26,7 +26,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa study plan',
-  publishOn: '2026-10-27',
+  publishOn: '2026-10-30',
   seoTitle: 'AP CSA Study Plan for Students Already Behind',
   seoDescription: 'Behind in AP CSA with shaky Unit 1 or 2 skills. This ap csa study plan covers diagnosing the real gap, triage order, and a two-track weekly routine.',
   summary: 'A study plan for the AP CSA student who is not just a little behind but is missing or shaky on Unit 1 and Unit 2 fundamentals while the class keeps moving through Unit 2 or Unit 3. The first move is an honest diagnostic that names one specific missing skill, tracing a loop by hand or explaining what a reference variable actually points to, rather than a vague plan to review everything. From there the guide sets a triage order: loops, conditionals, and reference semantics come before class creation and object composition, because a method body written for a new class cannot be reasoned about without them, so fixing those first unlocks everything taught after. It lays out a two track week that protects a fixed, small block of catch-up time so it survives a busy week instead of being the first thing dropped, while still doing the current unit reasonably well rather than either abandoning catch-up or falling further behind chasing both. It closes with how to walk into office hours or a tutoring session with one named question instead of "I do not get any of this," since a specific question is the difference between leaving with an answer and leaving with the same confusion restated. This post is the catch-up phase specifically; once caught up, the phase-based timeline in this blog\'s AP CSA exam date guide is what "on track" looks like from there.',

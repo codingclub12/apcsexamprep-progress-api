@@ -23,7 +23,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa recursion',
-  publishOn: '2026-10-13',
+  publishOn: '2026-10-14',
   seoTitle: 'AP CSA Recursion: Trace the Call Stack, Not Magic',
   seoDescription: 'Learn to trace AP CSA recursion like a call stack: base case, recursive case, and a full push and pop trace with real return values.',
   summary: 'AP CSA students can usually write a recursive method that works, but tracing one by hand to explain how it works is the skill the exam actually tests. This guide teaches recursion as a visible call stack, with a full push and pop trace of a worked method and the classic missing or unreachable base case bug that causes infinite recursion.',

@@ -29,7 +29,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'cybersecurity careers',
-  publishOn: '2026-09-08',
+  publishOn: '2026-09-07',
   seoTitle: 'What Cybersecurity Careers Look Like at 22',
   seoDescription: 'A concrete look at real entry-level cybersecurity careers: SOC analyst work, honest job market data, and how AP Cybersecurity maps to the job.',
   summary: 'A grounded look at what an actual entry-level cybersecurity career looks like at 22: real job titles like SOC analyst, what the work is actually like day to day, honest talk about the monitoring-and-documentation reality behind the hacker image, realistic paths in through degrees, certifications, and hands-on reps, current job market numbers from the Bureau of Labor Statistics, and a specific map from AP Cybersecurity units to the tasks those jobs actually involve.',

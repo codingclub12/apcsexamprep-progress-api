@@ -23,7 +23,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp internet',
-  publishOn: '2026-09-22',
+  publishOn: '2026-09-23',
   seoTitle: 'AP CSP Internet Basics, Explained at Exam Depth',
   seoDescription: 'An AP CSP internet guide covering protocols, packet-based transmission, fault tolerance, redundancy, and layered abstraction, with two practice questions.',
   summary: 'AP CSP tests how the internet works at a conceptual level: what a protocol is and why standardization lets any two devices communicate, how a message is split into packets that travel independently and get reassembled at the destination, why redundant paths make the internet fault tolerant with no single point of failure, and why layered abstraction means a web developer never has to think about wiring. This guide teaches that reasoning directly, with a walkable shipping analogy and two scenario-based practice questions, and points to our separate DNS and IP addressing guides for the naming and addressing side of Big Idea 4.',

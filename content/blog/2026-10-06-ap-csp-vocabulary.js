@@ -23,7 +23,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp vocabulary',
-  publishOn: '2026-10-06',
+  publishOn: '2026-10-09',
   seoTitle: 'AP CSP Vocabulary: 40 Terms Ranked by Big Idea',
   seoDescription: 'AP CSP vocabulary, defined and ranked across all five Big Ideas, with a note on why each term specifically matters on the exam, not just what it means.',
   summary: 'A reference-style AP CSP vocabulary guide covering forty terms across all five Big Ideas: Creative Development, Data, Algorithms and Programming, Computer Systems and Networks, and Impact of Computing. Each term gets a precise one-line definition and a note on why it specifically matters on the exam, a common mix-up or a place it shows up in written response, rather than a flat, equal-weight glossary. Terms that already have a dedicated deep-dive post on this blog link out to it instead of being re-explained here.',

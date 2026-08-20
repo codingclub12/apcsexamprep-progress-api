@@ -15,7 +15,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'cia triad',
-  publishOn: '2026-08-18',
+  publishOn: '2026-08-19',
   seoTitle: 'CIA Triad Explained: AP Cybersecurity Guide',
   seoDescription: 'What the CIA triad actually means, with distinct real world examples for confidentiality, integrity, and availability, and how to tell them apart on the exam.',
   summary: 'The CIA triad is taught in Unit 1 as three vocabulary words, but the exam uses it as the lens for almost every later scenario. This guide defines confidentiality, integrity, and availability with genuinely distinct examples, then teaches the harder skill: telling them apart when a scenario could plausibly be more than one, and refusing to pick a principle the evidence never actually supports.',

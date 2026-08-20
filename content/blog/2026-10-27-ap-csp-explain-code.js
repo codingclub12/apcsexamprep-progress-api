@@ -23,7 +23,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp code segment',
-  publishOn: '2026-10-27',
+  publishOn: '2026-10-30',
   seoTitle: 'Explain Your AP CSP Code Segment Out Loud',
   seoDescription: 'Saying an AP CSP code segment out loud, not writing about it, is how you catch the gaps in your understanding before the written response exam does.',
   summary: 'Explaining your own code out loud, to a study partner or an empty room, is a study technique for AP CSP written response prompts that writing practice cannot replace. This post gives a concrete method, the specific tell to listen for, and a two week routine.',

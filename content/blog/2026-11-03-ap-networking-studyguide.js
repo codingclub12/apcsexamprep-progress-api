@@ -28,7 +28,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'ap networking study guide',
-  publishOn: '2026-11-03',
+  publishOn: '2026-11-02',
   seoTitle: 'AP Networking Study Guide: A Unit by Unit Plan',
   seoDescription: 'An AP Networking study guide organized by all four units plus exam strategy: a checklist of what to actually do in each one, linked to the posts on this blog.',
   summary: 'A navigation-style AP Networking study guide built at the halfway point of the fall run of posts on this blog. Organized by the four units, Managing My Connections, Managing My Shared Connections, Managing Many Connections, and Managing Our Global Connections, plus a fifth cross-cutting section on exam strategy and method. For each section, a checklist of concrete review actions, linked to the specific dedicated posts already on this blog rather than re-explaining any of their content, plus a suggested time allocation and answers to the questions students ask most about using this guide.',

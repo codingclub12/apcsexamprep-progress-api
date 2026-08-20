@@ -24,7 +24,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'ap networking unit 1',
-  publishOn: '2026-09-15',
+  publishOn: '2026-09-18',
   seoTitle: 'AP Networking Unit 1: Ten Practice Questions',
   seoDescription: 'Ten AP Networking Unit 1 single-device scenario questions grouped by addressing, connectivity, and name resolution, with the reasoning worked out for each.',
   summary: 'Ten single-device practice scenarios scoped to AP Networking Unit 1, grouped into addressing, connectivity, and name resolution, each worked through with the same evidence-based reasoning the exam rewards. Two are presented as fully interactive practice questions and the rest as worked scenario walkthroughs.',

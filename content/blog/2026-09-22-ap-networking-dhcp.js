@@ -24,7 +24,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'dhcp',
-  publishOn: '2026-09-22',
+  publishOn: '2026-09-23',
   seoTitle: 'DHCP Explained: How Devices Get an IP Address',
   seoDescription: 'DHCP explained: the problem it solves, the four step exchange that assigns an address, and why that address is leased rather than permanent.',
   summary: 'A conceptual explanation of DHCP: why manually assigning an address to every device does not scale, the four step discover, offer, request, acknowledge exchange that assigns one automatically, why that assignment is a temporary lease rather than a permanent grant, and what happens to a device when DHCP fails to answer.',

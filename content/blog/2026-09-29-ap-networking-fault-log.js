@@ -23,7 +23,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'fault log',
-  publishOn: '2026-09-29',
+  publishOn: '2026-10-02',
   seoTitle: 'Fault Log: Turn Real Faults Into a Revision Guide',
   seoDescription: 'Keep a fault log while you practice AP Networking scenarios, and turn weeks of real faults into a revision guide that beats cramming the week before the exam.',
   summary: 'How to keep a running fault log during AP Networking practice, so weeks of real logged faults become a self-built revision guide by exam time, with a worked log entry and two practice questions on what a strong entry captures.',

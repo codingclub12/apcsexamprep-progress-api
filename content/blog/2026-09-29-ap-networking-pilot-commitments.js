@@ -27,7 +27,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'ap networking pilot',
-  publishOn: '2026-09-29',
+  publishOn: '2026-09-28',
   seoTitle: 'AP Networking Pilot: What Schools Commit To',
   seoDescription: 'What does the AP Networking pilot actually require from a school: eligibility, Course Audit, materials, and where Cisco Networking Academy really fits in.',
   summary: 'A school-administrator look at the 2026-27 AP Networking pilot: which schools are even eligible, what materials and platform access a school agrees to provide, what the Cisco Networking Academy tie actually requires, and how piloting differs from teaching an established AP course.',

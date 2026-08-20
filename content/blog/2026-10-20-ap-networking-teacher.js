@@ -23,7 +23,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'ap networking teacher',
-  publishOn: '2026-10-20',
+  publishOn: '2026-10-19',
   seoTitle: 'AP Networking Teacher: Teaching Without a Lab Budget',
   seoDescription: 'A classroom playbook for the AP Networking teacher with no lab budget: simulator-first labs, small-group rotations, and homework that stretches class time.',
   summary: 'A day-to-day classroom strategy for the AP Networking teacher working without a dedicated lab: using free simulator software as the primary hands-on tool, structuring group work around a small number of donated or repurposed devices, sending the home lab exercises home as homework to stretch limited class time, and deciding which units genuinely need hands-on practice versus which can be taught conceptually when equipment is tight.',

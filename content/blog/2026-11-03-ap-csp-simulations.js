@@ -27,7 +27,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp simulations',
-  publishOn: '2026-11-03',
+  publishOn: '2026-11-04',
   seoTitle: 'AP CSP Simulations and Models Explained Simply',
   seoDescription: 'AP CSP simulations guide: why every model leaves things out on purpose, worked weather and traffic examples, and the exam trap that expects reasoning.',
   summary: 'AP CSP Big Idea 3 grades simulations and models on whether a student understands that every model deliberately simplifies the real thing it represents, and that the simplification is a design strength rather than a mistake. This guide defines a model as a simplified representation of a system, process, or phenomenon and a simulation as running that model to explore outcomes, then walks through a weather simulation and a traffic simulation to show exactly what each one keeps and discards and why. It closes with the exam trap built around "what does this simulation not account for" questions, which test reasoning about whether an exclusion matters for the simulation\'s purpose, not a hunt for a defect.',

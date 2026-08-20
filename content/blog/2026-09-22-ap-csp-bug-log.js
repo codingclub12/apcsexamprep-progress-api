@@ -22,7 +22,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp bug log',
-  publishOn: '2026-09-22',
+  publishOn: '2026-09-25',
   seoTitle: 'AP CSP Bug Log: Ace the Errors and Testing Prompt',
   seoDescription: 'Keep an AP CSP bug log while you build your Create task project, and turn a real documented bug into a strong errors and testing written response answer.',
   summary: 'How to keep a running AP CSP bug log during Create task project work, with a worked example entry and two practice questions on what makes an entry strong.',

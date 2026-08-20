@@ -18,7 +18,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp practice exam',
-  publishOn: '2026-08-18',
+  publishOn: '2026-08-21',
   seoTitle: 'AP CSP Practice Exam: How to Spot a Weak Question',
   seoDescription: 'Not every AP CSP practice exam question tests the same skill. A teacher explains how to tell a good one from a weak one, and when to use each type.',
   summary: 'Grinding practice volume without checking quality wastes real study time. A guide to telling a good AP CSP practice question from one that only rewards memorization, plus how to sequence practice across a study timeline.',

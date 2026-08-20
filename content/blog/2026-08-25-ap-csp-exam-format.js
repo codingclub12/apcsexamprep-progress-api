@@ -24,7 +24,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp exam format',
-  publishOn: '2026-08-25',
+  publishOn: '2026-08-24',
   seoTitle: 'AP CSP Exam Format: Sections, Timing, Weighting',
   seoDescription: 'A full breakdown of the AP CSP exam format: the multiple choice section, the two written response questions, and how the five Big Ideas are weighted.',
   summary: 'Every section of the AP Computer Science Principles exam, in one place: how the multiple choice section is built, how the two written response questions are scored from your own Personalized Project Reference, how the two sections combine into your composite score, and how much of the multiple choice section each of the five Big Ideas actually carries.',

@@ -27,7 +27,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp common mistakes',
-  publishOn: '2026-10-13',
+  publishOn: '2026-10-16',
   seoTitle: 'AP CSP Common Mistakes: Why Written Answers Score Zero',
   seoDescription: 'The AP CSP common mistakes list nobody writes: written answers that sound confident but miss the exact fact a rubric row checks for.',
   summary: 'A confident, well written AP CSP written response can still score zero if it never states the one specific fact a rubric row is checking for. This guide covers the four ways a plausible answer misses that fact, with before and after example pairs, and the single habit that fixes most of it: naming the exact variable, procedure, or error instead of describing the concept around it.',

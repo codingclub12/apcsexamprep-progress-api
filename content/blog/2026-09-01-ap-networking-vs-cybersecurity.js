@@ -25,7 +25,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'ap networking vs ap cybersecurity',
-  publishOn: '2026-09-01',
+  publishOn: '2026-08-31',
   seoTitle: 'AP Networking vs AP Cybersecurity: The Real Difference',
   seoDescription: 'AP Networking and AP Cybersecurity are not the same course wearing two names. Here is exactly where they overlap, where they diverge, and which to take first.',
   summary: 'Both AP Networking and AP Cybersecurity sit under AP Career Kickstart, and both touch security, which is why families keep assuming they are near duplicates. They are not. This guide draws the actual line between a course about how systems connect and a course about how systems get attacked and defended, names the one place they genuinely overlap, and gives a straight recommendation on sequencing whether a student can take one or both.',

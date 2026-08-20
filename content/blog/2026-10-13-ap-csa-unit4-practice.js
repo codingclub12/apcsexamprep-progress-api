@@ -23,7 +23,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa unit 4 practice',
-  publishOn: '2026-10-13',
+  publishOn: '2026-10-16',
   seoTitle: 'AP CSA Unit 4 Practice: Twelve Data Collections Questions',
   seoDescription: 'Twelve AP CSA Unit 4 practice questions on array, ArrayList, and 2D arrays, grouped by sub-topic and ordered from basic tracing to combined scenarios.',
   summary: 'Twelve AP CSA Unit 4 practice questions, grouped into array and ArrayList basics, 2D array traversal, and harder mixed scenarios that combine both structures, ordered roughly easiest to hardest. Three are presented as fully interactive practice questions and the rest as worked tracing walkthroughs, all built around fresh code and values rather than reused examples.',

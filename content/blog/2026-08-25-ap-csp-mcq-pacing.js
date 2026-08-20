@@ -18,7 +18,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp mcq',
-  publishOn: '2026-08-25',
+  publishOn: '2026-08-28',
   seoTitle: 'AP CSP MCQ Pacing: How to Time the Multiple Choice Section',
   seoDescription: 'Most AP CSP students lose points to pacing, not content. A teacher explains how to set checkpoints, triage hard questions, and use elimination on exam day.',
   summary: 'A pacing method for the AP CSP multiple choice section: know your per-question budget going in, build mental checkpoints so you notice falling behind while it is still fixable, triage instead of grinding on hard questions, and eliminate efficiently on scenario, code, and Big Idea items.',

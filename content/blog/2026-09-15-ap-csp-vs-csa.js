@@ -24,7 +24,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp vs ap csa',
-  publishOn: '2026-09-15',
+  publishOn: '2026-09-14',
   seoTitle: 'AP CSP vs AP CSA: Which One First?',
   seoDescription: 'AP CSP vs AP CSA sequencing, explained by a teacher: what each course assumes coming in, which to take first, and what to do if you can fit only one.',
   summary: 'Most AP CSP vs AP CSA advice answers which course colleges value more. This one answers the question a teacher actually gets asked in advising meetings: which course should a student take first if doing both, and which to pick if only one fits before applications. Covers prerequisites, the difficulty jump into Java, and concrete guidance by student profile.',

@@ -16,7 +16,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'network segmentation',
-  publishOn: '2026-09-15',
+  publishOn: '2026-09-16',
   seoTitle: 'Network Segmentation Explained for AP Cybersecurity',
   seoDescription: 'Network segmentation explained: why a flat network is risky, how zones and gateway rules contain a breach, and the trade-off it creates in Unit 3.',
   summary: 'A flat network means one compromised device can reach everything else on it. This guide explains network segmentation, the practice of dividing a network into separate zones with controlled checkpoints between them, and works through a school example step by step: guest wifi, student devices, and the server holding grades and records. It covers the trade-off between security and manageability, and draws a clear line between segmentation and access control, since the two are easy to conflate but answer completely different questions.',

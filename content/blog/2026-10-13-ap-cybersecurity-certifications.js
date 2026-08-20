@@ -43,7 +43,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'cybersecurity certifications',
-  publishOn: '2026-10-13',
+  publishOn: '2026-10-12',
   seoTitle: 'Cybersecurity Certifications After AP Cybersecurity',
   seoDescription: 'A realistic look at cybersecurity certifications to pursue after AP Cybersecurity: CompTIA Security+, Tech+, CCST, and why CISSP is not a near-term goal.',
   summary: 'AP Cybersecurity is the on ramp, not the finish line, and students want to know what to pursue next. This guide covers the realistic certification landscape: CompTIA Security+, the certification the AP Cybersecurity Credential already points toward; CompTIA Tech+, the genuinely easier first step that replaced the now-retired ITF+; where Cisco CCST Cybersecurity fits alongside them; and an honest, sourced explanation of why CISSP and similar advanced credentials require years of professional experience and are not a realistic near-term goal for a current student.',

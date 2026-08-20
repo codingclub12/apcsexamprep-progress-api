@@ -19,7 +19,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp robot grid',
-  publishOn: '2026-09-01',
+  publishOn: '2026-09-04',
   seoTitle: 'AP CSP Robot Grid Problems: The Method That Works',
   seoDescription: 'AP CSP robot grid questions look different every time but reuse a small set of patterns. A teacher breaks down the method with two worked practice questions.',
   summary: 'Robot grid questions on the AP CSP exam vary in surface details but are built from a small, repeating set of pseudocode patterns. A method for recognizing them, tracing them without losing track, and two fully worked practice questions.',

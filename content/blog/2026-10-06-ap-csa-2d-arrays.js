@@ -22,7 +22,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa 2d array',
-  publishOn: '2026-10-06',
+  publishOn: '2026-10-07',
   seoTitle: 'AP CSA 2D Array Guide: Row-Major vs Column-Major',
   seoDescription: 'AP CSA 2D array traversal explained: how row-major and column-major loops differ, why a swapped loop still compiles, and the correct use of arr.length.',
   summary: 'An AP CSA 2D array is an array of arrays, not a grid, and the exam leans on exactly the traversal bug that comes from forgetting it. This guide covers declaring and accessing a 2D array with arr[row][col], traces row-major and the swapped column-major order side by side on a 3x3 example, and explains why arr.length and arr[i].length answer two different questions, including for arrays whose rows are genuinely different lengths.',

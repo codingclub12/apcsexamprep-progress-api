@@ -15,7 +15,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'password security',
-  publishOn: '2026-09-29',
+  publishOn: '2026-10-02',
   seoTitle: 'Password Security and MFA: The Advice Changed',
   seoDescription: 'Why NIST dropped forced password rotation and complexity rules, what actually strengthens a password now, and how MFA became the real second line of defense.',
   summary: 'The password security advice most students were taught, change it every ninety days and mix in a symbol, is no longer what the standards bodies recommend, and this guide explains exactly why. It walks through the behavioral research showing forced rotation and complexity rules made passwords weaker rather than stronger, lays out what current guidance recommends instead, length over complexity, a unique password per site through a password manager, and explains multi factor authentication conceptually as the control that actually blunts a stolen password, since a password alone is rarely enough to get in anymore.',

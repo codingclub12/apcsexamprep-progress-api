@@ -26,7 +26,7 @@ const meta = {
   blogHandle: 'ap-cybersecurity',
   course: 'ap-cybersecurity',
   targetKeyword: 'cisco networking academy',
-  publishOn: '2026-10-06',
+  publishOn: '2026-10-05',
   seoTitle: 'Cisco Networking Academy and AP Cybersecurity, Explained',
   seoDescription: 'What the Cisco Networking Academy partnership gives an AP Cybersecurity classroom: curriculum, labs, teacher training, and the CCST certification path.',
   summary: 'AP Cybersecurity has a real Cisco Networking Academy curriculum and lab partnership behind it, not just a credential-alignment footnote. A teacher-facing look at what that partnership actually supplies, what the CCST Cybersecurity certification is, how it relates to the AP Cybersecurity Credential, and how much of your course to build on Cisco material versus your own.',

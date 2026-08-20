@@ -33,7 +33,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'comptia network plus',
-  publishOn: '2026-10-06',
+  publishOn: '2026-10-05',
   seoTitle: 'CompTIA Network Plus and AP Networking Overlap',
   seoDescription: 'A domain-by-domain look at what CompTIA Network Plus tests, how much of it AP Networking already covers, and when to realistically sit the exam.',
   summary: 'CompTIA Network Plus gets named constantly next to AP Networking, usually as one line in a longer certification sequence. This guide goes underneath that mention: what the Network Plus exam actually tests domain by domain, a unit-by-unit comparison against AP Networking\'s own four units, what Network Plus covers that the AP course does not touch at all, and realistic guidance on timing, whether that means sitting the exam during the course, right after it, or with a dedicated prep gap in between.',

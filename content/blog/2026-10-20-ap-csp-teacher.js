@@ -36,7 +36,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp teacher',
-  publishOn: '2026-10-20',
+  publishOn: '2026-10-19',
   seoTitle: 'AP CSP Teacher Guide: What Changed This Year',
   seoDescription: 'Most of the AP CSP Create task, AI policy, and exam format stayed the same this year. Here is what changed, what stayed stable, and how to plan around it.',
   summary: 'Every fall an AP CSP teacher braces for a rulebook that moved. This year the honest answer is that it mostly did not: the Create task submission process, the AI attribution policy, and the exam scoring weighting are all confirmed stable for the current cycle. What genuinely refreshes is narrower and more mechanical, the AP Classroom user guides, the Course Audit status, and the calendar itself, and this guide walks through exactly what to recheck versus what to safely reuse from last year.',

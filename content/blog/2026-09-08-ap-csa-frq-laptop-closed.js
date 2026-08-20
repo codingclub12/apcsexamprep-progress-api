@@ -20,7 +20,7 @@ const meta = {
   blogHandle: 'ap-csa',
   course: 'ap-csa',
   targetKeyword: 'ap csa frq practice',
-  publishOn: '2026-09-08',
+  publishOn: '2026-09-11',
   seoTitle: 'AP CSA FRQ Practice: Start With the Laptop Closed',
   seoDescription: 'AP CSA FRQ practice with the laptop closed has no autocomplete and no compiler. Why to start this habit in September on easy content, plus a worked example.',
   summary: 'The free response section has no IDE, no autocomplete, and no compiler catching a typo, which means the habit of writing correct code by hand cannot be built in April. Here is why AP CSA FRQ practice should start in September on easy Unit 1 and Unit 2 material, a low-stakes weekly drill to build the habit, and a worked example showing what a strong first attempt actually looks like.',
