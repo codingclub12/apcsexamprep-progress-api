@@ -16,6 +16,7 @@
     "smoke:reset": "node smoke/password-reset.js",
     "smoke:health": "node smoke/admin-health.js",
     "smoke:encoding": "node smoke/encoding-guard.js",
+    "smoke:blogcontent": "node smoke/blog-content.js",
     "smoke:traffic": "node smoke/traffic.js",
     "smoke:trafficsources": "node smoke/traffic-sources.js",
     "smoke:unified": "node smoke/admin-unified.js",
