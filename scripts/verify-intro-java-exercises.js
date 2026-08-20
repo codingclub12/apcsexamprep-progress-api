@@ -187,7 +187,7 @@ function main() {
     if (ex.scene) {
       try {
         const scene = traceCase(Object.assign({}, ex.scene, {
-          helpers: ex.scene.helpers || ex.helpers || '',
+          helpers: ex.helpers || '',
           base: ex.base,
         }));
         const out = compileAndRun(codeModes.assemble('segment', JAVA, ex.reference, scene));

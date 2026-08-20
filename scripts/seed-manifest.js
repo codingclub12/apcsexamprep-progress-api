@@ -366,7 +366,7 @@ function introJavaExerciseRows() {
     const unit = unitOf[e.lesson];
     if (!unit) throw new Error(`intro-java exercise ${e.lesson} has no lesson in any bank`);
     return { course: 'intro-java', unit, lesson_id: e.lesson,
-      item_id: exerciseItemId(e.lesson), item_type: 'exercise', points: 1 };
+      item_id: exerciseItemId(e.lesson), item_type: 'code', points: 1 };
   });
 }
 
