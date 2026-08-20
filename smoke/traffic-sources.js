@@ -56,6 +56,49 @@ ok('  and null stays null', shopify.num(null) === null && shopify.num(undefined)
 ok('a real zero is still zero', shopify.num('0') === 0);
 ok('nonsense is rejected rather than becoming NaN', shopify.num('n/a') === null);
 
+// ── The PII guard versus the site's own subject matter ───────────────────────
+section('Search queries that only LOOK like personal data survive');
+//  Found in a production backfill: the phone-like heuristic was dropping real
+//  Search Console queries. On a site that teaches networking, an IP address is
+//  the subject, not an identifier, and "2025-2026" is the product year.
+{
+  const keep = [
+    ['192.168.1.256', 'the classic invalid-IP teaching example'],
+    ['185.220.101.47', 'a routable address, still just a query'],
+    ['172.16.50.5', 'private range, ap-cybersecurity content'],
+    ['10.0.0.1', 'short dotted quad'],
+    ['2025-2026', 'the school year'],
+    ['2025-26', 'the school year, abbreviated'],
+    ['2026', 'a bare year'],
+  ];
+  for (const [q, why] of keep) {
+    ok(`query "${q}" is kept (${why})`,
+      contract.normalizeDimension('query', q) === 'query:' + q.toLowerCase(),
+      contract.normalizeDimension('query', q));
+  }
+
+  // The exemption is narrow ON PURPOSE. It must not become a hole.
+  const drop = [
+    ['user@example.com', 'an email is never subject matter'],
+    ['+1 (555) 123-4567', 'an actual phone number'],
+    ['5551234567', 'ten bare digits'],
+    ['3f2504e0-4f89-11d3-9a0c-0305e82c3301', 'a uuid'],
+    ['1234567890.1234567890', 'a GA client id'],
+  ];
+  for (const [q, why] of drop) {
+    ok(`query "${q}" is STILL rejected (${why})`, contract.normalizeDimension('query', q) === null,
+      contract.normalizeDimension('query', q));
+  }
+
+  // Scoped to `query` only. A search term is an aggregate; an IP arriving in
+  // any other namespace has no such excuse.
+  ok('an IP is still rejected outside the query namespace',
+    contract.normalizeDimension('page', '192.168.1.1') === null,
+    contract.normalizeDimension('page', '192.168.1.1'));
+  ok('  and so is a year range',
+    contract.normalizeDimension('country', '2025-2026') === null);
+}
+
 // ── Backfill error classification ────────────────────────────────────────────
 section('The backfill tells you which thing is actually broken');
 //  The first real production run of the backfill hit an egress proxy that

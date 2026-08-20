@@ -122,8 +122,9 @@ async function main() {
   console.log(`  ${windows.length} requests of up to ${chunk} day(s) each, against ${base}`);
   console.log(`  ${dryRun ? 'DRY RUN, nothing will be written' : 'writing'}\n`);
 
-  const totals = { written: 0, capped: 0, dropped: 0, failed: 0 };
+  const totals = { written: 0, capped: 0, dropped: 0, failed: 0, rejected: 0 };
   const capped = [];
+  const rejectedWindows = [];
 
   for (let i = 0; i < windows.length; i++) {
     const w = windows[i];
@@ -162,18 +163,30 @@ async function main() {
       continue;
     }
 
-    let wrote = 0, cap = 0, drop = 0;
+    let wrote = 0, cap = 0, drop = 0, rej = 0;
     const parts = [];
     for (const name of ['ga4', 'gsc', 'shopify']) {
       const r = res[name];
       if (!r) continue;
       if (r.configured === false) { parts.push(`${name}: not configured (${r.reason})`); continue; }
-      if (r.ok === false) { parts.push(`${name}: ERROR ${r.error}`); continue; }
+
+      // A FETCH failure and a REJECTED READING are different things, and
+      // ingest() reports both through `ok: false`. Treating them alike printed
+      // "gsc: ERROR undefined" for six windows that had in fact stored all
+      // 1,812 of their rows and merely dropped three readings the contract
+      // refused. The rows were not counted either, so the run under-reported
+      // its own total. A fetch failure carries an `error`; a rejection does not.
+      if (r.error) { parts.push(`${name}: FETCH FAILED ${r.error}`); continue; }
+
       const w2 = dryRun ? (r.would_write || 0) : (r.written || 0);
       wrote += w2; cap += r.run_capped || 0; drop += r.dimension_rows_dropped || 0;
-      parts.push(`${name}: ${w2}${r.run_capped ? ` CAPPED+${r.run_capped}` : ''}`);
+      rej += r.rejected || 0;
+      parts.push(`${name}: ${w2}` +
+        (r.run_capped ? ` CAPPED+${r.run_capped}` : '') +
+        (r.rejected ? ` (${r.rejected} rejected)` : ''));
     }
-    totals.written += wrote; totals.capped += cap; totals.dropped += drop;
+    totals.written += wrote; totals.capped += cap; totals.dropped += drop; totals.rejected += rej;
+    if (rej > 0) rejectedWindows.push({ ...w, count: rej });
     if (cap > 0) capped.push(w);
 
     console.log(`${label}  ${parts.join('  ')}`);
@@ -183,6 +196,15 @@ async function main() {
   console.log(`${dryRun ? 'would write' : 'wrote'}: ${totals.written} rows`);
   if (totals.dropped) {
     console.log(`per-day dimension cap trimmed ${totals.dropped} low-traffic rows (expected; the cap keeps the top 200 per metric per day).`);
+  }
+  if (totals.rejected) {
+    // Not a failure, but not silence either: a reading the contract refuses is
+    // real data that will never appear on any dashboard, and the reason is
+    // worth someone's attention if the count is not tiny.
+    console.log(`contract rejected ${totals.rejected} readings across ${rejectedWindows.length} window(s).`);
+    console.log('Inspect one with:  curl -H "x-admin-key: $ADMIN_KEY" -X POST -d \'{"start_date":"' +
+      rejectedWindows[0].start + '","end_date":"' + rejectedWindows[0].end + '","dry_run":true}\' \\');
+    console.log('       -H "Content-Type: application/json" <base>/api/admin/traffic/pull | jq .gsc.rejections');
   }
   if (totals.failed) console.log(`FAILED requests: ${totals.failed}`);
   if (totals.capped) {
