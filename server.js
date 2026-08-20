@@ -84,6 +84,12 @@ app.use('/api/slides', require('./routes/slides'));
 app.use('/api/command', require('./routes/command'));
 app.use('/api/todo', require('./routes/todo'));
 
+// Interactive terminal labs. Mounted at the root because it owns four paths in
+// two namespaces: /api/labs (specs) and /lab, /lab-player.js (delivery). The
+// specs are public author content; the grade still goes through the student
+// JWT on POST /api/progress/attempt like every other reporter.
+app.use(require('./routes/labs'));
+
 // Boot seeds run before app.listen, so any throw here would crash the process
 // before the healthcheck can pass and take the whole service down. Each seed is
 // therefore wrapped: a failure is logged loudly but never blocks boot. Seeds are

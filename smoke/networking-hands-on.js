@@ -29,6 +29,7 @@ const skills = require(path.join(__dirname, '..', 'config', 'networking-framewor
 const statements = require(path.join(__dirname, '..', 'config', 'networking-framework-statements.json'));
 const seed = require(path.join(__dirname, '..', 'scripts', 'seed-manifest.js'));
 const { canonicalActivity } = require(path.join(__dirname, '..', 'lib', 'gradebook-contract.js'));
+const labSpecs = require(path.join(__dirname, '..', 'lib', 'lab-spec.js'));
 
 let pass = 0, fail = 0;
 const ok = (name, cond, extra) => {
@@ -147,8 +148,36 @@ ok('NET_HANDS_ON_LIVE is still false (pages do not exist yet)', seed.NET_HANDS_O
 
 const rows = seed.buildRows().filter((r) => r.course === 'ap-networking');
 const specIds = new Set(everything.map((a) => a.item_id));
-const collide = rows.filter((r) => specIds.has(r.item_id)).map((r) => r.item_id);
-ok('no seeded row already claims a hands-on item id', collide.length === 0, collide);
+
+// A hands-on item may be seeded AHEAD of the flag on exactly one condition: it
+// has a playable page. That is what the flag was ever about. NET_HANDS_ON_LIVE
+// gates the activities that are still only an authored intention; a lab with a
+// `graded: true` spec in config/labs is a page a student can open today, and
+// scripts/seed-manifest.js derives its row straight from that spec.
+//
+// So the rule is not "no hands-on id may be seeded". It is "no hands-on id may
+// be seeded unless a live lab page backs it, and then only on the authored
+// terms", which is the next assertion.
+const liveLabIds = new Set(
+  labSpecs.graded().filter((sp) => sp.course === 'ap-networking').map((sp) => sp.item_id)
+);
+const collide = rows.filter((r) => specIds.has(r.item_id) && !liveLabIds.has(r.item_id))
+  .map((r) => r.item_id);
+ok('no seeded row claims a hands-on item id without a live lab page', collide.length === 0, collide);
+
+// A live page is permission to seed the AUTHORED item, never permission to seed
+// a different one under its id.
+for (const itemId of liveLabIds) {
+  const authored = everything.find((a) => a.item_id === itemId);
+  const seeded = rows.find((r) => r.item_id === itemId);
+  ok(`${itemId}: seeded early, and on the authored terms`,
+    !!authored && !!seeded
+    && seeded.points === authored.points
+    && seeded.unit === authored.unit
+    && seeded.item_type === authored.item_type
+    && seeded.lesson_id === (authored.lesson_id || authored.topic),
+    { authored, seeded });
+}
 
 // The gate is only worth having if flipping it produces exactly the spec. Rather
 // than trust the flag, rebuild the rows the flag would add and compare them to
@@ -190,7 +219,11 @@ for (const t of ['lab', 'project']) {
 // thing separating them, and that is worth asserting rather than assuming.
 const cells = new Set();
 let cellClash = null;
-for (const r of [...rows, ...wouldAdd.map((w) => ({ ...w, course: 'ap-networking' }))]) {
+// A lab already seeded from its spec must not be counted twice. The seed dedupes
+// by (course, item_id), so flipping the flag adds nothing for it, and a second
+// copy in this list would report a clash against itself.
+const wouldAddNet = wouldAdd.filter((w) => !liveLabIds.has(w.item_id));
+for (const r of [...rows, ...wouldAddNet.map((w) => ({ ...w, course: 'ap-networking' }))]) {
   const k = `${r.unit}|${r.lesson_id}|${r.item_type}`;
   if (cells.has(k)) cellClash = k;
   cells.add(k);
