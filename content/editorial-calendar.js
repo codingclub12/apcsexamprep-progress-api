@@ -60,7 +60,7 @@ const STREAMS = {
       ['ai coding tools', 'Using AI to Learn Java Without Learning Nothing', 'ap-csa-using-ai-without-learning-nothing'],
       ['ap csa exam date', 'AP CSA Exam Date: Seven Months Out, What to Do With Them', 'ap-csa-months-to-exam-what-to-do'],
       ['ap csa semester exam', 'What a Good First Semester AP CSA Exam Covers', 'ap-csa-first-semester-exam-what-good-covers'],
-      ['ap csa inheritance', 'Inheritance Lost Its Unit. It Did Not Leave the Exam.'],
+      ['ap csa inheritance', 'AP CSA Inheritance in 2025-26: What Changed and What Did Not', 'ap-csa-inheritance-still-tested'],
     ],
     concept: [
       ['ap csa objects and methods', 'Objects, References, and the Thing Unit 1 Never Says Out Loud', 'ap-csa-objects-references-explained'],
@@ -74,7 +74,7 @@ const STREAMS = {
       ['ap csa recursion', 'Recursion as a Call Stack, Not as Magic', 'ap-csa-recursion-as-a-call-stack'],
       ['ap csa searching sorting', 'Binary Search and the Sorts You Must Be Able to Trace', 'ap-csa-binary-search-and-sorts-to-trace'],
       ['ap csa static methods', 'Static vs Instance: The Distinction Behind a Third of Compile Errors', 'ap-csa-static-vs-instance-compile-errors'],
-      ['java integer division', 'Integer Division, Modulus, and the Arithmetic Traps in Every Exam'],
+      ['java integer division', 'Integer Division, Modulus, and the Arithmetic Traps in Every Exam', 'ap-csa-integer-division-modulus-traps'],
     ],
     drill: [
       ['how to trace code', 'The Variable Table: Tracing Code the Way Fives Do It', 'ap-csa-variable-table-tracing-method'],
@@ -88,7 +88,7 @@ const STREAMS = {
       ['ap csa unit 4 practice', 'Twelve Data Collections Questions, Hardest Last', 'ap-csa-unit-4-data-collections-questions'],
       ['ap csa flashcards', 'Why Flashcards Fail for AP CSA, and What Replaces Them', 'ap-csa-why-flashcards-fail'],
       ['ap csa study plan', 'A Study Plan for Students Already Behind', 'ap-csa-study-plan-already-behind'],
-      ['ap csa final review', 'The Half Year AP CSA Review: Units 1 to 4'],
+      ['ap csa final review', 'The Half Year AP CSA Review: Units 1 to 4', 'ap-csa-half-year-review-units-1-to-4'],
     ],
   },
 
@@ -105,7 +105,7 @@ const STREAMS = {
       ['ap csp deadline', 'The April Project Reference Deadline, and How Students Miss It', 'ap-csp-project-reference-deadline-how-students-miss-it'],
       ['ap csp teacher', 'What Changed for AP CSP Teachers This Year', 'ap-csp-what-changed-for-teachers'],
       ['ap csp exam day', 'AP CSP Exam Day: What You Bring and What You Are Given', 'ap-csp-exam-day-what-to-bring'],
-      ['ap csp written response', 'Four Prompts, Four Different Sentences'],
+      ['ap csp written response', 'Four Prompts, Four Different Sentences', 'ap-csp-four-prompts-four-sentence-shapes'],
     ],
     concept: [
       ['ap csp pseudocode', 'College Board Pseudocode: The Whole Syntax in One Sitting', 'ap-csp-pseudocode-complete-syntax-guide'],
@@ -119,7 +119,7 @@ const STREAMS = {
       ['ap csp procedures', 'Procedures, Parameters and Return: Scope Made Concrete', 'ap-csp-procedures-parameters-return-scope'],
       ['ap csp conditionals', 'Nested Conditionals and Compound Boolean Logic', 'ap-csp-nested-conditionals-compound-boolean'],
       ['digital divide', 'The Digital Divide and Computing Bias as Exam Answers', 'ap-csp-digital-divide-and-bias'],
-      ['ap csp simulations', 'Simulations, Models, and What They Deliberately Leave Out'],
+      ['ap csp simulations', 'Simulations, Models, and What They Deliberately Leave Out', 'ap-csp-simulations-models-what-they-leave-out'],
     ],
     drill: [
       ['ap csp practice exam', 'Where AP CSP Practice Questions Mislead You', 'ap-csp-practice-exam-common-mistakes'],
@@ -133,7 +133,7 @@ const STREAMS = {
       ['ap csp common mistakes', 'The Answers That Look Right and Earn Nothing', 'ap-csp-plausible-answers-that-earn-nothing'],
       ['ap csp study guide', 'A Big Idea by Big Idea Study Guide', 'ap-csp-big-idea-by-big-idea-study-guide'],
       ['ap csp code segment', 'Explaining Your Own Code Out Loud as Practice', 'ap-csp-explaining-code-out-loud-practice'],
-      ['ap csp final review', 'The Half Year AP CSP Review'],
+      ['ap csp final review', 'The Half Year AP CSP Review', 'ap-csp-half-year-mixed-review-practice'],
     ],
   },
 
@@ -150,7 +150,7 @@ const STREAMS = {
       ['cybersecurity certifications', 'AP Cybersecurity and the Certifications That Follow It', 'ap-cybersecurity-certifications-that-follow'],
       ['ap cybersecurity teacher', 'Teaching AP Cybersecurity in Its First Year', 'ap-cybersecurity-teaching-first-year'],
       ['ap cybersecurity practice test', 'Practising for an Exam That Has Never Been Given', 'ap-cybersecurity-practicing-with-no-released-exam'],
-      ['ap cybersecurity study guide', 'The Half Year AP Cybersecurity Review'],
+      ['ap cybersecurity study guide', 'The Half Year AP Cybersecurity Review', 'ap-cybersecurity-half-year-review-guide'],
     ],
     concept: [
       ['cia triad', 'The CIA Triad Is Not Vocabulary, It Is the Grading Rubric', 'ap-cybersecurity-cia-triad-explained'],
@@ -164,7 +164,7 @@ const STREAMS = {
       ['encryption explained', 'Symmetric, Asymmetric, and What the Exam Asks', 'ap-cybersecurity-symmetric-asymmetric-encryption'],
       ['data backup', 'Backups, Recovery, and the Availability Nobody Studies', 'ap-cybersecurity-backups-recovery-availability'],
       ['zero trust', 'Zero Trust, Defence in Depth, Least Privilege: One Question, Three Ideas', 'ap-cybersecurity-zero-trust-defense-in-depth'],
-      ['risk assessment', 'Risk Assessment: Likelihood, Impact, and the Decision'],
+      ['risk assessment', 'Risk Assessment: Likelihood, Impact, and the Decision', 'ap-cybersecurity-risk-likelihood-impact-decision'],
     ],
     drill: [
       ['ap cybersecurity frq', 'Writing a Device Security Analysis, Step by Step', 'ap-cybersecurity-device-security-frq-guide'],
@@ -178,7 +178,7 @@ const STREAMS = {
       ['security controls', 'Matching the Control to the Layer the Attack Targets', 'ap-cybersecurity-matching-controls-to-layers'],
       ['ap cybersecurity glossary', 'The Running Glossary That Carries the Whole Course', 'ap-cybersecurity-running-glossary-all-units'],
       ['ap cybersecurity common mistakes', 'The Plausible Wrong Answer Pattern', 'ap-cybersecurity-plausible-wrong-answer-pattern'],
-      ['ap cybersecurity exam day', 'Exam Day for the First Cohort Ever'],
+      ['ap cybersecurity exam day', 'Exam Day for the First Cohort Ever', 'ap-cybersecurity-exam-day-first-cohort'],
     ],
   },
 
@@ -195,7 +195,7 @@ const STREAMS = {
       ['ap networking college credit', 'Credit for AP Networking: What Is Knowable Yet', 'ap-networking-college-credit-what-is-knowable'],
       ['ap networking teacher', 'Teaching AP Networking Without a Lab Budget', 'ap-networking-teaching-without-lab-budget'],
       ['ap networking practice test', 'Practising Without Released Questions', 'ap-networking-practicing-without-released-questions'],
-      ['ap networking study guide', 'The Half Year AP Networking Review'],
+      ['ap networking study guide', 'The Half Year AP Networking Review', 'ap-networking-half-year-review-guide'],
     ],
     concept: [
       ['ip address explained', 'What an IP Address Actually Is', 'ap-networking-ip-address-explained'],
@@ -209,7 +209,7 @@ const STREAMS = {
       ['tcp vs udp', 'TCP and UDP: Reliability Versus Speed', 'ap-networking-tcp-vs-udp'],
       ['ipv6', 'IPv6: Why It Exists and Why Unit 4 Cares', 'ap-networking-ipv6-why-it-exists'],
       ['nat', 'NAT, and the Address Shortage It Papered Over', 'ap-networking-nat-address-shortage-workaround'],
-      ['network latency', 'Bandwidth, Latency and Contention: Three Reasons for Slow'],
+      ['network latency', 'Bandwidth, Latency and Contention: Three Reasons for Slow', 'ap-networking-bandwidth-latency-contention'],
     ],
     drill: [
       ['how to troubleshoot wifi', 'Troubleshooting Method: Eliminate, Do Not Guess', 'ap-networking-troubleshooting-method'],
@@ -223,7 +223,7 @@ const STREAMS = {
       ['home lab', 'Building a Home Lab From What You Already Own', 'ap-networking-home-lab-from-what-you-own'],
       ['network commands', 'The Command Line Tools Worth Knowing Cold', 'ap-networking-command-line-tools-reference'],
       ['ap networking common mistakes', 'The Alarming Answer Versus the Mundane One', 'ap-networking-alarming-vs-mundane-answer'],
-      ['ap networking exam day', 'AP Networking Exam Day'],
+      ['ap networking exam day', 'AP Networking Exam Day: What Is Different in a Pilot Year', 'ap-networking-exam-day-pilot-year'],
     ],
   },
 };
