@@ -1,5 +1,16 @@
 # CSA exercise counts per lesson: what CodeHS's own course shows
 
+## READ THIS FIRST: Unit 4 has a real content-accuracy problem, not just an open question
+
+Six lessons (4.6, 4.7, 4.13, 4.14, 4.15, 4.17) have exercises authored against
+the wrong AP CSA topic, confirmed against the actual 2025-2026 CED. See "The
+CED-alignment finding" below for the specifics. This is independent of, and
+comes before, the exercise-count decision this doc was originally written
+for: counting how many exercises a lesson needs is not useful while six of
+Unit 4's lessons are teaching the wrong content. Flagged directly to Tanner;
+no code or content changed here pending a decision on how to fix it (relabel
+and recontent the six lessons on the storefront, or something larger).
+
 Reference data for the "how many exercises does each CSA lesson need" decision
 (not yet made; see `docs/csa-exercise-pages.md` for what is currently live,
 which is a uniform 1 per lesson across all 53). Read this before setting
@@ -32,35 +43,59 @@ CodeHS's own lesson numbering is denser than this platform's: 17/14/11/19 = 61
 lessons across Units 1-4, against this platform's 15/12/9/17 = 53. That
 discrepancy resolves cleanly for three of four units: every CodeHS unit ends
 with two of its own checkpoint lessons, "Mid-Unit Assessment" and "End of Unit
-Assessment" (61 − 8 = 53), and every other lesson 1.1-3.9 matches this
+Assessment" (61 - 8 = 53), and every other lesson 1.1-3.9 matches this
 platform's titles 1:1, same order, same wording.
 
-**Unit 4 does not resolve the same way past lesson 4.4.** CodeHS's topic at a
-given lesson number stops matching this platform's topic at that same number:
+**Units 1, 2 and 3 also checked directly against the real CED text, not just
+against CodeHS as a proxy: all 36 lessons are exact, verbatim matches.** No
+work needed on those three units.
 
-| this platform | CodeHS Cortado |
+**RESOLVED, 2026-08-19: this platform's Unit 4 is misaligned with the current
+official CED past lesson 4.4, and CodeHS's sequence is the one that matches.**
+Checked directly against the AP Computer Science A Course and Exam
+Description, Effective Fall 2025 (the source PDF text, supplied directly
+rather than fetched, since this session's egress to `apcentral.collegeboard.org`
+was still blocked at the time). Confirmed in three separate places in that
+document that agree with each other: the Course at a Glance table, the Unit 4
+"Unit at a Glance" table, and every individual topic header from 4.1 through
+4.17. CodeHS's Unit 4 sequence matches the CED exactly, word for word, at all
+17 positions. This platform's does not, starting at 4.6:
+
+| CED topic (official) | this platform's live page at that number |
 |---|---|
-| 4.5 Algorithms with Arrays | 4.5 Implementing Array Algorithms |
-| 4.6 Arrays as Parameters and Return Values | 4.6 Using Text Files |
-| 4.7 ArrayList Introduction | 4.7 Wrapper Classes |
-| 4.13 Searching and Sorting | 4.13 Implementing 2D Array Algorithms |
-| 4.14 Reading Data from Files | 4.14 Searching Algorithms |
-| 4.17 Informal Code Analysis | 4.17 Recursive Searching and Sorting |
+| 4.6 Using Text Files | Arrays as Parameters and Return Values |
+| 4.7 Wrapper Classes | ArrayList Introduction |
+| 4.13 Implementing 2D Array Algorithms | Searching and Sorting |
+| 4.14 Searching Algorithms | Reading Data from Files |
+| 4.15 Sorting Algorithms | Using Data Sets with Arrays and ArrayLists |
+| 4.17 Recursive Searching and Sorting | Informal Code Analysis |
 
-CodeHS has a standalone "Wrapper Classes" lesson and splits Searching and
-Sorting into two lessons, neither of which appears anywhere on this platform's
-Unit 4 list. This platform's "Reading Data from Files" and "Informal Code
-Analysis" don't appear in CodeHS's Unit 4 by those names either. This could be
-a real CED-alignment gap on this platform's Unit 4, or CodeHS customizing the
-official sequence; it was not resolved as of this writing; a live CED PDF check
-was in progress in a separate session at the time this doc was written; see
-that session's result before trusting this platform's Unit 4 topic list past
-4.4 for anything, including the exercise counts below.
+This is not a title mismatch. Checked directly against
+`seed/csa-exercises/unit4.js`: the exercise already authored for each of
+these six lessons is built around the platform's (wrong) topic, not the CED's
+(correct) one. 4.6's exercise is about array aliasing, not file reading. 4.7's
+is an ArrayList intro, not autoboxing. 4.13 through 4.15 collapse three
+distinct required topics, 2D array algorithms, linear/binary search, and
+selection/insertion sort, into a merged and misplaced "Searching and Sorting"
+plus a file-reading exercise repeated from where it should have been at 4.6.
+4.17's exercise duplicates Unit 2's own "Informal Run-Time Analysis" (2.12)
+under a Unit 4 title that is not a real CED topic, instead of covering
+recursive binary search and merge sort. **Two full required exam topics,
+Wrapper Classes and 2D-array-specific algorithms as their own topic, have no
+correctly-placed exercise anywhere in this platform's Unit 4 bank.** Unit 4 is
+30-40% of the multiple-choice exam weighting, the largest of the four units,
+and free-response Question 4 ("2D Array") is drawn from exactly this
+territory.
 
-Because of this, lessons 4.5 through 4.15 and 4.17 are **not** joined to this
+4.1 through 4.4, 4.8 through 4.12, and 4.16 are fine: exact CED matches or
+harmless title rewording of the same topic (e.g. "Traversing Arrays" for
+"Array Traversals").
+
+Because of this, lessons 4.5 through 4.15 and 4.17 stay **not** joined to this
 platform's lesson IDs in the table below. CodeHS's own version of those is kept
 separate, under CodeHS's numbering, so nothing gets attributed to the wrong
-topic.
+topic. This section is left in place as the record of how the mismatch was
+found, now that what it means is settled.
 
 ## Per-lesson exercise counts, from CodeHS's own course
 
