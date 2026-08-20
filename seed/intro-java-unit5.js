@@ -992,7 +992,10 @@ const LESSONS = [
           'int max = a[0];              // start from the FIRST ELEMENT\n'
           + 'for (int i = 1; i < a.length; i++)\n'
           + '{\n'
-          + '    if (a[i] > max) { max = a[i]; }\n'
+          + '    if (a[i] > max)\n'
+          + '    {\n'
+          + '        max = a[i];\n'
+          + '    }\n'
           + '}',
         note:
           'MAXIMUM, and here is the trap.\n\n'
@@ -1009,7 +1012,10 @@ const LESSONS = [
           + '{\n'
           + '    for (int i = 0; i < a.length; i++)\n'
           + '    {\n'
-          + '        if (a[i] == target) { return true; }\n'
+          + '        if (a[i] == target)\n'
+          + '        {\n'
+          + '            return true;\n'
+          + '        }\n'
           + '    }\n'
           + '    return false;      // only if the loop finished without finding it\n'
           + '}',
@@ -1026,7 +1032,10 @@ const LESSONS = [
           'int count = 0;\n'
           + 'for (int i = 0; i < a.length; i++)\n'
           + '{\n'
-          + '    if (a[i] > 10) { count = count + 1; }\n'
+          + '    if (a[i] > 10)\n'
+          + '    {\n'
+          + '        count = count + 1;\n'
+          + '    }\n'
           + '}',
         note:
           'COUNT MATCHING. The counting pattern from 4.3.\n\n'

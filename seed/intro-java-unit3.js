@@ -90,8 +90,14 @@ const LESSONS = [
         code:
           'public void act()\n'
           + '{\n'
-          + '    if (Greenfoot.isKeyDown("left"))  { setLocation(getX() - 3, getY()); }\n'
-          + '    if (Greenfoot.isKeyDown("right")) { setLocation(getX() + 3, getY()); }\n'
+          + '    if (Greenfoot.isKeyDown("left"))\n'
+          + '    {\n'
+          + '        setLocation(getX() - 3, getY());\n'
+          + '    }\n'
+          + '    if (Greenfoot.isKeyDown("right"))\n'
+          + '    {\n'
+          + '        setLocation(getX() + 3, getY());\n'
+          + '    }\n'
           + '    if (isTouching(Coin.class))\n'
           + '    {\n'
           + '        removeTouching(Coin.class);\n'
@@ -386,7 +392,10 @@ const LESSONS = [
           + '\n'
           + '    public void turnAtEdge()\n'
           + '    {\n'
-          + '        if (isAtEdge()) { turn(180); }\n'
+          + '        if (isAtEdge())\n'
+          + '        {\n'
+          + '            turn(180);\n'
+          + '        }\n'
           + '    }\n'
           + '}',
         note:

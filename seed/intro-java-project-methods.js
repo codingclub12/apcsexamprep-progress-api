@@ -115,7 +115,7 @@ const METHODS = {
       { call: 'public Projectile()', at: '3.9', why: 'the bullet builds its own image in its constructor' },
       { call: 'super(1000, 800, 1)', at: '3.5', why: 'a big world' },
       { call: 'private void prepare()', at: '3.7', why: 'the world places the player' },
-      { call: 'if (isAtEdge()) { getWorld().removeObject(this); }', at: '1.6', why: 'bullets that never die will fill the world' },
+      { call: 'if (isAtEdge())\n{\n    getWorld().removeObject(this);\n}', at: '1.6', why: 'bullets that never die will fill the world' },
     ],
     untaught: [
       { call: 'new GreenfootImage(15, 5) and fillRect(...)', why: 'drawing an image in code instead of loading a file. It is given to you in the starter.' },

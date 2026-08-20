@@ -48,6 +48,18 @@ jobs:
           node-version: '22'
           cache: npm
 
+      # smoke:greenfoot and smoke:gftrace compile the generated Java with a real
+      # javac and run it, which is the only check that catches a stub that looks
+      # right and does not compile. Both skip silently with no JDK, so this is
+      # pinned rather than left to whatever the runner image happens to ship.
+      # 17 because the stub is written Java 8 compatible on purpose and Judge0's
+      # Java version is not pinned by us; testing on a newer one than we target
+      # is the direction that catches problems rather than hiding them.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
       # better-sqlite3 is a native module; npm ci uses the lockfile so a
       # transitive bump can never silently change what is being tested.
       - name: Install

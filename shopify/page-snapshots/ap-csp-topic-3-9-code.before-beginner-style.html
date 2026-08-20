@@ -1,0 +1,181 @@
+<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#apcsp-code{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.55!important;font-size:16px!important;background:#fff!important}
+#apcsp-code *,#apcsp-code *::before,#apcsp-code *::after{box-sizing:border-box!important}
+#apcsp-code .hero{background:linear-gradient(135deg,#065F46,#10B981)!important;border-radius:16px!important;padding:24px!important;margin:8px 0 22px!important}
+#apcsp-code .hero .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;margin:0 0 8px!important}
+#apcsp-code h1{font-size:26px!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#apcsp-code .hero .sub{font-size:15px!important;margin:10px 0 0!important;color:#ECFDF5!important;-webkit-text-fill-color:#ECFDF5!important}
+#apcsp-code .prob{border:1px solid #BBE5D2!important;border-radius:14px!important;padding:16px 18px!important;margin:16px 0!important;background:#fff!important}
+#apcsp-code .pn{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 6px!important}
+#apcsp-code .prompt{font-size:16px!important;margin:0 0 10px!important}
+#apcsp-code code{font-family:Consolas,Menlo,monospace!important;background:#F0F7F4!important;padding:1px 5px!important;border-radius:4px!important;font-size:14px!important}
+#apcsp-code details.ref{margin:8px 0!important}
+#apcsp-code details.ref summary{cursor:pointer!important;font-weight:700!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;font-size:14px!important}
+#apcsp-code pre.ps{font-family:Consolas,Menlo,monospace!important;background:#F0F7F4!important;border:1px solid #BBE5D2!important;border-radius:8px!important;padding:10px 12px!important;white-space:pre!important;overflow-x:auto!important;font-size:13px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;margin:6px 0!important}
+#apcsp-code .toolbar{display:flex!important;align-items:center!important;gap:8px!important;margin:6px 0!important;flex-wrap:wrap!important}
+#apcsp-code .toolbar label{font-size:13px!important;color:#5B7268!important;-webkit-text-fill-color:#5B7268!important}
+#apcsp-code select.lang{font-family:inherit!important;font-size:14px!important;padding:5px 8px!important;border:1px solid #BBE5D2!important;border-radius:8px!important;background:#fff!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-code textarea.ed{width:100%!important;min-height:130px!important;font-family:Consolas,Menlo,monospace!important;font-size:14px!important;line-height:1.5!important;background:#022C22!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;border:1px solid #0B3B2E!important;border-radius:10px!important;padding:12px!important;resize:vertical!important;white-space:pre!important;tab-size:4!important}
+#apcsp-code button.run,#apcsp-code button.hint{font-family:inherit!important;font-weight:700!important;font-size:14px!important;border:0!important;border-radius:9px!important;padding:9px 16px!important;cursor:pointer!important;margin:8px 8px 0 0!important}
+#apcsp-code button.run{background:#10B981!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#apcsp-code button.hint{background:#ECFDF5!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;border:1px solid #BBE5D2!important}
+#apcsp-code .result{margin-top:10px!important;border-radius:9px!important;padding:10px 12px!important;font-family:Consolas,Menlo,monospace!important;font-size:13px!important;white-space:pre-wrap!important;display:none!important}
+#apcsp-code .result.pass{background:#DCFCE7!important;border:1px solid #16A34A!important;color:#14532D!important;-webkit-text-fill-color:#14532D!important;display:block!important}
+#apcsp-code .result.fail{background:#FEF2F2!important;border:1px solid #DC2626!important;color:#7F1D1D!important;-webkit-text-fill-color:#7F1D1D!important;display:block!important}
+#apcsp-code .result.wait{background:#F0F7F4!important;border:1px solid #BBE5D2!important;color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;display:block!important}
+#apcsp-code .hintbox{margin-top:8px!important;background:#FFFBEB!important;border-left:4px solid #F59E0B!important;padding:8px 12px!important;font-size:14px!important;display:none!important}
+#apcsp-code .hintbox.show{display:block!important}
+#apcsp-code .flow{background:#ECFDF5!important;border:1px solid #BBE5D2!important;border-left:5px solid #10B981!important;border-radius:0 12px 12px 0!important;padding:12px 16px!important;margin:0 0 18px!important;font-size:15px!important}
+#apcsp-code .flow b{color:#065F46!important;-webkit-text-fill-color:#065F46!important}
+#apcsp-code .muted{color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;font-size:13px!important}
+</style>
+<div id="apcsp-code">
+<div class="hero">
+<p class="eyebrow">Big Idea 3: Algorithms and Programming · Topic 3.9 · Coding Practice</p>
+<h1>Developing Algorithms — Code It Yourself</h1>
+<p class="sub">Write real code and check it against the expected output. Pick Python or JavaScript; the AP pseudocode reference is there when you need it.</p>
+</div>
+<div class="flow">You warmed these up on paper in Trace and Compare and Build It from Blocks, using the Level Up game. Now type and run them for real — same building blocks, harder each time. The first is a straight building block; the last you assemble and modify yourself. Predict the output first, then check it.</div>
+<div class="prob" data-i="0">
+  <p class="pn">Problem 1 of 4</p>
+  <p class="prompt">Building block — <strong>MAX</strong>. Two players scored <code>88</code> and <code>95</code>. Print the higher score.</p>
+  <p class="muted">Expected output: <code>95</code></p>
+  <details class="ref"><summary>Show AP pseudocode reference</summary><pre class="ps">a ← 88
+b ← 95
+IF(a &gt; b) { higher ← a } ELSE { higher ← b }
+DISPLAY(higher)</pre></details>
+  <div class="toolbar">
+<label>Language</label>
+    <select class="lang"><option value="python">Python</option>
+<option value="javascript">JavaScript</option></select>
+  </div>
+  <textarea class="ed" spellcheck="false">a = 88
+b = 95
+# print the larger of a and b
+</textarea>
+  <div>
+<button class="run">▶ Run &amp; Check</button><button class="hint">Hint</button>
+</div>
+  <div class="hintbox">Compare a and b with an IF/ELSE: if a &gt; b the higher is a, otherwise it is b. Print that value.</div>
+  <div class="result"></div>
+</div>
+<div class="prob" data-i="1">
+  <p class="pn">Problem 2 of 4</p>
+  <p class="prompt">Building block — <strong>DIVISIBILITY</strong>. A coin appears on every 3rd tile. For <code>tile = 12</code>, print <code>coin</code> if 3 divides it evenly, otherwise print <code>no coin</code>.</p>
+  <p class="muted">Expected output: <code>coin</code></p>
+  <details class="ref"><summary>Show AP pseudocode reference</summary><pre class="ps">tile ← 12
+IF(tile MOD 3 = 0) { DISPLAY("coin") }
+ELSE { DISPLAY("no coin") }</pre></details>
+  <div class="toolbar">
+<label>Language</label>
+    <select class="lang"><option value="python">Python</option>
+<option value="javascript">JavaScript</option></select>
+  </div>
+  <textarea class="ed" spellcheck="false">tile = 12
+# print "coin" if tile is evenly divisible by 3, else "no coin"
+# hint: use the remainder operator %
+</textarea>
+  <div>
+<button class="run">▶ Run &amp; Check</button><button class="hint">Hint</button>
+</div>
+  <div class="hintbox">MOD (written % in Python and JavaScript) gives the remainder. A remainder of 0 means the division is exact, so 3 divides the tile evenly.</div>
+  <div class="result"></div>
+</div>
+<div class="prob" data-i="2">
+  <p class="pn">Problem 3 of 4</p>
+  <p class="prompt">Combine blocks — <strong>AVERAGE</strong>, then <strong>PASS/FAIL</strong>. Three playtesters scored <code>80</code>, <code>90</code>, and <code>100</code>. Compute their average, then print <code>pass</code> if the average is at least 60, otherwise <code>fail</code>.</p>
+  <p class="muted">Expected output: <code>pass</code></p>
+  <details class="ref"><summary>Show AP pseudocode reference</summary><pre class="ps">s1 ← 80
+s2 ← 90
+s3 ← 100
+avg ← (s1 + s2 + s3) / 3
+IF(avg ≥ 60) { DISPLAY("pass") } ELSE { DISPLAY("fail") }</pre></details>
+  <div class="toolbar">
+<label>Language</label>
+    <select class="lang"><option value="python">Python</option>
+<option value="javascript">JavaScript</option></select>
+  </div>
+  <textarea class="ed" spellcheck="false">s1 = 80
+s2 = 90
+s3 = 100
+# step 1: compute the average (sum divided by 3)
+# step 2: print "pass" if the average is &gt;= 60, else "fail"
+</textarea>
+  <div>
+<button class="run">▶ Run &amp; Check</button><button class="hint">Hint</button>
+</div>
+  <div class="hintbox">This combines two building blocks: first the average (add the three scores, divide by 3), then a comparison (is the average &gt;= 60?). Compute the average into its own variable, then test it.</div>
+  <div class="result"></div>
+</div>
+<div class="prob" data-i="3">
+  <p class="pn">Problem 4 of 4</p>
+  <p class="prompt">Modify + build — <strong>MIN of three</strong>. Starting from the find-max idea, write an algorithm that prints the <strong>smallest</strong> of three scores: <code>88</code>, <code>72</code>, <code>95</code>.</p>
+  <p class="muted">Expected output: <code>72</code></p>
+  <details class="ref"><summary>Show AP pseudocode reference</summary><pre class="ps">a ← 88
+b ← 72
+c ← 95
+smallest ← a
+IF(b &lt; smallest) { smallest ← b }
+IF(c &lt; smallest) { smallest ← c }
+DISPLAY(smallest)</pre></details>
+  <div class="toolbar">
+<label>Language</label>
+    <select class="lang"><option value="python">Python</option>
+<option value="javascript">JavaScript</option></select>
+  </div>
+  <textarea class="ed" spellcheck="false">a = 88
+b = 72
+c = 95
+# find and print the SMALLEST of a, b, c
+# idea: start by assuming a is smallest, then compare against b and c
+</textarea>
+  <div>
+<button class="run">▶ Run &amp; Check</button><button class="hint">Hint</button>
+</div>
+  <div class="hintbox">Take the two-number min and extend it: assume the first is smallest, then compare it against each other value with &lt;, updating smallest whenever you find a lower one. This is the max building block modified (&gt; became &lt;) and extended to three.</div>
+  <div class="result"></div>
+</div>
+<p class="muted">Your code runs on a secure external service. Answers are checked automatically — nothing is stored.</p>
+</div>
+<script>
+(function(){
+  var CFG = {"proxyUrl":"https://progress.apcsexamprep.com/api/judge0/run","langIds":{"python":71,"javascript":63}};
+  var STARTERS = [{"python":"a = 88\nb = 95\n# print the larger of a and b\n","javascript":"let a = 88;\nlet b = 95;\n// print the larger of a and b\n"},{"python":"tile = 12\n# print \"coin\" if tile is evenly divisible by 3, else \"no coin\"\n# hint: use the remainder operator %\n","javascript":"let tile = 12;\n// print \"coin\" if tile is evenly divisible by 3, else \"no coin\"\n// hint: use the remainder operator %\n"},{"python":"s1 = 80\ns2 = 90\ns3 = 100\n# step 1: compute the average (sum divided by 3)\n# step 2: print \"pass\" if the average is \u003e= 60, else \"fail\"\n","javascript":"let s1 = 80;\nlet s2 = 90;\nlet s3 = 100;\n// step 1: compute the average (sum divided by 3)\n// step 2: print \"pass\" if the average is \u003e= 60, else \"fail\"\n"},{"python":"a = 88\nb = 72\nc = 95\n# find and print the SMALLEST of a, b, c\n# idea: start by assuming a is smallest, then compare against b and c\n","javascript":"let a = 88;\nlet b = 72;\nlet c = 95;\n// find and print the SMALLEST of a, b, c\n// idea: start by assuming a is smallest, then compare against b and c\n"}];
+  var EXPECTED = ["95","coin","pass","72"];
+  var root = document.getElementById("apcsp-code");
+  if(!root) return;
+  function norm(s){ return String(s==null?'':s).replace(/\r/g,'').replace(/[ \t]+$/gm,'').replace(/\n+$/,''); }
+  function submit(lang, code, cb){
+    var body = JSON.stringify({ code: code, language_id: CFG.langIds[lang] });
+    var headers = {'Content-Type':'application/json'};
+    fetch(CFG.proxyUrl, { method:'POST', headers: headers, body: body })
+      .then(function(r){ return r.json(); })
+      .then(function(d){ cb(null, d); })
+      .catch(function(e){ cb(e); });
+  }
+  Array.prototype.forEach.call(root.querySelectorAll('.prob'), function(box){
+    var i = +box.getAttribute('data-i');
+    var ed = box.querySelector('.ed'), lang = box.querySelector('.lang');
+    var res = box.querySelector('.result'), runBtn = box.querySelector('.run');
+    var hintBtn = box.querySelector('.hint'), hintBox = box.querySelector('.hintbox');
+    lang.addEventListener('change', function(){
+      var st = STARTERS[i] || {}; ed.value = st[lang.value] || st.python || ed.value;
+    });
+    if(hintBtn){ hintBtn.addEventListener('click', function(){ hintBox.classList.toggle('show'); }); }
+    runBtn.addEventListener('click', function(){
+      res.className = 'result wait'; res.textContent = 'Running your code...';
+      submit(lang.value, ed.value, function(err, d){
+        if(err){ res.className='result fail'; res.textContent='Could not reach the code runner. Check your connection and try again.'; return; }
+        var out = (d.stdout!=null)? d.stdout : '';
+        var errText = d.stderr || d.compile_output || '';
+        var exp = EXPECTED[i];
+        if(errText && !out){ res.className='result fail'; res.textContent='Your code hit an error:\n'+errText; return; }
+        if(exp==null){ res.className='result pass'; res.textContent='Output:\n'+out; return; }
+        if(norm(out)===norm(exp)){ res.className='result pass'; res.textContent='Correct! Output:\n'+out; }
+        else { res.className='result fail'; res.textContent='Not quite.\nExpected:\n'+exp+'\nGot:\n'+(out||'(no output)')+(errText?('\n'+errText):''); }
+      });
+    });
+  });
+})();
+</script>

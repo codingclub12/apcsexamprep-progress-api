@@ -620,7 +620,7 @@ const RECIPES = [
     handle: 'intro-java-help-recipe-arrow-key-movement',
     title: 'How to move a player with the arrow keys',
     snippet:
-      'public void act()\n{\n    // SEPARATE ifs, never else if, or diagonals stop working.\n    if (Greenfoot.isKeyDown("left"))  { setLocation(getX() - 3, getY()); }\n    if (Greenfoot.isKeyDown("right")) { setLocation(getX() + 3, getY()); }\n    if (Greenfoot.isKeyDown("up"))    { setLocation(getX(), getY() - 3); }\n    if (Greenfoot.isKeyDown("down"))  { setLocation(getX(), getY() + 3); }\n}',
+      'public void act()\n{\n    // SEPARATE ifs, never else if, or diagonals stop working.\n    if (Greenfoot.isKeyDown("left"))\n    {\n        setLocation(getX() - 3, getY());\n    }\n    if (Greenfoot.isKeyDown("right"))\n    {\n        setLocation(getX() + 3, getY());\n    }\n    if (Greenfoot.isKeyDown("up"))\n    {\n        setLocation(getX(), getY() - 3);\n    }\n    if (Greenfoot.isKeyDown("down"))\n    {\n        setLocation(getX(), getY() + 3);\n    }\n}',
     seo: SEO('greenfoot arrow key movement code',
       'Working Greenfoot code for four-direction arrow key movement, including diagonals, and why '
       + 'separate if statements are required.'),
@@ -632,7 +632,8 @@ const RECIPES = [
     snippet:
       'public class ScoreWorld extends World\n{\n'
       + '    private int score = 0;   // instance variable, so it survives\n\n'
-      + '    public void addScore(int points)\n    {\n'
+      + '    public void addScore(int points)\n'
+      + '    {\n'
       + '        score = score + points;\n'
       + '        showText("Score: " + score, 3, 1);\n'
       + '    }\n}',
@@ -648,8 +649,10 @@ const RECIPES = [
       'public MyWorld()\n{\n'
       + '    super(20, 15, 30);\n'
       + '    prepare();          // without this line, nothing appears\n'
-      + '}\n\n'
-      + 'public void prepare()\n{\n'
+      + '}\n'
+      + '\n'
+      + 'public void prepare()\n'
+      + '{\n'
       + '    addObject(new Player(), 10, 7);\n'
       + '    addObject(new Coin(), 3, 3);\n}',
     seo: SEO('greenfoot set up starting actors prepare',
@@ -663,12 +666,17 @@ const RECIPES = [
     snippet:
       'public void startWave()\n{\n'
       + '    // One loop, any size. Change the 8 to change the wave.\n'
-      + '    for (int i = 0; i < 8; i++)\n    {\n'
+      + '    for (int i = 0; i < 8; i++)\n'
+      + '    {\n'
       + '        addObject(new Enemy(2), i * 2, 0);\n'
-      + '    }\n}\n\n'
-      + 'public void act()\n{\n'
+      + '    }\n'
+      + '}\n'
+      + '\n'
+      + 'public void act()\n'
+      + '{\n'
       + '    // Guarded, so it runs once per wave and not once per frame.\n'
-      + '    if (getObjects(Enemy.class).size() == 0)\n    {\n'
+      + '    if (getObjects(Enemy.class).size() == 0)\n'
+      + '    {\n'
       + '        startWave();\n'
       + '    }\n}',
     seo: SEO('greenfoot spawn wave of enemies loop',
@@ -681,9 +689,13 @@ const RECIPES = [
     title: 'How to put level data in an array',
     snippet:
       '// The index is WHERE, the value is WHAT.\n'
-      + 'int[] heights = {2, 5, 1, 4, 3};\n\n'
-      + 'for (int i = 0; i < heights.length; i++)\n{\n'
-      + '    addObject(new Wall(), i, heights[i]);\n}\n\n'
+      + 'int[] heights = {2, 5, 1, 4, 3};\n'
+      + '\n'
+      + 'for (int i = 0; i < heights.length; i++)\n'
+      + '{\n'
+      + '    addObject(new Wall(), i, heights[i]);\n'
+      + '}\n'
+      + '\n'
       + '// A new level is now numbers, not code.',
     seo: SEO('greenfoot level layout in an array',
       'How to drive a Greenfoot level from array data so designing a new level means editing '
@@ -699,14 +711,24 @@ const RECIPES = [
       + '    {1, 1, 1, 1},\n'
       + '    {1, 0, 2, 1},\n'
       + '    {1, 1, 1, 1}\n'
-      + '};\n\n'
-      + 'public void buildMap()\n{\n'
-      + '    for (int row = 0; row < map.length; row++)\n    {\n'
-      + '        for (int col = 0; col < map[row].length; col++)\n        {\n'
+      + '};\n'
+      + '\n'
+      + 'public void buildMap()\n'
+      + '{\n'
+      + '    for (int row = 0; row < map.length; row++)\n'
+      + '    {\n'
+      + '        for (int col = 0; col < map[row].length; col++)\n'
+      + '        {\n'
       + '            int code = map[row][col];\n'
       + '            // col is x, row is y. They swap.\n'
-      + '            if (code == 1)      { addObject(new Wall(), col, row); }\n'
-      + '            else if (code == 2) { addObject(new Coin(), col, row); }\n'
+      + '            if (code == 1)\n'
+      + '            {\n'
+      + '                addObject(new Wall(), col, row);\n'
+      + '            }\n'
+      + '            else if (code == 2)\n'
+      + '            {\n'
+      + '                addObject(new Coin(), col, row);\n'
+      + '            }\n'
       + '        }\n    }\n}',
     seo: SEO('greenfoot render tile map from 2d array',
       'Working Greenfoot code to turn a 2D array of tile codes into a level, with the coordinate '
@@ -718,11 +740,13 @@ const RECIPES = [
     title: 'How to stop a player walking through walls',
     snippet:
       '// Check the destination cell BEFORE moving.\n'
-      + 'public void tryMove(int dRow, int dCol)\n{\n'
+      + 'public void tryMove(int dRow, int dCol)\n'
+      + '{\n'
       + '    int newRow = getY() + dRow;\n'
       + '    int newCol = getX() + dCol;\n\n'
       + '    // inBounds FIRST, or the lookup throws.\n'
-      + '    if (inBounds(newRow, newCol) && map[newRow][newCol] != 1)\n    {\n'
+      + '    if (inBounds(newRow, newCol) && map[newRow][newCol] != 1)\n'
+      + '    {\n'
       + '        setLocation(newCol, newRow);\n'
       + '    }\n}',
     seo: SEO('greenfoot grid wall collision 2d array',

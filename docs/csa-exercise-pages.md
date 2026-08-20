@@ -6,6 +6,11 @@ graded server side against hidden test cases.
 Read this before adding an exercise, changing a test bank, or touching
 `lib/csa-code-modes.js`.
 
+**Unit 4, lessons 4.6, 4.7, 4.13, 4.14, 4.15 and 4.17, are authored against the
+wrong topic.** Confirmed against the actual 2025-2026 CED text: see
+`docs/csa-codehs-exercise-reference.md` for the specifics before touching any
+of those six.
+
 ## The gap these fill
 
 Measured against the Shopify Admin API on 2026-08-17, not assumed.

@@ -129,7 +129,10 @@ const LESSONS = [
           + 'public void act()\n'
           + '{\n'
           + '    int i = 0;\n'
-          + '    while (i < 5) { i = i + 1; }\n'
+          + '    while (i < 5)\n'
+          + '    {\n'
+          + '        i = i + 1;\n'
+          + '    }\n'
           + '    move(1);\n'
           + '}',
         note:
@@ -185,14 +188,14 @@ const LESSONS = [
     cfus: [
       {
         id: 'cfu-1',
-        stem: 'How many times does this run?\n\nint i = 0;\nwhile (i < 3) { i = i + 1; }',
+        stem: 'How many times does this run?\n\nint i = 0;\nwhile (i < 3)\n{\n    i = i + 1;\n}',
         options: ['3', '2', '4', 'Forever'],
         answer: 0,
         why: 'i takes the values 0, 1 and 2 inside the body, which is three passes.',
       },
       {
         id: 'cfu-2',
-        stem: 'What is missing here?\n\nint i = 0;\nwhile (i < 3) { move(1); }',
+        stem: 'What is missing here?\n\nint i = 0;\nwhile (i < 3)\n{\n    move(1);\n}',
         options: [
           'A semicolon',
           'A return',
@@ -358,10 +361,13 @@ const LESSONS = [
           + 'parts connected.'),
         code:
           '// These two do exactly the same thing.\n'
-          + 'for (int i = 0; i < 5; i++) { doSomething(); }\n'
+          + 'for (int i = 0; i < 5; i++)\n'
+          + '{\n'
+          + '    doSomething();\n'
+          + '}\n'
           + '\n'
           + 'int i = 0;\n'
-          + 'while (i < 5) { doSomething(); i++; }',
+          + 'while (i < 5)\n{\n    doSomething();\n    i++;\n}',
         note:
           'Identical behavior. The for version is preferred for counting for one reason: you '
           + 'cannot forget the update, because it is sitting in the header where its absence is '
@@ -620,7 +626,10 @@ const LESSONS = [
           + 'for (int i = 0; i < 10; i++)\n'
           + '{\n'
           + '    int coinsHigh = 0;\n'
-          + '    if (test) { coinsHigh = coinsHigh + 1; }\n'
+          + '    if (test)\n'
+          + '    {\n'
+          + '        coinsHigh = coinsHigh + 1;\n'
+          + '    }\n'
           + '}',
         note:
           'This is the Unit 3 bug wearing a different hat.\n\n'
@@ -1369,7 +1378,10 @@ const LESSONS = [
         shot: SHOT('4.6', 2, 'The enhanced for and the index loop side by side, doing the same job.'),
         code:
           '// Enhanced for\n'
-          + 'for (Enemy e : enemies) { e.turn(180); }\n'
+          + 'for (Enemy e : enemies)\n'
+          + '{\n'
+          + '    e.turn(180);\n'
+          + '}\n'
           + '\n'
           + '// Index loop, same result\n'
           + 'for (int i = 0; i < enemies.size(); i++)\n'

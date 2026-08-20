@@ -23,7 +23,7 @@ const meta = {
   blogHandle: 'ap-networking',
   course: 'ap-networking',
   targetKeyword: 'ap networking',
-  publishOn: '2026-08-18',
+  publishOn: '2026-08-17',
   seoTitle: 'AP Networking 2026-27: Pilot Year, Units and Exam',
   seoDescription: 'AP Networking is in its final pilot year in 2026-27 before launching nationally. The four units, the skills tested, and how the pilot exam differs.',
   summary: 'AP Networking runs its third and final pilot in 2026-27 ahead of a national launch. The four units and 22 topics, the four skills the exam weights, how the pilot exam differs from the national exam that follows, and how to study a course with no released questions.',

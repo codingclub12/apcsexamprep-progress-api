@@ -11,8 +11,8 @@
  *   };
  *
  * Quiz pages additionally call:
- *   APCS_saveQuizScore(score, answers, onRetry)  - after each attempt
- *   APCS_finalizeQuiz()                          - when student hits Submit Final Grade
+ *   APCS_saveQuizScore(score, answers, onRetry)  — after each attempt
+ *   APCS_finalizeQuiz()                          — when student hits Submit Final Grade
  *
  * Hub pages call:
  *   APCS_renderHubProgress(lessonMap)
@@ -22,9 +22,9 @@
 (function() {
   'use strict';
 
-  const API = 'https://progress.apcsexamprep.com';
+  const API = 'https://apcsexamprep-progress-api-production.up.railway.app';
 
-  // -- SESSION ------------------------------------------------------------------
+  // ── SESSION ──────────────────────────────────────────────────────────────────
   function getSession() {
     try {
       const token   = localStorage.getItem('apcse_token');
@@ -34,7 +34,7 @@
     } catch(e) { return null; }
   }
 
-  // -- API HELPERS ---------------------------------------------------------------
+  // ── API HELPERS ───────────────────────────────────────────────────────────────
   // window.__nativeFetch is captured in quiz-tracker-wiring.liquid BEFORE
   // Appointo/ad scripts patch window.fetch. This is the only reliable way
   // to make requests without scrlybrkr injection.
@@ -72,7 +72,7 @@
     return apiCall('GET', endpoint, null, session.token);
   }
 
-  // -- SESSION BAR ---------------------------------------------------------------
+  // ── SESSION BAR ───────────────────────────────────────────────────────────────
   function renderSessionBar(session) {
     const bar = document.createElement('div');
     bar.id = 'apcs-session-bar';
@@ -88,6 +88,9 @@
 
     bar.innerHTML =
       '<div style="display:flex !important;align-items:center !important;gap:10px !important">' +
+        '<span style="background:#0F766E !important;padding:3px 8px !important;border-radius:4px !important;' +
+          'font-size:11px !important;font-weight:700 !important;letter-spacing:.5px !important;color:#6EE7B7 !important;' +
+          '-webkit-text-fill-color:#6EE7B7 !important">&#9679; SIGNED IN</span>' +
         '<span style="background:#6B21A8 !important;padding:3px 8px !important;border-radius:4px !important;' +
           'font-size:11px !important;font-weight:700 !important;letter-spacing:.5px !important;color:#fff !important;' +
           '-webkit-text-fill-color:#fff !important">CLASS</span>' +
@@ -96,6 +99,8 @@
         '<span style="color:#c4b5fd !important;-webkit-text-fill-color:#c4b5fd !important">' + session.student.name + '</span>' +
       '</div>' +
       '<div style="display:flex !important;align-items:center !important;gap:10px !important">' +
+        '<span id="apcs-bar-state" style="display:none !important;padding:2px 8px !important;border-radius:10px !important;' +
+          'font-size:10px !important;font-weight:700 !important;letter-spacing:.5px !important"></span>' +
         '<span id="apcs-bar-unit-progress" style="color:#E8A020 !important;-webkit-text-fill-color:#E8A020 !important;font-size:12px !important"></span>' +
         '<span style="color:#4c1d95 !important">|</span>' +
         '<a href="/pages/my-progress" style="color:#c4b5fd !important;-webkit-text-fill-color:#c4b5fd !important;' +
@@ -119,7 +124,30 @@
     if (el) el.textContent = completed + '/' + total + ' complete';
   }
 
-  // -- LOAD UNIT PROGRESS FOR BAR ------------------------------------------------
+  // state: 'started' (amber, work begun but not yet complete) or
+  // 'complete' (green, activity finished or quiz submitted). Any other
+  // value hides the pill (nothing recorded yet for this page).
+  function setBarState(state, label) {
+    const el = document.getElementById('apcs-bar-state');
+    if (!el) return;
+    if (state === 'complete') {
+      el.textContent = label || 'COMPLETE';
+      el.style.setProperty('display', 'inline-block', 'important');
+      el.style.setProperty('background', '#0F766E', 'important');
+      el.style.setProperty('color', '#6EE7B7', 'important');
+      el.style.setProperty('-webkit-text-fill-color', '#6EE7B7', 'important');
+    } else if (state === 'started') {
+      el.textContent = label || 'IN PROGRESS';
+      el.style.setProperty('display', 'inline-block', 'important');
+      el.style.setProperty('background', '#78350F', 'important');
+      el.style.setProperty('color', '#E8A020', 'important');
+      el.style.setProperty('-webkit-text-fill-color', '#E8A020', 'important');
+    } else {
+      el.style.setProperty('display', 'none', 'important');
+    }
+  }
+
+  // ── LOAD UNIT PROGRESS FOR BAR ────────────────────────────────────────────────
   async function loadUnitProgress(pageInfo) {
     const data = await apiGet('/api/student/progress');
     if (!data || !data.progress) return;
@@ -133,9 +161,20 @@
       return r.course === pageInfo.course && r.unit === pageInfo.unit;
     }).length;
     if (total > 0) setBarUnitProgress(completed, total);
+
+    // Quiz completion is tracked separately (see the quiz status branch in
+    // init), so only lesson/exercise pages derive their started/complete
+    // pill from the progress record itself.
+    if (pageInfo.activity !== 'quiz') {
+      const mine = data.progress.filter(function(r) {
+        return r.course === pageInfo.course && r.unit === pageInfo.unit &&
+               r.lesson === pageInfo.lesson && r.activity_type === pageInfo.activity;
+      })[0];
+      setBarState(mine && mine.completed ? 'complete' : 'started');
+    }
   }
 
-  // -- MODALS --------------------------------------------------------------------
+  // ── MODALS ────────────────────────────────────────────────────────────────────
   function makeBackdrop(id, zIndex, onClick) {
     const bd = document.createElement('div');
     bd.id = id;
@@ -170,7 +209,7 @@
     if (m) m.remove();
   }
 
-  // -- RETRY PANEL ---------------------------------------------------------------
+  // ── RETRY PANEL ───────────────────────────────────────────────────────────────
   function renderRetryPanel(score, threshold, retryAllowed, onRetry) {
     removeModal('apcs-retry-bd', 'apcs-retry-modal');
     const close = function() { removeModal('apcs-retry-bd', 'apcs-retry-modal'); };
@@ -217,7 +256,7 @@
     document.getElementById('apcs-retry-dismiss').addEventListener('click', close);
   }
 
-  // -- PASS PANEL ----------------------------------------------------------------
+  // ── PASS PANEL ────────────────────────────────────────────────────────────────
   function renderPassPanel(score, threshold, onRetry, retryAllowed) {
     removeModal('apcs-pass-bd', 'apcs-pass-modal');
     const close = function() { removeModal('apcs-pass-bd', 'apcs-pass-modal'); };
@@ -258,7 +297,7 @@
     }
   }
 
-  // -- LOCKED PANEL -------------------------------------------------------------
+  // ── LOCKED PANEL ─────────────────────────────────────────────────────────────
   function renderLockedPanel(score) {
     removeModal('apcs-locked-bd', 'apcs-locked-modal');
     const close = function() { removeModal('apcs-locked-bd', 'apcs-locked-modal'); };
@@ -282,7 +321,7 @@
     document.getElementById('apcs-locked-close').addEventListener('click', close);
   }
 
-  // -- JOIN PROMPT ---------------------------------------------------------------
+  // ── JOIN PROMPT ───────────────────────────────────────────────────────────────
   function renderJoinPrompt() {
     const prompt = document.createElement('div');
     prompt.setAttribute('style', [
@@ -303,7 +342,7 @@
     document.body.appendChild(prompt);
   }
 
-  // -- HUB PROGRESS RINGS --------------------------------------------------------
+  // ── HUB PROGRESS RINGS ────────────────────────────────────────────────────────
   /**
    * Call on hub pages to decorate lesson cards with live progress.
    * @param {Object} lessonMap  e.g. { '1.1': { el: DOMElement, activities: ['lesson','exercise-1','exercise-2','quiz'] } }
@@ -316,7 +355,7 @@
     const data = await apiGet('/api/student/progress');
     if (!data || !data.progress) return;
 
-    // Build a lookup: "course|unit|lesson|activity" -> record
+    // Build a lookup: "course|unit|lesson|activity" → record
     const lookup = {};
     for (const r of data.progress) {
       lookup[r.course + '|' + r.unit + '|' + r.lesson + '|' + r.activity_type] = r;
@@ -362,7 +401,116 @@
     });
   };
 
-  // -- MAIN INIT -----------------------------------------------------------------
+  // -- ACTIVITY COMPLETION --
+  // Completion has to measure work, not page views. This module decides when a
+  // non-quiz activity (lesson, exercise-1, exercise-2, lab) is actually done.
+  //
+  // Two signals, in priority order:
+  //   1. GRADED pages (exercises, labs, lesson CFUs) render one .check-btn per
+  //      question and disable it once the question is checked. The activity is
+  //      complete when every check button has been used. This is the same
+  //      "wait until answered reaches total" rule the exam path in
+  //      apcs-grade-reporter.liquid already uses; it is ported, not reinvented.
+  //   2. READING-ONLY pages carry no .check-btn at all. Marking those complete
+  //      on DOM ready is exactly the page-view bug, but never completing them
+  //      would strand real content, so they require genuine engagement: the
+  //      student must stay READ_DWELL_MS and scroll through most of the page.
+  //
+  // Every listener, observer, and timer here unbinds after completion posts
+  // once. Nothing accumulates for the life of the page.
+
+  var READ_DWELL_MS   = 60000;   // time on page before a reading page can count
+  var READ_SCROLL_PCT = 0.8;     // fraction of the document that must be seen
+
+  function activityScorePct(total) {
+    // Preferred: the score bar the page already maintains as "correct / answered".
+    var el = document.getElementById('score-display');
+    if (el) {
+      var m = /(\d+)\s*\/\s*(\d+)/.exec(el.textContent || el.innerText || '');
+      if (m && total) return Math.round(parseInt(m[1], 10) / total * 100);
+    }
+    // Fallback: the widget tags each graded block correct or wrong.
+    var correct = document.querySelectorAll('.answered-correct').length;
+    if (total) return Math.round(correct / total * 100);
+    return null;
+  }
+
+  function trackActivityCompletion(pageInfo) {
+    var posted = false;
+    var cleanups = [];
+
+    function cleanup() {
+      for (var i = 0; i < cleanups.length; i++) {
+        try { cleanups[i](); } catch (e) {}
+      }
+      cleanups.length = 0;
+    }
+
+    function markComplete(pct) {
+      if (posted) return;
+      posted = true;
+      cleanup();
+      var body = {
+        course: pageInfo.course, unit: pageInfo.unit,
+        lesson: pageInfo.lesson, activity_type: pageInfo.activity,
+        completed: true,
+      };
+      if (pct !== null && pct !== undefined) body.score = pct;
+      apiPost('/api/student/progress', body).then(function() {
+        setBarStatus('\u2713 Complete' + (pct !== null && pct !== undefined ? ': ' + pct + '%' : ''), '#6EE7B7');
+        setBarState('complete');
+        loadUnitProgress(pageInfo);
+      });
+    }
+
+    var checkBtns = document.querySelectorAll('.check-btn');
+    var total = checkBtns.length;
+
+    if (total > 0) {
+      // -- GRADED PATH --
+      var onClick = function() {
+        // Let the page's own handler grade and disable the button first.
+        setTimeout(function() {
+          var answered = 0;
+          var btns = document.querySelectorAll('.check-btn');
+          for (var i = 0; i < btns.length; i++) if (btns[i].disabled) answered++;
+          if (answered >= total) markComplete(activityScorePct(total));
+        }, 0);
+      };
+      document.addEventListener('click', onClick);
+      cleanups.push(function() { document.removeEventListener('click', onClick); });
+      return;
+    }
+
+    // -- READING PATH --
+    var dwellDone = false;
+    var scrollDone = false;
+
+    function maybeComplete() {
+      if (dwellDone && scrollDone) markComplete(null);
+    }
+
+    function scrolledEnough() {
+      var doc = document.documentElement;
+      var viewed = (window.pageYOffset || doc.scrollTop || 0) + window.innerHeight;
+      var height = Math.max(doc.scrollHeight || 0, document.body ? document.body.scrollHeight : 0);
+      if (height <= window.innerHeight) return true;  // page fits, nothing to scroll
+      return viewed >= height * READ_SCROLL_PCT;
+    }
+
+    var onScroll = function() {
+      if (scrolledEnough()) { scrollDone = true; maybeComplete(); }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    cleanups.push(function() { window.removeEventListener('scroll', onScroll); });
+
+    var dwellTimer = setTimeout(function() { dwellDone = true; maybeComplete(); }, READ_DWELL_MS);
+    cleanups.push(function() { clearTimeout(dwellTimer); });
+
+    onScroll();   // a short page may already satisfy the scroll half
+  }
+
+  // ── MAIN INIT ─────────────────────────────────────────────────────────────────
   function init() {
     const session  = getSession();
     const pageInfo = window.APCS_PAGE;
@@ -372,58 +520,24 @@
 
     renderSessionBar(session);
 
-    // -- NON-QUIZ PAGES --------------------------------------------------------
+    // ── NON-QUIZ PAGES ────────────────────────────────────────────────────────
     if (pageInfo.activity !== 'quiz') {
-      // Mark as visited (not completed) on page load
+      // Record the VISIT only. A page view is not work, so completed stays
+      // false here and trackActivityCompletion decides when the activity is
+      // genuinely finished. The server keeps completion sticky
+      // (completed = CASE WHEN ? = 1 THEN 1 ELSE completed END), so posting
+      // false never clears a completion the student already earned.
       apiPost('/api/student/progress', {
         course: pageInfo.course, unit: pageInfo.unit,
         lesson: pageInfo.lesson, activity_type: pageInfo.activity,
         completed: false,
       }).then(function() {
-        setBarStatus('Progress tracked', '#c4b5fd');
+        setBarStatus('Visit saved', '#c4b5fd');
         loadUnitProgress(pageInfo);
       });
-
-      // -- GLOBAL: lesson/exercise pages call this when CFU is submitted -------
-      // score = 0-100 percentage
-      window.APCS_saveLessonScore = async function(score) {
-        const cls = null; // threshold comes from API response
-        setBarStatus('Saving\u2026', '#c4b5fd');
-
-        // Get class threshold to determine completion
-        const statusData = await apiGet(
-          '/api/student/quiz/status?course=' + encodeURIComponent(pageInfo.course) +
-          '&unit=' + encodeURIComponent(pageInfo.unit) +
-          '&lesson=' + encodeURIComponent(pageInfo.lesson)
-        );
-        const threshold = statusData ? (statusData.threshold || 80) : 80;
-        const passed    = score >= threshold;
-
-        const result = await apiPost('/api/student/progress', {
-          course:        pageInfo.course,
-          unit:          pageInfo.unit,
-          lesson:        pageInfo.lesson,
-          activity_type: pageInfo.activity,
-          score:         score,
-          completed:     passed,
-        });
-
-        if (!result || !result.ok) {
-          setBarStatus('Error saving. Try again.', '#F87171');
-          return result;
-        }
-
-        if (passed) {
-          setBarStatus('\u2713 Complete: ' + score + '%', '#6EE7B7');
-        } else {
-          setBarStatus(score + '% \u2014 need ' + threshold + '% to complete', '#E8A020');
-        }
-
-        loadUnitProgress(pageInfo);
-        return { ok: true, score, passed, threshold };
-      };
+      trackActivityCompletion(pageInfo);
     } else {
-      // -- QUIZ PAGE INIT ------------------------------------------------------
+      // ── QUIZ PAGE INIT ──────────────────────────────────────────────────────
       // Check lock/retry status before doing anything
       apiGet('/api/student/quiz/status?course=' + encodeURIComponent(pageInfo.course) +
              '&unit=' + encodeURIComponent(pageInfo.unit) +
@@ -434,13 +548,18 @@
         window._APCS_quizStatus = status;
 
         if (status.locked) {
-          // Already finalized - show locked panel and disable quiz
+          // Already finalized — show locked panel and disable quiz
           setBarStatus('\u{1F512} Final grade: ' + status.score + '%', '#E8A020');
+          setBarState('complete', 'SUBMITTED');
           renderLockedPanel(status.score);
           // Dispatch event so quiz page JS can disable its UI
           document.dispatchEvent(new CustomEvent('apcs:quiz:locked', { detail: status }));
           return;
         }
+
+        // Visiting the quiz counts as starting it, same as a lesson/exercise
+        // visit; it upgrades to 'complete' above once a final grade posts.
+        setBarState('started');
 
         if (status.attempts > 0) {
           setBarStatus('Best score: ' + status.score + '% \u2022 ' + status.attempts + ' attempt' + (status.attempts !== 1 ? 's' : ''), '#c4b5fd');
@@ -450,7 +569,7 @@
       });
     }
 
-    // -- GLOBAL: called by quiz wiring after results panel appears -------------
+    // ── GLOBAL: called by quiz wiring after results panel appears ─────────────
     var _lastScore = null;
     window.APCS_saveQuizScore = async function(score, answers, onRetry) {
       _lastScore = score;
@@ -470,38 +589,13 @@
         return result;
       }
 
+      // Quiz is one-shot — just update bar with score, no retry/pass panels
       setBarStatus('\u2713 Score saved: ' + score + '%', '#6EE7B7');
       loadUnitProgress(pageInfo);
-
-      // -- Whose call is it whether this attempt is the last one ---------------
-      // The class setting decides. POST /api/student/quiz answers with the
-      // EFFECTIVE setting (students.retry_override when it is set, otherwise
-      // classes.retry_allowed), so it is read off the response rather than
-      // guessed here. The quiz/status read from page load is the fallback for a
-      // server that has not shipped that field yet. When neither can be read,
-      // retries stay OFF, which is exactly how this page behaved before, so a
-      // failed lookup can never quietly leave a quiz unfinalized.
-      const st      = window._APCS_quizStatus || {};
-      const retryOn = typeof result.retry_allowed === 'boolean' ? result.retry_allowed
-                    : (typeof st.retry_allowed === 'boolean' ? st.retry_allowed : false);
-      const thr     = typeof result.threshold === 'number' ? result.threshold
-                    : (typeof st.threshold === 'number' ? st.threshold : 80);
-      const passed  = typeof result.passed === 'boolean' ? result.passed : (score >= thr);
-
-      // Retries ON: the score is on record but nothing is final. Hand the
-      // student the choice - try again, or submit this as the final grade.
-      // Retries OFF: no panel; the caller finalizes straight away, as today.
-      if (retryOn) {
-        if (passed) renderPassPanel(score, thr, onRetry, true);
-        else        renderRetryPanel(score, thr, true, onRetry);
-      }
-
-      // Resolved once, here, so the quiz wiring never has to repeat the rule.
-      result.retry_effective = retryOn;
       return result;
     };
 
-    // -- GLOBAL: Submit Final Grade --------------------------------------------
+    // ── GLOBAL: Submit Final Grade ────────────────────────────────────────────
     window.APCS_finalizeQuiz = async function() {
       setBarStatus('Submitting final grade\u2026', '#c4b5fd');
       const result = await apiPost('/api/student/quiz/finalize', {
@@ -524,7 +618,7 @@
       return result;
     };
 
-    // -- GLOBAL: confidence rating ---------------------------------------------
+    // ── GLOBAL: confidence rating ─────────────────────────────────────────────
     window.APCS_saveConfidence = function(rating) {
       apiPost('/api/student/progress', {
         course: pageInfo.course, unit: pageInfo.unit,

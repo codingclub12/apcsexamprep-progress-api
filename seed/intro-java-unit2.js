@@ -903,7 +903,7 @@ const LESSONS = [
     cfus: [
       {
         id: 'cfu-1',
-        stem: 'score is 50. What happens?\n\nif (score > 100) { move(4); }\nturn(10);',
+        stem: 'score is 50. What happens?\n\nif (score > 100)\n{\n    move(4);\n}\nturn(10);',
         options: ['Both run', 'Neither runs', 'Only turn(10) runs', 'Only move(4) runs'],
         answer: 2,
         why: 'The condition is false so the body is skipped, but turn is outside the braces and '
@@ -972,7 +972,7 @@ const LESSONS = [
       },
       {
         id: 'q2',
-        stem: 'lives is 0. Which runs?\n\nif (lives > 0) { move(4); } else { Greenfoot.stop(); }',
+        stem: 'lives is 0. Which runs?\n\nif (lives > 0)\n{\n    move(4);\n}\nelse\n{\n    Greenfoot.stop();\n}',
         options: ['move(4)', 'Both', 'Greenfoot.stop()', 'Neither'],
         answer: 2,
         why: 'The condition is false, so the else branch runs.',
@@ -1107,8 +1107,8 @@ const LESSONS = [
       {
         shot: SHOT('2.5', 3, 'A chain with no final else, showing a value that matches nothing.'),
         code:
-          'if (key == 1) { move(4); }\n'
-          + 'else if (key == 2) { move(-4); }',
+          'if (key == 1)\n{\n    move(4);\n}\n'
+          + 'else if (key == 2)\n{\n    move(-4);\n}',
         note:
           'A chain does not have to end in else. But then it is possible for NOTHING to run.\n\n'
           + 'That is fine when doing nothing is the right answer. It is a bug when you assumed one '
@@ -1142,16 +1142,16 @@ const LESSONS = [
     cfus: [
       {
         id: 'cfu-1',
-        stem: 'score is 95. Which grade?\n\nif (score >= 90) grade = "A";\nelse if (score >= 80) '
-          + 'grade = "B";',
+        stem: 'score is 95. Which grade?\n\nif (score >= 90)\n{\n    grade = "A";\n}\nelse if (score >= 80)\n'
+          + '{\n    grade = "B";\n}',
         options: ['B', 'Both are set', 'A', 'Neither'],
         answer: 2,
         why: 'The first true condition wins and the rest are skipped.',
       },
       {
         id: 'cfu-2',
-        stem: 'In this chain, when can the second branch ever run?\n\nif (n > 0) { ... }\nelse if '
-          + '(n > 10) { ... }',
+        stem: 'In this chain, when can the second branch ever run?\n\nif (n > 0)\n{\n    ...\n}\nelse if '
+          + '(n > 10)\n{\n    ...\n}',
         options: ['When n is above 10', 'When n is 0', 'Always', 'Never'],
         answer: 3,
         why: 'Anything above 10 is already above 0, so the first branch always catches it first.',
@@ -1213,8 +1213,8 @@ const LESSONS = [
       },
       {
         id: 'q2',
-        stem: 'n is 50. Which branch runs?\n\nif (n > 10) { a(); }\nelse if (n > 40) { b(); }\n'
-          + 'else { c(); }',
+        stem: 'n is 50. Which branch runs?\n\nif (n > 10)\n{\n    a();\n}\nelse if (n > 40)\n{\n    b();\n}\n'
+          + 'else\n{\n    c();\n}',
         options: ['a()', 'b()', 'c()', 'a() and b()'],
         answer: 0,
         why: '50 is greater than 10, so the first branch catches and the rest are skipped.',
@@ -1569,10 +1569,22 @@ const LESSONS = [
         code:
           'public void act()\n'
           + '{\n'
-          + '    if (Greenfoot.isKeyDown("left"))  { setLocation(getX() - 3, getY()); }\n'
-          + '    if (Greenfoot.isKeyDown("right")) { setLocation(getX() + 3, getY()); }\n'
-          + '    if (Greenfoot.isKeyDown("up"))    { setLocation(getX(), getY() - 3); }\n'
-          + '    if (Greenfoot.isKeyDown("down"))  { setLocation(getX(), getY() + 3); }\n'
+          + '    if (Greenfoot.isKeyDown("left"))\n'
+          + '    {\n'
+          + '        setLocation(getX() - 3, getY());\n'
+          + '    }\n'
+          + '    if (Greenfoot.isKeyDown("right"))\n'
+          + '    {\n'
+          + '        setLocation(getX() + 3, getY());\n'
+          + '    }\n'
+          + '    if (Greenfoot.isKeyDown("up"))\n'
+          + '    {\n'
+          + '        setLocation(getX(), getY() - 3);\n'
+          + '    }\n'
+          + '    if (Greenfoot.isKeyDown("down"))\n'
+          + '    {\n'
+          + '        setLocation(getX(), getY() + 3);\n'
+          + '    }\n'
           + '}',
         note:
           'All four directions. Note "up" SUBTRACTS from y, because y grows downward. That is the '
@@ -1585,8 +1597,11 @@ const LESSONS = [
           + 'chain that does not.'),
         code:
           '// A CHAIN. Diagonal movement is impossible.\n'
-          + 'if (Greenfoot.isKeyDown("left"))       { ... }\n'
-          + 'else if (Greenfoot.isKeyDown("up"))    { ... }',
+          + 'if (Greenfoot.isKeyDown("left"))\n'
+          + '{\n'
+          + '    ...\n'
+          + '}\n'
+          + 'else if (Greenfoot.isKeyDown("up"))\n{\n    ...\n}',
         note:
           'Here is why the chain is wrong for this job.\n\n'
           + 'A chain stops at the first true condition. Hold left and up together and it handles '

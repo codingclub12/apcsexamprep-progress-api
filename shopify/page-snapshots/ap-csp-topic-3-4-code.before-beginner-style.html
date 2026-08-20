@@ -1,0 +1,168 @@
+<style>
+.page-title,.article__title,.page__title,.template-page main h1:first-of-type{display:none!important;visibility:hidden!important}
+#apcsp-code{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:0 auto!important;padding:8px 16px 56px!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;line-height:1.55!important;font-size:16px!important;background:#fff!important}
+#apcsp-code *,#apcsp-code *::before,#apcsp-code *::after{box-sizing:border-box!important}
+#apcsp-code .hero{background:linear-gradient(135deg,#065F46,#10B981)!important;border-radius:16px!important;padding:24px!important;margin:8px 0 22px!important}
+#apcsp-code .hero .eyebrow{font-size:13px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;margin:0 0 8px!important}
+#apcsp-code h1{font-size:26px!important;margin:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important}
+#apcsp-code .hero .sub{font-size:15px!important;margin:10px 0 0!important;color:#ECFDF5!important;-webkit-text-fill-color:#ECFDF5!important}
+#apcsp-code .prob{border:1px solid #BBE5D2!important;border-radius:14px!important;padding:16px 18px!important;margin:16px 0!important;background:#fff!important}
+#apcsp-code .pn{font-size:12px!important;font-weight:800!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 6px!important}
+#apcsp-code .prompt{font-size:16px!important;margin:0 0 10px!important}
+#apcsp-code code{font-family:Consolas,Menlo,monospace!important;background:#F0F7F4!important;padding:1px 5px!important;border-radius:4px!important;font-size:14px!important}
+#apcsp-code details.ref{margin:8px 0!important}
+#apcsp-code details.ref summary{cursor:pointer!important;font-weight:700!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;font-size:14px!important}
+#apcsp-code pre.ps{font-family:Consolas,Menlo,monospace!important;background:#F0F7F4!important;border:1px solid #BBE5D2!important;border-radius:8px!important;padding:10px 12px!important;white-space:pre!important;overflow-x:auto!important;font-size:13px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;margin:6px 0!important}
+#apcsp-code .toolbar{display:flex!important;align-items:center!important;gap:8px!important;margin:6px 0!important;flex-wrap:wrap!important}
+#apcsp-code .toolbar label{font-size:13px!important;color:#5B7268!important;-webkit-text-fill-color:#5B7268!important}
+#apcsp-code select.lang{font-family:inherit!important;font-size:14px!important;padding:5px 8px!important;border:1px solid #BBE5D2!important;border-radius:8px!important;background:#fff!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important}
+#apcsp-code textarea.ed{width:100%!important;min-height:130px!important;font-family:Consolas,Menlo,monospace!important;font-size:14px!important;line-height:1.5!important;background:#022C22!important;color:#D1FAE5!important;-webkit-text-fill-color:#D1FAE5!important;border:1px solid #0B3B2E!important;border-radius:10px!important;padding:12px!important;resize:vertical!important;white-space:pre!important;tab-size:4!important}
+#apcsp-code button.run,#apcsp-code button.hint{font-family:inherit!important;font-weight:700!important;font-size:14px!important;border:0!important;border-radius:9px!important;padding:9px 16px!important;cursor:pointer!important;margin:8px 8px 0 0!important}
+#apcsp-code button.run{background:#10B981!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#apcsp-code button.hint{background:#ECFDF5!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;border:1px solid #BBE5D2!important}
+#apcsp-code .result{margin-top:10px!important;border-radius:9px!important;padding:10px 12px!important;font-family:Consolas,Menlo,monospace!important;font-size:13px!important;white-space:pre-wrap!important;display:none!important}
+#apcsp-code .result.pass{background:#DCFCE7!important;border:1px solid #16A34A!important;color:#14532D!important;-webkit-text-fill-color:#14532D!important;display:block!important}
+#apcsp-code .result.fail{background:#FEF2F2!important;border:1px solid #DC2626!important;color:#7F1D1D!important;-webkit-text-fill-color:#7F1D1D!important;display:block!important}
+#apcsp-code .result.wait{background:#F0F7F4!important;border:1px solid #BBE5D2!important;color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;display:block!important}
+#apcsp-code .hintbox{margin-top:8px!important;background:#FFFBEB!important;border-left:4px solid #F59E0B!important;padding:8px 12px!important;font-size:14px!important;display:none!important}
+#apcsp-code .hintbox.show{display:block!important}
+#apcsp-code .flow{background:#ECFDF5!important;border:1px solid #BBE5D2!important;border-left:5px solid #10B981!important;border-radius:0 12px 12px 0!important;padding:12px 16px!important;margin:0 0 18px!important;font-size:15px!important}
+#apcsp-code .flow b{color:#065F46!important;-webkit-text-fill-color:#065F46!important}
+#apcsp-code .muted{color:#5B7268!important;-webkit-text-fill-color:#5B7268!important;font-size:13px!important}
+</style>
+<div id="apcsp-code">
+<div class="hero">
+<p class="eyebrow">Big Idea 3: Algorithms and Programming · Topic 3.4 · Coding Practice</p>
+<h1>Strings — Code It Yourself</h1>
+<p class="sub">Write real code and check it against the expected output. Pick Python or JavaScript; the AP pseudocode reference is there when you need it.</p>
+</div>
+<div class="flow">You warmed these up on paper in the String Builder and Build the Badge exercises — joining pieces with concatenation and taking substrings by position. Now type and run them for real, hardest last. Predict each output first, then check it: the first builds a badge from two substrings, and the last is an off-by-one index bug for you to fix.</div>
+<div class="prob" data-i="0">
+  <p class="pn">Problem 1 of 4</p>
+  <p class="prompt">Given <code>name = "Computer"</code>, print the first 4 characters followed by the last 4 characters, separated by a space.</p>
+  <p class="muted">Expected output: <code>Comp uter</code></p>
+  <details class="ref"><summary>Show AP pseudocode reference</summary><pre class="ps">first ← first 4 characters of name
+last ← last 4 characters of name
+DISPLAY(first + " " + last)
+(the exam describes substrings in words — there is no SUBSTRING procedure on the reference sheet)</pre></details>
+  <div class="toolbar">
+<label>Language</label>
+    <select class="lang"><option value="python">Python</option>
+<option value="javascript">JavaScript</option></select>
+  </div>
+  <textarea class="ed" spellcheck="false">name = "Computer"
+# print the first 4 characters, a space, then the last 4
+</textarea>
+  <div>
+<button class="run">▶ Run &amp; Check</button><button class="hint">Hint</button>
+</div>
+  <div class="hintbox">name[0:4] = 'Comp', name[4:8] = 'uter'. Concatenate them with a space in the middle.</div>
+  <div class="result"></div>
+</div>
+<div class="prob" data-i="1">
+  <p class="pn">Problem 2 of 4</p>
+  <p class="prompt">Build the string <code>AP: 5</code> from <code>course = "AP"</code> and <code>score = 5</code>.</p>
+  <p class="muted">Expected output: <code>AP: 5</code></p>
+  <details class="ref"><summary>Show AP pseudocode reference</summary><pre class="ps">DISPLAY(course + ": " + score)</pre></details>
+  <div class="toolbar">
+<label>Language</label>
+    <select class="lang"><option value="python">Python</option>
+<option value="javascript">JavaScript</option></select>
+  </div>
+  <textarea class="ed" spellcheck="false">course = "AP"
+score = 5
+# print them as "AP: 5"
+</textarea>
+  <div>
+<button class="run">▶ Run &amp; Check</button><button class="hint">Hint</button>
+</div>
+  <div class="hintbox">In Python, str(score) converts the integer to a string before you can join it with +.</div>
+  <div class="result"></div>
+</div>
+<div class="prob" data-i="2">
+  <p class="pn">Problem 3 of 4</p>
+  <p class="prompt">Print the number of vowels (a, e, i, o, u) in <code>"programming"</code>.</p>
+  <p class="muted">Expected output: <code>3</code></p>
+  <details class="ref"><summary>Show AP pseudocode reference</summary><pre class="ps">count &lt;- 0
+FOR EACH ch IN word
+{
+  IF(ch is a vowel) { count &lt;- count + 1 }
+}
+DISPLAY(count)</pre></details>
+  <div class="toolbar">
+<label>Language</label>
+    <select class="lang"><option value="python">Python</option>
+<option value="javascript">JavaScript</option></select>
+  </div>
+  <textarea class="ed" spellcheck="false">word = "programming"
+# count and print how many vowels it has
+</textarea>
+  <div>
+<button class="run">▶ Run &amp; Check</button><button class="hint">Hint</button>
+</div>
+  <div class="hintbox">Loop over each character; check whether "aeiou" contains it, and add 1 when it does.</div>
+  <div class="result"></div>
+</div>
+<div class="prob" data-i="3">
+  <p class="pn">Problem 4 of 4</p>
+  <p class="prompt">Spot the error: this should print the <strong>3rd</strong> character of <code>"science"</code> (which is <code>i</code>) but prints the wrong one. Fix it.</p>
+  <p class="muted">Expected output: <code>i</code></p>
+  <details class="ref"><summary>Show AP pseudocode reference</summary><pre class="ps">DISPLAY(s[3])
+(exam lists are 1-indexed, so the 3rd item is index 3)</pre></details>
+  <div class="toolbar">
+<label>Language</label>
+    <select class="lang"><option value="python">Python</option>
+<option value="javascript">JavaScript</option></select>
+  </div>
+  <textarea class="ed" spellcheck="false">s = "science"
+print(s[3])   # BUG: prints the wrong character. Fix it.
+</textarea>
+  <div>
+<button class="run">▶ Run &amp; Check</button><button class="hint">Hint</button>
+</div>
+  <div class="hintbox">In Python and JavaScript, string positions start at 0 — so the 3rd character is index 2, not 3.</div>
+  <div class="result"></div>
+</div>
+<p class="muted">Your code runs on a secure external service. Answers are checked automatically — nothing is stored.</p>
+</div>
+<script>
+(function(){
+  var CFG = {"proxyUrl":"https://progress.apcsexamprep.com/api/judge0/run","langIds":{"python":71,"javascript":63}};
+  var STARTERS = [{"python":"name = \"Computer\"\n# print the first 4 characters, a space, then the last 4\n","javascript":"let name = \"Computer\";\n// print the first 4 characters, a space, then the last 4\n"},{"python":"course = \"AP\"\nscore = 5\n# print them as \"AP: 5\"\n","javascript":"let course = \"AP\";\nlet score = 5;\n// print them as \"AP: 5\"\n"},{"python":"word = \"programming\"\n# count and print how many vowels it has\n","javascript":"let word = \"programming\";\n// count and print how many vowels it has\n"},{"python":"s = \"science\"\nprint(s[3])   # BUG: prints the wrong character. Fix it.\n","javascript":"let s = \"science\";\nconsole.log(s[3]);   // BUG: prints the wrong character. Fix it.\n"}];
+  var EXPECTED = ["Comp uter","AP: 5","3","i"];
+  var root = document.getElementById("apcsp-code");
+  if(!root) return;
+  function norm(s){ return String(s==null?'':s).replace(/\r/g,'').replace(/[ \t]+$/gm,'').replace(/\n+$/,''); }
+  function submit(lang, code, cb){
+    var body = JSON.stringify({ code: code, language_id: CFG.langIds[lang] });
+    var headers = {'Content-Type':'application/json'};
+    fetch(CFG.proxyUrl, { method:'POST', headers: headers, body: body })
+      .then(function(r){ return r.json(); })
+      .then(function(d){ cb(null, d); })
+      .catch(function(e){ cb(e); });
+  }
+  Array.prototype.forEach.call(root.querySelectorAll('.prob'), function(box){
+    var i = +box.getAttribute('data-i');
+    var ed = box.querySelector('.ed'), lang = box.querySelector('.lang');
+    var res = box.querySelector('.result'), runBtn = box.querySelector('.run');
+    var hintBtn = box.querySelector('.hint'), hintBox = box.querySelector('.hintbox');
+    lang.addEventListener('change', function(){
+      var st = STARTERS[i] || {}; ed.value = st[lang.value] || st.python || ed.value;
+    });
+    if(hintBtn){ hintBtn.addEventListener('click', function(){ hintBox.classList.toggle('show'); }); }
+    runBtn.addEventListener('click', function(){
+      res.className = 'result wait'; res.textContent = 'Running your code...';
+      submit(lang.value, ed.value, function(err, d){
+        if(err){ res.className='result fail'; res.textContent='Could not reach the code runner. Check your connection and try again.'; return; }
+        var out = (d.stdout!=null)? d.stdout : '';
+        var errText = d.stderr || d.compile_output || '';
+        var exp = EXPECTED[i];
+        if(errText && !out){ res.className='result fail'; res.textContent='Your code hit an error:\n'+errText; return; }
+        if(exp==null){ res.className='result pass'; res.textContent='Output:\n'+out; return; }
+        if(norm(out)===norm(exp)){ res.className='result pass'; res.textContent='Correct! Output:\n'+out; }
+        else { res.className='result fail'; res.textContent='Not quite.\nExpected:\n'+exp+'\nGot:\n'+(out||'(no output)')+(errText?('\n'+errText):''); }
+      });
+    });
+  });
+})();
+</script>

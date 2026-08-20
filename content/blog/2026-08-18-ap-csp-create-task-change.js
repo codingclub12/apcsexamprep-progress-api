@@ -23,7 +23,7 @@ const meta = {
   blogHandle: 'ap-csp',
   course: 'ap-csp',
   targetKeyword: 'ap csp create performance task',
-  publishOn: '2026-08-18',
+  publishOn: '2026-08-17',
   seoTitle: 'AP CSP Create Performance Task: What Changed',
   seoDescription: 'The AP CSP Create performance task no longer includes take home written responses. They are now timed exam prompts answered from your Project Reference.',
   summary: 'The written half of the AP CSP Create performance task moved into the end of course exam, answered under proctor from a Personalized Project Reference. What that changes about how you build your project, and how to prepare for prompts you cannot draft at home.',
