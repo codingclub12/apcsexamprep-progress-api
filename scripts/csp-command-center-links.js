@@ -77,11 +77,12 @@ function codeHandle(topic) {
   return 'ap-csp-topic-' + topic.replace('.', '-') + '-code';
 }
 
-// Coding practice pages exist for 3.1 through 3.16. Topics 3.17 and 3.18 have
-// none, so they get no link rather than a link to a 404. Listed rather than
-// derived from a range, because "the last two" is exactly the kind of fact that
-// silently stops being true when someone authors the missing pages.
-const NO_CODE_PAGE = new Set(['3.17', '3.18']);
+// Coding practice pages now exist for all eighteen Big Idea 3 topics. This set
+// was ['3.17', '3.18'] until those two were authored and imported on 2026-08-20,
+// which is exactly the change the comment here predicted, so the set stays
+// rather than being deleted: it is the place a missing page gets recorded, and
+// an empty set is a claim that nothing is missing.
+const NO_CODE_PAGE = new Set([]);
 
 // Topic -> game id, taken from the same table that builds the game pages and the
 // study games hub, so a game cannot appear in one place and not another.
