@@ -228,6 +228,45 @@ function pick(predicate) {
     ok('the page script still parses', broke === null, broke);
   }
 
+  section('10. The teacher resources page, which is the same leak on a page with no gate at all');
+  // Fixing the Command Center alone would not have closed anything. This page
+  // publishes the same 222 keys as plain <a href> links with no gate of any
+  // kind, not even a client-side one. It was found by sweeping the sitemap.
+  const trSnap = path.join(__dirname, '..', 'shopify', 'page-snapshots', 'ap-csp-teacher-resources.before-file-gate.html');
+  if (!fs.existsSync(trSnap)) {
+    ok('the teacher resources snapshot exists', false, trSnap);
+  } else {
+    ok('the teacher resources snapshot exists', true);
+    const before = fs.readFileSync(trSnap, 'utf8');
+
+    // The snapshot is the page as it stands today, so this doubles as a record
+    // of the exposure: if these ever stop being true the leak changed shape.
+    const rawKeys = [...new Set((before.match(/\/cdn\/shop\/files\/[^"]*/g) || []))]
+      .filter((u) => /answer|key|solution|rubric/i.test(u));
+    ok('the unfixed page really does publish 222 answer keys', rawKeys.length === 222, rawKeys.length);
+    ok('and it has no gate of any kind', !/FREE_[A-Z]+\s*:/.test(before));
+
+    const { rewrite: trRewrite } = require('../scripts/csp-teacher-resources-gate');
+    const rw = trRewrite(before);
+    ok('every teacher file link was gated', rw.swapped >= rw.teacher.length, { swapped: rw.swapped, teacher: rw.teacher.length });
+    const left = (rw.body.match(/\/cdn\/shop\/files\/[^"]*/g) || []).filter((u) => /answer|key|solution|rubric/i.test(u));
+    ok('no answer key URL survives', left.length === 0, left.slice(0, 3));
+    const lostStudent = rw.student.filter((h) => !rw.body.includes(h));
+    ok('every student handout URL is still there', lostStudent.length === 0, lostStudent.slice(0, 3));
+
+    const trIds = [...new Set([...rw.body.matchAll(/data-file="([0-9a-f]{16})"/g)].map((m) => m[1]))];
+    ok('every gated id is one the manifest resolves',
+      trIds.length > 0 && trIds.every((i) => Object.prototype.hasOwnProperty.call(MANIFEST, i)),
+      trIds.filter((i) => !MANIFEST[i]).slice(0, 3));
+
+    const vm2 = require('vm');
+    const blk = [...rw.body.matchAll(/<script>([\s\S]*?)<\/script>/g)].map((m) => m[1]);
+    ok('exactly one script block was added', blk.length === 1, blk.length);
+    let broke2 = null;
+    try { new vm2.Script(blk[0]); } catch (e) { broke2 = e.message; }
+    ok('and it parses', broke2 === null, broke2);
+  }
+
   server.close();
   console.log(`\n${'-'.repeat(60)}`);
   console.log(`${pass} passed, ${fail} failed`);
