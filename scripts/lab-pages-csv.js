@@ -48,6 +48,42 @@ const COPY = {
     ],
     signin: true,
   },
+  'ap-networking|1.4-lab': {
+    lede: 'A device nobody documented, an audit folder, and one setting that is still exactly '
+      + 'what it was in the box. Eight checks, and the seventh is where the lab turns.',
+    body: [
+      'Everything runs in this page. The filesystem is simulated, so you can open anything you can '
+      + 'reach and read it as many times as you like.',
+      'The live configuration files are not the whole device. A working config tells you what the '
+      + 'machine does today; it does not tell you what else is still sitting on it. Keep looking '
+      + 'after the obvious files have been read.',
+    ],
+    signin: true,
+  },
+  'ap-networking|3.5-lab': {
+    lede: 'A service is down, the firewall was changed on Monday, and every rule in the list is '
+      + 'correct. Eight checks, and the answer is not a wrong rule.',
+    body: [
+      'Everything runs in this page. Nothing is connected to anything real, so read the files as '
+      + 'often as you like and change your mind as often as you need to.',
+      'Read the rule set the way a firewall reads it: top to bottom, stopping at the first rule that '
+      + 'matches. A rule that is never reached looks completely fine on its own line, which is why '
+      + 'reviewing rules one at a time does not find this class of fault.',
+    ],
+    signin: true,
+  },
+  'ap-networking|2.2-lab': {
+    lede: 'A studio with no documentation at all, and a network that will tell you about itself if '
+      + 'you read what it keeps. Eight checks, and one of them is an address.',
+    body: [
+      'Everything runs in this page. The lease table, the ARP table and the inventory are simulated, '
+      + 'so read them in any order and as many times as you want.',
+      'Nine devices, eight leases. Finding which device is missing from the router\'s table is the '
+      + 'easy half. Saying what its address proves, and what that rules out, is the half that '
+      + 'separates documenting a network from copying one down.',
+    ],
+    signin: true,
+  },
   'ap-cybersecurity|1.2-lab': {
     lede: 'The tournament join code is in a folder on the club machine and nobody remembers which one. '
       + 'You have a terminal and no file browser.',

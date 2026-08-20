@@ -1,0 +1,204 @@
+{
+  "_comment": [
+    "AP Networking Topic 2.2, Documenting my network. Sub-skill 1.C.",
+    "",
+    "WHY THIS TOPIC BELONGS IN A TERMINAL",
+    "  LO 2.2.D is the only objective in the course whose verb IS documentation:",
+    "  'document an existing network including devices, addresses, and",
+    "  connections'. Documenting a network you did not build means reading what",
+    "  the network says about itself, which is lease tables, ARP caches and an",
+    "  inventory somebody half kept. That is file reading, so nothing here is a",
+    "  metaphor.",
+    "",
+    "THE FINDING IS AN ADDRESS",
+    "  One device answers on 169.254.x.x. That is not trivia and it is not a typo:",
+    "  EK 2.2.C.3 says APIPA is what a host assigns ITSELF when no DHCP server",
+    "  answered. So the address is already the diagnosis, and check 8 asks the",
+    "  student to say what follows from it. Because only one device shows it, the",
+    "  answer is that device or its port, not the DHCP server, and those are",
+    "  different repairs."
+  ],
+  "course": "ap-networking",
+  "item_id": "2.2-lab",
+  "lesson_id": "2.2",
+  "unit": "unit-2",
+  "item_type": "lab",
+  "graded": true,
+  "points": 8,
+  "est_minutes": 22,
+  "title": "Document a network nobody wrote down",
+  "page_handle": "ap-networking-lab-2-2",
+  "page_title": "AP Networking Lab: Document a Network From Its Own Records | Topic 2.2",
+  "seo_description": "Read a DHCP lease table and an ARP cache to document a small network, and find the one address that tells you something went wrong. AP Networking Topic 2.2.",
+  "subskills": [
+    "1.C"
+  ],
+  "brief": [
+    "A small design studio has no network documentation at all. You have been asked to produce some before anything else is changed.",
+    "",
+    "Nobody can tell you what is on the network, but the network can. The router keeps a table of the addresses it has handed out, and the switch keeps a record of which hardware addresses it has seen.",
+    "",
+    "1. Read what the router has leased.",
+    "2. Read what the switch has actually seen.",
+    "3. One device on this network did not get its address from the router. Find it.",
+    "4. Then say what that means, and what you would check first.",
+    "",
+    "An address is not just a label. Some addresses tell you what happened."
+  ],
+  "questions": [
+    {
+      "id": "apipa",
+      "prompt": "One host is on 169.254.18.44. What does that address tell you?",
+      "options": [
+        "It is a public address, so the device is exposed to the internet",
+        "It assigned itself, because no DHCP server answered",
+        "It is the router's own management address",
+        "It is a loopback address used for testing"
+      ],
+      "answer": 1,
+      "explain": "EK 2.2.C.3. The whole 169.254.0.0/16 range is APIPA, which a host assigns itself when it asked for a DHCP lease and nothing replied. It is not routable, so the device can talk to nothing beyond its own segment, which is exactly what the user reported."
+    },
+    {
+      "id": "oui",
+      "prompt": "Every MAC address in the ARP table starts 3C:22:FB. What does that first half tell you?",
+      "options": [
+        "The subnet the device is on",
+        "The manufacturer, because the first 24 bits are the OUI",
+        "The order in which the devices joined the network",
+        "The port on the switch the device is plugged into"
+      ],
+      "answer": 1,
+      "explain": "EK 2.2.A.3. A MAC address is 48 bits, and the first 24 are the Organizationally Unique Identifier, assigned to the manufacturer. It is why a rack of identical laptops shares the first half of its addresses, and why the OUI is a useful clue about what an unlabelled device actually is."
+    },
+    {
+      "id": "action",
+      "prompt": "Only one device of the nine shows a 169.254 address. What do you check first?",
+      "options": [
+        "The DHCP server, because it has stopped issuing leases",
+        "That device and the port it is connected to",
+        "The internet connection, because nothing can reach outside",
+        "The subnet mask on every other device"
+      ],
+      "answer": 1,
+      "explain": "This is the reasoning the address makes possible. If the DHCP server were down, every device asking for a lease would show 169.254, not one of nine. Eight devices hold current leases, so the server is answering. That points at this device or the link between it and the server, which is a completely different repair from restarting a DHCP service."
+    }
+  ],
+  "hosts": {
+    "local": {
+      "prompt": "student@survey",
+      "home": "/home/student",
+      "cwd": "/home/student",
+      "fs": {
+        "/home/student": {
+          "survey": {
+            "dhcp-leases.txt": "ROUTER DHCP LEASE TABLE   scope 192.168.4.0/24\nlease time 24h        gateway 192.168.4.1\n\n192.168.4.21   3C:22:FB:01:8A:10   design-mac-1\n192.168.4.22   3C:22:FB:01:8A:22   design-mac-2\n192.168.4.23   3C:22:FB:04:1C:07   front-desk-pc\n192.168.4.24   3C:22:FB:04:1C:19   studio-printer\n192.168.4.25   3C:22:FB:09:2D:41   nas-storage\n192.168.4.26   3C:22:FB:09:2D:55   meeting-tv\n192.168.4.27   3C:22:FB:11:70:03   owner-laptop\n192.168.4.28   3C:22:FB:11:70:88   guest-tablet\n\n8 active leases, 246 addresses free\n",
+            "arp-table.txt": "SWITCH ARP TABLE   collected today 14:20\n\n192.168.4.1     3C:22:FB:00:00:01   gi0/1   router\n192.168.4.21    3C:22:FB:01:8A:10   gi0/2\n192.168.4.22    3C:22:FB:01:8A:22   gi0/3\n192.168.4.23    3C:22:FB:04:1C:07   gi0/4\n192.168.4.24    3C:22:FB:04:1C:19   gi0/5\n192.168.4.25    3C:22:FB:09:2D:41   gi0/6\n192.168.4.26    3C:22:FB:09:2D:55   gi0/7\n192.168.4.27    3C:22:FB:11:70:03   gi0/8\n192.168.4.28    3C:22:FB:11:70:88   gi0/9\n169.254.18.44   3C:22:FB:16:C3:02   gi0/11\n",
+            "devices.txt": "WHAT THE STUDIO SAYS IT OWNS  (from the office manager, not verified)\n\n2 x design mac\n1 x front desk pc\n1 x studio printer\n1 x network storage\n1 x meeting room tv\n1 x owner laptop\n1 x guest tablet\n1 x scanner in the back room, 'plugged in last month, never worked'\n\nThat is nine devices plus the router.\n",
+            "notes.txt": "Start with dhcp-leases.txt. The ARP table is what the switch has SEEN,\nwhich is not always the same list.\n"
+          },
+          "readme.txt": "Survey machine. Everything collected so far is in survey/.\n"
+        }
+      }
+    }
+  },
+  "_solution_comment": [
+    "Replayed by smoke/labs.js through the real player."
+  ],
+  "solution": [
+    "cd survey",
+    "cat dhcp-leases.txt",
+    "cat arp-table.txt",
+    "grep 169.254 arp-table.txt",
+    {
+      "answer": "apipa"
+    },
+    "cat devices.txt",
+    "wc dhcp-leases.txt",
+    {
+      "answer": "oui"
+    },
+    {
+      "answer": "action"
+    }
+  ],
+  "checks": [
+    {
+      "n": 1,
+      "label": "Read what the router has actually leased",
+      "ek": "2.2.B.1",
+      "match": {
+        "event": "read",
+        "file": "dhcp-leases.txt",
+        "host": "local"
+      }
+    },
+    {
+      "n": 2,
+      "label": "Read what the switch has actually seen",
+      "ek": "2.2.B.6",
+      "match": {
+        "event": "read",
+        "file": "arp-table.txt",
+        "host": "local"
+      }
+    },
+    {
+      "n": 3,
+      "label": "Search for the address that did not come from the router",
+      "ek": "2.2.C.3",
+      "match": {
+        "event": "cmd",
+        "cmd": "grep",
+        "host": "local"
+      }
+    },
+    {
+      "n": 4,
+      "label": "Say what a 169.254 address means",
+      "ek": "2.2.C.3",
+      "match": {
+        "event": "answer",
+        "question": "apipa"
+      }
+    },
+    {
+      "n": 5,
+      "label": "Check the inventory against what the network reports",
+      "ek": "2.2.D.6",
+      "match": {
+        "event": "read",
+        "file": "devices.txt",
+        "host": "local"
+      }
+    },
+    {
+      "n": 6,
+      "label": "Count the leases rather than trusting the summary line",
+      "ek": "2.2.D.1",
+      "match": {
+        "event": "cmd",
+        "cmd": "wc",
+        "host": "local"
+      }
+    },
+    {
+      "n": 7,
+      "label": "Read the manufacturer out of a MAC address",
+      "ek": "2.2.A.3",
+      "match": {
+        "event": "answer",
+        "question": "oui"
+      }
+    },
+    {
+      "n": 8,
+      "label": "DECIDE: one device of nine, so what do you check first",
+      "ek": "2.2.C.3",
+      "match": {
+        "event": "answer",
+        "question": "action",
+        "after": 4
+      }
+    }
+  ]
+}

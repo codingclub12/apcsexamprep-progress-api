@@ -1,0 +1,198 @@
+{
+  "_comment": [
+    "AP Networking Topic 1.4, Securing my device. Sub-skills 2.C and 2.D.",
+    "",
+    "WHY AN AUDIT AND NOT A CONFIGURATION SCREEN",
+    "  The shell reads files. That is not a limitation to work around here, it is",
+    "  the job: a network analyst handed an unfamiliar device starts by reading",
+    "  what it is currently set to. Every check below is a real step of that",
+    "  reading, and the two questions are the judgements the reading supports.",
+    "",
+    "THE PUNCHLINE IS CHECK 7",
+    "  wifi.conf and accounts.conf both look defensible on a first pass. The",
+    "  factory credentials are still live in a backup config one directory down,",
+    "  which no one opens because the working config looks fine. EK 1.4.B.5 is",
+    "  about default credentials, and the reason they survive is almost never that",
+    "  somebody decided to keep them.",
+    "",
+    "  Check 8 is gated on 7 for that reason. Ranking the fixes before finding the",
+    "  backup gets a defensible wrong answer, which is the whole point."
+  ],
+  "course": "ap-networking",
+  "item_id": "1.4-lab",
+  "lesson_id": "1.4",
+  "unit": "unit-1",
+  "item_type": "lab",
+  "graded": true,
+  "points": 8,
+  "est_minutes": 20,
+  "title": "Audit a device you were just handed",
+  "page_handle": "ap-networking-lab-1-4",
+  "page_title": "AP Networking Lab: Audit a Device's Security Settings | Topic 1.4",
+  "seo_description": "Read a router's real configuration files in a terminal, find the setting that is still on factory defaults, and rank the fixes. AP Networking Topic 1.4.",
+  "subskills": [
+    "2.C",
+    "2.D"
+  ],
+  "brief": [
+    "A small office replaced its manager last month. Nobody knows how the router was set up, and the new manager has asked you to say what is wrong with it before anything else is spent.",
+    "",
+    "The previous manager left an `audit` folder with the device's configuration files in it.",
+    "",
+    "1. Look at what you were given.",
+    "2. Read the wireless configuration and decide whether its encryption is the best the hardware supports.",
+    "3. Read the account settings.",
+    "4. Then keep looking. A working configuration file tells you what the device does today. It does not tell you what else is still on it.",
+    "",
+    "Every check ticks itself the moment you do the thing it describes. Type `help` to see the commands."
+  ],
+  "questions": [
+    {
+      "id": "encryption",
+      "prompt": "wifi.conf reports `encryption=WPA2-PSK`, and devices.txt says every device on site supports WPA3. What should it be?",
+      "options": [
+        "Leave WPA2-PSK, since it is still widely used",
+        "WPA3-SAE, because every device on site supports it",
+        "Turn encryption off and rely on the password",
+        "WEP, because it is the most compatible"
+      ],
+      "answer": 1,
+      "explain": "EK 1.4.C.2: encrypt before transmission, with the strongest scheme the devices support. WPA2 is not broken in the way WEP is, but leaving it in place when every device supports WPA3 gives up protection for nothing. The reason to check devices.txt first is that the honest answer depends on what the hardware can do."
+    },
+    {
+      "id": "priority",
+      "prompt": "You can make one change tonight. Which one?",
+      "options": [
+        "Rename the SSID so it does not say the router model",
+        "Raise the wireless passphrase from 12 characters to 20",
+        "Replace the factory credentials that are still live on the device",
+        "Enable the guest network for visitors"
+      ],
+      "answer": 2,
+      "explain": "EK 1.4.B.5. A factory credential needs no skill to use and is printed in a manual anyone can download, so it is the shortest path in and the highest-value single fix. The SSID name and a longer passphrase are both worth doing and neither blocks someone who can simply log in as admin."
+    }
+  ],
+  "hosts": {
+    "local": {
+      "prompt": "student@audit",
+      "home": "/home/student",
+      "cwd": "/home/student",
+      "fs": {
+        "/home/student": {
+          "README.txt": "Handover notes from the previous manager.\n\nEverything I had is in audit/. The router config is the live one.\nI kept a backup of the old settings when I reset it in March.\n",
+          "audit": {
+            "wifi.conf": "# wireless configuration - live\nssid=OfficeNet\nbroadcast=on\nencryption=WPA2-PSK\npassphrase=correct-horse-battery\nguest_network=off\nband=5GHz\n",
+            "accounts.conf": "# local accounts on the router - live\nadmin_user=netmanager\nadmin_password_set=yes\nadmin_password_length=14\nlockout_after=5\nlockout_minutes=15\npassword_min_length=12\npassword_requires_mixed_case=yes\n",
+            "devices.txt": "Devices on site, and the strongest wireless each supports.\n\nfront-desk-laptop    WPA3\nmanager-laptop       WPA3\nprinter-hp           WPA3\nstockroom-tablet     WPA3\nlobby-tv             WPA3\n",
+            "backup": {
+              "old-router.conf": "# saved before the March reset - NOT reviewed since\nadmin_user=admin\nadmin_password=admin\nremote_admin=enabled\nremote_admin_port=8080\nfirmware=2019.04\n",
+              "notes.txt": "Kept in case the reset went wrong. Never got round to deleting it.\n"
+            }
+          }
+        }
+      }
+    }
+  },
+  "_solution_comment": [
+    "Played by smoke/labs.js through the real player. If any step stops ticking",
+    "its check, the build fails rather than a student finding out in class."
+  ],
+  "solution": [
+    "cd audit",
+    "ls",
+    "cat wifi.conf",
+    "cat devices.txt",
+    "grep password accounts.conf",
+    {
+      "answer": "encryption"
+    },
+    "cat accounts.conf",
+    "find . -name *.conf",
+    "cat backup/old-router.conf",
+    {
+      "answer": "priority"
+    }
+  ],
+  "checks": [
+    {
+      "n": 1,
+      "label": "List the audit folder and see what you were left",
+      "ek": "1.4.B.6",
+      "match": {
+        "event": "cmd",
+        "cmd": "ls",
+        "host": "local",
+        "cwd": "/home/student/audit"
+      }
+    },
+    {
+      "n": 2,
+      "label": "Read the live wireless configuration",
+      "ek": "1.4.C.2",
+      "match": {
+        "event": "read",
+        "file": "wifi.conf",
+        "host": "local"
+      }
+    },
+    {
+      "n": 3,
+      "label": "Check what the devices on site can actually support",
+      "ek": "1.4.C.2",
+      "match": {
+        "event": "read",
+        "file": "devices.txt",
+        "host": "local"
+      }
+    },
+    {
+      "n": 4,
+      "label": "Search the account settings rather than reading past them",
+      "ek": "1.4.A.2",
+      "match": {
+        "event": "cmd",
+        "cmd": "grep",
+        "host": "local"
+      }
+    },
+    {
+      "n": 5,
+      "label": "Choose the encryption the hardware supports",
+      "ek": "1.4.C.2",
+      "match": {
+        "event": "answer",
+        "question": "encryption"
+      }
+    },
+    {
+      "n": 6,
+      "label": "Read the live account settings in full",
+      "ek": "1.4.A.3",
+      "match": {
+        "event": "read",
+        "file": "accounts.conf",
+        "host": "local"
+      }
+    },
+    {
+      "n": 7,
+      "label": "Keep looking: find every configuration file, not just the live one",
+      "ek": "1.4.B.5",
+      "match": {
+        "event": "cmd",
+        "cmd": "find",
+        "host": "local"
+      }
+    },
+    {
+      "n": 8,
+      "label": "VERDICT: rank the fixes, having seen the backup",
+      "ek": "1.4.B.5",
+      "match": {
+        "event": "answer",
+        "question": "priority",
+        "after": 7
+      }
+    }
+  ]
+}

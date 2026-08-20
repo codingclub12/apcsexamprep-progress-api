@@ -256,6 +256,40 @@ console.log('\nHUB AND COMMAND CENTER LINKS');
     'the terminal lab never claims the handle the password-attack lab already holds');
 }
 
+// ── EVERY EK CODE A LAB CITES MUST EXIST, AND BELONG TO ITS OWN TOPIC ───────
+//  A check's `ek` is how a teacher answers "which part of the framework is this
+//  for", and it is quoted at them on the page. A code that does not exist reads
+//  exactly like one that does, so it has to be checked rather than eyeballed.
+//  Straying into another topic's codes is the subtler failure: it looks right,
+//  and it silently claims coverage the lesson does not have.
+//
+//  ap-cybersecurity labs are skipped: this file is the AP Networking framework,
+//  and cyber answers to a different one.
+{
+  const EK = require('../config/networking-framework-statements.json').essential_knowledge;
+  for (const spec of labs.all()) {
+    if (spec.course !== 'ap-networking') continue;
+    const missing = [];
+    const strayed = [];
+    for (const c of spec.checks) {
+      if (!c.ek) continue;
+      if (!EK[c.ek]) missing.push(`check ${c.n} -> ${c.ek}`);
+      else if (c.ek.indexOf(spec.lesson_id + '.') !== 0) strayed.push(`check ${c.n} -> ${c.ek}`);
+    }
+    ok(missing.length === 0, `${spec.item_id}: every EK code cited exists`, missing.join('; '));
+    ok(strayed.length === 0, `${spec.item_id}: no check cites another topic's EK`, strayed.join('; '));
+
+    // A question whose answer index is out of range scores nothing forever, and
+    // an unexplained one teaches nothing when it is got wrong.
+    const badAnswer = (spec.questions || [])
+      .filter((q) => !(Number.isInteger(q.answer) && q.answer >= 0 && q.answer < q.options.length))
+      .map((q) => q.id);
+    const unexplained = (spec.questions || []).filter((q) => !q.explain).map((q) => q.id);
+    ok(badAnswer.length === 0, `${spec.item_id}: every question's answer index is in range`, badAnswer.join(', '));
+    ok(unexplained.length === 0, `${spec.item_id}: every question explains itself`, unexplained.join(', '));
+  }
+}
+
 console.log(`\n${pass} passed, ${fail} failed`);
 try { fs.unlinkSync(process.env.DB_PATH); } catch (e) {}
 process.exit(fail ? 1 : 0);
