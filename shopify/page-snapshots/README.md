@@ -147,3 +147,13 @@ Guided notes link per topic; all eighteen Big Idea 3 topics carried an empty
 Rollback path for the import that fills those eighteen. The page is 132 KB and
 most of it is a minified `var DATA` blob, so a hand edit is not recoverable by
 eye; this file is.
+
+## CSP Command Center, before the coding practice links
+
+`csp-command-center.before-code-links.html` is the stored body as it stood on
+2026-08-20, `updatedAt` 2026-08-19T20:25:32Z: Big Idea 3 carrying 54 page links
+(lesson, guided notes, study game) and no link to the coding practice pages,
+which existed for sixteen of the eighteen topics and were reachable from
+nowhere on the site.
+
+Rollback path for the import that raises Big Idea 3 to 70 links.
