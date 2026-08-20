@@ -191,6 +191,55 @@ for (const [handle, page] of Object.entries(PAGES)) {
     Buffer.byteLength(res.body) > Buffer.byteLength(staged));
 }
 
+section('6. The plain-block live reformatter');
+// This one runs over hand-authored pages that are not in this repo, so there is
+// nothing on disk to pin it against. What can be pinned is the behaviour: it
+// must match the page's own style, refuse anything with markup in it, and never
+// touch a braceless body that is already on its own line.
+const plain = require('../scripts/live-plain-code-style');
+
+const knr = { allman: false, indent: '    ' };
+const allman = { allman: true, indent: '    ' };
+ok('K&R keeps the brace on the head line',
+  plain.expand('if (a) b();', knr).join('\n') === 'if (a) {\n    b();\n}',
+  plain.expand('if (a) b();', knr));
+ok('Allman puts it on its own line',
+  plain.expand('if (a) b();', allman).join('\n') === 'if (a)\n{\n    b();\n}',
+  plain.expand('if (a) b();', allman));
+ok('a trailing comment moves onto the head line',
+  plain.expand('if (a) b();  // why', knr).join('\n') === 'if (a) {  // why\n    b();\n}',
+  plain.expand('if (a) b();  // why', knr));
+ok('an if/else expands both halves',
+  plain.expand('if (a) { b(); } else { c(); }', knr).length === 6,
+  plain.expand('if (a) { b(); } else { c(); }', knr));
+
+// The distinction the whole approach rests on.
+const highlighted = '<pre><code><span class="keyword">if</span> (a) b();</code></pre>';
+const r1 = plain.patch(highlighted);
+ok('a syntax-highlighted block is refused, not mangled', r1.changed === 0 && r1.body === highlighted);
+ok('and it is counted rather than silently ignored', r1.skippedHighlighted === 1, r1.skippedHighlighted);
+
+const plainBlock = '<pre>int x = 1;\nif (x &gt; 0) x = 2;\n</pre>';
+const r2 = plain.patch(plainBlock);
+ok('a plain block is reformatted', r2.changed === 1, r2.changed);
+ok('and the entities survive', r2.body.includes('x &gt; 0'), r2.body);
+
+// A braceless body already on its own line is not a one-liner.
+const nextLine = '<pre>for (int i = 0; i &lt; n; i++)\n    doThing();\n</pre>';
+ok('a braceless body on the next line is left alone', plain.patch(nextLine).changed === 0);
+
+section('7. Its equivalence check catches what it is there to catch');
+const before7 = '<pre>if (a) b();  // note\n</pre>';
+const after7 = plain.patch(before7).body;
+ok('a clean reformat passes its own check', plain.check(before7, after7).length === 0,
+  plain.check(before7, after7));
+ok('a lost comment is caught',
+  plain.check(before7, after7.replace(/\/\/ note/, '')).length > 0);
+ok('altered code is caught',
+  plain.check(before7, after7.replace(/b\(\)/, 'z()')).length > 0);
+ok('a change outside the block is caught',
+  plain.check(before7 + '<p>x</p>', after7 + '<p>y</p>').length > 0);
+
 console.log(`\n${'-'.repeat(60)}`);
 console.log(`${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
