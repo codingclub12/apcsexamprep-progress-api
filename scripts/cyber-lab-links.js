@@ -34,16 +34,33 @@ const PUBLISHED_AT = '2026-03-01 12:00:00';
 const GUIDE_HANDLE = 'ap-cybersecurity-complete-course-guide';
 const CC_HANDLE = 'cyber-command-center';
 
-// The lab being linked, read from the spec so the link and the page it points at
-// can never name different handles.
-function theLab() {
-  const spec = labs.all().find((s) => s.course === 'ap-cybersecurity' && s.item_id === '1.2-lab');
-  if (!spec) throw new Error('no ap-cybersecurity 1.2-lab spec, so there is nothing to link');
-  if (!spec.page_handle) throw new Error('the 1.2-lab spec declares no page_handle');
-  if (spec.page_handle === 'ap-cyber-unit-1-lesson-2-lab') {
-    throw new Error('the spec points at the EXISTING password-attack lab handle; refusing to link over it');
+// The labs being linked, read from the specs so a link and the page it points at
+// can never name different handles. Every ap-cybersecurity lab is linked by
+// default, so a lab authored later is picked up without editing this file.
+//
+// Each lesson already has a NON-terminal lab page at
+// ap-cyber-unit-<u>-lesson-<l>-lab (1.2 is the 62 KB Password Attack Simulation,
+// 2.4 has its own). The terminal lab ships alongside it and never over it, which
+// is checked here rather than remembered.
+function existingLabHandle(lessonId) {
+  const [u, l] = String(lessonId).split('.');
+  return `ap-cyber-unit-${u}-lesson-${l}-lab`;
+}
+
+function cyberLabs(only) {
+  const all = labs.all().filter((s) => s.course === 'ap-cybersecurity');
+  const picked = only ? all.filter((s) => s.item_id === only) : all;
+  if (!picked.length) {
+    throw new Error(only ? `no ap-cybersecurity ${only} spec, so there is nothing to link`
+      : 'no ap-cybersecurity lab specs, so there is nothing to link');
   }
-  return spec;
+  for (const spec of picked) {
+    if (!spec.page_handle) throw new Error(`the ${spec.item_id} spec declares no page_handle`);
+    if (spec.page_handle === existingLabHandle(spec.lesson_id)) {
+      throw new Error(`the ${spec.item_id} spec points at the EXISTING lab handle; refusing to link over it`);
+    }
+  }
+  return picked.sort((a, b) => a.lesson_id.localeCompare(b.lesson_id, undefined, { numeric: true }));
 }
 
 const LABEL = 'Terminal Lab';
@@ -53,18 +70,19 @@ const LABEL = 'Terminal Lab';
 //  terminal lab goes after the existing Lab row and before the quiz, which is
 //  where a student would actually reach for it.
 function patchGuide(body, spec) {
-  const anchor = '              <a class="exercise-row" href="/pages/ap-cyber-unit-1-lesson-2-lab"><div class="ex-dot"></div>\n'
-    + '<span class="ex-label">Lab</span><span class="ex-tag">Start ' + '→' + '</span></a>\n';
+  const existing = existingLabHandle(spec.lesson_id);
+  const anchor = '              <a class="exercise-row" href="/pages/' + existing + '"><div class="ex-dot"></div>\n'
+    + '<span class="ex-label">Lab</span><span class="ex-tag">Start ' + '\u2192' + '</span></a>\n';
   if (!body.includes('id="apcyber-course-hub"')) throw new Error('this is not the cyber course guide body');
   if (body.includes('/pages/' + spec.page_handle)) return { body, changed: false };
 
   const hits = body.split(anchor).length - 1;
   if (hits !== 1) {
-    throw new Error(`expected exactly 1 Topic 1.2 Lab row to anchor to, found ${hits}. `
+    throw new Error(`expected exactly 1 Topic ${spec.lesson_id} Lab row to anchor to, found ${hits}. `
       + 'The card was edited; re-read it before running this again.');
   }
   const row = '              <a class="exercise-row" href="/pages/' + spec.page_handle + '"><div class="ex-dot"></div>\n'
-    + '<span class="ex-label">' + LABEL + '</span><span class="ex-tag">Start ' + '→' + '</span></a>\n';
+    + '<span class="ex-label">' + LABEL + '</span><span class="ex-tag">Start ' + '\u2192' + '</span></a>\n';
   return { body: body.replace(anchor, anchor + row), changed: true };
 }
 
@@ -75,25 +93,33 @@ function patchCommandCenter(body, spec) {
   if (!body.includes('var STU = {')) throw new Error('this is not the cyber command center body');
   if (body.includes('/pages/' + spec.page_handle)) return { body, changed: false };
 
-  const stuAnchor = '"1.2":{page:"/pages/ap-cybersecurity-unit-1-password-attacks",'
-    + 'quiz:"/pages/ap-cyber-unit-1-lesson-2-quiz",'
-    + 'ex1:"/pages/ap-cyber-unit-1-lesson-2-exercise-1",'
-    + 'ex2:"/pages/ap-cyber-unit-1-lesson-2-exercise-2"}';
-  if (body.split(stuAnchor).length - 1 !== 1) {
-    throw new Error('the STU row for 1.2 is not the one this script was written against');
+  // The STU row for this lesson, located rather than hardcoded, so a lesson whose
+  // page handles differ from 1.2's pattern still matches. The braces inside a row
+  // are only ever the one pair, so a non-greedy match to the first } is exact.
+  const re = new RegExp('"' + spec.lesson_id.replace('.', '\\.') + '":\\{[^}]*\\}', 'g');
+  const found = body.match(re) || [];
+  if (found.length !== 1) {
+    throw new Error(`expected exactly 1 STU row for ${spec.lesson_id}, found ${found.length}`);
+  }
+  const stuAnchor = found[0];
+  if (stuAnchor.includes('termlab:')) {
+    throw new Error(`the STU row for ${spec.lesson_id} already names a termlab, but not this one`);
   }
   const stuNew = stuAnchor.slice(0, -1) + ',termlab:"/pages/' + spec.page_handle + '"}';
 
-  const destsAnchor = "var dests = [ ['page','Lesson page'], ['quiz','Quiz'], ['ex1','Scenario 1'], ['ex2','Scenario 2'] ];";
-  if (body.split(destsAnchor).length - 1 !== 1) {
-    throw new Error('the student-pages dests list is not the one this script was written against');
-  }
-  // Appended, not inserted: the existing four keep their order, and a lesson
-  // without a termlab renders exactly what it renders today.
+  // The dests list gains the label that renders a termlab. It is shared by every
+  // lesson, so after the first lab it is already correct: patch it when it is
+  // missing, leave it alone when it is not. Neither state is an error.
+  const destsOld = "var dests = [ ['page','Lesson page'], ['quiz','Quiz'], ['ex1','Scenario 1'], ['ex2','Scenario 2'] ];";
   const destsNew = "var dests = [ ['page','Lesson page'], ['quiz','Quiz'], ['ex1','Scenario 1'], "
     + "['ex2','Scenario 2'], ['termlab','" + LABEL + "'] ];";
-
-  return { body: body.replace(stuAnchor, stuNew).replace(destsAnchor, destsNew), changed: true };
+  let out = body.replace(stuAnchor, stuNew);
+  if (out.includes(destsOld)) {
+    out = out.replace(destsOld, destsNew);
+  } else if (!out.includes("['termlab','" + LABEL + "']")) {
+    throw new Error('the student-pages dests list neither matches the original nor already renders a termlab');
+  }
+  return { body: out, changed: true };
 }
 
 function csvCell(v) {
@@ -101,12 +127,15 @@ function csvCell(v) {
 }
 
 function main(argv) {
-  const [guideIn, ccIn, out] = argv;
+  const flag = argv.indexOf('--item');
+  const only = flag > -1 ? argv[flag + 1] : null;
+  const rest = flag > -1 ? argv.filter((a, i) => i !== flag && i !== flag + 1) : argv.slice();
+  const [guideIn, ccIn, out] = rest;
   if (!guideIn || !ccIn || !out) {
-    console.error('usage: node scripts/cyber-lab-links.js <course-guide.html> <command-center.html> <out.csv>');
+    console.error('usage: node scripts/cyber-lab-links.js <course-guide.html> <command-center.html> <out.csv> [--item <item_id>]');
     process.exit(2);
   }
-  const spec = theLab();
+  const specs = cyberLabs(only);
 
   const rows = [];
   const report = [];
@@ -115,16 +144,31 @@ function main(argv) {
     [CC_HANDLE, ccIn, patchCommandCenter],
   ]) {
     const before = fs.readFileSync(file, 'utf8');
-    const { body, changed } = patch(before, spec);
-    if (!changed) { report.push(`${handle}: already links the lab, nothing to import`); continue; }
+    let body = before;
+    const linked = [];
+    // Cumulative: each lab patches the output of the last, so one page edit
+    // carries every lab rather than the sheet holding one row per lab per page.
+    for (const spec of specs) {
+      const res = patch(body, spec);
+      if (!res.changed) continue;
+      body = res.body;
+      linked.push(spec);
+    }
+    if (!linked.length) { report.push(`${handle}: already links every lab, nothing to import`); continue; }
     if (body.length <= before.length) throw new Error(`${handle}: the edit did not grow the body`);
-    if (!body.includes('/pages/' + spec.page_handle)) throw new Error(`${handle}: the link is not in the output`);
-    // The one thing worth checking twice: the existing lab row survived.
-    if (handle === GUIDE_HANDLE && !body.includes('/pages/ap-cyber-unit-1-lesson-2-lab')) {
-      throw new Error('the existing password-attack lab link was lost');
+    for (const spec of linked) {
+      if (!body.includes('/pages/' + spec.page_handle)) {
+        throw new Error(`${handle}: the ${spec.item_id} link is not in the output`);
+      }
+      // The one thing worth checking twice: every existing lab row survived.
+      const existing = existingLabHandle(spec.lesson_id);
+      if (handle === GUIDE_HANDLE && before.includes('/pages/' + existing) && !body.includes('/pages/' + existing)) {
+        throw new Error(`the existing ${existing} link was lost`);
+      }
     }
     rows.push([handle, 'MERGE', body, 'TRUE', PUBLISHED_AT]);
-    report.push(`${handle}: +${body.length - before.length} bytes, links /pages/${spec.page_handle}`);
+    report.push(`${handle}: +${body.length - before.length} bytes, links `
+      + linked.map((s) => s.item_id).join(', '));
   }
 
   report.forEach((r) => console.log('    ' + r));
@@ -133,13 +177,10 @@ function main(argv) {
   const header = ['Handle', 'Command', 'Body HTML', 'Published', 'Published At'];
   const lines = [header.map(csvCell).join(',')];
   for (const r of rows) lines.push(r.map(csvCell).join(','));
-  fs.writeFileSync(out, '﻿' + lines.join('\n') + '\n', 'utf8');
+  fs.writeFileSync(out, '\ufeff' + lines.join('\n') + '\n', 'utf8');
   console.log(`\nWrote ${rows.length} page edit(s) to ${out}`);
   console.log('Import this ONLY after the lab page sheet, or both links 404 for as long as it takes you.');
 }
 
-if (require.main === module) {
-  try { main(process.argv.slice(2)); } catch (e) { console.error('REFUSED: ' + e.message); process.exit(1); }
-}
-
-module.exports = { patchGuide, patchCommandCenter, theLab, GUIDE_HANDLE, CC_HANDLE, LABEL };
+if (require.main === module) main(process.argv.slice(2));
+module.exports = { patchGuide, patchCommandCenter, cyberLabs, existingLabHandle, GUIDE_HANDLE, CC_HANDLE, LABEL };
