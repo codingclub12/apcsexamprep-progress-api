@@ -147,6 +147,49 @@ const POINTS = {
   'safe-computing|quiz':                       6,   // 6 <div class="mcq-item" data-activity="quiz">
 };
 
+// ── THE HANDOUT MIRROR EXERCISE PAGES ────────────────────────────────────────
+// ap-csp-topic-{U}-{L}-exercise-{N}, the online companions to the Teacher Course
+// Bundle handouts. Topic 1.1's two pages went live on 2026-08-21, so their
+// denominators are seeded rather than gated: the pages exist, a student can
+// answer them today, and a column with no authored value falls back to whatever
+// the page paints.
+//
+// DERIVED, not scanned. The renderer in lib/csp-exercise-pages.js emits one
+// <div class="mcq-item" data-activity="exercise-{N}"> per authored check
+// question, so counting the checks counts the graded items on the page by
+// construction. Adding topic 1.2's checks adds its denominators with no edit
+// here; a topic whose page is NOT yet live must not be added to the checks
+// index until it is, or its class gets a column reading 0 for work no student
+// could have done.
+//
+// ONLY exercise-1 is seeded here, and the exclusion is the point.
+//
+// This lesson-keyed table has one row per (lesson, activity_type), so two
+// different activities that report under the same activity_type on the same
+// lesson cannot both be priced. Two such collisions exist, and neither is this
+// script's to settle:
+//
+//   exercise-2  every one of the 35 slugs in seed/csp-exercise-2 is ALSO a
+//               mirror-page slug, so 'collaboration|exercise-2' is claimed both
+//               by topic 1.1's live mirror page and by the gated whole-run
+//               practice game that ships with lib/csp-course-pages.js. Seeding
+//               it here would price one activity with the other's count the
+//               moment that import lands. Left unpriced deliberately: the
+//               column still scores, it just falls back to the count the page
+//               paints, which is what it did before today.
+//   exercise-1  Big Idea 3's topics already carry a scanned exercise-1 worth 8,
+//               from the coding-practice pages. A Big Idea 3 mirror page would
+//               hit the same wall. Topic 1.1 is Big Idea 1 and collides with
+//               nothing, which is why it can be priced today.
+//
+// Settling either one means giving the mirror pages their own activity_type in
+// utils.js COURSES and in the renderer, which is a contract change, not a seed
+// edit. Until then, do not widen this filter.
+for (const page of require('../lib/csp-exercise-pages').allPages()) {
+  if (page.kind !== 'exercise-1') continue;
+  POINTS[`${page.slug}|${page.kind}`] = page.questions;
+}
+
 // ── EXERCISE 2 ───────────────────────────────────────────────────────────────
 // Flip to true once scripts/csp-pages-csv.js has been imported and the pages
 // are verified live. See the header for why this is gated rather than seeded

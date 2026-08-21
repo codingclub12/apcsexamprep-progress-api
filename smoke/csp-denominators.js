@@ -70,7 +70,7 @@ const COURSE = 'ap-csp';
   // ── 1. The seed is well formed ────────────────────────────────────────────
   console.log('1. The authored table is well formed');
   const rows = buildRows();
-  ok('  53 rows, one per graded CSP column', rows.length === 53, rows.length);
+  ok('  54 rows, one per graded CSP column', rows.length === 54, rows.length);
   ok('  no row was dropped for an unknown lesson',
     rows.length === Object.keys(POINTS).length, { rows: rows.length, points: Object.keys(POINTS).length });
 
@@ -91,17 +91,31 @@ const COURSE = 'ap-csp';
   // The counts observed on the pages. Stated here so a silent edit to the seed
   // that changes a value has to change this test too.
   const quizzes = rows.filter((r) => r.activity_type === 'quiz');
-  const exercises = rows.filter((r) => r.activity_type === 'exercise-1');
+  const codeExercises = rows.filter((r) => r.activity_type === 'exercise-1' && r.unit === 'bi-3');
+  const mirrors = rows.filter((r) => r.lesson === 'collaboration' && r.activity_type !== 'quiz');
+  const x2 = rows.filter((r) => r.activity_type === 'exercise-2');
   ok('  35 lesson quizzes, every one out of 6',
     quizzes.length === 35 && quizzes.every((r) => r.possible === 6), quizzes.length);
-  ok('  18 exercises, every one out of 8 and all in Big Idea 3',
-    exercises.length === 18 && exercises.every((r) => r.possible === 8 && r.unit === 'bi-3'),
-    exercises.length);
+  ok('  18 coding-practice exercises, every one out of 8 and all in Big Idea 3',
+    codeExercises.length === 18 && codeExercises.every((r) => r.possible === 8),
+    codeExercises.length);
+  // Topic 1.1's two handout-mirror pages, live since 2026-08-21. Their values are
+  // DERIVED from the renderer rather than scanned, so this asserts the count the
+  // renderer actually emits: publishing topic 1.2's pages should make this fail
+  // until the number is updated deliberately.
+  ok('  topic 1.1 carries its mirror exercise-1, out of 5',
+    mirrors.length === 1 && mirrors[0].activity_type === 'exercise-1'
+      && mirrors[0].possible === 5 && mirrors[0].unit === 'bi-1',
+    mirrors);
+  // Every mirror slug is also a gated exercise-2 slug, so one key would have to
+  // hold two different activities. Nothing exercise-2 is priced here until that
+  // is settled in the course config, and this is what says so.
+  ok('  and no exercise-2 is priced, because that key is contested', x2.length === 0, x2);
 
   // ── 2. Writing it, and writing it again ───────────────────────────────────
   console.log('2. The write is additive and idempotent');
   const first = seedCspDenominators();
-  ok('  first run writes all 53', first.changed === 53 && first.total === 53, first);
+  ok('  first run writes all 54', first.changed === 54 && first.total === 54, first);
   const second = seedCspDenominators();
   ok('  second run writes nothing', second.changed === 0, second);
 
