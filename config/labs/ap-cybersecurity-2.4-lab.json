@@ -1,0 +1,185 @@
+{
+  "_comment": [
+    "AP Cybersecurity 2.4: physical security, read the way an analyst actually reads it.",
+    "",
+    "WHY A BADGE LOG AND NOT A FLOORPLAN",
+    "  The player is a simulated terminal, not a widget canvas. A click-the-vulnerability",
+    "  floorplan would need engine work; a log does not. It is also the truer exercise:",
+    "  a physical control leaves its evidence in a log, and Unit 2 is where students",
+    "  first meet detection as a skill rather than a topic.",
+    "",
+    "WHY ONLY EXISTING COMMANDS",
+    "  Every check here is satisfiable with ls, cd, cat, grep and wc, all of which",
+    "  public/lab-player.js already implements. Nothing in this file requires a new",
+    "  command. 4.2 (hashing) would have needed sha256sum, which is why this lab is",
+    "  first rather than that one.",
+    "",
+    "WHY graded:false",
+    "  Same reason as 1.2, and it must stay in step with it. scripts/seed-manifest.js",
+    "  deliberately does not seed ap-cybersecurity: that course carries its own",
+    "  denominators (course_denominators and course_unit_denominators, see",
+    "  docs/cyber-denominator-gaps.md). A manifest row here would add points to every",
+    "  cyber student's denominator through a second path, which is the exact failure",
+    "  smoke/manifest-prune.js exists to prevent.",
+    "  Playable and self-checking today, records nothing. Flipping it is this one field",
+    "  plus a seed run, once the cyber denominator work closes.",
+    "",
+    "THE THREE FINDINGS, AND THE DECOYS",
+    "  Real: B-1077 exits with no entry (tailgating), B-1055 enters at 02:47",
+    "  (after hours), B-1023 appears in two buildings 8 minutes apart when the walk is",
+    "  25 (cloned badge).",
+    "  Decoys: B-1004 works late but badges in AND out legitimately; B-1090 has two",
+    "  entries in one minute at the same door, which is a double-tap, not an attack.",
+    "  The decoys are the lab. Finding three anomalies in a clean log is easy; deciding",
+    "  which anomalies are attacks is the skill.",
+    "",
+    "No em-dashes, per repo convention."
+  ],
+
+  "course": "ap-cybersecurity",
+  "item_id": "2.4-lab",
+  "lesson_id": "2.4",
+  "unit": "unit-2",
+  "item_type": "lab",
+  "graded": false,
+  "points": 8,
+  "est_minutes": 20,
+
+  "title": "Read the badge log",
+  "page_handle": "ap-cyber-unit-2-lesson-4-terminal-lab",
+  "page_title": "AP Cybersecurity Terminal Lab: Read the Badge Log | Topic 2.4",
+  "seo_description": "A week of badge swipes: three real attacks, two innocent oddities. Work the log with grep and tell them apart. Free AP Cybersecurity Topic 2.4 lab.",
+
+  "brief": [
+    "You are covering the security desk at Northgate Labs for the week. The badge readers write every swipe to a log, and nobody has read it in months.",
+    "Three things in this week's log are attacks. Two more look wrong and are not. Your job is to tell them apart.",
+    "",
+    "**Work the log.**",
+    "1. `ls` and `cd logs` to find what the desk keeps.",
+    "2. `cat doors.txt` first. You cannot judge a swipe without knowing where the doors are.",
+    "3. `cat week.csv` to see the shape of it, then stop reading it whole.",
+    "4. `grep B-1023 week.csv` pulls one badge's day out of the noise. That is the move.",
+    "5. `wc -l week.csv` counts lines when you want a denominator.",
+    "",
+    "Every row is `time,badge,door,direction`. A person who is inside should have an entry. A person who is outside should have an exit. When that does not balance, somebody got in without swiping.",
+    "",
+    "Type `help` for the command list."
+  ],
+
+  "questions": [
+    {
+      "id": "tailgate",
+      "prompt": "One badge records an exit on Tuesday with no entry that day. What most likely happened?",
+      "options": [
+        "The reader failed, so the entry was simply not recorded",
+        "The holder entered behind somebody else without swiping, then swiped normally on the way out",
+        "The badge was stolen and used only to leave the building",
+        "The log rotated and the entry is in last week's file"
+      ],
+      "answer": 1,
+      "explain": "This is tailgating, and the exit is what exposes it. Doors that require a swipe to leave are specifically there to make the imbalance visible. A failed reader is possible, which is why you check whether that door recorded other swipes that morning: it did, so the reader was working."
+    },
+    {
+      "id": "afterhours",
+      "prompt": "B-1055 enters at 02:47 on Wednesday. B-1004 enters at 21:10 on Monday and leaves at 23:40. Which is the security concern?",
+      "options": [
+        "Both, because any access outside 08:00 to 18:00 is unauthorised",
+        "Neither, because both holders have valid badges",
+        "B-1055 only, because 02:47 has no matching exit and no work order, while B-1004 badges in and out cleanly during an evening",
+        "B-1004 only, because working late is more suspicious than a single early entry"
+      ],
+      "answer": 2,
+      "explain": "A valid badge is not the question; the pattern is. B-1004 looks like a person working late and leaves a complete round trip. B-1055 enters in the small hours, never exits, and matches no maintenance window. Flagging every after-hours swipe is how a team learns to ignore the alert that matters."
+    },
+    {
+      "id": "clone",
+      "prompt": "B-1023 swipes into Building A at 09:12 and into Building C at 09:20. doors.txt says the walk between them is 25 minutes. What does this indicate?",
+      "options": [
+        "The badge has been cloned, because one person cannot be in both places",
+        "The building clocks are out of sync and this is a logging artefact",
+        "The holder ran between buildings",
+        "Building C's reader is misconfigured and logs the wrong badge"
+      ],
+      "answer": 0,
+      "explain": "Impossible travel. Two physical presences from one credential means the credential exists twice. The other options are worth ruling out and the log lets you: the same two readers agree on timestamps for every other badge that morning, so the clocks are fine."
+    }
+  ],
+
+  "hosts": {
+    "local": {
+      "label": "desk@northgate",
+      "prompt": "desk@northgate:~/security$",
+      "home": "/home/desk/security",
+      "cwd": "/home/desk/security",
+      "fs": {
+        "/home/desk/security": {
+          "README.txt": "Northgate Labs, security desk.\nBadge reader exports land in logs/ every Sunday night.\nIncident write-ups go in reports/. Nothing has been filed since March.\n",
+          "logs": {
+            "doors.txt": "NORTHGATE LABS - DOOR REFERENCE\n\ndoor  building  description        badge required\n----  --------  -----------------  --------------\nD1    A         main entrance      in and out\nD2    A         loading bay        in and out\nD3    B         lab wing           in and out\nD4    C         data hall          in and out\n\nWALKING TIMES BETWEEN BUILDINGS\n  A to B   6 minutes\n  A to C  25 minutes  (across the service road, no internal route)\n  B to C  19 minutes\n\nNOTE: all four readers sync time from the same server. A timestamp\ndisagreement between two readers has never been observed here.\n",
+            "week.csv": "time,badge,door,direction\nMon 07:52,B-1004,D1,in\nMon 07:58,B-1023,D1,in\nMon 08:03,B-1042,D1,in\nMon 08:03,B-1077,D1,in\nMon 08:11,B-1055,D3,in\nMon 08:44,B-1090,D1,in\nMon 08:45,B-1090,D1,in\nMon 12:31,B-1042,D1,out\nMon 13:04,B-1042,D1,in\nMon 17:02,B-1023,D1,out\nMon 17:15,B-1077,D1,out\nMon 17:40,B-1055,D3,out\nMon 18:20,B-1090,D1,out\nMon 21:10,B-1004,D1,in\nMon 23:40,B-1004,D1,out\nTue 07:49,B-1004,D1,in\nTue 07:55,B-1023,D1,in\nTue 08:02,B-1042,D1,in\nTue 08:09,B-1055,D3,in\nTue 08:40,B-1090,D1,in\nTue 11:20,B-1042,D2,out\nTue 11:52,B-1042,D2,in\nTue 16:58,B-1023,D1,out\nTue 17:06,B-1077,D1,out\nTue 17:11,B-1004,D1,out\nTue 17:33,B-1055,D3,out\nTue 18:02,B-1090,D1,out\nWed 02:47,B-1055,D4,in\nWed 07:51,B-1004,D1,in\nWed 07:57,B-1023,D1,in\nWed 08:05,B-1042,D1,in\nWed 08:12,B-1077,D1,in\nWed 08:38,B-1090,D1,in\nWed 12:15,B-1090,D1,out\nWed 12:49,B-1090,D1,in\nWed 17:01,B-1023,D1,out\nWed 17:09,B-1042,D1,out\nWed 17:14,B-1077,D1,out\nWed 17:22,B-1004,D1,out\nWed 18:05,B-1090,D1,out\nThu 07:54,B-1004,D1,in\nThu 09:12,B-1023,D1,in\nThu 09:20,B-1023,D4,in\nThu 09:41,B-1042,D1,in\nThu 10:02,B-1077,D1,in\nThu 10:30,B-1055,D3,in\nThu 16:44,B-1023,D4,out\nThu 17:03,B-1042,D1,out\nThu 17:12,B-1077,D1,out\nThu 17:19,B-1004,D1,out\nThu 17:35,B-1055,D3,out\nFri 07:50,B-1004,D1,in\nFri 07:56,B-1023,D1,in\nFri 08:07,B-1042,D1,in\nFri 08:14,B-1077,D1,in\nFri 08:36,B-1090,D1,in\nFri 15:30,B-1090,D1,out\nFri 16:50,B-1023,D1,out\nFri 17:04,B-1042,D1,out\nFri 17:10,B-1077,D1,out\nFri 17:18,B-1004,D1,out\n",
+            "badges.txt": "ACTIVE BADGES\n\nbadge   role                  normal hours   buildings\n-----   --------------------  -------------  ---------\nB-1004  facilities lead       flexible       A\nB-1023  research assistant    08:00 to 17:00 A, B\nB-1042  logistics             08:00 to 17:00 A\nB-1055  lab technician        08:00 to 18:00 B\nB-1077  research assistant    08:00 to 17:00 A\nB-1090  reception             08:30 to 18:00 A\n\nB-1023 is not cleared for Building C. Access to D4 requires a data hall\nescort request, filed in reports/. None has been filed this year.\n\nB-1055 is a Building B badge. D4 is Building C.\n"
+          },
+          "reports": {
+            "MARCH_incident.txt": "12 March: propped fire door on D2, loading bay. Wedge removed,\nsigned off. No badge anomaly associated.\n\nNothing filed since. This is itself worth noticing: a desk that files\nnothing is not a desk with no incidents.\n"
+          }
+        }
+      }
+    }
+  },
+
+  "solution": [
+    "ls",
+    "cd logs",
+    "cat doors.txt",
+    "cat week.csv",
+    "grep B-1077 week.csv",
+    "grep B-1023 week.csv",
+    "cat badges.txt",
+    { "answer": "tailgate" },
+    { "answer": "afterhours" },
+    { "answer": "clone" }
+  ],
+
+  "checks": [
+    {
+      "n": 1,
+      "label": "Open the logs folder",
+      "match": { "event": "cmd", "cmd": "cd", "host": "local", "cwdAfter": "/home/desk/security/logs" }
+    },
+    {
+      "n": 2,
+      "label": "Read the door reference before judging any swipe",
+      "match": { "event": "read", "file": "doors.txt" }
+    },
+    {
+      "n": 3,
+      "label": "Look at the week's log",
+      "match": { "event": "read", "file": "week.csv" }
+    },
+    {
+      "n": 4,
+      "label": "Filter the log to a single badge",
+      "match": { "event": "cmd", "cmd": "grep", "host": "local", "after": 3 }
+    },
+    {
+      "n": 5,
+      "label": "Check who the badges belong to",
+      "match": { "event": "read", "file": "badges.txt" }
+    },
+    {
+      "n": 6,
+      "label": "Explain the exit with no entry",
+      "match": { "event": "answer", "question": "tailgate" }
+    },
+    {
+      "n": 7,
+      "label": "Separate the after-hours attack from the late shift",
+      "match": { "event": "answer", "question": "afterhours" }
+    },
+    {
+      "n": 8,
+      "label": "Identify the impossible travel",
+      "match": { "event": "answer", "question": "clone" }
+    }
+  ]
+}
