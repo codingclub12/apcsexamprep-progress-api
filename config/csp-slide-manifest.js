@@ -18,6 +18,8 @@
 //  entry here; nothing else in the gate route needs to change.
 // ─────────────────────────────────────────────────────────────────────────────
 
+const embeds = require('./csp-slide-embeds');
+
 // The shop-id path segment is stable for the store; it is the same base every
 // other Shopify Files URL in this repo uses (see lib/intro-java-page.js).
 const CDN_BASE = 'https://cdn.shopify.com/s/files/1/0778/8403/1191/files';
@@ -56,6 +58,12 @@ function deckUrl(lessonId, day, variant, track) {
 // Every deck for a lesson, across every day/variant/track combination.
 // `variants` restricts which role-variants to include (e.g. a student caller
 // never gets TEACHER-variant decks, even when entitled).
+//
+// `embedUrl` is present only for decks that have been converted to Google
+// Slides (config/csp-slide-embeds.js). It is deliberately omitted rather than
+// set to null when there is no conversion yet, so a client can branch on the
+// key existing: converted decks render inline, the rest stay download-only.
+// That makes a partial conversion a working state instead of a broken one.
 function decksForLesson(lessonId, variants) {
   if (!isKnownLesson(lessonId)) return null;
   const days = dayCount(lessonId);
@@ -64,7 +72,10 @@ function decksForLesson(lessonId, variants) {
   for (let day = 1; day <= days; day++) {
     for (const variant of wantVariants) {
       for (const track of Object.keys(TRACKS)) {
-        decks.push({ day, variant, track, url: deckUrl(lessonId, day, variant, track) });
+        const deck = { day, variant, track, url: deckUrl(lessonId, day, variant, track) };
+        const id = embeds.slideId(lessonId, day, variant, track);
+        if (id) deck.embedUrl = embeds.embedUrl(id);
+        decks.push(deck);
       }
     }
   }
@@ -75,6 +86,7 @@ module.exports = {
   isKnownLesson,
   dayCount,
   decksForLesson,
+  LESSON_IDS: Object.keys(DAY_COUNT_BY_LESSON),
   VARIANT_KEYS: Object.keys(VARIANTS),
   TRACK_KEYS: Object.keys(TRACKS),
 };
