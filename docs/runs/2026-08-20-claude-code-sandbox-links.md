@@ -75,3 +75,42 @@ plainly because the repo has been bitten by exactly this before, twice.
   `claude/site-linking-audit-yhufjk`. PR #62 targeted the connected branch on
   purpose, so it did deploy, but the underlying trap is unchanged and still
   needs a person in Shopify Admin.
+
+## Follow-up, 2026-08-21: sign out now clears the draft
+
+Tanner deleted the Dog file, signed out, and found it still deleted. That is the
+localStorage draft, working as designed, and the design was wrong.
+
+The draft is written on every edit so the editor survives a reload. `signOut()`
+removed only the token and the display name, so the draft outlived the SESSION
+by design and the STUDENT by accident: the next person to open the page on that
+machine got the previous student's code restored, because `loadDraft()` runs at
+boot and knows nothing about who is signed in. One shared computer used all day
+by different classes is the ordinary case in a school.
+
+Not a hole. Nothing in a sandbox program is secret, and the server already
+refuses a save against another student's program id, so the worst case was
+seeing the code rather than taking it over. But `sandbox_programs` is the ONE
+approved exception to "no student-typed text", and handing that text to the next
+person by default is the wrong posture for the exception to sit behind.
+
+Sign out now resets the editor and clears all three keys, behind the existing
+unsaved-changes confirm since clearing discards unsaved work.
+
+**Order matters and is the easy thing to get wrong.** `setLanguage()` ends in
+`saveDraft()`, so clearing the keys BEFORE resetting the editor writes the
+starters straight back under the same key and leaves a draft behind. Reset
+first, clear second.
+
+Tested by running the shipped functions, not by reading them. There is no jsdom
+here and adding one for this is disproportionate, so `smoke/sandbox.js` pulls
+`signOut` and `confirmDiscard` out of the rendered page and executes them under
+`vm` against stubs, where the `setLanguage` stub reproduces the write-back trap.
+The assertions are on the end state of the fake storage.
+
+Both failure modes were reintroduced to confirm the tests catch them: clearing
+before the reset fails 3 assertions, and dropping the `DRAFT_KEY` removal
+entirely fails the same 3. smoke:sandbox 53/53, and all 90 CI suites pass.
+
+Unchanged and still true: a signed-out student can still use the sandbox, and
+their draft still persists across reloads. Only signing out clears it.

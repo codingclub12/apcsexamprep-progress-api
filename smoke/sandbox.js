@@ -225,6 +225,89 @@ ok('it never asks for a login to RUN', html.includes('without signing in'));
 ok('the starters exist for every language',
   ['java', 'python', 'javascript'].every((k) => Array.isArray(page.STARTERS[k]) && page.STARTERS[k].length > 0));
 
+// ── SIGN OUT CLEARS THE DRAFT ────────────────────────────────────────────────
+//
+// A student's code lives in localStorage so the editor survives a reload. On a
+// shared school computer that also means it survives the STUDENT unless sign
+// out clears it, and the next person at that machine gets it restored into
+// their editor. Asserting on the page source would only prove the letters
+// "removeItem(DRAFT_KEY)" appear somewhere; it would not catch the ordering
+// trap, which is real: setLanguage() ends in saveDraft(), so clearing the key
+// BEFORE resetting the editor writes a fresh draft straight back and leaves
+// one behind anyway.
+//
+// So the shipped functions are pulled out of the page and actually RUN here,
+// against stubs that reproduce that trap: the setLanguage stub writes the
+// draft key exactly like the real one does. The assertion is on the end state
+// of the fake storage, not on the text of the function.
+const vm = require('vm');
+
+function extractFn(src, name) {
+  const start = src.indexOf('function ' + name + '(');
+  if (start === -1) return null;
+  // Walk braces from the function's opening { to its matching close.
+  let i = src.indexOf('{', start);
+  let depth = 0;
+  for (let j = i; j < src.length; j++) {
+    if (src[j] === '{') depth++;
+    else if (src[j] === '}') { depth--; if (depth === 0) return src.slice(start, j + 1); }
+  }
+  return null;
+}
+
+const signOutSrc = extractFn(html, 'signOut');
+const confirmSrc = extractFn(html, 'confirmDiscard');
+ok('the page still defines signOut and confirmDiscard', !!signOutSrc && !!confirmSrc);
+
+function runSignOut(opts) {
+  const store = Object.assign({
+    apcse_sandbox_token: 't', apcse_sandbox_who: 'Ada', apcse_sandbox_draft: 'STUDENT CODE',
+  }, opts.store || {});
+  const calls = { reset: 0, renderAccount: 0 };
+  const ctx = {
+    state: { token: 't', who: 'Ada', language: 'java', dirty: !!opts.dirty },
+    TOKEN_KEY: 'apcse_sandbox_token',
+    WHO_KEY: 'apcse_sandbox_who',
+    DRAFT_KEY: 'apcse_sandbox_draft',
+    localStorage: {
+      removeItem: (k) => { delete store[k]; },
+      setItem: (k, v) => { store[k] = v; },
+      getItem: (k) => (k in store ? store[k] : null),
+    },
+    // The real one resets the editor and then calls saveDraft(). Reproduced,
+    // because that is exactly what makes clear-then-reset the wrong order.
+    setLanguage: (lang, o) => {
+      if (o && o.reset) calls.reset++;
+      store.apcse_sandbox_draft = 'STARTERS';
+    },
+    renderAccount: () => { calls.renderAccount++; },
+    $: () => ({ set hidden(v) {}, get hidden() { return false; } }),
+    window: { confirm: () => opts.confirmAnswer !== false },
+  };
+  vm.createContext(ctx);
+  vm.runInContext(confirmSrc + '\n' + signOutSrc + '\nsignOut();', ctx);
+  return { store, calls, state: ctx.state };
+}
+
+const clean = runSignOut({ dirty: false });
+ok('sign out drops the token', clean.store.apcse_sandbox_token === undefined);
+ok('sign out drops the saved draft, so the next student starts fresh',
+  clean.store.apcse_sandbox_draft === undefined);
+ok('sign out resets the editor rather than leaving code on screen', clean.calls.reset === 1);
+
+// The ordering guard. If someone "simplifies" this by clearing the keys first
+// and resetting after, the setLanguage stub writes STARTERS back and this fails.
+ok('no draft is written back after the reset',
+  !('apcse_sandbox_draft' in clean.store));
+
+const kept = runSignOut({ dirty: true, confirmAnswer: false });
+ok('unsaved work is not discarded when the student cancels the confirm',
+  kept.store.apcse_sandbox_draft === 'STUDENT CODE' && kept.state.token === 't');
+
+const discarded = runSignOut({ dirty: true, confirmAnswer: true });
+ok('confirming at the prompt does sign out and does clear the draft',
+  discarded.store.apcse_sandbox_draft === undefined && discarded.state.token === null);
+
 // ── CLEANUP ──────────────────────────────────────────────────────────────────
 try {
   db.close();
