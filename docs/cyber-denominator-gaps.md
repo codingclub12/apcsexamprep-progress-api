@@ -16,7 +16,8 @@ records why the original claim about them was wrong.
 |---|---|---|---|
 | case files | `unit-{1..5}/case-file/case-file` | none, the original blocker was misdiagnosed | **priced**, out of 15/14/11/12/11 |
 | unit exams | `unit-{1..5}/exam/exam` | key collision fixed, but the pages cannot report a score at all | **stays unpriced on purpose** |
-| Unit 1 leftovers | `1.2/exercise-1`, `1.2/exercise-2`, `1.3/exercise-1`, `1.3/exercise-2`, `1.3/quiz` | value unknown, and not resolvable by reading the page | open, needs live data |
+| Unit 1 leftovers | `1.2/exercise-1`, `1.2/exercise-2` | value known (24 and 30), but neither page can report a score | **measured 2026-08-21**, held until a reporter ships |
+| Unit 1 leftovers | `1.3/exercise-1`, `1.3/exercise-2`, `1.3/quiz` | value unknown, and not resolvable by reading the prose | open, re-read the grading code as 1.2 was |
 
 ## 1. The exams: a key collision, not a missing value
 
@@ -132,8 +133,8 @@ What the pages do show, for the record:
 
 | column | evidence found |
 |---|---|
-| `1.2/exercise-1` | no answer key, `out of` candidates 3 and 24 |
-| `1.2/exercise-2` | no answer key, candidates 3, 30 and 10 |
+| `1.2/exercise-1` | **SETTLED 2026-08-21: 24.** See below. |
+| `1.2/exercise-2` | **SETTLED 2026-08-21: 30.** See below. |
 | `1.3/exercise-1` | no answer key, candidates 3 and 24; a second page claims the same column |
 | `1.3/exercise-2` | no answer key, candidates 3 and 24 |
 | `1.3/quiz` | `ANSWERS` has 5 entries |
@@ -141,6 +142,74 @@ What the pages do show, for the record:
 Only `1.3/quiz` has a value the page states unambiguously. The four exercises do
 not, which is the same conclusion `scripts/seed-cyber-denominators.js` reached
 when it left twenty Unit 1 activities deliberately absent.
+
+### Superseded for 1.2, 2026-08-21: both values were readable after all
+
+The two 1.2 exercises are settled, and the method that settled them is the one
+this section said would not work: reading the page. The earlier pass searched for
+an answer key and for a single `out of` string, found several candidate numbers,
+and stopped at the ambiguity. Reading the grading function instead of the prose
+resolves it, because each page states its own total three times and its scoring
+code sums to the same number:
+
+| column | badge | score bar | grading code | value |
+|---|---|---|---|---|
+| `1.2/exercise-1` | `3 Parts . 24 pts` | `/ 24 pts` | `maxPts` 12 + 6 + 6 | **24** |
+| `1.2/exercise-2` | `3 Clients . 30 pts` | `/ 30 pts` | 3 clients x (2 + 2 + 6) | **30** |
+
+The stray candidate `3` in the original scan was the parts-and-clients count, and
+`10` on exercise-2 was one client's subtotal. Neither was a competing total.
+
+**The values are recorded in `scripts/seed-cyber-denominators.js` and are
+deliberately commented out.** Pricing them now would violate this document's own
+rule, because neither page can report a score: a scan of both live page bodies
+finds no `fetch`, no `XMLHttpRequest` and no `sendBeacon`. That scan was run with
+the control this file insists on, `ap-cyber-unit-1-lesson-1-exercise-1`, which is
+detected correctly as fetch-based, so the zero result is distinguishing rather
+than merely failing.
+
+### The larger bug this uncovered: a fabricated 0, not a missing score
+
+Reported by a teacher on 2026-08-21 whose students had completed both 1.2
+exercises. These columns are not blank. They carry a hard zero that no student
+earned, and that is worse than a gap because nothing downstream can tell it from
+a real zero.
+
+The chain, verified against live code and the live deployed asset:
+
+1. Both pages grade themselves correctly and completely, out of 24 and 30.
+2. Neither page reports. Only `1.1/exercise-1` was ever retrofitted with the
+   reporter in `docs/exercise-reporter-contract.md`.
+3. The theme's grade reporter resolves an activity for `lesson` and `exam`
+   handles only. An `-exercise-N` handle falls through all three of its matchers
+   and returns, so it never posts.
+4. `apcs-tracker.js` **is** wired on these pages: the theme wiring snippet
+   matches `ap-cyber-unit-{U}-lesson-{L}-(exercise-1|exercise-2|lab|quiz)` and
+   sets `window.APCS_PAGE`. Its `trackActivityCompletion` takes the GRADED path,
+   because the pages do render `.check-btn`, and marks the activity complete once
+   every check button is spent.
+5. It then asks `activityScorePct` for the score. That function reads
+   `#score-display`, then falls back to counting `.answered-correct`. **The 1.2
+   pages have neither.** They use `#totalScore` and `#finalScore` and mark
+   feedback with `.feedback.correct`. So `correct` is 0, `total` is the check
+   button count, and the function returns `Math.round(0 / 3 * 100)`, which is 0.
+6. The tracker posts `completed: true, score: 0`. That is ingest source C
+   (`progress.score`), and with no `attempts` or `score_events` row to outrank
+   it, it becomes the grade of record.
+
+A student who scored 22 of 24 is recorded as a 0, and it counts against the class
+average.
+
+`activityScorePct` returning `0` rather than `null` when it finds no score UI is
+the defect worth fixing centrally. It cannot distinguish "graded zero" from "this
+page exposes no score in either shape I know", and it guesses the answer that
+silently destroys grades. This is ledger task 83, "score reporter depends on
+scraping rendered text", arriving as a real incident. The blast radius is every
+graded page whose score UI is neither `#score-display` nor `.answered-correct`,
+and it has not been enumerated yet.
+
+Both fixes live in the theme repo, not here: `assets/apcs-tracker.js` for the
+scraper, and the two page bodies for the reporter.
 
 `1.3/exercise-1` also has two pages claiming it, and the topic-named one is
 titled "Topic 1.4", so its content and its handle disagree about which lesson it

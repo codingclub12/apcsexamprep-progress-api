@@ -52,6 +52,31 @@ const POINTS = {
   // ── 1.2 ────────────────────────────────────────────
   '1.2|lab': 30,              // score readout reads 0 / 30
   '1.2|quiz': 5,              // score-display reads 0 / 5
+  //
+  // 1.2 exercise-1 (24) and exercise-2 (30) are MEASURED, not unknown. Both
+  // values were read off the live page bodies on 2026-08-21 and each is
+  // corroborated by three independent signals on its own page:
+  //   exercise-1: header badge "3 Parts . 24 pts", score bar "/ 24 pts",
+  //               results panel "/ 24", and maxPts 12 + 6 + 6 = 24.
+  //   exercise-2: header badge "3 Clients . 30 pts", score bar "/ 30 pts",
+  //               and three clients scored 2 + 2 + 6 = 10 each.
+  // This supersedes the "value unknown, not resolvable by reading the page"
+  // row for these two columns in docs/cyber-denominator-gaps.md section 3.
+  //
+  // They stay COMMENTED OUT on purpose, and the reason is the rule that file
+  // already states: pricing a column the page cannot report is strictly
+  // harmful. Neither page contains a fetch, an XHR, or a sendBeacon, so no
+  // real score can arrive. What arrives instead is a fabricated 0 from
+  // apcs-tracker.js, which marks the exercise complete once every .check-btn
+  // is spent and then scrapes #score-display (absent here) and
+  // .answered-correct (absent here), so activityScorePct returns
+  // Math.round(0 / 3 * 100). Pricing that would turn a percent-only 0 into a
+  // confident 0 / 24 and grow items_total, making pace worse as well.
+  //
+  // Uncomment BOTH lines in the same pass that ships a reporter on these two
+  // pages, never before. See docs/runs/2026-08-21-claude-code-cyber-1.2-fabricated-zero.md.
+  // '1.2|exercise-1': 24,    // header badge, score bar, results panel, 12+6+6
+  // '1.2|exercise-2': 30,    // header badge, score bar, 3 clients x (2+2+6)
 
   // ── 1.4 ────────────────────────────────────────────
   '1.4|exercise-1': 25,       // score readout reads 0 / 25
