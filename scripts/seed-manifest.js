@@ -350,9 +350,23 @@ function introJavaRows() {
 // every intro-java denominator with nothing on earth able to fill it, marking
 // every student down for a reason no teacher could see or explain.
 //
-// Flip this to true in the SAME pass that imports the exercise pages, and run
-// the seed with --update. Not before.
-const INTRO_JAVA_EXERCISES_LIVE = false;
+// ── THE GATE, NOW OPEN ──────────────────────────────────────────────────────
+// The ten exercise pages were imported to Shopify on 2026-08-20 and verified
+// live against the Admin API on 2026-08-21: every handle present, published, and
+// carrying data-item-id="{U}.{L}-code-1" plus the four attributes the page
+// script reads. So the condition this gate was waiting on is met.
+//
+// ONE THING TO KNOW ABOUT THE ORDER, because it is the opposite of what the
+// original plan said. POST /api/student/code-grade refuses to grade an item with
+// no manifest denominator (400, and it spends no Judge0 run), so the dangerous
+// state is denominators WITHOUT test cases, not the other way round: that is the
+// one where a student's correct work is told it is not graded while the column
+// still counts against their pace.
+//
+// So the hidden cases are seeded FIRST, through POST /api/admin/code-tests/seed,
+// and this flip lands after. Seeding cases early is harmless; opening the
+// denominator early is not.
+const INTRO_JAVA_EXERCISES_LIVE = true;
 
 // One point per exercise. Not more: an exercise is one submission and one row,
 // the same shape as a gap-fill, and weighting it above a quiz would make a

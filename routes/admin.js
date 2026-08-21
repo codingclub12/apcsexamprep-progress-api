@@ -1436,9 +1436,12 @@ router.post('/code-tests/seed', (req, res) => {
     if (dryRun) {
       // Load and validate the seed WITHOUT writing, so the shape of the bank can
       // be checked from a phone before anything touches a live class.
-      const { items } = require('../seed/csa-exercises').codeTestItems();
-      const legacy = require('../seed/csa-code-tests').items;
-      const all = legacy.concat(items);
+      // The SAME sources() the real seed uses. A hand-rolled list here drifts
+      // the moment a bank is added, silently, in the direction of under-
+      // reporting, and this endpoint exists precisely so the bank can be checked
+      // before it touches a live class.
+      const { sources } = require('../scripts/seed-code-tests');
+      const all = sources().reduce((acc, src) => acc.concat(src.items), []);
       return res.json({
         ok: true, dry_run: true, cases_before: before,
         would_load: { items: all.length, cases: all.reduce((n, it) => n + it.cases.length, 0) },
