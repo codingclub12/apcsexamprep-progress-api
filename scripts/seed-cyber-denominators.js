@@ -66,12 +66,20 @@ const POINTS = {
   // They stay COMMENTED OUT on purpose, and the reason is the rule that file
   // already states: pricing a column the page cannot report is strictly
   // harmful. Neither page contains a fetch, an XHR, or a sendBeacon, so no
-  // real score can arrive. What arrives instead is a fabricated 0 from
-  // apcs-tracker.js, which marks the exercise complete once every .check-btn
-  // is spent and then scrapes #score-display (absent here) and
-  // .answered-correct (absent here), so activityScorePct returns
-  // Math.round(0 / 3 * 100). Pricing that would turn a percent-only 0 into a
-  // confident 0 / 24 and grow items_total, making pace worse as well.
+  // real score can arrive.
+  //
+  // CORRECTED 2026-08-21: an earlier version of this comment said a fabricated
+  // 0 arrives instead, from apcs-tracker.js. It does not, on THESE two pages.
+  // Each carries two <a class="check-btn"> nav links beside its three real
+  // buttons, so the tracker's `total` is 5 while `answered` can only ever reach
+  // 3 (an anchor has no `disabled` property). markComplete is never called and
+  // nothing is recorded but the initial visit. The fabricated zero IS real on
+  // nine other Unit 1 pages (1.3, 1.4 and 1.5). See
+  // docs/runs/2026-08-21-claude-code-cyber-tracker-sweep.md and
+  // scripts/scan-tracker-score-risk.js.
+  //
+  // Either way these columns stay unpriced: pricing a column no page can report
+  // would grow items_total and make pace worse for every student.
   //
   // Uncomment BOTH lines in the same pass that ships a reporter on these two
   // pages, never before. See docs/runs/2026-08-21-claude-code-cyber-1.2-fabricated-zero.md.

@@ -168,48 +168,85 @@ the control this file insists on, `ap-cyber-unit-1-lesson-1-exercise-1`, which i
 detected correctly as fetch-based, so the zero result is distinguishing rather
 than merely failing.
 
-### The larger bug this uncovered: a fabricated 0, not a missing score
+### CORRECTED 2026-08-21: 1.2 does not record a zero, it records nothing
 
-Reported by a teacher on 2026-08-21 whose students had completed both 1.2
-exercises. These columns are not blank. They carry a hard zero that no student
-earned, and that is worse than a gap because nothing downstream can tell it from
-a real zero.
+An earlier revision of this section (merged in PR #256) concluded that the 1.2
+exercises store a fabricated `0`. **That conclusion was wrong at its last step,
+and this section replaces it.** The full-course sweep that followed found the
+real mechanism, and also found that the fabricated zero is real on nine OTHER
+pages. Both are recorded below.
 
-The chain, verified against live code and the live deployed asset:
+The teacher's original words were the accurate ones: the work does not show up.
 
-1. Both pages grade themselves correctly and completely, out of 24 and 30.
-2. Neither page reports. Only `1.1/exercise-1` was ever retrofitted with the
-   reporter in `docs/exercise-reporter-contract.md`.
-3. The theme's grade reporter resolves an activity for `lesson` and `exam`
-   handles only. An `-exercise-N` handle falls through all three of its matchers
-   and returns, so it never posts.
-4. `apcs-tracker.js` **is** wired on these pages: the theme wiring snippet
-   matches `ap-cyber-unit-{U}-lesson-{L}-(exercise-1|exercise-2|lab|quiz)` and
-   sets `window.APCS_PAGE`. Its `trackActivityCompletion` takes the GRADED path,
-   because the pages do render `.check-btn`, and marks the activity complete once
-   every check button is spent.
-5. It then asks `activityScorePct` for the score. That function reads
-   `#score-display`, then falls back to counting `.answered-correct`. **The 1.2
-   pages have neither.** They use `#totalScore` and `#finalScore` and mark
-   feedback with `.feedback.correct`. So `correct` is 0, `total` is the check
-   button count, and the function returns `Math.round(0 / 3 * 100)`, which is 0.
-6. The tracker posts `completed: true, score: 0`. That is ingest source C
-   (`progress.score`), and with no `attempts` or `score_events` row to outrank
-   it, it becomes the grade of record.
+#### Why 1.2 records nothing
 
-A student who scored 22 of 24 is recorded as a 0, and it counts against the class
-average.
+Steps 1 to 4 of the original chain hold. `apcs-tracker.js` is wired on these
+pages, takes the GRADED path, and waits for every `.check-btn` to be spent:
 
-`activityScorePct` returning `0` rather than `null` when it finds no score UI is
-the defect worth fixing centrally. It cannot distinguish "graded zero" from "this
-page exposes no score in either shape I know", and it guesses the answer that
-silently destroys grades. This is ledger task 83, "score reporter depends on
-scraping rendered text", arriving as a real incident. The blast radius is every
-graded page whose score UI is neither `#score-display` nor `.answered-correct`,
-and it has not been enumerated yet.
+```js
+var checkBtns = document.querySelectorAll('.check-btn');
+var total = checkBtns.length;                       // 1.2 exercise-1: FIVE
+...
+for (var i = 0; i < btns.length; i++) if (btns[i].disabled) answered++;
+if (answered >= total) markComplete(activityScorePct(total));
+```
 
+The 1.2 pages carry **three** `<button class="check-btn">` and **two**
+`<a class="check-btn">` navigation links ("Back to Lesson 1.2", "Continue to
+Exercise 2"), which are styled with the button class. So `total` is 5. An
+anchor has no `disabled` property, `undefined` is falsy, and the page's own
+`disableSection` is scoped to the part sections, so the anchors are never
+touched. `answered` tops out at 3, `3 >= 5` is never true, and **`markComplete`
+is never called.**
+
+Nothing is posted but the initial visit, which carries `completed: false`. No
+completion, and no score of any kind, fabricated or otherwise.
+
+This is worth stating plainly because the two failure modes need different
+fixes and look identical to a teacher: a zero is bad data to be cleared, while
+this is missing data with nothing to clear.
+
+#### The fabricated zero is real, on nine other pages
+
+Where a page's check buttons are all real buttons that do get disabled, and the
+page exposes no score UI, completion fires and `activityScorePct` returns
+`Math.round(0 / total * 100)`:
+
+| pages | mode |
+|---|---|
+| 1.3 / 1.4 / 1.5, each of exercise-1, exercise-2 and lab (9 pages) | stores a hard `0` |
+| 1.1 lab, 1.2 exercise-1, 1.2 exercise-2, 1.2 lab (4 pages) | never completes |
+
+Full results, and the method, are in
+`docs/runs/2026-08-21-claude-code-cyber-tracker-sweep.md`.
+`node scripts/scan-tracker-score-risk.js` reproduces them against the live site.
+
+#### The one-token trap that made the first sweep wrong too
+
+Several pages style their buttons `l-check-btn`. `querySelectorAll('.check-btn')`
+does **not** match that, because CSS matches whole class tokens, so those pages
+take the reading path and are safe. A `\bcheck-btn\b` regex DOES match inside
+`l-check-btn`, and the first run of the sweep reported twenty such pages as
+at-risk. The scanner now splits class attributes on whitespace and compares
+tokens. Any future check of this must do the same.
+
+#### What to fix
+
+`activityScorePct` returning `0` rather than `null` when it recognises no score
+UI is still the defect worth fixing centrally: it cannot distinguish "scored
+zero" from "this page exposes no score in either shape I know". It should return
+`null`, which `markComplete` already handles by posting completion alone.
+
+The completion threshold is the second defect, and it is the one that hit 1.2.
+Counting `.check-btn` elements that can never be disabled makes the activity
+permanently unfinishable. The tracker should count only elements that can carry
+a `disabled` state, and the pages should stop styling nav links with the class
+their grader counts.
+
+Both are ledger task 83, "score reporter depends on scraping rendered text".
 Both fixes live in the theme repo, not here: `assets/apcs-tracker.js` for the
-scraper, and the two page bodies for the reporter.
+scraper and the threshold, and the page bodies for the reporter and the nav
+link class.
 
 `1.3/exercise-1` also has two pages claiming it, and the topic-named one is
 titled "Topic 1.4", so its content and its handle disagree about which lesson it
