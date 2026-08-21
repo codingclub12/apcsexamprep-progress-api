@@ -13,6 +13,7 @@
     "smoke:teacher": "node smoke/teacher-dashboard.js",
     "smoke:cleanup": "node smoke/cleanup.js",
     "smoke:shopify": "node smoke/shopify-entitlements.js",
+    "smoke:csp-exercise-pages": "node smoke/csp-exercise-pages.js",
     "smoke:cspslides": "node smoke/csp-slide-gate.js",
     "smoke:cspembeds": "node smoke/csp-slide-embeds.js",
     "smoke:admin": "node smoke/admin-dashboard.js",

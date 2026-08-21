@@ -185,7 +185,11 @@ const POINTS = {
 // Settling either one means giving the mirror pages their own activity_type in
 // utils.js COURSES and in the renderer, which is a contract change, not a seed
 // edit. Until then, do not widen this filter.
-for (const page of require('../lib/csp-exercise-pages').allPages()) {
+// gradedPages(), NOT allPages(). allPages() is all 70 handles, most of which are
+// mirror-only and carry no check questions at all; pricing one of those would
+// author a denominator of 0 and mark a class down for an assessment that does
+// not exist on the page. Only a page with authored checks gets a number.
+for (const page of require('../lib/csp-exercise-pages').gradedPages()) {
   if (page.kind !== 'exercise-1') continue;
   POINTS[`${page.slug}|${page.kind}`] = page.questions;
 }
