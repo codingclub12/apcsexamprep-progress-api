@@ -119,7 +119,50 @@ async function deployedRules() {
   };
 }
 
-function classify(html, rules) {
+// The SECOND way a page can be scored, and the one this scan used to be blind to.
+//
+// apcs-tracker.js is not the only writer. assets/apcs-score-reporter.js watches
+// whichever element the page renders its score into and hands the result to
+// window.APCS_saveLessonScore. A page with no `#score-display` is invisible to
+// the tracker's own path and still fully scored through this one, so judging it
+// by the tracker alone reports "no score" about a page that reports a real
+// grade. This scan said exactly that about thirteen pages after theme PR #68
+// fixed them.
+//
+// Both halves are read from the DEPLOYED assets: the id list the reporter
+// actually ships with, and whether the writer it calls actually exists. Until
+// #68 the writer was undefined, so this path scored nothing at all.
+async function deployedReporter() {
+  const probe = await fetch(`${ORIGIN}/pages/ap-cyber-unit-1-lesson-2-exercise-1`);
+  const html = await probe.text();
+  const m = /src="([^"]*apcs-score-reporter\.js[^"]*)"/.exec(html);
+  const t = /src="([^"]*apcs-tracker\.js[^"]*)"/.exec(html);
+  if (!m || !t) return { present: false, ids: [], writerExists: false };
+  const abs = (u) => (u.startsWith('//') ? 'https:' + u : u);
+  const js = await (await fetch(abs(m[1]))).text();
+  const trackerJs = await (await fetch(abs(t[1]))).text();
+  // The deployed asset is MINIFIED, so match both quote styles: the source
+  // writes 'score-display' and the build ships "score-display". Reading only
+  // single quotes returned an empty list and silently made every page look
+  // uncovered, which is the same shape of bug this scan exists to catch.
+  const idsBlock = /SCORE_IDS\s*=\s*\[([\s\S]*?)\]/.exec(js);
+  const ids = idsBlock
+    ? Array.from(idsBlock[1].matchAll(/['"]([^'"]+)['"]/g)).map((x) => x[1])
+    : [];
+  return {
+    present: true,
+    ids,
+    writerExists: /APCS_saveLessonScore\s*=/.test(trackerJs),
+  };
+}
+
+function classify(html, rules, reporter) {
+  // Which score-element ids this page actually renders. Matched against the id
+  // list the deployed reporter ships with, rather than a list hardcoded here
+  // that would drift the moment the reporter learns a new one.
+  const scoreIds = new Set(
+    Array.from(html.matchAll(/id="([^"]+)"/g)).map((m) => m[1])
+  );
   const els = elementsWithClass(html, 'check-btn');
   const total = els.length;
   const anchors = els.filter((t) => t === 'a').length;
@@ -138,15 +181,20 @@ function classify(html, rules) {
   if (!rules.nullWhenNoScoreUi) {
     return { verdict: 'FABRICATED_ZERO', total, buttons, anchors, hasScoreUi };
   }
-  // Both rules fixed: the page completes and honestly reports no score. Not a
-  // defect, but it will read "done, ungraded" until it reports one of its own,
-  // so it stays visible as the reporter backlog.
+  // The tracker's own path finds no score here. Before calling that a gap, ask
+  // whether the score-reporter path covers the page, because that is a real
+  // grade arriving by another route.
+  if (reporter && reporter.writerExists && reporter.ids.some((id) => scoreIds.has(id))) {
+    return { verdict: 'SCORED_VIA_REPORTER', total, buttons, anchors, hasScoreUi };
+  }
+  // Neither path can score it. This is the genuine reporter backlog.
   return { verdict: 'NEEDS_REPORTER', total, buttons, anchors, hasScoreUi };
 }
 
 async function scan() {
   const handles = cyberHandles();
   const rules = await deployedRules();
+  const reporter = await deployedReporter();
   const results = [];
   let cursor = 0;
 
@@ -156,7 +204,7 @@ async function scan() {
       try {
         const res = await fetch(`${ORIGIN}/pages/${handle}`);
         if (!res.ok) { results.push({ handle, verdict: 'ABSENT', status: res.status }); continue; }
-        results.push({ handle, ...classify(await res.text(), rules) });
+        results.push({ handle, ...classify(await res.text(), rules, reporter) });
       } catch (e) {
         results.push({ handle, verdict: 'FETCH_FAILED', error: String(e && e.message) });
       }
@@ -165,10 +213,11 @@ async function scan() {
   await Promise.all(Array.from({ length: CONCURRENCY }, worker));
   results.sort((a, b) => a.handle.localeCompare(b.handle));
   results.rules = rules;
+  results.reporter = reporter;
   return results;
 }
 
-const ORDER = ['FABRICATED_ZERO', 'NEVER_COMPLETES', 'NEEDS_REPORTER', 'OK_SCORED', 'SAFE_READING', 'ABSENT', 'FETCH_FAILED'];
+const ORDER = ['FABRICATED_ZERO', 'NEVER_COMPLETES', 'NEEDS_REPORTER', 'SCORED_VIA_REPORTER', 'OK_SCORED', 'SAFE_READING', 'ABSENT', 'FETCH_FAILED'];
 
 if (require.main === module) {
   scan().then((results) => {
@@ -199,10 +248,19 @@ if (require.main === module) {
 
     const bad = results.filter((r) => r.verdict === 'FABRICATED_ZERO' || r.verdict === 'NEVER_COMPLETES');
     const backlog = results.filter((r) => r.verdict === 'NEEDS_REPORTER');
+    const viaReporter = results.filter((r) => r.verdict === 'SCORED_VIA_REPORTER');
+    const rep = results.reporter;
+    console.log(`\nScore reporter: ${rep.present ? 'loaded' : 'ABSENT'}` +
+                `, writer ${rep.writerExists ? 'defined' : 'UNDEFINED (scores nothing)'}` +
+                `, ids [${rep.ids.join(', ')}]`);
     console.log(`\n${bad.length} of ${results.length} pages mis-score.`);
+    if (viaReporter.length) {
+      console.log(`${viaReporter.length} are scored through apcs-score-reporter.js rather than ` +
+                  `the tracker's own path. Not a gap.`);
+    }
     if (backlog.length) {
-      console.log(`${backlog.length} complete honestly but report no score of their own ` +
-                  `(they read "done, ungraded" until a reporter ships).`);
+      console.log(`${backlog.length} can be scored by NEITHER path ` +
+                  `(they read "done, ungraded" until a reporter can read them).`);
     }
     process.exitCode = bad.length ? 1 : 0;
   });
