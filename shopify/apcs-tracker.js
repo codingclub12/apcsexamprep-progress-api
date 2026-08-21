@@ -572,6 +572,58 @@
         loadUnitProgress(pageInfo);
       });
       trackActivityCompletion(pageInfo);
+
+      // ── GLOBAL: the writer apcs-score-reporter.js hands graded results to ────
+      //
+      // This function was REFERENCED by two consumers and DEFINED by nobody.
+      // assets/apcs-score-reporter.js is the one script covering every graded
+      // exercise and lab page in the course, and its whole job is to watch the
+      // score a page shows the student and hand it here. It calls
+      // window.APCS_saveLessonScore, found undefined, logged a console.debug and
+      // returned. So no exercise or lab page has ever recorded a score through
+      // it. snippets/apcs-grade-reporter.liquid names it too, and survives only
+      // because it falls back to its own XHR after a bounded wait.
+      //
+      // Defined here, in the non-quiz branch, for the same reason
+      // APCS_saveQuizScore is defined in the quiz branch: it closes over
+      // pageInfo, so it cannot be wrong about which lesson it is writing, and it
+      // cannot exist on a page type that must not use it.
+      //
+      // POINTS, NOT JUST A PERCENT. The reporter reads a real "earned / possible"
+      // pair off the page and used to throw the pair away and pass only a
+      // percent. docs/gradebook-contract.md in the progress-api repo is explicit
+      // that the grade is earned over graded, and that a percent with no
+      // denominator has to be excluded from the points total rather than folded
+      // in at a guessed weight. So when the pair is available it goes to
+      // /api/student/score, which is the endpoint docs/exercise-reporter-contract.md
+      // specifies for exactly these pages. The percent post stays as well: it
+      // carries COMPLETION, and it is the lower-precedence source the gradebook
+      // already knows how to rank below real points.
+      window.APCS_saveLessonScore = async function(pct, pair) {
+        if (pct === null || pct === undefined) return null;
+
+        // Real points first, when the reporter could read both halves.
+        if (pair && pair.possible > 0 && pair.earned >= 0 && pair.earned <= pair.possible) {
+          await apiPost('/api/student/score', {
+            course: pageInfo.course, unit: pageInfo.unit, lesson: pageInfo.lesson,
+            activity_type: pageInfo.activity, item: 'score',
+            earned: pair.earned, possible: pair.possible,
+            // Stable per result, so a double submit is idempotent server side.
+            client_event_id: [pageInfo.lesson, pageInfo.activity, 'score',
+                              pair.earned, pair.possible].join(':'),
+          });
+        }
+
+        // Completion, and the percent as the fallback grade source.
+        const result = await apiPost('/api/student/progress', {
+          course: pageInfo.course, unit: pageInfo.unit, lesson: pageInfo.lesson,
+          activity_type: pageInfo.activity, completed: true, score: pct,
+        });
+        setBarStatus('\u2713 Score saved: ' + pct + '%', '#6EE7B7');
+        setBarState('complete');
+        loadUnitProgress(pageInfo);
+        return result;
+      };
     } else {
       // ── QUIZ PAGE INIT ──────────────────────────────────────────────────────
       // Check lock/retry status before doing anything
