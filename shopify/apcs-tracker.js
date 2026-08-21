@@ -429,9 +429,28 @@
       var m = /(\d+)\s*\/\s*(\d+)/.exec(el.textContent || el.innerText || '');
       if (m && total) return Math.round(parseInt(m[1], 10) / total * 100);
     }
+
     // Fallback: the widget tags each graded block correct or wrong.
-    var correct = document.querySelectorAll('.answered-correct').length;
-    if (total) return Math.round(correct / total * 100);
+    //
+    // This is only usable when the page actually uses that convention, and the
+    // count alone cannot tell whether it does. A page that marks nothing has
+    // zero '.answered-correct' nodes, and so does a page whose student got
+    // everything wrong. This function used to return 0 for both, which stored a
+    // hard zero against nine Unit 1 pages for students who had scored full
+    // marks, and nothing downstream could tell it from a grade someone earned.
+    //
+    // '.answered-wrong' is the companion marker, so the presence of EITHER
+    // class proves the page uses the convention and that a 0 computed here is a
+    // real 0 rather than a guess.
+    var graded = document.querySelectorAll('.answered-correct, .answered-wrong').length;
+    if (total && graded) {
+      var correct = document.querySelectorAll('.answered-correct').length;
+      return Math.round(correct / total * 100);
+    }
+
+    // The page exposes no score in either shape. Say so rather than guessing the
+    // value that destroys grades: markComplete omits `score` entirely when this
+    // is null, which records the truthful "done, ungraded".
     return null;
   }
 
@@ -463,8 +482,25 @@
       });
     }
 
-    var checkBtns = document.querySelectorAll('.check-btn');
-    var total = checkBtns.length;
+    // Only an element that can CARRY a disabled state can ever satisfy the
+    // "every check button has been spent" test below. Several pages style a
+    // navigation link with the same class (`a.check-btn`, "Continue to Exercise
+    // 2"), and an anchor has no `disabled` property, so including it made
+    // `total` permanently unreachable. Cyber 1.1 lab and all three 1.2
+    // activities counted 5 or 6 while only 3 or 4 could ever be disabled, so
+    // markComplete was never called and a finished exercise recorded nothing
+    // but the visit. That is the bug a teacher reported on 2026-08-21.
+    //
+    // `'disabled' in el` is the exact test: it is true for button, input,
+    // select, textarea and fieldset, and false for an anchor or a div.
+    function gradedButtons() {
+      var all = document.querySelectorAll('.check-btn');
+      var out = [];
+      for (var i = 0; i < all.length; i++) if ('disabled' in all[i]) out.push(all[i]);
+      return out;
+    }
+
+    var total = gradedButtons().length;
 
     if (total > 0) {
       // -- GRADED PATH --
@@ -472,7 +508,7 @@
         // Let the page's own handler grade and disable the button first.
         setTimeout(function() {
           var answered = 0;
-          var btns = document.querySelectorAll('.check-btn');
+          var btns = gradedButtons();
           for (var i = 0; i < btns.length; i++) if (btns[i].disabled) answered++;
           if (answered >= total) markComplete(activityScorePct(total));
         }, 0);
