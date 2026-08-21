@@ -224,7 +224,12 @@ console.log('\nMATRIXIFY SHEET');
 console.log('\nHUB AND COMMAND CENTER LINKS');
 {
   const links = require(path.join(__dirname, '..', 'scripts', 'cyber-lab-links.js'));
-  const spec = links.theLab();
+  const specs = links.cyberLabs();
+  const spec = specs.find((x) => x.item_id === '1.2-lab');
+  ok(!!spec, 'cyberLabs finds the 1.2 lab');
+  ok(specs.length >= 2, 'cyberLabs returns every cyber lab, not just the first one authored');
+  ok(links.existingLabHandle('2.4') === 'ap-cyber-unit-2-lesson-4-lab',
+    'the existing non-terminal lab handle is derived from the lesson id');
 
   const GUIDE = '<div id="apcyber-course-hub">\n'
     + '              <a class="exercise-row" href="/pages/ap-cyber-unit-1-lesson-2-lab"><div class="ex-dot"></div>\n'

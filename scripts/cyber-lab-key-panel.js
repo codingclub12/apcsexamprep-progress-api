@@ -156,10 +156,21 @@ function patch(body) {
   if (!body.includes('CFG.API') && !body.includes('API: "https://progress.apcsexamprep.com"')) {
     throw new Error('the page does not name the API origin this panel calls');
   }
-  if (body.includes(MARK)) return { body, changed: false };
-
   const byLesson = labsByLesson();
   if (!Object.keys(byLesson).length) throw new Error('no ap-cybersecurity lab specs, so there is no key to show');
+
+  // The panel is already installed. That is not the same as being current: a lab
+  // authored after the panel shipped leaves LABKEY naming only the older labs, so
+  // its lesson row renders no key button at all. Refresh the map in place rather
+  // than reinstalling the panel, which would double every listener it registers.
+  if (body.includes(MARK)) {
+    const want = '  var LABKEY = ' + JSON.stringify(byLesson) + ';';
+    const re = /^ {2}var LABKEY = \{.*\};$/m;
+    const found = body.match(re);
+    if (!found) throw new Error('the panel is installed but its LABKEY line is not where this script expects it');
+    if (found[0] === want) return { body, changed: false };
+    return { body: body.replace(re, want), changed: true, refreshed: true };
+  }
 
   // 1. the code, inserted inside the existing IIFE so it shares CFG/STATE/esc.
   const fnAnchor = '  function studentSection(l, unlocked){';
@@ -189,8 +200,9 @@ function main(argv) {
     process.exit(2);
   }
   const before = fs.readFileSync(ccIn, 'utf8');
-  const { body, changed } = patch(before);
-  if (!changed) { console.log('    already carries the key panel, nothing to import'); return; }
+  const { body, changed, refreshed } = patch(before);
+  if (!changed) { console.log('    the key panel is installed and current, nothing to import'); return; }
+  if (refreshed) console.log('    the key panel was already installed; refreshing its lab map');
 
   // The page must not contain an answer. If it does, this script built the key
   // into the markup instead of fetching it, and importing would publish it.
