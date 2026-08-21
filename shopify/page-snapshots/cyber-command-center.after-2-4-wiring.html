@@ -1,0 +1,841 @@
+<!-- apcs-ccx cross-link bar (managed) --><div id="apcs-ccx">
+<style>#apcs-ccx{all:initial!important;display:block!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;}#apcs-ccx *{box-sizing:border-box!important;}#apcs-ccx .ccx-bar{display:flex!important;gap:8px!important;align-items:center!important;background:#0f1f3d!important;padding:10px 14px!important;border-radius:10px!important;margin:0 0 18px!important;flex-wrap:wrap!important;}#apcs-ccx .ccx-lbl{font-size:11px!important;font-weight:700!important;letter-spacing:.05em!important;text-transform:uppercase!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin-right:2px!important;}#apcs-ccx a.ccx-link{display:inline-block!important;padding:7px 13px!important;border-radius:7px!important;font-size:14px!important;font-weight:600!important;line-height:1.2!important;text-decoration:none!important;color:#e5edff!important;-webkit-text-fill-color:#e5edff!important;background:rgba(255,255,255,.08)!important;border:1px solid rgba(255,255,255,.16)!important;}#apcs-ccx a.ccx-link:hover{background:rgba(255,255,255,.16)!important;}#apcs-ccx a.ccx-active{background:#2563eb!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-color:#2563eb!important;cursor:default!important;}#apcs-ccx .ccx-soon{font-size:12px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;padding:0 4px!important;}#apcs-ccx .ccx-sep{width:1px!important;height:20px!important;background:rgba(255,255,255,.2)!important;margin:0 4px!important;}</style>
+<nav class="ccx-bar" aria-label="Teacher hubs"><span class="ccx-lbl">Hubs</span><a class="ccx-link ccx-active" href="/pages/cyber-command-center" aria-current="page">Cyber</a><a class="ccx-link" href="/pages/csp-command-center">CSP</a><a class="ccx-link" href="/pages/csa-command-center">CSA</a><a class="ccx-link" href="/pages/ap-networking-command-center">Networking</a><span class="ccx-sep"></span><a class="ccx-link" href="/pages/cyber-dashboard">Gradebook -&gt;</a></nav>
+</div>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=DM+Serif+Display&amp;display=swap" rel="stylesheet">
+<style>
+  #actc-wrap{--navy:#0f1f3d;--blue:#1a56db;--blue2:#3b82f6;--bg:#f1f5f9;--card:#fff;--line:#e2e8f0;--ink:#1e293b;--muted:#64748b;--green:#16a34a;--amber:#d97706;--red:#dc2626;--lock:#94a3b8;}
+  #actc-wrap *{box-sizing:border-box;}
+  #actc-wrap{font-family:"DM Sans",system-ui,sans-serif;background:var(--bg)!important;color:var(--ink)!important;-webkit-text-fill-color:var(--ink)!important;margin:0;display:block;}
+  #actc-wrap .wrap{max-width:1080px;margin:0 auto;padding:20px 16px 60px;}
+  #actc-wrap h1,#actc-wrap h2,#actc-wrap h3{font-family:"DM Serif Display",serif;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin:0;}
+  #actc-wrap a{color:var(--blue)!important;-webkit-text-fill-color:var(--blue)!important;text-decoration:none;}
+  #actc-wrap .tag{display:inline-block;background:#dcfce7!important;color:#166534!important;-webkit-text-fill-color:#166534!important;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;letter-spacing:.04em;}
+  #actc-wrap .tag.free{background:#dcfce7!important;color:#166534!important;-webkit-text-fill-color:#166534!important;}
+  #actc-wrap .tag.locked{background:#f1f5f9!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+  /* status banner */
+  #actc-wrap .banner{border-radius:14px;padding:16px 18px;margin-bottom:20px;display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;}
+  #actc-wrap .banner.signin{background:linear-gradient(135deg,#0f1f3d,#1a2a4d)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  #actc-wrap .banner.signin h3,#actc-wrap .banner.signin p{color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  #actc-wrap .banner.locked{background:#fffbeb!important;border:1px solid #fde68a;}
+  #actc-wrap .banner .b-txt{flex:1;min-width:220px;}
+  #actc-wrap .banner h3{font-size:16px;margin-bottom:3px;}
+  #actc-wrap .banner p{font-size:13px;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;margin:0;line-height:1.5;}
+  #actc-wrap .banner.signin p{color:#c7d2e5!important;-webkit-text-fill-color:#c7d2e5!important;}
+  #actc-wrap .field{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px;}
+  #actc-wrap .field.stack{flex-direction:column;align-items:stretch;max-width:340px;}
+  #actc-wrap .field.stack input,#actc-wrap .field.stack .btn{width:100%;flex:none;}
+  #actc-wrap .field input{font-family:inherit;font-size:14px;padding:11px 13px;border-radius:9px;border:1px solid var(--line);min-width:170px;flex:1;background:#fff!important;color:var(--ink)!important;-webkit-text-fill-color:var(--ink)!important;}
+  #actc-wrap .field input::placeholder{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;}
+  #actc-wrap .banner.signin a{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:600;}
+  #actc-wrap .btn{font-family:inherit;font-size:14px;font-weight:700;padding:10px 16px;border-radius:9px;border:none;background:var(--blue)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;cursor:pointer;white-space:nowrap;}
+  #actc-wrap .btn.ghost{background:#fff!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;border:1px solid var(--line);}
+  #actc-wrap .msg{font-size:12.5px;font-weight:600;margin-top:8px;min-height:15px;}
+  #actc-wrap .msg.err{color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;}
+  #actc-wrap .msg.ok{color:var(--green)!important;-webkit-text-fill-color:var(--green)!important;}
+  /* header */
+  #actc-wrap .tcc-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:14px 0 18px;border-bottom:1px solid var(--line);margin-bottom:22px;}
+  #actc-wrap .tcc-title{display:flex;align-items:center;gap:12px;}
+  #actc-wrap .tcc-logo{width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg,#1a56db,#0f1f3d)!important;display:flex;align-items:center;justify-content:center;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:"DM Serif Display",serif;font-size:18px;}
+  #actc-wrap .tcc-title h1{font-size:21px;}
+  #actc-wrap .tcc-title .sub{font-size:12.5px;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;}
+  #actc-wrap .who{font-size:12px;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;text-align:right;}
+  #actc-wrap .who a{font-weight:600;cursor:pointer;}
+  /* progress strip */
+  #actc-wrap .prog{background:var(--card)!important;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:20px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;}
+  #actc-wrap .prog .bar-wrap{flex:1;min-width:200px;}
+  #actc-wrap .prog .bar-lbl{font-size:12.5px;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;margin-bottom:6px;}
+  #actc-wrap .prog .bar-lbl b{color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-family:"DM Serif Display",serif;font-weight:400;}
+  #actc-wrap .prog .bar{height:9px;border-radius:999px;background:#e8eef7;overflow:hidden;}
+  #actc-wrap .prog .bar i{display:block;height:100%;background:linear-gradient(90deg,#1a56db,#3b82f6)!important;width:0;transition:width .3s;}
+  #actc-wrap .prog .resume{font-size:12.5px;font-weight:600;padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:#eff6ff!important;color:var(--blue)!important;-webkit-text-fill-color:var(--blue)!important;cursor:pointer;}
+  /* units */
+  #actc-wrap .unit{background:var(--card)!important;border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:14px;}
+  #actc-wrap .u-head{display:flex;align-items:center;gap:12px;padding:15px 18px;cursor:pointer;background:#f8fafc;border-bottom:1px solid transparent;}
+  #actc-wrap .unit.open .u-head{border-bottom-color:var(--line);}
+  #actc-wrap .u-num{width:34px;height:34px;flex:none;border-radius:9px;background:var(--navy)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:"DM Serif Display",serif;font-size:16px;display:flex;align-items:center;justify-content:center;}
+  #actc-wrap .unit.lock .u-num{background:var(--lock)!important;}
+  #actc-wrap .u-head h2{font-size:17px;}
+  #actc-wrap .u-head .u-meta{font-size:12px;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;margin-top:1px;}
+  #actc-wrap .u-head .u-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+  #actc-wrap .u-head .u-days{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--blue)!important;-webkit-text-fill-color:var(--blue)!important;background:#eff6ff!important;padding:5px 10px;border-radius:999px;white-space:nowrap;}
+  #actc-wrap .u-head .caret{font-size:12px;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;transition:transform .15s;}
+  #actc-wrap .unit.open .caret{transform:rotate(90deg);}
+  #actc-wrap .u-body{display:none;padding:6px 10px 10px;}
+  #actc-wrap .unit.open .u-body{display:block;}
+  /* lesson accordion */
+  #actc-wrap .lsn{border:1px solid var(--line);border-radius:12px;margin-top:10px;overflow:hidden;}
+  #actc-wrap .lsn:first-child{margin-top:2px;}
+  #actc-wrap .l-head{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;}
+  #actc-wrap .l-chk{width:22px;height:22px;flex:none;border-radius:6px;border:2px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff!important;-webkit-text-fill-color:#fff!important;cursor:pointer;}
+  #actc-wrap .l-chk.done{background:var(--green)!important;border-color:var(--green);}
+  #actc-wrap .l-id{font-family:"DM Serif Display",serif;font-size:14px;color:var(--blue)!important;-webkit-text-fill-color:var(--blue)!important;flex:none;}
+  #actc-wrap .l-name{font-size:14px;font-weight:700;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;flex:1;min-width:0;}
+  #actc-wrap .lsn.done .l-name{color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;}
+  #actc-wrap .l-days{font-size:11px;font-weight:700;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;flex:none;}
+  #actc-wrap .l-ced{font-size:10px;font-weight:800;letter-spacing:.03em;color:var(--blue)!important;-webkit-text-fill-color:var(--blue)!important;background:#eff6ff!important;border:1px solid #bfdbfe;border-radius:6px;padding:2px 6px;flex:none;white-space:nowrap;}
+  #actc-wrap .l-caret{font-size:11px;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;transition:transform .15s;flex:none;}
+  #actc-wrap .lsn.open .l-caret{transform:rotate(90deg);}
+  #actc-wrap .l-body{display:none;padding:2px 14px 14px 48px;}
+  #actc-wrap .lsn.open .l-body{display:block;}
+  #actc-wrap .plan{font-size:12.5px;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;line-height:1.55;margin:6px 0 12px;}
+  #actc-wrap .plan b{color:var(--ink)!important;-webkit-text-fill-color:var(--ink)!important;}
+  #actc-wrap .mats{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;}
+  #actc-wrap .mat{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;padding:9px 11px;border-radius:9px;border:1px solid var(--line);background:#f8fafc!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+  #actc-wrap a.mat:hover{border-color:var(--blue);}
+  #actc-wrap .mat .m-ico{font-size:14px;}
+  #actc-wrap .mat.disabled{color:var(--lock)!important;-webkit-text-fill-color:var(--lock)!important;background:#f1f5f9!important;cursor:not-allowed;}
+  #actc-wrap a.mat.site{background:#ecfdf5!important;border-color:#a7f3d0;color:#065f46!important;-webkit-text-fill-color:#065f46!important;}
+  #actc-wrap a.mat.site:hover{border-color:var(--green);}
+  #actc-wrap button.mat.copy{font-family:inherit;cursor:pointer;background:#eff6ff!important;border-color:#bfdbfe;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;}
+  #actc-wrap button.mat.copy:hover{border-color:var(--blue);}
+  #actc-wrap .stu-pair{display:inline-flex;align-items:center;gap:2px;}
+  #actc-wrap button.mat.copy.mini{padding:9px 9px;}
+  #actc-wrap .mats-lbl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;margin:14px 0 6px;}
+  #actc-wrap .mats-lbl:first-child{margin-top:2px;}
+  #actc-wrap .uwrap{display:flex;gap:8px;flex-wrap:wrap;margin:12px 2px 4px;}
+  #actc-wrap .uwrap .wp{font-size:12px;font-weight:600;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;background:transparent!important;border:0;border-radius:0;padding:0;}.wplbl{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;padding:0;}.wpsep{color:var(--line)!important;-webkit-text-fill-color:var(--line)!important;padding:0 2px;}
+  #actc-wrap .unit.lock .uwrap .wp{color:var(--lock)!important;-webkit-text-fill-color:var(--lock)!important;}
+  #actc-wrap .exam .u-num{background:linear-gradient(135deg,#16a34a,#0f1f3d)!important;}
+  #actc-wrap .locknote{font-size:12.5px;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;padding:10px 14px 14px 48px;}
+  #actc-wrap .u-note{display:flex;gap:9px;font-size:12.5px;line-height:1.5;color:#0f3b66!important;-webkit-text-fill-color:#0f3b66!important;background:#eff6ff!important;border:1px solid #bfdbfe;border-left:3px solid var(--blue);border-radius:9px;padding:11px 13px;margin:2px 2px 12px;}
+  #actc-wrap .u-note b{color:#0b2c4d!important;-webkit-text-fill-color:#0b2c4d!important;}
+  #actc-wrap .foot{font-size:12px;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;margin-top:22px;line-height:1.65;}
+  /* header gradebook link */
+  #actc-wrap .who .navlink{display:inline-block;font-weight:600;padding:6px 11px;border-radius:8px;border:1px solid var(--line);background:#fff!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:4px;}
+  #actc-wrap .who .navlink:hover{border-color:var(--blue);}
+  /* summary stat blocks */
+  #actc-wrap .blocks{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+  #actc-wrap .block{background:var(--card)!important;border:1px solid var(--line);border-radius:14px;padding:16px;}
+  #actc-wrap .block .b-ico{font-size:20px;margin-bottom:8px;}
+  #actc-wrap .block .b-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;}
+  #actc-wrap .block .b-main{font-family:"DM Serif Display",serif;font-size:24px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin:2px 0;}
+  #actc-wrap .block .b-note{font-size:12px;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;line-height:1.45;}
+  /* controls strip */
+  #actc-wrap .ctrls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+  #actc-wrap .ctrls .exp{font-family:inherit;font-size:12.5px;font-weight:600;padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:#fff!important;color:var(--ink)!important;-webkit-text-fill-color:var(--ink)!important;cursor:pointer;margin-left:auto;}
+  @media(max-width:820px){#actc-wrap .blocks{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:520px){#actc-wrap .l-body{padding-left:14px;}#actc-wrap .blocks{grid-template-columns:1fr;}}
+</style>
+<div id="actc-wrap">
+  <div class="wrap">
+    <div class="tcc-head">
+      <div class="tcc-title">
+        <div class="tcc-logo">CY</div>
+        <div>
+<h1>AP Cybersecurity Command Center</h1>
+<div class="sub">APCSExamPrep • full-year pacing, materials &amp; your teaching progress</div>
+</div>
+      </div>
+      <div class="who" id="actc-who"></div>
+    </div>
+
+    <div id="actc-banner"></div>
+    <div id="actc-prog" style="display:none;"></div>
+    <div class="blocks" id="actc-blocks"></div>
+    <div id="actc-res"></div>
+    <div class="ctrls"><button class="exp" id="actc-expand">Expand all units</button></div>
+    <div id="actc-units"></div>
+
+    <div class="foot">
+      A suggested full-year pace in <b>50-minute periods</b> — on a block (90-minute) schedule, merge two days into one block. Adjust to your calendar and the day ranges update automatically. Teacher materials open in Google Drive (make a copy to edit for your class); Scenario buttons open the live student pages. Your “taught” progress is saved on this device.
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ============================================================================
+     CONFIG  -  the only things you edit
+     ---------------------------------------------------------------------------- */
+  var CFG = {
+    // Your progress API (custom domain on Railway). CORS already allows this site.
+    API: "https://progress.apcsexamprep.com",
+
+    // This hub's course. The gate check asks the API: is this teacher entitled to it?
+    COURSE: "ap-cybersecurity",
+
+    // localStorage key the teacher's JWT is stored under. MUST MATCH whatever your
+    // sign-in page (/pages/cyber-class) saves the teacher token as. If your sign-in
+    // uses a different key, change this to match, or the hub will ask them to sign
+    // in again here.
+    TOKEN_KEY: "apcse_teacher_token",
+
+    // Where teachers sign in / create an account for every course.
+    SIGNIN_URL: "/pages/cyber-class",
+
+    // This page's own path. Used to build the ?next= round-trip so the sign-in
+    // page returns the teacher here after they authenticate. Set to the handle
+    // you publish this hub at.
+    HUB_PATH: "/pages/cyber-command-center",
+
+    // The teacher gradebook dashboard (cross-linked in the header).
+    DASHBOARD_URL: "/pages/cyber-dashboard",
+
+    // Where a non-purchaser buys this course.
+    BUY_URL: "/products/ap-cybersecurity-founding-teacher-bundle",
+
+    // Units that are FREE to preview without an entitlement (funnel). Unit 1 free.
+    FREE_UNITS: [1],
+
+    DRIVE: "https://drive.google.com/drive/folders/",
+
+    // Base path for the student site. The per-lesson scenario/practice exercises
+    // are published here as their own pages (ap-cyber-unit-N-lesson-M-exercise-1/2).
+    SITE: "/pages/",
+
+    // Days budgeted at year-end for cumulative AP exam review + practice.
+    EXAM_REVIEW_DAYS: 12
+  };
+
+  /* UNITS: title, suggested days, and the lesson folder link. Each lesson folder
+     holds the slide deck, guided notes, quiz, and supplements. To deep-link an
+     individual file, add a `mats` object to a lesson, e.g.:
+       mats: { deck:"<url>", notes:"<url>", quiz:"<url>", supp:"<url>" }
+     Leave `mats` off and all four buttons open the lesson folder.
+     For site-hosted student pages (practice / coding), add `site` links later:
+       site: { notes:"<url>", coding:"<url>" }                                    */
+  var D = CFG.DRIVE, P = CFG.SITE;
+  var Q = "/pages/ap-cybersecurity-question-of-the-day?q=";
+  var UNITS = [
+    { n:1, name:"Introduction to Security", frqDays:2, labDays:3, testDays:2, lessons:[
+      { id:"1.1", title:"Understanding Social Engineering", days:2, act:1, folder:D+"1FShfCr-fi_GosCgPRwYdkSvK9o-sDWSf",
+        mats:{ deck:D+"1hWne2xW1pUqwraKeW6m-qz8Z7Lshl0P_", notes:D+"1CWGTg8T4T_Fq-20AC0WsaYaEvM7VKa5_", quiz:D+"1s2RU5AHWa_y4Y1RfUblKqzzdTUcXNv38", supp:D+"18oWIx8lqE2tbRPpmwWH5XhSO_RN_t6Jt", guide:"https://drive.google.com/file/d/1Pyc8Tri1K8pG6bBeRV0V5X3_Rx5gzoXd/view" },
+        site:{ ex1:P+"ap-cyber-unit-1-lesson-1-exercise-1", ex2:P+"ap-cyber-unit-1-lesson-1-exercise-2" }, qotd:[Q+"C1-101", Q+"C1-102"] },
+      { id:"1.2", title:"Suspicious Website Logins", days:2, act:1, folder:D+"1yuSq4-lvdjg9puB9r5nse4djlB02B9ji",
+        mats:{ deck:D+"1NILk1hiPU9Hl3g4lNaL0MQzU_8ymtL2-", notes:D+"1NTdrcKvShimfJL2d_K_SnOtsRuFPlmdI", quiz:D+"16ix8nD1DmeOXCnissLHCudO_xfTplE0n", supp:D+"1ZMVZpsFVWeRIpi_lFd-TaJ8VfoOJunI4", guide:"https://drive.google.com/file/d/1AQCavROy1CoF-3A5XmqRyuqlqaV6gK6p/view" },
+        site:{ ex1:P+"ap-cyber-unit-1-lesson-2-exercise-1", ex2:P+"ap-cyber-unit-1-lesson-2-exercise-2" }, qotd:[Q+"C1-110", Q+"C1-111", Q+"C1-112", Q+"C1-113"] },
+      { id:"1.3", title:"Best Practices for Public Networks", days:1, act:1, folder:D+"1-MXKxGlNrw5EPMSjY0W4iqDMSKSAsqVC",
+        mats:{ deck:D+"1w4InIh0v_J6aBS8bvo_6EA_jtl5QYs9B", notes:D+"16QI2u0FvOMRo7x9Wr1p9aT5vtreKjFE6", quiz:D+"1mDg1I5ZO8SWj4k4e8NS7eCAk9DA11w6o", supp:D+"1DHpfP_y6HXXHk2ApBqgBx3-4iJLKwMHg", guide:"https://drive.google.com/file/d/1f57Km-wGUgfjff2ik5kWx9oMb_nRCke-/view" },
+        site:{ ex1:P+"ap-cyber-unit-1-lesson-3-exercise-1", ex2:P+"ap-cyber-unit-1-lesson-3-exercise-2" }, qotd:[Q+"C1-116", Q+"C1-117", Q+"C1-118", Q+"C1-119"] },
+      { id:"1.4", title:"AI-Based Cybersecurity Attacks", days:2, act:1, folder:D+"1Djfmah2h8ZKf0LTzrko66EgTXNW1oWUB",
+        mats:{ deck:D+"16Mpyet0dBpdAHfL98JUkI2RR__RrTxk2", notes:D+"1Va-5UL_PpjX9wS0xmgOBVUXOEiN7_qn0", quiz:D+"14AyhJtkhoj-eL5dIwTs0Ml9Tw_5i6ps9", supp:D+"1bPRML1EcbKsFA_KqxKBqHhfOZQpuihmm", guide:"https://drive.google.com/file/d/1l4o_I1TiyraqrfgO7PwJKFzMFibRiOaE/view" },
+        site:{ ex1:P+"ap-cyber-unit-1-lesson-4-exercise-1", ex2:P+"ap-cyber-unit-1-lesson-4-exercise-2" }, qotd:[Q+"C1-121", Q+"C1-122"] },
+      { id:"1.5", title:"Leveraging AI in Cyber Defense", days:2, act:1, folder:D+"1lQXWLSTFY-BuS6DFtCsQa0veZJEMJQf1",
+        mats:{ deck:D+"1Q572xvzJqxkiCIcSjKVk_PHr5zv8K0xo", notes:D+"1DPV2WuBJiv_-EjdMcZUSVnLUSCrRmWcT", quiz:D+"1i9X8rdhUtyMfOfhJnqPAJxBWKn_kzyT5", supp:D+"15t_FXbZO2-KxMSyDGEysIMZobxF_i2d_", guide:"https://drive.google.com/file/d/1Uw2FlrX9S252y-f8aFOV8IQwI7XSRLaK/view" },
+        site:{ ex1:P+"ap-cyber-unit-1-lesson-5-exercise-1", ex2:P+"ap-cyber-unit-1-lesson-5-exercise-2" }, qotd:[Q+"C1-125", Q+"C1-126"] },
+    ]},
+    { n:2, name:"Securing Spaces", frqDays:2, labDays:3, testDays:2, lessons:[
+      { id:"2.1", title:"Cyber Foundations", days:2, act:1, folder:D+"1dz2bkfhkt1kOiX6POldf0Ndq8TL05Vyc",
+        mats:{ deck:D+"1phuJUbDsIb6GC5_yfSp6ibn7GTz7j16M", notes:D+"1q23ENmIbaSikYaqBIHPp5GQ6u49sBaxD", quiz:D+"1yuSz66ph7HulybpUi8OLz9b3puL3VIVO", supp:D+"1zV7TlYpIQwFF4nMMhgGqoQa_LSprKRBC", guide:"https://drive.google.com/file/d/1cC-jQ-SlBRFymGTayaF58We-6BSvwcId/view" },
+        site:{ ex1:P+"ap-cyber-unit-2-lesson-1-exercise-1", ex2:P+"ap-cyber-unit-2-lesson-1-exercise-2" }, qotd:[Q+"C2-101", Q+"C2-102", Q+"C2-103", Q+"C2-104", Q+"C2-105", Q+"C2-107", Q+"C2-123", Q+"C2-125"] },
+      { id:"2.2", title:"Physical Vulnerabilities", days:2, act:1, folder:D+"1xC0_B4qSaHqNdjrvf1RKnTWrHuRM6nxA",
+        mats:{ deck:D+"1_879YPUQbqGk4uG_TGBpdwwnLuKbCzZu", notes:D+"1reJO5JWGHFkEwlE4NrRJ-K02Ec1752jS", quiz:D+"12W4wU3m7DmsMZEB-W2dUd8ouzccrcuy2", supp:D+"1RGWSEe79XG2aX9xiwGXlVwh1wzIoJmmf", guide:"https://drive.google.com/file/d/1ANWwMvOP0GAlmA26BfEL1n6sSgFB8tyn/view" },
+        site:{ ex1:P+"ap-cyber-unit-2-lesson-2-exercise-1", ex2:P+"ap-cyber-unit-2-lesson-2-exercise-2" }, qotd:[Q+"C2-108", Q+"C2-109", Q+"C2-110", Q+"C2-111", Q+"C2-112"] },
+      { id:"2.3", title:"Protecting Physical Spaces", days:2, act:1, folder:D+"1eufkO6zMuLNltI4HwpMVk1S63We3hzsz",
+        mats:{ deck:D+"1yLKzGFKjNclivYugQpp-iBm4d6GIE6WS", notes:D+"1mSsLYX7Ny6V8o5lYLMsA989PK6BvK2Ug", quiz:D+"1xnLCaeT0Rn8E4iZlgb5-rWhrW9CE3bZ3", supp:D+"1O1Vt04FFwbtNiilkvRsJVqzbypl0KpDj", guide:"https://drive.google.com/file/d/1qRPLyx33pc-huZYCN2bFaWwS-2YHAF1K/view" },
+        site:{ ex1:P+"ap-cyber-unit-2-lesson-3-exercise-1", ex2:P+"ap-cyber-unit-2-lesson-3-exercise-2" }, qotd:[Q+"C2-113", Q+"C2-114", Q+"C2-115", Q+"C2-116"] },
+      { id:"2.4", title:"Detecting Physical Attacks", days:2, act:1, folder:D+"1HIR86oraRN_PGaAuQd-HDSLgUmCOGNC8",
+        mats:{ deck:D+"1QYBbDfmfN3jfrJf3bT5cCmGvnjuM68s1", notes:D+"13BWE6agb937e9YawyO_EHDUJUNlAxX4E", quiz:D+"1RB2WcU1Zh_HCSrU0dXECgZRLoMyBL1Ho", supp:D+"15U51FXebENnIFa7iy9JCfiFmwASOXbF-", guide:"https://drive.google.com/file/d/1lGbBAiyGusZu3Pa4-F5hdrRruCrCrxyJ/view" },
+        site:{ ex1:P+"ap-cyber-unit-2-lesson-4-exercise-1", ex2:P+"ap-cyber-unit-2-lesson-4-exercise-2" }, qotd:[Q+"C2-118", Q+"C2-119", Q+"C2-120", Q+"C2-121"] },
+    ]},
+    { n:3, name:"Securing Networks", frqDays:2, labDays:4, testDays:2,
+      note:"Unit 3 is taught in a flow-optimized sequence that differs from the CED's topic order. Every lesson is tagged with the CED topic it covers, and all of CED 3.1–3.5 is included. Lessons 3.1 (Network Fundamentals) and 3.2 (Network Attacks) both sit under CED 3.1 (Network Vulnerabilities & Attacks) and share the same CED 3.1 teacher deck and notes.",
+      lessons:[
+      { id:"3.1", title:"Network Fundamentals & Attack Surface", ced:"CED 3.1", days:2, act:1, folder:D+"1xe8mJbOnSsyI5RlYmL95mZDxCALWHj5I",
+        mats:{ deck:D+"1RrbKsEcCsQdjDR4ogVJVa4MGTzYDEJJp", notes:D+"1PATWMur-VUnMmfWPb9qXHSltMLteREPo", quiz:D+"18yyPt_bWAJRdIsw9TY8iqah-wS3XoRVb", supp:D+"1rjRB-wk9EbrvV8j0S_E-ycXpsjmLrGCu", guide:"https://drive.google.com/file/d/1cBUK8OPbsOXUBIcTzK6N69SXnI-jSslS/view" },
+        site:{ ex1:P+"ap-cyber-unit-3-lesson-1-exercise-1", ex2:P+"ap-cyber-unit-3-lesson-1-exercise-2" }, qotd:[Q+"C3-101", Q+"C3-102", Q+"C3-103"] },
+      { id:"3.2", title:"Network Attacks", ced:"CED 3.1", days:2, act:1, folder:D+"1xe8mJbOnSsyI5RlYmL95mZDxCALWHj5I",
+        mats:{ deck:D+"1RrbKsEcCsQdjDR4ogVJVa4MGTzYDEJJp", notes:D+"1PATWMur-VUnMmfWPb9qXHSltMLteREPo", quiz:D+"18yyPt_bWAJRdIsw9TY8iqah-wS3XoRVb", supp:D+"1rjRB-wk9EbrvV8j0S_E-ycXpsjmLrGCu", guide:"https://drive.google.com/file/d/1cBUK8OPbsOXUBIcTzK6N69SXnI-jSslS/view" },
+        site:{ ex1:P+"ap-cyber-unit-3-lesson-2-exercise-1", ex2:P+"ap-cyber-unit-3-lesson-2-exercise-2" }, qotd:[Q+"C3-104", Q+"C3-106", Q+"C3-126"] },
+      { id:"3.3", title:"Firewalls & Packet Filtering", ced:"CED 3.4", days:2, act:1, folder:D+"1eZwUIYIsf53gBsFP-1w6fYWX9ieC5RAO",
+        mats:{ deck:D+"1-M7-PTavNbaIITmzHZ3oqKy1eTXi2Chy", notes:D+"1mNVCxm1WDQ0a2c0bk8n6IRmjjUNTqSsu", quiz:D+"1MWEyCf0yrUzhDWqjpyvyayM9Jm-XuEjo", supp:D+"1W28y4omZvueNB90FUPkuvEtr4aE0KibW", guide:"https://drive.google.com/file/d/1wTQ8dChQ1kE0pGuK6Dx4NHSBfL8XDffn/view" },
+        site:{ ex1:P+"ap-cyber-unit-3-lesson-3-exercise-1", ex2:P+"ap-cyber-unit-3-lesson-3-exercise-2" }, qotd:[Q+"C3-115", Q+"C3-117"] },
+      { id:"3.4", title:"Network Segmentation & VLANs", ced:"CED 3.3", days:2, act:1, folder:D+"1pwYji4afMo-bA3ghFyiAaHl6Okdhb0tN",
+        mats:{ deck:D+"1Ul2Wpg2lgjYei0FUsoqrgWZ3WPJigaeb", notes:D+"1CMtq1RrZSGEhpb7zN4ykaa7MXHkvf6Pz", quiz:D+"1XkMMhG4HfMwweY1KuWNnJztf4SF8qobB", supp:D+"1f7qAJR9OB09D3Lt-1zx1CcC-tIQavfmx", guide:"https://drive.google.com/file/d/1xnfyfXR-_dwOkOUAk1LEjhNvyJA2ODwe/view" },
+        site:{ ex1:P+"ap-cyber-unit-3-lesson-4-exercise-1", ex2:P+"ap-cyber-unit-3-lesson-4-exercise-2" }, qotd:[Q+"C3-111", Q+"C3-112"] },
+      { id:"3.5", title:"IDS, IPS & SIEM", ced:"CED 3.5", days:2, act:1, folder:D+"1oco0hRuYkvftWHS0VI1hnlmFlumPHR5R",
+        mats:{ deck:D+"13OKXGi7tQp3N_TbDEYrR_OUqqMZqsPug", notes:D+"1Q-ZI2A2qlxs8t_EhDwNcfNaHzccBO31p", quiz:D+"1z52y1IaKzvL3bG0F9hvpeaOItTA2Rebm", supp:D+"1OSFFeCHWJkWZ4AKAc1_hdB2bI6jrR7cE", guide:"https://drive.google.com/file/d/16DRFx8VKowNqg26PsNpezctlOXThxViB/view" },
+        site:{ ex1:P+"ap-cyber-unit-3-lesson-5-exercise-1", ex2:P+"ap-cyber-unit-3-lesson-5-exercise-2" }, qotd:[Q+"C3-119", Q+"C3-120", Q+"C3-121", Q+"C3-123", Q+"C3-124", Q+"C3-125", Q+"C3-122"] },
+      { id:"3.6", title:"Network Security Policies & Wireless", ced:"CED 3.2", days:1, act:1, folder:D+"1USQlTsM-rJOPT-SklmM4y0TJ49V6Ub36",
+        mats:{ deck:D+"1g4n14lAYV_YcQSSE-NZ8zNdlFoRY1X8R", notes:D+"11R-o82dvTCHztNwnKNEaXw7_HPmFVDp5", quiz:D+"11dC01znXvJtS1P8nMtPFZ6Ph5iP1cXWe", supp:D+"13Qf-Na-NsD5DKMedSV6UG8Lf_kGkQFRO", guide:"https://drive.google.com/file/d/1QwO0EWkhP65qTYuVAChVcEaIVthVex-6/view" },
+        site:{ ex1:P+"ap-cyber-unit-3-lesson-6-exercise-1", ex2:P+"ap-cyber-unit-3-lesson-6-exercise-2" }, qotd:[Q+"C3-107", Q+"C3-108", Q+"C3-109"] },
+    ]},
+    { n:4, name:"Securing Devices", frqDays:2, labDays:3, testDays:2, lessons:[
+      { id:"4.1", title:"Device Vulnerabilities", days:2, act:1, folder:D+"1pEK_20MjVbogrpPY1W9iAXoV3BvExaF3",
+        mats:{ deck:D+"1MTaut6qQcDBxZLssBGhamgn6bypUQunt", notes:D+"1g6K_5aNsJnayRBzfYEj5oj5viVtI_Gud", quiz:D+"1GIio9ed7DpZRZ5HJQIG2jrFGwQVebXlg", supp:D+"1iPd5zR5S3C9B9N61UuMPLC1QcHMitE9W", guide:"https://drive.google.com/file/d/1dMRvsAzJKVn7arxGfL47brlLsLHHfcRr/view" },
+        site:{ ex1:P+"ap-cyber-unit-4-lesson-1-exercise-1", ex2:P+"ap-cyber-unit-4-lesson-1-exercise-2" }, qotd:[Q+"C4-101", Q+"C4-102", Q+"C4-103", Q+"C4-104", Q+"C4-105", Q+"C4-107"] },
+      { id:"4.2", title:"Authentication", days:2, act:1, folder:D+"1tlGVczvEu-FsuUbDa4nU5LzytJrjJHjg",
+        mats:{ deck:D+"1Ho3jY4NfQJwKfJ9wrGj2Ix4fl5oWZSza", notes:D+"1GilrRjmDZpMXWXxUYeJow6I1Fzk42fIb", quiz:D+"1KRJef0WsT845LZuzDANq4FHJLFMPRmWZ", supp:D+"1-LXO34dkFDLtl0r8Lka5isLeNu6kBSRY", guide:"https://drive.google.com/file/d/1AHgZiSpQF2dydrmaWBP-gGBH5vRiXdQB/view" },
+        site:{ ex1:P+"ap-cyber-unit-4-lesson-2-exercise-1", ex2:P+"ap-cyber-unit-4-lesson-2-exercise-2" }, qotd:[Q+"C4-108", Q+"C4-109", Q+"C4-110", Q+"C4-111", Q+"C4-112"] },
+      { id:"4.3", title:"Protecting Devices", days:2, act:1, folder:D+"1xT4VuU-dGerxJdVvV1hs6Y4k5xxmfBmj",
+        mats:{ deck:D+"1QARF2ve9Zc7bH24K8QBNGHn4qbXw8j96", notes:D+"1qyZdMHmd1tHG1BFntIRBZmubOfeAxni3", quiz:D+"1RWs9CSpOeoo4MBv0HkyFhjak3KHShvhK", supp:D+"1YdfNHnLsHnaOr9dOCYIva3xweihXjAyK", guide:"https://drive.google.com/file/d/19N8wE2QyAtI4OPZHbDXUB1LKKJ8aMBxu/view" },
+        site:{ ex1:P+"ap-cyber-unit-4-lesson-3-exercise-1", ex2:P+"ap-cyber-unit-4-lesson-3-exercise-2" }, qotd:[Q+"C4-113", Q+"C4-114"] },
+      { id:"4.4", title:"Detecting Device Attacks", days:2, act:1, folder:D+"1OmDU-ZGqMNJJEN7_HhTkKJEb3gJnz3ub",
+        mats:{ deck:D+"10ghnb9uCFq-4pv6qqR4qBpa0DkJtg2PP", notes:D+"1YMHQfARMozerT1Nllz6y1zLVXxg3JtjD", quiz:D+"13r-LXeXANd_-kjdORQF4IQdefy2qChw0", supp:D+"1PbeUyFKoLKajS4c6a88XSKAl-LCcWEmf", guide:"https://drive.google.com/file/d/1UobAGto1CMMp_lO0rn7LmEOaijiVJB6s/view" },
+        site:{ ex1:P+"ap-cyber-unit-4-lesson-4-exercise-1", ex2:P+"ap-cyber-unit-4-lesson-4-exercise-2" }, qotd:[Q+"C4-118", Q+"C4-119"] },
+    ]},
+    { n:5, name:"Securing Applications and Data", frqDays:2, labDays:4, testDays:2, lessons:[
+      { id:"5.1", title:"Application and Data Vulnerabilities", days:2, act:1, folder:D+"11WIPeFqZ4e0rhVsp1_m9YIHIcoBlQ99g",
+        mats:{ deck:D+"1-irY5CDKOB6SMR-BpycWKgvxj0eFSgKG", notes:D+"1_lfvAACkUZi_0E9OsNE4TxPq245mamSU", quiz:D+"1p9XPZ2Odw0kjf_MF-PSmUZN3S3MRu8mG", supp:D+"1N0nSo5KKEcNw9W14FWbytCvW8Du5yWmP", guide:"https://drive.google.com/file/d/1MXrxg9QyrVb6xfIyIiMvWvg43qmUa1UW/view" },
+        site:{ ex1:P+"ap-cyber-unit-5-lesson-1-exercise-1", ex2:P+"ap-cyber-unit-5-lesson-1-exercise-2" }, qotd:[Q+"C5-101", Q+"C5-102", Q+"C5-103", Q+"C5-104", Q+"C5-106"] },
+      { id:"5.2", title:"Protecting Data: Managerial Controls", days:1, act:1, folder:D+"1z6nURUm7qfo9rzkUHI9IglcZQIuTkPin",
+        mats:{ deck:D+"1a_jhKpNZvPVygX9lWYCfiVeFPkFeDpuH", notes:D+"1NiV-7rW2sLr2Y1kYt99837phqIbn19x3", quiz:D+"11dfXeF9e0L3WT8VvvmYym_E1FEOKgUCc", supp:D+"1b8IC6Yc7S4t8EdEuxuIkTyPJDQO14Qnk", guide:"https://drive.google.com/file/d/1WPVr1fAUWChObYBMvidZpt_hJAF92bz3/view" },
+        site:{ ex1:P+"ap-cyber-unit-5-lesson-2-exercise-1", ex2:P+"ap-cyber-unit-5-lesson-2-exercise-2" }, qotd:[Q+"C5-107", Q+"C5-108", Q+"C5-109", Q+"C5-110", Q+"C5-133", Q+"C5-137", Q+"C5-140"] },
+      { id:"5.3", title:"Stored Data Encryption", days:3, act:1, folder:D+"1zo99YNwgYadHsWss6FhpHT8cNhW4oL1l",
+        mats:{ deck:D+"14-UDXss7U-J5r0ekn6GGsZrGyKFNz5in", notes:D+"1qERHlF2Z2TMFjtoS_YJUTR9NaeUDVXDV", quiz:D+"1z_LKIW4bSvlMMPz3yx1fLxwq7IfvpiyM", supp:D+"1EnQHi4_1rQzbCEL0nspCXNUccHZkm5Ss", guide:"https://drive.google.com/file/d/1P9HqGGlLfs3pYx20FuPuokwpw0TI_Ws-/view" },
+        site:{ ex1:P+"ap-cyber-unit-5-lesson-3-exercise-1", ex2:P+"ap-cyber-unit-5-lesson-3-exercise-2" }, qotd:[Q+"C5-111", Q+"C5-112", Q+"C5-113", Q+"C5-114"] },
+      { id:"5.4", title:"Asymmetric Encryption", days:3, act:1, folder:D+"1lH1KkH917Z1F_FFeQsYMAs28-TVYVGJf",
+        mats:{ deck:D+"1dDfzMFIV7H335MkBupQw4yJ5YRspkrH-", notes:D+"1S4669wDYpKtb_VL4jzzjXZq9688PS3Xm", quiz:D+"19OFkuJmmIgAfGaTMc4-LIvt1ttq7RutI", supp:D+"1bXgdPI0HNZCRXYFXMzFCt2F8Qadg-HHU", guide:"https://drive.google.com/file/d/1ZylPMBToKm3dwGF8l7O1Y1draKh-9wHo/view" },
+        site:{ ex1:P+"ap-cyber-unit-5-lesson-4-exercise-1", ex2:P+"ap-cyber-unit-5-lesson-4-exercise-2" }, qotd:[Q+"C5-116", Q+"C5-118", Q+"C5-120", Q+"C5-117", Q+"C5-119"] },
+      { id:"5.5", title:"Protecting Applications", days:2, act:1, folder:D+"1i5EjNfS4W-FIKPKQUoK6t2AhdqmUSYoc",
+        mats:{ deck:D+"1CWbolkQvY1cTEOl41wk85m0_uhiijNDE", notes:D+"1Xsua0-SVST1t0o4RA75kMXjAUfKFcJi7", quiz:D+"1yiy3tWSP5RDEXBE2VaYYFTzVBhFNsUr_", supp:D+"1KOfD2fU74xnS6wsLvFXNslUpkWpbeLtU", guide:"https://drive.google.com/file/d/1aVlApjSEah5jqzc65ansOW33KJ4xSoYa/view" },
+        site:{ ex1:P+"ap-cyber-unit-5-lesson-5-exercise-1", ex2:P+"ap-cyber-unit-5-lesson-5-exercise-2" }, qotd:[Q+"C5-121", Q+"C5-122"] },
+      { id:"5.6", title:"Detecting Attacks on Data", days:2, act:1, folder:D+"1_bxzWFXeKIqXx3IkgoL5FILd_OV6UTXO",
+        mats:{ deck:D+"1XZwI4iKUmvROxO1TugEKuKksWol1SzVh", notes:D+"1UThSqn8TSvGVtY6f4O6qDjtitzkF0rfs", quiz:D+"1zzuL0r5zsK-l9alzZ-2niPVHsiLFKeDB", supp:D+"18TLVYIcNv0fa7iW1oqeWx-KiKcehtSm-", guide:"https://drive.google.com/file/d/1fCHOvvXfEkK33cndR3KctV6rhV65jXfK/view" },
+        site:{ ex1:P+"ap-cyber-unit-5-lesson-6-exercise-1", ex2:P+"ap-cyber-unit-5-lesson-6-exercise-2" }, qotd:[Q+"C5-126", Q+"C5-127", Q+"C5-128", Q+"C5-129", Q+"C5-139", Q+"C5-141", Q+"C5-130"] },
+    ]},
+  ];
+
+  var MATERIALS = [
+    { key:"deck",  label:"Slide Deck",    ico:"📽" },
+    { key:"notes", label:"Guided Notes",  ico:"📝" },
+    { key:"quiz",  label:"Quiz",          ico:"✅" },
+    { key:"supp",  label:"Supplements",   ico:"📁" },
+    { key:"guide", label:"Teacher Guide", ico:"📚" }
+  ];
+  var ARROW = "↗";
+
+  /* Student-site activities (scenario & free-response practice). These open the
+     live lesson exercise pages on the site, not Drive. Gated as Drive materials. */
+  var SITE = [
+    { key:"ex1", label:"Scenario 1", ico:"🎯" },
+    { key:"ex2", label:"Scenario 2", ico:"🎯" }
+  ];
+
+  /* STU: the student-facing pages per lesson (lesson page / quiz / two scenarios),
+     as live-site paths. U1/U2 lesson pages use descriptive slugs; U3/U4/U5 use
+     ap-cyber-unit-N-lesson-M. U3 mirrors the site's own 6-lesson teaching order
+     (3.N -> lesson-N), which is a flow-optimized resequencing of the 5 CED topics:
+     site 3.1 & 3.2 = CED 3.1 (Vulnerabilities & Attacks); site 3.3 = CED 3.4
+     (Firewalls); site 3.4 = CED 3.3 (Segmentation); site 3.5 = CED 3.5 (Detecting);
+     site 3.6 = CED 3.2 (Managerial Controls & Wireless). */
+  var STU = {
+    "1.1":{page:"/pages/ap-cybersecurity-unit-1-social-engineering",quiz:"/pages/ap-cyber-unit-1-lesson-1-quiz",ex1:"/pages/ap-cyber-unit-1-lesson-1-exercise-1",ex2:"/pages/ap-cyber-unit-1-lesson-1-exercise-2"},
+    "1.2":{page:"/pages/ap-cybersecurity-unit-1-password-attacks",quiz:"/pages/ap-cyber-unit-1-lesson-2-quiz",ex1:"/pages/ap-cyber-unit-1-lesson-2-exercise-1",ex2:"/pages/ap-cyber-unit-1-lesson-2-exercise-2",termlab:"/pages/ap-cyber-unit-1-lesson-2-terminal-lab"},
+    "1.3":{page:"/pages/ap-cybersecurity-unit-1-wireless-security",quiz:"/pages/ap-cyber-unit-1-lesson-3-quiz",ex1:"/pages/ap-cyber-unit-1-lesson-3-exercise-1",ex2:"/pages/ap-cyber-unit-1-lesson-3-exercise-2"},
+    "1.4":{page:"/pages/ap-cybersecurity-unit-1-ai-driven-threats",quiz:"/pages/ap-cyber-unit-1-lesson-4-quiz",ex1:"/pages/ap-cyber-unit-1-lesson-4-exercise-1",ex2:"/pages/ap-cyber-unit-1-lesson-4-exercise-2"},
+    "1.5":{page:"/pages/ap-cybersecurity-unit-1-ai-cyber-defense",quiz:"/pages/ap-cyber-unit-1-lesson-5-quiz",ex1:"/pages/ap-cyber-unit-1-lesson-5-exercise-1",ex2:"/pages/ap-cyber-unit-1-lesson-5-exercise-2"},
+    "2.1":{page:"/pages/ap-cybersecurity-unit-2-cyber-foundations",quiz:"/pages/ap-cyber-unit-2-lesson-1-quiz",ex1:"/pages/ap-cyber-unit-2-lesson-1-exercise-1",ex2:"/pages/ap-cyber-unit-2-lesson-1-exercise-2"},
+    "2.2":{page:"/pages/ap-cybersecurity-unit-2-physical-vulnerabilities",quiz:"/pages/ap-cyber-unit-2-lesson-2-quiz",ex1:"/pages/ap-cyber-unit-2-lesson-2-exercise-1",ex2:"/pages/ap-cyber-unit-2-lesson-2-exercise-2"},
+    "2.3":{page:"/pages/ap-cybersecurity-unit-2-protecting-physical-spaces",quiz:"/pages/ap-cyber-unit-2-lesson-3-quiz",ex1:"/pages/ap-cyber-unit-2-lesson-3-exercise-1",ex2:"/pages/ap-cyber-unit-2-lesson-3-exercise-2"},
+    "2.4":{page:"/pages/ap-cybersecurity-unit-2-detecting-physical-attacks",quiz:"/pages/ap-cyber-unit-2-lesson-4-quiz",ex1:"/pages/ap-cyber-unit-2-lesson-4-exercise-1",ex2:"/pages/ap-cyber-unit-2-lesson-4-exercise-2",termlab:"/pages/ap-cyber-unit-2-lesson-4-terminal-lab"},
+    "3.1":{page:"/pages/ap-cyber-unit-3-lesson-1",quiz:"/pages/ap-cyber-unit-3-lesson-1-quiz",ex1:"/pages/ap-cyber-unit-3-lesson-1-exercise-1",ex2:"/pages/ap-cyber-unit-3-lesson-1-exercise-2"},
+    "3.2":{page:"/pages/ap-cyber-unit-3-lesson-2",quiz:"/pages/ap-cyber-unit-3-lesson-2-quiz",ex1:"/pages/ap-cyber-unit-3-lesson-2-exercise-1",ex2:"/pages/ap-cyber-unit-3-lesson-2-exercise-2"},
+    "3.3":{page:"/pages/ap-cyber-unit-3-lesson-3",quiz:"/pages/ap-cyber-unit-3-lesson-3-quiz",ex1:"/pages/ap-cyber-unit-3-lesson-3-exercise-1",ex2:"/pages/ap-cyber-unit-3-lesson-3-exercise-2"},
+    "3.4":{page:"/pages/ap-cyber-unit-3-lesson-4",quiz:"/pages/ap-cyber-unit-3-lesson-4-quiz",ex1:"/pages/ap-cyber-unit-3-lesson-4-exercise-1",ex2:"/pages/ap-cyber-unit-3-lesson-4-exercise-2"},
+    "3.5":{page:"/pages/ap-cyber-unit-3-lesson-5",quiz:"/pages/ap-cyber-unit-3-lesson-5-quiz",ex1:"/pages/ap-cyber-unit-3-lesson-5-exercise-1",ex2:"/pages/ap-cyber-unit-3-lesson-5-exercise-2"},
+    "3.6":{page:"/pages/ap-cyber-unit-3-lesson-6",quiz:"/pages/ap-cyber-unit-3-lesson-6-quiz",ex1:"/pages/ap-cyber-unit-3-lesson-6-exercise-1",ex2:"/pages/ap-cyber-unit-3-lesson-6-exercise-2"},
+    "4.1":{page:"/pages/ap-cyber-unit-4-lesson-1",quiz:"/pages/ap-cyber-unit-4-lesson-1-quiz",ex1:"/pages/ap-cyber-unit-4-lesson-1-exercise-1",ex2:"/pages/ap-cyber-unit-4-lesson-1-exercise-2"},
+    "4.2":{page:"/pages/ap-cyber-unit-4-lesson-2",quiz:"/pages/ap-cyber-unit-4-lesson-2-quiz",ex1:"/pages/ap-cyber-unit-4-lesson-2-exercise-1",ex2:"/pages/ap-cyber-unit-4-lesson-2-exercise-2"},
+    "4.3":{page:"/pages/ap-cyber-unit-4-lesson-3",quiz:"/pages/ap-cyber-unit-4-lesson-3-quiz",ex1:"/pages/ap-cyber-unit-4-lesson-3-exercise-1",ex2:"/pages/ap-cyber-unit-4-lesson-3-exercise-2"},
+    "4.4":{page:"/pages/ap-cyber-unit-4-lesson-4",quiz:"/pages/ap-cyber-unit-4-lesson-4-quiz",ex1:"/pages/ap-cyber-unit-4-lesson-4-exercise-1",ex2:"/pages/ap-cyber-unit-4-lesson-4-exercise-2"},
+    "5.1":{page:"/pages/ap-cyber-unit-5-lesson-1",quiz:"/pages/ap-cyber-unit-5-lesson-1-quiz",ex1:"/pages/ap-cyber-unit-5-lesson-1-exercise-1",ex2:"/pages/ap-cyber-unit-5-lesson-1-exercise-2"},
+    "5.2":{page:"/pages/ap-cyber-unit-5-lesson-2",quiz:"/pages/ap-cyber-unit-5-lesson-2-quiz",ex1:"/pages/ap-cyber-unit-5-lesson-2-exercise-1",ex2:"/pages/ap-cyber-unit-5-lesson-2-exercise-2"},
+    "5.3":{page:"/pages/ap-cyber-unit-5-lesson-3",quiz:"/pages/ap-cyber-unit-5-lesson-3-quiz",ex1:"/pages/ap-cyber-unit-5-lesson-3-exercise-1",ex2:"/pages/ap-cyber-unit-5-lesson-3-exercise-2"},
+    "5.4":{page:"/pages/ap-cyber-unit-5-lesson-4",quiz:"/pages/ap-cyber-unit-5-lesson-4-quiz",ex1:"/pages/ap-cyber-unit-5-lesson-4-exercise-1",ex2:"/pages/ap-cyber-unit-5-lesson-4-exercise-2"},
+    "5.5":{page:"/pages/ap-cyber-unit-5-lesson-5",quiz:"/pages/ap-cyber-unit-5-lesson-5-quiz",ex1:"/pages/ap-cyber-unit-5-lesson-5-exercise-1",ex2:"/pages/ap-cyber-unit-5-lesson-5-exercise-2"},
+    "5.6":{page:"/pages/ap-cyber-unit-5-lesson-6",quiz:"/pages/ap-cyber-unit-5-lesson-6-quiz",ex1:"/pages/ap-cyber-unit-5-lesson-6-exercise-1",ex2:"/pages/ap-cyber-unit-5-lesson-6-exercise-2"}
+  };
+
+  /* ---------- tiny helpers ---------- */
+  function el(id){ return document.getElementById(id); }
+  // Replacement strings use hex escapes (\x26=&, \x3b=;) so this file is immune to
+  // HTML-entity DECODING by page editors (e.g. Shopify), which would otherwise turn
+  // """ back into a raw quote and break this function's string literal.
+  function esc(s){ return String(s==null?"":s).replace(/&/g,"\x26amp\x3b").replace(/</g,"\x26lt\x3b").replace(/>/g,"\x26gt\x3b").replace(/"/g,"\x26quot\x3b"); }
+  function getToken(){ try{ return localStorage.getItem(CFG.TOKEN_KEY)||null; }catch(e){ return null; } }
+  function setToken(t){ try{ localStorage.setItem(CFG.TOKEN_KEY,t); }catch(e){} }
+  function clearToken(){ try{ localStorage.removeItem(CFG.TOKEN_KEY); }catch(e){} }
+
+  /* ---------- "taught" progress (saved on this device) ---------- */
+  var TAUGHT_KEY = "actc_taught_" + CFG.COURSE;
+  function loadTaught(){ try{ return JSON.parse(localStorage.getItem(TAUGHT_KEY)||"{}")||{}; }catch(e){ return {}; } }
+  function saveTaught(o){ try{ localStorage.setItem(TAUGHT_KEY, JSON.stringify(o)); }catch(e){} }
+  var taught = loadTaught();
+
+  /* ---------- day-plan text ---------- */
+  function planText(l){
+    // Final activity day: scenario & free-response practice on the live student-site
+    // exercises, then the quiz. Lessons without site links (1.1) close on the Quiz.
+    var actDay = l.days + 1;
+    var act = l.act
+      ? (l.site
+          ? ' <b>Day '+actDay+':</b> Scenario & free-response practice (student-site Scenarios), then the Quiz.'
+          : ' <b>Day '+actDay+':</b> Guided practice, then the Quiz.')
+      : ' Assign the Quiz as an exit ticket.';
+    if(l.days<=1) return '<b>Day 1:</b> Slide Deck and Guided Notes.'+act;
+    if(l.days===2) return '<b>Day 1:</b> Slide Deck and Guided Notes. <b>Day 2:</b> Supplements and worked examples.'+act;
+    return '<b>Day 1:</b> Slide Deck and Guided Notes. <b>Day 2:</b> Worked examples from Supplements. <b>Day '+l.days+':</b> Review.'+act;
+  }
+  function lessonDays(l){ return l.days + (l.act||0); }
+  function unitDays(u){
+    var d=(u.frqDays||0)+(u.labDays||0)+(u.testDays||0);
+    u.lessons.forEach(function(l){ d+=lessonDays(l); });
+    return d;
+  }
+  function allLessons(){ var a=[]; UNITS.forEach(function(u){ u.lessons.forEach(function(l){ a.push(l); }); }); return a; }
+  function unitFree(u){ return CFG.FREE_UNITS.indexOf(u.n)>=0; }
+
+  /* ---------- sign-in / create links that round-trip back here via ?next= ---------- */
+  function authHref(hash){
+    return CFG.SIGNIN_URL + "?next=" + encodeURIComponent(CFG.HUB_PATH) + (hash||"");
+  }
+
+  /* ---------- course totals for the summary blocks ---------- */
+  function courseTotals(){
+    var lessons=0, days=(CFG.EXAM_REVIEW_DAYS||0);
+    UNITS.forEach(function(u){ lessons+=u.lessons.length; days+=unitDays(u); });
+    return { units:UNITS.length, lessons:lessons, days:days };
+  }
+
+  /* ---------- course-level resources (Drive) ----------
+     The documents that describe the course rather than a lesson. Per-lesson
+     materials live on UNITS; these do not belong to any one unit, so they get
+     their own card above the accordions.
+
+     Premium, all five, including on the free Unit 1 preview: these cover the
+     whole year, and Unit 1 being free is not a reason to hand out the full-year
+     pacing guide. Locked renders exactly like a locked lesson material. */
+  var F = "https://drive.google.com/file/d/";
+  var RESOURCES = [
+    { ico:"🎯", label:"Start Here", href:F+"1AS8EqcG-U24AJtWUVqJpspxtKhZKr0EI/view" },
+    { ico:"📖", label:"How To Use This Course", href:F+"1m7Wi6aR17eBpkmdl0oc6SQtXXXVUg9r0/view" },
+    { ico:"📅", label:"Pacing Guide: Full Year", href:F+"1ycmbdAITUjU1GccuJzmn-vmybBVclUeS/view" },
+    { ico:"📅", label:"Pacing Guide: Block & Semester", href:F+"1qR_b07ZDEGn8hVCOTDo8_Qx2QVQlhmg7/view" },
+    { ico:"📝", label:"Threat Defense Report Rubric", href:F+"1nCqSjlhCgFv-UR3WJqK3Xe9MPvyjFe3j/view" },
+  ];
+
+  function renderResources(){
+    var unlocked = STATE.entitled;
+    var items = RESOURCES.map(function(r){
+      if(!unlocked){
+        return '<span class="mat disabled"><span class="m-ico">'+r.ico+'</span>'+r.label+'</span>';
+      }
+      return '<a class="mat" href="'+esc(r.href)+'" target="_blank" rel="noopener"><span class="m-ico">'+r.ico+'</span>'+r.label+' '+ARROW+'</a>';
+    }).join("");
+    el("actc-res").innerHTML =
+      '<div class="block" style="margin-bottom:20px;">'
+      + '<div class="mats-lbl" style="margin-top:0;">Course resources'
+      + (unlocked ? '' : ' <span class="tag locked">🔒 PREMIUM</span>')
+      + '</div><div class="mats">'+items+'</div></div>';
+  }
+
+  /* ---------- summary stat blocks (always shown: overview + funnel) ---------- */
+  function renderBlocks(){
+    var t=courseTotals(), weeks=Math.round(t.days/5);
+    var blocks=[
+      { ico:"📚", lbl:"Course",       main:t.units+" units",   note:t.lessons+" lessons, fully sequenced with materials" },
+      { ico:"📅", lbl:"Pacing",       main:t.days+" days",     note:"~"+weeks+" weeks of 50-min periods, incl. labs & exam review" },
+      { ico:"🎓", lbl:"Start Here",   main:"Lesson 1.1",       note:"Social Engineering — open the deck and teach" },
+      { ico:"📝", lbl:"Every Lesson", main:"5 files + scenarios", note:"Slides, notes, quiz, supplements, teacher guide" }
+    ];
+    el("actc-blocks").innerHTML = blocks.map(function(b){
+      return '<div class="block"><div class="b-ico">'+b.ico+'</div><div class="b-lbl">'+b.lbl+'</div>'
+        + '<div class="b-main">'+b.main+'</div><div class="b-note">'+b.note+'</div></div>';
+    }).join("");
+  }
+
+  /* ============================================================================
+     STATE:  entitled = full access; else free units only.
+     ---------------------------------------------------------------------------- */
+  var STATE = { token:getToken(), entitled:false, teacher:null, checked:false };
+
+  function apiGate(cb){
+    if(!STATE.token){ cb(false); return; }
+    fetch(CFG.API+"/api/gate/check?course="+encodeURIComponent(CFG.COURSE),
+      { headers:{ Authorization:"Bearer "+STATE.token } })
+      .then(function(r){ return r.json(); })
+      .then(function(d){ cb(!!(d && d.entitled && d.role==="teacher"), d); })
+      .catch(function(){ cb(false); });
+  }
+  // Returns the teacher object (unwrapped from { teacher }) plus an HTTP status.
+  // status 401 = the saved token is expired/invalid, so the caller drops it and
+  // shows the sign-in form instead of a dead-end "redeem a code" box.
+  function apiMe(cb){
+    if(!STATE.token){ cb(null, 0); return; }
+    fetch(CFG.API+"/api/teacher/me", { headers:{ Authorization:"Bearer "+STATE.token } })
+      .then(function(r){
+        if(r.status===401){ cb(null, 401); return; }
+        if(!r.ok){ cb(null, r.status); return; }
+        return r.json().then(function(j){ cb(j && j.teacher ? j.teacher : j, 200); });
+      })
+      .catch(function(){ cb(null, -1); });
+  }
+
+  /* ---------- render the top banner + who ---------- */
+  function renderWho(){
+    var w=el("actc-who");
+    var grade = '<a class="navlink" href="'+esc(CFG.DASHBOARD_URL)+'">📊 Gradebook</a><br>';
+    if(STATE.teacher){
+      w.innerHTML = grade + 'Signed in as <b>'+esc(STATE.teacher.email)+'</b>  <a id="actc-out">Sign out</a>';
+      var o=el("actc-out"); if(o) o.onclick=function(){ clearToken(); location.reload(); };
+    } else { w.innerHTML = grade; }
+  }
+
+  function renderBanner(){
+    var b=el("actc-banner");
+    if(STATE.entitled){ b.innerHTML=""; b.style.display="none"; return; }
+    b.style.display="";
+    if(!STATE.token){
+      // signed out: offer inline sign-in + link to the central sign-in page
+      b.className="banner signin";
+      b.innerHTML =
+        '<div class="b-txt"><h3>Sign in to open your full course</h3>'
+        + '<p>Unit 1 is free to preview below. Sign in with the teacher email and password you use across APCSExamPrep to unlock Units 2–5.</p>'
+        + '<div class="field stack"><input id="actc-email" type="email" placeholder="Email" autocomplete="username" />'
+        + '<input id="actc-pass" type="password" placeholder="Password" autocomplete="current-password" />'
+        + '<button class="btn" id="actc-login">Sign in</button></div>'
+        + '<div class="msg err" id="actc-lmsg"></div>'
+        + '<p style="margin-top:6px;font-size:12.5px;">New here? <a href="'+esc(authHref("#create"))+'">Create your teacher account</a>'
+        + '  ·  Prefer the main page? <a href="'+esc(authHref("#signin"))+'">Sign in there</a>.</p></div>';
+      wireLogin();
+    } else {
+      // signed in but not entitled: buy or redeem a code
+      b.className="banner locked";
+      b.innerHTML =
+        '<div class="b-txt"><h3>You are signed in, but this course is not on your account yet</h3>'
+        + '<p>Unit 1 is free below. Purchase the AP Cybersecurity teacher bundle, or redeem the access code from your welcome email, to unlock Units 2–5.</p>'
+        + '<div class="field"><a class="btn" href="'+esc(CFG.BUY_URL)+'">Get the bundle</a>'
+        + '<input id="actc-code" type="text" placeholder="Access code" />'
+        + '<button class="btn ghost" id="actc-redeem">Redeem code</button></div>'
+        + '<div class="msg" id="actc-rmsg"></div></div>';
+      wireRedeem();
+    }
+  }
+
+  function wireLogin(){
+    var btn=el("actc-login"); if(!btn) return;
+    function go(){
+      var email=(el("actc-email").value||"").trim(), pass=el("actc-pass").value||"";
+      var m=el("actc-lmsg"); m.textContent="Signing in..."; m.className="msg";
+      fetch(CFG.API+"/api/teacher/login",{ method:"POST", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({ email:email, password:pass }) })
+        .then(function(r){ return r.json().then(function(j){ return { ok:r.ok, j:j }; }); })
+        .then(function(res){
+          if(res.ok && res.j && res.j.token){ setToken(res.j.token); location.reload(); }
+          else { m.className="msg err"; m.textContent=(res.j && res.j.error) || "Sign in failed. Check your email and password."; }
+        }).catch(function(){ m.className="msg err"; m.textContent="Could not reach the sign-in service. Try again."; });
+    }
+    btn.onclick=go;
+    el("actc-pass").addEventListener("keydown",function(e){ if(e.key==="Enter") go(); });
+  }
+
+  function wireRedeem(){
+    var btn=el("actc-redeem"); if(!btn) return;
+    btn.onclick=function(){
+      var code=(el("actc-code").value||"").trim(), m=el("actc-rmsg");
+      if(!code){ m.className="msg err"; m.textContent="Enter your access code."; return; }
+      m.className="msg"; m.textContent="Checking...";
+      fetch(CFG.API+"/api/teacher/redeem",{ method:"POST",
+        headers:{"Content-Type":"application/json", Authorization:"Bearer "+STATE.token },
+        body:JSON.stringify({ code:code }) })
+        .then(function(r){ return r.json().then(function(j){ return { ok:r.ok, j:j }; }); })
+        .then(function(res){
+          if(res.ok && res.j && res.j.entitled){ m.className="msg ok"; m.textContent="Unlocked! Loading your course..."; setTimeout(function(){ location.reload(); },700); }
+          else { m.className="msg err"; m.textContent=(res.j && res.j.error) || "That code did not work."; }
+        }).catch(function(){ m.className="msg err"; m.textContent="Could not reach the service. Try again."; });
+    };
+  }
+
+  /* ---------- progress strip (entitled only) ---------- */
+  function renderProgress(){
+    var p=el("actc-prog");
+    if(!STATE.entitled){ p.style.display="none"; return; }
+    p.style.display="";
+    var lessons=allLessons(), done=lessons.filter(function(l){ return taught[l.id]; }).length;
+    var pct=lessons.length?Math.round(done/lessons.length*100):0;
+    var next=lessons.filter(function(l){ return !taught[l.id]; })[0];
+    p.className="prog";
+    p.innerHTML =
+      '<div class="bar-wrap"><div class="bar-lbl">You have taught <b>'+done+'</b> of <b>'+lessons.length+'</b> lessons</div>'
+      + '<div class="bar"><i style="width:'+pct+'%"></i></div></div>'
+      + (next ? '<button class="resume" id="actc-resume">Continue → Lesson '+esc(next.id)+'</button>'
+              : '<button class="resume" id="actc-resume">All lessons taught 🎉</button>');
+    var r=el("actc-resume");
+    if(r && next) r.onclick=function(){ openTo(next.id); };
+  }
+
+  /* ---------- units + lessons ---------- */
+  var expandAll=false;
+  function wireExpand(){
+    var b=el("actc-expand"); if(!b) return;
+    b.onclick=function(){
+      expandAll=!expandAll;
+      b.textContent = expandAll ? "Collapse units" : "Expand all units";
+      renderUnits();
+    };
+  }
+
+  function matButton(l, mat, unlocked){
+    var url = (l.mats && l.mats[mat.key]) ? l.mats[mat.key] : l.folder;
+    if(!unlocked || !url){
+      return '<span class="mat disabled"><span class="m-ico">'+mat.ico+'</span>'+mat.label+'</span>';
+    }
+    return '<a class="mat" href="'+esc(url)+'" target="_blank" rel="noopener"><span class="m-ico">'+mat.ico+'</span>'+mat.label+' '+ARROW+'</a>';
+  }
+
+  function siteButton(l, s, unlocked){
+    var url = l.site && l.site[s.key];
+    if(!url) return '';
+    if(!unlocked) return '<span class="mat disabled"><span class="m-ico">'+s.ico+'</span>'+s.label+'</span>';
+    return '<a class="mat site" href="'+esc(url)+'" target="_blank" rel="noopener"><span class="m-ico">'+s.ico+'</span>'+s.label+' '+ARROW+'</a>';
+  }
+
+  /* ---------- "copy student link" (assign to students) ----------
+     The reliable per-lesson student destination in Cyber is the quiz page
+     (deterministic handle). To copy a different page instead, change studentPath. */
+
+  /* apcs-lab-key panel */
+  var LABKEY = {"1.2":{"course":"ap-cybersecurity","item":"1.2-lab","title":"Find the tournament code"},"2.4":{"course":"ap-cybersecurity","item":"2.4-lab","title":"Read the badge log"}};
+
+  // The button only. The key itself is fetched, gated, on click.
+  function labKeySection(l, unlocked){
+    var k = LABKEY[l.id]; if(!k) return "";
+    if(!unlocked) return '<div class="mats-lbl">Lab answer key</div>'
+      + '<div class="mats"><span class="mat disabled">Sign in to open the key</span></div>';
+    return '<div class="mats-lbl">Lab answer key</div><div class="mats">'
+      + '<button class="mat lab-key-btn" data-key-course="'+esc(k.course)+'" data-key-item="'+esc(k.item)+'">'
+      + 'Answer key: '+esc(k.title)+'</button></div>';
+  }
+
+  function labKeyStyles(){
+    if(document.getElementById("apcs-labkey-css")) return;
+    var s = document.createElement("style"); s.id = "apcs-labkey-css";
+    s.textContent = ".lab-key-btn{cursor:pointer}#apcs-labkey-ov{position:fixed;inset:0;background:rgba(15,31,61,.6);z-index:99999;display:flex;align-items:flex-start;justify-content:center;padding:24px;overflow:auto}#apcs-labkey-md{background:#fff;max-width:820px;width:100%;border-radius:10px;padding:22px 26px;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#12203a}#apcs-labkey-md h3{margin:0 0 4px;font-size:20px}#apcs-labkey-md h4{margin:18px 0 6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:#5a6b86}#apcs-labkey-md .lk-sub{color:#5a6b86;font-size:13px;margin:0 0 6px}#apcs-labkey-md ol,#apcs-labkey-md ul{margin:0;padding-left:20px;line-height:1.55}#apcs-labkey-md code{background:#eef2f7;padding:1px 5px;border-radius:4px;font-size:13px}#apcs-labkey-md .lk-right{color:#146c43;font-weight:700}#apcs-labkey-md .lk-why{color:#3d4d66;font-size:13px;margin:2px 0 10px}#apcs-labkey-md .lk-note{background:#fff6e5;border-left:3px solid #c98a00;padding:9px 12px;border-radius:0 6px 6px 0;font-size:13px;margin:16px 0 0}#apcs-labkey-md .lk-close{float:right;cursor:pointer;border:0;background:#0f1f3d;color:#fff;border-radius:6px;padding:6px 12px;font-weight:600}#apcs-labkey-md .lk-print{float:right;cursor:pointer;border:1px solid #c3ccdb;background:#fff;color:#12203a;border-radius:6px;padding:6px 12px;font-weight:600;margin-right:8px}";
+    document.head.appendChild(s);
+  }
+
+  function labKeyHTML(k){
+    var h = '<button class="lk-close" id="apcs-labkey-x">Close</button>'
+      + '<button class="lk-print" id="apcs-labkey-p">Print</button>'
+      + "<h3>"+esc(k.title)+"</h3>"
+      + '<p class="lk-sub">'+esc(k.course)+" · lesson "+esc(k.lesson_id)+" · "+k.points
+      + " point"+(k.points===1?"":"s")+(k.graded?" · graded":" · practice, records nothing")+"</p>";
+    h += "<h4>Rubric, one check one point</h4><ul>";
+    k.rubric.forEach(function(r){
+      h += "<li><b>"+r.n+". "+esc(r.label)+"</b><br><span class=\"lk-why\">"+esc(r.satisfied_by)+"</span></li>";
+    });
+    h += "</ul><h4>Reference walkthrough</h4><ol>";
+    k.walkthrough.forEach(function(w){
+      h += "<li>"+(w.kind==="command" ? "<code>"+esc(w.text)+"</code>"
+        : esc(w.text)+(w.correct?" → <span class=\"lk-right\">"+esc(w.correct)+"</span>":""))+"</li>";
+    });
+    h += "</ol><h4>Questions</h4>";
+    k.questions.forEach(function(q){
+      h += "<p style=\"margin:12px 0 4px\"><b>"+esc(q.prompt)+"</b></p><ul>";
+      q.options.forEach(function(o){
+        h += "<li>"+(o.correct?'<span class="lk-right">'+esc(o.text)+" &check;</span>":esc(o.text))+"</li>";
+      });
+      h += "</ul>"+(q.why?'<p class="lk-why">'+esc(q.why)+"</p>":"");
+    });
+    return h + '<p class="lk-note">'+esc(k.disclosure)+"</p>";
+  }
+
+  function openLabKey(course, item){
+    labKeyStyles();
+    var ov = document.getElementById("apcs-labkey-ov");
+    if(!ov){
+      ov = document.createElement("div"); ov.id = "apcs-labkey-ov";
+      ov.innerHTML = '<div id="apcs-labkey-md"></div>';
+      document.body.appendChild(ov);
+      ov.addEventListener("click", function(e){ if(e.target===ov) ov.remove(); });
+    }
+    var md = ov.querySelector("#apcs-labkey-md");
+    md.innerHTML = "<p>Loading the key...</p>";
+    fetch(CFG.API+"/api/labs/"+encodeURIComponent(course)+"/"+encodeURIComponent(item)+"/key",
+      { headers: STATE.token ? { Authorization:"Bearer "+STATE.token } : {} })
+      .then(function(r){ return r.json().then(function(j){ return { ok:r.ok, j:j }; }); })
+      .then(function(res){
+        if(!res.ok || !res.j || !res.j.key){
+          md.innerHTML = '<button class="lk-close" id="apcs-labkey-x">Close</button>'
+            + "<h3>Not available</h3><p>The answer key is for signed-in teachers with this course. "
+            + "If you are signed in and still see this, your access to AP Cybersecurity is not active.</p>";
+        } else { md.innerHTML = labKeyHTML(res.j.key); }
+        var x = document.getElementById("apcs-labkey-x");
+        if(x) x.addEventListener("click", function(){ ov.remove(); });
+        var p = document.getElementById("apcs-labkey-p");
+        if(p) p.addEventListener("click", function(){ window.print(); });
+      })
+      .catch(function(){ md.innerHTML = "<p>The key could not be loaded. Try again in a moment.</p>"; });
+  }
+
+  document.addEventListener("click", function(e){
+    var b = e.target && e.target.closest ? e.target.closest(".lab-key-btn") : null;
+    if(!b) return;
+    e.preventDefault();
+    openLabKey(b.getAttribute("data-key-course"), b.getAttribute("data-key-item"));
+  });
+  /* apcs-lab-key panel */
+
+  function studentSection(l, unlocked){
+    var s = STU[l.id]; if(!s) return '';
+    var dests = [ ['page','Lesson page'], ['quiz','Quiz'], ['ex1','Scenario 1'], ['ex2','Scenario 2'], ['termlab','Terminal Lab'] ];
+    var out = dests.map(function(d){
+      var url = s[d[0]]; if(!url) return '';
+      if(!unlocked) return '<span class="mat disabled">'+d[1]+'</span>';
+      return '<span class="stu-pair"><a class="mat site" href="'+esc(url)+'" target="_blank" rel="noopener">'+d[1]+' '+ARROW+'</a>'
+        + '<button class="mat copy mini" title="Copy this link to assign to students" data-copy="'+esc(url)+'">📋</button></span>';
+    }).join('');
+    if(!out) return '';
+    return '<div class="mats-lbl">Student pages · open, or 📋 copy the link to assign</div><div class="mats">'+out+'</div>';
+  }
+  function fallbackCopy(text){
+    try{ var ta=document.createElement("textarea"); ta.value=text; ta.style.position="fixed"; ta.style.opacity="0";
+      document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand("copy"); document.body.removeChild(ta); }catch(e){}
+  }
+
+  /* Question of the Day - one deep link per teaching day, matching the
+     QOTD (U#/L#.#/Q#) references in each lesson's Teacher Guide. Not gated:
+     the QOTD page is public, so these stay live on locked units too. */
+  function qotdSection(l, unlocked){
+    if(!l.qotd || !l.qotd.length) return '';
+    var out = l.qotd.map(function(url, i){
+      return '<span class="stu-pair">'
+        + '<a class="mat site" href="'+esc(url)+'" target="_blank" rel="noopener">'
+        +   '<span class="m-ico">\u2605</span>Day '+(i+1)+' '+ARROW+'</a>'
+        + '<button class="mat copy mini" title="Copy this question link to assign to students" data-copy="'+esc(url)+'">\uD83D\uDCCB</button>'
+        + '</span>';
+    }).join('');
+    return '<div class="mats-lbl">Question of the Day \u00b7 one per teaching day</div><div class="mats">'+out+'</div>';
+  }
+
+  function lessonHTML(l, unlocked){
+    var done = !!taught[l.id];
+    var mats = MATERIALS.map(function(m){ return matButton(l,m,unlocked); }).join("");
+    var td = lessonDays(l);
+    var chk = unlocked
+      ? '<div class="l-chk'+(done?' done':'')+'" data-chk="'+esc(l.id)+'" title="Mark taught">'+(done?"✓":"")+'</div>'
+      : '<div class="l-chk" style="opacity:.4" title="Sign in to track">🔒</div>';
+    return ''
+      + '<div class="lsn'+(done?' done':'')+'" data-lsn="'+esc(l.id)+'">'
+      +   '<div class="l-head">'+chk
+      +     '<span class="l-id">'+esc(l.id)+'</span><span class="l-name">'+esc(l.title)+'</span>'
+      +     (l.ced ? '<span class="l-ced">'+esc(l.ced)+'</span>' : '')
+      +     '<span class="l-days">'+td+(td===1?' day':' days')+'</span><span class="l-caret">▶</span>'
+      +   '</div>'
+      +   '<div class="l-body"><div class="plan">'+planText(l)+'</div>'
+      +     '<div class="mats-lbl">Teacher materials</div><div class="mats">'+mats+'</div>'
+      +     qotdSection(l, unlocked)
+      +     studentSection(l, unlocked)
+      +     labKeySection(l, unlocked)
+      +   '</div>'
+      + '</div>';
+  }
+
+  function renderUnits(){
+    var out="", runningDay=1;
+    UNITS.forEach(function(u,ui){
+      var unlocked = STATE.entitled || unitFree(u);
+      var uStart=runningDay, uEnd=runningDay+unitDays(u)-1; runningDay=uEnd+1;
+      var lessons = u.lessons.map(function(l){ return lessonHTML(l, unlocked); }).join("");
+      var wrap = '<div class="uwrap">'
+        + '<span class="wplbl">Days set aside in this unit</span>'
+        + '<span class="wp">📝 Free-response & review · '+(u.frqDays||0)+'d</span>'
+        + '<span class="wpsep">|</span>'
+        + '<span class="wp">🔧 Lab / project · '+(u.labDays||0)+'d</span>'
+        + '<span class="wpsep">|</span>'
+        + '<span class="wp">✅ Review & unit test · '+(u.testDays||0)+'d</span>'
+        + '</div>';
+      var noteHTML = u.note ? '<div class="u-note"><span>📌</span><span>'+u.note+'</span></div>' : '';
+      var body = noteHTML + lessons + wrap
+        + (unlocked ? '' : '<div class="locknote">🔒 Units 2–5 unlock with the AP Cybersecurity teacher bundle. Unit 1 is free to preview.</div>');
+      var tag = unitFree(u) ? '<span class="tag free">FREE PREVIEW</span>'
+              : (unlocked ? '' : '<span class="tag locked">🔒 PREMIUM</span>');
+      out += ''
+        + '<div class="unit'+(unlocked?"":" lock")+((ui===0||expandAll)?" open":"")+'" data-u="'+ui+'">'
+        +   '<div class="u-head">'
+        +     '<div class="u-num">'+u.n+'</div>'
+        +     '<div><h2>'+esc(u.name)+'</h2><div class="u-meta">'+u.lessons.length+' lessons + free-response, lab & test • Days '+uStart+'–'+uEnd+'</div></div>'
+        +     '<div class="u-right">'+tag+'<div class="u-days">'+unitDays(u)+' days</div><div class="caret">▶</div></div>'
+        +   '</div>'
+        +   '<div class="u-body">'+body+'</div>'
+        + '</div>';
+    });
+    // Year-end cumulative AP exam review + practice block.
+    var erd = CFG.EXAM_REVIEW_DAYS||0;
+    if(erd>0){
+      var eStart=runningDay, eEnd=runningDay+erd-1; runningDay=eEnd+1;
+      out += ''
+        + '<div class="unit exam'+(STATE.entitled?"":" lock")+'">'
+        +   '<div class="u-head" style="cursor:default">'
+        +     '<div class="u-num">🎓</div>'
+        +     '<div><h2>AP Exam Review & Practice</h2><div class="u-meta">Cumulative review across all five units • Days '+eStart+'–'+eEnd+'</div></div>'
+        +     '<div class="u-right"><div class="u-days">'+erd+' days</div></div>'
+        +   '</div>'
+        + '</div>';
+    }
+    el("actc-units").innerHTML=out;
+    wireAccordions();
+  }
+
+  function wireAccordions(){
+    document.querySelectorAll("#actc-units .u-head").forEach(function(h){
+      h.onclick=function(){ h.parentNode.classList.toggle("open"); };
+    });
+    document.querySelectorAll("#actc-units .mat.copy[data-copy]").forEach(function(b){
+      b.onclick=function(e){
+        e.stopPropagation();
+        var url = location.origin + b.getAttribute("data-copy");
+        var orig = b.innerHTML;
+        var done = function(){ b.innerHTML='<span class="m-ico">✓</span>Copied!'; setTimeout(function(){ b.innerHTML=orig; }, 1300); };
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(url).then(done, function(){ fallbackCopy(url); done(); });
+        } else { fallbackCopy(url); done(); }
+      };
+    });
+    document.querySelectorAll("#actc-units .l-head").forEach(function(h){
+      h.onclick=function(e){
+        if(e.target && e.target.getAttribute && e.target.getAttribute("data-chk")) return; // let checkbox handle itself
+        h.parentNode.classList.toggle("open");
+      };
+    });
+    document.querySelectorAll("#actc-units .l-chk[data-chk]").forEach(function(c){
+      c.onclick=function(e){
+        e.stopPropagation();
+        var id=c.getAttribute("data-chk");
+        taught[id] = !taught[id];
+        if(!taught[id]) delete taught[id];
+        saveTaught(taught);
+        renderUnits(); renderProgress();
+        openTo(id, true); // keep it open after re-render
+      };
+    });
+  }
+
+  // open a specific lesson (and its unit), optionally without scrolling
+  function openTo(lessonId, noScroll){
+    UNITS.forEach(function(u,ui){
+      if(u.lessons.some(function(l){ return l.id===lessonId; })){
+        var unitEl=document.querySelector('#actc-units .unit[data-u="'+ui+'"]');
+        if(unitEl) unitEl.classList.add("open");
+      }
+    });
+    var lsnEl=document.querySelector('#actc-units .lsn[data-lsn="'+lessonId+'"]');
+    if(lsnEl){ lsnEl.classList.add("open"); if(!noScroll) lsnEl.scrollIntoView({behavior:"smooth",block:"center"}); }
+  }
+
+  /* ============================================================================
+     BOOT
+     ---------------------------------------------------------------------------- */
+  function paint(){ renderWho(); renderBanner(); renderBlocks(); renderResources(); renderProgress(); renderUnits(); }
+
+  function boot(){
+    wireExpand();
+    paint(); // instant render: free preview + "checking" state
+    if(!STATE.token) return;
+    // Validate the saved session first. A 401 means the token is expired/invalid:
+    // drop it so the teacher gets the sign-in form, not a dead-end redeem box.
+    apiMe(function(me, status){
+      if(status===401){
+        clearToken(); STATE.token=null; STATE.teacher=null; STATE.entitled=false; paint(); return;
+      }
+      if(me) STATE.teacher=me;
+      apiGate(function(entitled){ STATE.entitled=entitled; paint(); });
+    });
+  }
+  boot();
+})();
+</script>
