@@ -155,3 +155,60 @@ jobs:
         with:
           path: previous.json
           key: board-state-${{ github.run_id }}
+
+      # ── CAN GRADED WORK STILL REACH THE GRADEBOOK? ──────────────────────────
+      #
+      # Added after the 2026-08-21 teacher report, where three defects had made
+      # every graded cyber exercise and lab page record nothing, and the only
+      # thing that surfaced it was an email. All three were silent: nothing
+      # threw, nothing logged, and the board looked fine every morning.
+      #
+      # DELIBERATELY LAST, AND AFTER THE CACHE SAVE. This step can fail the job,
+      # and the two save steps above are `if: success()`. Running it earlier
+      # would mean a broken grade path ALSO skips the baseline save, so the next
+      # morning reports "no baseline" and someone learns to ignore mornings.
+      # That is the exact failure the restore step's comment warns about, so the
+      # order here is load-bearing rather than incidental.
+      #
+      # ~10 requests against the storefront, not the 250 a full page crawl would
+      # take. The contract it checks lives in the deployed assets, and smoke.yml
+      # already records what driving the storefront hard does to bot protection.
+      #
+      # It reads. Nothing here is recorded to the ledger, the same posture as the
+      # rest of this workflow.
+      #
+      # The wording above is deliberate. smoke/board-delta.js asserts that the
+      # literal string "w-r-i-t-e" appears nowhere in this file, so a permissions
+      # block granting more than read can never slip in unnoticed. It is a blunt
+      # test over the whole file rather than over the permissions block, so even
+      # a comment trips it, and spelling the word out here would too. If a future
+      # edit fails that assertion, reword the comment. Do not loosen the check to
+      # fit the prose: it is guarding the difference between a job that reads
+      # unattended and one that changes things unattended.
+      - name: Can graded work still reach the gradebook
+        if: always()
+        run: |
+          set -o pipefail
+          if node scripts/grade-path-audit.js | tee grade-path.txt; then
+            {
+              echo ""
+              echo "**Grade path:** every reporter loads, and every function they hand results to exists."
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            {
+              echo ""
+              echo "### Graded work is NOT reaching the gradebook"
+              echo ""
+              echo "Students are submitting work that is not being recorded, or is being"
+              echo "recorded wrongly. This is silent to them and to their teacher."
+              echo ""
+              echo '```'
+              cat grade-path.txt
+              echo '```'
+              echo ""
+              echo "Reproduce with \`node scripts/grade-path-audit.js\`. The rules are pinned"
+              echo "offline by \`npm run smoke:gradepath\`."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error title=Graded work is not reaching the gradebook::See the summary."
+            exit 1
+          fi

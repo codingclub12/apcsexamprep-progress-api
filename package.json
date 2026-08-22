@@ -121,7 +121,8 @@
     "smoke:labkey": "node smoke/lab-key.js",
     "smoke:accounts": "node smoke/student-accounts.js",
     "seed:pagelinks": "node scripts/seed-page-links.js",
-    "publish:studentpages": "node scripts/publish-student-pages.js"
+    "publish:studentpages": "node scripts/publish-student-pages.js",
+    "smoke:gradepath": "node smoke/grade-path-audit.js"
   },
   "keywords": [],
   "author": "",
