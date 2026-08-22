@@ -171,10 +171,10 @@ const LESSONS = [
       {
         stem: 'A program must total every value in a file without ever being told how many values it holds. Which loop is correct?',
         options: [
-          'for (int i = 0; i < 100; i++) { total += input.nextInt(); }',
-          'while (true) { total += input.nextInt(); }',
-          'while (input.hasNextInt()) { total += input.nextInt(); }',
-          'int n = input.nextInt(); while (n != -1) { total += n; n = input.nextInt(); }',
+          'for (int i = 0; i < 100; i++) {\n    total += input.nextInt();\n}',
+          'while (true) {\n    total += input.nextInt();\n}',
+          'while (input.hasNextInt()) {\n    total += input.nextInt();\n}',
+          'int n = input.nextInt();\nwhile (n != -1) {\n    total += n;\n    n = input.nextInt();\n}',
         ], correctIndex: 2,
         feedback: 'Hardcoding a count assumes a length that may be wrong; looping forever eventually throws once data runs out; assuming a -1 sentinel assumes a value that could legitimately appear in real data. Only the hasNextInt guard is correct for genuinely unknown length.',
       },
