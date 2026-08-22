@@ -78,6 +78,16 @@ function renderable(s) {
     .replace(/&#(\d+);/g, (m, d) => String.fromCodePoint(Number(d)))
     .replace(/&(ndash|mdash|rarr|larr|nbsp|hellip|times|check|lt|gt|quot);/g, (m, n) => NAMED[n])
     .replace(/&amp;/g, '&')
+    // Shopify also REFLOWS the markup a little on save: it inserted a newline
+    // before a closing div in join.html, which is not a change to the page by
+    // any measure that matters and yet left the body one byte from its source
+    // forever. Whitespace BETWEEN tags is collapsed on both sides so that kind
+    // of reflow stops counting as a difference.
+    //
+    // Both sides get the identical treatment, so this can only ever hide a
+    // difference that is purely whitespace between tags, which by definition
+    // renders the same. It cannot invent a match: any real edit still differs.
+    .replace(/>\s+</g, '><')
     .split('&ndash;').join('–')
     .split('&mdash;').join('—')
     .replace(/\r\n/g, '\n')
