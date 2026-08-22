@@ -318,7 +318,10 @@ window.StProg={
   },
 
   unitLabel(k){ let m; if(m=/^unit-(\d+)$/.exec(k))return 'Unit '+m[1]; if(m=/^bi-?(\d+)$/.exec(k))return 'Big Idea '+m[1]; if(k==='qotd')return 'Daily Practice'; if(k==='exams')return 'Practice Exams'; return k.replace(/(^|[-_])(\w)/g,(x,s,c)=>(s?' ':'')+c.toUpperCase()); },
-  formatCourse(c){ return {'ap-cybersecurity':'AP Cybersecurity','ap-csa':'AP CSA','ap-csp':'AP CSP','ap-networking':'AP Networking'}[c]||c||''; },
+  // 'solo' is a real course value, not a fallthrough: a self-study account's
+  // class row carries it, and without an entry here the page prints the word
+  // "solo" at the student as though it were a course name.
+  formatCourse(c){ return {'ap-cybersecurity':'AP Cybersecurity','ap-csa':'AP CSA','ap-csp':'AP CSP','ap-networking':'AP Networking','solo':'Self-Study'}[c]||c||''; },
 
   allActivityCells(){
     const cells=[]; const cs=this.model;
