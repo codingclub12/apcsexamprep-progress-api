@@ -18,6 +18,12 @@ const contract = require('../lib/gradebook-contract');
 // The single definition of "this teacher has paid for this course", shared with
 // the gate check and the admin views (see lib/entitlements.js).
 const entitlements = require('../lib/entitlements');
+// One identity across every course a student takes. See lib/student-accounts.js
+// for why the link is made at sign-in rather than by a backfill.
+const accounts = require('../lib/student-accounts');
+// Where an activity lives, so a score in My Progress can be clicked back to the
+// page it came from. See lib/lesson-links.js.
+const links = require('../lib/lesson-links');
 
 // ── CREDENTIAL RATE LIMITS ────────────────────────────────────────────────────
 //  The four unauthenticated entry points below are the only places a caller can
@@ -64,12 +70,36 @@ router.post('/join', joinLimit, async (req, res) => {
     const existing = db.prepare('SELECT id FROM students WHERE class_id = ? AND lower(display_name) = lower(?)').get(cls.id, cleanName);
     if (existing) return res.status(409).json({ error: 'That name is already taken in this class. Try adding your last initial, e.g. "Avery M."' });
 
+    // ── THE CROSS-COURSE COLLISION ──────────────────────────────────────────
+    //  Name plus PIN is now an identity that spans courses, so two different
+    //  students holding the same pair is no longer a harmless coincidence: the
+    //  second one would be signing up into the first one's account, and every
+    //  course switcher after that would show them each other's classes.
+    //
+    //  Refusing is the only honest answer here, because the two cases this
+    //  branch cannot tell apart are "the same kid adding a course" and "a
+    //  different kid who picked the same name and the same four digits". The
+    //  first case has a door that does not require guessing: sign in to the
+    //  account you already have and add the class from there (POST /enroll),
+    //  which is what add_existing tells the join page to offer.
+    if (await accounts.nameAndPinTaken(cleanName, pin)) {
+      return res.status(409).json({
+        error: 'That name and PIN are already in use. Pick a different PIN, or add a letter to your name, so your sign-in is not confused with someone else.',
+        code: 'name_pin_taken',
+        // The page turns this into "Already have an account? Sign in and add
+        // this class." Nothing about the other account is named: not the class,
+        // not the course, not whether it is even the same person.
+        add_existing: true,
+      });
+    }
+
     const pinHash = await bcrypt.hash(String(pin), 10);
     const id = newId();
+    const accountId = accounts.createAccount(cleanName, pinHash);
     db.prepare(`
-      INSERT INTO students (id, class_id, display_name, pin_hash)
-      VALUES (?, ?, ?, ?)
-    `).run(id, cls.id, cleanName, pinHash);
+      INSERT INTO students (id, class_id, display_name, pin_hash, account_id)
+      VALUES (?, ?, ?, ?, ?)
+    `).run(id, cls.id, cleanName, pinHash, accountId);
 
     const student = db.prepare('SELECT id, class_id, display_name FROM students WHERE id = ?').get(id);
     const token = signStudentToken(student, cls.class_code);
@@ -78,6 +108,7 @@ router.post('/join', joinLimit, async (req, res) => {
       token,
       student: { id: student.id, name: student.display_name },
       class: { code: cls.class_code, name: cls.class_name, course: cls.course },
+      enrollments: accounts.enrollments(accountId),
     });
   } catch (e) {
     console.error('Join error:', e);
@@ -110,12 +141,22 @@ router.post('/login', loginLimit, async (req, res) => {
     db.prepare("UPDATE students SET last_active = datetime('now') WHERE id = ?").run(student.id);
     const token = signStudentToken(student, cls.class_code);
 
+    // The PIN was just verified, which makes this the one moment the identity
+    // can be resolved honestly, so the account link is made or created here
+    // rather than by a migration that would have to guess. Every row written
+    // before accounts existed gets linked on its owner's next sign-in.
+    const accountId = await accounts.ensureAccountForStudent(student, pin);
+
     res.json({
       token,
       student: { id: student.id, name: student.display_name },
       class: { code: cls.class_code, name: cls.class_name, course: cls.course },
+      // Every other class this same name and PIN reaches. The page renders these
+      // as a course switcher; POST /switch turns one into a token.
+      enrollments: accounts.enrollments(accountId),
     });
   } catch (e) {
+    console.error('Login error:', e);
     res.status(500).json({ error: 'Login failed' });
   }
 });
@@ -124,6 +165,159 @@ router.post('/login', loginLimit, async (req, res) => {
 router.get('/me', requireStudent, (req, res) => {
   const cls = db.prepare('SELECT class_code, class_name, course FROM classes WHERE id = ?').get(req.student.class_id);
   res.json({ student: req.student, class: cls });
+});
+
+// ── COURSES THIS ACCOUNT REACHES ──────────────────────────────────────────────
+//  The switcher behind "I take CSA and Cyber". A student row is per class, so a
+//  student in two courses has two of them; this is the list of the ones their
+//  identity owns, current class included and flagged.
+//
+//  Rows written before accounts existed have account_id NULL until their owner
+//  signs in again, so this lazily links the CURRENT row on first read using the
+//  hash already on it. That groups this student's own classes without a PIN in
+//  hand; it can never pull in a stranger's row, because a stranger's row has a
+//  different hash and is only ever attached by a verified sign-in.
+const linkSelfStmt = db.prepare('SELECT id, display_name, pin_hash, account_id FROM students WHERE id = ?');
+
+function accountIdFor(studentId) {
+  const row = linkSelfStmt.get(studentId);
+  if (!row) return null;
+  if (row.account_id && accounts.getAccount(row.account_id)) return row.account_id;
+  const accountId = accounts.createAccount(row.display_name, row.pin_hash);
+  accounts.linkStudent(row.id, accountId);
+  return accountId;
+}
+
+router.get('/enrollments', requireStudent, (req, res) => {
+  try {
+    const accountId = accountIdFor(req.student.id);
+    const rows = accounts.enrollments(accountId).map((e) => ({
+      class_code: e.class_code,
+      class_name: e.class_name,
+      course: e.course,
+      name: e.display_name,
+      current: e.student_id === req.student.id,
+    }));
+    res.set('Cache-Control', 'no-store');
+    res.json({ enrollments: rows });
+  } catch (e) {
+    console.error('Enrollments error:', e);
+    res.status(500).json({ error: 'Could not load your courses' });
+  }
+});
+
+// ── SWITCH COURSE ─────────────────────────────────────────────────────────────
+//  Trades the current token for one scoped to another class the SAME account is
+//  already in. No PIN retype, because nothing new is being proved: the caller
+//  already holds a valid token for an enrollment of that identity.
+//
+//  The account id is part of the lookup rather than a check after it, so this
+//  can only ever mint a token for a class the caller is genuinely enrolled in.
+//  A class code for someone else's class simply finds no row.
+router.post('/switch', requireStudent, (req, res) => {
+  try {
+    const code = req.body && req.body.class_code;
+    if (!code) return res.status(400).json({ error: 'Class code required' });
+
+    const accountId = accountIdFor(req.student.id);
+    const target = accounts.enrollmentByCode(accountId, code);
+    if (!target) return res.status(404).json({ error: 'You are not signed up for that class.' });
+    if (target.student_active === 0) {
+      return res.status(403).json({ error: 'That account has been deactivated by your teacher.' });
+    }
+
+    db.prepare("UPDATE students SET last_active = datetime('now') WHERE id = ?").run(target.student_id);
+    accounts.touch(accountId);
+    const token = signStudentToken(
+      { id: target.student_id, class_id: target.class_id, display_name: target.display_name },
+      target.class_code
+    );
+
+    res.set('Cache-Control', 'no-store');
+    res.json({
+      token,
+      student: { id: target.student_id, name: target.display_name },
+      class: { code: target.class_code, name: target.class_name, course: target.course },
+    });
+  } catch (e) {
+    console.error('Switch error:', e);
+    res.status(500).json({ error: 'Could not switch courses' });
+  }
+});
+
+// ── ADD A CLASS TO THIS ACCOUNT ───────────────────────────────────────────────
+//  The signed-in half of joining. /join is for a student with no account yet and
+//  asks for a name and a PIN; this is for one who already has both, so it copies
+//  them across rather than asking again. That is what makes "same name, same
+//  PIN, more courses" true instead of a thing students have to remember to do.
+//
+//  The PIN is never seen here and does not need to be: the existing row's hash
+//  is reused verbatim, so the new class answers to exactly the same PIN as the
+//  old one and a PIN change made later still has one hash per class to update.
+const enrollLimit = makeRateLimit({
+  windowMs: 10 * 60 * 1000, max: 60,
+  message: 'Too many attempts. Please wait a few minutes and try again.',
+});
+
+router.post('/enroll', enrollLimit, requireStudent, (req, res) => {
+  try {
+    const code = req.body && req.body.class_code;
+    if (!code) return res.status(400).json({ error: 'Class code required' });
+
+    const me = linkSelfStmt.get(req.student.id);
+    if (!me) return res.status(401).json({ error: 'Student not found' });
+    const accountId = accountIdFor(req.student.id);
+
+    const cls = db.prepare('SELECT * FROM classes WHERE class_code = ? AND active = 1')
+      .get(String(code).toUpperCase().trim());
+    if (!cls) return res.status(404).json({ error: 'Class not found or inactive. Check your class code.' });
+
+    // Already in it: hand back a token for it rather than an error. A student
+    // who taps "add" on a class they are already in wants to be in that class,
+    // and refusing would be pedantry with a dead end attached.
+    const already = accounts.enrollmentByCode(accountId, cls.class_code);
+    if (already) {
+      const token = signStudentToken(
+        { id: already.student_id, class_id: already.class_id, display_name: already.display_name },
+        already.class_code
+      );
+      return res.json({
+        token, already_enrolled: true,
+        student: { id: already.student_id, name: already.display_name },
+        class: { code: cls.class_code, name: cls.class_name, course: cls.course },
+        enrollments: accounts.enrollments(accountId),
+      });
+    }
+
+    // Names stay unique WITHIN a class, because that is the teacher's roster and
+    // two students called Avery on it is the teacher's problem, not the login's.
+    const taken = db.prepare('SELECT id FROM students WHERE class_id = ? AND lower(display_name) = lower(?)')
+      .get(cls.id, me.display_name);
+    if (taken) {
+      return res.status(409).json({
+        error: 'Someone in that class already uses your name. Ask your teacher which name to use there.',
+        code: 'name_taken_in_class',
+      });
+    }
+
+    const id = newId();
+    db.prepare(`
+      INSERT INTO students (id, class_id, display_name, pin_hash, account_id, last_active)
+      VALUES (?, ?, ?, ?, ?, datetime('now'))
+    `).run(id, cls.id, me.display_name, me.pin_hash, accountId);
+    accounts.touch(accountId);
+
+    const token = signStudentToken({ id, class_id: cls.id, display_name: me.display_name }, cls.class_code);
+    res.status(201).json({
+      token,
+      student: { id, name: me.display_name },
+      class: { code: cls.class_code, name: cls.class_name, course: cls.course },
+      enrollments: accounts.enrollments(accountId),
+    });
+  } catch (e) {
+    console.error('Enroll error:', e);
+    res.status(500).json({ error: 'Could not add that class' });
+  }
 });
 
 // ── ENTITLEMENT (site-wide ad gate + future paid gating) ──────────────────────
@@ -260,6 +454,22 @@ router.get('/progress', requireStudent, (req, res) => {
       r.points_earned = null;
       r.denominator_source = null;
     }
+  }
+
+  // ── WHERE EACH ROW CAME FROM ───────────────────────────────────────────────
+  //  A score names a lesson and an activity, and until now the student had to
+  //  go find the page themselves. Each record carries the link to its own page
+  //  so the cell can be clicked. url is null when nothing is known, and kind
+  //  says whether the link is the activity itself or only the unit it sits in,
+  //  so a page can label a hub link honestly instead of promising the quiz.
+  //
+  //  One read for the whole grid, not one per row: the map is loaded once for
+  //  the courses actually present. Reads are the heavy path here.
+  const linkMap = links.learnedMapFor(records.map((r) => r.course));
+  for (const r of records) {
+    const hit = links.resolve(r.course, r.unit, r.lesson, r.activity_type, linkMap);
+    r.url = hit ? hit.url : null;
+    r.url_kind = hit ? hit.kind : null;
   }
 
   res.json({ progress: records, map, mastery_threshold, denominators });
@@ -1046,6 +1256,18 @@ router.post('/solo-init', soloInitLimit, async (req, res) => {
 
     const cleanName = sanitize(display_name || 'Student', 50);
 
+    // Same cross-course collision rule /join enforces, and for the same reason:
+    // a solo account is one more class this identity would reach, so a second
+    // student minting the same name and PIN would land inside the first one's
+    // course switcher. See the note in /join.
+    if (await accounts.nameAndPinTaken(cleanName, pin)) {
+      return res.status(409).json({
+        error: 'That name and PIN are already in use. Pick a different PIN, or add a letter to your name, so your sign-in is not confused with someone else.',
+        code: 'name_pin_taken',
+        add_existing: true,
+      });
+    }
+
     // Unique personal code — doubles as the student's solo class_code
     let code = null;
     for (let i = 0; i < 6; i++) {
@@ -1058,6 +1280,7 @@ router.post('/solo-init', soloInitLimit, async (req, res) => {
     const pinHash = await bcrypt.hash(String(pin), 10);
     const classId = newId();
     const studentId = newId();
+    const accountId = accounts.createAccount(cleanName, pinHash);
 
     db.transaction(() => {
       // One shared system teacher owns all solo classes (satisfies the teacher_id foreign key)
@@ -1072,9 +1295,9 @@ router.post('/solo-init', soloInitLimit, async (req, res) => {
       `).run(classId, code);
 
       db.prepare(`
-        INSERT INTO students (id, class_id, display_name, pin_hash)
-        VALUES (?, ?, ?, ?)
-      `).run(studentId, classId, cleanName, pinHash);
+        INSERT INTO students (id, class_id, display_name, pin_hash, account_id)
+        VALUES (?, ?, ?, ?, ?)
+      `).run(studentId, classId, cleanName, pinHash, accountId);
     })();
 
     const student = db.prepare('SELECT id, class_id, display_name FROM students WHERE id = ?').get(studentId);
@@ -1084,6 +1307,7 @@ router.post('/solo-init', soloInitLimit, async (req, res) => {
       token,
       student: { id: student.id, name: student.display_name },
       login_code: code,
+      enrollments: accounts.enrollments(accountId),
     });
   } catch (e) {
     console.error('Solo init error:', e);
@@ -1108,11 +1332,13 @@ router.post('/solo-login', soloLoginLimit, async (req, res) => {
 
     db.prepare("UPDATE students SET last_active = datetime('now') WHERE id = ?").run(student.id);
     const token = signStudentToken(student, cls.class_code);
+    const accountId = await accounts.ensureAccountForStudent(student, pin);
 
     res.json({
       token,
       student: { id: student.id, name: student.display_name },
       login_code: cls.class_code,
+      enrollments: accounts.enrollments(accountId),
     });
   } catch (e) {
     console.error('Solo login error:', e);
@@ -1127,6 +1353,13 @@ router.post('/track', requireStudent, (req, res) => {
   try {
     const parsed = pageFromHandle(req.body && req.body.handle);
     if (!parsed) return res.json({ ok: true, tracked: false });
+
+    // Remember WHERE this activity lives, so My Progress can link a score back
+    // to its page. Recorded before the course checks below on purpose: a handle
+    // is a public page slug, identical for every student, so an off-course page
+    // that this student gets no credit for still teaches the map where that
+    // lesson is. Never allowed to throw into a student's request.
+    links.learn(parsed, req.body && req.body.handle);
 
     // Quizzes and exams have their own flow; never auto-complete them here.
     if (parsed.activity_type === 'quiz' || parsed.activity_type === 'exam') {

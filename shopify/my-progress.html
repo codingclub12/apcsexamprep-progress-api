@@ -104,6 +104,21 @@
 #stprog-wrap .sp-auth h1{font-size:20px!important;margin:0 0 8px!important;color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;}
 #stprog-wrap .sp-auth p{margin:0 0 18px!important;color:#64748b!important;-webkit-text-fill-color:#64748b;font-size:14px!important;}
 #stprog-wrap .sp-err{background:#fef2f2!important;border:1px solid #fecaca!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c;border-radius:10px!important;padding:12px 16px!important;font-size:13px!important;margin:12px 0!important;}
+/* Course switcher */
+#stprog-wrap .sp-switch{display:flex!important;flex-wrap:wrap!important;gap:8px!important;margin:0 0 18px!important;}
+#stprog-wrap .sp-switch button{font:inherit!important;font-size:13px!important;font-weight:600!important;cursor:pointer!important;border:1px solid #e5e7eb!important;background:#fff!important;color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;border-radius:999px!important;padding:7px 14px!important;}
+#stprog-wrap .sp-switch button:hover{border-color:#1e3a5f!important;}
+#stprog-wrap .sp-switch button[aria-current="true"]{background:#1e3a5f!important;border-color:#1e3a5f!important;color:#fff!important;-webkit-text-fill-color:#fff;}
+#stprog-wrap .sp-switch button[disabled]{opacity:.6!important;cursor:default!important;}
+#stprog-wrap .sp-switch .sp-add{border-style:dashed!important;color:#64748b!important;-webkit-text-fill-color:#64748b;}
+/* A cell that links to its own page. The link is the whole cell so the tap
+   target is the score itself, which is what a student actually aims at. */
+#stprog-wrap a.sp-go{text-decoration:none!important;display:inline-block!important;}
+#stprog-wrap a.sp-go:hover .sp-cell,#stprog-wrap a.sp-go:focus-visible .sp-cell{outline:2px solid #1e3a5f!important;outline-offset:1px!important;}
+#stprog-wrap a.sp-go:hover .n,#stprog-wrap a.sp-go:focus-visible .n{text-decoration:underline!important;}
+#stprog-wrap td a.sp-go,#stprog-wrap .sp-srow a.sp-go{display:block!important;}
+#stprog-wrap a.sp-lname{color:inherit!important;-webkit-text-fill-color:inherit;text-decoration:none!important;border-bottom:1px dotted #94a3b8!important;}
+#stprog-wrap a.sp-lname:hover{border-bottom-color:#1e3a5f!important;}
 @media(max-width:720px){#stprog-wrap .sp-stats{grid-template-columns:repeat(2,1fr)!important;} #stprog-wrap .sp-unit-bar{display:none!important;}}
 </style>
 
@@ -131,6 +146,11 @@
         </div>
         <button class="sp-btn" onclick="StProg.logout()">Sign out</button>
       </div>
+
+      <!-- Course switcher. One account, one name, one PIN, every course the
+           student takes. Hidden entirely when there is only one, so a student
+           in a single class sees no new furniture. -->
+      <nav id="sp-switch" class="sp-switch sp-hidden" aria-label="Your courses"></nav>
 
       <div id="sp-loading" class="sp-note" role="status" aria-live="polite">Loading your progress...</div>
       <div id="sp-error" class="sp-err sp-hidden" role="alert"></div>
@@ -173,7 +193,9 @@ window.StProg={
     document.getElementById('sp-av').textContent=nm.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()||'S';
     document.getElementById('sp-course').textContent=this.student.courseName||this.formatCourse(this.student.course)||'Course';
     document.getElementById('sp-class').textContent=this.student.className?('Class: '+this.student.className):'';
+    this.token=t;
     this.load(t);
+    this.loadCourses(t);
   },
 
   async load(token){
@@ -235,8 +257,19 @@ window.StProg={
         completed:!!r.completed,
         score:(r.score==null?null:r.score),
         attempts:(r.attempts==null?null:r.attempts),
-        earned:earned, possible:possible, source:src
+        earned:earned, possible:possible, source:src,
+        // Where this activity lives. url_kind is 'page' when the link is the
+        // activity itself and 'unit'/'course' when the API could only offer the
+        // hub it sits in, which is labelled as such rather than sold as the
+        // assignment.
+        url:(r.url||null), urlKind:(r.url_kind||null)
       };
+      // The lesson page for the row header. The lesson row itself is the best
+      // link; anything else in the lesson is a usable second choice, since it
+      // lands the student on the right topic either way.
+      if(r.url && r.url_kind==='page'){
+        if(r.activity_type==='lesson' || !U.lessons[l].url) U.lessons[l].url=r.url;
+      }
     });
     return courses;
   },
@@ -254,6 +287,15 @@ window.StProg={
   // A cell shows points earned over points possible. With no authored
   // denominator it shows the percent alone, which is the honest answer, rather
   // than a fraction against a number nobody chose.
+  // Wraps a rendered cell in the link to its page, when there is one. A cell
+  // with no known page stays exactly as it was: an unclickable link that goes
+  // nowhere is worse than no link at all.
+  linkWrap(inner,c,label){
+    if(!c||!c.url) return inner;
+    const hint=c.urlKind==='page'?('Open '+label):('Open the unit that contains '+label);
+    return "<a class='sp-go' href='"+this.esc(c.url)+"' title='"+this.esc(hint)+"' aria-label='"+this.esc(hint)+"'>"+inner+"</a>";
+  },
+
   cellHtml(nm,a,c){ const S=this;
     if(c&&c.score!=null){
       const att=(c.attempts&&c.attempts>1)?("<span class='sp-att'>"+c.attempts+"x</span>"):"";
@@ -268,11 +310,11 @@ window.StProg={
       const label=prov
         ? S.num(c.score)+" percent, points not assigned to this activity yet"
         : S.num(c.earned)+" of "+S.num(c.possible)+" points";
-      return "<span class='sp-cell "+S.clsFor(c.score)+"' aria-label='"+S.esc(nm)+": "+label
-        +((c.attempts&&c.attempts>1)?(", "+c.attempts+" attempts"):"")+"'>"+text+att+"</span>";
+      return S.linkWrap("<span class='sp-cell "+S.clsFor(c.score)+"' aria-label='"+S.esc(nm)+": "+label
+        +((c.attempts&&c.attempts>1)?(", "+c.attempts+" attempts"):"")+"'>"+text+att+"</span>", c, nm);
     }
-    if(c&&c.completed){ return "<span class='sp-cell c' aria-label='"+S.esc(nm)+": completed, not graded'>&#10003;</span>"; }
-    return "<span class='n' aria-label='"+S.esc(nm)+": not started'>&ndash;</span>";
+    if(c&&c.completed){ return S.linkWrap("<span class='sp-cell c' aria-label='"+S.esc(nm)+": completed, not graded'>&#10003;</span>", c, nm); }
+    return S.linkWrap("<span class='n' aria-label='"+S.esc(nm)+": not started'>&ndash;</span>", c, nm);
   },
 
   unitLabel(k){ let m; if(m=/^unit-(\d+)$/.exec(k))return 'Unit '+m[1]; if(m=/^bi-?(\d+)$/.exec(k))return 'Big Idea '+m[1]; if(k==='qotd')return 'Daily Practice'; if(k==='exams')return 'Practice Exams'; return k.replace(/(^|[-_])(\w)/g,(x,s,c)=>(s?' ':'')+c.toUpperCase()); },
@@ -334,7 +376,8 @@ window.StProg={
           ACTS.forEach(a=>{ html+="<th scope='col'>"+ACT_LABEL[a]+"</th>"; });
           html+="<th scope='col'>Lesson</th></tr></thead><tbody>";
           standard.forEach(lk=>{ const L=U.lessons[lk]; const nm=S.lessonLabel(lk);
-            html+="<tr><td class='lname'>"+S.esc(nm)+"</td>";
+            const ln=L.url?("<a class='sp-lname' href="+JSON.stringify(L.url)+">"+S.esc(nm)+"</a>"):S.esc(nm);
+            html+="<tr><td class='lname'>"+ln+"</td>";
             const lcells=[];
             ACTS.forEach(a=>{ const c=L.acts[a]; if(c) lcells.push(c); html+="<td>"+S.cellHtml(nm+' '+ACT_LABEL[a],a,c)+"</td>"; });
             const lt=S.totals(lcells);
@@ -346,7 +389,8 @@ window.StProg={
           html+="<div class='sp-srows'>";
           singles.forEach(lk=>{ const L=U.lessons[lk]; const a=Object.keys(L.acts)[0]; const c=L.acts[a];
             const nm=(lk==='exam'||lk==='case-file')?(ACT_LABEL[lk]||(S.unitLabel(uk)+' '+lk)):S.lessonLabel(lk);
-            html+="<div class='sp-srow'><span class='lname'>"+S.esc(nm)+"</span>"+S.cellHtml(nm,a,c)+"</div>";
+            const sn=L.url?("<a class='sp-lname' href="+JSON.stringify(L.url)+">"+S.esc(nm)+"</a>"):S.esc(nm);
+            html+="<div class='sp-srow'><span class='lname'>"+sn+"</span>"+S.cellHtml(nm,a,c)+"</div>";
           });
           html+="</div>";
         }
@@ -369,6 +413,86 @@ window.StProg={
       if(t.unpriced) note+=" A * marks "+t.unpriced+" activit"+(t.unpriced===1?"y whose":"ies whose")+" points have not been assigned yet. "+(t.unpriced===1?"Its percent is shown, and it is":"Their percents are shown, and they are")+" not counted in the points total.";
       pn.innerHTML=note;
     }
+  },
+
+  // ── ONE ACCOUNT, EVERY COURSE ──────────────────────────────────────────────
+  //  A student row is per class, so a kid taking CSA and Cyber has two of them.
+  //  The API groups them by identity (same name, same PIN) and returns the list;
+  //  switching trades this token for one scoped to the other class, with no PIN
+  //  retype, because nothing new is being proved.
+  async loadCourses(token){
+    try{
+      const r=await fetch(API+'/api/student/enrollments',{headers:{'Authorization':'Bearer '+token}});
+      if(!r.ok) return;
+      const d=await r.json();
+      this.enrollments=(d&&d.enrollments)||[];
+      this.renderCourses();
+    }catch(e){ /* the switcher is a convenience; its absence breaks nothing */ }
+  },
+
+  renderCourses(){
+    const el=document.getElementById('sp-switch'); if(!el) return;
+    const list=this.enrollments||[];
+    // Nothing to switch between is not a switcher. One course shows the plain
+    // page it always showed, plus the way to add a second.
+    let html='';
+    if(list.length>1){
+      list.forEach(e=>{
+        const label=this.formatCourse(e.course)||e.class_name||e.class_code;
+        html+="<button type='button' aria-current='"+(e.current?'true':'false')+"'"
+          +(e.current?" disabled":"")
+          +" onclick=\"StProg.switchTo('"+this.esc(e.class_code)+"')\">"+this.esc(label)+"</button>";
+      });
+    }
+    html+="<button type='button' class='sp-add' onclick='StProg.addCourse()'>+ Add a class</button>";
+    el.innerHTML=html;
+    el.classList.remove('sp-hidden');
+  },
+
+  async switchTo(code){
+    const token=this.token||localStorage.getItem('apcse_token'); if(!token) return;
+    try{
+      const r=await fetch(API+'/api/student/switch',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+        body:JSON.stringify({class_code:code}),
+      });
+      const d=await r.json();
+      if(!r.ok){ alert(d.error||'Could not switch courses.'); return; }
+      this.saveSession(d);
+      location.reload();
+    }catch(e){ alert('Could not reach the server. Try again.'); }
+  },
+
+  // Adding a class from inside the account is the whole point of the account:
+  // the name and the PIN are already known, so only the class code is asked for.
+  async addCourse(){
+    const token=this.token||localStorage.getItem('apcse_token'); if(!token) return;
+    const code=(window.prompt('Class code for the course you are adding (for example CSA-4KP2):')||'').trim();
+    if(!code) return;
+    try{
+      const r=await fetch(API+'/api/student/enroll',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+        body:JSON.stringify({class_code:code}),
+      });
+      const d=await r.json();
+      if(!r.ok){ alert(d.error||'Could not add that class.'); return; }
+      this.saveSession(d);
+      location.reload();
+    }catch(e){ alert('Could not reach the server. Try again.'); }
+  },
+
+  // Same shape /pages/join writes, so the two pages hand each other a session
+  // either way round.
+  saveSession(d){
+    if(!d||!d.token) return;
+    localStorage.setItem('apcse_token',d.token);
+    localStorage.setItem('apcse_student',JSON.stringify({
+      id:d.student.id, name:d.student.name,
+      classCode:d.class.code, className:d.class.name, course:d.class.course,
+      courseName:this.formatCourse(d.class.course),
+    }));
   },
 
   logout(){ localStorage.removeItem('apcse_token'); localStorage.removeItem('apcse_student');

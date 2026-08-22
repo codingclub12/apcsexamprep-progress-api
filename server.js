@@ -193,6 +193,15 @@ runBootSeed('course_manifest prune', () => {
 const csaSeeded = runBootSeed('csa_bank', () => require('./scripts/seed-csa-bank').seedCsaBank());
 if (csaSeeded) console.log(`csa bank: ${csaSeeded.answers} new answer rows, ${csaSeeded.denoms} new denominator rows`);
 
+// Where each activity LIVES, so a score in My Progress links back to the page it
+// came from. Harvested from the authored page handles in this repo, which is the
+// only source for CSA: its handles carry a title slug the lesson id does not
+// hold, so nothing can be derived and a fresh database would link nothing until
+// students had browsed. Insert-only, so a handle a student was actually standing
+// on (learned by /track) is never replaced by one harvested from source.
+const pageLinks = runBootSeed('page_links', () => require('./scripts/seed-page-links').seedPageLinks());
+if (pageLinks) console.log(`page links: ${pageLinks.changed} new of ${pageLinks.total} handles`);
+
 // Cyber denominators, extracted from the Shopify pages that own each activity.
 // Insert-or-ignore only: a value authored or corrected by hand is never
 // clobbered, and re-running is a no-op. Run

@@ -489,6 +489,56 @@ db.exec(`
   -- The only two access paths that exist: list mine (newest first) and open one
   -- of mine. Both are covered by this index.
   CREATE INDEX IF NOT EXISTS idx_sandbox_student ON sandbox_programs(student_id, updated_at DESC);
+
+  -- ── ONE ACCOUNT ACROSS COURSES ──────────────────────────────────────────────
+  --  A student row is per class and always has been: a kid taking CSA and Cyber
+  --  from the same teacher has two rows, two sets of progress, and until now two
+  --  separate sign-ins. This table is the identity ABOVE those rows, so the same
+  --  name and PIN reaches every class the student belongs to and My Progress can
+  --  show all of them.
+  --
+  --  Still zero PII: a folded name and a bcrypt hash, which is exactly what the
+  --  students table already held. Nothing new about a minor is stored here.
+  --
+  --  name_key is lower(display_name) as sanitize() stored it. It is deliberately
+  --  NOT unique: two different students may both be 'avery' as long as their PINs
+  --  differ, which is precisely the check /join makes before creating an account.
+  --  Making it unique would refuse the second Avery in the district.
+  CREATE TABLE IF NOT EXISTS student_accounts (
+    id           TEXT PRIMARY KEY,
+    name_key     TEXT NOT NULL,
+    pin_hash     TEXT NOT NULL,
+    created_at   TEXT DEFAULT (datetime('now')),
+    last_active  TEXT
+  );
+  CREATE INDEX IF NOT EXISTS idx_student_accounts_name ON student_accounts(name_key);
+
+  -- ── WHERE AN ACTIVITY LIVES ─────────────────────────────────────────────────
+  --  A score in My Progress names a lesson and an activity; it has never named
+  --  the page. This table is the (course, unit, lesson, activity_type) -> page
+  --  handle map that makes a cell clickable.
+  --
+  --  It is LEARNED rather than authored: /track already receives the handle a
+  --  student is standing on and pageFromHandle already parses it into exactly
+  --  this key, so recording the pair costs one upsert on a request that was
+  --  happening anyway. That matters because the handle is not derivable in
+  --  reverse for every course. 'ap-csa-lesson-1-2-{slug}' keeps its slug out of
+  --  the lesson id, so no amount of string building recovers it; only having
+  --  seen the page does. Courses whose handles ARE derivable (CSP, the numbered
+  --  cyber pages) are resolved in lib/lesson-links.js without needing a row.
+  --
+  --  Nothing student-specific is stored: a handle is a public URL slug, the same
+  --  for every student who opens it.
+  CREATE TABLE IF NOT EXISTS page_links (
+    course        TEXT NOT NULL,
+    unit          TEXT NOT NULL,
+    lesson        TEXT NOT NULL,
+    activity_type TEXT NOT NULL,
+    handle        TEXT NOT NULL,
+    seen_count    INTEGER NOT NULL DEFAULT 1,
+    last_seen     TEXT DEFAULT (datetime('now')),
+    PRIMARY KEY (course, unit, lesson, activity_type)
+  );
 `);
 
 // Migrations — safe to re-run on every boot, ignored if column already exists
@@ -539,10 +589,19 @@ const migrations = [
   // backfill below can map it from retry_allowed. A default would stamp every
   // old row with the same value and destroy the mapping.
   `ALTER TABLE classes   ADD COLUMN retry_mode        TEXT DEFAULT NULL`,
+  // The cross-course identity this per-class student row belongs to. NULL on
+  // every existing row and that is the correct starting state: the link is made
+  // lazily on the student's next successful sign-in, when a PIN has actually
+  // been verified, rather than by a backfill that would have to guess which of
+  // two students named Avery are the same person. See lib/student-accounts.js.
+  `ALTER TABLE students  ADD COLUMN account_id        TEXT DEFAULT NULL`,
 ];
 for (const sql of migrations) {
   try { db.exec(sql); } catch(e) { /* column already exists */ }
 }
+// Index after the ALTER, never inside the CREATE block above: the column does
+// not exist yet on a database that predates it.
+try { db.exec(`CREATE INDEX IF NOT EXISTS idx_students_account ON students(account_id)`); } catch(e) { /* pre-migration boot */ }
 
 // ── COMMAND CENTER (Phase 1) ──────────────────────────────────────────────────
 // Six additive tables (tasks, promises, deps, claims, task_events,

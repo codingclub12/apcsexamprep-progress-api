@@ -157,11 +157,24 @@ function loadPage() {
     cellOf('1.1', 'quiz').possible);
 
   console.log('2. The rendered cell text is points over points');
+  //  The cell is now WRAPPED IN ITS LINK when the API knows where the activity
+  //  lives, which is the point of the link feature and is why the anchor is
+  //  stripped before the text is read. Reading the first '>...<' without doing
+  //  that returns the empty gap between the anchor and the span, and every
+  //  assertion below compares against ''.
   const text = (lesson, act) => {
-    const h = StProg.cellHtml('x', act, cellOf(lesson, act));
+    const h = StProg.cellHtml('x', act, cellOf(lesson, act))
+      .replace(/<a\b[^>]*>/g, '').replace(/<\/a>/g, '');
     const m = />([^<]*)</.exec(h.replace(/<span class='sp-att'>[^<]*<\/span>/, ''));
     return m ? m[1].trim() : h;
   };
+  //  Cyber page handles are derivable from the lesson id, so every cell here
+  //  should carry a link to the page it was earned on. That is the student
+  //  facing half of the feature: a score you can click back to its assignment.
+  ok('  a scored cell links to its own page',
+    /<a class='sp-go' href='[^']*ap-cyber-unit-1-lesson-1-quiz'/.test(
+      StProg.cellHtml('x', 'quiz', cellOf('1.1', 'quiz'))),
+    StProg.cellHtml('x', 'quiz', cellOf('1.1', 'quiz')));
   ok('  1.1 exercise-1 shows 7/7', text('1.1', 'exercise-1') === '7/7', text('1.1', 'exercise-1'));
   ok('  1.1 exercise-2 shows 3/8, in whole marks', text('1.1', 'exercise-2') === '3/8', text('1.1', 'exercise-2'));
   ok('  1.1 quiz shows 4/5', text('1.1', 'quiz') === '4/5', text('1.1', 'quiz'));
