@@ -8,6 +8,7 @@
     "dev": "node server.js",
     "smoke:install": "npm install --prefix smoke",
     "smoke:auth": "node smoke/auth-enrollment.js",
+    "smoke:cyberexamtruth": "node smoke/cyber-exam-truth.js",
     "smoke:cyberclarity": "node smoke/cyber-clarity.js",
     "smoke:labs": "node smoke/labs.js",
     "smoke:teacher": "node smoke/teacher-dashboard.js",
