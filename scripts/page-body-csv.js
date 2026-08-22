@@ -46,6 +46,10 @@ const PAGES = [
   { handle: 'cyber-dashboard', title: 'Teacher Dashboard', file: 'shopify/cyber-dashboard.html' },
   { handle: 'my-progress',     title: 'My Progress',       file: 'shopify/my-progress.html' },
   { handle: 'cyber-class',     title: 'Teacher Portal',    file: 'shopify/cyber-class.html' },
+  // Handle and title read back from the store before being listed here, per the
+  // rule above: a guessed handle creates a NEW page and a guessed title renames
+  // a real one. Confirmed as page 134976110807, "Join a Class".
+  { handle: 'join',            title: 'Join a Class',      file: 'shopify/join.html' },
 ];
 
 // Shopify DECODES entities when it stores a body: `&#9662;` comes back as the
