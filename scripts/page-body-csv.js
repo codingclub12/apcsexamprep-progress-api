@@ -58,9 +58,26 @@ const PAGES = [
 // would have re-shipped every page on every run. Both sides are normalised to
 // the characters before comparing, so the check compares what a browser renders
 // rather than how it was spelled.
+// The named entities this store's pages actually use. The list used to be just
+// ndash and mdash, which meant a page carrying any OTHER entity (join.html ships
+// a &rarr; in a button) could never compare equal to its live copy: the repo
+// side kept the spelling, the live side had the character, and the
+// already-matches check therefore reported that page as needing an import on
+// every single run. A check that always says yes is the same as no check.
+//
+// &amp; is decoded LAST and separately, because decoding it first would turn a
+// literal &amp;lt; into &lt; and then into <, which is a different string than
+// the one that was stored.
+const NAMED = {
+  ndash: '–', mdash: '—', rarr: '→', larr: '←', nbsp: ' ',
+  hellip: '…', times: '×', check: '✓', lt: '<', gt: '>', quot: '"',
+};
+
 function renderable(s) {
   return String(s == null ? '' : s)
     .replace(/&#(\d+);/g, (m, d) => String.fromCodePoint(Number(d)))
+    .replace(/&(ndash|mdash|rarr|larr|nbsp|hellip|times|check|lt|gt|quot);/g, (m, n) => NAMED[n])
+    .replace(/&amp;/g, '&')
     .split('&ndash;').join('–')
     .split('&mdash;').join('—')
     .replace(/\r\n/g, '\n')
@@ -99,6 +116,27 @@ function main(argv) {
     if (body.includes('�')) problems.push(`${p.handle}: body contains a replacement character`);
     if (/Ã[-¿]|â€|Â[ -¿]/.test(body)) problems.push(`${p.handle}: body contains mojibake`);
     if (body.includes('—')) problems.push(`${p.handle}: body contains an em-dash`);
+    // An HTML entity written as a LITERAL inside a JavaScript string does not
+    // survive an import. Shopify decodes entities when it stores a body, so
+    //     {'&':'&amp;','<':'&lt;'}
+    // comes back as {'&':'&','<':'<'} and an escape function built from that
+    // table silently becomes an identity function. join.html shipped exactly
+    // that on 2026-08-22 and the defect is invisible in the repo, in the sheet
+    // and in review: it appears only after the round trip.
+    //
+    // Entities in ordinary markup are fine and common (&rarr; in a link,
+    // &ndash; in a legend): decoding those just yields the character that was
+    // meant. The hazard is only an entity a script needs to STILL be an entity
+    // afterwards, so this looks for one inside a quoted JS string. Build them
+    // from parts instead, the way both shipped pages now do:
+    //     var A = '&'; ... A + 'amp;'
+    const entityInJs = body.match(/(['`])&(amp|lt|gt|quot|#\d+);\1/g);
+    if (entityInJs) {
+      const shown = [...new Set(entityInJs)].slice(0, 4).join(' ');
+      problems.push(`${p.handle}: ${entityInJs.length} HTML entit${entityInJs.length === 1 ? 'y' : 'ies'} `
+        + `written as a JavaScript string literal (${shown}). Shopify decodes these on import, which turns `
+        + `an escape table into an identity map. Build the entity from parts instead.`);
+    }
     if (live) {
       const n = live.get(p.handle);
       if (!n) { problems.push(`${p.handle}: no live page with that handle`); continue; }
