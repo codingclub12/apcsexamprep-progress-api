@@ -30,7 +30,9 @@ for (const suf of ['', '-wal', '-shm']) { try { fs.unlinkSync(process.env.DB_PAT
 const express = require('express');
 const db = require('../db');
 const { signTeacherToken } = require('../utils');
-const { seedCyberDenominators, POINTS } = require('../scripts/seed-cyber-denominators');
+const {
+  seedCyberDenominators, POINTS, MEASURED_UNPRICEABLE, EXAM_UNPRICEABLE,
+} = require('../scripts/seed-cyber-denominators');
 
 let pass = 0, fail = 0;
 const ok = (n, c, x) => {
@@ -83,6 +85,58 @@ console.log('1. Per-lesson values, as the pages state them');
     wrong >= ex1vals.length * 0.75, { wrong, of: ex1vals.length });
 
   ok('  no value is zero or negative', Object.values(POINTS).every((v) => v > 0));
+
+  // ── Measured but deliberately unpriced ─────────────────────────────────────
+  //  A denominator is half of a pair. Authoring one for a column whose page
+  //  cannot report a score grows items_total and drags pace down for every
+  //  student in the class, for work none of them can submit. These columns were
+  //  measured so the number is not lost, and are asserted OUT of POINTS so that
+  //  moving one in is a deliberate act that has to update this file too.
+  const unpriceable = Object.keys(MEASURED_UNPRICEABLE);
+  ok('  the measured-unpriceable table is not empty', unpriceable.length >= 5, unpriceable.length);
+  {
+    const leaked = unpriceable.filter((k) => POINTS[k] !== undefined);
+    ok('  no measured-unpriceable column has been moved into POINTS', leaked.length === 0, leaked);
+  }
+  ok('  every unpriceable entry records a value, its evidence and its blocker',
+    unpriceable.every((k) => {
+      const e = MEASURED_UNPRICEABLE[k];
+      return e && typeof e.possible === 'number' && e.possible > 0
+        && typeof e.evidence === 'string' && e.evidence.length > 10
+        && typeof e.blocker === 'string' && e.blocker.length > 5;
+    }));
+
+  //  The values themselves, pinned. If someone re-reads a page and gets a
+  //  different number, that is a real change on the storefront and should
+  //  surface as a failing test rather than as a silently edited constant.
+  ok('  1.2 exercise-1 measured at 24', MEASURED_UNPRICEABLE['1.2|exercise-1'].possible === 24);
+  ok('  1.2 exercise-2 measured at 30', MEASURED_UNPRICEABLE['1.2|exercise-2'].possible === 30);
+  ok('  1.3 exercise-1 measured at 24', MEASURED_UNPRICEABLE['1.3|exercise-1'].possible === 24);
+  ok('  1.3 exercise-2 measured at 24', MEASURED_UNPRICEABLE['1.3|exercise-2'].possible === 24);
+  ok('  1.3 quiz measured at 5', MEASURED_UNPRICEABLE['1.3|quiz'].possible === 5);
+
+  //  Lesson 1.3 is the one that was absent entirely rather than parked. Pin the
+  //  whole set so a partial re-add cannot happen.
+  {
+    const l13 = unpriceable.filter((k) => k.startsWith('1.3|'));
+    ok('  all three 1.3 columns are accounted for', l13.length === 3, l13);
+  }
+
+  // ── The five per-unit exams ────────────────────────────────────────────────
+  //  These cannot be keyed here at all: all five collapse onto lesson 'exam',
+  //  which is what course_unit_denominators exists for. They stay unpriced for
+  //  the same reason as above, and the count is recorded so that "we never
+  //  checked" can never again be confused with "it cannot report".
+  {
+    const units = Object.keys(EXAM_UNPRICEABLE);
+    ok('  all five unit exams are measured', units.length === 5, units);
+    ok('  every unit exam is out of 20',
+      units.every((u) => EXAM_UNPRICEABLE[u].possible === 20),
+      units.map((u) => EXAM_UNPRICEABLE[u].possible));
+    ok('  no exam column leaked into POINTS',
+      !Object.keys(POINTS).some((k) => k.split('|')[1] === 'exam'),
+      Object.keys(POINTS).filter((k) => k.split('|')[1] === 'exam'));
+  }
 
   // Every authored lesson must exist in the course config, or the gradebook
   // builds no column for it and the value is unreachable. 2.5, 3.6, 4.4 and 4.5
