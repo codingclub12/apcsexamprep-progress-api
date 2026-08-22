@@ -1,0 +1,380 @@
+<!-- APCSExamPrep Student Progress - /pages/my-progress -->
+<!-- Navy redesign to match the teacher dashboard. Reads /api/student/progress. -->
+<!--
+  POINTS EARNED OVER POINTS POSSIBLE.
+
+  Every denominator on this page comes from the API, which resolves it through
+  the same authority the teacher and admin gradebooks use. This page must never
+  invent one.
+
+  It used to. A constant table lived here:
+
+      const POINTS={'lesson':10,'exercise-1':5,'exercise-2':5,'quiz':10,...}
+
+  and every cell rescaled the stored percent onto it. The constants were wrong
+  (Cyber 1.1 Exercise 1 is out of 7, not 5; its quiz is out of 5, not 10) and the
+  rounding MOVED THE GRADE:
+
+      teacher saw            this page showed
+      25/100 = 25 percent    3/10 = 30
+      17/100 = 17 percent    1/5  = 20
+      3.04/8 = 38 percent    2/5  = 40
+
+  Only an exact 0 or 100 survived. A student and their teacher were looking at
+  different numbers for the same work.
+
+  The percentages were also means of percentages, so a 5 point quiz counted the
+  same as a 25 point exam, and a student's overall grade moved when they started
+  a new item without answering anything differently. Points are summed now:
+  earned over the possible of the work actually attempted.
+
+  A graded cell shows a pair wherever the points are known. Where nobody has
+  authored a total, the cell shows its PERCENT ALONE, marked with a *, and is
+  left out of the points total on both sides.
+
+  An interim version printed those cells as "17/100" instead. The percentage was
+  right, but the 100 was not a number anyone chose: it outweighed a real 5 mark
+  quiz twenty to one in the total, and it produced course totals like "71 / 127"
+  whose denominator appears on no page. Unknown points are shown as unknown.
+-->
+<style>
+#stprog-wrap{all:initial!important;display:block!important;}
+#stprog-wrap *{box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important;}
+#stprog-wrap .sp-page{background:#f6f8fb!important;min-height:100vh!important;padding:24px 0 60px!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;font-size:14px!important;line-height:1.5!important;}
+#stprog-wrap .sp-wrap{max-width:960px!important;margin:0 auto!important;padding:0 18px!important;}
+#stprog-wrap .sp-hidden{display:none!important;}
+
+#stprog-wrap .sp-top{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:16px!important;flex-wrap:wrap!important;margin-bottom:18px!important;}
+#stprog-wrap .sp-id{display:flex!important;align-items:center!important;gap:13px!important;}
+#stprog-wrap .sp-av{width:48px!important;height:48px!important;border-radius:50%!important;background:#eef2f9!important;color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;display:flex!important;align-items:center!important;justify-content:center!important;font-weight:700!important;font-size:17px!important;}
+#stprog-wrap .sp-name{font-size:19px!important;margin:0!important;font-weight:700!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#stprog-wrap .sp-sub{display:flex!important;align-items:center!important;gap:8px!important;flex-wrap:wrap!important;margin-top:4px!important;color:#64748b!important;-webkit-text-fill-color:#64748b;font-size:12.5px!important;}
+#stprog-wrap .sp-tag{background:#eff6ff!important;color:#3b82f6!important;-webkit-text-fill-color:#3b82f6;border:1px solid #dbeafe!important;border-radius:999px!important;padding:2px 10px!important;font-weight:600!important;font-size:11.5px!important;}
+#stprog-wrap .sp-btn{border:1px solid #e5e7eb!important;background:#fff!important;color:#475569!important;-webkit-text-fill-color:#475569;border-radius:9px!important;padding:9px 14px!important;font-size:13px!important;font-weight:600!important;cursor:pointer!important;text-decoration:none!important;display:inline-block!important;}
+#stprog-wrap .sp-btn:hover{border-color:#94a3b8!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#stprog-wrap .sp-btn.primary{background:#1e3a5f!important;border-color:#1e3a5f!important;color:#fff!important;-webkit-text-fill-color:#fff;}
+#stprog-wrap .sp-btn.primary:hover{background:#274b78!important;}
+
+#stprog-wrap .sp-stats{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:14px!important;margin-bottom:22px!important;}
+#stprog-wrap .sp-stat{background:#fff!important;border:1px solid #e5e7eb!important;border-radius:12px!important;padding:14px 16px!important;}
+#stprog-wrap .sp-stat .l{font-size:11.5px!important;font-weight:600!important;text-transform:uppercase!important;letter-spacing:.04em!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;}
+#stprog-wrap .sp-stat .v{font-size:26px!important;font-weight:750!important;margin-top:5px!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#stprog-wrap .sp-stat .v small{font-size:14px!important;font-weight:600!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;}
+#stprog-wrap .sp-stat .f{font-size:12px!important;color:#64748b!important;-webkit-text-fill-color:#64748b;margin-top:2px!important;}
+
+#stprog-wrap .sp-unit{background:#fff!important;border:1px solid #e5e7eb!important;border-radius:12px!important;box-shadow:0 1px 2px rgba(15,23,42,.06)!important;margin-bottom:16px!important;overflow:hidden!important;}
+#stprog-wrap .sp-unit-head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;padding:14px 18px!important;border-bottom:1px solid #eef2f6!important;background:#fbfcfe!important;}
+#stprog-wrap .sp-unit-head h2{margin:0!important;font-size:15px!important;font-weight:700!important;color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;}
+#stprog-wrap .sp-unit-pct{font-size:13px!important;font-weight:700!important;color:#475569!important;-webkit-text-fill-color:#475569;}
+#stprog-wrap .sp-unit-bar{height:6px!important;background:#eef2f6!important;border-radius:999px!important;overflow:hidden!important;width:120px!important;display:inline-block!important;vertical-align:middle!important;margin-left:10px!important;}
+#stprog-wrap .sp-unit-bar > i{display:block!important;height:100%!important;background:#3b82f6!important;border-radius:999px!important;}
+
+#stprog-wrap table.sp-table{width:100%!important;border-collapse:collapse!important;font-size:13px!important;}
+#stprog-wrap .sp-table th{text-align:center!important;font-size:11px!important;text-transform:uppercase!important;letter-spacing:.03em!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;font-weight:600!important;padding:9px 8px!important;border-bottom:1px solid #eef2f6!important;}
+#stprog-wrap .sp-table th.lname{text-align:left!important;padding-left:18px!important;}
+#stprog-wrap .sp-table td{padding:8px!important;border-bottom:1px solid #f3f6fa!important;text-align:center!important;}
+#stprog-wrap .sp-table tr:last-child td{border-bottom:none!important;}
+#stprog-wrap .sp-table td.lname{text-align:left!important;padding-left:18px!important;font-weight:600!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;}
+#stprog-wrap .sp-table td.lpct{font-weight:700!important;color:#475569!important;-webkit-text-fill-color:#475569;font-size:12.5px!important;}
+#stprog-wrap .sp-cell{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-width:50px!important;height:30px!important;border-radius:8px!important;font-weight:700!important;font-size:12.5px!important;border:1px solid transparent!important;padding:0 8px!important;}
+#stprog-wrap .g{background:#ecfdf5!important;color:#047857!important;-webkit-text-fill-color:#047857;border-color:#a7f3d0!important;}
+#stprog-wrap .a{background:#fffbeb!important;color:#b45309!important;-webkit-text-fill-color:#b45309;border-color:#fde68a!important;}
+#stprog-wrap .r{background:#fef2f2!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c;border-color:#fecaca!important;}
+#stprog-wrap .n{color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1;font-weight:700!important;}
+#stprog-wrap .sp-cell.c{background:#eff6ff!important;color:#1d4ed8!important;-webkit-text-fill-color:#1d4ed8;border-color:#dbeafe!important;}
+#stprog-wrap .sp-prov{color:#b45309!important;-webkit-text-fill-color:#b45309;font-weight:700!important;margin-left:1px!important;}
+#stprog-wrap .sp-att{font-size:10px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;margin-left:3px!important;font-weight:600!important;}
+#stprog-wrap .sp-course-h{font-size:12.5px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.06em!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;margin:14px 2px 10px!important;}
+#stprog-wrap .sp-course-h:first-child{margin-top:0!important;}
+#stprog-wrap .sp-pass{font-size:12.5px!important;color:#64748b!important;-webkit-text-fill-color:#64748b;margin:-6px 2px 16px!important;}
+#stprog-wrap .sp-pass b{color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;}
+#stprog-wrap .sp-info{background:#eff6ff!important;border:1px solid #dbeafe!important;color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;border-radius:10px!important;padding:12px 16px!important;font-size:13px!important;line-height:1.6!important;margin-bottom:14px!important;}
+#stprog-wrap .sp-srow{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;padding:9px 18px!important;border-top:1px solid #f3f6fa!important;}
+#stprog-wrap .sp-srow .lname{font-weight:600!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a;font-size:13px!important;}
+#stprog-wrap .sp-srow .sp-cell{min-width:64px!important;}
+
+#stprog-wrap .sp-legend{display:flex!important;gap:16px!important;align-items:center!important;flex-wrap:wrap!important;margin-top:6px!important;font-size:12px!important;color:#64748b!important;-webkit-text-fill-color:#64748b;}
+#stprog-wrap .sp-legend .k{display:inline-flex!important;align-items:center!important;gap:6px!important;}
+#stprog-wrap .sw{width:14px!important;height:14px!important;border-radius:4px!important;border:1px solid transparent!important;}
+#stprog-wrap .sw.g{background:#ecfdf5!important;border-color:#a7f3d0!important;}#stprog-wrap .sw.a{background:#fffbeb!important;border-color:#fde68a!important;}
+#stprog-wrap .sw.r{background:#fef2f2!important;border-color:#fecaca!important;}#stprog-wrap .sw.n{background:#fff!important;border-color:#e5e7eb!important;}
+
+#stprog-wrap .sp-note{text-align:center!important;padding:48px 20px!important;color:#64748b!important;-webkit-text-fill-color:#64748b;}
+#stprog-wrap .sp-auth{max-width:420px!important;margin:60px auto!important;text-align:center!important;background:#fff!important;border:1px solid #e5e7eb!important;border-radius:14px!important;padding:32px 26px!important;}
+#stprog-wrap .sp-auth h1{font-size:20px!important;margin:0 0 8px!important;color:#1e3a5f!important;-webkit-text-fill-color:#1e3a5f;}
+#stprog-wrap .sp-auth p{margin:0 0 18px!important;color:#64748b!important;-webkit-text-fill-color:#64748b;font-size:14px!important;}
+#stprog-wrap .sp-err{background:#fef2f2!important;border:1px solid #fecaca!important;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c;border-radius:10px!important;padding:12px 16px!important;font-size:13px!important;margin:12px 0!important;}
+@media(max-width:720px){#stprog-wrap .sp-stats{grid-template-columns:repeat(2,1fr)!important;} #stprog-wrap .sp-unit-bar{display:none!important;}}
+</style>
+
+<div id="stprog-wrap">
+<div class="sp-page">
+  <div class="sp-wrap">
+
+    <div id="sp-auth" class="sp-auth sp-hidden">
+      <h1>See your progress</h1>
+      <p>Sign in with your class code, name, and PIN to view your scores.</p>
+      <a class="sp-btn primary" href="/pages/join">Sign in</a>
+    </div>
+
+    <div id="sp-main" class="sp-hidden">
+      <div class="sp-top">
+        <div class="sp-id">
+          <div class="sp-av" id="sp-av" aria-hidden="true">--</div>
+          <div>
+            <h1 class="sp-name" id="sp-name">Student</h1>
+            <div class="sp-sub">
+              <span class="sp-tag" id="sp-course">Course</span>
+              <span id="sp-class"></span>
+            </div>
+          </div>
+        </div>
+        <button class="sp-btn" onclick="StProg.logout()">Sign out</button>
+      </div>
+
+      <div id="sp-loading" class="sp-note" role="status" aria-live="polite">Loading your progress...</div>
+      <div id="sp-error" class="sp-err sp-hidden" role="alert"></div>
+
+      <div id="sp-body" class="sp-hidden">
+        <div class="sp-stats" id="sp-stats"></div>
+        <div class="sp-pass" id="sp-pass"></div>
+        <div id="sp-units"></div>
+        <div class="sp-legend" aria-hidden="true">
+          <span class="k"><span class="sw g"></span> 80 and up</span>
+          <span class="k"><span class="sw a"></span> 60 to 79</span>
+          <span class="k"><span class="sw r"></span> below 60</span>
+          <span class="k"><span class="sw n"></span> not started</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<script>
+(function(){
+const API='https://progress.apcsexamprep.com';
+const ACTS=['lesson','exercise-1','exercise-2','quiz'];
+const ACT_LABEL={'lesson':'Lesson','exercise-1':'Ex 1','exercise-2':'Ex 2','quiz':'Quiz','exam':'Exam','case_file':'Case File','case-file':'Case File','qotd':'Daily','study-guide':'Study Guide'};
+
+window.StProg={
+  student:null,
+  threshold:80,
+  denominators:{},
+
+  init(){
+    const t=localStorage.getItem('apcse_token'); const sj=localStorage.getItem('apcse_student');
+    if(!t||!sj){ document.getElementById('sp-auth').classList.remove('sp-hidden'); return; }
+    try{ this.student=JSON.parse(sj); }catch(e){ this.student={}; }
+    document.getElementById('sp-main').classList.remove('sp-hidden');
+    const nm=this.student.name||'Student';
+    document.getElementById('sp-name').textContent=nm;
+    document.getElementById('sp-av').textContent=nm.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()||'S';
+    document.getElementById('sp-course').textContent=this.student.courseName||this.formatCourse(this.student.course)||'Course';
+    document.getElementById('sp-class').textContent=this.student.className?('Class: '+this.student.className):'';
+    this.load(t);
+  },
+
+  async load(token){
+    try{
+      const r=await fetch(API+'/api/student/progress',{headers:{'Authorization':'Bearer '+token}});
+      if(r.status===401){ this.logout(); return; }
+      if(!r.ok) throw new Error('status '+r.status);
+      const data=await r.json();
+      const rows=Array.isArray(data)?data:(data.progress||data.rows||[]);
+      this.threshold=(data && (data.mastery_threshold || (data.class && data.class.mastery_threshold))) || 80;
+      // The authored "out of" per lesson and activity, resolved server side by
+      // the same authority the teacher gradebook uses. Absent means nobody has
+      // authored one for that column, and the cell shows a bare percent.
+      this.denominators=(data && data.denominators) || {};
+      this.model=this.buildModel(rows);
+      document.getElementById('sp-loading').classList.add('sp-hidden');
+      document.getElementById('sp-body').classList.remove('sp-hidden');
+      this.renderStats(); this.renderUnits();
+    }catch(e){
+      document.getElementById('sp-loading').classList.add('sp-hidden');
+      const el=document.getElementById('sp-error'); el.textContent='Could not load your progress. Please refresh and try again.'; el.classList.remove('sp-hidden');
+    }
+  },
+
+  // The denominator for a column. Unit-scoped key first, because every Cyber
+  // unit has a lesson called 'exam' and a lesson called 'case-file'.
+  possibleFor(unit,lesson,act){
+    const d=this.denominators;
+    const u=d[unit+'|'+lesson+'|'+act];
+    if(u!=null) return u;
+    const k=d[lesson+'|'+act];
+    return k==null?null:k;
+  },
+
+  buildModel(rows){
+    const courses={};
+    (rows||[]).forEach(r=>{
+      const c=r.course||'course'; const u=r.unit||'unit'; const l=String(r.lesson==null?'':r.lesson);
+      courses[c]=courses[c]||{key:c,units:{},order:[]};
+      const C=courses[c];
+      if(!C.units[u]){ C.units[u]={key:u,lessons:{},order:[]}; C.order.push(u); }
+      const U=C.units[u];
+      if(!U.lessons[l]){ U.lessons[l]={key:l,acts:{}}; U.order.push(l); }
+      // points_earned and points_possible come straight from the API. They are
+      // null when the column has no authored denominator, and that null is
+      // carried rather than filled in.
+      let possible=(r.points_possible!=null)?r.points_possible:this.possibleFor(u,l,r.activity_type);
+      let earned=(r.points_earned!=null)?r.points_earned
+        :((possible!=null&&r.score!=null)?Math.round(r.score/100*possible*100)/100:null);
+      let src=r.denominator_source||null;
+      // No authored total means the points are UNKNOWN, and unknown is what is
+      // shown. An earlier version filled the gap with a provisional 100. The
+      // percentage stayed right, but the weight was fiction: a column priced at
+      // 100 outweighs a real 5 mark quiz twenty to one, and it produced course
+      // totals whose denominator appears on no page. The cell keeps its percent
+      // and is marked, so the missing total is visible rather than papered over.
+      if(possible==null&&r.score!=null){ earned=null; src='percent'; }
+      U.lessons[l].acts[r.activity_type]={
+        completed:!!r.completed,
+        score:(r.score==null?null:r.score),
+        attempts:(r.attempts==null?null:r.attempts),
+        earned:earned, possible:possible, source:src
+      };
+    });
+    return courses;
+  },
+
+  cmpLesson(a,b){
+    const pa=String(a).split('.').map(n=>parseInt(n,10)), pb=String(b).split('.').map(n=>parseInt(n,10));
+    const na=pa.every(x=>!isNaN(x)), nb=pb.every(x=>!isNaN(x));
+    if(na&&nb){ for(let i=0;i<Math.max(pa.length,pb.length);i++){ const d=(pa[i]||0)-(pb[i]||0); if(d)return d; } return 0; }
+    if(na)return -1; if(nb)return 1; return String(a).localeCompare(String(b));
+  },
+  clsFor(p){ if(p==null)return'n'; if(p>=this.threshold)return'g'; if(p>=60)return'a'; return'r'; },
+  lessonLabel(l){ const s=String(l); if(/^\d/.test(s))return s; return s.replace(/[-_]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase()); },
+  num(n){ return (Math.round(n*100)/100).toString(); },
+
+  // A cell shows points earned over points possible. With no authored
+  // denominator it shows the percent alone, which is the honest answer, rather
+  // than a fraction against a number nobody chose.
+  cellHtml(nm,a,c){ const S=this;
+    if(c&&c.score!=null){
+      const att=(c.attempts&&c.attempts>1)?("<span class='sp-att'>"+c.attempts+"x</span>"):"";
+      // Points earned over points possible whenever the points are known. Where
+      // nobody has assigned points to the activity yet, the percent is shown on
+      // its own and marked, rather than invented against a denominator that
+      // appears on no page.
+      const prov=(c.possible==null||c.earned==null);
+      const text=prov
+        ? S.num(c.score)+"%<span class='sp-prov' title='Points not assigned to this activity yet'>*</span>"
+        : S.num(c.earned)+"/"+S.num(c.possible);
+      const label=prov
+        ? S.num(c.score)+" percent, points not assigned to this activity yet"
+        : S.num(c.earned)+" of "+S.num(c.possible)+" points";
+      return "<span class='sp-cell "+S.clsFor(c.score)+"' aria-label='"+S.esc(nm)+": "+label
+        +((c.attempts&&c.attempts>1)?(", "+c.attempts+" attempts"):"")+"'>"+text+att+"</span>";
+    }
+    if(c&&c.completed){ return "<span class='sp-cell c' aria-label='"+S.esc(nm)+": completed, not graded'>✓</span>"; }
+    return "<span class='n' aria-label='"+S.esc(nm)+": not started'>–</span>";
+  },
+
+  unitLabel(k){ let m; if(m=/^unit-(\d+)$/.exec(k))return 'Unit '+m[1]; if(m=/^bi-?(\d+)$/.exec(k))return 'Big Idea '+m[1]; if(k==='qotd')return 'Daily Practice'; if(k==='exams')return 'Practice Exams'; return k.replace(/(^|[-_])(\w)/g,(x,s,c)=>(s?' ':'')+c.toUpperCase()); },
+  formatCourse(c){ return {'ap-cybersecurity':'AP Cybersecurity','ap-csa':'AP CSA','ap-csp':'AP CSP','ap-networking':'AP Networking'}[c]||c||''; },
+
+  allActivityCells(){
+    const cells=[]; const cs=this.model;
+    Object.keys(cs).forEach(ck=>{ const C=cs[ck]; C.order.forEach(uk=>{ const U=C.units[uk];
+      U.order.forEach(lk=>{ const L=U.lessons[lk]; Object.keys(L.acts).forEach(a=>{ cells.push(L.acts[a]); }); }); }); });
+    return cells;
+  },
+
+  // Points over points, never a mean of percentages. A mean lets a 5 point quiz
+  // count the same as a 25 point exam, and it moves a student's grade every time
+  // they start something new.
+  totals(cells){
+    let earned=0,graded=0,priced=0,unpriced=0;
+    (cells||[]).forEach(c=>{
+      if(c.score==null) return;
+      if(c.possible!=null&&c.earned!=null&&c.possible>0){ earned+=c.earned; graded+=c.possible; }
+      if(c.source==='percent') unpriced++; else priced++;
+    });
+    return { earned:Math.round(earned*100)/100, graded:Math.round(graded*100)/100,
+             pct: graded>0?Math.round(earned/graded*1000)/10:null, priced:priced, unpriced:unpriced };
+  },
+
+  renderStats(){
+    const cells=this.allActivityCells();
+    const scored=cells.filter(x=>x.score!=null);
+    const started=cells.filter(x=>x.score!=null||x.completed);
+    const t=this.totals(cells);
+    const mastered=scored.filter(x=>x.score>=this.threshold).length;
+    const has=t.pct!=null;
+    const card=(l,v,f)=>'<div class="sp-stat"><div class="l">'+l+'</div><div class="v">'+v+'</div><div class="f">'+f+'</div></div>';
+    document.getElementById('sp-stats').innerHTML=
+      card('Overall',has?(t.pct+'<small>%</small>'):'–',has?(this.letter(t.pct)+', points earned over points attempted'):'no graded points yet')+
+      card('Points',has?(this.num(t.earned)+'<small> / '+this.num(t.graded)+'</small>'):'–','of the work you have attempted')+
+      card('Activities done',started.length,'started or submitted')+
+      card('Mastered',scored.length?(mastered+'<small>/'+scored.length+'</small>'):'–','at '+this.threshold+'% or above');
+  },
+  letter(p){ if(p>=90)return'A'; if(p>=80)return'B'; if(p>=70)return'C'; if(p>=60)return'D'; return'F'; },
+
+  renderUnits(){
+    const cs=this.model; let html=''; const S=this; const ckeys=Object.keys(cs);
+    ckeys.forEach(ck=>{ const C=cs[ck];
+      html+="<h2 class='sp-course-h'>"+S.esc(S.formatCourse(ck)||ck)+"</h2>";
+      C.order.forEach(uk=>{ const U=C.units[uk];
+        const ucells=[]; U.order.forEach(lk=>Object.keys(U.lessons[lk].acts).forEach(a=>ucells.push(U.lessons[lk].acts[a])));
+        const ut=S.totals(ucells);
+        html+="<section class='sp-unit'><div class='sp-unit-head'><h2>"+S.esc(S.unitLabel(uk))+"</h2><span class='sp-unit-pct'>"+(ut.pct==null?'Not graded':ut.pct+'%')+"<span class='sp-unit-bar'><i style='width:"+(ut.pct||0)+"%'></i></span></span></div>";
+        const lessons=U.order.slice().sort((a,b)=>S.cmpLesson(a,b));
+        const standard=lessons.filter(l=>Object.keys(U.lessons[l].acts).some(a=>ACTS.indexOf(a)>-1));
+        const singles=lessons.filter(l=>standard.indexOf(l)<0);
+        if(standard.length){
+          // No "/N" in the header. Denominators differ per lesson (Cyber 1.1
+          // Exercise 1 is out of 7, Unit 2's is out of 6), so a single number
+          // above the column is wrong for most of it. Each cell carries its own.
+          html+="<table class='sp-table'><thead><tr><th class='lname' scope='col'>Lesson</th>";
+          ACTS.forEach(a=>{ html+="<th scope='col'>"+ACT_LABEL[a]+"</th>"; });
+          html+="<th scope='col'>Lesson</th></tr></thead><tbody>";
+          standard.forEach(lk=>{ const L=U.lessons[lk]; const nm=S.lessonLabel(lk);
+            html+="<tr><td class='lname'>"+S.esc(nm)+"</td>";
+            const lcells=[];
+            ACTS.forEach(a=>{ const c=L.acts[a]; if(c) lcells.push(c); html+="<td>"+S.cellHtml(nm+' '+ACT_LABEL[a],a,c)+"</td>"; });
+            const lt=S.totals(lcells);
+            html+="<td class='lpct'>"+(lt.pct==null?"<span class='n'>–</span>":(S.num(lt.earned)+"/"+S.num(lt.graded)))+"</td></tr>";
+          });
+          html+="</tbody></table>";
+        }
+        if(singles.length){
+          html+="<div class='sp-srows'>";
+          singles.forEach(lk=>{ const L=U.lessons[lk]; const a=Object.keys(L.acts)[0]; const c=L.acts[a];
+            const nm=(lk==='exam'||lk==='case-file')?(ACT_LABEL[lk]||(S.unitLabel(uk)+' '+lk)):S.lessonLabel(lk);
+            html+="<div class='sp-srow'><span class='lname'>"+S.esc(nm)+"</span>"+S.cellHtml(nm,a,c)+"</div>";
+          });
+          html+="</div>";
+        }
+        html+="</section>";
+      });
+    });
+    if(!html) html="<div class='sp-note'>No progress yet. Start a lesson and your scores will show up here.</div>";
+    const anyScore=this.allActivityCells().some(x=>x.score!=null);
+    if(!anyScore && html.indexOf('sp-note')<0){ html="<div class='sp-info'>These are lessons you have opened. Individual grades appear here as you complete the graded quizzes and exercises in each lesson.</div>"+html; }
+    document.getElementById('sp-units').innerHTML=html;
+    const pn=document.getElementById('sp-pass');
+    if(pn){
+      const t=this.totals(this.allActivityCells());
+      let note="Passing mark: <b>"+this.threshold+"%</b>. Each score is points earned out of points possible. A blue check means completed but not yet graded.";
+      // What the total actually does with those activities. It used to say they
+      // "count out of 100 until then", which was the old behaviour and is no
+      // longer true: an unpriced activity is left out of the points total
+      // entirely, on both sides. Saying otherwise told a student their grade was
+      // computed one way while it was computed another.
+      if(t.unpriced) note+=" A * marks "+t.unpriced+" activit"+(t.unpriced===1?"y whose":"ies whose")+" points have not been assigned yet. "+(t.unpriced===1?"Its percent is shown, and it is":"Their percents are shown, and they are")+" not counted in the points total.";
+      pn.innerHTML=note;
+    }
+  },
+
+  logout(){ localStorage.removeItem('apcse_token'); localStorage.removeItem('apcse_student');
+    document.getElementById('sp-main').classList.add('sp-hidden'); document.getElementById('sp-auth').classList.remove('sp-hidden'); },
+  esc(s){ var A='&'; return String(s==null?'':s).split(A).join(A+'amp;').split('<').join(A+'lt;').split('>').join(A+'gt;').split('"').join(A+'quot;'); }
+};
+document.addEventListener('DOMContentLoaded',()=>StProg.init());
+})();
+</script>

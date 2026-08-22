@@ -32,11 +32,14 @@
 .apjoin-hint{font-size:12px!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;margin-top:8px!important;text-align:center!important;}
 .apjoin-already{text-align:center!important;margin-top:20px!important;font-size:13px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;}
 .apjoin-already a{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-decoration:underline!important;cursor:pointer!important;}
-.apjoin-logged{background:#1E1B4B!important;border-radius:10px!important;padding:20px 24px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-align:center!important;display:none!important;}
-.apjoin-logged .lname{font-size:20px!important;font-weight:700!important;margin-bottom:4px!important;}
-.apjoin-logged .lclass{font-size:14px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;margin-bottom:16px!important;}
-.apjoin-logged .l-prog-btn{display:inline-block!important;background:#E8A020!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;padding:10px 20px!important;border-radius:6px!important;font-weight:700!important;text-decoration:none!important;font-size:14px!important;margin:4px!important;}
-.apjoin-logged .l-out-btn{display:inline-block!important;background:transparent!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;padding:10px 20px!important;border-radius:6px!important;font-size:13px!important;cursor:pointer!important;border:1px solid #4c1d95!important;margin:4px!important;}
+.apjoin-logged{background:#1E1B4B!important;border-radius:10px!important;padding:24px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;text-align:center!important;display:none!important;}
+.apjoin-logged .l-eyebrow{font-size:13px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;margin-bottom:2px!important;}
+.apjoin-logged .lname{font-size:22px!important;font-weight:700!important;margin-bottom:4px!important;}
+.apjoin-logged .lclass{font-size:14px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;margin-bottom:20px!important;}
+.apjoin-logged .l-btn{display:block!important;width:100%!important;padding:13px!important;border-radius:8px!important;font-weight:700!important;font-size:15px!important;text-align:center!important;text-decoration:none!important;cursor:pointer!important;border:none!important;margin-top:10px!important;}
+.apjoin-logged .l-primary{background:#E8A020!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;}
+.apjoin-logged .l-secondary{background:#fff!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;}
+.apjoin-logged .l-ghost{background:transparent!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border:1px solid #4c1d95!important;}
 </style>
 
 <div id="apjoin-wrap">
@@ -52,17 +55,14 @@
     </div>
   </div>
 
-  <!-- Already logged in state -->
+  <!-- Already logged in state (now with real navigation) -->
   <div class="apjoin-logged" id="alreadyLogged">
+    <div class="l-eyebrow">You're signed in as</div>
     <div class="lname" id="loggedName"></div>
     <div class="lclass" id="loggedClass"></div>
-    <div>
-      <a class="l-prog-btn" href="/pages/my-progress">View My Progress</a>
-      <!-- Same account, another course. Your name and PIN are already known, so
-           only the class code is asked for. -->
-      <span class="l-out-btn" onclick="APJoin.addClass()">Add Another Class</span>
-      <span class="l-out-btn" onclick="APJoin.logout()">Sign Out</span>
-    </div>
+    <a class="l-btn l-primary" id="continueCourseBtn" href="/pages/my-progress">Continue My Course</a>
+    <a class="l-btn l-secondary" href="/pages/my-progress">View My Progress</a>
+    <span class="l-btn l-ghost" onclick="APJoin.logout()">Sign Out</span>
   </div>
 
   <!-- Join / Login tabs -->
@@ -70,6 +70,7 @@
     <div class="apjoin-tabs">
       <button class="apjoin-tab active" onclick="APJoin.switchTab('join')">Join a Class</button>
       <button class="apjoin-tab" onclick="APJoin.switchTab('login')">Return Student</button>
+      <button class="apjoin-tab" onclick="APJoin.switchTab('solo')">Self-Study</button>
     </div>
 
     <!-- JOIN STEP 1: Enter class code -->
@@ -86,7 +87,7 @@
       </div>
 
       <div class="apjoin-error" id="joinCodeError"></div>
-      <button class="apjoin-btn" onclick="APJoin.verifyCode()">Continue &rarr;</button>
+      <button class="apjoin-btn" onclick="APJoin.verifyCode()">Continue →</button>
     </div>
 
     <!-- JOIN STEP 2: Name + PIN -->
@@ -96,7 +97,7 @@
 
       <label class="apjoin-label">Your Display Name</label>
       <input class="apjoin-input" id="joinName" placeholder="e.g. Avery M." maxlength="50">
-      <div class="apjoin-hint">Use your first name + last initial so your teacher recognizes you</div>
+      <div class="apjoin-hint">Use your first name and last initial so your teacher recognizes you</div>
 
       <label class="apjoin-label" style="margin-top:20px!important;">Choose a 4-Digit PIN</label>
       <div class="apjoin-pin-row">
@@ -105,11 +106,11 @@
         <input class="apjoin-pin-digit" id="p3" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
         <input class="apjoin-pin-digit" id="p4" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
       </div>
-      <div class="apjoin-hint">Remember this PIN &mdash; you'll use it to log back in on any device</div>
+      <div class="apjoin-hint">Remember this PIN. You'll use it to log back in on any device.</div>
 
       <div class="apjoin-error" id="joinDetailsError"></div>
       <button class="apjoin-btn" onclick="APJoin.completeJoin()">Join Class</button>
-      <div class="apjoin-already"><a onclick="APJoin.goBack()">&#8592; Back</a></div>
+      <div class="apjoin-already"><a onclick="APJoin.goBack()">← Back</a></div>
     </div>
 
     <!-- LOGIN TAB -->
@@ -118,10 +119,11 @@
       <div style="font-size:14px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;margin-bottom:4px!important;">Sign in to resume where you left off</div>
 
       <label class="apjoin-label">Class Code</label>
-      <input class="apjoin-input big" id="loginCode" placeholder="CYBER-XXXX" maxlength="10" autocapitalize="characters" spellcheck="false">
+      <input class="apjoin-input big" id="loginCode" placeholder="CYBER-XXXX or ME-XXXX" maxlength="10" autocapitalize="characters" spellcheck="false">
 
       <label class="apjoin-label">Your Name</label>
       <input class="apjoin-input" id="loginName" placeholder="Your display name" maxlength="50">
+      <div class="apjoin-hint">Leave blank if you're using a personal ME- code.</div>
 
       <label class="apjoin-label">PIN</label>
       <div class="apjoin-pin-row">
@@ -134,13 +136,44 @@
       <div class="apjoin-error" id="loginError"></div>
       <button class="apjoin-btn" onclick="APJoin.doLogin()">Sign In</button>
 
-      <div class="apjoin-already">First time? <a onclick="APJoin.switchTab('join')">Join your class</a></div>
+      <div class="apjoin-already">First time? <a onclick="APJoin.switchTab('join')">Join a class</a> or <a onclick="APJoin.switchTab('solo')">study on your own</a>
+</div>
+    </div>
+
+    <!-- SELF-STUDY TAB -->
+    <div class="apjoin-step" id="step-solo">
+      <div style="font-size:22px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin-bottom:6px!important;">Study on Your Own</div>
+      <div style="font-size:14px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;margin-bottom:4px!important;">No class code needed. Save your progress across AP CSA, CSP, and Cybersecurity.</div>
+
+      <label class="apjoin-label">Your Name</label>
+      <input class="apjoin-input" id="soloName" placeholder="e.g. Avery M." maxlength="50">
+      <div class="apjoin-hint">Just for your own gradebook.</div>
+
+      <label class="apjoin-label" style="margin-top:20px!important;">Choose a 4-Digit PIN</label>
+      <div class="apjoin-pin-row">
+        <input class="apjoin-pin-digit" id="sp1" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+        <input class="apjoin-pin-digit" id="sp2" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+        <input class="apjoin-pin-digit" id="sp3" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+        <input class="apjoin-pin-digit" id="sp4" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+      </div>
+      <div class="apjoin-hint">You'll get a personal code. Save it with your PIN to log back in on any device.</div>
+
+      <div class="apjoin-error" id="soloError"></div>
+      <button class="apjoin-btn" onclick="APJoin.completeSolo()">Create My Account</button>
+      <div class="apjoin-already">Already have a personal code? <a onclick="APJoin.switchTab('login')">Sign in</a>
+</div>
     </div>
 
     <!-- SUCCESS -->
     <div class="apjoin-step" id="step-success">
       <div class="apjoin-success" id="successMsg" style="display:block!important;"></div>
-      <a class="apjoin-btn" href="/pages/my-progress" style="display:block!important;text-align:center!important;text-decoration:none!important;margin-top:16px!important;">View My Progress &rarr;</a>
+      <div id="soloCodeBox" style="display:none!important;margin:0 0 8px!important;padding:16px!important;background:#EDE9FE!important;border:2px solid #6B21A8!important;border-radius:10px!important;text-align:center!important;">
+        <div style="font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.5px!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;">Your personal code</div>
+        <div id="soloCodeValue" style="font-size:26px!important;font-weight:800!important;letter-spacing:2px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:6px 0!important;"></div>
+        <button id="soloCopyBtn" type="button" onclick="APJoin.copyCode()" style="background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:6px!important;padding:8px 18px!important;font-weight:700!important;font-size:13px!important;cursor:pointer!important;">Copy code</button>
+        <div style="font-size:12px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;margin-top:10px!important;line-height:1.5!important;">Save this with your PIN. It's the only way back in on another device or if you clear your browser. Accounts don't use email, so a lost code can't be recovered.</div>
+      </div>
+      <a class="apjoin-btn" href="/pages/my-progress" style="display:block!important;text-align:center!important;text-decoration:none!important;margin-top:16px!important;">View My Progress →</a>
     </div>
   </div>
 
@@ -149,42 +182,57 @@
 </div>
 
 <script>
-const API = 'https://apcsexamprep-progress-api-production.up.railway.app';
+const API = 'https://progress.apcsexamprep.com';
 
 window.APJoin = {
   currentCode: '',
   currentTab: 'join',
-  // The class a returning student was mid-way through joining when we
-  // recognised their account. Added for them once they sign in.
-  pendingClass: null,
+
+  // Where "Continue My Course" sends a signed-in student, by course.
+  COURSE_HOME: {
+    'ap-cybersecurity': '/pages/ap-cybersecurity-complete-course-guide',
+    'ap-csa': '/pages/ap-csa-course',
+    'ap-csp': '/pages/ap-csp-course',
+  },
+
+  // Toggle display with !important so it beats the stylesheet's display:none!important.
+  _show(el) { if (el) el.style.setProperty('display', 'block', 'important'); },
+  _hide(el) { if (el) el.style.setProperty('display', 'none', 'important'); },
 
   init() {
-    // Check if already logged in
+    this.setupPinInputs('p1', 'p2', 'p3', 'p4');
+    this.setupPinInputs('lp1', 'lp2', 'lp3', 'lp4');
+    this.setupPinInputs('sp1', 'sp2', 'sp3', 'sp4');
+
+    // Format class code inputs as the user types
+    ['joinCode', 'loginCode'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('input', () => {
+        el.value = el.value.toUpperCase().replace(/[^A-Z0-9-]/g, '');
+      });
+    });
+
+    // Already logged in: show the signed-in panel with navigation, hide the forms.
     const session = this.getSession();
     if (session) {
-      document.getElementById('alreadyLogged').style.display = 'block';
-      document.getElementById('joinLoginArea').style.display = 'none';
+      this._show(document.getElementById('alreadyLogged'));
+      this._hide(document.getElementById('joinLoginArea'));
       document.getElementById('loggedName').textContent = session.name;
-      document.getElementById('loggedClass').textContent = 'Class ' + session.classCode + ' \u00B7 ' + session.courseName;
+      document.getElementById('loggedClass').textContent = session.course === 'solo' ? 'Self-study \u00B7 Your code ' + session.classCode : 'Class ' + session.classCode + ' \u00B7 ' + (session.courseName || '');
+      const cont = document.getElementById('continueCourseBtn');
+      if (cont) cont.setAttribute('href', this.COURSE_HOME[session.course] || '/pages/my-progress');
+      return;
     }
-    this.setupPinInputs('p1','p2','p3','p4');
-    this.setupPinInputs('lp1','lp2','lp3','lp4');
 
-    // Auto-fill class code from URL param
+    // Not logged in: auto-fill class code from the URL and verify it
     const urlCode = new URLSearchParams(window.location.search).get('code');
     if (urlCode) {
       const el = document.getElementById('joinCode');
       if (el) { el.value = urlCode.toUpperCase(); this.verifyCode(); }
     }
 
-    // Format class code inputs as user types
-    ['joinCode','loginCode'].forEach(id => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      el.addEventListener('input', () => {
-        el.value = el.value.toUpperCase().replace(/[^A-Z0-9-]/g,'');
-      });
-    });
+    if (new URLSearchParams(window.location.search).get('mode') === 'solo') this.switchTab('solo');
   },
 
   setupPinInputs(...ids) {
@@ -192,11 +240,11 @@ window.APJoin = {
       const el = document.getElementById(id);
       if (!el) return;
       el.addEventListener('input', () => {
-        el.value = el.value.replace(/\D/,'').slice(-1);
-        if (el.value && i < ids.length - 1) document.getElementById(ids[i+1]).focus();
+        el.value = el.value.replace(/\D/, '').slice(-1);
+        if (el.value && i < ids.length - 1) document.getElementById(ids[i + 1]).focus();
       });
       el.addEventListener('keydown', e => {
-        if (e.key === 'Backspace' && !el.value && i > 0) document.getElementById(ids[i-1]).focus();
+        if (e.key === 'Backspace' && !el.value && i > 0) document.getElementById(ids[i - 1]).focus();
       });
     });
   },
@@ -207,18 +255,20 @@ window.APJoin = {
 
   switchTab(tab) {
     this.currentTab = tab;
-    document.querySelectorAll('.apjoin-tab').forEach((t,i) => {
-      t.classList.toggle('active', (tab === 'join' && i === 0) || (tab === 'login' && i === 1));
+    const idx = { join: 0, login: 1, solo: 2 };
+    document.querySelectorAll('.apjoin-tab').forEach((t, i) => {
+      t.classList.toggle('active', i === idx[tab]);
     });
     document.querySelectorAll('.apjoin-step').forEach(s => s.classList.remove('active'));
-    document.getElementById(tab === 'join' ? 'step-join-code' : 'step-login').classList.add('active');
+    const step = { join: 'step-join-code', login: 'step-login', solo: 'step-solo' }[tab];
+    document.getElementById(step).classList.add('active');
   },
 
   async verifyCode() {
     const code = document.getElementById('joinCode').value.trim().toUpperCase();
     if (!code) return this.showError('joinCodeError', 'Please enter your class code');
     const preview = document.getElementById('classPreview');
-    preview.style.display = 'none';
+    this._hide(preview);
     try {
       const r = await fetch(`${API}/api/class/${code}/exists`);
       const d = await r.json();
@@ -226,23 +276,23 @@ window.APJoin = {
       this.currentCode = code;
       document.getElementById('previewName').textContent = d.class_name;
       document.getElementById('previewMeta').textContent = 'Course: ' + this.formatCourse(d.course) + ' \u00B7 ' + d.student_count + ' students';
-      preview.style.display = 'block';
+      this._show(preview);
       this.hideError('joinCodeError');
-      // Move to next step after brief pause
+      // Move to next step after a brief pause
       setTimeout(() => {
         document.getElementById('step-join-code').classList.remove('active');
         document.getElementById('step-join-details').classList.add('active');
         document.getElementById('joinClassConfirm').textContent = '\u2713 ' + d.class_name;
         document.getElementById('joinName').focus();
       }, 500);
-    } catch(e) {
+    } catch (e) {
       this.showError('joinCodeError', 'Could not reach server. Try again.');
     }
   },
 
   async completeJoin() {
     const name = document.getElementById('joinName').value.trim();
-    const pin = this.getPin('p1','p2','p3','p4');
+    const pin = this.getPin('p1', 'p2', 'p3', 'p4');
     if (!name) return this.showError('joinDetailsError', 'Please enter your display name');
     if (pin.length !== 4) return this.showError('joinDetailsError', 'Please enter a 4-digit PIN');
 
@@ -252,127 +302,87 @@ window.APJoin = {
     try {
       const r = await fetch(`${API}/api/student/join`, {
         method: 'POST',
-        headers: {'Content-Type':'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ class_code: this.currentCode, display_name: name, pin }),
       });
       const d = await r.json();
-      if (!r.ok) {
-        btn.disabled = false; btn.textContent = 'Join Class';
-        // ── SOMEONE ALREADY ANSWERS TO THIS NAME AND PIN ────────────────────
-        //  A name and a PIN now identify a student across every course they
-        //  take, so this pair cannot belong to two people. If it is the same
-        //  student adding a course, they do not need a second account and are
-        //  sent to sign in with the one they have; this class is remembered and
-        //  added for them the moment they do. If it is a different student who
-        //  happened to pick the same four digits, they change one of the two.
-        if (d.code === 'name_pin_taken') {
-          this.pendingClass = this.currentCode;
-          this.showError('joinDetailsError', d.error);
-          const box = document.getElementById('joinDetailsError');
-          if (box && d.add_existing) {
-            box.innerHTML = this.esc(d.error)
-              + ' <a style="cursor:pointer;text-decoration:underline" onclick="APJoin.signInAndAdd()">Already have an account? Sign in and we will add this class for you.</a>';
-          }
-          return;
-        }
-        return this.showError('joinDetailsError', d.error);
-      }
+      if (!r.ok) { btn.disabled = false; btn.textContent = 'Join Class'; return this.showError('joinDetailsError', d.error); }
 
       this.saveSession(d.token, d.student, d.class);
       document.querySelectorAll('.apjoin-step').forEach(s => s.classList.remove('active'));
       document.getElementById('step-success').classList.add('active');
-      document.getElementById('successMsg').innerHTML = '\u2713 You\'re in! Welcome to <strong>' + d.class.name + '</strong>, ' + d.student.name + '.<br><br>Your PIN is <strong>' + pin + '</strong> &mdash; remember it to log back in on any device.';
-    } catch(e) {
+      document.getElementById('successMsg').innerHTML = '\u2713 You\'re in! Welcome to <strong>' + d.class.name + '</strong>, ' + d.student.name + '.<br><br>Your PIN is <strong>' + pin + '</strong>. Remember it to log back in on any device.';
+    } catch (e) {
       btn.disabled = false; btn.textContent = 'Join Class';
       this.showError('joinDetailsError', 'Connection error. Try again.');
     }
   },
 
+  async completeSolo() {
+    const name = document.getElementById('soloName').value.trim();
+    const pin = this.getPin('sp1', 'sp2', 'sp3', 'sp4');
+    if (pin.length !== 4) return this.showError('soloError', 'Please choose a 4-digit PIN');
+
+    const btn = document.querySelector('#step-solo .apjoin-btn');
+    btn.disabled = true; btn.textContent = 'Creating\u2026';
+
+    try {
+      const r = await fetch(`${API}/api/student/solo-init`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ display_name: name, pin }),
+      });
+      const d = await r.json();
+      if (!r.ok) { btn.disabled = false; btn.textContent = 'Create My Account'; return this.showError('soloError', d.error || 'Could not create account'); }
+
+      this.saveSession(d.token, d.student, { code: d.login_code, name: 'Self-Study', course: 'solo' });
+      document.getElementById('soloCodeValue').textContent = d.login_code;
+      this._show(document.getElementById('soloCodeBox'));
+      document.getElementById('successMsg').innerHTML = '\u2713 You\'re all set. Your progress saves automatically as you work.';
+      document.querySelectorAll('.apjoin-step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step-success').classList.add('active');
+    } catch (e) {
+      btn.disabled = false; btn.textContent = 'Create My Account';
+      this.showError('soloError', 'Connection error. Try again.');
+    }
+  },
+
+  copyCode() {
+    const code = document.getElementById('soloCodeValue').textContent;
+    try { navigator.clipboard.writeText(code); } catch (e) {}
+    const b = document.getElementById('soloCopyBtn');
+    if (b) { b.textContent = 'Copied!'; setTimeout(() => { b.textContent = 'Copy code'; }, 1500); }
+  },
+
   async doLogin() {
     const code = document.getElementById('loginCode').value.trim().toUpperCase();
     const name = document.getElementById('loginName').value.trim();
-    const pin = this.getPin('lp1','lp2','lp3','lp4');
-    if (!code || !name || pin.length !== 4) return this.showError('loginError', 'Please fill in all fields');
+    const pin = this.getPin('lp1', 'lp2', 'lp3', 'lp4');
+    const isSolo = code.startsWith('ME-');
+    if (!code || pin.length !== 4 || (!isSolo && !name)) return this.showError('loginError', 'Please fill in all fields');
 
     const btn = document.querySelector('#step-login .apjoin-btn');
     btn.disabled = true; btn.textContent = 'Signing in\u2026';
 
     try {
-      const r = await fetch(`${API}/api/student/login`, {
+      const r = await fetch(`${API}` + (isSolo ? '/api/student/solo-login' : '/api/student/login'), {
         method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ class_code: code, display_name: name, pin }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(isSolo ? { login_code: code, pin } : { class_code: code, display_name: name, pin }),
       });
       const d = await r.json();
       if (!r.ok) { btn.disabled = false; btn.textContent = 'Sign In'; return this.showError('loginError', d.error); }
 
-      this.saveSession(d.token, d.student, d.class);
-
-      // The class they were trying to join before we recognised the account.
-      // Adding it here is what makes "sign in and we will add this class" true.
-      let added = null;
-      if (this.pendingClass && this.pendingClass !== d.class.code) {
-        added = await this.addClassWithToken(d.token, this.pendingClass);
-      }
-      this.pendingClass = null;
-
+      const cls = isSolo ? { code: d.login_code, name: 'Self-Study', course: 'solo' } : d.class;
+      this.saveSession(d.token, d.student, cls);
       document.querySelectorAll('.apjoin-step').forEach(s => s.classList.remove('active'));
       document.getElementById('step-success').classList.add('active');
-      document.getElementById('successMsg').innerHTML = added
-        ? ('\u2713 Welcome back, <strong>' + this.esc(d.student.name) + '</strong>! <strong>' + this.esc(added.class.name) + '</strong> has been added to your account, and you can switch between your courses on My Progress.')
-        : ('\u2713 Welcome back, <strong>' + this.esc(d.student.name) + '</strong>! Your progress is saved and ready.');
-    } catch(e) {
+      document.getElementById('successMsg').innerHTML = '\u2713 Welcome back, <strong>' + d.student.name + '</strong>! Your progress is saved and ready.';
+    } catch (e) {
       btn.disabled = false; btn.textContent = 'Sign In';
       this.showError('loginError', 'Connection error. Try again.');
     }
   },
-
-  // ── ADDING A COURSE TO AN ACCOUNT THAT ALREADY EXISTS ─────────────────────
-  //  No name, no PIN: both are already on file, and the API copies them onto the
-  //  new class row so every course answers to the same sign-in.
-  async addClassWithToken(token, code) {
-    try {
-      const r = await fetch(`${API}/api/student/enroll`, {
-        method: 'POST',
-        headers: {'Content-Type':'application/json','Authorization':'Bearer ' + token},
-        body: JSON.stringify({ class_code: code }),
-      });
-      const d = await r.json();
-      if (!r.ok) return null;
-      // The new class becomes the active one, which is where the student was
-      // trying to go in the first place.
-      this.saveSession(d.token, d.student, d.class);
-      return d;
-    } catch (e) { return null; }
-  },
-
-  signInAndAdd() {
-    this.switchTab('login');
-    const code = document.getElementById('loginCode');
-    const name = document.getElementById('joinName');
-    const target = document.getElementById('loginName');
-    // The class code they typed belongs to the class they are ADDING, not the
-    // one they already have, so it is deliberately not carried across. The name
-    // is, because that half is the same on both accounts by definition.
-    if (code) code.value = '';
-    if (target && name) target.value = name.value;
-    if (code) code.focus();
-  },
-
-  async addClass() {
-    const token = localStorage.getItem('apcse_token');
-    if (!token) return;
-    const code = (window.prompt('Class code for the course you are adding (for example CSA-4KP2):') || '').trim().toUpperCase();
-    if (!code) return;
-    const d = await this.addClassWithToken(token, code);
-    if (!d) { alert('Could not add that class. Check the code with your teacher.'); return; }
-    alert(d.already_enrolled
-      ? ('You are already in ' + d.class.name + '.')
-      : (d.class.name + ' has been added. You can switch between your courses on My Progress.'));
-    location.reload();
-  },
-
-  esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); },
 
   saveSession(token, student, cls) {
     localStorage.setItem('apcse_token', token);
@@ -408,11 +418,12 @@ window.APJoin = {
       'ap-cybersecurity': 'AP Cybersecurity',
       'ap-csa': 'AP Computer Science A',
       'ap-csp': 'AP Computer Science Principles',
+      'solo': 'Self-Study',
     }[c] || c;
   },
 
-  showError(id, msg) { const el = document.getElementById(id); if(el){el.textContent=msg;el.style.display='block';} },
-  hideError(id) { const el = document.getElementById(id); if(el){el.style.display='none';} },
+  showError(id, msg) { const el = document.getElementById(id); if (el) { el.textContent = msg; this._show(el); } },
+  hideError(id) { const el = document.getElementById(id); if (el) this._hide(el); },
 };
 
 document.addEventListener('DOMContentLoaded', () => APJoin.init());
