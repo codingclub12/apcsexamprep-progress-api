@@ -372,7 +372,25 @@ window.APJoin = {
     location.reload();
   },
 
-  esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); },
+  // Entities are BUILT here, never written as literals, and that is not a style
+  // preference. Shopify DECODES any entity it finds in a page body when it
+  // stores it, so an escape table written with entity literals comes back with
+  // every value collapsed to the bare character it stood for. The map becomes
+  // an identity map and this function returns its input unchanged, on a page
+  // that writes student and class names into innerHTML. That is exactly what
+  // shipped on 2026-08-22 and it is invisible in the repo, in the sheet, and in
+  // review: the defect appears only after the round trip.
+  // my-progress.html has always used this construction for the same reason.
+  // (Spelling an entity out even in THIS comment would trip the same decode,
+  // and the guard in scripts/page-body-csv.js that now refuses to ship one.)
+  esc(s) {
+    var A = '&';
+    return String(s == null ? '' : s)
+      .split(A).join(A + 'amp;')
+      .split('<').join(A + 'lt;')
+      .split('>').join(A + 'gt;')
+      .split('"').join(A + 'quot;');
+  },
 
   saveSession(token, student, cls) {
     localStorage.setItem('apcse_token', token);
