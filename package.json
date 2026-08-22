@@ -117,7 +117,9 @@
     "snapshot": "node scripts/snapshot-live-page.js",
     "cedwatch": "node scripts/ced-watch.js",
     "ijredirects": "node scripts/intro-java-redirects-csv.js",
-    "smoke:labkey": "node smoke/lab-key.js"
+    "smoke:labkey": "node smoke/lab-key.js",
+    "smoke:accounts": "node smoke/student-accounts.js",
+    "seed:pagelinks": "node scripts/seed-page-links.js"
   },
   "keywords": [],
   "author": "",

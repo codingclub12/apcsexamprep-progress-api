@@ -58,6 +58,9 @@
     <div class="lclass" id="loggedClass"></div>
     <div>
       <a class="l-prog-btn" href="/pages/my-progress">View My Progress</a>
+      <!-- Same account, another course. Your name and PIN are already known, so
+           only the class code is asked for. -->
+      <span class="l-out-btn" onclick="APJoin.addClass()">Add Another Class</span>
       <span class="l-out-btn" onclick="APJoin.logout()">Sign Out</span>
     </div>
   </div>
@@ -151,6 +154,9 @@ const API = 'https://apcsexamprep-progress-api-production.up.railway.app';
 window.APJoin = {
   currentCode: '',
   currentTab: 'join',
+  // The class a returning student was mid-way through joining when we
+  // recognised their account. Added for them once they sign in.
+  pendingClass: null,
 
   init() {
     // Check if already logged in
@@ -250,7 +256,27 @@ window.APJoin = {
         body: JSON.stringify({ class_code: this.currentCode, display_name: name, pin }),
       });
       const d = await r.json();
-      if (!r.ok) { btn.disabled = false; btn.textContent = 'Join Class'; return this.showError('joinDetailsError', d.error); }
+      if (!r.ok) {
+        btn.disabled = false; btn.textContent = 'Join Class';
+        // ── SOMEONE ALREADY ANSWERS TO THIS NAME AND PIN ────────────────────
+        //  A name and a PIN now identify a student across every course they
+        //  take, so this pair cannot belong to two people. If it is the same
+        //  student adding a course, they do not need a second account and are
+        //  sent to sign in with the one they have; this class is remembered and
+        //  added for them the moment they do. If it is a different student who
+        //  happened to pick the same four digits, they change one of the two.
+        if (d.code === 'name_pin_taken') {
+          this.pendingClass = this.currentCode;
+          this.showError('joinDetailsError', d.error);
+          const box = document.getElementById('joinDetailsError');
+          if (box && d.add_existing) {
+            box.innerHTML = this.esc(d.error)
+              + ' <a style="cursor:pointer;text-decoration:underline" onclick="APJoin.signInAndAdd()">Already have an account? Sign in and we will add this class for you.</a>';
+          }
+          return;
+        }
+        return this.showError('joinDetailsError', d.error);
+      }
 
       this.saveSession(d.token, d.student, d.class);
       document.querySelectorAll('.apjoin-step').forEach(s => s.classList.remove('active'));
@@ -281,14 +307,72 @@ window.APJoin = {
       if (!r.ok) { btn.disabled = false; btn.textContent = 'Sign In'; return this.showError('loginError', d.error); }
 
       this.saveSession(d.token, d.student, d.class);
+
+      // The class they were trying to join before we recognised the account.
+      // Adding it here is what makes "sign in and we will add this class" true.
+      let added = null;
+      if (this.pendingClass && this.pendingClass !== d.class.code) {
+        added = await this.addClassWithToken(d.token, this.pendingClass);
+      }
+      this.pendingClass = null;
+
       document.querySelectorAll('.apjoin-step').forEach(s => s.classList.remove('active'));
       document.getElementById('step-success').classList.add('active');
-      document.getElementById('successMsg').innerHTML = '\u2713 Welcome back, <strong>' + d.student.name + '</strong>! Your progress is saved and ready.';
+      document.getElementById('successMsg').innerHTML = added
+        ? ('\u2713 Welcome back, <strong>' + this.esc(d.student.name) + '</strong>! <strong>' + this.esc(added.class.name) + '</strong> has been added to your account, and you can switch between your courses on My Progress.')
+        : ('\u2713 Welcome back, <strong>' + this.esc(d.student.name) + '</strong>! Your progress is saved and ready.');
     } catch(e) {
       btn.disabled = false; btn.textContent = 'Sign In';
       this.showError('loginError', 'Connection error. Try again.');
     }
   },
+
+  // ── ADDING A COURSE TO AN ACCOUNT THAT ALREADY EXISTS ─────────────────────
+  //  No name, no PIN: both are already on file, and the API copies them onto the
+  //  new class row so every course answers to the same sign-in.
+  async addClassWithToken(token, code) {
+    try {
+      const r = await fetch(`${API}/api/student/enroll`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json','Authorization':'Bearer ' + token},
+        body: JSON.stringify({ class_code: code }),
+      });
+      const d = await r.json();
+      if (!r.ok) return null;
+      // The new class becomes the active one, which is where the student was
+      // trying to go in the first place.
+      this.saveSession(d.token, d.student, d.class);
+      return d;
+    } catch (e) { return null; }
+  },
+
+  signInAndAdd() {
+    this.switchTab('login');
+    const code = document.getElementById('loginCode');
+    const name = document.getElementById('joinName');
+    const target = document.getElementById('loginName');
+    // The class code they typed belongs to the class they are ADDING, not the
+    // one they already have, so it is deliberately not carried across. The name
+    // is, because that half is the same on both accounts by definition.
+    if (code) code.value = '';
+    if (target && name) target.value = name.value;
+    if (code) code.focus();
+  },
+
+  async addClass() {
+    const token = localStorage.getItem('apcse_token');
+    if (!token) return;
+    const code = (window.prompt('Class code for the course you are adding (for example CSA-4KP2):') || '').trim().toUpperCase();
+    if (!code) return;
+    const d = await this.addClassWithToken(token, code);
+    if (!d) { alert('Could not add that class. Check the code with your teacher.'); return; }
+    alert(d.already_enrolled
+      ? ('You are already in ' + d.class.name + '.')
+      : (d.class.name + ' has been added. You can switch between your courses on My Progress.'));
+    location.reload();
+  },
+
+  esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); },
 
   saveSession(token, student, cls) {
     localStorage.setItem('apcse_token', token);
