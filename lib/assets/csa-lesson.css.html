@@ -1,0 +1,452 @@
+<style>
+/* =============================================================
+   SCOPED RESET --- nukes Shopify Dawn theme overrides
+   all:initial applies to wrapper ONLY (proven pattern from live
+   AP Cyber pages). Applying it to all descendants kills nested
+   element display values (table cells, buttons, inline-block badges).
+   ============================================================= */
+#apcsa-lesson {
+  all: initial !important;
+  display: block !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  max-width: 1080px !important;
+  margin: 0 auto !important;
+  padding: 32px 20px 80px !important;
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  line-height: 1.65 !important;
+  font-size: 17px !important;
+  background: #ffffff !important;
+}
+#apcsa-lesson * {
+  box-sizing: border-box !important;
+}
+#apcsa-lesson p, #apcsa-lesson li, #apcsa-lesson td, #apcsa-lesson th,
+#apcsa-lesson dt, #apcsa-lesson dd, #apcsa-lesson span, #apcsa-lesson em, #apcsa-lesson strong {
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  font-size: 17px !important;
+  line-height: 1.65 !important;
+}
+#apcsa-lesson em { font-style: italic !important; }
+#apcsa-lesson strong { font-weight: 700 !important; }
+#apcsa-lesson p { margin: 0 0 16px 0 !important; }
+#apcsa-lesson ul, #apcsa-lesson ol { display: block !important; margin: 0 0 16px 24px !important; padding: 0 !important; }
+#apcsa-lesson ul li { display: list-item !important; list-style: disc outside !important; margin: 0 0 6px 0 !important; }
+#apcsa-lesson ol li { display: list-item !important; list-style: decimal outside !important; margin: 0 0 6px 0 !important; }
+
+/* Headings */
+#apcsa-lesson h1, #apcsa-lesson h2, #apcsa-lesson h3, #apcsa-lesson h4 {
+  display: block !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  line-height: 1.25 !important;
+}
+#apcsa-lesson h1 { font-size: 36px !important; margin: 8px 0 12px 0 !important; letter-spacing: -0.02em !important; }
+#apcsa-lesson h2 { font-size: 26px !important; margin: 40px 0 14px 0 !important; padding-bottom: 8px !important; border-bottom: 2px solid #e5e7eb !important; }
+#apcsa-lesson h3 { font-size: 20px !important; margin: 24px 0 10px 0 !important; color: #1e3a8a !important; -webkit-text-fill-color: #1e3a8a !important; }
+#apcsa-lesson h4 { font-size: 17px !important; margin: 16px 0 8px 0 !important; }
+
+/* Links */
+#apcsa-lesson a:link, #apcsa-lesson a:visited {
+  color: #2563eb !important;
+  -webkit-text-fill-color: #2563eb !important;
+  text-decoration: underline !important;
+  cursor: pointer !important;
+}
+#apcsa-lesson a:hover, #apcsa-lesson a:active {
+  color: #1d4ed8 !important;
+  -webkit-text-fill-color: #1d4ed8 !important;
+}
+
+/* Code (used sparingly in conceptual lessons --- only for syntax mentions) */
+#apcsa-lesson code {
+  font-family: "SF Mono", Menlo, Consolas, Monaco, monospace !important;
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  font-size: 15px !important;
+}
+#apcsa-lesson pre {
+  display: block !important;
+  background: #0f172a !important;
+  color: #e2e8f0 !important;
+  -webkit-text-fill-color: #e2e8f0 !important;
+  padding: 18px 20px !important;
+  border-radius: 8px !important;
+  overflow-x: auto !important;
+  margin: 16px 0 !important;
+  font-family: "SF Mono", Menlo, Consolas, Monaco, monospace !important;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+  white-space: pre !important;
+}
+#apcsa-lesson pre code {
+  background: transparent !important;
+  color: #e2e8f0 !important;
+  -webkit-text-fill-color: #e2e8f0 !important;
+  padding: 0 !important;
+  font-size: 14px !important;
+}
+
+/* BREADCRUMB */
+#apcsa-lesson .apcsa-breadcrumb {
+  display: block !important;
+  font-size: 14px !important;
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+  margin-bottom: 16px !important;
+}
+#apcsa-lesson .apcsa-breadcrumb a:link, #apcsa-lesson .apcsa-breadcrumb a:visited {
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+  text-decoration: none !important;
+}
+#apcsa-lesson .apcsa-breadcrumb a:hover { text-decoration: underline !important; }
+#apcsa-lesson .apcsa-breadcrumb span.sep { margin: 0 8px !important; color: #cbd5e1 !important; -webkit-text-fill-color: #cbd5e1 !important; }
+
+/* HEADER */
+#apcsa-lesson .apcsa-header { display: block !important; margin-bottom: 28px !important; }
+#apcsa-lesson .apcsa-eyebrow {
+  display: inline-block !important;
+  background: #dbeafe !important;
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  padding: 5px 12px !important;
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 12px !important;
+}
+#apcsa-lesson .apcsa-meta-row {
+  display: flex !important;
+  gap: 16px !important;
+  flex-wrap: wrap !important;
+  margin-top: 12px !important;
+  font-size: 14px !important;
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+}
+#apcsa-lesson .apcsa-meta-row span { color: #64748b !important; -webkit-text-fill-color: #64748b !important; }
+
+/* "WHAT YOU'LL LEARN" BOX */
+#apcsa-lesson .apcsa-learn-box {
+  display: block !important;
+  background: #eff6ff !important;
+  border-left: 4px solid #2563eb !important;
+  padding: 20px 24px !important;
+  margin: 24px 0 !important;
+  border-radius: 0 8px 8px 0 !important;
+}
+#apcsa-lesson .apcsa-learn-box h3 {
+  margin-top: 0 !important;
+  color: #1e3a8a !important;
+  -webkit-text-fill-color: #1e3a8a !important;
+  font-size: 18px !important;
+}
+#apcsa-lesson .apcsa-learn-box ul li { margin-bottom: 8px !important; }
+
+/* CALLOUTS */
+#apcsa-lesson .apcsa-callout {
+  display: block !important;
+  padding: 18px 22px !important;
+  margin: 20px 0 !important;
+  border-radius: 0 8px 8px 0 !important;
+  border-left: 4px solid #94a3b8 !important;
+  background: #f8fafc !important;
+}
+#apcsa-lesson .apcsa-callout h4 {
+  margin-top: 0 !important;
+  margin-bottom: 8px !important;
+  font-size: 16px !important;
+  letter-spacing: 0.02em !important;
+}
+#apcsa-lesson .apcsa-callout.concept { background: #eff6ff !important; border-left-color: #2563eb !important; }
+#apcsa-lesson .apcsa-callout.concept h4 { color: #1e3a8a !important; -webkit-text-fill-color: #1e3a8a !important; }
+#apcsa-lesson .apcsa-callout.example { background: #f0fdf4 !important; border-left-color: #16a34a !important; }
+#apcsa-lesson .apcsa-callout.example h4 { color: #166534 !important; -webkit-text-fill-color: #166534 !important; }
+#apcsa-lesson .apcsa-callout.warning { background: #fef2f2 !important; border-left-color: #dc2626 !important; }
+#apcsa-lesson .apcsa-callout.warning h4 { color: #991b1b !important; -webkit-text-fill-color: #991b1b !important; }
+#apcsa-lesson .apcsa-callout.trap { background: #fef2f2 !important; border-left-color: #dc2626 !important; }
+#apcsa-lesson .apcsa-callout.trap h4 { color: #991b1b !important; -webkit-text-fill-color: #991b1b !important; }
+
+/* PRACTICE TIER */
+#apcsa-lesson .apcsa-practice-tier {
+  display: block !important;
+  background: #fafafa !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  padding: 24px 28px !important;
+  margin: 32px 0 !important;
+}
+#apcsa-lesson .apcsa-practice-tier h2 {
+  margin-top: 0 !important;
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+}
+#apcsa-lesson .apcsa-practice-tier .tier-label {
+  display: inline-block !important;
+  background: #1e40af !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  padding: 4px 10px !important;
+  border-radius: 4px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  margin-right: 10px !important;
+}
+
+/* MCQ */
+#apcsa-lesson .apcs-ex {
+  display: block !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  padding: 20px 22px !important;
+  margin: 16px 0 !important;
+}
+#apcsa-lesson .apcs-ex-stem { margin-bottom: 12px !important; }
+#apcsa-lesson .apcs-ex-stem strong { color: #0f172a !important; -webkit-text-fill-color: #0f172a !important; }
+
+/* MCQ options */
+#apcsa-lesson .apcs-ex-options { display: block !important; margin: 12px 0 !important; }
+#apcsa-lesson .apcs-ex-options .apcs-opt {
+  display: block !important;
+  padding: 10px 14px !important;
+  margin: 6px 0 !important;
+  border: 2px solid #e5e7eb !important;
+  border-radius: 6px !important;
+  background: #ffffff !important;
+  cursor: pointer !important;
+  font-size: 16px !important;
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  transition: all 0.15s !important;
+}
+#apcsa-lesson .apcs-ex-options .apcs-opt:hover { border-color: #93c5fd !important; background: #eff6ff !important; }
+#apcsa-lesson .apcs-ex-options .apcs-opt.selected { border-color: #2563eb !important; background: #dbeafe !important; }
+#apcsa-lesson .apcs-ex-options .apcs-opt.correct { border-color: #16a34a !important; background: #dcfce7 !important; }
+#apcsa-lesson .apcs-ex-options .apcs-opt.incorrect { border-color: #dc2626 !important; background: #fee2e2 !important; }
+#apcsa-lesson .apcs-opt-letter {
+  display: inline-block !important;
+  font-weight: 700 !important;
+  margin-right: 10px !important;
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+}
+
+/* Predict gate */
+#apcsa-lesson .apcs-predict-gate {
+  display: block !important;
+  background: #fffbeb !important;
+  border-left: 3px solid #f59e0b !important;
+  padding: 10px 14px !important;
+  margin: 10px 0 !important;
+  font-size: 14px !important;
+  color: #78350f !important;
+  -webkit-text-fill-color: #78350f !important;
+  font-style: italic !important;
+}
+
+/* Buttons */
+#apcsa-lesson .apcs-btn,
+#apcsa-lesson .apcs-btn:link,
+#apcsa-lesson .apcs-btn:visited {
+  display: inline-block !important;
+  background: #2563eb !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  padding: 10px 20px !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  text-decoration: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  margin: 4px 4px 4px 0 !important;
+}
+#apcsa-lesson .apcs-btn:hover, #apcsa-lesson .apcs-btn:active {
+  background: #1d4ed8 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* Feedback */
+#apcsa-lesson .apcs-ex-feedback {
+  display: none !important;
+  margin-top: 12px !important;
+  padding: 14px 16px !important;
+  border-radius: 6px !important;
+  font-size: 15px !important;
+}
+#apcsa-lesson .apcs-ex-feedback.show { display: block !important; }
+#apcsa-lesson .apcs-ex-feedback.fb-correct {
+  background: #dcfce7 !important;
+  border-left: 4px solid #16a34a !important;
+  color: #14532d !important;
+  -webkit-text-fill-color: #14532d !important;
+}
+#apcsa-lesson .apcs-ex-feedback.fb-incorrect {
+  background: #fee2e2 !important;
+  border-left: 4px solid #dc2626 !important;
+  color: #7f1d1d !important;
+  -webkit-text-fill-color: #7f1d1d !important;
+}
+
+/* MASTERY */
+#apcsa-lesson .apcsa-mastery {
+  display: block !important;
+  background: #0f172a !important;
+  color: #f1f5f9 !important;
+  -webkit-text-fill-color: #f1f5f9 !important;
+  border-radius: 12px !important;
+  padding: 32px 32px 28px !important;
+  margin: 40px 0 !important;
+}
+#apcsa-lesson .apcsa-mastery,
+#apcsa-lesson .apcsa-mastery p,
+#apcsa-lesson .apcsa-mastery span,
+#apcsa-lesson .apcsa-mastery li,
+#apcsa-lesson .apcsa-mastery strong,
+#apcsa-lesson .apcsa-mastery em { color: #f1f5f9 !important; -webkit-text-fill-color: #f1f5f9 !important; }
+#apcsa-lesson .apcsa-mastery code { background: rgba(255,255,255,0.10) !important; color: #fde68a !important; -webkit-text-fill-color: #fde68a !important; padding: 2px 6px !important; border-radius: 4px !important; font-size: 14px !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-feedback.fb-correct strong { color: #14532d !important; -webkit-text-fill-color: #14532d !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-feedback.fb-correct code { background: rgba(20,83,45,0.12) !important; color: #14532d !important; -webkit-text-fill-color: #14532d !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-feedback.fb-incorrect strong { color: #7f1d1d !important; -webkit-text-fill-color: #7f1d1d !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-feedback.fb-incorrect code { background: rgba(127,29,29,0.12) !important; color: #7f1d1d !important; -webkit-text-fill-color: #7f1d1d !important; }
+#apcsa-lesson .apcsa-mastery .mastery-badge {
+  display: inline-block !important;
+  background: #f59e0b !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  padding: 5px 12px !important;
+  border-radius: 999px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 14px !important;
+}
+#apcsa-lesson .apcsa-mastery h2 { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; border-bottom: none !important; padding-bottom: 0 !important; margin-top: 0 !important; }
+#apcsa-lesson .apcsa-mastery h3 { color: #fbbf24 !important; -webkit-text-fill-color: #fbbf24 !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+#apcsa-lesson .apcsa-mastery .apcs-ex-stem,
+#apcsa-lesson .apcsa-mastery .apcs-ex-stem strong { color: #f1f5f9 !important; -webkit-text-fill-color: #f1f5f9 !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-options .apcs-opt {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #f1f5f9 !important;
+  -webkit-text-fill-color: #f1f5f9 !important;
+}
+#apcsa-lesson .apcsa-mastery .apcs-ex-options .apcs-opt:hover { border-color: #60a5fa !important; background: #1e293b !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-options .apcs-opt.selected { border-color: #60a5fa !important; background: #1e3a8a !important; }
+#apcsa-lesson .apcsa-mastery .mastery-rubric {
+  display: block !important;
+  margin-top: 18px !important;
+  padding: 16px 18px !important;
+  background: #1e293b !important;
+  border-radius: 8px !important;
+  border: 1px solid #334155 !important;
+}
+#apcsa-lesson .apcsa-mastery .mastery-rubric h4 {
+  color: #fbbf24 !important;
+  -webkit-text-fill-color: #fbbf24 !important;
+  margin-top: 0 !important;
+  margin-bottom: 10px !important;
+  font-size: 15px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+}
+#apcsa-lesson .apcsa-mastery .rubric-row {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 8px 0 !important;
+  border-bottom: 1px solid #334155 !important;
+  gap: 12px !important;
+}
+#apcsa-lesson .apcsa-mastery .rubric-row:last-child { border-bottom: none !important; }
+#apcsa-lesson .apcsa-mastery .rubric-score {
+  display: inline-block !important;
+  background: #16a34a !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  padding: 3px 10px !important;
+  border-radius: 4px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+}
+
+/* EXTENSION */
+#apcsa-lesson .apcsa-extension {
+  display: block !important;
+  background: #faf5ff !important;
+  border: 1px solid #e9d5ff !important;
+  border-radius: 12px !important;
+  padding: 24px 28px !important;
+  margin: 32px 0 !important;
+}
+#apcsa-lesson .apcsa-extension h3 {
+  color: #6b21a8 !important;
+  -webkit-text-fill-color: #6b21a8 !important;
+  margin-top: 8px !important;
+}
+#apcsa-lesson .apcsa-extension .ext-badge {
+  display: inline-block !important;
+  background: #6b21a8 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  padding: 4px 10px !important;
+  border-radius: 4px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+}
+
+/* NAV */
+#apcsa-lesson .apcsa-lesson-nav {
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 14px !important;
+  margin: 40px 0 24px 0 !important;
+  padding-top: 24px !important;
+  border-top: 2px solid #e5e7eb !important;
+}
+#apcsa-lesson .apcsa-lesson-nav a:link, #apcsa-lesson .apcsa-lesson-nav a:visited {
+  display: block !important;
+  flex: 1 1 0 !important;
+  padding: 14px 18px !important;
+  background: #f8fafc !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  text-decoration: none !important;
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+}
+#apcsa-lesson .apcsa-lesson-nav a:hover { border-color: #2563eb !important; background: #eff6ff !important; }
+
+@media (max-width: 720px) {
+  #apcsa-lesson { padding: 20px 16px 60px !important; font-size: 16px !important; }
+  #apcsa-lesson h1 { font-size: 28px !important; }
+  #apcsa-lesson h2 { font-size: 22px !important; }
+}
+
+#apcsa-lesson .apcsa-mastery .apcs-predict-gate {
+  background: #1e293b !important;
+  border-left-color: #f59e0b !important;
+  color: #fde68a !important;
+  -webkit-text-fill-color: #fde68a !important;
+}
+</style>
