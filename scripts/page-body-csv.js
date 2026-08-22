@@ -23,12 +23,15 @@
 //    3. No replacement characters and no raw mojibake in the body, the defect
 //       the encoding guard exists for.
 //    4. No em-dashes, per repo convention.
+//    5. Nothing the LIVE body has that the repo file does not. See the block
+//       above contentLoss() for what this catches and why the other four
+//       checks all passed while a live page lost its self-study tab.
 //
 //  Zero PII: author content only.
 //  No em-dashes, per repo convention.
 //
 //  Run:
-//    node scripts/page-body-csv.js <out.csv> [--only handle,handle] [--live <pages.json>]
+//    node scripts/page-body-csv.js <out.csv> [--only handle,handle] [--live <pages.json>] [--accept-loss]
 //
 //  <pages.json> is the raw result of a Shopify Admin API pages query; both the
 //  `nodes` and the `edges` shapes are read.
@@ -94,6 +97,73 @@ function renderable(s) {
     .replace(/\s+$/, '');
 }
 
+// ── WHAT THIS IMPORT WOULD DELETE ────────────────────────────────────────────
+//  The check that was missing on 2026-08-22, and the reason the other four were
+//  all green while /pages/join lost its entire self-study tab.
+//
+//  Those four ask whether the handle exists, whether the title matches, and
+//  whether the live body ALREADY matches the file. Not one of them asks the
+//  question that decides whether an import is safe: what does the live page
+//  have that the file does not? An import REPLACES a body outright, so anything
+//  only the live copy holds is deleted, and Shopify keeps no page history to
+//  recover it from. shopify/join.html had never contained the string 'solo' in
+//  any revision, because that tab was authored in the Shopify admin. The repo
+//  copy was not a stale version of the live page; it was a different page that
+//  happened to share a handle, and nothing in this script could tell.
+//
+//  Three inventories, because they are what a page is made of and what a
+//  reviewer would actually miss: the element ids, the script's own function
+//  names, and the API paths it calls. Byte diffing cannot do this job: every
+//  import differs from the live body by design, which is the whole point of
+//  running one.
+//
+//  Deliberately removing something is still possible, it just has to be said
+//  out loud with --accept-loss rather than happening in silence.
+const INVENTORY = [
+  { key: 'id', label: 'element id', re: /id="([A-Za-z0-9_-]+)"/g },
+  // Method declarations inside an object literal (`  completeSolo() {`,
+  // `  async doLogin() {`) plus plain function declarations. The prefix allows
+  // a newline, a brace or a comma so a method still counts on a page whose
+  // script is not indented the way these two happen to be.
+  //
+  // KEYWORDS are excluded because `if (x) {` and `for (;;) {` match the same
+  // shape. They cancel out when both sides are real pages, which is the only
+  // way this is ever called, but a check that reports "function if" as deleted
+  // is a check nobody reads twice.
+  { key: 'fn', label: 'function',
+    re: /(?:[\n{,]\s*(?:async\s+)?|function\s+)([a-zA-Z_]\w*)\s*\([^()]*\)\s*\{/g,
+    skip: new Set(['if', 'for', 'while', 'switch', 'catch', 'function', 'return', 'typeof', 'do', 'else', 'with']) },
+  { key: 'api', label: 'API path', re: /(\/api\/[A-Za-z0-9_\-\/]+)/g },
+];
+
+function inventory(html) {
+  const out = new Map();
+  for (const spec of INVENTORY) {
+    const found = new Set();
+    let m;
+    spec.re.lastIndex = 0;
+    while ((m = spec.re.exec(html)) !== null) {
+      if (spec.skip && spec.skip.has(m[1])) continue;
+      found.add(m[1]);
+    }
+    out.set(spec.key, found);
+  }
+  return out;
+}
+
+// Everything the live body carries that the file about to replace it does not.
+function contentLoss(liveBody, fileBody) {
+  const a = inventory(String(liveBody || ''));
+  const b = inventory(fileBody);
+  const lost = [];
+  for (const spec of INVENTORY) {
+    for (const name of a.get(spec.key)) {
+      if (!b.get(spec.key).has(name)) lost.push(`${spec.label} ${name}`);
+    }
+  }
+  return lost;
+}
+
 function readLive(file) {
   const j = JSON.parse(fs.readFileSync(file, 'utf8'));
   const p = j && j.data && j.data.pages;
@@ -113,6 +183,7 @@ function main(argv) {
   const only = onlyAt === -1 ? null : new Set(argv[onlyAt + 1].split(','));
   const liveAt = argv.indexOf('--live');
   const live = liveAt === -1 ? null : readLive(argv[liveAt + 1]);
+  const acceptLoss = argv.includes('--accept-loss');
 
   const chosen = PAGES.filter((p) => !only || only.has(p.handle));
   if (!chosen.length) { console.error('no pages selected'); process.exit(2); }
@@ -158,6 +229,18 @@ function main(argv) {
         unchanged.push(p.handle);
         continue;
       }
+      const lost = contentLoss(n.body, body);
+      if (lost.length && !acceptLoss) {
+        const shown = lost.slice(0, 12).join(', ') + (lost.length > 12 ? `, and ${lost.length - 12} more` : '');
+        problems.push(`${p.handle}: this import would DELETE ${lost.length} thing(s) the live page has and `
+          + `${p.file} does not (${shown}). An import replaces the body outright and Shopify keeps no page `
+          + `history. Either the file is missing work that was authored live, or the removal is intended and `
+          + `you can say so with --accept-loss.`);
+        continue;
+      }
+      if (lost.length && acceptLoss) {
+        console.log(`\n  --accept-loss: ${p.handle} drops ${lost.length} live item(s): ${lost.join(', ')}`);
+      }
     }
     rows.push({ handle: p.handle, title: p.title, body, bytes: Buffer.byteLength(body) });
   }
@@ -185,4 +268,4 @@ function main(argv) {
 }
 
 if (require.main === module) main(process.argv.slice(2));
-module.exports = { PAGES };
+module.exports = { PAGES, contentLoss, inventory, renderable };

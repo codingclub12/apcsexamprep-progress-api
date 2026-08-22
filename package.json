@@ -122,6 +122,7 @@
     "smoke:accounts": "node smoke/student-accounts.js",
     "seed:pagelinks": "node scripts/seed-page-links.js",
     "publish:studentpages": "node scripts/publish-student-pages.js",
+    "smoke:pageimportguard": "node smoke/page-import-guard.js",
     "smoke:gradepath": "node smoke/grade-path-audit.js"
   },
   "keywords": [],
