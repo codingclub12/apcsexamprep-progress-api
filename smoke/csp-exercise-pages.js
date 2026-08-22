@@ -45,6 +45,7 @@ const { execFileSync } = require('child_process');
 
 const { allPages, gradedPages, allChecks, SOURCE } = require('../lib/csp-exercise-pages');
 const { checkPage, PUBLISHED_AT } = require('../scripts/csp-pages-csv');
+const { pageFromHandle } = require('../utils');
 const { ALREADY_LIVE } = require('../scripts/csp-exercise-pages-csv');
 
 let pass = 0, fail = 0;
@@ -143,6 +144,31 @@ ok('  no page posts a writing box anywhere',
 ok('  drafts are stored in localStorage and nowhere else',
   pages.every((p) => p.bodyHtml.includes("localStorage.setItem(KEY")
     && !p.bodyHtml.includes('sendBeacon')));
+
+// ── 3b. Handle routing, and what it must NOT do ──────────────────────────────
+section('3b. Every handle routes to its own topic, as a visit and never as a grade');
+const routes = pages.map((p) => ({ p, r: pageFromHandle(p.handle) }));
+ok('  every one of the 70 handles routes',
+  routes.every((x) => x.r), routes.filter((x) => !x.r).map((x) => x.p.handle).slice(0, 5));
+ok('  every handle routes to the unit and lesson its own renderer assigned it',
+  routes.every((x) => x.r && x.r.course === 'ap-csp'
+    && x.r.unit === x.p.unit && x.r.lesson === x.p.slug),
+  routes.filter((x) => x.r && (x.r.unit !== x.p.unit || x.r.lesson !== x.p.slug))
+    .map((x) => [x.p.handle, x.r.unit, x.r.lesson]).slice(0, 5));
+// The load-bearing one. /track writes progress with completed = 1 keyed on
+// activity_type, so routing these as 'exercise-{N}' would mark the exercise
+// COMPLETE for a student who opened the page and typed nothing, and would write
+// it onto a key the gated whole-run practice game also claims.
+ok('  no handle routes as a graded activity, so opening a page never completes it',
+  routes.every((x) => x.r && x.r.activity_type === 'lesson'),
+  routes.filter((x) => x.r && x.r.activity_type !== 'lesson')
+    .map((x) => [x.p.handle, x.r.activity_type]).slice(0, 5));
+// The rule must stay narrow. These neighbours are deliberately unrouted, and a
+// broadened regex would silently start minting visits for them.
+ok('  the rule does not capture the code or guided-notes pages',
+  ['ap-csp-topic-3-1-code', 'ap-csp-topic-3-1-guided-notes'].every((h) => !pageFromHandle(h)));
+ok('  and an unknown topic number is left unrouted rather than guessed',
+  !pageFromHandle('ap-csp-topic-9-9-exercise-1'));
 
 // ── 4. Every page passes the shared page validator ───────────────────────────
 section('4. Every page passes the same validator the other CSP sheets use');

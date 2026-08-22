@@ -392,6 +392,25 @@ function examsOf(unit) {
   return Array.isArray(unit.exam) ? unit.exam : [unit.exam];
 }
 
+// Topic number ("1.1") -> the Big Idea and lesson slug that own it, derived from
+// the COURSES config rather than authored twice. The lessons arrays are written
+// in CED order, so the Nth lesson of Big Idea U IS topic U.N and the numbering
+// cannot drift from the config. Built once at module scope.
+const CSP_TOPIC_INDEX = (() => {
+  const idx = new Map();
+  const cfg = COURSES['ap-csp'];
+  for (const [unit, u] of Object.entries((cfg && cfg.units) || {})) {
+    const bi = unit.match(/^bi-(\d+)$/);
+    if (!bi) continue;
+    (u.lessons || []).forEach((slug, i) => idx.set(`${bi[1]}.${i + 1}`, { unit, slug }));
+  }
+  return idx;
+})();
+
+function cspTopicSlug(unitNo, lessonNo) {
+  return CSP_TOPIC_INDEX.get(`${Number(unitNo)}.${Number(lessonNo)}`) || null;
+}
+
 function pageFromHandle(raw) {
   if (!raw) return null;
   const h = String(raw).split('/').filter(Boolean).pop() || '';
@@ -430,6 +449,38 @@ function pageFromHandle(raw) {
     const activity_type = trailingActivity(h);
     const lesson = slug.replace(new RegExp('-' + activity_type + '$'), '');
     return { course: 'ap-csp', unit, lesson, activity_type };
+  }
+
+  // CSP exercise pages: ap-csp-topic-{U}-{L}-exercise-{N}
+  //
+  // The online companions to the Teacher Course Bundle handouts. The handle is
+  // not a naming choice: it is printed inside 70 student documents already in
+  // teachers' hands, so it cannot be moved into the ap-csp-course-bi{N} scheme
+  // the rule above reads. Until this existed the handles matched nothing, /track
+  // silently no-opped, and none of the 70 pages recorded a visit.
+  //
+  // ROUTED AS A VISIT ON THE PARENT TOPIC, NOT AS 'exercise-{N}'.
+  // Same reasoning as the guided-notes rule above, and the stakes are higher
+  // here. /track writes progress with completed = 1 keyed on activity_type, so
+  // returning 'exercise-2' would mark the exercise COMPLETE for a student who
+  // opened the page and typed nothing, and it would write that onto
+  // {lesson}|exercise-2, a key already claimed by the gated whole-run practice
+  // game in lib/csp-course-pages.js. A visit is evidence the student opened the
+  // topic's exercise. It is not evidence they did it.
+  //
+  // Grading is unaffected and always was: the page dispatches course, unit and
+  // lesson explicitly in the apcsActivity detail, and assets/ap-csp-reporter.js
+  // prefers the detail over the handle. This function never sees a graded post
+  // from these pages.
+  m = h.match(/^ap-csp-topic-(\d+)-(\d+)-exercise-[12]$/);
+  if (m) {
+    const topic = cspTopicSlug(m[1], m[2]);
+    // A topic the course config does not know is left unrouted rather than
+    // filed under a guessed lesson id. A wrong lesson column is worse than a
+    // missing visit: it invents a row no teacher can explain.
+    if (topic) {
+      return { course: 'ap-csp', unit: topic.unit, lesson: topic.slug, activity_type: 'lesson' };
+    }
   }
 
   // CSA course: ap-csa-lesson-{U}-{L}-{slug}   (lesson id = "U.L")
