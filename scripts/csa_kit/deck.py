@@ -63,6 +63,16 @@ CONTENT_W  = 12.33
 FOOT_Y     = 6.94
 TRADE_Y    = 7.16
 
+# Code-block sizing. Courier New is ~0.6 em wide per character, and a line of
+# text occupies ~1.18 times its point size once leading is counted.
+CODE_MAX_PT = 12.0
+# Above this many lines a worked example takes the wide two-column layout
+# and moves its annotations to a second slide.
+SINGLE_SLIDE_LINES = 20
+CODE_MIN_PT = 7.0
+LINE_FACTOR = 1.18
+CHAR_FACTOR = 0.60
+
 JAVA_KEYWORDS = {
     'abstract','boolean','break','byte','case','catch','char','class','const',
     'continue','default','do','double','else','enum','extends','final','finally',
@@ -288,34 +298,121 @@ class Deck:
 
     # ── worked example ───────────────────────────────────────────────────────
     def worked_example(self, heading, code, notice, output, caption='Complete and runnable as shown.', note=None):
+        """One slide for a short program, two for a long one.
+
+        The pilot deck's example was a twelve line Greeting class, and the
+        panel was sized for it. Real worked examples in this course are whole
+        classes: constructors, getters and a main, routinely thirty lines and
+        occasionally fifty. Rendering those into the original panel pushed the
+        code over the slide title and past the footer, because a PowerPoint
+        text frame does not clip.
+
+        Shrinking the type was not the answer either. Nobody reads 6pt Java
+        from the back of a room. So a long program gets the full slide width in
+        two columns, and its annotations move to a second slide the teacher
+        flips to. Short programs keep the original single-slide layout, which
+        is better when it fits.
+        """
+        lines = code.split('\n')
+        if len(lines) <= SINGLE_SLIDE_LINES:
+            self._worked_compact(heading, code, notice, output, caption, note)
+        else:
+            self._worked_wide(heading, code, notice, output, caption, note)
+
+    def _worked_compact(self, heading, code, notice, output, caption, note):
         s = self._new()
         self._head(s, 'WORKED EXAMPLE', heading)
-        # left: code
         self._card(s, MARGIN, 1.98, 7.55, 4.34, 'THE COMPLETE PROGRAM')
         _shape(s, 0.80, 2.78, 6.95, 3.03, CODE_BG)
         self._code(s, 0.94, 2.90, 6.67, 2.80, code)
         _text(s, 0.80, 5.90, 6.95, 0.28, caption, size=9, color=MUTED)
-        # right: what to notice
         self._card(s, 8.38, 1.98, 4.40, 2.70, 'WHAT TO NOTICE')
         y = 2.76
         for item in notice:
             _text(s, 8.68, y, 0.18, 0.56, '\u2022', size=12, color=ACCENT)
             _text(s, 8.90, y, 3.58, 0.56, item, size=11.5, color=BODY, line=1.12)
             y += 0.62
-        # right: output. The label occupies y+0.38 to y+0.66, so lines start below it.
         self._card(s, 8.38, 4.86, 4.40, 1.46, 'OUTPUT', GREEN_TINT, GREEN)
         y = 5.62
         for line in output:
             _text(s, 8.68, y, 3.80, 0.26, line, size=11.5, font=MONO, color=BODY)
             y += 0.25
         self._foot(s)
-        self._note(s, note or 'A complete, runnable program. The annotations are the three points this example exists to make.')
+        self._note(s, note or 'A complete, runnable program. The annotations are on the next slide.')
 
-    def _code(self, s, x, y, w, h, code):
+    def _worked_wide(self, heading, code, notice, output, caption, note):
+        # Slide one: the program, full width, two columns.
+        s = self._new()
+        self._head(s, 'WORKED EXAMPLE', heading)
+        self._card(s, MARGIN, 1.90, CONTENT_W, 4.60, 'THE COMPLETE PROGRAM')
+        # The card label occupies 2.28 to 2.56, so the panel starts below it.
+        _shape(s, 0.72, 2.62, 11.89, 3.56, CODE_BG)
+
+        lines = code.split('\n')
+        half = (len(lines) + 1) // 2
+        left, right = lines[:half], lines[half:]
+        colw = 5.72
+        size_l = self._code(s, 0.90, 2.72, colw, 3.36, '\n'.join(left))
+        size_r = self._code(s, 6.86, 2.72, colw, 3.36, '\n'.join(right), force=size_l)
+        _text(s, 0.72, 6.24, CONTENT_W, 0.26,
+              caption + '  Continues in the right column.', size=9, color=MUTED)
+        self._foot(s)
+        self._note(s, note or 'A complete, runnable program. The annotations are on the next slide.')
+
+        # Slide two: what to notice, and the output.
+        s2 = self._new()
+        self._head(s2, 'WORKED EXAMPLE', heading, 'What to notice in the program on the previous slide.')
+        self._card(s2, MARGIN, 2.10, 7.55, 4.10, 'WHAT TO NOTICE')
+        y = 2.92
+        for item in notice:
+            _text(s2, 0.80, y, 0.20, 0.60, '\u2022', size=14, color=ACCENT)
+            _text(s2, 1.06, y, 6.65, 0.60, item, size=14, color=BODY, line=1.15)
+            y += 0.78
+        self._card(s2, 8.38, 2.10, 4.40, 4.10, 'OUTPUT', GREEN_TINT, GREEN)
+        y = 2.92
+        for line in output:
+            _text(s2, 8.68, y, 3.80, 0.28, line, size=13, font=MONO, color=BODY)
+            y += 0.30
+        self._foot(s2)
+        self._note(s2, 'The output the program on the previous slide produces.')
+
+    def _code(self, s, x, y, w, h, code, force=None):
+        """Render a code block, sized to fit its panel.
+
+        A PowerPoint text frame does not clip, so code that is too long does
+        not get cut off: it bleeds over the slide title and past the footer.
+        The point size is therefore computed from the block rather than
+        assumed, against BOTH constraints:
+
+          height  lines * size * LINE_FACTOR must fit h
+          width   longest line * size * CHAR_FACTOR must fit w
+
+        Courier New is monospaced at roughly 0.6 em per character, and a line
+        occupies about 1.18 times its point size once leading is included.
+        Below CODE_MIN_PT the code stops being readable from the back of a
+        room, so the builder raises rather than shipping a slide nobody can
+        read: that is a signal to shorten the example or widen the layout.
+
+        force pins the size, so the two columns of a wide worked example share
+        one point size instead of each fitting itself independently.
+        """
+        lines = code.split('\n')
+        longest = max((len(l) for l in lines), default=1)
+
+        by_height = (h * 72.0) / (max(len(lines), 1) * LINE_FACTOR)
+        by_width = (w * 72.0) / (max(longest, 1) * CHAR_FACTOR)
+        size = force if force else min(CODE_MAX_PT, by_height, by_width)
+
+        if size < CODE_MIN_PT:
+            raise ValueError(
+                f'code block needs {size:.1f}pt to fit ({len(lines)} lines, '
+                f'longest {longest} chars) but the floor is {CODE_MIN_PT}pt. '
+                'Shorten the worked example rather than shrinking the type.')
+
         sh = _shape(s, x, y, w, h)
         tf = sh.text_frame
         tf.word_wrap = False
-        for i, raw in enumerate(code.split('\n')):
+        for i, raw in enumerate(lines):
             p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
             p.alignment = PP_ALIGN.LEFT
             p.line_spacing = 1.0
@@ -324,8 +421,9 @@ class Deck:
                 r = p.add_run()
                 r.text = txt
                 r.font.name = MONO
-                r.font.size = Pt(12)
+                r.font.size = Pt(size)
                 r.font.color.rgb = col
+        return size
 
     # ── now break it ─────────────────────────────────────────────────────────
     def now_break_it(self, change, happens, why, note=None):
