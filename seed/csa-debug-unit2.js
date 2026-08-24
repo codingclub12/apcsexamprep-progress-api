@@ -520,11 +520,16 @@ const EXERCISES = [
       'i <= n and i < n differ by exactly one iteration. When the spec says through n inclusive, the condition has to let n into the body.',
     ],
     seo: 'AP CSA 2.7 debugging exercise: fix a while loop that stops one iteration early and updates its counter before doing the work.',
+    // Hidden inputs are all LARGER than the largest visible one on purpose.
+    // This program prints a cumulative sequence, so the output for any smaller n
+    // is a prefix of the output for a larger n: with 5 visible, a hidden n=2
+    // would have its whole expected output readable off the visible sample.
+    // scripts/csa-debug-pages-csv.js checkNoLeak catches exactly that.
     cases: [
       { stdin: '5\n', hidden: 0 },
       { stdin: '1\n', hidden: 0 },
       { stdin: '10\n', hidden: 1 },
-      { stdin: '2\n', hidden: 1 },
+      { stdin: '6\n', hidden: 1 },
       { stdin: '7\n', hidden: 1 },
     ],
   },
