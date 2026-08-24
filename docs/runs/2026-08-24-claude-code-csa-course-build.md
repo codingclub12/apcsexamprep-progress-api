@@ -22,7 +22,9 @@ else.
 `scripts/build-csa-teacher-kit.py` plus `scripts/csa_kit/` generates the full
 per-topic kit in the Unit 1 pilot's shape: Teacher_Guide, Day N teacher and
 student decks, Day N guided notes and answer key, and the topic quiz and key.
-Unit 2 is authored in full: 12 topics, 132 files.
+
+**Units 2 and 3 are authored in full: 21 topics, 231 files, 84 decks.** Unit 2
+is Selection and Iteration (12 topics); Unit 3 is Class Creation (9 topics).
 
 ## Evidence
 
@@ -37,8 +39,13 @@ $ python3 scripts/verify-csa-kit-examples.py --unit 2
   ran 24 of them against their authored stdin
   every worked example compiles, and every runnable one matches its OUTPUT panel.
 
-$ python3 scripts/build-csa-teacher-kit.py --unit 2
-  132 files written under build/csa-kit
+$ python3 scripts/verify-csa-kit-examples.py --unit 3
+  compiled 18 worked example(s)
+  ran 18 of them against their authored stdin
+  every worked example compiles, and every runnable one matches its OUTPUT panel.
+
+$ python3 scripts/build-csa-teacher-kit.py --unit 2   # 132 files
+$ python3 scripts/build-csa-teacher-kit.py --unit 3   #  99 files
 ```
 
 The debug verifier compiles and runs every reference solution under JDK 21 and
@@ -57,6 +64,19 @@ That caught three real defects that no amount of code review would have found:
 - OUTPUT values printing on top of their own card label
 
 All three are fixed.
+
+## Why Unit 3 is taught differently
+
+Units 1 and 2 fail loudly. Unit 3 fails silently: the class compiles, looks
+textbook-correct, and every getter returns 0 or every count returns 1. A student
+whose only debugging technique is reading the error message has nothing to read.
+Every break-it slide in Unit 3 therefore demonstrates a bug that produces no
+message at all, and three of them deliberately teach one rule from different
+angles: 3.1, 3.2 and 3.4 are all "one place for each fact", while 3.3, 3.8 and
+3.9 are all "which variable does this name actually reach".
+
+3.6 plants a half-fix rather than a fully broken class (the getter copies, the
+constructor does not), because that is what students actually produce.
 
 ## Method worth keeping
 
@@ -93,8 +113,9 @@ evening as a graded item.
   `debug` already had (`lib/csa-debug-pages.js`), so it is a larger job than
   authoring content.
 - `exercise-2` is Unit 4 only.
-- Units 3 and 4 teacher kits are not authored. The generator is done, so this is
-  content authoring against a proven pipeline rather than new engineering.
+- The Unit 4 teacher kit is not authored (17 topics). The generator is done and
+  Units 2 and 3 are proof it works, so this is content authoring against a
+  proven pipeline rather than new engineering.
 - Nothing has been imported to Drive or Shopify. Per CLAUDE.md every Shopify
   page change ships as a Matrixify sheet, and nothing here needed one yet.
 
