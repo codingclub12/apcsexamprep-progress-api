@@ -77,6 +77,62 @@ const CSA_UNIT1_GRADED = {
   '1.15': { cfus: 8, quiz: 2 },
 };
 
+// CSA Units 2, 3 and 4 cfu/quiz items. Same widget model as Unit 1 (one row per
+// auto-graded apcs-ex widget, plus one quiz row for the mastery section), and
+// the counts were produced by the same method: fetch the live lesson page,
+// count the apcs-ex blocks that carry a check button, split them on whether
+// they sit inside the .apcsa-mastery section. Running that method against the
+// 15 Unit 1 pages reproduces CSA_UNIT1_GRADED above exactly, which is why the
+// numbers below are trusted.
+//
+// These pages ship NO data-item-id attributes. They report because
+// assets/apcs-reporter.js assigns positional ids (U.L-cfu-N in document order,
+// U.L-quiz for the mastery section) on any page that carries none, so the ids
+// here and the ids the page mints are one contract. Changing a page's widget
+// count without recounting here means the extra widget posts an id the
+// manifest does not have and 400s: loud, and never a wrong grade.
+//
+// 3.1, 3.3 and 3.4 are absent on purpose. They are built-model pages with a
+// LESSON_DATA block and no apcs-ex widgets at all; their rows come from
+// CSA_UNIT3_GRADED below.
+const CSA_UNIT234_GRADED = {
+  '2.1':   { cfus: 8, quiz: 4 },
+  '2.2':   { cfus: 8, quiz: 4 },
+  '2.3':   { cfus: 8, quiz: 4 },
+  '2.4':   { cfus: 8, quiz: 4 },
+  '2.5':   { cfus: 8, quiz: 4 },
+  '2.6':   { cfus: 8, quiz: 4 },
+  '2.7':   { cfus: 8, quiz: 4 },
+  '2.8':   { cfus: 8, quiz: 4 },
+  '2.9':   { cfus: 8, quiz: 4 },
+  '2.10':  { cfus: 8, quiz: 4 },
+  '2.11':  { cfus: 8, quiz: 4 },
+  '2.12':  { cfus: 8, quiz: 4 },
+  '3.2':   { cfus: 8, quiz: 4 },
+  '3.5':   { cfus: 8, quiz: 4 },
+  '3.6':   { cfus: 8, quiz: 4 },
+  '3.7':   { cfus: 8, quiz: 4 },
+  '3.8':   { cfus: 8, quiz: 4 },
+  '3.9':   { cfus: 8, quiz: 4 },
+  '4.1':   { cfus: 5, quiz: 3 },
+  '4.2':   { cfus: 4, quiz: 4 },
+  '4.3':   { cfus: 6, quiz: 4 },
+  '4.4':   { cfus: 5, quiz: 5 },
+  '4.5':   { cfus: 5, quiz: 5 },
+  '4.6':   { cfus: 5, quiz: 5 },
+  '4.7':   { cfus: 5, quiz: 5 },
+  '4.8':   { cfus: 5, quiz: 5 },
+  '4.9':   { cfus: 5, quiz: 5 },
+  '4.10':  { cfus: 5, quiz: 5 },
+  '4.11':  { cfus: 5, quiz: 5 },
+  '4.12':  { cfus: 5, quiz: 5 },
+  '4.13':  { cfus: 5, quiz: 5 },
+  '4.14':  { cfus: 5, quiz: 5 },
+  '4.15':  { cfus: 5, quiz: 5 },
+  '4.16':  { cfus: 5, quiz: 5 },
+  '4.17':  { cfus: 5, quiz: 5 },
+};
+
 // Judge0-backed code editors, counted from the same export: one Try It
 // Yourself editor per lesson except 1.7 and 1.8, which have none. NOT yet
 // seeded. An editor becomes a graded item only when its page defines an
@@ -350,9 +406,23 @@ function introJavaRows() {
 // every intro-java denominator with nothing on earth able to fill it, marking
 // every student down for a reason no teacher could see or explain.
 //
-// Flip this to true in the SAME pass that imports the exercise pages, and run
-// the seed with --update. Not before.
-const INTRO_JAVA_EXERCISES_LIVE = false;
+// ── THE GATE, NOW OPEN ──────────────────────────────────────────────────────
+// The ten exercise pages were imported to Shopify on 2026-08-20 and verified
+// live against the Admin API on 2026-08-21: every handle present, published, and
+// carrying data-item-id="{U}.{L}-code-1" plus the four attributes the page
+// script reads. So the condition this gate was waiting on is met.
+//
+// ONE THING TO KNOW ABOUT THE ORDER, because it is the opposite of what the
+// original plan said. POST /api/student/code-grade refuses to grade an item with
+// no manifest denominator (400, and it spends no Judge0 run), so the dangerous
+// state is denominators WITHOUT test cases, not the other way round: that is the
+// one where a student's correct work is told it is not graded while the column
+// still counts against their pace.
+//
+// So the hidden cases are seeded FIRST, through POST /api/admin/code-tests/seed,
+// and this flip lands after. Seeding cases early is harmless; opening the
+// denominator early is not.
+const INTRO_JAVA_EXERCISES_LIVE = true;
 
 // One point per exercise. Not more: an exercise is one submission and one row,
 // the same shape as a gap-fill, and weighting it above a quiz would make a
@@ -423,6 +493,17 @@ function buildRows() {
     }
     if (cfg.quiz > 0) {
       rows.push({ course: 'ap-csa', unit: 'unit-1', lesson_id: lesson, item_id: `${lesson}-quiz`, item_type: 'quiz', points: cfg.quiz });
+    }
+  }
+
+  // CSA Units 2-4 cfu/quiz items (positional ids, see the note on the table).
+  for (const [lesson, cfg] of Object.entries(CSA_UNIT234_GRADED)) {
+    const unit = `unit-${lesson.split('.')[0]}`;
+    for (let i = 1; i <= cfg.cfus; i++) {
+      rows.push({ course: 'ap-csa', unit, lesson_id: lesson, item_id: `${lesson}-cfu-${i}`, item_type: 'cfu', points: 1 });
+    }
+    if (cfg.quiz > 0) {
+      rows.push({ course: 'ap-csa', unit, lesson_id: lesson, item_id: `${lesson}-quiz`, item_type: 'quiz', points: cfg.quiz });
     }
   }
 

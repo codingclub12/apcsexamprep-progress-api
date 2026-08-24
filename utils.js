@@ -125,21 +125,39 @@ const COURSES = {
         // all fifteen, graded server side against hidden test cases. The column
         // is declared now because the page that fills it exists now.
         //
-        // exercise-2 and exercise-3 stay out for the same original reason. No
-        // Unit 1 page emits either.
+        // exercise-2 stays out for the same original reason. No Unit 1 page
+        // emits it.
+        //
+        // exercise-3 (2026-08-24): declared now, because the FRQ bank
+        // (seed/csa-frq/unit1.js) and lib/csa-frq-pages.js build a four point
+        // FRQ practice page for these lessons, so the column has something to
+        // fill it. Same reasoning as exercise-1 and debug before it: declaring
+        // an activity moves PACE, not anyone's percentage, because the
+        // gradebook computes earned / graded over ATTEMPTED items. See
+        // docs/gradebook-contract.md.
+        //
+        // debug (2026-08-24): declared for the same reason exercise-1 was. The
+        // debugging bank now covers all fifteen Unit 1 lessons
+        // (seed/csa-debug-unit1.js) and lib/csa-debug-pages.js builds a page
+        // for each, so the column has something to fill it. Declaring an
+        // activity moves PACE, not anyone's percentage: the gradebook computes
+        // earned / graded over ATTEMPTED items, so an unattempted debug item
+        // never enters either total. See docs/gradebook-contract.md.
         label: 'Unit 1: Using Objects and Methods',
         lessons: ['1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', '1.8', '1.9', '1.10', '1.11', '1.12', '1.13', '1.14', '1.15'],
-        activities: ['lesson', 'cfu', 'exercise-1', 'quiz'],
+        activities: ['lesson', 'cfu', 'exercise-1', 'exercise-3', 'quiz', 'debug'],
       },
       'unit-2': {
         label: 'Unit 2: Selection and Iteration',
         lessons: ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6', '2.7', '2.8', '2.9', '2.10', '2.11', '2.12'],
-        activities: ['lesson', 'exercise-1', 'exercise-2', 'exercise-3', 'quiz'],
+        // debug declared 2026-08-24, same reasoning as Unit 1 above.
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'exercise-3', 'quiz', 'debug'],
       },
       'unit-3': {
         label: 'Unit 3: Class Creation',
         lessons: ['3.1', '3.2', '3.3', '3.4', '3.5', '3.6', '3.7', '3.8', '3.9'],
-        activities: ['lesson', 'exercise-1', 'exercise-2', 'exercise-3', 'quiz'],
+        // debug declared 2026-08-24, same reasoning as Unit 1 above.
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'exercise-3', 'quiz', 'debug'],
       },
       'unit-4': {
         label: 'Unit 4: Data Collections',
@@ -375,11 +393,23 @@ const COURSE_PREFIXES = {
 // list only for readability; order does not matter here because trailingActivity
 // anchors every token at the end of the handle. No other course has a handle
 // ending in '-gap', so adding it cannot reclassify an existing page.
-const ACTIVITY_TOKENS = ['exercise-1', 'exercise-2', 'exercise-3', 'lab', 'quiz', 'exam', 'code', 'gap', 'debug'];
+const ACTIVITY_TOKENS = ['exercise-1', 'exercise-2', 'exercise-3', 'lab', 'quiz', 'exam', 'code', 'gap', 'debug', 'frq'];
+
+// A handle token that is NOT its own activity type. 'frq' is what the page is
+// called, because that is the word the student and the search engine both use,
+// and '-exercise-3' on the end of a URL means nothing to either. The GRADED
+// column is still exercise-3, which the manifest already denominates at 4
+// points, so the alias is where the student-facing name and the gradebook
+// column are reconciled rather than one of them being bent to the other.
+//
+// Aliasing is safe here specifically because no page ends in '-frq' today, so
+// this cannot reclassify anything already live. That is the same test the
+// '-gap' token had to pass when it was added.
+const ACTIVITY_ALIASES = { frq: 'exercise-3' };
 
 function trailingActivity(h) {
   // anchored at the end so a slug like "collaboration" never trips "lab"
-  for (const a of ACTIVITY_TOKENS) if (h.endsWith('-' + a)) return a;
+  for (const a of ACTIVITY_TOKENS) if (h.endsWith('-' + a)) return ACTIVITY_ALIASES[a] || a;
   return 'lesson';
 }
 
@@ -390,6 +420,25 @@ function trailingActivity(h) {
 function examsOf(unit) {
   if (!unit || !unit.exam) return [];
   return Array.isArray(unit.exam) ? unit.exam : [unit.exam];
+}
+
+// Topic number ("1.1") -> the Big Idea and lesson slug that own it, derived from
+// the COURSES config rather than authored twice. The lessons arrays are written
+// in CED order, so the Nth lesson of Big Idea U IS topic U.N and the numbering
+// cannot drift from the config. Built once at module scope.
+const CSP_TOPIC_INDEX = (() => {
+  const idx = new Map();
+  const cfg = COURSES['ap-csp'];
+  for (const [unit, u] of Object.entries((cfg && cfg.units) || {})) {
+    const bi = unit.match(/^bi-(\d+)$/);
+    if (!bi) continue;
+    (u.lessons || []).forEach((slug, i) => idx.set(`${bi[1]}.${i + 1}`, { unit, slug }));
+  }
+  return idx;
+})();
+
+function cspTopicSlug(unitNo, lessonNo) {
+  return CSP_TOPIC_INDEX.get(`${Number(unitNo)}.${Number(lessonNo)}`) || null;
 }
 
 function pageFromHandle(raw) {
@@ -430,6 +479,38 @@ function pageFromHandle(raw) {
     const activity_type = trailingActivity(h);
     const lesson = slug.replace(new RegExp('-' + activity_type + '$'), '');
     return { course: 'ap-csp', unit, lesson, activity_type };
+  }
+
+  // CSP exercise pages: ap-csp-topic-{U}-{L}-exercise-{N}
+  //
+  // The online companions to the Teacher Course Bundle handouts. The handle is
+  // not a naming choice: it is printed inside 70 student documents already in
+  // teachers' hands, so it cannot be moved into the ap-csp-course-bi{N} scheme
+  // the rule above reads. Until this existed the handles matched nothing, /track
+  // silently no-opped, and none of the 70 pages recorded a visit.
+  //
+  // ROUTED AS A VISIT ON THE PARENT TOPIC, NOT AS 'exercise-{N}'.
+  // Same reasoning as the guided-notes rule above, and the stakes are higher
+  // here. /track writes progress with completed = 1 keyed on activity_type, so
+  // returning 'exercise-2' would mark the exercise COMPLETE for a student who
+  // opened the page and typed nothing, and it would write that onto
+  // {lesson}|exercise-2, a key already claimed by the gated whole-run practice
+  // game in lib/csp-course-pages.js. A visit is evidence the student opened the
+  // topic's exercise. It is not evidence they did it.
+  //
+  // Grading is unaffected and always was: the page dispatches course, unit and
+  // lesson explicitly in the apcsActivity detail, and assets/ap-csp-reporter.js
+  // prefers the detail over the handle. This function never sees a graded post
+  // from these pages.
+  m = h.match(/^ap-csp-topic-(\d+)-(\d+)-exercise-[12]$/);
+  if (m) {
+    const topic = cspTopicSlug(m[1], m[2]);
+    // A topic the course config does not know is left unrouted rather than
+    // filed under a guessed lesson id. A wrong lesson column is worse than a
+    // missing visit: it invents a row no teacher can explain.
+    if (topic) {
+      return { course: 'ap-csp', unit: topic.unit, lesson: topic.slug, activity_type: 'lesson' };
+    }
   }
 
   // CSA course: ap-csa-lesson-{U}-{L}-{slug}   (lesson id = "U.L")

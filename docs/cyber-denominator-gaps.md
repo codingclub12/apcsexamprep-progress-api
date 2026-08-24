@@ -16,7 +16,8 @@ records why the original claim about them was wrong.
 |---|---|---|---|
 | case files | `unit-{1..5}/case-file/case-file` | none, the original blocker was misdiagnosed | **priced**, out of 15/14/11/12/11 |
 | unit exams | `unit-{1..5}/exam/exam` | key collision fixed, but the pages cannot report a score at all | **stays unpriced on purpose** |
-| Unit 1 leftovers | `1.2/exercise-1`, `1.2/exercise-2`, `1.3/exercise-1`, `1.3/exercise-2`, `1.3/quiz` | value unknown, and not resolvable by reading the page | open, needs live data |
+| Unit 1 leftovers | `1.2/exercise-1`, `1.2/exercise-2` | value known (24 and 30), but neither page can report a score | **measured 2026-08-21**, held until a reporter ships |
+| Unit 1 leftovers | `1.3/exercise-1`, `1.3/exercise-2`, `1.3/quiz` | value unknown, and not resolvable by reading the prose | open, re-read the grading code as 1.2 was |
 
 ## 1. The exams: a key collision, not a missing value
 
@@ -132,8 +133,8 @@ What the pages do show, for the record:
 
 | column | evidence found |
 |---|---|
-| `1.2/exercise-1` | no answer key, `out of` candidates 3 and 24 |
-| `1.2/exercise-2` | no answer key, candidates 3, 30 and 10 |
+| `1.2/exercise-1` | **SETTLED 2026-08-21: 24.** See below. |
+| `1.2/exercise-2` | **SETTLED 2026-08-21: 30.** See below. |
 | `1.3/exercise-1` | no answer key, candidates 3 and 24; a second page claims the same column |
 | `1.3/exercise-2` | no answer key, candidates 3 and 24 |
 | `1.3/quiz` | `ANSWERS` has 5 entries |
@@ -141,6 +142,111 @@ What the pages do show, for the record:
 Only `1.3/quiz` has a value the page states unambiguously. The four exercises do
 not, which is the same conclusion `scripts/seed-cyber-denominators.js` reached
 when it left twenty Unit 1 activities deliberately absent.
+
+### Superseded for 1.2, 2026-08-21: both values were readable after all
+
+The two 1.2 exercises are settled, and the method that settled them is the one
+this section said would not work: reading the page. The earlier pass searched for
+an answer key and for a single `out of` string, found several candidate numbers,
+and stopped at the ambiguity. Reading the grading function instead of the prose
+resolves it, because each page states its own total three times and its scoring
+code sums to the same number:
+
+| column | badge | score bar | grading code | value |
+|---|---|---|---|---|
+| `1.2/exercise-1` | `3 Parts . 24 pts` | `/ 24 pts` | `maxPts` 12 + 6 + 6 | **24** |
+| `1.2/exercise-2` | `3 Clients . 30 pts` | `/ 30 pts` | 3 clients x (2 + 2 + 6) | **30** |
+
+The stray candidate `3` in the original scan was the parts-and-clients count, and
+`10` on exercise-2 was one client's subtotal. Neither was a competing total.
+
+**The values are recorded in `scripts/seed-cyber-denominators.js` and are
+deliberately commented out.** Pricing them now would violate this document's own
+rule, because neither page can report a score: a scan of both live page bodies
+finds no `fetch`, no `XMLHttpRequest` and no `sendBeacon`. That scan was run with
+the control this file insists on, `ap-cyber-unit-1-lesson-1-exercise-1`, which is
+detected correctly as fetch-based, so the zero result is distinguishing rather
+than merely failing.
+
+### CORRECTED 2026-08-21: 1.2 does not record a zero, it records nothing
+
+An earlier revision of this section (merged in PR #256) concluded that the 1.2
+exercises store a fabricated `0`. **That conclusion was wrong at its last step,
+and this section replaces it.** The full-course sweep that followed found the
+real mechanism, and also found that the fabricated zero is real on nine OTHER
+pages. Both are recorded below.
+
+The teacher's original words were the accurate ones: the work does not show up.
+
+#### Why 1.2 records nothing
+
+Steps 1 to 4 of the original chain hold. `apcs-tracker.js` is wired on these
+pages, takes the GRADED path, and waits for every `.check-btn` to be spent:
+
+```js
+var checkBtns = document.querySelectorAll('.check-btn');
+var total = checkBtns.length;                       // 1.2 exercise-1: FIVE
+...
+for (var i = 0; i < btns.length; i++) if (btns[i].disabled) answered++;
+if (answered >= total) markComplete(activityScorePct(total));
+```
+
+The 1.2 pages carry **three** `<button class="check-btn">` and **two**
+`<a class="check-btn">` navigation links ("Back to Lesson 1.2", "Continue to
+Exercise 2"), which are styled with the button class. So `total` is 5. An
+anchor has no `disabled` property, `undefined` is falsy, and the page's own
+`disableSection` is scoped to the part sections, so the anchors are never
+touched. `answered` tops out at 3, `3 >= 5` is never true, and **`markComplete`
+is never called.**
+
+Nothing is posted but the initial visit, which carries `completed: false`. No
+completion, and no score of any kind, fabricated or otherwise.
+
+This is worth stating plainly because the two failure modes need different
+fixes and look identical to a teacher: a zero is bad data to be cleared, while
+this is missing data with nothing to clear.
+
+#### The fabricated zero is real, on nine other pages
+
+Where a page's check buttons are all real buttons that do get disabled, and the
+page exposes no score UI, completion fires and `activityScorePct` returns
+`Math.round(0 / total * 100)`:
+
+| pages | mode |
+|---|---|
+| 1.3 / 1.4 / 1.5, each of exercise-1, exercise-2 and lab (9 pages) | stores a hard `0` |
+| 1.1 lab, 1.2 exercise-1, 1.2 exercise-2, 1.2 lab (4 pages) | never completes |
+
+Full results, and the method, are in
+`docs/runs/2026-08-21-claude-code-cyber-tracker-sweep.md`.
+`node scripts/scan-tracker-score-risk.js` reproduces them against the live site.
+
+#### The one-token trap that made the first sweep wrong too
+
+Several pages style their buttons `l-check-btn`. `querySelectorAll('.check-btn')`
+does **not** match that, because CSS matches whole class tokens, so those pages
+take the reading path and are safe. A `\bcheck-btn\b` regex DOES match inside
+`l-check-btn`, and the first run of the sweep reported twenty such pages as
+at-risk. The scanner now splits class attributes on whitespace and compares
+tokens. Any future check of this must do the same.
+
+#### What to fix
+
+`activityScorePct` returning `0` rather than `null` when it recognises no score
+UI is still the defect worth fixing centrally: it cannot distinguish "scored
+zero" from "this page exposes no score in either shape I know". It should return
+`null`, which `markComplete` already handles by posting completion alone.
+
+The completion threshold is the second defect, and it is the one that hit 1.2.
+Counting `.check-btn` elements that can never be disabled makes the activity
+permanently unfinishable. The tracker should count only elements that can carry
+a `disabled` state, and the pages should stop styling nav links with the class
+their grader counts.
+
+Both are ledger task 83, "score reporter depends on scraping rendered text".
+Both fixes live in the theme repo, not here: `assets/apcs-tracker.js` for the
+scraper and the threshold, and the page bodies for the reporter and the nav
+link class.
 
 `1.3/exercise-1` also has two pages claiming it, and the topic-named one is
 titled "Topic 1.4", so its content and its handle disagree about which lesson it

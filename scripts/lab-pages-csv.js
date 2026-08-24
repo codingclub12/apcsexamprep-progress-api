@@ -95,6 +95,18 @@ const COPY = {
     ],
     signin: false,
   },
+  'ap-cybersecurity|2.4-lab': {
+    lede: 'A week of badge swipes from a building nobody has audited since March. Three of the '
+      + 'oddities in it are attacks. Two are not, and telling them apart is the lab.',
+    body: [
+      'Everything runs in this page. The log, the door reference and the badge list are simulated, so '
+      + 'read them in any order and as many times as you need.',
+      'Finding something strange in a log is the easy half. A person working late and a badge used at '
+      + '02:47 are both unusual, and only one of them is a problem. Decide what makes the difference '
+      + 'before you decide which rows to flag.',
+    ],
+    signin: false,
+  },
 };
 
 function esc(s) {

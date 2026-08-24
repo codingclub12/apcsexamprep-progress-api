@@ -16,8 +16,28 @@ progress.db-*
 # content, not source: regenerate rather than commit a stale megabyte.
 *-rebalance*.csv
 
+# Same reason. Every sheet under here is rebuildable from the snapshot in
+# shopify/page-snapshots plus the script that made it, and a committed sheet
+# is a stale copy of a page somebody has since edited.
+shopify/import-sheets/
+
 # cyber unit 1 nav repair: generated bodies and scratch
 .work/
 
 # Written by .github/workflows/verify-board.yml when run locally
 report.md
+
+# Generated teacher-kit output and render previews. Rebuild with
+# scripts/build-csa-teacher-kit.py; the content source is what is tracked.
+build/csa-kit/
+build/preview/
+
+# CSP exercise answer keys, fetched by scripts/fetch-csp-keys.js for citation
+# verification. These are the answers to the whole course and never belong in
+# the repo; the pilot deliberately parsed only STUDENT documents into seed/.
+.keys-cache/
+
+# Generated Matrixify sheets. Rebuilt on demand from the tracked renderer and
+# seed data, e.g. scripts/csp-exercise-pages-csv.js out/x.csv --topic 1.2. A
+# committed copy would be a second source of truth that goes stale in silence.
+out/

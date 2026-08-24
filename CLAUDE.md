@@ -240,6 +240,15 @@ A shared reporter script following the apcs-tracker.js pattern hooks the existin
 
 File ownership: this Claude Code session is the owning agent for utils.js, student.js, and the new reporter file. The versions here are canonical. Other agents are pointed away from these files.
 
+Before any theme work, read the theme repo's own CLAUDE.md. The one fact that
+keeps costing sessions a deploy: the published theme is connected to the branch
+`claude/site-linking-audit-yhufjk`, NOT `main`. Merging a theme pull request into
+`main` deploys nothing, and the storefront keeps serving the old file while the
+PR reads as shipped. To actually deploy, fast-forward the connected branch:
+`git push origin origin/main:refs/heads/claude/site-linking-audit-yhufjk`. Verify
+against the live URL, never against `main`. Repointing the theme at `main` in
+Shopify Admin is the real fix and is a human action.
+
 Exception, apcs-tracker.js: this repo is NOT canonical for it. The deployed asset lives in the APCSExamPrep-theme repo at assets/apcs-tracker.js and reaches the storefront through Shopify two-way GitHub sync, so the theme repo is the only source of truth. shopify/apcs-tracker.js here is a byte-identical mirror for reference. Any change to tracker behaviour ships as a theme PR first, then the mirror is re-synced in the same pass. Never edit the mirror on its own and never upload it to Shopify by hand.
 
 ## Out of scope for this repo
@@ -267,5 +276,11 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
 - Claude Code may merge its own pull requests once CI is green. Work still lands on a
   branch behind a PR, never straight to main, and merging is still a deploy: say what
   was merged and check the Railway boot log after it lands.
+- Every Shopify page change ships as a Matrixify sheet. Not an Admin API
+  mutation, not a hand edit in the admin, and not `POST /api/admin/*/publish`:
+  those endpoints exist and are the exception a human asks for explicitly, never
+  the default. A sheet is reviewable before it lands, re-runnable in MERGE mode
+  after a partial import, and it is the one path that has not silently truncated
+  a live body. Generate it, read the refusals, import it once.
 - No em-dashes in any prose, comments, commit messages, or user-facing strings.
 - AP CSA references use the 2025-2026 4-unit structure exclusively.

@@ -52,6 +52,39 @@ const POINTS = {
   // ── 1.2 ────────────────────────────────────────────
   '1.2|lab': 30,              // score readout reads 0 / 30
   '1.2|quiz': 5,              // score-display reads 0 / 5
+  //
+  // 1.2 exercise-1 (24) and exercise-2 (30) are MEASURED, not unknown. Both
+  // values were read off the live page bodies on 2026-08-21 and each is
+  // corroborated by three independent signals on its own page:
+  //   exercise-1: header badge "3 Parts . 24 pts", score bar "/ 24 pts",
+  //               results panel "/ 24", and maxPts 12 + 6 + 6 = 24.
+  //   exercise-2: header badge "3 Clients . 30 pts", score bar "/ 30 pts",
+  //               and three clients scored 2 + 2 + 6 = 10 each.
+  // This supersedes the "value unknown, not resolvable by reading the page"
+  // row for these two columns in docs/cyber-denominator-gaps.md section 3.
+  //
+  // They are NOT entries in this table, and the reason is the rule that file
+  // already states: pricing a column the page cannot report is strictly
+  // harmful. Neither page contains a fetch, an XHR, or a sendBeacon, so no
+  // real score can arrive.
+  //
+  // The measured values are not lost. They live in MEASURED_UNPRICEABLE below,
+  // which is exported and covered by smoke/cyber-denominators.js. A commented
+  // out line records a number but proves nothing; a table can be asserted
+  // against, so re-adding one of these to POINTS by hand now fails a test
+  // instead of quietly regrading a class.
+  //
+  // CORRECTED 2026-08-21: an earlier version of this comment said a fabricated
+  // 0 arrives instead, from apcs-tracker.js. It does not, on THESE two pages.
+  // Each carries two <a class="check-btn"> nav links beside its three real
+  // buttons, so the tracker's `total` is 5 while `answered` can only ever reach
+  // 3 (an anchor has no `disabled` property). markComplete is never called and
+  // nothing is recorded but the initial visit. See
+  // docs/runs/2026-08-21-claude-code-cyber-tracker-sweep.md and
+  // scripts/scan-tracker-score-risk.js.
+  //
+  // Either way these columns stay unpriced: pricing a column no page can report
+  // would grow items_total and make pace worse for every student.
 
   // ── 1.4 ────────────────────────────────────────────
   '1.4|exercise-1': 25,       // score readout reads 0 / 25
@@ -187,6 +220,60 @@ const POINTS = {
   '5.6|quiz': 5,              // score readout reads 0 / 5
 };
 
+// ─────────────────────────────────────────────────────────────────────────────
+//  MEASURED, DELIBERATELY UNPRICED
+//
+//  Columns whose "out of" IS known, read off the live page body, but which must
+//  not be authored yet because the page cannot report a score into them. A
+//  denominator is half of a pair; authoring one without a numerator grows
+//  items_total and drags every student's pace down for work they cannot submit.
+//
+//  This table exists so the measurement survives without being active. Each
+//  entry carries the value, the evidence it was read from, and the single
+//  condition that would let it move into POINTS. Nothing here is ever written to
+//  the database: buildRows() reads POINTS only.
+//
+//  TO ACTIVATE ONE: confirm its page now reports (a fetch, XHR or sendBeacon to
+//  /api/student/progress, or a tracker path that posts a real score rather than
+//  a fabricated 0), move the line into POINTS, and delete it here. Both halves
+//  in the same pass, never one.
+//
+//  Measured 2026-08-22 against the live Shopify page bodies via the Admin API.
+//  Every value below is corroborated by two independent signals on its own page.
+// ─────────────────────────────────────────────────────────────────────────────
+const MEASURED_UNPRICEABLE = {
+  // Unit 1 lesson 1.2. Two <a class="check-btn"> nav links sit beside the three
+  // real buttons, so the tracker's completion count can never be reached.
+  '1.2|exercise-1': { possible: 24, evidence: 'header badge "3 Parts . 24 pts", score bar "/ 24 pts", parts 12+6+6', blocker: 'no reporter; check-btn anchors block markComplete' },
+  '1.2|exercise-2': { possible: 30, evidence: 'score bar "/ 30 pts", three clients at 10 each', blocker: 'no reporter; check-btn anchors block markComplete' },
+
+  // Unit 1 lesson 1.3. These three were absent from this file entirely, not
+  // because the pages state no total (they do) but because nobody had read
+  // them. The pages carry no fetch, XHR or sendBeacon of their own.
+  '1.3|exercise-1': { possible: 24, evidence: 'header badge "3 Parts . 24 pts", score bar and finalScore "/ 24 pts", parts 12+6+6', blocker: 'no reporter in page body' },
+  '1.3|exercise-2': { possible: 24, evidence: 'header badge "3 Parts . 24 pts", finalScore "/ 24 pts", parts 12+6+6', blocker: 'no reporter in page body' },
+  '1.3|quiz': { possible: 5, evidence: 'qzScore reads "0 / 5", ANSWERS has 5 keys, q1..q5 present', blocker: 'no reporter in page body' },
+};
+
+// The five per-unit exams, which this file's (lesson|activity) shape cannot key
+// anyway: all five collapse onto lesson 'exam'. course_unit_denominators is the
+// table that CAN hold them, and scripts/seed-cyber-case-file-denominators.js is
+// the working example. They are listed here because the count is now measured
+// and because "we never checked" and "we checked and it cannot report" are
+// different facts.
+//
+// Every one is 20 questions, confirmed by counting question containers in the
+// live body: units 1 and 2 use id="q-eN", unit 3 uses id="uNexam-qN", units 4
+// and 5 use id="qN". None of the five contains a fetch, an XHR, a sendBeacon or
+// a token read, so none can report. Unpriced is correct, not an oversight.
+const EXAM_UNPRICEABLE = {
+  'unit-1': { possible: 20, evidence: '20 q-eN containers, "20 questions"' },
+  'unit-2': { possible: 20, evidence: '20 q-eN containers, "20 questions"' },
+  'unit-3': { possible: 20, evidence: '20 uNexam-qN containers, "20 MCQ", score "0/20"' },
+  'unit-4': { possible: 20, evidence: '20 qN containers, score "0 / 20"' },
+  'unit-5': { possible: 20, evidence: '20 qN containers, "20 multiple-choice", score "0 / 20"' },
+};
+
 // unit is descriptive, not part of the primary key, so a best-effort lookup from
 // the course config is enough. A lesson the config does not know still seeds.
 function unitFor(lesson) {
@@ -247,4 +334,6 @@ if (require.main === module) {
   }
 }
 
-module.exports = { seedCyberDenominators, buildRows, POINTS };
+module.exports = {
+  seedCyberDenominators, buildRows, POINTS, MEASURED_UNPRICEABLE, EXAM_UNPRICEABLE,
+};

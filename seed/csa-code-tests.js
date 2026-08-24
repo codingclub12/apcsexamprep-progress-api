@@ -46,20 +46,25 @@
 // 1.6 exercise-3 (the FRQ) is a DIFFERENT item and is untouched. It keeps its
 // bare-segment shape, which is what the AP free-response question actually is.
 const ITEMS = [
-  {
-    course: 'ap-csa', lesson: '1.6', item: 'exercise-3',
-    // FRQ Practice (4 points): Register Receipt. Given a,b,c,d (item prices in
-    // cents) and paidCents, print subtotal, cast average, tax (8% truncated),
-    // dollars of change, leftover cents of change.
-    cases: [
-      { prelude: 'int a = 125;\nint b = 250;\nint c = 75;\nint d = 150;\nint paidCents = 1000;',  expected_stdout: '600\n150.0\n48\n3\n52\n',    hidden: 0 },
-      { prelude: 'int a = 99;\nint b = 100;\nint c = 101;\nint d = 102;\nint paidCents = 500;',    expected_stdout: '402\n100.5\n32\n0\n66\n',    hidden: 0 },
-      { prelude: 'int a = 250;\nint b = 250;\nint c = 250;\nint d = 250;\nint paidCents = 1080;',  expected_stdout: '1000\n250.0\n80\n0\n0\n',    hidden: 1 },
-      { prelude: 'int a = 25;\nint b = 25;\nint c = 25;\nint d = 24;\nint paidCents = 200;',       expected_stdout: '99\n24.75\n7\n0\n94\n',     hidden: 1 },
-      { prelude: 'int a = 0;\nint b = 0;\nint c = 0;\nint d = 0;\nint paidCents = 0;',             expected_stdout: '0\n0.0\n0\n0\n0\n',         hidden: 1 },
-      { prelude: 'int a = 1000;\nint b = 2000;\nint c = 3000;\nint d = 1000;\nint paidCents = 10000;', expected_stdout: '7000\n1750.0\n560\n24\n40\n', hidden: 1 },
-    ],
-  },
+  // Empty, and deliberately kept as a live module rather than deleted.
+  //
+  // 1.6 exercise-3 (the FRQ) was the last item here. It moved to seed/csa-frq/
+  // on 2026-08-24 when the FRQ bank and its page builder were created, for the
+  // same reason the exercise-1 items for 1.3, 1.5 and 1.6 moved out before it:
+  // code_test_cases is keyed (course, lesson, item, seq), so two definitions of
+  // ap-csa 1.6 exercise-3 would race, and whichever lost would grade a page
+  // assembled the other way.
+  //
+  // The move was verified rather than assumed. seed/csa-frq generates its
+  // expected outputs by running the reference through real javac/java, and all
+  // six generated cases reproduce the hand-written expectations that used to
+  // live here, byte for byte. That parity check is what made it safe to delete
+  // them; without it this would have been a rewrite wearing a migration's
+  // clothes.
+  //
+  // The file stays because scripts/seed-code-tests.js requires it by name and
+  // because a bare-segment item authored without a page is still a shape this
+  // bank is the right home for.
 ];
 
 module.exports = { items: ITEMS };

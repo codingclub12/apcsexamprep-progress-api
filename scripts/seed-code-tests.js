@@ -27,6 +27,7 @@ function sources() {
     require('../seed/csa-code-tests'),
     require('../seed/csa-exercises').codeTestItems(),
     require('../seed/csa-debug-exercises').codeTestItems(),
+    require('../seed/csa-frq').codeTestItems(),
     require('../seed/intro-java-exercises').codeTestItems(),
   ];
 }
@@ -128,4 +129,9 @@ if (require.main === module) {
   process.exit(0);
 }
 
-module.exports = { seedCodeTests };
+// sources() is exported so the admin dry-run preview reads the SAME list the
+// real seed writes from. It used to hand-roll its own list of two requires, and
+// by the time anyone noticed it was under-reporting by 44 cases across two banks
+// that had been added since. A preview that disagrees with the thing it previews
+// is worse than no preview, because it is believed.
+module.exports = { seedCodeTests, sources };

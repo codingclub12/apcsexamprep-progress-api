@@ -90,6 +90,11 @@ app.use('/api/todo', require('./routes/todo'));
 // JWT on POST /api/progress/attempt like every other reporter.
 app.use(require('./routes/labs'));
 
+// Device Security Analysis practice. Mounted at the root for the same reason
+// labs are: it owns paths in two namespaces, /api/frq for the specs and
+// /frq plus /frq-player.js for delivery.
+app.use(require('./routes/frq'));
+
 // Boot seeds run before app.listen, so any throw here would crash the process
 // before the healthcheck can pass and take the whole service down. Each seed is
 // therefore wrapped: a failure is logged loudly but never blocks boot. Seeds are
@@ -192,6 +197,15 @@ runBootSeed('course_manifest prune', () => {
 // run `node scripts/seed-csa-bank.js --update` to push edits to existing rows.
 const csaSeeded = runBootSeed('csa_bank', () => require('./scripts/seed-csa-bank').seedCsaBank());
 if (csaSeeded) console.log(`csa bank: ${csaSeeded.answers} new answer rows, ${csaSeeded.denoms} new denominator rows`);
+
+// Where each activity LIVES, so a score in My Progress links back to the page it
+// came from. Harvested from the authored page handles in this repo, which is the
+// only source for CSA: its handles carry a title slug the lesson id does not
+// hold, so nothing can be derived and a fresh database would link nothing until
+// students had browsed. Insert-only, so a handle a student was actually standing
+// on (learned by /track) is never replaced by one harvested from source.
+const pageLinks = runBootSeed('page_links', () => require('./scripts/seed-page-links').seedPageLinks());
+if (pageLinks) console.log(`page links: ${pageLinks.changed} new of ${pageLinks.total} handles`);
 
 // Cyber denominators, extracted from the Shopify pages that own each activity.
 // Insert-or-ignore only: a value authored or corrected by hand is never

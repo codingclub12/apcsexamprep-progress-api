@@ -45,45 +45,60 @@ function parseData(body) {
   return JSON.parse(body.slice(i + 'var DATA = '.length, j));
 }
 
-// Walk the WHOLE structure rather than the paths somebody happened to know.
-// The first version of this walked bigIdeas -> topics -> teacherFiles and missed
-// bigIdeas -> exam -> teacherFiles, which is where the five Big Idea exam keys
-// live, including the one used to demonstrate the leak in the first place. A
-// recursive walk cannot miss a section that gets added later either.
+// Collect by SHAPE, not by key name.
+//
+// This has been wrong twice, both times because it looked for a key called
+// `teacherFiles`. The first version walked bigIdeas -> topics -> teacherFiles
+// and missed bigIdeas -> exam -> teacherFiles, which is where the five Big Idea
+// exam keys live. Fixing that to a recursive walk still missed the top-level
+// `courseResources` and `projects` arrays, because those carry their hrefs under
+// no such key at all: courseResources is a bare [{href,label}] list and projects
+// is [{name,days,when,href}]. Seven more paid teacher files, published.
+//
+// So the rule is now the other way round: EVERY object carrying a Shopify file
+// href is a teacher file, unless it sits inside `studentFiles`. A new section
+// added next month is covered on the day it lands, because it does not have to
+// be named anything in particular to be found. Only the exclusion has to be
+// maintained, and there is exactly one of it.
 function build(body) {
   const data = parseData(body);
   const files = {};
   let teacher = 0, student = 0, keys = 0;
 
-  data.bigIdeas.forEach((bi) => {
-    (function walk(node, topicId) {
-      if (Array.isArray(node)) return node.forEach((x) => walk(x, topicId));
-      if (!node || typeof node !== 'object') return;
-      const here = typeof node.id === 'string' ? node.id : topicId;
-      for (const k of Object.keys(node)) {
-        if (k === 'studentFiles' && Array.isArray(node[k])) { student += node[k].length; continue; }
-        if (k === 'teacherFiles' && Array.isArray(node[k])) {
-          for (const f of node[k]) {
-            teacher++;
-            if (/answer|key|solution|rubric/i.test(f.href)) keys++;
-            files[fileId(f.href)] = {
-              path: f.href,
-              label: f.label,
-              course: 'ap-csp',
-              bigIdea: bi.n,
-              topic: here || ('BI' + bi.n),
-              // Big Idea 1 is the published free sample. Keeping that true
-              // through the endpoint preserves the page's current behavior
-              // rather than quietly making the free tier paid.
-              free: bi.n === 1,
-            };
-          }
-          continue;
-        }
-        walk(node[k], here);
-      }
-    })(bi, null);
-  });
+  (function walk(node, ctx) {
+    if (Array.isArray(node)) return node.forEach((x) => walk(x, ctx));
+    if (!node || typeof node !== 'object') return;
+
+    const here = {
+      bigIdea: typeof node.n === 'number' ? node.n : ctx.bigIdea,
+      topic: typeof node.id === 'string' ? node.id : ctx.topic,
+    };
+
+    if (typeof node.href === 'string' && /^\/cdn\/shop\/files\//.test(node.href)) {
+      if (ctx.student) { student++; return; }
+      teacher++;
+      if (/answer|key|solution|rubric/i.test(node.href)) keys++;
+      // A file referenced twice, as courseResources and again as a project,
+      // is one file and gets one id. The second reference just overwrites.
+      files[fileId(node.href)] = {
+        path: node.href,
+        label: node.label || node.name || 'Teacher file',
+        course: 'ap-csp',
+        bigIdea: here.bigIdea || 0,
+        topic: here.topic || (here.bigIdea ? 'BI' + here.bigIdea : 'course'),
+        // Big Idea 1 is the published free sample. Course-level files belong to
+        // no Big Idea, so they are paid: they are the pacing guides and the
+        // Create Task pack, not the free sampler.
+        free: here.bigIdea === 1,
+      };
+      return;
+    }
+
+    for (const k of Object.keys(node)) {
+      walk(node[k], { ...here, student: ctx.student || k === 'studentFiles' });
+    }
+  })(data, { student: false });
+
   return { files, stats: { teacher, student, keys, unique: Object.keys(files).length } };
 }
 
@@ -95,7 +110,7 @@ function main(argv) {
   }
   const r = build(fs.readFileSync(src, 'utf8'));
   const problems = [];
-  if (r.stats.teacher < 439) problems.push(`only ${r.stats.teacher} teacher files; the page carries 439`);
+  if (r.stats.unique < 446) problems.push(`only ${r.stats.unique} unique teacher files; the page carries 446`);
   if (r.stats.keys < 222) problems.push(`only ${r.stats.keys} answer keys found; the page carries 222`);
   for (const [id, f] of Object.entries(r.files)) {
     if (!/^\/cdn\/shop\/files\//.test(f.path)) problems.push(`${id} is not a Shopify file path: ${f.path}`);
@@ -105,6 +120,21 @@ function main(argv) {
     console.error(`\n  ${problems.length} problem(s). No file written:\n`);
     problems.slice(0, 10).forEach((p) => console.error('    ' + p));
     process.exit(1);
+  }
+  // A manifest that SHRANK is the failure mode that matters: every id it loses
+  // is a file that silently goes back to being published. Refuse rather than
+  // write. This also catches the obvious mistake of rebuilding from a page that
+  // has already been gated, where the teacher hrefs are ids and not URLs.
+  if (fs.existsSync(out)) {
+    const before = JSON.parse(fs.readFileSync(out, 'utf8'));
+    const lost = Object.keys(before).filter((id) => !r.files[id]);
+    if (lost.length) {
+      console.error(`\n  Refused: this would drop ${lost.length} file(s) from the manifest,`
+        + ' which un-gates them. Rebuild from a PRE-gate body.\n');
+      lost.slice(0, 5).forEach((id) => console.error('    ' + before[id].path));
+      console.error('');
+      process.exit(1);
+    }
   }
   fs.writeFileSync(out, JSON.stringify(r.files, null, 2) + '\n');
   console.log(`    ${r.stats.teacher} teacher files -> ${r.stats.unique} unique ids`);

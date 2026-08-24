@@ -108,16 +108,34 @@ const get = (p, tok) => fetch(base() + p, { headers: { Authorization: 'Bearer ' 
   }
 
   // ── 3. Students join ───────────────────────────────────────────────────────
+  //  One student, three courses, ONE name and PIN. The first class is a signup;
+  //  the rest are added to the account that signup created, which is why they go
+  //  through /enroll and not a second /join. Joining again with the same name
+  //  and PIN is now refused on purpose: /join cannot tell "the same kid adding a
+  //  course" from "a different kid who picked the same four digits", and quietly
+  //  merging the second case would put two students in one gradebook. See the
+  //  name_pin_taken branch in routes/student.js.
   console.log('\n3. Students join each class with its code');
   const stu = {};
   {
+    let first = true;
+    let accountToken = null;
     for (const course of Object.keys(cls)) {
-      const r = await post('/api/student/join',
-        { class_code: cls[course].class_code, display_name: 'Avery', pin: '1234' });
+      const r = first
+        ? await post('/api/student/join',
+          { class_code: cls[course].class_code, display_name: 'Avery', pin: '1234' })
+        : await post('/api/student/enroll', { class_code: cls[course].class_code }, accountToken);
       ok(`  a student joined the ${course} class`, r.status === 201, r.body);
       ok('    and is told the course', r.body.class && r.body.class.course === course, r.body.class);
       stu[course] = r.body.token;
+      if (first) { accountToken = r.body.token; first = false; }
     }
+
+    // The refusal itself, stated once here because this suite is where the
+    // whole-classroom flow is read.
+    const reJoin = await post('/api/student/join',
+      { class_code: cls['ap-csp'].class_code, display_name: 'Avery', pin: '1234' });
+    ok('  the same name and PIN cannot sign up twice', reJoin.status === 409, reJoin.status);
 
     const dupe = await post('/api/student/join',
       { class_code: cls['ap-csp'].class_code, display_name: 'avery', pin: '9999' });

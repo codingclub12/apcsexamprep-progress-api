@@ -429,9 +429,28 @@
       var m = /(\d+)\s*\/\s*(\d+)/.exec(el.textContent || el.innerText || '');
       if (m && total) return Math.round(parseInt(m[1], 10) / total * 100);
     }
+
     // Fallback: the widget tags each graded block correct or wrong.
-    var correct = document.querySelectorAll('.answered-correct').length;
-    if (total) return Math.round(correct / total * 100);
+    //
+    // This is only usable when the page actually uses that convention, and the
+    // count alone cannot tell whether it does. A page that marks nothing has
+    // zero '.answered-correct' nodes, and so does a page whose student got
+    // everything wrong. This function used to return 0 for both, which stored a
+    // hard zero against nine Unit 1 pages for students who had scored full
+    // marks, and nothing downstream could tell it from a grade someone earned.
+    //
+    // '.answered-wrong' is the companion marker, so the presence of EITHER
+    // class proves the page uses the convention and that a 0 computed here is a
+    // real 0 rather than a guess.
+    var graded = document.querySelectorAll('.answered-correct, .answered-wrong').length;
+    if (total && graded) {
+      var correct = document.querySelectorAll('.answered-correct').length;
+      return Math.round(correct / total * 100);
+    }
+
+    // The page exposes no score in either shape. Say so rather than guessing the
+    // value that destroys grades: markComplete omits `score` entirely when this
+    // is null, which records the truthful "done, ungraded".
     return null;
   }
 
@@ -463,8 +482,25 @@
       });
     }
 
-    var checkBtns = document.querySelectorAll('.check-btn');
-    var total = checkBtns.length;
+    // Only an element that can CARRY a disabled state can ever satisfy the
+    // "every check button has been spent" test below. Several pages style a
+    // navigation link with the same class (`a.check-btn`, "Continue to Exercise
+    // 2"), and an anchor has no `disabled` property, so including it made
+    // `total` permanently unreachable. Cyber 1.1 lab and all three 1.2
+    // activities counted 5 or 6 while only 3 or 4 could ever be disabled, so
+    // markComplete was never called and a finished exercise recorded nothing
+    // but the visit. That is the bug a teacher reported on 2026-08-21.
+    //
+    // `'disabled' in el` is the exact test: it is true for button, input,
+    // select, textarea and fieldset, and false for an anchor or a div.
+    function gradedButtons() {
+      var all = document.querySelectorAll('.check-btn');
+      var out = [];
+      for (var i = 0; i < all.length; i++) if ('disabled' in all[i]) out.push(all[i]);
+      return out;
+    }
+
+    var total = gradedButtons().length;
 
     if (total > 0) {
       // -- GRADED PATH --
@@ -472,7 +508,7 @@
         // Let the page's own handler grade and disable the button first.
         setTimeout(function() {
           var answered = 0;
-          var btns = document.querySelectorAll('.check-btn');
+          var btns = gradedButtons();
           for (var i = 0; i < btns.length; i++) if (btns[i].disabled) answered++;
           if (answered >= total) markComplete(activityScorePct(total));
         }, 0);
@@ -536,6 +572,58 @@
         loadUnitProgress(pageInfo);
       });
       trackActivityCompletion(pageInfo);
+
+      // ── GLOBAL: the writer apcs-score-reporter.js hands graded results to ────
+      //
+      // This function was REFERENCED by two consumers and DEFINED by nobody.
+      // assets/apcs-score-reporter.js is the one script covering every graded
+      // exercise and lab page in the course, and its whole job is to watch the
+      // score a page shows the student and hand it here. It calls
+      // window.APCS_saveLessonScore, found undefined, logged a console.debug and
+      // returned. So no exercise or lab page has ever recorded a score through
+      // it. snippets/apcs-grade-reporter.liquid names it too, and survives only
+      // because it falls back to its own XHR after a bounded wait.
+      //
+      // Defined here, in the non-quiz branch, for the same reason
+      // APCS_saveQuizScore is defined in the quiz branch: it closes over
+      // pageInfo, so it cannot be wrong about which lesson it is writing, and it
+      // cannot exist on a page type that must not use it.
+      //
+      // POINTS, NOT JUST A PERCENT. The reporter reads a real "earned / possible"
+      // pair off the page and used to throw the pair away and pass only a
+      // percent. docs/gradebook-contract.md in the progress-api repo is explicit
+      // that the grade is earned over graded, and that a percent with no
+      // denominator has to be excluded from the points total rather than folded
+      // in at a guessed weight. So when the pair is available it goes to
+      // /api/student/score, which is the endpoint docs/exercise-reporter-contract.md
+      // specifies for exactly these pages. The percent post stays as well: it
+      // carries COMPLETION, and it is the lower-precedence source the gradebook
+      // already knows how to rank below real points.
+      window.APCS_saveLessonScore = async function(pct, pair) {
+        if (pct === null || pct === undefined) return null;
+
+        // Real points first, when the reporter could read both halves.
+        if (pair && pair.possible > 0 && pair.earned >= 0 && pair.earned <= pair.possible) {
+          await apiPost('/api/student/score', {
+            course: pageInfo.course, unit: pageInfo.unit, lesson: pageInfo.lesson,
+            activity_type: pageInfo.activity, item: 'score',
+            earned: pair.earned, possible: pair.possible,
+            // Stable per result, so a double submit is idempotent server side.
+            client_event_id: [pageInfo.lesson, pageInfo.activity, 'score',
+                              pair.earned, pair.possible].join(':'),
+          });
+        }
+
+        // Completion, and the percent as the fallback grade source.
+        const result = await apiPost('/api/student/progress', {
+          course: pageInfo.course, unit: pageInfo.unit, lesson: pageInfo.lesson,
+          activity_type: pageInfo.activity, completed: true, score: pct,
+        });
+        setBarStatus('\u2713 Score saved: ' + pct + '%', '#6EE7B7');
+        setBarState('complete');
+        loadUnitProgress(pageInfo);
+        return result;
+      };
     } else {
       // ── QUIZ PAGE INIT ──────────────────────────────────────────────────────
       // Check lock/retry status before doing anything

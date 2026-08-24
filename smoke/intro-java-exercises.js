@@ -297,8 +297,15 @@ ok('6.4b every unit holding an exercise declares the code activity',
 // denominator would mark every one of them down for a column that does not
 // exist. When the pages import, flip INTRO_JAVA_EXERCISES_LIVE and this check
 // is the one to update, deliberately.
-ok('6.5 the exercise gate is still shut, so nothing is seeded yet',
-  manifest.INTRO_JAVA_EXERCISES_LIVE === false);
+// The gate OPENED on 2026-08-21, once the ten pages were imported and verified
+// live against the Shopify Admin API: every handle present, published, and
+// carrying data-item-id="{U}.{L}-code-1".
+//
+// This assertion is the one that flips with the gate. 6.6 through 6.8 below are
+// the ones that matter, and they were written to hold in BOTH positions, so
+// opening the gate exercised them rather than needing them rewritten.
+ok('6.5 the exercise gate is open, now that the pages are live',
+  manifest.INTRO_JAVA_EXERCISES_LIVE === true);
 // ── THE COUPLING, WHICH IS THE POINT OF THE GATE ─────────────────────────────
 // Pages and denominators fail in opposite directions, so they must move
 // together. Pages without rows means a student submits correct work and is told
@@ -317,9 +324,10 @@ ok('6.8 the gate agrees with what it actually produced',
   manifest.INTRO_JAVA_EXERCISES_LIVE === (pagesLive > 0),
   { gate: manifest.INTRO_JAVA_EXERCISES_LIVE, pagesLive });
 
-// The exercises exist and are buildable either way. Only their PUBLICATION is
-// gated, so the import CSV can be generated before the gate opens.
-ok('6.9 the pages are buildable even while the gate is shut',
+// The exercises are buildable either way. Only their PUBLICATION is gated, which
+// is what let the import CSV be generated before the gate opened, and is what
+// would let it be regenerated if the gate ever had to close again.
+ok('6.9 the pages are buildable independently of the gate',
   build.exercisePages().length === EXERCISES.length, build.exercisePages().length);
 
 // ── 7. House style ───────────────────────────────────────────────────────────

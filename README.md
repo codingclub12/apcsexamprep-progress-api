@@ -190,7 +190,7 @@ course; do not mix them for a single course, or the two rollups disagree.
 
 | Course | Endpoint | Denominator authority | Notes |
 |--------|----------|-----------------------|-------|
-| ap-csa | `POST /api/progress/attempt` | `course_manifest` | Unit 1 pilot (per-widget cfu/quiz items) plus Unit 3 built lessons (per-activity exercise-1/2/3 and quiz items with authored point weights). Rejects any `(course, item_id)` not in the manifest. |
+| ap-csa | `POST /api/progress/attempt` | `course_manifest` | All four units. Units 1, 2 and 4 plus six Unit 3 lessons use per-widget cfu/quiz items; the three built Unit 3 lessons (3.1, 3.3, 3.4) use per-activity exercise-1/2/3 and quiz items with authored point weights. Units 2-4 ship no `data-item-id` attributes, so `apcs-reporter.js` mints positional ids that must match the seeded rows. Rejects any `(course, item_id)` not in the manifest. |
 | ap-networking | `POST /api/progress/attempt` | `course_manifest` | Same manifest-gated path as CSA. |
 | ap-csp | `POST /api/student/score` | client-sent `max_points` | Course-agnostic. No manifest rows required; `(course, unit, lesson)` is validated against the `COURSES` config in `utils.js`. |
 | ap-cybersecurity | `POST /api/student/score` | client-sent `max_points` | Same path as CSP; existing grade-reporting flow. |

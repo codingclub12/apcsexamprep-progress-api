@@ -61,6 +61,14 @@ const post = (p, body, tok) => fetch(base() + p, {
 const { seedCspDenominators, buildRows, POINTS } = require('../scripts/seed-csp-denominators');
 const { buildCanonicalGradebook } = require('../lib/gradebook-contract');
 const { COURSES } = require('../utils');
+const { gradedPages } = require('../lib/csp-exercise-pages');
+
+// The mirror exercise-1 pages that carry authored checks, which are the only
+// mirror pages the denominator seed prices. exercise-2 stays unpriced while its
+// key is contested by the gated whole-run practice game.
+function gradedMirrorExercise1() {
+  return gradedPages().filter((p) => p.kind === 'exercise-1' && p.unit !== 'bi-3');
+}
 
 const COURSE = 'ap-csp';
 
@@ -70,7 +78,12 @@ const COURSE = 'ap-csp';
   // ── 1. The seed is well formed ────────────────────────────────────────────
   console.log('1. The authored table is well formed');
   const rows = buildRows();
-  ok('  53 rows, one per graded CSP column', rows.length === 53, rows.length);
+  // Derived, not hardcoded: the mirror exercises are being authored topic by
+  // topic, so this number moves every time a check file lands. What must stay
+  // true is that it equals the quizzes plus the Big Idea 3 coding exercises plus
+  // one row per graded mirror exercise-1.
+  const expectedRows = 35 + 18 + gradedMirrorExercise1().length;
+  ok(`  ${expectedRows} rows, one per graded CSP column`, rows.length === expectedRows, rows.length);
   ok('  no row was dropped for an unknown lesson',
     rows.length === Object.keys(POINTS).length, { rows: rows.length, points: Object.keys(POINTS).length });
 
@@ -91,17 +104,38 @@ const COURSE = 'ap-csp';
   // The counts observed on the pages. Stated here so a silent edit to the seed
   // that changes a value has to change this test too.
   const quizzes = rows.filter((r) => r.activity_type === 'quiz');
-  const exercises = rows.filter((r) => r.activity_type === 'exercise-1');
+  const codeExercises = rows.filter((r) => r.activity_type === 'exercise-1' && r.unit === 'bi-3');
+  // Every mirror slug that is priced. Big Idea 3's exercise-1 rows belong to the
+  // coding-practice pages, not to a mirror, so they are excluded by slug.
+  const mirrorSlugs = new Set(gradedMirrorExercise1().map((p) => p.slug));
+  const mirrorRows = rows.filter((r) => r.activity_type === 'exercise-1' && mirrorSlugs.has(r.lesson));
+  const x2 = rows.filter((r) => r.activity_type === 'exercise-2');
   ok('  35 lesson quizzes, every one out of 6',
     quizzes.length === 35 && quizzes.every((r) => r.possible === 6), quizzes.length);
-  ok('  18 exercises, every one out of 8 and all in Big Idea 3',
-    exercises.length === 18 && exercises.every((r) => r.possible === 8 && r.unit === 'bi-3'),
-    exercises.length);
+  ok('  18 coding-practice exercises, every one out of 8 and all in Big Idea 3',
+    codeExercises.length === 18 && codeExercises.every((r) => r.possible === 8),
+    codeExercises.length);
+  // Topic 1.1's two handout-mirror pages, live since 2026-08-21. Their values are
+  // DERIVED from the renderer rather than scanned, so this asserts the count the
+  // renderer actually emits: publishing topic 1.2's pages should make this fail
+  // until the number is updated deliberately.
+  ok('  the mirror exercise-1 pages are priced at their own question count',
+    mirrorRows.length === gradedMirrorExercise1().length
+      && mirrorRows.every((r) => {
+        const page = gradedMirrorExercise1().find((p) => p.slug === r.lesson);
+        return page && r.possible === page.questions;
+      }),
+    mirrorRows.map((r) => [r.lesson, r.possible]));
+  // Every mirror slug is also a gated exercise-2 slug, so one key would have to
+  // hold two different activities. Nothing exercise-2 is priced here until that
+  // is settled in the course config, and this is what says so.
+  ok('  and no exercise-2 is priced, because that key is contested', x2.length === 0, x2);
 
   // ── 2. Writing it, and writing it again ───────────────────────────────────
   console.log('2. The write is additive and idempotent');
   const first = seedCspDenominators();
-  ok('  first run writes all 53', first.changed === 53 && first.total === 53, first);
+  ok(`  first run writes all ${expectedRows}`,
+    first.changed === expectedRows && first.total === expectedRows, first);
   const second = seedCspDenominators();
   ok('  second run writes nothing', second.changed === 0, second);
 

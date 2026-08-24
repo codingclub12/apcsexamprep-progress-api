@@ -1436,9 +1436,12 @@ router.post('/code-tests/seed', (req, res) => {
     if (dryRun) {
       // Load and validate the seed WITHOUT writing, so the shape of the bank can
       // be checked from a phone before anything touches a live class.
-      const { items } = require('../seed/csa-exercises').codeTestItems();
-      const legacy = require('../seed/csa-code-tests').items;
-      const all = legacy.concat(items);
+      // The SAME sources() the real seed uses. A hand-rolled list here drifts
+      // the moment a bank is added, silently, in the direction of under-
+      // reporting, and this endpoint exists precisely so the bank can be checked
+      // before it touches a live class.
+      const { sources } = require('../scripts/seed-code-tests');
+      const all = sources().reduce((acc, src) => acc.concat(src.items), []);
       return res.json({
         ok: true, dry_run: true, cases_before: before,
         would_load: { items: all.length, cases: all.reduce((n, it) => n + it.cases.length, 0) },
@@ -1494,6 +1497,88 @@ router.post('/csa-exercise-pages/publish', async (req, res) => {
   } catch (e) {
     console.error('admin/csa-exercise-pages publish:', e);
     res.status(500).json({ error: 'publish failed', detail: e.message });
+  }
+});
+
+// ── IDENTITY COLLISIONS ──────────────────────────────────────────────────────
+//  (name, PIN) became a cross-course identity when student_accounts shipped.
+//  POST /api/student/join refuses a pair that is already taken, which closes the
+//  door going forward. Nothing closed it behind: every row written before
+//  accounts existed carries account_id NULL and is linked on its owner's next
+//  sign-in by findAccountByNameAndPin, so two DIFFERENT students who already
+//  share a name and a PIN would be linked into ONE account. From there
+//  /api/student/enrollments lists the other student's classes and
+//  /api/student/switch mints a token for one without asking for a PIN.
+//
+//  This route answers "has that already happened", which is a question only the
+//  database can answer, and answers it WITHOUT reading a single name: counts and
+//  a boolean, nothing a student typed. Zero PII, same as every other route here.
+//
+//  A shared name is not by itself a collision. Two students called Avery M. with
+//  different PINs are two accounts and always were, which is exactly why
+//  name_key is not unique. What matters is a shared name with a shared PIN, and
+//  the only way to know is to compare the hashes, which needs the PIN. So this
+//  reports the EXPOSURE (how many rows sit in a name bucket where a collision is
+//  even possible) and leaves the merge itself to be confirmed per bucket.
+const collisionAccountsStmt = db.prepare(`
+  SELECT name_key, COUNT(*) AS n FROM student_accounts
+  GROUP BY name_key HAVING COUNT(*) > 1 ORDER BY n DESC
+`);
+const collisionUnlinkedStmt = db.prepare(`
+  SELECT lower(display_name) AS name_key, COUNT(*) AS n FROM students
+  WHERE account_id IS NULL AND COALESCE(active, 1) = 1
+  GROUP BY 1 HAVING COUNT(*) > 1 ORDER BY n DESC
+`);
+const collisionMergedStmt = db.prepare(`
+  SELECT s.account_id, COUNT(DISTINCT c.course) AS courses, COUNT(*) AS rows_n
+  FROM students s JOIN classes c ON c.id = s.class_id
+  WHERE s.account_id IS NOT NULL
+  GROUP BY s.account_id HAVING COUNT(*) > 1 ORDER BY rows_n DESC
+`);
+const MAX_PIN_CANDIDATES = require('../lib/student-accounts').MAX_PIN_CANDIDATES;
+
+router.get('/identity-collisions', (req, res) => {
+  try {
+    const accounts = collisionAccountsStmt.all();
+    const unlinked = collisionUnlinkedStmt.all();
+    const linked = collisionMergedStmt.all();
+
+    // Names are never returned. A bucket is identified by its size and by
+    // whether it is large enough to defeat the candidate cap, which is the one
+    // property of it that changes what the code does.
+    const bucket = (rows) => ({
+      buckets: rows.length,
+      rows: rows.reduce((a, r) => a + r.n, 0),
+      largest: rows.length ? rows[0].n : 0,
+      over_candidate_cap: rows.filter((r) => r.n > MAX_PIN_CANDIDATES).length,
+    });
+
+    res.set('Cache-Control', 'no-store');
+    res.json({
+      // Accounts sharing a name. Only these can collide on a PIN.
+      accounts_sharing_a_name: bucket(accounts),
+      // Pre-accounts student rows sharing a name, still unlinked. These are the
+      // ones that get linked on next sign-in, so this is the exposure that is
+      // still ahead rather than already behind.
+      unlinked_students_sharing_a_name: bucket(unlinked),
+      // Accounts already reaching more than one student row. Expected and
+      // correct for a real student in several courses; the number to look at is
+      // multi_course, since one account holding rows in several DIFFERENT
+      // courses is the shape a wrong merge also takes.
+      accounts_with_several_rows: {
+        accounts: linked.length,
+        multi_course: linked.filter((r) => r.courses > 1).length,
+        largest: linked.length ? linked[0].rows_n : 0,
+      },
+      candidate_cap: MAX_PIN_CANDIDATES,
+      // Every number above being zero is the all-clear: no name is shared by two
+      // accounts and no unlinked row shares one either, so no PIN comparison can
+      // put two students in one account.
+      clear: accounts.length === 0 && unlinked.length === 0,
+    });
+  } catch (e) {
+    console.error('admin/identity-collisions:', e);
+    res.status(500).json({ error: 'collision check failed', detail: e.message });
   }
 });
 

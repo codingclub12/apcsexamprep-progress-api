@@ -124,7 +124,12 @@ function expectsPoints(course, act, gamesOn) {
     ok(`${course}: class created`, !!code, cls.body);
     if (!code) continue;
 
-    const j = await post('/api/student/join', { class_code: code, display_name: 'PA', pin: '1234' });
+    // A DIFFERENT student per course, on purpose. These fixtures are unrelated
+    // to each other, and a name plus a PIN now identifies a student across
+    // courses, so reusing one pair here would be claiming they are the same
+    // person and would be refused as a name/PIN clash. See docs/student-accounts.md.
+    const j = await post('/api/student/join',
+      { class_code: code, display_name: 'PA ' + course, pin: '1234' });
     const stok = j.body.token;
     ok(`${course}: student joined`, !!stok, j.body);
     if (!stok) continue;
