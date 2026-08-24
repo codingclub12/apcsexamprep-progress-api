@@ -26,3 +26,8 @@ report.md
 # scripts/build-csa-teacher-kit.py; the content source is what is tracked.
 build/csa-kit/
 build/preview/
+
+# CSP exercise answer keys, fetched by scripts/fetch-csp-keys.js for citation
+# verification. These are the answers to the whole course and never belong in
+# the repo; the pilot deliberately parsed only STUDENT documents into seed/.
+.keys-cache/

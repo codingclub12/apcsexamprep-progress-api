@@ -153,12 +153,44 @@ ok('4b.4 the one live exercise is linked and the rest are locked',
   u3.body.indexOf('/pages/ap-csa-lesson-3-4-constructors-exercise-1') !== -1
   && u3.body.indexOf('/pages/ap-csa-lesson-3-1-abstraction-and-program-design-exercise-1') === -1);
 
-section('4c. a rendered scrape is refused, not patched');
-// scripts/live-pages-dump.js recovers bodies from the storefront, where the
-// broken CTA opener arrives entity-escaped. That body is safe to read and not
-// safe to import.
-refuses('4c.1 an entity-escaped CTA opener means a rendered page',
-  () => hub.build(FIXTURE.replace('\nclass="u2-cta">', '\nclass="u2-cta"&gt;'), LIVE));
+section('4c. both spellings of the broken CTA are repaired');
+// The STORED body of Units 1 and 2 carries the opener with its `>` entity-
+// escaped: confirmed 2026-08-24 against a Matrixify Pages export that came back
+// byte-identical to the rendered dump. An earlier version of this module read
+// the escaped form as proof of a rendered scrape and refused the real export
+// over it, so both spellings are pinned here.
+const escRes = hub.build(FIXTURE.replace('\nclass="u2-cta">', '\nclass="u2-cta"&gt;'), LIVE);
+ok('4c.1 the entity-escaped opener is repaired rather than refused',
+  escRes.ctaFixed === 1 && escRes.problems.length === 0, escRes.problems);
+ok('4c.2 it yields the same opening div as the plain spelling',
+  escRes.body.indexOf('<div class="u2-cta">') !== -1);
+ok('4c.3 no escaped opener survives', escRes.body.indexOf('class="u2-cta"&gt;') === -1);
+
+// THE REAL STORED SHAPE, not a tidied version of it: balanced by count while
+// structurally wrong, because the orphan `</div>` closes `#uN-hub` early and
+// the wrapper's own close is missing. Repairing only the opener would leave the
+// body one div short, which is exactly what this pins.
+section('4e. the real stored shape: both halves of the CTA breakage');
+const REAL = '<style>\n.u2-lesson-card { display: block !important; }\n.u2-learn { padding: 24px !important; }\n</style>\n'
+  + '<div id="u2-hub">\n<h2 class="u2-section-title">All 12 Lessons</h2>\n<div class="u2-grid">\n'
+  + LESSONS.map(([id, h, t2]) => lessonCard(id, h, t2)).join('')
+  + '</div>\n<div class="u2-learn">\n  <div class="u2-learn-title">What you will learn</div>\n</div>\n'
+  + '\nclass="u2-cta"&gt;\n  <h2>Ready to test yourself?</h2>\n</div>\n'
+  + '<nav class="u2-nav"><a class="u2-nav-link" href="/pages/ap-csa-unit-1-course">Unit 1</a></nav>\n'
+  + '<script type="application/ld+json">{"@type":"Course"}</script>\n';
+
+ok('4e.1 the fixture reproduces the live trap: balanced by count, wrong by structure',
+  (REAL.match(/<div[\s>]/g) || []).length === (REAL.match(/<\/div>/g) || []).length);
+const realRes = hub.build(REAL, LIVE);
+ok('4e.2 it patches with no problems', realRes.problems.length === 0, realRes.problems);
+ok('4e.3 the CTA opener is restored', realRes.body.indexOf('<div class="u2-cta">') !== -1);
+ok('4e.4 the wrapper close is restored after the nav', /<\/nav>\s*<\/div>/.test(realRes.body));
+ok('4e.5 the result is exactly div-balanced, not one short',
+  (realRes.body.match(/<div[\s>]/g) || []).length === (realRes.body.match(/<\/div>/g) || []).length);
+ok('4e.6 the JSON-LD block is still last', realRes.body.trim().endsWith('</script>'));
+let noNavRefused = false;
+try { hub.build(REAL.replace(/<nav[\s\S]*?<\/nav>\n/, ''), LIVE); } catch (e) { noNavRefused = /<\/nav>/.test(e.message); }
+ok('4e.7 no anchor for the wrapper close means refuse, not guess', noNavRefused);
 
 section('4d. dead lesson links');
 // Six Unit 4 hub cards link handles no page carries any more. Relinking is only
