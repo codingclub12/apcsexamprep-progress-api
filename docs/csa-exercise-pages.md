@@ -233,3 +233,51 @@ to a unit outranks the manifest, so the column reads `possible_source: authored`
   `docs/csa-manifest-readiness.md`) are unaffected by this work. These exercise
   pages are new pages that report on their own; they do not fix the attribute gap
   on the lesson pages beside them.
+
+## Linking them from the unit hubs
+
+Measured 2026-08-24 against the Shopify Admin API: 21 of the 53 exercise-1 pages
+are live (all 15 of Unit 1, plus the six recontented Unit 4 lessons, which also
+carry exercise-2), and the four unit hub pages linked NONE of them. The only
+route into an exercise was the accordion nav, which is injected on Unit 1 and
+Unit 4 pages only, so a Unit 2 or Unit 3 student had no path to a graded
+exercise at all.
+
+`lib/csa-hub-links.js` generates a Coding Exercises section for a hub body and
+`scripts/csa-hub-exercise-links.js` turns it into a Matrixify sheet:
+
+```
+node scripts/csa-hub-exercise-links.js --handles live-handles.txt \
+  --out hubs.csv unit1.html unit2.html unit3.html unit4.html
+```
+
+Both inputs come from the Admin API in the same sitting, never from a document:
+the stored Body HTML of each hub, and the list of every live `ap-csa-*` page
+handle. The handle list decides whether a chip is a link or a lock, and it is
+also what a dead lesson link is repaired against, so a stale or partial list is
+the one input that can do damage.
+
+**Which pages exist is never inferred from a handle pattern.** An exercise the
+live set does not contain renders as an inert locked chip, the same lock
+semantics `lib/csa-nav.js` uses. `npm run smoke:csahublinks` proves both halves,
+including that a locked chip carries no href anywhere in the output.
+
+Two live defects were found while measuring and are repaired by the same pass:
+
+- **The broken CTA block.** The Unit 1 and Unit 2 hubs carry `class="uN-cta">`
+  where `<div class="uN-cta">` belongs. The opening tag was lost in some earlier
+  edit, so the literal text renders on the page and the block's `</div>` closes
+  the wrapper early. Units 3 and 4 are sound.
+- **Six dead lesson links.** The Unit 4 hub still links the pre-CED-fix handles
+  for 4.6, 4.7, 4.13, 4.14, 4.15 and 4.17. Those pages were republished under new
+  handles on 2026-08-20 and no page carries the old ones, so six of seventeen
+  cards are 404s. A dead link is relinked only when the live set holds exactly
+  one lesson page for that lesson number; zero or two candidates is a refusal.
+  The card TITLES on those six are still the old topic names, which is the
+  relabel already listed as out of scope at the top of this document. A working
+  link under a stale label beats a 404, so the relink does not wait on it.
+
+A body recovered by `scripts/live-pages-dump.js` is safe to READ and refused as
+a patch input: it is trimmed by div balance and the storefront serves the broken
+CTA opener entity-escaped, so patching it would import a body reconstructed from
+a render.
