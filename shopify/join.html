@@ -183,7 +183,52 @@
 </div>
 
 <script>
-const API = 'https://apcsexamprep-progress-api-production.up.railway.app';
+// - WHICH HOST THIS PAGE TALKS TO -------------------------------------------
+//  progress.apcsexamprep.com is the API's own name, and the name every other
+//  student-facing page here already uses. This page was the last one still
+//  calling the Railway hostname the app happens to be deployed on, and that is
+//  what stopped a whole class from joining: school content filters routinely
+//  block *.up.railway.app as an uncategorised cloud host while apcsexamprep.com
+//  and its subdomains are allowed. The page itself loaded, so nothing looked
+//  broken; only the fetch died, and the student read "Could not reach server"
+//  with nothing in it they could act on.
+//
+//  The Railway name stays as a SECOND host rather than being deleted. It is an
+//  independently routed way in, and a join page reachable by exactly one route
+//  is the failure being fixed here, not a shape to rebuild under a new name.
+const API_HOSTS = [
+  'https://progress.apcsexamprep.com',
+  'https://apcsexamprep-progress-api-production.up.railway.app',
+];
+// The host that last answered. Every call starts here, so a blocked host costs
+// one failed connection per session rather than one on every click.
+let API = API_HOSTS[0];
+
+// - ONE DOOR FOR EVERY CALL --------------------------------------------------
+//  Returns { ok, status, data }. It moves to the next host ONLY when the request
+//  never completed. An HTTP error is an answer, so a 404 "class not found" can
+//  never be retried into a second host and read as something else there.
+//
+//  A body that is not JSON yields {} instead of throwing, and that distinction
+//  is the second half of this bug: a proxy or captive portal answering with an
+//  HTML login page used to raise inside r.json(), and every caller reported that
+//  as a connection failure it was not.
+async function apiFetch(path, opts) {
+  const order = [API].concat(API_HOSTS.filter((h) => h !== API));
+  let lastErr = null;
+  for (const base of order) {
+    try {
+      const r = await fetch(base + path, opts);
+      API = base;
+      let data = null;
+      try { data = await r.json(); } catch (e) { data = null; }
+      return { ok: r.ok, status: r.status, data: data || {} };
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr || new Error('No API host reachable');
+}
 
 window.APJoin = {
   currentCode: '',
@@ -195,6 +240,11 @@ window.APJoin = {
     'ap-csa': '/pages/ap-csa-course',
     'ap-csp': '/pages/ap-csp-course',
   },
+
+  // Shown only when NO host answered. It names the school network on purpose:
+  // that is the cause a student can do something about, and "Try again" on its
+  // own sent a class of 27 back into the same dead end all period.
+  OFFLINE_MSG: 'Could not reach the server. If you are on school WiFi it may be blocking progress.apcsexamprep.com, so try another network and show your teacher this message.',
 
   // Toggle display with !important so it beats the stylesheet's display:none!important.
   _show(el) { if (el) el.style.setProperty('display', 'block', 'important'); },
@@ -288,8 +338,7 @@ window.APJoin = {
     const preview = document.getElementById('classPreview');
     this._hide(preview);
     try {
-      const r = await fetch(`${API}/api/class/${code}/exists`);
-      const d = await r.json();
+      const { data: d } = await apiFetch('/api/class/' + encodeURIComponent(code) + '/exists');
       if (!d.exists) return this.showError('joinCodeError', 'Class code not found. Double-check with your teacher.');
       this.currentCode = code;
       document.getElementById('previewName').textContent = d.class_name;
@@ -304,7 +353,7 @@ window.APJoin = {
         document.getElementById('joinName').focus();
       }, 500);
     } catch(e) {
-      this.showError('joinCodeError', 'Could not reach server. Try again.');
+      this.showError('joinCodeError', this.OFFLINE_MSG);
     }
   },
 
@@ -318,13 +367,12 @@ window.APJoin = {
     btn.disabled = true; btn.textContent = 'Joining\u2026';
 
     try {
-      const r = await fetch(`${API}/api/student/join`, {
+      const { ok, data: d } = await apiFetch('/api/student/join', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({ class_code: this.currentCode, display_name: name, pin }),
       });
-      const d = await r.json();
-      if (!r.ok) {
+      if (!ok) {
         btn.disabled = false; btn.textContent = 'Join Class';
         // ── SOMEONE ALREADY ANSWERS TO THIS NAME AND PIN ────────────────────
         //  A name and a PIN now identify a student across every course they
@@ -343,7 +391,7 @@ window.APJoin = {
           }
           return;
         }
-        return this.showError('joinDetailsError', d.error);
+        return this.showError('joinDetailsError', d.error || 'Could not join this class. Try again.');
       }
 
       this.saveSession(d.token, d.student, d.class);
@@ -352,7 +400,7 @@ window.APJoin = {
       document.getElementById('successMsg').innerHTML = '\u2713 You\'re in! Welcome to <strong>' + this.esc(d.class.name) + '</strong>, ' + this.esc(d.student.name) + '.<br><br>Your PIN is <strong>' + pin + '</strong> &mdash; remember it to log back in on any device.';
     } catch(e) {
       btn.disabled = false; btn.textContent = 'Join Class';
-      this.showError('joinDetailsError', 'Connection error. Try again.');
+      this.showError('joinDetailsError', this.OFFLINE_MSG);
     }
   },
 
@@ -369,13 +417,12 @@ window.APJoin = {
     btn.disabled = true; btn.textContent = 'Creating\u2026';
 
     try {
-      const r = await fetch(`${API}/api/student/solo-init`, {
+      const { ok, data: d } = await apiFetch('/api/student/solo-init', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({ display_name: name, pin }),
       });
-      const d = await r.json();
-      if (!r.ok) {
+      if (!ok) {
         btn.disabled = false; btn.textContent = 'Create My Account';
         return this.showError('soloError', d.error || 'Could not create account');
       }
@@ -388,7 +435,7 @@ window.APJoin = {
       document.getElementById('step-success').classList.add('active');
     } catch(e) {
       btn.disabled = false; btn.textContent = 'Create My Account';
-      this.showError('soloError', 'Connection error. Try again.');
+      this.showError('soloError', this.OFFLINE_MSG);
     }
   },
 
@@ -417,13 +464,12 @@ window.APJoin = {
     btn.disabled = true; btn.textContent = 'Signing in\u2026';
 
     try {
-      const r = await fetch(`${API}` + (isSolo ? '/api/student/solo-login' : '/api/student/login'), {
+      const { ok, data: d } = await apiFetch(isSolo ? '/api/student/solo-login' : '/api/student/login', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify(isSolo ? { login_code: code, pin } : { class_code: code, display_name: name, pin }),
       });
-      const d = await r.json();
-      if (!r.ok) { btn.disabled = false; btn.textContent = 'Sign In'; return this.showError('loginError', d.error); }
+      if (!ok) { btn.disabled = false; btn.textContent = 'Sign In'; return this.showError('loginError', d.error || 'Could not sign in. Try again.'); }
 
       // solo-login answers with login_code rather than a class: the personal
       // code IS the class code, and "Self-Study" is the name it shows under.
@@ -445,7 +491,7 @@ window.APJoin = {
         : ('\u2713 Welcome back, <strong>' + this.esc(d.student.name) + '</strong>! Your progress is saved and ready.');
     } catch(e) {
       btn.disabled = false; btn.textContent = 'Sign In';
-      this.showError('loginError', 'Connection error. Try again.');
+      this.showError('loginError', this.OFFLINE_MSG);
     }
   },
 
@@ -454,13 +500,12 @@ window.APJoin = {
   //  new class row so every course answers to the same sign-in.
   async addClassWithToken(token, code) {
     try {
-      const r = await fetch(`${API}/api/student/enroll`, {
+      const { ok, data: d } = await apiFetch('/api/student/enroll', {
         method: 'POST',
         headers: {'Content-Type':'application/json','Authorization':'Bearer ' + token},
         body: JSON.stringify({ class_code: code }),
       });
-      const d = await r.json();
-      if (!r.ok) return null;
+      if (!ok) return null;
       // The new class becomes the active one, which is where the student was
       // trying to go in the first place.
       this.saveSession(d.token, d.student, d.class);

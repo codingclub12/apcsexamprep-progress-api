@@ -44,7 +44,14 @@
 (function() {
   'use strict';
 
-  var API = 'https://apcsexamprep-progress-api-production.up.railway.app';
+  // The API's own name, not the hostname it is deployed on. School content
+  // filters block *.up.railway.app as an uncategorised cloud host while
+  // apcsexamprep.com and its subdomains are allowed, which on 2026-08-24 stopped
+  // a whole class from reaching /pages/join at all. The same block lands here as
+  // silent non-reporting: the student works, nothing records, and no error is
+  // shown because a reporter has nowhere to show one. apcs-score-reporter.js and
+  // intro-java-reporter.js already use this name.
+  var API = 'https://progress.apcsexamprep.com';
   var PAGE_LOADED_AT = Date.now();
 
   // ── SESSION (same storage as apcs-tracker.js) ───────────────────────────────
