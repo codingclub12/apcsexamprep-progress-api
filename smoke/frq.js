@@ -57,10 +57,19 @@ console.log('\nSPECS');
     ok(`${at}: part B's cited row range exists in the auth log`,
       !!m && Number(m[2]) <= auth.lines.length,
       m ? `cites up to ${m[2]}, log has ${auth.lines.length}` : 'no row range in the stem');
-    // The adversary IP in B(ii) must actually appear in the log.
-    const ip = (spec.parts.B.subparts.find((sp) => sp.verb === 'Identify') || {}).sample;
-    ok(`${at}: the adversary IP in part B appears in the log`,
-      !!ip && auth.lines.some((l) => l.includes(ip.trim())), ip);
+    // The adversary IP named in B(ii) must actually appear in the log.
+    //
+    // Extract the address rather than treating the whole sample as one. A
+    // sample response is prose, and an earlier version of this check required
+    // it to be a bare IP, which only passed because the first three sets
+    // happened to answer in one line. That is a check testing the shape of the
+    // writing rather than the fact it is meant to protect.
+    const answer = (spec.parts.B.subparts.find((sp) => sp.verb === 'Identify') || {}).sample || '';
+    const ips = answer.match(/\b\d{1,3}(?:\.\d{1,3}){3}\b/g) || [];
+    ok(`${at}: part B names an adversary IP`, ips.length > 0, answer.slice(0, 60));
+    ok(`${at}: every IP part B names appears in the auth log`,
+      ips.length > 0 && ips.every((ip) => auth.lines.some((l) => l.includes(ip))),
+      ips.filter((ip) => !auth.lines.some((l) => l.includes(ip))).join(', ') || 'all found');
     // The chmod answer must name a file that exists in the listing.
     const write = spec.parts.C.subparts.find((sp) => sp.verb === 'Write');
     const listing = spec.sources.find((s) => s.kind === 'file-listing');

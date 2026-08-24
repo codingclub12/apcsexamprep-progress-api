@@ -37,6 +37,16 @@ const COPY = {
     'The sources come from a single device, a public library catalogue kiosk. You get its firewall rules, two logs, a file listing, what it is listening on, and the library\'s acceptable use policy. Parts A through E ask you to read across all of them and cite what you find.',
     'Write your responses on paper or in your own editor first. Each subpart then reveals a sample response and the specific points that earn credit, so you can mark yourself honestly.',
   ],
+  'dsa-print-server': [
+    'The third Device Security Analysis, and the one where the attack is slow enough to look like nothing.',
+    'The device is a district print server holding queued documents, including individual education plans. The password attack here does not hammer one account; it tries each of nine real accounts exactly once, three minutes apart, which is how an attacker stays under a lockout threshold. Then it teaches the setuid bit, and part E is the escalation that uses it.',
+    'If you have done the kiosk or the laptop set, watch the clock in the log rather than the count.',
+  ],
+  'dsa-greenhouse-controller': [
+    'A six year old control device, an account called admin, and eleven failed logins from six different addresses.',
+    'This is the set where blocking the attacker\'s IP is the wrong reflex, because there is no single one. The device also ends up listening on a port nobody approved, which only Source 5 reveals, so this is the set that rewards reading the listening services rather than skimming past them.',
+    'Part C is a private key that every account on the device can read. Work out what that is worth to an attacker before you look at the sample.',
+  ],
   'dsa-athletics-laptop': [
     'A second full Device Security Analysis, deliberately not a reskin of the first.',
     'The device is a school athletics laptop holding student medical clearance forms. The password attack in this one behaves differently from the kiosk set, the blocked connection is outbound rather than inbound, and the second attack does its damage before the log ends rather than leaving something behind.',
