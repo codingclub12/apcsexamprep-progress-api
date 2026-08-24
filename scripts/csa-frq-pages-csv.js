@@ -101,10 +101,19 @@ function checkHandleRouting(p) {
 
 // A reference line worth protecting: real code, long enough to be distinctive,
 // and not something the starter or the task text would legitimately contain.
+// Lines the entry lists in `teaches` are exempt, because a hint about field
+// shadowing has to be able to print `this.x = x;` to be a hint at all. The
+// loader proves every exempted line really is in the reference.
 function referenceLines(x) {
+  // Lines the STARTER already contains were handed to the student, so finding
+  // one on the page is not a leak: `import java.util.ArrayList;` and the class
+  // header appear in both by design. Only lines unique to the reference are
+  // answers. This is the same reasoning scripts/csa-debug-pages-csv.js applies
+  // when it ignores overlap between a buggy starter and its fixed version.
+  const given = String(x.starter || '').split('\n').map((l) => l.trim());
   return String(x.reference).split('\n')
     .map((l) => l.trim())
-    .filter((l) => l.length >= 20 && !l.startsWith('//'));
+    .filter((l) => l.length >= 20 && !l.startsWith('//') && !given.includes(l));
 }
 
 function checkNoLeak(p, x, expected) {
@@ -119,24 +128,45 @@ function checkNoLeak(p, x, expected) {
     bad.push(`renders ${rendered} sample cases but the bank has ${visible} visible ones`);
   }
 
+  const taught = new Set((x.teaches || []).map((l) => String(l).trim()));
   for (const line of referenceLines(x)) {
+    if (taught.has(line)) continue;
     if (flat.includes(line)) {
       bad.push(`the body contains a line of the reference solution: ${JSON.stringify(line.slice(0, 60))}`);
       break;
     }
   }
 
-  // A hidden case is only hidden if the page does not show its input. For a
-  // segment FRQ the input IS the prelude declarations, which is exactly what
-  // the "what is given" samples render for visible cases.
+  // A hidden case is only hidden if the page does not give it away. How much
+  // evidence that takes depends entirely on how distinctive the case is, and
+  // the two modes are not comparable:
+  //
+  //   segment  the input is a block of declarations ("int legA = 5;\n..."),
+  //            long and unique, so finding it in the body IS the leak.
+  //   driver   the input is stdin, often a single token like "0" or "true
+  //            false". Those appear all over an ordinary page, so matching on
+  //            the input alone reports a leak on every well-formed page. The
+  //            first version of this check did exactly that and failed nine
+  //            healthy Unit 2 pages.
+  //
+  // So: a long input leaks on its own, and a short one only leaks when its
+  // OUTPUT is on the page beside it. That pairing is the same rule
+  // scripts/csa-debug-pages-csv.js settled on, for the same reason.
+  const DISTINCTIVE = 12;
   x.cases.forEach((c, i) => {
     if (!c.hidden) return;
     const input = String(x.mode === 'segment' ? (c.prelude || '') : (c.stdin || '')).trim();
     const outText = String(expected[bank.caseKey(x.lesson, i)] || '').trim();
     if (!input || !outText) return;
-    if (body.includes(input)) {
+
+    const inputShown = flat.includes(input);
+    const outputShown = outText.length >= DISTINCTIVE && flat.includes(outText);
+
+    if (input.length >= DISTINCTIVE && inputShown) {
       bad.push(`hidden case ${i} has its input printed on the page`);
-    } else if (flat.includes(outText) && outText.length > 6) {
+    } else if (inputShown && outputShown) {
+      bad.push(`hidden case ${i} has both its input and its expected output on the page`);
+    } else if (outputShown) {
       bad.push(`hidden case ${i} has its expected output printed on the page`);
     }
   });

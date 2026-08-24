@@ -107,6 +107,8 @@ const UNITS = [
 const REQUIRED = ['lesson', 'unit', 'title', 'name', 'mode', 'frqType', 'brief',
   'parts', 'task', 'given', 'starter', 'reference', 'hints', 'seo', 'cases'];
 
+// Optional per entry: `harness` (driver mode), `mutants`, `teaches`.
+
 function checkOne(x, where) {
   for (const k of REQUIRED) {
     if (x[k] == null || x[k] === '') throw new Error(`${where}: missing ${k}`);
@@ -162,6 +164,25 @@ function checkOne(x, where) {
     if (!parts.has(p)) {
       throw new Error(`${where}: rubric part ${p} (${x.parts[p - 1].label}) has no case behind it, `
         + 'so a student could miss it entirely and still be reported at 4 of 4');
+    }
+  }
+
+  // `teaches` is the explicit, reviewable exemption to the leak rule: reference
+  // lines that the page is ALLOWED to print because they are the idiom being
+  // taught rather than the answer being given. `this.threshold = threshold;` is
+  // the whole point of a shadowing hint, and a hint that cannot show it is a
+  // hint that has been defeated by its own guard.
+  //
+  // It is a list rather than a softening of the rule so that every exemption is
+  // named, and every named line must really be in the reference: a stale entry
+  // is a hole nobody would notice otherwise.
+  if (x.teaches != null) {
+    if (!Array.isArray(x.teaches)) throw new Error(`${where}: teaches must be an array`);
+    for (const line of x.teaches) {
+      if (!String(x.reference).includes(line)) {
+        throw new Error(`${where}: teaches lists ${JSON.stringify(line)}, which is not in the `
+          + 'reference, so it exempts nothing and is only hiding a stale exemption');
+      }
     }
   }
 
