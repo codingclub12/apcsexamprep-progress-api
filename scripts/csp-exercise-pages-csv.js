@@ -26,16 +26,18 @@
 //  Writing boxes are local to the browser in both kinds. Nothing typed is ever
 //  transmitted, which is what keeps the zero-PII posture intact.
 //
-//  WHY NO HANDLE ROUTING CHECK
-//  scripts/csp-pages-csv.js asserts every handle routes through pageFromHandle,
-//  because a graded page at a mis-routing handle files answers under the wrong
-//  column. These handles route nowhere at all: ap-csp-topic-{U}-{L}-exercise-{N}
-//  is not a pattern utils.js knows, so these pages record no VISIT. Grading is
-//  unaffected, because the page dispatches course, unit and lesson explicitly in
-//  the apcsActivity detail and the reporter prefers the detail over the handle.
-//  Asserting a routing rule that is knowingly unmet would just be a failing
-//  build with a comment explaining why to ignore it. Adding the pattern to
-//  utils.js is a separate, additive change.
+//  HANDLE ROUTING
+//  When this script was written these handles routed nowhere: the pattern
+//  ap-csp-topic-{U}-{L}-exercise-{N} was unknown to utils.js, so the pages
+//  recorded no visit at all. That pattern was added on 2026-08-22 and now
+//  resolves to the OWNING TOPIC as a plain lesson visit, deliberately not as an
+//  exercise completion: routing it to exercise-N would mark the topic's graded
+//  column complete the moment a student opened the page, and would contest a
+//  key that Big Idea 3 already spends on its coding-practice pages.
+//
+//  Grading is a separate path either way, because the page dispatches course,
+//  unit and lesson explicitly in the apcsActivity detail and the reporter
+//  prefers the detail over the handle.
 //
 //  THE HOUSE MATRIXIFY RULES, APPLIED
 //  Identical to scripts/csp-pages-csv.js, and for the same reasons: MERGE mode,
@@ -58,6 +60,7 @@
 //  Run:
 //    node scripts/csp-exercise-pages-csv.js out.csv
 //    node scripts/csp-exercise-pages-csv.js rest.csv --skip-live-1-1
+//    node scripts/csp-exercise-pages-csv.js out.csv --topic 1.2
 //    node scripts/csp-exercise-pages-csv.js out.csv --kind exercise-1
 //    node scripts/csp-exercise-pages-csv.js out.csv --unit bi-2
 //    node scripts/csp-exercise-pages-csv.js out.csv --live pages.json
@@ -92,7 +95,7 @@ function readLive(file) {
 function main(argv) {
   const out = argv.find((a) => !a.startsWith('--'));
   if (!out) {
-    console.error('\n  usage: node scripts/csp-exercise-pages-csv.js <out.csv> [--kind K] [--unit U] [--skip-live-1-1] [--live pages.json]\n');
+    console.error('\n  usage: node scripts/csp-exercise-pages-csv.js <out.csv> [--topic T] [--kind K] [--unit U] [--skip-live-1-1] [--live pages.json]\n');
     process.exit(1);
   }
   const arg = (name) => {
@@ -101,6 +104,7 @@ function main(argv) {
   };
   const kind = arg('--kind');
   const unit = arg('--unit');
+  const topic = arg('--topic');
   const live = arg('--live');
   const skipLive = argv.includes('--skip-live-1-1');
 
@@ -109,6 +113,7 @@ function main(argv) {
   let pages = built;
   if (kind) pages = pages.filter((p) => p.kind === kind);
   if (unit) pages = pages.filter((p) => p.unit === unit);
+  if (topic) pages = pages.filter((p) => p.topic === topic);
   if (skipLive) pages = pages.filter((p) => !ALREADY_LIVE.has(p.handle));
 
   if (!pages.length) {
@@ -187,8 +192,8 @@ function main(argv) {
   console.log(`\n  wrote ${path.relative(ROOT, out) || out}`);
   console.log(`    ${(Buffer.byteLength(csv) / 1024).toFixed(0)} KB sheet, ${(bytes / 1024).toFixed(0)} KB of body HTML`);
   console.log('\n  Import settings: MERGE mode, QUOTE_ALL quoting, utf-8-sig encoding. One import at a time.');
-  console.log('  These handles do not route through pageFromHandle, so the pages record no visit.');
-  console.log('  Grading is unaffected: the page dispatches course, unit and lesson explicitly.\n');
+  console.log('  These handles route through pageFromHandle as a lesson visit, not as a completion.');
+  console.log('  Grading is separate: the page dispatches course, unit and lesson explicitly.\n');
 }
 
 if (require.main === module) main(process.argv.slice(2));

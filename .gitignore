@@ -36,3 +36,8 @@ build/preview/
 # verification. These are the answers to the whole course and never belong in
 # the repo; the pilot deliberately parsed only STUDENT documents into seed/.
 .keys-cache/
+
+# Generated Matrixify sheets. Rebuilt on demand from the tracked renderer and
+# seed data, e.g. scripts/csp-exercise-pages-csv.js out/x.csv --topic 1.2. A
+# committed copy would be a second source of truth that goes stale in silence.
+out/
