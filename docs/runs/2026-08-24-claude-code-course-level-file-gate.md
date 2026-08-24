@@ -137,7 +137,7 @@ across the whole storefront, not just the two pages that were fixed:
 
 ```
 pages                                 1180 checked   0 hits   0 unverifiable
-products, collections, blog articles   715 URLs, sweep still running at commit time
+products, collections, blog articles    715 checked   0 hits   0 unverifiable
 ```
 
 A short or throttled response counts as UNVERIFIABLE and is retried up to three
