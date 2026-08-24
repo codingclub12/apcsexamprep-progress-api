@@ -77,8 +77,16 @@ def main():
     ap.add_argument('--topic', help='build only this topic, e.g. 2.3')
     args = ap.parse_args()
 
-    mod = importlib.import_module(f'csa_kit.content_unit{args.unit}')
-    topics = [t for t in mod.TOPICS if not args.topic or t['topic'] == args.topic]
+    # Unit content may be split across several part files for readability.
+    all_topics = []
+    for suffix in ('', 'b', 'c'):
+        try:
+            m = importlib.import_module(f'csa_kit.content_unit{args.unit}{suffix}')
+        except ModuleNotFoundError:
+            continue
+        all_topics.extend(m.TOPICS)
+    all_topics.sort(key=lambda t: [int(x) for x in t['topic'].split('.')])
+    topics = [t for t in all_topics if not args.topic or t['topic'] == args.topic]
     if not topics:
         sys.exit(f'no topics matched for unit {args.unit}')
 
