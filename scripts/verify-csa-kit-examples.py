@@ -33,7 +33,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 def load(unit):
     topics = []
-    for suffix in ('', 'b', 'c', 'd'):
+    for suffix in ('', 'b', 'c', 'd', 'e'):
         try:
             m = importlib.import_module(f'csa_kit.content_unit{unit}{suffix}')
         except ModuleNotFoundError:
