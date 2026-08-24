@@ -70,14 +70,44 @@ and diffing against the OUTPUT panel.
 
 Decks were verified by rendering, not by inspection: `libreoffice-impress` was
 installed, decks converted to PDF and rasterised, and slides read as images.
-That caught three real defects that no amount of code review would have found:
+That caught four real defects that no amount of code review would have found:
 
 - a drop shadow on all text, inherited from the `<p:style>` element python-pptx
   attaches to every autoshape
 - code blocks whose first line was centre-aligned
 - OUTPUT values printing on top of their own card label
+- **worked-example code overflowing the whole slide** on long programs
 
-All three are fixed.
+All four are fixed.
+
+### The overflow is the one worth remembering
+
+It passed every other gate. The Java compiled, the OUTPUT panels matched what
+Java printed, and python-pptx round-tripped the files cleanly. A PowerPoint
+text frame does not clip, so a 35 line program at a fixed 12pt was drawn over
+the slide title and past the footer rather than truncated.
+
+It was systemic, not a one-off: 55 of the 76 worked examples needed under 7pt
+to fit the original panel, which had been sized for the pilot deck's twelve
+line `Greeting` class. Real examples in this course are whole classes.
+
+It survived because I rendered Unit 2 decks, found them clean, and assumed the
+rest followed. That assumption is the actual defect.
+
+The fix is in the layout rather than in 67 rewritten examples: 20 lines or
+fewer keep the original single slide, longer programs take the full width in
+two columns with their annotations on a second slide, and `_code` computes its
+point size from the block and raises below 7pt rather than shipping a slide
+nobody can read.
+
+`scripts/verify-csa-kit-render.py` now makes this permanent. It renders every
+deck and fails on text outside the slide or any text block taller than 5.2in.
+It was validated against the bug rather than assumed to work: reintroducing the
+old behaviour makes it fail with a 6.79in block and text at y 7.43 to 7.62.
+
+    rendered 76 deck(s), 1168 slide(s)
+    every slide keeps its content inside the slide, and no text block has
+    outgrown its panel.
 
 ## Why Unit 3 is taught differently
 
