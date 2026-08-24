@@ -113,6 +113,16 @@ against a real JVM when one happens to be present.
 4. `node scripts/seed-code-tests.js --update` on the target database.
 5. `npm run csax1 -- out.csv` and import the sheet.
 
+`POST /api/admin/csa-exercise-pages/publish` creates the same pages through the
+Admin API and is NOT the default path: per the house rule in CLAUDE.md, a
+Shopify page change ships as a Matrixify sheet unless a human asks for the
+endpoint for that specific push. `--only` narrows the sheet to the handles that
+do not exist yet, and `--live` aborts on any handle that does:
+
+```
+npm run csax1 -- missing.csv --only <handle>,<handle> --live pages.json
+```
+
 **Order matters at step 4 and 5.** A page whose cases are not seeded answers
 every submission with a `404` and grades nothing. Seed first, import second.
 
