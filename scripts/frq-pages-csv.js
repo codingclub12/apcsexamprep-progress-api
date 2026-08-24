@@ -7,14 +7,20 @@
 //  itself is rendered by /frq-player.js from the spec at /api/frq. Editing a
 //  sample response is a commit, never another import.
 //
-//  HANDLE HAZARD, INHERITED FROM THE THEME
-//  layout/theme.liquid carries an "FRQ PAGE AUTO-CTA INJECTOR" that fires on
-//  ANY url containing "frq" and staples AP CSA Java navigation and CTAs onto
-//  the page. A cyber page called ap-cybersecurity-frq-... gets Java study guide
-//  links injected into it. The injector has a skipPages list, so the fix is a
-//  theme change, not a rename. Until that lands this script WARNS on every
-//  handle containing "frq" rather than silently shipping a page that will be
-//  vandalised by a script from another course.
+//  HANDLE HAZARD, INHERITED FROM THE THEME, NOW FIXED
+//  layout/theme.liquid carries an "FRQ PAGE AUTO-CTA INJECTOR" that used to
+//  fire on ANY url containing "frq" and staple AP CSA Java navigation and CTAs
+//  onto the page. A cyber page called ap-cybersecurity-frq-... would get Java
+//  study guide links injected into it.
+//
+//  Theme PR #73 narrowed that gate to require "csa" as well, and it is merged
+//  into the Shopify-connected branch and confirmed on the storefront. So these
+//  handles are safe.
+//
+//  The check below stays, because the guarantee is a line in another repo's
+//  theme file and nothing here would notice it being reverted. It now reports
+//  the dependency rather than blocking on it: the day someone widens that gate
+//  again, the next person to run this script reads why it mattered.
 //
 //  House Matrixify rules: MERGE, QUOTE_ALL, utf-8-sig, past-dated Published At,
 //  Body HTML never empty. One import at a time.
@@ -175,12 +181,13 @@ function main(argv) {
 
   const injectorRisk = pages.filter((p) => p.handle.includes('frq'));
   if (injectorRisk.length) {
-    console.log('\nWARNING, read before importing:');
-    console.log('  layout/theme.liquid injects AP CSA Java nav and CTAs into ANY page whose');
-    console.log('  URL contains "frq". These handles do:');
-    injectorRisk.forEach((p) => console.log('    ' + p.handle));
-    console.log('  Add them to the injector\'s skipPages list in the theme FIRST, or these');
-    console.log('  cyber pages will render Java study guide links under the question.');
+    console.log('\nDependency, satisfied as of theme PR #73:');
+    console.log('  These handles contain "frq", which the theme\'s FRQ auto-CTA injector');
+    console.log('  once keyed on, stapling AP CSA Java nav and CTAs onto any such page.');
+    console.log('  That gate now also requires "csa", so cyber pages are skipped.');
+    console.log('  If a cyber practice page ever renders Java study guide links under the');
+    console.log('  question, that gate was widened again. Check the injector in');
+    console.log('  layout/theme.liquid before blaming this sheet.');
   }
 }
 
