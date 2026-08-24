@@ -16,6 +16,11 @@ progress.db-*
 # content, not source: regenerate rather than commit a stale megabyte.
 *-rebalance*.csv
 
+# Same reason. Every sheet under here is rebuildable from the snapshot in
+# shopify/page-snapshots plus the script that made it, and a committed sheet
+# is a stale copy of a page somebody has since edited.
+shopify/import-sheets/
+
 # cyber unit 1 nav repair: generated bodies and scratch
 .work/
 

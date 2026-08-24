@@ -85,7 +85,15 @@ function pick(predicate) {
   // bigIdeas -> exam -> teacherFiles, so it held 434 of 439 files and 217 of 222
   // keys. A "> 400" assertion passed happily on that. The five it missed were
   // the Big Idea exam keys, including the one used to demonstrate the leak.
-  ok('the manifest holds every teacher file the page carries', ids.length === 439, ids.length);
+  //
+  // Then it missed seven more, the same way: 439 of 446. START HERE, both
+  // pacing guides, the Create Performance Task Pack, the Big Idea 2 Data
+  // Project and the Innovation Investigations live under `courseResources` and
+  // `projects`, not under a key named teacherFiles. So the builder stopped
+  // matching key names and started matching SHAPE: every Shopify file href that
+  // is not inside studentFiles. Twice is a pattern, and the pattern was that a
+  // name-based rule only ever knows about the names somebody remembered.
+  ok('the manifest holds every teacher file the page carries', ids.length === 446, ids.length);
   const keys = ids.filter((id) => /answer|key|solution|rubric/i.test(MANIFEST[id].path));
   ok('and all 222 answer keys', keys.length === 222, keys.length);
   const examKeys = ids.filter((id) => /BigIdea\d_Exam_KEY/i.test(MANIFEST[id].path));
@@ -265,6 +273,67 @@ function pick(predicate) {
     let broke2 = null;
     try { new vm2.Script(blk[0]); } catch (e) { broke2 = e.message; }
     ok('and it parses', broke2 === null, broke2);
+  }
+
+  section('11. The seven course-level files, which the first pass did not know existed');
+  // These were published on BOTH pages after the first pass reported success,
+  // because the manifest could not see them and neither script could gate what
+  // the manifest did not list. Worse than the rest on the Command Center: the
+  // courseResources renderer had no entitlement check at all, so a signed-out
+  // visitor was handed working download links for paid material.
+  const COURSE_IDS = Object.entries(MANIFEST).filter(([, f]) => f.topic === 'course').map(([id]) => id);
+  ok('the manifest holds all seven of them', COURSE_IDS.length === 7, COURSE_IDS.length);
+  ok('and none of them is marked free', COURSE_IDS.every((i) => !MANIFEST[i].free));
+
+  // A paid course-level file has to refuse anonymous exactly like a paid key.
+  r = await get('/api/files/' + COURSE_IDS[0]);
+  ok('anonymous is refused one', r.status === 403, r.status);
+  ok('and is not redirected anywhere', !r.headers.get('location'));
+
+  const { PAGES: GATE_PAGES, teacherUrls } = require('../scripts/gate-course-level-files');
+  for (const handle of Object.keys(GATE_PAGES)) {
+    const snap = path.join(__dirname, '..', 'shopify', 'page-snapshots',
+      handle + '.before-course-level-gate.html');
+    if (!fs.existsSync(snap)) { ok(`${handle}: the pre-change snapshot exists`, false, snap); continue; }
+    const before = fs.readFileSync(snap, 'utf8');
+
+    // The snapshot doubles as the record of the second exposure. If this stops
+    // being true the snapshot was overwritten with an already-fixed body, and
+    // every assertion under it stops meaning anything.
+    const exposed = teacherUrls(before);
+    ok(`${handle}: the snapshot really does still publish the seven`, exposed.length === 7, exposed.length);
+
+    const rw = GATE_PAGES[handle].rewrite(before);
+    ok(`${handle}: the rewrite raised no problems`, rw.problems.length === 0, rw.problems);
+    ok(`${handle}: every occurrence was swapped`, rw.swapped >= exposed.length,
+      { swapped: rw.swapped, urls: exposed.length });
+
+    const survivors = exposed.filter((u) => rw.body.includes(u));
+    ok(`${handle}: not one of the seven URLs survives`, survivors.length === 0, survivors.slice(0, 3));
+
+    // Student handouts are the reason this cannot just strip every CDN URL.
+    const beforeStudent = [...new Set(before.match(/\/cdn\/shop\/files\/[^"'\s)]+/g) || [])]
+      .filter((u) => !teacherUrls(before).includes(u));
+    const lost = beforeStudent.filter((u) => !rw.body.includes(u));
+    ok(`${handle}: every student handout URL is still there`, lost.length === 0, lost.slice(0, 3));
+
+    // An id the API will not resolve renders a link that 403s for the paying
+    // teacher too, which looks exactly like the gate working.
+    const pageIds = [...new Set([
+      ...[...rw.body.matchAll(/data-file="([0-9a-f]{16})"/g)].map((m) => m[1]),
+      ...[...rw.body.matchAll(/api:([0-9a-f]{16})/g)].map((m) => m[1]),
+    ])];
+    const unknown = pageIds.filter((i) => !Object.prototype.hasOwnProperty.call(MANIFEST, i));
+    ok(`${handle}: every id in the page is one the manifest resolves`, unknown.length === 0, unknown.slice(0, 3));
+    ok(`${handle}: the seven are among them`,
+      COURSE_IDS.every((i) => pageIds.includes(i)), COURSE_IDS.filter((i) => !pageIds.includes(i)));
+
+    const vm3 = require('vm');
+    let broke3 = null;
+    for (const b of [...rw.body.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)].map((m) => m[1])) {
+      try { new vm3.Script(b); } catch (e) { broke3 = e.message; }
+    }
+    ok(`${handle}: the page script still parses`, broke3 === null, broke3);
   }
 
   server.close();
