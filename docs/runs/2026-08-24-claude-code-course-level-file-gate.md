@@ -109,3 +109,46 @@ seven have been publicly linked for longer than the answer keys were, on two
 pages, one of which had no gate of any kind. The rotation should cover all 446,
 not just the keys, and it has to come after a confirmed teacher download so the
 gate is known good before the URLs move.
+
+## Verified after the import, 2026-08-24 19:37Z
+
+Both pages imported. Checked through the Shopify Admin API rather than the
+storefront, because a throttled storefront read returns a truncated page and has
+twice today produced a confident wrong answer.
+
+| page | updatedAt | bytes | byte-exact vs sheet | ungated teacher URLs | answer key URLs | gated ids | unresolvable | student handouts |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| csp-command-center | 19:37:38Z | 129,793 | yes | 0 | 0 | 446 | 0 | 334 |
+| ap-csp-teacher-resources | 19:37:38Z | 80,050 | yes | 0 | 0 | 334 | 0 | 222 |
+
+Every id in both pages resolves against the deployed manifest, so no link
+renders as a dead 403 for a teacher who paid for it.
+
+The deploy that carried the 446-entry manifest is `ff27475`, confirmed to
+contain `272d691` by `git merge-base --is-ancestor`. It took roughly 90 minutes
+from merge to live, well past the 30 to 50 minute lag seen earlier the same day,
+and several later PRs deployed with it.
+
+### The sweep, which is the part that is easy to skip
+
+Gating one page closed nothing the first time. The same keys were published on a
+second page found only by sweeping the sitemap. So the seven were swept for
+across the whole storefront, not just the two pages that were fixed:
+
+```
+pages                                 1180 checked   0 hits   0 unverifiable
+products, collections, blog articles    715 checked   0 hits   0 unverifiable
+```
+
+A short or throttled response counts as UNVERIFIABLE and is retried up to three
+times, never as a clean result. Absence of the string is only evidence when the
+document actually arrived, and that distinction is the whole reason the numbers
+above are worth reading.
+
+## Still open, and it is the only thing left
+
+Rotating the `_k7q2m9` suffix, across all 446 files rather than the keys alone.
+Nothing in this repo can fix a URL somebody already copied: Shopify CDN files are
+public by construction, so the old URLs keep returning 200 until the files are
+re-uploaded under a new suffix. These seven were linked publicly on two pages for
+longer than the answer keys were, and one of those pages had no gate of any kind.
