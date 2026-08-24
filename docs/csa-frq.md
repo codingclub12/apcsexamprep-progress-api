@@ -102,17 +102,18 @@ catch the mistake the part is about. Where a rubric part names a specific error
 (truncation, a swapped parameter order, a discarded return value, `==` on
 Strings), give it one.
 
-Unit 1 declares 18. All 18 are proven to fail.
+The course declares 160. All 160 are proven to fail.
 
 ## What is verified, and by what
 
-Five guarantees, each proven by breaking it deliberately rather than assumed:
+Six guarantees, each proven by breaking it deliberately rather than assumed:
 
 | guarantee | enforced by | caught when broken |
 |---|---|---|
 | every rubric part has a case | loader, at require time | yes |
 | a hidden case has a genuinely different input | loader, at require time | yes |
 | a constant that prints the sample cannot pass | `verify-csa-frq.js`, runs Java | yes |
+| a hidden case does not repeat a visible case's ANSWER | `verify-csa-frq.js`, runs Java | yes |
 | a declared mistake actually fails | `verify-csa-frq.js`, runs Java | yes |
 | the reference never appears on the page | `csa-frq-pages-csv.js` leak check | yes |
 
@@ -124,10 +125,36 @@ Row four was validated with a deliberate no-op control, a mutant that renames a
 local variable and prints identical output. The verifier reports it, which is
 what proves the mutants are being run rather than counted.
 
+Two mutants were WITHDRAWN rather than made to pass, which is worth recording
+because the temptation is to force them:
+
+- 2.9 declared `>` versus `>=` on a two-argument max. Those return the same
+  VALUE on a tie, so no case can separate them. That distinction only becomes
+  gradeable once an INDEX is tracked, which is 4.5, and it is declared there.
+- 2.11 declared a trailing space. Output normalisation strips trailing
+  whitespace before comparing, so the grader genuinely cannot see it. A LEADING
+  separator survives, so that is what the rubric row scores now.
+
+A rubric row that names a mistake the grader cannot detect is worse than no row
+at all, because it reads as covered.
+
 No expected output is written by hand anywhere in this bank. Each entry states a
 `reference`, and the verifier runs it through real `javac`/`java` to produce
 `expected.generated.json`. A hand-written expectation is a guess, and a wrong
 guess fails a student whose code is correct.
+
+## Two exemptions, both explicit
+
+The leak check would otherwise fire on things that are not leaks:
+
+- **`teaches`** is a per-entry list of reference lines the page may print
+  because they are the idiom being taught, not the answer. 3.2's shadowing hint
+  has to be able to show `this.threshold = threshold;` to be a hint at all. The
+  loader refuses a `teaches` entry that is not actually in the reference, so a
+  stale exemption cannot quietly widen the hole.
+- **Starter lines** are excluded automatically. `import java.util.ArrayList;`
+  and the class header appear in both the starter and the reference by design,
+  and a line already handed to the student cannot leak an answer to them.
 
 ## The 1.6 migration
 
@@ -144,10 +171,32 @@ right and the new prose was wrong.
 
 ## Scope today
 
-Unit 1 is authored in full: **15 of 15 lessons**, 76 cases, 46 of them hidden,
-18 declared mutants. Fourteen are `segment` mode; 1.9 is `driver` mode, because
-Method Signatures is the one Unit 1 topic a segment physically cannot test (a
-segment cannot declare a method).
+**All 53 lessons are authored**: 270 cases, 164 of them hidden, 160 declared
+mutants, every one proven to fail.
 
-Units 2, 3 and 4 are live module stubs exporting an empty array, so adding
-entries never needs a wiring change.
+| unit | lessons | mode | question type |
+|---|---|---|---|
+| 1 Using Objects and Methods | 15 | `segment`, except 1.9 | methods and control |
+| 2 Selection and Iteration | 12 | `driver` | methods and control |
+| 3 Class Creation | 9 | `driver` | class |
+| 4 Data Collections | 17 | `driver` | array/ArrayList and 2D array |
+
+Unit 1 is `segment` because the unit is about USING objects, and a segment
+cannot declare a method or a class. 1.9 is the exception: Method Signatures is
+the one Unit 1 topic a segment physically cannot test, so it is `driver`.
+
+From 2.1 on every entry is `driver`, which is the authentic FRQ shape and the
+only one that can refuse credit for printing instead of returning.
+
+### What each unit's questions are built around
+
+- **Unit 2** the boolean hazard: a method with two possible answers passes any
+  case set that only ever asks for one of them. Every boolean part has cases on
+  both sides, and `always returns true` is a declared mutant.
+- **Unit 3** silent failure. A broken class compiles cleanly and every getter
+  returns 0. Every mutant here produces no error message, and every harness
+  builds at least two objects, because a shared static or a leaked reference is
+  invisible to a harness that builds one.
+- **Unit 4** the index bug in its many costumes. Every grid is deliberately
+  non square, because a swapped row and column silently transposes on a square
+  one and throws on a 2 by 4.

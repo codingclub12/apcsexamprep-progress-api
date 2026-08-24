@@ -37,6 +37,14 @@
 //     fail a student who omitted the cast, because the harness fed it a
 //     division that always came out even.
 //
+//  5. No hidden case merely repeats a visible case's ANSWER. A hidden case whose
+//     output is byte-identical to some visible case's output is not hidden in
+//     the way that matters: its answer is already printed on the page, and it
+//     cannot distinguish a student who generalised from one who copied the
+//     sample. Unit 2 shipped four of these before this check existed, and they
+//     were found by the page leak detector reporting the symptom rather than
+//     the cause.
+//
 //  Usage:
 //      node scripts/verify-csa-frq.js            check, writes nothing
 //      node scripts/verify-csa-frq.js --write    regenerate the expected file
@@ -225,6 +233,24 @@ function proveMutantsFail(x, outputs, problems) {
   }
 }
 
+// PROOF 5: a hidden case must have an answer the page does not already show.
+function proveHiddenAnswersAreNew(x, outputs, problems) {
+  const visible = new Set(
+    x.cases.map((c, i) => ({ c, i })).filter(({ c }) => !c.hidden)
+      .map(({ i }) => outputs[bank.caseKey(x.lesson, i)])
+      .filter((o) => o != null));
+
+  x.cases.forEach((c, i) => {
+    if (!c.hidden) return;
+    const mine = outputs[bank.caseKey(x.lesson, i)];
+    if (mine != null && visible.has(mine)) {
+      problems.push(`${x.lesson}: hidden case ${i} produces exactly the same output as a `
+        + 'VISIBLE case, so its answer is already printed on the page. Change its inputs '
+        + 'so at least one part answers differently.');
+    }
+  });
+}
+
 function main() {
   const args = process.argv.slice(2);
   const write = args.includes('--write');
@@ -251,6 +277,7 @@ function main() {
     proveConstantFails(x, outputs, problems);
     proveRubricDiscriminates(x, outputs, problems);
     proveMutantsFail(x, outputs, problems);
+    proveHiddenAnswersAreNew(x, outputs, problems);
     if ((n + 1) % 5 === 0) console.log(`  ${n + 1}/${all.length}`);
   });
 
