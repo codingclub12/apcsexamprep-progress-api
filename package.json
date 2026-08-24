@@ -125,6 +125,7 @@
     "cedwatch": "node scripts/ced-watch.js",
     "ijredirects": "node scripts/intro-java-redirects-csv.js",
     "smoke:labkey": "node smoke/lab-key.js",
+    "smoke:trackguard": "node smoke/track-visit-completion-guard.js",
     "smoke:accounts": "node smoke/student-accounts.js",
     "seed:pagelinks": "node scripts/seed-page-links.js",
     "publish:studentpages": "node scripts/publish-student-pages.js",
