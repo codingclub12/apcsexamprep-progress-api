@@ -10,6 +10,7 @@ const { requireStudent } = require('../middleware');
 const { makeRateLimit } = require('../lib/rate-limit');
 const { newId, signStudentToken, isValidPin, sanitize, COURSES, pageFromHandle } = require('../utils');
 const { rollupScore, LESSON_SCORE_ITEM } = require('../scoring');
+const { attemptRollup } = require('../lib/attempt-rollup');
 const { resolveMode, retryAllowedFor } = require('../retry-policy');
 // The single denominator authority. The student view resolves "out of what"
 // through the same function the teacher and admin views use, so the three can
@@ -465,6 +466,60 @@ router.get('/progress', requireStudent, (req, res) => {
   //
   //  One read for the whole grid, not one per row: the map is loaded once for
   //  the courses actually present. Reads are the heavy path here.
+  // ── SYSTEM A: GRADES THAT LIVE IN `attempts`, NOT IN `progress` ────────────
+  //  AP CSA and AP Networking report graded work through
+  //  POST /api/progress/attempt, which lands in the `attempts` table. This
+  //  endpoint read `progress` and nothing else, so a CSA student could finish
+  //  every CFU and quiz in Unit 1 and My Progress showed blanks. The teacher
+  //  side hit the same wall and was fixed with lib/attempt-rollup.js; the
+  //  student side was never wired to it. Same disconnect, one surface later.
+  //
+  //  So this reuses that module rather than adding a second rollup. It is the
+  //  same grade-of-record window pass the teacher dashboard and the admin
+  //  gradebook run, denominated by course_manifest, which is what stops a
+  //  student and their teacher being shown different numbers.
+  //
+  //  ADDITIVE ONLY. A key already present from the progress table is left
+  //  exactly as it was. System C (progress.score) is the reset-aware source and
+  //  outranks a raw attempts rollup for any cell it already covers; this fills
+  //  the cells it does not cover at all, and never overwrites one.
+  //
+  //  The courses come from the ledger, not from the class. A class account has
+  //  one course, but a solo (ME-) account roams across several, and its class
+  //  row says `solo`, which matches no manifest. Asking `attempts` what the
+  //  student actually has is the only answer that is right for both.
+  const attemptCourses = db.prepare(
+    'SELECT DISTINCT course FROM attempts WHERE student_id = ?'
+  ).all(req.student.id).map((r) => r.course);
+
+  for (const course of attemptCourses) {
+    const rollup = attemptRollup(req.student.class_id, course);
+    if (!rollup) continue;                       // course not on System A
+    for (const [cellKey, cell] of rollup.cells) {
+      const [sid, lesson, activity] = cellKey.split('|');
+      if (sid !== req.student.id) continue;      // the rollup covers the class
+      const unit = rollup.unitOf.get(lesson) || null;
+      const key = `${course}|${unit}|${lesson}|${activity}`;
+      if (map[key]) continue;                    // already covered, leave it alone
+      const rec = {
+        course, unit, lesson, activity_type: activity,
+        completed: cell.completed ? 1 : 0,
+        score: cell.pct,
+        attempts: cell.tries || null,
+        confidence: null, completed_at: null, updated_at: null,
+        // Real points straight off the manifest, so these cells skip the
+        // percent-to-points estimate the loop above does for System C rows.
+        points_earned: cell.earned,
+        points_possible: cell.possible > 0 ? cell.possible : null,
+        denominator_source: cell.possible > 0 ? 'manifest' : 'percent',
+      };
+      records.push(rec);
+      map[key] = rec;
+    }
+  }
+
+  // Computed AFTER the bridge above so a course that exists only in `attempts`
+  // still gets its links resolved.
   const linkMap = links.learnedMapFor(records.map((r) => r.course));
   for (const r of records) {
     const hit = links.resolve(r.course, r.unit, r.lesson, r.activity_type, linkMap);
