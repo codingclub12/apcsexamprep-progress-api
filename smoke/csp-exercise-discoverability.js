@@ -166,8 +166,14 @@ if (ccData) {
   const mislabelled = topicLinks.filter((l) => /auto-graded/.test(l.label) && !gradedHrefs.has(l.href));
   ok('  no link is labelled auto-graded unless its page carries check questions',
     mislabelled.length === 0, mislabelled.slice(0, 3));
-  ok('  and the 68 that are not graded say so',
-    topicLinks.filter((l) => /not graded yet/.test(l.label)).length === 68);
+  // Derived: checks are being authored topic by topic, so the split between
+  // graded and not moves. What must hold is that every exercise link is labelled
+  // one way or the other, and the two counts add up to all 70.
+  const notYet = topicLinks.filter((l) => /not graded yet/.test(l.label)).length;
+  const gradedLabelled = topicLinks.filter((l) => /auto-graded/.test(l.label)).length;
+  ok('  every exercise link is labelled graded or not, and the two add to 70',
+    notYet + gradedLabelled === 70 && gradedLabelled === pages.filter((p) => p.graded).length,
+    { notYet, gradedLabelled });
   ok('  every lesson link that was there before is still there',
     ccData.bigIdeas.flatMap((b) => b.topics).every((t) => t.pageLinks.some((l) => l.label === 'Lesson page')));
 }

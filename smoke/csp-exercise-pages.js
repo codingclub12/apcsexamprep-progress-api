@@ -170,6 +170,38 @@ ok('  the rule does not capture the code or guided-notes pages',
 ok('  and an unknown topic number is left unrouted rather than guessed',
   !pageFromHandle('ap-csp-topic-9-9-exercise-1'));
 
+// ── 3c. The authored checks are structurally complete ────────────────────────
+section('3c. Every authored check question is complete and carries a citation');
+// The citation is VERIFIED against the real answer key by
+// scripts/verify-csp-exercise-checks.js, which needs the keys and therefore
+// cannot run here: caching every answer in the course into a CI runner would be
+// a worse leak than the one it guards. What CI can prove without a key is that
+// nothing is missing, so a question can never quietly ship uncitable.
+const authored = Object.entries(checks).flatMap(([h, c]) =>
+  (c.questions || []).map((q, i) => ({ where: `${h} q${i + 1}`, q, doc: c.keyDoc })));
+ok('  there are authored questions to check', authored.length > 0, authored.length);
+ok('  every check file names the key document it was written from',
+  Object.entries(checks).every(([, c]) => /^AP-CSP_.+_KEY_.+\.docx$/.test(String(c.keyDoc || ''))),
+  Object.entries(checks).filter(([, c]) => !/^AP-CSP_.+_KEY_.+\.docx$/.test(String(c.keyDoc || ''))).map(([h]) => h));
+ok('  every question quotes a citation',
+  authored.every((a) => a.q.keyCite && String(a.q.keyCite).trim().length > 20),
+  authored.filter((a) => !a.q.keyCite || String(a.q.keyCite).trim().length <= 20).map((a) => a.where).slice(0, 5));
+ok('  every question has exactly four options',
+  authored.every((a) => Array.isArray(a.q.options) && a.q.options.length === 4),
+  authored.filter((a) => (a.q.options || []).length !== 4).map((a) => a.where).slice(0, 5));
+ok('  every question names a correct option that exists',
+  authored.every((a) => ['A', 'B', 'C', 'D'].includes(a.q.correct)),
+  authored.filter((a) => !['A', 'B', 'C', 'D'].includes(a.q.correct)).map((a) => a.where).slice(0, 5));
+ok('  every option carries a written rationale, including the wrong ones',
+  authored.every((a) => ['A', 'B', 'C', 'D'].every((L) => a.q.why && String(a.q.why[L] || '').trim())),
+  authored.filter((a) => !['A', 'B', 'C', 'D'].every((L) => a.q.why && String(a.q.why[L] || '').trim())).map((a) => a.where).slice(0, 5));
+ok('  every question cites an EK', authored.every((a) => String(a.q.ek || '').trim()));
+// Counts are authored to content, so they are NOT expected to match each other.
+// What would be a bug is a check with too few items to mean anything.
+ok('  no check has fewer than three questions',
+  Object.values(checks).every((c) => (c.questions || []).length >= 3),
+  Object.entries(checks).filter(([, c]) => (c.questions || []).length < 3).map(([h]) => h));
+
 // ── 4. Every page passes the shared page validator ───────────────────────────
 section('4. Every page passes the same validator the other CSP sheets use');
 const problems = [];
