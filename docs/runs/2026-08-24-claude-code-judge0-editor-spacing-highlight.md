@@ -73,3 +73,27 @@ local file.
 The editors have no per-page key handling at all: every one of them is the one
 handler in `theme.liquid`. A bug reported as "all the editors" is therefore one
 fix in one file, and page CSS in this repo is the wrong place to look first.
+
+## Follow-up: the merge did not deploy
+
+Merging the theme PR into `main` changed nothing on the storefront. The
+published theme is connected to `claude/site-linking-audit-yhufjk`, which sat at
+exactly `main` minus the fix. Shipping took a fast-forward of that branch:
+
+```
+git push origin origin/main:refs/heads/claude/site-linking-audit-yhufjk
+88c3790..4735f4a
+```
+
+Verified live within a minute on the CSA 1.2 exercise page: the served HTML
+contains `SECTION 0: TEXT SELECTION` and `function replaceRange`, and driving
+the live markup in Chromium reproduces every case above, selection included.
+
+The theme repo's own CLAUDE.md already documents this trap in detail. It was
+missed because this session cloned that repo mid-run and read its files rather
+than its CLAUDE.md. The warning is now also in this repo's CLAUDE.md, since
+sessions start here.
+
+The API deploy is a separate, still-open problem: `/api/health` reported
+`782bef8` (PR #290) throughout, five merges behind `main`, so Railway looks
+stalled independently of this change. Worth a look at the Railway deploy log.
