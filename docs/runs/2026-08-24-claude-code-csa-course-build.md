@@ -23,8 +23,9 @@ else.
 per-topic kit in the Unit 1 pilot's shape: Teacher_Guide, Day N teacher and
 student decks, Day N guided notes and answer key, and the topic quiz and key.
 
-**Units 2 and 3 are authored in full: 21 topics, 231 files, 84 decks.** Unit 2
-is Selection and Iteration (12 topics); Unit 3 is Class Creation (9 topics).
+**All four units are authored in full: 38 topic folders, 419 files.** Unit 1
+already shipped as the pilot; Units 2, 3 and 4 were built this session
+(Selection and Iteration, Class Creation, Data Collections).
 
 ## Evidence
 
@@ -44,9 +45,22 @@ $ python3 scripts/verify-csa-kit-examples.py --unit 3
   ran 18 of them against their authored stdin
   every worked example compiles, and every runnable one matches its OUTPUT panel.
 
+$ python3 scripts/verify-csa-kit-examples.py --unit 4
+  compiled 34 worked example(s)
+  ran 34 of them against their authored stdin
+  every worked example compiles, and every runnable one matches its OUTPUT panel.
+
 $ python3 scripts/build-csa-teacher-kit.py --unit 2   # 132 files
 $ python3 scripts/build-csa-teacher-kit.py --unit 3   #  99 files
+$ python3 scripts/build-csa-teacher-kit.py --unit 4   # 187 files
 ```
+
+The worked-example verifier caught two wrong numbers of mine before they could
+be projected in front of a class: a 4.2 slide claiming three values above a
+threshold where the answer was two, and a 4.15 slide claiming seven insertion
+sort comparisons where the answer was five. Neither was findable by re-reading
+the content file. That is the entire argument for running the code rather than
+reviewing it.
 
 The debug verifier compiles and runs every reference solution under JDK 21 and
 **also proves each buggy starter fails at least one case**, which for a
@@ -77,6 +91,25 @@ angles: 3.1, 3.2 and 3.4 are all "one place for each fact", while 3.3, 3.8 and
 
 3.6 plants a half-fix rather than a fully broken class (the getter copies, the
 constructor does not), because that is what students actually produce.
+
+## The CI failures, and what they were
+
+Two real defects, both mine, both caught by the repo's own suite rather than by
+me. `smoke:csadebug` 1.3 found that only `unit-4` declared `debug` in COURSES;
+adding it for Units 1 to 3 moves PACE and not any student's percentage, because
+`pct = earned / graded` sums over ATTEMPTED items (docs/gradebook-contract.md).
+
+The second is worth recording properly. `smoke:csadebug` 4.2.7 found an answer
+leak I would never have found by reading: exercise 2.7 prints a cumulative
+sequence, so the expected output for the hidden case n=2 is a literal substring
+of the visible case n=5 output. A student could read the hidden answer off the
+sample they are shown. Every hidden input in that exercise is now larger than
+the largest visible one, and the constraint is commented for whoever authors
+the next unit.
+
+All 99 offline suites were run locally before pushing the fix, because
+`utils.js` is read widely enough that a second red run would have cost more
+than the wait. CI confirmed green on that commit.
 
 ## Method worth keeping
 
@@ -113,9 +146,9 @@ evening as a graded item.
   `debug` already had (`lib/csa-debug-pages.js`), so it is a larger job than
   authoring content.
 - `exercise-2` is Unit 4 only.
-- The Unit 4 teacher kit is not authored (17 topics). The generator is done and
-  Units 2 and 3 are proof it works, so this is content authoring against a
-  proven pipeline rather than new engineering.
+- Nothing has been uploaded to Drive. The 419 generated files sit in
+  `build/csa-kit/` and are gitignored; putting them beside the Unit 1 folders
+  is a decision for Tanner, not a default.
 - Nothing has been imported to Drive or Shopify. Per CLAUDE.md every Shopify
   page change ships as a Matrixify sheet, and nothing here needed one yet.
 
