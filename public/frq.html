@@ -1,0 +1,23 @@
+<!-- The standalone Device Security Analysis page. One file for every set; it
+     reads the course and set id out of its own URL and asks /api/frq for the
+     rest, exactly like public/lab.html does for labs. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Device Security Analysis practice</title>
+<style>
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       margin:0;padding:26px 18px 60px;color:#1e293b;background:#fff;}
+  #frq-mount{max-width:1000px;margin:0 auto;}
+</style>
+<script src="/posthog-init.js"></script>
+<div id="frq-mount">Loading the practice question...</div>
+<script src="/frq-player.js"></script>
+<script>
+  (function () {
+    var m = location.pathname.match(/^\/frq\/([^/]+)\/([^/]+)/);
+    var mount = document.getElementById('frq-mount');
+    if (!m) { mount.textContent = 'This practice question could not be loaded.'; return; }
+    window.APCS_FRQ = { base: '' };
+    APCSFrq.mountById(mount, decodeURIComponent(m[1]), decodeURIComponent(m[2]));
+  }());
+</script>

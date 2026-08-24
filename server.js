@@ -90,6 +90,11 @@ app.use('/api/todo', require('./routes/todo'));
 // JWT on POST /api/progress/attempt like every other reporter.
 app.use(require('./routes/labs'));
 
+// Device Security Analysis practice. Mounted at the root for the same reason
+// labs are: it owns paths in two namespaces, /api/frq for the specs and
+// /frq plus /frq-player.js for delivery.
+app.use(require('./routes/frq'));
+
 // Boot seeds run before app.listen, so any throw here would crash the process
 // before the healthcheck can pass and take the whole service down. Each seed is
 // therefore wrapped: a failure is logged loudly but never blocks boot. Seeds are
