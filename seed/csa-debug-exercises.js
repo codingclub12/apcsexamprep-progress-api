@@ -39,6 +39,9 @@ const ITEM = 'debug';
 const COURSE = 'ap-csa';
 const EXPECTED_FILE = path.join(__dirname, 'csa-debug-exercises.expected.generated.json');
 
+// Per-unit files, same split as seed/csa-exercises/unitN.js.
+const UNIT2 = require('./csa-debug-unit2');
+
 const REQUIRED = ['lesson', 'unit', 'mode', 'brief', 'task', 'reads', 'prints',
   'starter', 'reference', 'hints', 'seo', 'cases'];
 
@@ -161,7 +164,7 @@ const EXERCISES = [
       { stdin: '3\n1 2 3\n', hidden: 1 },
     ],
   },
-];
+].concat(UNIT2.EXERCISES);
 
 for (const x of EXERCISES) checkOne(x, `ap-csa ${x.lesson} debug`);
 
