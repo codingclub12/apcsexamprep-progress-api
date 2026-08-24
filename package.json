@@ -34,6 +34,7 @@
     "smoke:canvascourse": "node smoke/canvas-course-package.js",
     "smoke:quizparse": "node smoke/quiz-answer-parsing.js",
     "smoke:wirelog": "node smoke/wire-log.js",
+    "smoke:csawidgets": "node smoke/csa-widget-wiring.js",
     "smoke:denominators": "node smoke/admin-denominators.js",
     "smoke:legacypoints": "node smoke/legacy-points.js",
     "smoke:exercises": "node smoke/exercise-reporting.js",

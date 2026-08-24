@@ -244,15 +244,83 @@
     }, 0);
   }
 
+  // -- POSITIONAL ITEM IDS for lesson pages that ship no data-item-id ----------
+  // Units 2, 3 and 4 carry the same apcs-ex widget markup as Unit 1 but were
+  // never given data-item-id attributes, so every graded widget on 38 lesson
+  // pages was ignored here and nothing those students did was ever recorded.
+  // The markup is uniform and self describing: the CFU widgets are the graded
+  // apcs-ex blocks OUTSIDE the mastery section in document order, and the
+  // mastery section itself is the lesson quiz. That is enough to name them
+  // without rewriting 38 live page bodies.
+  //
+  // Deliberately narrow:
+  //   - it runs only when the page carries NO widget item id at all, so a page
+  //     that was attributed by hand is never renamed underneath itself and
+  //     Unit 1 is untouched
+  //   - it never overwrites an existing attribute
+  //   - a widget with no check button is not a graded item and is not counted,
+  //     so an explainer block cannot shift every id after it
+  //   - the ids it mints still have to exist in course_manifest. An id the
+  //     server does not know is a 400 and nothing is recorded, so a page whose
+  //     widget count drifts from its seeded count fails loudly rather than
+  //     writing a wrong grade.
+  //
+  // fallbackPlan is the whole decision, kept pure so it can be tested without
+  // a DOM. widgets is an ordered list of { gradable, inMastery }.
+  function fallbackPlan(lesson, widgets) {
+    var plan = { cfuIds: [], quizId: null, quizQuestions: 0 };
+    if (!lesson) return plan;
+    var n = 0;
+    for (var i = 0; i < widgets.length; i++) {
+      var w = widgets[i] || {};
+      if (!w.gradable) { plan.cfuIds.push(null); continue; }
+      if (w.inMastery) { plan.quizQuestions++; plan.cfuIds.push(null); continue; }
+      n++;
+      plan.cfuIds.push(lesson + '-cfu-' + n);
+    }
+    if (plan.quizQuestions > 0) plan.quizId = lesson + '-quiz';
+    return plan;
+  }
+
+  function assignFallbackIds(lesson) {
+    if (!lesson) return;
+    if (document.querySelector('.apcs-ex[data-item-id], .apcsa-mastery[data-item-id]')) return;
+    var mastery = document.querySelector('.apcsa-mastery');
+    var all = document.querySelectorAll('.apcs-ex');
+    var widgets = [];
+    for (var i = 0; i < all.length; i++) {
+      widgets.push({
+        gradable: !!all[i].querySelector('.apcs-ex-check'),
+        inMastery: !!(mastery && mastery.contains(all[i])),
+      });
+    }
+    var plan = fallbackPlan(lesson, widgets);
+    for (var j = 0; j < all.length; j++) {
+      if (!plan.cfuIds[j]) continue;
+      all[j].setAttribute('data-item-id', plan.cfuIds[j]);
+      all[j].setAttribute('data-apcs-id-source', 'positional');
+    }
+    if (plan.quizId && mastery) {
+      mastery.setAttribute('data-item-id', plan.quizId);
+      mastery.setAttribute('data-apcs-id-source', 'positional');
+    }
+  }
+
   function init() {
-    if (!getPageContext()) return;   // not a lesson page this script understands
+    var ctx = getPageContext();
+    if (!ctx) return;   // not a lesson page this script understands
+    assignFallbackIds(ctx.lesson);
     document.addEventListener('click', function(ev) {
       if (ev.target.closest('.apcs-ex, .apcsa-mastery')) touchKey(ev.target);
       onCheckClick(ev);
     });
   }
 
-  if (document.readyState === 'loading') {
+  // Node require()s this file to test fallbackPlan without a DOM; the browser
+  // path is unchanged.
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { fallbackPlan: fallbackPlan };
+  } else if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
     init();
