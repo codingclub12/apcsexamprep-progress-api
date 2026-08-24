@@ -1,5 +1,5 @@
 """
-AP CSA Unit 4 teacher-kit content, part 1: topics 4.1 - 4.6.
+AP CSA Unit 4 teacher-kit content, part 1: topics 4.1 - 4.3.
 
 Unit 4 is the largest unit in the course (17 topics) and carries the back half
 of the exam. Same schema and rules as Units 2 and 3; break-it and misconception
