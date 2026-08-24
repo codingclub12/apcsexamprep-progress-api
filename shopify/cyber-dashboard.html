@@ -188,7 +188,7 @@
 #tcdash-wrap .pop .row2{display:flex!important;gap:6px!important;}
 #tcdash-wrap .pop .row2 .gb-btn{flex:1!important;text-align:center!important;}
 #tcdash-wrap .pop .pc{position:absolute!important;top:8px!important;right:10px!important;background:none!important;border:none!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8;font-size:16px!important;cursor:pointer!important;}
-#tcdash-wrap .pop .soon{margin-top:10px!important;font-size:11px!important;color:#b45309!important;-webkit-text-fill-color:#b45309;background:#fffbeb!important;border:1px solid #fde68a!important;border-radius:8px!important;padding:6px 8px!important;}
+#tcdash-wrap .pop .soon,#tcdash-wrap .stu-retry .soon{margin-top:10px!important;font-size:11px!important;color:#b45309!important;-webkit-text-fill-color:#b45309;background:#fffbeb!important;border:1px solid #fde68a!important;border-radius:8px!important;padding:6px 8px!important;}
 /* ---- density slider: default vars (JS overrides via inline style on the table) ---- */
 #tcdash-wrap .gb-grid{--w-name:148px;--w-grade:45px;--w-pts:53px;--gfs:10.5px;--cfs:10.5px;--cmw:29px;--cch:21px;--trh:30px;--sbh:29px;--mxfs:8.5px;--inisz:20px;--ltsz:20px;--nmmax:87px;--sbfs:10px;--cpx:4.5px;}
 #tcdash-wrap table.gb-grid{font-size:var(--gfs)!important;}
@@ -470,7 +470,7 @@ const BUNDLE = {
 
 window.TCDash = {
   classCode:'', data:null, model:null,
-  OVER:{}, RESET:{}, GRANT:{}, STUDENT_RETRY:{},
+  STUDENT_RETRY:{},
   state:{view:'points',calc:'graded',threshold:80,letters:true,search:'',
     retryTypes:{lesson:true,exercise:true,quiz:true,exam:false},
     include:{lesson:false,exercise:true,quiz:true,exam:true}, sortKey:'name', sortDir:1, densityScale:50, units:null},
@@ -576,15 +576,18 @@ window.TCDash = {
   pctText(p){ return p==null?'–':(p+'%'); },
 
   cellData(stu,c){
-    const k=this.keyOf(stu.id,c);
-    if(this.RESET[k]) return {pct:null,earned:null,possible:c.possible,started:false,granted:this.GRANT[k]||0};
-    if(this.OVER[k]!=null){ const e=this.OVER[k]; return {pct:c.possible?Math.round(e/c.possible*100):e,earned:e,possible:c.possible,started:true,override:true,granted:this.GRANT[k]||0}; }
     const d = stu.detail[c.unit] && stu.detail[c.unit][c.dl] && stu.detail[c.unit][c.dl][c.da];
-    if(!d || (d.score==null && !d.completed)) return {pct:null,earned:null,possible:c.possible,started:false,granted:this.GRANT[k]||0};
+    // The two facts the cell ACTIONS are decided from, carried on every branch
+    // below so the popover never has to reach back into the raw payload.
+    // progress_id is the row Reset and Grant attempt address; a cell with no row
+    // has nothing to act on. locked is set only by quiz finalize, so it is the
+    // only state Grant attempt can reopen. See openPop.
+    const pid = d ? (d.progress_id||null) : null, lockd = !!(d && d.locked);
+    if(!d || (d.score==null && !d.completed)) return {pct:null,earned:null,possible:c.possible,started:false,progress_id:pid,locked:lockd};
       // Completed but never graded is NOT a zero. The exercise pages report no
       // score at all, so turning null into 0 invented a failing grade for every
       // exercise a student merely opened, and averaged it in against them.
-      if(d.score==null) return {pct:null,earned:null,possible:c.possible,started:false,ungraded:true,granted:this.GRANT[k]||0};
+      if(d.score==null) return {pct:null,earned:null,possible:c.possible,started:false,ungraded:true,progress_id:pid,locked:lockd};
       // Prefer the real pair the API reports. points_possible is per item, so an
       // exercise out of 7 stays out of 7 instead of being squashed onto a
       // per-activity constant and re-rounded, where 6/7 and 5/7 both became 4/5.
@@ -599,7 +602,7 @@ window.TCDash = {
       // priced=false means nobody has authored a total and the page reported no
       // pair. The percent is real and is shown; the points are unknown and are
       // shown as unknown, not filled in.
-      return {pct:d.score,earned:earned,possible:possible,priced:(possible!=null&&earned!=null),started:true,granted:this.GRANT[k]||0};
+      return {pct:d.score,earned:earned,possible:possible,priced:(possible!=null&&earned!=null),started:true,progress_id:pid,locked:lockd};
   },
   totals(stu){
     let earned=0,poss=0,done=0,total=0,unpriced=0;
@@ -660,9 +663,8 @@ window.TCDash = {
       vcols.forEach(o=>{ const c=o.c;
         const cd=this.cellData(s,c), off=!this.counts(c.activity), dim=off?" style='opacity:.45'":"";
         const rOn=this.retryOn(c.activity,s); let mk="";
-        if(cd.override) mk="<span class='mk ov'>●</span>";
+        if(cd.locked) mk="<span class='mk ov' title='Submitted as final. Grant attempt reopens it.'>●</span>";
         else if(rOn && cd.started && cd.pct<this.state.threshold) mk="<span class='mk open'>↻</span>";
-        else if(cd.granted) mk="<span class='mk open'>+"+cd.granted+"</span>";
         let inner;
         if(!cd.started) inner="–";
         else if(this.state.view==='points') inner=this.cellText(cd);
@@ -726,16 +728,34 @@ window.TCDash = {
     const cur=cd.started?(cd.priced?(this.num(cd.earned)+"</b> <span class='thin'>/ "+this.num(cd.possible)+"  ("+cd.pct+"%)")
                                    :("&ndash;</b> <span class='thin'>"+cd.pct+"% (points not assigned yet)"))
                         :"–</b> <span class='thin'>not started";
+    // ── WHAT THIS POPOVER MAY OFFER ────────────────────────────────────────
+    //  Only what has a server path that persists. Every button here used to be
+    //  drawn unconditionally and none of them saved; a teacher set a score,
+    //  saw the grid change, reloaded, and lost it. So each control is now gated
+    //  on the fact that makes it possible:
+    //    Reset  needs a progress row to reset.
+    //    Grant  reopens a quiz submitted as FINAL, and quiz finalize is the
+    //           only thing that sets locked, so on anything else it is a no-op
+    //           and is not drawn.
+    //  Typing a score by hand has no server path on this course at all. It is
+    //  stated as unavailable rather than drawn and quietly dropped.
+    const canReset=!!cd.progress_id, canGrant=!!cd.progress_id&&!!cd.locked;
+    let acts="";
+    if(canGrant||canReset){
+      acts="<div class='row2'>"+
+        (canGrant?"<button class='gb-btn sm' onclick='TCDash.applyGrant()'>Grant attempt</button>":"")+
+        (canReset?"<button class='gb-btn sm danger' onclick='TCDash.applyReset()'>Reset</button>":"")+
+      "</div>";
+      if(canReset&&!canGrant) acts+="<div class='fld thin'>Reset clears this score and gives the student one fresh attempt. Their earlier work stays in the history.</div>";
+    } else {
+      acts="<div class='fld thin'>Nothing is recorded here yet, so there is nothing to reset or reopen.</div>";
+    }
     pop.innerHTML=
       "<button class='pc' onclick='TCDash.closePop()'>×</button>"+
       "<h5>"+this.esc(s.name)+"</h5><div class='s'>"+this.esc(this.colLabel(c))+outOf+"</div>"+
-      "<div class='cur'>Current: <b>"+cur+"</span>"+(cd.override?" <span class='flag ok'>override</span>":"")+"</div>"+
-      (priced
-        ? "<div class='fld'>Override to <input type='number' id='gb-ovin' min='0' max='"+c.possible+"' value='"+(cd.priced?cd.earned:0)+"'> / "+c.possible+"</div>"+
-          "<div class='fld'><button class='gb-btn primary sm' style='width:100%' onclick='TCDash.applyOverride()'>Set score</button></div>"
-        : "<div class='fld thin'>This activity has no points assigned yet, so there is nothing to score it out of. Set its total from the admin denominators page and the override opens up.</div>")+
-      "<div class='row2'><button class='gb-btn sm' onclick='TCDash.applyGrant()'>Grant attempt</button><button class='gb-btn sm danger' onclick='TCDash.applyReset()'>Reset</button></div>"+
-      "<div class='soon'>Preview only in this session. Saved overrides ship with the next update.</div>";
+      "<div class='cur'>Current: <b>"+cur+"</span>"+(cd.locked?" <span class='flag'>final</span>":"")+"</div>"+
+      acts+
+      "<div class='soon'>Typing a score in by hand is not available on this course. Its grades are a ledger of what the pages reported, and there is no teacher write path into that ledger yet. Reset is the way to let a student re-earn the mark.</div>";
     pop.classList.remove('gb-hidden'); document.getElementById('gb-overlay').classList.remove('gb-hidden');
     const rect=ev.currentTarget.getBoundingClientRect();
     let top=window.scrollY+rect.bottom+8, left=window.scrollX+rect.left-100;
@@ -743,9 +763,27 @@ window.TCDash = {
     pop.style.top=top+'px'; pop.style.left=left+'px';
   },
   closePop(){ document.getElementById('gb-pop').classList.add('gb-hidden'); document.getElementById('gb-overlay').classList.add('gb-hidden'); this.popCtx=null; },
-  applyOverride(){ const s=this.model.students[this.popCtx.sidx],c=this.model.cols[this.popCtx.cidx]; if(c.possible==null) return this.closePop(); const v=Math.max(0,Math.min(c.possible,+document.getElementById('gb-ovin').value||0)); this.OVER[this.keyOf(s.id,c)]=v; delete this.RESET[this.keyOf(s.id,c)]; /* TODO PATCH .../students/:id/score */ this.closePop(); this.renderAll(); },
-  applyReset(){ const s=this.model.students[this.popCtx.sidx],c=this.model.cols[this.popCtx.cidx]; this.RESET[this.keyOf(s.id,c)]=true; delete this.OVER[this.keyOf(s.id,c)]; /* TODO DELETE .../students/:id/score */ this.closePop(); this.renderAll(); },
-  applyGrant(){ const s=this.model.students[this.popCtx.sidx],c=this.model.cols[this.popCtx.cidx]; const k=this.keyOf(s.id,c); this.GRANT[k]=(this.GRANT[k]||0)+1; /* TODO POST .../students/:id/grant-attempt */ this.closePop(); this.renderAll(); },
+  // ── THE TWO CELL ACTIONS THAT PERSIST ──────────────────────────────────────
+  //  Both address the progress ROW by its id, which the teacher progress payload
+  //  carries per cell, and both re-read that payload afterwards rather than
+  //  patching the grid locally. Re-reading is the point: what the teacher sees
+  //  after the click is what the next page load will show, so the grid cannot
+  //  drift away from the server the way the old in-memory version did.
+  async _cellAction(body,verb){
+    const cd=this._popCell(); if(!cd||!cd.progress_id) return this.closePop();
+    const pid=cd.progress_id; this.closePop();
+    const r=await this._api('PATCH','/api/teacher/classes/'+this.classCode+'/progress/'+pid+'/unlock',body);
+    if(!r||!r.ok) return alert((r&&r.error)||('Could not '+verb+'. Try again.'));
+    await this.loadProgress(this._token());
+  },
+  _popCell(){ if(!this.popCtx)return null; const s=this.model.students[this.popCtx.sidx],c=this.model.cols[this.popCtx.cidx]; return (s&&c)?this.cellData(s,c):null; },
+  // Destructive: it clears the recorded score. The earlier attempts are NOT
+  // deleted, they stay in the ledger and in the student's history, but the
+  // grade the teacher is looking at goes away, so it is confirmed first.
+  applyReset(){ const s=this.model.students[this.popCtx.sidx],c=this.model.cols[this.popCtx.cidx];
+    if(!confirm('Clear '+s.name+"'s score for "+this.colLabel(c)+'?\n\nThey get one fresh attempt. Their earlier work stays in the history.')) return;
+    return this._cellAction({reset:true},'reset that score'); },
+  applyGrant(){ return this._cellAction({reset:false},'reopen that quiz'); },
 
   renderStudent(idx){
     const s=this.model.students[idx]; if(!s)return; const t=this.totals(s),lt=this.letterFor(t.pct), S=this;
@@ -769,7 +807,7 @@ window.TCDash = {
         if(cd.pct>=S.state.threshold) st="<span class='flag ok'>Mastered</span>";
         else if(S.retryOn(c.activity,s)) st="<span class='flag open'>Retry open</span>";
         else st="<span class='flag low'>"+(cd.earned===0?'Missing':'Below '+S.state.threshold)+"</span>";
-        if(cd.override) st+=" <span class='flag ok'>override</span>"; }
+        if(cd.locked) st+=" <span class='flag'>final</span>"; }
       rows+="<tr><td>"+S.esc((c.activity==='exam'||c.activity==='case_file')?c.lessonName:c.lesson)+"</td><td>"+S.esc(c.type)+"</td><td>"+sc+"</td><td>"+pc+"</td><td>"+st+(S.counts(c.activity)?"":" <span class='thin'>(not counted)</span>")+"</td></tr>"; });
     document.getElementById('rep-table').innerHTML=rows;
   },
@@ -779,7 +817,15 @@ window.TCDash = {
       const b=(val,lab)=>"<button class='"+(eff===val?'on':'')+"' onclick=\"TCDash.setStuRetry("+idx+",'"+g+"','"+val+"')\">"+lab+"</button>";
       return "<div class='sr-item'><span class='nmw'>"+t[1]+"</span><span class='sr-seg'>"+b('default','Default ('+def+')')+b('on','On')+b('off','Off')+"</span></div>";
     }).join('');
-    return "<div class='stu-retry'><div class='sr-head'>Retry until mastery for "+S.esc(s.name)+" <span class='thin'>overrides the class policy for this student</span></div><div class='sr-rows'>"+rows+"</div></div>";
+    // These four toggles have never saved. The cell popover at least SAID so;
+    // this panel did not, which is the worse of the two failures: a teacher
+    // opens retry for a struggling student, the row updates, and nothing tells
+    // them it was forgotten on reload. Writing it is one call, but reading it
+    // back is not: the teacher progress payload does not carry retry_override,
+    // so a wired toggle would show "Default" on the next load while an override
+    // was live. Saying so is honest today; the fix is a field on that payload.
+    return "<div class='stu-retry'><div class='sr-head'>Retry until mastery for "+S.esc(s.name)+" <span class='thin'>overrides the class policy for this student</span></div><div class='sr-rows'>"+rows+"</div>"+
+      "<div class='soon'>Preview only in this session. These four do not save yet.</div></div>";
   },
   setStuRetry(idx,g,val){ const s=this.model.students[idx]; this.STUDENT_RETRY[s.id]=this.STUDENT_RETRY[s.id]||{}; if(val==='default') delete this.STUDENT_RETRY[s.id][g]; else this.STUDENT_RETRY[s.id][g]=val; /* TODO PATCH .../students/:id retry_modes */ this.renderAll(); },
 
@@ -980,7 +1026,24 @@ window.TCDash = {
   formatDate(dt){ if(!dt)return'Never'; const d=new Date(dt), today=new Date(); const diff=Math.floor((today-d)/86400000);
     if(diff===0)return'Today'; if(diff===1)return'Yesterday'; if(diff<7)return diff+'d ago'; return d.toLocaleDateString('en-US',{month:'short',day:'numeric'}); },
   formatCourse(c){ return {'ap-cybersecurity':'AP Cybersecurity','ap-csa':'AP CSA','ap-csp':'AP CSP'}[c]||c; },
-  esc(str){ return String(str==null?'':str).replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>').replace(/"/g,'"'); }
+  // ── WHY THIS IS WRITTEN THE LONG WAY ────────────────────────────────────
+  //  Shopify DECODES every HTML entity it finds in a page body when it stores
+  //  it, so an escape table written with entity literals comes back with each
+  //  value collapsed to the bare character it stood for. The map becomes an
+  //  identity map, this returns its input unchanged, and it does so on a page
+  //  that writes student and class names into innerHTML. That is exactly what
+  //  this function had become, and it is invisible in the repo, in the sheet
+  //  and in review: the defect appears only after the round trip. The same
+  //  thing happened to join.html and was fixed there on 2026-08-22.
+  //  (Spelling an entity out even in THIS comment would trip the same decode.)
+  esc(str){
+    var A = '&';
+    return String(str == null ? '' : str)
+      .split(A).join(A + 'amp;')
+      .split('<').join(A + 'lt;')
+      .split('>').join(A + 'gt;')
+      .split('"').join(A + 'quot;');
+  }
 };
 // Close the export menu on any outside click, so it cannot be left hanging
 // over the gradebook.

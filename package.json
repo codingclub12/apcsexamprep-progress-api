@@ -130,6 +130,7 @@
     "publish:studentpages": "node scripts/publish-student-pages.js",
     "smoke:pageimportguard": "node smoke/page-import-guard.js",
     "smoke:joinhost": "node smoke/join-api-host.js",
+    "smoke:cellactions": "node smoke/dashboard-cell-actions.js",
     "smoke:gradepath": "node smoke/grade-path-audit.js"
   },
   "keywords": [],
