@@ -21,3 +21,8 @@ progress.db-*
 
 # Written by .github/workflows/verify-board.yml when run locally
 report.md
+
+# CSP exercise answer keys, fetched by scripts/fetch-csp-keys.js for citation
+# verification. These are the answers to the whole course and never belong in
+# the repo; the pilot deliberately parsed only STUDENT documents into seed/.
+.keys-cache/
