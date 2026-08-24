@@ -79,7 +79,7 @@ def main():
 
     # Unit content may be split across several part files for readability.
     all_topics = []
-    for suffix in ('', 'b', 'c'):
+    for suffix in ('', 'b', 'c', 'd'):
         try:
             m = importlib.import_module(f'csa_kit.content_unit{args.unit}{suffix}')
         except ModuleNotFoundError:

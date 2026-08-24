@@ -102,6 +102,7 @@ TOPICS = [
      ],
      'output': ['A', '(for input 95)'],
      'caption': 'Complete and runnable as shown. Input 95 prints exactly one line.',
+     'stdin': '95\n',
      'note': 'Run it with 95, then 85, then 20. Ask before each run how many lines will print. The answer is '
              'always one, and that invariant is the point of the slide.',
    },
@@ -185,6 +186,7 @@ TOPICS = [
      ],
      'output': ['A', 'PASS', '(for input 90)'],
      'caption': 'Complete and runnable as shown. Input 90 sits exactly on a boundary.',
+     'stdin': '90\n',
      'note': 'Run 89, 90 and 91 in sequence. The jump happens between 89 and 90, which is what >= means and what '
              '> would break.',
    },
@@ -310,6 +312,7 @@ TOPICS = [
      ],
      'output': ['8', '(for age 70, member 1)'],
      'caption': 'Complete and runnable as shown. A 70 year old member pays the senior price.',
+     'stdin': '70 1\n',
      'note': 'This is the resolution of the warm-up. The chain encodes the priority decision explicitly, which the '
              'ambiguous English did not.',
    },
@@ -521,6 +524,7 @@ TOPICS = [
      ],
      'output': ['not above ten', '(for count 0)'],
      'caption': 'Complete and runnable as shown. Count 0 is handled without a crash.',
+     'stdin': '0 500\n',
      'note': 'Run it with 0 and any total. Then ask what would happen if the two sides were swapped. The guard '
              'only guards when it is on the left.',
    },
@@ -603,6 +607,7 @@ TOPICS = [
      ],
      'output': ['true', 'true', 'false', '(for input 15)'],
      'caption': 'Complete and runnable as shown. Input 15 is inside all three ranges.',
+     'stdin': '15\n',
      'note': 'Run 15, then 10, then 100. The boundary values are where the three lines start disagreeing, which '
              'is exactly the point.',
    },
@@ -940,6 +945,7 @@ TOPICS = [
      ],
      'output': ['1', '2', '3', '6', '(for input 3)'],
      'caption': 'Complete and runnable as shown. Input 3 prints 1, 2, 3 then the total 6.',
+     'stdin': '3\n',
      'note': 'Build the trace table on the board with columns i and total, one row per iteration, before running '
              'anything. Then run it and compare. Doing it in that order is the habit you are teaching.',
    },
@@ -1022,6 +1028,7 @@ TOPICS = [
      ],
      'output': ['4', '2', '3', '3', '9', '(for input 324)'],
      'caption': 'Complete and runnable as shown. Input 324 has three digits summing to 9.',
+     'stdin': '324\n',
      'note': 'Trace 324 as a table with n, digit, sum and count. Students who see n go 324, 32, 3, 0 stop asking '
              'why the loop ends.',
    },
