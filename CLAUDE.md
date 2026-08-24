@@ -267,5 +267,11 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
 - Claude Code may merge its own pull requests once CI is green. Work still lands on a
   branch behind a PR, never straight to main, and merging is still a deploy: say what
   was merged and check the Railway boot log after it lands.
+- Every Shopify page change ships as a Matrixify sheet. Not an Admin API
+  mutation, not a hand edit in the admin, and not `POST /api/admin/*/publish`:
+  those endpoints exist and are the exception a human asks for explicitly, never
+  the default. A sheet is reviewable before it lands, re-runnable in MERGE mode
+  after a partial import, and it is the one path that has not silently truncated
+  a live body. Generate it, read the refusals, import it once.
 - No em-dashes in any prose, comments, commit messages, or user-facing strings.
 - AP CSA references use the 2025-2026 4-unit structure exclusively.
