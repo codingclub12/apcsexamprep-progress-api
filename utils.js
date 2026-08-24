@@ -125,8 +125,16 @@ const COURSES = {
         // all fifteen, graded server side against hidden test cases. The column
         // is declared now because the page that fills it exists now.
         //
-        // exercise-2 and exercise-3 stay out for the same original reason. No
-        // Unit 1 page emits either.
+        // exercise-2 stays out for the same original reason. No Unit 1 page
+        // emits it.
+        //
+        // exercise-3 (2026-08-24): declared now, because the FRQ bank
+        // (seed/csa-frq/unit1.js) and lib/csa-frq-pages.js build a four point
+        // FRQ practice page for these lessons, so the column has something to
+        // fill it. Same reasoning as exercise-1 and debug before it: declaring
+        // an activity moves PACE, not anyone's percentage, because the
+        // gradebook computes earned / graded over ATTEMPTED items. See
+        // docs/gradebook-contract.md.
         //
         // debug (2026-08-24): declared for the same reason exercise-1 was. The
         // debugging bank now covers all fifteen Unit 1 lessons
@@ -137,7 +145,7 @@ const COURSES = {
         // never enters either total. See docs/gradebook-contract.md.
         label: 'Unit 1: Using Objects and Methods',
         lessons: ['1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', '1.8', '1.9', '1.10', '1.11', '1.12', '1.13', '1.14', '1.15'],
-        activities: ['lesson', 'cfu', 'exercise-1', 'quiz', 'debug'],
+        activities: ['lesson', 'cfu', 'exercise-1', 'exercise-3', 'quiz', 'debug'],
       },
       'unit-2': {
         label: 'Unit 2: Selection and Iteration',
@@ -385,11 +393,23 @@ const COURSE_PREFIXES = {
 // list only for readability; order does not matter here because trailingActivity
 // anchors every token at the end of the handle. No other course has a handle
 // ending in '-gap', so adding it cannot reclassify an existing page.
-const ACTIVITY_TOKENS = ['exercise-1', 'exercise-2', 'exercise-3', 'lab', 'quiz', 'exam', 'code', 'gap', 'debug'];
+const ACTIVITY_TOKENS = ['exercise-1', 'exercise-2', 'exercise-3', 'lab', 'quiz', 'exam', 'code', 'gap', 'debug', 'frq'];
+
+// A handle token that is NOT its own activity type. 'frq' is what the page is
+// called, because that is the word the student and the search engine both use,
+// and '-exercise-3' on the end of a URL means nothing to either. The GRADED
+// column is still exercise-3, which the manifest already denominates at 4
+// points, so the alias is where the student-facing name and the gradebook
+// column are reconciled rather than one of them being bent to the other.
+//
+// Aliasing is safe here specifically because no page ends in '-frq' today, so
+// this cannot reclassify anything already live. That is the same test the
+// '-gap' token had to pass when it was added.
+const ACTIVITY_ALIASES = { frq: 'exercise-3' };
 
 function trailingActivity(h) {
   // anchored at the end so a slug like "collaboration" never trips "lab"
-  for (const a of ACTIVITY_TOKENS) if (h.endsWith('-' + a)) return a;
+  for (const a of ACTIVITY_TOKENS) if (h.endsWith('-' + a)) return ACTIVITY_ALIASES[a] || a;
   return 'lesson';
 }
 

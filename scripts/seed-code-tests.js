@@ -27,6 +27,7 @@ function sources() {
     require('../seed/csa-code-tests'),
     require('../seed/csa-exercises').codeTestItems(),
     require('../seed/csa-debug-exercises').codeTestItems(),
+    require('../seed/csa-frq').codeTestItems(),
     require('../seed/intro-java-exercises').codeTestItems(),
   ];
 }
