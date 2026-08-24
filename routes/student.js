@@ -1148,25 +1148,39 @@ router.post('/track', requireStudent, (req, res) => {
     const { unit, lesson, activity_type } = parsed;
     const now = new Date().toISOString();
 
+    // Exercises and labs are graded (check-btn interactions), not read-only pages,
+    // so a bare visit only marks them "seen" (the row exists, the hub shows
+    // started/amber). Only the page's own grading flow (POST /api/student/progress
+    // with completed:true, once every check-btn is actually graded) may complete
+    // them. Lesson pages have no grading step, so a visit still completes those,
+    // same as before this exclusion existed.
+    const GRADED_ON_ARRIVAL = new Set(['exercise-1', 'exercise-2', 'lab']);
+    const autoComplete = !GRADED_ON_ARRIVAL.has(activity_type);
+
     const existing = db.prepare(`
       SELECT id FROM progress
       WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
     `).get(req.student.id, course, unit, lesson, activity_type);
 
     if (existing) {
-      db.prepare(`
-        UPDATE progress SET
-          completed = 1,
-          completed_at = COALESCE(completed_at, ?),
-          updated_at = ?
-        WHERE id = ?
-      `).run(now, now, existing.id);
+      if (autoComplete) {
+        db.prepare(`
+          UPDATE progress SET
+            completed = 1,
+            completed_at = COALESCE(completed_at, ?),
+            updated_at = ?
+          WHERE id = ?
+        `).run(now, now, existing.id);
+      } else {
+        db.prepare(`UPDATE progress SET updated_at = ? WHERE id = ?`).run(now, existing.id);
+      }
     } else {
       db.prepare(`
         INSERT INTO progress (id, student_id, class_id, course, unit, lesson, activity_type,
           completed, score, attempts, confidence, time_spent_s, completed_at, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, 1, NULL, 0, NULL, NULL, ?, ?)
-      `).run(newId(), req.student.id, req.student.class_id, course, unit, lesson, activity_type, now, now);
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL, 0, NULL, NULL, ?, ?)
+      `).run(newId(), req.student.id, req.student.class_id, course, unit, lesson, activity_type,
+        autoComplete ? 1 : 0, autoComplete ? now : null, now);
     }
 
     res.json({ ok: true, tracked: true, course, unit, lesson, activity_type });
