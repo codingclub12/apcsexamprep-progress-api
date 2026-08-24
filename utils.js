@@ -127,19 +127,29 @@ const COURSES = {
         //
         // exercise-2 and exercise-3 stay out for the same original reason. No
         // Unit 1 page emits either.
+        //
+        // debug (2026-08-24): declared for the same reason exercise-1 was. The
+        // debugging bank now covers all fifteen Unit 1 lessons
+        // (seed/csa-debug-unit1.js) and lib/csa-debug-pages.js builds a page
+        // for each, so the column has something to fill it. Declaring an
+        // activity moves PACE, not anyone's percentage: the gradebook computes
+        // earned / graded over ATTEMPTED items, so an unattempted debug item
+        // never enters either total. See docs/gradebook-contract.md.
         label: 'Unit 1: Using Objects and Methods',
         lessons: ['1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', '1.8', '1.9', '1.10', '1.11', '1.12', '1.13', '1.14', '1.15'],
-        activities: ['lesson', 'cfu', 'exercise-1', 'quiz'],
+        activities: ['lesson', 'cfu', 'exercise-1', 'quiz', 'debug'],
       },
       'unit-2': {
         label: 'Unit 2: Selection and Iteration',
         lessons: ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6', '2.7', '2.8', '2.9', '2.10', '2.11', '2.12'],
-        activities: ['lesson', 'exercise-1', 'exercise-2', 'exercise-3', 'quiz'],
+        // debug declared 2026-08-24, same reasoning as Unit 1 above.
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'exercise-3', 'quiz', 'debug'],
       },
       'unit-3': {
         label: 'Unit 3: Class Creation',
         lessons: ['3.1', '3.2', '3.3', '3.4', '3.5', '3.6', '3.7', '3.8', '3.9'],
-        activities: ['lesson', 'exercise-1', 'exercise-2', 'exercise-3', 'quiz'],
+        // debug declared 2026-08-24, same reasoning as Unit 1 above.
+        activities: ['lesson', 'exercise-1', 'exercise-2', 'exercise-3', 'quiz', 'debug'],
       },
       'unit-4': {
         label: 'Unit 4: Data Collections',
