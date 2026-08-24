@@ -14,7 +14,26 @@
     "              dependency and the only question worth asking of these files is",
     "              'did it change, go read it'.",
     "critical: surfaces at the top of the report. Reserve it for documents whose",
-    "       revision would invalidate published course content."
+    "       revision would invalidate published course content.",
+    "",
+    "RETIRED SOURCE, 2026-08-24: csa-future-revisions",
+    "  https://apcentral.collegeboard.org/courses/ap-computer-science-a/future-revisions",
+    "  It was the page that announced the CSA 10-unit to 4-unit rebuild, and it was",
+    "  marked critical for the right reason: if CSA moved again it would say so",
+    "  there first. It now returns 403 and College Board's own branded page,",
+    "  'Sorry, this page isn't available.' The rebuild shipped, so the page was",
+    "  retired with it.",
+    "",
+    "  Established, not assumed. On the same session and the same host, csa-course",
+    "  and networking-about both returned 200 while this one returned 403, so it is",
+    "  the page and not the egress. All 15 remaining sources answered 200, which is",
+    "  exactly the 15 the first Actions run read.",
+    "",
+    "  Removed rather than repointed, because its job is already covered twice:",
+    "  course-changes-overview is the program-wide announcement page and already",
+    "  names Computer Science A, and csa-course is the course page itself. Leaving",
+    "  a dead critical source in the list means every future run reports an",
+    "  unreachable critical page, which is how a real one stops being noticed."
   ],
   "sources": [
     {
@@ -106,15 +125,6 @@
       "critical": false,
       "url": "https://apcentral.collegeboard.org/courses/ap-cybersecurity/classroom-resources",
       "why": "What College Board gives teachers for free. It sets the floor the paid Teacher Bundle has to clear."
-    },
-    {
-      "id": "csa-future-revisions",
-      "label": "AP CSA future revisions",
-      "course": "ap-csa",
-      "kind": "html",
-      "critical": true,
-      "url": "https://apcentral.collegeboard.org/courses/ap-computer-science-a/future-revisions",
-      "why": "The page that announced the 10-unit to 4-unit rebuild. If CSA moves again, it says so here first."
     },
     {
       "id": "csa-course",
