@@ -12,10 +12,20 @@ name: CED watch
 #
 # WHY IT RUNS HERE AND NOT IN A SESSION
 #   Actions runners have open egress. Claude Code sessions go through the agent
-#   proxy, where apcentral.collegeboard.org is not on the allowed-domains list
-#   and every fetch returns 403. Verified: the real watch list scored 16 of 16
-#   forbidden from a session. So a Routine or a scheduled session could not do
-#   this job today, and this workflow can.
+#   proxy, and the script's fetches come back 403 there: the real watch list
+#   scored 16 of 16 forbidden from a session. So a Routine or a scheduled
+#   session could not do this job, and this workflow can.
+#
+#   THE 403 IS PER-TRANSPORT, WHICH WILL MISLEAD THE NEXT PERSON WHO CHECKS.
+#   On 2026-08-24, from one session, against the same URL with the same
+#   user-agent:
+#       curl        200
+#       node fetch  403
+#   scripts/ced-watch.js uses fetch, so the session result above is the one that
+#   governs, and "I curled it and it was fine" does not disprove it. Anyone
+#   testing a source by hand from a session should use fetch, or expect to
+#   conclude the opposite of the truth. It is also not a user-agent block: the
+#   script's own UA returns 200 through curl.
 #
 # WHY THE ARTIFACT IS A PULL REQUEST
 #   The snapshot is committed, so git history IS the record of what College
@@ -157,11 +167,66 @@ jobs:
           if [ -n "$EXISTING" ]; then
             gh pr edit "$EXISTING" --body-file pr-body.md
             echo "Updated existing PR #$EXISTING." >> "$GITHUB_STEP_SUMMARY"
-          else
-            gh pr create \
+            exit 0
+          fi
+
+          # THE PR IS THE DELIVERY, NOT THE WORK.
+          #
+          # Opening a PR needs "Allow GitHub Actions to create and approve pull
+          # requests", a repo setting that is OFF by default and was off on the
+          # first ever run (2026-08-24). The branch had already pushed and the
+          # report was already in the job summary, and the run still went red
+          # and reported nothing useful, because one `gh pr create` under
+          # `set -e` took the whole job down at the last line.
+          #
+          # So a failure here is caught rather than fatal. The two cases are
+          # deliberately NOT treated alike: a missing permission is a setting
+          # somebody has to tick, and the run is otherwise a complete success,
+          # so it warns and exits green with the compare link. Anything else is
+          # a real failure and still goes red.
+          if err=$(gh pr create \
               --head "$BRANCH" \
               --title "CED watch: College Board snapshot changed" \
               --body-file pr-body.md \
-              --draft
+              --draft 2>&1); then
             echo "Opened a new snapshot PR." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
           fi
+
+          COMPARE="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/compare/${BRANCH}?expand=1"
+
+          if printf '%s' "$err" | grep -qi "not permitted to create or approve pull requests"; then
+            echo "::warning title=CED watch could not open its PR::The snapshot is pushed to ${BRANCH} but Actions may not open pull requests. Turn on Settings > Actions > General > Allow GitHub Actions to create and approve pull requests."
+            {
+              echo ""
+              echo "### The snapshot is saved, but the PR could not be opened"
+              echo ""
+              echo "The branch \`${BRANCH}\` has this week's snapshot and the full report is above."
+              echo "Only the pull request step was refused:"
+              echo ""
+              echo '```'
+              printf '%s\n' "$err" | head -c 1000
+              echo '```'
+              echo ""
+              echo "Fix it once, in **Settings > Actions > General > Workflow permissions**, by ticking"
+              echo "**Allow GitHub Actions to create and approve pull requests**."
+              echo ""
+              echo "Until then, open it by hand: ${COMPARE}"
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          echo "::error title=CED watch could not open its PR::${err}"
+          {
+            echo ""
+            echo "### The PR step failed"
+            echo ""
+            echo "The snapshot is pushed to \`${BRANCH}\`; only the pull request failed."
+            echo ""
+            echo '```'
+            printf '%s\n' "$err" | head -c 1000
+            echo '```'
+            echo ""
+            echo "Open it by hand if the report above matters: ${COMPARE}"
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 1
