@@ -28,6 +28,17 @@
 //  first and every teacher file on a paying teacher's page stops working.
 //
 //  Run: node scripts/csp-teacher-resources-gate.js <live-body.html> <out.csv>
+//
+//  ── SUPERSEDED FOR ANYTHING NEW ─────────────────────────────────────────────
+//  This ran once, against the pre-gate body, and the live page is gated now. It
+//  refuses a gated body on purpose (the snapshot check, and the fileBtn patch
+//  that is already applied), so it is kept as the record of what was imported,
+//  not as a tool to re-run. It also asserts the page still carries 222
+//  answer keys and appends the click handler, both of which are true exactly
+//  once.
+//
+//  For anything further: scripts/gate-course-level-files.js. It gates whatever
+//  manifest URLs REMAIN on a page and leaves already-gated ids alone.
 // -----------------------------------------------------------------------------
 
 const fs = require('fs');

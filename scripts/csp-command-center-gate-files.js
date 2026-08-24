@@ -36,6 +36,17 @@
 //    - a teacher CDN URL still present anywhere in the output
 //
 //  Run: node scripts/csp-command-center-gate-files.js <live-body.html> <out.csv>
+//
+//  ── SUPERSEDED FOR ANYTHING NEW ─────────────────────────────────────────────
+//  This ran once, against the pre-gate body, and the live page is gated now. It
+//  refuses a gated body on purpose (the snapshot check, and the fileBtn patch
+//  that is already applied), so it is kept as the record of what was imported,
+//  not as a tool to re-run. It also collects teacher files by the key name
+//  `teacherFiles`, which is what missed the seven course-level files under
+//  `courseResources` and `projects`.
+//
+//  For anything further: scripts/gate-course-level-files.js. It gates whatever
+//  manifest URLs REMAIN on a page and leaves already-gated ids alone.
 // -----------------------------------------------------------------------------
 
 const fs = require('fs');
