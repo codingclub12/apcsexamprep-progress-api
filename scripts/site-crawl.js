@@ -36,7 +36,32 @@
 //  ── MEMORY ──────────────────────────────────────────────────────────────────
 //  Pages here run 350KB to 750KB. Bodies are parsed and DROPPED inside the loop;
 //  nothing accumulates but small per-URL records and a capped findings array.
-//  This repo has produced a $169 bill from an unbounded array once already.
+//  Four hundred retained bodies would be 200MB+ on a 1GB box.
+//
+//  ── RUNAWAY: THE HAZARD THE $169 BILL ACTUALLY WAS ──────────────────────────
+//  Not an unbounded array. An API that linked to itself and recursed, over and
+//  over, until it had spent real money. That is a LOOP, and a crawler is exactly
+//  the kind of program that reproduces it by accident, so it is worth stating
+//  plainly why this one cannot:
+//
+//    - The work list is FIXED BEFORE THE FIRST REQUEST. URLs come from the
+//      sitemap, once. Links discovered while crawling are never appended to the
+//      crawl queue; they are checked with a single HEAD each and never followed.
+//      There is no recursive descent, so there is no cycle to fall into.
+//    - Redirects are followed manually and capped at 6 hops, so A -> B -> A
+//      terminates and is reported as a redirect chain rather than chased.
+//    - Every phase is bounded twice over: BUDGET caps page requests,
+//      LINK_BUDGET caps link checks, MAX_MINUTES caps the wall clock, and
+//      MAX_STRIKES stops the run entirely on repeated throttling.
+//    - Link targets are deduplicated by normalised path before any request, so
+//      a page linking to itself costs nothing and a thousand pages linking to
+//      one target cost one HEAD.
+//
+//  The wall-clock cap is the one that matters most in practice, because the
+//  others bound REQUESTS and backoff bounds nothing: a storefront that starts
+//  throttling drives the delay to 30s, and 400 requests at 30s is over three
+//  hours. MAX_MINUTES is what turns that from an overnight surprise into a
+//  truncated run that says so.
 //
 //  ── IT READS. IT WRITES NOTHING. ────────────────────────────────────────────
 //  No credential is sent to the storefront, no ledger row is written, and the
@@ -72,6 +97,13 @@ const BUDGET = Number(opt('budget', '400'));         // 0 means no cap
 const SHARDS = Math.max(1, Number(opt('shards', '7')));
 const DELAY = Number(opt('delay', '1000'));
 const LINK_BUDGET = Number(opt('link-budget', '250'));
+// The wall clock, in minutes. 0 disables it. This exists because every other
+// bound here caps REQUESTS, and the thing that actually makes a night overrun is
+// backoff: a throttling storefront drives the delay to 30s, and 400 requests at
+// 30s is over three hours. A nightly job that can silently run until breakfast
+// is a nightly job nobody can schedule around.
+const MAX_MINUTES = Number(opt('max-minutes', '25'));
+const minutes = (n) => `${n} minute${n === 1 ? '' : 's'}`;
 const FULL = flag('full');
 const OUT = opt('out', '');
 const PREV = opt('previous', '');
@@ -85,6 +117,9 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 //  MAX_STRIKES throttled responses the crawl STOPS and says so, rather than
 //  spending the rest of the night collecting evidence that bot protection works.
 const MAX_STRIKES = 5;
+let deadline = Infinity;          // set in main(), once the run actually starts
+let truncated = '';               // why the run stopped early, if it did
+const outOfTime = () => Date.now() > deadline;
 let delay = DELAY;
 let strikes = 0;
 let clean = 0;
@@ -264,6 +299,9 @@ async function apiHealth(findings) {
 // ── MAIN ─────────────────────────────────────────────────────────────────────
 async function main() {
   const started = new Date();
+  // Armed before the sitemap fetch, not after, so enumeration counts against
+  // the budget too. A sitemap that hangs is exactly as late as a crawl that does.
+  deadline = MAX_MINUTES > 0 ? started.getTime() + MAX_MINUTES * 60000 : Infinity;
   let previous = null;
   if (PREV && fs.existsSync(PREV)) {
     try { previous = JSON.parse(fs.readFileSync(PREV, 'utf8')); } catch (e) { previous = null; }
@@ -305,6 +343,11 @@ async function main() {
 
   for (const url of targets) {
     if (aborted.yes) break;
+    if (outOfTime()) {
+      truncated = `wall clock: stopped after ${minutes(MAX_MINUTES)} with ` +
+                  `${crawledUrls.size} of ${targets.length} URLs crawled`;
+      break;
+    }
     const res = await polite(url);
     if (!res) break;
     crawledUrls.add(url);
@@ -359,6 +402,13 @@ async function main() {
 
   for (const [path, ref] of linkTargets) {
     if (aborted.yes) break;
+    // The link audit is the half that gets cut when time runs short, and that is
+    // the right half: an unchecked link is a missing P1, an uncrawled page is a
+    // missing P0 and a page with no fingerprint for tomorrow's regression check.
+    if (outOfTime()) {
+      truncated = truncated || `wall clock: link audit stopped after ${minutes(MAX_MINUTES)}`;
+      break;
+    }
     const res = await polite(`${STORE}${path}`, 'HEAD');
     if (!res) break;
     if (res.status >= 400 || res.status === 0) {
@@ -392,6 +442,8 @@ async function main() {
     ok: okCount,
     requests,
     aborted: aborted.yes ? aborted.why : null,
+    truncated: truncated || null,
+    max_minutes: MAX_MINUTES,
     findings: C.rank(findings),
     crawledUrls,
     fingerprints,
@@ -418,7 +470,7 @@ async function main() {
   // is information. An aborted crawl also fails, because a night that collected
   // nothing must never look like a quiet night.
   const p0 = current.findings.filter((f) => f.tier === 'P0').length;
-  process.exitCode = (p0 > 0 || aborted.yes) ? 1 : 0;
+  process.exitCode = (p0 > 0 || aborted.yes || truncated) ? 1 : 0;
 }
 
 // ── THE REPORT ───────────────────────────────────────────────────────────────
@@ -438,9 +490,16 @@ function report(cur, d) {
     L.push(`**The crawl stopped early.** ${cur.aborted}`);
     L.push('');
   }
+  if (cur.truncated) {
+    L.push(`**The crawl ran out of time.** ${cur.truncated}. Tonight's coverage is ` +
+           `short, so treat a quiet report as untested rather than clean.`);
+    L.push('');
+  }
 
   if (!cur.findings.length) {
-    L.push('**Nothing found.** Every URL crawled tonight answered cleanly and every check passed.');
+    L.push(cur.truncated || cur.aborted
+      ? '**Nothing found in what was reached**, which is not the same as nothing wrong. See above.'
+      : '**Nothing found.** Every URL crawled tonight answered cleanly and every check passed.');
     return L.join('\n');
   }
 

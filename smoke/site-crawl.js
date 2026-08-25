@@ -26,7 +26,7 @@
 //  Run: npm run smoke:sitecrawl
 // ─────────────────────────────────────────────────────────────────────────────
 const C = require('../lib/site-crawl');
-const { shardOf, dayOfYear } = require('../scripts/site-crawl');
+const { shardOf, dayOfYear, report } = require('../scripts/site-crawl');
 
 let pass = 0, fail = 0;
 const ok = (name, cond, extra) => {
@@ -266,6 +266,30 @@ const sizes = Object.values(spread);
 ok('all seven shards are used', Object.keys(spread).length === 7, spread);
 ok('no shard is more than twice the smallest', Math.max(...sizes) <= Math.min(...sizes) * 2, sizes);
 ok('day of year advances', dayOfYear(new Date('2026-01-01T00:00:00Z')) === 1);
+
+console.log('\n  A short night must not read as a clean night\n');
+//  Every other bound in the crawler caps REQUESTS. Backoff caps nothing: a
+//  throttling storefront drives the delay to 30s, and 400 requests at 30s is
+//  over three hours. The wall-clock cap is what keeps a nightly job schedulable,
+//  and these assert that a capped run SAYS so rather than reporting a quiet one.
+const baseRun = {
+  started_at: '2026-08-25T09:00:00.000Z', finished_at: '2026-08-25T09:12:00.000Z',
+  shard: '3/7', sitemap_total: 2006, crawled: 50, requests: 60,
+  api_commit: 'abc1234', aborted: null, truncated: null, findings: [],
+};
+const clean = report(baseRun, { baseline: false, fresh: [], resolved: [] });
+ok('a complete run with no findings says every check passed', /every check passed/.test(clean));
+
+const cut = report({ ...baseRun, truncated: 'wall clock: stopped after 25 minutes with 50 of 316 URLs crawled' },
+  { baseline: false, fresh: [], resolved: [] });
+ok('a truncated run says it ran out of time', /ran out of time/.test(cut));
+ok('a truncated run does NOT claim every check passed', !/every check passed/.test(cut));
+ok('a truncated run warns that quiet means untested', /untested rather than clean/.test(cut));
+
+const stopped = report({ ...baseRun, aborted: '5 throttled responses' },
+  { baseline: false, fresh: [], resolved: [] });
+ok('an aborted run says it stopped early', /stopped early/.test(stopped));
+ok('an aborted run does NOT claim every check passed', !/every check passed/.test(stopped));
 
 console.log('\n  The severity model itself\n');
 ok('every finding kind declares a tier', Object.values(C.KINDS).every((k) => ['P0', 'P1', 'P2', 'P3'].includes(k.tier)));

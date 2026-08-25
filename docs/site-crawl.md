@@ -54,6 +54,53 @@ rather than pushing through. An aborted run is reported as aborted. It is never
 retried the same night with a bigger budget: the cost of pushing through is the
 storefront serving challenges to real students on shared school IPs.
 
+## How long a night takes, and why it cannot overrun
+
+Measured, not estimated. A 130-URL run took 231 seconds across 201 requests; a
+50-URL run took 62 seconds across 60. That is about 1.15 seconds per request at
+the 1,000ms floor, and it puts the default night at roughly:
+
+| Phase | Requests | Time |
+|---|---|---|
+| Sitemap enumeration | ~5 | ~5s |
+| Page crawl (`--budget 400`) | 400 | ~500s |
+| Link audit (`--link-budget 250`) | 250 | ~275s |
+| Progress API half | ~6 | ~5s |
+| **Total** | **~660** | **~13 minutes** |
+
+The agent wrapped around it adds its own time: reading the digest, verifying
+every P0 and P1 by hand, tracing causes, writing the run note, committing. A
+quiet night is about 20 minutes end to end. A night with several real findings to
+chase can reach 35.
+
+**`--max-minutes` is the guarantee.** Every other bound here caps REQUESTS, and
+backoff caps nothing: a throttling storefront drives the delay to 30 seconds, and
+400 requests at 30 seconds is over three hours. Without a wall clock a nightly
+job can silently run until breakfast. With it, the run stops, says how much it
+covered, and exits non-zero. The link audit is cut first on purpose: an unchecked
+link is a missing P1, while an uncrawled page is a missing P0 and a page with no
+fingerprint for tomorrow's regression check.
+
+A truncated run never reports as a quiet one. `smoke/site-crawl.js` asserts that
+in both directions.
+
+## Runaway, and why this crawler cannot
+
+The $169 incident this repo remembers was an API that linked to itself and
+recursed until it had spent real money. That is a loop, and a crawler is exactly
+the program that reproduces it by accident. This one cannot:
+
+- The work list is **fixed before the first request**, from the sitemap. Links
+  found while crawling are checked with one HEAD each and never followed, so
+  there is no recursive descent and no cycle to fall into.
+- Redirects are followed manually and capped at 6 hops, so `A -> B -> A`
+  terminates and is reported as a redirect chain rather than chased.
+- Link targets are deduplicated by normalised path before any request. A page
+  linking to itself costs nothing; a thousand pages linking to one target cost
+  one HEAD.
+- Four independent bounds: `--budget`, `--link-budget`, `--max-minutes`, and the
+  five-strike throttle stop.
+
 ## The severity model
 
 Tier is a property of the finding kind, declared once in `lib/site-crawl.js`, so
@@ -199,6 +246,7 @@ npm run smoke:sitecrawl                           # the rules, offline, no netwo
 | `--full` | off | Ignore sharding. |
 | `--delay MS` | 1000 | Floor spacing. Backoff can only raise it. |
 | `--link-budget N` | 250 | HEAD requests for link checking. |
+| `--max-minutes N` | 25 | Wall-clock cap. 0 disables. |
 | `--include` | all | `pages,articles,products,collections` |
 | `--no-api` | off | Skip the progress API half. |
 
