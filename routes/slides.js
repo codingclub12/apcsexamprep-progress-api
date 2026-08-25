@@ -19,9 +19,18 @@
 //  the same reason: utils.js is owned elsewhere, so a local, duplicated
 //  verifier is preferred over adding an export there.
 //
-//  Only ap-csp is wired today; that is the only course with by-day decks in
-//  the Shopify file library (see config/csp-slide-manifest.js). Any other
-//  course 404s rather than pretending to have content.
+//  Which courses answer here, and which manifest serves each, is
+//  config/slide-manifests.js. Any other course 404s rather than pretending to
+//  have content.
+//
+//  The two wired courses deliver decks differently and the route does not care:
+//  an ap-csp deck carries a Shopify .pptx url (plus an embedUrl once it has
+//  been converted to Google Slides), while an ap-cybersecurity deck carries an
+//  embedUrl and nothing else, because those decks were never uploaded to
+//  Shopify. Both are disclosed under exactly the same gate, and both are
+//  equally a credential: a Slides id IS access, because the decks are shared
+//  "anyone with the link" and the paying teacher is gated on their teacher
+//  token rather than on a Google account.
 //
 //  Variant filtering is a real security boundary, not a UI nicety: an
 //  entitled STUDENT never receives TEACHER-variant decks (answer keys and
@@ -32,7 +41,7 @@ const express = require('express');
 const router = express.Router();
 const { verifyStudentToken } = require('../utils');
 const entitlements = require('../lib/entitlements');
-const manifest = require('../config/csp-slide-manifest');
+const manifests = require('../config/slide-manifests');
 const { makeRateLimit } = require('../lib/rate-limit');
 
 // Fires on every lesson-page view, same sizing rationale as the student
@@ -51,13 +60,14 @@ function verifyAnyToken(token) {
   try { return verifyStudentToken(token); } catch (e) { return null; }
 }
 
-const SUPPORTED_COURSES = new Set(['ap-csp']);
-
 router.get('/:course/:lessonId', slidesLimit, (req, res) => {
   const course = String(req.params.course || '');
   const lessonId = String(req.params.lessonId || '');
 
-  if (!SUPPORTED_COURSES.has(course)) {
+  // Which manifest answers for this course, if any. A course with no by-day
+  // decks 404s rather than pretending to have content.
+  const manifest = manifests.forCourse(course);
+  if (!manifest) {
     return res.status(404).json({ error: 'Slides are not available for this course yet' });
   }
   if (!manifest.isKnownLesson(lessonId)) {

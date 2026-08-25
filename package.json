@@ -24,6 +24,8 @@
     "smoke:csp-exercise-discoverability": "node smoke/csp-exercise-discoverability.js",
     "smoke:cspslides": "node smoke/csp-slide-gate.js",
     "smoke:cspembeds": "node smoke/csp-slide-embeds.js",
+    "smoke:cyberslides": "node smoke/cyber-slide-gate.js",
+    "smoke:cyberembeds": "node smoke/cyber-slide-embeds.js",
     "smoke:admin": "node smoke/admin-dashboard.js",
     "smoke:codegrade": "node smoke/code-grade.js",
     "smoke:reset": "node smoke/password-reset.js",
