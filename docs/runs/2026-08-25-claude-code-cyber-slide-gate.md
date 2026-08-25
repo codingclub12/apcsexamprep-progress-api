@@ -7,8 +7,11 @@ per-day decks for Units 3-5 in a separate pass.
 
 ## What shipped
 
-- **`assets/apcs-slides-gate.js`** (theme, PR #79): renders a deck that has an
-  embed and no download, and says the right thing on a cyber page.
+- **`assets/apcs-slides-gate.js`** (theme, PRs #79 and #81, both merged and
+  live): renders a deck that has an embed and no download, and says the right
+  thing on a cyber page. Verified against Shopify rather than GitHub: the live
+  theme's copy is 33533 bytes with `updatedAt` 2026-08-25T23:51:17Z, matching
+  the connected branch byte for byte.
 - **`config/cyber-slide-manifest.js`**, **`config/cyber-slide-embeds.js`**,
   **`config/slide-manifests.js`**: the cyber manifest, its (still empty) id map,
   and a registry so the route selects a manifest instead of branching.
@@ -80,6 +83,19 @@ bad-key error, because the fix is to widen the manifest deliberately.
   matched, a CSP-cased `Student` file proven not to match.
 - CSP suites still green after the shared-route change: `smoke:cspslides` 26,
   `smoke:cspembeds` 49.
+- **The API deploy was verified from the live endpoint, not from a report.**
+  After #342 merged and Railway redeployed:
+
+  ```
+  GET /api/slides/ap-cybersecurity/1-1 -> 200
+     {"days":2,"tracks":[],"locked":true,"decks":null}   0 docs.google.com
+  GET /api/slides/ap-cybersecurity/3-1 -> 404   (Units 3-5 correctly unwired)
+  GET /api/slides/ap-csp/1-1           -> 200   (no regression)
+  ```
+
+  The empty `tracks` array and the 404 are the two things that would have been
+  wrong if the manifest registry had not taken effect, so they are the ones
+  worth reading.
 
 ## Still open
 
@@ -98,8 +114,9 @@ bad-key error, because the fix is to widen the manifest deliberately.
 - **Theme deploy direction is still inverted.** The connected branch
   `claude/site-linking-audit-yhufjk` is 15 commits AHEAD of `main`, up from 2 at
   the CSP run. `CLAUDE.md`'s merge-to-main-then-fast-forward would rewind the
-  live theme. PR #79 targets the connected branch directly. The real fix is
-  repointing the theme at `main` in Shopify Admin, which needs a person.
+  live theme. Both theme PRs targeted the connected branch directly, so both
+  deployed on merge. The real fix is repointing the theme at `main` in Shopify
+  Admin, which needs a person.
 
 ## Learned
 
@@ -115,6 +132,32 @@ fix, where the empty case actually lands.
 **A second course is a test oracle.** Every defect found here was a
 single-course assumption that had been sitting in shipped, working code. None
 of them were introduced by this port; all of them were revealed by it.
+
+**A PR captures the commits that exist when it is merged, and no others.**
+This happened twice in one evening, which is why it is written down rather than
+noted.
+
+The theme work was two commits. #79 merged at 20:44Z; the second was pushed at
+20:47Z. It landed on the branch, the branch was that PR's head branch, and it
+shipped nothing, because the PR had already closed. The fix was a second PR
+(#81) for the remainder, since a merged PR cannot track new work.
+
+Then it repeated on the API side, and the stranded commit was THIS SECTION: the
+note recording the first occurrence was pushed seconds before #342 merged, and
+the merge captured everything except it.
+
+Nothing warns you in either direction. The push succeeds, the branch looks
+correct, `git status` is clean, and the merged PR reads as done. Both times it
+surfaced only from asking a different question than "did my push work":
+
+- for the theme, comparing the LIVE asset byte for byte against the MERGED
+  commit rather than against the branch;
+- for the API, running `git merge-base --is-ancestor <sha> origin/main` per
+  commit rather than trusting that the branch had been merged.
+
+Two habits fall out. Push everything before asking for a review, not after. And
+after any merge, verify per commit against the merged result, because the branch
+and what actually shipped are exactly the two things that silently diverge.
 
 **Commit the handover script.** The CSP Apps Script was pasted into a chat and
 is gone, so this one was rewritten from its description. `scripts/
