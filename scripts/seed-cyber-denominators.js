@@ -48,43 +48,39 @@ const POINTS = {
   '1.1|exercise-1': 7,        // foundCount reads / 7
   '1.1|exercise-2': 8,        // ANSWERS[] has 8 entries
   '1.1|quiz': 5,              // ANSWERS{} has 5 keys
+  '1.1|lab': 24,              // "/ 24 pts" score bar, finalScore + totalScore present
 
   // ── 1.2 ────────────────────────────────────────────
   '1.2|lab': 30,              // score readout reads 0 / 30
   '1.2|quiz': 5,              // score-display reads 0 / 5
+  '1.2|exercise-1': 24,       // "/ 24 pts" score bar, badge "3 Parts . 24 pts", 12+6+6
+  '1.2|exercise-2': 30,       // "/ 30 pts" score bar, three clients at 10 each
+
+  // ── 1.3 ────────────────────────────────────────────
+  '1.3|exercise-1': 24,       // "/ 24 pts" score bar and finalScore, badge "3 Parts . 24 pts"
+  '1.3|exercise-2': 24,       // "/ 24 pts" finalScore, badge "3 Parts . 24 pts"
+  '1.3|quiz': 5,              // qzScore reads "0 / 5", ANSWERS has 5 keys, q1..q5
+
+  // PRICED 2026-08-25, having been parked in MEASURED_UNPRICEABLE since
+  // 2026-08-21. Both blockers recorded there are gone, and the ledger proves it
+  // rather than a re-reading of the page proving it:
   //
-  // 1.2 exercise-1 (24) and exercise-2 (30) are MEASURED, not unknown. Both
-  // values were read off the live page bodies on 2026-08-21 and each is
-  // corroborated by three independent signals on its own page:
-  //   exercise-1: header badge "3 Parts . 24 pts", score bar "/ 24 pts",
-  //               results panel "/ 24", and maxPts 12 + 6 + 6 = 24.
-  //   exercise-2: header badge "3 Clients . 30 pts", score bar "/ 30 pts",
-  //               and three clients scored 2 + 2 + 6 = 10 each.
-  // This supersedes the "value unknown, not resolvable by reading the page"
-  // row for these two columns in docs/cyber-denominator-gaps.md section 3.
+  //   1.2 was blocked because two <a class="check-btn"> nav links sat beside its
+  //   three real buttons, so the tracker's `answered` could never reach `total`
+  //   (an anchor has no `disabled` property). Theme PR #64 changed the count to
+  //   disable-able elements only. 1.2 exercise-1 has recorded 41 submissions
+  //   since that shipped.
   //
-  // They are NOT entries in this table, and the reason is the rule that file
-  // already states: pricing a column the page cannot report is strictly
-  // harmful. Neither page contains a fetch, an XHR, or a sendBeacon, so no
-  // real score can arrive.
+  //   1.3 was blocked on "no fetch, XHR or sendBeacon in the page body". True,
+  //   and not the question: the page does not report itself, apcs-tracker.js
+  //   reports for it. Same wrong inference that kept the five unit exams
+  //   unpriced, corrected in the same pass.
   //
-  // The measured values are not lost. They live in MEASURED_UNPRICEABLE below,
-  // which is exported and covered by smoke/cyber-denominators.js. A commented
-  // out line records a number but proves nothing; a table can be asserted
-  // against, so re-adding one of these to POINTS by hand now fails a test
-  // instead of quietly regrading a class.
-  //
-  // CORRECTED 2026-08-21: an earlier version of this comment said a fabricated
-  // 0 arrives instead, from apcs-tracker.js. It does not, on THESE two pages.
-  // Each carries two <a class="check-btn"> nav links beside its three real
-  // buttons, so the tracker's `total` is 5 while `answered` can only ever reach
-  // 3 (an anchor has no `disabled` property). markComplete is never called and
-  // nothing is recorded but the initial visit. See
-  // docs/runs/2026-08-21-claude-code-cyber-tracker-sweep.md and
-  // scripts/scan-tracker-score-risk.js.
-  //
-  // Either way these columns stay unpriced: pricing a column no page can report
-  // would grow items_total and make pace worse for every student.
+  // Every value was re-read from the live page on 2026-08-25 before being moved,
+  // not carried over on trust. The observed maxima in
+  // GET /api/admin/denominators corroborate them arithmetically: 124 is 100 + 24
+  // and 130 is 100 + 30, the lesson-score percent carrier summed alongside the
+  // real item points.
 
   // ── 1.4 ────────────────────────────────────────────
   '1.4|exercise-1': 25,       // score readout reads 0 / 25
@@ -242,17 +238,24 @@ const POINTS = {
 //  Every value below is corroborated by two independent signals on its own page.
 // ─────────────────────────────────────────────────────────────────────────────
 const MEASURED_UNPRICEABLE = {
-  // Unit 1 lesson 1.2. Two <a class="check-btn"> nav links sit beside the three
-  // real buttons, so the tracker's completion count can never be reached.
-  '1.2|exercise-1': { possible: 24, evidence: 'header badge "3 Parts . 24 pts", score bar "/ 24 pts", parts 12+6+6', blocker: 'no reporter; check-btn anchors block markComplete' },
-  '1.2|exercise-2': { possible: 30, evidence: 'score bar "/ 30 pts", three clients at 10 each', blocker: 'no reporter; check-btn anchors block markComplete' },
-
-  // Unit 1 lesson 1.3. These three were absent from this file entirely, not
-  // because the pages state no total (they do) but because nobody had read
-  // them. The pages carry no fetch, XHR or sendBeacon of their own.
-  '1.3|exercise-1': { possible: 24, evidence: 'header badge "3 Parts . 24 pts", score bar and finalScore "/ 24 pts", parts 12+6+6', blocker: 'no reporter in page body' },
-  '1.3|exercise-2': { possible: 24, evidence: 'header badge "3 Parts . 24 pts", finalScore "/ 24 pts", parts 12+6+6', blocker: 'no reporter in page body' },
-  '1.3|quiz': { possible: 5, evidence: 'qzScore reads "0 / 5", ANSWERS has 5 keys, q1..q5 present', blocker: 'no reporter in page body' },
+  // EMPTY AS OF 2026-08-25, and kept rather than deleted.
+  //
+  // It held five columns: 1.2 exercise-1 (24) and exercise-2 (30), and 1.3
+  // exercise-1 (24), exercise-2 (24) and quiz (5). All five are now in POINTS,
+  // re-read from the live pages before being moved, with the reasoning in the
+  // comment beside them.
+  //
+  // The table stays because the protocol above is still the right one and this
+  // is where the next parked column goes. It also stays as a record of how the
+  // parking went wrong: the two blockers were "the page has no fetch" and "nav
+  // anchors block the completion count". The second was a real defect and was
+  // fixed in theme PR #64. The first was never a blocker at all, because the
+  // page does not report itself, apcs-tracker.js reports for it. Between them
+  // those two beliefs held real student work out of the gradebook for four
+  // days, and the same wrong inference kept all five unit exams unpriced.
+  //
+  // The lesson worth keeping: "we read the page and it cannot report" is only
+  // true if you also read what the THEME loads onto that page.
 };
 
 // The five per-unit exams, which this file's (lesson|activity) shape cannot key
