@@ -48,24 +48,82 @@
 //  ever touches ledger rows created before the cutoff, and prints any later
 //  ones it is deliberately leaving alone.
 //
-//  Run: node scripts/clear-cyber-fabricated-zeros.js [--apply] [--cutoff ISO]
+//  Run: node scripts/clear-cyber-fabricated-zeros.js [--apply] [--cutoff ISO] [--scope v1|v2|all]
 //  Dry run by default. It changes nothing without --apply.
 // ─────────────────────────────────────────────────────────────────────────────
 const db = require('../db');
 
 const COURSE   = 'ap-cybersecurity';
-const LESSONS  = ['1.3', '1.4', '1.5'];
-const ACTS     = ['exercise-1', 'exercise-2', 'lab'];
 const LESSON_SCORE_ITEM = require('../scoring').LESSON_SCORE_ITEM;
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  SCOPE: WHICH COLUMNS THIS IS ALLOWED TO TOUCH.
+//
+//  Named sets, defined here in code, NOT taken from the caller. A request that
+//  can name its own columns is a request that can clear any grade in the
+//  course, and this runs behind an admin key that is full write everywhere. The
+//  blast radius belongs in a diff someone can review, not in a request body.
+//
+//  v1, applied 2026-08-25T03:59Z, 170 rows. The nine columns whose pages showed
+//  no score UI at all, so apcs-tracker.js posted `completed: true, score: 0` for
+//  every student regardless of performance.
+//
+//  v2 exists because pricing those columns made the same latent bug ACTIVE on
+//  three more. Until 2026-08-25 lesson 1.1 lab and lesson 1.2 exercise-1 and
+//  exercise-2 had no authored denominator, so a fabricated zero sat in the
+//  gradebook as a percent-only cell and was held OUT of the points total. Once
+//  they were priced, that same cell became a counted 0 out of 24 (or 30) and
+//  started dragging real grades down. The zeros were always wrong; pricing is
+//  what made them cost something.
+//
+//  The signature is unmistakable on 1.1 lab: 93 pre-cutoff zeros against 5 real
+//  scores. 1.2 exercise-1 and exercise-2 carry 118 and 91 pre-cutoff zeros
+//  alongside 186 and 117 real ones, which is why the cutoff below does all the
+//  work: it is the only thing separating a bug from a student who genuinely
+//  scored nothing.
+//
+//  Lesson 1.3's exercise columns are deliberately absent from v2. They are in
+//  v1 and were cleared in the first pass.
+// ─────────────────────────────────────────────────────────────────────────────
+const SCOPES = {
+  v1: [
+    ['1.3', 'exercise-1'], ['1.3', 'exercise-2'], ['1.3', 'lab'],
+    ['1.4', 'exercise-1'], ['1.4', 'exercise-2'], ['1.4', 'lab'],
+    ['1.5', 'exercise-1'], ['1.5', 'exercise-2'], ['1.5', 'lab'],
+  ],
+  v2: [
+    ['1.1', 'lab'],
+    ['1.2', 'exercise-1'], ['1.2', 'exercise-2'],
+  ],
+};
+SCOPES.all = [...SCOPES.v1, ...SCOPES.v2];
+
+// v1 stays the default so an unqualified call keeps doing exactly what it did.
+const DEFAULT_SCOPE = 'v1';
+
+function columnsFor(scope) {
+  const key = scope || DEFAULT_SCOPE;
+  const cols = SCOPES[key];
+  if (!cols) throw new Error(`unknown scope "${key}"; known: ${Object.keys(SCOPES).join(', ')}`);
+  return cols;
+}
 
 // Theme PR #68 finished propagating at 19:52Z on 2026-08-21, verified by
 // sampling the deployed assets. Before that instant no real score could reach
 // these nine columns from any path.
 const DEFAULT_CUTOFF = '2026-08-21T19:52:00Z';
 
-function placeholders(n) { return new Array(n).fill('?').join(','); }
+// (lesson, activity) pairs as an OR of equalities rather than two IN lists.
+// Two IN lists are a cross product, which for v1 happened to be exactly the
+// nine columns and for any other set would silently widen the scope.
+function columnClause(cols, alias) {
+  const a = alias ? alias + '.' : '';
+  return '(' + cols.map(() => `(${a}lesson = ? AND ${a}activity_type = ?)`).join(' OR ') + ')';
+}
+function columnParams(cols) { return cols.flat(); }
 
-function findFabricated(cutoff) {
+function findFabricated(cutoff, cols) {
+  const columns = cols || columnsFor(DEFAULT_SCOPE);
   return db.prepare(`
     SELECT se.student_id, se.class_id, se.course, se.unit, se.lesson,
            se.activity_type, se.points, se.created_at,
@@ -79,26 +137,25 @@ function findFabricated(cutoff) {
     WHERE se.course = ?
       AND se.item = ?
       AND se.points = 0
-      AND se.lesson IN (${placeholders(LESSONS.length)})
-      AND se.activity_type IN (${placeholders(ACTS.length)})
+      AND ${columnClause(columns, 'se')}
       AND se.created_at < ?
     ORDER BY se.lesson, se.activity_type, se.created_at
-  `).all(COURSE, LESSON_SCORE_ITEM, ...LESSONS, ...ACTS, cutoff);
+  `).all(COURSE, LESSON_SCORE_ITEM, ...columnParams(columns), cutoff);
 }
 
 // Scores on the same nine columns recorded AFTER the cutoff. These can be real,
 // so they are listed and never touched. Printing them is the point: a silent
 // exclusion is how a cleanup turns into data loss.
-function findProtected(cutoff) {
+function findProtected(cutoff, cols) {
+  const columns = cols || columnsFor(DEFAULT_SCOPE);
   return db.prepare(`
     SELECT lesson, activity_type, COUNT(*) n, MIN(points) lo, MAX(points) hi
     FROM score_events
     WHERE course = ? AND item = ?
-      AND lesson IN (${placeholders(LESSONS.length)})
-      AND activity_type IN (${placeholders(ACTS.length)})
+      AND ${columnClause(columns)}
       AND created_at >= ?
     GROUP BY lesson, activity_type
-  `).all(COURSE, LESSON_SCORE_ITEM, ...LESSONS, ...ACTS, cutoff);
+  `).all(COURSE, LESSON_SCORE_ITEM, ...columnParams(columns), cutoff);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -116,9 +173,11 @@ function clearFabricatedZeros(opts) {
   const o = opts || {};
   const cutoff = o.cutoff || DEFAULT_CUTOFF;
   const apply = !!o.apply;
+  const scope = o.scope || DEFAULT_SCOPE;
+  const columns = columnsFor(scope);
 
-  const rows = findFabricated(cutoff);
-  const protectedRows = findProtected(cutoff);
+  const rows = findFabricated(cutoff, columns);
+  const protectedRows = findProtected(cutoff, columns);
 
   const byColumn = {};
   for (const r of rows) {
@@ -129,6 +188,8 @@ function clearFabricatedZeros(opts) {
   const todo = rows.filter((r) => r.progress_id && !r.score_reset_at);
   const plan = {
     cutoff,
+    scope,
+    columns: columns.map((c) => `${c[0]}|${c[1]}`),
     applied: false,
     found: rows.length,
     by_column: byColumn,
@@ -162,9 +223,12 @@ function main() {
   const apply  = process.argv.includes('--apply');
   const ci     = process.argv.indexOf('--cutoff');
   const cutoff = ci !== -1 && process.argv[ci + 1] ? process.argv[ci + 1] : DEFAULT_CUTOFF;
+  const si     = process.argv.indexOf('--scope');
+  const scope  = si !== -1 && process.argv[si + 1] ? process.argv[si + 1] : DEFAULT_SCOPE;
 
-  const p = clearFabricatedZeros({ cutoff, apply });
+  const p = clearFabricatedZeros({ cutoff, apply, scope });
 
+  console.log(`scope:  ${p.scope} (${p.columns.join(', ')})`);
   console.log(`cutoff: ${p.cutoff}`);
   console.log(`fabricated zeros found: ${p.found}\n`);
 
@@ -191,4 +255,4 @@ function main() {
 
 if (require.main === module) main();
 module.exports = { findFabricated, findProtected, clearFabricatedZeros, DEFAULT_CUTOFF,
-  COURSE, LESSONS, ACTS };
+  DEFAULT_SCOPE, SCOPES, columnsFor, COURSE };

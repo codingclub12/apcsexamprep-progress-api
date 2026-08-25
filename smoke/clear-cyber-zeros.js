@@ -47,7 +47,7 @@ const ok = (n, c, x) => {
 
 db.prepare("INSERT INTO teachers (id,email,password_hash,name) VALUES ('t1','t@smoke.test','x','T')").run();
 db.prepare("INSERT INTO classes (id,teacher_id,class_code,class_name,course) VALUES ('C1','t1','CYBER-SMOKE','Smoke','ap-cybersecurity')").run();
-for (const s of ['sA', 'sB', 'sC', 'sD', 'sE', 'sF']) {
+for (const s of ['sA', 'sB', 'sC', 'sD', 'sE', 'sF', 'sG']) {
   db.prepare('INSERT INTO students (id,class_id,display_name,pin_hash) VALUES (?, ?, ?, ?)').run(s, 'C1', s, 'x');
 }
 
@@ -70,13 +70,30 @@ prog('sA', '1.3', 'exercise-1', 0);                            ev('sA', '1.3', '
 prog('sB', '1.4', 'lab', 0);                                   ev('sB', '1.4', 'lab', 0, AFTER);
 prog('sC', '1.5', 'exercise-2', 0, '2026-08-22T00:00:00Z');    ev('sC', '1.5', 'exercise-2', 0, BEFORE);
                                                                ev('sD', '1.3', 'lab', 0, BEFORE);
-prog('sE', '1.2', 'exercise-1', 0);                            ev('sE', '1.2', 'exercise-1', 0, BEFORE);
+// E is out of scope for EVERY scope. It used to be lesson 1.2, which v2 now
+// legitimately covers, so it moves to a lesson no scope names.
+prog('sE', '2.1', 'exercise-1', 0);                            ev('sE', '2.1', 'exercise-1', 0, BEFORE);
+// G is a v2 column: a pre-cutoff zero that v1 must NOT touch and v2 must find.
+prog('sG', '1.2', 'exercise-1', 0);                            ev('sG', '1.2', 'exercise-1', 0, BEFORE);
 prog('sF', '1.4', 'exercise-1', 88);                           ev('sF', '1.4', 'exercise-1', 88, BEFORE);
 
 const eventsBefore = db.prepare('SELECT COUNT(*) c FROM score_events').get().c;
 
+console.log('scopes');
+const { findFabricated, findProtected, DEFAULT_CUTOFF, DEFAULT_SCOPE, SCOPES, columnsFor, clearFabricatedZeros } = require(script);
+ok('the default scope is v1, so an unqualified call is unchanged', DEFAULT_SCOPE === 'v1');
+ok('v1 is the original nine columns', SCOPES.v1.length === 9, SCOPES.v1.length);
+ok('v2 is the three that pricing made harmful', SCOPES.v2.length === 3, SCOPES.v2);
+ok('all is v1 plus v2 with nothing invented', SCOPES.all.length === 12);
+ok('1.3 exercises are in v1 and NOT repeated in v2',
+  SCOPES.v2.every((c) => c[0] !== '1.3'), SCOPES.v2.filter((c) => c[0] === '1.3'));
+{
+  let threw = null;
+  try { columnsFor('everything'); } catch (e) { threw = e.message; }
+  ok('an unknown scope throws rather than defaulting to a wide one', /unknown scope/.test(threw || ''), threw);
+}
+
 console.log('selection');
-const { findFabricated, findProtected, DEFAULT_CUTOFF } = require(script);
 const found = findFabricated(DEFAULT_CUTOFF);
 const ids = found.map((r) => r.student_id).sort();
 ok('selects only pre-cutoff zeros on the nine columns',
@@ -87,6 +104,20 @@ ok('a post-cutoff zero is reported as protected, not selected',
   !ids.includes('sB') && findProtected(DEFAULT_CUTOFF).some((p) => p.lesson === '1.4' && p.activity_type === 'lab'));
 ok('a ledger row with no progress row carries a null progress_id',
   found.find((r) => r.student_id === 'sD').progress_id === null);
+
+//  v2 must not reach into v1's columns, and vice versa. A scope that quietly
+//  widened would clear grades nobody reviewed.
+{
+  const v2 = clearFabricatedZeros({ scope: 'v2', apply: false });
+  ok('v2 finds only its own column, not v1\'s rows', v2.found === 1 && v2.would_reset === 1, v2);
+  ok('v2 names the row it found as 1.2 exercise-1',
+    JSON.stringify(Object.keys(v2.by_column)) === JSON.stringify(['1.2|exercise-1']), v2.by_column);
+  ok('v2 names exactly its three columns',
+    JSON.stringify(v2.columns) === JSON.stringify(['1.1|lab', '1.2|exercise-1', '1.2|exercise-2']), v2.columns);
+  const v1 = clearFabricatedZeros({ scope: 'v1', apply: false });
+  ok('v1 still finds its three fixture rows', v1.found === 3, v1.found);
+  ok('the plan reports which scope produced it', v1.scope === 'v1' && v2.scope === 'v2');
+}
 
 console.log('apply');
 require('child_process').execFileSync(process.execPath, [script, '--apply'],
@@ -99,7 +130,8 @@ ok('A: the fabricated zero is cleared',
 ok('B: a post-cutoff zero keeps its grade', row('p-sB').score === 0 && !row('p-sB').score_reset_at);
 ok('C: an already-reset row keeps its original reset stamp',
   row('p-sC').score_reset_at === '2026-08-22T00:00:00Z');
-ok('E: an out-of-scope lesson keeps its grade', row('p-sE').score === 0 && !row('p-sE').score_reset_at);
+ok('E: a lesson no scope names keeps its grade', row('p-sE').score === 0 && !row('p-sE').score_reset_at);
+ok('G: a v2 column is untouched by a v1 apply', row('p-sG').score === 0 && !row('p-sG').score_reset_at);
 ok('F: a real score is untouched', row('p-sF').score === 88 && !row('p-sF').score_reset_at);
 ok('nothing is deleted from the ledger',
   db.prepare('SELECT COUNT(*) c FROM score_events').get().c === eventsBefore);

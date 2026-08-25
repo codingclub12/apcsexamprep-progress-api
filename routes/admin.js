@@ -111,8 +111,8 @@ router.get('/', (req, res) => {
       'GET /api/admin/ungraded-fallout   completed activities that were never scored, and how much real graded work sits alongside them; ?course=',
       'POST /api/admin/denominators/adopt author denominators (header key required); {course, adopt_proposed} or {course, values}, dry_run supported',
       'POST /api/admin/denominators/remove un-author denominators (header key required); {course, activity_types} plus optional lessons / only_possible, dry_run supported',
-      'GET /api/admin/cyber-zeros        dry run: the fabricated zeros on Cyber 1.3/1.4/1.5 exercise-1, exercise-2 and lab; ?cutoff=',
-      'POST /api/admin/cyber-zeros/clear clear them (header key required); {confirm: true} to write, anything else returns the dry run',
+      'GET /api/admin/cyber-zeros        dry run: fabricated zeros on Cyber. ?scope=v1 (default, 1.3/1.4/1.5 exercise-1/exercise-2/lab) | v2 (1.1 lab, 1.2 exercise-1/exercise-2) | all; ?cutoff=',
+      'POST /api/admin/cyber-zeros/clear clear them (header key required); {confirm: true} to write, plus optional {scope}; anything else returns the dry run',
       'GET /api/admin/schema              live table/column listing',
       'GET /api/admin/score-events        raw graded-interaction ledger; ?student_id= ?class_code= ?course= ?limit=',
     ],
@@ -1217,8 +1217,11 @@ router.get('/ungraded-fallout', (req, res) => {
 // anything is written. ?cutoff= overrides the default instant.
 router.get('/cyber-zeros', (req, res) => {
   try {
-    res.json(cyberZeros.clearFabricatedZeros({ cutoff: req.query.cutoff, apply: false }));
+    res.json(cyberZeros.clearFabricatedZeros({
+      cutoff: req.query.cutoff, scope: req.query.scope, apply: false,
+    }));
   } catch (e) {
+    if (/unknown scope/.test(e.message)) return res.status(400).json({ error: e.message });
     console.error('admin/cyber-zeros:', e);
     res.status(500).json({ error: 'cyber zeros report failed', detail: e.message });
   }
@@ -1231,14 +1234,15 @@ router.post('/cyber-zeros/clear', (req, res) => {
   try {
     const b = req.body || {};
     if (!b.confirm) {
-      const plan = cyberZeros.clearFabricatedZeros({ cutoff: b.cutoff, apply: false });
+      const plan = cyberZeros.clearFabricatedZeros({ cutoff: b.cutoff, scope: b.scope, apply: false });
       return res.status(400).json({
         error: 'confirm is required to write. This response is the dry run.',
         plan,
       });
     }
-    res.json(cyberZeros.clearFabricatedZeros({ cutoff: b.cutoff, apply: true }));
+    res.json(cyberZeros.clearFabricatedZeros({ cutoff: b.cutoff, scope: b.scope, apply: true }));
   } catch (e) {
+    if (/unknown scope/.test(e.message)) return res.status(400).json({ error: e.message });
     console.error('admin/cyber-zeros/clear:', e);
     res.status(500).json({ error: 'cyber zeros clear failed', detail: e.message });
   }
