@@ -257,15 +257,23 @@ const MEASURED_UNPRICEABLE = {
 
 // The five per-unit exams, which this file's (lesson|activity) shape cannot key
 // anyway: all five collapse onto lesson 'exam'. course_unit_denominators is the
-// table that CAN hold them, and scripts/seed-cyber-case-file-denominators.js is
-// the working example. They are listed here because the count is now measured
-// and because "we never checked" and "we checked and it cannot report" are
-// different facts.
+// table that CAN hold them, and scripts/seed-cyber-exam-denominators.js now
+// seeds them from exactly the counts below.
 //
 // Every one is 20 questions, confirmed by counting question containers in the
 // live body: units 1 and 2 use id="q-eN", unit 3 uses id="uNexam-qN", units 4
-// and 5 use id="qN". None of the five contains a fetch, an XHR, a sendBeacon or
-// a token read, so none can report. Unpriced is correct, not an oversight.
+// and 5 use id="qN".
+//
+// CORRECTION, 2026-08-25. This block used to end "None of the five contains a
+// fetch, an XHR, a sendBeacon or a token read, so none can report. Unpriced is
+// correct, not an oversight." The observation was right and the conclusion was
+// wrong. A page does not have to report itself: all five load apcs-tracker.js
+// and set window.APCS_PAGE, and the tracker posts on their behalf. By the time
+// this was noticed the ledger held 19 real unit exam submissions across unit-1
+// and unit-2, every one of them rendering as a bare percentage that counted for
+// nothing. Units 1 and 2 report because they carry id="score-display" for
+// activityScorePct to read; 3, 4 and 5 have no score element and record
+// completion only. The name of the constant is kept as a marker of the mistake.
 const EXAM_UNPRICEABLE = {
   'unit-1': { possible: 20, evidence: '20 q-eN containers, "20 questions"' },
   'unit-2': { possible: 20, evidence: '20 q-eN containers, "20 questions"' },
