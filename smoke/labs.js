@@ -30,6 +30,7 @@ for (const suf of ['', '-wal', '-shm']) { try { fs.unlinkSync(process.env.DB_PAT
 
 const labs = require('../lib/lab-spec');
 const { buildRows } = require('../scripts/seed-manifest');
+const practice = require('../lib/practice-index');
 
 let pass = 0, fail = 0;
 function ok(cond, label, detail) {
@@ -202,11 +203,15 @@ console.log('\nMATRIXIFY SHEET');
   for (const spec of specs) {
     let page = null;
     let err = null;
-    try { page = sheet.build(spec); } catch (e) { err = e.message; }
+    // The index carries the lab's siblings, which the page's "More hands-on
+    // practice" strip is generated from. build() refuses without it rather than
+    // quietly producing a page that links nowhere.
+    const index = practice.forCourse(spec.course);
+    try { page = sheet.build(spec, index); } catch (e) { err = e.message; }
     ok(!!page, `${spec.item_id}: a page builds`, err);
     if (!page) continue;
     handles.push(page.handle);
-    const bad = sheet.checkPage(page, spec);
+    const bad = sheet.checkPage(page, spec, index);
     ok(bad.length === 0, `${spec.item_id}: the page passes every hazard rule`, bad.join('; '));
     ok(page.handle === spec.page_handle,
       `${spec.item_id}: the page uses the handle the spec declares`);
