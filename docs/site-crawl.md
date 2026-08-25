@@ -63,10 +63,15 @@ the 1,000ms floor, and it puts the default night at roughly:
 | Phase | Requests | Time |
 |---|---|---|
 | Sitemap enumeration | ~5 | ~5s |
-| Page crawl (`--budget 400`) | 400 | ~500s |
-| Link audit (`--link-budget 250`) | 250 | ~275s |
+| Page crawl | ~316 | ~395s |
+| Link audit (`--link-budget 250`) | up to 250 | ~275s |
 | Progress API half | ~6 | ~5s |
-| **Total** | **~660** | **~13 minutes** |
+| **Total** | **~580** | **~11 to 13 minutes** |
+
+The page count is the shard, not the cap: 2,006 URLs over seven shards is about
+287, plus the hot set, which measured 316 on a real run. `--budget 400` sits
+above that deliberately, so it is a backstop against a sitemap that suddenly
+grows rather than the number that governs a normal night.
 
 The agent wrapped around it adds its own time: reading the digest, verifying
 every P0 and P1 by hand, tracing causes, writing the run note, committing. A
