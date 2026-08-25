@@ -272,10 +272,26 @@ if (cyberExamDenoms) console.log(`cyber exam denominators: ${cyberExamDenoms.cha
 //
 // Short sha, and 'unknown' off-platform rather than an empty string, so a local
 // or test run is visibly not a deploy instead of looking like an unlabelled one.
+const healthIntegrity = require('./lib/health-integrity');
+
 const BUILD_COMMIT = (process.env.RAILWAY_GIT_COMMIT_SHA || '').slice(0, 7) || 'unknown';
 
+// `integrity` answers a question that previously needed ADMIN_KEY: has the code
+// test bank been seeded for every `code` item that has a denominator. The bank
+// is deliberately NOT seeded on boot (db.js records why), so that gap is real,
+// human-closed, and until now invisible without a credential. It cost four days
+// on the intro-java pilot: ten denominators live, ten items unable to grade,
+// and no way to see it from outside.
+//
+// Counts of author content only, so this stays public without touching the
+// zero-PII posture. It is cached and can never throw; if it could not be
+// measured the key is simply absent, which reads as "unknown" rather than
+// pretending everything is fine. See lib/health-integrity.js.
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', ts: new Date().toISOString(), commit: BUILD_COMMIT });
+  const body = { status: 'ok', ts: new Date().toISOString(), commit: BUILD_COMMIT };
+  const integrity = healthIntegrity.codeSeedIntegrity();
+  if (integrity) body.integrity = integrity;
+  res.json(body);
 });
 
 // ── ADMIN CLASS DASHBOARD (gated page) ────────────────────────────────────────

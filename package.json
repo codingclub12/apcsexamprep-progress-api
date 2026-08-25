@@ -144,7 +144,8 @@
     "smoke:sitecrawl": "node smoke/site-crawl.js",
     "autofixscan": "node scripts/autofix-scan.js",
     "smoke:autofixrisk": "node smoke/autofix-risk.js",
-    "smoke:cspunittestlinks": "node smoke/csp-unit-test-links.js"
+    "smoke:cspunittestlinks": "node smoke/csp-unit-test-links.js",
+    "smoke:healthintegrity": "node smoke/health-integrity.js"
   },
   "keywords": [],
   "author": "",
