@@ -1,0 +1,477 @@
+{
+  "_comment": [
+    "DEVICE SECURITY ANALYSIS practice set 5.",
+    "",
+    "The run note for sets 3 and 4 said a fifth set would need a genuinely new",
+    "evidence pattern rather than another device name. This one carries a new",
+    "pattern in part B, part C, part D and part E.",
+    "",
+    "PART B is the first two-stage attack in the library:",
+    "  kiosk      enumeration    one try each, usernames that do NOT exist",
+    "  laptop     brute force    many tries, ONE account, one source",
+    "  print      spraying       one try each across accounts that DO exist, slow",
+    "  greenhouse distributed    many tries, ONE account, SIX sources",
+    "  this one   sweep, then pivot. Seven usernames once each, of which exactly",
+    "             one comes back WITHOUT 'invalid user', then eight attempts",
+    "             against that one name, then a success.",
+    "The tell is neither the count nor the clock nor the source column, all of",
+    "which the earlier sets already train. It is the WORDING of row 9 against its",
+    "six neighbours, and the two minute gap where the attacker read the results.",
+    "",
+    "PART D is the first block of LEGITIMATE traffic, and the first that turns on",
+    "rule order. Rule 4 allows the IT provider inbound SSH. Rule 3 denies all",
+    "inbound SSH and sits above it, so rule 4 never runs. A student who scans for",
+    "a matching deny finds rule 3 and stops; the question is why the allow that is",
+    "plainly present does nothing. Row 22 dates the cause, and rule 1 above rule 3",
+    "still admits the studio LAN, so the lesson is precedence and not 'SSH is off'.",
+    "",
+    "PART C is the first directory permission. client_notes.txt is -rw-------,",
+    "which is airtight, inside a directory that is drwxrwxrwx. The file cannot be",
+    "read by anyone but its owner and can be deleted by anybody. Neither the",
+    "world-writable executable (kiosk), the world-readable secret (laptop and",
+    "greenhouse) nor the setuid bit (print server) teaches this.",
+    "",
+    "PART E is the first application input attack, and the only second attack in",
+    "the library that is not post-compromise host activity. It is read from a web",
+    "access log, and the filter bypass is real: rows 4 to 6 are refused, row 7",
+    "sends '....//' which survives a single-pass strip of '../', and returns 200.",
+    "",
+    "TIMELINE, because a set whose sources contradict each other teaches students",
+    "to distrust the evidence. Source 1 is the rule table as it stood on 20 Aug.",
+    "The password attack in Source 2 is dated 19 Aug, when inbound SSH was open to",
+    "any address; rule 3 replaced that rule the same evening, which Source 1's note",
+    "states and row 22 records. Every blocked connection in the log is dated after",
+    "the change, and every connection that succeeded is consistent with the rules",
+    "in force when it happened."
+  ],
+  "course": "ap-cybersecurity",
+  "set_id": "dsa-bluebird-studio",
+  "title": "Device Security Analysis: the design studio workstation",
+  "device": "Design workstation, Bluebird Design Studio",
+  "est_minutes": 50,
+  "page_handle": "ap-cybersecurity-frq-bluebird-studio",
+  "page_title": "AP Cybersecurity FRQ Practice: Device Security Analysis | Design Studio",
+  "seo_description": "A fifth Device Security Analysis practice question: a username sweep that pivots to brute force, an allow rule behind an earlier deny, and directory traversal.",
+  "intro": [
+    "The following sources all come from the same device and were captured during a risk assessment.",
+    "The device is a design workstation at 10.20.5.44 at Bluebird Design Studio, a six person studio. It runs the studio's client proofing site, which clients reach over the internet, and it holds working files for open projects. The studio has no in-house IT staff and contracts maintenance to an outside provider.",
+    "The sources were captured on 20 August and cover the two days before that. Use the sources to respond to parts A, B, C, D, and E. Label any subparts. Cite specific evidence from the sources in your responses."
+  ],
+  "sources": [
+    {
+      "kind": "firewall-rules",
+      "label": "Source 1: Device firewall settings",
+      "note": "The device's IP address is 10.20.5.44. The studio network is 10.20.5.0/24. Rules are evaluated from the top of the table downwards and the first rule that matches a packet is the one applied. This table was captured on 20 August. Rule 3 was added at 21:05 on 19 August and replaced a rule that had allowed inbound SSH from any address.",
+      "columns": [
+        "Rule",
+        "Action",
+        "Source",
+        "Destination",
+        "Direction",
+        "Port",
+        "Protocol"
+      ],
+      "rules": [
+        [
+          "1",
+          "Allow",
+          "10.20.5.0/24",
+          "10.20.5.44",
+          "Inbound",
+          "22",
+          "SSH"
+        ],
+        [
+          "2",
+          "Deny",
+          "ALL",
+          "10.20.5.44",
+          "Inbound",
+          "3389",
+          "RDP"
+        ],
+        [
+          "3",
+          "Deny",
+          "ALL",
+          "10.20.5.44",
+          "Inbound",
+          "22",
+          "SSH"
+        ],
+        [
+          "4",
+          "Allow",
+          "203.0.113.40",
+          "10.20.5.44",
+          "Inbound",
+          "22",
+          "SSH"
+        ],
+        [
+          "5",
+          "Allow",
+          "ALL",
+          "10.20.5.44",
+          "Inbound",
+          "443",
+          "HTTPS"
+        ],
+        [
+          "6",
+          "Allow",
+          "ALL",
+          "10.20.5.44",
+          "Inbound",
+          "80",
+          "HTTP"
+        ],
+        [
+          "7",
+          "Allow",
+          "10.20.5.44",
+          "ALL",
+          "Outbound",
+          "443",
+          "HTTPS"
+        ],
+        [
+          "8",
+          "Allow",
+          "10.20.5.44",
+          "10.20.5.1",
+          "Outbound",
+          "53",
+          "DNS"
+        ],
+        [
+          "9",
+          "Deny",
+          "ALL",
+          "ALL",
+          "Inbound",
+          "ALL",
+          "ALL"
+        ]
+      ]
+    },
+    {
+      "kind": "auth-log",
+      "label": "Source 2: Authorization log",
+      "command": "sudo tail -n 30 /var/log/auth.log",
+      "lines": [
+        "1 - Aug 19 08:40:02 bluebird sshd[801]: Server listening on 0.0.0.0 port 22.",
+        "2 - Aug 19 08:42:01 bluebird sshd[812]: Accepted publickey for studioadmin from 10.20.5.12 port 49122 ssh2",
+        "3 - Aug 19 08:43:08 bluebird sshd[812]: session closed for user studioadmin",
+        "4 - Aug 19 09:14:10 bluebird sshd[1042]: Failed password for invalid user admin from 198.51.100.93 port 44102 ssh2",
+        "5 - Aug 19 09:14:13 bluebird sshd[1044]: Failed password for invalid user administrator from 198.51.100.93 port 44118 ssh2",
+        "6 - Aug 19 09:14:16 bluebird sshd[1046]: Failed password for invalid user design from 198.51.100.93 port 44130 ssh2",
+        "7 - Aug 19 09:14:19 bluebird sshd[1048]: Failed password for invalid user guest from 198.51.100.93 port 44146 ssh2",
+        "8 - Aug 19 09:14:22 bluebird sshd[1050]: Failed password for invalid user studio from 198.51.100.93 port 44162 ssh2",
+        "9 - Aug 19 09:14:25 bluebird sshd[1052]: Failed password for jlee from 198.51.100.93 port 44178 ssh2",
+        "10 - Aug 19 09:14:28 bluebird sshd[1054]: Failed password for invalid user webmaster from 198.51.100.93 port 44194 ssh2",
+        "11 - Aug 19 09:16:40 bluebird sshd[1101]: Failed password for jlee from 198.51.100.93 port 45002 ssh2",
+        "12 - Aug 19 09:16:42 bluebird sshd[1103]: Failed password for jlee from 198.51.100.93 port 45018 ssh2",
+        "13 - Aug 19 09:16:44 bluebird sshd[1105]: Failed password for jlee from 198.51.100.93 port 45034 ssh2",
+        "14 - Aug 19 09:16:46 bluebird sshd[1107]: Failed password for jlee from 198.51.100.93 port 45050 ssh2",
+        "15 - Aug 19 09:16:48 bluebird sshd[1109]: Failed password for jlee from 198.51.100.93 port 45066 ssh2",
+        "16 - Aug 19 09:16:50 bluebird sshd[1111]: Failed password for jlee from 198.51.100.93 port 45082 ssh2",
+        "17 - Aug 19 09:16:52 bluebird sshd[1113]: Failed password for jlee from 198.51.100.93 port 45098 ssh2",
+        "18 - Aug 19 09:16:54 bluebird sshd[1115]: Failed password for jlee from 198.51.100.93 port 45114 ssh2",
+        "19 - Aug 19 09:16:56 bluebird sshd[1117]: Accepted password for jlee from 198.51.100.93 port 45130 ssh2",
+        "20 - Aug 19 09:17:01 bluebird systemd-logind[498]: New session 7 of user jlee.",
+        "21 - Aug 19 09:22:14 bluebird sudo: jlee : TTY=pts/1 ; PWD=/home/jlee ; USER=root ; COMMAND=/bin/cat /etc/shadow",
+        "22 - Aug 19 21:05:11 bluebird ufw[3310]: rule added, position 3, deny in on eth0 proto tcp to any port 22 from any",
+        "23 - Aug 20 07:02:19 bluebird kernel: [UFW BLOCK] IN=eth0 SRC=203.0.113.40 DST=10.20.5.44 PROTO=TCP SPT=51022 DPT=22",
+        "24 - Aug 20 07:02:27 bluebird kernel: [UFW BLOCK] IN=eth0 SRC=203.0.113.40 DST=10.20.5.44 PROTO=TCP SPT=51028 DPT=22",
+        "25 - Aug 20 07:04:52 bluebird kernel: [UFW BLOCK] IN=eth0 SRC=198.51.100.77 DST=10.20.5.44 PROTO=TCP SPT=60114 DPT=3389",
+        "26 - Aug 20 08:15:03 bluebird sshd[2210]: Accepted publickey for studioadmin from 10.20.5.12 port 49560 ssh2"
+      ]
+    },
+    {
+      "kind": "app-log",
+      "label": "Source 3: Client proofing site access log",
+      "command": "sudo tail -n 10 /var/log/proofsrv/access.log",
+      "lines": [
+        "1 - Aug 20 09:11:03 192.0.2.19 \"GET /proofs/ HTTP/1.1\" 200 4821",
+        "2 - Aug 20 09:11:09 192.0.2.19 \"GET /proofs/campaign-v2.png HTTP/1.1\" 200 94821",
+        "3 - Aug 20 09:12:44 192.0.2.155 \"GET /download?file=brief.pdf HTTP/1.1\" 200 20114",
+        "4 - Aug 20 09:13:27 192.0.2.155 \"GET /download?file=../../../../etc/passwd HTTP/1.1\" 403 199",
+        "5 - Aug 20 09:13:31 192.0.2.155 \"GET /download?file=../../../../etc/shadow HTTP/1.1\" 403 199",
+        "6 - Aug 20 09:13:36 192.0.2.155 \"GET /download?file=..%2f..%2f..%2fhome/jlee/.ssh/id_rsa HTTP/1.1\" 403 199",
+        "7 - Aug 20 09:13:42 192.0.2.155 \"GET /download?file=....//....//....//etc/passwd HTTP/1.1\" 200 2841",
+        "8 - Aug 20 09:13:58 192.0.2.155 \"GET /download?file=....//....//....//var/www/proofs/.env HTTP/1.1\" 200 486",
+        "9 - Aug 20 09:15:02 192.0.2.19 \"GET /proofs/poster-v3.png HTTP/1.1\" 200 51200"
+      ]
+    },
+    {
+      "kind": "file-listing",
+      "label": "Source 4: File permissions in /home/jlee/Documents",
+      "command": "ls -ld /home/jlee/Documents ; ls -l /home/jlee/Documents",
+      "columns": [
+        "Permissions",
+        "Links",
+        "Owner",
+        "Group",
+        "Size",
+        "Modified",
+        "Name"
+      ],
+      "entries": [
+        [
+          "drwxrwxrwx",
+          "2",
+          "jlee",
+          "design",
+          "4096",
+          "Aug 20 10:31",
+          "/home/jlee/Documents"
+        ],
+        [
+          "-rw-------",
+          "1",
+          "jlee",
+          "design",
+          "4821",
+          "Aug 20 10:14",
+          "client_notes.txt"
+        ],
+        [
+          "-rwxrwxr-x",
+          "1",
+          "jlee",
+          "design",
+          "1732",
+          "Aug 20 10:18",
+          "deploy_preview.sh"
+        ],
+        [
+          "-rw-rw-r--",
+          "1",
+          "jlee",
+          "design",
+          "94821",
+          "Aug 20 10:21",
+          "campaign_mockup.png"
+        ],
+        [
+          "-rw-r--r--",
+          "1",
+          "jlee",
+          "design",
+          "2260",
+          "Aug 20 10:26",
+          "vendor_contacts.csv"
+        ],
+        [
+          "-rw-rw-r--",
+          "1",
+          "jlee",
+          "design",
+          "12490",
+          "Aug 20 10:31",
+          "public_copy.csv"
+        ]
+      ]
+    },
+    {
+      "kind": "process-list",
+      "label": "Source 5: Listening services",
+      "command": "ss -tulnp",
+      "lines": [
+        "Netid  State   Local Address:Port   Peer Address:Port   Process",
+        "tcp    LISTEN  0.0.0.0:22           0.0.0.0:*           users:((\"sshd\",pid=801,uid=0))",
+        "tcp    LISTEN  0.0.0.0:80           0.0.0.0:*           users:((\"proofsrv\",pid=1180,uid=0))",
+        "tcp    LISTEN  0.0.0.0:443          0.0.0.0:*           users:((\"proofsrv\",pid=1180,uid=0))",
+        "tcp    LISTEN  127.0.0.1:3306       0.0.0.0:*           users:((\"mysqld\",pid=990,uid=114))"
+      ]
+    },
+    {
+      "kind": "policy",
+      "label": "Source 6: Studio device acceptable use policy",
+      "sections": {
+        "Required": [
+          "Every employee works under their own named account.",
+          "Security updates are installed within 30 days of release.",
+          "Client working files are removed from the workstation when a project closes."
+        ],
+        "Permitted": [
+          "Employees may connect to the workstation from outside the studio network.",
+          "The studio's contracted IT provider may connect to perform maintenance.",
+          "Company owned displays, keyboards and drawing tablets may be connected."
+        ],
+        "Prohibited": [
+          "Sharing an account password with another employee or with a client.",
+          "Disabling endpoint protection.",
+          "Installing unapproved software."
+        ]
+      }
+    }
+  ],
+  "parts": {
+    "A": {
+      "subject": "policy",
+      "stem": "Consider the acceptable use policy in Source 6.",
+      "subparts": [
+        {
+          "verb": "Explain",
+          "prompt": "Explain how one part of the policy helps protect the device.",
+          "credit": [
+            "Names one specific policy item",
+            "Explains the protection in terms of a threat it reduces"
+          ],
+          "sample": "The Required section says every employee works under their own named account. That requirement is what makes the rest of Source 2 readable. Row 19 shows the successful login as jlee and row 21 shows that same account running cat /etc/shadow through sudo five minutes later, so the studio can say which account was taken and what was done with it afterwards. If the six employees shared one studio login, every line in Source 2 would name the same user, the eight failures in rows 11 to 18 would be indistinguishable from somebody mistyping their own password, and there would be no way to separate an intruder's session from a designer's."
+        },
+        {
+          "verb": "Explain",
+          "prompt": "Explain how one rule in the current policy could be modified to make the device more secure. Include a specific example in your response.",
+          "credit": [
+            "Identifies a specific rule that is too weak",
+            "States a concrete modification",
+            "Connects it to evidence from the sources"
+          ],
+          "sample": "The Permitted section lets employees connect to the workstation from outside the studio network, and nothing in the policy asks for anything beyond a password to do it. Rows 11 to 18 are eight failed passwords against jlee in fourteen seconds and row 19 is a success, so a password was the whole of the defence and it held for less than a minute. The rule could be modified to require a second factor for any connection originating outside 10.20.5.0/24, and to lock an account for fifteen minutes after five failed attempts within one minute. Concretely, a lockout at five failures ends the run at row 15, and row 19 never happens."
+        }
+      ]
+    },
+    "B": {
+      "subject": "password-attack",
+      "stem": "In the authorization log, there is evidence of a password attack in rows 4 to 19.",
+      "subparts": [
+        {
+          "verb": "Describe",
+          "prompt": "Describe the evidence in the log file that indicates a password attack. Include specific entries from the log file in your response.",
+          "credit": [
+            "Cites at least two specific rows",
+            "Notes the first stage: one attempt each across several usernames",
+            "Reads the invalid user wording, and explains that its absence at row 9 is what singles out jlee",
+            "Describes the switch to repeated attempts against that one account, ending in the success at row 19"
+          ],
+          "sample": "The attack runs in two stages from one address, 198.51.100.93. Rows 4 to 10 try seven usernames once each, three seconds apart, from 09:14:10 to 09:14:28: admin, administrator, design, guest, studio, jlee and webmaster. Six of the seven come back as Failed password for invalid user. Row 9 reads Failed password for jlee, with no invalid user in it, so jlee is the only one of the seven that exists on this device. That first stage is username enumeration and its product is a single valid name. Rows 11 to 18 then drop the other six names entirely and put eight attempts against jlee alone into fourteen seconds, two seconds apart, which is a brute force run against the account the sweep just identified. Row 19 is Accepted password for jlee from that same address. The two minute gap between row 10 and row 11 is the join between the stages, and it is when the results of the sweep were read."
+        },
+        {
+          "verb": "Identify",
+          "prompt": "Identify the IP address of the adversary.",
+          "credit": [
+            "States 198.51.100.93"
+          ],
+          "sample": "198.51.100.93"
+        }
+      ]
+    },
+    "C": {
+      "subject": "permissions",
+      "stem": "Consider all the sources from the device.",
+      "subparts": [
+        {
+          "verb": "Explain",
+          "prompt": "Explain how the permission settings for one file in the /home/jlee/Documents directory determine the level of access for that file for the owner, group, and all other users on the system. Include the name of the file in your response.",
+          "credit": [
+            "Names a specific file from Source 4",
+            "Reads all three triads correctly",
+            "Distinguishes what the bits mean on the file from what they mean on the directory that contains it"
+          ],
+          "sample": "client_notes.txt is -rw-------. Reading the three triads after the leading file type character: the owner jlee gets rw, read and write; the group design gets nothing; all other users get nothing. On the file itself that is as closed as a usable file gets, and no account other than jlee can read a byte of it. The first line of Source 4 changes what that is worth. The directory holding it, /home/jlee/Documents, is drwxrwxrwx, and the same bits mean something different on a directory: r lists the names inside it, w creates, renames and deletes the entries in it, and x traverses into it. Because the other triad on the directory includes w, any account on this device can delete client_notes.txt, or replace it with a different file under the same name, without ever being able to open the original. The permissions on a file govern its contents. The permissions on the directory around it govern whether it keeps existing."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Other than removing all permissions from all users, describe one way the permission settings for one file on the system could be configured to restrict access for some users on the device. Include the name of the file in your response.",
+          "credit": [
+            "Names a specific file",
+            "Describes a restriction that leaves the file usable for its purpose",
+            "Identifies which class loses which access"
+          ],
+          "sample": "/home/jlee/Documents is currently drwxrwxrwx, so every account on the device can add, rename and delete entries in it. It could be configured so that the owner jlee keeps read, write and execute, the design group keeps read and execute but loses write, and all other users have nothing. jlee continues to work normally. Members of design can still list the directory and traverse into it, so they still reach the files their own permissions allow, and shared project work is unaffected. Every account outside that group loses the ability to create, rename or delete anything in the directory, which closes the replacement path described in part C (i). Tightening client_notes.txt itself would not have achieved this, because its permissions were already read and write for the owner and nothing for anybody else."
+        },
+        {
+          "verb": "Write",
+          "prompt": "Using the explanation from part C (ii), write one or more chmod commands that set the permissions described.",
+          "credit": [
+            "Command names the correct file",
+            "Mode produces exactly the described access",
+            "Valid chmod syntax"
+          ],
+          "sample": "chmod 750 /home/jlee/Documents\n\nThe 7 gives the owner jlee read, write and execute, the 5 gives the design group read and execute with no write, and the 0 gives all other users nothing. The symbolic form chmod u=rwx,g=rx,o= /home/jlee/Documents is equivalent. The execute bit has to be kept for jlee and for design: on a directory it is what permits entering the directory at all, and without it the files inside become unreachable by name no matter what their own permissions say."
+        }
+      ]
+    },
+    "D": {
+      "subject": "firewall",
+      "stem": "Consider all the sources from the device.",
+      "subparts": [
+        {
+          "verb": "Explain",
+          "prompt": "Explain how one connection attempt on the device was blocked by the device's firewall. Include evidence from a log file in your response.",
+          "credit": [
+            "Cites a specific log row showing the block",
+            "Names the rule number that caused it",
+            "Matches the port and protocol in the log to the rule",
+            "Explains that the earlier rule matched first, so the allow below it never applied"
+          ],
+          "sample": "Rows 23 and 24 of Source 2 are UFW BLOCK entries at 07:02:19 and 07:02:27 on 20 August, inbound from 203.0.113.40 to 10.20.5.44 with destination port 22. Source 1 contains a rule that permits exactly that traffic, rule 4, allow 203.0.113.40 inbound on port 22, and it never runs. Source 1 states that rules are evaluated from the top and the first match is applied, and rule 3, deny all inbound on port 22, sits above rule 4. Every packet rule 4 was written for matches rule 3 first and is dropped, so the contracted IT provider cannot reach the device for the maintenance that Source 6 permits. Row 22 dates the cause: the deny was added at 21:05 the previous evening, after the password attack, and it was inserted above a rule that was already there. Rule 1 sits above rule 3 and still admits the studio network, which is why row 26 shows studioadmin connecting successfully from 10.20.5.12 on the same morning."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Other than allowing all traffic for all services, describe a modification to one firewall rule that would allow the connection attempt identified in part D (i).",
+          "credit": [
+            "Names the rule being changed",
+            "Modification is scoped, not a blanket allow",
+            "Would actually permit the specific attempt described"
+          ],
+          "sample": "The rule that permits the connection already exists, so nothing has to be added. Rule 4 has to be evaluated before rule 3, and moving rule 4 above rule 3 is the whole modification: inbound port 22 from 203.0.113.40 then matches an allow before it can reach the deny. If the order is to be left alone, the equivalent change is to modify rule 3 so that it denies inbound port 22 from all sources except 203.0.113.40. Either way the deny still covers every other address on the internet, including 198.51.100.93 from part B."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Other than allowing the connection attempt identified in part D (i), describe one impact of your modification from part D (ii) on incoming or outgoing network traffic on the device.",
+          "credit": [
+            "Describes a consequence beyond the intended one",
+            "The consequence follows from the specific modification made"
+          ],
+          "sample": "Inbound SSH from the internet stops being refused uniformly. After the change one external address reaches the SSH service and gets as far as authentication, so anything that can present 203.0.113.40 as its source address, whether by spoofing it or by compromising the provider's own network, arrives at a login prompt that the rest of the internet does not see. It also changes what the log means. While rule 3 covers every source, an inbound block on port 22 is an unambiguous alert. Afterwards, traffic on port 22 from that one address is expected and unremarkable, and entries like rows 23 and 24 stop being a signal that anybody needs to look at."
+        }
+      ]
+    },
+    "E": {
+      "subject": "second-attack",
+      "stem": "Apart from the password attack identified in part B, there is evidence of another attack on the device. Consider all the sources from the device.",
+      "subparts": [
+        {
+          "verb": "Determine",
+          "prompt": "Determine the type of attack evidenced in a log file.",
+          "credit": [
+            "Names directory traversal or path traversal"
+          ],
+          "sample": "A directory traversal attack, also called path traversal, against the client proofing site in Source 3."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Describe specific information in the log file that indicates the attack named in part E (i).",
+          "credit": [
+            "Cites specific rows",
+            "Identifies the traversal sequences and that they target files outside the directory the site serves",
+            "Notes that rows 7 and 8 returned 200 rather than 403, so some attempts succeeded"
+          ],
+          "sample": "Rows 4 to 8 of Source 3 all come from 192.0.2.155 and all target the file parameter of /download, which row 3 shows the same address using normally for brief.pdf a minute earlier. Row 4 requests ../../../../etc/passwd and row 5 ../../../../etc/shadow, both refused with 403. Row 6 sends the same idea with the slashes percent encoded, ..%2f..%2f..%2fhome/jlee/.ssh/id_rsa, and is also refused. Row 7 then sends ....//....//....//etc/passwd and the server answers 200 with 2841 bytes, and row 8 gets 200 for the site's .env file. The signature is the sequence rather than any single line: repeated attempts to climb above the directory the application is meant to serve, aimed at files a proofing site has no reason to hold, each one a different encoding of the same trick until one of them is not filtered. The two responses of 200 matter more than the three of 403, because they show the filter was removing ../ in a single pass, and removing the ../ from the middle of ....// leaves ../ behind."
+        },
+        {
+          "verb": "Describe",
+          "prompt": "Describe one way an automated system could halt this type of attack in real time.",
+          "credit": [
+            "Names an automated control such as a WAF, IDS or IPS",
+            "Describes what it detects and what it does about it while the attack is happening"
+          ],
+          "sample": "A web application firewall placed in front of the proofing site can inspect each request before the application receives it, match the query string against traversal patterns including the percent encoded and doubled forms in rows 6 and 7, and drop the request with an error rather than passing it on. Because all five attempts in rows 4 to 8 come from one address inside about thirty seconds, the same system can rate limit or block 192.0.2.155 outright once the first attempt is refused, which ends the run at row 4 instead of row 8."
+        },
+        {
+          "verb": "Identify",
+          "prompt": "This attack could be mitigated by an automated system, such as a firewall, IDS, IPS, or AI. Identify a different countermeasure that could mitigate, prevent, or deter the attack.",
+          "credit": [
+            "Names a countermeasure that is not an automated detection system",
+            "Explains how it mitigates, prevents or deters this specific attack"
+          ],
+          "sample": "Change the application so that it resolves the requested filename to an absolute path and then checks that the result is inside the one directory it is allowed to serve, rejecting anything that resolves outside it, instead of searching the input for sequences it considers bad. That removes the entire class of encoding tricks that rows 6 and 7 depend on, because ....// and ..%2f both resolve to the same place that ../ does. A second, independent countermeasure is to run the proofing site under an unprivileged account rather than root. Source 5 shows proofsrv listening on ports 80 and 443 with uid 0, and that is why row 8 could return a .env file that is readable only by its owner."
+        }
+      ]
+    }
+  }
+}

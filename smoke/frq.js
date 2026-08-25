@@ -76,6 +76,38 @@ console.log('\nSPECS');
     const names = listing.entries.map((e) => e[e.length - 1]);
     ok(`${at}: the chmod command names a file from the listing`,
       names.some((n) => write.sample.includes(n)), write.sample.split('\n')[0]);
+    // Part C (i) explains a file. It must be a file the student can actually
+    // see, for the same reason the chmod answer must: an explanation of a file
+    // that is not in Source 4 is unanswerable from the sources.
+    const explain = spec.parts.C.subparts[0].sample || '';
+    ok(`${at}: part C (i) explains a file from the listing`,
+      names.some((n) => explain.includes(n)), explain.slice(0, 60));
+
+    // Every row a sample cites in part B must exist in the auth log. The
+    // existing check reads the row range out of the STEM; these are the rows
+    // the sample responses point at, which is where a set drifts first when
+    // its log is edited after the answers are written.
+    const bText = [spec.parts.B.stem || ''].concat(
+      spec.parts.B.subparts.map((sp) => sp.sample || '')).join(' ');
+    const bRows = [...bText.matchAll(/rows? (\d+)(?: to (\d+))?/gi)]
+      .flatMap((m) => [Number(m[1]), m[2] ? Number(m[2]) : null])
+      .filter((n) => n !== null);
+    const strayRows = bRows.filter((n) => n < 1 || n > auth.lines.length);
+    ok(`${at}: every row part B cites exists in the auth log`,
+      bRows.length > 0 && strayRows.length === 0,
+      strayRows.length ? `log has ${auth.lines.length}, cites ${strayRows.join(', ')}` : 'no rows cited');
+
+    // Same idea for the rule numbers in part D. A set whose answer names rule 8
+    // of a seven rule table is not practice, it is a typo a student cannot
+    // resolve, and part D is the one part that turns entirely on reading the
+    // table correctly.
+    const fw = spec.sources.find((s) => s.kind === 'firewall-rules');
+    const dRules = [...spec.parts.D.subparts.map((sp) => sp.sample || '').join(' ')
+      .matchAll(/rule (\d+)/gi)].map((m) => Number(m[1]));
+    const strayRules = dRules.filter((n) => n < 1 || n > fw.rules.length);
+    ok(`${at}: every firewall rule part D names exists in the rule table`,
+      dRules.length > 0 && strayRules.length === 0,
+      strayRules.length ? `table has ${fw.rules.length}, names ${strayRules.join(', ')}` : 'no rules named');
   }
 }
 
