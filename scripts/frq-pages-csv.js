@@ -50,6 +50,11 @@ const UMBRELLA = 'ap-cybersecurity-practice';
 // search result and a first time visitor read, and it is never shown inside the
 // question itself.
 const COPY = {
+  'dsa-bluebird-studio': [
+    'This is the whole of Section II of the AP Cybersecurity exam: one question, six sources, fifty minutes.',
+    'The device is a design workstation at a six person studio that runs its own client proofing site. The password attack in this one arrives in two stages, and the firewall question turns on the order of the rules rather than on finding the rule that says deny.',
+    'Write your responses on paper or in your own editor first. Each subpart then reveals a sample response and the specific points that earn credit, so you can mark yourself honestly.',
+  ],
   'dsa-library-kiosk': [
     'This is the whole of Section II of the AP Cybersecurity exam: one question, six sources, fifty minutes.',
     'The sources come from a single device, a public library catalogue kiosk. You get its firewall rules, two logs, a file listing, what it is listening on, and the library\'s acceptable use policy. Parts A through E ask you to read across all of them and cite what you find.',
