@@ -562,6 +562,25 @@ const migrations = [
   // the entry route filters on it in SQL: a re-entry replaces the teacher's own
   // prior row and must never be able to touch a student-reported one.
   `ALTER TABLE attempts  ADD COLUMN source            TEXT DEFAULT NULL`,
+  // The same distinction on the System B ledger, and for the same reason.
+  // score_events is where Cyber and CSP grades actually live (see
+  // docs/grading-systems.md), so a teacher override on those courses has to land
+  // here rather than in `attempts`: lib/attempt-rollup.js returns null for a
+  // course with no graded course_manifest rows, which means an attempts row for
+  // one of them never reaches the teacher dashboard at all.
+  //
+  // NULL, the value every existing row has, means the student reported it from
+  // the page. That is true of all 100 percent of rows today, so this needs no
+  // backfill and no read-path change: nothing that ignores the column changes
+  // behaviour. 'teacher' will mean a teacher typed it in.
+  //
+  // A real column rather than a key inside `answers` for the same reason it is
+  // one on `attempts`: the entry route has to filter on it in SQL, so that
+  // re-entering an override replaces the teacher's own prior row and can never
+  // touch a student-reported one. idx_score_events_item already covers the
+  // (student, course, unit, lesson, activity_type, item) prefix that filter
+  // uses, so it costs no new index.
+  `ALTER TABLE score_events ADD COLUMN source           TEXT DEFAULT NULL`,
   // Acquisition on a session: the entry channel (Direct / Organic Search /
   // Social / Referral / Email / Paid / Other) and the referrer domain only.
   // Zero PII: an enum plus a hostname, never a full URL, query string, or IP.
