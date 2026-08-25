@@ -95,6 +95,12 @@ app.use(require('./routes/labs'));
 // /frq plus /frq-player.js for delivery.
 app.use(require('./routes/frq'));
 
+// The practice index: what a course has to practise and where each piece lives.
+// Root mounted alongside the two above because it serves /api/practice and the
+// hub refresher at /practice-hub.js. It reads only the specs those two routes
+// already serve, so it can never disagree with them.
+app.use(require('./routes/practice'));
+
 // Boot seeds run before app.listen, so any throw here would crash the process
 // before the healthcheck can pass and take the whole service down. Each seed is
 // therefore wrapped: a failure is logged loudly but never blocks boot. Seeds are

@@ -22,39 +22,128 @@
     "The device is a public library catalogue kiosk, chosen because a student",
     "can reason about who physically touches it without knowing any product."
   ],
-
   "course": "ap-cybersecurity",
   "set_id": "dsa-library-kiosk",
   "title": "Device Security Analysis: the library catalogue kiosk",
   "device": "Public catalogue kiosk, Greenfield Community Library",
   "est_minutes": 50,
+  "order": 1,
+  "difficulty": "intro",
+  "focus": "The baseline: one attacker, one IP, one account",
+  "blurb": "Start here. A public catalogue kiosk with a single attacker hammering a single account, so you can learn where each of the five parts looks before the sets start hiding things.",
   "page_handle": "ap-cybersecurity-frq-library-kiosk",
   "page_title": "AP Cybersecurity FRQ Practice: Device Security Analysis | Library Kiosk",
   "seo_description": "A full Device Security Analysis practice question in the real exam format: six sources from one device, parts A to E, with sample responses and scoring notes.",
-
   "intro": [
     "The following sources all come from the same device and were captured during a risk assessment.",
     "The device is the public catalogue kiosk in the lobby of Greenfield Community Library. Its IP address is 192.168.4.20. Library members use it without signing in. Staff use the same machine to check items back in.",
     "Use the sources to respond to parts A, B, C, D, and E. Label any subparts. Cite specific evidence from the sources in your responses."
   ],
-
   "sources": [
     {
       "kind": "firewall-rules",
       "label": "Source 1: Device firewall settings",
       "note": "The device's IP address is 192.168.4.20.",
-      "columns": ["Rule", "Action", "Source", "Destination", "Direction", "Port", "Protocol"],
+      "columns": [
+        "Rule",
+        "Action",
+        "Source",
+        "Destination",
+        "Direction",
+        "Port",
+        "Protocol"
+      ],
       "rules": [
-        ["1", "Allow", "ALL", "192.168.4.20", "Inbound", "22", "SSH"],
-        ["2", "Allow", "ALL", "192.168.4.20", "Inbound", "21", "FTP"],
-        ["3", "Allow", "ALL", "192.168.4.20", "Inbound", "80", "HTTP"],
-        ["4", "Allow", "ALL", "192.168.4.20", "Inbound", "443", "HTTPS"],
-        ["5", "Allow", "192.168.4.0/24", "192.168.4.20", "Inbound", "445", "SMB"],
-        ["6", "Allow", "192.168.4.11", "192.168.4.20", "Inbound", "5900", "VNC"],
-        ["7", "Deny", "198.51.100.77", "192.168.4.20", "Inbound", "80", "HTTP"],
-        ["8", "Deny", "ALL", "192.168.4.20", "Inbound", "3389", "RDP"],
-        ["9", "Allow", "192.168.4.20", "ALL", "Outbound", "ALL", "ALL"],
-        ["10", "Deny", "ALL", "ALL", "Inbound", "ALL", "ALL"]
+        [
+          "1",
+          "Allow",
+          "ALL",
+          "192.168.4.20",
+          "Inbound",
+          "22",
+          "SSH"
+        ],
+        [
+          "2",
+          "Allow",
+          "ALL",
+          "192.168.4.20",
+          "Inbound",
+          "21",
+          "FTP"
+        ],
+        [
+          "3",
+          "Allow",
+          "ALL",
+          "192.168.4.20",
+          "Inbound",
+          "80",
+          "HTTP"
+        ],
+        [
+          "4",
+          "Allow",
+          "ALL",
+          "192.168.4.20",
+          "Inbound",
+          "443",
+          "HTTPS"
+        ],
+        [
+          "5",
+          "Allow",
+          "192.168.4.0/24",
+          "192.168.4.20",
+          "Inbound",
+          "445",
+          "SMB"
+        ],
+        [
+          "6",
+          "Allow",
+          "192.168.4.11",
+          "192.168.4.20",
+          "Inbound",
+          "5900",
+          "VNC"
+        ],
+        [
+          "7",
+          "Deny",
+          "198.51.100.77",
+          "192.168.4.20",
+          "Inbound",
+          "80",
+          "HTTP"
+        ],
+        [
+          "8",
+          "Deny",
+          "ALL",
+          "192.168.4.20",
+          "Inbound",
+          "3389",
+          "RDP"
+        ],
+        [
+          "9",
+          "Allow",
+          "192.168.4.20",
+          "ALL",
+          "Outbound",
+          "ALL",
+          "ALL"
+        ],
+        [
+          "10",
+          "Deny",
+          "ALL",
+          "ALL",
+          "Inbound",
+          "ALL",
+          "ALL"
+        ]
       ]
     },
     {
@@ -117,13 +206,61 @@
       "kind": "file-listing",
       "label": "Source 4: File permissions in /home/kiosk/scripts",
       "command": "ls -l /home/kiosk/scripts",
-      "columns": ["Permissions", "Links", "Owner", "Group", "Size", "Modified", "Name"],
+      "columns": [
+        "Permissions",
+        "Links",
+        "Owner",
+        "Group",
+        "Size",
+        "Modified",
+        "Name"
+      ],
       "entries": [
-        ["-rwxrwxrwx", "1", "kiosk", "kiosk", "1840", "Mar 03 15:14", "notes_backup.sh"],
-        ["-rwxr-x---", "1", "root", "staff", "2204", "Feb 11 09:20", "checkin_sync.sh"],
-        ["-rw-r--r--", "1", "root", "root", "512", "Jan 08 14:02", "kiosk.conf"],
-        ["-rw-rw-rw-", "1", "kiosk", "kiosk", "9931", "Mar 03 12:44", "patron_holds.csv"],
-        ["-rw-------", "1", "root", "root", "1024", "Jan 08 14:02", "db_credentials.ini"]
+        [
+          "-rwxrwxrwx",
+          "1",
+          "kiosk",
+          "kiosk",
+          "1840",
+          "Mar 03 15:14",
+          "notes_backup.sh"
+        ],
+        [
+          "-rwxr-x---",
+          "1",
+          "root",
+          "staff",
+          "2204",
+          "Feb 11 09:20",
+          "checkin_sync.sh"
+        ],
+        [
+          "-rw-r--r--",
+          "1",
+          "root",
+          "root",
+          "512",
+          "Jan 08 14:02",
+          "kiosk.conf"
+        ],
+        [
+          "-rw-rw-rw-",
+          "1",
+          "kiosk",
+          "kiosk",
+          "9931",
+          "Mar 03 12:44",
+          "patron_holds.csv"
+        ],
+        [
+          "-rw-------",
+          "1",
+          "root",
+          "root",
+          "1024",
+          "Jan 08 14:02",
+          "db_credentials.ini"
+        ]
       ]
     },
     {
@@ -160,7 +297,6 @@
       }
     }
   ],
-
   "parts": {
     "A": {
       "subject": "policy",
@@ -187,7 +323,6 @@
         }
       ]
     },
-
     "B": {
       "subject": "password-attack",
       "stem": "In the authorization log, there is evidence of a password attack in rows 3 to 12.",
@@ -205,12 +340,13 @@
         {
           "verb": "Identify",
           "prompt": "Identify the IP address of the adversary.",
-          "credit": ["States 198.51.100.77"],
+          "credit": [
+            "States 198.51.100.77"
+          ],
           "sample": "198.51.100.77"
         }
       ]
     },
-
     "C": {
       "subject": "permissions",
       "stem": "Consider all the sources from the device.",
@@ -247,7 +383,6 @@
         }
       ]
     },
-
     "D": {
       "subject": "firewall",
       "stem": "Consider all the sources from the device.",
@@ -283,7 +418,6 @@
         }
       ]
     },
-
     "E": {
       "subject": "second-attack",
       "stem": "Apart from the password attack identified in part B, there is evidence of another attack on the device. Consider all the sources from the device.",
