@@ -52,6 +52,10 @@
   "page_handle": "ap-cybersecurity-frq-bluebird-studio",
   "page_title": "AP Cybersecurity FRQ Practice: Device Security Analysis | Design Studio",
   "seo_description": "A fifth Device Security Analysis practice question: a username sweep that pivots to brute force, an allow rule behind an earlier deny, and directory traversal.",
+  "blurb": "The set where the rule that would allow the connection is right there in the table and never runs. The password attack arrives in two stages, and one line tells you which account exists.",
+  "focus": "Rule order, and a sweep that narrows to one account",
+  "difficulty": "stretch",
+  "order": 5,
   "intro": [
     "The following sources all come from the same device and were captured during a risk assessment.",
     "The device is a design workstation at 10.20.5.44 at Bluebird Design Studio, a six person studio. It runs the studio's client proofing site, which clients reach over the internet, and it holds working files for open projects. The studio has no in-house IT staff and contracts maintenance to an outside provider.",

@@ -1,6 +1,6 @@
 # Device Security Analysis set 5: the design studio workstation
 
-2026-08-25. Task #115, claim #23.
+2026-08-25. Task #115, claims #23 and #24.
 
 ## Where this came from
 
@@ -88,9 +88,9 @@ correct answers in the print server set.
 
 ## Evidence
 
-`npm run smoke:frq`: 110 passed, 0 failed, up from 81.
+`npm run smoke:frq`: 110 passed, 0 failed, up from 81. `npm run smoke:practicehub`: 86 passed, 0 failed.
 
-All 109 offline suites pass, run the way `tests.yml` derives them from
+All 110 offline suites pass, run the way `tests.yml` derives them from
 package.json rather than from a written out list.
 
 Local boot on port 3999:
@@ -106,36 +106,47 @@ The set is ASCII only and contains no em-dashes. It is self scored like the
 other four: `public/frq-player.js` is untouched, still makes exactly one network
 call, and no score from this set reaches a gradebook.
 
+## Task #114 landed mid-flight, and CI caught what that changed
+
+The first push of this branch went red, and it was this branch's failure rather
+than anybody else's. Task #114 merged as PR #315 while the set was being
+written, and CI tests the merge with main rather than the branch alone.
+
+Two things it changed:
+
+**The spec contract grew.** `lib/frq-spec.js` now requires `blurb`, `focus` and
+`difficulty` on every set, because the hub renders a card per set and a card
+with no copy is an empty box. Set 5 declares `blurb` (186 chars, inside the 60
+to 200 bound), `focus`, `difficulty: stretch` and `order: 5`. Stretch is the
+honest label: it is the only set where part D cannot be answered by finding the
+matching deny.
+
+**The page copy coupling became CI gating.** The first version of this run note
+said no CI suite ran `scripts/frq-pages-csv.js`, which was true when it was
+written and is no longer. `smoke/practice-hub.js` calls `build()` for every
+authored spec, so a set with no entry in the `COPY` table now fails the build
+rather than merely refusing a sheet on demand. The entry is in this change.
+
+That file was locked by #114 and the lock was still held 43 minutes after
+PR #315 merged. It was forced, which writes an audit row naming this session.
+The reasons, recorded because forcing a lock should never be quiet: #114's code
+had landed in main, the file's role in that task was the sibling links rewrite
+that shipped with it, the remaining #114 work is Shopify side, and the edit here
+is one additive entry for a set that does not exist in main. If that session did
+still have the file open, this is the collision to know about.
+
 ## Still open
 
-**The page copy entry is not in this change.** `scripts/frq-pages-csv.js` holds
-page copy in a `COPY` table and `build()` throws for a set that has none, so
-with this spec merged the generator refuses to write the sheet for ALL five
-sets until the entry lands. Nothing in CI runs that script, so this does not
-gate a build, but the next person to generate the sheet will hit it.
-
-The file was locked by task #114, which is building the FRQ hub from these same
-specs, and forcing the lock on a live session was not worth it. The copy below
-is written and was validated out of tree against the real `build()` and
-`checkPage()`, producing a five page sheet with zero problems. It needs pasting
-into the `COPY` object and nothing else:
-
-```js
-  'dsa-bluebird-studio': [
-    'This is the whole of Section II of the AP Cybersecurity exam: one question, six sources, fifty minutes.',
-    'The device is a design workstation at a six person studio that runs its own client proofing site. The password attack in this one arrives in two stages, and the firewall question turns on the order of the rules rather than on finding the rule that says deny.',
-    'Write your responses on paper or in your own editor first. Each subpart then reveals a sample response and the specific points that earn credit, so you can mark yourself honestly.',
-  ],
-```
-
-Once it is in, `node scripts/frq-pages-csv.js out.csv --only dsa-bluebird-studio`
-produces the sheet for the new page alone.
-
-**Discoverability is task #114's, not this one's.** The four existing pages had
-no inbound links, and a fifth changes that count and nothing else.
+**Discoverability is task #114's, not this one's.** A fifth set changes the
+count on the hub and nothing else; the hub generates itself from the specs.
 
 **The COPY table is the coupling worth removing.** Every new spec breaks the
-generator until a second file is edited, and the rest of the page metadata
-already lives in the spec next to `page_handle` and `seo_description`. Moving
-page copy into the spec, with the table kept as a fallback, would make a new set
-one file again. Not done here for the same lock reason.
+build until a second file is edited, and the rest of the page metadata already
+lives in the spec next to `page_handle`, `seo_description` and now `blurb`.
+Moving page copy into the spec, with the table kept as a fallback, would make a
+new set one file again. It is a change to a file two tasks have now contended
+over in one evening, which is the argument for doing it rather than against.
+
+**The sheet is not imported.** `node scripts/frq-pages-csv.js out.csv --only
+dsa-bluebird-studio` produces the page for the new set alone, and the generator
+still prints its theme injector warning on every handle containing "frq".
