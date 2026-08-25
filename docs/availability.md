@@ -72,6 +72,32 @@ For deploy staleness specifically, `/api/health` reports the serving commit and
 merge; that was a slow Railway queue and it cleared on its own. Deploy drift
 tolerates a young head commit on purpose, so a fresh merge does not alarm.
 
+## Pages and the API deploy independently
+
+A Shopify page ships by Matrixify import. Its player ships by Railway deploy.
+Nothing synchronises them, so a page is always liable to run against a player
+older or newer than the one it was generated against. That skew is permanent,
+not a rollout window.
+
+The bootstrap therefore never assumes a particular player version. In
+particular it does not depend on `mountById` returning a promise, because the
+older player returns undefined and swallows its rejection. Pinned by
+`smoke/page-outage.js`, which runs the bootstrap against both player versions.
+
+Against an older player the behaviour degrades in exactly one place and never
+regresses:
+
+| | Old player | Current player |
+|---|---|---|
+| Healthy API | mounts normally | mounts normally |
+| Fetch rejects | the player's bare sentence | fallback with a way out |
+| API hangs | fallback | fallback |
+| Script never loads | fallback | fallback |
+
+So importing the pages before the API deploys is safe. The worst mode, the one
+with no natural end, is fixed either way, because the sentinel timeout does not
+involve the player at all.
+
 ## If it happens again
 
 1. `node scripts/page-availability.js`. It will say whether this is the API, one

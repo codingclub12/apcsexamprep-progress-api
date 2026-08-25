@@ -63,6 +63,7 @@ function stubDom(mountId) {
     getElementById: (id) => nodes.get(id) || null,
     _drop: (id) => nodes.delete(id),
     _get: (id) => nodes.get(id),
+    _nodes: nodes,
   };
 }
 
@@ -101,6 +102,33 @@ function shown(r) {
   return !!(r.mount && String(r.mount.innerHTML).includes('apcs-offline'));
 }
 
+// A page and the API it mounts from deploy independently: pages ship by
+// Matrixify import, players ship by Railway deploy. So a page is ALWAYS liable
+// to run against an older player than the one it was generated against, and
+// that skew is permanent rather than a one-off during a rollout.
+//
+// The older player returns undefined from mountById and swallows its rejection.
+// The bootstrap must therefore never depend on getting a promise back. These
+// cases pin what happens when it does not.
+const OLD_PLAYER = [
+  ['an older player, healthy API', (w, d, n, g, mid) => {
+    w[g] = { mountById: (el) => { n.delete(boot.sentinelId(mid));
+      el.innerHTML = '<div>real content</div>'; return undefined; } };
+  }, false],
+  // The old player writes its own bare sentence, which removes the sentinel.
+  // The student keeps today's message rather than gaining the better one. That
+  // is a degradation, not a regression, and it ends when the API deploys.
+  ['an older player whose fetch rejects', (w, d, n, g, mid) => {
+    w[g] = { mountById: (el) => { n.delete(boot.sentinelId(mid));
+      el.textContent = 'This practice question could not be loaded.'; return undefined; } };
+  }, false],
+  // The mode with no natural end is fixed even against the old player, because
+  // the sentinel timeout does not involve the player at all.
+  ['an older player against a hanging API', (w, d, n, g) => {
+    w[g] = { mountById: () => undefined };
+  }, true],
+];
+
 const CASES = [
   ['the player script never loads', () => {}, true],
   ['the spec fetch rejects', (w, d, g) => { w[g] = { mountById: () => Promise.reject(new Error('down')) }; }, true],
@@ -115,6 +143,11 @@ function suite(label, body, mountId, globalName) {
     if (r.error) { ok(`${name}: ${r.error}`, false); continue; }
     ok(`${name}: student sees an explanation, not a spinner`, shown(r) === expect);
   }
+  for (const [name, install, expect] of OLD_PLAYER) {
+    const r = play(body, mountId, (w, d) => install(w, d, d._nodes, globalName, mountId));
+    ok(`${name}: behaves`, shown(r) === expect);
+  }
+
   // The one that protects every healthy page on the site.
   const good = play(body, mountId, (w, d) => {
     w[globalName] = { mountById: (el) => {

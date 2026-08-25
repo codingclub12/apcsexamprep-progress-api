@@ -185,6 +185,53 @@ jobs:
       # edit fails that assertion, reword the comment. Do not loosen the check to
       # fit the prose: it is guarding the difference between a job that reads
       # unattended and one that changes things unattended.
+      # ── IS THE SITE USABLE RIGHT NOW? ──────────────────────────────────────
+      #
+      # Added 2026-08-25, after progress.apcsexamprep.com went down and took the
+      # practice pages with it. The pages never 404ed. They served HTTP 200,
+      # rendered their heading and prose, and sat on a loading message forever,
+      # because their content arrives from the API at render time. A check that
+      # asked for a status code would have been green for the whole outage, and
+      # the only thing that surfaced it was a person opening a page.
+      #
+      # So this asks the endpoint each page actually mounts from. /api/health can
+      # be perfectly happy while /api/frq is broken by one bad spec.
+      #
+      # Same posture as the step below: it reads, and it is placed after the two
+      # cache saves so that a failure here can never also skip the baseline and
+      # leave the next morning reporting "no baseline".
+      #
+      # ~12 requests, single threaded with a pause. Board item #79 records 46
+      # pages returning 429 during a parallel crawl of this storefront.
+      - name: Is the site usable right now
+        if: always()
+        run: |
+          set -o pipefail
+          if node scripts/page-availability.js | tee availability.txt; then
+            {
+              echo ""
+              echo "**Availability:** every page a class needs, and the endpoint each one mounts from, is answering."
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            {
+              echo ""
+              echo "### Something a class needs is not answering"
+              echo ""
+              echo "A page here can be returning HTTP 200 and still be unusable: most content"
+              echo "pages are a mount point that fetches from the API at render time, so an API"
+              echo "outage shows up as a page that loads forever rather than as an error."
+              echo ""
+              echo '```'
+              cat availability.txt
+              echo '```'
+              echo ""
+              echo "Reproduce with \`node scripts/page-availability.js\`. What each failure means,"
+              echo "and what to do about it, is in \`docs/availability.md\`."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error title=Something a class needs is not answering::See the summary."
+            exit 1
+          fi
+
       - name: Can graded work still reach the gradebook
         if: always()
         run: |
