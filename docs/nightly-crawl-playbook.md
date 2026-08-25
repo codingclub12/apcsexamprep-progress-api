@@ -35,8 +35,8 @@ apcs digest
 
 # 2. Tonight's crawl, against last night's baseline.
 node scripts/site-crawl.js \
-  --previous docs/runs/crawl-state.json \
-  --out docs/runs/crawl-state.json.new \
+  --previous /tmp/crawl-baseline.json \
+  --out /tmp/crawl-state-new.json \
   --json > /tmp/crawl.json
 ```
 
@@ -121,13 +121,20 @@ crawl's own bookkeeping.
 
 Read it before the run, without switching branches, so the crawler you execute is
 always the version on the default branch rather than whatever the log branch last
-saw:
+saw. **Stage it outside the repo**, in `/tmp`, not in `docs/runs/`:
 
 ```bash
 git fetch origin claude/nightly-crawl-log 2>/dev/null || true
 git show origin/claude/nightly-crawl-log:docs/runs/crawl-state.json \
-  > docs/runs/crawl-state.json 2>/dev/null || echo "no baseline yet, first run"
+  > /tmp/crawl-baseline.json 2>/dev/null || echo "no baseline yet, first run"
 ```
+
+The `/tmp` part is not fussiness. Restoring the baseline into `docs/runs/` leaves
+an untracked file in the working tree for the whole run, on whatever branch you
+happen to be standing on. This repo's stop hook flags untracked files, and the
+next agent to see that flag is one `git add -A` away from committing the crawl's
+private bookkeeping onto a feature branch. Keep the state file out of the repo
+until the moment it is committed to the log branch, and that cannot happen.
 
 A miss is normal on the first run. `board-delta.js` earned the rule the crawler
 follows here: report "no baseline" rather than treating every finding as new,
@@ -136,14 +143,22 @@ someone learns to ignore mornings.
 
 ## Closing the run
 
-```bash
-mv docs/runs/crawl-state.json.new docs/runs/crawl-state.json
+Switch to the log branch FIRST, then copy the state in from `/tmp`. Doing it in
+that order means the file only ever exists inside the repo on the branch it
+belongs to.
 
+```bash
 git fetch origin claude/nightly-crawl-log 2>/dev/null \
   && git checkout -B claude/nightly-crawl-log origin/claude/nightly-crawl-log \
   || git checkout -B claude/nightly-crawl-log
 
-# only the crawl's own bookkeeping, never a change to the system it watches
+mkdir -p docs/runs
+cp /tmp/crawl-state-new.json docs/runs/crawl-state.json
+# write the run note here, then:
+
+# name both paths explicitly. never `git add -A` on this branch: the working
+# tree may still carry scratch files from the run, and the log branch is for
+# the crawl's own bookkeeping and nothing else.
 git add docs/runs/crawl-state.json "docs/runs/$(date +%F)-nightly-crawl.md"
 git commit -m "nightly crawl: <one line on what changed>"
 git push -u origin claude/nightly-crawl-log
