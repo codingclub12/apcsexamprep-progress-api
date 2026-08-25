@@ -291,7 +291,12 @@ const slides = (course, lessonId, tok) => fetch(`${base()}/api/slides/${course}/
     ok('  count() agrees with what the manifest can reach', embeds.count() === ids.length,
       [embeds.count(), ids.length]);
     const sample = embeds.embedUrl('ABC123');
-    ok('  embedUrl builds a docs.google.com embed', sample === 'https://docs.google.com/presentation/d/ABC123/embed?start=false&loop=false&rm=minimal', sample);
+    ok('  embedUrl builds a docs.google.com embed', sample === 'https://docs.google.com/presentation/d/ABC123/embed?start=false&loop=false', sample);
+    // rm=minimal hides the Slides toolbar, and with it the previous/next
+    // controls, the slide counter and the fullscreen button. A teacher
+    // projecting in class needs those, so it must not come back.
+    ok('  and does not hide the Slides toolbar', sample.indexOf('rm=minimal') === -1, sample);
+    ok('  and does not autoplay', /start=false/.test(sample) && /loop=false/.test(sample), sample);
     ok('  a lesson with no ids returns decks without embedUrl',
       embeds.count() > 0 || manifest.decksForLesson('1-1', ['teacher']).every((d) => !('embedUrl' in d)));
   }

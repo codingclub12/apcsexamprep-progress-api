@@ -265,12 +265,18 @@ function slideId(lessonId, day, variant, track) {
   return Object.prototype.hasOwnProperty.call(SLIDE_IDS, key) ? SLIDE_IDS[key] : null;
 }
 
-// The embed parameters live here and nowhere else. `rm=minimal` drops the
-// Slides chrome so the deck sits in the lesson page rather than looking like a
-// borrowed Google window; autoplay stays off so 35 lesson pages do not each
-// start advancing slides at a student.
+// The embed parameters live here and nowhere else.
+//
+// This deliberately does NOT pass rm=minimal, which an earlier version did.
+// rm=minimal hides the Slides embed toolbar, which looks tidier but is where
+// the previous/next controls, the slide counter and the fullscreen button
+// live. A teacher projecting a deck in class needs all three far more than
+// they need the frame to blend into the page, so the toolbar stays.
+//
+// autoplay stays off: 35 lesson pages should not each start advancing slides
+// on their own.
 function embedUrl(id) {
-  return `https://docs.google.com/presentation/d/${id}/embed?start=false&loop=false&rm=minimal`;
+  return `https://docs.google.com/presentation/d/${id}/embed?start=false&loop=false`;
 }
 
 function count() {
