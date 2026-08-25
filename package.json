@@ -147,7 +147,8 @@
     "autofixscan": "node scripts/autofix-scan.js",
     "smoke:autofixrisk": "node smoke/autofix-risk.js",
     "smoke:cspunittestlinks": "node smoke/csp-unit-test-links.js",
-    "smoke:renderable": "node smoke/renderable-entities.js"
+    "smoke:renderable": "node smoke/renderable-entities.js",
+    "smoke:healthintegrity": "node smoke/health-integrity.js"
   },
   "keywords": [],
   "author": "",
