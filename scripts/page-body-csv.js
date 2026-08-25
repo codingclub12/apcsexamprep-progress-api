@@ -71,15 +71,30 @@ const PAGES = [
 // &amp; is decoded LAST and separately, because decoding it first would turn a
 // literal &amp;lt; into &lt; and then into <, which is a different string than
 // the one that was stored.
+// Every named entity a generator ships has to be in here. Shopify decodes these
+// on save, so an entity this map does not know leaves the repo side holding
+// `&x;` while the live side holds the character: the two can never compare equal
+// and the page is re-imported forever. docs/shopify-page-imports.md records the
+// first time that happened, when the map knew only &ndash; and &mdash; and
+// join.html shipped a &rarr;.
+//
+// &middot; is the second time. The CSP exercise pages ship it 983 times, once in
+// every item number ("Q1 &middot; 3 points on the handout"), and every one of
+// those pages read as differing from its live copy.
+//
+// smoke/renderable-entities.js now derives the required set from what the
+// builders actually emit rather than trusting this list to stay complete, so a
+// third time fails a test instead of a sheet.
 const NAMED = {
   ndash: '–', mdash: '—', rarr: '→', larr: '←', nbsp: ' ',
   hellip: '…', times: '×', check: '✓', lt: '<', gt: '>', quot: '"',
+  middot: '·',
 };
 
 function renderable(s) {
   return String(s == null ? '' : s)
     .replace(/&#(\d+);/g, (m, d) => String.fromCodePoint(Number(d)))
-    .replace(/&(ndash|mdash|rarr|larr|nbsp|hellip|times|check|lt|gt|quot);/g, (m, n) => NAMED[n])
+    .replace(/&(ndash|mdash|rarr|larr|nbsp|hellip|times|check|lt|gt|quot|middot);/g, (m, n) => NAMED[n])
     .replace(/&amp;/g, '&')
     // Shopify also REFLOWS the markup a little on save: it inserted a newline
     // before a closing div in join.html, which is not a change to the page by
