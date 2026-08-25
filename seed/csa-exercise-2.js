@@ -7,9 +7,8 @@
 //  unit, following the same shape as seed/csa-exercises/index.js so a future
 //  lesson never has to change how this is required.
 //
-//  Unit 4 is COMPLETE: all 17 of its lessons have a bank. Units 2 and 3 are
-//  unfilled, 21 lessons between them, same posture the exercise-1 build itself
-//  took: content ships incrementally.
+//  Units 2, 3 and 4 are COMPLETE: every lesson those units declare has a bank,
+//  38 banks and 228 questions in total.
 //
 //  Unit 1 is not missing anything. It declares cfu rather than exercise-2 in
 //  utils.js, so it has no exercise-2 column at all. course_denominators prices
@@ -27,6 +26,8 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 const banks = [
+  ...require('./csa-exercise-2/unit2'),
+  ...require('./csa-exercise-2/unit3'),
   ...require('./csa-exercise-2/unit4'),
 ];
 
