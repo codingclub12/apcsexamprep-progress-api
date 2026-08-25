@@ -142,7 +142,8 @@
     "sitecrawl": "node scripts/site-crawl.js",
     "smoke:sitecrawl": "node smoke/site-crawl.js",
     "autofixscan": "node scripts/autofix-scan.js",
-    "smoke:autofixrisk": "node smoke/autofix-risk.js"
+    "smoke:autofixrisk": "node smoke/autofix-risk.js",
+    "smoke:cspunittestlinks": "node smoke/csp-unit-test-links.js"
   },
   "keywords": [],
   "author": "",

@@ -68,18 +68,12 @@ const PUBLISHED_AT = '2026-03-01 12:00:00';
 
 const REQUIRED = ['var DATA = {', '"bigIdeas"', 'csp-command-center'];
 
-// Big Idea -> its unit test page(s). Big Idea 3 sits across two class periods
-// and its test ships as two separate pages, which utils.js already knows about
-// (they are two separate lessons there for the same reason: one submission per
-// page id, so folding them into one would have part B overwrite part A).
-const UNIT_TESTS = {
-  1: [['ap-csp-course-bi1-unit-test', 'Unit test']],
-  2: [['ap-csp-course-bi2-unit-test', 'Unit test']],
-  3: [['ap-csp-course-bi3-unit-test-part-a', 'Unit test part A'],
-      ['ap-csp-course-bi3-unit-test-part-b', 'Unit test part B']],
-  4: [['ap-csp-course-bi4-unit-test', 'Unit test']],
-  5: [['ap-csp-course-bi5-unit-test', 'Unit test']],
-};
+// Big Idea -> its unit test page(s). This mapping used to live here, and living
+// in one place was not enough: two page builders wrote `bi${n}-unit-test` from a
+// uniform template anyway, and shipped a 404 on 54 pages. It now lives in
+// lib/csp-unit-tests.js so every caller shares it. See that file for why Big
+// Idea 3 is two pages.
+const { UNIT_TESTS } = require('../lib/csp-unit-tests');
 
 function label(page) {
   const n = 'Exercise ' + page.kind.slice('exercise-'.length);
