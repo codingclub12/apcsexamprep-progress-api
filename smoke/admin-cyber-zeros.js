@@ -96,7 +96,18 @@ const scoreOf = () => db.prepare("SELECT score, score_reset_at FROM progress WHE
       r.json && r.json.by_column && r.json.by_column['1.3|exercise-1'] === 1, r.json && r.json.by_column);
   }
 
-  console.log('the doors');
+  console.log('scope reaches the route');
+{
+  const r = await call('GET', '/api/admin/cyber-zeros?scope=v2', { headers: { 'x-admin-key': KEY } });
+  ok('GET honours ?scope=', r.status === 200 && r.json.scope === 'v2', r.json && r.json.scope);
+  ok('a v2 dry run finds nothing in this v1-only fixture', r.json.found === 0, r.json.found);
+  const bad = await call('GET', '/api/admin/cyber-zeros?scope=everything', { headers: { 'x-admin-key': KEY } });
+  ok('an unknown scope is a 400, not a 500 and not a silent widening',
+    bad.status === 400 && /unknown scope/.test(bad.json.error || ''), bad);
+  ok('the refused scope wrote nothing', scoreOf().score === 0);
+}
+
+console.log('the doors');
   {
     const r = await call('GET', '/api/admin/cyber-zeros');
     ok('GET with no credential is refused', r.status === 403, r.status);
