@@ -7,12 +7,15 @@
 //  unit, following the same shape as seed/csa-exercises/index.js so a future
 //  lesson never has to change how this is required.
 //
-//  Only seed/csa-exercise-2/unit4.js exists so far, covering the six lessons
-//  whose exercise-1 was just recontented to match the real CED (see the header
-//  of seed/csa-exercises/unit4.js). Units 1-3 and the rest of Unit 4 are
-//  unfilled, same posture the exercise-1 build itself took: content ships
-//  incrementally, and course_denominators already carries exercise-2 for every
-//  CSA lesson regardless of whether a bank exists yet.
+//  Unit 4 is COMPLETE: all 17 of its lessons have a bank. Units 2 and 3 are
+//  unfilled, 21 lessons between them, same posture the exercise-1 build itself
+//  took: content ships incrementally.
+//
+//  Unit 1 is not missing anything. It declares cfu rather than exercise-2 in
+//  utils.js, so it has no exercise-2 column at all. course_denominators prices
+//  exercise-2 for every CSA lesson including Unit 1's, but a denominator only
+//  prices a column that already exists; columns come from COURSES.activities
+//  and course_manifest, neither of which gives Unit 1 one.
 //
 //  RENDERED BY lib/csa-exercise-2-pages.js, exported to Matrixify by
 //  scripts/csa-exercise-2-pages-csv.js (npm run csax2 -- out.csv), and checked
