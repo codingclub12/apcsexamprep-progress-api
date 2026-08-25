@@ -22,7 +22,14 @@
 (function() {
   'use strict';
 
-  const API = 'https://apcsexamprep-progress-api-production.up.railway.app';
+  // The API's own name, not the hostname it happens to be deployed on. School
+  // content filters routinely block *.up.railway.app as an uncategorised cloud
+  // host while apcsexamprep.com and its subdomains are allowed, so a page loads
+  // normally and only its reporting dies, silently and with nothing on screen.
+  // That is what stopped a whole class reaching /pages/join on 2026-08-24, and
+  // this file is on every lesson, exercise and quiz page. Six other assets here
+  // already use this name.
+  const API = 'https://progress.apcsexamprep.com';
 
   // ── SESSION ──────────────────────────────────────────────────────────────────
   function getSession() {
