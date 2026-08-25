@@ -39,12 +39,52 @@ function parseArgs(argv) {
   const files = [];
   let handles = null;
   let out = null;
+  let fromJson = null;
   for (let i = 0; i < argv.length; i += 1) {
     if (argv[i] === '--handles') { handles = argv[i += 1]; continue; }
     if (argv[i] === '--out') { out = argv[i += 1]; continue; }
+    if (argv[i] === '--from-json') { fromJson = argv[i += 1]; continue; }
     files.push(argv[i]);
   }
-  return { files, handles, out };
+  return { files, handles, out, fromJson };
+}
+
+// ── --from-json ──────────────────────────────────────────────────────────────
+// The bodies and the handle list both have to come from the Admin API in the
+// same sitting, and the per-file route means somebody copies four live page
+// bodies out of an API response and into four files by hand. A stored hub body
+// is 18 KB of style rules; a single character altered in transit ships a broken
+// live page, and nothing downstream can see it, because the generator's checks
+// look at links, size and div balance rather than at CSS.
+//
+// So this reads the API response itself. Save one query, pass one file, retype
+// nothing:
+//
+//   { pages(first: 10, query: "handle:ap-csa-unit-*-course") {
+//       nodes { handle body } } }
+//
+// The handle list can come out of the same file when it carries the lesson and
+// activity pages too, which is why --handles stays optional in this mode.
+function readFromJson(file) {
+  const doc = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const seen = [];
+  // Accept the response whole, or any {nodes:[...]} inside it, so a multi-alias
+  // query (u1/u2/u3/u4) works as readily as a single paginated one.
+  (function walk(node) {
+    if (!node || typeof node !== 'object') return;
+    if (Array.isArray(node.nodes)) {
+      for (const n of node.nodes) if (n && typeof n.handle === 'string') seen.push(n);
+    }
+    for (const k of Object.keys(node)) walk(node[k]);
+  }(doc));
+
+  const byHandle = new Map();
+  for (const n of seen) if (!byHandle.has(n.handle)) byHandle.set(n.handle, n);
+  const bodies = [...byHandle.values()].filter((n) => typeof n.body === 'string' && n.body.length);
+  if (!bodies.length) {
+    throw new Error(`${file} carries no page with a body; the query must select body as well as handle`);
+  }
+  return { bodies, handles: new Set(byHandle.keys()) };
 }
 
 function readHandles(file) {
@@ -61,9 +101,11 @@ function cell(s) {
 }
 
 function main(argv) {
-  const { files, handles, out } = parseArgs(argv);
-  if (!files.length || !handles || !out) {
+  const { files, handles, out, fromJson } = parseArgs(argv);
+  if (!out || (!fromJson && (!files.length || !handles))) {
     console.error('usage: node scripts/csa-hub-exercise-links.js --handles <handles.txt> --out <out.csv> <hub-body.html>...');
+    console.error('   or: node scripts/csa-hub-exercise-links.js --from-json <admin-response.json> --out <out.csv>');
+    console.error('       [--handles <handles.txt>]   to widen the live handle set beyond that response');
     console.error('  fetch the bodies and the handle list from the Shopify Admin API first');
     process.exit(2);
   }
@@ -71,9 +113,21 @@ function main(argv) {
   let live;
   const rows = [];
   try {
-    live = readHandles(handles);
-    for (const file of files) {
-      const inBody = fs.readFileSync(file, 'utf8');
+    const json = fromJson ? readFromJson(fromJson) : null;
+    // Both sources union when both are given: the JSON knows the hub bodies, a
+    // handles file can carry the far larger lesson and activity handle set that
+    // decides whether each chip links or locks.
+    live = new Set([
+      ...(json ? json.handles : []),
+      ...(handles ? readHandles(handles) : []),
+    ]);
+    if (!live.size) throw new Error('the live handle set is empty; pass --handles or a richer query');
+
+    const inputs = json
+      ? json.bodies.map((n) => ({ name: n.handle, body: n.body }))
+      : files.map((f) => ({ name: f, body: fs.readFileSync(f, 'utf8') }));
+
+    for (const { name: file, body: inBody } of inputs) {
       const res = build(inBody, live);
       if (res.problems.length) {
         console.error(`\n  ${res.problems.length} problem(s) in ${file}. No file written:\n`);
