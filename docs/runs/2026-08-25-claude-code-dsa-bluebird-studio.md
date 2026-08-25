@@ -147,6 +147,43 @@ Moving page copy into the spec, with the table kept as a fallback, would make a
 new set one file again. It is a change to a file two tasks have now contended
 over in one evening, which is the argument for doing it rather than against.
 
-**The sheet is not imported.** `node scripts/frq-pages-csv.js out.csv --only
-dsa-bluebird-studio` produces the page for the new set alone, and the generator
-still prints its theme injector warning on every handle containing "frq".
+## The sheet, and why it is five pages rather than one
+
+Merged as PR #316, deployed, and confirmed live: `/api/frq` serves five sets
+with `spec_errors []`, the new set at 22275 bytes, and `/api/practice` lists it
+as `stretch` without anything being wired by hand, because the hub reads the
+specs.
+
+The sheet was then generated, and `--only dsa-bluebird-studio` turned out to be
+the wrong instinct. Two things make it a five page sheet:
+
+**The sibling links.** PR #315 added a "More Device Security Analysis practice"
+block to every FRQ page body, built from the other sets. A fifth set changes
+that block on all four existing pages, so importing only the new page would
+leave four pages linking to three siblings and the new one reachable from none
+of them.
+
+**PR #315's page bodies were never imported.** Checked against the storefront
+rather than assumed: all four live pages return 200 and carry the player mount,
+and none of them carries the sibling block at all. So that layer has been
+generated, tested and merged, and has never reached a page. This sheet is what
+lands it, which means the import does more than add one page and should be read
+that way before it runs.
+
+Sheet: 5 rows, MERGE, `utf-8-sig`, past dated Published At, 19055 bytes against
+the 58KB single push ceiling. Independently re-checked after generation rather
+than trusting the generator's own pass: every body has exactly one `<h1>`, is
+ASCII with no em-dash, has balanced script tags, mounts the player, names the
+new set, and carries an SEO description inside 70 to 160 characters.
+
+**The theme injector hazard is closed.** Every earlier run note on these pages
+carried a warning not to import until theme PR #73 narrowed the FRQ auto-CTA
+injector. That landed. The generator now re-checks the served page and reports
+that the gate requires "csa" too, so cyber pages are skipped. It also records
+the trap in the check: grepping a rendered cyber page for "java" proves nothing,
+because the global nav links the Java course from every page on the site.
+
+**Still not imported.** The import is a human action and the sheet is handed
+over, not run. The three hub pages from #114 are also still 404 on the
+storefront, so that task's own import has not happened either; when it does it
+will pick up all five sets, since it generates from the specs.
