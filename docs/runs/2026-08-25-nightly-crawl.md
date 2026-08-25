@@ -1,89 +1,107 @@
-# 2026-08-25 nightly site crawl (seeding run)
+# 2026-08-25 nightly site crawl
 
-Not a scheduled night. This is the run that stood the job up, kept here because
-it is the first baseline and because what it got wrong is the useful part.
+Shard 7 of 7. 316 of 2,006 sitemap URLs, 595 requests, 726 seconds, **zero 429s**,
+no abort, no truncation. API build `c7cd1d2`.
 
-The Routine fires nightly at 09:00 UTC (04:00 US Central) from tomorrow.
+**0 P0, 1 P1, 3 P2.** One new finding, and it is real.
 
-## What ran
+## P1: Big Idea 3 unit test is a dead link from BI3 exercise pages
 
-`node scripts/site-crawl.js --budget 130 --link-budget 60 --delay 900 --shard 6`
+`/pages/ap-csp-course-bi3-unit-test` returns **404**. It is linked from the
+"Where to go next" footer as **"Big Idea 3 unit test"**.
 
-130 of 2,006 sitemap URLs, 201 requests, 231 seconds, zero 429s, no abort. API
-build `c7cd1d2`.
+Verified by hand, and the shape of it is exact:
 
-## Findings
-
-**One, P2.** `/pages/java-editor-test` has no meta description.
-
-Verified by hand: HTTP 200, 345KB, title "Java Editor Test", no `<meta
-name="description">`, and **no robots noindex**. So the missing meta description
-is the smaller half of it. A page called Java Editor Test is live, indexable, and
-listed in the public sitemap that Google reads. Nothing is broken for a student,
-but it is a scratch page with a front door.
-
-Not filed as a task. This job reads; the board write is a human's call.
-
-## What the run got wrong first, and what changed
-
-The first live pass produced **22 findings and every one was a false positive**.
-That is the whole story of this run and the reason the checks look the way they
-do now. Each fix is pinned in `smoke/site-crawl.js` in the SILENT direction, so
-none of them can quietly come back.
-
-| What fired | Why it was wrong |
+| Handle | Live |
 |---|---|
-| Challenge detector on all 20 probe pages | A `/captcha/i` test matches every page on this storefront: Shopify's own bundled JS ships `recaptcha-v3-token` and `h-captcha-response` on every render. Size plus shape is the honest signal, because a real page here is 350KB+ and an interstitial is a few KB. |
-| `placeholder-text` on `/pages/ap-csa-course` | COMING SOON is a deliberate status badge, explained in the paragraph above the list. `TBD` came off for the same reason. |
-| `reporter-missing` on 7 CSA reference pages | `\bcheck-btn\b` matched inside `sp-check-btn`, because a hyphen is a word boundary. Class attributes are now split and compared as whole tokens. |
-| `broken-internal-link` on `/pages/ap-csa-`, "linked from 240 pages" | The href was read out of the middle of a JavaScript string concatenation on the FRQ pages: `'<a class="fc-nav-btn" href="/pages/ap-csa-' + year + ...`. Script and style blocks now come out once and everything structural reads the stripped copy. |
-| `broken-internal-link` on `/cdn-cgi/l/email-protection`, 243 pages | Cloudflare rewrites it in the browser and 404s a direct GET by design. It is on every page. |
-| `liquid-leak` on two CSA algorithm pages | `{{5,3,5,8}}` is a Java 2D array literal. This site teaches Java, so doubled braces are ordinary content. The check now requires a Liquid object root or a real tag keyword. |
-| 12 `reporter-missing` P0s across CSA and cyber | The big one. See below. |
+| `ap-csp-course-bi1-unit-test` | 200 |
+| `ap-csp-course-bi2-unit-test` | 200 |
+| **`ap-csp-course-bi3-unit-test`** | **404** |
+| `ap-csp-course-bi3-unit-test-part-a` | 200 |
+| `ap-csp-course-bi3-unit-test-part-b` | 200 |
+| `ap-csp-course-bi4-unit-test` | 200 |
+| `ap-csp-course-bi5-unit-test` | 200 |
 
-## The lesson worth keeping
+Big Idea 3 is the only one whose unit test is split across two sittings, which
+`utils.js` states outright in `pageFromHandle`: "Big Idea 3 is split across two
+sittings, part A and part B, and they stay SEPARATE lessons on purpose." So there
+is no `bi3-unit-test` page and there was never meant to be one.
 
-The twelve P0s came from asserting a widget-to-reporter matrix inferred from one
-sample page per course. Measuring the live storefront found **five** widget
-families, not three:
+Two link builders emit the handle from a uniform `bi{N}-unit-test` template,
+which is right for four Big Ideas and wrong for the fifth:
 
-| Course | Question widget | Score reporter |
-|---|---|---|
-| AP CSA lessons | `data-item-id`, `apcs-ex`, `apcs-opt` | `apcs-reporter.js` |
-| AP CSP lessons | `mcq-option`, no `data-item-id` | `ap-csp-reporter.js` |
-| Cyber exercises | `check-btn`, no `data-item-id` | `apcs-score-reporter.js` |
-| Cyber quizzes and exams | `option-label` plus `check-btn` | `apcs-quiz-wiring.js` |
-| CSA scenario practice | `sp-opt`, `sp-check-btn` | none at all |
-| Course hubs | none of them | none, correctly |
+- `lib/csp-exercise-pages.js:329`
+  `<a href="/pages/ap-csp-course-bi${bi}-unit-test">Big Idea ${bi} unit test</a>`
+- `lib/csp-course-pages.js:357`
+  `<a href="/pages/ap-csp-course-bi${bi.n}-unit-test">Sit the ... unit test</a>`
 
-`cyber-check-item` (15) and `apcs-dropdown-link` (135) appear on every page on
-the site. They are nav chrome, and counting them makes every page look graded.
+**The codebase already knows BI3 is special in three other places** and none of
+that knowledge reached these two lines:
 
-So the grade-path check was split into what is provable and what is not.
-`reporter-missing` now fires only on the `data-item-id` contract CLAUDE.md
-actually specifies. Everything else is caught by comparing each page against its
-own fingerprint from the previous run: a page that loaded a reporter last night
-and does not tonight is a regression on any reading, and needs no matrix.
+- `scripts/csp-command-center-exercises.js:78-79` lists `bi3-unit-test-part-a`
+  and `-part-b` explicitly
+- `lib/lesson-links.js:107-109` handles `unit-test` and `unit-test-part-a`
+- `utils.js` `pageFromHandle` parses both forms
 
-After the fixes, the same 130-URL slice returned **1 finding instead of 22**, and
-nine real pages spanning all five courses plus both hubs returned zero.
+Confirmed as a rendered anchor, not script text:
+`<a href="/pages/ap-csp-course-bi3-unit-test">Big Idea 3 unit test</a>` on
+`/pages/ap-csp-topic-3-11-exercise-2`.
 
-## Still open
+**Blast radius.** 7 of the 21 BI3 pages in this shard carry it. At a 1-in-6.3
+sampling rate that is roughly **44 pages sitewide**, and 72 BI3 topic pages are
+live. Treat 44 as an estimate from a sample, not a count.
 
-Nothing from this run.
+**Who it hurts.** A student finishes a Big Idea 3 exercise, clicks the one link
+offered for what to do next, and lands on a 404. `utils.js` calls the Big Idea
+unit tests "the highest stakes assessment in CSP", six tests and 84 authored
+questions. Part A and part B are both live and reachable by URL; nothing links
+to them from here.
 
-Worth a human's eye, but deliberately NOT filed as findings because the crawl
-cannot prove they are defects:
+**Proposed fix**, not applied, because this job reads: make both builders ask for
+the Big Idea's actual test pages rather than assuming one per Big Idea. The
+mapping already exists in `scripts/csp-command-center-exercises.js`; the honest
+fix is to lift it into a shared helper both builders call, so the next place that
+needs it is the fourth caller and not the fourth copy. A one-line special case
+for BI3 in each file would also work and would be the fourth place this fact is
+written down.
 
-- The CSA scenario-practice pages carry 32 graded widgets and load no score
-  reporter at all. That may be correct (they may be self-check only) or it may be
-  a whole page family recording nothing. Someone who knows the intent can settle
-  it in a minute; the crawler cannot.
-- `/pages/java-editor-test` is indexable and in the sitemap.
+**Not the same as board #91** (`CSP bundle links to exercise pages that do not
+exist`, in_progress). That one is bundle to exercise page. This is exercise and
+course page to unit test. Same family, different target, and worth handling
+together.
 
-## Coverage
+## P2: three pages with no meta description
 
-Shard 7 of 7, seeded as tomorrow's baseline. The hot set is re-crawled every
-night, so the regression checks have a baseline for the pages that matter most
-from the first scheduled run onward. The rest of the site rotates in over the
-week.
+`/collections/ap-csa`, `/collections/live-events`, `/pages/java-editor-test`.
+
+Per the playbook these are reported as a count and a pattern, not verified one by
+one. Two of the three are **collections**, which are commercial pages, so this is
+worth more than the tier suggests.
+
+`/pages/java-editor-test` is at **2 nights** and is the more interesting one: it
+returns 200, carries no `noindex`, and sits in the public sitemap. The missing
+meta description is the smaller half. A page called Java Editor Test has a front
+door.
+
+## Board cross-reference
+
+- **#79** "46 pages returned 429 during crawl, re-verify single-threaded". This
+  run is direct evidence: **595 requests single-threaded at 1/s produced zero
+  429s and zero connection errors.** The original 46 came from a 14-thread crawl.
+  That supports concurrency as the cause rather than page health, though it is
+  not proof for those specific 46 URLs unless they were in this shard.
+- **#73** "101 pages have zero inbound internal links". Not addressed. The
+  crawler records which targets are linked from crawled pages, so a `--full`
+  run could produce that list directly. Sharded nights cannot.
+- **#91** CSP dead links. Related, see above.
+
+## Coverage and what tomorrow inherits
+
+316 page fingerprints stored, up from 130. Every one is a baseline for the
+regression checks, so from tomorrow a page that loses its reporter or its graded
+widgets is caught by comparison rather than inference.
+
+The delta carried `java-editor-test` forward correctly at 2 nights, which is the
+first live proof that age tracking works across runs.
+
+Nothing was written to the ledger. Nothing on the site was changed.

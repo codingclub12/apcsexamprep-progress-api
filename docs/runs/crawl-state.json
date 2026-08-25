@@ -1,24 +1,58 @@
 {
-  "started_at": "2026-08-25T11:30:29.215Z",
-  "finished_at": "2026-08-25T11:34:20.066Z",
+  "started_at": "2026-08-25T12:12:00.101Z",
+  "finished_at": "2026-08-25T12:24:06.313Z",
   "store": "https://www.apcsexamprep.com",
   "api": "https://progress.apcsexamprep.com",
   "api_commit": "c7cd1d2",
   "shard": "7/7",
   "sitemap_total": 2006,
-  "crawled": 130,
-  "ok": 130,
-  "requests": 201,
+  "crawled": 316,
+  "ok": 316,
+  "requests": 595,
   "aborted": null,
+  "truncated": null,
+  "max_minutes": 25,
   "findings": [
+    {
+      "kind": "broken-internal-link",
+      "tier": "P1",
+      "url": "https://www.apcsexamprep.com/pages/ap-csp-course-bi3-unit-test",
+      "detail": "HTTP 404, linked from 7 crawled page(s)",
+      "evidence": "/pages/ap-csp-course-bi3-unit-test",
+      "linked_from": [
+        "https://www.apcsexamprep.com/pages/ap-csp-topic-3-11-exercise-2",
+        "https://www.apcsexamprep.com/pages/ap-csp-topic-3-15-exercise-2",
+        "https://www.apcsexamprep.com/pages/ap-csp-topic-3-16-exercise-2"
+      ],
+      "blast": 1,
+      "nights": 1
+    },
+    {
+      "kind": "meta-missing",
+      "tier": "P2",
+      "url": "https://www.apcsexamprep.com/collections/ap-csa",
+      "detail": "no meta description",
+      "evidence": "",
+      "blast": 3,
+      "nights": 1
+    },
+    {
+      "kind": "meta-missing",
+      "tier": "P2",
+      "url": "https://www.apcsexamprep.com/collections/live-events",
+      "detail": "no meta description",
+      "evidence": "",
+      "blast": 3,
+      "nights": 1
+    },
     {
       "kind": "meta-missing",
       "tier": "P2",
       "url": "https://www.apcsexamprep.com/pages/java-editor-test",
       "detail": "no meta description",
       "evidence": "",
-      "blast": 1,
-      "nights": 1
+      "blast": 3,
+      "nights": 2
     }
   ],
   "crawledUrls": [
@@ -151,7 +185,193 @@
     "https://www.apcsexamprep.com/pages/ap-csp-course-bi3-undecidable-problems",
     "https://www.apcsexamprep.com/pages/ap-csa-lesson-4-16-recursion",
     "https://www.apcsexamprep.com/pages/ap-csp-course-bi4-fault-tolerance",
-    "https://www.apcsexamprep.com/pages/ap-csp-course-bi5-computing-bias"
+    "https://www.apcsexamprep.com/pages/ap-csp-course-bi5-computing-bias",
+    "https://www.apcsexamprep.com/pages/ap-csp-course-bi5-beneficial-harmful-effects",
+    "https://www.apcsexamprep.com/pages/ap-csp-course-bi5-safe-computing",
+    "https://www.apcsexamprep.com/pages/ap-csp-course-big-idea-5-impact",
+    "https://www.apcsexamprep.com/pages/ap-cybersecurity-supplemental-resources",
+    "https://www.apcsexamprep.com/pages/ap-cybersecurity-password-attacks",
+    "https://www.apcsexamprep.com/pages/ap-cybersecurity-threat-actors",
+    "https://www.apcsexamprep.com/pages/ap-cyber-unit-4-lesson-1-quiz",
+    "https://www.apcsexamprep.com/pages/java-errors-stringindexoutofboundsexception-ap-csa",
+    "https://www.apcsexamprep.com/pages/ap-networking-study-guide",
+    "https://www.apcsexamprep.com/pages/ap-networking-ip-addressing-subnetting",
+    "https://www.apcsexamprep.com/pages/ap-cyber-unit-5-case-file-5",
+    "https://www.apcsexamprep.com/pages/csa-teacher-dashboard",
+    "https://www.apcsexamprep.com/pages/csp-teacher-dashboard",
+    "https://www.apcsexamprep.com/pages/ap-csp-game-bridge-the-divide",
+    "https://www.apcsexamprep.com/pages/homeschool-ap-computer-science-principles",
+    "https://www.apcsexamprep.com/pages/homeschool-ap-cybersecurity",
+    "https://www.apcsexamprep.com/pages/ap-csp-course-bi1-unit-test",
+    "https://www.apcsexamprep.com/pages/ap-csa-course-2-10-loop-algorithms",
+    "https://www.apcsexamprep.com/pages/ap-csp-course-bi5-summary-quiz",
+    "https://www.apcsexamprep.com/pages/ap-csp-course-bi1-program-function-purpose-notes",
+    "https://www.apcsexamprep.com/pages/ap-csp-course-bi1-program-design-development-notes",
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-12-guided-notes",
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-14-guided-notes",
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-17-guided-notes",
+    "https://www.apcsexamprep.com/pages/ap-csp-course-bi4-the-internet-notes",
+    "https://www.apcsexamprep.com/pages/ap-csp-course-bi5-beneficial-harmful-effects-notes",
+    "https://www.apcsexamprep.com/pages/ap-csp-course-bi5-safe-computing-notes",
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-12-code",
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-11-code",
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-13-code",
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-16-code",
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-3-code",
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-5-code",
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-9-code",
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-8-guided-notes",
+    "https://www.apcsexamprep.com/pages/ap-networking-unit-1",
+    "https://www.apcsexamprep.com/pages/ap-networking-lesson-2-3-upgrading-soho-network",
+    "https://www.apcsexamprep.com/pages/ap-networking-lesson-2-4-media-server-ai-network",
+    "https://www.apcsexamprep.com/pages/ap-networking-lesson-3-3-configuring-verifying-access",
+    "https://www.apcsexamprep.com/pages/ap-networking-lesson-3-5-firewalls-traffic-filtering",
+    "https://www.apcsexamprep.com/pages/ap-networking-lesson-4-2-protocols-osi-tcp-ip-models",
+    "https://www.apcsexamprep.com/pages/intro-java-lesson-1-6-the-act-method",
+    "https://www.apcsexamprep.com/pages/intro-java-lesson-2-7-keyboard-input",
+    "https://www.apcsexamprep.com/pages/intro-java-lesson-3-2-writing-a-void-method",
+    "https://www.apcsexamprep.com/pages/intro-java-lesson-3-6-the-world-constructor",
+    "https://www.apcsexamprep.com/pages/intro-java-lesson-3-9-the-actor-constructor",
+    "https://www.apcsexamprep.com/pages/intro-java-help-concurrent-modification-exception",
+    "https://www.apcsexamprep.com/pages/intro-java-help-recipe-random-spawning",
+    "https://www.apcsexamprep.com/pages/intro-java-help-recipe-show-a-score",
+    "https://www.apcsexamprep.com/pages/intro-java-help-recipe-spawn-a-wave",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-1-2-variables-data-types-exercise-1",
+    "https://www.apcsexamprep.com/pages/ap-csp-game-call-sheet",
+    "https://www.apcsexamprep.com/pages/ap-csp-game-list-surgeon",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-1-14-calling-instance-methods-exercise-1",
+    "https://www.apcsexamprep.com/pages/intro-java-project-7-endless-runner",
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-17-code",
+    "https://www.apcsexamprep.com/pages/ap-networking-game-rule-order",
+    "https://www.apcsexamprep.com/pages/ap-networking-game-packet-path",
+    "https://www.apcsexamprep.com/pages/ap-networking-game-log-hunt",
+    "https://www.apcsexamprep.com/pages/ap-networking-game-segment-sort",
+    "https://www.apcsexamprep.com/pages/ap-networking-game-shell-hop",
+    "https://www.apcsexamprep.com/pages/intro-java-lesson-1-4-calling-a-method-code",
+    "https://www.apcsexamprep.com/pages/intro-java-lesson-2-1-variables-and-types-code",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-4-17-recursive-searching-and-sorting-exercise-1",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-4-7-wrapper-classes-exercise-2",
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-1-4-exercise-2",
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-2-3-exercise-2",
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-11-exercise-2",
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-15-exercise-2",
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-16-exercise-2",
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-3-exercise-2",
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-7-exercise-1",
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-8-exercise-2",
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-9-exercise-1",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-2-9-implementing-selection-iteration-algorithms-exercise-1",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-3-2-impact-of-program-design-exercise-1",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-3-6-methods-passing-returning-object-references-exercise-1",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-3-7-class-variables-and-methods-exercise-1",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-3-8-scope-and-access-exercise-1",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-3-9-this-keyword-exercise-1",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-4-9-traversing-arraylists-exercise-1",
+    "https://www.apcsexamprep.com/pages/ap-cybersecurity-frq-greenhouse-controller",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-1-2-variables-data-types-frq",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-1-1-intro-algorithms-frq",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-1-12-objects-instances-frq",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-1-15-string-manipulation-frq",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-2-3-if-statements-frq",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-2-5-compound-boolean-expressions-frq",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-3-3-anatomy-of-a-class-frq",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-3-9-this-keyword-frq",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-3-8-scope-and-access-frq",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-1-9-method-signatures-debug",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-1-15-string-manipulation-debug",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-2-6-comparing-boolean-expressions-debug",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-2-11-nested-iteration-debug",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-3-7-class-variables-and-methods-debug",
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-4-8-arraylist-methods-debug",
+    "https://www.apcsexamprep.com/collections/ap-csa",
+    "https://www.apcsexamprep.com/collections/live-events",
+    "https://www.apcsexamprep.com/blogs/news/one-stop-hub-for-ap-computer-science-a-resources-tutoring-apcs-exam-prep",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-4-day-20-arraylist-vs-array",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-4-day-16-arraylist-algorithms",
+    "https://www.apcsexamprep.com/blogs/news/ap-csp-day-41-boolean-logic-de-morgans-law",
+    "https://www.apcsexamprep.com/blogs/news/ap-csp-day-42-data-visualization-interpretation",
+    "https://www.apcsexamprep.com/blogs/news/ap-csp-day-46-lossy-vs-lossless-compression",
+    "https://www.apcsexamprep.com/blogs/news/ap-csp-day-58-robot-grid-navigation",
+    "https://www.apcsexamprep.com/blogs/news/ap-csp-day-43-procedure-parameters-return",
+    "https://www.apcsexamprep.com/blogs/news/ap-csp-day-52-binary-arithmetic-overflow",
+    "https://www.apcsexamprep.com/blogs/news/ap-csp-day-55-data-privacy-cookies",
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/day-22-iteration-patterns",
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/day-45-list-filtering",
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/day-48-distributed-computing",
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/day-50-api-integration",
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/day-56-creative-commons",
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/variable-tracing-assignments",
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/csp-c1-day-4-iteration-patterns",
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/csp-c1-day-8-procedures-and-parameters",
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/csp-c1-day-28-procedures-and-parameters",
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/csp-c2-day-31-variables-and-assignment",
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/csp-c2-day-34-iteration-patterns",
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/csp-c2-day-38-procedures-and-parameters",
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/csp-c2-day-52-privacy-pii-and-ethical-computing",
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/csp-c2-day-54-boolean-logic",
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/csp-c2-day-55-conditionals",
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/csp-c2-day-56-iteration-patterns",
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/csp-c1-day-30-computing-innovations-review",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit2-cycle2-day-5-boolean-precedence-andand-before",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit2-cycle2-day-9-iteration-while-loop-tracing",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit2-cycle2-day-11-iteration-nested-loop-count",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit2-cycle2-day-13-iteration-break",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit2-cycle2-day-22-iteration-continue",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit3-cycle2-day-3-accessor-method-side-effects",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit3-cycle2-day-19-method-overriding-vs-overloading",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit4-cycle2-day-23-2d-array-row-sums",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-3-cycle-2-day-4-method-overriding",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-3-cycle-2-day-7-scope-and-access",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-3-cycle-2-day-23-static-method-calling",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-3-cycle-2-day-27-encapsulation-violation",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-4-cycle-2-day-1-array-initialization",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-4-cycle-2-day-4-array-vs-arraylist",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-4-cycle-2-day-12-array-out-of-bounds",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-4-cycle-2-day-16-arraylist-set-index-error",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-4-cycle-2-day-20-arraylist-remove-with-wrapper",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-2-cycle-2-day-3-short-circuit-logic",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-2-cycle-2-day-6-selection-range-check",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-2-cycle-2-day-10-iteration-accumulation",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-2-cycle-2-day-11-iteration-nested-loop-count",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-2-cycle-2-day-24-iteration-nested-loop-count",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-1-cycle-2-day-6-math-random-range-mapping",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-1-cycle-2-day-16-repeated-method-calls-mutate-object-state",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-1-cycle-2-day-28-string-length-string-concatenation",
+    "https://www.apcsexamprep.com/blogs/news/unit-2-cycle-2-day-20",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u1-c1-day-5-modulo-integer-division",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u1-c1-day-20-wrapper-equals-trap",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u1-c1-day-22-math-random-range",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u1-c1-day-25-string-method-edge-cases",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-4-iii-integer-division",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-3-error-spotting-assignment",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-8-iii-string-behavior",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-11-equals-ignorecase-traps",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-14-math-random-analysis",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-16-casting-precision-loss",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u2-c1-day-12-while-condition-change",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u2-c2-day-5-short-circuit-side-effects",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u2-c2-day-8-iii-boolean-equivalence",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u2-c2-day-16-for-multiple-updates",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u2-c2-day-18-nested-conditional-logic",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u2-c2-day-24-complex-nested-trace",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u3-c1-day-5-mutator-methods",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u3-c1-day-12-super-constructor",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u3-c1-day-20-calling-super-methods",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u3-c2-day-4-this-method-chaining",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u3-c2-day-9-error-private-parent",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u3-c2-day-26-class-collection-field",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u4-c1-day-23-2d-column-traversal",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u4-c1-day-26-array-vs-arraylist",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u4-c2-day-7-selection-sort-trace",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u4-c2-day-17-compareto-sorting",
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u4-c2-day-20-merge-sorted",
+    "https://www.apcsexamprep.com/blogs/news/csp-c3-day-62-lossy-lossless-compression-tradeoffs",
+    "https://www.apcsexamprep.com/blogs/news/csp-c3-day-68-creative-commons-licensing-restrictions",
+    "https://www.apcsexamprep.com/blogs/news/ap-csa-practice-test-searching-sorting",
+    "https://www.apcsexamprep.com/blogs/news/ap-csa-2015-frq-3-sparsearray",
+    "https://www.apcsexamprep.com/blogs/ap-csa/ap-csa-objects-references-explained",
+    "https://www.apcsexamprep.com/blogs/ap-csp/ap-csp-pseudocode-complete-syntax-guide",
+    "https://www.apcsexamprep.com/blogs/ap-networking/ap-networking-troubleshooting-method"
   ],
   "fingerprints": {
     "https://www.apcsexamprep.com/": {
@@ -765,6 +985,865 @@
         "ap-csp-reporter.js"
       ],
       "widgetCount": 24
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-course-bi5-beneficial-harmful-effects": {
+      "reporters": [
+        "ap-csp-reporter.js"
+      ],
+      "widgetCount": 24
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-course-bi5-safe-computing": {
+      "reporters": [
+        "ap-csp-reporter.js"
+      ],
+      "widgetCount": 24
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-course-big-idea-5-impact": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-cybersecurity-supplemental-resources": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-cybersecurity-password-attacks": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-cybersecurity-threat-actors": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-cyber-unit-4-lesson-1-quiz": {
+      "reporters": [
+        "apcs-tracker.js",
+        "apcs-quiz-wiring.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/java-errors-stringindexoutofboundsexception-ap-csa": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-networking-study-guide": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-networking-ip-addressing-subnetting": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-cyber-unit-5-case-file-5": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/csa-teacher-dashboard": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/csp-teacher-dashboard": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-game-bridge-the-divide": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/homeschool-ap-computer-science-principles": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/homeschool-ap-cybersecurity": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-course-bi1-unit-test": {
+      "reporters": [
+        "ap-csp-reporter.js"
+      ],
+      "widgetCount": 48
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-course-2-10-loop-algorithms": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-course-bi5-summary-quiz": {
+      "reporters": [
+        "ap-csp-reporter.js"
+      ],
+      "widgetCount": 32
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-course-bi1-program-function-purpose-notes": {
+      "reporters": [
+        "ap-csp-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-course-bi1-program-design-development-notes": {
+      "reporters": [
+        "ap-csp-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-12-guided-notes": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-14-guided-notes": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-17-guided-notes": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-course-bi4-the-internet-notes": {
+      "reporters": [
+        "ap-csp-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-course-bi5-beneficial-harmful-effects-notes": {
+      "reporters": [
+        "ap-csp-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-course-bi5-safe-computing-notes": {
+      "reporters": [
+        "ap-csp-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-12-code": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-11-code": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-13-code": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-16-code": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-3-code": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-5-code": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-9-code": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-8-guided-notes": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-networking-unit-1": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-networking-lesson-2-3-upgrading-soho-network": {
+      "reporters": [
+        "ap-networking-reporter.js"
+      ],
+      "widgetCount": 1
+    },
+    "https://www.apcsexamprep.com/pages/ap-networking-lesson-2-4-media-server-ai-network": {
+      "reporters": [
+        "ap-networking-reporter.js"
+      ],
+      "widgetCount": 1
+    },
+    "https://www.apcsexamprep.com/pages/ap-networking-lesson-3-3-configuring-verifying-access": {
+      "reporters": [
+        "ap-networking-reporter.js"
+      ],
+      "widgetCount": 1
+    },
+    "https://www.apcsexamprep.com/pages/ap-networking-lesson-3-5-firewalls-traffic-filtering": {
+      "reporters": [
+        "ap-networking-reporter.js"
+      ],
+      "widgetCount": 1
+    },
+    "https://www.apcsexamprep.com/pages/ap-networking-lesson-4-2-protocols-osi-tcp-ip-models": {
+      "reporters": [
+        "ap-networking-reporter.js"
+      ],
+      "widgetCount": 1
+    },
+    "https://www.apcsexamprep.com/pages/intro-java-lesson-1-6-the-act-method": {
+      "reporters": [
+        "intro-java-reporter.js"
+      ],
+      "widgetCount": 7
+    },
+    "https://www.apcsexamprep.com/pages/intro-java-lesson-2-7-keyboard-input": {
+      "reporters": [
+        "intro-java-reporter.js"
+      ],
+      "widgetCount": 7
+    },
+    "https://www.apcsexamprep.com/pages/intro-java-lesson-3-2-writing-a-void-method": {
+      "reporters": [
+        "intro-java-reporter.js"
+      ],
+      "widgetCount": 6
+    },
+    "https://www.apcsexamprep.com/pages/intro-java-lesson-3-6-the-world-constructor": {
+      "reporters": [
+        "intro-java-reporter.js"
+      ],
+      "widgetCount": 6
+    },
+    "https://www.apcsexamprep.com/pages/intro-java-lesson-3-9-the-actor-constructor": {
+      "reporters": [
+        "intro-java-reporter.js"
+      ],
+      "widgetCount": 6
+    },
+    "https://www.apcsexamprep.com/pages/intro-java-help-concurrent-modification-exception": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/intro-java-help-recipe-random-spawning": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/intro-java-help-recipe-show-a-score": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/intro-java-help-recipe-spawn-a-wave": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-1-2-variables-data-types-exercise-1": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-game-call-sheet": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-game-list-surgeon": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-1-14-calling-instance-methods-exercise-1": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/intro-java-project-7-endless-runner": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-17-code": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-networking-game-rule-order": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-networking-game-packet-path": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-networking-game-log-hunt": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-networking-game-segment-sort": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-networking-game-shell-hop": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/intro-java-lesson-1-4-calling-a-method-code": {
+      "reporters": [
+        "intro-java-reporter.js"
+      ],
+      "widgetCount": 1
+    },
+    "https://www.apcsexamprep.com/pages/intro-java-lesson-2-1-variables-and-types-code": {
+      "reporters": [
+        "intro-java-reporter.js"
+      ],
+      "widgetCount": 1
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-4-17-recursive-searching-and-sorting-exercise-1": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-4-7-wrapper-classes-exercise-2": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 24
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-1-4-exercise-2": {
+      "reporters": [
+        "ap-csp-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-2-3-exercise-2": {
+      "reporters": [
+        "ap-csp-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-11-exercise-2": {
+      "reporters": [
+        "ap-csp-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-15-exercise-2": {
+      "reporters": [
+        "ap-csp-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-16-exercise-2": {
+      "reporters": [
+        "ap-csp-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-3-exercise-2": {
+      "reporters": [
+        "ap-csp-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-7-exercise-1": {
+      "reporters": [
+        "ap-csp-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-8-exercise-2": {
+      "reporters": [
+        "ap-csp-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csp-topic-3-9-exercise-1": {
+      "reporters": [
+        "ap-csp-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-2-9-implementing-selection-iteration-algorithms-exercise-1": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-3-2-impact-of-program-design-exercise-1": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-3-6-methods-passing-returning-object-references-exercise-1": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-3-7-class-variables-and-methods-exercise-1": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-3-8-scope-and-access-exercise-1": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-3-9-this-keyword-exercise-1": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-4-9-traversing-arraylists-exercise-1": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-cybersecurity-frq-greenhouse-controller": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-1-2-variables-data-types-frq": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-1-1-intro-algorithms-frq": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-1-12-objects-instances-frq": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-1-15-string-manipulation-frq": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-2-3-if-statements-frq": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-2-5-compound-boolean-expressions-frq": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-3-3-anatomy-of-a-class-frq": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-3-9-this-keyword-frq": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-3-8-scope-and-access-frq": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-1-9-method-signatures-debug": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-1-15-string-manipulation-debug": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-2-6-comparing-boolean-expressions-debug": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-2-11-nested-iteration-debug": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-3-7-class-variables-and-methods-debug": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/pages/ap-csa-lesson-4-8-arraylist-methods-debug": {
+      "reporters": [
+        "apcs-reporter.js"
+      ],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/collections/ap-csa": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/collections/live-events": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/news/one-stop-hub-for-ap-computer-science-a-resources-tutoring-apcs-exam-prep": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-4-day-20-arraylist-vs-array": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-4-day-16-arraylist-algorithms": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/news/ap-csp-day-41-boolean-logic-de-morgans-law": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/news/ap-csp-day-42-data-visualization-interpretation": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/news/ap-csp-day-46-lossy-vs-lossless-compression": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/news/ap-csp-day-58-robot-grid-navigation": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/news/ap-csp-day-43-procedure-parameters-return": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/news/ap-csp-day-52-binary-arithmetic-overflow": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/news/ap-csp-day-55-data-privacy-cookies": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/day-22-iteration-patterns": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/day-45-list-filtering": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/day-48-distributed-computing": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/day-50-api-integration": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/day-56-creative-commons": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/variable-tracing-assignments": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/csp-c1-day-4-iteration-patterns": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/csp-c1-day-8-procedures-and-parameters": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/csp-c1-day-28-procedures-and-parameters": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/csp-c2-day-31-variables-and-assignment": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/csp-c2-day-34-iteration-patterns": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/csp-c2-day-38-procedures-and-parameters": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/csp-c2-day-52-privacy-pii-and-ethical-computing": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/csp-c2-day-54-boolean-logic": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/csp-c2-day-55-conditionals": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/csp-c2-day-56-iteration-patterns": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csp-daily-practice/csp-c1-day-30-computing-innovations-review": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit2-cycle2-day-5-boolean-precedence-andand-before": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit2-cycle2-day-9-iteration-while-loop-tracing": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit2-cycle2-day-11-iteration-nested-loop-count": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit2-cycle2-day-13-iteration-break": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit2-cycle2-day-22-iteration-continue": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit3-cycle2-day-3-accessor-method-side-effects": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit3-cycle2-day-19-method-overriding-vs-overloading": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit4-cycle2-day-23-2d-array-row-sums": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-3-cycle-2-day-4-method-overriding": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-3-cycle-2-day-7-scope-and-access": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-3-cycle-2-day-23-static-method-calling": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-3-cycle-2-day-27-encapsulation-violation": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-4-cycle-2-day-1-array-initialization": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-4-cycle-2-day-4-array-vs-arraylist": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-4-cycle-2-day-12-array-out-of-bounds": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-4-cycle-2-day-16-arraylist-set-index-error": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-4-cycle-2-day-20-arraylist-remove-with-wrapper": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-2-cycle-2-day-3-short-circuit-logic": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-2-cycle-2-day-6-selection-range-check": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-2-cycle-2-day-10-iteration-accumulation": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-2-cycle-2-day-11-iteration-nested-loop-count": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-2-cycle-2-day-24-iteration-nested-loop-count": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-1-cycle-2-day-6-math-random-range-mapping": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-1-cycle-2-day-16-repeated-method-calls-mutate-object-state": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/unit-1-cycle-2-day-28-string-length-string-concatenation": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/news/unit-2-cycle-2-day-20": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u1-c1-day-5-modulo-integer-division": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u1-c1-day-20-wrapper-equals-trap": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u1-c1-day-22-math-random-range": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u1-c1-day-25-string-method-edge-cases": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-4-iii-integer-division": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-3-error-spotting-assignment": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-8-iii-string-behavior": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-11-equals-ignorecase-traps": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-14-math-random-analysis": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u1-c2-day-16-casting-precision-loss": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u2-c1-day-12-while-condition-change": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u2-c2-day-5-short-circuit-side-effects": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u2-c2-day-8-iii-boolean-equivalence": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u2-c2-day-16-for-multiple-updates": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u2-c2-day-18-nested-conditional-logic": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u2-c2-day-24-complex-nested-trace": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u3-c1-day-5-mutator-methods": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u3-c1-day-12-super-constructor": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u3-c1-day-20-calling-super-methods": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u3-c2-day-4-this-method-chaining": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u3-c2-day-9-error-private-parent": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u3-c2-day-26-class-collection-field": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u4-c1-day-23-2d-column-traversal": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u4-c1-day-26-array-vs-arraylist": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u4-c2-day-7-selection-sort-trace": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u4-c2-day-17-compareto-sorting": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u4-c2-day-20-merge-sorted": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/news/csp-c3-day-62-lossy-lossless-compression-tradeoffs": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/news/csp-c3-day-68-creative-commons-licensing-restrictions": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/news/ap-csa-practice-test-searching-sorting": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/news/ap-csa-2015-frq-3-sparsearray": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csa/ap-csa-objects-references-explained": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-csp/ap-csp-pseudocode-complete-syntax-guide": {
+      "reporters": [],
+      "widgetCount": 0
+    },
+    "https://www.apcsexamprep.com/blogs/ap-networking/ap-networking-troubleshooting-method": {
+      "reporters": [],
+      "widgetCount": 0
     }
   }
 }
