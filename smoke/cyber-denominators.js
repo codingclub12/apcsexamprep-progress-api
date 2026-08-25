@@ -89,37 +89,49 @@ console.log('1. Per-lesson values, as the pages state them');
   // ── Measured but deliberately unpriced ─────────────────────────────────────
   //  A denominator is half of a pair. Authoring one for a column whose page
   //  cannot report a score grows items_total and drags pace down for every
-  //  student in the class, for work none of them can submit. These columns were
-  //  measured so the number is not lost, and are asserted OUT of POINTS so that
-  //  moving one in is a deliberate act that has to update this file too.
+  //  student in the class, for work none of them can submit. That rule still
+  //  holds; what changed on 2026-08-25 is that these five columns CAN report.
+  //
+  //  The table is now empty and stays in the file as the parking bay for the
+  //  next column plus a record of how this one went wrong. See the comment on
+  //  MEASURED_UNPRICEABLE itself.
   const unpriceable = Object.keys(MEASURED_UNPRICEABLE);
-  ok('  the measured-unpriceable table is not empty', unpriceable.length >= 5, unpriceable.length);
-  {
-    const leaked = unpriceable.filter((k) => POINTS[k] !== undefined);
-    ok('  no measured-unpriceable column has been moved into POINTS', leaked.length === 0, leaked);
-  }
-  ok('  every unpriceable entry records a value, its evidence and its blocker',
+  ok('  the measured-unpriceable table is empty: nothing is parked', unpriceable.length === 0, unpriceable);
+  ok('  any entry that IS parked still records value, evidence and blocker',
     unpriceable.every((k) => {
       const e = MEASURED_UNPRICEABLE[k];
       return e && typeof e.possible === 'number' && e.possible > 0
         && typeof e.evidence === 'string' && e.evidence.length > 10
         && typeof e.blocker === 'string' && e.blocker.length > 5;
     }));
-
-  //  The values themselves, pinned. If someone re-reads a page and gets a
-  //  different number, that is a real change on the storefront and should
-  //  surface as a failing test rather than as a silently edited constant.
-  ok('  1.2 exercise-1 measured at 24', MEASURED_UNPRICEABLE['1.2|exercise-1'].possible === 24);
-  ok('  1.2 exercise-2 measured at 30', MEASURED_UNPRICEABLE['1.2|exercise-2'].possible === 30);
-  ok('  1.3 exercise-1 measured at 24', MEASURED_UNPRICEABLE['1.3|exercise-1'].possible === 24);
-  ok('  1.3 exercise-2 measured at 24', MEASURED_UNPRICEABLE['1.3|exercise-2'].possible === 24);
-  ok('  1.3 quiz measured at 5', MEASURED_UNPRICEABLE['1.3|quiz'].possible === 5);
-
-  //  Lesson 1.3 is the one that was absent entirely rather than parked. Pin the
-  //  whole set so a partial re-add cannot happen.
   {
-    const l13 = unpriceable.filter((k) => k.startsWith('1.3|'));
-    ok('  all three 1.3 columns are accounted for', l13.length === 3, l13);
+    const leaked = unpriceable.filter((k) => POINTS[k] !== undefined);
+    ok('  nothing is in both tables at once', leaked.length === 0, leaked);
+  }
+
+  //  The five that moved, pinned at the values they were re-read at. If someone
+  //  re-reads a page and gets a different number, that is a real change on the
+  //  storefront and should surface as a failing test rather than as a silently
+  //  edited constant. These were held out of the gradebook for four days on a
+  //  blocker that was fixed (1.2's nav anchors, theme PR #64) and one that was
+  //  never real (1.3's "no fetch in the page body": apcs-tracker.js reports for
+  //  the page).
+  ok('  1.2 exercise-1 is priced at 24', POINTS['1.2|exercise-1'] === 24, POINTS['1.2|exercise-1']);
+  ok('  1.2 exercise-2 is priced at 30', POINTS['1.2|exercise-2'] === 30, POINTS['1.2|exercise-2']);
+  ok('  1.3 exercise-1 is priced at 24', POINTS['1.3|exercise-1'] === 24, POINTS['1.3|exercise-1']);
+  ok('  1.3 exercise-2 is priced at 24', POINTS['1.3|exercise-2'] === 24, POINTS['1.3|exercise-2']);
+  ok('  1.3 quiz is priced at 5', POINTS['1.3|quiz'] === 5, POINTS['1.3|quiz']);
+
+  //  1.1 lab was in NEITHER table, which is the quietest way for a column to go
+  //  missing: not parked with a reason, just absent. 68 students had already
+  //  scored it.
+  ok('  1.1 lab is priced at 24', POINTS['1.1|lab'] === 24, POINTS['1.1|lab']);
+
+  //  Lesson 1.3 was the one absent entirely rather than parked. Pin the whole
+  //  set so a partial move cannot happen.
+  {
+    const l13 = Object.keys(POINTS).filter((k) => k.startsWith('1.3|'));
+    ok('  all three 1.3 columns are priced', l13.length === 3, l13);
   }
 
   // ── The five per-unit exams ────────────────────────────────────────────────
@@ -257,10 +269,20 @@ const tok = signTeacherToken({ id: 't1', email: 't@s.org' });
   ok('  present with zero submissions recorded',
     db.prepare('SELECT COUNT(*) n FROM progress').get().n === 0 && d['1.1|exercise-1'] === 7);
 
-  // An unauthored column must be absent, not defaulted. 1.3 was one of the
-  // seven Unit 1 activities whose page states no total.
-  ok('  an UNAUTHORED column is absent, not defaulted',
-    !('1.3|exercise-1' in d), d['1.3|exercise-1']);
+  // An unauthored column must be absent, not defaulted.
+  //
+  // This used to assert on 1.3|exercise-1, which was unauthored until
+  // 2026-08-25. Every column the COURSES config names is authored now, so the
+  // case is made with the two that are priced in course_unit_denominators
+  // instead: all five exams sit at lesson 'exam' and all five case files at
+  // lesson 'case-file', so a lesson-keyed map must not carry either. If one
+  // ever appears here it means five units' values collapsed onto one row, which
+  // is the exact collision the unit-scoped table exists to prevent.
+  ok('  a unit-scoped column is absent from the lesson-keyed map, not defaulted',
+    !('exam|exam' in d) && !('case-file|case-file' in d),
+    [d['exam|exam'], d['case-file|case-file']]);
+  ok('  a column that does not exist is absent, not defaulted',
+    !('9.9|quiz' in d), d['9.9|quiz']);
   ok('  a lesson visit is never authored', !('1.1|lesson' in d), d['1.1|lesson']);
 
   server.close();
