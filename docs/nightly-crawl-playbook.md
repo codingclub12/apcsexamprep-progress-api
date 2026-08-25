@@ -90,6 +90,27 @@ For **P2 and P3**: do not verify individually. Report the counts, the pattern,
 and the two or three worst examples. A hundred pages missing meta descriptions is
 one line and a pointer to `docs/meta-description-gaps.md`.
 
+## Score the findings for auto-fix risk
+
+After verifying, before writing the report:
+
+```bash
+node scripts/autofix-scan.js /tmp/crawl-state-new.json
+```
+
+This SCORES ONLY. You still fix nothing. It answers "how much of tonight could a
+robot have safely fixed, and what stopped the rest", and the answer accumulates
+into an argument about where to invest. `docs/autofix-risk.md` is the contract.
+
+Put two lines in the report: how many findings scored eligible, and the top
+blocking reason. If a finding scores eligible, name the exact patch you would
+apply, with file and line, so the decision to automate it later is made against a
+real diff rather than a description.
+
+The scorer's per-kind surface is a default. You traced the cause, so if a dead
+link turned out to be authored straight into a page body rather than emitted by a
+template, say so: that is content, not code, and it is not eligible.
+
 ## What the report says
 
 Lead with the answer to "is anything on fire". Then:
