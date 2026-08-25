@@ -128,11 +128,17 @@ path that displays.
 
 ## Still open
 
-- **A reporting view can be wrong in the same direction twice.** `score_rollup_missing`
-  in `lib/admin-health.js` flags `p.score IS NULL`, which is exactly what a
-  deliberate teacher Reset leaves behind. Since Reset started actually writing on
-  2026-08-24 it raises a CRITICAL every time a teacher uses it. Same shape as this
-  bug: a health view not applying a guard the production path applies.
+- ~~`score_rollup_missing` has the same shape.~~ **FIXED in the same pass.** It
+  flagged `p.score IS NULL`, which is exactly what a deliberate teacher Reset
+  leaves behind: the reset nulls the score, stamps `score_reset_at`, and leaves
+  the pre-reset rows in the ledger on purpose. Since Reset started actually
+  writing on 2026-08-24 it would have raised a CRITICAL the next time a teacher
+  used the button, reading "the work was captured but the teacher's gradebook
+  will read blank for it", which is a description of what the teacher asked for.
+  The exclusion is scoped to "reset, then silence": a reset followed by a NEW
+  submission that still does not roll up is a real failure and still fires.
+  `smoke/health-reset-not-a-gap.js` pins both halves, and deliberately fails if
+  the column is muted rather than fixed.
 - **Students showing 100 alone** have a completion percent and no graded item, so
   the score reporter never fired for them. They still render correctly, against
   the authored denominator, but that is the one genuine gap in the data and it
