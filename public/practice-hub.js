@@ -46,6 +46,14 @@
   // An empty span is not the same as no span: it leaves a gap the card's own
   // margins still reserve, so a lab with no blurb would sit taller than its
   // neighbours for no reason. Absent content emits no element at all.
+  // Difficulty as a coloured pill. "Stretch" should be visible before the card
+  // is read, because it is the whole basis on which a student picks one.
+  function pill(difficulty) {
+    var label = DIFF_LABEL[difficulty];
+    if (!label) return '';
+    return '<span class="ph-pill ph-pill-' + difficulty + '">' + esc(label) + '</span>';
+  }
+
   function span(cls, text) {
     if (text == null || text === '') return '';
     return '<span class="' + cls + '">' + esc(text) + '</span>';
@@ -67,9 +75,7 @@
    */
   function frqCard(set, base) {
     var href = set.page_url || (base + set.url);
-    var diff = DIFF_LABEL[set.difficulty] || '';
     var meta = [];
-    if (diff) meta.push(esc(diff));
     if (set.est_minutes) meta.push(esc(minutes(set.est_minutes)));
     if (set.parts) meta.push('Parts A to E');
     if (set.sources) meta.push(esc(set.sources) + ' sources');
@@ -78,7 +84,8 @@
       + span('ph-card-focus', set.focus)
       + '<span class="ph-card-title">' + esc(set.title || set.set_id) + '</span>'
       + span('ph-card-blurb', set.blurb)
-      + '<span class="ph-card-meta">' + meta.join(' &middot; ') + '</span>'
+      + '<span class="ph-card-meta">' + pill(set.difficulty) + meta.join(' &middot; ') + '</span>'
+      + '<span class="ph-card-go">Start &rarr;</span>'
       + '</a>';
   }
 
@@ -89,15 +96,19 @@
     if (lab.lesson_id) meta.push('Topic ' + esc(lab.lesson_id));
     if (lab.est_minutes) meta.push(esc(minutes(lab.est_minutes)));
     if (lab.checks) meta.push(esc(lab.checks) + ' checks');
-    meta.push(lab.graded ? 'Graded' : 'Ungraded practice');
     return ''
       + '<a class="ph-card" href="' + esc(href) + '">'
       + span('ph-card-focus', String(lab.unit || '').replace('unit-', 'Unit '))
       + '<span class="ph-card-title">' + esc(lab.title || lab.item_id) + '</span>'
       + span('ph-card-blurb', lab.blurb)
-      + '<span class="ph-card-meta">' + meta.join(' &middot; ') + '</span>'
+      + '<span class="ph-card-meta">'
+      + '<span class="ph-pill ' + (lab.graded ? 'ph-pill-core' : 'ph-pill-intro') + '">'
+      + (lab.graded ? 'Graded' : 'Practice') + '</span>'
+      + meta.join(' &middot; ') + '</span>'
+      + '<span class="ph-card-go">Open &rarr;</span>'
       + '</a>';
   }
+
 
   /**
    * The card grid for one kind of practice.
@@ -118,20 +129,59 @@
     return out.join('');
   }
 
+  // ── THE CYBER HOUSE STYLE, NOT A NEW ONE ──────────────────────────────────
+  // The first cut of these pages used a teal palette and system sans. Every
+  // other AP Cybersecurity page on the site is purple and serif: the complete
+  // course guide sets --purple #6B21A8, --cy2 #7C3AED, --accent #A855F7,
+  // --navy #1E1B4B, cards on #F5F0FF with #e9d5ff borders at 14px radius, and
+  // Georgia bodies under DM Serif Display headings.
+  //
+  // So these pages did not look unstyled so much as foreign: correct content
+  // wearing another product's clothes. Everything below is taken from the
+  // guide rather than invented, because a hub that matches the course it
+  // belongs to is worth more than one that is prettier on its own.
+  //
   // Fixed column counts rather than auto-fit or auto-fill: the page generators
   // reject those, because Shopify's own stylesheet has collapsed them before.
   var CSS = [
-    '.ph-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0 26px;}',
-    '@media (max-width:720px){.ph-grid{grid-template-columns:1fr;}}',
-    '.ph-card{display:block;border:1px solid #dbe3ea;border-radius:10px;padding:15px 17px;',
-    'text-decoration:none;background:#fff;transition:border-color .12s,box-shadow .12s;}',
-    '.ph-card:hover{border-color:#2f6f8f;box-shadow:0 2px 10px rgba(47,111,143,.13);}',
-    '.ph-card-focus{display:block;font-size:11px;font-weight:700;text-transform:uppercase;',
-    'letter-spacing:.05em;color:#2f6f8f;margin:0 0 5px;}',
-    '.ph-card-title{display:block;font-size:17px;font-weight:700;color:#16324a;line-height:1.3;margin:0 0 7px;}',
-    '.ph-card-blurb{display:block;font-size:14.5px;line-height:1.5;color:#42556b;margin:0 0 9px;}',
-    '.ph-card-meta{display:block;font-size:12.5px;color:#6b7c8d;}',
-    '.ph-empty{font-size:15px;color:#6b7c8d;font-style:italic;margin:12px 0 24px;}',
+    // Flex rather than a fixed 2-column grid. Five sets in two columns leaves a
+    // lonely fifth card with dead space beside it, which reads as a broken
+    // layout rather than as an odd number of sets. Flex lets the last row
+    // centre itself, and it stays correct as sets are authored. auto-fit and
+    // auto-fill would do this too, and the generators reject both.
+    '.ph-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin:16px 0 30px;}',
+    '.ph-grid>.ph-card{flex:1 1 330px;max-width:508px;}',
+    '@media (max-width:760px){.ph-grid>.ph-card{flex:1 1 100%;max-width:none;}}',
+    // A card is a link, so it gets a link's affordances: it lifts, the border
+    // takes the accent, and the arrow moves. Static pages get none of that, so
+    // the arrow is always visible rather than appearing on hover.
+    '.ph-card{display:block;position:relative;background:#F5F0FF;border:1px solid #e9d5ff;',
+    'border-radius:14px;padding:18px 20px 46px;text-decoration:none!important;',
+    'transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease;}',
+    '.ph-card:hover{transform:translateY(-2px);border-color:#A855F7;',
+    'box-shadow:0 6px 20px rgba(107,33,168,.14);}',
+    '.ph-card-focus{display:block;font-family:"DM Sans",system-ui,sans-serif;font-size:11px;',
+    'font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#7C3AED;margin:0 0 7px;}',
+    '.ph-card-title{display:block;font-family:"DM Serif Display",Georgia,serif;font-size:20px;',
+    'line-height:1.25;color:#1E1B4B;margin:0 0 9px;}',
+    '.ph-card-blurb{display:block;font-family:Georgia,serif;font-size:15px;line-height:1.55;',
+    'color:#4B5563;margin:0 0 12px;}',
+    // The meta row sits on the floor of the card so every card in a row ends
+    // at the same place regardless of how long its blurb runs.
+    '.ph-card-meta{position:absolute;left:20px;right:20px;bottom:16px;',
+    'font-family:"DM Sans",system-ui,sans-serif;font-size:12.5px;color:#6B7280;}',
+    '.ph-card-go{position:absolute;right:18px;bottom:14px;font-family:"DM Sans",system-ui,sans-serif;',
+    'font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#6B21A8;}',
+    // Difficulty is the one thing a student should be able to see without
+    // reading, so it is a pill with its own colour rather than grey text.
+    '.ph-pill{display:inline-block;font-family:"DM Sans",system-ui,sans-serif;font-size:11px;',
+    'font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:999px;',
+    'padding:3px 9px;margin:0 7px 0 0;vertical-align:1px;}',
+    '.ph-pill-intro{background:#DCFCE7;color:#15803D;}',
+    '.ph-pill-core{background:#EDE9FE;color:#6B21A8;}',
+    '.ph-pill-stretch{background:#FEF3C7;color:#B45309;}',
+    '.ph-empty{font-family:Georgia,serif;font-size:15px;color:#6B7280;font-style:italic;',
+    'margin:12px 0 24px;}',
   ].join('');
 
   function styleTag() { return '<style>' + CSS + '</style>'; }
@@ -189,7 +239,7 @@
 
   return {
     grid: grid, frqCard: frqCard, labCard: labCard,
-    styleTag: styleTag, CSS: CSS, esc: esc, span: span,
+    styleTag: styleTag, CSS: CSS, esc: esc, span: span, pill: pill,
     refresh: refresh, mountAll: mountAll, DIFF_LABEL: DIFF_LABEL,
   };
 }));
