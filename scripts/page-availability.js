@@ -120,8 +120,13 @@ async function main(argv) {
       bytes: r.text.length, ok: true, notes: [] };
 
     if (r.status === 404 && p.optional) {
+      // Not an outage: the page has not been imported yet, so there is nothing
+      // to be down. But it must never READ as OK at a glance. A truncated
+      // reading of this report is exactly how a person concludes that pages are
+      // live when they do not exist, which has already happened once.
       rec.ok = true;
-      rec.notes.push('not imported yet, which is expected');
+      rec.missing = true;
+      rec.notes.push('NOT IMPORTED YET, so this page does not exist on the storefront');
     } else if (r.error) {
       rec.ok = false;
       rec.notes.push(`unreachable: ${r.error}`);
@@ -166,13 +171,24 @@ async function main(argv) {
     });
     console.log('\nPAGES');
     results.filter((r) => r.kind === 'page').forEach((r) => {
-      console.log(`  ${r.ok ? 'OK  ' : 'DOWN'}  ${r.target}`);
+      // Three states, not two. "Missing" is neither up nor down, and collapsing
+      // it into OK is how a glance at this report misleads.
+      const label = r.missing ? 'GONE' : (r.ok ? 'OK  ' : 'DOWN');
+      console.log(`  ${label}  ${r.target}`);
       console.log(`        ${r.why}, ${r.bytes} bytes, HTTP ${r.status}`);
       r.notes.forEach((n) => console.log(`        ${n}`));
     });
-    console.log(bad
-      ? `\n${bad} problem(s). See docs/availability.md for what each one means.`
-      : '\nEverything a class needs is answering.');
+    const missing = results.filter((r) => r.missing).length;
+    if (bad) {
+      console.log(`\n${bad} problem(s). See docs/availability.md for what each one means.`);
+    } else if (missing) {
+      // Deliberately not the same sentence as the all-clear. Everything that
+      // EXISTS is answering, and some things do not exist yet.
+      console.log(`\nEverything that exists is answering, but ${missing} page(s) `
+        + 'have not been imported yet and are 404 on the storefront.');
+    } else {
+      console.log('\nEverything a class needs is answering.');
+    }
   }
   process.exit(bad ? 1 : 0);
 }
