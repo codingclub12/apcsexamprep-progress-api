@@ -7,14 +7,28 @@
 //  itself is rendered by /frq-player.js from the spec at /api/frq. Editing a
 //  sample response is a commit, never another import.
 //
-//  HANDLE HAZARD, INHERITED FROM THE THEME
-//  layout/theme.liquid carries an "FRQ PAGE AUTO-CTA INJECTOR" that fires on
-//  ANY url containing "frq" and staples AP CSA Java navigation and CTAs onto
-//  the page. A cyber page called ap-cybersecurity-frq-... gets Java study guide
-//  links injected into it. The injector has a skipPages list, so the fix is a
-//  theme change, not a rename. Until that lands this script WARNS on every
-//  handle containing "frq" rather than silently shipping a page that will be
-//  vandalised by a script from another course.
+//  EVERY PAGE THIS BUILDS ENDS IN A SIBLING STRIP
+//  The first four of these pages went live linked from nowhere and linking to
+//  nothing, not even to each other. They were reachable only by typing the URL.
+//  So the strip is generated here rather than authored: it lists every OTHER
+//  authored set plus the hub, straight out of lib/practice-index.js, and
+//  checkPage refuses a sheet whose strip is missing a sibling. A fifth set
+//  cannot ship orphaned, and cannot leave the other four stale either.
+//
+//  HANDLE HAZARD, INHERITED FROM THE THEME, NOW FIXED
+//  layout/theme.liquid carries an "FRQ PAGE AUTO-CTA INJECTOR" that used to
+//  fire on ANY url containing "frq" and staple AP CSA Java navigation and CTAs
+//  onto the page. A cyber page called ap-cybersecurity-frq-... would get Java
+//  study guide links injected into it.
+//
+//  Theme PR #73 narrowed that gate to require "csa" as well, and it is merged
+//  into the Shopify-connected branch and confirmed on the storefront. So these
+//  handles are safe.
+//
+//  The check below stays, because the guarantee is a line in another repo's
+//  theme file and nothing here would notice it being reverted. It reports the
+//  dependency rather than blocking on it: the day someone widens that gate
+//  again, the next person to run this script reads why it mattered.
 //
 //  House Matrixify rules: MERGE, QUOTE_ALL, utf-8-sig, past-dated Published At,
 //  Body HTML never empty. One import at a time.
@@ -24,9 +38,13 @@
 
 const fs = require('fs');
 const frq = require('../lib/frq-spec');
+const practice = require('../lib/practice-index');
 
 const PUBLISHED_AT = '2026-03-01 12:00:00';
 const API = 'https://progress.apcsexamprep.com';
+const STORE = practice.STOREFRONT;
+const FRQ_HUB = 'ap-cybersecurity-frq-practice';
+const UMBRELLA = 'ap-cybersecurity-practice';
 
 // Page copy per set. Authored here rather than in the spec because it is what a
 // search result and a first time visitor read, and it is never shown inside the
@@ -58,7 +76,36 @@ function esc(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-function build(spec) {
+// ── the sibling strip ────────────────────────────────────────────────────────
+// Generated from the index, never authored, so it cannot fall behind the specs.
+// It is the difference between four orphan pages and a set: a student who
+// finishes one has the other three and the hub in front of them, and a crawler
+// following any one of them reaches all five.
+function siblingStrip(spec, index) {
+  const others = index.frq.filter((s) => s.set_id !== spec.set_id);
+  const items = others.map((s) => {
+    const href = s.page_url || (API + s.url);
+    const label = s.focus || s.title;
+    return '<li><a href="' + esc(href) + '">' + esc(s.title) + '</a>'
+      + (s.focus ? '<span class="frq-sib-focus">' + esc(label) + '</span>' : '')
+      + '</li>';
+  });
+  return [
+    '<div class="frq-sib">',
+    '<h2>More Device Security Analysis practice</h2>',
+    '<p>Every set is the same five parts against a different device. These are the others:</p>',
+    '<ul class="frq-sib-list">',
+    ...items,
+    '</ul>',
+    '<p>All of them, with what each part asks and how the sources work: '
+      + '<a href="' + STORE + '/pages/' + FRQ_HUB + '">the AP Cybersecurity FRQ practice hub</a>. '
+      + 'Multiple choice, free response and the terminal labs together: '
+      + '<a href="' + STORE + '/pages/' + UMBRELLA + '">AP Cybersecurity practice</a>.</p>',
+    '</div>',
+  ].join('\n');
+}
+
+function build(spec, index) {
   const copy = COPY[spec.set_id];
   if (!copy) throw new Error(`no page copy authored for ${spec.set_id}`);
   if (!spec.page_handle) throw new Error(`${spec.set_id} has no page_handle`);
@@ -72,6 +119,11 @@ function build(spec) {
     '.frq-page p{line-height:1.6}',
     '.frq-page .frq-page-note{background:#eef3f7;border-left:3px solid #2f6f8f;padding:10px 14px;',
     'border-radius:0 6px 6px 0;margin:16px 0 22px}',
+    '.frq-page .frq-sib{border-top:1px solid #dbe3ea;margin:34px 0 0;padding:22px 0 0}',
+    '.frq-page .frq-sib h2{font-size:20px;margin:0 0 8px}',
+    '.frq-page .frq-sib-list{list-style:none;padding:0;margin:12px 0 18px}',
+    '.frq-page .frq-sib-list li{border:1px solid #dbe3ea;border-radius:8px;padding:11px 14px;margin:0 0 9px}',
+    '.frq-page .frq-sib-focus{display:block;font-size:13px;color:#6b7c8d;margin-top:3px}',
     '</style>',
     '<h1>' + esc(spec.title) + '</h1>',
     '<p class="frq-page-lede">' + esc(copy[0]) + '</p>',
@@ -83,6 +135,7 @@ function build(spec) {
     '<script src="' + API + '/frq-player.js"></' + 'script>',
     '<script>APCSFrq.mountById(document.getElementById(' + JSON.stringify(mountId) + '),'
       + JSON.stringify(spec.course) + ',' + JSON.stringify(spec.set_id) + ');</' + 'script>',
+    siblingStrip(spec, index),
     '</div>',
   ].join('\n');
 
@@ -96,7 +149,7 @@ function build(spec) {
   };
 }
 
-function checkPage(p, spec) {
+function checkPage(p, spec, index) {
   const bad = [];
   const b = p.bodyHtml;
   if (!/^[a-z0-9-]+$/.test(p.handle)) bad.push('handle is not a clean slug');
@@ -121,6 +174,23 @@ function checkPage(p, spec) {
   if (/<\\\/script>/.test(b)) bad.push('an escaped <\\/script> would leave a block unclosed');
   const d = String(p.seoDescription || '');
   if (d.length < 70 || d.length > 160) bad.push(`SEO description is ${d.length} chars, must be 70 to 160`);
+
+  // The strip is the whole reason these pages stop being orphans, so it is
+  // checked against the index rather than merely checked for existence. Every
+  // sibling by name, the hub, and no link to itself.
+  if (index) {
+    for (const sib of index.frq) {
+      const href = sib.page_url || (API + sib.url);
+      const linked = b.includes('href="' + href + '"');
+      if (sib.set_id === spec.set_id) {
+        if (linked) bad.push('the strip links this page to itself');
+      } else if (!linked) {
+        bad.push(`the strip does not link sibling '${sib.set_id}' (${href})`);
+      }
+    }
+    if (!b.includes('/pages/' + FRQ_HUB + '"')) bad.push('the strip does not link the FRQ hub');
+    if (!b.includes('/pages/' + UMBRELLA + '"')) bad.push('the strip does not link the practice umbrella');
+  }
   return bad;
 }
 
@@ -145,12 +215,16 @@ function main(argv) {
     process.exit(1);
   }
 
+  // The index is built from ALL authored sets, never from the --only subset, so
+  // rebuilding one page still points it at every sibling that exists.
+  const index = practice.forCourse('ap-cybersecurity');
+
   const problems = [];
   const pages = [];
   for (const spec of specs) {
     let p;
-    try { p = build(spec); } catch (e) { problems.push(`${spec.set_id}: ${e.message}`); continue; }
-    for (const c of checkPage(p, spec)) problems.push(`${p.handle}: ${c}`);
+    try { p = build(spec, index); } catch (e) { problems.push(`${spec.set_id}: ${e.message}`); continue; }
+    for (const c of checkPage(p, spec, index)) problems.push(`${p.handle}: ${c}`);
     pages.push(p);
   }
   const handles = pages.map((p) => p.handle);
@@ -175,12 +249,16 @@ function main(argv) {
 
   const injectorRisk = pages.filter((p) => p.handle.includes('frq'));
   if (injectorRisk.length) {
-    console.log('\nWARNING, read before importing:');
-    console.log('  layout/theme.liquid injects AP CSA Java nav and CTAs into ANY page whose');
-    console.log('  URL contains "frq". These handles do:');
-    injectorRisk.forEach((p) => console.log('    ' + p.handle));
-    console.log('  Add them to the injector\'s skipPages list in the theme FIRST, or these');
-    console.log('  cyber pages will render Java study guide links under the question.');
+    console.log('\nDependency, satisfied and re-checked against the live storefront:');
+    console.log('  These handles contain "frq", which the theme\'s FRQ auto-CTA injector');
+    console.log('  once keyed on, stapling AP CSA Java nav and CTAs onto any such page.');
+    console.log('  Theme PR #73 narrowed that gate to require "csa" too, and the served');
+    console.log('  page carries both early returns, so cyber pages are skipped.');
+    console.log('  If a cyber practice page ever renders Java study guide links under the');
+    console.log('  question, that gate was widened again. Read the injector in');
+    console.log('  layout/theme.liquid before blaming this sheet. Note that grepping a');
+    console.log('  rendered cyber page for "java" proves nothing either way: the global');
+    console.log('  nav links the Java course on every page of the site.');
   }
 }
 

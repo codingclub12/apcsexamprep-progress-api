@@ -28,9 +28,20 @@
 
 const fs = require('fs');
 const labs = require('../lib/lab-spec');
+const practice = require('../lib/practice-index');
 
 const PUBLISHED_AT = '2026-03-01 12:00:00';
 const API = 'https://progress.apcsexamprep.com';
+
+// Which courses have a labs hub to point back at. A course absent from this
+// table gets no strip rather than a link to a page that does not exist:
+// ap-networking has six labs and no hub yet, and a 404 in a footer is worse
+// than no footer. Add a course here the day its hub page ships.
+const PRACTICE_HUBS = {
+  'ap-cybersecurity': { labs: 'ap-cybersecurity-labs', umbrella: 'ap-cybersecurity-practice' },
+};
+const STORE = 'https://www.apcsexamprep.com';
+
 
 // Prose per lab. Authored here rather than in the spec because it is page copy,
 // not lab content: it is what a search result and a first-time visitor read,
@@ -113,12 +124,50 @@ function esc(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-function build(spec) {
+// ── the sibling strip ────────────────────────────────────────────────────────
+// Generated from lib/practice-index.js, so it can never fall behind the specs.
+// Same reason as the one on the Device Security Analysis pages: a lab page that
+// links nowhere is a page a student reaches once and a crawler reaches never.
+function siblingStrip(spec, index) {
+  const hubs = PRACTICE_HUBS[spec.course];
+  if (!hubs) return '';
+  // A caller that forgot the index would otherwise get a page with no strip and
+  // no complaint, which is precisely how four pages shipped orphaned. Loudly.
+  if (!index || !Array.isArray(index.labs)) {
+    throw new Error(`build() needs the practice index to link ${spec.course} siblings; `
+      + 'pass practice.forCourse(spec.course)');
+  }
+  const others = index.labs.filter((l) => l.item_id !== spec.item_id);
+  const items = others.map((l) => {
+    const href = l.page_url || (API + l.url);
+    return '<li><a href="' + esc(href) + '">' + esc(l.title) + '</a>'
+      + '<span class="lab-sib-focus">Topic ' + esc(l.lesson_id) + '</span></li>';
+  });
+  const list = items.length
+    ? ['<p>The other labs in this course:</p>', '<ul class="lab-sib-list">', ...items, '</ul>']
+    : [];
+  return [
+    '<div class="lab-sib">',
+    '<h2>More hands-on practice</h2>',
+    ...list,
+    '<p>All of them: <a href="' + STORE + '/pages/' + hubs.labs + '">the terminal labs hub</a>. '
+      + 'The exam asks you to write commands in its free-response question, and '
+      + '<a href="' + STORE + '/pages/' + hubs.umbrella + '">AP Cybersecurity practice</a> '
+      + 'puts the labs, the multiple choice and the free response in one place.</p>',
+    '</div>',
+  ].join('\n');
+}
+
+function build(spec, index) {
   const copy = COPY[`${spec.course}|${spec.item_id}`];
   if (!copy) throw new Error(`no page copy authored for ${spec.course} ${spec.item_id}`);
   if (!spec.page_handle) throw new Error(`${spec.item_id} has no page_handle`);
 
   const mountId = 'apcs-lab-' + spec.item_id.replace(/[^a-z0-9]+/gi, '-');
+  // Built up front so the stylesheet can skip its rules entirely on a course
+  // with no hub. That keeps those pages byte-identical to what is already
+  // live, so this change never asks for a pointless re-import.
+  const strip = siblingStrip(spec, index);
   const signin = copy.signin
     ? '<p class="lab-page-note"><strong>Sign in first if this is for a grade.</strong> '
       + 'The lab runs either way, but it can only save your score when you are signed in to your class.</p>'
@@ -132,6 +181,13 @@ function build(spec) {
     '.lab-page p{line-height:1.6}',
     '.lab-page .lab-page-note{background:#eef3f7;border-left:3px solid #2f6f8f;padding:10px 14px;',
     'border-radius:0 6px 6px 0;margin:16px 0 22px}',
+    ...(strip ? [
+      '.lab-page .lab-sib{border-top:1px solid #dbe3ea;margin:34px 0 0;padding:22px 0 0}',
+      '.lab-page .lab-sib h2{font-size:20px;margin:0 0 8px}',
+      '.lab-page .lab-sib-list{list-style:none;padding:0;margin:12px 0 18px}',
+      '.lab-page .lab-sib-list li{border:1px solid #dbe3ea;border-radius:8px;padding:11px 14px;margin:0 0 9px}',
+      '.lab-page .lab-sib-focus{display:block;font-size:13px;color:#6b7c8d;margin-top:3px}',
+    ] : []),
     '</style>',
     '<h1>' + esc(spec.title) + '</h1>',
     '<p class="lab-page-lede">' + esc(copy.lede) + '</p>',
@@ -142,8 +198,9 @@ function build(spec) {
     '<script src="' + API + '/lab-player.js"></' + 'script>',
     '<script>APCSLab.mountById(document.getElementById(' + JSON.stringify(mountId) + '),'
       + JSON.stringify(spec.course) + ',' + JSON.stringify(spec.item_id) + ');</' + 'script>',
+    strip,
     '</div>',
-  ].join('\n');
+  ].filter((line) => line !== '').join('\n');
 
   return {
     item_id: spec.item_id,
@@ -160,7 +217,7 @@ function build(spec) {
 // and dispatches no score event. These are the ways a lab page specifically
 // fails, and each one is a way it fails SILENTLY, rendering fine and grading
 // nothing.
-function checkPage(p, spec) {
+function checkPage(p, spec, index) {
   const bad = [];
   const b = p.bodyHtml;
   if (!/^[a-z0-9-]+$/.test(p.handle)) bad.push('handle is not a clean slug');
@@ -193,6 +250,27 @@ function checkPage(p, spec) {
 
   const d = String(p.seoDescription || '');
   if (d.length < 70 || d.length > 160) bad.push(`SEO description is ${d.length} chars, must be 70 to 160`);
+  // The strip is the point, so it is checked against the index rather than
+  // merely checked for existence. A course with no hub configured is expected
+  // to have no strip; a course with one must name every sibling and neither
+  // link to itself nor to a hub it does not have.
+  const hubs = PRACTICE_HUBS[spec.course];
+  if (index && hubs) {
+    for (const sib of index.labs) {
+      const href = sib.page_url || (API + sib.url);
+      const linked = b.includes('href="' + href + '"');
+      if (sib.item_id === spec.item_id) {
+        if (linked) bad.push('the strip links this page to itself');
+      } else if (!linked) {
+        bad.push(`the strip does not link sibling '${sib.item_id}' (${href})`);
+      }
+    }
+    if (!b.includes('/pages/' + hubs.labs + '"')) bad.push('the strip does not link the labs hub');
+    if (!b.includes('/pages/' + hubs.umbrella + '"')) bad.push('the strip does not link the practice umbrella');
+  } else if (index && b.includes('<div class="lab-sib">')) {
+    bad.push(`${spec.course} has no hub configured but the page carries a strip`);
+  }
+
   return bad;
 }
 
@@ -215,12 +293,21 @@ function main(argv) {
     process.exit(2);
   }
 
+  // One index per course, built from ALL authored labs rather than the --only
+  // subset, so rebuilding a single page still points it at every sibling.
+  const indexes = new Map();
+  const indexFor = (course) => {
+    if (!indexes.has(course)) indexes.set(course, practice.forCourse(course));
+    return indexes.get(course);
+  };
+
   const problems = [];
   const pages = [];
   for (const spec of specs) {
+    const index = indexFor(spec.course);
     let p;
-    try { p = build(spec); } catch (e) { problems.push(`${spec.item_id}: ${e.message}`); continue; }
-    for (const c of checkPage(p, spec)) problems.push(`${p.handle}: ${c}`);
+    try { p = build(spec, index); } catch (e) { problems.push(`${spec.item_id}: ${e.message}`); continue; }
+    for (const c of checkPage(p, spec, index)) problems.push(`${p.handle}: ${c}`);
     pages.push(p);
   }
   const handles = pages.map((p) => p.handle);

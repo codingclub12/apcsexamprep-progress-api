@@ -1,0 +1,195 @@
+(function (root, factory) {
+  'use strict';
+  // ───────────────────────────────────────────────────────────────────────────
+  //  THE PRACTICE HUB RENDERER, AND WHY IT IS A UMD
+  //
+  //  This file has two callers that must never disagree:
+  //
+  //    1. scripts/cyber-practice-hubs-csv.js requires it in Node to generate the
+  //       hub pages' STATIC HTML, which is what a crawler reads and what has to
+  //       rank. A hub whose cards only appear after JavaScript runs is a hub
+  //       Google sees as an empty page.
+  //
+  //    2. The browser loads it from /practice-hub.js and it re-renders the same
+  //       cards from /api/practice/:course on load, so a fifth practice set
+  //       authored tomorrow shows up on every hub without another Matrixify
+  //       import.
+  //
+  //  The obvious way to do that is to write the card markup twice, once in a
+  //  Node generator and once here. That is exactly how the static half goes
+  //  stale: the two copies drift, and nobody notices because both "work". So
+  //  there is one implementation, in one file, that runs in both places. Parity
+  //  is a property of the file rather than a test that has to keep passing.
+  //
+  //  IT UPLOADS NOTHING. One GET, for a public table of contents. Same posture
+  //  as frq-player.js, and smoke/practice-hub.js fails the build on any write
+  //  method appearing here.
+  //
+  //  No em-dashes, per repo convention.
+  // ───────────────────────────────────────────────────────────────────────────
+  if (typeof module === 'object' && module.exports) module.exports = factory();
+  else root.APCSPracticeHub = factory();
+}(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  // A difficulty is a promise about where to start, so it is rendered as a word
+  // rather than a colour alone. "Stretch" tells a student something; an orange
+  // dot does not.
+  var DIFF_LABEL = { intro: 'Start here', core: 'Core', stretch: 'Stretch' };
+
+  // An empty span is not the same as no span: it leaves a gap the card's own
+  // margins still reserve, so a lab with no blurb would sit taller than its
+  // neighbours for no reason. Absent content emits no element at all.
+  function span(cls, text) {
+    if (text == null || text === '') return '';
+    return '<span class="' + cls + '">' + esc(text) + '</span>';
+  }
+
+  function minutes(n) {
+    if (!n) return '';
+    return n + ' min';
+  }
+
+  /**
+   * One Device Security Analysis card.
+   *
+   * `page_url` is preferred over the API's own player URL because a student who
+   * lands on the storefront should stay on the storefront. A set with no page
+   * yet still gets a card, pointing at the player, rather than being dropped:
+   * silently omitting authored practice is the failure mode this whole file
+   * exists to prevent.
+   */
+  function frqCard(set, base) {
+    var href = set.page_url || (base + set.url);
+    var diff = DIFF_LABEL[set.difficulty] || '';
+    var meta = [];
+    if (diff) meta.push(esc(diff));
+    if (set.est_minutes) meta.push(esc(minutes(set.est_minutes)));
+    if (set.parts) meta.push('Parts A to E');
+    if (set.sources) meta.push(esc(set.sources) + ' sources');
+    return ''
+      + '<a class="ph-card" href="' + esc(href) + '">'
+      + span('ph-card-focus', set.focus)
+      + '<span class="ph-card-title">' + esc(set.title || set.set_id) + '</span>'
+      + span('ph-card-blurb', set.blurb)
+      + '<span class="ph-card-meta">' + meta.join(' &middot; ') + '</span>'
+      + '</a>';
+  }
+
+  /** One terminal lab card. Labs carry a unit and a lesson, so they say so. */
+  function labCard(lab, base) {
+    var href = lab.page_url || (base + lab.url);
+    var meta = [];
+    if (lab.lesson_id) meta.push('Topic ' + esc(lab.lesson_id));
+    if (lab.est_minutes) meta.push(esc(minutes(lab.est_minutes)));
+    if (lab.checks) meta.push(esc(lab.checks) + ' checks');
+    meta.push(lab.graded ? 'Graded' : 'Ungraded practice');
+    return ''
+      + '<a class="ph-card" href="' + esc(href) + '">'
+      + span('ph-card-focus', String(lab.unit || '').replace('unit-', 'Unit '))
+      + '<span class="ph-card-title">' + esc(lab.title || lab.item_id) + '</span>'
+      + span('ph-card-blurb', lab.blurb)
+      + '<span class="ph-card-meta">' + meta.join(' &middot; ') + '</span>'
+      + '</a>';
+  }
+
+  /**
+   * The card grid for one kind of practice.
+   *
+   * `kind` is 'frq' or 'labs'. An empty group renders an honest sentence rather
+   * than an empty div, because a hub section that shows nothing and says nothing
+   * reads as broken rather than as not-yet-written.
+   */
+  function grid(index, kind, base) {
+    var items = (index && index[kind]) || [];
+    if (!items.length) {
+      return '<p class="ph-empty">Nothing published here yet. This section fills in as sets are authored.</p>';
+    }
+    var card = kind === 'frq' ? frqCard : labCard;
+    var out = ['<div class="ph-grid">'];
+    for (var i = 0; i < items.length; i++) out.push(card(items[i], base));
+    out.push('</div>');
+    return out.join('');
+  }
+
+  // Fixed column counts rather than auto-fit or auto-fill: the page generators
+  // reject those, because Shopify's own stylesheet has collapsed them before.
+  var CSS = [
+    '.ph-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0 26px;}',
+    '@media (max-width:720px){.ph-grid{grid-template-columns:1fr;}}',
+    '.ph-card{display:block;border:1px solid #dbe3ea;border-radius:10px;padding:15px 17px;',
+    'text-decoration:none;background:#fff;transition:border-color .12s,box-shadow .12s;}',
+    '.ph-card:hover{border-color:#2f6f8f;box-shadow:0 2px 10px rgba(47,111,143,.13);}',
+    '.ph-card-focus{display:block;font-size:11px;font-weight:700;text-transform:uppercase;',
+    'letter-spacing:.05em;color:#2f6f8f;margin:0 0 5px;}',
+    '.ph-card-title{display:block;font-size:17px;font-weight:700;color:#16324a;line-height:1.3;margin:0 0 7px;}',
+    '.ph-card-blurb{display:block;font-size:14.5px;line-height:1.5;color:#42556b;margin:0 0 9px;}',
+    '.ph-card-meta{display:block;font-size:12.5px;color:#6b7c8d;}',
+    '.ph-empty{font-size:15px;color:#6b7c8d;font-style:italic;margin:12px 0 24px;}',
+  ].join('');
+
+  function styleTag() { return '<style>' + CSS + '</style>'; }
+
+  // ── the browser half ───────────────────────────────────────────────────────
+  // Everything above is pure string building and runs identically in Node. Only
+  // what follows touches the DOM, and it is skipped entirely when required.
+
+  function base() {
+    var cfg = (typeof window !== 'undefined' && window.APCS_PRACTICE) || {};
+    return cfg.base || 'https://progress.apcsexamprep.com';
+  }
+
+  /**
+   * Refresh one already-rendered section against the live index.
+   *
+   * The element arrives from the Matrixify import already holding correct cards.
+   * This replaces them only once a good response is in hand, so a failed fetch,
+   * an offline student or a cold Railway container leaves the static HTML alone
+   * rather than blanking a page that was working.
+   */
+  function refresh(node, course, kind) {
+    if (!node) return Promise.resolve(false);
+    var url = base() + '/api/practice/' + encodeURIComponent(course);
+    return fetch(url, { method: 'GET', credentials: 'omit' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (index) {
+        if (!index || !Array.isArray(index[kind])) return false;
+        var html = grid(index, kind, base());
+        if (html === node.innerHTML) return false;
+        node.innerHTML = html;
+        return true;
+      })
+      .catch(function () { return false; });
+  }
+
+  /** Refresh every [data-practice-course][data-practice-kind] on the page. */
+  function mountAll(doc) {
+    var d = doc || (typeof document !== 'undefined' ? document : null);
+    if (!d) return;
+    var nodes = d.querySelectorAll('[data-practice-course][data-practice-kind]');
+    for (var i = 0; i < nodes.length; i++) {
+      refresh(nodes[i], nodes[i].getAttribute('data-practice-course'),
+        nodes[i].getAttribute('data-practice-kind'));
+    }
+  }
+
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () { mountAll(document); });
+    } else {
+      mountAll(document);
+    }
+  }
+
+  return {
+    grid: grid, frqCard: frqCard, labCard: labCard,
+    styleTag: styleTag, CSS: CSS, esc: esc, span: span,
+    refresh: refresh, mountAll: mountAll, DIFF_LABEL: DIFF_LABEL,
+  };
+}));
