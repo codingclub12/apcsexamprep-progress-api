@@ -85,6 +85,91 @@ function scripts() {
   ].join('\n');
 }
 
+// ── THE HOUSE STYLE ─────────────────────────────────────────────────────────
+// Lifted from ap-cybersecurity-complete-course-guide rather than invented. Every
+// other cyber page is a dark purple hero over a Georgia body, with DM Serif
+// Display headings, cards on #F5F0FF inside #e9d5ff borders at 14px radius, and
+// purple buttons carrying an arrow.
+//
+// The first cut of these hubs was teal and system sans, which did not read as
+// unstyled so much as foreign: correct content wearing another product's
+// clothes, sitting one click from pages that look nothing like it.
+//
+// ASCII only, so the arrow is an entity. The generator rejects non-ASCII and
+// the repo forbids em-dashes, both of which the guide itself ignores.
+const PURPLE = '#6B21A8';
+const PURPLE2 = '#7C3AED';
+const NAVY = '#1E1B4B';
+
+function chrome(extra) {
+  return [
+    '<style>',
+    // 900 rather than 1060. The measure cap on paragraphs is 72ch, so a wider
+    // container left prose hugging the left edge with a dead gutter beside it
+    // while the cards and the table ran full width. Matching the container to
+    // the measure removes the mismatch, and two cards still sit per row.
+    '.ph-page{max-width:900px;margin:0 auto;font-family:Georgia,serif;color:#1F2937;}',
+    // A measure, not a container width. 110 characters a line is why the first
+    // cut read as a wall: the container was 1040px and the prose filled it.
+    '.ph-page p{font-size:16.5px;line-height:1.7;max-width:72ch;margin:0 0 14px;}',
+    '.ph-page h2{font-family:"DM Serif Display",Georgia,serif;font-size:27px;color:' + NAVY + ';',
+    'margin:38px 0 6px;font-weight:400;}',
+    '.ph-page a{color:' + PURPLE + ';}',
+    // hero
+    '.ph-hero{background:linear-gradient(135deg,#2E1065 0%,' + PURPLE + ' 62%,' + PURPLE2 + ' 100%);',
+    'border-radius:18px;padding:40px 34px 34px;margin:0 0 26px;text-align:center;color:#fff;}',
+    '.ph-hero h1{font-family:"DM Serif Display",Georgia,serif;font-size:40px;line-height:1.15;',
+    'color:#fff;margin:0 0 12px;font-weight:400;}',
+    '.ph-eyebrow{display:inline-block;font-family:"DM Sans",system-ui,sans-serif;font-size:11.5px;',
+    'font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#E9D5FF;',
+    'background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);',
+    'border-radius:999px;padding:6px 16px;margin:0 0 16px;}',
+    '.ph-hero p{font-size:17px;line-height:1.6;color:#EDE9FE;max-width:64ch;margin:0 auto;}',
+    // the stat row: the facts a visitor wants before reading a word
+    '.ph-stats{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;',
+    'margin:26px auto 0;max-width:640px;}',
+    '@media (max-width:640px){.ph-stats{grid-template-columns:1fr 1fr;}}',
+    '.ph-stat b{display:block;font-family:"DM Serif Display",Georgia,serif;font-size:26px;',
+    'color:#fff;font-weight:400;line-height:1.1;}',
+    '.ph-stat span{display:block;font-family:"DM Sans",system-ui,sans-serif;font-size:10.5px;',
+    'font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#C4B5FD;margin-top:5px;}',
+    // the self-scored note, as the guide styles its green strip
+    '.ph-note{background:#F0FDF4;border:1px solid #BBF7D0;border-left:4px solid #15803D;',
+    'border-radius:0 10px 10px 0;padding:14px 18px;margin:18px 0 28px;}',
+    '.ph-note p{margin:0;font-size:15.5px;}',
+    // section band, for the closing "where this fits"
+    '.ph-band{background:#F5F0FF;border:1px solid #e9d5ff;border-radius:14px;',
+    'padding:22px 24px;margin:30px 0 0;}',
+    '.ph-band h2{margin-top:0;}',
+    '.ph-band p:last-child{margin-bottom:0;}',
+    // table
+    '.ph-page table{border-collapse:separate;border-spacing:0;width:100%;margin:14px 0 20px;',
+    'font-family:Georgia,serif;font-size:15px;border:1px solid #e9d5ff;border-radius:12px;',
+    'overflow:hidden;}',
+    '.ph-page th{background:#F5F0FF;font-family:"DM Sans",system-ui,sans-serif;font-size:11px;',
+    'font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:' + PURPLE + ';',
+    'text-align:left;padding:11px 14px;}',
+    '.ph-page td{padding:11px 14px;border-top:1px solid #F3E8FF;vertical-align:top;line-height:1.55;}',
+    '.ph-page td:first-child{font-family:"DM Serif Display",Georgia,serif;font-size:19px;',
+    'color:' + PURPLE + ';width:52px;}',
+    extra || '',
+    '</style>',
+  ].join('');
+}
+
+function hero(eyebrow, title, sub, stats) {
+  const cells = stats.map((st) => '<div class="ph-stat"><b>' + esc(st[0]) + '</b><span>'
+    + esc(st[1]) + '</span></div>').join('');
+  return [
+    '<div class="ph-hero">',
+    '<div class="ph-eyebrow">' + esc(eyebrow) + '</div>',
+    '<h1>' + esc(title) + '</h1>',
+    '<p>' + esc(sub) + '</p>',
+    '<div class="ph-stats">' + cells + '</div>',
+    '</div>',
+  ].join('\n');
+}
+
 // ── the FRQ hub ──────────────────────────────────────────────────────────────
 // The prose here is the reason the page can rank: it states the exam's real
 // shape, which the site itself got wrong in nine places until recently. Every
@@ -96,26 +181,21 @@ function buildFrqHub(index) {
   const body = [
     '<div class="ph-page">',
     hub.styleTag(),
-    '<style>.ph-page{max-width:1040px;margin:0 auto}.ph-page p{line-height:1.6}',
-    '.ph-page .ph-lede{font-size:18px;line-height:1.55;margin:0 0 14px}',
-    '.ph-page .ph-note{background:#eef3f7;border-left:3px solid #2f6f8f;padding:11px 15px;',
-    'border-radius:0 6px 6px 0;margin:16px 0 24px}',
-    '.ph-page h2{font-size:22px;margin:30px 0 8px}',
-    '.ph-page table{border-collapse:collapse;font-size:14.5px;width:100%;margin:12px 0 22px}',
-    '.ph-page th,.ph-page td{border:1px solid #dbe3ea;padding:7px 11px;text-align:left;vertical-align:top}',
-    '.ph-page th{background:#f4f7fa;font-size:12px;text-transform:uppercase;letter-spacing:.03em}',
-    '</style>',
-    '<h1>AP Cybersecurity Free Response Practice: Device Security Analysis</h1>',
-    '<p class="ph-lede">Section II of the AP Cybersecurity exam is one question. It is always called '
-      + 'Device Security Analysis, it is always parts A through E about a single device, and you are '
-      + 'given 50 minutes for it.</p>',
-    '<p>That is the whole free-response section. There is no choice of question and no second prompt, '
-      + 'so the entire section is one format you can rehearse until it is familiar. Below are '
-      + `${n} complete practice questions in that exact shape, each with sample responses and the `
-      + 'specific points that earn credit.</p>',
-    '<p class="ph-note">These are self-scored. You write your responses on paper or in your own '
-      + 'editor, reveal the sample, and mark yourself. Nothing you write is collected, sent or '
-      + 'stored, and no score reaches a gradebook.</p>',
+    chrome(),
+    hero('Section II of the exam',
+      'AP Cybersecurity Free Response Practice',
+      'The free response is one question. It is always Device Security Analysis, always parts A '
+        + 'through E about a single device, and you are given 50 minutes for it.',
+      [[String(n), 'full practice sets'], ['50', 'minutes each'], ['A to E', 'parts every time'],
+        ['Free', 'no account']]),
+
+    '<p>That is the whole free-response section. There is no choice of question and no second '
+      + 'prompt, so the entire section is one format you can rehearse until it is familiar. Below '
+      + `are ${n} complete practice questions in that exact shape, each with sample responses and `
+      + 'the specific points that earn credit.</p>',
+    '<div class="ph-note"><p><strong>These are self-scored.</strong> You write your responses on '
+      + 'paper or in your own editor, reveal the sample, and mark yourself. Nothing you write is '
+      + 'collected, sent or stored, and no score reaches a gradebook.</p></div>',
 
     '<h2>The practice sets</h2>',
     '<p>Work them in order if you are new to the format. The first is deliberately the '
@@ -123,44 +203,47 @@ function buildFrqHub(index) {
     liveSection('frq', hub.grid(index, 'frq', API)),
 
     '<h2>What each part asks</h2>',
-    '<p>Every Device Security Analysis uses the same five parts against different evidence. Knowing '
-      + 'which source answers which part is most of the speed you need on exam day.</p>',
+    '<p>Every Device Security Analysis uses the same five parts against different evidence. '
+      + 'Knowing which source answers which part is most of the speed you need on exam day.</p>',
     '<table>',
     '<tr><th>Part</th><th>What it is about</th><th>What you are asked to do</th></tr>',
-    '<tr><td>A</td><td>The acceptable use policy</td><td>Explain how one part of the policy protects '
-      + 'the device, and how one rule could be modified to protect it better.</td></tr>',
-    '<tr><td>B</td><td>The authorization log</td><td>Describe the evidence of a password attack, and '
-      + 'identify the IP address of the adversary.</td></tr>',
-    '<tr><td>C</td><td>File permissions</td><td>Explain what one file\'s mode grants its owner, group '
-      + 'and others, describe a change that restricts access, and write the chmod command that makes '
-      + 'it.</td></tr>',
+    '<tr><td>A</td><td>The acceptable use policy</td><td>Explain how one part of the policy '
+      + 'protects the device, and how one rule could be modified to protect it better.</td></tr>',
+    '<tr><td>B</td><td>The authorization log</td><td>Describe the evidence of a password attack, '
+      + 'and identify the IP address of the adversary.</td></tr>',
+    '<tr><td>C</td><td>File permissions</td><td>Explain what one file\'s mode grants its owner, '
+      + 'group and others, describe a change that restricts access, and write the chmod command '
+      + 'that makes it.</td></tr>',
     '<tr><td>D</td><td>The firewall rules</td><td>Explain how a connection attempt was blocked, '
-      + 'describe a rule change that would allow it, and describe a side effect of that change.</td></tr>',
-    '<tr><td>E</td><td>A second attack</td><td>Determine its type, describe the log evidence, describe '
-      + 'how an automated system could stop it in real time, and identify a countermeasure that is not '
-      + 'automated.</td></tr>',
+      + 'describe a rule change that would allow it, and describe a side effect of that '
+      + 'change.</td></tr>',
+    '<tr><td>E</td><td>A second attack</td><td>Determine its type, describe the log evidence, '
+      + 'describe how an automated system could stop it in real time, and identify a countermeasure '
+      + 'that is not automated.</td></tr>',
     '</table>',
     '<p>Part C is the one people are surprised by: it asks you to <strong>write an actual shell '
-      + 'command</strong>. Write is a CED task verb, and chmod is what the CED\'s own sample asks for. '
-      + 'If typing a command in a terminal is unfamiliar, the '
+      + 'command</strong>. Write is a CED task verb, and chmod is what the CED\'s own sample asks '
+      + 'for. If typing a command in a terminal is unfamiliar, the '
       + link(P.labs, 'terminal labs') + ' are the practice for it.</p>',
 
     '<h2>How the sources work</h2>',
-    '<p>You are handed several simulated sources from one device: firewall rules as a numbered table, '
-      + 'an application log, an authorization log, a listing of what the device is running or '
-      + 'listening on, a file listing with permissions, and an acceptable use policy. Every part '
+    '<p>You are handed several simulated sources from one device: firewall rules as a numbered '
+      + 'table, an application log, an authorization log, a listing of what the device is running '
+      + 'or listening on, a file listing with permissions, and an acceptable use policy. Every part '
       + 'expects you to cite specific evidence out of them, by row, by address, by filename.</p>',
-    '<p>Reading across sources is the skill being tested. Section II covers Skill Categories 2 and 3 '
-      + 'only, Mitigate Risk and Detect Attacks, which is why every part either finds something in '
-      + 'the evidence or fixes something in the configuration.</p>',
+    '<p>Reading across sources is the skill being tested. Section II covers Skill Categories 2 and '
+      + '3 only, Mitigate Risk and Detect Attacks, which is why every part either finds something '
+      + 'in the evidence or fixes something in the configuration.</p>',
 
+    '<div class="ph-band">',
     '<h2>Where this fits in the exam</h2>',
     '<p>The exam is 60 multiple-choice questions in Section I, drawn from all five units, and this '
       + 'one free-response question in Section II. For the multiple-choice half, use the '
-      + link(P.exam, 'AP Cybersecurity practice exam') + '. The full breakdown of both sections is on '
-      + 'the ' + link(P.format, 'exam format page') + '.</p>',
+      + link(P.exam, 'AP Cybersecurity practice exam') + '. The full breakdown of both sections is '
+      + 'on the ' + link(P.format, 'exam format page') + '.</p>',
     '<p>Everything practice on one page: ' + link(P.umbrella, 'AP Cybersecurity practice') + '. '
       + 'Course content by unit: ' + link(P.guide, 'the complete course guide') + '.</p>',
+    '</div>',
     scripts(),
     '</div>',
   ].join('\n');
@@ -178,31 +261,38 @@ function buildFrqHub(index) {
 // ── the labs hub ─────────────────────────────────────────────────────────────
 function buildLabsHub(index) {
   const n = index.labs.length;
+  const mins = index.labs.reduce((t, l) => t + (l.est_minutes || 0), 0);
+  const checks = index.labs.reduce((t, l) => t + (l.checks || 0), 0);
   const body = [
     '<div class="ph-page">',
     hub.styleTag(),
-    '<style>.ph-page{max-width:1040px;margin:0 auto}.ph-page p{line-height:1.6}',
-    '.ph-page .ph-lede{font-size:18px;line-height:1.55;margin:0 0 14px}',
-    '.ph-page .ph-note{background:#eef3f7;border-left:3px solid #2f6f8f;padding:11px 15px;',
-    'border-radius:0 6px 6px 0;margin:16px 0 24px}',
-    '.ph-page h2{font-size:22px;margin:30px 0 8px}</style>',
-    '<h1>AP Cybersecurity Terminal Labs</h1>',
-    '<p class="ph-lede">A real terminal in the browser, a pretend machine behind it, and a job to do. '
-      + 'No install, no virtual machine, no account needed to try one.</p>',
-    '<p>Each lab drops you into a filesystem with a brief and checks your work as you go. You navigate, '
-      + 'read logs, inspect permissions and run commands, which is the same work the exam\'s '
-      + 'free-response question asks you to reason about in writing.</p>',
-    '<p class="ph-note">Part C of the AP Cybersecurity free-response asks students to <strong>write a '
-      + 'chmod command</strong>. Write is a CED task verb. These labs are practice for a graded part '
-      + 'of the exam, not an extra.</p>',
+    chrome(),
+    hero('Hands on, in the browser',
+      'AP Cybersecurity Terminal Labs',
+      'A real terminal, a pretend machine behind it, and a job to do. No install, no virtual '
+        + 'machine, and no account needed to try one.',
+      [[String(n), 'labs'], [String(mins) + ' min', 'of practice'], [String(checks), 'checks to tick'],
+        ['Free', 'no account']]),
+
+    '<p>Each lab drops you into a filesystem with a brief and checks your work as you go. You '
+      + 'navigate, read logs, inspect permissions and run commands, which is the same work the '
+      + 'exam\'s free-response question asks you to reason about in writing.</p>',
+    '<div class="ph-note"><p>Part C of the AP Cybersecurity free-response asks students to '
+      + '<strong>write a chmod command</strong>. Write is a CED task verb. These labs are practice '
+      + 'for a graded part of the exam, not an extra.</p></div>',
+
     '<h2>The labs</h2>',
     liveSection('labs', hub.grid(index, 'labs', API)),
+
+    '<div class="ph-band">',
     '<h2>Where these fit</h2>',
-    '<p>Labs cover the doing. For the writing, the ' + link(P.frq, 'Device Security Analysis practice sets')
-      + ' put the same evidence in front of you in the exam\'s own format. For the multiple-choice '
-      + 'half, use the ' + link(P.exam, 'practice exam') + '.</p>',
+    '<p>Labs cover the doing. For the writing, the '
+      + link(P.frq, 'Device Security Analysis practice sets')
+      + ' put the same evidence in front of you in the exam\'s own format. For the '
+      + 'multiple-choice half, use the ' + link(P.exam, 'practice exam') + '.</p>',
     '<p>Everything practice on one page: ' + link(P.umbrella, 'AP Cybersecurity practice') + '. '
       + 'Course content by unit: ' + link(P.guide, 'the complete course guide') + '.</p>',
+    '</div>',
     scripts(),
     '</div>',
   ].join('\n');
@@ -225,40 +315,48 @@ function buildUmbrella(index) {
   const body = [
     '<div class="ph-page">',
     hub.styleTag(),
-    '<style>.ph-page{max-width:1040px;margin:0 auto}.ph-page p{line-height:1.6}',
-    '.ph-page .ph-lede{font-size:18px;line-height:1.55;margin:0 0 14px}',
-    '.ph-page h2{font-size:22px;margin:30px 0 8px}',
-    '.ph-page .ph-sub{font-size:15px;color:#42556b;margin:0 0 4px}</style>',
-    '<h1>AP Cybersecurity Practice</h1>',
-    '<p class="ph-lede">Everything on this site you can practise with, in one place: the '
-      + 'multiple-choice half, the free-response half, and the terminal labs.</p>',
-    '<p>The AP Cybersecurity exam is 60 multiple-choice questions across all five units, then a '
-      + 'single free-response question called Device Security Analysis with 50 minutes for it. '
-      + 'The three sections below map onto that.</p>',
+    // The eyebrow sits ABOVE its heading, the way the course guide puts FOR
+    // TEACHERS above its h2. Below the heading and set in loud uppercase it
+    // outshouted the serif h2 it was supposed to be subordinate to, and the
+    // longer ones wrapped to two lines of shouting.
+    chrome('.ph-sub{font-family:"DM Sans",system-ui,sans-serif;font-size:11px;font-weight:700;'
+      + 'letter-spacing:.09em;text-transform:uppercase;color:#7C3AED;margin:34px 0 0;}'
+      + '.ph-sub+h2{margin-top:4px;}'),
+    hero('Everything in one place',
+      'AP Cybersecurity Practice',
+      'The multiple-choice half, the free-response half, and the terminal labs. The exam is 60 '
+        + 'questions in Section I and one Device Security Analysis in Section II.',
+      [['60', 'MCQ in section I'], ['1', 'free response'], [String(index.frq.length), 'FRQ sets'],
+        [String(index.labs.length), 'terminal labs']]),
 
+    '<p class="ph-sub">Section I of the exam</p>',
     '<h2>Multiple choice</h2>',
-    '<p class="ph-sub">Section I of the exam: 60 questions, all five units, three skill categories.</p>',
-    '<p>' + link(P.exam, 'AP Cybersecurity practice exam') + ' gives you scored questions with '
+    '<p>60 questions, drawn from all five units and the three skill categories. '
+      + link(P.exam, 'The AP Cybersecurity practice exam') + ' gives you scored questions with '
       + 'explanations. The ' + link(P.format, 'exam format page') + ' has the full breakdown of how '
       + 'the exam is built.</p>',
 
+    '<p class="ph-sub">Section II of the exam</p>',
     '<h2>Free response</h2>',
-    '<p class="ph-sub">Section II: one Device Security Analysis, parts A to E, 50 minutes.</p>',
-    '<p>Full practice questions in the exam\'s exact format, each with sample responses and credit '
+    '<p>One Device Security Analysis, parts A to E, 50 minutes. Full practice questions in the '
+      + 'exam\'s exact format, each with sample responses and credit '
       + 'points. More on the format and what each part asks: ' + link(P.frq, 'the FRQ practice hub')
       + '.</p>',
     liveSection('frq', hub.grid(index, 'frq', API)),
 
+    '<p class="ph-sub">Hands on</p>',
     '<h2>Terminal labs</h2>',
-    '<p class="ph-sub">Hands-on work in a real browser terminal. No install, no account.</p>',
-    '<p>Practice for the commands the free-response question asks you to write. All of them: '
+    '<p>A real browser terminal, no install and no account. Practice for the commands the '
+      + 'free-response question asks you to write. All of them: '
       + link(P.labs, 'the terminal labs hub') + '.</p>',
     liveSection('labs', hub.grid(index, 'labs', API)),
 
+    '<div class="ph-band">',
     '<h2>Course content</h2>',
     '<p>Lessons, units and pacing rather than practice: '
       + link(P.guide, 'the complete course guide') + ' for students, and '
       + link(P.cc, 'the Command Center') + ' for teachers.</p>',
+    '</div>',
     scripts(),
     '</div>',
   ].join('\n');
