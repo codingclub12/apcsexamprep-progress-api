@@ -245,6 +245,16 @@ const cyberCaseFileDenoms = runBootSeed('cyber_case_file_denominators',
   () => require('./scripts/seed-cyber-case-file-denominators').seedCyberCaseFileDenominators());
 if (cyberCaseFileDenoms) console.log(`cyber case file denominators: ${cyberCaseFileDenoms.changed} new of ${cyberCaseFileDenoms.total} rows`);
 
+// Cyber per-unit exam totals. Same collision as the case files: all five exams
+// sit at lesson 'exam'. Seeded late because the exams were believed unable to
+// report (no fetch in any exam page body); they report through apcs-tracker.js,
+// and 19 real submissions were already on the ledger by 2026-08-25 rendering as
+// bare percentages. Same insert-or-ignore posture;
+// `node scripts/seed-cyber-exam-denominators.js --update` pushes edits.
+const cyberExamDenoms = runBootSeed('cyber_exam_denominators',
+  () => require('./scripts/seed-cyber-exam-denominators').seedCyberExamDenominators());
+if (cyberExamDenoms) console.log(`cyber exam denominators: ${cyberExamDenoms.changed} new of ${cyberExamDenoms.total} rows`);
+
 
 // ── PUBLIC ENDPOINTS ──────────────────────────────────────────────────────────
 // `commit` answers the one question this endpoint could not: WHICH BUILD is
