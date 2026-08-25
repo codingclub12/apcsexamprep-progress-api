@@ -33,6 +33,10 @@ const { allPages } = require('../lib/csa-frq-pages');
 const { checkPage, checkNoLeak, checkHandleRouting, PUBLISHED_AT } = require('../scripts/csa-frq-pages-csv');
 const { COURSES, pageFromHandle } = require('../utils');
 const bank = require('../seed/csa-frq');
+// The page escapes its text, so a describe containing an apostrophe is not a
+// literal substring of the body. Compare against the escaped form, which is
+// what actually has to be there.
+const { esc } = require('../lib/csa-exercise-pages');
 
 let pass = 0, fail = 0;
 function ok(name, cond, detail) {
@@ -195,6 +199,67 @@ section('6. The Matrixify sheet survives a round trip');
       const p = byHandle.get(r[header.indexOf('Handle')]);
       return p && r[header.indexOf('Body HTML')] === p.bodyHtml;
     }));
+}
+
+section('7. structured data and the common-mistakes checklist');
+{
+  const parsed = [];
+  let invalid = 0;
+  for (const p of pages) {
+    const raw = p.bodyHtml.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g) || [];
+    if (raw.length !== 3) { invalid++; continue; }
+    for (const block of raw) {
+      const json = block.replace(/^<script type="application\/ld\+json">/, '').replace(/<\/script>$/, '');
+      try { parsed.push({ lesson: p.lesson, obj: JSON.parse(json) }); } catch (e) { invalid++; }
+    }
+  }
+  ok('7.1 every page carries exactly three JSON-LD blocks and all of them parse',
+    invalid === 0 && parsed.length === pages.length * 3, { invalid, parsed: parsed.length });
+
+  const types = new Set(parsed.map((b) => b.obj['@type']));
+  ok('7.2 the three types are LearningResource, FAQPage and BreadcrumbList',
+    types.has('LearningResource') && types.has('FAQPage') && types.has('BreadcrumbList'),
+    [...types]);
+
+  // A near-identical FAQ repeated across 53 pages is a doorway-page signal
+  // rather than an SEO win. The first version of this shipped one scoring
+  // answer verbatim on 46 of the 53 pages, so uniqueness is asserted, not hoped
+  // for.
+  const qs = [];
+  const as = [];
+  for (const b of parsed) {
+    if (b.obj['@type'] !== 'FAQPage') continue;
+    for (const q of b.obj.mainEntity) { qs.push(q.name); as.push(q.acceptedAnswer.text); }
+  }
+  ok('7.3 every FAQ question is unique across the course',
+    new Set(qs).size === qs.length, { total: qs.length, unique: new Set(qs).size });
+  ok('7.4 every FAQ answer is unique across the course, not one template repeated',
+    new Set(as).size === as.length, { total: as.length, unique: new Set(as).size });
+
+  // The mistakes come from the mutants, which the verifier proved can fail a
+  // case. Anything else on this list would be a guess presented as a fact.
+  const withMutants = entries.filter((x) => (x.mutants || []).length);
+  const byLesson = new Map(pages.map((p) => [p.lesson, p]));
+  ok('7.5 every entry with mutants renders a mistakes checklist',
+    withMutants.every((x) => byLesson.get(x.lesson).bodyHtml.includes('Before you submit')),
+    withMutants.filter((x) => !byLesson.get(x.lesson).bodyHtml.includes('Before you submit')).map((x) => x.lesson));
+
+  ok('7.6 every declared mistake is actually rendered',
+    withMutants.every((x) => x.mutants.every((m) => byLesson.get(x.lesson).bodyHtml.includes(esc(m.describe)))),
+    withMutants.filter((x) => x.mutants.some((m) => !byLesson.get(x.lesson).bodyHtml.includes(esc(m.describe)))).map((x) => x.lesson));
+
+  // Collapsed, like the hints. A mistake description names the fix, so it must
+  // not sit open above the editor for somebody who has not attempted yet.
+  ok('7.7 the checklist is collapsed behind a summary rather than shown open',
+    withMutants.every((x) => {
+      const b = byLesson.get(x.lesson).bodyHtml;
+      const at = b.indexOf('Before you submit');
+      const det = b.indexOf('<details>', at);
+      return det !== -1 && det < b.indexOf(esc(x.mutants[0].describe), at);
+    }));
+
+  ok('7.8 no JSON-LD block can terminate its own script element early',
+    pages.every((p) => !/<script type="application\/ld\+json">[^<]*<\/script>[^<]*<\/script>/.test(p.bodyHtml)));
 }
 
 console.log(`\n${pass} passed, ${fail} failed`);
