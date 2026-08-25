@@ -73,6 +73,22 @@
    * silently omitting authored practice is the failure mode this whole file
    * exists to prevent.
    */
+  // Every Device Security Analysis is titled "Device Security Analysis: the
+  // <device>". On a page whose heading already says Device Security Analysis,
+  // five cards opening with the same 25 characters is wasted width and makes
+  // the cards harder to tell apart, which is the one job the card list has.
+  // The full title still ships everywhere else; this is display only.
+  function cardTitle(title) {
+    var t = String(title || '');
+    // Only a prefix long enough to be a category label, and short enough to be
+    // one. Without the lower bound "Lab 3: reading logs" becomes "Reading
+    // logs", which loses information rather than repetition.
+    var cut = t.indexOf(': ');
+    if (cut < 12 || cut > 34) return t;
+    var rest = t.slice(cut + 2);
+    return rest.charAt(0).toUpperCase() + rest.slice(1);
+  }
+
   function frqCard(set, base) {
     var href = set.page_url || (base + set.url);
     var meta = [];
@@ -82,7 +98,7 @@
     return ''
       + '<a class="ph-card" href="' + esc(href) + '">'
       + span('ph-card-focus', set.focus)
-      + '<span class="ph-card-title">' + esc(set.title || set.set_id) + '</span>'
+      + '<span class="ph-card-title">' + esc(cardTitle(set.title) || set.set_id) + '</span>'
       + span('ph-card-blurb', set.blurb)
       + '<span class="ph-card-meta">' + pill(set.difficulty) + meta.join(' &middot; ') + '</span>'
       + '<span class="ph-card-go">Start &rarr;</span>'
@@ -239,7 +255,7 @@
 
   return {
     grid: grid, frqCard: frqCard, labCard: labCard,
-    styleTag: styleTag, CSS: CSS, esc: esc, span: span, pill: pill,
+    styleTag: styleTag, CSS: CSS, esc: esc, span: span, pill: pill, cardTitle: cardTitle,
     refresh: refresh, mountAll: mountAll, DIFF_LABEL: DIFF_LABEL,
   };
 }));

@@ -315,8 +315,13 @@ function buildUmbrella(index) {
   const body = [
     '<div class="ph-page">',
     hub.styleTag(),
-    chrome('.ph-sub{font-family:"DM Sans",system-ui,sans-serif;font-size:12px;font-weight:700;'
-      + 'letter-spacing:.07em;text-transform:uppercase;color:#7C3AED;margin:0 0 6px;}'),
+    // The eyebrow sits ABOVE its heading, the way the course guide puts FOR
+    // TEACHERS above its h2. Below the heading and set in loud uppercase it
+    // outshouted the serif h2 it was supposed to be subordinate to, and the
+    // longer ones wrapped to two lines of shouting.
+    chrome('.ph-sub{font-family:"DM Sans",system-ui,sans-serif;font-size:11px;font-weight:700;'
+      + 'letter-spacing:.09em;text-transform:uppercase;color:#7C3AED;margin:34px 0 0;}'
+      + '.ph-sub+h2{margin-top:4px;}'),
     hero('Everything in one place',
       'AP Cybersecurity Practice',
       'The multiple-choice half, the free-response half, and the terminal labs. The exam is 60 '
@@ -324,22 +329,25 @@ function buildUmbrella(index) {
       [['60', 'MCQ in section I'], ['1', 'free response'], [String(index.frq.length), 'FRQ sets'],
         [String(index.labs.length), 'terminal labs']]),
 
+    '<p class="ph-sub">Section I of the exam</p>',
     '<h2>Multiple choice</h2>',
-    '<p class="ph-sub">Section I: 60 questions, all five units, three skill categories</p>',
-    '<p>' + link(P.exam, 'AP Cybersecurity practice exam') + ' gives you scored questions with '
+    '<p>60 questions, drawn from all five units and the three skill categories. '
+      + link(P.exam, 'The AP Cybersecurity practice exam') + ' gives you scored questions with '
       + 'explanations. The ' + link(P.format, 'exam format page') + ' has the full breakdown of how '
       + 'the exam is built.</p>',
 
+    '<p class="ph-sub">Section II of the exam</p>',
     '<h2>Free response</h2>',
-    '<p class="ph-sub">Section II: one Device Security Analysis, parts A to E, 50 minutes</p>',
-    '<p>Full practice questions in the exam\'s exact format, each with sample responses and credit '
+    '<p>One Device Security Analysis, parts A to E, 50 minutes. Full practice questions in the '
+      + 'exam\'s exact format, each with sample responses and credit '
       + 'points. More on the format and what each part asks: ' + link(P.frq, 'the FRQ practice hub')
       + '.</p>',
     liveSection('frq', hub.grid(index, 'frq', API)),
 
+    '<p class="ph-sub">Hands on</p>',
     '<h2>Terminal labs</h2>',
-    '<p class="ph-sub">Hands-on work in a real browser terminal, no install and no account</p>',
-    '<p>Practice for the commands the free-response question asks you to write. All of them: '
+    '<p>A real browser terminal, no install and no account. Practice for the commands the '
+      + 'free-response question asks you to write. All of them: '
       + link(P.labs, 'the terminal labs hub') + '.</p>',
     liveSection('labs', hub.grid(index, 'labs', API)),
 
