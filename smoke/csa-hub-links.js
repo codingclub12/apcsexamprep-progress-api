@@ -83,19 +83,26 @@ ok('1.4 the live exercise is linked', res.body.indexOf('/pages/ap-csa-lesson-2-2
 ok('1.5 the section landed before the learn block',
   res.body.indexOf('class="u2-exercises"') < res.body.indexOf('<div class="u2-learn">'));
 ok('1.6 the count in the blurb is the built count, not the lesson count',
-  res.body.indexOf('1 of 3 are open so far') !== -1);
+  res.body.indexOf('1 of 3 lessons are open so far') !== -1);
 
 section('2. a page that does not exist is never linked');
+// Every chip type is represented here, so a newly added one cannot be linked
+// unconditionally without this assertion catching it. Debug and FRQ joined the
+// row on 2026-08-25 and are unbuilt in this fixture.
 const unbuilt = [
   'ap-csa-lesson-2-1-algorithms-selection-repetition-exercise-1',
   'ap-csa-lesson-2-3-if-statements-exercise-1',
   'ap-csa-lesson-2-2-boolean-expressions-exercise-2',
+  'ap-csa-lesson-2-2-boolean-expressions-debug',
+  'ap-csa-lesson-2-2-boolean-expressions-frq',
+  'ap-csa-lesson-2-3-if-statements-frq',
 ];
 ok('2.1 no unbuilt exercise appears as an href',
   unbuilt.every((h) => res.body.indexOf(`/pages/${h}`) === -1),
   unbuilt.filter((h) => res.body.indexOf(`/pages/${h}`) !== -1));
+// 3 lessons x 4 chips = 12, of which exactly one is built in this fixture.
 ok('2.2 unbuilt work is still visible as a locked chip',
-  (res.body.match(/cursor:not-allowed/g) || []).length === 5,
+  (res.body.match(/cursor:not-allowed/g) || []).length === 11,
   (res.body.match(/cursor:not-allowed/g) || []).length);
 ok('2.3 an empty handle set locks everything and still builds',
   hub.build(FIXTURE, new Set()).problems.length === 0);
@@ -121,7 +128,11 @@ function refuses(name, fn) {
 }
 refuses('4.1 a rendered-page scrape with no stylesheet', () => hub.build(FIXTURE.replace('<style>', ''), LIVE));
 refuses('4.2 a body with no lesson cards', () => hub.build(FIXTURE.replace(/u2-lesson-card/g, 'x-card'), LIVE));
-refuses('4.3 a second patch over an already-patched body', () => hub.build(res.body, LIVE));
+// 4.3 used to assert a refusal. Re-running is now a REPLACEMENT, because the
+// four hubs are already patched and live and every new practice type has to
+// reach a body that already carries the old section. What must still be
+// impossible is a SECOND section, so that is what is asserted, along with the
+// section surviving a replace with its links intact.
 refuses('4.4 a body with no unambiguous anchor', () => hub.build(
   FIXTURE.replace('<div class="u2-learn">', '<div class="u2-x">')
     .replace('<div class="u2-resources">', '<div class="u2-y">')
@@ -264,6 +275,35 @@ ok('6.2 the hub handle is resolved from lib/csa-exercise-pages', rows[1][0] === 
 ok('6.3 MERGE, never REPLACE', rows[1][1] === 'MERGE', rows[1][1]);
 ok('6.4 the body survives the round trip byte for byte', rows[1][2] === res.body);
 fs.rmSync(tmp, { recursive: true, force: true });
+
+section('7. re-running against an already patched hub replaces, never duplicates');
+{
+  const second = hub.build(res.body, LIVE);
+  ok('7.1 it does not refuse an already patched body', second.problems.length === 0, second.problems);
+  ok('7.2 it reports that it replaced rather than added', second.replacedSection === true);
+  ok('7.3 exactly one exercises section exists afterwards',
+    (second.body.match(/class="u2-exercises"/g) || []).length === 1,
+    (second.body.match(/class="u2-exercises"/g) || []).length);
+  ok('7.4 the live exercise is still linked after the replace',
+    second.body.indexOf('/pages/ap-csa-lesson-2-2-boolean-expressions-exercise-1') !== -1);
+  ok('7.5 replacing twice is stable, byte for byte',
+    hub.build(second.body, LIVE).body === second.body);
+
+  // The whole point of the replace path: a chip added to the generator has to
+  // reach a hub that was patched before that chip existed.
+  const WIDER = new Set([...LIVE, 'ap-csa-lesson-2-2-boolean-expressions-frq']);
+  const third = hub.build(res.body, WIDER);
+  ok('7.6 a newly built page becomes a link on a hub patched before it existed',
+    third.body.indexOf('/pages/ap-csa-lesson-2-2-boolean-expressions-frq') !== -1);
+  ok('7.7 and that did not duplicate the section either',
+    (third.body.match(/class="u2-exercises"/g) || []).length === 1);
+}
+
+// A hand-written block that happens to use the class name must never be
+// silently deleted by the replace path.
+refuses('7.8 an exercises block that is not machine generated',
+  () => hub.stripSection('<div class="u2-exercises" style="margin-bottom:40px!important;">'
+    + '<p>hand written</p></div>', 'u2'));
 
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);
