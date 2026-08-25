@@ -135,6 +135,27 @@ Two properties are load-bearing:
 which is what "the student reported it from the page" means. It is a real
 column rather than a `detail` JSON key because the route filters on it in SQL.
 
+### The same column now exists on System B
+
+`score_events.source` was added 2026-08-25, nullable and defaulting to NULL, so
+the two ledgers describe provenance the same way. Nothing reads it yet:
+`smoke/score-event-source.js` pins that, flipping a row to `'teacher'` and
+asserting the student progress map and the teacher dashboard both read back
+byte-identical.
+
+It exists because System A cannot carry a Cyber or CSP override. An `attempts`
+row for a course with no graded `course_manifest` rows never reaches the teacher
+dashboard: `lib/attempt-rollup.js` opens with `if (!manifest.length) return
+null`. So a teacher override entered for one of those courses would return 200
+and then be invisible on the one surface the teacher was looking at, which is
+worse than the refusal that stands there today.
+
+The override write path itself is NOT built. When it is, it belongs here, on
+`score_events`, priced from `course_denominators` rather than `course_manifest`,
+and it must keep both load-bearing properties above: re-entry replaces, and the
+delete is scoped to `source = 'teacher'` so a student's own submission can never
+be removed by a teacher correcting a typo.
+
 Still unearnable after this, and deliberately so: the AP Networking baseline
 diagnostic is not seeded at all (it runs before instruction and is not graded
 for marks), and the unit-test and exam free-response sections are not manifest
