@@ -18,6 +18,10 @@
     var mount = document.getElementById('frq-mount');
     if (!m) { mount.textContent = 'This practice question could not be loaded.'; return; }
     window.APCS_FRQ = { base: '' };
-    APCSFrq.mountById(mount, decodeURIComponent(m[1]), decodeURIComponent(m[2]));
+    // The player writes its own failure message into the mount point, so the
+    // only job here is to keep a failed mount from surfacing as an unhandled
+    // rejection in the console.
+    APCSFrq.mountById(mount, decodeURIComponent(m[1]), decodeURIComponent(m[2]))
+      .catch(function () {});
   }());
 </script>

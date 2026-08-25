@@ -39,6 +39,8 @@
 const fs = require('fs');
 const frq = require('../lib/frq-spec');
 const practice = require('../lib/practice-index');
+const boot = require('../lib/page-bootstrap');
+const liveGuard = require('../lib/live-body-guard');
 
 const PUBLISHED_AT = '2026-03-01 12:00:00';
 const API = 'https://progress.apcsexamprep.com';
@@ -129,17 +131,29 @@ function build(spec, index) {
     '.frq-page .frq-sib-list{list-style:none;padding:0;margin:12px 0 18px}',
     '.frq-page .frq-sib-list li{border:1px solid #dbe3ea;border-radius:8px;padding:11px 14px;margin:0 0 9px}',
     '.frq-page .frq-sib-focus{display:block;font-size:13px;color:#6b7c8d;margin-top:3px}',
+    boot.CSS,
     '</style>',
     '<h1>' + esc(spec.title) + '</h1>',
     '<p class="frq-page-lede">' + esc(copy[0]) + '</p>',
     ...copy.slice(1).map((p) => '<p>' + esc(p) + '</p>'),
     '<p class="frq-page-note">This one is self-scored. Nothing you write is collected, sent or stored, '
       + 'and no score reaches a gradebook.</p>',
-    '<div id="' + mountId + '">Loading the practice question...</div>',
+    // The mount point carries a sentinel and the script tags are wired to a
+    // fallback, so an API outage renders an explanation with a way out instead
+    // of a permanent "Loading" spinner. See lib/page-bootstrap.js.
+    boot.mountPoint(mountId, 'Loading the practice question...'),
     '<script>window.APCS_FRQ={base:' + JSON.stringify(API) + '};</' + 'script>',
-    '<script src="' + API + '/frq-player.js"></' + 'script>',
-    '<script>APCSFrq.mountById(document.getElementById(' + JSON.stringify(mountId) + '),'
-      + JSON.stringify(spec.course) + ',' + JSON.stringify(spec.set_id) + ');</' + 'script>',
+    boot.bootstrapScript({
+      mountId,
+      globalName: 'APCSFrq',
+      course: spec.course,
+      itemId: spec.set_id,
+      noun: 'practice question',
+      hubHandle: FRQ_HUB,
+      hubText: 'browse the other practice sets',
+    }),
+    boot.playerTag(API + '/frq-player.js', mountId),
+    boot.goTag(mountId),
     siblingStrip(spec, index),
     '</div>',
   ].join('\n');
@@ -166,7 +180,16 @@ function checkPage(p, spec, index) {
   const h1 = (b.match(/<h1[\s>]/g) || []).length;
   if (h1 !== 1) bad.push(`${h1} h1 tags, must be exactly 1`);
   if (!b.includes('/frq-player.js')) bad.push('the player script is missing');
-  if (!b.includes('APCSFrq.mountById(')) bad.push('the player is never mounted');
+  if (!b.includes('APCSFrq')) bad.push('the player is never mounted');
+  // The outage contract, checked as three facts rather than one string.
+  if (!/id="apcs-frq-[a-z0-9-]+-loading"/.test(b)) {
+    bad.push('the mount point has no sentinel, so a hung API spins forever');
+  }
+  if (!b.includes('window.APCSPageFallback')) bad.push('no fallback is registered');
+  if (!b.includes('onerror="window.APCSPageFallback')) {
+    bad.push('the player script tag is not wired to the fallback');
+  }
+  if (!b.includes('apcs-offline')) bad.push('the fallback renders nothing');
   if (!b.includes('window.APCS_FRQ')) bad.push('the API origin is never set');
   const mount = /id="(apcs-frq-[a-z0-9-]+)"/.exec(b);
   if (!mount) bad.push('there is no mount point');
@@ -201,7 +224,7 @@ function checkPage(p, spec, index) {
 
 function csvCell(v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; }
 
-function main(argv) {
+async function main(argv) {
   const out = argv[0];
   if (!out || out.startsWith('--')) {
     console.error('usage: node scripts/frq-pages-csv.js <out.csv> [--only <set_id>]');
@@ -240,6 +263,12 @@ function main(argv) {
     process.exit(1);
   }
 
+  // Every page below MERGEs over whatever is live at that handle, and Shopify
+  // keeps no history to undo it with. So before anything is written, compare
+  // against the storefront. See lib/live-body-guard.js and the /pages/join
+  // incident of 2026-08-22.
+  await liveGuard.guard(pages.map((p) => ({ handle: p.handle, bodyHtml: p.bodyHtml })), argv);
+
   const header = ['Handle', 'Command', 'Title', 'Body HTML', 'Published', 'Published At',
     'Metafield: global.title_tag [string]', 'Metafield: global.description_tag [string]'];
   const lines = [header.map(csvCell).join(',')];
@@ -267,6 +296,8 @@ function main(argv) {
   }
 }
 
-if (require.main === module) main(process.argv.slice(2));
+if (require.main === module) {
+  main(process.argv.slice(2)).catch((e) => { console.error(e.stack || e.message); process.exit(1); });
+}
 
 module.exports = { build, checkPage, COPY, API };
