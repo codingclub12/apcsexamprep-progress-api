@@ -101,43 +101,48 @@ function findProtected(cutoff) {
   `).all(COURSE, LESSON_SCORE_ITEM, ...LESSONS, ...ACTS, cutoff);
 }
 
-function main() {
-  const apply  = process.argv.includes('--apply');
-  const ci     = process.argv.indexOf('--cutoff');
-  const cutoff = ci !== -1 && process.argv[ci + 1] ? process.argv[ci + 1] : DEFAULT_CUTOFF;
+// ─────────────────────────────────────────────────────────────────────────────
+//  THE OPERATION ITSELF, usable from the CLI and from the admin route.
+//
+//  ONE implementation, deliberately. A second copy of this UPDATE living in a
+//  route handler is how the endpoint and the script drift, and a drifted regrade
+//  is invisible until a teacher notices a wrong number weeks later.
+//
+//  Returns the full plan whether or not it wrote, so a dry run and a real run
+//  report the same shape and the caller can show the operator exactly what was
+//  or would be touched.
+// ─────────────────────────────────────────────────────────────────────────────
+function clearFabricatedZeros(opts) {
+  const o = opts || {};
+  const cutoff = o.cutoff || DEFAULT_CUTOFF;
+  const apply = !!o.apply;
 
   const rows = findFabricated(cutoff);
-  const prot = findProtected(cutoff);
+  const protectedRows = findProtected(cutoff);
 
-  console.log(`cutoff: ${cutoff}`);
-  console.log(`fabricated zeros found: ${rows.length}\n`);
-
-  if (rows.length) {
-    const byCol = new Map();
-    for (const r of rows) {
-      const k = `${r.lesson}|${r.activity_type}`;
-      byCol.set(k, (byCol.get(k) || 0) + 1);
-    }
-    for (const [k, n] of Array.from(byCol).sort()) console.log(`  ${k.padEnd(22)} ${n} student(s)`);
-
-    const already = rows.filter((r) => r.score_reset_at).length;
-    const noRow   = rows.filter((r) => !r.progress_id).length;
-    if (already) console.log(`\n  ${already} already carry a score_reset_at and will be skipped.`);
-    if (noRow)   console.log(`  ${noRow} have a ledger row but no progress row; nothing to reset.`);
-  }
-
-  if (prot.length) {
-    console.log(`\nRecorded AFTER the cutoff, left untouched (these can be real grades):`);
-    for (const p of prot) {
-      console.log(`  ${p.lesson}|${p.activity_type}  ${p.n} row(s), points ${p.lo} to ${p.hi}`);
-    }
+  const byColumn = {};
+  for (const r of rows) {
+    const k = `${r.lesson}|${r.activity_type}`;
+    byColumn[k] = (byColumn[k] || 0) + 1;
   }
 
   const todo = rows.filter((r) => r.progress_id && !r.score_reset_at);
-  if (!apply) {
-    console.log(`\nDRY RUN. ${todo.length} progress row(s) would be reset. Re-run with --apply to write.`);
-    return;
-  }
+  const plan = {
+    cutoff,
+    applied: false,
+    found: rows.length,
+    by_column: byColumn,
+    already_reset: rows.filter((r) => r.score_reset_at).length,
+    no_progress_row: rows.filter((r) => !r.progress_id).length,
+    would_reset: todo.length,
+    // Recorded after the cutoff, so possibly real. Reported, never touched: a
+    // silent exclusion is how a cleanup turns into data loss.
+    protected_after_cutoff: protectedRows.map((p) => ({
+      lesson: p.lesson, activity_type: p.activity_type, rows: p.n, points_low: p.lo, points_high: p.hi,
+    })),
+    reset_at: null,
+  };
+  if (!apply) return plan;
 
   const now = new Date().toISOString();
   // Field for field the reset branch of the teacher unlock route.
@@ -147,9 +152,43 @@ function main() {
   `);
   const run = db.transaction((list) => { for (const r of list) stmt.run(now, now, r.progress_id); });
   run(todo);
-  console.log(`\nAPPLIED. ${todo.length} progress row(s) reset at ${now}.`);
+
+  plan.applied = true;
+  plan.reset_at = now;
+  return plan;
+}
+
+function main() {
+  const apply  = process.argv.includes('--apply');
+  const ci     = process.argv.indexOf('--cutoff');
+  const cutoff = ci !== -1 && process.argv[ci + 1] ? process.argv[ci + 1] : DEFAULT_CUTOFF;
+
+  const p = clearFabricatedZeros({ cutoff, apply });
+
+  console.log(`cutoff: ${p.cutoff}`);
+  console.log(`fabricated zeros found: ${p.found}\n`);
+
+  for (const [k, n] of Object.entries(p.by_column).sort()) {
+    console.log(`  ${k.padEnd(22)} ${n} student(s)`);
+  }
+  if (p.already_reset) console.log(`\n  ${p.already_reset} already carry a score_reset_at and will be skipped.`);
+  if (p.no_progress_row) console.log(`  ${p.no_progress_row} have a ledger row but no progress row; nothing to reset.`);
+
+  if (p.protected_after_cutoff.length) {
+    console.log(`\nRecorded AFTER the cutoff, left untouched (these can be real grades):`);
+    for (const x of p.protected_after_cutoff) {
+      console.log(`  ${x.lesson}|${x.activity_type}  ${x.rows} row(s), points ${x.points_low} to ${x.points_high}`);
+    }
+  }
+
+  if (!p.applied) {
+    console.log(`\nDRY RUN. ${p.would_reset} progress row(s) would be reset. Re-run with --apply to write.`);
+    return;
+  }
+  console.log(`\nAPPLIED. ${p.would_reset} progress row(s) reset at ${p.reset_at}.`);
   console.log('Nothing was deleted: the pre-reset ledger rows remain in score_events.');
 }
 
 if (require.main === module) main();
-module.exports = { findFabricated, findProtected, DEFAULT_CUTOFF };
+module.exports = { findFabricated, findProtected, clearFabricatedZeros, DEFAULT_CUTOFF,
+  COURSE, LESSONS, ACTS };

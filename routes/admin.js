@@ -30,6 +30,7 @@ const ungraded = require('../lib/admin-ungraded');
 const wire = require('../lib/wire-log');
 const trafficAnalysis = require('../lib/traffic-analysis');
 const trafficIngest = require('../lib/traffic-ingest');
+const cyberZeros = require('../scripts/clear-cyber-fabricated-zeros');
 const trafficGoogle = require('../lib/traffic-google');
 const trafficShopify = require('../lib/traffic-shopify');
 const trafficPull = require('../lib/traffic-pull');
@@ -110,6 +111,8 @@ router.get('/', (req, res) => {
       'GET /api/admin/ungraded-fallout   completed activities that were never scored, and how much real graded work sits alongside them; ?course=',
       'POST /api/admin/denominators/adopt author denominators (header key required); {course, adopt_proposed} or {course, values}, dry_run supported',
       'POST /api/admin/denominators/remove un-author denominators (header key required); {course, activity_types} plus optional lessons / only_possible, dry_run supported',
+      'GET /api/admin/cyber-zeros        dry run: the fabricated zeros on Cyber 1.3/1.4/1.5 exercise-1, exercise-2 and lab; ?cutoff=',
+      'POST /api/admin/cyber-zeros/clear clear them (header key required); {confirm: true} to write, anything else returns the dry run',
       'GET /api/admin/schema              live table/column listing',
       'GET /api/admin/score-events        raw graded-interaction ledger; ?student_id= ?class_code= ?course= ?limit=',
     ],
@@ -1183,6 +1186,61 @@ router.get('/ungraded-fallout', (req, res) => {
   } catch (e) {
     console.error('admin/ungraded-fallout:', e);
     res.status(500).json({ error: 'ungraded fallout failed', detail: e.message });
+  }
+});
+
+// ── FABRICATED ZEROS: the nine Cyber Unit 1 columns ───────────────────────────
+//  Until theme PR #64 deployed on 2026-08-21, apcs-tracker.js decided a non-quiz
+//  activity was complete and then asked activityScorePct for its score. On nine
+//  Unit 1 pages that function found no score UI at all and returned 0 rather
+//  than null, so the tracker posted `completed: true, score: 0`. A student who
+//  scored full marks was stored as a zero, and it counts against the class
+//  average. The pages are 1.3, 1.4 and 1.5, each of exercise-1, exercise-2 and
+//  lab. Full evidence in docs/runs/2026-08-21-claude-code-cyber-tracker-sweep.md.
+//
+//  A corrected page cannot fix this itself: the zero is already the grade of
+//  record and nothing re-posts on a student's behalf. It has to be cleared
+//  deliberately, which is what these two routes are for.
+//
+//  THE READ IS A GET AND THE WRITE IS A POST, on purpose. requireAdmin accepts
+//  the dashboard cookie for safe methods only, so the report below is browsable
+//  from the admin UI while the mutation always needs the x-admin-key header.
+//  That is the existing CSRF posture on this router and this is not the route to
+//  make an exception for: it edits grades.
+//
+//  Both share ONE implementation with the CLI script, which has its own suite
+//  (npm run smoke:clearzeros) covering all six cases it must tell apart.
+//  Nothing is deleted either way: the pre-reset rows stay in score_events and
+//  still show in GET /api/student/history, marked pre-reset.
+
+// The dry run. Read only, so the cookie is enough and a human can look before
+// anything is written. ?cutoff= overrides the default instant.
+router.get('/cyber-zeros', (req, res) => {
+  try {
+    res.json(cyberZeros.clearFabricatedZeros({ cutoff: req.query.cutoff, apply: false }));
+  } catch (e) {
+    console.error('admin/cyber-zeros:', e);
+    res.status(500).json({ error: 'cyber zeros report failed', detail: e.message });
+  }
+});
+
+// The write. Requires the x-admin-key header (enforced by requireAdmin) AND an
+// explicit confirm in the body, so a stray POST from a curl history reports the
+// plan instead of regrading a class.
+router.post('/cyber-zeros/clear', (req, res) => {
+  try {
+    const b = req.body || {};
+    if (!b.confirm) {
+      const plan = cyberZeros.clearFabricatedZeros({ cutoff: b.cutoff, apply: false });
+      return res.status(400).json({
+        error: 'confirm is required to write. This response is the dry run.',
+        plan,
+      });
+    }
+    res.json(cyberZeros.clearFabricatedZeros({ cutoff: b.cutoff, apply: true }));
+  } catch (e) {
+    console.error('admin/cyber-zeros/clear:', e);
+    res.status(500).json({ error: 'cyber zeros clear failed', detail: e.message });
   }
 });
 
