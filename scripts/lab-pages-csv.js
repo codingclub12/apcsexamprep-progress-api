@@ -29,6 +29,8 @@
 const fs = require('fs');
 const labs = require('../lib/lab-spec');
 const practice = require('../lib/practice-index');
+const boot = require('../lib/page-bootstrap');
+const liveGuard = require('../lib/live-body-guard');
 
 const PUBLISHED_AT = '2026-03-01 12:00:00';
 const API = 'https://progress.apcsexamprep.com';
@@ -41,6 +43,14 @@ const PRACTICE_HUBS = {
   'ap-cybersecurity': { labs: 'ap-cybersecurity-labs', umbrella: 'ap-cybersecurity-practice' },
 };
 const STORE = 'https://www.apcsexamprep.com';
+
+// Where to send a student when the API is down and the course has no practice
+// hub. Not a nicety: without it the fallback on a networking lab would have no
+// link at all, which is the dead end this whole change is about.
+const COURSE_GUIDES = {
+  'ap-networking': 'ap-networking-complete-course-guide',
+  'ap-cybersecurity': 'ap-cybersecurity-complete-course-guide',
+};
 
 
 // Prose per lab. Authored here rather than in the spec because it is page copy,
@@ -168,6 +178,17 @@ function build(spec, index) {
   // with no hub. That keeps those pages byte-identical to what is already
   // live, so this change never asks for a pointless re-import.
   const strip = siblingStrip(spec, index);
+  // Where the outage fallback sends a student. A course with a labs hub gets
+  // it, because that page is static HTML and survives this API being down. A
+  // course without one still needs somewhere to go rather than a dead end.
+  const hubs = PRACTICE_HUBS[spec.course];
+  const fallbackHub = hubs
+    ? { handle: hubs.labs, text: 'browse the other labs' }
+    : { handle: COURSE_GUIDES[spec.course], text: 'go back to the course' };
+  if (!fallbackHub.handle) {
+    throw new Error(`no outage fallback destination for ${spec.course}; add it to `
+      + 'PRACTICE_HUBS or COURSE_GUIDES in this script');
+  }
   const signin = copy.signin
     ? '<p class="lab-page-note"><strong>Sign in first if this is for a grade.</strong> '
       + 'The lab runs either way, but it can only save your score when you are signed in to your class.</p>'
@@ -188,16 +209,27 @@ function build(spec, index) {
       '.lab-page .lab-sib-list li{border:1px solid #dbe3ea;border-radius:8px;padding:11px 14px;margin:0 0 9px}',
       '.lab-page .lab-sib-focus{display:block;font-size:13px;color:#6b7c8d;margin-top:3px}',
     ] : []),
+    boot.CSS,
     '</style>',
     '<h1>' + esc(spec.title) + '</h1>',
     '<p class="lab-page-lede">' + esc(copy.lede) + '</p>',
     ...copy.body.map((p) => '<p>' + esc(p) + '</p>'),
     signin,
-    '<div id="' + mountId + '">Loading the lab...</div>',
+    // See lib/page-bootstrap.js: an API outage must render an explanation with
+    // somewhere to go, not a permanent "Loading" spinner.
+    boot.mountPoint(mountId, 'Loading the lab...'),
     '<script>window.APCS_LAB={base:' + JSON.stringify(API) + '};</' + 'script>',
-    '<script src="' + API + '/lab-player.js"></' + 'script>',
-    '<script>APCSLab.mountById(document.getElementById(' + JSON.stringify(mountId) + '),'
-      + JSON.stringify(spec.course) + ',' + JSON.stringify(spec.item_id) + ');</' + 'script>',
+    boot.bootstrapScript({
+      mountId,
+      globalName: 'APCSLab',
+      course: spec.course,
+      itemId: spec.item_id,
+      noun: 'lab',
+      hubHandle: fallbackHub.handle,
+      hubText: fallbackHub.text,
+    }),
+    boot.playerTag(API + '/lab-player.js', mountId),
+    boot.goTag(mountId),
     strip,
     '</div>',
   ].filter((line) => line !== '').join('\n');
@@ -232,7 +264,16 @@ function checkPage(p, spec, index) {
 
   // The four things that make it a lab rather than a paragraph.
   if (!b.includes('/lab-player.js')) bad.push('the player script is missing, so the page renders prose and no lab');
-  if (!b.includes('APCSLab.mountById(')) bad.push('the player is never mounted');
+  if (!b.includes('APCSLab')) bad.push('the player is never mounted');
+  // The outage contract, checked as facts rather than one string.
+  if (!/id="apcs-lab-[a-z0-9-]+-loading"/.test(b)) {
+    bad.push('the mount point has no sentinel, so a hung API spins forever');
+  }
+  if (!b.includes('window.APCSPageFallback')) bad.push('no fallback is registered');
+  if (!b.includes('onerror="window.APCSPageFallback')) {
+    bad.push('the player script tag is not wired to the fallback');
+  }
+  if (!b.includes('apcs-offline')) bad.push('the fallback renders nothing');
   if (!b.includes('window.APCS_LAB')) bad.push('the API origin is never set, so the spec fetch would go to the storefront');
   const mount = /id="(apcs-lab-[a-z0-9-]+)"/.exec(b);
   if (!mount) bad.push('there is no mount point');
@@ -278,7 +319,7 @@ function csvCell(v) {
   return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
 }
 
-function main(argv) {
+async function main(argv) {
   const out = argv[0];
   if (!out || out.startsWith('--')) {
     console.error('usage: node scripts/lab-pages-csv.js <out.csv> [--only <item_id>]');
@@ -319,6 +360,12 @@ function main(argv) {
     process.exit(1);
   }
 
+  // Every page below MERGEs over whatever is live at that handle, and Shopify
+  // keeps no history to undo it with. So before anything is written, compare
+  // against the storefront. See lib/live-body-guard.js and the /pages/join
+  // incident of 2026-08-22.
+  await liveGuard.guard(pages.map((p) => ({ handle: p.handle, bodyHtml: p.bodyHtml })), argv);
+
   const header = ['Handle', 'Command', 'Title', 'Body HTML', 'Published', 'Published At',
     'Metafield: global.title_tag [string]', 'Metafield: global.description_tag [string]'];
   const lines = [header.map(csvCell).join(',')];
@@ -335,6 +382,8 @@ function main(argv) {
   console.log(API + '/api/labs, so committing config/labs/*.json is the deploy.');
 }
 
-if (require.main === module) main(process.argv.slice(2));
+if (require.main === module) {
+  main(process.argv.slice(2)).catch((e) => { console.error(e.stack || e.message); process.exit(1); });
+}
 
 module.exports = { build, checkPage, COPY, PUBLISHED_AT, API };

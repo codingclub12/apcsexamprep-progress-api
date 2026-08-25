@@ -12,6 +12,8 @@
     "smoke:cyberclarity": "node smoke/cyber-clarity.js",
     "smoke:frq": "node smoke/frq.js",
     "smoke:practicehub": "node smoke/practice-hub.js",
+    "smoke:pageoutage": "node smoke/page-outage.js",
+    "availability": "node scripts/page-availability.js",
     "practicehubs": "node scripts/cyber-practice-hubs-csv.js",
     "smoke:labs": "node smoke/labs.js",
     "smoke:teacher": "node smoke/teacher-dashboard.js",

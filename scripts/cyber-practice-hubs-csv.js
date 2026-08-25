@@ -51,6 +51,7 @@ const hub = require('../public/practice-hub.js');
 const practice = require('../lib/practice-index');
 const frq = require('../lib/frq-spec');
 const labs = require('../lib/lab-spec');
+const liveGuard = require('../lib/live-body-guard');
 
 const PUBLISHED_AT = '2026-03-01 12:00:00';
 const API = 'https://progress.apcsexamprep.com';
@@ -328,7 +329,7 @@ function checkPage(p, index) {
 
 function csvCell(v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; }
 
-function main(argv) {
+async function main(argv) {
   const out = argv[0];
   if (!out || out.startsWith('--')) {
     console.error('usage: node scripts/cyber-practice-hubs-csv.js <out.csv> [--only <handle>]');
@@ -362,6 +363,12 @@ function main(argv) {
     process.exit(1);
   }
 
+  // Every page below MERGEs over whatever is live at that handle, and Shopify
+  // keeps no history to undo it with. So before anything is written, compare
+  // against the storefront. See lib/live-body-guard.js and the /pages/join
+  // incident of 2026-08-22.
+  await liveGuard.guard(pages.map((p) => ({ handle: p.handle, bodyHtml: p.bodyHtml })), argv);
+
   const header = ['Handle', 'Command', 'Title', 'Body HTML', 'Published', 'Published At',
     'Metafield: global.title_tag [string]', 'Metafield: global.description_tag [string]'];
   const lines = [header.map(csvCell).join(',')];
@@ -377,6 +384,8 @@ function main(argv) {
   console.log('Every one of them is linked from at least one page in this sheet.');
 }
 
-if (require.main === module) main(process.argv.slice(2));
+if (require.main === module) {
+  main(process.argv.slice(2)).catch((e) => { console.error(e.stack || e.message); process.exit(1); });
+}
 
 module.exports = { buildFrqHub, buildLabsHub, buildUmbrella, checkPage, P, COURSE, API, STORE };

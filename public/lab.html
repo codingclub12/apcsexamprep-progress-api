@@ -30,7 +30,10 @@
     var item = decodeURIComponent(parts[2] || '');
     var preview = /(^|[?&])preview=(1|true)(&|$)/.test(location.search);
     document.title = item + ' lab';
-    APCSLab.mountById(document.getElementById('lab'), course, item, { preview: preview });
+    // mountById rethrows so a caller can react. This one has nothing to add:
+    // the player has already written its failure message into the mount point.
+    APCSLab.mountById(document.getElementById('lab'), course, item, { preview: preview })
+      .catch(function () {});
   })();
 </script>
 </body>

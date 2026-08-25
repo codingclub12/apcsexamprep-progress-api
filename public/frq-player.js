@@ -228,13 +228,22 @@
     var url = base + '/api/frq/' + encodeURIComponent(course) + '/' + encodeURIComponent(setId);
     // The ONLY network call in this file, and it is a GET for author content.
     // Nothing the student produces is ever sent anywhere.
-    global.fetch(url).then(function (r) {
+    // Returns the promise, so a caller can react to a failure. The inline
+    // bootstrap in the page body uses this to replace the bare sentence below
+    // with a fallback that links to the static hub. Before this it returned
+    // undefined and the page had no way to know the mount had failed.
+    return global.fetch(url).then(function (r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();
     }).then(function (spec) {
       mount(container, spec, opts);
-    }).catch(function () {
+    }).catch(function (e) {
+      // Write something honest here for a caller that does not handle it, then
+      // rethrow so one that does can replace this with a fallback that offers a
+      // way out. lab-player.js has always rethrown; this file swallowed, which
+      // meant a page could not tell a failed mount from a successful one.
       container.textContent = 'This practice question could not be loaded.';
+      throw e;
     });
   }
 
