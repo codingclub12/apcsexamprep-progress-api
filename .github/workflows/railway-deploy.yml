@@ -1,0 +1,152 @@
+name: Push the deploy to Railway
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  WHY THIS EXISTS
+#
+#  Railway's GitHub integration is supposed to build on every push to main. It
+#  mostly does, and then sometimes it does not, and the gap is not small: board
+#  tasks 116, 118 and 119 are all the same morning, recording deploys 25, 35 and
+#  77 minutes behind main, and task 119 had to be closed by a human opening the
+#  Railway build log. deploy-drift.yml was written to NOTICE this. Nothing was
+#  written to FIX it, so the fix has been a person clicking Redeploy.
+#
+#  This is that click, on a schedule and on every merge.
+#
+#  ── THE ONE-TIME SETUP ──────────────────────────────────────────────────────
+#  This workflow is inert until a token exists. Add both, once:
+#
+#    RAILWAY_TOKEN     Repository secret. Railway dashboard > project settings >
+#                      Tokens > create a PROJECT token. A project token is
+#                      scoped to this one project; an account token is not, and
+#                      would let this workflow reach every project on the
+#                      account, which is more authority than a deploy needs.
+#
+#    RAILWAY_SERVICE   Repository VARIABLE (not a secret; it is just a name).
+#                      The service name as Railway shows it. Without it the CLI
+#                      cannot tell which service in the project to deploy and
+#                      fails with a prompt that CI cannot answer.
+#
+#  Until RAILWAY_TOKEN is set the job is skipped rather than failed. A workflow
+#  that goes red on every push because a human has not done a setup step is a
+#  workflow people mute, and a muted deploy alarm is how a 77-minute stall goes
+#  unnoticed in the first place. Once the token IS set, a failure here is real
+#  and should be treated as one.
+#
+#  ── WHY `railway up` AND NOT `railway redeploy` ─────────────────────────────
+#  `redeploy` rebuilds the deployment that is already there, which on a stall
+#  means rebuilding the OLD commit: the exact thing that is already running and
+#  is already wrong. `up` uploads this checkout, so it deploys the commit that
+#  triggered the workflow, which is the one that is missing.
+#
+#  ── WHY THIS CANNOT DOUBLE-DEPLOY INTO A LOOP ───────────────────────────────
+#  It runs on push to main and on a hand press. It does not run on its own
+#  output: `railway up` does not push to git, so nothing here can re-trigger
+#  this workflow. The $169 incident this repo remembers was a service that
+#  re-entered itself; this one has no edge back to its own trigger.
+#
+#  If Railway's own integration and this workflow both build the same commit,
+#  the result is one redundant build, not a loop. That is the intended trade:
+#  a wasted build costs pennies, and a stalled deploy costs a morning.
+# ─────────────────────────────────────────────────────────────────────────────
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Why you are forcing a deploy (shows in the run summary)'
+        required: false
+        default: 'manual redeploy'
+
+# One deploy at a time. A queued second push should wait for the first rather
+# than race it, and cancel-in-progress would abort a build that is nearly done.
+concurrency:
+  group: railway-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy this commit
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      # The secret cannot be read in an `if:` at job level in a way that also
+      # lets the skip explain itself, so the gate is a step that sets an output
+      # and every later step keys off it.
+      - name: Is a Railway token configured
+        id: gate
+        env:
+          HAS_TOKEN: ${{ secrets.RAILWAY_TOKEN != '' }}
+        run: |
+          echo "ready=$HAS_TOKEN" >> "$GITHUB_OUTPUT"
+          if [ "$HAS_TOKEN" != "true" ]; then
+            {
+              echo '## Railway deploy skipped'
+              echo
+              echo 'No `RAILWAY_TOKEN` secret is set, so this workflow is inert.'
+              echo
+              echo 'To turn it on, once:'
+              echo '1. Railway dashboard, project settings, Tokens, create a **project** token.'
+              echo '2. Add it here as the repository secret `RAILWAY_TOKEN`.'
+              echo '3. Add the service name as the repository variable `RAILWAY_SERVICE`.'
+              echo
+              echo 'Until then, Railway deploys only via its own GitHub integration,'
+              echo 'which is the arrangement that stalled in board tasks 116, 118 and 119.'
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::notice::RAILWAY_TOKEN not set. Skipping, not failing."
+          fi
+
+      - name: Install the Railway CLI
+        if: steps.gate.outputs.ready == 'true'
+        run: npm i -g @railway/cli
+
+      - name: Deploy
+        if: steps.gate.outputs.ready == 'true'
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          SERVICE: ${{ vars.RAILWAY_SERVICE }}
+        run: |
+          set -o pipefail
+          if [ -z "$SERVICE" ]; then
+            echo "RAILWAY_SERVICE variable is not set, and the CLI cannot pick a service on its own."
+            echo "Set it to the service name exactly as Railway shows it."
+            exit 1
+          fi
+          echo "Deploying ${GITHUB_SHA:0:7} to $SERVICE"
+          # --ci keeps it non-interactive and streams the build log into this job,
+          # so a failed build is readable here rather than only in the dashboard,
+          # which is what task 119 needed a human for.
+          railway up --service "$SERVICE" --ci 2>&1 | tee deploy.log
+
+      # ── DID IT ACTUALLY LAND ────────────────────────────────────────────────
+      #  A green `railway up` means the upload and build were accepted, not that
+      #  the new container is serving. /api/health reports the commit it is
+      #  running, which is the only answer that is not a guess, so ask it.
+      - name: Confirm the new commit is serving
+        if: steps.gate.outputs.ready == 'true'
+        env:
+          HEALTH_URL: ${{ vars.PROGRESS_BASE_URL || 'https://progress.apcsexamprep.com' }}/api/health
+        run: |
+          short="${GITHUB_SHA:0:7}"
+          for i in $(seq 1 20); do
+            serving=$(curl -sS --max-time 20 "$HEALTH_URL" 2>/dev/null \
+              | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{console.log((JSON.parse(s).commit||"").slice(0,7))}catch(e){console.log("")}})')
+            echo "t+$(( (i-1)*30 ))s serving=${serving:-unreachable} want=$short"
+            if [ "$serving" = "$short" ]; then
+              echo "::notice::$short is live."
+              echo "## Railway deploy landed: \`$short\`" >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            sleep 30
+          done
+          echo "::error::Build was accepted but $short is still not serving after 10 minutes."
+          echo "## Deploy did NOT land" >> "$GITHUB_STEP_SUMMARY"
+          echo "\`railway up\` succeeded but /api/health still reports the old commit." >> "$GITHUB_STEP_SUMMARY"
+          echo "Check the Railway build log; this is the shape of the task 119 stall." >> "$GITHUB_STEP_SUMMARY"
+          exit 1
