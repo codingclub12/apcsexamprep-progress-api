@@ -54,6 +54,27 @@
 //  caught it. It would have rendered cleanly and handed a teacher the wrong
 //  decks. The decision removes that rather than translating it, so no mapping
 //  layer belongs here.
+//
+//  THE VERIFIED UNIT 3 DAY MAP, read from the five teacher guides on
+//  2026-08-26 and corroborated by tools/cyber-pacing/pacing.json ("Unit 3: 20
+//  teach days"). Keys are CED topic numbers, per the decision above.
+//
+//    '3-1' Network Vulnerabilities      6 days   (deck is 22 slides today)
+//    '3-2' Managerial Controls          3 days   (deck is 16 slides today)
+//    '3-3' Segmentation                 2 days   (deck is 20 slides today)
+//    '3-4' Firewalls                    2 days   (deck is 21 slides today)
+//    '3-5' Detecting Network Attacks    7 days   (deck is 25 slides today)
+//
+//  Those day counts are the CED's and are already correct. What does not exist
+//  is a per-day deck set for any of them, which is the whole reason none is
+//  listed below: listing one would report days for decks nobody can open.
+//  docs/cyber-unit3-tier1-split-spec.md carries the slide-level cut lists for
+//  3.3 and 3.4, the two that split without new content.
+//
+//  Why CED won, because it is the part that generalises rather than a
+//  preference: the EK identifiers are CED-canonical and printed on every
+//  slide, so a deck citing EK 3.4.B.2 for firewall ACLs cannot be renumbered.
+//  The site numbering was the only free variable, so it is the side that moved.
 // ---------------------------------------------------------------------------
 
 const embeds = require('./cyber-slide-embeds');

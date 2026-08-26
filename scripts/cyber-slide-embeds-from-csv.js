@@ -45,6 +45,12 @@
 //  row naming one means the conversion ran wider than the manifest, and the
 //  right fix is to widen the manifest deliberately, not to let a 22-slide
 //  whole-lesson deck appear on the site labelled "Day 1".
+//
+//  When Unit 3 is widened, its keys are CED TOPIC NUMBERS, not the site's old
+//  six-lesson ordering. The two disagreed until 2026-08-26 and a key could not
+//  tell them apart: '3-3' was Segmentation to the bundle and Firewalls to the
+//  site, both two-day lessons, so no count would catch the swap. The manifest
+//  header carries the decision and the verified day map.
 // ---------------------------------------------------------------------------
 const fs = require('fs');
 const path = require('path');
@@ -182,7 +188,7 @@ function main() {
   // Gaps are survivable; a crossed wire is not.
   if (dupeIds.length) fail(`${dupeIds.length} file id(s) are claimed by more than one deck slot. A shared id can hand a student a teacher deck.`);
   if (dupeKeys.length) fail(`${dupeKeys.length} deck slot(s) appear twice in the sheet.`);
-  if (outOfScope.length) fail(`${outOfScope.length} row(s) name a lesson outside Units 1 and 2. Widen config/cyber-slide-manifest.js deliberately before converting those.`);
+  if (outOfScope.length) fail(`${outOfScope.length} row(s) name a lesson outside Units 1 and 2. Widen config/cyber-slide-manifest.js deliberately before converting those, and key Unit 3 by CED topic number (see that file's header).`);
   if (badKeys.length) fail(`${badKeys.length} row(s) name a deck the manifest does not have.`);
   if (badIds.length) fail(`${badIds.length} row(s) carry an unusable file id.`);
   if (!got) fail('no usable rows at all.');
