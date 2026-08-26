@@ -953,7 +953,7 @@ router.put('/classes/:code', requireTeacher, (req, res) => {
     .get(req.params.code.toUpperCase(), req.teacher.id);
   if (!cls) return res.status(404).json({ error: 'Class not found' });
 
-  const { class_name, active, mastery_threshold, games_graded } = req.body;
+  const { class_name, active, mastery_threshold, games_graded, quiz_lock_default } = req.body;
   const threshold = mastery_threshold !== undefined
     ? clampThreshold(mastery_threshold, cls.mastery_threshold)
     : cls.mastery_threshold;
@@ -963,13 +963,21 @@ router.put('/classes/:code', requireTeacher, (req, res) => {
   const gamesGraded = games_graded === undefined
     ? cls.games_graded
     : (games_graded === null ? null : (games_graded ? 1 : 0));
+  // quiz_lock_default: 1 means quizzes and exams in this class stay closed until
+  // the teacher opens them in activity_gates. 0, the value every existing class
+  // has, keeps the current behaviour where a quiz is open unless explicitly
+  // closed. Omitting the field leaves the setting untouched.
+  const lockDefault = quiz_lock_default === undefined
+    ? cls.quiz_lock_default
+    : (quiz_lock_default ? 1 : 0);
 
-  db.prepare('UPDATE classes SET class_name = ?, active = ?, mastery_threshold = ?, games_graded = ? WHERE id = ?')
+  db.prepare('UPDATE classes SET class_name = ?, active = ?, mastery_threshold = ?, games_graded = ?, quiz_lock_default = ? WHERE id = ?')
     .run(
       sanitize(class_name || cls.class_name, 100),
       active !== undefined ? (active ? 1 : 0) : cls.active,
       threshold,
       gamesGraded,
+      lockDefault,
       cls.id
     );
 
@@ -1150,6 +1158,56 @@ router.get('/classes/:code/releases', requireTeacher, (req, res) => {
     ORDER BY course, unit, lesson, activity_type
   `).all(cls.id);
   res.json({ releases });
+});
+
+// ── OPEN / CLOSE AN ACTIVITY (availability gate) ──────────────────────────────
+// Controls whether the QUESTIONS are handed out at all, which is a different
+// question from /release (whether the ANSWERS come back after a submit). A quiz
+// used as a graded assessment needs this one: closed until the teacher opens it.
+//
+// Body: { course, unit, lesson, activity_type, open }   open defaults to true.
+//
+// Writing open=1 on a class whose quiz_lock_default is 0 is still meaningful: it
+// pins the activity open, so a later switch of the class to locked-by-default
+// leaves this one open. Omit-and-delete is not offered on purpose; an explicit
+// row is the auditable thing a teacher can see in the list below.
+router.post('/classes/:code/gate', requireTeacher, (req, res) => {
+  const cls = db.prepare('SELECT id FROM classes WHERE class_code = ? AND teacher_id = ?')
+    .get(req.params.code.toUpperCase(), req.teacher.id);
+  if (!cls) return res.status(404).json({ error: 'Class not found' });
+
+  const { course, unit, lesson, activity_type } = req.body || {};
+  if (!course || !unit || !lesson || !activity_type) {
+    return res.status(400).json({ error: 'course, unit, lesson, activity_type required' });
+  }
+  const open = req.body.open === undefined ? 1 : (req.body.open ? 1 : 0);
+
+  db.prepare(`
+    INSERT INTO activity_gates (class_id, course, unit, lesson, activity_type, open, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, datetime('now'))
+    ON CONFLICT(class_id, course, unit, lesson, activity_type)
+      DO UPDATE SET open = excluded.open, updated_at = datetime('now')
+  `).run(cls.id, String(course), String(unit), String(lesson), String(activity_type), open);
+
+  res.json({ ok: true, open: !!open, course, unit, lesson, activity_type });
+});
+
+// ── LIST ACTIVITY GATES ───────────────────────────────────────────────────────
+// Returns the class default alongside the explicit rows, because a row list on
+// its own cannot be read correctly: an empty list means "everything open" under
+// one default and "everything locked" under the other.
+router.get('/classes/:code/gates', requireTeacher, (req, res) => {
+  const cls = db.prepare('SELECT id, quiz_lock_default FROM classes WHERE class_code = ? AND teacher_id = ?')
+    .get(req.params.code.toUpperCase(), req.teacher.id);
+  if (!cls) return res.status(404).json({ error: 'Class not found' });
+
+  const gates = db.prepare(`
+    SELECT course, unit, lesson, activity_type, open, updated_at
+    FROM activity_gates WHERE class_id = ?
+    ORDER BY course, unit, lesson, activity_type
+  `).all(cls.id);
+
+  res.json({ quiz_lock_default: cls.quiz_lock_default ? 1 : 0, gates });
 });
 
 // ── DELETE CLASS ──────────────────────────────────────────────────────────────

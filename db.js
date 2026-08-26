@@ -219,6 +219,27 @@ db.exec(`
     PRIMARY KEY (class_id, course, unit, lesson, activity_type)
   );
 
+  -- Teacher availability gate. A row means the teacher has explicitly opened
+  -- (open = 1) or closed (open = 0) one activity for one class. This is NOT
+  -- key_releases: that one controls whether ANSWERS come back after a submit,
+  -- this one controls whether the QUESTIONS are handed out at all. A quiz meant
+  -- to be a graded assessment has to be closed until the teacher opens it, or
+  -- students read it days early and arrive with the answers.
+  --
+  -- Absence of a row means "fall back to the class default", classes.
+  -- quiz_lock_default, which is 0 for every existing class so nothing that works
+  -- today changes. Resolution happens at read time in lib/activity-gate.js.
+  CREATE TABLE IF NOT EXISTS activity_gates (
+    class_id      TEXT NOT NULL REFERENCES classes(id) ON DELETE CASCADE,
+    course        TEXT NOT NULL,
+    unit          TEXT NOT NULL,
+    lesson        TEXT NOT NULL,
+    activity_type TEXT NOT NULL,
+    open          INTEGER NOT NULL DEFAULT 0,
+    updated_at    TEXT DEFAULT (datetime('now')),
+    PRIMARY KEY (class_id, course, unit, lesson, activity_type)
+  );
+
   -- N-of-M randomization config. A row says "serve serve_count random questions
   -- out of the pool of M in quiz_bank for this activity." serve_count is chosen
   -- server-side and carried in the signed order_token, so a student can never ask
@@ -545,6 +566,12 @@ db.exec(`
 const migrations = [
   `ALTER TABLE classes   ADD COLUMN mastery_threshold INTEGER DEFAULT 80`,
   `ALTER TABLE classes   ADD COLUMN retry_allowed     INTEGER DEFAULT 0`,
+  // Locked-by-default assessments, opt-in per class. 0 (every existing row, and
+  // the default for every new class) keeps today's behaviour exactly: quizzes
+  // are open unless a teacher explicitly closes one. 1 flips the class to
+  // locked-by-default, so quizzes and exams stay shut until the teacher opens
+  // them in activity_gates. Read at request time, never cached.
+  `ALTER TABLE classes   ADD COLUMN quiz_lock_default INTEGER DEFAULT 0`,
   `ALTER TABLE students  ADD COLUMN retry_override    INTEGER DEFAULT NULL`,
   `ALTER TABLE students  ADD COLUMN active            INTEGER DEFAULT 1`,
   `ALTER TABLE progress  ADD COLUMN locked            INTEGER DEFAULT 0`,
