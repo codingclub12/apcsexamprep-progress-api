@@ -71,7 +71,7 @@ function checkRow(r, kind) {
     if (!r.title.trim()) bad.push('title is empty, which would blank the stored title');
     if (r.title.length > TITLE_MAX) bad.push(`title is ${r.title.length} chars, over the ${TITLE_MAX} budget`);
     if (/apcsexamprep/i.test(r.title)) bad.push('title carries the brand, which is what the doubling defect is');
-    if (/—|–/.test(r.title)) bad.push('title contains an em- or en-dash');
+    if (/[\u2013\u2014]/.test(r.title)) bad.push('title contains an em- or en-dash');
   }
 
   if (r.description !== undefined) {
@@ -80,7 +80,7 @@ function checkRow(r, kind) {
     if (d.length < DESC_MIN || d.length > DESC_MAX) {
       bad.push(`description is ${d.length} chars, outside ${DESC_MIN} to ${DESC_MAX}`);
     }
-    if (/—|–/.test(d)) bad.push('description contains an em- or en-dash');
+    if (/[\u2013\u2014]/.test(d)) bad.push('description contains an em- or en-dash');
     if (/�/.test(d)) bad.push('description contains a replacement character');
   }
 

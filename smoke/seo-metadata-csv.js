@@ -82,7 +82,7 @@ ok('a description outside 140 to 160 is refused',
 ok('a description inside the band is accepted',
   G.checkRow(row({ description: D(150) }), 'Pages').length === 0);
 ok('an em-dash is refused, per the house rule',
-  G.checkRow(row({ title: 'AP CSA — Guide' }), 'Pages').length > 0);
+  G.checkRow(row({ title: 'AP CSA \u2014 Guide' }), 'Pages').length > 0);
 ok('a row that changes nothing is refused',
   G.checkRow({ handle: 'a-page' }, 'Pages').some((p) => /changes nothing/.test(p)));
 ok('a handle that is not a slug is refused',
