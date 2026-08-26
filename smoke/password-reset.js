@@ -19,10 +19,21 @@ for (const suf of ['', '-wal', '-shm']) { try { fs.unlinkSync(process.env.DB_PAT
 const mailer = require('../lib/mailer');
 let lastEmail = null;
 mailer.sendEmail = async function (msg) { lastEmail = msg; return { sent: true }; };
+// The stub above DELIVERS, so the configured flag has to agree with it. Left at
+// the real implementation it reads RESEND_API_KEY, which is unset under test, and
+// the harness would then claim it cannot send while capturing every message.
+// mailConfigured is flipped directly by the unconfigured-mailer section below.
+let mailConfigured = true;
+mailer.mailerConfigured = function () { return mailConfigured; };
 
 const express = require('express');
 const db = require('../db');
 const app = express();
+// Mirrors server.js, which sets the same thing: req.ip then resolves from
+// X-Forwarded-For, which is how the rate limiter keys its buckets in production.
+// It also lets a section below take a FRESH limiter bucket by presenting its own
+// client IP, so tests do not have to share one 5-per-15-minutes budget.
+app.set('trust proxy', true);
 app.use(express.json());
 app.use('/api/teacher', require('../routes/teacher'));
 
@@ -44,6 +55,13 @@ function tokenFromEmail() {
   });
   const post = (p, body) => fetch(base + '/api/teacher' + p, {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+  });
+  // Same POST, from a stated client IP, so a section can get its own rate-limit
+  // bucket instead of spending the one the earlier sections already drew down.
+  const postFrom = (ip, p, body) => fetch(base + '/api/teacher' + p, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Forwarded-For': ip },
+    body: JSON.stringify(body),
   });
 
   const EMAIL = 'reset.teacher@example.org';
@@ -150,6 +168,35 @@ function tokenFromEmail() {
   ok('change-password burns outstanding reset links', r2.status === 400, r2.status);
   ok('  hijack attempt did not change the password',
     (await post('/login', { email: EMAIL, password: 'finalPass99' })).status === 200);
+
+  // ── UNCONFIGURED MAILER ────────────────────────────────────────────────────
+  //  With no RESEND_API_KEY the box cannot deliver, and the old copy still said
+  //  "a reset link is on its way", so a locked-out teacher waited on mail that
+  //  only ever reached the Railway logs. The response must now say so plainly.
+  //  The anti-enumeration property still has to hold: what distinguishes the two
+  //  answers is SERVER config, never whether the address has an account, so an
+  //  unknown and a known address must still be byte-identical to each other.
+  console.log('unconfigured mailer');
+  mailConfigured = false;
+  lastEmail = null;
+
+  const MAIL_IP = '203.0.113.7';   // TEST-NET-3, its own limiter bucket
+  const unknownRes = await (await postFrom(MAIL_IP, '/forgot-password', { email: 'nobody-here@example.org' })).json();
+  const knownRes = await (await postFrom(MAIL_IP, '/forgot-password', { email: EMAIL })).json();
+
+  ok('unconfigured mailer still returns ok:true', unknownRes.ok === true, unknownRes);
+  ok('unconfigured mailer reports mail_configured:false', unknownRes.mail_configured === false, unknownRes);
+  ok('unconfigured mailer does NOT promise a link',
+    !/on its way/i.test(unknownRes.message || ''), unknownRes.message);
+  ok('unconfigured mailer says email is not set up',
+    /not set up/i.test(unknownRes.message || ''), unknownRes.message);
+  ok('unknown and known addresses are still byte-identical',
+    JSON.stringify(unknownRes) === JSON.stringify(knownRes), { unknownRes, knownRes });
+
+  mailConfigured = true;
+  const backOn = await (await postFrom(MAIL_IP, '/forgot-password', { email: 'nobody-here@example.org' })).json();
+  ok('configured mailer goes back to the on-its-way copy',
+    backOn.mail_configured === true && /on its way/i.test(backOn.message || ''), backOn);
 
   console.log('\n' + (fail ? (fail + ' FAILED, ' + pass + ' passed') : ('OK - all ' + pass + ' checks passed')));
   for (const suf of ['', '-wal', '-shm']) { try { fs.unlinkSync(process.env.DB_PATH + suf); } catch (e) {} }
