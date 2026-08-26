@@ -2,10 +2,13 @@
 // ─────────────────────────────────────────────────────────────────────────────
 //  QUIZ BANK SEED — loads server-owned answer keys into quiz_bank.
 //
-//  Deliberately NOT run on boot (unlike seed-manifest.js). A fresh deploy must
-//  stay empty so every page not yet migrated keeps its existing client-side quiz
-//  flow, and so placeholder content never lands in production by accident. Run it
-//  by hand once the authoritative keys are ready:
+//  RUNS ON BOOT as of 2026-08-26 (server.js, runBootSeed 'quiz_bank'). It used to
+//  be excluded on the grounds that a fresh deploy must stay empty and that
+//  placeholder content must never land in production by accident. The placeholder
+//  was deleted, and seeding does not migrate a page: a page uses server scoring
+//  only if its body carries a data-apcs-quiz container, so these rows are inert
+//  until one does. Keeping it manual only meant reviewed content waited on
+//  somebody opening a shell against production. Still runnable by hand:
 //
 //      node scripts/seed-quiz-bank.js            insert-or-ignore (safe, additive)
 //      node scripts/seed-quiz-bank.js --update   also overwrite existing qids

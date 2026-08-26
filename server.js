@@ -204,6 +204,29 @@ runBootSeed('course_manifest prune', () => {
 const csaSeeded = runBootSeed('csa_bank', () => require('./scripts/seed-csa-bank').seedCsaBank());
 if (csaSeeded) console.log(`csa bank: ${csaSeeded.answers} new answer rows, ${csaSeeded.denoms} new denominator rows`);
 
+// Server-owned quiz banks. This was deliberately kept OFF boot, and the reason
+// it is on now is that both halves of that reason stopped being true.
+//
+// The original comment gave two: a fresh deploy must stay empty so every page
+// not yet migrated keeps its client-side quiz flow, and placeholder content must
+// never land in production by accident.
+//
+// The placeholder is gone. seed/cyber-quiz-bank.js held CIA triad and denial of
+// service questions under the label lesson 1.1, which is Unit 2 material; it was
+// deleted, and what the bank carries now is transcribed from the shipped teacher
+// bundle's own answer keys. There is nothing left to land by accident.
+//
+// And seeding does not migrate a page. A page uses server scoring only if its
+// body carries a data-apcs-quiz container, so for every page still on its own
+// client-side quiz this is inert: the rows exist and nothing fetches them.
+//
+// What it buys is that content already reviewed and merged no longer waits on
+// somebody opening a shell against production. Insert-or-ignore, so existing
+// qids and any score_events tied to them are untouched; run
+// `node scripts/seed-quiz-bank.js --update` to push edited wording.
+const quizBank = runBootSeed('quiz_bank', () => require('./scripts/seed-quiz-bank').seedQuizBank());
+if (quizBank) console.log(`quiz bank: ${quizBank.inserted} new of ${quizBank.total} source questions`);
+
 // Where each activity LIVES, so a score in My Progress links back to the page it
 // came from. Harvested from the authored page handles in this repo, which is the
 // only source for CSA: its handles carry a title slug the lesson id does not
