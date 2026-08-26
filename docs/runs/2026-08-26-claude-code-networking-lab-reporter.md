@@ -130,6 +130,43 @@ Run against production before the deploy, it reproduced the defect exactly:
 
 Exit code 1. That output is the before half of the evidence.
 
+## Deployed and verified
+
+Theme PR 84 merged into the connected branch `claude/site-linking-audit-yhufjk`
+at `48c3fd1`. Shopify picked it up through the two-way GitHub sync. Verified
+against the live storefront rather than against GitHub, per the theme repo's
+CLAUDE.md:
+
+```
+  ap-networking-lab-1-device-triage-bench      reporter tags: 1
+  ap-networking-lab-2-soho-documentation       reporter tags: 1
+  ap-networking-lab-3-segmented-lan-build      reporter tags: 1
+  ap-networking-lab-4-capture-and-trace        reporter tags: 1
+  ap-networking-lab-1-4                        reporter tags: 1
+  ap-networking-lab-2-2                        reporter tags: 1
+```
+
+The same live check, re-run after the deploy:
+
+```
+  67 pages in the sitemap, 67 read, 0 unreachable
+  26 pages report a grade and need ap-networking-reporter.js
+  4 pages load it without needing it (inert, self-gated on the wrapper)
+
+  Every page that reports a grade loads the reporter.
+```
+
+Exit code 0. The 4 inert loads are the terminal labs, exactly the number
+predicted before the change, which is the useful part: the prediction and the
+measurement were made separately and agree.
+
+What is NOT claimed here: no student has submitted a lab since the deploy, so
+there is no `attempts` row from a real browser yet. What is proven is that the
+function the widget calls is now defined on the page, and that the identical
+payload posts and records through the real router (80 assertions in
+`smoke/networking-lab-reporter.js`). The first genuine lab submission is the
+last piece of evidence and it belongs to whoever verifies board task 129.
+
 ## A trap the harness hit, recorded so the next one does not
 
 The reporter reads `localStorage` unqualified:
