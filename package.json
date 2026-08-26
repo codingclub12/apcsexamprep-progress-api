@@ -157,7 +157,9 @@
     "smoke:healthintegrity": "node smoke/health-integrity.js",
     "smoke:seocsv": "node smoke/seo-metadata-csv.js",
     "seocsv": "node scripts/seo-metadata-csv.js",
-    "verify:sharing": "node scripts/verify-slide-sharing.js"
+    "verify:sharing": "node scripts/verify-slide-sharing.js",
+    "smoke:netlabreporter": "node smoke/networking-lab-reporter.js",
+    "verify:netreporting": "node scripts/verify-networking-reporting.js"
   },
   "keywords": [],
   "author": "",
