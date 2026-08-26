@@ -9,13 +9,13 @@
   :root {
     color-scheme: light dark;
     --plane: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e;
-    --muted: #898781; --border: rgba(11,11,11,0.10); --csa: #2a78d6; --good: #0ca30c; --critical: #d03b3b;
+    --muted: #898781; --border: rgba(11,11,11,0.10); --csa: #2a78d6; --good: #0ca30c; --critical: #d03b3b; --warn: #9a6400;
     --shadow: 0 1px 2px rgba(11,11,11,0.04), 0 1px 3px rgba(11,11,11,0.06);
   }
   @media (prefers-color-scheme: dark) {
     :root {
       --plane: #0d0d0d; --surface: #1a1a19; --ink: #fff; --ink-2: #c3c2b7;
-      --muted: #898781; --border: rgba(255,255,255,0.10); --csa: #3987e5; --good: #0ca30c; --critical: #e66767; --shadow: none;
+      --muted: #898781; --border: rgba(255,255,255,0.10); --csa: #3987e5; --good: #0ca30c; --critical: #e66767; --warn: #e0a341; --shadow: none;
     }
   }
   * { box-sizing: border-box; }
@@ -38,7 +38,16 @@
   .msg { font-size: 13px; min-height: 18px; margin-top: 12px; }
   .msg.err { color: var(--critical); }
   .msg.ok { color: var(--good); }
+  .msg.warn { color: var(--warn); }
   .note { margin-top: 16px; font-size: 12px; color: var(--muted); }
+  /* Revealed only AFTER a submit. Shown up front it would read as doubt about
+     the address just typed; shown after, it answers the question the teacher
+     actually has, which is "I submitted and nothing came". */
+  .noacct {
+    margin-top: 14px; padding: 12px 14px; border: 1px solid var(--border);
+    border-radius: 8px; background: var(--plane); font-size: 13px; color: var(--ink-2);
+  }
+  .noacct a { color: var(--csa); }
 </style>
 <!-- Product analytics. Inert unless POSTHOG_API_KEY is set on the server. -->
 <script src="/posthog-init.js"></script>
@@ -51,6 +60,13 @@
     <input id="email" name="email" type="email" autocomplete="email" autofocus />
     <button id="btn" type="submit">Send reset link</button>
     <div class="msg" id="msg"></div>
+    <div class="noacct" id="noacct" hidden>
+      Nothing arriving? Check spam first. If it still does not show up, this
+      address may not have an account yet, or you may have signed up with a
+      different one. You can
+      <a href="https://apcsexamprep.com/pages/cyber-class#create">create a free account</a>
+      or <a href="https://apcsexamprep.com/pages/contact">contact us</a> and we will find it for you.
+    </div>
     <p class="note">Students do not have passwords; they sign in with a name and PIN. This page is for teacher accounts only.</p>
   </form>
 <script>
@@ -59,6 +75,7 @@
   var form = document.getElementById("form");
   var btn = document.getElementById("btn");
   var msg = document.getElementById("msg");
+  var noacct = document.getElementById("noacct");
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     var email = document.getElementById("email").value.trim();
@@ -71,10 +88,23 @@
     }).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (j) {
         if (r.ok) {
-          msg.className = "msg ok";
+          // mail_configured === false is the server saying it cannot send AT ALL.
+          // That is a warning, not a success, and it is a fact about the server
+          // rather than about this address, so showing it reveals nothing about
+          // who has an account. Re-enable the button in that case: there is
+          // nothing in flight to wait for, and a dead form helps no one.
+          var canMail = j.mail_configured !== false;
+          msg.className = canMail ? "msg ok" : "msg warn";
           msg.textContent = j.message || "If that email is registered, a reset link is on its way.";
-          // Leave the button disabled: the generic success is intentionally the
-          // same whether or not the address exists.
+          if (canMail) {
+            // Leave the button disabled: the generic success is intentionally the
+            // same whether or not the address exists. The panel below is what
+            // gives a teacher with no account somewhere to go, without the server
+            // ever having to say whether the address is registered.
+            noacct.hidden = false;
+          } else {
+            btn.disabled = false;
+          }
         } else {
           msg.className = "msg err";
           msg.textContent = j.error || (r.status === 429 ? "Too many requests. Wait a few minutes." : "Something went wrong. Try again.");

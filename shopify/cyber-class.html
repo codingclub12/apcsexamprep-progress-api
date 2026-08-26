@@ -26,6 +26,10 @@
 .tcp-btn.amber{background:#E8A020!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;}
 .tcp-btn.amber:hover{background:#D97706!important;}
 .tcp-error{background:#FEE2E2!important;color:#991b1b!important;-webkit-text-fill-color:#991b1b!important;padding:12px 14px!important;border-radius:8px!important;font-size:14px!important;margin-top:16px!important;display:none!important;}
+.tcp-help{text-align:center!important;margin-top:14px!important;font-size:13px!important;line-height:1.5!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;}
+.tcp-help a,.tcp-help a:link,.tcp-help a:visited{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-decoration:underline!important;font-weight:600!important;}
+.tcp-help a:hover{color:#5B1898!important;-webkit-text-fill-color:#5B1898!important;}
+.tcp-help-sub{margin-top:6px!important;font-size:12px!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;}
 .tcp-section-title{font-size:20px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin-bottom:20px!important;padding-bottom:12px!important;border-bottom:2px solid #EDE9FE!important;}
 /* Dashboard state */
 .tcp-teacher-bar{background:#1E1B4B!important;padding:14px 20px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;}
@@ -87,6 +91,10 @@
           <input class="tcp-input" id="loginPass" type="password" placeholder="••••••••">
           <div class="tcp-error" id="loginError"></div>
           <button class="tcp-btn" onclick="TCP.login()">Sign In</button>
+          <div class="tcp-help">
+            <a href="https://progress.apcsexamprep.com/teacher/forgot">Forgot your password?</a>
+            <div class="tcp-help-sub">Not sure which email you signed up with? Start there too.</div>
+          </div>
         </div>
       </div>
 

@@ -83,6 +83,7 @@
     "shotlist": "node scripts/intro-java-shot-list.js",
     "smoke:gapgrade": "node smoke/gap-grade.js",
     "smoke:gbagree": "node smoke/gradebook-agreement.js",
+    "smoke:cyberlesson": "node smoke/cyber-lesson-score.js",
     "smoke:contract": "node smoke/gradebook-contract.js",
     "smoke:retrymodes": "node smoke/retry-modes.js",
     "smoke:attemptretry": "node smoke/attempt-retry-modes.js",
@@ -157,7 +158,9 @@
     "smoke:healthintegrity": "node smoke/health-integrity.js",
     "smoke:seocsv": "node smoke/seo-metadata-csv.js",
     "seocsv": "node scripts/seo-metadata-csv.js",
-    "verify:sharing": "node scripts/verify-slide-sharing.js"
+    "verify:sharing": "node scripts/verify-slide-sharing.js",
+    "smoke:netlabreporter": "node smoke/networking-lab-reporter.js",
+    "verify:netreporting": "node scripts/verify-networking-reporting.js"
   },
   "keywords": [],
   "author": "",

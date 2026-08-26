@@ -284,8 +284,17 @@ const samePoints = (a, b) => (a == null && b == null)
   const cs = cg.students.find((s) => (s.display_name || s.name || s.label) === 'GAL');
   const cLesson = cs.items['unit-1/1.1/lesson'];
   ok('  the contract agrees the lesson has no points',
-    cLesson && cLesson.earned == null && cLesson.possible == null && cLesson.pct == null,
+    cLesson && cLesson.earned == null && cLesson.possible == null,
     cLesson);
+  // The PERCENT is a separate question from the POINTS, and the two views have
+  // to answer it the same way. This used to assert pct == null, which pinned the
+  // divergence rather than catching it: the teacher route reported 20 (asserted
+  // above) while the contract blanked the same cell, so one lesson read as a
+  // score on one page and as no grade at all on the other. A cyber teacher
+  // reported that as grades not saving, because on that course the lesson page
+  // IS the graded activity.
+  ok('  and it carries the same percent the teacher route reports',
+    cLesson.pct === tLesson.score, [cLesson.pct, tLesson.score]);
   ok('  and the two views now agree cell for cell on that column',
     cLesson.possible === (tLesson.points_possible == null ? null : tLesson.points_possible));
   ok('  the lesson contributes nothing to the row total',
