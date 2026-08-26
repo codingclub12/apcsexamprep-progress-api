@@ -71,12 +71,49 @@ objective. The likely truth is that both topics really do have an
 assess-and-document strand and the essential knowledge was never written in,
 rather than that the stray LO and the stray EK reference are both typos.
 
-### Blocked, and on what
+### UPDATE 2026-08-26: the direction is settled, the transcription is not
 
-Deciding between "author the missing EKs" and "delete the stray references"
-requires the actual College Board CED, and writing the EK text requires it
-verbatim, because every guide presents its essential knowledge as "verbatim
-from the CED". That text is not obtainable from a Claude Code session:
+The choice between "author the missing EKs" and "delete the stray references"
+is answered, and it is **author**. The evidence was inside the bundle the whole
+time: the Lesson 3.1 **slide deck** teaches LO 3.1.C in full.
+
+Read from `Day1_Deck_TEACHER.pptx` (`13_6icnULxRDpFQJ_u8cOQYzruviGyi2S`), a
+22-slide deck:
+
+- Slide 2 lists "Assess and document the risk a network vulnerability creates
+  ... (LO 3.1.C)" and marks it **CB REQUIRED**.
+- Slide 4's guided-notes preview names a section "Assessing Risk: High /
+  Moderate / Low (LO 3.1.C)", citing **EK 3.1.C.1-C.6**.
+- Slide 18 is that section's divider.
+- Slide 19 covers C.1 (impact on C/I/A), C.2 (automated vulnerability
+  scanners), C.3 (likelihood, and that harder exploits are less likely).
+- Slide 20 covers C.4 high, C.5 moderate and C.6 low, each with the CED's own
+  worked example (the flat WEP network with a web-app server; the firewall that
+  does not block inbound ICMP).
+- Slide 21 is a Stop and Think asking students to rate and justify.
+
+So 3.1 is not a topic with a stray EK reference. It is a topic whose guide is
+missing a strand the rest of the bundle already teaches. The same reasoning
+strengthens the 4.1 hypothesis above rather than weakening it.
+
+Two things this does NOT settle:
+
+1. **The deck's text is paraphrased, not verbatim.** It is bulleted, bolded and
+   partly rewritten ("EASILY" is capitalised for emphasis). The guides claim
+   verbatim CED text, so the deck is a source for *what the strand contains*,
+   never a source to copy from. Drafting EK text from it would put
+   non-verbatim prose under a "verbatim from the CED" heading.
+2. **A defect inside the deck.** Slide 19 carries an ENRICHMENT badge for
+   content slide 2 marks CB REQUIRED. Worth fixing whenever the deck is next
+   touched.
+
+Recorded in `docs/runs/2026-08-26-claude-code-cyber-unit3-slide-day-map.md`.
+
+### Still blocked, and on what
+
+Writing the EK text still requires the actual College Board CED verbatim,
+because every guide presents its essential knowledge as "verbatim from the
+CED". That text is not obtainable from a Claude Code session:
 
 - `docs/ced-snapshot/` is empty until the first Actions run.
 - `apcentral.collegeboard.org` is not on the agent proxy allowed-domains list,
