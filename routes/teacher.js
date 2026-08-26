@@ -112,7 +112,24 @@ const RESET_TTL_LABEL = resetLib.RESET_TTL_LABEL;
 
 // Same generic 200 whether or not the email exists: this endpoint must not be
 // usable to enumerate which addresses have a teacher account.
-const FORGOT_GENERIC = { ok: true, message: 'If that email is registered, a password reset link is on its way.' };
+const FORGOT_GENERIC = {
+  ok: true,
+  mail_configured: true,
+  message: 'If that email is registered, a password reset link is on its way.',
+};
+
+// What we say when no mailer is configured. This reports a fact about the SERVER,
+// not about the caller's address, so it is identical for every caller and leaks
+// nothing about who has an account. Without it the page promises a link the box
+// cannot actually send: RESEND_API_KEY unset means lib/mailer.js logs the message
+// instead of delivering it, and a locked-out teacher waits on an email that only
+// ever reached the Railway logs. Three manual resets in three days came from
+// exactly that, so the honest answer is worth more than the reassuring one.
+const FORGOT_NO_MAIL = {
+  ok: true,
+  mail_configured: false,
+  message: 'Email is not set up on this server yet, so a reset link cannot be sent right now. Please contact us and we will reset your password by hand.',
+};
 
 const forgotLimit = makeRateLimit({
   windowMs: 15 * 60 * 1000, max: 5,
@@ -132,12 +149,17 @@ const changeLimit = makeRateLimit({
 
 // POST /api/teacher/forgot-password  { email }
 router.post('/forgot-password', forgotLimit, async (req, res) => {
+  // Resolved once, up front, and used by EVERY return path below including the
+  // error path. Whether a mailer exists does not depend on the address supplied,
+  // so branching on it here cannot become an enumeration oracle: two different
+  // callers on the same server always get the same shape back.
+  const generic = mailer.mailerConfigured() ? FORGOT_GENERIC : FORGOT_NO_MAIL;
   try {
     const email = String((req.body && req.body.email) || '').trim().toLowerCase();
-    if (!isValidEmail(email)) return res.json(FORGOT_GENERIC);
+    if (!isValidEmail(email)) return res.json(generic);
 
     const teacher = db.prepare('SELECT id, email, name FROM teachers WHERE email = ?').get(email);
-    if (!teacher) return res.json(FORGOT_GENERIC); // no account: say the same thing
+    if (!teacher) return res.json(generic); // no account: say the same thing
 
     // One live token per teacher, minted by the shared module.
     const { link } = resetLib.mintResetLink(teacher.id);
@@ -167,10 +189,10 @@ router.post('/forgot-password', forgotLimit, async (req, res) => {
       // Never leak send status to the caller; log for the operator and still 200.
       console.error('[forgot-password] email send failed:', e.message);
     }
-    return res.json(FORGOT_GENERIC);
+    return res.json(generic);
   } catch (e) {
     console.error('forgot-password error:', e);
-    return res.json(FORGOT_GENERIC); // even on error, no signal
+    return res.json(generic); // even on error, no signal
   }
 });
 
