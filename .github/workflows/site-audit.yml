@@ -107,6 +107,52 @@ jobs:
           echo "site-crawl.js $ARGS"
           node scripts/site-crawl.js $ARGS 2>&1 | tee crawl-report.txt
 
+      # ── A RED RUN IS USUALLY THE ALARM, NOT A BROKEN JOB ────────────────────
+      #  site-crawl.js exits 1 for THREE different reasons: it found a P0, it
+      #  aborted on throttling, or it ran out of wall clock. Only the first is
+      #  the crawler working as designed, and on this site P0s are not rare, so
+      #  a red X here is the normal state of a working audit.
+      #
+      #  That distinction matters because of what it gates. The first version of
+      #  this workflow saved the baseline `if: success()`, copied from
+      #  nightly-sweep.yml where a failed sweep genuinely must not poison the
+      #  next morning. Here it meant the baseline was saved only on a night with
+      #  zero P0s. Run 1 found three, saved nothing, and every night after it
+      #  would have reported "no baseline to compare against" forever. The delta
+      #  half of this job would have been dead while the job still printed a
+      #  full report every morning, which is the exact shape of a check that
+      #  looks like it works.
+      #
+      #  So the gate is a positive test on the artifact rather than on the exit
+      #  code: the crawl JSON must exist, parse, and carry null for both
+      #  `aborted` and `truncated`. A run that collected a complete picture is a
+      #  valid baseline no matter how much it found wrong.
+      - name: Did the crawl collect a complete picture
+        id: complete
+        if: always()
+        run: |
+          usable=false
+          reason="current-crawl.json was never written"
+          if [ -f current-crawl.json ]; then
+            read -r usable reason < <(node -e '
+              try {
+                const j = JSON.parse(require("fs").readFileSync("current-crawl.json", "utf8"));
+                if (j.aborted) console.log(`false aborted:${String(j.aborted).slice(0,40)}`);
+                else if (j.truncated) console.log(`false truncated:${String(j.truncated).slice(0,40)}`);
+                else console.log("true complete");
+              } catch (e) { console.log("false unparseable"); }
+            ')
+          fi
+          echo "usable=$usable" >> "$GITHUB_OUTPUT"
+          echo "Baseline usable: $usable ($reason)"
+          {
+            if [ "$usable" = "true" ]; then
+              echo "Baseline saved for tomorrow's delta. A red run that found problems is this job working."
+            else
+              echo "Baseline NOT saved: $reason. Tomorrow will have nothing to compare against."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
       # The report is the deliverable, and it belongs where it can be read on a
       # phone without downloading anything.
       - name: Put the report in the job summary
@@ -140,11 +186,11 @@ jobs:
       # Saved only on success, so a crawl that died halfway cannot poison the
       # baseline and make tomorrow report phantom resolutions.
       - name: Save tonight's findings as the baseline
-        if: success()
+        if: always() && steps.complete.outputs.usable == 'true'
         run: cp current-crawl.json previous-crawl.json
 
       - uses: actions/cache/save@v4
-        if: success()
+        if: always() && steps.complete.outputs.usable == 'true'
         with:
           path: previous-crawl.json
           key: site-crawl-${{ github.run_id }}
