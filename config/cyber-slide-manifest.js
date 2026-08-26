@@ -36,6 +36,36 @@
 //  lesson is the whole-lesson deck, not that lesson's future Day 1. Converting
 //  it as-is would put a 22-slide deck behind a "Day 1" label next to five
 //  genuinely per-day decks.
+//
+//  UNIT 3 KEYS ARE CED TOPIC NUMBERS. Read this before adding '3-x' anything.
+//
+//  Until 2026-08-26 the site numbered Unit 3 as six lessons in a different
+//  order from the CED's five topics, and the two schemes were not
+//  distinguishable from a key. `'3-3'` meant Segmentation to the bundle and
+//  Firewalls to the site; BOTH ARE TWO-DAY LESSONS, so a day count would not
+//  have caught the swap. It renders cleanly, logs nothing, returns a correct
+//  API response, and hands a teacher the wrong decks.
+//
+//  Tanner resolved it by moving the site onto CED numbering rather than
+//  translating between the two, because the EK identifiers are CED-canonical
+//  and printed on every slide: a deck citing EK 3.4.B.2 for firewall ACLs
+//  cannot be renumbered, so the site numbering was the only free variable.
+//  There is therefore no mapping layer here, and there should never be one.
+//  See docs/runs/2026-08-26-claude-code-cyber-unit3-slide-day-map.md.
+//
+//  The verified Unit 3 day map, read from the teacher guides on 2026-08-26 and
+//  corroborated by tools/cyber-pacing/pacing.json (Unit 3: 20 teach days):
+//
+//    '3-1' Network Vulnerabilities      6 days   (deck is 22 slides today)
+//    '3-2' Managerial Controls          3 days   (deck is 16 slides today)
+//    '3-3' Segmentation                 2 days   (deck is 20 slides today)
+//    '3-4' Firewalls                    2 days   (deck is 21 slides today)
+//    '3-5' Detecting Network Attacks    7 days   (deck is 25 slides today)
+//
+//  Those day counts are the CED's and are already correct. What does NOT exist
+//  yet is a per-day deck set for any of them, which is why none is listed in
+//  DAY_COUNT_BY_LESSON. Add a lesson here only once its per-day decks exist in
+//  Drive, or the panel will report days for decks nobody can open.
 // ---------------------------------------------------------------------------
 
 const embeds = require('./cyber-slide-embeds');
