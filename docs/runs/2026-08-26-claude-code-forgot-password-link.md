@@ -73,12 +73,41 @@ Nothing server-side ever says whether an address is registered.
   delta, so the import cannot revert live content.
 - `node scripts/page-body-csv.js` passed all five guards and wrote a 1 row sheet
 
+## Verified against production
+
+Merged 2026-08-26 17:01:51Z. CI run #810 green on 464e68e. Railway deploy landed
+about 12 minutes later, `/api/health` moving to 729df15.
+
+API half, checked live:
+
+```
+POST /api/teacher/forgot-password  {"email":"definitely-not-an-account@example.org"}
+-> {"ok":true,"mail_configured":false,
+    "message":"Email is not set up on this server yet, so a reset link cannot be
+               sent right now. Please contact us and we will reset your password by hand."}
+```
+
+That is the new code serving, and it is production reporting its own mailer state
+rather than anyone inferring it. `/teacher/forgot` serves the new markup: the
+`noacct` panel, the warning state, and the create-account path.
+
+Storefront half, imported the same session and checked against the LIVE page
+rather than the import log:
+
+- the live body is byte-identical to the mirror on main at 20087 chars
+- zero mirror lines missing from live
+- zero lines from the PRE-import live body lost, which is the check that catches
+  an import silently dropping a section
+
+`verified` on the board is still not the implementing agent's to set; #127 sits in
+needs_verification with the merged PR as its artifact.
+
 ## Still open
 
-- NOT verified against production. Needs a deploy, then `RESEND_API_KEY` and
-  `MAIL_FROM` set in Railway against a VERIFIED Resend domain, then one real
-  forgot-password request delivering actual mail. `verified` is not the
-  implementing agent's to set.
+- `RESEND_API_KEY` is still absent, which is exactly what `mail_configured:false`
+  above reports. The link is live and currently tells teachers email is not set up
+  and to make contact. That is the designed behaviour, not a defect, and it starts
+  sending the moment the key lands with no further code change.
 - A brand-new Resend account has no verified domain and can only send to the
   signup address via `onboarding@resend.dev`. Until a domain is verified, real
   teachers get nothing, and the page will correctly say email is not set up only
