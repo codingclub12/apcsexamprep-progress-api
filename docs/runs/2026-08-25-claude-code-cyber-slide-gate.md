@@ -57,11 +57,22 @@ would have been wrong.
 
 Lesson 3.1's deck says **"DAY 1 OF 1"** on its title slide, runs to **"Slide 22
 of 22"**, and covers all three of the topic's learning objectives. Its
-`Teacher_Guide.docx` says **six class periods** and paces those same 22 slides
-across them: Day 1 is slides 1-7, Day 6 is slides 21-22.
+`Teacher_Guide.docx` says **six class periods**.
 
-So for those units the deck is a whole-lesson deck and the "days" are a reading
-plan over it. Listing one would report `days: 1` for a topic that runs six
+So for those units the deck is a whole-lesson deck.
+
+> **Corrected 2026-08-26.** This section originally went on to say the guide
+> "paces those same 22 slides across them: Day 1 is slides 1-7, Day 6 is slides
+> 21-22", which reads as though the guide were a usable split plan. It is not.
+> `docs/runs/2026-08-26-claude-code-cyber-unit3-slide-day-map.md` checked all
+> five Unit 3 guides against all five decks slide by slide: the numbers run 1 to
+> 22, but the content at those numbers is not what the guide says is there, and
+> two different numbering conventions are in use within the one unit. The
+> conclusion below (do not wire these lessons) is unchanged and that note
+> confirms it. What was wrong was treating a day count as a plan. I had read one
+> guide and one deck and generalised from them; the correction came from reading
+> all ten. Also from that note: 3.4's title slide reads DAY 1 OF 2, so the badges
+> are not uniform either. Listing one would report `days: 1` for a topic that runs six
 periods and label a 22-slide deck "Day 1". They stay out of the manifest until
 real per-day decks exist, which is one line per lesson and no code change. The
 generator refuses a row naming one, with its own message rather than a generic
