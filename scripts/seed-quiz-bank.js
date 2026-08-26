@@ -16,9 +16,10 @@
 // ─────────────────────────────────────────────────────────────────────────────
 const db = require('../db');
 
-// Each source module exports { location, questions }. Add more as courses go live.
+// Each source module exports { location, questions }; a module that owns more
+// than one location exports an array of them, spread in here.
 const SOURCES = [
-  require('../seed/cyber-quiz-bank'),
+  ...require('../seed/cyber-unit-1-quizzes'),
 ];
 
 const insert = db.prepare(`

@@ -31,6 +31,7 @@ const { resolveMode, retryAllowedFor } = require('../retry-policy');
 const { verifyStudentToken, newId, COURSES } = require('../utils');
 const { rollupScore } = require('../scoring');
 const { buildOrder, readOrder, sample } = require('../lib/quiz-order');
+const { resolveGate } = require('../lib/activity-gate');
 const wire = require('../lib/wire-log');
 
 // ── PREPARED STATEMENTS (module scope, reused) ────────────────────────────────
@@ -49,6 +50,16 @@ const releaseStmt = db.prepare(`
   SELECT released FROM key_releases
   WHERE class_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
 `);
+// Availability gate. Separate from classByIdStmt because that one is shaped for
+// the retry policy and adding columns to it would touch every caller.
+const gateClassStmt = db.prepare(
+  'SELECT id, course, quiz_lock_default FROM classes WHERE id = ?'
+);
+const gateStmt = db.prepare(`
+  SELECT open FROM activity_gates
+  WHERE class_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
+`);
+
 const priorEventsStmt = db.prepare(`
   SELECT COUNT(*) n FROM score_events
   WHERE student_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
@@ -173,6 +184,27 @@ router.get('/:course/:unit/:lesson/:activity_type', optionalStudent, (req, res) 
     if (!rows.length) {
       return res.status(404).json({ error: 'No server-scored quiz for this location' });
     }
+
+    // Availability gate. A closed activity returns 200 with no questions rather
+    // than 404, so the page can tell "your teacher has not opened this yet"
+    // apart from "this quiz does not exist". The questions are simply never put
+    // on the wire, which is the only kind of lock that survives View Source.
+    // The gate applies only when this quiz is the student's own class course.
+    // A solo (ME-) account, and a student looking at another course's quiz, are
+    // both self-study here: gating them would lock someone out of practice their
+    // teacher never intended to control. Same test the submit path uses to
+    // decide mode, so render and submit cannot disagree.
+    const sCls = req.student ? gateClassStmt.get(req.student.class_id) : null;
+    const gcls = sCls && sCls.course === course ? sCls : null;
+    const gateRow = gcls ? gateStmt.get(gcls.id, course, unit, lesson, activity_type) : null;
+    const gate = resolveGate(gateRow, gcls, activity_type);
+    if (!gate.open) {
+      return res.json({
+        course, unit, lesson, activity_type,
+        locked: true, reason: gate.reason,
+        order_token: null, total: 0, pool: rows.length, questions: null,
+      });
+    }
     // N-of-M: serve a server-chosen random subset when configured. The token
     // records exactly which questions were served, so the scorer grades only
     // those, and a student cannot request a smaller set.
@@ -181,6 +213,7 @@ router.get('/:course/:unit/:lesson/:activity_type', optionalStudent, (req, res) 
     const { token, questions } = buildOrder({ course, unit, lesson, activity_type }, served);
     res.json({
       course, unit, lesson, activity_type,
+      locked: false,
       order_token: token,
       total: questions.length,       // number of questions actually served
       pool: rows.length,             // size of the full pool this was drawn from
@@ -224,6 +257,21 @@ router.post('/submit', optionalStudent, rateLimit, (req, res) => {
         mode = 'class'; selfStudy = false;
       } else {
         return res.status(400).json({ error: `This quiz is ${course}; your class is ${cls.course}.` });
+      }
+    }
+
+    // 3b) Availability gate, re-checked at submit. A student who fetched the
+    //     quiz while it was open and held the order_token must not be able to
+    //     submit after the teacher closed it, and a token minted before a class
+    //     was switched to locked-by-default must not still spend.
+    if (mode === 'class') {
+      const gRow = gateStmt.get(req.student.class_id, course, unit, lesson, activity_type);
+      const g = resolveGate(gRow, gateClassStmt.get(req.student.class_id), activity_type);
+      if (!g.open) {
+        return res.status(403).json({
+          error: 'This quiz is not open. Ask your teacher to open it.',
+          locked: true, reason: g.reason,
+        });
       }
     }
 
