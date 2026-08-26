@@ -135,6 +135,39 @@ a percent posted to `/api/student/progress` (points = the percent, `max_points` 
 100), not a graded item, and summing them into a points total inflates the
 denominator by 100 per submission. `scoring.js` excludes them from the same rollup.
 
+### An ungraded column can still carry a percent
+
+`graded: false` means "contributes no points", NOT "has nothing to show". The two
+were conflated, and it cost a teacher her gradebook.
+
+A `lesson` normalizes to `graded: false` because on CSA and CSP a lesson page is
+reading, and the graded work sits beside it as `cfu`, `quiz` and `exercise` rows.
+On AP Cybersecurity that is false: the lesson page IS the graded activity, its CFU
+blocks are scored in the browser, and `apcs-grade-reporter` posts the percent as
+`activity_type: 'lesson'`. The score was stored and
+`GET /api/teacher/classes/:code/progress` showed it, while the gradebook blanked
+the same cell. One stored row, two teacher views, two different answers.
+
+So a lesson row carrying a score renders as `status: 'attempted'` with its `pct`
+set and `possible_source: 'percent'`. It still contributes nothing:
+
+- `earned` and `possible` stay `null`, so no points are invented.
+- It never enters `earned` or `graded`, so no existing grade moves.
+- It raises no `missing_denominators` row. That list is the work queue for graded
+  columns, and a lesson is not one.
+
+A lesson with NO score is unchanged: `status: 'done'`, `pct: null`. That is every
+CSA and CSP visit.
+
+Whether these percents SHOULD carry real points is a weighting question, not a
+rendering one. Answering it means authoring a real denominator per cyber lesson,
+which is the same bar every other graded column has to clear. Pricing them out of
+a provisional 100 is the mistake described directly above.
+
+Pinned by `smoke/cyber-lesson-score.js` and by `smoke/gradebook-agreement.js`,
+which now asserts the two teacher views report the same percent for that cell
+instead of asserting the gradebook drops it.
+
 ## Denominators, and what happens when one is missing
 
 Priority: `course_manifest` sum, then `course_denominators`, then observed.
