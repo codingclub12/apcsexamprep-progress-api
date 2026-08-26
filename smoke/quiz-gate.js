@@ -10,129 +10,135 @@
 //       closes, which is the hole a render-time-only check would leave.
 //
 //  Self-study is checked too, because a gate that locks out the public practice
-//  path would be a worse bug than the one it fixes.
+//  path would be a worse bug than the one it fixes. The seeded bank is scored
+//  end to end as well, so a bad correct_index in seed/cyber-unit-1-quizzes.js
+//  fails here rather than in front of a class.
 //
-//  Usage:  API_BASE=http://127.0.0.1:4311 node smoke/quiz-gate.js
-//  Needs quiz_bank seeded for ap-cybersecurity unit-1 1.1 and 1.2
-//  (node scripts/seed-quiz-bank.js).
+//  Offline and secret-free, per .github/workflows/tests.yml: a throwaway SQLite
+//  file, the real routers mounted in process on an ephemeral port, no network
+//  and no live server. tests.yml derives its suite list from package.json, so
+//  this runs on every pull request with no workflow edit.
+//
+//  Zero PII: synthetic teacher, class, and student; numbers only.
+//  No em-dashes, per repo convention.
+//
+//  Run: npm run smoke:quizgate
 // -----------------------------------------------------------------------------
-const BASE = process.env.API_BASE || 'http://127.0.0.1:4311';
+const path = require('path');
+const fs = require('fs');
+process.env.DB_PATH = path.join(__dirname, 'smoke-quiz-gate.db');
+for (const suf of ['', '-wal', '-shm']) { try { fs.unlinkSync(process.env.DB_PATH + suf); } catch (e) {} }
+
+const express = require('express');
+const db = require('../db');
+const { signTeacherToken, signStudentToken } = require('../utils');
+const { seedQuizBank } = require('../scripts/seed-quiz-bank');
+
 const COURSE = 'ap-cybersecurity';
 const UNIT = 'unit-1';
 
 let pass = 0, fail = 0;
-function check(label, ok, detail) {
-  if (ok) { pass++; console.log(`  ok    ${label}`); }
-  else { fail++; console.log(`  FAIL  ${label}${detail ? '  <- ' + detail : ''}`); }
-}
+const ok = (n, c, x) => {
+  if (c) { pass++; console.log('  [PASS] ' + n); }
+  else { fail++; console.log('  [FAIL] ' + n + (x !== undefined ? '  ' + JSON.stringify(x) : '')); }
+};
+const run = (s, ...a) => db.prepare(s).run(...a);
 
-async function req(method, path, { token, body } = {}) {
-  const res = await fetch(BASE + path, {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-    ...(body ? { body: JSON.stringify(body) } : {}),
-  });
-  let json = null;
-  try { json = await res.json(); } catch (_) { /* non-JSON body */ }
-  return { status: res.status, json };
-}
+const app = express();
+app.use(express.json());
+app.use('/api/quiz', require('../routes/quiz'));
+app.use('/api/teacher', require('../routes/teacher'));
+const server = app.listen(0);
+const base = () => `http://127.0.0.1:${server.address().port}`;
 
-function quizPath(lesson) {
-  return `/api/quiz/${COURSE}/${UNIT}/${lesson}/quiz`;
-}
+const call = (method, url, body, auth) => fetch(base() + url, {
+  method,
+  headers: { 'Content-Type': 'application/json', ...(auth ? { Authorization: 'Bearer ' + auth } : {}) },
+  ...(body ? { body: JSON.stringify(body) } : {}),
+}).then(async (r) => ({ status: r.status, body: await r.json().catch(() => null) }));
 
-async function main() {
-  // Unique per run so the suite is re-runnable without a cleanup step.
-  // Name and PIN are unique together across the whole platform, so both have to
-  // vary or a second run of this suite collides with the first.
-  const stamp = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-  const email = `gate-smoke-${stamp}@example.com`;
-  const pin = String(Math.floor(1000 + Math.random() * 9000));
+// -- fixtures ----------------------------------------------------------------
+run(`INSERT INTO teachers (id,name,email,password_hash) VALUES ('t1','T','t@s.org','x')`);
+run(`INSERT INTO classes (id,teacher_id,class_code,class_name,course,active,mastery_threshold,retry_allowed,retry_mode)
+     VALUES ('c1','t1','CYBER-GATE','Gate Test',?,1,80,1,'all')`, COURSE);
+run(`INSERT INTO students (id,class_id,display_name,pin_hash) VALUES ('s1','c1','A','x')`);
 
-  console.log(`quiz gate smoke against ${BASE}`);
+const TT = signTeacherToken({ id: 't1', email: 't@s.org' });
+const ST = signStudentToken({ id: 's1', class_id: 'c1' });
+const CODE = 'CYBER-GATE';
 
-  const reg = await req('POST', '/api/teacher/register', {
-    body: { email, password: 'GateSmoke!2345', name: 'Gate Smoke' },
-  });
-  const teacher = reg.json && reg.json.token;
-  check('teacher registered', !!teacher, JSON.stringify(reg.json));
-  if (!teacher) return;
+const quiz = (lesson) => `/api/quiz/${COURSE}/${UNIT}/${lesson}/quiz`;
+const setGate = (lesson, open) => call('POST', `/api/teacher/classes/${CODE}/gate`,
+  { course: COURSE, unit: UNIT, lesson, activity_type: 'quiz', open }, TT);
 
-  const made = await req('POST', '/api/teacher/classes', {
-    token: teacher,
-    body: { class_name: 'Gate Smoke Class', course: COURSE, mastery_threshold: 80 },
-  });
-  const code = made.json && made.json.class && made.json.class.class_code;
-  check('class created', !!code, JSON.stringify(made.json));
-  if (!code) return;
+(async () => {
+  const seeded = seedQuizBank();
+  ok('bank seeds 21 questions (9 for 1.1, 12 for 1.2)', seeded.total === 21, seeded);
 
-  const joined = await req('POST', '/api/student/join', {
-    body: { class_code: code, display_name: `Gate Tester ${stamp}`, pin },
-  });
-  const student = joined.json && joined.json.token;
-  check('student joined', !!student, JSON.stringify(joined.json));
-  if (!student) return;
+  // 1) An untouched class keeps working.
+  let r = await call('GET', quiz('1.1'), null, ST);
+  ok('default class: 1.1 quiz open', r.body && r.body.locked === false, r.body);
+  ok('default class: all 9 items served', r.body && r.body.total === 9, r.body && r.body.total);
 
-  // 1) Untouched class keeps working.
-  let r = await req('GET', quizPath('1.1'), { token: student });
-  check('default class: 1.1 quiz open', r.json && r.json.locked === false, JSON.stringify(r.json).slice(0, 160));
-  check('default class: all 9 items served', r.json && r.json.total === 9, `total=${r.json && r.json.total}`);
+  // 2) The class default closes everything with no per-activity rows.
+  r = await call('PUT', `/api/teacher/classes/${CODE}`, { quiz_lock_default: 1 }, TT);
+  ok('quiz_lock_default set to 1', r.body && r.body.class && r.body.class.quiz_lock_default === 1, r.body);
 
-  // 2) Class default flips everything shut with no per-activity rows.
-  r = await req('PUT', `/api/teacher/classes/${code}`, {
-    token: teacher, body: { quiz_lock_default: 1 },
-  });
-  check('quiz_lock_default set to 1', r.json && r.json.class && r.json.class.quiz_lock_default === 1);
+  r = await call('GET', quiz('1.1'), null, ST);
+  ok('locked class: 1.1 quiz closed', r.body && r.body.locked === true, r.body);
+  ok('locked class: no questions on the wire', r.body && r.body.questions === null);
+  ok('locked class: no order_token minted', r.body && !r.body.order_token);
+  ok('locked class: reason is the class default',
+    r.body && r.body.reason === 'class-default-locked', r.body && r.body.reason);
 
-  r = await req('GET', quizPath('1.1'), { token: student });
-  check('locked class: 1.1 quiz closed', r.json && r.json.locked === true, JSON.stringify(r.json).slice(0, 160));
-  check('locked class: no questions on the wire', r.json && r.json.questions === null);
-  check('locked class: no order_token minted', r.json && !r.json.order_token);
-  check('locked class: reason is the class default', r.json && r.json.reason === 'class-default-locked', `reason=${r.json && r.json.reason}`);
+  // Practice types are NOT swept up by the blanket default.
+  ok('class default does not gate non-assessment types',
+    require('../lib/activity-gate').resolveGate(null, { id: 'c1', quiz_lock_default: 1 }, 'exercise-1').open === true);
 
-  // Public self-study must be untouched: it has no teacher to open anything.
-  r = await req('GET', quizPath('1.1'));
-  check('self-study still open', r.json && r.json.locked === false && r.json.total === 9);
+  // Public self-study is untouched: it has no teacher to open anything.
+  r = await call('GET', quiz('1.1'));
+  ok('self-study still open', r.body && r.body.locked === false && r.body.total === 9, r.body && r.body.locked);
 
   // 3) Opening one activity opens only that one.
-  r = await req('POST', `/api/teacher/classes/${code}/gate`, {
-    token: teacher,
-    body: { course: COURSE, unit: UNIT, lesson: '1.1', activity_type: 'quiz', open: true },
+  r = await setGate('1.1', true);
+  ok('teacher opened 1.1 quiz', r.body && r.body.open === true, r.body);
+
+  r = await call('GET', quiz('1.1'), null, ST);
+  const token11 = r.body && r.body.order_token;
+  ok('1.1 quiz now open to the student', r.body && r.body.locked === false, r.body && r.body.locked);
+  ok('1.1 order_token minted', !!token11);
+
+  r = await call('GET', quiz('1.2'), null, ST);
+  ok('1.2 quiz still closed', r.body && r.body.locked === true, r.body && r.body.locked);
+
+  // The seeded bank scores correctly end to end, on the token just minted.
+  const served = (await call('GET', quiz('1.1'), null, ST)).body;
+  const answers = served.questions.map((q) => {
+    const row = db.prepare('SELECT options, correct_index FROM quiz_bank WHERE qid = ?').get(q.qid);
+    const correctText = JSON.parse(row.options)[row.correct_index];
+    return { qid: q.qid, chosen_index: q.options.indexOf(correctText) };
   });
-  check('teacher opened 1.1 quiz', r.json && r.json.open === true);
+  r = await call('POST', '/api/quiz/submit', { order_token: served.order_token, answers }, ST);
+  ok('all-correct submit scores 9 of 9', r.body && r.body.score === 9 && r.body.total === 9,
+    r.body && { score: r.body.score, total: r.body.total });
 
-  r = await req('GET', quizPath('1.1'), { token: student });
-  const token11 = r.json && r.json.order_token;
-  check('1.1 quiz now open to the student', r.json && r.json.locked === false);
-  check('1.1 order_token minted', !!token11);
+  // 4) Closing mid-flight invalidates a token minted while open.
+  r = await setGate('1.1', false);
+  ok('teacher closed 1.1 quiz', r.body && r.body.open === false, r.body);
 
-  r = await req('GET', quizPath('1.2'), { token: student });
-  check('1.2 quiz still closed', r.json && r.json.locked === true, `locked=${r.json && r.json.locked}`);
-
-  // 4) Closing mid-flight invalidates a token that was minted while open.
-  r = await req('POST', `/api/teacher/classes/${code}/gate`, {
-    token: teacher,
-    body: { course: COURSE, unit: UNIT, lesson: '1.1', activity_type: 'quiz', open: false },
-  });
-  check('teacher closed 1.1 quiz', r.json && r.json.open === false);
-
-  r = await req('POST', '/api/quiz/submit', {
-    token: student, body: { order_token: token11, answers: [] },
-  });
-  check('submit refused after close', r.status === 403, `status=${r.status}`);
-  check('submit refusal says locked', r.json && r.json.locked === true, JSON.stringify(r.json).slice(0, 160));
+  r = await call('POST', '/api/quiz/submit', { order_token: token11, answers: [] }, ST);
+  ok('submit refused after close', r.status === 403, r.status);
+  ok('submit refusal says locked', r.body && r.body.locked === true, r.body);
 
   // 5) The listing a teacher UI will read.
-  r = await req('GET', `/api/teacher/classes/${code}/gates`, { token: teacher });
-  check('gates listing reports the class default', r.json && r.json.quiz_lock_default === 1);
-  check('gates listing has the 1.1 row', !!(r.json && (r.json.gates || []).some(
-    (g) => g.lesson === '1.1' && g.activity_type === 'quiz' && g.open === 0)));
+  r = await call('GET', `/api/teacher/classes/${CODE}/gates`, null, TT);
+  ok('gates listing reports the class default', r.body && r.body.quiz_lock_default === 1, r.body);
+  ok('gates listing has the 1.1 row', !!(r.body && (r.body.gates || []).some(
+    (g) => g.lesson === '1.1' && g.activity_type === 'quiz' && g.open === 0)), r.body && r.body.gates);
 
   console.log(`\n${pass} passed, ${fail} failed`);
+  server.close();
+  db.close();
+  for (const suf of ['', '-wal', '-shm']) { try { fs.unlinkSync(process.env.DB_PATH + suf); } catch (e) {} }
   process.exit(fail ? 1 : 0);
-}
-
-main().catch((e) => { console.error(e); process.exit(1); });
+})().catch((e) => { console.error(e); server.close(); process.exit(1); });
