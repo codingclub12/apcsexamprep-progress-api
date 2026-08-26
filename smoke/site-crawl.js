@@ -208,6 +208,67 @@ ok('one redirect is fine, two is a chain',
 ok('an http:// resource is mixed content',
   C.checkPage(url('x'), res(page({ body: '<img src="http://example.com/a.png">' }))).some((f) => f.kind === 'mixed-content'));
 
+console.log('\n  SEO drift: the year, the brand, the headings, the snippet\n');
+// Pinned date, so these assertions cannot drift into passing or failing with the
+// calendar. 26 Aug 2026 sits in the 2026-27 school year.
+const NOW = '2026-08-26T00:00:00Z';
+const seo = (parts, o = {}) => C.checkPage(url('x'), res(page(parts)), { now: NOW, ...o });
+
+ok('the school year starts in July',
+  C.currentSchoolYearStart('2026-08-26T00:00:00Z') === 2026 &&
+  C.currentSchoolYearStart('2026-06-30T00:00:00Z') === 2025);
+ok('a school year that has ended is stale',
+  C.staleSchoolYears('AP CSA Study Guides 2025-2026', NOW).length === 1);
+ok('the current school year is not stale',
+  C.staleSchoolYears('AP CSA Study Guides 2026-2027', NOW).length === 0);
+ok('the two-digit form is caught too',
+  C.staleSchoolYears('Cram Kit 2025-26', NOW).length === 1);
+ok('a historical range spanning many years is not a school year',
+  C.staleSchoolYears('AP CSA FRQ Archive 2004-2025', NOW).length === 0);
+ok('a two-year span is not a school year either',
+  C.staleSchoolYears('Model Answers (2024\u20132026)', NOW).length === 0);
+ok('a stale year in the title is a P1',
+  seo({ title: 'AP CSA Study Guides 2025-2026 | APCSExamPrep' })
+    .some((f) => f.kind === 'stale-year' && f.tier === 'P1'));
+ok('a stale year in the meta description is caught',
+  seo({ meta: 'Aligned to the 2025-2026 curriculum.' }).some((f) => f.kind === 'stale-year'));
+
+ok('the store name twice in a title is flagged',
+  seo({ title: 'AP CSP Teacher Bundle | apcsexamprep.com | APCSExamPrep.com' })
+    .some((f) => f.kind === 'brand-doubled'));
+ok('the store name once is not',
+  !seo({ title: 'AP CSP Teacher Bundle | APCSExamPrep.com' })
+    .some((f) => f.kind === 'brand-doubled'));
+
+ok('two H1s are flagged',
+  seo({ body: '<h1>Real Heading</h1><h1>Get in Touch</h1>' }).some((f) => f.kind === 'h1-duplicate'));
+ok('one H1 is not',
+  !seo({ body: '<h1>Real Heading</h1>' }).some((f) => f.kind === 'h1-duplicate'));
+ok('the title string rendered as an H1 is flagged',
+  seo({ title: 'AP CSP Complete Course | 2025-2026 | APCSExamPrep.com',
+        body: '<h1>AP CSP Complete Course | 2025-2026 | APCSExamPrep.com</h1>' })
+    .some((f) => f.kind === 'h1-is-title'));
+ok('an ordinary H1 that happens to contain a pipe is not',
+  !seo({ title: 'AP CSA Arrays | APCSExamPrep', body: '<h1>Traversing | Searching</h1>' })
+    .some((f) => f.kind === 'h1-is-title'));
+
+ok('scraped navigation furniture is flagged as a snippet',
+  seo({ meta: 'HubsCyberCSPCSANetworkingGradebook -&gt; CSA AP Computer Science A Command Center' })
+    .some((f) => f.kind === 'meta-scraped'));
+ok('a long but authored description is not',
+  !seo({ meta: 'Complete year-long AP Computer Science A curriculum and free self-study course aligned to the College Board CED for the May 2027 exam. 400+ practice exercises, a built-in Java code editor on 39 skill lessons, and applied mastery scenarios throughout.' })
+    .some((f) => f.kind === 'meta-scraped'));
+ok('ordinary CamelCase in a description is not scraped furniture',
+  !seo({ meta: 'Learn ArrayList traversal and the Math class on APCSExamPrep.' })
+    .some((f) => f.kind === 'meta-scraped'));
+
+ok('a very long title is flagged',
+  seo({ title: 'AP CSA 2024 FRQ Year Pack - Complete Solutions | Feeder, Scoreboard, WordChecker, GridPath | APCSExamPrep.com' })
+    .some((f) => f.kind === 'title-overlong'));
+ok('a title inside the budget is not',
+  !seo({ title: 'AP CSA Study Guides 2026-27 | APCSExamPrep' })
+    .some((f) => f.kind === 'title-overlong'));
+
 console.log('\n  Which links are worth checking\n');
 ok('an on-site path is crawlable', C.isCrawlableLink('/pages/ap-csa-course'));
 ok('mailto is not', !C.isCrawlableLink('mailto:a@b.com'));

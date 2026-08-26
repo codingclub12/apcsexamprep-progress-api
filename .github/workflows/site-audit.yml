@@ -1,0 +1,150 @@
+name: Daily site audit
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  THE CRAWLER WAS BUILT AND THEN NEVER SCHEDULED.
+#
+#  lib/site-crawl.js and scripts/site-crawl.js have existed, fully written and
+#  pinned by 110 offline assertions in smoke/site-crawl.js, and appeared in NO
+#  workflow. Everything they were built to catch was still being found by a human
+#  opening a page, which is the same failure page-availability.js had before
+#  board task 117 put it on a schedule.
+#
+#  The 2026-08-26 audit is the cost of that. It found, by hand, defects the
+#  crawler already knew how to see: a school year that had ended sitting in the
+#  title of thirteen pages and seven products, the store name twice in three
+#  product titles, and scraped navigation furniture serving as the search snippet
+#  on every Command Center. None of it was new that morning. It had simply never
+#  been looked at.
+#
+#  ── WHY 09:00 AND NOT 08:00 ─────────────────────────────────────────────────
+#  Four jobs already drive the storefront: auto-dispatch at 06:00, the browser
+#  smoke at 07:00, the board sweep at 08:00. Stacking a fifth on top of the sweep
+#  would put two crawlers on the store in the same minute, which is the mistake
+#  .github/workflows/smoke.yml documents and board task 79 paid for. 09:00 sits
+#  clear of all of them.
+#
+#  ── WHY IT DOES NOT WRITE TO THE BOARD ──────────────────────────────────────
+#  Same posture as the overnight sweep: it reads and reports, it does not file.
+#  A crawler that opens tasks unattended turns one template regression into
+#  1,300 rows. The report is the artifact; a human decides what becomes a task.
+# ─────────────────────────────────────────────────────────────────────────────
+
+on:
+  schedule:
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+    inputs:
+      full:
+        description: 'Crawl every URL rather than tonight''s shard (slow, ~35 min)'
+        required: false
+        type: boolean
+        default: false
+      budget:
+        description: 'Max page requests'
+        required: false
+        default: '400'
+
+# Shared with the board sweep and the reconcile, by name, so no two jobs can
+# drive the storefront at once. Concurrency groups match across workflows.
+concurrency:
+  group: verify-board
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: Crawl the site and rank what is wrong
+    runs-on: ubuntu-latest
+    # The crawler's own --max-minutes is the real guarantee; this is the backstop
+    # under it, because a job-level timeout cannot write a report explaining
+    # itself and the crawler can.
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci --omit=dev
+
+      # Last night's findings, so tonight can say what is NEW rather than
+      # re-reading the same 1,300-page template defect as news every morning.
+      # A cache miss is normal on the first run and the delta reports "no
+      # baseline" instead of calling everything new.
+      - name: Restore last night's findings
+        uses: actions/cache/restore@v4
+        with:
+          path: previous-crawl.json
+          key: site-crawl-${{ github.run_id }}
+          restore-keys: |
+            site-crawl-
+
+      - name: Crawl
+        env:
+          STORE_ORIGIN: https://www.apcsexamprep.com
+          APCS_BASE: ${{ vars.PROGRESS_BASE_URL || 'https://progress.apcsexamprep.com' }}
+        run: |
+          # pipefail, or `node ... | tee` reports tee's status and a dead
+          # crawler lands as a green tick. This workflow's sibling shipped that
+          # exact bug once already.
+          set -o pipefail
+
+          ARGS="--out current-crawl.json --budget ${{ inputs.budget || '400' }} --max-minutes 30"
+          if [ -f previous-crawl.json ]; then
+            ARGS="$ARGS --previous previous-crawl.json"
+          else
+            echo "No baseline from a previous run. Tonight establishes one."
+          fi
+          if [ "${{ inputs.full }}" = "true" ]; then
+            ARGS="$ARGS --full"
+          fi
+
+          echo "site-crawl.js $ARGS"
+          node scripts/site-crawl.js $ARGS 2>&1 | tee crawl-report.txt
+
+      # The report is the deliverable, and it belongs where it can be read on a
+      # phone without downloading anything.
+      - name: Put the report in the job summary
+        if: always()
+        run: |
+          {
+            echo '## Daily site audit'
+            echo
+            echo '```'
+            # A very long report would blow the 1MB summary limit, so the tail
+            # is dropped rather than the head: the ranking puts what matters
+            # first, and a truncated summary says so.
+            head -c 900000 crawl-report.txt
+            if [ "$(wc -c < crawl-report.txt)" -gt 900000 ]; then
+              echo
+              echo '... report truncated for the summary. Full text is in the artifact.'
+            fi
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the full report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-audit-${{ github.run_number }}
+          path: |
+            crawl-report.txt
+            current-crawl.json
+          retention-days: 30
+
+      # Saved only on success, so a crawl that died halfway cannot poison the
+      # baseline and make tomorrow report phantom resolutions.
+      - name: Save tonight's findings as the baseline
+        if: success()
+        run: cp current-crawl.json previous-crawl.json
+
+      - uses: actions/cache/save@v4
+        if: success()
+        with:
+          path: previous-crawl.json
+          key: site-crawl-${{ github.run_id }}
