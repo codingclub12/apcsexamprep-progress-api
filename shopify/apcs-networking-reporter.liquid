@@ -1,0 +1,55 @@
+{% comment %}
+  AP Networking Grade Reporter wiring v2
+  Include in theme.liquid just before </body>: {% render 'apcs-networking-reporter' %}
+
+  Loads assets/ap-networking-reporter.js on the AP Networking pages that carry a
+  gradeable widget. The hubs (ap-networking, ap-networking-unit-N), the ten study
+  games and the topic overview pages carry none, so the script never loads there.
+  The reporter also self-gates: with no [data-course="ap-networking"] wrapper, or
+  no apcse_token, it does nothing, so anonymous SEO traffic is unaffected.
+
+  Grades post to POST /api/progress/attempt (the manifest-gated path, same as
+  ap-csa). Visits are already tracked by the sitewide track block, so this file
+  is grades only.
+
+  WHY THE LAB PREFIX IS HERE, ADDED 2026-08-26
+    v1 matched 'ap-networking-lesson-' only. That is the handle shape of the 22
+    topic lesson pages, and it was written when they were the only pages that
+    reported. The four browser labs shipped later under a different shape,
+    ap-networking-lab-{N}-{slug}, and nothing connected the two facts. So the
+    labs rendered, scored themselves on screen, told the student "Recorded: 6 out
+    of 8", and posted nothing: the function they call to report,
+    window.APNET_reportAttempt, is defined by the asset this snippet loads, and
+    on those four handles the asset was never on the page. Every one of the 32
+    lab points was a denominator no student could earn, and the only symptom was
+    a gradebook column of zeros that looked like students skipping the work.
+
+    The labs were correct on every other side of the contract. Each page carries
+    <div data-course="ap-networking" data-lesson-id="lab-N" data-item-id="lab-N">,
+    each computes score and a {q, sel, ok} detail array, and NET_LABS in the
+    progress API seeds lab-1 through lab-4 at 8 points, matching the 8
+    checkpoints each lab renders. One missing prefix was the whole defect.
+
+  WHAT THE PREFIX ALSO MATCHES, AND WHY THAT IS FINE
+    Eight handles begin ap-networking-lab-. Four are the browser labs above. The
+    other four (ap-networking-lab-1-4, -2-2, -3-5, -4-3) are the interactive
+    terminal labs, which render through /lab-player.js and post to
+    /api/progress/attempt themselves. Those pages carry no
+    [data-course="ap-networking"] wrapper and dispatch no 'apnet:attempt', so the
+    reporter's own gate makes it inert there: getContext() returns null and
+    postAttempt returns before it builds a body. There is no path to a double
+    post. Narrowing the match to exclude them would trade a proven no-op for a
+    pattern that breaks the next time a lab is numbered differently.
+
+  THE INVARIANT, NOT THE LIST
+    smoke/networking-lab-reporter.js in the progress API repo pins this. Its
+    offline half checks that this gate matches every lab handle the manifest
+    expects to hear from. Its live half is the one that matters: it walks the
+    AP Networking pages in the sitemap and fails if ANY page that calls
+    APNET_reportAttempt or dispatches apnet:attempt does not also load this
+    asset. That check knows nothing about handle conventions, so it catches the
+    next page family that ships under a shape nobody thought to add here.
+{% endcomment %}
+{%- if page.handle contains 'ap-networking-lesson-' or page.handle contains 'ap-networking-lab-' -%}
+<script src="{{ 'ap-networking-reporter.js' | asset_url }}" defer></script>
+{%- endif -%}
