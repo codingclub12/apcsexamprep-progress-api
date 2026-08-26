@@ -6,10 +6,13 @@ Ask: "publish the 18 course exercise-2 pages. Has this been done."
 
 ## Answer to the status question
 
-No. The sheet had been generated during the Big Idea 3 unit-test link fix on
-2026-08-25, recognised as a publish rather than the link update that was asked
-for, and deleted unimported. Nothing was ever imported. This run regenerates it,
-verifies it, and hands it over.
+At the time it was asked, no. The sheet had been generated during the Big Idea 3
+unit-test link fix on 2026-08-25, recognised as a publish rather than the link
+update that was asked for, and deleted unimported. Nothing had ever been
+imported.
+
+It has been now. The sheet was regenerated, verified, handed over, imported by
+Tanner, and confirmed live the same day. All 18 pages are serving.
 
 ## What was produced
 
@@ -19,6 +22,36 @@ ephemeral and this note is the only commit.
 
 Regenerated after `origin/main` moved f2795e6 to e4cda36 mid-run and confirmed
 byte-identical, so the delivered file is current against that head.
+
+## The artifact: what the site is serving now
+
+The board asks for an artifact rather than a report, and "the import reported
+success" is a report. Matrixify reports success on a sheet it silently
+truncated, so the check reads the live pages back. `/tmp/bi3/verify-import.js`,
+18 of 18, every assertion clean:
+
+| check | result |
+|-------|--------|
+| serving HTTP 200 | 18/18 |
+| load `ap-csp-reporter.js`, so grades record | 18/18 |
+| carry the `.lesson-page` wrapper | 18/18 |
+| six graded items with distinct ids | 18/18 |
+| declare `data-activity="exercise-2"` | 18/18 |
+| free of the dead BI3 unit test link | 18/18 |
+| link unit test part A and part B | 18/18 |
+| body matches what the sheet shipped | 18/18 |
+
+The body comparison runs both sides through `renderable()` rather than comparing
+raw bytes, because Shopify decodes HTML entities on save and the two copies are
+never byte-identical. That normaliser learned `&middot;` yesterday, which these
+pages ship in every item number, so without that fix all 18 would have compared
+unequal here and read as failed writes.
+
+No page came back 404, so the ~64-minute edge cache tail did not obscure
+anything and no result here is a stale read.
+
+This closes the 18 previously unfillable `exercise-2` gradebook columns for Big
+Idea 3. `verified` on the board is still not this agent's to set.
 
 ## Evidence
 
@@ -124,6 +157,7 @@ prevent, at 17 instead of 35. Two ways out, both a decision rather than a patch:
 publish the remaining 17 exercise-2 pages so the flag is correct as written, or
 make the gate per lesson. Left for the human, because it is a scope call.
 
-**Not flipped, not seeded, not verified.** The flag stays `false`, no
-denominator was written, and `verified` is not this agent's to set. The import
-itself is a human action.
+**Not flipped, not seeded.** The flag stays `false` and no denominator was
+written. Both remain open after the import, because the import is exactly what
+makes the gate ambiguous: 18 of 35 pages are now live, so neither leaving the
+flag alone nor flipping it is correct on its own.
