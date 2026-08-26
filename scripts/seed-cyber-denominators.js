@@ -47,12 +47,17 @@ const POINTS = {
   // ── 1.1 ────────────────────────────────────────────
   '1.1|exercise-1': 7,        // foundCount reads / 7
   '1.1|exercise-2': 8,        // ANSWERS[] has 8 entries
-  '1.1|quiz': 5,              // ANSWERS{} has 5 keys
+  // Re-priced with the server-scored swap: the corrected CED-aligned quiz asks
+  // 9 items, from the teacher bundle's own Quiz_KEY.docx. This does NOT regrade
+  // anyone who already sat the 5 item version: score_events carries earned and
+  // max_points per submission and gradebook-contract SOURCE B prices an attempted
+  // cell from the ledger, never from this table. Pinned by smoke/denominator-safety.js.
+  '1.1|quiz': 9,              // seed/cyber-unit-1-quizzes.js, 9 items
   '1.1|lab': 24,              // "/ 24 pts" score bar, finalScore + totalScore present
 
   // ── 1.2 ────────────────────────────────────────────
   '1.2|lab': 30,              // score readout reads 0 / 30
-  '1.2|quiz': 5,              // score-display reads 0 / 5
+  '1.2|quiz': 12,             // seed/cyber-unit-1-quizzes.js, 12 items
   '1.2|exercise-1': 24,       // "/ 24 pts" score bar, badge "3 Parts . 24 pts", 12+6+6
   '1.2|exercise-2': 30,       // "/ 30 pts" score bar, three clients at 10 each
 
