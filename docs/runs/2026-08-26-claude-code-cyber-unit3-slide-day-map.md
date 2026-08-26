@@ -1,10 +1,15 @@
 # 2026-08-26 claude code: what Unit 3's decks actually are, before splitting them
 
-An investigation, not a change. Tanner wants per-day slide decks for AP
-Cybersecurity Unit 3, which today ships five whole-lesson decks. This reads the
-Drive folder, all five teacher guides, and all five teacher decks end to end and
-records what the day map really is, where the guides disagree with the decks, and
-what the split would actually cost.
+An investigation that turned into a decision. Tanner wants per-day slide decks
+for AP Cybersecurity Unit 3, which today ships five whole-lesson decks. This reads
+the Drive folder, all five teacher guides, and all five teacher decks end to end
+and records what the day map really is, where the guides disagree with the decks,
+and what the split would actually cost.
+
+It surfaced a numbering collision between the bundle and the site. Tanner resolved
+it the same day by moving the site to CED numbering, which removes the collision
+instead of managing it. That decision is recorded below, together with the
+recommendation it overturned.
 
 Nothing in Drive, the theme, or the manifest was modified.
 
@@ -114,6 +119,9 @@ about 139 new slides against 104 existing.
 
 ## Three tiers, not one job
 
+Lesson numbers here are CED topic numbers, which after the decision below are the
+site's numbers too.
+
 **Tier 1, split now, near-zero authoring: 3.3 and 3.4.** Four days, four deck
 pairs. Clean LO seams at real section dividers.
 
@@ -134,7 +142,7 @@ which day owns slides 18-21.
 Do Tier 1 end to end first - split, convert, gate, screenshot - and prove the
 pipeline on four decks before committing to about 64 new content slides.
 
-## Two things found on the way
+## Two things found on the way, one of which became a decision
 
 ### Board #99 is unblocked, and the answer is "author the EKs"
 
@@ -158,12 +166,12 @@ needs the CED.
 While in there: slide 19 carries an ENRICHMENT badge for content slide 2 marks CB
 REQUIRED. Fix during the split.
 
-### The numbering collision, which is the highest-risk item in the whole job
+### The numbering collision, and the decision that dissolves it
 
-`pacing.json`'s `unit3Mapping` already records that the bundle and the site number
-Unit 3 differently:
+`pacing.json`'s `unit3Mapping` records that the bundle and the site numbered Unit 3
+differently:
 
-| Bundle / Drive | Days | Site lesson |
+| Bundle / Drive (CED) | Days | Site lesson, before this decision |
 | --- | --- | --- |
 | 3.1 Network Vulnerabilities | 6 | 3.1 Network Fundamentals & Attack Surface (d1-3) **and** 3.2 Network Attacks (d4-6) |
 | 3.2 Managerial Controls | 3 | 3.6 Network Security Policies & Wireless |
@@ -173,25 +181,87 @@ Unit 3 differently:
 
 Three lessons swap numbers and one splits in two. `config/cyber-slide-manifest.js`
 keys lessons as `'1-1'`, `'2-3'` and so on. Units 1 and 2 number identically in
-both schemes, so the key has never been ambiguous. Unit 3 is the first divergence.
-
-Add `'3-3': 2` and it means Segmentation under bundle numbering and Firewalls
+both schemes, so the key has never been ambiguous. Unit 3 is the first divergence:
+add `'3-3': 2` and it means Segmentation under bundle numbering and Firewalls
 under site numbering. Both are two-day lessons, so the day count will not catch
 it. It renders cleanly, logs nothing, returns a correct API response, and hands a
 teacher the wrong decks.
 
-That is the same shape as the defects the CSP-to-cyber port surfaced: a
-difference that does not announce itself. Decide the numbering before authoring
-a single slide, and write the mapping down in one place rather than implying it.
+**DECIDED 2026-08-26 by Tanner: the site moves to CED numbering.** Five topics, in
+the CED's order and with the CED's numbers. The divergence is removed rather than
+translated, so no mapping layer gets built and `unit3Mapping` is deleted rather
+than maintained.
 
-Recommendation: leave the Drive folders on bundle numbering (renaming 15 folders
-across Units 3-5 is churn and breaks the Apps Script enumeration) and make the
-manifest translate, so the key a page requests is the site lesson and the file it
-resolves to is the bundle lesson.
+An earlier draft of this note recommended the opposite: keep both schemes and make
+the manifest translate. That was wrong, and why it was wrong is the part worth
+keeping.
 
-`scripts/cyber-slide-embeds-from-csv.js:185` refuses rows naming a Unit 3-5 lesson
-with its own message. That refusal is lifted deliberately when the manifest
-widens; it is the checkpoint where the numbering decision gets enforced.
+**The EK identifiers are CED-canonical and they are printed on every slide.** Every
+deck cites `EK 3.4.B.2` for firewall ACLs; every guide presents its essential
+knowledge as verbatim from the CED; so do the quiz keys and the FRQ specs. Those
+identifiers cannot be renumbered. The site numbering is the only free variable, so
+any scheme where "Lesson 3: Firewalls" sits on a page whose own slides cite
+3.4.B.2 contradicts itself permanently. A translation layer would have made that
+contradiction permanent AND invisible to the code.
+
+The repo had already tried the softer fix. `scripts/cyber-cc-clarity.js` added a
+six-row crosswalk to the course guide, for exactly this reason:
+
+> The site teaches Unit 3 as six lessons; the CED has five topics, in a different
+> order. [...] A teacher reading both sees 3.4 Firewalls in one place and
+> Firewalls at position 3 in the other, with nothing saying the two numbering
+> systems are different.
+
+A crosswalk is a tax every teacher pays forever. Matching the CED deletes the need
+for it, and Tanner's report is that teachers were still confused with it in place.
+
+#### What the change costs, checked rather than assumed
+
+The thing that could have made this expensive is live gradebook data keyed to site
+lesson numbers. There is none.
+
+- **No gradebook migration.** Cyber Unit 3 items are keyed by page slug
+  (`ap-cyber-unit-3-case-file-3`, `unit-3`), not by dotted lesson numbers. Nothing
+  in `course_manifest` is keyed to `3.1`-`3.6`, and `seed/` carries no Unit 3
+  lesson ids at all. `CLAUDE.md`'s never-break-existing-data rule is not engaged.
+- **`pacing.json` is generated**, by `tools/cyber-pacing/extract-calendar.js` from
+  `AP_Cyber_Course_Calendars_Traditional_and_Block_2_1.xlsx`. No application code
+  reads it. The fix is the sheet, then regenerate. Never hand-edit the JSON.
+- **`unit3Mapping` has exactly one consumer: the generator that writes it.**
+  Nothing reads it. It exists for humans, and matching the CED retires it.
+- **One live lesson-numbered page**, `ap-cyber-unit-3-lesson-6`. Its slug is
+  positional (`lesson-6`), not dotted, so it does not encode a wrong topic number.
+
+So the work is the calendar sheet, the Command Center, the course guide and one
+page. It is not a data migration.
+
+#### The one thing genuinely lost
+
+CED 3.1 is a single six-day topic. The site split it into two three-day lessons,
+Attack Surface then Network Attacks. That is the only place the site numbering
+carried pedagogy rather than just a different order.
+
+It can be kept without keeping the lesson number: run it as Days 1-3 and Days 4-6
+inside topic 3.1. The teaching shape survives and only a lesson boundary the CED
+does not have goes away. Decide this deliberately rather than letting it fall out
+of the renumber.
+
+#### What this does to the slide work
+
+It dissolves what this section originally called the highest-risk item. With the
+site on CED numbering, `cyber-slide-manifest.js` keys are unambiguous, no
+translation layer is needed, and `scripts/cyber-slide-embeds-from-csv.js:185` can
+have its Unit 3-5 refusal lifted without inventing a mapping first.
+
+**The decks need no renumbering.** They are already CED-native; the site was the
+outlier. The tiers above are already stated in CED topic numbers and stand as
+written. Density does not change either: 3.1 and 3.5 still need authoring.
+
+Still open: regenerating `pacing.json` against the five-topic structure needs the
+corrected calendar sheet, or a decision to derive the calendar from the CED day
+counts (6/3/2/2/7, the same 20 total). Not done here, because inventing a calendar
+and returning it as though it came from the spreadsheet would put a fabrication in
+the one file the pacing pills are generated from.
 
 ## Environment note
 
@@ -215,3 +285,11 @@ asking for, not a description of the decks that shipped.
 **"Website" in a pacing table marks where the deck ran out.** It is a
 density signal hiding in plain sight, and it points at exactly the two lessons
 that need authoring rather than splitting.
+
+**Removing a divergence beats translating one.** This note's first recommendation
+was to keep two numbering schemes and teach the manifest to translate. The repo
+had already shipped the gentler version of that idea, a crosswalk table in the
+course guide, and teachers were still confused, because a crosswalk explains a
+contradiction instead of removing it. When one side of a mismatch is externally
+fixed and the other side is yours, move yours. The tell that the CED side was the
+fixed one was sitting on every slide: an EK number you do not get to renumber.
