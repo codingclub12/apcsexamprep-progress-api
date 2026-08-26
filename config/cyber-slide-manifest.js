@@ -19,42 +19,45 @@
 //  Why they are absent is worth recording, because the folder listing invites
 //  the wrong conclusion. Every one of the 15 lessons in Units 3-5 has exactly
 //  one deck, named Day1_Deck_*. That looks like 15 lessons each missing their
-//  later days. It is not: lesson 3.1's deck says "DAY 1 OF 1" on its title
-//  slide, runs to "Slide 22 of 22", and covers all three of the topic's
-//  learning objectives, while its Teacher_Guide.docx says the topic takes six
-//  class periods and paces those same 22 slides across them (Day 1 is slides
-//  1-7, Day 6 is slides 21-22).
+//  later days. It is not: lesson 3.1's deck runs to "Slide 22 of 22" and covers
+//  all three of the topic's learning objectives, while its Teacher_Guide.docx
+//  says the topic takes six class periods.
 //
-//  So for Units 3-5 the deck is a whole-lesson deck and the "days" are a
-//  reading plan over it. Listing one of those here would report days: 1 for a
-//  lesson that actually runs six periods, and the panel would label a
-//  six-period deck "Day 1". Tanner is building real per-day decks for those
-//  units; they join this map when they exist, which is one line per lesson and
-//  no code change.
+//  So for Units 3-5 the deck is a whole-lesson deck. Listing one here would
+//  report days: 1 for a lesson that actually runs six periods, and the panel
+//  would label a six-period deck "Day 1".
 //
-//  A CAUTION FOR WHOEVER ADDS THEM. The existing Day1 file for a Unit 3-5
-//  lesson is the whole-lesson deck, not that lesson's future Day 1. Converting
-//  it as-is would put a 22-slide deck behind a "Day 1" label next to five
-//  genuinely per-day decks.
+//  A CAUTION FOR WHOEVER ADDS THEM, corrected 2026-08-26. An earlier version of
+//  this comment said the guides "pace those same 22 slides" across the days, as
+//  though a guide were a usable split plan. It is not, and
+//  docs/runs/2026-08-26-claude-code-cyber-unit3-slide-day-map.md checked it
+//  slide by slide. The numbers run 1 to 22, but the CONTENT at those numbers
+//  does not match what the guide says is there: the guide has slide 5 as ARP
+//  mapping when it is a section divider, slide 14 as the smurf attack when it
+//  is 3.1.B. Two numbering conventions are even in use across one unit (3.1,
+//  3.4 and 3.5 number continuously; 3.2 and 3.3 restart each day, implying
+//  per-day decks that do not exist). Splitting a deck by following its guide
+//  would produce days whose slides are not the slides the guide describes.
 //
-//  UNIT 3 KEYS ARE CED TOPIC NUMBERS. Read this before adding '3-x' anything.
+//  Read that note before adding any of these. It also records that 3.4's title
+//  slide already reads DAY 1 OF 2 while its own speaker notes call it a single
+//  day, so not even the badges are uniform, and it ranks the five lessons by
+//  what a split actually costs: 3.3 and 3.4 are near-zero authoring, 3.1 and
+//  3.5 need roughly 64 new content slides between them.
 //
-//  Until 2026-08-26 the site numbered Unit 3 as six lessons in a different
-//  order from the CED's five topics, and the two schemes were not
-//  distinguishable from a key. `'3-3'` meant Segmentation to the bundle and
-//  Firewalls to the site; BOTH ARE TWO-DAY LESSONS, so a day count would not
-//  have caught the swap. It renders cleanly, logs nothing, returns a correct
-//  API response, and hands a teacher the wrong decks.
+//  ON THE KEYS. Tanner decided on 2026-08-26 that the site moves to CED
+//  numbering, which is what Drive and the decks already use. That matters here
+//  more than it looks: Units 1 and 2 number identically in both schemes, so
+//  these keys have never been ambiguous, but Unit 3 diverges. Under the old
+//  site numbering, adding '3-3' would have meant Segmentation to the bundle and
+//  Firewalls to the site, both two-day lessons, so the day count could not have
+//  caught it. It would have rendered cleanly and handed a teacher the wrong
+//  decks. The decision removes that rather than translating it, so no mapping
+//  layer belongs here.
 //
-//  Tanner resolved it by moving the site onto CED numbering rather than
-//  translating between the two, because the EK identifiers are CED-canonical
-//  and printed on every slide: a deck citing EK 3.4.B.2 for firewall ACLs
-//  cannot be renumbered, so the site numbering was the only free variable.
-//  There is therefore no mapping layer here, and there should never be one.
-//  See docs/runs/2026-08-26-claude-code-cyber-unit3-slide-day-map.md.
-//
-//  The verified Unit 3 day map, read from the teacher guides on 2026-08-26 and
-//  corroborated by tools/cyber-pacing/pacing.json (Unit 3: 20 teach days):
+//  THE VERIFIED UNIT 3 DAY MAP, read from the five teacher guides on
+//  2026-08-26 and corroborated by tools/cyber-pacing/pacing.json ("Unit 3: 20
+//  teach days"). Keys are CED topic numbers, per the decision above.
 //
 //    '3-1' Network Vulnerabilities      6 days   (deck is 22 slides today)
 //    '3-2' Managerial Controls          3 days   (deck is 16 slides today)
@@ -62,10 +65,16 @@
 //    '3-4' Firewalls                    2 days   (deck is 21 slides today)
 //    '3-5' Detecting Network Attacks    7 days   (deck is 25 slides today)
 //
-//  Those day counts are the CED's and are already correct. What does NOT exist
-//  yet is a per-day deck set for any of them, which is why none is listed in
-//  DAY_COUNT_BY_LESSON. Add a lesson here only once its per-day decks exist in
-//  Drive, or the panel will report days for decks nobody can open.
+//  Those day counts are the CED's and are already correct. What does not exist
+//  is a per-day deck set for any of them, which is the whole reason none is
+//  listed below: listing one would report days for decks nobody can open.
+//  docs/cyber-unit3-tier1-split-spec.md carries the slide-level cut lists for
+//  3.3 and 3.4, the two that split without new content.
+//
+//  Why CED won, because it is the part that generalises rather than a
+//  preference: the EK identifiers are CED-canonical and printed on every
+//  slide, so a deck citing EK 3.4.B.2 for firewall ACLs cannot be renumbered.
+//  The site numbering was the only free variable, so it is the side that moved.
 // ---------------------------------------------------------------------------
 
 const embeds = require('./cyber-slide-embeds');
