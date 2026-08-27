@@ -1,7 +1,7 @@
 # AP Cybersecurity Unit 1: CED realignment
 
 **Status:** 3 of 8 work orders complete. WO-3 imported and verified live
-2026-08-27.
+2026-08-27, along with a follow-on fix to Topic 1.1 Exercise 1.
 **Source of truth:** the AP Cybersecurity Course and Exam Description effective
 Fall 2026. Not this file, and not the older AP Cybersecurity framework PDF,
 which is a different document. `tools/ap-cyber-ced/CED-UNIT1-EXTRACT.txt` is a
@@ -139,7 +139,7 @@ Off-CED is an exact-match count. Measured 2026-08-27 with
 |---|---|---|---|---|---|
 | hub | ap-cybersecurity-unit-1-introduction-to-security | 130318827735 | 5 | | WO-8 |
 | 1.1 | ap-cybersecurity-unit-1-social-engineering | 132111237335 | 218 -> 60\* | 73 -> 30\* | done, live |
-| 1.1 | ap-cyber-unit-1-lesson-1-exercise-1 | 131898998999 | 3 | | low |
+| 1.1 | ap-cyber-unit-1-lesson-1-exercise-1 | 131898998999 | 3 -> 0\* | 2 -> 1\* | done, live |
 | 1.1 | ap-cyber-unit-1-lesson-1-exercise-2 | 131899031767 | 72 -> 18\* | 2\* | done |
 | 1.1 | ap-cyber-unit-1-lesson-1-lab | 132187422935 | 37 -> 3\* | 10 -> 2\* | done, CSV not imported |
 | 1.1 | ap-cyber-unit-1-lesson-1-quiz | 132079517911 | 0 | | clean |

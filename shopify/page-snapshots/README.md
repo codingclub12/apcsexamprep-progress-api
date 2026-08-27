@@ -7,6 +7,23 @@ page bodies, so these files are the rollback path.
 These are reference copies, not a source of truth. The live page always wins. Never
 edit a snapshot expecting it to reach the storefront.
 
+## Topic 1.1 Exercise 1, before and after the CED fix
+
+Both are the body of `gid://shopify/Page/131898998999`
+(`/pages/ap-cyber-unit-1-lesson-1-exercise-1`). See
+`docs/runs/2026-08-27-claude-code-cyber-u1-ex1.md`.
+
+1. `ap-cyber-unit-1-lesson-1-exercise-1.before-ced-realignment.html`
+   `updatedAt` 2026-07-28T23:05:46-05:00, 58,014 characters. Red flag #5 labelled
+   Authority a psychological tactic, which is EK 2.1.A.3 and belongs to Unit 2.
+   This is the rollback target.
+2. `ap-cyber-unit-1-lesson-1-exercise-1.after-ced-realignment.html`
+   `updatedAt` 2026-08-27T12:31:06-05:00, 58,273 characters, and what is live now.
+
+Captured the right way round: the before copy went on disk before the sheet was
+built, which is the correction to how the social-engineering pair below was done.
+Both are byte exact against their source responses.
+
 ## Topic 1.1 social engineering, before and after the CED realignment
 
 Both are the body of `gid://shopify/Page/132111237335`

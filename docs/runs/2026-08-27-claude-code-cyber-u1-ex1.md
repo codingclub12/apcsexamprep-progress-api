@@ -103,12 +103,34 @@ the gate requires 2.1.A.3 to be cited alongside it. Both script blocks compile.
 That is the heuristic doing its job badly on a single-specimen exercise: this
 page dissects one email and was never going to cover OTPs. Not chased.
 
+## Imported and verified live
+
+Imported 2026-08-27. `updated_at` moved to `2026-08-27T12:31:06-05:00`. Verified
+against the live page JSON and the rendered storefront, not against the sheet.
+
+43 of 43 post-import assertions pass. The seven-flag array still parses from the
+live body with its ids and order unchanged and no empty fields. Flag #5's
+principle now reads `Psychological Tactic: Urgency (1.1.A.2, mechanism 1.1.B.3)`
+and its body cites 2.1.A.3 for authority. Flag #3 no longer mentions spear
+phishing and ties the missing detail to EK 1.1.C.1. Both CED tactics are still
+named. No off-CED term appears anywhere in the student-facing flag copy, and the
+single surviving "authority" is the labelled disclaimer. The JSON-LD parses and
+no longer advertises vishing or smishing. Activity nav and the sticky rail are
+intact, tags balance with comments stripped, and there is no double-encoded text.
+
+Both JavaScript blocks compile from the live body and the JSON-LD parses, which
+is the check that actually matters here: the widget IS the page, and valid HTML
+would prove nothing about whether it runs.
+
+The stored body is 30 bytes shorter than the sheet, which is the same Shopify
+entity decode documented in the WO-3 note, at a smaller scale because this page
+has fewer entities. `verify_import.py` normalises it and passes.
+
+Snapshots for both states are in `shopify/page-snapshots/`, and this time the
+before copy went on disk before the sheet was built.
+
 ## Still open
 
-- **The sheet is not imported.** `node scripts/cyber-u1-ex1-ced-csv.js out/ex1-topic11.csv`,
-  then `python3 tools/ap-cyber-ced/validate_csv.py out/ex1-topic11.csv --baseline ./pages`,
-  import once in MERGE mode, then `verify_import.py`. Snapshot the live body into
-  `shopify/page-snapshots/` FIRST this time.
 - **Four Unit 1 pages report no progress at all**: exercise-1, lesson-1-quiz, the
   unit exam and the hub carry no `data-lesson-id`. Chat-side work, but somebody
   should own it.
