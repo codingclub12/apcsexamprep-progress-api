@@ -171,6 +171,49 @@ function gate(before, after) {
     }
   }
 
+  // ---- 3b. an AP claim standing next to off-CED content --------------------
+  //  The check the first pass did not have, and the one that would have caught
+  //  nine of the ten defects a human found in the built sheet. See the long
+  //  note on apClaimsNear in lib/cyber-page-gate.js: labelling a section as
+  //  enrichment is worth nothing while another part of the page calls the same
+  //  material testable.
+  //
+  //  The exemptions are the sentences whose entire job is to say a term is NOT
+  //  examined. Every one of them has to be unreadable as a requirement; if a
+  //  phrase here could be read either way it does not belong here.
+  const NEAR = ['rainbow', 'salt', 'bcrypt', 'argon', 'nist', 'spraying',
+    'credential stuffing', 'brute force', 'lockout', 'rate limiting'];
+  const EXEMPT = [
+    'not assessed in this topic',
+    'they are not what you will be asked about here',
+    'None of it is what this topic asks you about',
+    'it is a different question from the one this topic asks',
+    'and not of this topic',
+    'knowing they are not assessed here',
+  ];
+  const visText = flat(after.replace(/<script[^>]*>[\s\S]*?<\/script>/g, ' '));
+  for (const c of gate0.apClaimsNear(visText, NEAR, { pad: 500, exempt: EXEMPT })) {
+    fail.push(`AP claim beside off-CED content: ${c}`);
+  }
+  //  flat() strips <script>, so the FAQPage structured data has to be read on
+  //  its own. It is not rendered, it is what a search result quotes, and it
+  //  carried a verbatim copy of the worst answer on the page.
+  for (const m of after.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+    for (const c of gate0.apClaimsNear(m[1], NEAR, { pad: 500, exempt: EXEMPT })) {
+      fail.push(`AP claim in structured data: ${c}`);
+    }
+  }
+
+  //  ---- 3c. a claim about what the exam does --------------------------------
+  //  Ported from the Topic 1.3 gate, where one sentence of it survived. The
+  //  page is not allowed to tell a student what the exam commonly asks, however
+  //  true the surrounding content is: 1.2.9 was three screens of invented
+  //  question patterns written in exactly this voice.
+  const ASSERTS = /\b(?:is|are|remain|tend to be|will be)\s+(?:a\s+)?(?:high[- ]frequency|very\s+)?(?:common|frequent|typical|favou?rite)|\bfrequently\b|\bcommonly\b|\bexpect\s+(?:scenario|question|to see)|\bhigh-frequency\b|\balways asks\b/i;
+  for (const m of visText.matchAll(/[^.!?]{0,120}\b(?:AP )?exam[^.!?]{0,120}/gi)) {
+    if (ASSERTS.test(m[0])) fail.push(`a claim about what the exam does: ${JSON.stringify(m[0].trim().slice(0, 90))}`);
+  }
+
   // ---- 4. the graded keys of every CFU, before against after ----------------
   const keys = (b) => [...b.matchAll(/id="(cfu-\d+)"[^>]*data-answer="([A-E])"/g)]
     .map((m) => `${m[1]}=${m[2]}`).join(' ');
@@ -218,6 +261,13 @@ function gate(before, after) {
     return b || a ? `${t} ${b}->${a}` : null;
   }).filter(Boolean);
   note.push(`legacy terms still named: ${leg.join(', ')}`);
+
+  // ---- 8b. every splice that was written is actually wired ------------------
+  //  cfu-5 shipped with feedback for the question it used to be because its
+  //  splice was defined and never added to SPLICES. Nothing downstream could
+  //  see that, because a gate reads output and an unwired splice produces none.
+  fail.push(...gate0.unwiredSplices(fs.readFileSync(
+    path.join(__dirname, '..', 'lib', 'cyber-u1-topic12-ced.js'), 'utf8')));
 
   // ---- 9. the sentences a human has to read --------------------------------
   const changed = gate0.changedSentences(before, after, flat);

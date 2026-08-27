@@ -26,6 +26,7 @@
     "smoke:exsabotage": "node scripts/cyber-exercise-gate-sabotage.js",
     "smoke:exgate": "node smoke/exercise-gate.js",
     "smoke:cyberquizgate": "node smoke/cyber-quiz-gate.js",
+    "smoke:apclaimgate": "node smoke/cyber-ap-claim-gate.js",
     "smoke:cleanup": "node smoke/cleanup.js",
     "smoke:shopify": "node smoke/shopify-entitlements.js",
     "smoke:csafrq": "node smoke/csa-frq-pages.js",
