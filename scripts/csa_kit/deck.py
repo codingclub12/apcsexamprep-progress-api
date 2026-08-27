@@ -20,6 +20,8 @@ sees the same slide numbers.
 No em-dashes anywhere in generated text.
 """
 
+import math
+
 from pptx import Presentation
 from pptx.util import Inches, Pt, Emu
 from pptx.dml.color import RGBColor
@@ -61,17 +63,73 @@ W, H       = 13.333, 7.5
 MARGIN     = 0.50
 CONTENT_W  = 12.33
 FOOT_Y     = 6.94
-TRADE_Y    = 7.16
+TRADE_Y    = 7.18
+
+# The lowest a content panel may reach before it runs into the footer.
+CONTENT_BOTTOM = 6.86
+
+# Where a card's body copy starts, measured down from the top of the card. The
+# card label sits at +0.38 and the larger label needs the extra clearance.
+CARD_TEXT_DY = 0.86
 
 # Code-block sizing. Courier New is ~0.6 em wide per character, and a line of
 # text occupies ~1.18 times its point size once leading is counted.
-CODE_MAX_PT = 12.0
-# Above this many lines a worked example takes the wide two-column layout
-# and moves its annotations to a second slide.
+CODE_MAX_PT = 14.0
+# A worked example gets the single-slide layout only when BOTH its program and
+# its output fit alongside the annotations. Gating on the program alone let a
+# short program with six lines of output push the OUTPUT panel through the
+# footer and off the bottom of the slide, which is the same class of bug the
+# wide layout was introduced to fix, one panel over.
 SINGLE_SLIDE_LINES = 20
-CODE_MIN_PT = 7.0
+SINGLE_SLIDE_OUTPUT = 3
+CODE_MIN_PT = 8.5
 LINE_FACTOR = 1.18
 CHAR_FACTOR = 0.60
+
+# ── type scale, in points ────────────────────────────────────────────────────
+#  Every size on every slide is named here, so "make the decks bigger" is an
+#  edit to this block rather than a hunt through twelve slide builders, and the
+#  hierarchy survives the edit because the relationships are visible at once.
+#
+#  Raised in 2026-08. The pilot was set for reading at a desk and teachers
+#  projecting it could not read the smaller panels from the back of the room.
+#  Nothing here went down. The panels around the text grew to match, and
+#  _must_fit is what holds the two in step: a size raised past what its panel
+#  can hold fails the build instead of overprinting the slide.
+T_DECK_TITLE   = 42     # was 40
+T_TITLE_SUB    = 18     # was 16    the deck subtitle
+T_TITLE_META   = 14     # was 12    the "prepared for" line
+T_TITLE_NOTE   = 14.5   # was 12.5  the which-edition-is-this line
+T_TITLE_SITE   = 13     # was 11    the APCSExamPrep.com line
+T_DIVIDER_NUM  = 80     # was 76
+T_DIVIDER_NAME = 36     # was 34
+T_DIVIDER_META = 13.5   # was 12    the divider's SECTION and topic lines
+T_HEADING      = 32     # was 30
+
+T_EYEBROW      = 12.5   # was 11
+T_SUBHEAD      = 15     # was 13
+T_CARD_LABEL   = 12     # was 10.5
+T_CHIP         = 11.5   # was 10
+T_CAPTION      = 11     # was 9
+T_FOOTER       = 10.5   # was 9
+T_TRADEMARK    = 9      # was 7.5
+
+T_LEAD         = 18     # was 15    section ideas, warm-up prompt, discussion
+T_BODY         = 17     # was 14.5  objectives, misconceptions, annotations
+T_BODY_SM      = 15.5   # was 13    end-of-day items, vocabulary definitions
+T_BODY_MIN     = 14     # was 11.5  the compact worked example's annotations
+T_SECTION_NAME = 20     # was 17    notes-preview section names
+T_NUMERAL      = 26     # was 24    discussion numerals
+T_OUTPUT       = 13.5   # was 11.5  program output, compact layout
+T_OUTPUT_WIDE  = 15.5   # was 13    program output, wide layout
+
+# Proportional text metrics, the counterpart to CHAR_FACTOR for the code panels.
+# Calibri averages nearer 0.5 em per character, but these decks are verified by
+# rendering them through LibreOffice, which substitutes a wider face, so the
+# estimate uses the wider number that was measured against that renderer and
+# the shipped slide keeps the difference in hand as margin.
+PROP_CHAR = 0.62
+PROP_LINE = 1.20
 
 JAVA_KEYWORDS = {
     'abstract','boolean','break','byte','case','catch','char','class','const',
@@ -80,6 +138,73 @@ JAVA_KEYWORDS = {
     'new','package','private','protected','public','return','short','static',
     'super','switch','this','throw','throws','try','void','while','null','true','false',
 }
+
+
+def _code_size(code, w, h):
+    """The point size a code block renders at inside a w by h inch panel.
+
+    A PowerPoint text frame does not clip, so code that is too long is not cut
+    off: it bleeds over the slide title and past the footer. The size is
+    therefore computed from the block rather than assumed, against BOTH
+    constraints:
+
+      height  lines * size * LINE_FACTOR must fit h
+      width   longest line * size * CHAR_FACTOR must fit w
+
+    Courier New is monospaced at roughly 0.6 em per character, and a line
+    occupies about 1.18 times its point size once leading is included. Below
+    CODE_MIN_PT the code stops being readable from the back of a room, so the
+    builder raises rather than shipping a slide nobody can read: that is a
+    signal to shorten the example or widen the layout.
+    """
+    lines = code.split('\n')
+    longest = max((len(l) for l in lines), default=1)
+    by_height = (h * 72.0) / (max(len(lines), 1) * LINE_FACTOR)
+    by_width = (w * 72.0) / (max(longest, 1) * CHAR_FACTOR)
+    size = min(CODE_MAX_PT, by_height, by_width)
+    if size < CODE_MIN_PT:
+        raise ValueError(
+            f'code block needs {size:.1f}pt to fit ({len(lines)} lines, '
+            f'longest {longest} chars) but the floor is {CODE_MIN_PT}pt. '
+            'Shorten the worked example rather than shrinking the type.')
+    return size
+
+
+def _code_h(code, size):
+    """The height in inches a code block occupies at `size` points."""
+    return len(code.split('\n')) * size * LINE_FACTOR / 72.0
+
+
+def _wrapped_lines(text, w, size):
+    """How many lines `text` wraps to in a `w` inch column at `size` points."""
+    per_line = max(1.0, (w * 72.0) / (PROP_CHAR * size))
+    return max(1, math.ceil(len(text) / per_line))
+
+
+def _text_h(text, w, size, line=PROP_LINE):
+    """The height in inches `text` occupies in a `w` inch column once wrapped."""
+    return _wrapped_lines(text, w, size) * size * line / 72.0
+
+
+def _must_fit(what, text, w, size, room, line=PROP_LINE):
+    """Refuse to build a slide whose text has outgrown its panel.
+
+    A PowerPoint text frame does not clip, so text that does not fit is not cut
+    off: it is drawn straight over whatever sits below it and off the bottom of
+    the slide. _code has raised on exactly this since the worked-example panels
+    overflowed. This is the same guard for the proportional panels, and it is
+    what makes the type scale safe to raise: the failure mode is a build error
+    naming the panel, not a deck that looks fine in python-pptx and is unusable
+    on a projector. The fix when it fires is a bigger panel or shorter copy,
+    never a smaller point size.
+    """
+    need = _text_h(text, w, size, line)
+    if need > room:
+        raise ValueError(
+            f'{what}: {len(text)} characters need {need:.2f}in at {size}pt in a '
+            f'{w:.2f}in column but the panel leaves {room:.2f}in. Grow the panel '
+            f'or shorten the copy rather than shrinking the type.')
+    return need
 
 
 def _shape(slide, x, y, w, h, fill=None):
@@ -178,27 +303,33 @@ class Deck:
         label = 'Teacher Edition' if self.teacher else 'Student Edition'
         _text(s, MARGIN, FOOT_Y, CONTENT_W, 0.24,
               f"APCSExamPrep.com  |  Topic {self.topic}  |  Day {self.day}  |  Slide {self.n}  |  {label}",
-              size=9, color=(ON_NAVY_DIM if navy else MUTED))
+              size=T_FOOTER, color=(ON_NAVY_DIM if navy else MUTED))
         _text(s, MARGIN, TRADE_Y, CONTENT_W, 0.22, TRADEMARK,
-              size=7.5, color=(TRADE_NAVY if navy else FINEPRINT))
+              size=T_TRADEMARK, color=(TRADE_NAVY if navy else FINEPRINT))
 
     def _note(self, s, text):
         if self.teacher and text:
             s.notes_slide.notes_text_frame.text = text
 
     def _head(self, s, eyebrow, heading, sub=None, accent=ACCENT):
-        _text(s, MARGIN, 0.30, CONTENT_W, 0.28, eyebrow.upper(), size=11, bold=True, color=accent)
-        _text(s, MARGIN, 0.62, CONTENT_W, 0.90, heading, size=30, font=DISPLAY, bold=True,
-              color=RGBColor(0x10, 0x24, 0x3A))
+        _text(s, MARGIN, 0.30, CONTENT_W, 0.28, eyebrow.upper(), size=T_EYEBROW, bold=True, color=accent)
+        # The heading measures itself and the subhead sits under whatever that
+        # comes to. At the old 30pt every heading in the course was one line, so
+        # a fixed subhead position was safe; at 32pt the longest section names
+        # take two, and a fixed position would be written through them.
+        hh = _text_h(heading, CONTENT_W, T_HEADING)
+        _text(s, MARGIN, 0.62, CONTENT_W, max(0.90, hh), heading, size=T_HEADING,
+              font=DISPLAY, bold=True, color=RGBColor(0x10, 0x24, 0x3A))
         if sub:
-            _text(s, MARGIN, 1.42, CONTENT_W, 0.46, sub, size=13, color=MUTED)
+            _text(s, MARGIN, max(1.42, 0.62 + hh + 0.06), CONTENT_W, 0.46, sub,
+                  size=T_SUBHEAD, color=MUTED)
 
     def _card(self, s, x, y, w, h, label, fill=TINT, rule=ACCENT):
         _shape(s, x, y, w, h, fill)
         _shape(s, x, y, w, 0.18, rule)
         if label:
-            _text(s, x + 0.30, y + 0.38, w - 0.60, 0.28, label.upper(),
-                  size=10.5, bold=True, color=rule)
+            _text(s, x + 0.30, y + 0.38, w - 0.60, 0.30, label.upper(),
+                  size=T_CARD_LABEL, bold=True, color=rule)
 
     # ── slide 1 ──────────────────────────────────────────────────────────────
     def title_slide(self, prepared, note=None):
@@ -206,36 +337,41 @@ class Deck:
         _shape(s, 0, 0, W, 0.10, ACCENT)
         chips = [('TEACHER EDITION' if self.teacher else 'STUDENT EDITION'), f'DAY {self.day} OF {self.days}']
         for i, c in enumerate(chips):
-            x = 0.60 + i * 2.25
-            _shape(s, x, 0.62, 2.05, 0.36, NAVY_CHIP)
-            _text(s, x, 0.62, 2.05, 0.36, c, size=10, bold=True, color=ON_NAVY_DIM,
+            x = 0.60 + i * 2.50
+            _shape(s, x, 0.58, 2.30, 0.40, NAVY_CHIP)
+            _text(s, x, 0.58, 2.30, 0.40, c, size=T_CHIP, bold=True, color=ON_NAVY_DIM,
                   align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
-        _text(s, 0.60, 1.35, 12.10, 0.32,
+        _text(s, 0.60, 1.34, 12.10, 0.34,
               f"Unit {self.topic.split('.')[0]}  |  Topic {self.topic}  |  Day {self.day} of {self.days}",
-              size=13, color=ON_NAVY_DIM)
-        _text(s, 0.60, 1.80, 12.10, 1.60, self.title, size=40, font=DISPLAY, bold=True, color=WHITE)
-        _text(s, 0.60, 3.50, 11.40, 0.90, self.subtitle, size=16, color=ON_NAVY)
-        _shape(s, 0.60, 4.62, 2.40, 0.05, ACCENT)
-        _text(s, 0.60, 4.90, 11.40, 0.60, prepared, size=12, color=ON_NAVY_DIM)
-        _text(s, 0.60, 5.62, 11.40, 0.50,
+              size=T_SUBHEAD, color=ON_NAVY_DIM)
+        _must_fit('deck title', self.title, 12.10, T_DECK_TITLE, 1.74)
+        _text(s, 0.60, 1.80, 12.10, 1.74, self.title, size=T_DECK_TITLE, font=DISPLAY, bold=True, color=WHITE)
+        _must_fit('deck subtitle', self.subtitle, 11.40, T_TITLE_SUB, 1.00)
+        _text(s, 0.60, 3.58, 11.40, 1.00, self.subtitle, size=T_TITLE_SUB, color=ON_NAVY)
+        _shape(s, 0.60, 4.70, 2.40, 0.05, ACCENT)
+        _text(s, 0.60, 4.96, 11.40, 0.62, prepared, size=T_TITLE_META, color=ON_NAVY_DIM)
+        _text(s, 0.60, 5.68, 11.40, 0.62,
               ("Teacher edition. Speaker notes carry the answers and the misconceptions for each slide."
                if self.teacher else
                "Student edition. Fill in your guided notes as we go."),
-              size=12.5, color=ON_NAVY)
-        _text(s, 0.60, 6.60, 5.00, 0.30, "APCSExamPrep.com", size=11, bold=True, color=WHITE)
-        _text(s, 0.60, 6.94, 12.10, 0.40, TRADEMARK, size=7.5, color=TRADE_NAVY)
+              size=T_TITLE_NOTE, color=ON_NAVY)
+        _text(s, 0.60, 6.50, 5.00, 0.32, "APCSExamPrep.com", size=T_TITLE_SITE, bold=True, color=WHITE)
+        _text(s, 0.60, 6.94, 12.10, 0.40, TRADEMARK, size=T_TRADEMARK, color=TRADE_NAVY)
         self._note(s, note)
 
     # ── warm-up ──────────────────────────────────────────────────────────────
     def warmup(self, heading, prompt, draw_out=None):
         s = self._new()
         self._head(s, 'WARM-UP', heading)
-        self._card(s, MARGIN, 1.98, CONTENT_W, 1.90, 'ON THE BOARD')
-        _text(s, MARGIN + 0.30, 2.80, CONTENT_W - 0.60, 1.00, prompt, size=15, color=BODY,
+        w = CONTENT_W - 0.60
+        self._card(s, MARGIN, 1.90, CONTENT_W, 2.32, 'ON THE BOARD')
+        h = _must_fit('warm-up prompt', prompt, w, T_LEAD, 2.32 - CARD_TEXT_DY - 0.14, 1.25)
+        _text(s, MARGIN + 0.30, 1.90 + CARD_TEXT_DY, w, h, prompt, size=T_LEAD, color=BODY,
               space_after=6, line=1.25)
         if self.teacher and draw_out:
-            self._card(s, MARGIN, 4.14, CONTENT_W, 2.20, 'WORTH DRAWING OUT', GREEN_TINT, GREEN)
-            _text(s, MARGIN + 0.30, 4.96, CONTENT_W - 0.60, 1.30, draw_out, size=13.5,
+            self._card(s, MARGIN, 4.38, CONTENT_W, 2.34, 'WORTH DRAWING OUT', GREEN_TINT, GREEN)
+            h = _must_fit('warm-up draw-out', draw_out, w, T_BODY, 2.34 - CARD_TEXT_DY - 0.14, 1.2)
+            _text(s, MARGIN + 0.30, 4.38 + CARD_TEXT_DY, w, h, draw_out, size=T_BODY,
                   color=BODY, space_after=5, line=1.2)
         self._foot(s)
         self._note(s, draw_out)
@@ -247,12 +383,16 @@ class Deck:
                    "The sections of today's guided notes packet, in the order they appear.")
         n = max(1, len(sections))
         w = (CONTENT_W - 0.30 * (n - 1)) / n
+        cw = w - 0.56
         for i, (name, blurb) in enumerate(sections):
             x = MARGIN + i * (w + 0.30)
-            self._card(s, x, 2.10, w, 4.10, f'SECTION {i + 1}')
-            _text(s, x + 0.28, 2.52, w - 0.56, 0.80, name, size=17, font=DISPLAY, bold=True,
-                  color=RGBColor(0x10, 0x24, 0x3A))
-            _text(s, x + 0.28, 3.40, w - 0.56, 2.50, blurb, size=12.5, color=BODY, line=1.2)
+            self._card(s, x, 2.10, w, 4.20, f'SECTION {i + 1}')
+            nh = max(0.62, _must_fit('notes-preview name', name, cw, T_SECTION_NAME, 1.20))
+            _text(s, x + 0.28, 2.10 + CARD_TEXT_DY, cw, nh, name, size=T_SECTION_NAME,
+                  font=DISPLAY, bold=True, color=RGBColor(0x10, 0x24, 0x3A))
+            by = 2.10 + CARD_TEXT_DY + nh + 0.18
+            bh = _must_fit('notes-preview blurb', blurb, cw, T_BODY, 6.30 - 0.16 - by)
+            _text(s, x + 0.28, by, cw, bh, blurb, size=T_BODY, color=BODY, line=1.2)
         self._foot(s)
         self._note(s, "The sections of today's guided notes packet, in the order they appear.")
 
@@ -261,23 +401,29 @@ class Deck:
         s = self._new()
         self._head(s, 'LESSON OBJECTIVES', 'By the end of today you will be able to',
                    'The CED learning objectives for this topic, with their codes.')
-        y = 2.10
+        # This heading is fixed text and always sets one line, so the cards can
+        # start directly under the subhead rather than at a worst-case offset.
+        y = 1.80
         for text, code in items:
-            self._card(s, MARGIN, y, CONTENT_W, 1.28, 'CB REQUIRED')
-            _text(s, MARGIN + 0.30, y + 0.66, CONTENT_W - 2.20, 0.54, text, size=14.5, color=BODY)
-            _text(s, W - MARGIN - 1.70, y + 0.38, 1.40, 0.30, code, size=10.5, bold=True,
+            self._card(s, MARGIN, y, CONTENT_W, 1.58, 'CB REQUIRED')
+            h = _must_fit('objective', text, CONTENT_W - 2.20, T_BODY, 1.58 - CARD_TEXT_DY - 0.12)
+            _text(s, MARGIN + 0.30, y + CARD_TEXT_DY, CONTENT_W - 2.20, h, text, size=T_BODY, color=BODY)
+            _text(s, W - MARGIN - 1.80, y + 0.38, 1.50, 0.32, code, size=T_CARD_LABEL, bold=True,
                   color=ACCENT, align=PP_ALIGN.RIGHT)
-            y += 1.44
+            y += 1.72
         self._foot(s)
         self._note(s, 'The CED learning objectives for this topic, with their codes.')
 
     # ── section divider ──────────────────────────────────────────────────────
     def section_divider(self, index, name):
         s = self._new(navy=True)
-        _text(s, 0.60, 2.30, 3.00, 1.40, f"{index:02d}", size=76, font=DISPLAY, bold=True, color=ACCENT)
-        _text(s, 0.60, 3.70, 11.40, 0.34, 'SECTION', size=12, bold=True, color=ON_NAVY_DIM)
-        _text(s, 0.60, 4.06, 11.40, 1.20, name, size=34, font=DISPLAY, bold=True, color=WHITE)
-        _text(s, 0.60, 5.50, 11.40, 0.34, f"Topic {self.topic}  |  Day {self.day}", size=12, color=ON_NAVY_DIM)
+        _text(s, 0.60, 2.14, 3.00, 1.50, f"{index:02d}", size=T_DIVIDER_NUM, font=DISPLAY,
+              bold=True, color=ACCENT)
+        _text(s, 0.60, 3.64, 11.40, 0.36, 'SECTION', size=T_DIVIDER_META, bold=True, color=ON_NAVY_DIM)
+        _must_fit('divider name', name, 11.40, T_DIVIDER_NAME, 1.44)
+        _text(s, 0.60, 4.02, 11.40, 1.44, name, size=T_DIVIDER_NAME, font=DISPLAY, bold=True, color=WHITE)
+        _text(s, 0.60, 5.58, 11.40, 0.36, f"Topic {self.topic}  |  Day {self.day}",
+              size=T_DIVIDER_META, color=ON_NAVY_DIM)
         self._foot(s, navy=True)
 
     # ── section content ──────────────────────────────────────────────────────
@@ -285,14 +431,19 @@ class Deck:
         s = self._new()
         heading = name if not part else f"{name} ({part})"
         self._head(s, f'SECTION {index:02d}', heading, f'Guided notes, section {index}.')
-        self._card(s, MARGIN, 2.00, CONTENT_W, 4.42, 'KEY IDEA')
-        y = 2.80
+        card_y, card_h = 2.10, 4.36
+        self._card(s, MARGIN, card_y, CONTENT_W, card_h, 'KEY IDEA')
+        note_y = card_y + card_h - 0.44
+        w = CONTENT_W - 0.60
+        y = card_y + CARD_TEXT_DY
         for idea in ideas:
-            h = 0.36 + 0.30 * max(1, len(idea) // 95)
-            _text(s, MARGIN + 0.30, y, CONTENT_W - 0.60, h, idea, size=15, color=BODY, line=1.22)
-            y += h + 0.18
-        _text(s, MARGIN + 0.30, 6.02, CONTENT_W - 0.60, 0.30,
-              f"Topic {self.topic}  |  Section {index}", size=9, color=MUTED)
+            # Each idea measures itself rather than guessing a height from a
+            # character count, so the stack below it cannot be pushed off the card.
+            h = _must_fit('section idea', idea, w, T_LEAD, note_y - 0.12 - y, 1.22)
+            _text(s, MARGIN + 0.30, y, w, h, idea, size=T_LEAD, color=BODY, line=1.22)
+            y += h + 0.24
+        _text(s, MARGIN + 0.30, note_y, w, 0.30,
+              f"Topic {self.topic}  |  Section {index}", size=T_CAPTION, color=MUTED)
         self._foot(s)
         self._note(s, note or 'Where students go quiet here it is usually the vocabulary rather than the concept.')
 
@@ -312,9 +463,15 @@ class Deck:
         two columns, and its annotations move to a second slide the teacher
         flips to. Short programs keep the original single-slide layout, which
         is better when it fits.
+
+        "Fits" now means the output as well as the program. The single-slide
+        OUTPUT panel is the shortest thing on the slide and sits directly above
+        the footer, so a twelve line program printing six lines of output was
+        the same overflow one panel over. Either half being long sends the
+        example wide, where each half has a slide to itself.
         """
         lines = code.split('\n')
-        if len(lines) <= SINGLE_SLIDE_LINES:
+        if len(lines) <= SINGLE_SLIDE_LINES and len(output) <= SINGLE_SLIDE_OUTPUT:
             self._worked_compact(heading, code, notice, output, caption, note)
         else:
             self._worked_wide(heading, code, notice, output, caption, note)
@@ -322,21 +479,34 @@ class Deck:
     def _worked_compact(self, heading, code, notice, output, caption, note):
         s = self._new()
         self._head(s, 'WORKED EXAMPLE', heading)
-        self._card(s, MARGIN, 1.98, 7.55, 4.34, 'THE COMPLETE PROGRAM')
-        _shape(s, 0.80, 2.78, 6.95, 3.03, CODE_BG)
-        self._code(s, 0.94, 2.90, 6.67, 2.80, code)
-        _text(s, 0.80, 5.90, 6.95, 0.28, caption, size=9, color=MUTED)
-        self._card(s, 8.38, 1.98, 4.40, 2.70, 'WHAT TO NOTICE')
-        y = 2.76
+        # The panels start straight under the heading and run to the footer, so
+        # the code gets every inch of height available: the compact layout is
+        # height-bound, never width-bound, at every program length it accepts.
+        # The panel is drawn to the height the code turns out to need, so a
+        # twelve line program does not sit in the middle of a dark box sized
+        # for a twenty line one.
+        size = _code_size(code, 6.67, 3.40)
+        ch = _code_h(code, size)
+        panel_h = ch + 0.26
+        card_h = min(5.10, 0.92 + panel_h + 0.44)
+        self._card(s, MARGIN, 1.74, 7.55, card_h, 'THE COMPLETE PROGRAM')
+        _shape(s, 0.80, 2.66, 6.95, panel_h, CODE_BG)
+        self._code(s, 0.94, 2.79, 6.67, ch, code, size)
+        _text(s, 0.80, 1.74 + card_h - 0.34, 6.95, 0.28, caption, size=T_CAPTION, color=MUTED)
+
+        self._card(s, 8.38, 1.74, 4.40, 3.26, 'WHAT TO NOTICE')
+        y = 1.74 + CARD_TEXT_DY
         for item in notice:
-            _text(s, 8.68, y, 0.18, 0.56, '\u2022', size=12, color=ACCENT)
-            _text(s, 8.90, y, 3.58, 0.56, item, size=11.5, color=BODY, line=1.12)
-            y += 0.62
-        self._card(s, 8.38, 4.86, 4.40, 1.46, 'OUTPUT', GREEN_TINT, GREEN)
-        y = 5.62
+            h = _must_fit('worked-example note', item, 3.62, T_BODY_MIN, 5.00 - 0.12 - y, 1.12)
+            _text(s, 8.62, y, 0.20, h, '\u2022', size=T_BODY_MIN, color=ACCENT)
+            _text(s, 8.88, y, 3.62, h, item, size=T_BODY_MIN, color=BODY, line=1.12)
+            y += h + 0.13
+
+        self._card(s, 8.38, 5.18, 4.40, 1.66, 'OUTPUT', GREEN_TINT, GREEN)
+        y = 5.18 + CARD_TEXT_DY
         for line in output:
-            _text(s, 8.68, y, 3.80, 0.26, line, size=11.5, font=MONO, color=BODY)
-            y += 0.25
+            _text(s, 8.62, y, 3.88, 0.28, line, size=T_OUTPUT, font=MONO, color=BODY)
+            y += T_OUTPUT * 1.15 / 72.0
         self._foot(s)
         self._note(s, note or 'A complete, runnable program. The annotations are on the next slide.')
 
@@ -344,71 +514,57 @@ class Deck:
         # Slide one: the program, full width, two columns.
         s = self._new()
         self._head(s, 'WORKED EXAMPLE', heading)
-        self._card(s, MARGIN, 1.90, CONTENT_W, 4.60, 'THE COMPLETE PROGRAM')
-        # The card label occupies 2.28 to 2.56, so the panel starts below it.
-        _shape(s, 0.72, 2.62, 11.89, 3.56, CODE_BG)
-
         lines = code.split('\n')
         half = (len(lines) + 1) // 2
-        left, right = lines[:half], lines[half:]
+        left, right = '\n'.join(lines[:half]), '\n'.join(lines[half:])
         colw = 5.72
-        size_l = self._code(s, 0.90, 2.72, colw, 3.36, '\n'.join(left))
-        size_r = self._code(s, 6.86, 2.72, colw, 3.36, '\n'.join(right), force=size_l)
-        _text(s, 0.72, 6.24, CONTENT_W, 0.26,
-              caption + '  Continues in the right column.', size=9, color=MUTED)
+        # Both columns render at one size, and that size is what BOTH of them
+        # can hold. Sizing the left column and pinning the right one to it
+        # assumed the left column had the longest line, and where it did not
+        # the right column was drawn off the right-hand edge of the slide.
+        size = min(_code_size(left, colw, 3.68), _code_size(right, colw, 3.68))
+        ch = max(_code_h(left, size), _code_h(right, size))
+        panel_h = ch + 0.26
+        card_h = min(5.10, 0.84 + panel_h + 0.44)
+        self._card(s, MARGIN, 1.74, CONTENT_W, card_h, 'THE COMPLETE PROGRAM')
+        # The card label occupies 2.12 to 2.32, so the panel starts below it.
+        _shape(s, 0.72, 2.58, 11.89, panel_h, CODE_BG)
+        self._code(s, 0.90, 2.71, colw, ch, left, size)
+        self._code(s, 6.86, 2.71, colw, ch, right, size)
+        _text(s, 0.72, 1.74 + card_h - 0.34, CONTENT_W, 0.28,
+              caption + '  Continues in the right column.', size=T_CAPTION, color=MUTED)
         self._foot(s)
         self._note(s, note or 'A complete, runnable program. The annotations are on the next slide.')
 
-        # Slide two: what to notice, and the output.
+        # Slide two: what to notice, and the output. Both panels have a whole
+        # slide here rather than a column, which is what lets this layout carry
+        # the longest annotations and the longest output in the course.
         s2 = self._new()
         self._head(s2, 'WORKED EXAMPLE', heading, 'What to notice in the program on the previous slide.')
-        self._card(s2, MARGIN, 2.10, 7.55, 4.10, 'WHAT TO NOTICE')
-        y = 2.92
+        self._card(s2, MARGIN, 2.10, 7.55, 4.20, 'WHAT TO NOTICE')
+        y = 2.10 + CARD_TEXT_DY
         for item in notice:
-            _text(s2, 0.80, y, 0.20, 0.60, '\u2022', size=14, color=ACCENT)
-            _text(s2, 1.06, y, 6.65, 0.60, item, size=14, color=BODY, line=1.15)
-            y += 0.78
-        self._card(s2, 8.38, 2.10, 4.40, 4.10, 'OUTPUT', GREEN_TINT, GREEN)
-        y = 2.92
+            h = _must_fit('worked-example note', item, 6.45, T_BODY, 6.30 - 0.12 - y, 1.15)
+            _text(s2, 0.80, y, 0.22, h, '\u2022', size=T_BODY, color=ACCENT)
+            _text(s2, 1.10, y, 6.45, h, item, size=T_BODY, color=BODY, line=1.15)
+            y += h + 0.16
+        self._card(s2, 8.38, 2.10, 4.40, 4.20, 'OUTPUT', GREEN_TINT, GREEN)
+        y = 2.10 + CARD_TEXT_DY
         for line in output:
-            _text(s2, 8.68, y, 3.80, 0.28, line, size=13, font=MONO, color=BODY)
-            y += 0.30
+            _text(s2, 8.62, y, 3.88, 0.30, line, size=T_OUTPUT_WIDE, font=MONO, color=BODY)
+            y += T_OUTPUT_WIDE * 1.15 / 72.0
         self._foot(s2)
         self._note(s2, 'The output the program on the previous slide produces.')
 
-    def _code(self, s, x, y, w, h, code, force=None):
-        """Render a code block, sized to fit its panel.
+    def _code(self, s, x, y, w, h, code, size):
+        """Render a code block at an already-decided point size.
 
-        A PowerPoint text frame does not clip, so code that is too long does
-        not get cut off: it bleeds over the slide title and past the footer.
-        The point size is therefore computed from the block rather than
-        assumed, against BOTH constraints:
-
-          height  lines * size * LINE_FACTOR must fit h
-          width   longest line * size * CHAR_FACTOR must fit w
-
-        Courier New is monospaced at roughly 0.6 em per character, and a line
-        occupies about 1.18 times its point size once leading is included.
-        Below CODE_MIN_PT the code stops being readable from the back of a
-        room, so the builder raises rather than shipping a slide nobody can
-        read: that is a signal to shorten the example or widen the layout.
-
-        force pins the size, so the two columns of a wide worked example share
-        one point size instead of each fitting itself independently.
+        The size comes from _code_size rather than from here, because both
+        columns of a wide worked example have to agree on one size and the
+        panel behind them has to be drawn to the height the code will actually
+        occupy. All three need the number before any of them can be drawn.
         """
         lines = code.split('\n')
-        longest = max((len(l) for l in lines), default=1)
-
-        by_height = (h * 72.0) / (max(len(lines), 1) * LINE_FACTOR)
-        by_width = (w * 72.0) / (max(longest, 1) * CHAR_FACTOR)
-        size = force if force else min(CODE_MAX_PT, by_height, by_width)
-
-        if size < CODE_MIN_PT:
-            raise ValueError(
-                f'code block needs {size:.1f}pt to fit ({len(lines)} lines, '
-                f'longest {longest} chars) but the floor is {CODE_MIN_PT}pt. '
-                'Shorten the worked example rather than shrinking the type.')
-
         sh = _shape(s, x, y, w, h)
         tf = sh.text_frame
         tf.word_wrap = False
@@ -429,12 +585,17 @@ class Deck:
     def now_break_it(self, change, happens, why, note=None):
         s = self._new()
         self._head(s, 'NOW BREAK IT  |  ONE CHANGE', 'Change one line and run it again')
-        self._card(s, MARGIN, 1.98, 6.00, 2.30, 'THE CHANGE')
-        _text(s, MARGIN + 0.30, 2.78, 5.40, 1.30, change, size=14.5, color=BODY, line=1.2)
-        self._card(s, 6.83, 1.98, 6.00, 2.30, 'WHAT HAPPENS', ORANGE_TINT, ORANGE)
-        _text(s, 7.13, 2.78, 5.40, 1.30, happens, size=14.5, color=BODY, line=1.2)
-        self._card(s, MARGIN, 4.50, CONTENT_W, 1.80, 'WHY THIS MATTERS', GREEN_TINT, GREEN)
-        _text(s, MARGIN + 0.30, 5.30, CONTENT_W - 0.60, 0.90, why, size=14, color=BODY, line=1.2)
+        room = 2.80 - CARD_TEXT_DY - 0.12
+        self._card(s, MARGIN, 1.40, 6.00, 2.80, 'THE CHANGE')
+        h = _must_fit('break-it change', change, 5.40, T_BODY, room, 1.2)
+        _text(s, MARGIN + 0.30, 1.40 + CARD_TEXT_DY, 5.40, h, change, size=T_BODY, color=BODY, line=1.2)
+        self._card(s, 6.83, 1.40, 6.00, 2.80, 'WHAT HAPPENS', ORANGE_TINT, ORANGE)
+        h = _must_fit('break-it outcome', happens, 5.40, T_BODY, room, 1.2)
+        _text(s, 7.13, 1.40 + CARD_TEXT_DY, 5.40, h, happens, size=T_BODY, color=BODY, line=1.2)
+        self._card(s, MARGIN, 4.38, CONTENT_W, 2.44, 'WHY THIS MATTERS', GREEN_TINT, GREEN)
+        h = _must_fit('break-it rationale', why, CONTENT_W - 0.60, T_BODY, 2.44 - CARD_TEXT_DY - 0.12, 1.2)
+        _text(s, MARGIN + 0.30, 4.38 + CARD_TEXT_DY, CONTENT_W - 0.60, h, why, size=T_BODY,
+              color=BODY, line=1.2)
         self._foot(s)
         self._note(s, note or 'One change to the program on the previous slide. This is the error pattern the exam tests on this topic.')
 
@@ -442,11 +603,16 @@ class Deck:
     def misconception(self, heading, think, truth, note=None):
         s = self._new()
         self._head(s, 'COMMON MISCONCEPTION', heading, accent=ORANGE)
-        self._card(s, MARGIN, 2.00, 6.00, 4.10, 'WHAT STUDENTS THINK', ORANGE_TINT, ORANGE)
-        _text(s, MARGIN + 0.30, 2.80, 5.40, 3.00, think, size=15, color=BODY, line=1.25)
-        self._card(s, 6.83, 2.00, 6.00, 4.10, 'WHAT IS ACTUALLY TRUE', GREEN_TINT, GREEN)
-        _text(s, 7.13, 2.80, 5.40, 3.00, truth, size=15, color=BODY, line=1.25)
-        _text(s, MARGIN, 6.30, CONTENT_W, 0.30, f"Topic {self.topic}", size=9, color=MUTED)
+        # This heading runs to two lines at the longest, so the cards clear it.
+        card_y, card_h = 1.80, 4.60
+        room = card_h - CARD_TEXT_DY - 0.12
+        self._card(s, MARGIN, card_y, 6.00, card_h, 'WHAT STUDENTS THINK', ORANGE_TINT, ORANGE)
+        h = _must_fit('misconception belief', think, 5.40, T_BODY, room, 1.22)
+        _text(s, MARGIN + 0.30, card_y + CARD_TEXT_DY, 5.40, h, think, size=T_BODY, color=BODY, line=1.22)
+        self._card(s, 6.83, card_y, 6.00, card_h, 'WHAT IS ACTUALLY TRUE', GREEN_TINT, GREEN)
+        h = _must_fit('misconception correction', truth, 5.40, T_BODY, room, 1.22)
+        _text(s, 7.13, card_y + CARD_TEXT_DY, 5.40, h, truth, size=T_BODY, color=BODY, line=1.22)
+        _text(s, MARGIN, 6.50, CONTENT_W, 0.30, f"Topic {self.topic}", size=T_CAPTION, color=MUTED)
         self._foot(s)
         self._note(s, note or 'This is the misconception that costs the most marks on this topic.')
 
@@ -456,11 +622,15 @@ class Deck:
         self._head(s, 'KEY VOCABULARY', 'Words you need to use precisely',
                    'The terms the exam uses in its question stems.')
         cols, colw = 3, (CONTENT_W - 0.60) / 3
+        card_h = 2.30
         for i, (term, definition) in enumerate(terms[:6]):
             cx = MARGIN + (i % cols) * (colw + 0.30)
-            cy = 2.05 + (i // cols) * 2.20
-            self._card(s, cx, cy, colw, 2.00, term)
-            _text(s, cx + 0.28, cy + 0.76, colw - 0.56, 1.10, definition, size=11.5, color=BODY, line=1.15)
+            cy = 1.78 + (i // cols) * (card_h + 0.16)
+            self._card(s, cx, cy, colw, card_h, term)
+            h = _must_fit('vocabulary definition', definition, colw - 0.56, T_BODY_SM,
+                          card_h - CARD_TEXT_DY - 0.12, 1.15)
+            _text(s, cx + 0.28, cy + CARD_TEXT_DY, colw - 0.56, h, definition,
+                  size=T_BODY_SM, color=BODY, line=1.15)
         self._foot(s)
         self._note(s, 'The vocabulary for this topic as the CED uses it.')
 
@@ -468,13 +638,14 @@ class Deck:
     def discussion(self, questions, note=None):
         s = self._new()
         self._head(s, 'TALK IT THROUGH', 'Discussion')
-        y = 2.10
+        y, card_h = 1.90, 2.06
         for i, q in enumerate(questions, 1):
-            self._card(s, MARGIN, y, CONTENT_W, 1.45, None)
-            _text(s, MARGIN + 0.30, y + 0.40, 0.50, 0.60, str(i), size=24, font=DISPLAY,
+            self._card(s, MARGIN, y, CONTENT_W, card_h, None)
+            _text(s, MARGIN + 0.30, y + 0.42, 0.60, 0.60, str(i), size=T_NUMERAL, font=DISPLAY,
                   bold=True, color=ACCENT)
-            _text(s, MARGIN + 1.00, y + 0.48, CONTENT_W - 1.40, 0.80, q, size=14.5, color=BODY, line=1.2)
-            y += 1.60
+            h = _must_fit('discussion question', q, CONTENT_W - 1.40, T_LEAD, card_h - 0.52 - 0.14, 1.2)
+            _text(s, MARGIN + 1.00, y + 0.52, CONTENT_W - 1.40, h, q, size=T_LEAD, color=BODY, line=1.2)
+            y += card_h + 0.18
         self._foot(s)
         self._note(s, note)
 
@@ -482,15 +653,18 @@ class Deck:
     def end_of_day(self, learned, up_next, extra, note=None):
         s = self._new()
         self._head(s, f'END OF DAY {self.day}  |  DAY {self.day} OF {self.days}', f'End of day {self.day}')
-        self._card(s, MARGIN, 2.00, 7.30, 4.10, 'TODAY YOU LEARNED')
-        y = 2.80
+        self._card(s, MARGIN, 1.80, 7.30, 4.38, 'TODAY YOU LEARNED')
+        y = 1.80 + CARD_TEXT_DY
         for item in learned:
-            _text(s, MARGIN + 0.30, y, 6.70, 0.80, item, size=13, color=BODY, line=1.18)
-            y += 0.90
-        self._card(s, 8.10, 2.00, 4.73, 2.10, 'UP NEXT')
-        _text(s, 8.40, 2.80, 4.13, 1.10, up_next, size=13, color=BODY, line=1.2)
-        self._card(s, 8.10, 4.30, 4.73, 1.80, 'EXTRA PRACTICE', GREEN_TINT, GREEN)
-        _text(s, 8.40, 5.10, 4.13, 0.90, extra, size=12.5, color=BODY, line=1.2)
+            h = _must_fit('end-of-day outcome', item, 6.70, T_BODY, 6.18 - 0.12 - y, 1.18)
+            _text(s, MARGIN + 0.30, y, 6.70, h, item, size=T_BODY, color=BODY, line=1.18)
+            y += h + 0.22
+        self._card(s, 8.10, 1.80, 4.73, 2.10, 'UP NEXT')
+        h = _must_fit('end-of-day up next', up_next, 4.13, T_BODY_SM, 2.10 - CARD_TEXT_DY - 0.12, 1.2)
+        _text(s, 8.40, 1.80 + CARD_TEXT_DY, 4.13, h, up_next, size=T_BODY_SM, color=BODY, line=1.2)
+        self._card(s, 8.10, 4.08, 4.73, 2.10, 'EXTRA PRACTICE', GREEN_TINT, GREEN)
+        h = _must_fit('end-of-day extra practice', extra, 4.13, T_BODY_SM, 2.10 - CARD_TEXT_DY - 0.12, 1.2)
+        _text(s, 8.40, 4.08 + CARD_TEXT_DY, 4.13, h, extra, size=T_BODY_SM, color=BODY, line=1.2)
         self._foot(s)
         self._note(s, note or 'The objectives restated as outcomes, plus what the next day covers.')
 
