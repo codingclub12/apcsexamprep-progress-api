@@ -100,8 +100,24 @@ function main() {
 
     if (cmd !== 'MERGE') bad(`command is ${cmd}, expected MERGE`);
 
-    const relCount = (body.match(/<div\s+class=["'][^"']*\brelated\b/gi) || []).length;
-    if (relCount !== 1) bad(`${relCount} Related blocks, expected 1`);
+    //  Whole class tokens, via the same primitive the generator uses. Sharing a
+    //  parser for "does this tag carry this class" is not a loss of
+    //  independence: what this program checks independently is that the edit
+    //  REVERSES, and it disagreed with the generator here only because it was
+    //  still using a substring regex that matched related-card and
+    //  related-links on pages that carry no Related block at all.
+    //  The site nests its own containers: 35 CSP lesson pages wrap a
+    //  related-links-grid inside a related-links, which is ONE section built
+    //  from two containers. So the test is not how many containers the page
+    //  ends with, it is whether this edit ADDED a section. A page that already
+    //  had one must end with the same count; a page that had none must gain
+    //  exactly one.
+    const containers = (t) => (t.match(/<div\b[^>]*>/gi) || [])
+      .filter((tag) => B.CONTAINERS.some((c) => B.hasClass(tag, c))).length;
+    const had = containers(src);
+    const delta = containers(body) - had;
+    const want = had > 0 ? 0 : 1;
+    if (delta !== want) bad(`related containers moved by ${delta}, expected ${want} (source had ${had})`);
 
     if (bal(src) !== bal(body)) bad(`div balance ${bal(src)} -> ${bal(body)}`);
 

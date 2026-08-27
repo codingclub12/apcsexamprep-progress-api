@@ -212,6 +212,68 @@ console.log('\nlink block: escaping');
   ok('an already-escaped entity is left alone', B.esc('a &amp; b &#39; c') === 'a &amp; b &#39; c', B.esc('a &amp; b &#39; c'));
 }
 
+console.log('\nlink block: class tokens are whole words');
+{
+  // \brelated\b matches `related-card`, because \b treats a hyphen as a word
+  // boundary. This is the mistake lib/site-crawl.js records costing seven false
+  // P0s; here it made five `related-card` tiles read as a Related block.
+  // An ITEM is not a container. A page whose only 'related' word is on its cards
+  // has no related section, and must get one.
+  const cardsOnly = '<style>#w{}</style><div id="w">'
+    + '<div class="related-card"><a href="/pages/x">X</a></div>'
+    + '<div class="related-card"><a href="/pages/y">Y</a></div></div>';
+  ok('related-card alone is not a container', B.findRelated(cardsOnly) === null, B.findRelated(cardsOnly));
+  const r1 = B.build(cardsOnly, [{ handle: 'a-real-page', label: 'A' }], LIVE, { selfHandle: 'p' });
+  ok('so the page gets a block of its own', r1.changed && !r1.hadBlock);
+  ok('and the tiles are untouched', (r1.body.match(/related-card/g) || []).length === 2);
+
+  // A CONTAINER is extended, never duplicated. The site ships four container
+  // class names and a page carrying any of them already shows the reader a
+  // related section; adding a second one gives the page two.
+  const grid = '<style>#w{}</style><div id="w"><div class="related-grid">'
+    + '<div class="related-card"><a href="/pages/x">X</a></div></div></div>';
+  ok('related-grid IS a container', B.findRelated(grid) !== null);
+  const r2 = B.build(grid, [{ handle: 'a-real-page', label: 'A' }], LIVE, { selfHandle: 'p' });
+  ok('it is extended rather than duplicated', r2.hadBlock === true);
+  ok('exactly one container remains',
+    (r2.body.match(/<div\b[^>]*>/gi) || [])
+      .filter((t) => B.CONTAINERS.some((c) => B.hasClass(t, c))).length === 1);
+  ok('the new link landed inside it', r2.body.includes('/pages/a-real-page'));
+  ok('and it still reverses exactly', B.unmark(r2.body) === grid);
+}
+
+console.log('\nlink block: nested containers are one section, not two');
+{
+  // 35 live CSP lesson pages wrap a related-links-grid inside a related-links.
+  // An absolute container count called that two sections and refused them all.
+  const nested = '<style>#w{}</style><div id="w"><div class="related-links">'
+    + '<div class="related-links-grid"><a href="/pages/x">X</a></div></div></div>';
+  ok('the outer container is the one found',
+    B.hasClass(nested.slice(B.findRelated(nested).start).match(/<div\b[^>]*>/)[0], 'related-links'));
+  const r = B.build(nested, [{ handle: 'a-real-page', label: 'A' }], LIVE, { selfHandle: 'p' });
+  ok('it is accepted, not refused', r.changed);
+  ok('both containers survive untouched',
+    (r.body.match(/related-links-grid/g) || []).length === 1
+    && (r.body.match(/class="related-links"/g) || []).length === 1);
+  ok('and it reverses exactly', B.unmark(r.body) === nested);
+}
+
+console.log('\nlink block: a page with no wrapper id brings its own');
+{
+  // 160 of 1,251 live pages have no single outer id: FRQ solutions open with
+  // JSON-LD, the vocabulary list styles itself off :root. Refusing them left
+  // 13% of the site unlinkable for a reason unrelated to linking.
+  const noWrapper = '<script type="application/ld+json">{"a":1}</script><h2>Solution</h2><p>Body</p>';
+  const r = B.build(noWrapper, [{ handle: 'a-real-page', label: 'A' }], LIVE, { selfHandle: 'ap-csa-2004-frq-1' });
+  ok('it is accepted', r.changed);
+  ok('it wraps itself with a derived id',
+    r.body.includes('id="apcs-links-ap-csa-2004-frq-1"'), r.body.slice(-320));
+  ok('and carries its own stylesheet', /<style>[\s\S]*\.related\{/.test(r.body));
+  ok('css is scoped to the id it brought',
+    r.body.includes('#apcs-links-ap-csa-2004-frq-1 .related{'));
+  ok('it still reverses to the original exactly', B.unmark(r.body) === noWrapper);
+}
+
 console.log('\nlink block: markers make the edit reversible');
 {
   const r = B.build(BARE, [{ handle: 'a-real-page', label: 'A Real Page' }], LIVE);
@@ -254,13 +316,17 @@ console.log('\nlink block: refusals');
   };
   refuses('empty body', () => B.build('', [{ handle: 'a-real-page', label: 'A' }], LIVE));
   refuses('no live handle set', () => B.build(BODY, [{ handle: 'a-real-page', label: 'A' }], new Set()));
-  refuses('no wrapper id', () => B.build('<p>no wrapper</p>', [{ handle: 'a-real-page', label: 'A' }], LIVE));
+  // No longer a refusal: a page with no wrapper id brings its own. Asserted in
+  // the self-scoped section above. What still refuses is an empty body, which
+  // is what /pages/ap-csa and /pages/ap-csp actually are.
+  refuses('empty-but-whitespace body', () => B.build('   \n  ', [{ handle: 'a-real-page', label: 'A' }], LIVE));
   refuses('div imbalance', () => B.check(BODY, BODY + '<div>', 0));
   refuses('body did not grow', () => B.check(BODY, BODY, 0));
   refuses('anchor count disagrees', () => B.check(BODY, BODY + '<a href="/x">x</a>', 5));
   refuses('style block lost', () => B.check(BODY, BODY.replace('<style>', '') + '<a href="/x">x</a>', 1));
   refuses('growth over cap', () => B.check(BODY, BODY + 'x'.repeat(B.MAX_GROWTH_BYTES + 10), 0));
-  refuses('two related blocks', () => B.check(BODY, BODY + '<div class="related"><a href="/x">x</a></div>', 1));
+  refuses('creating a second related section', () => B.check(BODY, BODY + '<div class="related"><a href="/x">x</a></div>', 1, true));
+  refuses('adding no section when creating one', () => B.check(BARE, BARE + '<a href="/x">x</a>', 1, false));
 }
 
 console.log('\nfamilies: the site\'s naming irregularities');
