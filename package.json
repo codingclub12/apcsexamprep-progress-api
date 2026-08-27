@@ -147,6 +147,7 @@
     "smoke:pageimportguard": "node smoke/page-import-guard.js",
     "smoke:joinhost": "node smoke/join-api-host.js",
     "smoke:cellactions": "node smoke/dashboard-cell-actions.js",
+    "smoke:removal": "node smoke/student-removal.js",
     "smoke:denomlessonscore": "node smoke/denominator-lesson-score.js",
     "smoke:healthreset": "node smoke/health-reset-not-a-gap.js",
     "smoke:gradepath": "node smoke/grade-path-audit.js",
