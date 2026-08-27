@@ -229,6 +229,75 @@ console.log('\nlink block: refusals');
   refuses('two related blocks', () => B.check(BODY, BODY + '<div class="related"><a href="/x">x</a></div>', 1));
 }
 
+console.log('\nfamilies: the site\'s naming irregularities');
+{
+  const f = G.familyOf;
+  ok('two topic words, not one', f('ap-csa-arraylist-basics') !== f('ap-csa-array-traversal'));
+  ok('numbered activity families on its lesson stem',
+    f('ap-cyber-unit-3-lesson-1-quiz') === 'ap-cyber-unit-3', f('ap-cyber-unit-3-lesson-1-quiz'));
+  ok('bi3 normalises to bi-3', f('ap-csp-bi2-data-cleaning') === 'ap-csp-bi-2', f('ap-csp-bi2-data-cleaning'));
+  ok('a leading path word is stripped',
+    f('ap-csp-course-big-idea-2-data') === 'ap-csp-big-idea-2', f('ap-csp-course-big-idea-2-data'));
+  ok('singular and plural are one family',
+    f('ap-csa-2d-arrays-exam-guide') === f('ap-csa-2d-array-cheat-sheet'), f('ap-csa-2d-arrays-exam-guide'));
+  ok('a non-course handle has no family', f('contact') === null);
+}
+
+console.log('\nhubs: never propose building a page that is already live');
+{
+  const node = (h, over = {}) => ({
+    path: `/pages/${h}`, handle: h, title: h, course: G.courseOf(h), role: 'page',
+    crawled: true, status: 200, inBody: 1, outBody: 1, outTo: [], inFrom: [], ...over,
+  });
+  const hubOf = (handles, family) => {
+    const c = G.resolveClusters(handles.map((h) => node(h))).find((x) => x.family === family);
+    return c ? c.hub : undefined;
+  };
+
+  ok('exact handle is the hub',
+    hubOf(['ap-csa-2d-array', 'ap-csa-2d-array-mistakes', 'ap-csa-2d-array-traversal'], 'ap-csa-2d-array')
+      === '/pages/ap-csa-2d-array');
+
+  ok('a -course suffix is the hub',
+    hubOf(['ap-csa-unit-1-course', 'ap-csa-unit-1-exam', 'ap-csa-unit-1-practice-exam'], 'ap-csa-unit-1')
+      === '/pages/ap-csa-unit-1-course');
+
+  // Without the anagram rule all 22 FRQ year hubs read as missing.
+  ok('token-order twin is the hub (frq-2004 for family 2004-frq)',
+    hubOf(['ap-csa-frq-2004', 'ap-csa-2004-frq-1', 'ap-csa-2004-frq-2'], 'ap-csa-2004-frq')
+      === '/pages/ap-csa-frq-2004');
+
+  // The two cyber prefixes are one course.
+  ok('hub under the sibling prefix, with a slug',
+    hubOf(['ap-cybersecurity-unit-3-securing-networks', 'ap-cyber-unit-3-lesson-1-quiz',
+      'ap-cyber-unit-3-lesson-1-lab', 'ap-cyber-unit-3-exam'], 'ap-cyber-unit-3')
+      === '/pages/ap-cybersecurity-unit-3-securing-networks',
+    hubOf(['ap-cybersecurity-unit-3-securing-networks', 'ap-cyber-unit-3-lesson-1-quiz',
+      'ap-cyber-unit-3-lesson-1-lab', 'ap-cyber-unit-3-exam'], 'ap-cyber-unit-3'));
+
+  ok('bare plural page heads the singularised family',
+    hubOf(['ap-csa-2d-arrays', 'ap-csa-2d-array-mistakes', 'ap-csa-2d-array-traversal'], 'ap-csa-2d-array')
+      === '/pages/ap-csa-2d-arrays');
+
+  ok('a by-topic index is the hub',
+    hubOf(['ap-csp-practice-tests-by-topic', 'ap-csp-practice-test-binary-data',
+      'ap-csp-practice-test-networks-internet'], 'ap-csp-practice-test')
+      === '/pages/ap-csp-practice-tests-by-topic');
+
+  // The silent direction. 'guide' is how SPOKES are named here, so accepting it
+  // would let a spoke pose as a hub and hide a real gap.
+  ok('a -guide page is NOT accepted as a hub',
+    hubOf(['ap-csp-written-response-guide', 'ap-csp-written-response-walkthrough-2026',
+      'ap-csp-written-response-rubric'], 'ap-csp-written-response') === null,
+    hubOf(['ap-csp-written-response-guide', 'ap-csp-written-response-walkthrough-2026',
+      'ap-csp-written-response-rubric'], 'ap-csp-written-response'));
+
+  // Two candidates is a guess, and a wrong hub link is worse than a missing one.
+  ok('two equally good candidates resolves to no hub',
+    hubOf(['ap-csa-7day-alpha-kit', 'ap-csa-7day-beta-kit',
+      'ap-csa-7day-kit-day-1', 'ap-csa-7day-kit-day-2'], 'ap-csa-7day-kit') === null);
+}
+
 // ── LINK PLAN ────────────────────────────────────────────────────────────────
 const P = require('../lib/link-plan');
 

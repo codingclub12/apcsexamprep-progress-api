@@ -42,28 +42,6 @@ function load(file) {
   return pages;
 }
 
-// ── CLUSTERS ─────────────────────────────────────────────────────────────────
-//  The family root of a handle: course prefix plus the first one or two topic
-//  words. Two words rather than one because 'ap-csa-array' and
-//  'ap-csa-arraylist' are different families and a one-word cut merges them.
-const COURSE_PREFIXES = [
-  'ap-cybersecurity', 'ap-networking', 'ap-cyber', 'ap-csa', 'ap-csp', 'intro-java',
-];
-
-function familyOf(handle) {
-  if (!handle) return null;
-  const prefix = COURSE_PREFIXES.find((p) => handle === p || handle.startsWith(p + '-'));
-  if (!prefix) return null;
-  const rest = handle.slice(prefix.length).replace(/^-/, '');
-  if (!rest) return null;
-  const words = rest.split('-');
-  // Numbered structures ('unit-3-lesson-2-quiz') family on the numbered stem so
-  // every activity for a lesson lands together.
-  const numbered = rest.match(/^((?:unit|big-idea|bi|topic|lesson)-\d+(?:-\d+)?)/);
-  if (numbered) return `${prefix}-${numbered[1]}`;
-  return `${prefix}-${words.slice(0, 2).join('-')}`;
-}
-
 function main() {
   const pages = load(IN);
   const graph = G.buildGraph(pages);
@@ -72,55 +50,12 @@ function main() {
   const live = nodes.filter((x) => x.crawled && x.status === 200);
 
   // ── clusters ──
-  //  Hub detection is deliberately generous, because a false "no hub here"
-  //  proposes building a page that already exists under a different word order.
-  //  Three ways a member can be the hub of its family:
-  //
-  //    exact      handle === family                    ap-csa-2d-array
-  //    suffixed   family + course|hub|overview|home    ap-csa-unit-1-course
-  //    anagram    same tokens, different order         ap-csa-frq-2004 for
-  //                                                    family ap-csa-2004-frq
-  //
-  //  The anagram rule is not a nicety: the whole FRQ archive is stored as
-  //  ap-csa-frq-YYYY with members ap-csa-YYYY-frq-N, and without it every one
-  //  of the 22 year hubs reads as missing.
-  const HUB_SUFFIXES = ['course', 'hub', 'overview', 'home', 'index', 'topics'];
-  const tokenKey = (h) => h.split('-').sort().join('-');
-
-  const clusters = new Map();
-  for (const x of live) {
-    if (!x.handle) continue;
-    const fam = familyOf(x.handle);
-    if (!fam) continue;
-    if (!clusters.has(fam)) clusters.set(fam, { family: fam, course: x.course, members: [], hub: null });
-    clusters.get(fam).members.push(x);
-  }
-  // Hubs are resolved against every live page, not only cluster members: the
-  // hub of ap-csa-2d-array-* may sit outside the family by handle shape.
-  const byHandle = new Map(live.filter((x) => x.handle).map((x) => [x.handle, x]));
-  const byTokens = new Map();
-  for (const x of live) if (x.handle) byTokens.set(tokenKey(x.handle), x);
-  for (const c of clusters.values()) {
-    c.hub = byHandle.get(c.family)
-      || HUB_SUFFIXES.map((s) => byHandle.get(`${c.family}-${s}`)).find(Boolean)
-      || byTokens.get(tokenKey(c.family))
-      || null;
-  }
-  const clusterList = Array.from(clusters.values()).map((c) => {
-    const inbound = c.members.reduce((s, m) => s + m.inBody, 0);
-    const orphans = c.members.filter((m) => m.inBody === 0).length;
-    // Internal cohesion: body edges that stay inside the cluster.
-    const paths = new Set(c.members.map((m) => m.path));
-    let internal = 0;
-    for (const m of c.members) for (const t of m.outTo) if (paths.has(t)) internal++;
-    return {
-      family: c.family, course: c.course, size: c.members.length,
-      hub: c.hub ? c.hub.path : null,
-      hubInside: c.hub ? c.members.some((m) => m.path === c.hub.path) : false,
-      orphans, inbound, internal,
-      members: c.members.map((m) => ({ path: m.path, title: m.title, role: m.role, in: m.inBody, out: m.outBody })),
-    };
-  }).sort((x, y) => y.size - x.size);
+  //  Family grouping and hub resolution live in lib/link-graph.js so they can be
+  //  pinned offline. They carry the site's naming irregularities (two cyber
+  //  prefixes, bi3 against big-idea-3, singular against plural) and every one of
+  //  those rules decides whether a report proposes building a page that is
+  //  already live.
+  const clusterList = G.resolveClusters(live);
 
   // A cluster of 3+ with no root page is a hub the taxonomy implies and the
   // site does not have.
@@ -133,6 +68,23 @@ function main() {
   const brokenClusters = clusterList
     .filter((c) => c.size >= 3 && c.orphans / c.size >= 0.5)
     .sort((x, y) => y.orphans - x.orphans);
+
+  //  ── COURSE-LEVEL HUBS ─────────────────────────────────────────────────────
+  //  Cluster analysis cannot see this one. A course can have every topic
+  //  cluster properly hubbed and still have no page that is the COURSE, which
+  //  is what Intro to Java looks like today: 109 live pages, six unit pages,
+  //  and no root anyone can land on.
+  const courseRoots = new Map();
+  for (const x of live) {
+    if (!x.course) continue;
+    if (!courseRoots.has(x.course)) courseRoots.set(x.course, { course: x.course, pages: 0, hubs: [] });
+    const c = courseRoots.get(x.course);
+    c.pages++;
+    if (x.role === 'course-hub') c.hubs.push({ path: x.path, title: x.title, in: x.inBody, out: x.outBody });
+  }
+  const missingCourseHubs = Array.from(courseRoots.values())
+    .filter((c) => c.hubs.length === 0)
+    .sort((a, b) => b.pages - a.pages);
 
   const byRole = {};
   for (const x of live) {
@@ -170,6 +122,8 @@ function main() {
     dangling: a.dangling.map((x) => ({ path: x.path, in: x.inBody, from: x.inFrom.slice(0, 5) })),
     clusters: clusterList,
     missingHubs,
+    missingCourseHubs,
+    courseRoots: Array.from(courseRoots.values()).sort((a, b) => b.pages - a.pages),
     brokenClusters,
     chromeTargets: Array.from(graph.chromeTargets).sort(),
   };
@@ -187,6 +141,10 @@ function main() {
   console.log(`unreachable from home by content links: ${t.unreachable}`);
   console.log(`links to pages not in sitemap: ${t.dangling}`);
   console.log(`\nclusters ${clusterList.length}, of which ${missingHubs.length} have no hub page`);
+  if (missingCourseHubs.length) {
+    console.log('\nCOURSES WITH NO COURSE HUB AT ALL:');
+    for (const c of missingCourseHubs) console.log(`  ${c.course}: ${c.pages} live pages, no course-hub page`);
+  }
   console.log('\ntop clusters with no hub:');
   for (const c of missingHubs.slice(0, 15)) {
     console.log(`  ${String(c.size).padStart(3)} pages  ${c.orphans} orphaned  ${c.family}`);
