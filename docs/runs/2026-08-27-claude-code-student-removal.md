@@ -90,30 +90,39 @@ complaint: `the removed student is gone from model.students
 
 All 130 offline suites pass, run the way `tests.yml` runs them.
 
+## Verified live
+
+The import landed and the page was checked three ways, in rising order of what
+they prove.
+
+**1. The markers.** The deployed page carries `restoreStudent`, `renderRemoved`,
+`gb-removed`, `model.removed`, `roster.filter` and the new dialog copy, and no
+longer carries `permanently deletes their progress`. Necessary, but it only
+proves the text arrived.
+
+**2. The behaviour.** The stronger check, and the one worth reusing: the
+`<script>` block was extracted from the LIVE storefront render, not from the
+repo file, and run in a `vm` with a stub DOM, then fed a payload with one
+removed student and one active one. The DEPLOYED `buildModel` drops the removed
+student from `model.students`, keeps them in `model.removed` with their detail
+intact, and leaves them out of the gradebook CSV. Eight checks, all pass. This
+is the difference between the words being on the page and the button working.
+
+**3. No truncation.** A body import REPLACES the page body, so a silent
+truncation is the failure that matters most and is the hardest to see. The live
+TCDash script is 53,897 chars against the repo's 53,915. That delta is not
+loss: it is exactly the three `&ndash;` occurrences Shopify decoded to the
+character on store, at 6 chars each. Normalise those and the two are IDENTICAL,
+byte for byte, first char to last.
+
+The reusable part is 2 and 3 together: run the shipped page's own functions
+against a synthetic payload, and prove the length delta rather than accepting
+it. A marker grep would have passed on a body truncated halfway through.
+
 ## What is still open
 
-**The fix is merged and the API is deployed, but the page is not.** The Railway
-deploy needed a manual redeploy (see below) and now serves `6f9b051`. That ships
-the API and nothing else: `server.js` only serves from `public/`, so
-`shopify/cyber-dashboard.html` reaches the storefront ONLY through a Matrixify
-Pages import, which is a human step. Confirmed against the live page after the
-deploy: `permanently deletes their progress` is still there and none of the fix
-markers are.
-
-The sheet was generated with a real live dump, pulled from the Admin API:
-
-```
-node scripts/page-body-csv.js out.csv --only cyber-dashboard --live pages.json
-```
-
-All five guards passed, including the content-loss check. Worth recording why
-that check was clean: the live body and the repo mirror differed by exactly four
-lines before the fix, and all four are entity decodings Shopify does on store
-(`&#9662;` to the character, `&ndash;` to the dash), which is the behaviour the
-script's own header documents. The mirror was otherwise byte-identical to live,
-so the import changes this fix and nothing else. If a future sheet shows any
-OTHER difference, somebody edited the live page by hand and the import would
-clobber it.
+**Not the fix itself.** Tanner imported the sheet at about 11:35 UTC and the
+page is live and verified, per the section above. What follows is adjacent.
 
 **Only the cyber dashboard was fixed.** `/pages/cyber-dashboard` is the teacher
 dashboard for every course, so this covers the reported case, but the same

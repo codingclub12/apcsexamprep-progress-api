@@ -87,9 +87,14 @@ const root = {
 global.DriveApp = { getFolderById: () => root };
 global.Logger = { log: () => {} };
 global.MimeType = { GOOGLE_SLIDES: 'application/vnd.google-apps.presentation' };
+// The ADVANCED Drive service, which is not enabled by default in a new Apps
+// Script project and is not the same object as DriveApp. Its absence is what
+// failed the first real run, seventy times over, so preflight_() now checks
+// for it and both entry points call preflight_() before doing anything.
+global.Drive = { Files: { copy: () => ({ id: 'stub' }) } };
 
 // eslint-disable-next-line no-eval
-eval(src + '\n;global.__enumerate = enumerateDecks_; global.__preview = preview; global.__embed = embedUrl_;');
+eval(src + '\n;global.__enumerate = enumerateDecks_; global.__preview = preview; global.__embed = embedUrl_; global.__normLesson = normLesson_;');
 
 console.log('\nCYBER SLIDES CONVERSION: ENUMERATION\n');
 
@@ -129,6 +134,63 @@ ok('  sorted by lesson, then day, then variant',
 ok('  embed url is the /embed view, never /edit',
    global.__embed('X').includes('/embed') && !global.__embed('X').includes('/edit'), global.__embed('X'));
 ok('  and does not hide the Slides toolbar', !global.__embed('X').includes('rm=minimal'));
+
+console.log('4b. a lesson id that Sheets turned into a date still resumes');
+{
+  // Every Units 1-2 lesson id is also a valid month-day, so Sheets coerces
+  // appendRow's '1-1' into a Date and getValues() returns a Date. The resume
+  // key then never matched, every run thought all 70 decks were both done and
+  // outstanding, and all 70 were converted again. Nothing errored.
+  const norm = global.__normLesson;
+  ok('  a plain string is unchanged', norm('1-1') === '1-1', norm('1-1'));
+  ok('  and is trimmed', norm('  2-4  ') === '2-4', norm('  2-4  '));
+
+  // January 1 is what Sheets makes of "1-1"; February 4 of "2-4".
+  ok('  Jan 1 recovers to 1-1', norm(new Date(2026, 0, 1)) === '1-1', norm(new Date(2026, 0, 1)));
+  ok('  Feb 4 recovers to 2-4', norm(new Date(2026, 1, 4)) === '2-4', norm(new Date(2026, 1, 4)));
+  ok('  Jan 5 recovers to 1-5', norm(new Date(2026, 0, 5)) === '1-5', norm(new Date(2026, 0, 5)));
+
+  // Round trip every id this script can actually meet.
+  const ids = ['1-1','1-2','1-3','1-4','1-5','2-1','2-2','2-3','2-4'];
+  const roundTripped = ids.every((id) => {
+    const [u, l] = id.split('-').map(Number);
+    return norm(new Date(2026, u - 1, l)) === id;
+  });
+  ok('  all nine wired lesson ids round trip through a Date', roundTripped, ids);
+
+  // The failure this protects against, stated as the assertion it needed.
+  const dateKey = new Date(2026, 0, 1) + '|1|STUDENT';
+  ok('  an un-normalised Date key would NOT have matched',
+     dateKey !== '1-1|1|STUDENT', dateKey.slice(0, 40));
+}
+
+console.log('5a. preflight refuses to run without the Advanced Drive Service');
+{
+  // The first real run wrote seventy rows of "ReferenceError: Drive is not
+  // defined" and reported only "converted 0, failed 70" in the log. One clear
+  // error before any work starts is worth more than seventy after it.
+  const saved = global.Drive;
+  delete global.Drive;
+  let threw = null;
+  try { global.__preview(); } catch (e) { threw = e; }
+  ok('  preview() throws rather than reporting zero decks', threw !== null);
+  ok('  and names the Advanced Drive Service',
+     threw && /Advanced Drive Service/.test(threw.message), threw && threw.message);
+  ok('  and says which version to add',
+     threw && /v3/.test(threw.message), threw && threw.message);
+  ok('  and does not blame the decks',
+     threw && !/deck/i.test(threw.message), threw && threw.message);
+
+  // Wrong version added: the object exists but cannot copy.
+  global.Drive = { Files: {} };
+  let threw2 = null;
+  try { global.__preview(); } catch (e) { threw2 = e; }
+  ok('  a Drive service without Files.copy is also refused', threw2 !== null);
+  ok('  and is diagnosed as a version problem',
+     threw2 && /version/i.test(threw2.message), threw2 && threw2.message);
+
+  global.Drive = saved;
+}
 
 console.log('5. preview() tells the operator whether to proceed');
 const preview = global.__preview();

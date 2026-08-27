@@ -26,11 +26,24 @@ it says.
 
 ## Empty until the first run
 
-`apcentral.collegeboard.org` is not on the agent proxy's allowed-domains list,
-so a Claude Code session cannot seed this directory: all sixteen sources return
-403. The first scheduled run on an Actions runner creates the baseline and
-opens the first pull request.
+The first scheduled run on an Actions runner creates the baseline and opens the
+first pull request.
 
-If you want a session to be able to read College Board directly, add
-`apcentral.collegeboard.org` to the environment's Custom allowed domains. The
-workflow does not need it.
+### The 403 is gone, as of 2026-08-27
+
+This section used to say `apcentral.collegeboard.org` was not on the agent
+proxy's allowed-domains list, so a session could not seed this directory
+because all sources returned 403. **That is no longer true.** Measured
+2026-08-27 from a Claude Code session, every one of the 15 sources in
+`config/ced-sources.json` returned 200 through `node fetch`, and the Cyber CED
+PDF downloaded whole at 5,947,037 bytes through both `fetch` and curl.
+
+Either the domain was added to the environment's Custom allowed domains, as the
+old text suggested doing, or the proxy policy changed. The original observation
+is kept here because it was true when written on 2026-08-24 and the workflow's
+own header comment still describes it: a session reading College Board and
+getting 403 today means something changed back, not that the tooling is broken.
+
+The workflow still does not need session egress, and this directory is still
+machine-written. A session being able to fetch the sources is not permission to
+hand-seed the snapshot; let the scheduled run create the baseline.
