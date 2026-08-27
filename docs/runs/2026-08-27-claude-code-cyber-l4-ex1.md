@@ -77,7 +77,9 @@ rather than against a number picked here.
 
 ## The browser check
 
-`scripts/cyber-u1-l4-ex1-grade-check.cjs` drives the rebuilt page in Chromium:
+`scripts/cyber-exercise-grade-check.cjs` drives the rebuilt page in Chromium. It
+reads the credited answers out of the page rather than hardcoding them, so it
+works on any of the Topic 1.4 exercises unedited:
 
 ```
 all-correct run   Part 1 score 12 (expected 12), 7 scoring lines, no page errors

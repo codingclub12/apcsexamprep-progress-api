@@ -24,6 +24,7 @@
     "smoke:ekprotect": "node smoke/ek-protection.js",
     "smoke:gatesabotage": "node scripts/cyber-u1-topic14-gate-sabotage.js",
     "smoke:l4ex1gate": "node scripts/cyber-u1-l4-ex1-gate-sabotage.js",
+    "smoke:exgate": "node smoke/exercise-gate.js",
     "smoke:cleanup": "node smoke/cleanup.js",
     "smoke:shopify": "node smoke/shopify-entitlements.js",
     "smoke:csafrq": "node smoke/csa-frq-pages.js",
