@@ -38,7 +38,12 @@ for (const suf of ['', '-wal', '-shm']) { try { fs.unlinkSync(process.env.DB_PAT
 const express = require('express');
 const db = require('../db');
 const { seedQuizBank } = require('../scripts/seed-quiz-bank');
-const SOURCES = require('../seed/cyber-unit-1-quizzes');
+// Every bank the seed script loads, so adding a lesson never breaks this suite.
+const SOURCES = [
+  ...require('../seed/cyber-unit-1-quizzes'),
+  ...require('../seed/cyber-unit-1-web-quizzes'),
+];
+const TOTAL = SOURCES.reduce((n, p) => n + p.questions.length, 0);
 
 const COURSE = 'ap-cybersecurity';
 const UNIT = 'unit-1';
@@ -80,8 +85,8 @@ const get = (url) => fetch(base() + url).then(async (r) => ({ status: r.status, 
 
   console.log('\n-- 3. seed, then check the rendered payload --');
   const first = seedQuizBank();
-  ok('first seed inserts every source question',
-    first.inserted === first.total && first.total === 21, first);
+  ok(`first seed inserts every source question (${TOTAL} across ${SOURCES.length} locations)`,
+    first.inserted === first.total && first.total === TOTAL, { first, TOTAL });
 
   for (const pack of SOURCES) {
     const r = await get(`/api/quiz/${COURSE}/${UNIT}/${pack.location.lesson}/quiz`);
@@ -128,7 +133,7 @@ const get = (url) => fetch(base() + url).then(async (r) => ({ status: r.status, 
               VALUES (?,?,?,?,?,99,'A question no longer in the seed file','["a","b"]',0,1,1)`)
     .run(GHOST, COURSE, UNIT, '1.1', 'quiz');
   const rendered = (await get(`/api/quiz/${COURSE}/${UNIT}/1.1/quiz`)).body.questions.length;
-  ok('setup: the stale question is being served', rendered === 10, { rendered });
+  ok('setup: the stale question is being served', rendered === 9 + 1, { rendered });
 
   const third = seedQuizBank();
   ok('the seed reports exactly one retirement', third.retired === 1, third);
@@ -141,7 +146,7 @@ const get = (url) => fetch(base() + url).then(async (r) => ({ status: r.status, 
   const live = db.prepare(
     `SELECT COUNT(*) n FROM quiz_bank WHERE course=? AND unit=? AND activity_type='quiz' AND active=1`
   ).get(COURSE, UNIT).n;
-  ok('retirement touched nothing else: 21 real questions still active', live === 21, { live });
+  ok(`retirement touched nothing else: ${TOTAL} real questions still active`, live === TOTAL, { live, TOTAL });
 
   const fourth = seedQuizBank();
   ok('retirement is idempotent, a second run retires nothing', fourth.retired === 0, fourth);

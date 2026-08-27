@@ -33,6 +33,11 @@ const express = require('express');
 const db = require('../db');
 const { signTeacherToken, signStudentToken } = require('../utils');
 const { seedQuizBank } = require('../scripts/seed-quiz-bank');
+// Derived, not hardcoded: a new lesson bank must not fail this suite.
+const BANK_TOTAL = [
+  ...require('../seed/cyber-unit-1-quizzes'),
+  ...require('../seed/cyber-unit-1-web-quizzes'),
+].reduce((n, p) => n + p.questions.length, 0);
 
 const COURSE = 'ap-cybersecurity';
 const UNIT = 'unit-1';
@@ -73,7 +78,7 @@ const setGate = (lesson, open) => call('POST', `/api/teacher/classes/${CODE}/gat
 
 (async () => {
   const seeded = seedQuizBank();
-  ok('bank seeds 21 questions (9 for 1.1, 12 for 1.2)', seeded.total === 21, seeded);
+  ok(`bank seeds ${BANK_TOTAL} questions across every seeded location`, seeded.total === BANK_TOTAL, { seeded, BANK_TOTAL });
 
   // 1) An untouched class keeps working.
   let r = await call('GET', quiz('1.1'), null, ST);
