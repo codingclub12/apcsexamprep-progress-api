@@ -11,7 +11,7 @@
 //
 //  Self-study is checked too, because a gate that locks out the public practice
 //  path would be a worse bug than the one it fixes. The seeded bank is scored
-//  end to end as well, so a bad correct_index in seed/cyber-unit-1-quizzes.js
+//  end to end as well, so a bad correct_index in seed/cyber-unit-1-web-quizzes.js
 //  fails here rather than in front of a class.
 //
 //  Offline and secret-free, per .github/workflows/tests.yml: a throwaway SQLite
@@ -34,8 +34,11 @@ const db = require('../db');
 const { signTeacherToken, signStudentToken } = require('../utils');
 const { seedQuizBank } = require('../scripts/seed-quiz-bank');
 // Derived, not hardcoded: a new lesson bank must not fail this suite.
+const WEB_PACKS = require('../seed/cyber-unit-1-web-quizzes');
+// The lesson this suite drives end to end. Derived so a content change to the
+// bank cannot turn the GATE suite red for a reason that has nothing to do with gating.
+const N11 = WEB_PACKS.find(p => p.location.lesson === '1.1').questions.length;
 const BANK_TOTAL = [
-  ...require('../seed/cyber-unit-1-quizzes'),
   ...require('../seed/cyber-unit-1-web-quizzes'),
 ].reduce((n, p) => n + p.questions.length, 0);
 
@@ -83,7 +86,7 @@ const setGate = (lesson, open) => call('POST', `/api/teacher/classes/${CODE}/gat
   // 1) An untouched class keeps working.
   let r = await call('GET', quiz('1.1'), null, ST);
   ok('default class: 1.1 quiz open', r.body && r.body.locked === false, r.body);
-  ok('default class: all 9 items served', r.body && r.body.total === 9, r.body && r.body.total);
+  ok(`default class: all ${N11} items served`, r.body && r.body.total === N11, r.body && r.body.total);
 
   // 2) The class default closes everything with no per-activity rows.
   r = await call('PUT', `/api/teacher/classes/${CODE}`, { quiz_lock_default: 1 }, TT);
@@ -102,7 +105,7 @@ const setGate = (lesson, open) => call('POST', `/api/teacher/classes/${CODE}/gat
 
   // Public self-study is untouched: it has no teacher to open anything.
   r = await call('GET', quiz('1.1'));
-  ok('self-study still open', r.body && r.body.locked === false && r.body.total === 9, r.body && r.body.locked);
+  ok('self-study still open', r.body && r.body.locked === false && r.body.total === N11, r.body && r.body.locked);
 
   // 3) Opening one activity opens only that one.
   r = await setGate('1.1', true);
@@ -124,7 +127,7 @@ const setGate = (lesson, open) => call('POST', `/api/teacher/classes/${CODE}/gat
     return { qid: q.qid, chosen_index: q.options.indexOf(correctText) };
   });
   r = await call('POST', '/api/quiz/submit', { order_token: served.order_token, answers }, ST);
-  ok('all-correct submit scores 9 of 9', r.body && r.body.score === 9 && r.body.total === 9,
+  ok(`all-correct submit scores ${N11} of ${N11}`, r.body && r.body.score === N11 && r.body.total === N11,
     r.body && { score: r.body.score, total: r.body.total });
 
   // 4) Closing mid-flight invalidates a token minted while open.

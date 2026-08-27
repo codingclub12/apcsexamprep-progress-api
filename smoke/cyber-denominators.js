@@ -263,11 +263,12 @@ const tok = signTeacherToken({ id: 't1', email: 't@s.org' });
   ok('  the response carries a denominators map', !!d && typeof d === 'object');
   ok('  1.1|exercise-1 reads 7', d['1.1|exercise-1'] === 7, d && d['1.1|exercise-1']);
   ok('  2.1|exercise-1 reads 6', d['2.1|exercise-1'] === 6, d && d['2.1|exercise-1']);
-  // Re-priced from 5 when the corrected CED-aligned quizzes replaced the old
-  // five item pages: 1.1 asks 9 and 1.2 asks 12, per seed/cyber-unit-1-quizzes.js.
-  // Existing attempts are NOT regraded by this; smoke/denominator-safety.js pins that.
-  ok('  1.1|quiz reads 9', d['1.1|quiz'] === 9, d && d['1.1|quiz']);
-  ok('  1.2|quiz reads 12', d['1.2|quiz'] === 12, d && d['1.2|quiz']);
+  // Both are 5 item web quizzes, per seed/cyber-unit-1-web-quizzes.js. They read
+  // 9 and 12 for one day, while the banks were transcribed from the teacher bundle,
+  // before the rule landed that bundle instruments stay offline. Existing attempts
+  // are NOT regraded by either move; smoke/denominator-safety.js pins that.
+  ok('  1.1|quiz reads 5', d['1.1|quiz'] === 5, d && d['1.1|quiz']);
+  ok('  1.2|quiz reads 5', d['1.2|quiz'] === 5, d && d['1.2|quiz']);
 
   // Present BEFORE any student has submitted: a header cannot wait for a cell.
   ok('  present with zero submissions recorded',

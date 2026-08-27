@@ -47,17 +47,22 @@ const POINTS = {
   // ── 1.1 ────────────────────────────────────────────
   '1.1|exercise-1': 7,        // foundCount reads / 7
   '1.1|exercise-2': 8,        // ANSWERS[] has 8 entries
-  // Re-priced with the server-scored swap: the corrected CED-aligned quiz asks
-  // 9 items, from the teacher bundle's own Quiz_KEY.docx. This does NOT regrade
-  // anyone who already sat the 5 item version: score_events carries earned and
-  // max_points per submission and gradebook-contract SOURCE B prices an attempted
-  // cell from the ledger, never from this table. Pinned by smoke/denominator-safety.js.
-  '1.1|quiz': 9,              // seed/cyber-unit-1-quizzes.js, 9 items
+  // Re-priced twice on 2026-08-26/27, and the second move is the one that sticks.
+  // It briefly read 9, matching the teacher bundle's Quiz_KEY.docx, until the rule
+  // landed that bundle instruments stay offline: an online quiz that copies the
+  // paper one destroys the paper one's security for every teacher using it. The
+  // web quiz is a separate 5 item instrument covering the same EKs.
+  //
+  // Neither move regrades anyone who already sat any version: score_events carries
+  // earned and max_points per submission, and gradebook-contract SOURCE B prices an
+  // attempted cell from the ledger, never from this table. smoke/denominator-safety.js
+  // pins that in both directions.
+  '1.1|quiz': 5,              // seed/cyber-unit-1-web-quizzes.js, 5 items
   '1.1|lab': 24,              // "/ 24 pts" score bar, finalScore + totalScore present
 
   // ── 1.2 ────────────────────────────────────────────
   '1.2|lab': 30,              // score readout reads 0 / 30
-  '1.2|quiz': 12,             // seed/cyber-unit-1-quizzes.js, 12 items
+  '1.2|quiz': 5,              // seed/cyber-unit-1-web-quizzes.js, 5 items (was 12, see 1.1 note)
   '1.2|exercise-1': 24,       // "/ 24 pts" score bar, badge "3 Parts . 24 pts", 12+6+6
   '1.2|exercise-2': 30,       // "/ 30 pts" score bar, three clients at 10 each
 
