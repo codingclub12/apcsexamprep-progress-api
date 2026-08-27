@@ -102,19 +102,44 @@ function auditPage(handle, html) {
   }
   const nums = blocks.map(Number).filter((n) => Number.isFinite(n));
 
-  // The denominator the page WRITES into the tracker, and the one it ships with.
+  // WHERE THE DENOMINATOR COMES FROM, in the reporter's own precedence.
+  //
+  // lessonPct() prefers window.cfuState and only falls back to scraping the
+  // tracker text. Two page generations are live and the difference matters:
+  //
+  //   new shell: assigns cfuState = { score: 0, total: N, ... }. The reporter
+  //              reads the number directly, so there is nothing to misread and
+  //              the total tracks the real question count.
+  //   old shell: no cfuState, and the engine writes a hardcoded "score / N"
+  //              into the tracker for the reporter to SCRAPE. That N drifts
+  //              from the block count the moment a question is added or cut.
+  //
+  // Checking only the scraped form reports every new-shell page as broken, so
+  // both are read and the winning one is named in the output.
+  const stateM = /cfuState\s*=\s*\{[^}]*?\btotal\s*:\s*(\d+)/.exec(html);
   const written = /state\.score\s*\+\s*['"]\s*\/\s*(\d+)['"]/.exec(html);
   const shipped = /id="cfu-score-num"[^>]*>\s*\d+(?:\.\d+)?\s*\/\s*(\d+)/.exec(html);
-  const denom = written ? Number(written[1]) : (shipped ? Number(shipped[1]) : null);
+  const scraped = written ? Number(written[1]) : (shipped ? Number(shipped[1]) : null);
+  const stateTotal = stateM ? Number(stateM[1]) : null;
+  const denom = stateTotal != null ? stateTotal : scraped;
+  const source = stateTotal != null ? 'cfuState' : (scraped != null ? 'scraped' : null);
 
   if (blocks.length && denom != null && denom !== blocks.length) {
     f.push({ sev: 'P0', code: 'denominator-mismatch',
-      msg: `tracker says "/ ${denom}" but the page has ${blocks.length} CFU blocks. `
+      msg: `denominator is ${denom} (from ${source}) but the page has ${blocks.length} CFU blocks. `
          + `Max achievable is ${Math.round(blocks.length / denom * 100)}%, and every grade is scaled wrong.` });
   }
   if (blocks.length && denom == null) {
-    f.push({ sev: 'P1', code: 'denominator-unreadable',
-      msg: `${blocks.length} CFU blocks but no readable "score / N" for the reporter to scrape.` });
+    f.push({ sev: 'P0', code: 'denominator-unreadable',
+      msg: `${blocks.length} CFU blocks but neither a cfuState.total nor a readable "score / N". `
+         + `lessonPct() returns null, so this page can never record a lesson grade by any path.` });
+  }
+  // Both mechanisms present and disagreeing: the reporter takes cfuState, the
+  // student watches the scraped text. They must not say different things.
+  if (stateTotal != null && scraped != null && stateTotal !== scraped) {
+    f.push({ sev: 'P1', code: 'denominator-split',
+      msg: `cfuState.total is ${stateTotal} but the tracker text says ${scraped}. `
+         + `The reporter grades on ${stateTotal} while the student is shown ${scraped}.` });
   }
 
   // Numbering gaps: a removed question whose denominator stayed behind.
@@ -175,7 +200,7 @@ function auditPage(handle, html) {
     }
   }
 
-  return { handle, blocks: blocks.length, denom, nums, findings: f };
+  return { handle, blocks: blocks.length, denom, source, nums, findings: f };
 }
 
 // --- RUN -------------------------------------------------------------
@@ -205,7 +230,8 @@ function auditPage(handle, html) {
   for (const p of pages) {
     const tag = p.findings.length ? p.findings.map((x) => x.sev).sort()[0] : 'ok';
     console.log(`  [${tag.padEnd(2)}] ${p.handle}`
-      + (p.blocks ? `   blocks=${p.blocks} denom=${p.denom == null ? '?' : p.denom}` : ''));
+      + (p.blocks ? `   blocks=${p.blocks} denom=${p.denom == null ? '?' : p.denom}`
+        + ` src=${p.source || 'none'}` : ''));
     for (const f of p.findings) { console.log(`         ${f.sev} ${f.code}: ${f.msg}`); all.push(f); }
   }
 

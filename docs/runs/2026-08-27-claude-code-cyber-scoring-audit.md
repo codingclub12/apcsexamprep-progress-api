@@ -57,14 +57,79 @@ and 1.5. Lesson 1.3 is clean. `getElementById` returns the first, and the page e
 and the reporter both read the same first one, so the grade is unaffected. What it
 costs is the student's own display: they may be watching the copy that never updates.
 
+## The full sweep: all five units, 131 pages
+
+```
+unit 1   26/26 reachable    P0 1   P1 1   P2 9
+unit 2   17/21 reachable    P0 0   P1 0   P2 0
+unit 3   31/31 reachable    P0 0   P1 0   P2 0
+unit 4   26/26 reachable    P0 0   P1 3   P2 0
+unit 5   31/31 reachable    P0 0   P1 18  P2 0
+```
+
+### Two page generations, and the split explains everything
+
+The first run reported lesson 3.6 as having an unreadable denominator. That was a
+FALSE POSITIVE in the audit, and correcting it produced the most useful finding of
+the sweep.
+
+`lessonPct()` prefers `window.cfuState` and only falls back to scraping the tracker
+text. Two shells are live:
+
+| shell | mechanism | risk |
+|---|---|---|
+| new | assigns `cfuState = {score, total, answered}` | total tracks the real question count |
+| old | hardcodes `"score / N"` for the reporter to SCRAPE | N drifts the moment a question is added or cut |
+
+Unit 3 is fully migrated: all six lessons read `src=cfuState` and the unit is clean.
+Unit 1 is mixed: 1.1, 1.3 and 1.5 are on `cfuState`; **1.2 and 1.4 are still scraped**.
+
+That reframes the P0. Lesson 1.2 is not an isolated typo, it is the old shell doing
+exactly what the old shell does: it lost a question and its hardcoded denominator
+stayed at 10. **Lesson 1.4 is the same shell and currently correct, which makes it a
+trap rather than a bug** - change its question count and it breaks silently and
+identically. Migrating both to the `cfuState` shell fixes one and disarms the other,
+and the target pattern already exists in this course.
+
+### Unit 5: 18 graded pages that cannot report a score
+
+Every `exercise-1`, `exercise-2` and `lab` across all six lessons. Verified on
+`ap-cyber-unit-5-lesson-1-exercise-1`: it renders `correct + ' / ' + total` into
+`#u5l1ex1-score`, loads `apcs-score-reporter.js`, and sets no `cfuState`.
+
+The ids are **namespaced per page** (`u5l1ex1-...`), so this cannot be fixed by adding
+a constant to `SCORE_IDS` the way `labTotal` was. Either the reporter learns a
+pattern (a guarded fallback over `[id*="score"]`, which its existing visibility,
+`0 / 0` and out-of-range guards make defensible), or the pages adopt the standard
+ids. That is a decision, not a patch, and it is not made here.
+
+### Unit 1 lesson 1: one bespoke id
+
+`ap-cyber-unit-1-lesson-1-exercise-2` renders into `#x2scn` (`"0 / 15"`). Lessons 2
+to 5 all use the standard `finalScore` / `totalScore`. One page, one id, and the
+same shape as the `labTotal` gap that file already records fixing.
+
+### Unit 4: three labs, NOT yet classified
+
+`lesson-1-lab`, `lesson-4-lab`, `lesson-5-lab` carry no id the reporter knows. They
+do have scoring machinery (`check-btn`, `correct`, `pts`) but no aggregate readout
+was located, and no `textContent` write to a score-bearing element matched. So it is
+not yet established whether these labs produce a total at all. Recorded as open
+rather than reported as broken.
+
+### Unit 2: clean, and 4 handles absent
+
+17 of 21. The four missing are the `ap-cyber-unit-2-lesson-N` lesson pages: unit 2's
+lesson landings exist only under the named family (`ap-cybersecurity-unit-2-<slug>`),
+which this audit does not yet generate.
+
 ## What this run does NOT cover
 
-- **Named lesson landings.** The audit derives handles from the `COURSES` config, so
-  it visits `ap-cyber-unit-1-lesson-2`. The named landing
-  `ap-cybersecurity-unit-1-password-attacks` is a second handle for the same lesson
-  and is not generated. Both are wired by `quiz-tracker-wiring.liquid` and both write
-  the same `(unit, lesson, activity)` row, so the grade is not double counted, but the
-  audit should discover them rather than skip them.
-- **Whether a student can complete every widget.** The audit proves `blockDone()` is
-  reachable for every block in Unit 1. It cannot prove the widget works.
-- **Units 2 to 5.** `--unit 2` and up are one flag away and unrun.
+- **Named lesson landings.** Handles come from the `COURSES` config, so the audit
+  visits `ap-cyber-unit-1-lesson-2` but never
+  `ap-cybersecurity-unit-1-password-attacks`. Both are wired and both write the same
+  `(unit, lesson, activity)` row, so nothing double counts, but unit 2 shows the cost:
+  a whole unit's lesson pages went unaudited.
+- **Whether a widget is completable.** The audit proves `blockDone()` is reachable for
+  every block. It cannot prove the widget works.
+- **The three unit 4 labs** above.
