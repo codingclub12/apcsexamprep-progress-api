@@ -1,0 +1,576 @@
+TOPIC 1.1 
+Understanding Social 
+Engineering
+Required Course Content 
+ESSENTIAL KNOWLEDGE
+1.1.A.1
+Social engineering attacks employ 
+psychological tactics to manipulate users into 
+revealing sensitive information (elicitation), 
+downloading a malicious file, or clicking on 
+a malicious link. Social engineering can be 
+performed in person but is often done by 
+email, by text message, or through social 
+media messages.
+1.1.A.2
+Adversaries often use psychological 
+tactics like intimidation and urgency to 
+achieve their goals. Intimidation is when an 
+adversary threatens a target with negative 
+consequences if they donât comply. Urgency 
+is when an adversary creates reasons why a 
+target should act quickly.
+1.1.B
+Explain how social engineering 
+tactics influence victims to 
+perform a desired action.
+1.1.B.1
+Social engineering tactics rely on common 
+psychological principles that influence human 
+behavior.
+1.1.B.2 
+Intimidation leverages a natural human 
+aversion to negative consequences. By 
+drawing attention to possible negative 
+consequences, adversaries use fear to incite 
+targets to act.
+1.1.B.3
+Urgency leverages a natural human response 
+to react quickly to time-sensitive needs. 
+When targets detect a sense of urgency in 
+a message, they feel pressured to respond 
+or act quickly, which can prevent them from 
+taking the time to consider whether an action 
+is reasonable or safe.
+SUGGESTED SKILLS
+1.A
+AP CybersecurityâÂ·âCourse Framework 
+Identify, with and without the 
+support of AI, vulnerabilities, 
+threats, and attack methods, 
+and explain how they generate 
+risk.
+return to contents 33
+
+34 AP CybersecurityâÂ·âCourse Framework return to contents
+1.1.C.1 
+Victims may give an adversary personal 
+information that could lead to impersonation, 
+such as name, phone number, address, 
+workplace, petsâ names, or birthdate. These 
+types of information, and information like 
+them, are often used on websites as challenge 
+questions to verify a userâs identity.
+1.1.C.2 
+Victims may give an adversary secure 
+information like a one-time password (OTP) 
+or authentication login code, which could 
+allow an adversary to log in to a service as the 
+victim.
+1.1.C.3 
+Victims may download malware or click a 
+link that that installs malware on their device, 
+steals information from their web browser, or 
+directs them to a website where their login 
+credentials can be captured by an adversary.
+1.1.C
+Describe possible impacts for 
+victims of social engineering 
+attacks.
+
+AP CybersecurityâÂ·âCourse Framework return to contents 35
+TOPIC 1.2 
+Suspicious 
+Website Logins
+Required Course Content 
+LEARNING OBJECTIVE
+1.2.A
+Identify common signs of a 
+password attack.
+ESSENTIAL KNOWLEDGE
+1.2.A.1
+In an online password attack, adversaries 
+try logging in to a device or service using 
+common passwords, common password 
+patterns, or stolen passwords.
+1.2.A.2
+Signs of an online password attack include:
+Â§ Many failed attempts to log in over a short 
+duration
+Â§ Login attempts at unusual times
+Â§ Login attempts from unknown devices
+1.2.B
+Explain how adversaries 
+take advantage of weak 
+authentication.
+1.2.B.1
+Many people use common patterns when 
+creating passwords, such as:
+Â§ Starting a password with one or two words, 
+adding a two-digit number (often signifying 
+a year), and putting a special character at 
+the end
+Â§ Including the names of family or pets in 
+their passwords
+Â§ Including personally significant dates in 
+their passwords
+1.2.B.2
+Adversaries often construct a dictionary 
+of possible passwords based on personal 
+information gathered about a target (e.g., 
+birthday, anniversary, names of pets and 
+family) and use an automated tool to submit 
+potential passwords.
+SUGGESTED SKILLS
+1.A
+Identify, with and without the 
+support of AI, vulnerabilities, 
+threats, and attack methods, 
+and explain how they generate 
+risk.
+2.A
+Identify security controls, and 
+explain how they mitigate risks.
+
+36 AP CybersecurityâÂ·âCourse Framework return to contents
+1.2.C.1
+Users should create passwords that are long, 
+random, and unique. A password manager 
+can be used to generate and store strong 
+passwords, or a user may create long, unique 
+passphrases for their accounts. 
+1.2.C.2
+When creating passwords, users should avoid 
+names, dates, or other personally meaningful 
+words or numbers. 
+1.2.C.3
+When available, users should enable 
+multifactor authentication (MFA), which 
+will require the user to provide extra proof 
+of identityâsuch as a one-time codeâin 
+addition to the password as an extra layer of 
+security.
+1.2.C
+Explain how to make 
+authentication stronger.
+
+AP CybersecurityâÂ·âCourse Framework return to contents 37
+TOPIC 1.3 
+Best Practices for 
+Public Networks 
+Required Course Content 
+LEARNING OBJECTIVE
+1.3.A
+Identify the type of adversary 
+conducting a cyberattack.
+ESSENTIAL KNOWLEDGE
+1.3.A.1
+Adversaries can be classified by their skill 
+levels.
+Â§ Low-skilled adversaries rely on malicious 
+cyber tools created by others that can 
+be purchased online. The tools they use 
+exploit known vulnerabilities.
+Â§ High-skilled adversaries have the 
+capacity to create new malicious cyber 
+tools or modify existing ones to adapt 
+to new defensive techniques and tools. 
+They also have the capacity to discover 
+undocumented vulnerabilities, known as 
+zero days.
+1.3.A.2
+Adversaries have a variety of motivations, 
+including greed, desire for recognition, 
+dedication to a cause, revenge, politics, or 
+beliefs.
+1.3.B
+Identify types of wireless 
+cyberattacks.
+1.3.B.1
+In an evil twin attack, an adversary sets up 
+their own wireless access point (WAP) with a 
+service set identifier (SSID) similar or identical 
+to a target network; the adversaryâs network 
+is called the evil twin. Victims of this attack 
+could select to unknowingly connect to the 
+evil twin, allowing the adversary to capture 
+their network traffic. The adversary cannot 
+read traffic that uses an encrypted protocol 
+like HTTPS. 
+SUGGESTED SKILLS
+1.A
+Identify, with and without the 
+support of AI, vulnerabilities, 
+threats, and attack methods, 
+and explain how they generate 
+risk.
+2.A
+Identify security controls, and 
+explain how they mitigate risks.
+
+38 AP CybersecurityâÂ·âCourse Framework return to contents
+1.3.B
+Identify types of wireless 
+cyberattacks.
+1.3.C
+Describe actions individuals 
+can take to increase protection 
+of sensitive data when using 
+the internet and Wi-Fi.
+1.3.B.2
+In a jamming attack, an adversary floods 
+an area with a strong electromagnetic (EM) 
+signal in the same frequency range as the 
+wireless network, which prevents legitimate 
+traffic between the access point (AP) and 
+users. This type of attack that prevents users 
+from accessing resources is called a denial of 
+service (DoS) attack.
+1.3.B.3
+In a war driving attack, adversaries try to 
+detect wireless network beacons while 
+driving or walking around a target. If a wireless 
+signal is detected, the adversary can gather 
+information about the type of wireless network 
+used and find areas where the wireless signal 
+extends outside the physical building.
+1.3.C.1
+1.3.C.2
+1.3.C.3
+Individuals may consider using a virtual private 
+network (VPN), which encrypts all their traffic 
+to the VPN operatorâs system. Although 
+this action prevents a service provider from 
+viewing traffic, the VPN provider can view the 
+traffic. 
+Most internet protocols are encrypted to 
+protect network traffic. However, individuals 
+may consider the sensitivity of their data in 
+choosing whether to join unencrypted Wi-Fi 
+networks to protect vulnerable data such as 
+DNS queries. 
+Individuals should verify that the name of any 
+wireless network they join exactly matches the 
+name of the network they intend to join.
+
+AP CybersecurityâÂ·âCourse Framework return to contents 39
+TOPIC 1.4 
+AI-Based 
+Cybersecurity Attacks
+Required Course Content 
+LEARNING OBJECTIVE
+1.4.A
+Explain how adversaries use 
+AI-powered tools to augment 
+cyberattacks.
+ESSENTIAL KNOWLEDGE
+1.4.A.1
+Adversaries can use AI-powered tools that 
+leverage existing voice and image samples 
+of a person to create a digital avatar of that 
+person. The use of these technologies enables 
+adversaries to impersonate someone over the 
+phone or even on a video call, which can lead 
+to financial loss or the sharing of sensitive or 
+private information. As more organizations 
+adopt voice-based authentication, the impact 
+of voice-impersonation has a larger potential 
+impact.
+1.4.A.2
+Adversaries can use generative AI tools, 
+like large language models (LLMs), to create 
+convincing phishing messages in any target 
+language. Because traditional phishing 
+messages are sometimes written by non-native speakers of the targetâs language, 
+unnatural language is a feature that has been 
+used to distinguish phishing messages from 
+legitimate messages. However, with AI tools, 
+adversaries can now craft phishing messages 
+in any language that read as though they were 
+written by a native speaker.
+1.4.A.3
+Adversaries can craft prompts that extract 
+secure or sensitive information from LLMs. 
+Secure or sensitive information in LLMs can 
+come from user input and the large data sets 
+used to train LLMs.
+SUGGESTED SKILLS
+1.A
+Identify, with and without the 
+support of AI, vulnerabilities, 
+threats, and attack methods, 
+and explain how they generate 
+risk.
+2.A
+Identify security controls, and 
+explain how they mitigate risks.
+
+40 AP CybersecurityâÂ·âCourse Framework return to contents
+1.4.A
+Explain how adversaries use 
+AI-powered tools to augment 
+cyberattacks.
+1.4.B
+Explain how to protect 
+against some AI-augmented 
+cyberattacks.
+1.4.A.4
+Adversaries can publish websites or modify 
+existing websites to contain false information 
+so that the false information will be included in 
+the training sets for LLMs, causing the LLMs to 
+repeat the false information.
+1.4.A.5
+Adversaries can perform reconnaissance on 
+a target using AI-powered tools that scan the 
+internet to gather information posted on social 
+media and public websites.
+1.4.A.6
+Adversaries can use AI-enhanced coding 
+tools to help them write new malware, modify 
+existing application code to perform malicious 
+activities, or to find vulnerabilities in large code 
+bases.
+1.4.B.1
+Shared secrets with close friends and relatives 
+that can be used to verify each otherâs 
+identities should be established. A secret word 
+or phrase known only to two parties can be 
+used to authenticate identities in high-stakes 
+situations.
+1.4.B.2
+Multifactor authentication (MFA) should be 
+enabled. If an adversary clones a targetâs voice 
+to access a system with voice authentication, 
+requiring a second authentication factor could 
+prevent an adversary from gaining access to 
+accounts.
+1.4.B.3
+Personal or sensitive data should not be 
+entered into any AI-powered tools, such 
+as chatbots or virtual assistants. Some AI-powered tools feed user input back into 
+the model to provide continuous training. 
+Adversaries could extract data that users have 
+included in prompts.
+1.4.B.4
+Output from AI-powered tools should be 
+carefully evaluated. Verify information from 
+AI-powered tools using reputable, stable, non-AI-based sources.
+
+TOPIC 1.5 
+Leveraging AI in 
+Cyber Defense
+Required Course Content 
+LEARNING OBJECTIVE
+1.5.A
+Explain how cyber defenders 
+can leverage AI-powered 
+tools to protect networks, 
+applications, and data.
+ESSENTIAL KNOWLEDGE
+1.5.A.1
+AI tools can review current security 
+configurations, like firewall rules and access 
+controls, and recommend more secure 
+options. Recommendations should always 
+be checked by a knowledgeable security 
+technician before being implemented.
+1.5.A.2
+AI-powered tools can analyze application code 
+to identify vulnerabilities and recommend 
+mitigations. Recommendations should always 
+be reviewed by a knowledgeable programmer 
+before being implemented.
+1.5.A.3
+AI-powered tools can suggest rules for 
+automated detection systems. Detection 
+rules should always be reviewed by a 
+knowledgeable detection engineer before 
+being added to a system.
+1.5.B.1
+Of the millions of digital events that happen 
+on networks daily, some likely represent an 
+adversary conducting malicious activity. 
+Humans cannot carefully examine all those 
+events to identify the malicious activity.
+1.5.B.2
+AI-powered tools can be trained to quickly 
+analyze digital events and sort the events that 
+are likely malicious activity from those that are 
+harmless.
+1.5.B
+Explain how AI-powered tools 
+are enabling faster and more 
+accurate threat detection and 
+response.
+SUGGESTED SKILLS
+2.A
+Identify security controls, and 
+explain how they mitigate risks.
+3.A
+Identify methods for monitoring 
+systems, and explain how they 
+detect attacks.
+AP CybersecurityâÂ·âCourse Framework return to contents 41
+
+42 AP CybersecurityâÂ·âCourse Framework return to contents
+1.5.B
+Explain how AI-powered tools 
+are enabling faster and more 
+accurate threat detection and 
+response.
+1.5.B.3
+AI-powered tools can be programmed to 
+alert human cybersecurity personnel when 
+likely malicious activity is detected or to take 
+specific corrective actions based on the type 
+of malicious activity detected.
+1.5.B.4
+AI-powered tools enable threat-detection 
+and response teams to catch malicious 
+activity and intervene quickly to prevent loss, 
+harm, damage, and destruction to digital 
+infrastructure and data.
+
+AP CYBERSECURITY
+UNIT
+Securing 
+Spaces
+2
+~2
+CLASS
+1
+ PERIODS
+
+UNIT
+2
+Developing Understanding
+In this unit, students focus on securing a physical location. Adversaries that can gain 
+physical access to a device are often able to bypass many of the technical controls 
+that protect the device and the data on it. Thus, securing the physical space is a 
+critical first layer of defense and a concrete way for students to develop adversarial 
+thinking skills and begin to identify vulnerabilities, threats, attacks, and mitigations. 
+Students consider how physical spaces might be breached by adversaries, how to 
+detect physical breaches, how to select devices to prevent or deter an adversary, 
+and how to place those devices to maximize their usefulness. 
+Building Cybersecurity Skills
+This unit focuses on an aspect of security that is concrete and is present in studentsâ 
+everyday lives. By leveraging the fact that students move through different spaces 
+(e.g., their home, the school building, a bank) that are secured in a variety of ways, 
+teachers can connect the concepts of vulnerabilities, threats, and risk to studentsâ 
+experiences. Students begin assessing and managing risk in this familiar domain 
+while they practice selecting security controls based on the principles from Unit 1. 
+Finally, students consider how to select controls to detect physical breaches and 
+evaluate the impact of those controls.
+Securing Spaces
+~21ââCLASS PERIODS
+AP CybersecurityâÂ·âCourse Framework return to contents 45
+
+Securing Spaces
+UNIT
+2
+Unit Scenario
+The scenario for this unit is designed to connect the knowledge and skills 
+students gain to realistic workplace tasks. The scenario is paired with relevant 
+student activities. Teachers may use their own scenarios in addition to, or in lieu 
+of, the one provided here.
+SCENARIO 2A: 
+Securing Xtensr Labs
+You work on the physical security team at Xtensr Research Labs. Xtensr is buying 
+a smaller research company in the same town to expand their operations. You 
+have been tasked with conducting a physical vulnerability assessment of the 
+new lab.
+You will:
+Â§ Review the building plans and current security controls for this new lab and 
+identify physical vulnerabilities
+Â§ Assess the risk from the vulnerabilities identified
+Â§ Recommend physical security controls to mitigate these vulnerabilities
+Â§ Recommend the placement of monitoring equipment to detect physical 
+security breaches
+46 AP CybersecurityâÂ·âCourse Framework return to contents
+
+Securing Spaces
+UNIT
+2
+UNIT AT A G CLAN E
+AP CybersecurityâÂ·âCourse Framework return to contents 47
+Topic Learning Objectives Scenario Connections
+Class 
+Periods
+2.1 Cyber 
+Foundations
+2.1.A 
+2.1.B 
+2.1.C 
+2.1.D 
+2.1.E 
+2.1.F 
+2.1.G 
+Identify social engineering attacks.
+Identify types of adversaries.
+Describe the phases of a 
+cyberattack.
+Describe the risk assessment 
+process.
+Identify strategies for managing risk.
+Identify types of security controls.
+Explain why a defense-in-depth 
+security strategy is necessary to 
+optimally protect an organization.
+8
+2.2 Physical 
+Vulnerabilities 
+and Attacks
+2.2.A 
+2.2.B 
+2.2.C 
+Identify common physical attacks.
+Explain how threats can exploit 
+common physical vulnerabilities to 
+cause loss, damage, disruption, or 
+destruction to assets.
+Assess and document risks from 
+physical vulnerabilities.
+2A Securing Xtensr Labs
+Review physical plans to identify 
+physical vulnerabilities.
+Assess the risk from the vulnerabilities 
+identified.
+5
+2.3 Protecting 
+Physical 
+Spaces
+2.3.A 
+2.3.B 
+Identify managerial controls related 
+to physical security.
+Determine mitigation strategies for 
+risks from physical vulnerabilities.
+2A Securing Xtensr Labs
+Recommend physical security controls 
+to mitigate the risks identified in 
+Topic 2.2.
+4
+2.4 Detecting 
+Physical 
+Attacks
+2.4.A 
+2.4.B 
+2.4.C 
+Identify ways security controls can 
+detect physical attacks.
+Determine effective placement 
+of security controls for detecting 
+physical attacks.
+Apply detection techniques to 
+identify physical attacks.
+2A Securing Xtensr Labs
+Recommend the placement of 
+monitoring equipment for detecting 
+physical security breaches.
+4
+ 
+
+Securing Spaces
+UNIT
+2

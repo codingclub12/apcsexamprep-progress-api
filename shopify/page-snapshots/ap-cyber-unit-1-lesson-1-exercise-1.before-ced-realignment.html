@@ -1,0 +1,882 @@
+<script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "LearningResource",
+    "headline": "AP Cybersecurity Topic 1.1 Exercise 1: Spot the Red Flags",
+    "description": "Practice identifying social engineering red flags in phishing emails, vishing calls, and smishing messages. AP Cybersecurity exam-level scenarios with instant feedback.",
+    "author": {
+      "@type": "Person",
+      "name": "Tanner Crow",
+      "url": "https://www.apcsexamprep.com/pages/ap-computer-science-tutor"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "APCSExamPrep.com",
+      "url": "https://www.apcsexamprep.com"
+    },
+    "educationalLevel": "High School",
+    "inLanguage": "en-US"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.apcsexamprep.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "AP Cybersecurity",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Unit 1: Introduction to Security",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide#unit1"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": "Topic 1.1: Understanding Social Engineering",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-unit-1-social-engineering"
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "name": "AP Cybersecurity Topic 1.1 Exercise 1: Spot the Red Flags",
+        "item": "https://www.apcsexamprep.com/pages/ap-cyber-unit-1-lesson-1-exercise-1"
+      }
+    ]
+  }
+]
+</script>
+<style>
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-lesson.locked{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;cursor:not-allowed!important;}
+#ucnav .ucn-lesson.locked:link,#ucnav .ucn-lesson.locked:visited,#ucnav .ucn-lesson.locked:hover{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;background:transparent!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-lock svg{opacity:.5!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+
+/* RESET SHOPIFY TITLE */
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none !important;}
+
+#apcyber-ex1{
+  --dark:#1E1B4B;
+  --purple:#6B21A8;
+  --purple-mid:#7C3AED;
+  --accent:#A855F7;
+  --green:#15803D;
+  --red:#B91C1C;
+  --gold:#F59E0B;
+  --light:#F5F0FF;
+  --light-border:#DDD6FE;
+  --gray-50:#F9FAFB;
+  --gray-100:#F3F4F6;
+  --gray-200:#E5E7EB;
+  --gray-600:#4B5563;
+  --gray-700:#374151;
+  --gray-800:#1F2937;
+  --white:#ffffff;
+  --radius-sm:6px;
+  --radius-md:10px;
+  --radius-lg:16px;
+  --shadow-md:0 4px 12px rgba(0,0,0,0.12);
+  font-family:Georgia,serif;
+  line-height:1.7;
+  color:var(--gray-800);
+  max-width:960px;
+  margin:0 auto;
+  padding:20px 16px 60px;
+}
+#apcyber-ex1 *{box-sizing:border-box !important;}
+
+#apcyber-ex1 .cyber-course-header{
+  background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%);
+  border-radius:var(--radius-lg);padding:36px 40px;margin-bottom:8px;
+  color:var(--white) !important;
+}
+#apcyber-ex1 .cyber-course-label{
+  font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;
+  color:#C4B5FD !important;margin-bottom:8px;font-family:Georgia,serif;
+}
+#apcyber-ex1 .cyber-course-header h1{
+  font-size:26px;font-weight:800;color:var(--white) !important;
+  margin:0 0 8px 0;line-height:1.3;font-family:Georgia,serif;
+}
+#apcyber-ex1 .cyber-course-header p{
+  font-size:15px;color:rgba(255,255,255,0.85) !important;
+  margin:0 0 20px 0;font-family:Georgia,serif;
+}
+#apcyber-ex1 .cyber-header-meta{display:flex;flex-wrap:wrap;gap:12px;}
+#apcyber-ex1 .cyber-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(168,85,247,0.2);border:1px solid rgba(168,85,247,0.4);
+  color:var(--white) !important;padding:6px 14px;border-radius:20px;
+  font-size:13px;font-weight:500;font-family:Georgia,serif;
+}
+
+#apcyber-ex1 .cyber-page-nav{
+  background:var(--white);border:1px solid var(--light-border);
+  border-radius:var(--radius-md);padding:16px 20px;margin-bottom:28px;
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+}
+#apcyber-ex1 .cyber-nav-step{
+  display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gray-600);
+  text-decoration:none;padding:4px 8px;border-radius:var(--radius-sm);
+  transition:background 0.2s;font-family:Georgia,serif;
+}
+#apcyber-ex1 a.cyber-nav-step,
+#apcyber-ex1 a.cyber-nav-step:link,
+#apcyber-ex1 a.cyber-nav-step:visited{color:var(--purple) !important;text-decoration:none !important;}
+#apcyber-ex1 a.cyber-nav-step:hover{background:var(--light);}
+#apcyber-ex1 .cyber-nav-step.active{background:var(--dark);color:var(--white) !important;font-weight:600;}
+#apcyber-ex1 .cyber-nav-sep{color:var(--light-border);font-size:18px;}
+#apcyber-ex1 .cyber-nav-step .step-num{
+  width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;background:var(--gray-200);color:var(--gray-700) !important;flex-shrink:0;
+}
+#apcyber-ex1 .cyber-nav-step.active .step-num{background:var(--accent);color:var(--white) !important;}
+#apcyber-ex1 a.cyber-nav-step .step-num{background:var(--light);color:var(--purple) !important;}
+
+#apcyber-ex1 .key-terms{
+  background:var(--white);border:2px solid var(--light-border);
+  border-radius:var(--radius-lg);padding:24px 28px;margin-bottom:24px;
+}
+#apcyber-ex1 .key-terms-label{
+  font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;
+  color:var(--purple);margin-bottom:14px;font-family:Georgia,serif;
+}
+#apcyber-ex1 .key-terms-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;
+}
+#apcyber-ex1 .kt-item{
+  background:var(--light);border-radius:var(--radius-sm);
+  padding:10px 14px;border-left:3px solid var(--accent);
+}
+#apcyber-ex1 .kt-term{
+  font-size:13px;font-weight:700;color:var(--dark);display:block;margin-bottom:2px;font-family:Georgia,serif;
+}
+#apcyber-ex1 .kt-def{font-size:12px;color:var(--gray-600);line-height:1.5;font-family:Georgia,serif;}
+
+#apcyber-ex1 .intro-card{
+  background:linear-gradient(135deg,#FFFBEB,#FEF3C7);
+  border:2px solid #F59E0B;border-radius:var(--radius-md);
+  padding:24px 28px;margin-bottom:28px;
+}
+#apcyber-ex1 .intro-card h2{
+  font-size:20px;font-weight:700;color:var(--dark);margin:0 0 10px 0;font-family:Georgia,serif;
+}
+#apcyber-ex1 .intro-card p{font-size:15px;color:var(--gray-700);margin:0 0 10px 0;font-family:Georgia,serif;}
+#apcyber-ex1 .intro-card p:last-child{margin:0;}
+#apcyber-ex1 .predict-box{
+  background:linear-gradient(135deg,#1E1B4B,#3B0764);
+  color:var(--white) !important;border-radius:var(--radius-md);padding:16px 20px;margin-top:16px;
+}
+#apcyber-ex1 .predict-box p{color:rgba(255,255,255,0.9) !important;margin:0 0 10px 0;font-size:14px;font-family:Georgia,serif;}
+#apcyber-ex1 .predict-input{
+  width:100%;padding:10px 14px;border-radius:var(--radius-sm);
+  border:2px solid rgba(196,181,253,0.4);background:rgba(255,255,255,0.08);
+  color:var(--white);font-size:14px;box-sizing:border-box;
+  font-family:Georgia,serif;resize:vertical;min-height:70px;
+}
+#apcyber-ex1 .predict-input::placeholder{color:rgba(255,255,255,0.4);}
+#apcyber-ex1 .predict-input:focus{outline:none;border-color:var(--accent);}
+#apcyber-ex1 .btn-reveal{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#6B21A8 !important;color:#fff !important;-webkit-text-fill-color:#fff !important;
+  border:none;border-radius:var(--radius-sm);padding:10px 22px;
+  font-size:14px;font-weight:700;cursor:pointer;margin-top:12px;
+  transition:background 0.2s;font-family:Georgia,serif;
+}
+#apcyber-ex1 .btn-reveal:hover{background:#4C1D95 !important;}
+#apcyber-ex1 .btn-reveal:link,
+#apcyber-ex1 .btn-reveal:visited{color:#fff !important;-webkit-text-fill-color:#fff !important;}
+#apcyber-ex1 .btn-reveal.locked{background:#C4B5FD !important;cursor:not-allowed;opacity:0.7;pointer-events:none !important;}
+
+#apcyber-ex1 .btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#6B21A8 !important;color:#fff !important;-webkit-text-fill-color:#fff !important;
+  border:none;border-radius:var(--radius-sm);padding:12px 24px;
+  font-size:14px;font-weight:700;cursor:pointer;text-decoration:none !important;
+  transition:background 0.2s;font-family:Georgia,serif;
+}
+#apcyber-ex1 .btn-primary:link,
+#apcyber-ex1 .btn-primary:visited{color:#fff !important;-webkit-text-fill-color:#fff !important;}
+#apcyber-ex1 .btn-primary:hover{background:#4C1D95 !important;}
+
+#apcyber-ex1 .btn-secondary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#fff !important;color:#1E1B4B !important;-webkit-text-fill-color:#1E1B4B !important;
+  border:2px solid #DDD6FE !important;border-radius:var(--radius-sm);
+  padding:12px 24px;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none !important;
+  transition:all 0.2s;font-family:Georgia,serif;
+}
+#apcyber-ex1 .btn-secondary:link,
+#apcyber-ex1 .btn-secondary:visited{color:#1E1B4B !important;-webkit-text-fill-color:#1E1B4B !important;}
+#apcyber-ex1 .btn-secondary:hover{border-color:#6B21A8 !important;background:var(--light) !important;}
+
+#apcyber-ex1 .btn-retry{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#7C3AED !important;color:#fff !important;-webkit-text-fill-color:#fff !important;
+  border:none;border-radius:var(--radius-sm);padding:12px 24px;
+  font-size:14px;font-weight:700;cursor:pointer;text-decoration:none !important;
+  transition:background 0.2s;font-family:Georgia,serif;
+}
+#apcyber-ex1 .btn-retry:link,
+#apcyber-ex1 .btn-retry:visited{color:#fff !important;-webkit-text-fill-color:#fff !important;}
+#apcyber-ex1 .btn-retry:hover{background:#6B21A8 !important;}
+
+#apcyber-ex1 .score-bar{
+  background:var(--white);border:2px solid var(--light-border);
+  border-radius:var(--radius-md);padding:16px 24px;margin-bottom:20px;
+  display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+}
+#apcyber-ex1 .score-label{font-size:14px;font-weight:600;color:var(--gray-700);font-family:Georgia,serif;}
+#apcyber-ex1 .score-pips{display:flex;gap:6px;}
+#apcyber-ex1 .pip{width:32px;height:10px;border-radius:5px;background:var(--gray-200);transition:background 0.4s;}
+#apcyber-ex1 .pip.found{background:linear-gradient(90deg,#6B21A8,#A855F7);}
+#apcyber-ex1 .score-count{font-size:20px;font-weight:800;color:var(--dark);font-family:Georgia,serif;}
+#apcyber-ex1 .score-hint{font-size:13px;color:var(--gray-600);margin-left:auto;font-family:Georgia,serif;}
+
+#apcyber-ex1 .email-shell{
+  background:var(--white);border:1px solid var(--gray-200);
+  border-radius:var(--radius-lg);box-shadow:var(--shadow-md);margin-bottom:28px;overflow:hidden;
+}
+#apcyber-ex1 .email-toolbar{
+  background:#F3F4F6;padding:10px 16px;border-bottom:1px solid var(--gray-200);
+  display:flex;gap:8px;align-items:center;
+}
+#apcyber-ex1 .email-dot{width:12px;height:12px;border-radius:50%;}
+#apcyber-ex1 .email-dot.red{background:#FF5F56;}
+#apcyber-ex1 .email-dot.yellow{background:#FFBD2E;}
+#apcyber-ex1 .email-dot.green-d{background:#27C93F;}
+#apcyber-ex1 .email-toolbar-label{font-size:12px;color:#9CA3AF;margin-left:8px;font-family:monospace;}
+#apcyber-ex1 .email-header{padding:20px 24px 12px;border-bottom:1px solid var(--gray-100);}
+#apcyber-ex1 .email-field{display:flex;gap:12px;margin-bottom:8px;font-size:14px;align-items:flex-start;}
+#apcyber-ex1 .email-field-label{
+  font-weight:700;color:var(--gray-600);width:70px;flex-shrink:0;
+  padding-top:1px;font-family:Georgia,serif;
+}
+#apcyber-ex1 .email-field-value{color:var(--gray-800);font-family:Georgia,serif;}
+#apcyber-ex1 .email-body{padding:24px;font-size:15px;color:var(--gray-800);line-height:1.8;font-family:Georgia,serif;}
+#apcyber-ex1 .email-body p{margin:0 0 14px 0;}
+#apcyber-ex1 .email-body p:last-child{margin:0;}
+
+/* HOTSPOTS - hover-only discovery */
+#apcyber-ex1 .hotspot{
+  border-bottom:2px dashed transparent;cursor:text;
+  border-radius:2px;transition:all 0.2s;padding:1px 2px;
+}
+#apcyber-ex1 .hotspot:hover{
+  background:rgba(107,33,168,0.08);border-bottom:2px dashed #C4B5FD;cursor:pointer;
+}
+#apcyber-ex1 .hotspot.found{
+  background:rgba(185,28,28,0.10);border-bottom:2px solid #B91C1C;
+  border-radius:var(--radius-sm);cursor:default;
+}
+#apcyber-ex1 .hotspot.found::after{
+  content:'!';display:inline-flex;align-items:center;justify-content:center;
+  width:16px;height:16px;border-radius:50%;
+  background:#B91C1C;color:white;font-size:10px;font-weight:900;
+  margin-left:4px;vertical-align:middle;line-height:1;
+}
+#apcyber-ex1 .hotspot.missed{
+  background:rgba(146,64,14,0.10);border-bottom:2px solid #D97706;border-radius:var(--radius-sm);
+}
+
+#apcyber-ex1 .flag-panel{margin:0 24px 24px;display:none;}
+#apcyber-ex1 .flag-panel.visible{display:block;}
+#apcyber-ex1 .flag-card{
+  border-radius:var(--radius-md);padding:16px 20px;margin-bottom:12px;
+  border-left:4px solid #B91C1C;background:#FEF2F2;animation:flagIn 0.3s ease;
+}
+@keyframes flagIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+#apcyber-ex1 .flag-card h4{font-size:14px;font-weight:700;color:#B91C1C;margin:0 0 6px 0;font-family:Georgia,serif;}
+#apcyber-ex1 .flag-card p{font-size:14px;color:var(--gray-700);margin:0 0 8px 0;font-family:Georgia,serif;}
+#apcyber-ex1 .flag-card p:last-child{margin:0;}
+#apcyber-ex1 .flag-principle{
+  display:inline-block;background:linear-gradient(135deg,#1E1B4B,#3B0764);
+  color:var(--white) !important;font-size:11px;font-weight:700;
+  padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;font-family:Georgia,serif;
+}
+
+#apcyber-ex1 .results-panel{
+  display:none;background:var(--white);border:2px solid var(--light-border);
+  border-radius:var(--radius-lg);padding:28px;margin-bottom:28px;
+}
+#apcyber-ex1 .results-panel.visible{display:block;}
+#apcyber-ex1 .results-header{text-align:center;margin-bottom:24px;}
+#apcyber-ex1 .results-score-big{
+  font-size:64px;font-weight:900;color:#6B21A8;line-height:1;margin-bottom:4px;font-family:Georgia,serif;
+}
+#apcyber-ex1 .results-score-label{font-size:16px;color:var(--gray-600);font-family:Georgia,serif;}
+#apcyber-ex1 .results-message{
+  background:var(--light);border:1px solid var(--light-border);
+  border-radius:var(--radius-md);padding:16px 20px;margin-bottom:20px;text-align:center;
+}
+#apcyber-ex1 .results-message p{margin:0;font-size:15px;color:var(--dark);font-weight:500;font-family:Georgia,serif;}
+#apcyber-ex1 .missed-header{font-size:15px;font-weight:700;color:#D97706;margin:0 0 12px 0;font-family:Georgia,serif;}
+#apcyber-ex1 .missed-card{
+  background:#FFFBEB;border-left:4px solid #F59E0B;
+  border-radius:var(--radius-md);padding:14px 18px;margin-bottom:10px;
+}
+#apcyber-ex1 .missed-card h4{font-size:14px;font-weight:700;color:#D97706;margin:0 0 6px 0;font-family:Georgia,serif;}
+#apcyber-ex1 .missed-card p{font-size:14px;color:var(--gray-700);margin:0;font-family:Georgia,serif;}
+
+#apcyber-ex1 .extension-box{
+  background:linear-gradient(135deg,#1E1B4B,#3B0764);
+  border-radius:var(--radius-lg);padding:28px;margin-bottom:28px;display:none;
+}
+#apcyber-ex1 .extension-box.visible{display:block;}
+#apcyber-ex1 .extension-label{
+  font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;
+  color:#C4B5FD;margin-bottom:6px;font-family:Georgia,serif;
+}
+#apcyber-ex1 .extension-box h3{font-size:20px;font-weight:800;color:#fff;margin:0 0 10px 0;font-family:Georgia,serif;}
+#apcyber-ex1 .extension-box p{font-size:14px;color:rgba(255,255,255,0.85);margin:0 0 14px 0;font-family:Georgia,serif;}
+#apcyber-ex1 .extension-box p:last-of-type{margin-bottom:0;}
+#apcyber-ex1 .ext-scenario{
+  background:rgba(255,255,255,0.08);border:1px solid rgba(196,181,253,0.3);
+  border-radius:var(--radius-md);padding:16px 20px;margin:14px 0;
+}
+#apcyber-ex1 .ext-scenario p{color:rgba(255,255,255,0.9) !important;margin:0 0 8px 0;font-size:14px;}
+#apcyber-ex1 .ext-scenario p:last-child{margin:0;}
+#apcyber-ex1 .ext-textarea{
+  width:100%;padding:10px 14px;border-radius:var(--radius-sm);
+  border:2px solid rgba(196,181,253,0.4);background:rgba(255,255,255,0.08);
+  color:#fff;font-size:14px;box-sizing:border-box;
+  font-family:Georgia,serif;resize:vertical;min-height:80px;margin-top:10px;
+}
+#apcyber-ex1 .ext-textarea::placeholder{color:rgba(255,255,255,0.35);}
+
+#apcyber-ex1 .exam-tip{
+  background:linear-gradient(135deg,#1E1B4B,#3B0764);
+  color:var(--white) !important;border-radius:var(--radius-md);padding:20px 24px;margin-bottom:28px;
+}
+#apcyber-ex1 .exam-tip h3{
+  font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+  color:#C4B5FD !important;margin:0 0 10px 0;font-family:Georgia,serif;
+}
+#apcyber-ex1 .exam-tip p{color:rgba(255,255,255,0.9) !important;font-size:14px;margin:0;font-family:Georgia,serif;}
+
+#apcyber-ex1 .click-instruction{
+  text-align:center;padding:12px;font-size:14px;color:var(--gray-600);
+  font-style:italic;background:var(--gray-50);border-radius:var(--radius-sm);
+  margin:0 24px 16px;font-family:Georgia,serif;
+}
+#apcyber-ex1 .click-instruction strong{color:var(--dark);}
+#apcyber-ex1 .nav-buttons{display:flex;gap:12px;flex-wrap:wrap;}
+
+@media(max-width:640px){
+  #apcyber-ex1 .cyber-course-header{padding:24px 20px;}
+  #apcyber-ex1 .email-body{padding:16px;}
+  #apcyber-ex1 .email-header{padding:16px;}
+  #apcyber-ex1 .flag-panel{margin:0 12px 16px;}
+  #apcyber-ex1 .click-instruction{margin:0 12px 12px;}
+  #apcyber-ex1 .key-terms-grid{grid-template-columns:1fr;}
+}
+
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+</style>
+
+<!-- UNIT ACCORDION NAV -->
+
+<div id="ucnav">
+  <div class="ucn-rail" id="ucn-rail">
+    <a href="/pages/ap-cybersecurity-complete-course-guide" class="ucn-hub">AP Cyber Hub</a>
+    <span class="ucn-badge">Unit 1</span>
+    <a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-lesson open" onclick="ucnToggle(1);" id="ucn-l1" title="Understanding Social Engineering">1.1 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps open" id="ucn-s1">
+      <a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-step">Lesson</a>
+      <span class="ucn-step current">Ex 1</span>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-lesson" onclick="ucnToggle(2);" id="ucn-l2" title="Suspicious Website Logins">1.2 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s2">
+      <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cybersecurity-unit-1-password-attacks-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-lesson" onclick="ucnToggle(3);" id="ucn-l3" title="Best Practices for Public Networks">1.3 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s3">
+      <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-lesson" onclick="ucnToggle(4);" id="ucn-l4" title="AI-Based Cybersecurity Attacks">1.4 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s4">
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-lesson" onclick="ucnToggle(5);" id="ucn-l5" title="Leveraging AI in Cyber Defense">1.5 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s5">
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-quiz" class="ucn-step">Quiz</a>
+    </span>
+  </div>
+</div>
+
+<script>
+function ucnToggle(num){var l=document.getElementById('ucn-l'+num),s=document.getElementById('ucn-s'+num);if(!l||!s)return;var o=l.classList.contains('open');document.querySelectorAll('#ucnav .ucn-lesson').forEach(function(e){e.classList.remove('open')});document.querySelectorAll('#ucnav .ucn-steps').forEach(function(e){e.classList.remove('open')});if(!o){l.classList.add('open');s.classList.add('open');setTimeout(function(){l.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},50)}}
+(function(){function pos(){var nav=document.getElementById('ucnav');if(!nav)return;if(nav.parentElement!==document.body){document.body.appendChild(nav)}var h=0;var headerEl=document.querySelector('.section-header header.header')||document.querySelector('sticky-header header')||document.querySelector('header.header');if(headerEl){h=Math.round(headerEl.getBoundingClientRect().bottom)}if(h<20||h>300)h=68;nav.style.setProperty('top',h+'px','important');var navH=nav.offsetHeight||42;var w=document.getElementById('apcyber-wrapper');if(w)w.style.setProperty('padding-top',(h+navH+4)+'px','important')}requestAnimationFrame(pos);setTimeout(pos,150);setTimeout(pos,400);setTimeout(pos,800);setTimeout(pos,1500);setTimeout(pos,3000);window.addEventListener('resize',pos,{passive:true});setTimeout(function(){var _w=document.getElementById('apcyber-wrapper');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}var _m=document.getElementById('MainContent');if(_m){_m.style.setProperty('padding-top','0','important');_m.style.setProperty('margin-top','0','important')}},50);setTimeout(function(){var _w=document.getElementById('apcyber-wrapper');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}},500);var scrolled=false;window.addEventListener('scroll',function(){if(!scrolled){scrolled=true;requestAnimationFrame(pos)}},{passive:true});var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class','hidden']});setTimeout(function(){obs.disconnect()},15000)})();
+</script>
+
+<div id="apcyber-ex1">
+
+  <div class="cyber-course-header">
+    <div class="cyber-course-label">AP Cybersecurity — Unit 1 • Topic 1.1</div>
+    
+<nav aria-label="Breadcrumb" style="font-size:0.82rem;color:#6b7280;-webkit-text-fill-color:#6b7280;margin:0 0 16px;font-family:'Georgia',serif;padding:0;"><a href="/" style="color:#6b21a8;text-decoration:none;-webkit-text-fill-color:#6b21a8;">Home</a><span style="margin:0 6px;color:#d1d5db;">›</span><a href="/pages/ap-cybersecurity-complete-course-guide" style="color:#6b21a8;text-decoration:none;-webkit-text-fill-color:#6b21a8;">AP Cybersecurity</a><span style="margin:0 6px;color:#d1d5db;">›</span><span style="color:#374151;-webkit-text-fill-color:#374151;">Topic 1.1 › Exercise 1</span></nav>
+<h1>Spot the Red Flags</h1>
+    <p>Can you identify every suspicious element before someone clicks a malicious link?</p>
+    <div class="cyber-header-meta">
+      <span class="cyber-badge">Exercise 1 of 2</span>
+      <span class="cyber-badge">Skill 1.A — Analyze Risk</span>
+      <span class="cyber-badge">~10 minutes</span>
+    </div>
+  </div>
+
+  <div class="cyber-page-nav">
+    <a href="/pages/ap-cybersecurity-complete-course-guide" class="cyber-nav-step">
+      <span class="step-num">H</span>Course Hub
+    </a>
+    <span class="cyber-nav-sep">›</span>
+    <a href="/pages/ap-cyber-unit-1-lesson-1" class="cyber-nav-step">
+      <span class="step-num">1</span>Lesson
+    </a>
+    <span class="cyber-nav-sep">›</span>
+    <span class="cyber-nav-step active">
+      <span class="step-num">2</span>Exercise 1
+    </span>
+    <span class="cyber-nav-sep">›</span>
+    <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-2" class="cyber-nav-step">
+      <span class="step-num">3</span>Exercise 2
+    </a>
+    <span class="cyber-nav-sep">›</span>
+    <a href="/pages/ap-cyber-unit-1-lesson-1-quiz" class="cyber-nav-step">
+      <span class="step-num">4</span>Quiz
+    </a>
+  </div>
+
+  <p style="font-size:15px;color:#374151;line-height:1.7;margin:0 0 24px 0;font-family:Georgia,serif;">
+    This exercise trains you to identify <strong>social engineering red flags</strong> in a real phishing email — one of the most frequently tested skills on the AP Cybersecurity exam. Hover over any part of the email you find suspicious and click to reveal what makes it a threat. Master the vocabulary below before you begin, then see how many of the 7 red flags you can find. For a deeper review of the concepts behind this exercise, see the <a href="/pages/ap-cybersecurity-unit-1-introduction-to-security" style="color:#6B21A8;font-weight:600;">Unit 1 Study Guide</a>.
+  </p>
+
+  <div class="key-terms">
+    <div class="key-terms-label">Key Terms — Topic 1.1</div>
+    <div class="key-terms-grid">
+      <div class="kt-item">
+        <span class="kt-term">Phishing</span>
+        <span class="kt-def">A mass deceptive email designed to trick recipients into revealing credentials or clicking malicious links.</span>
+      </div>
+      <div class="kt-item">
+        <span class="kt-term">Domain Spoofing</span>
+        <span class="kt-def">Registering or faking a domain that closely resembles a legitimate one (e.g., g00gle.com vs google.com).</span>
+      </div>
+      <div class="kt-item">
+        <span class="kt-term">Typosquatting</span>
+        <span class="kt-def">A form of domain spoofing that substitutes visually similar characters (0 for o, 1 for l) to deceive at a glance.</span>
+      </div>
+      <div class="kt-item">
+        <span class="kt-term">Social Engineering</span>
+        <span class="kt-def">Manipulating people psychologically to take a security-compromising action, rather than exploiting technology directly.</span>
+      </div>
+      <div class="kt-item">
+        <span class="kt-term">Urgency Tactic</span>
+        <span class="kt-def">Creating artificial time pressure to prevent the target from thinking critically before acting.</span>
+      </div>
+      <div class="kt-item">
+        <span class="kt-term">Intimidation Tactic</span>
+        <span class="kt-def">Threatening negative consequences (job loss, failed assignment, legal action) if the target does not comply immediately.</span>
+      </div>
+      <div class="kt-item">
+        <span class="kt-term">Credential Harvesting</span>
+        <span class="kt-def">Stealing login credentials by directing users to a fake login page that captures what they type.</span>
+      </div>
+      <div class="kt-item">
+        <span class="kt-term">Impersonation</span>
+        <span class="kt-def">Pretending to be a trusted person or organization (Google, the IRS, a manager) to gain trust and compliance.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="score-bar" id="scoreBar" style="display:flex;">
+    <div>
+      <div class="score-label">Red Flags Found</div>
+      <div class="score-pips">
+        <div class="pip" id="pip1"></div>
+        <div class="pip" id="pip2"></div>
+        <div class="pip" id="pip3"></div>
+        <div class="pip" id="pip4"></div>
+        <div class="pip" id="pip5"></div>
+        <div class="pip" id="pip6"></div>
+        <div class="pip" id="pip7"></div>
+      </div>
+    </div>
+    <div class="score-count">
+<span id="foundCount">0</span> / 7</div>
+    <div class="score-hint">Hover over suspicious elements and click to investigate</div>
+  </div>
+
+  <div class="email-shell">
+    <div class="email-toolbar">
+      <div class="email-dot red"></div>
+      <div class="email-dot yellow"></div>
+      <div class="email-dot green-d"></div>
+      <span class="email-toolbar-label">Inbox — ljones@school.edu</span>
+    </div>
+    <div class="email-header">
+      <div class="email-field">
+        <span class="email-field-label">From:</span>
+        <span class="email-field-value">
+          <span class="hotspot" id="flag-from" data-flag="0" onclick="clickFlag(this)">do-not-reply@<strong>g00gle.com</strong></span>
+        </span>
+      </div>
+      <div class="email-field">
+        <span class="email-field-label">To:</span>
+        <span class="email-field-value">ljones@school.edu</span>
+      </div>
+      <div class="email-field">
+        <span class="email-field-label">Subject:</span>
+        <span class="email-field-value">
+          <span class="hotspot" id="flag-subj" data-flag="1" onclick="clickFlag(this)">[Urgent!] Access Requested</span>
+        </span>
+      </div>
+      <div class="email-field">
+        <span class="email-field-label">Date:</span>
+        <span class="email-field-value">Today, 8:47 AM</span>
+      </div>
+    </div>
+    <div class="email-body">
+      <p>
+        <span class="hotspot" id="flag-generic" data-flag="2" onclick="clickFlag(this)">One of your students</span> has requested access to make a copy of a document. Click this link to authorize your student to copy your document.
+      </p>
+      <p>
+        <span class="hotspot" id="flag-threat" data-flag="3" onclick="clickFlag(this)">If you don’t click the link, your student won’t be able to copy the document and complete their assignment.</span>
+      </p>
+      <p>
+        <span class="hotspot" id="flag-stat" data-flag="4" onclick="clickFlag(this)">Research shows that the faster teachers respond to students’ document-sharing requests, the more likely students are to submit assignments on-time.</span>
+      </p>
+      <p>
+        — <span class="hotspot" id="flag-sig" data-flag="5" onclick="clickFlag(this)">The Google Drive Team</span>
+      </p>
+      <p style="margin-top:20px;">
+        <a class="hotspot" id="flag-link" data-flag="6" onclick="clickFlag(this); return false;" href="javascript:void(0)" style="color:#6B21A8;text-decoration:underline;font-family:Georgia,serif;">
+          Click here to authorize access ›
+        </a>
+      </p>
+    </div>
+    <div class="flag-panel" id="flagPanel"></div>
+  </div>
+
+  <div class="click-instruction" id="clickInstruction" style="display:block;">
+    <strong>Read the email carefully.</strong> Hover over any part you find suspicious and click to investigate. Find all 7 red flags.
+  </div>
+
+  <div class="results-panel" id="resultsPanel">
+    <div class="results-header">
+      <div class="results-score-big" id="finalScore">0</div>
+      <div class="results-score-label">out of 7 red flags found</div>
+    </div>
+    <div class="results-message" id="resultsMessage"><p></p></div>
+    <div id="missedSection"></div>
+    <div class="nav-buttons" style="justify-content:center;margin-top:20px;">
+      <button class="btn-retry" onclick="retryExercise()">↻ Try Again</button>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-2" class="btn-primary">Exercise 2: Attack Classifier ›</a>
+    </div>
+  </div>
+
+  <div class="exam-tip" id="examTip" style="display:none;">
+    <h3>AP Exam Strategy — Social Engineering</h3>
+    <p>On the AP Cybersecurity exam, social engineering questions typically show you a message and ask you to identify which psychological tactic is being used. The two most commonly tested tactics are <strong>Urgency</strong> (act now or something bad happens) and <strong>Impersonation</strong> (pretending to be a trusted organization or person). Always check: (1) Is the sender’s domain real? (2) Is there artificial time pressure? (3) Are consequences threatened for inaction? (4) Does the claimed identity match the actual sender? These four questions catch the majority of phishing attacks on the AP exam.</p>
+  </div>
+
+  <div class="extension-box" id="extensionBox">
+    <div class="extension-label">Extension Challenge — For Early Finishers</div>
+    <h3>Write Your Own Phishing Email</h3>
+    <p>You have just analyzed a phishing attack from the defender’s perspective. Now switch sides. Write a phishing email that targets a high school student using <strong>at least 4 of the 7 tactics</strong> from this exercise. Your email should be convincing enough to fool someone who is not paying close attention.</p>
+    <p>When finished, identify each tactic in brackets — for example: <em>Your Netflix account has been suspended [Urgency] — The Netflix Team [Impersonation].</em></p>
+    <div class="ext-scenario">
+      <p><strong>Your scenario:</strong> You are an attacker targeting a student who uses an online gradebook called SchoolLoop. Craft an email that tricks them into clicking a link that harvests their login credentials.</p>
+      <p>Write your phishing email below, then annotate each red flag you intentionally included.</p>
+    </div>
+    <textarea class="ext-textarea" placeholder="From: ...
+Subject: ...
+
+Body of your phishing email here...
+
+--- Tactics used: ---"></textarea>
+  </div>
+
+  <div class="nav-buttons" id="bottomNav">
+    <a href="/pages/ap-cyber-unit-1-lesson-1" class="btn-secondary">← Back to Lesson</a>
+    <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-2" class="btn-primary">Exercise 2: Attack Classifier ›</a>
+  </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+(function(){
+
+  var FLAGS = [
+    {
+      id:'flag-from',
+      title:'Red Flag #1: Spoofed Sender Domain',
+      body:'The email claims to be from Google, but the domain is <strong>g00gle.com</strong> — using zeros instead of the letter O. This is called <strong>domain spoofing</strong> (specifically typosquatting). Adversaries register lookalike domains to trick recipients who glance too quickly. Legitimate Google emails come from <strong>google.com</strong> only.',
+      principle:'Indicator: Impersonation via typosquatting'
+    },
+    {
+      id:'flag-subj',
+      title:'Red Flag #2: Urgency in the Subject Line',
+      body:'The word <strong>[Urgent!]</strong> in the subject line is a deliberate psychological tactic. Adversaries use urgency to pressure targets into acting quickly without stopping to think critically. The AP exam specifically identifies urgency as one of the two most commonly tested social engineering tactics.',
+      principle:'Psychological Tactic: Urgency'
+    },
+    {
+      id:'flag-generic',
+      title:'Red Flag #3: No Specific Student Named',
+      body:'A legitimate Google Drive notification would include the specific student’s name and the specific document title. This email says <strong>“one of your students”</strong> — vague and generic. Phishing emails often cannot include specifics because they are sent in bulk to thousands of people at once. This is exactly what distinguishes generic phishing from <strong>spear phishing</strong>, which does use your name and personal details — making it far harder to detect.',
+      principle:'Indicator: Lack of personalization (mass phishing)'
+    },
+    {
+      id:'flag-threat',
+      title:'Red Flag #4: Threat of Negative Consequences',
+      body:'This sentence uses <strong>intimidation</strong>: it threatens that the student will fail their assignment if the teacher does not act. This is the second major psychological tactic the AP exam tests. Adversaries use fear of negative consequences to override careful thinking. Real document-sharing tools do not threaten teachers.',
+      principle:'Psychological Tactic: Intimidation / Fear'
+    },
+    {
+      id:'flag-stat',
+      title:'Red Flag #5: Fabricated Statistic to Add Pressure',
+      body:'This fake “research” claim is designed to make the teacher feel obligated to respond quickly. It reinforces the urgency tactic with a made-up authority source. <strong>Google does not include research statistics in document-sharing notifications.</strong> When an email invents data to justify urgency, treat it as a major red flag.',
+      principle:'Psychological Tactic: Authority + Urgency combined'
+    },
+    {
+      id:'flag-sig',
+      title:'Red Flag #6: Mismatched Signature',
+      body:'The email is signed <strong>“The Google Drive Team”</strong> but was sent from g00gle.com (not google.com). These two details are inconsistent. Real Google emails show a matching from-address and signature. When the claimed identity and the actual sender domain do not match, the email is almost certainly a phishing attempt.',
+      principle:'Indicator: Identity inconsistency'
+    },
+    {
+      id:'flag-link',
+      title:'Red Flag #7: Suspicious Action Link',
+      body:'Any email that asks you to click a link to authorize something should be verified independently. Before clicking any link: (1) hover over it to see the real destination URL, (2) navigate directly to the service in a new browser tab instead of clicking. Clicking unverified links is the primary delivery mechanism for malware and credential harvesting pages.',
+      principle:'Attack Vector: Malicious link / credential harvesting'
+    }
+  ];
+
+  var found=new Array(FLAGS.length).fill(false);
+  var revealed=true;
+  var submitted=false;
+
+
+  window.revealExercise=function(){
+    revealed=true;
+    document.getElementById('scoreBar').style.display='flex';
+    document.getElementById('clickInstruction').style.display='block';
+    document.getElementById('revealBtn').style.display='none';
+  };
+
+  window.clickFlag=function(el){
+    if(!revealed||submitted)return;
+    var flagIdx=parseInt(el.getAttribute('data-flag'),10);
+    if(found[flagIdx])return;
+    found[flagIdx]=true;
+    el.classList.add('found');
+    document.getElementById('pip'+(flagIdx+1)).classList.add('found');
+    var total=found.filter(Boolean).length;
+    document.getElementById('foundCount').textContent=total;
+    var panel=document.getElementById('flagPanel');
+    panel.classList.add('visible');
+    var f=FLAGS[flagIdx];
+    var card=document.createElement('div');
+    card.className='flag-card';
+    card.innerHTML='<h4>'+f.title+'</h4><p>'+f.body+'</p><span class="flag-principle">'+f.principle+'</span>';
+    panel.appendChild(card);
+    if(total===FLAGS.length){setTimeout(function(){showResults();},600);}
+  };
+
+  
+    // ── SCORE REPORTING ──────────────────────────────────────────────────────
+    //  This exercise knew its own score all along and never told anyone, so the
+    //  teacher gradebook showed a fabricated 0 for anyone who merely opened it.
+    //  Reports the REAL pair: red flags found out of FLAGS.length, which is 7.
+    //  A per-activity constant cannot express that, which is why both halves
+    //  are sent rather than a percentage.
+    function apcseReportScore(earned, possible){
+      try {
+        if (earned == null || possible == null || !(possible > 0)) return;   // never half a pair
+        var t = null;
+        try {
+          t = localStorage.getItem('apcse_token')
+           || localStorage.getItem('apcs_student_token')
+           || localStorage.getItem('student_token');
+        } catch (e) { return; }
+        if (!t) return;                       // signed out: nothing to report
+        fetch('https://progress.apcsexamprep.com/api/student/score', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + t },
+          body: JSON.stringify({
+            course: 'ap-cybersecurity', unit: 'unit-1', lesson: '1.1',
+            activity_type: 'exercise-1', item: 'redflags',
+            earned: Number(earned), possible: Number(possible),
+            client_event_id: '1.1:exercise-1:redflags:' + earned + ':' + possible
+          })
+        }).then(function(r){
+          if (!r.ok) { r.json().then(function(e){ console.warn('[apcse] not scored:', e && e.error); }); }
+        }).catch(function(){ /* offline: the student must never notice */ });
+      } catch (e) { /* reporting must never break the exercise */ }
+    }
+    
+    function showResults(){
+    submitted=true;
+    var total=found.filter(Boolean).length; apcseReportScore(total, FLAGS.length);
+    for(var i=0;i<FLAGS.length;i++){
+      if(!found[i]){var el=document.getElementById(FLAGS[i].id);if(el)el.classList.add('missed');}
+    }
+    document.getElementById('finalScore').textContent=total;
+    var msg='';
+    if(total===7){
+      msg='Perfect! You identified every red flag. A skilled security analyst would be proud. You spotted domain spoofing, both psychological tactics (urgency + intimidation), the fake statistic, and the malicious link.';
+    } else if(total>=5){
+      msg='Strong work! You caught '+total+' of 7 red flags. Review the ones you missed — they are the subtler tactics adversaries count on people overlooking.';
+    } else if(total>=3){
+      msg='Good start! You found '+total+' red flags. The ones you missed are exactly the elements adversaries use to fool security-aware people. Study the explanations carefully.';
+    } else {
+      msg='You found '+total+' red flags. Social engineering is specifically designed to fool people who are paying attention. Review all 7 explanations and try again.';
+    }
+    document.getElementById('resultsMessage').querySelector('p').textContent=msg;
+    var missed=[];
+    for(var j=0;j<FLAGS.length;j++){if(!found[j])missed.push(FLAGS[j]);}
+    if(missed.length>0){
+      var ms=document.getElementById('missedSection');
+      ms.innerHTML='<p class="missed-header">Red Flags You Missed ('+missed.length+'):</p>';
+      for(var k=0;k<missed.length;k++){
+        var mc=document.createElement('div');
+        mc.className='missed-card';
+        mc.innerHTML='<h4>'+missed[k].title+'</h4><p>'+missed[k].body.replace(/<[^>]+>/g,'')+'</p>';
+        ms.appendChild(mc);
+      }
+    }
+    document.getElementById('resultsPanel').classList.add('visible');
+    document.getElementById('examTip').style.display='block';
+    document.getElementById('extensionBox').classList.add('visible');
+    document.getElementById('resultsPanel').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  window.retryExercise=function(){
+    found=new Array(FLAGS.length).fill(false);
+    revealed=false;
+    submitted=false;
+    predictInput.value='';
+    revealBtn.classList.add('locked');
+    revealBtn.style.display='inline-flex';
+    document.getElementById('scoreBar').style.display='none';
+    document.getElementById('clickInstruction').style.display='none';
+    document.getElementById('foundCount').textContent='0';
+    document.getElementById('flagPanel').innerHTML='';
+    document.getElementById('flagPanel').classList.remove('visible');
+    document.getElementById('resultsPanel').classList.remove('visible');
+    document.getElementById('missedSection').innerHTML='';
+    document.getElementById('examTip').style.display='none';
+    document.getElementById('extensionBox').classList.remove('visible');
+    for(var i=1;i<=7;i++){document.getElementById('pip'+i).classList.remove('found');}
+    var spots=document.querySelectorAll('#apcyber-ex1 .hotspot');
+    for(var j=0;j<spots.length;j++){spots[j].classList.remove('found','missed');}
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+
+})();
+}); // DOMContentLoaded
+</script>
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id="apcyber-activity-nav"><div class="aan-card">
+<span class="aan-eyebrow">AP Cybersecurity · Unit 1 · Lesson 1.1 · Exercise 1</span><div class="aan-strip">
+<a class="aan-chip" href="/pages/ap-cybersecurity-unit-1-social-engineering">Lesson</a><span class="aan-sep">•</span><span class="aan-chip cur">Exercise 1</span><span class="aan-sep">•</span><a class="aan-chip next" href="/pages/ap-cyber-unit-1-lesson-1-exercise-2">Exercise 2 →</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-1-lesson-1-lab">Lab</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-1-lesson-1-quiz">Quiz</a>
+</div>
+<div class="aan-up">
+<span class="aan-lbl">Back to:</span><a href="/pages/ap-cybersecurity-unit-1-social-engineering">Lesson 1.1</a><a href="/pages/ap-cybersecurity-unit-1-introduction-to-security">Unit 1 Study Guide</a><a href="/pages/ap-cybersecurity-complete-course-guide">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->
