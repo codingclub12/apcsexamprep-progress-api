@@ -1,0 +1,1700 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {"@type":"Article","headline":"AP Cybersecurity 1.3: Best Practices for Public Networks","description":"Master AP Cybersecurity Topic 1.3: adversary skill levels, evil twin attacks, jamming, war driving, and the three CED individual protections. Includes bellringer, AP Exam Focus, common mistakes, and exit ticket.","author":{"@type":"Person","name":"Tanner Crow","url":"https://www.apcsexamprep.com/pages/ap-computer-science-a-tutor"},"publisher":{"@type":"Organization","name":"AP CS Exam Prep","url":"https://www.apcsexamprep.com"},"datePublished":"2026-06-06","dateModified":"2026-06-06","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.apcsexamprep.com/pages/ap-cybersecurity-unit-1-wireless-security"},"educationalLevel":"High School","keywords":"AP Cybersecurity Topic 1.3, evil twin attack, jamming attack, war driving, public wifi safety, VPN wireless security, SSID verification, adversary skill levels"},
+    {"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.apcsexamprep.com/"},{"@type":"ListItem","position":2,"name":"AP Cybersecurity","item":"https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide"},{"@type":"ListItem","position":3,"name":"Unit 1","item":"https://www.apcsexamprep.com/pages/ap-cybersecurity-unit-1-introduction-to-security"},{"@type":"ListItem","position":4,"name":"Topic 1.3","item":"https://www.apcsexamprep.com/pages/ap-cybersecurity-unit-1-wireless-security"}]},
+    {"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Can a VPN stop an evil twin attack?","acceptedAnswer":{"@type":"Answer","text":"A VPN makes intercepted data not immediately readable, but doesn't prevent connecting to the evil twin. Verify the SSID first."}},{"@type":"Question","name":"What is the difference between low-skilled and high-skilled adversaries?","acceptedAnswer":{"@type":"Answer","text":"Low-skilled adversaries use tools created by others and exploit known vulnerabilities. High-skilled adversaries create their own tools and can discover zero-day vulnerabilities. Damage caused does not determine skill level."}},{"@type":"Question","name":"Can an individual stop a jamming attack?","acceptedAnswer":{"@type":"Answer","text":"No. Jamming operates at the physical radio frequency layer. No individual action — VPN, SSID verification, or otherwise — can counter it."}}]}
+  ]
+}
+</script>
+
+<style>
+
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-lesson.locked{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;cursor:not-allowed!important;}
+#ucnav .ucn-lesson.locked:link,#ucnav .ucn-lesson.locked:visited,#ucnav .ucn-lesson.locked:hover{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;background:transparent!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-lock svg{opacity:.5!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+
+.page-title,.article__title,.page__title,
+.template-page h1:first-of-type{display:none!important;}
+
+/* Strip Shopify page template wrapper padding */
+.shopify-section-template--main,
+[class*="shopify-section-template"][class*="__main"],
+[id*="__main"].shopify-section,
+.section-template--main-padding,
+.template-page .shopify-section:not(.section-header):first-of-type,
+.page-container,
+.main-content{
+  padding-top:0!important;margin-top:0!important;
+}
+.template-page main,
+main#MainContent,
+#MainContent{
+  padding-top:0!important;margin-top:0!important;
+}
+
+#apcyber-wrapper{
+  all:initial;display:block;box-sizing:border-box;font-family:'Georgia',serif;
+  --dark:#130825;--deep:#1e0d40;--primary:#6d28d9;--mid:#7c3aed;--accent:#a78bfa;
+  --light:#ede9fe;--lighter:#f5f3ff;--sky:#0ea5e9;--green:#059669;--warn:#d97706;
+  --red:#dc2626;--white:#ffffff;--g50:#fafafa;--g100:#f4f4f5;--g200:#e4e4e7;
+  --g400:#a1a1aa;--g600:#52525b;--g700:#3f3f46;--g800:#27272a;
+  --r-sm:6px;--r-md:12px;--r-lg:18px;--r-xl:24px;
+  --sh-sm:0 1px 4px rgba(0,0,0,.08);--sh-md:0 4px 16px rgba(0,0,0,.12);--sh-lg:0 8px 32px rgba(0,0,0,.16);
+  color:var(--g800)!important;line-height:1.75!important;max-width:980px!important;
+  margin:0 auto!important;padding:24px 18px 72px!important;
+}
+#apcyber-wrapper *{box-sizing:border-box!important;}
+
+#apcyber-wrapper .ch-header{
+  background:linear-gradient(135deg,var(--dark) 0%,#2e1065 55%,#1e3a5f 100%)!important;
+  border-radius:var(--r-xl)!important;padding:44px 48px!important;margin-bottom:6px!important;
+  position:relative!important;overflow:hidden!important;
+}
+#apcyber-wrapper .ch-header::before{content:""!important;position:absolute!important;top:0!important;right:-60px!important;width:300px!important;height:300px!important;background:radial-gradient(circle,rgba(109,40,217,.35) 0%,transparent 70%)!important;pointer-events:none!important;}
+#apcyber-wrapper .ch-header::after{content:""!important;position:absolute!important;bottom:-40px!important;left:30%!important;width:200px!important;height:200px!important;background:radial-gradient(circle,rgba(14,165,233,.2) 0%,transparent 70%)!important;pointer-events:none!important;}
+#apcyber-wrapper .ch-label{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:2px!important;color:var(--accent)!important;margin-bottom:10px!important;display:block!important;}
+#apcyber-wrapper .ch-header h1{font-family:'Georgia',serif!important;font-size:30px!important;font-weight:700!important;color:var(--white)!important;margin:0 0 10px 0!important;line-height:1.25!important;}
+#apcyber-wrapper .ch-header p{font-size:15px!important;color:rgba(255,255,255,.78)!important;margin:0 0 22px 0!important;max-width:640px!important;line-height:1.6!important;}
+#apcyber-wrapper .ch-meta{display:flex!important;flex-wrap:wrap!important;gap:10px!important;}
+#apcyber-wrapper .ch-badge{display:inline-flex!important;align-items:center!important;gap:6px!important;background:rgba(255,255,255,.1)!important;border:1px solid rgba(255,255,255,.18)!important;color:var(--white)!important;padding:5px 14px!important;border-radius:20px!important;font-size:12px!important;font-weight:600!important;font-family:'Georgia',serif!important;}
+
+#apcyber-wrapper .card{background:var(--white)!important;border-radius:var(--r-lg)!important;padding:36px 40px!important;margin-bottom:24px!important;box-shadow:var(--sh-sm)!important;border:1px solid var(--g200)!important;}
+#apcyber-wrapper .card h2{font-family:'Georgia',serif!important;font-size:20px!important;font-weight:700!important;color:var(--deep)!important;margin:0 0 20px 0!important;padding-bottom:14px!important;border-bottom:3px solid var(--primary)!important;display:flex!important;align-items:center!important;gap:12px!important;line-height:1.3!important;}
+#apcyber-wrapper .section-icon{width:34px!important;height:34px!important;background:var(--primary)!important;border-radius:8px!important;display:flex!important;align-items:center!important;justify-content:center!important;color:var(--white)!important;font-size:14px!important;font-weight:800!important;flex-shrink:0!important;font-family:'Georgia',serif!important;}
+#apcyber-wrapper .card h3{font-family:'Georgia',serif!important;font-size:17px!important;font-weight:700!important;color:var(--primary)!important;margin:28px 0 10px 0!important;}
+#apcyber-wrapper .card h4{font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;color:var(--deep)!important;margin:0 0 6px 0!important;}
+#apcyber-wrapper .card p{font-size:15px!important;color:var(--g700)!important;margin:0 0 14px 0!important;font-family:'Georgia',serif!important;}
+#apcyber-wrapper .card p:last-child{margin-bottom:0!important;}
+
+#apcyber-wrapper .obj-list{list-style:none!important;padding:0!important;margin:0!important;display:grid!important;gap:10px!important;}
+#apcyber-wrapper .obj-list li{display:flex!important;align-items:flex-start!important;gap:12px!important;font-size:15px!important;color:var(--g700)!important;padding:12px 16px!important;background:var(--lighter)!important;border-radius:var(--r-sm)!important;border-left:4px solid var(--primary)!important;font-family:'Georgia',serif!important;line-height:1.5!important;}
+#apcyber-wrapper .obj-check{width:22px!important;height:22px!important;background:var(--primary)!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;flex-shrink:0!important;margin-top:1px!important;}
+#apcyber-wrapper .obj-check::after{content:"\2713"!important;color:var(--white)!important;font-size:12px!important;font-weight:900!important;}
+
+#apcyber-wrapper .principle-grid{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:16px!important;margin:16px 0!important;}
+#apcyber-wrapper .principle-card{background:var(--g50)!important;border:1px solid var(--g200)!important;border-radius:var(--r-md)!important;padding:20px!important;border-top:4px solid var(--primary)!important;}
+#apcyber-wrapper .p-num{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1px!important;color:var(--primary)!important;margin-bottom:4px!important;}
+#apcyber-wrapper .p-name{font-family:'Georgia',serif!important;font-size:16px!important;font-weight:700!important;color:var(--deep)!important;margin-bottom:8px!important;}
+#apcyber-wrapper .p-how{font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g700)!important;margin-bottom:10px!important;line-height:1.6!important;}
+#apcyber-wrapper .p-example{font-family:'Georgia',serif!important;font-size:13px!important;color:var(--g600)!important;font-style:italic!important;padding:8px 12px!important;background:var(--light)!important;border-radius:var(--r-sm)!important;margin-bottom:8px!important;line-height:1.5!important;}
+#apcyber-wrapper .callout{background:#f0eeff!important;border-left:4px solid var(--primary)!important;border-radius:0 var(--r-md) var(--r-md) 0!important;padding:16px 20px!important;font-size:14px!important;color:var(--g700)!important;line-height:1.6!important;}
+#apcyber-wrapper .callout strong{color:var(--deep)!important;display:block!important;margin-bottom:6px!important;font-size:13px!important;text-transform:uppercase!important;letter-spacing:0.5px!important;}
+#apcyber-wrapper .cfu-predict{font-size:13px!important;font-style:italic!important;color:var(--primary)!important;background:#f0eeff!important;border-radius:var(--r-sm)!important;padding:8px 12px!important;margin-bottom:12px!important;border-left:3px solid var(--primary)!important;}
+
+#apcyber-wrapper .vocab-table{width:100%!important;border-collapse:collapse!important;font-size:14px!important;font-family:'Georgia',serif!important;}
+#apcyber-wrapper .vocab-table th{background:var(--deep)!important;color:var(--white)!important;padding:12px 16px!important;text-align:left!important;font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.5px!important;}
+#apcyber-wrapper .vocab-table th:first-child{border-radius:var(--r-sm) 0 0 0!important;}
+#apcyber-wrapper .vocab-table th:last-child{border-radius:0 var(--r-sm) 0 0!important;}
+#apcyber-wrapper .vocab-table td{padding:12px 16px!important;border-bottom:1px solid var(--g200)!important;color:var(--g700)!important;vertical-align:top!important;line-height:1.55!important;}
+#apcyber-wrapper .vocab-table tr:nth-child(even) td{background:var(--g50)!important;}
+#apcyber-wrapper .vocab-table tr:hover td{background:var(--lighter)!important;}
+#apcyber-wrapper .vocab-table .term{font-weight:700!important;color:var(--primary)!important;white-space:nowrap!important;}
+#apcyber-wrapper .vocab-table .exam-tip{font-size:12px!important;color:var(--g600)!important;font-style:italic!important;margin-top:4px!important;padding:4px 8px!important;background:var(--light)!important;border-radius:4px!important;border-left:3px solid var(--accent)!important;display:block!important;}
+
+#apcyber-wrapper .attack-block{border-left:5px solid var(--primary)!important;background:var(--g50)!important;border-radius:0 var(--r-md) var(--r-md) 0!important;padding:22px 26px!important;margin:18px 0!important;}
+#apcyber-wrapper .atk-name{font-family:'Georgia',serif!important;font-size:18px!important;font-weight:800!important;color:var(--deep)!important;margin-bottom:6px!important;display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important;}
+#apcyber-wrapper .atk-tag{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.8px!important;background:var(--deep)!important;color:var(--white)!important;padding:3px 10px!important;border-radius:20px!important;}
+#apcyber-wrapper .atk-desc{font-family:'Georgia',serif!important;font-size:15px!important;color:var(--g700)!important;margin:8px 0 12px 0!important;line-height:1.65!important;}
+#apcyber-wrapper .atk-scenario{font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g600)!important;font-style:italic!important;background:var(--white)!important;border-radius:var(--r-sm)!important;padding:12px 16px!important;border-left:3px solid var(--sky)!important;margin-bottom:10px!important;line-height:1.6!important;}
+#apcyber-wrapper .atk-scenario strong{color:var(--deep)!important;font-style:normal!important;}
+#apcyber-wrapper .atk-edge{font-family:'Georgia',serif!important;font-size:13px!important;color:var(--warn)!important;background:#fffbeb!important;border-radius:var(--r-sm)!important;padding:10px 14px!important;border-left:3px solid var(--warn)!important;line-height:1.55!important;}
+#apcyber-wrapper .atk-edge strong{color:var(--warn)!important;}
+
+#apcyber-wrapper .compare-table{width:100%!important;border-collapse:collapse!important;font-family:'Georgia',serif!important;font-size:13px!important;}
+#apcyber-wrapper .compare-table th{background:var(--primary)!important;color:var(--white)!important;padding:10px 14px!important;text-align:left!important;font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.5px!important;}
+#apcyber-wrapper .compare-table td{padding:10px 14px!important;border-bottom:1px solid var(--g200)!important;color:var(--g700)!important;vertical-align:top!important;line-height:1.5!important;}
+#apcyber-wrapper .compare-table tr:nth-child(even) td{background:var(--lighter)!important;}
+#apcyber-wrapper .compare-table .att-name{font-weight:700!important;color:var(--deep)!important;}
+#apcyber-wrapper .compare-table .channel{font-weight:600!important;color:var(--sky)!important;}
+#apcyber-wrapper .compare-table .principle{font-style:italic!important;}
+
+#apcyber-wrapper .info-box{border-radius:var(--r-md)!important;padding:20px 24px!important;margin:20px 0!important;}
+#apcyber-wrapper .info-box.stat{background:#ede9fe!important;border-left:5px solid var(--primary)!important;}
+#apcyber-wrapper .info-box.insight{background:#ecfdf5!important;border-left:5px solid var(--green)!important;}
+#apcyber-wrapper .info-box.warning{background:#fffbeb!important;border-left:5px solid var(--warn)!important;}
+#apcyber-wrapper .info-box.danger{background:#fef2f2!important;border-left:5px solid var(--red)!important;}
+#apcyber-wrapper .info-box.exam{background:linear-gradient(135deg,#1e0d40,#2e1065)!important;border-left:5px solid var(--accent)!important;border-radius:var(--r-md)!important;}
+#apcyber-wrapper .box-label{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;margin-bottom:8px!important;display:block!important;}
+#apcyber-wrapper .info-box.stat .box-label{color:var(--primary)!important;}
+#apcyber-wrapper .info-box.insight .box-label{color:var(--green)!important;}
+#apcyber-wrapper .info-box.warning .box-label{color:var(--warn)!important;}
+#apcyber-wrapper .info-box.danger .box-label{color:var(--red)!important;}
+#apcyber-wrapper .info-box.exam .box-label{color:var(--accent)!important;}
+#apcyber-wrapper .info-box p{font-family:'Georgia',serif!important;font-size:15px!important;color:var(--g700)!important;margin:0!important;line-height:1.65!important;}
+#apcyber-wrapper .info-box.exam p{color:rgba(255,255,255,.85)!important;}
+
+#apcyber-wrapper .defense-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:20px!important;margin:16px 0!important;}
+#apcyber-wrapper .defense-col h4{font-family:'Georgia',serif!important;font-size:14px!important;font-weight:700!important;padding:10px 16px!important;border-radius:var(--r-sm) var(--r-sm) 0 0!important;margin:0!important;}
+#apcyber-wrapper .defense-col.tech h4{background:var(--primary)!important;color:var(--white)!important;}
+#apcyber-wrapper .defense-col.human h4{background:var(--sky)!important;color:var(--white)!important;}
+#apcyber-wrapper .defense-col ul{list-style:none!important;padding:0!important;margin:0!important;border:1px solid var(--g200)!important;border-top:none!important;border-radius:0 0 var(--r-sm) var(--r-sm)!important;}
+#apcyber-wrapper .defense-col ul li{padding:10px 14px!important;font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g700)!important;border-bottom:1px solid var(--g200)!important;display:flex!important;align-items:flex-start!important;gap:8px!important;line-height:1.5!important;}
+#apcyber-wrapper .defense-col ul li:last-child{border-bottom:none!important;}
+#apcyber-wrapper .defense-col ul li::before{content:"\2713"!important;color:var(--green)!important;font-weight:900!important;flex-shrink:0!important;margin-top:1px!important;}
+
+#apcyber-wrapper .case-block{border:2px solid var(--g200)!important;border-radius:var(--r-lg)!important;overflow:hidden!important;margin:20px 0!important;}
+#apcyber-wrapper .case-header{background:linear-gradient(90deg,var(--deep),var(--primary))!important;padding:14px 22px!important;display:flex!important;align-items:center!important;gap:12px!important;}
+#apcyber-wrapper .case-year{background:rgba(255,255,255,.2)!important;color:var(--white)!important;font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;padding:3px 10px!important;border-radius:20px!important;letter-spacing:.5px!important;white-space:nowrap!important;}
+#apcyber-wrapper .case-title{font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;color:var(--white)!important;}
+#apcyber-wrapper .case-body{padding:22px!important;}
+#apcyber-wrapper .case-body p{font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g700)!important;margin:0 0 10px 0!important;line-height:1.65!important;}
+#apcyber-wrapper .case-verdict{background:var(--lighter)!important;border-radius:var(--r-sm)!important;padding:12px 16px!important;margin-top:12px!important;}
+#apcyber-wrapper .case-verdict-label{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1px!important;color:var(--primary)!important;margin-bottom:4px!important;display:block!important;}
+#apcyber-wrapper .case-verdict p{font-family:'Georgia',serif!important;font-size:13px!important;color:var(--g700)!important;margin:0!important;}
+
+#apcyber-wrapper .ex-block{border:2px solid var(--primary)!important;border-radius:var(--r-lg)!important;overflow:hidden!important;margin:20px 0!important;}
+#apcyber-wrapper .ex-header{background:var(--primary)!important;padding:14px 22px!important;display:flex!important;align-items:center!important;gap:10px!important;}
+#apcyber-wrapper .ex-num{background:rgba(255,255,255,.25)!important;color:var(--white)!important;width:28px!important;height:28px!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-family:'Georgia',serif!important;font-size:13px!important;font-weight:900!important;flex-shrink:0!important;}
+#apcyber-wrapper .ex-title{font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;color:var(--white)!important;}
+#apcyber-wrapper .ex-scenario{background:#f0ebff!important;padding:18px 22px!important;font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g700)!important;border-bottom:1px solid var(--g200)!important;font-style:italic!important;line-height:1.65!important;}
+#apcyber-wrapper .ex-scenario strong{color:var(--deep)!important;font-style:normal!important;}
+#apcyber-wrapper .ex-body{padding:22px!important;}
+#apcyber-wrapper .ex-step{display:flex!important;gap:14px!important;margin-bottom:18px!important;align-items:flex-start!important;}
+#apcyber-wrapper .step-n{width:30px!important;height:30px!important;background:var(--deep)!important;color:var(--white)!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-family:'Georgia',serif!important;font-size:13px!important;font-weight:800!important;flex-shrink:0!important;}
+#apcyber-wrapper .step-c h4{font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;color:var(--deep)!important;margin:0 0 5px 0!important;}
+#apcyber-wrapper .step-c p{font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g700)!important;margin:0!important;line-height:1.6!important;}
+#apcyber-wrapper .step-c ul{padding-left:16px!important;margin:6px 0 0 0!important;}
+#apcyber-wrapper .step-c ul li{font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g700)!important;margin-bottom:4px!important;line-height:1.5!important;}
+#apcyber-wrapper .ex-answer{background:#ecfdf5!important;border-left:4px solid var(--green)!important;border-radius:var(--r-sm)!important;padding:14px 18px!important;margin-top:4px!important;}
+#apcyber-wrapper .ans-label{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1px!important;color:var(--green)!important;margin-bottom:5px!important;display:block!important;}
+#apcyber-wrapper .ex-answer p{font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g700)!important;margin:0!important;line-height:1.6!important;}
+
+#apcyber-wrapper .exam-card{background:linear-gradient(135deg,var(--dark) 0%,#2e1065 100%)!important;border-radius:var(--r-xl)!important;padding:36px 40px!important;margin-bottom:24px!important;}
+#apcyber-wrapper .exam-card h2{font-family:'Georgia',serif!important;font-size:20px!important;font-weight:700!important;color:var(--white)!important;margin:0 0 20px 0!important;padding-bottom:14px!important;border-bottom:2px solid rgba(167,139,250,.4)!important;display:flex!important;align-items:center!important;gap:12px!important;}
+#apcyber-wrapper .exam-card .section-icon{background:var(--accent)!important;}
+#apcyber-wrapper .exam-tip-item{display:flex!important;gap:16px!important;margin-bottom:20px!important;align-items:flex-start!important;}
+#apcyber-wrapper .tip-badge{background:var(--accent)!important;color:var(--dark)!important;font-family:'Georgia',serif!important;font-size:11px!important;font-weight:800!important;padding:4px 10px!important;border-radius:20px!important;white-space:nowrap!important;margin-top:2px!important;flex-shrink:0!important;}
+#apcyber-wrapper .tip-text h4{font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;color:var(--white)!important;margin:0 0 4px 0!important;}
+#apcyber-wrapper .tip-text p{font-family:'Georgia',serif!important;font-size:14px!important;color:rgba(255,255,255,.75)!important;margin:0!important;line-height:1.6!important;}
+#apcyber-wrapper .tip-text strong{color:var(--accent)!important;}
+
+#apcyber-wrapper .bottom-nav{display:flex!important;justify-content:space-between!important;align-items:center!important;gap:16px!important;margin-top:32px!important;flex-wrap:wrap!important;}
+#apcyber-wrapper .nav-btn{display:inline-flex!important;align-items:center!important;gap:8px!important;padding:14px 26px!important;border-radius:var(--r-md)!important;font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;text-decoration:none!important;cursor:pointer!important;}
+#apcyber-wrapper .nav-btn.primary{background:var(--primary)!important;color:var(--white)!important;border:none!important;}
+#apcyber-wrapper .nav-btn.primary:link,#apcyber-wrapper .nav-btn.primary:visited{background:var(--primary)!important;color:var(--white)!important;-webkit-text-fill-color:var(--white)!important;opacity:1!important;visibility:visible!important;}
+#apcyber-wrapper .nav-btn.primary:hover{background:var(--dark)!important;color:var(--white)!important;-webkit-text-fill-color:var(--white)!important;}
+#apcyber-wrapper .nav-btn.secondary{background:var(--white)!important;color:var(--primary)!important;border:2px solid var(--primary)!important;}
+#apcyber-wrapper .nav-btn.secondary:link,#apcyber-wrapper .nav-btn.secondary:visited{background:var(--white)!important;color:var(--primary)!important;-webkit-text-fill-color:var(--primary)!important;opacity:1!important;visibility:visible!important;}
+#apcyber-wrapper .nav-btn.secondary:hover{background:var(--lighter)!important;color:var(--primary)!important;-webkit-text-fill-color:var(--primary)!important;}
+#apcyber-wrapper .nav-center{text-align:center!important;font-family:'Georgia',serif!important;font-size:13px!important;color:var(--g600)!important;line-height:1.5!important;}
+
+#apcyber-wrapper .breadcrumb{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:4px!important;font-family:'Georgia',serif!important;font-size:13px!important;color:var(--g600)!important;margin-bottom:8px!important;padding:4px 0 0 0!important;}
+#apcyber-wrapper .breadcrumb a{color:var(--primary)!important;text-decoration:none!important;font-weight:500!important;}
+#apcyber-wrapper .breadcrumb a:link,#apcyber-wrapper .breadcrumb a:visited{color:var(--primary)!important;-webkit-text-fill-color:var(--primary)!important;}
+#apcyber-wrapper .breadcrumb a:hover{text-decoration:underline!important;}
+#apcyber-wrapper .bc-sep{color:var(--g400)!important;margin:0 2px!important;}
+#apcyber-wrapper .bc-current{color:var(--g700)!important;font-weight:600!important;}
+
+#apcyber-wrapper .meta-bar{display:flex!important;align-items:center!important;gap:20px!important;flex-wrap:wrap!important;padding:10px 0!important;margin-bottom:8px!important;border-bottom:1px solid var(--g200)!important;}
+#apcyber-wrapper .meta-bar span{font-family:'Georgia',serif!important;font-size:13px!important;color:var(--g600)!important;display:flex!important;align-items:center!important;gap:5px!important;}
+#apcyber-wrapper .meta-bar strong{color:var(--g700)!important;}
+
+#apcyber-wrapper .toc-row{display:grid!important;grid-template-columns:1fr 1fr!important;gap:20px!important;margin-bottom:24px!important;align-items:stretch!important;}
+#apcyber-wrapper .toc-card{background:var(--lighter)!important;border:1px solid var(--light)!important;border-radius:var(--r-lg)!important;padding:22px 28px!important;margin-bottom:0!important;border-left:4px solid var(--primary)!important;}
+#apcyber-wrapper .toc-label{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.8px!important;color:var(--primary)!important;margin-bottom:12px!important;display:block!important;}
+#apcyber-wrapper .toc-list{list-style:none!important;padding:0!important;margin:0!important;display:grid!important;grid-template-columns:1fr!important;gap:6px!important;}
+#apcyber-wrapper .toc-list li{font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g700)!important;display:flex!important;align-items:flex-start!important;gap:7px!important;}
+#apcyber-wrapper .toc-list li::before{content:"\2023"!important;color:var(--primary)!important;font-size:15px!important;flex-shrink:0!important;margin-top:1px!important;}
+#apcyber-wrapper .toc-list a{color:var(--primary)!important;text-decoration:none!important;font-weight:500!important;}
+#apcyber-wrapper .toc-list a:link,#apcyber-wrapper .toc-list a:visited{color:var(--primary)!important;-webkit-text-fill-color:var(--primary)!important;}
+#apcyber-wrapper .toc-list a:hover{text-decoration:underline!important;}
+#apcyber-wrapper .toc-time{font-family:'Georgia',serif!important;font-size:11px!important;color:var(--g400)!important;margin-left:4px!important;font-weight:400!important;white-space:nowrap!important;}
+
+#apcyber-wrapper .lesson-video-card{background:linear-gradient(145deg,var(--dark) 0%,#1a0a35 100%)!important;border:1px solid rgba(167,139,250,.2)!important;border-radius:var(--r-lg)!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;}
+#apcyber-wrapper .lvc-header{padding:14px 20px 12px!important;border-bottom:1px solid rgba(255,255,255,.08)!important;}
+#apcyber-wrapper .lvc-eyebrow{display:block!important;font-family:'Georgia',serif!important;font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:var(--accent)!important;margin-bottom:3px!important;}
+#apcyber-wrapper .lvc-title{display:block!important;font-family:'Georgia',serif!important;font-size:13px!important;font-weight:600!important;color:rgba(255,255,255,.75)!important;}
+#apcyber-wrapper .lvc-video-wrap{position:relative!important;width:100%!important;padding-bottom:56.25%!important;height:0!important;background:#000!important;flex:1!important;}
+#apcyber-wrapper .lvc-video-wrap iframe{position:absolute!important;top:0!important;left:0!important;width:100%!important;height:100%!important;border:0!important;}
+#apcyber-wrapper .lvc-footer{padding:10px 16px!important;font-family:'Georgia',serif!important;font-size:11px!important;color:rgba(255,255,255,.35)!important;text-align:center!important;border-top:1px solid rgba(255,255,255,.06)!important;}
+
+#apcyber-progress-bar{position:fixed!important;top:0!important;left:0!important;width:0%!important;height:3px!important;background:linear-gradient(90deg,var(--primary),var(--accent))!important;z-index:99999!important;transition:width .1s linear!important;}
+#apcyber-back-top{position:fixed!important;bottom:28px!important;right:24px!important;width:44px!important;height:44px!important;border-radius:50%!important;background:var(--primary)!important;color:var(--white)!important;border:none!important;cursor:pointer!important;display:flex!important;align-items:center!important;justify-content:center!important;box-shadow:0 4px 16px rgba(109,40,217,.4)!important;opacity:0!important;pointer-events:none!important;transition:opacity .25s,transform .25s!important;z-index:9999!important;font-size:18px!important;font-weight:700!important;font-family:'Georgia',serif!important;}
+#apcyber-back-top.visible{opacity:1!important;pointer-events:auto!important;}
+#apcyber-back-top:hover{transform:translateY(-3px)!important;background:var(--deep)!important;}
+
+#apcyber-wrapper .tutor-cta{background:linear-gradient(135deg,#1e0d40 0%,#2e1065 60%,#1e3a5f 100%)!important;border-radius:var(--r-xl)!important;padding:32px 40px!important;margin-bottom:24px!important;display:flex!important;align-items:center!important;gap:32px!important;flex-wrap:wrap!important;border:1px solid rgba(167,139,250,.2)!important;}
+#apcyber-wrapper .tutor-cta-text{flex:1!important;min-width:200px!important;}
+#apcyber-wrapper .tutor-cta-eyebrow{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:var(--accent)!important;margin-bottom:8px!important;display:block!important;}
+#apcyber-wrapper .tutor-cta h3{font-family:'Georgia',serif!important;font-size:20px!important;font-weight:700!important;color:var(--white)!important;margin:0 0 10px 0!important;line-height:1.3!important;}
+#apcyber-wrapper .tutor-cta p{font-family:'Georgia',serif!important;font-size:14px!important;color:rgba(255,255,255,.72)!important;margin:0!important;line-height:1.6!important;}
+#apcyber-wrapper .tutor-cta-btn{display:inline-flex!important;align-items:center!important;gap:8px!important;background:var(--white)!important;color:var(--primary)!important;padding:14px 26px!important;border-radius:var(--r-md)!important;font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;text-decoration:none!important;white-space:nowrap!important;flex-shrink:0!important;}
+#apcyber-wrapper .tutor-cta-btn:link,#apcyber-wrapper .tutor-cta-btn:visited{background:var(--white)!important;color:var(--primary)!important;-webkit-text-fill-color:var(--primary)!important;text-decoration:none!important;opacity:1!important;visibility:visible!important;}
+#apcyber-wrapper .tutor-cta-btn:hover{background:var(--lighter)!important;color:var(--primary)!important;-webkit-text-fill-color:var(--primary)!important;}
+#apcyber-wrapper .tutor-stats{display:flex!important;gap:20px!important;margin-top:12px!important;flex-wrap:wrap!important;}
+#apcyber-wrapper .tutor-stat{font-family:'Georgia',serif!important;font-size:12px!important;color:rgba(255,255,255,.55)!important;display:flex!important;gap:5px!important;}
+#apcyber-wrapper .tutor-stat strong{color:rgba(255,255,255,.9)!important;}
+
+#apcyber-wrapper .key-terms-box{background:var(--lighter)!important;border:1px solid var(--light)!important;border-radius:var(--r-lg)!important;padding:22px 26px!important;margin-bottom:22px!important;border-left:4px solid var(--primary)!important;}
+#apcyber-wrapper .key-terms-label{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.8px!important;color:var(--primary)!important;margin-bottom:12px!important;display:block!important;}
+#apcyber-wrapper .key-terms-grid{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:6px 24px!important;}
+#apcyber-wrapper dt{font-family:'Georgia',serif!important;font-size:14px!important;font-weight:700!important;color:var(--deep)!important;}
+#apcyber-wrapper dd{font-family:'Georgia',serif!important;font-size:13px!important;color:var(--g600)!important;margin:0 0 6px 0!important;padding-left:0!important;}
+
+#cfu-score-tracker{position:fixed!important;bottom:28px!important;left:24px!important;background:var(--primary)!important;color:var(--white)!important;border-radius:24px!important;padding:8px 18px!important;font-family:'Georgia',serif!important;font-size:13px!important;font-weight:700!important;box-shadow:0 4px 16px rgba(109,40,217,.45)!important;z-index:9999!important;display:flex!important;align-items:center!important;gap:8px!important;opacity:0!important;transition:opacity .3s!important;pointer-events:none!important;white-space:nowrap!important;}
+#cfu-score-tracker.visible{opacity:1!important;}
+#cfu-score-num{background:rgba(255,255,255,.2)!important;border-radius:12px!important;padding:2px 10px!important;font-size:14px!important;}
+#cfu-score-tracker .cfu-score-label{color:rgba(255,255,255,.8)!important;font-size:12px!important;}
+
+#apcyber-wrapper .cfu-block{background:var(--g50)!important;border:1px solid var(--g200)!important;border-radius:var(--r-lg)!important;padding:24px 28px!important;margin-top:28px!important;border-top:3px solid var(--primary)!important;}
+#apcyber-wrapper .cfu-header{display:flex!important;align-items:center!important;justify-content:space-between!important;margin-bottom:14px!important;flex-wrap:wrap!important;gap:8px!important;}
+#apcyber-wrapper .cfu-header-left{display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important;}
+#apcyber-wrapper .cfu-label{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1px!important;color:var(--primary)!important;}
+#apcyber-wrapper .cfu-type-badge{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:600!important;background:var(--light)!important;color:var(--primary)!important;padding:2px 10px!important;border-radius:12px!important;}
+#apcyber-wrapper .cfu-scenario-badge{background:#fef3c7!important;color:#92400e!important;}
+#apcyber-wrapper .cfu-counter{font-family:'Georgia',serif!important;font-size:12px!important;color:var(--g400)!important;font-weight:600!important;}
+#apcyber-wrapper .cfu-scenario{background:var(--white)!important;border:1px solid var(--g200)!important;border-left:4px solid var(--sky)!important;border-radius:var(--r-md)!important;padding:16px 18px!important;margin-bottom:16px!important;font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g700)!important;line-height:1.7!important;}
+#apcyber-wrapper .cfu-question{font-family:'Georgia',serif!important;font-size:15px!important;font-weight:600!important;color:var(--deep)!important;margin:0 0 16px 0!important;line-height:1.55!important;}
+#apcyber-wrapper .cfu-options{display:grid!important;gap:8px!important;margin-bottom:16px!important;}
+#apcyber-wrapper .cfu-opt{display:flex!important;align-items:flex-start!important;gap:10px!important;background:var(--white)!important;border:2px solid var(--g200)!important;border-radius:var(--r-md)!important;padding:12px 16px!important;cursor:pointer!important;transition:all .15s!important;font-family:'Georgia',serif!important;}
+#apcyber-wrapper .cfu-opt:hover{border-color:var(--primary)!important;background:var(--lighter)!important;}
+#apcyber-wrapper .cfu-opt.selected{border-color:var(--primary)!important;background:var(--lighter)!important;}
+#apcyber-wrapper .cfu-opt.correct{border-color:var(--green)!important;background:#ecfdf5!important;}
+#apcyber-wrapper .cfu-opt.wrong{border-color:var(--red)!important;background:#fef2f2!important;}
+#apcyber-wrapper .cfu-opt.locked{cursor:default!important;}
+#apcyber-wrapper .cfu-opt-letter{font-family:'Georgia',serif!important;font-size:13px!important;font-weight:700!important;color:var(--primary)!important;min-width:20px!important;flex-shrink:0!important;margin-top:1px!important;}
+#apcyber-wrapper .cfu-opt.correct .cfu-opt-letter{color:var(--green)!important;}
+#apcyber-wrapper .cfu-opt.wrong .cfu-opt-letter{color:var(--red)!important;}
+#apcyber-wrapper .cfu-opt-text{font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g700)!important;line-height:1.5!important;}
+#apcyber-wrapper .cfu-submit{background:var(--primary)!important;color:var(--white)!important;border:none!important;border-radius:var(--r-md)!important;padding:11px 28px!important;font-family:'Georgia',serif!important;font-size:14px!important;font-weight:700!important;cursor:pointer!important;display:block!important;}
+#apcyber-wrapper .cfu-submit:link,#apcyber-wrapper .cfu-submit:visited{color:var(--white)!important;-webkit-text-fill-color:var(--white)!important;}
+#apcyber-wrapper .cfu-submit:hover{background:var(--deep)!important;}
+#apcyber-wrapper .cfu-submit:disabled{background:var(--g200)!important;color:var(--g400)!important;-webkit-text-fill-color:var(--g400)!important;cursor:default!important;}
+#apcyber-wrapper .cfu-feedback{margin-top:16px!important;border-radius:var(--r-md)!important;padding:16px 20px!important;border-left:4px solid var(--green)!important;background:#ecfdf5!important;}
+#apcyber-wrapper .cfu-feedback.wrong-fb{border-left-color:var(--red)!important;background:#fef2f2!important;}
+#apcyber-wrapper .cfu-feedback-verdict{font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;margin-bottom:8px!important;}
+#apcyber-wrapper .cfu-feedback.wrong-fb .cfu-feedback-verdict{color:var(--red)!important;}
+#apcyber-wrapper .cfu-feedback:not(.wrong-fb) .cfu-feedback-verdict{color:var(--green)!important;}
+#apcyber-wrapper .cfu-feedback-explain{font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g700)!important;line-height:1.65!important;}
+#apcyber-wrapper .cfu-eol{background:linear-gradient(to bottom right,#fdf4ff,#f5f3ff)!important;border-top-color:var(--accent)!important;}
+#apcyber-wrapper .cfu-eol-badge{background:#f3e8ff!important;color:#7e22ce!important;font-weight:700!important;}
+
+#apcyber-wrapper .faq-list{list-style:none!important;padding:0!important;margin:0!important;display:grid!important;gap:16px!important;}
+#apcyber-wrapper .faq-item{background:var(--g50)!important;border:1px solid var(--g200)!important;border-radius:var(--r-md)!important;padding:20px 24px!important;border-left:4px solid var(--primary)!important;}
+#apcyber-wrapper .faq-q{font-family:'Georgia',serif!important;font-size:16px!important;font-weight:700!important;color:var(--deep)!important;margin-bottom:10px!important;}
+#apcyber-wrapper .faq-a{font-family:'Georgia',serif!important;font-size:15px!important;color:var(--g700)!important;line-height:1.65!important;margin:0!important;}
+
+#apcyber-wrapper .author-box{background:linear-gradient(135deg,var(--dark) 0%,#2e1065 100%)!important;border-radius:var(--r-xl)!important;padding:28px 32px!important;margin-bottom:24px!important;display:flex!important;align-items:flex-start!important;gap:20px!important;flex-wrap:wrap!important;}
+#apcyber-wrapper .author-avatar{width:72px!important;height:72px!important;border-radius:50%!important;background:var(--primary)!important;flex-shrink:0!important;display:flex!important;align-items:center!important;justify-content:center!important;font-family:'Georgia',serif!important;font-size:24px!important;font-weight:700!important;color:var(--white)!important;border:3px solid var(--accent)!important;}
+#apcyber-wrapper .author-info{flex:1!important;min-width:200px!important;}
+#apcyber-wrapper .author-name{font-family:'Georgia',serif!important;font-size:18px!important;font-weight:700!important;color:var(--white)!important;margin-bottom:4px!important;}
+#apcyber-wrapper .author-role{font-family:'Georgia',serif!important;font-size:11px!important;color:var(--accent)!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.7px!important;margin-bottom:10px!important;}
+#apcyber-wrapper .author-bio{font-family:'Georgia',serif!important;font-size:14px!important;color:rgba(255,255,255,.8)!important;line-height:1.6!important;margin-bottom:12px!important;}
+#apcyber-wrapper .author-stats{display:flex!important;flex-wrap:wrap!important;gap:8px!important;}
+#apcyber-wrapper .author-stat{background:rgba(255,255,255,.1)!important;border:1px solid rgba(255,255,255,.15)!important;border-radius:20px!important;padding:4px 12px!important;font-family:'Georgia',serif!important;font-size:12px!important;color:var(--white)!important;font-weight:500!important;}
+#apcyber-wrapper .author-updated{font-family:'Georgia',serif!important;font-size:12px!important;color:rgba(255,255,255,.45)!important;margin-top:10px!important;}
+
+#apcyber-wrapper .related-grid{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important;margin-top:8px!important;}
+#apcyber-wrapper .related-link{display:flex!important;align-items:flex-start!important;gap:10px!important;background:var(--g50)!important;border:1px solid var(--g200)!important;border-radius:var(--r-md)!important;padding:14px 16px!important;text-decoration:none!important;border-left:3px solid var(--primary)!important;}
+#apcyber-wrapper .related-link:link,#apcyber-wrapper .related-link:visited{text-decoration:none!important;}
+#apcyber-wrapper .related-link:hover{background:var(--lighter)!important;}
+#apcyber-wrapper .rl-type{font-family:'Georgia',serif!important;font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.8px!important;color:var(--primary)!important;margin-bottom:3px!important;display:block!important;}
+#apcyber-wrapper .rl-title{font-family:'Georgia',serif!important;font-size:14px!important;font-weight:600!important;color:var(--deep)!important;line-height:1.4!important;}
+
+/* ===== SLIDES SECTION ===== */
+#apcyber-wrapper .slides-section{background:linear-gradient(135deg,var(--dark) 0%,#1e1040 100%)!important;border-radius:var(--r-xl)!important;padding:32px 36px!important;margin-bottom:24px!important;border:1px solid rgba(167,139,250,.15)!important;}
+#apcyber-wrapper .slides-header{display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:20px!important;margin-bottom:20px!important;flex-wrap:wrap!important;}
+#apcyber-wrapper .slides-header-left{flex:1!important;min-width:200px!important;}
+#apcyber-wrapper .slides-eyebrow{display:block!important;font-family:'Georgia',serif!important;font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1.5px!important;color:var(--accent)!important;margin-bottom:6px!important;}
+#apcyber-wrapper .slides-title{font-family:'Georgia',serif!important;font-size:20px!important;font-weight:700!important;color:var(--white)!important;margin:0 0 8px 0!important;line-height:1.25!important;}
+#apcyber-wrapper .slides-sub{font-family:'Georgia',serif!important;font-size:14px!important;color:rgba(255,255,255,.6)!important;margin:0!important;line-height:1.6!important;}
+#apcyber-wrapper .slides-open-btn{display:inline-flex!important;align-items:center!important;gap:6px!important;background:rgba(255,255,255,.1)!important;border:1px solid rgba(255,255,255,.2)!important;color:var(--white)!important;padding:10px 18px!important;border-radius:var(--r-md)!important;font-family:'Georgia',serif!important;font-size:13px!important;font-weight:600!important;text-decoration:none!important;white-space:nowrap!important;flex-shrink:0!important;margin-top:4px!important;}
+#apcyber-wrapper .slides-open-btn:link,#apcyber-wrapper .slides-open-btn:visited{color:var(--white)!important;-webkit-text-fill-color:var(--white)!important;text-decoration:none!important;opacity:1!important;visibility:visible!important;}
+#apcyber-wrapper .slides-open-btn:hover{background:rgba(255,255,255,.18)!important;color:var(--white)!important;-webkit-text-fill-color:var(--white)!important;}
+#apcyber-wrapper .slides-embed-wrap{position:relative!important;width:100%!important;padding-bottom:56.25%!important;height:0!important;border-radius:var(--r-md)!important;overflow:hidden!important;background:#000!important;box-shadow:0 8px 32px rgba(0,0,0,.4)!important;}
+#apcyber-wrapper .slides-embed-wrap iframe{position:absolute!important;top:0!important;left:0!important;width:100%!important;height:100%!important;border:0!important;}
+
+/* ===== MIXED-FORMAT CFU STYLES ===== */
+#apcyber-wrapper .match-container{display:flex!important;gap:16px!important;margin-bottom:16px!important;}
+#apcyber-wrapper .match-col{flex:1!important;display:flex!important;flex-direction:column!important;gap:8px!important;}
+#apcyber-wrapper .match-col-label{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1px!important;color:var(--primary)!important;margin-bottom:4px!important;text-align:center!important;}
+#apcyber-wrapper .match-item{display:flex!important;align-items:center!important;gap:8px!important;background:var(--white)!important;border:2px solid var(--g200)!important;border-radius:var(--r-md)!important;padding:11px 14px!important;cursor:pointer!important;transition:all .15s!important;font-family:'Georgia',serif!important;font-size:13px!important;color:var(--g700)!important;line-height:1.45!important;min-height:48px!important;}
+#apcyber-wrapper .match-item:hover{border-color:var(--primary)!important;background:var(--lighter)!important;}
+#apcyber-wrapper .match-item.selected{border-color:var(--primary)!important;background:var(--lighter)!important;box-shadow:0 0 0 2px rgba(109,40,217,.2)!important;}
+#apcyber-wrapper .match-item.matched{border-color:var(--green)!important;background:#ecfdf5!important;cursor:default!important;opacity:.85!important;}
+#apcyber-wrapper .match-item.wrong-match{border-color:var(--red)!important;background:#fef2f2!important;}
+#apcyber-wrapper .match-item.locked{cursor:default!important;}
+#apcyber-wrapper .match-num{width:22px!important;height:22px!important;border-radius:50%!important;background:var(--primary)!important;color:var(--white)!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:11px!important;font-weight:800!important;flex-shrink:0!important;}
+#apcyber-wrapper .match-item.matched .match-num{background:var(--green)!important;}
+#apcyber-wrapper .match-connector{width:24px!important;flex-shrink:0!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:16px!important;color:var(--g400)!important;font-family:'Georgia',serif!important;}
+#apcyber-wrapper .match-instructions{font-family:'Georgia',serif!important;font-size:13px!important;color:var(--g600)!important;font-style:italic!important;margin-bottom:14px!important;padding:8px 12px!important;background:var(--lighter)!important;border-radius:var(--r-sm)!important;border-left:3px solid var(--primary)!important;}
+
+#apcyber-wrapper .cloze-passage{font-family:'Georgia',serif!important;font-size:15px!important;color:var(--g700)!important;line-height:2!important;margin-bottom:20px!important;padding:16px 20px!important;background:var(--white)!important;border:1px solid var(--g200)!important;border-radius:var(--r-md)!important;}
+#apcyber-wrapper .cloze-blank{display:inline-block!important;min-width:120px!important;border-bottom:2px dashed var(--primary)!important;padding:2px 8px!important;margin:0 3px!important;cursor:pointer!important;font-family:'Georgia',serif!important;font-size:14px!important;color:var(--primary)!important;font-weight:700!important;text-align:center!important;transition:all .15s!important;background:rgba(109,40,217,.05)!important;border-radius:3px 3px 0 0!important;vertical-align:baseline!important;}
+#apcyber-wrapper .cloze-blank:hover{background:rgba(109,40,217,.1)!important;}
+#apcyber-wrapper .cloze-blank.filled{border-bottom-style:solid!important;background:var(--lighter)!important;}
+#apcyber-wrapper .cloze-blank.correct-blank{border-bottom-color:var(--green)!important;background:#ecfdf5!important;color:var(--green)!important;}
+#apcyber-wrapper .cloze-blank.wrong-blank{border-bottom-color:var(--red)!important;background:#fef2f2!important;color:var(--red)!important;text-decoration:line-through!important;}
+#apcyber-wrapper .cloze-bank{display:flex!important;flex-wrap:wrap!important;gap:8px!important;margin-bottom:16px!important;padding:14px 16px!important;background:var(--g50)!important;border:1px solid var(--g200)!important;border-radius:var(--r-md)!important;}
+#apcyber-wrapper .cloze-bank-label{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1px!important;color:var(--primary)!important;margin-bottom:6px!important;display:block!important;width:100%!important;}
+#apcyber-wrapper .cloze-chip{display:inline-flex!important;align-items:center!important;padding:6px 14px!important;border-radius:20px!important;background:var(--white)!important;border:2px solid var(--g200)!important;cursor:pointer!important;font-family:'Georgia',serif!important;font-size:13px!important;font-weight:600!important;color:var(--g700)!important;transition:all .15s!important;white-space:nowrap!important;}
+#apcyber-wrapper .cloze-chip:hover{border-color:var(--primary)!important;background:var(--lighter)!important;}
+#apcyber-wrapper .cloze-chip.selected{border-color:var(--primary)!important;background:var(--primary)!important;color:var(--white)!important;}
+#apcyber-wrapper .cloze-chip.placed{opacity:.4!important;cursor:default!important;border-style:dashed!important;}
+#apcyber-wrapper .cloze-chip.locked{cursor:default!important;}
+#apcyber-wrapper .cloze-correction{font-family:'Georgia',serif!important;font-size:12px!important;color:var(--green)!important;font-weight:700!important;display:inline!important;}
+
+#apcyber-wrapper .sort-buckets{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important;margin-bottom:16px!important;}
+#apcyber-wrapper .sort-bucket{background:var(--white)!important;border:2px dashed var(--g200)!important;border-radius:var(--r-md)!important;padding:12px!important;min-height:80px!important;transition:all .15s!important;}
+#apcyber-wrapper .sort-bucket.active{border-color:var(--primary)!important;border-style:solid!important;background:var(--lighter)!important;}
+#apcyber-wrapper .sort-bucket.correct-bucket{border-color:var(--green)!important;border-style:solid!important;}
+#apcyber-wrapper .sort-bucket-label{font-family:'Georgia',serif!important;font-size:13px!important;font-weight:700!important;color:var(--primary)!important;text-align:center!important;padding:6px 10px!important;background:var(--lighter)!important;border-radius:var(--r-sm)!important;margin-bottom:8px!important;display:block!important;}
+#apcyber-wrapper .sort-bucket.correct-bucket .sort-bucket-label{background:#ecfdf5!important;color:var(--green)!important;}
+#apcyber-wrapper .sort-placed-card{font-family:'Georgia',serif!important;font-size:12px!important;color:var(--g700)!important;background:var(--g50)!important;border:1px solid var(--g200)!important;border-radius:var(--r-sm)!important;padding:6px 10px!important;margin-bottom:4px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:6px!important;}
+#apcyber-wrapper .sort-placed-card .sort-remove{cursor:pointer!important;color:var(--g400)!important;font-weight:700!important;font-size:14px!important;flex-shrink:0!important;}
+#apcyber-wrapper .sort-placed-card .sort-remove:hover{color:var(--red)!important;}
+#apcyber-wrapper .sort-placed-card.correct-placed{border-color:var(--green)!important;background:#ecfdf5!important;}
+#apcyber-wrapper .sort-placed-card.wrong-placed{border-color:var(--red)!important;background:#fef2f2!important;}
+#apcyber-wrapper .sort-scenarios{display:grid!important;gap:8px!important;margin-bottom:16px!important;}
+#apcyber-wrapper .sort-card{display:flex!important;align-items:flex-start!important;gap:10px!important;background:var(--white)!important;border:2px solid var(--g200)!important;border-radius:var(--r-md)!important;padding:12px 16px!important;cursor:pointer!important;transition:all .15s!important;font-family:'Georgia',serif!important;font-size:13px!important;color:var(--g700)!important;line-height:1.5!important;}
+#apcyber-wrapper .sort-card:hover{border-color:var(--primary)!important;background:var(--lighter)!important;}
+#apcyber-wrapper .sort-card.selected{border-color:var(--primary)!important;background:var(--lighter)!important;box-shadow:0 0 0 2px rgba(109,40,217,.2)!important;}
+#apcyber-wrapper .sort-card.placed-in-bucket{opacity:.4!important;cursor:default!important;border-style:dashed!important;}
+#apcyber-wrapper .sort-card-num{font-weight:800!important;color:var(--primary)!important;flex-shrink:0!important;min-width:18px!important;}
+#apcyber-wrapper .sort-instructions{font-family:'Georgia',serif!important;font-size:13px!important;color:var(--g600)!important;font-style:italic!important;margin-bottom:14px!important;padding:8px 12px!important;background:var(--lighter)!important;border-radius:var(--r-sm)!important;border-left:3px solid var(--primary)!important;}
+
+#apcyber-wrapper .redflag-email{background:var(--white)!important;border:1px solid var(--g200)!important;border-radius:var(--r-md)!important;overflow:hidden!important;margin-bottom:16px!important;box-shadow:var(--sh-sm)!important;}
+#apcyber-wrapper .redflag-toolbar{background:var(--g100)!important;padding:8px 14px!important;border-bottom:1px solid var(--g200)!important;display:flex!important;align-items:center!important;gap:6px!important;}
+#apcyber-wrapper .redflag-dot{width:10px!important;height:10px!important;border-radius:50%!important;display:inline-block!important;}
+#apcyber-wrapper .redflag-dot.r{background:#ef4444!important;}
+#apcyber-wrapper .redflag-dot.y{background:#eab308!important;}
+#apcyber-wrapper .redflag-dot.g{background:#22c55e!important;}
+#apcyber-wrapper .redflag-meta{padding:14px 18px!important;border-bottom:1px solid var(--g200)!important;font-family:'Georgia',serif!important;font-size:13px!important;color:var(--g600)!important;line-height:1.8!important;}
+#apcyber-wrapper .redflag-meta strong{color:var(--g800)!important;}
+#apcyber-wrapper .redflag-field{display:block!important;margin-bottom:2px!important;}
+#apcyber-wrapper .redflag-body{padding:18px!important;font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g700)!important;line-height:1.7!important;}
+#apcyber-wrapper .redflag-body p{margin:0 0 12px 0!important;}
+#apcyber-wrapper .rf-spot{cursor:pointer!important;border-bottom:2px dotted transparent!important;padding:1px 2px!important;border-radius:2px!important;transition:all .15s!important;position:relative!important;}
+#apcyber-wrapper .rf-spot:hover{background:rgba(109,40,217,.08)!important;border-bottom-color:var(--g400)!important;}
+#apcyber-wrapper .rf-spot.flagged{background:#fef3c7!important;border-bottom:2px solid var(--warn)!important;}
+#apcyber-wrapper .rf-spot.correct-flag{background:#dcfce7!important;border-bottom:2px solid var(--green)!important;}
+#apcyber-wrapper .rf-spot.wrong-flag{background:#fecaca!important;border-bottom:2px solid var(--red)!important;text-decoration:line-through!important;}
+#apcyber-wrapper .rf-spot.missed-flag{background:#fef9c3!important;border-bottom:2px dashed var(--warn)!important;}
+#apcyber-wrapper .redflag-instructions{font-family:'Georgia',serif!important;font-size:13px!important;color:var(--g600)!important;font-style:italic!important;margin-bottom:14px!important;padding:8px 12px!important;background:#fffbeb!important;border-radius:var(--r-sm)!important;border-left:3px solid var(--warn)!important;}
+#apcyber-wrapper .redflag-counter{font-family:'Georgia',serif!important;font-size:12px!important;color:var(--g400)!important;margin-bottom:10px!important;}
+#apcyber-wrapper .rf-legend{display:flex!important;gap:16px!important;flex-wrap:wrap!important;margin-top:8px!important;font-family:'Georgia',serif!important;font-size:12px!important;color:var(--g600)!important;}
+#apcyber-wrapper .rf-legend-item{display:flex!important;align-items:center!important;gap:5px!important;}
+#apcyber-wrapper .rf-legend-swatch{width:14px!important;height:14px!important;border-radius:3px!important;display:inline-block!important;}
+#apcyber-wrapper .cfu-type-badge.cfu-match-badge{background:#dbeafe!important;color:#1e40af!important;}
+#apcyber-wrapper .cfu-type-badge.cfu-cloze-badge{background:#fce7f3!important;color:#9d174d!important;}
+#apcyber-wrapper .cfu-type-badge.cfu-sort-badge{background:#d1fae5!important;color:#065f46!important;}
+#apcyber-wrapper .cfu-type-badge.cfu-redflag-badge{background:#fef3c7!important;color:#92400e!important;}
+
+@media(max-width:680px){
+  #apcyber-wrapper .ch-header{padding:26px 22px!important;}
+  #apcyber-wrapper .card{padding:24px 20px!important;}
+  #apcyber-wrapper .principle-grid{grid-template-columns:1fr!important;}
+  #apcyber-wrapper .defense-grid{grid-template-columns:1fr!important;}
+  #apcyber-wrapper .related-grid{grid-template-columns:1fr!important;}
+  #apcyber-wrapper .bottom-nav{flex-direction:column!important;}
+  #apcyber-wrapper .nav-btn{width:100%!important;justify-content:center!important;}
+  #apcyber-wrapper .exam-card{padding:24px 20px!important;}
+  #apcyber-wrapper .author-box{flex-direction:column!important;}
+  #apcyber-wrapper .toc-row{grid-template-columns:1fr!important;}
+  #apcyber-wrapper .tutor-cta{padding:24px 20px!important;flex-direction:column!important;}
+  #apcyber-wrapper .key-terms-grid{grid-template-columns:1fr!important;}
+  #cfu-score-tracker{left:12px!important;bottom:20px!important;}
+  #apcyber-wrapper .slides-section{padding:22px 18px!important;}
+  #apcyber-wrapper .slides-header{flex-direction:column!important;}
+  #apcyber-wrapper .slides-open-btn{width:100%!important;justify-content:center!important;}
+  #apcyber-wrapper .match-container{flex-direction:column!important;}
+  #apcyber-wrapper .match-connector{display:none!important;}
+  #apcyber-wrapper .sort-buckets{grid-template-columns:1fr!important;}
+  #apcyber-wrapper .cloze-blank{min-width:90px!important;}
+}
+
+</style>
+
+<script>
+function ucnToggle(num){try{event.stopPropagation();}catch(x){}var l=document.getElementById('ucn-l'+num),s=document.getElementById('ucn-s'+num);if(!l||!s)return;var o=l.classList.contains('open');document.querySelectorAll('#ucnav .ucn-lesson').forEach(function(e){e.classList.remove('open')});document.querySelectorAll('#ucnav .ucn-steps').forEach(function(e){e.classList.remove('open')});if(!o){l.classList.add('open');s.classList.add('open');setTimeout(function(){l.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},50)}}
+(function(){function pos(){var nav=document.getElementById('ucnav');if(!nav)return;if(nav.parentElement!==document.body){document.body.appendChild(nav)}var h=0;var headerEl=document.querySelector('.section-header header.header')||document.querySelector('sticky-header header')||document.querySelector('header.header');if(headerEl){h=Math.round(headerEl.getBoundingClientRect().bottom)}if(h<20||h>300)h=68;nav.style.setProperty('top',h+'px','important');var navH=nav.offsetHeight||42;var w=document.getElementById('apcyber-wrapper');if(w)w.style.setProperty('padding-top',(h+navH+4)+'px','important')}function openCurrentSteps(){var ol=document.querySelector('#ucnav .ucn-lesson.open');if(ol&&ol.id){var n=ol.id.replace('ucn-l','');var s=document.getElementById('ucn-s'+n);if(s)s.classList.add('open');setTimeout(function(){ol.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},100)}}requestAnimationFrame(pos);setTimeout(pos,150);setTimeout(pos,400);setTimeout(pos,800);setTimeout(pos,1500);setTimeout(pos,3000);setTimeout(openCurrentSteps,200);window.addEventListener('resize',pos,{passive:true});setTimeout(function(){var _w=document.getElementById('apcyber-wrapper');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}var _m=document.getElementById('MainContent');if(_m){_m.style.setProperty('padding-top','0','important');_m.style.setProperty('margin-top','0','important')}},50);var scrolled=false;window.addEventListener('scroll',function(){if(!scrolled){scrolled=true;requestAnimationFrame(pos)}},{passive:true});var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class','hidden']});setTimeout(function(){obs.disconnect()},15000);})();
+</script>
+
+<div id="ucnav"><div class="ucn-rail">
+<a href="/pages/ap-cybersecurity-complete-course-guide" class="ucn-hub">AP Cyber Hub</a><span class="ucn-badge">Unit 1</span><a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-lesson " onclick="ucnToggle(1);" id="ucn-l1">1.1 <span class="ucn-chevron">▼</span></a><span class="ucn-steps " id="ucn-s1"><a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-step">Lesson</a><a href="/pages/ap-cyber-unit-1-lesson-1-exercise-1" class="ucn-step">Ex 1</a><a href="/pages/ap-cyber-unit-1-lesson-1-exercise-2" class="ucn-step">Ex 2</a><a href="/pages/ap-cyber-unit-1-lesson-1-lab" class="ucn-step">Lab</a><a href="/pages/ap-cyber-unit-1-lesson-1-quiz" class="ucn-step">Quiz</a></span><a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-lesson " onclick="ucnToggle(2);" id="ucn-l2">1.2 <span class="ucn-chevron">▼</span></a><span class="ucn-steps " id="ucn-s2"><a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-step">Lesson</a><a href="/pages/ap-cyber-unit-1-lesson-2-exercise-1" class="ucn-step">Ex 1</a><a href="/pages/ap-cyber-unit-1-lesson-2-exercise-2" class="ucn-step">Ex 2</a><a href="/pages/ap-cyber-unit-1-lesson-2-lab" class="ucn-step">Lab</a><a href="/pages/ap-cyber-unit-1-lesson-2-quiz" class="ucn-step">Quiz</a></span><a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-lesson open" onclick="ucnToggle(3);" id="ucn-l3">1.3 <span class="ucn-chevron">▼</span></a><span class="ucn-steps open" id="ucn-s3"><span class="ucn-step current">Lesson</span><a href="/pages/ap-cyber-unit-1-lesson-3-exercise-1" class="ucn-step">Ex 1</a><a href="/pages/ap-cyber-unit-1-lesson-3-exercise-2" class="ucn-step">Ex 2</a><a href="/pages/ap-cyber-unit-1-lesson-3-lab" class="ucn-step">Lab</a><a href="/pages/ap-cyber-unit-1-lesson-3-quiz" class="ucn-step">Quiz</a></span><a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-lesson " onclick="ucnToggle(4);" id="ucn-l4">1.4 <span class="ucn-chevron">▼</span></a><span class="ucn-steps " id="ucn-s4"><a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-step">Lesson</a><a href="/pages/ap-cyber-unit-1-lesson-4-exercise-1" class="ucn-step">Ex 1</a><a href="/pages/ap-cyber-unit-1-lesson-4-exercise-2" class="ucn-step">Ex 2</a><a href="/pages/ap-cyber-unit-1-lesson-4-lab" class="ucn-step">Lab</a><a href="/pages/ap-cyber-unit-1-lesson-4-quiz" class="ucn-step">Quiz</a></span><a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-lesson " onclick="ucnToggle(5);" id="ucn-l5">1.5 <span class="ucn-chevron">▼</span></a><span class="ucn-steps " id="ucn-s5"><a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-step">Lesson</a><a href="/pages/ap-cyber-unit-1-lesson-5-exercise-1" class="ucn-step">Ex 1</a><a href="/pages/ap-cyber-unit-1-lesson-5-exercise-2" class="ucn-step">Ex 2</a><a href="/pages/ap-cyber-unit-1-lesson-5-lab" class="ucn-step">Lab</a><a href="/pages/ap-cyber-unit-1-lesson-5-quiz" class="ucn-step">Quiz</a></span>
+</div></div>
+
+<div id="apcyber-progress-bar"></div>
+<button id="apcyber-back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">⇧</button>
+<div id="cfu-score-tracker">
+<span class="cfu-score-label">Score</span><span id="cfu-score-num">0 / 10</span>
+</div>
+
+<div id="apcyber-wrapper" data-lesson-id="1.3">
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <a href="/">Home</a><span class="bc-sep">›</span>
+  <a href="/pages/ap-cybersecurity-complete-course-guide">AP Cybersecurity</a><span class="bc-sep">›</span>
+  <a href="/pages/ap-cybersecurity-unit-1-introduction-to-security">Unit 1: Introduction to Security</a><span class="bc-sep">›</span>
+  <span class="bc-current">Topic 1.3: Best Practices for Public Networks</span>
+</div>
+
+<div class="meta-bar">
+  <span>📅 Last Updated: <strong>June 2026</strong></span>
+  <span>⏱ <strong>~50 min</strong></span>
+  <span>📚 Lesson <strong>3 of 5</strong> — Unit 1</span>
+</div>
+
+<!-- HERO -->
+<div class="ch-header">
+  <span class="ch-label">AP Cybersecurity — Unit 1: Introduction to Security</span>
+  <h1>Topic 1.3: Best Practices for Public Networks</h1>
+  <p>Adversary skill levels and motivations, evil twin attacks, jamming, war driving — and the three specific individual protections every user needs when connecting to public Wi-Fi.</p>
+  <div class="ch-meta">
+    <span class="ch-badge">Lesson 3 of 5</span>
+    <span class="ch-badge">~50 min</span>
+    <span class="ch-badge">LO 1.3.A – 1.3.C</span>
+    <span class="ch-badge">Skills: Analyze Risk • Mitigate Risk</span>
+  </div>
+</div>
+
+
+<!-- AP EXAM FOCUS -->
+<div class="info-box exam" style="margin-bottom:20px!important;">
+  <span class="box-label">★ AP Exam Focus — Topic 1.3</span>
+  <p>
+    • Classify adversaries as low-skilled or high-skilled based on tool origin and vulnerability type — not based on damage caused<br>
+    • Identify evil twin, jamming, and war driving by mechanism, CIA property violated, and attack phase<br>
+    • Apply the three individual protections (verify SSID, avoid open networks, VPN) to scenario questions<br>
+    • Explain why no individual-level protection can stop a jamming attack<br>
+    • Recognize homoglyph substitution in SSID names as the evil twin detection technique
+  </p>
+</div>
+
+<!-- EK TABLE -->
+<div class="card" style="border-top:3px solid #d97706!important;">
+  <div style="display:flex!important;justify-content:space-between!important;align-items:center!important;cursor:pointer!important;" onclick="var b=document.getElementById('ek13-body');var c=document.getElementById('ek13-chev');b.style.display=b.style.display==='none'?'block':'none';c.style.transform=c.style.transform?'':'rotate(180deg)';">
+    <div>
+      <span style="font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1.5px!important;color:#d97706!important;font-family:Georgia,serif!important;">College Board Essential Knowledge Coverage</span>
+      <h3 style="margin:4px 0 0!important;font-size:16px!important;font-weight:700!important;color:#1E1B4B!important;font-family:Georgia,serif!important;">Topic 1.3 — What Is Testable</h3>
+    </div>
+    <span id="ek13-chev" style="font-size:20px!important;color:#6B21A8!important;transition:transform .2s!important;">▼</span>
+  </div>
+  <div id="ek13-body" style="display:none!important;margin-top:16px!important;">
+    <table class="vocab-table">
+      <thead><tr>
+<th>CED Ref</th>
+<th>Essential Knowledge</th>
+<th>Covered In</th>
+</tr></thead>
+      <tbody>
+        <tr>
+<td class="term">1.3.A.1</td>
+<td>Low-skilled adversaries rely on tools created by others; exploit known vulnerabilities. High-skilled adversaries create/modify tools; can discover zero-day vulnerabilities.</td>
+<td>Section 2</td>
+</tr>
+        <tr>
+<td class="term">1.3.A.2</td>
+<td>Adversary motivations include: greed, recognition, dedication to a cause, revenge, politics, beliefs</td>
+<td>Section 2</td>
+</tr>
+        <tr>
+<td class="term">1.3.B.1</td>
+<td>Evil twin: adversary sets up WAP with SSID similar/identical to target network; victims unknowingly connect; adversary captures traffic</td>
+<td>Section 3</td>
+</tr>
+        <tr>
+<td class="term">1.3.B.2</td>
+<td>Jamming: adversary floods area with EM signal in wireless frequency range; prevents legitimate traffic = DoS attack</td>
+<td>Section 3</td>
+</tr>
+        <tr>
+<td class="term">1.3.B.3</td>
+<td>War driving: adversary detects wireless beacons while mobile to map networks and find signal leakage outside buildings</td>
+<td>Section 3</td>
+</tr>
+        <tr>
+<td class="term">1.3.C.1</td>
+<td>Verify the wireless network name matches exactly the network you intend to join</td>
+<td>Section 5</td>
+</tr>
+        <tr>
+<td class="term">1.3.C.2</td>
+<td>Avoid joining unprotected wireless networks (no password/authentication required)</td>
+<td>Section 5</td>
+</tr>
+        <tr>
+<td class="term">1.3.C.3</td>
+<td>Consider using a VPN, which encrypts all traffic so intercepted data is not immediately readable</td>
+<td>Section 5</td>
+</tr>
+      </tbody>
+    </table>
+    <p style="font-size:12px!important;color:#6B7280!important;font-family:Georgia,serif!important;margin-top:8px!important;">Source: AP Cybersecurity CED, Effective Fall 2026. AP Skills: 1.A Identify threats/attacks • 2.A Identify security controls</p>
+  </div>
+</div>
+
+<!-- BELLRINGER -->
+<div class="card" style="border-top:3px solid #059669!important;">
+  <span style="font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1.5px!important;color:#059669!important;font-family:Georgia,serif!important;">♡ Bellringer — 3 Questions, 5 Minutes</span>
+  <p style="font-size:13px!important;color:#6B7280!important;font-family:Georgia,serif!important;margin-top:4px!important;margin-bottom:14px!important;">Answer independently before the lesson. No notes.</p>
+  <ol style="font-size:15px!important;color:#374151!important;line-height:2!important;padding-left:20px!important;font-family:Georgia,serif!important;">
+    <li>At a coffee shop, you see two networks: “CafeWifi” (requires password) and “CafeWifi_Free” (open). Which is more likely to be an evil twin, and what is the one thing you should do before connecting to either?</li>
+    <li>An adversary uses a $30 device and freely available software to set up a rogue access point at an airport. A nation-state hacker writes custom zero-day exploit code. Which is low-skilled and which is high-skilled? What distinguishes them?</li>
+    <li>Your laptop’s Wi-Fi is suddenly unable to connect anywhere in a building, even though other devices connected before you arrived. Name the attack type and explain why this is classified as a DoS attack.</li>
+  </ol>
+  <p style="font-size:12px!important;color:#9CA3AF!important;font-family:Georgia,serif!important;margin-top:8px!important;"><em>Answers: (1) CafeWifi_Free is more suspicious; ask staff for the exact network name. (2) Rogue AP operator = low-skilled (uses tools created by others); nation-state = high-skilled (creates own tools, discovers zero-days). (3) Jamming — it makes the wireless resource unavailable to authorized users = DoS.</em></p>
+</div>
+
+<!-- TOC -->
+<div class="toc-row">
+  <div class="toc-card">
+    <span class="toc-label">In This Lesson</span>
+    <ul class="toc-list">
+      <li>1.3.1 — Learning Objectives <span class="toc-time">(3 min)</span>
+</li>
+      <li>1.3.2 — Adversary Classification <span class="toc-time">(8 min)</span>
+</li>
+      <li>1.3.3 — Three Wireless Attack Types <span class="toc-time">(10 min)</span>
+</li>
+      <li>1.3.4 — Evil Twin Attacks in Depth <span class="toc-time">(8 min)</span>
+</li>
+    </ul>
+  </div>
+  <div class="toc-card">
+    <span class="toc-label">Continued</span>
+    <ul class="toc-list">
+      <li>1.3.5 — Individual Protections <span class="toc-time">(8 min)</span>
+</li>
+      <li>1.3.6 — Defense Coverage Matrix <span class="toc-time">(5 min)</span>
+</li>
+      <li>1.3.7 — Worked Scenarios &amp; CFU <span class="toc-time">(6 min)</span>
+</li>
+      <li>1.3.8 — Key Terms &amp; FAQ <span class="toc-time">(4 min)</span>
+</li>
+    </ul>
+  </div>
+</div>
+
+<!-- SECTION 1: LEARNING OBJECTIVES -->
+<div class="card">
+  <h2>
+<span class="section-icon">1</span>1.3.1 — Learning Objectives</h2>
+  <ul class="obj-list">
+    <li>
+<span class="obj-check"></span>Identify adversary types by skill level (low-skilled vs. high-skilled) and explain how skill level affects risk assessment (1.3.A)</li>
+    <li>
+<span class="obj-check"></span>Identify and distinguish evil twin, jamming, and war driving attacks — including mechanism, CIA impact, and classification (1.3.B)</li>
+    <li>
+<span class="obj-check"></span>Apply the three CED individual protections (verify SSID, avoid open networks, use VPN) to wireless threat scenarios (1.3.C)</li>
+    <li>
+<span class="obj-check"></span>Match each protection to the attack type(s) it addresses and explain why no individual protection stops jamming</li>
+    <li>
+<span class="obj-check"></span>Analyze a wireless attack scenario and select the correct defense using the CED framework</li>
+  </ul>
+</div>
+
+<!-- SECTION 2: ADVERSARY CLASSIFICATION -->
+<div class="card">
+  <h2>
+<span class="section-icon">2</span>1.3.2 — Adversary Classification: Skill Levels and Motivations</h2>
+
+  <p>Before examining specific attacks, you need to understand who conducts them. The CED classifies adversaries along two dimensions: <strong>skill level</strong> and <strong>motivation</strong>. Both affect the types of attacks they attempt and the defenses that can stop them.</p>
+
+  <div class="principle-grid">
+    <div class="principle-card">
+      <div class="p-num">Low-Skilled</div>
+      <div class="p-name">Tool Users</div>
+      <div class="p-how">Rely on malicious tools <em>created by others</em> — purchased or downloaded online. The tools they use exploit <strong>known vulnerabilities</strong>: weaknesses already documented by security researchers. These adversaries do not understand how the tools work at a deep level.</div>
+      <div class="p-example">Risk implication: Keeping software patched stops most low-skilled attacks. The same tool deployed by a low-skilled adversary can still cause serious damage.</div>
+    </div>
+    <div class="principle-card">
+      <div class="p-num">High-Skilled</div>
+      <div class="p-name">Tool Creators</div>
+      <div class="p-how">Have the capacity to <em>create or modify</em> malicious tools and adapt them to new defenses. Can discover <strong>zero-day vulnerabilities</strong> — undocumented flaws the vendor has had zero days to patch.</div>
+      <div class="p-example">Risk implication: Patching alone does not stop them. Zero-day exploits bypass fully updated systems. Require layered defenses and behavioral detection.</div>
+    </div>
+  </div>
+
+  <div class="info-box warning">
+    <span class="box-label">⚠ AP Exam Trap — Damage ≠ Skill</span>
+    <p>Skill level is determined by <strong>tool origin and vulnerability type</strong>, not by the damage caused or the target chosen. A low-skilled adversary deploying a sophisticated tool built by others can cause massive harm. A question describing significant damage does not imply a high-skilled adversary.</p>
+  </div>
+
+  <h3>Adversary Motivations</h3>
+  <p>The CED (1.3.A.2) identifies six motivations adversaries may have: <strong>greed</strong> (financial gain), <strong>recognition</strong> (status, proving skill), <strong>dedication to a cause</strong> (ideological, political, social), <strong>revenge</strong> (personal or professional), <strong>politics</strong>, and <strong>beliefs</strong>. Understanding motivation helps predict which targets are at risk and how persistent an adversary will be.</p>
+
+  <!-- CFU 1: MCQ — Adversary Classification -->
+  <div class="cfu-block" id="cfu-1" data-num="1" data-type="mcq" data-answer="C">
+    <div class="cfu-header">
+      <div class="cfu-header-left">
+<span class="cfu-label">Check for Understanding</span><span class="cfu-type-badge">Spot the Error</span>
+</div>
+      <span class="cfu-counter">Q 1 of 10</span>
+    </div>
+    <p class="cfu-question">A security instructor states: <em>“An adversary who caused a $2 million ransomware attack must be high-skilled because of the magnitude of damage they caused.”</em> Which statement <strong>correctly</strong> identifies the error?</p>
+    <div class="cfu-options" id="cfu-1-opts">
+      <div class="cfu-opt" data-val="A" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">A</span><span class="cfu-opt-text">The instructor is correct — only high-skilled adversaries have access to ransomware capable of causing millions in damage.</span>
+</div>
+      <div class="cfu-opt" data-val="B" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">B</span><span class="cfu-opt-text">The instructor is partially correct — a $2 million attack requires at minimum a medium-skilled adversary with some technical knowledge.</span>
+</div>
+      <div class="cfu-opt" data-val="C" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">C</span><span class="cfu-opt-text">The instructor is wrong — skill level is determined by whether tools are created or borrowed, not by damage magnitude. A low-skilled adversary deploying ransomware-as-a-service built by others can cause millions in damage without understanding the underlying code.</span>
+</div>
+      <div class="cfu-opt" data-val="D" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">D</span><span class="cfu-opt-text">The instructor is wrong — ransomware attacks always originate from state-sponsored groups, which are a separate classification from the CED adversary types.</span>
+</div>
+    </div>
+    <button class="cfu-submit" id="cfu-1-btn" onclick="cfuSubmitMCQ(1)">Check Answer</button>
+    <div id="cfu-1-feedback" class="cfu-feedback" style="display:none">
+      <div id="cfu-1-verdict" class="cfu-feedback-verdict"></div>
+      <div class="cfu-feedback-explain">C is correct. This is a core CED concept: <strong>skill level = how tools are obtained, not the power of those tools or the resulting damage.</strong> Ransomware-as-a-service platforms allow low-skilled adversaries to deploy highly sophisticated ransomware by following step-by-step instructions. The $2 million figure tells you nothing about who built the attack — only about the target and the attacker’s luck or persistence. D introduces a false category not in the CED framework.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3: THREE WIRELESS ATTACKS -->
+<div class="card">
+  <h2>
+<span class="section-icon">3</span>1.3.3 — Three Wireless Attack Types</h2>
+  <p>Wireless networks transmit data via radio waves that extend beyond physical walls — creating attack opportunities that don’t exist on wired networks. The CED identifies three attacks you must know precisely.</p>
+
+  <div class="attack-block">
+    <div class="atk-name">
+<span class="atk-tag">1.3.B.1</span>Evil Twin Attack</div>
+    <div class="atk-desc">An adversary sets up a wireless access point (WAP) with a <strong>service set identifier (SSID) similar or identical to a target network</strong>. This malicious network is called the evil twin. Victims who connect — often unknowingly, sometimes automatically — have all their traffic flowing through the adversary’s device.</div>
+    <div class="atk-scenario">
+<strong>CED Scenario 1C:</strong> You’re at Sunshine Coffee. Your friend connects to “Sunshine Wi-Fi.” Minutes later their music stops and they’re locked out of their streaming account. The real network is “Guest Wi-Fi.” An adversary running the evil twin captured login credentials and changed the password.</div>
+    <div class="atk-edge">
+<strong>CIA violated:</strong> Confidentiality — traffic including credentials, session tokens, and unencrypted data are exposed to the adversary. Note: The adversary <em>cannot read HTTPS-encrypted traffic</em>, but unencrypted protocols and credential capture at login are vulnerable.</div>
+  </div>
+
+  <div class="attack-block">
+    <div class="atk-name">
+<span class="atk-tag">1.3.B.2</span>Jamming Attack</div>
+    <div class="atk-desc">An adversary floods an area with a <strong>strong electromagnetic (EM) signal in the same frequency range</strong> as the wireless network. This interference prevents legitimate traffic between the access point and users — effectively blocking all wireless communication in the affected area.</div>
+    <div class="atk-scenario">A jamming attack is classified as a <strong>denial of service (DoS) attack</strong> — it makes a resource (the wireless network) unavailable to authorized users. It does not steal data; it disrupts communication entirely. Can be used standalone or to force devices to disconnect from a legitimate network before an evil twin attack.</div>
+    <div class="atk-edge">
+<strong>CIA violated:</strong> Availability — systems and services become inaccessible. <strong>AP Exam Note:</strong> No individual-level protection can stop jamming. It operates at the physical radio layer — software on the user’s device cannot counter it.</div>
+  </div>
+
+  <div class="attack-block">
+    <div class="atk-name">
+<span class="atk-tag">1.3.B.3</span>War Driving</div>
+    <div class="atk-desc">Adversaries <strong>detect wireless network beacons while driving or walking</strong> through an area to map networks, identify encryption types, and find locations where signals extend beyond physical buildings. War driving is <em>passive</em> — no traffic is intercepted or modified.</div>
+    <div class="atk-scenario">War driving belongs to the <strong>reconnaissance phase</strong> of a cyberattack. The adversary is not yet attacking — they are gathering intelligence to plan a more targeted attack: identifying weak encryption, finding access points reachable from outside a building, locating networks without authentication.</div>
+    <div class="atk-edge">
+<strong>CIA violated:</strong> None directly — war driving itself does not compromise any CIA property. It enables future attacks that may. <strong>Common trap:</strong> War driving does <em>not</em> intercept or steal data in transit. Any answer claiming war driving captures live traffic is wrong.</div>
+  </div>
+
+  <!-- CFU 2: Spot the Error — Jamming vs Evil Twin -->
+  <div class="cfu-block" id="cfu-2" data-num="2" data-type="mcq" data-answer="B">
+    <div class="cfu-header">
+      <div class="cfu-header-left">
+<span class="cfu-label">Check for Understanding</span><span class="cfu-type-badge">Spot the Error</span>
+</div>
+      <span class="cfu-counter">Q 2 of 10</span>
+    </div>
+    <p class="cfu-question">A student writes: <em>“A jamming attack is when an adversary creates a fake wireless access point to flood a network with traffic, causing a denial of service.”</em> Which part contains an error?</p>
+    <div class="cfu-options" id="cfu-2-opts">
+      <div class="cfu-opt" data-val="A" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">A</span><span class="cfu-opt-text">The statement incorrectly identifies jamming as causing a denial of service — jamming is actually a data theft attack.</span>
+</div>
+      <div class="cfu-opt" data-val="B" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">B</span><span class="cfu-opt-text">The mechanism is wrong — jamming floods an area with EM signals in the wireless frequency range, not by creating a fake access point. Creating a fake access point describes an evil twin attack.</span>
+</div>
+      <div class="cfu-opt" data-val="C" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">C</span><span class="cfu-opt-text">The statement incorrectly implies jamming targets a specific network — jamming actually targets individual devices, not networks.</span>
+</div>
+      <div class="cfu-opt" data-val="D" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">D</span><span class="cfu-opt-text">The DoS classification is wrong — jamming is correctly classified as a man-in-the-middle attack because the adversary sits between users and the network.</span>
+</div>
+    </div>
+    <button class="cfu-submit" id="cfu-2-btn" onclick="cfuSubmitMCQ(2)">Check Answer</button>
+    <div id="cfu-2-feedback" class="cfu-feedback" style="display:none">
+      <div id="cfu-2-verdict" class="cfu-feedback-verdict"></div>
+      <div class="cfu-feedback-explain">B is correct. The student confused two separate attacks. Jamming works by flooding an area with electromagnetic interference — it has nothing to do with creating an access point. Creating a fake access point with a convincing SSID is the <em>evil twin</em>. The DoS classification in the student’s statement is actually <em>correct</em> — jamming does cause a denial of service by making wireless communication unavailable. The only error is the mechanism description. A and D are wrong because DoS is the right classification. C is wrong because jamming affects an entire area (all devices within EM range), not individual targeted devices.</div>
+    </div>
+  </div>
+
+  <!-- CFU 3: I/II/III -->
+  <div class="cfu-block" id="cfu-3" data-num="3" data-type="mcq" data-answer="B">
+    <div class="cfu-header">
+      <div class="cfu-header-left">
+<span class="cfu-label">Check for Understanding</span><span class="cfu-type-badge">I / II / III</span>
+</div>
+      <span class="cfu-counter">Q 3 of 10</span>
+    </div>
+    <p class="cfu-question">Which of the following statements about wireless attacks are <strong>TRUE</strong>?<br><br>
+    I. An evil twin attack allows an adversary to capture a victim’s network traffic by setting up a WAP with a similar or identical SSID.<br>
+    II. A jamming attack prevents legitimate wireless communication by flooding an area with EM signals in the wireless frequency range.<br>
+    III. War driving allows an adversary to modify data on a wireless network by intercepting packets in transit.</p>
+    <div class="cfu-options" id="cfu-3-opts">
+      <div class="cfu-opt" data-val="A" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">A</span><span class="cfu-opt-text">I only</span>
+</div>
+      <div class="cfu-opt" data-val="B" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">B</span><span class="cfu-opt-text">I and II only</span>
+</div>
+      <div class="cfu-opt" data-val="C" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">C</span><span class="cfu-opt-text">II and III only</span>
+</div>
+      <div class="cfu-opt" data-val="D" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">D</span><span class="cfu-opt-text">I, II, and III</span>
+</div>
+    </div>
+    <button class="cfu-submit" id="cfu-3-btn" onclick="cfuSubmitMCQ(3)">Check Answer</button>
+    <div id="cfu-3-feedback" class="cfu-feedback" style="display:none">
+      <div id="cfu-3-verdict" class="cfu-feedback-verdict"></div>
+      <div class="cfu-feedback-explain">B — I and II only. Statement I is TRUE: this is the CED definition of an evil twin attack (1.3.B.1). Statement II is TRUE: this is the CED definition of jamming (1.3.B.2). Statement III is FALSE: war driving is a <em>passive reconnaissance technique</em> — the adversary scans for beacon frames to map networks and find signal leakage. War driving does not involve intercepting, reading, or modifying data in transit. Any answer attributing data interception to war driving is wrong on the AP exam.</div>
+    </div>
+  </div>
+
+  <!-- CFU 4: Matching -->
+  <div class="cfu-block" id="cfu-4" data-num="4" data-type="match">
+    <div class="cfu-header">
+      <div class="cfu-header-left">
+<span class="cfu-label">Check for Understanding</span><span class="cfu-type-badge">Matching</span>
+</div>
+      <span class="cfu-counter">Q 4 of 10</span>
+    </div>
+    <p class="cfu-question">Match each scenario to the wireless attack type it describes.</p>
+    <div class="match-instructions">Click a scenario on the left, then click the attack type on the right. Click a matched pair to undo it.</div>
+    <div class="match-container" id="match-4-container">
+      <div class="match-col" id="match-4-left">
+        <div class="match-col-label">Scenarios</div>
+        <div class="match-item" data-match-id="m4a" data-match-key="wardriving">
+<span class="match-num">1</span>An adversary drives through an office park with a laptop, recording SSIDs, encryption types, and signal coverage areas for each building.</div>
+        <div class="match-item" data-match-id="m4b" data-match-key="eviltwin">
+<span class="match-num">2</span>An adversary sets up a hotspot named “Airport_Free_WiFi” near a busy departure gate to intercept passenger credentials.</div>
+        <div class="match-item" data-match-id="m4c" data-match-key="jamming">
+<span class="match-num">3</span>An adversary uses a device to broadcast a strong signal on the 2.4 GHz band, preventing all nearby devices from connecting to any network.</div>
+      </div>
+      <div class="match-connector">↔</div>
+      <div class="match-col" id="match-4-right">
+        <div class="match-col-label">Attack Type</div>
+        <div class="match-item" data-match-id="m4r1" data-match-key="eviltwin">
+<span class="match-num">A</span>Evil Twin</div>
+        <div class="match-item" data-match-id="m4r2" data-match-key="jamming">
+<span class="match-num">B</span>Jamming</div>
+        <div class="match-item" data-match-id="m4r3" data-match-key="wardriving">
+<span class="match-num">C</span>War Driving</div>
+      </div>
+    </div>
+    <button class="cfu-submit" onclick="cfuSubmitMatch(4)">Submit Matches</button>
+    <div id="cfu-4-feedback" class="cfu-feedback" style="display:none">
+      <div id="cfu-4-verdict" class="cfu-feedback-verdict"></div>
+      <div class="cfu-feedback-explain">Correct: Scenario 1 (office park scan) = War Driving — passive reconnaissance mapping network beacons. Scenario 2 (airport fake hotspot) = Evil Twin — rogue WAP designed to intercept credentials. Scenario 3 (2.4 GHz signal broadcast) = Jamming — electromagnetic interference blocking all wireless communication.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4: EVIL TWIN IN DEPTH -->
+<div class="card">
+  <h2>
+<span class="section-icon">4</span>1.3.4 — Evil Twin Attacks in Depth</h2>
+  <p>The evil twin is the most dangerous wireless attack for individual users because it enables credential theft at scale with minimal skill. Understanding the step-by-step anatomy makes it concrete and memorable.</p>
+
+  <div class="ex-block">
+    <div class="ex-header">
+<span class="ex-num">1</span><span class="ex-title">Anatomy of an Evil Twin Attack</span>
+</div>
+    <div class="ex-body">
+      <div class="ex-step">
+<div class="step-n">1</div>
+<div class="step-c">
+<h4>Setup</h4>
+<p>The adversary configures a device — often a laptop or cheap portable router — to broadcast a WAP with an SSID matching or resembling a legitimate network. In the CED scenario, the adversary named it “Sunshine Wi-Fi” when the real network was “Guest Wi-Fi.”</p>
+</div>
+</div>
+      <div class="ex-step">
+<div class="step-n">2</div>
+<div class="step-c">
+<h4>Lure</h4>
+<p>Victims see the evil twin in their available network list. If the SSID matches one they’ve joined before, their device may <em>auto-connect</em> without user action. If it’s slightly different but plausible, users may select it manually without scrutinizing the name.</p>
+</div>
+</div>
+      <div class="ex-step">
+<div class="step-n">3</div>
+<div class="step-c">
+<h4>Interception</h4>
+<p>All traffic flowing through the evil twin passes through the adversary’s device. Packet capture tools record everything: web requests, login forms, session tokens, chat messages. Any data transmitted without encryption is visible in plaintext.</p>
+</div>
+</div>
+      <div class="ex-step">
+<div class="step-n">4</div>
+<div class="step-c">
+<h4>Exploitation</h4>
+<p>The adversary extracts credentials from captured traffic. In the CED scenario: the adversary logs in as the victim, changes the streaming service password, and locks the victim out. The attack is complete.</p>
+</div>
+</div>
+      <div class="ex-answer">
+<span class="ans-label">Why it works</span><p>Evil twin networks are almost always open (no password) by design — the adversary wants frictionless connections. This is why the CED warns against joining <em>unprotected</em> networks: no password means no assurance about who is operating it. Homoglyph substitution (replacing “l” with “I”, “0” with “O”) makes SSID spoofing visually convincing at a glance.</p>
+</div>
+    </div>
+  </div>
+
+  <!-- CFU 5: Sort — Evil Twin Sequence -->
+  <div class="cfu-block" id="cfu-5" data-num="5" data-type="sort">
+    <div class="cfu-header">
+      <div class="cfu-header-left">
+<span class="cfu-label">Check for Understanding</span><span class="cfu-type-badge">Sequence Sort</span>
+</div>
+      <span class="cfu-counter">Q 5 of 10</span>
+    </div>
+    <p class="cfu-question">Sort the following steps of an evil twin attack into the correct chronological order. Click a card to select it, then click the bucket where it belongs.</p>
+    <div id="sort-5-cards" style="display:flex!important;flex-wrap:wrap!important;gap:8px!important;margin-bottom:16px!important;">
+      <div class="sort-card" data-sort-id="s5a" data-correct="Step 3" onclick="sortSelectCard(5,'s5a')" style="padding:10px 14px!important;background:#fff!important;border:2px solid #E5E7EB!important;border-radius:8px!important;cursor:pointer!important;font-size:14px!important;font-family:Georgia,serif!important;color:#374151!important;">Adversary captures victim’s traffic including login credentials</div>
+      <div class="sort-card" data-sort-id="s5b" data-correct="Step 1" onclick="sortSelectCard(5,'s5b')" style="padding:10px 14px!important;background:#fff!important;border:2px solid #E5E7EB!important;border-radius:8px!important;cursor:pointer!important;font-size:14px!important;font-family:Georgia,serif!important;color:#374151!important;">Adversary configures a device to broadcast a WAP with a spoofed SSID</div>
+      <div class="sort-card" data-sort-id="s5c" data-correct="Step 4" onclick="sortSelectCard(5,'s5c')" style="padding:10px 14px!important;background:#fff!important;border:2px solid #E5E7EB!important;border-radius:8px!important;cursor:pointer!important;font-size:14px!important;font-family:Georgia,serif!important;color:#374151!important;">Adversary uses stolen credentials to log into victim’s accounts</div>
+      <div class="sort-card" data-sort-id="s5d" data-correct="Step 2" onclick="sortSelectCard(5,'s5d')" style="padding:10px 14px!important;background:#fff!important;border:2px solid #E5E7EB!important;border-radius:8px!important;cursor:pointer!important;font-size:14px!important;font-family:Georgia,serif!important;color:#374151!important;">Victim connects to the evil twin instead of the legitimate network</div>
+    </div>
+    <div id="sort-5-buckets" class="sort-buckets" style="display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important;margin-bottom:12px!important;">
+      <div class="sort-bucket" data-bucket="Step 1" onclick="sortPlaceInBucket(5,'Step 1')">
+<div style="font-size:11px!important;font-weight:700!important;color:#6B21A8!important;font-family:Georgia,serif!important;margin-bottom:6px!important;">Step 1</div>
+<div class="sort-bucket-cards"></div>
+</div>
+      <div class="sort-bucket" data-bucket="Step 2" onclick="sortPlaceInBucket(5,'Step 2')">
+<div style="font-size:11px!important;font-weight:700!important;color:#6B21A8!important;font-family:Georgia,serif!important;margin-bottom:6px!important;">Step 2</div>
+<div class="sort-bucket-cards"></div>
+</div>
+      <div class="sort-bucket" data-bucket="Step 3" onclick="sortPlaceInBucket(5,'Step 3')">
+<div style="font-size:11px!important;font-weight:700!important;color:#6B21A8!important;font-family:Georgia,serif!important;margin-bottom:6px!important;">Step 3</div>
+<div class="sort-bucket-cards"></div>
+</div>
+      <div class="sort-bucket" data-bucket="Step 4" onclick="sortPlaceInBucket(5,'Step 4')">
+<div style="font-size:11px!important;font-weight:700!important;color:#6B21A8!important;font-family:Georgia,serif!important;margin-bottom:6px!important;">Step 4</div>
+<div class="sort-bucket-cards"></div>
+</div>
+    </div>
+    <button class="cfu-submit" onclick="cfuSubmitSort(5)">Check Order</button>
+    <div id="cfu-5-feedback" class="cfu-feedback" style="display:none">
+      <div id="cfu-5-verdict" class="cfu-feedback-verdict"></div>
+      <div class="cfu-feedback-explain">Correct order: Step 1 = Set up rogue WAP. Step 2 = Victim connects. Step 3 = Adversary captures traffic. Step 4 = Adversary exploits stolen credentials. Setup must happen first — the evil twin must exist before anyone can connect. Interception follows connection. Exploitation requires captured credentials. This sequence is a reliable template for any evil twin attack on the AP exam.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 5: INDIVIDUAL PROTECTIONS -->
+<div class="card">
+  <h2>
+<span class="section-icon">5</span>1.3.5 — Individual Protections (CED 1.3.C)</h2>
+  <p>The CED identifies three specific actions <em>individuals</em> can take to protect themselves from wireless attacks. These are personal-level defenses, not enterprise controls. AP exam questions about wireless defense in Unit 1 focus on these three.</p>
+
+  <div class="attack-block">
+    <div class="atk-name">
+<span class="atk-tag">1.3.C.1</span>Verify the Network Name Exactly</div>
+    <div class="atk-desc">Individuals should verify that the name of any wireless network they join <strong>exactly matches</strong> the name of the network they intend to join. “Exactly” means checking for subtle differences: extra spaces, homoglyph substitutions (lowercase ‘l’ vs. number ‘1’, zero vs. letter ‘O’), or slight name variations.</div>
+    <div class="atk-scenario">Best practice: ask an employee of the establishment for the exact network name rather than guessing. This is the primary defense against evil twin attacks.</div>
+  </div>
+
+  <div class="attack-block">
+    <div class="atk-name">
+<span class="atk-tag">1.3.C.2</span>Avoid Unprotected Networks</div>
+    <div class="atk-desc">Individuals should avoid joining <strong>unprotected wireless networks</strong> — networks that do not require a password or authentication to join. An open network provides no encryption between your device and the access point. Any adversary within range can intercept that traffic.</div>
+    <div class="atk-scenario">If you must use an open network, layer additional protection on top (see VPN). Evil twin networks are almost always open by design — avoiding open networks directly reduces evil twin exposure.</div>
+  </div>
+
+  <div class="attack-block">
+    <div class="atk-name">
+<span class="atk-tag">1.3.C.3</span>Use a VPN</div>
+    <div class="atk-desc">Individuals may consider using a <strong>virtual private network (VPN)</strong>, which encrypts all their traffic, so that any intercepted traffic would <em>not be immediately readable</em>. A VPN creates an encrypted tunnel between your device and a remote server. Even if an adversary captures your traffic, the data inside the tunnel is unreadable without the decryption key.</div>
+    <div class="atk-scenario">Note the CED’s careful phrasing: “not immediately readable.” A VPN makes interception impractical for most adversaries — not theoretically impossible. Also note: the VPN provider <em>can</em> view your traffic. You are trusting the VPN provider instead of the network operator.</div>
+  </div>
+
+  <!-- CFU 6: Cloze Fill-in-Blank -->
+  <div class="cfu-block" id="cfu-6" data-num="6" data-type="cloze">
+    <div class="cfu-header">
+      <div class="cfu-header-left">
+<span class="cfu-label">Check for Understanding</span><span class="cfu-type-badge">Fill in the Blank</span>
+</div>
+      <span class="cfu-counter">Q 6 of 10</span>
+    </div>
+    <p class="cfu-question">Place the correct term from the bank into each blank.</p>
+    <div class="cloze-bank" id="cloze-6-bank">
+      <span class="cloze-bank-label">Word Bank (click to select, then click a blank)</span>
+      <span class="cloze-chip" data-chip="SSID" onclick="clozeSelect(6,this)">SSID</span>
+      <span class="cloze-chip" data-chip="unprotected" onclick="clozeSelect(6,this)">unprotected</span>
+      <span class="cloze-chip" data-chip="VPN" onclick="clozeSelect(6,this)">VPN</span>
+      <span class="cloze-chip" data-chip="zero day" onclick="clozeSelect(6,this)">zero day</span>
+      <span class="cloze-chip" data-chip="denial of service" onclick="clozeSelect(6,this)">denial of service</span>
+    </div>
+    <div class="cloze-passage" id="cloze-6-passage">
+      <p>1. Before connecting to any wireless network, verify that its <span class="cloze-blank" id="cloze-6-b1" data-answer="SSID" onclick="clozePlace(6,'cloze-6-b1')">​</span> exactly matches the name of the network you intend to join.</p>
+      <p>2. Avoid joining <span class="cloze-blank" id="cloze-6-b2" data-answer="unprotected" onclick="clozePlace(6,'cloze-6-b2')">​</span> wireless networks that require no password or authentication.</p>
+      <p>3. Using a <span class="cloze-blank" id="cloze-6-b3" data-answer="VPN" onclick="clozePlace(6,'cloze-6-b3')">​</span> encrypts all traffic so that intercepted data is not immediately readable.</p>
+      <p>4. A vulnerability undocumented by the vendor — meaning the vendor has had zero days to prepare a fix — is called a <span class="cloze-blank" id="cloze-6-b4" data-answer="zero day" onclick="clozePlace(6,'cloze-6-b4')">​</span>.</p>
+      <p>5. A jamming attack is classified as a <span class="cloze-blank" id="cloze-6-b5" data-answer="denial of service" onclick="clozePlace(6,'cloze-6-b5')">​</span> attack because it makes the wireless network unavailable to authorized users.</p>
+    </div>
+    <button class="cfu-submit" onclick="cfuSubmitCloze(6)">Check Answers</button>
+    <div id="cfu-6-feedback" class="cfu-feedback" style="display:none">
+      <div id="cfu-6-verdict" class="cfu-feedback-verdict"></div>
+      <div class="cfu-feedback-explain">Correct: SSID (the network name you verify), unprotected (no password required), VPN (creates encrypted tunnel), zero day (undocumented vulnerability), denial of service (jamming makes wireless unavailable). These five terms are the core vocabulary for Topic 1.3 on the AP exam.</div>
+    </div>
+  </div>
+
+  <!-- CFU 7: MCQ — VPN defense -->
+  <div class="cfu-block" id="cfu-7" data-num="7" data-type="mcq" data-answer="B">
+    <div class="cfu-header">
+      <div class="cfu-header-left">
+<span class="cfu-label">Check for Understanding</span><span class="cfu-type-badge">MCQ</span>
+</div>
+      <span class="cfu-counter">Q 7 of 10</span>
+    </div>
+    <p class="cfu-question">A user at an airport connects to an open public Wi-Fi network and logs into their bank account. An adversary on the same network captures the user’s banking credentials. Which control would have been <strong>most effective</strong> at preventing the credential theft?</p>
+    <div class="cfu-options" id="cfu-7-opts">
+      <div class="cfu-opt" data-val="A" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">A</span><span class="cfu-opt-text">Restarting the device before connecting to the network</span>
+</div>
+      <div class="cfu-opt" data-val="B" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">B</span><span class="cfu-opt-text">Using a VPN to encrypt all traffic before transmitting it over the network</span>
+</div>
+      <div class="cfu-opt" data-val="C" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">C</span><span class="cfu-opt-text">Changing the bank account password immediately after logging in</span>
+</div>
+      <div class="cfu-opt" data-val="D" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">D</span><span class="cfu-opt-text">Connecting using a device with recently updated antivirus software</span>
+</div>
+    </div>
+    <button class="cfu-submit" id="cfu-7-btn" onclick="cfuSubmitMCQ(7)">Check Answer</button>
+    <div id="cfu-7-feedback" class="cfu-feedback" style="display:none">
+      <div id="cfu-7-verdict" class="cfu-feedback-verdict"></div>
+      <div class="cfu-feedback-explain">B is correct. A VPN encrypts all traffic between the user’s device and the VPN server. Even if the adversary captures packets, the banking credentials inside the encrypted tunnel are unreadable without the decryption key. A: restarting a device does not change how data is transmitted over the network. C: changing the password after logging in does not help — the adversary already captured the original credentials during the login event. D: antivirus software detects malware on the device itself; this attack is a network-level interception that does not involve malware on the user’s device.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 6: DEFENSE COVERAGE MATRIX -->
+<div class="card">
+  <h2>
+<span class="section-icon">6</span>1.3.6 — Defense Coverage Matrix</h2>
+  <p>The three individual protections address different attack types. Understanding which protection works against which attack is a high-frequency AP exam pattern.</p>
+
+  <table class="compare-table">
+    <thead><tr>
+<th>Protection</th>
+<th>Evil Twin</th>
+<th>Jamming</th>
+<th>War Driving</th>
+</tr></thead>
+    <tbody>
+      <tr>
+<td class="att-name">Verify SSID exactly (1.3.C.1)</td>
+<td>✓ Yes — prevents connecting to impersonating network</td>
+<td>✗ No — EM interference affects all networks</td>
+<td>✗ No — war driving is passive; doesn’t connect to your device</td>
+</tr>
+      <tr>
+<td class="att-name">Avoid open networks (1.3.C.2)</td>
+<td>✓ Yes — most evil twins are open by design</td>
+<td>✗ No — jamming affects protected and open networks equally</td>
+<td>✗ No — war driving detects all networks regardless of protection</td>
+</tr>
+      <tr>
+<td class="att-name">Use a VPN (1.3.C.3)</td>
+<td>✓ Yes — encrypts data even if connected to an evil twin</td>
+<td>✗ No — if the connection is jammed, there’s no traffic to encrypt</td>
+<td>✗ No — VPN doesn’t prevent beacon detection</td>
+</tr>
+    </tbody>
+  </table>
+
+  <div class="info-box exam">
+    <span class="box-label">★ AP Exam Pattern — Jamming Has No Individual Defense</span>
+    <p>All three individual protections address evil twin most effectively. <strong>No individual action can stop a jamming attack</strong> — it operates at the physical radio layer and requires organizational responses (signal shielding, frequency hopping, wired backup). If an exam question asks what an <em>individual</em> can do to stop jamming, the correct answer is: nothing at the individual level. If the answer choices include a VPN or SSID verification, they are all wrong for jamming.</p>
+  </div>
+
+  <!-- CFU 8: I/II/III — defenses -->
+  <div class="cfu-block" id="cfu-8" data-num="8" data-type="mcq" data-answer="B">
+    <div class="cfu-header">
+      <div class="cfu-header-left">
+<span class="cfu-label">Check for Understanding</span><span class="cfu-type-badge">I / II / III</span>
+</div>
+      <span class="cfu-counter">Q 8 of 10</span>
+    </div>
+    <p class="cfu-question">Which of the following statements about defending against wireless attacks are <strong>TRUE</strong>?<br><br>
+    I. Verifying the exact network name before connecting can prevent a user from joining an evil twin network.<br>
+    II. Using a VPN prevents a jamming attack from disrupting the user’s wireless connection.<br>
+    III. Avoiding open (unprotected) wireless networks reduces the risk of an adversary capturing unencrypted traffic.</p>
+    <div class="cfu-options" id="cfu-8-opts">
+      <div class="cfu-opt" data-val="A" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">A</span><span class="cfu-opt-text">I only</span>
+</div>
+      <div class="cfu-opt" data-val="B" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">B</span><span class="cfu-opt-text">I and III only</span>
+</div>
+      <div class="cfu-opt" data-val="C" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">C</span><span class="cfu-opt-text">II and III only</span>
+</div>
+      <div class="cfu-opt" data-val="D" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">D</span><span class="cfu-opt-text">I, II, and III</span>
+</div>
+    </div>
+    <button class="cfu-submit" id="cfu-8-btn" onclick="cfuSubmitMCQ(8)">Check Answer</button>
+    <div id="cfu-8-feedback" class="cfu-feedback" style="display:none">
+      <div id="cfu-8-verdict" class="cfu-feedback-verdict"></div>
+      <div class="cfu-feedback-explain">B — I and III only. Statement I is TRUE: verifying the SSID is the primary individual defense against evil twins. Statement II is FALSE: a VPN encrypts traffic but cannot prevent jamming. Jamming disrupts the wireless connection itself by flooding the frequency with EM signals — if there is no connection, the VPN cannot function. No individual-level action stops jamming. Statement III is TRUE: open networks provide no encryption between device and access point, so avoiding them reduces interception risk.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 7: WORKED SCENARIOS -->
+<div class="card">
+  <h2>
+<span class="section-icon">7</span>1.3.7 — Worked Scenarios</h2>
+
+  <!-- CFU 9: Spot the Error — war driving -->
+  <div class="cfu-block" id="cfu-9" data-num="9" data-type="mcq" data-answer="A">
+    <div class="cfu-header">
+      <div class="cfu-header-left">
+<span class="cfu-label">Check for Understanding</span><span class="cfu-type-badge">Spot the Error</span>
+</div>
+      <span class="cfu-counter">Q 9 of 10</span>
+    </div>
+    <p class="cfu-question">A cybersecurity blog states: <em>“War driving is particularly dangerous because it allows adversaries to intercept private data being transmitted over a wireless network in real time.”</em> What is wrong with this claim?</p>
+    <div class="cfu-options" id="cfu-9-opts">
+      <div class="cfu-opt" data-val="A" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">A</span><span class="cfu-opt-text">War driving does not intercept data — it is a passive reconnaissance technique that detects wireless beacons to map networks, identify encryption types, and locate signal leakage. No data in transit is captured.</span>
+</div>
+      <div class="cfu-opt" data-val="B" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">B</span><span class="cfu-opt-text">War driving does intercept data, but only from unprotected networks, not from all wireless networks as the blog implies.</span>
+</div>
+      <div class="cfu-opt" data-val="C" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">C</span><span class="cfu-opt-text">War driving is only dangerous when performed by high-skilled adversaries with custom tools, which limits its frequency.</span>
+</div>
+      <div class="cfu-opt" data-val="D" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">D</span><span class="cfu-opt-text">War driving requires the adversary to be inside the building to be effective, so the blog overstates its reach.</span>
+</div>
+    </div>
+    <button class="cfu-submit" id="cfu-9-btn" onclick="cfuSubmitMCQ(9)">Check Answer</button>
+    <div id="cfu-9-feedback" class="cfu-feedback" style="display:none">
+      <div id="cfu-9-verdict" class="cfu-feedback-verdict"></div>
+      <div class="cfu-feedback-explain">A is correct. War driving is strictly passive information gathering. The adversary scans for beacon frames broadcast by access points to learn network names, encryption types, and signal coverage — not to capture data from devices. The blog conflates war driving with eavesdropping or on-path attacks. B is wrong because war driving does not intercept data from <em>any</em> network. C is wrong because war driving requires minimal skill — freely available apps can detect nearby networks. D is wrong because war driving is defined by mobility <em>outside</em> buildings specifically to detect signal leakage beyond the physical perimeter.</div>
+    </div>
+  </div>
+
+  <!-- CFU 10: Integrative Scenario -->
+  <div class="cfu-block cfu-eol" id="cfu-10" data-num="10" data-type="mcq" data-answer="C">
+    <div class="cfu-header">
+      <div class="cfu-header-left">
+<span class="cfu-label">End of Lesson</span><span class="cfu-type-badge cfu-eol-badge">Integrative Scenario</span>
+</div>
+      <span class="cfu-counter">Q 10 of 10</span>
+    </div>
+    <div class="cfu-scenario">Mariana visits a hotel lobby and sees three available Wi-Fi networks on her phone:<br>
+    1. “HotelGrand_Lobby” — requires password 🔒<br>
+    2. “Hotel Grand Free WiFi” — open 🔓<br>
+    3. “HoteIGrand_Lobby” — requires password 🔒<br><br>
+    Mariana asks the front desk, confirms the real network is “HotelGrand_Lobby,” connects to it, and activates her VPN before browsing.</div>
+    <p class="cfu-question">Which network is most likely the evil twin, and which statement <strong>best</strong> explains why Mariana’s actions demonstrate all three CED individual protections?</p>
+    <div class="cfu-options" id="cfu-10-opts">
+      <div class="cfu-opt" data-val="A" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">A</span><span class="cfu-opt-text">Network 2 is the evil twin because it is open. Mariana applied two protections: avoiding the open network and using a VPN.</span>
+</div>
+      <div class="cfu-opt" data-val="B" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">B</span><span class="cfu-opt-text">Network 3 is the evil twin because it requires a password, making it harder to detect. Mariana only applied one protection: SSID verification.</span>
+</div>
+      <div class="cfu-opt" data-val="C" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">C</span><span class="cfu-opt-text">Network 3 is the evil twin — it uses a homoglyph substitution (“HoteI” with uppercase I instead of lowercase l). Mariana applied all three protections: verified the exact name with staff (1.3.C.1), connected to the password-protected real network rather than the open one (1.3.C.2), and activated a VPN for additional encryption (1.3.C.3).</span>
+</div>
+      <div class="cfu-opt" data-val="D" onclick="this.closest('.cfu-block').querySelectorAll('.cfu-opt').forEach(o=&gt;o.classList.remove('selected'));this.classList.add('selected')">
+<span class="cfu-opt-letter">D</span><span class="cfu-opt-text">Both networks 2 and 3 are likely evil twins. Mariana should not have connected at all — the only safe option in a hotel lobby is to use cellular data.</span>
+</div>
+    </div>
+    <button class="cfu-submit" id="cfu-10-btn" onclick="cfuSubmitMCQ(10)">Check Answer</button>
+    <div id="cfu-10-feedback" class="cfu-feedback" style="display:none">
+      <div id="cfu-10-verdict" class="cfu-feedback-verdict"></div>
+      <div class="cfu-feedback-explain">C is correct. Network 3, “HoteIGrand_Lobby,” is the likely evil twin — the adversary replaced the lowercase ‘l’ in “Hotel” with an uppercase ‘I’ (a homoglyph substitution that looks identical at a glance). Network 2 is suspicious too (open), but the homoglyph on Network 3 is a deliberate impersonation of the confirmed name. Mariana applied all three CED protections cleanly: (1.3.C.1) asked staff for the exact name; (1.3.C.2) chose the password-protected real network over the open Network 2; (1.3.C.3) added VPN encryption as a final layer. This scenario is a textbook AP exam integrative question — know what homoglyph substitution looks like in SSID names.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- COMMON MISTAKES -->
+<div class="card">
+  <h2>
+<span class="section-icon">!</span>Common AP Exam Mistakes — Topic 1.3</h2>
+  <table class="vocab-table">
+    <thead><tr>
+<th>Mistake</th>
+<th>Why It’s Wrong</th>
+<th>What to Do Instead</th>
+</tr></thead>
+    <tbody>
+      <tr>
+        <td class="term">Classifying adversaries by damage caused</td>
+        <td>“The attack caused $2M in damage, so they must be high-skilled.” Damage magnitude tells you nothing about skill level.</td>
+        <td>Look for tool origin (created vs. borrowed) and vulnerability type (known vs. zero-day).</td>
+      </tr>
+      <tr>
+        <td class="term">Claiming war driving intercepts data</td>
+        <td>War driving is passive beacon scanning — no data in transit is captured or modified.</td>
+        <td>Classify war driving as Reconnaissance only. Any answer attributing data theft to war driving is wrong.</td>
+      </tr>
+      <tr>
+        <td class="term">Saying VPN stops jamming</td>
+        <td>A VPN encrypts traffic, but jamming cuts the wireless connection entirely. No connection = no VPN tunnel to encrypt anything.</td>
+        <td>No individual-level action stops jamming. Never select a VPN or SSID check as a jamming defense.</td>
+      </tr>
+      <tr>
+        <td class="term">Assuming HTTPS alone makes public Wi-Fi safe</td>
+        <td>HTTPS encrypts the content of web traffic but doesn’t prevent an evil twin from capturing metadata, redirecting to lookalike pages, or exploiting non-HTTPS traffic.</td>
+        <td>HTTPS is necessary but not sufficient on public Wi-Fi. Layer with VPN and SSID verification.</td>
+      </tr>
+      <tr>
+        <td class="term">Confusing jamming mechanism with evil twin</td>
+        <td>Students write “jamming creates a fake access point” — that’s an evil twin. Jamming floods a frequency with EM signals.</td>
+        <td>Jamming = EM interference. Evil twin = fake WAP with spoofed SSID. These are completely different mechanisms.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- SECTION 8: KEY TERMS AND FAQ -->
+<div class="card">
+  <h2>
+<span class="section-icon">8</span>1.3.8 — Key Terms &amp; FAQ</h2>
+
+  <table class="vocab-table">
+    <thead><tr>
+<th>Term</th>
+<th>Definition</th>
+<th>AP Exam Note</th>
+</tr></thead>
+    <tbody>
+      <tr>
+<td class="term">Evil Twin</td>
+<td>Rogue WAP with SSID matching a legitimate network, used to intercept victim traffic</td>
+<td>Adversary captures traffic; victims may auto-connect</td>
+</tr>
+      <tr>
+<td class="term">Jamming</td>
+<td>EM signal flood in wireless frequency range preventing legitimate communication = DoS</td>
+<td>No individual-level defense exists</td>
+</tr>
+      <tr>
+<td class="term">War Driving</td>
+<td>Passive scanning for wireless beacons while mobile to map networks and find signal leakage</td>
+<td>Does NOT intercept data; belongs to Reconnaissance phase</td>
+</tr>
+      <tr>
+<td class="term">SSID</td>
+<td>Service Set Identifier — the name of a wireless network</td>
+<td>Verify it exactly matches; watch for homoglyphs</td>
+</tr>
+      <tr>
+<td class="term">VPN</td>
+<td>Virtual Private Network — encrypts all traffic between device and remote server</td>
+<td>Makes intercepted data “not immediately readable” (CED phrasing)</td>
+</tr>
+      <tr>
+<td class="term">Zero Day</td>
+<td>Undocumented vulnerability; vendor has had zero days to prepare a patch</td>
+<td>Exploited by high-skilled adversaries</td>
+</tr>
+      <tr>
+<td class="term">Low-Skilled</td>
+<td>Uses tools created by others; exploits known vulnerabilities</td>
+<td>Damage caused does NOT determine skill level</td>
+</tr>
+      <tr>
+<td class="term">High-Skilled</td>
+<td>Creates or modifies tools; discovers zero-day vulnerabilities</td>
+<td>Can bypass patched systems with novel techniques</td>
+</tr>
+      <tr>
+<td class="term">Unprotected Network</td>
+<td>Wireless network requiring no password or authentication to join</td>
+<td>Evil twins are almost always open by design</td>
+</tr>
+    </tbody>
+  </table>
+
+  <ul class="faq-list">
+    <li class="faq-item">
+      <div class="faq-q">Can a VPN stop an evil twin attack entirely?</div>
+      <p class="faq-a">Not entirely, but it removes most of the danger. If you connect to an evil twin while using a VPN, the adversary can see that traffic is flowing through their access point, but the contents of that traffic are encrypted inside the VPN tunnel. They cannot read your credentials or session data. The CED uses the phrase “not immediately readable” — meaning decryption is impractical for most adversaries, not theoretically impossible. Verifying the SSID first is still important because connecting to an evil twin even with a VPN may expose your device to other risks.</p>
+    </li>
+    <li class="faq-item">
+      <div class="faq-q">Why is war driving in the Reconnaissance phase rather than a direct attack?</div>
+      <p class="faq-a">War driving collects information without taking action against any system. The adversary is building a map: which networks exist, where their signals reach, what encryption they use, whether any are open. This information is then used to plan a targeted attack later — identifying which building has an unencrypted access point reachable from the parking lot, for example. War driving itself does not compromise any CIA property, which is why it belongs to Reconnaissance rather than the Initial Access or Taking Action phases.</p>
+    </li>
+    <li class="faq-item">
+      <div class="faq-q">Is there anything an individual can do about jamming?</div>
+      <p class="faq-a">At the individual level, no. Jamming operates at the physical radio frequency layer — it is a hardware-level attack that software on your device cannot counter. Individual protections (verify SSID, avoid open networks, VPN) all assume a working wireless connection exists. When jamming cuts the connection, none of these protections can help. Organizational responses exist — frequency hopping (FHSS), wired backup connections, signal monitoring — but these are enterprise controls, not individual actions. On the AP exam, never select an individual protection as a defense against jamming.</p>
+    </li>
+  </ul>
+</div>
+
+<!-- EXIT TICKET -->
+<div class="card" style="border-top:3px solid #DC2626!important;margin-top:8px!important;">
+  <span style="font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1.5px!important;color:#DC2626!important;font-family:Georgia,serif!important;">📋 Exit Ticket — Topic 1.3 | 5 Questions | Ready for Canvas / Google Classroom</span>
+  <p style="font-size:13px!important;color:#6B7280!important;font-family:Georgia,serif!important;margin-top:4px!important;margin-bottom:14px!important;">Students submit before leaving. Target 70%+ on Q1–3.</p>
+  <ol style="font-size:15px!important;color:#374151!important;line-height:2!important;padding-left:20px!important;font-family:Georgia,serif!important;">
+    <li>An adversary uses a $30 router and free software to set up an evil twin at an airport. A separate adversary writes custom zero-day exploit code targeting airport networks. Classify each by skill level and explain the single factor that distinguishes them. <em style="color:#6B7280!important;">(AP Skill: Analyze Risk)</em>
+</li>
+    <li>Name all three wireless attack types the CED requires, classify each by CIA property violated, and identify which one belongs to the Reconnaissance phase of a cyberattack. <em style="color:#6B7280!important;">(AP Skill: Analyze Risk)</em>
+</li>
+    <li>A user at a library sees two available networks: “LibraryPublic” (open) and “LibraryPubllc” (requires password). Which is likely the evil twin and why? What should the user do before connecting to either? <em style="color:#6B7280!important;">(AP Skill: Analyze Risk)</em>
+</li>
+    <li>A student claims: “Using a VPN on public Wi-Fi protects you from jamming attacks.” Is this true or false? Explain why using the CED framework. <em style="color:#6B7280!important;">(AP Skill: Mitigate Risk)</em>
+</li>
+    <li>Apply all three CED individual protections to this scenario: you need to use Wi-Fi at a coffee shop to access your bank account. Explain exactly what you would do and which protection each action represents. <em style="color:#6B7280!important;">(AP Skill: Mitigate Risk)</em>
+</li>
+  </ol>
+  <div style="background:#FEF3C7!important;border-radius:8px!important;padding:12px 16px!important;margin-top:12px!important;font-size:13px!important;color:#78350F!important;font-family:Georgia,serif!important;">
+    <strong>Answer Key:</strong> (1) Evil twin operator = low-skilled (tools created by others, known vulnerability); custom zero-day developer = high-skilled (creates tools, discovers undocumented vulnerabilities). Distinguishing factor: tool origin and vulnerability type. (2) Evil Twin (Confidentiality), Jamming (Availability/DoS), War Driving (none directly — Reconnaissance phase). (3) “LibraryPubllc” uses double-l, likely homoglyph substitution — the extra ‘l’ is an impersonation attempt; ask staff for exact network name before connecting. (4) False — a VPN encrypts traffic but cannot restore a jammed wireless connection; jamming cuts the physical radio link that a VPN tunnel requires. (5) Ask barista for exact network name (1.3.C.1); connect only to the password-protected network, avoid any open networks (1.3.C.2); activate VPN before opening the bank site (1.3.C.3).
+  </div>
+</div>
+
+<!-- TUTOR CTA -->
+<div class="tutor-cta">
+  <div class="tutor-cta-text">
+    <span class="tutor-cta-eyebrow">Premium Feature</span>
+    <h3>1-on-1 Expert Support</h3>
+    <p>Get personalized help from an AP Cybersecurity instructor — 2,067+ verified hours, 5.0 rating, 499+ reviews.</p>
+    <div class="tutor-stats">
+      <span class="tutor-stat"><strong>2,067+</strong> Verified Hours</span>
+      <span class="tutor-stat"><strong>5.0</strong> Wyzant Rating</span>
+      <span class="tutor-stat"><strong>499+</strong> Reviews</span>
+    </div>
+  </div>
+  <a href="/pages/ap-computer-science-a-tutor" class="tutor-cta-btn">Learn About Expert Sessions →</a>
+</div>
+
+<!-- AUTHOR BOX -->
+<div class="author-box">
+  <div class="author-avatar">TC</div>
+  <div class="author-info">
+    <div class="author-name">Tanner Crow</div>
+    <div class="author-role">AP Computer Science Teacher — Blue Valley North High School</div>
+    <p class="author-bio">Tanner has taught AP Computer Science for 11+ years and built APCSExamPrep.com to give every student access to the same resources his own students use. He holds 2,067+ verified tutoring hours on Wyzant with a 5.0 rating from 499+ reviews.</p>
+    <div class="author-stats">
+      <span class="author-stat">11+ Years Teaching AP CS</span>
+      <span class="author-stat">2,067+ Verified Tutoring Hours</span>
+      <span class="author-stat">499+ Five-Star Reviews</span>
+      <span class="author-stat">5.0 Rating on Wyzant</span>
+    </div>
+    <div class="author-updated">Content last reviewed and updated: June 2026</div>
+  </div>
+</div>
+
+<!-- CONTINUE LEARNING -->
+<div class="card">
+  <h2>
+<span class="section-icon">+</span>Continue Learning</h2>
+  <p>Practice what you learned, then move to the next topic in Unit 1:</p>
+  <div class="related-grid">
+    <a href="/pages/ap-cyber-unit-1-lesson-3-exercise-1" class="related-link"><div>
+<span class="rl-type">Exercise</span><span class="rl-title">Topic 1.3 Exercise 1 — Guided Practice</span>
+</div></a>
+    <a href="/pages/ap-cyber-unit-1-lesson-3-exercise-2" class="related-link"><div>
+<span class="rl-type">Exercise</span><span class="rl-title">Topic 1.3 Exercise 2 — Applied Challenge</span>
+</div></a>
+    <a href="/pages/ap-cyber-unit-1-lesson-3-lab" class="related-link"><div>
+<span class="rl-type">Lab</span><span class="rl-title">Topic 1.3 Lab — Wireless Attack Analysis</span>
+</div></a>
+    <a href="/pages/ap-cyber-unit-1-lesson-3-quiz" class="related-link"><div>
+<span class="rl-type">Quiz</span><span class="rl-title">Topic 1.3 Quiz — 5 Questions, Instant Feedback</span>
+</div></a>
+    <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="related-link"><div>
+<span class="rl-type">Next Lesson</span><span class="rl-title">Topic 1.4 — AI-Based Cybersecurity Attacks</span>
+</div></a>
+    <a href="/pages/ap-cyber-unit-1-exam" class="related-link"><div>
+<span class="rl-type">Unit Exam</span><span class="rl-title">Unit 1 Exam — 20 Questions, All Topics</span>
+</div></a>
+    <a href="/pages/ap-cybersecurity-unit-1-introduction-to-security" class="related-link"><div>
+<span class="rl-type">Unit Guide</span><span class="rl-title">Unit 1: Introduction to Security — Study Guide</span>
+</div></a>
+    <a href="/pages/ap-cybersecurity-complete-course-guide" class="related-link"><div>
+<span class="rl-type">Course Hub</span><span class="rl-title">AP Cybersecurity Complete Course Guide</span>
+</div></a>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="nav-btn secondary">← Topic 1.2</a>
+  <div class="nav-center">
+    Topic 1.3 — Lesson (Step 1 of 5)<br>
+    <span style="font-size:12px;color:#a1a1aa!important;">Lesson → Exercise 1 → Exercise 2 → Lab → Quiz</span>
+  </div>
+  <a href="/pages/ap-cyber-unit-1-lesson-3-exercise-1" class="nav-btn primary">Exercise 1 →</a>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+
+var cfuState = { score: 0, total: 10, answered: {} };
+
+function updateScoreTracker(){
+  var tracker = document.getElementById('cfu-score-tracker');
+  var scoreNum = document.getElementById('cfu-score-num');
+  var answeredCount = Object.keys(cfuState.answered).length;
+  if(tracker && answeredCount > 0) tracker.classList.add('visible');
+  if(scoreNum){
+    scoreNum.textContent = cfuState.score + ' / ' + cfuState.total;
+    scoreNum.style.transform = 'scale(1.2)';
+    setTimeout(function(){ scoreNum.style.transform = ''; }, 200);
+  }
+}
+
+function showFeedback(num, isCorrect, partialMsg){
+  var feedDiv = document.getElementById('cfu-' + num + '-feedback');
+  var verdict = document.getElementById('cfu-' + num + '-verdict');
+  var btn = document.getElementById('cfu-' + num + '-btn');
+  if(feedDiv){ feedDiv.style.setProperty('display','block','important'); if(!isCorrect) feedDiv.classList.add('wrong-fb'); }
+  if(verdict){ if(isCorrect) verdict.textContent = 'Correct! \u2713'; else if(partialMsg) verdict.textContent = partialMsg; else verdict.textContent = 'Not quite.'; }
+  if(btn) btn.disabled = true;
+  if(feedDiv) setTimeout(function(){ feedDiv.scrollIntoView({behavior:'smooth',block:'nearest'}); }, 100);
+}
+
+/* MCQ click to select */
+document.addEventListener('click', function(e){
+  var opt = e.target.closest('.cfu-opt');
+  if(!opt) return;
+  var block = opt.closest('.cfu-block');
+  if(!block) return;
+  var num = block.getAttribute('data-num');
+  if(cfuState.answered[num]) return;
+  if(block.getAttribute('data-type') !== 'mcq') return;
+  block.querySelectorAll('.cfu-opt').forEach(function(o){ o.classList.remove('selected'); });
+  opt.classList.add('selected');
+});
+
+window.cfuSubmitMCQ = function(num){
+  if(cfuState.answered[num]) return;
+  var block = document.getElementById('cfu-' + num);
+  if(!block) return;
+  var opts = block.querySelectorAll('.cfu-opt');
+  var selected = null;
+  opts.forEach(function(o){ if(o.classList.contains('selected')) selected = o.getAttribute('data-val'); });
+  if(!selected){ var optsEl = document.getElementById('cfu-' + num + '-opts'); if(optsEl){ optsEl.style.outline = '2px solid #dc2626'; setTimeout(function(){ optsEl.style.outline=''; }, 800); } return; }
+  var correct = block.getAttribute('data-answer');
+  var isRight = (selected === correct);
+  opts.forEach(function(o){ var val = o.getAttribute('data-val'); o.classList.add('locked'); if(val === correct) o.classList.add('correct'); else if(val === selected && !isRight) o.classList.add('wrong'); });
+  if(isRight) cfuState.score++;
+  cfuState.answered[num] = true;
+  updateScoreTracker();
+  showFeedback(num, isRight, 'Not quite. The correct answer is ' + correct + '.');
+};
+
+/* MATCHING */
+var matchState = {};
+function initMatch(num){ if(!matchState[num]) matchState[num] = { selectedLeft: null, selectedRight: null, pairs: {}, locked: false }; }
+
+document.addEventListener('click', function(e){
+  var item = e.target.closest('.match-item');
+  if(!item) return;
+  var block = item.closest('.cfu-block');
+  if(!block || block.getAttribute('data-type') !== 'match') return;
+  var num = parseInt(block.getAttribute('data-num'));
+  initMatch(num);
+  var ms = matchState[num];
+  if(ms.locked || item.classList.contains('matched')) return;
+  var col = item.closest('.match-col');
+  var isLeft = col.id.indexOf('-left') > -1;
+  var isRight = col.id.indexOf('-right') > -1;
+  if(isLeft){
+    col.querySelectorAll('.match-item').forEach(function(i){ i.classList.remove('selected'); });
+    item.classList.add('selected');
+    ms.selectedLeft = { key: item.getAttribute('data-match-key'), id: item.getAttribute('data-match-id'), el: item };
+    if(ms.selectedRight) makePair(num);
+  }
+  if(isRight){
+    var rightCol = document.getElementById('match-' + num + '-right');
+    rightCol.querySelectorAll('.match-item').forEach(function(i){ i.classList.remove('selected'); });
+    item.classList.add('selected');
+    ms.selectedRight = { key: item.getAttribute('data-match-key'), id: item.getAttribute('data-match-id'), el: item };
+    if(ms.selectedLeft) makePair(num);
+  }
+});
+
+function makePair(num){
+  var ms = matchState[num];
+  ms.selectedLeft.el.classList.remove('selected'); ms.selectedLeft.el.classList.add('matched');
+  ms.selectedRight.el.classList.remove('selected'); ms.selectedRight.el.classList.add('matched');
+  ms.pairs[ms.selectedLeft.key] = ms.selectedRight.key;
+  ms.selectedLeft.el.setAttribute('data-paired-with', ms.selectedRight.id);
+  ms.selectedRight.el.setAttribute('data-paired-with', ms.selectedLeft.id);
+  ms.selectedLeft = null; ms.selectedRight = null;
+}
+
+window.cfuSubmitMatch = function(num){
+  if(cfuState.answered[num]) return;
+  initMatch(num);
+  var ms = matchState[num];
+  var leftItems = document.querySelectorAll('#match-' + num + '-left .match-item');
+  var totalPairs = leftItems.length;
+  if(Object.keys(ms.pairs).length < totalPairs){ var c = document.getElementById('match-' + num + '-container'); if(c){ c.style.outline = '2px solid #dc2626'; setTimeout(function(){ c.style.outline=''; }, 800); } return; }
+  ms.locked = true;
+  var correctCount = 0;
+  for(var lk in ms.pairs){ if(ms.pairs[lk] === lk) correctCount++; }
+  leftItems.forEach(function(li){ var lk = li.getAttribute('data-match-key'); li.classList.add('locked'); if(ms.pairs[lk] !== lk){ li.classList.remove('matched'); li.classList.add('wrong-match'); } });
+  document.querySelectorAll('#match-' + num + '-right .match-item').forEach(function(ri){ ri.classList.add('locked'); var pw = ri.getAttribute('data-paired-with'); if(pw){ var le = document.querySelector('[data-match-id="' + pw + '"]'); if(le && le.getAttribute('data-match-key') !== ri.getAttribute('data-match-key')){ ri.classList.remove('matched'); ri.classList.add('wrong-match'); } } });
+  var isAll = (correctCount === totalPairs);
+  if(isAll) cfuState.score++; else if(correctCount >= totalPairs * 0.5) cfuState.score += 0.5;
+  cfuState.answered[num] = true;
+  updateScoreTracker();
+  showFeedback(num, isAll, correctCount + ' of ' + totalPairs + ' matched correctly.');
+};
+
+/* CLOZE */
+var clozeState = {};
+function initCloze(num){ if(!clozeState[num]) clozeState[num] = { selectedChip: null, placements: {}, locked: false }; }
+
+window.clozeSelect = function(num, chipEl){
+  initCloze(num); var cs = clozeState[num];
+  if(cs.locked || chipEl.classList.contains('placed')) return;
+  var bank = document.getElementById('cloze-' + num + '-bank');
+  if(bank) bank.querySelectorAll('.cloze-chip').forEach(function(c){ c.classList.remove('selected'); });
+  chipEl.classList.add('selected');
+  cs.selectedChip = chipEl.getAttribute('data-chip');
+};
+
+window.clozePlace = function(num, blankId){
+  initCloze(num); var cs = clozeState[num];
+  if(cs.locked) return;
+  var blank = document.getElementById(blankId);
+  if(!blank) return;
+  if(cs.placements[blankId]){
+    var oldVal = cs.placements[blankId];
+    var bank = document.getElementById('cloze-' + num + '-bank');
+    if(bank) bank.querySelectorAll('.cloze-chip').forEach(function(c){ if(c.getAttribute('data-chip') === oldVal) c.classList.remove('placed'); });
+    delete cs.placements[blankId];
+    blank.textContent = '\u200B'; blank.classList.remove('filled');
+    return;
+  }
+  if(!cs.selectedChip) return;
+  blank.textContent = cs.selectedChip; blank.classList.add('filled');
+  cs.placements[blankId] = cs.selectedChip;
+  var bank = document.getElementById('cloze-' + num + '-bank');
+  if(bank) bank.querySelectorAll('.cloze-chip').forEach(function(c){ if(c.getAttribute('data-chip') === cs.selectedChip){ c.classList.remove('selected'); c.classList.add('placed'); } });
+  cs.selectedChip = null;
+};
+
+window.cfuSubmitCloze = function(num){
+  if(cfuState.answered[num]) return;
+  initCloze(num); var cs = clozeState[num];
+  var passage = document.getElementById('cloze-' + num + '-passage');
+  if(!passage) return;
+  var blanks = passage.querySelectorAll('.cloze-blank');
+  var totalBlanks = blanks.length;
+  if(Object.keys(cs.placements).length < totalBlanks){ passage.style.outline = '2px solid #dc2626'; setTimeout(function(){ passage.style.outline=''; }, 800); return; }
+  cs.locked = true;
+  var correctCount = 0;
+  blanks.forEach(function(b){
+    var answer = b.getAttribute('data-answer');
+    var placed = cs.placements[b.id];
+    if(placed === answer){ b.classList.add('correct-blank'); correctCount++; }
+    else { b.classList.add('wrong-blank'); var corr = document.createElement('span'); corr.className = 'cloze-correction'; corr.textContent = ' \u2192 ' + answer; b.parentNode.insertBefore(corr, b.nextSibling); }
+  });
+  var bank = document.getElementById('cloze-' + num + '-bank');
+  if(bank) bank.querySelectorAll('.cloze-chip').forEach(function(c){ c.classList.add('locked'); });
+  var isAll = (correctCount === totalBlanks);
+  if(isAll) cfuState.score++; else if(correctCount >= totalBlanks * 0.5) cfuState.score += 0.5;
+  cfuState.answered[num] = true;
+  updateScoreTracker();
+  showFeedback(num, isAll, correctCount + ' of ' + totalBlanks + ' blanks correct.');
+};
+
+/* SCENARIO SORT */
+var sortState = {};
+function initSort(num){ if(!sortState[num]) sortState[num] = { selectedCard: null, placements: {}, locked: false }; }
+
+window.sortSelectCard = function(num, cardId){
+  initSort(num); var ss = sortState[num];
+  if(ss.locked) return;
+  var card = document.querySelector('[data-sort-id="' + cardId + '"]');
+  if(!card || card.classList.contains('placed-in-bucket')) return;
+  document.querySelectorAll('#sort-' + num + '-cards .sort-card').forEach(function(c){ c.classList.remove('selected'); });
+  card.classList.add('selected');
+  ss.selectedCard = cardId;
+};
+
+window.sortPlaceInBucket = function(num, bucketName){
+  initSort(num); var ss = sortState[num];
+  if(ss.locked || !ss.selectedCard) return;
+  var card = document.querySelector('[data-sort-id="' + ss.selectedCard + '"]');
+  if(!card) return;
+  var cardText = card.textContent.trim();
+  var cardId = ss.selectedCard;
+  var bucketEl = document.querySelector('#sort-' + num + '-buckets [data-bucket="' + bucketName + '"]');
+  if(!bucketEl) return;
+  var cardsContainer = bucketEl.querySelector('.sort-bucket-cards');
+  var placedCard = document.createElement('div');
+  placedCard.className = 'sort-placed-card';
+  placedCard.setAttribute('data-placed-id', cardId);
+  placedCard.innerHTML = '<span style="flex:1!important;">' + cardText + '</span><span class="sort-remove" onclick="sortRemoveCard(' + num + ',\'' + cardId + '\',\'' + bucketName + '\')">×</span>';
+  cardsContainer.appendChild(placedCard);
+  card.classList.remove('selected'); card.classList.add('placed-in-bucket');
+  ss.placements[cardId] = bucketName;
+  ss.selectedCard = null;
+  bucketEl.classList.add('active'); setTimeout(function(){ bucketEl.classList.remove('active'); }, 300);
+};
+
+window.sortRemoveCard = function(num, cardId, bucketName){
+  initSort(num); var ss = sortState[num];
+  if(ss.locked) return;
+  var bucketEl = document.querySelector('#sort-' + num + '-buckets [data-bucket="' + bucketName + '"]');
+  if(bucketEl){ var placed = bucketEl.querySelector('[data-placed-id="' + cardId + '"]'); if(placed) placed.remove(); }
+  var card = document.querySelector('[data-sort-id="' + cardId + '"]');
+  if(card) card.classList.remove('placed-in-bucket');
+  delete ss.placements[cardId];
+};
+
+window.cfuSubmitSort = function(num){
+  if(cfuState.answered[num]) return;
+  initSort(num); var ss = sortState[num];
+  var allCards = document.querySelectorAll('#sort-' + num + '-cards .sort-card');
+  var totalCards = allCards.length;
+  if(Object.keys(ss.placements).length < totalCards){ document.getElementById('sort-' + num + '-buckets').style.outline = '2px solid #dc2626'; setTimeout(function(){ document.getElementById('sort-' + num + '-buckets').style.outline=''; }, 800); return; }
+  ss.locked = true;
+  var correctCount = 0;
+  allCards.forEach(function(card){
+    var cid = card.getAttribute('data-sort-id');
+    var correctBucket = card.getAttribute('data-correct');
+    var placedBucket = ss.placements[cid];
+    var isCorrect = (placedBucket === correctBucket);
+    if(isCorrect) correctCount++;
+    var bucketEl = document.querySelector('#sort-' + num + '-buckets [data-bucket="' + placedBucket + '"]');
+    if(bucketEl){
+      var placedEl = bucketEl.querySelector('[data-placed-id="' + cid + '"]');
+      if(placedEl){
+        placedEl.classList.add(isCorrect ? 'correct-placed' : 'wrong-placed');
+        var removeBtn = placedEl.querySelector('.sort-remove');
+        if(removeBtn) removeBtn.style.display = 'none';
+        if(!isCorrect){ var corr = document.createElement('span'); corr.style.cssText = 'font-size:11px!important;color:#059669!important;font-weight:700!important;white-space:nowrap!important;'; corr.textContent = '\u2192 ' + correctBucket; placedEl.appendChild(corr); }
+      }
+    }
+  });
+  var isAll = (correctCount === totalCards);
+  if(isAll) cfuState.score++; else if(correctCount >= totalCards * 0.5) cfuState.score += 0.5;
+  cfuState.answered[num] = true;
+  updateScoreTracker();
+  showFeedback(num, isAll, correctCount + ' of ' + totalCards + ' sorted correctly.');
+};
+
+/* RED FLAGS */
+var rfState = {};
+function initRF(num){ if(!rfState[num]) rfState[num] = { flagged: {}, locked: false }; }
+
+window.rfToggle = function(num, spotId){
+  initRF(num); var rs = rfState[num];
+  if(rs.locked) return;
+  var spot = document.querySelector('[data-rf-id="' + spotId + '"]');
+  if(!spot) return;
+  if(rs.flagged[spotId]){ delete rs.flagged[spotId]; spot.classList.remove('flagged'); }
+  else { rs.flagged[spotId] = true; spot.classList.add('flagged'); }
+  var counter = document.getElementById('rf-' + num + '-counter');
+  if(counter) counter.textContent = 'Flags placed: ' + Object.keys(rs.flagged).length + ' / 6';
+};
+
+window.cfuSubmitRedFlag = function(num){
+  if(cfuState.answered[num]) return;
+  initRF(num); var rs = rfState[num];
+  rs.locked = true;
+  var email = document.getElementById('rf-' + num + '-email');
+  if(!email) return;
+  var allSpots = email.querySelectorAll('.rf-spot');
+  var correctFlags = 0, totalFlags = 0, wrongFlags = 0;
+  allSpots.forEach(function(spot){
+    var id = spot.getAttribute('data-rf-id');
+    var isFlag = spot.getAttribute('data-flag') === 'true';
+    var wasFlagged = !!rs.flagged[id];
+    if(isFlag) totalFlags++;
+    spot.classList.remove('flagged');
+    if(isFlag && wasFlagged){ spot.classList.add('correct-flag'); correctFlags++; }
+    else if(isFlag && !wasFlagged){ spot.classList.add('missed-flag'); }
+    else if(!isFlag && wasFlagged){ spot.classList.add('wrong-flag'); wrongFlags++; }
+  });
+  var adjustedScore = Math.max(0, correctFlags - wrongFlags);
+  var isAll = (correctFlags === totalFlags && wrongFlags === 0);
+  if(isAll) cfuState.score++; else if(adjustedScore >= totalFlags * 0.5) cfuState.score += 0.5;
+  cfuState.answered[num] = true;
+  updateScoreTracker();
+  var msg = isAll ? null : correctFlags + ' of ' + totalFlags + ' flags correct' + (wrongFlags > 0 ? ', ' + wrongFlags + ' false alarm(s)' : '') + '.';
+  showFeedback(num, isAll, msg);
+};
+
+/* PROGRESS BAR + BACK TO TOP */
+(function(){
+  var bar = document.getElementById('apcyber-progress-bar');
+  var btn = document.getElementById('apcyber-back-top');
+  if(!bar && !btn) return;
+  function onScroll(){
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    if(bar){ var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0; bar.style.width = Math.min(pct, 100) + '%'; }
+    if(btn){ if(scrollTop > 400) btn.classList.add('visible'); else btn.classList.remove('visible'); }
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+})();
+
+}); /* end DOMContentLoaded */
+
+
+
+</script>
+
+</div>
+<!--APCYBER-LESSON-NAV-START--><style>
+#apcyber-lesson-nav, #apcyber-lesson-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-lesson-nav{display:block!important;margin:48px auto 8px!important;max-width:880px!important;
+ padding:0 16px!important}
+#apcyber-lesson-nav .aln-card{display:block!important;background:#FFFFFF!important;
+ border:1px solid #E5E1F2!important;border-top:4px solid #6B21A8!important;border-radius:14px!important;
+ padding:22px 22px 18px!important;box-shadow:0 6px 22px rgba(30,27,75,.07)!important}
+#apcyber-lesson-nav .aln-eyebrow{display:block!important;font-size:12px!important;font-weight:700!important;
+ letter-spacing:.09em!important;text-transform:uppercase!important;color:#6B21A8!important;
+ -webkit-text-fill-color:#6B21A8!important;margin:0 0 14px!important}
+#apcyber-lesson-nav .aln-pn{display:flex!important;gap:12px!important;flex-wrap:wrap!important;margin:0 0 16px!important}
+#apcyber-lesson-nav .aln-step{flex:1 1 0!important;min-width:200px!important;display:block!important;
+ text-decoration:none!important;border:1px solid #E5E1F2!important;border-radius:11px!important;
+ padding:13px 15px!important;background:#FAF8FF!important}
+#apcyber-lesson-nav .aln-step:link,#apcyber-lesson-nav .aln-step:visited{color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important}
+#apcyber-lesson-nav .aln-step.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-lesson-nav .aln-step.next:link,#apcyber-lesson-nav .aln-step.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-lesson-nav .aln-dir{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.06em!important;text-transform:uppercase!important;color:#8A7FB0!important;
+ -webkit-text-fill-color:#8A7FB0!important;margin:0 0 4px!important}
+#apcyber-lesson-nav .aln-step.next .aln-dir{color:#E8A020!important;-webkit-text-fill-color:#E8A020!important;text-align:right!important}
+#apcyber-lesson-nav .aln-ttl{display:block!important;font-size:15px!important;font-weight:600!important;line-height:1.3!important}
+#apcyber-lesson-nav .aln-step.next .aln-ttl{text-align:right!important}
+#apcyber-lesson-nav .aln-links{display:flex!important;flex-wrap:wrap!important;align-items:center!important;
+ gap:8px 18px!important;padding-top:15px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-lesson-nav .aln-lbl{font-size:13px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-lesson-nav .aln-links a:link,#apcyber-lesson-nav .aln-links a:visited{font-size:14px!important;
+ font-weight:500!important;color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;
+ text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important;padding-bottom:1px!important}
+@media(max-width:560px){#apcyber-lesson-nav .aln-step{flex:1 1 100%!important}}
+</style><div id="apcyber-lesson-nav"><div class="aln-card">
+<span class="aln-eyebrow">AP Cybersecurity · Unit 1 · Lesson 1.3</span><div class="aln-pn">
+<a class="aln-step prev" href="/pages/ap-cybersecurity-unit-1-password-attacks"><span class="aln-dir">← Previous</span><span class="aln-ttl">1.2 Suspicious Website Logins</span></a><a class="aln-step next" href="/pages/ap-cybersecurity-unit-1-ai-driven-threats"><span class="aln-dir">Next →</span><span class="aln-ttl">1.4 AI-Based Cybersecurity Attacks</span></a>
+</div>
+<div class="aln-links">
+<span class="aln-lbl">Keep going:</span><a href="/pages/ap-cybersecurity-unit-1-introduction-to-security">Unit 1 Study Guide</a><a href="/pages/ap-cyber-unit-1-exam">Unit 1 Exam</a><a href="/pages/ap-cybersecurity-complete-course-guide">Course Guide</a><a href="/pages/ap-cybersecurity-study-guide">All Study Guides</a><a href="/pages/ap-cybersecurity-practice-questions">Practice Questions</a><a href="/pages/ap-cybersecurity-score-calculator">Score Calculator</a>
+</div>
+</div></div><!--APCYBER-LESSON-NAV-END-->
