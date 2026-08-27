@@ -168,26 +168,53 @@ renders on every cyber page, so a page whose handle matches no branch still pass
 check while tracking nothing. `password-attacks-quiz` is the case that shows it. Not
 fixed here.
 
-## Running totals after discovery
+## Final sweep: all five units with discovery, 165 pages
 
 ```
 unit 1   43 pages   P0 3   P1 2   P2 21
-unit 2   27 pages   P0 0   P1 0   P2 0
-unit 3   31 pages   P0 0   P1 0   P2 0
-unit 4   26 pages   P0 0   P1 3   P2 0
-unit 5   31 pages   P0 0   P1 18  P2 0
+unit 2   27 pages   clean
+unit 3   36 pages   clean
+unit 4   27 pages   P1 3
+unit 5   32 pages   P1 18
+-------------------------------------
+        165 pages   P0 3   P1 23  P2 21
 ```
 
-Units 3, 4 and 5 have not been re-run since discovery landed, so their named landings
-are still unaudited. Only their hubs appeared in the harvest, which suggests their
-lessons live under the numbered family already covered, but that is an expectation
-rather than a measurement.
+Units 3 to 5 were re-run rather than assumed. Their named landings turned out to be
+hubs, which is what was expected, but unit 2 is exactly why the expectation was not
+allowed to stand as the answer.
+
+The untracked-by-design bucket was itself checked rather than trusted:
+`ap-cybersecurity-unit-3-firewalls`, `-network-attacks` and `-securing-networks` all
+have **zero CFU blocks, no data-lesson-id and no cfuState**. They are genuine hubs
+carrying no graded content, so skipping them is correct and the bucket is not hiding
+lesson pages.
+
+### The 23 P1s, by cause
+
+| count | where | cause |
+|---|---|---|
+| 18 | unit 5, every exercise and lab | per-page namespaced score ids (`#u5l1ex1-score`) the reporter cannot know |
+| 3 | unit 4 labs 1, 4, 5 | scoring machinery present, no aggregate readout located, UNCLASSIFIED |
+| 1 | unit 1 lesson 1 exercise-2 | bespoke `#x2scn` |
+| 1 | unit 1 password-attacks-quiz | no `apcs-quiz-wiring.js` |
+
+### The 3 P0s are one defect
+
+Lesson 1.2 under three handles. Fixing it means fixing three page bodies.
+
+### The 21 P2s
+
+Duplicate `#cfu-score-num` and `#cfu-score-tracker`, two per page across ten pages,
+plus the 1.2 numbering gap. Grades are unaffected because the engine and the reporter
+both read the first element. What it costs is the student's own display.
 
 ## What this run does NOT cover
 
 - **Whether a widget is completable.** The audit proves `blockDone()` is reachable for
   every block. It cannot prove the widget works.
-- **The three unit 4 labs**: scoring machinery present, no aggregate readout located,
-  so whether they produce a total at all is unestablished.
-- **Whether the wiring RESOLVES**, per the blind spot above.
-- **Units 3 to 5 re-run with discovery.**
+- **The three unit 4 labs**, still unclassified.
+- **Whether the wiring RESOLVES**, not merely that the snippet is present. A handle no
+  branch matches still passes the check while tracking nothing;
+  `password-attacks-quiz` is that case.
+- **Unit 2's config disagreement**: nine lesson landings against four lessons declared.
