@@ -95,11 +95,16 @@ function main() {
   }
   for (const r of Object.values(byRole)) r.avgIn = +(r.totalIn / r.pages).toFixed(1);
 
-  const depthHist = {};
-  for (const x of live) {
-    const d = a.depth.has(x.path) ? a.depth.get(x.path) : 'unreachable';
-    depthHist[d] = (depthHist[d] || 0) + 1;
-  }
+  const hist = (map) => {
+    const h = {};
+    for (const x of live) {
+      const d = map.has(x.path) ? map.get(x.path) : 'unreachable';
+      h[d] = (h[d] || 0) + 1;
+    }
+    return h;
+  };
+  const depthHist = hist(a.depth);
+  const homeDepthHist = hist(a.homeDepth);
 
   const slim = (x) => ({
     path: x.path, title: x.title, h1: x.h1 || '', course: x.course, role: x.role,
@@ -112,6 +117,8 @@ function main() {
     source: IN,
     totals: a.totals,
     depthHistogram: depthHist,
+    homeDepthHistogram: homeDepthHist,
+    navFrontierSize: a.navFrontierSize,
     byCourse: a.byCourse,
     byRole: Object.values(byRole).sort((p, q) => q.pages - p.pages),
     hubs: a.hubs,
@@ -119,6 +126,7 @@ function main() {
     nearOrphans: a.nearOrphans.map(slim),
     deadEnds: a.deadEnds.map(slim),
     broken: a.broken.map((x) => ({ path: x.path, status: x.status, in: x.inBody })),
+    throttled: a.throttled.map((x) => ({ path: x.path, status: x.status })),
     dangling: a.dangling.map((x) => ({ path: x.path, in: x.inBody, from: x.inFrom.slice(0, 5) })),
     clusters: clusterList,
     missingHubs,
@@ -134,7 +142,7 @@ function main() {
   }
 
   const t = report.totals;
-  console.log(`crawled ${t.crawled}  live ${t.live}  broken ${t.broken}`);
+  console.log(`crawled ${t.crawled}  live ${t.live}  broken ${t.broken}  throttled-not-verified ${t.throttled}`);
   console.log(`body edges ${t.bodyEdges}  chrome targets ${t.chromeTargets}`);
   console.log(`ORPHANS (0 inbound body links): ${t.orphans}`);
   console.log(`near-orphans (1): ${t.nearOrphans}   dead ends (0 outbound): ${t.deadEnds}`);
@@ -149,8 +157,10 @@ function main() {
   for (const c of missingHubs.slice(0, 15)) {
     console.log(`  ${String(c.size).padStart(3)} pages  ${c.orphans} orphaned  ${c.family}`);
   }
-  console.log('\ndepth from home (content links only):');
+  console.log(`\ncontent-link depth from the nav frontier (${a.navFrontierSize} seeds):`);
   for (const k of Object.keys(depthHist).sort()) console.log(`  ${String(k).padStart(11)}: ${depthHist[k]}`);
+  console.log('\nfor contrast, from the homepage alone:');
+  for (const k of Object.keys(homeDepthHist).sort()) console.log(`  ${String(k).padStart(11)}: ${homeDepthHist[k]}`);
 }
 
 main();

@@ -292,6 +292,24 @@ console.log('\nhubs: never propose building a page that is already live');
     hubOf(['ap-csp-written-response-guide', 'ap-csp-written-response-walkthrough-2026',
       'ap-csp-written-response-rubric'], 'ap-csp-written-response'));
 
+  // The hub of a lesson family IS a member: the lesson page itself, with its
+  // activities beneath it. Blanket-excluding members reported 53 CSA lesson
+  // families as hubless.
+  ok('the lesson page heads its own lesson family',
+    hubOf(['ap-csa-lesson-2-3-expressions-assignment', 'ap-csa-lesson-2-3-exercise-1',
+      'ap-csa-lesson-2-3-exercise-2', 'ap-csa-lesson-2-3-quiz'], 'ap-csa-lesson-2-3')
+      === '/pages/ap-csa-lesson-2-3-expressions-assignment',
+    hubOf(['ap-csa-lesson-2-3-expressions-assignment', 'ap-csa-lesson-2-3-exercise-1',
+      'ap-csa-lesson-2-3-exercise-2', 'ap-csa-lesson-2-3-quiz'], 'ap-csa-lesson-2-3'));
+
+  // The silent direction of the same rule: an activity must never head anything,
+  // or ap-cyber-unit-3-exam becomes the hub of its own unit and hides the gap.
+  ok('an activity page never heads a family',
+    hubOf(['ap-cyber-unit-3-exam', 'ap-cyber-unit-3-lesson-1-quiz',
+      'ap-cyber-unit-3-lesson-1-lab'], 'ap-cyber-unit-3') === null,
+    hubOf(['ap-cyber-unit-3-exam', 'ap-cyber-unit-3-lesson-1-quiz',
+      'ap-cyber-unit-3-lesson-1-lab'], 'ap-cyber-unit-3'));
+
   // Two candidates is a guess, and a wrong hub link is worse than a missing one.
   ok('two equally good candidates resolves to no hub',
     hubOf(['ap-csa-7day-alpha-kit', 'ap-csa-7day-beta-kit',
