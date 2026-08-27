@@ -40,6 +40,10 @@ function main() {
   const redirects = resolved.filter((x) => x.status >= 300 && x.status < 400)
     .sort((a, b) => b.inbound - a.inbound);
   const broken404 = resolved.filter((x) => x.status === 404).sort((a, b) => b.inbound - a.inbound);
+  const brokenAssets = broken404.filter((x) => /^\/cdn\/|\.(docx|pdf|pptx|xlsx|zip)$/i.test(x.path));
+  const brokenPages = broken404.filter((x) => !brokenAssets.includes(x));
+  const corrupted = brokenPages.filter((x) => /%0[Aa]|%0[Dd]/.test(x.path));
+  const redirectLinkTotal = redirects.reduce((sum, x) => sum + x.inbound, 0);
 
   const orphanPct = t.live ? Math.round((t.orphans / t.live) * 100) : 0;
   const reachable = Object.entries(r.depthHistogram)
@@ -90,11 +94,22 @@ function main() {
       <td><code class="ok">${e(x.location || '')}</code></td>
     </tr>`).join('\n');
 
-  const brokenLinkRows = broken404.slice(0, 14).map((x) => `<tr>
+  const corruptedRows = corrupted.map((x) => `<tr>
+      <th scope="row"><code>${e(x.path)}</code></th>
+      <td><code class="muted">${e((x.from || [])[0] || '')}</code></td>
+    </tr>`).join('\n');
+  const assetSample = brokenAssets.slice(0, 8).map((x) => `<li><code>${e(x.path)}</code></li>`).join('\n');
+  const brokenLinkRows = brokenPages.slice(0, 14).map((x) => `<tr>
       <th scope="row"><code>${e(x.path)}</code></th>
       <td class="num">${n(x.inbound)}</td>
       <td class="muted">${e((x.from || []).slice(0, 2).join(', '))}</td>
     </tr>`).join('\n');
+
+  const twinRows = (r.twins || []).map((g) => g.pages.map((x, i) => `<tr>
+      <th scope="row"><code>${e(x.path)}</code></th>
+      <td class="num${i === 0 ? '' : ' bad'}">${n(x.in)}</td>
+      <td>${i === 0 ? '<span class="keep">most linked</span>' : '<span class="muted">candidate to fold in</span>'}</td>
+    </tr>`).join('\n')).join('\n');
 
   const orphanSample = (r.orphans || []).slice(0, 40).map((o) => `<tr>
       <th scope="row"><code>${e(o.path)}</code></th>
@@ -109,6 +124,8 @@ function main() {
       <td>${e(COURSE_LABEL[h.course] || h.course || '')}</td>
     </tr>`).join('\n');
 
+  const homeReach = Object.entries(r.homeDepthHistogram || {})
+    .filter(([k]) => k !== 'unreachable').reduce((s, [, v]) => s + v, 0);
   const depthRows = Object.keys(r.depthHistogram).sort((a, b) => {
     if (a === 'unreachable') return 1;
     if (b === 'unreachable') return -1;
@@ -118,7 +135,7 @@ function main() {
     const pct = t.live ? (v / t.live) * 100 : 0;
     const bad = k === 'unreachable';
     return `<tr>
-      <th scope="row">${k === 'unreachable' ? 'No path' : `${k} click${k === '1' ? '' : 's'}`}</th>
+      <th scope="row">${k === 'unreachable' ? 'No path at all' : `${k} click${k === '1' ? '' : 's'}`}</th>
       <td class="num">${n(v)}</td>
       <td><div class="bar${bad ? ' bar-bad' : ''}"><span style="width:${Math.max(pct, 0.6)}%"></span></div></td>
     </tr>`;
@@ -247,6 +264,7 @@ tbody th{font-weight:500}
 .muted{color:var(--muted)}
 code.ok{color:var(--ok)}
 code.prop{color:var(--accent)}
+.keep{color:var(--ok); font-weight:500}
 .pct{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--muted); margin-left:10px}
 .bar{display:inline-block; width:120px; height:7px; border-radius:4px; background:var(--line); overflow:hidden; vertical-align:middle}
 .bar span{display:block; height:100%; background:var(--accent); border-radius:4px}
@@ -349,10 +367,14 @@ summary{cursor:pointer; font-size:14px; color:var(--accent); font-weight:500}
   ${figureCurrent(t, unreachable, reachable)}
 
   <div class="tbl-wrap"><table>
-    <caption><b>Clicks from the homepage</b>Following content links only. Chrome would put everything at one click and the number would mean nothing.</caption>
+    <caption><b>Content clicks from the nav frontier</b>Seeded from the homepage plus every page the navigation reaches, since all of those are one click from anywhere. Following content links only from there.</caption>
     <thead><tr><th>Depth</th><th class="num">Pages</th><th>Share of site</th></tr></thead>
     <tbody>${depthRows}</tbody>
   </table></div>
+
+  <div class="note">
+    <p><b>Why the seed set is the navigation and not just the homepage.</b> Measured from the homepage alone, only ${n(homeReach)} pages are reachable and ${n((r.homeDepthHistogram || {}).unreachable || 0)} are not. That number is an artefact: the homepage does link its course hubs in its own body, but those URLs also sit in the mega-menu on all ${n(t.crawled)} pages, so they count as chrome and the walk refuses to pass through the site's own hubs. The gap between ${n(homeReach)} and ${n(t.live - unreachable)} is the site's dependence on its navigation.</p>
+  </div>
 
   <div class="tbl-wrap"><table>
     <caption><b>Orphans by course</b>A page with zero inbound content links, counted against that course's live pages.</caption>
@@ -393,7 +415,13 @@ summary{cursor:pointer; font-size:14px; color:var(--accent); font-weight:500}
 <section id="rot">
   <span class="sec-num">03 &middot; Link rot</span>
   <h2>Links that land somewhere other than where they point</h2>
-  <p class="lede">Every link target outside the sitemap was resolved once. Three outcomes, and they need different fixes.</p>
+  <p class="lede">Every link target outside the sitemap was resolved once, most-linked first. Three outcomes, and they need different fixes.</p>
+
+  <div class="stats">
+    <div class="stat is-bad"><div class="v">${n(redirectLinkTotal)}</div><div class="k">internal links pointing at a redirect</div></div>
+    <div class="stat is-bad"><div class="v">${n(brokenAssets.length)}</div><div class="k">broken file downloads</div></div>
+    <div class="stat is-bad"><div class="v">${n(brokenPages.length)}</div><div class="k">links to pages that 404</div></div>
+  </div>
 
   ${redirectRows ? `<div class="tbl-wrap"><table>
     <caption><b>Internal links pointing at a redirect</b>The link works. It spends a hop and passes its equity through a 301. Point the link at the destination instead.</caption>
@@ -402,10 +430,22 @@ summary{cursor:pointer; font-size:14px; color:var(--accent); font-weight:500}
   </table></div>` : '<p class="muted">No redirect targets resolved in this run.</p>'}
 
   ${brokenLinkRows ? `<div class="tbl-wrap"><table>
-    <caption><b>Internal links to pages that do not exist</b>These are 404s a reader can click today.</caption>
+    <caption><b>Internal links to pages that do not exist</b>404s a reader can click today.</caption>
     <thead><tr><th>Linked URL</th><th class="num">Pages linking it</th><th>Linked from</th></tr></thead>
     <tbody>${brokenLinkRows}</tbody>
   </table></div>` : ''}
+
+  ${corruptedRows ? `<h3>Two links carry a newline inside the handle</h3>
+  <div class="tbl-wrap"><table>
+    <caption><b>Percent-encoded line breaks in an href</b>Verified against the live page. <code>%0A</code> is a newline that has been encoded into the middle of the handle, so the URL cannot resolve. Both sit in the accordion navigation on the same lesson page.</caption>
+    <thead><tr><th>Linked URL</th><th>Emitted by</th></tr></thead>
+    <tbody>${corruptedRows}</tbody>
+  </table></div>` : ''}
+
+  ${assetSample ? `<h3>${n(brokenAssets.length)} worksheet downloads return 404</h3>
+  <p>Student and teacher <code>.docx</code> files linked from CSP lesson pages. These are the download buttons on the lesson, so this is a reader-facing break rather than a crawl concern.</p>
+  <div class="note warn"><ul style="margin:0;padding-left:20px">${assetSample}</ul>
+  <p style="margin-top:10px" class="muted">First 8 of ${n(brokenAssets.length)}. Full list in the report JSON.</p></div>` : ''}
 </section>
 
 <section id="ideal">
@@ -434,16 +474,54 @@ summary{cursor:pointer; font-size:14px; color:var(--accent); font-weight:500}
   </table></div>` : ''}
 
   ${missingHubRows ? `<div class="tbl-wrap"><table>
-    <caption><b>Topic clusters with no hub page</b>Checked against four live naming irregularities first, so nothing here is a page that already exists under a different spelling.</caption>
+    <caption><b>Topic clusters with no hub page</b>Checked against five live naming irregularities first, so nothing here is a page that already exists under a different spelling. Each was then confirmed against the sitemap by hand.</caption>
     <thead><tr><th>Family</th><th class="num">Pages</th><th class="num">Orphaned</th><th>Placeholder to create</th></tr></thead>
     <tbody>${missingHubRows}</tbody>
   </table></div>` : '<p class="muted">Every cluster of three or more resolved to a hub.</p>'}
+
+  <h3>The placeholder set, in priority order</h3>
+  <p class="lede">Ranked by how many live pages each one would rescue from having no parent.</p>
+
+  <div class="builds">
+    <div class="build"><span class="tag tag-new">build</span><code>/pages/intro-java</code><span class="num muted">109 pages</span>
+      <span class="why">Intro to Java has six unit pages, 52 lessons, 41 help pages and ten projects, and no page that is the course. Every other course has one. This is the single largest structural gap on the site.</span></div>
+    <div class="build"><span class="tag tag-new">build</span><code>/pages/intro-java-help</code><span class="num muted">41 pages</span>
+      <span class="why">An index for the help library, which currently has no entry point. CSA already has <code>ap-csa-java-errors-hub</code> doing exactly this job, so the pattern exists and is not being applied here.</span></div>
+    <div class="build"><span class="tag tag-fix">404</span><code>/pages/ap-csp-exam-prep-hub</code><span class="num muted">linked, missing</span>
+      <span class="why">Linked from <code>ap-csp-course-big-idea-5-impact</code> and returns 404. CSA has <code>ap-csa-exam-prep-hub</code>; CSP's counterpart was linked before it was built.</span></div>
+    <div class="build"><span class="tag tag-new">build</span><code>/pages/ap-csp-create-task</code><span class="num muted">3 pages, all orphaned</span>
+      <span class="why">Create Task is a scored component of the CSP exam. Its three pages (practice, rescue kit, ultimate guide) have no hub and no inbound content link between them.</span></div>
+    <div class="build"><span class="tag tag-new">build</span><code>/pages/for-teachers</code><span class="num muted">cross-course</span>
+      <span class="why">Proposed in the August positioning audit and still absent. The buyer is a teacher and no page addresses one. Parent for the four Command Centers, which currently hang off nothing.</span></div>
+    <div class="build"><span class="tag tag-new">build</span><code>/pages/for-students</code><span class="num muted">cross-course</span>
+      <span class="why">Self-study entry: join a class, my progress, practice. Same audit.</span></div>
+  </div>
+
+  <h3>Spokes that exist but hang off nothing</h3>
+  <div class="builds">
+    <div class="build"><span class="tag tag-fix">wire</span><code>every -exercise page</code><span class="num muted">18 of 18</span>
+      <span class="why">Every exercise page on the site has zero inbound content links, an average inbound degree of 0.0. They are graded activities reachable only from the nav. This is the cleanest hub-down fix available: their lesson pages already exist.</span></div>
+    <div class="build"><span class="tag tag-fix">wire</span><code>AP Networking</code><span class="num muted">35 of 67</span>
+      <span class="why">52% orphaned, the worst rate of any course with a hub. Launching as an invite-only pilot this year.</span></div>
+    <div class="build"><span class="tag tag-fix">wire</span><code>course hub pages themselves</code><span class="num muted">9 of 14</span>
+      <span class="why">Nine of the fourteen pages that behave as course hubs have no inbound content link of their own. The tops of the trees are orphans.</span></div>
+  </div>
 </section>
 
 <section id="cuts">
   <span class="sec-num">06 &middot; Consolidation</span>
   <h2>Pages that compete with each other</h2>
   <p class="lede">The audit on 26 August found one intent spread across many URLs, so no single URL accumulates authority. Those findings stand and are not re-derived here.</p>
+
+  ${twinRows ? `<h3>Same page, two or three URLs</h3>
+  <p>Found by comparing handles as token sets rather than strings, with numbers bound to the word in front of them. This is a mechanical check, and it independently rediscovered the case the August audit had named by hand.</p>
+  <div class="tbl-wrap"><table>
+    <caption><b>Handle twins</b>Each block is one intent spread across several live URLs. Inbound counts are content links only.</caption>
+    <thead><tr><th>URL</th><th class="num">Inbound</th><th>Position</th></tr></thead>
+    <tbody>${twinRows}</tbody>
+  </table></div>` : ''}
+
+  <p>Beyond these mechanical twins, the August audit recorded the larger clusters by intent: AP Cybersecurity has eight URLs competing on overview intent and three on practice intent, AP CSA has six competing surfaces and AP CSP six. Those findings stand and are not re-derived here.</p>
 
   <div class="note stop">
     <p><b>Do not execute these until Search Console is connected.</b> Consolidating a cannibalised cluster means picking one URL to keep and redirecting the others into it. Picking that URL without click and impression data is a guess, and a wrong guess redirects away the page that was actually earning the traffic.</p>
