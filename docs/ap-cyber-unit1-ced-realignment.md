@@ -210,6 +210,46 @@ blurred in both directions.
 
 ## House rules for this course
 
+### Citing the CED to students
+
+**The EK code is teacher knowledge. Do not put it in front of students by
+default.** A student reading a lesson does not need to be told that intimidation
+is 1.1.A.2. They need to know what intimidation is and how to spot it in a
+message. Name the idea, not the code.
+
+Write "secure information, such as a one-time password" and not "secure
+information (1.1.C.2)". Write "the CED names two tactics" and not "EK 1.1.A.2
+names two tactics". The sentence is shorter and it teaches the same thing.
+
+Three places a code still earns its place:
+
+- **The Essential Knowledge coverage table.** It exists to be audited against the
+  framework, and it is collapsed by default, so a student only meets it if they
+  go looking.
+- **A claim that something is not assessed, or belongs to another unit.** There
+  the code is the evidence. "Pretexting is a real CED term, at 2.1.A.3 in Unit 2"
+  is checkable in a way that "pretexting is Unit 2 content" is not, and the
+  checkability is the point of saying it at all.
+- **Teacher-facing artifacts**: exit ticket answer keys, teacher guides, pacing
+  documents. Nobody is reading those to learn the topic.
+
+Beyond those, one orientation tag on a concept card is the most a lesson page
+should carry, and only where the page is explicitly teaching the structure of
+the topic rather than the topic itself. If a code is doing anything other than
+proving a claim or letting a teacher audit, cut it and keep the idea.
+
+**The cautionary number.** The rebuilt Topic 1.1 lesson shipped with **218 EK
+codes in student-visible text**, roughly one every 300 characters: 31 in the
+tactics section, 30 in the FAQ, 21 in the vocabulary table, 20 in the quick
+reference. Every one of them was defensible on its own and the accumulation was
+not. Writing to a framework makes it very easy to write the framework onto the
+page.
+
+`validate_csv.py` counts them and warns past a threshold. It is a warning rather
+than a failure because the judgement is real: a page teaching how Topic 1.1 is
+organised legitimately cites more than a page teaching what social engineering
+is. The count exists to make the accumulation visible, not to pick the number.
+
 ### MCQ standards
 Harder only, priority to spot-the-error and I/II/III multi-correct. No giveaway
 names. Options parallel in length and structure. Bold **NOT** and **EXCEPT** in
