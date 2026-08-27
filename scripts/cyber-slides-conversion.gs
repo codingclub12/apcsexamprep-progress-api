@@ -255,9 +255,40 @@ function sheet_() {
     var file = DriveApp.getFileById(ss.getId());
     folder.addFile(file);
     DriveApp.getRootFolder().removeFile(file);
-    ss.getActiveSheet().appendRow(HEADER);
+    var sheet = ss.getActiveSheet();
+    // Column A holds lesson ids like 1-1 and 2-4, every one of which Sheets
+    // would otherwise read as a month-day date. Forcing plain text keeps the
+    // written value and the read value the same string.
+    sheet.getRange('A:A').setNumberFormat('@');
+    sheet.appendRow(HEADER);
   }
   return ss.getActiveSheet();
+}
+
+/**
+ * Read a lesson id back from the sheet as the string it was written as.
+ *
+ * THIS IS THE BUG THAT RE-CONVERTED EVERYTHING. Every lesson id in Units 1
+ * and 2 is also a valid month-day: 1-1 is January 1, 2-4 is February 4, and
+ * so on for all nine. Google Sheets parses those on write, so appendRow's
+ * '1-1' is stored as a Date and getValues() hands back a Date object. The
+ * resume key then read "Thu Jan 01 2026 00:00:00 GMT-0500|1|STUDENT" and
+ * never matched the "1-1|1|STUDENT" built from Drive.
+ *
+ * Nothing errored. alreadyDone_ returned a full set of keys, none of which
+ * matched anything, so every run believed all 70 decks were both already done
+ * AND still to do, and converted all 70 again. The giveaway was the work-list
+ * line reading "70 to convert, 70 already done, 70 total", which cannot be
+ * true at once.
+ *
+ * Two defences, because either alone is not enough. sheet_() now formats
+ * column A as plain text so new sheets never coerce, and this recovers the
+ * id from a Date for sheets already written the old way: month and day map
+ * straight back to unit and lesson.
+ */
+function normLesson_(v) {
+  if (v instanceof Date) return (v.getMonth() + 1) + '-' + v.getDate();
+  return String(v).trim();
 }
 
 /**
@@ -289,7 +320,7 @@ function clearStaleRows_(sh, todo) {
   // means the indices of the rows still to inspect never move.
   for (var i = rows.length - 1; i >= 0; i--) {
     if (String(rows[i][6]).trim() === 'OK') continue;
-    var key = rows[i][0] + '|' + rows[i][1] + '|' + String(rows[i][2]).toUpperCase();
+    var key = normLesson_(rows[i][0]) + '|' + rows[i][1] + '|' + String(rows[i][2]).toUpperCase();
     if (!wanted[key]) continue;
     sh.deleteRow(i + 2);      // +2: one for the header, one for 1-based rows
     removed++;
@@ -305,7 +336,7 @@ function alreadyDone_(sh) {
   var rows = sh.getRange(2, 1, last - 1, HEADER.length).getValues();
   rows.forEach(function (r) {
     if (String(r[6]).trim() === 'OK') {
-      done[r[0] + '|' + r[1] + '|' + String(r[2]).toUpperCase()] = true;
+      done[normLesson_(r[0]) + '|' + r[1] + '|' + String(r[2]).toUpperCase()] = true;
     }
   });
   return done;
