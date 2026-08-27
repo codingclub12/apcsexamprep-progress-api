@@ -229,5 +229,60 @@ console.log('\nlink block: refusals');
   refuses('two related blocks', () => B.check(BODY, BODY + '<div class="related"><a href="/x">x</a></div>', 1));
 }
 
+// ── LINK PLAN ────────────────────────────────────────────────────────────────
+const P = require('../lib/link-plan');
+
+console.log('\nlink plan: labels');
+{
+  ok('brand suffix stripped', P.label('AP CSA Course | Full Curriculum | APCSExamPrep.com', 'x') === 'AP CSA Course');
+  ok('doubled brand suffix stripped',
+    P.label('Guide | All 5 Units | APCSExamPrep.com | APCSExamPrep.com', 'x') === 'Guide', P.label('Guide | All 5 Units | APCSExamPrep.com | APCSExamPrep.com', 'x'));
+  ok('empty title falls back to the handle',
+    P.label('', 'ap-csa-2d-array-cheat-sheet') === '2d Array Cheat Sheet', P.label('', 'ap-csa-2d-array-cheat-sheet'));
+  ok('a clean title is left alone', P.label('2D Array Patterns', 'x') === '2D Array Patterns');
+}
+
+console.log('\nlink plan: hub-down is what rescues orphans');
+{
+  const node = (path, over = {}) => ({
+    path, handle: path.replace('/pages/', ''), title: path.replace('/pages/', ''),
+    course: 'ap-csa', role: 'page', crawled: true, status: 200,
+    inBody: 0, outBody: 0, outTo: [], inFrom: [], ...over,
+  });
+  const nodes = new Map();
+  for (const n of [
+    node('/pages/ap-csa-2d-array', { role: 'reference', inBody: 5 }),
+    node('/pages/ap-csa-2d-array-mistakes'),
+    node('/pages/ap-csa-2d-array-traversal'),
+    node('/pages/ap-csa-2d-array-cheat-sheet'),
+    node('/pages/ap-csa', { role: 'course-hub', inBody: 40 }),
+  ]) nodes.set(n.path, n);
+
+  const clusters = [{
+    family: 'ap-csa-2d-array', course: 'ap-csa', hub: '/pages/ap-csa-2d-array',
+    members: [
+      { path: '/pages/ap-csa-2d-array' }, { path: '/pages/ap-csa-2d-array-mistakes' },
+      { path: '/pages/ap-csa-2d-array-traversal' }, { path: '/pages/ap-csa-2d-array-cheat-sheet' },
+    ],
+  }];
+
+  const p = P.plan(nodes, clusters);
+  const hubLinks = p.get('ap-csa-2d-array') || [];
+  ok('the hub is given every one of its spokes', hubLinks.filter((l) => /^down/.test(l.reason)).length === 3, hubLinks);
+  ok('orphaned spokes are labelled as such', hubLinks.some((l) => l.reason === 'down: orphaned spoke'));
+
+  const spokeLinks = p.get('ap-csa-2d-array-mistakes') || [];
+  ok('a spoke is pointed back at its hub',
+    spokeLinks.some((l) => l.handle === 'ap-csa-2d-array' && /^up: cluster/.test(l.reason)), spokeLinks);
+  ok('the hub link outranks the siblings',
+    spokeLinks[0] && spokeLinks[0].handle === 'ap-csa-2d-array', spokeLinks[0]);
+  ok('siblings are offered too', spokeLinks.some((l) => /^across/.test(l.reason)));
+  ok('the course hub is offered', spokeLinks.some((l) => l.handle === 'ap-csa'));
+  ok('no page is ever planned to link itself',
+    Array.from(p.entries()).every(([h, ls]) => ls.every((l) => l.handle !== h)));
+  ok('nothing is planned that was not in the crawl',
+    Array.from(p.values()).flat().every((l) => nodes.has(`/pages/${l.handle}`)));
+}
+
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);
