@@ -91,8 +91,23 @@ rescues one page, and the orphan stays invisible to anyone browsing the hub.
 Adding the missing spokes to the hub edits one page and rescues up to a dozen,
 and makes them browsable.
 
-First sheet: **51 pages, 270 links**, rescuing 58 orphans. One page refused for
-having no wrapper div with an id.
+Six sheets, all independently verified, none imported:
+
+| Sheet | Pages | Links |
+|---|---|---|
+| `links-orphan-rescue.csv` | 52 | 233 |
+| `links-ap-csa.csv` | 538 | 3,057 |
+| `links-ap-csp.csv` | 316 | 1,634 |
+| `links-ap-cyber.csv` | 220 | 1,219 |
+| `links-ap-networking.csv` | 67 | 170 |
+| `links-intro-java.csv` | 70 | 148 |
+| **Total** | **1,211** | **6,228** |
+
+The first generation refused 160 of 1,251 pages, 13%, and every refusal was the
+generator being narrow rather than the page being unusual. Four measured facts
+about the site's own markup fixed it, all recorded in `docs/internal-linking.md`:
+class tokens are whole words, the site ships four container names rather than
+one, containers nest, and a wrapper id is not guaranteed.
 
 Everything inserted is fenced with markers. That buys three things: the sheet can
 be verified by reversing the edit and comparing byte for byte, the pass is
@@ -106,6 +121,22 @@ Two earlier versions of that check were wrong and both looked reasonable: a
 line-level subsequence test failed on legal mid-line inserts, and a
 character-level one desynced against inserted CSS and reported six untouched
 pages as damaged.
+
+## The finding that came out of the body fetch, not the crawl
+
+**`/pages/ap-csa` and `/pages/ap-csp` store no body at all.** Confirmed against
+the Admin API and against the rendered page: they emit the theme's `<h1>` and
+the "Get in Touch" block and nothing else, while serving authored meta
+descriptions promising "all 4 units, 400+ exercises, a built-in Java editor and
+FRQ solutions from 2004 to 2025".
+
+`/pages/ap-csp` is both an orphan and a dead end. Under the proposed
+architecture these two URLs are the canonical course hubs and carry the head
+terms, which makes them the highest-value pages to build on the site. The
+generator refuses them, correctly: this is a content gap, not a linking one.
+
+Four more empty bodies: `quick-reference`, `practice-exams`,
+`ap-csa-premium-frq-solutions`, `java-editor-test`.
 
 ## What was NOT done, and why
 
