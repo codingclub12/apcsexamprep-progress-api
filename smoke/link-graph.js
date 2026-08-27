@@ -212,6 +212,40 @@ console.log('\nlink block: escaping');
   ok('an already-escaped entity is left alone', B.esc('a &amp; b &#39; c') === 'a &amp; b &#39; c', B.esc('a &amp; b &#39; c'));
 }
 
+console.log('\nlink block: markers make the edit reversible');
+{
+  const r = B.build(BARE, [{ handle: 'a-real-page', label: 'A Real Page' }], LIVE);
+  ok('block is fenced', r.body.includes(B.MARK_OPEN) && r.body.includes(B.MARK_CLOSE));
+  ok('css is fenced', r.body.includes(B.CSS_OPEN) && r.body.includes(B.CSS_CLOSE));
+  // The assertion the whole verification step rests on.
+  ok('stripping the fences reproduces the source BYTE FOR BYTE',
+    B.unmark(r.body) === BARE, JSON.stringify(B.unmark(r.body).slice(0, 120)));
+}
+{
+  const r = B.build(BODY, [{ handle: 'a-real-page', label: 'A' }], LIVE);
+  ok('extending an existing block also round-trips exactly', B.unmark(r.body) === BODY);
+}
+
+console.log('\nlink block: running twice is the same as running once');
+{
+  const one = B.build(BARE, [{ handle: 'a-real-page', label: 'A' }], LIVE);
+  const two = B.build(one.body, [
+    { handle: 'a-real-page', label: 'A' },
+    { handle: 'another-real-page', label: 'B' },
+  ], LIVE);
+  ok('the re-run is detected', two.rerun === true);
+  ok('exactly one fenced region survives',
+    (two.body.match(new RegExp(B.MARK_OPEN, 'g')) || []).length === 1,
+    (two.body.match(new RegExp(B.MARK_OPEN, 'g')) || []).length);
+  ok('exactly one related block survives',
+    (two.body.match(/class="related"/g) || []).length === 1);
+  ok('css is not duplicated on the re-run',
+    (two.body.match(/#w \.related\{/g) || []).length === 1);
+  ok('both links are present after the re-run',
+    two.body.includes('/pages/a-real-page') && two.body.includes('/pages/another-real-page'));
+  ok('a re-run still reverses to the ORIGINAL body', B.unmark(two.body) === BARE);
+}
+
 console.log('\nlink block: refusals');
 {
   const refuses = (name, fn) => {
