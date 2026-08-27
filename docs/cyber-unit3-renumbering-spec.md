@@ -117,6 +117,42 @@ number agree**. That is checkable per page and is the acceptance test:
 `3.4.*` EKs. The two 3.1 pages both read 3.1 and cite `3.1.A` and `3.1.B/C`
 respectively.
 
+## The ucnav rail, and the bug surveying it found
+
+The sticky in-unit navigation cannot be token-substituted, because its labels
+are positional: after the bodies move, rail position N links to `lesson-N` and
+must read the topic taught there. Running the renumbering over the old rail
+gives the right numbers in the wrong order (3.1a, 3.1b, 3.4, 3.3, 3.5, 3.2), so
+the rail is regenerated wholesale and the token pass never sees it.
+
+Surveying all 30 pages found far less rail work than expected, and one real
+defect:
+
+- Only the five **lesson** pages 1 to 5 carry a rail. The 24 activity pages
+  carry none, so they need no rail work at all.
+- Every rail lists five topics, 3.1 to 3.5.
+- **`lesson-6`, the wireless lesson, appears in no rail and has none of its own.**
+  It is unreachable from the in-unit navigation today. That is pre-existing, and
+  it is why the Unit 3 hub links `lesson-6` and nothing else.
+
+So five rails are replaced and one is inserted, on the page that receives the
+wireless body. That page was authored against a different template (an `exhero`
+header rather than the `ch-badge` course header lessons 1 to 5 use), which is
+why it never had one.
+
+**The markup alone is inert.** Every topic entry calls `ucnToggle`, and the same
+3052-byte script also positions the fixed rail under the theme header and strips
+the padding Shopify's template adds. The wireless lesson carries the ucnav CSS
+but not that script, so inserting only the markup would ship a rail that renders
+and does nothing when clicked. The script is copied from a donor page rather
+than embedded in the lib, so the inserted rail runs byte-identical code to the
+five that already work and stays that way if the script is ever revised.
+
+Rail labels read `3.1a` and `3.1b` rather than "3.1" twice. The strip is one line
+of compact text with no room for "Part 1 of 2", two entries both reading 3.1
+would be a coin flip, and a/b is what the section numbers on those two pages
+already say. The `title` attribute carries the descriptive name on hover.
+
 ## Everything that has to change
 
 1. **30 Shopify pages** via one Matrixify sheet, `Command: MERGE`, columns
