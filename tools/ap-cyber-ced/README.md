@@ -1,8 +1,18 @@
 # AP Cybersecurity CED alignment tooling
 
-Three scripts for checking AP Cybersecurity page bodies against the Course and
-Exam Description effective Fall 2026, plus a cleaned text dump of the Unit 1
-framework section.
+Scripts for checking AP Cybersecurity page bodies against the Course and Exam
+Description effective Fall 2026, plus cleaned text dumps of the framework
+sections for Unit 1 and for Units 2 through 5.
+
+**Use `ced_audit_v2.py` for any unit.** `ced_audit.py` is kept for reference but
+its `OFF` list is a Unit 1 exclusion list mislabelled as a course-wide one:
+eleven of its terms are real CED content owned by Units 2-5 (credential
+stuffing, password spraying, brute force and rainbow table in Unit 4;
+man-in-the-middle, rogue access point and WPA3 in Unit 3; shoulder surfing and
+dumpster diving in Unit 2; keylogger in 2 and 4; honeypot in Unit 5). Run against
+those units it flags correct pages, which is the false positive that costs the
+most, because someone then rewrites a page that was right. v2 reads
+`ced_term_index.json` instead, which records the units each term belongs to.
 
 They arrived in the `ap-cyber-unit1-handoff` bundle on 2026-08-27 and are
 vendored here because the work they gate is not finished: WO-3 shipped, WO-4
@@ -20,14 +30,27 @@ Cybersecurity framework PDF; it is not the CED.
 
 ```
 ./fetch_pages.sh ./pages                    # pull all 23 Unit 1 page bodies as JSON
-python3 ced_audit.py ./pages                # off-CED / wrong-unit / missing-EK report
+python3 ced_audit_v2.py ./pages --unit=3    # off-CED / wrong-term / wrong-unit, any unit
+python3 ced_audit.py ./pages                # Unit 1 ONLY, see the warning above
 python3 validate_csv.py out.csv --baseline ./pages   # pre-import gate; exit 1 means DO NOT import
 #   ... a human imports the sheet via Matrixify ...
 python3 verify_import.py out.csv            # post-import gate; exit 1 means it did NOT land
 ```
 
 `fetch_pages.sh` needs the `www` subdomain. Non-www is blocked by Cloudflare, and
-so is a request without a browser User-Agent.
+so is a request without a browser User-Agent. From inside a Claude Code container
+a User-Agent alone is not enough either: Cloudflare returns a "Verifying your
+connection" interstitial with HTTP 200, so the file looks fetched and is HTML.
+Send `Accept`, `Accept-Language` and `Sec-Fetch-Mode: navigate` as well, and check
+that the body starts with `{"page":` before trusting it.
+
+The CED PDF is not vendored here: it is copyrighted and 5.9 MB. Download it from
+`https://apcentral.collegeboard.org/media/pdf/ap-cybersecurity-course-and-exam-description.pdf`.
+It is AES-encrypted with an empty user password, so extraction needs `pypdf` with
+`cryptography` present and a `reader.decrypt('')` call first. Its text also
+carries hyphenation artifacts across line breaks (LO 3.4.A reads "network- based
+firewalls"), so match punctuation-insensitively or the index will report present
+terms as absent. That mistake cost a full pass here on 2026-08-27.
 
 ## Always pass --baseline
 

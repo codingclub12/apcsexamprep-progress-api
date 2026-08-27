@@ -27,6 +27,15 @@ name: CED watch
 #   conclude the opposite of the truth. It is also not a user-agent block: the
 #   script's own UA returns 200 through curl.
 #
+#   UPDATE 2026-08-27: this no longer reproduces. All 15 sources in
+#   config/ced-sources.json returned 200 through node fetch from a session, and
+#   the Cyber CED PDF came back whole (5,947,037 bytes) through both transports.
+#   The paragraph above is kept because it was true when written and because the
+#   failure mode it describes is per-transport rather than per-domain, so it is
+#   the right thing to re-check first if 403s come back. None of this changes
+#   why the job runs here: an Actions runner does not depend on whatever the
+#   proxy's allowed-domains list happens to say this month.
+#
 # WHY THE ARTIFACT IS A PULL REQUEST
 #   The snapshot is committed, so git history IS the record of what College
 #   Board said and when. A PR also means an unacknowledged CED change keeps
