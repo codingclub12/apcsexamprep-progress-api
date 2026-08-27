@@ -327,3 +327,70 @@ misled:
 
 Cross-referencing all three is what produced a list of 669 pages worth acting on
 rather than 480 worth worrying about.
+
+## Plan regenerated against the 669-page list
+
+The 669 pages Google records zero internal links for are not all link targets.
+Resolved one at a time:
+
+| | |
+|---|---|
+| Live `/pages/` handles, editable | **355** |
+| Legacy URLs returning 301 | 75, carrying 1,831 clicks |
+| Blog posts | 195 |
+| Products and collections | 40 |
+| A URL earning clicks and returning 404 | 1, `/pages/frq-2024` |
+
+The 75 redirects are **correctly** unlinked: they no longer exist, and their
+traffic already flows to a live page. `ap-csp-create-task-guide`, the second
+biggest name on the original list at 471 clicks and 47,951 impressions, is one
+of them. It 301s to `ap-csp-create-task-ultimate-guide`. Linking it would have
+pointed 30 pages at a redirect.
+
+So the real target set is **355 live pages carrying 2,558 clicks and 273,889
+impressions**, and `scripts/link-plan-build.js --targets` now drives the plan
+from that list rather than from the crawl's own idea of what matters.
+
+### Coverage, and three bugs found getting there
+
+| Round | Targets linked | Target clicks covered |
+|---|---|---|
+| Cluster hubs only | 161 | - |
+| + role-affinity fallback | 195 | 67% |
+| + hub cap raised from 8 to 24 | 250 | 72% |
+| + fallback load-balanced | **323 of 355** | **97%** |
+
+**Families are too narrow for one-off pages.** `ap-csa-jeopardy-game` becomes
+its own single-member family and therefore its own hub, so hub-down never
+reaches it even though `ap-csa-study-games-hub` is sitting right there. 194 of
+355 targets were in that hole. A target no cluster reaches is now offered to the
+best index page in its own course, matched on role.
+
+**One cap for hubs and spokes was wrong.** Eight links is right for a lesson
+page and wrong for a hub, whose job is to list its spokes; the site's own unit
+hubs link twelve to seventeen. With a single cap of 8 the fallback planned 75
+links onto `ap-cybersecurity-course` and everything past the eighth was dropped
+in silence. Hubs now take 24, and a page is treated as a hub when most of its
+planned links are `down:` rather than by what it is called.
+
+**The fallback piled instead of spreading.** Even at 24 the tail was lost,
+because one course hub was absorbing thirty-odd targets. Each target now goes to
+whichever of its course's index pages currently carries the fewest. Maximum load
+on any one page dropped to 15.
+
+`ap-csp-ced-explained`, 249 clicks and no internal links, survived the first two
+fixes unlinked and is now linked from `ap-csp-topics`. It is the reason the third
+one exists.
+
+### What is left
+
+32 targets carrying 87 clicks. Almost all are the legacy-naming pages that put
+the course at the END of the handle (`linear-search-ap-csa`,
+`static-vs-instance-variables-ap-csa`), so `courseOf()` returns null and no
+course can claim them. Fixing that means teaching the parser the old convention,
+which is worth doing when those pages are next touched and is not worth a
+special case now.
+
+### Sheets
+
+896 pages, 5,734 links, all five independently verified.

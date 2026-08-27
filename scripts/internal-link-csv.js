@@ -68,7 +68,16 @@ function main() {
     const body = fs.readFileSync(file, 'utf8');
     let res;
     try {
-      res = B.build(body, links, live, { selfHandle: handle });
+      //  A page whose planned links are mostly DOWN is acting as a hub, so it
+      //  gets the hub cap. Derived from the plan rather than from the handle,
+      //  because what makes a page a hub here is that spokes hang off it, not
+      //  what it is called.
+      const down = links.filter((l) => /^down/.test(l.reason || '')).length;
+      const asHub = down >= Math.max(3, links.length / 2);
+      res = B.build(body, links, live, {
+        selfHandle: handle,
+        max: asHub ? B.MAX_LINKS_HUB : B.MAX_LINKS,
+      });
     } catch (e) {
       skipped.refused.push({ handle, why: e.message });
       continue;

@@ -212,6 +212,25 @@ console.log('\nlink block: escaping');
   ok('an already-escaped entity is left alone', B.esc('a &amp; b &#39; c') === 'a &amp; b &#39; c', B.esc('a &amp; b &#39; c'));
 }
 
+console.log('\nlink block: a hub gets a bigger cap than a spoke');
+{
+  // With one cap of 8, the course-hub fallback planned 75 links onto
+  // ap-cybersecurity-course and everything past the eighth was silently
+  // dropped, including a 249-click page with no internal links.
+  const many = Array.from({ length: 20 }, (_, i) => ({ handle: `t${i}`, label: `T${i}` }));
+  const liveMany = new Set(many.map((m) => m.handle));
+  const spoke = B.build(BARE, many, liveMany, { selfHandle: 'p', max: B.MAX_LINKS });
+  ok('a spoke stops at 8', spoke.added.length === B.MAX_LINKS, spoke.added.length);
+  const hub = B.build(BARE, many, liveMany, { selfHandle: 'p', max: B.MAX_LINKS_HUB });
+  ok('a hub takes 20', hub.added.length === 20, hub.added.length);
+  ok('the hub cap is still bounded', B.MAX_LINKS_HUB <= 24);
+  ok('and the result still reverses exactly', B.unmark(hub.body) === BARE);
+  ok('overflow past the hub cap is still reported', B.build(BARE,
+    Array.from({ length: 30 }, (_, i) => ({ handle: `t${i}`, label: `T${i}` })),
+    new Set(Array.from({ length: 30 }, (_, i) => `t${i}`)),
+    { selfHandle: 'p', max: B.MAX_LINKS_HUB }).dropped.some((d) => /capped at 24/.test(d.why)));
+}
+
 console.log('\nlink block: class tokens are whole words');
 {
   // \brelated\b matches `related-card`, because \b treats a hyphen as a word
