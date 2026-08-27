@@ -46,6 +46,24 @@ So pass --baseline pointing at a directory of live <handle>.json bodies, as
 already live is reported as PRE-EXISTING rather than counted as a failure. A
 check that passes live and fails on the sheet is a regression this import would
 cause, and still fails. Without --baseline nothing changes.
+
+    stayed_hidden, AND THE BUG THAT PAID FOR IT
+
+--baseline also enables the one check that cannot be written without a live
+copy. On 2026-08-27 the WO-3 rewrite of the Topic 1.1 lesson shipped with eight
+of its ten Check For Understanding feedback boxes missing the inline
+style="display:none!important;" that is the ONLY thing hiding them. There is no
+CSS rule for it. The page served the correct answer and the full explanation for
+every item on load, and a teacher found it.
+
+Every gate passed. They checked the widgets existed, the keys resolved, the tags
+balanced, the EKs were cited and the markup was well formed. Not one asked
+whether an element that used to be hidden still was, because nothing in a sheet
+tells you what the page looked like before.
+
+stayed_hidden collects every id carrying display:none in the baseline body and
+fails if any of them lost it. It is cheap, it is general, and it is the check
+that would have caught a defect none of the others could see.
 """
 import csv, sys, re, json
 
@@ -70,6 +88,21 @@ def baseline_bodies(d):
             out[os.path.basename(f)[:-5]] = json.load(open(f, encoding='utf-8'))['page']['body_html']
         except Exception:
             pass
+    return out
+
+
+def hidden_ids(b):
+    """Every element id carrying an inline display:none. These are hidden by the
+    attribute alone, with no CSS rule behind them, so losing the attribute
+    reveals the element."""
+    out = set()
+    for m in re.finditer(r'<\w+[^>]*>', b):
+        tag = m.group(0)
+        if 'display:none' not in tag.replace(' ', ''):
+            continue
+        i = re.search(r'id="([^"]+)"', tag)
+        if i:
+            out.add(i.group(1))
     return out
 
 
@@ -133,6 +166,17 @@ def check(path, baseline=None):
         # name them while telling students they are not assessed. This is a
         # WARNING. A human must confirm every hit is explanatory, never
         # content students are asked to learn or classify.
+
+        #  Regression only: an element hidden in the live page must stay
+        #  hidden. See stayed_hidden in the docstring.
+        if h in base:
+            was_hidden = hidden_ids(base[h])
+            still = hidden_ids(b)
+            lost = sorted(was_hidden - still)
+            c['stayed_hidden'] = not lost
+            if lost:
+                print('        LEAK  these were hidden on the live page and are not in this'
+                      ' sheet: ' + ', '.join(lost[:12]) + (' ...' if len(lost) > 12 else ''))
 
         bad = [k for k, v in c.items() if not v]
 

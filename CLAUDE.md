@@ -282,5 +282,14 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   the default. A sheet is reviewable before it lands, re-runnable in MERGE mode
   after a partial import, and it is the one path that has not silently truncated
   a live body. Generate it, read the refusals, import it once.
+- Never put CED Essential Knowledge codes in front of students. The code is
+  teacher knowledge: write "secure information, such as a one-time password",
+  not "secure information (1.1.C.2)". A code earns its place only where it is
+  evidence for a claim (this is not assessed, that belongs to Unit 2), in the
+  collapsed coverage table a teacher audits, or in a teacher-facing answer key.
+  The rebuilt Topic 1.1 lesson shipped with 218 of them in student-visible text
+  before anyone noticed. `docs/ap-cyber-unit1-ced-realignment.md`, under "Citing
+  the CED to students", has the full rule; `tools/ap-cyber-ced/validate_csv.py`
+  counts them.
 - No em-dashes in any prose, comments, commit messages, or user-facing strings.
 - AP CSA references use the 2025-2026 4-unit structure exclusively.
