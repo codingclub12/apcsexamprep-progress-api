@@ -49,11 +49,9 @@ const db = require('../db');
 // Each source module exports { location, questions }; a module that owns more
 // than one location exports an array of them, spread in here.
 const SOURCES = [
-  // Bundle-derived (1.1, 1.2). Queued to be re-authored as short web quizzes so
-  // the bundle's own instruments go back to being offline-only; see the header of
-  // cyber-unit-1-web-quizzes.js for why that matters.
-  ...require('../seed/cyber-unit-1-quizzes'),
-  // Web-authored short quizzes. New lessons belong here, never in the file above.
+  // Web-authored short quizzes only. A bundle question must never be seeded here;
+  // see that file's header for why. The bundle-derived bank that briefly held 1.1
+  // and 1.2 was deleted on 2026-08-27, which retires its rows (active = 0).
   ...require('../seed/cyber-unit-1-web-quizzes'),
 ];
 

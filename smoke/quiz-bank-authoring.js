@@ -40,7 +40,6 @@ const db = require('../db');
 const { seedQuizBank } = require('../scripts/seed-quiz-bank');
 // Every bank the seed script loads, so adding a lesson never breaks this suite.
 const SOURCES = [
-  ...require('../seed/cyber-unit-1-quizzes'),
   ...require('../seed/cyber-unit-1-web-quizzes'),
 ];
 const TOTAL = SOURCES.reduce((n, p) => n + p.questions.length, 0);
@@ -122,10 +121,14 @@ const get = (url) => fetch(base() + url).then(async (r) => ({ status: r.status, 
       'SELECT qid, correct_index FROM quiz_bank WHERE course=? AND unit=? AND lesson=? AND activity_type=? ORDER BY q_order'
     ).all(COURSE, UNIT, pack.location.lesson, 'quiz').map(r => r.correct_index).join('');
   }
-  ok('lesson 1.1 key is the documented ACBDABCBD',
-    keys['1.1'] === '021301213', { got: keys['1.1'] });
-  ok('lesson 1.2 key is the documented CADBAACCBDBD',
-    keys['1.2'] === '203100221313', { got: keys['1.2'] });
+  // Derived from the source rather than pinned to a literal: the meaningful
+  // property is that seeding stores the authored key exactly, not that any
+  // particular string survives. Content changes should not turn this suite red.
+  for (const pack of SOURCES) {
+    const want = pack.questions.map(q => q.correct_index).join('');
+    ok(`lesson ${pack.location.lesson} key round-trips through quiz_bank unchanged`,
+      keys[pack.location.lesson] === want, { got: keys[pack.location.lesson], want });
+  }
 
   console.log('\n-- 6. a question dropped from seed/ is retired, not deleted --');
   const GHOST = `${COURSE}:${UNIT}:1.1:quiz#99`;
@@ -133,7 +136,8 @@ const get = (url) => fetch(base() + url).then(async (r) => ({ status: r.status, 
               VALUES (?,?,?,?,?,99,'A question no longer in the seed file','["a","b"]',0,1,1)`)
     .run(GHOST, COURSE, UNIT, '1.1', 'quiz');
   const rendered = (await get(`/api/quiz/${COURSE}/${UNIT}/1.1/quiz`)).body.questions.length;
-  ok('setup: the stale question is being served', rendered === 9 + 1, { rendered });
+  const N11 = SOURCES.find(p => p.location.lesson === '1.1').questions.length;
+  ok('setup: the stale question is being served', rendered === N11 + 1, { rendered, N11 });
 
   const third = seedQuizBank();
   ok('the seed reports exactly one retirement', third.retired === 1, third);
@@ -141,7 +145,7 @@ const get = (url) => fetch(base() + url).then(async (r) => ({ status: r.status, 
   ok('the retired row still EXISTS, so score_events tied to it still resolve', !!ghost);
   ok('the retired row is deactivated rather than deleted', ghost && ghost.active === 0, ghost);
   const afterRetire = (await get(`/api/quiz/${COURSE}/${UNIT}/1.1/quiz`)).body.questions.length;
-  ok('it stops being served', afterRetire === 9, { afterRetire });
+  ok('it stops being served', afterRetire === N11, { afterRetire, N11 });
 
   const live = db.prepare(
     `SELECT COUNT(*) n FROM quiz_bank WHERE course=? AND unit=? AND activity_type='quiz' AND active=1`
@@ -150,6 +154,23 @@ const get = (url) => fetch(base() + url).then(async (r) => ({ status: r.status, 
 
   const fourth = seedQuizBank();
   ok('retirement is idempotent, a second run retires nothing', fourth.retired === 0, fourth);
+
+  console.log('\n-- 7. a bundle-derived bank cannot come back by accident --');
+  // The 1.1 and 1.2 banks were briefly transcribed from the teacher bundle and
+  // served online, which is the exposure the whole web-quiz rule exists to prevent.
+  // Those rows used a plain #N qid series; everything authored for the web uses #wN.
+  // So an active non-#w row at a web-quiz location means a bundle bank has been
+  // reintroduced, and this fails rather than letting it ship quietly.
+  db.prepare(`INSERT INTO quiz_bank (qid,course,unit,lesson,activity_type,q_order,prompt,options,correct_index,points,active)
+              VALUES (?,?,?,?,?,0,'a bundle question','["a","b"]',0,1,1)`)
+    .run(`${COURSE}:${UNIT}:1.1:quiz#1`, COURSE, UNIT, '1.1', 'quiz');
+  seedQuizBank();
+  const strays = db.prepare(
+    `SELECT qid FROM quiz_bank WHERE course=? AND unit=? AND activity_type='quiz'
+       AND active=1 AND qid NOT LIKE '%#w%'`
+  ).all(COURSE, UNIT);
+  ok('a plain #N row at a web-quiz location is retired on the next seed',
+    strays.length === 0, strays.map(r => r.qid));
 
   console.log(`\n${pass} passed, ${fail} failed`);
   server.close();
