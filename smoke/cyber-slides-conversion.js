@@ -87,6 +87,11 @@ const root = {
 global.DriveApp = { getFolderById: () => root };
 global.Logger = { log: () => {} };
 global.MimeType = { GOOGLE_SLIDES: 'application/vnd.google-apps.presentation' };
+// The ADVANCED Drive service, which is not enabled by default in a new Apps
+// Script project and is not the same object as DriveApp. Its absence is what
+// failed the first real run, seventy times over, so preflight_() now checks
+// for it and both entry points call preflight_() before doing anything.
+global.Drive = { Files: { copy: () => ({ id: 'stub' }) } };
 
 // eslint-disable-next-line no-eval
 eval(src + '\n;global.__enumerate = enumerateDecks_; global.__preview = preview; global.__embed = embedUrl_;');
@@ -129,6 +134,34 @@ ok('  sorted by lesson, then day, then variant',
 ok('  embed url is the /embed view, never /edit',
    global.__embed('X').includes('/embed') && !global.__embed('X').includes('/edit'), global.__embed('X'));
 ok('  and does not hide the Slides toolbar', !global.__embed('X').includes('rm=minimal'));
+
+console.log('5a. preflight refuses to run without the Advanced Drive Service');
+{
+  // The first real run wrote seventy rows of "ReferenceError: Drive is not
+  // defined" and reported only "converted 0, failed 70" in the log. One clear
+  // error before any work starts is worth more than seventy after it.
+  const saved = global.Drive;
+  delete global.Drive;
+  let threw = null;
+  try { global.__preview(); } catch (e) { threw = e; }
+  ok('  preview() throws rather than reporting zero decks', threw !== null);
+  ok('  and names the Advanced Drive Service',
+     threw && /Advanced Drive Service/.test(threw.message), threw && threw.message);
+  ok('  and says which version to add',
+     threw && /v3/.test(threw.message), threw && threw.message);
+  ok('  and does not blame the decks',
+     threw && !/deck/i.test(threw.message), threw && threw.message);
+
+  // Wrong version added: the object exists but cannot copy.
+  global.Drive = { Files: {} };
+  let threw2 = null;
+  try { global.__preview(); } catch (e) { threw2 = e; }
+  ok('  a Drive service without Files.copy is also refused', threw2 !== null);
+  ok('  and is diagnosed as a version problem',
+     threw2 && /version/i.test(threw2.message), threw2 && threw2.message);
+
+  global.Drive = saved;
+}
 
 console.log('5. preview() tells the operator whether to proceed');
 const preview = global.__preview();
