@@ -32,7 +32,10 @@ const SHOT = process.argv[3] || null;
     for (const el of document.querySelectorAll('.cfu-feedback')) {
       (vis(el) ? out.leaked : out.hiddenOk).push(el.id);
     }
-    out.ekBody = [...document.querySelectorAll('#ek14-body')].map((e) => vis(e));
+    //  The coverage table's id carries the topic number: ek11-body on 1.1,
+    //  ek12-body on 1.2, and so on. Pinned to ek14-body this reported an empty
+    //  array on every other page, which reads the same as "not collapsed".
+    out.ekBody = [...document.querySelectorAll('[id^="ek"][id$="-body"]')].map((e) => vis(e));
     out.cfuBlocks = document.querySelectorAll('.cfu-block').length;
     out.tables = [...document.querySelectorAll('table.vocab-table')].map((t) =>
       [...t.querySelectorAll('thead th')].map((th) => th.innerText.trim()).join(' | '));
@@ -55,13 +58,18 @@ const SHOT = process.argv[3] || null;
   // Does the painted text give away any answer? Test real answer CONTENT, not
   // labels: "Model Answer" is also the text on cfu-9's submit button, so
   // matching on it flags a button that is supposed to be visible.
+  //  Match on the SHAPE of an answer key, not on a phrase that can occur in
+  //  ordinary copy. "is correct." matched an option label reading "I is
+  //  incorrect and II is correct." and a sentence about a password that is
+  //  correct, on a page with no leak at all. A feedback box opens with a bare
+  //  option letter, a space, and "is correct." at the start of its text, which
+  //  option labels and prose do not do.
   const tells = [
-    'is correct.',                                  // every MCQ feedback opens with this
-    'Correct matches:', 'Correct order:', 'Correct sequence:',
-    'Slash the trash:',                             // distractor walkthrough, feedback only
-    'The training program is built around detection signals',  // cfu-9 model answer text
+    /(^|\n)\s*[A-E] is correct\./,
+    /(^|\n)\s*Correct (?:matches|order|sequence):/,
+    /(^|\n)\s*Slash the trash:/,
   ];
-  const found = tells.filter((t) => r.text.includes(t));
+  const found = tells.filter((t) => t.test(r.text)).map((t) => String(t));
   console.log('answer-key phrases in painted text :', found.length ? found.join(' / ') : 'none');
 
   if (SHOT) await page.screenshot({ path: SHOT, fullPage: false });
