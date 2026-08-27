@@ -252,3 +252,78 @@ not in this pass.
 Also: 120 dead-end pages carry 8,476 clicks, led by `ap-csp-vocabulary-list`
 (1,598) and `ap-csa-score-calculator` (1,531). A student lands from search and
 the page offers nowhere to go next.
+
+## Google's internal-link export, and a correction to the headline above
+
+A third export arrived: Search Console's Links report, Top target pages, 277
+rows. It is Google's own count of internal links per page, from a different
+crawler with no knowledge of this analysis.
+
+### It confirms the method
+
+Sixty-three pages sit in a tight band between about 1,380 and 1,500 internal
+links. That band is the mega-menu, measured independently. It is exactly the
+boilerplate this pass separates out, and it is the reason counting raw anchors
+cannot answer the orphan question.
+
+The two counts are not in conflict. They measure different things and both are
+right:
+
+| Page | Google's count | This report's count | Clicks |
+|---|---|---|---|
+| `ap-computer-science-principles-full-practice-exam-70-mcq` | 1,483 | 0 | 34,857 |
+| `ap-cybersecurity-study-guide` | 2,579 | 0 | 982 |
+| `ap-csa-exam-prep-hub` | 1,496 | 0 | 2,470 |
+
+### And it corrects the headline
+
+The section above led with **"65 percent of search clicks land on pages nothing
+links to."** That is true by the content-link definition used throughout this
+report and **wrong as a statement about discoverability**, because those same
+pages carry roughly 1,480 internal links each. They are in the nav. They are
+linked; they are not linked from anything relevant.
+
+The honest partition of the site's 120,378 clicks:
+
+| Internal-link status | Clicks | Share |
+|---|---|---|
+| In the nav (1,300+ links), 63 pages | 88,941 | 74% |
+| Linked, but not from the nav | 25,849 | 21% |
+| **No internal links at all, 669 pages** | **5,588** | **5%** |
+
+So the genuinely unlinked set carries 5 percent of clicks, not 65. The finding
+that survives is different and more interesting: **74 percent of all search
+clicks land on 63 pages, and the entire content-link graph adds 21 percent on
+top of the navigation.** The contextual linking layer is doing very little work.
+
+### The list that actually matters
+
+Pages that rank (so they are indexed for certain, making a zero a real zero) and
+have no internal links whatsoever:
+
+| Page | Clicks | Impressions |
+|---|---|---|
+| `ap-csp-written-response-guide` | 587 | 43,910 |
+| `ap-csp-create-task-guide` | 471 | 47,951 |
+| `ap-csp-ced-explained` | 249 | 25,157 |
+| `ap-csa-unit-3-class-creation-complete-study-guide-2025` | 235 | 3,282 |
+| `ap-csa-unit-4-data-collection-complete-study-guide-2025` | 180 | 4,873 |
+
+The top two draw 91,861 impressions between them from no internal links at all,
+and neither appeared in the contested-URL list, because nothing in the crawl
+suggested they mattered. Several of the others carry a stale `-2025` in the
+handle while still earning.
+
+### Method note for the next pass
+
+Three measurements were needed to get this right and any two of them would have
+misled:
+
+- the crawl alone said 480 orphans, without knowing which mattered
+- clicks alone said those orphans carry 65 percent of traffic, without knowing
+  they were nav-linked
+- Google's link counts alone say everything important has 1,480 links, without
+  distinguishing nav from content
+
+Cross-referencing all three is what produced a list of 669 pages worth acting on
+rather than 480 worth worrying about.

@@ -456,11 +456,38 @@ summary{cursor:pointer; font-size:14px; color:var(--accent); font-weight:500}
   ${gsc ? `<p class="lede">Search Console, ${e(gsc.window)}. This section exists because the link graph got the most important question backwards, and only this data could say so.</p>
 
   <div class="headline-stat">
-    <div class="big">${Math.round(gsc.orphanEarners.share)}%</div>
-    <p><strong>of the site's search clicks land on pages nothing links to.</strong> ${n(gsc.orphanEarners.count)} orphaned pages carry ${n(gsc.orphanEarners.clicks)} clicks and ${n(gsc.orphanEarners.impr)} impressions between them. Google found them. The site does not link them.</p>
+    <div class="big">${Math.round((gsc.internal.partition.nav / gsc.internal.partition.total) * 100)}%</div>
+    <p><strong>of the site's search clicks land on just ${n(63)} pages, and what those pages have in common is the navigation menu.</strong> Everything the content graph adds on top of the nav accounts for ${Math.round((gsc.internal.partition.mid / gsc.internal.partition.total) * 100)}% of clicks.</p>
   </div>
 
-  <p>That inverts what the linking pass is for. It is not hygiene on pages nobody visits; it is the site failing to pass any authority to the pages already earning most of its traffic. The single highest-earning page on the whole domain is an orphan.</p>
+  <div class="note warn">
+    <p><b>A correction to an earlier version of this page.</b> This section first led with "${Math.round(gsc.orphanEarners.share)}% of search clicks land on pages nothing links to", counting the ${n(gsc.orphanEarners.count)} orphans that earn traffic. That number is right by the content-link definition used throughout this report and <em>wrong as a statement about discoverability</em>, because Google's own internal-link export says those same pages carry roughly 1,480 links each. They are in the mega-menu. They are linked; they are just not linked from anything relevant.</p>
+    <p>The honest version is the partition below. The genuinely unlinked pages carry ${Math.round((gsc.internal.partition.zero / gsc.internal.partition.total) * 100)}% of clicks, not ${Math.round(gsc.orphanEarners.share)}%.</p>
+  </div>
+
+  <div class="tbl-wrap"><table>
+    <caption><b>Where the clicks actually sit</b>Google's internal-link count per page against 16 months of clicks. A page at 1,300+ links is in the mega-menu.</caption>
+    <thead><tr><th>Internal-link status</th><th class="num">Clicks</th><th class="num">Share</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">In the nav (1,300+ links), 63 pages</th><td class="num">${n(gsc.internal.partition.nav)}</td><td class="num">${Math.round((gsc.internal.partition.nav / gsc.internal.partition.total) * 100)}%</td></tr>
+      <tr><th scope="row">Linked, but not from the nav</th><td class="num">${n(gsc.internal.partition.mid)}</td><td class="num">${Math.round((gsc.internal.partition.mid / gsc.internal.partition.total) * 100)}%</td></tr>
+      <tr><th scope="row">No internal links at all, ${n(gsc.internal.partition.zeroPages)} pages</th><td class="num bad">${n(gsc.internal.partition.zero)}</td><td class="num bad">${Math.round((gsc.internal.partition.zero / gsc.internal.partition.total) * 100)}%</td></tr>
+    </tbody>
+  </table></div>
+
+  <p><b>Google's export independently confirms the method.</b> Sixty-three pages sit in a tight band between about 1,380 and 1,500 internal links. That band is the mega-menu, measured by a different crawler with no knowledge of this analysis, and it is exactly the boilerplate this report separates out. It also confirms the two counts are not in conflict: <code>ap-computer-science-principles-full-practice-exam-70-mcq</code> has 1,483 internal links by Google's count and zero by this one, and both are correct.</p>
+
+  <h3>Pages that earn, with no internal links at all</h3>
+  <p class="lede">These rank, so they are indexed for certain, which makes a zero here a real zero rather than a page Google has not got to. This is the list the linking pass should reach first.</p>
+  <div class="tbl-wrap"><table>
+    <caption><b>Zero internal links, real search traffic</b>${n(gsc.internal.partition.zeroPages)} pages carry ${n(gsc.internal.partition.zero)} clicks between them.</caption>
+    <thead><tr><th>Page</th><th class="num">Clicks</th><th class="num">Impressions</th></tr></thead>
+    <tbody>${gsc.internal.zeroLinked.slice(0, 14).map((x) => `<tr>
+      <th scope="row"><code>${e(x.path)}</code></th>
+      <td class="num">${n(x.clicks)}</td><td class="num muted">${n(x.impr)}</td></tr>`).join('\n')}</tbody>
+  </table></div>
+
+  <p>The two at the top, <code>ap-csp-written-response-guide</code> and <code>ap-csp-create-task-guide</code>, draw 91,861 impressions between them from no internal links whatsoever. Neither appeared in the contested-URL list, because nothing in the crawl suggested they mattered.</p>
 
   <div class="tbl-wrap"><table>
     <caption><b>Orphaned pages that earn search traffic</b>Zero inbound content links, ranked by clicks over 16 months.</caption>
