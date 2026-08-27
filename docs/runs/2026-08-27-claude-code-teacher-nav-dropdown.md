@@ -39,8 +39,10 @@ The classifier decided "this is a student" on the bare presence of a string at
    is gone, and reads as a student from then on.
 2. **Expired token.** Presence, not validity. A student JWT six months dead,
    which the API 401s, still hid the door.
-3. **Truthy junk.** `setItem` coerces, so a sign-out path storing an undefined
-   value leaves the string `"null"`, which is truthy.
+3. **Truthy junk.** `setItem` coerces, so a path storing an undefined value
+   leaves the string `"null"`, which is truthy. NOTE, see Corrections below:
+   this one was reasoned about, not observed. Every sign-out path in both repos
+   uses `removeItem`. Do not treat it as an established property of the system.
 
 That is the "sometimes": it appears roughly a month after a teacher last signed
 in, only on browsers carrying both tokens, so it never reproduced on demand.
