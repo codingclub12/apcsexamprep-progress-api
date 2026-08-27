@@ -135,18 +135,51 @@ lives in a zip gets rebuilt from memory by the next session.
   `APCYBER-ACTIVITY-NAV-*`. Exercise, lab and quiz pages use those. Lesson pages
   use `APCYBER-LESSON-NAV-*`. Either is accepted now.
 
+## Imported and verified live
+
+Imported 2026-08-27. `updated_at` moved to `2026-08-27T11:38:26-05:00`. Verified
+against `https://www.apcsexamprep.com/pages/ap-cybersecurity-unit-1-social-engineering.json`
+and against the rendered storefront page, not against the sheet.
+
+`ced_audit.py` on the LIVE body returns exactly what the sheet predicted:
+off-CED 60, wrong-unit 30, and no MISSING EK line at all. 48 of 48 post-import
+assertions pass: tag balance with comments stripped, zero DOM nesting errors,
+all ten CFU widgets with their buttons and feedback blocks, every matching pair
+resolving in both directions, every sort card naming a real bucket, every cloze
+answer in its word bank, all eight `#atk-*` anchors existing, all eight EKs
+cited, the enrichment banner present, the sticky rail and grading script and
+lesson nav intact, no March 2026 anywhere, and the exit ticket rendering once
+instead of twice. The rendered page returns 200 and contains none of Cialdini,
+"Attack Types In Depth" or March 2026.
+
+### Shopify normalises the body on save, in two ways
+
+The stored body is 556 bytes shorter than the sheet, which looks alarming and is
+not. Normalising both sides for it leaves a 31 byte difference, and that is the
+second normalisation:
+
+- **HTML entities are decoded to characters.** `&#9733;` is stored as a star,
+  `&bull;` as a bullet, `&ldquo;` as a left quote. This does not undermine the
+  pure-ASCII authoring rule; it vindicates the reason for it. The rule protects
+  the transport, which is where the 2026-08-07 mojibake incident happened. The
+  decode itself is clean: zero double-encoded sequences in the live body, and
+  the stored non-ASCII inventory is exactly the expected set (smart quotes,
+  em-dashes in preserved copy, bullets, the nav arrows, and the six zero-width
+  spaces that are the six cloze blanks).
+- **A newline is inserted** after a block element that opens directly onto an
+  inline child, so `<div class="atk-desc"><strong>` comes back as
+  `<div class="atk-desc">` newline `<strong>`.
+
+Neither changes rendering. Both are worth knowing before WO-4 through WO-8,
+because a byte comparison against the sheet will always "fail" and the check
+that means something is a comparison after entity normalisation.
+
 ## Still open
 
-- **The sheet is not imported.** It is a one-row MERGE sheet, generated, not
-  committed, because `out/` is git-ignored on purpose. Rebuild it with
-  `node scripts/cyber-u1-topic11-ced-csv.js out/wo3-topic11.csv`, import once in
-  MERGE mode, then re-fetch
-  `https://www.apcsexamprep.com/pages/ap-cybersecurity-unit-1-social-engineering.json`
-  and re-run `ced_audit.py`. Expect about 30 seconds of CDN lag.
 - **WO-2's lab sheet is still unimported**, from the previous session.
-- **The theme auto-reverts button and title colors on save.** Re-verify the
-  rebuilt CFU submit buttons against the live page after the import, not against
-  the sheet.
+- **The theme auto-reverts button and title colors on save.** The `.cfu-submit`
+  background rule survived this import intact, so it did not bite here, but it
+  is still worth a human eye on the live page before the next one.
 - **The 1.1 exercises and lab still use the old framing** in places the audit
   counts as low. They are downstream of this page and worth a re-read once this
   lands.

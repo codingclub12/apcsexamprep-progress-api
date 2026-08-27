@@ -19,12 +19,35 @@ Cybersecurity framework PDF; it is not the CED.
 ## Usage
 
 ```
-./fetch_pages.sh ./pages           # pull all 23 Unit 1 page bodies as JSON
-python3 ced_audit.py ./pages       # off-CED / wrong-unit / missing-EK report
-python3 validate_csv.py out.csv    # pre-import gate; exit 1 means DO NOT import
+./fetch_pages.sh ./pages                    # pull all 23 Unit 1 page bodies as JSON
+python3 ced_audit.py ./pages                # off-CED / wrong-unit / missing-EK report
+python3 validate_csv.py out.csv             # pre-import gate; exit 1 means DO NOT import
+#   ... a human imports the sheet via Matrixify ...
+python3 verify_import.py out.csv            # post-import gate; exit 1 means it did NOT land
 ```
 
-`fetch_pages.sh` needs the `www` subdomain. Non-www is blocked by Cloudflare.
+`fetch_pages.sh` needs the `www` subdomain. Non-www is blocked by Cloudflare, and
+so is a request without a browser User-Agent.
+
+## Do not verify an import with a byte comparison
+
+Shopify normalises a page body when it stores it, and the stored body will never
+equal the sheet. On the WO-3 Topic 1.1 import the live body came back **556 bytes
+shorter** than what was sent, and nothing was wrong:
+
+- **HTML entities are decoded.** `&#9733;` is stored as a star, `&bull;` as a
+  bullet. Entities are longer than the characters they encode, so the body
+  shrinks. This does not retire the pure-ASCII authoring rule: that rule protects
+  the transport, which is where the 2026-08-07 double-encoding incident happened.
+  A clean entity decoded into a clean character on the far side is the rule
+  working.
+- **A newline is inserted** between a block element and an inline child opening
+  directly after it, so `<div class="x"><strong>` comes back with a newline
+  between the two.
+
+`verify_import.py` normalises both, then requires equality, so a difference that
+survives is real. It also parses the result for nesting errors rather than
+counting tags, because tag arithmetic is what missed the original defect.
 
 ## Reading the audit
 

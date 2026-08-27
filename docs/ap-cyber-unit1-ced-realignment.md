@@ -1,7 +1,7 @@
 # AP Cybersecurity Unit 1: CED realignment
 
-**Status:** 3 of 8 work orders complete. WO-3 built and gated 2026-08-27,
-awaiting import.
+**Status:** 3 of 8 work orders complete. WO-3 imported and verified live
+2026-08-27.
 **Source of truth:** the AP Cybersecurity Course and Exam Description effective
 Fall 2026. Not this file, and not the older AP Cybersecurity framework PDF,
 which is a different document. `tools/ap-cyber-ced/CED-UNIT1-EXTRACT.txt` is a
@@ -138,7 +138,7 @@ Off-CED is an exact-match count. Measured 2026-08-27 with
 | Topic | Handle | Page ID | Off-CED | Wrong-unit | Status |
 |---|---|---|---|---|---|
 | hub | ap-cybersecurity-unit-1-introduction-to-security | 130318827735 | 5 | | WO-8 |
-| 1.1 | ap-cybersecurity-unit-1-social-engineering | 132111237335 | 218 -> 60\* | 73 -> 30\* | **WO-3 built** |
+| 1.1 | ap-cybersecurity-unit-1-social-engineering | 132111237335 | 218 -> 60\* | 73 -> 30\* | done, live |
 | 1.1 | ap-cyber-unit-1-lesson-1-exercise-1 | 131898998999 | 3 | | low |
 | 1.1 | ap-cyber-unit-1-lesson-1-exercise-2 | 131899031767 | 72 -> 18\* | 2\* | done |
 | 1.1 | ap-cyber-unit-1-lesson-1-lab | 132187422935 | 37 -> 3\* | 10 -> 2\* | done, CSV not imported |
@@ -177,7 +177,7 @@ tell teaching from disclaiming.
   four email specimens, swapped the tactic dropdown from the Unit 2 six-option
   list to intimidation/urgency/both/neither, rekeyed all four, rewrote a false
   exam tip. Reference implementation for surgical repair that preserves content.
-- **WO-3, Topic 1.1 lesson.** Built and gated 2026-08-27, awaiting import. See
+- **WO-3, Topic 1.1 lesson.** Imported and verified live 2026-08-27. See
   `docs/runs/2026-08-27-claude-code-cyber-u1-wo3.md`. Regenerate the sheet with
   `node scripts/cyber-u1-topic11-ced-csv.js out/wo3-topic11.csv`.
 - **WO-4, Topic 1.2 lesson.** New authored content, not a sweep. 176 off-CED:
