@@ -64,7 +64,8 @@ was asked for, but fixing one without the other would have been half a job.
 
 ## What shipped
 
-Theme PR: https://github.com/codingclub12/APCSExamPrep-theme/pull/88 (draft)
+Theme PR: https://github.com/codingclub12/APCSExamPrep-theme/pull/88, merged
+2026-08-27T21:45:41Z into the connected branch, so it is live.
 
 - The teacher check reads `localStorage` and nothing else, so it runs first and
   short-circuits. A signed-in teacher skips the student call entirely: one fewer
@@ -95,9 +96,54 @@ adds no network call, since a network call is what caused defect 1.
 That red run is the artifact that matters. A guard that has never failed is not
 known to be a guard.
 
-Not yet evidence: the storefront itself. The PR is a draft and the base is the
-connected branch, so merging is the deploy. Verify against the Shopify Admin API
-afterwards, never against GitHub.
+### The deploy, verified against Shopify rather than GitHub
+
+Merged into the connected branch at 21:45:41Z. A merged pull request is not
+evidence, so both ends were checked.
+
+Shopify Admin API, the published (MAIN) theme:
+
+```
+name      APCSExamPrep-theme/claude/site-linking-audit-yh...
+file      snippets/apcs-entitlement.liquid
+updatedAt 2026-08-27T21:45:46Z          (5s after the merge)
+size      8925
+```
+
+That also re-confirms the published theme is still the connected branch and not
+`main`, which is the thing this repo keeps getting wrong.
+
+Stronger than `updatedAt`, because it is what a visitor actually receives: the
+gate was pulled back out of the live page and re-run through the same 17-case
+table. All 17 correct, including the two that used to fail:
+
+```
+curl -sSL https://www.apcsexamprep.com/pages/ap-csa-unit-3-class-creation-study-guide
+
+ADS OFF  teacher + student token, SLOW API (3s)
+ADS OFF  teacher + student token, API HANGS
+ADS ON   EXPIRED teacher token
+ADS ON   non-JWT garbage
+```
+
+The live page carries `apcsTeacherIsSignedIn` and `isLiveTeacherToken`, and the
+only remaining `Promise.all` in the gate is inside a comment describing the old
+code.
+
+## A process trap worth knowing about
+
+This correction landed as a SECOND pull request, and the reason is worth
+recording. PR #375 carrying this note was merged about 90 seconds before the
+follow-up commit was pushed to the same branch. A merged pull request cannot
+track new work, so that push sat on a branch nothing was watching: it was never
+in `main`, and it never got CI either, because `tests.yml` fires on
+`pull_request` (impossible once the PR is closed) and on `push` only for
+`main`.
+
+The missing CI run was misread at the time as GitHub failing to deliver a
+webhook, and that was wrong. Both facts had one cause. If a push to a PR branch
+produces no run at all while Actions is visibly healthy on other branches, check
+whether the PR is still open before blaming the webhook.
 
 ## Still open
 
