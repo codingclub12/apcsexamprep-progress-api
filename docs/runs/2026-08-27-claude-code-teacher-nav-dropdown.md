@@ -205,42 +205,46 @@ test, both want a second look. Not built.
 `Authorization: Bearer null` at `/api/teacher/classes` on every page view. Only
 reachable if some path writes that string; none observed. Noted, not chased.
 
-## Deploy: what is live, and what is not
+## Deploy: SHIPPED and verified
 
-**PR #85 merged at 2026-08-27T11:13Z and is LIVE** on the connected branch
-(`claude/site-linking-audit-yhufjk`, head `e46780c`).
+Both theme PRs are merged into the connected branch
+(`claude/site-linking-audit-yhufjk`) and live on the storefront.
 
-So the reported bug IS fixed on the storefront: the role gate is gone and both
-auth doors show for every visitor.
+- **#85** merged 2026-08-27T11:13Z. Deleted the role gate. This is the fix.
+- **#86** merged 2026-08-27T18:21Z, head `85b6a18`. Reverted the dead classifier
+  hardening, rebuilt the guard, added CI.
 
-The code review that produced the corrections in this note finished AFTER that
-merge, so what is live also includes two things this note argues against:
+**Verified against Shopify, not GitHub**, per CONVENTIONS.md. Admin API on the
+MAIN theme (`gid://shopify/OnlineStoreTheme/163294281943`, named for the
+connected branch):
 
-- the hardened role classifier, which is dead code (zero readers) and carries
-  three bugs of its own (`payload()` accepting non-objects, `expired()` failing
-  open on a missing or string-typed `exp`, the `catch` dereferencing a variable
-  declared outside its `try`);
-- the first version of the guard, which passes on eleven mutations including a
-  verbatim reinstatement of the deleted rule reformatted across lines.
+```
+snippets/apcs-nav-source.liquid
+  size          77782
+  updatedAt     2026-08-27T18:21:55Z     (3s after the #86 merge)
+  checksumMd5   f946008a63eb594a640bf6887a82f921
+```
 
-Neither breaks the fix. The classifier's output is read by nothing, and the weak
-guard is a missing safety net rather than a live fault. But the guard being weak
-matters, because this repo deploys on commit and that script is what a future
-session will trust.
+`git show origin/claude/site-linking-audit-yhufjk:snippets/apcs-nav-source.liquid`
+hashes to the same md5 at the same size, so the storefront is serving the merged
+file byte for byte. A merged PR is not evidence; this is.
 
-**Follow-up: https://github.com/codingclub12/APCSExamPrep-theme/pull/86 (draft)**
-reverts the hardening, rebuilds the guard, and adds
-`.github/workflows/verify-nav.yml` so it runs on every push and pull request.
-Net 210 insertions, 257 deletions. Base is the connected branch, so merging it
-deploys. Verify against the live URL, not GitHub.
+State of the live branch, checked directly:
 
-Run note PR: https://github.com/codingclub12/apcsexamprep-progress-api/pull/366
+- no active `html.apcs-is-student` rule (the gate is gone, both doors show)
+- no `function payload(tok)` (the hardening is gone, classifier is its original
+  twelve lines)
+- `.github/workflows/verify-nav.yml` present
+- `node scripts/verify-nav-role-classifier.js` against the live branch content:
+  118 CSS sources, 4855 rules, exit 0
 
-One visual check worth doing, not possible from this container: between roughly
+One visual check remains, not possible from this container: between roughly
 901px and 1200px the nav bar carries logo + six top-level items + Teachers +
 Students + cart in a `max-width: 1200px` flex row with no wrap. Anon and teacher
-visitors already carried both doors, so if it overflows it overflowed before this
-change; students are simply now in the same population.
+visitors already carried both doors before this change, so if it overflows it
+overflowed already; students are simply now in the same population.
+
+Run note PR: https://github.com/codingclub12/apcsexamprep-progress-api/pull/366
 
 ## Process note, for the next session
 
@@ -248,13 +252,18 @@ Two failures here are worth remembering, because neither was caught by testing:
 
 1. **A justification was asserted instead of checked.** "Off-repo page bodies may
    read these classes" was one grep away from being settled, and it was false.
-   Roughly 90 lines of sitewide JavaScript were kept alive by it, and they are
-   live right now. When a hedge is load-bearing, check it before building on it.
+   Roughly 90 lines of sitewide JavaScript were kept alive by it, and they went
+   live in #85 before the review caught it. When a hedge is load-bearing, check
+   it before building on it.
 2. **A guard was trusted because it was green.** The first version passed on the
    exact bug it existed to prevent, and its passing output read as a strong
    claim. Mutation-test a new guard against the thing it guards, in the
    formatting the surrounding file actually uses, before writing "mutation
    checked" anywhere.
+
+A third, about sequencing: #85 merged while a code review of it was still
+running, so its corrections needed a second PR and the dead code was live for
+seven hours. Nothing was harmed, but the review wanted to finish first.
 
 And one on the ledger: this work was done with no board task and no
 `(repo, file)` lock on `theme:snippets/apcs-nav-source.liquid`, against the rule
