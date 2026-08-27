@@ -108,12 +108,54 @@ bad-key error, because the fix is to widen the manifest deliberately.
   wrong if the manifest registry had not taken effect, so they are the ones
   worth reading.
 
+## The conversion, and the four runs it took
+
+Written up here because the log line that exposed it is the only thing that did.
+
+- **Run 1: `ReferenceError: Drive is not defined`, all 70 failed.** The
+  Advanced Drive Service was not enabled, and `DriveApp` cannot convert a
+  `.pptx`. The Logger said only "converted 0, failed 70"; the actual error was
+  in the sheet's status column. PR #376 adds `preflight_()`, which throws with
+  the enabling steps before a folder, a sheet or 70 rows of identical errors
+  exist, plus `clearStaleRows_()` so a failed run does not poison the resume.
+- **Runs 2, 3 and 4 each converted all 70 again.** About 209 Google Slides
+  files where 70 were wanted, roughly three copies of each deck, confirmed in
+  Drive at 21:52, 22:01 and 22:07 by identical sizes. Nothing errored. The only
+  symptom was one line:
+
+  ```
+  work list: 70 deck(s) to convert, 70 already done, 70 total
+  ```
+
+  which cannot be true at once. Every lesson id in Units 1 and 2 is also a
+  valid month-day, all nine of them, so Sheets parsed `'1-1'` on write and
+  `getValues()` handed back a Date. The resume key became
+  `Thu Jan 01 2026 00:00:00 GMT-0500 (EST)|1|STUDENT` and matched nothing.
+  PR #381 formats column A as plain text so a new sheet never coerces, and
+  `normLesson_` recovers the id from a Date so an already-written sheet
+  resumes rather than having to be discarded.
+- **CSP was not affected.** `config/csp-slide-embeds.js` holds 224 ids and 224
+  unique ids, and the generator refuses duplicate deck slots, so it could not
+  have written that file from a coerced sheet. Checked rather than assumed,
+  because CSP lesson ids have the same shape.
+- **Recovery.** The `AP Cyber Slides (converted)` folder was moved to Drive
+  trash, taking the poisoned sheet and all ~209 copies with it. `outputFolder_`
+  resolves by name via `getFoldersByName`, which excludes trashed items, so the
+  next run creates a fresh folder and a fresh sheet. `start()` clears its own
+  continuation triggers on completion, so nothing was queued behind it.
+
+Nothing incorrect could have reached the site in the meantime:
+`scripts/cyber-slide-embeds-from-csv.js` refuses a sheet with duplicate deck
+slots outright. That guard was written for a different scenario, a shared id
+across variants, and caught this one for free.
+
 ## Still open
 
-- **The conversion has not run.** 70 decks are still `.pptx` in Drive, so
-  `config/cyber-slide-embeds.js` is empty and every cyber lesson currently
-  reports zero decks to an entitled teacher. That is a working state by design,
-  and it is why the pending branch exists.
+- **The conversion is being re-run** from a clean folder with the PR #381
+  script. Until it lands and the generator writes
+  `config/cyber-slide-embeds.js`, every cyber lesson reports zero decks to an
+  entitled teacher. That is a working state by design, and it is what the
+  pending branch renders.
 - **No screenshots yet**, at either width. The CSP build found two real defects
   that passed every DOM assertion and were only visible in a picture. Nothing
   here has been photographed, because there is nothing to photograph until
@@ -173,3 +215,25 @@ and what actually shipped are exactly the two things that silently diverge.
 **Commit the handover script.** The CSP Apps Script was pasted into a chat and
 is gone, so this one was rewritten from its description. `scripts/
 cyber-slides-conversion.gs` is in the repo, and its enumeration has a suite.
+
+**An impossible log line is worth more than a correct one.** "70 to convert, 70
+already done, 70 total" is self-contradictory, and it was the entire diagnosis.
+That line exists because a pasted CSP log once claimed a completion whose
+timestamps could not have been real, and it was added so such a log would be
+checkable. It earned its place a second time on a bug nobody anticipated. When
+a run has a resume step, print both sides of the comparison, not the verdict.
+
+**A spreadsheet is a typed store pretending not to be one.** `appendRow('1-1')`
+does not store `'1-1'`. Every id in scope here happened to be a valid month-day,
+so the coercion was total rather than partial, which is the only reason it was
+ever noticed; one id in nine converting would have looked like a flake. Any key
+that round-trips through Sheets needs the column formatted as text on write AND
+a normaliser on read, because the first protects new sheets and only the second
+rescues the ones already written.
+
+**A guard built for one scenario is worth checking against the new one.** The
+generator's duplicate-slot refusal was written for a shared id across variants.
+It is the reason a triple-converted sheet could not produce a config, so the
+blast radius of four bad runs was some wasted Drive quota and no site impact.
+Worth asking, after any incident, which existing guard held and why, because
+that is what tells you where the next one should go.
