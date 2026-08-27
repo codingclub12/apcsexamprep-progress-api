@@ -92,26 +92,43 @@ All 130 offline suites pass, run the way `tests.yml` runs them.
 
 ## What is still open
 
-**The fix is not live.** `shopify/cyber-dashboard.html` reaches the storefront
-as a Matrixify Pages import, and the import is a human step. The sheet builds
-clean from this branch:
+**The fix is merged and the API is deployed, but the page is not.** The Railway
+deploy needed a manual redeploy (see below) and now serves `6f9b051`. That ships
+the API and nothing else: `server.js` only serves from `public/`, so
+`shopify/cyber-dashboard.html` reaches the storefront ONLY through a Matrixify
+Pages import, which is a human step. Confirmed against the live page after the
+deploy: `permanently deletes their progress` is still there and none of the fix
+markers are.
+
+The sheet was generated with a real live dump, pulled from the Admin API:
 
 ```
-node scripts/page-body-csv.js out.csv --only cyber-dashboard --live <pages.json>
+node scripts/page-body-csv.js out.csv --only cyber-dashboard --live pages.json
 ```
 
-It was generated here WITHOUT `--live`, which means checks 1, 2 and 5 (handle
-and title match, no-op drop, and the content-loss guard) did not run against
-reality. Pull a live pages dump and regenerate before importing.
+All five guards passed, including the content-loss check. Worth recording why
+that check was clean: the live body and the repo mirror differed by exactly four
+lines before the fix, and all four are entity decodings Shopify does on store
+(`&#9662;` to the character, `&ndash;` to the dash), which is the behaviour the
+script's own header documents. The mirror was otherwise byte-identical to live,
+so the import changes this fix and nothing else. If a future sheet shows any
+OTHER difference, somebody edited the live page by hand and the import would
+clobber it.
 
 **Only the cyber dashboard was fixed.** `/pages/cyber-dashboard` is the teacher
 dashboard for every course, so this covers the reported case, but the same
 `active`-blind pattern is worth a look anywhere else a roster is rendered.
 
-**`TODO_KEY` is set on this session's environment.** CLAUDE.md says it should
-not be: it can WRITE to the ledger, and belongs in Railway and the Actions
-secret only. `COMMAND_READ_TOKEN` is also set, which is the one that should be.
-Not touched from here, flagged for Tanner.
+**Railway deploys were stalled for about ten hours, and the safety net hid it.**
+Board task #133. `/api/health` was serving `b7a31f8` (PR #364, 00:39 UTC) while
+main had moved twice; PR #365 merged at 01:09 UTC and never deployed. Three
+things lined up: Railway's GitHub integration stalled, `deploy-drift.yml`
+correctly alarmed at 05:18 UTC into an empty room, and `railway-deploy.yml`,
+written to auto-fix exactly this, reported GREEN in eleven seconds with its
+`Install the Railway CLI`, `Deploy` and `Confirm the new commit is serving`
+steps all SKIPPED, because `RAILWAY_TOKEN` was never set. Tanner cleared it with
+a manual redeploy. The cause stands: until the token and `RAILWAY_SERVICE` exist,
+every merge will keep showing a green deploy check that deployed nothing.
 
 ## What this taught
 
