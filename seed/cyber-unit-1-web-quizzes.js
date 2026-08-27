@@ -31,6 +31,19 @@
 //  needed fixing was that the page shipped its own answer key in the body
 //  (ANSWERS={1:'C',...}), which server scoring removes.
 //
+//  1.1 and 1.2 were authored for the web on 2026-08-27, replacing the banks that
+//  had been transcribed from the bundle a day earlier.
+//
+//  1.4 and 1.5 were authored on 2026-08-27 and had no server bank before. 1.4 had
+//  no online quiz at all: the page the unit nav offers as the 1.4 quiz is a second
+//  copy of 1.3, and serves wireless questions under a 1.4 title. 1.5 did have one,
+//  and it asked about SIEM versus IDS products and adversarial machine learning.
+//  Both are real subjects and neither is in Topic 1.5, so a five-item quiz spent
+//  its whole length outside the framework it was supposed to assess.
+//
+//  So all five lessons now hold a five-item, framework-anchored, web-authored
+//  pool, and no bundle question appears in any of them.
+//
 //  Options are stored in their authored order. routes/quiz.js reshuffles them per
 //  render, so the stored order is never what a student sees and a patterned key
 //  cannot exist here.
@@ -232,6 +245,138 @@ const L13 = [
   },
 ];
 
+// -- Lesson 1.4, AI-Based Cybersecurity Attacks --------------------------------
+//    Authored for the web 2026-08-27. Shares no question with the bundle's
+//    24-item Quiz_KEY.docx; covers EK 1.4.A.1, A.2, A.3, A.6, B.1, B.2 and B.4.
+//
+//    A.4 (training-data poisoning) and A.5 (AI reconnaissance) are the two
+//    attack EKs this five-item pool does not reach. Named here rather than left
+//    to be rediscovered: they are the first candidates if the pool ever grows.
+const L14 = [
+  {
+    prompt: 'A finance clerk takes a phone call. The voice is unmistakably their director: same accent, same speech rhythm, same habit of clearing his throat before a sentence. The caller asks for a supplier payment to be released before the end of the day. The director is on a flight and made no such call. Investigators note that the director records a public webinar every month. What made this attack possible?',
+    options: [
+      'Recorded public audio of the director was used to build an AI voice model that impersonates him on a live call',
+      'The phone line was flooded with a strong electromagnetic signal that distorted the real voice',
+      'The director password was guessed from personal details he had posted publicly',
+      'The call was routed through a rogue wireless access point that rewrote the audio in transit',
+    ],
+    correct_index: 0,
+    explanation: 'EK 1.4.A.1 says adversaries can use AI tools that leverage existing voice and image samples to create a digital avatar impersonating someone over the phone or on a video call, and that this can lead to financial loss. A monthly public webinar is a standing supply of exactly the samples such a tool needs. The other options name a jamming attack, a password attack and a wireless attack, none of which produces a convincing imitation of one specific person voice.',
+  },
+  {
+    prompt: 'A company has trained its staff with a single rule for years: genuine messages from the bank are written properly, so clumsy grammar and odd phrasing are the giveaway. Over the past year that rule has stopped catching anything, and two staff have been caught out by messages that read perfectly. What best explains why the rule stopped working?',
+    options: [
+      'Encrypted web traffic now prevents mail filters from reading the content of any message',
+      'Banks have started having their customer messages written by overseas contractors',
+      'Adversaries can now generate messages in any language that read as though a native speaker wrote them',
+      'Mail providers silently correct the grammar of every message before delivering it',
+    ],
+    correct_index: 2,
+    explanation: 'EK 1.4.A.2 says adversaries can use generative AI tools such as large language models to craft convincing phishing messages in any target language that read as though written by a native speaker. Awkward language was never the defect itself, only a side effect of who was writing; once the writing is automated the tell disappears and a rule built on it stops detecting anything. The other options invent mechanisms the framework does not describe.',
+  },
+  {
+    prompt: 'A developer pastes an internal access key into a free public chatbot while asking it to help debug a script. Months later a researcher demonstrates that carefully worded prompts can make that same chatbot reproduce fragments of text it absorbed while being trained. Taken together, what do these two events demonstrate about tools of this kind?',
+    options: [
+      'The tool encrypts every prompt to its operator, so only the operator could ever read the key',
+      'Some tools feed user input back into the model, and a crafted prompt can draw that information back out',
+      'The tool refuses to retain anything a user considers confidential, so the key was never stored',
+      'The tool converts pasted text into a form that no later prompt can recover',
+    ],
+    correct_index: 1,
+    explanation: 'Two Essential Knowledge statements meet here. EK 1.4.B.3 warns that personal or sensitive data should not be entered into AI-powered tools because some feed user input back into the model for continuous training, and EK 1.4.A.3 explains that adversaries can craft prompts to extract secure or sensitive information from a large language model, drawn from user input and from the data sets used to train it. The paste is the deposit and the crafted prompt is the withdrawal.',
+  },
+  {
+    prompt: 'An incident review finds that the person behind a new piece of malware had never written a program before this year. They used an AI coding assistant to produce the malware, and to comb a large open-source project for weaknesses worth targeting. What is the significance of this for defenders?',
+    options: [
+      'The malware will be straightforward to detect, because assistants of this kind can only reproduce well-known code',
+      'Nothing changes for defenders, because writing effective malware has never required much skill',
+      'Only open-source projects are exposed, since coding assistants cannot reason about code they were not shown',
+      'Both the skill and the time an effective attack requires have fallen, so a capable attack no longer implies a capable attacker',
+    ],
+    correct_index: 3,
+    explanation: 'EK 1.4.A.6 says adversaries can use AI-enhanced coding tools to help write new malware, to modify existing application code to perform malicious activities, and to find vulnerabilities in large code bases. The consequence worth teaching is the one in the stem: capability and authorship have come apart, so defenders can no longer infer a sophisticated adversary from a sophisticated attack. The other options either understate the tooling or misdescribe what it can read.',
+  },
+  {
+    prompt: 'A family wants to protect itself against phone calls that use a cloned voice. They consider three habits. I. Agree on a private word known only to the family, and ask for it during any urgent request for money. II. Turn on a second authentication step for their accounts, so that a matching voice alone cannot unlock one. III. When a caller sounds suspicious, describe the call to a different chatbot and act on whether it says the story sounds like a known scam. Which of these are recommended protections?',
+    options: [
+      'Habits I and II only',
+      'Habit I only',
+      'Habits II and III only',
+      'Habits I, II and III',
+    ],
+    correct_index: 0,
+    explanation: 'Habit I is EK 1.4.B.1, a shared secret word or phrase known only to two parties, used to authenticate identity in high-stakes situations: a cloned voice cannot supply a word it was never told. Habit II is EK 1.4.B.2, multifactor authentication, which can stop an adversary who has defeated voice authentication. Habit III fails EK 1.4.B.4, which directs that AI output be verified against reputable, stable, non-AI-based sources rather than against another AI tool, and it also feeds the details of a live incident into a public tool, against EK 1.4.B.3.',
+  },
+];
+
+// -- Lesson 1.5, Leveraging AI in Cyber Defense --------------------------------
+//    Authored for the web 2026-08-27. Shares no question with the bundle's
+//    10-item Quiz_KEY.docx, and replaces the client-side quiz that was live on
+//    ap-cybersecurity-unit-1-ai-cyber-defense-quiz, which asked about SIEM
+//    versus IDS products and adversarial machine learning. Both are real
+//    subjects and neither is in this topic: the framework here is narrower, and
+//    a five-item quiz that spends its items outside the framework leaves the
+//    graded content untested. Covers every 1.5 EK: A.1, A.2, A.3, B.1, B.2, B.3
+//    and B.4.
+const L15 = [
+  {
+    prompt: 'An AI tool reviews a company firewall rules and access-control lists and returns a set of proposed changes it reports will tighten the network. The security lead is short of time and the proposals look reasonable. What does recommended practice say should happen next?',
+    options: [
+      'Apply the changes at once, since the tool examined the entire configuration rather than a sample',
+      'Discard the proposals, because tools of this kind are not permitted to inspect firewall rules',
+      'Have a knowledgeable security technician check the proposed changes before any of them are implemented',
+      'Pass the proposals to the software development team to implement exactly as written',
+    ],
+    correct_index: 2,
+    explanation: 'EK 1.5.A.1 says AI-powered tools can review current security configurations such as firewall rules and access controls and recommend more secure options, and that those recommendations should always be checked by a knowledgeable security technician before being implemented. The review is the useful part; the human check is what keeps a confident but context-blind suggestion from weakening the network it was meant to harden.',
+  },
+  {
+    prompt: 'Before a school club sign-up application goes live, an AI tool analyses its source code and reports several places where text typed by a student is passed straight into a database request. It also supplies rewritten code that checks and cleans that input first. What should the team do with the rewritten code?',
+    options: [
+      'Push it to the live site immediately, so that the weakness is closed as quickly as possible',
+      'Cancel the launch, because a tool found weaknesses in the application',
+      'Grant the AI tool permission to commit and deploy the change itself',
+      'Have a knowledgeable programmer review the proposed change and update the code before it moves on',
+    ],
+    correct_index: 3,
+    explanation: 'EK 1.5.A.2 says AI-powered tools can analyze application code to identify vulnerabilities, and that recommendations for code mitigations should always be reviewed by a knowledgeable programmer before being implemented. Cancelling the launch treats a fixable finding as a failure, which is the opposite of why the analysis was run, and handing deployment to the tool removes the review the framework requires.',
+  },
+  {
+    prompt: 'A university network records roughly forty million events in a day: sign-ins, file accesses, and connections between machines. A small number of them belong to an intruder. The security team has six analysts. Why do teams in this position turn to AI-powered tools?',
+    options: [
+      'The tools reduce how many events the network generates, bringing the daily total within reach of six analysts',
+      'No person can review forty million records with care, so the tools are trained to pick out the activity likely to be malicious and set the rest aside',
+      'The tools remove the need for analysts, so the six can be reassigned to other work',
+      'The tools encrypt each event so that an intruder cannot read the record of their own activity',
+    ],
+    correct_index: 1,
+    explanation: 'EK 1.5.B.1 establishes the problem, that humans cannot carefully examine the millions of daily digital events to find the malicious ones, and EK 1.5.B.2 gives the response, that AI-powered tools can be trained to quickly analyze those events and sort the likely-malicious from the harmless. Note what the tool does not do: it triages the events, it does not reduce how many occur, and it does not remove the analysts it exists to prioritise work for.',
+  },
+  {
+    prompt: 'At 03:14 an AI-powered monitoring system flags a pattern of activity it judges to be an intruder moving between servers. What is a system of this kind able to do at that moment, and why does it matter?',
+    options: [
+      'It can alert on-call staff or take a defined corrective action itself, so a response can begin before the damage spreads',
+      'It can only write the pattern to a log to be read at the next scheduled audit',
+      'It must wait for a human analyst to be present before it is permitted to record anything at all',
+      'It can only shut down the entire network, which is its single available response',
+    ],
+    correct_index: 0,
+    explanation: 'EK 1.5.B.3 says AI-powered tools can be programmed to alert human cybersecurity personnel when likely malicious activity is detected, or to take specific corrective actions based on the type of activity. EK 1.5.B.4 gives the reason it matters: this is what lets threat-detection and response teams catch malicious activity and intervene quickly to prevent loss, harm, damage and destruction. Waiting for an audit or for an analyst to arrive gives up the speed that is the whole benefit.',
+  },
+  {
+    prompt: 'After an attempted break-in, a team feeds the attack data to an AI tool, which returns twelve new rules for their automated detection system. One engineer proposes loading all twelve tonight, so the system is ready if the attacker comes back. What is wrong with that plan?',
+    options: [
+      'Nothing is wrong, because rules derived from real attack data do not need to be reviewed',
+      'The rules belong to the firewall team, who own every rule that runs on the network',
+      'AI tools are not permitted to propose detection rules, so all twelve should be discarded',
+      'The suggested rules should be reviewed by a knowledgeable detection engineer before any of them are added',
+    ],
+    correct_index: 3,
+    explanation: 'EK 1.5.A.3 says AI-powered tools can suggest rules for automated detection systems, but that those rules should always be reviewed by a knowledgeable detection engineer before being added to a system. The urgency in the stem is the trap: a detection rule that is wrong does not fail quietly, it either floods the team with false alarms or leaves a real intrusion unflagged, and both are worse than a night spent reviewing twelve rules.',
+  },
+];
+
 function pack(lesson, questions, serve_count) {
   return {
     location: { course: COURSE, unit: UNIT, lesson, activity_type: ACTIVITY, serve_count: serve_count || 0 },
@@ -246,4 +391,6 @@ module.exports = [
   pack('1.1', L11, 0),
   pack('1.2', L12, 0),
   pack('1.3', L13, 0),
+  pack('1.4', L14, 0),
+  pack('1.5', L15, 0),
 ];
