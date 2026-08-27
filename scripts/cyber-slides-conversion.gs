@@ -86,6 +86,41 @@ var HEADER = ['lesson', 'day', 'variant', 'sourceName', 'slidesId', 'embedUrl', 
 var TIME_BUDGET_MS = 4.5 * 60 * 1000;
 
 // ---------------------------------------------------------------------------
+// Preflight
+// ---------------------------------------------------------------------------
+
+/**
+ * Fail loudly, once, if the project is not set up to convert anything.
+ *
+ * This exists because the first real run produced seventy identical rows
+ * reading "FAILED: ReferenceError: Drive is not defined". Every one of them was
+ * the same missing setup step, and the run had to be diagnosed from the sheet
+ * because the log only said "converted 0, failed 70". One clear error before
+ * any work starts is worth more than seventy after it.
+ *
+ * `Drive` is the ADVANCED Drive service, which is not enabled by default and is
+ * not the same thing as `DriveApp`. DriveApp cannot convert a .pptx to Slides
+ * at all, so there is no fallback to take: without the advanced service this
+ * script simply cannot do its job, and should say so rather than try.
+ */
+function preflight_() {
+  if (typeof Drive === 'undefined') {
+    throw new Error(
+      'The Advanced Drive Service is not enabled, so nothing can be converted.\n' +
+      'In the Apps Script editor: Services (the + beside it in the left rail),\n' +
+      'choose "Drive API", set Version to v3, leave the identifier as "Drive",\n' +
+      'then Add. Re-run preview() to confirm, then start().\n' +
+      'Note v3 specifically: this script sends "name", which v2 does not accept.');
+  }
+  if (!Drive.Files || typeof Drive.Files.copy !== 'function') {
+    throw new Error(
+      'The Advanced Drive Service is enabled but Drive.Files.copy is missing.\n' +
+      'That usually means the wrong version was added. Remove the service and\n' +
+      're-add "Drive API" at version v3.');
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Enumeration
 // ---------------------------------------------------------------------------
 
@@ -155,6 +190,7 @@ function enumerateDecks_() {
 
 /** Counts what start() would convert. Writes nothing. */
 function preview() {
+  preflight_();
   var found = enumerateDecks_();
   var byLesson = {}, byUnit = {};
 
@@ -224,6 +260,43 @@ function sheet_() {
   return ss.getActiveSheet();
 }
 
+/**
+ * Remove previous non-OK rows for the decks about to be retried.
+ *
+ * Rows were only ever appended, and alreadyDone_ tracks OK rows alone, so a
+ * failed run left its rows behind and the next attempt appended a fresh set
+ * next to them. The first real run did exactly that: seventy failures, then
+ * seventy more, one hundred and forty rows describing seventy decks. The
+ * generator survives it (a non-OK row simply is not converted) but every
+ * retry doubles the noise, and a sheet that grows on failure is a sheet
+ * nobody trusts.
+ *
+ * OK rows are never touched. Only rows for decks in this run's work list are
+ * touched, so an unrelated failure recorded earlier stays visible.
+ */
+function clearStaleRows_(sh, todo) {
+  var last = sh.getLastRow();
+  if (last < 2 || !todo.length) return 0;
+
+  var wanted = {};
+  for (var t = 0; t < todo.length; t++) {
+    wanted[todo[t].lesson + '|' + todo[t].day + '|' + todo[t].variant] = true;
+  }
+
+  var rows = sh.getRange(2, 1, last - 1, HEADER.length).getValues();
+  var removed = 0;
+  // Bottom up: deleting a row shifts everything below it, so walking upward
+  // means the indices of the rows still to inspect never move.
+  for (var i = rows.length - 1; i >= 0; i--) {
+    if (String(rows[i][6]).trim() === 'OK') continue;
+    var key = rows[i][0] + '|' + rows[i][1] + '|' + String(rows[i][2]).toUpperCase();
+    if (!wanted[key]) continue;
+    sh.deleteRow(i + 2);      // +2: one for the header, one for 1-based rows
+    removed++;
+  }
+  return removed;
+}
+
 /** lesson|day|variant -> true, for every row already recorded OK. */
 function alreadyDone_(sh) {
   var done = {};
@@ -275,6 +348,10 @@ function embedUrl_(id) {
 
 /** Convert everything not yet done, resuming automatically if time runs out. */
 function start() {
+  // Before anything is created or written. A setup failure must not leave a
+  // folder, a sheet and seventy rows of identical errors behind it.
+  preflight_();
+
   var began = new Date().getTime();
   var sh = sheet_();
   var dest = outputFolder_().getId();
@@ -290,6 +367,11 @@ function start() {
   // list line above it. That line is what makes such a log checkable.
   Logger.log('work list: ' + todo.length + ' deck(s) to convert, '
     + Object.keys(done).length + ' already done, ' + found.decks.length + ' total');
+
+  var cleared = clearStaleRows_(sh, todo);
+  if (cleared) {
+    Logger.log('cleared ' + cleared + ' row(s) from an earlier failed attempt at these decks');
+  }
 
   if (!todo.length) {
     removeTriggers_();
