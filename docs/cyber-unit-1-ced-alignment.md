@@ -81,9 +81,23 @@ one lab carries an `ANSWERS` object:
 - 1.5 lesson: `data-correct` x1
 - 1.3 lab: `ANSWERS` x2
 
-Formative rather than graded, so much lower stakes than the quizzes were, but it
-is the same class of defect as audit finding 1 and worth knowing before any of
-these are used for a grade.
+For 1.2, 1.5 and the 1.3 lab this is the view-source exposure of audit finding 1:
+formative rather than graded, so lower stakes than the quizzes were, but worth
+knowing before any of them is used for a grade.
+
+**1.1 is worse than that and should not be filed alongside them.** Its answers
+are not merely readable in the source, they are rendered on the page at load.
+The lesson has ten `cfu-feedback` blocks, each holding a verdict and a written
+explanation. Only `cfu-7` and `cfu-8` carry `style="display:none!important;"`.
+The other eight carry no inline hide, and no rule in the page stylesheet hides
+`.cfu-feedback` either: every rule that names it sets margin, padding, border or
+background and none sets `display`. So eight of the ten checks show their answer
+and their explanation before the student has read the question.
+
+This is ledger task 137, a regression from the WO-3 rewrite rather than an
+original defect, and it is owned by Tanner on the Shopify surface. Recorded here
+because this document is what the rest of the alignment work reads from, and the
+sentence it replaced understated a live leak on the free preview unit.
 
 ### EK citations are uneven
 
@@ -104,6 +118,14 @@ cannot tell from the page what an activity is meant to cover.
 - The 1.1 and 1.2 quiz page heroes advertise 9 and 12 questions while the server
   serves 5. Those counts were correct on 2026-08-26 against the bundle-derived
   banks and went stale when those were retired the next day.
+
+## What this audit did not cover
+
+The unit-level exam page, `ap-cyber-unit-1-exam`, is out of scope here: this pass
+walked the five lessons and their four activities each. That page is its own
+graded artifact, it sits at the end of the free preview unit, and ledger task 136
+reports it tests thirteen off-CED terms. Anyone reading this document for a
+complete picture of Unit 1 alignment needs that task as well as this file.
 
 ## What is already fixed
 
