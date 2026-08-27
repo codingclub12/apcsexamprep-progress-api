@@ -101,6 +101,31 @@ check('losing a whole keyword list FAILS', () => {
   assert.ok(r.fail.some((f) => f.includes('keyword list count changed')), r.fail.join('; '));
 });
 
+// ---- 3b. variable bindings are positional, not global -----------------------
+//  Found by running the gate on the Topic 1.4 lab. These pages declare a fresh
+//  `var t` inside each `if(n===N){...}` block, so one page bound `t` to
+//  s1-technique, s2-technique and s4-techniques in turn. A name-to-element map
+//  keeps only the last, which attributed `t==='spear'` to a TEXTAREA at the
+//  bottom of the page and reported two perfectly good keys as ungettable. A
+//  gate that cries wolf on a sound page is worse than no gate: it gets ignored.
+check('a name rebound in a later block does not steal an earlier comparison', () => {
+  const html = `
+    <select id="s1-tech"><option value="">-</option><option value="spear">A</option><option value="ai">B</option></select>
+    <select id="s2-tech"><option value="">-</option><option value="deep">C</option><option value="ai">D</option></select>
+    <textarea id="s4-free"></textarea>
+    <script>
+      if(n===1){ var t=document.getElementById('s1-tech').value; if(t==='spear'){pts+=2;} }
+      if(n===2){ var t=document.getElementById('s2-tech').value; if(t==='deep'){pts+=2;} }
+      if(n===4){ var t=document.getElementById('s4-free').value.trim(); }
+    </script>`;
+  const got = g.credited(html).map((k) => `${k.select}=${k.value}`);
+  assert.deepStrictEqual(got, ['s1-tech=spear', 's2-tech=deep'],
+    `attributed to the wrong elements: ${got.join(' ')}`);
+  const r = g.check(html, html);
+  assert.ok(!r.fail.some((f) => f.includes('UNGETTABLE')),
+    `reported a sound page as broken: ${r.fail.join('; ')}`);
+});
+
 // ---- 4. the known gap, recorded so nobody assumes the check is exhaustive ---
 check('KNOWN GAP: a mid-sentence teaching use with no gloss is not caught', () => {
   //  This is a limitation, not a bug. Tightening the pattern to catch it would

@@ -65,8 +65,12 @@ spell the same thing.
 - no credited answer, and no "Correct" feedback, may name a legacy term
 - point awards and score scaling unchanged
 
-`scripts/cyber-u1-l4-ex1-gate-sabotage.js`, registered as `smoke:l4ex1gate` so
-CI runs it, breaks the built output fourteen ways and asserts the gate says so.
+`scripts/cyber-exercise-gate-sabotage.js`, registered as `smoke:exsabotage` so
+CI runs it, breaks the built output and asserts the gate says so. It started as
+an Exercise 1 specific suite; once the lab arrived it was generalised to run the
+same sabotages against every committed before/after snapshot pair, because a
+gate that works on the page it was written for and not on the next one is the
+failure mode the shared module exists to prevent. 38 sabotages across 3 pages.
 
 It found a gap on its first run. The option-count check compared each select
 against its own id in the before, so a select whose id was NEW had nothing to
