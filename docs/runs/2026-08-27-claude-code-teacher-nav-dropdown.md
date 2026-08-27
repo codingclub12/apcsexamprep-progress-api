@@ -51,9 +51,15 @@ back to teacher sign in. Losing the door loses the way to fix it.
 
 ## Fix
 
-`snippets/apcs-nav-source.liquid`, role classifier. The gate now fails open:
-hide only when `apcse_token` reads as an unexpired student JWT. Expired,
-malformed, or `"null"` proves nothing, so the door stays.
+Two commits. The second is the one that settles it.
+
+**1. Token validation** (`snippets/apcs-nav-source.liquid`, role classifier).
+Stopped the wrong readings: hide only when `apcse_token` reads as an unexpired
+student JWT, so expired tokens and the `"null"` string no longer count.
+
+**2. Gate dropped** (same file, stylesheet). The rule that hid the Teachers door
+by role is removed outright. Both doors now show for everyone. See the decision
+below.
 
 Asymmetric on purpose. The teacher key stays a bare presence test, junk strings
 included. **Do not tighten it.** Adding an expiry check there re-breaks the
@@ -71,46 +77,68 @@ No signature verification. That is the API's job; the nav needs `exp` and `role`
 ## Evidence
 
 `scripts/verify-nav-role-classifier.js` in the theme repo, wired to
-`npm run verify:nav-role`. Runs the old and new rules over 13 token
-combinations and asserts no scenario moves SHOW to HIDE.
+`npm run verify:nav-role`. Two checks.
 
 ```
-13 scenarios, 5 newly reveal the door, 0 regressions
-listeners: ["storage","pageshow"] ok
-PASS: every scenario matches, and nothing that used to show is now hidden.
+check 1  no role gating: 3 classes absent from active CSS, 0 door rule(s) inspected, none hide by role
+check 2  role labels: 13 scenarios          (all pass)
+         listeners: ["storage","pageshow"] ok
+PASS: no role gating in CSS, and every role label is correct.
 ```
 
-The five that change: expired student token; `"null"`; `"undefined"`; junk that
-is not a JWT; a teacher JWT stored under the student key. The intended gate
-still fires - a live student token alone still hides the door.
+Check 1 is the one that matters now: it strips CSS comments, then asserts no
+active rule references `apcs-is-student` / `apcs-is-teacher` / `apcs-is-anon`
+and no active rule hides an auth door. Reinstating the old gate makes it exit 1
+with both the class reference and the `display:none` named. Restoring exits 0.
 
-Mutation-checked: re-adding the teacher expiry check makes the script exit 1
-with "a scenario moved SHOW -> HIDE", so the guard bites.
+Check 2 pins the published labels across 13 token combinations, including the
+one that drove the original bug: an expired teacher token plus a live student
+token must still label TEACHER. An expiry check on the teacher key makes that
+row fail, which is the guard against re-breaking it.
 
-That repo has no CI and its connected branch deploys live, so this script is
-the gate. It matches the differential style of `verify-tracker-fix.js`.
+That repo has no CI and its connected branch deploys live, so this script is the
+gate. It matches the differential style of `verify-tracker-fix.js`.
 
-## Still open, needs a decision not a patch
+## Decision: gate dropped
 
-A teacher whose browser holds a **genuinely live** student token and no teacher
-token is still read as a student, still loses the Teachers door, and still has
-no route back to teacher sign in from that nav. By the gate's own rule that
-browser is a signed-in student, so this fix does not touch it.
+Tanner, 2026-08-27: "drop the gate and just always have teacher and student
+option for ease."
 
-Closing it means picking one:
+So the CSS rule is gone and both doors are in the nav for every visitor. That
+closes the case the token fix could not reach - a teacher on a browser holding a
+genuinely live student token is a signed-in student by the gate's own rule, so
+the gate still took their Teachers door and the route back to sign in with it.
 
-- drop the role gate and show Teachers to everyone (simplest, costs a little
-  student-facing clutter);
-- keep the gate but always leave a sign-in row reachable;
-- have the teacher sign-out path clear `apcse_token` as well.
+The classifier stays and still publishes `apcs-is-teacher` / `apcs-is-student` /
+`apcs-is-anon`. Nothing in the theme reads them now, but Shopify page bodies ship
+outside that repo and may, so the signal stays published and stays accurate. It
+just no longer decides what the nav shows. Keeping it is also why removing the
+gate is safe: any off-repo page body that reads these classes is unaffected.
 
-Tanner's call. Not built.
+The verify script is reframed. Check 1 strips CSS comments and asserts no active
+rule references a role class or hides an auth door, so the gate cannot come back
+by accident. Check 2 keeps the 13 token scenarios, now asserting the published
+label rather than door visibility. Mutation-checked both ways: reinstating the
+gate exits 1, restoring exits 0.
 
-Second, smaller: there are **two** Teachers dropdowns on the page.
-`#ni-teacher` from `apcs-nav-source.liquid` (gated, via `theme.liquid`) and
-`#apcse-navauth` from `apcse-nav-auth.liquid` (ungated, via
-`sections/header.liquid:866`). Whether both are visible at once was not
-verified against the live storefront. Worth a look; not in scope here.
+Not taken, for the record: keeping the gate with a sign-in row always reachable,
+or having the teacher sign-out path clear `apcse_token`. The second would have
+been this repo's work. Neither is needed now.
+
+## Also noticed, not fixed
+
+`snippets/apcs-nav-source.liquid:1558` builds `innerHTML` from a string
+containing `&#8594;` inside a `<script>` block, which CONVENTIONS.md forbids
+(Shopify decodes entities in script tags). It predates this work and is on the
+base branch, and the string is static with no untrusted data, so the XSS rule is
+not violated in substance. Left alone rather than widening the PR. Worth a
+separate sweep.
+
+Second, unverified: there are two Teachers dropdowns on the page. `#ni-teacher`
+from `apcs-nav-source.liquid` (via `theme.liquid`) and `#apcse-navauth` from
+`apcse-nav-auth.liquid` (via `sections/header.liquid:866`). Whether both render
+at once was not checked against the live storefront. With the gate gone this
+matters slightly more, since neither is now suppressed by role.
 
 ## Deploy
 
