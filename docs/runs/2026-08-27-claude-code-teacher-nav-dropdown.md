@@ -203,18 +203,59 @@ test, both want a second look. Not built.
 `Authorization: Bearer null` at `/api/teacher/classes` on every page view. Only
 reachable if some path writes that string; none observed. Noted, not chased.
 
-## Deploy
+## Deploy: what is live, and what is not
 
-Theme PR: https://github.com/codingclub12/APCSExamPrep-theme/pull/85 (draft)
-Run note PR: https://github.com/codingclub12/apcsexamprep-progress-api/pull/366 (draft)
+**PR #85 merged at 2026-08-27T11:13Z and is LIVE** on the connected branch
+(`claude/site-linking-audit-yhufjk`, head `e46780c`).
 
-The theme PR's base is `claude/site-linking-audit-yhufjk`, the connected branch,
-so merging it deploys to the live site. Draft on purpose: sitewide nav wants a
-human on the blast radius. Verify against the live URL after merge, not against
-GitHub.
+So the reported bug IS fixed on the storefront: the role gate is gone and both
+auth doors show for every visitor.
 
-One visual check worth doing before merge, not doable from this container:
-between roughly 901px and 1200px the nav bar carries logo + six top-level items
-+ Teachers + Students + cart in a `max-width: 1200px` flex row with no wrap.
-Anon and teacher visitors already carried both doors, so if it overflows it
-overflowed before this change; students are simply now in the same population.
+The code review that produced the corrections in this note finished AFTER that
+merge, so what is live also includes two things this note argues against:
+
+- the hardened role classifier, which is dead code (zero readers) and carries
+  three bugs of its own (`payload()` accepting non-objects, `expired()` failing
+  open on a missing or string-typed `exp`, the `catch` dereferencing a variable
+  declared outside its `try`);
+- the first version of the guard, which passes on eleven mutations including a
+  verbatim reinstatement of the deleted rule reformatted across lines.
+
+Neither breaks the fix. The classifier's output is read by nothing, and the weak
+guard is a missing safety net rather than a live fault. But the guard being weak
+matters, because this repo deploys on commit and that script is what a future
+session will trust.
+
+**Follow-up: https://github.com/codingclub12/APCSExamPrep-theme/pull/86 (draft)**
+reverts the hardening, rebuilds the guard, and adds
+`.github/workflows/verify-nav.yml` so it runs on every push and pull request.
+Net 210 insertions, 257 deletions. Base is the connected branch, so merging it
+deploys. Verify against the live URL, not GitHub.
+
+Run note PR: https://github.com/codingclub12/apcsexamprep-progress-api/pull/366
+
+One visual check worth doing, not possible from this container: between roughly
+901px and 1200px the nav bar carries logo + six top-level items + Teachers +
+Students + cart in a `max-width: 1200px` flex row with no wrap. Anon and teacher
+visitors already carried both doors, so if it overflows it overflowed before this
+change; students are simply now in the same population.
+
+## Process note, for the next session
+
+Two failures here are worth remembering, because neither was caught by testing:
+
+1. **A justification was asserted instead of checked.** "Off-repo page bodies may
+   read these classes" was one grep away from being settled, and it was false.
+   Roughly 90 lines of sitewide JavaScript were kept alive by it, and they are
+   live right now. When a hedge is load-bearing, check it before building on it.
+2. **A guard was trusted because it was green.** The first version passed on the
+   exact bug it existed to prevent, and its passing output read as a strong
+   claim. Mutation-test a new guard against the thing it guards, in the
+   formatting the surrounding file actually uses, before writing "mutation
+   checked" anywhere.
+
+And one on the ledger: this work was done with no board task and no
+`(repo, file)` lock on `theme:snippets/apcs-nav-source.liquid`, against the rule
+in CLAUDE.md. Every comparable run note in this directory carries a claim line.
+On a file that renders into every storefront page, that is exactly the collision
+the lock exists to prevent.
