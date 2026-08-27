@@ -7,6 +7,39 @@ page bodies, so these files are the rollback path.
 These are reference copies, not a source of truth. The live page always wins. Never
 edit a snapshot expecting it to reach the storefront.
 
+## Topic 1.1 social engineering, before and after the CED realignment
+
+Both are the body of `gid://shopify/Page/132111237335`
+(`/pages/ap-cybersecurity-unit-1-social-engineering`), WO-3 of the AP Cyber Unit 1
+CED realignment. See `docs/runs/2026-08-27-claude-code-cyber-u1-wo3.md`.
+
+1. `ap-cybersecurity-unit-1-social-engineering.before-ced-realignment.html`
+   `updatedAt` 2026-08-10T16:25:18-05:00, 218,875 characters. The page as it
+   taught the legacy attack taxonomy. This is the rollback target.
+2. `ap-cybersecurity-unit-1-social-engineering.after-ced-realignment.html`
+   `updatedAt` 2026-08-27T11:38:26-05:00, 212,598 characters, and what is live
+   now.
+
+Two notes on these two files specifically.
+
+**They were captured from `GET /pages/<handle>.json`, not the Admin API.** That
+endpoint returns the stored `body_html` directly, so the copy is byte exact by
+construction rather than by transcription, which is the property the rule in
+`scripts/snapshot-live-page.js` is protecting. Both were confirmed identical to
+their source responses after writing.
+
+**The "before" copy was written after the import, not before it.** It is byte
+exact because the pre-import body had been fetched and kept during the same
+session, but the process was still wrong way round: the snapshot is the only
+rollback path and it belongs on disk before the sheet is imported, not after. On
+WO-4 through WO-8, snapshot first.
+
+`scripts/snapshot-live-page.js` was not used, and could not be without changing
+it: it parses the Admin API `{"data":{"pages":...}}` shape with a `body` field,
+and it hardcodes a `.before-intro-java.html` suffix. Teaching it the storefront
+JSON shape and an arbitrary label would make it usable for work like this and is
+worth doing before the next import.
+
 ## Unit 1 exam: three states, in order
 
 All three are the body of `gid://shopify/Page/132079550679`

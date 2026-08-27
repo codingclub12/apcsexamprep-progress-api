@@ -289,6 +289,25 @@ async function main() {
   const page = await readLive(liveIdx > 0 ? process.argv[liveIdx + 1] : null);
   const before = page.body_html;
 
+  //  This script rewrites the PRE-WO-3 body. Once the sheet is imported the
+  //  anchors it splices against are gone, and every rerun dies on the first
+  //  missing one with a message that reads like a bug in the script. It is not:
+  //  the work already shipped. Say so, because the README hands a future session
+  //  this exact command and "anchor not found" will send them hunting.
+  if (before.includes('1.1.4: The Three Victim Impacts')) {
+    console.error('This page already carries the WO-3 rewrite, so there is nothing to splice.');
+    console.error('');
+    console.error('  Imported 2026-08-27. To check it is still intact:');
+    console.error('    ./tools/ap-cyber-ced/fetch_pages.sh ./verify');
+    console.error('    python3 tools/ap-cyber-ced/ced_audit.py ./verify');
+    console.error('');
+    console.error('  The sheet this built is not reproducible from the current live body,');
+    console.error('  and re-importing it would revert the page to the 2026-08-27 text.');
+    console.error('  A further change to Topic 1.1 is a new splice table against the body');
+    console.error('  as it stands now, not a rerun of this one.');
+    process.exit(3);
+  }
+
   const { body: after, resolved } = ced.applySplices(before);
   const { fail, warn, note } = gate(before, after, resolved);
 

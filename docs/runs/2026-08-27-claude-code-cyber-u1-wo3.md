@@ -174,6 +174,22 @@ Neither changes rendering. Both are worth knowing before WO-4 through WO-8,
 because a byte comparison against the sheet will always "fail" and the check
 that means something is a comparison after entity normalisation.
 
+## A process step that was missed
+
+`shopify/page-snapshots/` is the only rollback path that exists, because Shopify
+keeps no usable version history for a page body and a Matrixify import reports
+success either way. This import replaced a 218 KB live body **without a snapshot
+on disk first**. Both states are committed now and both are byte exact, because
+the pre-import body had been fetched and kept in the session, but that is luck
+rather than process: had the session ended between the fetch and the import, the
+original would have been gone.
+
+On WO-4 through WO-8, snapshot before generating the sheet, not after importing
+it. `scripts/snapshot-live-page.js` cannot currently take this input: it parses
+the Admin API response shape and hardcodes a `.before-intro-java.html` suffix.
+Teaching it the storefront JSON shape and an arbitrary label is a small change
+and worth making before the next import.
+
 ## Still open
 
 - **WO-2's lab sheet is still unimported**, from the previous session.
