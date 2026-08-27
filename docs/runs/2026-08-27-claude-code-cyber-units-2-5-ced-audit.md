@@ -58,6 +58,17 @@ JS-rendered pages clean.
 does not exist; it exists with six EKs. #98 says LO 4.1.D has no EKs; it has four.
 Both were filed against teacher guides that were right.
 
+**College Board is reachable from a session again.** `docs/ced-snapshot/README.md`
+said a session cannot seed that directory because all sources return 403, and
+`ced-watch.yml` recorded the 403 as per-transport, curl 200 against node fetch
+403, measured 2026-08-24. Neither reproduces. On 2026-08-27 all 15 sources in
+`config/ced-sources.json` returned 200 through node fetch from this session, and
+the Cyber CED PDF downloaded whole through both transports, which is how the CED
+used for this audit was obtained at all. Both notes corrected in place with the
+original observation kept, since a 403 coming back means something changed rather
+than the tooling breaking. The snapshot directory was NOT hand-seeded: it is
+machine-written and being able to fetch is not permission to write it.
+
 **Verify the extractor before the content.** The first term index called 85 terms
 absent from the CED. 27 of those were PDF hyphenation artifacts: the CED's own
 text reads "network- based firewalls" mid-sentence, so word-boundary regex misses
