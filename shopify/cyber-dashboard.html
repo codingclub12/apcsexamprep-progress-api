@@ -398,6 +398,13 @@
 <div class="txt"><h4>Unit tests</h4></div>
 <label class="switch"><input type="checkbox" id="inc-exam" checked><span class="slider"></span></label>
 </div>
+          <h3 class="sec" style="margin-top:18px">Removed students</h3>
+          <div class="set-row">
+<div class="txt">
+<p>Removing a student stops them signing in and takes them out of the gradebook, the grid and every export. Their scores are kept, so restoring a student puts everything back exactly as it was.</p>
+</div>
+</div>
+          <div id="gb-removed"></div>
           <h3 class="sec" style="margin-top:18px">Class data</h3>
           <div class="set-row">
 <div class="txt">
@@ -544,12 +551,26 @@ window.TCDash = {
         cols.push({unit:uid,uLabel:uLabel,lesson:dl,lessonName:el,activity:'exam',type:'Exam',possible:p,authored:p!=null,group:g.key,dl:dl,da:'exam'}); });
     });
     const unitList=uids.map(uid=>({id:uid,label:String((units[uid]&&units[uid].label)||uid).replace(/:.*$/,'')}));
-      const students=(resp.summary||[]).map(rec=>({
+    // A removed student is DEACTIVATED, never deleted: the scores are gradebook
+    // data and have to survive. The API therefore keeps sending them, and this
+    // model used to pass every row straight through, so a teacher who clicked
+    // Remove watched the student reappear on reload, unchanged, with the same
+    // Remove button. The removal was real in the database and invisible on
+    // screen, which reads as a broken button.
+    //
+    // Splitting here is the whole fix: the grid, the stat cards, the student
+    // picker, the report tab and the gradebook CSV all read model.students, so
+    // one filter takes the student out of every one of them at once. The rows
+    // are kept in model.removed so Settings can put a student back, which is the
+    // half a hard delete could never offer.
+    const roster=(resp.summary||[]).map(rec=>({
       id:rec.student.id, name:rec.student.name, ref:rec.student.ref,
+      active:rec.student.active!==0,
       initials:(rec.student.name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(),
       lastActive:this.formatDate(rec.student.last_active), detail:rec.detail||{}
     }));
-    return {cols:cols,groups:groups,students:students,units:unitList};
+    const students=roster.filter(s=>s.active), removed=roster.filter(s=>!s.active);
+    return {cols:cols,groups:groups,students:students,removed:removed,units:unitList};
   },
 
   keyOf(sid,c){ return sid+'|'+c.unit+'|'+c.lesson+'|'+c.activity; },
@@ -621,7 +642,7 @@ window.TCDash = {
             pct:poss>0?Math.round(earned/poss*100):null,done:done,total:total,unpriced:unpriced};
   },
 
-  renderAll(){ this.renderStats(); this.renderGrid(); this.renderStudent(+document.getElementById('rep-picker').value||0); this.renderAssignment(+document.getElementById('ba-picker').value||0); },
+  renderAll(){ this.renderStats(); this.renderGrid(); this.renderStudent(+document.getElementById('rep-picker').value||0); this.renderAssignment(+document.getElementById('ba-picker').value||0); this.renderRemoved(); },
 
   renderStats(){
     const arr=this.model.students.map(s=>this.totals(s));
@@ -1016,8 +1037,37 @@ window.TCDash = {
     const r=await this._api('PATCH','/api/teacher/classes/'+this.classCode+'/students/'+id,{display_name:name}); if(r.ok){ await this.loadProgress(this._token()); this.showTab('student'); } else alert(r.error||'Could not rename student.'); },
   async resetPin(id){ const stu=this._findStudent(id); if(!stu)return; const suggested=String(Math.floor(1000+Math.random()*9000)); const pin=prompt('Set a new 4-digit PIN for '+stu.name+'.',suggested); if(pin==null)return; const clean=pin.trim(); if(!/^\d{4}$/.test(clean)){ alert('PIN must be exactly 4 digits.'); return; }
     const r=await this._api('PATCH','/api/teacher/classes/'+this.classCode+'/students/'+id,{pin:clean}); if(r.ok) alert(stu.name+"'s new PIN is "+clean+'.'); else alert(r.error||'Could not reset PIN.'); },
-  async removeStudent(id){ const stu=this._findStudent(id); if(!stu)return; if(!confirm('Remove '+stu.name+' from this class? This permanently deletes their progress and cannot be undone.'))return;
-    const r=await this._api('DELETE','/api/teacher/classes/'+this.classCode+'/students/'+id); if(r.ok){ await this.loadProgress(this._token()); } else alert(r.error||'Could not remove student.'); },
+  // The server deactivates and keeps every score. This dialog used to promise a
+  // permanent delete instead, so a teacher who read it, clicked OK and then saw
+  // the student still on the roster had every reason to call the button broken.
+  // The words now match what the server actually does, and they name the way
+  // back, because "cannot be undone" was the part that made people hesitate.
+  async removeStudent(id){ const stu=this._findStudent(id); if(!stu)return;
+    if(!confirm('Remove '+stu.name+' from this class?\n\nThey can no longer sign in, and they come off the gradebook, the grid and every export. Their scores are kept, and you can restore them from Settings.'))return;
+    const r=await this._api('DELETE','/api/teacher/classes/'+this.classCode+'/students/'+id);
+    if(!r||!r.ok) return alert((r&&r.error)||'Could not remove student.');
+    await this.loadProgress(this._token());
+    // The By Student tab is an INDEX into model.students, and that list is now
+    // one shorter, so the index the teacher was on belongs to somebody else.
+    // Overview is the honest landing place: it is where they can see the roster
+    // is actually shorter, which is the thing that was not happening before.
+    this.showTab('overview'); },
+  // The other half of a reversible removal. Nothing is recovered here, because
+  // nothing was destroyed: active goes back to 1 and the student's own history
+  // is already sitting where it always was.
+  async restoreStudent(id){ const stu=this._findStudent(id); if(!stu)return;
+    const r=await this._api('PATCH','/api/teacher/classes/'+this.classCode+'/students/'+id,{active:true});
+    if(!r||!r.ok) return alert((r&&r.error)||'Could not restore student.');
+    await this.loadProgress(this._token());
+    this.showTab('settings'); },
+  renderRemoved(){
+    const el=document.getElementById('gb-removed'); if(!el)return;
+    const S=this, list=(this.model&&this.model.removed)||[];
+    if(!list.length){ el.innerHTML='<div class="set-row"><div class="txt"><p class="thin">Nobody has been removed from this class.</p></div></div>'; return; }
+    el.innerHTML=list.map(s=>'<div class="set-row"><div class="txt"><h4>'+S.esc(s.name||'')+'</h4>'
+      +'<p>Removed. Last active '+S.esc(s.lastActive||'Never')+'. Scores kept.</p></div>'
+      +"<button class='gb-btn sm' onclick=\"TCDash.restoreStudent('"+s.id+"')\">Restore</button></div>").join('');
+  },
   async deleteClass(){ const name=(this.data&&this.data.class&&this.data.class.class_name)||this.classCode; const count=((this.data&&this.data.summary)||[]).length;
     const typed=prompt('This permanently deletes "'+name+'" and all '+count+' student(s). This CANNOT be undone.\n\nType the class code ('+this.classCode+') to confirm:'); if(typed==null)return;
     if(typed.trim().toUpperCase()!==this.classCode.toUpperCase()){ alert('Class code did not match. Nothing was deleted.'); return; }
