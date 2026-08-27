@@ -508,8 +508,42 @@ summary{cursor:pointer; font-size:14px; color:var(--accent); font-weight:500}
   </div>
 </section>
 
+<section id="wired">
+  <span class="sec-num">06 &middot; Executed</span>
+  <h2>The linking pass</h2>
+  <p class="lede">Six Matrixify sheets, hub-down first. Nothing was imported: a sheet is reviewable before it lands and re-runnable in MERGE mode after a partial import, which is the path this repo's conventions require for every page change.</p>
+
+  <div class="stats">
+    <div class="stat is-ok"><div class="v">1,211</div><div class="k">pages wired</div></div>
+    <div class="stat is-ok"><div class="v">6,228</div><div class="k">links added</div></div>
+    <div class="stat"><div class="v">0</div><div class="k">refusals remaining</div></div>
+    <div class="stat is-ok"><div class="v">6/6</div><div class="k">sheets independently verified</div></div>
+  </div>
+
+  <div class="tbl-wrap"><table>
+    <caption><b>The sheets</b>Import <code>links-orphan-rescue.csv</code> first: it is the smallest and carries the highest-value change.</caption>
+    <thead><tr><th>Sheet</th><th class="num">Pages</th><th class="num">Links</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>links-orphan-rescue.csv</code></th><td class="num">52</td><td class="num">233</td><td><span class="keep">verified</span></td></tr>
+      <tr><th scope="row"><code>links-ap-csa.csv</code></th><td class="num">538</td><td class="num">3,057</td><td><span class="keep">verified</span></td></tr>
+      <tr><th scope="row"><code>links-ap-csp.csv</code></th><td class="num">316</td><td class="num">1,634</td><td><span class="keep">verified</span></td></tr>
+      <tr><th scope="row"><code>links-ap-cyber.csv</code></th><td class="num">220</td><td class="num">1,219</td><td><span class="keep">verified</span></td></tr>
+      <tr><th scope="row"><code>links-ap-networking.csv</code></th><td class="num">67</td><td class="num">170</td><td><span class="keep">verified</span></td></tr>
+      <tr><th scope="row"><code>links-intro-java.csv</code></th><td class="num">70</td><td class="num">148</td><td><span class="keep">verified</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note">
+    <p><b>Every insertion is fenced.</b> HTML comments around the block, CSS comments around the rules. Stripping the fences returns the body the page started as, byte for byte, so verification reverses the edit rather than measuring how similar the result looks. The same fences make the pass idempotent: running it twice is the same as running it once.</p>
+  </div>
+
+  <div class="note warn">
+    <p><b>Two pages could not be wired and are a content gap, not a linking one.</b> <code>/pages/ap-csa</code> and <code>/pages/ap-csp</code> store no body at all. They render the theme's heading and the contact block and nothing else, while carrying authored meta descriptions promising a full course. Under the architecture above these two URLs are the canonical course hubs, which makes them the highest-value pages to build on the whole site.</p>
+  </div>
+</section>
+
 <section id="cuts">
-  <span class="sec-num">06 &middot; Consolidation</span>
+  <span class="sec-num">07 &middot; Consolidation</span>
   <h2>Pages that compete with each other</h2>
   <p class="lede">The audit on 26 August found one intent spread across many URLs, so no single URL accumulates authority. Those findings stand and are not re-derived here.</p>
 
