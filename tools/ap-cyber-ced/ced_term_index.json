@@ -1,0 +1,1338 @@
+{
+"phishing": {
+"units": [
+"1",
+"2"
+],
+"nonframework": true
+},
+"spear phishing": {
+"units": [],
+"nonframework": false
+},
+"vishing": {
+"units": [],
+"nonframework": false
+},
+"smishing": {
+"units": [],
+"nonframework": false
+},
+"whaling": {
+"units": [],
+"nonframework": false
+},
+"baiting": {
+"units": [],
+"nonframework": false
+},
+"quid pro quo": {
+"units": [],
+"nonframework": false
+},
+"tailgating": {
+"units": [
+"2"
+],
+"nonframework": false
+},
+"piggybacking": {
+"units": [
+"2"
+],
+"nonframework": false
+},
+"shoulder surfing": {
+"units": [
+"2"
+],
+"nonframework": false
+},
+"dumpster diving": {
+"units": [
+"2"
+],
+"nonframework": false
+},
+"watering hole": {
+"units": [],
+"nonframework": false
+},
+"credential stuffing": {
+"units": [
+"4"
+],
+"nonframework": false
+},
+"password spraying": {
+"units": [
+"4"
+],
+"nonframework": false
+},
+"brute force": {
+"units": [
+"4"
+],
+"nonframework": true
+},
+"rainbow table": {
+"units": [
+"4"
+],
+"nonframework": false
+},
+"dictionary attack": {
+"units": [
+"4"
+],
+"nonframework": false
+},
+"keylogger": {
+"units": [
+"2",
+"4"
+],
+"nonframework": false
+},
+"hash": {
+"units": [
+"4",
+"5"
+],
+"nonframework": true
+},
+"salt": {
+"units": [
+"4",
+"5"
+],
+"nonframework": true
+},
+"salting": {
+"units": [],
+"nonframework": false
+},
+"checksum": {
+"units": [
+"4"
+],
+"nonframework": false
+},
+"message digest": {
+"units": [
+"4"
+],
+"nonframework": false
+},
+"wep": {
+"units": [
+"3"
+],
+"nonframework": false
+},
+"wpa2": {
+"units": [],
+"nonframework": false
+},
+"wpa3": {
+"units": [
+"3"
+],
+"nonframework": false
+},
+"evil twin": {
+"units": [
+"1",
+"3"
+],
+"nonframework": true
+},
+"rogue access point": {
+"units": [
+"3"
+],
+"nonframework": false
+},
+"war driving": {
+"units": [
+"1"
+],
+"nonframework": false
+},
+"jamming": {
+"units": [
+"1",
+"3"
+],
+"nonframework": false
+},
+"deepfake": {
+"units": [],
+"nonframework": false
+},
+"digital avatar": {
+"units": [
+"1"
+],
+"nonframework": false
+},
+"honeypot": {
+"units": [
+"5"
+],
+"nonframework": false
+},
+"man-in-the-middle": {
+"units": [
+"3"
+],
+"nonframework": false
+},
+"on-path": {
+"units": [
+"3"
+],
+"nonframework": false
+},
+"packet sniffing": {
+"units": [],
+"nonframework": false
+},
+"mac flooding": {
+"units": [
+"3"
+],
+"nonframework": true
+},
+"arp spoofing": {
+"units": [],
+"nonframework": false
+},
+"dns poisoning": {
+"units": [
+"3"
+],
+"nonframework": true
+},
+"dns spoofing": {
+"units": [],
+"nonframework": false
+},
+"ddos": {
+"units": [
+"3"
+],
+"nonframework": true
+},
+"denial of service": {
+"units": [
+"1",
+"3"
+],
+"nonframework": false
+},
+"botnet": {
+"units": [],
+"nonframework": false
+},
+"zero day": {
+"units": [
+"1"
+],
+"nonframework": false
+},
+"firewall": {
+"units": [
+"1",
+"2",
+"3",
+"4"
+],
+"nonframework": true
+},
+"access control list": {
+"units": [
+"3"
+],
+"nonframework": true
+},
+"stateful": {
+"units": [
+"3"
+],
+"nonframework": true
+},
+"stateless": {
+"units": [
+"3"
+],
+"nonframework": false
+},
+"next-generation firewall": {
+"units": [
+"3"
+],
+"nonframework": false
+},
+"proxy": {
+"units": [],
+"nonframework": false
+},
+"dmz": {
+"units": [
+"3"
+],
+"nonframework": false
+},
+"vlan": {
+"units": [
+"3"
+],
+"nonframework": false
+},
+"network segmentation": {
+"units": [
+"3"
+],
+"nonframework": false
+},
+"subnet": {
+"units": [
+"3"
+],
+"nonframework": false
+},
+"ids": {
+"units": [
+"1",
+"2",
+"3",
+"5"
+],
+"nonframework": true
+},
+"ips": {
+"units": [
+"2",
+"3"
+],
+"nonframework": true
+},
+"intrusion detection": {
+"units": [
+"2",
+"3"
+],
+"nonframework": true
+},
+"intrusion prevention": {
+"units": [
+"2",
+"3"
+],
+"nonframework": true
+},
+"siem": {
+"units": [
+"2",
+"3"
+],
+"nonframework": false
+},
+"honeynet": {
+"units": [],
+"nonframework": false
+},
+"nac": {
+"units": [
+"1",
+"2",
+"3",
+"4",
+"5"
+],
+"nonframework": true
+},
+"network access control": {
+"units": [],
+"nonframework": false
+},
+"malware": {
+"units": [
+"1",
+"2",
+"3",
+"4"
+],
+"nonframework": true
+},
+"virus": {
+"units": [
+"4"
+],
+"nonframework": false
+},
+"worm": {
+"units": [
+"4"
+],
+"nonframework": true
+},
+"trojan": {
+"units": [
+"2",
+"4"
+],
+"nonframework": false
+},
+"ransomware": {
+"units": [
+"2",
+"4"
+],
+"nonframework": false
+},
+"spyware": {
+"units": [
+"4"
+],
+"nonframework": false
+},
+"adware": {
+"units": [],
+"nonframework": false
+},
+"rootkit": {
+"units": [
+"2",
+"4"
+],
+"nonframework": false
+},
+"logic bomb": {
+"units": [
+"4"
+],
+"nonframework": false
+},
+"fileless": {
+"units": [
+"4"
+],
+"nonframework": false
+},
+"mfa": {
+"units": [
+"1",
+"3",
+"4"
+],
+"nonframework": false
+},
+"multifactor": {
+"units": [
+"1",
+"4"
+],
+"nonframework": false
+},
+"biometric": {
+"units": [
+"4",
+"5"
+],
+"nonframework": true
+},
+"smart card": {
+"units": [],
+"nonframework": false
+},
+"token": {
+"units": [
+"2",
+"4"
+],
+"nonframework": true
+},
+"single sign-on": {
+"units": [],
+"nonframework": false
+},
+"kerberos": {
+"units": [],
+"nonframework": false
+},
+"ldap": {
+"units": [],
+"nonframework": true
+},
+"radius": {
+"units": [],
+"nonframework": false
+},
+"cia triad": {
+"units": [],
+"nonframework": false
+},
+"confidentiality": {
+"units": [
+"2",
+"3",
+"5"
+],
+"nonframework": false
+},
+"integrity": {
+"units": [
+"2",
+"3",
+"4",
+"5"
+],
+"nonframework": false
+},
+"availability": {
+"units": [
+"1",
+"2",
+"3",
+"5"
+],
+"nonframework": false
+},
+"defense in depth": {
+"units": [
+"2",
+"4"
+],
+"nonframework": true
+},
+"least privilege": {
+"units": [
+"5"
+],
+"nonframework": false
+},
+"separation of duties": {
+"units": [],
+"nonframework": false
+},
+"risk assessment": {
+"units": [
+"2",
+"3",
+"5"
+],
+"nonframework": true
+},
+"risk avoidance": {
+"units": [
+"2"
+],
+"nonframework": false
+},
+"risk transference": {
+"units": [
+"2"
+],
+"nonframework": false
+},
+"risk acceptance": {
+"units": [
+"2"
+],
+"nonframework": false
+},
+"risk mitigation": {
+"units": [
+"2"
+],
+"nonframework": false
+},
+"threat": {
+"units": [
+"1",
+"2",
+"3",
+"4"
+],
+"nonframework": true
+},
+"vulnerability": {
+"units": [
+"2",
+"3",
+"4"
+],
+"nonframework": true
+},
+"likelihood": {
+"units": [
+"2",
+"3"
+],
+"nonframework": true
+},
+"impact": {
+"units": [
+"1",
+"2",
+"3",
+"4",
+"5"
+],
+"nonframework": true
+},
+"managerial control": {
+"units": [
+"2",
+"3",
+"4",
+"5"
+],
+"nonframework": true
+},
+"technical control": {
+"units": [
+"2",
+"4"
+],
+"nonframework": false
+},
+"physical control": {
+"units": [
+"2"
+],
+"nonframework": false
+},
+"operational control": {
+"units": [],
+"nonframework": false
+},
+"preventive": {
+"units": [],
+"nonframework": false
+},
+"detective": {
+"units": [
+"2",
+"3",
+"4",
+"5"
+],
+"nonframework": false
+},
+"corrective": {
+"units": [
+"1",
+"2"
+],
+"nonframework": false
+},
+"deterrent": {
+"units": [
+"4"
+],
+"nonframework": true
+},
+"bollard": {
+"units": [
+"2"
+],
+"nonframework": false
+},
+"mantrap": {
+"units": [],
+"nonframework": false
+},
+"access vestibule": {
+"units": [],
+"nonframework": false
+},
+"turnstile": {
+"units": [
+"2"
+],
+"nonframework": false
+},
+"badge": {
+"units": [
+"2"
+],
+"nonframework": false
+},
+"biometrics": {
+"units": [],
+"nonframework": false
+},
+"cctv": {
+"units": [],
+"nonframework": false
+},
+"surveillance": {
+"units": [],
+"nonframework": false
+},
+"motion sensor": {
+"units": [
+"2"
+],
+"nonframework": false
+},
+"alarm": {
+"units": [
+"2"
+],
+"nonframework": false
+},
+"guard": {
+"units": [
+"2",
+"3"
+],
+"nonframework": true
+},
+"fence": {
+"units": [
+"2"
+],
+"nonframework": false
+},
+"lighting": {
+"units": [
+"4"
+],
+"nonframework": false
+},
+"encryption": {
+"units": [
+"2",
+"3",
+"5"
+],
+"nonframework": true
+},
+"symmetric": {
+"units": [
+"5"
+],
+"nonframework": true
+},
+"asymmetric": {
+"units": [
+"5"
+],
+"nonframework": true
+},
+"aes": {
+"units": [
+"3",
+"5"
+],
+"nonframework": false
+},
+"des": {
+"units": [
+"1",
+"2",
+"3",
+"4",
+"5"
+],
+"nonframework": true
+},
+"3des": {
+"units": [],
+"nonframework": false
+},
+"rsa": {
+"units": [
+"1",
+"2",
+"3",
+"4",
+"5"
+],
+"nonframework": true
+},
+"public key": {
+"units": [
+"5"
+],
+"nonframework": false
+},
+"private key": {
+"units": [
+"3",
+"5"
+],
+"nonframework": false
+},
+"key length": {
+"units": [
+"3",
+"5"
+],
+"nonframework": false
+},
+"caesar cipher": {
+"units": [],
+"nonframework": false
+},
+"vigenere": {
+"units": [],
+"nonframework": false
+},
+"xor": {
+"units": [],
+"nonframework": false
+},
+"digital signature": {
+"units": [
+"3",
+"5"
+],
+"nonframework": false
+},
+"certificate": {
+"units": [
+"5"
+],
+"nonframework": false
+},
+"pki": {
+"units": [],
+"nonframework": false
+},
+"tls": {
+"units": [],
+"nonframework": true
+},
+"ssl": {
+"units": [
+"2",
+"3",
+"4",
+"5"
+],
+"nonframework": true
+},
+"https": {
+"units": [
+"1"
+],
+"nonframework": true
+},
+"vpn": {
+"units": [
+"1",
+"3"
+],
+"nonframework": false
+},
+"hashing": {
+"units": [
+"4"
+],
+"nonframework": true
+},
+"sha-256": {
+"units": [
+"4",
+"5"
+],
+"nonframework": false
+},
+"md5": {
+"units": [
+"4"
+],
+"nonframework": false
+},
+"sql injection": {
+"units": [
+"5"
+],
+"nonframework": true
+},
+"cross-site scripting": {
+"units": [
+"5"
+],
+"nonframework": true
+},
+"xss": {
+"units": [
+"5"
+],
+"nonframework": true
+},
+"buffer overflow": {
+"units": [
+"5"
+],
+"nonframework": true
+},
+"input sanitization": {
+"units": [
+"5"
+],
+"nonframework": true
+},
+"input validation": {
+"units": [],
+"nonframework": false
+},
+"secure by design": {
+"units": [
+"5"
+],
+"nonframework": false
+},
+"security by default": {
+"units": [
+"5"
+],
+"nonframework": false
+},
+"race condition": {
+"units": [],
+"nonframework": false
+},
+"privilege escalation": {
+"units": [],
+"nonframework": false
+},
+"directory traversal": {
+"units": [
+"5"
+],
+"nonframework": true
+},
+"csrf": {
+"units": [],
+"nonframework": false
+},
+"access control model": {
+"units": [
+"5"
+],
+"nonframework": true
+},
+"discretionary": {
+"units": [
+"5"
+],
+"nonframework": false
+},
+"mandatory": {
+"units": [
+"5"
+],
+"nonframework": false
+},
+"role-based": {
+"units": [
+"5"
+],
+"nonframework": false
+},
+"attribute-based": {
+"units": [],
+"nonframework": false
+},
+"rbac": {
+"units": [
+"5"
+],
+"nonframework": true
+},
+"dac": {
+"units": [
+"1",
+"2",
+"3",
+"4",
+"5"
+],
+"nonframework": true
+},
+"mac": {
+"units": [
+"1",
+"2",
+"3",
+"4",
+"5"
+],
+"nonframework": true
+},
+"chmod": {
+"units": [
+"5"
+],
+"nonframework": true
+},
+"permissions": {
+"units": [
+"2",
+"5"
+],
+"nonframework": true
+},
+"data at rest": {
+"units": [
+"5"
+],
+"nonframework": false
+},
+"data in transit": {
+"units": [
+"3",
+"5"
+],
+"nonframework": false
+},
+"data in use": {
+"units": [
+"5"
+],
+"nonframework": false
+},
+"classification": {
+"units": [
+"5"
+],
+"nonframework": false
+},
+"pii": {
+"units": [
+"5"
+],
+"nonframework": true
+},
+"script kiddie": {
+"units": [
+"2"
+],
+"nonframework": true
+},
+"hacktivist": {
+"units": [
+"2"
+],
+"nonframework": false
+},
+"nation-state": {
+"units": [],
+"nonframework": false
+},
+"insider threat": {
+"units": [],
+"nonframework": false
+},
+"organized crime": {
+"units": [],
+"nonframework": false
+},
+"advanced persistent threat": {
+"units": [],
+"nonframework": false
+},
+"apt": {
+"units": [
+"1",
+"2",
+"3",
+"4"
+],
+"nonframework": true
+},
+"reconnaissance": {
+"units": [
+"1",
+"2"
+],
+"nonframework": false
+},
+"weaponization": {
+"units": [],
+"nonframework": false
+},
+"delivery": {
+"units": [],
+"nonframework": false
+},
+"exploitation": {
+"units": [],
+"nonframework": false
+},
+"installation": {
+"units": [
+"4"
+],
+"nonframework": false
+},
+"command and control": {
+"units": [
+"2"
+],
+"nonframework": false
+},
+"actions on objectives": {
+"units": [],
+"nonframework": false
+},
+"kill chain": {
+"units": [],
+"nonframework": false
+},
+"log file": {
+"units": [
+"1",
+"2",
+"3",
+"4",
+"5"
+],
+"nonframework": true
+},
+"syslog": {
+"units": [],
+"nonframework": true
+},
+"audit log": {
+"units": [],
+"nonframework": false
+},
+"event log": {
+"units": [],
+"nonframework": false
+},
+"baseline": {
+"units": [
+"3"
+],
+"nonframework": false
+},
+"anomaly": {
+"units": [
+"3",
+"4"
+],
+"nonframework": true
+},
+"false positive": {
+"units": [
+"3",
+"4"
+],
+"nonframework": false
+},
+"false negative": {
+"units": [
+"3",
+"5"
+],
+"nonframework": true
+},
+"patch": {
+"units": [
+"2",
+"4"
+],
+"nonframework": true
+},
+"update": {
+"units": [
+"1",
+"3",
+"4",
+"5"
+],
+"nonframework": true
+},
+"antivirus": {
+"units": [
+"4"
+],
+"nonframework": false
+},
+"anti-malware": {
+"units": [
+"2",
+"4"
+],
+"nonframework": false
+},
+"endpoint": {
+"units": [
+"4"
+],
+"nonframework": false
+},
+"host-based firewall": {
+"units": [
+"4"
+],
+"nonframework": false
+},
+"sandboxing": {
+"units": [],
+"nonframework": false
+},
+"iot": {
+"units": [
+"2",
+"4"
+],
+"nonframework": true
+},
+"embedded": {
+"units": [
+"4",
+"5"
+],
+"nonframework": false
+},
+"scada": {
+"units": [],
+"nonframework": false
+},
+"ics": {
+"units": [
+"1",
+"2",
+"3",
+"4",
+"5"
+],
+"nonframework": true
+},
+"mobile device management": {
+"units": [],
+"nonframework": false
+},
+"byod": {
+"units": [],
+"nonframework": false
+},
+"social engineering": {
+"units": [
+"1",
+"2",
+"4"
+],
+"nonframework": true
+},
+"elicitation": {
+"units": [
+"1"
+],
+"nonframework": true
+},
+"intimidation": {
+"units": [
+"1",
+"2"
+],
+"nonframework": true
+},
+"urgency": {
+"units": [
+"1",
+"2"
+],
+"nonframework": true
+},
+"authority": {
+"units": [
+"2"
+],
+"nonframework": true
+},
+"consensus": {
+"units": [
+"2"
+],
+"nonframework": true
+},
+"scarcity": {
+"units": [
+"2"
+],
+"nonframework": true
+},
+"familiarity": {
+"units": [
+"2"
+],
+"nonframework": true
+},
+"pretexting": {
+"units": [
+"2"
+],
+"nonframework": false
+},
+"impersonation": {
+"units": [
+"1"
+],
+"nonframework": false
+},
+"one-time password": {
+"units": [
+"1"
+],
+"nonframework": false
+},
+"otp": {
+"units": [
+"1",
+"2"
+],
+"nonframework": true
+},
+"password manager": {
+"units": [
+"1"
+],
+"nonframework": false
+},
+"passphrase": {
+"units": [
+"1"
+],
+"nonframework": false
+},
+"llm": {
+"units": [
+"1",
+"4",
+"5"
+],
+"nonframework": true
+},
+"large language model": {
+"units": [
+"1"
+],
+"nonframework": false
+},
+"artificial intelligence": {
+"units": [
+"3"
+],
+"nonframework": false
+},
+"machine learning": {
+"units": [],
+"nonframework": false
+},
+"prompt injection": {
+"units": [],
+"nonframework": false
+}
+}

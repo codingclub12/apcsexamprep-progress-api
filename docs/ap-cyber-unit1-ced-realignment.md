@@ -111,12 +111,24 @@ of 1.5.A.1 through A.3 and is highly assessable.
 
 ## Terms that must not appear as content students learn
 
-**Zero occurrences in the CED:** spear phishing, vishing, smishing, whaling,
-baiting, quid pro quo, tailgating, shoulder surfing, dumpster diving, watering
-hole, credential stuffing, password spraying, brute force, rainbow table,
-keylogger, WEP, WPA2, WPA3, deepfake, honeypot, man-in-the-middle, packet
+**Zero occurrences in Unit 1 of the CED:** spear phishing, vishing, smishing,
+whaling, baiting, quid pro quo, tailgating, shoulder surfing, dumpster diving,
+watering hole, credential stuffing, password spraying, brute force, rainbow
+table, keylogger, WEP, WPA2, WPA3, deepfake, honeypot, man-in-the-middle, packet
 sniffing, rogue access point, business email compromise, bluejacking,
 bluesnarfing.
+
+> **Corrected 2026-08-27.** This list was headed "Zero occurrences in the CED",
+> and for eleven of these terms that is false. They are absent from Unit 1 and
+> present elsewhere in the Fall 2026 CED: shoulder surfing (2.2.A.4), dumpster
+> diving (2.2.A.5), tailgating (2.2.A.3), keylogger (Units 2 and 4),
+> man-in-the-middle, rogue access point and WPA3 (Unit 3), credential stuffing,
+> password spraying, brute force and rainbow table (Unit 4), honeypot (Unit 5).
+> The list is correct as a Unit 1 exclusion list, which is the job it was built
+> for, and every Unit 1 conclusion above still stands. It must not be reused as a
+> course-wide off-CED list: against Units 2-5 it reports correct CED content as a
+> violation. Use `tools/ap-cyber-ced/ced_term_index.json`, which records the units
+> each term actually belongs to. See `docs/ap-cyber-units-2-5-ced-audit.md`.
 
 **In the CED but owned by another unit:** pretexting (2.1.A.2), authority
 (2.1.A.3), consensus (2.1.A.5), scarcity (2.1.A.6), familiarity (2.1.A.7),

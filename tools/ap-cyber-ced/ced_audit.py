@@ -56,7 +56,16 @@ BASEDIR = sys.argv[1] if len(sys.argv) > 1 else '.'
 
 import json,re,os,glob,html  # noqa: E401
 
-# terms that are NOT in the Fall 2026 CED at all
+# Terms not present in UNIT 1 of the Fall 2026 CED.
+#
+# CORRECTED 2026-08-27. This was commented "terms that are NOT in the Fall 2026
+# CED at all" and that is false for eleven of them: credential stuffing,
+# password spraying, brute force and rainbow table are Unit 4; mitm,
+# man-in-the-middle, rogue access point and wpa3 are Unit 3; shoulder surf and
+# dumpster div are Unit 2; keylogger is Units 2 and 4; honeypot is Unit 5.
+# As a Unit 1 exclusion list it is correct and every Unit 1 finding built on it
+# stands. Do NOT run this script against Units 2-5: it reports correct CED
+# content as a violation. Use ced_audit_v2.py, which reads ced_term_index.json.
 OFF = ['spear phishing','spear-phishing','vishing','smishing','whaling','baiting',
        'quid pro quo','tailgating','shoulder surf','dumpster div','watering hole',
        'credential stuffing','password spraying','brute force','rainbow table',
