@@ -156,6 +156,40 @@ Steps 2 and 4 are independent while Unit 3 has no traffic. If that stops being
 true, do 4 before 2: a visit filed under a stale lesson is recoverable, a graded
 attempt filed under one is the thing worth avoiding.
 
+## Interaction with the "do not cite the CED to students" rule
+
+That rule landed in `CLAUDE.md` on 2026-08-27, the same day as this spec and from
+a different session, so the two have to be sequenced deliberately.
+
+Unit 3 has the same defect Unit 1 had, smaller. Measured with
+`lib/cyber-ek-density.js` across the six lesson pages: **108 EK codes, 21
+protected, 87 student-visible and cuttable.** Worst pages are 3.1 with 19 and 3.6
+with 17. Unit 1's Topic 1.1 had 218, so this is a fifth of the size, and it is
+the same job.
+
+**Renumber first, thin second.** Not a preference:
+
+- The acceptance test above works by checking that a page's plain topic number
+  agrees with its EK topic numbers. Thinning removes 87 of those EK codes, which
+  are exactly the anchors the test reads. Run thinning first and the renumbering
+  ships with most of its evidence deleted.
+- Renumbering does not touch prose. Thinning rewrites sentences ("secure
+  information (3.2.A.1)" becomes "secure information, such as ..."). Doing the
+  prose rewrite on pages whose numbering is already correct means the thinning
+  diff is about wording only.
+
+Two notes for whoever runs the thinning pass:
+
+- `EK_RX` in `lib/cyber-ek-density.js` matches `\d\.\d\.[A-C]`. Units 3 to 5 have
+  LOs running to E (3.4.D, 3.5.D, 3.5.E, 4.1.D, 4.4.D, 5.2.D, 5.6.D, 5.6.E), so
+  it currently misses them: 3 codes on the IDS lesson alone. Unit 1 stops at C,
+  which is why it has not bitten yet. `[A-E]` is the fix.
+- The only span it recognises as protecting a code on these pages is the exit
+  ticket key. Each Unit 3 lesson also carries a collapsed "College Board
+  Essential Knowledge Coverage" table, which is exactly the teacher-audited
+  coverage table the rule permits, and it is not in `CANDIDATES`. So the 87 is an
+  upper bound and some of it is already legitimate.
+
 ## Deliberately not in this pass
 
 The Unit 3 rename sweep from the audit (DNS spoofing to DNS poisoning, ARP
