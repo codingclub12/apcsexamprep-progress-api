@@ -123,13 +123,71 @@ rather than reported as broken.
 lesson landings exist only under the named family (`ap-cybersecurity-unit-2-<slug>`),
 which this audit does not yet generate.
 
+## Landing discovery, and what the config-only audit was hiding
+
+Named landings (`ap-cybersecurity-unit-N-<slug>`) cannot be derived from the config.
+Every page carries the course nav, so they are now harvested from whatever is fetched
+and swept in a second pass. A named landing with no clean `data-lesson-id` is skipped
+as untracked BY DESIGN, which is the same test `quiz-tracker-wiring.liquid` applies
+before it sets `APCS_PAGE`; auditing hubs and study guides for wiring would otherwise
+manufacture a P0 per hub.
+
+### Unit 2 was never actually clean, it was unaudited
+
+Its numbered handles 404, so its lesson pages exist ONLY as named landings and the
+config-only audit skipped every one of them while reporting the unit clean. Discovery
+finds **9**, all `src=cfuState` and all 10 of 10, plus one hub correctly skipped. The
+unit really is clean. It is now verified rather than assumed, which is a different
+thing.
+
+Worth noting separately: nine lesson landings against four lessons in the `COURSES`
+config for unit 2. The config and the content disagree about how many lessons exist.
+
+### Unit 1: the same lesson is live under three handles
+
+`ap-cyber-unit-1-lesson-2`, `ap-cybersecurity-unit-1-password-attacks` and
+`ap-cybersecurity-unit-1-password-attacks-quiz` all carry `data-lesson-id="1.2"` and
+all have 9 CFU blocks. They are the same lesson served three ways, and **all three
+carry the 9 against 10 denominator defect**.
+
+That is why unit 1's P0 count went from 1 to 3. It is one content defect in three
+page bodies, not three defects, and the useful part is that fixing "the 1.2 page"
+means fixing three of them. That is exactly the kind of thing a hand pass fixes once
+and declares done.
+
+`...-password-attacks-quiz` also came back without `apcs-quiz-wiring.js`. Its handle
+ends `-quiz`, so branch 3 of the wiring excludes it, and branches 1 and 2 need the
+`ap-cyber-` prefix it does not have. INFERENCE, not verified: no branch sets
+`APCS_PAGE`, so the page records nothing at all despite carrying a lesson id. Worth
+opening before it is edited.
+
+### A blind spot this exposed in the audit itself
+
+The wiring check tests that the snippet is PRESENT, not that it RESOLVES. The snippet
+renders on every cyber page, so a page whose handle matches no branch still passes the
+check while tracking nothing. `password-attacks-quiz` is the case that shows it. Not
+fixed here.
+
+## Running totals after discovery
+
+```
+unit 1   43 pages   P0 3   P1 2   P2 21
+unit 2   27 pages   P0 0   P1 0   P2 0
+unit 3   31 pages   P0 0   P1 0   P2 0
+unit 4   26 pages   P0 0   P1 3   P2 0
+unit 5   31 pages   P0 0   P1 18  P2 0
+```
+
+Units 3, 4 and 5 have not been re-run since discovery landed, so their named landings
+are still unaudited. Only their hubs appeared in the harvest, which suggests their
+lessons live under the numbered family already covered, but that is an expectation
+rather than a measurement.
+
 ## What this run does NOT cover
 
-- **Named lesson landings.** Handles come from the `COURSES` config, so the audit
-  visits `ap-cyber-unit-1-lesson-2` but never
-  `ap-cybersecurity-unit-1-password-attacks`. Both are wired and both write the same
-  `(unit, lesson, activity)` row, so nothing double counts, but unit 2 shows the cost:
-  a whole unit's lesson pages went unaudited.
 - **Whether a widget is completable.** The audit proves `blockDone()` is reachable for
   every block. It cannot prove the widget works.
-- **The three unit 4 labs** above.
+- **The three unit 4 labs**: scoring machinery present, no aggregate readout located,
+  so whether they produce a total at all is unestablished.
+- **Whether the wiring RESOLVES**, per the blind spot above.
+- **Units 3 to 5 re-run with discovery.**

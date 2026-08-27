@@ -92,6 +92,15 @@ async function fetchPage(handle) {
 function auditPage(handle, html) {
   const f = [];   // findings
 
+  // A named landing is only TRACKED when it carries a clean data-lesson-id, which
+  // is the same test quiz-tracker-wiring.liquid applies before it sets APCS_PAGE.
+  // Unit hubs and study guides deliberately carry none and are correctly left
+  // untracked, so auditing them for wiring would manufacture a P0 per hub.
+  const named = /^ap-cybersecurity-unit-\d+-/.test(handle);
+  if (named && !/data-lesson-id="\s*\d+\.\d+\s*"/.test(html)) {
+    return { handle, blocks: 0, denom: null, source: null, nums: [], untracked: true, findings: [] };
+  }
+
   // Blocks, in document order, with their data-num.
   const blocks = [];
   const tagRe = /<[a-z]+[^>]*class="[^"]*\bcfu-block\b[^"]*"[^>]*>/gi;
@@ -209,19 +218,40 @@ function auditPage(handle, html) {
   if (!handles.length) { console.error(`No unit-${UNIT} in the ap-cybersecurity config.`); process.exit(2); }
 
   const pages = [];
+  const seen = new Set();
+  const discovered = new Set();
   let strikes = 0, aborted = null;
-  for (const h of handles) {
+
+  // Named lesson landings (ap-cybersecurity-unit-N-<slug>) cannot be derived from
+  // the config, and on unit 2 they are the ONLY lesson pages: its numbered handles
+  // 404, so a config-only audit silently skips a whole unit's lessons and still
+  // reports clean. Every page carries the course nav, so they are harvested from
+  // whatever is fetched and swept in a second pass.
+  const LANDING_RE = new RegExp(`/pages/(ap-cybersecurity-unit-${UNIT}-[a-z0-9-]+)`, 'g');
+
+  async function visit(h, list) {
+    if (seen.has(h)) return;
+    seen.add(h);
     const res = await fetchPage(h);
     if (res.status === 429 || res.status === 503) {
       strikes++;
-      if (strikes >= 3) { aborted = `stopped after ${strikes} throttled responses; the storefront serves challenges to real students when pushed`; break; }
+      if (strikes >= 3) { aborted = `stopped after ${strikes} throttled responses; the storefront serves challenges to real students when pushed`; return; }
     }
-    if (res.status === 200) pages.push(auditPage(h, res.html));
-    else if (res.status !== 404) pages.push({ handle: h, blocks: 0, denom: null, nums: [], findings: [{ sev: 'P1', code: 'fetch', msg: `HTTP ${res.status}${res.error ? ' ' + res.error : ''}` }] });
+    if (res.status === 200) {
+      for (const m of res.html.matchAll(LANDING_RE)) discovered.add(m[1]);
+      list.push(auditPage(h, res.html));
+    } else if (res.status !== 404) {
+      list.push({ handle: h, blocks: 0, denom: null, source: null, nums: [], findings: [{ sev: 'P1', code: 'fetch', msg: `HTTP ${res.status}${res.error ? ' ' + res.error : ''}` }] });
+    }
     await sleep(DELAY);
   }
 
-  if (JSON_OUT) { console.log(JSON.stringify({ unit: UNIT, aborted, pages }, null, 2)); return; }
+  for (const h of handles) { if (aborted) break; await visit(h, pages); }
+
+  const extra = [];
+  for (const h of [...discovered].sort()) { if (aborted) break; await visit(h, extra); }
+
+  if (JSON_OUT) { console.log(JSON.stringify({ unit: UNIT, aborted, pages, discovered: extra }, null, 2)); return; }
 
   console.log(`\nCYBER SCORING AUDIT  unit-${UNIT}  ${new Date().toISOString()}`);
   console.log(`${pages.length} page(s) reachable of ${handles.length} candidate handles\n`);
@@ -235,8 +265,24 @@ function auditPage(handle, html) {
     for (const f of p.findings) { console.log(`         ${f.sev} ${f.code}: ${f.msg}`); all.push(f); }
   }
 
+  if (extra.length) {
+    const tracked = extra.filter((p) => !p.untracked);
+    const hubs = extra.filter((p) => p.untracked);
+    console.log(`\n  discovered named landings (not derivable from the config):`);
+    for (const p of tracked) {
+      const tag = p.findings.length ? p.findings.map((x) => x.sev).sort()[0] : 'ok';
+      console.log(`  [${tag.padEnd(2)}] ${p.handle}`
+        + (p.blocks ? `   blocks=${p.blocks} denom=${p.denom == null ? '?' : p.denom} src=${p.source || 'none'}` : ''));
+      for (const f of p.findings) { console.log(`         ${f.sev} ${f.code}: ${f.msg}`); all.push(f); }
+    }
+    if (hubs.length) {
+      console.log(`  [--] ${hubs.length} untracked by design (no clean data-lesson-id): `
+        + hubs.map((p) => p.handle.replace(`ap-cybersecurity-unit-${UNIT}-`, '')).join(', '));
+    }
+  }
+
   const by = (s) => all.filter((f) => f.sev === s).length;
-  console.log(`\n  P0 ${by('P0')}   P1 ${by('P1')}   P2 ${by('P2')}   across ${pages.length} pages`);
+  console.log(`\n  P0 ${by('P0')}   P1 ${by('P1')}   P2 ${by('P2')}   across ${pages.length + extra.length} pages`);
   if (aborted) console.log(`\n  ABORTED: ${aborted}`);
   console.log('');
   process.exit(by('P0') ? 1 : 0);
