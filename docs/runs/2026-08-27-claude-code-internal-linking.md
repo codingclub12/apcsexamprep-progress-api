@@ -170,3 +170,85 @@ Railway and the Actions secret and nowhere else, because it can WRITE to the
 ledger and any session can echo a variable into its own transcript.
 `COMMAND_READ_TOKEN` is also set, so the read path is already covered. Unset
 `TODO_KEY` here and rotate it.
+
+## Search Console data, added after the fact
+
+Two GSC Performance exports arrived after the analysis above was written: Web
+search, last 16 months and last 3 months, exported 2026-08-27. Both cap at the
+top 1,000 pages by clicks. The lowest row in the 16-month file carries 0 clicks
+and about 260 impressions, so a page **absent** from it is known to be small
+rather than known to be zero.
+
+### The finding that reframes the whole pass
+
+**143 of the 480 orphans earn search traffic: 77,939 clicks and 1,541,726
+impressions, which is 65 percent of the site's 120,378 total clicks.** The
+highest-earning page on the domain,
+`ap-computer-science-principles-full-practice-exam-70-mcq` at 34,857 clicks, has
+zero inbound content links.
+
+So the linking pass is not hygiene on pages nobody visits. It is the site
+failing to pass authority to the pages already earning most of its traffic.
+
+### A prediction this repo got wrong
+
+Before the exports arrived, inbound content links were used as a stand-in for
+whether a page mattered, and four pages were called likely-dead on that basis.
+Two were among the biggest earners in their cluster:
+
+| Page | Inbound content links | Clicks, 16mo |
+|---|---|---|
+| `ap-cybersecurity-study-guide` | 0 | **982** |
+| `ap-cybersecurity-complete-course-guide` | 0 | **571** |
+
+Internal links measure browsability. They do not measure demand, and on this
+site the two are not correlated. `docs/site-audit-2026-08-positioning.md` was
+right to block consolidation on this data.
+
+### The proposed canonical is wrong for three courses
+
+The audit's template gives `/pages/ap-{course}` the head term. Those URLs have
+almost no equity, and two of them are the empty-body pages recorded above.
+
+| Course | Proposed canonical | Clicks | Earns instead | Clicks |
+|---|---|---|---|---|
+| AP CSA | `/pages/ap-csa` | 1 | `ap-csa-exam-prep-hub` | 2,470 |
+| AP CSP | `/pages/ap-csp` | 2 | `ap-csp-topics` | 323 |
+| AP Cyber | `/pages/ap-cybersecurity` | 4 | `ap-cybersecurity-study-guide` | 982 |
+
+Consolidating the earner into the bare handle would redirect away the traffic.
+Decision for Tanner: either build out the bare handles first and migrate
+deliberately, or keep the earner as canonical and drop the template.
+
+### Folds the data supports
+
+- `ap-cybersecurity-practice` (absent) into `-practice-exam` (1,524)
+- `ap-cybersecurity-exam-format-scoring` (4) into `-exam-format` (355)
+- `ap-csa-practice-test-hub` (absent) into `-practice-tests-by-topic` (81)
+- both primitives/casting twins (absent, 4) into
+  `ap-csa-practice-test-primitives-casting` (16)
+
+### Not folded, and why
+
+- **constructors twins**: `constructors-in-ap-csa` 19 clicks on 4,130
+  impressions against `ap-csa-constructors` 25 on 1,560. Neither dominates.
+- **cyber overview**: the audit counted eight URLs on one intent. Five are
+  near-zero and can go; `-study-guide` (982), `-complete-course-guide` (571) and
+  `-curriculum` (469) are three real pages and need query-level data first.
+
+### Worth more than most of the linking
+
+Two pages rank and are almost never clicked:
+
+| Page | Impressions | CTR | Position |
+|---|---|---|---|
+| `ap-csp-score-calculator` | 180,721 | 0.74% | 7.8 |
+| `ap-csa-score-calculator` | 144,784 | 1.06% | 6.8 |
+
+Moving both to 3 percent is roughly 8,000 additional clicks a year from a title
+and description rewrite. That is an SEO task, not an architecture one, and it is
+not in this pass.
+
+Also: 120 dead-end pages carry 8,476 clicks, led by `ap-csp-vocabulary-list`
+(1,598) and `ap-csa-score-calculator` (1,531). A student lands from search and
+the page offers nowhere to go next.

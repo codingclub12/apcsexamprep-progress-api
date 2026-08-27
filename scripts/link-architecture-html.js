@@ -20,6 +20,7 @@ const opt = (n, d) => {
 };
 const REPORT = opt('report', '');
 const RESOLVED = opt('resolved', '');
+const GSC = opt('gsc', '');
 const OUT = opt('out', 'architecture.html');
 
 const e = (s) => String(s == null ? '' : s)
@@ -35,6 +36,7 @@ function main() {
   if (!REPORT) { console.error('need --report'); process.exit(1); }
   const r = JSON.parse(fs.readFileSync(REPORT, 'utf8'));
   const resolved = RESOLVED && fs.existsSync(RESOLVED) ? JSON.parse(fs.readFileSync(RESOLVED, 'utf8')) : [];
+  const gsc = GSC && fs.existsSync(GSC) ? JSON.parse(fs.readFileSync(GSC, 'utf8')) : null;
   const t = r.totals;
 
   const redirects = resolved.filter((x) => x.status >= 300 && x.status < 400)
@@ -448,8 +450,83 @@ summary{cursor:pointer; font-size:14px; color:var(--accent); font-weight:500}
   <p style="margin-top:10px" class="muted">First 8 of ${n(brokenAssets.length)}. Full list in the report JSON.</p></div>` : ''}
 </section>
 
+<section id="gsc">
+  <span class="sec-num">04 &middot; Search data</span>
+  <h2>What the crawl could not know</h2>
+  ${gsc ? `<p class="lede">Search Console, ${e(gsc.window)}. This section exists because the link graph got the most important question backwards, and only this data could say so.</p>
+
+  <div class="headline-stat">
+    <div class="big">${Math.round(gsc.orphanEarners.share)}%</div>
+    <p><strong>of the site's search clicks land on pages nothing links to.</strong> ${n(gsc.orphanEarners.count)} orphaned pages carry ${n(gsc.orphanEarners.clicks)} clicks and ${n(gsc.orphanEarners.impr)} impressions between them. Google found them. The site does not link them.</p>
+  </div>
+
+  <p>That inverts what the linking pass is for. It is not hygiene on pages nobody visits; it is the site failing to pass any authority to the pages already earning most of its traffic. The single highest-earning page on the whole domain is an orphan.</p>
+
+  <div class="tbl-wrap"><table>
+    <caption><b>Orphaned pages that earn search traffic</b>Zero inbound content links, ranked by clicks over 16 months.</caption>
+    <thead><tr><th>Page</th><th class="num">Clicks</th><th class="num">Impressions</th></tr></thead>
+    <tbody>${gsc.orphanEarners.top.map((x) => `<tr>
+      <th scope="row"><code>${e(x.path)}</code></th>
+      <td class="num">${n(x.clicks)}</td><td class="num muted">${n(x.impr)}</td></tr>`).join('\n')}</tbody>
+  </table></div>
+
+  <div class="note warn">
+    <p><b>A prediction this report got wrong, corrected by the data.</b> Before these exports arrived, inbound content links were used as a stand-in for whether a page mattered, and four pages were called likely-dead on that basis. Two of them are among the biggest earners in their cluster: <code>ap-cybersecurity-study-guide</code> has zero inbound content links and ${n(gsc.clusters['AP Cybersecurity - overview intent'].find((x) => /study-guide/.test(x.path)).clicks)} clicks, and <code>ap-cybersecurity-complete-course-guide</code> has ${n(gsc.clusters['AP Cybersecurity - overview intent'].find((x) => /complete-course/.test(x.path)).clicks)}. Internal links measure browsability. They do not measure demand, and the two are not correlated here.</p>
+  </div>
+
+  <h3>The proposed canonical is wrong for three courses</h3>
+  <p>Section 05 proposes <code>/pages/ap-{course}</code> as the URL that owns each head term. Those URLs exist. They have almost no search equity, and two of them are the empty pages noted below.</p>
+
+  <div class="tbl-wrap"><table>
+    <caption><b>Head-term URL against the URL that actually earns</b>Consolidating the earner into the bare handle would redirect away the traffic.</caption>
+    <thead><tr><th>Course</th><th>Proposed canonical</th><th class="num">Clicks</th><th>Earns instead</th><th class="num">Clicks</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">AP CSA</th><td><code>/pages/ap-csa</code></td><td class="num bad">1</td><td><code>/pages/ap-csa-exam-prep-hub</code></td><td class="num">2,470</td></tr>
+      <tr><th scope="row">AP CSP</th><td><code>/pages/ap-csp</code></td><td class="num bad">2</td><td><code>/pages/ap-csp-topics</code></td><td class="num">323</td></tr>
+      <tr><th scope="row">AP Cyber</th><td><code>/pages/ap-cybersecurity</code></td><td class="num bad">4</td><td><code>/pages/ap-cybersecurity-study-guide</code></td><td class="num">982</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Folds the data now supports</h3>
+  <p class="lede">Each of these is a near-zero URL against a clear earner in the same intent. Absent means below the export cutoff: zero clicks and under about 260 impressions in 16 months.</p>
+  <div class="builds">
+    <div class="build"><span class="tag tag-cut">fold</span><code>ap-cybersecurity-practice</code><span class="num muted">absent</span>
+      <span class="why">into <code>ap-cybersecurity-practice-exam</code>, 1,524 clicks.</span></div>
+    <div class="build"><span class="tag tag-cut">fold</span><code>ap-cybersecurity-exam-format-scoring</code><span class="num muted">4 clicks</span>
+      <span class="why">into <code>ap-cybersecurity-exam-format</code>, 355 clicks. Same page under two URLs, per the August audit.</span></div>
+    <div class="build"><span class="tag tag-cut">fold</span><code>ap-csa-practice-test-hub</code><span class="num muted">absent</span>
+      <span class="why">into <code>ap-csa-practice-tests-by-topic</code>, 81 clicks.</span></div>
+    <div class="build"><span class="tag tag-cut">fold</span><code>ap-csa-primitives-and-casting-practice-test</code><span class="num muted">absent</span>
+      <span class="why">into <code>ap-csa-practice-test-primitives-casting</code>, 16 clicks. Third twin <code>ap-csa-primitives-casting-practice-test</code> has 4 and folds the same way.</span></div>
+  </div>
+
+  <h3>Do not fold, on this evidence</h3>
+  <div class="builds">
+    <div class="build"><span class="tag tag-fix">keep both</span><code>constructors twins</code><span class="num muted">19 vs 25 clicks</span>
+      <span class="why"><code>constructors-in-ap-csa</code> earns 19 clicks on 4,130 impressions; <code>ap-csa-constructors</code> earns 25 on 1,560. Neither dominates and they convert differently. Picking one here is still a guess; separate them by query first.</span></div>
+    <div class="build"><span class="tag tag-fix">keep all three</span><code>cyber overview trio</code><span class="num muted">982 / 571 / 469</span>
+      <span class="why"><code>-study-guide</code>, <code>-complete-course-guide</code> and <code>-curriculum</code> are three substantial pages, not duplicates. The August audit counted eight URLs on this intent; five of them are near-zero and can go, these three cannot.</span></div>
+  </div>
+
+  <h3>A larger prize than any of the linking</h3>
+  <p>Two pages rank well and are almost never clicked. This is a title and description problem, not an architecture one, and it is worth more than most of the work above.</p>
+  <div class="tbl-wrap"><table>
+    <caption><b>High impressions, near-zero click-through</b>Pages over 20,000 impressions, worst CTR first.</caption>
+    <thead><tr><th>Page</th><th class="num">Clicks</th><th class="num">Impressions</th><th class="num">CTR</th></tr></thead>
+    <tbody>${gsc.ctrLosers.map((x) => `<tr>
+      <th scope="row"><code>${e(x.path)}</code></th>
+      <td class="num">${n(x.clicks)}</td><td class="num">${n(x.impr)}</td>
+      <td class="num bad">${x.ctr}%</td></tr>`).join('\n')}</tbody>
+  </table></div>
+  <p><code>ap-csp-score-calculator</code> alone draws 180,721 impressions at position 7.8 and converts 0.74% of them. Moving those two calculators to a 3% CTR is roughly 8,000 additional clicks a year, from a title rewrite.</p>
+
+  <div class="note">
+    <p><b>Dead ends leak the traffic they earn.</b> ${n(gsc.deadEndEarners.count)} pages with no outbound content link carry ${n(gsc.deadEndEarners.clicks)} clicks between them, led by <code>ap-csp-vocabulary-list</code> at 1,598 and <code>ap-csa-score-calculator</code> at 1,531. A student lands from search and the page offers nowhere to go next.</p>
+  </div>` : '<p class="lede">No Search Console export was supplied to this run.</p>'}
+</section>
+
 <section id="ideal">
-  <span class="sec-num">04 &middot; Proposed</span>
+  <span class="sec-num">05 &middot; Proposed</span>
   <h2>The architecture it should have</h2>
   <p class="lede">One template, applied identically to all five courses, so no page's position has to be remembered. This follows the shape already proposed in <code>docs/site-audit-2026-08-positioning.md</code> rather than competing with it.</p>
 
@@ -463,7 +540,7 @@ summary{cursor:pointer; font-size:14px; color:var(--accent); font-weight:500}
 </section>
 
 <section id="gaps">
-  <span class="sec-num">05 &middot; Gaps</span>
+  <span class="sec-num">06 &middot; Gaps</span>
   <h2>Hubs the taxonomy implies and the site does not have</h2>
   <p class="lede">A cluster is a set of pages whose handles already agree they belong together. Where three or more of them exist with no page at the family root, the hub is missing rather than merely unlinked.</p>
 
@@ -509,7 +586,7 @@ summary{cursor:pointer; font-size:14px; color:var(--accent); font-weight:500}
 </section>
 
 <section id="wired">
-  <span class="sec-num">06 &middot; Executed</span>
+  <span class="sec-num">07 &middot; Executed</span>
   <h2>The linking pass</h2>
   <p class="lede">Six Matrixify sheets, hub-down first. Nothing was imported: a sheet is reviewable before it lands and re-runnable in MERGE mode after a partial import, which is the path this repo's conventions require for every page change.</p>
 
@@ -543,7 +620,7 @@ summary{cursor:pointer; font-size:14px; color:var(--accent); font-weight:500}
 </section>
 
 <section id="cuts">
-  <span class="sec-num">07 &middot; Consolidation</span>
+  <span class="sec-num">08 &middot; Consolidation</span>
   <h2>Pages that compete with each other</h2>
   <p class="lede">The audit on 26 August found one intent spread across many URLs, so no single URL accumulates authority. Those findings stand and are not re-derived here.</p>
 
@@ -557,10 +634,13 @@ summary{cursor:pointer; font-size:14px; color:var(--accent); font-weight:500}
 
   <p>Beyond these mechanical twins, the August audit recorded the larger clusters by intent: AP Cybersecurity has eight URLs competing on overview intent and three on practice intent, AP CSA has six competing surfaces and AP CSP six. Those findings stand and are not re-derived here.</p>
 
-  <div class="note stop">
+  ${gsc ? `<div class="note">
+    <p><b>Partially unblocked.</b> The August audit blocked consolidation until Search Console data existed, because picking which URL to keep without click data can redirect away the page earning the traffic. That data is now in section 04, and it changed the answer: the four folds listed there are safe, and two clusters that looked like duplicates are not.</p>
+    <p>What is still blocked is anything not in that list. The export is capped at the top 1,000 pages by clicks, so a URL absent from it is known to be small, not known to be zero, and the cyber overview cluster still needs query-level data before three real pages are merged into one.</p>
+  </div>` : `<div class="note stop">
     <p><b>Do not execute these until Search Console is connected.</b> Consolidating a cannibalised cluster means picking one URL to keep and redirecting the others into it. Picking that URL without click and impression data is a guess, and a wrong guess redirects away the page that was actually earning the traffic.</p>
-    <p>This section is therefore a list to rank once the data exists, not a list to action. Everything in sections 02 through 05 is additive and safe to do now.</p>
-  </div>
+    <p>This section is therefore a list to rank once the data exists, not a list to action.</p>
+  </div>`}
 </section>
 
 <footer>
