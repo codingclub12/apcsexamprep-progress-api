@@ -175,7 +175,36 @@ does, and nothing painting an answer on load. Every page drives identically to
 its pre-import version, including 15/15 on 1.1 exercise 2, 24/24 on the 1.3 lab,
 5/5 on the 1.3 quiz and 20/20 on the exam page.
 
-The unit exam sheet is still held, for the WO-7 reason above.
+The unit exam went in last, at 17:10, ahead of WO-7 rather than behind it.
+The page was still on its 2026-08-12 body when the sheet was rebuilt against it,
+so WO-7 had not started and there was nothing to clobber. Byte-identical, and
+driven on the live body it still scores 20 of 20 correct and 0 of 20 wrong with
+the ANSWERS map unchanged.
+
+That resolves the sequencing hazard by removing it: whoever picks up WO-7 now
+builds against a body that already carries these ten edits. Anyone who
+snapshotted that page earlier today has to re-pull.
+
+### Where Unit 1 stands
+
+```
+node scripts/cyber-unit-sweep.js cyber unit-1
+32 pages, 4 carrying something a student should not see
+```
+
+Twenty-eight of thirty-two clean. The four left carry six claims between them:
+
+```
+ap-cybersecurity-unit-1-social-engineering    2
+ap-cybersecurity-unit-1-ai-cyber-defense      2
+ap-cyber-unit-1-lesson-2-terminal-lab         1
+ap-cyber-unit-1-lesson-4-exercise-2           1
+```
+
+Two of those are lesson pages an earlier claim sweep had already called clean.
+They surfaced only when the detector learned the construction `the exam tests`,
+which is the same lesson this pass keeps relearning: a check that cannot see a
+construction reports the page as clean, and the report is believed.
 
 ### The quiz counts
 
