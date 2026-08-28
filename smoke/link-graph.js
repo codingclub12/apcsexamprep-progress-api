@@ -212,6 +212,31 @@ console.log('\nlink block: escaping');
   ok('an already-escaped entity is left alone', B.esc('a &amp; b &#39; c') === 'a &amp; b &#39; c', B.esc('a &amp; b &#39; c'));
 }
 
+console.log('\nsource bodies: Cloudflare email obfuscation is refused, not repaired');
+{
+  // Cloudflare rewrites every address at render time with a key that rotates
+  // per render, so a rendered body does not contain the address at all. On this
+  // site 24 live pages carry them, and the AP Cybersecurity phishing exercises
+  // are built on lookalike domains the student is asked to spot. Writing
+  // do-not-reply@g00gle.com out as the placeholder deletes the question.
+  const GATE = /__cf_email__|\/cdn-cgi\/l\/email-protection/;
+  ok('the span form is caught',
+    GATE.test('<span class="__cf_email__" data-cfemail="4430252a">[email protected]</span>'));
+  ok('the anchor form is caught',
+    GATE.test('<a href="/cdn-cgi/l/email-protection#4430252a">x</a>'));
+  ok('a real mailto is NOT caught',
+    !GATE.test('<a href="mailto:tanner@apcsexamprep.com">tanner@apcsexamprep.com</a>'));
+  ok('an ordinary body is NOT caught',
+    !GATE.test('<div id="w"><p>related-links and email in prose</p></div>'));
+
+  // The cipher is reversible, which is exactly why the rule has to be explicit:
+  // reversing it recovers the address but not the markup it replaced, and this
+  // repo refuses rather than guesses.
+  const decode = (h) => { const b = Buffer.from(h, 'hex'); return Array.from(b.slice(1)).map((c) => String.fromCharCode(c ^ b[0])).join(''); };
+  ok('the cipher is trivially reversible, and that is not a reason to repair',
+    decode('4430252a2a2136042534273721') === 'tanner@apcse', decode('4430252a2a2136042534273721'));
+}
+
 console.log('\nlink block: a hub gets a bigger cap than a spoke');
 {
   // With one cap of 8, the course-hub fallback planned 75 links onto
