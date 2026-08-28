@@ -233,6 +233,52 @@ async function main() {
     }
   }
 
+  //  ── THE HUB, AS A 31st ROW ────────────────────────────────────────────────
+  //  It ships in THIS sheet rather than separately, and that is not tidiness.
+  //  The hub's one outbound lesson link points at lesson-6 and describes TLS,
+  //  SSH and DNSSEC. After the three-cycle lesson-6 holds the DETECTION body,
+  //  so a hub imported even minutes apart from the pages sends readers to IDS
+  //  and SIEM under a heading promising secure protocols. It still resolves and
+  //  still renders, which is exactly why it would go unnoticed.
+  //
+  //  The hub itself needs NO renumbering: its five sections already read the
+  //  CED topics correctly. It was right while the lessons were wrong, so the
+  //  token pass is deliberately never run over it.
+  {
+    const hub = await load(R.HUB_HANDLE);
+    const { body, actions } = R.transformHub(hub.body_html);
+    const bad = [];
+    if (!actions.includes('lesson-index-added')) bad.push('lesson index not inserted');
+    if (!actions.includes('card-retargeted')) bad.push('enrichment card not retargeted');
+    if (/ap-cyber-unit-3-lesson-6"[^>]*>\s*(?:Explore|Go to)/.test(body)) {
+      bad.push('a call-to-action still points at lesson-6');
+    }
+    for (let n = 1; n <= 6; n++) {
+      if (!body.includes(`/pages/ap-cyber-unit-3-lesson-${n}"`)) {
+        bad.push(`no link to lesson-${n}`);
+      }
+    }
+    if (/not tested on the AP exam/.test(body)) {
+      bad.push('the "not tested" warning survives on what is now a core topic');
+    }
+    const tag = bad.length ? 'FAIL' : 'ok  ';
+    if (bad.length) failures++;
+    console.log(`${tag} ${R.HUB_HANDLE.padEnd(38)} <- itself${' '.repeat(31)}hub  [${actions.join(', ')}]`);
+    for (const x of bad) console.log(`       ! ${x}`);
+    rows.push([hub.id, R.HUB_HANDLE, hub.title, body, 'MERGE']);
+
+    //  The hub does not move, so its baseline is simply itself. Written anyway
+    //  so stayed_hidden covers the hub too rather than silently skipping the
+    //  one page in this sheet whose body was hand-edited rather than renumbered.
+    if (baseOut) {
+      fs.mkdirSync(baseOut, { recursive: true });
+      fs.writeFileSync(
+        path.join(baseOut, `${R.HUB_HANDLE}.json`),
+        JSON.stringify({ page: hub }), 'utf8',
+      );
+    }
+  }
+
   if (failures) {
     console.error(`\n${failures} page(s) failed the gate. NO SHEET WRITTEN.`);
     process.exit(1);
