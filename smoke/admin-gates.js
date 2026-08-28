@@ -219,11 +219,38 @@ const at = (list, lesson, type) =>
   const served = (await call('GET', q, null, ST)).body;
   r = await call('POST', '/api/quiz/submit',
     { order_token: served.order_token, answers: [] }, 'not.a.jwt');
-  ok('submit with a malformed token is still rejected', r.status === 401, r.status);
+  ok('submit with an UNVERIFIABLE token is still rejected', r.status === 401, r.status);
 
+  //  A verified token with no gradebook row behind it is a different case, and
+  //  lumping it in with the one above is what broke the classroom a second
+  //  time: the render was fixed, then the teacher answered every question and
+  //  got "Your answers were not saved. Please try again." on submit. There was
+  //  nothing to save and retrying could never help.
+  const fresh = () => call('GET', q, null, ST).then((x) => x.body.order_token);
+
+  r = await call('POST', '/api/quiz/submit', { order_token: await fresh(), answers: [] }, TT);
+  ok('submit with a TEACHER token scores instead of 401', r.status === 200, { status: r.status, body: r.body });
+  ok('teacher submit is self-study', r.body && r.body.mode === 'self-study', r.body && r.body.mode);
+  ok('teacher submit records nothing to a gradebook', r.body && r.body.recorded === false, r.body && r.body.recorded);
+  ok('teacher submit releases the key, so a preview is useful',
+    r.body && r.body.released === true, r.body && r.body.released);
+
+  r = await call('POST', '/api/quiz/submit', { order_token: await fresh(), answers: [] }, GHOST);
+  ok('submit for a removed student scores instead of 401', r.status === 200, r.status);
+  ok('removed student submit records nothing', r.body && r.body.recorded === false, r.body && r.body.recorded);
+
+  //  The case that must NOT have changed: a real student is still attributed.
+  const evBefore = db.prepare('SELECT COUNT(*) n FROM score_events WHERE student_id = ?').get('s1').n;
+  const s11 = (await call('GET', q, null, ST)).body;
   r = await call('POST', '/api/quiz/submit',
-    { order_token: served.order_token, answers: [] }, GHOST);
-  ok('submit for a deleted student is still rejected', r.status === 401, r.status);
+    { order_token: s11.order_token, answers: s11.questions.map((x) => ({ qid: x.qid, chosen_index: 0 })) }, ST);
+  ok('a real student still submits in class mode', r.status === 200 && r.body.mode !== 'self-study',
+    { status: r.status, mode: r.body && r.body.mode });
+  const evAfter = db.prepare('SELECT COUNT(*) n FROM score_events WHERE student_id = ?').get('s1').n;
+  //  score_events is per graded question by design (Phase 2), so assert that
+  //  attribution happened rather than pinning a row count that is not this
+  //  test's business.
+  ok('a real student is still recorded to the gradebook', evAfter > evBefore, { evBefore, evAfter });
 
   // ── 7) Unknown class is a clean 404, not a 500 ─────────────────────────────
   r = await admin('/api/admin/class/CYBER-NOPE/gates');

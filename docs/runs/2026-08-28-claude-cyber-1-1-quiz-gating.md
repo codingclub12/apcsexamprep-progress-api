@@ -192,8 +192,54 @@ that matter: a locked class still locks a valid student and still withholds the
 questions, and submit still rejects a malformed token and a deleted student. All
 138 offline suites pass.
 
+## The same bug again, one layer down
+
+Deployed as `dc65649`, verified live: a stale token went from 401 to 200 with
+questions on all five Unit 1 quizzes. Then a screenshot showed the quiz
+rendering correctly, every question answered, and submit failing with **"Your
+answers were not saved. Please try again."**
+
+Half a fix. `renderStudent` tolerated the bad credential; `POST /submit` still
+used the strict middleware, so the same teacher token 401'd one step later. And
+"try again" could never work: the token was going to fail identically every
+time. Confirmed against production, anonymous submit scoring fine while a token
+holder was refused:
+
+```
+submit, no token     -> 200 {"mode":"self-study","recorded":false,"released":true}
+submit, stale token  -> 401 {"error":"Invalid or expired student session"}
+```
+
+The original strict/tolerant split was drawn in the wrong place. The line that
+matters is not "student or not", it is **is there a gradebook row this work
+belongs to**:
+
+1. Valid student token -> that student. Attributed and gated.
+2. **Verified token, no student row behind it**: a teacher previewing, or a
+   token naming a removed student. Signature good, identity known, nothing to
+   credit. Self-study loses nothing, because there was nothing to lose.
+3. Unverifiable token: bad signature, expired, malformed. Still 401, and only
+   this one. It may belong to a real student with a real row, and scoring that
+   as anonymous would drop it silently.
+
+Case 2 was lumped in with case 3, which is what broke the classroom twice in one
+afternoon on the same root cause. Both middlewares now call one `resolveStudent`
+helper and differ only in whether case 3 is fatal, so the two paths cannot drift
+apart again.
+
+A teacher previewing now gets a scored result with the key released, which is
+what a preview is for, and `recorded: false`, so nothing lands in a gradebook.
+
+43 assertions, including the guards that matter in the other direction: a real
+student still submits in class mode and is still recorded, a locked class still
+locks a valid student and still withholds questions, and an unverifiable token
+is still refused. All 138 offline suites pass.
+
 ## Still open
 
-Nothing on the cause. Worth confirming after deploy that Peter's students can
-open the quiz, and the three defects above still belong to the theme and
-page-copy pipelines.
+Confirm after deploy that a full attempt now submits end to end.
+
+On the question counts above: 5 is deliberate. The web quiz is not meant to
+match the teacher bundle, so the bank stays at 5 and the PAGE COPY is what is
+wrong. The 1.1 page should read 5 questions, not 9, and 1.2 should read 5, not
+12. Matrixify sheet, not a seeding change.
