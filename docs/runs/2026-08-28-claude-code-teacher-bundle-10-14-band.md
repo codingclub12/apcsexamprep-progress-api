@@ -101,15 +101,77 @@ does not get renumbered a second time.
 Rendered pages read at the title, vocabulary, and end-of-day slides, which are
 the three carrying the most of the changed sizes between them.
 
+## The other courses, after all: an Apps Script
+
+Asked directly, Tanner chose the CSP and cyber decks over the CSA handouts. So
+the second half of this change is `scripts/slide-type-bump.gs`, written to the
+same split `cyber-slides-conversion.gs` established: the agent does the parts
+needing judgement, and the account holder runs it.
+
+It walks the 294 decks the gate can serve, and raises anything between 10 and
+14pt. Same band, same reasoning, a gentler curve than the CSA pass got, because
+that pass had a build step that could measure a panel and refuse and this one
+has nothing of the kind:
+
+    10   to 11.5   +2.5
+    11.5 to 13     +2
+    13   to 14     +1.5
+
+`scripts/build-slide-type-bump-gs.js` fills the deck table by walking both
+manifests and asking `slideId()` for each deck, so the table is exactly the set
+`routes/slides.js` can hand an entitled teacher, and a mistyped file id is not
+a thing that can happen. It refuses to generate if two decks share an id, since
+a shared id would be bumped twice and remembered once.
+
+### What makes this safe enough to hand over
+
+A Google Slides text box does not shrink its text to fit, nobody has seen these
+294 decks, and there is no staging copy. Four things follow.
+
+`preview()` writes nothing and reports the size histogram. It is the step that
+replaces guessing: the band was designed against the CSA decks, and whether it
+suits these depends on sizes nobody has looked at yet. If the band comes back
+nearly empty, the right move is to stop.
+
+`DECK_LIMIT` ships at 3, not 0. The default for a script that edits 294 live
+decks should not be all of them.
+
+Every change is written to an undo file in Drive BEFORE the deck is touched,
+and `revert()` replays it backwards. Writing first can at worst describe
+changes that were never made, which replays as a no-op; writing after can leave
+a deck nobody can restore.
+
+A deck that already has an undo file is refused a second bump. That guard is
+not redundant with the sheet: the sheet can be deleted, and a second pass would
+turn a 12 into a 14 and then a 16.
+
+### It is tested, which for a .gs is not the default
+
+`smoke/slide-type-bump.js` loads the script into a `vm` context with the six
+Google globals stubbed and exercises it for real. 47 assertions, picked up by
+CI automatically because the suite list is derived from `package.json`.
+
+The one that matters most is the round trip. The bump maps 10 to 12.5 and 12.5
+to 14.5, so a deck holding both sizes afterwards cannot be unmapped by
+arithmetic: only the undo file knows which run was which. The suite asserts
+that non-invertibility explicitly, then asserts that `revert()` restores every
+size exactly anyway. It also asserts that a second `start()` compounds nothing,
+with the sheet present and with the sheet deleted.
+
+```
+$ npm run smoke:slidetypebump
+  47 passed, 0 failed
+```
+
 ## Still open
 
-- The other courses, as above. If the CSP and cyber decks should get the same
-  treatment, that is an Apps Script for Tanner to run against Drive, written
-  the same way `cyber-slides-conversion.gs` was, and it is a decision rather
-  than a patch: it rewrites live decks in place with no undo.
+- **The Apps Script has never run.** It cannot run here; that is the whole
+  reason it exists. `preview()` first, then `start()` with `DECK_LIMIT` at 3,
+  then open those three before setting it to 0. The smoke suite proves the
+  logic, not that a bumped deck looks right.
 - `scripts/csa_kit/notes.py` builds the same bundle's guided notes, quizzes and
-  teacher guide, and its type runs 9.5 to 13pt. Those are handouts rather than
-  slides, so nothing here touched them, and the constraint is page overflow
-  rather than panel overflow.
-- Regenerating the kit and reuploading it is still the human step that puts any
-  of this in front of a teacher.
+  teacher guide, and its type runs 9.5 to 13pt. Handouts rather than slides,
+  and not asked for. The constraint there is page overflow rather than panel
+  overflow.
+- Regenerating the CSA kit and reuploading it is still the human step that puts
+  any of the CSA half in front of a teacher.
