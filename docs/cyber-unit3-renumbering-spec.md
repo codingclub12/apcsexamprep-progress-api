@@ -19,7 +19,12 @@ than a rewrite:
 | 3.3 Firewalls and Packet Filtering | 3.4.A/B/C.\* | 3.4 |
 | 3.4 Network Segmentation and VLANs | 3.3.A/B.\* | 3.3 |
 | 3.5 IDS, IPS and SIEM | 3.5.A-E.\* | 3.5 |
-| 3.6 Network Security Policies and Wireless | 3.2.A/B.\* | 3.2 |
+| 3.6 Network Security Policies and Wireless | 3.2.A/B.\* | 3.2 (see below) |
+
+The last row is the one to distrust. Those EK citations sit in a coverage table,
+not in the teaching body, and the page does not actually teach CED 3.2. The audit
+said so plainly ("Content is TLS and secure protocols") and this table lost it by
+reading the numbering back from the citations. See "The CED 3.2 content gap".
 
 Site 3.3 and 3.4 are each other's CED topics. Site 3.6 is CED 3.2. Site 3.1 and
 3.2 are two halves of CED 3.1, which is why six site lessons cover five CED
@@ -152,6 +157,53 @@ Rail labels read `3.1a` and `3.1b` rather than "3.1" twice. The strip is one lin
 of compact text with no room for "Part 1 of 2", two entries both reading 3.1
 would be a coin flip, and a/b is what the section numbers on those two pages
 already say. The `title` attribute carries the descriptive name on hover.
+
+## The CED 3.2 content gap, and how the audit nearly missed it
+
+**Unit 3 has no lesson that teaches CED 3.2.** Found 2026-08-28 while wiring the
+hub, and it is the one finding here that outlives the renumbering.
+
+The audit mapped `lesson-6` to CED 3.2 because the page cites all eight of CED
+3.2's EK codes, `3.2.A.1` through `3.2.B.4`. That inference was too fast. Those
+citations live in a "What Is Testable" coverage table at the end of the page. The
+91 KB teaching body above it is five sections on TLS, SSH and SFTP, VPN
+architecture, DNSSEC and PKI: secure protocols, not managerial controls.
+
+Measured against what CED 3.2.A actually requires:
+
+| CED 3.2 concept | teaching body | coverage table |
+|---|---|---|
+| router security policy | 0 | 2 |
+| switch security policy | 0 | 2 |
+| wireless security policy | 0 | 1 |
+| local user accounts | 0 | 4 |
+| extensible authentication (EAP) | 0 | 0 |
+| minimum configuration standard | 0 | 0 |
+
+The hub's own 3.2 section does not close it either: 1,648 characters covering
+evil twin, jamming, WPA3 and SSID, with none of the four policy types.
+
+**A citation is not coverage.** An EK code in a coverage table says what the page
+claims to be about; only the body says what it teaches. The audit's term scans
+read whole pages and could not tell those apart, which is the same shape of
+mistake as counting a term without reading its context. Any future
+"which CED topic is this page" call should check the body, not the citations.
+
+Tanner's call on 2026-08-28: **renumber as planned and file the gap separately.**
+The numbering becomes CED-correct now and the content hole becomes explicit and
+tracked, rather than staying hidden behind a wrong number. The cost is accepted:
+until that work ships, `3.2` names a lesson whose body is enrichment.
+
+Two consequences already handled here:
+
+- The hub's card called that lesson "Enrichment, Beyond CED Scope" and "not
+  tested on the AP exam". On a page that is now a core CED topic, that sentence
+  would tell a student to skip tested material, so it is gone. What remains true,
+  and is what the card now says, is that the protocol material *inside* the
+  lesson is enrichment.
+- **Still to file:** author CED 3.2.A's router, switch, VPN and wireless policy
+  content, plus 3.2.B wireless configuration, into the Topic 3.2 lesson. Eight
+  EKs. Not started.
 
 ## The gate, the body move, and the ids left alone
 
