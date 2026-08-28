@@ -149,13 +149,54 @@ Nothing incorrect could have reached the site in the meantime:
 slots outright. That guard was written for a different scenario, a shared id
 across variants, and caught this one for free.
 
+## Outcome: the gate is live
+
+- **The conversion ran clean.** 70 decks, 70 unique ids, zero duplicates, from
+  a fresh folder. It took two passes: Drive rate-limited four copies on the
+  first, and the second pass converted **exactly those four and nothing else**
+  (`2-1 Day8 STUDENT`, `2-2 Day1 TEACHER`, `2-2 Day5 STUDENT`,
+  `2-4 Day2 TEACHER`, 22:39:58 to 22:40:06). That is what #381 bought: before
+  it, a second pass meant another 70 copies. `alreadyDone_` keys only on rows
+  whose status is `OK`, so failures retry and successes never do.
+- **Evidence, in the order it was gathered.** Drive listing matched the
+  per-lesson deck counts exactly (1-1:4, 1-2:8, 1-3:8, 1-4:4, 1-5:4, 2-1:16,
+  2-2:10, 2-3:8, 2-4:8). The sheet CSV read 70 rows, 70 `OK`, 70 unique ids,
+  with column A holding `1-1` as text rather than a date, so the #381 fix held
+  at the source and not merely in the reader. `verify:sharing` returned 70/70
+  anonymously with both controls behaving. Two decks were then read end to end,
+  including one from the second pass, because sharing proves reachability and
+  says nothing about whether a deck converted blank.
+- **Merged as #385 and verified against the live API**, not against the merge.
+  Every cyber lesson returns `locked:true`, `decks:null` and zero
+  `docs.google.com` strings to an unauthenticated caller; `3-1` still 404s;
+  `ap-csp/1-1` unchanged. The ids reach an entitled caller and nobody else.
+
 ## Still open
 
-- **The conversion is being re-run** from a clean folder with the PR #381
-  script. Until it lands and the generator writes
-  `config/cyber-slide-embeds.js`, every cyber lesson reports zero decks to an
-  entitled teacher. That is a working state by design, and it is what the
-  pending branch renders.
+- **CED Essential Knowledge codes are in the student decks.** Found while
+  reading decks to prove content survived, so it is unrelated to the gate and
+  was not introduced by it. `CLAUDE.md` says these never go in front of
+  students. `1-1 Day1 STUDENT` carries roughly 15 in visible body text,
+  including "Name the two tactics the CED specifies - intimidation and urgency
+  (EK 1.1.A.2)" on the objectives slide and an EK citation ending every
+  vocabulary card. `2-2 Day5 STUDENT` has a review table with a literal `EK`
+  column. Two decks, two units, both hit, which reads as the deck template
+  rather than a slip; at that rate it is several hundred across the 35 student
+  decks in Units 1 and 2.
+
+  The shape is the useful part: `docs/ap-cyber-unit1-ced-realignment.md`
+  records this exact problem being found and fixed in the Topic 1.1 lesson
+  PAGE. The decks for that same topic still have it. The cleanup landed on one
+  surface and not the other, which is worth checking for whenever a content
+  rule gets enforced anywhere. The sources are `.pptx` files in Drive, outside
+  both repos. `tools/ap-cyber-ced/validate_csv.py` counts them.
+- **No screenshot of a real deck inside the viewer iframe.** The panel around
+  it is photographed at both widths with real ids and is correct. The deck is
+  not, and cannot be from here: Chromium reaches no https host at all through
+  the agent proxy (`example.com`, `cdnjs` and `google.com` all
+  ERR_CONNECTION_RESET) while curl reaches all of them, so it is browser egress
+  rather than anything about Google or the decks. `screenshots-real-deck.js` in
+  the theme repo does it in one run anywhere with a normal network.
 - **No screenshots yet**, at either width. The CSP build found two real defects
   that passed every DOM assertion and were only visible in a picture. Nothing
   here has been photographed, because there is nothing to photograph until
@@ -237,3 +278,16 @@ It is the reason a triple-converted sheet could not produce a config, so the
 blast radius of four bad runs was some wasted Drive quota and no site impact.
 Worth asking, after any incident, which existing guard held and why, because
 that is what tells you where the next one should go.
+
+**A content rule enforced on one surface is not enforced.** The EK codes were
+hunted down and removed from the Topic 1.1 lesson page, and that work is
+written up. The slide decks for the same topic, teaching the same objectives,
+kept every one of them. Nothing connected the two, because the rule lived in
+prose and the enforcement lived in a script pointed at one file type. Worth
+asking, whenever a content rule is enforced: what else renders this content?
+
+**Reachable is not rendered, and neither is proof of the other.** 70/70
+credential-free fetches say every deck is shared. They say nothing about
+whether a deck converted to blank slides, which is why two were read end to
+end. The sharing script says so itself, in its own output, because the CSP
+build learned it the hard way.
