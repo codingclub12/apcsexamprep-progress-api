@@ -35,6 +35,7 @@
 
 const { chromium } = require('../smoke/node_modules/playwright');
 const tg = require('../lib/cyber-thin-gate');
+const cg = require('../lib/cyber-cite-gate');
 
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 '
   + '(KHTML, like Gecko) Chrome/126.0 Safari/537.36';
@@ -81,7 +82,7 @@ function claims(body) {
   const f = tg.flat(body);
   const seen = new Set();
   const out = [];
-  for (const m of f.matchAll(/[^.!?]{0,120}\b(?:AP )?exam[^.!?]{0,120}/gi)) {
+  for (const m of f.matchAll(cg.claimWindow())) {
     const hit = m[0].match(tg.ASSERTS);
     if (!hit) continue;
     const at = m.index + m[0].indexOf(hit[0]);
