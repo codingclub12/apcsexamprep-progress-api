@@ -157,9 +157,15 @@ check('the live Topic 1.2 module has no unwired splices', () => {
 });
 
 check('every other cyber splice module is wired too', () => {
+  //  Matched on the module PREFIX, not on a "-ced" suffix. The first version
+  //  required "-ced.js", so cyber-u1-topic12-thin.js was invisible to it the
+  //  day it was added: a new module shape silently outside the check is the
+  //  same failure as cfu-5's unwired splice, one level up.
   const dir = path.join(__dirname, '..', 'lib');
-  const mods = fs.readdirSync(dir).filter((f) => /^cyber-u1-.*-ced\.js$/.test(f));
+  const mods = fs.readdirSync(dir).filter((f) => /^cyber-u1-.*\.js$/.test(f));
   assert.ok(mods.length >= 5, `expected the Unit 1 modules, found ${mods.length}`);
+  assert.ok(mods.some((m) => m.endsWith('-thin.js')),
+    'the thinning modules are part of what this has to cover');
   for (const m of mods) {
     const out = gate.unwiredSplices(fs.readFileSync(path.join(dir, m), 'utf8'));
     assert.deepStrictEqual(out, [], `${m}: ${out.join('; ')}`);
