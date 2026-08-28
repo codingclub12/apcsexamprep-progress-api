@@ -233,7 +233,7 @@ Write "secure information, such as a one-time password" and not "secure
 information (1.1.C.2)". Write "the CED names two tactics" and not "EK 1.1.A.2
 names two tactics". The sentence is shorter and it teaches the same thing.
 
-Three places a code still earns its place:
+Four places a code still earns its place:
 
 - **The Essential Knowledge coverage table.** It exists to be audited against the
   framework, and it is collapsed by default, so a student only meets it if they
@@ -244,11 +244,53 @@ Three places a code still earns its place:
   checkability is the point of saying it at all.
 - **Teacher-facing artifacts**: exit ticket answer keys, teacher guides, pacing
   documents. Nobody is reading those to learn the topic.
+- **A web quiz explanation, shown after the student has answered.** Decided
+  2026-08-28, and written down here because the rule as it stood did not cover
+  it and the next sweep would have stripped it. See below.
 
 Beyond those, one orientation tag on a concept card is the most a lesson page
 should carry, and only where the page is explicitly teaching the structure of
 the topic rather than the topic itself. If a code is doing anything other than
 proving a claim or letting a teacher audit, cut it and keep the idea.
+
+#### The quiz explanations, and why they keep their codes
+
+The five Unit 1 web quizzes return an explanation with each result, and those
+carry **38 EK codes**, every one of the form "EK 1.5.A.1 says AI-powered tools
+can review current security configurations". They stay.
+
+**They do not fit the "evidence for a claim" exception**, and pretending they do
+would be the kind of stretched reading that later gets used to justify anything.
+Not one of the 38 is a scoping claim. There is no "this is not assessed", no
+"that belongs to Unit 2". Every one cites the framework for a statement of
+content, where the code supplies authority rather than meaning: strike the four
+opening words and the sentence teaches exactly the same thing.
+
+**The argument that they prove the material is examinable does not survive
+contact with the quiz either.** Every question in these banks is built from the
+course description already, so the code is a uniform label across all 38. A
+label present on everything cannot tell a student which part matters more.
+
+**They stay anyway, and the reason is placement.** This is the one surface in the
+course where a code is read AFTER the student has committed to an answer, at the
+moment they are asking why. It is not sitting in the middle of teaching, it is
+not on a card they scroll past twenty times, and it is read once. That is the
+"unless it makes sense" case, and a quiz explanation is the strongest instance of
+it anywhere in Unit 1.
+
+**If they are ever revisited, the fix is not a strip.** It is flipping the
+construction from citation-first to content-first, with the code as a trailing
+tag: "AI tools can review firewall rules and recommend more secure options, but a
+knowledgeable technician should always check them. (1.5.A.1)". Same lookup, same
+signal, and the student owns the sentence instead of a document they have never
+been handed. That is a rewrite of 33 sentences and a content decision, not a
+sweep.
+
+**The reason this note exists at all.** The sweep in `scripts/cyber-unit-sweep.js`
+reads pages, not API responses, so it never sees these. A future pass that does
+look at the bank would find 38 codes in student-visible text, match no exception,
+and remove them. An undocumented exception gets re-litigated; a written one does
+not.
 
 **The cautionary number.** The rebuilt Topic 1.1 lesson shipped with **218 EK
 codes in student-visible text**, roughly one every 300 characters: 31 in the

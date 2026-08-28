@@ -162,3 +162,38 @@ the live body AFTER WO-7 lands. Do not hold both at once.
   display and the scroll are lost.
 - 1.5 carries its Exit Ticket twice, both painted.
 - WO-7 itself.
+
+## Imported, and verified live
+
+All fifteen non-exam sheets are in. Topic 1.3's three went first (13:45 to
+13:48), the remaining twelve as one merged sheet (14:25), and the two quiz
+count sheets after (17:01). Every one byte-identical to what was sent, with no
+Shopify normalization drift on any of them.
+
+On the live bodies: zero "CED", zero EK codes, zero claims about what the exam
+does, and nothing painting an answer on load. Every page drives identically to
+its pre-import version, including 15/15 on 1.1 exercise 2, 24/24 on the 1.3 lab,
+5/5 on the 1.3 quiz and 20/20 on the exam page.
+
+The unit exam sheet is still held, for the WO-7 reason above.
+
+### The quiz counts
+
+The 1.1 page promised nine questions and the 1.2 page twelve. Both now read five,
+which is what the server serves and what the denominator table prices. Confirmed
+against both after the import:
+
+```
+page reads: 1.1  "5 questions, about 10 minutes."
+            1.2  "5 questions, about 10 minutes."
+server:     1.1  served 5, total 5
+            1.2  served 5, total 5
+```
+
+### The 38 codes in quiz explanations: decided, kept, written down
+
+Reported here as "found, not fixed", and now resolved: they stay. All 38 were
+classified before deciding, and none is the scoping use the rule sanctions, so
+the rule as written did not cover them. Rather than leave an undocumented
+exception for the next sweep to re-litigate, the decision and its reasoning are
+now in docs/ap-cyber-unit1-ced-realignment.md under "Citing the CED to students".
