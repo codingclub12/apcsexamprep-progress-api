@@ -69,12 +69,16 @@ TRADE_Y    = 7.18
 CONTENT_BOTTOM = 6.86
 
 # Where a card's body copy starts, measured down from the top of the card. The
-# card label sits at +0.38 and the larger label needs the extra clearance.
+# card label sits at +0.38, and every label in the deck sets one line at this
+# size except the vocabulary card's, whose label is the term itself. That card
+# computes its own offset rather than every other card paying for it: raising
+# this constant to clear a two-line label took 0.08in out of twelve panels and
+# broke two of them, which is what _must_fit is for.
 CARD_TEXT_DY = 0.86
 
 # Code-block sizing. Courier New is ~0.6 em wide per character, and a line of
 # text occupies ~1.18 times its point size once leading is counted.
-CODE_MAX_PT = 14.0
+CODE_MAX_PT = 15.0
 # A worked example gets the single-slide layout only when BOTH its program and
 # its output fit alongside the annotations. Gating on the program alone let a
 # short program with six lines of output push the OUTPUT panel through the
@@ -96,31 +100,45 @@ CHAR_FACTOR = 0.60
 #  Nothing here went down. The panels around the text grew to match, and
 #  _must_fit is what holds the two in step: a size raised past what its panel
 #  can hold fails the build instead of overprinting the slide.
+#
+#  A second pass took everything still sitting between 10 and 14pt as high as
+#  its panel would carry it, which is why several entries below record two
+#  steps. The trademark line is the one thing deliberately left under 10: it is
+#  a legal notice nobody reads from a projector, and every point it gains is a
+#  point taken from the footer above it, which a teacher does read.
+#
+#  T_BODY_MIN is the other one held back, and for a measurable reason rather
+#  than a judgement: it sets the three annotations in the compact worked
+#  example's right-hand column, stacked above the OUTPUT panel. At 15pt they
+#  need 3.47in and the column between the heading and the footer is 5.12in, of
+#  which OUTPUT wants 1.70in. Widening does not help, because the longest
+#  annotation still wraps to three lines at any width the column can be given
+#  without starving the code panel beside it. 14pt is what the panel holds.
 T_DECK_TITLE   = 42     # was 40
 T_TITLE_SUB    = 18     # was 16    the deck subtitle
-T_TITLE_META   = 14     # was 12    the "prepared for" line
+T_TITLE_META   = 15     # 12 -> 14 -> 15   the "prepared for" line
 T_TITLE_NOTE   = 14.5   # was 12.5  the which-edition-is-this line
-T_TITLE_SITE   = 13     # was 11    the APCSExamPrep.com line
+T_TITLE_SITE   = 14     # 11 -> 13 -> 14   the APCSExamPrep.com line
 T_DIVIDER_NUM  = 80     # was 76
 T_DIVIDER_NAME = 36     # was 34
-T_DIVIDER_META = 13.5   # was 12    the divider's SECTION and topic lines
+T_DIVIDER_META = 15     # 12 -> 13.5 -> 15  the divider's SECTION and topic lines
 T_HEADING      = 32     # was 30
 
-T_EYEBROW      = 12.5   # was 11
+T_EYEBROW      = 13.5   # 11 -> 12.5 -> 13.5
 T_SUBHEAD      = 15     # was 13
-T_CARD_LABEL   = 12     # was 10.5
-T_CHIP         = 11.5   # was 10
-T_CAPTION      = 11     # was 9
-T_FOOTER       = 10.5   # was 9
-T_TRADEMARK    = 9      # was 7.5
+T_CARD_LABEL   = 13     # 10.5 -> 12 -> 13
+T_CHIP         = 13     # 10 -> 11.5 -> 13
+T_CAPTION      = 12.5   # 9 -> 11 -> 12.5
+T_FOOTER       = 12     # 9 -> 10.5 -> 12
+T_TRADEMARK    = 9      # was 7.5, and staying there: see the note below
 
 T_LEAD         = 18     # was 15    section ideas, warm-up prompt, discussion
 T_BODY         = 17     # was 14.5  objectives, misconceptions, annotations
 T_BODY_SM      = 15.5   # was 13    end-of-day items, vocabulary definitions
-T_BODY_MIN     = 14     # was 11.5  the compact worked example's annotations
+T_BODY_MIN     = 14     # 11.5 -> 14, and held there: see the note below
 T_SECTION_NAME = 20     # was 17    notes-preview section names
 T_NUMERAL      = 26     # was 24    discussion numerals
-T_OUTPUT       = 13.5   # was 11.5  program output, compact layout
+T_OUTPUT       = 15     # 11.5 -> 13.5 -> 15  program output, compact layout
 T_OUTPUT_WIDE  = 15.5   # was 13    program output, wide layout
 
 # Proportional text metrics, the counterpart to CHAR_FACTOR for the code panels.
@@ -627,9 +645,13 @@ class Deck:
             cx = MARGIN + (i % cols) * (colw + 0.30)
             cy = 1.78 + (i // cols) * (card_h + 0.16)
             self._card(s, cx, cy, colw, card_h, term)
+            # The label here is the term, and a long one wraps. Start the
+            # definition under whatever the term actually came to.
+            dy = max(CARD_TEXT_DY,
+                     0.38 + _text_h(term.upper(), colw - 0.60, T_CARD_LABEL) + 0.10)
             h = _must_fit('vocabulary definition', definition, colw - 0.56, T_BODY_SM,
-                          card_h - CARD_TEXT_DY - 0.12, 1.15)
-            _text(s, cx + 0.28, cy + CARD_TEXT_DY, colw - 0.56, h, definition,
+                          card_h - dy - 0.12, 1.15)
+            _text(s, cx + 0.28, cy + dy, colw - 0.56, h, definition,
                   size=T_BODY_SM, color=BODY, line=1.15)
         self._foot(s)
         self._note(s, 'The vocabulary for this topic as the CED uses it.')
