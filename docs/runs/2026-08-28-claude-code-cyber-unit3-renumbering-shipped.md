@@ -57,12 +57,14 @@ the hub shipped as a row in the same sheet rather than a separate import.
 
 ## Still open
 
-1. **CED 3.2 content.** Author 3.2.A router, switch, VPN and wireless policies and
-   3.2.B wireless configuration into the Topic 3.2 lesson. Eight EKs, not started.
-   Until it ships, `3.2` names a lesson whose body is enrichment. Tanner's call on
-   2026-08-28 was to renumber first and track the gap rather than hide it behind a
-   wrong number. **Needs filing as a board task**; this session has read-only board
-   access.
+1. **CED 3.2 content.** ~~Author 3.2.A router, switch, VPN and wireless policies
+   and 3.2.B wireless configuration into the Topic 3.2 lesson.~~ Done on the
+   lesson page later the same day: all eight EKs are sections 3.2.1 to 3.2.5 with
+   five checks on them, and the protocol body is background at 3.2.6 to 3.2.10.
+   Run note: `docs/runs/2026-08-28-claude-code-cyber-topic32-ced-content.md`.
+   Tanner's call was to renumber first and track the gap rather than hide it
+   behind a wrong number, and tracking it is what made it easy to close.
+   **What remains:** the lesson's four activity pages still teach protocols.
 2. **Denominators.** 8 adds (`3.1a|*`, `3.1b|*`), 8 removes (`3.1|*`, `3.6|*`),
    no value changes, because the old 3.2, 3.3, 3.4 totals were numerically
    identical to their new occupants. Needs Railway or admin auth.

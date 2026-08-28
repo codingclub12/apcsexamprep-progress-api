@@ -1,0 +1,1699 @@
+ID,Handle,Title,Body HTML,Command
+"132524769495","ap-cyber-unit-3-lesson-3","AP Cybersecurity 3.2: Network Security Policies & Wireless","<script type=""application/ld+json"">
+[{""@context"":""https://schema.org"",""@type"":""Course"",""name"":""AP Cybersecurity Topic 3.2: Network Security Policies and Wireless"",""description"":""Router, switch, VPN and wireless security policies, and wireless access point configuration, for AP Cybersecurity Unit 3."",""author"":{""@type"":""Person"",""name"":""Tanner Crow""},""publisher"":{""@type"":""Organization"",""name"":""APCSExamPrep.com""},""educationalLevel"":""High School"",""inLanguage"":""en-US""},{""@context"":""https://schema.org"",""@type"":""BreadcrumbList"",""itemListElement"":[{""@type"":""ListItem"",""position"":1,""name"":""Home"",""item"":""https://www.apcsexamprep.com""},{""@type"":""ListItem"",""position"":2,""name"":""AP Cybersecurity"",""item"":""https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide""},{""@type"":""ListItem"",""position"":3,""name"":""Unit 3"",""item"":""https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide#unit3""},{""@type"":""ListItem"",""position"":4,""name"":""Lesson 3.2"",""item"":""https://www.apcsexamprep.com/pages/ap-cyber-unit-3-lesson-3""}]}]
+</script>
+<style>
+
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-lesson.locked{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;cursor:not-allowed!important;}
+#ucnav .ucn-lesson.locked:link,#ucnav .ucn-lesson.locked:visited,#ucnav .ucn-lesson.locked:hover{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;background:transparent!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-lock svg{opacity:.5!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+
+.page-title,.article__title,.page__title,
+.template-page h1:first-of-type{display:none!important;}
+
+/* Strip Shopify page template wrapper padding */
+.shopify-section-template--main,
+[class*=""shopify-section-template""][class*=""__main""],
+[id*=""__main""].shopify-section,
+.section-template--main-padding,
+.template-page .shopify-section:not(.section-header):first-of-type,
+.page-container,
+.main-content{
+  padding-top:0!important;margin-top:0!important;
+}
+.template-page main,
+main#MainContent,
+#MainContent{
+  padding-top:0!important;margin-top:0!important;
+}
+
+#apcyber-wrapper{
+  all:initial;display:block;box-sizing:border-box;font-family:'Georgia',serif;
+  --dark:#130825;--deep:#1e0d40;--primary:#6d28d9;--mid:#7c3aed;--accent:#a78bfa;
+  --light:#ede9fe;--lighter:#f5f3ff;--sky:#0ea5e9;--green:#059669;--warn:#d97706;
+  --red:#dc2626;--white:#ffffff;--g50:#fafafa;--g100:#f4f4f5;--g200:#e4e4e7;
+  --g400:#a1a1aa;--g600:#52525b;--g700:#3f3f46;--g800:#27272a;
+  --r-sm:6px;--r-md:12px;--r-lg:18px;--r-xl:24px;
+  --sh-sm:0 1px 4px rgba(0,0,0,.08);--sh-md:0 4px 16px rgba(0,0,0,.12);--sh-lg:0 8px 32px rgba(0,0,0,.16);
+  color:var(--g800)!important;line-height:1.75!important;max-width:980px!important;
+  margin:0 auto!important;padding:24px 18px 72px!important;
+}
+#apcyber-wrapper *{box-sizing:border-box!important;}
+
+#apcyber-wrapper .ch-header{
+  background:linear-gradient(135deg,var(--dark) 0%,#2e1065 55%,#1e3a5f 100%)!important;
+  border-radius:var(--r-xl)!important;padding:44px 48px!important;margin-bottom:6px!important;
+  position:relative!important;overflow:hidden!important;
+}
+#apcyber-wrapper .ch-header::before{content:""""!important;position:absolute!important;top:0!important;right:-60px!important;width:300px!important;height:300px!important;background:radial-gradient(circle,rgba(109,40,217,.35) 0%,transparent 70%)!important;pointer-events:none!important;}
+#apcyber-wrapper .ch-header::after{content:""""!important;position:absolute!important;bottom:-40px!important;left:30%!important;width:200px!important;height:200px!important;background:radial-gradient(circle,rgba(14,165,233,.2) 0%,transparent 70%)!important;pointer-events:none!important;}
+#apcyber-wrapper .ch-label{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:2px!important;color:var(--accent)!important;margin-bottom:10px!important;display:block!important;}
+#apcyber-wrapper .ch-header h1{font-family:'Georgia',serif!important;font-size:30px!important;font-weight:700!important;color:var(--white)!important;margin:0 0 10px 0!important;line-height:1.25!important;}
+#apcyber-wrapper .ch-header p{font-size:15px!important;color:rgba(255,255,255,.78)!important;margin:0 0 22px 0!important;max-width:640px!important;line-height:1.6!important;}
+#apcyber-wrapper .ch-meta{display:flex!important;flex-wrap:wrap!important;gap:10px!important;}
+#apcyber-wrapper .ch-badge{display:inline-flex!important;align-items:center!important;gap:6px!important;background:rgba(255,255,255,.1)!important;border:1px solid rgba(255,255,255,.18)!important;color:var(--white)!important;padding:5px 14px!important;border-radius:20px!important;font-size:12px!important;font-weight:600!important;font-family:'Georgia',serif!important;}
+
+#apcyber-wrapper .card{background:var(--white)!important;border-radius:var(--r-lg)!important;padding:36px 40px!important;margin-bottom:24px!important;box-shadow:var(--sh-sm)!important;border:1px solid var(--g200)!important;}
+#apcyber-wrapper .card h2{font-family:'Georgia',serif!important;font-size:20px!important;font-weight:700!important;color:var(--deep)!important;margin:0 0 20px 0!important;padding-bottom:14px!important;border-bottom:3px solid var(--primary)!important;display:flex!important;align-items:center!important;gap:12px!important;line-height:1.3!important;}
+#apcyber-wrapper .section-icon{width:34px!important;height:34px!important;background:var(--primary)!important;border-radius:8px!important;display:flex!important;align-items:center!important;justify-content:center!important;color:var(--white)!important;font-size:14px!important;font-weight:800!important;flex-shrink:0!important;font-family:'Georgia',serif!important;}
+#apcyber-wrapper .card h3{font-family:'Georgia',serif!important;font-size:17px!important;font-weight:700!important;color:var(--primary)!important;margin:28px 0 10px 0!important;}
+#apcyber-wrapper .card h4{font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;color:var(--deep)!important;margin:0 0 6px 0!important;}
+#apcyber-wrapper .card p{font-size:15px!important;color:var(--g700)!important;margin:0 0 14px 0!important;font-family:'Georgia',serif!important;}
+#apcyber-wrapper .card p:last-child{margin-bottom:0!important;}
+
+#apcyber-wrapper .obj-list{list-style:none!important;padding:0!important;margin:0!important;display:grid!important;gap:10px!important;}
+#apcyber-wrapper .obj-list li{display:flex!important;align-items:flex-start!important;gap:12px!important;font-size:15px!important;color:var(--g700)!important;padding:12px 16px!important;background:var(--lighter)!important;border-radius:var(--r-sm)!important;border-left:4px solid var(--primary)!important;font-family:'Georgia',serif!important;line-height:1.5!important;}
+#apcyber-wrapper .obj-check{width:22px!important;height:22px!important;background:var(--primary)!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;flex-shrink:0!important;margin-top:1px!important;}
+#apcyber-wrapper .obj-check::after{content:""\2713""!important;color:var(--white)!important;font-size:12px!important;font-weight:900!important;}
+
+#apcyber-wrapper .principle-grid{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:16px!important;margin:16px 0!important;}
+#apcyber-wrapper .principle-card{background:var(--g50)!important;border:1px solid var(--g200)!important;border-radius:var(--r-md)!important;padding:20px!important;border-top:4px solid var(--primary)!important;}
+#apcyber-wrapper .p-num{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1px!important;color:var(--primary)!important;margin-bottom:4px!important;}
+#apcyber-wrapper .p-name{font-family:'Georgia',serif!important;font-size:16px!important;font-weight:700!important;color:var(--deep)!important;margin-bottom:8px!important;}
+#apcyber-wrapper .p-how{font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g700)!important;margin-bottom:10px!important;line-height:1.6!important;}
+#apcyber-wrapper .p-example{font-family:'Georgia',serif!important;font-size:13px!important;color:var(--g600)!important;font-style:italic!important;padding:8px 12px!important;background:var(--light)!important;border-radius:var(--r-sm)!important;margin-bottom:8px!important;line-height:1.5!important;}
+#apcyber-wrapper .callout{background:#f0eeff!important;border-left:4px solid var(--primary)!important;border-radius:0 var(--r-md) var(--r-md) 0!important;padding:16px 20px!important;font-size:14px!important;color:var(--g700)!important;line-height:1.6!important;}
+#apcyber-wrapper .callout strong{color:var(--deep)!important;display:block!important;margin-bottom:6px!important;font-size:13px!important;text-transform:uppercase!important;letter-spacing:0.5px!important;}
+#apcyber-wrapper .cfu-predict{font-size:13px!important;font-style:italic!important;color:var(--primary)!important;background:#f0eeff!important;border-radius:var(--r-sm)!important;padding:8px 12px!important;margin-bottom:12px!important;border-left:3px solid var(--primary)!important;}
+
+#apcyber-wrapper .vocab-table{width:100%!important;border-collapse:collapse!important;font-size:14px!important;font-family:'Georgia',serif!important;}
+#apcyber-wrapper .vocab-table th{background:var(--deep)!important;color:var(--white)!important;padding:12px 16px!important;text-align:left!important;font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.5px!important;}
+#apcyber-wrapper .vocab-table th:first-child{border-radius:var(--r-sm) 0 0 0!important;}
+#apcyber-wrapper .vocab-table th:last-child{border-radius:0 var(--r-sm) 0 0!important;}
+#apcyber-wrapper .vocab-table td{padding:12px 16px!important;border-bottom:1px solid var(--g200)!important;color:var(--g700)!important;vertical-align:top!important;line-height:1.55!important;}
+#apcyber-wrapper .vocab-table tr:nth-child(even) td{background:var(--g50)!important;}
+#apcyber-wrapper .vocab-table tr:hover td{background:var(--lighter)!important;}
+#apcyber-wrapper .vocab-table .term{font-weight:700!important;color:var(--primary)!important;white-space:nowrap!important;}
+#apcyber-wrapper .vocab-table .exam-tip{font-size:12px!important;color:var(--g600)!important;font-style:italic!important;margin-top:4px!important;padding:4px 8px!important;background:var(--light)!important;border-radius:4px!important;border-left:3px solid var(--accent)!important;display:block!important;}
+
+#apcyber-wrapper .attack-block{border-left:5px solid var(--primary)!important;background:var(--g50)!important;border-radius:0 var(--r-md) var(--r-md) 0!important;padding:22px 26px!important;margin:18px 0!important;}
+#apcyber-wrapper .atk-name{font-family:'Georgia',serif!important;font-size:18px!important;font-weight:800!important;color:var(--deep)!important;margin-bottom:6px!important;display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important;}
+#apcyber-wrapper .atk-tag{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.8px!important;background:var(--deep)!important;color:var(--white)!important;padding:3px 10px!important;border-radius:20px!important;}
+#apcyber-wrapper .atk-desc{font-family:'Georgia',serif!important;font-size:15px!important;color:var(--g700)!important;margin:8px 0 12px 0!important;line-height:1.65!important;}
+#apcyber-wrapper .atk-scenario{font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g600)!important;font-style:italic!important;background:var(--white)!important;border-radius:var(--r-sm)!important;padding:12px 16px!important;border-left:3px solid var(--sky)!important;margin-bottom:10px!important;line-height:1.6!important;}
+#apcyber-wrapper .atk-scenario strong{color:var(--deep)!important;font-style:normal!important;}
+#apcyber-wrapper .atk-edge{font-family:'Georgia',serif!important;font-size:13px!important;color:var(--warn)!important;background:#fffbeb!important;border-radius:var(--r-sm)!important;padding:10px 14px!important;border-left:3px solid var(--warn)!important;line-height:1.55!important;}
+#apcyber-wrapper .atk-edge strong{color:var(--warn)!important;}
+
+#apcyber-wrapper .compare-table{width:100%!important;border-collapse:collapse!important;font-family:'Georgia',serif!important;font-size:13px!important;}
+#apcyber-wrapper .compare-table th{background:var(--primary)!important;color:var(--white)!important;padding:10px 14px!important;text-align:left!important;font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.5px!important;}
+#apcyber-wrapper .compare-table td{padding:10px 14px!important;border-bottom:1px solid var(--g200)!important;color:var(--g700)!important;vertical-align:top!important;line-height:1.5!important;}
+#apcyber-wrapper .compare-table tr:nth-child(even) td{background:var(--lighter)!important;}
+#apcyber-wrapper .compare-table .att-name{font-weight:700!important;color:var(--deep)!important;}
+#apcyber-wrapper .compare-table .channel{font-weight:600!important;color:var(--sky)!important;}
+#apcyber-wrapper .compare-table .principle{font-style:italic!important;}
+
+#apcyber-wrapper .info-box{border-radius:var(--r-md)!important;padding:20px 24px!important;margin:20px 0!important;}
+#apcyber-wrapper .info-box.stat{background:#ede9fe!important;border-left:5px solid var(--primary)!important;}
+#apcyber-wrapper .info-box.insight{background:#ecfdf5!important;border-left:5px solid var(--green)!important;}
+#apcyber-wrapper .info-box.warning{background:#fffbeb!important;border-left:5px solid var(--warn)!important;}
+#apcyber-wrapper .info-box.danger{background:#fef2f2!important;border-left:5px solid var(--red)!important;}
+#apcyber-wrapper .info-box.exam{background:linear-gradient(135deg,#1e0d40,#2e1065)!important;border-left:5px solid var(--accent)!important;border-radius:var(--r-md)!important;}
+#apcyber-wrapper .box-label{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;margin-bottom:8px!important;display:block!important;}
+#apcyber-wrapper .info-box.stat .box-label{color:var(--primary)!important;}
+#apcyber-wrapper .info-box.insight .box-label{color:var(--green)!important;}
+#apcyber-wrapper .info-box.warning .box-label{color:var(--warn)!important;}
+#apcyber-wrapper .info-box.danger .box-label{color:var(--red)!important;}
+#apcyber-wrapper .info-box.exam .box-label{color:var(--accent)!important;}
+#apcyber-wrapper .info-box p{font-family:'Georgia',serif!important;font-size:15px!important;color:var(--g700)!important;margin:0!important;line-height:1.65!important;}
+#apcyber-wrapper .info-box.exam p{color:rgba(255,255,255,.85)!important;}
+
+#apcyber-wrapper .defense-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:20px!important;margin:16px 0!important;}
+#apcyber-wrapper .defense-col h4{font-family:'Georgia',serif!important;font-size:14px!important;font-weight:700!important;padding:10px 16px!important;border-radius:var(--r-sm) var(--r-sm) 0 0!important;margin:0!important;}
+#apcyber-wrapper .defense-col.tech h4{background:var(--primary)!important;color:var(--white)!important;}
+#apcyber-wrapper .defense-col.human h4{background:var(--sky)!important;color:var(--white)!important;}
+#apcyber-wrapper .defense-col ul{list-style:none!important;padding:0!important;margin:0!important;border:1px solid var(--g200)!important;border-top:none!important;border-radius:0 0 var(--r-sm) var(--r-sm)!important;}
+#apcyber-wrapper .defense-col ul li{padding:10px 14px!important;font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g700)!important;border-bottom:1px solid var(--g200)!important;display:flex!important;align-items:flex-start!important;gap:8px!important;line-height:1.5!important;}
+#apcyber-wrapper .defense-col ul li:last-child{border-bottom:none!important;}
+#apcyber-wrapper .defense-col ul li::before{content:""\2713""!important;color:var(--green)!important;font-weight:900!important;flex-shrink:0!important;margin-top:1px!important;}
+
+#apcyber-wrapper .case-block{border:2px solid var(--g200)!important;border-radius:var(--r-lg)!important;overflow:hidden!important;margin:20px 0!important;}
+#apcyber-wrapper .case-header{background:linear-gradient(90deg,var(--deep),var(--primary))!important;padding:14px 22px!important;display:flex!important;align-items:center!important;gap:12px!important;}
+#apcyber-wrapper .case-year{background:rgba(255,255,255,.2)!important;color:var(--white)!important;font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;padding:3px 10px!important;border-radius:20px!important;letter-spacing:.5px!important;white-space:nowrap!important;}
+#apcyber-wrapper .case-title{font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;color:var(--white)!important;}
+#apcyber-wrapper .case-body{padding:22px!important;}
+#apcyber-wrapper .case-body p{font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g700)!important;margin:0 0 10px 0!important;line-height:1.65!important;}
+#apcyber-wrapper .case-verdict{background:var(--lighter)!important;border-radius:var(--r-sm)!important;padding:12px 16px!important;margin-top:12px!important;}
+#apcyber-wrapper .case-verdict-label{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1px!important;color:var(--primary)!important;margin-bottom:4px!important;display:block!important;}
+#apcyber-wrapper .case-verdict p{font-family:'Georgia',serif!important;font-size:13px!important;color:var(--g700)!important;margin:0!important;}
+
+#apcyber-wrapper .ex-block{border:2px solid var(--primary)!important;border-radius:var(--r-lg)!important;overflow:hidden!important;margin:20px 0!important;}
+#apcyber-wrapper .ex-header{background:var(--primary)!important;padding:14px 22px!important;display:flex!important;align-items:center!important;gap:10px!important;}
+#apcyber-wrapper .ex-num{background:rgba(255,255,255,.25)!important;color:var(--white)!important;width:28px!important;height:28px!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-family:'Georgia',serif!important;font-size:13px!important;font-weight:900!important;flex-shrink:0!important;}
+#apcyber-wrapper .ex-title{font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;color:var(--white)!important;}
+#apcyber-wrapper .ex-scenario{background:#f0ebff!important;padding:18px 22px!important;font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g700)!important;border-bottom:1px solid var(--g200)!important;font-style:italic!important;line-height:1.65!important;}
+#apcyber-wrapper .ex-scenario strong{color:var(--deep)!important;font-style:normal!important;}
+#apcyber-wrapper .ex-body{padding:22px!important;}
+#apcyber-wrapper .ex-step{display:flex!important;gap:14px!important;margin-bottom:18px!important;align-items:flex-start!important;}
+#apcyber-wrapper .step-n{width:30px!important;height:30px!important;background:var(--deep)!important;color:var(--white)!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-family:'Georgia',serif!important;font-size:13px!important;font-weight:800!important;flex-shrink:0!important;}
+#apcyber-wrapper .step-c h4{font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;color:var(--deep)!important;margin:0 0 5px 0!important;}
+#apcyber-wrapper .step-c p{font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g700)!important;margin:0!important;line-height:1.6!important;}
+#apcyber-wrapper .step-c ul{padding-left:16px!important;margin:6px 0 0 0!important;}
+#apcyber-wrapper .step-c ul li{font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g700)!important;margin-bottom:4px!important;line-height:1.5!important;}
+#apcyber-wrapper .ex-answer{background:#ecfdf5!important;border-left:4px solid var(--green)!important;border-radius:var(--r-sm)!important;padding:14px 18px!important;margin-top:4px!important;}
+#apcyber-wrapper .ans-label{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1px!important;color:var(--green)!important;margin-bottom:5px!important;display:block!important;}
+#apcyber-wrapper .ex-answer p{font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g700)!important;margin:0!important;line-height:1.6!important;}
+
+#apcyber-wrapper .exam-card{background:linear-gradient(135deg,var(--dark) 0%,#2e1065 100%)!important;border-radius:var(--r-xl)!important;padding:36px 40px!important;margin-bottom:24px!important;}
+#apcyber-wrapper .exam-card h2{font-family:'Georgia',serif!important;font-size:20px!important;font-weight:700!important;color:var(--white)!important;margin:0 0 20px 0!important;padding-bottom:14px!important;border-bottom:2px solid rgba(167,139,250,.4)!important;display:flex!important;align-items:center!important;gap:12px!important;}
+#apcyber-wrapper .exam-card .section-icon{background:var(--accent)!important;}
+#apcyber-wrapper .exam-tip-item{display:flex!important;gap:16px!important;margin-bottom:20px!important;align-items:flex-start!important;}
+#apcyber-wrapper .tip-badge{background:var(--accent)!important;color:var(--dark)!important;font-family:'Georgia',serif!important;font-size:11px!important;font-weight:800!important;padding:4px 10px!important;border-radius:20px!important;white-space:nowrap!important;margin-top:2px!important;flex-shrink:0!important;}
+#apcyber-wrapper .tip-text h4{font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;color:var(--white)!important;margin:0 0 4px 0!important;}
+#apcyber-wrapper .tip-text p{font-family:'Georgia',serif!important;font-size:14px!important;color:rgba(255,255,255,.75)!important;margin:0!important;line-height:1.6!important;}
+#apcyber-wrapper .tip-text strong{color:var(--accent)!important;}
+
+#apcyber-wrapper .bottom-nav{display:flex!important;justify-content:space-between!important;align-items:center!important;gap:16px!important;margin-top:32px!important;flex-wrap:wrap!important;}
+#apcyber-wrapper .nav-btn{display:inline-flex!important;align-items:center!important;gap:8px!important;padding:14px 26px!important;border-radius:var(--r-md)!important;font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;text-decoration:none!important;cursor:pointer!important;}
+#apcyber-wrapper .nav-btn.primary{background:var(--primary)!important;color:var(--white)!important;border:none!important;}
+#apcyber-wrapper .nav-btn.primary:link,#apcyber-wrapper .nav-btn.primary:visited{background:var(--primary)!important;color:var(--white)!important;-webkit-text-fill-color:var(--white)!important;opacity:1!important;visibility:visible!important;}
+#apcyber-wrapper .nav-btn.primary:hover{background:var(--dark)!important;color:var(--white)!important;-webkit-text-fill-color:var(--white)!important;}
+#apcyber-wrapper .nav-btn.secondary{background:var(--white)!important;color:var(--primary)!important;border:2px solid var(--primary)!important;}
+#apcyber-wrapper .nav-btn.secondary:link,#apcyber-wrapper .nav-btn.secondary:visited{background:var(--white)!important;color:var(--primary)!important;-webkit-text-fill-color:var(--primary)!important;opacity:1!important;visibility:visible!important;}
+#apcyber-wrapper .nav-btn.secondary:hover{background:var(--lighter)!important;color:var(--primary)!important;-webkit-text-fill-color:var(--primary)!important;}
+#apcyber-wrapper .nav-center{text-align:center!important;font-family:'Georgia',serif!important;font-size:13px!important;color:var(--g600)!important;line-height:1.5!important;}
+
+#apcyber-wrapper .breadcrumb{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:4px!important;font-family:'Georgia',serif!important;font-size:13px!important;color:var(--g600)!important;margin-bottom:8px!important;padding:4px 0 0 0!important;}
+#apcyber-wrapper .breadcrumb a{color:var(--primary)!important;text-decoration:none!important;font-weight:500!important;}
+#apcyber-wrapper .breadcrumb a:link,#apcyber-wrapper .breadcrumb a:visited{color:var(--primary)!important;-webkit-text-fill-color:var(--primary)!important;}
+#apcyber-wrapper .breadcrumb a:hover{text-decoration:underline!important;}
+#apcyber-wrapper .bc-sep{color:var(--g400)!important;margin:0 2px!important;}
+#apcyber-wrapper .bc-current{color:var(--g700)!important;font-weight:600!important;}
+
+#apcyber-wrapper .meta-bar{display:flex!important;align-items:center!important;gap:20px!important;flex-wrap:wrap!important;padding:10px 0!important;margin-bottom:8px!important;border-bottom:1px solid var(--g200)!important;}
+#apcyber-wrapper .meta-bar span{font-family:'Georgia',serif!important;font-size:13px!important;color:var(--g600)!important;display:flex!important;align-items:center!important;gap:5px!important;}
+#apcyber-wrapper .meta-bar strong{color:var(--g700)!important;}
+
+#apcyber-wrapper .toc-row{display:grid!important;grid-template-columns:1fr 1fr!important;gap:20px!important;margin-bottom:24px!important;align-items:stretch!important;}
+#apcyber-wrapper .toc-card{background:var(--lighter)!important;border:1px solid var(--light)!important;border-radius:var(--r-lg)!important;padding:22px 28px!important;margin-bottom:0!important;border-left:4px solid var(--primary)!important;}
+#apcyber-wrapper .toc-label{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.8px!important;color:var(--primary)!important;margin-bottom:12px!important;display:block!important;}
+#apcyber-wrapper .toc-list{list-style:none!important;padding:0!important;margin:0!important;display:grid!important;grid-template-columns:1fr!important;gap:6px!important;}
+#apcyber-wrapper .toc-list li{font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g700)!important;display:flex!important;align-items:flex-start!important;gap:7px!important;}
+#apcyber-wrapper .toc-list li::before{content:""\2023""!important;color:var(--primary)!important;font-size:15px!important;flex-shrink:0!important;margin-top:1px!important;}
+#apcyber-wrapper .toc-list a{color:var(--primary)!important;text-decoration:none!important;font-weight:500!important;}
+#apcyber-wrapper .toc-list a:link,#apcyber-wrapper .toc-list a:visited{color:var(--primary)!important;-webkit-text-fill-color:var(--primary)!important;}
+#apcyber-wrapper .toc-list a:hover{text-decoration:underline!important;}
+#apcyber-wrapper .toc-time{font-family:'Georgia',serif!important;font-size:11px!important;color:var(--g400)!important;margin-left:4px!important;font-weight:400!important;white-space:nowrap!important;}
+
+#apcyber-wrapper .lesson-video-card{background:linear-gradient(145deg,var(--dark) 0%,#1a0a35 100%)!important;border:1px solid rgba(167,139,250,.2)!important;border-radius:var(--r-lg)!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;}
+#apcyber-wrapper .lvc-header{padding:14px 20px 12px!important;border-bottom:1px solid rgba(255,255,255,.08)!important;}
+#apcyber-wrapper .lvc-eyebrow{display:block!important;font-family:'Georgia',serif!important;font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:var(--accent)!important;margin-bottom:3px!important;}
+#apcyber-wrapper .lvc-title{display:block!important;font-family:'Georgia',serif!important;font-size:13px!important;font-weight:600!important;color:rgba(255,255,255,.75)!important;}
+#apcyber-wrapper .lvc-video-wrap{position:relative!important;width:100%!important;padding-bottom:56.25%!important;height:0!important;background:#000!important;flex:1!important;}
+#apcyber-wrapper .lvc-video-wrap iframe{position:absolute!important;top:0!important;left:0!important;width:100%!important;height:100%!important;border:0!important;}
+#apcyber-wrapper .lvc-footer{padding:10px 16px!important;font-family:'Georgia',serif!important;font-size:11px!important;color:rgba(255,255,255,.35)!important;text-align:center!important;border-top:1px solid rgba(255,255,255,.06)!important;}
+
+#apcyber-progress-bar{position:fixed!important;top:0!important;left:0!important;width:0%!important;height:3px!important;background:linear-gradient(90deg,var(--primary),var(--accent))!important;z-index:99999!important;transition:width .1s linear!important;}
+#apcyber-back-top{position:fixed!important;bottom:28px!important;right:24px!important;width:44px!important;height:44px!important;border-radius:50%!important;background:var(--primary)!important;color:var(--white)!important;border:none!important;cursor:pointer!important;display:flex!important;align-items:center!important;justify-content:center!important;box-shadow:0 4px 16px rgba(109,40,217,.4)!important;opacity:0!important;pointer-events:none!important;transition:opacity .25s,transform .25s!important;z-index:9999!important;font-size:18px!important;font-weight:700!important;font-family:'Georgia',serif!important;}
+#apcyber-back-top.visible{opacity:1!important;pointer-events:auto!important;}
+#apcyber-back-top:hover{transform:translateY(-3px)!important;background:var(--deep)!important;}
+
+#apcyber-wrapper .tutor-cta{background:linear-gradient(135deg,#1e0d40 0%,#2e1065 60%,#1e3a5f 100%)!important;border-radius:var(--r-xl)!important;padding:32px 40px!important;margin-bottom:24px!important;display:flex!important;align-items:center!important;gap:32px!important;flex-wrap:wrap!important;border:1px solid rgba(167,139,250,.2)!important;}
+#apcyber-wrapper .tutor-cta-text{flex:1!important;min-width:200px!important;}
+#apcyber-wrapper .tutor-cta-eyebrow{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:var(--accent)!important;margin-bottom:8px!important;display:block!important;}
+#apcyber-wrapper .tutor-cta h3{font-family:'Georgia',serif!important;font-size:20px!important;font-weight:700!important;color:var(--white)!important;margin:0 0 10px 0!important;line-height:1.3!important;}
+#apcyber-wrapper .tutor-cta p{font-family:'Georgia',serif!important;font-size:14px!important;color:rgba(255,255,255,.72)!important;margin:0!important;line-height:1.6!important;}
+#apcyber-wrapper .tutor-cta-btn{display:inline-flex!important;align-items:center!important;gap:8px!important;background:var(--white)!important;color:var(--primary)!important;padding:14px 26px!important;border-radius:var(--r-md)!important;font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;text-decoration:none!important;white-space:nowrap!important;flex-shrink:0!important;}
+#apcyber-wrapper .tutor-cta-btn:link,#apcyber-wrapper .tutor-cta-btn:visited{background:var(--white)!important;color:var(--primary)!important;-webkit-text-fill-color:var(--primary)!important;text-decoration:none!important;opacity:1!important;visibility:visible!important;}
+#apcyber-wrapper .tutor-cta-btn:hover{background:var(--lighter)!important;color:var(--primary)!important;-webkit-text-fill-color:var(--primary)!important;}
+#apcyber-wrapper .tutor-stats{display:flex!important;gap:20px!important;margin-top:12px!important;flex-wrap:wrap!important;}
+#apcyber-wrapper .tutor-stat{font-family:'Georgia',serif!important;font-size:12px!important;color:rgba(255,255,255,.55)!important;display:flex!important;gap:5px!important;}
+#apcyber-wrapper .tutor-stat strong{color:rgba(255,255,255,.9)!important;}
+
+#apcyber-wrapper .key-terms-box{background:var(--lighter)!important;border:1px solid var(--light)!important;border-radius:var(--r-lg)!important;padding:22px 26px!important;margin-bottom:22px!important;border-left:4px solid var(--primary)!important;}
+#apcyber-wrapper .key-terms-label{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.8px!important;color:var(--primary)!important;margin-bottom:12px!important;display:block!important;}
+#apcyber-wrapper .key-terms-grid{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:6px 24px!important;}
+#apcyber-wrapper dt{font-family:'Georgia',serif!important;font-size:14px!important;font-weight:700!important;color:var(--deep)!important;}
+#apcyber-wrapper dd{font-family:'Georgia',serif!important;font-size:13px!important;color:var(--g600)!important;margin:0 0 6px 0!important;padding-left:0!important;}
+
+#cfu-score-tracker{position:fixed!important;bottom:28px!important;left:24px!important;background:var(--primary)!important;color:var(--white)!important;border-radius:24px!important;padding:8px 18px!important;font-family:'Georgia',serif!important;font-size:13px!important;font-weight:700!important;box-shadow:0 4px 16px rgba(109,40,217,.45)!important;z-index:9999!important;display:flex!important;align-items:center!important;gap:8px!important;opacity:0!important;transition:opacity .3s!important;pointer-events:none!important;white-space:nowrap!important;}
+#cfu-score-tracker.visible{opacity:1!important;}
+#cfu-score-num{background:rgba(255,255,255,.2)!important;border-radius:12px!important;padding:2px 10px!important;font-size:14px!important;}
+#cfu-score-tracker .cfu-score-label{color:rgba(255,255,255,.8)!important;font-size:12px!important;}
+
+#apcyber-wrapper .cfu-block{background:var(--g50)!important;border:1px solid var(--g200)!important;border-radius:var(--r-lg)!important;padding:24px 28px!important;margin-top:28px!important;border-top:3px solid var(--primary)!important;}
+#apcyber-wrapper .cfu-header{display:flex!important;align-items:center!important;justify-content:space-between!important;margin-bottom:14px!important;flex-wrap:wrap!important;gap:8px!important;}
+#apcyber-wrapper .cfu-header-left{display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important;}
+#apcyber-wrapper .cfu-label{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1px!important;color:var(--primary)!important;}
+#apcyber-wrapper .cfu-type-badge{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:600!important;background:var(--light)!important;color:var(--primary)!important;padding:2px 10px!important;border-radius:12px!important;}
+#apcyber-wrapper .cfu-scenario-badge{background:#fef3c7!important;color:#92400e!important;}
+#apcyber-wrapper .cfu-counter{font-family:'Georgia',serif!important;font-size:12px!important;color:var(--g400)!important;font-weight:600!important;}
+#apcyber-wrapper .cfu-scenario{background:var(--white)!important;border:1px solid var(--g200)!important;border-left:4px solid var(--sky)!important;border-radius:var(--r-md)!important;padding:16px 18px!important;margin-bottom:16px!important;font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g700)!important;line-height:1.7!important;}
+#apcyber-wrapper .cfu-question{font-family:'Georgia',serif!important;font-size:15px!important;font-weight:600!important;color:var(--deep)!important;margin:0 0 16px 0!important;line-height:1.55!important;}
+#apcyber-wrapper .cfu-options{display:grid!important;gap:8px!important;margin-bottom:16px!important;}
+#apcyber-wrapper .cfu-opt{display:flex!important;align-items:flex-start!important;gap:10px!important;background:var(--white)!important;border:2px solid var(--g200)!important;border-radius:var(--r-md)!important;padding:12px 16px!important;cursor:pointer!important;transition:all .15s!important;font-family:'Georgia',serif!important;}
+#apcyber-wrapper .cfu-opt:hover{border-color:var(--primary)!important;background:var(--lighter)!important;}
+#apcyber-wrapper .cfu-opt.selected{border-color:var(--primary)!important;background:var(--lighter)!important;}
+#apcyber-wrapper .cfu-opt.correct{border-color:var(--green)!important;background:#ecfdf5!important;}
+#apcyber-wrapper .cfu-opt.wrong{border-color:var(--red)!important;background:#fef2f2!important;}
+#apcyber-wrapper .cfu-opt.locked{cursor:default!important;}
+#apcyber-wrapper .cfu-opt-letter{font-family:'Georgia',serif!important;font-size:13px!important;font-weight:700!important;color:var(--primary)!important;min-width:20px!important;flex-shrink:0!important;margin-top:1px!important;}
+#apcyber-wrapper .cfu-opt.correct .cfu-opt-letter{color:var(--green)!important;}
+#apcyber-wrapper .cfu-opt.wrong .cfu-opt-letter{color:var(--red)!important;}
+#apcyber-wrapper .cfu-opt-text{font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g700)!important;line-height:1.5!important;}
+#apcyber-wrapper .cfu-submit{background:var(--primary)!important;color:var(--white)!important;border:none!important;border-radius:var(--r-md)!important;padding:11px 28px!important;font-family:'Georgia',serif!important;font-size:14px!important;font-weight:700!important;cursor:pointer!important;display:block!important;}
+#apcyber-wrapper .cfu-submit:link,#apcyber-wrapper .cfu-submit:visited{color:var(--white)!important;-webkit-text-fill-color:var(--white)!important;}
+#apcyber-wrapper .cfu-submit:hover{background:var(--deep)!important;}
+#apcyber-wrapper .cfu-submit:disabled{background:var(--g200)!important;color:var(--g400)!important;-webkit-text-fill-color:var(--g400)!important;cursor:default!important;}
+#apcyber-wrapper .cfu-feedback{margin-top:16px!important;border-radius:var(--r-md)!important;padding:16px 20px!important;border-left:4px solid var(--green)!important;background:#ecfdf5!important;}
+#apcyber-wrapper .cfu-feedback.wrong-fb{border-left-color:var(--red)!important;background:#fef2f2!important;}
+#apcyber-wrapper .cfu-feedback-verdict{font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;margin-bottom:8px!important;}
+#apcyber-wrapper .cfu-feedback.wrong-fb .cfu-feedback-verdict{color:var(--red)!important;}
+#apcyber-wrapper .cfu-feedback:not(.wrong-fb) .cfu-feedback-verdict{color:var(--green)!important;}
+#apcyber-wrapper .cfu-feedback-explain{font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g700)!important;line-height:1.65!important;}
+#apcyber-wrapper .cfu-eol{background:linear-gradient(to bottom right,#fdf4ff,#f5f3ff)!important;border-top-color:var(--accent)!important;}
+#apcyber-wrapper .cfu-eol-badge{background:#f3e8ff!important;color:#7e22ce!important;font-weight:700!important;}
+
+#apcyber-wrapper .faq-list{list-style:none!important;padding:0!important;margin:0!important;display:grid!important;gap:16px!important;}
+#apcyber-wrapper .faq-item{background:var(--g50)!important;border:1px solid var(--g200)!important;border-radius:var(--r-md)!important;padding:20px 24px!important;border-left:4px solid var(--primary)!important;}
+#apcyber-wrapper .faq-q{font-family:'Georgia',serif!important;font-size:16px!important;font-weight:700!important;color:var(--deep)!important;margin-bottom:10px!important;}
+#apcyber-wrapper .faq-a{font-family:'Georgia',serif!important;font-size:15px!important;color:var(--g700)!important;line-height:1.65!important;margin:0!important;}
+
+#apcyber-wrapper .author-box{background:linear-gradient(135deg,var(--dark) 0%,#2e1065 100%)!important;border-radius:var(--r-xl)!important;padding:28px 32px!important;margin-bottom:24px!important;display:flex!important;align-items:flex-start!important;gap:20px!important;flex-wrap:wrap!important;}
+#apcyber-wrapper .author-avatar{width:72px!important;height:72px!important;border-radius:50%!important;background:var(--primary)!important;flex-shrink:0!important;display:flex!important;align-items:center!important;justify-content:center!important;font-family:'Georgia',serif!important;font-size:24px!important;font-weight:700!important;color:var(--white)!important;border:3px solid var(--accent)!important;}
+#apcyber-wrapper .author-info{flex:1!important;min-width:200px!important;}
+#apcyber-wrapper .author-name{font-family:'Georgia',serif!important;font-size:18px!important;font-weight:700!important;color:var(--white)!important;margin-bottom:4px!important;}
+#apcyber-wrapper .author-role{font-family:'Georgia',serif!important;font-size:11px!important;color:var(--accent)!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.7px!important;margin-bottom:10px!important;}
+#apcyber-wrapper .author-bio{font-family:'Georgia',serif!important;font-size:14px!important;color:rgba(255,255,255,.8)!important;line-height:1.6!important;margin-bottom:12px!important;}
+#apcyber-wrapper .author-stats{display:flex!important;flex-wrap:wrap!important;gap:8px!important;}
+#apcyber-wrapper .author-stat{background:rgba(255,255,255,.1)!important;border:1px solid rgba(255,255,255,.15)!important;border-radius:20px!important;padding:4px 12px!important;font-family:'Georgia',serif!important;font-size:12px!important;color:var(--white)!important;font-weight:500!important;}
+#apcyber-wrapper .author-updated{font-family:'Georgia',serif!important;font-size:12px!important;color:rgba(255,255,255,.45)!important;margin-top:10px!important;}
+
+#apcyber-wrapper .related-grid{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important;margin-top:8px!important;}
+#apcyber-wrapper .related-link{display:flex!important;align-items:flex-start!important;gap:10px!important;background:var(--g50)!important;border:1px solid var(--g200)!important;border-radius:var(--r-md)!important;padding:14px 16px!important;text-decoration:none!important;border-left:3px solid var(--primary)!important;}
+#apcyber-wrapper .related-link:link,#apcyber-wrapper .related-link:visited{text-decoration:none!important;}
+#apcyber-wrapper .related-link:hover{background:var(--lighter)!important;}
+#apcyber-wrapper .rl-type{font-family:'Georgia',serif!important;font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.8px!important;color:var(--primary)!important;margin-bottom:3px!important;display:block!important;}
+#apcyber-wrapper .rl-title{font-family:'Georgia',serif!important;font-size:14px!important;font-weight:600!important;color:var(--deep)!important;line-height:1.4!important;}
+
+/* ===== SLIDES SECTION ===== */
+#apcyber-wrapper .slides-section{background:linear-gradient(135deg,var(--dark) 0%,#1e1040 100%)!important;border-radius:var(--r-xl)!important;padding:32px 36px!important;margin-bottom:24px!important;border:1px solid rgba(167,139,250,.15)!important;}
+#apcyber-wrapper .slides-header{display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:20px!important;margin-bottom:20px!important;flex-wrap:wrap!important;}
+#apcyber-wrapper .slides-header-left{flex:1!important;min-width:200px!important;}
+#apcyber-wrapper .slides-eyebrow{display:block!important;font-family:'Georgia',serif!important;font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1.5px!important;color:var(--accent)!important;margin-bottom:6px!important;}
+#apcyber-wrapper .slides-title{font-family:'Georgia',serif!important;font-size:20px!important;font-weight:700!important;color:var(--white)!important;margin:0 0 8px 0!important;line-height:1.25!important;}
+#apcyber-wrapper .slides-sub{font-family:'Georgia',serif!important;font-size:14px!important;color:rgba(255,255,255,.6)!important;margin:0!important;line-height:1.6!important;}
+#apcyber-wrapper .slides-open-btn{display:inline-flex!important;align-items:center!important;gap:6px!important;background:rgba(255,255,255,.1)!important;border:1px solid rgba(255,255,255,.2)!important;color:var(--white)!important;padding:10px 18px!important;border-radius:var(--r-md)!important;font-family:'Georgia',serif!important;font-size:13px!important;font-weight:600!important;text-decoration:none!important;white-space:nowrap!important;flex-shrink:0!important;margin-top:4px!important;}
+#apcyber-wrapper .slides-open-btn:link,#apcyber-wrapper .slides-open-btn:visited{color:var(--white)!important;-webkit-text-fill-color:var(--white)!important;text-decoration:none!important;opacity:1!important;visibility:visible!important;}
+#apcyber-wrapper .slides-open-btn:hover{background:rgba(255,255,255,.18)!important;color:var(--white)!important;-webkit-text-fill-color:var(--white)!important;}
+#apcyber-wrapper .slides-embed-wrap{position:relative!important;width:100%!important;padding-bottom:56.25%!important;height:0!important;border-radius:var(--r-md)!important;overflow:hidden!important;background:#000!important;box-shadow:0 8px 32px rgba(0,0,0,.4)!important;}
+#apcyber-wrapper .slides-embed-wrap iframe{position:absolute!important;top:0!important;left:0!important;width:100%!important;height:100%!important;border:0!important;}
+
+/* ===== MIXED-FORMAT CFU STYLES ===== */
+#apcyber-wrapper .match-container{display:flex!important;gap:16px!important;margin-bottom:16px!important;}
+#apcyber-wrapper .match-col{flex:1!important;display:flex!important;flex-direction:column!important;gap:8px!important;}
+#apcyber-wrapper .match-col-label{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1px!important;color:var(--primary)!important;margin-bottom:4px!important;text-align:center!important;}
+#apcyber-wrapper .match-item{display:flex!important;align-items:center!important;gap:8px!important;background:var(--white)!important;border:2px solid var(--g200)!important;border-radius:var(--r-md)!important;padding:11px 14px!important;cursor:pointer!important;transition:all .15s!important;font-family:'Georgia',serif!important;font-size:13px!important;color:var(--g700)!important;line-height:1.45!important;min-height:48px!important;}
+#apcyber-wrapper .match-item:hover{border-color:var(--primary)!important;background:var(--lighter)!important;}
+#apcyber-wrapper .match-item.selected{border-color:var(--primary)!important;background:var(--lighter)!important;box-shadow:0 0 0 2px rgba(109,40,217,.2)!important;}
+#apcyber-wrapper .match-item.matched{border-color:var(--green)!important;background:#ecfdf5!important;cursor:default!important;opacity:.85!important;}
+#apcyber-wrapper .match-item.wrong-match{border-color:var(--red)!important;background:#fef2f2!important;}
+#apcyber-wrapper .match-item.locked{cursor:default!important;}
+#apcyber-wrapper .match-num{width:22px!important;height:22px!important;border-radius:50%!important;background:var(--primary)!important;color:var(--white)!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:11px!important;font-weight:800!important;flex-shrink:0!important;}
+#apcyber-wrapper .match-item.matched .match-num{background:var(--green)!important;}
+#apcyber-wrapper .match-connector{width:24px!important;flex-shrink:0!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:16px!important;color:var(--g400)!important;font-family:'Georgia',serif!important;}
+#apcyber-wrapper .match-instructions{font-family:'Georgia',serif!important;font-size:13px!important;color:var(--g600)!important;font-style:italic!important;margin-bottom:14px!important;padding:8px 12px!important;background:var(--lighter)!important;border-radius:var(--r-sm)!important;border-left:3px solid var(--primary)!important;}
+
+#apcyber-wrapper .cloze-passage{font-family:'Georgia',serif!important;font-size:15px!important;color:var(--g700)!important;line-height:2!important;margin-bottom:20px!important;padding:16px 20px!important;background:var(--white)!important;border:1px solid var(--g200)!important;border-radius:var(--r-md)!important;}
+#apcyber-wrapper .cloze-blank{display:inline-block!important;min-width:120px!important;border-bottom:2px dashed var(--primary)!important;padding:2px 8px!important;margin:0 3px!important;cursor:pointer!important;font-family:'Georgia',serif!important;font-size:14px!important;color:var(--primary)!important;font-weight:700!important;text-align:center!important;transition:all .15s!important;background:rgba(109,40,217,.05)!important;border-radius:3px 3px 0 0!important;vertical-align:baseline!important;}
+#apcyber-wrapper .cloze-blank:hover{background:rgba(109,40,217,.1)!important;}
+#apcyber-wrapper .cloze-blank.filled{border-bottom-style:solid!important;background:var(--lighter)!important;}
+#apcyber-wrapper .cloze-blank.correct-blank{border-bottom-color:var(--green)!important;background:#ecfdf5!important;color:var(--green)!important;}
+#apcyber-wrapper .cloze-blank.wrong-blank{border-bottom-color:var(--red)!important;background:#fef2f2!important;color:var(--red)!important;text-decoration:line-through!important;}
+#apcyber-wrapper .cloze-bank{display:flex!important;flex-wrap:wrap!important;gap:8px!important;margin-bottom:16px!important;padding:14px 16px!important;background:var(--g50)!important;border:1px solid var(--g200)!important;border-radius:var(--r-md)!important;}
+#apcyber-wrapper .cloze-bank-label{font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1px!important;color:var(--primary)!important;margin-bottom:6px!important;display:block!important;width:100%!important;}
+#apcyber-wrapper .cloze-chip{display:inline-flex!important;align-items:center!important;padding:6px 14px!important;border-radius:20px!important;background:var(--white)!important;border:2px solid var(--g200)!important;cursor:pointer!important;font-family:'Georgia',serif!important;font-size:13px!important;font-weight:600!important;color:var(--g700)!important;transition:all .15s!important;white-space:nowrap!important;}
+#apcyber-wrapper .cloze-chip:hover{border-color:var(--primary)!important;background:var(--lighter)!important;}
+#apcyber-wrapper .cloze-chip.selected{border-color:var(--primary)!important;background:var(--primary)!important;color:var(--white)!important;}
+#apcyber-wrapper .cloze-chip.placed{opacity:.4!important;cursor:default!important;border-style:dashed!important;}
+#apcyber-wrapper .cloze-chip.locked{cursor:default!important;}
+#apcyber-wrapper .cloze-correction{font-family:'Georgia',serif!important;font-size:12px!important;color:var(--green)!important;font-weight:700!important;display:inline!important;}
+
+#apcyber-wrapper .sort-buckets{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important;margin-bottom:16px!important;}
+#apcyber-wrapper .sort-bucket{background:var(--white)!important;border:2px dashed var(--g200)!important;border-radius:var(--r-md)!important;padding:12px!important;min-height:80px!important;transition:all .15s!important;}
+#apcyber-wrapper .sort-bucket.active{border-color:var(--primary)!important;border-style:solid!important;background:var(--lighter)!important;}
+#apcyber-wrapper .sort-bucket.correct-bucket{border-color:var(--green)!important;border-style:solid!important;}
+#apcyber-wrapper .sort-bucket-label{font-family:'Georgia',serif!important;font-size:13px!important;font-weight:700!important;color:var(--primary)!important;text-align:center!important;padding:6px 10px!important;background:var(--lighter)!important;border-radius:var(--r-sm)!important;margin-bottom:8px!important;display:block!important;}
+#apcyber-wrapper .sort-bucket.correct-bucket .sort-bucket-label{background:#ecfdf5!important;color:var(--green)!important;}
+#apcyber-wrapper .sort-placed-card{font-family:'Georgia',serif!important;font-size:12px!important;color:var(--g700)!important;background:var(--g50)!important;border:1px solid var(--g200)!important;border-radius:var(--r-sm)!important;padding:6px 10px!important;margin-bottom:4px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:6px!important;}
+#apcyber-wrapper .sort-placed-card .sort-remove{cursor:pointer!important;color:var(--g400)!important;font-weight:700!important;font-size:14px!important;flex-shrink:0!important;}
+#apcyber-wrapper .sort-placed-card .sort-remove:hover{color:var(--red)!important;}
+#apcyber-wrapper .sort-placed-card.correct-placed{border-color:var(--green)!important;background:#ecfdf5!important;}
+#apcyber-wrapper .sort-placed-card.wrong-placed{border-color:var(--red)!important;background:#fef2f2!important;}
+#apcyber-wrapper .sort-scenarios{display:grid!important;gap:8px!important;margin-bottom:16px!important;}
+#apcyber-wrapper .sort-card{display:flex!important;align-items:flex-start!important;gap:10px!important;background:var(--white)!important;border:2px solid var(--g200)!important;border-radius:var(--r-md)!important;padding:12px 16px!important;cursor:pointer!important;transition:all .15s!important;font-family:'Georgia',serif!important;font-size:13px!important;color:var(--g700)!important;line-height:1.5!important;}
+#apcyber-wrapper .sort-card:hover{border-color:var(--primary)!important;background:var(--lighter)!important;}
+#apcyber-wrapper .sort-card.selected{border-color:var(--primary)!important;background:var(--lighter)!important;box-shadow:0 0 0 2px rgba(109,40,217,.2)!important;}
+#apcyber-wrapper .sort-card.placed-in-bucket{opacity:.4!important;cursor:default!important;border-style:dashed!important;}
+#apcyber-wrapper .sort-card-num{font-weight:800!important;color:var(--primary)!important;flex-shrink:0!important;min-width:18px!important;}
+#apcyber-wrapper .sort-instructions{font-family:'Georgia',serif!important;font-size:13px!important;color:var(--g600)!important;font-style:italic!important;margin-bottom:14px!important;padding:8px 12px!important;background:var(--lighter)!important;border-radius:var(--r-sm)!important;border-left:3px solid var(--primary)!important;}
+
+#apcyber-wrapper .redflag-email{background:var(--white)!important;border:1px solid var(--g200)!important;border-radius:var(--r-md)!important;overflow:hidden!important;margin-bottom:16px!important;box-shadow:var(--sh-sm)!important;}
+#apcyber-wrapper .redflag-toolbar{background:var(--g100)!important;padding:8px 14px!important;border-bottom:1px solid var(--g200)!important;display:flex!important;align-items:center!important;gap:6px!important;}
+#apcyber-wrapper .redflag-dot{width:10px!important;height:10px!important;border-radius:50%!important;display:inline-block!important;}
+#apcyber-wrapper .redflag-dot.r{background:#ef4444!important;}
+#apcyber-wrapper .redflag-dot.y{background:#eab308!important;}
+#apcyber-wrapper .redflag-dot.g{background:#22c55e!important;}
+#apcyber-wrapper .redflag-meta{padding:14px 18px!important;border-bottom:1px solid var(--g200)!important;font-family:'Georgia',serif!important;font-size:13px!important;color:var(--g600)!important;line-height:1.8!important;}
+#apcyber-wrapper .redflag-meta strong{color:var(--g800)!important;}
+#apcyber-wrapper .redflag-field{display:block!important;margin-bottom:2px!important;}
+#apcyber-wrapper .redflag-body{padding:18px!important;font-family:'Georgia',serif!important;font-size:14px!important;color:var(--g700)!important;line-height:1.7!important;}
+#apcyber-wrapper .redflag-body p{margin:0 0 12px 0!important;}
+#apcyber-wrapper .rf-spot{cursor:pointer!important;border-bottom:2px dotted transparent!important;padding:1px 2px!important;border-radius:2px!important;transition:all .15s!important;position:relative!important;}
+#apcyber-wrapper .rf-spot:hover{background:rgba(109,40,217,.08)!important;border-bottom-color:var(--g400)!important;}
+#apcyber-wrapper .rf-spot.flagged{background:#fef3c7!important;border-bottom:2px solid var(--warn)!important;}
+#apcyber-wrapper .rf-spot.correct-flag{background:#dcfce7!important;border-bottom:2px solid var(--green)!important;}
+#apcyber-wrapper .rf-spot.wrong-flag{background:#fecaca!important;border-bottom:2px solid var(--red)!important;text-decoration:line-through!important;}
+#apcyber-wrapper .rf-spot.missed-flag{background:#fef9c3!important;border-bottom:2px dashed var(--warn)!important;}
+#apcyber-wrapper .redflag-instructions{font-family:'Georgia',serif!important;font-size:13px!important;color:var(--g600)!important;font-style:italic!important;margin-bottom:14px!important;padding:8px 12px!important;background:#fffbeb!important;border-radius:var(--r-sm)!important;border-left:3px solid var(--warn)!important;}
+#apcyber-wrapper .redflag-counter{font-family:'Georgia',serif!important;font-size:12px!important;color:var(--g400)!important;margin-bottom:10px!important;}
+#apcyber-wrapper .rf-legend{display:flex!important;gap:16px!important;flex-wrap:wrap!important;margin-top:8px!important;font-family:'Georgia',serif!important;font-size:12px!important;color:var(--g600)!important;}
+#apcyber-wrapper .rf-legend-item{display:flex!important;align-items:center!important;gap:5px!important;}
+#apcyber-wrapper .rf-legend-swatch{width:14px!important;height:14px!important;border-radius:3px!important;display:inline-block!important;}
+#apcyber-wrapper .cfu-type-badge.cfu-match-badge{background:#dbeafe!important;color:#1e40af!important;}
+#apcyber-wrapper .cfu-type-badge.cfu-cloze-badge{background:#fce7f3!important;color:#9d174d!important;}
+#apcyber-wrapper .cfu-type-badge.cfu-sort-badge{background:#d1fae5!important;color:#065f46!important;}
+#apcyber-wrapper .cfu-type-badge.cfu-redflag-badge{background:#fef3c7!important;color:#92400e!important;}
+
+@media(max-width:680px){
+  #apcyber-wrapper .ch-header{padding:26px 22px!important;}
+  #apcyber-wrapper .card{padding:24px 20px!important;}
+  #apcyber-wrapper .principle-grid{grid-template-columns:1fr!important;}
+  #apcyber-wrapper .defense-grid{grid-template-columns:1fr!important;}
+  #apcyber-wrapper .related-grid{grid-template-columns:1fr!important;}
+  #apcyber-wrapper .bottom-nav{flex-direction:column!important;}
+  #apcyber-wrapper .nav-btn{width:100%!important;justify-content:center!important;}
+  #apcyber-wrapper .exam-card{padding:24px 20px!important;}
+  #apcyber-wrapper .author-box{flex-direction:column!important;}
+  #apcyber-wrapper .toc-row{grid-template-columns:1fr!important;}
+  #apcyber-wrapper .tutor-cta{padding:24px 20px!important;flex-direction:column!important;}
+  #apcyber-wrapper .key-terms-grid{grid-template-columns:1fr!important;}
+  #cfu-score-tracker{left:12px!important;bottom:20px!important;}
+  #apcyber-wrapper .slides-section{padding:22px 18px!important;}
+  #apcyber-wrapper .slides-header{flex-direction:column!important;}
+  #apcyber-wrapper .slides-open-btn{width:100%!important;justify-content:center!important;}
+  #apcyber-wrapper .match-container{flex-direction:column!important;}
+  #apcyber-wrapper .match-connector{display:none!important;}
+  #apcyber-wrapper .sort-buckets{grid-template-columns:1fr!important;}
+  #apcyber-wrapper .cloze-blank{min-width:90px!important;}
+}
+
+/* -- ATTACK COMPARISON TABLE -- */
+#apcyber-wrapper .attack-table{width:100%!important;border-collapse:collapse!important;margin:16px 0 24px!important;font-family:'Georgia',serif!important;font-size:0.88rem!important;}
+#apcyber-wrapper .attack-table th{background:#1e1b4b!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:10px 14px!important;text-align:left!important;font-size:0.78rem!important;text-transform:uppercase!important;letter-spacing:.06em!important;}
+#apcyber-wrapper .attack-table td{padding:10px 14px!important;border-bottom:1px solid #e5e7eb!important;vertical-align:top!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.6!important;}
+#apcyber-wrapper .attack-table tr:nth-child(even) td{background:#f9fafb!important;}
+#apcyber-wrapper .attack-table .atk-name{font-weight:700!important;color:#6b21a8!important;-webkit-text-fill-color:#6b21a8!important;}
+#apcyber-wrapper .attack-table .osi-tag{display:inline-block!important;background:#ede9fe!important;color:#6d28d9!important;-webkit-text-fill-color:#6d28d9!important;font-size:0.72rem!important;font-weight:600!important;border-radius:3px!important;padding:1px 7px!important;margin-left:4px!important;}
+#apcyber-wrapper .attack-table .cia-tag{display:inline-block!important;font-size:0.72rem!important;font-weight:600!important;border-radius:3px!important;padding:1px 7px!important;margin:1px 2px!important;}
+#apcyber-wrapper .attack-table .cia-c{background:#dbeafe!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;}
+#apcyber-wrapper .attack-table .cia-i{background:#d1fae5!important;color:#065f46!important;-webkit-text-fill-color:#065f46!important;}
+#apcyber-wrapper .attack-table .cia-a{background:#ffedd5!important;color:#9a3412!important;-webkit-text-fill-color:#9a3412!important;}
+
+/* -- ATTACK ANATOMY DARK BOX -- */
+#apcyber-wrapper .attack-anatomy{background:#1e1b4b!important;border-radius:12px!important;padding:24px!important;margin:16px 0 24px!important;}
+#apcyber-wrapper .attack-anatomy h4{color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;font-size:0.8rem!important;text-transform:uppercase!important;letter-spacing:.08em!important;margin:0 0 16px!important;font-family:'Georgia',serif!important;}
+#apcyber-wrapper .aa-step{display:flex!important;gap:14px!important;margin-bottom:14px!important;align-items:flex-start!important;}
+#apcyber-wrapper .aa-step:last-child{margin-bottom:0!important;}
+#apcyber-wrapper .aa-num{width:28px!important;height:28px!important;border-radius:50%!important;background:#6b21a8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:0.78rem!important;font-weight:700!important;display:flex!important;align-items:center!important;justify-content:center!important;flex-shrink:0!important;margin-top:2px!important;}
+#apcyber-wrapper .aa-content{flex:1!important;}
+#apcyber-wrapper .aa-label{font-size:0.72rem!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.06em!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-family:'Georgia',serif!important;margin:0 0 3px!important;}
+#apcyber-wrapper .aa-desc{font-size:0.88rem!important;color:rgba(255,255,255,.85)!important;-webkit-text-fill-color:rgba(255,255,255,.85)!important;line-height:1.6!important;font-family:'Georgia',serif!important;}
+
+/* -- MITM FLOW VISUAL -- */
+#apcyber-wrapper .mitm-flow{display:flex!important;align-items:center!important;gap:8px!important;margin:16px 0 24px!important;background:#f5f0ff!important;border:1px solid #ddd6fe!important;border-radius:10px!important;padding:18px 20px!important;flex-wrap:wrap!important;}
+#apcyber-wrapper .mf-node{background:#6b21a8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-radius:8px!important;padding:10px 14px!important;font-size:0.82rem!important;font-weight:700!important;font-family:'Georgia',serif!important;text-align:center!important;}
+#apcyber-wrapper .mf-node.attacker{background:#dc2626!important;}
+#apcyber-wrapper .mf-arrow{font-size:1.2rem!important;color:#6b21a8!important;-webkit-text-fill-color:#6b21a8!important;font-weight:700!important;}
+#apcyber-wrapper .mf-label{font-size:0.75rem!important;color:#6b7280!important;-webkit-text-fill-color:#6b7280!important;text-align:center!important;font-family:'Georgia',serif!important;margin-top:4px!important;}
+
+/* -- CASE BLOCK -- */
+#apcyber-wrapper .case-block{background:#f8fafc!important;border:1px solid #e2e8f0!important;border-left:4px solid #6b21a8!important;border-radius:8px!important;padding:22px 24px!important;margin-bottom:20px!important;}
+#apcyber-wrapper .case-eyebrow{font-size:0.72rem!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.08em!important;color:#6b21a8!important;-webkit-text-fill-color:#6b21a8!important;margin:0 0 6px!important;font-family:'Georgia',serif!important;}
+#apcyber-wrapper .case-title{font-size:1rem!important;font-weight:700!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;margin:0 0 12px!important;font-family:'Georgia',serif!important;}
+#apcyber-wrapper .case-body p{font-size:0.92rem!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.7!important;margin:0 0 10px!important;font-family:'Georgia',serif!important;}
+#apcyber-wrapper .case-body p:last-child{margin:0!important;}
+#apcyber-wrapper .case-tags{display:flex!important;flex-wrap:wrap!important;gap:8px!important;margin-top:14px!important;}
+#apcyber-wrapper .case-tag{font-size:0.75rem!important;font-weight:600!important;border-radius:4px!important;padding:3px 10px!important;}
+#apcyber-wrapper .case-tag.fail{background:#fee2e2!important;color:#991b1b!important;-webkit-text-fill-color:#991b1b!important;}
+#apcyber-wrapper .case-tag.lesson{background:#ede9fe!important;color:#6d28d9!important;-webkit-text-fill-color:#6d28d9!important;}
+
+/* -- VOCAB TABLE -- */
+#apcyber-wrapper .vocab-table-full{width:100%!important;border-collapse:collapse!important;margin:16px 0 24px!important;font-family:'Georgia',serif!important;}
+#apcyber-wrapper .vocab-table-full th{background:#1e1b4b!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:12px 16px!important;text-align:left!important;font-size:0.78rem!important;text-transform:uppercase!important;letter-spacing:.06em!important;}
+#apcyber-wrapper .vocab-table-full td{padding:12px 16px!important;border-bottom:1px solid #e5e7eb!important;vertical-align:top!important;font-size:0.9rem!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.6!important;}
+#apcyber-wrapper .vocab-table-full tr:nth-child(even) td{background:#f9fafb!important;}
+#apcyber-wrapper .vt-term{font-weight:700!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;white-space:nowrap!important;}
+#apcyber-wrapper .exam-trap{display:inline-block!important;background:#fef3c7!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;font-size:0.72rem!important;font-weight:600!important;border-radius:3px!important;padding:1px 6px!important;margin-left:6px!important;}
+
+/* -- EXAM STRATEGY GRID -- */
+#apcyber-wrapper .exam-strat-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:14px!important;margin:16px 0!important;}
+#apcyber-wrapper .strat-card{border-radius:10px!important;padding:18px 20px!important;background:#f5f0ff!important;border:1px solid #ddd6fe!important;}
+#apcyber-wrapper .strat-card h4{font-size:0.8rem!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.06em!important;color:#6b21a8!important;-webkit-text-fill-color:#6b21a8!important;margin:0 0 10px!important;font-family:'Georgia',serif!important;}
+#apcyber-wrapper .strat-card p,#apcyber-wrapper .strat-card li{font-size:0.88rem!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.65!important;margin:0 0 8px!important;font-family:'Georgia',serif!important;}
+#apcyber-wrapper .strat-card ul{margin:0!important;padding-left:16px!important;}
+#apcyber-wrapper .strat-card li{margin-bottom:6px!important;}
+
+@media(max-width:650px){
+  #apcyber-wrapper .mitm-flow{flex-direction:column!important;align-items:flex-start!important;}
+  #apcyber-wrapper .exam-strat-grid{grid-template-columns:1fr!important;}
+}
+@media(max-width:768px){
+  #apcyber-wrapper{padding-bottom:70px!important;}
+}
+
+
+/* -- LESSON STEP LINK IN NAV -- */
+#apcyber-wrapper .ucn-step-lesson,
+.ucn-step-lesson {
+  font-weight:700!important;
+  color:#c4b5fd!important;
+  -webkit-text-fill-color:#c4b5fd!important;
+  border-bottom:1px solid rgba(167,139,250,.2)!important;
+  margin-bottom:2px!important;
+}
+
+</style>
+
+<div id=""apcyber-wrapper"" data-lesson-id=""3.2"">
+<div id=""ucnav"">
+  <div class=""ucn-rail"" id=""ucn-rail"">
+    <a href=""/pages/ap-cybersecurity-complete-course-guide"" class=""ucn-hub"">AP Cyber Hub</a>
+    <span class=""ucn-badge"">Unit 3</span>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(1);"" id=""ucn-l1"" title=""Network Fundamentals"">3.1a <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s1"">
+      <a href=""/pages/ap-cyber-unit-3-lesson-1"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-3-lesson-1-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-3-lesson-1-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-3-lesson-1-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-3-lesson-1-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(2);"" id=""ucn-l2"" title=""Network Attacks"">3.1b <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s2"">
+      <a href=""/pages/ap-cyber-unit-3-lesson-2"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-3-lesson-2-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-3-lesson-2-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-3-lesson-2-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-3-lesson-2-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson open"" onclick=""ucnToggle(3);"" id=""ucn-l3"" title=""Policies and Wireless"">3.2 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps open"" id=""ucn-s3"">
+      <a href=""/pages/ap-cyber-unit-3-lesson-3"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-3-lesson-3-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-3-lesson-3-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-3-lesson-3-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-3-lesson-3-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(4);"" id=""ucn-l4"" title=""Segmentation"">3.3 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s4"">
+      <a href=""/pages/ap-cyber-unit-3-lesson-4"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-3-lesson-4-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-3-lesson-4-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-3-lesson-4-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-3-lesson-4-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(5);"" id=""ucn-l5"" title=""Firewalls"">3.4 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s5"">
+      <a href=""/pages/ap-cyber-unit-3-lesson-5"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-3-lesson-5-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-3-lesson-5-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-3-lesson-5-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-3-lesson-5-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+    <div style=""cursor:pointer!important;"" class=""ucn-lesson"" onclick=""ucnToggle(6);"" id=""ucn-l6"" title=""Detection"">3.5 <span class=""ucn-chevron"">▼</span>
+</div>
+    <div class=""ucn-steps"" id=""ucn-s6"">
+      <a href=""/pages/ap-cyber-unit-3-lesson-6"" class=""ucn-step ucn-step-lesson"">Lesson</a>
+      <a href=""/pages/ap-cyber-unit-3-lesson-6-exercise-1"" class=""ucn-step"">Exercise 1</a>
+      <a href=""/pages/ap-cyber-unit-3-lesson-6-exercise-2"" class=""ucn-step"">Exercise 2</a>
+      <a href=""/pages/ap-cyber-unit-3-lesson-6-lab"" class=""ucn-step"">Lab</a>
+      <a href=""/pages/ap-cyber-unit-3-lesson-6-quiz"" class=""ucn-step"">Quiz</a>
+    </div>
+  </div>
+</div>
+<script>
+function ucnToggle(num){try{event.stopPropagation();}catch(x){}var l=document.getElementById('ucn-l'+num),s=document.getElementById('ucn-s'+num);if(!l||!s)return;var o=l.classList.contains('open');document.querySelectorAll('#ucnav .ucn-lesson').forEach(function(e){e.classList.remove('open')});document.querySelectorAll('#ucnav .ucn-steps').forEach(function(e){e.classList.remove('open')});if(!o){l.classList.add('open');s.classList.add('open');setTimeout(function(){l.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},50)}}
+(function(){
+function pos(){var nav=document.getElementById('ucnav');if(!nav)return;if(nav.parentElement!==document.body){document.body.appendChild(nav)}var h=0;var headerEl=document.querySelector('.section-header header.header')||document.querySelector('sticky-header header')||document.querySelector('header.header');if(headerEl){h=Math.round(headerEl.getBoundingClientRect().bottom)}if(h<20||h>300)h=68;nav.style.setProperty('top',h+'px','important');var navH=nav.offsetHeight||42;var w=document.getElementById('apcyber-wrapper')||document.querySelector('[data-lesson-id]')||document.querySelector('[id^=""u3l""]')||document.querySelector('[id^=""u1l""]')||document.querySelector('[id^=""u2l""]');if(w)w.style.setProperty('padding-top',(h+navH+4)+'px','important')}
+function openCurrentSteps(){var ol=document.querySelector('#ucnav .ucn-lesson.open');if(ol&&ol.id){var n=ol.id.replace('ucn-l','');var s=document.getElementById('ucn-s'+n);if(s)s.classList.add('open');setTimeout(function(){ol.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},100)}}
+requestAnimationFrame(pos);setTimeout(pos,150);setTimeout(pos,400);setTimeout(pos,800);setTimeout(pos,1500);setTimeout(pos,3000);setTimeout(openCurrentSteps,200);
+window.addEventListener('resize',pos,{passive:true});
+setTimeout(function(){var _w=document.getElementById('apcyber-wrapper')||document.querySelector('[id^=""u3l""]')||document.querySelector('[id^=""u1l""]')||document.querySelector('[id^=""u2l""]');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}var _m=document.getElementById('MainContent');if(_m){_m.style.setProperty('padding-top','0','important');_m.style.setProperty('margin-top','0','important')}},50);
+setTimeout(function(){var _w=document.getElementById('apcyber-wrapper')||document.querySelector('[id^=""u3l""]');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}},500);
+var scrolled=false;window.addEventListener('scroll',function(){if(!scrolled){scrolled=true;requestAnimationFrame(pos)}},{passive:true});
+var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class','hidden']});setTimeout(function(){obs.disconnect()},15000);
+})();
+</script>
+<div class=""exhero"" style=""margin-bottom:0!important;"">
+<div class=""exhero-badge"">Unit 3 • Lesson 3.2</div>
+<nav aria-label=""Breadcrumb"" style=""font-size:0.82rem;color:#6b7280;-webkit-text-fill-color:#6b7280;margin:0 0 16px;font-family:Georgia,serif;padding:0;"">
+<a href=""/"" style=""color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;"">Home</a><span style=""margin:0 6px;color:#d1d5db;"">›</span><a href=""/pages/ap-cybersecurity-complete-course-guide"" style=""color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;"">AP Cybersecurity</a><span style=""margin:0 6px;color:#d1d5db;"">›</span><span style=""color:#e9d5ff;-webkit-text-fill-color:#e9d5ff;"">Unit 3 › Lesson 3.2</span>
+</nav>
+<h1>Topic 3.2: Network Security Policies &amp; Wireless</h1>
+<p>Router, switch, VPN and wireless security policies, and the access point settings that carry them out</p>
+</div>
+<div class=""lesson-obj"" style=""background:#F5F0FF!important;border-left:4px solid #6B21A8!important;padding:20px 24px!important;border-radius:0 10px 10px 0!important;margin:24px 0!important;font-family:Georgia,serif!important;"">
+<p style=""font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 10px!important;font-size:15px!important;"">🎯 Learning Objectives</p>
+<ul style=""margin:0!important;padding-left:20px!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.8!important;"">
+<li>Explain what a managerial control is, and why a written policy is what makes one device&rsquo;s configuration true of every device</li>
+<li>Identify the requirements a router security policy and a switch security policy set, and say which are shared</li>
+<li>Explain what a VPN policy requires, including why it prohibits split tunneling</li>
+<li>Identify the requirements a wireless security policy establishes</li>
+<li>Describe the four wireless configuration controls, and say what each one does and does not achieve</li>
+<li>Recognize which wireless encryption protocols are insecure, and which is currently strongest</li>
+<li><em>Background:</em> compare secure protocols including TLS, SSH, SFTP and DNSSEC, and the certificate trust model they rely on</li>
+</ul>
+</div>
+<div class=""lesson-section"" style=""padding:0 4px!important;"">
+<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">3.2.1: Policy Comes Before Configuration</h2>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">A <strong>managerial control</strong> is a written rule about how something must be built or used. It is not a setting on a device. It is the document that says what every device of that kind has to look like before it is allowed on the network.</p>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">The distinction matters because configuration without policy does not survive contact with an organization. One administrator hardens a router carefully. A second administrator, six months later, adds a router and does what seems reasonable at the time. Neither of them did anything wrong, and the network now has two different security postures. A policy is what makes the second router match the first one, and what makes an auditor able to tell whether it does.</p>
+
+<div style=""background:#F9FAFB!important;border:1px solid #E5E7EB!important;border-radius:10px!important;padding:20px 24px!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
+<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">The four policies in this topic</h3>
+<div style=""display:grid!important;grid-template-columns:1fr!important;gap:10px!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;"">
+<div style=""background:#EDE9FE!important;padding:10px 14px!important;border-radius:6px!important;""><strong>Router security policy</strong> sets the minimum configuration standard for routers on the network.</div>
+<div style=""background:#EDE9FE!important;padding:10px 14px!important;border-radius:6px!important;""><strong>Switch security policy</strong> sets the minimum configuration standard for switches.</div>
+<div style=""background:#EDE9FE!important;padding:10px 14px!important;border-radius:6px!important;""><strong>VPN policy</strong> sets the minimum security requirements for employees reaching the internal network from outside it.</div>
+<div style=""background:#EDE9FE!important;padding:10px 14px!important;border-radius:6px!important;""><strong>Wireless security policy</strong> sets the minimum security requirements for the organization's wireless networks.</div>
+</div>
+</div>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">All four share a phrase worth reading carefully: a policy sets a <strong>minimum</strong> standard and <strong>may include</strong> a given requirement. A policy is a floor, not a ceiling. An organization is free to require more than the list; what it may not do is require less.</p>
+
+<div style=""background:#F5F0FF!important;border-left:4px solid #6B21A8!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
+<p style=""font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 6px!important;font-size:14px!important;"">&#9733; The pattern to carry through this topic</p>
+<p style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;"">Three of the four policies say the same thing in different words: <strong>stop trusting the device to decide who you are</strong>. Routers and switches ban local accounts, wireless requires authentication against an approved server, and the VPN requires keys or multifactor authentication. Identity is checked centrally, or it is not really checked.</p>
+</div>
+
+</div>
+<div class=""lesson-section"" style=""padding:0 4px!important;"">
+<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">3.2.2: Router and Switch Security Policies</h2>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">Routers and switches are the devices that move traffic. An adversary who controls one of them does not need to break anything else: they can read traffic, redirect it, or quietly let themselves back in later. Both policies are built around that fact, and they overlap more than they differ.</p>
+
+<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">Router security policy</h3>
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">A router security policy sets a minimum configuration standard for every router on the organization's network, and it may include:</p>
+<ul style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.9!important;margin:0 0 16px!important;padding-left:22px!important;font-family:Georgia,serif!important;"">
+<li><strong>Banning local user accounts.</strong> All router logins must go through an approved authentication server. A local account lives on the box, so it does not disappear when the person who used it leaves, it does not show up in central logs, and it is the account everyone shares because it is easier.</li>
+<li><strong>Disabling unnecessary services,</strong> such as Telnet. Every service left running is another way in and another thing to patch. Telnet is the standing example because it carries credentials in plaintext, so anyone positioned to watch the traffic gets the password.</li>
+<li><strong>Requiring a firewall.</strong> The organization may decide to use a firewall device separate from the router rather than the router's own filtering.</li>
+</ul>
+
+<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">Switch security policy</h3>
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">A switch security policy sets a minimum configuration standard for every switch, and it may include:</p>
+<ul style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.9!important;margin:0 0 16px!important;padding-left:22px!important;font-family:Georgia,serif!important;"">
+<li><strong>Banning local user accounts.</strong> Same requirement, same reason: switch logins go through an approved authentication server.</li>
+<li><strong>Requiring port security to be enabled.</strong> Port security limits which devices, and how many, may use a physical switch port. A port expecting one workstation should not silently accept a hub with six unknown machines behind it.</li>
+<li><strong>Using MAC filtering,</strong> so the switch forwards traffic only for hardware addresses the organization expects.</li>
+</ul>
+
+<div style=""background:#F9FAFB!important;border:1px solid #E5E7EB!important;border-radius:10px!important;padding:20px 24px!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
+<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">What is shared and what is not</h3>
+<div style=""display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px 16px!important;align-items:start!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;"">
+<div style=""font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;"">Router policy</div>
+<div style=""font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;"">Switch policy</div>
+<div style=""background:#DCFCE7!important;padding:8px 12px!important;border-radius:6px!important;"">Ban local user accounts</div>
+<div style=""background:#DCFCE7!important;padding:8px 12px!important;border-radius:6px!important;"">Ban local user accounts</div>
+<div style=""background:#EDE9FE!important;padding:8px 12px!important;border-radius:6px!important;"">Disable unnecessary services (for example Telnet)</div>
+<div style=""background:#F3F4F6!important;padding:8px 12px!important;border-radius:6px!important;"">Require port security enabled</div>
+<div style=""background:#EDE9FE!important;padding:8px 12px!important;border-radius:6px!important;"">Require a firewall, which may be a separate device</div>
+<div style=""background:#F3F4F6!important;padding:8px 12px!important;border-radius:6px!important;"">Use MAC filtering</div>
+</div>
+<p style=""font-size:13px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;margin:12px 0 0!important;font-family:Georgia,serif!important;"">Green is the requirement both policies make. It is the one to remember first, because a question that swaps router for switch is testing whether you know which requirements are specific.</p>
+</div>
+
+<div style=""background:#FEF2F2!important;border-left:4px solid #EF4444!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
+<p style=""font-weight:700!important;color:#EF4444!important;-webkit-text-fill-color:#EF4444!important;margin:0 0 6px!important;font-size:14px!important;"">&#9888; Exam Trap</p>
+<p style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;"">Port security and MAC filtering are switch policy requirements, not router ones. Disabling unnecessary services and requiring a firewall are router policy requirements. Banning local user accounts is the requirement that appears in both, so it is never the answer to ""which of these is unique to the switch policy"".</p>
+</div>
+
+</div>
+<div class=""lesson-section"" style=""padding:0 4px!important;"">
+<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">3.2.3: VPN Policy</h2>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">A <strong>virtual private network</strong> lets an employee outside the building reach the internal network as though they were inside it. That is useful and it is also a hole in the perimeter, so the VPN policy details the minimum security requirements for using one. It may include:</p>
+
+<ul style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.9!important;margin:0 0 16px!important;padding-left:22px!important;font-family:Georgia,serif!important;"">
+<li><strong>A list of roles allowed to use the VPN.</strong> Access is granted to roles that need it, not to everyone with a login. A policy that lets the whole organization in has not reduced anything.</li>
+<li><strong>Authentication requirements,</strong> such as a public and private key system, or multifactor authentication. A password alone is not enough to open a door this wide.</li>
+<li><strong>A prohibition against split tunneling,</strong> which is also called dual tunneling.</li>
+</ul>
+
+<div style=""background:#F9FAFB!important;border:1px solid #E5E7EB!important;border-radius:10px!important;padding:20px 24px!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
+<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">What split tunneling actually does</h3>
+<p style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 14px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">With split tunneling on, the laptop keeps two paths open at once. Traffic for the organization goes through the encrypted tunnel and gets inspected. Everything else goes straight out to the internet and is inspected by nobody.</p>
+<div style=""display:grid!important;grid-template-columns:1fr auto 1fr!important;gap:10px 14px!important;align-items:center!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;"">
+<div style=""font-weight:700!important;color:#EF4444!important;-webkit-text-fill-color:#EF4444!important;"">Split tunneling (prohibited)</div>
+<div></div>
+<div style=""font-weight:700!important;color:#22C55E!important;-webkit-text-fill-color:#22C55E!important;"">Full tunneling (required)</div>
+<div style=""background:#FEE2E2!important;padding:8px 12px!important;border-radius:6px!important;"">Work traffic through the tunnel, inspected</div>
+<div>&#8596;</div>
+<div style=""background:#DCFCE7!important;padding:8px 12px!important;border-radius:6px!important;"">Work traffic through the tunnel, inspected</div>
+<div style=""background:#FEE2E2!important;padding:8px 12px!important;border-radius:6px!important;"">Everything else direct to the internet, <strong>not inspected</strong></div>
+<div>&#8596;</div>
+<div style=""background:#DCFCE7!important;padding:8px 12px!important;border-radius:6px!important;"">Everything else also through the tunnel, inspected</div>
+</div>
+<p style=""font-size:13px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;margin:12px 0 0!important;font-family:Georgia,serif!important;"">The risk is not that the direct traffic is sensitive. It is that the direct path is a route into a machine that is simultaneously connected to the internal network, and the organization cannot see it.</p>
+</div>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">Organizations turn split tunneling on for a mundane reason: sending every employee's video calls and software updates through headquarters is expensive and slow. That is a real cost, and it is why the prohibition has to be written down rather than left to judgement.</p>
+
+<div style=""background:#FEF2F2!important;border-left:4px solid #EF4444!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
+<p style=""font-weight:700!important;color:#EF4444!important;-webkit-text-fill-color:#EF4444!important;margin:0 0 6px!important;font-size:14px!important;"">&#9888; Exam Trap</p>
+<p style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;"">Split tunneling is not an attack and it is not malware. It is a configuration choice an organization makes on purpose, and the policy requirement is that it be prohibited. If a scenario says a VPN permits split tunneling, the finding is a policy violation, not an intrusion.</p>
+</div>
+
+</div>
+<div class=""lesson-section"" style=""padding:0 4px!important;"">
+<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">3.2.4: Wireless Security Policy</h2>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">Wired networks have a physical control built in: to plug into a switch, you have to be in the building. Wireless removes it. The signal goes through walls and does not stop at the property line, so anyone within range is already as close to the network as an employee at a desk. The wireless security policy establishes the minimum requirements that replace the lock on the door, and it may include:</p>
+
+<ul style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.9!important;margin:0 0 16px!important;padding-left:22px!important;font-family:Georgia,serif!important;"">
+<li><strong>Requiring users to authenticate through an extensible authentication protocol</strong> connected to an approved authentication server. This is the same central-identity requirement the router and switch policies make, applied to the people joining the network rather than the staff administering it. A single shared wireless password identifies nobody.</li>
+<li><strong>Requiring all wireless traffic to be encrypted using AES encryption with a minimum key length.</strong> The policy names the algorithm and it names a floor for the key length, because ""encrypted"" on its own is satisfied by encryption too weak to matter.</li>
+<li><strong>Disabling beacon frames on wireless access points.</strong></li>
+</ul>
+
+<div style=""background:#F5F0FF!important;border-left:4px solid #6B21A8!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
+<p style=""font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 6px!important;font-size:14px!important;"">&#9733; Policy and configuration meet here</p>
+<p style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;"">The last requirement is the only one in this topic that is written twice: once as something the policy must say, and once as something an administrator must actually do. That is the seam between the two halves of this lesson, and the next section is the doing half.</p>
+</div>
+
+</div>
+<div class=""lesson-section"" style=""padding:0 4px!important;"">
+<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">3.2.5: Configuring Wireless Security</h2>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">These are the settings an administrator changes on a wireless access point to carry out the policy. There are four, and they are worth learning as a set because each one closes a gap the others leave open.</p>
+
+<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">1. Disable beacon frame broadcasting</h3>
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">A <strong>beacon frame</strong> is a small message an access point broadcasts on a timer, announcing the network's name and its basic properties. It is what fills the list when a phone shows nearby networks. Turning it off means the access point stops advertising itself, which makes it harder for an adversary to find the network and learn what it is running.</p>
+
+<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">2. Control broadcast direction and signal strength</h3>
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">An access point set to maximum power in the middle of a building puts a usable signal in the car park and the pavement outside. Reducing the transmit power, and aiming the signal with directional antennas, keeps coverage inside the physical space the access point is meant to cover. This is the one control on the list that takes territory back from the attacker rather than making the network harder to use once they are in range.</p>
+
+<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">3. Enable strong wireless encryption</h3>
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">Wireless frames travel through open air, so anyone with an antenna can capture them. Encryption is what stops a captured frame from being readable. Not every option is worth having:</p>
+<div style=""background:#F9FAFB!important;border:1px solid #E5E7EB!important;border-radius:10px!important;padding:20px 24px!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
+<div style=""display:grid!important;grid-template-columns:auto 1fr!important;gap:8px 16px!important;align-items:center!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;"">
+<div style=""background:#FEE2E2!important;padding:8px 14px!important;border-radius:6px!important;font-weight:700!important;"">WEP</div>
+<div>Known vulnerabilities. Insecure.</div>
+<div style=""background:#FEE2E2!important;padding:8px 14px!important;border-radius:6px!important;font-weight:700!important;"">WPS</div>
+<div>Known vulnerabilities. Insecure.</div>
+<div style=""background:#FEE2E2!important;padding:8px 14px!important;border-radius:6px!important;font-weight:700!important;"">WPA (original)</div>
+<div>Known vulnerabilities. Insecure.</div>
+<div style=""background:#DCFCE7!important;padding:8px 14px!important;border-radius:6px!important;font-weight:700!important;"">WPA3</div>
+<div>Currently the strongest wireless encryption algorithm.</div>
+</div>
+</div>
+
+<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">4. Enable MAC filtering and require authentication</h3>
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">MAC filtering keeps a list of the hardware addresses allowed on the network and refuses the rest, which prevents unauthorised devices from getting on. Alongside it, users are required to authenticate when joining the network, so getting a device admitted and getting a person admitted are two separate checks.</p>
+
+<div style=""background:#FEF2F2!important;border-left:4px solid #EF4444!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
+<p style=""font-weight:700!important;color:#EF4444!important;-webkit-text-fill-color:#EF4444!important;margin:0 0 6px!important;font-size:14px!important;"">&#9888; Exam Trap</p>
+<p style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;"">Two of these controls raise the cost of an attack rather than preventing one. A network with beacons disabled is <strong>harder to find</strong>, not invisible: it still carries traffic, and traffic can be observed. MAC filtering blocks a device that has not been added to the list, but a hardware address is something a machine announces about itself. Neither is a reason to weaken the encryption or the authentication, which are what actually keep an adversary out.</p>
+</div>
+
+</div>
+<div class=""cfu-block"" id=""cfu-1"" data-type=""matching"" data-num=""1"" data-answer=""R,S,B"">
+<div class=""cfu-header"">
+<div class=""cfu-header-left"">
+<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge cfu-scenario-badge"">Matching</span>
+</div>
+<span class=""cfu-counter"">1 / 15</span>
+</div>
+<div class=""cfu-scenario"">
+<strong>Halden Regional Hospital</strong> is writing minimum configuration standards for its network devices.</div>
+<p class=""cfu-question"">Match each requirement to the policy or policies it belongs to.</p>
+<div class=""cfu-match-grid"">
+<div class=""cfu-match-row"">
+<div class=""cfu-match-term"">Disabling unnecessary services, such as Telnet</div>
+<select class=""cfu-match-select"" id=""cfu1-m1""><option value="""">Select...</option>
+<option value=""R"">Router security policy only</option>
+<option value=""S"">Switch security policy only</option>
+<option value=""B"">Both the router and switch policies</option></select>
+</div>
+<div class=""cfu-match-row"">
+<div class=""cfu-match-term"">Requiring port security to be enabled</div>
+<select class=""cfu-match-select"" id=""cfu1-m2""><option value="""">Select...</option>
+<option value=""R"">Router security policy only</option>
+<option value=""S"">Switch security policy only</option>
+<option value=""B"">Both the router and switch policies</option></select>
+</div>
+<div class=""cfu-match-row"">
+<div class=""cfu-match-term"">Banning local user accounts</div>
+<select class=""cfu-match-select"" id=""cfu1-m3""><option value="""">Select...</option>
+<option value=""R"">Router security policy only</option>
+<option value=""S"">Switch security policy only</option>
+<option value=""B"">Both the router and switch policies</option></select>
+</div>
+</div>
+<div class=""cfu-feedback"" id=""cfu-fb-1"" style=""display:none;"">
+<div class=""cfu-fb-correct"" style=""display:none;"">Disabling unnecessary services is a router policy requirement. Port security is a switch policy requirement. Banning local user accounts appears in both, because logins to either device must go through an approved authentication server.</div>
+<div class=""cfu-fb-partial"" style=""display:none;"">Router policy: ban local accounts, disable unnecessary services, require a firewall. Switch policy: ban local accounts, require port security, use MAC filtering. Only the first requirement is shared.</div>
+</div>
+</div>
+<div class=""cfu-block"" id=""cfu-2"" data-type=""mcq"" data-num=""2"" data-answer=""B"">
+<div class=""cfu-header"">
+<div class=""cfu-header-left"">
+<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge"">MCQ</span>
+</div>
+<span class=""cfu-counter"">2 / 15</span>
+</div>
+<div class=""cfu-scenario"">
+<strong>Corvid Freight</strong> reviews its VPN policy and finds that split tunneling is permitted for all remote staff.</div>
+<p class=""cfu-question"">Which statement <span style=""font-weight:700!important;text-decoration:underline!important;"">BEST</span> describes the security problem?</p>
+<div class=""cfu-options-grid"">
+<div class=""cfu-opt"" data-val=""A"">
+<span class=""cfu-opt-letter"">A</span><span class=""cfu-opt-text"">Split tunneling weakens the encryption used inside the VPN tunnel</span>
+</div>
+<div class=""cfu-opt"" data-val=""B"">
+<span class=""cfu-opt-letter"">B</span><span class=""cfu-opt-text"">Traffic outside the tunnel reaches the internet without passing the organization&rsquo;s inspection, on a machine that is connected to the internal network at the same time</span>
+</div>
+<div class=""cfu-opt"" data-val=""C"">
+<span class=""cfu-opt-letter"">C</span><span class=""cfu-opt-text"">Split tunneling lets employees connect to the VPN from home, which should not be allowed</span>
+</div>
+<div class=""cfu-opt"" data-val=""D"">
+<span class=""cfu-opt-letter"">D</span><span class=""cfu-opt-text"">Split tunneling limits the VPN to carrying one protocol at a time</span>
+</div>
+</div>
+<div class=""cfu-feedback"" id=""cfu-fb-2"" style=""display:none;"">
+<div class=""cfu-fb-correct"" style=""display:none;""><strong>Correct.</strong> The tunnel itself is fine. The problem is the second path: the laptop is talking directly to the internet with no inspection while also being connected to the internal network, so anything that reaches it that way has a route inward that the organization cannot see. This is why a VPN policy prohibits split tunneling, also called dual tunneling.</div>
+<div class=""cfu-fb-wrong"" data-a=""A"" style=""display:none;"">The encryption inside the tunnel is unchanged. The risk comes from the traffic that never enters the tunnel.</div>
+<div class=""cfu-fb-wrong"" data-a=""C"" style=""display:none;"">Connecting from outside the building is the point of a VPN. What the policy restricts is which roles may do it, and how they authenticate.</div>
+<div class=""cfu-fb-wrong"" data-a=""D"" style=""display:none;"">Split tunneling is about which traffic uses the tunnel, not about how many protocols it can carry.</div>
+</div>
+</div>
+<div class=""cfu-block"" id=""cfu-3"" data-type=""checkbox"" data-num=""3"" data-answer=""A,B,C"">
+<div class=""cfu-header"">
+<div class=""cfu-header-left"">
+<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge cfu-scenario-badge"">Select All</span>
+</div>
+<span class=""cfu-counter"">3 / 15</span>
+</div>
+<div class=""cfu-scenario"">
+<strong>Alder Grove School District</strong> is drafting a wireless security policy.</div>
+<p class=""cfu-question"">Select <strong>ALL</strong> requirements a wireless security policy may establish.</p>
+<div class=""cfu-cb-grid"">
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu3-cb1"" value=""A""> <span>Users authenticate through an extensible authentication protocol connected to an approved authentication server</span></label>
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu3-cb2"" value=""B""> <span>All wireless traffic is encrypted using AES encryption with a minimum key length</span></label>
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu3-cb3"" value=""C""> <span>Beacon frames are disabled on wireless access points</span></label>
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu3-cb4"" value=""D""> <span>The wireless password is printed on the visitor sign-in sheet so guests can connect themselves</span></label>
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu3-cb5"" value=""E""> <span>Every employee must connect through the VPN before using any internal system</span></label>
+</div>
+<div class=""cfu-feedback"" id=""cfu-fb-3"" style=""display:none;"">
+<div class=""cfu-fb-correct"" style=""display:none;"">A, B and C are the three requirements a wireless security policy establishes. D defeats the authentication requirement it sits next to. E is a reasonable rule, but it belongs to the VPN policy, not the wireless one.</div>
+<div class=""cfu-fb-partial"" style=""display:none;"">A wireless security policy covers authentication through an approved server, AES encryption with a minimum key length, and disabling beacon frames. Requirements about who may use the VPN belong to a different policy.</div>
+</div>
+</div>
+<div class=""cfu-block"" id=""cfu-4"" data-type=""mcq"" data-num=""4"" data-answer=""C"">
+<div class=""cfu-header"">
+<div class=""cfu-header-left"">
+<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge"">MCQ</span>
+</div>
+<span class=""cfu-counter"">4 / 15</span>
+</div>
+<div class=""cfu-scenario"">
+<strong>Northvale Credit Union</strong> audits an access point and finds it running the original WPA. An administrator suggests switching to WEP because it is simpler to configure.</div>
+<p class=""cfu-question"">Which response is <span style=""font-weight:700!important;text-decoration:underline!important;"">MOST</span> accurate?</p>
+<div class=""cfu-options-grid"">
+<div class=""cfu-opt"" data-val=""A"">
+<span class=""cfu-opt-letter"">A</span><span class=""cfu-opt-text"">Keep the original WPA. It is the current standard and no change is needed</span>
+</div>
+<div class=""cfu-opt"" data-val=""B"">
+<span class=""cfu-opt-letter"">B</span><span class=""cfu-opt-text"">Switch to WEP as suggested, since simpler configuration means fewer mistakes</span>
+</div>
+<div class=""cfu-opt"" data-val=""C"">
+<span class=""cfu-opt-letter"">C</span><span class=""cfu-opt-text"">Neither. WEP, WPS and the original WPA all have known vulnerabilities and are insecure. WPA3 is currently the strongest wireless encryption algorithm</span>
+</div>
+<div class=""cfu-opt"" data-val=""D"">
+<span class=""cfu-opt-letter"">D</span><span class=""cfu-opt-text"">Encryption choice does not matter as long as MAC filtering is enabled</span>
+</div>
+</div>
+<div class=""cfu-feedback"" id=""cfu-fb-4"" style=""display:none;"">
+<div class=""cfu-fb-correct"" style=""display:none;""><strong>Correct.</strong> WEP, WPS and the original WPA are all insecure, so moving between them does not fix anything. WPA3 is currently the strongest wireless encryption algorithm and is what the access point should be running.</div>
+<div class=""cfu-fb-wrong"" data-a=""A"" style=""display:none;"">The original WPA has known vulnerabilities and is insecure.</div>
+<div class=""cfu-fb-wrong"" data-a=""B"" style=""display:none;"">WEP is on the same insecure list as the original WPA. Switching between two broken options is not an upgrade.</div>
+<div class=""cfu-fb-wrong"" data-a=""D"" style=""display:none;"">MAC filtering controls which devices may join. It does nothing to make captured wireless frames unreadable.</div>
+</div>
+</div>
+<div class=""cfu-block"" id=""cfu-5"" data-type=""matching"" data-num=""5"" data-answer=""F,P,D"">
+<div class=""cfu-header"">
+<div class=""cfu-header-left"">
+<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge cfu-scenario-badge"">Matching</span>
+</div>
+<span class=""cfu-counter"">5 / 15</span>
+</div>
+<div class=""cfu-scenario"">
+<strong>Pierce Manufacturing</strong> applies three wireless configuration controls to its access points.</div>
+<p class=""cfu-question"">Match each control to what it achieves.</p>
+<div class=""cfu-match-grid"">
+<div class=""cfu-match-row"">
+<div class=""cfu-match-term"">Disable beacon frame broadcasting</div>
+<select class=""cfu-match-select"" id=""cfu5-m1""><option value="""">Select...</option>
+<option value=""F"">Makes the network harder for an adversary to find and learn about</option>
+<option value=""P"">Keeps the usable signal inside the physical space the access point should cover</option>
+<option value=""D"">Prevents devices that are not on the approved list from getting onto the network</option></select>
+</div>
+<div class=""cfu-match-row"">
+<div class=""cfu-match-term"">Reduce transmit power and aim antennas</div>
+<select class=""cfu-match-select"" id=""cfu5-m2""><option value="""">Select...</option>
+<option value=""F"">Makes the network harder for an adversary to find and learn about</option>
+<option value=""P"">Keeps the usable signal inside the physical space the access point should cover</option>
+<option value=""D"">Prevents devices that are not on the approved list from getting onto the network</option></select>
+</div>
+<div class=""cfu-match-row"">
+<div class=""cfu-match-term"">Enable MAC filtering</div>
+<select class=""cfu-match-select"" id=""cfu5-m3""><option value="""">Select...</option>
+<option value=""F"">Makes the network harder for an adversary to find and learn about</option>
+<option value=""P"">Keeps the usable signal inside the physical space the access point should cover</option>
+<option value=""D"">Prevents devices that are not on the approved list from getting onto the network</option></select>
+</div>
+</div>
+<div class=""cfu-feedback"" id=""cfu-fb-5"" style=""display:none;"">
+<div class=""cfu-fb-correct"" style=""display:none;"">Each control closes a different gap. Note the wording on the first one: disabling beacons makes the network harder to find, not invisible. It still carries traffic, and traffic can be observed.</div>
+<div class=""cfu-fb-partial"" style=""display:none;"">Beacons disabled makes the network harder to find. Power and antenna direction keep the signal inside the intended space. MAC filtering keeps unapproved devices off. None of the three replaces strong encryption and authentication.</div>
+</div>
+</div>
+<div class=""lesson-section"" style=""padding:0 4px!important;"">
+<div style=""background:#EFF6FF!important;border-left:4px solid #2563EB!important;padding:18px 22px!important;border-radius:0 8px 8px 0!important;margin:32px 0 8px!important;font-family:Georgia,serif!important;"">
+<p style=""font-weight:700!important;color:#2563EB!important;-webkit-text-fill-color:#2563EB!important;margin:0 0 6px!important;font-size:15px!important;"">Background: Secure Network Protocols</p>
+<p style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;line-height:1.7!important;"">Everything above is Topic 3.2. The sections that follow go further than this topic requires, and they are here because the policies above keep naming protocols without explaining them. A wireless policy that requires AES encryption, a router policy that bans Telnet, and a VPN policy that asks for a public and private key system all make more sense once you know what those things do. Read it as background: useful, and not the material Topic 3.2 is built on.</p>
+</div>
+</div>
+<div class=""lesson-section"" style=""padding:0 4px!important;"">
+<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">3.2.6 — The Insecure Protocol Problem</h2>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">Many foundational internet protocols were designed in the 1970s-1990s when the internet was a trusted academic network. Security was an afterthought. These protocols transmit everything — credentials, commands, data — in <strong>plaintext</strong>, meaning anyone who intercepts the traffic can read it directly.</p>
+
+<div style=""background:#F9FAFB!important;border:1px solid #E5E7EB!important;border-radius:10px!important;padding:20px 24px!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
+<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 12px!important;font-family:Georgia,serif!important;"">Insecure → Secure Protocol Map</h3>
+<div style=""display:grid!important;grid-template-columns:1fr auto 1fr!important;gap:8px 16px!important;align-items:center!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;"">
+<div style=""font-weight:700!important;color:#EF4444!important;-webkit-text-fill-color:#EF4444!important;"">Insecure</div>
+<div></div>
+<div style=""font-weight:700!important;color:#22C55E!important;-webkit-text-fill-color:#22C55E!important;"">Secure Replacement</div>
+<div style=""background:#FEE2E2!important;padding:8px 12px!important;border-radius:6px!important;"">FTP (port 21) — plaintext file transfer</div>
+<div>→</div>
+<div style=""background:#DCFCE7!important;padding:8px 12px!important;border-radius:6px!important;"">SFTP (port 22) — SSH-encrypted file transfer</div>
+<div style=""background:#FEE2E2!important;padding:8px 12px!important;border-radius:6px!important;"">Telnet (port 23) — plaintext remote terminal</div>
+<div>→</div>
+<div style=""background:#DCFCE7!important;padding:8px 12px!important;border-radius:6px!important;"">SSH (port 22) — encrypted remote terminal</div>
+<div style=""background:#FEE2E2!important;padding:8px 12px!important;border-radius:6px!important;"">HTTP (port 80) — plaintext web traffic</div>
+<div>→</div>
+<div style=""background:#DCFCE7!important;padding:8px 12px!important;border-radius:6px!important;"">HTTPS (port 443) — TLS-encrypted web traffic</div>
+<div style=""background:#FEE2E2!important;padding:8px 12px!important;border-radius:6px!important;"">DNS (port 53) — plaintext name resolution</div>
+<div>→</div>
+<div style=""background:#DCFCE7!important;padding:8px 12px!important;border-radius:6px!important;"">DoH / DoT — encrypted DNS queries</div>
+</div>
+</div>
+
+<div style=""background:#FEF2F2!important;border-left:4px solid #EF4444!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
+<p style=""font-weight:700!important;color:#EF4444!important;-webkit-text-fill-color:#EF4444!important;margin:0 0 6px!important;font-size:14px!important;"">⚠ Exam Trap</p>
+<p style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;"">FTP and FTPS are different from SFTP. FTPS adds TLS to FTP (still uses port 21/990). SFTP is a completely different protocol that runs over SSH (port 22). The exam may test this distinction. SFTP is generally preferred because it uses a single port and leverages the existing SSH infrastructure.</p>
+</div>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;""><strong>Why plaintext protocols persist:</strong> Legacy systems, backward compatibility requirements, and organizational inertia. Many SCADA/OT environments still use Telnet and unencrypted Modbus because the devices were deployed before secure alternatives existed and cannot be easily updated without risking operational disruption.</p>
+</div>
+<div class=""lesson-section"" style=""padding:0 4px!important;"">
+<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">3.2.7 — TLS: The Foundation of Encrypted Communication</h2>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;""><strong>Transport Layer Security (TLS)</strong> is the cryptographic protocol that protects data in transit. Every HTTPS connection, every secure email, and every VPN tunnel relies on TLS to provide three guarantees:</p>
+
+<div style=""display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:12px!important;margin:0 0 20px!important;"">
+<div style=""background:#F5F0FF!important;border:1px solid #DDD6FE!important;border-radius:10px!important;padding:16px!important;text-align:center!important;font-family:Georgia,serif!important;"">
+<div style=""font-size:24px!important;margin-bottom:6px!important;"">🔒</div>
+<div style=""font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:14px!important;margin-bottom:4px!important;"">Confidentiality</div>
+<div style=""font-size:13px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;"">Data is encrypted and unreadable to eavesdroppers</div>
+</div>
+<div style=""background:#F5F0FF!important;border:1px solid #DDD6FE!important;border-radius:10px!important;padding:16px!important;text-align:center!important;font-family:Georgia,serif!important;"">
+<div style=""font-size:24px!important;margin-bottom:6px!important;"">✓</div>
+<div style=""font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:14px!important;margin-bottom:4px!important;"">Integrity</div>
+<div style=""font-size:13px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;"">Tampered data is detected and rejected</div>
+</div>
+<div style=""background:#F5F0FF!important;border:1px solid #DDD6FE!important;border-radius:10px!important;padding:16px!important;text-align:center!important;font-family:Georgia,serif!important;"">
+<div style=""font-size:24px!important;margin-bottom:6px!important;"">👤</div>
+<div style=""font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:14px!important;margin-bottom:4px!important;"">Authentication</div>
+<div style=""font-size:13px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;"">The server proves its identity via certificate</div>
+</div>
+</div>
+
+<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">The TLS Handshake (Simplified)</h3>
+
+<div style=""background:#F9FAFB!important;border:1px solid #E5E7EB!important;border-radius:10px!important;padding:20px 24px!important;margin:0 0 20px!important;font-family:Georgia,serif!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.8!important;"">
+<p style=""margin:0 0 12px!important;font-weight:700!important;""><strong>Step 1: Client Hello</strong> — The browser sends supported TLS versions and cipher suites to the server.</p>
+<p style=""margin:0 0 12px!important;font-weight:700!important;""><strong>Step 2: Server Hello + Certificate</strong> — The server selects a cipher suite and sends its digital certificate (contains public key + identity + CA signature).</p>
+<p style=""margin:0 0 12px!important;font-weight:700!important;""><strong>Step 3: Certificate Verification</strong> — The browser verifies the certificate: Is it signed by a trusted CA? Is the domain correct? Is it expired?</p>
+<p style=""margin:0 0 12px!important;font-weight:700!important;""><strong>Step 4: Key Exchange</strong> — Client and server negotiate a shared session key using asymmetric cryptography. This session key will encrypt all subsequent data.</p>
+<p style=""margin:0!important;font-weight:700!important;""><strong>Step 5: Encrypted Communication</strong> — Both sides now use the shared session key for fast symmetric encryption. All data (HTTP requests, responses, cookies, credentials) is encrypted.</p>
+</div>
+
+<div style=""background:#FEF2F2!important;border-left:4px solid #EF4444!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
+<p style=""font-weight:700!important;color:#EF4444!important;-webkit-text-fill-color:#EF4444!important;margin:0 0 6px!important;font-size:14px!important;"">⚠ Exam Trap</p>
+<p style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;""><strong>HTTPS ≠ safe website.</strong> HTTPS means the connection is encrypted, not that the website is legitimate. A phishing site can have a valid TLS certificate and show the padlock icon. TLS protects data <em>in transit</em> — it does not verify the website’s <em>intent</em>.</p>
+</div>
+
+<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">SSL Stripping and HSTS</h3>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;""><strong>SSL stripping</strong> is an attack that exploits the HTTP-to-HTTPS redirect. When a user types <code style=""background:#EDE9FE!important;padding:2px 6px!important;border-radius:3px!important;font-size:13px!important;"">example.com</code> (without https://), the browser first connects via HTTP, then the server redirects to HTTPS. An attacker in a MitM position can intercept the initial HTTP request and prevent the redirect, keeping the victim on an unencrypted connection while proxying to the real HTTPS site.</p>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;""><strong>HSTS (HTTP Strict Transport Security)</strong> eliminates this vulnerability. When a server sends the HSTS header, the browser remembers to <em>always</em> use HTTPS for that domain. <strong>HSTS preloading</strong> goes further: the domain is hardcoded into the browser itself (Chrome, Firefox, Safari maintain preload lists), so the browser <em>never</em> sends an initial HTTP request. There is nothing for the attacker to intercept.</p>
+</div>
+<div class=""lesson-section"" style=""padding:0 4px!important;"">
+<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">3.2.8 — SSH and SFTP: Encrypted Remote Access and File Transfer
+
+</h2>
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;""><strong>SSH (Secure Shell)</strong> replaces Telnet for remote server administration. Where Telnet transmits every keystroke, command, and output in plaintext, SSH encrypts the entire session. An attacker intercepting a Telnet session sees passwords, commands, and configuration data. An attacker intercepting an SSH session sees encrypted gibberish.</p>
+
+<div style=""display:grid!important;grid-template-columns:1fr 1fr!important;gap:16px!important;margin:0 0 20px!important;"">
+<div style=""background:#FEE2E2!important;border:1px solid #FECACA!important;border-radius:10px!important;padding:18px!important;font-family:Georgia,serif!important;"">
+<div style=""font-weight:700!important;color:#DC2626!important;-webkit-text-fill-color:#DC2626!important;font-size:14px!important;margin-bottom:8px!important;""> Telnet (Insecure)</div>
+<ul style=""font-size:13px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;padding-left:16px!important;line-height:1.7!important;"">
+<li>Port 23</li>
+<li>All data in plaintext</li>
+<li>Passwords visible to any interceptor</li>
+<li>Commands and output readable</li>
+<li>No identity verification of server</li>
+</ul>
+</div>
+<div style=""background:#DCFCE7!important;border:1px solid #BBF7D0!important;border-radius:10px!important;padding:18px!important;font-family:Georgia,serif!important;"">
+<div style=""font-weight:700!important;color:#16A34A!important;-webkit-text-fill-color:#16A34A!important;font-size:14px!important;margin-bottom:8px!important;"">✓ SSH (Secure)</div>
+<ul style=""font-size:13px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;padding-left:16px!important;line-height:1.7!important;"">
+<li>Port 22</li>
+<li>All data encrypted</li>
+<li>Passwords protected in transit</li>
+<li>Key-based auth (no passwords needed)</li>
+<li>Server identity verified via host key</li>
+</ul>
+</div>
+</div>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;""><strong>SFTP (SSH File Transfer Protocol)</strong> provides encrypted file transfer over the SSH protocol (port 22). Unlike FTP (port 21) which sends credentials and file contents in plaintext, SFTP encrypts everything — login, commands, directory listings, and file data. Unlike FTPS (which wraps FTP in TLS), SFTP is a completely different protocol that uses only one port (22), simplifying firewall rules.</p>
+</div>
+<div class=""lesson-section"" style=""padding:0 4px!important;"">
+<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">3.2.9 — VPNs: Encrypted Tunnels Across Untrusted Networks</h2>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">A <strong>Virtual Private Network (VPN)</strong> creates an encrypted tunnel through a public network, allowing private communication as if both endpoints were on the same local network. The tunnel encrypts all traffic so that even if intercepted on a public Wi-Fi or compromised ISP link, the data is unreadable.</p>
+
+<div style=""background:#F9FAFB!important;border:1px solid #E5E7EB!important;border-radius:10px!important;padding:20px 24px!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
+<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 14px!important;font-family:Georgia,serif!important;"">VPN Architecture Comparison</h3>
+<div style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.8!important;"">
+<p style=""margin:0 0 14px!important;""><strong>Remote-Access VPN:</strong> An individual user (employee working from home, traveling executive) connects their device to the corporate network over an encrypted tunnel. The user’s laptop acts as one end, and the VPN gateway is the other. Used by: remote workers, traveling staff, contractors.</p>
+<p style=""margin:0 0 14px!important;""><strong>Site-to-Site VPN:</strong> Two physical locations (HQ and branch office) are connected over the internet through a permanent encrypted tunnel between their routers/firewalls. All traffic between the sites is encrypted transparently — individual users do not need VPN software. Used by: multi-office organizations, partner connections.</p>
+<p style=""margin:0!important;""><strong>Split Tunneling:</strong> Only traffic destined for the corporate network goes through the VPN tunnel; internet traffic (YouTube, personal email) goes directly to the internet. <strong>Trade-off:</strong> Reduces VPN bandwidth and latency but creates a gap — the user’s internet traffic is unprotected and could be intercepted on public Wi-Fi. High-security organizations enforce <strong>full tunneling</strong> (all traffic through VPN) to prevent data leaks.</p>
+</div>
+</div>
+
+<div style=""background:#FEF2F2!important;border-left:4px solid #EF4444!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
+<p style=""font-weight:700!important;color:#EF4444!important;-webkit-text-fill-color:#EF4444!important;margin:0 0 6px!important;font-size:14px!important;"">⚠ Exam Trap</p>
+<p style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;"">Split tunneling is NOT always wrong. It is a valid design choice for organizations that prioritize performance and have other protections (endpoint security, cloud-based web filtering). The exam tests whether you understand the <em>trade-off</em>, not whether you pick one as universally correct.</p>
+</div>
+</div>
+<div class=""lesson-section"" style=""padding:0 4px!important;"">
+<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">3.2.10 — DNSSEC and Certificate Authorities</h2>
+
+<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">DNSSEC: Authenticating DNS Responses</h3>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">Standard DNS has no built-in verification — when your device asks “what is the IP for example.com?” it trusts whatever answer it receives. <strong>DNSSEC (DNS Security Extensions)</strong> adds cryptographic signatures to DNS responses, allowing the client to verify: (1) the response came from the authoritative server, and (2) the response was not modified in transit.</p>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;""><strong>Important distinction:</strong> DNSSEC provides <strong>authentication and integrity</strong> (is this response genuine and unmodified?) but NOT <strong>encryption</strong> (can eavesdroppers see what domains you query?). For DNS query encryption, you need <strong>DNS over HTTPS (DoH)</strong> or <strong>DNS over TLS (DoT)</strong>. These solve different problems and can be used together.</p>
+
+<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">Certificate Authorities and the PKI Trust Model</h3>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">TLS certificates are issued by <strong>Certificate Authorities (CAs)</strong> — trusted organizations that verify domain ownership before signing a certificate. Your browser comes pre-loaded with a list of trusted Root CAs. The trust chain works as follows:</p>
+
+<div style=""background:#F9FAFB!important;border:1px solid #E5E7EB!important;border-radius:10px!important;padding:20px 24px!important;margin:0 0 20px!important;font-family:Georgia,serif!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.8!important;"">
+<p style=""margin:0 0 10px!important;""><strong>Root CA</strong> → signs the <strong>Intermediate CA</strong> certificate → which signs the <strong>Server Certificate</strong></p>
+<p style=""margin:0 0 10px!important;"">Your browser trusts the Root CA → therefore trusts the Intermediate CA → therefore trusts the server certificate → therefore trusts the server’s identity.</p>
+<p style=""margin:0!important;"">If a CA is compromised or issues a fraudulent certificate, browsers can <strong>revoke</strong> trust using Certificate Revocation Lists (CRLs) or the Online Certificate Status Protocol (OCSP).</p>
+</div>
+
+<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">Protocol Migration Best Practices</h3>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">Migrating from insecure to secure protocols requires three steps: <strong>(1) Deploy</strong> the secure replacement alongside the insecure protocol. <strong>(2) Migrate</strong> all traffic to the secure protocol and verify functionality. <strong>(3) Block</strong> the insecure protocol at the firewall to prevent fallback. Skipping step 3 is the most common failure — users drift back to the easier (insecure) option if it remains available.</p>
+</div>
+<div class=""cfu-block"" id=""cfu-6"" data-type=""matching"" data-num=""6"" data-answer=""S,H,X"">
+<div class=""cfu-header"">
+<div class=""cfu-header-left"">
+<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge cfu-scenario-badge"">Matching</span>
+</div>
+<span class=""cfu-counter"">6 / 15</span>
+</div>
+<div class=""cfu-scenario"">
+<strong>Meridian Energy Grid</strong> audits three insecure protocols found in its network.</div>
+<p class=""cfu-question"">Match each insecure protocol to its correct secure replacement.</p>
+<div class=""cfu-match-grid"">
+  <div class=""cfu-match-row"">
+<div class=""cfu-match-term"">FTP (port 21) — plaintext file transfers with visible credentials</div>
+<select class=""cfu-match-select"" id=""cfu6-m1""><option value="""">Select...</option>
+<option value=""S"">SFTP (SSH-encrypted file transfer)</option>
+<option value=""H"">HTTPS (TLS-encrypted web traffic)</option>
+<option value=""X"">SSH (encrypted remote terminal)</option></select>
+</div>
+  <div class=""cfu-match-row"">
+<div class=""cfu-match-term"">HTTP (port 80) — unencrypted web traffic on billing portal</div>
+<select class=""cfu-match-select"" id=""cfu6-m2""><option value="""">Select...</option>
+<option value=""S"">SFTP (SSH-encrypted file transfer)</option>
+<option value=""H"">HTTPS (TLS-encrypted web traffic)</option>
+<option value=""X"">SSH (encrypted remote terminal)</option></select>
+</div>
+  <div class=""cfu-match-row"">
+<div class=""cfu-match-term"">Telnet (port 23) — plaintext SCADA server management</div>
+<select class=""cfu-match-select"" id=""cfu6-m3""><option value="""">Select...</option>
+<option value=""S"">SFTP (SSH-encrypted file transfer)</option>
+<option value=""H"">HTTPS (TLS-encrypted web traffic)</option>
+<option value=""X"">SSH (encrypted remote terminal)</option></select>
+</div>
+</div>
+<div class=""cfu-feedback"" id=""cfu-fb-6"" style=""display:none;"">
+<div class=""cfu-fb-correct"" style=""display:none;"">FTP→SFTP, HTTP→HTTPS, Telnet→SSH. Each replacement encrypts the same communication type.</div>
+<div class=""cfu-fb-partial"" style=""display:none;"">FTP→SFTP (encrypted file transfer). HTTP→HTTPS (encrypted web). Telnet→SSH (encrypted terminal).</div>
+</div>
+</div>
+<div class=""cfu-block"" id=""cfu-7"" data-type=""mcq"" data-num=""7"" data-answer=""C"">
+<div class=""cfu-header"">
+<div class=""cfu-header-left"">
+<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge"">MCQ</span>
+</div>
+<span class=""cfu-counter"">7 / 15</span>
+</div>
+<div class=""cfu-scenario"">
+<strong>NovaTech Solutions:</strong> A customer reports seeing a padlock icon on a suspicious website that asks for credit card information. They ask: “Doesn’t the padlock mean it’s safe?”</div>
+<p class=""cfu-question"">Which response is <span style=""font-weight:700!important;text-decoration:underline!important;"">MOST</span> accurate?</p>
+<div class=""cfu-options-grid"">
+  <div class=""cfu-opt"" data-val=""A"">
+<span class=""cfu-opt-letter"">A</span><span class=""cfu-opt-text"">Yes — the padlock means the website has been verified as legitimate and safe by the browser</span>
+</div>
+  <div class=""cfu-opt"" data-val=""B"">
+<span class=""cfu-opt-letter"">B</span><span class=""cfu-opt-text"">Yes — only government-approved websites can obtain TLS certificates</span>
+</div>
+  <div class=""cfu-opt"" data-val=""C"">
+<span class=""cfu-opt-letter"">C</span><span class=""cfu-opt-text"">No — the padlock means the connection is encrypted, but phishing sites can also get valid TLS certificates. HTTPS protects data in transit, not the website’s intent</span>
+</div>
+  <div class=""cfu-opt"" data-val=""D"">
+<span class=""cfu-opt-letter"">D</span><span class=""cfu-opt-text"">No — the padlock means nothing; browsers show it randomly</span>
+</div>
+</div>
+<div class=""cfu-feedback"" id=""cfu-fb-7"" style=""display:none;"">
+<div class=""cfu-fb-correct"" style=""display:none;"">
+<strong>Correct.</strong> HTTPS = encrypted connection, not verified intent. Free CAs like Let’s Encrypt issue certificates to any domain. A phishing site at fake-bank.com can have a valid certificate and show the padlock.</div>
+<div class=""cfu-fb-wrong"" data-a=""A"" style=""display:none;"">The padlock means encryption, not legitimacy.</div>
+<div class=""cfu-fb-wrong"" data-a=""B"" style=""display:none;"">Anyone can obtain a TLS certificate; no government approval needed.</div>
+<div class=""cfu-fb-wrong"" data-a=""D"" style=""display:none;"">The padlock has a specific meaning (encrypted connection); it is not random.</div>
+</div>
+</div>
+<div class=""cfu-block"" id=""cfu-8"" data-type=""cloze"" data-num=""8"" data-answer=""tls,session,certificate,handshake"">
+<div class=""cfu-header"">
+<div class=""cfu-header-left"">
+<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge cfu-scenario-badge"">Fill in the Blank</span>
+</div>
+<span class=""cfu-counter"">8 / 15</span>
+</div>
+<div class=""cfu-scenario"">
+<strong>Crossroads Logistics:</strong> Complete the TLS connection process.</div>
+<div class=""cfu-cloze-text"">
+  <p>HTTPS wraps HTTP inside a <input type=""text"" class=""cfu-cloze-blank"" id=""cfu8-c1"" placeholder=""???"" autocomplete=""off""> tunnel to encrypt all data between browser and server.</p>
+  <p>After the handshake, both sides use a shared <input type=""text"" class=""cfu-cloze-blank"" id=""cfu8-c2"" placeholder=""???"" autocomplete=""off""> key for fast symmetric encryption of the actual data.</p>
+  <p>The server proves its identity by presenting a digital <input type=""text"" class=""cfu-cloze-blank"" id=""cfu8-c3"" placeholder=""???"" autocomplete=""off""> signed by a trusted Certificate Authority.</p>
+  <p>The process of negotiating encryption parameters and exchanging keys is called the TLS <input type=""text"" class=""cfu-cloze-blank"" id=""cfu8-c4"" placeholder=""???"" autocomplete=""off"">.</p>
+</div>
+<div class=""cfu-feedback"" id=""cfu-fb-8"" style=""display:none;"">
+<div class=""cfu-fb-correct"" style=""display:none;"">TLS tunnel, session key, certificate, handshake — the four core components of every encrypted connection.</div>
+<div class=""cfu-fb-partial"" style=""display:none;"">Answers: TLS, session, certificate, handshake. TLS wraps HTTP into HTTPS using a session key negotiated during the handshake, verified by a CA-signed certificate.</div>
+</div>
+</div>
+<div class=""cfu-block"" id=""cfu-9"" data-type=""mcq"" data-num=""9"" data-answer=""B"">
+<div class=""cfu-header"">
+<div class=""cfu-header-left"">
+<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge"">MCQ</span>
+</div>
+<span class=""cfu-counter"">9 / 15</span>
+</div>
+<div class=""cfu-scenario"">
+<strong>Harborview Bank:</strong> A MitM attacker intercepts the initial HTTP request to onlinebanking.harborview.com and prevents the HTTPS redirect, keeping the customer on an unencrypted HTTP connection.</div>
+<p class=""cfu-question"">This attack is called:</p>
+<div class=""cfu-options-grid"">
+  <div class=""cfu-opt"" data-val=""A"">
+<span class=""cfu-opt-letter"">A</span><span class=""cfu-opt-text"">DNS spoofing — redirecting the domain to a different IP</span>
+</div>
+  <div class=""cfu-opt"" data-val=""B"">
+<span class=""cfu-opt-letter"">B</span><span class=""cfu-opt-text"">SSL stripping — intercepting the HTTP-to-HTTPS redirect to keep the victim on unencrypted HTTP</span>
+</div>
+  <div class=""cfu-opt"" data-val=""C"">
+<span class=""cfu-opt-letter"">C</span><span class=""cfu-opt-text"">Certificate pinning — forcing the browser to accept only specific certificates</span>
+</div>
+  <div class=""cfu-opt"" data-val=""D"">
+<span class=""cfu-opt-letter"">D</span><span class=""cfu-opt-text"">ARP poisoning — manipulating MAC-to-IP mappings on the local switch</span>
+</div>
+</div>
+<div class=""cfu-feedback"" id=""cfu-fb-9"" style=""display:none;"">
+<div class=""cfu-fb-correct"" style=""display:none;"">
+<strong>Correct.</strong> SSL stripping exploits the brief HTTP moment before the HTTPS redirect. Defense: HSTS preloading eliminates the initial HTTP request entirely.</div>
+<div class=""cfu-fb-wrong"" data-a=""A"" style=""display:none;"">DNS spoofing changes IP resolution; SSL stripping intercepts the protocol upgrade.</div>
+<div class=""cfu-fb-wrong"" data-a=""C"" style=""display:none;"">Certificate pinning is a defense mechanism, not an attack.</div>
+<div class=""cfu-fb-wrong"" data-a=""D"" style=""display:none;"">ARP poisoning enables MitM at Layer 2; SSL stripping is the Layer 7 attack performed from a MitM position.</div>
+</div>
+</div>
+<div class=""cfu-block"" id=""cfu-10"" data-type=""checkbox"" data-num=""10"" data-answer=""A,C,D"">
+<div class=""cfu-header"">
+<div class=""cfu-header-left"">
+<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge cfu-scenario-badge"">Select All</span>
+</div>
+<span class=""cfu-counter"">10 / 15</span>
+</div>
+<div class=""cfu-scenario"">
+<strong>Brightpath University</strong> is deploying TLS across all web services.</div>
+<p class=""cfu-question"">Select <strong>ALL</strong> guarantees that TLS provides.</p>
+<div class=""cfu-cb-grid"">
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu10-cb1"" value=""A""> <span>Confidentiality — encrypted data is unreadable to eavesdroppers</span></label>
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu10-cb2"" value=""B""> <span>Availability — the website will never go offline</span></label>
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu10-cb3"" value=""C""> <span>Integrity — tampered data is detected and rejected</span></label>
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu10-cb4"" value=""D""> <span>Authentication — the server proves its identity via a CA-signed certificate</span></label>
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu10-cb5"" value=""E""> <span>Authorization — TLS controls what the user can access on the server</span></label>
+</div>
+<div class=""cfu-feedback"" id=""cfu-fb-10"" style=""display:none;"">
+<div class=""cfu-fb-correct"" style=""display:none;"">Confidentiality (A), integrity (C), authentication (D). TLS does NOT provide availability (B) or authorization (E) — those are handled by other controls.</div>
+<div class=""cfu-fb-partial"" style=""display:none;"">TLS provides: confidentiality (encryption), integrity (tamper detection), authentication (certificate verification). Not availability or authorization.</div>
+</div>
+</div>
+<div class=""cfu-block"" id=""cfu-11"" data-type=""matching"" data-num=""11"" data-answer=""R,S,P"">
+<div class=""cfu-header"">
+<div class=""cfu-header-left"">
+<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge cfu-scenario-badge"">Matching</span>
+</div>
+<span class=""cfu-counter"">11 / 15</span>
+</div>
+<div class=""cfu-scenario"">
+<strong>NovaTech Solutions</strong> uses three VPN configurations.</div>
+<p class=""cfu-question"">Match each scenario to the correct VPN type.</p>
+<div class=""cfu-match-grid"">
+  <div class=""cfu-match-row"">
+<div class=""cfu-match-term"">A traveling sales rep connects from a hotel to access NovaTech’s CRM system</div>
+<select class=""cfu-match-select"" id=""cfu11-m1""><option value="""">Select...</option>
+<option value=""R"">Remote-Access VPN</option>
+<option value=""S"">Site-to-Site VPN</option>
+<option value=""P"">Split Tunneling</option></select>
+</div>
+  <div class=""cfu-match-row"">
+<div class=""cfu-match-term"">NovaTech HQ and its European office have a permanent encrypted link between their firewalls</div>
+<select class=""cfu-match-select"" id=""cfu11-m2""><option value="""">Select...</option>
+<option value=""R"">Remote-Access VPN</option>
+<option value=""S"">Site-to-Site VPN</option>
+<option value=""P"">Split Tunneling</option></select>
+</div>
+  <div class=""cfu-match-row"">
+<div class=""cfu-match-term"">An employee’s corporate traffic goes through VPN but YouTube streams directly to the internet</div>
+<select class=""cfu-match-select"" id=""cfu11-m3""><option value="""">Select...</option>
+<option value=""R"">Remote-Access VPN</option>
+<option value=""S"">Site-to-Site VPN</option>
+<option value=""P"">Split Tunneling</option></select>
+</div>
+</div>
+<div class=""cfu-feedback"" id=""cfu-fb-11"" style=""display:none;"">
+<div class=""cfu-fb-correct"" style=""display:none;"">Traveling user = Remote-Access. Permanent office link = Site-to-Site. Corporate only through VPN = Split Tunneling.</div>
+<div class=""cfu-fb-partial"" style=""display:none;"">Remote-Access = individual user. Site-to-Site = office-to-office. Split Tunneling = selective routing through VPN.</div>
+</div>
+</div>
+<div class=""cfu-block"" id=""cfu-12"" data-type=""mcq"" data-num=""12"" data-answer=""D"">
+<div class=""cfu-header"">
+<div class=""cfu-header-left"">
+<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge"">MCQ</span>
+</div>
+<span class=""cfu-counter"">12 / 15</span>
+</div>
+<div class=""cfu-scenario"">
+<strong>Crossroads Logistics</strong> implements DNSSEC on its DNS servers. A security intern asks: “Now that we have DNSSEC, can eavesdroppers still see which domains our employees are querying?”</div>
+<p class=""cfu-question"">Which answer is <span style=""font-weight:700!important;text-decoration:underline!important;"">CORRECT</span>?</p>
+<div class=""cfu-options-grid"">
+  <div class=""cfu-opt"" data-val=""A"">
+<span class=""cfu-opt-letter"">A</span><span class=""cfu-opt-text"">No — DNSSEC encrypts all DNS queries so eavesdroppers cannot see them</span>
+</div>
+  <div class=""cfu-opt"" data-val=""B"">
+<span class=""cfu-opt-letter"">B</span><span class=""cfu-opt-text"">No — DNSSEC blocks all malicious domains automatically</span>
+</div>
+  <div class=""cfu-opt"" data-val=""C"">
+<span class=""cfu-opt-letter"">C</span><span class=""cfu-opt-text"">No — DNSSEC replaces DNS with a completely new protocol on a different port</span>
+</div>
+  <div class=""cfu-opt"" data-val=""D"">
+<span class=""cfu-opt-letter"">D</span><span class=""cfu-opt-text"">Yes — DNSSEC provides authentication and integrity (verifies responses are genuine) but does NOT encrypt queries. DNS over HTTPS (DoH) or DNS over TLS (DoT) is needed for query encryption</span>
+</div>
+</div>
+<div class=""cfu-feedback"" id=""cfu-fb-12"" style=""display:none;"">
+<div class=""cfu-fb-correct"" style=""display:none;"">
+<strong>Correct.</strong> DNSSEC signs responses (prevents spoofing). DoH/DoT encrypts queries (prevents eavesdropping). Different problems, different solutions. Use both together for maximum protection.</div>
+<div class=""cfu-fb-wrong"" data-a=""A"" style=""display:none;"">DNSSEC does NOT encrypt. It signs responses for authenticity verification.</div>
+<div class=""cfu-fb-wrong"" data-a=""B"" style=""display:none;"">DNSSEC verifies response authenticity; it does not maintain domain blocklists.</div>
+<div class=""cfu-fb-wrong"" data-a=""C"" style=""display:none;"">DNSSEC extends DNS; it does not replace it.</div>
+</div>
+</div>
+<div class=""cfu-block"" id=""cfu-13"" data-type=""mcq"" data-num=""13"" data-answer=""A"">
+<div class=""cfu-header"">
+<div class=""cfu-header-left"">
+<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge"">MCQ</span>
+</div>
+<span class=""cfu-counter"">13 / 15</span>
+</div>
+<div class=""cfu-scenario"">
+<strong>Harborview Bank:</strong> The IT manager states: “We deployed HTTPS on our banking portal and also redirect HTTP to HTTPS. SSL stripping is no longer possible because we redirect all HTTP traffic.”</div>
+<p class=""cfu-question"">Identify the <strong>error</strong> in this reasoning.</p>
+<div class=""cfu-options-grid"">
+  <div class=""cfu-opt"" data-val=""A"">
+<span class=""cfu-opt-letter"">A</span><span class=""cfu-opt-text"">The redirect itself travels over HTTP — an attacker in a MitM position can intercept and block the redirect before it reaches the browser. HSTS preloading is needed to eliminate the initial HTTP request entirely</span>
+</div>
+  <div class=""cfu-opt"" data-val=""B"">
+<span class=""cfu-opt-letter"">B</span><span class=""cfu-opt-text"">The IT manager is correct — HTTP-to-HTTPS redirects fully prevent SSL stripping</span>
+</div>
+  <div class=""cfu-opt"" data-val=""C"">
+<span class=""cfu-opt-letter"">C</span><span class=""cfu-opt-text"">The error is that HTTPS should use port 8443, not port 443</span>
+</div>
+  <div class=""cfu-opt"" data-val=""D"">
+<span class=""cfu-opt-letter"">D</span><span class=""cfu-opt-text"">The error is that only paid certificates prevent SSL stripping; free certificates do not</span>
+</div>
+</div>
+<div class=""cfu-feedback"" id=""cfu-fb-13"" style=""display:none;"">
+<div class=""cfu-fb-correct"" style=""display:none;"">
+<strong>Correct.</strong> The redirect travels over HTTP (unencrypted). A MitM attacker intercepts this redirect and blocks it. HSTS preloading hardcodes HTTPS at the browser level, eliminating the vulnerable initial HTTP request.</div>
+<div class=""cfu-fb-wrong"" data-a=""B"" style=""display:none;"">Redirects do NOT prevent SSL stripping; they are the vulnerability it exploits.</div>
+<div class=""cfu-fb-wrong"" data-a=""C"" style=""display:none;"">Port 443 is the standard HTTPS port; 8443 is an alternative, not a requirement.</div>
+<div class=""cfu-fb-wrong"" data-a=""D"" style=""display:none;"">Certificate cost is irrelevant to SSL stripping prevention.</div>
+</div>
+</div>
+<div class=""cfu-block"" id=""cfu-14"" data-type=""checkbox"" data-num=""14"" data-answer=""B,C,D"">
+<div class=""cfu-header"">
+<div class=""cfu-header-left"">
+<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge cfu-scenario-badge"">Select All</span>
+</div>
+<span class=""cfu-counter"">14 / 15</span>
+</div>
+<div class=""cfu-scenario"">
+<strong>Meridian Energy</strong> is migrating from Telnet to SSH on SCADA servers.</div>
+<p class=""cfu-question"">Select <strong>ALL</strong> steps required for a complete protocol migration.</p>
+<div class=""cfu-cb-grid"">
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu14-cb1"" value=""A""> <span>Keep Telnet running alongside SSH indefinitely so engineers can choose whichever they prefer</span></label>
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu14-cb2"" value=""B""> <span>Deploy SSH servers and verify connectivity before migrating any traffic</span></label>
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu14-cb3"" value=""C""> <span>Migrate all engineers to SSH and verify all workflows function correctly</span></label>
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu14-cb4"" value=""D""> <span>Block Telnet (port 23) at the firewall after successful migration to prevent fallback</span></label>
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu14-cb5"" value=""E""> <span>Rename Telnet to “SecureTelnet” to make it appear encrypted</span></label>
+</div>
+<div class=""cfu-feedback"" id=""cfu-fb-14"" style=""display:none;"">
+<div class=""cfu-fb-correct"" style=""display:none;"">Deploy (B), migrate (C), block (D). Keeping Telnet running (A) lets users drift back. Renaming (E) is security through obscurity with zero protection.</div>
+<div class=""cfu-fb-partial"" style=""display:none;"">Three migration steps: deploy secure replacement, migrate traffic, block insecure protocol. Step 3 (blocking) is the most commonly skipped and most critical.</div>
+</div>
+</div>
+<div class=""cfu-block"" id=""cfu-15"" data-type=""mcq"" data-num=""15"" data-answer=""D"">
+<div class=""cfu-header"">
+<div class=""cfu-header-left"">
+<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge"">MCQ</span>
+</div>
+<span class=""cfu-counter"">15 / 15</span>
+</div>
+<div class=""cfu-scenario"">
+<strong>Brightpath University</strong> evaluates which protocol defenses protect against which threats.</div>
+<p class=""cfu-question"">Which defense-to-threat pairings are <span style=""font-weight:700!important;text-decoration:underline!important;"">CORRECT</span>?<br><br>I. HSTS preloading prevents SSL stripping by eliminating the initial HTTP request<br>II. DNSSEC prevents DNS spoofing by cryptographically signing responses<br>III. SSH prevents credential interception by encrypting the entire session</p>
+<div class=""cfu-options-grid"">
+  <div class=""cfu-opt"" data-val=""A"">
+<span class=""cfu-opt-letter"">A</span><span class=""cfu-opt-text"">I only</span>
+</div>
+  <div class=""cfu-opt"" data-val=""B"">
+<span class=""cfu-opt-letter"">B</span><span class=""cfu-opt-text"">I and II only</span>
+</div>
+  <div class=""cfu-opt"" data-val=""C"">
+<span class=""cfu-opt-letter"">C</span><span class=""cfu-opt-text"">II and III only</span>
+</div>
+  <div class=""cfu-opt"" data-val=""D"">
+<span class=""cfu-opt-letter"">D</span><span class=""cfu-opt-text"">I, II, and III — all three pairings are correct</span>
+</div>
+</div>
+<div class=""cfu-feedback"" id=""cfu-fb-15"" style=""display:none;"">
+<div class=""cfu-fb-correct"" style=""display:none;"">
+<strong>Correct.</strong> All three are accurate: HSTS eliminates the HTTP redirect vulnerability (I). DNSSEC signs DNS responses to prevent forgery (II). SSH encrypts sessions to prevent credential capture (III).</div>
+<div class=""cfu-fb-wrong"" data-a=""A"" style=""display:none;"">All three pairings are correct, not just I.</div>
+<div class=""cfu-fb-wrong"" data-a=""B"" style=""display:none;"">Statement III is also correct — SSH encrypts sessions preventing interception.</div>
+<div class=""cfu-fb-wrong"" data-a=""C"" style=""display:none;"">Statement I is also correct — HSTS preloading eliminates the SSL stripping vulnerability.</div>
+</div>
+</div>
+<div class=""nav-links"">
+<a href=""/pages/ap-cyber-unit-3-lesson-2"" class=""nav-link"">← Lesson 3.1 (Part 2 of 2)</a><a href=""/pages/ap-cyber-unit-3-lesson-3-exercise-1"" class=""nav-link"">Exercise 1 →</a>
+</div>
+<div style=""text-align:center!important;padding:20px!important;font-size:12px!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;font-family:Georgia,serif!important;"">AP Cybersecurity Lesson 3.2 | APCSExamPrep.com | Built by Tanner Crow, AP CS Teacher (11+ years)<br>AP® is a registered trademark of the College Board.</div>
+<div class=""info-box exam"" style=""margin-bottom:20px!important;"">
+<span class=""box-label"">★ AP Exam Focus — Topic 3.2</span><p>• Identify the four CED network security policies: router policy (ban local accounts, disable Telnet, require firewall), switch policy (ban local accounts, port security, MAC filtering), VPN policy (role-based access, auth requirements, no split tunneling), wireless policy (EAP authentication, AES encryption, disable beacon frames)<br>• Apply the three CED wireless security controls: disable beacon frame broadcasting, control WAP signal strength/direction, enable strong encryption (WPA3 is strongest; WEP/WPS/original WPA are insecure)<br>• Explain MAC filtering: prevents unauthorized devices from joining the network<br>• Recognize that WEP, WPS, and original WPA have known vulnerabilities and are insecure — WPA3 is the CED-specified strongest option<br>• Note: TLS/SSH/SFTP/DNSSEC content in this lesson extends beyond CED core — labeled enrichment</p>
+</div>
+
+<div class=""card"" style=""border-top:3px solid #d97706!important;"">
+<div style=""display:flex!important;justify-content:space-between!important;align-items:center!important;cursor:pointer!important;"" onclick=""var b=document.getElementById('ek36-body');var c=document.getElementById('ek36-chev');b.style.display=b.style.display==='none'?'block':'none';c.style.transform=c.style.transform?'':'rotate(180deg)';"">
+<div>
+<span style=""font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1.5px!important;color:#d97706!important;font-family:Georgia,serif!important;"">College Board Essential Knowledge Coverage</span><h3 style=""margin:4px 0 0!important;font-size:16px!important;font-weight:700!important;color:#1E1B4B!important;font-family:Georgia,serif!important;"">Topic 3.2 Managerial Controls — What Is Testable</h3>
+</div>
+<span id=""ek36-chev"" style=""font-size:20px!important;color:#6B21A8!important;transition:transform .2s!important;"">▼</span>
+</div>
+<div id=""ek36-body"" style=""display:none!important;margin-top:16px!important;"">
+<div class=""info-box warning"" style=""margin-bottom:12px!important;"">
+<span class=""box-label"">⚠ CED Scope Note</span><p>Topic 3.2 is router, switch, VPN and wireless <em>security policies</em>, plus wireless access point configuration. That material is sections 3.2.1 to 3.2.5, and checks 1 to 5. The TLS, SSH, SFTP, DNSSEC and certificate content in sections 3.2.6 to 3.2.10 goes beyond this topic and is marked on the page as background; it is kept because Unit 3 has no better home for it and the policies above refer to it.</p>
+</div>
+<table class=""vocab-table"">
+<thead><tr>
+<th>CED Ref</th>
+<th>Essential Knowledge</th>
+<th>Covered In</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class=""term"">3.2.A.1</td>
+<td>Router security policy: ban local user accounts, disable unnecessary services (e.g. Telnet), require a firewall</td>
+<td>Section 3.2.2, Router and switch security policies</td>
+</tr>
+<tr>
+<td class=""term"">3.2.A.2</td>
+<td>Switch security policy: ban local user accounts, require port security, use MAC filtering</td>
+<td>Section 3.2.2, Router and switch security policies</td>
+</tr>
+<tr>
+<td class=""term"">3.2.A.3</td>
+<td>VPN policy: role-based access, authentication requirements (public/private key or MFA), prohibition against split tunneling (dual tunneling)</td>
+<td>Section 3.2.3, VPN policy</td>
+</tr>
+<tr>
+<td class=""term"">3.2.A.4</td>
+<td>Wireless security policy: EAP authentication to approved auth server, AES encryption with minimum key length, disable beacon frames on WAPs</td>
+<td>Section 3.2.4, Wireless security policy</td>
+</tr>
+<tr>
+<td class=""term"">3.2.B.1</td>
+<td>Disable beacon frame broadcasting on WAPs: makes it harder for adversaries to find the network and learn its properties</td>
+<td>Section 3.2.5, Configuring wireless security</td>
+</tr>
+<tr>
+<td class=""term"">3.2.B.2</td>
+<td>Control WAP broadcast direction and signal strength so signal does not extend beyond the intended physical space</td>
+<td>Section 3.2.5, Configuring wireless security</td>
+</tr>
+<tr>
+<td class=""term"">3.2.B.3</td>
+<td>Enable strong wireless encryption: WEP/WPS/original WPA have known vulnerabilities and are insecure. WPA3 is currently the strongest wireless encryption algorithm.</td>
+<td>Section 3.2.5, Configuring wireless security</td>
+</tr>
+<tr>
+<td class=""term"">3.2.B.4</td>
+<td>Enable MAC filtering to prevent unauthorized devices from accessing the network; require user authentication when joining</td>
+<td>Section 3.2.5, Configuring wireless security</td>
+</tr>
+</tbody>
+</table>
+<p style=""font-size:12px!important;color:#6B7280!important;font-family:Georgia,serif!important;margin-top:8px!important;"">Source: AP Cybersecurity CED Effective Fall 2026. AP Skills: 2.A Identify security controls • 2.C Evaluate mitigations • 2.D Implement mitigations</p>
+</div>
+</div>
+
+<div class=""card"" style=""border-top:3px solid #059669!important;"">
+<span style=""font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1.5px!important;color:#059669!important;font-family:Georgia,serif!important;"">♡ Bellringer — 3 Questions, 5 Minutes</span><p style=""font-size:13px!important;color:#6B7280!important;font-family:Georgia,serif!important;margin-top:4px!important;margin-bottom:14px!important;"">Answer independently. No notes.</p>
+<ol style=""font-size:15px!important;color:#374151!important;line-height:2!important;padding-left:20px!important;font-family:Georgia,serif!important;"">
+<li>A company’s router configuration allows local user accounts with local passwords, has Telnet enabled, and does not require a separate firewall device. List every violation of the CED router security policy and explain what each should be replaced with.</li>
+<li>A WAP at an organization broadcasts its SSID at full signal strength, which extends into the parking lot, and uses WPA2 encryption. Name two CED wireless security controls that should be applied and explain the security benefit of each.</li>
+<li>An organization’s VPN policy allows all employees to use the VPN and permits split tunneling. What is split tunneling, why does the CED prohibit it in a VPN policy, and what should the policy say instead?</li>
+</ol>
+<p style=""font-size:12px!important;color:#9CA3AF!important;font-family:Georgia,serif!important;margin-top:8px!important;""><em>Answers: (1) Violations: local accounts (should ban; require approved auth server) + Telnet enabled (should disable unnecessary services) + no separate firewall required (the policy should require one, which may be a separate device). (2) Disable beacon frame broadcasting (adversaries can’t detect the network) + control signal strength and direction so it does not extend beyond the physical space the access point should cover. Upgrading the encryption to WPA3 is also correct. (3) Split tunneling = VPN user routes some traffic through the VPN tunnel and some directly to the internet. Risk: direct internet traffic bypasses organizational security controls, creating a potential path for adversaries. The VPN policy should prohibit split tunneling.</em></p>
+</div>
+
+<div class=""card"">
+<h2>
+<span class=""section-icon"">!</span>Common AP Exam Mistakes — Topic 3.2</h2>
+<table class=""vocab-table"">
+<thead><tr>
+<th>Mistake</th>
+<th>Why It’s Wrong</th>
+<th>What to Do Instead</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class=""term"">Thinking WPA2 is the strongest wireless encryption</td>
+<td>WPA3 is currently the strongest wireless encryption algorithm. WPA2 has known vulnerabilities (KRACK). WPA3 is the correct answer for “strongest.”</td>
+<td>Strongest = WPA3. WEP/WPS/original WPA = known vulnerabilities and insecure. WPA2 = acceptable but not strongest.</td>
+</tr>
+<tr>
+<td class=""term"">Saying disabling beacon frames makes a network invisible</td>
+<td>Disabling beacons makes the network harder to find and prevents easy information gathering, but determined adversaries with scanning tools can still detect it. It reduces risk, not eliminates it.</td>
+<td>Disabling beacons = makes it harder to find the network. It is a deterrent, not a complete defense.</td>
+</tr>
+<tr>
+<td class=""term"">Confusing VPN split tunneling with dual-factor auth</td>
+<td>Split tunneling (also called dual tunneling) means some traffic goes through the VPN and some goes directly to the internet. It is a routing configuration, not an authentication method.</td>
+<td>Split tunneling = routing some traffic outside the VPN tunnel. The CED VPN policy prohibits it because unprotected internet-bound traffic bypasses organizational controls.</td>
+</tr>
+<tr>
+<td class=""term"">Forgetting that router/switch policies ban local accounts</td>
+<td>Both the router and the switch security policies require banning local user accounts and requiring an approved authentication server. Students remember the technical controls but forget the account management policy.</td>
+<td>All logins to network infrastructure devices must use an approved central authentication server — never local accounts.</td>
+</tr>
+<tr>
+<td class=""term"">Applying TLS/HTTPS/SSH content to the AP exam core</td>
+<td>TLS, HTTPS, SSH, SFTP, DNSSEC, and PKI are enrichment in this lesson — they extend beyond the CED 3.2 core. The AP exam tests CED 3.2 policy and wireless controls, not TLS handshake details.</td>
+<td>For AP exam: focus on the four security policies and four wireless controls in CED 3.2. TLS/SSH/PKI content is background knowledge.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class=""card"" style=""border-top:3px solid #DC2626!important;margin-top:8px!important;"">
+<span style=""font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1.5px!important;color:#DC2626!important;font-family:Georgia,serif!important;"">📋 Exit Ticket — Lesson 3.2 | 5 Questions | Ready for Canvas / Google Classroom</span><p style=""font-size:13px!important;color:#6B7280!important;font-family:Georgia,serif!important;margin-top:4px!important;margin-bottom:14px!important;"">Students submit before leaving.</p>
+<ol style=""font-size:15px!important;color:#374151!important;line-height:2!important;padding-left:20px!important;font-family:Georgia,serif!important;"">
+<li>The CED defines four network security policies. List all four and for each name one specific requirement that policy must include. <em style=""color:#6B7280!important;"">(AP Skill: Mitigate Risk)</em>
+</li>
+<li>A company’s WAP uses WEP encryption, broadcasts its SSID at full strength, and its signal extends into the adjacent parking structure. Apply all three CED wireless security controls to fix each issue and explain the security benefit of each fix. <em style=""color:#6B7280!important;"">(AP Skill: Mitigate Risk)</em>
+</li>
+<li>An employee working remotely connects their laptop to both their home Wi-Fi and the company VPN simultaneously, routing some traffic through the VPN and browsing the web directly. What is this configuration called, why does the CED VPN policy prohibit it, and what is the specific risk? <em style=""color:#6B7280!important;"">(AP Skill: Mitigate Risk)</em>
+</li>
+<li>A network administrator configures a new switch with a local admin account and password rather than connecting it to the company authentication server. Which CED policy does this violate, and what should be done instead? <em style=""color:#6B7280!important;"">(AP Skill: Mitigate Risk)</em>
+</li>
+<li>True or False: a wireless network that requires WPA3 authentication and disables beacon frame broadcasting is fully secure against wireless attacks. Explain using two CED wireless security controls. <em style=""color:#6B7280!important;"">(AP Skill: Mitigate Risk)</em>
+</li>
+</ol>
+<div style=""background:#FEF3C7!important;border-radius:8px!important;padding:12px 16px!important;margin-top:12px!important;font-size:13px!important;color:#78350F!important;font-family:Georgia,serif!important;"">
+<strong>Answer Key:</strong> (1) Router policy: ban local accounts (require auth server), disable unnecessary services like Telnet, require a firewall; Switch policy: ban local accounts, require port security, use MAC filtering; VPN policy: role-based access, auth requirements (public/private key or MFA), prohibit split tunneling; Wireless policy: EAP authentication to auth server, AES encryption with minimum key length, disable beacon frames. (2) WEP → enable WPA3 (strongest encryption per 3.2.B.3, WEP is insecure); SSID broadcast → disable beacon frame broadcasting (makes network harder to detect 3.2.B.1); signal too far → control broadcast direction and signal strength to stay within intended physical space (3.2.B.2). (3) Split tunneling (also called dual tunneling). Prohibited per CED 3.2.A.3. Risk: web traffic goes directly to internet, bypassing organizational firewalls, IDS/IPS, and content filters — creating an unmonitored channel that adversaries or malware could exploit. (4) Violates CED 3.2.A.2 switch security policy: all switch logins must use an approved authentication server; local accounts are prohibited. Fix: configure the switch to authenticate via the central auth server; remove the local account. (5) False. Even with WPA3 and disabled beacons, the network still needs: (a) controlled signal strength/direction (3.2.B.2) — if signal extends outside physical space, adversaries can still attempt connections or eavesdrop; (b) MAC filtering and user authentication (3.2.B.4) — without these, unauthorized devices may still attempt to join. Multiple controls are required; no single control provides complete security.</div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+var cfuState = { score: 0, total: 15, answered: {} };
+function updateScoreTracker(){
+  var tracker = document.getElementById('cfu-score-tracker');
+  var scoreNum = document.getElementById('cfu-score-num');
+  var answeredCount = Object.keys(cfuState.answered).length;
+  if(tracker && answeredCount > 0) tracker.classList.add('visible');
+  if(scoreNum){
+    scoreNum.textContent = cfuState.score + ' / ' + cfuState.total;
+    scoreNum.style.color = cfuState.score >= cfuState.total * 0.8 ? '#22c55e' : cfuState.score >= cfuState.total * 0.5 ? '#eab308' : '#ef4444';
+  }
+}
+function cfuSubmitMCQ(num){
+  if(cfuState.answered[num]) return;
+  var block = document.getElementById('cfu-' + num);
+  var answer = block.getAttribute('data-answer');
+  var selected = block.querySelector('.cfu-opt.selected');
+  if(!selected) return;
+  var val = selected.getAttribute('data-val');
+  var correct = val === answer;
+  cfuState.answered[num] = true;
+  if(correct) cfuState.score++;
+  block.querySelectorAll('.cfu-opt').forEach(function(opt){
+    opt.style.pointerEvents = 'none';
+    if(opt.getAttribute('data-val') === answer) opt.classList.add('cfu-opt-correct');
+    else if(opt === selected) opt.classList.add('cfu-opt-wrong');
+    else opt.classList.add('cfu-opt-dim');
+  });
+  var fb = document.getElementById('cfu-fb-' + num);
+  if(correct){ fb.querySelector('.cfu-fb-correct').style.display = 'block'; }
+  else { var w = fb.querySelector('.cfu-fb-wrong[data-a=""' + val + '""]'); if(w) w.style.display = 'block'; fb.querySelector('.cfu-fb-correct').style.display = 'block'; }
+  fb.style.display = 'block';
+  updateScoreTracker();
+}
+function cfuSubmitMatching(num){
+  if(cfuState.answered[num]) return;
+  var block = document.getElementById('cfu-' + num);
+  var answers = block.getAttribute('data-answer').split(',');
+  var selects = block.querySelectorAll('.cfu-match-select');
+  var allFilled = true;
+  selects.forEach(function(s){ if(!s.value) allFilled = false; });
+  if(!allFilled) return;
+  var correct = 0;
+  selects.forEach(function(s, i){
+    s.disabled = true;
+    if(s.value === answers[i]){ correct++; s.style.borderColor='#86EFAC'; s.style.background='#DCFCE7'; }
+    else { s.style.borderColor='#FCA5A5'; s.style.background='#FEE2E2'; }
+  });
+  cfuState.answered[num] = true;
+  if(correct === answers.length) cfuState.score++;
+  else if(correct > 0) cfuState.score += 0.5;
+  var fb = document.getElementById('cfu-fb-' + num);
+  if(correct === answers.length) fb.querySelector('.cfu-fb-correct').style.display = 'block';
+  else { var p = fb.querySelector('.cfu-fb-partial'); if(p) p.style.display = 'block'; else fb.querySelector('.cfu-fb-correct').style.display = 'block'; }
+  fb.style.display = 'block';
+  updateScoreTracker();
+}
+function cfuSubmitCloze(num){
+  if(cfuState.answered[num]) return;
+  var block = document.getElementById('cfu-' + num);
+  var answers = block.getAttribute('data-answer').split(',');
+  var blanks = block.querySelectorAll('.cfu-cloze-blank');
+  var allFilled = true;
+  blanks.forEach(function(b){ if(!b.value.trim()) allFilled = false; });
+  if(!allFilled) return;
+  var correct = 0;
+  blanks.forEach(function(b, i){
+    b.disabled = true;
+    var val = b.value.trim().toLowerCase();
+    var ans = answers[i] ? answers[i].trim().toLowerCase() : '';
+    if(val.indexOf(ans) !== -1 || ans.indexOf(val) !== -1){ correct++; b.style.borderColor='#86EFAC'; b.style.background='#DCFCE7'; b.style.borderStyle='solid'; }
+    else { b.style.borderColor='#FCA5A5'; b.style.background='#FEE2E2'; b.style.borderStyle='solid'; }
+  });
+  cfuState.answered[num] = true;
+  if(correct === blanks.length) cfuState.score++;
+  else if(correct >= blanks.length * 0.5) cfuState.score += 0.5;
+  var fb = document.getElementById('cfu-fb-' + num);
+  if(correct === blanks.length) fb.querySelector('.cfu-fb-correct').style.display = 'block';
+  else { var p = fb.querySelector('.cfu-fb-partial'); if(p) p.style.display = 'block'; else fb.querySelector('.cfu-fb-correct').style.display = 'block'; }
+  fb.style.display = 'block';
+  updateScoreTracker();
+}
+function cfuSubmitCheckbox(num){
+  if(cfuState.answered[num]) return;
+  var block = document.getElementById('cfu-' + num);
+  var correctVals = block.getAttribute('data-answer').split(',');
+  var cbs = block.querySelectorAll('.cfu-cb');
+  var hits = 0, fp = 0;
+  cbs.forEach(function(cb){
+    var label = cb.parentElement;
+    var shouldBe = correctVals.indexOf(cb.value) !== -1;
+    cb.disabled = true;
+    if(cb.checked && shouldBe){ hits++; label.style.background='#DCFCE7'; label.style.borderColor='#86EFAC'; }
+    else if(cb.checked && !shouldBe){ fp++; label.style.background='#FEE2E2'; label.style.borderColor='#FCA5A5'; }
+    else if(!cb.checked && shouldBe){ label.style.background='#FEF3C7'; label.style.borderColor='#FDE68A'; }
+    else { label.style.opacity='0.5'; }
+  });
+  cfuState.answered[num] = true;
+  if(hits === correctVals.length && fp === 0) cfuState.score++;
+  else if(hits > 0 && fp === 0) cfuState.score += 0.5;
+  var fb = document.getElementById('cfu-fb-' + num);
+  if(hits === correctVals.length && fp === 0) fb.querySelector('.cfu-fb-correct').style.display = 'block';
+  else { var p = fb.querySelector('.cfu-fb-partial'); if(p) p.style.display = 'block'; else fb.querySelector('.cfu-fb-correct').style.display = 'block'; }
+  fb.style.display = 'block';
+  updateScoreTracker();
+}
+document.querySelectorAll('.cfu-opt').forEach(function(opt){
+  opt.addEventListener('click', function(){
+    var block = this.closest('.cfu-block');
+    var num = parseInt(block.getAttribute('data-num'));
+    if(cfuState.answered[num]) return;
+    block.querySelectorAll('.cfu-opt').forEach(function(o){ o.classList.remove('selected'); });
+    this.classList.add('selected');
+  });
+});
+document.querySelectorAll('.cfu-block').forEach(function(block){
+  var num = parseInt(block.getAttribute('data-num'));
+  var type = block.getAttribute('data-type');
+  var fb = block.querySelector('.cfu-feedback');
+  if(fb && !block.querySelector('.cfu-submit-btn')){
+    var btn = document.createElement('button');
+    btn.className = 'cfu-submit-btn';
+    btn.textContent = type === 'matching' ? 'Check Matches' : type === 'cloze' ? 'Check Answers' : type === 'checkbox' ? 'Check Selections' : 'Submit';
+    btn.style.cssText = 'display:block!important;margin:16px 0!important;padding:10px 24px!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:8px!important;font-family:Georgia,serif!important;font-size:14px!important;font-weight:600!important;cursor:pointer!important;';
+    btn.addEventListener('click', function(){
+      if(type === 'mcq') cfuSubmitMCQ(num);
+      else if(type === 'matching') cfuSubmitMatching(num);
+      else if(type === 'cloze') cfuSubmitCloze(num);
+      else if(type === 'checkbox') cfuSubmitCheckbox(num);
+      this.disabled = true; this.style.opacity = '0.5';
+    });
+    fb.parentNode.insertBefore(btn, fb);
+  }
+});
+var style = document.createElement('style');
+style.textContent = [
+  '#apcyber-wrapper .cfu-match-grid{display:grid;gap:12px;margin:12px 0;}',
+  '#apcyber-wrapper .cfu-match-row{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;}',
+  '#apcyber-wrapper .cfu-match-term{background:#F5F0FF;border:1px solid #DDD6FE;border-radius:6px;padding:10px 14px;font-family:Georgia,serif;font-size:14px;color:#1E1B4B;font-weight:600;line-height:1.5;}',
+  '#apcyber-wrapper .cfu-match-select{width:100%;padding:10px 12px;border:1px solid #D1D5DB;border-radius:6px;font-size:14px;font-family:Georgia,serif;color:#1E1B4B;background:#fff;appearance:auto;-webkit-appearance:auto;}',
+  '#apcyber-wrapper .cfu-cloze-blank{display:inline-block;min-width:130px;padding:4px 10px;border:2px dashed #C4B5FD;border-radius:4px;font-family:Georgia,serif;font-size:14px;color:#6B21A8;background:#F5F0FF;text-align:center;}',
+  '#apcyber-wrapper .cfu-cloze-blank:focus{border-color:#6B21A8;outline:none;box-shadow:0 0 0 2px #EDE9FE;}',
+  '#apcyber-wrapper .cfu-cb-grid{display:grid;gap:8px;margin:12px 0;}',
+  '#apcyber-wrapper .cfu-cb-label{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid #E5E7EB;border-radius:6px;cursor:pointer;font-family:Georgia,serif;font-size:14px;color:#374151;transition:border-color 0.15s,background 0.15s;}',
+  '#apcyber-wrapper .cfu-cb-label:hover{background:#F5F0FF;border-color:#C4B5FD;}',
+  '#apcyber-wrapper .cfu-cb{margin-top:2px;flex-shrink:0;accent-color:#6B21A8;}',
+  '#apcyber-wrapper .cfu-cloze-text{font-family:Georgia,serif;font-size:15px;color:#1E1B4B;line-height:2.2;}',
+  '@media(max-width:600px){#apcyber-wrapper .cfu-match-row{grid-template-columns:1fr;gap:4px;} #apcyber-wrapper .cfu-match-row>div:nth-child(2){display:none;}}'
+].join('\\n');
+document.head.appendChild(style);
+});
+</script>
+</div>
+<!--APCYBER-LESSON-NAV-START--><style>
+#apcyber-lesson-nav, #apcyber-lesson-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-lesson-nav{display:block!important;margin:48px auto 8px!important;max-width:880px!important;
+ padding:0 16px!important}
+#apcyber-lesson-nav .aln-card{display:block!important;background:#FFFFFF!important;
+ border:1px solid #E5E1F2!important;border-top:4px solid #6B21A8!important;border-radius:14px!important;
+ padding:22px 22px 18px!important;box-shadow:0 6px 22px rgba(30,27,75,.07)!important}
+#apcyber-lesson-nav .aln-eyebrow{display:block!important;font-size:12px!important;font-weight:700!important;
+ letter-spacing:.09em!important;text-transform:uppercase!important;color:#6B21A8!important;
+ -webkit-text-fill-color:#6B21A8!important;margin:0 0 14px!important}
+#apcyber-lesson-nav .aln-pn{display:flex!important;gap:12px!important;flex-wrap:wrap!important;margin:0 0 16px!important}
+#apcyber-lesson-nav .aln-step{flex:1 1 0!important;min-width:200px!important;display:block!important;
+ text-decoration:none!important;border:1px solid #E5E1F2!important;border-radius:11px!important;
+ padding:13px 15px!important;background:#FAF8FF!important}
+#apcyber-lesson-nav .aln-step:link,#apcyber-lesson-nav .aln-step:visited{color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important}
+#apcyber-lesson-nav .aln-step.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-lesson-nav .aln-step.next:link,#apcyber-lesson-nav .aln-step.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-lesson-nav .aln-dir{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.06em!important;text-transform:uppercase!important;color:#8A7FB0!important;
+ -webkit-text-fill-color:#8A7FB0!important;margin:0 0 4px!important}
+#apcyber-lesson-nav .aln-step.next .aln-dir{color:#E8A020!important;-webkit-text-fill-color:#E8A020!important;text-align:right!important}
+#apcyber-lesson-nav .aln-ttl{display:block!important;font-size:15px!important;font-weight:600!important;line-height:1.3!important}
+#apcyber-lesson-nav .aln-step.next .aln-ttl{text-align:right!important}
+#apcyber-lesson-nav .aln-links{display:flex!important;flex-wrap:wrap!important;align-items:center!important;
+ gap:8px 18px!important;padding-top:15px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-lesson-nav .aln-lbl{font-size:13px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-lesson-nav .aln-links a:link,#apcyber-lesson-nav .aln-links a:visited{font-size:14px!important;
+ font-weight:500!important;color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;
+ text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important;padding-bottom:1px!important}
+@media(max-width:560px){#apcyber-lesson-nav .aln-step{flex:1 1 100%!important}}
+</style><div id=""apcyber-lesson-nav""><div class=""aln-card"">
+<span class=""aln-eyebrow"">AP Cybersecurity · Unit 3 · Lesson 3.2</span><div class=""aln-pn"">
+<a class=""aln-step prev"" href=""/pages/ap-cyber-unit-3-lesson-5""><span class=""aln-dir"">← Previous</span><span class=""aln-ttl"">3.5 IDS/IPS &amp; SIEM</span></a><a class=""aln-step next"" href=""/pages/ap-cyber-unit-4-lesson-1""><span class=""aln-dir"">Next →</span><span class=""aln-ttl"">4.1 Device Vulnerabilities and Attacks</span></a>
+</div>
+<div class=""aln-links"">
+<span class=""aln-lbl"">Keep going:</span><a href=""/pages/ap-cybersecurity-unit-3-securing-networks"">Unit 3 Study Guide</a><a href=""/pages/ap-cyber-unit-3-exam"">Unit 3 Exam</a><a href=""/pages/ap-cybersecurity-complete-course-guide"">Course Guide</a><a href=""/pages/ap-cybersecurity-study-guide"">All Study Guides</a><a href=""/pages/ap-cybersecurity-practice-questions"">Practice Questions</a><a href=""/pages/ap-cybersecurity-score-calculator"">Score Calculator</a>
+</div>
+</div></div><!--APCYBER-LESSON-NAV-END-->","MERGE"
