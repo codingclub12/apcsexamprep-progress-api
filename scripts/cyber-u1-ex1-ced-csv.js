@@ -29,6 +29,7 @@
 const fs = require('fs');
 const path = require('path');
 const ced = require('../lib/cyber-u1-ex1-ced');
+const gate0 = require('../lib/cyber-page-gate');
 
 const LIVE_URL = `https://www.apcsexamprep.com/pages/${ced.HANDLE}.json`;
 
@@ -83,24 +84,14 @@ function gate(before, after, resolved) {
   const warn = [];
   const note = [];
 
-  for (const tag of ['div', 'style', 'script']) {
-    const { open, close } = countTag(after, tag);
-    if (open !== close) fail.push(`<${tag}> unbalanced: ${open} open, ${close} close`);
-  }
+  fail.push(...gate0.balancedTags(after, ['div', 'style', 'script']));
 
   //  The widget IS the page: the seven flags, the scoring and the reveal all
   //  live in JavaScript. Balanced tags prove nothing about whether it runs, and
   //  a splice that lands one character wrong inside a string literal produces
   //  perfectly valid HTML that renders a blank exercise. So compile every
   //  script block before shipping it.
-  for (const m of after.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)) {
-    const src = m[1];
-    if (/application\/ld\+json/.test(m[0])) {
-      try { JSON.parse(src); } catch (e) { fail.push(`JSON-LD does not parse: ${e.message}`); }
-      continue;
-    }
-    try { new Function(src); } catch (e) { fail.push(`a script block does not compile: ${e.message}`); }
-  }
+  fail.push(...gate0.scriptsParse(after));
 
   //  The widget is the page. If the array does not parse, nothing renders.
   const was = flags(before);
@@ -174,10 +165,7 @@ function gate(before, after, resolved) {
     check(after.includes(needle), `lost the ${why}`);
   }
 
-  const codepoints = (s) => new Set([...s].filter((ch) => ch.charCodeAt(0) > 127));
-  const had = codepoints(before);
-  const added = [...codepoints(after)].filter((ch) => !had.has(ch));
-  if (added.length) fail.push(`new copy introduced non-ASCII: ${JSON.stringify(added.join(''))}`);
+  fail.push(...gate0.noNewNonAscii(before, after));
 
   note.push(`body ${before.length} -> ${after.length} bytes`);
   for (const r of resolved) note.push(`  spliced ${r.name}: ${r.removed} bytes -> ${r.html.length}`);
@@ -185,8 +173,6 @@ function gate(before, after, resolved) {
   function check(cond, msg) { if (!cond) fail.push(msg); }
   return { fail, warn, note };
 }
-
-function csvCell(v) { return `"${String(v).replace(/"/g, '""')}"`; }
 
 async function main() {
   const out = process.argv[2];
@@ -220,7 +206,7 @@ async function main() {
   fs.mkdirSync(path.dirname(path.resolve(out)), { recursive: true });
   fs.writeFileSync(out, [
     ['ID', 'Handle', 'Title', 'Body HTML', 'Command'].join(','),
-    [ced.PAGE_ID, ced.HANDLE, ced.TITLE, after, 'MERGE'].map(csvCell).join(','),
+    [ced.PAGE_ID, ced.HANDLE, ced.TITLE, after, 'MERGE'].map(gate0.csvCell).join(','),
   ].join('\n') + '\n', 'utf8');
   console.log(`\nwrote ${out}  (${fs.statSync(out).size} bytes, 1 row, Command MERGE)`);
   console.log('gate passed. Import once, in MERGE mode, then:');

@@ -43,7 +43,11 @@ const SABOTAGE={
 };
 
 // Drive the real gate by writing a temp live.json the script will read.
-function run(body,label){
+// The baseline runs the real CLI end to end, which the per-sabotage checks do
+// not: they call gate() directly. Both levels are worth having, since a gate
+// that works in isolation and a script that never reaches it look the same from
+// the outside.
+function run(body){
   const j={page:{...live.page, body_html:body}};
   fs.writeFileSync(S+'/gt.json', JSON.stringify(j));
   const r=cp.spawnSync('node',['scripts/cyber-u1-topic14-ced-csv.js',S+'/gt.csv','--live',S+'/gt.json','--show-changes'],
@@ -54,7 +58,7 @@ function run(body,label){
 }
 
 // Baseline: the real build must pass. Feed it the untouched live body.
-const base=run(live.page.body_html,'baseline');
+const base=run(live.page.body_html);
 console.log('baseline (real build)   exit=%d  %s', base.code, base.code===0?'PASS as expected':'UNEXPECTED FAILURE\n'+base.fails.join('\n'));
 console.log('');
 

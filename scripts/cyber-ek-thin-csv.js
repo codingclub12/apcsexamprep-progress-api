@@ -34,6 +34,7 @@ const fs = require('fs');
 const path = require('path');
 const ek = require('../lib/cyber-ek-density');
 const { thin } = require('../lib/cyber-ek-thin');
+const gate0 = require('../lib/cyber-page-gate');
 
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 '
   + '(KHTML, like Gecko) Chrome/126.0 Safari/537.36';
@@ -55,15 +56,7 @@ const flat = (s) => s
   .replace(/<[^>]+>/g, ' ')
   .replace(/\s+/g, ' ');
 
-function hiddenIds(b) {
-  const out = new Set();
-  for (const m of b.matchAll(/<[a-z]+[^>]*>/gi)) {
-    if (!m[0].replace(/\s/g, '').includes('display:none')) continue;
-    const id = /id="([^"]+)"/.exec(m[0]);
-    if (id) out.add(id[1]);
-  }
-  return out;
-}
+const hiddenIds = gate0.hiddenIds;
 
 function visibleCitations(b) {
   const skip = [];
@@ -82,8 +75,7 @@ function gate(before, after) {
   if (s.unbalanced.length) fail.push(`unbalanced blocks: ${s.unbalanced.join(', ')}`);
 
   //  nothing that was hidden may become visible
-  const lost = [...hiddenIds(before)].filter((id) => !hiddenIds(after).has(id));
-  if (lost.length) fail.push(`these were hidden and are not any more: ${lost.join(', ')}`);
+  fail.push(...gate0.nothingUnhidden(before, after));
 
   //  the sort widget still grades
   const buckets = [...after.matchAll(/data-bucket="([^"]+)"/g)].map((m) => m[1]);
@@ -110,37 +102,20 @@ function gate(before, after) {
   }
 
   //  structure and scripts
-  const nc = after.replace(/<!--[\s\S]*?-->/g, '');
-  for (const tag of ['div', 'style', 'script', 'table', 'tr', 'td']) {
-    const o = (nc.match(new RegExp(`<${tag}[ >]`, 'g')) || []).length;
-    const c = (nc.match(new RegExp(`</${tag}>`, 'g')) || []).length;
-    if (o !== c) fail.push(`<${tag}> unbalanced: ${o} open, ${c} close`);
-  }
-  for (const m of after.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)) {
-    if (/application\/ld\+json/.test(m[0])) {
-      try { JSON.parse(m[1]); } catch (e) { fail.push(`JSON-LD does not parse: ${e.message}`); }
-      continue;
-    }
-    try { new Function(m[1]); } catch (e) { fail.push(`script does not compile: ${e.message}`); }
-  }
+  fail.push(...gate0.balancedTags(after, ['div', 'style', 'script', 'table', 'tr', 'td']));
+  fail.push(...gate0.scriptsParse(after));
 
   //  no new non-ASCII, and the CFU widgets all survive
-  const cp = (x) => new Set([...x].filter((ch) => ch.charCodeAt(0) > 127));
-  const had = cp(before);
-  const added = [...cp(after)].filter((ch) => !had.has(ch));
-  if (added.length) fail.push(`introduced non-ASCII: ${JSON.stringify(added.join(''))}`);
+  fail.push(...gate0.noNewNonAscii(before, after));
   const nBefore = (before.match(/<div class="cfu-block/g) || []).length;
   const nAfter = (after.match(/<div class="cfu-block/g) || []).length;
   if (nBefore !== nAfter) fail.push(`cfu block count changed: ${nBefore} -> ${nAfter}`);
 
   //  the sentences a human has to read
-  const seen = new Set(flat(before).split(/(?<=[.?!]) /));
-  const changed = flat(after).split(/(?<=[.?!]) /).filter((x) => !seen.has(x));
+  const changed = gate0.changedSentences(before, after, flat);
   note.push(`sentences changed: ${changed.length}`);
   return { fail, note, changed };
 }
-
-function csvCell(v) { return `"${String(v).replace(/"/g, '""')}"`; }
 
 async function main() {
   const out = process.argv[2];
@@ -171,10 +146,7 @@ async function main() {
   }
 
   fs.mkdirSync(path.dirname(path.resolve(out)), { recursive: true });
-  fs.writeFileSync(out, [
-    ['ID', 'Handle', 'Title', 'Body HTML', 'Command'].join(','),
-    [page.id, page.handle, page.title, after, 'MERGE'].map(csvCell).join(','),
-  ].join('\n') + '\n', 'utf8');
+  fs.writeFileSync(out, gate0.csvRow(page, after), 'utf8');
   console.log(`wrote ${out}  (${fs.statSync(out).size} bytes, 1 row, Command MERGE)`);
 }
 
