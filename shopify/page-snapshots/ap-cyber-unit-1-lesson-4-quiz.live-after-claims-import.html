@@ -1,0 +1,456 @@
+<!-- ============================================================
+  AP CYBERSECURITY | Unit 1 Topic 1.2 | Exercise 1: Password Autopsy
+  Shopify Handle: ap-cyber-unit-1-lesson-2-exercise-1
+  data-lesson-id="1.2-ex1"
+
+  SHOPIFY NOTES:
+  - Unique wrapper: #cyber-ex1-12
+  - Purple theme, Georgia serif, ucnav, full CSS isolation
+  - NO raw emojis - HTML entities only
+  - All buttons: white text forced with :link/:visited/:hover/:active + -webkit-text-fill-color
+
+  CB ALIGNMENT: 1.2.A (signs of attack), 1.2.B (exploit weak auth), 1.2.C (strengthen auth)
+  TIME: 30-40 minutes
+============================================================ -->
+
+<style>
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-lesson.locked{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;cursor:not-allowed!important;}
+#ucnav .ucn-lesson.locked:link,#ucnav .ucn-lesson.locked:visited,#ucnav .ucn-lesson.locked:hover{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;background:transparent!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-lock svg{opacity:.5!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+
+
+/* ===== UNIT NAV ===== */
+@media(max-width:600px){}
+
+/* ===== WRAPPER ===== */
+#cyber-ex1-12{
+  all:initial!important;display:block!important;font-family:'Georgia',serif!important;
+  color:#1E1B4B!important;background:#ffffff!important;line-height:1.6!important;
+  -webkit-font-smoothing:antialiased!important;max-width:940px!important;
+  margin:0 auto!important;padding:20px 16px 60px!important;
+}
+#cyber-ex1-12 *{box-sizing:border-box!important;}
+#cyber-ex1-12{--purple:#6B21A8;--purple-mid:#7C3AED;--purple-light:#A855F7;--purple-bg:#F5F0FF;--purple-border:#DDD6FE;--dark:#1E1B4B;--gray:#6B7280;--gray-light:#F9FAFB;--gray-border:#E5E7EB;--green:#15803D;--green-bg:#F0FDF4;--green-border:#BBF7D0;}
+
+/* ===== HEADER ===== */
+#cyber-ex1-12 .ex-header{
+  background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;
+  border-radius:14px!important;padding:36px 32px!important;margin-bottom:20px!important;
+  color:#ffffff!important;position:relative!important;overflow:hidden!important;
+}
+#cyber-ex1-12 .ex-header::before{content:''!important;position:absolute!important;top:-60px!important;right:-60px!important;width:300px!important;height:300px!important;border-radius:50%!important;background:rgba(168,85,247,0.15)!important;pointer-events:none!important;}
+#cyber-ex1-12 .ex-header::after{content:''!important;position:absolute!important;bottom:-80px!important;left:-40px!important;width:250px!important;height:250px!important;border-radius:50%!important;background:rgba(124,58,237,0.12)!important;pointer-events:none!important;}
+#cyber-ex1-12 .ex-tag{display:inline-block!important;background:rgba(168,85,247,0.25)!important;border:1px solid rgba(168,85,247,0.5)!important;color:#E9D5FF!important;font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;text-transform:uppercase!important;padding:6px 16px!important;border-radius:20px!important;margin-bottom:16px!important;}
+#cyber-ex1-12 .ex-header h1{font-family:'Georgia',serif!important;font-size:28px!important;font-weight:700!important;color:#ffffff!important;margin:0 0 10px!important;line-height:1.3!important;position:relative!important;}
+#cyber-ex1-12 .ex-header p{font-family:'Georgia',serif!important;font-size:15px!important;color:rgba(255,255,255,0.85)!important;margin:0 0 20px!important;line-height:1.6!important;position:relative!important;}
+#cyber-ex1-12 .ex-badges{display:flex!important;flex-wrap:wrap!important;gap:10px!important;position:relative!important;}
+#cyber-ex1-12 .ex-badge{display:inline-flex!important;align-items:center!important;gap:5px!important;background:rgba(168,85,247,0.2)!important;border:1px solid rgba(168,85,247,0.4)!important;color:#E9D5FF!important;padding:5px 14px!important;border-radius:18px!important;font-family:'Georgia',serif!important;font-size:12px!important;font-weight:600!important;}
+
+/* ===== SCORE BAR ===== */
+#cyber-ex1-12 .score-bar{position:relative!important;z-index:50!important;background:linear-gradient(135deg,#1E1B4B,#3B0764)!important;color:#ffffff!important;padding:10px 20px!important;border-radius:10px!important;display:flex!important;justify-content:space-between!important;align-items:center!important;font-family:'Georgia',serif!important;font-size:13px!important;font-weight:600!important;box-shadow:0 4px 12px rgba(30,27,75,0.3)!important;margin-bottom:24px!important;}
+#cyber-ex1-12 .score-bar .score-num{background:var(--purple)!important;padding:4px 14px!important;border-radius:14px!important;font-size:14px!important;font-weight:800!important;color:#ffffff!important;}
+
+/* ===== SECTIONS ===== */
+#cyber-ex1-12 .section{background:#ffffff!important;border:1px solid var(--gray-border)!important;border-radius:12px!important;padding:28px 24px!important;margin-bottom:24px!important;box-shadow:0 2px 8px rgba(0,0,0,0.04)!important;}
+#cyber-ex1-12 .section h2{font-family:'Georgia',serif!important;font-size:18px!important;font-weight:700!important;color:var(--dark)!important;margin:0 0 12px!important;}
+#cyber-ex1-12 .section h3{font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;color:var(--purple)!important;margin:16px 0 8px!important;}
+#cyber-ex1-12 .section p{font-family:'Georgia',serif!important;font-size:14px!important;color:#374151!important;margin:0 0 12px!important;line-height:1.7!important;}
+#cyber-ex1-12 .section-label{display:inline-block!important;background:var(--purple-bg)!important;color:var(--purple)!important;font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1px!important;padding:4px 12px!important;border-radius:4px!important;margin-bottom:12px!important;}
+
+/* ===== PASSWORD SPECIMEN ===== */
+#cyber-ex1-12 .pw-specimen{background:#0f172a!important;border-radius:8px!important;padding:16px 20px!important;margin:12px 0!important;font-family:'Courier New',monospace!important;font-size:20px!important;font-weight:700!important;letter-spacing:2px!important;color:#a78bfa!important;text-align:center!important;border:2px solid #334155!important;}
+#cyber-ex1-12 .pw-context{background:var(--gray-light)!important;border:1px solid var(--gray-border)!important;border-radius:8px!important;padding:12px 16px!important;margin:8px 0 16px!important;font-family:'Georgia',serif!important;font-size:13px!important;color:#475569!important;}
+#cyber-ex1-12 .pw-context strong{color:var(--dark)!important;}
+
+/* ===== FORM FIELDS ===== */
+#cyber-ex1-12 .q-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:14px!important;margin:12px 0!important;}
+@media(max-width:600px){#cyber-ex1-12 .q-grid{grid-template-columns:1fr!important;}}
+#cyber-ex1-12 .q-field{display:flex!important;flex-direction:column!important;gap:4px!important;}
+#cyber-ex1-12 .q-field label{font-family:'Georgia',serif!important;font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:0.5px!important;color:#475569!important;}
+#cyber-ex1-12 .q-field select,#cyber-ex1-12 .q-field textarea{font-family:'Georgia',serif!important;font-size:13px!important;padding:8px 10px!important;border:1px solid var(--purple-border)!important;border-radius:6px!important;background:#ffffff!important;color:var(--dark)!important;resize:vertical!important;}
+#cyber-ex1-12 .q-field select:focus,#cyber-ex1-12 .q-field textarea:focus{outline:none!important;border-color:var(--purple)!important;box-shadow:0 0 0 2px rgba(107,33,168,0.15)!important;}
+#cyber-ex1-12 .q-full{grid-column:1/-1!important;}
+
+/* ===== LOG TABLE ===== */
+#cyber-ex1-12 .log-table{width:100%!important;border-collapse:collapse!important;margin:12px 0!important;font-family:'Courier New',monospace!important;font-size:12px!important;}
+#cyber-ex1-12 .log-table th{background:var(--dark)!important;color:#ffffff!important;padding:8px 10px!important;text-align:left!important;font-family:'Georgia',serif!important;font-size:11px!important;text-transform:uppercase!important;letter-spacing:0.5px!important;}
+#cyber-ex1-12 .log-table td{padding:6px 10px!important;border-bottom:1px solid var(--gray-border)!important;vertical-align:top!important;color:#1e293b!important;}
+#cyber-ex1-12 .log-table tr:nth-child(even) td{background:var(--gray-light)!important;}
+#cyber-ex1-12 .log-table tr.suspicious td{background:#fef2f2!important;color:#991b1b!important;font-weight:600!important;}
+
+/* ===== BUTTONS ===== */
+#cyber-ex1-12 .check-btn{display:inline-block!important;background:var(--purple)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;font-family:'Georgia',serif!important;font-size:14px!important;font-weight:700!important;padding:10px 24px!important;border:none!important;border-radius:8px!important;cursor:pointer!important;margin-top:12px!important;opacity:1!important;visibility:visible!important;text-decoration:none!important;}
+#cyber-ex1-12 .check-btn:hover{background:var(--purple-mid)!important;}
+#cyber-ex1-12 a.check-btn:link,#cyber-ex1-12 a.check-btn:visited,#cyber-ex1-12 a.check-btn:hover,#cyber-ex1-12 a.check-btn:active{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#cyber-ex1-12 .nav-btn-back{background:#475569!important;}
+#cyber-ex1-12 .nav-btn-back:hover{background:#334155!important;}
+
+/* ===== FEEDBACK ===== */
+#cyber-ex1-12 .feedback{display:none!important;border-radius:8px!important;padding:16px 18px!important;margin-top:14px!important;font-family:'Georgia',serif!important;font-size:13px!important;line-height:1.7!important;}
+#cyber-ex1-12 .feedback.show{display:block!important;}
+#cyber-ex1-12 .feedback.correct{background:var(--green-bg)!important;border:1px solid var(--green-border)!important;color:#166534!important;}
+#cyber-ex1-12 .feedback.partial{background:#FFFBEB!important;border:1px solid #FDE68A!important;color:#92400E!important;}
+#cyber-ex1-12 .feedback.incorrect{background:#FEF2F2!important;border:1px solid #FECACA!important;color:#991B1B!important;}
+
+/* ===== RESULTS ===== */
+#cyber-ex1-12 .results-panel{display:none!important;background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;border-radius:12px!important;padding:32px!important;text-align:center!important;color:#ffffff!important;margin-top:24px!important;position:relative!important;overflow:hidden!important;}
+#cyber-ex1-12 .results-panel::before{content:''!important;position:absolute!important;top:-40px!important;right:-40px!important;width:200px!important;height:200px!important;border-radius:50%!important;background:rgba(168,85,247,0.15)!important;pointer-events:none!important;}
+#cyber-ex1-12 .results-panel.show{display:block!important;}
+#cyber-ex1-12 .results-panel h2{font-family:'Georgia',serif!important;font-size:22px!important;color:#ffffff!important;margin:0 0 8px!important;position:relative!important;}
+#cyber-ex1-12 .results-score{font-family:'Georgia',serif!important;font-size:48px!important;font-weight:900!important;color:var(--purple-light)!important;margin:12px 0!important;position:relative!important;}
+#cyber-ex1-12 .results-panel p{font-family:'Georgia',serif!important;font-size:14px!important;color:rgba(255,255,255,0.85)!important;margin:8px 0!important;position:relative!important;}
+
+/* ===== EXAM TIP ===== */
+#cyber-ex1-12 .exam-tip{background:var(--purple-bg)!important;border-left:4px solid var(--purple)!important;border-radius:0 8px 8px 0!important;padding:16px 20px!important;margin:20px 0!important;font-family:'Georgia',serif!important;font-size:14px!important;color:var(--dark)!important;}
+#cyber-ex1-12 .exam-tip strong{color:var(--purple)!important;}
+
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+</style>
+<script>
+function ucnToggle(num){try{event.stopPropagation();}catch(x){}var l=document.getElementById('ucn-l'+num),s=document.getElementById('ucn-s'+num);if(!l||!s)return;var o=l.classList.contains('open');document.querySelectorAll('#ucnav .ucn-lesson').forEach(function(e){e.classList.remove('open')});document.querySelectorAll('#ucnav .ucn-steps').forEach(function(e){e.classList.remove('open')});if(!o){l.classList.add('open');s.classList.add('open');setTimeout(function(){l.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},50)}}
+(function(){
+function pos(){var nav=document.getElementById('ucnav');if(!nav)return;if(nav.parentElement!==document.body){document.body.appendChild(nav)}var h=0;var headerEl=document.querySelector('.section-header header.header')||document.querySelector('sticky-header header')||document.querySelector('header.header');if(headerEl){h=Math.round(headerEl.getBoundingClientRect().bottom)}if(h<20||h>300)h=68;nav.style.setProperty('top',h+'px','important');var navH=nav.offsetHeight||42;var w=document.getElementById('apcyber-wrapper')||document.querySelector('[data-lesson-id]')||document.querySelector('[id^="u3l"]')||document.querySelector('[id^="u1l"]')||document.querySelector('[id^="u2l"]');if(w)w.style.setProperty('padding-top',(h+navH+4)+'px','important')}
+function openCurrentSteps(){var ol=document.querySelector('#ucnav .ucn-lesson.open');if(ol&&ol.id){var n=ol.id.replace('ucn-l','');var s=document.getElementById('ucn-s'+n);if(s)s.classList.add('open');setTimeout(function(){ol.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},100)}}
+requestAnimationFrame(pos);setTimeout(pos,150);setTimeout(pos,400);setTimeout(pos,800);setTimeout(pos,1500);setTimeout(pos,3000);setTimeout(openCurrentSteps,200);
+window.addEventListener('resize',pos,{passive:true});
+setTimeout(function(){var _w=document.getElementById('apcyber-wrapper')||document.querySelector('[id^="u3l"]')||document.querySelector('[id^="u1l"]')||document.querySelector('[id^="u2l"]');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}var _m=document.getElementById('MainContent');if(_m){_m.style.setProperty('padding-top','0','important');_m.style.setProperty('margin-top','0','important')}},50);
+setTimeout(function(){var _w=document.getElementById('apcyber-wrapper')||document.querySelector('[id^="u3l"]');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}},500);
+var scrolled=false;window.addEventListener('scroll',function(){if(!scrolled){scrolled=true;requestAnimationFrame(pos)}},{passive:true});
+var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class','hidden']});setTimeout(function(){obs.disconnect()},15000);
+})();
+</script>
+<div id="ucnav"><div class="ucn-rail" id="ucn-rail">
+<a href="/pages/ap-cybersecurity-complete-course-guide" class="ucn-hub">AP Cyber Hub</a>
+<span class="ucn-badge">Unit 1</span>
+<a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-lesson" onclick="ucnToggle(1);" id="ucn-l1" title="Understanding Social Engineering">1.1 <span class="ucn-chevron">▼</span></a>
+<div class="ucn-steps" id="ucn-s1">
+<a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-step">Lesson</a>
+<a href="/pages/ap-cyber-unit-1-lesson-1-exercise-1" class="ucn-step">Ex 1</a>
+<a href="/pages/ap-cyber-unit-1-lesson-1-exercise-2" class="ucn-step">Ex 2</a>
+<a href="/pages/ap-cyber-unit-1-lesson-1-lab" class="ucn-step">Lab</a>
+<a href="/pages/ap-cyber-unit-1-lesson-1-quiz" class="ucn-step">Quiz</a>
+</div>
+<a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-lesson" onclick="ucnToggle(2);" id="ucn-l2" title="Suspicious Website Logins">1.2 <span class="ucn-chevron">▼</span></a>
+<div class="ucn-steps" id="ucn-s2">
+<a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-step">Lesson</a>
+<a href="/pages/ap-cyber-unit-1-lesson-2-exercise-1" class="ucn-step">Ex 1</a>
+<a href="/pages/ap-cyber-unit-1-lesson-2-exercise-2" class="ucn-step">Ex 2</a>
+<a href="/pages/ap-cyber-unit-1-lesson-2-lab" class="ucn-step">Lab</a>
+<a href="/pages/ap-cyber-unit-1-lesson-2-quiz" class="ucn-step">Quiz</a>
+</div>
+<a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-lesson" onclick="ucnToggle(3);" id="ucn-l3" title="Public Wi-Fi Dangers">1.3 <span class="ucn-chevron">▼</span></a>
+<div class="ucn-steps" id="ucn-s3">
+<a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-step">Lesson</a>
+<a href="/pages/ap-cyber-unit-1-lesson-3-exercise-1" class="ucn-step">Ex 1</a>
+<a href="/pages/ap-cyber-unit-1-lesson-3-exercise-2" class="ucn-step">Ex 2</a>
+<a href="/pages/ap-cyber-unit-1-lesson-3-lab" class="ucn-step">Lab</a>
+<a href="/pages/ap-cyber-unit-1-lesson-3-quiz" class="ucn-step">Quiz</a>
+</div>
+<a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-lesson open" onclick="ucnToggle(4);" id="ucn-l4" title="AI-Based Attacks">1.4 <span class="ucn-chevron">▼</span></a>
+<div class="ucn-steps open" id="ucn-s4">
+<a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-step">Lesson</a>
+<a href="/pages/ap-cyber-unit-1-lesson-4-exercise-1" class="ucn-step">Ex 1</a>
+<a href="/pages/ap-cyber-unit-1-lesson-4-exercise-2" class="ucn-step">Ex 2</a>
+<a href="/pages/ap-cyber-unit-1-lesson-4-lab" class="ucn-step">Lab</a>
+<a href="/pages/ap-cyber-unit-1-lesson-4-quiz" class="ucn-step current">Quiz</a>
+</div>
+<a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-lesson" onclick="ucnToggle(5);" id="ucn-l5" title="AI in Defense">1.5 <span class="ucn-chevron">▼</span></a>
+<div class="ucn-steps" id="ucn-s5">
+<a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-step">Lesson</a>
+<a href="/pages/ap-cyber-unit-1-lesson-5-exercise-1" class="ucn-step">Ex 1</a>
+<a href="/pages/ap-cyber-unit-1-lesson-5-exercise-2" class="ucn-step">Ex 2</a>
+<a href="/pages/ap-cyber-unit-1-lesson-5-lab" class="ucn-step">Lab</a>
+<a href="/pages/ap-cyber-unit-1-lesson-5-quiz" class="ucn-step">Quiz</a>
+</div>
+</div></div>
+<div style="max-width:860px;margin:0 auto;padding:0 16px 60px;">
+<nav style="font-size:0.82rem;color:#6b7280;margin:16px 0 20px;font-family:'Georgia',serif;" aria-label="Breadcrumb">
+  <a href="/" style="color:#6b21a8;text-decoration:none;">Home</a>
+  <span style="margin:0 6px;color:#d1d5db;">›</span>
+  <a href="/pages/ap-cybersecurity-complete-course-guide" style="color:#6b21a8;text-decoration:none;">AP Cybersecurity</a>
+  <span style="margin:0 6px;color:#d1d5db;">›</span>
+  <span style="color:#374151;">Topic 1.4 › Quiz</span>
+</nav>
+<nav style="font-size:0.82rem;color:#6b7280;margin:16px 0 20px;font-family:'Georgia',serif;" aria-label="Breadcrumb">
+  <a href="/" style="color:#6b21a8;text-decoration:none;">Home</a>
+  <span style="margin:0 6px;color:#d1d5db;">›</span>
+  <a href="/pages/ap-cybersecurity-complete-course-guide" style="color:#6b21a8;text-decoration:none;">AP Cybersecurity</a>
+  <span style="margin:0 6px;color:#d1d5db;">›</span>
+  <span style="color:#374151;">Topic 1.4 › Quiz</span>
+</nav>
+<div style="background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 60%,#7C3AED 100%);border-radius:14px;padding:28px 32px;margin-bottom:28px;color:#fff;">
+  <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#c4b5fd;margin-bottom:8px;font-family:'Georgia',serif;">AP Cybersecurity — Unit 1, Topic 1.4</div>
+  <h1 style="font-size:1.5rem;font-weight:800;color:#fff;-webkit-text-fill-color:#fff;margin:0 0 10px;font-family:'Georgia',serif;">Topic 1.4 Quiz: AI-Based Cybersecurity Attacks</h1>
+  <p style="font-size:0.92rem;color:rgba(255,255,255,.85);-webkit-text-fill-color:rgba(255,255,255,.85);margin:0 0 16px;line-height:1.6;font-family:'Georgia',serif;">5 questions. Timed. AP exam difficulty. No retakes during the timer. Predict the answer before you pick.</p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <span style="background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.78rem;font-weight:600;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">5 Questions • 8 Minutes</span>
+    <span style="background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.78rem;font-weight:600;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">AP Difficulty • Timed</span>
+  </div>
+</div>
+<div style="background:#1e1b4b;border-radius:10px;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+  <span style="color:#a78bfa;-webkit-text-fill-color:#a78bfa;font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-family:'Georgia',serif;">Time Remaining</span>
+  <span id="timerDisplay" style="color:#fff;-webkit-text-fill-color:#fff;font-size:1.4rem;font-weight:700;font-family:'Georgia',serif;">8:00</span>
+  <button id="timerStart" onclick="startTimer()" style="background:#6b21a8;color:#fff;-webkit-text-fill-color:#fff;border:none;border-radius:6px;padding:8px 16px;font-size:0.82rem;font-weight:700;cursor:pointer;font-family:'Georgia',serif;">Start Timer</button>
+</div>
+<div style="background:#f5f0ff;border-radius:8px;padding:12px 16px;margin-bottom:24px;font-size:0.84rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">
+  <strong>Exam Overview:</strong> 5 questions covering the AI attack types (deepfakes and voice cloning, AI phishing, AI reconnaissance, filter evasion) and the defenses that answer them, plus the dual-use nature of AI security tools. Format matches AP Cybersecurity exam style with scenario-based questions.
+</div>
+<div id="quizBody">
+<div class="quiz-q" id="q1" style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:22px 24px;margin-bottom:16px;">
+  <div style="font-size:0.72rem;font-weight:700;color:#6b21a8;-webkit-text-fill-color:#6b21a8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;font-family:'Georgia',serif;">Q1 • Predict first: what AI technique makes a fake real-time video possible?</div>
+  <p style="font-size:0.95rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;line-height:1.55;margin:0 0 16px;font-family:'Georgia',serif;">A company’s CFO receives a video call from what appears to be the CEO requesting an urgent wire transfer. The video shows the CEO speaking clearly with natural facial movements and the correct background. The CFO processes the transfer. Investigation later reveals the CEO never made the call. Which AI technique most likely enabled this attack?</p>
+  <div class="quiz-opt" id="q1-A" onclick="selectOpt(1,'A')" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;font-family:'Georgia',serif;">
+    <span style="width:26px;height:26px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0;color:#6b7280;-webkit-text-fill-color:#6b7280;">A</span>
+    <span style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.6;">An AI phishing email spoofing the CEO’s email address, with no video involved</span>
+  </div>
+<div class="quiz-opt" id="q1-B" onclick="selectOpt(1,'B')" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;font-family:'Georgia',serif;">
+    <span style="width:26px;height:26px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0;color:#6b7280;-webkit-text-fill-color:#6b7280;">B</span>
+    <span style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.6;">Deepfake video using AI to synthesize the CEO’s appearance and voice in real time</span>
+  </div>
+<div class="quiz-opt" id="q1-C" onclick="selectOpt(1,'C')" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;font-family:'Georgia',serif;">
+    <span style="width:26px;height:26px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0;color:#6b7280;-webkit-text-fill-color:#6b7280;">C</span>
+    <span style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.6;">AI-powered malware installed on the CEO’s device that hijacked the camera</span>
+  </div>
+<div class="quiz-opt" id="q1-D" onclick="selectOpt(1,'D')" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;font-family:'Georgia',serif;">
+    <span style="width:26px;height:26px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0;color:#6b7280;-webkit-text-fill-color:#6b7280;">D</span>
+    <span style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.6;">Credential stuffing attack that accessed the CEO’s video conferencing account</span>
+  </div>
+  <button onclick="checkQ(1)" id="btn1" style="background:#6b21a8;color:#fff;-webkit-text-fill-color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:0.88rem;font-weight:700;cursor:pointer;margin-top:8px;font-family:'Georgia',serif;">Check Answer</button>
+  <div id="fb1" style="display:none;margin-top:14px;padding:14px 16px;border-radius:8px;font-size:0.87rem;font-family:'Georgia',serif;line-height:1.65;"></div>
+</div>
+<div class="quiz-q" id="q2" style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:22px 24px;margin-bottom:16px;">
+  <div style="font-size:0.72rem;font-weight:700;color:#6b21a8;-webkit-text-fill-color:#6b21a8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;font-family:'Georgia',serif;">Q2 • Identify WHY personalized attacks are more effective before reading choices</div>
+  <p style="font-size:0.95rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;line-height:1.55;margin:0 0 16px;font-family:'Georgia',serif;">An attacker researches a hospital employee on social media and discovers: the employee’s manager’s name, a recent project deadline, and the name of a vendor the hospital uses. The attacker then sends an email referencing all three details and requests the employee click a link to complete a vendor setup. This attack is most effective compared to a generic phishing email because:</p>
+  <div class="quiz-opt" id="q2-A" onclick="selectOpt(2,'A')" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;font-family:'Georgia',serif;">
+    <span style="width:26px;height:26px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0;color:#6b7280;-webkit-text-fill-color:#6b7280;">A</span>
+    <span style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.6;">The email uses technical language that bypasses email security filters</span>
+  </div>
+<div class="quiz-opt" id="q2-B" onclick="selectOpt(2,'B')" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;font-family:'Georgia',serif;">
+    <span style="width:26px;height:26px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0;color:#6b7280;-webkit-text-fill-color:#6b7280;">B</span>
+    <span style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.6;">AI scraped public information to craft a personalized email containing context the target finds credible, reducing the skepticism the target would apply to a generic message</span>
+  </div>
+<div class="quiz-opt" id="q2-C" onclick="selectOpt(2,'C')" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;font-family:'Georgia',serif;">
+    <span style="width:26px;height:26px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0;color:#6b7280;-webkit-text-fill-color:#6b7280;">C</span>
+    <span style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.6;">The email is longer than typical phishing emails so it appears more legitimate</span>
+  </div>
+<div class="quiz-opt" id="q2-D" onclick="selectOpt(2,'D')" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;font-family:'Georgia',serif;">
+    <span style="width:26px;height:26px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0;color:#6b7280;-webkit-text-fill-color:#6b7280;">D</span>
+    <span style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.6;">The attacker has access to the hospital’s internal systems and can send from a trusted address</span>
+  </div>
+  <button onclick="checkQ(2)" id="btn2" style="background:#6b21a8;color:#fff;-webkit-text-fill-color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:0.88rem;font-weight:700;cursor:pointer;margin-top:8px;font-family:'Georgia',serif;">Check Answer</button>
+  <div id="fb2" style="display:none;margin-top:14px;padding:14px 16px;border-radius:8px;font-size:0.87rem;font-family:'Georgia',serif;line-height:1.65;"></div>
+</div>
+<div class="quiz-q" id="q3" style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:22px 24px;margin-bottom:16px;">
+  <div style="font-size:0.72rem;font-weight:700;color:#6b21a8;-webkit-text-fill-color:#6b21a8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;font-family:'Georgia',serif;">Q3 • Identify the mechanism that would cause filter effectiveness to drop systematically over weeks</div>
+  <p style="font-size:0.95rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;line-height:1.55;margin:0 0 16px;font-family:'Georgia',serif;">A security team analyzes a phishing campaign against their organization. In week 1, the AI email filter blocked 95% of the campaign emails. In week 2, the attacker sent a new wave and the filter blocked only 60%. In week 3, the filter blocked only 25%. Which explanation BEST accounts for this pattern?</p>
+  <div class="quiz-opt" id="q3-A" onclick="selectOpt(3,'A')" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;font-family:'Georgia',serif;">
+    <span style="width:26px;height:26px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0;color:#6b7280;-webkit-text-fill-color:#6b7280;">A</span>
+    <span style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.6;">The email filter’s license expired, reducing its effectiveness over time</span>
+  </div>
+<div class="quiz-opt" id="q3-B" onclick="selectOpt(3,'B')" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;font-family:'Georgia',serif;">
+    <span style="width:26px;height:26px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0;color:#6b7280;-webkit-text-fill-color:#6b7280;">B</span>
+    <span style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.6;">The attacker added more email addresses each week, overwhelming the filter’s capacity</span>
+  </div>
+<div class="quiz-opt" id="q3-C" onclick="selectOpt(3,'C')" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;font-family:'Georgia',serif;">
+    <span style="width:26px;height:26px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0;color:#6b7280;-webkit-text-fill-color:#6b7280;">C</span>
+    <span style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.6;">The attacker used AI to analyze which email variants were blocked, then automatically rewrote subsequent campaigns to evade the active filter signatures — an adversarial feedback loop</span>
+  </div>
+<div class="quiz-opt" id="q3-D" onclick="selectOpt(3,'D')" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;font-family:'Georgia',serif;">
+    <span style="width:26px;height:26px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0;color:#6b7280;-webkit-text-fill-color:#6b7280;">D</span>
+    <span style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.6;">Human employees started clicking the emails, which trained the filter to see them as legitimate</span>
+  </div>
+  <button onclick="checkQ(3)" id="btn3" style="background:#6b21a8;color:#fff;-webkit-text-fill-color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:0.88rem;font-weight:700;cursor:pointer;margin-top:8px;font-family:'Georgia',serif;">Check Answer</button>
+  <div id="fb3" style="display:none;margin-top:14px;padding:14px 16px;border-radius:8px;font-size:0.87rem;font-family:'Georgia',serif;line-height:1.65;"></div>
+</div>
+<div class="quiz-q" id="q4" style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:22px 24px;margin-bottom:16px;">
+  <div style="font-size:0.72rem;font-weight:700;color:#6b21a8;-webkit-text-fill-color:#6b21a8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;font-family:'Georgia',serif;">Q4 • Describe the relationship between offensive and defensive AI before choosing</div>
+  <p style="font-size:0.95rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;line-height:1.55;margin:0 0 16px;font-family:'Georgia',serif;">Which of the following accurately describes the relationship between AI-based offensive capabilities and AI-based defensive capabilities in cybersecurity?</p>
+  <div class="quiz-opt" id="q4-A" onclick="selectOpt(4,'A')" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;font-family:'Georgia',serif;">
+    <span style="width:26px;height:26px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0;color:#6b7280;-webkit-text-fill-color:#6b7280;">A</span>
+    <span style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.6;">Offensive AI is always more advanced than defensive AI because attackers have unrestricted development resources</span>
+  </div>
+<div class="quiz-opt" id="q4-B" onclick="selectOpt(4,'B')" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;font-family:'Georgia',serif;">
+    <span style="width:26px;height:26px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0;color:#6b7280;-webkit-text-fill-color:#6b7280;">B</span>
+    <span style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.6;">Defensive AI eliminates the need for offensive AI once properly deployed</span>
+  </div>
+<div class="quiz-opt" id="q4-C" onclick="selectOpt(4,'C')" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;font-family:'Georgia',serif;">
+    <span style="width:26px;height:26px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0;color:#6b7280;-webkit-text-fill-color:#6b7280;">C</span>
+    <span style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.6;">The same underlying AI capabilities (NLP, generative models, classification) are used on both sides; attackers generate personalized attacks, defenders filter them — creating an arms race requiring continuous updates to defensive models</span>
+  </div>
+<div class="quiz-opt" id="q4-D" onclick="selectOpt(4,'D')" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;font-family:'Georgia',serif;">
+    <span style="width:26px;height:26px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0;color:#6b7280;-webkit-text-fill-color:#6b7280;">D</span>
+    <span style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.6;">Offensive and defensive AI use completely different technologies with no overlap</span>
+  </div>
+  <button onclick="checkQ(4)" id="btn4" style="background:#6b21a8;color:#fff;-webkit-text-fill-color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:0.88rem;font-weight:700;cursor:pointer;margin-top:8px;font-family:'Georgia',serif;">Check Answer</button>
+  <div id="fb4" style="display:none;margin-top:14px;padding:14px 16px;border-radius:8px;font-size:0.87rem;font-family:'Georgia',serif;line-height:1.65;"></div>
+</div>
+<div class="quiz-q" id="q5" style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:22px 24px;margin-bottom:16px;">
+  <div style="font-size:0.72rem;font-weight:700;color:#6b21a8;-webkit-text-fill-color:#6b21a8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;font-family:'Georgia',serif;">Q5 • Predict which single control defeats the attack regardless of how good the AI is at crafting the email</div>
+  <p style="font-size:0.95rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;line-height:1.55;margin:0 0 16px;font-family:'Georgia',serif;">A small medical clinic wants to defend against AI-powered Business Email Compromise (BEC) attacks. Their IT consultant recommends: (1) an AI email security platform, (2) employee training on recognizing lookalike domains, and (3) a policy requiring out-of-band verification for any wire transfer request over $500. If only ONE control could be implemented, which provides the MOST protection against the attack chain described in Topic 1.4?</p>
+  <div class="quiz-opt" id="q5-A" onclick="selectOpt(5,'A')" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;font-family:'Georgia',serif;">
+    <span style="width:26px;height:26px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0;color:#6b7280;-webkit-text-fill-color:#6b7280;">A</span>
+    <span style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.6;">The AI email security platform, because it automatically blocks the most AI-generated attack emails</span>
+  </div>
+<div class="quiz-opt" id="q5-B" onclick="selectOpt(5,'B')" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;font-family:'Georgia',serif;">
+    <span style="width:26px;height:26px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0;color:#6b7280;-webkit-text-fill-color:#6b7280;">B</span>
+    <span style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.6;">Employee training on lookalike domains, because it addresses the root cause of successful BEC attacks</span>
+  </div>
+<div class="quiz-opt" id="q5-C" onclick="selectOpt(5,'C')" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;font-family:'Georgia',serif;">
+    <span style="width:26px;height:26px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0;color:#6b7280;-webkit-text-fill-color:#6b7280;">C</span>
+    <span style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.6;">The out-of-band verification policy, because it defeats the attack even when the AI email filter fails and even when the employee is convinced by the email’s personalization — no wire transfer proceeds without independent confirmation</span>
+  </div>
+<div class="quiz-opt" id="q5-D" onclick="selectOpt(5,'D')" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;font-family:'Georgia',serif;">
+    <span style="width:26px;height:26px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0;color:#6b7280;-webkit-text-fill-color:#6b7280;">D</span>
+    <span style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.6;">The AI email security platform, because detecting the AI-generated message is the only way to stop the attack before a human is involved</span>
+  </div>
+  <button onclick="checkQ(5)" id="btn5" style="background:#6b21a8;color:#fff;-webkit-text-fill-color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:0.88rem;font-weight:700;cursor:pointer;margin-top:8px;font-family:'Georgia',serif;">Check Answer</button>
+  <div id="fb5" style="display:none;margin-top:14px;padding:14px 16px;border-radius:8px;font-size:0.87rem;font-family:'Georgia',serif;line-height:1.65;"></div>
+</div>
+</div>
+<div id="quizResults" style="display:none;background:#f5f0ff;border:1px solid #ddd6fe;border-radius:12px;padding:24px;text-align:center;margin-bottom:24px;">
+  <div style="font-size:2rem;font-weight:800;color:#6b21a8;-webkit-text-fill-color:#6b21a8;font-family:'Georgia',serif;">
+<span id="qzScore">0 / 5</span>
+</div>
+  <p id="qzMsg" style="font-size:0.92rem;color:#374151;-webkit-text-fill-color:#374151;margin:12px 0 0;font-family:'Georgia',serif;"></p>
+  <a href="/pages/ap-cyber-unit-1-exam" style="display:inline-block;margin-top:16px;background:#6b21a8;color:#fff;-webkit-text-fill-color:#fff;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:700;font-size:0.9rem;font-family:'Georgia',serif;">Take Unit 1 Exam →</a>
+</div>
+<div style="display:flex;gap:12px;justify-content:space-between;margin-top:32px;padding-top:24px;border-top:1px solid #e5e7eb;">
+  <a href="/pages/ap-cyber-unit-1-lesson-4-lab" style="display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;font-size:0.88rem;font-weight:700;text-decoration:none;border:2px solid #6b21a8;color:#6b21a8;-webkit-text-fill-color:#6b21a8;font-family:'Georgia',serif;">← Lab</a>
+  <a href="/pages/ap-cyber-unit-1-exam" style="display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;font-size:0.88rem;font-weight:700;text-decoration:none;background:#6b21a8;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">Unit 1 Exam →</a>
+</div>
+</div>
+<script>
+(function(){
+  var sel={},scores={},ANSWERS={1:'B',2:'B',3:'C',4:'C',5:'C'},EXPLS={
+    1:"B — Deepfake video synthesizes the CEO's appearance in real time. The CFO saw natural facial movements — all AI-generated.",
+    2:"B — AI reconnaissance, sometimes called OSINT, gathered the details. Personalizing on them creates credibility that generic phishing lacks, and that is what lowers the target's guard.",
+    3:"C — Systematic improvement in evasion over weeks = adversarial feedback loop: attacker AI adapts to filter blocks in real time.",
+    4:"C — Same underlying AI capabilities serve both sides (NLP, ML, generative models) — creating an arms race requiring continuous model updates.",
+    5:"C — Out-of-band verification defeats BEC at the authorization layer, making email AI quality irrelevant. No email alone can authorize a wire."
+  };
+  var timer,timeLeft=480,started=false,qDone={};
+  window.startTimer=function(){
+    if(started)return;started=true;document.getElementById('timerStart').disabled=true;
+    timer=setInterval(function(){
+      timeLeft--;var m=Math.floor(timeLeft/60),s=timeLeft%60;
+      document.getElementById('timerDisplay').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+      if(timeLeft<=60)document.getElementById('timerDisplay').style.color='#dc2626';
+      if(timeLeft<=0){clearInterval(timer);document.getElementById('timerDisplay').textContent='0:00';showResults();}
+    },1000);
+  };
+  window.selectOpt=function(n,l){
+    if(qDone[n])return;
+    sel[n]=l;
+    for(var k of['A','B','C','D']){
+      var el=document.getElementById('q'+n+'-'+k);
+      if(!el)continue;
+      el.style.background=k===l?'#ede9fe':'#fff';
+      el.style.borderColor=k===l?'#6b21a8':'#e5e7eb';
+    }
+  };
+  window.checkQ=function(n){
+    if(qDone[n])return;
+    if(!sel[n])return;
+    qDone[n]=true;
+    var correct=sel[n]===ANSWERS[n];
+    scores[n]=correct?1:0;
+    var opt=document.getElementById('q'+n+'-'+sel[n]);
+    var correctOpt=document.getElementById('q'+n+'-'+ANSWERS[n]);
+    if(opt){opt.style.background=correct?'#d1fae5':'#fee2e2';opt.style.borderColor=correct?'#059669':'#dc2626';}
+    if(!correct&&correctOpt){correctOpt.style.background='#d1fae5';correctOpt.style.borderColor='#059669';}
+    var fb=document.getElementById('fb'+n);fb.style.display='block';
+    fb.style.background=correct?'#d1fae5':'#fee2e2';fb.style.borderLeft=correct?'3px solid #059669':'3px solid #dc2626';
+    fb.style.color='#374151';fb.style.webkitTextFillColor='#374151';
+    fb.innerHTML='<strong>'+(correct?'✓ Correct':'✗ Incorrect')+'</strong> — '+EXPLS[n];
+    document.getElementById('btn'+n).disabled=true;document.getElementById('btn'+n).style.opacity='0.5';
+    if(Object.keys(scores).length===5)showResults();
+  };
+  function showResults(){
+    clearInterval(timer);
+    var t=Object.values(scores).reduce(function(a,b){return a+b;},0);
+    document.getElementById('qzScore').textContent=t+' / 5';
+    var msg=t>=5?'Perfect. Full mastery of Topic 1.4 AI attack concepts.':t>=4?'Strong. Review the question you missed.':t>=3?'Good. Review AI arms race and out-of-band verification concepts.':t>=2?'Developing. Re-read Topic 1.4 before taking the Unit 1 exam.':'Needs review. Return to Lesson 1.4.';
+    document.getElementById('qzMsg').textContent=msg;
+    document.getElementById('quizResults').style.display='block';
+    document.getElementById('quizResults').scrollIntoView({behavior:'smooth'});
+  }
+})();
+</script>
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id="apcyber-activity-nav"><div class="aan-card">
+<span class="aan-eyebrow">AP Cybersecurity · Unit 1 · Lesson 1.4 · Quiz</span><div class="aan-strip">
+<a class="aan-chip" href="/pages/ap-cybersecurity-unit-1-wireless-security">Lesson</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-1-lesson-4-exercise-1">Exercise 1</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-1-lesson-4-exercise-2">Exercise 2</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-1-lesson-4-lab">Lab</a><span class="aan-sep">•</span><span class="aan-chip cur">Quiz</span><span class="aan-sep">•</span><a class="aan-chip next" href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense">Next: 1.5 Leveraging AI in Cyber Defense →</a>
+</div>
+<div class="aan-up">
+<span class="aan-lbl">Back to:</span><a href="/pages/ap-cybersecurity-unit-1-wireless-security">Lesson 1.4</a><a href="/pages/ap-cybersecurity-unit-1-introduction-to-security">Unit 1 Study Guide</a><a href="/pages/ap-cybersecurity-complete-course-guide">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->

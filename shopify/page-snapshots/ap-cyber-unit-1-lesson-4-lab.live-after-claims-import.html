@@ -1,0 +1,516 @@
+<!-- ============================================================
+  AP CYBERSECURITY | Unit 1 Topic 1.2 | Exercise 1: Password Autopsy
+  Shopify Handle: ap-cyber-unit-1-lesson-2-exercise-1
+  data-lesson-id="1.2-ex1"
+
+  SHOPIFY NOTES:
+  - Unique wrapper: #cyber-ex1-12
+  - Purple theme, Georgia serif, ucnav, full CSS isolation
+  - NO raw emojis - HTML entities only
+  - All buttons: white text forced with :link/:visited/:hover/:active + -webkit-text-fill-color
+
+  CB ALIGNMENT: 1.2.A (signs of attack), 1.2.B (exploit weak auth), 1.2.C (strengthen auth)
+  TIME: 30-40 minutes
+============================================================ -->
+
+<style>
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-lesson.locked{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;cursor:not-allowed!important;}
+#ucnav .ucn-lesson.locked:link,#ucnav .ucn-lesson.locked:visited,#ucnav .ucn-lesson.locked:hover{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;background:transparent!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-lock svg{opacity:.5!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+
+
+/* ===== UNIT NAV ===== */
+@media(max-width:600px){}
+
+/* ===== WRAPPER ===== */
+#cyber-ex1-12{
+  all:initial!important;display:block!important;font-family:'Georgia',serif!important;
+  color:#1E1B4B!important;background:#ffffff!important;line-height:1.6!important;
+  -webkit-font-smoothing:antialiased!important;max-width:940px!important;
+  margin:0 auto!important;padding:20px 16px 60px!important;
+}
+#cyber-ex1-12 *{box-sizing:border-box!important;}
+#cyber-ex1-12{--purple:#6B21A8;--purple-mid:#7C3AED;--purple-light:#A855F7;--purple-bg:#F5F0FF;--purple-border:#DDD6FE;--dark:#1E1B4B;--gray:#6B7280;--gray-light:#F9FAFB;--gray-border:#E5E7EB;--green:#15803D;--green-bg:#F0FDF4;--green-border:#BBF7D0;}
+
+/* ===== HEADER ===== */
+#cyber-ex1-12 .ex-header{
+  background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;
+  border-radius:14px!important;padding:36px 32px!important;margin-bottom:20px!important;
+  color:#ffffff!important;position:relative!important;overflow:hidden!important;
+}
+#cyber-ex1-12 .ex-header::before{content:''!important;position:absolute!important;top:-60px!important;right:-60px!important;width:300px!important;height:300px!important;border-radius:50%!important;background:rgba(168,85,247,0.15)!important;pointer-events:none!important;}
+#cyber-ex1-12 .ex-header::after{content:''!important;position:absolute!important;bottom:-80px!important;left:-40px!important;width:250px!important;height:250px!important;border-radius:50%!important;background:rgba(124,58,237,0.12)!important;pointer-events:none!important;}
+#cyber-ex1-12 .ex-tag{display:inline-block!important;background:rgba(168,85,247,0.25)!important;border:1px solid rgba(168,85,247,0.5)!important;color:#E9D5FF!important;font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;text-transform:uppercase!important;padding:6px 16px!important;border-radius:20px!important;margin-bottom:16px!important;}
+#cyber-ex1-12 .ex-header h1{font-family:'Georgia',serif!important;font-size:28px!important;font-weight:700!important;color:#ffffff!important;margin:0 0 10px!important;line-height:1.3!important;position:relative!important;}
+#cyber-ex1-12 .ex-header p{font-family:'Georgia',serif!important;font-size:15px!important;color:rgba(255,255,255,0.85)!important;margin:0 0 20px!important;line-height:1.6!important;position:relative!important;}
+#cyber-ex1-12 .ex-badges{display:flex!important;flex-wrap:wrap!important;gap:10px!important;position:relative!important;}
+#cyber-ex1-12 .ex-badge{display:inline-flex!important;align-items:center!important;gap:5px!important;background:rgba(168,85,247,0.2)!important;border:1px solid rgba(168,85,247,0.4)!important;color:#E9D5FF!important;padding:5px 14px!important;border-radius:18px!important;font-family:'Georgia',serif!important;font-size:12px!important;font-weight:600!important;}
+
+/* ===== SCORE BAR ===== */
+#cyber-ex1-12 .score-bar{position:relative!important;z-index:50!important;background:linear-gradient(135deg,#1E1B4B,#3B0764)!important;color:#ffffff!important;padding:10px 20px!important;border-radius:10px!important;display:flex!important;justify-content:space-between!important;align-items:center!important;font-family:'Georgia',serif!important;font-size:13px!important;font-weight:600!important;box-shadow:0 4px 12px rgba(30,27,75,0.3)!important;margin-bottom:24px!important;}
+#cyber-ex1-12 .score-bar .score-num{background:var(--purple)!important;padding:4px 14px!important;border-radius:14px!important;font-size:14px!important;font-weight:800!important;color:#ffffff!important;}
+
+/* ===== SECTIONS ===== */
+#cyber-ex1-12 .section{background:#ffffff!important;border:1px solid var(--gray-border)!important;border-radius:12px!important;padding:28px 24px!important;margin-bottom:24px!important;box-shadow:0 2px 8px rgba(0,0,0,0.04)!important;}
+#cyber-ex1-12 .section h2{font-family:'Georgia',serif!important;font-size:18px!important;font-weight:700!important;color:var(--dark)!important;margin:0 0 12px!important;}
+#cyber-ex1-12 .section h3{font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;color:var(--purple)!important;margin:16px 0 8px!important;}
+#cyber-ex1-12 .section p{font-family:'Georgia',serif!important;font-size:14px!important;color:#374151!important;margin:0 0 12px!important;line-height:1.7!important;}
+#cyber-ex1-12 .section-label{display:inline-block!important;background:var(--purple-bg)!important;color:var(--purple)!important;font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1px!important;padding:4px 12px!important;border-radius:4px!important;margin-bottom:12px!important;}
+
+/* ===== PASSWORD SPECIMEN ===== */
+#cyber-ex1-12 .pw-specimen{background:#0f172a!important;border-radius:8px!important;padding:16px 20px!important;margin:12px 0!important;font-family:'Courier New',monospace!important;font-size:20px!important;font-weight:700!important;letter-spacing:2px!important;color:#a78bfa!important;text-align:center!important;border:2px solid #334155!important;}
+#cyber-ex1-12 .pw-context{background:var(--gray-light)!important;border:1px solid var(--gray-border)!important;border-radius:8px!important;padding:12px 16px!important;margin:8px 0 16px!important;font-family:'Georgia',serif!important;font-size:13px!important;color:#475569!important;}
+#cyber-ex1-12 .pw-context strong{color:var(--dark)!important;}
+
+/* ===== FORM FIELDS ===== */
+#cyber-ex1-12 .q-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:14px!important;margin:12px 0!important;}
+@media(max-width:600px){#cyber-ex1-12 .q-grid{grid-template-columns:1fr!important;}}
+#cyber-ex1-12 .q-field{display:flex!important;flex-direction:column!important;gap:4px!important;}
+#cyber-ex1-12 .q-field label{font-family:'Georgia',serif!important;font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:0.5px!important;color:#475569!important;}
+#cyber-ex1-12 .q-field select,#cyber-ex1-12 .q-field textarea{font-family:'Georgia',serif!important;font-size:13px!important;padding:8px 10px!important;border:1px solid var(--purple-border)!important;border-radius:6px!important;background:#ffffff!important;color:var(--dark)!important;resize:vertical!important;}
+#cyber-ex1-12 .q-field select:focus,#cyber-ex1-12 .q-field textarea:focus{outline:none!important;border-color:var(--purple)!important;box-shadow:0 0 0 2px rgba(107,33,168,0.15)!important;}
+#cyber-ex1-12 .q-full{grid-column:1/-1!important;}
+
+/* ===== LOG TABLE ===== */
+#cyber-ex1-12 .log-table{width:100%!important;border-collapse:collapse!important;margin:12px 0!important;font-family:'Courier New',monospace!important;font-size:12px!important;}
+#cyber-ex1-12 .log-table th{background:var(--dark)!important;color:#ffffff!important;padding:8px 10px!important;text-align:left!important;font-family:'Georgia',serif!important;font-size:11px!important;text-transform:uppercase!important;letter-spacing:0.5px!important;}
+#cyber-ex1-12 .log-table td{padding:6px 10px!important;border-bottom:1px solid var(--gray-border)!important;vertical-align:top!important;color:#1e293b!important;}
+#cyber-ex1-12 .log-table tr:nth-child(even) td{background:var(--gray-light)!important;}
+#cyber-ex1-12 .log-table tr.suspicious td{background:#fef2f2!important;color:#991b1b!important;font-weight:600!important;}
+
+/* ===== BUTTONS ===== */
+#cyber-ex1-12 .check-btn{display:inline-block!important;background:var(--purple)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;font-family:'Georgia',serif!important;font-size:14px!important;font-weight:700!important;padding:10px 24px!important;border:none!important;border-radius:8px!important;cursor:pointer!important;margin-top:12px!important;opacity:1!important;visibility:visible!important;text-decoration:none!important;}
+#cyber-ex1-12 .check-btn:hover{background:var(--purple-mid)!important;}
+#cyber-ex1-12 a.check-btn:link,#cyber-ex1-12 a.check-btn:visited,#cyber-ex1-12 a.check-btn:hover,#cyber-ex1-12 a.check-btn:active{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#cyber-ex1-12 .nav-btn-back{background:#475569!important;}
+#cyber-ex1-12 .nav-btn-back:hover{background:#334155!important;}
+
+/* ===== FEEDBACK ===== */
+#cyber-ex1-12 .feedback{display:none!important;border-radius:8px!important;padding:16px 18px!important;margin-top:14px!important;font-family:'Georgia',serif!important;font-size:13px!important;line-height:1.7!important;}
+#cyber-ex1-12 .feedback.show{display:block!important;}
+#cyber-ex1-12 .feedback.correct{background:var(--green-bg)!important;border:1px solid var(--green-border)!important;color:#166534!important;}
+#cyber-ex1-12 .feedback.partial{background:#FFFBEB!important;border:1px solid #FDE68A!important;color:#92400E!important;}
+#cyber-ex1-12 .feedback.incorrect{background:#FEF2F2!important;border:1px solid #FECACA!important;color:#991B1B!important;}
+
+/* ===== RESULTS ===== */
+#cyber-ex1-12 .results-panel{display:none!important;background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;border-radius:12px!important;padding:32px!important;text-align:center!important;color:#ffffff!important;margin-top:24px!important;position:relative!important;overflow:hidden!important;}
+#cyber-ex1-12 .results-panel::before{content:''!important;position:absolute!important;top:-40px!important;right:-40px!important;width:200px!important;height:200px!important;border-radius:50%!important;background:rgba(168,85,247,0.15)!important;pointer-events:none!important;}
+#cyber-ex1-12 .results-panel.show{display:block!important;}
+#cyber-ex1-12 .results-panel h2{font-family:'Georgia',serif!important;font-size:22px!important;color:#ffffff!important;margin:0 0 8px!important;position:relative!important;}
+#cyber-ex1-12 .results-score{font-family:'Georgia',serif!important;font-size:48px!important;font-weight:900!important;color:var(--purple-light)!important;margin:12px 0!important;position:relative!important;}
+#cyber-ex1-12 .results-panel p{font-family:'Georgia',serif!important;font-size:14px!important;color:rgba(255,255,255,0.85)!important;margin:8px 0!important;position:relative!important;}
+
+/* ===== EXAM TIP ===== */
+#cyber-ex1-12 .exam-tip{background:var(--purple-bg)!important;border-left:4px solid var(--purple)!important;border-radius:0 8px 8px 0!important;padding:16px 20px!important;margin:20px 0!important;font-family:'Georgia',serif!important;font-size:14px!important;color:var(--dark)!important;}
+#cyber-ex1-12 .exam-tip strong{color:var(--purple)!important;}
+
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+</style>
+<script>
+function ucnToggle(num){try{event.stopPropagation();}catch(x){}var l=document.getElementById('ucn-l'+num),s=document.getElementById('ucn-s'+num);if(!l||!s)return;var o=l.classList.contains('open');document.querySelectorAll('#ucnav .ucn-lesson').forEach(function(e){e.classList.remove('open')});document.querySelectorAll('#ucnav .ucn-steps').forEach(function(e){e.classList.remove('open')});if(!o){l.classList.add('open');s.classList.add('open');setTimeout(function(){l.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},50)}}
+(function(){
+function pos(){var nav=document.getElementById('ucnav');if(!nav)return;if(nav.parentElement!==document.body){document.body.appendChild(nav)}var h=0;var headerEl=document.querySelector('.section-header header.header')||document.querySelector('sticky-header header')||document.querySelector('header.header');if(headerEl){h=Math.round(headerEl.getBoundingClientRect().bottom)}if(h<20||h>300)h=68;nav.style.setProperty('top',h+'px','important');var navH=nav.offsetHeight||42;var w=document.getElementById('apcyber-wrapper')||document.querySelector('[data-lesson-id]')||document.querySelector('[id^="u3l"]')||document.querySelector('[id^="u1l"]')||document.querySelector('[id^="u2l"]');if(w)w.style.setProperty('padding-top',(h+navH+4)+'px','important')}
+function openCurrentSteps(){var ol=document.querySelector('#ucnav .ucn-lesson.open');if(ol&&ol.id){var n=ol.id.replace('ucn-l','');var s=document.getElementById('ucn-s'+n);if(s)s.classList.add('open');setTimeout(function(){ol.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},100)}}
+requestAnimationFrame(pos);setTimeout(pos,150);setTimeout(pos,400);setTimeout(pos,800);setTimeout(pos,1500);setTimeout(pos,3000);setTimeout(openCurrentSteps,200);
+window.addEventListener('resize',pos,{passive:true});
+setTimeout(function(){var _w=document.getElementById('apcyber-wrapper')||document.querySelector('[id^="u3l"]')||document.querySelector('[id^="u1l"]')||document.querySelector('[id^="u2l"]');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}var _m=document.getElementById('MainContent');if(_m){_m.style.setProperty('padding-top','0','important');_m.style.setProperty('margin-top','0','important')}},50);
+setTimeout(function(){var _w=document.getElementById('apcyber-wrapper')||document.querySelector('[id^="u3l"]');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}},500);
+var scrolled=false;window.addEventListener('scroll',function(){if(!scrolled){scrolled=true;requestAnimationFrame(pos)}},{passive:true});
+var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class','hidden']});setTimeout(function(){obs.disconnect()},15000);
+})();
+</script>
+<div id="ucnav"><div class="ucn-rail" id="ucn-rail">
+<a href="/pages/ap-cybersecurity-complete-course-guide" class="ucn-hub">AP Cyber Hub</a>
+<span class="ucn-badge">Unit 1</span>
+<a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-lesson" onclick="ucnToggle(1);" id="ucn-l1" title="Understanding Social Engineering">1.1 <span class="ucn-chevron">▼</span></a>
+<div class="ucn-steps" id="ucn-s1">
+<a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-step">Lesson</a>
+<a href="/pages/ap-cyber-unit-1-lesson-1-exercise-1" class="ucn-step">Ex 1</a>
+<a href="/pages/ap-cyber-unit-1-lesson-1-exercise-2" class="ucn-step">Ex 2</a>
+<a href="/pages/ap-cyber-unit-1-lesson-1-lab" class="ucn-step">Lab</a>
+<a href="/pages/ap-cyber-unit-1-lesson-1-quiz" class="ucn-step">Quiz</a>
+</div>
+<a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-lesson" onclick="ucnToggle(2);" id="ucn-l2" title="Suspicious Website Logins">1.2 <span class="ucn-chevron">▼</span></a>
+<div class="ucn-steps" id="ucn-s2">
+<a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-step">Lesson</a>
+<a href="/pages/ap-cyber-unit-1-lesson-2-exercise-1" class="ucn-step">Ex 1</a>
+<a href="/pages/ap-cyber-unit-1-lesson-2-exercise-2" class="ucn-step">Ex 2</a>
+<a href="/pages/ap-cyber-unit-1-lesson-2-lab" class="ucn-step">Lab</a>
+<a href="/pages/ap-cyber-unit-1-lesson-2-quiz" class="ucn-step">Quiz</a>
+</div>
+<a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-lesson" onclick="ucnToggle(3);" id="ucn-l3" title="Public Wi-Fi Dangers">1.3 <span class="ucn-chevron">▼</span></a>
+<div class="ucn-steps" id="ucn-s3">
+<a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-step">Lesson</a>
+<a href="/pages/ap-cyber-unit-1-lesson-3-exercise-1" class="ucn-step">Ex 1</a>
+<a href="/pages/ap-cyber-unit-1-lesson-3-exercise-2" class="ucn-step">Ex 2</a>
+<a href="/pages/ap-cyber-unit-1-lesson-3-lab" class="ucn-step">Lab</a>
+<a href="/pages/ap-cyber-unit-1-lesson-3-quiz" class="ucn-step">Quiz</a>
+</div>
+<a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-lesson open" onclick="ucnToggle(4);" id="ucn-l4" title="AI-Based Attacks">1.4 <span class="ucn-chevron">▼</span></a>
+<div class="ucn-steps open" id="ucn-s4">
+<a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-step">Lesson</a>
+<a href="/pages/ap-cyber-unit-1-lesson-4-exercise-1" class="ucn-step">Ex 1</a>
+<a href="/pages/ap-cyber-unit-1-lesson-4-exercise-2" class="ucn-step">Ex 2</a>
+<a href="/pages/ap-cyber-unit-1-lesson-4-lab" class="ucn-step current">Lab</a>
+<a href="/pages/ap-cyber-unit-1-lesson-4-quiz" class="ucn-step">Quiz</a>
+</div>
+<a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-lesson" onclick="ucnToggle(5);" id="ucn-l5" title="AI in Defense">1.5 <span class="ucn-chevron">▼</span></a>
+<div class="ucn-steps" id="ucn-s5">
+<a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-step">Lesson</a>
+<a href="/pages/ap-cyber-unit-1-lesson-5-exercise-1" class="ucn-step">Ex 1</a>
+<a href="/pages/ap-cyber-unit-1-lesson-5-exercise-2" class="ucn-step">Ex 2</a>
+<a href="/pages/ap-cyber-unit-1-lesson-5-lab" class="ucn-step">Lab</a>
+<a href="/pages/ap-cyber-unit-1-lesson-5-quiz" class="ucn-step">Quiz</a>
+</div>
+</div></div>
+<div style="max-width:860px;margin:0 auto;padding:0 16px 60px;">
+<nav style="font-size:0.82rem;color:#6b7280;margin:16px 0 20px;font-family:'Georgia',serif;" aria-label="Breadcrumb">
+  <a href="/" style="color:#6b21a8;text-decoration:none;">Home</a>
+  <span style="margin:0 6px;color:#d1d5db;">›</span>
+  <a href="/pages/ap-cybersecurity-complete-course-guide" style="color:#6b21a8;text-decoration:none;">AP Cybersecurity</a>
+  <span style="margin:0 6px;color:#d1d5db;">›</span>
+  <span style="color:#374151;">Topic 1.4 › Lab</span>
+</nav>
+<nav style="font-size:0.82rem;color:#6b7280;margin:16px 0 20px;font-family:'Georgia',serif;" aria-label="Breadcrumb">
+  <a href="/" style="color:#6b21a8;text-decoration:none;">Home</a>
+  <span style="margin:0 6px;color:#d1d5db;">›</span>
+  <a href="/pages/ap-cybersecurity-complete-course-guide" style="color:#6b21a8;text-decoration:none;">AP Cybersecurity</a>
+  <span style="margin:0 6px;color:#d1d5db;">›</span>
+  <span style="color:#374151;">Topic 1.4 › Lab</span>
+</nav>
+<div style="background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 60%,#7C3AED 100%);border-radius:14px;padding:28px 32px;margin-bottom:28px;color:#fff;">
+  <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#c4b5fd;margin-bottom:8px;font-family:'Georgia',serif;">AP Cybersecurity — Unit 1, Topic 1.4</div>
+  <h1 style="font-size:1.5rem;font-weight:800;color:#fff;-webkit-text-fill-color:#fff;margin:0 0 10px;font-family:'Georgia',serif;">Lab: AI Attack Specimen Dissection</h1>
+  <p style="font-size:0.92rem;color:rgba(255,255,255,.85);-webkit-text-fill-color:rgba(255,255,255,.85);margin:0 0 16px;line-height:1.6;font-family:'Georgia',serif;">You are a cybersecurity analyst at a regional hospital. Four AI-enhanced attack attempts have been flagged for review. Dissect each one: identify the AI technique, the psychological lever, the indicators that reveal it as an attack, and the control that would prevent it.</p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <span style="background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.78rem;font-weight:600;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">Skills 1.A, 1.B, 1.D</span>
+    <span style="background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.78rem;font-weight:600;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">~40–50 min • 4 Specimens • 24 pts</span>
+  </div>
+</div>
+<div style="background:#fef3c7;border-left:4px solid #d97706;border-radius:8px;padding:14px 18px;margin-bottom:24px;">
+  <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#92400e;-webkit-text-fill-color:#92400e;margin-bottom:6px;font-family:'Georgia',serif;">Your Role</div>
+  <p style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.65;margin:0;font-family:'Georgia',serif;">Analyze each specimen with the same rigor you would apply on the AP exam. Each specimen requires: (1) identifying the AI technique, (2) naming the psychological tactic, (3) listing at least two indicators that reveal it as an attack, and (4) naming the specific control. Each specimen is worth 6 points.</p>
+</div>
+
+<div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;margin-bottom:24px;">
+  <div style="background:#1e3a8a;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;">
+    <div>
+<div style="font-size:0.72rem;font-weight:700;color:#bfdbfe;text-transform:uppercase;letter-spacing:.08em;font-family:'Georgia',serif;">Specimen 1 — Introductory</div>
+    <div style="font-size:1rem;font-weight:700;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">The Supplier Invoice Email</div>
+</div>
+    <span style="background:rgba(255,255,255,.15);border-radius:12px;padding:3px 12px;font-size:0.75rem;font-weight:700;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">6 pts</span>
+  </div>
+  <div style="padding:20px 22px;">
+    <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px 18px;margin-bottom:18px;font-family:'Georgia',serif;">
+      <div style="font-size:0.75rem;font-weight:700;color:#6b7280;-webkit-text-fill-color:#6b7280;margin-bottom:10px;">Received by: Dr. Emily Tran, Chief of Medicine, Riverside Hospital</div>
+      <div style="display:grid;grid-template-columns:80px 1fr;gap:6px;font-size:0.84rem;color:#374151;-webkit-text-fill-color:#374151;margin-bottom:12px;">
+        <span style="font-weight:700;">From:</span><span>billing@medica1-supply-group.net</span>
+        <span style="font-weight:700;">Subject:</span><span>Re: MedSurge Supply Order #HS-2024-8847 — Payment Overdue</span>
+        <span style="font-weight:700;">Date:</span><span>March 11, 2026 — 11:42 AM</span>
+      </div>
+      <p style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.6;margin:0 0 8px;">Dr. Tran,</p>
+      <p style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.6;margin:0 0 8px;">Following up on our previous conversation last Tuesday regarding the Q1 surgical supply order. Invoice #HS-2024-8847 for $22,400 is now 31 days overdue. Per our contract terms, a 1.5% late fee will apply after 45 days.</p>
+      <p style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.6;margin:0 0 8px;">Our new banking details are below following our recent acquisition. Please update your records and process payment to the new account by Friday to avoid the late fee. I’ve attached the updated invoice.</p>
+      <p style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.6;margin:0;"><em>Michael Chen<br>Accounts Receivable<br>Medical Supply Group</em></p>
+    </div>
+
+    <p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:0 0 6px;font-family:'Georgia',serif;">AI technique used in this attack:</p>
+    <select id="s1-technique" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin-bottom:14px;">
+      <option value="">-- Select --</option>
+      <option value="spear">AI phishing built on AI reconnaissance (research turned up a real invoice number, a real date, and a real relationship to reference)</option>
+      <option value="deepfake">Deepfake audio of Michael Chen to support the email</option>
+      <option value="clone">Voice cloning used in a follow-up call</option>
+      <option value="malware">AI-generated malware in the attachment</option>
+    </select>
+
+    <p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:0 0 6px;font-family:'Georgia',serif;">List TWO indicators that this is not a legitimate email:</p>
+    <textarea id="s1-indicators" rows="3" placeholder="Indicator 1: ...
+Indicator 2: ..." style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;resize:vertical;margin-bottom:14px;"></textarea>
+
+    <p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:0 0 6px;font-family:'Georgia',serif;">Specific control that prevents this attack from succeeding:</p>
+    <select id="s1-control" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin-bottom:14px;">
+      <option value="">-- Select --</option>
+      <option value="policy">Out-of-band verification: call the known supplier number (not the contact number in the email) to verify any banking detail change before processing payment</option>
+      <option value="filter">Install a better email spam filter to block all supplier emails</option>
+      <option value="training">Train Dr. Tran to recognize poor grammar in phishing emails</option>
+      <option value="encrypt">Encrypt all payment communications with the supplier</option>
+    </select>
+    <button class="check-btn" onclick="checkSpecimen(1)" style="background:#6b21a8;color:#fff;-webkit-text-fill-color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'Georgia',serif;">Check Specimen 1</button>
+    <div id="s1-feedback" style="display:none;margin-top:14px;padding:14px 16px;border-radius:8px;font-size:0.88rem;font-family:'Georgia',serif;line-height:1.6;"></div>
+  </div>
+</div>
+
+<div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;margin-bottom:24px;">
+  <div style="background:#065f46;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;">
+    <div>
+<div style="font-size:0.72rem;font-weight:700;color:#a7f3d0;text-transform:uppercase;letter-spacing:.08em;font-family:'Georgia',serif;">Specimen 2 — Moderate</div>
+    <div style="font-size:1rem;font-weight:700;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">The Board Member Video Call</div>
+</div>
+    <span style="background:rgba(255,255,255,.15);border-radius:12px;padding:3px 12px;font-size:0.75rem;font-weight:700;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">6 pts</span>
+  </div>
+  <div style="padding:20px 22px;">
+    <p style="font-size:0.9rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.65;margin:0 0 16px;font-family:'Georgia',serif;"><strong>Incident report:</strong> The hospital’s CFO joined a video call with what appeared to be two board members to discuss an emergency lease agreement for new MRI equipment. One board member’s video was live and showed the person speaking clearly. The other board member’s audio was present but video was disabled (“camera issue”). The CFO was asked to wire a $185,000 deposit to a leasing company before the end of business. When the CFO later called the board members directly, neither had scheduled or attended any such call.</p>
+
+    <p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:0 0 6px;font-family:'Georgia',serif;">Which AI technique(s) were used? (select the most accurate)</p>
+    <select id="s2-technique" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin-bottom:14px;">
+      <option value="">-- Select --</option>
+      <option value="deepfake">Deepfake video of one board member + voice cloning of the second (camera disabled to avoid deepfake detection)</option>
+      <option value="voice">Voice cloning only — both board members were audio-only</option>
+      <option value="spear">An AI phishing email preceding the video call</option>
+      <option value="account">Compromised board member accounts used to join the call legitimately</option>
+    </select>
+
+    <p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:0 0 6px;font-family:'Georgia',serif;">The second board member had their camera disabled. Why is this a significant indicator of attack?</p>
+    <select id="s2-indicator" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin-bottom:14px;">
+      <option value="">-- Select --</option>
+      <option value="deepfake">Generating a real-time deepfake video is computationally expensive; voice cloning is easier. Attackers often disable the camera for the second person to use voice cloning alone while maintaining the illusion of a multi-person call.</option>
+      <option value="privacy">It indicates a privacy preference and is not suspicious</option>
+      <option value="technical">Camera failures during business calls are common and not indicative of attacks</option>
+      <option value="real">The person with the disabled camera is the real board member</option>
+    </select>
+
+    <p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:0 0 6px;font-family:'Georgia',serif;">Policy that prevents this attack regardless of how realistic the video/audio appears:</p>
+    <textarea id="s2-policy" rows="3" placeholder="Describe the specific policy..." style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;resize:vertical;margin-bottom:14px;"></textarea>
+    <button class="check-btn" onclick="checkSpecimen(2)" style="background:#6b21a8;color:#fff;-webkit-text-fill-color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'Georgia',serif;">Check Specimen 2</button>
+    <div id="s2-feedback" style="display:none;margin-top:14px;padding:14px 16px;border-radius:8px;font-size:0.88rem;font-family:'Georgia',serif;line-height:1.6;"></div>
+  </div>
+</div>
+
+<div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;margin-bottom:24px;">
+  <div style="background:#6b21a8;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;">
+    <div>
+<div style="font-size:0.72rem;font-weight:700;color:#ddd6fe;text-transform:uppercase;letter-spacing:.08em;font-family:'Georgia',serif;">Specimen 3 — Challenging</div>
+    <div style="font-size:1rem;font-weight:700;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">The Evolving Mass Attack</div>
+</div>
+    <span style="background:rgba(255,255,255,.15);border-radius:12px;padding:3px 12px;font-size:0.75rem;font-weight:700;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">6 pts</span>
+  </div>
+  <div style="padding:20px 22px;">
+    <p style="font-size:0.9rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.65;margin:0 0 16px;font-family:'Georgia',serif;"><strong>SIEM Alert:</strong> Email security platform blocked 312 inbound phishing emails over 48 hours. However, analysis shows the blocked emails' characteristics evolved during the campaign: the first 80 emails used the keyword “urgent password reset” (blocked). The next 60 replaced “urgent” with “important” (blocked by updated filter). The final 172 used completely novel phrasing with no overlap with previous trigger words, referenced a real hospital HR portal domain, and scored 0.58 on the phishing classifier (delivered to 44 inboxes).</p>
+
+    <p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:0 0 6px;font-family:'Georgia',serif;">What does the evolving pattern reveal about the attacker’s methodology?</p>
+    <select id="s3-method" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin-bottom:14px;">
+      <option value="">-- Select --</option>
+      <option value="ai">The attacker used AI to monitor which email variants were blocked and automatically rewrite subsequent emails to evade active filter signatures — a real-time adversarial feedback loop</option>
+      <option value="human">A skilled human writer manually rewrote each batch to avoid detection</option>
+      <option value="testing">The attacker was testing different social engineering approaches, not specifically targeting the filter</option>
+      <option value="volume">High email volume automatically produces pattern variation</option>
+    </select>
+
+    <p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:0 0 6px;font-family:'Georgia',serif;">The 172 delivered emails scored 0.58. List TWO defenses that together would address this gap:</p>
+    <textarea id="s3-defenses" rows="4" placeholder="Defense 1: ...
+Defense 2: ..." style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;resize:vertical;margin-bottom:14px;"></textarea>
+    <button class="check-btn" onclick="checkSpecimen(3)" style="background:#6b21a8;color:#fff;-webkit-text-fill-color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'Georgia',serif;">Check Specimen 3</button>
+    <div id="s3-feedback" style="display:none;margin-top:14px;padding:14px 16px;border-radius:8px;font-size:0.88rem;font-family:'Georgia',serif;line-height:1.6;"></div>
+  </div>
+</div>
+
+<div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;margin-bottom:24px;">
+  <div style="background:#7f1d1d;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;">
+    <div>
+<div style="font-size:0.72rem;font-weight:700;color:#fecaca;text-transform:uppercase;letter-spacing:.08em;font-family:'Georgia',serif;">Specimen 4 — Expert</div>
+    <div style="font-size:1rem;font-weight:700;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">The Multi-Vector AI Campaign</div>
+</div>
+    <span style="background:rgba(255,255,255,.15);border-radius:12px;padding:3px 12px;font-size:0.75rem;font-weight:700;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">6 pts</span>
+  </div>
+  <div style="padding:20px 22px;">
+    <p style="font-size:0.9rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.65;margin:0 0 12px;font-family:'Georgia',serif;"><strong>Incident timeline:</strong></p>
+    <div style="border-left:3px solid #7f1d1d;padding-left:16px;margin-bottom:18px;">
+      <p style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;margin:0 0 8px;font-family:'Georgia',serif;"><strong>Week 1:</strong> Hospital posts LinkedIn update about their new HIPAA compliance software deployment. An AI tool scrapes this, identifying the software vendor, IT manager’s name (David Park), and implementation timeline.</p>
+      <p style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;margin:0 0 8px;font-family:'Georgia',serif;"><strong>Week 2:</strong> Five staff members receive a targeted email referencing the HIPAA software deployment, claiming to be from the software vendor’s “compliance team,” requesting they complete “mandatory user setup” through a link. Three click through.</p>
+      <p style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;margin:0 0 8px;font-family:'Georgia',serif;"><strong>Week 3:</strong> One of the three staff members receives a phone call that sounds exactly like David Park (IT manager) saying their account setup requires them to provide their hospital network credentials for “profile migration.”</p>
+      <p style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;margin:0;font-family:'Georgia',serif;"><strong>Week 4:</strong> The staff member’s credentials are used to log into the hospital network from an external IP. SIEM detects unusual access patterns 72 hours after initial login.</p>
+    </div>
+
+    <p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:0 0 6px;font-family:'Georgia',serif;">Name the AI techniques used at each stage (Week 1, Week 2, Week 3):</p>
+    <textarea id="s4-techniques" rows="4" placeholder="Week 1: ...
+Week 2: ...
+Week 3: ..." style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;resize:vertical;margin-bottom:14px;"></textarea>
+
+    <p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:0 0 6px;font-family:'Georgia',serif;">At which stage could a SINGLE control have broken the entire attack chain? Which control?</p>
+    <select id="s4-break" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin-bottom:14px;">
+      <option value="">-- Select --</option>
+      <option value="week3">Week 3: A policy that IT will never request network credentials by phone would have stopped the credential handoff. All prior stages (OSINT, email) produced no direct damage — only the credential theft enabled the breach. Blocking Week 3 renders Weeks 1-2 irrelevant.</option>
+      <option value="week1">Week 1: Removing the hospital’s LinkedIn post would have prevented all subsequent stages</option>
+      <option value="week2">Week 2: A better email filter would have stopped the attack at the phishing stage</option>
+      <option value="week4">Week 4: Faster SIEM detection would have contained the breach earlier</option>
+    </select>
+    <button class="check-btn" onclick="checkSpecimen(4)" style="background:#6b21a8;color:#fff;-webkit-text-fill-color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'Georgia',serif;">Check Specimen 4</button>
+    <div id="s4-feedback" style="display:none;margin-top:14px;padding:14px 16px;border-radius:8px;font-size:0.88rem;font-family:'Georgia',serif;line-height:1.6;"></div>
+  </div>
+</div>
+
+<div id="labScore" style="display:none;background:#f5f0ff;border:1px solid #ddd6fe;border-radius:12px;padding:24px;text-align:center;margin-bottom:24px;">
+  <div style="font-size:2rem;font-weight:800;color:#6b21a8;-webkit-text-fill-color:#6b21a8;font-family:'Georgia',serif;">
+<span id="labTotal">0</span> / 24 pts</div>
+  <p id="labMsg" style="font-size:0.92rem;color:#374151;-webkit-text-fill-color:#374151;margin:12px 0 0;line-height:1.65;font-family:'Georgia',serif;"></p>
+</div>
+<div style="background:#ede9fe;border-left:4px solid #6b21a8;border-radius:8px;padding:16px 18px;margin-bottom:24px;">
+  <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6b21a8;-webkit-text-fill-color:#6b21a8;margin-bottom:6px;font-family:'Georgia',serif;">✎ How to read a multi-stage attack</div>
+  <p style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.65;margin:0;font-family:'Georgia',serif;">Work a multi-stage attack one stage at a time: which AI technique was used at each, what made that stage more effective than the non-AI version, and which single control would have broken the chain at the cheapest point. The answer to #3 is almost always the credential-request stage — because that’s where physical access or system compromise actually occurs.</p>
+</div>
+<div style="display:flex;gap:12px;justify-content:space-between;margin-top:32px;padding-top:24px;border-top:1px solid #e5e7eb;">
+  <a href="/pages/ap-cyber-unit-1-lesson-4-exercise-2" style="display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;font-size:0.88rem;font-weight:700;text-decoration:none;border:2px solid #6b21a8;color:#6b21a8;-webkit-text-fill-color:#6b21a8;font-family:'Georgia',serif;">← Exercise 2</a>
+  <a href="/pages/ap-cyber-unit-1-lesson-4-quiz" style="display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;font-size:0.88rem;font-weight:700;text-decoration:none;background:#6b21a8;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">Quiz →</a>
+</div>
+</div>
+<script>
+(function(){
+  var scores={1:0,2:0,3:0,4:0},done={1:false,2:false,3:false,4:false};
+  function tc(v,ks){var l=v.toLowerCase(),c=0;for(var i=0;i<ks.length;i++)if(l.indexOf(ks[i].toLowerCase())!==-1)c++;return c;}
+  function dis(id){var s=document.getElementById(id);if(!s)return;s.querySelectorAll('textarea,select,button.check-btn').forEach(function(e){e.disabled=true;if(e.tagName==='BUTTON')e.style.opacity='0.5';});}
+  function fb(id,pts,max,html){
+    var el=document.getElementById(id);el.style.display='block';
+    el.style.background=pts>=max*0.8?'#d1fae5':pts>=max*0.5?'#fef3c7':'#fee2e2';
+    el.style.borderLeft=pts>=max*0.8?'3px solid #059669':pts>=max*0.5?'3px solid #d97706':'3px solid #dc2626';
+    el.style.color='#374151';el.style.webkitTextFillColor='#374151';
+    el.innerHTML='<strong>Specimen Score: '+pts+' / '+max+'</strong><br><br>'+html;
+  }
+  function updateLab(){
+    var all=done[1]&&done[2]&&done[3]&&done[4];
+    if(!all)return;
+    var t=scores[1]+scores[2]+scores[3]+scores[4];
+    document.getElementById('labTotal').textContent=t;
+    var msg=t>=22?'Excellent analyst work. You can dissect AI attack techniques, identify indicators, and select effective controls.':t>=16?'Good. Review multi-stage attack chain analysis and the camera-disabled deepfake indicator.':t>=10?'Developing. Re-read Topic 1.4 case studies focusing on the three-part analysis: technique + indicator + control.':'Needs review. Return to Lesson 1.4.';
+    document.getElementById('labMsg').textContent=msg;
+    document.getElementById('labScore').style.display='block';
+    document.getElementById('labScore').scrollIntoView({behavior:'smooth'});
+  }
+  window.checkSpecimen=function(n){
+    if(done[n])return;done[n]=true;var pts=0,det=[];
+    if(n===1){
+      var t=document.getElementById('s1-technique').value;
+      if(t==='spear'){pts+=2;det.push('<strong>Technique:</strong> +2 — Correct. AI phishing, and the invoice number, the date and the relationship all came from AI reconnaissance done before the email was written.');}
+      else det.push('<strong>Technique:</strong> 0 — AI phishing built on AI reconnaissance: the email cites invoice #HS-2024-8847 and a \'previous conversation last Tuesday\', which is research, not guesswork.');
+      var ind=document.getElementById('s1-indicators').value.trim();
+      var indPts=tc(ind,['medica1','domain','medical-supply','1 not l','digit','lookalike','banking','change','acquisition','urgent','Friday','deadline','new account','update record'])>=2?2:tc(ind,['medica1','domain','banking','change','urgent'])>=1?1:0;
+      pts+=indPts;
+      if(indPts>=2)det.push('<strong>Indicators:</strong> +2 — Strong identification of red flags.');
+      else if(indPts===1)det.push('<strong>Indicators:</strong> +1 — Key indicators: (1) medica1-supply-group.net uses digit \'1\' not letter \'l\' — lookalike domain; (2) requesting banking detail change with urgency (Friday deadline) — classic BEC tactic; (3) legitimate suppliers don\'t change banking details mid-invoice.');
+      else det.push('<strong>Indicators:</strong> 0 — Indicators: lookalike domain (medica1 = 1 not l), urgency deadline, banking detail change request, \'recent acquisition\' excuse (a common BEC pretext).');
+      var c=document.getElementById('s1-control').value;
+      if(c==='policy'){pts+=2;det.push('<strong>Control:</strong> +2 — Correct. Out-of-band verification defeats banking change requests regardless of email realism.');}
+      else det.push('<strong>Control:</strong> 0 — Out-of-band verification: call the supplier on their known number (not the one in the email) before updating banking details. Mandatory for any payment change.');
+      scores[1]=pts;fb('s1-feedback',pts,6,det.join('<br>'));dis('s1-technique');dis('s1-indicators');dis('s1-control');var b=document.querySelector('[onclick="checkSpecimen(1)"]');if(b){b.disabled=true;b.style.opacity='0.5';}
+    }
+    if(n===2){
+      var t=document.getElementById('s2-technique').value;
+      if(t==='deepfake'){pts+=2;det.push('<strong>Technique:</strong> +2 — Correct. Deepfake video + voice cloning (camera disabled for the second to avoid real-time deepfake difficulty).');}
+      else det.push('<strong>Technique:</strong> 0 — Deepfake video for the live-camera person; voice cloning for the camera-disabled person. This combination is common — real-time deepfake video is harder than voice cloning alone.');
+      var i=document.getElementById('s2-indicator').value;
+      if(i==='deepfake'){pts+=2;det.push('<strong>Camera indicator:</strong> +2 — Correct. Disabled camera is an indicator of voice-only cloning in a multi-person scenario.');}
+      else det.push('<strong>Camera indicator:</strong> 0 — Generating real-time deepfake video requires significant compute; disabling the camera lets the attacker use cheaper voice cloning for that participant while maintaining a multi-person call illusion.');
+      var p=document.getElementById('s2-policy').value.trim();
+      var pPts=tc(p,['out-of-band','oob','separate','known','call back','verify','policy','wire','transfer','approval','dual','never','video'])>=2?2:tc(p,['verify','call','policy','separate','approval'])>=1?1:0;
+      pts+=pPts;
+      if(pPts>=2)det.push('<strong>Policy:</strong> +2 — Strong. Out-of-band verification for any wire request.');
+      else if(pPts===1)det.push('<strong>Policy:</strong> +1 — Partial. Policy: all wire transfer requests from video/phone calls require out-of-band confirmation via a known contact method. The CFO should call the board member\'s known direct line, not initiate through the meeting platform.');
+      else det.push('<strong>Policy:</strong> 0 — Policy: wire transfers initiated by video/phone call must be verified out-of-band (call the board member on their known number, not through the meeting) before processing. No video call authenticity guarantees authorization.');
+      scores[2]=pts;fb('s2-feedback',pts,6,det.join('<br>'));dis('s2-technique');dis('s2-indicator');dis('s2-policy');var b=document.querySelector('[onclick="checkSpecimen(2)"]');if(b){b.disabled=true;b.style.opacity='0.5';}
+    }
+    if(n===3){
+      var m=document.getElementById('s3-method').value;
+      if(m==='ai'){pts+=2;det.push('<strong>Methodology:</strong> +2 — Correct. Real-time adversarial feedback loop: attacker AI adapted to filter responses.');}
+      else det.push('<strong>Methodology:</strong> 0 — AI adversarial loop: the attacker monitored which emails were blocked and automatically rewrote subsequent batches to evade the updated signatures. This is the AI-vs-AI arms race in practice.');
+      var d=document.getElementById('s3-defenses').value.trim();
+      var dPts=tc(d,['retrain','update','human','review','banner','warning','layer','threshold','lower','ensemble','multiple','model','flag','quarantine'])>=3?4:tc(d,['retrain','human','review','banner','threshold','lower'])>=2?3:tc(d,['retrain','human','review','threshold'])>=1?2:0;
+      pts+=Math.min(dPts,4);
+      if(dPts>=3)det.push('<strong>Defenses:</strong> +4 — Comprehensive defense combination identified.');
+      else if(dPts>=2)det.push('<strong>Defenses:</strong> +3 — Good. Ensure you include both the model layer (retrain on adversarial samples) and the human layer (review/banner for mid-range scores 0.40-0.79).');
+      else if(dPts>=1)det.push('<strong>Defenses:</strong> +2 — Partial. Two complementary defenses: (1) continuous model retraining using the blocked + delivered samples as new training data; (2) add warning banner for emails scoring 0.40-0.79 instead of automatic deliver/block binary decision.');
+      else det.push('<strong>Defenses:</strong> 0 — (1) Retrain the model using the blocked and delivered campaign emails as labeled adversarial training data; (2) Add human review or warning banner for mid-range scores (0.40-0.79) rather than automatic delivery.');
+      scores[3]=pts;fb('s3-feedback',pts,6,det.join('<br>'));dis('s3-method');dis('s3-defenses');var b=document.querySelector('[onclick="checkSpecimen(3)"]');if(b){b.disabled=true;b.style.opacity='0.5';}
+    }
+    if(n===4){
+      var t=document.getElementById('s4-techniques').value.trim();
+      var tPts=tc(t,['osint','scrape','recon','reconnaissance','week 1','intelligence'])>=1&&tc(t,['spear','personali','targeted','week 2','phishing'])>=1&&tc(t,['voice','clone','week 3','cloning'])>=1?4:tc(t,['osint','scrape','spear','personali','voice','clone'])>=2?2:tc(t,['osint','spear','voice'])>=1?1:0;
+      pts+=tPts;
+      if(tPts>=4)det.push('<strong>Techniques:</strong> +4 — All three stages correctly identified.');
+      else if(tPts>=2)det.push('<strong>Techniques:</strong> +2 — Partial. W1: AI reconnaissance (scraped LinkedIn for vendor and IT details); W2: AI phishing (referenced the specific software and the IT manager by name); W3: an AI deepfake of the IT manager\'s voice, asking for credentials.');
+      else det.push('<strong>Techniques:</strong> 0 — W1: AI reconnaissance, scraping public profiles; W2: AI phishing written from what that turned up; W3: an AI deepfake of the IT manager\'s voice.');
+      var b=document.getElementById('s4-break').value;
+      if(b==='week3'){pts+=2;det.push('<strong>Chain-breaking control:</strong> +2 — Correct. Week 3 policy stops the only stage that produces direct system access.');}
+      else det.push('<strong>Chain-breaking control:</strong> 0 — Week 3: the credential-request call. Weeks 1-2 gathered information but caused no direct harm. Week 3 is where physical system access was transferred. A \'IT never requests credentials by phone\' policy makes the entire prior campaign irrelevant.');
+      scores[4]=pts;fb('s4-feedback',pts,6,det.join('<br>'));dis('s4-techniques');dis('s4-break');var b2=document.querySelector('[onclick="checkSpecimen(4)"]');if(b2){b2.disabled=true;b2.style.opacity='0.5';}
+    }
+    updateLab();
+  };
+})();
+</script>
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id="apcyber-activity-nav"><div class="aan-card">
+<span class="aan-eyebrow">AP Cybersecurity · Unit 1 · Lesson 1.4 · Lab</span><div class="aan-strip">
+<a class="aan-chip" href="/pages/ap-cybersecurity-unit-1-wireless-security">Lesson</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-1-lesson-4-exercise-1">Exercise 1</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-1-lesson-4-exercise-2">Exercise 2</a><span class="aan-sep">•</span><span class="aan-chip cur">Lab</span><span class="aan-sep">•</span><a class="aan-chip next" href="/pages/ap-cyber-unit-1-lesson-4-quiz">Quiz →</a>
+</div>
+<div class="aan-up">
+<span class="aan-lbl">Back to:</span><a href="/pages/ap-cybersecurity-unit-1-wireless-security">Lesson 1.4</a><a href="/pages/ap-cybersecurity-unit-1-introduction-to-security">Unit 1 Study Guide</a><a href="/pages/ap-cybersecurity-complete-course-guide">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->

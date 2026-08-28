@@ -127,3 +127,72 @@ lands**, because it is a second sheet for the same page.
 - `updateTracker` is scoped inside the `cfuSubmit` IIFE on 1.2 and 1.4, so four
   submit handlers throw after setting the verdict. Grading and feedback are
   correct; the score display and the scroll are not.
+
+---
+
+## Verified live, all seven, 2026-08-28
+
+Tanner imported all seven. Checked against the live bodies, not the sheets.
+
+```
+page         live bytes   built     match
+1.3 lesson      158517   158517     exact
+1.4 lesson      234267   234263     4 bytes longer, see below
+1.4 ex1          75166    75166     exact
+1.4 ex2          63570    63570     exact
+1.4 lab          64883    64883     exact
+1.4 quiz         61341    61341     exact
+1.5 lesson      259522   259522     exact
+```
+
+### The 1.4 delta is Shopify's normalizer again, and my test for it was wrong
+
+Four newlines inserted directly after `<td>` and before a `<strong>`, the same
+transformation the first 1.2 import applied once. Proven rather than assumed:
+normalizing only `<td>\n` back to `<td>` makes the live body and the built body
+byte-identical, and the live body contains exactly four of those sequences where
+the built body contains none. Four inserted characters, four bytes of delta,
+nothing else changed.
+
+Worth recording that the check nearly missed it. The prefix-plus-suffix test
+used on the earlier imports only recognises a SINGLE contiguous insertion: with
+four separate one-character insertions, common prefix plus common suffix falls
+short of the built length and the page reports as "DIVERGES" rather than as the
+benign normalisation it is. The right test for this class is to normalise the
+one transformation and compare, which is what settled it.
+
+### Every check, run against the live bodies
+
+```
+page         claims  EK  CED  answers painted     verification
+1.3 lesson        0   9   17        0             render check passed
+1.4 lesson        0  16    9        0             render check passed
+1.4 ex1           0   0    0        0             graded 14 correct vs 0 wrong
+1.4 ex2           0   0    0        0             graded 19 correct vs 5 wrong
+1.4 lab           0   0    0        0             graded 12 correct vs 0 wrong
+1.4 quiz          0   0    0        0             5 correct, 0 false positives
+1.5 lesson        0   8   23        0             render check passed
+1.2 lesson        0   0    0        0             closed earlier
+```
+
+**Zero claims about what the exam does anywhere in Unit 1's lesson pages or the
+1.4 artifacts.** That was eleven this morning. No page paints an answer on load.
+
+Live snapshots committed as `*.live-after-claims-import.html`.
+
+## What is left in Unit 1
+
+Thinning, and only thinning. Measured live, right now:
+
+| page | "CED" painted | EK codes painted |
+|---|---|---|
+| 1.1 lesson | 75 | 28 |
+| 1.5 lesson | 23 | 8 |
+| 1.3 lesson | 17 | 9 |
+| 1.4 lesson | 9 | 16 |
+| 1.2 lesson | 0 | 0 |
+
+1.1 is the worst page on the site by a distance, and its two existing modules no
+longer apply because 1.1 was imported in an earlier pass, so it needs fresh
+anchors. 1.4's thinning is now unblocked: its lesson import has landed, so the
+second sheet for that page can be built.
