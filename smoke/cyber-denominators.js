@@ -52,11 +52,33 @@ console.log('1. Per-lesson values, as the pages state them');
   ok('  1.5 exercise-1 is out of 4', POINTS['1.5|exercise-1'] === 4, POINTS['1.5|exercise-1']);
 
   // Units 4 and 5 are covered by the full scan, and lessons the course config
-  // was missing entirely (2.5, 3.6, 4.4, 4.5) are authored too.
+  // was missing entirely (4.4, 4.5) are authored too.
   ok('  4.5 quiz is authored', POINTS['4.5|quiz'] > 0, POINTS['4.5|quiz']);
   ok('  5.6 exercise-2 is authored', POINTS['5.6|exercise-2'] > 0, POINTS['5.6|exercise-2']);
-  ok('  3.6, 4.4 and 4.5 carry values',
-    ['3.6|quiz', '4.4|quiz', '4.5|quiz'].every((k) => POINTS[k] > 0));
+  ok('  4.4 and 4.5 carry values',
+    ['4.4|quiz', '4.5|quiz'].every((k) => POINTS[k] > 0));
+
+  //  Unit 3 was renumbered to the CED on 2026-08-27 and 3.6 is gone: it was
+  //  never a CED topic, and its content is now 3.2. This used to assert
+  //  '3.6|quiz' carried a value. Keeping the retired key here would have
+  //  authored a column for a lesson that no longer exists, which is the same
+  //  defect the 2.5 assertion below exists to prevent.
+  ok('  3.6 is NOT authored, because the CED has no 3.6',
+    !Object.keys(POINTS).some((k) => k.startsWith('3.6|')),
+    Object.keys(POINTS).filter((k) => k.startsWith('3.6|')));
+
+  //  The two halves of CED 3.1 carry separate keys. One shared id would
+  //  collapse eight gradebook columns into four.
+  ok('  3.1a and 3.1b are authored separately',
+    POINTS['3.1a|quiz'] > 0 && POINTS['3.1b|quiz'] > 0,
+    [POINTS['3.1a|quiz'], POINTS['3.1b|quiz']]);
+
+  //  3.5 is the only Unit 3 activity set with its own totals, and the only one
+  //  whose number did not change in the renumbering. If a careless swap had
+  //  mis-keyed the block, this is where it would show.
+  ok('  3.5 kept its own totals through the renumbering',
+    POINTS['3.5|quiz'] === 10 && POINTS['3.5|lab'] === 24,
+    [POINTS['3.5|quiz'], POINTS['3.5|lab']]);
 
   // Cyber Unit 2 is 2.1 through 2.4. A 2.5 page set exists on the storefront
   // but the lesson does not exist in the course, so authoring it would render a

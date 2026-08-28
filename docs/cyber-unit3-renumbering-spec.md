@@ -185,13 +185,20 @@ safety check sharp beats making an invisible id read nicely.
 1. **30 Shopify pages** via one Matrixify sheet, `Command: MERGE`, columns
    `ID, Handle, Title, Body HTML, Command`. Titles, H1s, breadcrumbs, nav strips,
    section numbers, `data-lesson-id`, and the JSON-LD headline.
-2. **`utils.js`**, the cyber numbered rule. It derives the lesson from the handle
-   for `/track` visits, so `ap-cyber-unit-3-lesson-3` currently files visits under
+2. **`utils.js`**, the cyber numbered rule. DONE. It derives the lesson from the
+   handle for `/track` visits, so `ap-cyber-unit-3-lesson-3` filed visits under
    `3.3`. Because CED 3.1 spans two pages the handle index is offset from the
-   topic number for every lesson after the pair, so an explicit map is required.
-   It follows the `CYBER_SLUGS` pattern already in that file.
-3. **`scripts/seed-cyber-denominators.js`**, Unit 3 keys `3.1` and `3.2` become
-   `3.1a` and `3.1b`, `3.6` disappears, and the rest shift to their CED numbers.
+   topic number for every lesson after the pair, so an explicit map is required;
+   it follows the `CYBER_SLUGS` pattern already in that file. The `unit-3`
+   `lessons` array in `COURSES` moved with it, because an authored denominator
+   for a lesson the config does not list builds no column and is unreachable.
+   Pinned by `smoke/cyber-unit3-lessons.js`.
+3. **`scripts/seed-cyber-denominators.js`**, DONE. Unit 3 keys `3.1` and `3.2`
+   became `3.1a` and `3.1b`, `3.6` is gone, and the rest shifted to their CED
+   numbers. Each value stayed with the ACTIVITY it was measured from rather than
+   with the number it used to sit under. Four of the six were numerically
+   identical, so 3.5 is the only set a careless swap could have mis-keyed, and it
+   is asserted directly in `smoke/cyber-denominators.js`.
 4. **`course_manifest` and `course_denominators` in production.** Unit 3 rows
    keyed on the old lesson ids. Additive insert plus removal of the retired keys;
    `POST /api/admin/denominators/remove` exists for the second half.

@@ -86,8 +86,20 @@ const COURSES = {
       },
       'unit-3': {
         label: 'Unit 3: Securing Networks',
-        // 3.6 likewise: real content, no column.
-        lessons: ['3.1', '3.2', '3.3', '3.4', '3.5', '3.6'],
+        //  Renumbered to the Fall 2026 CED on 2026-08-27. The CED has five Unit
+        //  3 topics and the site teaches six pages, because CED 3.1 runs over
+        //  two: 3.1a is Network Fundamentals and 3.1b is Network Attacks. The
+        //  retired 3.6 was never a CED topic; its content is now 3.2.
+        //
+        //  Two ids for one topic is what keeps the gradebook honest. A column
+        //  is keyed `${lesson}|${activity}` and the grade of record is per
+        //  (student, lesson, activity), so one shared id would collapse eight
+        //  columns into four and let a better score on one half mask the other.
+        //
+        //  docs/cyber-unit3-renumbering-spec.md carries the full mapping;
+        //  utils.js pageFromHandle and scripts/seed-cyber-denominators.js must
+        //  agree with this list, and smoke/cyber-unit3-lessons.js pins that.
+        lessons: ['3.1a', '3.1b', '3.2', '3.3', '3.4', '3.5'],
         activities: ['lesson', 'exercise-1', 'exercise-2', 'quiz'],
         case_file: { lesson: 'case-file', label: 'Case File' },
         exam: { lesson: 'exam', label: 'Unit Exam' },
@@ -602,13 +614,50 @@ function pageFromHandle(raw) {
   // that, a leftover page set from an earlier cut of Unit 2. Listing it here
   // keeps it untracked, which is the same choice the unmapped slugs above make.
   const CYBER_NOT_IN_COURSE = new Set(['2.5']);
+
+  //  UNIT 3 IS NOT unit.handleNumber, AND CANNOT BE.
+  //
+  //  Unit 3's pages were renumbered to the Fall 2026 CED, which the site had
+  //  wrong in three ways at once: site 3.3 and 3.4 were each other's CED
+  //  topics, site 3.6 was CED 3.2, and site 3.1 and 3.2 are two halves of one
+  //  CED topic. Six handles, five topics. See
+  //  docs/cyber-unit3-renumbering-spec.md.
+  //
+  //  That doubled topic is what makes an explicit map unavoidable rather than
+  //  merely tidy: with two handles sharing CED 3.1, every handle after the pair
+  //  is offset by one from its topic number, so no arithmetic on the handle
+  //  index can recover the lesson. Left to the generic rule below, a visit to
+  //  lesson-3 files under 3.3 when the page now teaches 3.2, and the work lands
+  //  on a lesson the student never opened.
+  //
+  //  The a/b suffixes are the gradebook's, not decoration: a column is keyed on
+  //  `${lesson}|${activity}` and the grade of record is per (student, lesson,
+  //  activity), so both halves sharing the id `3.1` would collapse into one
+  //  column per activity and let a better score on one part mask the other.
+  //
+  //  Same shape as CYBER_SLUGS above, and the same reason: a handle whose
+  //  number no longer states its lesson needs the mapping written down.
+  const CYBER_UNIT3_LESSONS = {
+    1: '3.1a',  // Network Fundamentals and Attack Surface, CED 3.1 LO B/C
+    2: '3.1b',  // Network Attacks,                         CED 3.1 LO A
+    3: '3.2',   // Network Security Policies and Wireless,  CED 3.2
+    4: '3.3',   // Network Segmentation and VLANs,          CED 3.3
+    5: '3.4',   // Firewalls and Packet Filtering,          CED 3.4
+    6: '3.5',   // IDS, IPS and SIEM,                       CED 3.5
+  };
+
   m = h.match(/^ap-cyber-unit-(\d+)-exam$/);
   if (m) return { course: 'ap-cybersecurity', unit: 'unit-' + m[1], lesson: 'exam', activity_type: 'exam' };
   m = h.match(/^ap-cyber-unit-(\d+)-lesson-(\d+)/);
   if (m) {
-    const lesson = m[1] + '.' + m[2];
-    if (CYBER_NOT_IN_COURSE.has(lesson)) return null;
-    return { course: 'ap-cybersecurity', unit: 'unit-' + m[1], lesson, activity_type: trailingActivity(h) };
+    const unitNo = m[1];
+    const lesson = unitNo === '3'
+      ? CYBER_UNIT3_LESSONS[Number(m[2])]
+      : unitNo + '.' + m[2];
+    //  An unmapped Unit 3 handle stays untracked rather than being invented
+    //  into a lesson, the same choice the unmapped slugs above make.
+    if (!lesson || CYBER_NOT_IN_COURSE.has(lesson)) return null;
+    return { course: 'ap-cybersecurity', unit: 'unit-' + unitNo, lesson, activity_type: trailingActivity(h) };
   }
 
   return null; // unknown page, /track no-ops

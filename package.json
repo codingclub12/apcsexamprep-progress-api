@@ -170,7 +170,8 @@
     "seocsv": "node scripts/seo-metadata-csv.js",
     "verify:sharing": "node scripts/verify-slide-sharing.js",
     "smoke:netlabreporter": "node smoke/networking-lab-reporter.js",
-    "verify:netreporting": "node scripts/verify-networking-reporting.js"
+    "verify:netreporting": "node scripts/verify-networking-reporting.js",
+    "smoke:cyberunit3": "node smoke/cyber-unit3-lessons.js"
   },
   "keywords": [],
   "author": "",
