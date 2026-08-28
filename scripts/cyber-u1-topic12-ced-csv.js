@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 'use strict';
 // -----------------------------------------------------------------------------
-//  BUILD THE MATRIXIFY SHEET FOR THE TOPIC 1.4 CED REALIGNMENT.
+//  BUILD THE MATRIXIFY SHEET FOR THE TOPIC 1.2 CED REALIGNMENT.
 //
 //  Run:
-//    node scripts/cyber-u1-topic14-ced-csv.js out/topic14.csv [--live page.json]
+//    node scripts/cyber-u1-topic12-ced-csv.js out/topic12.csv [--live page.json]
 //                                             [--show-changes] [--html out.html]
 //
 //  ---- WHAT THIS GATE EXISTS TO CATCH ---------------------------------------
@@ -30,20 +30,23 @@
 
 const fs = require('fs');
 const path = require('path');
-const mod = require('../lib/cyber-u1-topic14-ced');
+const mod = require('../lib/cyber-u1-topic12-ced');
 const gate0 = require('../lib/cyber-page-gate');
 
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 '
   + '(KHTML, like Gecko) Chrome/126.0 Safari/537.36';
 
-//  Terms the CED does not contain that name a delivery channel or a legacy
-//  category. Naming one is fine. Putting one in an "Attack Type" cell is not.
-const LEGACY = ['spear phishing', 'spear-phishing', 'vishing', 'smishing', 'whaling',
-  'baiting', 'quid pro quo', 'polymorphic'];
+//  Off-CED for THIS topic. Every one is a real thing and several are taught on
+//  this page as enrichment, which is allowed. What is not allowed is one of them
+//  sitting in a column that tells a student what the exam will ask.
+const LEGACY = ['brute force', 'credential stuffing', 'password spraying',
+  'rainbow table', 'keyspace', 'bcrypt', 'argon2', 'nist'];
 
-//  The vocabulary the topic is actually built on.
-const CED_TERMS = ['digital avatar', 'ai phishing', 'prompt injection', 'data poisoning',
-  'reconnaissance', 'ai malware', 'shared secret', 'multi-factor', 'reputable'];
+//  Topic 1.2's seven Essential Knowledge statements, in the words a student
+//  would actually write.
+const CED_TERMS = ['common password', 'common pattern', 'stolen password',
+  'dictionary attack', 'failed attempt', 'unusual', 'unknown device',
+  'long, random', 'unique', 'passphrase', 'password manager', 'multi-factor'];
 
 async function readLive(handle, file) {
   if (file) return JSON.parse(fs.readFileSync(file, 'utf8')).page;
@@ -168,6 +171,49 @@ function gate(before, after) {
     }
   }
 
+  // ---- 3b. an AP claim standing next to off-CED content --------------------
+  //  The check the first pass did not have, and the one that would have caught
+  //  nine of the ten defects a human found in the built sheet. See the long
+  //  note on apClaimsNear in lib/cyber-page-gate.js: labelling a section as
+  //  enrichment is worth nothing while another part of the page calls the same
+  //  material testable.
+  //
+  //  The exemptions are the sentences whose entire job is to say a term is NOT
+  //  examined. Every one of them has to be unreadable as a requirement; if a
+  //  phrase here could be read either way it does not belong here.
+  const NEAR = ['rainbow', 'salt', 'bcrypt', 'argon', 'nist', 'spraying',
+    'credential stuffing', 'brute force', 'lockout', 'rate limiting'];
+  const EXEMPT = [
+    'not assessed in this topic',
+    'they are not what you will be asked about here',
+    'None of it is what this topic asks you about',
+    'it is a different question from the one this topic asks',
+    'and not of this topic',
+    'knowing they are not assessed here',
+  ];
+  const visText = flat(after.replace(/<script[^>]*>[\s\S]*?<\/script>/g, ' '));
+  for (const c of gate0.apClaimsNear(visText, NEAR, { pad: 500, exempt: EXEMPT })) {
+    fail.push(`AP claim beside off-CED content: ${c}`);
+  }
+  //  flat() strips <script>, so the FAQPage structured data has to be read on
+  //  its own. It is not rendered, it is what a search result quotes, and it
+  //  carried a verbatim copy of the worst answer on the page.
+  for (const m of after.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+    for (const c of gate0.apClaimsNear(m[1], NEAR, { pad: 500, exempt: EXEMPT })) {
+      fail.push(`AP claim in structured data: ${c}`);
+    }
+  }
+
+  //  ---- 3c. a claim about what the exam does --------------------------------
+  //  Ported from the Topic 1.3 gate, where one sentence of it survived. The
+  //  page is not allowed to tell a student what the exam commonly asks, however
+  //  true the surrounding content is: 1.2.9 was three screens of invented
+  //  question patterns written in exactly this voice.
+  const ASSERTS = /\b(?:is|are|remain|tend to be|will be)\s+(?:a\s+)?(?:high[- ]frequency|very\s+)?(?:common|frequent|typical|favou?rite)|\bfrequently\b|\bcommonly\b|\bexpect\s+(?:scenario|question|to see)|\bhigh-frequency\b|\balways asks\b/i;
+  for (const m of visText.matchAll(/[^.!?]{0,120}\b(?:AP )?exam[^.!?]{0,120}/gi)) {
+    if (ASSERTS.test(m[0])) fail.push(`a claim about what the exam does: ${JSON.stringify(m[0].trim().slice(0, 90))}`);
+  }
+
   // ---- 4. the graded keys of every CFU, before against after ----------------
   const keys = (b) => [...b.matchAll(/id="(cfu-\d+)"[^>]*data-answer="([A-E])"/g)]
     .map((m) => `${m[1]}=${m[2]}`).join(' ');
@@ -216,6 +262,13 @@ function gate(before, after) {
   }).filter(Boolean);
   note.push(`legacy terms still named: ${leg.join(', ')}`);
 
+  // ---- 8b. every splice that was written is actually wired ------------------
+  //  cfu-5 shipped with feedback for the question it used to be because its
+  //  splice was defined and never added to SPLICES. Nothing downstream could
+  //  see that, because a gate reads output and an unwired splice produces none.
+  fail.push(...gate0.unwiredSplices(fs.readFileSync(
+    path.join(__dirname, '..', 'lib', 'cyber-u1-topic12-ced.js'), 'utf8')));
+
   // ---- 9. the sentences a human has to read --------------------------------
   const changed = gate0.changedSentences(before, after, flat);
   note.push(`sentences changed: ${changed.length}`);
@@ -226,7 +279,7 @@ async function main() {
   const out = process.argv[2];
   const show = process.argv.includes('--show-changes');
   if (!out) {
-    console.error('usage: node scripts/cyber-u1-topic14-ced-csv.js <out.csv> [--live page.json] [--show-changes] [--html f.html]');
+    console.error('usage: node scripts/cyber-u1-topic12-ced-csv.js <out.csv> [--live page.json] [--show-changes] [--html f.html]');
     process.exit(2);
   }
   const liveIdx = process.argv.indexOf('--live');
@@ -267,7 +320,7 @@ async function main() {
   console.log(`wrote ${out}  (${fs.statSync(out).size} bytes, 1 row, Command MERGE)`);
 }
 
-//  gate() is exported so scripts/cyber-u1-topic14-gate-sabotage.js can drive it
+//  gate() is exported so scripts/cyber-u1-topic12-gate-sabotage.js can drive it
 //  directly. The suite used to scrape this function out of the file with a
 //  regex, which quietly stopped matching the moment the source was reformatted
 //  and reported every sabotage as MISSED. Exporting it is the honest version:

@@ -108,12 +108,95 @@ bad-key error, because the fix is to widen the manifest deliberately.
   wrong if the manifest registry had not taken effect, so they are the ones
   worth reading.
 
+## The conversion, and the four runs it took
+
+Written up here because the log line that exposed it is the only thing that did.
+
+- **Run 1: `ReferenceError: Drive is not defined`, all 70 failed.** The
+  Advanced Drive Service was not enabled, and `DriveApp` cannot convert a
+  `.pptx`. The Logger said only "converted 0, failed 70"; the actual error was
+  in the sheet's status column. PR #376 adds `preflight_()`, which throws with
+  the enabling steps before a folder, a sheet or 70 rows of identical errors
+  exist, plus `clearStaleRows_()` so a failed run does not poison the resume.
+- **Runs 2, 3 and 4 each converted all 70 again.** About 209 Google Slides
+  files where 70 were wanted, roughly three copies of each deck, confirmed in
+  Drive at 21:52, 22:01 and 22:07 by identical sizes. Nothing errored. The only
+  symptom was one line:
+
+  ```
+  work list: 70 deck(s) to convert, 70 already done, 70 total
+  ```
+
+  which cannot be true at once. Every lesson id in Units 1 and 2 is also a
+  valid month-day, all nine of them, so Sheets parsed `'1-1'` on write and
+  `getValues()` handed back a Date. The resume key became
+  `Thu Jan 01 2026 00:00:00 GMT-0500 (EST)|1|STUDENT` and matched nothing.
+  PR #381 formats column A as plain text so a new sheet never coerces, and
+  `normLesson_` recovers the id from a Date so an already-written sheet
+  resumes rather than having to be discarded.
+- **CSP was not affected.** `config/csp-slide-embeds.js` holds 224 ids and 224
+  unique ids, and the generator refuses duplicate deck slots, so it could not
+  have written that file from a coerced sheet. Checked rather than assumed,
+  because CSP lesson ids have the same shape.
+- **Recovery.** The `AP Cyber Slides (converted)` folder was moved to Drive
+  trash, taking the poisoned sheet and all ~209 copies with it. `outputFolder_`
+  resolves by name via `getFoldersByName`, which excludes trashed items, so the
+  next run creates a fresh folder and a fresh sheet. `start()` clears its own
+  continuation triggers on completion, so nothing was queued behind it.
+
+Nothing incorrect could have reached the site in the meantime:
+`scripts/cyber-slide-embeds-from-csv.js` refuses a sheet with duplicate deck
+slots outright. That guard was written for a different scenario, a shared id
+across variants, and caught this one for free.
+
+## Outcome: the gate is live
+
+- **The conversion ran clean.** 70 decks, 70 unique ids, zero duplicates, from
+  a fresh folder. It took two passes: Drive rate-limited four copies on the
+  first, and the second pass converted **exactly those four and nothing else**
+  (`2-1 Day8 STUDENT`, `2-2 Day1 TEACHER`, `2-2 Day5 STUDENT`,
+  `2-4 Day2 TEACHER`, 22:39:58 to 22:40:06). That is what #381 bought: before
+  it, a second pass meant another 70 copies. `alreadyDone_` keys only on rows
+  whose status is `OK`, so failures retry and successes never do.
+- **Evidence, in the order it was gathered.** Drive listing matched the
+  per-lesson deck counts exactly (1-1:4, 1-2:8, 1-3:8, 1-4:4, 1-5:4, 2-1:16,
+  2-2:10, 2-3:8, 2-4:8). The sheet CSV read 70 rows, 70 `OK`, 70 unique ids,
+  with column A holding `1-1` as text rather than a date, so the #381 fix held
+  at the source and not merely in the reader. `verify:sharing` returned 70/70
+  anonymously with both controls behaving. Two decks were then read end to end,
+  including one from the second pass, because sharing proves reachability and
+  says nothing about whether a deck converted blank.
+- **Merged as #385 and verified against the live API**, not against the merge.
+  Every cyber lesson returns `locked:true`, `decks:null` and zero
+  `docs.google.com` strings to an unauthenticated caller; `3-1` still 404s;
+  `ap-csp/1-1` unchanged. The ids reach an entitled caller and nobody else.
+
 ## Still open
 
-- **The conversion has not run.** 70 decks are still `.pptx` in Drive, so
-  `config/cyber-slide-embeds.js` is empty and every cyber lesson currently
-  reports zero decks to an entitled teacher. That is a working state by design,
-  and it is why the pending branch exists.
+- **CED Essential Knowledge codes are in the student decks.** Found while
+  reading decks to prove content survived, so it is unrelated to the gate and
+  was not introduced by it. `CLAUDE.md` says these never go in front of
+  students. `1-1 Day1 STUDENT` carries roughly 15 in visible body text,
+  including "Name the two tactics the CED specifies - intimidation and urgency
+  (EK 1.1.A.2)" on the objectives slide and an EK citation ending every
+  vocabulary card. `2-2 Day5 STUDENT` has a review table with a literal `EK`
+  column. Two decks, two units, both hit, which reads as the deck template
+  rather than a slip; at that rate it is several hundred across the 35 student
+  decks in Units 1 and 2.
+
+  The shape is the useful part: `docs/ap-cyber-unit1-ced-realignment.md`
+  records this exact problem being found and fixed in the Topic 1.1 lesson
+  PAGE. The decks for that same topic still have it. The cleanup landed on one
+  surface and not the other, which is worth checking for whenever a content
+  rule gets enforced anywhere. The sources are `.pptx` files in Drive, outside
+  both repos. `tools/ap-cyber-ced/validate_csv.py` counts them.
+- **No screenshot of a real deck inside the viewer iframe.** The panel around
+  it is photographed at both widths with real ids and is correct. The deck is
+  not, and cannot be from here: Chromium reaches no https host at all through
+  the agent proxy (`example.com`, `cdnjs` and `google.com` all
+  ERR_CONNECTION_RESET) while curl reaches all of them, so it is browser egress
+  rather than anything about Google or the decks. `screenshots-real-deck.js` in
+  the theme repo does it in one run anywhere with a normal network.
 - **No screenshots yet**, at either width. The CSP build found two real defects
   that passed every DOM assertion and were only visible in a picture. Nothing
   here has been photographed, because there is nothing to photograph until
@@ -173,3 +256,38 @@ and what actually shipped are exactly the two things that silently diverge.
 **Commit the handover script.** The CSP Apps Script was pasted into a chat and
 is gone, so this one was rewritten from its description. `scripts/
 cyber-slides-conversion.gs` is in the repo, and its enumeration has a suite.
+
+**An impossible log line is worth more than a correct one.** "70 to convert, 70
+already done, 70 total" is self-contradictory, and it was the entire diagnosis.
+That line exists because a pasted CSP log once claimed a completion whose
+timestamps could not have been real, and it was added so such a log would be
+checkable. It earned its place a second time on a bug nobody anticipated. When
+a run has a resume step, print both sides of the comparison, not the verdict.
+
+**A spreadsheet is a typed store pretending not to be one.** `appendRow('1-1')`
+does not store `'1-1'`. Every id in scope here happened to be a valid month-day,
+so the coercion was total rather than partial, which is the only reason it was
+ever noticed; one id in nine converting would have looked like a flake. Any key
+that round-trips through Sheets needs the column formatted as text on write AND
+a normaliser on read, because the first protects new sheets and only the second
+rescues the ones already written.
+
+**A guard built for one scenario is worth checking against the new one.** The
+generator's duplicate-slot refusal was written for a shared id across variants.
+It is the reason a triple-converted sheet could not produce a config, so the
+blast radius of four bad runs was some wasted Drive quota and no site impact.
+Worth asking, after any incident, which existing guard held and why, because
+that is what tells you where the next one should go.
+
+**A content rule enforced on one surface is not enforced.** The EK codes were
+hunted down and removed from the Topic 1.1 lesson page, and that work is
+written up. The slide decks for the same topic, teaching the same objectives,
+kept every one of them. Nothing connected the two, because the rule lived in
+prose and the enforcement lived in a script pointed at one file type. Worth
+asking, whenever a content rule is enforced: what else renders this content?
+
+**Reachable is not rendered, and neither is proof of the other.** 70/70
+credential-free fetches say every deck is shared. They say nothing about
+whether a deck converted to blank slides, which is why two were read end to
+end. The sharing script says so itself, in its own output, because the CSP
+build learned it the hard way.

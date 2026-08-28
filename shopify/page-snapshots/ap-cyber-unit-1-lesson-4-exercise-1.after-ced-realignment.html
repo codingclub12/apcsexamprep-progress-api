@@ -1,0 +1,596 @@
+<!-- AP CYBERSECURITY AP-CYBER-UNIT-1-LESSON-4-EXERCISE-1 -->
+<!-- ============================================================
+  AP CYBERSECURITY | Unit 1 Topic 1.2 | Exercise 1: Password Autopsy
+  Shopify Handle: ap-cyber-unit-1-lesson-2-exercise-1
+  data-lesson-id="1.2-ex1"
+
+  SHOPIFY NOTES:
+  - Unique wrapper: #cyber-ex1-12
+  - Purple theme, Georgia serif, ucnav, full CSS isolation
+  - NO raw emojis - HTML entities only
+  - All buttons: white text forced with :link/:visited/:hover/:active + -webkit-text-fill-color
+
+  CB ALIGNMENT: 1.2.A (signs of attack), 1.2.B (exploit weak auth), 1.2.C (strengthen auth)
+  TIME: 30-40 minutes
+============================================================ -->
+
+<style>
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-lesson.locked{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;cursor:not-allowed!important;}
+#ucnav .ucn-lesson.locked:link,#ucnav .ucn-lesson.locked:visited,#ucnav .ucn-lesson.locked:hover{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;background:transparent!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-lock svg{opacity:.5!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+
+
+/* ===== UNIT NAV ===== */
+@media(max-width:600px){}
+
+/* ===== WRAPPER ===== */
+#cyber-ex1-12{
+  all:initial!important;display:block!important;font-family:'Georgia',serif!important;
+  color:#1E1B4B!important;background:#ffffff!important;line-height:1.6!important;
+  -webkit-font-smoothing:antialiased!important;max-width:940px!important;
+  margin:0 auto!important;padding:20px 16px 60px!important;
+}
+#cyber-ex1-12 *{box-sizing:border-box!important;}
+#cyber-ex1-12{--purple:#6B21A8;--purple-mid:#7C3AED;--purple-light:#A855F7;--purple-bg:#F5F0FF;--purple-border:#DDD6FE;--dark:#1E1B4B;--gray:#6B7280;--gray-light:#F9FAFB;--gray-border:#E5E7EB;--green:#15803D;--green-bg:#F0FDF4;--green-border:#BBF7D0;}
+
+/* ===== HEADER ===== */
+#cyber-ex1-12 .ex-header{
+  background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;
+  border-radius:14px!important;padding:36px 32px!important;margin-bottom:20px!important;
+  color:#ffffff!important;position:relative!important;overflow:hidden!important;
+}
+#cyber-ex1-12 .ex-header::before{content:''!important;position:absolute!important;top:-60px!important;right:-60px!important;width:300px!important;height:300px!important;border-radius:50%!important;background:rgba(168,85,247,0.15)!important;pointer-events:none!important;}
+#cyber-ex1-12 .ex-header::after{content:''!important;position:absolute!important;bottom:-80px!important;left:-40px!important;width:250px!important;height:250px!important;border-radius:50%!important;background:rgba(124,58,237,0.12)!important;pointer-events:none!important;}
+#cyber-ex1-12 .ex-tag{display:inline-block!important;background:rgba(168,85,247,0.25)!important;border:1px solid rgba(168,85,247,0.5)!important;color:#E9D5FF!important;font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;text-transform:uppercase!important;padding:6px 16px!important;border-radius:20px!important;margin-bottom:16px!important;}
+#cyber-ex1-12 .ex-header h1{font-family:'Georgia',serif!important;font-size:28px!important;font-weight:700!important;color:#ffffff!important;margin:0 0 10px!important;line-height:1.3!important;position:relative!important;}
+#cyber-ex1-12 .ex-header p{font-family:'Georgia',serif!important;font-size:15px!important;color:rgba(255,255,255,0.85)!important;margin:0 0 20px!important;line-height:1.6!important;position:relative!important;}
+#cyber-ex1-12 .ex-badges{display:flex!important;flex-wrap:wrap!important;gap:10px!important;position:relative!important;}
+#cyber-ex1-12 .ex-badge{display:inline-flex!important;align-items:center!important;gap:5px!important;background:rgba(168,85,247,0.2)!important;border:1px solid rgba(168,85,247,0.4)!important;color:#E9D5FF!important;padding:5px 14px!important;border-radius:18px!important;font-family:'Georgia',serif!important;font-size:12px!important;font-weight:600!important;}
+
+/* ===== SCORE BAR ===== */
+#cyber-ex1-12 .score-bar{position:relative!important;z-index:50!important;background:linear-gradient(135deg,#1E1B4B,#3B0764)!important;color:#ffffff!important;padding:10px 20px!important;border-radius:10px!important;display:flex!important;justify-content:space-between!important;align-items:center!important;font-family:'Georgia',serif!important;font-size:13px!important;font-weight:600!important;box-shadow:0 4px 12px rgba(30,27,75,0.3)!important;margin-bottom:24px!important;}
+#cyber-ex1-12 .score-bar .score-num{background:var(--purple)!important;padding:4px 14px!important;border-radius:14px!important;font-size:14px!important;font-weight:800!important;color:#ffffff!important;}
+
+/* ===== SECTIONS ===== */
+#cyber-ex1-12 .section{background:#ffffff!important;border:1px solid var(--gray-border)!important;border-radius:12px!important;padding:28px 24px!important;margin-bottom:24px!important;box-shadow:0 2px 8px rgba(0,0,0,0.04)!important;}
+#cyber-ex1-12 .section h2{font-family:'Georgia',serif!important;font-size:18px!important;font-weight:700!important;color:var(--dark)!important;margin:0 0 12px!important;}
+#cyber-ex1-12 .section h3{font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;color:var(--purple)!important;margin:16px 0 8px!important;}
+#cyber-ex1-12 .section p{font-family:'Georgia',serif!important;font-size:14px!important;color:#374151!important;margin:0 0 12px!important;line-height:1.7!important;}
+#cyber-ex1-12 .section-label{display:inline-block!important;background:var(--purple-bg)!important;color:var(--purple)!important;font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1px!important;padding:4px 12px!important;border-radius:4px!important;margin-bottom:12px!important;}
+
+/* ===== PASSWORD SPECIMEN ===== */
+#cyber-ex1-12 .pw-specimen{background:#0f172a!important;border-radius:8px!important;padding:16px 20px!important;margin:12px 0!important;font-family:'Courier New',monospace!important;font-size:20px!important;font-weight:700!important;letter-spacing:2px!important;color:#a78bfa!important;text-align:center!important;border:2px solid #334155!important;}
+#cyber-ex1-12 .pw-context{background:var(--gray-light)!important;border:1px solid var(--gray-border)!important;border-radius:8px!important;padding:12px 16px!important;margin:8px 0 16px!important;font-family:'Georgia',serif!important;font-size:13px!important;color:#475569!important;}
+#cyber-ex1-12 .pw-context strong{color:var(--dark)!important;}
+
+/* ===== FORM FIELDS ===== */
+#cyber-ex1-12 .q-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:14px!important;margin:12px 0!important;}
+@media(max-width:600px){#cyber-ex1-12 .q-grid{grid-template-columns:1fr!important;}}
+#cyber-ex1-12 .q-field{display:flex!important;flex-direction:column!important;gap:4px!important;}
+#cyber-ex1-12 .q-field label{font-family:'Georgia',serif!important;font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:0.5px!important;color:#475569!important;}
+#cyber-ex1-12 .q-field select,#cyber-ex1-12 .q-field textarea{font-family:'Georgia',serif!important;font-size:13px!important;padding:8px 10px!important;border:1px solid var(--purple-border)!important;border-radius:6px!important;background:#ffffff!important;color:var(--dark)!important;resize:vertical!important;}
+#cyber-ex1-12 .q-field select:focus,#cyber-ex1-12 .q-field textarea:focus{outline:none!important;border-color:var(--purple)!important;box-shadow:0 0 0 2px rgba(107,33,168,0.15)!important;}
+#cyber-ex1-12 .q-full{grid-column:1/-1!important;}
+
+/* ===== LOG TABLE ===== */
+#cyber-ex1-12 .log-table{width:100%!important;border-collapse:collapse!important;margin:12px 0!important;font-family:'Courier New',monospace!important;font-size:12px!important;}
+#cyber-ex1-12 .log-table th{background:var(--dark)!important;color:#ffffff!important;padding:8px 10px!important;text-align:left!important;font-family:'Georgia',serif!important;font-size:11px!important;text-transform:uppercase!important;letter-spacing:0.5px!important;}
+#cyber-ex1-12 .log-table td{padding:6px 10px!important;border-bottom:1px solid var(--gray-border)!important;vertical-align:top!important;color:#1e293b!important;}
+#cyber-ex1-12 .log-table tr:nth-child(even) td{background:var(--gray-light)!important;}
+#cyber-ex1-12 .log-table tr.suspicious td{background:#fef2f2!important;color:#991b1b!important;font-weight:600!important;}
+
+/* ===== BUTTONS ===== */
+#cyber-ex1-12 .check-btn{display:inline-block!important;background:var(--purple)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;font-family:'Georgia',serif!important;font-size:14px!important;font-weight:700!important;padding:10px 24px!important;border:none!important;border-radius:8px!important;cursor:pointer!important;margin-top:12px!important;opacity:1!important;visibility:visible!important;text-decoration:none!important;}
+#cyber-ex1-12 .check-btn:hover{background:var(--purple-mid)!important;}
+#cyber-ex1-12 a.check-btn:link,#cyber-ex1-12 a.check-btn:visited,#cyber-ex1-12 a.check-btn:hover,#cyber-ex1-12 a.check-btn:active{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#cyber-ex1-12 .nav-btn-back{background:#475569!important;}
+#cyber-ex1-12 .nav-btn-back:hover{background:#334155!important;}
+
+/* ===== FEEDBACK ===== */
+#cyber-ex1-12 .feedback{display:none!important;border-radius:8px!important;padding:16px 18px!important;margin-top:14px!important;font-family:'Georgia',serif!important;font-size:13px!important;line-height:1.7!important;}
+#cyber-ex1-12 .feedback.show{display:block!important;}
+#cyber-ex1-12 .feedback.correct{background:var(--green-bg)!important;border:1px solid var(--green-border)!important;color:#166534!important;}
+#cyber-ex1-12 .feedback.partial{background:#FFFBEB!important;border:1px solid #FDE68A!important;color:#92400E!important;}
+#cyber-ex1-12 .feedback.incorrect{background:#FEF2F2!important;border:1px solid #FECACA!important;color:#991B1B!important;}
+
+/* ===== RESULTS ===== */
+#cyber-ex1-12 .results-panel{display:none!important;background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;border-radius:12px!important;padding:32px!important;text-align:center!important;color:#ffffff!important;margin-top:24px!important;position:relative!important;overflow:hidden!important;}
+#cyber-ex1-12 .results-panel::before{content:''!important;position:absolute!important;top:-40px!important;right:-40px!important;width:200px!important;height:200px!important;border-radius:50%!important;background:rgba(168,85,247,0.15)!important;pointer-events:none!important;}
+#cyber-ex1-12 .results-panel.show{display:block!important;}
+#cyber-ex1-12 .results-panel h2{font-family:'Georgia',serif!important;font-size:22px!important;color:#ffffff!important;margin:0 0 8px!important;position:relative!important;}
+#cyber-ex1-12 .results-score{font-family:'Georgia',serif!important;font-size:48px!important;font-weight:900!important;color:var(--purple-light)!important;margin:12px 0!important;position:relative!important;}
+#cyber-ex1-12 .results-panel p{font-family:'Georgia',serif!important;font-size:14px!important;color:rgba(255,255,255,0.85)!important;margin:8px 0!important;position:relative!important;}
+
+/* ===== EXAM TIP ===== */
+#cyber-ex1-12 .exam-tip{background:var(--purple-bg)!important;border-left:4px solid var(--purple)!important;border-radius:0 8px 8px 0!important;padding:16px 20px!important;margin:20px 0!important;font-family:'Georgia',serif!important;font-size:14px!important;color:var(--dark)!important;}
+#cyber-ex1-12 .exam-tip strong{color:var(--purple)!important;}
+
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+</style>
+<script>
+function ucnToggle(num){try{event.stopPropagation();}catch(x){}var l=document.getElementById('ucn-l'+num),s=document.getElementById('ucn-s'+num);if(!l||!s)return;var o=l.classList.contains('open');document.querySelectorAll('#ucnav .ucn-lesson').forEach(function(e){e.classList.remove('open')});document.querySelectorAll('#ucnav .ucn-steps').forEach(function(e){e.classList.remove('open')});if(!o){l.classList.add('open');s.classList.add('open');setTimeout(function(){l.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},50)}}
+(function(){
+function pos(){var nav=document.getElementById('ucnav');if(!nav)return;if(nav.parentElement!==document.body){document.body.appendChild(nav)}var h=0;var headerEl=document.querySelector('.section-header header.header')||document.querySelector('sticky-header header')||document.querySelector('header.header');if(headerEl){h=Math.round(headerEl.getBoundingClientRect().bottom)}if(h<20||h>300)h=68;nav.style.setProperty('top',h+'px','important');var navH=nav.offsetHeight||42;var w=document.getElementById('apcyber-wrapper')||document.querySelector('[data-lesson-id]')||document.querySelector('[id^="u3l"]')||document.querySelector('[id^="u1l"]')||document.querySelector('[id^="u2l"]');if(w)w.style.setProperty('padding-top',(h+navH+4)+'px','important')}
+function openCurrentSteps(){var ol=document.querySelector('#ucnav .ucn-lesson.open');if(ol&&ol.id){var n=ol.id.replace('ucn-l','');var s=document.getElementById('ucn-s'+n);if(s)s.classList.add('open');setTimeout(function(){ol.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},100)}}
+requestAnimationFrame(pos);setTimeout(pos,150);setTimeout(pos,400);setTimeout(pos,800);setTimeout(pos,1500);setTimeout(pos,3000);setTimeout(openCurrentSteps,200);
+window.addEventListener('resize',pos,{passive:true});
+setTimeout(function(){var _w=document.getElementById('apcyber-wrapper')||document.querySelector('[id^="u3l"]')||document.querySelector('[id^="u1l"]')||document.querySelector('[id^="u2l"]');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}var _m=document.getElementById('MainContent');if(_m){_m.style.setProperty('padding-top','0','important');_m.style.setProperty('margin-top','0','important')}},50);
+setTimeout(function(){var _w=document.getElementById('apcyber-wrapper')||document.querySelector('[id^="u3l"]');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}},500);
+var scrolled=false;window.addEventListener('scroll',function(){if(!scrolled){scrolled=true;requestAnimationFrame(pos)}},{passive:true});
+var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class','hidden']});setTimeout(function(){obs.disconnect()},15000);
+})();
+</script>
+<div id="ucnav"><div class="ucn-rail" id="ucn-rail">
+<a href="/pages/ap-cybersecurity-complete-course-guide" class="ucn-hub">AP Cyber Hub</a>
+<span class="ucn-badge">Unit 1</span>
+<a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-lesson" onclick="ucnToggle(1);" id="ucn-l1" title="Understanding Social Engineering">1.1 <span class="ucn-chevron">▼</span></a>
+<div class="ucn-steps" id="ucn-s1">
+<a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-step">Lesson</a>
+<a href="/pages/ap-cyber-unit-1-lesson-1-exercise-1" class="ucn-step">Ex 1</a>
+<a href="/pages/ap-cyber-unit-1-lesson-1-exercise-2" class="ucn-step">Ex 2</a>
+<a href="/pages/ap-cyber-unit-1-lesson-1-lab" class="ucn-step">Lab</a>
+<a href="/pages/ap-cyber-unit-1-lesson-1-quiz" class="ucn-step">Quiz</a>
+</div>
+<a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-lesson" onclick="ucnToggle(2);" id="ucn-l2" title="Suspicious Website Logins">1.2 <span class="ucn-chevron">▼</span></a>
+<div class="ucn-steps" id="ucn-s2">
+<a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-step">Lesson</a>
+<a href="/pages/ap-cyber-unit-1-lesson-2-exercise-1" class="ucn-step">Ex 1</a>
+<a href="/pages/ap-cyber-unit-1-lesson-2-exercise-2" class="ucn-step">Ex 2</a>
+<a href="/pages/ap-cyber-unit-1-lesson-2-lab" class="ucn-step">Lab</a>
+<a href="/pages/ap-cyber-unit-1-lesson-2-quiz" class="ucn-step">Quiz</a>
+</div>
+<a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-lesson" onclick="ucnToggle(3);" id="ucn-l3" title="Public Wi-Fi Dangers">1.3 <span class="ucn-chevron">▼</span></a>
+<div class="ucn-steps" id="ucn-s3">
+<a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-step">Lesson</a>
+<a href="/pages/ap-cyber-unit-1-lesson-3-exercise-1" class="ucn-step">Ex 1</a>
+<a href="/pages/ap-cyber-unit-1-lesson-3-exercise-2" class="ucn-step">Ex 2</a>
+<a href="/pages/ap-cyber-unit-1-lesson-3-lab" class="ucn-step">Lab</a>
+<a href="/pages/ap-cyber-unit-1-lesson-3-quiz" class="ucn-step">Quiz</a>
+</div>
+<a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-lesson open" onclick="ucnToggle(4);" id="ucn-l4" title="AI-Based Attacks">1.4 <span class="ucn-chevron">▼</span></a>
+<div class="ucn-steps open" id="ucn-s4">
+<a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-step">Lesson</a>
+<a href="/pages/ap-cyber-unit-1-lesson-4-exercise-1" class="ucn-step current">Ex 1</a>
+<a href="/pages/ap-cyber-unit-1-lesson-4-exercise-2" class="ucn-step">Ex 2</a>
+<a href="/pages/ap-cyber-unit-1-lesson-4-lab" class="ucn-step">Lab</a>
+<a href="/pages/ap-cyber-unit-1-lesson-4-quiz" class="ucn-step">Quiz</a>
+</div>
+<a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-lesson" onclick="ucnToggle(5);" id="ucn-l5" title="AI in Defense">1.5 <span class="ucn-chevron">▼</span></a>
+<div class="ucn-steps" id="ucn-s5">
+<a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-step">Lesson</a>
+<a href="/pages/ap-cyber-unit-1-lesson-5-exercise-1" class="ucn-step">Ex 1</a>
+<a href="/pages/ap-cyber-unit-1-lesson-5-exercise-2" class="ucn-step">Ex 2</a>
+<a href="/pages/ap-cyber-unit-1-lesson-5-lab" class="ucn-step">Lab</a>
+<a href="/pages/ap-cyber-unit-1-lesson-5-quiz" class="ucn-step">Quiz</a>
+</div>
+</div></div>
+<div style="max-width:860px;margin:0 auto;padding:0 16px 60px;">
+<nav class="breadcrumb" aria-label="Breadcrumb" style="font-size:0.82rem;color:#6b7280;margin:16px 0 20px;font-family:'Georgia',serif;">
+  <a href="/" style="color:#6b21a8;text-decoration:none;">Home</a>
+  <span style="margin:0 6px;color:#d1d5db;">›</span>
+  <a href="/pages/ap-cybersecurity-complete-course-guide" style="color:#6b21a8;text-decoration:none;">AP Cybersecurity</a>
+  <span style="margin:0 6px;color:#d1d5db;">›</span>
+  <span style="color:#374151;">Topic 1.4 › Exercise 1</span>
+</nav>
+
+<div style="background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 60%,#7C3AED 100%);border-radius:14px;padding:28px 32px;margin-bottom:28px;color:#fff;">
+  <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#c4b5fd;margin-bottom:8px;font-family:'Georgia',serif;">AP Cybersecurity — Unit 1, Topic 1.4</div>
+  <h1 style="font-size:1.5rem;font-weight:800;color:#fff;-webkit-text-fill-color:#fff;margin:0 0 10px;font-family:'Georgia',serif;">Exercise 1: AI Attack Classification Lab</h1>
+  <p style="font-size:0.92rem;color:rgba(255,255,255,.85);-webkit-text-fill-color:rgba(255,255,255,.85);margin:0 0 16px;line-height:1.6;font-family:'Georgia',serif;">Classify AI-based attack techniques, analyze a phishing email log for adversarial patterns, and recommend defenses. The three skills tested most on the AP exam for Topic 1.4.</p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <span style="background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.78rem;font-weight:600;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">Skills 1.A, 1.B</span>
+    <span style="background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.78rem;font-weight:600;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">~30–40 min • 3 Parts • 24 pts</span>
+  </div>
+</div>
+
+<div style="background:#f9fafb;border-radius:10px;padding:14px 18px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;border:1px solid #e5e7eb;">
+  <span style="font-size:0.85rem;font-weight:700;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">Progress: <span id="partsComplete" style="color:#6b21a8;-webkit-text-fill-color:#6b21a8;">0</span> / 3 Parts Complete</span>
+  <span style="font-size:0.85rem;font-weight:700;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;"><span id="totalScore" style="color:#6b21a8;-webkit-text-fill-color:#6b21a8;">0</span> / 24 pts</span>
+</div>
+
+<div id="part1-section" style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;margin-bottom:20px;">
+  <div style="background:linear-gradient(135deg,#1e1b4b,#3b0764);padding:16px 22px;display:flex;justify-content:space-between;align-items:center;">
+    <div>
+      <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#c4b5fd;font-family:'Georgia',serif;">Part 1</div>
+      <div style="font-size:1.05rem;font-weight:700;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">AI Attack Classification (12 pts)</div>
+    </div>
+    <span style="background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.8rem;font-weight:700;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">12 pts</span>
+  </div>
+  <div style="padding:22px 24px;">
+    
+<p style="font-size:0.9rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.65;margin:0 0 12px;font-family:'Georgia',serif;">Below are four AI-assisted attacks Maple Street Veterinary Clinic’s staff encountered. For each one, identify the AI technique used and the psychological tactic the attacker deployed.</p>
+
+<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:18px 20px;margin-bottom:14px;">
+  <div style="font-size:0.82rem;font-weight:700;color:#6b21a8;-webkit-text-fill-color:#6b21a8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;font-family:'Georgia',serif;">Incident A</div>
+  <p style="font-size:0.9rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.65;margin:0 0 12px;font-family:'Georgia',serif;">The clinic’s office manager, Sarah, received an email appearing to come from Dr. Martinez (the clinic owner). The email referenced a real patient case they had discussed that morning, Sarah’s exact role, and a pending vendor invoice. It requested she approve a $3,400 wire transfer to a new account. The sender’s email address had one letter different from Dr. Martinez’s real address.</p>
+  <p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">AI technique used:</p>
+  <select id="p1a-technique" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin-top:6px;">
+<option value="">-- Select --</option>
+<option value="personalized">AI phishing built on AI reconnaissance (an LLM wrote the message using details gathered about the target)</option>
+<option value="deepfake">AI deepfake impersonation on a phone or video call</option>
+<option value="voiceClone">Prompt injection against an AI assistant</option>
+<option value="malware">AI malware that rewrites its own code</option>
+</select>
+  <p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">Which defense would have stopped this?</p>
+  <select id="p1a-defense" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin-top:6px;">
+<option value="">-- Select --</option>
+<option value="secret">Ask for a secret phrase Sarah and Dr. Martinez agreed on in advance, before any of this happened</option>
+<option value="grammar">Check the email carefully for spelling and grammar mistakes</option>
+<option value="reply">Reply to the email and ask Dr. Martinez to confirm the request</option>
+<option value="antivirus">Install antivirus software that scans incoming mail</option>
+</select>
+</div>
+
+<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:18px 20px;margin-bottom:14px;">
+  <div style="font-size:0.82rem;font-weight:700;color:#6b21a8;-webkit-text-fill-color:#6b21a8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;font-family:'Georgia',serif;">Incident B</div>
+  <p style="font-size:0.9rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.65;margin:0 0 12px;font-family:'Georgia',serif;">A veterinary technician named Carlos received a phone call from what sounded exactly like his father, saying he was in a car accident, needed bail money immediately, and asked Carlos to wire $1,800 to an account. Carlos almost complied before calling his father’s cell phone directly and confirming his father was safe at home.</p>
+  <p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">AI technique used:</p>
+  <select id="p1b-technique" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin-top:6px;">
+<option value="">-- Select --</option>
+<option value="voiceClone">AI deepfake, the kind people call voice cloning: audio samples of a real person build a digital avatar that speaks in their voice</option>
+<option value="personalized">AI phishing, an LLM-written email</option>
+<option value="deepfake">Data poisoning of an AI assistant Carlos uses</option>
+<option value="malware">AI malware recording audio from his phone</option>
+</select>
+  <p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">What would have happened without out-of-band verification?</p>
+  <select id="p1b-outcome" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin-top:6px;">
+<option value="">-- Select --</option>
+<option value="wire">Carlos would have wired $1,800 to the attacker believing he helped his father</option>
+<option value="report">Carlos would have reported the call to police</option>
+<option value="ignore">Carlos would have ignored the call</option>
+<option value="callback">Carlos would have called back the number that called him</option>
+</select>
+</div>
+
+<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:18px 20px;margin-bottom:14px;">
+  <div style="font-size:0.82rem;font-weight:700;color:#6b21a8;-webkit-text-fill-color:#6b21a8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;font-family:'Georgia',serif;">Incident C</div>
+  <p style="font-size:0.9rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.65;margin:0 0 12px;font-family:'Georgia',serif;">The clinic received 847 emails in one week from different sender addresses, all with slightly different subject lines, all promoting the same fraudulent medical supplier. Traditional keyword filters blocked the first 200; the remaining 647 had been automatically rewritten by an AI tool to avoid the specific phrases that triggered the filter.</p>
+  <p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">Which AI capability enabled this attack to evade filters?</p>
+  <select id="p1c-technique" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin-top:6px;">
+<option value="">-- Select --</option>
+<option value="evasion">AI phishing: an LLM rewrote every message so the patterns the filter matches on were not there</option>
+<option value="clone">AI deepfake audio attached to each email</option>
+<option value="phishing">Ordinary mass phishing with no AI involved</option>
+<option value="recon">AI reconnaissance alone, with no message generation</option>
+</select>
+  <p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">This is an example of:</p>
+  <select id="p1c-arms" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin-top:6px;">
+<option value="">-- Select --</option>
+<option value="arms">The AI-vs-AI arms race: attacker AI evades defender AI filters, requiring defender models to retrain</option>
+<option value="defeat">AI defenses are ineffective and should not be used</option>
+<option value="success">A successful defense because 200 emails were blocked</option>
+<option value="manual">Manual email review that should replace AI filters</option>
+</select>
+</div>
+
+<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:18px 20px;margin-bottom:14px;">
+  <div style="font-size:0.82rem;font-weight:700;color:#6b21a8;-webkit-text-fill-color:#6b21a8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;font-family:'Georgia',serif;">Incident D</div>
+  <p style="font-size:0.9rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.65;margin:0 0 12px;font-family:'Georgia',serif;">A security researcher found that an AI tool scanning for SQL injection vulnerabilities could also be used by attackers to automatically scan Maple Street’s patient portal for weaknesses. The same tool the clinic uses for defense was used offensively to map attack surfaces.</p>
+  <p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">What does this demonstrate about AI security tools?</p>
+  <select id="p1d-dual" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin-top:6px;">
+<option value="">-- Select --</option>
+<option value="dual">Dual-use nature: the same AI capabilities that defend can be used offensively by adversaries</option>
+<option value="unique">AI offensive tools are completely different from defensive tools</option>
+<option value="weak">Defensive AI tools are always weaker than offensive ones</option>
+<option value="stop">Clinics should stop using AI security tools due to this risk</option>
+</select>
+</div>
+    <button class="check-btn" onclick="checkPart(1)" style="background:#6b21a8;color:#fff;-webkit-text-fill-color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:0.9rem;font-weight:700;cursor:pointer;margin-top:18px;font-family:'Georgia',serif;">Check Part 1</button>
+    <div id="p1-feedback" class="feedback" style="display:none;margin-top:14px;padding:14px 16px;border-radius:8px;font-size:0.88rem;font-family:'Georgia',serif;line-height:1.6;"></div>
+  </div>
+</div>
+<div id="part2-section" style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;margin-bottom:20px;">
+  <div style="background:linear-gradient(135deg,#1e1b4b,#3b0764);padding:16px 22px;display:flex;justify-content:space-between;align-items:center;">
+    <div>
+      <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#c4b5fd;font-family:'Georgia',serif;">Part 2</div>
+      <div style="font-size:1.05rem;font-weight:700;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">Phishing Log Analysis (6 pts)</div>
+    </div>
+    <span style="background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.8rem;font-weight:700;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">6 pts</span>
+  </div>
+  <div style="padding:22px 24px;">
+    
+<p style="font-size:0.9rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.65;margin:0 0 12px;font-family:'Georgia',serif;">Maple Street Veterinary Clinic has installed a basic email security system. Review the following email log from the past week and answer the questions.</p>
+<table style="width:100%;border-collapse:collapse;margin:14px 0 18px;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;">
+<thead><tr>
+<th style="background:#1e1b4b;color:#fff;-webkit-text-fill-color:#fff;padding:10px 12px;text-align:left;font-size:0.78rem;text-transform:uppercase;letter-spacing:.06em;font-family:'Georgia',serif;">#</th>
+<th style="background:#1e1b4b;color:#fff;-webkit-text-fill-color:#fff;padding:10px 12px;text-align:left;font-size:0.78rem;text-transform:uppercase;letter-spacing:.06em;font-family:'Georgia',serif;">Date/Time</th>
+<th style="background:#1e1b4b;color:#fff;-webkit-text-fill-color:#fff;padding:10px 12px;text-align:left;font-size:0.78rem;text-transform:uppercase;letter-spacing:.06em;font-family:'Georgia',serif;">Sender Domain</th>
+<th style="background:#1e1b4b;color:#fff;-webkit-text-fill-color:#fff;padding:10px 12px;text-align:left;font-size:0.78rem;text-transform:uppercase;letter-spacing:.06em;font-family:'Georgia',serif;">Subject</th>
+<th style="background:#1e1b4b;color:#fff;-webkit-text-fill-color:#fff;padding:10px 12px;text-align:left;font-size:0.78rem;text-transform:uppercase;letter-spacing:.06em;font-family:'Georgia',serif;">AI Phishing Score</th>
+<th style="background:#1e1b4b;color:#fff;-webkit-text-fill-color:#fff;padding:10px 12px;text-align:left;font-size:0.78rem;text-transform:uppercase;letter-spacing:.06em;font-family:'Georgia',serif;">Action</th>
+</tr></thead>
+<tbody>
+<tr style="background:#fff;">
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">1</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">2026-03-10 08:22:14</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">vetsupp1y.com</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">Your Order #8872 has shipped</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">0.12</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">Delivered</td>
+</tr>
+<tr style="background:#f9fafb;">
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">2</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">2026-03-10 09:45:02</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">paypa1.com</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">Urgent: Account access restricted</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">0.94</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">Quarantined</td>
+</tr>
+<tr style="background:#fff;">
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">3</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">2026-03-11 02:17:33</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">dhl-delivery-notif.net</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">Package held: confirm address</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">0.87</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">Quarantined</td>
+</tr>
+<tr style="background:#f9fafb;">
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">4</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">2026-03-11 14:02:18</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">maple-street-vet.com</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">Re: Tuesday patient roster</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">0.08</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">Delivered</td>
+</tr>
+<tr style="background:#fff;">
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">5</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">2026-03-12 11:33:44</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">vetsupply.com</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">Invoice #4421 - March order</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">0.19</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">Delivered</td>
+</tr>
+<tr style="background:#f9fafb;">
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">6</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">2026-03-12 22:58:01</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">accounts-payabIe-dept.net</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">Wire confirmation needed - Dr. Martinez</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">0.61</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">Delivered</td>
+</tr>
+<tr style="background:#fff;">
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">7</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">2026-03-13 08:14:55</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">microsoft-secur1ty.com</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">Your account has been compromised</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">0.96</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">Quarantined</td>
+</tr>
+<tr style="background:#f9fafb;">
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">8</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">2026-03-13 13:45:22</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">gmail.com</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">Vet conference registration reminder</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">0.09</td>
+<td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:0.85rem;color:#374151;-webkit-text-fill-color:#374151;font-family:'Georgia',serif;">Delivered</td>
+</tr>
+</tbody>
+</table>
+<p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">1. Which delivered email (not quarantined) is MOST suspicious and should be investigated immediately? Why? (2 pts)</p>
+<textarea id="p2-suspicious" rows="3" placeholder="Enter the email number and explain what makes it suspicious..." style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;resize:vertical;margin-top:6px;"></textarea>
+<p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">2. The AI phishing filter scored email #6 at 0.61 but delivered it. What does this suggest about the attacker's technique? (2 pts)</p>
+<select id="p2-technique" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin-top:6px;">
+<option value="">-- Select --</option>
+<option value="adversarial">The attacker used AI to craft an email that evades filters by scoring in the mid-range — high enough to be effective phishing but below the block threshold</option>
+<option value="legitimate">The email is legitimate since it scored below 0.8</option>
+<option value="error">The email filter has a technical error</option>
+<option value="normal">Mid-range scores are normal and not concerning</option>
+</select>
+<p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">3. What threshold change and additional control would best address the gap shown by email #6? (2 pts)</p>
+<textarea id="p2-fix" rows="3" placeholder="Suggest a threshold adjustment and an additional control layer..." style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;resize:vertical;margin-top:6px;"></textarea>
+    <button class="check-btn" onclick="checkPart(2)" style="background:#6b21a8;color:#fff;-webkit-text-fill-color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:0.9rem;font-weight:700;cursor:pointer;margin-top:18px;font-family:'Georgia',serif;">Check Part 2</button>
+    <div id="p2-feedback" class="feedback" style="display:none;margin-top:14px;padding:14px 16px;border-radius:8px;font-size:0.88rem;font-family:'Georgia',serif;line-height:1.6;"></div>
+  </div>
+</div>
+<div id="part3-section" style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;margin-bottom:20px;">
+  <div style="background:linear-gradient(135deg,#1e1b4b,#3b0764);padding:16px 22px;display:flex;justify-content:space-between;align-items:center;">
+    <div>
+      <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#c4b5fd;font-family:'Georgia',serif;">Part 3</div>
+      <div style="font-size:1.05rem;font-weight:700;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">Defense Recommendations (6 pts)</div>
+    </div>
+    <span style="background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.8rem;font-weight:700;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">6 pts</span>
+  </div>
+  <div style="padding:22px 24px;">
+    
+<p style="font-size:0.9rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.65;margin:0 0 12px;font-family:'Georgia',serif;">The clinic wants to defend against the AI-based attacks in this exercise. Recommend specific controls for each scenario.</p>
+
+<p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">Scenario 1 (Business Email Compromise): The clinic received a wire transfer request that appeared to come from Dr. Martinez. List TWO specific controls that would prevent this attack from succeeding. (2 pts)</p>
+<textarea id="p3a-controls" rows="4" placeholder="List two specific controls: (1) ... (2) ..." style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;resize:vertical;margin-top:6px;"></textarea>
+
+<p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">Scenario 2 (Voice Cloning Defense): List the single MOST important protection against voice cloning scams, and explain why it works even when the voice sounds completely authentic. (2 pts)</p>
+<select id="p3b-control" style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;color:#1e1b4b;background:#fff;margin-top:6px;">
+<option value="">-- Select --</option>
+<option value="secret">A secret word or phrase agreed with the person in advance, asked for when the call comes. It works because the attacker can copy how someone sounds but cannot know something they were never told, and it cannot be created during the suspicious call.</option>
+<option value="outofband">Hang up and call back on a number from your own contact list, never one given in the message. This is genuinely good practice and works for the same reason, but it is not the control this topic names.</option>
+<option value="training">Train people to hear the artifacts in cloned audio</option>
+<option value="antivirus">Install antivirus software that detects cloned audio files</option>
+</select>
+
+<p style="font-size:0.9rem;font-weight:700;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;margin:16px 0 4px;font-family:'Georgia',serif;">Scenario 3 (AI Arms Race): The clinic's email filter blocked 200 AI-evading phishing emails but the attacker's AI kept rewriting them. Describe TWO approaches that would help the defense stay ahead. (2 pts)</p>
+<textarea id="p3c-arms" rows="4" placeholder="Approach 1: ... Approach 2: ..." style="width:100%;padding:10px 12px;border:1.5px solid #ddd6fe;border-radius:8px;font-size:0.9rem;font-family:'Georgia',serif;resize:vertical;margin-top:6px;"></textarea>
+<div style="background:#ede9fe;border-left:4px solid #6b21a8;border-radius:8px;padding:16px 18px;margin-top:24px;">
+  <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6b21a8;-webkit-text-fill-color:#6b21a8;margin-bottom:6px;font-family:'Georgia',serif;">✎ AP Exam Tip</div>
+  <p style="font-size:0.88rem;color:#374151;-webkit-text-fill-color:#374151;line-height:1.65;margin:0;font-family:'Georgia',serif;">For any AI-based attack on the AP exam: identify (1) what AI capability was used to make the attack more effective, (2) what defense would have stopped it, and (3) whether human oversight was part of the solution. Business Email Compromise with AI personalization = out-of-band verification. Voice cloning = verify via known contact number. Filter evasion = add human review layer + model retraining.</p>
+</div>
+    <button class="check-btn" onclick="checkPart(3)" style="background:#6b21a8;color:#fff;-webkit-text-fill-color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:0.9rem;font-weight:700;cursor:pointer;margin-top:18px;font-family:'Georgia',serif;">Check Part 3</button>
+    <div id="p3-feedback" class="feedback" style="display:none;margin-top:14px;padding:14px 16px;border-radius:8px;font-size:0.88rem;font-family:'Georgia',serif;line-height:1.6;"></div>
+  </div>
+</div>
+
+<div id="resultsPanel" class="results-panel" style="display:none;">
+  <div style="font-size:1.3rem;font-weight:800;color:#6b21a8;-webkit-text-fill-color:#6b21a8;margin-bottom:8px;font-family:'Georgia',serif;">Exercise Complete</div>
+  <div style="font-size:2rem;font-weight:800;color:#1e1b4b;-webkit-text-fill-color:#1e1b4b;font-family:'Georgia',serif;">
+<span id="finalScore">0</span> <span style="font-size:1rem;font-weight:400;color:#6b7280;-webkit-text-fill-color:#6b7280;">/ 24 pts</span>
+</div>
+  <p id="resultsMsg" style="font-size:0.92rem;color:#374151;-webkit-text-fill-color:#374151;margin:12px 0 0;line-height:1.65;font-family:'Georgia',serif;"></p>
+</div>
+
+<div style="display:flex;gap:12px;justify-content:space-between;margin-top:32px;padding-top:24px;border-top:1px solid #e5e7eb;">
+  <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" style="display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;font-size:0.88rem;font-weight:700;text-decoration:none;border:2px solid #6b21a8;color:#6b21a8;-webkit-text-fill-color:#6b21a8;font-family:'Georgia',serif;">← Back to Lesson 1.4</a>
+  <a href="/pages/ap-cyber-unit-1-lesson-4-exercise-2" style="display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;font-size:0.88rem;font-weight:700;text-decoration:none;background:#6b21a8;color:#fff;-webkit-text-fill-color:#fff;font-family:'Georgia',serif;">Continue to Exercise 2 →</a>
+</div>
+</div>
+<script>
+(function(){
+  var scores={1:0,2:0,3:0},checked={1:false,2:false,3:false};
+  function tMatch(v,keys){var l=v.toLowerCase();for(var i=0;i<keys.length;i++)if(l.indexOf(keys[i].toLowerCase())!==-1)return true;return false;}
+  function tCount(v,keys){var l=v.toLowerCase(),c=0;for(var i=0;i<keys.length;i++)if(l.indexOf(keys[i].toLowerCase())!==-1)c++;return c;}
+  function disable(id){var s=document.getElementById(id);s.querySelectorAll('textarea,select').forEach(function(e){e.disabled=true;});var b=s.querySelector('.check-btn');if(b){b.disabled=true;b.style.opacity='0.5';}}
+  function updateTotals(){
+    var t=scores[1]+scores[2]+scores[3],d=(checked[1]?1:0)+(checked[2]?1:0)+(checked[3]?1:0);
+    document.getElementById('totalScore').textContent=t;
+    document.getElementById('partsComplete').textContent=d;
+    if(d===3){
+      var rp=document.getElementById('resultsPanel');rp.style.display='block';
+      document.getElementById('finalScore').textContent=t;
+      var msg=t>=22?'Excellent. You can identify AI attack techniques, analyze phishing indicators, and recommend layered defenses.':
+        t>=16?'Good. Review the attack type classifications and the four named defenses. Both come up constantly.':
+        t>=10?'Developing. Re-read Topic 1.4 focusing on the six AI attack types and the AI-vs-AI arms race concept.':
+        'Needs review. Return to the Lesson 1.4 page and study each AI attack technique before retaking.';
+      document.getElementById('resultsMsg').textContent=msg;rp.scrollIntoView({behavior:'smooth'});
+    }
+  }
+  window.checkPart=function(n){
+    if(checked[n])return;checked[n]=true;var pts=0,details=[];
+    if(n===1){
+      var a1t=document.getElementById('p1a-technique').value,a1p=document.getElementById('p1a-defense').value;
+      if(a1t==='personalized'){pts++;details.push('<strong>A technique:</strong> +1 — Correct. AI phishing, and the specifics that made it believable came from AI reconnaissance: the patient case, the role, the pending invoice were all gathered first.');}
+      else details.push('<strong>A technique:</strong> 0 — AI phishing built on AI reconnaissance. The research step is what let an LLM write something Sarah had no reason to doubt.');
+      if(a1p==='secret'){pts++;details.push('<strong>A defense:</strong> +1 — Correct. A secret agreed in advance is the one thing an attacker who scraped everything public still does not have.');}
+      else details.push('<strong>A defense:</strong> 0 — A secret phrase agreed in advance. Grammar checks fail because an LLM writes cleanly, and replying to the email just asks the attacker whether the attacker is real.');
+      var b1t=document.getElementById('p1b-technique').value,b1o=document.getElementById('p1b-outcome').value;
+      if(b1t==='voiceClone'){pts++;details.push('<strong>B technique:</strong> +1 — Correct. An AI deepfake. Voice samples of a real person build a digital avatar that speaks as them, and arriving by phone rather than video does not make it a different attack.');}
+      else details.push('<strong>B technique:</strong> 0 — An AI deepfake, the kind people call voice cloning. Samples of the father\'s voice from social media built a digital avatar of him.');
+      if(b1o==='wire'){pts++;details.push('<strong>B outcome:</strong> +1 — Correct. Without verification, Carlos would have wired the money.');}
+      else details.push('<strong>B outcome:</strong> 0 — Without out-of-band verification, Carlos would have wired $1,800 to the attacker.');
+      var c1t=document.getElementById('p1c-technique').value,c1a=document.getElementById('p1c-arms').value;
+      if(c1t==='evasion'){pts++;details.push('<strong>C technique:</strong> +1 — Correct. AI phishing. An LLM rewrote each message so the patterns the filter matches on were simply not present.');}
+      else details.push('<strong>C technique:</strong> 0 — AI phishing. The filter looks for patterns it has seen before, and an LLM writes something it has not.');
+      if(c1a==='arms'){pts++;details.push('<strong>C arms race:</strong> +1 — Correct. Attacker AI evades defender AI, requiring continuous retraining.');}
+      else details.push('<strong>C arms race:</strong> 0 — This is the AI-vs-AI arms race: attacker AI adapts to evade defender AI filters.');
+      var d1d=document.getElementById('p1d-dual').value;
+      if(d1d==='dual'){pts+=2;details.push('<strong>D dual-use:</strong> +2 — Correct. Same AI tools serve both offensive and defensive purposes.');}
+      else details.push('<strong>D dual-use:</strong> 0 — Dual-use: the same vulnerability scanning AI can be used by both defenders and attackers.');
+      scores[1]=Math.min(Math.round(pts*1.5),12);
+    }
+    if(n===2){
+      var sus=document.getElementById('p2-suspicious').value.trim();
+      var susPts=0;
+      if(tMatch(sus,['6'])&&tMatch(sus,['wire','transfer','martinez','domain','payabl','imperson','bec'])){susPts=2;details.push('<strong>Suspicious email:</strong> +2 — Email #6 is the most dangerous: low score (0.61) but targets the office manager with a wire transfer from a spoofed \'accounts payable\' domain.');}
+      else if(tMatch(sus,['6'])){susPts=1;details.push('<strong>Suspicious email:</strong> +1 — Correct email identified. Strengthen your explanation: the spoofed domain (payabIe vs payable), wire request, and Dr. Martinez mention are BEC indicators.');}
+      else{details.push('<strong>Suspicious email:</strong> 0 — Email #6 is most dangerous: accounts-payabIe-dept.net (note capital I not lowercase l) requesting a wire with Dr. Martinez\'s name at only 0.61 confidence = adversarially crafted BEC.');}
+      var tech=document.getElementById('p2-technique').value;
+      if(tech==='adversarial'){susPts++;details.push('<strong>Technique:</strong> +1 — Correct. Adversarial crafting to land in the mid-range confidence zone.');}
+      else details.push('<strong>Technique:</strong> 0 — The attacker used AI to craft an email that scores mid-range, below the automated block threshold.');
+      var fix=document.getElementById('p2-fix').value.trim();
+      var fixPts=tCount(fix,['lower','0.','threshold','human','review','banner','warning','flag','quarantine','mid','manual'])>=2?2:tCount(fix,['lower','0.','threshold','human','review','banner','warning','flag','quarantine'])>=1?1:0;
+      susPts+=fixPts;
+      if(fixPts>=2)details.push('<strong>Fix:</strong> +2 — Complete. Lower threshold + human review layer for mid-range scores.');
+      else if(fixPts===1)details.push('<strong>Fix:</strong> +1 — Partial. Best approach: lower the quarantine threshold to ~0.50 AND add human review (or warning banner) for scores 0.50-0.89 rather than binary deliver/block.');
+      else details.push('<strong>Fix:</strong> 0 — Lower threshold to 0.50 and add a human review or warning banner for scores 0.50-0.89 to catch mid-range adversarial emails.');
+      scores[2]=Math.min(susPts,6);
+    }
+    if(n===3){
+      var c1=document.getElementById('p3a-controls').value.trim();
+      var c1Pts=tCount(c1,['out-of-band','out of band','verify','phone','call back','separate channel','second channel','approval','dual','mfa','two person','multi-person'])>=2?2:tCount(c1,['verify','phone','call','channel','approval'])>=1?1:0;
+      if(c1Pts>=2)details.push('<strong>BEC controls:</strong> +2 — Strong controls identified.');
+      else if(c1Pts===1)details.push('<strong>BEC controls:</strong> +1 — Partial. Key controls: (1) out-of-band verification (call Dr. Martinez directly on his known cell), (2) dual-approval policy for wire transfers over a threshold (e.g., two authorized signers required).');
+      else details.push('<strong>BEC controls:</strong> 0 — Two key controls: out-of-band verification for any wire transfer request, and a dual-approval policy requiring two authorized signers.');
+      var c2=document.getElementById('p3b-control').value;
+      if(c2==='secret'){c1Pts++;details.push('<strong>Voice cloning defense:</strong> +1 — Correct. A secret agreed in advance. The attacker can reproduce how someone sounds and cannot reproduce something they were never told, and it cannot be arranged during the call itself.');}
+      else details.push('<strong>Voice cloning defense:</strong> 0 — A secret phrase agreed with the person beforehand. Calling back on a number you looked up yourself works for the same reason and is worth doing, but the control named for this is the pre-arranged secret.');
+      var c3=document.getElementById('p3c-arms').value.trim();
+      var c3Pts=tCount(c3,['retrain','update','model','human','review','layer','ensemble','multiple','banner','flag','second','monitor','adapt'])>=2?2:tCount(c3,['retrain','update','human','review'])>=1?1:0;
+      if(c3Pts>=2)details.push('<strong>Arms race defense:</strong> +2 — Strong approaches identified.');
+      else if(c3Pts===1)details.push('<strong>Arms race defense:</strong> +1 — Partial. Key approaches: (1) continuous model retraining with new adversarial samples, (2) add human review layer for mid-range scores, (3) ensemble models (multiple classifiers harder to simultaneously defeat).');
+      else details.push('<strong>Arms race defense:</strong> 0 — Two approaches: retrain the model on adversarial samples, and add a human review layer for mid-range confidence scores (0.50-0.89).');
+      scores[3]=Math.min(c1Pts+c3Pts,6);
+    }
+    var fb=document.getElementById('p'+n+'-feedback'),pts_max=n===1?12:6;
+    fb.style.display='block';
+    fb.style.background=scores[n]>=pts_max*0.8?'#d1fae5':scores[n]>=pts_max*0.5?'#fef3c7':'#fee2e2';
+    fb.style.borderLeft=scores[n]>=pts_max*0.8?'3px solid #059669':scores[n]>=pts_max*0.5?'3px solid #d97706':'3px solid #dc2626';
+    fb.style.color='#374151';fb.style.webkitTextFillColor='#374151';
+    fb.innerHTML='<strong>Part '+n+' Score: '+scores[n]+' / '+pts_max+'</strong><br><br>'+details.join('<br>');
+    disable('part'+n+'-section');updateTotals();
+  };
+})();
+</script>
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id="apcyber-activity-nav"><div class="aan-card">
+<span class="aan-eyebrow">AP Cybersecurity · Unit 1 · Lesson 1.4 · Exercise 1</span><div class="aan-strip">
+<a class="aan-chip" href="/pages/ap-cybersecurity-unit-1-wireless-security">Lesson</a><span class="aan-sep">•</span><span class="aan-chip cur">Exercise 1</span><span class="aan-sep">•</span><a class="aan-chip next" href="/pages/ap-cyber-unit-1-lesson-4-exercise-2">Exercise 2 →</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-1-lesson-4-lab">Lab</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-1-lesson-4-quiz">Quiz</a>
+</div>
+<div class="aan-up">
+<span class="aan-lbl">Back to:</span><a href="/pages/ap-cybersecurity-unit-1-wireless-security">Lesson 1.4</a><a href="/pages/ap-cybersecurity-unit-1-introduction-to-security">Unit 1 Study Guide</a><a href="/pages/ap-cybersecurity-complete-course-guide">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->

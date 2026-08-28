@@ -120,6 +120,47 @@ check('a code in a row-final <td> is still protected from the column stripper', 
   assert.ok(/<tr>/.test(coverageTableOf(out)), 'coverage table rows were deleted');
 });
 
+// ---- 3b. a card tag is protected however it is punctuated -------------------
+//  One orientation tag per concept card earns its place. The first version of
+//  the check required the tag to open with "EK " or "Mechanism:", which is how
+//  Topic 1.1 writes them. Topic 1.3 writes a bare code, so all six of its card
+//  tags counted as unprotected decoration and would have been stripped. The
+//  rule is about the tag's job, not its punctuation.
+for (const [style, tag] of [['EK prefix', 'EK 1.1.A.2'], ['Mechanism prefix', 'Mechanism: 1.1.B.2'],
+  ['bare code', '1.3.B.1'], ['bare code with text', '1.3.C.3 Use a VPN']]) {
+  check(`a card tag written as ${style} is protected`, () => {
+    const body = `<div class="attack-block"><div class="atk-name">`
+      + `<span class="atk-tag">${tag}</span>Evil Twin Attack</div>`
+      + `<div class="atk-desc">An adversary sets up a lookalike access point.</div></div>`;
+    const kept = ek.citations(body).citations.filter((c) => c.protectedBy === 'card tag');
+    assert.ok(kept.length >= 1, `not protected: ${JSON.stringify(ek.citations(body).citations)}`);
+  });
+}
+check('a span that is not a card tag is not protected by this rule', () => {
+  const body = '<p>Intimidation is <span class="vocab-term">1.1.A.2</span> in the framework.</p>';
+  const kept = ek.citations(body).citations.filter((c) => c.protectedBy === 'card tag');
+  assert.strictEqual(kept.length, 0, 'the class is what makes it a card tag');
+});
+
+// ---- 3c. "CED <code>" is consumed as one unit ------------------------------
+//  The subject-position rule turns a bare code into "the CED". Where the word
+//  CED is already in front of the code, doing that leaves the original word
+//  standing: "CED 1.5.B.3 covers both alerting and corrective action" became
+//  "CED the CED covers both alerting and corrective action" on Topic 1.5. Four
+//  of the five lesson pages carry this shape. Found by reading the changed
+//  sentences, which is the only thing that finds this class of defect.
+for (const [style, src, want] of [
+  ['bare', 'CED 1.5.B.3 covers both alerting and corrective action.', 'The CED covers both'],
+  ['capitalised', 'The CED 1.2.B.2 says adversaries build a targeted list.', 'The CED says adversaries'],
+  ['with EK', 'CED EK 1.3.C covers the three protections.', 'The CED covers the three'],
+]) {
+  check(`"CED <code>" written ${style} does not double up`, () => {
+    const out = thin(`<p>${src}</p>`);
+    assert.ok(!/CED the CED/i.test(out), `doubled: ${out}`);
+    assert.ok(out.includes(want), `expected ${JSON.stringify(want)}, got ${out}`);
+  });
+}
+
 // ---- 4. the decorative citation outside the table still goes ----------------
 //  Scoped to a PARENTHETICAL citation on purpose. The thinner does not delete
 //  bare inline codes from arbitrary prose and should not: blind deletion is what
