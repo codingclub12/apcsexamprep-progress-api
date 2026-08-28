@@ -117,6 +117,69 @@ number agree**. That is checkable per page and is the acceptance test:
 `3.4.*` EKs. The two 3.1 pages both read 3.1 and cite `3.1.A` and `3.1.B/C`
 respectively.
 
+## The ucnav rail, and the bug surveying it found
+
+The sticky in-unit navigation cannot be token-substituted, because its labels
+are positional: after the bodies move, rail position N links to `lesson-N` and
+must read the topic taught there. Running the renumbering over the old rail
+gives the right numbers in the wrong order (3.1a, 3.1b, 3.4, 3.3, 3.5, 3.2), so
+the rail is regenerated wholesale and the token pass never sees it.
+
+Surveying all 30 pages found far less rail work than expected, and one real
+defect:
+
+- Only the five **lesson** pages 1 to 5 carry a rail. The 24 activity pages
+  carry none, so they need no rail work at all.
+- Every rail lists five topics, 3.1 to 3.5.
+- **`lesson-6`, the wireless lesson, appears in no rail and has none of its own.**
+  It is unreachable from the in-unit navigation today. That is pre-existing, and
+  it is why the Unit 3 hub links `lesson-6` and nothing else.
+
+So five rails are replaced and one is inserted, on the page that receives the
+wireless body. That page was authored against a different template (an `exhero`
+header rather than the `ch-badge` course header lessons 1 to 5 use), which is
+why it never had one.
+
+**The markup alone is inert.** Every topic entry calls `ucnToggle`, and the same
+3052-byte script also positions the fixed rail under the theme header and strips
+the padding Shopify's template adds. The wireless lesson carries the ucnav CSS
+but not that script, so inserting only the markup would ship a rail that renders
+and does nothing when clicked. The script is copied from a donor page rather
+than embedded in the lib, so the inserted rail runs byte-identical code to the
+five that already work and stays that way if the script is ever revised.
+
+Rail labels read `3.1a` and `3.1b` rather than "3.1" twice. The strip is one line
+of compact text with no room for "Part 1 of 2", two entries both reading 3.1
+would be a coin flip, and a/b is what the section numbers on those two pages
+already say. The `title` attribute carries the descriptive name on hover.
+
+## The gate, the body move, and the ids left alone
+
+`validate_csv.py`'s `stayed_hidden` check collects every id carrying
+`display:none` in the live page and fails if the sheet lost it. It is the check
+that would have caught the Topic 1.1 answer leak, and it is keyed by **id**.
+
+A body move breaks that assumption. The sheet's `lesson-5` row carries the
+firewall body, whose collapsed Essential Knowledge panel is `ek33-body`, and it
+gets compared against the live `lesson-5`, which had `ek35-body`. The panel is
+still hidden. The check sees an id that vanished and calls it a regression.
+Three pages fail exactly that way on a first run, and all three are the ones
+whose bodies move.
+
+So the generator writes a **move-aware baseline** with `--baseline-out`: for each
+target handle, the body of the page its content actually came from. The check
+then compares like with like and keeps all of its teeth. Proven rather than
+assumed: stripping `display:none` from one panel in the sheet still fails the
+run with exit 1 and names `ek33-body`.
+
+**The `ek3N` ids are deliberately not renumbered** to match the new topic. Each
+is referenced exactly twice, by its own panel and its own toggle, on one page.
+They are document-scoped internal anchors: not student-visible, not in a URL, not
+in the manifest, and their digits mean nothing outside the page. Renaming them
+would be tidiness that costs `stayed_hidden` the ability to prove the panel is
+still hidden, because the check cannot tell a rename from a loss. Keeping a real
+safety check sharp beats making an invisible id read nicely.
+
 ## Everything that has to change
 
 1. **30 Shopify pages** via one Matrixify sheet, `Command: MERGE`, columns
@@ -144,7 +207,18 @@ respectively.
 Nobody is on Unit 3, so there is no window to protect, but the order still
 matters for what a mid-flight reader sees.
 
-1. Generate the sheet, validate it with `tools/ap-cyber-ced/validate_csv.py --baseline`.
+1. Generate the sheet and its move-aware baseline, then validate:
+
+   ```
+   node scripts/cyber-unit3-renumber-csv.js out/unit3-renumber.csv \
+        --baseline-out out/baseline
+   python3 tools/ap-cyber-ced/validate_csv.py out/unit3-renumber.csv \
+        --baseline out/baseline
+   ```
+
+   Both must exit 0. Check the exit code directly and never through a pipe into
+   `head` or `tail`, which reports the pager's status instead and turns a
+   refusal into a pass.
 2. A human imports it once via Matrixify.
 3. Verify live with `tools/ap-cyber-ced/verify_import.py` and re-run
    `ced_audit_v2.py --unit=3`, which should show the plain and EK numbering in
