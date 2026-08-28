@@ -160,6 +160,7 @@
     "smoke:gradepath": "node smoke/grade-path-audit.js",
     "sitecrawl": "node scripts/site-crawl.js",
     "smoke:sitecrawl": "node smoke/site-crawl.js",
+    "smoke:linkgraph": "node smoke/link-graph.js",
     "autofixscan": "node scripts/autofix-scan.js",
     "smoke:autofixrisk": "node smoke/autofix-risk.js",
     "smoke:cspunittestlinks": "node smoke/csp-unit-test-links.js",
