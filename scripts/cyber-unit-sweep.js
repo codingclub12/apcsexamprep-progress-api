@@ -83,7 +83,11 @@ function claims(body) {
   const seen = new Set();
   const out = [];
   for (const m of f.matchAll(cg.claimWindow())) {
-    const hit = m[0].match(tg.ASSERTS);
+    //  cg's list, not tg's: thinGate's ASSERTS counts the bare "Exam Tip"
+    //  heading, which this pass keeps on purpose. Sharing the window but not
+    //  the patterns left the sweep and the gate reporting different numbers
+    //  for the same page.
+    const hit = cg.ASSERTS_NO_LABEL.exec(m[0]);
     if (!hit) continue;
     const at = m.index + m[0].indexOf(hit[0]);
     const ex = f.slice(Math.max(0, at - 70), at + hit[0].length + 70).trim();
