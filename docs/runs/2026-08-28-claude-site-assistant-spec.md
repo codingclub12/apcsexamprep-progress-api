@@ -79,3 +79,25 @@ build. Today that produced 105 minutes of drift, confirmed by dispatching
 a fresh build. Separately, GitHub is throttling that drift monitor's `*/30`
 schedule to a few runs a day, so the alarm written to catch this inside the hour
 did not fire.
+
+## Addendum: the panel before the bubble
+
+Section 3.5 was added after the first draft, and it is the recommendation I would
+defend hardest.
+
+Every question in the top support clusters is answerable by reading state the
+teacher already owns, so the first surface should be one button in the teacher
+portal that runs the typed reads and renders what is true. It cannot
+hallucinate, it has no path to an answer key, it stores nothing a student typed,
+it costs nothing per use, and it is the fastest thing in the plan to build
+because the reads are the same ones chat would need.
+
+It also de-risks chat rather than competing with it. If the reads are wrong, a
+panel shows it plainly; a chat reply hides the same error inside prose that
+sounds fine. So the panel is Phase 0.5 and chat moves behind it.
+
+The implied placement, which differs from the v1 handoff: diagnostic panel and
+then chat on the teacher portal, chat over the knowledge base on commerce pages
+where the audience is adults and conversational phrasing genuinely beats a page
+of links, the report affordance only on lessons and labs, and nothing at all on
+assessment pages.

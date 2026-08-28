@@ -59,6 +59,44 @@ the student path.
 4. **Log the taxonomy.** Every conversation is classified. The "no good answer"
    bucket is the content roadmap.
 
+## 3.5 The strongest version: a diagnostic panel before a chat bubble
+
+The single highest-value thing this system can do needs no model at all.
+
+Every question in the top support clusters is answerable by reading state the
+teacher already owns. So the first surface is not a chat bubble, it is one
+button in the teacher portal: **Check my account**. Pressing it runs the typed
+reads in section 5 and renders what is true.
+
+```
+Entitlement    ap-cybersecurity, redeemed 2026-08-12, active
+Class          CYBER-4471, 28 students, 3 never signed in
+Quizzes        teacher-opened (quiz_lock_default = 1)
+               1.1 quiz CLOSED, 1.1 exercises open, 1.2 quiz CLOSED
+Scores         117 attempts recorded in the last 24h
+Mastery        80 percent, retries allowed
+```
+
+That panel answers "why is the quiz greyed out", "why does my course not show",
+"are my students' scores landing", and "why did nothing record" without a
+sentence of generated text. It cannot hallucinate, it cannot leak an answer key
+because it has no path to one, it stores nothing a student typed, and it costs
+nothing per use. It is also the fastest thing here to build, because the reads
+are the same ones chat would need and the endpoints mostly exist.
+
+Chat is then the long tail on top of that, not the front door. The order this
+implies:
+
+- **Teacher portal**: diagnostic panel first, chat second.
+- **Commerce and marketing pages**: chat over the knowledge base. Adults, no
+  account, no state, low risk, and the one place conversational phrasing genuinely
+  beats a page of links.
+- **Lesson and lab pages**: the report affordance only. No chat.
+- **Assessment pages**: nothing at all.
+
+Building the panel first also de-risks chat. If the reads are wrong, a panel
+shows it plainly, where a chat reply hides it inside prose that sounds fine.
+
 ## 4. What it must never do
 
 - Teach, tutor, hint, trace code, evaluate an answer, or confirm correctness.
@@ -387,16 +425,22 @@ email lands, which also retires the password-reset support cluster. Ship
 into the TODO board plus mail. Zero token spend, zero transcript storage, and it
 is the piece that makes every later phase debuggable.
 
+**Phase 0.5, the diagnostic panel.** `lib/assistant/reads.js` plus one teacher
+portal view, per section 3.5. No model, no chat, no transcripts. This is the
+highest ratio of tickets deflected to risk taken in the whole plan, and it
+builds the read layer every later phase depends on.
+
 **Phase 1, KB without chat.** `kb_articles`, versions, FTS with correct
 triggers, editor in `/admin/command`. Serve it as a searchable help page. Tanner
 writes the bodies; the assistant must not invent site mechanics. Seed the
 thirteen categories as drafts, and document known-broken items honestly rather
 than pretending they work.
 
-**Phase 2, read tools plus chat, teacher portal only.** `lib/assistant/reads.js`,
-the six layers, the exfiltration smoke test, and chat behind `ASSISTANT_ENABLED`.
-Teachers are adults, so the privacy question does not gate this phase, and
-teacher questions are the ones that need state.
+**Phase 2, chat on the teacher portal.** The six layers, the exfiltration smoke
+test, and chat behind `ASSISTANT_ENABLED`, reusing the Phase 0.5 reads. Teachers
+are adults, so the privacy question does not gate this phase, and by now the read
+layer has been proved correct in a surface that cannot hide a wrong answer in
+prose.
 
 **Phase 3, anonymous on commerce pages.** Turnstile, spend cap, output filter.
 
@@ -422,6 +466,8 @@ still absent from every assessment template.
 - Daily cap breach degrades to a static FAQ reply.
 - The widget renders identically after a theme save with modified colors, and is
   absent from the DOM on every assessment template.
+- The diagnostic panel reports the same gate state that
+  `GET /api/teacher/classes/:code/gates` returns, with no model call in the path.
 - A KB edit takes effect on the next message with no deploy.
 - API unreachable, widget hides, page unaffected.
 
