@@ -1201,7 +1201,7 @@ var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(docume
         <td class="vt-term">Human Oversight</td>
         <td>The requirement that human security professionals review, validate, and authorize consequential actions suggested or taken by AI security tools. Human oversight is the layer that catches AI errors, false positives, and adversarial inputs before they cause harm.</td>
         <td>
-<span class="exam-trap">KEY</span> The AP exam specifically tests whether students understand that AI tools require human oversight. “The AI tool should be trusted to automatically implement all security fixes” is always wrong. The CED Scenario 1E explicitly shows the software development team reviewing AI recommendations before implementing them.</td>
+<span class="exam-trap">KEY</span> This is the part people get wrong: an AI tool is not trusted to implement security fixes on its own. A person reviews what it recommends and decides. The reason is in the row above, that the tool produces false positives and can be fed adversarial input, and neither of those is visible without someone looking.</td>
       </tr>
     </tbody>
   </table>
@@ -1381,7 +1381,7 @@ var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(docume
         <td>Yes — baseline must be recalibrated as business patterns change; model must be retrained against adversarial inputs.</td>
       </tr>
       <tr>
-        <td class="vt-term">Example AP question</td>
+        <td class="vt-term">A question it answers</td>
         <td>“A new ransomware variant changes its code to avoid matching existing antivirus signatures. Which detection method would STILL catch it?” — Answer: anomaly-based (detects mass file encryption behavior).</td>
         <td>“Which detection method is better suited for catching an employee who is slowly exfiltrating data using their legitimate credentials?” — Answer: anomaly-based (detects deviation from user’s normal data access pattern).</td>
       </tr>
@@ -1510,7 +1510,7 @@ var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(docume
       <p><strong>The research:</strong> In 2022–2024, security researchers (and subsequently attackers) discovered that AI-powered email security filters could be systematically evaded. By studying which email characteristics triggered high phishing probability scores, adversaries constructed “adversarial phishing emails” — messages that contained all the semantic content of a phishing attack (fraudulent wire transfer request, urgency, spoofed executive identity) but were structured specifically to score below the filter’s detection threshold.</p>
       <p><strong>The technique:</strong> Adversaries trained their own AI models to generate text that scored poorly on the defender’s phishing classifier while still being convincing to human targets. The generated emails used natural language patterns more associated with legitimate business communication, avoided trigger phrases that inflate phishing scores, and included plausible context details scraped from LinkedIn.</p>
       <p><strong>What this means for defense:</strong> Deploying an AI defense tool is not a one-time solution. Adversaries study, probe, and ultimately defeat static AI models. Defensive AI requires: continuous retraining on new attack samples, ensemble models (multiple classifiers that are harder to simultaneously defeat), and human review as the backstop layer that catches adversarial inputs that fool the AI.</p>
-      <p><strong>The AP exam angle:</strong> The arms race concept appears in questions that ask why “AI defense tools require ongoing maintenance and updates” or why “human oversight cannot be eliminated even with advanced AI tools.” The answer is adversarial inputs and the AI-vs-AI dynamic.</p>
+      <p><strong>Why this matters:</strong> it is the reason two things on this page are not optional. An AI defense tool needs ongoing maintenance because the attacks it was trained on keep changing, and human oversight cannot be removed because adversarial input is designed to look normal to the model and wrong to a person.</p>
     </div>
     <div class="case-tags">
       <span class="case-tag bad">Adversarial AI Can Defeat Static Defense Models</span>
