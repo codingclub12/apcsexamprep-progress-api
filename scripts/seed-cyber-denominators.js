@@ -128,41 +128,59 @@ const POINTS = {
   '2.4|lab': 30,              // score-display reads 0 / 30
   '2.4|quiz': 5,              // ANSWERS{} has 5 keys
 
-  // ── 3.1 ────────────────────────────────────────────
-  '3.1|exercise-1': 6,        // ANSWERS{} has 6 keys
-  '3.1|exercise-2': 24,       // score-display reads 0 / 24
-  '3.1|lab': 30,              // score-display reads 0 / 30
-  '3.1|quiz': 5,              // ANSWERS{} has 5 keys
+  //  UNIT 3 IS KEYED ON THE CED TOPIC, NOT THE HANDLE NUMBER.
+  //
+  //  These keys moved with the 2026-08-27 renumbering, and each value stayed
+  //  with the ACTIVITY it was measured from rather than with the number it used
+  //  to sit under. docs/cyber-unit3-renumbering-spec.md has the mapping; the
+  //  short form is old 3.1 -> 3.1a, 3.2 -> 3.1b, 3.3 -> 3.4, 3.4 -> 3.3,
+  //  3.6 -> 3.2, and 3.5 keeps its number.
+  //
+  //  Four of the six were numerically identical (6/24/30/5), so only 3.5 could
+  //  have been silently mis-keyed by a careless swap: it is the one activity set
+  //  with its own totals (24/24/24/10), and it is also the one whose number did
+  //  not change. Everything else lands on the same numbers it had.
+  //
+  //  3.1a and 3.1b are the two halves of CED 3.1. They are separate keys on
+  //  purpose: a column is keyed `${lesson}|${activity}`, so one shared id would
+  //  collapse eight columns into four and let a better score on one part mask
+  //  the other.
 
-  // ── 3.2 ────────────────────────────────────────────
+  // ── 3.1a, CED 3.1 part 1: Network Fundamentals (was 3.1) ──────────────────
+  '3.1a|exercise-1': 6,       // ANSWERS{} has 6 keys
+  '3.1a|exercise-2': 24,      // score-display reads 0 / 24
+  '3.1a|lab': 30,             // score-display reads 0 / 30
+  '3.1a|quiz': 5,             // ANSWERS{} has 5 keys
+
+  // ── 3.1b, CED 3.1 part 2: Network Attacks (was 3.2) ───────────────────────
+  '3.1b|exercise-1': 6,       // ANSWERS{} has 6 keys
+  '3.1b|exercise-2': 24,      // score-display reads 0 / 24
+  '3.1b|lab': 30,             // score-display reads 0 / 30
+  '3.1b|quiz': 5,             // ANSWERS{} has 5 keys
+
+  // ── 3.2 Policies and Wireless (was 3.6) ───────────────────────────────────
   '3.2|exercise-1': 6,        // ANSWERS{} has 6 keys
   '3.2|exercise-2': 24,       // score-display reads 0 / 24
   '3.2|lab': 30,              // score-display reads 0 / 30
   '3.2|quiz': 5,              // ANSWERS{} has 5 keys
 
-  // ── 3.3 ────────────────────────────────────────────
+  // ── 3.3 Segmentation (was 3.4) ────────────────────────────────────────────
   '3.3|exercise-1': 6,        // ANSWERS{} has 6 keys
   '3.3|exercise-2': 24,       // score-display reads 0 / 24
   '3.3|lab': 30,              // score-display reads 0 / 30
   '3.3|quiz': 5,              // ANSWERS{} has 5 keys
 
-  // ── 3.4 ────────────────────────────────────────────
+  // ── 3.4 Firewalls (was 3.3) ───────────────────────────────────────────────
   '3.4|exercise-1': 6,        // ANSWERS{} has 6 keys
   '3.4|exercise-2': 24,       // score-display reads 0 / 24
   '3.4|lab': 30,              // score-display reads 0 / 30
   '3.4|quiz': 5,              // ANSWERS{} has 5 keys
 
-  // ── 3.5 ────────────────────────────────────────────
+  // ── 3.5 Detection, IDS/IPS/SIEM (number unchanged) ────────────────────────
   '3.5|exercise-1': 24,       // score-display reads 0 / 24
   '3.5|exercise-2': 24,       // score-display reads 0 / 24
   '3.5|lab': 24,              // score-display reads 0 / 24
   '3.5|quiz': 10,             // score-display reads 0 / 10
-
-  // ── 3.6 ────────────────────────────────────────────
-  '3.6|exercise-1': 6,        // ANSWERS{} has 6 keys
-  '3.6|exercise-2': 24,       // score-display reads 0 / 24
-  '3.6|lab': 30,              // score-display reads 0 / 30
-  '3.6|quiz': 5,              // ANSWERS{} has 5 keys
 
   // ── 4.1 ────────────────────────────────────────────
   '4.1|exercise-1': 5,        // score readout reads 0 / 5
