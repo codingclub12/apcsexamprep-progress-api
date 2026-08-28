@@ -148,6 +148,10 @@ function rateLimit(req, res, next) {
 // ── OPTIONAL STUDENT AUTH ─────────────────────────────────────────────────────
 // A present token must be valid: we never silently downgrade an expired class
 // student to key-revealing self-study. No token means anonymous self-study.
+//
+// STRICT. Use this on paths that ATTRIBUTE work or RELEASE a key, where quietly
+// forgetting who the student is would lose their submission or hand out answers.
+// The render path deliberately does not use it; see renderStudent below.
 function optionalStudent(req, res, next) {
   const auth = req.headers.authorization || '';
   const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
@@ -165,6 +169,48 @@ function optionalStudent(req, res, next) {
   }
 }
 
+// TOLERANT. Render only.
+//
+// The strict middleware above rejects a bad credential with 401, and on the
+// render path that turned a broken credential into a broken PAGE. A signed-out
+// visitor gets 200 and the questions; someone holding an expired, malformed, or
+// wrong-role token got 401, and apcs-quiz-mount.js prints "This quiz could not
+// be loaded" for any non-200. So the quiz failed for exactly the people who HAD
+// signed in, and worked for everyone who had not.
+//
+// It was not a rare edge case. That mount reads apcse_teacher_token BEFORE
+// apcse_student_token, so every signed-in teacher previewing a quiz sent a
+// teacher token, failed the role check, and got the error banner every single
+// time. Reported from a live classroom as "the quiz is greyed out".
+//
+// Degrading to anonymous here is safe in a way it is not on submit: this route
+// releases no key, attributes nothing, and returns exactly what it already
+// returns to a signed-out visitor. Nothing is downgraded, because there is
+// nothing on this route to downgrade.
+//
+// The class gate is not weakened either. A VALID student token still resolves
+// the gate normally, so a locked class stays locked. A bad token lands where a
+// signed-out browser already lands, which is the same place clearing site data
+// has always led; it opens no door that was not already open.
+function renderStudent(req, res, next) {
+  const auth = req.headers.authorization || '';
+  const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
+  if (!token) { req.student = null; return next(); }
+  try {
+    const payload = verifyStudentToken(token);
+    if (payload.role !== 'student') { req.student = null; return next(); }
+    const student = db.prepare('SELECT id, class_id, display_name FROM students WHERE id = ?').get(payload.id);
+    // A token naming a student who no longer exists is stale, not hostile.
+    req.student = student || null;
+    if (student) req._identityKey = 'stu:' + student.id;
+    next();
+  } catch (e) {
+    // Expired or unverifiable. Self-study, same as any signed-out visitor.
+    req.student = null;
+    next();
+  }
+}
+
 function canRetry(studentId) {
   const stu = retryOverrideStmt.get(studentId);
   if (stu && stu.retry_override !== null && stu.retry_override !== undefined) {
@@ -174,7 +220,7 @@ function canRetry(studentId) {
 }
 
 // ── GET render (key-free, shuffled) ───────────────────────────────────────────
-router.get('/:course/:unit/:lesson/:activity_type', optionalStudent, (req, res) => {
+router.get('/:course/:unit/:lesson/:activity_type', renderStudent, (req, res) => {
   try {
     const { course, unit, lesson, activity_type } = req.params;
     if (!VALID_ACTIVITIES.has(activity_type)) {
