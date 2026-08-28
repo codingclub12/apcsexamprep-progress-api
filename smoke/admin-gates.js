@@ -168,6 +168,63 @@ const at = (list, lesson, type) =>
   ok('other course: nothing reads as locked',
     r.body.activities.every((a) => a.open === true), r.body.counts);
 
+  // ── 7) A BAD CREDENTIAL MUST NOT BREAK THE RENDER ─────────────────────────
+  //  The reported "greyed out" quiz was this: apcs-quiz-mount.js prints
+  //  "This quiz could not be loaded" for any non-200, and the render path used
+  //  to answer 401 to an expired, malformed, or wrong-role token. The quiz
+  //  therefore failed for people who HAD signed in and worked for everyone who
+  //  had not, and because the mount prefers apcse_teacher_token, every teacher
+  //  previewing a quiz hit it every time.
+  //
+  //  First re-open the class, so these assertions test the credential and not a
+  //  leftover lock from section 3.
+  await call('PUT', `/api/teacher/classes/${CODE}`, { quiz_lock_default: 0 }, TT);
+
+  const q = `/api/quiz/${COURSE}/${UNIT}/1.2/quiz`;
+
+  r = await call('GET', q);
+  ok('signed out: quiz renders', r.status === 200 && r.body.locked === false, r.status);
+
+  r = await call('GET', q, null, 'not.a.jwt');
+  ok('malformed token: renders instead of 401', r.status === 200, { status: r.status, body: r.body });
+  ok('malformed token: questions actually served', r.body && Array.isArray(r.body.questions) && r.body.questions.length > 0);
+
+  // The teacher-token case, which is the one that fired every time.
+  r = await call('GET', q, null, TT);
+  ok('teacher token: renders instead of 401', r.status === 200, { status: r.status, body: r.body });
+  ok('teacher token: questions actually served', r.body && Array.isArray(r.body.questions) && r.body.questions.length > 0);
+
+  // A token naming a student who no longer exists is stale, not hostile.
+  const GHOST = signStudentToken({ id: 'no-such-student', class_id: 'c1' });
+  r = await call('GET', q, null, GHOST);
+  ok('token for a deleted student: renders instead of 401', r.status === 200, r.status);
+
+  // A real student still resolves normally, so the gate still binds them.
+  r = await call('GET', q, null, ST);
+  ok('valid student token still renders', r.status === 200 && r.body.locked === false, r.status);
+
+  // ── 8) The fix must NOT open a locked class to a bad credential ────────────
+  //  Degrading to anonymous is only acceptable while a VALID token still gates.
+  await call('PUT', `/api/teacher/classes/${CODE}`, { quiz_lock_default: 1 }, TT);
+
+  r = await call('GET', q, null, ST);
+  ok('locked class still locks a valid student', r.body && r.body.locked === true, r.body && r.body.locked);
+  ok('locked class still withholds the questions', r.body && r.body.questions === null);
+
+  await call('PUT', `/api/teacher/classes/${CODE}`, { quiz_lock_default: 0 }, TT);
+
+  // ── 9) SUBMIT stays strict: identity is never silently dropped ─────────────
+  //  Tolerating a bad token here would score a student's work as anonymous and
+  //  lose it from the gradebook, which is worse than an honest error.
+  const served = (await call('GET', q, null, ST)).body;
+  r = await call('POST', '/api/quiz/submit',
+    { order_token: served.order_token, answers: [] }, 'not.a.jwt');
+  ok('submit with a malformed token is still rejected', r.status === 401, r.status);
+
+  r = await call('POST', '/api/quiz/submit',
+    { order_token: served.order_token, answers: [] }, GHOST);
+  ok('submit for a deleted student is still rejected', r.status === 401, r.status);
+
   // ── 7) Unknown class is a clean 404, not a 500 ─────────────────────────────
   r = await admin('/api/admin/class/CYBER-NOPE/gates');
   ok('unknown class returns 404', r.status === 404, r.status);

@@ -1,5 +1,14 @@
 # AP Cyber 1.1 quiz "greyed out" for a live class: what it actually is
 
+> **RESOLVED.** A screenshot settled it: the box read "This quiz could not be
+> loaded." That is the error branch, not the lock branch, and the cause was in
+> this repo. `optionalStudent` answered 401 to any bad credential on the RENDER
+> path, and `apcs-quiz-mount.js` prints that banner for any non-200. The quiz
+> therefore failed for people who HAD signed in and worked for everyone who had
+> not. Because the mount reads `apcse_teacher_token` first, every signed-in
+> teacher previewing a quiz hit it every time. Fixed below. Sections 1 and 2 are
+> kept because ruling them out is what located the real bug.
+
 Reported by Peter Vo (Klein Cain HS, Klein ISD) on 2026-08-28: students finished
 Exercise 1 and Exercise 2 on Lesson 1.1, but the Quiz is still greyed out.
 
@@ -114,8 +123,77 @@ All five Unit 1 quizzes are seeded and currently open to an unauthenticated
 caller, `total=5 pool=5` each. Health at commit `3e64bb8`. Gate resolution table
 above produced by running `lib/activity-gate.js` directly.
 
+## The actual cause
+
+The reported box read **"This quiz could not be loaded. Please reload the page."**
+That is `renderError`, reached when the fetch rejects or the response is not 200.
+Everything environmental was ruled out from here first:
+
+- CORS correct on both `www` and apex origins, including the `OPTIONS` preflight
+  (the mount sets `Content-Type: application/json` on a GET, so one is always sent)
+- 8/8 requests, 0.28s to 0.61s, nowhere near the mount's 12s timeout
+- `trust proxy` set, and the render path carries no rate limit at all
+
+Then the middleware:
+
+```js
+function optionalStudent(req, res, next) {
+  ...
+  if (payload.role !== 'student') throw new Error('not a student token');
+  if (!student) return res.status(401).json({ error: 'Student not found' });
+  ...
+  catch (e) { return res.status(401).json({ error: 'Invalid or expired student session' }); }
+}
+```
+
+It is not optional about a bad token, and it guarded the render path. Confirmed
+against production:
+
+```
+no token                -> HTTP 200, questions served
+stale/garbage token     -> HTTP 401 {"error":"Invalid or expired student session"}
+```
+
+So a signed-out visitor got the quiz and a signed-in one got the error banner.
+And the mount reads the teacher key first:
+
+```js
+var t = localStorage.getItem(TEACHER_TOKEN_KEY);   // apcse_teacher_token
+return t || localStorage.getItem(STUDENT_TOKEN_KEY);
+```
+
+A teacher token fails the `role !== 'student'` check, so **every signed-in
+teacher previewing any quiz got this error, every time, on every network.** That
+is almost certainly the screenshot, and it is what Peter would hit the moment he
+checked the quiz himself.
+
+Student tokens last 180d, so expiry is not yet the common trigger for students;
+a deleted or re-created student row hits the same 401.
+
+## The fix
+
+`routes/quiz.js` now has two middlewares instead of one, which is what the
+original comment's reasoning actually implied:
+
+- `optionalStudent` (unchanged, **strict**) still guards `POST /submit`.
+  Tolerating a bad token there would score a student's work as anonymous and
+  lose it from the gradebook, which is worse than an honest error.
+- `renderStudent` (**tolerant**) guards the GET. A bad, expired, or wrong-role
+  token degrades to anonymous self-study.
+
+Safe on this route specifically because the render releases no key and
+attributes nothing: it returns exactly what a signed-out visitor already gets.
+The class gate is untouched, because a VALID student token still resolves it, so
+a locked class stays locked. A bad token lands where a signed-out browser already
+landed, which is where clearing site data has always led.
+
+Covered by 11 new assertions in `smoke/admin-gates.js`, including the two guards
+that matter: a locked class still locks a valid student and still withholds the
+questions, and submit still rejects a malformed token and a deleted student. All
+138 offline suites pass.
+
 ## Still open
 
-Which of the three causes is hitting Klein Cain. That needs either the on-screen
-text from Peter, or the new endpoint run against his class code once someone with
-the admin key can reach it.
+Nothing on the cause. Worth confirming after deploy that Peter's students can
+open the quiz, and the three defects above still belong to the theme and
+page-copy pipelines.
