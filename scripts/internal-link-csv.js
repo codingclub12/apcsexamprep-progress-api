@@ -66,6 +66,13 @@ function main() {
     const file = path.join(BODIES, `${handle}.html`);
     if (!fs.existsSync(file)) { skipped.noBody.push(handle); continue; }
     const body = fs.readFileSync(file, 'utf8');
+    //  Second gate, in case a body predates the fetcher's check. Same reason:
+    //  a body carrying Cloudflare's placeholder is not the stored body, and
+    //  importing it deletes the address it stands in for.
+    if (/__cf_email__|\/cdn-cgi\/l\/email-protection/.test(body)) {
+      skipped.refused.push({ handle, why: 'Cloudflare email obfuscation in the source body' });
+      continue;
+    }
     let res;
     try {
       //  A page whose planned links are mostly DOWN is acting as a hub, so it

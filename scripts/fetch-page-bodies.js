@@ -75,6 +75,30 @@ async function main() {
 
     try {
       const body = extract(html);
+      //  ── CLOUDFLARE EMAIL OBFUSCATION MAKES A RENDERED BODY A LIE ─────────
+      //  Cloudflare rewrites every mailto and every plain-text address at
+      //  render time into
+      //      <span class="__cf_email__" data-cfemail="HEX">[email protected]</span>
+      //  with a cipher key that ROTATES per render, and restores it in the
+      //  browser with its own script. So the rendered HTML does not contain the
+      //  address at all, and a body extracted from it is not a faithful copy of
+      //  what Shopify stores.
+      //
+      //  Importing one would replace the real address with a dead placeholder
+      //  permanently. On this site that is not cosmetic: the AP Cybersecurity
+      //  phishing exercises are BUILT on lookalike domains the student is asked
+      //  to spot, and 24 live pages carry them. Writing
+      //  'do-not-reply@g00gle.com' out as '[email protected]' does not damage
+      //  the page, it deletes the question.
+      //
+      //  The cipher is trivially reversible, and reversing it is still the
+      //  wrong move: what the ORIGINAL markup was (a mailto anchor, a bare
+      //  span, anchor text that may or may not have been the address) cannot be
+      //  recovered, only guessed. This repo refuses rather than guesses, so the
+      //  page is dropped and named. Its body has to come from the Admin API.
+      if (/__cf_email__|\/cdn-cgi\/l\/email-protection/.test(body)) {
+        throw new Error('Cloudflare email obfuscation present, so this rendered body is not the stored body');
+      }
       // A body that came back suspiciously short is a truncated render, not a
       // short page. Writing it would feed the generator a body that is missing
       // its own stylesheet, and the sheet would flatten the live page.
