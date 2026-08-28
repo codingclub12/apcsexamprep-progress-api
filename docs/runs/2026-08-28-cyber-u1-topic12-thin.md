@@ -110,3 +110,72 @@ PR. It runs by hand before the sheet ships, in the same category as
   fixes 1.2 only. The same module shape ports to each; 1.3 and 1.5 already have
   thinning modules from an earlier pass, and what they do NOT yet do is the
   painted-text check this gate introduced.
+
+---
+
+## Verified live, 2026-08-28
+
+Tanner imported the sheet. Checked against the live body, not the sheet.
+
+```
+GET https://www.apcsexamprep.com/pages/ap-cybersecurity-unit-1-password-attacks.json
+updated_at  2026-08-27T22:06:49-05:00
+live bytes  275613        built 275613
+live md5    3dc33ee743fc2424c65c4b908d19a79b
+built md5   3dc33ee743fc2424c65c4b908d19a79b
+IDENTICAL   true
+```
+
+**Byte-identical, with no normalizer delta this time.** The previous import
+picked up one inserted newline from Shopify's markup normalizer. This one did
+not, and the reason is worth recording rather than being surprised by twice:
+that sheet was built against the pre-import body, so the normalizer still had
+work to do on save. This one was built against the body Shopify had already
+normalized, so there was nothing left to change. The rule that falls out of it:
+**always build the next sheet against the CURRENT live body**, which is what the
+build script does by fetching rather than reading a snapshot.
+
+### The gate, the render check and the grade check, all against the live body
+
+```
+gate     0 failures
+         "CED" in painted text: 11 -> 0
+         "CED" in source: 13 -> 2 (both inside the collapsed coverage table)
+         framing mention intact: the coverage accordion header
+         MCQ keys unchanged: cfu-2=C cfu-4=D cfu-6=B cfu-8=B cfu-10=D
+         sequence, match, dtb keys and chips all unchanged
+         feedback boxes painted on load: 0
+render   EK codes in painted text 0; answer-key phrases none; table collapsed
+grade    9 items driven in Chromium, every keyed answer grades correct
+```
+
+And the replacement copy is on the page, checked one line at a time: "There are
+three signs, not two", "Long, random, unique", "which of the three kinds of
+guess it is", "which signs give it away", "Identify all three signs".
+
+Live snapshot committed as
+`shopify/page-snapshots/ap-cybersecurity-unit-1-password-attacks.live-after-thin.html`.
+
+### Topic 1.2 is now closed
+
+Both sheets are live and verified. What a student sees on this page:
+
+- zero claims about what the exam does
+- zero EK codes
+- zero uses of "CED", with the framing mention preserved as the coverage
+  accordion header at the top of the topic
+- every graded item keyed to the seven Essential Knowledge statements, and every
+  key unchanged since before the realignment began
+
+### Still open, and not on this page
+
+- `updateTracker` is scoped inside the `cfuSubmit` IIFE, so `matchSubmit`,
+  `dtbSubmit`, `seqSubmit` and `crSubmit` throw after setting the verdict.
+  Grading, verdict and feedback are correct; the running score display and the
+  scroll are lost. Reproduces on Topic 1.4, which carries the same widget block.
+  Deliberately untouched by both 1.2 sheets.
+- Fourteen claims about what the exam does survive on 1.1, 1.4, 1.5 and three of
+  the 1.4 artifacts. 1.3 and the 1.4 quiz are clean.
+- The other four lesson pages still say "the CED" in student prose. 1.3 and 1.5
+  have thinning modules from an earlier pass; none of them does the painted-text
+  check this gate introduced.
