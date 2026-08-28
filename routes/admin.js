@@ -36,6 +36,7 @@ const trafficShopify = require('../lib/traffic-shopify');
 const trafficPull = require('../lib/traffic-pull');
 const trafficCsv = require('../lib/traffic-csv');
 const { retrySqlExpr } = require('../retry-policy');
+const { resolveGate } = require('../lib/activity-gate');
 
 const router = express.Router();
 
@@ -107,6 +108,7 @@ router.get('/', (req, res) => {
       'GET /api/admin/student/:id         per-lesson visit status + grade-of-record per item, vs manifest',
       'GET /api/admin/class/:id/gradebook full gradebook: merges attempts + score_events rollups; ?reveal=1 for real names, ?course= for solo',
       'GET /api/admin/class/:id/gradebook/as-teacher  the canonical contract, the same builder and the same output the teacher route returns; anonymized unless ?reveal=1',
+      'GET /api/admin/class/:id/gates     resolved availability gate per activity, and WHY: the same resolveGate students hit. Answers "the teacher says the quiz is greyed out" without DB access',
       'GET /api/admin/denominators        which graded columns have an authored "out of"; ?course= required, proposes values where the data agrees',
       'GET /api/admin/ungraded-fallout   completed activities that were never scored, and how much real graded work sits alongside them; ?course=',
       'POST /api/admin/denominators/adopt author denominators (header key required); {course, adopt_proposed} or {course, values}, dry_run supported',
@@ -1063,6 +1065,93 @@ router.get('/class/:id/gradebook', (req, res) => {
 //  verifying that the numbers are right does not need a minor's name to do it.
 //  ?reveal=1 opts in to display names, same posture as every other admin route.
 //  ?course= picks the course for a solo system class.
+// ── AVAILABILITY GATES: what is actually open to this class, and why ─────────
+//  This exists because of a support ticket that should have taken thirty
+//  seconds and took an afternoon. A teacher reported that his students had
+//  finished Exercise 1 and Exercise 2 but the quiz was still greyed out, and
+//  there was no way to answer him without opening the database: the only gate
+//  listing in the codebase was GET /api/teacher/classes/:code/gates, which
+//  needs that teacher's own login.
+//
+//  The asymmetry he described is not a bug and not a coincidence. A class whose
+//  quiz_lock_default is 1 leaves exercises and labs open (DEFAULT_GATED in
+//  lib/activity-gate.js covers 'quiz' and 'exam' only) and closes exactly the
+//  quiz. "Exercises work, quiz is locked" is therefore the EXPECTED shape of a
+//  locked class, not evidence of a broken reporter or a filtered network, and
+//  the first thing worth checking is this endpoint.
+//
+//  It calls resolveGate, the same function the render path and the submit path
+//  call, rather than reimplementing the resolution. Same posture as the
+//  as-teacher gradebook above: an operator view that reimplements the rule is a
+//  view that eventually disagrees with what students get, and disagreeing
+//  silently is worse than not having it.
+router.get('/class/:id/gates', (req, res) => {
+  try {
+    const cls = db.prepare(`
+      SELECT id, class_code, class_name, course, quiz_lock_default
+      FROM classes WHERE id = ? OR class_code = ?
+    `).get(req.params.id, req.params.id);
+    if (!cls) return res.status(404).json({ error: `No class with id or code ${req.params.id}` });
+
+    // The activities a student in this class could actually reach. Driven by
+    // quiz_bank because that is what the render path serves: an activity with
+    // no bank rows 404s regardless of any gate, and listing it as "open" would
+    // send an operator hunting for a lock that was never the problem.
+    const course = req.query.course || cls.course;
+    const activities = db.prepare(`
+      SELECT unit, lesson, activity_type, COUNT(*) AS pool
+      FROM quiz_bank WHERE course = ? AND active = 1
+      GROUP BY unit, lesson, activity_type
+      ORDER BY unit, lesson, activity_type
+    `).all(course);
+
+    const gateRowStmt = db.prepare(`
+      SELECT open FROM activity_gates
+      WHERE class_id = ? AND course = ? AND unit = ? AND lesson = ? AND activity_type = ?
+    `);
+
+    // The gate only bites when the activity's course is the class's own course.
+    // A student looking at another course's quiz is self-study there, so an
+    // operator checking ?course= for a course this class is not enrolled in
+    // must see "open", not a hypothetical lock. Mirrors routes/quiz.js exactly.
+    const gcls = cls.course === course ? cls : null;
+
+    const resolved = activities.map((a) => {
+      const row = gcls ? gateRowStmt.get(gcls.id, course, a.unit, a.lesson, a.activity_type) : null;
+      const g = resolveGate(row, gcls, a.activity_type);
+      return {
+        unit: a.unit,
+        lesson: a.lesson,
+        activity_type: a.activity_type,
+        pool: a.pool,
+        open: g.open,
+        reason: g.reason,
+        explicit_row: row ? (row.open ? 'open' : 'closed') : null,
+      };
+    });
+
+    const closed = resolved.filter((r) => !r.open);
+    res.json({
+      class: {
+        id: cls.id,
+        class_code: cls.class_code,
+        class_name: cls.class_name,
+        course: cls.course,
+        quiz_lock_default: cls.quiz_lock_default ? 1 : 0,
+      },
+      course_checked: course,
+      counts: { activities: resolved.length, open: resolved.length - closed.length, closed: closed.length },
+      // Named so the answer to "why is the quiz greyed out" is readable without
+      // scanning the full list.
+      closed_activities: closed,
+      activities: resolved,
+    });
+  } catch (e) {
+    console.error('admin/class/:id/gates:', e);
+    res.status(500).json({ error: 'gate listing failed', detail: e.message });
+  }
+});
+
 router.get('/class/:id/gradebook/as-teacher', (req, res) => {
   try {
     const out = contract.buildCanonicalGradebook(req.params.id, {

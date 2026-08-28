@@ -146,23 +146,75 @@ function rateLimit(req, res, next) {
 }
 
 // ── OPTIONAL STUDENT AUTH ─────────────────────────────────────────────────────
-// A present token must be valid: we never silently downgrade an expired class
-// student to key-revealing self-study. No token means anonymous self-study.
-function optionalStudent(req, res, next) {
+// No token means anonymous self-study. A token that IS present splits three
+// ways, and the line that matters is not "student or not" but "is there a
+// gradebook row this work belongs to".
+//
+//   1. A valid student token         -> that student. Attributed and gated.
+//   2. A VERIFIED token with no student row behind it: a teacher previewing the
+//      quiz, or a token naming a student who has since been removed. The
+//      signature is good, we know exactly who this is, and there is no row to
+//      credit. Self-study. Nothing is lost by it, because there was nothing to
+//      lose.
+//   3. An UNVERIFIABLE token: bad signature, expired, malformed. This one still
+//      fails, and only this one. It may belong to a real student with a real
+//      gradebook row, and scoring their work as anonymous would drop it
+//      silently, which is worse than an honest error.
+//
+// Case 2 used to be lumped in with case 3, and that is what broke a live
+// classroom twice in one afternoon. apcs-quiz-mount.js reads
+// apcse_teacher_token BEFORE apcse_student_token, so every signed-in teacher
+// sent a teacher token: first the render 401'd and the page showed "This quiz
+// could not be loaded", and once the render was fixed, the SUBMIT 401'd and the
+// same teacher got "Your answers were not saved. Please try again." after
+// answering every question. "Try again" could never work, because the token was
+// going to fail identically every time.
+function resolveStudent(req, { strict }) {
   const auth = req.headers.authorization || '';
   const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
-  if (!token) { req.student = null; return next(); }
+  if (!token) { req.student = null; return { ok: true }; }
+  let payload;
   try {
-    const payload = verifyStudentToken(token);
-    if (payload.role !== 'student') throw new Error('not a student token');
-    const student = db.prepare('SELECT id, class_id, display_name FROM students WHERE id = ?').get(payload.id);
-    if (!student) return res.status(401).json({ error: 'Student not found' });
-    req.student = student;
-    req._identityKey = 'stu:' + student.id;
-    next();
+    payload = verifyStudentToken(token);
   } catch (e) {
+    // Case 3. The render path tolerates it (it releases no key and attributes
+    // nothing, so it can just serve what a signed-out visitor already gets);
+    // the submit path must not.
+    req.student = null;
+    return strict ? { ok: false } : { ok: true };
+  }
+  // Case 2: verified, but nothing to attribute to.
+  if (payload.role !== 'student') { req.student = null; return { ok: true }; }
+  const student = db.prepare('SELECT id, class_id, display_name FROM students WHERE id = ?').get(payload.id);
+  if (!student) { req.student = null; return { ok: true }; }
+  // Case 1.
+  req.student = student;
+  req._identityKey = 'stu:' + student.id;
+  return { ok: true };
+}
+
+// STRICT. Paths that ATTRIBUTE work: an unverifiable token is refused rather
+// than silently scored as anonymous.
+function optionalStudent(req, res, next) {
+  if (!resolveStudent(req, { strict: true }).ok) {
     return res.status(401).json({ error: 'Invalid or expired student session' });
   }
+  next();
+}
+
+// TOLERANT. Render only.
+//
+// Same resolution, except that an unverifiable token degrades to anonymous
+// self-study instead of 401ing. Safe here and nowhere else: this route releases
+// no key and attributes nothing, so it returns exactly what a signed-out
+// visitor already gets.
+//
+// The class gate is not weakened. A VALID student token still resolves it, so a
+// locked class stays locked; a bad token lands where a signed-out browser
+// already landed, which is where clearing site data has always led.
+function renderStudent(req, res, next) {
+  resolveStudent(req, { strict: false });
+  next();
 }
 
 function canRetry(studentId) {
@@ -174,7 +226,7 @@ function canRetry(studentId) {
 }
 
 // ── GET render (key-free, shuffled) ───────────────────────────────────────────
-router.get('/:course/:unit/:lesson/:activity_type', optionalStudent, (req, res) => {
+router.get('/:course/:unit/:lesson/:activity_type', renderStudent, (req, res) => {
   try {
     const { course, unit, lesson, activity_type } = req.params;
     if (!VALID_ACTIVITIES.has(activity_type)) {
