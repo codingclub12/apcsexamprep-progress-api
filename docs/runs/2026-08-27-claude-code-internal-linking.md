@@ -394,3 +394,45 @@ special case now.
 ### Sheets
 
 896 pages, 5,734 links, all five independently verified.
+
+## Answered: what a student actually sees on the phishing pages
+
+The Cloudflare finding left one question open, and it mattered: if the decoder
+does not run, the AP Cybersecurity phishing exercises render with the lookalike
+domain already stripped, and the question becomes unanswerable.
+
+**It runs. Students are fine.** Verified by rendering the real page in Chromium
+with Cloudflare's own `email-decode.min.js`:
+
+```
+ap-cyber-unit-1-lesson-1-lab
+  10 obfuscated spans in the raw HTML
+  after the decoder runs: 0 placeholders, 0 undecoded, 9 addresses readable
+      do-not-reply@g00gle.com                  <- the lookalike, intact
+      IT-Security@yourcompany-helpdesk.net
+      ...
+```
+
+### How it was verified, and one wrong turn
+
+The browser could not reach the storefront through the agent proxy
+(`ERR_CONNECTION_RESET`), so the page was fetched with curl and rendered from
+`file://` with the decoder inlined. Same HTML, same script, real DOM.
+
+The first run of that reported **2 spans failing to decode** and it was wrong.
+The page loads `email-decode.min.js` TWICE and the inliner had replaced only the
+first occurrence, so the second decoder never ran and its spans stayed
+untouched. Inlining both gives 0 undecoded. Worth recording because the wrong
+version looked exactly like a real finding.
+
+### What remains true
+
+- A student with **JavaScript disabled** sees `[email protected]` and the
+  exercise is unanswerable. Pre-existing, small population, not caused by
+  anything here.
+- `ap-cybersecurity-unit-1-social-engineering` returned a 9,257-byte challenge
+  page on both attempts, so it has not been checked. Every other page tested
+  decoded cleanly.
+- The real risk was never the live page. It was writing the obfuscated form into
+  the STORED body, which would have made the placeholder permanent. That is what
+  the gate prevents.
