@@ -184,3 +184,75 @@ sixteen, 1.5 eight, 1.1 two hundred and thirteen. Read that as a lead, not a
 verdict: those snapshots are splice-only for pages whose thinning sheet was a
 separate build, and 1.1's is from before the WO-3 rebuild. Worth re-measuring
 against live bodies before acting.
+
+---
+
+## Verified live, 2026-08-28
+
+Tanner imported the sheet. Checked against the live body, not against the sheet.
+
+```
+GET https://www.apcsexamprep.com/pages/ap-cybersecurity-unit-1-password-attacks.json
+page id     132157374679
+live bytes  275515        built 275514
+live md5    9c3d0965cd6565d167fc83489ec8e817
+```
+
+**The one-byte difference is Shopify's own markup normalizer, not a content
+change.** It inserted a newline after a `<td>` before a `<strong>` at offset
+172836. Proven rather than assumed: the common prefix is 172836 characters and
+the common suffix is 102678, and 172836 + 102678 = 275514, which is the entire
+built length. So the live body is the built body with exactly one `\n` inserted
+and nothing else. Same class of thing as the entity decoding the anchors already
+account for; worth recording so the next build's anchors are not written against
+the pre-import bytes.
+
+Live snapshot committed as
+`shopify/page-snapshots/ap-cybersecurity-unit-1-password-attacks.live-after-import.html`.
+
+### All three checks, run against the live body
+
+```
+gate     0 failures; feedback boxes hidden 9/9; dtb 4 blanks against 6 chips,
+         all resolved; MCQ keys cfu-2=C cfu-4=D cfu-6=B cfu-8=B cfu-10=D
+         (unchanged from before the whole realignment)
+render   EK codes in painted text 0; answer-key phrases none; coverage table
+         collapsed
+grade    9 items driven in Chromium, every keyed answer graded correct, and
+         cfu-5's feedback names only chips from its own word bank
+claims about what the exam does: 0
+```
+
+### The ten defects, each checked both directions
+
+Gone from the live page: the 1.2.2 AP Exam Tip and its "root cause 4"; the
+1.2.6 "specific, testable AP exam concept" and all three "AP Lesson" chips; the
+1.2.7 "prerequisite ... on the AP exam" and all three "Exam Trap" chips; the FAQ
+"How do password attacks appear on the AP Cybersecurity exam?" and the separate
+"The AP exam signal:" line; Q9's NIST rotation grading and its "AP Exam Strategy
+Check" label; Q5's salting feedback; Q10's "attack types available to this
+attacker" stem; Q7's 30-to-60-minute delays and "detection thresholds"; the
+hero's "from exhaustive brute force to precomputed rainbow tables"; the
+"Exam Weight: ~15-20%" badge.
+
+Present on the live page: Q5's feedback opening on **personal information**,
+which is a chip in its own bank; Q10's stem asking for the routes to the login
+page; Q9 rebuilt on long, random and unique; the 1.2.6 and 1.2.7 banners; the
+replaced FAQ; the rewritten hero.
+
+### Still open on 1.2 after this import
+
+- The thinning sheet. Seven EK codes remain, all inside the collapsed coverage
+  table, which the house rule permits. Zero are painted. "The CED" still appears
+  in student prose, which is the decision open across all five pages.
+- `updateTracker` is still scoped inside the `cfuSubmit` IIFE, so the four
+  non-MCQ submit handlers still throw after setting the verdict. Grading and
+  feedback are correct; the score display and the scroll are not. Unchanged by
+  this import because it was deliberately not touched, and Topic 1.4 has it too.
+
+### Environment note, unrelated to this page
+
+`TODO_KEY` is set on this Claude Code environment. CLAUDE.md says it should not
+be: it can WRITE to the ledger, it belongs in Railway and the Actions secret
+only, and `COMMAND_READ_TOKEN` is what a session should carry. Worth rotating
+and replacing with the read token.
