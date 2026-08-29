@@ -121,6 +121,11 @@ per-lesson Drive folders, so mapping them to lessons is its own pass. What this
 audit establishes is structural: which pages leak the key, which serve the wrong
 lesson, and which carry the wrong tracking id.
 
+**Closed for Unit 1 on 2026-08-29.** All six Unit 1 instruments were compared
+item by item against their bundle counterparts and none shares an item with the
+paper version. See `docs/cyber-unit1-bundle-vs-online.md` for the numbers and the
+limits of the method. Units 2 through 5 remain unverified.
+
 ## Suggested order
 
 1. Finding 1 for the units a teacher is actually teaching now. Migrating a page
