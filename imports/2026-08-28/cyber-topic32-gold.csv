@@ -574,224 +574,434 @@ var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(docume
 })();
 </script>
 <div class=""exhero"" style=""margin-bottom:0!important;"">
-<div class=""exhero-badge"">Unit 3 • Lesson 3.2</div>
+<div class=""exhero-badge"">Unit 3 &bull; Lesson 3.2</div>
 <nav aria-label=""Breadcrumb"" style=""font-size:0.82rem;color:#6b7280;-webkit-text-fill-color:#6b7280;margin:0 0 16px;font-family:Georgia,serif;padding:0;"">
-<a href=""/"" style=""color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;"">Home</a><span style=""margin:0 6px;color:#d1d5db;"">›</span><a href=""/pages/ap-cybersecurity-complete-course-guide"" style=""color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;"">AP Cybersecurity</a><span style=""margin:0 6px;color:#d1d5db;"">›</span><span style=""color:#e9d5ff;-webkit-text-fill-color:#e9d5ff;"">Unit 3 › Lesson 3.2</span>
+<a href=""/"" style=""color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;"">Home</a><span style=""margin:0 6px;color:#d1d5db;"">&rsaquo;</span><a href=""/pages/ap-cybersecurity-complete-course-guide"" style=""color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;"">AP Cybersecurity</a><span style=""margin:0 6px;color:#d1d5db;"">&rsaquo;</span><span style=""color:#e9d5ff;-webkit-text-fill-color:#e9d5ff;"">Unit 3 &rsaquo; Lesson 3.2</span>
 </nav>
 <h1>Topic 3.2: Network Security Policies &amp; Wireless</h1>
 <p>Router, switch, VPN and wireless security policies, and the access point settings that carry them out</p>
 </div>
-<div class=""lesson-obj"" style=""background:#F5F0FF!important;border-left:4px solid #6B21A8!important;padding:20px 24px!important;border-radius:0 10px 10px 0!important;margin:24px 0!important;font-family:Georgia,serif!important;"">
-<p style=""font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 10px!important;font-size:15px!important;"">🎯 Learning Objectives</p>
-<ul style=""margin:0!important;padding-left:20px!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.8!important;"">
-<li>Explain what a managerial control is, and why a written policy is what makes one device&rsquo;s configuration true of every device</li>
-<li>Identify the requirements a router security policy and a switch security policy set, and say which are shared</li>
-<li>Explain what a VPN policy requires, including why it prohibits split tunneling</li>
-<li>Identify the requirements a wireless security policy establishes</li>
-<li>Describe the four wireless configuration controls, and say what each one does and does not achieve</li>
-<li>Recognize which wireless encryption protocols are insecure, and which is currently strongest</li>
-<li><em>Background:</em> compare secure protocols including TLS, SSH, SFTP and DNSSEC, and the certificate trust model they rely on</li>
-</ul>
-</div>
-<div class=""lesson-section"" style=""padding:0 4px!important;"">
-<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">3.2.1: Policy Comes Before Configuration</h2>
-
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">A <strong>managerial control</strong> is a written rule about how something must be built or used. It is not a setting on a device. It is the document that says what every device of that kind has to look like before it is allowed on the network.</p>
-
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">The distinction matters because configuration without policy does not survive contact with an organization. One administrator hardens a router carefully. A second administrator, six months later, adds a router and does what seems reasonable at the time. Neither of them did anything wrong, and the network now has two different security postures. A policy is what makes the second router match the first one, and what makes an auditor able to tell whether it does.</p>
-
-<div style=""background:#F9FAFB!important;border:1px solid #E5E7EB!important;border-radius:10px!important;padding:20px 24px!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
-<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">The four policies in this topic</h3>
-<div style=""display:grid!important;grid-template-columns:1fr!important;gap:10px!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;"">
-<div style=""background:#EDE9FE!important;padding:10px 14px!important;border-radius:6px!important;""><strong>Router security policy</strong> sets the minimum configuration standard for routers on the network.</div>
-<div style=""background:#EDE9FE!important;padding:10px 14px!important;border-radius:6px!important;""><strong>Switch security policy</strong> sets the minimum configuration standard for switches.</div>
-<div style=""background:#EDE9FE!important;padding:10px 14px!important;border-radius:6px!important;""><strong>VPN policy</strong> sets the minimum security requirements for employees reaching the internal network from outside it.</div>
-<div style=""background:#EDE9FE!important;padding:10px 14px!important;border-radius:6px!important;""><strong>Wireless security policy</strong> sets the minimum security requirements for the organization's wireless networks.</div>
-</div>
+<div class=""card"" id=""section-a"">
+  <h2>
+<span class=""section-icon"">1</span>3.2.1 — Learning Objectives</h2>
+  <ul class=""obj-list"">
+    <li>
+<span class=""obj-check""></span>Explain what a managerial control is, and why a written policy is what makes one device&rsquo;s configuration true of every device</li>
+    <li>
+<span class=""obj-check""></span>Identify the requirements a router security policy sets: banning local user accounts, disabling unnecessary services, and requiring a firewall</li>
+    <li>
+<span class=""obj-check""></span>Identify the requirements a switch security policy sets: banning local user accounts, requiring port security, and using MAC filtering</li>
+    <li>
+<span class=""obj-check""></span>Say which requirement the router and switch policies share, and which belong to only one of them</li>
+    <li>
+<span class=""obj-check""></span>Explain what a VPN policy requires, and describe split tunneling precisely enough to say what it exposes</li>
+    <li>
+<span class=""obj-check""></span>Identify the requirements a wireless security policy establishes, including authentication to an approved server and AES encryption at a minimum key length</li>
+    <li>
+<span class=""obj-check""></span>Describe the four wireless configuration controls, and say what each one achieves and what it does not</li>
+    <li>
+<span class=""obj-check""></span>Recognize which wireless encryption protocols are insecure, and which is currently strongest</li>
+    <li>
+<span class=""obj-check""></span>Apply all four policies to a described network and name which requirements a configuration violates</li>
+  </ul>
 </div>
 
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">All four share a phrase worth reading carefully: a policy sets a <strong>minimum</strong> standard and <strong>may include</strong> a given requirement. A policy is a floor, not a ceiling. An organization is free to require more than the list; what it may not do is require less.</p>
+<div class=""card"" id=""section-b"">
+  <h2>
+<span class=""section-icon"">2</span>3.2.2 — Why Policy Comes Before Configuration</h2>
+  <p>An administrator hardens a router carefully on a Tuesday. Six months later a second administrator adds another router and configures it the way that seems reasonable at the time. Neither of them did anything wrong. The network now has two security postures, and nobody can say which one is correct.</p>
 
-<div style=""background:#F5F0FF!important;border-left:4px solid #6B21A8!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
-<p style=""font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 6px!important;font-size:14px!important;"">&#9733; The pattern to carry through this topic</p>
-<p style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;"">Three of the four policies say the same thing in different words: <strong>stop trusting the device to decide who you are</strong>. Routers and switches ban local accounts, wireless requires authentication against an approved server, and the VPN requires keys or multifactor authentication. Identity is checked centrally, or it is not really checked.</p>
+  <p>That is <strong>configuration drift</strong>, and it is the problem managerial controls exist to solve. A <strong>managerial control</strong> is a written rule about how something must be built or used. It is not a setting on a device. It is the document that says what every device of that kind has to look like before it is allowed on the network, which is what makes the second router match the first one and what lets an auditor tell whether it does.</p>
+
+  <div class=""info-box insight"">
+<span class=""box-label"">&#9733; The distinction the exam tests</span><p>A technical control is the switch setting. A managerial control is the policy that requires the setting. Questions in this topic describe an organization and ask what its <em>policy</em> should say, not which button to press. If an answer choice names a device configuration and the question asked about policy, read it again.</p>
+  </div>
+
+  <p>All four policies in this topic share a phrase worth reading carefully: a policy sets a <strong>minimum</strong> standard and <strong>may include</strong> a given requirement. A policy is a floor, not a ceiling. An organization is free to require more than the list. What it may not do is require less.</p>
+
+  <table class=""vocab-table-full"">
+    <thead><tr>
+<th>Policy</th>
+<th>What it sets a minimum standard for</th>
+</tr></thead>
+    <tbody>
+      <tr>
+<td class=""term"">Router security policy</td>
+<td>Every router on the organization&rsquo;s network</td>
+</tr>
+      <tr>
+<td class=""term"">Switch security policy</td>
+<td>Every switch on the organization&rsquo;s network</td>
+</tr>
+      <tr>
+<td class=""term"">VPN policy</td>
+<td>Employees reaching the internal network from outside it</td>
+</tr>
+      <tr>
+<td class=""term"">Wireless security policy</td>
+<td>The organization&rsquo;s wireless networks</td>
+</tr>
+    </tbody>
+  </table>
+
+  <p>Three of the four say the same thing in different words: <strong>stop trusting the device to decide who you are.</strong> Routers and switches ban local accounts, wireless requires authentication against an approved server, and the VPN requires keys or multifactor authentication. Identity is checked centrally, or it is not really checked.</p>
 </div>
 
+<div class=""cfu-block"" id=""cfu-1"" data-type=""mcq"" data-num=""1"" data-answer=""B"">
+<div class=""cfu-header"">
+<div class=""cfu-header-left"">
+<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge"">MCQ</span>
 </div>
-<div class=""lesson-section"" style=""padding:0 4px!important;"">
-<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">3.2.2: Router and Switch Security Policies</h2>
-
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">Routers and switches are the devices that move traffic. An adversary who controls one of them does not need to break anything else: they can read traffic, redirect it, or quietly let themselves back in later. Both policies are built around that fact, and they overlap more than they differ.</p>
-
-<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">Router security policy</h3>
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">A router security policy sets a minimum configuration standard for every router on the organization's network, and it may include:</p>
-<ul style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.9!important;margin:0 0 16px!important;padding-left:22px!important;font-family:Georgia,serif!important;"">
-<li><strong>Banning local user accounts.</strong> All router logins must go through an approved authentication server. A local account lives on the box, so it does not disappear when the person who used it leaves, it does not show up in central logs, and it is the account everyone shares because it is easier.</li>
-<li><strong>Disabling unnecessary services,</strong> such as Telnet. Every service left running is another way in and another thing to patch. Telnet is the standing example because it carries credentials in plaintext, so anyone positioned to watch the traffic gets the password.</li>
-<li><strong>Requiring a firewall.</strong> The organization may decide to use a firewall device separate from the router rather than the router's own filtering.</li>
-</ul>
-
-<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">Switch security policy</h3>
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">A switch security policy sets a minimum configuration standard for every switch, and it may include:</p>
-<ul style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.9!important;margin:0 0 16px!important;padding-left:22px!important;font-family:Georgia,serif!important;"">
-<li><strong>Banning local user accounts.</strong> Same requirement, same reason: switch logins go through an approved authentication server.</li>
-<li><strong>Requiring port security to be enabled.</strong> Port security limits which devices, and how many, may use a physical switch port. A port expecting one workstation should not silently accept a hub with six unknown machines behind it.</li>
-<li><strong>Using MAC filtering,</strong> so the switch forwards traffic only for hardware addresses the organization expects.</li>
-</ul>
-
-<div style=""background:#F9FAFB!important;border:1px solid #E5E7EB!important;border-radius:10px!important;padding:20px 24px!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
-<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">What is shared and what is not</h3>
-<div style=""display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px 16px!important;align-items:start!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;"">
-<div style=""font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;"">Router policy</div>
-<div style=""font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;"">Switch policy</div>
-<div style=""background:#DCFCE7!important;padding:8px 12px!important;border-radius:6px!important;"">Ban local user accounts</div>
-<div style=""background:#DCFCE7!important;padding:8px 12px!important;border-radius:6px!important;"">Ban local user accounts</div>
-<div style=""background:#EDE9FE!important;padding:8px 12px!important;border-radius:6px!important;"">Disable unnecessary services (for example Telnet)</div>
-<div style=""background:#F3F4F6!important;padding:8px 12px!important;border-radius:6px!important;"">Require port security enabled</div>
-<div style=""background:#EDE9FE!important;padding:8px 12px!important;border-radius:6px!important;"">Require a firewall, which may be a separate device</div>
-<div style=""background:#F3F4F6!important;padding:8px 12px!important;border-radius:6px!important;"">Use MAC filtering</div>
+<span class=""cfu-counter"">1 / 10</span>
 </div>
-<p style=""font-size:13px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;margin:12px 0 0!important;font-family:Georgia,serif!important;"">Green is the requirement both policies make. It is the one to remember first, because a question that swaps router for switch is testing whether you know which requirements are specific.</p>
+<div class=""cfu-scenario"">
+<strong>Vantex Financial Group</strong> has a hardened core router. A second router added last spring was configured by a different administrator and allows local logins.</div>
+<p class=""cfu-question"">Which statement <span style=""font-weight:700!important;text-decoration:underline!important;"">BEST</span> describes what the district is missing?</p>
+<div class=""cfu-options-grid"">
+<div class=""cfu-opt"" data-val=""A"">
+<span class=""cfu-opt-letter"">A</span><span class=""cfu-opt-text"">A better router product, since the second one clearly has weaker defaults</span>
+</div>
+<div class=""cfu-opt"" data-val=""B"">
+<span class=""cfu-opt-letter"">B</span><span class=""cfu-opt-text"">A written minimum configuration standard that every router has to meet, so the second router cannot differ from the first by accident</span>
+</div>
+<div class=""cfu-opt"" data-val=""C"">
+<span class=""cfu-opt-letter"">C</span><span class=""cfu-opt-text"">Nothing. The core router is hardened, so the network is protected</span>
+</div>
+<div class=""cfu-opt"" data-val=""D"">
+<span class=""cfu-opt-letter"">D</span><span class=""cfu-opt-text"">A faster patching schedule for the second router</span>
+</div>
+</div>
+<div class=""cfu-feedback"" id=""cfu-fb-1"" style=""display:none;"">
+<div class=""cfu-fb-correct"" style=""display:none;""><strong>Correct.</strong> Neither administrator did anything wrong; there was simply nothing saying what correct looked like. That written minimum standard is the managerial control, and it is what makes the second router match the first one and lets an auditor tell whether it does.</div>
+<div class=""cfu-fb-wrong"" data-a=""A"" style=""display:none;"">Both routers can be configured correctly. The gap is that nothing defined correct, so the product is not the variable.</div>
+<div class=""cfu-fb-wrong"" data-a=""C"" style=""display:none;"">A hardened device beside an unhardened one on the same network is not a protected network. The adversary uses the second router.</div>
+<div class=""cfu-fb-wrong"" data-a=""D"" style=""display:none;"">Patching is worth doing and does not address local accounts, which is a configuration standard question rather than a currency one.</div>
+</div>
+</div>
+<div class=""info-box exam"" style=""margin-bottom:20px!important;"">
+<span class=""box-label"">★ AP Exam Focus — Topic 3.2</span><p>• Identify the four CED network security policies: router policy (ban local accounts, disable Telnet, require firewall), switch policy (ban local accounts, port security, MAC filtering), VPN policy (role-based access, auth requirements, no split tunneling), wireless policy (EAP authentication, AES encryption, disable beacon frames)<br>• Apply the three CED wireless security controls: disable beacon frame broadcasting, control WAP signal strength/direction, enable strong encryption (WPA3 is strongest; WEP/WPS/original WPA are insecure)<br>• Explain MAC filtering: prevents unauthorized devices from joining the network<br>• Recognize that WEP, WPS, and original WPA have known vulnerabilities and are insecure — WPA3 is the CED-specified strongest option<br>• Note: TLS/SSH/SFTP/DNSSEC content in this lesson extends beyond CED core — labeled enrichment</p>
 </div>
 
-<div style=""background:#FEF2F2!important;border-left:4px solid #EF4444!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
-<p style=""font-weight:700!important;color:#EF4444!important;-webkit-text-fill-color:#EF4444!important;margin:0 0 6px!important;font-size:14px!important;"">&#9888; Exam Trap</p>
-<p style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;"">Port security and MAC filtering are switch policy requirements, not router ones. Disabling unnecessary services and requiring a firewall are router policy requirements. Banning local user accounts is the requirement that appears in both, so it is never the answer to ""which of these is unique to the switch policy"".</p>
+
+<div class=""card"" style=""border-top:3px solid #d97706!important;"">
+<div style=""display:flex!important;justify-content:space-between!important;align-items:center!important;cursor:pointer!important;"" onclick=""var b=document.getElementById('ek36-body');var c=document.getElementById('ek36-chev');b.style.display=b.style.display==='none'?'block':'none';c.style.transform=c.style.transform?'':'rotate(180deg)';"">
+<div>
+<span style=""font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1.5px!important;color:#d97706!important;font-family:Georgia,serif!important;"">College Board Essential Knowledge Coverage</span><h3 style=""margin:4px 0 0!important;font-size:16px!important;font-weight:700!important;color:#1E1B4B!important;font-family:Georgia,serif!important;"">Topic 3.2 Managerial Controls — What Is Testable</h3>
 </div>
-
+<span id=""ek36-chev"" style=""font-size:20px!important;color:#6B21A8!important;transition:transform .2s!important;"">▼</span>
 </div>
-<div class=""lesson-section"" style=""padding:0 4px!important;"">
-<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">3.2.3: VPN Policy</h2>
-
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">A <strong>virtual private network</strong> lets an employee outside the building reach the internal network as though they were inside it. That is useful and it is also a hole in the perimeter, so the VPN policy details the minimum security requirements for using one. It may include:</p>
-
-<ul style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.9!important;margin:0 0 16px!important;padding-left:22px!important;font-family:Georgia,serif!important;"">
-<li><strong>A list of roles allowed to use the VPN.</strong> Access is granted to roles that need it, not to everyone with a login. A policy that lets the whole organization in has not reduced anything.</li>
-<li><strong>Authentication requirements,</strong> such as a public and private key system, or multifactor authentication. A password alone is not enough to open a door this wide.</li>
-<li><strong>A prohibition against split tunneling,</strong> which is also called dual tunneling.</li>
-</ul>
-
-<div style=""background:#F9FAFB!important;border:1px solid #E5E7EB!important;border-radius:10px!important;padding:20px 24px!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
-<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">What split tunneling actually does</h3>
-<p style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 14px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">With split tunneling on, the laptop keeps two paths open at once. Traffic for the organization goes through the encrypted tunnel and gets inspected. Everything else goes straight out to the internet and is inspected by nobody.</p>
-<div style=""display:grid!important;grid-template-columns:1fr auto 1fr!important;gap:10px 14px!important;align-items:center!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;"">
-<div style=""font-weight:700!important;color:#EF4444!important;-webkit-text-fill-color:#EF4444!important;"">Split tunneling (prohibited)</div>
-<div></div>
-<div style=""font-weight:700!important;color:#22C55E!important;-webkit-text-fill-color:#22C55E!important;"">Full tunneling (required)</div>
-<div style=""background:#FEE2E2!important;padding:8px 12px!important;border-radius:6px!important;"">Work traffic through the tunnel, inspected</div>
-<div>&#8596;</div>
-<div style=""background:#DCFCE7!important;padding:8px 12px!important;border-radius:6px!important;"">Work traffic through the tunnel, inspected</div>
-<div style=""background:#FEE2E2!important;padding:8px 12px!important;border-radius:6px!important;"">Everything else direct to the internet, <strong>not inspected</strong></div>
-<div>&#8596;</div>
-<div style=""background:#DCFCE7!important;padding:8px 12px!important;border-radius:6px!important;"">Everything else also through the tunnel, inspected</div>
+<div id=""ek36-body"" style=""display:none!important;margin-top:16px!important;"">
+<div class=""info-box warning"" style=""margin-bottom:12px!important;"">
+<span class=""box-label"">⚠ CED Scope Note</span><p>Topic 3.2 is router, switch, VPN and wireless <em>security policies</em>, plus wireless access point configuration. That material is sections 3.2.1 to 3.2.11 and all ten checks. The TLS, SSH, SFTP, DNSSEC and certificate content is kept on the page as collapsed background reading and is not part of this topic.</p>
 </div>
-<p style=""font-size:13px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;margin:12px 0 0!important;font-family:Georgia,serif!important;"">The risk is not that the direct traffic is sensitive. It is that the direct path is a route into a machine that is simultaneously connected to the internal network, and the organization cannot see it.</p>
-</div>
-
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">Organizations turn split tunneling on for a mundane reason: sending every employee's video calls and software updates through headquarters is expensive and slow. That is a real cost, and it is why the prohibition has to be written down rather than left to judgement.</p>
-
-<div style=""background:#FEF2F2!important;border-left:4px solid #EF4444!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
-<p style=""font-weight:700!important;color:#EF4444!important;-webkit-text-fill-color:#EF4444!important;margin:0 0 6px!important;font-size:14px!important;"">&#9888; Exam Trap</p>
-<p style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;"">Split tunneling is not an attack and it is not malware. It is a configuration choice an organization makes on purpose, and the policy requirement is that it be prohibited. If a scenario says a VPN permits split tunneling, the finding is a policy violation, not an intrusion.</p>
-</div>
-
-</div>
-<div class=""lesson-section"" style=""padding:0 4px!important;"">
-<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">3.2.4: Wireless Security Policy</h2>
-
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">Wired networks have a physical control built in: to plug into a switch, you have to be in the building. Wireless removes it. The signal goes through walls and does not stop at the property line, so anyone within range is already as close to the network as an employee at a desk. The wireless security policy establishes the minimum requirements that replace the lock on the door, and it may include:</p>
-
-<ul style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.9!important;margin:0 0 16px!important;padding-left:22px!important;font-family:Georgia,serif!important;"">
-<li><strong>Requiring users to authenticate through an extensible authentication protocol</strong> connected to an approved authentication server. This is the same central-identity requirement the router and switch policies make, applied to the people joining the network rather than the staff administering it. A single shared wireless password identifies nobody.</li>
-<li><strong>Requiring all wireless traffic to be encrypted using AES encryption with a minimum key length.</strong> The policy names the algorithm and it names a floor for the key length, because ""encrypted"" on its own is satisfied by encryption too weak to matter.</li>
-<li><strong>Disabling beacon frames on wireless access points.</strong></li>
-</ul>
-
-<div style=""background:#F5F0FF!important;border-left:4px solid #6B21A8!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
-<p style=""font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 6px!important;font-size:14px!important;"">&#9733; Policy and configuration meet here</p>
-<p style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;"">The last requirement is the only one in this topic that is written twice: once as something the policy must say, and once as something an administrator must actually do. That is the seam between the two halves of this lesson, and the next section is the doing half.</p>
-</div>
-
-</div>
-<div class=""lesson-section"" style=""padding:0 4px!important;"">
-<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">3.2.5: Configuring Wireless Security</h2>
-
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">These are the settings an administrator changes on a wireless access point to carry out the policy. There are four, and they are worth learning as a set because each one closes a gap the others leave open.</p>
-
-<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">1. Disable beacon frame broadcasting</h3>
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">A <strong>beacon frame</strong> is a small message an access point broadcasts on a timer, announcing the network's name and its basic properties. It is what fills the list when a phone shows nearby networks. Turning it off means the access point stops advertising itself, which makes it harder for an adversary to find the network and learn what it is running.</p>
-
-<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">2. Control broadcast direction and signal strength</h3>
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">An access point set to maximum power in the middle of a building puts a usable signal in the car park and the pavement outside. Reducing the transmit power, and aiming the signal with directional antennas, keeps coverage inside the physical space the access point is meant to cover. This is the one control on the list that takes territory back from the attacker rather than making the network harder to use once they are in range.</p>
-
-<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">3. Enable strong wireless encryption</h3>
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">Wireless frames travel through open air, so anyone with an antenna can capture them. Encryption is what stops a captured frame from being readable. Not every option is worth having:</p>
-<div style=""background:#F9FAFB!important;border:1px solid #E5E7EB!important;border-radius:10px!important;padding:20px 24px!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
-<div style=""display:grid!important;grid-template-columns:auto 1fr!important;gap:8px 16px!important;align-items:center!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;"">
-<div style=""background:#FEE2E2!important;padding:8px 14px!important;border-radius:6px!important;font-weight:700!important;"">WEP</div>
-<div>Known vulnerabilities. Insecure.</div>
-<div style=""background:#FEE2E2!important;padding:8px 14px!important;border-radius:6px!important;font-weight:700!important;"">WPS</div>
-<div>Known vulnerabilities. Insecure.</div>
-<div style=""background:#FEE2E2!important;padding:8px 14px!important;border-radius:6px!important;font-weight:700!important;"">WPA (original)</div>
-<div>Known vulnerabilities. Insecure.</div>
-<div style=""background:#DCFCE7!important;padding:8px 14px!important;border-radius:6px!important;font-weight:700!important;"">WPA3</div>
-<div>Currently the strongest wireless encryption algorithm.</div>
+<table class=""vocab-table"">
+<thead><tr>
+<th>CED Ref</th>
+<th>Essential Knowledge</th>
+<th>Covered In</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class=""term"">3.2.A.1</td>
+<td>Router security policy: ban local user accounts, disable unnecessary services (e.g. Telnet), require a firewall</td>
+<td>Section 3.2.4, Router and switch security policies</td>
+</tr>
+<tr>
+<td class=""term"">3.2.A.2</td>
+<td>Switch security policy: ban local user accounts, require port security, use MAC filtering</td>
+<td>Section 3.2.4, Router and switch security policies</td>
+</tr>
+<tr>
+<td class=""term"">3.2.A.3</td>
+<td>VPN policy: role-based access, authentication requirements (public/private key or MFA), prohibition against split tunneling (dual tunneling)</td>
+<td>Section 3.2.5, VPN policy</td>
+</tr>
+<tr>
+<td class=""term"">3.2.A.4</td>
+<td>Wireless security policy: EAP authentication to approved auth server, AES encryption with minimum key length, disable beacon frames on WAPs</td>
+<td>Section 3.2.6, Wireless security policy</td>
+</tr>
+<tr>
+<td class=""term"">3.2.B.1</td>
+<td>Disable beacon frame broadcasting on WAPs: makes it harder for adversaries to find the network and learn its properties</td>
+<td>Section 3.2.7, Configuring wireless security</td>
+</tr>
+<tr>
+<td class=""term"">3.2.B.2</td>
+<td>Control WAP broadcast direction and signal strength so signal does not extend beyond the intended physical space</td>
+<td>Section 3.2.7, Configuring wireless security</td>
+</tr>
+<tr>
+<td class=""term"">3.2.B.3</td>
+<td>Enable strong wireless encryption: WEP/WPS/original WPA have known vulnerabilities and are insecure. WPA3 is currently the strongest wireless encryption algorithm.</td>
+<td>Section 3.2.7, Configuring wireless security</td>
+</tr>
+<tr>
+<td class=""term"">3.2.B.4</td>
+<td>Enable MAC filtering to prevent unauthorized devices from accessing the network; require user authentication when joining</td>
+<td>Section 3.2.7, Configuring wireless security</td>
+</tr>
+</tbody>
+</table>
+<p style=""font-size:12px!important;color:#6B7280!important;font-family:Georgia,serif!important;margin-top:8px!important;"">Source: AP Cybersecurity CED Effective Fall 2026. AP Skills: 2.A Identify security controls • 2.C Evaluate mitigations • 2.D Implement mitigations</p>
 </div>
 </div>
 
-<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">4. Enable MAC filtering and require authentication</h3>
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">MAC filtering keeps a list of the hardware addresses allowed on the network and refuses the rest, which prevents unauthorised devices from getting on. Alongside it, users are required to authenticate when joining the network, so getting a device admitted and getting a person admitted are two separate checks.</p>
 
-<div style=""background:#FEF2F2!important;border-left:4px solid #EF4444!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
-<p style=""font-weight:700!important;color:#EF4444!important;-webkit-text-fill-color:#EF4444!important;margin:0 0 6px!important;font-size:14px!important;"">&#9888; Exam Trap</p>
-<p style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;"">Two of these controls raise the cost of an attack rather than preventing one. A network with beacons disabled is <strong>harder to find</strong>, not invisible: it still carries traffic, and traffic can be observed. MAC filtering blocks a device that has not been added to the list, but a hardware address is something a machine announces about itself. Neither is a reason to weaken the encryption or the authentication, which are what actually keep an adversary out.</p>
+<div class=""card"" id=""section-c"">
+  <h2>
+<span class=""section-icon"">3</span>3.2.3 — Essential Vocabulary &amp; Exam Tips</h2>
+  <table class=""vocab-table-full"">
+    <thead>
+      <tr>
+<th style=""width:22%"">Term</th>
+<th style=""width:40%"">Definition</th>
+<th style=""width:38%"">Exam Trap / Critical Distinction</th>
+</tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class=""vt-term"">Managerial control</td>
+        <td>A written rule setting how something must be built or used. It is a document, not a device setting. The four in this topic are the router, switch, VPN and wireless security policies.</td>
+        <td>
+<span class=""exam-trap"">KEY</span> The exam distinguishes managerial from technical controls. The policy requiring port security is managerial. Port security itself is technical. A question asking what the policy should say is not asking which setting to change.</td>
+      </tr>
+      <tr>
+        <td class=""vt-term"">Local user account</td>
+        <td>An account defined on the device itself rather than on a central authentication server. Both the router and the switch policies ban them.</td>
+        <td>
+<span class=""exam-trap"">KEY</span> This is the one requirement the router and switch policies share, so it is never the answer to ""which requirement is unique to the switch policy"". Local accounts survive an employee&rsquo;s departure, do not appear in central logs, and get shared.</td>
+      </tr>
+      <tr>
+        <td class=""vt-term"">Approved authentication server</td>
+        <td>The central system all device logins must go through once local accounts are banned. The wireless policy points at the same kind of server for the people joining the network.</td>
+        <td>
+<span class=""exam-trap"">NOTE</span> Three of the four policies route identity here. Recognizing that pattern is usually faster than recalling each policy&rsquo;s bullets separately.</td>
+      </tr>
+      <tr>
+        <td class=""vt-term"">Unnecessary services</td>
+        <td>Services running on a device that the organization does not need, which the router security policy requires be disabled. Telnet is the standing example.</td>
+        <td>
+<span class=""exam-trap"">TRAP</span> Disabling unnecessary services belongs to the ROUTER policy. Students who remember only ""Telnet is insecure"" sometimes attach it to the switch policy, which does not name it.</td>
+      </tr>
+      <tr>
+        <td class=""vt-term"">Port security</td>
+        <td>A switch feature limiting which devices, and how many, may use a physical switch port. Required by the switch security policy.</td>
+        <td>
+<span class=""exam-trap"">TRAP</span> Port security is switch-only. A port expecting one workstation should not silently accept a hub with six unknown machines behind it. Do not confuse it with a firewall port number, which is unrelated.</td>
+      </tr>
+      <tr>
+        <td class=""vt-term"">MAC filtering</td>
+        <td>Allowing only listed hardware addresses onto the network and refusing the rest. It appears twice in this topic: in the switch security policy, and as a wireless configuration control.</td>
+        <td>
+<span class=""exam-trap"">NOTE</span> The only item in this topic that is both a policy requirement and a configuration step. A hardware address is something a machine announces about itself, so filtering raises the cost of an attack rather than preventing one.</td>
+      </tr>
+      <tr>
+        <td class=""vt-term"">Split tunneling</td>
+        <td>A VPN configuration in which some traffic goes through the encrypted tunnel and the rest goes straight to the internet. Also called dual tunneling. The VPN policy prohibits it.</td>
+        <td>
+<span class=""exam-trap"">TRAP</span> Split tunneling is not an attack and not malware. It is a configuration an organization chooses. If a scenario says a VPN permits it, the finding is a policy violation, not an intrusion.</td>
+      </tr>
+      <tr>
+        <td class=""vt-term"">Beacon frame</td>
+        <td>A message a wireless access point broadcasts on a timer, announcing the network name and basic properties. It is what fills the list of nearby networks on a phone.</td>
+        <td>
+<span class=""exam-trap"">TRAP</span> Disabling beacons makes a network HARDER TO FIND, not invisible. It still carries traffic, and traffic can be observed. Any answer choice claiming the network becomes undetectable is wrong.</td>
+      </tr>
+      <tr>
+        <td class=""vt-term"">EAP (extensible authentication protocol)</td>
+        <td>The authentication framework the wireless security policy requires, connected to an approved authentication server, so that people joining the wireless network are identified individually.</td>
+        <td>
+<span class=""exam-trap"">KEY</span> A single shared wireless password identifies nobody. The policy asks for authentication per person, which is why it names a framework and a server rather than a passphrase.</td>
+      </tr>
+      <tr>
+        <td class=""vt-term"">AES encryption with a minimum key length</td>
+        <td>What the wireless security policy requires of all wireless traffic. The policy names both the algorithm and a floor for the key length.</td>
+        <td>
+<span class=""exam-trap"">NOTE</span> The key length matters as much as the algorithm. A policy saying only ""traffic must be encrypted"" is satisfied by encryption too weak to matter, which is why the requirement is written with a floor.</td>
+      </tr>
+      <tr>
+        <td class=""vt-term"">WPA3</td>
+        <td>Currently the strongest wireless encryption algorithm, and what an access point should be running.</td>
+        <td>
+<span class=""exam-trap"">KEY</span> WEP, WPS and the original WPA all have known vulnerabilities and are insecure. WPA2 is neither on that list nor the strongest, so ""WPA2 is the strongest available"" is a wrong answer and ""WPA2 is insecure"" is not what this topic says either.</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
-</div>
-<div class=""cfu-block"" id=""cfu-1"" data-type=""matching"" data-num=""1"" data-answer=""R,S,B"">
+<div class=""cfu-block"" id=""cfu-2"" data-type=""matching"" data-num=""2"" data-answer=""P,S,B"">
 <div class=""cfu-header"">
 <div class=""cfu-header-left"">
 <span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge cfu-scenario-badge"">Matching</span>
 </div>
-<span class=""cfu-counter"">1 / 15</span>
+<span class=""cfu-counter"">2 / 10</span>
 </div>
 <div class=""cfu-scenario"">
-<strong>Halden Regional Hospital</strong> is writing minimum configuration standards for its network devices.</div>
+<strong>Vantex Financial Group</strong> is checking that its network team uses the topic&rsquo;s terms precisely.</div>
+<p class=""cfu-question"">Match each term to the statement that is true of it.</p>
+<div class=""cfu-match-grid"">
+<div class=""cfu-match-row"">
+<div class=""cfu-match-term"">Port security</div>
+<select class=""cfu-match-select"" id=""cfu2-m1""><option value="""">Select...</option>
+<option value=""P"">Limits which devices, and how many, may use a physical switch port</option>
+<option value=""S"">A configuration in which some traffic bypasses the encrypted tunnel</option>
+<option value=""B"">A periodic broadcast announcing a wireless network&rsquo;s name and properties</option></select>
+</div>
+<div class=""cfu-match-row"">
+<div class=""cfu-match-term"">Split tunneling</div>
+<select class=""cfu-match-select"" id=""cfu2-m2""><option value="""">Select...</option>
+<option value=""P"">Limits which devices, and how many, may use a physical switch port</option>
+<option value=""S"">A configuration in which some traffic bypasses the encrypted tunnel</option>
+<option value=""B"">A periodic broadcast announcing a wireless network&rsquo;s name and properties</option></select>
+</div>
+<div class=""cfu-match-row"">
+<div class=""cfu-match-term"">Beacon frame</div>
+<select class=""cfu-match-select"" id=""cfu2-m3""><option value="""">Select...</option>
+<option value=""P"">Limits which devices, and how many, may use a physical switch port</option>
+<option value=""S"">A configuration in which some traffic bypasses the encrypted tunnel</option>
+<option value=""B"">A periodic broadcast announcing a wireless network&rsquo;s name and properties</option></select>
+</div>
+</div>
+<div class=""cfu-feedback"" id=""cfu-fb-2"" style=""display:none;"">
+<div class=""cfu-fb-correct"" style=""display:none;"">Port security is a switch policy requirement. Split tunneling is the VPN configuration the policy prohibits. A beacon frame is what an access point stops broadcasting when beacons are disabled.</div>
+<div class=""cfu-fb-partial"" style=""display:none;"">Port security limits devices on a switch port. Split tunneling routes some traffic outside the VPN tunnel. A beacon frame advertises a wireless network. None of the three is an attack.</div>
+</div>
+</div>
+<div class=""card"" id=""section-d"">
+  <h2>
+<span class=""section-icon"">4</span>3.2.4 — Router and Switch Security Policies</h2>
+  <p>Routers and switches move traffic. An adversary who controls one does not need to break anything else: they can read traffic, redirect it, or quietly leave themselves a way back in. Both policies are built around that, and they overlap more than they differ.</p>
+
+  <h3>Router security policy</h3>
+  <p>Sets a minimum configuration standard for every router on the network, and may include:</p>
+  <ul>
+    <li>
+<strong>Banning local user accounts.</strong> All router logins must go through an approved authentication server. A local account lives on the box, so it does not disappear when the person who used it leaves, it does not show up in central logs, and it is the account everyone shares because it is easier.</li>
+    <li>
+<strong>Disabling unnecessary services,</strong> such as Telnet. Every service left running is another way in and another thing to patch. Telnet is the standing example because it carries credentials in plaintext, so anyone positioned to watch the traffic gets the password.</li>
+    <li>
+<strong>Requiring a firewall.</strong> The organization may opt for a firewall device separate from the router rather than relying on the router&rsquo;s own filtering.</li>
+  </ul>
+
+  <h3>Switch security policy</h3>
+  <p>Sets a minimum configuration standard for every switch, and may include:</p>
+  <ul>
+    <li>
+<strong>Banning local user accounts.</strong> Same requirement, same reason: switch logins go through an approved authentication server.</li>
+    <li>
+<strong>Requiring port security to be enabled.</strong> Port security limits which devices, and how many, may use a physical switch port.</li>
+    <li>
+<strong>Using MAC filtering,</strong> so the switch forwards traffic only for hardware addresses the organization expects.</li>
+  </ul>
+
+  <table class=""vocab-table-full"">
+    <thead><tr>
+<th>Router policy</th>
+<th>Switch policy</th>
+</tr></thead>
+    <tbody>
+      <tr>
+<td class=""term"">Ban local user accounts</td>
+<td class=""term"">Ban local user accounts</td>
+</tr>
+      <tr>
+<td>Disable unnecessary services (for example Telnet)</td>
+<td>Require port security enabled</td>
+</tr>
+      <tr>
+<td>Require a firewall, which may be a separate device</td>
+<td>Use MAC filtering</td>
+</tr>
+    </tbody>
+  </table>
+
+  <div class=""info-box warning"">
+<span class=""box-label"">&#9888; Exam Trap</span><p>The first row is the requirement both policies make, so it is never the answer to ""which of these is unique to the switch policy"". Port security and MAC filtering are switch-only. Disabling unnecessary services and requiring a firewall are router-only.</p>
+  </div>
+</div>
+
+<div class=""cfu-block"" id=""cfu-3"" data-type=""matching"" data-num=""3"" data-answer=""R,S,B"">
+<div class=""cfu-header"">
+<div class=""cfu-header-left"">
+<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge cfu-scenario-badge"">Matching</span>
+</div>
+<span class=""cfu-counter"">3 / 10</span>
+</div>
+<div class=""cfu-scenario"">
+<strong>Vantex Financial Group</strong> is writing minimum configuration standards for its network devices.</div>
 <p class=""cfu-question"">Match each requirement to the policy or policies it belongs to.</p>
 <div class=""cfu-match-grid"">
 <div class=""cfu-match-row"">
 <div class=""cfu-match-term"">Disabling unnecessary services, such as Telnet</div>
-<select class=""cfu-match-select"" id=""cfu1-m1""><option value="""">Select...</option>
+<select class=""cfu-match-select"" id=""cfu3-m1""><option value="""">Select...</option>
 <option value=""R"">Router security policy only</option>
 <option value=""S"">Switch security policy only</option>
 <option value=""B"">Both the router and switch policies</option></select>
 </div>
 <div class=""cfu-match-row"">
 <div class=""cfu-match-term"">Requiring port security to be enabled</div>
-<select class=""cfu-match-select"" id=""cfu1-m2""><option value="""">Select...</option>
+<select class=""cfu-match-select"" id=""cfu3-m2""><option value="""">Select...</option>
 <option value=""R"">Router security policy only</option>
 <option value=""S"">Switch security policy only</option>
 <option value=""B"">Both the router and switch policies</option></select>
 </div>
 <div class=""cfu-match-row"">
 <div class=""cfu-match-term"">Banning local user accounts</div>
-<select class=""cfu-match-select"" id=""cfu1-m3""><option value="""">Select...</option>
+<select class=""cfu-match-select"" id=""cfu3-m3""><option value="""">Select...</option>
 <option value=""R"">Router security policy only</option>
 <option value=""S"">Switch security policy only</option>
 <option value=""B"">Both the router and switch policies</option></select>
 </div>
 </div>
-<div class=""cfu-feedback"" id=""cfu-fb-1"" style=""display:none;"">
+<div class=""cfu-feedback"" id=""cfu-fb-3"" style=""display:none;"">
 <div class=""cfu-fb-correct"" style=""display:none;"">Disabling unnecessary services is a router policy requirement. Port security is a switch policy requirement. Banning local user accounts appears in both, because logins to either device must go through an approved authentication server.</div>
-<div class=""cfu-fb-partial"" style=""display:none;"">Router policy: ban local accounts, disable unnecessary services, require a firewall. Switch policy: ban local accounts, require port security, use MAC filtering. Only the first requirement is shared.</div>
+<div class=""cfu-fb-partial"" style=""display:none;"">Router policy: ban local accounts, disable unnecessary services, require a firewall. Switch policy: ban local accounts, require port security, use MAC filtering. Only the first is shared.</div>
 </div>
 </div>
-<div class=""cfu-block"" id=""cfu-2"" data-type=""mcq"" data-num=""2"" data-answer=""B"">
+<div class=""card"" id=""section-e"">
+  <h2>
+<span class=""section-icon"">5</span>3.2.5 — VPN Policy and the Split Tunneling Prohibition</h2>
+  <p>A <strong>virtual private network</strong> lets an employee outside the building reach the internal network as though they were inside it. That is useful, and it is a hole in the perimeter, so the VPN policy details the minimum security requirements for using one. It may include:</p>
+
+  <ul>
+    <li>
+<strong>A list of roles allowed to use the VPN.</strong> Access goes to roles that need it, not to everyone with a login. A policy that lets the whole organization in has not reduced anything.</li>
+    <li>
+<strong>Authentication requirements,</strong> such as a public and private key system, or multifactor authentication. A password alone is not enough to open a door this wide.</li>
+    <li>
+<strong>A prohibition against split tunneling,</strong> also called dual tunneling.</li>
+  </ul>
+
+  <h3>What split tunneling actually exposes</h3>
+  <p>With split tunneling on, the laptop keeps two paths open at once. Traffic for the organization goes through the encrypted tunnel and gets inspected. Everything else goes straight out to the internet and is inspected by nobody.</p>
+
+  <table class=""vocab-table-full"">
+    <thead><tr>
+<th>Split tunneling (prohibited)</th>
+<th>Full tunneling (required)</th>
+</tr></thead>
+    <tbody>
+      <tr>
+<td>Work traffic through the tunnel, inspected</td>
+<td>Work traffic through the tunnel, inspected</td>
+</tr>
+      <tr>
+<td class=""term"">Everything else direct to the internet, not inspected</td>
+<td>Everything else also through the tunnel, inspected</td>
+</tr>
+    </tbody>
+  </table>
+
+  <p>The risk is not that the direct traffic is sensitive. It is that the direct path is a route into a machine which is simultaneously connected to the internal network, and the organization cannot see it. Organizations turn split tunneling on for a mundane reason: sending every employee&rsquo;s video calls and software updates through headquarters is slow and expensive. That is a real cost, and it is why the prohibition has to be written down rather than left to judgement.</p>
+</div>
+
+<div class=""cfu-block"" id=""cfu-4"" data-type=""mcq"" data-num=""4"" data-answer=""B"">
 <div class=""cfu-header"">
 <div class=""cfu-header-left"">
 <span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge"">MCQ</span>
 </div>
-<span class=""cfu-counter"">2 / 15</span>
+<span class=""cfu-counter"">4 / 10</span>
 </div>
 <div class=""cfu-scenario"">
 <strong>Corvid Freight</strong> reviews its VPN policy and finds that split tunneling is permitted for all remote staff.</div>
@@ -810,44 +1020,109 @@ var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(docume
 <span class=""cfu-opt-letter"">D</span><span class=""cfu-opt-text"">Split tunneling limits the VPN to carrying one protocol at a time</span>
 </div>
 </div>
-<div class=""cfu-feedback"" id=""cfu-fb-2"" style=""display:none;"">
-<div class=""cfu-fb-correct"" style=""display:none;""><strong>Correct.</strong> The tunnel itself is fine. The problem is the second path: the laptop is talking directly to the internet with no inspection while also being connected to the internal network, so anything that reaches it that way has a route inward that the organization cannot see. This is why a VPN policy prohibits split tunneling, also called dual tunneling.</div>
+<div class=""cfu-feedback"" id=""cfu-fb-4"" style=""display:none;"">
+<div class=""cfu-fb-correct"" style=""display:none;""><strong>Correct.</strong> The tunnel itself is fine. The problem is the second path: the laptop is talking directly to the internet with no inspection while also connected to the internal network, so anything arriving that way has a route inward the organization cannot see. This is why a VPN policy prohibits split tunneling, also called dual tunneling.</div>
 <div class=""cfu-fb-wrong"" data-a=""A"" style=""display:none;"">The encryption inside the tunnel is unchanged. The risk comes from the traffic that never enters the tunnel.</div>
-<div class=""cfu-fb-wrong"" data-a=""C"" style=""display:none;"">Connecting from outside the building is the point of a VPN. What the policy restricts is which roles may do it, and how they authenticate.</div>
-<div class=""cfu-fb-wrong"" data-a=""D"" style=""display:none;"">Split tunneling is about which traffic uses the tunnel, not about how many protocols it can carry.</div>
+<div class=""cfu-fb-wrong"" data-a=""C"" style=""display:none;"">Connecting from outside the building is the point of a VPN. The policy restricts which roles may do it, and how they authenticate.</div>
+<div class=""cfu-fb-wrong"" data-a=""D"" style=""display:none;"">Split tunneling is about which traffic uses the tunnel, not how many protocols it carries.</div>
 </div>
 </div>
-<div class=""cfu-block"" id=""cfu-3"" data-type=""checkbox"" data-num=""3"" data-answer=""A,B,C"">
+<div class=""card"" id=""section-f"">
+  <h2>
+<span class=""section-icon"">6</span>3.2.6 — Wireless Security Policy</h2>
+  <p>A wired network has a physical control built into it: to plug into a switch, you have to be in the building. Wireless removes it. The signal goes through walls and does not stop at the property line, so anyone within range is already as close to the network as an employee at a desk. The wireless security policy establishes the minimum requirements that replace the lock on the door, and may include:</p>
+
+  <ul>
+    <li>
+<strong>Requiring users to authenticate through an extensible authentication protocol</strong> connected to an approved authentication server. This is the same central-identity requirement the router and switch policies make, applied to the people joining the network rather than the staff administering it. A single shared wireless password identifies nobody.</li>
+    <li>
+<strong>Requiring all wireless traffic to be encrypted using AES encryption with a minimum key length.</strong> The policy names the algorithm and a floor for the key length, because ""encrypted"" on its own is satisfied by encryption too weak to matter.</li>
+    <li>
+<strong>Disabling beacon frames on wireless access points.</strong></li>
+  </ul>
+
+  <div class=""info-box insight"">
+<span class=""box-label"">&#9733; Policy and configuration meet here</span><p>That last requirement is the only one in this topic written twice: once as something the policy must say, and once as something an administrator must actually do. It is the seam between the two halves of the topic, and the next section is the doing half.</p>
+  </div>
+</div>
+
+<div class=""cfu-block"" id=""cfu-5"" data-type=""checkbox"" data-num=""5"" data-answer=""A,B,C"">
 <div class=""cfu-header"">
 <div class=""cfu-header-left"">
 <span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge cfu-scenario-badge"">Select All</span>
 </div>
-<span class=""cfu-counter"">3 / 15</span>
+<span class=""cfu-counter"">5 / 10</span>
 </div>
 <div class=""cfu-scenario"">
 <strong>Alder Grove School District</strong> is drafting a wireless security policy.</div>
 <p class=""cfu-question"">Select <strong>ALL</strong> requirements a wireless security policy may establish.</p>
 <div class=""cfu-cb-grid"">
-  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu3-cb1"" value=""A""> <span>Users authenticate through an extensible authentication protocol connected to an approved authentication server</span></label>
-  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu3-cb2"" value=""B""> <span>All wireless traffic is encrypted using AES encryption with a minimum key length</span></label>
-  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu3-cb3"" value=""C""> <span>Beacon frames are disabled on wireless access points</span></label>
-  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu3-cb4"" value=""D""> <span>The wireless password is printed on the visitor sign-in sheet so guests can connect themselves</span></label>
-  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu3-cb5"" value=""E""> <span>Every employee must connect through the VPN before using any internal system</span></label>
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu5-cb1"" value=""A""> <span>Users authenticate through an extensible authentication protocol connected to an approved authentication server</span></label>
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu5-cb2"" value=""B""> <span>All wireless traffic is encrypted using AES encryption with a minimum key length</span></label>
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu5-cb3"" value=""C""> <span>Beacon frames are disabled on wireless access points</span></label>
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu5-cb4"" value=""D""> <span>The wireless password is printed on the visitor sign-in sheet so guests can connect themselves</span></label>
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu5-cb5"" value=""E""> <span>Every employee must connect through the VPN before using any internal system</span></label>
 </div>
-<div class=""cfu-feedback"" id=""cfu-fb-3"" style=""display:none;"">
-<div class=""cfu-fb-correct"" style=""display:none;"">A, B and C are the three requirements a wireless security policy establishes. D defeats the authentication requirement it sits next to. E is a reasonable rule, but it belongs to the VPN policy, not the wireless one.</div>
-<div class=""cfu-fb-partial"" style=""display:none;"">A wireless security policy covers authentication through an approved server, AES encryption with a minimum key length, and disabling beacon frames. Requirements about who may use the VPN belong to a different policy.</div>
+<div class=""cfu-feedback"" id=""cfu-fb-5"" style=""display:none;"">
+<div class=""cfu-fb-correct"" style=""display:none;"">A, B and C are the three requirements a wireless security policy establishes. D defeats the authentication requirement sitting next to it. E is a reasonable rule that belongs to the VPN policy, not the wireless one.</div>
+<div class=""cfu-fb-partial"" style=""display:none;"">A wireless security policy covers authentication through an approved server, AES encryption at a minimum key length, and disabling beacon frames. Rules about who may use the VPN belong to a different policy.</div>
 </div>
 </div>
-<div class=""cfu-block"" id=""cfu-4"" data-type=""mcq"" data-num=""4"" data-answer=""C"">
+<div class=""card"" id=""section-g"">
+  <h2>
+<span class=""section-icon"">7</span>3.2.7 — Configuring Wireless Security</h2>
+  <p>These are the settings an administrator changes on a wireless access point to carry out the policy. There are four, and they are worth learning as a set because each closes a gap the others leave open.</p>
+
+  <h3>1. Disable beacon frame broadcasting</h3>
+  <p>A <strong>beacon frame</strong> is a small message an access point broadcasts on a timer, announcing the network&rsquo;s name and basic properties. Turning it off means the access point stops advertising itself, which makes it harder for an adversary to find the network and learn what it is running.</p>
+
+  <h3>2. Control broadcast direction and signal strength</h3>
+  <p>An access point set to maximum power in the middle of a building puts a usable signal in the car park and on the pavement outside. Reducing the transmit power, and aiming the signal with directional antennas, keeps coverage inside the physical space the access point is meant to cover. This is the one control here that takes territory back from the attacker rather than making the network harder to use once they are in range.</p>
+
+  <h3>3. Enable strong wireless encryption</h3>
+  <p>Wireless frames travel through open air, so anyone with an antenna can capture them. Encryption is what stops a captured frame being readable. Not every option is worth having:</p>
+  <table class=""vocab-table-full"">
+    <thead><tr>
+<th>Protocol</th>
+<th>Status</th>
+</tr></thead>
+    <tbody>
+      <tr>
+<td class=""term"">WEP</td>
+<td>Known vulnerabilities. Insecure.</td>
+</tr>
+      <tr>
+<td class=""term"">WPS</td>
+<td>Known vulnerabilities. Insecure.</td>
+</tr>
+      <tr>
+<td class=""term"">WPA (original)</td>
+<td>Known vulnerabilities. Insecure.</td>
+</tr>
+      <tr>
+<td class=""term"">WPA3</td>
+<td>Currently the strongest wireless encryption algorithm.</td>
+</tr>
+    </tbody>
+  </table>
+
+  <h3>4. Enable MAC filtering and require authentication</h3>
+  <p>MAC filtering keeps a list of the hardware addresses allowed on the network and refuses the rest, which prevents unauthorized devices getting on. Alongside it, users are required to authenticate when joining, so admitting a device and admitting a person are two separate checks.</p>
+
+  <div class=""info-box warning"">
+<span class=""box-label"">&#9888; Exam Trap</span><p>Two of these raise the cost of an attack rather than preventing one. A network with beacons disabled is <strong>harder to find</strong>, not invisible: it still carries traffic, and traffic can be observed. MAC filtering blocks a device that is not on the list, but a hardware address is something a machine announces about itself. Neither is a reason to weaken the encryption or the authentication, which are what actually keep an adversary out.</p>
+  </div>
+</div>
+
+<div class=""cfu-block"" id=""cfu-6"" data-type=""mcq"" data-num=""6"" data-answer=""C"">
 <div class=""cfu-header"">
 <div class=""cfu-header-left"">
 <span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge"">MCQ</span>
 </div>
-<span class=""cfu-counter"">4 / 15</span>
+<span class=""cfu-counter"">6 / 10</span>
 </div>
 <div class=""cfu-scenario"">
-<strong>Northvale Credit Union</strong> audits an access point and finds it running the original WPA. An administrator suggests switching to WEP because it is simpler to configure.</div>
+<strong>Northvale Credit Union</strong> audits an access point running the original WPA. An administrator suggests switching to WEP because it is simpler to configure.</div>
 <p class=""cfu-question"">Which response is <span style=""font-weight:700!important;text-decoration:underline!important;"">MOST</span> accurate?</p>
 <div class=""cfu-options-grid"">
 <div class=""cfu-opt"" data-val=""A"">
@@ -863,589 +1138,342 @@ var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(docume
 <span class=""cfu-opt-letter"">D</span><span class=""cfu-opt-text"">Encryption choice does not matter as long as MAC filtering is enabled</span>
 </div>
 </div>
-<div class=""cfu-feedback"" id=""cfu-fb-4"" style=""display:none;"">
-<div class=""cfu-fb-correct"" style=""display:none;""><strong>Correct.</strong> WEP, WPS and the original WPA are all insecure, so moving between them does not fix anything. WPA3 is currently the strongest wireless encryption algorithm and is what the access point should be running.</div>
+<div class=""cfu-feedback"" id=""cfu-fb-6"" style=""display:none;"">
+<div class=""cfu-fb-correct"" style=""display:none;""><strong>Correct.</strong> WEP, WPS and the original WPA are all insecure, so moving between them fixes nothing. WPA3 is currently the strongest wireless encryption algorithm and is what the access point should run.</div>
 <div class=""cfu-fb-wrong"" data-a=""A"" style=""display:none;"">The original WPA has known vulnerabilities and is insecure.</div>
 <div class=""cfu-fb-wrong"" data-a=""B"" style=""display:none;"">WEP is on the same insecure list as the original WPA. Switching between two broken options is not an upgrade.</div>
 <div class=""cfu-fb-wrong"" data-a=""D"" style=""display:none;"">MAC filtering controls which devices may join. It does nothing to make captured wireless frames unreadable.</div>
 </div>
 </div>
-<div class=""cfu-block"" id=""cfu-5"" data-type=""matching"" data-num=""5"" data-answer=""F,P,D"">
+<div class=""card"" id=""section-h"">
+  <h2>
+<span class=""section-icon"">8</span>3.2.8 — Real-World Case Studies: When the Policy Was Missing</h2>
+  <div class=""case-block"">
+    <div class=""case-eyebrow"">Case Study 1 &mdash; A wireless network with no policy floor</div>
+    <div class=""case-title"">TJX (2005 to 2007): WEP on the wireless network, 45 million cards</div>
+    <div class=""case-body"">
+      <p><strong>What happened:</strong> Attackers sat outside a retail store, captured wireless traffic from an access point still running WEP, and recovered the key. That put them on the store network. From there they reached systems carrying payment card data and exfiltrated records over roughly eighteen months before the intrusion was found.</p>
+      <p><strong>Why it belongs to this topic:</strong> the failure was not that somebody chose a weak setting once. It was that nothing in writing said what the floor was. A wireless security policy naming an encryption algorithm and a minimum key length turns ""which encryption did this store configure"" into a question with one correct answer, checkable by an auditor who never visits the store. Without that document, every access point is whatever the installer chose on the day.</p>
+      <p><strong>The two controls that would have applied:</strong> the encryption requirement, which WEP fails outright, and the signal control. An access point tuned so its usable signal stops at the walls of the building is materially harder to attack from a car park.</p>
+      <p><strong>Cost:</strong> reported at roughly 250 million dollars. The encryption standard that would have prevented it existed and was already recommended at the time.</p>
+    </div>
+    <div class=""case-tags"">
+      <span class=""case-tag fail"">No written floor means every device is somebody&rsquo;s guess</span>
+      <span class=""case-tag lesson"">A policy makes a configuration auditable from a distance</span>
+    </div>
+  </div>
+
+  <div class=""case-block"">
+    <div class=""case-eyebrow"">Case Study 2 &mdash; A policy that existed and had a hole in it</div>
+    <div class=""case-title"">Meridian Energy Grid simulation: split tunneling on a maintained VPN</div>
+    <div class=""case-body"">
+      <p><strong>Scenario:</strong> Meridian has a VPN policy. It names the roles allowed to connect, and it requires multifactor authentication, both of which are enforced. It says nothing about split tunneling, and the client is configured with it on so that field engineers&rsquo; video calls do not cross the corporate link.</p>
+      <p><strong>What the gap allows:</strong> an engineer&rsquo;s laptop is connected to the internal network through the tunnel and to the open internet directly, at the same time. The direct path carries no organizational inspection. A compromise arriving that way lands on a machine that already holds an authenticated route inward, and the organization has no record of the traffic that delivered it.</p>
+      <p><strong>Why the two enforced requirements did not help:</strong> role restriction decides <em>who</em> may connect and multifactor decides <em>whether they are who they say</em>. Neither says anything about which traffic uses the tunnel once the session is up. The three VPN requirements cover three different questions, and answering two of them well does not cover the third.</p>
+      <p><strong>The fix is one line in a document:</strong> prohibit split tunneling. The configuration change that follows is small. Finding the gap without the policy naming it is the hard part.</p>
+    </div>
+    <div class=""case-tags"">
+      <span class=""case-tag fail"">Two of three requirements enforced is still an open path</span>
+      <span class=""case-tag lesson"">Each VPN requirement answers a different question</span>
+    </div>
+  </div>
+
+  <div class=""case-block"">
+    <div class=""case-eyebrow"">Case Study 3 &mdash; Vantex quarterly policy audit</div>
+    <div class=""case-title"">Four findings, three policies, and one that belonged to none of them</div>
+    <div class=""case-body"">
+      <p><strong>The exercise:</strong> Vantex Financial Group audits its network devices each quarter against its four written policies. The reviewer&rsquo;s job is not to decide whether a configuration looks risky. It is to say which policy a finding violates, which is a different and much faster question.</p>
+      <p><strong>Finding 1.</strong> A branch router still has Telnet enabled for a management tool nobody uses. <em>Router security policy, disabling unnecessary services.</em> The tool being unused is what makes this easy: the service is unnecessary by the policy&rsquo;s own word.</p>
+      <p><strong>Finding 2.</strong> Two switches in a renovated floor have local admin accounts created during the works and never removed. <em>Switch security policy, banning local user accounts.</em> Note that the same finding on the branch router would violate the router policy in exactly the same way, because that requirement is in both.</p>
+      <p><strong>Finding 3.</strong> The guest wireless network runs WPA2 and broadcasts at full power into the car park. <em>Wireless security policy and the configuration controls.</em> Two separate items: the encryption should be WPA3, and the signal should be tuned so it does not extend beyond the space the access point covers.</p>
+      <p><strong>Finding 4.</strong> A contractor&rsquo;s laptop connects to the VPN and, while connected, streams video directly to the internet. <em>VPN policy, the prohibition against split tunneling.</em></p>
+      <p><strong>The finding that belonged to no policy:</strong> the reviewer also noted that a network diagram was eighteen months out of date. That is a real problem and it is not one of these four policies, so it goes on the report as an observation rather than a violation. Knowing which findings a policy actually governs is as much a part of this skill as knowing the requirements.</p>
+    </div>
+    <div class=""case-tags"">
+      <span class=""case-tag fail"">Four findings, none of which needed a product to fix</span>
+      <span class=""case-tag lesson"">Name the device or access path, and the policy names itself</span>
+    </div>
+  </div>
+</div>
+
+<div class=""cfu-block"" id=""cfu-7"" data-type=""mcq"" data-num=""7"" data-answer=""B"">
+<div class=""cfu-header"">
+<div class=""cfu-header-left"">
+<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge"">MCQ</span>
+</div>
+<span class=""cfu-counter"">7 / 10</span>
+</div>
+<div class=""cfu-scenario"">
+<strong>Meridian Energy Grid</strong> enforces its VPN policy&rsquo;s role restrictions and its multifactor authentication requirement. The policy says nothing about split tunneling, and the client has it enabled.</div>
+<p class=""cfu-question"">Why do the two enforced requirements <span style=""font-weight:700!important;text-decoration:underline!important;"">NOT</span> close the gap?</p>
+<div class=""cfu-options-grid"">
+<div class=""cfu-opt"" data-val=""A"">
+<span class=""cfu-opt-letter"">A</span><span class=""cfu-opt-text"">They do close it. Role restriction plus multifactor authentication is complete VPN security</span>
+</div>
+<div class=""cfu-opt"" data-val=""B"">
+<span class=""cfu-opt-letter"">B</span><span class=""cfu-opt-text"">They answer who may connect and whether they are who they claim, and neither says anything about which traffic uses the tunnel once the session is up</span>
+</div>
+<div class=""cfu-opt"" data-val=""C"">
+<span class=""cfu-opt-letter"">C</span><span class=""cfu-opt-text"">Multifactor authentication is incompatible with full tunneling</span>
+</div>
+<div class=""cfu-opt"" data-val=""D"">
+<span class=""cfu-opt-letter"">D</span><span class=""cfu-opt-text"">Role restrictions only apply to employees, and contractors bypass them automatically</span>
+</div>
+</div>
+<div class=""cfu-feedback"" id=""cfu-fb-7"" style=""display:none;"">
+<div class=""cfu-fb-correct"" style=""display:none;""><strong>Correct.</strong> The three VPN requirements answer three different questions. Role restriction decides who may connect, authentication decides whether they are who they say, and the split tunneling prohibition decides which traffic uses the tunnel. Answering two well leaves the third open.</div>
+<div class=""cfu-fb-wrong"" data-a=""A"" style=""display:none;"">Two of three requirements enforced still leaves an uninspected path into a machine that holds an authenticated route inward.</div>
+<div class=""cfu-fb-wrong"" data-a=""C"" style=""display:none;"">The two are unrelated. Multifactor authentication works the same under full tunneling.</div>
+<div class=""cfu-fb-wrong"" data-a=""D"" style=""display:none;"">Nothing in the scenario says that, and it would be a separate failure of the role list rather than the tunneling gap.</div>
+</div>
+</div>
+<div class=""card"" id=""section-i"">
+  <h2>
+<span class=""section-icon"">9</span>3.2.9 — Worked Examples: Predict First, Then Classify</h2>
+  <p>Work each scenario before reading the steps. The habit these build is the one the free-response questions reward: name the policy first, then check its requirements one at a time, rather than reacting to whichever detail looks alarming.</p>
+
+  <div class=""ex-block"">
+    <div class=""ex-header"">
+<div class=""ex-num"">1</div>
+<div class=""ex-title"">Sorting Findings Into the Right Policy</div>
+</div>
+    <div class=""ex-scenario"">
+<strong>Scenario:</strong> An auditor at Vantex Financial Group reports four findings. (A) A core router has a local admin account with a local password. (B) A switch port in a waiting room accepts any device plugged into it. (C) The guest wireless uses a single shared passphrase printed on a card. (D) Remote staff can route non-work traffic outside the VPN tunnel. Which policy does each finding belong to, and what does each violate?</div>
+    <div class=""ex-body"">
+      <div class=""ex-step"">
+<div class=""step-n"">1</div>
+<div class=""step-c"">
+        <h4>Name the device or the access path, not the symptom</h4>
+        <p>A is a router. B is a switch. C is wireless. D is the VPN. Each finding names its own policy before you consider whether it is serious. Sorting first is what stops a hard question becoming four hard questions at once.</p>
+      </div>
+</div>
+      <div class=""ex-step"">
+<div class=""step-n"">2</div>
+<div class=""step-c"">
+        <h4>Check the finding against that policy&rsquo;s requirements</h4>
+        <p>A violates the router policy&rsquo;s ban on local user accounts. B violates the switch policy&rsquo;s requirement that port security be enabled. C violates the wireless policy&rsquo;s requirement that users authenticate through an extensible authentication protocol connected to an approved server, because a shared passphrase identifies nobody. D violates the VPN policy&rsquo;s prohibition against split tunneling.</p>
+      </div>
+</div>
+      <div class=""ex-step"">
+<div class=""step-n"">3</div>
+<div class=""step-c"">
+        <h4>Check whether any finding violates more than one thing</h4>
+        <p>A does. Banning local accounts is a requirement of both the router and the switch policies, so the same finding on a switch would violate the switch policy in exactly the same way. That shared requirement is the one worth knowing cold.</p>
+      </div>
+</div>
+      <div class=""ex-answer"">
+<span class=""ans-label"">Analysis</span><p><strong>One finding per policy, and each one names a requirement rather than a preference.</strong> Notice that none of the four was fixed by choosing a better product. Each was fixed by a sentence in a document that the configuration then has to satisfy.</p>
+</div>
+    </div>
+  </div>
+
+  <div class=""ex-block"">
+    <div class=""ex-header"">
+<div class=""ex-num"">2</div>
+<div class=""ex-title"">Deciding What a Control Actually Buys You</div>
+</div>
+    <div class=""ex-scenario"">
+<strong>Scenario:</strong> Vantex Financial Group disables beacon frame broadcasting on all its branch access points and enables MAC filtering. The branch operations manager tells the board the wireless network is now invisible and that only company devices can reach it, so upgrading the encryption from the original WPA can wait. Evaluate that claim.</div>
+    <div class=""ex-body"">
+      <div class=""ex-step"">
+<div class=""step-n"">1</div>
+<div class=""step-c"">
+        <h4>Take each control and say what it does, precisely</h4>
+        <p>Disabling beacons stops the access point advertising itself, which makes the network harder to find and learn about. MAC filtering refuses devices whose hardware address is not on the list, which prevents unauthorized devices getting on.</p>
+      </div>
+</div>
+      <div class=""ex-step"">
+<div class=""step-n"">2</div>
+<div class=""step-c"">
+        <h4>Now say what each one does not do</h4>
+        <p>A network with beacons off still carries traffic, and traffic can be observed, so ""invisible"" overstates it. A hardware address is something a machine announces about itself, so MAC filtering raises the cost of getting a device admitted rather than making it impossible.</p>
+      </div>
+</div>
+      <div class=""ex-step"">
+<div class=""step-n"">3</div>
+<div class=""step-c"">
+        <h4>Evaluate the conclusion that was drawn from them</h4>
+        <p>Both controls act on finding the network and joining it. Neither acts on readability of the frames already in the air. The original WPA has known vulnerabilities and is insecure, so captured traffic stays readable no matter how hard the network was to locate.</p>
+      </div>
+</div>
+      <div class=""ex-answer"">
+<span class=""ans-label"">Analysis</span><p><strong>The claim fails on the part that matters.</strong> Both controls are worth having and neither substitutes for encryption. The upgrade to WPA3, currently the strongest wireless encryption algorithm, is the one change that addresses what the other two leave open. This is the shape of a great many questions in this topic: two reasonable controls used to justify skipping the necessary one.</p>
+</div>
+    </div>
+  </div>
+</div>
+
+<div class=""cfu-block"" id=""cfu-8"" data-type=""matching"" data-num=""8"" data-answer=""F,P,D"">
 <div class=""cfu-header"">
 <div class=""cfu-header-left"">
 <span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge cfu-scenario-badge"">Matching</span>
 </div>
-<span class=""cfu-counter"">5 / 15</span>
+<span class=""cfu-counter"">8 / 10</span>
 </div>
 <div class=""cfu-scenario"">
-<strong>Pierce Manufacturing</strong> applies three wireless configuration controls to its access points.</div>
+<strong>Vantex Financial Group</strong> applies three wireless configuration controls to its branch access points.</div>
 <p class=""cfu-question"">Match each control to what it achieves.</p>
 <div class=""cfu-match-grid"">
 <div class=""cfu-match-row"">
 <div class=""cfu-match-term"">Disable beacon frame broadcasting</div>
-<select class=""cfu-match-select"" id=""cfu5-m1""><option value="""">Select...</option>
+<select class=""cfu-match-select"" id=""cfu8-m1""><option value="""">Select...</option>
 <option value=""F"">Makes the network harder for an adversary to find and learn about</option>
 <option value=""P"">Keeps the usable signal inside the physical space the access point should cover</option>
 <option value=""D"">Prevents devices that are not on the approved list from getting onto the network</option></select>
 </div>
 <div class=""cfu-match-row"">
 <div class=""cfu-match-term"">Reduce transmit power and aim antennas</div>
-<select class=""cfu-match-select"" id=""cfu5-m2""><option value="""">Select...</option>
+<select class=""cfu-match-select"" id=""cfu8-m2""><option value="""">Select...</option>
 <option value=""F"">Makes the network harder for an adversary to find and learn about</option>
 <option value=""P"">Keeps the usable signal inside the physical space the access point should cover</option>
 <option value=""D"">Prevents devices that are not on the approved list from getting onto the network</option></select>
 </div>
 <div class=""cfu-match-row"">
 <div class=""cfu-match-term"">Enable MAC filtering</div>
-<select class=""cfu-match-select"" id=""cfu5-m3""><option value="""">Select...</option>
+<select class=""cfu-match-select"" id=""cfu8-m3""><option value="""">Select...</option>
 <option value=""F"">Makes the network harder for an adversary to find and learn about</option>
 <option value=""P"">Keeps the usable signal inside the physical space the access point should cover</option>
 <option value=""D"">Prevents devices that are not on the approved list from getting onto the network</option></select>
 </div>
 </div>
-<div class=""cfu-feedback"" id=""cfu-fb-5"" style=""display:none;"">
-<div class=""cfu-fb-correct"" style=""display:none;"">Each control closes a different gap. Note the wording on the first one: disabling beacons makes the network harder to find, not invisible. It still carries traffic, and traffic can be observed.</div>
+<div class=""cfu-feedback"" id=""cfu-fb-8"" style=""display:none;"">
+<div class=""cfu-fb-correct"" style=""display:none;"">Each closes a different gap. Note the wording on the first: disabling beacons makes the network harder to find, not invisible. It still carries traffic, and traffic can be observed.</div>
 <div class=""cfu-fb-partial"" style=""display:none;"">Beacons disabled makes the network harder to find. Power and antenna direction keep the signal inside the intended space. MAC filtering keeps unapproved devices off. None of the three replaces strong encryption and authentication.</div>
 </div>
 </div>
-<div class=""lesson-section"" style=""padding:0 4px!important;"">
-<div style=""background:#EFF6FF!important;border-left:4px solid #2563EB!important;padding:18px 22px!important;border-radius:0 8px 8px 0!important;margin:32px 0 8px!important;font-family:Georgia,serif!important;"">
-<p style=""font-weight:700!important;color:#2563EB!important;-webkit-text-fill-color:#2563EB!important;margin:0 0 6px!important;font-size:15px!important;"">Background: Secure Network Protocols</p>
-<p style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;line-height:1.7!important;"">Everything above is Topic 3.2. The sections that follow go further than this topic requires, and they are here because the policies above keep naming protocols without explaining them. A wireless policy that requires AES encryption, a router policy that bans Telnet, and a VPN policy that asks for a public and private key system all make more sense once you know what those things do. Read it as background: useful, and not the material Topic 3.2 is built on.</p>
-</div>
-</div>
-<div class=""lesson-section"" style=""padding:0 4px!important;"">
-<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">3.2.6 — The Insecure Protocol Problem</h2>
-
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">Many foundational internet protocols were designed in the 1970s-1990s when the internet was a trusted academic network. Security was an afterthought. These protocols transmit everything — credentials, commands, data — in <strong>plaintext</strong>, meaning anyone who intercepts the traffic can read it directly.</p>
-
-<div style=""background:#F9FAFB!important;border:1px solid #E5E7EB!important;border-radius:10px!important;padding:20px 24px!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
-<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 12px!important;font-family:Georgia,serif!important;"">Insecure → Secure Protocol Map</h3>
-<div style=""display:grid!important;grid-template-columns:1fr auto 1fr!important;gap:8px 16px!important;align-items:center!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;"">
-<div style=""font-weight:700!important;color:#EF4444!important;-webkit-text-fill-color:#EF4444!important;"">Insecure</div>
-<div></div>
-<div style=""font-weight:700!important;color:#22C55E!important;-webkit-text-fill-color:#22C55E!important;"">Secure Replacement</div>
-<div style=""background:#FEE2E2!important;padding:8px 12px!important;border-radius:6px!important;"">FTP (port 21) — plaintext file transfer</div>
-<div>→</div>
-<div style=""background:#DCFCE7!important;padding:8px 12px!important;border-radius:6px!important;"">SFTP (port 22) — SSH-encrypted file transfer</div>
-<div style=""background:#FEE2E2!important;padding:8px 12px!important;border-radius:6px!important;"">Telnet (port 23) — plaintext remote terminal</div>
-<div>→</div>
-<div style=""background:#DCFCE7!important;padding:8px 12px!important;border-radius:6px!important;"">SSH (port 22) — encrypted remote terminal</div>
-<div style=""background:#FEE2E2!important;padding:8px 12px!important;border-radius:6px!important;"">HTTP (port 80) — plaintext web traffic</div>
-<div>→</div>
-<div style=""background:#DCFCE7!important;padding:8px 12px!important;border-radius:6px!important;"">HTTPS (port 443) — TLS-encrypted web traffic</div>
-<div style=""background:#FEE2E2!important;padding:8px 12px!important;border-radius:6px!important;"">DNS (port 53) — plaintext name resolution</div>
-<div>→</div>
-<div style=""background:#DCFCE7!important;padding:8px 12px!important;border-radius:6px!important;"">DoH / DoT — encrypted DNS queries</div>
-</div>
-</div>
-
-<div style=""background:#FEF2F2!important;border-left:4px solid #EF4444!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
-<p style=""font-weight:700!important;color:#EF4444!important;-webkit-text-fill-color:#EF4444!important;margin:0 0 6px!important;font-size:14px!important;"">⚠ Exam Trap</p>
-<p style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;"">FTP and FTPS are different from SFTP. FTPS adds TLS to FTP (still uses port 21/990). SFTP is a completely different protocol that runs over SSH (port 22). The exam may test this distinction. SFTP is generally preferred because it uses a single port and leverages the existing SSH infrastructure.</p>
-</div>
-
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;""><strong>Why plaintext protocols persist:</strong> Legacy systems, backward compatibility requirements, and organizational inertia. Many SCADA/OT environments still use Telnet and unencrypted Modbus because the devices were deployed before secure alternatives existed and cannot be easily updated without risking operational disruption.</p>
-</div>
-<div class=""lesson-section"" style=""padding:0 4px!important;"">
-<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">3.2.7 — TLS: The Foundation of Encrypted Communication</h2>
-
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;""><strong>Transport Layer Security (TLS)</strong> is the cryptographic protocol that protects data in transit. Every HTTPS connection, every secure email, and every VPN tunnel relies on TLS to provide three guarantees:</p>
-
-<div style=""display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:12px!important;margin:0 0 20px!important;"">
-<div style=""background:#F5F0FF!important;border:1px solid #DDD6FE!important;border-radius:10px!important;padding:16px!important;text-align:center!important;font-family:Georgia,serif!important;"">
-<div style=""font-size:24px!important;margin-bottom:6px!important;"">🔒</div>
-<div style=""font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:14px!important;margin-bottom:4px!important;"">Confidentiality</div>
-<div style=""font-size:13px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;"">Data is encrypted and unreadable to eavesdroppers</div>
-</div>
-<div style=""background:#F5F0FF!important;border:1px solid #DDD6FE!important;border-radius:10px!important;padding:16px!important;text-align:center!important;font-family:Georgia,serif!important;"">
-<div style=""font-size:24px!important;margin-bottom:6px!important;"">✓</div>
-<div style=""font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:14px!important;margin-bottom:4px!important;"">Integrity</div>
-<div style=""font-size:13px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;"">Tampered data is detected and rejected</div>
-</div>
-<div style=""background:#F5F0FF!important;border:1px solid #DDD6FE!important;border-radius:10px!important;padding:16px!important;text-align:center!important;font-family:Georgia,serif!important;"">
-<div style=""font-size:24px!important;margin-bottom:6px!important;"">👤</div>
-<div style=""font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:14px!important;margin-bottom:4px!important;"">Authentication</div>
-<div style=""font-size:13px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;"">The server proves its identity via certificate</div>
-</div>
+<div class=""card"" id=""section-j"">
+  <h2>
+<span class=""section-icon"">10</span>3.2.10 — AP Exam Strategy: Managerial Control Questions</h2>
+  <div class=""exam-strat-grid"">
+    <div class=""strat-card"">
+      <h4>Strategy 1: Name the policy before you judge the finding</h4>
+      <p>Every scenario in this topic names a device or an access path, and that names the policy.</p>
+      <ul>
+        <li>Router, or a routing device &rarr; router security policy</li>
+        <li>Switch, or a physical port &rarr; switch security policy</li>
+        <li>Remote access from outside &rarr; VPN policy</li>
+        <li>Anything wireless &rarr; wireless security policy, and possibly the configuration controls too</li>
+        <li>Sorting first turns one hard question into four easy checks</li>
+      </ul>
+    </div>
+    <div class=""strat-card"">
+      <h4>Strategy 2: Policy or configuration, and which was asked</h4>
+      <p>A managerial control is a document. A technical control is a setting.</p>
+      <ul>
+        <li>Asked what the policy should say &rarr; answer names a requirement</li>
+        <li>Asked what the administrator should do &rarr; answer names a setting</li>
+        <li>Disabling beacon frames is the one item that is legitimately both</li>
+        <li>An answer choice describing a product purchase is almost never the policy answer</li>
+      </ul>
+    </div>
+    <div class=""strat-card"">
+      <h4>Strategy 3: The shared requirement and the unique ones</h4>
+      <ul>
+        <li>Banning local user accounts &rarr; BOTH router and switch policies</li>
+        <li>Disabling unnecessary services, requiring a firewall &rarr; router only</li>
+        <li>Port security, MAC filtering &rarr; switch only</li>
+        <li>Asked which requirement is unique to one policy, the shared one is never the answer</li>
+        <li>Three of four policies route identity to an approved authentication server</li>
+      </ul>
+    </div>
+    <div class=""strat-card"">
+      <h4>Strategy 4: The three fatal traps</h4>
+      <ul>
+        <li><strong>Trap 1 &mdash; beacons off means invisible:</strong> Wrong. It means harder to find. The network still carries observable traffic.</li>
+        <li><strong>Trap 2 &mdash; WPA2 is the strongest:</strong> Wrong. WPA3 is. WEP, WPS and the original WPA are the ones named insecure.</li>
+        <li><strong>Trap 3 &mdash; split tunneling is an attack:</strong> Wrong. It is a configuration the organization chose, and the finding is a policy violation.</li>
+      </ul>
+    </div>
+  </div>
 </div>
 
-<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">The TLS Handshake (Simplified)</h3>
-
-<div style=""background:#F9FAFB!important;border:1px solid #E5E7EB!important;border-radius:10px!important;padding:20px 24px!important;margin:0 0 20px!important;font-family:Georgia,serif!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.8!important;"">
-<p style=""margin:0 0 12px!important;font-weight:700!important;""><strong>Step 1: Client Hello</strong> — The browser sends supported TLS versions and cipher suites to the server.</p>
-<p style=""margin:0 0 12px!important;font-weight:700!important;""><strong>Step 2: Server Hello + Certificate</strong> — The server selects a cipher suite and sends its digital certificate (contains public key + identity + CA signature).</p>
-<p style=""margin:0 0 12px!important;font-weight:700!important;""><strong>Step 3: Certificate Verification</strong> — The browser verifies the certificate: Is it signed by a trusted CA? Is the domain correct? Is it expired?</p>
-<p style=""margin:0 0 12px!important;font-weight:700!important;""><strong>Step 4: Key Exchange</strong> — Client and server negotiate a shared session key using asymmetric cryptography. This session key will encrypt all subsequent data.</p>
-<p style=""margin:0!important;font-weight:700!important;""><strong>Step 5: Encrypted Communication</strong> — Both sides now use the shared session key for fast symmetric encryption. All data (HTTP requests, responses, cookies, credentials) is encrypted.</p>
-</div>
-
-<div style=""background:#FEF2F2!important;border-left:4px solid #EF4444!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
-<p style=""font-weight:700!important;color:#EF4444!important;-webkit-text-fill-color:#EF4444!important;margin:0 0 6px!important;font-size:14px!important;"">⚠ Exam Trap</p>
-<p style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;""><strong>HTTPS ≠ safe website.</strong> HTTPS means the connection is encrypted, not that the website is legitimate. A phishing site can have a valid TLS certificate and show the padlock icon. TLS protects data <em>in transit</em> — it does not verify the website’s <em>intent</em>.</p>
-</div>
-
-<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">SSL Stripping and HSTS</h3>
-
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;""><strong>SSL stripping</strong> is an attack that exploits the HTTP-to-HTTPS redirect. When a user types <code style=""background:#EDE9FE!important;padding:2px 6px!important;border-radius:3px!important;font-size:13px!important;"">example.com</code> (without https://), the browser first connects via HTTP, then the server redirects to HTTPS. An attacker in a MitM position can intercept the initial HTTP request and prevent the redirect, keeping the victim on an unencrypted connection while proxying to the real HTTPS site.</p>
-
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;""><strong>HSTS (HTTP Strict Transport Security)</strong> eliminates this vulnerability. When a server sends the HSTS header, the browser remembers to <em>always</em> use HTTPS for that domain. <strong>HSTS preloading</strong> goes further: the domain is hardcoded into the browser itself (Chrome, Firefox, Safari maintain preload lists), so the browser <em>never</em> sends an initial HTTP request. There is nothing for the attacker to intercept.</p>
-</div>
-<div class=""lesson-section"" style=""padding:0 4px!important;"">
-<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">3.2.8 — SSH and SFTP: Encrypted Remote Access and File Transfer
-
-</h2>
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;""><strong>SSH (Secure Shell)</strong> replaces Telnet for remote server administration. Where Telnet transmits every keystroke, command, and output in plaintext, SSH encrypts the entire session. An attacker intercepting a Telnet session sees passwords, commands, and configuration data. An attacker intercepting an SSH session sees encrypted gibberish.</p>
-
-<div style=""display:grid!important;grid-template-columns:1fr 1fr!important;gap:16px!important;margin:0 0 20px!important;"">
-<div style=""background:#FEE2E2!important;border:1px solid #FECACA!important;border-radius:10px!important;padding:18px!important;font-family:Georgia,serif!important;"">
-<div style=""font-weight:700!important;color:#DC2626!important;-webkit-text-fill-color:#DC2626!important;font-size:14px!important;margin-bottom:8px!important;""> Telnet (Insecure)</div>
-<ul style=""font-size:13px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;padding-left:16px!important;line-height:1.7!important;"">
-<li>Port 23</li>
-<li>All data in plaintext</li>
-<li>Passwords visible to any interceptor</li>
-<li>Commands and output readable</li>
-<li>No identity verification of server</li>
-</ul>
-</div>
-<div style=""background:#DCFCE7!important;border:1px solid #BBF7D0!important;border-radius:10px!important;padding:18px!important;font-family:Georgia,serif!important;"">
-<div style=""font-weight:700!important;color:#16A34A!important;-webkit-text-fill-color:#16A34A!important;font-size:14px!important;margin-bottom:8px!important;"">✓ SSH (Secure)</div>
-<ul style=""font-size:13px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;padding-left:16px!important;line-height:1.7!important;"">
-<li>Port 22</li>
-<li>All data encrypted</li>
-<li>Passwords protected in transit</li>
-<li>Key-based auth (no passwords needed)</li>
-<li>Server identity verified via host key</li>
-</ul>
-</div>
-</div>
-
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;""><strong>SFTP (SSH File Transfer Protocol)</strong> provides encrypted file transfer over the SSH protocol (port 22). Unlike FTP (port 21) which sends credentials and file contents in plaintext, SFTP encrypts everything — login, commands, directory listings, and file data. Unlike FTPS (which wraps FTP in TLS), SFTP is a completely different protocol that uses only one port (22), simplifying firewall rules.</p>
-</div>
-<div class=""lesson-section"" style=""padding:0 4px!important;"">
-<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">3.2.9 — VPNs: Encrypted Tunnels Across Untrusted Networks</h2>
-
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">A <strong>Virtual Private Network (VPN)</strong> creates an encrypted tunnel through a public network, allowing private communication as if both endpoints were on the same local network. The tunnel encrypts all traffic so that even if intercepted on a public Wi-Fi or compromised ISP link, the data is unreadable.</p>
-
-<div style=""background:#F9FAFB!important;border:1px solid #E5E7EB!important;border-radius:10px!important;padding:20px 24px!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
-<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 14px!important;font-family:Georgia,serif!important;"">VPN Architecture Comparison</h3>
-<div style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.8!important;"">
-<p style=""margin:0 0 14px!important;""><strong>Remote-Access VPN:</strong> An individual user (employee working from home, traveling executive) connects their device to the corporate network over an encrypted tunnel. The user’s laptop acts as one end, and the VPN gateway is the other. Used by: remote workers, traveling staff, contractors.</p>
-<p style=""margin:0 0 14px!important;""><strong>Site-to-Site VPN:</strong> Two physical locations (HQ and branch office) are connected over the internet through a permanent encrypted tunnel between their routers/firewalls. All traffic between the sites is encrypted transparently — individual users do not need VPN software. Used by: multi-office organizations, partner connections.</p>
-<p style=""margin:0!important;""><strong>Split Tunneling:</strong> Only traffic destined for the corporate network goes through the VPN tunnel; internet traffic (YouTube, personal email) goes directly to the internet. <strong>Trade-off:</strong> Reduces VPN bandwidth and latency but creates a gap — the user’s internet traffic is unprotected and could be intercepted on public Wi-Fi. High-security organizations enforce <strong>full tunneling</strong> (all traffic through VPN) to prevent data leaks.</p>
-</div>
-</div>
-
-<div style=""background:#FEF2F2!important;border-left:4px solid #EF4444!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
-<p style=""font-weight:700!important;color:#EF4444!important;-webkit-text-fill-color:#EF4444!important;margin:0 0 6px!important;font-size:14px!important;"">⚠ Exam Trap</p>
-<p style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;"">Split tunneling is NOT always wrong. It is a valid design choice for organizations that prioritize performance and have other protections (endpoint security, cloud-based web filtering). The exam tests whether you understand the <em>trade-off</em>, not whether you pick one as universally correct.</p>
-</div>
-</div>
-<div class=""lesson-section"" style=""padding:0 4px!important;"">
-<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">3.2.10 — DNSSEC and Certificate Authorities</h2>
-
-<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">DNSSEC: Authenticating DNS Responses</h3>
-
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">Standard DNS has no built-in verification — when your device asks “what is the IP for example.com?” it trusts whatever answer it receives. <strong>DNSSEC (DNS Security Extensions)</strong> adds cryptographic signatures to DNS responses, allowing the client to verify: (1) the response came from the authoritative server, and (2) the response was not modified in transit.</p>
-
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;""><strong>Important distinction:</strong> DNSSEC provides <strong>authentication and integrity</strong> (is this response genuine and unmodified?) but NOT <strong>encryption</strong> (can eavesdroppers see what domains you query?). For DNS query encryption, you need <strong>DNS over HTTPS (DoH)</strong> or <strong>DNS over TLS (DoT)</strong>. These solve different problems and can be used together.</p>
-
-<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">Certificate Authorities and the PKI Trust Model</h3>
-
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">TLS certificates are issued by <strong>Certificate Authorities (CAs)</strong> — trusted organizations that verify domain ownership before signing a certificate. Your browser comes pre-loaded with a list of trusted Root CAs. The trust chain works as follows:</p>
-
-<div style=""background:#F9FAFB!important;border:1px solid #E5E7EB!important;border-radius:10px!important;padding:20px 24px!important;margin:0 0 20px!important;font-family:Georgia,serif!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.8!important;"">
-<p style=""margin:0 0 10px!important;""><strong>Root CA</strong> → signs the <strong>Intermediate CA</strong> certificate → which signs the <strong>Server Certificate</strong></p>
-<p style=""margin:0 0 10px!important;"">Your browser trusts the Root CA → therefore trusts the Intermediate CA → therefore trusts the server certificate → therefore trusts the server’s identity.</p>
-<p style=""margin:0!important;"">If a CA is compromised or issues a fraudulent certificate, browsers can <strong>revoke</strong> trust using Certificate Revocation Lists (CRLs) or the Online Certificate Status Protocol (OCSP).</p>
-</div>
-
-<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">Protocol Migration Best Practices</h3>
-
-<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">Migrating from insecure to secure protocols requires three steps: <strong>(1) Deploy</strong> the secure replacement alongside the insecure protocol. <strong>(2) Migrate</strong> all traffic to the secure protocol and verify functionality. <strong>(3) Block</strong> the insecure protocol at the firewall to prevent fallback. Skipping step 3 is the most common failure — users drift back to the easier (insecure) option if it remains available.</p>
-</div>
-<div class=""cfu-block"" id=""cfu-6"" data-type=""matching"" data-num=""6"" data-answer=""S,H,X"">
-<div class=""cfu-header"">
-<div class=""cfu-header-left"">
-<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge cfu-scenario-badge"">Matching</span>
-</div>
-<span class=""cfu-counter"">6 / 15</span>
-</div>
-<div class=""cfu-scenario"">
-<strong>Meridian Energy Grid</strong> audits three insecure protocols found in its network.</div>
-<p class=""cfu-question"">Match each insecure protocol to its correct secure replacement.</p>
-<div class=""cfu-match-grid"">
-  <div class=""cfu-match-row"">
-<div class=""cfu-match-term"">FTP (port 21) — plaintext file transfers with visible credentials</div>
-<select class=""cfu-match-select"" id=""cfu6-m1""><option value="""">Select...</option>
-<option value=""S"">SFTP (SSH-encrypted file transfer)</option>
-<option value=""H"">HTTPS (TLS-encrypted web traffic)</option>
-<option value=""X"">SSH (encrypted remote terminal)</option></select>
-</div>
-  <div class=""cfu-match-row"">
-<div class=""cfu-match-term"">HTTP (port 80) — unencrypted web traffic on billing portal</div>
-<select class=""cfu-match-select"" id=""cfu6-m2""><option value="""">Select...</option>
-<option value=""S"">SFTP (SSH-encrypted file transfer)</option>
-<option value=""H"">HTTPS (TLS-encrypted web traffic)</option>
-<option value=""X"">SSH (encrypted remote terminal)</option></select>
-</div>
-  <div class=""cfu-match-row"">
-<div class=""cfu-match-term"">Telnet (port 23) — plaintext SCADA server management</div>
-<select class=""cfu-match-select"" id=""cfu6-m3""><option value="""">Select...</option>
-<option value=""S"">SFTP (SSH-encrypted file transfer)</option>
-<option value=""H"">HTTPS (TLS-encrypted web traffic)</option>
-<option value=""X"">SSH (encrypted remote terminal)</option></select>
-</div>
-</div>
-<div class=""cfu-feedback"" id=""cfu-fb-6"" style=""display:none;"">
-<div class=""cfu-fb-correct"" style=""display:none;"">FTP→SFTP, HTTP→HTTPS, Telnet→SSH. Each replacement encrypts the same communication type.</div>
-<div class=""cfu-fb-partial"" style=""display:none;"">FTP→SFTP (encrypted file transfer). HTTP→HTTPS (encrypted web). Telnet→SSH (encrypted terminal).</div>
-</div>
-</div>
-<div class=""cfu-block"" id=""cfu-7"" data-type=""mcq"" data-num=""7"" data-answer=""C"">
-<div class=""cfu-header"">
-<div class=""cfu-header-left"">
-<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge"">MCQ</span>
-</div>
-<span class=""cfu-counter"">7 / 15</span>
-</div>
-<div class=""cfu-scenario"">
-<strong>NovaTech Solutions:</strong> A customer reports seeing a padlock icon on a suspicious website that asks for credit card information. They ask: “Doesn’t the padlock mean it’s safe?”</div>
-<p class=""cfu-question"">Which response is <span style=""font-weight:700!important;text-decoration:underline!important;"">MOST</span> accurate?</p>
-<div class=""cfu-options-grid"">
-  <div class=""cfu-opt"" data-val=""A"">
-<span class=""cfu-opt-letter"">A</span><span class=""cfu-opt-text"">Yes — the padlock means the website has been verified as legitimate and safe by the browser</span>
-</div>
-  <div class=""cfu-opt"" data-val=""B"">
-<span class=""cfu-opt-letter"">B</span><span class=""cfu-opt-text"">Yes — only government-approved websites can obtain TLS certificates</span>
-</div>
-  <div class=""cfu-opt"" data-val=""C"">
-<span class=""cfu-opt-letter"">C</span><span class=""cfu-opt-text"">No — the padlock means the connection is encrypted, but phishing sites can also get valid TLS certificates. HTTPS protects data in transit, not the website’s intent</span>
-</div>
-  <div class=""cfu-opt"" data-val=""D"">
-<span class=""cfu-opt-letter"">D</span><span class=""cfu-opt-text"">No — the padlock means nothing; browsers show it randomly</span>
-</div>
-</div>
-<div class=""cfu-feedback"" id=""cfu-fb-7"" style=""display:none;"">
-<div class=""cfu-fb-correct"" style=""display:none;"">
-<strong>Correct.</strong> HTTPS = encrypted connection, not verified intent. Free CAs like Let’s Encrypt issue certificates to any domain. A phishing site at fake-bank.com can have a valid certificate and show the padlock.</div>
-<div class=""cfu-fb-wrong"" data-a=""A"" style=""display:none;"">The padlock means encryption, not legitimacy.</div>
-<div class=""cfu-fb-wrong"" data-a=""B"" style=""display:none;"">Anyone can obtain a TLS certificate; no government approval needed.</div>
-<div class=""cfu-fb-wrong"" data-a=""D"" style=""display:none;"">The padlock has a specific meaning (encrypted connection); it is not random.</div>
-</div>
-</div>
-<div class=""cfu-block"" id=""cfu-8"" data-type=""cloze"" data-num=""8"" data-answer=""tls,session,certificate,handshake"">
-<div class=""cfu-header"">
-<div class=""cfu-header-left"">
-<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge cfu-scenario-badge"">Fill in the Blank</span>
-</div>
-<span class=""cfu-counter"">8 / 15</span>
-</div>
-<div class=""cfu-scenario"">
-<strong>Crossroads Logistics:</strong> Complete the TLS connection process.</div>
-<div class=""cfu-cloze-text"">
-  <p>HTTPS wraps HTTP inside a <input type=""text"" class=""cfu-cloze-blank"" id=""cfu8-c1"" placeholder=""???"" autocomplete=""off""> tunnel to encrypt all data between browser and server.</p>
-  <p>After the handshake, both sides use a shared <input type=""text"" class=""cfu-cloze-blank"" id=""cfu8-c2"" placeholder=""???"" autocomplete=""off""> key for fast symmetric encryption of the actual data.</p>
-  <p>The server proves its identity by presenting a digital <input type=""text"" class=""cfu-cloze-blank"" id=""cfu8-c3"" placeholder=""???"" autocomplete=""off""> signed by a trusted Certificate Authority.</p>
-  <p>The process of negotiating encryption parameters and exchanging keys is called the TLS <input type=""text"" class=""cfu-cloze-blank"" id=""cfu8-c4"" placeholder=""???"" autocomplete=""off"">.</p>
-</div>
-<div class=""cfu-feedback"" id=""cfu-fb-8"" style=""display:none;"">
-<div class=""cfu-fb-correct"" style=""display:none;"">TLS tunnel, session key, certificate, handshake — the four core components of every encrypted connection.</div>
-<div class=""cfu-fb-partial"" style=""display:none;"">Answers: TLS, session, certificate, handshake. TLS wraps HTTP into HTTPS using a session key negotiated during the handshake, verified by a CA-signed certificate.</div>
-</div>
-</div>
 <div class=""cfu-block"" id=""cfu-9"" data-type=""mcq"" data-num=""9"" data-answer=""B"">
 <div class=""cfu-header"">
 <div class=""cfu-header-left"">
 <span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge"">MCQ</span>
 </div>
-<span class=""cfu-counter"">9 / 15</span>
+<span class=""cfu-counter"">9 / 10</span>
 </div>
 <div class=""cfu-scenario"">
-<strong>Harborview Bank:</strong> A MitM attacker intercepts the initial HTTP request to onlinebanking.harborview.com and prevents the HTTPS redirect, keeping the customer on an unencrypted HTTP connection.</div>
-<p class=""cfu-question"">This attack is called:</p>
+An exam item describes a bank branch where <strong>a switch port in a public waiting area accepts any device plugged into it</strong>, and asks what the organization&rsquo;s policy should require.</div>
+<p class=""cfu-question"">Which answer choice is the one the question is actually asking for?</p>
 <div class=""cfu-options-grid"">
-  <div class=""cfu-opt"" data-val=""A"">
-<span class=""cfu-opt-letter"">A</span><span class=""cfu-opt-text"">DNS spoofing — redirecting the domain to a different IP</span>
+<div class=""cfu-opt"" data-val=""A"">
+<span class=""cfu-opt-letter"">A</span><span class=""cfu-opt-text"">Purchase managed switches from a vendor with better default settings</span>
 </div>
-  <div class=""cfu-opt"" data-val=""B"">
-<span class=""cfu-opt-letter"">B</span><span class=""cfu-opt-text"">SSL stripping — intercepting the HTTP-to-HTTPS redirect to keep the victim on unencrypted HTTP</span>
+<div class=""cfu-opt"" data-val=""B"">
+<span class=""cfu-opt-letter"">B</span><span class=""cfu-opt-text"">The switch security policy should require port security to be enabled on every switch</span>
 </div>
-  <div class=""cfu-opt"" data-val=""C"">
-<span class=""cfu-opt-letter"">C</span><span class=""cfu-opt-text"">Certificate pinning — forcing the browser to accept only specific certificates</span>
+<div class=""cfu-opt"" data-val=""C"">
+<span class=""cfu-opt-letter"">C</span><span class=""cfu-opt-text"">Move the waiting room network onto its own wireless access point</span>
 </div>
-  <div class=""cfu-opt"" data-val=""D"">
-<span class=""cfu-opt-letter"">D</span><span class=""cfu-opt-text"">ARP poisoning — manipulating MAC-to-IP mappings on the local switch</span>
+<div class=""cfu-opt"" data-val=""D"">
+<span class=""cfu-opt-letter"">D</span><span class=""cfu-opt-text"">The router security policy should require a firewall separate from the router</span>
 </div>
 </div>
 <div class=""cfu-feedback"" id=""cfu-fb-9"" style=""display:none;"">
-<div class=""cfu-fb-correct"" style=""display:none;"">
-<strong>Correct.</strong> SSL stripping exploits the brief HTTP moment before the HTTPS redirect. Defense: HSTS preloading eliminates the initial HTTP request entirely.</div>
-<div class=""cfu-fb-wrong"" data-a=""A"" style=""display:none;"">DNS spoofing changes IP resolution; SSL stripping intercepts the protocol upgrade.</div>
-<div class=""cfu-fb-wrong"" data-a=""C"" style=""display:none;"">Certificate pinning is a defense mechanism, not an attack.</div>
-<div class=""cfu-fb-wrong"" data-a=""D"" style=""display:none;"">ARP poisoning enables MitM at Layer 2; SSL stripping is the Layer 7 attack performed from a MitM position.</div>
+<div class=""cfu-fb-correct"" style=""display:none;""><strong>Correct.</strong> The scenario names a physical switch port, which names the switch security policy, and the requirement that answers it is port security. The question asked what the policy should require, so the answer names a requirement rather than a purchase or a redesign.</div>
+<div class=""cfu-fb-wrong"" data-a=""A"" style=""display:none;"">A product purchase is almost never the answer to a policy question, and defaults are not a written standard.</div>
+<div class=""cfu-fb-wrong"" data-a=""C"" style=""display:none;"">A redesign might help and is not what was asked. The question asked what the policy should require.</div>
+<div class=""cfu-fb-wrong"" data-a=""D"" style=""display:none;"">Right shape, wrong policy. A switch port is the switch policy, not the router policy.</div>
 </div>
 </div>
-<div class=""cfu-block"" id=""cfu-10"" data-type=""checkbox"" data-num=""10"" data-answer=""A,C,D"">
+<div class=""card"" id=""section-faq"">
+  <h2>
+<span class=""section-icon"">?</span>3.2.11 — Frequently Asked Questions</h2>
+  <div class=""faq-item"">
+    <h3 class=""faq-q"">Q: What is the difference between a managerial control and a technical control?</h3>
+    <p class=""faq-a"">A managerial control is a written rule about how something must be built or used, and a technical control is the mechanism that carries it out. The switch setting that limits which devices may use a port is technical. The policy sentence requiring port security to be enabled on every switch is managerial. They are not competing options, they are two layers of the same defence: the technical control does the work, and the managerial control is what makes it true of every device rather than of the one an administrator remembered. This topic is about the managerial layer, which is why its questions ask what a policy should say rather than which setting to change.</p>
+  </div>
+
+  <div class=""faq-item"">
+    <h3 class=""faq-q"">Q: Why do the router and switch policies both ban local user accounts?</h3>
+    <p class=""faq-a"">Because a local account is an identity the device decides on by itself, and that breaks three things at once. It survives the departure of the person who used it, since removing someone centrally does not touch accounts stored on individual boxes. It does not appear in central logs, so nobody can reconstruct who logged into what. And because it is more convenient than the approved path, it becomes the account a team shares, at which point the login no longer identifies a person at all. Routing every login through an approved authentication server fixes all three. The requirement appears in both policies because both kinds of device have the same weakness.</p>
+  </div>
+
+  <div class=""faq-item"">
+    <h3 class=""faq-q"">Q: Is split tunneling a vulnerability, an attack, or a configuration?</h3>
+    <p class=""faq-a"">A configuration, chosen deliberately, usually for a mundane reason: sending every remote employee&rsquo;s video calls and software updates through headquarters is slow and expensive, and split tunneling avoids that. What makes it a problem is the second path it leaves open. The laptop is connected to the internal network through the tunnel and to the open internet directly, at the same time, and only the tunnel is inspected. So an exam scenario that says a VPN permits split tunneling is describing a policy violation, not an intrusion, and the correct finding is that the VPN policy should prohibit it. Answer choices calling it malware or an attack technique are wrong.</p>
+  </div>
+
+  <div class=""faq-item"">
+    <h3 class=""faq-q"">Q: If MAC filtering can be defeated, why does this topic require it twice?</h3>
+    <p class=""faq-a"">Because raising the cost of an attack is worth doing even when it does not make one impossible, as long as nobody mistakes it for the whole defence. A hardware address is something a machine announces about itself, so an adversary who can observe traffic can learn an allowed address. What MAC filtering reliably stops is an unauthorized device simply being plugged in or joined, which is a real and common way onto a network. It appears in the switch security policy and again as a wireless configuration control because both places have that same problem. What it never justifies is weakening the encryption or the authentication, which are the controls doing the load-bearing work.</p>
+  </div>
+
+  <div class=""faq-item"">
+    <h3 class=""faq-q"">Q: The policy says AES with a minimum key length. Why name the key length at all?</h3>
+    <p class=""faq-a"">Because ""traffic must be encrypted"" is a requirement that weak encryption satisfies. A policy is a floor, and a floor with no number in it can be met by any implementation somebody can argue is encryption, including algorithms already known to be broken. Naming the algorithm answers what kind, and naming a minimum key length answers how strong, and an auditor can check both without needing to judge whether a given configuration is good enough. This is the same reason the topic names WPA3 rather than saying ""use modern encryption"": a requirement you cannot check is not really a requirement.</p>
+  </div>
+
+  <div class=""faq-item"">
+    <h3 class=""faq-q"">Q: Does disabling beacon frames actually hide a network?</h3>
+    <p class=""faq-a"">No, and this is the single most common misreading in the topic. A beacon frame is a periodic broadcast advertising the network name and basic properties, so turning it off means the access point stops announcing itself and an adversary has to work harder to find the network and learn what it is running. The network is still there and still carrying traffic, and traffic can be observed by anyone in range with an antenna. So the honest description is harder to find, not invisible or undetectable, and any answer choice using the stronger words is wrong. It is a worthwhile control precisely as far as that, and no further.</p>
+  </div>
+</div>
+
+<div class=""cfu-block"" id=""cfu-10"" data-type=""checkbox"" data-num=""10"" data-answer=""A,B,C"">
 <div class=""cfu-header"">
 <div class=""cfu-header-left"">
 <span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge cfu-scenario-badge"">Select All</span>
 </div>
-<span class=""cfu-counter"">10 / 15</span>
+<span class=""cfu-counter"">10 / 10</span>
 </div>
 <div class=""cfu-scenario"">
-<strong>Brightpath University</strong> is deploying TLS across all web services.</div>
-<p class=""cfu-question"">Select <strong>ALL</strong> guarantees that TLS provides.</p>
+A student is reviewing the claims made in this topic before the exam.</div>
+<p class=""cfu-question"">Select <strong>ALL</strong> statements that are accurate.</p>
 <div class=""cfu-cb-grid"">
-  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu10-cb1"" value=""A""> <span>Confidentiality — encrypted data is unreadable to eavesdroppers</span></label>
-  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu10-cb2"" value=""B""> <span>Availability — the website will never go offline</span></label>
-  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu10-cb3"" value=""C""> <span>Integrity — tampered data is detected and rejected</span></label>
-  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu10-cb4"" value=""D""> <span>Authentication — the server proves its identity via a CA-signed certificate</span></label>
-  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu10-cb5"" value=""E""> <span>Authorization — TLS controls what the user can access on the server</span></label>
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu10-cb1"" value=""A""> <span>Disabling beacon frames makes a wireless network harder to find, but not invisible</span></label>
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu10-cb2"" value=""B""> <span>Banning local user accounts is required by both the router and the switch security policies</span></label>
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu10-cb3"" value=""C""> <span>WPA3 is currently the strongest wireless encryption algorithm</span></label>
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu10-cb4"" value=""D""> <span>Split tunneling is an attack technique used by adversaries to bypass a VPN</span></label>
+  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu10-cb5"" value=""E""> <span>MAC filtering makes it impossible for an unauthorized device to reach the network</span></label>
 </div>
 <div class=""cfu-feedback"" id=""cfu-fb-10"" style=""display:none;"">
-<div class=""cfu-fb-correct"" style=""display:none;"">Confidentiality (A), integrity (C), authentication (D). TLS does NOT provide availability (B) or authorization (E) — those are handled by other controls.</div>
-<div class=""cfu-fb-partial"" style=""display:none;"">TLS provides: confidentiality (encryption), integrity (tamper detection), authentication (certificate verification). Not availability or authorization.</div>
+<div class=""cfu-fb-correct"" style=""display:none;"">A, B and C are accurate. D is wrong: split tunneling is a configuration the organization chooses, which is why permitting it is a policy violation rather than an intrusion. E overstates MAC filtering, which prevents unlisted devices from getting on but rests on an address a machine announces about itself.</div>
+<div class=""cfu-fb-partial"" style=""display:none;"">The three accurate statements are the beacon wording (harder to find, not invisible), the shared local-account ban, and WPA3 as currently strongest. The two wrong ones are the classic overstatements in this topic.</div>
 </div>
 </div>
-<div class=""cfu-block"" id=""cfu-11"" data-type=""matching"" data-num=""11"" data-answer=""R,S,P"">
-<div class=""cfu-header"">
-<div class=""cfu-header-left"">
-<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge cfu-scenario-badge"">Matching</span>
-</div>
-<span class=""cfu-counter"">11 / 15</span>
-</div>
-<div class=""cfu-scenario"">
-<strong>NovaTech Solutions</strong> uses three VPN configurations.</div>
-<p class=""cfu-question"">Match each scenario to the correct VPN type.</p>
-<div class=""cfu-match-grid"">
-  <div class=""cfu-match-row"">
-<div class=""cfu-match-term"">A traveling sales rep connects from a hotel to access NovaTech’s CRM system</div>
-<select class=""cfu-match-select"" id=""cfu11-m1""><option value="""">Select...</option>
-<option value=""R"">Remote-Access VPN</option>
-<option value=""S"">Site-to-Site VPN</option>
-<option value=""P"">Split Tunneling</option></select>
-</div>
-  <div class=""cfu-match-row"">
-<div class=""cfu-match-term"">NovaTech HQ and its European office have a permanent encrypted link between their firewalls</div>
-<select class=""cfu-match-select"" id=""cfu11-m2""><option value="""">Select...</option>
-<option value=""R"">Remote-Access VPN</option>
-<option value=""S"">Site-to-Site VPN</option>
-<option value=""P"">Split Tunneling</option></select>
-</div>
-  <div class=""cfu-match-row"">
-<div class=""cfu-match-term"">An employee’s corporate traffic goes through VPN but YouTube streams directly to the internet</div>
-<select class=""cfu-match-select"" id=""cfu11-m3""><option value="""">Select...</option>
-<option value=""R"">Remote-Access VPN</option>
-<option value=""S"">Site-to-Site VPN</option>
-<option value=""P"">Split Tunneling</option></select>
-</div>
-</div>
-<div class=""cfu-feedback"" id=""cfu-fb-11"" style=""display:none;"">
-<div class=""cfu-fb-correct"" style=""display:none;"">Traveling user = Remote-Access. Permanent office link = Site-to-Site. Corporate only through VPN = Split Tunneling.</div>
-<div class=""cfu-fb-partial"" style=""display:none;"">Remote-Access = individual user. Site-to-Site = office-to-office. Split Tunneling = selective routing through VPN.</div>
-</div>
-</div>
-<div class=""cfu-block"" id=""cfu-12"" data-type=""mcq"" data-num=""12"" data-answer=""D"">
-<div class=""cfu-header"">
-<div class=""cfu-header-left"">
-<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge"">MCQ</span>
-</div>
-<span class=""cfu-counter"">12 / 15</span>
-</div>
-<div class=""cfu-scenario"">
-<strong>Crossroads Logistics</strong> implements DNSSEC on its DNS servers. A security intern asks: “Now that we have DNSSEC, can eavesdroppers still see which domains our employees are querying?”</div>
-<p class=""cfu-question"">Which answer is <span style=""font-weight:700!important;text-decoration:underline!important;"">CORRECT</span>?</p>
-<div class=""cfu-options-grid"">
-  <div class=""cfu-opt"" data-val=""A"">
-<span class=""cfu-opt-letter"">A</span><span class=""cfu-opt-text"">No — DNSSEC encrypts all DNS queries so eavesdroppers cannot see them</span>
-</div>
-  <div class=""cfu-opt"" data-val=""B"">
-<span class=""cfu-opt-letter"">B</span><span class=""cfu-opt-text"">No — DNSSEC blocks all malicious domains automatically</span>
-</div>
-  <div class=""cfu-opt"" data-val=""C"">
-<span class=""cfu-opt-letter"">C</span><span class=""cfu-opt-text"">No — DNSSEC replaces DNS with a completely new protocol on a different port</span>
-</div>
-  <div class=""cfu-opt"" data-val=""D"">
-<span class=""cfu-opt-letter"">D</span><span class=""cfu-opt-text"">Yes — DNSSEC provides authentication and integrity (verifies responses are genuine) but does NOT encrypt queries. DNS over HTTPS (DoH) or DNS over TLS (DoT) is needed for query encryption</span>
-</div>
-</div>
-<div class=""cfu-feedback"" id=""cfu-fb-12"" style=""display:none;"">
-<div class=""cfu-fb-correct"" style=""display:none;"">
-<strong>Correct.</strong> DNSSEC signs responses (prevents spoofing). DoH/DoT encrypts queries (prevents eavesdropping). Different problems, different solutions. Use both together for maximum protection.</div>
-<div class=""cfu-fb-wrong"" data-a=""A"" style=""display:none;"">DNSSEC does NOT encrypt. It signs responses for authenticity verification.</div>
-<div class=""cfu-fb-wrong"" data-a=""B"" style=""display:none;"">DNSSEC verifies response authenticity; it does not maintain domain blocklists.</div>
-<div class=""cfu-fb-wrong"" data-a=""C"" style=""display:none;"">DNSSEC extends DNS; it does not replace it.</div>
-</div>
-</div>
-<div class=""cfu-block"" id=""cfu-13"" data-type=""mcq"" data-num=""13"" data-answer=""A"">
-<div class=""cfu-header"">
-<div class=""cfu-header-left"">
-<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge"">MCQ</span>
-</div>
-<span class=""cfu-counter"">13 / 15</span>
-</div>
-<div class=""cfu-scenario"">
-<strong>Harborview Bank:</strong> The IT manager states: “We deployed HTTPS on our banking portal and also redirect HTTP to HTTPS. SSL stripping is no longer possible because we redirect all HTTP traffic.”</div>
-<p class=""cfu-question"">Identify the <strong>error</strong> in this reasoning.</p>
-<div class=""cfu-options-grid"">
-  <div class=""cfu-opt"" data-val=""A"">
-<span class=""cfu-opt-letter"">A</span><span class=""cfu-opt-text"">The redirect itself travels over HTTP — an attacker in a MitM position can intercept and block the redirect before it reaches the browser. HSTS preloading is needed to eliminate the initial HTTP request entirely</span>
-</div>
-  <div class=""cfu-opt"" data-val=""B"">
-<span class=""cfu-opt-letter"">B</span><span class=""cfu-opt-text"">The IT manager is correct — HTTP-to-HTTPS redirects fully prevent SSL stripping</span>
-</div>
-  <div class=""cfu-opt"" data-val=""C"">
-<span class=""cfu-opt-letter"">C</span><span class=""cfu-opt-text"">The error is that HTTPS should use port 8443, not port 443</span>
-</div>
-  <div class=""cfu-opt"" data-val=""D"">
-<span class=""cfu-opt-letter"">D</span><span class=""cfu-opt-text"">The error is that only paid certificates prevent SSL stripping; free certificates do not</span>
-</div>
-</div>
-<div class=""cfu-feedback"" id=""cfu-fb-13"" style=""display:none;"">
-<div class=""cfu-fb-correct"" style=""display:none;"">
-<strong>Correct.</strong> The redirect travels over HTTP (unencrypted). A MitM attacker intercepts this redirect and blocks it. HSTS preloading hardcodes HTTPS at the browser level, eliminating the vulnerable initial HTTP request.</div>
-<div class=""cfu-fb-wrong"" data-a=""B"" style=""display:none;"">Redirects do NOT prevent SSL stripping; they are the vulnerability it exploits.</div>
-<div class=""cfu-fb-wrong"" data-a=""C"" style=""display:none;"">Port 443 is the standard HTTPS port; 8443 is an alternative, not a requirement.</div>
-<div class=""cfu-fb-wrong"" data-a=""D"" style=""display:none;"">Certificate cost is irrelevant to SSL stripping prevention.</div>
-</div>
-</div>
-<div class=""cfu-block"" id=""cfu-14"" data-type=""checkbox"" data-num=""14"" data-answer=""B,C,D"">
-<div class=""cfu-header"">
-<div class=""cfu-header-left"">
-<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge cfu-scenario-badge"">Select All</span>
-</div>
-<span class=""cfu-counter"">14 / 15</span>
-</div>
-<div class=""cfu-scenario"">
-<strong>Meridian Energy</strong> is migrating from Telnet to SSH on SCADA servers.</div>
-<p class=""cfu-question"">Select <strong>ALL</strong> steps required for a complete protocol migration.</p>
-<div class=""cfu-cb-grid"">
-  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu14-cb1"" value=""A""> <span>Keep Telnet running alongside SSH indefinitely so engineers can choose whichever they prefer</span></label>
-  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu14-cb2"" value=""B""> <span>Deploy SSH servers and verify connectivity before migrating any traffic</span></label>
-  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu14-cb3"" value=""C""> <span>Migrate all engineers to SSH and verify all workflows function correctly</span></label>
-  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu14-cb4"" value=""D""> <span>Block Telnet (port 23) at the firewall after successful migration to prevent fallback</span></label>
-  <label class=""cfu-cb-label""><input type=""checkbox"" class=""cfu-cb"" id=""cfu14-cb5"" value=""E""> <span>Rename Telnet to “SecureTelnet” to make it appear encrypted</span></label>
-</div>
-<div class=""cfu-feedback"" id=""cfu-fb-14"" style=""display:none;"">
-<div class=""cfu-fb-correct"" style=""display:none;"">Deploy (B), migrate (C), block (D). Keeping Telnet running (A) lets users drift back. Renaming (E) is security through obscurity with zero protection.</div>
-<div class=""cfu-fb-partial"" style=""display:none;"">Three migration steps: deploy secure replacement, migrate traffic, block insecure protocol. Step 3 (blocking) is the most commonly skipped and most critical.</div>
-</div>
-</div>
-<div class=""cfu-block"" id=""cfu-15"" data-type=""mcq"" data-num=""15"" data-answer=""D"">
-<div class=""cfu-header"">
-<div class=""cfu-header-left"">
-<span class=""cfu-label"">Check for Understanding</span><span class=""cfu-type-badge"">MCQ</span>
-</div>
-<span class=""cfu-counter"">15 / 15</span>
-</div>
-<div class=""cfu-scenario"">
-<strong>Brightpath University</strong> evaluates which protocol defenses protect against which threats.</div>
-<p class=""cfu-question"">Which defense-to-threat pairings are <span style=""font-weight:700!important;text-decoration:underline!important;"">CORRECT</span>?<br><br>I. HSTS preloading prevents SSL stripping by eliminating the initial HTTP request<br>II. DNSSEC prevents DNS spoofing by cryptographically signing responses<br>III. SSH prevents credential interception by encrypting the entire session</p>
-<div class=""cfu-options-grid"">
-  <div class=""cfu-opt"" data-val=""A"">
-<span class=""cfu-opt-letter"">A</span><span class=""cfu-opt-text"">I only</span>
-</div>
-  <div class=""cfu-opt"" data-val=""B"">
-<span class=""cfu-opt-letter"">B</span><span class=""cfu-opt-text"">I and II only</span>
-</div>
-  <div class=""cfu-opt"" data-val=""C"">
-<span class=""cfu-opt-letter"">C</span><span class=""cfu-opt-text"">II and III only</span>
-</div>
-  <div class=""cfu-opt"" data-val=""D"">
-<span class=""cfu-opt-letter"">D</span><span class=""cfu-opt-text"">I, II, and III — all three pairings are correct</span>
-</div>
-</div>
-<div class=""cfu-feedback"" id=""cfu-fb-15"" style=""display:none;"">
-<div class=""cfu-fb-correct"" style=""display:none;"">
-<strong>Correct.</strong> All three are accurate: HSTS eliminates the HTTP redirect vulnerability (I). DNSSEC signs DNS responses to prevent forgery (II). SSH encrypts sessions to prevent credential capture (III).</div>
-<div class=""cfu-fb-wrong"" data-a=""A"" style=""display:none;"">All three pairings are correct, not just I.</div>
-<div class=""cfu-fb-wrong"" data-a=""B"" style=""display:none;"">Statement III is also correct — SSH encrypts sessions preventing interception.</div>
-<div class=""cfu-fb-wrong"" data-a=""C"" style=""display:none;"">Statement I is also correct — HSTS preloading eliminates the SSL stripping vulnerability.</div>
-</div>
-</div>
-<div class=""nav-links"">
-<a href=""/pages/ap-cyber-unit-3-lesson-2"" class=""nav-link"">← Lesson 3.1 (Part 2 of 2)</a><a href=""/pages/ap-cyber-unit-3-lesson-3-exercise-1"" class=""nav-link"">Exercise 1 →</a>
-</div>
-<div style=""text-align:center!important;padding:20px!important;font-size:12px!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;font-family:Georgia,serif!important;"">AP Cybersecurity Lesson 3.2 | APCSExamPrep.com | Built by Tanner Crow, AP CS Teacher (11+ years)<br>AP® is a registered trademark of the College Board.</div>
-<div class=""info-box exam"" style=""margin-bottom:20px!important;"">
-<span class=""box-label"">★ AP Exam Focus — Topic 3.2</span><p>• Identify the four CED network security policies: router policy (ban local accounts, disable Telnet, require firewall), switch policy (ban local accounts, port security, MAC filtering), VPN policy (role-based access, auth requirements, no split tunneling), wireless policy (EAP authentication, AES encryption, disable beacon frames)<br>• Apply the three CED wireless security controls: disable beacon frame broadcasting, control WAP signal strength/direction, enable strong encryption (WPA3 is strongest; WEP/WPS/original WPA are insecure)<br>• Explain MAC filtering: prevents unauthorized devices from joining the network<br>• Recognize that WEP, WPS, and original WPA have known vulnerabilities and are insecure — WPA3 is the CED-specified strongest option<br>• Note: TLS/SSH/SFTP/DNSSEC content in this lesson extends beyond CED core — labeled enrichment</p>
-</div>
-
-<div class=""card"" style=""border-top:3px solid #d97706!important;"">
-<div style=""display:flex!important;justify-content:space-between!important;align-items:center!important;cursor:pointer!important;"" onclick=""var b=document.getElementById('ek36-body');var c=document.getElementById('ek36-chev');b.style.display=b.style.display==='none'?'block':'none';c.style.transform=c.style.transform?'':'rotate(180deg)';"">
-<div>
-<span style=""font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1.5px!important;color:#d97706!important;font-family:Georgia,serif!important;"">College Board Essential Knowledge Coverage</span><h3 style=""margin:4px 0 0!important;font-size:16px!important;font-weight:700!important;color:#1E1B4B!important;font-family:Georgia,serif!important;"">Topic 3.2 Managerial Controls — What Is Testable</h3>
-</div>
-<span id=""ek36-chev"" style=""font-size:20px!important;color:#6B21A8!important;transition:transform .2s!important;"">▼</span>
-</div>
-<div id=""ek36-body"" style=""display:none!important;margin-top:16px!important;"">
-<div class=""info-box warning"" style=""margin-bottom:12px!important;"">
-<span class=""box-label"">⚠ CED Scope Note</span><p>Topic 3.2 is router, switch, VPN and wireless <em>security policies</em>, plus wireless access point configuration. That material is sections 3.2.1 to 3.2.5, and checks 1 to 5. The TLS, SSH, SFTP, DNSSEC and certificate content in sections 3.2.6 to 3.2.10 goes beyond this topic and is marked on the page as background; it is kept because Unit 3 has no better home for it and the policies above refer to it.</p>
-</div>
-<table class=""vocab-table"">
-<thead><tr>
-<th>CED Ref</th>
-<th>Essential Knowledge</th>
-<th>Covered In</th>
-</tr></thead>
-<tbody>
-<tr>
-<td class=""term"">3.2.A.1</td>
-<td>Router security policy: ban local user accounts, disable unnecessary services (e.g. Telnet), require a firewall</td>
-<td>Section 3.2.2, Router and switch security policies</td>
-</tr>
-<tr>
-<td class=""term"">3.2.A.2</td>
-<td>Switch security policy: ban local user accounts, require port security, use MAC filtering</td>
-<td>Section 3.2.2, Router and switch security policies</td>
-</tr>
-<tr>
-<td class=""term"">3.2.A.3</td>
-<td>VPN policy: role-based access, authentication requirements (public/private key or MFA), prohibition against split tunneling (dual tunneling)</td>
-<td>Section 3.2.3, VPN policy</td>
-</tr>
-<tr>
-<td class=""term"">3.2.A.4</td>
-<td>Wireless security policy: EAP authentication to approved auth server, AES encryption with minimum key length, disable beacon frames on WAPs</td>
-<td>Section 3.2.4, Wireless security policy</td>
-</tr>
-<tr>
-<td class=""term"">3.2.B.1</td>
-<td>Disable beacon frame broadcasting on WAPs: makes it harder for adversaries to find the network and learn its properties</td>
-<td>Section 3.2.5, Configuring wireless security</td>
-</tr>
-<tr>
-<td class=""term"">3.2.B.2</td>
-<td>Control WAP broadcast direction and signal strength so signal does not extend beyond the intended physical space</td>
-<td>Section 3.2.5, Configuring wireless security</td>
-</tr>
-<tr>
-<td class=""term"">3.2.B.3</td>
-<td>Enable strong wireless encryption: WEP/WPS/original WPA have known vulnerabilities and are insecure. WPA3 is currently the strongest wireless encryption algorithm.</td>
-<td>Section 3.2.5, Configuring wireless security</td>
-</tr>
-<tr>
-<td class=""term"">3.2.B.4</td>
-<td>Enable MAC filtering to prevent unauthorized devices from accessing the network; require user authentication when joining</td>
-<td>Section 3.2.5, Configuring wireless security</td>
-</tr>
-</tbody>
-</table>
-<p style=""font-size:12px!important;color:#6B7280!important;font-family:Georgia,serif!important;margin-top:8px!important;"">Source: AP Cybersecurity CED Effective Fall 2026. AP Skills: 2.A Identify security controls • 2.C Evaluate mitigations • 2.D Implement mitigations</p>
-</div>
-</div>
-
-<div class=""card"" style=""border-top:3px solid #059669!important;"">
-<span style=""font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1.5px!important;color:#059669!important;font-family:Georgia,serif!important;"">♡ Bellringer — 3 Questions, 5 Minutes</span><p style=""font-size:13px!important;color:#6B7280!important;font-family:Georgia,serif!important;margin-top:4px!important;margin-bottom:14px!important;"">Answer independently. No notes.</p>
-<ol style=""font-size:15px!important;color:#374151!important;line-height:2!important;padding-left:20px!important;font-family:Georgia,serif!important;"">
-<li>A company’s router configuration allows local user accounts with local passwords, has Telnet enabled, and does not require a separate firewall device. List every violation of the CED router security policy and explain what each should be replaced with.</li>
-<li>A WAP at an organization broadcasts its SSID at full signal strength, which extends into the parking lot, and uses WPA2 encryption. Name two CED wireless security controls that should be applied and explain the security benefit of each.</li>
-<li>An organization’s VPN policy allows all employees to use the VPN and permits split tunneling. What is split tunneling, why does the CED prohibit it in a VPN policy, and what should the policy say instead?</li>
-</ol>
-<p style=""font-size:12px!important;color:#9CA3AF!important;font-family:Georgia,serif!important;margin-top:8px!important;""><em>Answers: (1) Violations: local accounts (should ban; require approved auth server) + Telnet enabled (should disable unnecessary services) + no separate firewall required (the policy should require one, which may be a separate device). (2) Disable beacon frame broadcasting (adversaries can’t detect the network) + control signal strength and direction so it does not extend beyond the physical space the access point should cover. Upgrading the encryption to WPA3 is also correct. (3) Split tunneling = VPN user routes some traffic through the VPN tunnel and some directly to the internet. Risk: direct internet traffic bypasses organizational security controls, creating a potential path for adversaries. The VPN policy should prohibit split tunneling.</em></p>
-</div>
-
 <div class=""card"">
 <h2>
 <span class=""section-icon"">!</span>Common AP Exam Mistakes — Topic 3.2</h2>
@@ -1504,9 +1532,216 @@ var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(docume
 </div>
 
 
+<div class=""card"" style=""border-top:3px solid #059669!important;"">
+<span style=""font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1.5px!important;color:#059669!important;font-family:Georgia,serif!important;"">♡ Bellringer — 3 Questions, 5 Minutes</span><p style=""font-size:13px!important;color:#6B7280!important;font-family:Georgia,serif!important;margin-top:4px!important;margin-bottom:14px!important;"">Answer independently. No notes.</p>
+<ol style=""font-size:15px!important;color:#374151!important;line-height:2!important;padding-left:20px!important;font-family:Georgia,serif!important;"">
+<li>A company’s router configuration allows local user accounts with local passwords, has Telnet enabled, and does not require a separate firewall device. List every violation of the CED router security policy and explain what each should be replaced with.</li>
+<li>A WAP at an organization broadcasts its SSID at full signal strength, which extends into the parking lot, and uses WPA2 encryption. Name two CED wireless security controls that should be applied and explain the security benefit of each.</li>
+<li>An organization’s VPN policy allows all employees to use the VPN and permits split tunneling. What is split tunneling, why does the CED prohibit it in a VPN policy, and what should the policy say instead?</li>
+</ol>
+<p style=""font-size:12px!important;color:#9CA3AF!important;font-family:Georgia,serif!important;margin-top:8px!important;""><em>Answers: (1) Violations: local accounts (should ban; require approved auth server) + Telnet enabled (should disable unnecessary services) + no separate firewall required (the policy should require one, which may be a separate device). (2) Disable beacon frame broadcasting (adversaries can’t detect the network) + control signal strength and direction so it does not extend beyond the physical space the access point should cover. Upgrading the encryption to WPA3 is also correct. (3) Split tunneling = VPN user routes some traffic through the VPN tunnel and some directly to the internet. Risk: direct internet traffic bypasses organizational security controls, creating a potential path for adversaries. The VPN policy should prohibit split tunneling.</em></p>
+</div>
+
+<div class=""card"" style=""border-top:3px solid #2563EB!important;"">
+<div style=""display:flex!important;justify-content:space-between!important;align-items:center!important;cursor:pointer!important;"" onclick=""var b=document.getElementById('apx-body');var c=document.getElementById('apx-chev');b.style.display=b.style.display==='none'?'block':'none';c.style.transform=c.style.transform?'':'rotate(180deg)';"">
+<div>
+<span style=""font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1.5px!important;color:#2563EB!important;font-family:Georgia,serif!important;"">Background reading, beyond Topic 3.2</span><h3 style=""margin:4px 0 0!important;font-size:16px!important;font-weight:700!important;color:#1E1B4B!important;font-family:Georgia,serif!important;"">Secure Network Protocols: TLS, SSH, SFTP, DNSSEC and certificates</h3>
+</div>
+<span id=""apx-chev"" style=""font-size:20px!important;color:#2563EB!important;transition:transform .2s!important;"">&#9660;</span>
+</div>
+<div id=""apx-body"" style=""display:none!important;margin-top:16px!important;"">
+  <p>Everything above is Topic 3.2. What follows goes further than this topic requires, and it is kept because the policies above name protocols without explaining them. A wireless policy requiring AES encryption, a router policy banning Telnet, and a VPN policy asking for a public and private key system all make more sense once you know what those things do.</p>
+  <p style=""font-size:13px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;"">Read it as background. It is not the material Topic 3.2 is built on, and the checks above do not cover it.</p>
+<div class=""lesson-section"" style=""padding:0 4px!important;"">
+<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">Background 1 — The Insecure Protocol Problem</h2>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">Many foundational internet protocols were designed in the 1970s-1990s when the internet was a trusted academic network. Security was an afterthought. These protocols transmit everything — credentials, commands, data — in <strong>plaintext</strong>, meaning anyone who intercepts the traffic can read it directly.</p>
+
+<div style=""background:#F9FAFB!important;border:1px solid #E5E7EB!important;border-radius:10px!important;padding:20px 24px!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
+<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 12px!important;font-family:Georgia,serif!important;"">Insecure → Secure Protocol Map</h3>
+<div style=""display:grid!important;grid-template-columns:1fr auto 1fr!important;gap:8px 16px!important;align-items:center!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;"">
+<div style=""font-weight:700!important;color:#EF4444!important;-webkit-text-fill-color:#EF4444!important;"">Insecure</div>
+<div></div>
+<div style=""font-weight:700!important;color:#22C55E!important;-webkit-text-fill-color:#22C55E!important;"">Secure Replacement</div>
+<div style=""background:#FEE2E2!important;padding:8px 12px!important;border-radius:6px!important;"">FTP (port 21) — plaintext file transfer</div>
+<div>→</div>
+<div style=""background:#DCFCE7!important;padding:8px 12px!important;border-radius:6px!important;"">SFTP (port 22) — SSH-encrypted file transfer</div>
+<div style=""background:#FEE2E2!important;padding:8px 12px!important;border-radius:6px!important;"">Telnet (port 23) — plaintext remote terminal</div>
+<div>→</div>
+<div style=""background:#DCFCE7!important;padding:8px 12px!important;border-radius:6px!important;"">SSH (port 22) — encrypted remote terminal</div>
+<div style=""background:#FEE2E2!important;padding:8px 12px!important;border-radius:6px!important;"">HTTP (port 80) — plaintext web traffic</div>
+<div>→</div>
+<div style=""background:#DCFCE7!important;padding:8px 12px!important;border-radius:6px!important;"">HTTPS (port 443) — TLS-encrypted web traffic</div>
+<div style=""background:#FEE2E2!important;padding:8px 12px!important;border-radius:6px!important;"">DNS (port 53) — plaintext name resolution</div>
+<div>→</div>
+<div style=""background:#DCFCE7!important;padding:8px 12px!important;border-radius:6px!important;"">DoH / DoT — encrypted DNS queries</div>
+</div>
+</div>
+
+<div style=""background:#FEF2F2!important;border-left:4px solid #EF4444!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
+<p style=""font-weight:700!important;color:#EF4444!important;-webkit-text-fill-color:#EF4444!important;margin:0 0 6px!important;font-size:14px!important;"">⚠ Exam Trap</p>
+<p style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;"">FTP and FTPS are different from SFTP. FTPS adds TLS to FTP (still uses port 21/990). SFTP is a completely different protocol that runs over SSH (port 22). The exam may test this distinction. SFTP is generally preferred because it uses a single port and leverages the existing SSH infrastructure.</p>
+</div>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;""><strong>Why plaintext protocols persist:</strong> Legacy systems, backward compatibility requirements, and organizational inertia. Many SCADA/OT environments still use Telnet and unencrypted Modbus because the devices were deployed before secure alternatives existed and cannot be easily updated without risking operational disruption.</p>
+</div>
+<div class=""lesson-section"" style=""padding:0 4px!important;"">
+<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">Background 2 — TLS: The Foundation of Encrypted Communication</h2>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;""><strong>Transport Layer Security (TLS)</strong> is the cryptographic protocol that protects data in transit. Every HTTPS connection, every secure email, and every VPN tunnel relies on TLS to provide three guarantees:</p>
+
+<div style=""display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:12px!important;margin:0 0 20px!important;"">
+<div style=""background:#F5F0FF!important;border:1px solid #DDD6FE!important;border-radius:10px!important;padding:16px!important;text-align:center!important;font-family:Georgia,serif!important;"">
+<div style=""font-size:24px!important;margin-bottom:6px!important;"">🔒</div>
+<div style=""font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:14px!important;margin-bottom:4px!important;"">Confidentiality</div>
+<div style=""font-size:13px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;"">Data is encrypted and unreadable to eavesdroppers</div>
+</div>
+<div style=""background:#F5F0FF!important;border:1px solid #DDD6FE!important;border-radius:10px!important;padding:16px!important;text-align:center!important;font-family:Georgia,serif!important;"">
+<div style=""font-size:24px!important;margin-bottom:6px!important;"">✓</div>
+<div style=""font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:14px!important;margin-bottom:4px!important;"">Integrity</div>
+<div style=""font-size:13px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;"">Tampered data is detected and rejected</div>
+</div>
+<div style=""background:#F5F0FF!important;border:1px solid #DDD6FE!important;border-radius:10px!important;padding:16px!important;text-align:center!important;font-family:Georgia,serif!important;"">
+<div style=""font-size:24px!important;margin-bottom:6px!important;"">👤</div>
+<div style=""font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-size:14px!important;margin-bottom:4px!important;"">Authentication</div>
+<div style=""font-size:13px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;"">The server proves its identity via certificate</div>
+</div>
+</div>
+
+<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">The TLS Handshake (Simplified)</h3>
+
+<div style=""background:#F9FAFB!important;border:1px solid #E5E7EB!important;border-radius:10px!important;padding:20px 24px!important;margin:0 0 20px!important;font-family:Georgia,serif!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.8!important;"">
+<p style=""margin:0 0 12px!important;font-weight:700!important;""><strong>Step 1: Client Hello</strong> — The browser sends supported TLS versions and cipher suites to the server.</p>
+<p style=""margin:0 0 12px!important;font-weight:700!important;""><strong>Step 2: Server Hello + Certificate</strong> — The server selects a cipher suite and sends its digital certificate (contains public key + identity + CA signature).</p>
+<p style=""margin:0 0 12px!important;font-weight:700!important;""><strong>Step 3: Certificate Verification</strong> — The browser verifies the certificate: Is it signed by a trusted CA? Is the domain correct? Is it expired?</p>
+<p style=""margin:0 0 12px!important;font-weight:700!important;""><strong>Step 4: Key Exchange</strong> — Client and server negotiate a shared session key using asymmetric cryptography. This session key will encrypt all subsequent data.</p>
+<p style=""margin:0!important;font-weight:700!important;""><strong>Step 5: Encrypted Communication</strong> — Both sides now use the shared session key for fast symmetric encryption. All data (HTTP requests, responses, cookies, credentials) is encrypted.</p>
+</div>
+
+<div style=""background:#FEF2F2!important;border-left:4px solid #EF4444!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
+<p style=""font-weight:700!important;color:#EF4444!important;-webkit-text-fill-color:#EF4444!important;margin:0 0 6px!important;font-size:14px!important;"">⚠ Exam Trap</p>
+<p style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;""><strong>HTTPS ≠ safe website.</strong> HTTPS means the connection is encrypted, not that the website is legitimate. A phishing site can have a valid TLS certificate and show the padlock icon. TLS protects data <em>in transit</em> — it does not verify the website’s <em>intent</em>.</p>
+</div>
+
+<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">SSL Stripping and HSTS</h3>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;""><strong>SSL stripping</strong> is an attack that exploits the HTTP-to-HTTPS redirect. When a user types <code style=""background:#EDE9FE!important;padding:2px 6px!important;border-radius:3px!important;font-size:13px!important;"">example.com</code> (without https://), the browser first connects via HTTP, then the server redirects to HTTPS. An attacker in a MitM position can intercept the initial HTTP request and prevent the redirect, keeping the victim on an unencrypted connection while proxying to the real HTTPS site.</p>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;""><strong>HSTS (HTTP Strict Transport Security)</strong> eliminates this vulnerability. When a server sends the HSTS header, the browser remembers to <em>always</em> use HTTPS for that domain. <strong>HSTS preloading</strong> goes further: the domain is hardcoded into the browser itself (Chrome, Firefox, Safari maintain preload lists), so the browser <em>never</em> sends an initial HTTP request. There is nothing for the attacker to intercept.</p>
+</div>
+<div class=""lesson-section"" style=""padding:0 4px!important;"">
+<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">Background 3 — SSH and SFTP: Encrypted Remote Access and File Transfer
+
+</h2>
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;""><strong>SSH (Secure Shell)</strong> replaces Telnet for remote server administration. Where Telnet transmits every keystroke, command, and output in plaintext, SSH encrypts the entire session. An attacker intercepting a Telnet session sees passwords, commands, and configuration data. An attacker intercepting an SSH session sees encrypted gibberish.</p>
+
+<div style=""display:grid!important;grid-template-columns:1fr 1fr!important;gap:16px!important;margin:0 0 20px!important;"">
+<div style=""background:#FEE2E2!important;border:1px solid #FECACA!important;border-radius:10px!important;padding:18px!important;font-family:Georgia,serif!important;"">
+<div style=""font-weight:700!important;color:#DC2626!important;-webkit-text-fill-color:#DC2626!important;font-size:14px!important;margin-bottom:8px!important;""> Telnet (Insecure)</div>
+<ul style=""font-size:13px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;padding-left:16px!important;line-height:1.7!important;"">
+<li>Port 23</li>
+<li>All data in plaintext</li>
+<li>Passwords visible to any interceptor</li>
+<li>Commands and output readable</li>
+<li>No identity verification of server</li>
+</ul>
+</div>
+<div style=""background:#DCFCE7!important;border:1px solid #BBF7D0!important;border-radius:10px!important;padding:18px!important;font-family:Georgia,serif!important;"">
+<div style=""font-weight:700!important;color:#16A34A!important;-webkit-text-fill-color:#16A34A!important;font-size:14px!important;margin-bottom:8px!important;"">✓ SSH (Secure)</div>
+<ul style=""font-size:13px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;padding-left:16px!important;line-height:1.7!important;"">
+<li>Port 22</li>
+<li>All data encrypted</li>
+<li>Passwords protected in transit</li>
+<li>Key-based auth (no passwords needed)</li>
+<li>Server identity verified via host key</li>
+</ul>
+</div>
+</div>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;""><strong>SFTP (SSH File Transfer Protocol)</strong> provides encrypted file transfer over the SSH protocol (port 22). Unlike FTP (port 21) which sends credentials and file contents in plaintext, SFTP encrypts everything — login, commands, directory listings, and file data. Unlike FTPS (which wraps FTP in TLS), SFTP is a completely different protocol that uses only one port (22), simplifying firewall rules.</p>
+</div>
+<div class=""lesson-section"" style=""padding:0 4px!important;"">
+<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">Background 4 — VPNs: Encrypted Tunnels Across Untrusted Networks</h2>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">A <strong>Virtual Private Network (VPN)</strong> creates an encrypted tunnel through a public network, allowing private communication as if both endpoints were on the same local network. The tunnel encrypts all traffic so that even if intercepted on a public Wi-Fi or compromised ISP link, the data is unreadable.</p>
+
+<div style=""background:#F9FAFB!important;border:1px solid #E5E7EB!important;border-radius:10px!important;padding:20px 24px!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
+<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 14px!important;font-family:Georgia,serif!important;"">VPN Architecture Comparison</h3>
+<div style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.8!important;"">
+<p style=""margin:0 0 14px!important;""><strong>Remote-Access VPN:</strong> An individual user (employee working from home, traveling executive) connects their device to the corporate network over an encrypted tunnel. The user’s laptop acts as one end, and the VPN gateway is the other. Used by: remote workers, traveling staff, contractors.</p>
+<p style=""margin:0 0 14px!important;""><strong>Site-to-Site VPN:</strong> Two physical locations (HQ and branch office) are connected over the internet through a permanent encrypted tunnel between their routers/firewalls. All traffic between the sites is encrypted transparently — individual users do not need VPN software. Used by: multi-office organizations, partner connections.</p>
+<p style=""margin:0!important;""><strong>Split Tunneling:</strong> Only traffic destined for the corporate network goes through the VPN tunnel; internet traffic (YouTube, personal email) goes directly to the internet. <strong>Trade-off:</strong> Reduces VPN bandwidth and latency but creates a gap — the user’s internet traffic is unprotected and could be intercepted on public Wi-Fi. High-security organizations enforce <strong>full tunneling</strong> (all traffic through VPN) to prevent data leaks.</p>
+</div>
+</div>
+
+<div style=""background:#FEF2F2!important;border-left:4px solid #EF4444!important;padding:16px 20px!important;border-radius:0 8px 8px 0!important;margin:0 0 20px!important;font-family:Georgia,serif!important;"">
+<p style=""font-weight:700!important;color:#EF4444!important;-webkit-text-fill-color:#EF4444!important;margin:0 0 6px!important;font-size:14px!important;"">⚠ Exam Trap</p>
+<p style=""font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0!important;"">Split tunneling is NOT always wrong. It is a valid design choice for organizations that prioritize performance and have other protections (endpoint security, cloud-based web filtering). The exam tests whether you understand the <em>trade-off</em>, not whether you pick one as universally correct.</p>
+</div>
+</div>
+<div class=""lesson-section"" style=""padding:0 4px!important;"">
+<h2 style=""font-size:21px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:32px 0 12px!important;border-bottom:2px solid #EDE9FE!important;padding-bottom:8px!important;font-family:Georgia,serif!important;"">Background 5 — DNSSEC and Certificate Authorities</h2>
+
+<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">DNSSEC: Authenticating DNS Responses</h3>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">Standard DNS has no built-in verification — when your device asks “what is the IP for example.com?” it trusts whatever answer it receives. <strong>DNSSEC (DNS Security Extensions)</strong> adds cryptographic signatures to DNS responses, allowing the client to verify: (1) the response came from the authoritative server, and (2) the response was not modified in transit.</p>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;""><strong>Important distinction:</strong> DNSSEC provides <strong>authentication and integrity</strong> (is this response genuine and unmodified?) but NOT <strong>encryption</strong> (can eavesdroppers see what domains you query?). For DNS query encryption, you need <strong>DNS over HTTPS (DoH)</strong> or <strong>DNS over TLS (DoT)</strong>. These solve different problems and can be used together.</p>
+
+<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">Certificate Authorities and the PKI Trust Model</h3>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">TLS certificates are issued by <strong>Certificate Authorities (CAs)</strong> — trusted organizations that verify domain ownership before signing a certificate. Your browser comes pre-loaded with a list of trusted Root CAs. The trust chain works as follows:</p>
+
+<div style=""background:#F9FAFB!important;border:1px solid #E5E7EB!important;border-radius:10px!important;padding:20px 24px!important;margin:0 0 20px!important;font-family:Georgia,serif!important;font-size:14px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.8!important;"">
+<p style=""margin:0 0 10px!important;""><strong>Root CA</strong> → signs the <strong>Intermediate CA</strong> certificate → which signs the <strong>Server Certificate</strong></p>
+<p style=""margin:0 0 10px!important;"">Your browser trusts the Root CA → therefore trusts the Intermediate CA → therefore trusts the server certificate → therefore trusts the server’s identity.</p>
+<p style=""margin:0!important;"">If a CA is compromised or issues a fraudulent certificate, browsers can <strong>revoke</strong> trust using Certificate Revocation Lists (CRLs) or the Online Certificate Status Protocol (OCSP).</p>
+</div>
+
+<h3 style=""font-size:16px!important;font-weight:700!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:20px 0 10px!important;font-family:Georgia,serif!important;"">Protocol Migration Best Practices</h3>
+
+<p style=""font-size:15px!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 16px!important;font-family:Georgia,serif!important;line-height:1.7!important;"">Migrating from insecure to secure protocols requires three steps: <strong>(1) Deploy</strong> the secure replacement alongside the insecure protocol. <strong>(2) Migrate</strong> all traffic to the secure protocol and verify functionality. <strong>(3) Block</strong> the insecure protocol at the firewall to prevent fallback. Skipping step 3 is the most common failure — users drift back to the easier (insecure) option if it remains available.</p>
+</div>
+</div>
+</div>
+<div class=""card"">
+  <h2>
+<span class=""section-icon"">+</span>Continue Learning</h2>
+  <p>Practice what you learned, then move to the next topic in Unit 3:</p>
+  <div class=""related-grid"">
+    <a href=""/pages/ap-cyber-unit-3-lesson-3-exercise-1"" class=""related-link""><div>
+<span class=""rl-type"">Exercise</span><span class=""rl-title"">Topic 3.2 Exercise 1 — Secure Protocol Analysis</span>
+</div></a>
+    <a href=""/pages/ap-cyber-unit-3-lesson-3-exercise-2"" class=""related-link""><div>
+<span class=""rl-type"">Exercise</span><span class=""rl-title"">Topic 3.2 Exercise 2 — Protocol Migration Planning</span>
+</div></a>
+    <a href=""/pages/ap-cyber-unit-3-lesson-3-lab"" class=""related-link""><div>
+<span class=""rl-type"">Lab</span><span class=""rl-title"">Topic 3.2 Lab — Operation Cipher Sweep</span>
+</div></a>
+    <a href=""/pages/ap-cyber-unit-3-lesson-3-quiz"" class=""related-link""><div>
+<span class=""rl-type"">Quiz</span><span class=""rl-title"">Topic 3.2 Quiz — Instant Feedback</span>
+</div></a>
+    <a href=""/pages/ap-cyber-unit-3-lesson-4"" class=""related-link""><div>
+<span class=""rl-type"">Next Topic</span><span class=""rl-title"">Topic 3.3 — Network Segmentation and VLANs</span>
+</div></a>
+    <a href=""/pages/ap-cyber-unit-3-exam"" class=""related-link""><div>
+<span class=""rl-type"">Unit Exam</span><span class=""rl-title"">Unit 3 Exam — All Lessons</span>
+</div></a>
+    <a href=""/pages/ap-cybersecurity-unit-3-securing-networks"" class=""related-link""><div>
+<span class=""rl-type"">Unit Guide</span><span class=""rl-title"">Unit 3: Securing Networks — Full Study Guide</span>
+</div></a>
+    <a href=""/pages/ap-cybersecurity-complete-course-guide"" class=""related-link""><div>
+<span class=""rl-type"">Course Hub</span><span class=""rl-title"">AP Cybersecurity Complete Course Guide</span>
+</div></a>
+  </div>
+</div>
+<div class=""nav-links"">
+<a href=""/pages/ap-cyber-unit-3-lesson-2"" class=""nav-link"">&larr; Lesson 3.1 (Part 2 of 2)</a><a href=""/pages/ap-cyber-unit-3-lesson-3-exercise-1"" class=""nav-link"">Exercise 1 &rarr;</a>
+</div>
+<div style=""text-align:center!important;padding:20px!important;font-size:12px!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;font-family:Georgia,serif!important;"">AP Cybersecurity Lesson 3.2 | APCSExamPrep.com | Built by Tanner Crow, AP CS Teacher (11+ years)<br>AP® is a registered trademark of the College Board.</div>
 <script>
 document.addEventListener('DOMContentLoaded', function(){
-var cfuState = { score: 0, total: 15, answered: {} };
+var cfuState = { score: 0, total: 10, answered: {} };
 function updateScoreTracker(){
   var tracker = document.getElementById('cfu-score-tracker');
   var scoreNum = document.getElementById('cfu-score-num');

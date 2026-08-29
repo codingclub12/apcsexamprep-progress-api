@@ -204,7 +204,7 @@ Two consequences already handled here:
 - **Closed 2026-08-28** on the lesson page: all eight EKs are authored as
   sections 3.2.1 to 3.2.5, with five graded checks on them, and the protocol
   material moved to 3.2.6 to 3.2.10 as labelled background. See
-  `docs/cyber-topic32-ced-content.md`. Still open: the four activity pages
+  `docs/cyber-topic32-gold-rebuild.md`. Still open: the four activity pages
   under this lesson (exercise-1, exercise-2, lab, quiz) moved here with the body
   and still teach secure protocols, so the lesson and its assessments no longer
   agree.
