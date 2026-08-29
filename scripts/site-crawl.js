@@ -268,6 +268,89 @@ function hotSet(all, previous) {
 //  an anonymous request must receive the LOGIN page. If one of them ever returns
 //  dashboard markup to a crawler with no cookie, the fail-closed posture this
 //  repo is built on has regressed, and that is a P0 by any reading.
+//  Is the sha production reports the sha main is on?
+//
+//  Three ways this returns null rather than a finding, and each is a case where
+//  a finding would be a lie:
+//
+//    - The served sha is 'unknown'. RAILWAY_GIT_COMMIT_SHA is absent, so there
+//      is nothing to compare and the deploy may be perfectly current.
+//    - The checkout is not main. A feature branch is SUPPOSED to differ from
+//      production; comparing against it would fire on every branch.
+//    - main's tip is younger than GRACE. A deploy takes minutes, so the window
+//      right after a merge is the normal state of the world, not a fault.
+//      Twenty was measured against this repo's own build; thirty leaves room.
+//
+//  Deliberately NOT reported: how many commits behind, and what is in them.
+//  actions/checkout defaults to depth 1, so the CI run that matters has exactly
+//  one commit of history and cannot count or diff. Reporting a number that is
+//  right locally and silently absent in CI is worse than reporting neither, and
+//  the sha plus the age is already enough to act on.
+const GRACE_MINUTES = 30;
+
+function git(args) {
+  try {
+    return require('child_process')
+      .execFileSync('git', args, { stdio: ['ignore', 'pipe', 'ignore'] })
+      .toString().trim();
+  } catch (e) { return null; }
+}
+
+//  git and now are injectable so smoke/site-crawl.js can drive every branch
+//  offline. A check whose only test is "it did not fire against the real repo
+//  today" is the shape this whole file exists to avoid.
+function deployLag(served, { runGit = git, now = () => Date.now() } = {}) {
+  if (!served || served === 'unknown') return null;
+
+  //  origin/main when the remote ref is present, otherwise HEAD but only when
+  //  HEAD actually is main. Anything else is not a fair comparison.
+  let ref = runGit(['rev-parse', 'origin/main']);
+  if (!ref) {
+    const branch = runGit(['rev-parse', '--abbrev-ref', 'HEAD']);
+    if (branch !== 'main') return null;
+    ref = runGit(['rev-parse', 'HEAD']);
+  }
+  if (!ref) return null;
+
+  const short = ref.slice(0, served.length);
+  if (short === served) return null;
+
+  //  The GATE is the age of main's tip: a merge two minutes old has not had time
+  //  to deploy and must not fire.
+  const tipIso = runGit(['log', '-1', '--format=%cI', ref]);
+  if (!tipIso) return null;
+  const tipMin = Math.floor((now() - new Date(tipIso).getTime()) / 60000);
+  if (!Number.isFinite(tipMin) || tipMin < GRACE_MINUTES) return null;
+
+  //  The NUMBER A HUMAN ACTS ON is a different one, and getting these two
+  //  confused is how this check would have understated its own first catch by a
+  //  factor of thirty. When production was found on a commit from the previous
+  //  afternoon, main's tip was 46 minutes old, so reporting the tip age would
+  //  have said "0.8h" about a deploy that had been dead for 28.
+  //
+  //  So: age the SERVED commit when it is in local history, because "production
+  //  is running code from 28 hours ago" is the sentence that gets someone to
+  //  open Railway. actions/checkout defaults to depth 1 and cannot resolve it,
+  //  which is why site-audit.yml asks for full history; where that is missing
+  //  this degrades to a claim about main only, worded so it cannot be misread
+  //  as a claim about the deploy.
+  const servedIso = runGit(['log', '-1', '--format=%cI', served]);
+  const servedMin = servedIso
+    ? Math.floor((now() - new Date(servedIso).getTime()) / 60000) : null;
+
+  const hours = (m) => (m / 60).toFixed(1);
+  const detail = Number.isFinite(servedMin)
+    ? `production serves ${served}, which is ${hours(servedMin)}h old; main is ${short}`
+    : `production serves ${served}, not main's ${short}; main has been on ${short} for ${hours(tipMin)}h `
+      + '(age of the deployed commit unavailable: shallow checkout)';
+
+  return {
+    detail,
+    evidence: `${served} != ${short}, main tip +${tipMin}m`
+      + (Number.isFinite(servedMin) ? `, deployed commit +${servedMin}m` : ''),
+  };
+}
+
 async function apiHealth(findings) {
   const health = await fetchOnce(`${API}/api/health`);
   if (health.status !== 200) {
@@ -277,6 +360,23 @@ async function apiHealth(findings) {
   }
   let commit = 'unknown';
   try { commit = (JSON.parse(health.html).commit) || 'unknown'; } catch (e) { /* not fatal */ }
+
+  //  The sha was collected here for a year and never compared to anything, so
+  //  the comment above ("the answer to the question the status code cannot
+  //  reach") described a question nobody asked. On 2026-08-29 production was
+  //  found running a commit from the previous afternoon with six merges stacked
+  //  behind it, and it was found by hand, after a merge, because someone
+  //  happened to look. Nothing in the nightly run would have said a word.
+  //
+  //  Nothing user-facing had changed in that gap, which is exactly why it went
+  //  unnoticed for a day and exactly why it is worth a finding: the pipeline is
+  //  broken from the first merge, and the merge that reveals it is whichever
+  //  one first touches a route.
+  const stale = deployLag(commit);
+  if (stale) {
+    findings.push({ kind: 'api-stale-deploy', tier: C.tierOf('api-stale-deploy'),
+      url: `${API}/api/health`, detail: stale.detail, evidence: stale.evidence });
+  }
 
   const gated = ['/admin/dashboard', '/admin/analytics', '/admin/exec', '/admin/command'];
   for (const path of gated) {
@@ -548,4 +648,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { shardOf, dayOfYear, hotSet, report };
+module.exports = { shardOf, dayOfYear, hotSet, report, deployLag, GRACE_MINUTES };

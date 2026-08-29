@@ -63,7 +63,15 @@ jobs:
     timeout-minutes: 45
 
     steps:
+      # Full history, for one reason: the api-stale-deploy check dates the
+      # commit production is actually serving, and the default depth-1 checkout
+      # contains exactly one commit, so that sha is never resolvable. The check
+      # degrades gracefully without this and still fires, but it can only say
+      # "not main" instead of "production is running code from 23 hours ago",
+      # and the second sentence is the one that gets someone to open Railway.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
