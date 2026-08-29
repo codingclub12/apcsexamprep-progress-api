@@ -39,10 +39,14 @@ build the same page.
   holding all 8.
 - `validate_csv.py --baseline` exit 0, `PASS ap-cyber-unit-3-lesson-3`. Exit code
   read directly, never through a pipe.
-- `npm run smoke:cybertopic32` exit 0, 62 assertions.
+- `npm run smoke:cybertopic32` exit 0, 67 assertions.
+- Browser run against the generated body in headless Chromium, exit 0, 17
+  assertions: all ten checks graded, score reaches 10 / 10, a wrong answer
+  scores 0 and opens its own distractor feedback, both collapsed panels open,
+  no page or console errors. Harness `tools/ap-cyber-ced/cfu_browser_check.js`.
 - All 141 offline suites pass.
-- Sheet: `imports/2026-08-28/cyber-topic32-gold.csv`, 198,452 bytes, 1 row,
-  `Command: MERGE`, md5 `2992d7b9ac41aeff9927a81c61ba0b76`.
+- Sheet: `imports/2026-08-28/cyber-topic32-gold.csv`, 198,788 bytes, 1 row,
+  `Command: MERGE`, md5 `a65f7a18aa933af06a5206003517441f`.
 
 Four gates confirmed by breaking them on purpose: a dropped case study, an MCQ
 key naming an absent option, an EK code in authored copy, and the stylesheet
@@ -74,6 +78,15 @@ is why a sabotaged assembly is caught by a byte comparison.
 **Test the property, not the word.** The smoke test first banned "invisible"
 outright and failed on correct content: it appears nine times and every one is a
 refutation. It now checks each occurrence has a refutation in its own window.
+
+**The score nobody could see.** Driving the checks in a real browser, rather
+than reasoning about the markup, found that 3.2 was missing `#cfu-score-tracker`,
+`#cfu-score-num`, `#apcyber-progress-bar` and `#apcyber-back-top`, all of which
+every sibling carries and all of whose CSS was already in 3.2's stylesheet. The
+grader null-guards the tracker, so it computed a running score on every answer
+and wrote it nowhere: a student answered ten questions and saw no score, silently,
+on the one page in the unit that did not show one. Same harness against the live
+body reads `(no tracker)`; against the rebuild it reaches 10 / 10.
 
 ## Still open
 

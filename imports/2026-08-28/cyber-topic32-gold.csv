@@ -573,6 +573,12 @@ var scrolled=false;window.addEventListener('scroll',function(){if(!scrolled){scr
 var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class','hidden']});setTimeout(function(){obs.disconnect()},15000);
 })();
 </script>
+<div id=""apcyber-progress-bar""></div>
+<button id=""apcyber-back-top"" onclick=""window.scrollTo({top:0,behavior:'smooth'})"" aria-label=""Back to top"">&#8679;</button>
+<div id=""cfu-score-tracker"" role=""status"" aria-live=""polite"">
+  <span class=""cfu-score-label"">Score</span>
+  <span id=""cfu-score-num"">0 / 10</span>
+</div>
 <div class=""exhero"" style=""margin-bottom:0!important;"">
 <div class=""exhero-badge"">Unit 3 &bull; Lesson 3.2</div>
 <nav aria-label=""Breadcrumb"" style=""font-size:0.82rem;color:#6b7280;-webkit-text-fill-color:#6b7280;margin:0 0 16px;font-family:Georgia,serif;padding:0;"">

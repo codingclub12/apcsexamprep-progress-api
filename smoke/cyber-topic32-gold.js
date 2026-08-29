@@ -150,6 +150,24 @@ check(unqualified.length === 0,
 check(/harder to find/.test(AUTHORED), 'beacons are described as making a network harder to find');
 check(/WPA3 is currently the strongest/.test(AUTHORED), 'WPA3 is named as currently the strongest');
 
+// ── 3b. the page widgets every sibling carries ──────────────────────────────
+//  3.2 was missing all three, and the score tracker is the one that mattered:
+//  the grader was already computing a running score and null-guards the element,
+//  so on 3.2 a student answered ten questions and the score displayed nowhere,
+//  silently, while every other lesson in the unit showed it. Verified in a real
+//  browser against both the live page (score reads "(no tracker)") and the
+//  rebuild (reaches "10 / 10"). tools/ap-cyber-ced/cfu_browser_check.js.
+for (const [id, why] of [
+  ['cfu-score-tracker', 'the running score has somewhere to display'],
+  ['cfu-score-num', 'the score number element the grader writes into'],
+  ['apcyber-progress-bar', 'the reading progress bar every sibling carries'],
+  ['apcyber-back-top', 'the back-to-top button every sibling carries'],
+]) {
+  check(T.PAGE_WIDGETS.includes(`id="${id}"`), `${id} is present, so ${why}`);
+}
+check(T.PAGE_WIDGETS.includes(`0 / ${T.TOTAL_CFUS}`),
+  `the tracker's initial text agrees with the check count (0 / ${T.TOTAL_CFUS})`);
+
 // ── 4. the coverage table may not name a section that does not exist ────────
 check(T.COVERED_IN.length === 8, `coverage table has all 8 essential knowledge rows (got ${T.COVERED_IN.length})`);
 for (const cell of T.COVERED_IN) {

@@ -217,6 +217,18 @@ function gate(before, after) {
   }
   note.push('every section the coverage table names exists on the page');
 
+  //  The three widgets every sibling carries. Their CSS was already in 3.2's
+  //  stylesheet; only the markup was missing, which is why nothing looked
+  //  broken and the score simply never appeared.
+  for (const id of ['cfu-score-tracker', 'cfu-score-num', 'apcyber-progress-bar', 'apcyber-back-top']) {
+    if (!after.includes(`id="${id}"`)) fail(`page widget missing: ${id}`);
+  }
+  const trackerInit = /id="cfu-score-num"[^>]*>0 \/ (\d+)</.exec(after);
+  if (!trackerInit) fail('score tracker has no initial value');
+  else if (Number(trackerInit[1]) !== T.TOTAL_CFUS) {
+    fail(`tracker starts at 0 / ${trackerInit[1]} but there are ${T.TOTAL_CFUS} checks`);
+  } else note.push(`score tracker present and starts at 0 / ${trackerInit[1]}`);
+
   // ---- 6. the body's old home --------------------------------------------
   const hero = after.indexOf('<div class="exhero"');
   const stale = [...after.matchAll(/lesson-6/g)].filter((m) => m.index > hero);

@@ -115,6 +115,40 @@ That was safe to decide only after checking the tracker. `apcs-tracker.js` count
 3.5). These pages record a visit and never a score, so the number of checks
 changes what a student sees on the page and nothing that reaches the gradebook.
 
+## The score nobody could see
+
+Asked whether the checks would work outside the preview, the honest answer was
+that it needed testing rather than reasoning. Driving all ten in headless
+Chromium found a defect that no amount of markup inspection would have shown.
+
+Every sibling carries three page widgets and 3.2 carried none of them:
+`#cfu-score-tracker`, `#cfu-score-num`, `#apcyber-progress-bar` and
+`#apcyber-back-top`. The stylesheet already defined all eight rules for them,
+because the CSS is shared unit-wide and only the markup diverged.
+
+The score tracker is the one that mattered. `updateScoreTracker()` null-guards
+both elements, so on 3.2 the grader computed a running score every time a student
+answered and then wrote it nowhere. Nothing threw. Nothing looked broken. A
+student answered ten questions and never saw a score, on the one page in the unit
+that did not show one.
+
+Confirmed by running the same harness against both bodies:
+
+| | live page today | rebuilt page |
+|---|---|---|
+| All ten answered correctly | `(no tracker)` | **10 / 10** |
+| Tracker becomes visible | FAIL, element missing | ok |
+| Feedback opens on all ten | ok | ok |
+| Buttons disable after use | ok | ok |
+
+Harness: `tools/ap-cyber-ced/cfu_browser_check.js`, run by hand against a
+generated body. It reads every answer off the page's own `data-answer` rather
+than carrying its own copy, so it cannot pass by grading a key it supplied
+itself. It is deliberately not an npm smoke script: it needs a browser and a
+built page, and CI's suite list is derived from `package.json`, so adding it
+there would break every CI run. The offline suite asserts the widgets are
+present instead.
+
 ## Evidence
 
 - Gate clean against the **live** body: 152,008 to 196,007 bytes; stylesheet and
@@ -125,10 +159,13 @@ changes what a student sees on the page and nothing that reaches the gradebook.
   0; coverage table still holding all 8.
 - `validate_csv.py --baseline`: `PASS ap-cyber-unit-3-lesson-3`, exit 0, read
   directly and never through a pipe.
-- `npm run smoke:cybertopic32`: 62 assertions, exit 0.
+- `npm run smoke:cybertopic32`: 67 assertions, exit 0.
 - All 141 offline suites pass, derived from `package.json` as CI derives them.
-- Sheet: `imports/2026-08-28/cyber-topic32-gold.csv`, 198,452 bytes, 1 row,
-  `Command: MERGE`, md5 `2992d7b9ac41aeff9927a81c61ba0b76`.
+- Browser run: 17 assertions, exit 0. All ten checks graded, score reaches
+  10 / 10, a wrong answer scores 0 and opens its own distractor feedback, both
+  collapsed panels open, no page or console errors.
+- Sheet: `imports/2026-08-28/cyber-topic32-gold.csv`, 198,788 bytes, 1 row,
+  `Command: MERGE`, md5 `a65f7a18aa933af06a5206003517441f`.
 
 Four gates were confirmed by breaking them on purpose. A dropped case study:
 `case-block count 2 is outside the sibling range 3-3`. An MCQ key naming an
@@ -144,6 +181,10 @@ stylesheet, the unit rail, the collapsed coverage table and 91 KB of prose:
 things a reader would not immediately miss and whose loss is permanent after
 import. So the gate checks each **by content**, not by presence of a tag, which
 is why the stylesheet is compared byte for byte rather than merely counted.
+
+**A question is worth more than an inspection.** "Will the checks work outside
+the preview" could not be answered by reading markup, and answering it properly
+found a live defect that had nothing to do with this rebuild.
 
 **Test the property, not the word.** The smoke test first banned "invisible"
 from authored copy, and failed on correct content: the word appears nine times
