@@ -26,7 +26,7 @@
 //  Run: npm run smoke:sitecrawl
 // ─────────────────────────────────────────────────────────────────────────────
 const C = require('../lib/site-crawl');
-const { shardOf, dayOfYear, report } = require('../scripts/site-crawl');
+const { shardOf, dayOfYear, report, deployLag, GRACE_MINUTES } = require('../scripts/site-crawl');
 
 let pass = 0, fail = 0;
 const ok = (name, cond, extra) => {
@@ -357,6 +357,96 @@ ok('every finding kind declares a tier', Object.values(C.KINDS).every((k) => ['P
 ok('every finding kind explains its cost', Object.values(C.KINDS).every((k) => k.why && k.why.length > 20));
 ok('the grade-path kinds are all P0',
   ['reporter-missing', 'reporter-asset-dead', 'api-down', 'reporter-regressed'].every((k) => C.KINDS[k].tier === 'P0'));
+
+
+// ── IS PRODUCTION RUNNING WHAT MAIN IS ON? ───────────────────────────────────
+//  deployLag takes its git and its clock by injection precisely so this runs
+//  with no repo state and no network. Every branch is driven, and the SILENT
+//  ones matter more than the loud one: a check that fires on a normal deploy
+//  window, or on a feature branch, would cry wolf every single night and be
+//  muted inside a week.
+console.log('\n  Stale-deploy detection\n');
+
+const MAIN = 'abcdef1234567890abcdef1234567890abcdef12';
+const hoursAgo = (h) => new Date(Date.now() - h * 3600e3).toISOString();
+// A git stub. `refs` maps the argv it would receive to what git would print;
+// anything unlisted returns null, which is what the real helper does when git
+// fails or the ref does not exist.
+const fakeGit = (refs) => (args) => {
+  const key = args.join(' ');
+  return Object.prototype.hasOwnProperty.call(refs, key) ? refs[key] : null;
+};
+const onMain = (iso, head = MAIN) => fakeGit({
+  'rev-parse origin/main': head,
+  ['log -1 --format=%cI ' + head]: iso,
+});
+
+// The loud direction: main has been sitting on a sha production is not serving.
+const stale = deployLag('1bebfd0', { runGit: onMain(hoursAgo(23)) });
+ok('fires when production serves a different sha than main', !!stale);
+ok('says both shas', !!stale && /1bebfd0/.test(stale.detail) && /abcdef1/.test(stale.detail));
+
+// THE number. The gate is main's tip age; the number a human acts on is how old
+// the DEPLOYED commit is, and confusing the two understated the real first catch
+// by a factor of thirty (tip 46 minutes old, deploy 28 hours dead).
+const deep = fakeGit({
+  'rev-parse origin/main': MAIN,
+  ['log -1 --format=%cI ' + MAIN]: hoursAgo(0.8),   // main moved 48 minutes ago
+  'log -1 --format=%cI 1bebfd0': hoursAgo(28),      // but production is 28h old
+});
+const aged = deployLag('1bebfd0', { runGit: deep });
+ok('ages the DEPLOYED commit, not main\'s tip', !!aged && /28\.0h old/.test(aged.detail));
+ok('does not report the tip age as the deploy age', !!aged && !/0\.8h/.test(aged.detail));
+ok('evidence carries both ages', !!aged && /main tip \+48m/.test(aged.evidence)
+  && /deployed commit \+1680m/.test(aged.evidence));
+
+// Shallow checkout: the deployed commit is not in history, so the message must
+// degrade to a claim about main and say so rather than implying a deploy age.
+ok('shallow checkout still fires', !!stale);
+ok('shallow checkout says the deploy age is unavailable', !!stale && /shallow checkout/.test(stale.detail));
+ok('shallow checkout does not claim the deploy is N hours old',
+  !!stale && !/which is [\d.]+h old/.test(stale.detail));
+
+// Silent direction 1: production IS main.
+ok('silent when production is serving main',
+  deployLag('abcdef1', { runGit: onMain(hoursAgo(23)) }) === null);
+
+// Silent direction 2: the deploy window. This is the one that decides whether
+// the check is usable at all, because every merge passes through it.
+ok('silent inside the grace window, right after a merge',
+  deployLag('1bebfd0', { runGit: onMain(hoursAgo(0.1)) }) === null);
+ok('fires once the grace window has passed',
+  deployLag('1bebfd0', { runGit: onMain(hoursAgo(1)) }) !== null);
+ok('the grace window is minutes, not hours', GRACE_MINUTES >= 10 && GRACE_MINUTES <= 60);
+
+// Silent direction 3: no sha to compare. RAILWAY_GIT_COMMIT_SHA absent.
+ok('silent when the served commit is unknown',
+  deployLag('unknown', { runGit: onMain(hoursAgo(23)) }) === null);
+ok('silent when the served commit is missing entirely',
+  deployLag('', { runGit: onMain(hoursAgo(23)) }) === null);
+
+// Silent direction 4: not main. A branch checkout differing from production is
+// the normal state of every feature branch and must never be a finding.
+ok('silent on a feature branch with no origin/main ref',
+  deployLag('1bebfd0', { runGit: fakeGit({
+    'rev-parse --abbrev-ref HEAD': 'claude/some-branch',
+    'rev-parse HEAD': MAIN,
+  }) }) === null);
+ok('falls back to HEAD when the checkout IS main and origin/main is absent',
+  deployLag('1bebfd0', { runGit: fakeGit({
+    'rev-parse --abbrev-ref HEAD': 'main',
+    'rev-parse HEAD': MAIN,
+    ['log -1 --format=%cI ' + MAIN]: hoursAgo(23),
+  }) }) !== null);
+
+// Silent direction 5: git unavailable or the date unreadable. The check has to
+// degrade to saying nothing rather than to a wrong finding.
+ok('silent when git is unavailable', deployLag('1bebfd0', { runGit: () => null }) === null);
+ok('silent when the commit date cannot be read',
+  deployLag('1bebfd0', { runGit: fakeGit({ 'rev-parse origin/main': MAIN }) }) === null);
+
+ok('the kind is registered and is P1', C.KINDS['api-stale-deploy'].tier === 'P1');
+ok('the kind explains why it is not P0', /P1 rather than P0/.test(C.KINDS['api-stale-deploy'].why));
 
 console.log('\n' + (fail ? ('  ' + fail + ' FAILED, ' + pass + ' passed') : ('  OK - all ' + pass + ' checks passed')) + '\n');
 process.exit(fail ? 1 : 0);
