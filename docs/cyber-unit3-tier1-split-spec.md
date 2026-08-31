@@ -2,8 +2,22 @@
 
 The per-deck instruction sheet for splitting the two Unit 3 lessons that split
 cleanly. Slide numbers are positions in the shipped TEACHER deck, read from
-Drive on 2026-08-26. The STUDENT deck of each pair has the same structure and
-takes the same cuts.
+Drive on 2026-08-26.
+
+**Corrected 2026-08-31, when the split was actually run.** This file used to say
+"the STUDENT deck of each pair has the same structure and takes the same cuts".
+It does not. Each student deck is one slide shorter, because it drops its
+lesson's teacher-only Enrichment slide: 3.3 has no "Designing the Submarine
+Network" (TEACHER slide 16) and 3.4 has no "Ordering a Real Multi-Rule ACL"
+(TEACHER slide 19). Both fall AFTER the day seam, so the seam is unchanged and
+the cut lists below still hold, but Day 2 ends one slide earlier and the
+finished student Day 2 decks are 12 slides where the teacher decks are 13.
+
+Two more places the variants differ, which matter if you edit by shape position:
+3.3's STUDENT guided-notes slide has two section cards where TEACHER has three
+and its text says "2 sections", and the TEACHER title slide carries an extra
+speaker-notes shape. `tools/cyber-deck-split/build_33_34.py` locates every shape
+by geometry and text for exactly this reason.
 
 Background and the wider plan:
 `docs/runs/2026-08-26-claude-code-cyber-unit3-slide-day-map.md`.
@@ -22,6 +36,12 @@ blocked on the LO 3.1.C question (board #99). These two are mechanical.
 Hand-split them in PowerPoint. A script is not worth writing for four decks:
 the mechanical part is a range delete, and everything else on this page is
 authoring that a script cannot do anyway.
+
+**That held for a human and stopped holding for Claude Code, which has no
+PowerPoint.** `tools/cyber-deck-split/` now carries the range cut, an audit that
+reports what the cut left undone, and the 3.3/3.4 build. The cut is also where a
+human miscounts, and the same tools take the other 26 source decks in Units 3-5.
+The authoring judgement this page describes is still authoring.
 
 ## CED 3.4 Firewalls, 21 slides, 2 days
 
@@ -172,3 +192,29 @@ split at all, so each lesson's notes split on the same seam as its deck.
 Eleven authored slides and four range cuts, producing eight deck files from
 four. The run note estimated five new slides per lesson; 3.4 needs six, because
 its only Stop and Think falls on the Day 2 side of the seam.
+
+## What was actually produced, 2026-08-31
+
+Eight decks, from `tools/cyber-deck-split/build_33_34.py`:
+
+| | Day 1 | Day 2 |
+| --- | --- | --- |
+| CED 3.3 TEACHER | 12 | 13 |
+| CED 3.3 STUDENT | 12 | 12 |
+| CED 3.4 TEACHER | 14 | 13 |
+| CED 3.4 STUDENT | 14 | 12 |
+
+The TEACHER numbers are exactly the ones predicted in the table above, which is
+the useful confirmation: the cut lists were re-verified slide by slide against
+the shipped decks first (3.3 matched 20 of 20, 3.4 matched 21 of 21) rather than
+trusted. `audit_deck.py` exits 0 on all eight.
+
+**EK codes in authored slides.** CLAUDE.md forbids CED Essential Knowledge codes
+in front of students, and the shipped decks break that rule heavily. The slides
+authored here follow the rule instead of the surrounding deck: teacher decks
+cite EKs, student decks do not. That leaves a new student slide next to old ones
+that still carry codes. The alternative was adding more of exactly what is
+already flagged for removal.
+
+Still outstanding for these two lessons: the Guided Notes `.docx` split, which
+has to fall on the same seam.
