@@ -152,10 +152,38 @@ check('counters that miscount the questions are their own finding', () => {
   assert.ok(kinds(html).includes('cfu-counter-mismatch'));
 });
 
-check('graded blocks with no counters at all are reported', () => {
+check('a page that labels NO questions is silent, not wrong', () => {
+  // Several cyber lessons carry no per-question counters at all. Nothing is
+  // claimed, so nothing can be misleading, and the grade is still covered by the
+  // denominator check. Firing here reported 12 healthy pages as defective.
   const html = `${range(1, 5).map((n) => `<div class="cfu-block" data-num="${n}"></div>`).join('')}
     <script>function u(){ x.textContent = state.score + ' / 5'; }</script>`;
-  assert.ok(kinds(html).includes('cfu-counter-mismatch'));
+  assert.deepStrictEqual(kinds(html), []);
+});
+
+check('the n / N counter shape is read, not just Q n of N', () => {
+  // Unit 3 lessons write "1 / 13" where unit 1 and 2 write "Q 1 of 13".
+  const shape = (n, tot) => `<div class="cfu-block" data-num="${n}">`
+    + `<span class="cfu-counter">${n} / ${tot}</span></div>`;
+  const good = `${range(1, 3).map((n) => shape(n, 3)).join('')}`
+    + `<script>function u(){ x.textContent = state.score + ' / 3'; }</script>`;
+  assert.strictEqual(g.counters(good).length, 3);
+  assert.deepStrictEqual(kinds(good), []);
+
+  // The real ap-cyber-unit-3-lesson-1 defect: 10 blocks, every label says 13.
+  const bad = `${range(1, 10).map((n) => shape(n, 13)).join('')}`
+    + `<script>function u(){ x.textContent = state.score + ' / 10'; }</script>`;
+  assert.ok(kinds(bad).includes('cfu-counter-mismatch'));
+});
+
+check('a bare n / N outside a cfu-counter span is not read as a label', () => {
+  // "3 / 4" is far too common in prose and markup to match globally.
+  const html = `${range(1, 3).map((n) => `<div class="cfu-block" data-num="${n}">`
+    + `<span class="cfu-counter">Q ${n} of 3</span></div>`).join('')}`
+    + `<p>You scored 2 / 5 on the warm up.</p>`
+    + `<script>function u(){ x.textContent = state.score + ' / 3'; }</script>`;
+  assert.strictEqual(g.counters(html).length, 3);
+  assert.deepStrictEqual(kinds(html), []);
 });
 
 check('displayCoherent is exact about repeats and gaps in the labels', () => {
@@ -190,6 +218,49 @@ check('a declared total outranks a stale literal elsewhere on the page', () => {
   assert.strictEqual(d.value, 8);
   assert.strictEqual(d.source, 'cfuState-total');
   assert.deepStrictEqual(kinds(html), []);
+});
+
+// ── COMMENTS ARE NOT CODE ────────────────────────────────────────────────────
+//  These parse the RENDERED page, which carries theme chrome. The grade
+//  reporter's own header comment quotes this defect verbatim, including the
+//  literal `state.score + ' / 10'`, and it renders on every cyber lesson page.
+//  Reading it as the page's total made this gate emit a FALSE P0.
+const REPORTER_COMMENT = `
+    //  The printed total is a number an author typed next to the questions, and
+    //  nothing on the page compares the two. Measured 2026-08-31 on
+    //  ap-cybersecurity-unit-1-password-attacks (lesson 1.2): the tracker reads
+    //  \`state.score + ' / 10'\` while the page serves NINE blocks, numbered 2
+    //  through 10, with no cfu-1 anywhere in the body.
+    //  See https://www.apcsexamprep.com/pages/ap-cybersecurity-unit-1-password-attacks`;
+
+check('REGRESSION: a quoted total in a comment is not read as the page total', () => {
+  // Three blocks, correctly labelled, no tracker of their own. Before this was
+  // fixed the gate read 10 out of the comment and reported "a perfect paper
+  // scores 30 percent" on a page that has no denominator at all.
+  const html = `${[1, 2, 3].map((n) => block(n, n, 3)).join('')}${REPORTER_COMMENT}`;
+  assert.strictEqual(g.denominator(html).value, null);
+  assert.deepStrictEqual(kinds(html), ['cfu-no-denominator']);
+});
+
+check('the page own total still wins when the comment sits after it', () => {
+  // The live 1.2 shape after the label import: real tracker says 9, the
+  // reporter comment further down still quotes 10.
+  const html = `${relabelled(range(2, 10))}
+    <script>function u(){ x.textContent = state.score + ' / 9'; }</script>${REPORTER_COMMENT}`;
+  assert.strictEqual(g.denominator(html).value, 9);
+  assert.deepStrictEqual(kinds(html), []);
+});
+
+check('a commented-out block does not inflate the block count', () => {
+  const html = `${[1, 2].map((n) => block(n, n, 2)).join('')}
+    <!-- <div class="cfu-block" data-num="3"></div> -->
+    <script>function u(){ x.textContent = state.score + ' / 2'; }</script>`;
+  assert.strictEqual(g.blocks(html).length, 2);
+  assert.deepStrictEqual(kinds(html), []);
+});
+
+check('stripComments leaves a URL alone', () => {
+  assert.match(g.stripComments('see https://apcsexamprep.com/pages/x'), /https:\/\//);
 });
 
 check('check() never throws on junk', () => {
