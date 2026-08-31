@@ -101,11 +101,47 @@ from the **stored** body rather than from a repo mirror means the decode has
 already happened; there is nothing left to decode, so the trap cannot bite on a
 round trip. A repo mirror of this page would reintroduce the hazard.
 
+## The theme deploy recipe in CLAUDE.md is currently backwards
+
+Found while opening the theme pull request, which reported 41 commits and 23
+files for a one file change. The cause is worth writing down, because a session
+that follows CLAUDE.md literally right now damages the live site.
+
+The theme repository's **default branch is `claude/site-linking-audit-yhufjk`**,
+the connected branch, not `main`. So a plain `git clone` checks out the connected
+branch, and a branch cut from it looks enormous when compared against `main`.
+
+Measured, not assumed:
+
+```
+connected branch ahead of main:  40 commits
+main ahead of connected branch:   0 commits
+git merge-base --is-ancestor origin/claude/site-linking-audit-yhufjk origin/main  ->  false
+```
+
+`main` is strictly behind. CLAUDE.md says to deploy with
+`git push origin origin/main:refs/heads/claude/site-linking-audit-yhufjk`. Today
+that is **not a fast-forward**, and running it would rewind the live theme by 40
+commits. The guard the same doc tells you to run first correctly refuses it,
+which is the only reason this is a note rather than an incident.
+
+This is the 2026-08-16 drift inverted. Then, `main` was 103 commits ahead and
+four merged pull requests had shipped nothing. Now the connected branch is ahead
+and `main` is the stale one, so the failure mode has flipped from "your change
+never deployed" to "your deploy reverts everyone else's". Both come from the same
+root cause: the theme is not pointed at `main`, and only a person can repoint it
+in Shopify Admin.
+
+Until somebody does, two things follow. A theme pull request should be opened
+against the connected branch, where it is reviewable and where merging actually
+ships. And `main` can be fast-forwarded to the connected branch, since it is
+strictly an ancestor, which ends the drift in the safe direction.
+
 ## Still open
 
 - **Neither change is live.** The sheet needs one Matrixify import (Pages, MERGE,
-  one at a time). The theme fix needs the connected branch fast-forwarded:
-  merging to `main` deploys nothing.
+  one at a time). The theme fix is a pull request against the connected branch,
+  so merging it is the deploy.
 - **`verified` is not the agent's to set**, so both need a human to close the loop
   against the live page.
 - The four problem titles carry em-dashes (`Problem 2 of 4 - spot the compile
