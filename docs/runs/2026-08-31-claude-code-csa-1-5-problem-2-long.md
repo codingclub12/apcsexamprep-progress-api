@@ -137,11 +137,37 @@ against the connected branch, where it is reviewable and where merging actually
 ships. And `main` can be fast-forwarded to the connected branch, since it is
 strictly an ancestor, which ends the drift in the safe direction.
 
+## The theme half is live, verified against the storefront
+
+Theme pull request 90 merged into the connected branch at 20:06Z on 2026-08-31,
+which is the deploy. Confirmed against the live page rather than against GitHub,
+per the rule that repo learned the hard way in August: a merged pull request is
+not evidence.
+
+`https://apcsexamprep.com/pages/ap-csa-lesson-1-5-casting-range` now serves the
+guard. The script was extracted from that live response and driven in Chromium
+against CodeMirror 5.65.16:
+
+| check | result |
+| --- | --- |
+| theme indenter attached to `.CodeMirror textarea` | false |
+| one Enter at end of line 1 of a two line document | `int a = 1;\n\nint b = 2;` |
+| one Tab at the start of a line | `\tint a = 1;` |
+
+One newline per Enter, one indent per Tab, on the real deployed script. Before
+the fix the same probe returned `int a = 1;\n\n\nint b = 2;` and
+`\t    int a = 1;`.
+
+Two other pull requests landed on the same bases while this was open, and neither
+conflicted: theme 91 (`snippets/apcs-grade-reporter.liquid`) and api 410
+(`docs/runs/2026-08-31-weekly-blog-publish.md`). Each time the base moved, GitHub
+reported `mergeable_state: unknown` for a while, so mergeability was re-checked
+with `git merge-tree` rather than read off that field.
+
 ## Still open
 
-- **Neither change is live.** The sheet needs one Matrixify import (Pages, MERGE,
-  one at a time). The theme fix is a pull request against the connected branch,
-  so merging it is the deploy.
+- **The 1.5 page change is not live.** The sheet needs one Matrixify import
+  (Pages, MERGE, one at a time). Only the theme half has shipped.
 - **`verified` is not the agent's to set**, so both need a human to close the loop
   against the live page.
 - The four problem titles carry em-dashes (`Problem 2 of 4 - spot the compile
