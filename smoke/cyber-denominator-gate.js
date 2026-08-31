@@ -28,14 +28,17 @@ function check(name, fn) {
 }
 
 //  One graded block, shaped like the live ones.
-const block = (n) =>
+const block = (n, label, tot) =>
   `<div class="cfu-block" id="cfu-${n}" data-answer="C" data-num="${n}">
-     <span class="cfu-counter">Q ${n} of 10</span>
+     <span class="cfu-counter">Q ${label === undefined ? n : label} of ${tot === undefined ? 10 : tot}</span>
    </div>`;
+
+//  Blocks whose visible labels read 1..N of N, whatever their data-num is.
+const relabelled = (nums) => nums.map((n, i) => block(n, i + 1, nums.length)).join('\n');
 
 //  Family A: the total is a literal typed into the tracker.
 const literalShell = (nums, total) => `
-  ${nums.map(block).join('\n')}
+  ${nums.map((n) => block(n, n, total)).join('\n')}
   <span id="cfu-score-num">0 / ${total}</span>
   <script>
     function updateTracker(){
@@ -46,7 +49,7 @@ const literalShell = (nums, total) => `
 
 //  Family B: the total is declared on a state object and rendered from it.
 const declaredShell = (nums, total) => `
-  ${nums.map(block).join('\n')}
+  ${nums.map((n) => block(n, n, total)).join('\n')}
   <span id="cfu-score-num">0 / ${total}</span>
   <script>
     var cfuState = { score: 0, total: ${total}, answered: {} };
@@ -57,7 +60,7 @@ const declaredShell = (nums, total) => `
 
 //  Family C: the grade-all shells. The total is computed from the question set.
 const dynamicShell = (nums) => `
-  ${nums.map(block).join('\n')}
+  ${nums.map((n, i) => block(n, i + 1, nums.length)).join('\n')}
   <div class="score-panel">Score: <span class="score-num" id="score-num"></span></div>
   <script>
     var tot = document.querySelectorAll('.cfu-block').length, sc = 0;
@@ -101,7 +104,7 @@ check('a page renumbered into agreement still reports nothing wrong', () => {
 });
 
 check('graded blocks with no readable total are reported, never silently passed', () => {
-  const html = `${range(1, 5).map(block).join('\n')}<div>no tracker here</div>`;
+  const html = `${range(1, 5).map((n) => block(n, n, 5)).join('\n')}<div>no tracker here</div>`;
   assert.deepStrictEqual(kinds(html), ['cfu-no-denominator']);
 });
 
@@ -125,6 +128,43 @@ check('a page with no cfu shell at all is not this gate\'s business', () => {
   assert.deepStrictEqual(kinds('<div class="quiz-opt" id="q1-A">not a cfu page</div>'), []);
 });
 
+// ── WHAT THE STUDENT READS, WHICH IS THE NUMBERING THAT MATTERS ─────────────
+check('a data-num gap is NOT reported once the visible labels read 1..N of N', () => {
+  // This is the shipped 1.2 fix: labels relabelled to 1..9 of 9, data-num left
+  // at 2..10 because seven id families embed it and renumbering breaks widgets.
+  // The page is honest to the student, so the gate must be quiet.
+  const html = `${relabelled(range(2, 10))}
+    <script>function u(){ x.textContent = state.score + ' / 9'; }</script>`;
+  assert.deepStrictEqual(kinds(html), []);
+});
+
+check('a data-num gap IS still reported when the labels are also wrong', () => {
+  // Unrepaired: labels still say "of 10" and skip 1. The gap names the question
+  // to go looking for, which is the only time it is useful.
+  const found = kinds(literalShell(range(2, 10), 10));
+  assert.ok(found.includes('cfu-numbering-gap'), 'gap should fire on an unrepaired page');
+});
+
+check('counters that miscount the questions are their own finding', () => {
+  // Nine blocks, total correct at 9, but the labels still advertise 10.
+  const html = `${range(2, 10).map((n, i) => block(n, i + 1, 10)).join('\n')}
+    <script>function u(){ x.textContent = state.score + ' / 9'; }</script>`;
+  assert.ok(kinds(html).includes('cfu-counter-mismatch'));
+});
+
+check('graded blocks with no counters at all are reported', () => {
+  const html = `${range(1, 5).map((n) => `<div class="cfu-block" data-num="${n}"></div>`).join('')}
+    <script>function u(){ x.textContent = state.score + ' / 5'; }</script>`;
+  assert.ok(kinds(html).includes('cfu-counter-mismatch'));
+});
+
+check('displayCoherent is exact about repeats and gaps in the labels', () => {
+  const dup = `${[1, 2, 3].map((n) => block(n, 1, 3)).join('')}`;   // all say "Q 1 of 3"
+  assert.strictEqual(g.displayCoherent(dup, 3), false);
+  assert.strictEqual(g.displayCoherent(relabelled(range(2, 10)), 9), true);
+  assert.strictEqual(g.counters(relabelled(range(2, 10))).length, 9);
+});
+
 // ── THE PARSER, IN THE DIRECTIONS THAT HAVE BURNED THIS REPO BEFORE ──────────
 check('data-num outside a cfu-block does not inflate the count', () => {
   // The attribute is not reserved to these blocks. Counting it across the page
@@ -136,8 +176,8 @@ check('data-num outside a cfu-block does not inflate the count', () => {
 
 check('the extra class on the last block does not drop it from the count', () => {
   // The live pages close with class="cfu-block cfu-eol".
-  const html = `${range(1, 9).map(block).join('\n')}
-    <div class="cfu-block cfu-eol" id="cfu-10" data-num="10"></div>
+  const html = `${range(1, 9).map((n) => block(n, n, 10)).join('\n')}
+    <div class="cfu-block cfu-eol" id="cfu-10" data-num="10"><span class="cfu-counter">Q 10 of 10</span></div>
     <script>function u(){ x.textContent = state.score + ' / 10'; }</script>`;
   assert.strictEqual(g.blocks(html).length, 10);
   assert.deepStrictEqual(kinds(html), []);
