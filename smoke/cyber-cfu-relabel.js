@@ -138,6 +138,59 @@ check('a page with no cfu shell is left alone', () => {
   assert.strictEqual(r.apply(other).html, other);
 });
 
+// ── THE UNIT 3 SHAPE, AND THE CONTENT SITTING NEXT TO IT ────────────────────
+//  Unit 3 writes "1 / 13" where unit 1 and 2 write "Q 1 of 10", and its lessons
+//  carry a port reference table whose cells look exactly like a label.
+const u3block = (n, tot) => `
+  <div class="cfu-block" id="cfu-${n}" data-answer="C" data-num="${n}">
+    <span class="cfu-counter">${n} / ${tot}</span>
+    <button id="cfu-${n}-btn" onclick="cfuSubmit(${n})">Check</button>
+  </div>`;
+const PORTS = `
+  <table><tbody>
+    <tr><td class="port-num">143/993</td><td>TCP</td><td>IMAP/IMAPS</td></tr>
+    <tr><td class="port-num">20/21</td><td>TCP</td><td>FTP</td></tr>
+  </tbody></table>`;
+const u3page = (count, printed) => `
+  <span id="cfu-score-num">0 / ${count}</span>
+  ${Array.from({ length: count }, (_, i) => u3block(i + 1, printed)).join('\n')}
+  ${PORTS}
+  <script>var cfuState = { score: 0, total: ${count}, answered: {} };</script>`;
+
+check('REGRESSION: a port table is not a question label', () => {
+  // The live ap-cyber-unit-3-lesson-1 shape: 10 blocks labelled "n / 13".
+  // An earlier version rewrote any >n / m< text node and would have turned
+  // 143/993 into 143/10 and 20/21 into 20/10, corrupting the lesson.
+  const out = r.apply(u3page(10, 13)).html;
+  assert.ok(out.includes('<td class="port-num">143/993</td>'), '143/993 was rewritten');
+  assert.ok(out.includes('<td class="port-num">20/21</td>'), '20/21 was rewritten');
+});
+
+check('the n / N labels are relabelled to 1..N of the real count', () => {
+  const out = r.apply(u3page(10, 13)).html;
+  assert.deepStrictEqual(
+    [...out.matchAll(/class="cfu-counter">([^<]*)</g)].map((m) => m[1]),
+    Array.from({ length: 10 }, (_, i) => `${i + 1} / 10`));
+  assert.strictEqual(count(out, /\/ 13/g), 0);
+});
+
+check('the label SHAPE is preserved, not converted between styles', () => {
+  // unit 3 stays "n / N"; unit 1 and 2 stay "Q n of N".
+  assert.match(r.apply(u3page(3, 7)).html, /class="cfu-counter">1 \/ 3</);
+  assert.match(r.apply(live).html, /class="cfu-counter">Q 1 of 9</);
+});
+
+check('a page whose counters already agree is returned byte identical', () => {
+  const honest = u3page(4, 4);
+  assert.strictEqual(r.plan(honest), null);
+  assert.strictEqual(r.apply(honest).html, honest);
+});
+
+check('refuses when counter spans and blocks do not line up', () => {
+  const mismatched = u3page(4, 9).replace('<span class="cfu-counter">2 / 9</span>', '');
+  assert.throws(() => r.apply(mismatched), /refusing to relabel/);
+});
+
 check('apply() never throws on junk', () => {
   for (const junk of ['', null, undefined, '<div class="cfu-block" data-num="x">']) {
     assert.doesNotThrow(() => r.apply(junk == null ? '' : junk));
