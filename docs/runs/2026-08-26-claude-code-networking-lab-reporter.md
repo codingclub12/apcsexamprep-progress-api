@@ -189,14 +189,52 @@ the only thing left that can be making it inert.
 
 ## Still open
 
-**The exam pages report nothing at all.** The manifest carries `exam-midterm`,
-`exam-practice-pilot` and `exam-final` (40, 40 and 50 points) plus `1-test`
-through `4-test` (16, 24, 24, 24). None of `ap-networking-exam`,
-`ap-networking-practice-exam` or `ap-networking-practice-exam-full` calls
-`APNET_reportAttempt` or dispatches `apnet:attempt`, and no page in the sitemap
-carries a `test-N` or `exam-*` item id. That is 218 more points of denominator
-with no delivery, and it is a much larger job than this one: the labs needed a
-prefix, the exams need pages that grade. Not filed as fixed here, and not fixed.
+~~**The exam pages report nothing at all.**~~ **WITHDRAWN 2026-08-31. This was
+wrong, and it was wrong the same way my first reading of the labs was wrong.**
+
+What I wrote: that `exam-midterm`, `exam-practice-pilot`, `exam-final` and
+`1-test` through `4-test` are 218 points of denominator with no delivery, and
+that the exams need pages that grade.
+
+What is actually true: those seven items are PRINTED instruments, given on
+paper, on purpose, and they have a reporting path that was built for them.
+`POST /api/teacher/classes/:code/scores` exists for exactly this case, and
+`routes/teacher.js` carries the reasoning under OFF-PLATFORM SCORE ENTRY:
+
+>   The printed instruments are the other half of that problem, and un-seeding
+>   is the wrong answer for them. The four AP Networking unit tests and the
+>   three cumulative exams are real assessments a teacher really administers;
+>   they are simply administered on paper. Dropping them from the manifest
+>   would keep the denominator honest and leave the single largest block of
+>   assessment in the course permanently outside the gradebook. So instead the
+>   teacher enters the scores, and the manifest rows become true.
+
+`smoke/teacher-score-entry.js` pins it. I searched only for a student-facing
+reporting path, found none, and concluded there was none at all. That is the
+identical error to grepping the labs for `apnet:attempt` and concluding they
+emitted nothing: checking one entry point and reasoning from its absence.
+
+The second half of the claim was wrong too. An un-entered exam does not mark a
+student down. Measured rather than assumed, with a 40-point paper exam
+unentered and one 10-point online quiz scored 8:
+
+```
+pct: 80    earned: 8    graded: 10    possible: 50
+```
+
+`attemptRollup` emits NO cell for an unattempted item, so it renders as not
+attempted rather than as a zero, and the grade is `earned / graded` exactly as
+docs/gradebook-contract.md requires. The exam lands in `possible`, which is
+pace, not grade.
+
+WHAT IS ACTUALLY OPEN, and it is smaller and different: the score-entry API has
+no user interface. Nothing in `public/`, `shopify/` or the theme calls
+`/api/teacher/classes/:code/scores`. The teacher dashboard
+(`shopify/cyber-dashboard.html`, 94KB, live at `/pages/cyber-dashboard`)
+mentions the word "scores" exactly once, on an export button. So the route is
+built, documented, ownership-checked, rate-limited and tested, and a teacher
+can reach it only with curl. The 218 points do sit unfilled in practice; the
+reason is a missing last mile, not a missing design.
 
 **`main` and the connected branch have diverged in the theme repo.** `main` is
 224 commits ahead but is not a descendant, and its copy of
