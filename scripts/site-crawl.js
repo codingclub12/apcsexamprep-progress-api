@@ -361,17 +361,31 @@ async function apiHealth(findings) {
   let commit = 'unknown';
   try { commit = (JSON.parse(health.html).commit) || 'unknown'; } catch (e) { /* not fatal */ }
 
-  //  The sha was collected here for a year and never compared to anything, so
-  //  the comment above ("the answer to the question the status code cannot
-  //  reach") described a question nobody asked. On 2026-08-29 production was
-  //  found running a commit from the previous afternoon with six merges stacked
-  //  behind it, and it was found by hand, after a merge, because someone
-  //  happened to look. Nothing in the nightly run would have said a word.
+  //  THIS IS THE SECOND DETECTOR, AND THE FIRST ONE WORKS.
   //
-  //  Nothing user-facing had changed in that gap, which is exactly why it went
-  //  unnoticed for a day and exactly why it is worth a finding: the pipeline is
-  //  broken from the first merge, and the merge that reveals it is whichever
-  //  one first touches a route.
+  //  .github/workflows/deploy-drift.yml asks this same question every thirty
+  //  minutes and is the better implementation: it ages the oldest undeployed
+  //  commit (a lesson it learned and fixed on 2026-08-18) and separates behind
+  //  from rollback from a commit this repository does not contain. Nothing
+  //  here supersedes it, and a change to the grace window belongs in both.
+  //
+  //  What this one adds is DELIVERY, not detection. On 2026-08-29 production
+  //  was found running a commit from the previous afternoon with six merges
+  //  stacked behind it. deploy-drift had been failing on it since the evening
+  //  of 2026-08-28 and nobody had looked, partly because it flaps: red for
+  //  runs 299-304, green 305-307, red 308-310, green 311-312, then red. An
+  //  alarm intermittently red for a week is one a person stops opening. The
+  //  nightly report is a channel that reaches someone.
+  //
+  //  The first version of this comment claimed the sha was collected here for
+  //  a year and compared to nothing, and that no check would have said a word.
+  //  Both were wrong, written without looking in .github/workflows/. The
+  //  sentence is kept in the negative here so the next person to reach for a
+  //  third detector checks first.
+  //
+  //  Nothing user-facing had changed in the 2026-08-29 gap, which is why it
+  //  went unnoticed for days: the pipeline breaks at the first merge, and the
+  //  merge that reveals it is whichever one first touches a route.
   const stale = deployLag(commit);
   if (stale) {
     findings.push({ kind: 'api-stale-deploy', tier: C.tierOf('api-stale-deploy'),
