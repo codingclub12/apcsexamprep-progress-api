@@ -110,6 +110,7 @@
     "smoke:schoology": "node smoke/schoology-export.js",
     "smoke:posthog": "node smoke/posthog.js",
     "smoke:answerkeys": "node smoke/answer-keys.js",
+    "smoke:examkeyshapes": "node smoke/exam-key-shapes.js",
     "smoke:cspunittests": "node smoke/csp-unit-tests.js",
     "smoke:tchdashpage": "node smoke/teacher-dashboard-page.js",
     "smoke:verify": "node smoke/verify-artifact.js",

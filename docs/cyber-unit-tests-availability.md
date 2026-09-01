@@ -75,11 +75,24 @@ unit 5   CADBDACDBACBDABCADBC   A:5 B:5 C:5 D:5   longest run 1
 This defect class has been fixed here before. `tools/cyber-unit1-nav-repair/`
 exists because the Unit 1 exam key was once 3 A / 11 B and was rebalanced, and
 `scripts/one-off/verify-exam-key.js` was generalised to catch it on any page.
-That checker **skips Unit 3 silently**: it looks for `var ANSWERS = {"q1":"D"}`
-and reports "no letter key" for the index-keyed `CORR` shape, so the one page
-with the worst key is the one page the checker cannot see. It also skips 4 and 5,
-whose key lives in the click handlers. Two of the five exams are audited; three
-are not.
+That checker **skipped Unit 3 silently**: it looked for `var ANSWERS = {"q1":"D"}`
+and reported "no letter key" for the index-keyed `CORR` shape, so the one page
+with the worst key was the one page the checker could not see. It also skipped 4
+and 5, whose key lives in the click handlers. Two of the five exams were audited;
+three were not.
+
+**Fixed the same day.** `verify-exam-key.js` now reads all three shapes, and a
+skewed key is a defect rather than a number printed in verbose output. Run
+against the five live bodies it audits 5 and fails Unit 3 on three counts: the
+cap, the unused D, and the run. The bound is the bundle generator's own, which
+caps a letter at about a third of the items, so Unit 1 (max 6 of 20) and Unit 2
+(max 7) still pass. `smoke/exam-key-shapes.js` pins all three shapes in CI,
+because nothing in CI touched this script before, which is how it drifted.
+
+Two further shapes are known and still unhandled, both on per-lesson quizzes:
+`var DATA={...}` and `var sel={...}`, each with a `window.checkQ` handler. They
+are named in the script header so the next person does not have to find them
+again.
 
 ## 3. The bundle comparison, Units 2 through 5
 

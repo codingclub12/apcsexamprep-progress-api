@@ -38,12 +38,16 @@ percent, without reading a stem. Confirmed twice off the live body, from
 mis-keyed, so this is a distribution defect, not a correctness one. The other
 four keys are fine, and 4 and 5 are perfectly balanced at 5/5/5/5.
 
-**2. `verify-exam-key.js` cannot see three of the five.** It looks for
-`var ANSWERS = {"q1":"D"}` and reports "no letter key" for anything else. Unit 3
+**2. `verify-exam-key.js` could not see three of the five.** It looked for
+`var ANSWERS = {"q1":"D"}` and reported "no letter key" for anything else. Unit 3
 keys on `CORR` indices and Units 4 and 5 key in their click handlers, so all
-three are skipped silently. The one page with the worst key is a page the
-checker structurally cannot audit. That is why this went unnoticed: the audit
+three were skipped silently. The one page with the worst key was a page the
+checker structurally could not audit. That is why this went unnoticed: the audit
 ran and passed.
+
+**Fixed in a follow-up commit on this branch.** All three shapes are read now,
+guessability is a defect rather than a printed number, and
+`smoke/exam-key-shapes.js` pins the behaviour in CI. See the note at the end.
 
 **3. Four of five unit hubs do not link their own exam.** Only Unit 4's hub does.
 All five are linked from the course guide, which is the sole path for the other
@@ -69,13 +73,51 @@ correctly returns null. `scripts/seed-cyber-denominators.js` documented this on
 ## Still open
 
 - Whether to rebalance the Unit 3 key. Content decision, and it ships as a
-  Matrixify sheet if taken.
-- Teaching `verify-exam-key.js` the `CORR` and click-handler shapes, so the
-  audit covers five pages instead of two. This is the fix that keeps the class
-  of defect from recurring, and it is the one worth doing first.
+  Matrixify sheet if taken. The checker now fails on it, so this is visible
+  rather than silent, but nothing about the live page has changed.
 - Whether the unit hubs should link their own exams.
 - Off-CED drift in the online exams, worst in Units 4 and 5 (CIS Benchmarks,
   DISA STIGs, FedRAMP, NIST 800-53, MDM/MAM, PKI, secure boot, NIST SP 800-61,
   Pyramid of Pain). Board #136 already tracks the same thing for Unit 1.
 - The per-lesson quiz comparison for Units 2 through 5, which is a different pass
   from this one and is still untouched.
+
+## Follow-up, same session: the checker now reads all three shapes
+
+`scripts/one-off/verify-exam-key.js` understood one key shape and reported the
+other two as "no letter key", which is a skip rather than a failure and does not
+move the exit code. It now detects three:
+
+```
+answers-object  var ANSWERS = {"e1":"D"}            cyber unit 1, 2
+corr-index      4th arg of qzNAME(this,q,idx,corr)  cyber unit 3
+check-mcq       2nd arg of checkMCQ('qN','C',...)   cyber unit 4, 5
+```
+
+Against the five live bodies it now audits 5 and skips 0, where it audited 2 and
+skipped 3. Unit 1's existing 5 missing-explanation defects are unchanged.
+
+Two design points worth keeping:
+
+**The distractor checks do not run on all three.** They need one explanation per
+OPTION, which only the answers-object pages have; the other two carry a single
+explanation per question. Forcing them through would report 60 invented defects
+a page. So each shape declares which checks it supports and every result prints
+that, because an unstated coverage claim is what went wrong the first time.
+
+**A skewed key is now a defect, not a number.** The distribution and longest run
+were already being printed, and Unit 3 shipped anyway, so printing is not
+working. The bound is not invented: the bundle generator's own keys record a cap
+per letter of 9 over 26 items, 8 over 24 and 7 over 22, and `Math.round(n / 3)`
+reproduces all three. Below 12 items the check is withheld, because a 5-item
+quiz cannot use four letters and firing there would be noise.
+
+Validated three ways. The saved snapshot trio is an unplanned regression test:
+`ap-cyber-unit-1-exam.before-rebalance` is flagged guessable and both
+`after-rebalance` and `current-live` are clean, which is the historical record
+agreeing with the new check on data it was not tuned against. Across 72 saved
+bodies there are no new false positives. And five mutations of the checker were
+each confirmed to turn `smoke/exam-key-shapes.js` red.
+
+Still unhandled, and now named in the script header: `var DATA={...}` and
+`var sel={...}`, both with a `window.checkQ` handler, on the per-lesson quizzes.
