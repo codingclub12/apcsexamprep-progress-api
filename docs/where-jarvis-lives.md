@@ -37,8 +37,10 @@ through the browser at `/admin/command` with the session cookie.
 | `scripts/apcs.js` | The CLI. `digest`, `claim`, `done --artifact`. |
 | `scripts/verify-artifact.js` | The checker. Reports evidence, never a verdict. |
 | `scripts/verify-board.js` | Reconciliation: runs the checker over the whole board. |
+| `.claude/agents/ceo.md` | The CEO agent. Reconciles the board against live, ranks, delegates. |
 | `.claude/agents/verifier.md` | The verifier agent definition. |
 | `CLAUDE.md` | The protocol every session reads on boot. |
+| `docs/ceo-operating-model.md` | How a human runs the above, and the three jobs that stay human. |
 | `docs/runs/` | What past sessions learned, and the evidence they left. |
 
 ### 3. GitHub Actions - the clock
@@ -69,6 +71,7 @@ session knows.** There is nothing to install and nothing to remember.
 | Last night's dispatch report | GitHub > Actions > Overnight dispatch check |
 | To reconcile the board | GitHub > Actions > Reconcile the board > Run workflow |
 | To get work done | A NEW Claude Code session on this repo. Say "read the digest and tell me what is next" |
+| To decide what to work on | Same session, say "use the ceo agent, reconcile and tell me what to do" |
 | From a terminal | `apcs digest` |
 
 ## What to save
