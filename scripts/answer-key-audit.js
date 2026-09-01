@@ -49,6 +49,24 @@ const esc = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 // rerun produces the same file and a reviewer can check the intent: these lean
 // to D and A because the course over-used B and under-used D.
 const TARGETS = {
+  // ── AP CYBER UNIT 5, added 2026-09-01 ─────────────────────────────────────
+  //  Measured live: 5.1 ABDCB, 5.2 ABCDB, 5.3 ABCDB, 5.4 ABCDB, 5.5 BCADB,
+  //  5.6 BCDAB. Three keys byte identical, question 5 is B on all six, and B is
+  //  40 percent of the unit against an even 25. None of that trips the
+  //  all-one-letter or 60-percent checks, which is why it survived until the
+  //  ordered-key checks were added.
+  //
+  //  These targets are chosen to fix all three at once, and chosen DELIBERATELY
+  //  so a rerun produces the same file and a reviewer can check the intent:
+  //  every key distinct, no question position sharing a letter across all six,
+  //  and the whole unit at A8 B7 C7 D8 out of 30, against an even 7.5.
+  'ap-cyber-unit-5-lesson-1-quiz': ['C', 'D', 'A', 'B', 'D'],
+  'ap-cyber-unit-5-lesson-2-quiz': ['D', 'A', 'B', 'C', 'A'],
+  'ap-cyber-unit-5-lesson-3-quiz': ['B', 'C', 'D', 'A', 'C'],
+  'ap-cyber-unit-5-lesson-4-quiz': ['A', 'B', 'C', 'D', 'B'],
+  'ap-cyber-unit-5-lesson-5-quiz': ['D', 'A', 'C', 'B', 'A'],
+  'ap-cyber-unit-5-lesson-6-quiz': ['C', 'D', 'B', 'A', 'D'],
+
   'ap-csp-course-bi3-undecidable-problems':  ['D', 'A', 'C', 'D', 'B', 'A'],
   'ap-csp-course-bi3-iteration':             ['A', 'D', 'C', 'B', 'D', 'A'],
   'ap-csp-course-bi3-lists':                 ['C', 'D', 'A', 'D', 'B', 'C'],
@@ -252,6 +270,157 @@ function audit(edges) {
   return { same, skew, dupes, locked };
 }
 
+// ── THE opt-btn SHAPE, FOR REBALANCE ────────────────────────────────────────
+//  Every AP Cyber unit 5 quiz. Structurally kinder to permute than checkMCQ,
+//  and it is worth saying why, because it changes what can go wrong.
+//
+//  In the checkMCQ shape the correct letter is an ARGUMENT in the handler call
+//  and the feedback lives in a separate sibling div keyed by letter, so moving
+//  an option means moving three things that are only related by a naming
+//  convention. Here every option is one self-contained button:
+//
+//    <button type="button" class="opt-btn" data-correct="1" data-fb="Correct...."
+//            onclick="u5l1quizAnswer(this,1)"><span class="opt-letter">A.</span>Injection</button>
+//
+//  Correctness, feedback and text are all attributes of the same element, so
+//  reordering the buttons carries all three automatically. The ONLY thing that
+//  must change is the letter printed in the opt-letter span, because that is
+//  positional labelling rather than identity.
+//
+//  So the rule the whole rebalance obeys holds trivially here: the correct
+//  answer never changes, only which letter it sits on.
+const OPT_BTN_RE = /<button[^>]*class="[^"]*\bopt-btn\b[^"]*"[^>]*>[\s\S]*?<\/button>/g;
+const OPT_CALL_RE = /onclick="([A-Za-z0-9_$]+?)Answer\(\s*this\s*,\s*(\d+)\s*\)"/;
+const OPT_LETTER_RE = /(<span[^>]*class="opt-letter"[^>]*>\s*)([A-D])(\s*\.?\s*<\/span>)/;
+
+// Group the buttons of a body into questions, keyed by (handler prefix, index).
+// The handler prefix doubles as the activity name, which keeps one page holding
+// two quizzes from merging into a single question run.
+function readOptBtnQuestions(body) {
+  const groups = [];
+  const byKey = new Map();
+  for (const m of body.matchAll(OPT_BTN_RE)) {
+    const tag = m[0];
+    const call = OPT_CALL_RE.exec(tag);
+    if (!call) continue;
+    const lm = OPT_LETTER_RE.exec(tag);
+    if (!lm) continue;
+    const key = `${call[1]}|${call[2]}`;
+    let g = byKey.get(key);
+    if (!g) {
+      g = { key, act: call[1], q: Number(call[2]), opts: [], gaps: [], start: m.index, end: m.index + tag.length };
+      byKey.set(key, g);
+      groups.push(g);
+    }
+    // The exact text between this button and the previous one. Rejoining with a
+    // bare newline instead loses the source indentation, which silently rewrites
+    // bytes the rebalance has no business touching: 6 spaces x 3 gaps x 5
+    // questions is 90 bytes a page of unrelated diff on a live page.
+    if (g.opts.length) g.gaps.push(body.slice(g.end, m.index));
+    g.end = m.index + tag.length;
+    g.opts.push({
+      tag,
+      letter: lm[2],
+      correct: /data-correct="1"/.test(tag),
+      // Everything after the letter span is the option's own text.
+      text: tag.slice(tag.indexOf(lm[0]) + lm[0].length).replace(/<\/button>\s*$/, '').trim(),
+      fb: (tag.match(/data-fb="([^"]*)"/) || [])[1] || '',
+    });
+  }
+  return groups;
+}
+
+// Permute one question so its correct option lands on `want`. Returns the new
+// HTML for that run of buttons, preserving each button byte for byte except the
+// letter it prints.
+function permuteOptBtnGroup(g, want) {
+  const L = ['A', 'B', 'C', 'D'];
+  const correct = g.opts.filter((o) => o.correct);
+  // Zero or several correct options is a different defect, and silently
+  // permuting it would bake the ambiguity in. Refuse.
+  if (correct.length !== 1) return { error: `${g.opts.length} options, ${correct.length} flagged correct` };
+  if (!L.includes(want)) return { error: `target letter ${want} is not A-D` };
+  if (g.opts.length !== L.length) return { error: `${g.opts.length} options, expected 4` };
+
+  const others = g.opts.filter((o) => !o.correct);
+  const slots = L.filter((x) => x !== want);
+  const assign = new Map([[correct[0], want]]);
+  others.forEach((o, i) => assign.set(o, slots[i]));
+
+  const tags = L.map((slot) => {
+    const src = g.opts.find((o) => assign.get(o) === slot);
+    // Only the printed letter changes. data-correct, data-fb, onclick and the
+    // option text are carried through untouched.
+    return src.tag.replace(OPT_LETTER_RE, (whole, pre, _old, post) => pre + slot + post);
+  });
+  // Separators stay where they were. They are positional formatting, not part of
+  // an option, so they do not travel with the option that moves.
+  let html = tags[0];
+  for (let i = 1; i < tags.length; i++) html += (g.gaps[i - 1] !== undefined ? g.gaps[i - 1] : '\n') + tags[i];
+  return { html };
+}
+
+function rewriteBodyOptBtn(handle, body, targets) {
+  const groups = readOptBtnQuestions(body);
+  const problems = [];
+  let moved = 0;
+  // Splice from the END so earlier offsets stay valid.
+  let out = body;
+  const ordered = groups.slice().sort((a, b) => a.start - b.start);
+  for (let i = ordered.length - 1; i >= 0; i--) {
+    const g = ordered[i];
+    const want = targets[i];
+    if (!want) continue;
+    const cur = (g.opts.find((o) => o.correct) || {}).letter;
+    const res = permuteOptBtnGroup(g, want);
+    if (res.error) { problems.push(`${g.act} q${g.q}: ${res.error}`); continue; }
+    if (cur === want) continue;
+    moved += 1;
+    out = out.slice(0, g.start) + res.html + out.slice(g.end);
+  }
+  return { body: out, questions: groups.length, moved, problems };
+}
+
+// The same guarantee verify() gives the checkMCQ shape: the correct answer's
+// TEXT and its FEEDBACK are unchanged, the option set is unchanged, and exactly
+// one option is still flagged correct. A rewrite that cannot pass this is not
+// written to the CSV.
+function verifyOptBtn(handle, before, after) {
+  const read = (b) => readOptBtnQuestions(b).map((g) => {
+    const c = g.opts.find((o) => o.correct);
+    return {
+      key: g.key,
+      correctText: c ? c.text : null,
+      correctFb: c ? c.fb : null,
+      correctCount: g.opts.filter((o) => o.correct).length,
+      texts: g.opts.map((o) => o.text).sort(),
+      letters: g.opts.map((o) => o.letter).sort().join(''),
+    };
+  });
+  const A = read(before), B = read(after), bad = [];
+  if (A.length !== B.length) return [`${handle}: question count ${A.length} -> ${B.length}`];
+  // EVERYTHING OUTSIDE THE OPTION BUTTONS MUST BE BYTE IDENTICAL.
+  //
+  // Added after this verifier passed a rewrite that silently dropped 90 bytes a
+  // page. The answer checks below were all green, because they only ever looked
+  // at option semantics; the loss was inter-button indentation, which no
+  // semantic check can see. A rebalance that edits bytes it was not asked to
+  // edit is one nobody can review by diffing, so it is refused.
+  const stripBtns = (b) => b.replace(OPT_BTN_RE, ' BTN ');
+  if (stripBtns(before) !== stripBtns(after)) {
+    bad.push(`${handle}: content OUTSIDE the option buttons changed`);
+  }
+  for (let i = 0; i < A.length; i++) {
+    if (A[i].key !== B[i].key) bad.push(`${handle} ${A[i].key}: question identity changed`);
+    if (A[i].correctText !== B[i].correctText) bad.push(`${handle} ${A[i].key}: the CORRECT ANSWER TEXT changed`);
+    if (A[i].correctFb !== B[i].correctFb) bad.push(`${handle} ${A[i].key}: the correct answer's feedback changed`);
+    if (JSON.stringify(A[i].texts) !== JSON.stringify(B[i].texts)) bad.push(`${handle} ${A[i].key}: the option set changed`);
+    if (B[i].correctCount !== 1) bad.push(`${handle} ${A[i].key}: ${B[i].correctCount} options flagged correct`);
+    if (B[i].letters !== 'ABCD') bad.push(`${handle} ${A[i].key}: letters are ${B[i].letters}, not ABCD`);
+  }
+  return bad;
+}
+
 // Permute so the correct option lands on `want`, carrying its feedback with it.
 function rewriteBody(handle, body, targets) {
   const problems = [];
@@ -318,8 +487,15 @@ function rebalance(edges, outPath) {
   for (const e of edges) {
     const targets = TARGETS[e.node.handle];
     if (!targets) continue;
-    const r = rewriteBody(e.node.handle, e.node.body, targets);
-    const problems = r.problems.concat(verify(e.node.handle, e.node.body, r.body));
+    // Two shapes, one contract. checkMCQ wins when present, matching the
+    // precedence keysFor already uses: it is the older, authoritative shape, and
+    // a page carrying both is a page where the newer one must not overwrite it.
+    const isCheckMcq = QUESTION_RE.test(e.node.body);
+    QUESTION_RE.lastIndex = 0;   // /g regex: .test leaves state behind
+    const rw = isCheckMcq ? rewriteBody : rewriteBodyOptBtn;
+    const vf = isCheckMcq ? verify : verifyOptBtn;
+    const r = rw(e.node.handle, e.node.body, targets);
+    const problems = r.problems.concat(vf(e.node.handle, e.node.body, r.body));
     console.log(`  ${e.node.handle.padEnd(42)}${r.questions} questions, ${r.moved} moved`
       + (problems.length ? `   PROBLEMS: ${problems.slice(0, 3).join('; ')}` : ''));
     bad.push(...problems);
@@ -357,4 +533,5 @@ if (require.main === module) {
   else audit(edges);
 }
 
-module.exports = { keysFor, distributionRows, rewriteBody, verify, audit, TARGETS };
+module.exports = { keysFor, distributionRows, rewriteBody, verify, audit,
+  readOptBtnQuestions, rewriteBodyOptBtn, verifyOptBtn, TARGETS };

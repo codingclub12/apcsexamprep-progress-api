@@ -13,7 +13,8 @@
 //
 //  Run: npm run smoke:answerkeys
 // ─────────────────────────────────────────────────────────────────────────────
-const { keysFor, distributionRows, rewriteBody, verify, audit } = require('../scripts/answer-key-audit');
+const { keysFor, distributionRows, rewriteBody, verify, audit,
+  readOptBtnQuestions, rewriteBodyOptBtn, verifyOptBtn } = require('../scripts/answer-key-audit');
 
 let pass = 0, fail = 0;
 const ok = (n, c, x) => {
@@ -223,6 +224,72 @@ const small = audit(smallEdges);
 console.log = realLog;
 ok('  three activities agreeing on a position is coincidence, not a finding',
   small.locked.length === 0, small.locked);
+
+
+// ── REBALANCING THE opt-btn SHAPE ───────────────────────────────────────────
+//  Built to fix AP Cyber unit 5, whose six live quizzes shared three identical
+//  keys and had B on question 5 every time. The rule is the same as the older
+//  shape's: the correct answer never changes, only which letter it sits on.
+//
+//  This shape makes that easier, because data-correct, data-fb and the option
+//  text all live on the same button, so an option and its feedback move
+//  together by construction. The one thing that must change is the letter in
+//  the opt-letter span.
+console.log('\nopt-btn rebalance');
+{
+  // Indentation between buttons on purpose: the first version of this rewrite
+  // rejoined them with a bare newline and silently dropped 90 bytes a page.
+  const gap = '\n      ';
+  const build = (handler, correctByQ) => correctByQ.map((c, qi) =>
+    optBtn(handler, qi + 1, c, LETTERS).split('\n').join(gap)).join(gap);
+
+  const body = build('u5l1quiz', ['A', 'B', 'C']);
+  const want = ['C', 'D', 'A'];
+  const r = rewriteBodyOptBtn('t', body, want);
+
+  const keyOf = (b) => readOptBtnQuestions(b)
+    .map((g) => (g.opts.find((o) => o.correct) || {}).letter).join('');
+  ok('  the correct answer lands on the target letter', keyOf(r.body) === 'CDA', keyOf(r.body));
+  ok('  and every question reports as moved', r.questions === 3 && r.moved === 3, r);
+  ok('  the rewrite passes its own verifier',
+    verifyOptBtn('t', body, r.body).length === 0, verifyOptBtn('t', body, r.body));
+
+  // The guarantee that matters: an option's feedback travels with the option,
+  // so the correct answer never ends up wearing a wrong answer's explanation.
+  const before = readOptBtnQuestions(body), after = readOptBtnQuestions(r.body);
+  const pair = (g) => { const c = g.opts.find((o) => o.correct); return c.text + '|' + c.fb; };
+  ok('  the correct option keeps its own text and its own feedback',
+    before.every((g, i) => pair(g) === pair(after[i])),
+    before.map((g, i) => [pair(g), pair(after[i])]));
+
+  // Byte preservation. A rebalance that edits bytes nobody asked it to edit is
+  // one no reviewer can check by diffing.
+  ok('  the body length is unchanged, because only letters moved',
+    r.body.length === body.length, { before: body.length, after: r.body.length });
+  const strip = (b) => b.replace(/<button[^>]*class="[^"]*\bopt-btn\b[^"]*"[^>]*>[\s\S]*?<\/button>/g, ' BTN ');
+  ok('  and everything outside the option buttons is byte identical',
+    strip(body) === strip(r.body));
+
+  // A question already sitting on its target is left alone, so an unchanged
+  // page stays out of the sheet entirely.
+  const same = rewriteBodyOptBtn('t', body, ['A', 'B', 'C']);
+  ok('  a question already on target is not rewritten',
+    same.moved === 0 && same.body === body, same.moved);
+
+  // Refusals. Zero or several correct options is a different defect, and
+  // permuting it would bake the ambiguity in rather than surface it.
+  const noneCorrect = optBtn('u5l1quiz', 1, 'Z', LETTERS);
+  const bad = rewriteBodyOptBtn('t', noneCorrect, ['A']);
+  ok('  a question with no correct option is refused, not guessed at',
+    bad.problems.length === 1 && /0 flagged correct/.test(bad.problems[0]), bad.problems);
+
+  // And the verifier must catch a corrupted rewrite rather than trust the
+  // rewriter. This is the check that was missing when the 90-byte loss shipped.
+  const corrupted = r.body.replace('opt-letter', 'opt-letter ');
+  ok('  the verifier rejects a body whose non-button content moved',
+    verifyOptBtn('t', body, corrupted).length > 0,
+    verifyOptBtn('t', body, corrupted));
+}
 
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);
