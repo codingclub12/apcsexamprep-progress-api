@@ -284,15 +284,19 @@ if (cyberExamDenoms) console.log(`cyber exam denominators: ${cyberExamDenoms.cha
 //
 // A 200 here only ever meant "some container is up". It could not distinguish a
 // container running the merge you just made from one running last week's, which
-// is precisely what you want to know after a merge. Railway injects
-// RAILWAY_GIT_COMMIT_SHA into every container, so the answer was already present
-// and simply never surfaced.
+// is precisely what you want to know after a merge.
 //
-// Short sha, and 'unknown' off-platform rather than an empty string, so a local
-// or test run is visibly not a deploy instead of looking like an unlabelled one.
+// CORRECTION, 2026-09-01: this comment used to say "Railway injects
+// RAILWAY_GIT_COMMIT_SHA into every container". That was true of the only build
+// path that existed when it was written, and stopped being true the moment
+// railway-deploy.yml started deploying with `railway up`, which uploads a
+// directory rather than building a git ref. The first real run of that workflow
+// served `commit: unknown` and the workflow failed a deploy that had landed.
+// Resolution now has three sources and lives in lib/build-commit.js, which
+// carries the full reasoning.
 const healthIntegrity = require('./lib/health-integrity');
 
-const BUILD_COMMIT = (process.env.RAILWAY_GIT_COMMIT_SHA || '').slice(0, 7) || 'unknown';
+const BUILD_COMMIT = require('./lib/build-commit').resolveBuildCommit();
 
 // `integrity` answers a question that previously needed ADMIN_KEY: has the code
 // test bank been seeded for every `code` item that has a denominator. The bank
