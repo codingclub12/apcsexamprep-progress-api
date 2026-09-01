@@ -112,10 +112,21 @@ element and is intact.
 - Purge the phantom rows. Production data change, needs an explicit go-ahead.
   Target: score_events rows for ap-cybersecurity activity pages with points 0
   where the same student has no later non-zero row for that item.
-- Deploy. The theme PR merges to `main`, which ships NOTHING. The published
-  theme is connected to `claude/site-linking-audit-yhufjk`. That branch
-  currently contains `main`, so the deploy is a clean fast-forward, verified
-  against the live URL and not against GitHub.
+- Deploy. The theme PR is based on the CONNECTED branch, so merging it IS the
+  deploy. Do NOT reach for the fast-forward recipe in CLAUDE.md: the drift has
+  REVERSED since that was written. CLAUDE.md warns that `main` runs ahead of the
+  connected branch. Measured today it is the other way round.
+
+      commits on connected NOT on main : 44
+      commits on main NOT on connected : 0
+
+  `main` is fully contained in the connected branch, which makes
+  `git push origin origin/main:refs/heads/claude/site-linking-audit-yhufjk` a
+  NO-OP. It exits clean, changes nothing, and reads as a successful deploy.
+  That is the same failure mode that kept a live RapidAPI key on the CDN for
+  ten days. Verify against the live URL, never against GitHub, and note that
+  `main` is 44 commits behind what the storefront actually serves, so it is not
+  a reference for what is live either.
 - Tell the rest of the AP Cyber cohort. Unit 1 lesson 1.1 is the free entry
   lesson, so this is exactly where a trialling teacher decides whether the
   platform works.
