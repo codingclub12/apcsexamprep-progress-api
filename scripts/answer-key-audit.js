@@ -127,6 +127,50 @@ function keysFor(body) {
   }
   const k = body.match(/KEY\s*=\s*(\{[^}]{2,4000}\})/);
   if (k) { try { byAct.exam = Object.values(JSON.parse(k[1])); } catch (e) { /* not a key map */ } }
+
+  // ── THIRD SHAPE: `opt-btn`, every AP Cyber unit 5 quiz ─────────────────────
+  //  This audit was blind to it until 2026-09-01, and the blindness is why the
+  //  unit 5 defect was found by a human reading pages instead of by this tool:
+  //  5.2, 5.3 and 5.4 all key ABCDB, B is 40 percent of unit 5 against an even
+  //  25, and question 5 is B on all six quizzes.
+  //
+  //  The other two shapes carry the correct letter INSIDE the handler call, so
+  //  one regex over the call reads the key. This one does not. Correctness is a
+  //  `data-correct` attribute on the button, the letter is in a child span, and
+  //  the only thing tying options into a question is the index in the onclick:
+  //
+  //    <button class="opt-btn" data-correct="1" data-fb="..."
+  //            onclick="u5l2quizAnswer(this,3)"><span class="opt-letter">C.</span>
+  //
+  //  So it groups by (handler prefix, question index) and reads the letter off
+  //  whichever option is flagged. The handler prefix doubles as the activity
+  //  name, which keeps one page with two quizzes from merging into one key.
+  //
+  //  A question is only counted when EXACTLY ONE option is flagged correct.
+  //  Zero or several is a different defect, and quietly folding it into a
+  //  distribution would corrupt the very number this tool exists to report.
+  const optBtnSeen = {};
+  for (const m of body.matchAll(/<button[^>]*class="[^"]*\bopt-btn\b[^"]*"[^>]*>[\s\S]*?<\/button>/g)) {
+    const tag = m[0];
+    const call = tag.match(/onclick="([A-Za-z0-9_$]+?)Answer\(\s*this\s*,\s*(\d+)\s*\)"/);
+    if (!call) continue;
+    const letter = (tag.match(/class="opt-letter"[^>]*>\s*([A-D])/) || [])[1];
+    if (!letter) continue;
+    const act = call[1];
+    const q = Number(call[2]);
+    const seen = (optBtnSeen[act] = optBtnSeen[act] || {});
+    const rec = (seen[q] = seen[q] || { correct: [], total: 0 });
+    rec.total += 1;
+    if (/data-correct="1"/.test(tag)) rec.correct.push(letter);
+  }
+  for (const [act, byQ] of Object.entries(optBtnSeen)) {
+    const letters = Object.keys(byQ).map(Number).sort((a, b) => a - b)
+      .filter((q) => byQ[q].correct.length === 1)
+      .map((q) => byQ[q].correct[0]);
+    // Never clobber a key another shape already produced on the same page.
+    if (letters.length && !byAct[act]) byAct[act] = letters;
+  }
+
   return byAct;
 }
 

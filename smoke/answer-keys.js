@@ -79,5 +79,80 @@ const sabotaged = BODY.replace(/checkMCQ\('q1','([A-D])','B'/g, "checkMCQ('q1','
 ok('  relabelling the correct letter in place is rejected',
   verify('fixture', BODY, sabotaged).length > 0, verify('fixture', BODY, sabotaged));
 
+// ── 5. THE THIRD SHAPE: opt-btn, every AP Cyber unit 5 quiz ─────────────────
+//  The audit was blind to this shape until 2026-09-01, which is why the unit 5
+//  defect was found by a human reading pages rather than by this tool. The
+//  blindness matters more than the one defect: opt-btn is the whole of unit 5.
+console.log('5. The opt-btn shape the AP Cyber quizzes use');
+
+// Exactly the markup the live pages carry, including the trailing dot in the
+// letter span and the question index as the second onclick argument.
+const optBtn = (handler, qNum, correctLetter, letters) => letters.map((l) =>
+  `<button type="button" class="opt-btn" data-correct="${l === correctLetter ? 1 : 0}"`
+  + ` data-fb="feedback for ${l}" onclick="${handler}Answer(this,${qNum})">`
+  + `<span class="opt-letter">${l}.</span>opt ${l} text</button>`).join('\n');
+
+const LETTERS = ['A', 'B', 'C', 'D'];
+const cyberBody = [
+  optBtn('u5l2quiz', 1, 'A', LETTERS),
+  optBtn('u5l2quiz', 2, 'B', LETTERS),
+  optBtn('u5l2quiz', 3, 'C', LETTERS),
+].join('\n');
+const cyber = keysFor(cyberBody);
+ok('  reads the key off data-correct, not out of the handler call',
+  cyber.u5l2quiz && cyber.u5l2quiz.join('') === 'ABC', cyber);
+ok('  names the activity after the handler, so two quizzes on one page stay apart',
+  Object.keys(cyber).length === 1 && Object.keys(cyber)[0] === 'u5l2quiz', Object.keys(cyber));
+
+const twoQuizzes = keysFor(cyberBody + '\n' + [
+  optBtn('u5l3quiz', 1, 'D', LETTERS),
+  optBtn('u5l3quiz', 2, 'D', LETTERS),
+].join('\n'));
+ok('  a second quiz on the same page is its own activity',
+  twoQuizzes.u5l2quiz.join('') === 'ABC' && twoQuizzes.u5l3quiz.join('') === 'DD', twoQuizzes);
+
+// Zero or several flagged options is a DIFFERENT defect. Folding it into a
+// distribution would corrupt the number this tool exists to report, so those
+// questions are dropped rather than guessed at.
+const noneFlagged = keysFor([
+  optBtn('u5l9quiz', 1, 'A', LETTERS),
+  optBtn('u5l9quiz', 2, 'ZZ', LETTERS),
+].join('\n'));
+ok('  a question with no correct option is excluded, not guessed',
+  noneFlagged.u5l9quiz.join('') === 'A', noneFlagged);
+
+const twoFlagged = keysFor([
+  optBtn('u5l8quiz', 1, 'A', LETTERS),
+  optBtn('u5l8quiz', 2, 'B', LETTERS).replace('data-correct="0" data-fb="feedback for C"', 'data-correct="1" data-fb="feedback for C"'),
+].join('\n'));
+ok('  a question with two correct options is excluded too',
+  twoFlagged.u5l8quiz.join('') === 'A', twoFlagged);
+
+// The two older shapes must be untouched by the addition.
+ok('  the checkMCQ shape still parses alongside it',
+  keysFor(BODY + '\n' + cyberBody).quiz.join('') === 'BBB');
+ok('  and the opt-btn key is found on the same body',
+  keysFor(BODY + '\n' + cyberBody).u5l2quiz.join('') === 'ABC');
+
+// Found by mutation-testing this suite: removing the clobber guard in keysFor
+// changed nothing, which meant the guard was untested and could have been wrong
+// in either direction without anybody noticing. A handler literally named
+// `examAnswer(this,N)` yields the activity name `exam`, which is the same key
+// the KEY={...} exam shape writes. The older shape is the authoritative one, so
+// opt-btn must not overwrite it.
+const clash = keysFor(
+  '<script>var KEY={"e1":"D","e2":"D"};</script>\n'
+  + optBtn('exam', 1, 'A', LETTERS) + '\n' + optBtn('exam', 2, 'A', LETTERS)
+);
+ok('  opt-btn does not clobber a key an older shape already produced',
+  clash.exam.join('') === 'DD', clash);
+
+// The real defect, on the real shape: the distribution report must flag it.
+const collision = distributionRows([
+  { node: { handle: 'u5l2', body: [optBtn('u5l2quiz', 1, 'B', LETTERS), optBtn('u5l2quiz', 2, 'B', LETTERS), optBtn('u5l2quiz', 3, 'B', LETTERS)].join('\n') } },
+]);
+ok('  an all-B opt-btn quiz is reported as every-answer-the-same',
+  collision.length === 1 && collision[0].allSame && collision[0].n === 3, collision);
+
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);
