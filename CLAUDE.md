@@ -317,6 +317,27 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
 - Claude Code may merge its own pull requests once CI is green. Work still lands on a
   branch behind a PR, never straight to main, and merging is still a deploy: say what
   was merged and check the Railway boot log after it lands.
+- **That "once CI is green" is now enforced, not trusted.** A ruleset on `main`
+  requires the `Offline smoke suites` check, so a red or still-running suite blocks
+  the merge button for a human and the API alike. It was a convention until
+  2026-09-01 and conventions do not survive a busy afternoon: PR #428 was merged at
+  16:59:01 while its own test run, started 16:57:19, was still going.
+  The reason it has to be a gate rather than a habit is a race nobody can win by
+  being careful. Both workflows fire from the same push, and the deploy is roughly
+  five times faster than the suite:
+
+      push ae460f3      16:36:10
+      deployed          16:37:04   railway-deploy, about 55 seconds
+      first CI verdict  16:41:03   tests, about 4.5 minutes
+
+  So production ran that commit for 3m59s before anything had judged it, and that
+  window opened on every merge. Measured across runs 80 to 82 and 1024 to 1028; it
+  is structural, not a slow day. A gate before the merge is the only place that
+  beats the race, because it is the only point that happens before the deploy
+  starts.
+  To land an emergency fix, flip the ruleset's Enforcement to Disabled, merge, and
+  turn it back on. There is deliberately no standing bypass, so that skipping the
+  suite is always a visible act rather than a quiet one.
 - Every Shopify page change ships as a Matrixify sheet. Not an Admin API
   mutation, not a hand edit in the admin, and not `POST /api/admin/*/publish`:
   those endpoints exist and are the exception a human asks for explicitly, never
