@@ -83,6 +83,12 @@
   .row .line { display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
   .row .ttl { font-size:14.5px; font-weight:560; cursor:pointer; flex:1 1 220px; min-width:0; word-break:break-word; }
   .row .ttl.done { text-decoration:line-through; color:var(--muted); }
+  /* The id every other surface refers to. `apcs done 133`, "blocked by #133" and
+     a person saying "task 133" all name this number, and until now it was only
+     in a data- attribute, so the page was the one place it could not be read.
+     user-select:all makes one click grab the whole token. It carries no
+     data-act, so clicking it does not also expand the row. */
+  .row .tid { font-size:11.5px; font-weight:700; font-variant-numeric:tabular-nums; color:var(--muted); flex:0 0 auto; user-select:all; -webkit-user-select:all; }
   .chk { flex:0 0 auto; width:20px; height:20px; margin:0 2px 0 0; }
   .chip { font-size:10.5px; font-weight:700; padding:2px 7px; border-radius:999px; text-transform:uppercase; letter-spacing:0.03em; white-space:nowrap; background:color-mix(in srgb, var(--muted) 14%, transparent); color:var(--ink-2); }
   .chip.surface { background:color-mix(in srgb, var(--accent) 16%, transparent); color:var(--accent); }
@@ -358,6 +364,7 @@
     return '<div class="' + cls.join(" ") + '" data-id="' + t.id + '">'
       + '<div class="line">'
       + '<input class="chk" type="checkbox" data-act="check" ' + (t.closed ? "checked" : "") + ' aria-label="check off" />'
+      + '<span class="tid">#' + esc(t.id) + "</span>"
       + '<span class="ttl' + (t.closed ? " done" : "") + '" data-act="expand">' + esc(t.title) + "</span>"
       + chips.join("")
       + "</div>"

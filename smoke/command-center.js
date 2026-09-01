@@ -557,6 +557,29 @@ const raw = (sql, ...args) => db.prepare(sql).run(...args);
   ok('the panel degrades to a working button if GitHub cannot be reached',
     /Could not reach GitHub/.test(page) && /The button still works/.test(page));
 
+  // ── The row shows the id it is referred to by ─────────────────────────────
+  //  Every other surface names a task by number: `apcs done 133`, "blocked by
+  //  #133", the prompt URL, a person saying "task 133". The page was the single
+  //  place that number could not be read, because it lived only in a data-
+  //  attribute, so a human could not connect what an agent said to a row.
+  ok('the row renders a visible #id next to the title',
+    /<span class="tid">#' \+ esc\(t\.id\) \+ "<\/span>/.test(page));
+  //  Escaped, not interpolated raw. This page has had a stored-XSS hole through
+  //  innerHTML before, and the id lands in TEXT here rather than an attribute,
+  //  so it goes through esc() like every other value the row prints.
+  ok('the id is escaped on the way into the row',
+    !/<span class="tid">#' \+ t\.id/.test(page));
+  ok('the id is styled as a reference rather than competing with the title',
+    /\.row \.tid \{[^}]*color:var\(--muted\)/.test(page));
+  //  Two behaviours the id must NOT have. It carries no data-act, or clicking
+  //  the number would toggle the row open, which is precisely what someone
+  //  trying to select it for pasting would do. And user-select:all makes that
+  //  one click take the whole token rather than half of it.
+  ok('the id carries no data-act, so clicking it cannot expand the row',
+    !/<span class="tid"[^>]*data-act/.test(page));
+  ok('the id is selectable in one click for pasting',
+    /\.row \.tid \{[^}]*user-select:all/.test(page));
+
   // ── Chat cannot claim ─────────────────────────────────────────────────────
   const chatClaim = await call('POST', `/api/command/task/${csaContent.body.task.id}/claim`, {
     as: 'agent', body: { surface: 'chat', session_label: 'chat session', locks: ['theme:assets/x.js'] },
