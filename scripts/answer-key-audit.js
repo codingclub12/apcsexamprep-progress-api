@@ -67,15 +67,35 @@ const TARGETS = {
   'ap-cyber-unit-5-lesson-5-quiz': ['D', 'A', 'C', 'B', 'A'],
   'ap-cyber-unit-5-lesson-6-quiz': ['C', 'D', 'B', 'A', 'D'],
 
-  'ap-csp-course-bi3-undecidable-problems':  ['D', 'A', 'C', 'D', 'B', 'A'],
-  'ap-csp-course-bi3-iteration':             ['A', 'D', 'C', 'B', 'D', 'A'],
-  'ap-csp-course-bi3-lists':                 ['C', 'D', 'A', 'D', 'B', 'C'],
-  'ap-csp-course-bi3-strings':               ['D', 'A', 'D', 'C', 'A', 'B'],
-  'ap-csp-course-bi3-conditionals':          ['B', 'C', 'D', 'A', 'D', 'C'],
-  'ap-csp-course-bi3-nested-conditionals':   ['D', 'B', 'A', 'C', 'D', 'A'],
-  'ap-csp-course-bi3-developing-algorithms': ['C', 'D', 'B', 'A', 'C', 'D'],
-  'ap-csp-course-bi4-fault-tolerance':       ['A', 'C', 'D', 'B', 'A', 'D'],
+  'ap-csp-course-bi3-undecidable-problems':  ['C', 'C', 'A', 'B', 'B', 'C'],
+  'ap-csp-course-bi3-iteration':             ['B', 'C', 'D', 'A', 'B', 'D'],
+  'ap-csp-course-bi3-lists':                 ['D', 'B', 'C', 'D', 'D', 'B'],
+  'ap-csp-course-bi3-strings':               ['A', 'B', 'C', 'D', 'A', 'D'],
+  'ap-csp-course-bi3-conditionals':          ['B', 'C', 'D', 'A', 'B', 'C'],
+  'ap-csp-course-bi3-nested-conditionals':   ['B', 'C', 'D', 'A', 'B', 'A'],
+  'ap-csp-course-bi3-developing-algorithms': ['C', 'D', 'B', 'D', 'D', 'B'],
+  'ap-csp-course-bi4-fault-tolerance':       ['A', 'B', 'C', 'D', 'A', 'A'],
 
+  // ── PASS THREE, 2026-09-01: EVERY KEY DISTINCT ────────────────────────────
+  //  The values below replace the pass-one and pass-two targets wholesale. Those
+  //  were chosen to even out a LETTER DISTRIBUTION and did that almost perfectly,
+  //  A51 B51 C53 D55 of 210 against 52.5. They achieved it with two rotations:
+  //
+  //      ABCDAB   13 quizzes        CDABCD   12 quizzes
+  //
+  //  Twenty-five of thirty-five quizzes on two keys, verified live. A student who
+  //  learns ABCDAB has thirteen quizzes. It passed every check that existed at
+  //  the time, because a histogram cannot see order.
+  //
+  //  The measure improved and the thing the measure stood for got worse, which is
+  //  the whole reason the ordered-key checks were added. These targets are
+  //  generated to satisfy all three properties at once and refuse to emit
+  //  otherwise: every key distinct, per-POSITION balance so no question number
+  //  drifts toward one letter, and overall balance. Result:
+  //
+  //      distinct     35 of 35
+  //      overall      A52 B52 C53 D53   of 210, even is 52.5
+  //      per column   9/9/9/8 in all six, which is the best 35 allows
   // ── PASS TWO: the remaining 27 lesson quizzes ─────────────────────────────
   //  Pass one fixed the eight worst and OVER-CORRECTED toward D, so these lean
   //  back to B and C. Solved, not guessed: the seven unit test exams are already
@@ -86,32 +106,32 @@ const TARGETS = {
   //  Dealt from that pool in an interleaved cycle, so no single quiz carries
   //  more than three of any one letter and the sequence is reproducible.
   'ap-csp-course-bi1-collaboration':             ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi1-identifying-correcting-errors': ['C', 'D', 'A', 'B', 'C', 'D'],
-  'ap-csp-course-bi1-program-design-development': ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi1-program-function-purpose':  ['C', 'D', 'A', 'B', 'C', 'D'],
-  'ap-csp-course-bi2-binary-numbers':            ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi2-data-compression':          ['C', 'D', 'A', 'B', 'C', 'D'],
-  'ap-csp-course-bi2-extracting-information':    ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi2-using-programs-with-data':  ['C', 'D', 'A', 'B', 'C', 'D'],
-  'ap-csp-course-bi3-algorithmic-efficiency':    ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi3-binary-search':             ['C', 'D', 'A', 'B', 'C', 'D'],
-  'ap-csp-course-bi3-boolean-expressions':       ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi3-calling-procedures':        ['C', 'D', 'A', 'B', 'C', 'D'],
-  'ap-csp-course-bi3-data-abstraction':          ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi3-developing-procedures':     ['C', 'D', 'A', 'B', 'C', 'D'],
-  'ap-csp-course-bi3-libraries':                 ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi3-mathematical-expressions':  ['C', 'D', 'A', 'B', 'C', 'D'],
-  'ap-csp-course-bi3-random-values':             ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi3-simulations':               ['C', 'D', 'A', 'B', 'C', 'D'],
-  'ap-csp-course-bi3-variables':                 ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi4-parallel-distributed-computing': ['C', 'D', 'A', 'B', 'C', 'D'],
-  'ap-csp-course-bi4-the-internet':              ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi5-beneficial-harmful-effects': ['C', 'D', 'A', 'B', 'C', 'D'],
-  'ap-csp-course-bi5-computing-bias':            ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi5-crowdsourcing':             ['C', 'D', 'A', 'B', 'C', 'D'],
-  'ap-csp-course-bi5-digital-divide':            ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi5-legal-ethical-concerns':    ['C', 'D', 'B', 'C', 'D', 'B'],
-  'ap-csp-course-bi5-safe-computing':            ['C', 'B', 'C', 'B', 'C', 'B'],
+  'ap-csp-course-bi1-identifying-correcting-errors': ['C', 'D', 'D', 'A', 'B', 'C'],
+  'ap-csp-course-bi1-program-design-development': ['D', 'A', 'B', 'C', 'C', 'D'],
+  'ap-csp-course-bi1-program-function-purpose':  ['B', 'C', 'A', 'B', 'D', 'A'],
+  'ap-csp-course-bi2-binary-numbers':            ['A', 'B', 'C', 'D', 'A', 'C'],
+  'ap-csp-course-bi2-data-compression':          ['B', 'D', 'D', 'A', 'B', 'A'],
+  'ap-csp-course-bi2-extracting-information':    ['C', 'C', 'B', 'B', 'D', 'D'],
+  'ap-csp-course-bi2-using-programs-with-data':  ['D', 'A', 'A', 'C', 'C', 'B'],
+  'ap-csp-course-bi3-algorithmic-efficiency':    ['A', 'B', 'C', 'D', 'B', 'C'],
+  'ap-csp-course-bi3-binary-search':             ['D', 'A', 'A', 'B', 'C', 'D'],
+  'ap-csp-course-bi3-boolean-expressions':       ['B', 'C', 'D', 'A', 'D', 'A'],
+  'ap-csp-course-bi3-calling-procedures':        ['C', 'D', 'B', 'C', 'A', 'B'],
+  'ap-csp-course-bi3-data-abstraction':          ['D', 'A', 'A', 'B', 'C', 'A'],
+  'ap-csp-course-bi3-developing-procedures':     ['A', 'B', 'C', 'C', 'A', 'D'],
+  'ap-csp-course-bi3-libraries':                 ['C', 'A', 'A', 'B', 'C', 'A'],
+  'ap-csp-course-bi3-mathematical-expressions':  ['A', 'D', 'B', 'C', 'A', 'C'],
+  'ap-csp-course-bi3-random-values':             ['C', 'D', 'A', 'B', 'C', 'D'],
+  'ap-csp-course-bi3-simulations':               ['D', 'A', 'B', 'C', 'D', 'B'],
+  'ap-csp-course-bi3-variables':                 ['D', 'A', 'B', 'C', 'D', 'A'],
+  'ap-csp-course-bi4-parallel-distributed-computing': ['B', 'D', 'D', 'A', 'C', 'B'],
+  'ap-csp-course-bi4-the-internet':              ['C', 'C', 'D', 'B', 'B', 'C'],
+  'ap-csp-course-bi5-beneficial-harmful-effects': ['D', 'A', 'A', 'C', 'D', 'B'],
+  'ap-csp-course-bi5-computing-bias':            ['A', 'B', 'C', 'D', 'C', 'C'],
+  'ap-csp-course-bi5-crowdsourcing':             ['B', 'D', 'B', 'A', 'A', 'D'],
+  'ap-csp-course-bi5-digital-divide':            ['B', 'C', 'D', 'A', 'B', 'B'],
+  'ap-csp-course-bi5-legal-ethical-concerns':    ['C', 'D', 'A', 'C', 'D', 'A'],
+  'ap-csp-course-bi5-safe-computing':            ['D', 'A', 'B', 'D', 'C', 'C'],
 };
 
 const QUESTION_RE = /<div class="mcq-options" id="([^"]+)-options">([\s\S]*?)<\/div>\s*((?:\s*<div id="\1-fb-[A-D]"[\s\S]*?<\/div>)+)/g;
