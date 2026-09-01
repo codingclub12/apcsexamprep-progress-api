@@ -181,6 +181,19 @@ console.log('\n6b. The reporter gap: graded work finished that never reports a s
     ok('  and no graded native is excluded',
       !integrity.LESSON_NATIVES.some((n) => gc.isGradedActivity(gc.canonicalActivity(n).activity)),
       integrity.LESSON_NATIVES);
+
+    // AP CSA's debugging drills record as native 'debug'. They used to fall
+    // through to the practice default, which is the side of the line that means
+    // "nobody has decided yet", and they showed up in integrity.unmapped_activities
+    // for exactly that reason. Mapped deliberately on 2026-09-01.
+    const dbg = gc.canonicalActivity('debug');
+    ok('  debug is mapped deliberately, not defaulted',
+      dbg.mapped === true && dbg.activity === 'exercise', dbg);
+    ok('  and stays graded, so a debug drill that loses its score is still caught',
+      gc.isGradedActivity(dbg.activity), dbg);
+    // No ordinal: a debug drill is not "exercise 4", and an ordinal would sort it
+    // among the numbered exercises.
+    ok('  with no ordinal', dbg.ordinal === null, dbg);
   }
 
   // A score arriving later closes the gap without anyone editing this file.

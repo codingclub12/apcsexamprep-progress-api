@@ -183,6 +183,11 @@ function distributionRows(edges) {
       letters.forEach((l) => { dist[l] = (dist[l] || 0) + 1; });
       rows.push({
         handle: e.node.handle, activity, n: letters.length, dist,
+        // The ORDERED key, which the two checks below need and which a
+        // distribution throws away. "40 percent B" and "ABCDB every time" are
+        // different defects and only one of them is visible in a histogram.
+        letters: letters.slice(),
+        key: letters.join(''),
         allSame: Object.keys(dist).length === 1,
         maxShare: Math.max(...Object.values(dist)) / letters.length,
       });
@@ -202,12 +207,49 @@ function audit(edges) {
   console.log(`\n60 PERCENT OR MORE ON ONE LETTER (${skew.length}):`);
   skew.length ? skew.forEach((r) => console.log(`  ${r.handle.padEnd(42)}${r.activity.padEnd(10)}${r.n}q  ${JSON.stringify(r.dist)}`))
               : console.log('  none');
+  // ── TWO PATTERNS A DISTRIBUTION CANNOT SEE ────────────────────────────────
+  //  Measured on AP Cyber unit 5, 2026-09-01, which passed BOTH checks above:
+  //
+  //      5.1 ABDCB   5.2 ABCDB   5.3 ABCDB   5.4 ABCDB   5.5 BCADB   5.6 BCDAB
+  //
+  //  Every quiz is 40 percent B, so nothing hits the 60 percent bar and no key
+  //  is all one letter. Yet 5.2, 5.3 and 5.4 are byte identical, and question 5
+  //  is B on all six. A student who notices "the last one is always B" scores a
+  //  free point on six assessments, which is the exact harm this file exists to
+  //  prevent, arriving through a shape the thresholds were not looking for.
+  //
+  //  DUPLICATE KEYS. Two activities with the same ordered key. Requires 3+
+  //  questions, because a pair of 2-question quizzes matching is coincidence.
+  const byKey = {};
+  rows.filter((r) => r.n >= 3).forEach((r) => { (byKey[r.key] = byKey[r.key] || []).push(r); });
+  const dupes = Object.entries(byKey).filter(([, g]) => g.length > 1)
+    .sort((a, b) => b[1].length - a[1].length);
+  console.log(`\nIDENTICAL KEYS SHARED BY TWO OR MORE ACTIVITIES (${dupes.length}):`);
+  dupes.length ? dupes.forEach(([key, g]) => console.log(
+    `  ${key.padEnd(12)}${g.length} activities: ${g.map((r) => r.handle + '/' + r.activity).join(', ')}`))
+              : console.log('  none');
+
+  //  POSITION LOCK. A question index carrying the same letter on every activity
+  //  that has one. Needs at least 4 activities: three in a row is 1 in 16 by
+  //  chance, four is 1 in 64, and by six it is 1 in 1024. Below four this would
+  //  cry wolf on small courses, which is how a check gets ignored.
+  const POSITION_MIN = 4;
+  const byPos = {};
+  rows.forEach((r) => r.letters.forEach((l, i) => { (byPos[i] = byPos[i] || []).push(l); }));
+  const locked = Object.entries(byPos)
+    .filter(([, v]) => v.length >= POSITION_MIN && v.every((x) => x === v[0]))
+    .map(([i, v]) => ({ q: Number(i) + 1, letter: v[0], n: v.length }));
+  console.log(`\nSAME LETTER AT THE SAME QUESTION ON EVERY ACTIVITY (${locked.length}):`);
+  locked.length ? locked.forEach((l) => console.log(
+    `  question ${l.q}: ${l.letter} on all ${l.n} activities`))
+                : console.log('  none');
+
   const tot = {};
   rows.forEach((r) => Object.entries(r.dist).forEach(([k, v]) => { tot[k] = (tot[k] || 0) + v; }));
   const N = Object.values(tot).reduce((a, b) => a + b, 0);
   console.log(`\nWHOLE-COURSE DISTRIBUTION (${N} questions, even would be 25 percent each):`);
   Object.keys(tot).sort().forEach((k) => console.log(`  ${k}  ${String(tot[k]).padStart(4)}  ${(100 * tot[k] / N).toFixed(1)}%`));
-  return { same, skew };
+  return { same, skew, dupes, locked };
 }
 
 // Permute so the correct option lands on `want`, carrying its feedback with it.
@@ -315,4 +357,4 @@ if (require.main === module) {
   else audit(edges);
 }
 
-module.exports = { keysFor, distributionRows, rewriteBody, verify, TARGETS };
+module.exports = { keysFor, distributionRows, rewriteBody, verify, audit, TARGETS };

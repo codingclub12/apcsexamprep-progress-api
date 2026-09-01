@@ -13,7 +13,7 @@
 //
 //  Run: npm run smoke:answerkeys
 // ─────────────────────────────────────────────────────────────────────────────
-const { keysFor, distributionRows, rewriteBody, verify } = require('../scripts/answer-key-audit');
+const { keysFor, distributionRows, rewriteBody, verify, audit } = require('../scripts/answer-key-audit');
 
 let pass = 0, fail = 0;
 const ok = (n, c, x) => {
@@ -153,6 +153,76 @@ const collision = distributionRows([
 ]);
 ok('  an all-B opt-btn quiz is reported as every-answer-the-same',
   collision.length === 1 && collision[0].allSame && collision[0].n === 3, collision);
+
+// ── The two patterns a distribution cannot see ──────────────────────────────
+//  Measured on AP Cyber unit 5 on 2026-09-01. It passed BOTH existing checks:
+//    5.1 ABDCB  5.2 ABCDB  5.3 ABCDB  5.4 ABCDB  5.5 BCADB  5.6 BCDAB
+//  Every quiz is 40 percent B, so nothing reaches the 60 percent bar and no key
+//  is all one letter. Yet three quizzes are byte identical and question 5 is B
+//  on all six. That is a free point on six assessments for any student who
+//  notices, arriving through a shape the thresholds were not watching.
+const U5 = { '5.1': 'ABDCB', '5.2': 'ABCDB', '5.3': 'ABCDB', '5.4': 'ABCDB', '5.5': 'BCADB', '5.6': 'BCDAB' };
+const u5Edges = Object.entries(U5).map(([id, key]) => ({
+  node: {
+    handle: 'u5-' + id, title: id,
+    body: key.split('').map((correct, i) =>
+      optBtn('u5l' + id.slice(2) + 'quiz', i + 1, correct, LETTERS)).join('\n'),
+  },
+}));
+
+// Silence the report while asserting on its return value.
+const realLog = console.log;
+console.log = () => {};
+const res = audit(u5Edges);
+console.log = realLog;
+
+ok('  the real unit 5 keys still pass the OLD checks, which is the problem',
+  res.same.length === 0 && res.skew.length === 0, { same: res.same.length, skew: res.skew.length });
+ok('  identical keys shared by three quizzes are flagged',
+  res.dupes.length === 1 && res.dupes[0][0] === 'ABCDB' && res.dupes[0][1].length === 3,
+  res.dupes.map(([k, g]) => [k, g.length]));
+ok('  a question locked to one letter on every quiz is flagged',
+  res.locked.length === 1 && res.locked[0].q === 5 && res.locked[0].letter === 'B'
+  && res.locked[0].n === 6, res.locked);
+
+// Neither check may cry wolf. Six genuinely varied keys, no repeat and no
+// position that agrees, must come back clean: a check that fires on healthy
+// content is one people learn to skip.
+const VARIED = ['ABCDA', 'BCDAB', 'CDABC', 'DABCD', 'ACBDC', 'BDCAD'];
+const okEdges = VARIED.map((key, n) => ({
+  node: {
+    handle: 'ok-' + n, title: String(n),
+    body: key.split('').map((c, i) => optBtn('q' + n + 'quiz', i + 1, c, LETTERS)).join('\n'),
+  },
+}));
+console.log = () => {};
+const clean = audit(okEdges);
+console.log = realLog;
+ok('  varied keys raise neither flag',
+  clean.dupes.length === 0 && clean.locked.length === 0,
+  { dupes: clean.dupes.length, locked: clean.locked.length });
+
+// The POSITION_MIN threshold itself. Found by mutation-testing this suite:
+// dropping the minimum to 1 changed nothing above, because the varied fixture
+// has six activities and no position that agrees. So the threshold was
+// untested and could have been any number.
+//
+// Three activities all starting A is 1 in 16 by chance. On a course with three
+// quizzes that is a coincidence, not a defect, and flagging it teaches people
+// to skip the check. Four is 1 in 64, which is where it starts being worth
+// saying out loud.
+const SMALL = ['ABCD', 'ACDB', 'ADBC'];
+const smallEdges = SMALL.map((key, n) => ({
+  node: {
+    handle: 'small-' + n, title: String(n),
+    body: key.split('').map((c, i) => optBtn('s' + n + 'quiz', i + 1, c, LETTERS)).join('\n'),
+  },
+}));
+console.log = () => {};
+const small = audit(smallEdges);
+console.log = realLog;
+ok('  three activities agreeing on a position is coincidence, not a finding',
+  small.locked.length === 0, small.locked);
 
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);
