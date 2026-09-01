@@ -116,8 +116,25 @@ jobs:
           if [ -z "$SERVICE" ]; then
             echo "RAILWAY_SERVICE variable is not set, and the CLI cannot pick a service on its own."
             echo "Set it to the service name exactly as Railway shows it."
+            echo
+            echo "It must be a repository VARIABLE, not a secret. This step reads"
+            echo "vars.RAILWAY_SERVICE, and a value stored under Secrets resolves to"
+            echo "empty here however correct it looks in the UI. Settings > Secrets and"
+            echo "variables > Actions, then the Variables tab."
             exit 1
           fi
+          # ── LABEL THE ARTIFACT WITH ITS OWN SHA ─────────────────────────────
+          #  `railway up` uploads this DIRECTORY, not a git ref, so Railway never
+          #  injects RAILWAY_GIT_COMMIT_SHA and the container cannot know what it
+          #  is running. On 2026-09-01 the first real run of this workflow served
+          #  `commit: unknown`; the confirm step below then polled ten minutes for
+          #  a sha that could never appear and failed a deploy that had landed.
+          #
+          #  The sha is a property of this artifact, so it travels inside it.
+          #  lib/build-commit.js reads this file. It must NOT be gitignored:
+          #  `railway up` honours .gitignore and would drop it from the upload.
+          echo "$GITHUB_SHA" > build-commit.txt
+
           echo "Deploying ${GITHUB_SHA:0:7} to $SERVICE"
           # --ci keeps it non-interactive and streams the build log into this job,
           # so a failed build is readable here rather than only in the dashboard,
