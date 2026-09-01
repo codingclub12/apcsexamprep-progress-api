@@ -88,6 +88,11 @@
   td.pass { color:var(--good); }
   td.fail { color:var(--critical); }
   td.done { color:var(--muted); }
+  /* Lost score. Deliberately NOT td.zero's critical red: this is an ABSENT
+     grade, not a bad one, and colouring it like a failure would libel the
+     student. It must not look like the tick either, which is what made the
+     missing AP Cyber scores read as healthy. */
+  td.lost { color:var(--warnc); font-weight:700; cursor:help; }
   td.unpriced { color:var(--warnc); }
 
   .pill { display:inline-block; font-size:10.5px; padding:1px 6px; border-radius:99px; border:1px solid var(--border); color:var(--muted); margin-left:6px; vertical-align:middle; }
@@ -136,7 +141,15 @@
         attempted. It is never divided by the whole course, because a student who has finished three
         items perfectly is at 100 percent, not 3 percent. How much of the course has been reached is
         <b>pace</b>, reported separately. A blank cell means not attempted. A <b>0</b> means attempted
-        and scored zero.
+        and scored zero. A <b>&#10003;</b> means completed work that carries no score by design, such as
+        a lesson visit.
+        <br /><br />
+        A <b>&#10007;</b> is different and worth understanding: the student completed a GRADED activity
+        and no score was ever recorded, because the page did not report one. It is not a zero, it is not
+        counted against the student, and it cannot be recovered here, since the number was never sent.
+        Once that activity page reports correctly, resubmitting records the score normally. The affected
+        activities are listed in <code>integrity.score_missing_items</code>, which is the page-reporter
+        work queue.
       </p>
     </details>
   </div>
@@ -275,6 +288,13 @@
   // ── The grid ──────────────────────────────────────────────────────────────
   function cellHtml(c) {
     if (!c) return '<td class="blank"></td>';                       // NOT ATTEMPTED
+    // A graded activity the student COMPLETED whose score never arrived. A tick
+    // here reads as done and fine, which is how a week of AP Cyber Ex2, Lab and
+    // Quiz completions looked healthy while their pages posted no score at all.
+    // Nothing read-time can recover it: the number was never sent.
+    if (c.score_missing) {
+      return '<td class="lost" title="Score not recorded. The page did not report a score when this was completed, so there is no grade and none can be recovered. Resubmitting on a fixed page records normally.">✗</td>';
+    }
     if (c.pct === null || c.pct === undefined) {
       return '<td class="done" title="completed, no score recorded">✓</td>';
     }

@@ -71,6 +71,7 @@ const CYBER = 'ap-cybersecurity';
 const ROLLUP_KEYS = [
   'pct', 'earned', 'graded', 'possible',
   'items_graded', 'items_passed', 'items_total', 'items_percent_only',
+  'items_score_missing',
 ].sort();
 
 const near = (a, b, eps = 0.051) => a != null && b != null && Math.abs(a - b) < eps;
@@ -301,6 +302,53 @@ const near = (a, b, eps = 0.051) => a != null && b != null && Math.abs(a - b) < 
     strip(anon.body) === strip(tv.body));
 
   // ── 13. Nothing that already worked was taken away ────────────────────────
+  // ── 12b. A completed graded activity with no score is its own fact ────────
+  //  This is the AP Cyber failure of 2026-09-01 reproduced exactly. Ex2 pages
+  //  carried the completion tracker but no score reporter, so students finished
+  //  the work and no earned/possible pair was ever posted. The gradebook showed
+  //  a tick, teachers read that as done and fine, and the missing grades were
+  //  invisible for a week.
+  //
+  //  Three things have to hold and they are easy to conflate:
+  //    a completed GRADED item with no score is flagged,
+  //    a completed UNGRADED item (a lesson visit) is NOT,
+  //    a real scored zero is NOT.
+  //  Collapsing any pair of those makes the flag useless or defamatory.
+  console.log('12b. A graded activity completed with no score is flagged, not ticked');
+  const s4 = await join('GC4');
+  // Graded activity, completed, and no score ever posted: the Ex2 case.
+  await post('/api/student/progress',
+    { course: CYBER, unit: 'unit-1', lesson: '1.1', activity_type: 'exercise-2', completed: true }, s4);
+  // Ungraded lesson visit, completed: legitimately carries no score.
+  await post('/api/student/progress',
+    { course: CYBER, unit: 'unit-1', lesson: '1.1', activity_type: 'lesson', completed: true }, s4);
+
+  const g4 = gb();
+  const r4 = byLabel(g4, 'GC4');
+  const lostCells = Object.entries(r4.items).filter(([, c]) => c.score_missing);
+  ok('  the completed graded activity is flagged score_missing',
+    lostCells.length === 1 && /exercise-2/.test(lostCells[0][0]), lostCells.map(([k]) => k));
+  ok('  it carries no score and no pass verdict, so it cannot become a zero',
+    lostCells.length === 1 && lostCells[0][1].pct === null
+    && lostCells[0][1].earned === null && lostCells[0][1].passed === null,
+    lostCells[0] && lostCells[0][1]);
+  ok('  the rollup counts it', r4.overall.items_score_missing === 1, r4.overall);
+  ok('  it does not drag the grade down: nothing graded means pct stays null',
+    r4.overall.pct === null && r4.overall.earned === 0, r4.overall);
+  ok('  integrity names the activity, so it is a page-reporter work queue',
+    g4.integrity.scores_missing === 1
+    && g4.integrity.score_missing_items.some((k) => /exercise-2/.test(k)),
+    g4.integrity.score_missing_items);
+  // The ungraded lesson visit for the SAME student must not be flagged.
+  const lessonCell = Object.entries(r4.items).find(([k]) => /lesson/.test(k));
+  ok('  a completed UNGRADED lesson visit is not flagged',
+    !!lessonCell && !lessonCell[1].score_missing, lessonCell && lessonCell[1]);
+  // And a real zero is a grade, not a gap. GC1 scored 0 of 7 on exercise-1.
+  const gc1Row = byLabel(g4, 'GC1');
+  const realZero = Object.entries(gc1Row.items).find(([k]) => /exercise-1/.test(k));
+  ok('  a genuine scored zero is NOT flagged as missing',
+    !!realZero && realZero[1].earned === 0 && !realZero[1].score_missing, realZero && realZero[1]);
+
   console.log('13. Regression: the existing surfaces are untouched');
   const legacy = await get(`/api/teacher/classes/${code}/progress`, teacherToken);
   ok('  GET /classes/:code/progress still responds with its own shape',
