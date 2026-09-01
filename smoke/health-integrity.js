@@ -106,6 +106,56 @@ console.log('\n6. The cache holds, because this sits behind a liveness probe');
   ok('  which surfaces the newly opened denominator', fresh.code_items_unseeded === 1, fresh);
 }
 
+console.log('\n6b. The reporter gap: graded work finished that never reports a score');
+{
+  // The AP Cyber failure of 2026-09-01, reproduced. Foreign keys are ON, so the
+  // parent rows are real; none of them is ever read back, and no name is used.
+  db.prepare(`INSERT INTO teachers (id,email,password_hash,name,school)
+              VALUES ('t-rep','rep@example.org','x','T','S')`).run();
+  db.prepare(`INSERT INTO classes (id,teacher_id,class_code,class_name,course)
+              VALUES ('c-rep','t-rep','CYBER-REP','Rep','ap-cybersecurity')`).run();
+  db.prepare(`INSERT INTO students (id,class_id,display_name,pin_hash)
+              VALUES ('s-rep','c-rep','S1','x')`).run();
+
+  const denom = db.prepare(`INSERT OR REPLACE INTO course_denominators
+    (course,unit,lesson,activity_type,possible) VALUES (?,?,?,?,?)`);
+  const prog = db.prepare(`INSERT INTO progress
+    (id,student_id,class_id,course,unit,lesson,activity_type,completed,score)
+    VALUES (?,'s-rep','c-rep','ap-cybersecurity','unit-1',?,?,1,?)`);
+
+  // A: authored denominator, completed, no score anywhere. The broken page.
+  denom.run('ap-cybersecurity', 'unit-1', '1.1', 'exercise-2', 6);
+  prog.run('p-a', '1.1', 'exercise-2', null);
+  // B: authored denominator, completed, and the page DID report. Healthy.
+  denom.run('ap-cybersecurity', 'unit-1', '1.1', 'exercise-1', 7);
+  prog.run('p-b', '1.1', 'exercise-1', null);
+  db.prepare(`INSERT INTO score_events
+    (id,student_id,class_id,course,unit,lesson,activity_type,item,points,max_points)
+    VALUES ('se-b','s-rep','c-rep','ap-cybersecurity','unit-1','1.1','exercise-1','e1',5,7)`).run();
+  // C: NO authored denominator, completed. A lesson visit: correctly unscored,
+  // and the single most important thing this must not flag, because flagging
+  // every visit would bury the real signal and train people to ignore it.
+  prog.run('p-c', '1.1', 'lesson', null);
+
+  const r = integrity.reporterIntegrity({ force: true });
+  ok('  the broken page is detected', r && r.activities === 1, r);
+  ok('  and named precisely enough to fix',
+    r && r.worst[0].lesson === '1.1' && r.worst[0].activity_type === 'exercise-2', r && r.worst[0]);
+  ok('  ok is false while any graded activity is losing scores', r && r.ok === false, r);
+  ok('  the completions at stake are counted', r && r.completions_affected === 1, r);
+  ok('  an activity whose page DOES report is not flagged',
+    r && !r.worst.some((w) => w.activity_type === 'exercise-1'), r && r.worst);
+  ok('  an UNGRADED lesson visit is not flagged',
+    r && !r.worst.some((w) => w.activity_type === 'lesson'), r && r.worst);
+
+  // A score arriving later closes the gap without anyone editing this file.
+  db.prepare(`INSERT INTO score_events
+    (id,student_id,class_id,course,unit,lesson,activity_type,item,points,max_points)
+    VALUES ('se-a','s-rep','c-rep','ap-cybersecurity','unit-1','1.1','exercise-2','e2',4,6)`).run();
+  const after = integrity.reporterIntegrity({ force: true });
+  ok('  it clears itself once the page starts reporting', after && after.ok === true, after);
+}
+
 console.log('\n7. It degrades to absent, never to a wrong answer');
 {
   // Drop the table the query depends on. A liveness probe must not 500 because

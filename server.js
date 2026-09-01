@@ -313,6 +313,13 @@ app.get('/api/health', (req, res) => {
   const body = { status: 'ok', ts: new Date().toISOString(), commit: BUILD_COMMIT };
   const integrity = healthIntegrity.codeSeedIntegrity();
   if (integrity) body.integrity = integrity;
+  // The reporter gap, for the same reason and on the same terms: graded work
+  // students finish that never reports a score. That failure is silent by
+  // construction (the page marks it done and sends no number) and it cost a week
+  // of AP Cyber Ex2, Lab and Quiz grades before a teacher reported it. Activities
+  // and counts only, no student or class, so the zero-PII posture holds.
+  const reporters = healthIntegrity.reporterIntegrity();
+  if (reporters) body.reporters = reporters;
   res.json(body);
 });
 
