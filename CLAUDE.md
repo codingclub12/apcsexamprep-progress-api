@@ -258,14 +258,37 @@ as a non-fast-forward, which is the only reason this has not already cost a
 storefront. The danger is the next step: a rejected push invites `--force`, and
 forcing it would rewind the live theme by 46 commits in one command.
 
-No replacement recipe is given here on purpose, because the right one is not
-known yet. If the connected branch is ahead, theme work is reaching the
-storefront some other way, and guessing at a command that writes to a published
-theme is how this entry became wrong in the first place. Establish where theme
-changes actually land before writing a new one.
+**The recipe that is actually in use.** Established 2026-09-01 by reading the
+base branch of the 40 most recently merged theme pull requests, not by reading
+anybody's description of the process:
 
-Repointing the theme at `main` in Shopify Admin remains the real fix and is a
-human action. Board task 141.
+    33 of 40 targeted claude/site-linking-audit-yhufjk
+     7 of 40 targeted main, and all seven are older
+    the last PR to target main was #71 on 2026-08-24
+    every one of the 21 merged since then targeted the connected branch
+
+So theme work reaches the storefront the ordinary way: **open the pull request
+against `claude/site-linking-audit-yhufjk` and merge it there.** That is why the
+connected branch runs ahead of `main`, and why `main` lags: nothing merges into
+`main` any more. No push incantation is needed and none should be invented.
+
+Three things follow, and the first is the one that bites:
+
+- **Merging that PR deploys to the live storefront immediately.** The theme repo
+  has no CI, so the merge IS the deploy and there is no gate between the click
+  and a student's page. Merge deliberately, and verify against the live URL.
+- **Retarget, do not rebase.** A branch cut from the connected branch and opened
+  against `main` reads as dozens of files and dozens of commits, because it is
+  showing the gap between the branches rather than the change. PR #91 hit exactly
+  this and was retargeted; against the correct base the same diff was one file.
+- `main` is not dead, it is just not the deploy path. PR #69 reconciled `main`
+  into the connected branch once, which is how its content got there.
+
+**What this does NOT establish.** Shopify Admin is the only authority on which
+branch is connected; the branch name here is inferred from consistent practice
+and could be changed there without any signal in this repo. If a deploy does not
+appear, check Shopify Admin before trusting this paragraph. Repointing the theme
+at `main` remains the real fix and is a human action. Board task 141.
 
 Exception, apcs-tracker.js: this repo is NOT canonical for it. The deployed asset lives in the APCSExamPrep-theme repo at assets/apcs-tracker.js and reaches the storefront through Shopify two-way GitHub sync, so the theme repo is the only source of truth. shopify/apcs-tracker.js here is a byte-identical mirror for reference. Any change to tracker behaviour ships as a theme PR first, then the mirror is re-synced in the same pass. Never edit the mirror on its own and never upload it to Shopify by hand.
 
