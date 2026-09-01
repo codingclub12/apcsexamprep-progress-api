@@ -54,10 +54,45 @@ before anything is written down.
 Repointing the theme at `main` in Shopify Admin remains the real fix and is a
 human action, as the file already said.
 
+## RESOLVED same day: where theme changes actually land
+
+The section above said no replacement recipe was known. It is now, and this note
+is updated rather than left to go stale.
+
+The answer was not obtained by reading anybody's description of the process. PR
+#91's body asserts it, but an agent report is not evidence in this repo, so the
+claim was checked against the base branch of the 40 most recently merged theme
+pull requests:
+
+```
+33 of 40 targeted claude/site-linking-audit-yhufjk
+ 7 of 40 targeted main, and all seven are older
+last PR to target main:  #71, 2026-08-24T17:10:21Z
+since then: 21 consecutive PRs, every one to the connected branch
+most recent: #92, 2026-09-01T14:59:48Z
+```
+
+So the recipe is the ordinary one: open the pull request against
+`claude/site-linking-audit-yhufjk` and merge it there. No push incantation is
+needed, which is the part that matters, because the incantation is what was
+wrong.
+
+That also explains the topology rather than just describing it. The connected
+branch runs ahead of `main` because everything merges into the connected branch
+and nothing merges into `main`. The gap is not drift; it is the deploy path.
+
+`CLAUDE.md` now carries this, along with the three consequences: merging deploys
+immediately with no CI in the way, a branch opened against the wrong base shows
+the branch gap rather than the change (PR #91 hit this and was retargeted), and
+`main` is not dead but is not the deploy path either.
+
+What it does not establish, and the doc says so: Shopify Admin is the only
+authority on which branch is connected. The name is inferred from consistent
+practice and could be changed there with no signal in this repo.
+
 ## Still open
 
-- **Where theme changes actually land.** Until that is established, there is no
-  documented deploy path for the theme at all, which is a gap rather than a
-  regression: the previous text was worse than nothing.
-- Task 141 stays open. It is a theme-surface task and the fix is a human action
-  in Shopify Admin, so this pass only defused the landmine in the docs.
+- Task 141 stays open. It is a theme-surface task and the real fix, repointing
+  the theme at `main` in Shopify Admin, is a human action. What changed here is
+  that following the docs is no longer a hazard and the working path is written
+  down.
