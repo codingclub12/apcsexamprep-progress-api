@@ -11,28 +11,61 @@
  * needing judgement (which decks, which sizes, the undo record, this script),
  * and the account holder runs it.
  *
- * WHAT IT DOES
- * Walks every deck the gate can serve and raises any text between 10 and 14
- * points. That band was chosen against the AP CSA decks, whose generator IS in
- * the repo: raising it there took footers, captions, card labels and program
- * output from unreadable-at-the-back to readable, and left the display type
- * and the legal fine print alone. See docs/runs/2026-08-27 and 2026-08-28.
+ * ---------------------------------------------------------------------------
+ * WHY THIS IS A LADDER AND NOT ARITHMETIC
  *
- *     10   to 11.5   +2.5    the smallest body text, where the problem is
- *     11.5 to 13     +2
- *     13   to 14     +1.5    already near body size, so a lighter touch
+ * The first version of this script added a fixed amount per range: +2.5 below
+ * 11.5pt, +2 below 13, +1.5 up to 14. preview() then read 63,842 text runs out
+ * of 136 real decks and showed that rule was wrong, in two ways that no amount
+ * of care about the arithmetic would have caught:
  *
- * Text under 10pt is left alone deliberately. In the CSA decks that band is the
- * College Board trademark line, which nobody reads from a projector and which
- * steals room from the footer above it when it grows. Text over 14pt is already
- * readable and is what the band is measured against.
+ *   COLLISIONS. 12.5 + 2 and 13 + 1.5 are both 14.5. So 12.5, 13 and the
+ *   untouched 14.5 all ended up at 14.5: three distinct tiers flattened into
+ *   one, across 7,900 runs.
  *
+ *   INVERSIONS. 14 + 1.5 is 15.5, which is larger than the untouched 14.5 and
+ *   15. Text that was SMALLER came out BIGGER. That alone was 11,638 runs, the
+ *   single largest bucket in the corpus.
+ *
+ *   Together, 18,866 runs, 29% of all the text in the sample, came out with
+ *   their size relationships broken.
+ *
+ * The cause is structural rather than a bad choice of constants. These decks
+ * carry a dense size vocabulary in the band (10, 10.5, 11, 12, 12.5, 13, 14:
+ * seven distinct sizes inside four points) and a sparse one just above it. A
+ * rule that lifts the bottom more than the top COMPRESSES that ladder, so its
+ * slope is below 1; and a slope below 1 on a ladder with half-point steps
+ * always collides once the result is rounded back to half points. No taper
+ * expressed as a function of the size can avoid it.
+ *
+ * So the map is a table over the sizes that actually exist, built once from
+ * what preview() measured, and asserted strictly increasing. proposeLadder_()
+ * below is the generator, so a course with a different vocabulary gets its own
+ * ladder from its own preview() run rather than inheriting this one.
+ *
+ * A size inside the range with no ladder entry is REFUSED, not guessed at. See
+ * ALLOW_UNKNOWN.
+ *
+ * ---------------------------------------------------------------------------
  * WHAT IT DOES NOT TOUCH
+ *   Below LADDER_FLOOR. In the AP CSA decks, whose generator IS in this repo,
+ *   that band held the College Board trademark line, which nobody reads from a
+ *   projector and which steals room from the footer above it when it grows.
+ *   In these decks 19% of runs sit under 10pt, at roughly 47 per deck for 9pt
+ *   alone, which is the shape of per-slide furniture rather than body text.
+ *   That is an inference from counts, not from looking: if any of it turns out
+ *   to be body copy, it is the least readable text in the bundle and the floor
+ *   is wrong. Opening one deck settles it; preview() cannot.
+ *
+ *   At or above LADDER_CEILING. Already readable, and it is what the lift is
+ *   measured against.
+ *
  *   Speaker notes. A teacher deck's notes carry answers, timing cues and
  *   misconception alerts, and they are read off a laptop at arm's length
  *   rather than projected. They are also the one surface here with no visible
  *   overflow, so growing them buys nothing and risks pushing content off the
  *   notes page.
+ *
  *   Layouts and masters. Only shapes on the slides themselves are touched, so
  *   nothing changes globally in a way this script cannot record and undo.
  *
@@ -42,18 +75,18 @@
  * A Google Slides text box does not shrink its text to fit. Raising a size in
  * a box that is already full pushes the text out of the box, and unlike the
  * CSA decks there is no build step here that can measure a panel and refuse.
- * Nobody has seen these 294 decks: they were converted from .pptx in bulk and
- * this script is being written against their file ids, not their contents.
+ * 56% of all text in these decks is inside the ladder's range, so this is most
+ * of the deck rather than a few captions.
  *
  * Three things follow, and none of them is optional:
  *
- *   1. preview() writes nothing and reports what is actually in there. Run it
- *      first. It is the only way anyone learns what sizes these decks use.
+ *   1. preview() writes nothing and reports what is actually in there,
+ *      including a proposed ladder for whatever it finds. Run it per course.
  *   2. DECK_LIMIT exists so the first real run is two or three decks, opened
  *      and looked at, before the other 291.
  *   3. Every change is recorded to an undo file in Drive before it is made,
  *      and revert() puts it back. A deck that has an undo file is refused a
- *      second bump, so sizes cannot compound into 16, 18, 20 across re-runs.
+ *      second bump, so sizes cannot compound across re-runs.
  *
  * ---------------------------------------------------------------------------
  * SETUP
@@ -62,10 +95,9 @@
  *   3. Run preview() first and authorise when prompted.
  *
  * RUN ORDER
- *   preview()   Opens every deck, counts nothing but sizes, writes NOTHING.
- *               Read the histogram before going further. If the band 10 to 14
- *               is nearly empty, these decks do not have the problem the CSA
- *               decks had and there is nothing worth doing.
+ *   preview()   Opens decks, reports the size histogram and a proposed ladder,
+ *               writes NOTHING. Run it once per course: it samples both, but
+ *               the 4.5 minute budget will not reach all 294 in one go.
  *   start()     Does the work, DECK_LIMIT decks at a time, resumable.
  *   report()    What the sheet currently holds.
  *   revert()    Puts every recorded change back, deck by deck.
@@ -79,12 +111,51 @@
  */
 
 // ---------------------------------------------------------------------------
-// Configuration
+// The ladder
 // ---------------------------------------------------------------------------
 
-// The band, in points. Text outside it is never touched.
-var BAND_LO = 10;
-var BAND_HI = 14;
+// Sizes below the floor and at or above the ceiling are never touched.
+var LADDER_FLOOR = 10;
+var LADDER_CEILING = 18;
+
+// The lift proposeLadder_() aims for at the floor, tapering to nothing at the
+// ceiling. Only used to BUILD a ladder, never to apply one.
+var MAX_LIFT = 2.5;
+
+// The shipped ladder, built by proposeLadder_() from the 63,842 runs preview()
+// read across 136 AP CSP decks on 2026-08-28. Strictly increasing by
+// construction and asserted so by smoke/slide-type-bump.js.
+//
+// Note it moves 14.5, 15, 16 and 17, which sit above the 10 to 14 band the
+// change was originally scoped to. That is forced, not scope creep: if nothing
+// above 14 may move, then the whole band is capped just under 14.5, the 14pt
+// bucket (11,638 runs, 18% of all text) can only reach 14.25, and the mean
+// lift inside the band falls from 1.96pt to 0.88pt. Order preservation and a
+// real lift at the top of the band are not both available unless the sizes
+// immediately above the band move too.
+//
+// AP CYBERSECURITY IS NOT COVERED BY THIS LADDER. preview() ran out of time
+// after 136 decks, and the deck table lists all 224 CSP decks before the first
+// cyber one, so no cyber deck was ever opened. Run preview() with COURSES set
+// to ['ap-cybersecurity'], read the proposed ladder it prints, and paste it in
+// before bumping that course.
+var SIZE_LADDER = {
+  '10': 12.5,
+  '10.5': 13,
+  '11': 13.5,
+  '12': 14,
+  '12.5': 14.5,
+  '13': 15,
+  '14': 15.5,
+  '14.5': 16,
+  '15': 16.5,
+  '16': 17,
+  '17': 17.5
+};
+
+// ---------------------------------------------------------------------------
+// Configuration
+// ---------------------------------------------------------------------------
 
 // How many decks a single start() run may change. THE FIRST RUN SHOULD BE 2 OR
 // 3: open them, look at them, and only then set this to 0. Left small on
@@ -92,15 +163,24 @@ var BAND_HI = 14;
 // not be "all of them".
 var DECK_LIMIT = 3;
 
-// Which courses to walk. Narrow this to run one course at a time.
+// Which courses to walk. Narrow this to run one course at a time, which is
+// also how you get preview() to reach cyber.
 var COURSES = ['ap-csp', 'ap-cybersecurity'];
 
 // Belt and braces. With this true, start() reports exactly what it would
 // change and writes nothing, the same as preview() but per deck.
 var DRY_RUN = false;
 
+// What to do about a size inside the ladder's range that the ladder has no
+// entry for. False, the default, SKIPS the whole deck and says which sizes:
+// a deck the ladder does not describe is a deck this script does not
+// understand, and bumping the sizes it does recognise would break the
+// relationships with the ones it does not. True leaves the unknown sizes alone
+// and bumps the rest, which is only sensible once you have looked at one.
+var ALLOW_UNKNOWN = false;
+
 // Re-bump a deck that already has an undo file. Almost always wrong: it
-// compounds, so a 12 becomes 14 and then 16. Here so that a genuine re-run
+// compounds, so a 12 becomes 14 and then 15.5. Here so that a genuine re-run
 // after a revert() is possible without editing the guard out.
 var FORCE = false;
 
@@ -422,26 +502,86 @@ var DECKS = [
 ];
 var DECKS_GENERATED_AT = '2026-08-28';
 // ---- END GENERATED DECK TABLE ---------------------------------------------
-
 // ---------------------------------------------------------------------------
 // The rule
 // ---------------------------------------------------------------------------
 
+/** A ladder key, guarded against float noise coming back from Slides. */
+function sizeKey_(s) {
+  return String(Math.round(s * 100) / 100);
+}
+
 /**
  * The new size for a run, or null to leave it alone.
  *
- * Monotonic and non-overlapping on purpose: every input in the band maps to an
- * output above the band's top, so a reverted deck cannot be told apart from a
- * deck that was never bumped by size alone. That is also why re-running is
- * guarded rather than idempotent. Nothing here can work out that a 15.5pt run
- * used to be 13pt; only the undo file knows that.
+ * Null means "outside the ladder's range, by design". A size INSIDE the range
+ * with no ladder entry is a different thing entirely, and unknownSize_ is what
+ * asks about that: the caller has to decide, because guessing is how the
+ * arithmetic version broke the hierarchy in the first place.
  */
 function bumpedSize_(s) {
   if (s === null || s === undefined) return null;
-  if (s < BAND_LO || s > BAND_HI) return null;
-  if (s < 11.5) return s + 2.5;
-  if (s < 13) return s + 2;
-  return s + 1.5;
+  if (s < LADDER_FLOOR || s >= LADDER_CEILING) return null;
+  var k = sizeKey_(s);
+  return Object.prototype.hasOwnProperty.call(SIZE_LADDER, k) ? SIZE_LADDER[k] : null;
+}
+
+/** True for a size the ladder should describe and does not. */
+function unknownSize_(s) {
+  if (s === null || s === undefined) return false;
+  if (s < LADDER_FLOOR || s >= LADDER_CEILING) return false;
+  return !Object.prototype.hasOwnProperty.call(SIZE_LADDER, sizeKey_(s));
+}
+
+/**
+ * One attempt at a ladder, at a given lift. Null if that lift does not fit.
+ *
+ * The lift tapers from `lift` at the floor to nothing at the ceiling, and then
+ * the result is walked upward and pushed apart wherever rounding to half
+ * points would have collapsed two sizes onto one. That second pass is the
+ * whole point: the taper alone has a slope below 1 and therefore collides, and
+ * it was those collisions that made the arithmetic version unusable.
+ *
+ * The push-apart can cascade, and on a dense enough vocabulary it runs the top
+ * of the ladder into the ceiling. There is no local repair for that: mapping
+ * the saturated size to itself puts it BELOW the size beneath it, which is the
+ * inversion the whole exercise exists to avoid. So this returns null and lets
+ * the caller try a smaller lift instead.
+ */
+function buildLadder_(sizes, lift) {
+  var out = [], prev = null;
+  for (var i = 0; i < sizes.length; i++) {
+    var s = sizes[i];
+    var raw = s + lift * (LADDER_CEILING - s) / (LADDER_CEILING - LADDER_FLOOR);
+    var t = Math.round(raw * 2) / 2;
+    if (t < s) t = s;
+    if (prev !== null && t <= prev) t = prev + 0.5;
+    if (t >= LADDER_CEILING) return null;
+    out.push([s, t]);
+    prev = t;
+  }
+  return out;
+}
+
+/**
+ * Build a strictly increasing ladder from the sizes a corpus actually uses.
+ *
+ * Tries the full MAX_LIFT first and backs off a quarter point at a time until
+ * the ladder fits under the ceiling. That is what makes this safe to point at
+ * a course nobody has measured yet: a vocabulary denser than AP CSP's simply
+ * gets a gentler lift rather than a broken hierarchy. The search always
+ * terminates, because a lift of zero maps every size to itself and the sources
+ * are already distinct and sorted.
+ */
+function proposeLadder_(sizes) {
+  var inRange = sizes
+    .filter(function (s) { return s >= LADDER_FLOOR && s < LADDER_CEILING; })
+    .sort(function (a, b) { return a - b; });
+  for (var k = Math.round(MAX_LIFT * 4); k >= 0; k--) {
+    var out = buildLadder_(inRange, k / 4);
+    if (out) return out;
+  }
+  return [];
 }
 
 // ---------------------------------------------------------------------------
@@ -481,14 +621,14 @@ function collectFrom_(elements, out) {
 }
 
 /**
- * What this deck would change, as a list of records. Reads only.
+ * What this deck would change, and what it could not describe. Reads only.
  *
- * A record is [slideObjectId, shapeRef, startIndex, endIndex, oldSize, newSize].
+ * A change is [slideObjectId, shapeRef, startIndex, endIndex, oldSize, newSize].
  * The text itself is never edited, so those indices stay valid, which is what
  * makes the undo file usable later.
  */
 function planForDeck_(pres) {
-  var plan = [];
+  var plan = [], unknown = {};
   var slides = pres.getSlides();
   for (var i = 0; i < slides.length; i++) {
     var slideId = slides[i].getObjectId();
@@ -505,13 +645,14 @@ function planForDeck_(pres) {
         } catch (e) {
           continue; // a run with no resolvable style is one to leave alone
         }
+        if (unknownSize_(size)) { unknown[sizeKey_(size)] = true; continue; }
         var next = bumpedSize_(size);
         if (next === null) continue;
         plan.push([slideId, ranges[j].id, run.getStartIndex(), run.getEndIndex(), size, next]);
       }
     }
   }
-  return plan;
+  return { plan: plan, unknown: Object.keys(unknown).sort(function (a, b) { return a - b; }) };
 }
 
 /** Apply a plan. Returns how many runs were changed. */
@@ -561,7 +702,7 @@ function writeUndo_(deckId, course, key, plan) {
   var payload = JSON.stringify({
     deckId: deckId, course: course, key: key,
     writtenAt: new Date().toISOString(),
-    band: [BAND_LO, BAND_HI],
+    ladder: SIZE_LADDER,
     changes: plan
   });
   var existing = undoFileFor_(deckId);
@@ -598,17 +739,44 @@ function decksInScope_() {
   return DECKS.filter(function (d) { return COURSES.indexOf(d[0]) !== -1; });
 }
 
+/**
+ * The decks in scope, round-robined by course.
+ *
+ * The table lists all 224 CSP decks before the first cyber one, so the first
+ * preview() spent its whole 4.5 minute budget inside CSP and reported a size
+ * histogram for one course while looking like it described both. Interleaving
+ * means a run that stops early stops with a sample of everything it was
+ * pointed at.
+ */
+function decksInterleaved_() {
+  var byCourse = {}, order = [];
+  decksInScope_().forEach(function (d) {
+    if (!byCourse[d[0]]) { byCourse[d[0]] = []; order.push(d[0]); }
+    byCourse[d[0]].push(d);
+  });
+  var out = [], i = 0, more = true;
+  while (more) {
+    more = false;
+    for (var c = 0; c < order.length; c++) {
+      var list = byCourse[order[c]];
+      if (i < list.length) { out.push(list[i]); more = true; }
+    }
+    i++;
+  }
+  return out;
+}
+
 // ---------------------------------------------------------------------------
 // preview
 // ---------------------------------------------------------------------------
 
 /**
- * Opens every deck in scope and reports the size histogram. Writes NOTHING.
+ * Opens decks and reports what is in them. Writes NOTHING.
  *
- * This is the step that replaces guessing. The bump table above was designed
- * against the AP CSA decks; whether it is right for these depends on what
- * sizes they actually use, and until this has run nobody knows that. If the
- * band comes back nearly empty, stop: these decks do not have the problem.
+ * This is the step that replaces guessing, and it has already earned its
+ * keep once: the arithmetic rule this script shipped with looked reasonable
+ * and was breaking the size hierarchy of 29% of the text. Nothing short of
+ * reading the real sizes would have shown that.
  */
 function preview() {
   if (!DECKS.length) {
@@ -617,17 +785,18 @@ function preview() {
       'and paste this file in again.');
   }
   var began = new Date().getTime();
-  var scope = decksInScope_();
+  var scope = decksInterleaved_();
   Logger.log('preview: ' + scope.length + ' deck(s) in scope, generated ' + DECKS_GENERATED_AT);
   Logger.log('NOTHING WILL BE WRITTEN BY THIS FUNCTION.');
 
-  var hist = {}, inBand = 0, total = 0, opened = 0, failed = 0;
-  var noAutofit = 0, autofitSeen = 0;
+  var hist = {}, inRange = 0, total = 0, failed = 0;
+  var openedBy = {}, scopeBy = {};
+  scope.forEach(function (d) { scopeBy[d[0]] = (scopeBy[d[0]] || 0) + 1; });
 
   for (var i = 0; i < scope.length; i++) {
     if (new Date().getTime() - began > TIME_BUDGET_MS) {
-      Logger.log('time budget reached after ' + opened + ' deck(s). '
-        + 'Narrow COURSES, or read this sample as representative.');
+      Logger.log('time budget reached. The sample below is partial; see the');
+      Logger.log('per-course coverage. Narrow COURSES and run again for the rest.');
       break;
     }
     try {
@@ -643,34 +812,58 @@ function preview() {
             try { size = runs[k].getTextStyle().getFontSize(); } catch (e) { continue; }
             if (size === null || size === undefined) continue;
             total++;
-            var bucket = String(size);
-            hist[bucket] = (hist[bucket] || 0) + 1;
-            if (bumpedSize_(size) !== null) inBand++;
+            hist[sizeKey_(size)] = (hist[sizeKey_(size)] || 0) + 1;
+            if (size >= LADDER_FLOOR && size < LADDER_CEILING) inRange++;
           }
         }
       }
       pres.saveAndClose();
-      opened++;
+      openedBy[scope[i][0]] = (openedBy[scope[i][0]] || 0) + 1;
     } catch (e) {
       failed++;
       Logger.log('could not open ' + scope[i][0] + ' ' + scope[i][1] + ': ' + e);
     }
   }
 
+  var opened = 0;
   Logger.log('');
-  Logger.log('opened ' + opened + ' deck(s), ' + failed + ' failed');
+  Logger.log('per-course coverage:');
+  Object.keys(scopeBy).sort().forEach(function (c) {
+    var n = openedBy[c] || 0;
+    opened += n;
+    Logger.log('  ' + c + ': opened ' + n + ' of ' + scopeBy[c]
+      + (n === 0 ? '   <-- NOTHING SEEN, this course is not described below' : ''));
+  });
+  Logger.log('  ' + failed + ' failed to open');
+
+  var sizes = Object.keys(hist).map(Number).sort(function (a, b) { return a - b; });
+  Logger.log('');
   Logger.log('text runs seen: ' + total);
-  Logger.log('runs inside the ' + BAND_LO + ' to ' + BAND_HI + 'pt band: ' + inBand
-    + (total ? '  (' + Math.round(inBand * 100 / total) + '%)' : ''));
+  Logger.log('runs in the ' + LADDER_FLOOR + ' to ' + LADDER_CEILING + 'pt range: ' + inRange
+    + (total ? '  (' + Math.round(inRange * 100 / total) + '%)' : ''));
   Logger.log('');
-  Logger.log('size histogram (pt: runs), smallest first:');
-  Object.keys(hist)
-    .map(Number)
-    .sort(function (a, b) { return a - b; })
-    .forEach(function (sz) {
-      var mark = bumpedSize_(sz) !== null ? '  -> ' + bumpedSize_(sz) : '';
-      Logger.log('  ' + sz + ': ' + hist[String(sz)] + mark);
-    });
+  Logger.log('size histogram (pt: runs, per deck), smallest first:');
+  sizes.forEach(function (sz) {
+    var n = hist[sizeKey_(sz)];
+    var to = bumpedSize_(sz);
+    var mark = to !== null ? '  -> ' + to : (unknownSize_(sz) ? '  <-- NO LADDER ENTRY' : '');
+    Logger.log('  ' + sz + ': ' + n + '   ' + (opened ? (n / opened).toFixed(1) : '?') + '/deck' + mark);
+  });
+
+  var missing = sizes.filter(unknownSize_);
+  if (missing.length) {
+    Logger.log('');
+    Logger.log(missing.length + ' size(s) in range have no ladder entry: ' + missing.join(', '));
+    Logger.log('start() will SKIP every deck containing one of those.');
+  }
+
+  Logger.log('');
+  Logger.log('proposed ladder for what was seen, paste over SIZE_LADDER:');
+  Logger.log('var SIZE_LADDER = {');
+  proposeLadder_(sizes).forEach(function (pair) {
+    Logger.log("  '" + pair[0] + "': " + pair[1] + ',');
+  });
+  Logger.log('};');
   Logger.log('');
   Logger.log('This is a read of the decks, not a promise about how they look.');
   Logger.log('A Slides text box does not shrink text to fit, so the only way to');
@@ -689,7 +882,7 @@ function start() {
   }
   var began = new Date().getTime();
   var sh = sheet_();
-  var scope = decksInScope_();
+  var scope = decksInterleaved_();
   var done = alreadyDone_(sh);
 
   var todo = scope.filter(function (d) { return !done[d[2]]; });
@@ -730,30 +923,41 @@ function start() {
     try {
       if (!FORCE && undoFileFor_(d[2])) {
         // Already bumped in an earlier run whose sheet row is gone. Bumping
-        // again would compound: a 12 became 14, and would now become 16.
+        // again would compound: a 12 became 14, and would now become 15.5.
         sh.appendRow([d[0], d[1], d[2], '', 0, 'SKIPPED: undo file already exists']);
         skipped++;
         continue;
       }
       var pres = SlidesApp.openById(d[2]);
-      var plan = planForDeck_(pres);
+      var res = planForDeck_(pres);
       var slideCount = pres.getSlides().length;
+
+      if (res.unknown.length && !ALLOW_UNKNOWN) {
+        // A deck the ladder does not describe. Bumping only the sizes it does
+        // recognise would break their relationship with the ones it does not,
+        // which is exactly the failure the ladder replaced.
+        pres.saveAndClose();
+        sh.appendRow([d[0], d[1], d[2], slideCount, 0,
+          'SKIPPED: no ladder entry for ' + res.unknown.join(', ') + 'pt']);
+        skipped++;
+        continue;
+      }
 
       if (DRY_RUN) {
         pres.saveAndClose();
-        Logger.log('would change ' + plan.length + ' run(s) in ' + d[0] + ' ' + d[1]);
+        Logger.log('would change ' + res.plan.length + ' run(s) in ' + d[0] + ' ' + d[1]);
         bumped++;
         continue;
       }
-      if (!plan.length) {
+      if (!res.plan.length) {
         pres.saveAndClose();
         sh.appendRow([d[0], d[1], d[2], slideCount, 0, 'OK']);
         bumped++;
         continue;
       }
 
-      writeUndo_(d[2], d[0], d[1], plan);       // before, not after
-      var changed = applyPlan_(pres, plan);
+      writeUndo_(d[2], d[0], d[1], res.plan);       // before, not after
+      var changed = applyPlan_(pres, res.plan);
       pres.saveAndClose();
 
       sh.appendRow([d[0], d[1], d[2], slideCount, changed, 'OK']);
@@ -769,6 +973,7 @@ function start() {
   removeTriggers_();
   Logger.log('run complete. bumped ' + bumped + ', skipped ' + skipped
     + ', failed ' + failed + ', ' + runsTotal + ' run(s) changed.');
+  if (skipped) Logger.log('Skipped decks are listed in the sheet with the reason.');
   Logger.log('Open two or three of them before running the rest.');
 }
 
@@ -779,9 +984,11 @@ function start() {
 /**
  * Put every recorded change back, using the undo files rather than arithmetic.
  *
- * Arithmetic would not be safe. The bump maps 10 to 12.5 and 12.5 to 14.5, so
- * a deck holding both sizes afterwards cannot be unmapped without knowing
- * which run was which. The undo file knows; nothing else does.
+ * Arithmetic would not be safe even with a strictly increasing ladder: a deck
+ * bumped under one ladder and then read under a newer one would be unmapped
+ * with the wrong table. The undo file carries the ladder it was written under
+ * and the old size of every run it touched, so it does not need to infer
+ * anything.
  */
 function revert() {
   var began = new Date().getTime();
@@ -840,11 +1047,21 @@ function report() {
   var ok = rows.filter(function (r) { return String(r[5]).trim() === 'OK'; });
   var runs = 0;
   ok.forEach(function (r) { runs += Number(r[4]) || 0; });
+  var skipped = rows.filter(function (r) { return String(r[5]).indexOf('SKIPPED') === 0; });
 
   Logger.log('rows        : ' + rows.length);
   Logger.log('OK          : ' + ok.length + ' of ' + decksInScope_().length + ' in scope');
-  Logger.log('not OK      : ' + (rows.length - ok.length));
+  Logger.log('skipped     : ' + skipped.length);
+  Logger.log('failed      : ' + (rows.length - ok.length - skipped.length));
   Logger.log('runs changed: ' + runs);
+  if (skipped.length) {
+    Logger.log('');
+    Logger.log('skipped, with reasons:');
+    skipped.slice(0, 20).forEach(function (r) {
+      Logger.log('  ' + r[0] + ' ' + r[1] + ': ' + r[5]);
+    });
+    if (skipped.length > 20) Logger.log('  ... and ' + (skipped.length - 20) + ' more');
+  }
   Logger.log('');
   Logger.log('This is the script reporting on itself. It is not evidence.');
   Logger.log('Open a deck. A box whose text now overflows still reads as OK here.');
