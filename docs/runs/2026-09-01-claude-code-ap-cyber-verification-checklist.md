@@ -9,14 +9,21 @@ Production was serving `405b3d8` throughout the checks, which was `origin/main`
 HEAD and the commit checked out here, so "the deployed code" below means code
 read directly rather than inferred.
 
-`main` has since advanced to `ffc152d` (PR #431), and production has deployed it.
-That delta is two files, `public/command.html` and `smoke/command-center.js`, and
-touches nothing any finding below rests on, so every verdict still holds on the
-currently deployed commit.
+`main` has since advanced to `e9b8153` and production has deployed it. Most of
+that delta is unrelated, but `0ccd3c7` and `517f93d` added a reporter-gap
+detector to `/api/health` that bears directly on item 1, and item 1 has been
+corrected against its live output rather than left as first written. Every other
+verdict still holds.
 
 ## 1. Does the API record Ex2 / Lab / Quiz at all, or is it display-only?
 
-**Display-only. Recording is wired end to end and works.**
+**Unit 1 records fine. Units 2 through 5 do not. Both halves matter.**
+
+CORRECTED after first writing. This note originally said recording works
+everywhere and the only gap was denominators. That was right for Unit 1, which is
+what was checked live, and too broad as a general claim. `e9b8153` landed a
+reporter-gap detector on `/api/health` a few hours later, and its live read on
+production settles it better than my page-by-page check could.
 
 - `snippets/quiz-tracker-wiring.liquid:34` parses the handle for
   `exercise-1|exercise-2|lab|quiz` and sets `window.APCS_PAGE`.
@@ -28,15 +35,53 @@ currently deployed commit.
   `apcs-quiz-wiring`. All three load `apcs-tracker`.
 - `score_events` takes a free-text `activity_type`, so nothing is rejected.
 
-The visible failure is the DENOMINATOR gap, not the write.
-`scripts/seed-cyber-denominators.js` records that twenty activities state no
+So Unit 1's wiring is sound, and the live gap list agrees: production reports
+`reporters.ok: false`, 11 activities and 11 completions affected, and **not one
+of them is cyber Unit 1**.
+
+    ap-csa            unit-1  1.1  exercise-2
+    ap-csa            unit-1  1.2  exercise-3
+    ap-csa            unit-1  1.5  exercise-3
+    ap-csa            unit-1  1.7  debug
+    ap-cybersecurity  unit-2  2.4  exercise-2
+    ap-cybersecurity  unit-3  3.1  exercise-1
+    ap-cybersecurity  unit-3  3.3  exercise-2
+    ap-cybersecurity  unit-4  4.2  exercise-1
+    ap-cybersecurity  unit-4  4.3  exercise-1
+    ap-cybersecurity  unit-5  5.1  exercise-1
+    ap-cybersecurity  unit-5  5.1  lab
+
+Seven cyber rows, all in Units 2 through 5, including one Ex2 and one Lab. Each
+is an activity somebody authored a denominator for, that has completions, and
+that has never received a score by any of the three paths the gradebook reads.
+That is a real reporter gap, not a display problem, and it is the honest answer
+to the question as asked: **Ex2 and Lab do lose grades, just not in Unit 1.**
+
+Blast radius is small right now. One completion each, 11 total, which is what
+early September looks like before classes ramp.
+
+There is ALSO a separate denominator gap, and the two should not be conflated.
+`scripts/seed-cyber-denominators.js` records twenty activities that state no
 total in any readable form: fifteen in Unit 1's `ap-cyber-unit-1-lesson-N-*`
 page set, plus the five Unit 4 labs. Unpriced work cannot join a points sum, so
-it is excluded from the rollup and surfaced separately as `items_percent_only`.
-A student can complete an Ex2 or a lab, have the attempt stored, and still see
+it is excluded from the rollup and shown separately as `items_percent_only`. A
+student can complete one of those, have the attempt stored, and still see
 nothing in the points column.
 
-Fix is a denominator row per activity, not reporter work.
+The distinction is load-bearing, and `517f93d` is the cautionary tale: the
+detector's first version gated on "has a denominator" as a proxy for "is graded",
+and its first production read returned 362 completions that were almost all
+ap-csa lesson visits. It now gates on `isGradedActivity` from
+`lib/gradebook-contract.js` instead.
+
+So: two fixes, not one. A reporter for the seven cyber activities above, and a
+denominator row for the twenty unpriced ones. Neither substitutes for the other.
+
+Worth knowing where this came from. Per `0ccd3c7`, AP Cyber Ex2, Lab and Quiz
+lost grades for a week, and what eventually noticed was a teacher emailing to say
+his students' work stopped after Exercise 1. The Unit 1 instance of that is
+closed (tasks 102, 104, 105, 143, 145, plus theme PR #92). The Units 2-5 instance
+is what the list above is still showing.
 
 ## 2. Is task 85 (earned:0 possible:0) still live in prod?
 
@@ -249,8 +294,8 @@ decision rather than an inherited default.
 ## Also observed
 
 Task 144 ("Production /api/health reports commit:unknown") is fixed in prod.
-`/api/health` returns a real commit (`405b3d8` during the checks, `ffc152d` after
-the next deploy) rather than `unknown`. The board still lists it open.
+`/api/health` returns a real commit (`405b3d8` during the checks, `e9b8153` by the
+end of them) rather than `unknown`. The board still lists it open.
 
 ## Environment note
 
