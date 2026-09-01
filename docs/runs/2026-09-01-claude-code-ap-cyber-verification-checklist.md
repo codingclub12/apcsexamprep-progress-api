@@ -60,6 +60,24 @@ to the question as asked: **Ex2 and Lab do lose grades, just not in Unit 1.**
 Blast radius is small right now. One completion each, 11 total, which is what
 early September looks like before classes ramp.
 
+`docs/reporter-gap-handoff.md` (landed on main in `35c9c76`, after this note) has
+since checked each of those eleven against the live storefront and split them
+into four problems. Read it before working any of them, rather than treating the
+list above as homogeneous. Two of its findings change how the list should be
+read:
+
+- The seven cyber rows are two groups, not one. Five pages never score at all;
+  two compute a score and never post it, which is the smaller fix.
+- Three of the four ap-csa rows have NO PAGE AT ALL. There are zero
+  `exercise-3` pages in the entire CSA course, so `1.2` and `1.5 exercise-3`
+  cannot be a broken reporter. Somebody authored `course_denominators` rows for
+  activities nobody built, and something recorded completions against them.
+
+That third category is neither of the two gaps this item separates. It is a
+denominator authored ahead of a page, and it is a stated limit of the health
+check: authored, completed and unscored is the signature of a broken page AND of
+a phantom activity. The cyber half of the list is unaffected by it.
+
 There is ALSO a separate denominator gap, and the two should not be conflated.
 `scripts/seed-cyber-denominators.js` records twenty activities that state no
 total in any readable form: fifteen in Unit 1's `ap-cyber-unit-1-lesson-N-*`
