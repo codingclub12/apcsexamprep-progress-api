@@ -14,8 +14,8 @@
 //  Run: npm run smoke:answerkeys
 // ─────────────────────────────────────────────────────────────────────────────
 const {
-  keysFor, distributionRows, rewriteBody, verify,
-  longestCycle, cycleFinding, identicalKeys, positionalCollisions,
+  keysFor, distributionRows, rewriteBody, verify, audit,
+  longestCycle, cycleFinding,
 } = require('../scripts/answer-key-audit');
 
 let pass = 0, fail = 0;
@@ -157,74 +157,126 @@ const collision = distributionRows([
 ok('  an all-B opt-btn quiz is reported as every-answer-the-same',
   collision.length === 1 && collision[0].allSame && collision[0].n === 3, collision);
 
+// ── The two patterns a distribution cannot see ──────────────────────────────
+//  Measured on AP Cyber unit 5 on 2026-09-01. It passed BOTH existing checks:
+//    5.1 ABDCB  5.2 ABCDB  5.3 ABCDB  5.4 ABCDB  5.5 BCADB  5.6 BCDAB
+//  Every quiz is 40 percent B, so nothing reaches the 60 percent bar and no key
+//  is all one letter. Yet three quizzes are byte identical and question 5 is B
+//  on all six. That is a free point on six assessments for any student who
+//  notices, arriving through a shape the thresholds were not watching.
+const U5 = { '5.1': 'ABDCB', '5.2': 'ABCDB', '5.3': 'ABCDB', '5.4': 'ABCDB', '5.5': 'BCADB', '5.6': 'BCDAB' };
+const u5Edges = Object.entries(U5).map(([id, key]) => ({
+  node: {
+    handle: 'u5-' + id, title: id,
+    body: key.split('').map((correct, i) =>
+      optBtn('u5l' + id.slice(2) + 'quiz', i + 1, correct, LETTERS)).join('\n'),
+  },
+}));
 
-// ── 6. SEQUENCE DEFECTS: the ones a distribution cannot see ─────────────────
-//  Every key below is real. The two bundle keys passed every check that existed
-//  on 2026-09-01 while being trivially guessable, which is why these exist.
+// Silence the report while asserting on its return value.
+const realLog = console.log;
+console.log = () => {};
+const res = audit(u5Edges);
+console.log = realLog;
+
+ok('  the real unit 5 keys still pass the OLD checks, which is the problem',
+  res.same.length === 0 && res.skew.length === 0, { same: res.same.length, skew: res.skew.length });
+ok('  identical keys shared by three quizzes are flagged',
+  res.dupes.length === 1 && res.dupes[0][0] === 'ABCDB' && res.dupes[0][1].length === 3,
+  res.dupes.map(([k, g]) => [k, g.length]));
+ok('  a question locked to one letter on every quiz is flagged',
+  res.locked.length === 1 && res.locked[0].q === 5 && res.locked[0].letter === 'B'
+  && res.locked[0].n === 6, res.locked);
+
+// Neither check may cry wolf. Six genuinely varied keys, no repeat and no
+// position that agrees, must come back clean: a check that fires on healthy
+// content is one people learn to skip.
+const VARIED = ['ABCDA', 'BCDAB', 'CDABC', 'DABCD', 'ACBDC', 'BDCAD'];
+const okEdges = VARIED.map((key, n) => ({
+  node: {
+    handle: 'ok-' + n, title: String(n),
+    body: key.split('').map((c, i) => optBtn('q' + n + 'quiz', i + 1, c, LETTERS)).join('\n'),
+  },
+}));
+console.log = () => {};
+const clean = audit(okEdges);
+console.log = realLog;
+ok('  varied keys raise neither flag',
+  clean.dupes.length === 0 && clean.locked.length === 0,
+  { dupes: clean.dupes.length, locked: clean.locked.length });
+
+// The POSITION_MIN threshold itself. Found by mutation-testing this suite:
+// dropping the minimum to 1 changed nothing above, because the varied fixture
+// has six activities and no position that agrees. So the threshold was
+// untested and could have been any number.
+//
+// Three activities all starting A is 1 in 16 by chance. On a course with three
+// quizzes that is a coincidence, not a defect, and flagging it teaches people
+// to skip the check. Four is 1 in 64, which is where it starts being worth
+// saying out loud.
+const SMALL = ['ABCD', 'ACDB', 'ADBC'];
+const smallEdges = SMALL.map((key, n) => ({
+  node: {
+    handle: 'small-' + n, title: String(n),
+    body: key.split('').map((c, i) => optBtn('s' + n + 'quiz', i + 1, c, LETTERS)).join('\n'),
+  },
+}));
+console.log = () => {};
+const small = audit(smallEdges);
+console.log = realLog;
+ok('  three activities agreeing on a position is coincidence, not a finding',
+  small.locked.length === 0, small.locked);
+
+
+// ── A REPEATING BLOCK INSIDE ONE KEY ────────────────────────────────────────
+//  The duplicate-key and position-lock checks above compare activities to each
+//  OTHER. A single quiz whose own key cycles slips past both, and past the
+//  histogram. Both keys below are real, from the AP Cyber teacher bundle, and
+//  both passed every check that existed on 2026-09-01.
 const K = (s) => s.split('');
-console.log('\nSEQUENCE DEFECTS\n');
+console.log('\nREPEATING BLOCK\n');
 
-const cyber22 = 'CADBCADBCADBCADBCABDBCDADACD';   // AP Cyber 2.2 teacher bundle
-const cyber21 = 'ACBDABCDBCDABCDA';               // AP Cyber 2.1 teacher bundle
+const bundle22 = 'CADBCADBCADBCADBCABDBCDADACD';
+const bundle21 = 'ACBDABCDBCDABCDA';
 
-const f22 = cycleFinding(K(cyber22));
+const f22 = cycleFinding(K(bundle22));
 ok('  the 2.2 bundle key is flagged as a repeating CADB block',
   f22 && f22.block === 'CADB' && f22.len === 18, f22);
 
-// Both bundle keys are 25 percent on every letter, or close to it, so the two
-// distribution checks are silent on them. That is the entire point.
 const d22 = {};
-K(cyber22).forEach((l) => { d22[l] = (d22[l] || 0) + 1; });
-ok('  ...while its distribution is even enough to pass the skew check',
-  Math.max(...Object.values(d22)) / 28 < 0.6, d22);
+K(bundle22).forEach((l) => { d22[l] = (d22[l] || 0) + 1; });
+ok('  ...while its distribution passes the 60 percent bar untouched',
+  Math.max(...Object.values(d22)) / bundle22.length < 0.6, d22);
 
-// REGRESSION: taking the longest cycle at ANY period and then rejecting it for
-// being too long reported nothing here, because a meaningless period-7 run of 12
-// sits on top of the real period-4 defect. The period must bound the search.
-const f21 = cycleFinding(K(cyber21));
+// REGRESSION, and the reason longestCycle takes a maxPeriod. Searching every
+// period and then rejecting the winner for being too long reports NOTHING here:
+// a meaningless period-7 run of 12 sits on top of the real period-4 BCDA BCDA.
+const f21 = cycleFinding(K(bundle21));
 ok('  the 2.1 bundle key is flagged as BCDA twice, not masked by a longer noisy run',
   f21 && f21.block === 'BCDA' && f21.len === 8, f21);
-ok('  ...and the unbounded search is what used to hide it',
-  longestCycle(K(cyber21)).period === 7 && longestCycle(K(cyber21), 4).period === 4);
+ok('  ...and the unbounded search is exactly what used to hide it',
+  longestCycle(K(bundle21)).period === 7 && longestCycle(K(bundle21), 4).period === 4);
 
 ok('  the replacement 2.1 key is clean', cycleFinding(K('DADBACBCABCBDACD')) === null);
 ok('  the replacement 2.2 key is clean', cycleFinding(K('BADDACDADCACBDBCABCBACADBDCB')) === null);
-ok('  a run of eight identical answers is flagged even when the rest varies',
+ok('  a run of eight identical answers is caught even when the rest varies',
   (cycleFinding(K('AAAAAAAABCDB')) || {}).len === 8);
 ok('  a five-item key is never flagged, since it cannot cycle meaningfully',
   cycleFinding(K('ABCDB')) === null);
 ok('  a key with no repeating block is left alone',
   cycleFinding(K('DCBAACADBBDCACBD')) === null);
 
-// Cyber 5.2, 5.3 and 5.4 all shipped ABCDB (task 130).
-const row = (handle, activity, key) => ({ handle, activity, n: key.length, letters: K(key) });
-const dupes = identicalKeys([
-  row('ap-cyber-course-u5-l2', 'quiz', 'ABCDB'),
-  row('ap-cyber-course-u5-l3', 'quiz', 'ABCDB'),
-  row('ap-cyber-course-u5-l4', 'quiz', 'ABCDB'),
-  row('ap-cyber-course-u5-l1', 'quiz', 'ABDCB'),
-]);
-ok('  three quizzes sharing one key are reported as a single group of three',
-  dupes.length === 1 && dupes[0].key === 'ABCDB' && dupes[0].group.length === 3, dupes);
-ok('  two-question activities are too short to count as a shared key',
-  identicalKeys([row('a', 'quiz', 'AB'), row('b', 'quiz', 'AB')]).length === 0);
-
-// Every unit 5 quiz answered B on question 5 (task 130).
-const unit5 = ['ABCDB', 'ABDCB', 'BCADB', 'BCDAB', 'ABCDB', 'ABCDB']
-  .map((k, i) => row(`ap-cyber-course-u5-l${i + 1}`, 'quiz', k));
-const pos = positionalCollisions(unit5);
-ok('  question 5 being B on all six unit-5 quizzes is reported',
-  pos.some((p) => p.q === 5 && p.letter === 'B' && p.of === 6), pos);
-ok('  ...and question 1, which varies, is not',
-  !pos.some((p) => p.q === 1), pos);
-ok('  two quizzes are not enough to call a position a collision',
-  positionalCollisions([row('ap-cyber-course-u5-l1', 'quiz', 'AB'), row('ap-cyber-course-u5-l2', 'quiz', 'AB')]).length === 0);
-ok('  unrelated courses are not pooled into a false collision',
-  positionalCollisions([
-    row('ap-csp-course-bi3-lists', 'quiz', 'BBB'),
-    row('ap-cyber-course-u5-l1', 'quiz', 'BBB'),
-    row('ap-csa-course-u1-l1', 'quiz', 'BBB'),
-  ]).length === 0);
+// End to end through audit(), on the shape the live pages use.
+const cyc = 'CADBCADBCADBCADB';
+const cycEdges = [{ node: { handle: 'bundle-2-2', title: 'x',
+  body: cyc.split('').map((c, i) => optBtn('b22quiz', i + 1, c, LETTERS)).join('\n') } }];
+const silence = console.log; console.log = () => {};
+const cycRes = audit(cycEdges);
+console.log = silence;
+ok('  audit() reports the cycle while its other three checks stay silent',
+  cycRes.cycles.length === 1 && cycRes.cycles[0].c.block === 'CADB'
+  && cycRes.same.length === 0 && cycRes.skew.length === 0 && cycRes.dupes.length === 0,
+  { cycles: cycRes.cycles.length, same: cycRes.same.length, skew: cycRes.skew.length, dupes: cycRes.dupes.length });
 
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);

@@ -182,7 +182,12 @@ function distributionRows(edges) {
       const dist = {};
       letters.forEach((l) => { dist[l] = (dist[l] || 0) + 1; });
       rows.push({
-        handle: e.node.handle, activity, n: letters.length, dist, letters,
+        handle: e.node.handle, activity, n: letters.length, dist,
+        // The ORDERED key, which the two checks below need and which a
+        // distribution throws away. "40 percent B" and "ABCDB every time" are
+        // different defects and only one of them is visible in a histogram.
+        letters: letters.slice(),
+        key: letters.join(''),
         allSame: Object.keys(dist).length === 1,
         maxShare: Math.max(...Object.values(dist)) / letters.length,
       });
@@ -191,30 +196,27 @@ function distributionRows(edges) {
   return rows.sort((a, b) => b.maxShare - a.maxShare);
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-//  SEQUENCE DEFECTS: what a distribution cannot see.
+// ── THE PATTERN NEITHER CHECK ABOVE SEES: A REPEATING BLOCK ─────────────────
+//  Duplicate keys and position lock both compare activities to EACH OTHER, so a
+//  single quiz whose own key cycles slips past them, and so does the histogram.
+//  Measured on the AP Cyber teacher bundle, 2026-09-01:
 //
-//  The two checks above both read the distribution, and a distribution has no
-//  order in it. "CADB CADB CADB CADB" is 25 percent on every letter and 0 percent
-//  skew, so it passes both while being the most guessable key a quiz can carry:
-//  read four answers and you have the rest. The AP Cyber 2.2 teacher-bundle quiz
-//  was exactly that, 16 of its 28 answers, and it had passed every check that
-//  existed.
+//      2.1  ACBD ABCD BCDA BCDA                      4/4/4/4, dead even
+//      2.2  CADB CADB CADB CADB CABD BCDA DACD       CADB four and a half times
 //
-//  Three order-sensitive defects, each one found live in this course rather than
-//  imagined:
-//    repeating block   2.2 bundle quiz, CADB four times over
-//    identical keys    cyber 5.2, 5.3 and 5.4 all ABCDB (task 130)
-//    fixed position    every unit 5 quiz answered B on question 5 (task 130)
-// ─────────────────────────────────────────────────────────────────────────────
+//  Both are at or near 25 percent on every letter, neither is all one letter,
+//  neither shares a key with anything, and no position is locked across the
+//  pair. All four checks report "none" on the most guessable key a quiz can
+//  carry: read four answers on 2.2 and you have the next twelve.
 
-// The longest stretch anywhere in the key that repeats a block of `period`.
-// Returns the block itself plus every repeat of it, so "CADB" x4 reports len 16.
+// The longest stretch anywhere in the key that repeats a block of `period`,
+// counting the block itself plus every repeat, so "CADB" x4 reports 16.
 //
-// `maxPeriod` bounds the search rather than filtering afterwards, and that is not
-// a detail. Taking the global maximum and rejecting it for being too long hides
-// the finding underneath: "ACBD ABCD BCDA BCDA" has a meaningless period-7 run of
-// 12 sitting on top of the real defect, BCDA twice, and reported nothing at all.
+// `maxPeriod` bounds the SEARCH rather than filtering its result, and that is
+// the whole correctness of this function. Taking the longest cycle at any
+// period and then rejecting it for being too long reports nothing on 2.1: a
+// meaningless period-7 run of 12 sits on top of the real period-4 BCDA BCDA and
+// hides it. There is an assertion named for that mutation.
 function longestCycle(letters, maxPeriod = Infinity) {
   const n = letters.length;
   let best = { period: 0, start: 0, len: 0 };
@@ -232,53 +234,15 @@ function longestCycle(letters, maxPeriod = Infinity) {
   return best;
 }
 
-// A cycle is worth reporting only when it covers enough of the key to be usable
-// by a student. Half the questions, and never fewer than eight: a 5-item quiz
-// cannot cycle meaningfully, and flagging one would train people to ignore this.
+// Report a cycle only when it covers enough of the key to be usable by a
+// student: half the questions, and never fewer than eight. A five-item quiz
+// cannot cycle meaningfully and flagging one would teach people to skip this,
+// which is the same reasoning POSITION_MIN is set on.
 function cycleFinding(letters) {
   const c = longestCycle(letters, 4);
   if (!c.period) return null;
   if (c.len < 8 || c.len < letters.length / 2) return null;
-  return { ...c, block: letters.slice(c.start, c.start + c.period).join('') };
-}
-
-// Two graded activities with the identical key: whoever sits one has the other.
-function identicalKeys(rows) {
-  const by = new Map();
-  for (const r of rows) {
-    if (r.n < 3) continue;                       // too short to mean anything
-    const k = r.letters.join('');
-    if (!by.has(k)) by.set(k, []);
-    by.get(k).push(r);
-  }
-  return [...by.entries()].filter(([, g]) => g.length > 1)
-    .map(([key, group]) => ({ key, group }))
-    .sort((a, b) => b.group.length - a.group.length);
-}
-
-// The same letter at the same question number across a group of quizzes. Grouped
-// by the handle prefix so unrelated courses are not pooled into a false signal.
-function positionalCollisions(rows, minRows = 3) {
-  const groups = new Map();
-  for (const r of rows) {
-    const g = (r.handle.match(/^(ap-[a-z]+-course-[a-z0-9]+)/) || [null, r.handle])[1];
-    if (!groups.has(g)) groups.set(g, []);
-    groups.get(g).push(r);
-  }
-  const out = [];
-  for (const [g, rs] of groups) {
-    if (rs.length < minRows) continue;
-    const width = Math.max(...rs.map((r) => r.n));
-    for (let i = 0; i < width; i++) {
-      const here = rs.filter((r) => i < r.n).map((r) => r.letters[i]);
-      if (here.length < minRows) continue;
-      const tally = {};
-      here.forEach((l) => { tally[l] = (tally[l] || 0) + 1; });
-      const [letter, count] = Object.entries(tally).sort((a, b) => b[1] - a[1])[0];
-      if (count === here.length) out.push({ group: g, q: i + 1, letter, of: here.length });
-    }
-  }
-  return out;
+  return Object.assign({}, c, { block: letters.slice(c.start, c.start + c.period).join('') });
 }
 
 function audit(edges) {
@@ -292,31 +256,57 @@ function audit(edges) {
   console.log(`\n60 PERCENT OR MORE ON ONE LETTER (${skew.length}):`);
   skew.length ? skew.forEach((r) => console.log(`  ${r.handle.padEnd(42)}${r.activity.padEnd(10)}${r.n}q  ${JSON.stringify(r.dist)}`))
               : console.log('  none');
-  const cycles = rows.map((r) => ({ r, c: cycleFinding(r.letters) })).filter((x) => x.c);
-  console.log(`\nREPEATING BLOCK, invisible to the distribution (${cycles.length}):`);
-  cycles.length ? cycles.forEach(({ r, c }) => console.log(
-      `  ${r.handle.padEnd(42)}${r.activity.padEnd(10)}${c.block} x${(c.len / c.period).toFixed(0)}`
-      + ` covers ${c.len} of ${r.n} answers  ${r.letters.join('')}`))
+  // ── TWO PATTERNS A DISTRIBUTION CANNOT SEE ────────────────────────────────
+  //  Measured on AP Cyber unit 5, 2026-09-01, which passed BOTH checks above:
+  //
+  //      5.1 ABDCB   5.2 ABCDB   5.3 ABCDB   5.4 ABCDB   5.5 BCADB   5.6 BCDAB
+  //
+  //  Every quiz is 40 percent B, so nothing hits the 60 percent bar and no key
+  //  is all one letter. Yet 5.2, 5.3 and 5.4 are byte identical, and question 5
+  //  is B on all six. A student who notices "the last one is always B" scores a
+  //  free point on six assessments, which is the exact harm this file exists to
+  //  prevent, arriving through a shape the thresholds were not looking for.
+  //
+  //  DUPLICATE KEYS. Two activities with the same ordered key. Requires 3+
+  //  questions, because a pair of 2-question quizzes matching is coincidence.
+  const byKey = {};
+  rows.filter((r) => r.n >= 3).forEach((r) => { (byKey[r.key] = byKey[r.key] || []).push(r); });
+  const dupes = Object.entries(byKey).filter(([, g]) => g.length > 1)
+    .sort((a, b) => b[1].length - a[1].length);
+  console.log(`\nIDENTICAL KEYS SHARED BY TWO OR MORE ACTIVITIES (${dupes.length}):`);
+  dupes.length ? dupes.forEach(([key, g]) => console.log(
+    `  ${key.padEnd(12)}${g.length} activities: ${g.map((r) => r.handle + '/' + r.activity).join(', ')}`))
+              : console.log('  none');
+
+  //  POSITION LOCK. A question index carrying the same letter on every activity
+  //  that has one. Needs at least 4 activities: three in a row is 1 in 16 by
+  //  chance, four is 1 in 64, and by six it is 1 in 1024. Below four this would
+  //  cry wolf on small courses, which is how a check gets ignored.
+  const POSITION_MIN = 4;
+  const byPos = {};
+  rows.forEach((r) => r.letters.forEach((l, i) => { (byPos[i] = byPos[i] || []).push(l); }));
+  const locked = Object.entries(byPos)
+    .filter(([, v]) => v.length >= POSITION_MIN && v.every((x) => x === v[0]))
+    .map(([i, v]) => ({ q: Number(i) + 1, letter: v[0], n: v.length }));
+  console.log(`\nSAME LETTER AT THE SAME QUESTION ON EVERY ACTIVITY (${locked.length}):`);
+  locked.length ? locked.forEach((l) => console.log(
+    `  question ${l.q}: ${l.letter} on all ${l.n} activities`))
                 : console.log('  none');
 
-  const dupes = identicalKeys(rows);
-  console.log(`\nIDENTICAL KEYS SHARED BY TWO OR MORE ACTIVITIES (${dupes.length}):`);
-  dupes.length ? dupes.forEach((d) => console.log(
-      `  ${d.key}   ${d.group.map((r) => r.handle + '/' + r.activity).join(', ')}`))
-               : console.log('  none');
-
-  const pos = positionalCollisions(rows);
-  console.log(`\nSAME ANSWER AT THE SAME QUESTION NUMBER ACROSS A UNIT (${pos.length}):`);
-  pos.length ? pos.forEach((p) => console.log(
-      `  ${p.group.padEnd(42)}Q${p.q} is ${p.letter} on all ${p.of} quizzes`))
-             : console.log('  none');
+  //  REPEATING BLOCK, the one defect visible in a single key on its own.
+  const cycles = rows.map((r) => ({ r, c: cycleFinding(r.letters) })).filter((x) => x.c);
+  console.log(`\nA REPEATING BLOCK INSIDE ONE KEY (${cycles.length}):`);
+  cycles.length ? cycles.forEach(({ r, c }) => console.log(
+    `  ${r.handle.padEnd(42)}${r.activity.padEnd(10)}${c.block} x${(c.len / c.period).toFixed(1)}`
+    + ` covers ${c.len} of ${r.n}   ${r.key}`))
+                : console.log('  none');
 
   const tot = {};
   rows.forEach((r) => Object.entries(r.dist).forEach(([k, v]) => { tot[k] = (tot[k] || 0) + v; }));
   const N = Object.values(tot).reduce((a, b) => a + b, 0);
   console.log(`\nWHOLE-COURSE DISTRIBUTION (${N} questions, even would be 25 percent each):`);
   Object.keys(tot).sort().forEach((k) => console.log(`  ${k}  ${String(tot[k]).padStart(4)}  ${(100 * tot[k] / N).toFixed(1)}%`));
-  return { same, skew, cycles, dupes, pos };
+  return { same, skew, dupes, locked, cycles };
 }
 
 // Permute so the correct option lands on `want`, carrying its feedback with it.
@@ -425,6 +415,6 @@ if (require.main === module) {
 }
 
 module.exports = {
-  keysFor, distributionRows, rewriteBody, verify, TARGETS,
-  longestCycle, cycleFinding, identicalKeys, positionalCollisions,
+  keysFor, distributionRows, rewriteBody, verify, audit, TARGETS,
+  longestCycle, cycleFinding,
 };

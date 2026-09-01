@@ -86,24 +86,41 @@ This is the second time in one day this tool was found blind. The earlier run no
 markup shape. This is a blindness of a different kind: it read the right numbers
 and the numbers do not contain the defect.
 
-Three order-sensitive detectors added, each one for a defect found live rather than
-imagined:
+A second session reached the same conclusion from the other end at almost exactly
+the same time. `5427309`, merged into main at 19:20 while this branch was open,
+added two order-sensitive checks off the back of the unit 5 keys: identical keys
+shared by two or more activities, and a question index locked to one letter
+across every activity. Both are checks this branch had also written, and theirs
+landed first.
 
-| detector | the case it was written for |
-|---|---|
-| repeating block | 2.2 bundle quiz, CADB four and a half times |
-| identical keys | cyber 5.2, 5.3 and 5.4 all ABCDB (task 130) |
-| fixed position | question 5 answered B on all six unit 5 quizzes (task 130) |
+Theirs win. Their POSITION_MIN of 4 is better reasoned than the 3 used here, and
+it was arrived at by mutation testing rather than by taste: three activities
+agreeing on a position is 1 in 16 and flagging it teaches people to skip the
+check. This branch's duplicates are dropped.
 
-One implementation note is worth keeping, because the first version of it silently
-reported nothing. Taking the longest cycle at any period and then rejecting it for
-having too long a period hides the finding underneath it: 2.1's key carries a
-meaningless period-7 run of 12 sitting on top of the real period-4 `BCDA BCDA`.
-Bounding the period inside the search rather than filtering afterwards is the fix,
-and there is a named assertion for exactly that mutation.
+What survives is the one thing neither of their checks can see, because both
+compare activities to EACH OTHER:
 
 ```
-smoke:answerkeys     37 passed, 0 failed   (was 22)
+  identical keys   fires on 2.1 and 2.2:  no
+  position lock    fires on 2.1 and 2.2:  no
+  allSame          fires on 2.1 and 2.2:  no
+  skew >= 0.6      fires on 2.1 and 2.2:  no
+```
+
+A single quiz whose own key cycles is invisible to all four. So the repeating
+block check is added on top of theirs, and the audit now has five detectors
+rather than two.
+
+One implementation note is worth keeping, because the first version of it
+silently reported nothing. Taking the longest cycle at any period and then
+rejecting it for having too long a period hides the finding underneath it: 2.1's
+key carries a meaningless period-7 run of 12 sitting on top of the real period-4
+`BCDA BCDA`. Bounding the period inside the search rather than filtering
+afterwards is the fix, and there is a named assertion for exactly that mutation.
+
+```
+smoke:answerkeys     37 passed, 0 failed   (22 before either session, 27 after theirs)
 smoke:quizauthoring  39 passed, 0 failed
 smoke:quizgate       20 passed, 0 failed
 smoke:cyberdenoms    60 passed, 0 failed

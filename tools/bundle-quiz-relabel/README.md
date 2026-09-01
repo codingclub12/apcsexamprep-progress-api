@@ -21,7 +21,7 @@ reference that pointed at either of them, in two files that must stay identical.
 | file | what it does |
 |---|---|
 | `parse.py` | reads `word/document.xml` into questions. Strict: raises rather than skipping anything it does not fully understand |
-| `keysolve.py` | generates a key and holds `violations()`, the constraint set |
+| `keysolve.py` | generates a key and holds `violations()`, the constraint set. The repo-side counterpart is the repeating-block check in `scripts/answer-key-audit.js`, which detects what this avoids generating |
 | `keyopt.py` | backtracking search for the minimum-change key. Kept, but see the note below |
 | `plan.py` | the per-lesson decisions: keys, pinned questions, replacement questions, repairs |
 | `fix.py` | applies the plan and rezips |
