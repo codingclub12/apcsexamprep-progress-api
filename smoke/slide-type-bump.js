@@ -9,31 +9,29 @@
 //  proof, run it and look, is unavailable, and the script would otherwise
 //  reach production having never executed once.
 //
-//  It is plain ES5, so it can be loaded into a vm context with the six Google
-//  globals stubbed and exercised for real. That is what this does. The stubs
-//  are deliberately literal about the one thing that matters: a text range is
-//  a list of runs with sizes, and setting a size on a range sets it on the
-//  runs inside it.
+//  It is plain ES5, so it can be loaded into a vm context with the Google
+//  globals stubbed and exercised for real. That is what this does.
 //
-//  WHAT IS ACTUALLY UNDER TEST, in the order it would hurt:
+//  THE ASSERTION THIS SUITE GOT WRONG THE FIRST TIME, kept at the top because
+//  it is the lesson. The original rule was arithmetic: +2.5 below 11.5pt, +2
+//  below 13, +1.5 up to 14. This suite asserted it was "monotonic, so
+//  hierarchy is preserved" using `b(s) >= b(prev)`. That passes for a rule
+//  that maps two different sizes onto the SAME size, and that is exactly what
+//  the rule did: 12.5 + 2 and 13 + 1.5 are both 14.5. preview() later read
+//  63,842 real runs and found 7,900 of them losing a size distinction and
+//  11,638 more inverted, 29% of all text, none of which this suite objected
+//  to. Non-decreasing was the wrong property. STRICTLY increasing is the right
+//  one, and part A now checks it against the sizes those decks actually use.
 //
-//  A. THE ROUND TRIP. revert() must put every size back exactly. The bump maps
-//     10 to 12.5 and 12.5 to 14.5, so the transform is NOT invertible by
-//     arithmetic: a deck holding both sizes afterwards cannot be unmapped
-//     without knowing which run was which. Only the undo file knows. If the
-//     round trip is wrong, the undo is a fiction and 294 decks are one bad run
-//     away from being unrecoverable.
+//  WHAT IS UNDER TEST, in the order it would hurt:
 //
-//  B. THE COMPOUNDING GUARD. Running start() twice must not turn a 12 into a
-//     14 and then a 16. The sheet is the first guard and the undo file is the
-//     second, because a deleted sheet must not be enough to double-bump.
-//
-//  C. THE BAND. Nothing under 10pt or over 14pt may move. Under 10 is the
-//     College Board trademark line; over 14 is already readable.
-//
-//  D. THE DECK TABLE. It must still match what routes/slides.js would serve.
-//     A stale table means editing a deck the gate no longer hands out, or
-//     missing one it does.
+//  A. THE LADDER IS STRICTLY INCREASING over the real corpus, and no bumped
+//     size lands on or above a size left untouched above it.
+//  B. THE ROUND TRIP. revert() must put every size back exactly.
+//  C. THE COMPOUNDING GUARD. Running start() twice must not bump twice, with
+//     the sheet present AND with it deleted.
+//  D. UNKNOWN SIZES ARE REFUSED, not guessed at.
+//  E. THE DECK TABLE still matches what routes/slides.js would serve.
 //
 //  Zero PII, no network, nothing written outside a temp dir.
 //  No em-dashes, per repo convention.
@@ -54,13 +52,21 @@ const ok = (n, c, x) => {
 
 const GS = path.join(__dirname, '..', 'scripts', 'slide-type-bump.gs');
 
+// The size histogram preview() read from 136 real AP CSP decks on 2026-08-28.
+// Every claim about hierarchy is checked against THIS, not against invented
+// sizes, because the failure mode was specific to how densely these decks
+// populate the low end.
+const CORPUS = {
+  7.5: 4272, 8: 1076, 9: 6432, 9.5: 656, 10: 3512, 10.5: 1048, 11: 4280,
+  12: 8208, 12.5: 2392, 13: 4836, 14: 11638, 14.5: 672, 15: 1636, 16: 1768,
+  17: 2648, 18: 360, 19: 456, 20: 760, 24: 168, 30: 808, 32: 3872, 34: 152,
+  36: 656, 54: 272, 72: 456, 96: 272, 200: 536,
+};
+const CORPUS_SIZES = Object.keys(CORPUS).map(Number).sort((a, b) => a - b);
+
 // ── stubs ────────────────────────────────────────────────────────────────────
-// A text range is a window over a shared run list. Setting a size on the
-// window sets it on every run the window covers, which is what the real
-// service does and the only behaviour the script depends on.
 
 function makeText(runs) {
-  // runs: [{ text, size }] -> internal [{ start, end, size }]
   const model = [];
   let at = 0;
   for (const r of runs) {
@@ -75,7 +81,7 @@ function makeText(runs) {
         const covered = model.filter((m) => m.start >= start && m.end <= end);
         if (!covered.length) return null;
         const sizes = new Set(covered.map((m) => m.size));
-        return sizes.size === 1 ? covered[0].size : null;   // mixed -> null
+        return sizes.size === 1 ? covered[0].size : null;
       },
       setFontSize: (n) => {
         model.forEach((m) => { if (m.start >= start && m.end <= end) m.size = n; });
@@ -127,7 +133,6 @@ function makeDeck(slides) {
   };
 }
 
-/** Every size currently in a deck, in a stable order, for comparison. */
 function sizesOf(deck) {
   const out = [];
   const walk = (els) => {
@@ -146,19 +151,21 @@ function sizesOf(deck) {
 
 function loadGs(decksById, opts) {
   opts = opts || {};
-  const files = new Map();          // undo folder: name -> contents
+  const files = new Map();
   const sheetRows = [];
   const logs = [];
   const triggers = [];
 
+  const fileHandle = (n) => ({
+    getName: () => n,
+    setTrashed: () => { files.delete(n); },
+    getBlob: () => ({ getDataAsString: () => files.get(n) }),
+  });
   const folder = {
     getFilesByName: (n) => {
       const has = files.has(n);
       let served = false;
-      return {
-        hasNext: () => has && !served,
-        next: () => { served = true; return fileHandle(n); },
-      };
+      return { hasNext: () => has && !served, next: () => { served = true; return fileHandle(n); } };
     },
     getFiles: () => {
       const names = [...files.keys()];
@@ -167,11 +174,19 @@ function loadGs(decksById, opts) {
     },
     createFile: (n, body) => { files.set(n, body); return fileHandle(n); },
   };
-  const fileHandle = (n) => ({
-    getName: () => n,
-    setTrashed: () => { files.delete(n); },
-    getBlob: () => ({ getDataAsString: () => files.get(n) }),
-  });
+
+  const sheetStub = {
+    appendRow: (r) => sheetRows.push(r.slice()),
+    getLastRow: () => sheetRows.length,
+    getRange: (r1, c1, nr, nc) => ({
+      getValues: () => sheetRows.slice(r1 - 1, r1 - 1 + nr).map((r) => {
+        const out = r.slice(c1 - 1, c1 - 1 + nc);
+        while (out.length < nc) out.push('');
+        return out;
+      }),
+    }),
+  };
+  sheetRows.push(['course', 'key', 'deckId', 'slides', 'runsChanged', 'status']);
 
   const ctx = {
     SlidesApp: {
@@ -199,19 +214,6 @@ function loadGs(decksById, opts) {
     MimeType: { PLAIN_TEXT: 'text/plain' },
     console,
   };
-  const sheetStub = {
-    appendRow: (r) => sheetRows.push(r.slice()),
-    getLastRow: () => sheetRows.length,
-    getRange: (r1, c1, nr, nc) => ({
-      getValues: () => sheetRows.slice(r1 - 1, r1 - 1 + nr).map((r) => {
-        const out = r.slice(c1 - 1, c1 - 1 + nc);
-        while (out.length < nc) out.push('');
-        return out;
-      }),
-    }),
-  };
-  // Row 1 is the header the real sheet_() writes.
-  sheetRows.push(['course', 'key', 'deckId', 'slides', 'runsChanged', 'status']);
 
   vm.createContext(ctx);
   vm.runInContext(fs.readFileSync(GS, 'utf8'), ctx);
@@ -222,31 +224,105 @@ function loadGs(decksById, opts) {
 
 console.log('\nslide-type-bump smoke\n');
 
-// ── C. the band ──────────────────────────────────────────────────────────────
-console.log('band rule');
+// ── A. the ladder, against the real corpus ───────────────────────────────────
+console.log('the ladder, checked against the 136-deck corpus');
 {
   const { ctx } = loadGs({});
   const b = ctx.bumpedSize_;
-  ok('under the band is untouched (7.5, 9, 9.9)',
-    b(7.5) === null && b(9) === null && b(9.9) === null,
-    [b(7.5), b(9), b(9.9)]);
-  ok('over the band is untouched (14.1, 18, 40)',
-    b(14.1) === null && b(18) === null && b(40) === null,
-    [b(14.1), b(18), b(40)]);
-  ok('null and undefined are untouched', b(null) === null && b(undefined) === null);
-  ok('10 -> 12.5, 11 -> 13.5', b(10) === 12.5 && b(11) === 13.5, [b(10), b(11)]);
-  ok('11.5 -> 13.5, 12 -> 14', b(11.5) === 13.5 && b(12) === 14, [b(11.5), b(12)]);
-  ok('13 -> 14.5, 14 -> 15.5', b(13) === 14.5 && b(14) === 15.5, [b(13), b(14)]);
+  const unknown = ctx.unknownSize_;
+  const FLOOR = ctx.LADDER_FLOOR, CEIL = ctx.LADDER_CEILING;
 
-  // The smallest text gets the most lift, which is where the readability
-  // problem is. Checked as a property rather than trusting the table above.
+  ok('outside the range is untouched (7.5, 9, 9.5, 18, 32, 200)',
+    [7.5, 9, 9.5, 18, 32, 200].every((s) => b(s) === null),
+    [7.5, 9, 18, 200].map(b));
+  ok('null and undefined are untouched', b(null) === null && b(undefined) === null);
+  ok('every corpus size in range has a ladder entry',
+    CORPUS_SIZES.filter((s) => s >= FLOOR && s < CEIL).every((s) => b(s) !== null),
+    CORPUS_SIZES.filter((s) => s >= FLOOR && s < CEIL && b(s) === null));
   ok('every bump is an increase',
-    [10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14].every((s) => b(s) > s));
-  ok('no bump exceeds 2.5pt, so nothing jumps a whole hierarchy level',
-    [10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14].every((s) => b(s) - s <= 2.5));
-  ok('the rule is monotonic, so hierarchy is preserved',
-    [10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14]
-      .every((s, i, a) => i === 0 || b(s) >= b(a[i - 1])));
+    CORPUS_SIZES.filter((s) => b(s) !== null).every((s) => b(s) > s));
+
+  // The assertion the first version of this suite got wrong. `>=` passes for a
+  // collision; `>` does not.
+  const mapped = CORPUS_SIZES.map((s) => [s, b(s) === null ? s : b(s)]);
+  let strict = true, offender = null;
+  for (let i = 1; i < mapped.length; i++) {
+    if (mapped[i][1] <= mapped[i - 1][1]) { strict = false; offender = [mapped[i - 1], mapped[i]]; break; }
+  }
+  ok('the map is STRICTLY increasing over every size in the corpus', strict, offender);
+
+  // Stated separately because it is the specific failure that shipped: two
+  // different sizes landing on one.
+  const landings = mapped.map((m) => m[1]);
+  ok('no two corpus sizes land on the same size',
+    new Set(landings).size === landings.length,
+    landings.filter((v, i) => landings.indexOf(v) !== i));
+
+  // And the specific inversion: a bumped size passing an untouched one.
+  let inverted = 0;
+  for (let i = 0; i < mapped.length; i++) {
+    for (let j = i + 1; j < mapped.length; j++) {
+      if (mapped[i][1] >= mapped[j][1]) inverted += CORPUS[mapped[i][0]];
+    }
+  }
+  ok('no run ends up at or above text that used to be bigger', inverted === 0, inverted);
+
+  const inBand = CORPUS_SIZES.filter((s) => s >= 10 && s <= 14);
+  const lift = inBand.reduce((a, s) => a + CORPUS[s] * (b(s) - s), 0)
+    / inBand.reduce((a, s) => a + CORPUS[s], 0);
+  ok('the mean lift across the original 10 to 14 band is at least 1.5pt',
+    lift >= 1.5, lift.toFixed(2));
+  ok('no single bump exceeds 2.5pt',
+    CORPUS_SIZES.filter((s) => b(s) !== null).every((s) => b(s) - s <= 2.5));
+}
+
+// ── proposeLadder_ ───────────────────────────────────────────────────────────
+console.log('\nproposeLadder_, the generator behind the shipped ladder');
+{
+  const { ctx } = loadGs({});
+  const proposed = ctx.proposeLadder_(CORPUS_SIZES);
+
+  ok('it reproduces the shipped ladder from the corpus it was built from',
+    proposed.every(([s, t]) => ctx.SIZE_LADDER[String(s)] === t)
+      && proposed.length === Object.keys(ctx.SIZE_LADDER).length,
+    { proposed, shipped: ctx.SIZE_LADDER });
+
+  ok('its output is strictly increasing',
+    proposed.every(([, t], i) => i === 0 || t > proposed[i - 1][1]), proposed);
+  ok('it never proposes a size at or above the ceiling',
+    proposed.every(([, t]) => t < ctx.LADDER_CEILING), proposed);
+
+  // A vocabulary it has never seen, packed tighter than the real one. The
+  // taper alone has slope below 1, so without the push-apart pass this is
+  // exactly where it would collide.
+  const dense = [10, 10.25, 10.5, 10.75, 11, 11.25, 11.5, 12, 13, 14, 15, 16, 17, 17.5];
+  const p2 = ctx.proposeLadder_(dense);
+  ok('a denser vocabulary than the real one still comes out strictly increasing',
+    p2.every(([, t], i) => i === 0 || t > p2[i - 1][1]), p2);
+  ok('and still stays under the ceiling',
+    p2.every(([, t]) => t < ctx.LADDER_CEILING), p2);
+  // The mechanism that makes that possible, asserted on the lift PARAMETER
+  // rather than on the observed rise. The push-apart pass can lift an
+  // individual size further than the taper asked for, so a backed-off ladder
+  // can still contain a 2.5pt jump; the two are not the same measurement.
+  ok('that vocabulary genuinely does NOT fit at the full lift',
+    ctx.buildLadder_(dense, ctx.MAX_LIFT) === null);
+  ok('so proposeLadder_ backs the lift off and still returns a usable ladder',
+    p2.length === dense.length && p2.every(([, t], i) => i === 0 || t > p2[i - 1][1]));
+
+  const inRange = CORPUS_SIZES.filter((s) => s >= ctx.LADDER_FLOOR && s < ctx.LADDER_CEILING);
+  ok('the real corpus DOES fit at the full lift, so it needs no backoff',
+    ctx.buildLadder_(inRange, ctx.MAX_LIFT) !== null);
+
+  // A vocabulary packed against the ceiling has no room at all. Coming back
+  // with an identity ladder is the honest answer: it reads as "nothing to do
+  // here" rather than inventing headroom that does not exist.
+  const packed = [14, 14.5, 15, 15.5, 16, 16.5, 17, 17.5];
+  const p3 = ctx.proposeLadder_(packed);
+  ok('a vocabulary packed against the ceiling yields an identity ladder, not a broken one',
+    p3.length === packed.length && p3.every(([s, t]) => t === s));
+  ok('it skips sizes outside the range',
+    ctx.proposeLadder_([8, 9, 9.5, 18, 20, 32]).length === 0);
 }
 
 // ── the walk ─────────────────────────────────────────────────────────────────
@@ -261,24 +337,66 @@ console.log('\nwalking a deck');
     ]),
   ]);
   const { ctx } = loadGs({ D: deck });
-  const plan = ctx.planForDeck_(deck);
+  const { plan, unknown } = ctx.planForDeck_(deck);
   ok('plan covers shape, table cell and grouped shape, and nothing else',
     plan.length === 3, plan.map((p) => [p[1], p[4], p[5]]));
-  ok('a shape nested in a group is found', plan.some((p) => p[1] === 'nested'), plan.map((p) => p[1]));
+  ok('a shape nested in a group is found', plan.some((p) => p[1] === 'nested'));
   ok('a table cell is found and keyed by row,col', plan.some((p) => p[1] === 'tb1!0,0'));
   ok('the 30pt run is left out of the plan', !plan.some((p) => p[4] === 30));
   ok('the 9pt run is left out of the plan', !plan.some((p) => p[4] === 9));
   ok('an image contributes nothing and does not throw', plan.every((p) => p[1] !== 'img1'));
+  ok('nothing is reported unknown for a deck the ladder describes',
+    unknown.length === 0, unknown);
 }
 
-// ── A. the round trip ────────────────────────────────────────────────────────
+// ── D. unknown sizes ─────────────────────────────────────────────────────────
+console.log('\nunknown sizes are refused, not guessed at');
+{
+  const { ctx } = loadGs({});
+  ok('a size in range with no ladder entry is flagged unknown',
+    ctx.unknownSize_(11.25) && ctx.unknownSize_(13.5) && ctx.unknownSize_(16.5));
+  ok('and bumpedSize_ declines to invent a value for it',
+    ctx.bumpedSize_(11.25) === null && ctx.bumpedSize_(13.5) === null);
+  ok('a size outside the range is not "unknown", it is out of scope',
+    !ctx.unknownSize_(9) && !ctx.unknownSize_(18) && !ctx.unknownSize_(32));
+  ok('a known size is not unknown', CORPUS_SIZES.every((s) => !ctx.unknownSize_(s)));
+
+  const mk = () => makeDeck([slide('s1', [
+    shapeEl('sh1', [{ text: 'a', size: 12 }, { text: 'b', size: 13.5 }]),
+  ])]);
+  const deck = mk();
+  const before = sizesOf(deck);
+  const h = loadGs({ A: deck }, {
+    decks: [['ap-csp', 'a', 'A']],
+    config: { DECK_LIMIT: 0, DRY_RUN: false, FORCE: false, ALLOW_UNKNOWN: false, COURSES: ['ap-csp'] },
+  });
+  h.ctx.start();
+  ok('a deck containing an unknown size is left completely alone',
+    JSON.stringify(sizesOf(deck)) === JSON.stringify(before), sizesOf(deck));
+  ok('the 12pt run beside it is NOT bumped either, since the relationship matters',
+    sizesOf(deck)[0] === 12);
+  ok('the skip is recorded with the offending size named',
+    h.sheetRows.some((r) => String(r[5]).indexOf('SKIPPED: no ladder entry for 13.5') === 0),
+    h.sheetRows);
+  ok('no undo file is written for a skipped deck', h.files.size === 0);
+
+  const deck2 = mk();
+  const h2 = loadGs({ A: deck2 }, {
+    decks: [['ap-csp', 'a', 'A']],
+    config: { DECK_LIMIT: 0, DRY_RUN: false, FORCE: false, ALLOW_UNKNOWN: true, COURSES: ['ap-csp'] },
+  });
+  h2.ctx.start();
+  ok('ALLOW_UNKNOWN bumps the known sizes and leaves the unknown one alone',
+    sizesOf(deck2)[0] === 14 && sizesOf(deck2)[1] === 13.5, sizesOf(deck2));
+}
+
+// ── B. the round trip ────────────────────────────────────────────────────────
 console.log('\napply and revert round trip');
 {
   const build = () => makeDeck([
     slide('s1', [
-      // 10 and 12.5 together: 10 bumps TO 12.5, so after the bump this deck
-      // holds two runs at 12.5 whose originals differ. Arithmetic cannot undo
-      // that. This is the case the undo file exists for.
+      // 10 and 12.5 together: 10 bumps TO 12.5, so afterwards this deck holds
+      // two runs at 12.5 whose originals differ. Arithmetic cannot undo that.
       shapeEl('sh1', [{ text: 'aaa', size: 10 }, { text: 'bbb', size: 12.5 }]),
       shapeEl('sh2', [{ text: 'ccc', size: 7.5 }, { text: 'ddd', size: 14 }, { text: 'eee', size: 24 }]),
       tableEl('tb1', [[[{ text: 'ff', size: 11 }], [{ text: 'gg', size: 13 }]]]),
@@ -291,18 +409,15 @@ console.log('\napply and revert round trip');
   const before = sizesOf(deck);
   const { ctx } = loadGs({ D: deck });
 
-  const plan = ctx.planForDeck_(deck);
+  const { plan } = ctx.planForDeck_(deck);
   const changed = ctx.applyPlan_(deck, plan);
   const after = sizesOf(deck);
 
-  ok('every in-band run was changed and nothing else was',
+  ok('every in-range run was changed and nothing else was',
     changed === plan.length && plan.length === 7, [changed, plan.length]);
-  ok('the 7.5pt run is untouched after the bump', after[2] === 7.5, after);
-  ok('the 24pt run is untouched after the bump', after[4] === 24, after);
+  ok('the 7.5pt run is untouched', after[2] === 7.5, after);
+  ok('the 24pt run is untouched', after[4] === 24, after);
   ok('the deck really did change', JSON.stringify(before) !== JSON.stringify(after));
-
-  // Two runs now share 12.5 with different origins. This is the assertion that
-  // proves arithmetic reversal would be wrong.
   ok('the bump is genuinely not invertible by size alone',
     after[0] === 12.5 && before[0] === 10 && before[1] === 12.5 && after[1] === 14.5,
     { before: before.slice(0, 2), after: after.slice(0, 2) });
@@ -311,56 +426,45 @@ console.log('\napply and revert round trip');
   const restored = ctx.applyPlan_(deck, back);
   ok('revert touches the same number of runs', restored === plan.length);
   ok('every size is exactly back where it started',
-    JSON.stringify(sizesOf(deck)) === JSON.stringify(before),
-    { before, now: sizesOf(deck) });
+    JSON.stringify(sizesOf(deck)) === JSON.stringify(before), { before, now: sizesOf(deck) });
 }
 
-// ── B. start(), the guard, and the undo file ─────────────────────────────────
+// ── C. start(), the guards and the undo record ───────────────────────────────
 console.log('\nstart(), guards and the undo record');
 {
   const mk = () => makeDeck([slide('s1', [shapeEl('sh1', [{ text: 'x', size: 12 }])])]);
   const decks = { A: mk(), B: mk() };
   const table = [['ap-csp', '1-1|1|teacher|cb', 'A'], ['ap-cybersecurity', '1-1|1|teacher', 'B']];
+  const cfg = { DECK_LIMIT: 0, DRY_RUN: false, FORCE: false, ALLOW_UNKNOWN: false, COURSES: ['ap-csp', 'ap-cybersecurity'] };
 
-  const h = loadGs(decks, {
-    decks: table,
-    config: { DECK_LIMIT: 0, DRY_RUN: false, FORCE: false, COURSES: ['ap-csp', 'ap-cybersecurity'] },
-  });
+  const h = loadGs(decks, { decks: table, config: cfg });
   h.ctx.start();
 
   ok('both decks bumped 12 -> 14', sizesOf(decks.A)[0] === 14 && sizesOf(decks.B)[0] === 14,
     [sizesOf(decks.A), sizesOf(decks.B)]);
   ok('each deck was saved and closed', decks.A._closed() && decks.B._closed());
-  ok('an undo file was written per deck', h.files.has('A.json') && h.files.has('B.json'),
-    [...h.files.keys()]);
+  ok('an undo file was written per deck', h.files.has('A.json') && h.files.has('B.json'));
   ok('the sheet recorded one OK row per deck',
     h.sheetRows.filter((r) => r[5] === 'OK').length === 2, h.sheetRows);
 
   const rec = JSON.parse(h.files.get('A.json'));
   ok('the undo file records the OLD size, not the new one',
     rec.changes[0][4] === 12 && rec.changes[0][5] === 14, rec.changes[0]);
-  ok('the undo file records the band it was written under',
-    rec.band[0] === 10 && rec.band[1] === 14, rec.band);
+  ok('the undo file records the ladder it was written under',
+    rec.ladder && rec.ladder['12'] === 14, rec.ladder);
 
-  // Re-running must not compound. This is the whole reason the guard exists.
   h.ctx.start();
   ok('a second start() leaves the sizes alone (sheet guard)',
-    sizesOf(decks.A)[0] === 14 && sizesOf(decks.B)[0] === 14,
-    [sizesOf(decks.A), sizesOf(decks.B)]);
+    sizesOf(decks.A)[0] === 14 && sizesOf(decks.B)[0] === 14);
 
-  // Now the harder case: the sheet is gone but the decks were already done.
-  const h2 = loadGs(decks, {
-    decks: table,
-    config: { DECK_LIMIT: 0, DRY_RUN: false, FORCE: false, COURSES: ['ap-csp', 'ap-cybersecurity'] },
-  });
+  const h2 = loadGs(decks, { decks: table, config: cfg });
   h2.files.set('A.json', h.files.get('A.json'));
   h2.files.set('B.json', h.files.get('B.json'));
   h2.ctx.start();
   ok('a lost sheet still does not double-bump, because the undo file is the second guard',
-    sizesOf(decks.A)[0] === 14 && sizesOf(decks.B)[0] === 14,
-    [sizesOf(decks.A), sizesOf(decks.B)]);
+    sizesOf(decks.A)[0] === 14 && sizesOf(decks.B)[0] === 14);
   ok('the skip is recorded rather than silent',
-    h2.sheetRows.some((r) => String(r[5]).indexOf('SKIPPED') === 0), h2.sheetRows);
+    h2.sheetRows.some((r) => String(r[5]).indexOf('SKIPPED') === 0));
 }
 
 // ── revert() end to end ──────────────────────────────────────────────────────
@@ -372,57 +476,67 @@ console.log('\nrevert() end to end');
   const before = sizesOf(deck);
   const h = loadGs({ A: deck }, {
     decks: [['ap-csp', '1-1|1|teacher|cb', 'A']],
-    config: { DECK_LIMIT: 0, DRY_RUN: false, FORCE: false, COURSES: ['ap-csp'] },
+    config: { DECK_LIMIT: 0, DRY_RUN: false, FORCE: false, ALLOW_UNKNOWN: false, COURSES: ['ap-csp'] },
   });
   h.ctx.start();
   ok('bumped before reverting', JSON.stringify(sizesOf(deck)) !== JSON.stringify(before));
-
   h.ctx.revert();
   ok('revert() restores every size from the undo file',
     JSON.stringify(sizesOf(deck)) === JSON.stringify(before), { before, now: sizesOf(deck) });
-  ok('revert() trashes the undo file so the deck can be done again',
-    !h.files.has('A.json'), [...h.files.keys()]);
+  ok('revert() trashes the undo file so the deck can be done again', !h.files.has('A.json'));
 }
 
-// ── DRY_RUN and DECK_LIMIT ───────────────────────────────────────────────────
-console.log('\nDRY_RUN and DECK_LIMIT');
+// ── DRY_RUN, DECK_LIMIT, COURSES, interleaving ───────────────────────────────
+console.log('\nDRY_RUN, DECK_LIMIT, COURSES and interleaving');
 {
   const mk = () => makeDeck([slide('s1', [shapeEl('sh1', [{ text: 'x', size: 11 }])])]);
   const decks = { A: mk(), B: mk(), C: mk() };
   const table = [['ap-csp', 'a', 'A'], ['ap-csp', 'b', 'B'], ['ap-csp', 'c', 'C']];
+  const base = { DRY_RUN: false, FORCE: false, ALLOW_UNKNOWN: false, COURSES: ['ap-csp'] };
 
-  const dry = loadGs(decks, { decks: table, config: { DECK_LIMIT: 0, DRY_RUN: true, FORCE: false, COURSES: ['ap-csp'] } });
+  const dry = loadGs(decks, { decks: table, config: { ...base, DECK_LIMIT: 0, DRY_RUN: true } });
   dry.ctx.start();
-  ok('DRY_RUN changes nothing in any deck',
-    Object.values(decks).every((d) => sizesOf(d)[0] === 11));
-  ok('DRY_RUN writes no undo files', dry.files.size === 0, [...dry.files.keys()]);
+  ok('DRY_RUN changes nothing in any deck', Object.values(decks).every((d) => sizesOf(d)[0] === 11));
+  ok('DRY_RUN writes no undo files', dry.files.size === 0);
 
   const decks2 = { A: mk(), B: mk(), C: mk() };
-  const lim = loadGs(decks2, { decks: table, config: { DECK_LIMIT: 1, DRY_RUN: false, FORCE: false, COURSES: ['ap-csp'] } });
+  const lim = loadGs(decks2, { decks: table, config: { ...base, DECK_LIMIT: 1 } });
   lim.ctx.start();
-  const touched = Object.values(decks2).filter((d) => sizesOf(d)[0] !== 11).length;
-  ok('DECK_LIMIT 1 changes exactly one deck', touched === 1, touched);
-  ok('the shipped default of DECK_LIMIT is small, not "all of them"',
-    loadGs({}).ctx.DECK_LIMIT > 0 && loadGs({}).ctx.DECK_LIMIT <= 5, loadGs({}).ctx.DECK_LIMIT);
-  ok('the shipped default of FORCE is off', loadGs({}).ctx.FORCE === false);
-}
+  ok('DECK_LIMIT 1 changes exactly one deck',
+    Object.values(decks2).filter((d) => sizesOf(d)[0] !== 11).length === 1);
 
-// ── COURSES filter ───────────────────────────────────────────────────────────
-console.log('\nCOURSES filter');
-{
-  const mk = () => makeDeck([slide('s1', [shapeEl('sh1', [{ text: 'x', size: 11 }])])]);
-  const decks = { A: mk(), B: mk() };
-  const h = loadGs(decks, {
+  const shipped = loadGs({}).ctx;
+  ok('the shipped default of DECK_LIMIT is small, not "all of them"',
+    shipped.DECK_LIMIT > 0 && shipped.DECK_LIMIT <= 5, shipped.DECK_LIMIT);
+  ok('the shipped defaults of FORCE and ALLOW_UNKNOWN are both off',
+    shipped.FORCE === false && shipped.ALLOW_UNKNOWN === false);
+
+  const decks3 = { A: mk(), B: mk() };
+  const h = loadGs(decks3, {
     decks: [['ap-csp', 'a', 'A'], ['ap-cybersecurity', 'b', 'B']],
-    config: { DECK_LIMIT: 0, DRY_RUN: false, FORCE: false, COURSES: ['ap-csp'] },
+    config: { ...base, DECK_LIMIT: 0, COURSES: ['ap-csp'] },
   });
   h.ctx.start();
   ok('narrowing COURSES leaves the other course alone',
-    sizesOf(decks.A)[0] === 13.5 && sizesOf(decks.B)[0] === 11,
-    [sizesOf(decks.A), sizesOf(decks.B)]);
+    sizesOf(decks3.A)[0] === 13.5 && sizesOf(decks3.B)[0] === 11,
+    [sizesOf(decks3.A), sizesOf(decks3.B)]);
+
+  // The bias that made the first preview() report a one-course histogram while
+  // looking like it described both.
+  const { ctx } = loadGs({}, {
+    decks: [...Array(20)].map((_, i) => ['ap-csp', 'c' + i, 'C' + i])
+      .concat([...Array(5)].map((_, i) => ['ap-cybersecurity', 'y' + i, 'Y' + i])),
+    config: { COURSES: ['ap-csp', 'ap-cybersecurity'] },
+  });
+  const order = ctx.decksInterleaved_();
+  ok('interleaving keeps every deck exactly once', order.length === 25
+    && new Set(order.map((d) => d[2])).size === 25);
+  ok('a run that stops early still sees both courses',
+    new Set(order.slice(0, 6).map((d) => d[0])).size === 2,
+    order.slice(0, 6).map((d) => d[0]));
 }
 
-// ── D. the generated deck table ──────────────────────────────────────────────
+// ── E. the generated deck table ──────────────────────────────────────────────
 console.log('\nthe generated deck table');
 {
   const { ctx } = loadGs({});
@@ -457,8 +571,6 @@ console.log('\nthe generated deck table');
   ok('every row is [course, key, fileId] with a plausible Drive id',
     table.every((r) => r.length === 3 && /^[A-Za-z0-9_-]{20,}$/.test(r[2])));
 
-  // The generator must be idempotent, or "regenerate and diff" is not a check
-  // anyone can run.
   let checkOk = true;
   try {
     execFileSync('node', [path.join(__dirname, '..', 'scripts', 'build-slide-type-bump-gs.js'), '--check'],
@@ -467,8 +579,8 @@ console.log('\nthe generated deck table');
   ok('build-slide-type-bump-gs.js --check reports the file in sync', checkOk);
 }
 
-// ── the script never touches speaker notes ───────────────────────────────────
-console.log('\nspeaker notes');
+// ── what the script must never touch ─────────────────────────────────────────
+console.log('\nwhat the script must never touch');
 {
   const src = fs.readFileSync(GS, 'utf8');
   ok('the script never calls getNotesPage, so teacher notes are left alone',
