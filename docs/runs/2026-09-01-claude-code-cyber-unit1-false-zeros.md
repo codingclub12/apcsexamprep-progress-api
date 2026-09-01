@@ -109,9 +109,32 @@ element and is intact.
 
 ## Still open
 
-- Purge the phantom rows. Production data change, needs an explicit go-ahead.
-  Target: score_events rows for ap-cybersecurity activity pages with points 0
-  where the same student has no later non-zero row for that item.
+- Clear the phantom rows. The tool already existed: `scripts/clear-cyber-fabricated-zeros.js`
+  and `GET/POST /api/admin/cyber-zeros[/clear]`, built 2026-08-21 for the earlier
+  tracker bug. Dry run by default, `confirm` required to write, and NOTHING is
+  deleted: it stamps `score_reset_at` on the progress row, which excludes the
+  pre-reset ledger rows and grants one clean retry. So this needed a scope and a
+  cutoff, not a new tool.
+
+  Added scope `v3`, the ten columns measured fabricating on load, and
+  `FIX_CUTOFF_2026_09_01 = 2026-09-01T15:10:00Z`, the instant the fix was
+  verified SERVING rather than the instant it merged.
+
+  The subtle part, and the reason running the tool unchanged would have missed
+  almost everything: its safety argument is the cutoff, and that cutoff was
+  `2026-08-21T19:52Z` on the reasoning that a later zero "can be real, because
+  the score reporter now reads the page's own number". True of the TRACKER path
+  theme PR #68 fixed. FALSE of the SCORE REPORTER, a separate writer into the
+  same ledger, which kept fabricating for another eleven days. Every zero Peter
+  reported sits in that window and the old cutoff protects all of them.
+
+  Re-running over v1 and v2 columns is safe: rows already carrying
+  `score_reset_at` are skipped, proven by the existing idempotence checks.
+
+  NOT RUN from the session that wrote this: `/api/admin/*` needs `ADMIN_KEY`,
+  which is not in the Claude Code environment and should not be. Dry run first
+  and read `by_column` against the signature in the v2 comment (93 fabricated
+  against 5 real on 1.1 lab): mass zeros on a column is the bug, a mix is not.
 - Deploy. The theme PR is based on the CONNECTED branch, so merging it IS the
   deploy. Do NOT reach for the fast-forward recipe in CLAUDE.md: the drift has
   REVERSED since that was written. CLAUDE.md warns that `main` runs ahead of the

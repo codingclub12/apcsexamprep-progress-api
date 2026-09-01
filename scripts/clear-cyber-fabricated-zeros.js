@@ -95,8 +95,50 @@ const SCOPES = {
     ['1.1', 'lab'],
     ['1.2', 'exercise-1'], ['1.2', 'exercise-2'],
   ],
+
+  //  v3, the 2026-09-01 SCORE REPORTER bug. A DIFFERENT WRITER from v1 and v2.
+  //  apcs-score-reporter.js treated "a score element is visible" as "the student
+  //  finished", but these pages paint a LIVE PROGRESS counter from the first
+  //  frame ("Lab Progress: 0 / 4 Emails Analyzed    0 / 24 pts"). Merely OPENING
+  //  a page therefore posted a real zero. Measured that day by running the
+  //  deployed reporter in Chromium against the live page bodies with no
+  //  interaction at all: 10 of the 15 Unit 1 activity pages posted a zero on
+  //  load. Fixed in theme PR #92; see FIX_CUTOFF_2026_09_01 below.
+  //
+  //  WHY THIS OVERLAPS v1 AND v2, AND WHY THAT IS NOT A DUPLICATE
+  //  Eight of these ten are columns v1 or v2 already cleared once, and the
+  //  overlap is the whole point. Those passes used DEFAULT_CUTOFF on the
+  //  argument that a zero recorded after it "can be real, because the score
+  //  reporter now reads the page's own number". That was true of the TRACKER
+  //  path theme PR #68 fixed. It was FALSE of the SCORE REPORTER, a separate
+  //  writer into the same score_events ledger, which went on fabricating zeros
+  //  on load for another eleven days. So those columns need the window
+  //  2026-08-21 -> 2026-09-01 cleared too. That is a CUTOFF correction, not a
+  //  new scope, and re-running is safe: clearFabricatedZeros skips any row that
+  //  already carries score_reset_at.
+  //
+  //  WHAT A ZERO ON THESE COLUMNS IS WORTH, AND WHY CLEARING IS THE RIGHT CALL
+  //  On a page that fabricates on load, a genuine zero and a fabricated one are
+  //  THE SAME ROW. A student who did the work and scored nothing never moved the
+  //  counter off 0, and the reporter's own dedup then suppressed a second post.
+  //  So a pre-cutoff zero here carries no information either way, and leaving it
+  //  shows an uninformative value as a failing grade. The reset grants one clean
+  //  retry on pages that now grade correctly, which serves the student who
+  //  genuinely scored nothing just as well as the one who never started.
+  v3: [
+    ['1.1', 'exercise-1'], ['1.1', 'lab'],
+    ['1.2', 'exercise-1'], ['1.2', 'exercise-2'], ['1.2', 'lab'],
+    ['1.3', 'exercise-1'], ['1.3', 'exercise-2'],
+    ['1.4', 'exercise-1'], ['1.4', 'exercise-2'],
+    ['1.5', 'exercise-2'],
+  ],
 };
-SCOPES.all = [...SCOPES.v1, ...SCOPES.v2];
+
+// Deduplicated. v3 overlaps v1 and v2 on eight columns, and a repeated pair adds
+// a redundant OR condition and makes plan.columns misreport what the run covered.
+SCOPES.all = [...new Map(
+  [...SCOPES.v1, ...SCOPES.v2, ...SCOPES.v3].map((c) => [c.join('|'), c])
+).values()];
 
 // v1 stays the default so an unqualified call keeps doing exactly what it did.
 const DEFAULT_SCOPE = 'v1';
@@ -112,6 +154,14 @@ function columnsFor(scope) {
 // sampling the deployed assets. Before that instant no real score could reach
 // these nine columns from any path.
 const DEFAULT_CUTOFF = '2026-08-21T19:52:00Z';
+
+// The cutoff v3 wants. Theme PR #92 merged at 2026-09-01T14:59:48Z, but the
+// instant that matters is when the fix was VERIFIED SERVING: the deployed CDN
+// asset was fetched and run against all 15 Unit 1 pages, and none of them posts
+// on load any more. Shopify's GitHub sync and CDN propagation sit between the
+// merge and that instant, and a zero written in that gap still came from the old
+// asset. Rounded up to the verification, never down to the merge.
+const FIX_CUTOFF_2026_09_01 = '2026-09-01T15:10:00Z';
 
 // (lesson, activity) pairs as an OR of equalities rather than two IN lists.
 // Two IN lists are a cross product, which for v1 happened to be exactly the
@@ -255,4 +305,5 @@ function main() {
 
 if (require.main === module) main();
 module.exports = { findFabricated, findProtected, clearFabricatedZeros, DEFAULT_CUTOFF,
+  FIX_CUTOFF_2026_09_01,
   DEFAULT_SCOPE, SCOPES, columnsFor, COURSE };

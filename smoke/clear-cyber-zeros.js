@@ -47,7 +47,7 @@ const ok = (n, c, x) => {
 
 db.prepare("INSERT INTO teachers (id,email,password_hash,name) VALUES ('t1','t@smoke.test','x','T')").run();
 db.prepare("INSERT INTO classes (id,teacher_id,class_code,class_name,course) VALUES ('C1','t1','CYBER-SMOKE','Smoke','ap-cybersecurity')").run();
-for (const s of ['sA', 'sB', 'sC', 'sD', 'sE', 'sF', 'sG']) {
+for (const s of ['sA', 'sB', 'sC', 'sD', 'sE', 'sF', 'sG', 'sH']) {
   db.prepare('INSERT INTO students (id,class_id,display_name,pin_hash) VALUES (?, ?, ?, ?)').run(s, 'C1', s, 'x');
 }
 
@@ -76,6 +76,9 @@ prog('sE', '2.1', 'exercise-1', 0);                            ev('sE', '2.1', '
 // G is a v2 column: a pre-cutoff zero that v1 must NOT touch and v2 must find.
 prog('sG', '1.2', 'exercise-1', 0);                            ev('sG', '1.2', 'exercise-1', 0, BEFORE);
 prog('sF', '1.4', 'exercise-1', 88);                           ev('sF', '1.4', 'exercise-1', 88, BEFORE);
+// H is on 1.2 lab, one of the two columns ONLY v3 names. v1 and v2 must both
+// miss it, or v3 is not actually reaching the new ground it was added for.
+prog('sH', '1.2', 'lab', 0);                                   ev('sH', '1.2', 'lab', 0, BEFORE);
 
 const eventsBefore = db.prepare('SELECT COUNT(*) c FROM score_events').get().c;
 
@@ -84,7 +87,24 @@ const { findFabricated, findProtected, DEFAULT_CUTOFF, DEFAULT_SCOPE, SCOPES, co
 ok('the default scope is v1, so an unqualified call is unchanged', DEFAULT_SCOPE === 'v1');
 ok('v1 is the original nine columns', SCOPES.v1.length === 9, SCOPES.v1.length);
 ok('v2 is the three that pricing made harmful', SCOPES.v2.length === 3, SCOPES.v2);
-ok('all is v1 plus v2 with nothing invented', SCOPES.all.length === 12);
+ok('v3 is the ten columns the score reporter fabricated on load', SCOPES.v3.length === 10, SCOPES.v3.length);
+// v3 deliberately overlaps v1 and v2 on eight columns, so `all` must dedupe or
+// it double-lists and plan.columns stops describing what the run covered.
+ok('all is the union of v1, v2 and v3, deduplicated', SCOPES.all.length === 14, SCOPES.all.length);
+ok('all contains no repeated column',
+  new Set(SCOPES.all.map((c) => c.join('|'))).size === SCOPES.all.length);
+// The two columns v3 exists to add. If either drifts back out, Peter's 1.1
+// exercise-1 and 1.2 lab zeros go unswept and nothing else notices.
+{
+  const inV1orV2 = new Set([...SCOPES.v1, ...SCOPES.v2].map((c) => c.join('|')));
+  const novel = SCOPES.v3.map((c) => c.join('|')).filter((k) => !inV1orV2.has(k)).sort();
+  ok('v3 adds exactly 1.1|exercise-1 and 1.2|lab over v1 and v2',
+    JSON.stringify(novel) === JSON.stringify(['1.1|exercise-1', '1.2|lab']), novel);
+}
+// The lab columns v3 does NOT name. They were v1's, they no longer fabricate,
+// and widening v3 to "every column v1 had" would clear grades nobody reviewed.
+ok('v3 omits the 1.3, 1.4 and 1.5 labs',
+  SCOPES.v3.every((c) => !(c[1] === 'lab' && ['1.3', '1.4', '1.5'].includes(c[0]))), SCOPES.v3);
 ok('1.3 exercises are in v1 and NOT repeated in v2',
   SCOPES.v2.every((c) => c[0] !== '1.3'), SCOPES.v2.filter((c) => c[0] === '1.3'));
 {
@@ -117,6 +137,22 @@ ok('a ledger row with no progress row carries a null progress_id',
   const v1 = clearFabricatedZeros({ scope: 'v1', apply: false });
   ok('v1 still finds its three fixture rows', v1.found === 3, v1.found);
   ok('the plan reports which scope produced it', v1.scope === 'v1' && v2.scope === 'v2');
+
+  //  v3 spans columns v1 and v2 each hold a piece of, plus ground neither has.
+  //  Asserting the exact student set is what catches a scope that quietly
+  //  widened into the lab columns or narrowed out of the new ones.
+  const v3 = clearFabricatedZeros({ scope: 'v3', apply: false });
+  const v3ids = findFabricated(DEFAULT_CUTOFF, SCOPES.v3).map((r) => r.student_id).sort();
+  ok('v3 finds sA (v1 column), sC (v1 column), sG (v2 column) and sH (v3 only)',
+    JSON.stringify(v3ids) === JSON.stringify(['sA', 'sC', 'sG', 'sH']), v3ids);
+  ok('v3 does NOT reach 1.3 lab, which is v1\'s and not v3\'s', !v3ids.includes('sD'));
+  ok('v3 never selects a real nonzero score', !v3ids.includes('sF'));
+  ok('v3 names ten columns in its plan', v3.columns.length === 10, v3.columns);
+
+  //  1.2 lab is the whole reason v3 exists. Neither older scope may find it.
+  ok('neither v1 nor v2 finds the 1.2 lab row',
+    !findFabricated(DEFAULT_CUTOFF, SCOPES.v1).some((r) => r.student_id === 'sH')
+    && !findFabricated(DEFAULT_CUTOFF, SCOPES.v2).some((r) => r.student_id === 'sH'));
 }
 
 console.log('apply');
