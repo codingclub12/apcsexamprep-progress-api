@@ -103,7 +103,49 @@ here, and that is now written into both files.
   and costs nothing extra. Deliberately not done here: this pass was scoped to
   items 2 and 3 as agreed, and that is a third change to a workflow that has
   already been edited twice today.
-- **Neither of these is proven live yet.** Both are asserted structurally; the
-  first real evidence is the next scheduled run of each, and neither has fired.
 - Tasks 133 and 144 are resolved but await a human verify click, which is
-  cookie-auth only and stays that way.
+  cookie-auth only and stays that way. The evidence they need is below.
+
+## Proven live, 2026-09-01 16:51 to 16:55 UTC
+
+The section above used to say "neither of these is proven live yet." It is not
+true any more, and the whole point of this note is that a claim which has stopped
+being true is worse than no claim, so here is what was measured.
+
+Merging PR #427 supplied the trigger, and the whole chain was watched end to end
+rather than inferred from a green workflow:
+
+    16:51:55  railway-deploy run 81 starts on aa1b375
+    16:52:07  /api/health reports commit ae460f3      <- the PREVIOUS main head
+    16:52:40  /api/health reports commit aa1b375      <- the merge just made
+    16:52:46  railway-deploy run 81 completes, success
+    16:53:26  /api/health reports commit aa1b375      (held)
+    16:54:11  /api/health reports commit aa1b375      (held)
+    16:54:48  deploy-drift run 336 starts, dispatched by hand
+    16:54:56  board checks.last_seen_at updates
+    16:54:59  deploy-drift run 336 completes, success
+
+Three separate things are established by that, and none of them was safe to
+assume this morning:
+
+- **The deploy pipeline works.** `/api/health` moving from `ae460f3` to `aa1b375`
+  is a deploy observed landing, not a workflow reporting itself green. Task 133
+  had `railway-deploy` passing 70 times while deploying nothing, so a green run
+  is precisely the evidence that was already known to be worthless.
+- **`/api/health` reports a real commit.** Task 144 was `commit:unknown`, which
+  blinded both deploy-landed checks. It served two different real shas here.
+  `lib/build-commit.js` and the `build-commit.txt` write ahead of `railway up`
+  are doing their job in production.
+- **The drift alarm reaches the board.** `checks` reads
+  `{total: 2, failing: 0, red: []}` with `last_seen_at` at 16:54:56, three
+  seconds before run 336 finished, because the reporting step runs inside the
+  job. Before today the alarm was correct and red for four days while reporting
+  to nobody.
+
+The throttling caveat above still stands and is untouched by this. A hand
+dispatch proves the reporting path works; it says nothing about how promptly the
+cron fires, which was measured at 3 to 8 hours and is a separate problem.
+
+One thing this does NOT establish: a single deploy landing in under a minute is
+not evidence the pipeline is reliable, only that it is connected. Task 118 was
+about deploys lagging 25 to 35 minutes, and one fast sample does not retire it.
