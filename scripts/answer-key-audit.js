@@ -182,13 +182,103 @@ function distributionRows(edges) {
       const dist = {};
       letters.forEach((l) => { dist[l] = (dist[l] || 0) + 1; });
       rows.push({
-        handle: e.node.handle, activity, n: letters.length, dist,
+        handle: e.node.handle, activity, n: letters.length, dist, letters,
         allSame: Object.keys(dist).length === 1,
         maxShare: Math.max(...Object.values(dist)) / letters.length,
       });
     }
   }
   return rows.sort((a, b) => b.maxShare - a.maxShare);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  SEQUENCE DEFECTS: what a distribution cannot see.
+//
+//  The two checks above both read the distribution, and a distribution has no
+//  order in it. "CADB CADB CADB CADB" is 25 percent on every letter and 0 percent
+//  skew, so it passes both while being the most guessable key a quiz can carry:
+//  read four answers and you have the rest. The AP Cyber 2.2 teacher-bundle quiz
+//  was exactly that, 16 of its 28 answers, and it had passed every check that
+//  existed.
+//
+//  Three order-sensitive defects, each one found live in this course rather than
+//  imagined:
+//    repeating block   2.2 bundle quiz, CADB four times over
+//    identical keys    cyber 5.2, 5.3 and 5.4 all ABCDB (task 130)
+//    fixed position    every unit 5 quiz answered B on question 5 (task 130)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// The longest stretch anywhere in the key that repeats a block of `period`.
+// Returns the block itself plus every repeat of it, so "CADB" x4 reports len 16.
+//
+// `maxPeriod` bounds the search rather than filtering afterwards, and that is not
+// a detail. Taking the global maximum and rejecting it for being too long hides
+// the finding underneath: "ACBD ABCD BCDA BCDA" has a meaningless period-7 run of
+// 12 sitting on top of the real defect, BCDA twice, and reported nothing at all.
+function longestCycle(letters, maxPeriod = Infinity) {
+  const n = letters.length;
+  let best = { period: 0, start: 0, len: 0 };
+  for (let p = 1; p * 2 <= n && p <= maxPeriod; p++) {
+    let i = p;
+    while (i < n) {
+      if (letters[i] !== letters[i - p]) { i++; continue; }
+      let j = i;
+      while (j < n && letters[j] === letters[j - p]) j++;
+      const len = (j - i) + p;
+      if (len > best.len || (len === best.len && p < best.period)) best = { period: p, start: i - p, len };
+      i = j + 1;
+    }
+  }
+  return best;
+}
+
+// A cycle is worth reporting only when it covers enough of the key to be usable
+// by a student. Half the questions, and never fewer than eight: a 5-item quiz
+// cannot cycle meaningfully, and flagging one would train people to ignore this.
+function cycleFinding(letters) {
+  const c = longestCycle(letters, 4);
+  if (!c.period) return null;
+  if (c.len < 8 || c.len < letters.length / 2) return null;
+  return { ...c, block: letters.slice(c.start, c.start + c.period).join('') };
+}
+
+// Two graded activities with the identical key: whoever sits one has the other.
+function identicalKeys(rows) {
+  const by = new Map();
+  for (const r of rows) {
+    if (r.n < 3) continue;                       // too short to mean anything
+    const k = r.letters.join('');
+    if (!by.has(k)) by.set(k, []);
+    by.get(k).push(r);
+  }
+  return [...by.entries()].filter(([, g]) => g.length > 1)
+    .map(([key, group]) => ({ key, group }))
+    .sort((a, b) => b.group.length - a.group.length);
+}
+
+// The same letter at the same question number across a group of quizzes. Grouped
+// by the handle prefix so unrelated courses are not pooled into a false signal.
+function positionalCollisions(rows, minRows = 3) {
+  const groups = new Map();
+  for (const r of rows) {
+    const g = (r.handle.match(/^(ap-[a-z]+-course-[a-z0-9]+)/) || [null, r.handle])[1];
+    if (!groups.has(g)) groups.set(g, []);
+    groups.get(g).push(r);
+  }
+  const out = [];
+  for (const [g, rs] of groups) {
+    if (rs.length < minRows) continue;
+    const width = Math.max(...rs.map((r) => r.n));
+    for (let i = 0; i < width; i++) {
+      const here = rs.filter((r) => i < r.n).map((r) => r.letters[i]);
+      if (here.length < minRows) continue;
+      const tally = {};
+      here.forEach((l) => { tally[l] = (tally[l] || 0) + 1; });
+      const [letter, count] = Object.entries(tally).sort((a, b) => b[1] - a[1])[0];
+      if (count === here.length) out.push({ group: g, q: i + 1, letter, of: here.length });
+    }
+  }
+  return out;
 }
 
 function audit(edges) {
@@ -202,12 +292,31 @@ function audit(edges) {
   console.log(`\n60 PERCENT OR MORE ON ONE LETTER (${skew.length}):`);
   skew.length ? skew.forEach((r) => console.log(`  ${r.handle.padEnd(42)}${r.activity.padEnd(10)}${r.n}q  ${JSON.stringify(r.dist)}`))
               : console.log('  none');
+  const cycles = rows.map((r) => ({ r, c: cycleFinding(r.letters) })).filter((x) => x.c);
+  console.log(`\nREPEATING BLOCK, invisible to the distribution (${cycles.length}):`);
+  cycles.length ? cycles.forEach(({ r, c }) => console.log(
+      `  ${r.handle.padEnd(42)}${r.activity.padEnd(10)}${c.block} x${(c.len / c.period).toFixed(0)}`
+      + ` covers ${c.len} of ${r.n} answers  ${r.letters.join('')}`))
+                : console.log('  none');
+
+  const dupes = identicalKeys(rows);
+  console.log(`\nIDENTICAL KEYS SHARED BY TWO OR MORE ACTIVITIES (${dupes.length}):`);
+  dupes.length ? dupes.forEach((d) => console.log(
+      `  ${d.key}   ${d.group.map((r) => r.handle + '/' + r.activity).join(', ')}`))
+               : console.log('  none');
+
+  const pos = positionalCollisions(rows);
+  console.log(`\nSAME ANSWER AT THE SAME QUESTION NUMBER ACROSS A UNIT (${pos.length}):`);
+  pos.length ? pos.forEach((p) => console.log(
+      `  ${p.group.padEnd(42)}Q${p.q} is ${p.letter} on all ${p.of} quizzes`))
+             : console.log('  none');
+
   const tot = {};
   rows.forEach((r) => Object.entries(r.dist).forEach(([k, v]) => { tot[k] = (tot[k] || 0) + v; }));
   const N = Object.values(tot).reduce((a, b) => a + b, 0);
   console.log(`\nWHOLE-COURSE DISTRIBUTION (${N} questions, even would be 25 percent each):`);
   Object.keys(tot).sort().forEach((k) => console.log(`  ${k}  ${String(tot[k]).padStart(4)}  ${(100 * tot[k] / N).toFixed(1)}%`));
-  return { same, skew };
+  return { same, skew, cycles, dupes, pos };
 }
 
 // Permute so the correct option lands on `want`, carrying its feedback with it.
@@ -315,4 +424,7 @@ if (require.main === module) {
   else audit(edges);
 }
 
-module.exports = { keysFor, distributionRows, rewriteBody, verify, TARGETS };
+module.exports = {
+  keysFor, distributionRows, rewriteBody, verify, TARGETS,
+  longestCycle, cycleFinding, identicalKeys, positionalCollisions,
+};

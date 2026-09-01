@@ -1,0 +1,146 @@
+# AP Cyber 2.1 and 2.2 bundle quizzes: the key was patterned, and the student copy was broken
+
+Tanner asked for the answer-letter patterns in the teacher bundle to be fixed.
+The patterns were real. Underneath them sat a worse defect that nobody had
+reported, in the copy students actually read.
+
+## What was wrong
+
+**The keys were cycled, not merely skewed.**
+
+```
+2.1   ACBD ABCD BCDA BCDA        4/4/4/4, perfectly even
+2.2   CADB CADB CADB CADB CABD BCDA DACD    16 of 28 on one repeating block
+```
+
+Both were even enough to pass `answer-key-audit.js`. That is the interesting part
+and is dealt with below.
+
+**The 2.2 STUDENT copy had 18 broken strings.** An earlier pass removed the EK
+citations from the student file with what looks like a plain find-and-replace.
+Where the citation was a grammatical constituent, the sentence did not survive:
+
+```
+"According to, a vulnerability is best defined as which of the following?"
+"Which statement(s) correctly describe shoulder surfing as defined in?"
+"Lists the common ways an asset can be compromised."
+"— manipulating an authorized person into granting access"     (all four of Q12)
+```
+
+Ten stems and eight options. This is ledger #125, filed as "drops the EK citation
+out of several stems"; the count is higher than the ticket suggests and the Q12
+and Q14 option sets were left with no subject at all.
+
+**Q25 was a verbatim duplicate of Q7.** Same EK, same three I/II/III statements,
+same answer, different only in that one said "Statement I only" and the other
+"I only". 28 questions, 27 of them distinct.
+
+**Q26's rationale argued against its own key.** Correct answer A, and the
+rationale read "Options A, B, and C name attacks that do not involve cutting
+power."
+
+**2.1 leaked teacher-facing sourcing into student stems.** Q5 asked "Per the CED,
+which factors...", Q4 "In CED terms...". Same defect class Tanner had already
+called out for the online quizzes.
+
+## What changed
+
+```
+2.1   ACBD ABCD BCDA BCDA          ->  DADB ACBC ABCB DACD
+2.2   CADB CADB CADB CADB CABD...  ->  BADD ACDA DCAC BDBC ABCB ACAD BDCB
+```
+
+Both keys are 25 percent per letter, contain no repeated three-block, no cyclic
+run, no three-in-a-row, and no block that alternates or leans three-to-one.
+
+The correct ANSWER never moved. Only the letter it sits on. That property is
+asserted per question rather than trusted.
+
+Q25 is re-authored on EK 2.2.B.1 from the misconception side (a flood is a threat
+to physical security even with no adversary), which keeps this quiz at exactly two
+questions per EK. Q26's rationale now names the three distractors. The 18 broken
+student strings are rewritten as sentences rather than patched. 2.1's CED
+references are gone from both copies, so the two do not drift.
+
+Q12 and Q14 also had the teacher copy asking "Which EK describes this?" while the
+student copy asked "What describes this?". Both now ask the same question and the
+KEY carries its citation as a trailing parenthetical, which is what Q20, Q21 and
+Q24 in the same quiz already did.
+
+## Three questions are deliberately NOT re-lettered
+
+2.2 Q2, Q7 and Q22 have options ordered by cardinality: `I only`, `I and II only`,
+`I, II, and III`. Permuting those strands `I, II, and III` at option A, which reads
+as a mistake to any teacher scanning the page. They are pinned at A, D and C and
+the rest of the key is designed around them.
+
+## Why the audit did not catch this, and what now does
+
+`answer-key-audit.js` had two detectors, `allSame` and `maxShare >= 0.6`. Both read
+the distribution, and **a distribution has no order in it**. `CADB CADB CADB CADB`
+is 25 percent on every letter and zero skew. It passed cleanly while being the most
+guessable key a quiz can carry: read four answers and you have the other twelve.
+
+This is the second time in one day this tool was found blind. The earlier run note,
+`2026-09-01-claude-code-cyber-unit5-answer-keys.md`, fixed it being blind to a
+markup shape. This is a blindness of a different kind: it read the right numbers
+and the numbers do not contain the defect.
+
+Three order-sensitive detectors added, each one for a defect found live rather than
+imagined:
+
+| detector | the case it was written for |
+|---|---|
+| repeating block | 2.2 bundle quiz, CADB four and a half times |
+| identical keys | cyber 5.2, 5.3 and 5.4 all ABCDB (task 130) |
+| fixed position | question 5 answered B on all six unit 5 quizzes (task 130) |
+
+One implementation note is worth keeping, because the first version of it silently
+reported nothing. Taking the longest cycle at any period and then rejecting it for
+having too long a period hides the finding underneath it: 2.1's key carries a
+meaningless period-7 run of 12 sitting on top of the real period-4 `BCDA BCDA`.
+Bounding the period inside the search rather than filtering afterwards is the fix,
+and there is a named assertion for exactly that mutation.
+
+```
+smoke:answerkeys     37 passed, 0 failed   (was 22)
+smoke:quizauthoring  39 passed, 0 failed
+smoke:quizgate       20 passed, 0 failed
+smoke:cyberdenoms    60 passed, 0 failed
+smoke:denomsafety    11 passed, 0 failed
+smoke:contract       42 passed, 0 failed
+smoke:namesafety     24 passed, 0 failed
+```
+
+## Evidence on the four documents
+
+```
+archive integrity        4/4, part lists identical to the originals (26 each)
+only document.xml differs in all four files
+XML well-formed          22 parts per file
+opens via python-docx    95 / 111 / 158 / 190 paragraphs
+purple + checkmark       DADBACBCABCBDACD and BADDACDADCACBDBCABCBACADBDCB
+                         read back off the runs, matching the printed summary line
+one purple option per question, one checkmark, none in either STUDENT copy
+176 option slots compared between KEY and STUDENT: 0 mismatches
+every rationale: 'Why X' matches the purple option, and every 'Option ...'
+                 reference names the same text it named before the re-lettering
+```
+
+## Not verified
+
+**No visual render.** LibreOffice is installed in the container but cannot convert,
+including a plain `.txt` file and including the untouched originals, so the PDF
+check that was planned did not run. `verify3.py` substitutes an independent OPC
+parser reading the colour off each run, which answers "is the purple on the right
+option" more directly than a visual check would. It does not answer "does this look
+right when opened". Somebody should open one file before these replace anything in
+Drive.
+
+## Still open
+
+- The four documents are not yet in Drive. Plan is archive the originals, upload
+  the replacements into the Quiz folders. The Command Center links folders rather
+  than files, so new file ids are safe.
+- Units 2.3, 2.4 and the Unit 2 Test are not audited. Nor are Units 3 to 5.
+- The online quiz banks were not touched by any of this.

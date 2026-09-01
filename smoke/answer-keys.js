@@ -13,7 +13,10 @@
 //
 //  Run: npm run smoke:answerkeys
 // ─────────────────────────────────────────────────────────────────────────────
-const { keysFor, distributionRows, rewriteBody, verify } = require('../scripts/answer-key-audit');
+const {
+  keysFor, distributionRows, rewriteBody, verify,
+  longestCycle, cycleFinding, identicalKeys, positionalCollisions,
+} = require('../scripts/answer-key-audit');
 
 let pass = 0, fail = 0;
 const ok = (n, c, x) => {
@@ -153,6 +156,75 @@ const collision = distributionRows([
 ]);
 ok('  an all-B opt-btn quiz is reported as every-answer-the-same',
   collision.length === 1 && collision[0].allSame && collision[0].n === 3, collision);
+
+
+// ── 6. SEQUENCE DEFECTS: the ones a distribution cannot see ─────────────────
+//  Every key below is real. The two bundle keys passed every check that existed
+//  on 2026-09-01 while being trivially guessable, which is why these exist.
+const K = (s) => s.split('');
+console.log('\nSEQUENCE DEFECTS\n');
+
+const cyber22 = 'CADBCADBCADBCADBCABDBCDADACD';   // AP Cyber 2.2 teacher bundle
+const cyber21 = 'ACBDABCDBCDABCDA';               // AP Cyber 2.1 teacher bundle
+
+const f22 = cycleFinding(K(cyber22));
+ok('  the 2.2 bundle key is flagged as a repeating CADB block',
+  f22 && f22.block === 'CADB' && f22.len === 18, f22);
+
+// Both bundle keys are 25 percent on every letter, or close to it, so the two
+// distribution checks are silent on them. That is the entire point.
+const d22 = {};
+K(cyber22).forEach((l) => { d22[l] = (d22[l] || 0) + 1; });
+ok('  ...while its distribution is even enough to pass the skew check',
+  Math.max(...Object.values(d22)) / 28 < 0.6, d22);
+
+// REGRESSION: taking the longest cycle at ANY period and then rejecting it for
+// being too long reported nothing here, because a meaningless period-7 run of 12
+// sits on top of the real period-4 defect. The period must bound the search.
+const f21 = cycleFinding(K(cyber21));
+ok('  the 2.1 bundle key is flagged as BCDA twice, not masked by a longer noisy run',
+  f21 && f21.block === 'BCDA' && f21.len === 8, f21);
+ok('  ...and the unbounded search is what used to hide it',
+  longestCycle(K(cyber21)).period === 7 && longestCycle(K(cyber21), 4).period === 4);
+
+ok('  the replacement 2.1 key is clean', cycleFinding(K('DADBACBCABCBDACD')) === null);
+ok('  the replacement 2.2 key is clean', cycleFinding(K('BADDACDADCACBDBCABCBACADBDCB')) === null);
+ok('  a run of eight identical answers is flagged even when the rest varies',
+  (cycleFinding(K('AAAAAAAABCDB')) || {}).len === 8);
+ok('  a five-item key is never flagged, since it cannot cycle meaningfully',
+  cycleFinding(K('ABCDB')) === null);
+ok('  a key with no repeating block is left alone',
+  cycleFinding(K('DCBAACADBBDCACBD')) === null);
+
+// Cyber 5.2, 5.3 and 5.4 all shipped ABCDB (task 130).
+const row = (handle, activity, key) => ({ handle, activity, n: key.length, letters: K(key) });
+const dupes = identicalKeys([
+  row('ap-cyber-course-u5-l2', 'quiz', 'ABCDB'),
+  row('ap-cyber-course-u5-l3', 'quiz', 'ABCDB'),
+  row('ap-cyber-course-u5-l4', 'quiz', 'ABCDB'),
+  row('ap-cyber-course-u5-l1', 'quiz', 'ABDCB'),
+]);
+ok('  three quizzes sharing one key are reported as a single group of three',
+  dupes.length === 1 && dupes[0].key === 'ABCDB' && dupes[0].group.length === 3, dupes);
+ok('  two-question activities are too short to count as a shared key',
+  identicalKeys([row('a', 'quiz', 'AB'), row('b', 'quiz', 'AB')]).length === 0);
+
+// Every unit 5 quiz answered B on question 5 (task 130).
+const unit5 = ['ABCDB', 'ABDCB', 'BCADB', 'BCDAB', 'ABCDB', 'ABCDB']
+  .map((k, i) => row(`ap-cyber-course-u5-l${i + 1}`, 'quiz', k));
+const pos = positionalCollisions(unit5);
+ok('  question 5 being B on all six unit-5 quizzes is reported',
+  pos.some((p) => p.q === 5 && p.letter === 'B' && p.of === 6), pos);
+ok('  ...and question 1, which varies, is not',
+  !pos.some((p) => p.q === 1), pos);
+ok('  two quizzes are not enough to call a position a collision',
+  positionalCollisions([row('ap-cyber-course-u5-l1', 'quiz', 'AB'), row('ap-cyber-course-u5-l2', 'quiz', 'AB')]).length === 0);
+ok('  unrelated courses are not pooled into a false collision',
+  positionalCollisions([
+    row('ap-csp-course-bi3-lists', 'quiz', 'BBB'),
+    row('ap-cyber-course-u5-l1', 'quiz', 'BBB'),
+    row('ap-csa-course-u1-l1', 'quiz', 'BBB'),
+  ]).length === 0);
 
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);
