@@ -32,9 +32,37 @@ Three distinct failures, all downstream of that one confusion:
   the visit and completion record normally, but the page names its score element
   `x2scn` ("<span class=sc-n id=x2scn>0 / 15</span>"), which matched no id in
   `SCORE_IDS`. The reporter could never read a score there at all.
-- **Quiz never unlocks.** The unlock waits on a scored Ex2. The score never
-  arrived, so the gate never opened. Unlocking the quiz by hand could not fix
-  that, which is why the Aug 31 change did nothing.
+- **Quiz greyed out.** SEPARATE CAUSE. See the correction below: this one is
+  not downstream of the scoring bug at all.
+
+## CORRECTION: the quiz lock is not caused by the Ex2 bug
+
+The first version of this note said the quiz unlock "waits on a scored Ex2", so
+the missing score kept the gate shut. That was inherited from the first read of
+the gradebook and never checked against the code. It is wrong, and it matters,
+because it points at the wrong fix for the symptom the teacher reported FIRST.
+
+There is no prerequisite gating anywhere in either repo. Searched both for
+prereq/unlock/requires-exercise logic: nothing gates a quiz on another
+activity's completion or score. What actually decides it is `lib/activity-gate.js`,
+and it reads exactly two things:
+
+1. an explicit `activity_gates` row for that activity, open or closed, or
+2. failing that, the class flag `quiz_lock_default`. False means open; true
+   closes the `DEFAULT_GATED` types, which are `quiz` and `exam`.
+
+Resolved at read time, never stored. Neither input consults an exercise, a
+score, or a completion. The other "locked" states in the theme are a different
+thing again: `apcs-quiz-wiring.js` locks a quiz AFTER submission ("Final grade
+submitted, contact your teacher to unlock"), and `apcs-hub-progress.js` only
+colours hub rows, gating nothing.
+
+So the greyed-out quiz is a class gate: either an `activity_gates` row closing
+it or `quiz_lock_default = 1` on the class. To fix Peter's, check those two for
+CYBER-BFXP rather than waiting on the scoring fix to open it.
+
+Two real bugs and one setting, not three symptoms of one bug. The scoring
+findings below stand on their own evidence and are unaffected.
 
 ## Evidence
 
