@@ -72,8 +72,12 @@ the reporter trusting whatever the page happened to paint.
 
 ## Is the earned work recoverable
 
-Yes, and nobody should redo anything. Reasoning, to be confirmed against the
-database rather than taken on trust:
+Two different answers, and conflating them would give a teacher a promise that
+does not hold.
+
+### The false zeros: yes, nothing was lost
+
+Reasoning, to be confirmed against the database rather than taken on trust:
 
 - `exercise-1`, `exercise-2` and `lab` are PRACTICE in `retry-policy.js`. Under
   both `all` and the default `practice` mode the best attempt is the grade of
@@ -86,6 +90,22 @@ database rather than taken on trust:
   `retry_mode: 'none'` takes the FIRST attempt on everything. There a load-time
   zero is sticky and would outrank real work done later. Confirm no affected
   class is on `none` before telling a teacher their data is safe.
+
+### The 1.1 Ex2 scores: no, and no purge will bring them back
+
+This is the opposite case and it matters for what a teacher is told. On 1.1
+exercise 2 the reporter could not READ the score, so nothing was ever sent. The
+completion row exists; the number never left the browser. There is no phantom
+row to delete and no stored value to recover, because none was ever written.
+
+So the student Peter named, the one who scored 15/15, has a recorded completion
+and no score, and no amount of cleanup will produce the 15. The options are to
+accept the completion as evidence the work was done, or to have those students
+resubmit Ex2 once the fix is deployed, which is a few minutes of class time
+rather than redoing the unit.
+
+Everything else in Unit 1 that shows a score reported it through a readable
+element and is intact.
 
 ## Still open
 
