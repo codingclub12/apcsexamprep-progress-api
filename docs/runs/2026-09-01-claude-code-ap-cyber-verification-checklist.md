@@ -5,8 +5,14 @@ Every one was checked against a primary source: production `/api/health` and the
 deployed code at that commit, the live storefront, the Shopify Admin API, the
 command board, and Google Drive. Four of the eight premises did not survive.
 
-Production was serving `405b3d8` throughout, which is `origin/main` HEAD and the
-commit checked out here, so "the deployed code" below means code read directly.
+Production was serving `405b3d8` throughout the checks, which was `origin/main`
+HEAD and the commit checked out here, so "the deployed code" below means code
+read directly rather than inferred.
+
+`main` has since advanced to `ffc152d` (PR #431), and production has deployed it.
+That delta is two files, `public/command.html` and `smoke/command-center.js`, and
+touches nothing any finding below rests on, so every verdict still holds on the
+currently deployed commit.
 
 ## 1. Does the API record Ex2 / Lab / Quiz at all, or is it display-only?
 
@@ -243,7 +249,8 @@ decision rather than an inherited default.
 ## Also observed
 
 Task 144 ("Production /api/health reports commit:unknown") is fixed in prod.
-`/api/health` returns `"commit":"405b3d8"`. The board still lists it open.
+`/api/health` returns a real commit (`405b3d8` during the checks, `ffc152d` after
+the next deploy) rather than `unknown`. The board still lists it open.
 
 ## Environment note
 
