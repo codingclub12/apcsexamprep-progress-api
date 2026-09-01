@@ -244,10 +244,28 @@ Before any theme work, read the theme repo's own CLAUDE.md. The one fact that
 keeps costing sessions a deploy: the published theme is connected to the branch
 `claude/site-linking-audit-yhufjk`, NOT `main`. Merging a theme pull request into
 `main` deploys nothing, and the storefront keeps serving the old file while the
-PR reads as shipped. To actually deploy, fast-forward the connected branch:
-`git push origin origin/main:refs/heads/claude/site-linking-audit-yhufjk`. Verify
-against the live URL, never against `main`. Repointing the theme at `main` in
-Shopify Admin is the real fix and is a human action.
+PR reads as shipped. Verify against the live URL, never against `main`.
+
+**DO NOT run the fast-forward command this file used to give here.** It said to
+run `git push origin origin/main:refs/heads/claude/site-linking-audit-yhufjk`,
+and that is backwards. Checked against the API on 2026-09-01: theme `main` is at
+`4735f4a`, the connected branch is at `6664a8f`, and `4735f4a` is an ANCESTOR of
+the connected branch. The connected branch is **46 commits AHEAD of main**, not
+behind it.
+
+So that push moves the published branch BACKWARD by 46 commits. Git refuses it
+as a non-fast-forward, which is the only reason this has not already cost a
+storefront. The danger is the next step: a rejected push invites `--force`, and
+forcing it would rewind the live theme by 46 commits in one command.
+
+No replacement recipe is given here on purpose, because the right one is not
+known yet. If the connected branch is ahead, theme work is reaching the
+storefront some other way, and guessing at a command that writes to a published
+theme is how this entry became wrong in the first place. Establish where theme
+changes actually land before writing a new one.
+
+Repointing the theme at `main` in Shopify Admin remains the real fix and is a
+human action. Board task 141.
 
 Exception, apcs-tracker.js: this repo is NOT canonical for it. The deployed asset lives in the APCSExamPrep-theme repo at assets/apcs-tracker.js and reaches the storefront through Shopify two-way GitHub sync, so the theme repo is the only source of truth. shopify/apcs-tracker.js here is a byte-identical mirror for reference. Any change to tracker behaviour ships as a theme PR first, then the mirror is re-synced in the same pass. Never edit the mirror on its own and never upload it to Shopify by hand.
 
