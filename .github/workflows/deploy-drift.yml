@@ -53,6 +53,7 @@ jobs:
           fetch-depth: 0
 
       - name: Compare the serving commit against main
+        id: compare
         env:
           HEALTH_URL: https://progress.apcsexamprep.com/api/health
           # How long a build is allowed to take before silence is a problem.
@@ -78,6 +79,7 @@ jobs:
           if [ -z "$body" ]; then
             echo "::error title=Health endpoint unreachable::$HEALTH_URL did not answer after 3 tries."
             echo "That is a bigger problem than drift: the API may be down."
+            echo "detail=/api/health did not answer after 3 tries; the API may be down. main is $head_short." >> "$GITHUB_OUTPUT"
             exit 1
           fi
 
@@ -89,17 +91,23 @@ jobs:
           if [ -z "$served" ]; then
             echo "::error title=No commit in health response::/api/health answered but reported no commit."
             echo "Body: $body"
+            echo "detail=/api/health answered but reported no commit at all. main is $head_short." >> "$GITHUB_OUTPUT"
             exit 1
           fi
 
           if [ "$served" = "unknown" ]; then
-            echo "::error title=Serving container is not a Railway build::commit reported as 'unknown'."
-            echo "RAILWAY_GIT_COMMIT_SHA is unset in the running container."
+            echo "::error title=Serving container cannot name its own build::commit reported as 'unknown'."
+            echo "None of the three sources in lib/build-commit.js resolved: the BUILD_COMMIT"
+            echo "service variable, build-commit.txt inside the upload, and RAILWAY_GIT_COMMIT_SHA"
+            echo "were all absent. A container that cannot name its build makes this check and"
+            echo "railway-deploy.yml's confirm step blind, which is task 144."
+            echo "detail=Serving container reports commit 'unknown', so it cannot name its own build. main is $head_short." >> "$GITHUB_OUTPUT"
             exit 1
           fi
 
           if [ "$served" = "$head_short" ]; then
             echo "In sync."
+            echo "detail=In sync: production is serving $head_short." >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
@@ -151,6 +159,7 @@ jobs:
 
             if [ "$stale_min" -le "${GRACE_MINUTES}" ]; then
               echo "Behind by design: the deploy has been behind for only ${stale_min}m and a build takes a few minutes."
+              echo "detail=Building: serving $served, main is $head_short, behind ${stale_min}m and inside the ${GRACE_MINUTES}m grace." >> "$GITHUB_OUTPUT"
               exit 0
             fi
           fi
@@ -165,4 +174,71 @@ jobs:
           echo "  2. The build log for 'prebuild-install warn install Request timed out',"
           echo "     which is the documented failure mode for better-sqlite3 here."
           echo "  3. Whether the push that should have triggered it actually reached main."
+          echo "detail=Deploy has not landed: serving $served ($relation), main is $head_short, behind ${stale_min}m." >> "$GITHUB_OUTPUT"
           exit 1
+
+      # ── TELL THE BOARD ──────────────────────────────────────────────────────
+      #  This check has been correct and unread. It went red on 2026-08-28 and
+      #  stayed red for four days while the board's health panel reported
+      #  `checks: {total: 1, failing: 0}`, because only tests.yml posted to
+      #  /api/command/checks and this workflow reported to nobody. A human looks
+      #  at the board, not at the Actions tab, so an alarm that only lands here
+      #  manufactures the feeling of coverage without the coverage.
+      #
+      #  source `health` is the registered source for exactly this (see
+      #  lib/command-checks.js), which files it in `now` on surface `api`.
+      #  Fingerprinting is (source, check_id), so a stall that persists for days
+      #  is ONE task aging rather than one per run, and going green auto-closes
+      #  it with the passing run as the artifact.
+      #
+      #  NOT ON A CANCELLED JOB. tests.yml learned this the expensive way:
+      #  `always()` fires on cancellation, job.status is then `cancelled`, and
+      #  reporting `fail` from a run that compared nothing opened task #88
+      #  against work that never happened. A cancelled run knows nothing, and
+      #  silence is the only honest report.
+      #
+      #  continue-on-error, and the curl swallows its own failure: the command
+      #  center is an observer here, and an observer that can turn this job red
+      #  would make the drift alarm lie in a new direction.
+      - name: Report the drift verdict to the command center
+        if: always() && job.status != 'cancelled'
+        continue-on-error: true
+        env:
+          TODO_KEY: ${{ secrets.TODO_KEY }}
+          BASE: ${{ vars.PROGRESS_BASE_URL || 'https://progress.apcsexamprep.com' }}
+          OUTCOME: ${{ steps.compare.outcome }}
+          DETAIL: ${{ steps.compare.outputs.detail }}
+        run: |
+          if [ -z "${TODO_KEY:-}" ]; then
+            echo "TODO_KEY not configured; skipping command center report."
+            exit 0
+          fi
+
+          # Only success and failure can reach here; cancellation is filtered
+          # above. Anything else is treated as a failure rather than guessed at.
+          if [ "$OUTCOME" = "success" ]; then state=pass; else state=fail; fi
+
+          # A verdict is always set by the step above, but never post an empty
+          # detail: "" on the board reads as a check that ran and found nothing
+          # to say, which is not the same as one that could not describe itself.
+          detail="${DETAIL:-no verdict recorded by the compare step}"
+          detail="$detail (run ${{ github.run_id }})"
+
+          printf 'reporting state=%s detail=%s\n' "$state" "$detail"
+
+          node -e '
+            const body = JSON.stringify({
+              source: "health",
+              check_id: "deploy-drift",
+              state: process.argv[1],
+              detail: process.argv[2],
+            });
+            process.stdout.write(body);
+          ' "$state" "$detail" > payload.json
+
+          curl -sS -X POST "$BASE/api/command/checks" \
+            -H "Authorization: Bearer $TODO_KEY" \
+            -H "Content-Type: application/json" \
+            -H "User-Agent: Mozilla/5.0 (compatible; apcse-ci/1.0) Chrome/120.0.0.0 Safari/537.36" \
+            --data-binary @payload.json \
+            || echo "report failed, ignoring"

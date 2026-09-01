@@ -10,14 +10,40 @@ name: Reconcile the board
 # never be the thing that closes the loop on it. smoke/verify-board.js records
 # every request the script makes and fails if any of them is not a GET.
 #
-# MANUAL ONLY, on purpose. There is no schedule here. The overnight sweep that
-# files findings as tasks is Phase 2.2 and is a different job with different
-# risks; this one exists to be pressed by a human who is about to read it.
+# ── WHY THIS IS NOW SCHEDULED, HAVING BEEN MANUAL ON PURPOSE ─────────────────
+# This used to say "MANUAL ONLY, on purpose. There is no schedule here", and the
+# reasoning was sound: a report nobody reads is noise, and the overnight sweep
+# that FILES findings as tasks is Phase 2.2, a different job with different
+# risks. That distinction still holds. This job still writes nothing, and still
+# files nothing.
+#
+# What changed is the arithmetic. On 2026-09-01 the board held 60 tasks in
+# needs_verification against 0 in-flight agent work: production had outrun
+# verification, at manual speed, before any automation was switched on. The one
+# queue that cannot be moved off a human is the verify click, so the only lever
+# is making each click cheap, and evidence gathered at 3am is cheaper than
+# evidence gathered while somebody waits for it.
+#
+# So it runs daily AND stays a button. The schedule keeps the evidence warm; the
+# button is still there for the moment you actually want to reconcile.
+#
+# The failure this must not become: a daily green tick that nobody opens, which
+# is precisely how deploy-drift.yml stayed red and unread for four days. If this
+# report goes unread for a week, delete the schedule rather than let it become
+# furniture.
 #
 # It fails loudly for the same reason auto-dispatch.yml does: a green tick on a
 # run that read nothing is worse than no run at all.
 
 on:
+  # Daily, at a minute that is not :00 so it is not queued behind every other
+  # repo's on-the-hour cron. GitHub deprioritises scheduled workflows heavily on
+  # low-activity repos: deploy-drift.yml nominally runs every 30 minutes and was
+  # measured actually firing every 3 to 8 hours. Treat this as "most days,
+  # roughly then", never as a guarantee, and never put anything time-critical on
+  # a cron in this repo.
+  schedule:
+    - cron: '17 11 * * *'
   workflow_dispatch:
     inputs:
       limit:
@@ -44,7 +70,10 @@ jobs:
         env:
           TODO_KEY: ${{ secrets.TODO_KEY }}
           APCS_BASE: ${{ vars.PROGRESS_BASE_URL || 'https://progress.apcsexamprep.com' }}
-          LIMIT: ${{ inputs.limit }}
+          # `inputs` is empty on a scheduled run, which would drop --limit and
+          # sweep the entire backlog against a storefront that rate-limits. The
+          # fallback keeps a cron run the same size as a hand-pressed one.
+          LIMIT: ${{ inputs.limit || '12' }}
           ONLY: ${{ inputs.task }}
         run: |
           # pipefail, or the `node ... | tee` below reports TEE's exit status and

@@ -171,6 +171,7 @@
     "smoke:renderable": "node smoke/renderable-entities.js",
     "smoke:healthintegrity": "node smoke/health-integrity.js",
     "smoke:buildcommit": "node smoke/build-commit.js",
+    "smoke:deployreporting": "node smoke/deploy-reporting.js",
     "smoke:seocsv": "node smoke/seo-metadata-csv.js",
     "seocsv": "node scripts/seo-metadata-csv.js",
     "verify:sharing": "node scripts/verify-slide-sharing.js",
