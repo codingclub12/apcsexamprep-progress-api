@@ -290,6 +290,12 @@ const raw = (sql, ...args) => db.prepare(sql).run(...args);
     && digestAfterDone.needs_verification.some((t) => t.id === agentDone.id),
     { verified: withArtifact.body.task && withArtifact.body.task.verified });
 
+  // The verify link. `verified` stays cookie-auth only; this is about how many
+  // clicks it takes a human to reach the button, not about who may press it.
+  const vTask = digestAfterDone.needs_verification.find((t) => t.id === agentDone.id);
+  ok('12. every task carries a deep link to its own row',
+    !!vTask && vTask.verify_url === `${BASE}/admin/command#t${agentDone.id}`, vTask && vTask.verify_url);
+
   const cookieVerify = await call('POST', `/api/todo/${agentDone.id}/verify`, { as: 'tanner', body: {} });
   ok('12. the cookie path can set verified=1', cookieVerify.status === 200 && cookieVerify.body.task.verified === true);
 
@@ -579,6 +585,44 @@ const raw = (sql, ...args) => db.prepare(sql).run(...args);
     !/<span class="tid"[^>]*data-act/.test(page));
   ok('the id is selectable in one click for pasting',
     /\.row \.tid \{[^}]*user-select:all/.test(page));
+
+  // ── The deep link has to survive the filters ──────────────────────────────
+  //  A link that lands on a hidden row fails exactly when it is needed. The
+  //  board's defaults hide precisely the tasks awaiting verification: owner is
+  //  "tanner" so agent-owned work is filtered out, `closed` is false so anything
+  //  done is not even fetched, and the closed group renders collapsed.
+  ok('  the page reads a #t<id> hash', /\^#t\(\\d\{1,9\}\)\$/.test(page) || /#t\(\\d/.test(page));
+  ok('  include_closed is forced on, or a done task is not in the payload',
+    /if \(focusId\) \{[\s\S]{0,200}state\.closed = true;/.test(page));
+  ok('  the focused row is expanded, so Verify is on screen not one click away',
+    /state\.open\[focusId\] = true;/.test(page));
+  ok('  and the client-side filters cannot hide it',
+    /if \(focusId && t\.id === focusId\) return true;/.test(page));
+  //  The override must NOT be persisted. Clearing somebody's filters forever to
+  //  show them one row would be a rude trade, and it would be invisible until
+  //  they next opened the board and wondered why everything moved.
+  //  Naive proximity does not work here: `function save()` is declared a few
+  //  lines below the block, so a "no save() within N chars" regex matches the
+  //  DECLARATION and fails on correct code. Read the block itself instead.
+  const focusBlock = (function () {
+    const i = page.indexOf('if (focusId) {');
+    if (i < 0) return null;
+    let depth = 0;
+    for (let j = page.indexOf('{', i); j < page.length; j++) {
+      if (page[j] === '{') depth += 1;
+      else if (page[j] === '}') { depth -= 1; if (depth === 0) return page.slice(i, j + 1); }
+    }
+    return null;
+  })();
+  ok('  the override is applied AFTER stored prefs load, so it wins',
+    !!focusBlock && page.indexOf('if (focusId) {') > page.indexOf('localStorage.getItem(LS)'));
+  ok('  and is never persisted: clearing saved filters to show one row is a rude trade',
+    !!focusBlock && !/\bsave\s*\(/.test(focusBlock), focusBlock);
+  //  The scroll happens once. load() re-renders on every poll, and yanking the
+  //  viewport back each time would fight the person reading the row.
+  ok('  it scrolls once, but re-marks on every render',
+    /var focusScrolled = false;/.test(page) && /if \(focusScrolled\) return;/.test(page)
+    && /if \(focusId\) focusRow\(\);/.test(page));
 
   // ── Chat cannot claim ─────────────────────────────────────────────────────
   const chatClaim = await call('POST', `/api/command/task/${csaContent.body.task.id}/claim`, {
