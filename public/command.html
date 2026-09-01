@@ -83,6 +83,9 @@
   .row .line { display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
   .row .ttl { font-size:14.5px; font-weight:560; cursor:pointer; flex:1 1 220px; min-width:0; word-break:break-word; }
   .row .ttl.done { text-decoration:line-through; color:var(--muted); }
+  /* The deep-linked row. A ring rather than a fill, so the row's own bucket
+     colour and its chips still read normally underneath. */
+  .row.focus { outline:2px solid var(--accent); outline-offset:2px; border-radius:6px; }
   /* The id every other surface refers to. `apcs done 133`, "blocked by #133" and
      a person saying "task 133" all name this number, and until now it was only
      in a data- attribute, so the page was the one place it could not be read.
@@ -208,8 +211,39 @@
 (function () {
   "use strict";
   var LS = "apcse_command_ui";
+  // ── DEEP LINK TO ONE TASK: #t144 ──────────────────────────────────────────
+  //  `verified` is cookie-auth only and stays that way: an agent must never be
+  //  able to close the loop on its own report. That control is about WHO decides,
+  //  not about how many clicks it takes to decide, and the clicks were the part
+  //  that made verifying feel like a chore worth routing around. A rule people
+  //  route around stops being a rule.
+  //
+  //  So the link lands on the row with its panel already open and the Verify
+  //  button in front of you. A human still clicks it. Nothing about the
+  //  permission changes.
+  //
+  //  It has to survive the filters or it fails exactly when it is needed. Owner
+  //  defaults to "tanner", so an agent-owned task is hidden; `closed` defaults
+  //  to false, so anything done is not even fetched; and the closed group renders
+  //  collapsed. A task awaiting verification is usually done and often
+  //  agent-owned, which is every one of those at once.
+  //
+  //  The override is TRANSIENT. It is never passed to save(), because clearing
+  //  somebody's filters permanently to show them one row would be a rude trade.
+  var focusId = (function () {
+    var m = /^#t(\d{1,9})$/.exec(String(location.hash || ""));
+    return m ? Number(m[1]) : null;
+  })();
+
   var state = { owner: "tanner", surface: "", course: "", bucket: "", closed: false, open: {}, groups: {} };
   try { state = Object.assign(state, JSON.parse(localStorage.getItem(LS) || "{}")); } catch (e) {}
+  if (focusId) {
+    // include_closed is the only server-side filter, so it must be on or the
+    // task is not in the payload at all.
+    state.closed = true;
+    state.open[focusId] = true;
+    state.groups.closed = true;
+  }
   function save() { try { localStorage.setItem(LS, JSON.stringify(state)); } catch (e) {} }
 
   var BUCKETS = ["now", "decision", "week", "before_school", "september", "someday", "closed"];
@@ -420,6 +454,8 @@
 
   function visible() {
     return data.tasks.filter(function (t) {
+      // The one row you asked for is never filtered out from under you.
+      if (focusId && t.id === focusId) return true;
       if (state.owner !== "all" && t.owner !== state.owner) return false;
       if (state.surface && t.surface !== state.surface) return false;
       if (state.course && t.course !== state.course) return false;
@@ -442,8 +478,23 @@
         + list.map(rowHtml).join("") + "</details>";
     }).join("");
     $("list").innerHTML = html || '<p class="hint">Nothing here with these filters.</p>';
+    if (focusId) focusRow();
     Object.keys(state.open).forEach(function (id) { if (state.open[id]) loadLedger(Number(id)); });
     syncControls();
+  }
+
+  //  Runs after every render while a focus is active, because load() re-renders
+  //  and would otherwise drop the highlight the moment anything refreshed. The
+  //  scroll happens once: yanking the viewport back on every poll would fight
+  //  the person reading.
+  var focusScrolled = false;
+  function focusRow() {
+    var row = document.querySelector('.row[data-id="' + focusId + '"]');
+    if (!row) return;
+    row.classList.add("focus");
+    if (focusScrolled) return;
+    focusScrolled = true;
+    try { row.scrollIntoView({ block: "center", behavior: "smooth" }); } catch (e) { row.scrollIntoView(); }
   }
 
   function loadLedger(id) {

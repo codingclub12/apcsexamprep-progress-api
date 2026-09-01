@@ -342,7 +342,10 @@ cmds.verify = async (argv) => {
   console.log('  `verified` is in AGENT_FORBIDDEN_FIELDS: cookie-auth only, so an');
   console.log('  agent can never close the loop on its own report.\n');
   console.log(`  Gather the evidence:  ${C.cyan(`apcs evidence ${id}`)}`);
-  console.log(`  Then click verify at: ${C.cyan(`${BASE}/admin/command`)}`);
+  // The bare board URL used to be the whole answer, which meant hunting for the
+  // row under filters that default to hiding it. This lands on it directly,
+  // panel open. Still a human click, still cookie-auth only.
+  console.log(`  Then click verify at: ${C.cyan(`${BASE}/admin/command#t${id}`)}`);
 };
 
 // The bridge between the ledger and reality: pull the task's artifact and go
