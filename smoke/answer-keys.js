@@ -13,10 +13,9 @@
 //
 //  Run: npm run smoke:answerkeys
 // ─────────────────────────────────────────────────────────────────────────────
-const {
-  keysFor, distributionRows, rewriteBody, verify, audit,
-  longestCycle, cycleFinding,
-} = require('../scripts/answer-key-audit');
+const { keysFor, distributionRows, rewriteBody, verify, audit,
+  readOptBtnQuestions, rewriteBodyOptBtn, verifyOptBtn,
+  longestCycle, cycleFinding } = require('../scripts/answer-key-audit');
 
 let pass = 0, fail = 0;
 const ok = (n, c, x) => {
@@ -228,11 +227,77 @@ ok('  three activities agreeing on a position is coincidence, not a finding',
   small.locked.length === 0, small.locked);
 
 
+// ── REBALANCING THE opt-btn SHAPE ───────────────────────────────────────────
+//  Built to fix AP Cyber unit 5, whose six live quizzes shared three identical
+//  keys and had B on question 5 every time. The rule is the same as the older
+//  shape's: the correct answer never changes, only which letter it sits on.
+//
+//  This shape makes that easier, because data-correct, data-fb and the option
+//  text all live on the same button, so an option and its feedback move
+//  together by construction. The one thing that must change is the letter in
+//  the opt-letter span.
+console.log('\nopt-btn rebalance');
+{
+  // Indentation between buttons on purpose: the first version of this rewrite
+  // rejoined them with a bare newline and silently dropped 90 bytes a page.
+  const gap = '\n      ';
+  const build = (handler, correctByQ) => correctByQ.map((c, qi) =>
+    optBtn(handler, qi + 1, c, LETTERS).split('\n').join(gap)).join(gap);
+
+  const body = build('u5l1quiz', ['A', 'B', 'C']);
+  const want = ['C', 'D', 'A'];
+  const r = rewriteBodyOptBtn('t', body, want);
+
+  const keyOf = (b) => readOptBtnQuestions(b)
+    .map((g) => (g.opts.find((o) => o.correct) || {}).letter).join('');
+  ok('  the correct answer lands on the target letter', keyOf(r.body) === 'CDA', keyOf(r.body));
+  ok('  and every question reports as moved', r.questions === 3 && r.moved === 3, r);
+  ok('  the rewrite passes its own verifier',
+    verifyOptBtn('t', body, r.body).length === 0, verifyOptBtn('t', body, r.body));
+
+  // The guarantee that matters: an option's feedback travels with the option,
+  // so the correct answer never ends up wearing a wrong answer's explanation.
+  const before = readOptBtnQuestions(body), after = readOptBtnQuestions(r.body);
+  const pair = (g) => { const c = g.opts.find((o) => o.correct); return c.text + '|' + c.fb; };
+  ok('  the correct option keeps its own text and its own feedback',
+    before.every((g, i) => pair(g) === pair(after[i])),
+    before.map((g, i) => [pair(g), pair(after[i])]));
+
+  // Byte preservation. A rebalance that edits bytes nobody asked it to edit is
+  // one no reviewer can check by diffing.
+  ok('  the body length is unchanged, because only letters moved',
+    r.body.length === body.length, { before: body.length, after: r.body.length });
+  const strip = (b) => b.replace(/<button[^>]*class="[^"]*\bopt-btn\b[^"]*"[^>]*>[\s\S]*?<\/button>/g, ' BTN ');
+  ok('  and everything outside the option buttons is byte identical',
+    strip(body) === strip(r.body));
+
+  // A question already sitting on its target is left alone, so an unchanged
+  // page stays out of the sheet entirely.
+  const same = rewriteBodyOptBtn('t', body, ['A', 'B', 'C']);
+  ok('  a question already on target is not rewritten',
+    same.moved === 0 && same.body === body, same.moved);
+
+  // Refusals. Zero or several correct options is a different defect, and
+  // permuting it would bake the ambiguity in rather than surface it.
+  const noneCorrect = optBtn('u5l1quiz', 1, 'Z', LETTERS);
+  const bad = rewriteBodyOptBtn('t', noneCorrect, ['A']);
+  ok('  a question with no correct option is refused, not guessed at',
+    bad.problems.length === 1 && /0 flagged correct/.test(bad.problems[0]), bad.problems);
+
+  // And the verifier must catch a corrupted rewrite rather than trust the
+  // rewriter. This is the check that was missing when the 90-byte loss shipped.
+  const corrupted = r.body.replace('opt-letter', 'opt-letter ');
+  ok('  the verifier rejects a body whose non-button content moved',
+    verifyOptBtn('t', body, corrupted).length > 0,
+    verifyOptBtn('t', body, corrupted));
+}
+
+
 // ── A REPEATING BLOCK INSIDE ONE KEY ────────────────────────────────────────
-//  The duplicate-key and position-lock checks above compare activities to each
-//  OTHER. A single quiz whose own key cycles slips past both, and past the
-//  histogram. Both keys below are real, from the AP Cyber teacher bundle, and
-//  both passed every check that existed on 2026-09-01.
+//  Duplicate keys and position lock compare activities to each OTHER. A single
+//  quiz whose own key cycles slips past both, and past the histogram. Both keys
+//  below are real, from the AP Cyber teacher bundle, and both passed every check
+//  that existed on 2026-09-01.
 const K = (s) => s.split('');
 console.log('\nREPEATING BLOCK\n');
 
@@ -261,22 +326,31 @@ ok('  the replacement 2.1 key is clean', cycleFinding(K('DADBACBCABCBDACD')) ===
 ok('  the replacement 2.2 key is clean', cycleFinding(K('BADDACDADCACBDBCABCBACADBDCB')) === null);
 ok('  a run of eight identical answers is caught even when the rest varies',
   (cycleFinding(K('AAAAAAAABCDB')) || {}).len === 8);
-ok('  a five-item key is never flagged, since it cannot cycle meaningfully',
-  cycleFinding(K('ABCDB')) === null);
+// A short key is not automatically safe. CDACDA is one block twice over: too
+// short for the eight-answer rule, and still a free second half. It is a real
+// target, generated for ap-csp-course-bi5-legal-ethical-concerns in 974b2cf.
+ok('  a fully periodic six-item key IS flagged, however short',
+  (cycleFinding(K('CDACDA')) || {}).block === 'CDA');
+ok('  ...but a six-item key that merely starts to repeat is not',
+  cycleFinding(K('ABCDAB')) === null && cycleFinding(K('ABCDB')) === null);
+ok('  an all-one-letter key is left to allSame rather than reported twice',
+  cycleFinding(K('BBBBBB')) === null);
 ok('  a key with no repeating block is left alone',
   cycleFinding(K('DCBAACADBBDCACBD')) === null);
 
-// End to end through audit(), on the shape the live pages use.
-const cyc = 'CADBCADBCADBCADB';
+// End to end through audit(), on the opt-btn shape the live pages use.
+const cycKey = 'CADBCADBCADBCADB';
 const cycEdges = [{ node: { handle: 'bundle-2-2', title: 'x',
-  body: cyc.split('').map((c, i) => optBtn('b22quiz', i + 1, c, LETTERS)).join('\n') } }];
-const silence = console.log; console.log = () => {};
+  body: cycKey.split('').map((c, i) => optBtn('b22quiz', i + 1, c, LETTERS)).join('\n') } }];
+const hush = console.log; console.log = () => {};
 const cycRes = audit(cycEdges);
-console.log = silence;
-ok('  audit() reports the cycle while its other three checks stay silent',
+console.log = hush;
+ok('  audit() reports the cycle while its other four checks stay silent',
   cycRes.cycles.length === 1 && cycRes.cycles[0].c.block === 'CADB'
-  && cycRes.same.length === 0 && cycRes.skew.length === 0 && cycRes.dupes.length === 0,
-  { cycles: cycRes.cycles.length, same: cycRes.same.length, skew: cycRes.skew.length, dupes: cycRes.dupes.length });
+  && cycRes.same.length === 0 && cycRes.skew.length === 0
+  && cycRes.dupes.length === 0 && cycRes.locked.length === 0,
+  { cycles: cycRes.cycles.length, same: cycRes.same.length, skew: cycRes.skew.length,
+    dupes: cycRes.dupes.length, locked: cycRes.locked.length });
 
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);

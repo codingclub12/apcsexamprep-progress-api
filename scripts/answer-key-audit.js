@@ -49,15 +49,53 @@ const esc = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 // rerun produces the same file and a reviewer can check the intent: these lean
 // to D and A because the course over-used B and under-used D.
 const TARGETS = {
-  'ap-csp-course-bi3-undecidable-problems':  ['D', 'A', 'C', 'D', 'B', 'A'],
-  'ap-csp-course-bi3-iteration':             ['A', 'D', 'C', 'B', 'D', 'A'],
-  'ap-csp-course-bi3-lists':                 ['C', 'D', 'A', 'D', 'B', 'C'],
-  'ap-csp-course-bi3-strings':               ['D', 'A', 'D', 'C', 'A', 'B'],
-  'ap-csp-course-bi3-conditionals':          ['B', 'C', 'D', 'A', 'D', 'C'],
-  'ap-csp-course-bi3-nested-conditionals':   ['D', 'B', 'A', 'C', 'D', 'A'],
-  'ap-csp-course-bi3-developing-algorithms': ['C', 'D', 'B', 'A', 'C', 'D'],
-  'ap-csp-course-bi4-fault-tolerance':       ['A', 'C', 'D', 'B', 'A', 'D'],
+  // ── AP CYBER UNIT 5, added 2026-09-01 ─────────────────────────────────────
+  //  Measured live: 5.1 ABDCB, 5.2 ABCDB, 5.3 ABCDB, 5.4 ABCDB, 5.5 BCADB,
+  //  5.6 BCDAB. Three keys byte identical, question 5 is B on all six, and B is
+  //  40 percent of the unit against an even 25. None of that trips the
+  //  all-one-letter or 60-percent checks, which is why it survived until the
+  //  ordered-key checks were added.
+  //
+  //  These targets are chosen to fix all three at once, and chosen DELIBERATELY
+  //  so a rerun produces the same file and a reviewer can check the intent:
+  //  every key distinct, no question position sharing a letter across all six,
+  //  and the whole unit at A8 B7 C7 D8 out of 30, against an even 7.5.
+  'ap-cyber-unit-5-lesson-1-quiz': ['C', 'D', 'A', 'B', 'D'],
+  'ap-cyber-unit-5-lesson-2-quiz': ['D', 'A', 'B', 'C', 'A'],
+  'ap-cyber-unit-5-lesson-3-quiz': ['B', 'C', 'D', 'A', 'C'],
+  'ap-cyber-unit-5-lesson-4-quiz': ['A', 'B', 'C', 'D', 'B'],
+  'ap-cyber-unit-5-lesson-5-quiz': ['D', 'A', 'C', 'B', 'A'],
+  'ap-cyber-unit-5-lesson-6-quiz': ['C', 'D', 'B', 'A', 'D'],
 
+  'ap-csp-course-bi3-undecidable-problems':  ['C', 'C', 'A', 'B', 'B', 'C'],
+  'ap-csp-course-bi3-iteration':             ['B', 'C', 'D', 'A', 'B', 'D'],
+  'ap-csp-course-bi3-lists':                 ['D', 'B', 'C', 'D', 'D', 'B'],
+  'ap-csp-course-bi3-strings':               ['A', 'B', 'C', 'D', 'A', 'D'],
+  'ap-csp-course-bi3-conditionals':          ['B', 'C', 'D', 'A', 'B', 'C'],
+  'ap-csp-course-bi3-nested-conditionals':   ['B', 'C', 'D', 'A', 'B', 'A'],
+  'ap-csp-course-bi3-developing-algorithms': ['C', 'D', 'B', 'D', 'D', 'B'],
+  'ap-csp-course-bi4-fault-tolerance':       ['A', 'B', 'C', 'D', 'A', 'A'],
+
+  // ── PASS THREE, 2026-09-01: EVERY KEY DISTINCT ────────────────────────────
+  //  The values below replace the pass-one and pass-two targets wholesale. Those
+  //  were chosen to even out a LETTER DISTRIBUTION and did that almost perfectly,
+  //  A51 B51 C53 D55 of 210 against 52.5. They achieved it with two rotations:
+  //
+  //      ABCDAB   13 quizzes        CDABCD   12 quizzes
+  //
+  //  Twenty-five of thirty-five quizzes on two keys, verified live. A student who
+  //  learns ABCDAB has thirteen quizzes. It passed every check that existed at
+  //  the time, because a histogram cannot see order.
+  //
+  //  The measure improved and the thing the measure stood for got worse, which is
+  //  the whole reason the ordered-key checks were added. These targets are
+  //  generated to satisfy all three properties at once and refuse to emit
+  //  otherwise: every key distinct, per-POSITION balance so no question number
+  //  drifts toward one letter, and overall balance. Result:
+  //
+  //      distinct     35 of 35
+  //      overall      A52 B52 C53 D53   of 210, even is 52.5
+  //      per column   9/9/9/8 in all six, which is the best 35 allows
   // ── PASS TWO: the remaining 27 lesson quizzes ─────────────────────────────
   //  Pass one fixed the eight worst and OVER-CORRECTED toward D, so these lean
   //  back to B and C. Solved, not guessed: the seven unit test exams are already
@@ -68,32 +106,32 @@ const TARGETS = {
   //  Dealt from that pool in an interleaved cycle, so no single quiz carries
   //  more than three of any one letter and the sequence is reproducible.
   'ap-csp-course-bi1-collaboration':             ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi1-identifying-correcting-errors': ['C', 'D', 'A', 'B', 'C', 'D'],
-  'ap-csp-course-bi1-program-design-development': ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi1-program-function-purpose':  ['C', 'D', 'A', 'B', 'C', 'D'],
-  'ap-csp-course-bi2-binary-numbers':            ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi2-data-compression':          ['C', 'D', 'A', 'B', 'C', 'D'],
-  'ap-csp-course-bi2-extracting-information':    ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi2-using-programs-with-data':  ['C', 'D', 'A', 'B', 'C', 'D'],
-  'ap-csp-course-bi3-algorithmic-efficiency':    ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi3-binary-search':             ['C', 'D', 'A', 'B', 'C', 'D'],
-  'ap-csp-course-bi3-boolean-expressions':       ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi3-calling-procedures':        ['C', 'D', 'A', 'B', 'C', 'D'],
-  'ap-csp-course-bi3-data-abstraction':          ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi3-developing-procedures':     ['C', 'D', 'A', 'B', 'C', 'D'],
-  'ap-csp-course-bi3-libraries':                 ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi3-mathematical-expressions':  ['C', 'D', 'A', 'B', 'C', 'D'],
-  'ap-csp-course-bi3-random-values':             ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi3-simulations':               ['C', 'D', 'A', 'B', 'C', 'D'],
-  'ap-csp-course-bi3-variables':                 ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi4-parallel-distributed-computing': ['C', 'D', 'A', 'B', 'C', 'D'],
-  'ap-csp-course-bi4-the-internet':              ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi5-beneficial-harmful-effects': ['C', 'D', 'A', 'B', 'C', 'D'],
-  'ap-csp-course-bi5-computing-bias':            ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi5-crowdsourcing':             ['C', 'D', 'A', 'B', 'C', 'D'],
-  'ap-csp-course-bi5-digital-divide':            ['A', 'B', 'C', 'D', 'A', 'B'],
-  'ap-csp-course-bi5-legal-ethical-concerns':    ['C', 'D', 'B', 'C', 'D', 'B'],
-  'ap-csp-course-bi5-safe-computing':            ['C', 'B', 'C', 'B', 'C', 'B'],
+  'ap-csp-course-bi1-identifying-correcting-errors': ['C', 'D', 'D', 'A', 'B', 'C'],
+  'ap-csp-course-bi1-program-design-development': ['D', 'A', 'B', 'C', 'C', 'D'],
+  'ap-csp-course-bi1-program-function-purpose':  ['B', 'C', 'A', 'B', 'D', 'A'],
+  'ap-csp-course-bi2-binary-numbers':            ['A', 'B', 'C', 'D', 'A', 'C'],
+  'ap-csp-course-bi2-data-compression':          ['B', 'D', 'D', 'A', 'B', 'A'],
+  'ap-csp-course-bi2-extracting-information':    ['C', 'C', 'B', 'B', 'D', 'D'],
+  'ap-csp-course-bi2-using-programs-with-data':  ['D', 'A', 'A', 'C', 'C', 'B'],
+  'ap-csp-course-bi3-algorithmic-efficiency':    ['A', 'B', 'C', 'D', 'B', 'C'],
+  'ap-csp-course-bi3-binary-search':             ['D', 'A', 'A', 'B', 'C', 'D'],
+  'ap-csp-course-bi3-boolean-expressions':       ['B', 'C', 'D', 'A', 'D', 'A'],
+  'ap-csp-course-bi3-calling-procedures':        ['C', 'D', 'B', 'C', 'A', 'B'],
+  'ap-csp-course-bi3-data-abstraction':          ['D', 'A', 'A', 'B', 'C', 'A'],
+  'ap-csp-course-bi3-developing-procedures':     ['A', 'B', 'C', 'C', 'A', 'D'],
+  'ap-csp-course-bi3-libraries':                 ['C', 'A', 'A', 'B', 'C', 'A'],
+  'ap-csp-course-bi3-mathematical-expressions':  ['A', 'D', 'B', 'C', 'A', 'C'],
+  'ap-csp-course-bi3-random-values':             ['C', 'D', 'A', 'B', 'C', 'D'],
+  'ap-csp-course-bi3-simulations':               ['D', 'A', 'B', 'C', 'D', 'B'],
+  'ap-csp-course-bi3-variables':                 ['D', 'A', 'B', 'C', 'D', 'A'],
+  'ap-csp-course-bi4-parallel-distributed-computing': ['B', 'D', 'D', 'A', 'C', 'B'],
+  'ap-csp-course-bi4-the-internet':              ['C', 'C', 'D', 'B', 'B', 'C'],
+  'ap-csp-course-bi5-beneficial-harmful-effects': ['D', 'A', 'A', 'C', 'D', 'B'],
+  'ap-csp-course-bi5-computing-bias':            ['A', 'B', 'C', 'D', 'C', 'C'],
+  'ap-csp-course-bi5-crowdsourcing':             ['B', 'D', 'B', 'A', 'A', 'D'],
+  'ap-csp-course-bi5-digital-divide':            ['B', 'C', 'D', 'A', 'B', 'B'],
+  'ap-csp-course-bi5-legal-ethical-concerns':    ['C', 'D', 'A', 'C', 'D', 'A'],
+  'ap-csp-course-bi5-safe-computing':            ['D', 'A', 'B', 'D', 'C', 'C'],
 };
 
 const QUESTION_RE = /<div class="mcq-options" id="([^"]+)-options">([\s\S]*?)<\/div>\s*((?:\s*<div id="\1-fb-[A-D]"[\s\S]*?<\/div>)+)/g;
@@ -196,27 +234,27 @@ function distributionRows(edges) {
   return rows.sort((a, b) => b.maxShare - a.maxShare);
 }
 
-// ── THE PATTERN NEITHER CHECK ABOVE SEES: A REPEATING BLOCK ─────────────────
+// ── THE PATTERN NONE OF THE CHECKS ABOVE SEE: A REPEATING BLOCK ─────────────
 //  Duplicate keys and position lock both compare activities to EACH OTHER, so a
-//  single quiz whose own key cycles slips past them, and so does the histogram.
-//  Measured on the AP Cyber teacher bundle, 2026-09-01:
+//  single quiz whose OWN key cycles slips past them, and the histogram never had
+//  a chance. Measured on the AP Cyber teacher bundle, 2026-09-01:
 //
 //      2.1  ACBD ABCD BCDA BCDA                      4/4/4/4, dead even
 //      2.2  CADB CADB CADB CADB CABD BCDA DACD       CADB four and a half times
 //
-//  Both are at or near 25 percent on every letter, neither is all one letter,
+//  Both sit at or near 25 percent on every letter, neither is all one letter,
 //  neither shares a key with anything, and no position is locked across the
 //  pair. All four checks report "none" on the most guessable key a quiz can
 //  carry: read four answers on 2.2 and you have the next twelve.
 
 // The longest stretch anywhere in the key that repeats a block of `period`,
-// counting the block itself plus every repeat, so "CADB" x4 reports 16.
+// counting the block plus every repeat, so "CADB" x4 reports 16.
 //
 // `maxPeriod` bounds the SEARCH rather than filtering its result, and that is
-// the whole correctness of this function. Taking the longest cycle at any
-// period and then rejecting it for being too long reports nothing on 2.1: a
-// meaningless period-7 run of 12 sits on top of the real period-4 BCDA BCDA and
-// hides it. There is an assertion named for that mutation.
+// the whole correctness of this function. Taking the longest cycle at any period
+// and then rejecting it for being too long reports nothing on 2.1: a meaningless
+// period-7 run of 12 sits on top of the real period-4 BCDA BCDA and hides it.
+// There is an assertion named for that mutation.
 function longestCycle(letters, maxPeriod = Infinity) {
   const n = letters.length;
   let best = { period: 0, start: 0, len: 0 };
@@ -234,14 +272,27 @@ function longestCycle(letters, maxPeriod = Infinity) {
   return best;
 }
 
-// Report a cycle only when it covers enough of the key to be usable by a
-// student: half the questions, and never fewer than eight. A five-item quiz
-// cannot cycle meaningfully and flagging one would teach people to skip this,
-// which is the same reasoning POSITION_MIN is set on.
+// Two ways a cycle is worth reporting, and a short quiz needs the second one.
+//
+//   LONG ENOUGH TO RIDE. Eight or more answers, covering at least half the key.
+//   Below that, flagging would teach people to skip the check, which is the same
+//   reasoning POSITION_MIN is set on.
+//
+//   FULLY PERIODIC. The whole key is one block repeated at least twice, however
+//   short. A six-item key of CDACDA is not long enough for the first rule and is
+//   still a free second half: learn CDA and you have all six. The odds of a
+//   random six-key doing that by chance are (1/4)^3, or 1 in 64, which is the
+//   same bar POSITION_MIN answers to.
+//
+// Period 1 is excluded from the second rule only because allSame already owns
+// it, and one defect should not be reported twice.
 function cycleFinding(letters) {
+  const n = letters.length;
   const c = longestCycle(letters, 4);
   if (!c.period) return null;
-  if (c.len < 8 || c.len < letters.length / 2) return null;
+  const longEnough = c.len >= 8 && c.len >= n / 2;
+  const fullyPeriodic = c.len === n && c.period > 1 && c.len / c.period >= 2;
+  if (!longEnough && !fullyPeriodic) return null;
   return Object.assign({}, c, { block: letters.slice(c.start, c.start + c.period).join('') });
 }
 
@@ -293,7 +344,12 @@ function audit(edges) {
     `  question ${l.q}: ${l.letter} on all ${l.n} activities`))
                 : console.log('  none');
 
-  //  REPEATING BLOCK, the one defect visible in a single key on its own.
+  const tot = {};
+  rows.forEach((r) => Object.entries(r.dist).forEach(([k, v]) => { tot[k] = (tot[k] || 0) + v; }));
+  const N = Object.values(tot).reduce((a, b) => a + b, 0);
+  console.log(`\nWHOLE-COURSE DISTRIBUTION (${N} questions, even would be 25 percent each):`);
+  Object.keys(tot).sort().forEach((k) => console.log(`  ${k}  ${String(tot[k]).padStart(4)}  ${(100 * tot[k] / N).toFixed(1)}%`));
+  //  REPEATING BLOCK, the one defect visible inside a single key on its own.
   const cycles = rows.map((r) => ({ r, c: cycleFinding(r.letters) })).filter((x) => x.c);
   console.log(`\nA REPEATING BLOCK INSIDE ONE KEY (${cycles.length}):`);
   cycles.length ? cycles.forEach(({ r, c }) => console.log(
@@ -301,12 +357,158 @@ function audit(edges) {
     + ` covers ${c.len} of ${r.n}   ${r.key}`))
                 : console.log('  none');
 
-  const tot = {};
-  rows.forEach((r) => Object.entries(r.dist).forEach(([k, v]) => { tot[k] = (tot[k] || 0) + v; }));
-  const N = Object.values(tot).reduce((a, b) => a + b, 0);
-  console.log(`\nWHOLE-COURSE DISTRIBUTION (${N} questions, even would be 25 percent each):`);
-  Object.keys(tot).sort().forEach((k) => console.log(`  ${k}  ${String(tot[k]).padStart(4)}  ${(100 * tot[k] / N).toFixed(1)}%`));
   return { same, skew, dupes, locked, cycles };
+}
+
+// ── THE opt-btn SHAPE, FOR REBALANCE ────────────────────────────────────────
+//  Every AP Cyber unit 5 quiz. Structurally kinder to permute than checkMCQ,
+//  and it is worth saying why, because it changes what can go wrong.
+//
+//  In the checkMCQ shape the correct letter is an ARGUMENT in the handler call
+//  and the feedback lives in a separate sibling div keyed by letter, so moving
+//  an option means moving three things that are only related by a naming
+//  convention. Here every option is one self-contained button:
+//
+//    <button type="button" class="opt-btn" data-correct="1" data-fb="Correct...."
+//            onclick="u5l1quizAnswer(this,1)"><span class="opt-letter">A.</span>Injection</button>
+//
+//  Correctness, feedback and text are all attributes of the same element, so
+//  reordering the buttons carries all three automatically. The ONLY thing that
+//  must change is the letter printed in the opt-letter span, because that is
+//  positional labelling rather than identity.
+//
+//  So the rule the whole rebalance obeys holds trivially here: the correct
+//  answer never changes, only which letter it sits on.
+const OPT_BTN_RE = /<button[^>]*class="[^"]*\bopt-btn\b[^"]*"[^>]*>[\s\S]*?<\/button>/g;
+const OPT_CALL_RE = /onclick="([A-Za-z0-9_$]+?)Answer\(\s*this\s*,\s*(\d+)\s*\)"/;
+const OPT_LETTER_RE = /(<span[^>]*class="opt-letter"[^>]*>\s*)([A-D])(\s*\.?\s*<\/span>)/;
+
+// Group the buttons of a body into questions, keyed by (handler prefix, index).
+// The handler prefix doubles as the activity name, which keeps one page holding
+// two quizzes from merging into a single question run.
+function readOptBtnQuestions(body) {
+  const groups = [];
+  const byKey = new Map();
+  for (const m of body.matchAll(OPT_BTN_RE)) {
+    const tag = m[0];
+    const call = OPT_CALL_RE.exec(tag);
+    if (!call) continue;
+    const lm = OPT_LETTER_RE.exec(tag);
+    if (!lm) continue;
+    const key = `${call[1]}|${call[2]}`;
+    let g = byKey.get(key);
+    if (!g) {
+      g = { key, act: call[1], q: Number(call[2]), opts: [], gaps: [], start: m.index, end: m.index + tag.length };
+      byKey.set(key, g);
+      groups.push(g);
+    }
+    // The exact text between this button and the previous one. Rejoining with a
+    // bare newline instead loses the source indentation, which silently rewrites
+    // bytes the rebalance has no business touching: 6 spaces x 3 gaps x 5
+    // questions is 90 bytes a page of unrelated diff on a live page.
+    if (g.opts.length) g.gaps.push(body.slice(g.end, m.index));
+    g.end = m.index + tag.length;
+    g.opts.push({
+      tag,
+      letter: lm[2],
+      correct: /data-correct="1"/.test(tag),
+      // Everything after the letter span is the option's own text.
+      text: tag.slice(tag.indexOf(lm[0]) + lm[0].length).replace(/<\/button>\s*$/, '').trim(),
+      fb: (tag.match(/data-fb="([^"]*)"/) || [])[1] || '',
+    });
+  }
+  return groups;
+}
+
+// Permute one question so its correct option lands on `want`. Returns the new
+// HTML for that run of buttons, preserving each button byte for byte except the
+// letter it prints.
+function permuteOptBtnGroup(g, want) {
+  const L = ['A', 'B', 'C', 'D'];
+  const correct = g.opts.filter((o) => o.correct);
+  // Zero or several correct options is a different defect, and silently
+  // permuting it would bake the ambiguity in. Refuse.
+  if (correct.length !== 1) return { error: `${g.opts.length} options, ${correct.length} flagged correct` };
+  if (!L.includes(want)) return { error: `target letter ${want} is not A-D` };
+  if (g.opts.length !== L.length) return { error: `${g.opts.length} options, expected 4` };
+
+  const others = g.opts.filter((o) => !o.correct);
+  const slots = L.filter((x) => x !== want);
+  const assign = new Map([[correct[0], want]]);
+  others.forEach((o, i) => assign.set(o, slots[i]));
+
+  const tags = L.map((slot) => {
+    const src = g.opts.find((o) => assign.get(o) === slot);
+    // Only the printed letter changes. data-correct, data-fb, onclick and the
+    // option text are carried through untouched.
+    return src.tag.replace(OPT_LETTER_RE, (whole, pre, _old, post) => pre + slot + post);
+  });
+  // Separators stay where they were. They are positional formatting, not part of
+  // an option, so they do not travel with the option that moves.
+  let html = tags[0];
+  for (let i = 1; i < tags.length; i++) html += (g.gaps[i - 1] !== undefined ? g.gaps[i - 1] : '\n') + tags[i];
+  return { html };
+}
+
+function rewriteBodyOptBtn(handle, body, targets) {
+  const groups = readOptBtnQuestions(body);
+  const problems = [];
+  let moved = 0;
+  // Splice from the END so earlier offsets stay valid.
+  let out = body;
+  const ordered = groups.slice().sort((a, b) => a.start - b.start);
+  for (let i = ordered.length - 1; i >= 0; i--) {
+    const g = ordered[i];
+    const want = targets[i];
+    if (!want) continue;
+    const cur = (g.opts.find((o) => o.correct) || {}).letter;
+    const res = permuteOptBtnGroup(g, want);
+    if (res.error) { problems.push(`${g.act} q${g.q}: ${res.error}`); continue; }
+    if (cur === want) continue;
+    moved += 1;
+    out = out.slice(0, g.start) + res.html + out.slice(g.end);
+  }
+  return { body: out, questions: groups.length, moved, problems };
+}
+
+// The same guarantee verify() gives the checkMCQ shape: the correct answer's
+// TEXT and its FEEDBACK are unchanged, the option set is unchanged, and exactly
+// one option is still flagged correct. A rewrite that cannot pass this is not
+// written to the CSV.
+function verifyOptBtn(handle, before, after) {
+  const read = (b) => readOptBtnQuestions(b).map((g) => {
+    const c = g.opts.find((o) => o.correct);
+    return {
+      key: g.key,
+      correctText: c ? c.text : null,
+      correctFb: c ? c.fb : null,
+      correctCount: g.opts.filter((o) => o.correct).length,
+      texts: g.opts.map((o) => o.text).sort(),
+      letters: g.opts.map((o) => o.letter).sort().join(''),
+    };
+  });
+  const A = read(before), B = read(after), bad = [];
+  if (A.length !== B.length) return [`${handle}: question count ${A.length} -> ${B.length}`];
+  // EVERYTHING OUTSIDE THE OPTION BUTTONS MUST BE BYTE IDENTICAL.
+  //
+  // Added after this verifier passed a rewrite that silently dropped 90 bytes a
+  // page. The answer checks below were all green, because they only ever looked
+  // at option semantics; the loss was inter-button indentation, which no
+  // semantic check can see. A rebalance that edits bytes it was not asked to
+  // edit is one nobody can review by diffing, so it is refused.
+  const stripBtns = (b) => b.replace(OPT_BTN_RE, ' BTN ');
+  if (stripBtns(before) !== stripBtns(after)) {
+    bad.push(`${handle}: content OUTSIDE the option buttons changed`);
+  }
+  for (let i = 0; i < A.length; i++) {
+    if (A[i].key !== B[i].key) bad.push(`${handle} ${A[i].key}: question identity changed`);
+    if (A[i].correctText !== B[i].correctText) bad.push(`${handle} ${A[i].key}: the CORRECT ANSWER TEXT changed`);
+    if (A[i].correctFb !== B[i].correctFb) bad.push(`${handle} ${A[i].key}: the correct answer's feedback changed`);
+    if (JSON.stringify(A[i].texts) !== JSON.stringify(B[i].texts)) bad.push(`${handle} ${A[i].key}: the option set changed`);
+    if (B[i].correctCount !== 1) bad.push(`${handle} ${A[i].key}: ${B[i].correctCount} options flagged correct`);
+    if (B[i].letters !== 'ABCD') bad.push(`${handle} ${A[i].key}: letters are ${B[i].letters}, not ABCD`);
+  }
+  return bad;
 }
 
 // Permute so the correct option lands on `want`, carrying its feedback with it.
@@ -375,8 +577,15 @@ function rebalance(edges, outPath) {
   for (const e of edges) {
     const targets = TARGETS[e.node.handle];
     if (!targets) continue;
-    const r = rewriteBody(e.node.handle, e.node.body, targets);
-    const problems = r.problems.concat(verify(e.node.handle, e.node.body, r.body));
+    // Two shapes, one contract. checkMCQ wins when present, matching the
+    // precedence keysFor already uses: it is the older, authoritative shape, and
+    // a page carrying both is a page where the newer one must not overwrite it.
+    const isCheckMcq = QUESTION_RE.test(e.node.body);
+    QUESTION_RE.lastIndex = 0;   // /g regex: .test leaves state behind
+    const rw = isCheckMcq ? rewriteBody : rewriteBodyOptBtn;
+    const vf = isCheckMcq ? verify : verifyOptBtn;
+    const r = rw(e.node.handle, e.node.body, targets);
+    const problems = r.problems.concat(vf(e.node.handle, e.node.body, r.body));
     console.log(`  ${e.node.handle.padEnd(42)}${r.questions} questions, ${r.moved} moved`
       + (problems.length ? `   PROBLEMS: ${problems.slice(0, 3).join('; ')}` : ''));
     bad.push(...problems);
@@ -414,7 +623,6 @@ if (require.main === module) {
   else audit(edges);
 }
 
-module.exports = {
-  keysFor, distributionRows, rewriteBody, verify, audit, TARGETS,
-  longestCycle, cycleFinding,
-};
+module.exports = { keysFor, distributionRows, rewriteBody, verify, audit,
+  readOptBtnQuestions, rewriteBodyOptBtn, verifyOptBtn,
+  longestCycle, cycleFinding, TARGETS };

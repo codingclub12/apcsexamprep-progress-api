@@ -161,3 +161,45 @@ Drive.
   than files, so new file ids are safe.
 - Units 2.3, 2.4 and the Unit 2 Test are not audited. Nor are Units 3 to 5.
 - The online quiz banks were not touched by any of this.
+
+## Addendum, 23:25: merged main twice more, and one finding going the other way
+
+Main kept moving. `6fa96a2` taught the REBALANCE path the opt-btn shape so unit 5
+can actually be fixed rather than only named, and `974b2cf` replaced every CSP
+target after finding 25 of 35 CSP quizzes were sharing two rotations, `ABCDAB`
+thirteen times and `CDABCD` twelve. Both landed while this branch was open, both
+touched the same two files, and both win on the parts that overlap. This branch
+still contributes only the repeating-block check.
+
+Pointing the check at the 41 targets afterwards found one going the other way.
+The new CSP targets are all distinct, per-column balanced 9/9/9/8, and overall
+A52 B52 C53 D53. One of them is `CDACDA`:
+
+```
+ap-csp-course-bi5-legal-ethical-concerns   CDACDA   = CDA twice
+```
+
+Six answers, and the second three are the first three. Learn `CDA` and the quiz
+is free. It satisfies every property the generator enforces, because none of them
+look at periodicity within a single key.
+
+The first version of the repeating-block rule missed it too, needing eight
+answers before it would speak. That threshold was set to avoid crying wolf on
+short quizzes, and it is right for a key that merely BEGINS to repeat, such as
+the old `ABCDAB`. It is wrong for a key that is fully periodic, however short: a
+random six-key repeating a three-block is `(1/4)^3`, or 1 in 64, which is the
+same bar `POSITION_MIN` already answers to in this file. So the rule now fires on
+either "long enough to ride" or "fully periodic", and period 1 is left to
+`allSame` so one defect is not reported twice.
+
+Rescanned with that rule, exactly one of the 41 targets flags, and it is that
+one.
+
+**Not fixed here, deliberately.** Hand-editing `CDACDA` would swap two positions
+and break the per-column balance the generator computed. The fix belongs in the
+generator, as a fourth property alongside distinct, per-column and overall. That
+is the other session's code and its own change.
+
+```
+smoke:answerkeys  48 passed, 0 failed   (22 originally, 36 on main, 48 here)
+```
