@@ -122,12 +122,6 @@ was truncated and no theme markup was injected into the page content.
 **"Always guess B" scored 40 percent on unit 5 this morning. It scores 23 percent
 now.**
 
-## Still open
-
-- The other 21 cyber quiz pages are NOT cleared, they are UNMEASURED. Only unit
-  5's six extract a key. Unit 4's five carry `checkMCQ` and yield nothing, and
-  units 1 to 3's sixteen carry no answer markup in the served HTML at all. That
-  gap is worth its own pass; "no bias found" there would be a false statement.
 ## THE SAME CHECK IMMEDIATELY FOUND SOMETHING BIGGER
 
 The CSP course was rebalanced in an earlier pass under the OLD checks only. Run
@@ -163,3 +157,11 @@ them the distribution check is actively dangerous.
 Fixing CSP needs its own pass and its own sheet, with targets chosen so that no
 two quizzes share a key. Unlike unit 5 no new code is needed: CSP uses the
 checkMCQ shape that `rewriteBody` has always handled.
+
+## Still open
+
+- The other 21 cyber quiz pages are NOT cleared, they are UNMEASURED. Only unit
+  5's six extract a key. Unit 4's five carry `checkMCQ` and yield nothing, and
+  units 1 to 3's sixteen carry no answer markup in the served HTML at all. That
+  gap is worth its own pass; "no bias found" there would be a false statement.
+- CSP, above: 25 of 35 quizzes on two keys, live right now.
