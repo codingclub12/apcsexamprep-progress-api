@@ -132,10 +132,25 @@ console.log('\n6b. The reporter gap: graded work finished that never reports a s
   db.prepare(`INSERT INTO score_events
     (id,student_id,class_id,course,unit,lesson,activity_type,item,points,max_points)
     VALUES ('se-b','s-rep','c-rep','ap-cybersecurity','unit-1','1.1','exercise-1','e1',5,7)`).run();
-  // C: NO authored denominator, completed. A lesson visit: correctly unscored,
-  // and the single most important thing this must not flag, because flagging
-  // every visit would bury the real signal and train people to ignore it.
+  // C: a lesson visit. Correctly unscored, and the single most important thing
+  // this must not flag: flagging visits buries the real signal.
+  //
+  // It is given an authored denominator ON PURPOSE. The first shipped version of
+  // this check gated on "has a denominator", assuming that meant graded. It does
+  // not: production carries denominators for ap-csa lessons, so the first live
+  // read returned 53 activities of which every one of the top twenty was a
+  // lesson visit. This fixture reproduces that, so the noisy version cannot come
+  // back unnoticed.
+  denom.run('ap-cybersecurity', 'unit-1', '1.1', 'lesson', 10);
   prog.run('p-c', '1.1', 'lesson', null);
+  // Every OTHER native that normalizes to the lesson canonical, for the same
+  // reason. 'visit', 'page' and 'read' are lesson visits under another name.
+  denom.run('ap-cybersecurity', 'unit-1', '1.2', 'visit', 10);
+  prog.run('p-c2', '1.2', 'visit', null);
+  denom.run('ap-cybersecurity', 'unit-1', '1.3', 'page', 10);
+  prog.run('p-c3', '1.3', 'page', null);
+  denom.run('ap-cybersecurity', 'unit-1', '1.4', 'read', 10);
+  prog.run('p-c4', '1.4', 'read', null);
 
   const r = integrity.reporterIntegrity({ force: true });
   ok('  the broken page is detected', r && r.activities === 1, r);
@@ -145,8 +160,28 @@ console.log('\n6b. The reporter gap: graded work finished that never reports a s
   ok('  the completions at stake are counted', r && r.completions_affected === 1, r);
   ok('  an activity whose page DOES report is not flagged',
     r && !r.worst.some((w) => w.activity_type === 'exercise-1'), r && r.worst);
-  ok('  an UNGRADED lesson visit is not flagged',
+  ok('  an UNGRADED lesson visit is not flagged, even with a denominator',
     r && !r.worst.some((w) => w.activity_type === 'lesson'), r && r.worst);
+  ok('  nor visit, page or read, which are lesson visits under another name',
+    r && !r.worst.some((w) => ['visit', 'page', 'read'].includes(w.activity_type)), r && r.worst);
+
+  // The exclusion list must stay tied to the gradebook's own definition of
+  // graded work. If someone adds a native that normalizes to 'lesson' and does
+  // not add it here, this check starts flagging page visits again and nobody
+  // finds out from the alarm, because the alarm is the thing that broke.
+  {
+    const gc = require('../lib/gradebook-contract');
+    const shouldExclude = ['lesson', 'visit', 'page', 'read']
+      .filter((n) => !gc.isGradedActivity(gc.canonicalActivity(n).activity));
+    ok('  every excluded native really is ungraded per the contract',
+      shouldExclude.length === integrity.LESSON_NATIVES.length
+      && integrity.LESSON_NATIVES.every((n) => shouldExclude.includes(n)),
+      { excluded: integrity.LESSON_NATIVES, ungradedPerContract: shouldExclude });
+    // And nothing GRADED is excluded by accident.
+    ok('  and no graded native is excluded',
+      !integrity.LESSON_NATIVES.some((n) => gc.isGradedActivity(gc.canonicalActivity(n).activity)),
+      integrity.LESSON_NATIVES);
+  }
 
   // A score arriving later closes the gap without anyone editing this file.
   db.prepare(`INSERT INTO score_events
