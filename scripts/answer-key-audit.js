@@ -462,6 +462,41 @@ function verifyOptBtn(handle, before, after) {
 }
 
 // Permute so the correct option lands on `want`, carrying its feedback with it.
+// Where each tag sits and what whitespace separates them, so a rewrite can put
+// the tags back in a new order without reformatting the page around them.
+// gaps[i] is the text before part i; trail is what follows the last one.
+function layout(text, re) {
+  const gaps = [];
+  let last = 0, m, n = 0;
+  re.lastIndex = 0;
+  while ((m = re.exec(text))) {
+    gaps.push(text.slice(last, m.index));
+    last = m.index + m[0].length;
+    n += 1;
+  }
+  return { gaps, trail: text.slice(last), n };
+}
+
+const MCQ_BTN_RE = /<button class="mcq-option"[\s\S]*?<\/button>/g;
+const MCQ_FB_RE = /<div id="[^"]+-fb-[A-D]" class="mcq-feedback [^"]*">[\s\S]*?<\/div>/g;
+
+// REORDERING OPTIONS MUST NOT REFORMAT THE PAGE.
+//
+// This joined the rebuilt tags with a bare newline, which normalised the source
+// indentation away. The CSP import on 2026-09-02 stripped 3,280 bytes of it
+// across 23 pages: nothing rendered differently and nothing semantic changed,
+// which is precisely why every check was green. The opt-btn path had the same
+// bug and it was fixed there after the unit 5 sheet lost 90 bytes a page. This
+// is the other half of it, plus the guard in verify() that makes the shape
+// impossible to ship again.
+function weave(parts, lay) {
+  let s = '';
+  for (let i = 0; i < parts.length; i++) {
+    s += (lay.gaps[i] !== undefined ? lay.gaps[i] : '\n') + parts[i];
+  }
+  return s + (lay.n === parts.length ? lay.trail : '\n');
+}
+
 function rewriteBody(handle, body, targets) {
   const problems = [];
   let qi = 0, moved = 0;
@@ -482,13 +517,21 @@ function rewriteBody(handle, body, targets) {
       const src = q.opts.find((o) => assign.get(o.letter) === slot);
       return `<button class="mcq-option" onclick="checkMCQ('${qid}','${slot}','${want}','${qid}-fb-${slot}')">`
         + `<span class="mcq-option-letter">${slot}</span> ${src.text}</button>`;
-    }).join('\n');
+    });
     const fbs = L.map((slot) => {
       const src = q.opts.find((o) => assign.get(o.letter) === slot);
       const fb = q.fbs[src.letter];
       return `<div id="${qid}-fb-${slot}" class="mcq-feedback ${fb.kind}">${fb.inner}</div>`;
-    }).join('\n');
-    return `<div class="mcq-options" id="${qid}-options">\n${opts}\n</div>\n${fbs}`;
+    });
+
+    // The separator between the options div and the first feedback block is
+    // consumed by QUESTION_RE and never captured, so it is read back off the
+    // whole match rather than assumed to be a newline.
+    const head = `<div class="mcq-options" id="${qid}-options">`;
+    const sep = whole.slice(head.length + optsInner.length + '</div>'.length,
+      whole.length - fbsBlock.length);
+    return head + weave(opts, layout(optsInner, MCQ_BTN_RE)) + '</div>'
+      + sep + weave(fbs, layout(fbsBlock, MCQ_FB_RE));
   });
   return { body: out, questions: qi, moved, problems };
 }
@@ -512,6 +555,18 @@ function verify(handle, before, after) {
   };
   const A = read(before), B = read(after), bad = [];
   if (A.length !== B.length) return [`${handle}: question count ${A.length} -> ${B.length}`];
+  // EVERYTHING OUTSIDE THE OPTIONS AND THEIR FEEDBACK MUST BE BYTE IDENTICAL.
+  //
+  // The same guard verifyOptBtn has carried since the unit 5 sheet lost 90 bytes
+  // a page. Its absence here is why the CSP import normalised 3,280 bytes of
+  // indentation away with every semantic check green: the loss was BETWEEN the
+  // tags, and no check that reads option semantics can see the space around
+  // them. A rebalance that edits bytes it was not asked to edit cannot be
+  // reviewed by diffing, so it is refused.
+  const stripQ = (b) => b.replace(MCQ_BTN_RE, ' BTN ').replace(MCQ_FB_RE, ' FB ');
+  if (stripQ(before) !== stripQ(after)) {
+    bad.push(`${handle}: content OUTSIDE the options and their feedback changed`);
+  }
   for (let i = 0; i < A.length; i++) {
     if (A[i].correctText !== B[i].correctText) bad.push(`${handle} ${A[i].qid}: the CORRECT ANSWER TEXT changed`);
     if (JSON.stringify(A[i].texts) !== JSON.stringify(B[i].texts)) bad.push(`${handle} ${A[i].qid}: the option set changed`);
