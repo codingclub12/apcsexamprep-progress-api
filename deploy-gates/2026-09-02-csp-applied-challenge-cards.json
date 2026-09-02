@@ -1,0 +1,69 @@
+{
+  "change": "link the 17 CSP Applied Challenge pages that board 163 published, round two of the exercise block (board 163)",
+  "_why_a_second_gate": "Round one, deploy-gates/2026-09-02-csp-exercise-links.json, pinned 'REBUILD FAITHFUL 14 byte-identical' because 14 of the 35 lesson pages already carried a correct block that morning. Eighteen do now. Editing that manifest would erase the record of what round one actually proved, so round two gets its own and the two numbers stay readable side by side.",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "running twice equals running once, and the applied card is not authored",
+      "command": "npm run --silent smoke:csp-exercise-discoverability",
+      "expect": "43 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the preflight, including a fixed time on the fixed date",
+      "command": "npm run --silent smoke:preflight",
+      "expect": "53 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT WOULD DOUBLE THE BLOCK: stripping it back before rebuilding",
+      "file": "scripts/csp-lesson-exercise-links.js",
+      "find": "  const at = body.indexOf('\\n' + MARKER);",
+      "replace": "  const at = -1;",
+      "command": "npm run --silent smoke:csp-exercise-discoverability",
+      "expect_failure": "[FAIL]",
+      "_why": "unmark() is what makes a re-run a rebuild rather than an append. Without it the second run stacks a second managed block onto every page, and this program has now been run twice on the same 35 pages, so the failure would be live rather than hypothetical."
+    },
+    {
+      "kind": "mutation",
+      "name": "a card is only added for a page the verified set says is live",
+      "file": "scripts/csp-lesson-exercise-links.js",
+      "find": "    const appliedLive = applied && (!verified || verified.has(applied.handle)) ? applied : null;",
+      "replace": "    const appliedLive = applied;",
+      "command": "npm run --silent smoke:csp-exercise-discoverability",
+      "expect_failure": "[FAIL]",
+      "_why": "This is the guard that kept round one honest: with it off the generator emits all 35 cards whatever the storefront says, and 17 of them would have pointed at a 404. The safety is in the fixture and this line is what consults it."
+    },
+    {
+      "kind": "mutation",
+      "name": "the wide rule is emitted only where it is used",
+      "file": "scripts/csp-lesson-exercise-links.js",
+      "find": "  const css = applied ? CSS + '\\n' + WIDE_CSS : CSS;",
+      "replace": "  const css = CSS + '\\n' + WIDE_CSS;",
+      "command": "npm run --silent smoke:csp-exercise-discoverability",
+      "expect_failure": "[FAIL]",
+      "_why": "Emit the wide-card rule unconditionally and the 18 pages that already carry a correct block stop rebuilding byte for byte, which destroys the only evidence that a re-run is safe."
+    },
+    {
+      "kind": "rederive",
+      "name": "18 of the 35 rebuild BYTE FOR BYTE as published, which is the proof a re-run is safe",
+      "command": "node -e \"const fs=require('fs'),path=require('path'),os=require('os');const {OPEN}=require('./scripts/extract-live-body');const D='smoke/fixtures/csp-lesson-bodies-round2';const t=fs.mkdtempSync(path.join(os.tmpdir(),'csp2-'));for(const f of fs.readdirSync(D))if(f.endsWith('.html'))fs.writeFileSync(path.join(t,f),'<html><body>'+OPEN+fs.readFileSync(path.join(D,f),'utf8')+String.fromCharCode(10)+'  </div></body></html>');const {build}=require('./scripts/csp-lesson-exercise-links');const v=new Set(fs.readFileSync('smoke/fixtures/csp-verified-handles-round2.txt','utf8').split(String.fromCharCode(10)).map(s=>s.trim()).filter(Boolean));const r=build(t,v);if(r.problems.length)throw new Error(r.problems[0]);if(r.pages.length!==35)throw new Error('built '+r.pages.length);const same=r.pages.filter(p=>p.body===p.original).length;const applied=r.pages.filter(p=>p.applied).length;if(applied!==35)throw new Error('expected 35 applied cards, got '+applied);if(same!==18)throw new Error('expected 18 byte-identical, got '+same);console.log('REBUILD FAITHFUL 18 byte-identical, '+(35-same)+' rows written, 35 applied cards');\"",
+      "expect": "REBUILD FAITHFUL 18 byte-identical",
+      "_why": "The 18 pages that already carry a correct managed block must come out of a fresh run identical to what the storefront serves, so they fall out of the sheet on their own. That is idempotence demonstrated against live bytes rather than asserted."
+    },
+    {
+      "kind": "rederive",
+      "name": "the sheet clears the house preflight, with every emoji round-tripped against the live body",
+      "command": "node scripts/matrixify-preflight.js imports/2026-09-02/csp-applied-challenge-cards-pages.csv --carrying smoke/fixtures/csp-lesson-bodies-round2.json",
+      "expect": "clear to import",
+      "_why": "The preflight knows nothing about this page family. It caught two real refusals on the first attempt: a filename that names no Matrixify sheet type, which rejects the whole file in one second, and 289 raw emoji with no original supplied to show they were already there."
+    },
+    {
+      "kind": "live",
+      "name": "each of the 17 lesson pages reaches an exercise that serves its six questions",
+      "command": "node scripts/verify-csp-applied-cards-live.js",
+      "expect": "CSP APPLIED CHALLENGES REACHABLE: 17 of 17",
+      "_why": "False today, and measured: all 17 exercises already serve their six questions after the board 163 import, and 0 of the 17 lesson pages link them. Both halves are asserted because either alone passes while the student is still stuck: a card pointing at a 404 is worse than no card, and a live exercise nothing links is what board 163 was."
+    }
+  ]
+}

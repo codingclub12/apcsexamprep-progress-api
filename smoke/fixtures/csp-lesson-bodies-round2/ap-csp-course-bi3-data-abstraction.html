@@ -1,0 +1,1211 @@
+<!--
+  PAGE: /pages/ap-csp-course-bi3-data-abstraction
+  TITLE: Topic 3.2: Data Abstraction | AP CSP Big Idea 3 | APCSExamPrep.com
+  META: Master AP CSP Topic 3.2 Data Abstraction. Why one list beats many variables, accessing elements by index, the Python 0-indexed vs AP pseudocode 1-indexed trap, named constants, a live Python editor, the Index Detective game, and Create Task use-cases.
+-->
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+  :root{--navy:#0f1f3d;--bi3:#1a56db;--bi3-lt:#93c5fd;--bi3-bg:#eff6ff;--bi3-dk:#1e40af;--green:#16a34a;--amber:#d97706;--red:#dc2626;--slate:#64748b;--white:#ffffff;--py:#3b82f6;--pseudo:#8b5cf6;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  .lesson-page{font-family:"DM Sans",sans-serif;color:var(--navy);background:#f8fafc;line-height:1.6;}
+
+  .lesson-breadcrumb{background:#fff;border-bottom:1px solid #e2e8f0;padding:12px 24px;}
+  .lesson-breadcrumb-inner{max-width:880px;margin:0 auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate);flex-wrap:wrap;}
+  .lesson-breadcrumb a{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;text-decoration:none;font-weight:500;}
+  .bc-sep{color:#cbd5e1;}
+
+  .social-proof-bar{background:#fff;border-bottom:1px solid #e2e8f0;padding:10px 24px;}
+  .social-proof-inner{max-width:880px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 20px;font-size:13px;color:var(--slate);}
+  .social-proof-item{display:flex;align-items:center;gap:5px;font-weight:500;}
+  .social-proof-item strong{color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+
+  .lesson-hero{background:var(--navy);background-image:radial-gradient(ellipse 60% 70% at 90% 20%,rgba(26,86,219,.28) 0%,transparent 60%);padding:48px 24px 40px;}
+  .lesson-hero-inner{max-width:880px;margin:0 auto;}
+  .lesson-hero-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .lesson-num-badge{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:var(--bi3);font-weight:700;font-size:14px;color:#fff!important;-webkit-text-fill-color:#fff!important;flex-shrink:0;}
+  .lesson-eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;}
+  .lesson-hero h1{font-family:"DM Serif Display",serif!important;font-size:clamp(26px,4vw,40px)!important;line-height:1.2!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:14px!important;}
+  .lesson-hero-pills{display:flex;flex-wrap:wrap;gap:8px;}
+  .lesson-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:5px 12px;border-radius:100px;font-size:12px;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .ced-tag{display:inline-flex;align-items:center;background:rgba(26,86,219,.25);border:1px solid rgba(147,197,253,.3);padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;letter-spacing:.04em;}
+
+  /* PROGRESS STRIP */
+  .bi3-progress{background:#fff!important;border-bottom:1px solid #e2e8f0!important;padding:14px 20px!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;}
+  .bi3-progress-inner{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;gap:0!important;width:max-content!important;min-width:100%!important;}
+  .prog-step{display:flex!important;flex-direction:column!important;align-items:center!important;min-width:46px!important;text-align:center!important;flex-shrink:0!important;}
+  .prog-step-link{display:flex!important;flex-direction:column!important;align-items:center!important;min-width:46px!important;text-align:center!important;flex-shrink:0!important;text-decoration:none!important;cursor:pointer!important;}
+  .prog-step-link:hover .prog-dot{background:#dbeafe!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border-color:var(--bi3)!important;}
+  .prog-dot{width:26px!important;height:26px!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:9px!important;font-weight:700!important;margin-bottom:4px!important;flex-shrink:0!important;}
+  .prog-dot.active{background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .prog-dot.upcoming{background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:2px solid #e2e8f0!important;}
+  .prog-dot.done{background:#dbeafe!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border:2px solid var(--bi3)!important;}
+  .prog-label{font-size:8px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;line-height:1.2!important;white-space:nowrap!important;}
+  .prog-label.active-label{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;}
+  .prog-arrow{flex:1 0 4px!important;height:2px!important;background:#e2e8f0!important;margin-bottom:18px!important;min-width:4px!important;max-width:16px!important;flex-shrink:0!important;}
+
+  /* MAIN */
+  .lesson-main{max-width:880px;margin:0 auto;padding:40px 24px 80px;}
+  .lesson-objectives{background:var(--bi3-bg);border-left:4px solid var(--bi3);border-radius:0 10px 10px 0;padding:20px 24px;margin-bottom:28px;}
+  .lesson-objectives h2{font-size:14px!important;font-weight:700!important;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;text-transform:uppercase!important;letter-spacing:.06em!important;margin-bottom:12px!important;}
+  .lesson-objectives ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;}
+  .lesson-objectives li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#1e3a8a;line-height:1.5;}
+  .lesson-objectives li::before{content:"\2713";color:var(--bi3);font-weight:700;flex-shrink:0;margin-top:1px;}
+  .score-impact{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 18px;margin-bottom:28px;display:flex;align-items:center;gap:10px;font-size:14px;color:#14532d;}
+  .score-impact strong{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+
+  /* HOOK */
+  .hook-box{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px 28px;margin-bottom:32px;}
+  .hook-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:8px;}
+  .hook-box p{font-size:15px!important;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;line-height:1.7!important;margin-bottom:0!important;}
+
+  /* LESSON SECTIONS */
+  .lesson-section{margin-bottom:40px;}
+  .lesson-section h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;padding-bottom:10px!important;border-bottom:2px solid var(--bi3-bg)!important;}
+  .lesson-section h3{font-size:17px!important;font-weight:700!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-top:24px!important;margin-bottom:10px!important;}
+  .lesson-section p{font-size:15px;color:#374151;line-height:1.8;margin-bottom:14px;}
+  .lesson-section ul,.lesson-section ol{padding-left:20px;margin-bottom:14px;}
+  .lesson-section li{font-size:15px;color:#374151;line-height:1.7;margin-bottom:6px;}
+  .lesson-section code{background:#eef2ff;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+
+  /* DUAL CODE PANEL */
+  .code-panel-wrap{margin:20px 0;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;}
+  .code-panel-tabs{display:flex;background:#1e293b;}
+  .code-tab{padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;border:none;background:transparent;letter-spacing:.04em;transition:background .15s;font-family:inherit;}
+  .code-tab.py{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .code-tab.pseudo{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+  .code-tab.active{background:rgba(255,255,255,.15)!important;}
+  .code-tab-label{font-size:10px;opacity:.6;margin-left:4px;font-weight:400;}
+  .code-pane{background:#0f172a;padding:18px 20px;overflow-x:auto;height:0;overflow:hidden;padding:0;}
+  .code-pane.active{height:auto;overflow-x:auto;padding:18px 20px;}
+  .code-pane pre{font-family:monospace;font-size:13px;line-height:1.8;margin:0;white-space:pre-wrap;word-break:break-word;max-width:100%;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .py-kw{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:700;}
+  .py-fn{color:#6ee7b7!important;-webkit-text-fill-color:#6ee7b7!important;}
+  .py-num{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .py-str{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .py-comment{color:#475569!important;-webkit-text-fill-color:#475569!important;font-style:italic;}
+  .py-var{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .py-op{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;}
+  .ps-kw{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700;}
+  .ps-op{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .ps-num{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .ps-str{color:#86efac!important;-webkit-text-fill-color:#86efac!important;}
+  .ps-comment{color:#475569!important;-webkit-text-fill-color:#475569!important;font-style:italic;}
+  .ps-var{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+
+  /* CALLOUTS */
+  .callout-exam{background:#fffbeb;border:1px solid #fcd34d;border-left:4px solid var(--amber);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+  .callout-exam-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--amber)!important;-webkit-text-fill-color:var(--amber)!important;margin-bottom:6px;}
+  .callout-exam p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin-bottom:0!important;line-height:1.6!important;}
+  .callout-trap{background:#fef2f2;border:1px solid #fca5a5;border-left:4px solid var(--red);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+  .callout-trap-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;margin-bottom:6px;}
+  .callout-trap p{font-size:14px!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;margin-bottom:0!important;line-height:1.6!important;}
+
+  /* MINI EXERCISES */
+  .mini-ex{background:#fff;border:1px solid #bfdbfe;border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .mini-ex-label{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;margin-bottom:12px;}
+  .mini-ex-q{font-size:15px;font-weight:600;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px;line-height:1.5;}
+  .mini-ex-code{background:#0f172a;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;line-height:1.8;margin-bottom:14px;overflow-x:auto;white-space:pre;display:block;}
+  .mini-opts{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;}
+  .mini-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border:2px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:14px;font-family:monospace;color:#374151!important;-webkit-text-fill-color:#374151!important;background:#f8fafc;text-align:left;width:100%;transition:border-color .15s;}
+  .mini-opt:hover{border-color:var(--bi3-lt);background:var(--bi3-bg);}
+  .mini-opt.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mini-opt.incorrect{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mini-opt.reveal{border-color:var(--green)!important;background:#f0fdf4!important;}
+  .mini-opt-letter{font-weight:700;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;min-width:18px;font-family:inherit;}
+  .mini-opt.correct .mini-opt-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mini-opt.incorrect .mini-opt-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mini-fib-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;}
+  .mini-fib-input{padding:8px 12px;border:2px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:14px;width:130px;outline:none;color:var(--navy)!important;background:#f8fafc;}
+  .mini-fib-input:focus{border-color:var(--bi3-lt);}
+  .mini-fib-input.correct{border-color:var(--green);background:#f0fdf4;}
+  .mini-fib-input.incorrect{border-color:var(--red);background:#fef2f2;}
+  .mini-fib-btn{padding:8px 18px;background:var(--bi3);border:none;border-radius:8px;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .mini-fb{font-size:13px;font-weight:500;padding:8px 12px;border-radius:7px;margin-top:6px;display:none;line-height:1.5;}
+  .mini-fb.c{background:#f0fdf4;color:var(--green)!important;-webkit-text-fill-color:var(--green)!important;display:block;}
+  .mini-fb.w{background:#fef2f2;color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;display:block;}
+
+  /* VOCAB */
+  .vocab-table{width:100%;border-collapse:collapse;margin-bottom:24px;font-size:14px;}
+  .vocab-table thead tr{background:var(--bi3);}
+  .vocab-table thead th{padding:10px 16px;text-align:left;font-weight:600;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px;}
+  .vocab-table tbody tr:nth-child(even){background:var(--bi3-bg);}
+  .vocab-table tbody tr:nth-child(odd){background:#fff;}
+  .vocab-table tbody td{padding:10px 16px;border-bottom:1px solid #bfdbfe;color:#374151;vertical-align:top;line-height:1.5;}
+  .vocab-table tbody td:first-child{font-weight:700;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;white-space:nowrap;}
+
+  /* CPT CONNECTION */
+  .cpt-connection{background:#fefce8;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:0 10px 10px 0;padding:20px 24px;margin:28px 0;}
+  .cpt-connection-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#92400e!important;-webkit-text-fill-color:#92400e!important;margin-bottom:8px;}
+  .cpt-connection h3{font-size:16px!important;font-weight:700!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin:16px 0 8px!important;}
+  .cpt-connection p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;line-height:1.7!important;margin-bottom:12px!important;}
+  .cpt-connection a{color:#b45309!important;-webkit-text-fill-color:#b45309!important;font-weight:600;text-decoration:underline;}
+  .cpt-connection code{background:#fef3c7;color:#78350f!important;-webkit-text-fill-color:#78350f!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+  .cpt-stems{list-style:none;padding:0;margin:0 0 8px;display:flex;flex-direction:column;gap:8px;}
+  .cpt-stems li{background:#fffef5;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:13px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;line-height:1.6;}
+  .cpt-code{background:#0f172a;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;line-height:1.8;margin:6px 0 12px;overflow-x:auto;white-space:pre;display:block;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+
+  /* EMAIL */
+  .email-capture{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px 28px;margin-bottom:36px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
+  .email-capture-text{flex:1;min-width:200px;}
+  .email-capture-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:4px;}
+  .email-capture h3{font-size:16px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .email-capture p{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:0!important;line-height:1.5!important;}
+  .email-capture-form{display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0;}
+  .email-capture-input{padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff!important;font-size:14px;font-family:inherit;min-width:180px;outline:none;}
+  .email-capture-btn{padding:10px 20px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:8px!important;font-size:14px!important;font-weight:600!important;cursor:pointer!important;font-family:inherit!important;}
+  .email-capture-success{display:none;font-size:14px;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:600;padding:10px 0;}
+
+  /* MCQ */
+  .mcq-section{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:28px;margin-bottom:40px;}
+  .mcq-section-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--bi3-bg);}
+  .mcq-section-icon{width:40px;height:40px;border-radius:10px;background:var(--bi3-bg);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .mcq-section-title{font-family:"DM Serif Display",serif;font-size:20px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+  .mcq-section-sub{font-size:13px;color:var(--slate);}
+  .mcq-item{margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid #f1f5f9;}
+  .mcq-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .mcq-q-num{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:8px;}
+  .diff-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:100px;margin-left:8px;background:#fef2f2;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;border:1px solid #fca5a5;}
+  .mcq-q-text{font-size:15px!important;font-weight:600!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;margin-bottom:12px!important;}
+  .predict-note{font-size:12px;font-style:italic;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:12px;}
+  .mcq-code{background:#0f172a;border-radius:8px;padding:12px 14px;margin:10px 0 14px;font-family:monospace;font-size:13px;line-height:1.75;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;white-space:pre;overflow-x:auto;display:block;}
+  .mcq-code .k{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .mcq-code .s{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .mcq-code .n{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .mcq-code .c{color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-style:italic;}
+  .mcq-roman{list-style:none;padding:0;margin:10px 0 14px;display:flex;flex-direction:column;gap:6px;}
+  .mcq-roman li{font-family:monospace;font-size:13px;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;background:#f1f5f9;border-radius:6px;padding:8px 12px;}
+  .mcq-roman li strong{color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;font-family:"DM Sans",sans-serif;margin-right:8px;}
+  .mcq-options{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+  .mcq-option{display:flex!important;align-items:flex-start!important;gap:12px!important;padding:11px 14px!important;border:2px solid #e2e8f0!important;border-radius:8px!important;cursor:pointer!important;background:#f8fafc!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.5!important;text-align:left!important;width:100%!important;font-family:inherit!important;}
+  .mcq-option:hover{border-color:var(--bi3-lt)!important;background:var(--bi3-bg)!important;}
+  .mcq-option.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mcq-option.incorrect{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mcq-option.revealed-correct{border-color:var(--green)!important;background:#f0fdf4!important;}
+  .mcq-option-letter{font-weight:700!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;flex-shrink:0!important;min-width:18px!important;}
+  .mcq-option.correct .mcq-option-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mcq-option.incorrect .mcq-option-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mcq-feedback{display:none!important;padding:12px 16px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;margin-top:8px!important;}
+  .mcq-feedback.show{display:block!important;}
+  .mcq-feedback.correct-fb{background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #bbf7d0!important;}
+  .mcq-feedback.incorrect-fb{background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;border:1px solid #fecaca!important;}
+
+  /* GAME */
+  .game-section{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:14px;padding:28px;margin-bottom:40px;}
+  .game-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:10px;}
+  .game-title{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .game-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:20px!important;}
+  .vt-score-bar{display:flex;justify-content:space-between;background:rgba(255,255,255,.06);border-radius:10px;padding:12px 20px;margin-bottom:20px;flex-wrap:wrap;gap:8px;}
+  .vt-stat{text-align:center;}
+  .vt-stat-val{font-size:20px;font-weight:800;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1;}
+  .vt-stat-lbl{font-size:10px;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:2px;}
+  .vt-code-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  .vt-code-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:10px;}
+  .vt-code-lines{font-family:monospace;font-size:14px;line-height:2;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .vt-line{display:block;padding:2px 8px;border-radius:4px;white-space:pre;}
+  .vt-line.hl{background:rgba(147,197,253,.2);color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .vt-question{font-size:15px;font-weight:600;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;margin-bottom:14px;}
+  .vt-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+  .vt-btn{padding:12px;border-radius:9px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);cursor:pointer;font-size:15px;font-weight:700;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;font-family:monospace;transition:all .15s;}
+  .vt-btn:hover{border-color:var(--bi3-lt);background:rgba(26,86,219,.2);}
+  .vt-btn.c{border-color:#4ade80;background:rgba(74,222,128,.15);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+  .vt-btn.w{border-color:#f87171;background:rgba(248,113,113,.15);color:#f87171!important;-webkit-text-fill-color:#f87171!important;}
+  .vt-btn.rv{border-color:#4ade80;background:rgba(74,222,128,.08);}
+  .vt-fb{padding:10px 14px;border-radius:8px;font-size:13px;font-weight:500;margin-bottom:12px;display:none;line-height:1.5;}
+  .vt-fb.c{background:rgba(74,222,128,.1);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;display:block;}
+  .vt-fb.w{background:rgba(248,113,113,.1);color:#f87171!important;-webkit-text-fill-color:#f87171!important;display:block;}
+  .vt-next{display:none;width:100%;padding:12px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);border-radius:8px;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .vt-next.show{display:block;}
+  .vt-results{display:none;text-align:center;padding:20px;}
+  .vt-results.show{display:block;}
+  .vt-res-score{font-family:"DM Serif Display",serif;font-size:52px;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1;}
+  .vt-res-lbl{font-size:14px;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:12px;}
+  .vt-res-msg{font-size:14px;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;margin-bottom:20px;line-height:1.6;}
+  .vt-restart{background:rgba(255,255,255,.1);color:#fff!important;-webkit-text-fill-color:#fff!important;border:2px solid rgba(255,255,255,.2);border-radius:8px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+
+  /* CODE EDITOR (Pyodide live) */
+  .code-editor-section{background:#0f172a;border-radius:14px;padding:28px;margin-bottom:40px;}
+  .code-editor-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:10px;}
+  .code-editor-title{font-family:"DM Serif Display",serif!important;font-size:22px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .code-editor-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:20px!important;line-height:1.6;}
+  .code-problem{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+  .scaffold-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:rgba(147,197,253,.15);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;border:1px solid rgba(147,197,253,.35);margin-bottom:8px;}
+  .code-problem-num{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:8px;}
+  .code-problem-prompt{font-size:14px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.6!important;margin-bottom:12px!important;}
+  .code-problem-prompt code{background:rgba(147,197,253,.12);color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;padding:1px 6px;border-radius:5px;font-size:12px;}
+  .code-textarea{width:100%;min-height:120px;background:#020617;border:2px solid rgba(255,255,255,.1);border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;color:#e2e8f0!important;resize:vertical;outline:none;line-height:1.8;}
+  .code-textarea:focus{border-color:var(--bi3-lt);}
+  .code-btn-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center;}
+  .code-run-btn{padding:9px 20px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:7px!important;font-size:13px!important;font-weight:700!important;cursor:pointer!important;font-family:inherit!important;}
+  .code-run-btn:disabled{opacity:.6;cursor:wait;}
+  .code-hint-btn,.code-sol-btn{padding:9px 16px!important;background:rgba(255,255,255,.06)!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:7px!important;font-size:13px!important;cursor:pointer!important;font-family:inherit!important;}
+  .code-output{margin-top:10px;background:#020617;border-radius:8px;padding:12px 16px;font-family:monospace;font-size:13px;min-height:44px;display:none;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .code-output.show{display:block;}
+  .code-output.ok{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+  .code-output.err{color:#f87171!important;-webkit-text-fill-color:#f87171!important;}
+  .code-hint{margin-top:8px;background:rgba(147,197,253,.06);border:1px solid rgba(147,197,253,.2);border-radius:8px;padding:10px 14px;font-size:13px;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;display:none;line-height:1.6;}
+  .code-hint.show{display:block;}
+  .code-solution{margin-top:8px;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:8px;padding:12px 14px;font-family:monospace;font-size:13px;color:#bbf7d0!important;-webkit-text-fill-color:#bbf7d0!important;display:none;white-space:pre;line-height:1.8;overflow-x:auto;}
+  .code-solution.show{display:block;}
+
+  /* FAQ */
+  .faq-section{margin-bottom:40px;}
+  .faq-section h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;padding-bottom:10px!important;border-bottom:2px solid var(--bi3-bg)!important;}
+  .faq-item{background:#fff;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:10px;overflow:hidden;}
+  .faq-q{width:100%;text-align:left;padding:16px 20px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:15px!important;font-weight:600!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-family:inherit!important;line-height:1.4!important;}
+  .faq-q:hover{background:#f8fafc;}
+  .faq-icon{font-size:18px;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;flex-shrink:0;transition:transform .2s;font-style:normal;}
+  .faq-item.open .faq-icon{transform:rotate(45deg);}
+  .faq-a{display:none;padding:0 20px 16px;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.7!important;border-top:1px solid #f1f5f9;}
+  .faq-item.open .faq-a{display:block;}
+  .faq-a code{background:#eef2ff;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+
+  /* RELATED + SUPERPACK + TEACHER + NAV */
+  .related-links{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:24px;margin-bottom:40px;}
+  .related-links h3{font-size:15px!important;font-weight:700!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;}
+  .related-links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
+  .related-link{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;background:#f8fafc;text-decoration:none;font-size:13px!important;font-weight:500!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border:1px solid #bfdbfe;transition:background .15s;line-height:1.3;}
+  .related-link:link,.related-link:visited{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;}
+  .related-link:hover{background:var(--bi3-bg);}
+  .related-ext{color:var(--slate)!important;-webkit-text-fill-color:var(--slate)!important;border-color:#e2e8f0;}
+  .superpack-slim{background:#fff;border:1px solid #bfdbfe;border-radius:10px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:36px;}
+  .superpack-slim-icon{width:36px;height:36px;border-radius:8px;background:var(--bi3-bg);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .superpack-slim-text{font-size:14px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-weight:600;line-height:1.3;}
+  .superpack-slim-sub{font-size:12px;color:var(--slate);font-weight:400;display:block;margin-top:2px;}
+  .superpack-slim-btn{display:inline-flex!important;align-items:center!important;gap:6px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:9px 18px!important;border-radius:7px!important;font-size:13px!important;font-weight:600!important;text-decoration:none!important;white-space:nowrap!important;}
+  .superpack-slim-btn:link,.superpack-slim-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .teacher-callout{background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:18px 22px;margin-bottom:28px;display:flex;align-items:flex-start;gap:14px;}
+  .teacher-callout-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+  .teacher-callout-body{flex:1;}
+  .teacher-callout-label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#0369a1!important;-webkit-text-fill-color:#0369a1!important;margin-bottom:4px;}
+  .teacher-callout-body p{font-size:14px!important;color:#0c4a6e!important;-webkit-text-fill-color:#0c4a6e!important;margin-bottom:0!important;line-height:1.6!important;}
+  .teacher-callout-body a{color:#0369a1!important;-webkit-text-fill-color:#0369a1!important;font-weight:600;text-decoration:underline;}
+  .lesson-nav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:40px;}
+  .nav-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 20px;text-decoration:none;color:inherit;transition:box-shadow .15s;display:block;}
+  .nav-card:hover{box-shadow:0 4px 16px rgba(26,86,219,.1);border-color:#bfdbfe;}
+  .nav-card-dir{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:4px;}
+  .nav-card-title{font-size:14px;font-weight:700;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;line-height:1.3;}
+  .nav-card.next{border-left:3px solid var(--bi3);}
+
+  @media(max-width:600px){
+    .lesson-hero{padding:36px 20px 32px;}
+    .lesson-main{padding:32px 20px 60px;}
+    .vt-options{grid-template-columns:1fr 1fr;}
+    .lesson-nav{grid-template-columns:1fr;}
+    .mini-opts{gap:6px;}
+  }
+</style>
+<style>
+.code-usage{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin:-6px 0 18px!important;padding:8px 12px!important;background:rgba(255,255,255,.04)!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:8px!important;display:block!important;}
+.code-usage strong{color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;}
+.code-problem-prompt ul.rules{margin:10px 0 4px!important;padding-left:0!important;list-style:none!important;}
+.code-problem-prompt ul.rules li{position:relative;padding:3px 0 3px 20px!important;font-size:14px;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.55;}
+.code-problem-prompt ul.rules li::before{content:"\25B8";position:absolute;left:2px;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+.mcq-q-text ul.rules,.mini-ex-q ul.rules{margin:10px 0 4px!important;padding-left:0!important;list-style:none!important;}
+.mcq-q-text ul.rules li,.mini-ex-q ul.rules li{position:relative;padding:3px 0 3px 20px!important;font-size:15px;font-weight:400;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;line-height:1.5;}
+.mcq-q-text ul.rules li::before,.mini-ex-q ul.rules li::before{content:"\25B8";position:absolute;left:2px;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;}
+</style>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "AP CSP Course", "item": "https://apcsexamprep.com/pages/ap-csp-course"}, {"@type": "ListItem", "position": 2, "name": "Big Idea 3", "item": "https://apcsexamprep.com/pages/ap-csp-course-big-idea-3-algorithms"}, {"@type": "ListItem", "position": 3, "name": "Topic 3.2: Data Abstraction", "item": "https://apcsexamprep.com/pages/ap-csp-course-bi3-data-abstraction"}]}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "LearningResource", "name": "AP CSP Topic 3.2: Data Abstraction", "description": "Master AP CSP Topic 3.2 Data Abstraction. Why one list beats many variables, accessing elements by index, the Python 0-indexed vs AP pseudocode 1-indexed trap, named constants, a live Python editor, the Index Detective game, and Create Task use-cases.", "url": "https://apcsexamprep.com/pages/ap-csp-course-bi3-data-abstraction", "educationalLevel": "High School", "learningResourceType": "Lesson", "author": {"@type": "Person", "name": "Tanner Crow"}, "isPartOf": {"@type": "Course", "name": "AP Computer Science Principles Complete Course", "url": "https://apcsexamprep.com/pages/ap-csp-course"}, "datePublished": "2026-03-01"}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is data abstraction?", "acceptedAnswer": {"@type": "Answer", "text": "Data abstraction means giving data a name and hiding its underlying detail so you can manage complexity. Instead of tracking many separate values, you bundle related data under one meaningful name, such as a list called scores, and work with that name."}}, {"@type": "Question", "name": "Why use a list instead of separate variables?", "acceptedAnswer": {"@type": "Answer", "text": "A list represents multiple related values with a single variable name. That one name can refer to the whole collection, it scales to any amount of data without adding new variables, and you can reach any element by its index. Separate variables like score1, score2, and score3 share nothing and become unmanageable as the data grows."}}, {"@type": "Question", "name": "Why does index 0 give the first element in Python?", "acceptedAnswer": {"@type": "Answer", "text": "Python lists are 0-indexed, which means the first element is at position 0, the second at position 1, and so on. So scores[0] is the first element. Reaching for the first element with index 1 gives you the second element instead."}}, {"@type": "Question", "name": "How is AP pseudocode indexing different?", "acceptedAnswer": {"@type": "Answer", "text": "AP pseudocode lists are 1-indexed: the first element is at index 1. So on the exam reference sheet, list[1] is the first element, while in Python list[0] is the first element. Always check which language a question uses before you count."}}, {"@type": "Question", "name": "What is a named value or constant?", "acceptedAnswer": {"@type": "Answer", "text": "A named value gives a meaningful name to a fixed value, like TAX_RATE = 0.07. It is a small data abstraction: the name explains what the number means and hides the raw detail, and if the value ever changes you update it in one place."}}]}</script>
+
+<div class="lesson-page" data-course="ap-csp" data-unit="bi-3" data-lesson="data-abstraction">
+
+  <div class="lesson-breadcrumb">
+    <div class="lesson-breadcrumb-inner">
+      <a href="/pages/ap-csp-course">AP CSP Course</a><span class="bc-sep">›</span>
+      <a href="/pages/ap-csp-course-big-idea-3-algorithms">Big Idea 3</a><span class="bc-sep">›</span>
+      <span>3.2 Data Abstraction</span>
+    </div>
+  </div>
+  <div class="social-proof-bar">
+    <div class="social-proof-inner">
+      <span class="social-proof-item">⭐ <strong>5.0</strong> Wyzant rating</span>
+      <span class="social-proof-item">📚 <strong>1,845+</strong> tutoring hours</span>
+      <span class="social-proof-item">🏫 Built by an <strong>AP CS teacher</strong> with 11+ years experience</span>
+      <span class="social-proof-item">🎯 <strong>70%</strong> of classroom students score 4 or 5 on AP CSP</span>
+    </div>
+  </div>
+  <div class="lesson-hero">
+    <div class="lesson-hero-inner">
+      <div class="lesson-hero-meta">
+        <div class="lesson-num-badge">3.2</div>
+        <div><div class="lesson-eyebrow">Big Idea 3 • Algorithms &amp; Programming</div></div>
+      </div>
+      <h1>Data Abstraction</h1>
+      <div class="lesson-hero-pills">
+        <span class="lesson-pill">🕐 ~40 min</span>
+        <span class="lesson-pill" style="background:rgba(74,222,128,0.15);border-color:rgba(74,222,128,0.3);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;">FREE</span>
+        <span class="lesson-pill">📖 6 MCQ questions</span>
+        <span class="lesson-pill">🎮 Index Detective game</span>
+        <span class="lesson-pill">💻 Live Python editor</span>
+        <span class="ced-tag">AAP-1.C • AAP-1.D</span>
+      </div>
+    </div>
+  </div>
+  <div class="bi3-progress"><div class="bi3-progress-inner">
+<a href="/pages/ap-csp-course-bi3-variables" class="prog-step-link"><div class="prog-dot done">3.1</div>
+<div class="prog-label">Variables</div></a>
+<div class="prog-arrow"></div>
+<div class="prog-step">
+<div class="prog-dot active">3.2</div>
+<div class="prog-label active-label">Abstraction</div>
+</div>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-mathematical-expressions" class="prog-step-link"><div class="prog-dot upcoming">3.3</div>
+<div class="prog-label">Expressions</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-strings" class="prog-step-link"><div class="prog-dot upcoming">3.4</div>
+<div class="prog-label">Strings</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-boolean-expressions" class="prog-step-link"><div class="prog-dot upcoming">3.5</div>
+<div class="prog-label">Booleans</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-conditionals" class="prog-step-link"><div class="prog-dot upcoming">3.6</div>
+<div class="prog-label">IF/ELSE</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-nested-conditionals" class="prog-step-link"><div class="prog-dot upcoming">3.7</div>
+<div class="prog-label">Nested IF</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-iteration" class="prog-step-link"><div class="prog-dot upcoming">3.8</div>
+<div class="prog-label">Iteration</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-developing-algorithms" class="prog-step-link"><div class="prog-dot upcoming">3.9</div>
+<div class="prog-label">Algorithms</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-lists" class="prog-step-link"><div class="prog-dot upcoming">3.10</div>
+<div class="prog-label">Lists</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-binary-search" class="prog-step-link"><div class="prog-dot upcoming">3.11</div>
+<div class="prog-label">Search</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-calling-procedures" class="prog-step-link"><div class="prog-dot upcoming">3.12</div>
+<div class="prog-label">Procedures</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-developing-procedures" class="prog-step-link"><div class="prog-dot upcoming">3.13</div>
+<div class="prog-label">Dev Procs</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-libraries" class="prog-step-link"><div class="prog-dot upcoming">3.14</div>
+<div class="prog-label">Libraries</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-random-values" class="prog-step-link"><div class="prog-dot upcoming">3.15</div>
+<div class="prog-label">Random</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-simulations" class="prog-step-link"><div class="prog-dot upcoming">3.16</div>
+<div class="prog-label">Simulate</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-algorithmic-efficiency" class="prog-step-link"><div class="prog-dot upcoming">3.17</div>
+<div class="prog-label">Efficiency</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-undecidable-problems" class="prog-step-link"><div class="prog-dot upcoming">3.18</div>
+<div class="prog-label">Undecidable</div></a>
+</div></div>
+
+  <div class="lesson-main">
+
+    <div class="lesson-objectives">
+      <h2>After this lesson, you will be able to:</h2>
+      <ul>
+        <li><span>Explain that data abstraction gives data a name and hides detail to manage complexity</span></li>
+        <li><span>Describe how a list represents multiple related values with a single variable name</span></li>
+        <li><span>Explain why one list is better than many separate variables like score1, score2, score3</span></li>
+        <li><span>Access a list element by its index and know the list name refers to the whole collection</span></li>
+        <li><span>Distinguish Python 0-indexing from AP pseudocode 1-indexing to avoid off-by-one errors</span></li>
+        <li><span>Use a named value or constant as an abstraction in your Create Performance Task</span></li>
+      </ul>
+    </div>
+    <div class="score-impact">📈 <span><strong>Exam weight:</strong> Data abstraction is foundational for all of Big Idea 3. Index questions, especially the Python 0-indexed versus AP pseudocode 1-indexed difference, appear on tracing and spot-the-bug items, and a list that manages complexity earns a point on the Create Performance Task.</span>
+</div>
+    <div class="hook-box">
+      <div class="hook-label">💡 Think about this first</div>
+      <p>Imagine tracking the scores of thirty students with thirty separate variables: score1, score2, all the way to score30. It would be a nightmare to write and impossible to change. Now imagine one name, scores, that holds all thirty at once. That single move, giving a collection of data one name and hiding the rest of the detail, is data abstraction. This lesson is about naming data with lists and reaching individual values by index without slipping on the off-by-one trap.</p>
+    </div>
+    <div class="lesson-section">
+      <h2>What Data Abstraction Means</h2>
+      <p><strong>Data abstraction</strong> is the practice of giving data a name and hiding its underlying detail so the programmer can manage complexity (AAP-1.D). Instead of tracking many loose pieces of information, you bundle related data under one meaningful name and then work with that name. The details are still there, but you no longer have to think about all of them at once. That is the whole point of abstraction: it lets you focus on what the data represents rather than how it is stored.</p>
+      <p>The most common tool for this in AP CSP is the <strong>list</strong>. A list lets multiple related items be represented with a single variable name (AAP-1.C). One name, <code>scores</code>, can stand for an entire collection of test scores. You do not need <code>score1</code>, <code>score2</code>, <code>score3</code>, and so on; you need one list.</p>
+      <div class="code-panel-wrap">
+  <div class="code-panel-tabs">
+    <button class="code-tab py active" onclick="switchTab(this,'py','pan-1')">🐛 Python</button>
+    <button class="code-tab pseudo" onclick="switchTab(this,'pseudo','pan-1')">📋 AP Pseudocode</button>
+  </div>
+  <div class="code-pane active" id="pan-1-py"><pre><span class="py-comment"># many separate variables</span>
+<span class="py-var">score1</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">90</span>
+<span class="py-var">score2</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">85</span>
+<span class="py-var">score3</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">88</span>
+
+<span class="py-comment"># one abstraction: a single list</span>
+<span class="py-var">scores</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">[</span><span class="py-num">90</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">85</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">88</span><span class="py-var">]</span></pre></div>
+  <div class="code-pane" id="pan-1-pseudo"><pre><span class="ps-var">score1</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-num">90</span>
+<span class="ps-var">score2</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-num">85</span>
+<span class="ps-var">score3</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-num">88</span>
+
+<span class="ps-var">scores</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-var">[</span><span class="ps-num">90</span><span class="ps-var">,</span><span class="ps-var"> </span><span class="ps-num">85</span><span class="ps-var">,</span><span class="ps-var"> </span><span class="ps-num">88</span><span class="ps-var">]</span></pre></div>
+</div>
+      <p>On the left, three separate variables each hold one value and share nothing. On the right, a single list groups the same three values under one name. If you later have thirty scores instead of three, the separate-variable approach becomes unmanageable, while the list approach does not change shape at all.</p>
+      <div class="callout-exam">
+        <div class="callout-exam-label">🎯 What the exam expects</div>
+        <p>The CED says abstraction manages complexity by "hiding details." On the exam, be ready to explain <em>why</em> one list is better than many variables: it gives the collection a single name, it scales to any amount of data, and it lets the program refer to the whole collection at once.</p>
+      </div>
+
+      <div class="mini-ex">
+        <div class="mini-ex-label">✍ Mini Exercise 1 • Predict the output</div>
+        <div class="mini-ex-q">Python lists start counting at 0. What does this print?</div>
+        <div class="mini-ex-code"><pre style="margin:0;white-space:pre;font-family:monospace;font-size:13px;color:#e2e8f0;"><span class="py-var">data</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">[</span><span class="py-num">4</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">8</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">15</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">16</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">23</span><span class="py-var">]</span>
+<span class="py-kw">print</span><span class="py-var">(</span><span class="py-var">data</span><span class="py-var">[</span><span class="py-num">2</span><span class="py-var">]</span><span class="py-var">)</span></pre></div>
+        <div class="mini-opts" id="me1-opts">
+          <button class="mini-opt" onclick="miniMCQ('me1','A','B','me1-fb')"><span class="mini-opt-letter">A</span> 8</button>
+          <button class="mini-opt" onclick="miniMCQ('me1','B','B','me1-fb')"><span class="mini-opt-letter">B</span> 15</button>
+          <button class="mini-opt" onclick="miniMCQ('me1','C','B','me1-fb')"><span class="mini-opt-letter">C</span> 16</button>
+          <button class="mini-opt" onclick="miniMCQ('me1','D','B','me1-fb')"><span class="mini-opt-letter">D</span> nothing prints</button>
+        </div>
+        <div class="mini-fb" id="me1-fb"></div>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Accessing Elements by Index</h2>
+      <p>Once data lives in a list, you reach individual values by their <strong>index</strong>, the position number written in square brackets after the list name. The list name by itself refers to the <em>whole</em> collection; the list name plus an index refers to <em>one</em> element inside it. Understanding that difference is the core skill of this topic.</p>
+      <p>Here is the trap that catches more students than any other in Big Idea 3: the two languages you must know count positions differently.</p>
+      <div class="code-panel-wrap">
+  <div class="code-panel-tabs">
+    <button class="code-tab py active" onclick="switchTab(this,'py','pan-2')">🐛 Python (0-indexed)</button>
+    <button class="code-tab pseudo" onclick="switchTab(this,'pseudo','pan-2')">📋 Pseudocode (1-indexed)</button>
+  </div>
+  <div class="code-pane active" id="pan-2-py"><pre><span class="py-var">scores</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">[</span><span class="py-num">90</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">85</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">88</span><span class="py-var">]</span>
+<span class="py-kw">print</span><span class="py-var">(</span><span class="py-var">scores</span><span class="py-var">[</span><span class="py-num">0</span><span class="py-var">]</span><span class="py-var">)</span>
+<span class="py-kw">print</span><span class="py-var">(</span><span class="py-var">scores</span><span class="py-var">[</span><span class="py-num">2</span><span class="py-var">]</span><span class="py-var">)</span></pre></div>
+  <div class="code-pane" id="pan-2-pseudo"><pre><span class="ps-var">scores</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-var">[</span><span class="ps-num">90</span><span class="ps-var">,</span><span class="ps-var"> </span><span class="ps-num">85</span><span class="ps-var">,</span><span class="ps-var"> </span><span class="ps-num">88</span><span class="ps-var">]</span>
+<span class="ps-kw">DISPLAY</span><span class="ps-var">(</span><span class="ps-var">scores</span><span class="ps-var">[</span><span class="ps-num">1</span><span class="ps-var">]</span><span class="ps-var">)</span>
+<span class="ps-kw">DISPLAY</span><span class="ps-var">(</span><span class="ps-var">scores</span><span class="ps-var">[</span><span class="ps-num">3</span><span class="ps-var">]</span><span class="ps-var">)</span></pre></div>
+</div>
+      <p>In <strong>Python</strong>, the first element is at index <code>0</code>, so <code>scores[0]</code> is 90 and <code>scores[2]</code> is 88. In <strong>AP pseudocode</strong>, the first element is at index <code>1</code>, so <code>scores[1]</code> is 90 and <code>scores[3]</code> is 88. Both panels above print the same two values, 90 then 88, but the index numbers are different by one. Read the label before you trust an index.</p>
+      <div class="callout-trap">
+        <div class="callout-trap-label">⚠ The off-by-one trap</div>
+        <p>Python lists are <strong>0-indexed</strong> (first element is index 0). AP pseudocode lists are <strong>1-indexed</strong> (first element is index 1). If you reach for the first element with index 1 in Python, you get the <em>second</em> element instead. If a four-item Python list is indexed at 4, that index does not exist and the program raises an out-of-range error, because the valid indexes are 0, 1, 2, and 3. On the exam, always check which language a question is written in before you count.</p>
+      </div>
+
+      <div class="mini-ex">
+        <div class="mini-ex-label">✍ Mini Exercise 2 • Spot the off-by-one</div>
+        <div class="mini-ex-q">A student wanted the <strong>first</strong> element of this Python list but wrote index 1. What actually prints?</div>
+        <div class="mini-ex-code"><pre style="margin:0;white-space:pre;font-family:monospace;font-size:13px;color:#e2e8f0;"><span class="py-var">nums</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">[</span><span class="py-num">7</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">2</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">9</span><span class="py-var">]</span>
+<span class="py-kw">print</span><span class="py-var">(</span><span class="py-var">nums</span><span class="py-var">[</span><span class="py-num">1</span><span class="py-var">]</span><span class="py-var">)</span></pre></div>
+        <div class="mini-opts" id="me2-opts">
+          <button class="mini-opt" onclick="miniMCQ('me2','A','B','me2-fb')"><span class="mini-opt-letter">A</span> 7</button>
+          <button class="mini-opt" onclick="miniMCQ('me2','B','B','me2-fb')"><span class="mini-opt-letter">B</span> 2</button>
+          <button class="mini-opt" onclick="miniMCQ('me2','C','B','me2-fb')"><span class="mini-opt-letter">C</span> 9</button>
+          <button class="mini-opt" onclick="miniMCQ('me2','D','B','me2-fb')"><span class="mini-opt-letter">D</span> an error</button>
+        </div>
+        <div class="mini-fb" id="me2-fb"></div>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>The List Name Is the Whole Collection</h2>
+      <p>It is worth stating plainly: a list name refers to the entire collection of values, in order. When you use the name alone you are talking about all of the data at once; when you attach an index you are picking out one specific item.</p>
+      <div class="code-panel-wrap">
+  <div class="code-panel-tabs">
+    <button class="code-tab py active" onclick="switchTab(this,'py','pan-4')">🐛 Python</button>
+    <button class="code-tab pseudo" onclick="switchTab(this,'pseudo','pan-4')">📋 AP Pseudocode</button>
+  </div>
+  <div class="code-pane active" id="pan-4-py"><pre><span class="py-var">names</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">[</span><span class="py-str">"Ana"</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-str">"Ben"</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-str">"Cy"</span><span class="py-var">]</span>
+<span class="py-kw">print</span><span class="py-var">(</span><span class="py-var">names</span><span class="py-var">)</span>
+<span class="py-kw">print</span><span class="py-var">(</span><span class="py-var">names</span><span class="py-var">[</span><span class="py-num">1</span><span class="py-var">]</span><span class="py-var">)</span></pre></div>
+  <div class="code-pane" id="pan-4-pseudo"><pre><span class="ps-var">names</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-var">[</span><span class="ps-str">"Ana"</span><span class="ps-var">,</span><span class="ps-var"> </span><span class="ps-str">"Ben"</span><span class="ps-var">,</span><span class="ps-var"> </span><span class="ps-str">"Cy"</span><span class="ps-var">]</span>
+<span class="ps-kw">DISPLAY</span><span class="ps-var">(</span><span class="ps-var">names</span><span class="ps-var">)</span>
+<span class="ps-kw">DISPLAY</span><span class="ps-var">(</span><span class="ps-var">names</span><span class="ps-var">[</span><span class="ps-num">2</span><span class="ps-var">]</span><span class="ps-var">)</span></pre></div>
+</div>
+      <p>The first line prints the whole list, brackets and all, because <code>names</code> by itself is the collection. The second line prints just <code>names[1]</code>, which in Python is the second element, "Ben." This is exactly why a list is such a powerful abstraction: one name can behave as the whole group or, with an index, as any single member of it.</p>
+      <div class="callout-exam">
+        <div class="callout-exam-label">🎯 Forward reference</div>
+        <p>This lesson stops at naming data and reading single elements by index. Looping through every element, adding items, and removing items are the job of <strong>Topic 3.10 Lists</strong>. Here, master the abstraction and the indexing first; the traversal skills build directly on top of them.</p>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Named Values as Abstractions</h2>
+      <p>A list is not the only kind of data abstraction. Giving a plain value a meaningful name is abstraction too. A <strong>named value</strong>, often called a constant when it is meant to stay fixed, replaces a mystery number with a word that explains what the number means.</p>
+      <div class="code-panel-wrap">
+  <div class="code-panel-tabs">
+    <button class="code-tab py active" onclick="switchTab(this,'py','pan-3')">🐛 Python</button>
+    <button class="code-tab pseudo" onclick="switchTab(this,'pseudo','pan-3')">📋 AP Pseudocode</button>
+  </div>
+  <div class="code-pane active" id="pan-3-py"><pre><span class="py-var">TAX_RATE</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">0.07</span>
+<span class="py-var">price</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">20</span>
+<span class="py-kw">print</span><span class="py-var">(</span><span class="py-var">price</span><span class="py-var"> </span><span class="py-var">+</span><span class="py-var"> </span><span class="py-var">price</span><span class="py-var"> </span><span class="py-var">*</span><span class="py-var"> </span><span class="py-var">TAX_RATE</span><span class="py-var">)</span></pre></div>
+  <div class="code-pane" id="pan-3-pseudo"><pre><span class="ps-var">TAX_RATE</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-num">0.07</span>
+<span class="ps-var">price</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-num">20</span>
+<span class="ps-kw">DISPLAY</span><span class="ps-var">(</span><span class="ps-var">price</span><span class="ps-var"> </span><span class="ps-var">+</span><span class="ps-var"> </span><span class="ps-var">price</span><span class="ps-var"> </span><span class="ps-var">*</span><span class="ps-var"> </span><span class="ps-var">TAX_RATE</span><span class="ps-var">)</span></pre></div>
+</div>
+      <p>Reading <code>price + price * TAX_RATE</code> tells you instantly that the program adds tax to a price. If the code said <code>price + price * 0.07</code>, a reader would have to guess what 0.07 stands for. The name hides the raw detail behind an idea, and if the tax rate ever changes you update it in one place. That is data abstraction managing complexity on a small scale.</p>
+
+      <div class="mini-ex">
+        <div class="mini-ex-label">✍ Mini Exercise 3 • Fill in the blank</div>
+        <div class="mini-ex-q">This is AP pseudocode, which is 1-indexed. Type the exact value it displays (lowercase).</div>
+        <div class="mini-ex-code"><pre style="margin:0;white-space:pre;font-family:monospace;font-size:13px;color:#e2e8f0;"><span class="ps-var">colors</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-var">[</span><span class="ps-str">"red"</span><span class="ps-var">,</span><span class="ps-var"> </span><span class="ps-str">"green"</span><span class="ps-var">,</span><span class="ps-var"> </span><span class="ps-str">"blue"</span><span class="ps-var">]</span>
+<span class="ps-kw">DISPLAY</span><span class="ps-var">(</span><span class="ps-var">colors</span><span class="ps-var">[</span><span class="ps-num">1</span><span class="ps-var">]</span><span class="ps-var">)</span></pre></div>
+        <div class="mini-fib-row">
+          <span style="font-size:14px;color:#374151;">displays:</span>
+          <input type="text" class="mini-fib-input" id="me3-inp" placeholder="?">
+          <button class="mini-fib-btn" onclick="miniFIB('me3','me3-fb')">Check</button>
+        </div>
+        <div class="mini-fb" id="me3-fb"></div>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Key Vocabulary</h2>
+      <table class="vocab-table">
+        <thead><tr>
+<th>Term</th>
+<th>Definition</th>
+<th>Example</th>
+</tr></thead>
+        <tbody>
+          <tr>
+<td>Data abstraction</td>
+<td>Giving data a name and hiding detail to manage complexity</td>
+<td>naming a collection <code>scores</code>
+</td>
+</tr>
+          <tr>
+<td>List</td>
+<td>One variable name that represents multiple related values</td>
+<td><code>scores = [90, 85, 88]</code></td>
+</tr>
+          <tr>
+<td>Element</td>
+<td>A single value stored inside a list</td>
+<td>the 85 in <code>scores</code>
+</td>
+</tr>
+          <tr>
+<td>Index</td>
+<td>The position number used to access one element</td>
+<td><code>scores[0]</code></td>
+</tr>
+          <tr>
+<td>0-indexed</td>
+<td>Python counting, where the first element is at index 0</td>
+<td>
+<code>scores[0]</code> is first</td>
+</tr>
+          <tr>
+<td>1-indexed</td>
+<td>AP pseudocode counting, where the first element is at index 1</td>
+<td>
+<code>scores[1]</code> is first</td>
+</tr>
+          <tr>
+<td>Named value</td>
+<td>A meaningful name given to a fixed value; a small abstraction</td>
+<td><code>TAX_RATE = 0.07</code></td>
+</tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cpt-connection">
+      <div class="cpt-connection-label">📋 Create Performance Task • A list that manages complexity</div>
+      <p>The Create Task rubric awards a point for a list (or other collection type) that is used to manage complexity in your program. A list earns that point only when representing the data as separate variables would make your program harder to write. Data abstraction is the reason the point exists.</p>
+      <h3>A point-earning example</h3>
+      <p>Suppose your program stores several quiz scores and reports one of them. Using a list gives the whole set a single name:</p>
+      <div class="cpt-code">scores &lt;- [88, 92, 79]
+DISPLAY(scores[1])</div>
+      <p>Remember this is AP pseudocode, so <code>scores[1]</code> is the FIRST element, 88. In your written response, name the abstraction and explain why it manages complexity:</p>
+      <ul class="cpt-stems">
+        <li>"The list <code>scores</code> stores all of the quiz scores under one name instead of separate variables."</li>
+        <li>"Using a list manages complexity because the program can refer to the whole collection at once and reach any single score by its index."</li>
+        <li>"Without the list I would need a separate variable for every score, which would make the program longer and harder to change."</li>
+      </ul>
+      <h3>The trap to avoid</h3>
+      <p>Match your index to the language. Your written portable pseudocode is 1-indexed, but if you build in Python your first element is at index 0. Describing the wrong element, or reaching past the end of the list, weakens the response. State which element your index selects and confirm it exists. <a href="/pages/ap-csp-course-create-task">See the full Create Task module →</a></p>
+    </div>
+    <div class="email-capture">
+      <div class="email-capture-text">
+        <div class="email-capture-eyebrow">FREE for students</div>
+        <h3>Get a free AP CSP question every day</h3>
+        <p>Join 3,000+ students. Daily practice, study tips, and exam strategies.</p>
+      </div>
+      <div>
+        <div class="email-capture-form" id="capture-form">
+          <input type="email" class="email-capture-input" id="capture-email" placeholder="your@email.com">
+          <button class="email-capture-btn" onclick="handleCapture()">Subscribe →</button>
+        </div>
+        <div class="email-capture-success" id="capture-success">✓ You're in!</div>
+      </div>
+    </div>
+    <div class="mcq-section">
+      <div class="mcq-section-header">
+        <div class="mcq-section-icon">📈</div>
+        <div>
+          <div class="mcq-section-title">MCQ Practice</div>
+          <div class="mcq-section-sub">6 questions • Exam difficulty and above • Predict before you peek</div>
+        </div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q1">
+        <div class="mcq-q-num">Question 1 of 6<span class="diff-tag">Trace</span>
+</div>
+        <div class="predict-note">Predict first: what are the values at index 0 and index 3?</div>
+        <div class="mcq-q-text">What does this code segment display?</div>
+        <div class="mcq-code">
+<span class="k">t</span> = [<span class="n">5</span>, <span class="n">10</span>, <span class="n">15</span>, <span class="n">20</span>]
+<span class="k">print</span>(t[<span class="n">0</span>] + t[<span class="n">3</span>])</div>
+        <div class="mcq-options" id="q1-options">
+<button class="mcq-option" onclick="checkMCQ('q1','A','D','q1-fb-A')"><span class="mcq-option-letter">A</span> 10</button>
+<button class="mcq-option" onclick="checkMCQ('q1','B','D','q1-fb-B')"><span class="mcq-option-letter">B</span> 15</button>
+<button class="mcq-option" onclick="checkMCQ('q1','C','D','q1-fb-C')"><span class="mcq-option-letter">C</span> 35</button>
+<button class="mcq-option" onclick="checkMCQ('q1','D','D','q1-fb-D')"><span class="mcq-option-letter">D</span> 25</button>
+</div>
+<div id="q1-fb-A" class="mcq-feedback incorrect-fb">Incorrect. t[0] is 5 and t[3] is 20. Their sum is 25, not 10.</div>
+<div id="q1-fb-B" class="mcq-feedback incorrect-fb">Incorrect. 15 is the value at index 2. The code adds index 0 (5) and index 3 (20).</div>
+<div id="q1-fb-C" class="mcq-feedback incorrect-fb">Incorrect. 35 would be t[2] + t[3]. The code uses index 0 and index 3, giving 5 + 20 = 25.</div>
+<div id="q1-fb-D" class="mcq-feedback correct-fb">Correct. Python is 0-indexed, so t[0] is 5 and t[3] is 20. 5 + 20 is 25.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q2">
+        <div class="mcq-q-num">Question 2 of 6<span class="diff-tag">Spot the bug</span>
+</div>
+        <div class="predict-note">Predict first: which position does index 1 select in Python?</div>
+        <div class="mcq-q-text">The code below is meant to print the <strong>first</strong> element of the list. What does it actually print, and why?</div>
+        <div class="mcq-code">
+<span class="k">s</span> = [<span class="s">"a"</span>, <span class="s">"b"</span>, <span class="s">"c"</span>]
+<span class="k">print</span>(s[<span class="n">1</span>])</div>
+        <div class="mcq-options" id="q2-options">
+<button class="mcq-option" onclick="checkMCQ('q2','A','A','q2-fb-A')"><span class="mcq-option-letter">A</span> b, because Python is 0-indexed, so index 1 is the second element</button>
+<button class="mcq-option" onclick="checkMCQ('q2','B','A','q2-fb-B')"><span class="mcq-option-letter">B</span> a, because index 1 is the first element</button>
+<button class="mcq-option" onclick="checkMCQ('q2','C','A','q2-fb-C')"><span class="mcq-option-letter">C</span> c, because index 1 counts from the end</button>
+<button class="mcq-option" onclick="checkMCQ('q2','D','A','q2-fb-D')"><span class="mcq-option-letter">D</span> an error, because index 1 is out of range</button>
+</div>
+<div id="q2-fb-A" class="mcq-feedback correct-fb">Correct. Python lists start at index 0, so s[0] is the first element. s[1] is the second element, b. That off-by-one is the bug.</div>
+<div id="q2-fb-B" class="mcq-feedback incorrect-fb">Incorrect. The first element is s[0]. Python is 0-indexed, so index 1 is not the first element.</div>
+<div id="q2-fb-C" class="mcq-feedback incorrect-fb">Incorrect. Positive indexes count from the front, not the end. s[1] is the second element, b.</div>
+<div id="q2-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Index 1 is valid for a three-item list, so there is no error; it prints b.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q3">
+        <div class="mcq-q-num">Question 3 of 6<span class="diff-tag">I, II, III</span>
+</div>
+        <div class="mcq-q-text">Which of the following statements about lists and data abstraction are true?</div>
+        <ul class="mcq-roman">
+          <li>
+<strong>I.</strong> A list lets one variable name represent many related values.</li>
+          <li>
+<strong>II.</strong> In Python, the first element is at index 0.</li>
+          <li>
+<strong>III.</strong> In AP pseudocode, the first element is at index 0.</li>
+        </ul>
+        <div class="mcq-options" id="q3-options">
+<button class="mcq-option" onclick="checkMCQ('q3','A','A','q3-fb-A')"><span class="mcq-option-letter">A</span> I and II only</button>
+<button class="mcq-option" onclick="checkMCQ('q3','B','A','q3-fb-B')"><span class="mcq-option-letter">B</span> I only</button>
+<button class="mcq-option" onclick="checkMCQ('q3','C','A','q3-fb-C')"><span class="mcq-option-letter">C</span> I and III only</button>
+<button class="mcq-option" onclick="checkMCQ('q3','D','A','q3-fb-D')"><span class="mcq-option-letter">D</span> II and III only</button>
+</div>
+<div id="q3-fb-A" class="mcq-feedback correct-fb">Correct. I and II are both true. III is false because AP pseudocode is 1-indexed, so its first element is at index 1, not 0.</div>
+<div id="q3-fb-B" class="mcq-feedback incorrect-fb">Incorrect. I is true, but II is also true: Python is 0-indexed, so its first element is at index 0.</div>
+<div id="q3-fb-C" class="mcq-feedback incorrect-fb">Incorrect. III is false. In AP pseudocode the first element is at index 1, not 0.</div>
+<div id="q3-fb-D" class="mcq-feedback incorrect-fb">Incorrect. II is true, but III is false and I is also true. Only I and II are correct.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q4">
+        <div class="mcq-q-num">Question 4 of 6<span class="diff-tag">NOT question</span>
+</div>
+        <div class="mcq-q-text">Which statement about lists and data abstraction is <strong>NOT</strong> true?</div>
+        <div class="mcq-options" id="q4-options">
+<button class="mcq-option" onclick="checkMCQ('q4','A','B','q4-fb-A')"><span class="mcq-option-letter">A</span> A single list name can represent many related values</button>
+<button class="mcq-option" onclick="checkMCQ('q4','B','B','q4-fb-B')"><span class="mcq-option-letter">B</span> The values in a list are automatically sorted in ascending order</button>
+<button class="mcq-option" onclick="checkMCQ('q4','C','B','q4-fb-C')"><span class="mcq-option-letter">C</span> Data abstraction hides detail to help manage complexity</button>
+<button class="mcq-option" onclick="checkMCQ('q4','D','B','q4-fb-D')"><span class="mcq-option-letter">D</span> The whole collection can be referenced by the list name</button>
+</div>
+<div id="q4-fb-A" class="mcq-feedback incorrect-fb">Incorrect. This is true. One list name can hold many related values, which is the idea behind AAP-1.C.</div>
+<div id="q4-fb-B" class="mcq-feedback correct-fb">Correct. This is NOT true. A list keeps values in the order you place them; it does not sort them automatically.</div>
+<div id="q4-fb-C" class="mcq-feedback incorrect-fb">Incorrect. This is true. Hiding detail behind a name is exactly what data abstraction does.</div>
+<div id="q4-fb-D" class="mcq-feedback incorrect-fb">Incorrect. This is true. The list name refers to the whole collection, not just one element.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q5">
+        <div class="mcq-q-num">Question 5 of 6<span class="diff-tag">Spot the bug</span>
+</div>
+        <div class="predict-note">Predict first: what are the valid indexes of a four-item list?</div>
+        <div class="mcq-q-text">This line is meant to print the <strong>last</strong> element of the four-item list. What actually happens?</div>
+        <div class="mcq-code">
+<span class="k">p</span> = [<span class="n">8</span>, <span class="n">6</span>, <span class="n">7</span>, <span class="n">5</span>]
+<span class="k">print</span>(p[<span class="n">4</span>])</div>
+        <div class="mcq-options" id="q5-options">
+<button class="mcq-option" onclick="checkMCQ('q5','A','C','q5-fb-A')"><span class="mcq-option-letter">A</span> It prints 5, the last element, as intended</button>
+<button class="mcq-option" onclick="checkMCQ('q5','B','C','q5-fb-B')"><span class="mcq-option-letter">B</span> It prints 7, the third element</button>
+<button class="mcq-option" onclick="checkMCQ('q5','C','C','q5-fb-C')"><span class="mcq-option-letter">C</span> It causes an index out of range error, because valid indexes are 0 to 3</button>
+<button class="mcq-option" onclick="checkMCQ('q5','D','C','q5-fb-D')"><span class="mcq-option-letter">D</span> It prints nothing, because index 4 is skipped</button>
+</div>
+<div id="q5-fb-A" class="mcq-feedback incorrect-fb">Incorrect. The last element is p[3], not p[4]. Index 4 does not exist in a four-item list.</div>
+<div id="q5-fb-B" class="mcq-feedback incorrect-fb">Incorrect. 7 is at index 2. The real issue is that index 4 is past the end of the list.</div>
+<div id="q5-fb-C" class="mcq-feedback correct-fb">Correct. A four-item Python list has indexes 0, 1, 2, and 3. Index 4 is out of range, so this raises an error. The last element is p[3].</div>
+<div id="q5-fb-D" class="mcq-feedback incorrect-fb">Incorrect. An out-of-range index does not print nothing; it raises an error.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q6">
+        <div class="mcq-q-num">Question 6 of 6<span class="diff-tag">Trace</span>
+</div>
+        <div class="predict-note">Predict first: what is n, and what value sits at that index?</div>
+        <div class="mcq-q-text">What does this code segment display?</div>
+        <div class="mcq-code">
+<span class="k">n</span> = <span class="n">3</span>
+<span class="k">k</span> = [<span class="n">2</span>, <span class="n">4</span>, <span class="n">6</span>, <span class="n">8</span>]
+<span class="k">print</span>(k[n])</div>
+        <div class="mcq-options" id="q6-options">
+<button class="mcq-option" onclick="checkMCQ('q6','A','A','q6-fb-A')"><span class="mcq-option-letter">A</span> 8</button>
+<button class="mcq-option" onclick="checkMCQ('q6','B','A','q6-fb-B')"><span class="mcq-option-letter">B</span> 4</button>
+<button class="mcq-option" onclick="checkMCQ('q6','C','A','q6-fb-C')"><span class="mcq-option-letter">C</span> 6</button>
+<button class="mcq-option" onclick="checkMCQ('q6','D','A','q6-fb-D')"><span class="mcq-option-letter">D</span> an error</button>
+</div>
+<div id="q6-fb-A" class="mcq-feedback correct-fb">Correct. n is 3, so k[n] is k[3]. Python is 0-indexed, so k[3] is the fourth element, 8.</div>
+<div id="q6-fb-B" class="mcq-feedback incorrect-fb">Incorrect. 4 is at index 1. Here n is 3, so the code prints k[3].</div>
+<div id="q6-fb-C" class="mcq-feedback incorrect-fb">Incorrect. 6 is at index 2. n is 3, so the code prints k[3], which is 8.</div>
+<div id="q6-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Index 3 is valid for a four-item list, so there is no error; it prints 8.</div>
+      </div>
+    </div>
+    <div class="game-section">
+      <div style="text-align:center;margin-bottom:20px;">
+        <div class="game-badge">🎮 Lesson Game</div>
+        <div class="game-title">Index Detective</div>
+        <div class="game-sub">Read each list and predict what is displayed. Watch the index carefully. 8 rounds.</div>
+      </div>
+      <div id="vt-active">
+        <div class="vt-score-bar">
+          <div class="vt-stat">
+<div class="vt-stat-val" id="vt-score">0</div>
+<div class="vt-stat-lbl">Correct</div>
+</div>
+          <div class="vt-stat">
+<div class="vt-stat-val" id="vt-qn">1/8</div>
+<div class="vt-stat-lbl">Round</div>
+</div>
+          <div class="vt-stat">
+<div class="vt-stat-val" id="vt-streak">0</div>
+<div class="vt-stat-lbl">Streak 🔥</div>
+</div>
+        </div>
+        <div class="vt-code-card">
+          <div class="vt-code-label">🐛 Python • which value prints?</div>
+          <div class="vt-code-lines" id="vt-code"></div>
+        </div>
+        <div class="vt-question" id="vt-question"></div>
+        <div class="vt-options" id="vt-options"></div>
+        <div class="vt-fb" id="vt-fb"></div>
+        <button class="vt-next" id="vt-next" onclick="vtNext()">Next →</button>
+      </div>
+      <div class="vt-results" id="vt-results">
+        <div class="vt-res-score" id="vt-res-score">0/8</div>
+        <div class="vt-res-lbl">correct answers</div>
+        <div class="vt-res-msg" id="vt-res-msg"></div>
+        <button class="vt-restart" onclick="vtRestart()">↻ Play again</button>
+      </div>
+    </div>
+    <div class="code-editor-section">
+      <div class="code-editor-badge">💻 Live Python Code Editor</div>
+      <div class="code-editor-title">Practice Problems</div>
+      <div class="code-editor-sub">Real Python runs right here in your browser. The first time you press Run, the Python engine loads (a few seconds); after that it is instant. Problems build from guided to Create-Task level. Use Hint if you are stuck, and check your output against the target.</div>
+      <div class="code-usage" id="code-usage">Hints used: <strong>0</strong> • Solutions viewed: <strong>0</strong>
+</div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-1">
+        <div class="scaffold-badge">Level 1 • Guided</div>
+        <div class="code-problem-num">Problem 1 of 8 • first element</div>
+        <div class="code-problem-prompt">
+<code>scores</code> holds three test scores. Print the <strong>first</strong> element using its index. Remember Python starts at index 0. Target output: <strong>88</strong>
+</div>
+        <textarea class="code-textarea" id="ce-1" rows="6" spellcheck="false">scores = [88, 92, 79]
+# TODO: print the first element (index 0)
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-1" onclick="runPy(1)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(1)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-1" onclick="showSol(1)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-1"></div>
+        <div class="code-hint" id="ce-hint-1"></div>
+        <div class="code-solution" id="ce-sol-1"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-2">
+        <div class="scaffold-badge">Level 2 • Guided</div>
+        <div class="code-problem-num">Problem 2 of 8 • pick an element</div>
+        <div class="code-problem-prompt">Print the element at <strong>index 2</strong> of the list. Target output: <strong>30</strong>
+</div>
+        <textarea class="code-textarea" id="ce-2" rows="6" spellcheck="false">data = [10, 20, 30, 40, 50]
+# TODO: print the element at index 2
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-2" onclick="runPy(2)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(2)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-2" onclick="showSol(2)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-2"></div>
+        <div class="code-hint" id="ce-hint-2"></div>
+        <div class="code-solution" id="ce-sol-2"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-3">
+        <div class="scaffold-badge">Level 3 • Combine elements</div>
+        <div class="code-problem-num">Problem 3 of 8 • first plus last</div>
+        <div class="code-problem-prompt">Print the sum of the <strong>first</strong> element (index 0) and the <strong>last</strong> element (index 3). Target output: <strong>13</strong>
+</div>
+        <textarea class="code-textarea" id="ce-3" rows="6" spellcheck="false">nums = [4, 7, 2, 9]
+# TODO: print nums[0] + nums[3]
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-3" onclick="runPy(3)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(3)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-3" onclick="showSol(3)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-3"></div>
+        <div class="code-hint" id="ce-hint-3"></div>
+        <div class="code-solution" id="ce-sol-3"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-4">
+        <div class="scaffold-badge">Level 4 • Fix the bug</div>
+        <div class="code-problem-num">Problem 4 of 8 • off-by-one</div>
+        <div class="code-problem-prompt">This should print the <strong>first</strong> name, Ana, but Python lists are 0-indexed so the index is wrong. Fix it. Target output: <strong>Ana</strong>
+</div>
+        <textarea class="code-textarea" id="ce-4" rows="6" spellcheck="false">names = ["Ana", "Ben", "Cy"]
+print(names[1])
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-4" onclick="runPy(4)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(4)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-4" onclick="showSol(4)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-4"></div>
+        <div class="code-hint" id="ce-hint-4"></div>
+        <div class="code-solution" id="ce-sol-4"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-5">
+        <div class="scaffold-badge">Level 5 • Named value</div>
+        <div class="code-problem-num">Problem 5 of 8 • constant as abstraction</div>
+        <div class="code-problem-prompt">Create a named constant <code>TAX_RATE</code> equal to 0.10, then print <code>price + price * TAX_RATE</code>. Target output: <strong>55.0</strong>
+</div>
+        <textarea class="code-textarea" id="ce-5" rows="6" spellcheck="false">price = 50
+# TODO: set TAX_RATE to 0.10, then print price + price * TAX_RATE
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-5" onclick="runPy(5)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(5)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-5" onclick="showSol(5)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-5"></div>
+        <div class="code-hint" id="ce-hint-5"></div>
+        <div class="code-solution" id="ce-sol-5"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-6">
+        <div class="scaffold-badge">Level 6 • Create Task style</div>
+        <div class="code-problem-num">Problem 6 of 8 • index from a variable</div>
+        <div class="code-problem-prompt">
+<code>temps</code> stores daily highs and <code>day</code> holds an index. Print the temperature stored at index <code>day</code>. Target output: <strong>72</strong>
+</div>
+        <textarea class="code-textarea" id="ce-6" rows="6" spellcheck="false">temps = [61, 68, 72, 70, 65]
+day = 2
+# TODO: print the temperature at index day
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-6" onclick="runPy(6)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(6)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-6" onclick="showSol(6)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-6"></div>
+        <div class="code-hint" id="ce-hint-6"></div>
+        <div class="code-solution" id="ce-sol-6"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-7">
+        <div class="scaffold-badge">Level 7 • Challenge</div>
+        <div class="code-problem-num">Problem 7 of 8 • you write the whole program</div>
+        <div class="code-problem-prompt">Open ended. Write the <strong>entire</strong> program yourself. Using only indexing (no loops), print two lines:<ul class="rules">
+<li>the label <code>First:</code> followed by the first score</li>
+<li>the label <code>Total:</code> followed by the sum of all four scores</li>
+</ul>Only the list is given. Target output:<br><strong>First: 12<br>Total: 55</strong>
+</div>
+        <textarea class="code-textarea" id="ce-7" rows="6" spellcheck="false">scores = [12, 8, 15, 20]
+# Print "First:" and the first score, then "Total:" and the sum of all four.
+# Use indexing only, no loops.
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-7" onclick="runPy(7)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(7)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-7" onclick="showSol(7)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-7"></div>
+        <div class="code-hint" id="ce-hint-7"></div>
+        <div class="code-solution" id="ce-sol-7"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-8">
+        <div class="scaffold-badge">Level 8 • Challenge</div>
+        <div class="code-problem-num">Problem 8 of 8 • multi-step summary</div>
+        <div class="code-problem-prompt">Open ended. Write the <strong>entire</strong> program yourself. Using only indexing (no loops), print two lines:<ul class="rules">
+<li>
+<code>First 3 total:</code> followed by the sum of the first three days</li>
+<li>
+<code>Last minus first:</code> followed by the last day minus the first day</li>
+</ul>Only the list is given. Target output:<br><strong>First 3 total: 450<br>Last minus first: 125</strong>
+</div>
+        <textarea class="code-textarea" id="ce-8" rows="6" spellcheck="false">sales = [100, 150, 200, 175, 225]
+# Print the total of the first three days, then last day minus first day.
+# Use indexing only, no loops.
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-8" onclick="runPy(8)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(8)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-8" onclick="showSol(8)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-8"></div>
+        <div class="code-hint" id="ce-hint-8"></div>
+        <div class="code-solution" id="ce-sol-8"></div>
+      </div>
+    </div>
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What is data abstraction?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Data abstraction means giving data a name and hiding its underlying detail so you can manage complexity. Instead of tracking many separate values, you bundle related data under one meaningful name, such as a list called <code>scores</code>, and work with that name.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Why use a list instead of separate variables?<i class="faq-icon">+</i></button>
+        <div class="faq-a">A list represents multiple related values with a single variable name. That one name can refer to the whole collection, it scales to any amount of data without adding new variables, and you can reach any element by its index. Separate variables like <code>score1</code>, <code>score2</code>, and <code>score3</code> share nothing and become unmanageable as the data grows.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Why does index 0 give the first element in Python?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Python lists are <strong>0-indexed</strong>, which means the first element is at position 0, the second at position 1, and so on. So <code>scores[0]</code> is the first element. Reaching for the first element with index 1 gives you the second element instead.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">How is AP pseudocode indexing different?<i class="faq-icon">+</i></button>
+        <div class="faq-a">AP pseudocode lists are <strong>1-indexed</strong>: the first element is at index 1. So on the exam reference sheet, <code>list[1]</code> is the first element, while in Python <code>list[0]</code> is the first element. Always check which language a question uses before you count.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What is a named value or constant?<i class="faq-icon">+</i></button>
+        <div class="faq-a">A named value gives a meaningful name to a fixed value, like <code>TAX_RATE = 0.07</code>. It is a small data abstraction: the name explains what the number means and hides the raw detail, and if the value ever changes you update it in one place.</div>
+      </div>
+    </div>
+    <div class="related-links">
+      <h3>🔗 Continue studying</h3>
+      <div class="related-links-grid">
+        <a href="/pages/ap-csp-course-big-idea-3-algorithms" class="related-link">← BI3 Hub</a>
+        <a href="/pages/ap-csp-course-bi3-variables" class="related-link">← 3.1 Variables &amp; Assignments</a>
+        <a href="/pages/ap-csp-course-bi3-mathematical-expressions" class="related-link">Next: 3.3 Mathematical Expressions →</a>
+        <a href="/pages/ap-csp-course-bi3-lists" class="related-link">3.10 Lists</a>
+        <a href="/pages/ap-csp-course-create-task" class="related-link">Create Task Module</a>
+        <a href="/pages/ap-csp-question-of-the-day" class="related-link">Daily Practice Questions</a>
+        <a href="https://apcentral.collegeboard.org/courses/ap-computer-science-principles" class="related-link related-ext" target="_blank" rel="noopener">College Board AP CSP ↗</a>
+      </div>
+    </div>
+    <div class="superpack-slim">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="superpack-slim-icon">📦</div>
+        <div><div class="superpack-slim-text">AP CSP Teacher Superpack<span class="superpack-slim-sub">Slides, lesson plans, unit tests for all 5 Big Ideas, $249</span>
+</div></div>
+      </div>
+      <a href="/products/ap-csp-teacher-superpack" class="superpack-slim-btn">Get the Superpack →</a>
+    </div>
+    <div class="teacher-callout">
+      <div class="teacher-callout-icon">🏫</div>
+      <div class="teacher-callout-body">
+        <div class="teacher-callout-label">For teachers</div>
+        <p>The Superpack includes an editable Topic 3.2 slide deck that animates list indexing side by side in Python and AP pseudocode, an off-by-one error bank, a print-ready data abstraction worksheet, and a unit quiz. <a href="/products/ap-csp-teacher-superpack">View what's included →</a></p>
+      </div>
+    </div>
+    <div class="lesson-nav">
+      <a href="/pages/ap-csp-course-bi3-variables" class="nav-card">
+        <div class="nav-card-dir">← Previous</div>
+        <div class="nav-card-title">3.1 Variables &amp; Assignments</div>
+      </a>
+      <a href="/pages/ap-csp-course-bi3-mathematical-expressions" class="nav-card next">
+        <div class="nav-card-dir">Next lesson →</div>
+        <div class="nav-card-title">3.3 Mathematical Expressions</div>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var MINI_MSGS={"me1": {"A": "\u2717 Index 2 is not the second element. Python counts 0, 1, 2, so data[2] is the third value.", "B": "\u2713 Correct! Python is 0-indexed: data[0] is 4, data[1] is 8, data[2] is 15.", "C": "\u2717 16 is at index 3. Counting from 0, data[2] is the third value, 15.", "D": "\u2717 Index 2 is a valid position, so it prints a value, not nothing."}, "me2": {"A": "\u2717 7 is at index 0. That is the first element the student wanted, but the code used index 1.", "B": "\u2713 Correct! Python lists are 0-indexed, so nums[1] is the SECOND element, 2. Using index 1 for the first item is the bug.", "C": "\u2717 9 is at index 2, the third element. nums[1] is 2.", "D": "\u2717 Index 1 is valid for a three-item list, so there is no error; it prints 2."}};
+var MINI_FIB={"me3": {"correct": "red", "c": "\u2713 Correct! AP pseudocode is 1-indexed, so colors[1] is the FIRST element, red.", "w": "\u2717 Not quite. AP pseudocode is 1-indexed, so colors[1] is the first element, red (not green)."}};
+var CE_EXPECTED={"1": "88", "2": "30", "3": "13", "4": "Ana", "5": "55.0", "6": "72", "7": "First: 12\nTotal: 55", "8": "First 3 total: 450\nLast minus first: 125"};
+var CE_HINTS={"1": ["The first element of a Python list is at index 0, not 1.", "Use scores[0] inside print.", "Full pattern:\nscores = [88, 92, 79]\nprint(scores[0])"], "2": ["Count positions from 0: index 0, then 1, then 2.", "data[2] is the third value.", "Full pattern:\ndata = [10, 20, 30, 40, 50]\nprint(data[2])"], "3": ["The first element is index 0. The last of four elements is index 3.", "Add the two elements with a plus sign inside print.", "Full pattern:\nprint(nums[0] + nums[3])"], "4": ["Python is 0-indexed, so the first name is names[0], not names[1].", "Change the index from 1 to 0."], "5": ["A named constant is just a variable you assign once, like TAX_RATE = 0.10.", "Then print price + price * TAX_RATE.", "Full pattern:\nprice = 50\nTAX_RATE = 0.10\nprint(price + price * TAX_RATE)"], "6": ["You can put a variable inside the brackets: list[day].", "day is 2, so temps[day] is temps[2].", "Full pattern:\ntemps = [61, 68, 72, 70, 65]\nday = 2\nprint(temps[day])"], "7": ["Get single values with scores[0], scores[1], scores[2], scores[3].", "print(\"First:\", scores[0]) prints the label and the value with a space.", "Full solution:\nprint(\"First:\", scores[0])\nprint(\"Total:\", scores[0] + scores[1] + scores[2] + scores[3])"], "8": ["The first three days are indexes 0, 1, and 2. The last day of five is index 4.", "Add sales[0] + sales[1] + sales[2] for the total, and sales[4] - sales[0] for the difference.", "Full solution:\nprint(\"First 3 total:\", sales[0] + sales[1] + sales[2])\nprint(\"Last minus first:\", sales[4] - sales[0])"]};
+var CE_SOL={"1": "scores = [88, 92, 79]\nprint(scores[0])", "2": "data = [10, 20, 30, 40, 50]\nprint(data[2])", "3": "nums = [4, 7, 2, 9]\nprint(nums[0] + nums[3])", "4": "names = [\"Ana\", \"Ben\", \"Cy\"]\nprint(names[0])", "5": "price = 50\nTAX_RATE = 0.10\nprint(price + price * TAX_RATE)", "6": "temps = [61, 68, 72, 70, 65]\nday = 2\nprint(temps[day])", "7": "scores = [12, 8, 15, 20]\nprint(\"First:\", scores[0])\nprint(\"Total:\", scores[0] + scores[1] + scores[2] + scores[3])", "8": "sales = [100, 150, 200, 175, 225]\nprint(\"First 3 total:\", sales[0] + sales[1] + sales[2])\nprint(\"Last minus first:\", sales[4] - sales[0])"};
+var VT_QS=[{"lines": ["scores = [90, 85, 88]", "print(scores[0])"], "hl": 1, "q": "What is displayed?", "choices": ["90", "85", "88", "error"], "correct": 0, "exp": "Python is 0-indexed, so scores[0] is the first element, 90."}, {"lines": ["data = [4, 8, 15, 16]", "print(data[2])"], "hl": 1, "q": "What is displayed?", "choices": ["4", "8", "15", "16"], "correct": 2, "exp": "Count from 0: data[0]=4, data[1]=8, data[2]=15."}, {"lines": ["t = [10, 20, 30]", "print(t[1] + t[2])"], "hl": 1, "q": "What is displayed?", "choices": ["30", "40", "50", "60"], "correct": 2, "exp": "t[1] is 20 and t[2] is 30, so 20 + 30 = 50."}, {"lines": ["names = [\"Ana\", \"Ben\", \"Cy\"]", "print(names[0])"], "hl": 1, "q": "What is displayed?", "choices": ["Ana", "Ben", "Cy", "error"], "correct": 0, "exp": "names[0] is the first element in Python, Ana."}, {"lines": ["RATE = 2", "x = 5", "print(x * RATE)"], "hl": 2, "q": "What is displayed?", "choices": ["5", "7", "10", "25"], "correct": 2, "exp": "RATE is a named value holding 2, so x * RATE is 5 * 2 = 10."}, {"lines": ["k = [7, 14, 21, 28]", "i = 2", "print(k[i])"], "hl": 2, "q": "What is displayed?", "choices": ["14", "21", "28", "7"], "correct": 1, "exp": "i is 2, so k[i] is k[2], the third element, 21."}, {"lines": ["v = [3, 6, 9, 12]", "print(v[0] + v[3])"], "hl": 1, "q": "What is displayed?", "choices": ["12", "15", "18", "21"], "correct": 1, "exp": "v[0] is 3 and v[3] is 12, so 3 + 12 = 15."}, {"lines": ["s = [1, 2, 3]", "print(s)"], "hl": 1, "q": "What is displayed?", "choices": ["[1, 2, 3]", "1 2 3", "1", "3"], "correct": 0, "exp": "The list name alone refers to the whole collection, so it prints [1, 2, 3]."}];
+var VT_MSGS=["Indexing takes reps. Check whether the code is Python (starts at 0) or pseudocode (starts at 1).", "Getting there. The list name alone is the whole collection; add an index for one element.", "Decent. In Python, the first element is always index 0.", "Solid. You are reading indexes accurately.", "Strong. You will handle most list-access questions on the exam.", "Very strong. Nearly perfect.", "Almost flawless.", "Perfect! You can name data and pull any element by index without slipping on off-by-one."];
+
+function switchTab(btn, lang, panelId){
+  var wrap=btn.parentElement.parentElement;
+  var tabs=wrap.querySelectorAll('.code-tab'),panes=wrap.querySelectorAll('.code-pane');
+  for(var i=0;i<tabs.length;i++)tabs[i].classList.remove('active');
+  for(var i=0;i<panes.length;i++)panes[i].classList.remove('active');
+  btn.classList.add('active');
+  var t=document.getElementById(panelId+'-'+lang); if(t)t.classList.add('active');
+}
+/* Gradebook hook: fire one standard event per graded interaction. The theme reporter
+   listens for 'apcsActivity' and reads course/unit/lesson off the .lesson-page wrapper. */
+function _activity(d){
+  try{ var w=document.querySelector('.lesson-page');
+    if(w){ d.course=w.getAttribute('data-course'); d.unit=w.getAttribute('data-unit'); d.lesson=w.getAttribute('data-lesson'); }
+    document.dispatchEvent(new CustomEvent('apcsActivity',{detail:d}));
+  }catch(e){}
+}
+function miniMCQ(id, chosen, correct, fbId){
+  var opts=document.querySelectorAll('#'+id+'-opts .mini-opt');
+  opts.forEach(function(b){b.onclick=null;b.style.cursor='default';});
+  var letters=['A','B','C','D'];
+  opts[letters.indexOf(chosen)].classList.add(chosen===correct?'correct':'incorrect');
+  if(chosen!==correct)opts[letters.indexOf(correct)].classList.add('reveal');
+  var fb=document.getElementById(fbId);
+  if(MINI_MSGS[id]){fb.textContent=MINI_MSGS[id][chosen]||'';fb.className='mini-fb '+(chosen===correct?'c':'w');}
+}
+function miniFIB(id, fbId){
+  var inp=document.getElementById(id+'-inp'),fb=document.getElementById(fbId);
+  var val=inp.value.trim().toLowerCase();var d=MINI_FIB[id];
+  var ok=(val===String(d.correct).toLowerCase());
+  inp.classList.add(ok?'correct':'incorrect');
+  fb.textContent=ok?d.c:d.w; fb.className='mini-fb '+(ok?'c':'w'); inp.disabled=true;
+}
+function checkMCQ(qid, chosen, correct, fbId){
+  var opts=document.querySelectorAll('#'+qid+'-options .mcq-option');
+  opts.forEach(function(b){b.disabled=true;b.onclick=null;});
+  var letters=['A','B','C','D'];
+  opts[letters.indexOf(chosen)].classList.add(chosen===correct?'correct':'incorrect');
+  if(chosen!==correct)opts[letters.indexOf(correct)].classList.add('revealed-correct');
+  document.getElementById(fbId).classList.add('show');
+  _activity({activity:'quiz',item:qid,choice:chosen});
+}
+function toggleFAQ(btn){
+  var item=btn.parentElement,wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(el){el.classList.remove('open');});
+  if(!wasOpen)item.classList.add('open');
+}
+function handleCapture(){
+  var email=document.getElementById('capture-email').value.trim();
+  if(!email||!email.includes('@')){document.getElementById('capture-email').focus();return;}
+  document.getElementById('capture-form').style.display='none';
+  document.getElementById('capture-success').style.display='block';
+  if(typeof window._learnq!=='undefined'){window._learnq.push(['identify',{'$email':email}]);}
+}
+var PY_URL='https://cdn.jsdelivr.net/pyodide/v0.26.2/full/';
+var CE_HINT_IDX={};
+/* Hint/solution usage tracking. window.LESSON_USAGE is read by the gradebook reporter
+   (separate task) and mirrored in a visible on-page tally so teachers can factor it in. */
+var LESSON_USAGE={hints:{},solutions:{},totalHints:0,totalSolutions:0};
+window.LESSON_USAGE=LESSON_USAGE;
+function _sumv(o){var t=0;for(var k in o){t+=o[k];}return t;}
+function updateUsage(){
+  var el=document.getElementById('code-usage');
+  if(el){el.innerHTML='Hints used: <strong>'+LESSON_USAGE.totalHints+'</strong> • Solutions viewed: <strong>'+LESSON_USAGE.totalSolutions+'</strong>';}
+  try{document.dispatchEvent(new CustomEvent('lessonUsage',{detail:LESSON_USAGE}));}catch(e){}
+}
+function loadScriptOnce(src){return new Promise(function(res,rej){
+  if(document.querySelector('script[data-pyodide]')){res();return;}
+  var s=document.createElement('script');s.src=src;s.setAttribute('data-pyodide','1');
+  s.onload=function(){res();};s.onerror=function(){rej(new Error('script load failed'));};
+  document.head.appendChild(s);});}
+function ensurePy(){if(window.__pyPromise)return window.__pyPromise;
+  window.__pyPromise=(async function(){await loadScriptOnce(PY_URL+'pyodide.js');
+    var py=await loadPyodide({indexURL:PY_URL});window.__pyodide=py;return py;})();
+  return window.__pyPromise;}
+function cleanErr(msg){if(!msg)return 'error';var lines=String(msg).trim().split('\n');return lines.slice(-3).join('\n');}
+function execUser(py,code){var output='',err=null;
+  try{py.runPython('import sys, io\n__old_out = sys.stdout\nsys.stdout = io.StringIO()\nsys.stderr = sys.stdout');
+    try{var ns=py.globals.get('dict')();py.runPython(code,{globals:ns});ns.destroy();}
+    catch(e){err=cleanErr(e.message);}
+    output=py.runPython('sys.stdout.getvalue()');}
+  catch(e2){err=cleanErr((e2&&e2.message)||String(e2));}
+  finally{try{py.runPython('sys.stdout = __old_out\nsys.stderr = __old_out');}catch(e3){}}
+  return {output:output,err:err};}
+async function runPy(n){
+  var out=document.getElementById('ce-out-'+n),btn=document.getElementById('run-btn-'+n);
+  out.className='code-output show';out.textContent='Loading Python (first run may take a few seconds)...';
+  if(btn)btn.disabled=true;var py;
+  try{py=await ensurePy();}catch(e){out.className='code-output show err';
+    out.textContent='Could not load the Python engine. Check your connection and try Run again.';if(btn)btn.disabled=false;return;}
+  var code=document.getElementById('ce-'+n).value;var res=execUser(py,code);
+  var solBtn=document.getElementById('sol-btn-'+n);
+  if(res.err){out.className='code-output show err';out.textContent='\u2717 Error:\n'+res.err;}
+  else{var got=(res.output||'').replace(/\s+$/,'');var exp=CE_EXPECTED[n];
+    var shown=res.output&&res.output.length?res.output.replace(/\n$/,''):'(no output)';
+    if(exp!==undefined&&got===exp){out.className='code-output show ok';out.textContent='\u2713 Correct! Output:\n'+shown;if(solBtn)solBtn.style.display='inline-block';}
+    else if(exp!==undefined){out.className='code-output show err';out.textContent='Output:\n'+shown+'\n\nTarget: '+exp+'\nKeep going, or press Hint.';}
+    else{out.className='code-output show';out.textContent='Output:\n'+shown;}
+    if(typeof exp!=='undefined')_activity({activity:'exercise-1',item:'ce-'+n,correct:(got===exp)});}
+  if(btn)btn.disabled=false;}
+function showHint(n){var box=document.getElementById('ce-hint-'+n);
+  if(CE_HINT_IDX[n]===undefined)CE_HINT_IDX[n]=0;var hints=CE_HINTS[n]||[];
+  if(hints.length===0)return;
+  if(CE_HINT_IDX[n]>=hints.length)CE_HINT_IDX[n]=hints.length-1;
+  var shown=CE_HINT_IDX[n]+1;var text='';
+  for(var i=0;i<shown;i++){text+='Hint '+(i+1)+': '+hints[i]+(i<shown-1?'\n\n':'');}
+  box.textContent=text;box.className='code-hint show';box.style.whiteSpace='pre-wrap';
+  LESSON_USAGE.hints[n]=shown;LESSON_USAGE.totalHints=_sumv(LESSON_USAGE.hints);updateUsage();
+  if(CE_HINT_IDX[n]<hints.length-1)CE_HINT_IDX[n]++;
+  var solBtn=document.getElementById('sol-btn-'+n);if(solBtn)solBtn.style.display='inline-block';}
+function showSol(n){var box=document.getElementById('ce-sol-'+n);box.textContent=CE_SOL[n]||'';box.className='code-solution show';
+  LESSON_USAGE.solutions[n]=1;LESSON_USAGE.totalSolutions=_sumv(LESSON_USAGE.solutions);updateUsage();}
+var vtScore=0,vtQ=0,vtStreak=0,vtAnswered=false;
+function vtRender(){if(vtQ>=VT_QS.length){vtShowResults();return;}vtAnswered=false;var q=VT_QS[vtQ];
+  document.getElementById('vt-qn').textContent=(vtQ+1)+'/'+VT_QS.length;
+  document.getElementById('vt-streak').textContent=vtStreak;
+  var codeEl=document.getElementById('vt-code');codeEl.innerHTML='';
+  q.lines.forEach(function(line,i){var span=document.createElement('span');
+    span.className='vt-line'+(i===q.hl?' hl':'');span.textContent=line;codeEl.appendChild(span);});
+  document.getElementById('vt-question').textContent=q.q;
+  var optEl=document.getElementById('vt-options');optEl.innerHTML='';
+  q.choices.forEach(function(ch,i){var btn=document.createElement('button');btn.className='vt-btn';btn.textContent=ch;
+    btn.onclick=(function(idx){return function(){vtAnswer(idx);};})(i);optEl.appendChild(btn);});
+  document.getElementById('vt-fb').className='vt-fb';document.getElementById('vt-next').className='vt-next';}
+function vtAnswer(idx){if(vtAnswered)return;vtAnswered=true;var q=VT_QS[vtQ];
+  var btns=document.querySelectorAll('.vt-btn');btns.forEach(function(b){b.onclick=null;});
+  var fb=document.getElementById('vt-fb');
+  if(idx===q.correct){vtScore++;vtStreak++;btns[idx].classList.add('c');fb.textContent='\u2713 Correct! '+q.exp;fb.className='vt-fb c';}
+  else{vtStreak=0;btns[idx].classList.add('w');btns[q.correct].classList.add('rv');fb.textContent='\u2717 Not quite. '+q.exp;fb.className='vt-fb w';}
+  document.getElementById('vt-score').textContent=vtScore;document.getElementById('vt-streak').textContent=vtStreak;
+  document.getElementById('vt-next').className='vt-next show';}
+function vtNext(){vtQ++;vtRender();}
+function vtShowResults(){document.getElementById('vt-active').style.display='none';
+  document.getElementById('vt-results').className='vt-results show';
+  document.getElementById('vt-res-score').textContent=vtScore+'/'+VT_QS.length;
+  document.getElementById('vt-res-msg').textContent=VT_MSGS[Math.min(vtScore,VT_MSGS.length-1)];
+  _activity({activity:'exercise-2',earned:vtScore,possible:VT_QS.length});}
+function vtRestart(){vtScore=0;vtQ=0;vtStreak=0;vtAnswered=false;
+  document.getElementById('vt-results').className='vt-results';
+  document.getElementById('vt-active').style.display='block';
+  document.getElementById('vt-score').textContent='0';vtRender();}
+vtRender();
+</script>
+<!-- apcs-keepgoing (managed) -->
+<div id="apcs-kg">
+<style>
+#apcs-kg{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:28px auto 0!important;padding:0 16px 8px!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important}
+#apcs-kg *,#apcs-kg *::before,#apcs-kg *::after{box-sizing:border-box!important}
+#apcs-kg .kg-lbl{font-size:12px!important;font-weight:800!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 10px!important}
+#apcs-kg .kg-row{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:12px!important}
+@media (max-width:640px){#apcs-kg .kg-row{grid-template-columns:repeat(1,1fr)!important}}
+#apcs-kg a.kg,#apcs-kg a.kg:link,#apcs-kg a.kg:visited{display:block!important;text-decoration:none!important;border:1px solid #BBE5D2!important;border-left:5px solid #10B981!important;border-radius:0 12px 12px 0!important;background:#ECFDF5!important;padding:14px 16px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;font-size:16px!important;font-weight:700!important;line-height:1.35!important}
+#apcs-kg a.kg:hover{background:#D1FAE5!important}
+#apcs-kg a.kg span{display:block!important;margin-top:4px!important;font-size:13px!important;font-weight:400!important;color:#5B7268!important;-webkit-text-fill-color:#5B7268!important}
+</style>
+<p class="kg-lbl">Keep going with Topic 3.2</p>
+<div class="kg-row">
+<a class="kg" href="/pages/ap-csp-topic-3-2-code">Coding practice<span>Write and run real code, checked as you go</span></a>
+<a class="kg" href="/pages/ap-csp-game-name-the-thing">Study game<span>Not graded, just for the practice</span></a>
+<a class="kg" href="/pages/ap-csp-topic-3-2-guided-notes">Guided notes<span>Print them or fill them in here</span></a>
+</div>
+</div>
+<!-- apcs-exercises (managed) -->
+<div id="apcs-ex-links">
+<style>
+#apcs-ex-links{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:28px auto 0!important;padding:0 16px 8px!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important}
+#apcs-ex-links *,#apcs-ex-links *::before,#apcs-ex-links *::after{box-sizing:border-box!important}
+#apcs-ex-links .ex-lbl{font-size:12px!important;font-weight:800!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:0 0 10px!important}
+#apcs-ex-links .ex-row{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important}
+@media (max-width:640px){#apcs-ex-links .ex-row{grid-template-columns:repeat(1,1fr)!important}}
+#apcs-ex-links a.ex,#apcs-ex-links a.ex:link,#apcs-ex-links a.ex:visited{display:block!important;text-decoration:none!important;border:1px solid #93c5fd!important;border-left:5px solid #1a56db!important;border-radius:0 12px 12px 0!important;background:#eff6ff!important;padding:14px 16px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;font-size:16px!important;font-weight:700!important;line-height:1.35!important}
+#apcs-ex-links a.ex:hover{background:#dbeafe!important}
+#apcs-ex-links a.ex span{display:block!important;margin-top:4px!important;font-size:13px!important;font-weight:400!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important}
+#apcs-ex-links a.ex.wide{grid-column:1/-1!important}
+</style>
+<p class="ex-lbl">Exercises for Topic 3.2</p>
+<div class="ex-row">
+<a class="ex" href="/pages/ap-csp-topic-3-2-exercise-1">Exercise 1: Trace the List<span>Work it online. Saved in your browser, not graded</span></a>
+<a class="ex" href="/pages/ap-csp-topic-3-2-exercise-2">Exercise 2: One Name for Many<span>Work it online. Saved in your browser, not graded</span></a>
+<a class="ex wide" href="/pages/ap-csp-course-bi3-data-abstraction-exercise-2">Applied Challenge<span>undefined questions, and every answer is recorded for your teacher</span></a>
+</div>
+</div>

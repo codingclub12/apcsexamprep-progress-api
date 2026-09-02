@@ -1,0 +1,1362 @@
+<!--
+  PAGE: /pages/ap-csp-course-bi3-nested-conditionals
+  TITLE: Topic 3.7: Nested Conditionals | AP CSP Big Idea 3 | APCSExamPrep.com
+  META: Master AP CSP Topic 3.7 Nested Conditionals. Nesting, multiway if/elif/else selection, condition ordering and reachability, tracing, a live Python code editor, the Nesting Navigator game, and Create Task use-cases.
+-->
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+  :root{--navy:#0f1f3d;--bi3:#1a56db;--bi3-lt:#93c5fd;--bi3-bg:#eff6ff;--bi3-dk:#1e40af;--green:#16a34a;--amber:#d97706;--red:#dc2626;--slate:#64748b;--white:#ffffff;--py:#3b82f6;--pseudo:#8b5cf6;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  .lesson-page{font-family:"DM Sans",sans-serif;color:var(--navy);background:#f8fafc;line-height:1.6;}
+
+  .lesson-breadcrumb{background:#fff;border-bottom:1px solid #e2e8f0;padding:12px 24px;}
+  .lesson-breadcrumb-inner{max-width:880px;margin:0 auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate);flex-wrap:wrap;}
+  .lesson-breadcrumb a{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;text-decoration:none;font-weight:500;}
+  .bc-sep{color:#cbd5e1;}
+
+  .social-proof-bar{background:#fff;border-bottom:1px solid #e2e8f0;padding:10px 24px;}
+  .social-proof-inner{max-width:880px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 20px;font-size:13px;color:var(--slate);}
+  .social-proof-item{display:flex;align-items:center;gap:5px;font-weight:500;}
+  .social-proof-item strong{color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+
+  .lesson-hero{background:var(--navy);background-image:radial-gradient(ellipse 60% 70% at 90% 20%,rgba(26,86,219,.28) 0%,transparent 60%);padding:48px 24px 40px;}
+  .lesson-hero-inner{max-width:880px;margin:0 auto;}
+  .lesson-hero-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .lesson-num-badge{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:var(--bi3);font-weight:700;font-size:14px;color:#fff!important;-webkit-text-fill-color:#fff!important;flex-shrink:0;}
+  .lesson-eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;}
+  .lesson-hero h1{font-family:"DM Serif Display",serif!important;font-size:clamp(26px,4vw,40px)!important;line-height:1.2!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:14px!important;}
+  .lesson-hero-pills{display:flex;flex-wrap:wrap;gap:8px;}
+  .lesson-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:5px 12px;border-radius:100px;font-size:12px;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .ced-tag{display:inline-flex;align-items:center;background:rgba(26,86,219,.25);border:1px solid rgba(147,197,253,.3);padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;letter-spacing:.04em;}
+
+  /* PROGRESS STRIP */
+  .bi3-progress{background:#fff!important;border-bottom:1px solid #e2e8f0!important;padding:14px 20px!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;}
+  .bi3-progress-inner{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;gap:0!important;width:max-content!important;min-width:100%!important;}
+  .prog-step{display:flex!important;flex-direction:column!important;align-items:center!important;min-width:46px!important;text-align:center!important;flex-shrink:0!important;}
+  .prog-step-link{display:flex!important;flex-direction:column!important;align-items:center!important;min-width:46px!important;text-align:center!important;flex-shrink:0!important;text-decoration:none!important;cursor:pointer!important;}
+  .prog-step-link:hover .prog-dot{background:#dbeafe!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border-color:var(--bi3)!important;}
+  .prog-dot{width:26px!important;height:26px!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:9px!important;font-weight:700!important;margin-bottom:4px!important;flex-shrink:0!important;}
+  .prog-dot.active{background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .prog-dot.upcoming{background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:2px solid #e2e8f0!important;}
+  .prog-dot.done{background:#dbeafe!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border:2px solid var(--bi3)!important;}
+  .prog-label{font-size:8px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;line-height:1.2!important;white-space:nowrap!important;}
+  .prog-label.active-label{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;}
+  .prog-arrow{flex:1 0 4px!important;height:2px!important;background:#e2e8f0!important;margin-bottom:18px!important;min-width:4px!important;max-width:16px!important;flex-shrink:0!important;}
+
+  /* MAIN */
+  .lesson-main{max-width:880px;margin:0 auto;padding:40px 24px 80px;}
+  .lesson-objectives{background:var(--bi3-bg);border-left:4px solid var(--bi3);border-radius:0 10px 10px 0;padding:20px 24px;margin-bottom:28px;}
+  .lesson-objectives h2{font-size:14px!important;font-weight:700!important;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;text-transform:uppercase!important;letter-spacing:.06em!important;margin-bottom:12px!important;}
+  .lesson-objectives ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;}
+  .lesson-objectives li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#1e3a8a;line-height:1.5;}
+  .lesson-objectives li::before{content:"\2713";color:var(--bi3);font-weight:700;flex-shrink:0;margin-top:1px;}
+  .score-impact{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 18px;margin-bottom:28px;display:flex;align-items:center;gap:10px;font-size:14px;color:#14532d;}
+  .score-impact strong{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+
+  /* HOOK */
+  .hook-box{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px 28px;margin-bottom:32px;}
+  .hook-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:8px;}
+  .hook-box p{font-size:15px!important;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;line-height:1.7!important;margin-bottom:0!important;}
+
+  /* LESSON SECTIONS */
+  .lesson-section{margin-bottom:40px;}
+  .lesson-section h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;padding-bottom:10px!important;border-bottom:2px solid var(--bi3-bg)!important;}
+  .lesson-section h3{font-size:17px!important;font-weight:700!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-top:24px!important;margin-bottom:10px!important;}
+  .lesson-section p{font-size:15px;color:#374151;line-height:1.8;margin-bottom:14px;}
+  .lesson-section ul,.lesson-section ol{padding-left:20px;margin-bottom:14px;}
+  .lesson-section li{font-size:15px;color:#374151;line-height:1.7;margin-bottom:6px;}
+  .lesson-section code{background:#eef2ff;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+
+  /* DUAL CODE PANEL */
+  .code-panel-wrap{margin:20px 0;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;}
+  .code-panel-tabs{display:flex;background:#1e293b;}
+  .code-tab{padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;border:none;background:transparent;letter-spacing:.04em;transition:background .15s;font-family:inherit;}
+  .code-tab.py{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .code-tab.pseudo{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+  .code-tab.active{background:rgba(255,255,255,.15)!important;}
+  .code-tab-label{font-size:10px;opacity:.6;margin-left:4px;font-weight:400;}
+  .code-pane{background:#0f172a;padding:18px 20px;overflow-x:auto;height:0;overflow:hidden;padding:0;}
+  .code-pane.active{height:auto;overflow-x:auto;padding:18px 20px;}
+  .code-pane pre{font-family:monospace;font-size:13px;line-height:1.8;margin:0;white-space:pre-wrap;word-break:break-word;max-width:100%;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .py-kw{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:700;}
+  .py-fn{color:#6ee7b7!important;-webkit-text-fill-color:#6ee7b7!important;}
+  .py-num{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .py-str{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .py-comment{color:#475569!important;-webkit-text-fill-color:#475569!important;font-style:italic;}
+  .py-var{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .py-op{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;}
+  .ps-kw{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700;}
+  .ps-op{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .ps-num{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .ps-str{color:#86efac!important;-webkit-text-fill-color:#86efac!important;}
+  .ps-comment{color:#475569!important;-webkit-text-fill-color:#475569!important;font-style:italic;}
+  .ps-var{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+
+  /* CALLOUTS */
+  .callout-exam{background:#fffbeb;border:1px solid #fcd34d;border-left:4px solid var(--amber);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+  .callout-exam-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--amber)!important;-webkit-text-fill-color:var(--amber)!important;margin-bottom:6px;}
+  .callout-exam p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin-bottom:0!important;line-height:1.6!important;}
+  .callout-trap{background:#fef2f2;border:1px solid #fca5a5;border-left:4px solid var(--red);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+  .callout-trap-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;margin-bottom:6px;}
+  .callout-trap p{font-size:14px!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;margin-bottom:0!important;line-height:1.6!important;}
+
+  /* MINI EXERCISES */
+  .mini-ex{background:#fff;border:1px solid #bfdbfe;border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .mini-ex-label{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;margin-bottom:12px;}
+  .mini-ex-q{font-size:15px;font-weight:600;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px;line-height:1.5;}
+  .mini-ex-code{background:#0f172a;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;line-height:1.8;margin-bottom:14px;overflow-x:auto;white-space:pre;display:block;}
+  .mini-opts{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;}
+  .mini-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border:2px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:14px;font-family:monospace;color:#374151!important;-webkit-text-fill-color:#374151!important;background:#f8fafc;text-align:left;width:100%;transition:border-color .15s;}
+  .mini-opt:hover{border-color:var(--bi3-lt);background:var(--bi3-bg);}
+  .mini-opt.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mini-opt.incorrect{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mini-opt.reveal{border-color:var(--green)!important;background:#f0fdf4!important;}
+  .mini-opt-letter{font-weight:700;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;min-width:18px;font-family:inherit;}
+  .mini-opt.correct .mini-opt-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mini-opt.incorrect .mini-opt-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mini-fib-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;}
+  .mini-fib-input{padding:8px 12px;border:2px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:14px;width:130px;outline:none;color:var(--navy)!important;background:#f8fafc;}
+  .mini-fib-input:focus{border-color:var(--bi3-lt);}
+  .mini-fib-input.correct{border-color:var(--green);background:#f0fdf4;}
+  .mini-fib-input.incorrect{border-color:var(--red);background:#fef2f2;}
+  .mini-fib-btn{padding:8px 18px;background:var(--bi3);border:none;border-radius:8px;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .mini-fb{font-size:13px;font-weight:500;padding:8px 12px;border-radius:7px;margin-top:6px;display:none;line-height:1.5;}
+  .mini-fb.c{background:#f0fdf4;color:var(--green)!important;-webkit-text-fill-color:var(--green)!important;display:block;}
+  .mini-fb.w{background:#fef2f2;color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;display:block;}
+
+  /* VOCAB */
+  .vocab-table{width:100%;border-collapse:collapse;margin-bottom:24px;font-size:14px;}
+  .vocab-table thead tr{background:var(--bi3);}
+  .vocab-table thead th{padding:10px 16px;text-align:left;font-weight:600;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px;}
+  .vocab-table tbody tr:nth-child(even){background:var(--bi3-bg);}
+  .vocab-table tbody tr:nth-child(odd){background:#fff;}
+  .vocab-table tbody td{padding:10px 16px;border-bottom:1px solid #bfdbfe;color:#374151;vertical-align:top;line-height:1.5;}
+  .vocab-table tbody td:first-child{font-weight:700;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;white-space:nowrap;}
+
+  /* CPT CONNECTION */
+  .cpt-connection{background:#fefce8;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:0 10px 10px 0;padding:20px 24px;margin:28px 0;}
+  .cpt-connection-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#92400e!important;-webkit-text-fill-color:#92400e!important;margin-bottom:8px;}
+  .cpt-connection h3{font-size:16px!important;font-weight:700!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin:16px 0 8px!important;}
+  .cpt-connection p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;line-height:1.7!important;margin-bottom:12px!important;}
+  .cpt-connection a{color:#b45309!important;-webkit-text-fill-color:#b45309!important;font-weight:600;text-decoration:underline;}
+  .cpt-connection code{background:#fef3c7;color:#78350f!important;-webkit-text-fill-color:#78350f!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+  .cpt-stems{list-style:none;padding:0;margin:0 0 8px;display:flex;flex-direction:column;gap:8px;}
+  .cpt-stems li{background:#fffef5;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:13px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;line-height:1.6;}
+  .cpt-code{background:#0f172a;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;line-height:1.8;margin:6px 0 12px;overflow-x:auto;white-space:pre;display:block;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+
+  /* EMAIL */
+  .email-capture{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px 28px;margin-bottom:36px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
+  .email-capture-text{flex:1;min-width:200px;}
+  .email-capture-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:4px;}
+  .email-capture h3{font-size:16px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .email-capture p{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:0!important;line-height:1.5!important;}
+  .email-capture-form{display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0;}
+  .email-capture-input{padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff!important;font-size:14px;font-family:inherit;min-width:180px;outline:none;}
+  .email-capture-btn{padding:10px 20px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:8px!important;font-size:14px!important;font-weight:600!important;cursor:pointer!important;font-family:inherit!important;}
+  .email-capture-success{display:none;font-size:14px;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:600;padding:10px 0;}
+
+  /* MCQ */
+  .mcq-section{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:28px;margin-bottom:40px;}
+  .mcq-section-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--bi3-bg);}
+  .mcq-section-icon{width:40px;height:40px;border-radius:10px;background:var(--bi3-bg);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .mcq-section-title{font-family:"DM Serif Display",serif;font-size:20px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+  .mcq-section-sub{font-size:13px;color:var(--slate);}
+  .mcq-item{margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid #f1f5f9;}
+  .mcq-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .mcq-q-num{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:8px;}
+  .diff-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:100px;margin-left:8px;background:#fef2f2;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;border:1px solid #fca5a5;}
+  .mcq-q-text{font-size:15px!important;font-weight:600!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;margin-bottom:12px!important;}
+  .predict-note{font-size:12px;font-style:italic;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:12px;}
+  .mcq-code{background:#0f172a;border-radius:8px;padding:12px 14px;margin:10px 0 14px;font-family:monospace;font-size:13px;line-height:1.75;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;white-space:pre;overflow-x:auto;display:block;}
+  .mcq-code .k{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .mcq-code .s{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .mcq-code .n{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .mcq-code .c{color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-style:italic;}
+  .mcq-roman{list-style:none;padding:0;margin:10px 0 14px;display:flex;flex-direction:column;gap:6px;}
+  .mcq-roman li{font-family:monospace;font-size:13px;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;background:#f1f5f9;border-radius:6px;padding:8px 12px;}
+  .mcq-roman li strong{color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;font-family:"DM Sans",sans-serif;margin-right:8px;}
+  .mcq-options{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+  .mcq-option{display:flex!important;align-items:flex-start!important;gap:12px!important;padding:11px 14px!important;border:2px solid #e2e8f0!important;border-radius:8px!important;cursor:pointer!important;background:#f8fafc!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.5!important;text-align:left!important;width:100%!important;font-family:inherit!important;}
+  .mcq-option:hover{border-color:var(--bi3-lt)!important;background:var(--bi3-bg)!important;}
+  .mcq-option.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mcq-option.incorrect{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mcq-option.revealed-correct{border-color:var(--green)!important;background:#f0fdf4!important;}
+  .mcq-option-letter{font-weight:700!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;flex-shrink:0!important;min-width:18px!important;}
+  .mcq-option.correct .mcq-option-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mcq-option.incorrect .mcq-option-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mcq-feedback{display:none!important;padding:12px 16px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;margin-top:8px!important;}
+  .mcq-feedback.show{display:block!important;}
+  .mcq-feedback.correct-fb{background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #bbf7d0!important;}
+  .mcq-feedback.incorrect-fb{background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;border:1px solid #fecaca!important;}
+
+  /* GAME */
+  .game-section{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:14px;padding:28px;margin-bottom:40px;}
+  .game-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:10px;}
+  .game-title{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .game-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:20px!important;}
+  .vt-score-bar{display:flex;justify-content:space-between;background:rgba(255,255,255,.06);border-radius:10px;padding:12px 20px;margin-bottom:20px;flex-wrap:wrap;gap:8px;}
+  .vt-stat{text-align:center;}
+  .vt-stat-val{font-size:20px;font-weight:800;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1;}
+  .vt-stat-lbl{font-size:10px;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:2px;}
+  .vt-code-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  .vt-code-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:10px;}
+  .vt-code-lines{font-family:monospace;font-size:14px;line-height:2;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .vt-line{display:block;padding:2px 8px;border-radius:4px;white-space:pre;}
+  .vt-line.hl{background:rgba(147,197,253,.2);color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .vt-question{font-size:15px;font-weight:600;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;margin-bottom:14px;}
+  .vt-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+  .vt-btn{padding:12px;border-radius:9px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);cursor:pointer;font-size:15px;font-weight:700;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;font-family:monospace;transition:all .15s;}
+  .vt-btn:hover{border-color:var(--bi3-lt);background:rgba(26,86,219,.2);}
+  .vt-btn.c{border-color:#4ade80;background:rgba(74,222,128,.15);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+  .vt-btn.w{border-color:#f87171;background:rgba(248,113,113,.15);color:#f87171!important;-webkit-text-fill-color:#f87171!important;}
+  .vt-btn.rv{border-color:#4ade80;background:rgba(74,222,128,.08);}
+  .vt-fb{padding:10px 14px;border-radius:8px;font-size:13px;font-weight:500;margin-bottom:12px;display:none;line-height:1.5;}
+  .vt-fb.c{background:rgba(74,222,128,.1);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;display:block;}
+  .vt-fb.w{background:rgba(248,113,113,.1);color:#f87171!important;-webkit-text-fill-color:#f87171!important;display:block;}
+  .vt-next{display:none;width:100%;padding:12px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);border-radius:8px;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .vt-next.show{display:block;}
+  .vt-results{display:none;text-align:center;padding:20px;}
+  .vt-results.show{display:block;}
+  .vt-res-score{font-family:"DM Serif Display",serif;font-size:52px;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1;}
+  .vt-res-lbl{font-size:14px;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:12px;}
+  .vt-res-msg{font-size:14px;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;margin-bottom:20px;line-height:1.6;}
+  .vt-restart{background:rgba(255,255,255,.1);color:#fff!important;-webkit-text-fill-color:#fff!important;border:2px solid rgba(255,255,255,.2);border-radius:8px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+
+  /* CODE EDITOR (Pyodide live) */
+  .code-editor-section{background:#0f172a;border-radius:14px;padding:28px;margin-bottom:40px;}
+  .code-editor-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:10px;}
+  .code-editor-title{font-family:"DM Serif Display",serif!important;font-size:22px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .code-editor-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:20px!important;line-height:1.6;}
+  .code-problem{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+  .scaffold-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:rgba(147,197,253,.15);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;border:1px solid rgba(147,197,253,.35);margin-bottom:8px;}
+  .code-problem-num{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:8px;}
+  .code-problem-prompt{font-size:14px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.6!important;margin-bottom:12px!important;}
+  .code-problem-prompt code{background:rgba(147,197,253,.12);color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;padding:1px 6px;border-radius:5px;font-size:12px;}
+  .code-textarea{width:100%;min-height:120px;background:#020617;border:2px solid rgba(255,255,255,.1);border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;color:#e2e8f0!important;resize:vertical;outline:none;line-height:1.8;}
+  .code-textarea:focus{border-color:var(--bi3-lt);}
+  .code-btn-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center;}
+  .code-run-btn{padding:9px 20px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:7px!important;font-size:13px!important;font-weight:700!important;cursor:pointer!important;font-family:inherit!important;}
+  .code-run-btn:disabled{opacity:.6;cursor:wait;}
+  .code-hint-btn,.code-sol-btn{padding:9px 16px!important;background:rgba(255,255,255,.06)!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:7px!important;font-size:13px!important;cursor:pointer!important;font-family:inherit!important;}
+  .code-output{margin-top:10px;background:#020617;border-radius:8px;padding:12px 16px;font-family:monospace;font-size:13px;min-height:44px;display:none;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .code-output.show{display:block;}
+  .code-output.ok{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+  .code-output.err{color:#f87171!important;-webkit-text-fill-color:#f87171!important;}
+  .code-hint{margin-top:8px;background:rgba(147,197,253,.06);border:1px solid rgba(147,197,253,.2);border-radius:8px;padding:10px 14px;font-size:13px;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;display:none;line-height:1.6;}
+  .code-hint.show{display:block;}
+  .code-solution{margin-top:8px;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:8px;padding:12px 14px;font-family:monospace;font-size:13px;color:#bbf7d0!important;-webkit-text-fill-color:#bbf7d0!important;display:none;white-space:pre;line-height:1.8;overflow-x:auto;}
+  .code-solution.show{display:block;}
+
+  /* FAQ */
+  .faq-section{margin-bottom:40px;}
+  .faq-section h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;padding-bottom:10px!important;border-bottom:2px solid var(--bi3-bg)!important;}
+  .faq-item{background:#fff;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:10px;overflow:hidden;}
+  .faq-q{width:100%;text-align:left;padding:16px 20px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:15px!important;font-weight:600!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-family:inherit!important;line-height:1.4!important;}
+  .faq-q:hover{background:#f8fafc;}
+  .faq-icon{font-size:18px;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;flex-shrink:0;transition:transform .2s;font-style:normal;}
+  .faq-item.open .faq-icon{transform:rotate(45deg);}
+  .faq-a{display:none;padding:0 20px 16px;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.7!important;border-top:1px solid #f1f5f9;}
+  .faq-item.open .faq-a{display:block;}
+  .faq-a code{background:#eef2ff;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+
+  /* RELATED + SUPERPACK + TEACHER + NAV */
+  .related-links{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:24px;margin-bottom:40px;}
+  .related-links h3{font-size:15px!important;font-weight:700!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;}
+  .related-links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
+  .related-link{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;background:#f8fafc;text-decoration:none;font-size:13px!important;font-weight:500!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border:1px solid #bfdbfe;transition:background .15s;line-height:1.3;}
+  .related-link:link,.related-link:visited{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;}
+  .related-link:hover{background:var(--bi3-bg);}
+  .related-ext{color:var(--slate)!important;-webkit-text-fill-color:var(--slate)!important;border-color:#e2e8f0;}
+  .superpack-slim{background:#fff;border:1px solid #bfdbfe;border-radius:10px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:36px;}
+  .superpack-slim-icon{width:36px;height:36px;border-radius:8px;background:var(--bi3-bg);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .superpack-slim-text{font-size:14px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-weight:600;line-height:1.3;}
+  .superpack-slim-sub{font-size:12px;color:var(--slate);font-weight:400;display:block;margin-top:2px;}
+  .superpack-slim-btn{display:inline-flex!important;align-items:center!important;gap:6px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:9px 18px!important;border-radius:7px!important;font-size:13px!important;font-weight:600!important;text-decoration:none!important;white-space:nowrap!important;}
+  .superpack-slim-btn:link,.superpack-slim-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .teacher-callout{background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:18px 22px;margin-bottom:28px;display:flex;align-items:flex-start;gap:14px;}
+  .teacher-callout-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+  .teacher-callout-body{flex:1;}
+  .teacher-callout-label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#0369a1!important;-webkit-text-fill-color:#0369a1!important;margin-bottom:4px;}
+  .teacher-callout-body p{font-size:14px!important;color:#0c4a6e!important;-webkit-text-fill-color:#0c4a6e!important;margin-bottom:0!important;line-height:1.6!important;}
+  .teacher-callout-body a{color:#0369a1!important;-webkit-text-fill-color:#0369a1!important;font-weight:600;text-decoration:underline;}
+  .lesson-nav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:40px;}
+  .nav-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 20px;text-decoration:none;color:inherit;transition:box-shadow .15s;display:block;}
+  .nav-card:hover{box-shadow:0 4px 16px rgba(26,86,219,.1);border-color:#bfdbfe;}
+  .nav-card-dir{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:4px;}
+  .nav-card-title{font-size:14px;font-weight:700;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;line-height:1.3;}
+  .nav-card.next{border-left:3px solid var(--bi3);}
+
+  @media(max-width:600px){
+    .lesson-hero{padding:36px 20px 32px;}
+    .lesson-main{padding:32px 20px 60px;}
+    .vt-options{grid-template-columns:1fr 1fr;}
+    .lesson-nav{grid-template-columns:1fr;}
+    .mini-opts{gap:6px;}
+  }
+</style>
+<style>
+.code-usage{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin:-6px 0 18px!important;padding:8px 12px!important;background:rgba(255,255,255,.04)!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:8px!important;display:block!important;}
+.code-usage strong{color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;}
+.code-problem-prompt ul.rules{margin:10px 0 4px!important;padding-left:0!important;list-style:none!important;}
+.code-problem-prompt ul.rules li{position:relative;padding:3px 0 3px 20px!important;font-size:14px;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.55;}
+.code-problem-prompt ul.rules li::before{content:"\25B8";position:absolute;left:2px;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+.mcq-q-text ul.rules,.mini-ex-q ul.rules{margin:10px 0 4px!important;padding-left:0!important;list-style:none!important;}
+.mcq-q-text ul.rules li,.mini-ex-q ul.rules li{position:relative;padding:3px 0 3px 20px!important;font-size:15px;font-weight:400;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;line-height:1.5;}
+.mcq-q-text ul.rules li::before,.mini-ex-q ul.rules li::before{content:"\25B8";position:absolute;left:2px;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;}
+</style>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "AP CSP Course", "item": "https://apcsexamprep.com/pages/ap-csp-course"}, {"@type": "ListItem", "position": 2, "name": "Big Idea 3", "item": "https://apcsexamprep.com/pages/ap-csp-course-big-idea-3-algorithms"}, {"@type": "ListItem", "position": 3, "name": "Topic 3.7: Nested Conditionals", "item": "https://apcsexamprep.com/pages/ap-csp-course-bi3-nested-conditionals"}]}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "LearningResource", "name": "AP CSP Topic 3.7: Nested Conditionals", "description": "Master AP CSP Topic 3.7 Nested Conditionals. Nesting, multiway if/elif/else selection, condition ordering and reachability, tracing, a live Python code editor, the Nesting Navigator game, and Create Task use-cases.", "url": "https://apcsexamprep.com/pages/ap-csp-course-bi3-nested-conditionals", "educationalLevel": "High School", "learningResourceType": "Lesson", "author": {"@type": "Person", "name": "Tanner Crow"}, "isPartOf": {"@type": "Course", "name": "AP Computer Science Principles Complete Course", "url": "https://apcsexamprep.com/pages/ap-csp-course"}, "datePublished": "2026-03-01"}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is a nested conditional?", "acceptedAnswer": {"@type": "Answer", "text": "A nested conditional is a conditional statement placed inside another conditional statement. The inner condition is only checked when the outer condition is true. If the outer condition is false, the entire inner conditional is skipped."}}, {"@type": "Question", "name": "How is elif different from a second if?", "acceptedAnswer": {"@type": "Answer", "text": "An elif is only checked when every condition above it was false, and at most one branch in the whole chain runs. Two separate if statements are each checked independently, so more than one can run. Use elif when the outcomes are mutually exclusive."}}, {"@type": "Question", "name": "Why does the order of my elif branches matter?", "acceptedAnswer": {"@type": "Answer", "text": "Python runs the first branch whose condition is true and skips the rest. If a broad condition comes before a more specific one, the broad one catches the value first and the specific branch becomes unreachable dead code. Test the most specific or most extreme case first."}}, {"@type": "Question", "name": "How does a nested conditional relate to AND?", "acceptedAnswer": {"@type": "Answer", "text": "Reaching the inner block of a nested IF requires the outer condition AND the inner condition to both be true. A nested IF with no else is often equivalent to a single IF that joins the two conditions with and."}}, {"@type": "Question", "name": "How do nested conditionals help my Create Task?", "acceptedAnswer": {"@type": "Answer", "text": "They let your program handle varied input by making a decision and then a follow-up decision. In your written response you identify the selection, name the conditions, and describe each reachable branch. Make sure every branch can actually run for some input."}}]}</script>
+
+<div class="lesson-page" data-course="ap-csp" data-unit="bi-3" data-lesson="nested-conditionals">
+
+  <div class="lesson-breadcrumb">
+    <div class="lesson-breadcrumb-inner">
+      <a href="/pages/ap-csp-course">AP CSP Course</a><span class="bc-sep">›</span>
+      <a href="/pages/ap-csp-course-big-idea-3-algorithms">Big Idea 3</a><span class="bc-sep">›</span>
+      <span>3.7 Nested Conditionals</span>
+    </div>
+  </div>
+  <div class="social-proof-bar">
+    <div class="social-proof-inner">
+      <span class="social-proof-item">⭐ <strong>5.0</strong> Wyzant rating</span>
+      <span class="social-proof-item">📚 <strong>1,845+</strong> tutoring hours</span>
+      <span class="social-proof-item">🏫 Built by an <strong>AP CS teacher</strong> with 11+ years experience</span>
+      <span class="social-proof-item">🎯 <strong>70%</strong> of classroom students score 4 or 5 on AP CSP</span>
+    </div>
+  </div>
+  <div class="lesson-hero">
+    <div class="lesson-hero-inner">
+      <div class="lesson-hero-meta">
+        <div class="lesson-num-badge">3.7</div>
+        <div><div class="lesson-eyebrow">Big Idea 3 • Algorithms &amp; Programming</div></div>
+      </div>
+      <h1>Nested Conditionals</h1>
+      <div class="lesson-hero-pills">
+        <span class="lesson-pill">🕐 ~40 min</span>
+        <span class="lesson-pill" style="background:rgba(74,222,128,0.15);border-color:rgba(74,222,128,0.3);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;">FREE</span>
+        <span class="lesson-pill">📖 6 MCQ questions</span>
+        <span class="lesson-pill">🎮 Nesting Navigator game</span>
+        <span class="lesson-pill">💻 Live Python editor</span>
+        <span class="ced-tag">AAP-2.I</span>
+      </div>
+    </div>
+  </div>
+  <div class="bi3-progress"><div class="bi3-progress-inner">
+<a href="/pages/ap-csp-course-bi3-variables" class="prog-step-link"><div class="prog-dot done">3.1</div>
+<div class="prog-label">Variables</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-data-abstraction" class="prog-step-link"><div class="prog-dot done">3.2</div>
+<div class="prog-label">Abstraction</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-mathematical-expressions" class="prog-step-link"><div class="prog-dot done">3.3</div>
+<div class="prog-label">Expressions</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-strings" class="prog-step-link"><div class="prog-dot done">3.4</div>
+<div class="prog-label">Strings</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-boolean-expressions" class="prog-step-link"><div class="prog-dot done">3.5</div>
+<div class="prog-label">Booleans</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-conditionals" class="prog-step-link"><div class="prog-dot done">3.6</div>
+<div class="prog-label">IF/ELSE</div></a>
+<div class="prog-arrow"></div>
+<div class="prog-step">
+<div class="prog-dot active">3.7</div>
+<div class="prog-label active-label">Nested IF</div>
+</div>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-iteration" class="prog-step-link"><div class="prog-dot upcoming">3.8</div>
+<div class="prog-label">Iteration</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-developing-algorithms" class="prog-step-link"><div class="prog-dot upcoming">3.9</div>
+<div class="prog-label">Algorithms</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-lists" class="prog-step-link"><div class="prog-dot upcoming">3.10</div>
+<div class="prog-label">Lists</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-binary-search" class="prog-step-link"><div class="prog-dot upcoming">3.11</div>
+<div class="prog-label">Search</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-calling-procedures" class="prog-step-link"><div class="prog-dot upcoming">3.12</div>
+<div class="prog-label">Procedures</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-developing-procedures" class="prog-step-link"><div class="prog-dot upcoming">3.13</div>
+<div class="prog-label">Dev Procs</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-libraries" class="prog-step-link"><div class="prog-dot upcoming">3.14</div>
+<div class="prog-label">Libraries</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-random-values" class="prog-step-link"><div class="prog-dot upcoming">3.15</div>
+<div class="prog-label">Random</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-simulations" class="prog-step-link"><div class="prog-dot upcoming">3.16</div>
+<div class="prog-label">Simulate</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-algorithmic-efficiency" class="prog-step-link"><div class="prog-dot upcoming">3.17</div>
+<div class="prog-label">Efficiency</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-undecidable-problems" class="prog-step-link"><div class="prog-dot upcoming">3.18</div>
+<div class="prog-label">Undecidable</div></a>
+</div></div>
+
+  <div class="lesson-main">
+
+    <div class="lesson-objectives">
+      <h2>After this lesson, you will be able to:</h2>
+      <ul>
+        <li><span>Read a nested conditional and know that the inner condition is checked only when the outer is true</span></li>
+        <li><span>Write multiway selection with if, elif, and else so exactly one branch runs</span></li>
+        <li><span>Order conditions correctly so no branch becomes unreachable dead code</span></li>
+        <li><span>Convert between a nested IF and a single condition joined with and</span></li>
+        <li><span>Trace nested and multiway code to determine exactly what is displayed</span></li>
+        <li><span>Describe a meaningful, reachable nested selection for your Create Performance Task</span></li>
+      </ul>
+    </div>
+    <div class="score-impact">📈 <span><strong>Exam weight:</strong> Nested and multiway conditionals appear throughout Big Idea 3 tracing and spot-the-bug items, and they are the natural way to show your Create Task program handles varied input. Ordering and reachability are favorite trap topics.</span>
+</div>
+    <div class="hook-box">
+      <div class="hook-label">💡 Think about this first</div>
+      <p>Real decisions are rarely a single yes or no. A streaming app asks: are you logged in? If yes, do you have a subscription? If yes, is the show available in your region? Each answer opens a new question. That is nesting. And when a program must pick one label out of many, an A, B, C, or F, it uses a multiway chain. This lesson is about controlling exactly which path runs.</p>
+    </div>
+    <div class="lesson-section">
+      <h2>What "Nested" Means</h2>
+      <p>A <strong>nested conditional</strong> is a conditional statement placed inside another conditional statement. The key rule is timing: the <strong>inner</strong> condition is only checked when the <strong>outer</strong> condition is true. If the outer condition is false, the entire inner conditional is skipped without ever being evaluated. Nesting is how a program asks a second question only after the first one has already been answered a certain way.</p>
+      <div class="code-panel-wrap">
+  <div class="code-panel-tabs">
+    <button class="code-tab py active" onclick="switchTab(this,'py','pan-1')">🐛 Python</button>
+    <button class="code-tab pseudo" onclick="switchTab(this,'pseudo','pan-1')">📋 AP Pseudocode</button>
+  </div>
+  <div class="code-pane active" id="pan-1-py"><pre><span class="py-var">x</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">3</span>
+<span class="py-kw">if</span><span class="py-var"> </span><span class="py-var">x</span><span class="py-var"> </span><span class="py-var">&gt;</span><span class="py-var"> </span><span class="py-num">5</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">if</span><span class="py-var"> </span><span class="py-var">x</span><span class="py-var"> </span><span class="py-var">&gt;</span><span class="py-var"> </span><span class="py-num">1</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">print</span><span class="py-var">(</span><span class="py-str">"deep"</span><span class="py-var">)</span>
+<span class="py-kw">print</span><span class="py-var">(</span><span class="py-str">"done"</span><span class="py-var">)</span></pre></div>
+  <div class="code-pane" id="pan-1-pseudo"><pre><span class="ps-var">x</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-num">3</span>
+<span class="ps-kw">IF</span><span class="ps-var"> </span><span class="ps-var">(</span><span class="ps-var">x</span><span class="ps-var"> </span><span class="ps-var">&gt;</span><span class="ps-var"> </span><span class="ps-num">5</span><span class="ps-var">)</span>
+<span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">IF</span><span class="ps-var"> </span><span class="ps-var">(</span><span class="ps-var">x</span><span class="ps-var"> </span><span class="ps-var">&gt;</span><span class="ps-var"> </span><span class="ps-num">1</span><span class="ps-var">)</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">DISPLAY</span><span class="ps-var">(</span><span class="ps-str">"deep"</span><span class="ps-var">)</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">}</span>
+<span class="ps-var">}</span>
+<span class="ps-kw">DISPLAY</span><span class="ps-var">(</span><span class="ps-str">"done"</span><span class="ps-var">)</span></pre></div>
+</div>
+      <p>Here the outer test <code>x &gt; 5</code> is false (x is 3), so the whole inner IF is skipped and never runs. The program jumps straight to <code>print("done")</code>. Reading nesting correctly means always resolving the outer condition first, then only descending into the inner block when the outer was true.</p>
+      <div class="callout-exam">
+        <div class="callout-exam-label">🎯 What the exam expects</div>
+        <p>The CED describes nested conditionals as "conditional statements within conditional statements." AP pseudocode has no <code>elif</code>, so multiway choices are written as an IF nested inside an ELSE. Recognizing that shape on the exam is half the battle.</p>
+      </div>
+
+      <div class="mini-ex">
+        <div class="mini-ex-label">✍ Mini Exercise 1 • Predict the output</div>
+        <div class="mini-ex-q">The outer condition is false. What does this print?</div>
+        <div class="mini-ex-code"><pre style="margin:0;white-space:pre;font-family:monospace;font-size:13px;color:#e2e8f0;"><span class="py-var">x</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">3</span>
+<span class="py-kw">if</span><span class="py-var"> </span><span class="py-var">x</span><span class="py-var"> </span><span class="py-var">&gt;</span><span class="py-var"> </span><span class="py-num">5</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">if</span><span class="py-var"> </span><span class="py-var">x</span><span class="py-var"> </span><span class="py-var">&gt;</span><span class="py-var"> </span><span class="py-num">1</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">print</span><span class="py-var">(</span><span class="py-str">"deep"</span><span class="py-var">)</span>
+<span class="py-kw">print</span><span class="py-var">(</span><span class="py-str">"done"</span><span class="py-var">)</span></pre></div>
+        <div class="mini-opts" id="me1-opts">
+          <button class="mini-opt" onclick="miniMCQ('me1','A','B','me1-fb')"><span class="mini-opt-letter">A</span> deep</button>
+          <button class="mini-opt" onclick="miniMCQ('me1','B','B','me1-fb')"><span class="mini-opt-letter">B</span> done</button>
+          <button class="mini-opt" onclick="miniMCQ('me1','C','B','me1-fb')"><span class="mini-opt-letter">C</span> deep then done</button>
+          <button class="mini-opt" onclick="miniMCQ('me1','D','B','me1-fb')"><span class="mini-opt-letter">D</span> nothing prints</button>
+        </div>
+        <div class="mini-fb" id="me1-fb"></div>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Multiway Selection: Choosing One of Many</h2>
+      <p>Often you need more than two outcomes: a grade of A, B, C, or F; a shipping tier; a category. In Python this is an <code>if</code> followed by one or more <code>elif</code> branches and a final <code>else</code>. The rule that makes it work: Python checks the branches top to bottom and runs the <strong>first</strong> one whose condition is true, then skips all the rest. At most one branch ever runs.</p>
+      <div class="code-panel-wrap">
+  <div class="code-panel-tabs">
+    <button class="code-tab py active" onclick="switchTab(this,'py','pan-2')">🐛 Python</button>
+    <button class="code-tab pseudo" onclick="switchTab(this,'pseudo','pan-2')">📋 AP Pseudocode</button>
+  </div>
+  <div class="code-pane active" id="pan-2-py"><pre><span class="py-var">x</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">82</span>
+<span class="py-kw">if</span><span class="py-var"> </span><span class="py-var">x</span><span class="py-var"> </span><span class="py-var">&gt;</span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">90</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">print</span><span class="py-var">(</span><span class="py-str">"A"</span><span class="py-var">)</span>
+<span class="py-kw">elif</span><span class="py-var"> </span><span class="py-var">x</span><span class="py-var"> </span><span class="py-var">&gt;</span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">80</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">print</span><span class="py-var">(</span><span class="py-str">"B"</span><span class="py-var">)</span>
+<span class="py-kw">else</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">print</span><span class="py-var">(</span><span class="py-str">"C"</span><span class="py-var">)</span></pre></div>
+  <div class="code-pane" id="pan-2-pseudo"><pre><span class="ps-var">x</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-num">82</span>
+<span class="ps-kw">IF</span><span class="ps-var"> </span><span class="ps-var">(</span><span class="ps-var">x</span><span class="ps-var"> </span><span class="ps-var">&gt;</span><span class="ps-var">=</span><span class="ps-var"> </span><span class="ps-num">90</span><span class="ps-var">)</span>
+<span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">DISPLAY</span><span class="ps-var">(</span><span class="ps-str">"A"</span><span class="ps-var">)</span>
+<span class="ps-var">}</span>
+<span class="ps-kw">ELSE</span>
+<span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">IF</span><span class="ps-var"> </span><span class="ps-var">(</span><span class="ps-var">x</span><span class="ps-var"> </span><span class="ps-var">&gt;</span><span class="ps-var">=</span><span class="ps-var"> </span><span class="ps-num">80</span><span class="ps-var">)</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">DISPLAY</span><span class="ps-var">(</span><span class="ps-str">"B"</span><span class="ps-var">)</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">}</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">ELSE</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">DISPLAY</span><span class="ps-var">(</span><span class="ps-str">"C"</span><span class="ps-var">)</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">}</span>
+<span class="ps-var">}</span></pre></div>
+</div>
+      <p>With x at 82, the first condition <code>x &gt;= 90</code> is false, the second <code>x &gt;= 80</code> is true, so it prints B and stops. It never even checks the else. Notice the pseudocode on the right expresses the exact same logic as nested IF/ELSE, because the exam reference sheet has no elif. They are two spellings of one idea.</p>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Order Matters: the Overlap Trap</h2>
+      <p>Because a multiway chain runs the first true branch, the <strong>order</strong> of the conditions can change the result when the conditions overlap. If a broad condition is placed before a more specific one, the broad condition catches the value first and the specific branch becomes unreachable.</p>
+      <div class="code-panel-wrap">
+  <div class="code-panel-tabs">
+    <button class="code-tab py active" onclick="switchTab(this,'py','pan-3')">🐛 Python (buggy)</button>
+    <button class="code-tab pseudo" onclick="switchTab(this,'pseudo','pan-3')">📋 Pseudocode (fixed)</button>
+  </div>
+  <div class="code-pane active" id="pan-3-py"><pre><span class="py-comment"># WRONG order: broad test first</span>
+<span class="py-kw">if</span><span class="py-var"> </span><span class="py-var">x</span><span class="py-var"> </span><span class="py-var">&gt;</span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">50</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">print</span><span class="py-var">(</span><span class="py-str">"big"</span><span class="py-var">)</span>
+<span class="py-kw">elif</span><span class="py-var"> </span><span class="py-var">x</span><span class="py-var"> </span><span class="py-var">&gt;</span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">100</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">print</span><span class="py-var">(</span><span class="py-str">"huge"</span><span class="py-var">)</span>
+<span class="py-kw">else</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">print</span><span class="py-var">(</span><span class="py-str">"small"</span><span class="py-var">)</span></pre></div>
+  <div class="code-pane" id="pan-3-pseudo"><pre><span class="ps-comment"># RIGHT order: specific test first</span>
+<span class="ps-kw">IF</span><span class="ps-var"> </span><span class="ps-var">(</span><span class="ps-var">x</span><span class="ps-var"> </span><span class="ps-var">&gt;</span><span class="ps-var">=</span><span class="ps-var"> </span><span class="ps-num">100</span><span class="ps-var">)</span>
+<span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">DISPLAY</span><span class="ps-var">(</span><span class="ps-str">"huge"</span><span class="ps-var">)</span>
+<span class="ps-var">}</span>
+<span class="ps-kw">ELSE</span>
+<span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">IF</span><span class="ps-var"> </span><span class="ps-var">(</span><span class="ps-var">x</span><span class="ps-var"> </span><span class="ps-var">&gt;</span><span class="ps-var">=</span><span class="ps-var"> </span><span class="ps-num">50</span><span class="ps-var">)</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">DISPLAY</span><span class="ps-var">(</span><span class="ps-str">"big"</span><span class="ps-var">)</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">}</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">ELSE</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">DISPLAY</span><span class="ps-var">(</span><span class="ps-str">"small"</span><span class="ps-var">)</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">}</span>
+<span class="ps-var">}</span></pre></div>
+</div>
+      <p>On the left, any value 100 or larger is also 50 or larger, so <code>x &gt;= 50</code> fires first and prints "big" even when the value deserved "huge." The specific case never gets a chance. The fix, shown on the right, is to test the most specific or most extreme condition first and let the broader ones follow.</p>
+      <div class="callout-trap">
+        <div class="callout-trap-label">⚠ Reachability</div>
+        <p>A branch that can never run for any valid input is a bug called a dead branch. It usually means an earlier condition already covers every case the later branch was meant to catch. When you write a chain, ask of every branch: is there any input that reaches this one? On the Create Task, an unreachable branch means your selection does not really demonstrate the skill.</p>
+      </div>
+
+      <div class="mini-ex">
+        <div class="mini-ex-label">✍ Mini Exercise 2 • Spot the flaw</div>
+        <div class="mini-ex-q">Why does the <code>adult</code> branch below <strong>never</strong> run for any integer?</div>
+        <div class="mini-ex-code"><pre style="margin:0;white-space:pre;font-family:monospace;font-size:13px;color:#e2e8f0;"><span class="py-kw">if</span><span class="py-var"> </span><span class="py-var">x</span><span class="py-var"> </span><span class="py-var">&gt;</span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">13</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">print</span><span class="py-var">(</span><span class="py-str">"teen"</span><span class="py-var">)</span>
+<span class="py-kw">elif</span><span class="py-var"> </span><span class="py-var">x</span><span class="py-var"> </span><span class="py-var">&gt;</span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">20</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">print</span><span class="py-var">(</span><span class="py-str">"adult"</span><span class="py-var">)</span></pre></div>
+        <div class="mini-opts" id="me2-opts">
+          <button class="mini-opt" onclick="miniMCQ('me2','A','B','me2-fb')"><span class="mini-opt-letter">A</span> because 20 is greater than 13</button>
+          <button class="mini-opt" onclick="miniMCQ('me2','B','B','me2-fb')"><span class="mini-opt-letter">B</span> any x that is 20 or more is already 13 or more, so the first branch runs first</button>
+          <button class="mini-opt" onclick="miniMCQ('me2','C','B','me2-fb')"><span class="mini-opt-letter">C</span> an elif cannot legally follow an if</button>
+          <button class="mini-opt" onclick="miniMCQ('me2','D','B','me2-fb')"><span class="mini-opt-letter">D</span> print stops the program early</button>
+        </div>
+        <div class="mini-fb" id="me2-fb"></div>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Tracing Nested and Multiway Code</h2>
+      <p>Use one disciplined procedure and these questions become mechanical:</p>
+      <ol>
+        <li>Evaluate the <strong>outer</strong> condition first using current values.</li>
+        <li>If it is false, skip the entire inner block, then continue after it. Do not peek inside.</li>
+        <li>If it is true, step into the inner conditional and evaluate it the same way.</li>
+        <li>For an if / elif / else chain, check conditions top to bottom and stop at the first true one.</li>
+        <li>Exactly one path through the structure runs. Trace only that path.</li>
+      </ol>
+      <div class="code-panel-wrap">
+  <div class="code-panel-tabs">
+    <button class="code-tab py active" onclick="switchTab(this,'py','pan-4')">🐛 Python</button>
+    <button class="code-tab pseudo" onclick="switchTab(this,'pseudo','pan-4')">📋 AP Pseudocode</button>
+  </div>
+  <div class="code-pane active" id="pan-4-py"><pre><span class="py-var">w</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">5</span>
+<span class="py-kw">if</span><span class="py-var"> </span><span class="py-var">w</span><span class="py-var"> </span><span class="py-var">&gt;</span><span class="py-var"> </span><span class="py-num">0</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">if</span><span class="py-var"> </span><span class="py-var">w</span><span class="py-var"> </span><span class="py-var">&gt;</span><span class="py-var"> </span><span class="py-num">10</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">print</span><span class="py-var">(</span><span class="py-str">"big positive"</span><span class="py-var">)</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">else</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">print</span><span class="py-var">(</span><span class="py-str">"small positive"</span><span class="py-var">)</span>
+<span class="py-kw">else</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">print</span><span class="py-var">(</span><span class="py-str">"not positive"</span><span class="py-var">)</span></pre></div>
+  <div class="code-pane" id="pan-4-pseudo"><pre><span class="ps-var">w</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-num">5</span>
+<span class="ps-kw">IF</span><span class="ps-var"> </span><span class="ps-var">(</span><span class="ps-var">w</span><span class="ps-var"> </span><span class="ps-var">&gt;</span><span class="ps-var"> </span><span class="ps-num">0</span><span class="ps-var">)</span>
+<span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">IF</span><span class="ps-var"> </span><span class="ps-var">(</span><span class="ps-var">w</span><span class="ps-var"> </span><span class="ps-var">&gt;</span><span class="ps-var"> </span><span class="ps-num">10</span><span class="ps-var">)</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">DISPLAY</span><span class="ps-var">(</span><span class="ps-str">"big positive"</span><span class="ps-var">)</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">}</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">ELSE</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">DISPLAY</span><span class="ps-var">(</span><span class="ps-str">"small positive"</span><span class="ps-var">)</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">}</span>
+<span class="ps-var">}</span>
+<span class="ps-kw">ELSE</span>
+<span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">DISPLAY</span><span class="ps-var">(</span><span class="ps-str">"not positive"</span><span class="ps-var">)</span>
+<span class="ps-var">}</span></pre></div>
+</div>
+      <p>With w at 5: the outer <code>w &gt; 0</code> is true, so step inside. The inner <code>w &gt; 10</code> is false, so the inner else runs and it prints "small positive." The outer else is never considered because the outer condition was true.</p>
+
+      <div class="mini-ex">
+        <div class="mini-ex-label">✍ Mini Exercise 3 • Fill in the blank</div>
+        <div class="mini-ex-q">Type the exact word this prints (lowercase).</div>
+        <div class="mini-ex-code"><pre style="margin:0;white-space:pre;font-family:monospace;font-size:13px;color:#e2e8f0;"><span class="py-var">x</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">7</span>
+<span class="py-kw">if</span><span class="py-var"> </span><span class="py-var">x</span><span class="py-var"> </span><span class="py-var">&gt;</span><span class="py-var"> </span><span class="py-num">10</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">print</span><span class="py-var">(</span><span class="py-str">"hi"</span><span class="py-var">)</span>
+<span class="py-kw">elif</span><span class="py-var"> </span><span class="py-var">x</span><span class="py-var"> </span><span class="py-var">&gt;</span><span class="py-var"> </span><span class="py-num">5</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">print</span><span class="py-var">(</span><span class="py-str">"mid"</span><span class="py-var">)</span>
+<span class="py-kw">else</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">print</span><span class="py-var">(</span><span class="py-str">"lo"</span><span class="py-var">)</span></pre></div>
+        <div class="mini-fib-row">
+          <span style="font-size:14px;color:#374151;">prints:</span>
+          <input type="text" class="mini-fib-input" id="me3-inp" placeholder="?">
+          <button class="mini-fib-btn" onclick="miniFIB('me3','me3-fb')">Check</button>
+        </div>
+        <div class="mini-fb" id="me3-fb"></div>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Key Vocabulary</h2>
+      <table class="vocab-table">
+        <thead><tr>
+<th>Term</th>
+<th>Definition</th>
+<th>Example</th>
+</tr></thead>
+        <tbody>
+          <tr>
+<td>Nested conditional</td>
+<td>A conditional statement inside another conditional statement</td>
+<td>an IF inside an IF</td>
+</tr>
+          <tr>
+<td>Inner condition</td>
+<td>The condition checked only after the outer condition is true</td>
+<td>
+<code>if x &gt; 1:</code> inside</td>
+</tr>
+          <tr>
+<td>Multiway selection</td>
+<td>Choosing one of several outcomes with if / elif / else</td>
+<td>A, B, C, or F</td>
+</tr>
+          <tr>
+<td>elif</td>
+<td>Python keyword for "else if"; checked only if earlier conditions were false</td>
+<td><code>elif x &gt;= 80:</code></td>
+</tr>
+          <tr>
+<td>First-true rule</td>
+<td>In a chain, only the first branch whose condition is true runs</td>
+<td>top to bottom</td>
+</tr>
+          <tr>
+<td>Dead branch</td>
+<td>A branch that can never run because an earlier condition covers it</td>
+<td>ordering bug</td>
+</tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cpt-connection">
+      <div class="cpt-connection-label">📋 Create Performance Task • Nested selection that manages complexity</div>
+      <p>Nested and multiway conditionals are where your Create Task program shows it can "handle varied input values," the exact language the rubric rewards. A single IF makes one decision; a nested or multiway structure makes a decision and then a follow-up decision, which is what real programs do.</p>
+      <h3>A point-earning example</h3>
+      <p>Imagine a program that sorts a user's quiz percentage into a letter and then a message:</p>
+      <div class="cpt-code">IF (pct &gt;= 90)
+{
+    grade &lt;- "A"
+}
+ELSE
+{
+    IF (pct &gt;= 80)
+    {
+        grade &lt;- "B"
+    }
+    ELSE
+    {
+        grade &lt;- "C"
+    }
+}</div>
+      <p>In your written response, identify the selection, name the condition, and describe each reachable branch:</p>
+      <ul class="cpt-stems">
+        <li>"The nested selection first tests <code>pct &gt;= 90</code>; if that is false it tests <code>pct &gt;= 80</code>."</li>
+        <li>"Each branch assigns a different value to <code>grade</code>, so the program produces one of three distinct results depending on the input."</li>
+        <li>"This structure lets the program respond to a range of scores rather than a single yes-or-no case, which is how it handles varied input."</li>
+      </ul>
+      <h3>The trap to avoid</h3>
+      <p>Order your conditions so every branch is reachable. If you write the broad test first, a specific branch becomes dead code and your selection no longer demonstrates the skill. Test the most specific case first, then broaden. <a href="/pages/ap-csp-course-create-task">See the full Create Task module →</a></p>
+    </div>
+    <div class="email-capture">
+      <div class="email-capture-text">
+        <div class="email-capture-eyebrow">FREE for students</div>
+        <h3>Get a free AP CSP question every day</h3>
+        <p>Join 3,000+ students. Daily practice, study tips, and exam strategies.</p>
+      </div>
+      <div>
+        <div class="email-capture-form" id="capture-form">
+          <input type="email" class="email-capture-input" id="capture-email" placeholder="your@email.com">
+          <button class="email-capture-btn" onclick="handleCapture()">Subscribe →</button>
+        </div>
+        <div class="email-capture-success" id="capture-success">✓ You're in!</div>
+      </div>
+    </div>
+    <div class="mcq-section">
+      <div class="mcq-section-header">
+        <div class="mcq-section-icon">📈</div>
+        <div>
+          <div class="mcq-section-title">MCQ Practice</div>
+          <div class="mcq-section-sub">6 questions • Exam difficulty and above • Predict before you peek</div>
+        </div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q1">
+        <div class="mcq-q-num">Question 1 of 6<span class="diff-tag">Trace</span>
+</div>
+        <div class="predict-note">Predict first: which branch is the first true one?</div>
+        <div class="mcq-q-text">What does this code segment display?</div>
+        <div class="mcq-code">
+<span class="k">x</span> = <span class="n">82</span>
+<span class="k">if</span> x &gt;= <span class="n">90</span>:
+    <span class="k">print</span>(<span class="s">"A"</span>)
+<span class="k">elif</span> x &gt;= <span class="n">80</span>:
+    <span class="k">print</span>(<span class="s">"B"</span>)
+<span class="k">elif</span> x &gt;= <span class="n">70</span>:
+    <span class="k">print</span>(<span class="s">"C"</span>)
+<span class="k">else</span>:
+    <span class="k">print</span>(<span class="s">"F"</span>)</div>
+        <div class="mcq-options" id="q1-options">
+<button class="mcq-option" onclick="checkMCQ('q1','A','B','q1-fb-A')"><span class="mcq-option-letter">A</span> A</button>
+<button class="mcq-option" onclick="checkMCQ('q1','B','B','q1-fb-B')"><span class="mcq-option-letter">B</span> B</button>
+<button class="mcq-option" onclick="checkMCQ('q1','C','B','q1-fb-C')"><span class="mcq-option-letter">C</span> C</button>
+<button class="mcq-option" onclick="checkMCQ('q1','D','B','q1-fb-D')"><span class="mcq-option-letter">D</span> F</button>
+</div>
+<div id="q1-fb-A" class="mcq-feedback incorrect-fb">Incorrect. 82 &gt;= 90 is false, so the A branch is skipped. The first true condition is 82 &gt;= 80.</div>
+<div id="q1-fb-B" class="mcq-feedback correct-fb">Correct. 82 &gt;= 90 is false, 82 &gt;= 80 is true, so it prints B and stops. Later branches are never checked.</div>
+<div id="q1-fb-C" class="mcq-feedback incorrect-fb">Incorrect. The chain stops at the first true condition. 82 &gt;= 80 is true, so it prints B before reaching the C test.</div>
+<div id="q1-fb-D" class="mcq-feedback incorrect-fb">Incorrect. The else only runs if every condition above was false. 82 &gt;= 80 is true, so it prints B.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q2">
+        <div class="mcq-q-num">Question 2 of 6<span class="diff-tag">Spot the bug</span>
+</div>
+        <div class="predict-note">Predict first: which value lands in the wrong branch?</div>
+        <div class="mcq-q-text">This is meant to label a value:<ul class="rules">
+<li>100 or more: <code>huge</code>
+</li>
+<li>50 or more: <code>big</code>
+</li>
+<li>otherwise: <code>small</code>
+</li>
+</ul>For which value does it give the <strong>wrong</strong> label?</div>
+        <div class="mcq-code">
+<span class="k">if</span> x &gt;= <span class="n">50</span>:
+    <span class="k">print</span>(<span class="s">"big"</span>)
+<span class="k">elif</span> x &gt;= <span class="n">100</span>:
+    <span class="k">print</span>(<span class="s">"huge"</span>)
+<span class="k">else</span>:
+    <span class="k">print</span>(<span class="s">"small"</span>)</div>
+        <div class="mcq-options" id="q2-options">
+<button class="mcq-option" onclick="checkMCQ('q2','A','C','q2-fb-A')"><span class="mcq-option-letter">A</span> x = 40</button>
+<button class="mcq-option" onclick="checkMCQ('q2','B','C','q2-fb-B')"><span class="mcq-option-letter">B</span> x = 60</button>
+<button class="mcq-option" onclick="checkMCQ('q2','C','C','q2-fb-C')"><span class="mcq-option-letter">C</span> x = 150</button>
+<button class="mcq-option" onclick="checkMCQ('q2','D','C','q2-fb-D')"><span class="mcq-option-letter">D</span> x = 50</button>
+</div>
+<div id="q2-fb-A" class="mcq-feedback incorrect-fb">Incorrect. 40 is below 50, so it correctly prints small.</div>
+<div id="q2-fb-B" class="mcq-feedback incorrect-fb">Incorrect. 60 is at least 50 but below 100, so big is the correct label.</div>
+<div id="q2-fb-C" class="mcq-feedback correct-fb">Correct. 150 should be huge, but 150 &gt;= 50 is true first, so it wrongly prints big. The broad test shadows the specific one.</div>
+<div id="q2-fb-D" class="mcq-feedback incorrect-fb">Incorrect. 50 should be big, and it prints big. That is correct.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q3">
+        <div class="mcq-q-num">Question 3 of 6<span class="diff-tag">I, II, III</span>
+</div>
+        <div class="mcq-q-text">The variable <code>x</code> holds an integer. Which of the following print <code>mid</code> <strong>exactly</strong> when <code>x</code> is from 10 to 20 inclusive?</div>
+        <ul class="mcq-roman">
+          <li>
+<strong>I.</strong> if x &lt; 10: print("low") ; elif x &lt;= 20: print("mid") ; else: print("high")</li>
+          <li>
+<strong>II.</strong> if x &gt;= 10 and x &lt;= 20: print("mid")</li>
+          <li>
+<strong>III.</strong> if x &gt; 10: (nested) if x &lt; 20: print("mid")</li>
+        </ul>
+        <div class="mcq-options" id="q3-options">
+<button class="mcq-option" onclick="checkMCQ('q3','A','D','q3-fb-A')"><span class="mcq-option-letter">A</span> I only</button>
+<button class="mcq-option" onclick="checkMCQ('q3','B','D','q3-fb-B')"><span class="mcq-option-letter">B</span> I and III only</button>
+<button class="mcq-option" onclick="checkMCQ('q3','C','D','q3-fb-C')"><span class="mcq-option-letter">C</span> I, II, and III</button>
+<button class="mcq-option" onclick="checkMCQ('q3','D','D','q3-fb-D')"><span class="mcq-option-letter">D</span> I and II only</button>
+</div>
+<div id="q3-fb-A" class="mcq-feedback incorrect-fb">Incorrect. I is correct, but II also prints mid exactly for 10 through 20 inclusive.</div>
+<div id="q3-fb-B" class="mcq-feedback incorrect-fb">Incorrect. III uses x &gt; 10 and x &lt; 20, which excludes the boundary values 10 and 20, so it is wrong.</div>
+<div id="q3-fb-C" class="mcq-feedback incorrect-fb">Incorrect. III excludes 10 and 20 because it uses strict inequalities. Only I and II are exact.</div>
+<div id="q3-fb-D" class="mcq-feedback correct-fb">Correct. I includes both boundaries (10 passes the elif, 20 passes it, 21 goes to high). II is the direct range test including 10 and 20. III uses strict &gt; and &lt;, so it misses 10 and 20.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q4">
+        <div class="mcq-q-num">Question 4 of 6<span class="diff-tag">NOT question</span>
+</div>
+        <div class="mcq-q-text">For each segment, <code>w</code> has been assigned 5. Which segment does <strong>NOT</strong> print <code>yes</code>?</div>
+        <div class="mcq-options" id="q4-options">
+<button class="mcq-option" onclick="checkMCQ('q4','A','A','q4-fb-A')"><span class="mcq-option-letter">A</span> if w &gt; 0: (nested) if w &gt; 10: print("yes") else: print("no")</button>
+<button class="mcq-option" onclick="checkMCQ('q4','B','A','q4-fb-B')"><span class="mcq-option-letter">B</span> if w &gt; 0: (nested) if w &lt; 10: print("yes")</button>
+<button class="mcq-option" onclick="checkMCQ('q4','C','A','q4-fb-C')"><span class="mcq-option-letter">C</span> if w &gt;= 5: print("yes")</button>
+<button class="mcq-option" onclick="checkMCQ('q4','D','A','q4-fb-D')"><span class="mcq-option-letter">D</span> if w != 0: print("yes")</button>
+</div>
+<div id="q4-fb-A" class="mcq-feedback correct-fb">Correct. The outer 5 &gt; 0 is true, but the inner 5 &gt; 10 is false, so the inner else runs and it prints no, not yes.</div>
+<div id="q4-fb-B" class="mcq-feedback incorrect-fb">Incorrect. 5 &gt; 0 is true and 5 &lt; 10 is true, so this DOES print yes.</div>
+<div id="q4-fb-C" class="mcq-feedback incorrect-fb">Incorrect. 5 &gt;= 5 is true, so this DOES print yes.</div>
+<div id="q4-fb-D" class="mcq-feedback incorrect-fb">Incorrect. 5 is not equal to 0, so this DOES print yes.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q5">
+        <div class="mcq-q-num">Question 5 of 6<span class="diff-tag">Reachability</span>
+</div>
+        <div class="mcq-q-text">In the chain below, which branch can <strong>never</strong> execute for any integer <code>x</code>?</div>
+        <div class="mcq-code">
+<span class="k">if</span> x &gt; <span class="n">100</span>:
+    <span class="k">print</span>(<span class="s">"A"</span>)
+<span class="k">elif</span> x &gt; <span class="n">50</span>:
+    <span class="k">print</span>(<span class="s">"B"</span>)
+<span class="k">elif</span> x &gt; <span class="n">75</span>:
+    <span class="k">print</span>(<span class="s">"C"</span>)
+<span class="k">else</span>:
+    <span class="k">print</span>(<span class="s">"D"</span>)</div>
+        <div class="mcq-options" id="q5-options">
+<button class="mcq-option" onclick="checkMCQ('q5','A','B','q5-fb-A')"><span class="mcq-option-letter">A</span> A</button>
+<button class="mcq-option" onclick="checkMCQ('q5','B','B','q5-fb-B')"><span class="mcq-option-letter">B</span> C</button>
+<button class="mcq-option" onclick="checkMCQ('q5','C','B','q5-fb-C')"><span class="mcq-option-letter">C</span> B</button>
+<button class="mcq-option" onclick="checkMCQ('q5','D','B','q5-fb-D')"><span class="mcq-option-letter">D</span> D</button>
+</div>
+<div id="q5-fb-A" class="mcq-feedback incorrect-fb">Incorrect. A runs for any x &gt; 100, for example x = 200.</div>
+<div id="q5-fb-B" class="mcq-feedback correct-fb">Correct. Any x &gt; 75 is also &gt; 50, and the x &gt; 50 test comes first, so C is unreachable. It is a dead branch caused by ordering.</div>
+<div id="q5-fb-C" class="mcq-feedback incorrect-fb">Incorrect. B runs for values like 60, which are over 50 but not over 100.</div>
+<div id="q5-fb-D" class="mcq-feedback incorrect-fb">Incorrect. D runs for any x of 50 or below, for example x = 10.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q6">
+        <div class="mcq-q-num">Question 6 of 6<span class="diff-tag">Boolean logic</span>
+</div>
+        <div class="mcq-q-text">Which single <code>if</code> condition prints <code>go</code> for <strong>exactly</strong> the same values of <code>x</code> as this nested structure?</div>
+        <div class="mcq-code">
+<span class="k">if</span> x &gt; <span class="n">0</span>:
+    <span class="k">if</span> x &lt; <span class="n">100</span>:
+        <span class="k">print</span>(<span class="s">"go"</span>)</div>
+        <div class="mcq-options" id="q6-options">
+<button class="mcq-option" onclick="checkMCQ('q6','A','A','q6-fb-A')"><span class="mcq-option-letter">A</span> if x &gt; 0 and x &lt; 100:</button>
+<button class="mcq-option" onclick="checkMCQ('q6','B','A','q6-fb-B')"><span class="mcq-option-letter">B</span> if x &gt; 0 or x &lt; 100:</button>
+<button class="mcq-option" onclick="checkMCQ('q6','C','A','q6-fb-C')"><span class="mcq-option-letter">C</span> if x &gt; 100 and x &lt; 0:</button>
+<button class="mcq-option" onclick="checkMCQ('q6','D','A','q6-fb-D')"><span class="mcq-option-letter">D</span> if x &lt; 0 or x &gt; 100:</button>
+</div>
+<div id="q6-fb-A" class="mcq-feedback correct-fb">Correct. Reaching the inner print requires the outer AND the inner condition to be true, so it is x &gt; 0 and x &lt; 100.</div>
+<div id="q6-fb-B" class="mcq-feedback incorrect-fb">Incorrect. OR is too broad; it is true for almost every number. A nested IF requires BOTH conditions, which is AND.</div>
+<div id="q6-fb-C" class="mcq-feedback incorrect-fb">Incorrect. No number is both greater than 100 and less than 0, so this never prints.</div>
+<div id="q6-fb-D" class="mcq-feedback incorrect-fb">Incorrect. That is the complement (the values that do NOT print go), and it uses OR.</div>
+      </div>
+    </div>
+    <div class="game-section">
+      <div style="text-align:center;margin-bottom:20px;">
+        <div class="game-badge">🎮 Lesson Game</div>
+        <div class="game-title">Nesting Navigator</div>
+        <div class="game-sub">Trace each nested or multiway conditional and predict what it displays. 8 rounds.</div>
+      </div>
+      <div id="vt-active">
+        <div class="vt-score-bar">
+          <div class="vt-stat">
+<div class="vt-stat-val" id="vt-score">0</div>
+<div class="vt-stat-lbl">Correct</div>
+</div>
+          <div class="vt-stat">
+<div class="vt-stat-val" id="vt-qn">1/8</div>
+<div class="vt-stat-lbl">Round</div>
+</div>
+          <div class="vt-stat">
+<div class="vt-stat-val" id="vt-streak">0</div>
+<div class="vt-stat-lbl">Streak 🔥</div>
+</div>
+        </div>
+        <div class="vt-code-card">
+          <div class="vt-code-label">🐛 Python • which branch runs?</div>
+          <div class="vt-code-lines" id="vt-code"></div>
+        </div>
+        <div class="vt-question" id="vt-question"></div>
+        <div class="vt-options" id="vt-options"></div>
+        <div class="vt-fb" id="vt-fb"></div>
+        <button class="vt-next" id="vt-next" onclick="vtNext()">Next →</button>
+      </div>
+      <div class="vt-results" id="vt-results">
+        <div class="vt-res-score" id="vt-res-score">0/8</div>
+        <div class="vt-res-lbl">correct answers</div>
+        <div class="vt-res-msg" id="vt-res-msg"></div>
+        <button class="vt-restart" onclick="vtRestart()">↻ Play again</button>
+      </div>
+    </div>
+    <div class="code-editor-section">
+      <div class="code-editor-badge">💻 Live Python Code Editor</div>
+      <div class="code-editor-title">Practice Problems</div>
+      <div class="code-editor-sub">Real Python runs right here in your browser. The first time you press Run, the Python engine loads (a few seconds); after that it is instant. Problems build from guided to Create-Task level. Use Hint if you are stuck, and check your output against the target.</div>
+      <div class="code-usage" id="code-usage">Hints used: <strong>0</strong> • Solutions viewed: <strong>0</strong>
+</div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-1">
+        <div class="scaffold-badge">Level 1 • Guided</div>
+        <div class="code-problem-num">Problem 1 of 8 • if / elif / else</div>
+        <div class="code-problem-prompt">
+<code>x</code> is a test score. Print the letter:<ul class="rules">
+<li>at least 90: <code>A</code>
+</li>
+<li>at least 80: <code>B</code>
+</li>
+<li>otherwise: <code>C</code>
+</li>
+</ul>Target output: <strong>B</strong>
+</div>
+        <textarea class="code-textarea" id="ce-1" rows="6" spellcheck="false">x = 85
+# TODO: A if x &gt;= 90, elif x &gt;= 80 print B, else print C
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-1" onclick="runPy(1)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(1)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-1" onclick="showSol(1)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-1"></div>
+        <div class="code-hint" id="ce-hint-1"></div>
+        <div class="code-solution" id="ce-sol-1"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-2">
+        <div class="scaffold-badge">Level 2 • Nested IF</div>
+        <div class="code-problem-num">Problem 2 of 8 • question inside a question</div>
+        <div class="code-problem-prompt">
+<code>n</code> is set. Print a label using a nested check on <code>n % 2</code>:<ul class="rules">
+<li>positive and even: <code>even</code>
+</li>
+<li>positive and odd: <code>odd</code>
+</li>
+<li>not positive: <code>nonpositive</code>
+</li>
+</ul>Target output: <strong>even</strong>
+</div>
+        <textarea class="code-textarea" id="ce-2" rows="6" spellcheck="false">n = 4
+# TODO: if n &gt; 0, nested print even/odd; else print nonpositive
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-2" onclick="runPy(2)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(2)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-2" onclick="showSol(2)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-2"></div>
+        <div class="code-hint" id="ce-hint-2"></div>
+        <div class="code-solution" id="ce-sol-2"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-3">
+        <div class="scaffold-badge">Level 3 • Multiway</div>
+        <div class="code-problem-num">Problem 3 of 8 • four-way grade</div>
+        <div class="code-problem-prompt">Print the letter grade for <code>x</code>:<ul class="rules">
+<li>90 or above: <code>A</code>
+</li>
+<li>80 or above: <code>B</code>
+</li>
+<li>70 or above: <code>C</code>
+</li>
+<li>otherwise: <code>F</code>
+</li>
+</ul>Target output: <strong>C</strong>
+</div>
+        <textarea class="code-textarea" id="ce-3" rows="6" spellcheck="false">x = 72
+# TODO: A/B/C/F using if, elif, elif, else
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-3" onclick="runPy(3)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(3)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-3" onclick="showSol(3)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-3"></div>
+        <div class="code-hint" id="ce-hint-3"></div>
+        <div class="code-solution" id="ce-sol-3"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-4">
+        <div class="scaffold-badge">Level 4 • Fix the bug</div>
+        <div class="code-problem-num">Problem 4 of 8 • reorder the chain</div>
+        <div class="code-problem-prompt">This should print <code>huge</code> for values of 100 or more, but it prints the wrong label because the branches are in the wrong order. Fix the ordering so <code>x = 150</code> prints <code>huge</code>. Target output: <strong>huge</strong>
+</div>
+        <textarea class="code-textarea" id="ce-4" rows="6" spellcheck="false">x = 150
+if x &gt;= 50:
+    print("big")
+elif x &gt;= 100:
+    print("huge")
+else:
+    print("small")
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-4" onclick="runPy(4)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(4)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-4" onclick="showSol(4)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-4"></div>
+        <div class="code-hint" id="ce-hint-4"></div>
+        <div class="code-solution" id="ce-sol-4"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-5">
+        <div class="scaffold-badge">Level 5 • Ranges</div>
+        <div class="code-problem-num">Problem 5 of 8 • comfortable, cold, or hot</div>
+        <div class="code-problem-prompt">
+<code>temp</code> is set. Print a label:<ul class="rules">
+<li>from 60 to 80 inclusive: <code>comfortable</code>
+</li>
+<li>below 60: <code>cold</code>
+</li>
+<li>otherwise: <code>hot</code>
+</li>
+</ul>Target output: <strong>hot</strong>
+</div>
+        <textarea class="code-textarea" id="ce-5" rows="6" spellcheck="false">temp = 85
+# TODO: 60..80 comfortable, below 60 cold, else hot
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-5" onclick="runPy(5)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(5)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-5" onclick="showSol(5)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-5"></div>
+        <div class="code-hint" id="ce-hint-5"></div>
+        <div class="code-solution" id="ce-sol-5"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-6">
+        <div class="scaffold-badge">Level 6 • Create Task style</div>
+        <div class="code-problem-num">Problem 6 of 8 • access control</div>
+        <div class="code-problem-prompt">A meaningful, reachable multiway selection like you would identify in your Create Task. Given <code>role</code> and <code>active</code>, print the access level:<ul class="rules">
+<li>
+<code>role</code> is admin: <code>full access</code>
+</li>
+<li>
+<code>role</code> is user and <code>active</code> is True: <code>limited access</code>
+</li>
+<li>anything else: <code>no access</code>
+</li>
+</ul>Target output: <strong>limited access</strong>
+</div>
+        <textarea class="code-textarea" id="ce-6" rows="6" spellcheck="false">role = "user"
+active = True
+# TODO: admin -&gt; full access; user and active -&gt; limited access; else no access
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-6" onclick="runPy(6)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(6)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-6" onclick="showSol(6)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-6"></div>
+        <div class="code-hint" id="ce-hint-6"></div>
+        <div class="code-solution" id="ce-sol-6"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-7">
+        <div class="scaffold-badge">Level 7 • Challenge</div>
+        <div class="code-problem-num">Problem 7 of 8 • you write the whole program</div>
+        <div class="code-problem-prompt">Open ended. Write the <strong>entire</strong> program yourself. A theme park sets a ticket label from age and membership. Rules, in order:<ul class="rules">
+<li>under 5: <code>free</code>
+</li>
+<li>5 to 12: <code>child 20</code>
+</li>
+<li>13 to 64: <code>adult member 35</code> when <code>is_member</code> is True, else <code>adult 45</code>
+</li>
+<li>65 and over: <code>senior 25</code>
+</li>
+</ul>Only the two inputs are given. Print exactly one label. Target output: <strong>adult member 35</strong>
+</div>
+        <textarea class="code-textarea" id="ce-7" rows="6" spellcheck="false">age = 40
+is_member = True
+# Write the full pricing logic below.
+# Print exactly one line: the correct label for this person.
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-7" onclick="runPy(7)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(7)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-7" onclick="showSol(7)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-7"></div>
+        <div class="code-hint" id="ce-hint-7"></div>
+        <div class="code-solution" id="ce-sol-7"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-8">
+        <div class="scaffold-badge">Level 8 • Challenge</div>
+        <div class="code-problem-num">Problem 8 of 8 • multi-step, order matters</div>
+        <div class="code-problem-prompt">Open ended. Write the <strong>entire</strong> program yourself. An access system checks, <strong>in this order</strong>:<ul class="rules">
+<li>
+<code>is_banned</code> is True: <code>no access</code>
+</li>
+<li>the user is not logged in: <code>please log in</code>
+</li>
+<li>
+<code>role</code> is admin: <code>admin panel</code>
+</li>
+<li>otherwise: <code>user home</code>
+</li>
+</ul>The order is what makes it correct. Target output: <strong>user home</strong>
+</div>
+        <textarea class="code-textarea" id="ce-8" rows="6" spellcheck="false">role = "user"
+logged_in = True
+is_banned = False
+# Write the full access-check program below.
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-8" onclick="runPy(8)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(8)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-8" onclick="showSol(8)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-8"></div>
+        <div class="code-hint" id="ce-hint-8"></div>
+        <div class="code-solution" id="ce-sol-8"></div>
+      </div>
+    </div>
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What is a nested conditional?<i class="faq-icon">+</i></button>
+        <div class="faq-a">A nested conditional is a conditional statement placed inside another conditional statement. The inner condition is only checked when the outer condition is true. If the outer condition is false, the entire inner conditional is skipped.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">How is elif different from a second if?<i class="faq-icon">+</i></button>
+        <div class="faq-a">An <code>elif</code> is only checked when every condition above it was false, and at most one branch in the whole chain runs. Two separate <code>if</code> statements are each checked independently, so more than one can run. Use elif when the outcomes are mutually exclusive.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Why does the order of my elif branches matter?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Python runs the first branch whose condition is true and skips the rest. If a broad condition comes before a more specific one, the broad one catches the value first and the specific branch becomes unreachable dead code. Test the most specific or most extreme case first.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">How does a nested conditional relate to AND?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Reaching the inner block of a nested IF requires the outer condition AND the inner condition to both be true. A nested IF with no else is often equivalent to a single IF that joins the two conditions with <code>and</code>.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">How do nested conditionals help my Create Task?<i class="faq-icon">+</i></button>
+        <div class="faq-a">They let your program handle varied input by making a decision and then a follow-up decision. In your written response you identify the selection, name the conditions, and describe each reachable branch. Make sure every branch can actually run for some input.</div>
+      </div>
+    </div>
+    <div class="related-links">
+      <h3>🔗 Continue studying</h3>
+      <div class="related-links-grid">
+        <a href="/pages/ap-csp-course-big-idea-3-algorithms" class="related-link">← BI3 Hub</a>
+        <a href="/pages/ap-csp-course-bi3-conditionals" class="related-link">← 3.6 Conditionals</a>
+        <a href="/pages/ap-csp-course-bi3-iteration" class="related-link">Next: 3.8 Iteration →</a>
+        <a href="/pages/ap-csp-course-bi3-boolean-expressions" class="related-link">3.5 Boolean Expressions</a>
+        <a href="/pages/ap-csp-course-create-task" class="related-link">Create Task Module</a>
+        <a href="/pages/ap-csp-question-of-the-day" class="related-link">Daily Practice Questions</a>
+        <a href="https://apcentral.collegeboard.org/courses/ap-computer-science-principles" class="related-link related-ext" target="_blank" rel="noopener">College Board AP CSP ↗</a>
+      </div>
+    </div>
+    <div class="superpack-slim">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="superpack-slim-icon">📦</div>
+        <div><div class="superpack-slim-text">AP CSP Teacher Superpack<span class="superpack-slim-sub">Slides, lesson plans, unit tests for all 5 Big Ideas, $249</span>
+</div></div>
+      </div>
+      <a href="/products/ap-csp-teacher-superpack" class="superpack-slim-btn">Get the Superpack →</a>
+    </div>
+    <div class="teacher-callout">
+      <div class="teacher-callout-icon">🏫</div>
+      <div class="teacher-callout-body">
+        <div class="teacher-callout-label">For teachers</div>
+        <p>The Superpack includes an editable Topic 3.7 slide deck with animated nested-branch traces, a reachability and ordering bug bank, a print-ready multiway worksheet, and a unit quiz. <a href="/products/ap-csp-teacher-superpack">View what's included →</a></p>
+      </div>
+    </div>
+    <div class="lesson-nav">
+      <a href="/pages/ap-csp-course-bi3-conditionals" class="nav-card">
+        <div class="nav-card-dir">← Previous</div>
+        <div class="nav-card-title">3.6 Conditionals</div>
+      </a>
+      <a href="/pages/ap-csp-course-bi3-iteration" class="nav-card next">
+        <div class="nav-card-dir">Next lesson →</div>
+        <div class="nav-card-title">3.8 Iteration</div>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var MINI_MSGS={"me1": {"A": "\u2717 The outer x > 5 is false, so the inner block never runs and deep is never printed.", "B": "\u2713 Correct! x is 3, so x > 5 is false. The whole inner IF is skipped and only print(\"done\") runs.", "C": "\u2717 deep would require the outer condition to be true. It is false, so only done prints.", "D": "\u2717 print(\"done\") is outside the IF, so it always runs. done prints."}, "me2": {"A": "\u2717 That the numbers differ is not the reason. The reason is about which test runs first.", "B": "\u2713 Correct! Any x that is 20 or more is also 13 or more, so the first branch (x >= 13) fires first and the adult branch is never reached.", "C": "\u2717 elif legally follows if. The issue is reachability, not syntax.", "D": "\u2717 print does not stop the program. The adult branch is skipped because the first condition already matched."}};
+var MINI_FIB={"me3": {"correct": "mid", "c": "\u2713 Correct! 7 > 10 is false, then 7 > 5 is true, so it prints mid.", "w": "\u2717 Not quite. 7 > 10 is false, so it checks the elif: 7 > 5 is true, so it prints mid."}};
+var CE_EXPECTED={"1": "B", "2": "even", "3": "C", "4": "huge", "5": "hot", "6": "limited access", "7": "adult member 35", "8": "user home"};
+var CE_HINTS={"1": ["Use if, then elif, then else.", "if x >= 90: A  |  elif x >= 80: B  |  else: C", "Full pattern:\nif x >= 90:\n    print(\"A\")\nelif x >= 80:\n    print(\"B\")\nelse:\n    print(\"C\")"], "2": ["First decide positive vs not. Only if positive, ask even or odd.", "Put an if/else on n % 2 == 0 inside the if n > 0 block.", "Full pattern:\nif n > 0:\n    if n % 2 == 0:\n        print(\"even\")\n    else:\n        print(\"odd\")\nelse:\n    print(\"nonpositive\")"], "3": ["Four outcomes means if, elif, elif, else.", "Test the highest cutoff first: 90, then 80, then 70.", "Full pattern:\nif x >= 90:\n    print(\"A\")\nelif x >= 80:\n    print(\"B\")\nelif x >= 70:\n    print(\"C\")\nelse:\n    print(\"F\")"], "4": ["The specific case (100+) must be tested before the broad case (50+).", "Swap the first two branches so >= 100 comes first."], "5": ["The comfortable range needs an AND: temp >= 60 and temp <= 80.", "Order: comfortable range first, then below 60, then else hot.", "Full pattern:\nif temp >= 60 and temp <= 80:\n    print(\"comfortable\")\nelif temp < 60:\n    print(\"cold\")\nelse:\n    print(\"hot\")"], "6": ["Compare strings with ==. Check admin first.", "elif needs role == \"user\" and active (True is truthy).", "Full pattern:\nif role == \"admin\":\n    print(\"full access\")\nelif role == \"user\" and active:\n    print(\"limited access\")\nelse:\n    print(\"no access\")"], "7": ["Handle the ranges in order: under 5, then up to 12, then up to 64, then else.", "The 13 to 64 case needs a nested if on is_member for the two adult prices.", "Full solution:\nif age < 5:\n    print(\"free\")\nelif age <= 12:\n    print(\"child 20\")\nelif age <= 64:\n    if is_member:\n        print(\"adult member 35\")\n    else:\n        print(\"adult 45\")\nelse:\n    print(\"senior 25\")"], "8": ["Test is_banned first, because a banned user should never reach the other checks.", "Then use elif for each next rule: not logged_in, then role == \"admin\", then else.", "Full solution:\nif is_banned:\n    print(\"no access\")\nelif not logged_in:\n    print(\"please log in\")\nelif role == \"admin\":\n    print(\"admin panel\")\nelse:\n    print(\"user home\")"]};
+var CE_SOL={"1": "x = 85\nif x >= 90:\n    print(\"A\")\nelif x >= 80:\n    print(\"B\")\nelse:\n    print(\"C\")", "2": "n = 4\nif n > 0:\n    if n % 2 == 0:\n        print(\"even\")\n    else:\n        print(\"odd\")\nelse:\n    print(\"nonpositive\")", "3": "x = 72\nif x >= 90:\n    print(\"A\")\nelif x >= 80:\n    print(\"B\")\nelif x >= 70:\n    print(\"C\")\nelse:\n    print(\"F\")", "4": "x = 150\nif x >= 100:\n    print(\"huge\")\nelif x >= 50:\n    print(\"big\")\nelse:\n    print(\"small\")", "5": "temp = 85\nif temp >= 60 and temp <= 80:\n    print(\"comfortable\")\nelif temp < 60:\n    print(\"cold\")\nelse:\n    print(\"hot\")", "6": "role = \"user\"\nactive = True\nif role == \"admin\":\n    print(\"full access\")\nelif role == \"user\" and active:\n    print(\"limited access\")\nelse:\n    print(\"no access\")", "7": "age = 40\nis_member = True\nif age < 5:\n    print(\"free\")\nelif age <= 12:\n    print(\"child 20\")\nelif age <= 64:\n    if is_member:\n        print(\"adult member 35\")\n    else:\n        print(\"adult 45\")\nelse:\n    print(\"senior 25\")", "8": "role = \"user\"\nlogged_in = True\nis_banned = False\nif is_banned:\n    print(\"no access\")\nelif not logged_in:\n    print(\"please log in\")\nelif role == \"admin\":\n    print(\"admin panel\")\nelse:\n    print(\"user home\")"};
+var VT_QS=[{"lines": ["x = 82", "if x >= 90:", "    print(\"A\")", "elif x >= 80:", "    print(\"B\")", "else:", "    print(\"C\")"], "hl": 3, "q": "What is displayed?", "choices": ["A", "B", "C", "F"], "correct": 1, "exp": "82 >= 90 is false, 82 >= 80 is true, so it prints B."}, {"lines": ["n = 4", "if n > 0:", "    if n % 2 == 0:", "        print(\"pos even\")", "    else:", "        print(\"pos odd\")", "else:", "    print(\"nonpos\")"], "hl": 2, "q": "What is displayed?", "choices": ["pos even", "pos odd", "nonpos", "error"], "correct": 0, "exp": "n > 0 is true, and 4 % 2 == 0 is true, so it prints pos even."}, {"lines": ["x = 7", "if x < 5:", "    print(\"low\")", "elif x < 10:", "    print(\"mid\")", "else:", "    print(\"high\")"], "hl": 3, "q": "What is displayed?", "choices": ["low", "mid", "high", "error"], "correct": 1, "exp": "7 < 5 is false, 7 < 10 is true, so it prints mid."}, {"lines": ["x = 3", "if x > 0:", "    if x > 5:", "        print(\"big\")"], "hl": 2, "q": "What is displayed?", "choices": ["big", "small", "nothing", "error"], "correct": 2, "exp": "Outer is true, but inner 3 > 5 is false and there is no else, so nothing prints."}, {"lines": ["x = 10", "if x >= 10:", "    print(\"ten+\")", "elif x >= 5:", "    print(\"five+\")"], "hl": 1, "q": "What is displayed?", "choices": ["ten+", "five+", "nothing", "error"], "correct": 0, "exp": "10 >= 10 is true, so it prints ten+ and skips the elif."}, {"lines": ["g = 60", "if g >= 90:", "    print(\"A\")", "elif g >= 80:", "    print(\"B\")", "elif g >= 70:", "    print(\"C\")", "else:", "    print(\"D\")"], "hl": 7, "q": "What is displayed?", "choices": ["B", "C", "D", "error"], "correct": 2, "exp": "60 fails 90, 80, and 70, so the else runs and prints D."}, {"lines": ["x = 5", "if x > 3:", "    if x > 8:", "        print(\"hi\")", "    else:", "        print(\"mid\")", "else:", "    print(\"lo\")"], "hl": 2, "q": "What is displayed?", "choices": ["hi", "mid", "lo", "error"], "correct": 1, "exp": "x > 3 is true, inner x > 8 is false, so the inner else prints mid."}, {"lines": ["x = 50", "if x > 100:", "    print(\"A\")", "elif x > 25:", "    print(\"B\")", "elif x > 40:", "    print(\"C\")", "else:", "    print(\"D\")"], "hl": 3, "q": "What is displayed?", "choices": ["A", "B", "C", "D"], "correct": 1, "exp": "50 is not over 100 but is over 25, so it prints B. The x > 40 branch is unreachable."}];
+var VT_MSGS=["Nesting takes reps. Resolve the outer condition first, then only step inside if it was true.", "Getting there. In a chain, stop at the first true branch.", "Decent. Watch the order of conditions for overlap.", "Solid. You are tracing nested paths well.", "Strong. You will handle most nested questions on the exam.", "Very strong. Nearly perfect.", "Almost flawless.", "Perfect! You can navigate any nested or multiway conditional the AP exam shows you."];
+
+function switchTab(btn, lang, panelId){
+  var wrap=btn.parentElement.parentElement;
+  var tabs=wrap.querySelectorAll('.code-tab'),panes=wrap.querySelectorAll('.code-pane');
+  for(var i=0;i<tabs.length;i++)tabs[i].classList.remove('active');
+  for(var i=0;i<panes.length;i++)panes[i].classList.remove('active');
+  btn.classList.add('active');
+  var t=document.getElementById(panelId+'-'+lang); if(t)t.classList.add('active');
+}
+/* Gradebook hook: fire one standard event per graded interaction. The theme reporter
+   listens for 'apcsActivity' and reads course/unit/lesson off the .lesson-page wrapper. */
+function _activity(d){
+  try{ var w=document.querySelector('.lesson-page');
+    if(w){ d.course=w.getAttribute('data-course'); d.unit=w.getAttribute('data-unit'); d.lesson=w.getAttribute('data-lesson'); }
+    document.dispatchEvent(new CustomEvent('apcsActivity',{detail:d}));
+  }catch(e){}
+}
+function miniMCQ(id, chosen, correct, fbId){
+  var opts=document.querySelectorAll('#'+id+'-opts .mini-opt');
+  opts.forEach(function(b){b.onclick=null;b.style.cursor='default';});
+  var letters=['A','B','C','D'];
+  opts[letters.indexOf(chosen)].classList.add(chosen===correct?'correct':'incorrect');
+  if(chosen!==correct)opts[letters.indexOf(correct)].classList.add('reveal');
+  var fb=document.getElementById(fbId);
+  if(MINI_MSGS[id]){fb.textContent=MINI_MSGS[id][chosen]||'';fb.className='mini-fb '+(chosen===correct?'c':'w');}
+}
+function miniFIB(id, fbId){
+  var inp=document.getElementById(id+'-inp'),fb=document.getElementById(fbId);
+  var val=inp.value.trim().toLowerCase();var d=MINI_FIB[id];
+  var ok=(val===String(d.correct).toLowerCase());
+  inp.classList.add(ok?'correct':'incorrect');
+  fb.textContent=ok?d.c:d.w; fb.className='mini-fb '+(ok?'c':'w'); inp.disabled=true;
+}
+function checkMCQ(qid, chosen, correct, fbId){
+  var opts=document.querySelectorAll('#'+qid+'-options .mcq-option');
+  opts.forEach(function(b){b.disabled=true;b.onclick=null;});
+  var letters=['A','B','C','D'];
+  opts[letters.indexOf(chosen)].classList.add(chosen===correct?'correct':'incorrect');
+  if(chosen!==correct)opts[letters.indexOf(correct)].classList.add('revealed-correct');
+  document.getElementById(fbId).classList.add('show');
+  _activity({activity:'quiz',item:qid,choice:chosen});
+}
+function toggleFAQ(btn){
+  var item=btn.parentElement,wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(el){el.classList.remove('open');});
+  if(!wasOpen)item.classList.add('open');
+}
+function handleCapture(){
+  var email=document.getElementById('capture-email').value.trim();
+  if(!email||!email.includes('@')){document.getElementById('capture-email').focus();return;}
+  document.getElementById('capture-form').style.display='none';
+  document.getElementById('capture-success').style.display='block';
+  if(typeof window._learnq!=='undefined'){window._learnq.push(['identify',{'$email':email}]);}
+}
+var PY_URL='https://cdn.jsdelivr.net/pyodide/v0.26.2/full/';
+var CE_HINT_IDX={};
+/* Hint/solution usage tracking. window.LESSON_USAGE is read by the gradebook reporter
+   (separate task) and mirrored in a visible on-page tally so teachers can factor it in. */
+var LESSON_USAGE={hints:{},solutions:{},totalHints:0,totalSolutions:0};
+window.LESSON_USAGE=LESSON_USAGE;
+function _sumv(o){var t=0;for(var k in o){t+=o[k];}return t;}
+function updateUsage(){
+  var el=document.getElementById('code-usage');
+  if(el){el.innerHTML='Hints used: <strong>'+LESSON_USAGE.totalHints+'</strong> • Solutions viewed: <strong>'+LESSON_USAGE.totalSolutions+'</strong>';}
+  try{document.dispatchEvent(new CustomEvent('lessonUsage',{detail:LESSON_USAGE}));}catch(e){}
+}
+function loadScriptOnce(src){return new Promise(function(res,rej){
+  if(document.querySelector('script[data-pyodide]')){res();return;}
+  var s=document.createElement('script');s.src=src;s.setAttribute('data-pyodide','1');
+  s.onload=function(){res();};s.onerror=function(){rej(new Error('script load failed'));};
+  document.head.appendChild(s);});}
+function ensurePy(){if(window.__pyPromise)return window.__pyPromise;
+  window.__pyPromise=(async function(){await loadScriptOnce(PY_URL+'pyodide.js');
+    var py=await loadPyodide({indexURL:PY_URL});window.__pyodide=py;return py;})();
+  return window.__pyPromise;}
+function cleanErr(msg){if(!msg)return 'error';var lines=String(msg).trim().split('\n');return lines.slice(-3).join('\n');}
+function execUser(py,code){var output='',err=null;
+  try{py.runPython('import sys, io\n__old_out = sys.stdout\nsys.stdout = io.StringIO()\nsys.stderr = sys.stdout');
+    try{var ns=py.globals.get('dict')();py.runPython(code,{globals:ns});ns.destroy();}
+    catch(e){err=cleanErr(e.message);}
+    output=py.runPython('sys.stdout.getvalue()');}
+  catch(e2){err=cleanErr((e2&&e2.message)||String(e2));}
+  finally{try{py.runPython('sys.stdout = __old_out\nsys.stderr = __old_out');}catch(e3){}}
+  return {output:output,err:err};}
+async function runPy(n){
+  var out=document.getElementById('ce-out-'+n),btn=document.getElementById('run-btn-'+n);
+  out.className='code-output show';out.textContent='Loading Python (first run may take a few seconds)...';
+  if(btn)btn.disabled=true;var py;
+  try{py=await ensurePy();}catch(e){out.className='code-output show err';
+    out.textContent='Could not load the Python engine. Check your connection and try Run again.';if(btn)btn.disabled=false;return;}
+  var code=document.getElementById('ce-'+n).value;var res=execUser(py,code);
+  var solBtn=document.getElementById('sol-btn-'+n);
+  if(res.err){out.className='code-output show err';out.textContent='\u2717 Error:\n'+res.err;}
+  else{var got=(res.output||'').replace(/\s+$/,'');var exp=CE_EXPECTED[n];
+    var shown=res.output&&res.output.length?res.output.replace(/\n$/,''):'(no output)';
+    if(exp!==undefined&&got===exp){out.className='code-output show ok';out.textContent='\u2713 Correct! Output:\n'+shown;if(solBtn)solBtn.style.display='inline-block';}
+    else if(exp!==undefined){out.className='code-output show err';out.textContent='Output:\n'+shown+'\n\nTarget: '+exp+'\nKeep going, or press Hint.';}
+    else{out.className='code-output show';out.textContent='Output:\n'+shown;}
+    if(typeof exp!=='undefined')_activity({activity:'exercise-1',item:'ce-'+n,correct:(got===exp)});}
+  if(btn)btn.disabled=false;}
+function showHint(n){var box=document.getElementById('ce-hint-'+n);
+  if(CE_HINT_IDX[n]===undefined)CE_HINT_IDX[n]=0;var hints=CE_HINTS[n]||[];
+  if(hints.length===0)return;
+  if(CE_HINT_IDX[n]>=hints.length)CE_HINT_IDX[n]=hints.length-1;
+  var shown=CE_HINT_IDX[n]+1;var text='';
+  for(var i=0;i<shown;i++){text+='Hint '+(i+1)+': '+hints[i]+(i<shown-1?'\n\n':'');}
+  box.textContent=text;box.className='code-hint show';box.style.whiteSpace='pre-wrap';
+  LESSON_USAGE.hints[n]=shown;LESSON_USAGE.totalHints=_sumv(LESSON_USAGE.hints);updateUsage();
+  if(CE_HINT_IDX[n]<hints.length-1)CE_HINT_IDX[n]++;
+  var solBtn=document.getElementById('sol-btn-'+n);if(solBtn)solBtn.style.display='inline-block';}
+function showSol(n){var box=document.getElementById('ce-sol-'+n);box.textContent=CE_SOL[n]||'';box.className='code-solution show';
+  LESSON_USAGE.solutions[n]=1;LESSON_USAGE.totalSolutions=_sumv(LESSON_USAGE.solutions);updateUsage();}
+var vtScore=0,vtQ=0,vtStreak=0,vtAnswered=false;
+function vtRender(){if(vtQ>=VT_QS.length){vtShowResults();return;}vtAnswered=false;var q=VT_QS[vtQ];
+  document.getElementById('vt-qn').textContent=(vtQ+1)+'/'+VT_QS.length;
+  document.getElementById('vt-streak').textContent=vtStreak;
+  var codeEl=document.getElementById('vt-code');codeEl.innerHTML='';
+  q.lines.forEach(function(line,i){var span=document.createElement('span');
+    span.className='vt-line'+(i===q.hl?' hl':'');span.textContent=line;codeEl.appendChild(span);});
+  document.getElementById('vt-question').textContent=q.q;
+  var optEl=document.getElementById('vt-options');optEl.innerHTML='';
+  q.choices.forEach(function(ch,i){var btn=document.createElement('button');btn.className='vt-btn';btn.textContent=ch;
+    btn.onclick=(function(idx){return function(){vtAnswer(idx);};})(i);optEl.appendChild(btn);});
+  document.getElementById('vt-fb').className='vt-fb';document.getElementById('vt-next').className='vt-next';}
+function vtAnswer(idx){if(vtAnswered)return;vtAnswered=true;var q=VT_QS[vtQ];
+  var btns=document.querySelectorAll('.vt-btn');btns.forEach(function(b){b.onclick=null;});
+  var fb=document.getElementById('vt-fb');
+  if(idx===q.correct){vtScore++;vtStreak++;btns[idx].classList.add('c');fb.textContent='\u2713 Correct! '+q.exp;fb.className='vt-fb c';}
+  else{vtStreak=0;btns[idx].classList.add('w');btns[q.correct].classList.add('rv');fb.textContent='\u2717 Not quite. '+q.exp;fb.className='vt-fb w';}
+  document.getElementById('vt-score').textContent=vtScore;document.getElementById('vt-streak').textContent=vtStreak;
+  document.getElementById('vt-next').className='vt-next show';}
+function vtNext(){vtQ++;vtRender();}
+function vtShowResults(){document.getElementById('vt-active').style.display='none';
+  document.getElementById('vt-results').className='vt-results show';
+  document.getElementById('vt-res-score').textContent=vtScore+'/'+VT_QS.length;
+  document.getElementById('vt-res-msg').textContent=VT_MSGS[Math.min(vtScore,VT_MSGS.length-1)];
+  _activity({activity:'exercise-2',earned:vtScore,possible:VT_QS.length});}
+function vtRestart(){vtScore=0;vtQ=0;vtStreak=0;vtAnswered=false;
+  document.getElementById('vt-results').className='vt-results';
+  document.getElementById('vt-active').style.display='block';
+  document.getElementById('vt-score').textContent='0';vtRender();}
+vtRender();
+</script>
+<!-- apcs-keepgoing (managed) -->
+<div id="apcs-kg">
+<style>
+#apcs-kg{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:28px auto 0!important;padding:0 16px 8px!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important}
+#apcs-kg *,#apcs-kg *::before,#apcs-kg *::after{box-sizing:border-box!important}
+#apcs-kg .kg-lbl{font-size:12px!important;font-weight:800!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 10px!important}
+#apcs-kg .kg-row{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:12px!important}
+@media (max-width:640px){#apcs-kg .kg-row{grid-template-columns:repeat(1,1fr)!important}}
+#apcs-kg a.kg,#apcs-kg a.kg:link,#apcs-kg a.kg:visited{display:block!important;text-decoration:none!important;border:1px solid #BBE5D2!important;border-left:5px solid #10B981!important;border-radius:0 12px 12px 0!important;background:#ECFDF5!important;padding:14px 16px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;font-size:16px!important;font-weight:700!important;line-height:1.35!important}
+#apcs-kg a.kg:hover{background:#D1FAE5!important}
+#apcs-kg a.kg span{display:block!important;margin-top:4px!important;font-size:13px!important;font-weight:400!important;color:#5B7268!important;-webkit-text-fill-color:#5B7268!important}
+</style>
+<p class="kg-lbl">Keep going with Topic 3.7</p>
+<div class="kg-row">
+<a class="kg" href="/pages/ap-csp-topic-3-7-code">Coding practice<span>Write and run real code, checked as you go</span></a>
+<a class="kg" href="/pages/ap-csp-game-branch-runner">Study game<span>Not graded, just for the practice</span></a>
+<a class="kg" href="/pages/ap-csp-topic-3-7-guided-notes">Guided notes<span>Print them or fill them in here</span></a>
+</div>
+</div>
+<!-- apcs-exercises (managed) -->
+<div id="apcs-ex-links">
+<style>
+#apcs-ex-links{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:28px auto 0!important;padding:0 16px 8px!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important}
+#apcs-ex-links *,#apcs-ex-links *::before,#apcs-ex-links *::after{box-sizing:border-box!important}
+#apcs-ex-links .ex-lbl{font-size:12px!important;font-weight:800!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:0 0 10px!important}
+#apcs-ex-links .ex-row{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important}
+@media (max-width:640px){#apcs-ex-links .ex-row{grid-template-columns:repeat(1,1fr)!important}}
+#apcs-ex-links a.ex,#apcs-ex-links a.ex:link,#apcs-ex-links a.ex:visited{display:block!important;text-decoration:none!important;border:1px solid #93c5fd!important;border-left:5px solid #1a56db!important;border-radius:0 12px 12px 0!important;background:#eff6ff!important;padding:14px 16px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;font-size:16px!important;font-weight:700!important;line-height:1.35!important}
+#apcs-ex-links a.ex:hover{background:#dbeafe!important}
+#apcs-ex-links a.ex span{display:block!important;margin-top:4px!important;font-size:13px!important;font-weight:400!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important}
+#apcs-ex-links a.ex.wide{grid-column:1/-1!important}
+</style>
+<p class="ex-lbl">Exercises for Topic 3.7</p>
+<div class="ex-row">
+<a class="ex" href="/pages/ap-csp-topic-3-7-exercise-1">Exercise 1: Trace the Gate<span>Work it online. Saved in your browser, not graded</span></a>
+<a class="ex" href="/pages/ap-csp-topic-3-7-exercise-2">Exercise 2: Design the Gate<span>Work it online. Saved in your browser, not graded</span></a>
+<a class="ex wide" href="/pages/ap-csp-course-bi3-nested-conditionals-exercise-2">Applied Challenge<span>undefined questions, and every answer is recorded for your teacher</span></a>
+</div>
+</div>

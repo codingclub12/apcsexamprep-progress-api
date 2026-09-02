@@ -1,0 +1,1250 @@
+<!--
+  PAGE: /pages/ap-csp-course-bi4-fault-tolerance
+  TITLE: AP CSP 4.2 Fault Tolerance | Redundancy and Reliable Networks
+  META: AP CSP Topic 4.2: fault tolerance, redundancy, and why a distributed network keeps working when parts fail. 6 exam MCQs plus the Redundant Routing game.
+-->
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+  :root{--navy:#0f1f3d;--bi3:#1a56db;--bi3-lt:#93c5fd;--bi3-bg:#eff6ff;--bi3-dk:#1e40af;--green:#16a34a;--amber:#d97706;--red:#dc2626;--slate:#64748b;--white:#ffffff;--py:#3b82f6;--pseudo:#8b5cf6;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  .lesson-page{font-family:"DM Sans",sans-serif;color:var(--navy);background:#f8fafc;line-height:1.6;}
+
+  .lesson-breadcrumb{background:#fff;border-bottom:1px solid #e2e8f0;padding:12px 24px;}
+  .lesson-breadcrumb-inner{max-width:880px;margin:0 auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate);flex-wrap:wrap;}
+  .lesson-breadcrumb a{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;text-decoration:none;font-weight:500;}
+  .bc-sep{color:#cbd5e1;}
+
+  .social-proof-bar{background:#fff;border-bottom:1px solid #e2e8f0;padding:10px 24px;}
+  .social-proof-inner{max-width:880px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 20px;font-size:13px;color:var(--slate);}
+  .social-proof-item{display:flex;align-items:center;gap:5px;font-weight:500;}
+  .social-proof-item strong{color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+
+  .lesson-hero{background:var(--navy);background-image:radial-gradient(ellipse 60% 70% at 90% 20%,rgba(26,86,219,.28) 0%,transparent 60%);padding:48px 24px 40px;}
+  .lesson-hero-inner{max-width:880px;margin:0 auto;}
+  .lesson-hero-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .lesson-num-badge{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:var(--bi3);font-weight:700;font-size:14px;color:#fff!important;-webkit-text-fill-color:#fff!important;flex-shrink:0;}
+  .lesson-eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;}
+  .lesson-hero h1{font-family:"DM Serif Display",serif!important;font-size:clamp(26px,4vw,40px)!important;line-height:1.2!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:14px!important;}
+  .lesson-hero-pills{display:flex;flex-wrap:wrap;gap:8px;}
+  .lesson-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:5px 12px;border-radius:100px;font-size:12px;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .ced-tag{display:inline-flex;align-items:center;background:rgba(26,86,219,.25);border:1px solid rgba(147,197,253,.3);padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;letter-spacing:.04em;}
+
+  /* PROGRESS STRIP */
+  .bi3-progress{background:#fff!important;border-bottom:1px solid #e2e8f0!important;padding:14px 20px!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;}
+  .bi3-progress-inner{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;gap:0!important;width:max-content!important;min-width:100%!important;}
+  .prog-step{display:flex!important;flex-direction:column!important;align-items:center!important;min-width:46px!important;text-align:center!important;flex-shrink:0!important;}
+  .prog-step-link{display:flex!important;flex-direction:column!important;align-items:center!important;min-width:46px!important;text-align:center!important;flex-shrink:0!important;text-decoration:none!important;cursor:pointer!important;}
+  .prog-step-link:hover .prog-dot{background:#dbeafe!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border-color:var(--bi3)!important;}
+  .prog-dot{width:26px!important;height:26px!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:9px!important;font-weight:700!important;margin-bottom:4px!important;flex-shrink:0!important;}
+  .prog-dot.active{background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .prog-dot.upcoming{background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:2px solid #e2e8f0!important;}
+  .prog-dot.done{background:#dbeafe!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border:2px solid var(--bi3)!important;}
+  .prog-label{font-size:8px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;line-height:1.2!important;white-space:nowrap!important;}
+  .prog-label.active-label{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;}
+  .prog-arrow{flex:1 0 4px!important;height:2px!important;background:#e2e8f0!important;margin-bottom:18px!important;min-width:4px!important;max-width:16px!important;flex-shrink:0!important;}
+
+  /* MAIN */
+  .lesson-main{max-width:880px;margin:0 auto;padding:40px 24px 80px;}
+  .lesson-objectives{background:var(--bi3-bg);border-left:4px solid var(--bi3);border-radius:0 10px 10px 0;padding:20px 24px;margin-bottom:28px;}
+  .lesson-objectives h2{font-size:14px!important;font-weight:700!important;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;text-transform:uppercase!important;letter-spacing:.06em!important;margin-bottom:12px!important;}
+  .lesson-objectives ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;}
+  .lesson-objectives li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#1e3a8a;line-height:1.5;}
+  .lesson-objectives li::before{content:"\2713";color:var(--bi3);font-weight:700;flex-shrink:0;margin-top:1px;}
+  .score-impact{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 18px;margin-bottom:28px;display:flex;align-items:center;gap:10px;font-size:14px;color:#14532d;}
+  .score-impact strong{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+
+  /* HOOK */
+  .hook-box{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px 28px;margin-bottom:32px;}
+  .hook-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:8px;}
+  .hook-box p{font-size:15px!important;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;line-height:1.7!important;margin-bottom:0!important;}
+
+  /* LESSON SECTIONS */
+  .lesson-section{margin-bottom:40px;}
+  .lesson-section h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;padding-bottom:10px!important;border-bottom:2px solid var(--bi3-bg)!important;}
+  .lesson-section h3{font-size:17px!important;font-weight:700!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-top:24px!important;margin-bottom:10px!important;}
+  .lesson-section p{font-size:15px;color:#374151;line-height:1.8;margin-bottom:14px;}
+  .lesson-section ul,.lesson-section ol{padding-left:20px;margin-bottom:14px;}
+  .lesson-section li{font-size:15px;color:#374151;line-height:1.7;margin-bottom:6px;}
+  .lesson-section code{background:#eef2ff;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+
+  /* DUAL CODE PANEL */
+  .code-panel-wrap{margin:20px 0;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;}
+  .code-panel-tabs{display:flex;background:#1e293b;}
+  .code-tab{padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;border:none;background:transparent;letter-spacing:.04em;transition:background .15s;font-family:inherit;}
+  .code-tab.py{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .code-tab.pseudo{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+  .code-tab.active{background:rgba(255,255,255,.15)!important;}
+  .code-tab-label{font-size:10px;opacity:.6;margin-left:4px;font-weight:400;}
+  .code-pane{background:#0f172a;padding:18px 20px;overflow-x:auto;height:0;overflow:hidden;padding:0;}
+  .code-pane.active{height:auto;overflow-x:auto;padding:18px 20px;}
+  .code-pane pre{font-family:monospace;font-size:13px;line-height:1.8;margin:0;white-space:pre-wrap;word-break:break-word;max-width:100%;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .py-kw{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:700;}
+  .py-fn{color:#6ee7b7!important;-webkit-text-fill-color:#6ee7b7!important;}
+  .py-num{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .py-str{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .py-comment{color:#475569!important;-webkit-text-fill-color:#475569!important;font-style:italic;}
+  .py-var{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .py-op{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;}
+  .ps-kw{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700;}
+  .ps-op{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .ps-num{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .ps-str{color:#86efac!important;-webkit-text-fill-color:#86efac!important;}
+  .ps-comment{color:#475569!important;-webkit-text-fill-color:#475569!important;font-style:italic;}
+  .ps-var{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+
+  /* CALLOUTS */
+  .callout-exam{background:#fffbeb;border:1px solid #fcd34d;border-left:4px solid var(--amber);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+  .callout-exam-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--amber)!important;-webkit-text-fill-color:var(--amber)!important;margin-bottom:6px;}
+  .callout-exam p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin-bottom:0!important;line-height:1.6!important;}
+  .callout-trap{background:#fef2f2;border:1px solid #fca5a5;border-left:4px solid var(--red);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+  .callout-trap-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;margin-bottom:6px;}
+  .callout-trap p{font-size:14px!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;margin-bottom:0!important;line-height:1.6!important;}
+
+  /* MINI EXERCISES */
+  .mini-ex{background:#fff;border:1px solid #bfdbfe;border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .mini-ex-label{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;margin-bottom:12px;}
+  .mini-ex-q{font-size:15px;font-weight:600;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px;line-height:1.5;}
+  .mini-ex-code{background:#0f172a;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;line-height:1.8;margin-bottom:14px;overflow-x:auto;white-space:pre;display:block;}
+  .mini-opts{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;}
+  .mini-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border:2px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:14px;font-family:monospace;color:#374151!important;-webkit-text-fill-color:#374151!important;background:#f8fafc;text-align:left;width:100%;transition:border-color .15s;}
+  .mini-opt:hover{border-color:var(--bi3-lt);background:var(--bi3-bg);}
+  .mini-opt.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mini-opt.incorrect{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mini-opt.reveal{border-color:var(--green)!important;background:#f0fdf4!important;}
+  .mini-opt-letter{font-weight:700;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;min-width:18px;font-family:inherit;}
+  .mini-opt.correct .mini-opt-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mini-opt.incorrect .mini-opt-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mini-fib-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;}
+  .mini-fib-input{padding:8px 12px;border:2px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:14px;width:130px;outline:none;color:var(--navy)!important;background:#f8fafc;}
+  .mini-fib-input:focus{border-color:var(--bi3-lt);}
+  .mini-fib-input.correct{border-color:var(--green);background:#f0fdf4;}
+  .mini-fib-input.incorrect{border-color:var(--red);background:#fef2f2;}
+  .mini-fib-btn{padding:8px 18px;background:var(--bi3);border:none;border-radius:8px;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .mini-fb{font-size:13px;font-weight:500;padding:8px 12px;border-radius:7px;margin-top:6px;display:none;line-height:1.5;}
+  .mini-fb.c{background:#f0fdf4;color:var(--green)!important;-webkit-text-fill-color:var(--green)!important;display:block;}
+  .mini-fb.w{background:#fef2f2;color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;display:block;}
+
+  /* VOCAB */
+  .vocab-table{width:100%;border-collapse:collapse;margin-bottom:24px;font-size:14px;}
+  .vocab-table thead tr{background:var(--bi3);}
+  .vocab-table thead th{padding:10px 16px;text-align:left;font-weight:600;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px;}
+  .vocab-table tbody tr:nth-child(even){background:var(--bi3-bg);}
+  .vocab-table tbody tr:nth-child(odd){background:#fff;}
+  .vocab-table tbody td{padding:10px 16px;border-bottom:1px solid #bfdbfe;color:#374151;vertical-align:top;line-height:1.5;}
+  .vocab-table tbody td:first-child{font-weight:700;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;white-space:nowrap;}
+
+  /* CPT CONNECTION */
+  .cpt-connection{background:#fefce8;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:0 10px 10px 0;padding:20px 24px;margin:28px 0;}
+  .cpt-connection-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#92400e!important;-webkit-text-fill-color:#92400e!important;margin-bottom:8px;}
+  .cpt-connection h3{font-size:16px!important;font-weight:700!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin:16px 0 8px!important;}
+  .cpt-connection p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;line-height:1.7!important;margin-bottom:12px!important;}
+  .cpt-connection a{color:#b45309!important;-webkit-text-fill-color:#b45309!important;font-weight:600;text-decoration:underline;}
+  .cpt-connection code{background:#fef3c7;color:#78350f!important;-webkit-text-fill-color:#78350f!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+  .cpt-stems{list-style:none;padding:0;margin:0 0 8px;display:flex;flex-direction:column;gap:8px;}
+  .cpt-stems li{background:#fffef5;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:13px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;line-height:1.6;}
+  .cpt-code{background:#0f172a;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;line-height:1.8;margin:6px 0 12px;overflow-x:auto;white-space:pre;display:block;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+
+  /* EMAIL */
+  .email-capture{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px 28px;margin-bottom:36px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
+  .email-capture-text{flex:1;min-width:200px;}
+  .email-capture-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:4px;}
+  .email-capture h3{font-size:16px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .email-capture p{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:0!important;line-height:1.5!important;}
+  .email-capture-form{display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0;}
+  .email-capture-input{padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff!important;font-size:14px;font-family:inherit;min-width:180px;outline:none;}
+  .email-capture-btn{padding:10px 20px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:8px!important;font-size:14px!important;font-weight:600!important;cursor:pointer!important;font-family:inherit!important;}
+  .email-capture-success{display:none;font-size:14px;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:600;padding:10px 0;}
+
+  /* MCQ */
+  .mcq-section{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:28px;margin-bottom:40px;}
+  .mcq-section-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--bi3-bg);}
+  .mcq-section-icon{width:40px;height:40px;border-radius:10px;background:var(--bi3-bg);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .mcq-section-title{font-family:"DM Serif Display",serif;font-size:20px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+  .mcq-section-sub{font-size:13px;color:var(--slate);}
+  .mcq-item{margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid #f1f5f9;}
+  .mcq-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .mcq-q-num{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:8px;}
+  .diff-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:100px;margin-left:8px;background:#fef2f2;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;border:1px solid #fca5a5;}
+  .mcq-q-text{font-size:15px!important;font-weight:600!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;margin-bottom:12px!important;}
+  .predict-note{font-size:12px;font-style:italic;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:12px;}
+  .mcq-code{background:#0f172a;border-radius:8px;padding:12px 14px;margin:10px 0 14px;font-family:monospace;font-size:13px;line-height:1.75;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;white-space:pre;overflow-x:auto;display:block;}
+  .mcq-code .k{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .mcq-code .s{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .mcq-code .n{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .mcq-code .c{color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-style:italic;}
+  .mcq-roman{list-style:none;padding:0;margin:10px 0 14px;display:flex;flex-direction:column;gap:6px;}
+  .mcq-roman li{font-family:monospace;font-size:13px;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;background:#f1f5f9;border-radius:6px;padding:8px 12px;}
+  .mcq-roman li strong{color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;font-family:"DM Sans",sans-serif;margin-right:8px;}
+  .mcq-options{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+  .mcq-option{display:flex!important;align-items:flex-start!important;gap:12px!important;padding:11px 14px!important;border:2px solid #e2e8f0!important;border-radius:8px!important;cursor:pointer!important;background:#f8fafc!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.5!important;text-align:left!important;width:100%!important;font-family:inherit!important;}
+  .mcq-option:hover{border-color:var(--bi3-lt)!important;background:var(--bi3-bg)!important;}
+  .mcq-option.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mcq-option.incorrect{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mcq-option.revealed-correct{border-color:var(--green)!important;background:#f0fdf4!important;}
+  .mcq-option-letter{font-weight:700!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;flex-shrink:0!important;min-width:18px!important;}
+  .mcq-option.correct .mcq-option-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mcq-option.incorrect .mcq-option-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mcq-feedback{display:none!important;padding:12px 16px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;margin-top:8px!important;}
+  .mcq-feedback.show{display:block!important;}
+  .mcq-feedback.correct-fb{background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #bbf7d0!important;}
+  .mcq-feedback.incorrect-fb{background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;border:1px solid #fecaca!important;}
+
+  /* GAME */
+  .game-section{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:14px;padding:28px;margin-bottom:40px;}
+  .game-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:10px;}
+  .game-title{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .game-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:20px!important;}
+  .vt-score-bar{display:flex;justify-content:space-between;background:rgba(255,255,255,.06);border-radius:10px;padding:12px 20px;margin-bottom:20px;flex-wrap:wrap;gap:8px;}
+  .vt-stat{text-align:center;}
+  .vt-stat-val{font-size:20px;font-weight:800;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1;}
+  .vt-stat-lbl{font-size:10px;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:2px;}
+  .vt-code-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  .vt-code-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:10px;}
+  .vt-code-lines{font-family:monospace;font-size:14px;line-height:2;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .vt-line{display:block;padding:2px 8px;border-radius:4px;white-space:pre;}
+  .vt-line.hl{background:rgba(147,197,253,.2);color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .vt-question{font-size:15px;font-weight:600;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;margin-bottom:14px;}
+  .vt-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+  .vt-btn{padding:12px;border-radius:9px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);cursor:pointer;font-size:15px;font-weight:700;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;font-family:monospace;transition:all .15s;}
+  .vt-btn:hover{border-color:var(--bi3-lt);background:rgba(26,86,219,.2);}
+  .vt-btn.c{border-color:#4ade80;background:rgba(74,222,128,.15);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+  .vt-btn.w{border-color:#f87171;background:rgba(248,113,113,.15);color:#f87171!important;-webkit-text-fill-color:#f87171!important;}
+  .vt-btn.rv{border-color:#4ade80;background:rgba(74,222,128,.08);}
+  .vt-fb{padding:10px 14px;border-radius:8px;font-size:13px;font-weight:500;margin-bottom:12px;display:none;line-height:1.5;}
+  .vt-fb.c{background:rgba(74,222,128,.1);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;display:block;}
+  .vt-fb.w{background:rgba(248,113,113,.1);color:#f87171!important;-webkit-text-fill-color:#f87171!important;display:block;}
+  .vt-next{display:none;width:100%;padding:12px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);border-radius:8px;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .vt-next.show{display:block;}
+  .vt-results{display:none;text-align:center;padding:20px;}
+  .vt-results.show{display:block;}
+  .vt-res-score{font-family:"DM Serif Display",serif;font-size:52px;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1;}
+  .vt-res-lbl{font-size:14px;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:12px;}
+  .vt-res-msg{font-size:14px;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;margin-bottom:20px;line-height:1.6;}
+  .vt-restart{background:rgba(255,255,255,.1);color:#fff!important;-webkit-text-fill-color:#fff!important;border:2px solid rgba(255,255,255,.2);border-radius:8px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+
+  /* CODE EDITOR (Pyodide live) */
+  .code-editor-section{background:#0f172a;border-radius:14px;padding:28px;margin-bottom:40px;}
+  .code-editor-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:10px;}
+  .code-editor-title{font-family:"DM Serif Display",serif!important;font-size:22px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .code-editor-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:20px!important;line-height:1.6;}
+  .code-problem{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+  .scaffold-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:rgba(147,197,253,.15);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;border:1px solid rgba(147,197,253,.35);margin-bottom:8px;}
+  .code-problem-num{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:8px;}
+  .code-problem-prompt{font-size:14px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.6!important;margin-bottom:12px!important;}
+  .code-problem-prompt code{background:rgba(147,197,253,.12);color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;padding:1px 6px;border-radius:5px;font-size:12px;}
+  .code-textarea{width:100%;min-height:120px;background:#020617;border:2px solid rgba(255,255,255,.1);border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;color:#e2e8f0!important;resize:vertical;outline:none;line-height:1.8;}
+  .code-textarea:focus{border-color:var(--bi3-lt);}
+  .code-btn-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center;}
+  .code-run-btn{padding:9px 20px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:7px!important;font-size:13px!important;font-weight:700!important;cursor:pointer!important;font-family:inherit!important;}
+  .code-run-btn:disabled{opacity:.6;cursor:wait;}
+  .code-hint-btn,.code-sol-btn{padding:9px 16px!important;background:rgba(255,255,255,.06)!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:7px!important;font-size:13px!important;cursor:pointer!important;font-family:inherit!important;}
+  .code-output{margin-top:10px;background:#020617;border-radius:8px;padding:12px 16px;font-family:monospace;font-size:13px;min-height:44px;display:none;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .code-output.show{display:block;}
+  .code-output.ok{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+  .code-output.err{color:#f87171!important;-webkit-text-fill-color:#f87171!important;}
+  .code-hint{margin-top:8px;background:rgba(147,197,253,.06);border:1px solid rgba(147,197,253,.2);border-radius:8px;padding:10px 14px;font-size:13px;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;display:none;line-height:1.6;}
+  .code-hint.show{display:block;}
+  .code-solution{margin-top:8px;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:8px;padding:12px 14px;font-family:monospace;font-size:13px;color:#bbf7d0!important;-webkit-text-fill-color:#bbf7d0!important;display:none;white-space:pre;line-height:1.8;overflow-x:auto;}
+  .code-solution.show{display:block;}
+
+  /* FAQ */
+  .faq-section{margin-bottom:40px;}
+  .faq-section h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;padding-bottom:10px!important;border-bottom:2px solid var(--bi3-bg)!important;}
+  .faq-item{background:#fff;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:10px;overflow:hidden;}
+  .faq-q{width:100%;text-align:left;padding:16px 20px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:15px!important;font-weight:600!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-family:inherit!important;line-height:1.4!important;}
+  .faq-q:hover{background:#f8fafc;}
+  .faq-icon{font-size:18px;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;flex-shrink:0;transition:transform .2s;font-style:normal;}
+  .faq-item.open .faq-icon{transform:rotate(45deg);}
+  .faq-a{display:none;padding:0 20px 16px;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.7!important;border-top:1px solid #f1f5f9;}
+  .faq-item.open .faq-a{display:block;}
+  .faq-a code{background:#eef2ff;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+
+  /* RELATED + SUPERPACK + TEACHER + NAV */
+  .related-links{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:24px;margin-bottom:40px;}
+  .related-links h3{font-size:15px!important;font-weight:700!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;}
+  .related-links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
+  .related-link{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;background:#f8fafc;text-decoration:none;font-size:13px!important;font-weight:500!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border:1px solid #bfdbfe;transition:background .15s;line-height:1.3;}
+  .related-link:link,.related-link:visited{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;}
+  .related-link:hover{background:var(--bi3-bg);}
+  .related-ext{color:var(--slate)!important;-webkit-text-fill-color:var(--slate)!important;border-color:#e2e8f0;}
+  .superpack-slim{background:#fff;border:1px solid #bfdbfe;border-radius:10px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:36px;}
+  .superpack-slim-icon{width:36px;height:36px;border-radius:8px;background:var(--bi3-bg);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .superpack-slim-text{font-size:14px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-weight:600;line-height:1.3;}
+  .superpack-slim-sub{font-size:12px;color:var(--slate);font-weight:400;display:block;margin-top:2px;}
+  .superpack-slim-btn{display:inline-flex!important;align-items:center!important;gap:6px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:9px 18px!important;border-radius:7px!important;font-size:13px!important;font-weight:600!important;text-decoration:none!important;white-space:nowrap!important;}
+  .superpack-slim-btn:link,.superpack-slim-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .teacher-callout{background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:18px 22px;margin-bottom:28px;display:flex;align-items:flex-start;gap:14px;}
+  .teacher-callout-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+  .teacher-callout-body{flex:1;}
+  .teacher-callout-label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#0369a1!important;-webkit-text-fill-color:#0369a1!important;margin-bottom:4px;}
+  .teacher-callout-body p{font-size:14px!important;color:#0c4a6e!important;-webkit-text-fill-color:#0c4a6e!important;margin-bottom:0!important;line-height:1.6!important;}
+  .teacher-callout-body a{color:#0369a1!important;-webkit-text-fill-color:#0369a1!important;font-weight:600;text-decoration:underline;}
+  .lesson-nav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:40px;}
+  .nav-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 20px;text-decoration:none;color:inherit;transition:box-shadow .15s;display:block;}
+  .nav-card:hover{box-shadow:0 4px 16px rgba(26,86,219,.1);border-color:#bfdbfe;}
+  .nav-card-dir{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:4px;}
+  .nav-card-title{font-size:14px;font-weight:700;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;line-height:1.3;}
+  .nav-card.next{border-left:3px solid var(--bi3);}
+
+  @media(max-width:600px){
+    .lesson-hero{padding:36px 20px 32px;}
+    .lesson-main{padding:32px 20px 60px;}
+    .vt-options{grid-template-columns:1fr 1fr;}
+    .lesson-nav{grid-template-columns:1fr;}
+    .mini-opts{gap:6px;}
+  }
+</style>
+<style>
+.code-usage{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin:-6px 0 18px!important;padding:8px 12px!important;background:rgba(255,255,255,.04)!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:8px!important;display:block!important;}
+.code-usage strong{color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;}
+.code-problem-prompt ul.rules{margin:10px 0 4px!important;padding-left:0!important;list-style:none!important;}
+.code-problem-prompt ul.rules li{position:relative;padding:3px 0 3px 20px!important;font-size:14px;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.55;}
+.code-problem-prompt ul.rules li::before{content:"\25B8";position:absolute;left:2px;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+.mcq-q-text ul.rules,.mini-ex-q ul.rules{margin:10px 0 4px!important;padding-left:0!important;list-style:none!important;}
+.mcq-q-text ul.rules li,.mini-ex-q ul.rules li{position:relative;padding:3px 0 3px 20px!important;font-size:15px;font-weight:400;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;line-height:1.5;}
+.mcq-q-text ul.rules li::before,.mini-ex-q ul.rules li::before{content:"\25B8";position:absolute;left:2px;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;}
+</style>
+<style>
+
+.lesson-visual{margin:0 0 40px!important;}
+.lv-kicker{font-size:11px!important;font-weight:700!important;letter-spacing:.1em!important;text-transform:uppercase!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;margin:0 0 10px!important;}
+/* before/after panel */
+.ba{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:14px!important;padding:20px!important;margin:0 0 14px!important;}
+.ba-cap-top{font-size:12px!important;font-weight:700!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;margin:0 0 14px!important;}
+.ba-grid{display:grid!important;grid-template-columns:1fr auto 1fr!important;align-items:center!important;gap:14px!important;}
+.ba-panel{border-radius:12px!important;padding:16px 14px!important;text-align:center!important;}
+.ba-panel.before{background:#f8fafc!important;border:1px solid #e2e8f0!important;}
+.ba-panel.after{background:#f0fdf4!important;border:1px solid #bbf7d0!important;}
+.ba-label{font-size:11px!important;font-weight:700!important;letter-spacing:.05em!important;text-transform:uppercase!important;margin:0 0 8px!important;}
+.ba-panel.before .ba-label{color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+.ba-panel.after .ba-label{color:#166534!important;-webkit-text-fill-color:#166534!important;}
+.ba-data{font-family:monospace!important;font-size:15px!important;letter-spacing:1px!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;word-break:break-all!important;}
+.ba-meta{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:6px!important;}
+.ba-arrow{font-size:26px!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;font-weight:700!important;}
+.ba-caption{font-size:13px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;line-height:1.55!important;margin:14px 0 0!important;padding-top:12px!important;border-top:1px solid #f1f5f9!important;}
+.ba-caption strong{color:#166534!important;-webkit-text-fill-color:#166534!important;}
+/* dark interactive card shell (shared by binary/rle/parallel/packet/io) */
+.wgt{background:#0f172a!important;border-radius:16px!important;padding:22px!important;border:1px solid #1e293b!important;margin:0 0 14px!important;}
+.wgt-h{font-family:"DM Serif Display",serif!important;font-size:18px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 3px!important;}
+.wgt-sub{font-size:13px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0 0 18px!important;}
+.wgt-btns{display:flex!important;gap:8px!important;justify-content:center!important;flex-wrap:wrap!important;margin-top:14px!important;}
+.wgt-btn{font-family:"DM Sans",sans-serif!important;font-size:13px!important;font-weight:700!important;padding:8px 14px!important;border-radius:9px!important;border:1px solid #334155!important;background:#1e293b!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;cursor:pointer!important;}
+.wgt-btn:hover{background:#334155!important;}
+.wgt-note{font-size:12.5px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;text-align:center!important;margin:12px 0 0!important;line-height:1.5!important;}
+.wgt-note.warn{color:#fca5a5!important;-webkit-text-fill-color:#fca5a5!important;}
+.wgt-note.good{color:#86efac!important;-webkit-text-fill-color:#86efac!important;}
+/* binary */
+.bpv-strip{display:flex!important;gap:6px!important;justify-content:center!important;flex-wrap:wrap!important;}
+.bpv-col{display:flex!important;flex-direction:column!important;align-items:center!important;gap:6px!important;}
+.bpv-pv{font-size:12px!important;font-weight:700!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-variant-numeric:tabular-nums!important;}
+.bpv-bit{width:44px!important;height:54px!important;border-radius:10px!important;border:2px solid #334155!important;background:#1e293b!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-family:monospace!important;font-size:23px!important;font-weight:700!important;cursor:pointer!important;}
+.bpv-bit.on{background:#1a56db!important;border-color:#60a5fa!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+.bpv-read{display:flex!important;align-items:baseline!important;justify-content:center!important;gap:14px!important;margin:20px 0 0!important;flex-wrap:wrap!important;}
+.bpv-binary{font-family:monospace!important;font-size:22px!important;letter-spacing:2px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+.bpv-eq{font-size:22px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+.bpv-dec{font-family:"DM Serif Display",serif!important;font-size:34px!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;line-height:1!important;}
+/* rle */
+.rle-in{width:100%!important;box-sizing:border-box!important;font-family:monospace!important;font-size:15px!important;padding:10px 12px!important;border-radius:9px!important;border:1px solid #334155!important;background:#1e293b!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;letter-spacing:1px!important;}
+.rle-row{display:flex!important;gap:12px!important;flex-wrap:wrap!important;margin-top:14px!important;}
+.rle-cell{flex:1!important;min-width:130px!important;background:#1e293b!important;border-radius:10px!important;padding:12px!important;text-align:center!important;}
+.rle-cell .l{font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:6px!important;}
+.rle-cell .v{font-family:monospace!important;font-size:16px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;word-break:break-all!important;}
+.rle-cell.out .v{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+.rle-cell .m{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:4px!important;}
+/* parallel timeline */
+.ptl-ctl{display:flex!important;align-items:center!important;gap:12px!important;justify-content:center!important;flex-wrap:wrap!important;margin-bottom:16px!important;}
+.ptl-ctl label{font-size:13px!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;font-weight:700!important;}
+.ptl-ctl input[type=range]{width:180px!important;}
+.ptl-ctl .n{font-family:"DM Serif Display",serif!important;font-size:22px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;min-width:28px!important;text-align:center!important;}
+.ptl-bar{height:26px!important;border-radius:6px!important;margin:8px 0!important;display:flex!important;overflow:hidden!important;}
+.ptl-seg{height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:11px!important;font-weight:700!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a!important;white-space:nowrap!important;}
+.ptl-seg.seq{background:#fca5a5!important;}
+.ptl-seg.par{background:#6ee7b7!important;}
+.ptl-lbl{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:2px!important;}
+.ptl-stat{display:flex!important;gap:18px!important;justify-content:center!important;margin-top:14px!important;flex-wrap:wrap!important;}
+.ptl-stat div{text-align:center!important;}
+.ptl-stat .k{font-size:11px!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+.ptl-stat .v{font-family:"DM Serif Display",serif!important;font-size:26px!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+/* packet */
+.pkt-track{display:flex!important;gap:8px!important;justify-content:center!important;flex-wrap:wrap!important;min-height:64px!important;}
+.pkt{width:58px!important;border-radius:9px!important;background:#1e293b!important;border:1px solid #334155!important;padding:8px 4px!important;text-align:center!important;}
+.pkt .seq{font-size:10px!important;font-weight:700!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+.pkt .ch{font-family:monospace!important;font-size:20px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;margin-top:2px!important;}
+.pkt.lost{opacity:.35!important;border-style:dashed!important;}
+.pkt-msg{font-family:monospace!important;font-size:20px!important;letter-spacing:3px!important;text-align:center!important;margin-top:16px!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;min-height:24px!important;}
+/* io mapper */
+.iom-flow{display:grid!important;grid-template-columns:1fr auto 1fr auto 1fr!important;align-items:center!important;gap:10px!important;}
+.iom-box{background:#1e293b!important;border-radius:12px!important;padding:14px!important;text-align:center!important;}
+.iom-box .l{font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:6px!important;}
+.iom-box .v{font-size:15px!important;font-weight:700!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+.iom-box.prog{background:#1a3a6b!important;}
+.iom-box.out .v{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+.iom-ar{font-size:20px!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;font-weight:700!important;}
+.iom-temp{font-family:"DM Serif Display",serif!important;font-size:26px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+@media(max-width:520px){.ba-grid{grid-template-columns:1fr!important;}.ba-arrow{transform:rotate(90deg)!important;}.iom-flow{grid-template-columns:1fr!important;}.iom-ar{transform:rotate(90deg)!important;}}
+
+</style>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "AP CSP Course", "item": "https://apcsexamprep.com/pages/ap-csp-course"}, {"@type": "ListItem", "position": 2, "name": "Big Idea 4", "item": "https://apcsexamprep.com/pages/ap-csp-course-big-idea-4-computer-systems"}, {"@type": "ListItem", "position": 3, "name": "Topic 4.2: Fault Tolerance", "item": "https://apcsexamprep.com/pages/ap-csp-course-bi4-fault-tolerance"}]}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "LearningResource", "name": "AP CSP Topic 4.2: Fault Tolerance", "description": "AP CSP Topic 4.2: fault tolerance, redundancy, and why a distributed network keeps working when parts fail. 6 exam MCQs plus the Redundant Routing game.", "url": "https://apcsexamprep.com/pages/ap-csp-course-bi4-fault-tolerance", "educationalLevel": "High School", "learningResourceType": "Lesson", "author": {"@type": "Person", "name": "Tanner Crow"}, "isPartOf": {"@type": "Course", "name": "AP Computer Science Principles Complete Course", "url": "https://apcsexamprep.com/pages/ap-csp-course"}, "datePublished": "2026-03-01"}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is the difference between redundancy and fault tolerance?", "acceptedAnswer": {"@type": "Answer", "text": "Redundancy is the design feature: having multiple paths or copies of a component. Fault tolerance is the result: because of that redundancy, the system keeps working when a component fails. You build in redundancy so that you get fault tolerance when a failure happens."}}, {"@type": "Question", "name": "Why is the Internet considered fault tolerant?", "acceptedAnswer": {"@type": "Answer", "text": "Because it uses redundant routing. Devices are connected by many paths, and data is sent as packets that are routed hop by hop. If a router or connection fails, the surrounding routers can send packets along a different available path, so the data still gets through."}}, {"@type": "Question", "name": "How do I find a single point of failure in a network diagram?", "acceptedAnswer": {"@type": "Answer", "text": "Look for a component that every path has to pass through. If removing one node or one link disconnects part of the network from the rest, that component is a single point of failure. If any single component can be removed and traffic still has another route, there is no single point of failure there."}}, {"@type": "Question", "name": "Does adding more bandwidth or a faster router make a network more fault tolerant?", "acceptedAnswer": {"@type": "Answer", "text": "No. Making a single path faster improves performance but adds no fault tolerance, because that path is still a single point of failure. Fault tolerance comes from adding another independent path or a redundant component, not from upgrading one path."}}, {"@type": "Question", "name": "If redundancy is so useful, why not add as much as possible?", "acceptedAnswer": {"@type": "Answer", "text": "Because redundancy costs money and resources. Every extra path or backup means more cables, routers, servers, power, and maintenance. Designers weigh how much reliability they need against the added cost, which is the tradeoff the exam expects you to recognize."}}]}</script>
+
+<div class="lesson-page" data-course="ap-csp" data-unit="bi-4" data-lesson="fault-tolerance">
+
+  <div class="lesson-breadcrumb">
+    <div class="lesson-breadcrumb-inner">
+      <a href="/pages/ap-csp-course">AP CSP Course</a><span class="bc-sep">›</span>
+      <a href="/pages/ap-csp-course-big-idea-4-computer-systems">Big Idea 4</a><span class="bc-sep">›</span>
+      <span>4.2 Fault Tolerance</span>
+    </div>
+  </div>
+  <div class="social-proof-bar">
+    <div class="social-proof-inner">
+      <span class="social-proof-item">⭐ <strong>5.0</strong> Wyzant rating</span>
+      <span class="social-proof-item">📚 <strong>1,845+</strong> tutoring hours</span>
+      <span class="social-proof-item">🏫 Built by an <strong>AP CS teacher</strong> with 11+ years experience</span>
+      <span class="social-proof-item">🎯 <strong>70%</strong> of classroom students score 4 or 5 on AP CSP</span>
+    </div>
+  </div>
+  <div class="lesson-hero">
+    <div class="lesson-hero-inner">
+      <div class="lesson-hero-meta">
+        <div class="lesson-num-badge">4.2</div>
+        <div><div class="lesson-eyebrow">Big Idea 4 • Computing Systems &amp; Networks</div></div>
+      </div>
+      <h1>Fault Tolerance</h1>
+      <div class="lesson-hero-pills">
+        <span class="lesson-pill">🕐 ~30 min</span>
+        <span class="lesson-pill" style="background:rgba(74,222,128,0.15);border-color:rgba(74,222,128,0.3);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;">FREE</span>
+        <span class="lesson-pill">📖 6 MCQ questions</span>
+        <span class="lesson-pill">🎮 Redundant Routing game</span>
+        <span class="ced-tag">CSN-1.E</span>
+      </div>
+    </div>
+  </div>
+  <div class="bi3-progress"><div class="bi3-progress-inner">
+<a href="/pages/ap-csp-course-bi4-the-internet" class="prog-step-link"><div class="prog-dot done">4.1</div>
+<div class="prog-label">Internet</div></a>
+<div class="prog-arrow"></div>
+<div class="prog-step">
+<div class="prog-dot active">4.2</div>
+<div class="prog-label active-label">Fault Tol</div>
+</div>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi4-parallel-distributed-computing" class="prog-step-link"><div class="prog-dot upcoming">4.3</div>
+<div class="prog-label">Parallel</div></a>
+</div></div>
+
+  <div class="lesson-main">
+
+    <div class="lesson-objectives">
+      <h2>After this lesson, you will be able to:</h2>
+      <ul>
+        <li><span>Define fault tolerance as a system's ability to keep working when one or more components fail</span></li>
+        <li><span>Explain redundancy as having multiple paths or copies so a failure does not stop the system</span></li>
+        <li><span>Identify a single point of failure in a described network and explain why it is dangerous</span></li>
+        <li><span>Explain why the Internet is fault tolerant because of redundant routing</span></li>
+        <li><span>Describe the tradeoff between more redundancy and higher cost and resource use</span></li>
+      </ul>
+    </div>
+    <div class="score-impact">📈 <span>Big Idea 4 (Computing Systems and Networks) is 11 to 15 percent of the AP CSP exam, and fault tolerance is one of its most reliably tested ideas. Questions about redundancy, single points of failure, and rerouting are quick points once you can read a network diagram, so this lesson is high value for the effort.</span>
+</div>
+    <div class="hook-box">
+      <div class="hook-label">💡 Think about this first</div>
+      <p>A small company runs its entire website through a single router in the closet. It is fast and cheap and works fine, until the day that one router dies and the whole site goes dark for everyone at once. A rival company spends a little more and wires every server to two separate routers. When one of theirs fails, customers never even notice. Both networks had a failure. Why did only one of them go down, and what did the second company buy with that extra wiring?</p>
+    </div>
+    <div class="lesson-section">
+      <h2>What Fault Tolerance Actually Means</h2>
+      <p><strong>Fault tolerance</strong> is the ability of a system to keep working, possibly at reduced performance, even when one or more of its components fail. A fault-tolerant system does not promise that nothing ever breaks. It promises that when something breaks, the whole system does not stop. The web page still loads, the packet still arrives, the service stays up, just maybe a little slower while the broken part is worked around.</p>
+      <p>The mechanism that makes this possible is <strong>redundancy</strong>: having more than one path or more than one copy of a component, so that if one fails, another can take over. A network with only one cable between two points has no redundancy. A network with two independent cables between those same points is redundant, because losing one cable still leaves a working path. Redundancy is what you build in ahead of time so that fault tolerance is what you get when a failure actually happens.</p>
+      <table class="vocab-table">
+        <tr>
+<th>Term</th>
+<th>What it means</th>
+</tr>
+        <tr>
+<td><strong>Redundancy</strong></td>
+<td>Having multiple paths or copies of a component so the system can still function if one part fails.</td>
+</tr>
+        <tr>
+<td><strong>Fault tolerance</strong></td>
+<td>The ability of a system to keep working, possibly at reduced performance, when one or more components fail.</td>
+</tr>
+        <tr>
+<td><strong>Single point of failure</strong></td>
+<td>A component whose failure alone stops the entire system, because there is no backup path or copy for it.</td>
+</tr>
+      </table>
+      <div class="callout-exam">
+        <div class="callout-exam-label">🎯 What the exam rewards</div>
+        <p>When a question asks why a system is fault tolerant, the credited answer is almost always <strong>redundancy: there is more than one path or copy, so a failure can be worked around</strong>. Fault tolerance is the outcome; redundancy is the reason.</p>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Single Points of Failure</h2>
+      <p>A <strong>single point of failure</strong> is a component whose failure, all by itself, brings down the whole system. If every request in a network has to pass through one router, one cable, or one server, then that one thing is a single point of failure: the moment it dies, everything that depends on it stops. Redundancy is precisely the tool for removing single points of failure. When you add a second path around a component, that component is no longer the only way through, so its failure no longer takes down the system.</p>
+      <p>To spot a single point of failure in a described network, look for a component that <strong>every path must go through</strong>. If cutting one node or one link disconnects part of the network from the rest, that node or link is a single point of failure. If you can cut any one component and traffic still has another route, then there is no single point of failure at that spot.</p>
+      <div class="callout-trap">
+        <div class="callout-trap-label">⚠ Common trap</div>
+        <p>Redundancy is <strong>not</strong> the same as making one path faster. Upgrading your single router to a faster model, or buying more bandwidth on your one cable, improves performance but adds zero fault tolerance: that faster router is still a single point of failure, and when it dies the system still goes fully down. Fault tolerance comes from having <strong>another</strong> path, not a better single path.</p>
+      </div>
+      <div class="mini-ex">
+        <div class="mini-ex-label">Quick check</div>
+        <div class="mini-ex-q">In a network, computers A and B both connect only to router R, and R is the only device connected to the Internet. Which component is a single point of failure?</div>
+        <div class="mini-opts" id="mc-fault-1-opts">
+          <button class="mini-opt" onclick="miniMCQ('mc-fault-1','A','C','mc-fault-1-fb')"><span class="mini-opt-letter">A</span> Computer A only</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-fault-1','B','C','mc-fault-1-fb')"><span class="mini-opt-letter">B</span> Computer B only</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-fault-1','C','C','mc-fault-1-fb')"><span class="mini-opt-letter">C</span> Router R, since all Internet traffic must pass through it</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-fault-1','D','C','mc-fault-1-fb')"><span class="mini-opt-letter">D</span> There is no single point of failure in this network</button>
+        </div>
+        <div class="mini-fb" id="mc-fault-1-fb"></div>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Why the Internet Keeps Working: Redundant Routing</h2>
+      <p>The Internet is a huge, fault-tolerant network, and the reason is <strong>redundant routing</strong>. Devices on the Internet are connected by many paths, not one. When you send data, it is broken into packets, and each packet is routed hop by hop from one router to the next toward its destination. If a router or a connection along the way <strong>fails</strong>, the routers around it can send packets along a <strong>different available path</strong>. The data still gets through; it just takes another route.</p>
+      <p>This is why no single broken cable or dead router takes down the whole Internet. Because there are multiple paths between most points, the failure of any one path can be worked around. In general, <strong>connecting nodes with more than one path increases fault tolerance</strong>, and a network where every pair of important nodes has at least two independent paths has no single point of failure between them.</p>
+      <ul>
+        <li>
+<strong>One path</strong> between two nodes: if that path fails, they are cut off. Not fault tolerant.</li>
+        <li>
+<strong>Two or more independent paths</strong> between two nodes: if one fails, traffic reroutes over another. Fault tolerant.</li>
+      </ul>
+      <div class="mini-ex">
+        <div class="mini-ex-label">Quick check</div>
+        <div class="mini-ex-q">A router on the Internet suddenly stops working. Users on both sides of it still reach each other, just over a slightly longer route. Which idea best explains why the network kept working?</div>
+        <div class="mini-opts" id="mc-fault-2-opts">
+          <button class="mini-opt" onclick="miniMCQ('mc-fault-2','A','B','mc-fault-2-fb')"><span class="mini-opt-letter">A</span> The failed router repaired itself instantly</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-fault-2','B','B','mc-fault-2-fb')"><span class="mini-opt-letter">B</span> Redundant routing let packets travel along another available path</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-fault-2','C','B','mc-fault-2-fb')"><span class="mini-opt-letter">C</span> The remaining routers ran at a faster clock speed to compensate</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-fault-2','D','B','mc-fault-2-fb')"><span class="mini-opt-letter">D</span> The packets were deleted and the users resent them by hand</button>
+        </div>
+        <div class="mini-fb" id="mc-fault-2-fb"></div>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>The Tradeoff: Redundancy Is Not Free</h2>
+      <p>If redundancy is so good, why not build infinite backups everywhere? Because <strong>redundancy costs money and resources</strong>. Every extra path means extra cables, extra routers, extra servers, extra electricity, and extra maintenance. A second data center that mostly sits idle waiting for the first one to fail is expensive to run. So designers face a <strong>tradeoff</strong>: more redundancy generally means more fault tolerance, but also higher cost and more resources used.</p>
+      <p>The right amount of redundancy depends on how important reliability is. A hospital network or a bank cannot tolerate downtime, so they pay for heavy redundancy. A hobby blog might accept the risk of a single server to save money. The exam wants you to recognize both directions of this relationship: adding redundant components increases fault tolerance, and it also increases cost.</p>
+    </div>
+    <div class="lesson-section">
+      <h2>How Topic 4.2 Shows Up on the MCQ Exam</h2>
+      <p>Fault tolerance questions on the multiple-choice section usually come in a few predictable shapes, and knowing them turns these into fast points. The most common is the <strong>network diagram or description</strong> where you must identify a <strong>single point of failure</strong>: look for the one component that every path passes through, the one whose removal disconnects part of the network. A close cousin asks <strong>which change would make a network more fault tolerant</strong>, and the answer is almost always the one that <strong>adds an additional path or a redundant component</strong> between nodes, not the one that upgrades a single link.</p>
+      <p>The trap the exam loves is confusing <strong>redundancy with speed</strong>. Answers that make one path faster, add more bandwidth to a single cable, or use a more powerful single server improve performance but do <strong>not</strong> add fault tolerance, because a single point of failure remains. Remember the exact framework claim: the Internet is fault tolerant <strong>because of redundant routing</strong>, and connecting nodes with more than one path increases fault tolerance. Watch for stem words like <strong>MOST</strong>, <strong>LEAST</strong>, and <strong>EXCEPT</strong> that flip which option you should pick.</p>
+    </div>
+    <div class="email-capture">
+      <div class="email-capture-text">
+        <div class="email-capture-eyebrow">FREE for students</div>
+        <h3>Get a free AP CSP question every day</h3>
+        <p>Join 3,000+ students. Daily practice, study tips, and exam strategies.</p>
+      </div>
+      <div>
+        <div class="email-capture-form" id="capture-form">
+          <input type="email" class="email-capture-input" id="capture-email" placeholder="your@email.com">
+          <button class="email-capture-btn" onclick="handleCapture()">Subscribe →</button>
+        </div>
+        <div class="email-capture-success" id="capture-success">✓ You're in!</div>
+      </div>
+    </div>
+    <div class="mcq-section">
+      <div class="mcq-section-header">
+        <div class="mcq-section-icon">📈</div>
+        <div>
+          <div class="mcq-section-title">MCQ Practice</div>
+          <div class="mcq-section-sub">6 questions • Exam difficulty and above • Predict before you peek</div>
+        </div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q1">
+        <div class="mcq-q-num">Question 1 of 6<span class="diff-tag">Definition</span>
+</div>
+        <div class="predict-note">Predict the meaning of fault tolerance before reading the options.</div>
+        <div class="mcq-q-text"><p>Which statement best describes what it means for a network to be <strong>fault tolerant</strong>?</p></div>
+        <div class="mcq-options" id="q1-options">
+<button class="mcq-option" onclick="checkMCQ('q1','A','A','q1-fb-A')"><span class="mcq-option-letter">A</span> It can continue to function, possibly at reduced performance, when one or more components fail</button>
+<button class="mcq-option" onclick="checkMCQ('q1','B','A','q1-fb-B')"><span class="mcq-option-letter">B</span> It transmits data faster than a network without fault tolerance</button>
+<button class="mcq-option" onclick="checkMCQ('q1','C','A','q1-fb-C')"><span class="mcq-option-letter">C</span> It guarantees that none of its components will ever fail</button>
+<button class="mcq-option" onclick="checkMCQ('q1','D','A','q1-fb-D')"><span class="mcq-option-letter">D</span> It uses the smallest possible number of routers and cables to save cost</button>
+</div>
+<div id="q1-fb-A" class="mcq-feedback correct-fb">Correct. A fault-tolerant system keeps working, possibly at reduced performance, even when components fail, because it has redundancy to work around them.</div>
+<div id="q1-fb-B" class="mcq-feedback incorrect-fb">Incorrect. Fault tolerance is about surviving failures, not about raw speed. A fault-tolerant network may even run slower after a failure.</div>
+<div id="q1-fb-C" class="mcq-feedback incorrect-fb">Incorrect. Fault tolerance does not prevent failures. It lets the system keep working when failures do happen.</div>
+<div id="q1-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Minimizing components usually reduces fault tolerance, because it removes the redundant paths that let the system survive a failure.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q2">
+        <div class="mcq-q-num">Question 2 of 6<span class="diff-tag">More fault tolerant</span>
+</div>
+        <div class="predict-note">Predict which change adds a path, not speed, before you look.</div>
+        <div class="mcq-q-text"><p>A network currently connects a company's main office to its data center over a single leased line. Which change would MOST increase the network's fault tolerance?</p></div>
+        <div class="mcq-options" id="q2-options">
+<button class="mcq-option" onclick="checkMCQ('q2','A','B','q2-fb-A')"><span class="mcq-option-letter">A</span> Replace the leased line with a faster leased line that carries more data per second</button>
+<button class="mcq-option" onclick="checkMCQ('q2','B','B','q2-fb-B')"><span class="mcq-option-letter">B</span> Add a second, independent line to the data center over a different physical route</button>
+<button class="mcq-option" onclick="checkMCQ('q2','C','B','q2-fb-C')"><span class="mcq-option-letter">C</span> Upgrade the office computers to models with faster processors</button>
+<button class="mcq-option" onclick="checkMCQ('q2','D','B','q2-fb-D')"><span class="mcq-option-letter">D</span> Compress the data before sending it so each transmission is smaller</button>
+</div>
+<div id="q2-fb-A" class="mcq-feedback incorrect-fb">Incorrect. A faster single line improves performance but is still one path. If it fails, the connection is lost, so fault tolerance does not increase.</div>
+<div id="q2-fb-B" class="mcq-feedback correct-fb">Correct. A second independent line adds a redundant path, so if one line fails traffic can use the other. Redundancy is what increases fault tolerance.</div>
+<div id="q2-fb-C" class="mcq-feedback incorrect-fb">Incorrect. Faster processors speed up the computers but do nothing about surviving a failure of the single line between the sites.</div>
+<div id="q2-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Compression reduces how much data is sent but still relies on the one line. Losing that line still cuts the connection.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q3">
+        <div class="mcq-q-num">Question 3 of 6<span class="diff-tag">Single point of failure</span>
+</div>
+        <div class="predict-note">Trace which node every path must cross before choosing.</div>
+        <div class="mcq-q-text"><p>In a network, computers X, Y, and Z each connect only to switch S, and switch S is the only device that connects to the rest of the company network. Which statement is correct?</p></div>
+        <div class="mcq-options" id="q3-options">
+<button class="mcq-option" onclick="checkMCQ('q3','A','C','q3-fb-A')"><span class="mcq-option-letter">A</span> Computer X is a single point of failure for the whole network</button>
+<button class="mcq-option" onclick="checkMCQ('q3','B','C','q3-fb-B')"><span class="mcq-option-letter">B</span> The network has no single point of failure, since it has three computers</button>
+<button class="mcq-option" onclick="checkMCQ('q3','C','C','q3-fb-C')"><span class="mcq-option-letter">C</span> Switch S is a single point of failure, because if it fails all three computers are cut off</button>
+<button class="mcq-option" onclick="checkMCQ('q3','D','C','q3-fb-D')"><span class="mcq-option-letter">D</span> Only the company network beyond S is a single point of failure</button>
+</div>
+<div id="q3-fb-A" class="mcq-feedback incorrect-fb">Incorrect. If computer X fails, Y and Z still reach the network through S. One computer is not what all traffic depends on.</div>
+<div id="q3-fb-B" class="mcq-feedback incorrect-fb">Incorrect. Having several computers does not remove a single point of failure. All of them still depend on the one switch S.</div>
+<div id="q3-fb-C" class="mcq-feedback correct-fb">Correct. Every connection from X, Y, and Z to the rest of the network passes through switch S, so S's failure alone disconnects all of them. That is a single point of failure.</div>
+<div id="q3-fb-D" class="mcq-feedback incorrect-fb">Incorrect. The described bottleneck that every computer depends on is switch S, not the network beyond it.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q4">
+        <div class="mcq-q-num">Question 4 of 6<span class="diff-tag">Two true one false</span>
+</div>
+        <div class="predict-note">Decide which statements are true before matching to an option.</div>
+        <div class="mcq-q-text"><p>Consider these claims about redundancy and fault tolerance:</p></div>
+        <ul class="mcq-roman">
+          <li>
+<strong>I.</strong> Adding redundant paths between nodes can increase a network's fault tolerance.</li>
+          <li>
+<strong>II.</strong> The Internet is fault tolerant largely because packets can be rerouted along alternate paths when a router or connection fails.</li>
+          <li>
+<strong>III.</strong> Redundancy is free, so a well-designed network should always add as much of it as possible.</li>
+        </ul>
+        <div class="mcq-options" id="q4-options">
+<button class="mcq-option" onclick="checkMCQ('q4','A','D','q4-fb-A')"><span class="mcq-option-letter">A</span> I only</button>
+<button class="mcq-option" onclick="checkMCQ('q4','B','D','q4-fb-B')"><span class="mcq-option-letter">B</span> II only</button>
+<button class="mcq-option" onclick="checkMCQ('q4','C','D','q4-fb-C')"><span class="mcq-option-letter">C</span> I, II, and III</button>
+<button class="mcq-option" onclick="checkMCQ('q4','D','D','q4-fb-D')"><span class="mcq-option-letter">D</span> I and II only</button>
+</div>
+<div id="q4-fb-A" class="mcq-feedback incorrect-fb">Incorrect. Statement II is also true. Rerouting along alternate paths is exactly why the Internet tolerates failures.</div>
+<div id="q4-fb-B" class="mcq-feedback incorrect-fb">Incorrect. Statement I is also true. Adding redundant paths is a core way to increase fault tolerance.</div>
+<div id="q4-fb-C" class="mcq-feedback incorrect-fb">Incorrect. Statement III is false. Redundancy is not free; it adds cost and resource use, which is the tradeoff the framework describes.</div>
+<div id="q4-fb-D" class="mcq-feedback correct-fb">Correct. I and II are true. III is false because redundancy costs money and resources, so there is a tradeoff rather than unlimited backups.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q5">
+        <div class="mcq-q-num">Question 5 of 6<span class="diff-tag">Tradeoff</span>
+</div>
+        <div class="predict-note">Predict what extra redundancy costs before reading the choices.</div>
+        <div class="mcq-q-text"><p>A streaming company decides to run its service from three geographically separate data centers instead of one, so the service stays up if a whole data center goes offline. Which statement best describes the consequence of this decision?</p></div>
+        <div class="mcq-options" id="q5-options">
+          <button class="mcq-option" onclick="checkMCQ('q5','A','A','q5-fb-A')"><span class="mcq-option-letter">A</span> It increases fault tolerance but also increases the cost and resources required to run the service</button>
+          <button class="mcq-option" onclick="checkMCQ('q5','B','A','q5-fb-B')"><span class="mcq-option-letter">B</span> It decreases fault tolerance because more data centers means more things that can break</button>
+          <button class="mcq-option" onclick="checkMCQ('q5','C','A','q5-fb-C')"><span class="mcq-option-letter">C</span> It has no effect on fault tolerance, since the service already worked with one data center</button>
+          <button class="mcq-option" onclick="checkMCQ('q5','D','A','q5-fb-D')"><span class="mcq-option-letter">D</span> It increases fault tolerance at no additional cost, because the extra centers are free to operate</button>
+        </div>
+        <div id="q5-fb-A" class="mcq-feedback correct-fb">Correct. Multiple independent data centers add redundancy, so the loss of one does not stop the service, but running three centers costs more money and resources. That is the tradeoff.</div>
+        <div id="q5-fb-B" class="mcq-feedback incorrect-fb">Incorrect. More independent copies increase fault tolerance, because the service survives losing one. The relevant downside is cost, not reduced tolerance.</div>
+        <div id="q5-fb-C" class="mcq-feedback incorrect-fb">Incorrect. Redundant data centers do change fault tolerance: the service can now survive a failure that would previously have taken it fully offline.</div>
+        <div id="q5-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Additional data centers are not free. They add hardware, electricity, and maintenance costs, which is the tradeoff for the extra fault tolerance.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q6">
+        <div class="mcq-q-num">Question 6 of 6<span class="diff-tag">Reroute reasoning</span>
+</div>
+        <div class="predict-note">Predict why the message still arrived before you look.</div>
+        <div class="mcq-q-text"><p>A message is sent across the Internet from one city to another. Partway through the transmission, a router on the original route fails, yet the complete message still arrives at its destination. Which of the following best explains this outcome?</p></div>
+        <div class="mcq-options" id="q6-options">
+<button class="mcq-option" onclick="checkMCQ('q6','A','A','q6-fb-A')"><span class="mcq-option-letter">A</span> Because the network has redundant paths, the remaining routers forwarded the packets along a different available route to the destination</button>
+<button class="mcq-option" onclick="checkMCQ('q6','B','A','q6-fb-B')"><span class="mcq-option-letter">B</span> The failed router must not have actually been on the path the message used</button>
+<button class="mcq-option" onclick="checkMCQ('q6','C','A','q6-fb-C')"><span class="mcq-option-letter">C</span> The message arrived only because it happened to be sent before the router failed and none of it needed the router afterward</button>
+<button class="mcq-option" onclick="checkMCQ('q6','D','A','q6-fb-D')"><span class="mcq-option-letter">D</span> The destination computer rebuilt the missing part of the message on its own without receiving it</button>
+</div>
+<div id="q6-fb-A" class="mcq-feedback correct-fb">Correct. Redundant routing means that when a router fails, neighboring routers can forward packets along another available path, so the full message still reaches the destination.</div>
+<div id="q6-fb-B" class="mcq-feedback incorrect-fb">Incorrect. The scenario states the failed router was on the original route. The message still arrived because of rerouting, not because the router was uninvolved.</div>
+<div id="q6-fb-C" class="mcq-feedback incorrect-fb">Incorrect. The failure happened partway through, so later packets did need a route around the dead router. Redundant paths, not timing luck, explain the delivery.</div>
+<div id="q6-fb-D" class="mcq-feedback incorrect-fb">Incorrect. A destination cannot invent data it never received. The missing packets arrived over an alternate path made possible by redundancy.</div>
+      </div>
+    </div>
+    <div class="game-section">
+      <div style="text-align:center;margin-bottom:20px;">
+        <div class="game-badge">🎮 Lesson Game</div>
+        <div class="game-title">Redundant Routing</div>
+        <div class="game-sub">Cut links and watch the network reroute; find the minimum cut that severs the path.</div>
+      </div>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+#rr-game *{box-sizing:border-box;}
+#rr-game{
+  font-family:'DM Sans',system-ui,Arial,sans-serif;
+  max-width:720px;margin:0 auto;padding:14px;
+  color:#0f1f3d !important;-webkit-text-fill-color:#0f1f3d !important;
+}
+#rr-game .rr-card{
+  background:#ffffff !important;
+  border:1px solid #e2e8f0 !important;border-radius:14px;overflow:hidden;
+  box-shadow:0 10px 30px rgba(15,31,61,0.10);
+}
+#rr-game .rr-hero{
+  background:#0f1f3d !important;padding:18px 20px;
+}
+#rr-game .rr-title{
+  font-family:'DM Serif Display',Georgia,serif;
+  font-size:28px;line-height:1.1;margin:0 0 4px;
+  color:#ffffff !important;-webkit-text-fill-color:#ffffff !important;
+}
+#rr-game .rr-sub{
+  margin:0;font-size:13.5px;
+  color:#93c5fd !important;-webkit-text-fill-color:#93c5fd !important;
+}
+#rr-game .rr-bar{
+  display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  padding:12px 16px;background:#eff6ff !important;border-bottom:1px solid #e2e8f0 !important;
+}
+#rr-game .rr-chip{
+  font-size:12.5px;font-weight:600;padding:5px 11px;border-radius:999px;
+  background:#ffffff !important;border:1px solid #dbe4f0 !important;
+  color:#1a56db !important;-webkit-text-fill-color:#1a56db !important;
+}
+#rr-game .rr-chip.rr-score{
+  background:#1a56db !important;border-color:#1a56db !important;
+  color:#ffffff !important;-webkit-text-fill-color:#ffffff !important;margin-left:auto;
+}
+#rr-game .rr-chip.rr-mode{
+  background:#7c3aed !important;border-color:#7c3aed !important;
+  color:#ffffff !important;-webkit-text-fill-color:#ffffff !important;
+}
+#rr-game .rr-body{padding:14px 16px 18px;}
+#rr-game .rr-how{
+  margin:0 0 8px;font-size:12.5px;
+  color:#64748b !important;-webkit-text-fill-color:#64748b !important;
+}
+#rr-game .rr-prompt{
+  margin:0 0 12px;font-size:14px;font-weight:600;line-height:1.4;
+  color:#0f1f3d !important;-webkit-text-fill-color:#0f1f3d !important;
+}
+#rr-game .rr-prompt b{
+  color:#7c3aed !important;-webkit-text-fill-color:#7c3aed !important;
+}
+#rr-game .rr-stage{
+  background:#f8fafc !important;border:1px solid #e2e8f0 !important;border-radius:12px;
+  padding:6px;
+}
+#rr-game .rr-stage svg{display:block;width:100%;height:auto;touch-action:manipulation;}
+#rr-game .rr-status{
+  margin-top:12px;padding:11px 13px;border-radius:12px;font-size:13.5px;line-height:1.4;
+  min-height:44px;font-weight:600;
+  background:#f1f5f9 !important;border:1px solid #e2e8f0 !important;
+  color:#334155 !important;-webkit-text-fill-color:#334155 !important;
+}
+#rr-game .rr-status.ok{
+  background:#ecfdf3 !important;border-color:#16a34a !important;
+  color:#15803d !important;-webkit-text-fill-color:#15803d !important;
+}
+#rr-game .rr-status.bad{
+  background:#fef2f2 !important;border-color:#dc2626 !important;
+  color:#b91c1c !important;-webkit-text-fill-color:#b91c1c !important;
+}
+#rr-game .rr-status.win{
+  background:#f5f3ff !important;border-color:#7c3aed !important;
+  color:#6d28d9 !important;-webkit-text-fill-color:#6d28d9 !important;
+}
+#rr-game .rr-controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;}
+#rr-game .rr-btn{
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;
+  padding:11px 18px;border-radius:10px;border:1px solid transparent;
+  background:#eef2f7 !important;
+  color:#0f1f3d !important;-webkit-text-fill-color:#0f1f3d !important;
+  transition:transform .05s ease,filter .15s ease;
+}
+#rr-game .rr-btn:hover{filter:brightness(0.97);}
+#rr-game .rr-btn:active{transform:translateY(1px);}
+#rr-game .rr-btn.rr-reset{
+  background:#ffffff !important;border-color:#cbd5e1 !important;
+  color:#64748b !important;-webkit-text-fill-color:#64748b !important;
+}
+#rr-game .rr-btn.rr-next{
+  background:#1a56db !important;
+  color:#ffffff !important;-webkit-text-fill-color:#ffffff !important;margin-left:auto;
+}
+#rr-game .rr-btn:disabled{opacity:0.45;cursor:not-allowed;}
+#rr-game .rr-legend{
+  display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-size:11.5px;font-weight:600;
+  color:#64748b !important;-webkit-text-fill-color:#64748b !important;
+}
+#rr-game .rr-legend span{display:inline-flex;align-items:center;gap:6px;}
+#rr-game .rr-swatch{width:16px;height:5px;border-radius:3px;display:inline-block;}
+</style>
+
+<div class="rr-game" id="rr-game">
+  <div class="rr-card">
+    <div class="rr-hero">
+      <h1 class="rr-title">Redundant Routing</h1>
+      <p class="rr-sub">Cut the Connection  -  why the Internet keeps working when links fail</p>
+    </div>
+    <div class="rr-bar">
+      <span class="rr-chip" id="rr-level">Level 1 / 4</span>
+      <span class="rr-chip rr-mode" id="rr-mode">Survivor</span>
+      <span class="rr-chip" id="rr-cuts">Cuts: 0</span>
+      <span class="rr-chip rr-score" id="rr-score">Score: 0</span>
+    </div>
+    <div class="rr-body">
+      <p class="rr-how">How to play: tap a link to <b>cut</b> it (tap again to restore). The map instantly reroutes and shows if A can still reach B.</p>
+      <p class="rr-prompt" id="rr-prompt"></p>
+      <div class="rr-stage">
+        <svg id="rr-svg" viewbox="0 0 640 380" role="img" aria-label="network map"></svg>
+      </div>
+      <div class="rr-status" id="rr-status"></div>
+      <div class="rr-legend">
+        <span><i class="rr-swatch" style="background:#1a56db;"></i>Live link</span>
+        <span><i class="rr-swatch" style="background:#16a34a;"></i>Active path</span>
+        <span><i class="rr-swatch" style="background:#dc2626;"></i>Cut link</span>
+      </div>
+      <div class="rr-controls">
+        <button class="rr-btn rr-reset" id="rr-reset" type="button">Reset cuts</button>
+        <button class="rr-btn rr-next" id="rr-next" type="button" disabled>Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var SVGNS="http://www.w3.org/2000/svg";
+  var root=document.getElementById("rr-game");
+  var svg=document.getElementById("rr-svg");
+  var elLevel=document.getElementById("rr-level");
+  var elMode=document.getElementById("rr-mode");
+  var elCuts=document.getElementById("rr-cuts");
+  var elScore=document.getElementById("rr-score");
+  var elPrompt=document.getElementById("rr-prompt");
+  var elStatus=document.getElementById("rr-status");
+  var elReset=document.getElementById("rr-reset");
+  var elNext=document.getElementById("rr-next");
+
+  // ----- Level definitions (positions on a 640x380 canvas) -----
+  var LEVELS=[
+    {
+      mode:"survivor",
+      nodes:{A:[60,190],C:[230,80],D:[230,300],E:[410,80],F:[410,300],B:[580,190]},
+      edges:[["A","C"],["A","D"],["C","E"],["D","F"],["E","B"],["F","B"],["C","D"],["E","F"]]
+    },
+    {
+      mode:"attacker",
+      nodes:{A:[60,190],C:[210,80],D:[210,300],E:[350,190],F:[490,80],G:[490,300],B:[600,190]},
+      edges:[["A","C"],["A","D"],["C","E"],["D","E"],["E","F"],["E","G"],["F","B"],["G","B"]]
+    },
+    {
+      mode:"survivor",
+      nodes:{A:[60,190],C:[210,70],D:[210,190],E:[210,310],F:[440,70],G:[440,190],H:[440,310],B:[600,190]},
+      edges:[["A","C"],["A","D"],["A","E"],["C","F"],["D","G"],["E","H"],["F","B"],["G","B"],["H","B"],["C","D"],["G","H"]]
+    },
+    {
+      mode:"attacker",
+      nodes:{A:[60,190],C:[200,70],D:[200,190],E:[200,310],F:[430,70],G:[430,190],H:[430,310],B:[600,190]},
+      edges:[["A","C"],["A","D"],["A","E"],["C","F"],["D","G"],["E","H"],["F","B"],["G","B"],["H","B"],["C","D"],["D","E"],["F","G"],["G","H"]]
+    }
+  ];
+
+  var levelIdx=0, score=0;
+  var L=null;          // current level compiled data
+  var cut=[];          // boolean per edge index
+  var completed=false; // scored this level already
+  var edgeEls=[];      // {line, hit}
+  var nodeIds=[];      // ordered id list
+  var idToIdx={};
+  var minCutVal=0;
+
+  // ----- graph algorithms -----
+  function computeMinCut(n, edges, s, t){
+    var cap=[],i;
+    for(i=0;i<n;i++){cap.push(new Array(n).fill(0));}
+    edges.forEach(function(e){cap[e.u][e.v]++;cap[e.v][e.u]++;});
+    var flow=0;
+    while(true){
+      var par=new Array(n).fill(-1); par[s]=s; var q=[s], v;
+      while(q.length){var u=q.shift(); for(v=0;v<n;v++){ if(par[v]===-1 && cap[u][v]>0){par[v]=u;q.push(v);} }}
+      if(par[t]===-1) break;
+      var b=Infinity;
+      for(v=t; v!==s; v=par[v]){ b=Math.min(b,cap[par[v]][v]); }
+      for(v=t; v!==s; v=par[v]){ cap[par[v]][v]-=b; cap[v][par[v]]+=b; }
+      flow+=b;
+    }
+    return flow;
+  }
+
+  function findPath(){
+    var N=nodeIds.length;
+    var par=new Array(N).fill(-1), pe=new Array(N).fill(-1);
+    var s=idToIdx.A, t=idToIdx.B;
+    par[s]=s; var q=[s];
+    while(q.length){
+      var u=q.shift();
+      if(u===t) break;
+      L.adj[u].forEach(function(a){
+        if(par[a.to]===-1 && !cut[a.ei]){ par[a.to]=u; pe[a.to]=a.ei; q.push(a.to); }
+      });
+    }
+    if(par[t]===-1) return null;
+    var nodes=[], eds=[], v=t;
+    while(v!==s){ nodes.push(v); eds.push(pe[v]); v=par[v]; }
+    nodes.push(s); nodes.reverse(); eds.reverse();
+    return {nodes:nodes, edges:eds};
+  }
+
+  // ----- rendering -----
+  function nodeColor(id){
+    if(id==="A") return "#16a34a";
+    if(id==="B") return "#7c3aed";
+    return "#1a56db";
+  }
+
+  function renderLevel(){
+    while(svg.firstChild) svg.removeChild(svg.firstChild);
+    edgeEls=[];
+
+    // edges first (under nodes)
+    L.edges.forEach(function(e, ei){
+      var p1=L.nodes[nodeIds[e.u]], p2=L.nodes[nodeIds[e.v]];
+      var line=document.createElementNS(SVGNS,"line");
+      line.setAttribute("x1",p1[0]); line.setAttribute("y1",p1[1]);
+      line.setAttribute("x2",p2[0]); line.setAttribute("y2",p2[1]);
+      line.setAttribute("stroke","#1a56db");
+      line.setAttribute("stroke-width","5");
+      line.setAttribute("stroke-linecap","round");
+      svg.appendChild(line);
+
+      var hit=document.createElementNS(SVGNS,"line");
+      hit.setAttribute("x1",p1[0]); hit.setAttribute("y1",p1[1]);
+      hit.setAttribute("x2",p2[0]); hit.setAttribute("y2",p2[1]);
+      hit.setAttribute("stroke","transparent");
+      hit.setAttribute("stroke-width","22");
+      hit.setAttribute("stroke-linecap","round");
+      hit.style.cursor="pointer";
+      hit.addEventListener("click",(function(k){return function(){toggleEdge(k);};})(ei));
+      svg.appendChild(hit);
+
+      edgeEls.push({line:line, hit:hit});
+    });
+
+    // nodes on top
+    nodeIds.forEach(function(id){
+      var p=L.nodes[id];
+      var c=document.createElementNS(SVGNS,"circle");
+      c.setAttribute("cx",p[0]); c.setAttribute("cy",p[1]); c.setAttribute("r","22");
+      c.setAttribute("fill",nodeColor(id));
+      c.setAttribute("stroke","#ffffff"); c.setAttribute("stroke-width","3");
+      svg.appendChild(c);
+      var t=document.createElementNS(SVGNS,"text");
+      t.setAttribute("x",p[0]); t.setAttribute("y",p[1]);
+      t.setAttribute("text-anchor","middle");
+      t.setAttribute("dominant-baseline","central");
+      t.setAttribute("font-family","'DM Sans',sans-serif");
+      t.setAttribute("font-size","16"); t.setAttribute("font-weight","700");
+      t.setAttribute("fill","#ffffff");
+      t.textContent=id;
+      svg.appendChild(t);
+    });
+  }
+
+  function paintEdges(pathEdges){
+    var hi={};
+    if(pathEdges){ pathEdges.forEach(function(ei){hi[ei]=true;}); }
+    edgeEls.forEach(function(o, ei){
+      var ln=o.line;
+      if(cut[ei]){
+        ln.setAttribute("stroke","#dc2626");
+        ln.setAttribute("stroke-width","3");
+        ln.setAttribute("stroke-dasharray","4 7");
+      }else if(hi[ei]){
+        ln.setAttribute("stroke","#16a34a");
+        ln.setAttribute("stroke-width","7");
+        ln.removeAttribute("stroke-dasharray");
+      }else{
+        ln.setAttribute("stroke","#1a56db");
+        ln.setAttribute("stroke-width","5");
+        ln.removeAttribute("stroke-dasharray");
+      }
+    });
+  }
+
+  // ----- game flow -----
+  function pathString(nodes){
+    return nodes.map(function(i){return nodeIds[i];}).join(" → ");
+  }
+  function cutCount(){
+    var n=0; cut.forEach(function(b){if(b)n++;}); return n;
+  }
+  function setStatus(cls, html){
+    elStatus.className="rr-status"+(cls?(" "+cls):"");
+    elStatus.innerHTML=html;
+  }
+
+  function update(){
+    var path=findPath();
+    var connected=!!path;
+    paintEdges(connected?path.edges:null);
+    var cc=cutCount();
+    elCuts.textContent="Cuts: "+cc;
+
+    if(L.mode==="survivor"){
+      if(cc===0){
+        setStatus("", "Tap any link to cut it. A fault-tolerant network should still route A to B.");
+      }else if(connected){
+        setStatus("ok", "Still connected  -  the network rerouted.<br>Surviving path: <b>"+pathString(path.nodes)+"</b>. That is redundancy in action.");
+        if(!completed){
+          completed=true; score+=100; elScore.textContent="Score: "+score;
+          setStatus("ok", "Redundancy proven! Cut "+cc+" link"+(cc>1?"s":"")+" and A still reaches B via <b>"+pathString(path.nodes)+"</b>.<br>Redundant paths make this network fault tolerant. +100");
+          enableNext();
+        }
+      }else{
+        setStatus("bad", "DISCONNECTED  -  you severed every path from A to B. With no redundant route left, this part of the network goes dark. Restore a link to reconnect.");
+      }
+    }else{ // attacker / min-cut
+      if(!connected){
+        if(!completed){
+          completed=true;
+          var pts, msg;
+          if(cc===minCutVal){
+            pts=200;
+            msg="Perfect min-cut! You severed A from B using the true minimum of <b>"+minCutVal+"</b> link"+(minCutVal>1?"s":"")+". Every redundant path is gone. +200";
+          }else{
+            var extra=cc-minCutVal;
+            pts=Math.max(60, 200-40*extra);
+            msg="DISCONNECTED with "+cc+" cuts, but the minimum was only <b>"+minCutVal+"</b> ("+extra+" wasted). Fewer, smarter cuts sever the network faster. +"+pts;
+          }
+          score+=pts; elScore.textContent="Score: "+score;
+          setStatus("bad", msg);
+          enableNext();
+        }else{
+          setStatus("bad", "DISCONNECTED  -  no path from A to B.");
+        }
+      }else{
+        setStatus("", "Still connected via <b>"+pathString(path.nodes)+"</b>. Keep cutting  -  target minimum is <b>"+minCutVal+"</b> link"+(minCutVal>1?"s":"")+".");
+      }
+    }
+  }
+
+  function enableNext(){
+    elNext.disabled=false;
+    elNext.textContent=(levelIdx>=LEVELS.length-1)?"Finish \u2691":"Next \u2192";
+  }
+
+  function toggleEdge(ei){
+    cut[ei]=!cut[ei];
+    update();
+  }
+
+  function loadLevel(idx){
+    levelIdx=idx;
+    var def=LEVELS[idx];
+    nodeIds=Object.keys(def.nodes);
+    idToIdx={}; nodeIds.forEach(function(id,i){idToIdx[id]=i;});
+    var edges=def.edges.map(function(p){return {u:idToIdx[p[0]], v:idToIdx[p[1]]};});
+    var adj=nodeIds.map(function(){return [];});
+    edges.forEach(function(e,ei){ adj[e.u].push({to:e.v,ei:ei}); adj[e.v].push({to:e.u,ei:ei}); });
+    L={nodes:def.nodes, edges:edges, adj:adj, mode:def.mode};
+    cut=new Array(edges.length).fill(false);
+    completed=false;
+    minCutVal=computeMinCut(nodeIds.length, edges, idToIdx.A, idToIdx.B);
+
+    elLevel.textContent="Level "+(idx+1)+" / "+LEVELS.length;
+    elMode.textContent=(def.mode==="survivor")?"Survivor":"Attacker";
+    elNext.disabled=true;
+    elNext.textContent=(idx>=LEVELS.length-1)?"Finish \u2691":"Next \u2192";
+
+    if(def.mode==="survivor"){
+      elPrompt.innerHTML="<b>Survivor:</b> a network is fault tolerant if it survives any single failure. Cut a link and prove A can still reach B through a redundant path.";
+    }else{
+      elPrompt.innerHTML="<b>Attacker  -  min-cut:</b> sever A from B using the <b>fewest</b> cuts. Find the bottleneck! (true minimum: "+minCutVal+" link"+(minCutVal>1?"s":"")+")";
+    }
+
+    renderLevel();
+    update();
+  }
+
+  function nextLevel(){
+    if(levelIdx>=LEVELS.length-1){ winScreen(); return; }
+    loadLevel(levelIdx+1);
+  }
+
+  function winScreen(){
+    while(svg.firstChild) svg.removeChild(svg.firstChild);
+    var t1=document.createElementNS(SVGNS,"text");
+    t1.setAttribute("x","320"); t1.setAttribute("y","150");
+    t1.setAttribute("text-anchor","middle");
+    t1.setAttribute("font-family","'DM Serif Display',serif");
+    t1.setAttribute("font-size","34"); t1.setAttribute("fill","#1a56db");
+    t1.textContent="Network Mastered!";
+    svg.appendChild(t1);
+    var t2=document.createElementNS(SVGNS,"text");
+    t2.setAttribute("x","320"); t2.setAttribute("y","210");
+    t2.setAttribute("text-anchor","middle");
+    t2.setAttribute("font-family","'DM Sans',sans-serif");
+    t2.setAttribute("font-size","22"); t2.setAttribute("font-weight","700");
+    t2.setAttribute("fill","#7c3aed");
+    t2.textContent="Final score: "+score;
+    svg.appendChild(t2);
+
+    elPrompt.innerHTML="<b>You've got it.</b> The Internet is fault tolerant because redundant paths connect its nodes.";
+    setStatus("win", "A network keeps routing as long as ANY path survives  -  it only fails when EVERY path between two points is severed. That is why engineers build redundancy into the Internet. Press Play again to run it back.");
+    elCuts.textContent="Cuts: 0";
+    elReset.disabled=true;
+    elNext.disabled=false;
+    elNext.textContent="Play again \u21bb";
+    completed=true;
+    levelIdx=LEVELS.length; // sentinel for restart
+    document.dispatchEvent(new CustomEvent('apcsGameScore',{detail:{value:score}}));
+  }
+
+  elReset.addEventListener("click", function(){
+    if(!L) return;
+    cut=new Array(L.edges.length).fill(false);
+    update();
+  });
+  elNext.addEventListener("click", function(){
+    if(levelIdx>=LEVELS.length){ // restart from win
+      score=0; elScore.textContent="Score: 0"; elReset.disabled=false;
+      loadLevel(0); return;
+    }
+    if(elNext.disabled) return;
+    nextLevel();
+  });
+
+  loadLevel(0);
+})();
+</script>
+    </div>
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What is the difference between redundancy and fault tolerance?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Redundancy is the design feature: having multiple paths or copies of a component. Fault tolerance is the result: because of that redundancy, the system keeps working when a component fails. You build in redundancy so that you get fault tolerance when a failure happens.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Why is the Internet considered fault tolerant?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Because it uses redundant routing. Devices are connected by many paths, and data is sent as packets that are routed hop by hop. If a router or connection fails, the surrounding routers can send packets along a different available path, so the data still gets through.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">How do I find a single point of failure in a network diagram?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Look for a component that every path has to pass through. If removing one node or one link disconnects part of the network from the rest, that component is a single point of failure. If any single component can be removed and traffic still has another route, there is no single point of failure there.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Does adding more bandwidth or a faster router make a network more fault tolerant?<i class="faq-icon">+</i></button>
+        <div class="faq-a">No. Making a single path faster improves performance but adds no fault tolerance, because that path is still a single point of failure. Fault tolerance comes from adding another independent path or a redundant component, not from upgrading one path.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">If redundancy is so useful, why not add as much as possible?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Because redundancy costs money and resources. Every extra path or backup means more cables, routers, servers, power, and maintenance. Designers weigh how much reliability they need against the added cost, which is the tradeoff the exam expects you to recognize.</div>
+      </div>
+    </div>
+    <div class="related-links">
+      <h3>🔗 Continue studying</h3>
+      <div class="related-links-grid">
+        <a href="/pages/ap-csp-course-bi4-parallel-distributed-computing" class="related-link">4.3 Parallel and Distributed Computing</a>
+        <a href="/pages/ap-csp-course-bi4-the-internet" class="related-link">4.1 The Internet</a>
+        <a href="/pages/ap-csp-study-games-hub" class="related-link">All CSP Study Games</a>
+      </div>
+    </div>
+    <div class="superpack-slim">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="superpack-slim-icon">📦</div>
+        <div><div class="superpack-slim-text">AP CSP Teacher Superpack<span class="superpack-slim-sub">Slides, lesson plans, unit tests for all 5 Big Ideas, $249</span>
+</div></div>
+      </div>
+      <a href="/products/ap-csp-teacher-superpack" class="superpack-slim-btn">Get the Superpack →</a>
+    </div>
+    <div class="teacher-callout">
+      <div class="teacher-callout-icon">🏫</div>
+      <div class="teacher-callout-body">
+        <div class="teacher-callout-label">For teachers</div>
+        <p>Fault tolerance is best taught at the whiteboard with node-and-edge diagrams: draw a network, ask students to find the single point of failure, then have them add one link that removes it. Push the tradeoff explicitly by giving each redundant link a dollar cost and a fixed budget, so students feel that more fault tolerance is not free. The Superpack includes diagram worksheets, a cut-the-link routing activity, and a set of single-point-of-failure exam drills. <a href="/products/ap-csp-teacher-superpack">View what's included →</a></p>
+      </div>
+    </div>
+    <div class="lesson-nav">
+      <a href="/pages/ap-csp-course-bi4-the-internet" class="nav-card">
+        <div class="nav-card-dir">← Previous</div>
+        <div class="nav-card-title">4.1 The Internet</div>
+      </a>
+      <a href="/pages/ap-csp-course-bi4-parallel-distributed-computing" class="nav-card next">
+        <div class="nav-card-dir">Next lesson →</div>
+        <div class="nav-card-title">4.3 Parallel and Distributed Computing</div>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var MINI_MSGS={"mc-fault-1": {"A": "Not quite. If computer A fails, computer B can still reach the Internet through R. A single computer failing does not stop the whole network.", "B": "Not quite. If computer B fails, computer A can still reach the Internet through R. A single computer failing does not stop the whole network.", "C": "Correct. Every path to the Internet goes through router R, so R's failure alone disconnects the entire network. That makes R a single point of failure.", "D": "Incorrect. There is a single point of failure: router R is the only route to the Internet, so if it fails, both computers lose access."}, "mc-fault-2": {"A": "No. Routers do not instantly repair themselves. The network kept working because packets were rerouted, not because the failed router came back.", "B": "Correct. Because the Internet has redundant paths, the routers around the failure sent packets along another available route, so the data still got through.", "C": "No. Clock speed is about processor performance, not about surviving a failed router. Survival came from an alternate path being available.", "D": "No. Rerouting is automatic and happens between routers. Users do not manually resend packets around a dead router."}};
+var MINI_FIB={};
+
+function _activity(d){
+  try{ var w=document.querySelector('.lesson-page');
+    if(w){ d.course=w.getAttribute('data-course'); d.unit=w.getAttribute('data-unit'); d.lesson=w.getAttribute('data-lesson'); }
+    document.dispatchEvent(new CustomEvent('apcsActivity',{detail:d}));
+  }catch(e){}
+}
+function checkMCQ(qid, chosen, correct, fbId){
+  var opts=document.querySelectorAll('#'+qid+'-options .mcq-option');
+  opts.forEach(function(b){b.disabled=true;b.onclick=null;});
+  var letters=['A','B','C','D'];
+  opts[letters.indexOf(chosen)].classList.add(chosen===correct?'correct':'incorrect');
+  if(chosen!==correct)opts[letters.indexOf(correct)].classList.add('revealed-correct');
+  document.getElementById(fbId).classList.add('show');
+  _activity({activity:'quiz',item:qid,choice:chosen});
+}
+function miniMCQ(id, chosen, correct, fbId){
+  var opts=document.querySelectorAll('#'+id+'-opts .mini-opt');
+  opts.forEach(function(b){b.onclick=null;b.style.cursor='default';});
+  var letters=['A','B','C','D'];
+  opts[letters.indexOf(chosen)].classList.add(chosen===correct?'correct':'incorrect');
+  if(chosen!==correct)opts[letters.indexOf(correct)].classList.add('reveal');
+  var fb=document.getElementById(fbId);
+  if(MINI_MSGS[id]){fb.textContent=MINI_MSGS[id][chosen]||'';fb.className='mini-fb '+(chosen===correct?'c':'w');}
+}
+function miniFIB(id, fbId){
+  var inp=document.getElementById(id+'-inp'),fb=document.getElementById(fbId);
+  var val=inp.value.trim().toLowerCase();var d=MINI_FIB[id];
+  var ok=(val===String(d.correct).toLowerCase());
+  inp.classList.add(ok?'correct':'incorrect');
+  fb.textContent=ok?d.c:d.w; fb.className='mini-fb '+(ok?'c':'w'); inp.disabled=true;
+}
+function toggleFAQ(btn){
+  var item=btn.parentElement,wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(el){el.classList.remove('open');});
+  if(!wasOpen)item.classList.add('open');
+}
+function handleCapture(){
+  var email=document.getElementById('capture-email').value.trim();
+  if(!email||!email.includes('@')){document.getElementById('capture-email').focus();return;}
+  document.getElementById('capture-form').style.display='none';
+  document.getElementById('capture-success').style.display='block';
+  if(typeof window._learnq!=='undefined'){window._learnq.push(['identify',{'$email':email}]);}
+}
+/* Bridge: the embedded topic game dispatches 'apcsGameScore' on completion.
+   Convert that single completion into the standard exercise-2 gradebook hook. */
+document.addEventListener('apcsGameScore', function(e){
+  _activity({activity:'exercise-2', earned:1, possible:1});
+});
+</script>
+<!-- apcs-exercises (managed) -->
+<div id="apcs-ex-links">
+<style>
+#apcs-ex-links{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:28px auto 0!important;padding:0 16px 8px!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important}
+#apcs-ex-links *,#apcs-ex-links *::before,#apcs-ex-links *::after{box-sizing:border-box!important}
+#apcs-ex-links .ex-lbl{font-size:12px!important;font-weight:800!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:0 0 10px!important}
+#apcs-ex-links .ex-row{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important}
+@media (max-width:640px){#apcs-ex-links .ex-row{grid-template-columns:repeat(1,1fr)!important}}
+#apcs-ex-links a.ex,#apcs-ex-links a.ex:link,#apcs-ex-links a.ex:visited{display:block!important;text-decoration:none!important;border:1px solid #93c5fd!important;border-left:5px solid #1a56db!important;border-radius:0 12px 12px 0!important;background:#eff6ff!important;padding:14px 16px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;font-size:16px!important;font-weight:700!important;line-height:1.35!important}
+#apcs-ex-links a.ex:hover{background:#dbeafe!important}
+#apcs-ex-links a.ex span{display:block!important;margin-top:4px!important;font-size:13px!important;font-weight:400!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important}
+</style>
+<p class="ex-lbl">Exercises for Topic 4.2</p>
+<div class="ex-row">
+<a class="ex" href="/pages/ap-csp-topic-4-2-exercise-1">Exercise 1: Outage Post-Mortem: The SnackDash Blackout<span>Work it online. Saved in your browser, not graded</span></a>
+<a class="ex" href="/pages/ap-csp-topic-4-2-exercise-2">Exercise 2: Redundancy Audit<span>Work it online. Saved in your browser, not graded</span></a>
+</div>
+</div>

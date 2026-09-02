@@ -1,0 +1,1088 @@
+<!--
+  PAGE: /pages/ap-csp-course-bi1-program-function-purpose
+  TITLE: AP CSP 1.2 Program Function and Purpose | Inputs, Outputs, Behavior
+  META: AP CSP Topic 1.2: what a program does, its function and purpose, inputs and outputs, and program behavior. 6 exam MCQs plus the Guess the Purpose game.
+-->
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+  :root{--navy:#0f1f3d;--bi3:#1a56db;--bi3-lt:#93c5fd;--bi3-bg:#eff6ff;--bi3-dk:#1e40af;--green:#16a34a;--amber:#d97706;--red:#dc2626;--slate:#64748b;--white:#ffffff;--py:#3b82f6;--pseudo:#8b5cf6;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  .lesson-page{font-family:"DM Sans",sans-serif;color:var(--navy);background:#f8fafc;line-height:1.6;}
+
+  .lesson-breadcrumb{background:#fff;border-bottom:1px solid #e2e8f0;padding:12px 24px;}
+  .lesson-breadcrumb-inner{max-width:880px;margin:0 auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate);flex-wrap:wrap;}
+  .lesson-breadcrumb a{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;text-decoration:none;font-weight:500;}
+  .bc-sep{color:#cbd5e1;}
+
+  .social-proof-bar{background:#fff;border-bottom:1px solid #e2e8f0;padding:10px 24px;}
+  .social-proof-inner{max-width:880px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 20px;font-size:13px;color:var(--slate);}
+  .social-proof-item{display:flex;align-items:center;gap:5px;font-weight:500;}
+  .social-proof-item strong{color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+
+  .lesson-hero{background:var(--navy);background-image:radial-gradient(ellipse 60% 70% at 90% 20%,rgba(26,86,219,.28) 0%,transparent 60%);padding:48px 24px 40px;}
+  .lesson-hero-inner{max-width:880px;margin:0 auto;}
+  .lesson-hero-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .lesson-num-badge{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:var(--bi3);font-weight:700;font-size:14px;color:#fff!important;-webkit-text-fill-color:#fff!important;flex-shrink:0;}
+  .lesson-eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;}
+  .lesson-hero h1{font-family:"DM Serif Display",serif!important;font-size:clamp(26px,4vw,40px)!important;line-height:1.2!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:14px!important;}
+  .lesson-hero-pills{display:flex;flex-wrap:wrap;gap:8px;}
+  .lesson-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:5px 12px;border-radius:100px;font-size:12px;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .ced-tag{display:inline-flex;align-items:center;background:rgba(26,86,219,.25);border:1px solid rgba(147,197,253,.3);padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;letter-spacing:.04em;}
+
+  /* PROGRESS STRIP */
+  .bi3-progress{background:#fff!important;border-bottom:1px solid #e2e8f0!important;padding:14px 20px!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;}
+  .bi3-progress-inner{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;gap:0!important;width:max-content!important;min-width:100%!important;}
+  .prog-step{display:flex!important;flex-direction:column!important;align-items:center!important;min-width:46px!important;text-align:center!important;flex-shrink:0!important;}
+  .prog-step-link{display:flex!important;flex-direction:column!important;align-items:center!important;min-width:46px!important;text-align:center!important;flex-shrink:0!important;text-decoration:none!important;cursor:pointer!important;}
+  .prog-step-link:hover .prog-dot{background:#dbeafe!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border-color:var(--bi3)!important;}
+  .prog-dot{width:26px!important;height:26px!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:9px!important;font-weight:700!important;margin-bottom:4px!important;flex-shrink:0!important;}
+  .prog-dot.active{background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .prog-dot.upcoming{background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:2px solid #e2e8f0!important;}
+  .prog-dot.done{background:#dbeafe!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border:2px solid var(--bi3)!important;}
+  .prog-label{font-size:8px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;line-height:1.2!important;white-space:nowrap!important;}
+  .prog-label.active-label{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;}
+  .prog-arrow{flex:1 0 4px!important;height:2px!important;background:#e2e8f0!important;margin-bottom:18px!important;min-width:4px!important;max-width:16px!important;flex-shrink:0!important;}
+
+  /* MAIN */
+  .lesson-main{max-width:880px;margin:0 auto;padding:40px 24px 80px;}
+  .lesson-objectives{background:var(--bi3-bg);border-left:4px solid var(--bi3);border-radius:0 10px 10px 0;padding:20px 24px;margin-bottom:28px;}
+  .lesson-objectives h2{font-size:14px!important;font-weight:700!important;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;text-transform:uppercase!important;letter-spacing:.06em!important;margin-bottom:12px!important;}
+  .lesson-objectives ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;}
+  .lesson-objectives li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#1e3a8a;line-height:1.5;}
+  .lesson-objectives li::before{content:"\2713";color:var(--bi3);font-weight:700;flex-shrink:0;margin-top:1px;}
+  .score-impact{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 18px;margin-bottom:28px;display:flex;align-items:center;gap:10px;font-size:14px;color:#14532d;}
+  .score-impact strong{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+
+  /* HOOK */
+  .hook-box{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px 28px;margin-bottom:32px;}
+  .hook-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:8px;}
+  .hook-box p{font-size:15px!important;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;line-height:1.7!important;margin-bottom:0!important;}
+
+  /* LESSON SECTIONS */
+  .lesson-section{margin-bottom:40px;}
+  .lesson-section h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;padding-bottom:10px!important;border-bottom:2px solid var(--bi3-bg)!important;}
+  .lesson-section h3{font-size:17px!important;font-weight:700!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-top:24px!important;margin-bottom:10px!important;}
+  .lesson-section p{font-size:15px;color:#374151;line-height:1.8;margin-bottom:14px;}
+  .lesson-section ul,.lesson-section ol{padding-left:20px;margin-bottom:14px;}
+  .lesson-section li{font-size:15px;color:#374151;line-height:1.7;margin-bottom:6px;}
+  .lesson-section code{background:#eef2ff;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+
+  /* DUAL CODE PANEL */
+  .code-panel-wrap{margin:20px 0;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;}
+  .code-panel-tabs{display:flex;background:#1e293b;}
+  .code-tab{padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;border:none;background:transparent;letter-spacing:.04em;transition:background .15s;font-family:inherit;}
+  .code-tab.py{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .code-tab.pseudo{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+  .code-tab.active{background:rgba(255,255,255,.15)!important;}
+  .code-tab-label{font-size:10px;opacity:.6;margin-left:4px;font-weight:400;}
+  .code-pane{background:#0f172a;padding:18px 20px;overflow-x:auto;height:0;overflow:hidden;padding:0;}
+  .code-pane.active{height:auto;overflow-x:auto;padding:18px 20px;}
+  .code-pane pre{font-family:monospace;font-size:13px;line-height:1.8;margin:0;white-space:pre-wrap;word-break:break-word;max-width:100%;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .py-kw{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:700;}
+  .py-fn{color:#6ee7b7!important;-webkit-text-fill-color:#6ee7b7!important;}
+  .py-num{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .py-str{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .py-comment{color:#475569!important;-webkit-text-fill-color:#475569!important;font-style:italic;}
+  .py-var{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .py-op{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;}
+  .ps-kw{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700;}
+  .ps-op{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .ps-num{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .ps-str{color:#86efac!important;-webkit-text-fill-color:#86efac!important;}
+  .ps-comment{color:#475569!important;-webkit-text-fill-color:#475569!important;font-style:italic;}
+  .ps-var{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+
+  /* CALLOUTS */
+  .callout-exam{background:#fffbeb;border:1px solid #fcd34d;border-left:4px solid var(--amber);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+  .callout-exam-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--amber)!important;-webkit-text-fill-color:var(--amber)!important;margin-bottom:6px;}
+  .callout-exam p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin-bottom:0!important;line-height:1.6!important;}
+  .callout-trap{background:#fef2f2;border:1px solid #fca5a5;border-left:4px solid var(--red);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+  .callout-trap-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;margin-bottom:6px;}
+  .callout-trap p{font-size:14px!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;margin-bottom:0!important;line-height:1.6!important;}
+
+  /* MINI EXERCISES */
+  .mini-ex{background:#fff;border:1px solid #bfdbfe;border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .mini-ex-label{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;margin-bottom:12px;}
+  .mini-ex-q{font-size:15px;font-weight:600;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px;line-height:1.5;}
+  .mini-ex-code{background:#0f172a;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;line-height:1.8;margin-bottom:14px;overflow-x:auto;white-space:pre;display:block;}
+  .mini-opts{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;}
+  .mini-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border:2px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:14px;font-family:monospace;color:#374151!important;-webkit-text-fill-color:#374151!important;background:#f8fafc;text-align:left;width:100%;transition:border-color .15s;}
+  .mini-opt:hover{border-color:var(--bi3-lt);background:var(--bi3-bg);}
+  .mini-opt.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mini-opt.incorrect{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mini-opt.reveal{border-color:var(--green)!important;background:#f0fdf4!important;}
+  .mini-opt-letter{font-weight:700;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;min-width:18px;font-family:inherit;}
+  .mini-opt.correct .mini-opt-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mini-opt.incorrect .mini-opt-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mini-fib-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;}
+  .mini-fib-input{padding:8px 12px;border:2px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:14px;width:130px;outline:none;color:var(--navy)!important;background:#f8fafc;}
+  .mini-fib-input:focus{border-color:var(--bi3-lt);}
+  .mini-fib-input.correct{border-color:var(--green);background:#f0fdf4;}
+  .mini-fib-input.incorrect{border-color:var(--red);background:#fef2f2;}
+  .mini-fib-btn{padding:8px 18px;background:var(--bi3);border:none;border-radius:8px;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .mini-fb{font-size:13px;font-weight:500;padding:8px 12px;border-radius:7px;margin-top:6px;display:none;line-height:1.5;}
+  .mini-fb.c{background:#f0fdf4;color:var(--green)!important;-webkit-text-fill-color:var(--green)!important;display:block;}
+  .mini-fb.w{background:#fef2f2;color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;display:block;}
+
+  /* VOCAB */
+  .vocab-table{width:100%;border-collapse:collapse;margin-bottom:24px;font-size:14px;}
+  .vocab-table thead tr{background:var(--bi3);}
+  .vocab-table thead th{padding:10px 16px;text-align:left;font-weight:600;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px;}
+  .vocab-table tbody tr:nth-child(even){background:var(--bi3-bg);}
+  .vocab-table tbody tr:nth-child(odd){background:#fff;}
+  .vocab-table tbody td{padding:10px 16px;border-bottom:1px solid #bfdbfe;color:#374151;vertical-align:top;line-height:1.5;}
+  .vocab-table tbody td:first-child{font-weight:700;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;white-space:nowrap;}
+
+  /* CPT CONNECTION */
+  .cpt-connection{background:#fefce8;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:0 10px 10px 0;padding:20px 24px;margin:28px 0;}
+  .cpt-connection-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#92400e!important;-webkit-text-fill-color:#92400e!important;margin-bottom:8px;}
+  .cpt-connection h3{font-size:16px!important;font-weight:700!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin:16px 0 8px!important;}
+  .cpt-connection p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;line-height:1.7!important;margin-bottom:12px!important;}
+  .cpt-connection a{color:#b45309!important;-webkit-text-fill-color:#b45309!important;font-weight:600;text-decoration:underline;}
+  .cpt-connection code{background:#fef3c7;color:#78350f!important;-webkit-text-fill-color:#78350f!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+  .cpt-stems{list-style:none;padding:0;margin:0 0 8px;display:flex;flex-direction:column;gap:8px;}
+  .cpt-stems li{background:#fffef5;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:13px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;line-height:1.6;}
+  .cpt-code{background:#0f172a;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;line-height:1.8;margin:6px 0 12px;overflow-x:auto;white-space:pre;display:block;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+
+  /* EMAIL */
+  .email-capture{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px 28px;margin-bottom:36px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
+  .email-capture-text{flex:1;min-width:200px;}
+  .email-capture-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:4px;}
+  .email-capture h3{font-size:16px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .email-capture p{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:0!important;line-height:1.5!important;}
+  .email-capture-form{display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0;}
+  .email-capture-input{padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff!important;font-size:14px;font-family:inherit;min-width:180px;outline:none;}
+  .email-capture-btn{padding:10px 20px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:8px!important;font-size:14px!important;font-weight:600!important;cursor:pointer!important;font-family:inherit!important;}
+  .email-capture-success{display:none;font-size:14px;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:600;padding:10px 0;}
+
+  /* MCQ */
+  .mcq-section{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:28px;margin-bottom:40px;}
+  .mcq-section-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--bi3-bg);}
+  .mcq-section-icon{width:40px;height:40px;border-radius:10px;background:var(--bi3-bg);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .mcq-section-title{font-family:"DM Serif Display",serif;font-size:20px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+  .mcq-section-sub{font-size:13px;color:var(--slate);}
+  .mcq-item{margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid #f1f5f9;}
+  .mcq-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .mcq-q-num{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:8px;}
+  .diff-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:100px;margin-left:8px;background:#fef2f2;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;border:1px solid #fca5a5;}
+  .mcq-q-text{font-size:15px!important;font-weight:600!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;margin-bottom:12px!important;}
+  .predict-note{font-size:12px;font-style:italic;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:12px;}
+  .mcq-code{background:#0f172a;border-radius:8px;padding:12px 14px;margin:10px 0 14px;font-family:monospace;font-size:13px;line-height:1.75;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;white-space:pre;overflow-x:auto;display:block;}
+  .mcq-code .k{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .mcq-code .s{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .mcq-code .n{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .mcq-code .c{color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-style:italic;}
+  .mcq-roman{list-style:none;padding:0;margin:10px 0 14px;display:flex;flex-direction:column;gap:6px;}
+  .mcq-roman li{font-family:monospace;font-size:13px;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;background:#f1f5f9;border-radius:6px;padding:8px 12px;}
+  .mcq-roman li strong{color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;font-family:"DM Sans",sans-serif;margin-right:8px;}
+  .mcq-options{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+  .mcq-option{display:flex!important;align-items:flex-start!important;gap:12px!important;padding:11px 14px!important;border:2px solid #e2e8f0!important;border-radius:8px!important;cursor:pointer!important;background:#f8fafc!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.5!important;text-align:left!important;width:100%!important;font-family:inherit!important;}
+  .mcq-option:hover{border-color:var(--bi3-lt)!important;background:var(--bi3-bg)!important;}
+  .mcq-option.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mcq-option.incorrect{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mcq-option.revealed-correct{border-color:var(--green)!important;background:#f0fdf4!important;}
+  .mcq-option-letter{font-weight:700!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;flex-shrink:0!important;min-width:18px!important;}
+  .mcq-option.correct .mcq-option-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mcq-option.incorrect .mcq-option-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mcq-feedback{display:none!important;padding:12px 16px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;margin-top:8px!important;}
+  .mcq-feedback.show{display:block!important;}
+  .mcq-feedback.correct-fb{background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #bbf7d0!important;}
+  .mcq-feedback.incorrect-fb{background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;border:1px solid #fecaca!important;}
+
+  /* GAME */
+  .game-section{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:14px;padding:28px;margin-bottom:40px;}
+  .game-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:10px;}
+  .game-title{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .game-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:20px!important;}
+  .vt-score-bar{display:flex;justify-content:space-between;background:rgba(255,255,255,.06);border-radius:10px;padding:12px 20px;margin-bottom:20px;flex-wrap:wrap;gap:8px;}
+  .vt-stat{text-align:center;}
+  .vt-stat-val{font-size:20px;font-weight:800;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1;}
+  .vt-stat-lbl{font-size:10px;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:2px;}
+  .vt-code-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  .vt-code-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:10px;}
+  .vt-code-lines{font-family:monospace;font-size:14px;line-height:2;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .vt-line{display:block;padding:2px 8px;border-radius:4px;white-space:pre;}
+  .vt-line.hl{background:rgba(147,197,253,.2);color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .vt-question{font-size:15px;font-weight:600;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;margin-bottom:14px;}
+  .vt-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+  .vt-btn{padding:12px;border-radius:9px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);cursor:pointer;font-size:15px;font-weight:700;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;font-family:monospace;transition:all .15s;}
+  .vt-btn:hover{border-color:var(--bi3-lt);background:rgba(26,86,219,.2);}
+  .vt-btn.c{border-color:#4ade80;background:rgba(74,222,128,.15);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+  .vt-btn.w{border-color:#f87171;background:rgba(248,113,113,.15);color:#f87171!important;-webkit-text-fill-color:#f87171!important;}
+  .vt-btn.rv{border-color:#4ade80;background:rgba(74,222,128,.08);}
+  .vt-fb{padding:10px 14px;border-radius:8px;font-size:13px;font-weight:500;margin-bottom:12px;display:none;line-height:1.5;}
+  .vt-fb.c{background:rgba(74,222,128,.1);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;display:block;}
+  .vt-fb.w{background:rgba(248,113,113,.1);color:#f87171!important;-webkit-text-fill-color:#f87171!important;display:block;}
+  .vt-next{display:none;width:100%;padding:12px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);border-radius:8px;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .vt-next.show{display:block;}
+  .vt-results{display:none;text-align:center;padding:20px;}
+  .vt-results.show{display:block;}
+  .vt-res-score{font-family:"DM Serif Display",serif;font-size:52px;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1;}
+  .vt-res-lbl{font-size:14px;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:12px;}
+  .vt-res-msg{font-size:14px;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;margin-bottom:20px;line-height:1.6;}
+  .vt-restart{background:rgba(255,255,255,.1);color:#fff!important;-webkit-text-fill-color:#fff!important;border:2px solid rgba(255,255,255,.2);border-radius:8px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+
+  /* CODE EDITOR (Pyodide live) */
+  .code-editor-section{background:#0f172a;border-radius:14px;padding:28px;margin-bottom:40px;}
+  .code-editor-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:10px;}
+  .code-editor-title{font-family:"DM Serif Display",serif!important;font-size:22px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .code-editor-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:20px!important;line-height:1.6;}
+  .code-problem{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+  .scaffold-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:rgba(147,197,253,.15);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;border:1px solid rgba(147,197,253,.35);margin-bottom:8px;}
+  .code-problem-num{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:8px;}
+  .code-problem-prompt{font-size:14px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.6!important;margin-bottom:12px!important;}
+  .code-problem-prompt code{background:rgba(147,197,253,.12);color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;padding:1px 6px;border-radius:5px;font-size:12px;}
+  .code-textarea{width:100%;min-height:120px;background:#020617;border:2px solid rgba(255,255,255,.1);border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;color:#e2e8f0!important;resize:vertical;outline:none;line-height:1.8;}
+  .code-textarea:focus{border-color:var(--bi3-lt);}
+  .code-btn-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center;}
+  .code-run-btn{padding:9px 20px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:7px!important;font-size:13px!important;font-weight:700!important;cursor:pointer!important;font-family:inherit!important;}
+  .code-run-btn:disabled{opacity:.6;cursor:wait;}
+  .code-hint-btn,.code-sol-btn{padding:9px 16px!important;background:rgba(255,255,255,.06)!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:7px!important;font-size:13px!important;cursor:pointer!important;font-family:inherit!important;}
+  .code-output{margin-top:10px;background:#020617;border-radius:8px;padding:12px 16px;font-family:monospace;font-size:13px;min-height:44px;display:none;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .code-output.show{display:block;}
+  .code-output.ok{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+  .code-output.err{color:#f87171!important;-webkit-text-fill-color:#f87171!important;}
+  .code-hint{margin-top:8px;background:rgba(147,197,253,.06);border:1px solid rgba(147,197,253,.2);border-radius:8px;padding:10px 14px;font-size:13px;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;display:none;line-height:1.6;}
+  .code-hint.show{display:block;}
+  .code-solution{margin-top:8px;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:8px;padding:12px 14px;font-family:monospace;font-size:13px;color:#bbf7d0!important;-webkit-text-fill-color:#bbf7d0!important;display:none;white-space:pre;line-height:1.8;overflow-x:auto;}
+  .code-solution.show{display:block;}
+
+  /* FAQ */
+  .faq-section{margin-bottom:40px;}
+  .faq-section h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;padding-bottom:10px!important;border-bottom:2px solid var(--bi3-bg)!important;}
+  .faq-item{background:#fff;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:10px;overflow:hidden;}
+  .faq-q{width:100%;text-align:left;padding:16px 20px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:15px!important;font-weight:600!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-family:inherit!important;line-height:1.4!important;}
+  .faq-q:hover{background:#f8fafc;}
+  .faq-icon{font-size:18px;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;flex-shrink:0;transition:transform .2s;font-style:normal;}
+  .faq-item.open .faq-icon{transform:rotate(45deg);}
+  .faq-a{display:none;padding:0 20px 16px;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.7!important;border-top:1px solid #f1f5f9;}
+  .faq-item.open .faq-a{display:block;}
+  .faq-a code{background:#eef2ff;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+
+  /* RELATED + SUPERPACK + TEACHER + NAV */
+  .related-links{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:24px;margin-bottom:40px;}
+  .related-links h3{font-size:15px!important;font-weight:700!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;}
+  .related-links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
+  .related-link{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;background:#f8fafc;text-decoration:none;font-size:13px!important;font-weight:500!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border:1px solid #bfdbfe;transition:background .15s;line-height:1.3;}
+  .related-link:link,.related-link:visited{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;}
+  .related-link:hover{background:var(--bi3-bg);}
+  .related-ext{color:var(--slate)!important;-webkit-text-fill-color:var(--slate)!important;border-color:#e2e8f0;}
+  .superpack-slim{background:#fff;border:1px solid #bfdbfe;border-radius:10px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:36px;}
+  .superpack-slim-icon{width:36px;height:36px;border-radius:8px;background:var(--bi3-bg);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .superpack-slim-text{font-size:14px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-weight:600;line-height:1.3;}
+  .superpack-slim-sub{font-size:12px;color:var(--slate);font-weight:400;display:block;margin-top:2px;}
+  .superpack-slim-btn{display:inline-flex!important;align-items:center!important;gap:6px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:9px 18px!important;border-radius:7px!important;font-size:13px!important;font-weight:600!important;text-decoration:none!important;white-space:nowrap!important;}
+  .superpack-slim-btn:link,.superpack-slim-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .teacher-callout{background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:18px 22px;margin-bottom:28px;display:flex;align-items:flex-start;gap:14px;}
+  .teacher-callout-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+  .teacher-callout-body{flex:1;}
+  .teacher-callout-label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#0369a1!important;-webkit-text-fill-color:#0369a1!important;margin-bottom:4px;}
+  .teacher-callout-body p{font-size:14px!important;color:#0c4a6e!important;-webkit-text-fill-color:#0c4a6e!important;margin-bottom:0!important;line-height:1.6!important;}
+  .teacher-callout-body a{color:#0369a1!important;-webkit-text-fill-color:#0369a1!important;font-weight:600;text-decoration:underline;}
+  .lesson-nav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:40px;}
+  .nav-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 20px;text-decoration:none;color:inherit;transition:box-shadow .15s;display:block;}
+  .nav-card:hover{box-shadow:0 4px 16px rgba(26,86,219,.1);border-color:#bfdbfe;}
+  .nav-card-dir{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:4px;}
+  .nav-card-title{font-size:14px;font-weight:700;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;line-height:1.3;}
+  .nav-card.next{border-left:3px solid var(--bi3);}
+
+  @media(max-width:600px){
+    .lesson-hero{padding:36px 20px 32px;}
+    .lesson-main{padding:32px 20px 60px;}
+    .vt-options{grid-template-columns:1fr 1fr;}
+    .lesson-nav{grid-template-columns:1fr;}
+    .mini-opts{gap:6px;}
+  }
+</style>
+<style>
+.code-usage{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin:-6px 0 18px!important;padding:8px 12px!important;background:rgba(255,255,255,.04)!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:8px!important;display:block!important;}
+.code-usage strong{color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;}
+.code-problem-prompt ul.rules{margin:10px 0 4px!important;padding-left:0!important;list-style:none!important;}
+.code-problem-prompt ul.rules li{position:relative;padding:3px 0 3px 20px!important;font-size:14px;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.55;}
+.code-problem-prompt ul.rules li::before{content:"\25B8";position:absolute;left:2px;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+.mcq-q-text ul.rules,.mini-ex-q ul.rules{margin:10px 0 4px!important;padding-left:0!important;list-style:none!important;}
+.mcq-q-text ul.rules li,.mini-ex-q ul.rules li{position:relative;padding:3px 0 3px 20px!important;font-size:15px;font-weight:400;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;line-height:1.5;}
+.mcq-q-text ul.rules li::before,.mini-ex-q ul.rules li::before{content:"\25B8";position:absolute;left:2px;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;}
+</style>
+<style>
+
+.lesson-visual{margin:0 0 40px!important;}
+.lv-kicker{font-size:11px!important;font-weight:700!important;letter-spacing:.1em!important;text-transform:uppercase!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;margin:0 0 10px!important;}
+/* before/after panel */
+.ba{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:14px!important;padding:20px!important;margin:0 0 14px!important;}
+.ba-cap-top{font-size:12px!important;font-weight:700!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;margin:0 0 14px!important;}
+.ba-grid{display:grid!important;grid-template-columns:1fr auto 1fr!important;align-items:center!important;gap:14px!important;}
+.ba-panel{border-radius:12px!important;padding:16px 14px!important;text-align:center!important;}
+.ba-panel.before{background:#f8fafc!important;border:1px solid #e2e8f0!important;}
+.ba-panel.after{background:#f0fdf4!important;border:1px solid #bbf7d0!important;}
+.ba-label{font-size:11px!important;font-weight:700!important;letter-spacing:.05em!important;text-transform:uppercase!important;margin:0 0 8px!important;}
+.ba-panel.before .ba-label{color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+.ba-panel.after .ba-label{color:#166534!important;-webkit-text-fill-color:#166534!important;}
+.ba-data{font-family:monospace!important;font-size:15px!important;letter-spacing:1px!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;word-break:break-all!important;}
+.ba-meta{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:6px!important;}
+.ba-arrow{font-size:26px!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;font-weight:700!important;}
+.ba-caption{font-size:13px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;line-height:1.55!important;margin:14px 0 0!important;padding-top:12px!important;border-top:1px solid #f1f5f9!important;}
+.ba-caption strong{color:#166534!important;-webkit-text-fill-color:#166534!important;}
+/* dark interactive card shell (shared by binary/rle/parallel/packet/io) */
+.wgt{background:#0f172a!important;border-radius:16px!important;padding:22px!important;border:1px solid #1e293b!important;margin:0 0 14px!important;}
+.wgt-h{font-family:"DM Serif Display",serif!important;font-size:18px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 3px!important;}
+.wgt-sub{font-size:13px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0 0 18px!important;}
+.wgt-btns{display:flex!important;gap:8px!important;justify-content:center!important;flex-wrap:wrap!important;margin-top:14px!important;}
+.wgt-btn{font-family:"DM Sans",sans-serif!important;font-size:13px!important;font-weight:700!important;padding:8px 14px!important;border-radius:9px!important;border:1px solid #334155!important;background:#1e293b!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;cursor:pointer!important;}
+.wgt-btn:hover{background:#334155!important;}
+.wgt-note{font-size:12.5px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;text-align:center!important;margin:12px 0 0!important;line-height:1.5!important;}
+.wgt-note.warn{color:#fca5a5!important;-webkit-text-fill-color:#fca5a5!important;}
+.wgt-note.good{color:#86efac!important;-webkit-text-fill-color:#86efac!important;}
+/* binary */
+.bpv-strip{display:flex!important;gap:6px!important;justify-content:center!important;flex-wrap:wrap!important;}
+.bpv-col{display:flex!important;flex-direction:column!important;align-items:center!important;gap:6px!important;}
+.bpv-pv{font-size:12px!important;font-weight:700!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-variant-numeric:tabular-nums!important;}
+.bpv-bit{width:44px!important;height:54px!important;border-radius:10px!important;border:2px solid #334155!important;background:#1e293b!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-family:monospace!important;font-size:23px!important;font-weight:700!important;cursor:pointer!important;}
+.bpv-bit.on{background:#1a56db!important;border-color:#60a5fa!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+.bpv-read{display:flex!important;align-items:baseline!important;justify-content:center!important;gap:14px!important;margin:20px 0 0!important;flex-wrap:wrap!important;}
+.bpv-binary{font-family:monospace!important;font-size:22px!important;letter-spacing:2px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+.bpv-eq{font-size:22px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+.bpv-dec{font-family:"DM Serif Display",serif!important;font-size:34px!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;line-height:1!important;}
+/* rle */
+.rle-in{width:100%!important;box-sizing:border-box!important;font-family:monospace!important;font-size:15px!important;padding:10px 12px!important;border-radius:9px!important;border:1px solid #334155!important;background:#1e293b!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;letter-spacing:1px!important;}
+.rle-row{display:flex!important;gap:12px!important;flex-wrap:wrap!important;margin-top:14px!important;}
+.rle-cell{flex:1!important;min-width:130px!important;background:#1e293b!important;border-radius:10px!important;padding:12px!important;text-align:center!important;}
+.rle-cell .l{font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:6px!important;}
+.rle-cell .v{font-family:monospace!important;font-size:16px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;word-break:break-all!important;}
+.rle-cell.out .v{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+.rle-cell .m{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:4px!important;}
+/* parallel timeline */
+.ptl-ctl{display:flex!important;align-items:center!important;gap:12px!important;justify-content:center!important;flex-wrap:wrap!important;margin-bottom:16px!important;}
+.ptl-ctl label{font-size:13px!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;font-weight:700!important;}
+.ptl-ctl input[type=range]{width:180px!important;}
+.ptl-ctl .n{font-family:"DM Serif Display",serif!important;font-size:22px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;min-width:28px!important;text-align:center!important;}
+.ptl-bar{height:26px!important;border-radius:6px!important;margin:8px 0!important;display:flex!important;overflow:hidden!important;}
+.ptl-seg{height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:11px!important;font-weight:700!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a!important;white-space:nowrap!important;}
+.ptl-seg.seq{background:#fca5a5!important;}
+.ptl-seg.par{background:#6ee7b7!important;}
+.ptl-lbl{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:2px!important;}
+.ptl-stat{display:flex!important;gap:18px!important;justify-content:center!important;margin-top:14px!important;flex-wrap:wrap!important;}
+.ptl-stat div{text-align:center!important;}
+.ptl-stat .k{font-size:11px!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+.ptl-stat .v{font-family:"DM Serif Display",serif!important;font-size:26px!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+/* packet */
+.pkt-track{display:flex!important;gap:8px!important;justify-content:center!important;flex-wrap:wrap!important;min-height:64px!important;}
+.pkt{width:58px!important;border-radius:9px!important;background:#1e293b!important;border:1px solid #334155!important;padding:8px 4px!important;text-align:center!important;}
+.pkt .seq{font-size:10px!important;font-weight:700!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+.pkt .ch{font-family:monospace!important;font-size:20px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;margin-top:2px!important;}
+.pkt.lost{opacity:.35!important;border-style:dashed!important;}
+.pkt-msg{font-family:monospace!important;font-size:20px!important;letter-spacing:3px!important;text-align:center!important;margin-top:16px!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;min-height:24px!important;}
+/* io mapper */
+.iom-flow{display:grid!important;grid-template-columns:1fr auto 1fr auto 1fr!important;align-items:center!important;gap:10px!important;}
+.iom-box{background:#1e293b!important;border-radius:12px!important;padding:14px!important;text-align:center!important;}
+.iom-box .l{font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:6px!important;}
+.iom-box .v{font-size:15px!important;font-weight:700!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+.iom-box.prog{background:#1a3a6b!important;}
+.iom-box.out .v{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+.iom-ar{font-size:20px!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;font-weight:700!important;}
+.iom-temp{font-family:"DM Serif Display",serif!important;font-size:26px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+@media(max-width:520px){.ba-grid{grid-template-columns:1fr!important;}.ba-arrow{transform:rotate(90deg)!important;}.iom-flow{grid-template-columns:1fr!important;}.iom-ar{transform:rotate(90deg)!important;}}
+
+</style>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "AP CSP Course", "item": "https://apcsexamprep.com/pages/ap-csp-course"}, {"@type": "ListItem", "position": 2, "name": "Big Idea 1", "item": "https://apcsexamprep.com/pages/ap-csp-course-big-idea-1"}, {"@type": "ListItem", "position": 3, "name": "Topic 1.2: Program Function and Purpose", "item": "https://apcsexamprep.com/pages/ap-csp-course-bi1-program-function-purpose"}]}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "LearningResource", "name": "AP CSP Topic 1.2: Program Function and Purpose", "description": "AP CSP Topic 1.2: what a program does, its function and purpose, inputs and outputs, and program behavior. 6 exam MCQs plus the Guess the Purpose game.", "url": "https://apcsexamprep.com/pages/ap-csp-course-bi1-program-function-purpose", "educationalLevel": "High School", "learningResourceType": "Lesson", "author": {"@type": "Person", "name": "Tanner Crow"}, "isPartOf": {"@type": "Course", "name": "AP Computer Science Principles Complete Course", "url": "https://apcsexamprep.com/pages/ap-csp-course"}, "datePublished": "2026-03-01"}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is the difference between a program's function and its purpose?", "acceptedAnswer": {"@type": "Answer", "text": "The function is what the program does, its observable behavior, such as \"it displays the largest number in a list.\" The purpose is why it exists, the need it meets and who it is for, such as \"it helps a coach quickly find the top score.\" Describing a program well means answering both."}}, {"@type": "Question", "name": "Does input always come from a person typing?", "acceptedAnswer": {"@type": "Answer", "text": "No. Input is any data a program receives. It can come from a user, from another program, from an input device like a mouse, from a sensor like a thermometer, or from a file. Input can be tactile, audible, visual, or text."}}, {"@type": "Question", "name": "What counts as an output?", "acceptedAnswer": {"@type": "Answer", "text": "An output is any observable behavior the program produces. It can be visual (something on screen), audible (a sound), tactile (a vibration), movement (a motor turning), or text. If you can observe the program producing it, it is a candidate output."}}, {"@type": "Question", "name": "What does it mean for a program to be event-driven?", "acceptedAnswer": {"@type": "Answer", "text": "In an event-driven program, certain code runs only when a specific event occurs, such as a mouse click, a key press, or a sensor reading. The event is the trigger; until it happens, that code simply waits."}}, {"@type": "Question", "name": "Why does the Create Task ask me to describe function, purpose, input, and output?", "acceptedAnswer": {"@type": "Answer", "text": "Because those are the core ideas of Topic 1.2 and the framework expects you to communicate what your program does, why you built it, and how it interacts with data. Using this exact vocabulary in your written responses is what earns the points."}}]}</script>
+
+<div class="lesson-page" data-course="ap-csp" data-unit="bi-1" data-lesson="program-function-purpose">
+
+  <div class="lesson-breadcrumb">
+    <div class="lesson-breadcrumb-inner">
+      <a href="/pages/ap-csp-course">AP CSP Course</a><span class="bc-sep">›</span>
+      <a href="/pages/ap-csp-course-big-idea-1">Big Idea 1</a><span class="bc-sep">›</span>
+      <span>1.2 Program Function and Purpose</span>
+    </div>
+  </div>
+  <div class="social-proof-bar">
+    <div class="social-proof-inner">
+      <span class="social-proof-item">⭐ <strong>5.0</strong> Wyzant rating</span>
+      <span class="social-proof-item">📚 <strong>1,845+</strong> tutoring hours</span>
+      <span class="social-proof-item">🏫 Built by an <strong>AP CS teacher</strong> with 11+ years experience</span>
+      <span class="social-proof-item">🎯 <strong>70%</strong> of classroom students score 4 or 5 on AP CSP</span>
+    </div>
+  </div>
+  <div class="lesson-hero">
+    <div class="lesson-hero-inner">
+      <div class="lesson-hero-meta">
+        <div class="lesson-num-badge">1.2</div>
+        <div><div class="lesson-eyebrow">Big Idea 1 • Creative Development</div></div>
+      </div>
+      <h1>Program Function and Purpose</h1>
+      <div class="lesson-hero-pills">
+        <span class="lesson-pill">🕐 ~30 min</span>
+        <span class="lesson-pill" style="background:rgba(74,222,128,0.15);border-color:rgba(74,222,128,0.3);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;">FREE</span>
+        <span class="lesson-pill">📖 6 MCQ questions</span>
+        <span class="lesson-pill">🎮 Guess the Purpose game</span>
+        <span class="ced-tag">CRD-2.A / CRD-2.B</span>
+      </div>
+    </div>
+  </div>
+  <div class="bi3-progress"><div class="bi3-progress-inner">
+<a href="/pages/ap-csp-course-bi1-collaboration" class="prog-step-link"><div class="prog-dot done">1.1</div>
+<div class="prog-label">Collab</div></a>
+<div class="prog-arrow"></div>
+<div class="prog-step">
+<div class="prog-dot active">1.2</div>
+<div class="prog-label active-label">Purpose</div>
+</div>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi1-program-design-development" class="prog-step-link"><div class="prog-dot upcoming">1.3</div>
+<div class="prog-label">Design</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi1-identifying-correcting-errors" class="prog-step-link"><div class="prog-dot upcoming">1.4</div>
+<div class="prog-label">Errors</div></a>
+</div></div>
+
+  <div class="lesson-main">
+
+    <div class="lesson-objectives">
+      <h2>After this lesson, you will be able to:</h2>
+      <ul>
+        <li><span>Define a program as a collection of statements that performs a specific task when run</span></li>
+        <li><span>Distinguish a program's function (what it does) from its purpose (the need it meets and why)</span></li>
+        <li><span>Identify the inputs a program receives and the outputs it produces, across text, visual, audible, tactile, and movement forms</span></li>
+        <li><span>Explain program behavior as how a program responds to a given input or set of inputs</span></li>
+        <li><span>Recognize event-driven code that runs only when a triggering event, such as a click or key press, occurs</span></li>
+      </ul>
+    </div>
+    <div class="score-impact">📈 <span>Big Idea 1 (Creative Development) is 10 to 13 percent of the AP CSP exam, and describing a program's function and purpose is a skill you use twice: on the multiple-choice section and in the written responses of the Create Performance Task. Getting the function versus purpose distinction right is nearly free points, and it is the exact language your Create Task writeup must use.</span>
+</div>
+    <div class="hook-box">
+      <div class="hook-label">💡 Think about this first</div>
+      <p>A weather app on a phone quietly checks the barometer sensor every few minutes, and when the pressure drops sharply it buzzes and shows a storm warning. Ask two people what the app is, and one says "it reads a sensor and shows a message," while the other says "it helps people stay safe when bad weather is coming." Both are right, but they are answering two different questions. Which one is describing the function, and which one is describing the purpose?</p>
+    </div>
+    <div class="lesson-section">
+      <h2>What a Program Actually Is</h2>
+      <p>A <strong>program</strong> is a collection of statements that performs a specific task when it is run. That definition is small but exact, and the exam holds you to it. The statements are the instructions; running them is what produces a result. Nothing happens until the program runs, and when it does, it carries out the task it was written to do.</p>
+      <p>To <strong>describe</strong> a program you answer two separate questions: what does it do, and why does it exist? Those map to two vocabulary terms you must not mix up: <strong>function</strong> and <strong>purpose</strong>. Almost every 1.2 question is really testing whether you can tell those two apart, so it is worth getting clear before anything else.</p>
+      <div class="callout-exam">
+        <div class="callout-exam-label">🎯 What the exam rewards</div>
+        <p>When a question asks you to describe a program, decide first whether it wants the <strong>function</strong> (the observable behavior) or the <strong>purpose</strong> (the need it addresses). Answering the wrong one is the single most common way students lose these points even when they understand the program.</p>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Function versus Purpose</h2>
+      <p>The <strong>function</strong> of a program is <strong>what it does</strong>: its observable behavior, described concretely. "It takes a list of numbers and displays the largest one" is a function. You could watch the program run and confirm it.</p>
+      <p>The <strong>purpose</strong> of a program is <strong>why it was created</strong>: the problem it addresses, the need it meets, who it is for, and the value it provides. "It helps a coach quickly find the top score so practice runs faster" is a purpose. You cannot see the purpose by watching the screen; it lives in the reason someone built the program. A program can also reflect the <strong>creativity, values, and interests</strong> of the person who made it, which is part of why two programmers solving the same need may build very different programs.</p>
+      <table class="vocab-table">
+        <tr>
+<th>Term</th>
+<th>Question it answers</th>
+</tr>
+        <tr>
+<td><strong>Function</strong></td>
+<td>What does the program do? (its observable behavior)</td>
+</tr>
+        <tr>
+<td><strong>Purpose</strong></td>
+<td>Why does it exist? (the need it meets, who it is for, the value it gives)</td>
+</tr>
+      </table>
+      <div class="mini-ex">
+        <div class="mini-ex-label">Quick check</div>
+        <div class="mini-ex-q">An app scans a photo of a meal and shows an estimated calorie count. A user says, "This exists to help people who are tracking their diet make quicker food choices." That sentence is describing the app's:</div>
+        <div class="mini-opts" id="mc-purpose-1-opts">
+          <button class="mini-opt" onclick="miniMCQ('mc-purpose-1','A','B','mc-purpose-1-fb')"><span class="mini-opt-letter">A</span> Function</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-purpose-1','B','B','mc-purpose-1-fb')"><span class="mini-opt-letter">B</span> Purpose</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-purpose-1','C','B','mc-purpose-1-fb')"><span class="mini-opt-letter">C</span> Input</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-purpose-1','D','B','mc-purpose-1-fb')"><span class="mini-opt-letter">D</span> Output</button>
+        </div>
+        <div class="mini-fb" id="mc-purpose-1-fb"></div>
+      </div>
+      <div class="callout-trap">
+        <div class="callout-trap-label">⚠ Common trap</div>
+        <p>Do not assume purpose is just a fancier restatement of function. "It sorts the scores" (function) and "it helps a teacher find who needs help" (purpose) are different answers to different questions. A response that only lists what the code does has <strong>not</strong> described the purpose, and vice versa.</p>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Inputs and Outputs</h2>
+      <p><strong>Input</strong> is how a program receives data. Input does not have to come from a person typing. It can come from a <strong>user</strong>, from <strong>another program</strong>, from an <strong>input device</strong> such as a keyboard or mouse, from a <strong>sensor</strong> such as a thermometer or accelerometer, or from a <strong>file</strong>. Input can be <strong>tactile</strong> (a touch or button press), <strong>audible</strong> (a spoken command), <strong>visual</strong> (a scanned image), or <strong>text</strong>.</p>
+      <p><strong>Output</strong> is any observable behavior a program produces. Like input, it comes in several forms: <strong>visual</strong> (something on the screen), <strong>audible</strong> (a sound), <strong>tactile</strong> (a vibration), <strong>movement</strong> (a robot arm turning), or <strong>text</strong>. If you can observe it happening, it is a candidate for being an output.</p>
+      <ul>
+        <li>
+<strong>Input examples:</strong> a tapped button, a voice command, a temperature reading from a sensor, a saved file the program opens.</li>
+        <li>
+<strong>Output examples:</strong> a message on the screen, a beep, a phone buzz, a drawn shape, a motor spinning.</li>
+      </ul>
+      <p>Identifying input and output precisely matters because the Create Task written responses ask you to name at least one input to your program and one output your program produces. Vague answers like "the program" are not inputs; a specific piece of data the program receives is.</p>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Behavior and Events</h2>
+      <p><strong>Program behavior</strong> is how a program responds to a given input or set of inputs. Same program, different input, and the behavior can change: type a valid password and you are let in; type the wrong one and you get an error. Describing behavior means connecting an input to the response it produces.</p>
+      <p>Some programs are <strong>event-driven</strong>. In an event-driven program, certain code runs <strong>only when a specific event occurs</strong>. The event is the <strong>trigger</strong>: a mouse click, a key press, a sensor crossing a threshold, a screen tap. Until that event happens, that block of code simply waits. A button that does nothing until you click it, then plays a sound, is event-driven: the click is the event, and playing the sound is the response.</p>
+      <div class="mini-ex">
+        <div class="mini-ex-label">Quick check</div>
+        <div class="mini-ex-q">In a drawing app, a block of code runs only at the moment the user presses the space bar, at which point the canvas clears. What is the event that triggers this code?</div>
+        <div class="mini-opts" id="mc-purpose-2-opts">
+          <button class="mini-opt" onclick="miniMCQ('mc-purpose-2','A','C','mc-purpose-2-fb')"><span class="mini-opt-letter">A</span> Clearing the canvas</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-purpose-2','B','C','mc-purpose-2-fb')"><span class="mini-opt-letter">B</span> The drawing already on the canvas</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-purpose-2','C','C','mc-purpose-2-fb')"><span class="mini-opt-letter">C</span> The space bar being pressed</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-purpose-2','D','C','mc-purpose-2-fb')"><span class="mini-opt-letter">D</span> The app being a drawing app</button>
+        </div>
+        <div class="mini-fb" id="mc-purpose-2-fb"></div>
+      </div>
+    </div>
+    <div class="lesson-visual">
+      <p class="lv-kicker">💡 See it in action</p>
+    <div class="wgt" role="group" aria-label="Interactive input output program behavior demo">
+      <div class="wgt-h">Input, Program, Output</div>
+      <div class="wgt-sub">A thermostat program. Its function: turn the heater on when the room is below 68 degrees.</div>
+      <div class="iom-flow">
+        <div class="iom-box">
+<div class="l">Input</div>
+<div class="iom-temp" id="iomTemp">70°</div>
+</div>
+        <div class="iom-ar" aria-hidden="true">→</div>
+        <div class="iom-box prog">
+<div class="l">Program</div>
+<div class="v">if temp &lt; 68:<br>heater on</div>
+</div>
+        <div class="iom-ar" aria-hidden="true">→</div>
+        <div class="iom-box out">
+<div class="l">Output</div>
+<div class="v" id="iomOut">Heater OFF</div>
+</div>
+      </div>
+      <div class="ptl-ctl" style="margin-top:16px">
+<label for="iomR">Room temperature</label><input type="range" id="iomR" min="60" max="78" value="70">
+</div>
+      <div class="wgt-note" id="iomNote">Change the input and the output changes. Same input always gives the same output: that is the program's behavior.</div>
+    </div>
+    <script>(function(){
+      var r=document.getElementById('iomR'),t=document.getElementById('iomTemp'),o=document.getElementById('iomOut'),note=document.getElementById('iomNote');
+      function upd(){var v=parseInt(r.value,10);t.innerHTML=v+'°';var on=v<68;o.textContent='Heater '+(on?'ON':'OFF');o.parentElement.className='iom-box out';
+        note.textContent=on?('Input '+v+' is below 68, so the program outputs Heater ON.'):('Input '+v+' is at or above 68, so the program outputs Heater OFF.');note.className='wgt-note';}
+      r.addEventListener('input',upd);upd();
+    })();</script>
+    </div>
+    <div class="lesson-section">
+      <h2>How This Shows Up on the Create Performance Task</h2>
+      <p>The Create Performance Task is completed <strong>individually</strong> under current AP rules, so the program and every written response must be your own. Topic 1.2 is the backbone of the written responses. You are asked to <strong>describe the overall function and purpose</strong> of your program: state clearly what your program does (its function) and why you made it or what need it addresses (its purpose). Do not settle for one; a strong response names both. You are also asked to <strong>identify the input and the output</strong> of your program: point to a specific piece of data your program receives, whether from a user, a file, or a device, and a specific observable result it produces. Using the exact vocabulary from this lesson, function, purpose, input, output, and behavior, is what makes these responses earn their points.</p>
+    </div>
+    <div class="email-capture">
+      <div class="email-capture-text">
+        <div class="email-capture-eyebrow">FREE for students</div>
+        <h3>Get a free AP CSP question every day</h3>
+        <p>Join 3,000+ students. Daily practice, study tips, and exam strategies.</p>
+      </div>
+      <div>
+        <div class="email-capture-form" id="capture-form">
+          <input type="email" class="email-capture-input" id="capture-email" placeholder="your@email.com">
+          <button class="email-capture-btn" onclick="handleCapture()">Subscribe →</button>
+        </div>
+        <div class="email-capture-success" id="capture-success">✓ You're in!</div>
+      </div>
+    </div>
+    <div class="mcq-section">
+      <div class="mcq-section-header">
+        <div class="mcq-section-icon">📈</div>
+        <div>
+          <div class="mcq-section-title">MCQ Practice</div>
+          <div class="mcq-section-sub">6 questions • Exam difficulty and above • Predict before you peek</div>
+        </div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q1">
+        <div class="mcq-q-num">Question 1 of 6<span class="diff-tag">Concept</span>
+</div>
+        <div class="predict-note">Predict whether the sentence names a function or a purpose before reading the options.</div>
+        <div class="mcq-q-text"><p>A student describes a program by saying, "It exists so that visually impaired users can hear the text on a web page instead of reading it." Which aspect of the program is the student describing?</p></div>
+        <div class="mcq-options" id="q1-options">
+<button class="mcq-option" onclick="checkMCQ('q1','A','B','q1-fb-A')"><span class="mcq-option-letter">A</span> The function, because it names the observable behavior the program produces</button>
+<button class="mcq-option" onclick="checkMCQ('q1','B','B','q1-fb-B')"><span class="mcq-option-letter">B</span> The purpose, because it names the need the program meets and who it serves</button>
+<button class="mcq-option" onclick="checkMCQ('q1','C','B','q1-fb-C')"><span class="mcq-option-letter">C</span> The input, because it names the data the program receives to run</button>
+<button class="mcq-option" onclick="checkMCQ('q1','D','B','q1-fb-D')"><span class="mcq-option-letter">D</span> The behavior, because it names how the program responds to one input</button>
+</div>
+<div id="q1-fb-A" class="mcq-feedback incorrect-fb">Incorrect. The observable behavior would be something like "it reads the page text aloud." This sentence gives the reason the program exists.</div>
+<div id="q1-fb-B" class="mcq-feedback correct-fb">Correct. Naming the need (accessibility for visually impaired users) and who it serves describes the program's purpose, not what it observably does.</div>
+<div id="q1-fb-C" class="mcq-feedback incorrect-fb">Incorrect. The input would be the text on the page. This sentence explains why the program was built.</div>
+<div id="q1-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Behavior connects a specific input to a response. This sentence gives the underlying reason the program exists.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q2">
+        <div class="mcq-q-num">Question 2 of 6<span class="diff-tag">Spot the problem</span>
+</div>
+        <div class="predict-note">Decide what is missing from the description before you look.</div>
+        <div class="mcq-q-text"><p>For the Create Task, a student writes: "My program takes a number the user types and prints whether it is even or odd." A teacher says the description is incomplete for the purpose requirement. What is the most accurate reason?</p></div>
+        <div class="mcq-options" id="q2-options">
+<button class="mcq-option" onclick="checkMCQ('q2','A','C','q2-fb-A')"><span class="mcq-option-letter">A</span> It never states which programming language was used to build the program</button>
+<button class="mcq-option" onclick="checkMCQ('q2','B','C','q2-fb-B')"><span class="mcq-option-letter">B</span> It fails to list every line of code that runs when the program starts</button>
+<button class="mcq-option" onclick="checkMCQ('q2','C','C','q2-fb-C')"><span class="mcq-option-letter">C</span> It describes what the program does but not the need it meets or why it exists</button>
+<button class="mcq-option" onclick="checkMCQ('q2','D','C','q2-fb-D')"><span class="mcq-option-letter">D</span> It does not explain how many test cases the student ran on the program</button>
+</div>
+<div id="q2-fb-A" class="mcq-feedback incorrect-fb">Incorrect. The language is not part of describing function or purpose, so its absence is not the issue.</div>
+<div id="q2-fb-B" class="mcq-feedback incorrect-fb">Incorrect. A purpose description does not require listing code; it requires the reason the program exists.</div>
+<div id="q2-fb-C" class="mcq-feedback correct-fb">Correct. The sentence gives the function (what it does) but never states the purpose, the need it addresses or why the student built it.</div>
+<div id="q2-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Test cases relate to correctness, not to the purpose requirement being described here.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q3">
+        <div class="mcq-q-num">Question 3 of 6<span class="diff-tag">Inputs and outputs</span>
+</div>
+        <div class="predict-note">List which items are inputs before matching to an option.</div>
+        <div class="mcq-q-text"><p>A fitness wristband program does the following. Consider which of these are best classified as inputs to the program:</p></div>
+        <ul class="mcq-roman">
+          <li>
+<strong>I.</strong> A reading from the built-in heart-rate sensor</li>
+          <li>
+<strong>II.</strong> A goal the user taps in on the touchscreen</li>
+          <li>
+<strong>III.</strong> A vibration the band produces to alert the user</li>
+        </ul>
+        <div class="mcq-options" id="q3-options">
+<button class="mcq-option" onclick="checkMCQ('q3','A','A','q3-fb-A')"><span class="mcq-option-letter">A</span> I and II only</button>
+<button class="mcq-option" onclick="checkMCQ('q3','B','A','q3-fb-B')"><span class="mcq-option-letter">B</span> I only</button>
+<button class="mcq-option" onclick="checkMCQ('q3','C','A','q3-fb-C')"><span class="mcq-option-letter">C</span> II and III only</button>
+<button class="mcq-option" onclick="checkMCQ('q3','D','A','q3-fb-D')"><span class="mcq-option-letter">D</span> I, II, and III</button>
+</div>
+<div id="q3-fb-A" class="mcq-feedback correct-fb">Correct. A sensor reading and a tapped-in goal are both data the program receives, so both are inputs. A vibration is an output, so III does not belong.</div>
+<div id="q3-fb-B" class="mcq-feedback incorrect-fb">Incorrect. Statement II is also an input; a value the user taps in is data the program receives.</div>
+<div id="q3-fb-C" class="mcq-feedback incorrect-fb">Incorrect. Statement III is a vibration, which is an output, not an input, so this pairing is wrong.</div>
+<div id="q3-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Statement III is an output (a vibration the band produces), so not all three are inputs.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q4">
+        <div class="mcq-q-num">Question 4 of 6<span class="diff-tag">Event-driven</span>
+</div>
+        <div class="predict-note">Name the trigger before reading the choices.</div>
+        <div class="mcq-q-text"><p>A home program is written so that a block of code runs only when a motion sensor detects movement near the front door, and that code then turns on a porch light. Which statement best identifies the event and the resulting behavior?</p></div>
+        <div class="mcq-options" id="q4-options">
+<button class="mcq-option" onclick="checkMCQ('q4','A','B','q4-fb-A')"><span class="mcq-option-letter">A</span> The event is turning on the porch light, and the behavior is the motion being detected</button>
+<button class="mcq-option" onclick="checkMCQ('q4','B','B','q4-fb-B')"><span class="mcq-option-letter">B</span> The event is the motion being detected, and the behavior is turning on the porch light</button>
+<button class="mcq-option" onclick="checkMCQ('q4','C','B','q4-fb-C')"><span class="mcq-option-letter">C</span> The event is the porch light staying off, and the behavior is the sensor waiting for input</button>
+<button class="mcq-option" onclick="checkMCQ('q4','D','B','q4-fb-D')"><span class="mcq-option-letter">D</span> The event is the program starting up, and the behavior is the motion sensor being installed</button>
+</div>
+<div id="q4-fb-A" class="mcq-feedback incorrect-fb">Incorrect. These are reversed. The trigger cannot be the light turning on, since that is the response the code produces.</div>
+<div id="q4-fb-B" class="mcq-feedback correct-fb">Correct. The detected motion is the event that triggers the code, and turning on the light is how the program responds to that input.</div>
+<div id="q4-fb-C" class="mcq-feedback incorrect-fb">Incorrect. The light being off is a state, not a triggering event, and waiting is not the behavior the question asks about.</div>
+<div id="q4-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Startup is not the trigger here, and installing a sensor is a physical action, not program behavior.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q5">
+        <div class="mcq-q-num">Question 5 of 6<span class="diff-tag">Best choice</span>
+</div>
+        <div class="predict-note">Predict the strongest function-and-purpose description first.</div>
+        <div class="mcq-q-text"><p>Which of the following most completely describes both the function and the purpose of a program that logs daily water intake?</p></div>
+        <div class="mcq-options" id="q5-options">
+<button class="mcq-option" onclick="checkMCQ('q5','A','D','q5-fb-A')"><span class="mcq-option-letter">A</span> It stores numbers in a list and adds them together each day when the app opens</button>
+<button class="mcq-option" onclick="checkMCQ('q5','B','D','q5-fb-B')"><span class="mcq-option-letter">B</span> It was written in a block-based language and uses a loop and a variable to keep a running count</button>
+<button class="mcq-option" onclick="checkMCQ('q5','C','D','q5-fb-C')"><span class="mcq-option-letter">C</span> It helps people who forget to drink water and is useful for anyone with a busy schedule</button>
+<button class="mcq-option" onclick="checkMCQ('q5','D','D','q5-fb-D')"><span class="mcq-option-letter">D</span> It records how many cups a user logs and shows a daily total to help the user stay hydrated</button>
+</div>
+<div id="q5-fb-A" class="mcq-feedback incorrect-fb">Incorrect. This gives only the function (what it does) and leaves out the purpose or need it meets.</div>
+<div id="q5-fb-B" class="mcq-feedback incorrect-fb">Incorrect. This describes implementation details, not the function and purpose the question asks for.</div>
+<div id="q5-fb-C" class="mcq-feedback incorrect-fb">Incorrect. This gives only the purpose (who it helps and why) and never states what the program actually does.</div>
+<div id="q5-fb-D" class="mcq-feedback correct-fb">Correct. It states the function (records cups and shows a daily total) and the purpose (help the user stay hydrated), so it covers both.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q6">
+        <div class="mcq-q-num">Question 6 of 6<span class="diff-tag">Application</span>
+</div>
+        <div class="predict-note">Predict which change alters observable behavior before deciding.</div>
+        <div class="mcq-q-text"><p>Two versions of a quiz program receive the same input, a student's typed answer, but version one displays "Correct" for a right answer while version two plays a short chime for a right answer. Which computing terms most precisely capture this difference?</p></div>
+        <div class="mcq-options" id="q6-options">
+<button class="mcq-option" onclick="checkMCQ('q6','A','A','q6-fb-A')"><span class="mcq-option-letter">A</span> The two versions produce different outputs, one visual and one audible, which is a difference in behavior</button>
+<button class="mcq-option" onclick="checkMCQ('q6','B','A','q6-fb-B')"><span class="mcq-option-letter">B</span> The two versions have different purposes but identical outputs</button>
+<button class="mcq-option" onclick="checkMCQ('q6','C','A','q6-fb-C')"><span class="mcq-option-letter">C</span> The two versions have different inputs, one text and one audible, which changes the function</button>
+<button class="mcq-option" onclick="checkMCQ('q6','D','A','q6-fb-D')"><span class="mcq-option-letter">D</span> The two versions differ only in purpose, since both produce the same observable result</button>
+</div>
+<div id="q6-fb-A" class="mcq-feedback correct-fb">Correct. Same input, but one produces a visual output and the other an audible output, so the programs respond differently, which is a difference in behavior.</div>
+<div id="q6-fb-B" class="mcq-feedback incorrect-fb">Incorrect. The outputs clearly differ (text versus a chime), so they are not identical, and the purpose is the same.</div>
+<div id="q6-fb-C" class="mcq-feedback incorrect-fb">Incorrect. The input is the same typed answer in both versions; it is the output that differs.</div>
+<div id="q6-fb-D" class="mcq-feedback incorrect-fb">Incorrect. The observable results are not the same, so this cannot be a purpose-only difference.</div>
+      </div>
+    </div>
+    <div class="game-section">
+      <div style="text-align:center;margin-bottom:20px;">
+        <div class="game-badge">🎮 Lesson Game</div>
+        <div class="game-title">Guess the Purpose</div>
+        <div class="game-sub">Read what a program does and name its function and purpose before the timer runs out.</div>
+      </div>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+#gp-game{font-family:"DM Sans",sans-serif!important;max-width:560px;margin:0 auto;padding:0 12px 12px;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;box-sizing:border-box;}
+#gp-game *{box-sizing:border-box;}
+#gp-game .gp-hero{background:#0f1f3d!important;border-radius:14px!important;padding:20px 22px;margin-top:12px;}
+#gp-game .gp-title{font-family:"DM Serif Display",serif!important;font-size:26px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 6px;line-height:1.1;}
+#gp-game .gp-desc{font-size:13px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0;line-height:1.5;}
+#gp-game .gp-how{font-size:12px!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;margin:10px 0 0;line-height:1.5;}
+#gp-game .gp-bar{display:flex;gap:8px;margin-top:12px;}
+#gp-game .gp-stat{flex:1;background:#eff6ff!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:10px 8px;text-align:center;}
+#gp-game .gp-stat .k{font-size:11px!important;font-weight:700;color:#64748b!important;-webkit-text-fill-color:#64748b!important;text-transform:uppercase;letter-spacing:.04em;}
+#gp-game .gp-stat .v{font-size:22px!important;font-weight:800;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;font-variant-numeric:tabular-nums;line-height:1.1;margin-top:2px;}
+#gp-game .gp-stat.streak .v{color:#d97706!important;-webkit-text-fill-color:#d97706!important;}
+#gp-game .gp-prog{height:8px;background:#e2e8f0!important;border-radius:100px!important;margin-top:12px;overflow:hidden;}
+#gp-game .gp-prog span{display:block;height:100%;background:#16a34a!important;border-radius:100px!important;width:0;transition:width .3s;}
+#gp-game .gp-card{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:14px!important;padding:18px;margin-top:12px;}
+#gp-game .gp-tag{display:inline-block;font-size:11px!important;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#7c3aed!important;-webkit-text-fill-color:#7c3aed!important;background:#f5f3ff!important;border:1px solid #ddd6fe!important;border-radius:100px!important;padding:4px 10px;margin-bottom:10px;}
+#gp-game .gp-q{font-size:16px!important;font-weight:700;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.4;margin:0 0 12px;}
+#gp-game .gp-io{border:1px solid #e2e8f0!important;border-radius:12px!important;overflow:hidden;margin-bottom:14px;}
+#gp-game .gp-io .gp-ioh{display:flex;background:#0f1f3d!important;}
+#gp-game .gp-io .gp-ioh div{flex:1;padding:8px 12px;font-size:11px!important;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+#gp-game .gp-io .gp-ioh div+div{border-left:1px solid #1e293b!important;}
+#gp-game .gp-io .gp-ior{display:flex;font-family:ui-monospace,Menlo,Consolas,monospace!important;font-size:14px!important;}
+#gp-game .gp-io .gp-ior:nth-child(even){background:#f8fafc!important;}
+#gp-game .gp-io .gp-ior span{flex:1;padding:8px 12px;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;}
+#gp-game .gp-io .gp-ior span+span{border-left:1px solid #e2e8f0!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;font-weight:700;}
+#gp-game .gp-opts{display:flex;flex-direction:column;gap:8px;}
+#gp-game .gp-opt{text-align:left;width:100%;background:#fff!important;border:2px solid #e2e8f0!important;border-radius:12px!important;padding:12px 14px;font-family:inherit;font-size:14px!important;font-weight:600;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;cursor:pointer;transition:border-color .15s,background .15s;}
+#gp-game .gp-opt:hover:not(:disabled){border-color:#93c5fd!important;background:#eff6ff!important;}
+#gp-game .gp-opt:disabled{cursor:default;}
+#gp-game .gp-opt.right{border-color:#16a34a!important;background:#f0fdf4!important;color:#166534!important;-webkit-text-fill-color:#166534!important;}
+#gp-game .gp-opt.wrong{border-color:#dc2626!important;background:#fef2f2!important;color:#991b1b!important;-webkit-text-fill-color:#991b1b!important;}
+#gp-game .gp-fb{margin-top:12px;border-radius:12px!important;padding:12px 14px;font-size:13px!important;line-height:1.5;font-weight:600;display:none;}
+#gp-game .gp-fb.show{display:block;}
+#gp-game .gp-fb.ok{background:#f0fdf4!important;border:1px solid #bbf7d0!important;color:#166534!important;-webkit-text-fill-color:#166534!important;}
+#gp-game .gp-fb.no{background:#fef2f2!important;border:1px solid #fecaca!important;color:#991b1b!important;-webkit-text-fill-color:#991b1b!important;}
+#gp-game .gp-next{margin-top:12px;width:100%;background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none;border-radius:12px!important;padding:13px;font-family:inherit;font-size:15px!important;font-weight:800;cursor:pointer;display:none;}
+#gp-game .gp-next.show{display:block;}
+#gp-game .gp-next:hover{background:#1e40af!important;}
+#gp-game .gp-end{text-align:center;padding:24px 18px;}
+#gp-game .gp-end h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin:0 0 8px;}
+#gp-game .gp-end .big{font-size:44px!important;font-weight:800;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;line-height:1;margin:8px 0;}
+#gp-game .gp-end p{font-size:14px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;line-height:1.6;margin:8px 0 0;}
+#gp-game .gp-end .gp-next{display:block;max-width:240px;margin:18px auto 0;}
+</style>
+
+<div class="gp-game" id="gp-game">
+  <div class="gp-hero">
+    <h1 class="gp-title">Guess the Purpose</h1>
+    <p class="gp-desc">A program is a black box: it turns INPUTS into OUTPUTS. Figure out what problem it solves.</p>
+    <p class="gp-how">How to play: study the example inputs and outputs, predict the rule in your head, then pick the option that matches. 8 rounds.</p>
+    <div class="gp-bar">
+      <div class="gp-stat">
+<div class="k">Round</div>
+<div class="v" id="gp-round">1</div>
+</div>
+      <div class="gp-stat">
+<div class="k">Score</div>
+<div class="v" id="gp-score">0</div>
+</div>
+      <div class="gp-stat streak">
+<div class="k">Streak</div>
+<div class="v" id="gp-streak">0</div>
+</div>
+    </div>
+    <div class="gp-prog"><span id="gp-progbar"></span></div>
+  </div>
+  <div id="gp-play"></div>
+</div>
+
+<script>
+(function(){
+  var ARROW = ' \u2192 ';
+  var TOTAL = 8;
+
+  // Each round: {kind, tag, q, io:[[in,out],...], ioHead:[inLabel,outLabel], opts:[...], answer:idx, fb:'rule'}
+  var ROUNDS = [
+    {
+      tag:'What is the purpose?',
+      q:'A program takes a number and produces this output. What is its purpose?',
+      ioHead:['Input','Output'],
+      io:[['3','6'],['5','10'],['8','16'],['12','24']],
+      opts:['Adds 3 to the number','Doubles the number','Squares the number','Adds the number to itself and then adds 1'],
+      answer:1,
+      fb:'Every output is exactly twice the input (3\u21926, 12\u219224). The purpose is to double the number.'
+    },
+    {
+      tag:'What is the purpose?',
+      q:'A program reads a list of numbers and returns a shorter list. What is its purpose?',
+      ioHead:['Input list','Output list'],
+      io:[['[1,2,3,4]','[2,4]'],['[5,6,7,8]','[6,8]'],['[10,11,12]','[10,12]']],
+      opts:['Removes the first number','Keeps only the even numbers','Keeps only numbers greater than 3','Keeps every other number starting at the second'],
+      answer:1,
+      fb:'The kept values (2,4,6,8,10,12) are exactly the even ones. Odd numbers are dropped no matter their position.'
+    },
+    {
+      tag:'What is the purpose?',
+      q:'A program takes a word and returns a number. What is its purpose?',
+      ioHead:['Input word','Output'],
+      io:[['"cat"','1'],['"queue"','4'],['"sky"','0'],['"idea"','3']],
+      opts:['Counts the letters in the word','Counts the vowels in the word','Counts the consonants in the word','Returns the position of the first vowel'],
+      answer:1,
+      fb:'"queue" has 4 vowels (u,e,u,e) and "sky" has 0. The program counts vowels, not total letters.'
+    },
+    {
+      // reversed style: given purpose, pick correct output
+      tag:'Predict the output',
+      q:'A program converts Celsius to Fahrenheit using F = C * 9/5 + 32. For the input C = 20, which output is correct?',
+      ioHead:['Input','Output'],
+      io:[['0','32'],['100','212']],
+      opts:['52','68','36','93'],
+      answer:1,
+      fb:'F = 20 * 9/5 + 32 = 36 + 32 = 68. The examples (0\u219232, 100\u2192212) confirm the same rule.'
+    },
+    {
+      tag:'What is the purpose?',
+      q:'A program takes two numbers and returns one number. What is its purpose?',
+      ioHead:['Input (a, b)','Output'],
+      io:[['4, 9','9'],['7, 2','7'],['5, 5','5'],['3, 8','8']],
+      opts:['Returns the second number','Returns the larger of the two numbers','Adds the two numbers','Returns the difference of the two numbers'],
+      answer:1,
+      fb:'For 4,9 it returns 9 and for 7,2 it returns 7: always the larger value, not simply the second one.'
+    },
+    {
+      tag:'What is the purpose?',
+      q:'A program takes a string and returns a string. What is its purpose?',
+      ioHead:['Input','Output'],
+      io:[['"code"','"edoc"'],['"stop"','"pots"'],['"ab"','"ba"']],
+      opts:['Sorts the letters alphabetically','Reverses the order of the characters','Swaps the first and last characters','Moves the last character to the front'],
+      answer:1,
+      fb:'"stop" becomes "pots": every character order is flipped, not just the ends. The purpose is to reverse the string.'
+    },
+    {
+      // predict output style with a rule that has a common off-by-one distractor
+      tag:'Predict the output',
+      q:'A program returns the number of times a target value appears in a list. For the input list [7,3,7,7,1] with target 7, which output is correct?',
+      ioHead:['Input','Output'],
+      io:[['[2,2,5], target 2','2'],['[9,9,9], target 9','3']],
+      opts:['2','3','4','1'],
+      answer:1,
+      fb:'7 appears three times in [7,3,7,7,1]. Counting occurrences means every match adds one, giving 3.'
+    },
+    {
+      tag:'What is the purpose?',
+      q:'A program takes a whole number and returns true or false. What is its purpose?',
+      ioHead:['Input','Output'],
+      io:[['6','true'],['7','false'],['10','true'],['15','false']],
+      opts:['Checks if the number is greater than 5','Checks if the number is divisible by 2','Checks if the number is a multiple of 3','Checks if the number is less than 12'],
+      answer:1,
+      fb:'6 and 10 are true, 7 and 15 are false: true exactly when the number is even (divisible by 2). 15 > 5 yet returns false, so it is not a size test.'
+    }
+  ];
+
+  var round = 0, score = 0, streak = 0, answered = false;
+  var playEl = document.getElementById('gp-play');
+  var roundEl = document.getElementById('gp-round');
+  var scoreEl = document.getElementById('gp-score');
+  var streakEl = document.getElementById('gp-streak');
+  var progEl = document.getElementById('gp-progbar');
+
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&','<':'<','>':'>','"':'"'}[c];}); }
+
+  function updateBar(){
+    roundEl.textContent = Math.min(round+1, TOTAL);
+    scoreEl.textContent = score;
+    streakEl.textContent = streak;
+    progEl.style.width = ((round)/TOTAL*100) + '%';
+  }
+
+  function render(){
+    updateBar();
+    if(round >= TOTAL){ return renderEnd(); }
+    answered = false;
+    var r = ROUNDS[round];
+    var rowsHtml = r.io.map(function(p){
+      return '<div class="gp-ior"><span>'+esc(p[0])+'</span><span>'+esc(p[1])+'</span></div>';
+    }).join('');
+    var optsHtml = r.opts.map(function(o,i){
+      return '<button class="gp-opt" data-i="'+i+'">'+esc(o)+'</button>';
+    }).join('');
+    playEl.innerHTML =
+      '<div class="gp-card">'+
+        '<div class="gp-tag">'+esc(r.tag)+'</div>'+
+        '<p class="gp-q">'+esc(r.q)+'</p>'+
+        '<div class="gp-io"><div class="gp-ioh"><div>'+esc(r.ioHead[0])+'</div><div>'+esc(r.ioHead[1])+'</div></div>'+rowsHtml+'</div>'+
+        '<div class="gp-opts">'+optsHtml+'</div>'+
+        '<div class="gp-fb" id="gp-fb"></div>'+
+        '<button class="gp-next" id="gp-next">Next round '+ARROW+'</button>'+
+      '</div>';
+    var btns = playEl.querySelectorAll('.gp-opt');
+    Array.prototype.forEach.call(btns, function(b){
+      b.addEventListener('click', function(){ choose(parseInt(b.getAttribute('data-i'),10)); });
+    });
+    var nx = document.getElementById('gp-next');
+    nx.addEventListener('click', function(){ round++; render(); });
+  }
+
+  function choose(i){
+    if(answered) return;
+    answered = true;
+    var r = ROUNDS[round];
+    var btns = playEl.querySelectorAll('.gp-opt');
+    Array.prototype.forEach.call(btns, function(b){ b.disabled = true; });
+    var correct = (i === r.answer);
+    btns[r.answer].classList.add('right');
+    if(!correct){ btns[i].classList.add('wrong'); }
+    var fb = document.getElementById('gp-fb');
+    if(correct){
+      streak++;
+      var pts = 10 + Math.min(streak-1,5)*2;
+      score += pts;
+      fb.className = 'gp-fb show ok';
+      fb.innerHTML = 'Correct! +'+pts+' points. '+esc(r.fb);
+    } else {
+      streak = 0;
+      fb.className = 'gp-fb show no';
+      fb.innerHTML = 'Not quite. '+esc(r.fb);
+    }
+    updateBar();
+    var nx = document.getElementById('gp-next');
+    if(round === TOTAL-1){ nx.textContent = 'See results '+ARROW; }
+    nx.classList.add('show');
+  }
+
+  function renderEnd(){
+    progEl.style.width = '100%';
+    var msg;
+    if(score >= 90){ msg = 'Outstanding. You read each black box by its input to output pattern, exactly how a program purpose is defined.'; }
+    else if(score >= 60){ msg = 'Nice work. Remember: a program is defined by how it transforms inputs into outputs, and its purpose is the problem it solves.'; }
+    else { msg = 'Keep going. Predict the rule from the examples first, then match it. The purpose is the problem the program solves, not just one output.'; }
+    playEl.innerHTML =
+      '<div class="gp-card gp-end">'+
+        '<h2>Run complete!</h2>'+
+        '<div class="big">'+score+'</div>'+
+        '<p style="font-weight:700;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-top:0;">points</p>'+
+        '<p>'+msg+'</p>'+
+        '<button class="gp-next show" id="gp-again">Play again</button>'+
+      '</div>';
+    document.getElementById('gp-again').addEventListener('click', reset);
+    document.dispatchEvent(new CustomEvent('apcsGameScore',{detail:{value:score}}));
+  }
+
+  function reset(){
+    round = 0; score = 0; streak = 0; answered = false;
+    render();
+  }
+
+  render();
+})();
+</script>
+    </div>
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What is the difference between a program's function and its purpose?<i class="faq-icon">+</i></button>
+        <div class="faq-a">The function is what the program does, its observable behavior, such as "it displays the largest number in a list." The purpose is why it exists, the need it meets and who it is for, such as "it helps a coach quickly find the top score." Describing a program well means answering both.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Does input always come from a person typing?<i class="faq-icon">+</i></button>
+        <div class="faq-a">No. Input is any data a program receives. It can come from a user, from another program, from an input device like a mouse, from a sensor like a thermometer, or from a file. Input can be tactile, audible, visual, or text.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What counts as an output?<i class="faq-icon">+</i></button>
+        <div class="faq-a">An output is any observable behavior the program produces. It can be visual (something on screen), audible (a sound), tactile (a vibration), movement (a motor turning), or text. If you can observe the program producing it, it is a candidate output.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What does it mean for a program to be event-driven?<i class="faq-icon">+</i></button>
+        <div class="faq-a">In an event-driven program, certain code runs only when a specific event occurs, such as a mouse click, a key press, or a sensor reading. The event is the trigger; until it happens, that code simply waits.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Why does the Create Task ask me to describe function, purpose, input, and output?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Because those are the core ideas of Topic 1.2 and the framework expects you to communicate what your program does, why you built it, and how it interacts with data. Using this exact vocabulary in your written responses is what earns the points.</div>
+      </div>
+    </div>
+    <div class="related-links">
+      <h3>🔗 Continue studying</h3>
+      <div class="related-links-grid">
+        <a href="/pages/ap-csp-course-bi1-program-design-development" class="related-link">1.3 Program Design and Development</a>
+        <a href="/pages/ap-csp-create-task-ultimate-guide" class="related-link">Create Task Ultimate Guide</a>
+        <a href="/pages/ap-csp-study-games-hub" class="related-link">All CSP Study Games</a>
+      </div>
+    </div>
+    <div class="superpack-slim">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="superpack-slim-icon">📦</div>
+        <div><div class="superpack-slim-text">AP CSP Teacher Superpack<span class="superpack-slim-sub">Slides, lesson plans, unit tests for all 5 Big Ideas, $249</span>
+</div></div>
+      </div>
+      <a href="/products/ap-csp-teacher-superpack" class="superpack-slim-btn">Get the Superpack →</a>
+    </div>
+    <div class="teacher-callout">
+      <div class="teacher-callout-icon">🏫</div>
+      <div class="teacher-callout-body">
+        <div class="teacher-callout-label">For teachers</div>
+        <p>Topic 1.2 is where students first learn to talk about programs precisely, so drill the function-versus-purpose split relentlessly. A quick warm-up: show a familiar app and have students write one function sentence and one purpose sentence, then identify one input and one output. The Superpack includes a function-and-purpose sorting activity and a matched set of Create Task sentence stems students can reuse in their written responses. <a href="/products/ap-csp-teacher-superpack">View what's included →</a></p>
+      </div>
+    </div>
+    <div class="lesson-nav">
+      <a href="/pages/ap-csp-course-bi1-collaboration" class="nav-card">
+        <div class="nav-card-dir">← Previous</div>
+        <div class="nav-card-title">1.1 Collaboration</div>
+      </a>
+      <a href="/pages/ap-csp-course-bi1-program-design-development" class="nav-card next">
+        <div class="nav-card-dir">Next lesson →</div>
+        <div class="nav-card-title">1.3 Program Design and Development</div>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var MINI_MSGS={"mc-purpose-1": {"A": "Not quite. The function is what the app does (scan a photo and show a calorie count). This sentence explains why the app exists, which is its purpose.", "B": "Correct. Explaining the need the app meets and who it helps is describing its purpose, not its observable behavior.", "C": "No. The input is the photo the app receives. This sentence is about why the app was built, which is its purpose.", "D": "No. The output is the calorie count shown on screen. This sentence describes the need the app meets, which is its purpose."}, "mc-purpose-2": {"A": "Not quite. Clearing the canvas is the response the code produces, not the trigger. The event is what causes the code to run.", "B": "No. The existing drawing is data on the screen, not the event. Look for the action that triggers the code.", "C": "Correct. In an event-driven program the trigger is the event, and here the space bar press is what makes the clearing code run.", "D": "No. Being a drawing app is a description of the program, not a triggering event. The trigger is the space bar press."}};
+var MINI_FIB={};
+
+function _activity(d){
+  try{ var w=document.querySelector('.lesson-page');
+    if(w){ d.course=w.getAttribute('data-course'); d.unit=w.getAttribute('data-unit'); d.lesson=w.getAttribute('data-lesson'); }
+    document.dispatchEvent(new CustomEvent('apcsActivity',{detail:d}));
+  }catch(e){}
+}
+function checkMCQ(qid, chosen, correct, fbId){
+  var opts=document.querySelectorAll('#'+qid+'-options .mcq-option');
+  opts.forEach(function(b){b.disabled=true;b.onclick=null;});
+  var letters=['A','B','C','D'];
+  opts[letters.indexOf(chosen)].classList.add(chosen===correct?'correct':'incorrect');
+  if(chosen!==correct)opts[letters.indexOf(correct)].classList.add('revealed-correct');
+  document.getElementById(fbId).classList.add('show');
+  _activity({activity:'quiz',item:qid,choice:chosen});
+}
+function miniMCQ(id, chosen, correct, fbId){
+  var opts=document.querySelectorAll('#'+id+'-opts .mini-opt');
+  opts.forEach(function(b){b.onclick=null;b.style.cursor='default';});
+  var letters=['A','B','C','D'];
+  opts[letters.indexOf(chosen)].classList.add(chosen===correct?'correct':'incorrect');
+  if(chosen!==correct)opts[letters.indexOf(correct)].classList.add('reveal');
+  var fb=document.getElementById(fbId);
+  if(MINI_MSGS[id]){fb.textContent=MINI_MSGS[id][chosen]||'';fb.className='mini-fb '+(chosen===correct?'c':'w');}
+}
+function miniFIB(id, fbId){
+  var inp=document.getElementById(id+'-inp'),fb=document.getElementById(fbId);
+  var val=inp.value.trim().toLowerCase();var d=MINI_FIB[id];
+  var ok=(val===String(d.correct).toLowerCase());
+  inp.classList.add(ok?'correct':'incorrect');
+  fb.textContent=ok?d.c:d.w; fb.className='mini-fb '+(ok?'c':'w'); inp.disabled=true;
+}
+function toggleFAQ(btn){
+  var item=btn.parentElement,wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(el){el.classList.remove('open');});
+  if(!wasOpen)item.classList.add('open');
+}
+function handleCapture(){
+  var email=document.getElementById('capture-email').value.trim();
+  if(!email||!email.includes('@')){document.getElementById('capture-email').focus();return;}
+  document.getElementById('capture-form').style.display='none';
+  document.getElementById('capture-success').style.display='block';
+  if(typeof window._learnq!=='undefined'){window._learnq.push(['identify',{'$email':email}]);}
+}
+/* Bridge: the embedded topic game dispatches 'apcsGameScore' on completion.
+   Convert that single completion into the standard exercise-2 gradebook hook. */
+document.addEventListener('apcsGameScore', function(e){
+  _activity({activity:'exercise-2', earned:1, possible:1});
+});
+</script>
+<!-- apcs-exercises (managed) -->
+<div id="apcs-ex-links">
+<style>
+#apcs-ex-links{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:28px auto 0!important;padding:0 16px 8px!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important}
+#apcs-ex-links *,#apcs-ex-links *::before,#apcs-ex-links *::after{box-sizing:border-box!important}
+#apcs-ex-links .ex-lbl{font-size:12px!important;font-weight:800!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:0 0 10px!important}
+#apcs-ex-links .ex-row{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important}
+@media (max-width:640px){#apcs-ex-links .ex-row{grid-template-columns:repeat(1,1fr)!important}}
+#apcs-ex-links a.ex,#apcs-ex-links a.ex:link,#apcs-ex-links a.ex:visited{display:block!important;text-decoration:none!important;border:1px solid #93c5fd!important;border-left:5px solid #1a56db!important;border-radius:0 12px 12px 0!important;background:#eff6ff!important;padding:14px 16px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;font-size:16px!important;font-weight:700!important;line-height:1.35!important}
+#apcs-ex-links a.ex:hover{background:#dbeafe!important}
+#apcs-ex-links a.ex span{display:block!important;margin-top:4px!important;font-size:13px!important;font-weight:400!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important}
+</style>
+<p class="ex-lbl">Exercises for Topic 1.2</p>
+<div class="ex-row">
+<a class="ex" href="/pages/ap-csp-topic-1-2-exercise-1">Exercise 1: Behavior Detective - The LunchDash Log<span>Work it online, then take the auto-graded check</span></a>
+<a class="ex" href="/pages/ap-csp-topic-1-2-exercise-2">Exercise 2: Trigger Tracer<span>Work it online, then take the auto-graded check</span></a>
+</div>
+</div>
