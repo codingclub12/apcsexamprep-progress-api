@@ -105,9 +105,27 @@ and `3.1b`) and `snippets/quiz-tracker-wiring.liquid:34`, not taken on the
 doc's word.
 
 Nothing throws and no request fails, so a student's work simply lands on a
-lesson they never opened. `smoke/cyber-unit3-lessons.js` now pins it; it is
-green today, and green here means the defect is still there. The fix belongs in
-the theme repo, where that snippet lives.
+lesson they never opened.
+
+**FIXED 2026-09-02, and this paragraph used to say it was still live.** Theme
+PR #93 added `snippets/apcs-cyber-lesson-map.liquid`, which carries the override
+table and is rendered before both consumers, and replaced the arithmetic in
+`quiz-tracker-wiring.liquid` and `apcs-grade-reporter.liquid` with calls to it.
+An ordinal the table does not know returns null, so an unknown page stays
+untracked instead of filing under a plausible guess.
+
+Verified against the live storefront rather than a merged pull request, per the
+theme repo's own rule. The deployed function was extracted from the HTML served
+for `ap-cyber-unit-3-lesson-2-quiz` and run against this repo's `pageFromHandle`:
+all 24 Unit 3 activity handles agree, zero mismatches; units 1, 2, 4 and 5 still
+fall through to the plain `U.L` form; and Unit 3 ordinal 7 returns null.
+`smoke/cyber-unit3-lessons.js` section 6 now transcribes the deployed rule and
+passes on all 104 cyber activity handles.
+
+That section says plainly what it cannot do: it is a transcription, so it
+catches a change made HERE without a matching theme change, and it cannot see a
+theme change on its own. It stayed green through both the broken and the fixed
+theme. Re-verify against the storefront, not against this suite.
 
 One more trap this uncovered, worth carrying: `shopify/apcs-score-reporter.js`
 in THIS repo is a stale mirror and a materially different program from the
