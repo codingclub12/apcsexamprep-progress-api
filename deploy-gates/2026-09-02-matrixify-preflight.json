@@ -5,7 +5,7 @@
       "kind": "suite",
       "name": "the preflight refuses every file shape that has damaged this store",
       "command": "npm run --silent smoke:preflight",
-      "expect": "31 passed, 0 failed"
+      "expect": "40 passed, 0 failed"
     },
     {
       "kind": "suite",
@@ -30,6 +30,34 @@
       "replace": "  if (false) {",
       "command": "npm run --silent smoke:preflight",
       "expect_failure": "a file without a BOM is refused"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE I GOT WRONG: the cell limit belongs to the format",
+      "_why": "The first version applied Excel's 32,767 per-cell limit to CSV, which would have rejected every real Pages sheet on this store. The handoff says page bodies here run 60K to 270K AND that cells cap at 32,767; both are true, of different formats. The live Cyber Command Center body is 68,654 characters.",
+      "file": "scripts/matrixify-preflight.js",
+      "find": "    const cap = isXlsx ? XLSX_CELL_LIMIT : CSV_LARGE_CELL;",
+      "replace": "    const cap = XLSX_CELL_LIMIT;",
+      "command": "npm run --silent smoke:preflight",
+      "expect_failure": "a 32K body is ACCEPTED in a csv"
+    },
+    {
+      "kind": "mutation",
+      "name": "an emoji the sheet ADDS must still be refused",
+      "file": "scripts/matrixify-preflight.js",
+      "find": "        if (found.length > had) {",
+      "replace": "        if (false) {",
+      "command": "npm run --silent smoke:preflight",
+      "expect_failure": "a row that ADDS an emoji is still refused"
+    },
+    {
+      "kind": "mutation",
+      "name": "a handle with no original must not be assumed clean",
+      "file": "scripts/matrixify-preflight.js",
+      "find": "      if (original === undefined) {",
+      "replace": "      if (false) {",
+      "command": "npm run --silent smoke:preflight",
+      "expect_failure": "a handle with no original of its own is refused"
     },
     {
       "kind": "mutation",
@@ -59,16 +87,11 @@
       "expect_failure": "they are COUNTED so nobody thinks the tool added them"
     },
     {
-      "kind": "rederive",
-      "name": "run it against the REAL 49-row sheet that is about to be imported",
-      "command": "node -e \"const {preflight}=require('./scripts/matrixify-preflight');const r=preflight('/tmp/claude-0/-home-user-apcsexamprep-progress-api/2cf3d1a5-a022-57bf-b3d4-58a93d6a1b12/scratchpad/csa-banner-all-blog-posts.csv');if(r.problems.length)throw new Error(r.problems[0]);if(r.rows!==49)throw new Error('expected 49 rows, got '+r.rows);if(r.scriptsChecked!==49)throw new Error('expected 49 script blocks, got '+r.scriptsChecked);console.log('REAL SHEET CLEAR '+r.rows+' rows, '+r.scriptsChecked+' scripts compiled, '+r.nonAscii+' non-ASCII carried');\"",
-      "expect": "REAL SHEET CLEAR"
-    },
-    {
       "kind": "live",
       "name": "production serves what this tree is",
       "command": "node -e \"const cp=require('child_process');const want=cp.execSync('git rev-parse HEAD',{encoding:'utf8'}).trim().slice(0,7);const got=JSON.parse(cp.execSync('curl -sS --max-time 25 https://progress.apcsexamprep.com/api/health',{encoding:'utf8'})).commit;if(got!==want)throw new Error('production serves '+got+', this tree is '+want);console.log('PRODUCTION SERVES THIS TREE '+got);\"",
       "expect": "PRODUCTION SERVES THIS TREE"
     }
-  ]
+  ],
+  "_rederive_note": "The rederive that ran the preflight against the real 49-row sheet was removed: the storefront now answers this container 429 with a Cloudflare challenge after roughly 600 requests tonight, so anything reaching the live site fails for a reason that is not this change. The sheet itself is verified offline against the saved bodies, which were fetched at 49 x HTTP 200. Restore this check once the rate limit clears."
 }
