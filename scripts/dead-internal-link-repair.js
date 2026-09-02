@@ -44,6 +44,24 @@ const path = require('path');
 const LEGAL = /^[a-z0-9-]+$/;
 const HREF = /href="(\/pages\/[^"]*)"/g;
 
+//  A href inside a <script> or a <style> is not a link. This storefront builds
+//  its prev and next buttons at runtime from a table of handles, so the source
+//  of 14 practice-test pages contains
+//
+//      '<a class="tn-arrow" href="/pages/'+prev.handle+'">'
+//
+//  which is working JavaScript, not a broken anchor. Reading it as one reported
+//  28 dead links that do not exist and put a page-content bug on the board that
+//  was really a bug in this scanner. lib/site-crawl.js records the same trap
+//  costing seven false P0s, and docs/internal-linking.md records it again.
+//
+//  Blanked rather than deleted, so that every offset in the body still lines up
+//  with the original: the repair records SPANS by index and they have to point
+//  at the real text.
+const NON_MARKUP = /<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi;
+const withoutScripts = (body) => body.replace(NON_MARKUP,
+  (m) => m.replace(/[^\n]/g, ' '));
+
 //  Percent-decode only the escapes we are willing to reason about, so a href
 //  carrying a legitimately encoded character is left for a human.
 const decodeControls = (s) => s.replace(/%(0A|0D|09|20|0a|0d)/g, (m, hex) =>
@@ -235,8 +253,9 @@ function repairBody(before, live, blogs) {
   let out = '';
   let last = 0;
   let m;
+  const scannable = withoutScripts(before);
   HREF.lastIndex = 0;
-  while ((m = HREF.exec(before)) !== null) {
+  while ((m = HREF.exec(scannable)) !== null) {
     const c = classify(m[1], live, blogs);
     found.push(c);
     if (c.kind !== 'repair') continue;
@@ -342,4 +361,4 @@ if (require.main === module) {
 }
 
 module.exports = { classify, repairBody, build, sheet, verify, parseHref, stripIllegal,
-  decodeControls, LEGAL, HREF, RETARGET };
+  decodeControls, LEGAL, HREF, RETARGET, withoutScripts, NON_MARKUP };

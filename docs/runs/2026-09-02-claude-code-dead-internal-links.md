@@ -38,7 +38,7 @@ Every `/pages/` href in the stored body of all 1,311 readable pages, checked
 against the 1,344 handles the sitemap advertises. Bodies come off the storefront
 so this is authored content, never theme chrome.
 
-**516 dead internal links across 163 targets.**
+**492 dead internal links across 164 targets.**
 
 The 2026-08-27 report says 3. That number came from a different question, "did
 the target return a non-200 during the crawl", and it undercounts by two orders
@@ -52,7 +52,6 @@ The clusters worth a decision, all listed with their sources in
 |---|---|---|
 | `/pages/tutoring`, `/pages/ap-computer-science-tutor`, `/pages/tutoring-packages` | 58 | the tutoring pages are gone. Board 76 asks whether the tutoring products are in the discontinue scope, so these 58 links are waiting on that answer. |
 | `/pages/ap-computer-science-a` | 20 | the head term, 404. The live URLs are `ap-csa`, which is blank, and `ap-csa-exam-prep-hub`, which is the real hub. Which one to point at IS the consolidation decision, still blocked on Search Console. |
-| `/pages/'+prev.handle+'`, `/pages/'+next.handle+'` | 28 | a JavaScript template literal written into stored HTML unrendered. Fourteen practice-test pages have prev and next buttons whose href is source code. |
 | `/pages/ap-csa-qotd-hub`, `/pages/ap-csp-qotd-hub` | 19 | neither exists. CSP and Cyber have a question-of-the-day page; CSA does not. |
 | `ap-cybersecurity-unit-1-*-exercise-1/2/lab/quiz` | 40 | eight Unit 1 activity pages linked from the cyber lesson pages and never built. This is the cyber practice hub not being architected, measured. |
 | `/pages/ap-csp-full-practice-exam-70-mcq` | 4 | the highest-earning page on the domain is `ap-computer-science-principles-full-practice-exam-70-mcq`, at 34,857 clicks. Four links point at a handle it does not have. |
@@ -68,9 +67,34 @@ three grounds and no fourth:
 | retarget, by hand | 26 | two entries read off the live site, each carrying its evidence |
 | retarget, unique extension | 113 | the target is the ONLY live handle that extends the dead one |
 
-The 379 that remain are enumerated and left alone. A dead link whose repair
+The 351 that remain are enumerated and left alone. A dead link whose repair
 cannot be proved must never be invented, because inventing one hides a page that
 was never built.
+
+## The correction that came after the import
+
+**28 of the 516 were working JavaScript.** Fourteen practice-test pages build
+their prev and next buttons at runtime from a table of handles, so their source
+carries
+
+    '<a class="tn-arrow" href="/pages/'+prev.handle+'">'
+
+and the scanner read it as a broken anchor. It is not one. The same trap is
+recorded in `lib/site-crawl.js` costing seven false P0s and in
+`docs/internal-linking.md` as class tokens being whole words; this is its third
+appearance and the first where it reached the board. Task 157 was that false
+positive and is closed as one.
+
+**None of the 141 repairs were affected.** Checked rather than assumed: every
+changed href was located by offset in the original body and none falls inside a
+`<script>` or `<style>` region, and regenerating the sheet with the fix produces
+a file byte-identical to the one that was imported. That is luck rather than
+design, because a repair also has to resolve to a live page and a JavaScript
+expression never does. The scanner now blanks scripts and styles to spaces
+before scanning, preserving length and newlines so that the span offsets the
+repair records still point at the real text, and there is a mutation for it.
+
+The measurement is now 492 links across 164 targets, 141 repaired and 351 left.
 
 ## Two things this got wrong first
 
@@ -101,10 +125,10 @@ pages.
 
 ## Evidence
 
-- **suite**, 83 assertions, offline, `npm run smoke:deadlinks`. The live handle
+- **suite**, 90 assertions, offline, `npm run smoke:deadlinks`. The live handle
   list and the 45 before-bodies are checked in, so the evidence survives the
   change that removes it.
-- **mutation**, 5 of 5, each tripping the assertion it targets.
+- **mutation**, 6 of 6, each tripping the assertion it targets.
 - **rederive**, `scripts/verify-dead-link-sheet.py`. It blanks every href out of
   the before body and out of the after body and requires what is left to be
   identical, which is one statement that nothing outside a link attribute moved
@@ -116,11 +140,31 @@ pages.
 - **rederive**, the preflight over the finished file, with the live bodies passed
   as `--carrying` so that an emoji this sheet ADDED is separated from one it
   round-tripped. Without it the sheet is refused, which is the correct default.
-- **live**, deferred until the import.
+- **live**, run after the import: all four kinds agree.
+- **an independent re-check after the import**, which is the one that matters.
+  All 45 repaired pages were refetched from the storefront and every one is
+  byte-identical to the sheet, with no repairable link left on any of them.
+  Matrixify preserved the bodies exactly, embedded newlines included.
 
 ## Still open
 
 - The import. One sheet, handed over; I do not import.
-- 379 dead links, 142 targets, the six clusters above. Board 156.
+- 351 dead links, 140 targets, the clusters above. Board 156.
 - Seven pages with an empty body, two of them the head-term course hubs.
-- The `'+prev.handle+'` template literal on 14 pages. Board 157.
+- Nothing on board 157: it was this scanner misreading JavaScript, and is closed.
+
+## Verified after the import
+
+Both sheets were imported by Tanner and both were then re-checked by refetching
+live state, not by reading a report.
+
+**SEO titles, 429 of 429.** Every article's `<title>` was read off the storefront
+again and compared to the value the generator predicted. 429 match. Seven looked
+like mismatches until the comparison decoded HTML entities: the theme escapes
+`'` to `&#39;` and `&&` to `&amp;&amp;` on output, so the stored metafield is
+right and the naive string compare was wrong. A separate scan for any of the four
+defects still being served returns zero.
+
+**Dead links, 45 of 45.** Every repaired page was refetched and is byte-identical
+to the sheet, embedded newlines included, with no repairable link left on any of
+them. Matrixify preserved the bodies exactly.
