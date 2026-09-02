@@ -109,3 +109,25 @@ with tests.
 - **17 of the 35 graded exercise-2 pages do not exist**, in Big Ideas 1, 2, 4
   and 5, while the manifest carries a denominator for each. A teacher sees the
   column; there is no page behind it. Board 163.
+
+## Verified after the import
+
+Both sheets were imported and both were re-checked by refetching live state.
+
+**CSP, 21 of 21 byte-identical to the sheet.** 18 pages now show an Applied
+Challenge card and 3 now say "auto-graded check" where they said "not graded".
+**Cyber Unit 1, 5 of 5 byte-identical.** All six deploy gates from today pass
+all four kinds, live included.
+
+The course-wide measurement that started this, re-run against live bodies:
+
+| course | activity pages | reachable from nowhere |
+|---|---|---|
+| AP CSA | 197 | 0 |
+| AP CSP | 124 | **1** |
+| AP Cyber | 112 | 0 |
+
+432 of 433. The one left is `ap-csp-course-bi5-summary-quiz`, a real auto-scored
+8-question checkpoint that nothing links, and it is the only summary quiz in the
+course: Big Ideas 1 to 4 have none. Board 164, because where a one-off belongs is
+a decision rather than a missing link.
