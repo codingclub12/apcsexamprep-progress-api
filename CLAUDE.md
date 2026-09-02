@@ -171,6 +171,13 @@ Run `--pre` before the merge, which defers `live` and still demands `mutation`.
 Run it again without `--pre` after the deploy, when the live check can actually
 observe something. A deploy is not finished until that second run passes.
 
+The live check must assert something that was FALSE before the deploy. The
+gate's own first manifest expected `"status":"ok"` from `/api/health`, which was
+true beforehand, true during, and true if the deploy never happened, so it
+verified nothing while reading like proof. Pin what the change made true: the
+commit sha now serving, a byte string only the new build emits, a count that
+moved. An assertion that would have passed yesterday is decoration.
+
 Verify against live systems, never against a report, and say plainly in the same
 breath what you did and what you are still unsure of.
 

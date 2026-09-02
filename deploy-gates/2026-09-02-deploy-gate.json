@@ -31,9 +31,9 @@
     },
     {
       "kind": "live",
-      "name": "production is serving and healthy",
+      "name": "production is serving THIS commit",
       "command": "curl -sS --max-time 25 https://progress.apcsexamprep.com/api/health",
-      "expect": "\"status\":\"ok\""
+      "expect": "\"commit\":\"74b4750\""
     },
     {
       "kind": "rederive",
