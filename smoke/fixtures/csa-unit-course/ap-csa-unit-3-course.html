@@ -1,0 +1,239 @@
+<style>
+#u3-hub{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;max-width:860px!important;margin:0 auto!important;padding:24px 16px!important;}
+#u3-hub *{box-sizing:border-box!important;}
+.u3-breadcrumb{font-size:13px!important;color:#6b7280!important;-webkit-text-fill-color:#6b7280!important;margin-bottom:24px!important;}
+.u3-breadcrumb a{color:#2563eb!important;-webkit-text-fill-color:#2563eb!important;text-decoration:none!important;}
+.u3-breadcrumb .sep{margin:0 6px!important;}
+.u3-eyebrow{display:inline-block!important;font-size:11px!important;font-weight:700!important;letter-spacing:1.5px!important;text-transform:uppercase!important;color:#7c3aed!important;-webkit-text-fill-color:#7c3aed!important;margin-bottom:8px!important;}
+.u3-heading{font-size:32px!important;font-weight:800!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;margin:0 0 12px!important;line-height:1.2!important;}
+.u3-desc{font-size:16px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;line-height:1.6!important;margin-bottom:32px!important;}
+.u3-progress-wrap{background:#e5e7eb!important;border-radius:999px!important;height:10px!important;margin-bottom:6px!important;overflow:hidden!important;}
+.u3-progress-bar{background:linear-gradient(90deg,#7c3aed,#6b21a8)!important;height:10px!important;border-radius:999px!important;width:100%!important;}
+.u3-stats{display:flex!important;gap:24px!important;flex-wrap:wrap!important;margin-bottom:36px!important;padding:20px!important;background:#f8fafc!important;border-radius:12px!important;border:1px solid #e2e8f0!important;}
+.u3-stat{text-align:center!important;}
+.u3-stat-val{font-size:28px!important;font-weight:800!important;color:#6b21a8!important;-webkit-text-fill-color:#6b21a8!important;display:block!important;}
+.u3-stat-label{font-size:12px!important;color:#6b7280!important;-webkit-text-fill-color:#6b7280!important;}
+.u3-learn{margin-bottom:36px!important;padding:24px!important;background:#ede9fe!important;border-radius:12px!important;border:1px solid #c4b5fd!important;}
+.u3-learn-title{font-size:16px!important;font-weight:700!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;margin:0 0 14px!important;}
+.u3-learn-list{margin:0!important;padding:0!important;list-style:none!important;}
+.u3-learn-list li{font-size:15px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;padding:5px 0 5px 22px!important;position:relative!important;line-height:1.5!important;}
+.u3-learn-list li::before{content:"\2713"!important;position:absolute!important;left:0!important;color:#7c3aed!important;-webkit-text-fill-color:#7c3aed!important;font-weight:700!important;}
+.u3-resources{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important;margin-bottom:40px!important;}
+@media(max-width:540px){.u3-resources{grid-template-columns:1fr!important;}}
+.u3-resource-card{display:block!important;padding:16px 18px!important;background:#fff!important;border:2px solid #e5e7eb!important;border-radius:10px!important;text-decoration:none!important;}
+.u3-resource-card:link,.u3-resource-card:visited{text-decoration:none!important;}
+.u3-resource-card:hover{border-color:#6b21a8!important;}
+.u3-resource-icon{font-size:22px!important;display:block!important;margin-bottom:6px!important;}
+.u3-resource-title{font-size:14px!important;font-weight:700!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;display:block!important;}
+.u3-resource-sub{font-size:12px!important;color:#6b7280!important;-webkit-text-fill-color:#6b7280!important;display:block!important;margin-top:2px!important;}
+.u3-section-label{font-size:11px!important;font-weight:700!important;letter-spacing:1.5px!important;text-transform:uppercase!important;color:#7c3aed!important;-webkit-text-fill-color:#7c3aed!important;margin-bottom:12px!important;}
+.u3-section-title{font-size:22px!important;font-weight:800!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;margin:0 0 20px!important;}
+.u3-topic-list{display:flex!important;flex-direction:column!important;gap:8px!important;margin-bottom:40px!important;}
+.u3-topic-row{display:flex!important;align-items:center!important;gap:12px!important;padding:14px 16px!important;background:#fff!important;border:2px solid #e5e7eb!important;border-radius:10px!important;text-decoration:none!important;}
+.u3-topic-link:link,.u3-topic-link:visited{text-decoration:none!important;}
+.u3-topic-link:hover{border-color:#7c3aed!important;background:#faf5ff!important;}
+.u3-topic-num{font-size:13px!important;font-weight:700!important;color:#7c3aed!important;-webkit-text-fill-color:#7c3aed!important;min-width:28px!important;}
+.u3-topic-name{font-size:15px!important;font-weight:600!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;flex:1!important;}
+.u3-topic-badge{font-size:11px!important;font-weight:600!important;padding:2px 8px!important;border-radius:20px!important;white-space:nowrap!important;}
+.u3-badge-concept{background:#ede9fe!important;color:#6b21a8!important;-webkit-text-fill-color:#6b21a8!important;}
+.u3-badge-code{background:#dbeafe!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;}
+.u3-topic-arrow{font-size:18px!important;color:#9ca3af!important;-webkit-text-fill-color:#9ca3af!important;margin-left:auto!important;}
+.u3-unit-nav{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:10px!important;margin-bottom:40px!important;}
+@media(max-width:540px){.u3-unit-nav{grid-template-columns:repeat(2,1fr)!important;}}
+.u3-unit-chip{display:block!important;padding:14px 12px!important;border-radius:10px!important;text-decoration:none!important;}
+.u3-unit-chip:link,.u3-unit-chip:visited{text-decoration:none!important;}
+.u3-nav-row{display:flex!important;justify-content:space-between!important;gap:12px!important;margin-top:40px!important;padding-top:24px!important;border-top:2px solid #e5e7eb!important;}
+.u3-nav-btn{display:inline-block!important;padding:10px 20px!important;border-radius:8px!important;font-size:14px!important;font-weight:600!important;text-decoration:none!important;background:#6b21a8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+.u3-nav-btn:link,.u3-nav-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;}
+.u3-chip-label-sm{font-size:10px!important;font-weight:700!important;letter-spacing:1px!important;text-transform:uppercase!important;color:rgba(255,255,255,0.8)!important;-webkit-text-fill-color:rgba(255,255,255,0.8)!important;display:block!important;}
+.u3-chip-name{font-size:13px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;display:block!important;margin-top:4px!important;}
+</style>
+
+<div id="u3-hub">
+
+  <nav class="u3-breadcrumb">
+    <a href="/pages/ap-csa-exam-prep-hub">AP CSA</a><span class="sep">›</span>
+    <a href="/pages/ap-csa-course">Full Course</a><span class="sep">›</span>
+    <span>Unit 3</span>
+  </nav>
+
+  <span class="u3-eyebrow">Unit 3 of 4  ·  AP CSA 2025–2026 CED</span>
+  <h1 class="u3-heading">Unit 3: Class Creation</h1>
+  <p class="u3-desc">Learn to design and build your own Java classes from scratch. This unit covers abstraction, constructors, accessors, mutators, static members, scope, and the <code style="font-size:15px!important;">this</code> keyword — the foundation of object-oriented programming on the AP exam. Accounts for 10–18% of the AP exam.</p>
+
+  <div class="u3-progress-wrap"><div class="u3-progress-bar"></div></div>
+  <p style="font-size:12px!important;color:#6b7280!important;-webkit-text-fill-color:#6b7280!important;margin:0 0 28px!important;">9 of 9 lessons live — 100% complete</p>
+
+  <div class="u3-stats">
+    <div class="u3-stat">
+<span class="u3-stat-val">9</span><span class="u3-stat-label">Lessons</span>
+</div>
+    <div class="u3-stat">
+<span class="u3-stat-val">10–18%</span><span class="u3-stat-label">AP Exam Weight</span>
+</div>
+    <div class="u3-stat">
+<span class="u3-stat-val">108</span><span class="u3-stat-label">Practice MCQs</span>
+</div>
+    <div class="u3-stat">
+<span class="u3-stat-val">36</span><span class="u3-stat-label">Mastery MCQs</span>
+</div>
+    <div class="u3-stat">
+<span class="u3-stat-val">18</span><span class="u3-stat-label">Interactive Games</span>
+</div>
+  </div>
+
+  
+<div class="u3-exercises" style="margin-bottom:40px!important;">
+<h2 class="u3-section-title">Coding Practice</h2>
+<p style="font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;line-height:1.6!important;margin:0 0 14px!important;">Write real Java in the browser and submit it. Everything here is graded against hidden test cases, and your score reports to your teacher automatically. Exercise 1 is write-it-from-scratch, Debug hands you somebody else's broken attempt to fix, and FRQ is the shape the exam actually asks for. 9 of 9 lessons are open so far; the rest unlock as they are built.</p>
+<div style="background:#fff!important;border:2px solid #e5e7eb!important;border-radius:10px!important;padding:6px 16px!important;">
+<div style="display:flex!important;align-items:baseline!important;gap:12px!important;flex-wrap:wrap!important;padding:10px 0!important;border-bottom:1px solid #f1f5f9!important;">
+<span style="font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;min-width:52px!important;">3.1</span><span style="font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;flex:1 1 200px!important;">Abstraction and Program Design</span><span style="flex:0 0 auto!important;"><a href="/pages/ap-csa-lesson-3-1-abstraction-and-program-design-exercise-1" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Exercise 1 →</a><span style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;cursor:not-allowed!important;border:1px solid #e2e8f0!important;" title="Not built yet">🔒 Exercise 2</span><a href="/pages/ap-csa-lesson-3-1-abstraction-and-program-design-debug" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Debug →</a><a href="/pages/ap-csa-lesson-3-1-abstraction-and-program-design-frq" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">FRQ →</a></span>
+</div>
+<div style="display:flex!important;align-items:baseline!important;gap:12px!important;flex-wrap:wrap!important;padding:10px 0!important;border-bottom:1px solid #f1f5f9!important;">
+<span style="font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;min-width:52px!important;">3.2</span><span style="font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;flex:1 1 200px!important;">Impact of Program Design</span><span style="flex:0 0 auto!important;"><a href="/pages/ap-csa-lesson-3-2-impact-of-program-design-exercise-1" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Exercise 1 →</a><span style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;cursor:not-allowed!important;border:1px solid #e2e8f0!important;" title="Not built yet">🔒 Exercise 2</span><a href="/pages/ap-csa-lesson-3-2-impact-of-program-design-debug" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Debug →</a><a href="/pages/ap-csa-lesson-3-2-impact-of-program-design-frq" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">FRQ →</a></span>
+</div>
+<div style="display:flex!important;align-items:baseline!important;gap:12px!important;flex-wrap:wrap!important;padding:10px 0!important;border-bottom:1px solid #f1f5f9!important;">
+<span style="font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;min-width:52px!important;">3.3</span><span style="font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;flex:1 1 200px!important;">Anatomy of a Class</span><span style="flex:0 0 auto!important;"><a href="/pages/ap-csa-lesson-3-3-anatomy-of-a-class-exercise-1" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Exercise 1 →</a><span style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;cursor:not-allowed!important;border:1px solid #e2e8f0!important;" title="Not built yet">🔒 Exercise 2</span><a href="/pages/ap-csa-lesson-3-3-anatomy-of-a-class-debug" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Debug →</a><a href="/pages/ap-csa-lesson-3-3-anatomy-of-a-class-frq" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">FRQ →</a></span>
+</div>
+<div style="display:flex!important;align-items:baseline!important;gap:12px!important;flex-wrap:wrap!important;padding:10px 0!important;border-bottom:1px solid #f1f5f9!important;">
+<span style="font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;min-width:52px!important;">3.4</span><span style="font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;flex:1 1 200px!important;">Constructors</span><span style="flex:0 0 auto!important;"><a href="/pages/ap-csa-lesson-3-4-constructors-exercise-1" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Exercise 1 →</a><span style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;cursor:not-allowed!important;border:1px solid #e2e8f0!important;" title="Not built yet">🔒 Exercise 2</span><a href="/pages/ap-csa-lesson-3-4-constructors-debug" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Debug →</a><a href="/pages/ap-csa-lesson-3-4-constructors-frq" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">FRQ →</a></span>
+</div>
+<div style="display:flex!important;align-items:baseline!important;gap:12px!important;flex-wrap:wrap!important;padding:10px 0!important;border-bottom:1px solid #f1f5f9!important;">
+<span style="font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;min-width:52px!important;">3.5</span><span style="font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;flex:1 1 200px!important;">Methods: How to Write Them</span><span style="flex:0 0 auto!important;"><a href="/pages/ap-csa-lesson-3-5-methods-how-to-write-them-exercise-1" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Exercise 1 →</a><span style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;cursor:not-allowed!important;border:1px solid #e2e8f0!important;" title="Not built yet">🔒 Exercise 2</span><a href="/pages/ap-csa-lesson-3-5-methods-how-to-write-them-debug" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Debug →</a><a href="/pages/ap-csa-lesson-3-5-methods-how-to-write-them-frq" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">FRQ →</a></span>
+</div>
+<div style="display:flex!important;align-items:baseline!important;gap:12px!important;flex-wrap:wrap!important;padding:10px 0!important;border-bottom:1px solid #f1f5f9!important;">
+<span style="font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;min-width:52px!important;">3.6</span><span style="font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;flex:1 1 200px!important;">Methods: Passing and Returning References of an Object</span><span style="flex:0 0 auto!important;"><a href="/pages/ap-csa-lesson-3-6-methods-passing-returning-object-references-exercise-1" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Exercise 1 →</a><span style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;cursor:not-allowed!important;border:1px solid #e2e8f0!important;" title="Not built yet">🔒 Exercise 2</span><a href="/pages/ap-csa-lesson-3-6-methods-passing-returning-object-references-debug" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Debug →</a><a href="/pages/ap-csa-lesson-3-6-methods-passing-returning-object-references-frq" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">FRQ →</a></span>
+</div>
+<div style="display:flex!important;align-items:baseline!important;gap:12px!important;flex-wrap:wrap!important;padding:10px 0!important;border-bottom:1px solid #f1f5f9!important;">
+<span style="font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;min-width:52px!important;">3.7</span><span style="font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;flex:1 1 200px!important;">Class Variables and Methods</span><span style="flex:0 0 auto!important;"><a href="/pages/ap-csa-lesson-3-7-class-variables-and-methods-exercise-1" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Exercise 1 →</a><span style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;cursor:not-allowed!important;border:1px solid #e2e8f0!important;" title="Not built yet">🔒 Exercise 2</span><a href="/pages/ap-csa-lesson-3-7-class-variables-and-methods-debug" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Debug →</a><a href="/pages/ap-csa-lesson-3-7-class-variables-and-methods-frq" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">FRQ →</a></span>
+</div>
+<div style="display:flex!important;align-items:baseline!important;gap:12px!important;flex-wrap:wrap!important;padding:10px 0!important;border-bottom:1px solid #f1f5f9!important;">
+<span style="font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;min-width:52px!important;">3.8</span><span style="font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;flex:1 1 200px!important;">Scope and Access</span><span style="flex:0 0 auto!important;"><a href="/pages/ap-csa-lesson-3-8-scope-and-access-exercise-1" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Exercise 1 →</a><span style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;cursor:not-allowed!important;border:1px solid #e2e8f0!important;" title="Not built yet">🔒 Exercise 2</span><a href="/pages/ap-csa-lesson-3-8-scope-and-access-debug" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Debug →</a><a href="/pages/ap-csa-lesson-3-8-scope-and-access-frq" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">FRQ →</a></span>
+</div>
+<div style="display:flex!important;align-items:baseline!important;gap:12px!important;flex-wrap:wrap!important;padding:10px 0!important;border-bottom:1px solid #f1f5f9!important;">
+<span style="font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;min-width:52px!important;">3.9</span><span style="font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;flex:1 1 200px!important;">this Keyword</span><span style="flex:0 0 auto!important;"><a href="/pages/ap-csa-lesson-3-9-this-keyword-exercise-1" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Exercise 1 →</a><span style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;cursor:not-allowed!important;border:1px solid #e2e8f0!important;" title="Not built yet">🔒 Exercise 2</span><a href="/pages/ap-csa-lesson-3-9-this-keyword-debug" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Debug →</a><a href="/pages/ap-csa-lesson-3-9-this-keyword-frq" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">FRQ →</a></span>
+</div>
+</div>
+</div>
+<div class="u3-learn">
+    <div class="u3-learn-title">What You'll Master in Unit 3</div>
+    <ul class="u3-learn-list">
+      <li>Apply abstraction to identify the right attributes and behaviors for any class</li>
+      <li>Write constructors, accessors, and mutators following AP exam conventions</li>
+      <li>Explain pass-by-value for primitives vs. reference semantics for objects</li>
+      <li>Use static variables and methods correctly (and avoid the classic compile errors)</li>
+      <li>Resolve variable shadowing with <code>this</code> in constructors and methods</li>
+      <li>Predict output and spot bugs in class-design code</li>
+    </ul>
+  </div>
+
+  <div class="u3-resources">
+    <a class="u3-resource-card" href="/pages/ap-csa-unit-3-class-creation-study-guide">
+      <span class="u3-resource-icon">📖</span>
+      <span class="u3-resource-title">Unit 3 Study Guide</span>
+      <span class="u3-resource-sub">Complete reference &amp; review</span>
+    </a>
+    <a class="u3-resource-card" href="/pages/ap-csa-unit-3-practice-exam">
+      <span class="u3-resource-icon">📝</span>
+      <span class="u3-resource-title">Unit 3 Practice Exam</span>
+      <span class="u3-resource-sub">Full timed MCQ test</span>
+    </a>
+    <a class="u3-resource-card" href="/pages/ap-csa-test-builder">
+      <span class="u3-resource-icon">⚙</span>
+      <span class="u3-resource-title">Test Builder</span>
+      <span class="u3-resource-sub">Custom quizzes from 586 questions</span>
+    </a>
+    <a class="u3-resource-card" href="/pages/ap-computer-science-a-tutor">
+      <span class="u3-resource-icon">👩​🏫</span>
+      <span class="u3-resource-title">1-on-1 Tutoring</span>
+      <span class="u3-resource-sub">Live help from Tanner Crow</span>
+    </a>
+  </div>
+
+  <div class="u3-section-label">Lessons</div>
+  <h2 class="u3-section-title">All 9 Lessons — Start Anywhere</h2>
+
+  <div class="u3-topic-list">
+  <a class="u3-topic-row u3-topic-link" href="/pages/ap-csa-lesson-3-1-abstraction-and-program-design">
+    <span class="u3-topic-num">3.1</span>
+    <span class="u3-topic-name">Abstraction and Program Design</span>
+    <span class="u3-topic-badge u3-badge-concept">Conceptual</span>
+    <span class="u3-topic-arrow">›</span>
+  </a>
+  <a class="u3-topic-row u3-topic-link" href="/pages/ap-csa-lesson-3-2-impact-of-program-design">
+    <span class="u3-topic-num">3.2</span>
+    <span class="u3-topic-name">Impact of Program Design</span>
+    <span class="u3-topic-badge u3-badge-concept">Conceptual</span>
+    <span class="u3-topic-arrow">›</span>
+  </a>
+  <a class="u3-topic-row u3-topic-link" href="/pages/ap-csa-lesson-3-3-anatomy-of-a-class">
+    <span class="u3-topic-num">3.3</span>
+    <span class="u3-topic-name">Anatomy of a Class</span>
+    <span class="u3-topic-badge u3-badge-code">Code Mechanics</span>
+    <span class="u3-topic-arrow">›</span>
+  </a>
+  <a class="u3-topic-row u3-topic-link" href="/pages/ap-csa-lesson-3-4-constructors">
+    <span class="u3-topic-num">3.4</span>
+    <span class="u3-topic-name">Constructors</span>
+    <span class="u3-topic-badge u3-badge-code">Code Mechanics</span>
+    <span class="u3-topic-arrow">›</span>
+  </a>
+  <a class="u3-topic-row u3-topic-link" href="/pages/ap-csa-lesson-3-5-methods-how-to-write-them">
+    <span class="u3-topic-num">3.5</span>
+    <span class="u3-topic-name">Methods: How to Write Them</span>
+    <span class="u3-topic-badge u3-badge-code">Code Mechanics</span>
+    <span class="u3-topic-arrow">›</span>
+  </a>
+  <a class="u3-topic-row u3-topic-link" href="/pages/ap-csa-lesson-3-6-methods-passing-returning-object-references">
+    <span class="u3-topic-num">3.6</span>
+    <span class="u3-topic-name">Methods: Passing and Returning References of an Object</span>
+    <span class="u3-topic-badge u3-badge-code">Code Mechanics</span>
+    <span class="u3-topic-arrow">›</span>
+  </a>
+  <a class="u3-topic-row u3-topic-link" href="/pages/ap-csa-lesson-3-7-class-variables-and-methods">
+    <span class="u3-topic-num">3.7</span>
+    <span class="u3-topic-name">Class Variables and Methods</span>
+    <span class="u3-topic-badge u3-badge-code">Code Mechanics</span>
+    <span class="u3-topic-arrow">›</span>
+  </a>
+  <a class="u3-topic-row u3-topic-link" href="/pages/ap-csa-lesson-3-8-scope-and-access">
+    <span class="u3-topic-num">3.8</span>
+    <span class="u3-topic-name">Scope and Access</span>
+    <span class="u3-topic-badge u3-badge-code">Code Mechanics</span>
+    <span class="u3-topic-arrow">›</span>
+  </a>
+  <a class="u3-topic-row u3-topic-link" href="/pages/ap-csa-lesson-3-9-this-keyword">
+    <span class="u3-topic-num">3.9</span>
+    <span class="u3-topic-name">this Keyword</span>
+    <span class="u3-topic-badge u3-badge-code">Code Mechanics</span>
+    <span class="u3-topic-arrow">›</span>
+  </a>
+  </div>
+
+  <div class="u3-section-label" style="margin-top:40px!important;">Navigate the Course</div>
+  <div class="u3-unit-nav">
+    <a class="u3-unit-chip" href="/pages/ap-csa-unit-1-course" style="background:linear-gradient(135deg,#4c1d95,#7c3aed)!important;">
+      <span class="u3-chip-label-sm">Unit 1</span>
+      <span class="u3-chip-name">Using Objects</span>
+    </a>
+    <a class="u3-unit-chip" href="/pages/ap-csa-unit-2-course" style="background:linear-gradient(135deg,#1e3a8a,#2563eb)!important;">
+      <span class="u3-chip-label-sm">Unit 2</span>
+      <span class="u3-chip-name">Selection &amp; Iteration</span>
+    </a>
+    <a class="u3-unit-chip" href="/pages/ap-csa-unit-3-course" style="background:linear-gradient(135deg,#065f46,#059669)!important;">
+      <span class="u3-chip-label-sm">Unit 3 ✓</span>
+      <span class="u3-chip-name">Class Creation</span>
+    </a>
+    <a class="u3-unit-chip" href="/pages/ap-csa-unit-4-course" style="background:linear-gradient(135deg,#7c2d12,#ea580c)!important;">
+      <span class="u3-chip-label-sm">Unit 4</span>
+      <span class="u3-chip-name">Data Collections</span>
+    </a>
+  </div>
+
+  <div class="u3-nav-row">
+    <a class="u3-nav-btn" href="/pages/ap-csa-unit-2-course" style="background:#e5e7eb!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;">← Unit 2</a>
+    <a class="u3-nav-btn" href="/pages/ap-csa-unit-4-course">Unit 4 →</a>
+  </div>
+
+</div>

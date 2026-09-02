@@ -1,0 +1,94 @@
+{
+  "change": "the four AP CSA unit course pages: 32 unreachable Exercise 2 pages, and 9 rows naming the wrong lesson",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the pill is copied not written, and the title comes from the page it opens",
+      "command": "npm run --silent smoke:unitcourse",
+      "expect": "71 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the preflight, with a blank cell treated as an erase in every column",
+      "command": "npm run --silent smoke:preflight",
+      "expect": "50 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT WOULD PUT THE WRONG LESSON IN FRONT OF A TEACHER: the title's source",
+      "file": "scripts/csa-unit-course-repair.js",
+      "find": "      const stale = titleHtml;",
+      "replace": "      const stale = titleHtml; said.title = shown;",
+      "command": "npm run --silent smoke:unitcourse",
+      "expect_failure": "9 rows disagree with the lesson they link"
+    },
+    {
+      "kind": "mutation",
+      "name": "a lesson that calls itself a different number must stop the page",
+      "file": "scripts/csa-unit-course-repair.js",
+      "find": "    if (said.num !== num) { problems.push(`unit ${unit} row ${num}: the lesson it links calls itself ${said.num}`); continue; }",
+      "replace": "    if (false) { problems.push(``); continue; }",
+      "command": "npm run --silent smoke:unitcourse",
+      "expect_failure": "a lesson that calls itself a different number is REFUSED"
+    },
+    {
+      "kind": "mutation",
+      "name": "the Exercise 2 pill is the row's own Exercise 1 pill, twice substituted",
+      "file": "scripts/csa-unit-course-repair.js",
+      "find": "      const pill = anchor.replace('-exercise-1\"', '-exercise-2\"').replace('Exercise 1', 'Exercise 2');",
+      "replace": "      const pill = `<a href=\"/pages/${two}\">Exercise 2 \\u2192</a>`;",
+      "command": "npm run --silent smoke:unitcourse",
+      "expect_failure": "the pill carries no attribute the Exercise 1 pill did not"
+    },
+    {
+      "kind": "mutation",
+      "name": "a pill is only added for a page the sitemap says is live",
+      "file": "scripts/csa-unit-course-repair.js",
+      "find": "    if (live.has(two) && !page.includes(`href=\"/pages/${two}\"`)) {",
+      "replace": "    if (!page.includes(`href=\"/pages/${two}\"`)) {",
+      "command": "npm run --silent smoke:unitcourse",
+      "expect_failure": "a pill is not added for a page that is not live"
+    },
+    {
+      "kind": "mutation",
+      "name": "a title is a WHOLE text node, never a substring of a longer one",
+      "file": "scripts/csa-unit-course-repair.js",
+      "find": "    const whole = page[i - 1] === '>' && page[i + stale.length] === '<';",
+      "replace": "    const whole = true;",
+      "command": "npm run --silent smoke:unitcourse",
+      "expect_failure": "a stale title that is a substring of a correct one is not half-eaten",
+      "_why": "\"Searching and Sorting\" is row 4.13's stale title and also sits inside row 4.17's correct one, \"Recursive Searching and Sorting\". A substring replace eats half of it, and the suite assertion is the only thing that noticed."
+    },
+    {
+      "kind": "mutation",
+      "name": "one row this cannot verify stops the whole page",
+      "file": "scripts/csa-unit-course-repair.js",
+      "find": "    if (plan.problems.length || !plan.spans.length) continue;",
+      "replace": "    if (!plan.spans.length) continue;",
+      "command": "npm run --silent smoke:unitcourse",
+      "expect_failure": "and its whole unit page ships nothing"
+    },
+    {
+      "kind": "mutation",
+      "name": "the round trip is what stops an edit outside the recorded spans",
+      "file": "scripts/csa-unit-course-repair.js",
+      "find": "  return { roundTrip: out === before, anchorsOk: after_a - before_a === anchorsAdded,",
+      "replace": "  return { roundTrip: true, anchorsOk: after_a - before_a === anchorsAdded,",
+      "command": "npm run --silent smoke:unitcourse",
+      "expect_failure": "an edit outside the recorded spans is REJECTED"
+    },
+    {
+      "kind": "rederive",
+      "name": "the sheet clears the preflight, with every emoji round-tripped against the live body",
+      "command": "node -e \"const fs=require('fs'),os=require('os'),path=require('path');const D='smoke/fixtures/csa-unit-course';const out={};for(const f of fs.readdirSync(D))if(/^ap-csa-unit-\\\\d-course[.]html$/.test(f))out[f.slice(0,-5)]=fs.readFileSync(path.join(D,f),'utf8');const t=path.join(os.tmpdir(),'uc.json');fs.writeFileSync(t,JSON.stringify(out));console.log(t);\" > /tmp/ucpath.txt && node scripts/matrixify-preflight.js imports/2026-09-02/csa-unit-course-pages.csv --carrying \"$(cat /tmp/ucpath.txt)\"",
+      "expect": "clear to import"
+    },
+    {
+      "kind": "live",
+      "name": "a teacher can now reach Exercise 2, and Unit 4 names its own lessons",
+      "command": "node -e \"const cp=require('child_process');const get=(h)=>cp.execSync('curl -sSL --max-time 40 --compressed https://www.apcsexamprep.com/pages/'+h,{encoding:'utf8',maxBuffer:1<<26});const u2=get('ap-csa-unit-2-course');if(!u2.includes('/pages/ap-csa-lesson-2-3-if-statements-exercise-2'))throw new Error('unit 2 still does not link lesson 2.3 exercise 2');const u4=get('ap-csa-unit-4-course');for(const s of ['ArrayList Introduction','Arrays as Parameters and Return Values','Informal Code Analysis','Reading Data from Files'])if(u4.includes('>'+s+'<'))throw new Error('unit 4 still shows the retired title '+JSON.stringify(s));for(const s of ['>Wrapper Classes<','>Using Text Files<','>Searching Algorithms<'])if(!u4.includes(s))throw new Error('unit 4 does not show '+s);console.log('TEACHER CAN REACH EXERCISE 2 AND UNIT 4 NAMES ITS OWN LESSONS');\"",
+      "expect": "TEACHER CAN REACH EXERCISE 2 AND UNIT 4 NAMES ITS OWN LESSONS",
+      "_why": "All of it is false today: no page anywhere links lesson 2.3's Exercise 2, and Unit 4 shows four retired lesson titles including two topics the 2025-2026 CED removed."
+    }
+  ]
+}
