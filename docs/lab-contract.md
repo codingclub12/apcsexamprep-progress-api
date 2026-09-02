@@ -151,10 +151,28 @@ It checks your work on the page and records nothing." The page text and the
 config agree, so a teacher reporting that a terminal lab shows nothing in the
 gradebook has found the design, not a defect.
 
-This is recorded because it has already been read the other way once, in a draft
-reply to a teacher that called it "a miss". A `points` value is present on both
-(6 and 8), which is what makes the misreading easy: points without `graded: true`
-prices the checkboxes on the page, not a gradebook cell.
+**But "by design" here means "held, not abandoned", and the reason is
+architectural.** The config's own `_comment` is the authority and it is more
+specific than either reading that has been offered so far:
+
+> `scripts/seed-manifest.js` deliberately does not seed `ap-cybersecurity`: that
+> course carries its own denominators. A lone manifest row here would add points
+> to every cyber student's denominator through a second path, which is the exact
+> failure `smoke/manifest-prune.js` exists to prevent. Flipping it to graded is
+> this one field plus a seed run, once the cyber denominator work in
+> `docs/cyber-denominator-gaps.md` closes.
+
+So it is not that these labs are meant to be ungraded forever. They are graded
+capable and held at `false` until the cyber denominator path stops double
+counting. Telling a teacher "this is free practice by design" is true today and
+will stop being true, so say "it records nothing today" rather than implying a
+permanent choice.
+
+This is recorded because it has already been read two other ways: once in a
+draft reply to a teacher that called it "a miss", and once as settled free
+practice. A `points` value is present on both (6 and 8), which is what makes the
+first misreading easy: points without `graded: true` prices the checkboxes on
+the page, not a gradebook cell.
 
 The five per-lesson Unit 1 labs are a different thing entirely from the two
 terminal labs, and a teacher asking about "the Unit 1 labs" almost always means
