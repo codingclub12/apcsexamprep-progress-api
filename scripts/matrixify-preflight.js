@@ -36,13 +36,21 @@
 // ---------------------------------------------------------------------------
 const fs = require('fs');
 
-const CELL_LIMIT = 32767;
+//  32,767 is EXCEL's per-cell limit, so it binds an .xlsx and not a .csv. Taking
+//  it as a CSV rule was wrong and would have rejected every real Pages sheet on
+//  this store: the handoff says in one breath that page bodies here run 60K to
+//  270K characters, and in another that cells cap at 32,767. Both are true of
+//  different formats. The Cyber Command Center body is 68,654 characters and
+//  imports fine as CSV.
+const XLSX_CELL_LIMIT = 32767;
+//  The handoff's own threshold for "check this one by hand" on a CSV.
+const CSV_LARGE_CELL = 250000;
 const PUBLISHED_AT_OK = ['', '2026-03-01'];
 //  Built from code points so this file stays pure ASCII. These are the byte
 //  sequences a UTF-8 bullet, dash or emoji turns into when read as Latin-1.
 const MOJIBAKE = [[0xE2, 0x80], [0xC3, 0xA2], [0xF0, 0x9F]]
   .map((p) => String.fromCharCode(p[0]) + String.fromCharCode(p[1]));
-const EMOJI = /[\u{1F300}-\u{1FAFF}]/u;
+const EMOJI = /[\u{1F300}-\u{1FAFF}]/gu;
 const SHEET_NAMES = /(page|product|blog[-_ ]?post|article|collection|customer|order|smart[-_ ]?collection|redirect|metafield)/i;
 
 //  Independent of every generator in this repo, on purpose.
@@ -126,8 +134,20 @@ function preflight(path, opts) {
       problems.push(`${blank.length} row(s) carry a BLANK Body HTML. That does not mean leave it `
         + 'alone, it means set the body to empty, and it would wipe those pages.');
     }
-    const over = body.filter((r) => String(r[bi] || '').length > CELL_LIMIT);
-    if (over.length) problems.push(`${over.length} row(s) exceed the ${CELL_LIMIT} character cell limit`);
+    const isXlsx = /\.xlsx$/i.test(name);
+    const cap = isXlsx ? XLSX_CELL_LIMIT : CSV_LARGE_CELL;
+    const over = body.filter((r) => String(r[bi] || '').length > cap);
+    if (over.length) {
+      problems.push(`${over.length} row(s) exceed the ${cap} character cell limit for `
+        + `${isXlsx ? 'xlsx' : 'csv'}`);
+    }
+    if (!isXlsx) {
+      const big = body.filter((r) => String(r[bi] || '').length > XLSX_CELL_LIMIT);
+      if (big.length) {
+        notes.push(`${big.length} row(s) are over ${XLSX_CELL_LIMIT} characters, which is fine `
+          + 'for CSV and would not survive xlsx. Do not re-save this file as a spreadsheet.');
+      }
+    }
   }
 
   const pi = col('Published At');
@@ -144,17 +164,44 @@ function preflight(path, opts) {
     if (bad.length) problems.push(`${bad.length} row(s) are not ${expectCommand}`);
   }
 
-  let nonAscii = 0, scriptsChecked = 0;
+  const hi = col('Handle');
+  let nonAscii = 0, scriptsChecked = 0, carriedEmoji = 0;
   for (const r of body) {
     const cellText = bi === -1 ? '' : String(r[bi] || '');
     for (const sig of MOJIBAKE) {
       if (cellText.indexOf(sig) !== -1) { problems.push('mojibake sequence present in a body'); break; }
     }
-    if (EMOJI.test(cellText)) problems.push('raw emoji present in a body');
+    //  CARRIED vs INTRODUCED, the same distinction the non-ASCII note makes.
+    //  The handoff says emoji are not used in this store's page content, and the
+    //  live Cyber Command Center body carries 27 of them in its resource rows.
+    //  Refusing them would mean a round-trip of that page can never be written,
+    //  and stripping them would change live content well beyond the edit. So an
+    //  emoji the sheet ADDS is refused, and one that was already there is
+    //  counted. Proving the difference needs the original, which is what
+    //  --carrying supplies; with no original, the safe reading is "introduced".
+    const found = cellText.match(EMOJI) || [];
+    if (found.length) {
+      const handle = hi === -1 ? null : String(r[hi] || '');
+      const original = (opts.carrying && handle) ? opts.carrying[handle] : undefined;
+      if (original === undefined) {
+        problems.push('raw emoji present in a body, and no original was supplied to show '
+          + 'it was already there. Pass --carrying <handle-to-body.json> for a round-trip.');
+      } else {
+        const had = (String(original).match(EMOJI) || []).length;
+        if (found.length > had) {
+          problems.push(`a body gained ${found.length - had} emoji that the live page does not have`);
+        } else {
+          carriedEmoji += found.length;
+        }
+      }
+    }
     nonAscii += (cellText.match(/[^\x00-\x7F]/g) || []).length;
     const sc = scriptsCompile(cellText);
     scriptsChecked += sc.checked;
     sc.bad.forEach((b) => problems.push(b));
+  }
+  if (carriedEmoji) {
+    notes.push(`${carriedEmoji} emoji carried through from the live bodies, none added.`);
   }
   if (nonAscii) {
     notes.push(`${nonAscii} non-ASCII characters carried through from the live bodies `
@@ -169,11 +216,18 @@ if (require.main === module) {
   const args = process.argv.slice(2);
   const file = args[0];
   if (!file) {
-    console.error('usage: node scripts/matrixify-preflight.js <sheet.csv> [--expect-command MERGE]');
+    console.error('usage: node scripts/matrixify-preflight.js <sheet.csv> '
+      + '[--expect-command MERGE] [--carrying <handle-to-body.json>]');
     process.exit(2);
   }
   const ec = args.indexOf('--expect-command');
-  const r = preflight(file, { expectCommand: ec === -1 ? 'MERGE' : args[ec + 1] });
+  const cy = args.indexOf('--carrying');
+  const carrying = cy === -1 ? null
+    : JSON.parse(fs.readFileSync(args[cy + 1], 'utf8'));
+  const r = preflight(file, {
+    expectCommand: ec === -1 ? 'MERGE' : args[ec + 1],
+    carrying,
+  });
   console.log(`\nPREFLIGHT ${file}`);
   console.log(`  rows              : ${r.rows}`);
   console.log(`  columns           : ${(r.header || []).join(' | ')}`);
@@ -188,4 +242,5 @@ if (require.main === module) {
   console.log('\n  clear to import.\n');
 }
 
-module.exports = { preflight, parseCsv, scriptsCompile, CELL_LIMIT, PUBLISHED_AT_OK };
+module.exports = { preflight, parseCsv, scriptsCompile, XLSX_CELL_LIMIT, CSV_LARGE_CELL,
+  PUBLISHED_AT_OK };

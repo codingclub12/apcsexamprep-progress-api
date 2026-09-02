@@ -41,7 +41,14 @@ guesses Latin-1 and a bullet arrives on the live page as three characters.
 **QUOTE_ALL, CRLF.** Page bodies here run 60K to 270K characters and contain
 commas, quotes and newlines constantly. One unquoted comma splits a row.
 
-**Cells cap at 32,767 characters.** Check before assuming a large body imported.
+**32,767 is EXCEL's per-cell limit, not a CSV rule.** The handoff says in one
+place that page bodies here run 60K to 270K characters, and in another that cells
+cap at 32,767. Both are true, of different formats. Taking the second as a CSV
+rule was wrong and would have rejected every real Pages sheet on this store: the
+live Cyber Command Center body is 68,654 characters and imports fine as CSV. The
+preflight applies 32,767 only to a `.xlsx`, notes it on a CSV so nobody re-saves
+one as a spreadsheet, and refuses a CSV cell past 250,000, which is the store's
+own check-this-by-hand threshold.
 
 **Verify against the live store afterwards.** `updated_at` must have moved. If it
 did not, the import was a no-op whatever the Matrixify log said. Body length
@@ -88,8 +95,19 @@ BOM is what keeps them intact, which is why its check is a hard failure and this
 one is a note.
 
 Authored content still uses entities: `&bull;`, `&ndash;`, `&rarr;`, `&nbsp;`,
-`&rsquo;`. Emoji are not used in page content at all; strip them rather than
-encoding them.
+`&rsquo;`.
+
+**Emoji get the same treatment, and the handoff is out of date about them.** It
+says emoji are not used in this store's page content. The live Cyber Command
+Center body carries 27, in 14 distinct glyphs, inside its resource rows. Refusing
+them outright means a round-trip of that page can never be written; stripping
+them changes live content far beyond the edit being made.
+
+So the preflight refuses an emoji the SHEET ADDS and counts one that was already
+there. Proving the difference needs the original, which `--carrying
+<handle-to-body.json>` supplies. With no original, the safe reading is
+"introduced", so a round-trip sheet must pass its before-snapshot or it will be
+refused. Never author new emoji into page content.
 
 ## Ship one row first
 

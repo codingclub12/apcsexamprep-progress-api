@@ -16,7 +16,8 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { preflight, scriptsCompile, CELL_LIMIT } = require('../scripts/matrixify-preflight');
+const { preflight, scriptsCompile, XLSX_CELL_LIMIT, CSV_LARGE_CELL }
+  = require('../scripts/matrixify-preflight');
 
 let pass = 0, fail = 0;
 const ok = (n, c, x) => {
@@ -138,11 +139,60 @@ console.log('\n6. Scripts, because on the widget pages the script IS the page');
   ok('  and a sheet carrying one is refused', has(r, /script block/), r.problems);
 }
 
-console.log('\n7. The cell limit');
+console.log('\n7. The cell limit belongs to the FORMAT, not to Matrixify');
 {
-  const r = preflight(write('big-blog-posts.csv', HDR,
-    [['b', 'h', 'MERGE', '<p>' + 'x'.repeat(CELL_LIMIT) + '</p>']]));
-  ok('  a body over the cell limit is refused', has(r, /cell limit/), r.problems);
+  //  32,767 is EXCEL's per-cell limit. Applying it to a CSV was wrong and would
+  //  have rejected every real Pages sheet on this store: the handoff says page
+  //  bodies here run 60K to 270K, and also that cells cap at 32,767. Both are
+  //  true, of different formats. The live Cyber Command Center body is 68,654
+  //  characters and imports fine as CSV.
+  const big = '<p>' + 'x'.repeat(XLSX_CELL_LIMIT) + '</p>';
+  const csv = preflight(write('big-blog-posts.csv', HDR, [['b', 'h', 'MERGE', big]]));
+  ok('  a 32K body is ACCEPTED in a csv, which is the normal case here',
+    !has(csv, /cell limit/), csv.problems);
+  ok('  and it is flagged as something that would not survive xlsx',
+    csv.notes.some((n) => /would not survive xlsx/.test(n)), csv.notes);
+
+  const xlsx = preflight(write('big-blog-posts.xlsx', HDR, [['b', 'h', 'MERGE', big]]));
+  ok('  the same body IS refused when the file is an xlsx',
+    has(xlsx, /cell limit for xlsx/), xlsx.problems);
+
+  const huge = preflight(write('huge-blog-posts.csv', HDR,
+    [['b', 'h', 'MERGE', 'x'.repeat(CSV_LARGE_CELL + 1)]]));
+  ok('  a csv body past the store\'s own 250K check-by-hand threshold is refused',
+    has(huge, /cell limit for csv/), huge.problems);
+}
+
+console.log('\n8. EMOJI: carried is not the same as introduced');
+{
+  //  The handoff says emoji are not used in this store's page content. The live
+  //  Cyber Command Center body carries 27 of them in its resource rows. Refusing
+  //  them outright means a round-trip of that page can never be written;
+  //  stripping them changes live content far beyond the edit being made.
+  const E = String.fromCodePoint(0x1F3AF);
+  const live = { h: '<p>' + E + ' already here</p>' };
+
+  const noOrigin = preflight(write('e1-blog-posts.csv', HDR,
+    [['b', 'h', 'MERGE', '<p>' + E + ' already here</p>']]));
+  ok('  with no original supplied, an emoji is refused', has(noOrigin, /raw emoji/), noOrigin.problems);
+  ok('  and the message says how to prove it was carried',
+    has(noOrigin, /--carrying/), noOrigin.problems);
+
+  const carried = preflight(write('e2-blog-posts.csv', HDR,
+    [['b', 'h', 'MERGE', '<p>' + E + ' already here</p>']]), { carrying: live });
+  ok('  the same row passes when the live page already had it',
+    carried.problems.length === 0, carried.problems);
+  ok('  and the carried emoji are counted, not silently ignored',
+    carried.notes.some((n) => /emoji carried through/.test(n)), carried.notes);
+
+  const added = preflight(write('e3-blog-posts.csv', HDR,
+    [['b', 'h', 'MERGE', '<p>' + E + E + ' now two</p>']]), { carrying: live });
+  ok('  a row that ADDS an emoji is still refused', has(added, /gained 1 emoji/), added.problems);
+
+  const other = preflight(write('e4-blog-posts.csv', HDR,
+    [['b', 'other-handle', 'MERGE', '<p>' + E + '</p>']]), { carrying: live });
+  ok('  a handle with no original of its own is refused, not assumed clean',
+    has(other, /raw emoji/), other.problems);
 }
 
 fs.rmSync(tmp, { recursive: true, force: true });
