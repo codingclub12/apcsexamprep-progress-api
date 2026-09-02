@@ -354,8 +354,11 @@ decision rather than an inherited default.
 ## Also observed
 
 Task 144 ("Production /api/health reports commit:unknown") is fixed in prod.
-`/api/health` returns a real commit (`405b3d8` during the checks, `e9b8153` by the
-end of them) rather than `unknown`. The board still lists it open.
+`/api/health` returns a real commit (`405b3d8` during the checks, and whatever is
+deployed since) rather than `unknown`. The board listed 144 as open when this was
+written; it has since been closed as done, still `verified=false`. Task 85 is the
+one that is still open and still flagged bleeding, which the item 2 section above
+argues it should not be.
 
 ## Environment note
 
