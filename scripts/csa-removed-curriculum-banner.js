@@ -96,13 +96,52 @@ function sheetRows(bodies) {
   return { rows, bad, skipped };
 }
 
-//  Matrixify's Blogs sheet nests articles under a blog. No sheet of this shape
-//  has been generated from this repo before, which is why the runner emits a
-//  ONE ROW canary as well: import that, look at the live page, then import the
-//  rest. A format guess verified by one page costs a minute; the same guess
-//  applied to 49 pages at once does not.
+//  MATRIXIFY BLOG POSTS SHEET. The first attempt at this was REFUSED by
+//  Matrixify in one second with "Cannot understand the uploaded file", and the
+//  canary is the only reason that cost one row instead of forty-nine.
+//
+//  Two things were wrong, and neither was the content. The bodies were correct
+//  in the rejected file, byte for byte. It was the envelope, and nothing
+//  checked the envelope.
+//
+//  1. THE POST'S OWN COLUMNS ARE NOT PREFIXED. The sheet said
+//     `Article: Handle`, `Article: Command`, `Article: Body HTML`. Matrixify
+//     names the sheet's own entity columns bare and prefixes only RELATED
+//     entities, so it is `Handle`, `Command`, `Body HTML`, and `Blog: Handle`
+//     for the parent. The Pages generators already in this repo show the same
+//     shape and were the evidence that the mechanics were fine.
+//
+//  2. THE FILE NAME IS THE SHEET NAME. Matrixify decides what a file contains
+//     from the tab name, and a CSV has no tabs, so the FILENAME carries it.
+//     `csa-banner-canary.csv` told it nothing. `...-blog-posts.csv` does.
+//     assertSheetName below refuses to write a file Matrixify would reject,
+//     because a generator that cannot be imported is not a generator.
+//
+//  Command is MERGE, per the store handoff. The reservation that made an
+//  earlier version use UPDATE was real and is answered rather than ignored:
+//  MERGE CREATES a row it cannot find, so a typo'd handle would publish a blank
+//  article to a live blog. What removes that risk is not the command, it is
+//  knowing the handles are real. All 49 were fetched from the live storefront
+//  and returned 200, and their bodies in this sheet ARE those responses, so
+//  there is nothing here for MERGE to create. Anything that cannot be fetched
+//  never reaches the sheet.
 const BLOG_HANDLE = 'ap-csa-daily-practice';
-const HEADER = ['Blog: Handle', 'Article: Handle', 'Article: Command', 'Article: Body HTML'];
+const HEADER = ['Blog: Handle', 'Handle', 'Command', 'Body HTML'];
+
+//  Matrixify reads the sheet type off the file name for a CSV. Getting this
+//  wrong is a one-second rejection with no per-row detail, so it is checked
+//  here rather than discovered in the Shopify admin.
+const SHEET_NAME_RE = /blog[-_ ]?posts?/i;
+const COMMAND = 'MERGE';
+
+function assertSheetName(outPath) {
+  const name = String(outPath || '').split(/[\\/]/).pop();
+  if (SHEET_NAME_RE.test(name)) return null;
+  return `${name} is not a name Matrixify will recognise as a Blog Posts sheet. `
+    + 'It reads the sheet type off the file name for a CSV, and rejects the whole file '
+    + 'in one second with no per-row detail. Name it something like '
+    + '"csa-banner-blog-posts.csv".';
+}
 
 function toCsv(rows) {
   const cell = (s) => '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"';
@@ -111,7 +150,7 @@ function toCsv(rows) {
   //  everywhere except one line invites the next person to decide quoting is
   //  optional on the line that does carry a comma. Caught by smoke:csabanner.
   return '﻿' + [HEADER.map(cell).join(',')]
-    .concat(rows.map((r) => [cell(BLOG_HANDLE), cell(r.handle), cell('UPDATE'), cell(r.body)].join(',')))
+    .concat(rows.map((r) => [cell(BLOG_HANDLE), cell(r.handle), cell(COMMAND), cell(r.body)].join(',')))
     .join('\r\n') + '\r\n';
 }
 
@@ -137,6 +176,15 @@ if (require.main === module) {
   }
   const i = rest.indexOf('--sheet');
   const c = rest.indexOf('--canary');
+  const nameProblems = [rest[c + 1], rest[i + 1]]
+    .filter((x, n) => (n === 0 ? c !== -1 : i !== -1))
+    .map(assertSheetName).filter(Boolean);
+  if (nameProblems.length) {
+    console.error(`\n  ${nameProblems.length} output name(s) Matrixify would reject. `
+      + 'No file written.\n');
+    nameProblems.forEach((m) => console.error('    ' + m));
+    process.exit(1);
+  }
   if (c !== -1) {
     fs.writeFileSync(rest[c + 1], toCsv(rows.slice(0, 1)));
     console.log(`\n  wrote ${rest[c + 1]}  (1 row, the canary: ${rows[0].handle})`);
@@ -149,4 +197,5 @@ if (require.main === module) {
   console.log(`\n  every row: body is exactly the banner plus the original, nothing else moved.\n`);
 }
 
-module.exports = { BANNER, MARKER, addBanner, verify, sheetRows, toCsv, HEADER, BLOG_HANDLE };
+module.exports = { BANNER, MARKER, addBanner, verify, sheetRows, toCsv, HEADER, BLOG_HANDLE,
+  assertSheetName, SHEET_NAME_RE, COMMAND };

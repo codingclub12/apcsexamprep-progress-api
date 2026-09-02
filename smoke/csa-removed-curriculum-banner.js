@@ -24,7 +24,7 @@
 //  No em-dashes, per repo convention.
 // ─────────────────────────────────────────────────────────────────────────────
 const {
-  BANNER, MARKER, addBanner, verify, sheetRows, toCsv, HEADER, BLOG_HANDLE,
+  BANNER, MARKER, addBanner, verify, sheetRows, toCsv, HEADER, BLOG_HANDLE, COMMAND,
 } = require('../scripts/csa-removed-curriculum-banner');
 
 let pass = 0, fail = 0;
@@ -150,8 +150,8 @@ console.log('\n5. The sheet, parsed back by a reader that did not write it');
     JSON.stringify(parsed[0]) === JSON.stringify(HEADER), parsed[0]);
   ok('  every row names the blog, so the articles are not orphaned',
     parsed.slice(1).every((r) => r[0] === BLOG_HANDLE), parsed[1] && parsed[1][0]);
-  ok('  every row is an UPDATE, never a create',
-    parsed.slice(1).every((r) => r[2] === 'UPDATE'));
+  ok('  every row carries the command the store handoff requires',
+    parsed.slice(1).every((r) => r[2] === COMMAND), parsed.slice(1).map((r) => r[2]));
   ok('  there is one row per article and no blank trailing row',
     parsed.length === 3, parsed.length);
 
@@ -175,6 +175,46 @@ console.log('\n5. The sheet, parsed back by a reader that did not write it');
     .filter(Boolean).filter((l) => !QUOTED_LINE.test(l));
   ok('  every field on every line is quoted, header included',
     unquoted.length === 0, unquoted.map((l) => l.slice(0, 60)));
+}
+
+console.log('\n5b. THE ENVELOPE, which is what actually failed');
+{
+  //  The first sheet generated here was REFUSED by Matrixify in one second:
+  //  "Cannot understand the uploaded file". The bodies in it were correct, byte
+  //  for byte. Everything this suite checked was right and the file was still
+  //  unimportable, because nothing checked the two things that decide whether
+  //  Matrixify will read a file at all.
+  const { assertSheetName } = require('../scripts/csa-removed-curriculum-banner');
+
+  //  1. The post's OWN columns are bare. Matrixify prefixes only RELATED
+  //     entities, so `Article: Handle` is not a column it knows.
+  ok('  the post\'s own columns are not prefixed',
+    HEADER.includes('Handle') && HEADER.includes('Command') && HEADER.includes('Body HTML'), HEADER);
+  ok('  and nothing in the header is prefixed with Article:',
+    !HEADER.some((h) => /^Article:/i.test(h)), HEADER);
+  ok('  the parent blog IS prefixed, because it is a related entity',
+    HEADER.includes('Blog: Handle'), HEADER);
+
+  //  2. A CSV has no tab name, so Matrixify reads the sheet type off the FILE
+  //     NAME. This is the one that cost the canary.
+  ok('  a file name Matrixify cannot recognise is refused',
+    !!assertSheetName('csa-banner-canary.csv'), assertSheetName('csa-banner-canary.csv'));
+  ok('  and the refusal explains that the name IS the sheet type',
+    /reads the sheet type off the file name/.test(assertSheetName('x.csv') || ''));
+  for (const good of ['csa-banner-blog-posts.csv', 'Blog Posts.csv', 'my_blog_post.csv',
+    '/tmp/deep/path/all-blog-posts.csv']) {
+    ok(`  ${JSON.stringify(good)} is accepted`, assertSheetName(good) === null, assertSheetName(good));
+  }
+
+  //  MERGE, per the store handoff. The risk MERGE carries is that it CREATES a
+  //  row it cannot find, so a typo'd handle publishes a blank article to a live
+  //  blog. What answers that is not the command word, it is that every handle in
+  //  this sheet was fetched live and returned 200, and its body in the sheet IS
+  //  that response. A handle that cannot be fetched never reaches the sheet.
+  const { rows } = sheetRows({ 'u3-c1-day-1': BODY });
+  const line = toCsv(rows).split('\r\n')[1];
+  ok('  every row is MERGE, matching the store handoff',
+    line.includes('"MERGE"') && !line.includes('"UPDATE"'), line.slice(0, 80));
 }
 
 console.log('\n6. A body the generator cannot handle is DROPPED, never guessed at');

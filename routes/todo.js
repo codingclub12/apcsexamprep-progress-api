@@ -205,9 +205,13 @@ router.post('/:id/verify-by-evidence', async (req, res) => {
   if (!task) return res.status(404).json({ error: `No task #${id}` });
 
   const phrase = req.body && req.body.expect;
+  //  `expect_absent` proves a REMOVAL: the fix took something off the page. It
+  //  is refused without `expect`, because absence is the default state of a 404,
+  //  an empty body and a typo, and all three would otherwise read as success.
+  const absent = req.body && req.body.expect_absent;
   let result;
   try {
-    result = await evidence.verifyByEvidence(task, phrase);
+    result = await evidence.verifyByEvidence(task, phrase, { absent });
   } catch (e) {
     // A verifier that throws must not leave the caller guessing whether it wrote.
     return res.status(500).json({ error: `The check itself failed: ${String(e.message || e)}`,

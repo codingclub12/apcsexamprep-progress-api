@@ -1,0 +1,54 @@
+{
+  "change": "the digest printed #undefined for every claim, so a stale lock could not be traced to its task",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the CLI, driven end to end against real routers",
+      "command": "npm run --silent smoke:apcs",
+      "expect": "59 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "the claim/task dispatch is real",
+      "file": "scripts/apcs.js",
+      "find": "  if (isClaim(t)) return claimLine(t);",
+      "replace": "",
+      "command": "npm run --silent smoke:apcs",
+      "expect_failure": "a live claim renders with its task id, not #undefined"
+    },
+    {
+      "kind": "mutation",
+      "name": "a lockless claim really is called out, not counted",
+      "file": "scripts/apcs.js",
+      "find": "    : C.yellow('NO LOCKS');",
+      "replace": "    : C.dim('0 locks');",
+      "command": "npm run --silent smoke:apcs",
+      "expect_failure": "says NO LOCKS rather than"
+    },
+    {
+      "kind": "mutation",
+      "name": "the release hint is checked, not assumed",
+      "file": "scripts/apcs.js",
+      "find": "    console.log(C.dim('  a stale claim still holds its locks.  apcs release <task-id>'));",
+      "replace": "",
+      "command": "npm run --silent smoke:apcs",
+      "expect_failure": "tells you a stale claim is still holding its locks"
+    },
+    {
+      "kind": "mutation",
+      "name": "the silence duration is rendered, not blank",
+      "file": "scripts/apcs.js",
+      "find": "    + `${mins(c.since_heartbeat_minutes)} silent`);",
+      "replace": "    + ``);",
+      "command": "npm run --silent smoke:apcs",
+      "expect_failure": "the stale row reports how long it has been silent"
+    },
+    {
+      "kind": "live",
+      "name": "production serves what this tree is",
+      "command": "node -e \"const cp=require('child_process');const want=cp.execSync('git rev-parse HEAD',{encoding:'utf8'}).trim().slice(0,7);const h=cp.execSync('curl -sS --max-time 25 https://progress.apcsexamprep.com/api/health',{encoding:'utf8'});const got=JSON.parse(h).commit;if(got!==want)throw new Error('production serves '+got+', this tree is '+want);console.log('PRODUCTION SERVES THIS TREE '+got);\"",
+      "expect": "PRODUCTION SERVES THIS TREE"
+    }
+  ],
+  "_rederive_removed": "This manifest had a rederive that read the LIVE board and asserted every claim row is keyed task_id/task_title and never id/title. It PASSED (4 claim rows, all correct) and is the reason the fix is known to be right. It was then removed rather than kept, because the same session released all four of those claims, so the board now has no claim rows and the check refuses: 'no claim rows on the live board, so this proves nothing today'. That refusal is the check working. The wrong fix would be to take a claim purely so the gate has something to read, which is staging evidence for your own check. The third kind here is `live`, and the rederive's one passing run is recorded in the pull request."
+}

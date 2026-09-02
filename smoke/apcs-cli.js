@@ -367,6 +367,66 @@ const liveFor = (taskId) => store.liveClaims().filter((c) => c.task_id === taskI
   ok('7.5 and it does not blame agent field permissions for it',
     !/cannot touch/.test(proxy403.out), proxy403.out.trim().slice(0, 200));
 
+  // ── 8. The digest can name a claim it is complaining about ─────────────────
+  section('8. A claim row is not a task row, and the digest has to render both');
+
+  //  THE BUG THIS PINS. digest mixes two shapes in one list: `in_flight` and
+  //  `stale` carry CLAIM rows keyed as task_id/task_title, while every other
+  //  section carries TASK rows keyed as id/title. The renderer read id/title
+  //  for both, so on the live board four stale claims printed as
+  //
+  //      #undefined
+  //
+  //  with an empty title, holding thirteen files between them. The ledger could
+  //  say something was stuck and not which task, nor which files, which is the
+  //  only question a stale claim exists to answer. Nothing threw and nothing
+  //  looked broken: "#undefined" reads as an empty row.
+  {
+    const t = await call('POST', '/api/todo', {
+      title: 'Claim rendering fixture', bucket: 'now', surface: 'api', size: 's', owner: 'agent',
+    });
+    const id = t.body.id || t.body.task?.id;
+    await apcs('claim', String(id), '--lock', 'api:routes/render-me.js', '--lock', 'theme:assets/render-me.js');
+
+    const fresh = await apcs('digest');
+    ok('a live claim renders with its task id, not #undefined',
+      !/#undefined/.test(fresh.out) && fresh.out.includes(`#${id}`), fresh.out.slice(0, 400));
+    ok('and the digest names the task, not an empty string',
+      fresh.out.includes('Claim rendering fixture'));
+    ok('and says how many files it is holding', /2 locks/.test(fresh.out), fresh.out.slice(0, 400));
+
+    //  Now age the heartbeat past the grace window so the SAME row moves from
+    //  in_flight to stale. Both lists go through the same renderer, so this is
+    //  the reported symptom rather than a near neighbour of it.
+    const claim = liveFor(id)[0];
+    store.db.prepare("UPDATE claims SET heartbeat_at = datetime('now', '-6 hours') WHERE id = ?")
+      .run(claim.id);
+
+    const stale = await apcs('digest');
+    const staleBlock = stale.out.slice(stale.out.indexOf('STALE / STUCK'));
+    ok('a STALE claim also renders with its task id',
+      /STALE \/ STUCK/.test(stale.out) && !/#undefined/.test(stale.out), stale.out.slice(0, 500));
+    ok('the stale row names the task', staleBlock.includes('Claim rendering fixture'), staleBlock.slice(0, 300));
+    ok('the stale row reports how long it has been silent', /\d+h silent|\d+m silent|\d+d silent/.test(staleBlock),
+      staleBlock.slice(0, 300));
+    ok('and tells you a stale claim is still holding its locks',
+      /still holds its locks/.test(staleBlock), staleBlock.slice(0, 400));
+
+    //  A claim with no locks protects nothing. Printing "0 locks" would read as
+    //  tidy, so the digest has to say it in a way somebody notices.
+    const t2 = await call('POST', '/api/todo', {
+      title: 'Unlocked claim fixture', bucket: 'now', surface: 'api', size: 's', owner: 'agent',
+    });
+    const id2 = t2.body.id || t2.body.task?.id;
+    await apcs('claim', String(id2));
+    const noLock = await apcs('digest');
+    ok('a claim holding nothing says NO LOCKS rather than "0 locks"',
+      /NO LOCKS/.test(noLock.out) && !/0 locks/.test(noLock.out), noLock.out.slice(0, 500));
+
+    await apcs('release', String(id));
+    await apcs('release', String(id2));
+  }
+
   // ── summary ────────────────────────────────────────────────────────────────
   console.log(`\n${'-'.repeat(70)}`);
   console.log(`apcs cli: ${pass} passed, ${fail} failed`);

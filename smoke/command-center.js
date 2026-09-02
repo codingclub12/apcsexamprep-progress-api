@@ -106,6 +106,22 @@ app.get('/fixture/shipped', (req, res) => {
 app.get('/fixture/not-shipped', (req, res) => {
   res.type('html').send('<html><body><p>nothing here yet</p></body></html>');
 });
+//  The removal case, in both states. Same lesson page: one still leaks the
+//  answer key into the served bytes, one has had it taken out. The anchor
+//  phrase is on both, because the point of an anchor is that it survives the fix.
+app.get('/fixture/leaking', (req, res) => {
+  res.type('html').send('<html><body><h1>apcs-cyber-lesson-map</h1>'
+    + '<script>var answerKey = ["A","B","C"];</script></body></html>');
+});
+app.get('/fixture/leak-fixed', (req, res) => {
+  res.type('html').send('<html><body><h1>apcs-cyber-lesson-map</h1>'
+    + '<script>var answerKey = null;</script></body></html>');
+});
+//  A page that 404s. Absence is the default state of a 404, so this is the
+//  failure an unanchored absence check would report as a successful removal.
+app.get('/fixture/gone-entirely', (req, res) => {
+  res.status(404).type('html').send('<html><body>Not Found</body></html>');
+});
 
 const server = app.listen(0);
 const PORT = server.address().port;
@@ -674,6 +690,49 @@ const raw = (sql, ...args) => db.prepare(sql).run(...args);
     const notes = JSON.stringify(ev.body || '');
     ok('  and the ledger records how it was verified, with the re-run command',
       /machine-verified/.test(notes) && /Re-run:/.test(notes), notes.slice(0, 300));
+
+    //  ── REMOVALS, over real http ──────────────────────────────────────────
+    //  Half the fixes on this board take something OFF a page: a leaked answer
+    //  key, a dead link, a stale promo bar. Presence cannot verify any of them.
+    //  These run through the route rather than the lib, because the lib's unit
+    //  tests once all passed against a stub that shared the code's own wrong
+    //  assumption, and it was the real-http test that caught it.
+    {
+      const fixed = await mk(`${BASE}/fixture/leak-fixed`);
+      const leaking = await mk(`${BASE}/fixture/leaking`);
+      const missing = await mk(`${BASE}/fixture/gone-entirely`);
+      const KEY = 'var answerKey = ["A","B","C"]';
+
+      const r = await call('POST', `/api/todo/${fixed}/verify-by-evidence`,
+        { body: { expect: 'apcs-cyber-lesson-map', expect_absent: KEY } });
+      ok('  a removal verifies when the anchor is there and the leak is gone',
+        r.status === 200 && r.body.verified === true, r.body);
+      ok('  and the evidence names what is gone',
+        r.body.evidence && r.body.evidence.absent && r.body.evidence.absent.phrase === KEY,
+        r.body.evidence);
+
+      const ledger = await call('GET', `/api/todo/${fixed}`);
+      ok('  the ledger records the removal, not just the anchor',
+        /is GONE from it/.test(JSON.stringify(ledger.body || '')),
+        JSON.stringify(ledger.body || '').slice(0, 300));
+
+      const still = await call('POST', `/api/todo/${leaking}/verify-by-evidence`,
+        { body: { expect: 'apcs-cyber-lesson-map', expect_absent: KEY } });
+      ok('  a leak that is still served is refused 422',
+        still.status === 422 && /removal did not ship/.test(still.body.error || ''), still.body);
+
+      //  THE ONE THAT MATTERS. Without the anchor rule this 404 verifies: the
+      //  phrase really is not in the response.
+      const four04 = await call('POST', `/api/todo/${missing}/verify-by-evidence`,
+        { body: { expect: 'apcs-cyber-lesson-map', expect_absent: KEY } });
+      ok('  a 404 is refused rather than counted as a successful removal',
+        four04.status === 422 && /answered 404/.test(four04.body.error || ''), four04.body);
+
+      const noAnchor = await call('POST', `/api/todo/${missing}/verify-by-evidence`,
+        { body: { expect_absent: KEY } });
+      ok('  an absence claim with no anchor is refused outright',
+        noAnchor.status === 422 && /needs an anchor/.test(noAnchor.body.error || ''), noAnchor.body);
+    }
 
     const absent = await call('POST', `/api/todo/${notShipped}/verify-by-evidence`,
       { body: { expect: 'apcs-cyber-lesson-map' } });

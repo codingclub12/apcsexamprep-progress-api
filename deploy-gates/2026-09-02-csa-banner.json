@@ -5,7 +5,7 @@
       "kind": "suite",
       "name": "the banner guard, tested for the first time",
       "command": "npm run --silent smoke:csabanner",
-      "expect": "38 passed, 0 failed"
+      "expect": "48 passed, 0 failed"
     },
     {
       "kind": "suite",
@@ -33,6 +33,25 @@
     },
     {
       "kind": "mutation",
+      "name": "THE ONE THAT ACTUALLY FAILED: an unrecognisable file name is refused",
+      "_why": "Matrixify rejected the first canary in one second with 'Cannot understand the uploaded file'. The bodies were correct byte for byte; the file NAME was the defect, because a CSV has no tab name and Matrixify reads the sheet type off the name. Nothing checked the envelope, so 38 green assertions sat on top of a file that could not be imported.",
+      "file": "scripts/csa-removed-curriculum-banner.js",
+      "find": "  if (SHEET_NAME_RE.test(name)) return null;",
+      "replace": "  if (true) return null;",
+      "command": "npm run --silent smoke:csabanner",
+      "expect_failure": "a file name Matrixify cannot recognise is refused"
+    },
+    {
+      "kind": "mutation",
+      "name": "the post's own columns must stay unprefixed",
+      "file": "scripts/csa-removed-curriculum-banner.js",
+      "find": "const HEADER = ['Blog: Handle', 'Handle', 'Command', 'Body HTML'];",
+      "replace": "const HEADER = ['Blog: Handle', 'Article: Handle', 'Article: Command', 'Article: Body HTML'];",
+      "command": "npm run --silent smoke:csabanner",
+      "expect_failure": "nothing in the header is prefixed with Article:"
+    },
+    {
+      "kind": "mutation",
       "name": "the new subsumption rule is not itself hollow",
       "file": "scripts/deploy-gate.js",
       "find": "  if (m.expect_failure && !String(res.out || '').includes(m.expect_failure)) {",
@@ -44,8 +63,8 @@
       "kind": "mutation",
       "name": "QUOTE_ALL is enforced, not assumed",
       "file": "scripts/csa-removed-curriculum-banner.js",
-      "find": "  return '﻿' + [HEADER.map(cell).join(',')]",
-      "replace": "  return '﻿' + [HEADER.join(',')]",
+      "find": "  return '\ufeff' + [HEADER.map(cell).join(',')]",
+      "replace": "  return '\ufeff' + [HEADER.join(',')]",
       "command": "npm run --silent smoke:csabanner",
       "expect_failure": "every field on every line is quoted, header included"
     },
