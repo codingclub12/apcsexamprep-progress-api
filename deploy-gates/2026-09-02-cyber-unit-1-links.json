@@ -1,9 +1,9 @@
 {
-  "change": "sweep products, collections and blogs too, and repair the 9 links that can be proved (round 2)",
+  "change": "AP Cyber Unit 1: eight activity links that 404 because the course is named twice (round 3)",
   "checks": [
     {
       "kind": "suite",
-      "name": "four sections, two provable rules, and an unchecked link is never called broken",
+      "name": "the Unit 1 mapping, the two provable rules, and an unchecked link is never called broken",
       "command": "npm run --silent smoke:deadlinks",
       "expect": "100 passed, 0 failed"
     },
@@ -81,23 +81,23 @@
     },
     {
       "kind": "rederive",
-      "name": "a SECOND implementation, in another language, over BOTH sheets",
-      "command": "python3 scripts/verify-dead-link-sheet.py --sheet imports/2026-09-02/dead-link-repair-round-2-pages.csv --bodies smoke/fixtures/dead-link-bodies-2 --handles smoke/fixtures/live-page-handles.txt && python3 scripts/verify-dead-link-sheet.py --sheet imports/2026-09-02/dead-link-repair-pages.csv --bodies smoke/fixtures/dead-link-bodies --handles smoke/fixtures/live-page-handles.txt",
+      "name": "a SECOND implementation, in another language, over ALL THREE sheets",
+      "command": "python3 scripts/verify-dead-link-sheet.py --sheet imports/2026-09-02/dead-link-repair-round-3-pages.csv --bodies smoke/fixtures/dead-link-bodies-3 --handles smoke/fixtures/live-page-handles.txt && python3 scripts/verify-dead-link-sheet.py --sheet imports/2026-09-02/dead-link-repair-round-2-pages.csv --bodies smoke/fixtures/dead-link-bodies-2 --handles smoke/fixtures/live-page-handles.txt && python3 scripts/verify-dead-link-sheet.py --sheet imports/2026-09-02/dead-link-repair-pages.csv --bodies smoke/fixtures/dead-link-bodies --handles smoke/fixtures/live-page-handles.txt",
       "expect": "SHEET VERIFIED 45 pages",
-      "_why": "Run over the new sheet AND over the one already imported, so the section change cannot quietly invalidate the round it is built on."
+      "_why": "Run over all three rounds, so a map entry added for round three cannot quietly invalidate the two already imported. It keeps its own copy of the by-hand pairs rather than importing the map."
     },
     {
       "kind": "rederive",
       "name": "the sheet clears the preflight, with every emoji round-tripped against the live body",
-      "command": "node -e \"const fs=require('fs'),os=require('os'),path=require('path');const D='smoke/fixtures/dead-link-bodies-2';const out={};for(const f of fs.readdirSync(D))if(f.endsWith('.html'))out[f.slice(0,-5)]=fs.readFileSync(path.join(D,f),'utf8');const t=path.join(os.tmpdir(),'dl2.json');fs.writeFileSync(t,JSON.stringify(out));console.log(t);\" > /tmp/dl2path.txt && node scripts/matrixify-preflight.js imports/2026-09-02/dead-link-repair-round-2-pages.csv --carrying \"$(cat /tmp/dl2path.txt)\"",
+      "command": "node -e \"const fs=require('fs'),os=require('os'),path=require('path');const D='smoke/fixtures/dead-link-bodies-3';const out={};for(const f of fs.readdirSync(D))if(f.endsWith('.html'))out[f.slice(0,-5)]=fs.readFileSync(path.join(D,f),'utf8');const t=path.join(os.tmpdir(),'dl3.json');fs.writeFileSync(t,JSON.stringify(out));console.log(t);\" > /tmp/dl3path.txt && node scripts/matrixify-preflight.js imports/2026-09-02/dead-link-repair-round-3-pages.csv --carrying \"$(cat /tmp/dl3path.txt)\"",
       "expect": "clear to import"
     },
     {
       "kind": "live",
-      "name": "the free-preview button and the daily-practice links resolve",
-      "command": "node -e \"const cp=require('child_process');const want=[['ap-csa-teacher-superpack',['/products/ap-csa-teacher-superpack-free-preview'],['/products/ap-csa-unit-1-superpack-free']],['ap-csa-study-games-hub',['/blogs/ap-csa-daily-practice'],['/blogs/daily-ap-csa-practice']],['ap-csa-wordle',['/blogs/ap-csa-daily-practice'],['/blogs/daily-ap-csa-practice']]];for(const [h,present,absent] of want){const html=cp.execSync('curl -sSL --max-time 40 --compressed https://www.apcsexamprep.com/pages/'+h,{encoding:'utf8',maxBuffer:1<<26});for(const s of present)if(!html.includes(s))throw new Error(h+' does not link '+s);for(const s of absent)if(html.includes(s))throw new Error(h+' still serves '+s);}console.log('STOREFRONT ROUND 2 LINKS RESOLVE on 3 of 3 pages');\"",
-      "expect": "STOREFRONT ROUND 2 LINKS RESOLVE",
-      "_why": "Both halves are false today: /products/ap-csa-unit-1-superpack-free is a 404 behind three Download free buttons on the CSA teacher bundle, and /blogs/daily-ap-csa-practice is a 404 behind six study-game links."
+      "name": "a teacher walking Cyber Unit 1 no longer hits a 404 activity",
+      "command": "node -e \"const cp=require('child_process');const pages=['ap-cyber-unit-1-lesson-1-exercise-2','ap-cyber-unit-1-lesson-2-quiz'];for(const h of pages){const html=cp.execSync('curl -sSL --max-time 40 --compressed https://www.apcsexamprep.com/pages/'+h,{encoding:'utf8',maxBuffer:1<<26});for(const s of ['ap-cybersecurity-unit-1-wireless-security-quiz','ap-cybersecurity-unit-1-ai-cyber-defense-lab'])if(html.includes(s))throw new Error(h+' still serves '+s);for(const s of ['/pages/ap-cyber-unit-1-lesson-3-quiz','/pages/ap-cyber-unit-1-lesson-5-lab'])if(!html.includes(s))throw new Error(h+' does not link '+s);}console.log('CYBER UNIT 1 ACTIVITY LINKS RESOLVE');\"",
+      "expect": "CYBER UNIT 1 ACTIVITY LINKS RESOLVE",
+      "_why": "Both halves are false today: those two Unit 1 pages serve links to ap-cybersecurity-unit-1-wireless-security-quiz and -ai-cyber-defense-lab, which are 404s, and link neither of the live pages behind them."
     }
   ]
 }

@@ -1,0 +1,803 @@
+<script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "LearningResource",
+    "headline": "AP Cybersecurity Topic 1.2 Exercise 1: Password Autopsy",
+    "description": "Analyze real-world password weaknesses, read an authentication attack log, and recommend NIST-compliant authentication improvements. AP Cybersecurity exam practice.",
+    "author": {
+      "@type": "Person",
+      "name": "Tanner Crow",
+      "url": "https://www.apcsexamprep.com/pages/ap-computer-science-tutor"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "APCSExamPrep.com",
+      "url": "https://www.apcsexamprep.com"
+    },
+    "educationalLevel": "High School",
+    "inLanguage": "en-US"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.apcsexamprep.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "AP Cybersecurity",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Unit 1: Introduction to Security",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide#unit1"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": "Topic 1.2: Suspicious Website Logins",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-unit-1-password-attacks"
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "name": "AP Cybersecurity Topic 1.2 Exercise 1: Password Autopsy",
+        "item": "https://www.apcsexamprep.com/pages/ap-cyber-unit-1-lesson-2-exercise-1"
+      }
+    ]
+  }
+]
+</script>
+<!-- ============================================================
+  AP CYBERSECURITY | Unit 1 Topic 1.2 | Exercise 1: Password Autopsy
+  Shopify Handle: ap-cyber-unit-1-lesson-2-exercise-1
+  data-lesson-id="1.2-ex1"
+
+  SHOPIFY NOTES:
+  - Unique wrapper: #cyber-ex1-12
+  - Purple theme, Georgia serif, ucnav, full CSS isolation
+  - NO raw emojis - HTML entities only
+  - All buttons: white text forced with :link/:visited/:hover/:active + -webkit-text-fill-color
+
+  CB ALIGNMENT: 1.2.A (signs of attack), 1.2.B (exploit weak auth), 1.2.C (strengthen auth)
+  TIME: 30-40 minutes
+============================================================ -->
+
+<style>
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-lesson.locked{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;cursor:not-allowed!important;}
+#ucnav .ucn-lesson.locked:link,#ucnav .ucn-lesson.locked:visited,#ucnav .ucn-lesson.locked:hover{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;background:transparent!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-lock svg{opacity:.5!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+
+
+/* ===== UNIT NAV ===== */
+@media(max-width:600px){}
+
+/* ===== WRAPPER ===== */
+#cyber-ex1-12{
+  all:initial!important;display:block!important;font-family:'Georgia',serif!important;
+  color:#1E1B4B!important;background:#ffffff!important;line-height:1.6!important;
+  -webkit-font-smoothing:antialiased!important;max-width:940px!important;
+  margin:0 auto!important;padding:20px 16px 60px!important;
+}
+#cyber-ex1-12 *{box-sizing:border-box!important;}
+#cyber-ex1-12{--purple:#6B21A8;--purple-mid:#7C3AED;--purple-light:#A855F7;--purple-bg:#F5F0FF;--purple-border:#DDD6FE;--dark:#1E1B4B;--gray:#6B7280;--gray-light:#F9FAFB;--gray-border:#E5E7EB;--green:#15803D;--green-bg:#F0FDF4;--green-border:#BBF7D0;}
+
+/* ===== HEADER ===== */
+#cyber-ex1-12 .ex-header{
+  background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;
+  border-radius:14px!important;padding:36px 32px!important;margin-bottom:20px!important;
+  color:#ffffff!important;position:relative!important;overflow:hidden!important;
+}
+#cyber-ex1-12 .ex-header::before{content:''!important;position:absolute!important;top:-60px!important;right:-60px!important;width:300px!important;height:300px!important;border-radius:50%!important;background:rgba(168,85,247,0.15)!important;pointer-events:none!important;}
+#cyber-ex1-12 .ex-header::after{content:''!important;position:absolute!important;bottom:-80px!important;left:-40px!important;width:250px!important;height:250px!important;border-radius:50%!important;background:rgba(124,58,237,0.12)!important;pointer-events:none!important;}
+#cyber-ex1-12 .ex-tag{display:inline-block!important;background:rgba(168,85,247,0.25)!important;border:1px solid rgba(168,85,247,0.5)!important;color:#E9D5FF!important;font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;text-transform:uppercase!important;padding:6px 16px!important;border-radius:20px!important;margin-bottom:16px!important;}
+#cyber-ex1-12 .ex-header h1{font-family:'Georgia',serif!important;font-size:28px!important;font-weight:700!important;color:#ffffff!important;margin:0 0 10px!important;line-height:1.3!important;position:relative!important;}
+#cyber-ex1-12 .ex-header p{font-family:'Georgia',serif!important;font-size:15px!important;color:rgba(255,255,255,0.85)!important;margin:0 0 20px!important;line-height:1.6!important;position:relative!important;}
+#cyber-ex1-12 .ex-badges{display:flex!important;flex-wrap:wrap!important;gap:10px!important;position:relative!important;}
+#cyber-ex1-12 .ex-badge{display:inline-flex!important;align-items:center!important;gap:5px!important;background:rgba(168,85,247,0.2)!important;border:1px solid rgba(168,85,247,0.4)!important;color:#E9D5FF!important;padding:5px 14px!important;border-radius:18px!important;font-family:'Georgia',serif!important;font-size:12px!important;font-weight:600!important;}
+
+/* ===== SCORE BAR ===== */
+#cyber-ex1-12 .score-bar{position:relative!important;z-index:50!important;background:linear-gradient(135deg,#1E1B4B,#3B0764)!important;color:#ffffff!important;padding:10px 20px!important;border-radius:10px!important;display:flex!important;justify-content:space-between!important;align-items:center!important;font-family:'Georgia',serif!important;font-size:13px!important;font-weight:600!important;box-shadow:0 4px 12px rgba(30,27,75,0.3)!important;margin-bottom:24px!important;}
+#cyber-ex1-12 .score-bar .score-num{background:var(--purple)!important;padding:4px 14px!important;border-radius:14px!important;font-size:14px!important;font-weight:800!important;color:#ffffff!important;}
+
+/* ===== SECTIONS ===== */
+#cyber-ex1-12 .section{background:#ffffff!important;border:1px solid var(--gray-border)!important;border-radius:12px!important;padding:28px 24px!important;margin-bottom:24px!important;box-shadow:0 2px 8px rgba(0,0,0,0.04)!important;}
+#cyber-ex1-12 .section h2{font-family:'Georgia',serif!important;font-size:18px!important;font-weight:700!important;color:var(--dark)!important;margin:0 0 12px!important;}
+#cyber-ex1-12 .section h3{font-family:'Georgia',serif!important;font-size:15px!important;font-weight:700!important;color:var(--purple)!important;margin:16px 0 8px!important;}
+#cyber-ex1-12 .section p{font-family:'Georgia',serif!important;font-size:14px!important;color:#374151!important;margin:0 0 12px!important;line-height:1.7!important;}
+#cyber-ex1-12 .section-label{display:inline-block!important;background:var(--purple-bg)!important;color:var(--purple)!important;font-family:'Georgia',serif!important;font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:1px!important;padding:4px 12px!important;border-radius:4px!important;margin-bottom:12px!important;}
+
+/* ===== PASSWORD SPECIMEN ===== */
+#cyber-ex1-12 .pw-specimen{background:#0f172a!important;border-radius:8px!important;padding:16px 20px!important;margin:12px 0!important;font-family:'Courier New',monospace!important;font-size:20px!important;font-weight:700!important;letter-spacing:2px!important;color:#a78bfa!important;text-align:center!important;border:2px solid #334155!important;}
+#cyber-ex1-12 .pw-context{background:var(--gray-light)!important;border:1px solid var(--gray-border)!important;border-radius:8px!important;padding:12px 16px!important;margin:8px 0 16px!important;font-family:'Georgia',serif!important;font-size:13px!important;color:#475569!important;}
+#cyber-ex1-12 .pw-context strong{color:var(--dark)!important;}
+
+/* ===== FORM FIELDS ===== */
+#cyber-ex1-12 .q-grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:14px!important;margin:12px 0!important;}
+@media(max-width:600px){#cyber-ex1-12 .q-grid{grid-template-columns:1fr!important;}}
+#cyber-ex1-12 .q-field{display:flex!important;flex-direction:column!important;gap:4px!important;}
+#cyber-ex1-12 .q-field label{font-family:'Georgia',serif!important;font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:0.5px!important;color:#475569!important;}
+#cyber-ex1-12 .q-field select,#cyber-ex1-12 .q-field textarea{font-family:'Georgia',serif!important;font-size:13px!important;padding:8px 10px!important;border:1px solid var(--purple-border)!important;border-radius:6px!important;background:#ffffff!important;color:var(--dark)!important;resize:vertical!important;}
+#cyber-ex1-12 .q-field select:focus,#cyber-ex1-12 .q-field textarea:focus{outline:none!important;border-color:var(--purple)!important;box-shadow:0 0 0 2px rgba(107,33,168,0.15)!important;}
+#cyber-ex1-12 .q-full{grid-column:1/-1!important;}
+
+/* ===== LOG TABLE ===== */
+#cyber-ex1-12 .log-table{width:100%!important;border-collapse:collapse!important;margin:12px 0!important;font-family:'Courier New',monospace!important;font-size:12px!important;}
+#cyber-ex1-12 .log-table th{background:var(--dark)!important;color:#ffffff!important;padding:8px 10px!important;text-align:left!important;font-family:'Georgia',serif!important;font-size:11px!important;text-transform:uppercase!important;letter-spacing:0.5px!important;}
+#cyber-ex1-12 .log-table td{padding:6px 10px!important;border-bottom:1px solid var(--gray-border)!important;vertical-align:top!important;color:#1e293b!important;}
+#cyber-ex1-12 .log-table tr:nth-child(even) td{background:var(--gray-light)!important;}
+#cyber-ex1-12 .log-table tr.suspicious td{background:#fef2f2!important;color:#991b1b!important;font-weight:600!important;}
+
+/* ===== BUTTONS ===== */
+#cyber-ex1-12 .check-btn{display:inline-block!important;background:var(--purple)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;font-family:'Georgia',serif!important;font-size:14px!important;font-weight:700!important;padding:10px 24px!important;border:none!important;border-radius:8px!important;cursor:pointer!important;margin-top:12px!important;opacity:1!important;visibility:visible!important;text-decoration:none!important;}
+#cyber-ex1-12 .check-btn:hover{background:var(--purple-mid)!important;}
+#cyber-ex1-12 a.check-btn:link,#cyber-ex1-12 a.check-btn:visited,#cyber-ex1-12 a.check-btn:hover,#cyber-ex1-12 a.check-btn:active{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#cyber-ex1-12 .nav-btn-back{background:#475569!important;}
+#cyber-ex1-12 .nav-btn-back:hover{background:#334155!important;}
+
+/* ===== FEEDBACK ===== */
+#cyber-ex1-12 .feedback{display:none!important;border-radius:8px!important;padding:16px 18px!important;margin-top:14px!important;font-family:'Georgia',serif!important;font-size:13px!important;line-height:1.7!important;}
+#cyber-ex1-12 .feedback.show{display:block!important;}
+#cyber-ex1-12 .feedback.correct{background:var(--green-bg)!important;border:1px solid var(--green-border)!important;color:#166534!important;}
+#cyber-ex1-12 .feedback.partial{background:#FFFBEB!important;border:1px solid #FDE68A!important;color:#92400E!important;}
+#cyber-ex1-12 .feedback.incorrect{background:#FEF2F2!important;border:1px solid #FECACA!important;color:#991B1B!important;}
+
+/* ===== RESULTS ===== */
+#cyber-ex1-12 .results-panel{display:none!important;background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;border-radius:12px!important;padding:32px!important;text-align:center!important;color:#ffffff!important;margin-top:24px!important;position:relative!important;overflow:hidden!important;}
+#cyber-ex1-12 .results-panel::before{content:''!important;position:absolute!important;top:-40px!important;right:-40px!important;width:200px!important;height:200px!important;border-radius:50%!important;background:rgba(168,85,247,0.15)!important;pointer-events:none!important;}
+#cyber-ex1-12 .results-panel.show{display:block!important;}
+#cyber-ex1-12 .results-panel h2{font-family:'Georgia',serif!important;font-size:22px!important;color:#ffffff!important;margin:0 0 8px!important;position:relative!important;}
+#cyber-ex1-12 .results-score{font-family:'Georgia',serif!important;font-size:48px!important;font-weight:900!important;color:var(--purple-light)!important;margin:12px 0!important;position:relative!important;}
+#cyber-ex1-12 .results-panel p{font-family:'Georgia',serif!important;font-size:14px!important;color:rgba(255,255,255,0.85)!important;margin:8px 0!important;position:relative!important;}
+
+/* ===== EXAM TIP ===== */
+#cyber-ex1-12 .exam-tip{background:var(--purple-bg)!important;border-left:4px solid var(--purple)!important;border-radius:0 8px 8px 0!important;padding:16px 20px!important;margin:20px 0!important;font-family:'Georgia',serif!important;font-size:14px!important;color:var(--dark)!important;}
+#cyber-ex1-12 .exam-tip strong{color:var(--purple)!important;}
+
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+</style>
+
+<!-- UNIT ACCORDION NAV -->
+
+<div id="ucnav">
+  <div class="ucn-rail" id="ucn-rail">
+    <a href="/pages/ap-cybersecurity-complete-course-guide" class="ucn-hub">AP Cyber Hub</a>
+    <span class="ucn-badge">Unit 1</span>
+    <a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-lesson" onclick="ucnToggle(1);" id="ucn-l1" title="Understanding Social Engineering">1.1 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s1">
+      <a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-lesson open" onclick="ucnToggle(2);" id="ucn-l2" title="Suspicious Website Logins">1.2 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps open" id="ucn-s2">
+      <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-step">Lesson</a>
+      <span class="ucn-step current">Ex 1</span>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cybersecurity-unit-1-password-attacks-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-lesson" onclick="ucnToggle(3);" id="ucn-l3" title="Best Practices for Public Networks">1.3 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s3">
+      <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-lesson" onclick="ucnToggle(4);" id="ucn-l4" title="AI-Based Cybersecurity Attacks">1.4 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s4">
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-lesson" onclick="ucnToggle(5);" id="ucn-l5" title="Leveraging AI in Cyber Defense">1.5 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s5">
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-quiz" class="ucn-step">Quiz</a>
+    </span>
+  </div>
+</div>
+
+<script>
+function ucnToggle(num){var l=document.getElementById('ucn-l'+num),s=document.getElementById('ucn-s'+num);if(!l||!s)return;var o=l.classList.contains('open');document.querySelectorAll('#ucnav .ucn-lesson').forEach(function(e){e.classList.remove('open')});document.querySelectorAll('#ucnav .ucn-steps').forEach(function(e){e.classList.remove('open')});if(!o){l.classList.add('open');s.classList.add('open');setTimeout(function(){l.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},50)}}
+(function(){function pos(){var nav=document.getElementById('ucnav');if(!nav)return;if(nav.parentElement!==document.body){document.body.appendChild(nav)}var h=0;var headerEl=document.querySelector('.section-header header.header')||document.querySelector('sticky-header header')||document.querySelector('header.header');if(headerEl){h=Math.round(headerEl.getBoundingClientRect().bottom)}if(h<20||h>300)h=68;nav.style.setProperty('top',h+'px','important');var navH=nav.offsetHeight||42;var w=document.getElementById('apcyber-wrapper');if(w)w.style.setProperty('padding-top',(h+navH+4)+'px','important')}requestAnimationFrame(pos);setTimeout(pos,150);setTimeout(pos,400);setTimeout(pos,800);setTimeout(pos,1500);setTimeout(pos,3000);window.addEventListener('resize',pos,{passive:true});setTimeout(function(){var _w=document.getElementById('apcyber-wrapper');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}var _m=document.getElementById('MainContent');if(_m){_m.style.setProperty('padding-top','0','important');_m.style.setProperty('margin-top','0','important')}},50);setTimeout(function(){var _w=document.getElementById('apcyber-wrapper');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}},500);var scrolled=false;window.addEventListener('scroll',function(){if(!scrolled){scrolled=true;requestAnimationFrame(pos)}},{passive:true});var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class','hidden']});setTimeout(function(){obs.disconnect()},15000)})();
+</script>
+
+
+
+<!-- UCNAV -->
+
+<div id="cyber-ex1-12" data-lesson-id="1.2-ex1">
+
+  <!-- HEADER -->
+  <div class="ex-header">
+    <span class="ex-tag">AP Cybersecurity — Unit 1, Topic 1.2</span>
+    
+<nav aria-label="Breadcrumb" style="font-size:0.82rem;color:#6b7280;-webkit-text-fill-color:#6b7280;margin:0 0 16px;font-family:'Georgia',serif;padding:0;"><a href="/" style="color:#6b21a8;text-decoration:none;-webkit-text-fill-color:#6b21a8;">Home</a><span style="margin:0 6px;color:#d1d5db;">›</span><a href="/pages/ap-cybersecurity-complete-course-guide" style="color:#6b21a8;text-decoration:none;-webkit-text-fill-color:#6b21a8;">AP Cybersecurity</a><span style="margin:0 6px;color:#d1d5db;">›</span><span style="color:#374151;-webkit-text-fill-color:#374151;">Topic 1.2 › Exercise 1</span></nav>
+<h1>Exercise 1: Password Autopsy</h1>
+    <p>Examine real-world password patterns, analyze an authentication log for attack indicators, and recommend security improvements — the three core skills tested on the AP exam for this topic.</p>
+    <div class="ex-badges">
+      <span class="ex-badge">Exercise 1 of 2</span>
+      <span class="ex-badge">Skills 1.A, 2.A</span>
+      <span class="ex-badge">~30–40 min</span>
+      <span class="ex-badge">3 Parts • 24 pts</span>
+    </div>
+  </div>
+
+  <!-- SCORE BAR -->
+  <div class="score-bar">
+    <span>Progress: <span id="partsComplete">0</span> / 3 Parts Complete</span>
+    <span class="score-num"><span id="totalScore">0</span> / 24 pts</span>
+  </div>
+
+  <!-- ============ PART 1: PASSWORD PATTERN ANALYSIS (12 pts) ============ -->
+  <div class="section" id="part1-section">
+    <span class="section-label">Part 1 — Password Pattern Analysis (12 pts)</span>
+    <h2>Dissect the Password</h2>
+    <p>Below are 4 passwords recovered from a simulated data breach. For each one, identify the weakness, the attack that would crack it, and how long it would likely take.</p>
+
+    <!-- PW 1 -->
+    <h3>Password Specimen A</h3>
+    <div class="pw-specimen">Fluffy2019!</div>
+    <div class="pw-context">
+<strong>Owner:</strong> High school teacher. <strong>Context:</strong> School email account. Public Facebook profile shows a cat named Fluffy adopted in 2019.</div>
+    <div class="q-grid">
+      <div class="q-field">
+        <label>Weakness Pattern</label>
+        <select id="p1a-weakness">
+          <option value="">-- Select --</option>
+          <option value="personal">Personal info (pet name + year)</option>
+          <option value="short">Too short (under 8 chars)</option>
+          <option value="common">Common dictionary word only</option>
+          <option value="reused">Reused across multiple sites</option>
+        </select>
+      </div>
+      <div class="q-field">
+        <label>Attack Method</label>
+        <select id="p1a-attack">
+          <option value="">-- Select --</option>
+          <option value="brute">Brute force (try every combination)</option>
+          <option value="dictionary">Dictionary attack (common passwords)</option>
+          <option value="targeted">Targeted dictionary (personal info + patterns)</option>
+          <option value="credential">Credential stuffing (stolen from another site)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- PW 2 -->
+    <h3>Password Specimen B</h3>
+    <div class="pw-specimen">P@ssw0rd123</div>
+    <div class="pw-context">
+<strong>Owner:</strong> Office employee. <strong>Context:</strong> Corporate VPN login. Company requires "at least 1 uppercase, 1 number, 1 special character."</div>
+    <div class="q-grid">
+      <div class="q-field">
+        <label>Weakness Pattern</label>
+        <select id="p1b-weakness">
+          <option value="">-- Select --</option>
+          <option value="personal">Personal info (pet name + year)</option>
+          <option value="leet">Common word with predictable substitutions</option>
+          <option value="short">Too short (under 8 chars)</option>
+          <option value="random">Appears random but follows a known pattern</option>
+        </select>
+      </div>
+      <div class="q-field">
+        <label>Attack Method</label>
+        <select id="p1b-attack">
+          <option value="">-- Select --</option>
+          <option value="brute">Brute force (try every combination)</option>
+          <option value="dictionary">Dictionary attack (common passwords + substitution rules)</option>
+          <option value="targeted">Targeted dictionary (personal info + patterns)</option>
+          <option value="credential">Credential stuffing (stolen from another site)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- PW 3 -->
+    <h3>Password Specimen C</h3>
+    <div class="pw-specimen">qwerty</div>
+    <div class="pw-context">
+<strong>Owner:</strong> College student. <strong>Context:</strong> Free streaming service account. Also uses this password for email and banking.</div>
+    <div class="q-grid">
+      <div class="q-field">
+        <label>Weakness Pattern (select the MOST critical)</label>
+        <select id="p1c-weakness">
+          <option value="">-- Select --</option>
+          <option value="keyboard">Keyboard pattern (no randomness)</option>
+          <option value="reused">Reused across multiple sites including banking</option>
+          <option value="short">Too short (under 8 chars)</option>
+          <option value="nospecial">No uppercase, numbers, or special characters</option>
+        </select>
+      </div>
+      <div class="q-field">
+        <label>Attack Method</label>
+        <select id="p1c-attack">
+          <option value="">-- Select --</option>
+          <option value="brute">Brute force (try every combination)</option>
+          <option value="dictionary">Dictionary attack (top 1000 common passwords)</option>
+          <option value="targeted">Targeted dictionary (personal info + patterns)</option>
+          <option value="credential">Credential stuffing (if streaming service is breached)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- PW 4 -->
+    <h3>Password Specimen D</h3>
+    <div class="pw-specimen">correct-horse-battery-staple</div>
+    <div class="pw-context">
+<strong>Owner:</strong> IT administrator. <strong>Context:</strong> Server root access. This is the only account without MFA enabled. Password has not been changed in 3 years.</div>
+    <div class="q-grid">
+      <div class="q-field">
+        <label>Weakness Pattern</label>
+        <select id="p1d-weakness">
+          <option value="">-- Select --</option>
+          <option value="short">Too short (under 8 chars)</option>
+          <option value="famous">Famous example password (widely published)</option>
+          <option value="nospecial">No uppercase, numbers, or special characters</option>
+          <option value="personal">Personal info (pet name + year)</option>
+        </select>
+      </div>
+      <div class="q-field">
+        <label>What makes this account MOST vulnerable?</label>
+        <select id="p1d-vuln">
+          <option value="">-- Select --</option>
+          <option value="nomfa">No MFA on a high-privilege account</option>
+          <option value="length">Password is too short</option>
+          <option value="pattern">Keyboard pattern detected</option>
+          <option value="reuse">Password reused from another site</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="check-btn" onclick="checkPart(1)">Check Part 1</button>
+    <div class="feedback" id="p1-feedback"></div>
+  </div>
+
+  <!-- ============ PART 2: ATTACK LOG ANALYSIS (6 pts) ============ -->
+  <div class="section" id="part2-section">
+    <span class="section-label">Part 2 — Attack Log Analysis (6 pts)</span>
+    <h2>Read the Authentication Log</h2>
+    <p>Your organization’s SIEM system flagged the following authentication log. Analyze it for indicators of a password attack.</p>
+
+    <table class="log-table">
+      <tr>
+<th>#</th>
+<th>Timestamp</th>
+<th>User</th>
+<th>Source IP</th>
+<th>Result</th>
+</tr>
+      <tr>
+<td>1</td>
+<td>2026-03-04 08:15:22</td>
+<td>jsmith</td>
+<td>10.0.1.45</td>
+<td>Success</td>
+</tr>
+      <tr>
+<td>2</td>
+<td>2026-03-04 08:32:10</td>
+<td>kpatel</td>
+<td>10.0.1.62</td>
+<td>Success</td>
+</tr>
+      <tr class="suspicious">
+<td>3</td>
+<td>2026-03-04 02:41:03</td>
+<td>admin</td>
+<td>185.220.101.33</td>
+<td>Fail</td>
+</tr>
+      <tr class="suspicious">
+<td>4</td>
+<td>2026-03-04 02:41:18</td>
+<td>admin</td>
+<td>185.220.101.33</td>
+<td>Fail</td>
+</tr>
+      <tr class="suspicious">
+<td>5</td>
+<td>2026-03-04 02:41:29</td>
+<td>admin</td>
+<td>185.220.101.33</td>
+<td>Fail</td>
+</tr>
+      <tr class="suspicious">
+<td>6</td>
+<td>2026-03-04 02:41:44</td>
+<td>admin</td>
+<td>185.220.101.33</td>
+<td>Fail</td>
+</tr>
+      <tr class="suspicious">
+<td>7</td>
+<td>2026-03-04 02:41:57</td>
+<td>admin</td>
+<td>185.220.101.33</td>
+<td>Fail</td>
+</tr>
+      <tr class="suspicious">
+<td>8</td>
+<td>2026-03-04 02:42:11</td>
+<td>admin</td>
+<td>185.220.101.33</td>
+<td>Fail</td>
+</tr>
+      <tr class="suspicious">
+<td>9</td>
+<td>2026-03-04 02:42:30</td>
+<td>admin</td>
+<td>185.220.101.33</td>
+<td>Success</td>
+</tr>
+      <tr>
+<td>10</td>
+<td>2026-03-04 09:05:44</td>
+<td>mgarcia</td>
+<td>10.0.1.78</td>
+<td>Success</td>
+</tr>
+    </table>
+
+    <div class="q-grid">
+      <div class="q-field q-full">
+        <label>1. Which log entries are suspicious? List the entry numbers and explain why. (2 pts)</label>
+        <textarea id="p2-entries" rows="3" placeholder="Identify the suspicious entries by number and explain what makes them suspicious..."></textarea>
+      </div>
+      <div class="q-field">
+        <label>2. What type of attack is this?</label>
+        <select id="p2-attack">
+          <option value="">-- Select --</option>
+          <option value="brute">Online brute force / dictionary attack</option>
+          <option value="credential">Credential stuffing</option>
+          <option value="phishing">Phishing attack</option>
+          <option value="insider">Insider threat</option>
+        </select>
+      </div>
+      <div class="q-field">
+        <label>3. What is the MOST concerning detail about entry #9?</label>
+        <select id="p2-concern">
+          <option value="">-- Select --</option>
+          <option value="success">The attacker succeeded after multiple failures</option>
+          <option value="time">It happened at 2:42 AM</option>
+          <option value="admin">The "admin" account was targeted</option>
+          <option value="ip">The IP address is external</option>
+        </select>
+      </div>
+      <div class="q-field q-full">
+        <label>4. What should the security team do IMMEDIATELY? (2 pts)</label>
+        <textarea id="p2-action" rows="2" placeholder="List the most urgent response actions..."></textarea>
+      </div>
+    </div>
+
+    <button class="check-btn" onclick="checkPart(2)">Check Part 2</button>
+    <div class="feedback" id="p2-feedback"></div>
+  </div>
+
+  <!-- ============ PART 3: FIX THE AUTHENTICATION (6 pts) ============ -->
+  <div class="section" id="part3-section">
+    <span class="section-label">Part 3 — Strengthen the Authentication (6 pts)</span>
+    <h2>Recommend Improvements</h2>
+    <p>Based on what you learned in the lesson about making authentication stronger, recommend fixes for each scenario.</p>
+
+    <h3>Scenario 1: Small Business</h3>
+    <p>A dental office has 8 employees. All use the same shared password (<strong>DentalOffice2024</strong>) to access the patient records system. There is no MFA. The password is written on a sticky note attached to the front desk monitor.</p>
+    <div class="q-grid">
+      <div class="q-field q-full">
+        <label>List 3 specific improvements this office should make (2 pts)</label>
+        <textarea id="p3a-fix" rows="3" placeholder="Be specific — don't just say 'use a better password.' What exactly should they change?"></textarea>
+      </div>
+    </div>
+
+    <h3>Scenario 2: Student Account</h3>
+    <p>A student uses <strong>BaseballFan99</strong> for their school Google account, their Instagram, their bank, and their gaming accounts. They recently saw a notification that their email appeared in a data breach.</p>
+    <div class="q-grid">
+      <div class="q-field">
+        <label>Most urgent action</label>
+        <select id="p3b-urgent">
+          <option value="">-- Select --</option>
+          <option value="bank">Change bank password immediately</option>
+          <option value="school">Change school password first</option>
+          <option value="all">Change all passwords at once</option>
+          <option value="gaming">Change gaming password first</option>
+        </select>
+      </div>
+      <div class="q-field">
+        <label>Best long-term solution</label>
+        <select id="p3b-longterm">
+          <option value="">-- Select --</option>
+          <option value="manager">Use a password manager with unique passwords per site</option>
+          <option value="pattern">Use a pattern like SiteName+BasePassword</option>
+          <option value="longer">Make the same password longer</option>
+          <option value="write">Write all passwords in a notebook</option>
+        </select>
+      </div>
+    </div>
+
+    <h3>Scenario 3: Corporate Policy</h3>
+    <p>A company requires passwords to be exactly 8 characters, changed every 30 days, with at least 1 uppercase, 1 number, and 1 special character. Employees complain they can never remember passwords and keep getting locked out.</p>
+    <div class="q-grid">
+      <div class="q-field q-full">
+        <label>What is wrong with this policy, and what should they change? (2 pts)</label>
+        <textarea id="p3c-fix" rows="3" placeholder="Think about what NIST recommends vs. what this company does..."></textarea>
+      </div>
+    </div>
+
+    <button class="check-btn" onclick="checkPart(3)">Check Part 3</button>
+    <div class="feedback" id="p3-feedback"></div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-panel" id="resultsPanel">
+    <h2>Exercise Complete</h2>
+    <div class="results-score">
+<span id="finalScore">0</span> / 24</div>
+    <p id="resultsMsg"></p>
+  </div>
+
+  <!-- EXAM TIP -->
+  <div class="exam-tip">
+    <strong>AP Exam Tip:</strong> Reading an authentication log table starts with the attack indicators. Memorize the three signs: (1) many failed attempts in a short window, (2) login attempts at unusual times, (3) login attempts from unknown devices or external IPs. When a question mentions “the user recently switched banks” or “changed password patterns,” think dictionary attack with personal info. A question about a pre-built wordlist points to a dictionary attack; credentials leaked from another site points to credential stuffing.
+  </div>
+
+  <!-- NAV -->
+  <div style="display:flex!important;justify-content:space-between!important;margin-top:24px!important;flex-wrap:wrap!important;gap:12px!important;">
+    <a class="check-btn nav-btn-back" href="/pages/ap-cybersecurity-unit-1-password-attacks">← Back to Lesson 1.2</a>
+    <a class="check-btn" href="/pages/ap-cyber-unit-1-lesson-2-exercise-2">Continue to Exercise 2 →</a>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var scores = {1:0,2:0,3:0};
+  var checked = {1:false,2:false,3:false};
+
+  function textMatch(input, keys){
+    var lower = input.toLowerCase();
+    for(var i=0;i<keys.length;i++){if(lower.indexOf(keys[i].toLowerCase())!==-1)return true;}
+    return false;
+  }
+  function textMatchCount(input, keys){
+    var lower = input.toLowerCase(), c=0;
+    for(var i=0;i<keys.length;i++){if(lower.indexOf(keys[i].toLowerCase())!==-1)c++;}
+    return c;
+  }
+
+  function disableSection(id){
+    var section = document.getElementById(id);
+    var inputs = section.querySelectorAll('textarea,select');
+    for(var i=0;i<inputs.length;i++) inputs[i].disabled = true;
+    var btn = section.querySelector('.check-btn');
+    if(btn){btn.disabled=true;btn.style.opacity='0.5';}
+  }
+
+  function updateTotals(){
+    var total = scores[1]+scores[2]+scores[3];
+    var done = (checked[1]?1:0)+(checked[2]?1:0)+(checked[3]?1:0);
+    document.getElementById('totalScore').textContent = total;
+    document.getElementById('partsComplete').textContent = done;
+    if(done===3){
+      var rp = document.getElementById('resultsPanel');
+      rp.className='results-panel show';
+      document.getElementById('finalScore').textContent = total;
+      var msg='';
+      if(total>=22) msg='Excellent. You can identify password weaknesses, read attack logs, and recommend strong authentication improvements.';
+      else if(total>=16) msg='Good foundation. Review the areas you missed \u2014 the AP exam tests all three skills (identify, analyze, recommend) for this topic.';
+      else if(total>=10) msg='Developing. Re-read the lesson sections on authentication log analysis and NIST password guidelines, then try Exercise 2.';
+      else msg='Needs review. Return to the Lesson 1.2 page and study each section before retaking this exercise.';
+      document.getElementById('resultsMsg').textContent = msg;
+      rp.scrollIntoView({behavior:'smooth'});
+    }
+  }
+
+  window.checkPart = function(num){
+    if(checked[num]) return;
+    checked[num] = true;
+    var pts=0, details=[];
+
+    if(num===1){
+      // PW A: personal + targeted
+      var a1w = document.getElementById('p1a-weakness').value;
+      var a1a = document.getElementById('p1a-attack').value;
+      if(a1w==='personal'){pts++;details.push('<strong>A weakness:</strong> +1 \u2014 Correct. Pet name + adoption year from social media.');}
+      else details.push('<strong>A weakness:</strong> 0 \u2014 This uses personal info (pet name + year) found on social media.');
+      if(a1a==='targeted'){pts++;details.push('<strong>A attack:</strong> +1 \u2014 Correct. Targeted dictionary using OSINT.');}
+      else details.push('<strong>A attack:</strong> 0 \u2014 A targeted dictionary attack uses personal info gathered about the victim.');
+
+      // PW B: leet + dictionary
+      var b1w = document.getElementById('p1b-weakness').value;
+      var b1a = document.getElementById('p1b-attack').value;
+      if(b1w==='leet'){pts++;details.push('<strong>B weakness:</strong> +1 \u2014 Correct. Classic leet-speak substitutions (@ for a, 0 for o).');}
+      else details.push('<strong>B weakness:</strong> 0 \u2014 P@ssw0rd is "password" with predictable character substitutions.');
+      if(b1a==='dictionary'){pts++;details.push('<strong>B attack:</strong> +1 \u2014 Correct. Dictionary attacks include common substitution rules.');}
+      else details.push('<strong>B attack:</strong> 0 \u2014 Dictionary attacks try common words WITH standard substitution patterns.');
+
+      // PW C: reused + credential stuffing (most critical = reused because it impacts banking)
+      var c1w = document.getElementById('p1c-weakness').value;
+      var c1a = document.getElementById('p1c-attack').value;
+      if(c1w==='reused'){pts++;details.push('<strong>C weakness:</strong> +1 \u2014 Correct. Reuse across banking is the MOST critical issue.');}
+      else details.push('<strong>C weakness:</strong> 0 \u2014 While "qwerty" has many weaknesses, reuse across banking is the most dangerous.');
+      if(c1a==='credential'){pts++;details.push('<strong>C attack:</strong> +1 \u2014 Correct. If the streaming service is breached, credential stuffing hits all other accounts.');}
+      else details.push('<strong>C attack:</strong> 0 \u2014 Credential stuffing uses leaked credentials from one breach to attack other sites.');
+
+      // PW D: famous + nomfa
+      var d1w = document.getElementById('p1d-weakness').value;
+      var d1v = document.getElementById('p1d-vuln').value;
+      if(d1w==='famous'){pts++;details.push('<strong>D weakness:</strong> +1 \u2014 Correct. This is the famous xkcd example \u2014 it appears in every password wordlist.');}
+      else details.push('<strong>D weakness:</strong> 0 \u2014 This is the famous "correct horse battery staple" from xkcd \u2014 published worldwide, in every wordlist.');
+      if(d1v==='nomfa'){pts++;details.push('<strong>D vulnerability:</strong> +1 \u2014 Correct. No MFA on a root/admin account is the biggest risk regardless of password strength.');}
+      else details.push('<strong>D vulnerability:</strong> 0 \u2014 A server root account without MFA is critically exposed \u2014 even a strong password can be compromised.');
+
+      // Part 1: 8 possible, scale to 12
+      pts = Math.round(pts * 1.5);
+      scores[1] = Math.min(pts, 12);
+    }
+
+    if(num===2){
+      // Entries
+      var entriesVal = document.getElementById('p2-entries').value.trim();
+      var entryPts = 0;
+      if(textMatch(entriesVal, ['3','4','5','6','7','8','9']) && textMatch(entriesVal, ['fail','multiple','rapid','short','external','2:4','unusual','brute'])){
+        entryPts = 2;
+        details.push('<strong>Entries:</strong> +2 \u2014 Correct identification and reasoning.');
+      } else if(entriesVal.length > 10 && textMatch(entriesVal, ['3','4','5','6','7','8','9'])){
+        entryPts = 1;
+        details.push('<strong>Entries:</strong> +1 \u2014 Correct entries but explanation needs more detail (mention: rapid failures, external IP, unusual time).');
+      } else {
+        details.push('<strong>Entries:</strong> 0 \u2014 Entries 3\u20139 are suspicious: rapid failed logins from an external IP at 2:41 AM targeting the admin account.');
+      }
+
+      // Attack type
+      var atkVal = document.getElementById('p2-attack').value;
+      if(atkVal==='brute'){entryPts++;details.push('<strong>Attack type:</strong> +1 \u2014 Correct. Online brute force/dictionary attack.');}
+      else details.push('<strong>Attack type:</strong> 0 \u2014 This is an online brute force/dictionary attack (rapid automated login attempts).');
+
+      // Most concerning
+      var cVal = document.getElementById('p2-concern').value;
+      if(cVal==='success'){entryPts++;details.push('<strong>Most concerning:</strong> +1 \u2014 Correct. The attacker gained access after the failures.');}
+      else details.push('<strong>Most concerning:</strong> 0 \u2014 Entry #9 shows the attacker SUCCEEDED \u2014 they are now inside the admin account.');
+
+      // Action
+      var actVal = document.getElementById('p2-action').value.trim();
+      var actPts = 0;
+      var actMatches = textMatchCount(actVal, ['reset','disable','lock','password','mfa','monitor','log','block','ip','investigate','session','force logout','revoke']);
+      if(actMatches >= 3){actPts=2;details.push('<strong>Action:</strong> +2 \u2014 Comprehensive response.');}
+      else if(actMatches >= 1){actPts=1;details.push('<strong>Action:</strong> +1 \u2014 Partial. Best response includes: reset admin password, force logout active sessions, block the attacking IP, enable MFA, investigate what the attacker did while logged in.');}
+      else details.push('<strong>Action:</strong> 0 \u2014 Immediate steps: reset admin password, kill active sessions, block attacking IP, enable MFA, review admin account activity logs.');
+
+      scores[2] = entryPts + actPts;
+    }
+
+    if(num===3){
+      // Scenario 1: dental office
+      var fix1 = document.getElementById('p3a-fix').value.trim();
+      var fix1Matches = textMatchCount(fix1, ['individual','unique','separate','each employee','own password','mfa','multi-factor','two-factor','2fa','remove sticky','sticky note','password manager','train','access control','role','least privilege']);
+      var fix1Pts = 0;
+      if(fix1Matches >= 3){fix1Pts=2;details.push('<strong>Dental office:</strong> +2 \u2014 Thorough recommendations.');}
+      else if(fix1Matches >= 1){fix1Pts=1;details.push('<strong>Dental office:</strong> +1 \u2014 Partial. Key fixes: (1) individual accounts per employee, (2) enable MFA, (3) remove the sticky note and use a password manager. Shared passwords mean no accountability and no audit trail.');}
+      else details.push('<strong>Dental office:</strong> 0 \u2014 Critical fixes: unique accounts per employee (for audit trails), enable MFA, remove the sticky note, use a password manager.');
+
+      // Scenario 2: student
+      var urgVal = document.getElementById('p3b-urgent').value;
+      var longVal = document.getElementById('p3b-longterm').value;
+      if(urgVal==='bank'){fix1Pts++;details.push('<strong>Student urgent:</strong> +1 \u2014 Correct. Bank account has the highest financial risk.');}
+      else details.push('<strong>Student urgent:</strong> 0 \u2014 Bank password first \u2014 financial accounts carry the highest impact if compromised.');
+      if(longVal==='manager'){fix1Pts++;details.push('<strong>Student long-term:</strong> +1 \u2014 Correct. Password manager generates and stores unique passwords per site.');}
+      else details.push('<strong>Student long-term:</strong> 0 \u2014 A password manager creates unique, random passwords for every site \u2014 eliminating reuse entirely.');
+
+      // Scenario 3: corporate policy
+      var fix3 = document.getElementById('p3c-fix').value.trim();
+      var fix3Matches = textMatchCount(fix3, ['length','longer','12','14','16','passphrase','frequency','stop','90 day','30 day','rotation','nist','mfa','multi-factor','memorab','complex']);
+      if(fix3Matches >= 3){fix1Pts+=2;details.push('<strong>Corporate policy:</strong> +2 \u2014 Strong analysis.');}
+      else if(fix3Matches >= 1){fix1Pts+=1;details.push('<strong>Corporate policy:</strong> +1 \u2014 Partial. NIST recommends: (1) increase minimum length to 12+ characters, (2) allow passphrases, (3) stop mandatory rotation (it causes weaker passwords), (4) add MFA instead of relying on complexity rules alone.');}
+      else details.push('<strong>Corporate policy:</strong> 0 \u2014 The 8-char max is too short. Forced 30-day rotation causes employees to use weak patterns (Password1!, Password2!, etc.). NIST recommends longer passwords, passphrases, no forced rotation, and MFA.');
+
+      scores[3] = Math.min(fix1Pts, 6);
+    }
+
+    var fb = document.getElementById('p'+num+'-feedback');
+    var s = scores[num];
+    var maxPts = num===1?12:(num===2?6:6);
+    var cls = s >= maxPts*0.8 ? 'correct' : (s >= maxPts*0.5 ? 'partial' : 'incorrect');
+    fb.className = 'feedback show ' + cls;
+    fb.innerHTML = '<strong>Part '+num+' Score: '+s+' / '+maxPts+'</strong><br>'+details.join('<br>');
+
+    disableSection('part'+num+'-section');
+    updateTotals();
+  };
+})();
+</script>
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id="apcyber-activity-nav"><div class="aan-card">
+<span class="aan-eyebrow">AP Cybersecurity · Unit 1 · Lesson 1.2 · Exercise 1</span><div class="aan-strip">
+<a class="aan-chip" href="/pages/ap-cybersecurity-unit-1-password-attacks">Lesson</a><span class="aan-sep">•</span><span class="aan-chip cur">Exercise 1</span><span class="aan-sep">•</span><a class="aan-chip next" href="/pages/ap-cyber-unit-1-lesson-2-exercise-2">Exercise 2 →</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-1-lesson-2-lab">Lab</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-1-lesson-2-quiz">Quiz</a>
+</div>
+<div class="aan-up">
+<span class="aan-lbl">Back to:</span><a href="/pages/ap-cybersecurity-unit-1-password-attacks">Lesson 1.2</a><a href="/pages/ap-cybersecurity-unit-1-introduction-to-security">Unit 1 Study Guide</a><a href="/pages/ap-cybersecurity-complete-course-guide">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->
