@@ -1,0 +1,689 @@
+<script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "LearningResource",
+    "headline": "AP Cybersecurity Topic 1.1 Exercise 2: Tactics and Impacts",
+    "description": "Identify the psychological tactic (intimidation or urgency) and classify the victim impact across 15 scenarios. AP Cybersecurity Topic 1.1 practice.",
+    "author": {
+      "@type": "Person",
+      "name": "Tanner Crow",
+      "url": "https://www.apcsexamprep.com/pages/ap-computer-science-tutor"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "APCSExamPrep.com",
+      "url": "https://www.apcsexamprep.com"
+    },
+    "educationalLevel": "High School",
+    "inLanguage": "en-US"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.apcsexamprep.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "AP Cybersecurity",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Unit 1: Introduction to Security",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide#unit1"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": "Topic 1.1: Understanding Social Engineering",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-unit-1-social-engineering"
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "name": "AP Cybersecurity Topic 1.1 Exercise 2: Tactics and Impacts",
+        "item": "https://www.apcsexamprep.com/pages/ap-cyber-unit-1-lesson-1-exercise-2"
+      }
+    ]
+  }
+]
+</script>
+<style>
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-lesson.locked{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;cursor:not-allowed!important;}
+#ucnav .ucn-lesson.locked:link,#ucnav .ucn-lesson.locked:visited,#ucnav .ucn-lesson.locked:hover{color:rgba(255,255,255,.45)!important;-webkit-text-fill-color:rgba(255,255,255,.45)!important;background:transparent!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-lock svg{opacity:.5!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+
+/* RESET SHOPIFY TITLE */
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none !important;}
+
+#apcyber-ex2{
+  --dark:#1E1B4B;
+  --purple:#6B21A8;
+  --purple-mid:#7C3AED;
+  --accent:#A855F7;
+  --warn:#92400E;
+  --green:#15803D;
+  --red:#B91C1C;
+  --gold:#F59E0B;
+  --light:#F5F0FF;
+  --light-border:#DDD6FE;
+  --gray-50:#F9FAFB;
+  --gray-100:#F3F4F6;
+  --gray-200:#E5E7EB;
+  --gray-600:#4B5563;
+  --gray-700:#374151;
+  --gray-800:#1F2937;
+  --white:#ffffff;
+  --radius-sm:6px;
+  --radius-md:10px;
+  --radius-lg:16px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.1);
+  --shadow-md:0 4px 12px rgba(0,0,0,0.12);
+  --shadow-lg:0 8px 24px rgba(0,0,0,0.15);
+  font-family:Georgia,serif;
+  line-height:1.7;
+  color:var(--gray-800);
+  max-width:960px;
+  margin:0 auto;
+  padding:20px 16px 60px;
+}
+#apcyber-ex2 *{box-sizing:border-box !important;}
+
+/* COURSE HEADER */
+#apcyber-ex2 .cyber-course-header{
+  background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%);
+  border-radius:var(--radius-lg);
+  padding:36px 40px;margin-bottom:8px;
+  color:var(--white) !important;
+}
+#apcyber-ex2 .cyber-course-label{
+  font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;
+  color:#C4B5FD !important;margin-bottom:8px;
+  font-family:Georgia,serif;
+}
+#apcyber-ex2 .cyber-course-header h1{
+  font-size:26px;font-weight:800;color:var(--white) !important;
+  margin:0 0 8px 0;line-height:1.3;font-family:Georgia,serif;
+}
+#apcyber-ex2 .cyber-course-header p{
+  font-size:15px;color:rgba(255,255,255,0.85) !important;margin:0 0 20px 0;
+  font-family:Georgia,serif;
+}
+#apcyber-ex2 .cyber-header-meta{display:flex;flex-wrap:wrap;gap:12px;}
+#apcyber-ex2 .cyber-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(168,85,247,0.2);border:1px solid rgba(168,85,247,0.4);
+  color:var(--white) !important;padding:6px 14px;border-radius:20px;
+  font-size:13px;font-weight:500;font-family:Georgia,serif;
+}
+
+/* PAGE NAV */
+#apcyber-ex2 .cyber-page-nav{
+  background:var(--white);border:1px solid var(--light-border);
+  border-radius:var(--radius-md);padding:16px 20px;margin-bottom:28px;
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+}
+#apcyber-ex2 .cyber-nav-step{
+  display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gray-600);
+  text-decoration:none;padding:4px 8px;border-radius:var(--radius-sm);transition:background 0.2s;
+  font-family:Georgia,serif;
+}
+#apcyber-ex2 a.cyber-nav-step,
+#apcyber-ex2 a.cyber-nav-step:link,
+#apcyber-ex2 a.cyber-nav-step:visited{color:var(--purple) !important;text-decoration:none !important;}
+#apcyber-ex2 a.cyber-nav-step:hover{background:var(--light);}
+#apcyber-ex2 .cyber-nav-step.active{background:var(--dark);color:var(--white) !important;font-weight:600;}
+#apcyber-ex2 .cyber-nav-sep{color:var(--light-border);font-size:18px;}
+#apcyber-ex2 .cyber-nav-step .step-num{
+  width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;background:var(--gray-200);color:var(--gray-700) !important;flex-shrink:0;
+}
+#apcyber-ex2 .cyber-nav-step.active .step-num{background:var(--accent);color:var(--white) !important;}
+#apcyber-ex2 a.cyber-nav-step .step-num{background:var(--light);color:var(--purple) !important;}
+
+/* PREDICT BOX */
+#apcyber-ex2 .intro-card{
+  background:linear-gradient(135deg,#FFFBEB,#FEF3C7);
+  border:2px solid #F59E0B;border-radius:var(--radius-md);
+  padding:24px 28px;margin-bottom:24px;
+}
+#apcyber-ex2 .intro-card h2{
+  font-size:20px;font-weight:700;color:var(--dark);margin:0 0 10px 0;
+  font-family:Georgia,serif;
+}
+#apcyber-ex2 .intro-card p{font-size:15px;color:var(--gray-700);margin:0 0 10px 0;font-family:Georgia,serif;}
+#apcyber-ex2 .predict-box{
+  background:linear-gradient(135deg,#1E1B4B,#3B0764);
+  color:var(--white) !important;
+  border-radius:var(--radius-md);padding:16px 20px;margin-top:16px;
+}
+#apcyber-ex2 .predict-box p{
+  color:rgba(255,255,255,0.9) !important;margin:0 0 10px 0;font-size:14px;
+  font-family:Georgia,serif;
+}
+
+/* PROGRESS BAR */
+#apcyber-ex2 .progress-wrap{
+  background:var(--white);border:1px solid var(--light-border);
+  border-radius:var(--radius-md);padding:16px 24px;margin-bottom:24px;display:none;
+}
+#apcyber-ex2 .progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+#apcyber-ex2 .progress-label{font-size:14px;font-weight:600;color:var(--gray-700);font-family:Georgia,serif;}
+#apcyber-ex2 .progress-count{font-size:20px;font-weight:800;color:var(--dark);font-family:Georgia,serif;}
+#apcyber-ex2 .progress-track{height:8px;background:var(--gray-200);border-radius:4px;overflow:hidden;}
+#apcyber-ex2 .progress-fill{
+  height:100%;background:linear-gradient(90deg,#6B21A8,#A855F7);
+  border-radius:4px;transition:width 0.4s ease;width:0%;
+}
+
+/* CARDS GRID */
+#apcyber-ex2 .cards-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:16px;margin-bottom:28px;
+}
+
+/* SCENARIO CARD */
+#apcyber-ex2 .scenario-card{
+  background:var(--white);border:2px solid var(--gray-200);
+  border-radius:var(--radius-md);padding:0;
+  transition:all 0.2s;cursor:default;overflow:hidden;
+  box-shadow:var(--shadow-sm);
+}
+#apcyber-ex2 .scenario-card.active{
+  border-color:var(--accent);box-shadow:0 0 0 3px rgba(168,85,247,0.15);
+  transform:translateY(-2px);
+}
+#apcyber-ex2 .scenario-card.correct{border-color:#86EFAC;box-shadow:0 0 0 3px rgba(134,239,172,0.3);}
+#apcyber-ex2 .scenario-card.wrong{border-color:#FCA5A5;box-shadow:0 0 0 3px rgba(252,165,165,0.3);}
+#apcyber-ex2 .card-num{
+  background:linear-gradient(135deg,#1E1B4B,#3B0764);color:var(--white) !important;
+  font-size:11px;font-weight:700;padding:6px 14px;
+  letter-spacing:0.5px;text-transform:uppercase;font-family:Georgia,serif;
+}
+#apcyber-ex2 .card-scenario{
+  padding:16px;font-size:14px;color:var(--gray-700);line-height:1.6;
+  border-bottom:1px solid var(--gray-100);min-height:90px;font-family:Georgia,serif;
+}
+#apcyber-ex2 .card-dropzone{
+  padding:12px 16px;background:var(--gray-50);
+  font-size:13px;color:var(--gray-600);
+  transition:background 0.2s;min-height:48px;
+  display:flex;align-items:center;font-family:Georgia,serif;
+}
+#apcyber-ex2 .card-dropzone.drag-over{background:var(--light);}
+#apcyber-ex2 .card-dropzone .placed-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  background:linear-gradient(135deg,#6B21A8,#7C3AED);
+  color:var(--white) !important;
+  font-size:12px;font-weight:700;padding:5px 12px;
+  border-radius:20px;letter-spacing:0.3px;font-family:Georgia,serif;
+}
+#apcyber-ex2 .card-result{display:none;padding:12px 16px;font-size:13px;line-height:1.5;font-family:Georgia,serif;}
+#apcyber-ex2 .card-result.correct-result{background:#DCFCE7;color:#15803D;}
+#apcyber-ex2 .card-result.wrong-result{background:#FEF2F2;color:#B91C1C;}
+#apcyber-ex2 .card-result.visible{display:block;}
+
+/* ATTACK TYPE PALETTE */
+#apcyber-ex2 .palette-section{
+  background:var(--white);border:2px solid var(--light-border);
+  border-radius:var(--radius-lg);padding:24px;margin-bottom:28px;display:none;
+}
+#apcyber-ex2 .palette-section.visible{display:block;}
+#apcyber-ex2 .palette-title{
+  font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+  color:var(--gray-600);margin-bottom:16px;font-family:Georgia,serif;
+}
+#apcyber-ex2 .palette-grid{display:flex;flex-wrap:wrap;gap:10px;}
+#apcyber-ex2 .attack-chip{
+  padding:10px 18px;border-radius:24px;font-size:13px;font-weight:700;
+  cursor:grab;user-select:none;border:2px solid transparent;
+  transition:all 0.15s;letter-spacing:0.3px;font-family:Georgia,serif;
+}
+#apcyber-ex2 .attack-chip:active{cursor:grabbing;transform:scale(0.97);}
+#apcyber-ex2 .attack-chip.selected{
+  box-shadow:0 0 0 3px rgba(168,85,247,0.5);transform:scale(1.05);
+  outline:2px solid #6B21A8;
+}
+#apcyber-ex2 .attack-chip.used{opacity:0.4;cursor:not-allowed;}
+
+/* chip colors - keep distinct for readability */
+#apcyber-ex2 .chip-quid{background:#EDE9FE;color:#3730A3;border-color:#A5B4FC;}
+
+/* MOBILE TAP HINT */
+#apcyber-ex2 .tap-hint{
+  font-size:13px;color:var(--gray-600);font-style:italic;
+  margin-bottom:12px;text-align:center;font-family:Georgia,serif;
+}
+
+/* BUTTONS - nuclear protection */
+#apcyber-ex2 .btn-check{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#15803D !important;color:#fff !important;-webkit-text-fill-color:#fff !important;
+  border:none;border-radius:var(--radius-sm);padding:13px 28px;
+  font-size:15px;font-weight:700;cursor:pointer;transition:background 0.2s;
+  font-family:Georgia,serif;
+}
+#apcyber-ex2 .btn-check:hover{background:#14532D !important;}
+#apcyber-ex2 .btn-check:link,
+#apcyber-ex2 .btn-check:visited{color:#fff !important;-webkit-text-fill-color:#fff !important;}
+#apcyber-ex2 .btn-check:disabled{background:#9CA3AF !important;cursor:not-allowed;}
+
+#apcyber-ex2 .btn-reveal{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#6B21A8 !important;color:#fff !important;-webkit-text-fill-color:#fff !important;
+  border:none;border-radius:var(--radius-sm);padding:10px 22px;
+  font-size:14px;font-weight:700;cursor:pointer;transition:background 0.2s;
+  font-family:Georgia,serif;margin-top:12px;
+}
+#apcyber-ex2 .btn-reveal:hover{background:#4C1D95 !important;}
+#apcyber-ex2 .btn-reveal:link,
+#apcyber-ex2 .btn-reveal:visited{color:#fff !important;-webkit-text-fill-color:#fff !important;}
+#apcyber-ex2 .btn-reveal:disabled{background:#C4B5FD !important;cursor:not-allowed;opacity:0.7;}
+
+#apcyber-ex2 .btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#6B21A8 !important;color:#fff !important;-webkit-text-fill-color:#fff !important;
+  border:none;border-radius:var(--radius-sm);padding:12px 24px;
+  font-size:14px;font-weight:700;cursor:pointer;text-decoration:none !important;
+  transition:background 0.2s;font-family:Georgia,serif;
+}
+#apcyber-ex2 .btn-primary:link,
+#apcyber-ex2 .btn-primary:visited{color:#fff !important;-webkit-text-fill-color:#fff !important;}
+#apcyber-ex2 .btn-primary:hover{background:#4C1D95 !important;}
+
+#apcyber-ex2 .btn-secondary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#fff !important;color:#1E1B4B !important;-webkit-text-fill-color:#1E1B4B !important;
+  border:2px solid #DDD6FE !important;border-radius:var(--radius-sm);
+  padding:12px 24px;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none !important;
+  transition:all 0.2s;font-family:Georgia,serif;
+}
+#apcyber-ex2 .btn-secondary:link,
+#apcyber-ex2 .btn-secondary:visited{color:#1E1B4B !important;-webkit-text-fill-color:#1E1B4B !important;}
+#apcyber-ex2 .btn-secondary:hover{border-color:#6B21A8 !important;background:#F5F0FF !important;}
+
+#apcyber-ex2 .btn-retry{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#7C3AED !important;color:#fff !important;-webkit-text-fill-color:#fff !important;
+  border:none;border-radius:var(--radius-sm);padding:12px 24px;
+  font-size:14px;font-weight:700;cursor:pointer;text-decoration:none !important;
+  transition:background 0.2s;font-family:Georgia,serif;
+}
+#apcyber-ex2 .btn-retry:link,
+#apcyber-ex2 .btn-retry:visited{color:#fff !important;-webkit-text-fill-color:#fff !important;}
+#apcyber-ex2 .btn-retry:hover{background:#6B21A8 !important;}
+
+/* RESULTS PANEL */
+#apcyber-ex2 .results-panel{
+  display:none;background:var(--white);border:2px solid var(--light-border);
+  border-radius:var(--radius-lg);padding:28px;margin-bottom:28px;
+}
+#apcyber-ex2 .results-panel.visible{display:block;}
+#apcyber-ex2 .results-score-big{
+  font-size:64px;font-weight:900;color:#6B21A8;line-height:1;
+  text-align:center;margin-bottom:4px;font-family:Georgia,serif;
+}
+#apcyber-ex2 .results-score-label{
+  text-align:center;font-size:16px;color:var(--gray-600);
+  margin-bottom:20px;font-family:Georgia,serif;
+}
+#apcyber-ex2 .results-message{
+  background:var(--light);border-radius:var(--radius-md);
+  border:1px solid var(--light-border);padding:16px 20px;margin-bottom:20px;
+}
+#apcyber-ex2 .results-message p{
+  margin:0;font-size:15px;color:var(--dark);font-weight:500;font-family:Georgia,serif;
+}
+
+/* ANSWER KEY */
+#apcyber-ex2 .answer-key{margin-top:20px;}
+#apcyber-ex2 .answer-key h3{
+  font-size:16px;font-weight:700;color:var(--dark);margin:0 0 14px 0;font-family:Georgia,serif;
+}
+#apcyber-ex2 .answer-row{
+  display:flex;align-items:flex-start;gap:14px;padding:12px 0;
+  border-bottom:1px solid var(--gray-100);
+}
+#apcyber-ex2 .answer-row:last-child{border-bottom:none;}
+#apcyber-ex2 .answer-icon{
+  width:28px;height:28px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:14px;font-weight:900;flex-shrink:0;margin-top:2px;
+}
+#apcyber-ex2 .answer-icon.correct-icon{background:#DCFCE7;color:#15803D;}
+#apcyber-ex2 .answer-icon.wrong-icon{background:#FEF2F2;color:#B91C1C;}
+#apcyber-ex2 .answer-body{flex:1;}
+#apcyber-ex2 .answer-tag{
+  display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;
+  border-radius:20px;margin-bottom:4px;letter-spacing:0.3px;font-family:Georgia,serif;
+}
+#apcyber-ex2 .answer-explanation{font-size:13px;color:var(--gray-600);font-family:Georgia,serif;}
+#apcyber-ex2 .answer-your{font-size:12px;color:#B91C1C;font-weight:600;font-family:Georgia,serif;}
+
+/* EXAM TIP */
+#apcyber-ex2 .exam-tip{
+  background:linear-gradient(135deg,#1E1B4B,#3B0764);
+  color:var(--white) !important;border-radius:var(--radius-md);
+  padding:20px 24px;margin-bottom:28px;
+}
+#apcyber-ex2 .exam-tip h3{
+  font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+  color:#C4B5FD !important;margin:0 0 10px 0;font-family:Georgia,serif;
+}
+#apcyber-ex2 .exam-tip p{
+  color:rgba(255,255,255,0.9) !important;font-size:14px;
+  margin:0 0 8px 0;font-family:Georgia,serif;
+}
+#apcyber-ex2 .exam-tip p:last-child{margin:0;}
+
+/* NAV BUTTONS */
+#apcyber-ex2 .nav-buttons{display:flex;gap:12px;flex-wrap:wrap;}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  #apcyber-ex2 .cyber-course-header{padding:24px 20px;}
+  #apcyber-ex2 .cards-grid{grid-template-columns:1fr;}
+}
+
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+</style>
+
+<!-- UNIT ACCORDION NAV -->
+
+<div id="ucnav">
+  <div class="ucn-rail" id="ucn-rail">
+    <a href="/pages/ap-cybersecurity-complete-course-guide" class="ucn-hub">AP Cyber Hub</a>
+    <span class="ucn-badge">Unit 1</span>
+    <a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-lesson open" onclick="ucnToggle(1);" id="ucn-l1" title="Understanding Social Engineering">1.1 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps open" id="ucn-s1">
+      <a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-1" class="ucn-step">Ex 1</a>
+      <span class="ucn-step current">Ex 2</span>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-lesson" onclick="ucnToggle(2);" id="ucn-l2" title="Suspicious Website Logins">1.2 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s2">
+      <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cybersecurity-unit-1-password-attacks-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-lesson" onclick="ucnToggle(3);" id="ucn-l3" title="Best Practices for Public Networks">1.3 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s3">
+      <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-lesson" onclick="ucnToggle(4);" id="ucn-l4" title="AI-Based Cybersecurity Attacks">1.4 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s4">
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-lesson" onclick="ucnToggle(5);" id="ucn-l5" title="Leveraging AI in Cyber Defense">1.5 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s5">
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-quiz" class="ucn-step">Quiz</a>
+    </span>
+  </div>
+</div>
+
+<script>
+function ucnToggle(num){var l=document.getElementById('ucn-l'+num),s=document.getElementById('ucn-s'+num);if(!l||!s)return;var o=l.classList.contains('open');document.querySelectorAll('#ucnav .ucn-lesson').forEach(function(e){e.classList.remove('open')});document.querySelectorAll('#ucnav .ucn-steps').forEach(function(e){e.classList.remove('open')});if(!o){l.classList.add('open');s.classList.add('open');setTimeout(function(){l.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},50)}}
+(function(){function pos(){var nav=document.getElementById('ucnav');if(!nav)return;if(nav.parentElement!==document.body){document.body.appendChild(nav)}var h=0;var headerEl=document.querySelector('.section-header header.header')||document.querySelector('sticky-header header')||document.querySelector('header.header');if(headerEl){h=Math.round(headerEl.getBoundingClientRect().bottom)}if(h<20||h>300)h=68;nav.style.setProperty('top',h+'px','important');var navH=nav.offsetHeight||42;var w=document.getElementById('apcyber-wrapper');if(w)w.style.setProperty('padding-top',(h+navH+4)+'px','important')}requestAnimationFrame(pos);setTimeout(pos,150);setTimeout(pos,400);setTimeout(pos,800);setTimeout(pos,1500);setTimeout(pos,3000);window.addEventListener('resize',pos,{passive:true});setTimeout(function(){var _w=document.getElementById('apcyber-wrapper');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}var _m=document.getElementById('MainContent');if(_m){_m.style.setProperty('padding-top','0','important');_m.style.setProperty('margin-top','0','important')}},50);setTimeout(function(){var _w=document.getElementById('apcyber-wrapper');if(_w){var _p=_w.parentElement;while(_p&&_p!==document.body){_p.style.setProperty('padding-top','0','important');_p.style.setProperty('margin-top','0','important');_p=_p.parentElement}}},500);var scrolled=false;window.addEventListener('scroll',function(){if(!scrolled){scrolled=true;requestAnimationFrame(pos)}},{passive:true});var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class','hidden']});setTimeout(function(){obs.disconnect()},15000)})();
+</script>
+
+<div id="apcyber-ex2" data-lesson-id="cyber-1-1-ex2">
+<style>
+#apcyber-ex2 .x2{all:initial;display:block;font-family:Georgia,'Times New Roman',serif;max-width:900px;margin:0 auto;padding:0 4px}
+#apcyber-ex2 .x2 *{box-sizing:border-box;font-family:Georgia,'Times New Roman',serif;-webkit-font-smoothing:antialiased}
+#apcyber-ex2 .x2 .x2-eyebrow{display:block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;font-weight:700;margin:0 0 6px}
+#apcyber-ex2 .x2 h1.x2-h{display:block;font-size:27px;line-height:1.25;font-weight:700;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 8px}
+#apcyber-ex2 .x2 .x2-lede{display:block;font-size:16px;line-height:1.6;color:#374151!important;-webkit-text-fill-color:#374151!important;margin:0 0 14px}
+#apcyber-ex2 .x2 .x2-ced{display:block;background:#EDE9FE;border-left:5px solid #6B21A8;border-radius:0 8px 8px 0;padding:12px 16px;margin:0 0 22px;font-size:14px;line-height:1.6;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important}
+#apcyber-ex2 .x2 .x2-ced b{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-ex2 .x2 h2.x2-part{display:block;font-size:20px;font-weight:700;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:30px 0 4px;padding:0 0 8px;border-bottom:3px solid #E8A020}
+#apcyber-ex2 .x2 .x2-sub{display:block;font-size:14px;line-height:1.55;color:#4B5563!important;-webkit-text-fill-color:#4B5563!important;margin:0 0 16px}
+#apcyber-ex2 .x2 .x2-item{display:block;background:#FFFFFF;border:1px solid #D8D3E8;border-radius:10px;padding:16px 18px;margin:0 0 14px}
+#apcyber-ex2 .x2 .x2-qn{display:block;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;margin:0 0 8px}
+#apcyber-ex2 .x2 .x2-msg{display:block;background:#F7F5FC;border:1px dashed #B9AEDA;border-radius:8px;padding:12px 14px;margin:0 0 12px;font-size:15px;line-height:1.6;color:#1F2937!important;-webkit-text-fill-color:#1F2937!important}
+#apcyber-ex2 .x2 .x2-stem{display:block;font-size:15px;line-height:1.6;color:#1F2937!important;-webkit-text-fill-color:#1F2937!important;margin:0 0 10px}
+#apcyber-ex2 .x2 .x2-stem b{color:#8A1C1C!important;-webkit-text-fill-color:#8A1C1C!important}
+#apcyber-ex2 .x2 .x2-opts{display:block;margin:0}
+#apcyber-ex2 .x2 button.x2-opt{display:block;width:100%;text-align:left;font-size:14.5px;line-height:1.5;padding:10px 13px;margin:0 0 7px;border-radius:7px;border:1.5px solid #C9C2DE;background:#FFFFFF!important;color:#1F2937!important;-webkit-text-fill-color:#1F2937!important;cursor:pointer}
+#apcyber-ex2 .x2 button.x2-opt:hover{border-color:#6B21A8;background:#FAF8FF!important}
+#apcyber-ex2 .x2 button.x2-opt.sel{border-color:#6B21A8;border-width:2px;background:#EDE9FE!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;font-weight:700}
+#apcyber-ex2 .x2 button.x2-opt.ok{border-color:#0F766E;border-width:2px;background:#E6F4F1!important;color:#0B4F49!important;-webkit-text-fill-color:#0B4F49!important;font-weight:700}
+#apcyber-ex2 .x2 button.x2-opt.no{border-color:#B91C1C;border-width:2px;background:#FDECEC!important;color:#7F1D1D!important;-webkit-text-fill-color:#7F1D1D!important}
+#apcyber-ex2 .x2 button.x2-opt[disabled]{cursor:default}
+#apcyber-ex2 .x2 .x2-fb{display:none;margin:10px 0 0;padding:11px 14px;border-radius:7px;font-size:14px;line-height:1.6}
+#apcyber-ex2 .x2 .x2-fb.show{display:block}
+#apcyber-ex2 .x2 .x2-fb.good{background:#E6F4F1;border-left:4px solid #0F766E;color:#0B4F49!important;-webkit-text-fill-color:#0B4F49!important}
+#apcyber-ex2 .x2 .x2-fb.bad{background:#FDECEC;border-left:4px solid #B91C1C;color:#7F1D1D!important;-webkit-text-fill-color:#7F1D1D!important}
+#apcyber-ex2 .x2 .x2-fb code{font-family:Consolas,Monaco,monospace;background:rgba(0,0,0,.07);padding:1px 5px;border-radius:3px;font-size:13px}
+#apcyber-ex2 .x2 .x2-bar{display:block;position:sticky;top:44px;z-index:50;background:#1E1B4B;border-radius:9px;padding:11px 16px;margin:0 0 20px}
+#apcyber-ex2 .x2 .x2-bar span{display:inline-block;font-size:14px;font-weight:700;color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important;margin-right:16px}
+#apcyber-ex2 .x2 .x2-bar b{color:#E8A020!important;-webkit-text-fill-color:#E8A020!important}
+#apcyber-ex2 .x2 .x2-actions{display:block;text-align:center;margin:26px 0 10px}
+#apcyber-ex2 .x2 button.x2-btn{display:inline-block;font-size:15px;font-weight:700;padding:12px 26px;margin:0 6px 8px;border-radius:7px;border:none;cursor:pointer;background:#0F766E!important;color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-ex2 .x2 button.x2-btn:hover{background:#12897F!important;color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-ex2 .x2 button.x2-btn.alt{background:#6B21A8!important;color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-ex2 .x2 button.x2-btn.alt:hover{background:#7C2FBD!important}
+#apcyber-ex2 .x2 .x2-score{display:none;background:#1E1B4B;border-radius:10px;padding:20px;margin:18px 0 0;text-align:center}
+#apcyber-ex2 .x2 .x2-score.show{display:block}
+#apcyber-ex2 .x2 .x2-score .sc-n{display:block;font-size:34px;font-weight:700;color:#E8A020!important;-webkit-text-fill-color:#E8A020!important}
+#apcyber-ex2 .x2 .x2-score .sc-t{display:block;font-size:14px;line-height:1.6;color:#DDD6FE!important;-webkit-text-fill-color:#DDD6FE!important;margin:6px 0 0}
+#apcyber-ex2 .x2 .x2-note{display:block;font-size:13.5px;line-height:1.6;color:#4B5563!important;-webkit-text-fill-color:#4B5563!important;background:#FFF8E9;border-left:4px solid #E8A020;padding:12px 15px;border-radius:0 7px 7px 0;margin:26px 0 0}
+@media(max-width:600px){#apcyber-ex2 .x2 h1.x2-h{font-size:22px}#apcyber-ex2 .x2 .x2-bar{position:static}}
+</style>
+
+<div class="x2">
+<span class="x2-eyebrow">AP Cybersecurity · Unit 1 · Topic 1.1 · Exercise 2</span>
+<h1 class="x2-h">Tactics and Impacts: Analyzing Social Engineering</h1>
+<span class="x2-lede">Fifteen items. You will name the psychological tactic an adversary used, then classify what the victim actually gave up. These are the two things Topic 1.1 asks you to do.</span>
+
+<div class="x2-ced">
+<b>What this exercise covers.</b> Topic 1.1 names exactly two psychological tactics, <b>intimidation</b> and <b>urgency</b>, and three victim impacts: personal information, secure information such as a one-time code, and malware or credential capture.</div>
+
+<div class="x2-bar">
+<span>Answered <b><span id="x2ct">0</span> / 15</b></span><span>Score <b><span id="x2pt">0</span> / 15</b></span>
+</div>
+
+<h2 class="x2-part">Part 1. Which tactic is at work?</h2>
+<span class="x2-sub">Intimidation threatens a negative consequence. Urgency imposes a deadline that prevents careful thinking. A message can use both, or neither. Read for the mechanism, not the tone.</span>
+<div id="x2p1"></div>
+
+<h2 class="x2-part">Part 2. What did the victim give up?</h2>
+<span class="x2-sub">Classify the impact by category. The channel does not matter. What matters is what the adversary walked away with.</span>
+<div id="x2p2"></div>
+
+<h2 class="x2-part">Part 3. Exam-style analysis</h2>
+<span class="x2-sub">Multi-select reasoning. Read every option before choosing.</span>
+<div id="x2p3"></div>
+
+<div class="x2-actions">
+<button class="x2-btn" id="x2check" type="button">Check All Answers</button>
+<button class="x2-btn alt" id="x2reset" type="button">Reset</button>
+</div>
+<div class="x2-score" id="x2score">
+<span class="sc-n" id="x2scn">0 / 15</span><span class="sc-t" id="x2sct"></span>
+</div>
+
+<div class="x2-note">
+<b>Why no attack-type sorting here.</b> An earlier version of this exercise asked you to sort scenarios into phishing, spear phishing, vishing, smishing, pretexting, baiting, whaling, and quid pro quo. Six of those eight terms are not part of this course at all, and pretexting belongs to Topic 2.1, not 1.1. What Topic 1.1 asks for is the tactic and the impact. That is what you practice above.</div>
+</div>
+<script>
+(function(){
+var Q=[{"id": "p1_0", "part": 1, "msg": "Payroll Notice: We were unable to process your direct deposit. Log in at the link below to confirm your routing number. If it is not corrected, your paycheck will be issued as a paper check and mailed in 6-8 weeks.", "stem": "Which psychological tactic does this message use?", "opts": ["Intimidation only", "Urgency only", "Both intimidation and urgency", "Neither"], "key": 0, "fb": "Intimidation only. A bad outcome is threatened (paycheck delayed 6-8 weeks), but no deadline is imposed. Urgency requires time pressure that prevents verification. There is none here, so it is not urgency."}, {"id": "p1_1", "part": 1, "msg": "Hi, this is the help desk. We are running a security sweep and need to confirm the code that was just texted to your phone before we can clear your account.", "stem": "Which psychological tactic does this message use?", "opts": ["Intimidation only", "Urgency only", "Both intimidation and urgency", "Neither"], "key": 3, "fb": "Neither. Nothing negative is threatened and no deadline is set. The message relies on impersonating a trusted authority, which is a tactic named in Unit 2. Topic 1.1 names only intimidation and urgency."}, {"id": "p1_2", "part": 1, "msg": "FINAL WARNING: Unusual sign-in detected. Your account will be permanently deleted in 30 minutes unless you verify your identity now.", "stem": "Which psychological tactic does this message use?", "opts": ["Intimidation only", "Urgency only", "Both intimidation and urgency", "Neither"], "key": 2, "fb": "Both. Permanent deletion is the threatened negative consequence, and the 30-minute window is the deadline that stops the target from checking."}, {"id": "p1_3", "part": 1, "msg": "Only 4 seats left in the summer internship program. Applications close tonight at 11:59pm. Reserve your spot by submitting your student ID and date of birth.", "stem": "Which psychological tactic does this message use?", "opts": ["Intimidation only", "Urgency only", "Both intimidation and urgency", "Neither"], "key": 1, "fb": "Urgency only. The deadline is real time pressure. Nothing bad is threatened if the target ignores it, so there is no intimidation. Limited availability is scarcity, which is a Unit 2 tactic."}, {"id": "p1_4", "part": 1, "msg": "Your library book is due Friday. You can renew it online or at the front desk.", "stem": "Which psychological tactic does this message use?", "opts": ["Intimidation only", "Urgency only", "Both intimidation and urgency", "Neither"], "key": 3, "fb": "Neither. A legitimate due date is not an adversary manufacturing pressure. Topic 1.1 describes tactics an adversary uses to manipulate a target. A routine reminder with a normal deadline and no request for sensitive action is not a social engineering tactic."}, {"id": "p1_5", "part": 1, "msg": "We have detected illegal files on your device. Legal action begins immediately. To avoid prosecution you must call this number and remain on the line while we walk you through removal.", "stem": "Which psychological tactic does this message use?", "opts": ["Intimidation only", "Urgency only", "Both intimidation and urgency", "Neither"], "key": 2, "fb": "Both. Prosecution is the threatened consequence, and 'begins immediately' plus 'remain on the line' is engineered time pressure that blocks the target from consulting anyone."}, {"id": "p2_0", "part": 2, "msg": "A student answers a phone survey about their neighborhood and mentions their first pet's name, the street they grew up on, and their mother's maiden name.", "stem": "Which impact category does this fall under?", "opts": ["Personal information", "Secure information (OTP or login code)", "Malware or captured credentials"], "key": 0, "fb": "Personal information. None of this is a password or a login code, but all three are standard challenge questions used to verify identity, which is exactly what that category warns about."}, {"id": "p2_1", "part": 2, "msg": "A user clicks a link in an email, lands on a page that looks like their bank, and types their username and password into it.", "stem": "Which impact category does this fall under?", "opts": ["Personal information", "Secure information (OTP or login code)", "Malware or captured credentials"], "key": 2, "fb": "Malware or captured credentials. This category explicitly covers links that send a target to a website where login credentials are captured. It is not secure information, which is about codes the victim hands over, such as a one-time password."}, {"id": "p2_2", "part": 2, "msg": "Someone posing as a bank fraud agent calls a customer and asks them to read back the six-digit code that just arrived by text.", "stem": "Which impact category does this fall under?", "opts": ["Personal information", "Secure information (OTP or login code)", "Malware or captured credentials"], "key": 1, "fb": "Secure information. A one-time password or authentication code lets the adversary log in as the victim, which is what defines this category."}, {"id": "p2_3", "part": 2, "msg": "An employee opens an attachment named Q3_Bonus_Schedule and a program silently installs that copies saved browser data.", "stem": "Which impact category does this fall under?", "opts": ["Personal information", "Secure information (OTP or login code)", "Malware or captured credentials"], "key": 2, "fb": "Malware or captured credentials. Downloading a file that installs malware and steals browser information is exactly this category."}, {"id": "p2_4", "part": 2, "msg": "A target confirms their birthdate and current employer to a caller who says they are updating an old customer record.", "stem": "Which impact category does this fall under?", "opts": ["Personal information", "Secure information (OTP or login code)", "Malware or captured credentials"], "key": 0, "fb": "Personal information. Birthdate and workplace are the kind of detail that enables impersonation and answers challenge questions."}, {"id": "p3_0", "part": 3, "msg": null, "stem": "A message reads: \"Your account has been flagged. Confirm your identity within one hour or it will be locked.\" Which of the following are correctly supported by Topic 1.1?<br><br>I. Intimidation is present because account lockout is a threatened negative consequence.<br>II. Urgency is present because the one-hour window discourages verification.<br>III. The message is an example of vishing because it pressures the target.", "opts": ["I only", "I and II only", "II and III only", "I, II, and III"], "key": 1, "fb": "I and II only. Both tactics are present. III is wrong on two counts: vishing is not a term this course uses at all, and the message is text, not voice."}, {"id": "p3_1", "part": 3, "msg": null, "stem": "Which statements about the three victim impacts are supported by the framework?<br><br>I. Giving up a birthdate can matter as much as giving up a password because it can answer a challenge question.<br>II. Handing over a one-time code can let an adversary sign in as the victim.<br>III. An impact only counts if the victim loses money.", "opts": ["I only", "II only", "I and II only", "I, II, and III"], "key": 2, "fb": "I and II only. Both restate the personal information and secure information categories. III is invented. Impact is never conditioned on financial loss."}, {"id": "p3_2", "part": 3, "msg": null, "stem": "A teacher claims: \"Topic 1.1 requires students to classify social engineering attacks as phishing, spear phishing, vishing, or smishing.\" What is wrong with this claim?", "opts": ["None of those four labels is required content in Topic 1.1", "Only spear phishing falls outside the required course framework", "All four labels are required, but they belong to Topic 1.3", "Nothing is wrong; the claim matches the course framework"], "key": 0, "fb": "None of those four labels is required content in Topic 1.1. The word phishing turns up only inside sample scenarios, never as a taxonomy students must apply. Spear phishing, vishing, and smishing do not appear at all."}, {"id": "p3_3", "part": 3, "msg": null, "stem": "An adversary sends a message with no deadline and no threat, but impersonates the target's manager to request a file. Under Topic 1.1, how should this be analyzed?<br><br>I. Neither intimidation nor urgency is present.<br>II. The tactic used is named in Unit 2, not Topic 1.1.<br>III. Because no Topic 1.1 tactic applies, no social engineering occurred.", "opts": ["I only", "I and II only", "I and III only", "II and III only"], "key": 1, "fb": "I and II only. Authority is the tactic, and it belongs to Unit 2. III is false: social engineering is defined broadly, and adversaries <i>often</i> use intimidation and urgency, not always."}];
+
+var root=document.getElementById('apcyber-ex2');
+if(!root){return;}
+var LET=['A','B','C','D'];
+var picks={};
+function esc(s){return s;}
+function render(){
+  var buckets={1:'',2:'',3:''};
+  for(var i=0;i<Q.length;i++){
+    var q=Q[i];
+    var h='<div class="x2-item" id="it_'+q.id+'">';
+    h+='<span class="x2-qn">Item '+(i+1)+' of '+Q.length+'</span>';
+    if(q.msg){h+='<span class="x2-msg">'+q.msg+'</span>';}
+    h+='<span class="x2-stem">'+q.stem+'</span><span class="x2-opts">';
+    for(var j=0;j<q.opts.length;j++){
+      h+='<button type="button" class="x2-opt" data-q="'+q.id+'" data-i="'+j+'">'+LET[j]+'. '+q.opts[j]+'</button>';
+    }
+    h+='</span><span class="x2-fb" id="fb_'+q.id+'"></span></div>';
+    buckets[q.part]+=h;
+  }
+  document.getElementById('x2p1').innerHTML=buckets[1];
+  document.getElementById('x2p2').innerHTML=buckets[2];
+  document.getElementById('x2p3').innerHTML=buckets[3];
+  var btns=root.querySelectorAll('.x2-opt');
+  for(var k=0;k<btns.length;k++){btns[k].addEventListener('click',onPick);}
+}
+function onPick(e){
+  var b=e.currentTarget, qid=b.getAttribute('data-q'), idx=parseInt(b.getAttribute('data-i'),10);
+  if(b.disabled){return;}
+  var sibs=root.querySelectorAll('.x2-opt[data-q="'+qid+'"]');
+  for(var i=0;i<sibs.length;i++){sibs[i].classList.remove('sel');}
+  b.classList.add('sel');
+  picks[qid]=idx;
+  document.getElementById('x2ct').textContent=Object.keys(picks).length;
+}
+function check(){
+  var pts=0;
+  for(var i=0;i<Q.length;i++){
+    var q=Q[i], sel=picks[q.id], fb=document.getElementById('fb_'+q.id);
+    var sibs=root.querySelectorAll('.x2-opt[data-q="'+q.id+'"]');
+    for(var j=0;j<sibs.length;j++){
+      sibs[j].disabled=true; sibs[j].classList.remove('sel');
+      if(j===q.key){sibs[j].classList.add('ok');}
+      else if(sel===j){sibs[j].classList.add('no');}
+    }
+    var right=(sel===q.key);
+    if(right){pts++;}
+    fb.className='x2-fb show '+(right?'good':'bad');
+    fb.innerHTML='<b>'+(right?'Correct.':(sel===undefined?'Not answered.':'Not quite.'))+'</b> '+q.fb;
+  }
+  document.getElementById('x2pt').textContent=pts;
+  var sc=document.getElementById('x2score');
+  sc.classList.add('show');
+  document.getElementById('x2scn').textContent=pts+' / '+Q.length;
+  var pct=Math.round(pts/Q.length*100);
+  var msg;
+  if(pct>=90){msg='Strong. You are separating the tactic from the channel and the impact from the story, which is what Topic 1.1 assesses.';}
+  else if(pct>=70){msg='Solid. Re-read the items you missed and note whether the error was tactic identification or impact category.';}
+  else{msg='Go back to the lesson sections on intimidation and urgency and on the three impacts before retrying.';}
+  document.getElementById('x2sct').textContent=msg+' Percent: '+pct+'%.';
+  try{
+    if(window.APCyberScore){window.APCyberScore('cyber-1-1-ex2',pts,Q.length);}
+  }catch(err){}
+  sc.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function reset(){
+  picks={};
+  document.getElementById('x2ct').textContent='0';
+  document.getElementById('x2pt').textContent='0';
+  document.getElementById('x2score').classList.remove('show');
+  render();
+  root.scrollIntoView({behavior:'smooth',block:'start'});
+}
+render();
+document.getElementById('x2check').addEventListener('click',check);
+document.getElementById('x2reset').addEventListener('click',reset);
+})();
+</script>
+
+</div>
+<!--APCYBER-ACTIVITY-NAV-START--><style>
+#apcyber-activity-nav,#apcyber-activity-nav *{all:initial!important;box-sizing:border-box!important;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important}
+#apcyber-activity-nav{display:block!important;margin:40px auto 8px!important;max-width:880px!important;padding:0 16px!important}
+#apcyber-activity-nav .aan-card{display:block!important;background:#FAF8FF!important;border:1px solid #E5E1F2!important;
+ border-left:4px solid #6B21A8!important;border-radius:12px!important;padding:16px 18px!important}
+#apcyber-activity-nav .aan-eyebrow{display:block!important;font-size:11px!important;font-weight:700!important;
+ letter-spacing:.08em!important;text-transform:uppercase!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;margin:0 0 11px!important}
+#apcyber-activity-nav .aan-strip{display:flex!important;flex-wrap:wrap!important;gap:7px!important;align-items:center!important;margin:0 0 13px!important}
+#apcyber-activity-nav .aan-chip{display:inline-block!important;font-size:13px!important;font-weight:600!important;
+ padding:6px 12px!important;border-radius:999px!important;border:1px solid #D9D2EC!important;text-decoration:none!important;background:#FFFFFF!important}
+#apcyber-activity-nav .aan-chip:link,#apcyber-activity-nav .aan-chip:visited{color:#4B3F73!important;-webkit-text-fill-color:#4B3F73!important}
+#apcyber-activity-nav .aan-chip.cur{background:#EDE9FE!important;border-color:#C4B5FD!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important}
+#apcyber-activity-nav .aan-chip.next{background:#1E1B4B!important;border-color:#1E1B4B!important}
+#apcyber-activity-nav .aan-chip.next:link,#apcyber-activity-nav .aan-chip.next:visited{color:#FFFFFF!important;-webkit-text-fill-color:#FFFFFF!important}
+#apcyber-activity-nav .aan-sep{font-size:12px!important;color:#B7AED2!important;-webkit-text-fill-color:#B7AED2!important}
+#apcyber-activity-nav .aan-up{display:flex!important;flex-wrap:wrap!important;gap:6px 16px!important;align-items:center!important;
+ padding-top:11px!important;border-top:1px solid #EDE9FE!important}
+#apcyber-activity-nav .aan-lbl{font-size:12px!important;font-weight:700!important;color:#8A7FB0!important;-webkit-text-fill-color:#8A7FB0!important;text-transform:uppercase!important;letter-spacing:.05em!important}
+#apcyber-activity-nav .aan-up a:link,#apcyber-activity-nav .aan-up a:visited{font-size:13px!important;font-weight:500!important;
+ color:#0F766E!important;-webkit-text-fill-color:#0F766E!important;text-decoration:none!important;border-bottom:1px solid rgba(15,118,110,.35)!important}
+</style><div id="apcyber-activity-nav"><div class="aan-card">
+<span class="aan-eyebrow">AP Cybersecurity · Unit 1 · Lesson 1.1 · Exercise 2</span><div class="aan-strip">
+<a class="aan-chip" href="/pages/ap-cybersecurity-unit-1-social-engineering">Lesson</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-1-lesson-1-exercise-1">Exercise 1</a><span class="aan-sep">•</span><span class="aan-chip cur">Exercise 2</span><span class="aan-sep">•</span><a class="aan-chip next" href="/pages/ap-cyber-unit-1-lesson-1-lab">Lab →</a><span class="aan-sep">•</span><a class="aan-chip" href="/pages/ap-cyber-unit-1-lesson-1-quiz">Quiz</a>
+</div>
+<div class="aan-up">
+<span class="aan-lbl">Back to:</span><a href="/pages/ap-cybersecurity-unit-1-social-engineering">Lesson 1.1</a><a href="/pages/ap-cybersecurity-unit-1-introduction-to-security">Unit 1 Study Guide</a><a href="/pages/ap-cybersecurity-complete-course-guide">Course Guide</a>
+</div>
+</div></div><!--APCYBER-ACTIVITY-NAV-END-->

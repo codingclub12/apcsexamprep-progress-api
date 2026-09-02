@@ -1,0 +1,804 @@
+<script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "LearningResource",
+    "headline": "AP Cybersecurity Unit 1 Project: Security Consultant Report",
+    "description": "Culminating Unit 1 project where students analyze Maple Street Veterinary Clinic security vulnerabilities across all 5 topics and write a professional security consultant report with recommendations.",
+    "author": {
+      "@type": "Person",
+      "name": "Tanner Crow",
+      "url": "https://www.apcsexamprep.com/pages/ap-computer-science-tutor"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "APCSExamPrep.com",
+      "url": "https://www.apcsexamprep.com"
+    },
+    "educationalLevel": "High School",
+    "inLanguage": "en-US"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.apcsexamprep.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "AP Cybersecurity",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Unit 1: Introduction to Security",
+        "item": "https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide#unit1"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": "Unit 1 Project: Security Consultant Report",
+        "item": "https://www.apcsexamprep.com/pages/ap-cyber-unit-1-project"
+      }
+    ]
+  }
+]
+</script>
+<style>
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+
+/* ===== UNIT ACCORDION NAV ===== */
+#ucnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:'Georgia',serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;}
+#ucnav *{box-sizing:border-box!important;font-family:'Georgia',serif!important;-webkit-font-smoothing:antialiased!important;}
+#ucnav .ucn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#ucnav .ucn-rail::-webkit-scrollbar{display:none!important;}
+#ucnav .ucn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#ucnav .ucn-hub:link,#ucnav .ucn-hub:visited,#ucnav a.ucn-hub,#ucnav a.ucn-hub:link,#ucnav a.ucn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#ucnav .ucn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#ucnav .ucn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#ucnav .ucn-lesson:link,#ucnav .ucn-lesson:visited,#ucnav .ucn-lesson:hover,#ucnav .ucn-lesson:active,#ucnav a.ucn-lesson,#ucnav a.ucn-lesson:link,#ucnav a.ucn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#ucnav .ucn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#ucnav .ucn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#ucnav .ucn-lesson.open:link,#ucnav .ucn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#ucnav .ucn-lesson.open .ucn-chevron{transform:rotate(180deg)!important;}
+#ucnav .ucn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#ucnav .ucn-steps.open{display:inline-flex!important;}
+#ucnav .ucn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#ucnav .ucn-step:link,#ucnav .ucn-step:visited,#ucnav a.ucn-step,#ucnav a.ucn-step:link,#ucnav a.ucn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#ucnav .ucn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#ucnav .ucn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#ucnav .ucn-step.current:link,#ucnav .ucn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#ucnav .ucn-badge{display:none!important;}}
+
+/* ===== MAIN WRAPPER ===== */
+#cyber-project{
+  all:initial!important;display:block!important;
+  font-family:Georgia,serif!important;
+  color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;background:#fff!important;
+  line-height:1.65!important;-webkit-font-smoothing:antialiased!important;
+}
+#cyber-project *{box-sizing:border-box!important;}
+
+/* hero */
+#cyber-project .phero{
+  background:linear-gradient(135deg,#1E1B4B 0%,#3B0764 50%,#4C1D95 100%)!important;
+  color:#fff!important;padding:40px 24px 32px!important;text-align:center!important;
+}
+#cyber-project .phero-badge{
+  display:inline-block!important;background:rgba(168,85,247,0.25)!important;
+  border:1px solid rgba(168,85,247,0.5)!important;color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;
+  font-size:11px!important;font-weight:700!important;letter-spacing:2px!important;
+  text-transform:uppercase!important;padding:5px 14px!important;border-radius:20px!important;
+  margin-bottom:14px!important;font-family:Georgia,serif!important;
+}
+#cyber-project .phero h1{
+  font-family:Georgia,serif!important;font-size:clamp(22px,4vw,34px)!important;
+  font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 8px!important;
+}
+#cyber-project .phero p{
+  color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;font-size:15px!important;font-family:Georgia,serif!important;margin:0!important;
+}
+
+/* container */
+#cyber-project .cnt{max-width:800px!important;margin:0 auto!important;padding:0 20px!important;}
+
+/* client brief */
+#cyber-project .client-brief{
+  max-width:800px!important;margin:28px auto!important;padding:0 20px!important;
+}
+#cyber-project .brief-card{
+  background:linear-gradient(135deg,#F5F0FF,#EDE9FE)!important;
+  border:2px solid #C4B5FD!important;border-radius:12px!important;padding:24px!important;
+}
+#cyber-project .brief-label{
+  display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  font-size:11px!important;font-weight:700!important;letter-spacing:1.5px!important;
+  text-transform:uppercase!important;padding:4px 12px!important;border-radius:20px!important;
+  margin-bottom:12px!important;font-family:Georgia,serif!important;
+}
+#cyber-project .brief-title{
+  font-family:Georgia,serif!important;font-size:20px!important;font-weight:700!important;
+  color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:0 0 12px!important;
+}
+#cyber-project .brief-text{
+  font-family:Georgia,serif!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.7!important;
+}
+#cyber-project .brief-text p{margin:0 0 10px!important;}
+#cyber-project .brief-text p:last-child{margin:0!important;}
+#cyber-project .brief-detail{
+  display:grid!important;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))!important;gap:10px!important;
+  margin-top:16px!important;
+}
+#cyber-project .bd-item{
+  background:#fff!important;border:1px solid #DDD6FE!important;border-radius:6px!important;padding:10px 14px!important;
+}
+#cyber-project .bd-label{font-size:11px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;text-transform:uppercase!important;letter-spacing:.5px!important;font-weight:600!important;font-family:Georgia,serif!important;}
+#cyber-project .bd-val{font-size:14px!important;font-weight:700!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;font-family:Georgia,serif!important;}
+
+/* progress bar */
+#cyber-project .progress-bar{
+  max-width:800px!important;margin:20px auto!important;padding:0 20px!important;
+}
+#cyber-project .pb-track{
+  background:#E5E7EB!important;border-radius:8px!important;height:8px!important;overflow:hidden!important;
+}
+#cyber-project .pb-fill{
+  background:linear-gradient(90deg,#6B21A8,#A855F7)!important;height:100%!important;
+  border-radius:8px!important;transition:width 0.4s ease!important;width:0%!important;
+}
+#cyber-project .pb-label{
+  font-size:12px!important;color:#6B7280!important;-webkit-text-fill-color:#6B7280!important;
+  font-family:Georgia,serif!important;margin-top:6px!important;text-align:right!important;
+}
+
+/* part blocks */
+#cyber-project .part-block{
+  border:1px solid #E5E7EB!important;border-radius:10px!important;
+  margin:28px auto!important;max-width:800px!important;overflow:hidden!important;background:#fff!important;
+}
+#cyber-project .part-header{
+  background:#F5F0FF!important;padding:16px 18px!important;
+  border-bottom:1px solid #DDD6FE!important;
+}
+#cyber-project .part-num{
+  display:inline-block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  font-weight:700!important;font-size:12px!important;padding:3px 10px!important;border-radius:20px!important;
+  font-family:Georgia,serif!important;margin-right:8px!important;
+}
+#cyber-project .part-topic{
+  font-size:12px!important;color:#7C3AED!important;-webkit-text-fill-color:#7C3AED!important;font-weight:600!important;
+  text-transform:uppercase!important;letter-spacing:0.5px!important;font-family:Georgia,serif!important;
+}
+#cyber-project .part-title{
+  font-family:Georgia,serif!important;font-size:17px!important;font-weight:700!important;
+  color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;margin:8px 0 0!important;
+}
+#cyber-project .part-body{padding:18px!important;}
+#cyber-project .part-context{
+  background:#F9FAFB!important;border-left:3px solid #A855F7!important;
+  padding:12px 14px!important;border-radius:0 6px 6px 0!important;
+  font-size:14px!important;font-family:Georgia,serif!important;color:#374151!important;-webkit-text-fill-color:#374151!important;
+  margin-bottom:16px!important;font-style:italic!important;line-height:1.6!important;
+}
+#cyber-project .part-prompt{
+  font-size:15px!important;font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;
+  margin-bottom:14px!important;line-height:1.6!important;
+}
+#cyber-project .part-prompt .kw{
+  font-weight:700!important;text-decoration:underline!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;
+}
+/* select fields */
+#cyber-project .field-group{margin-bottom:14px!important;}
+#cyber-project .field-label{
+  display:block!important;font-size:13px!important;font-weight:700!important;
+  color:#374151!important;-webkit-text-fill-color:#374151!important;margin-bottom:4px!important;font-family:Georgia,serif!important;
+}
+#cyber-project .field-select{
+  width:100%!important;padding:9px 12px!important;border:1px solid #D1D5DB!important;
+  border-radius:6px!important;font-size:14px!important;font-family:Georgia,serif!important;
+  color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;background:#fff!important;
+  appearance:auto!important;-webkit-appearance:auto!important;
+}
+#cyber-project .field-textarea{
+  width:100%!important;min-height:100px!important;padding:10px 12px!important;
+  border:1px solid #D1D5DB!important;border-radius:6px!important;font-size:14px!important;
+  font-family:Georgia,serif!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;
+  background:#fff!important;resize:vertical!important;line-height:1.5!important;
+}
+#cyber-project .field-hint{
+  font-size:12px!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;
+  font-family:Georgia,serif!important;margin-top:3px!important;
+}
+/* points badge */
+#cyber-project .pts-badge{
+  display:inline-block!important;background:#EDE9FE!important;color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;
+  font-size:12px!important;font-weight:700!important;padding:3px 10px!important;
+  border-radius:12px!important;font-family:Georgia,serif!important;margin-bottom:12px!important;
+}
+/* submit per part */
+#cyber-project .submit-part{
+  display:block!important;background:#6B21A8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  border:none!important;padding:10px 24px!important;border-radius:6px!important;
+  font-weight:700!important;font-size:14px!important;cursor:pointer!important;
+  font-family:Georgia,serif!important;margin-top:8px!important;
+}
+#cyber-project .submit-part:disabled{background:#C4B5FD!important;cursor:not-allowed!important;}
+/* feedback */
+#cyber-project .part-feedback{
+  display:none!important;margin-top:16px!important;border-radius:8px!important;
+  padding:14px 16px!important;font-family:Georgia,serif!important;font-size:14px!important;
+}
+#cyber-project .part-feedback.show{display:block!important;}
+#cyber-project .part-feedback.fb-good{background:#DCFCE7!important;border:1px solid #86EFAC!important;}
+#cyber-project .part-feedback.fb-partial{background:#FEF3C7!important;border:1px solid #FDE68A!important;}
+#cyber-project .part-feedback.fb-weak{background:#FEF2F2!important;border:1px solid #FCA5A5!important;}
+#cyber-project .fb-score-line{font-weight:700!important;font-size:15px!important;margin-bottom:6px!important;}
+#cyber-project .fb-good .fb-score-line{color:#15803D!important;-webkit-text-fill-color:#15803D!important;}
+#cyber-project .fb-partial .fb-score-line{color:#92400E!important;-webkit-text-fill-color:#92400E!important;}
+#cyber-project .fb-weak .fb-score-line{color:#B91C1C!important;-webkit-text-fill-color:#B91C1C!important;}
+#cyber-project .fb-detail{color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.6!important;}
+#cyber-project .fb-model{
+  background:#F5F0FF!important;border-left:3px solid #7C3AED!important;
+  padding:10px 14px!important;border-radius:0 6px 6px 0!important;
+  margin-top:10px!important;font-size:13px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;
+}
+#cyber-project .fb-model strong{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;}
+
+/* results */
+#cyber-project .results-panel{
+  display:none!important;max-width:800px!important;margin:0 auto 32px!important;
+  background:linear-gradient(135deg,#1E1B4B,#3B0764)!important;
+  border-radius:12px!important;padding:32px 24px!important;text-align:center!important;color:#fff!important;
+}
+#cyber-project .results-panel.show{display:block!important;}
+#cyber-project .results-score{font-size:48px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:Georgia,serif!important;}
+#cyber-project .results-label{color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;font-size:14px!important;font-family:Georgia,serif!important;margin-bottom:16px!important;}
+#cyber-project .results-breakdown{
+  display:flex!important;justify-content:center!important;gap:12px!important;flex-wrap:wrap!important;margin-bottom:20px!important;
+}
+#cyber-project .rb-item{
+  background:rgba(168,85,247,0.2)!important;border:1px solid rgba(168,85,247,0.4)!important;
+  border-radius:8px!important;padding:8px 14px!important;min-width:100px!important;
+}
+#cyber-project .rb-label{font-size:10px!important;color:#C4B5FD!important;-webkit-text-fill-color:#C4B5FD!important;text-transform:uppercase!important;letter-spacing:1px!important;font-family:Georgia,serif!important;}
+#cyber-project .rb-val{font-size:18px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:Georgia,serif!important;}
+#cyber-project .results-msg{color:#E9D5FF!important;-webkit-text-fill-color:#E9D5FF!important;font-size:15px!important;font-family:Georgia,serif!important;margin-bottom:20px!important;}
+#cyber-project .results-btn{
+  display:inline-block!important;background:#A855F7!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  padding:12px 28px!important;border-radius:6px!important;font-weight:700!important;
+  text-decoration:none!important;font-family:Georgia,serif!important;font-size:14px!important;margin:0 6px!important;
+}
+#cyber-project a.results-btn:link,#cyber-project a.results-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration:none!important;}
+/* nav */
+#cyber-project .nav-links{
+  max-width:800px!important;margin:0 auto 40px!important;
+  display:flex!important;justify-content:space-between!important;
+  flex-wrap:wrap!important;gap:10px!important;padding:0 20px!important;
+}
+#cyber-project .nav-link{
+  display:inline-block!important;padding:10px 20px!important;
+  border:1px solid #DDD6FE!important;border-radius:6px!important;
+  color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-decoration:none!important;
+  font-family:Georgia,serif!important;font-size:14px!important;font-weight:600!important;background:#F5F0FF!important;
+}
+#cyber-project a.nav-link:link,#cyber-project a.nav-link:visited{color:#6B21A8!important;-webkit-text-fill-color:#6B21A8!important;text-decoration:none!important;}
+</style>
+
+<!-- UNIT ACCORDION NAV -->
+<div id="ucnav">
+  <div class="ucn-rail" id="ucn-rail">
+    <a href="/pages/ap-cybersecurity-complete-course-guide" class="ucn-hub">AP Cyber Hub</a>
+    <span class="ucn-badge">Unit 1</span>
+    <a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-lesson" onclick="ucnToggle(1);" id="ucn-l1" title="Understanding Social Engineering">1.1 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s1">
+      <a href="/pages/ap-cybersecurity-unit-1-social-engineering" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-1-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-lesson" onclick="ucnToggle(2);" id="ucn-l2" title="Suspicious Website Logins">1.2 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s2">
+      <a href="/pages/ap-cybersecurity-unit-1-password-attacks" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-2-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cybersecurity-unit-1-password-attacks-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-lesson" onclick="ucnToggle(3);" id="ucn-l3" title="Public Wi-Fi">1.3 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s3">
+      <a href="/pages/ap-cybersecurity-unit-1-ai-driven-threats" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cyber-unit-1-lesson-3-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-lesson" onclick="ucnToggle(4);" id="ucn-l4" title="AI-Based Attacks">1.4 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s4">
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cybersecurity-unit-1-wireless-security-quiz" class="ucn-step">Quiz</a>
+    </span>
+    <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-lesson" onclick="ucnToggle(5);" id="ucn-l5" title="AI in Defense">1.5 <span class="ucn-chevron">▼</span></a>
+    <span class="ucn-steps" id="ucn-s5">
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense" class="ucn-step">Lesson</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-exercise-1" class="ucn-step">Ex 1</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-exercise-2" class="ucn-step">Ex 2</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-lab" class="ucn-step">Lab</a>
+      <a href="/pages/ap-cybersecurity-unit-1-ai-cyber-defense-quiz" class="ucn-step">Quiz</a>
+    </span>
+  </div>
+</div>
+
+<script>
+function ucnToggle(num){var l=document.getElementById('ucn-l'+num),s=document.getElementById('ucn-s'+num);if(!l||!s)return;var o=l.classList.contains('open');document.querySelectorAll('#ucnav .ucn-lesson').forEach(function(e){e.classList.remove('open')});document.querySelectorAll('#ucnav .ucn-steps').forEach(function(e){e.classList.remove('open')});if(!o){l.classList.add('open');s.classList.add('open');setTimeout(function(){l.scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'})},50)}}
+(function(){function pos(){var nav=document.getElementById('ucnav');if(!nav)return;if(nav.parentElement!==document.body){document.body.appendChild(nav)}var h=0;var headerEl=document.querySelector('.section-header header.header')||document.querySelector('sticky-header header')||document.querySelector('header.header');if(headerEl){h=Math.round(headerEl.getBoundingClientRect().bottom)}if(h<20||h>300)h=68;nav.style.setProperty('top',h+'px','important');var navH=nav.offsetHeight||42;var w=document.getElementById('cyber-project');if(w)w.style.setProperty('padding-top',(h+navH+4)+'px','important')}requestAnimationFrame(pos);setTimeout(pos,150);setTimeout(pos,400);setTimeout(pos,800);setTimeout(pos,1500);setTimeout(pos,3000);window.addEventListener('resize',pos,{passive:true});var scrolled=false;window.addEventListener('scroll',function(){if(!scrolled){scrolled=true;requestAnimationFrame(pos)}},{passive:true});var obs=new MutationObserver(function(){setTimeout(pos,100)});obs.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class','hidden']});setTimeout(function(){obs.disconnect()},15000)})();
+</script>
+
+<div id="cyber-project" data-lesson-id="u1-project">
+
+  <div class="phero">
+    <div class="phero-badge">Unit 1 • Culminating Project</div>
+    <nav aria-label="Breadcrumb" style="font-size:0.82rem;color:#6b7280;-webkit-text-fill-color:#6b7280;margin:0 0 16px;font-family:'Georgia',serif;padding:0;"><a href="/" style="color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;">Home</a><span style="margin:0 6px;color:#d1d5db;">›</span><a href="/pages/ap-cybersecurity-complete-course-guide" style="color:#c4b5fd;-webkit-text-fill-color:#c4b5fd;text-decoration:none;">AP Cybersecurity</a><span style="margin:0 6px;color:#d1d5db;">›</span><span style="color:#e9d5ff;-webkit-text-fill-color:#e9d5ff;">Unit 1 › Project</span></nav>
+    <h1>Security Consultant Report</h1>
+    <p>Analyze Maple Street Veterinary Clinic — identify vulnerabilities, classify threats, and write professional recommendations</p>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-bar">
+    <div class="pb-track"><div class="pb-fill" id="pb-fill"></div></div>
+    <div class="pb-label" id="pb-label">0 of 5 sections complete</div>
+  </div>
+
+  <!-- CLIENT BRIEF -->
+  <div class="client-brief">
+    <div class="brief-card">
+      <div class="brief-label">Client Brief</div>
+      <div class="brief-title">Maple Street Veterinary Clinic</div>
+      <div class="brief-text">
+        <p>Maple Street Veterinary Clinic is a small animal hospital with 18 employees, including 4 veterinarians, 6 vet techs, and 8 administrative and support staff. The clinic stores sensitive data including pet medical records, client billing information (credit card numbers), and employee payroll data.</p>
+        <p>The clinic manager, Janet, has hired your cybersecurity consulting firm after a series of concerning incidents over the past month. She has provided the following incident log and asks you to prepare a formal security assessment covering all five areas below.</p>
+        <p>Your report will be evaluated on your ability to correctly identify threats, explain why they are dangerous, and provide actionable recommendations that are realistic for a small business with limited IT budget.</p>
+      </div>
+      <div class="brief-detail">
+        <div class="bd-item">
+<div class="bd-label">Employees</div>
+<div class="bd-val">18 staff members</div>
+</div>
+        <div class="bd-item">
+<div class="bd-label">Data at Risk</div>
+<div class="bd-val">Medical + financial records</div>
+</div>
+        <div class="bd-item">
+<div class="bd-label">IT Budget</div>
+<div class="bd-val">Limited (small business)</div>
+</div>
+        <div class="bd-item">
+<div class="bd-label">Your Role</div>
+<div class="bd-val">Security Consultant</div>
+</div>
+        <div class="bd-item">
+<div class="bd-label">Deliverable</div>
+<div class="bd-val">5-Part Security Report</div>
+</div>
+        <div class="bd-item">
+<div class="bd-label">Total Points</div>
+<div class="bd-val">30 points</div>
+</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PART 1: Social Engineering (Topic 1.1) ===== -->
+  <div style="max-width:800px;margin:28px auto;padding:0 20px;">
+    <div class="part-block" id="part-1">
+      <div class="part-header">
+        <span class="part-num">Part 1</span>
+        <span class="part-topic">Topic 1.1 — Social Engineering Assessment</span>
+        <div class="part-title">Incident: Suspicious Phone Call</div>
+      </div>
+      <div class="part-body">
+        <div class="part-context">A front desk receptionist received a phone call from someone claiming to be a representative from the clinic’s medical software vendor. The caller said they needed remote access to “update the database” and asked the receptionist to read aloud her login credentials. The receptionist complied before realizing the actual vendor had not scheduled any update.</div>
+        <span class="pts-badge">6 points</span>
+        <div class="part-prompt">
+<strong>1a.</strong> Identify the <span class="kw">specific type</span> of social engineering attack described above.</div>
+        <div class="field-group">
+          <select class="field-select" id="p1-attack">
+            <option value="">-- Select attack type --</option>
+            <option value="phishing">Phishing (email-based deception)</option>
+            <option value="vishing">Vishing (voice/phone-based deception)</option>
+            <option value="smishing">Smishing (SMS/text-based deception)</option>
+            <option value="tailgating">Tailgating (physical access piggybacking)</option>
+            <option value="baiting">Baiting (infected media left for discovery)</option>
+          </select>
+        </div>
+        <div class="part-prompt">
+<strong>1b.</strong> Explain the <span class="kw">psychological tactic</span> the attacker used and why it was effective against the receptionist. (2–3 sentences)</div>
+        <div class="field-group">
+          <textarea class="field-textarea" id="p1-tactic" placeholder="Describe the psychological manipulation technique and why the receptionist was vulnerable to it..."></textarea>
+          <div class="field-hint">Key terms to include: authority, trust, urgency, impersonation, pretexting</div>
+        </div>
+        <div class="part-prompt">
+<strong>1c.</strong> Recommend <span class="kw">two specific countermeasures</span> the clinic should implement to prevent this type of attack in the future. (2–3 sentences)</div>
+        <div class="field-group">
+          <textarea class="field-textarea" id="p1-counter" placeholder="Provide two realistic countermeasures for a small veterinary clinic..."></textarea>
+          <div class="field-hint">Key terms to include: training, verification, callback, policy, awareness</div>
+        </div>
+        <button class="submit-part" onclick="scorePart(1)">Submit Part 1</button>
+        <div class="part-feedback" id="fb-p1">
+          <div class="fb-score-line" id="fb-p1-score"></div>
+          <div class="fb-detail" id="fb-p1-detail"></div>
+          <div class="fb-model">
+<strong>Model Response:</strong> This is a vishing (voice phishing) attack. The attacker exploited authority bias by impersonating a trusted vendor, creating a false sense of urgency around a “database update.” The receptionist complied because the caller appeared to be a legitimate authority figure with a plausible reason for needing credentials. Countermeasures: (1) Implement a mandatory callback verification policy — staff must hang up and call the vendor directly using a known number before sharing any credentials. (2) Conduct regular security awareness training that includes simulated vishing scenarios so staff can recognize and report suspicious calls.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PART 2: Password Attacks (Topic 1.2) ===== -->
+  <div style="max-width:800px;margin:28px auto;padding:0 20px;">
+    <div class="part-block" id="part-2">
+      <div class="part-header">
+        <span class="part-num">Part 2</span>
+        <span class="part-topic">Topic 1.2 — Password Security Assessment</span>
+        <div class="part-title">Incident: Compromised Employee Accounts</div>
+      </div>
+      <div class="part-body">
+        <div class="part-context">An audit of clinic accounts revealed that 12 of 18 employees use passwords following the format <code style="background:#EDE9FE!important;padding:2px 6px!important;border-radius:3px!important;font-size:13px!important;">MapleVet</code> + birth year (e.g., <code style="background:#EDE9FE!important;padding:2px 6px!important;border-radius:3px!important;font-size:13px!important;">MapleVet1985</code>). Two accounts were accessed by unauthorized users last week. The clinic does not use multi-factor authentication on any system.</div>
+        <span class="pts-badge">6 points</span>
+        <div class="part-prompt">
+<strong>2a.</strong> Identify which <span class="kw">type of password attack</span> is most likely to succeed against these passwords, and explain why.</div>
+        <div class="field-group">
+          <select class="field-select" id="p2-attack">
+            <option value="">-- Select attack type --</option>
+            <option value="dictionary">Dictionary attack (common words/patterns)</option>
+            <option value="brute">Brute force attack (all combinations)</option>
+            <option value="rainbow">Rainbow table attack (precomputed hashes)</option>
+            <option value="credential">Credential stuffing (reused leaked passwords)</option>
+          </select>
+        </div>
+        <div class="part-prompt">
+<strong>2b.</strong> Explain <span class="kw">two specific weaknesses</span> in the clinic’s current password practices that make these accounts vulnerable. (2–3 sentences)</div>
+        <div class="field-group">
+          <textarea class="field-textarea" id="p2-weakness" placeholder="Identify two specific weaknesses in their password strategy..."></textarea>
+          <div class="field-hint">Key terms to include: predictable, pattern, organization name, no MFA, reuse, short, complexity</div>
+        </div>
+        <div class="part-prompt">
+<strong>2c.</strong> Write a <span class="kw">password policy recommendation</span> for the clinic that addresses both weaknesses you identified. Include specific requirements. (2–3 sentences)</div>
+        <div class="field-group">
+          <textarea class="field-textarea" id="p2-policy" placeholder="Write specific password policy requirements..."></textarea>
+          <div class="field-hint">Key terms to include: MFA, minimum length, unique, manager, passphrase, no patterns</div>
+        </div>
+        <button class="submit-part" onclick="scorePart(2)">Submit Part 2</button>
+        <div class="part-feedback" id="fb-p2">
+          <div class="fb-score-line" id="fb-p2-score"></div>
+          <div class="fb-detail" id="fb-p2-detail"></div>
+          <div class="fb-model">
+<strong>Model Response:</strong> A dictionary attack would be most effective because the passwords follow a predictable pattern using the organization name plus a common number format. Weaknesses: (1) Passwords are based on the clinic name, making them trivially guessable by any attacker who knows the business. (2) No multi-factor authentication means a compromised password grants full access with no additional barrier. Policy: Require minimum 12-character unique passwords (or passphrases) that cannot contain the organization name. Enforce MFA on all systems. Provide a password manager to help staff maintain unique credentials without memorizing them.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PART 3: Public Wi-Fi (Topic 1.3) ===== -->
+  <div style="max-width:800px;margin:28px auto;padding:0 20px;">
+    <div class="part-block" id="part-3">
+      <div class="part-header">
+        <span class="part-num">Part 3</span>
+        <span class="part-topic">Topic 1.3 — Wireless Security Assessment</span>
+        <div class="part-title">Incident: Unsecured Lobby Wi-Fi</div>
+      </div>
+      <div class="part-body">
+        <div class="part-context">The clinic offers free Wi-Fi to pet owners in the waiting room. The network is named “MapleVet_Guest” and uses no password. A vet tech recently reported that she logs into the clinic’s scheduling system from her personal phone while on break using this same guest network. The clinic’s payment processing terminal is also connected to this network.</div>
+        <span class="pts-badge">6 points</span>
+        <div class="part-prompt">
+<strong>3a.</strong> Identify the <span class="kw">most critical security risk</span> in this network configuration.</div>
+        <div class="field-group">
+          <select class="field-select" id="p3-risk">
+            <option value="">-- Select primary risk --</option>
+            <option value="noseg">No network segmentation (guest and business on same network)</option>
+            <option value="evil">Vulnerability to evil twin attacks from the open network</option>
+            <option value="speed">Slow network speeds due to guest traffic congestion</option>
+            <option value="range">Excessive Wi-Fi signal range beyond the building</option>
+          </select>
+        </div>
+        <div class="part-prompt">
+<strong>3b.</strong> Explain <span class="kw">how an attacker</span> could exploit this network configuration to steal client payment information. Describe the specific attack path. (2–3 sentences)</div>
+        <div class="field-group">
+          <textarea class="field-textarea" id="p3-attack" placeholder="Describe the step-by-step attack path from the guest network to payment data..."></textarea>
+          <div class="field-hint">Key terms to include: intercept, unencrypted, same network, packet sniffing, man-in-the-middle, payment, traffic</div>
+        </div>
+        <div class="part-prompt">
+<strong>3c.</strong> Recommend a <span class="kw">network redesign</span> that protects both client convenience and business data. (2–3 sentences)</div>
+        <div class="field-group">
+          <textarea class="field-textarea" id="p3-fix" placeholder="Describe how to restructure the network..."></textarea>
+          <div class="field-hint">Key terms to include: separate, segment, VLAN, WPA, encrypt, isolate, dedicated, business network</div>
+        </div>
+        <button class="submit-part" onclick="scorePart(3)">Submit Part 3</button>
+        <div class="part-feedback" id="fb-p3">
+          <div class="fb-score-line" id="fb-p3-score"></div>
+          <div class="fb-detail" id="fb-p3-detail"></div>
+          <div class="fb-model">
+<strong>Model Response:</strong> The most critical risk is no network segmentation — the payment terminal and guest Wi-Fi share the same network. An attacker could connect to the open guest network, use packet sniffing tools to intercept unencrypted traffic on the shared network, and capture payment card data transmitted by the terminal. Recommendation: Create two physically or logically separate networks — a secured business network (WPA3, password-protected) for the payment terminal, scheduling system, and staff devices, and an isolated guest network with no access to business resources. Use VLANs or a separate router to enforce segmentation.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PART 4: AI-Based Attacks (Topic 1.4) ===== -->
+  <div style="max-width:800px;margin:28px auto;padding:0 20px;">
+    <div class="part-block" id="part-4">
+      <div class="part-header">
+        <span class="part-num">Part 4</span>
+        <span class="part-topic">Topic 1.4 — AI-Based Threat Assessment</span>
+        <div class="part-title">Incident: AI-Generated Phishing Campaign</div>
+      </div>
+      <div class="part-body">
+        <div class="part-context">Several clinic clients received emails that appeared to come from Maple Street Veterinary Clinic, offering a “loyalty discount” on their pet’s upcoming appointment. The emails used each pet’s actual name and referenced the correct appointment date. Clicking the discount link led to a fake payment page. The clinic’s social media posts, which often include client pet names and appointment celebrations, appear to be the data source.</div>
+        <span class="pts-badge">6 points</span>
+        <div class="part-prompt">
+<strong>4a.</strong> Explain how <span class="kw">AI technology</span> could have been used to create this attack at scale. (2–3 sentences)</div>
+        <div class="field-group">
+          <textarea class="field-textarea" id="p4-ai" placeholder="Explain the role of AI in automating this attack..."></textarea>
+          <div class="field-hint">Key terms to include: scrape, automate, personalize, generate, social media, data collection, scale</div>
+        </div>
+        <div class="part-prompt">
+<strong>4b.</strong> This attack is more dangerous than generic phishing because it is personalized. Identify <span class="kw">two specific reasons</span> why personalization increases the attack’s effectiveness. (2–3 sentences)</div>
+        <div class="field-group">
+          <textarea class="field-textarea" id="p4-why" placeholder="Explain why personalized phishing is more effective..."></textarea>
+          <div class="field-hint">Key terms to include: trust, legitimate, verify, specific details, harder to detect, bypass filters</div>
+        </div>
+        <div class="part-prompt">
+<strong>4c.</strong> Recommend <span class="kw">one action</span> the clinic should take regarding its social media practices, and <span class="kw">one action</span> to protect clients from these emails. (2–3 sentences)</div>
+        <div class="field-group">
+          <textarea class="field-textarea" id="p4-counter" placeholder="One social media recommendation + one client protection recommendation..."></textarea>
+          <div class="field-hint">Key terms to include: limit, personal information, notify, verify, authenticate, policy, posting</div>
+        </div>
+        <button class="submit-part" onclick="scorePart(4)">Submit Part 4</button>
+        <div class="part-feedback" id="fb-p4">
+          <div class="fb-score-line" id="fb-p4-score"></div>
+          <div class="fb-detail" id="fb-p4-detail"></div>
+          <div class="fb-model">
+<strong>Model Response:</strong> AI tools could scrape the clinic’s social media posts to automatically collect pet names, client names, and appointment details, then generate individually personalized phishing emails at scale — work that would take a human attacker hours per target. Personalization is more effective because: (1) recipients see verifiably accurate details about their own pet, which increases trust and makes the message appear legitimate; (2) personalized emails are harder for spam filters to detect because they lack the generic patterns that trigger automated blocks. Recommendations: (1) Adopt a social media policy that avoids posting client names, pet names, or appointment details publicly. (2) Notify clients that the clinic will never request payment through email links, and provide a verified phone number for appointment confirmations.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PART 5: AI in Cyber Defense (Topic 1.5) ===== -->
+  <div style="max-width:800px;margin:28px auto;padding:0 20px;">
+    <div class="part-block" id="part-5">
+      <div class="part-header">
+        <span class="part-num">Part 5</span>
+        <span class="part-topic">Topic 1.5 — AI Defense Recommendation</span>
+        <div class="part-title">Executive Summary: AI-Powered Security Proposal</div>
+      </div>
+      <div class="part-body">
+        <div class="part-context">Janet, the clinic manager, has asked you to conclude your report by evaluating whether the clinic should invest in an AI-powered security monitoring tool. The tool costs $200/month and claims to detect phishing emails, flag unusual login behavior, and monitor network traffic for anomalies. Janet wants to know if this is worth the investment for a small clinic.</div>
+        <span class="pts-badge">6 points</span>
+        <div class="part-prompt">
+<strong>5a.</strong> Identify <span class="kw">two specific benefits</span> this AI tool would provide based on the incidents described in Parts 1–4. Reference specific incidents. (2–3 sentences)</div>
+        <div class="field-group">
+          <textarea class="field-textarea" id="p5-benefits" placeholder="Connect two AI tool capabilities to specific incidents from the report..."></textarea>
+          <div class="field-hint">Key terms to include: detect, anomaly, pattern, phishing, unusual login, monitor, flag, prevent</div>
+        </div>
+        <div class="part-prompt">
+<strong>5b.</strong> Identify <span class="kw">one limitation</span> of the AI tool that means it cannot replace human judgment or other security measures. (1–2 sentences)</div>
+        <div class="field-group">
+          <textarea class="field-textarea" id="p5-limit" placeholder="Describe a specific limitation of AI-based security..."></textarea>
+          <div class="field-hint">Key terms to include: false positive, false negative, training, human, judgment, alert fatigue, override, social engineering</div>
+        </div>
+        <div class="part-prompt">
+<strong>5c.</strong> Write your <span class="kw">final recommendation</span> to Janet: should the clinic invest in this tool? Justify your answer by weighing the benefits against the cost and limitations. (2–3 sentences)</div>
+        <div class="field-group">
+          <textarea class="field-textarea" id="p5-rec" placeholder="Write a professional recommendation with justification..."></textarea>
+          <div class="field-hint">Key terms to include: recommend, invest, cost, benefit, layer, complement, training, not replace</div>
+        </div>
+        <button class="submit-part" onclick="scorePart(5)">Submit Part 5</button>
+        <div class="part-feedback" id="fb-p5">
+          <div class="fb-score-line" id="fb-p5-score"></div>
+          <div class="fb-detail" id="fb-p5-detail"></div>
+          <div class="fb-model">
+<strong>Model Response:</strong> Benefits: (1) The AI tool’s phishing detection would help catch personalized emails like the ones targeting clinic clients (Part 4), which static filters missed. (2) Unusual login monitoring would flag the unauthorized account access in Part 2 by detecting logins from unfamiliar locations or at unusual times. Limitation: AI-based tools can produce false positives (flagging legitimate emails) or false negatives (missing novel attacks), and they cannot prevent social engineering attacks like the vishing call in Part 1 where a human voluntarily shared credentials. Recommendation: I recommend investing in the tool as one layer of a broader security strategy. At $200/month, it provides automated monitoring the clinic cannot staff manually, but it must be paired with employee security training and strong password policies — the AI complements human awareness, it does not replace it.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div style="max-width:800px;margin:0 auto;padding:0 20px;">
+    <div class="results-panel" id="results-panel">
+      <div class="results-score" id="r-score"></div>
+      <div class="results-label">Total Points</div>
+      <div class="results-breakdown">
+        <div class="rb-item">
+<div class="rb-label">Part 1</div>
+<div class="rb-val" id="r-p1">-</div>
+</div>
+        <div class="rb-item">
+<div class="rb-label">Part 2</div>
+<div class="rb-val" id="r-p2">-</div>
+</div>
+        <div class="rb-item">
+<div class="rb-label">Part 3</div>
+<div class="rb-val" id="r-p3">-</div>
+</div>
+        <div class="rb-item">
+<div class="rb-label">Part 4</div>
+<div class="rb-val" id="r-p4">-</div>
+</div>
+        <div class="rb-item">
+<div class="rb-label">Part 5</div>
+<div class="rb-val" id="r-p5">-</div>
+</div>
+      </div>
+      <div class="results-msg" id="r-msg"></div>
+      <a href="/pages/ap-cyber-unit-1-scenario-practice" class="results-btn">Scenario Practice →</a>
+      <a href="/pages/ap-cyber-unit-1-exam" class="results-btn">Unit 1 Exam →</a>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav-links">
+    <a href="/pages/ap-cyber-unit-1-scenario-practice" class="nav-link">← Scenario Practice (15 MCQ)</a>
+    <a href="/pages/ap-cyber-unit-1-exam" class="nav-link">Unit 1 Exam →</a>
+  </div>
+
+  <div style="text-align:center!important;padding:20px!important;font-size:12px!important;color:#9CA3AF!important;-webkit-text-fill-color:#9CA3AF!important;font-family:'Georgia',serif!important;">
+    AP Cybersecurity Unit 1 Project | APCSExamPrep.com | Built by Tanner Crow, AP CS Teacher (11+ years)<br>
+    AP® is a registered trademark of the College Board, which was not involved in the production of this content.
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var partScores={};
+  var totalParts=5;
+
+  /* Keyword scoring config per part */
+  var RUBRIC={
+    1:{
+      select:{id:'p1-attack',correct:'vishing',pts:2},
+      texts:[
+        {id:'p1-tactic',pts:2,keywords:['authority','trust','urgency','impersonat','pretext','vendor','legitim','pressure','fear','manipulat','psycholog']},
+        {id:'p1-counter',pts:2,keywords:['training','verif','callback','call back','policy','awareness','hang up','confirm','phone','never share','credential']}
+      ]
+    },
+    2:{
+      select:{id:'p2-attack',correct:'dictionary',pts:2},
+      texts:[
+        {id:'p2-weakness',pts:2,keywords:['predict','pattern','organization','clinic name','no mfa','no multi','reuse','simple','short','weak','same format','easy to guess','common']},
+        {id:'p2-policy',pts:2,keywords:['mfa','multi-factor','two-factor','2fa','length','12','unique','manager','passphrase','no pattern','complex','different','not contain']}
+      ]
+    },
+    3:{
+      select:{id:'p3-risk',correct:'noseg',pts:2},
+      texts:[
+        {id:'p3-attack',pts:2,keywords:['intercept','sniff','unencrypt','same network','man-in-the-middle','mitm','packet','capture','payment','credit card','traffic','monitor','eavesdrop']},
+        {id:'p3-fix',pts:2,keywords:['separate','segment','vlan','wpa','encrypt','isolat','dedicated','business','split','two network','guest','restrict','firewall']}
+      ]
+    },
+    4:{
+      select:null,
+      texts:[
+        {id:'p4-ai',pts:2,keywords:['scrape','automat','personal','generat','social media','collect','data','scale','harvest','target','craft','individual']},
+        {id:'p4-why',pts:2,keywords:['trust','legitim','verif','specific','detail','harder','detect','filter','believab','accurate','real','convinc','person']},
+        {id:'p4-counter',pts:2,keywords:['limit','personal','informat','notify','verif','authent','policy','post','social media','phone','confirm','never','email','link']}
+      ]
+    },
+    5:{
+      select:null,
+      texts:[
+        {id:'p5-benefits',pts:2,keywords:['detect','anomal','pattern','phish','unusual','login','monitor','flag','prevent','part 1','part 2','part 3','part 4','incident','automat']},
+        {id:'p5-limit',pts:2,keywords:['false positive','false negative','train','human','judgment','alert fatigue','override','social engineer','cannot','limit','miss','mistake','imperfect']},
+        {id:'p5-rec',pts:2,keywords:['recommend','invest','cost','benefit','layer','complement','training','not replace','worth','addition','combined','alongside','pair','strategy']}
+      ]
+    }
+  };
+
+  function scoreText(text,keywords){
+    var lower=text.toLowerCase();
+    var hits=0;
+    for(var i=0;i<keywords.length;i++){
+      if(lower.indexOf(keywords[i])!==-1)hits++;
+    }
+    return hits;
+  }
+
+  function scorePart(num){
+    if(partScores[num]!==undefined)return;
+    var r=RUBRIC[num];
+    var pts=0;
+    var maxPts=6;
+    var details=[];
+
+    /* Select field */
+    if(r.select){
+      var sel=document.getElementById(r.select.id);
+      if(sel.value===r.select.correct){
+        pts+=r.select.pts;
+        details.push('Classification: '+r.select.pts+'/'+r.select.pts+' (correct)');
+      } else if(sel.value!==''){
+        details.push('Classification: 0/'+r.select.pts+' (incorrect)');
+      } else {
+        details.push('Classification: 0/'+r.select.pts+' (not answered)');
+      }
+    }
+
+    /* Text fields */
+    for(var i=0;i<r.texts.length;i++){
+      var t=r.texts[i];
+      var el=document.getElementById(t.id);
+      var text=el?el.value.trim():'';
+      if(text.length<15){
+        details.push('Response '+(r.select?String.fromCharCode(98+i):String.fromCharCode(97+i))+': 0/'+t.pts+' (too short or empty)');
+        continue;
+      }
+      var hits=scoreText(text,t.keywords);
+      var earned=0;
+      if(hits>=4)earned=t.pts;
+      else if(hits>=2)earned=Math.ceil(t.pts*0.5);
+      else if(hits>=1)earned=1;
+      pts+=earned;
+      details.push('Response '+(r.select?String.fromCharCode(98+i):String.fromCharCode(97+i))+': '+earned+'/'+t.pts+' ('+hits+' key concepts identified)');
+    }
+
+    partScores[num]=pts;
+
+    /* Show feedback */
+    var fb=document.getElementById('fb-p'+num);
+    var scoreLine=document.getElementById('fb-p'+num+'-score');
+    var detailEl=document.getElementById('fb-p'+num+'-detail');
+
+    scoreLine.textContent='Part '+num+' Score: '+pts+'/'+maxPts;
+    detailEl.innerHTML=details.join('<br>');
+
+    if(pts>=5){fb.classList.add('fb-good');}
+    else if(pts>=3){fb.classList.add('fb-partial');}
+    else{fb.classList.add('fb-weak');}
+    fb.classList.add('show');
+
+    /* Disable inputs */
+    var block=document.getElementById('part-'+num);
+    block.querySelectorAll('select,textarea').forEach(function(el){el.disabled=true;el.style.setProperty('opacity','0.7','important');});
+    block.querySelector('.submit-part').disabled=true;
+
+    /* Update progress */
+    var completed=Object.keys(partScores).length;
+    var pct=Math.round(completed/totalParts*100);
+    document.getElementById('pb-fill').style.width=pct+'%';
+    document.getElementById('pb-label').textContent=completed+' of '+totalParts+' sections complete';
+    document.getElementById('r-p'+num).textContent=pts+'/6';
+
+    if(completed===totalParts){showResults();}
+  }
+
+  function showResults(){
+    var panel=document.getElementById('results-panel');
+    var total=0;
+    for(var k in partScores)total+=partScores[k];
+    document.getElementById('r-score').textContent=total+'/30';
+    var pct=Math.round(total/30*100);
+    var msg=pct>=83?'Outstanding report! You demonstrate strong analytical skills across all security domains.':
+            pct>=67?'Solid work. Review the model responses for sections where you lost points.':
+            pct>=50?'Adequate foundation. Focus on connecting specific vulnerabilities to concrete countermeasures.':
+            'This report needs significant revision. Review each topic lesson before retrying the project.';
+    document.getElementById('r-msg').textContent=msg;
+    panel.classList.add('show');
+    panel.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  window.scorePart=scorePart;
+})();
+</script>

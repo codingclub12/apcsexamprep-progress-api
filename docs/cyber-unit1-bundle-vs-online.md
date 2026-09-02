@@ -80,3 +80,11 @@ preview unit and the one in front of live classes. The same comparison for the
 other units is the same work with different files, and the bundle side is the
 slow half: every key is named `Quiz_KEY.docx` and they distinguish only by
 folder, so each has to be opened to find out which lesson it belongs to.
+
+**Update 2026-09-01: the unit TEST half of that gap is now closed.**
+`docs/cyber-unit-tests-availability.md` compares the Unit 2, 3, 4 and 5 tests
+against `_Unit_N_Test_KEY.docx` and finds the same result as Unit 1, zero shared
+items on all four. What remains open is the per-LESSON quiz half, which is the
+part this paragraph was really describing: the `Quiz_KEY.docx` files still have
+to be opened one at a time to learn which lesson each belongs to. That pass has
+not been done for Units 2 through 5.

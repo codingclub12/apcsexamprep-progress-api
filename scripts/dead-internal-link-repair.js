@@ -199,6 +199,64 @@ const RETARGET = {
       + 'records as one of this site five naming irregularities. One live blog carries '
       + 'these tokens and it holds the 429 daily-practice articles. 6 links.',
   },
+  //  AP CYBER UNIT 1, WHERE THE COURSE IS NAMED TWICE AND LINKED BY THE OTHER
+  //  NAME. The lesson pages are `ap-cybersecurity-unit-1-<topic>` and their
+  //  activities are `ap-cyber-unit-1-lesson-<n>`, which is the two-prefix
+  //  irregularity docs/internal-linking.md already records, crossed with topic
+  //  name against lesson number. Eight activity links inside Unit 1 therefore
+  //  404, and board 159 called those pages unbuilt. They were not: all eight
+  //  are live under the other name.
+  //
+  //  The number comes off the pages themselves, twice over.
+  //  /pages/ap-cybersecurity-unit-1-wireless-security heads itself "Topic 1.3:
+  //  Best Practices for Public Networks" and ap-cyber-unit-1-lesson-3-quiz
+  //  heads itself "Topic 1.3 Quiz: The Dangers of Public Wi-Fi". The other two
+  //  lesson-3 activities name the subject in their own headings, "Applied
+  //  Wireless Security Analysis" and "Wireless Attack Specimen Dissection".
+  //  The same holds for 1.5: the lesson page reads "Topic 1.5: Leveraging AI in
+  //  Cyber Defense", lesson-5-quiz reads "Topic 1.5 Quiz: Leveraging AI in
+  //  Cyber Defense", and the exercises read "AI Defense Application Lab" and
+  //  "AI Defense Failure Analysis".
+  'pages/ap-cybersecurity-unit-1-wireless-security-exercise-1': {
+    to: 'ap-cyber-unit-1-lesson-3-exercise-1',
+    why: 'Topic 1.3. The lesson page and the lesson-3 quiz both head themselves '
+      + 'Topic 1.3, and the other lesson-3 activities name the same subject.',
+  },
+  'pages/ap-cybersecurity-unit-1-wireless-security-exercise-2': {
+    to: 'ap-cyber-unit-1-lesson-3-exercise-2',
+    why: 'Topic 1.3. The lesson page and the lesson-3 quiz both head themselves '
+      + 'Topic 1.3, and the other lesson-3 activities name the same subject.',
+  },
+  'pages/ap-cybersecurity-unit-1-wireless-security-lab': {
+    to: 'ap-cyber-unit-1-lesson-3-lab',
+    why: 'Topic 1.3. The lesson page and the lesson-3 quiz both head themselves '
+      + 'Topic 1.3, and the other lesson-3 activities name the same subject.',
+  },
+  'pages/ap-cybersecurity-unit-1-wireless-security-quiz': {
+    to: 'ap-cyber-unit-1-lesson-3-quiz',
+    why: 'Topic 1.3. The lesson page and the lesson-3 quiz both head themselves '
+      + 'Topic 1.3, and the other lesson-3 activities name the same subject.',
+  },
+  'pages/ap-cybersecurity-unit-1-ai-cyber-defense-exercise-1': {
+    to: 'ap-cyber-unit-1-lesson-5-exercise-1',
+    why: 'Topic 1.5. The lesson page and the lesson-5 quiz both head themselves '
+      + 'Topic 1.5, and the other lesson-5 activities name the same subject.',
+  },
+  'pages/ap-cybersecurity-unit-1-ai-cyber-defense-exercise-2': {
+    to: 'ap-cyber-unit-1-lesson-5-exercise-2',
+    why: 'Topic 1.5. The lesson page and the lesson-5 quiz both head themselves '
+      + 'Topic 1.5, and the other lesson-5 activities name the same subject.',
+  },
+  'pages/ap-cybersecurity-unit-1-ai-cyber-defense-lab': {
+    to: 'ap-cyber-unit-1-lesson-5-lab',
+    why: 'Topic 1.5. The lesson page and the lesson-5 quiz both head themselves '
+      + 'Topic 1.5, and the other lesson-5 activities name the same subject.',
+  },
+  'pages/ap-cybersecurity-unit-1-ai-cyber-defense-quiz': {
+    to: 'ap-cyber-unit-1-lesson-5-quiz',
+    why: 'Topic 1.5. The lesson page and the lesson-5 quiz both head themselves '
+      + 'Topic 1.5, and the other lesson-5 activities name the same subject.',
+  },
 };
 
 //  Split a href into its section, its handle and whatever query or fragment
