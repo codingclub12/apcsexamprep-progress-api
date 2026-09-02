@@ -89,13 +89,33 @@ const TARGETS = {
   //
   //  The measure improved and the thing the measure stood for got worse, which is
   //  the whole reason the ordered-key checks were added. These targets are
-  //  generated to satisfy all three properties at once and refuse to emit
-  //  otherwise: every key distinct, per-POSITION balance so no question number
-  //  drifts toward one letter, and overall balance. Result:
+  //  generated to satisfy every property at once and refuse to emit otherwise.
+  //
+  // ── PASS FOUR, 2026-09-02: NO KEY REPEATS INSIDE ITSELF ───────────────────
+  //  Pass three shipped ONE key that repeats: CDACDA, which is CDA twice. Learn
+  //  three answers and the quiz is free. It satisfied all three pass-three
+  //  properties, because every one of them compares keys to EACH OTHER and none
+  //  of them looks inside a single key. Same failure as pass two, one level in.
+  //
+  //  Found by the repeating-block check on the branch for ledger #125, then
+  //  reproduced here independently before anything was changed. Caught before
+  //  the import sheet was run, so no student ever saw it.
+  //
+  //  So the generator now refuses any key with a period that TILES it: p divides
+  //  the length and the key is that block repeated, which for six questions is
+  //  AAAAAA, ABABAB and CDACDA. A partial echo like ABCDAB is a two character
+  //  tail at 1 in 16, below the bar used elsewhere in this file, and is left to
+  //  distinctness, which is what made ABCDAB a problem in the first place.
+  //  scripts/csp-target-generator.js reproduces this table and mutation testing
+  //  it, by dropping the periodicity term, brings CDACDA straight back.
+  //
+  //  Two keys moved: legal-ethical-concerns CDACDA to CDACDB, and safe-computing
+  //  DABDCC to AACDAC as downstream drift from the changed counters. Result:
   //
   //      distinct     35 of 35
-  //      overall      A52 B52 C53 D53   of 210, even is 52.5
-  //      per column   9/9/9/8 in all six, which is the best 35 allows
+  //      periodic     0 of 35
+  //      overall      A53 B52 C53 D52   of 210, even is 52.5
+  //      per column   9/9/9/8 in five, 10/9/8/8 in the sixth
   // ── PASS TWO: the remaining 27 lesson quizzes ─────────────────────────────
   //  Pass one fixed the eight worst and OVER-CORRECTED toward D, so these lean
   //  back to B and C. Solved, not guessed: the seven unit test exams are already
@@ -130,8 +150,8 @@ const TARGETS = {
   'ap-csp-course-bi5-computing-bias':            ['A', 'B', 'C', 'D', 'C', 'C'],
   'ap-csp-course-bi5-crowdsourcing':             ['B', 'D', 'B', 'A', 'A', 'D'],
   'ap-csp-course-bi5-digital-divide':            ['B', 'C', 'D', 'A', 'B', 'B'],
-  'ap-csp-course-bi5-legal-ethical-concerns':    ['C', 'D', 'A', 'C', 'D', 'A'],
-  'ap-csp-course-bi5-safe-computing':            ['D', 'A', 'B', 'D', 'C', 'C'],
+  'ap-csp-course-bi5-legal-ethical-concerns':    ['C', 'D', 'A', 'C', 'D', 'B'],
+  'ap-csp-course-bi5-safe-computing':            ['A', 'A', 'C', 'D', 'A', 'C'],
 };
 
 const QUESTION_RE = /<div class="mcq-options" id="([^"]+)-options">([\s\S]*?)<\/div>\s*((?:\s*<div id="\1-fb-[A-D]"[\s\S]*?<\/div>)+)/g;
