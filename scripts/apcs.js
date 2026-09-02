@@ -191,7 +191,42 @@ const FLAG = (t) => [
   t.status === 'done' && !t.verified ? C.yellow('UNVERIFIED') : null,
 ].filter(Boolean).join(' ');
 
+//  THE DIGEST MIXES TWO ROW SHAPES, AND ONLY ONE OF THEM IS A TASK.
+//  `in_flight` and `stale` carry CLAIM rows: they key the task as `task_id` and
+//  `task_title`, and add `locks` and heartbeat age. This function read `t.id`
+//  and `t.title`, which do not exist on a claim, so every claim printed as
+//  "#undefined" followed by nothing.
+//
+//  Four stale claims sat in the live digest that way. The ledger could say
+//  something was stuck and not which task it was stuck on, nor which files it
+//  was still holding, which is the one question a stale claim exists to answer.
+const isClaim = (r) => !!r && r.claim_id !== undefined && r.claim_id !== null;
+
+//  Minutes are how the API reports age, and "5760m" is not a duration anybody
+//  reads. A stale claim is usually hours or days old.
+function mins(n) {
+  const m = Math.round(Number(n) || 0);
+  if (m < 60) return `${m}m`;
+  if (m < 1440) return `${Math.round(m / 60)}h`;
+  return `${Math.round(m / 1440)}d`;
+}
+
+function claimLine(c) {
+  const id = C.bold(`#${String(c.task_id == null ? '?' : c.task_id).padEnd(4)}`);
+  const locks = c.locks || [];
+  //  Said out loud rather than printed as "0 locks", because a claim with no
+  //  locks protects nothing and the digest is where somebody would notice.
+  const held = locks.length
+    ? C.dim(`${locks.length} lock${locks.length > 1 ? 's' : ''}`)
+    : C.yellow('NO LOCKS');
+  const who = c.session_label ? ` ${c.session_label}` : '';
+  const meta = C.dim(`claim ${c.claim_id}${who}, ${mins(c.age_minutes)} old, `
+    + `${mins(c.since_heartbeat_minutes)} silent`);
+  return `  ${id} ${String(c.task_title || '').slice(0, 50).padEnd(50)} ${meta} ${held}`.trimEnd();
+}
+
 function line(t) {
+  if (isClaim(t)) return claimLine(t);
   const id = C.bold(`#${String(t.id).padEnd(4)}`);
   const meta = C.dim(`${t.bucket || '-'}/${t.surface || '-'}/${t.owner || '-'}`);
   return `  ${id} ${String(t.title || '').slice(0, 66).padEnd(66)} ${meta} ${FLAG(t)}`.trimEnd();
@@ -215,7 +250,13 @@ cmds.digest = async () => {
   section('DECISIONS BLOCKING WORK', d.decisions_blocking);
   section('AGENT READY', d.agent_ready, 8);
   section('IN FLIGHT', d.in_flight);
-  section('STALE / STUCK', [...(d.stale || []), ...(d.stuck || [])]);
+  const stuckRows = [...(d.stale || []), ...(d.stuck || [])];
+  section('STALE / STUCK', stuckRows);
+  //  A stale claim keeps its locks until somebody takes them back, so the next
+  //  session to want that file gets a 409 naming a session that walked away.
+  if (stuckRows.some(isClaim)) {
+    console.log(C.dim('  a stale claim still holds its locks.  apcs release <task-id>'));
+  }
   section('NEEDS VERIFICATION', d.needs_verification, 6);
   if (d.needs_verification?.length > 6) {
     console.log(C.dim(`  ... ${d.needs_verification.length - 6} more. apcs list --needs-verification`));
@@ -448,7 +489,7 @@ function wrap(s, width, indent) {
   return lines.join('\n');
 }
 
-module.exports = { cmds, flags, flag, resolveClaimId };
+module.exports = { cmds, flags, flag, resolveClaimId, line, claimLine, isClaim, mins };
 
 if (require.main === module) {
   (async () => {
