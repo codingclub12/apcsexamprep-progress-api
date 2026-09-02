@@ -259,3 +259,40 @@ jobs:
             echo "::error title=Graded work is not reaching the gradebook::See the summary."
             exit 1
           fi
+
+      # ── TELL THE BOARD ──────────────────────────────────────────────────────
+      #  Board task 166: same reporting gap as deploy-drift.yml before
+      #  2026-09-01. This job carries three real failure points above (the board
+      #  read, page-availability, grade-path-audit); job.status here is
+      #  `failure` if ANY of them tripped, because none of those steps has
+      #  continue-on-error, and this step's own `if: always()` is what keeps it
+      #  running to say so.
+      #
+      #  Placed last, after both `if: success()` cache-save steps earlier in this
+      #  file: this step touches none of the state those steps persist, so its
+      #  position cannot poison a baseline the way running the availability and
+      #  grade-path checks before the cache save would have (see the comment on
+      #  the restore step above).
+      #
+      #  continue-on-error so the observer cannot turn this red by itself; never
+      #  on a cancelled run, which checked nothing; a missing TODO_KEY skips
+      #  rather than fails.
+      - name: Report to the command center
+        if: always() && job.status != 'cancelled'
+        continue-on-error: true
+        env:
+          TODO_KEY: ${{ secrets.TODO_KEY }}
+          BASE: ${{ vars.PROGRESS_BASE_URL || 'https://progress.apcsexamprep.com' }}
+        run: |
+          if [ -z "${TODO_KEY:-}" ]; then
+            echo "TODO_KEY not configured; skipping command center report."
+            exit 0
+          fi
+          state=$([ "${{ job.status }}" = "success" ] && echo pass || echo fail)
+          detail="run ${{ github.run_id }}"
+          curl -sS -X POST "$BASE/api/command/checks" \
+            -H "Authorization: Bearer $TODO_KEY" \
+            -H "Content-Type: application/json" \
+            -H "User-Agent: Mozilla/5.0 (compatible; apcse-ci/1.0) Chrome/120.0.0.0 Safari/537.36" \
+            -d "{\"source\":\"health\",\"check_id\":\"nightly-sweep\",\"state\":\"$state\",\"detail\":\"$detail\"}" \
+            || echo "report failed, ignoring"
