@@ -38,12 +38,45 @@
 //
 //  Zero PII: author content only. No em-dashes, per repo convention.
 //
+//  PUBLISHING A SUBSET: --status AND --only-dead
+//  Added for board 163, where 17 of the 35 exercise-2 pages were never imported
+//  and 18 have been live since 2026-08-26. A sheet for the 17 has to answer one
+//  question per row that no offline check can answer: does this handle already
+//  resolve on the storefront? --status reads the JSONL that
+//  scripts/csp-exercise-2-live-status.js writes and makes the storefront, not a
+//  fixture, the authority:
+//
+//    - a selected handle that is 200 is REFUSED, because writing a Body HTML
+//      over a page that exists is a rewrite and not a publish. Those are
+//      different acts with different risks and this program only does one.
+//    - a selected handle with NO row in the status file is REFUSED. Unmeasured
+//      is not the same as missing, and board item #79 records 46 pages of this
+//      storefront answering 429 during a crawl. A throttle read as a 404 is how
+//      a publish quietly becomes an overwrite.
+//    - every internal /pages/ link in the body is checked against the same
+//      status file. Publishing a page whose own links 404 is what the nightly
+//      crawl exists to catch, so it is caught before the sheet goes out.
+//
+//  --only-dead selects exactly the handles the status file records as 404, so
+//  the row set is measured rather than typed. --expect N refuses a sheet whose
+//  row count is not the number that was reviewed.
+//
+//  CED CODES NEVER REACH A STUDENT
+//  The rebuilt Topic 1.1 lesson shipped with 218 Essential Knowledge codes in
+//  student-visible text. Both code shapes this site can emit are counted here:
+//  the AP Cybersecurity shape (1.1.A.2) through lib/cyber-ek-density.js, which
+//  is the module that resolves which citations are protected, and the AP CSP
+//  shape (CRD-2.A.1, DAT-1.B, AAP-2.K.4, CSN-1.E.1, IOC-1.A.1) against the same
+//  protected spans. An unprotected code in a body refuses the sheet.
+//
 //  Run:
 //    node scripts/csp-pages-csv.js out.csv
 //    node scripts/csp-pages-csv.js x2.csv --kind exercise-2
 //    node scripts/csp-pages-csv.js notes.csv --kind notes
 //    node scripts/csp-pages-csv.js out.csv --unit bi-3
 //    node scripts/csp-pages-csv.js out.csv --live pages.json
+//    node scripts/csp-pages-csv.js out.csv --kind exercise-2 \
+//        --status smoke/fixtures/csp-exercise-2-live-status.jsonl --only-dead --expect 17
 //
 //  <pages.json> is the raw result of a Shopify Admin API pages query. Both the
 //  `nodes` and the `edges` shapes are read.
@@ -53,6 +86,7 @@ const fs = require('fs');
 const path = require('path');
 const { allPages } = require('../lib/csp-course-pages');
 const { pageFromHandle } = require('../utils');
+const ekDensity = require('../lib/cyber-ek-density');
 
 const ROOT = path.join(__dirname, '..');
 
@@ -73,6 +107,62 @@ function readLive(file) {
 }
 
 // Every check that can stop the write. Each returns a list of complaints.
+//  THE STOREFRONT, AS MEASURED TODAY, KEYED BY HANDLE.
+//  One JSONL row per handle from scripts/csp-exercise-2-live-status.js. A row
+//  flagged `unresolved` never got a 200 or a 404 out of the store, so it is kept
+//  and treated as an answer to nothing: it refuses any page that depends on it.
+function readStatus(file) {
+  const by = new Map();
+  for (const line of fs.readFileSync(file, 'utf8').split('\n')) {
+    const t = line.trim();
+    if (!t) continue;
+    const r = JSON.parse(t);
+    if (r && r.handle) by.set(r.handle, r);
+  }
+  return by;
+}
+
+//  Every internal page link in a body, with <script> blocks CUT OUT FIRST.
+//  A dead-link scan in this repo once read href="/pages/'+prev.handle+'" out of
+//  a script block and reported 141 dead links that were string concatenation.
+//  An href only means a URL where the HTML parser is the one reading it.
+function bodyLinkTargets(body) {
+  const markup = String(body).replace(/<script[\s\S]*?<\/script>/g, '');
+  const out = new Set();
+  for (const m of markup.match(/href="\/pages\/[a-z0-9-]+"/g) || []) {
+    out.add(m.slice('href="/pages/'.length, -1));
+  }
+  return [...out];
+}
+
+//  CED codes a student would read, both shapes this site can emit.
+//
+//  Protection is resolved by lib/cyber-ek-density.js rather than re-decided
+//  here. That module is the one place that knows a code inside an EK coverage
+//  table, an answer key, a card orientation tag, or a sentence citing the code
+//  AS EVIDENCE has earned its place. Re-implementing that judgement would be a
+//  second opinion about a convention, which is the exact shape of the three
+//  measurements this repo has already had to throw away.
+const CSP_CED_RX = /\b(?:CRD|DAT|AAP|CSN|IOC)-\d+\.[A-Z](?:\.\d+)?\b/g;
+
+function cedCodesVisible(body) {
+  const found = [];
+  //  Shape one: the AP Cybersecurity code, straight from the resolver.
+  for (const c of ekDensity.citations(body).citations) {
+    if (!c.protectedBy) found.push(c.code);
+  }
+  //  Shape two: the AP CSP code, which EK_RX cannot match, scored against the
+  //  SAME protected spans so the two shapes are judged by one rule.
+  const { spans } = ekDensity.protectedSpans(body);
+  const isProtected = (i) => spans.some((sp) => sp.a <= i && i < sp.z);
+  CSP_CED_RX.lastIndex = 0;
+  let m;
+  while ((m = CSP_CED_RX.exec(body))) {
+    if (!isProtected(m.index)) found.push(m[0]);
+  }
+  return found;
+}
+
 function checkPage(p) {
   const bad = [];
   const body = p.bodyHtml;
@@ -169,7 +259,8 @@ function main(argv) {
   const out = argv[0];
   if (!out || out.startsWith('--')) {
     console.error('usage: node scripts/csp-pages-csv.js <out.csv> [--kind exercise-2|notes]'
-      + ' [--unit bi-N] [--only handle,handle] [--live <pages.json>]');
+      + ' [--unit bi-N] [--only handle,handle] [--live <pages.json>]'
+      + ' [--status <status.jsonl> [--only-dead]] [--expect N]');
     process.exit(2);
   }
   const arg = (name) => { const i = argv.indexOf(name); return i === -1 ? null : argv[i + 1]; };
@@ -177,6 +268,13 @@ function main(argv) {
   const unit = arg('--unit');
   const only = arg('--only') ? new Set(arg('--only').split(',')) : null;
   const live = arg('--live') ? readLive(arg('--live')) : null;
+  const status = arg('--status') ? readStatus(arg('--status')) : null;
+  const onlyDead = argv.includes('--only-dead');
+  const expect = arg('--expect') ? Number(arg('--expect')) : null;
+  if (onlyDead && !status) {
+    console.error('--only-dead needs --status: the set of pages to publish is measured, not typed');
+    process.exit(2);
+  }
 
   const everything = allPages();
   const banks = require('../seed/csp-exercise-2');
@@ -187,6 +285,13 @@ function main(argv) {
   if (kind) pages = pages.filter((p) => p.kind === kind);
   if (unit) pages = pages.filter((p) => p.unit === unit);
   if (only) pages = pages.filter((p) => only.has(p.handle));
+  //  Selection by measurement. A handle with no status row is NOT selected here
+  //  and is not silently dropped either: the per-page loop below refuses it, so
+  //  a page missing from the probe can never be quietly excluded from a sheet
+  //  someone reviewed by row count.
+  if (onlyDead) {
+    pages = pages.filter((p) => { const r = status.get(p.handle); return r && r.status === 404 && !r.unresolved; });
+  }
   if (!pages.length) { console.error('no pages selected'); process.exit(2); }
 
   const problems = [];
@@ -202,6 +307,28 @@ function main(argv) {
 
   for (const p of pages) {
     for (const c of checkPage(p)) problems.push(`${p.handle}: ${c}`);
+
+    //  A CED code a student can read. 218 of them reached students on the
+    //  rebuilt Topic 1.1 lesson before anyone noticed, and the code teaches
+    //  nothing: it is the teacher's index into the framework. One stops the
+    //  sheet.
+    //
+    //  Deliberately HERE and not in checkPage, which is shared. Running it there
+    //  refuses 21 of the 70 CSP handout exercise pages that
+    //  lib/csp-exercise-pages.js builds and that went live on 2026-08-22, over
+    //  83 codes a student can read today, including question stems written
+    //  around the code ("Explain how a pull request satisfies EK CRD-1.B.1's
+    //  description"). That is a real defect and it is reported as one, but it is
+    //  a different page family, it is already published, and removing those
+    //  codes means rewriting the questions. Authoring belongs to a human, so
+    //  this program refuses its own rows rather than quietly re-contracting a
+    //  generator it was not asked to change.
+    const ced = cedCodesVisible(p.bodyHtml);
+    if (ced.length) {
+      problems.push(`${p.handle}: ${ced.length} CED Essential Knowledge code(s) in `
+        + `student-visible text, first ${JSON.stringify(ced[0])}`);
+    }
+
     const routing = checkHandleRouting(p);
     if (routing) problems.push(`${p.handle}: ${routing}`);
     if (p.kind === 'exercise-2') {
@@ -212,6 +339,43 @@ function main(argv) {
       problems.push(`${p.handle}: a live page ALREADY uses this handle`
         + ` (title ${JSON.stringify(n.title)}). Importing would replace its body.`);
     }
+
+    //  The storefront, measured. This is the check that separates a publish from
+    //  a rewrite, and the one no offline fixture can make.
+    if (status) {
+      const r = status.get(p.handle);
+      if (!r) {
+        problems.push(`${p.handle}: no row in the status file, so nothing is known`
+          + ' about whether this handle already resolves. Unmeasured is not missing.');
+      } else if (r.unresolved) {
+        problems.push(`${p.handle}: the storefront never answered (${r.error || 'unresolved'}).`
+          + ' A throttled request is not a 404.');
+      } else if (r.status !== 404) {
+        problems.push(`${p.handle}: the storefront serves HTTP ${r.status} for this handle already.`
+          + ' Importing a Body HTML over it is a REWRITE, not a publish, and this program only publishes.');
+      }
+
+      //  A page whose own links 404 is a page that ships broken. Checked from
+      //  the markup only, script blocks removed, against the same measurement.
+      for (const target of bodyLinkTargets(p.bodyHtml)) {
+        const t = status.get(target);
+        if (!t) {
+          problems.push(`${p.handle}: links /pages/${target}, which was never probed,`
+            + ' so this sheet cannot say the link works');
+        } else if (t.unresolved) {
+          problems.push(`${p.handle}: links /pages/${target}, which the storefront never answered for`);
+        } else if (t.status !== 200) {
+          problems.push(`${p.handle}: links /pages/${target}, which returns HTTP ${t.status}`);
+        }
+      }
+    }
+  }
+
+  //  A row count nobody reviewed is a different sheet with the same name. When
+  //  --expect is given, the sheet is the one that was reviewed or it is nothing.
+  if (expect !== null && pages.length !== expect) {
+    problems.push(`selected ${pages.length} page(s), --expect said ${expect}.`
+      + ' The set moved since it was reviewed, so this is a different sheet.');
   }
 
   if (problems.length) {
@@ -252,4 +416,5 @@ function main(argv) {
 }
 
 if (require.main === module) main(process.argv.slice(2));
-module.exports = { checkPage, checkHandleRouting, checkBank, PUBLISHED_AT };
+module.exports = { checkPage, checkHandleRouting, checkBank, PUBLISHED_AT,
+  readStatus, bodyLinkTargets, cedCodesVisible, CSP_CED_RX };

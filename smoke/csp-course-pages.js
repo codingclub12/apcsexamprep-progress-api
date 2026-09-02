@@ -55,6 +55,24 @@ function ok(name, cond, detail) {
 }
 function section(t) { console.log(`\n${t}`); }
 
+//  RUN THE GENERATOR AND REPORT WHAT IT DID, without letting a non-zero exit
+//  throw past the assertion that is meant to read it.
+//
+//  This used to be a bare execFileSync in section 7, and a refusal there KILLED
+//  THE PROCESS: every assertion after it silently never ran. The deploy gate
+//  found it, exactly as its own header warns. A mutation that makes the renderer
+//  emit a CED code was caught by the crash rather than by the guard it targets,
+//  so the guard read as proven while being unreachable.
+const script = path.join(__dirname, '..', 'scripts', 'csp-pages-csv.js');
+function run(args) {
+  try {
+    const out = execFileSync(process.execPath, [script, ...args], { stdio: ['ignore', 'pipe', 'pipe'] });
+    return { ok: true, text: String(out) };
+  } catch (e) {
+    return { ok: false, text: String(e.stdout || '') + String(e.stderr || '') };
+  }
+}
+
 // A real RFC 4180 reader. Deliberately NOT a split on commas: splitting is the
 // bug this test exists to catch, so the test cannot be allowed to make it too.
 function parseCsv(text) {
@@ -248,10 +266,16 @@ ok('6.3 every SEO description is distinct', new Set(pages.map((p) => p.seoDescri
 
 section('7. The Matrixify sheet');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'csp-pages-'));
-const script = path.join(__dirname, '..', 'scripts', 'csp-pages-csv.js');
 const out = path.join(tmp, 'all.csv');
-execFileSync(process.execPath, [script, out], { stdio: ['ignore', 'pipe', 'pipe'] });
-const raw = fs.readFileSync(out, 'utf8');
+const gen = run([out]);
+ok('7.0 the generator writes the whole build rather than refusing it', gen.ok,
+  gen.text.slice(0, 400));
+//  On a refusal, stand in a header-only sheet so the rest of section 7 FAILS as
+//  assertions instead of throwing. A dead process reports nothing at all, and
+//  nothing at all is indistinguishable from a clean run.
+const STUB = '\uFEFF"Handle","Command","Title","Body HTML","Published","Published At",'
+  + '"SEO Title","SEO Description"\r\n';
+const raw = gen.ok ? fs.readFileSync(out, 'utf8') : STUB;
 
 ok('7.1 the sheet is written with a BOM (utf-8-sig)', raw.charCodeAt(0) === 0xFEFF);
 const rows = parseCsv(raw.slice(1)).filter((r) => r.length > 1);
@@ -283,9 +307,11 @@ ok('7.8 every title survives the round trip',
 section('8. Selecting part of the build');
 for (const [flag, value, expected] of [['--kind', 'exercise-2', 35], ['--kind', 'notes', 18], ['--unit', 'bi-3', 36]]) {
   const f = path.join(tmp, `${value}.csv`);
-  execFileSync(process.execPath, [script, f, flag, value], { stdio: ['ignore', 'pipe', 'pipe'] });
-  const n = parseCsv(fs.readFileSync(f, 'utf8').slice(1)).slice(1).filter((r) => r.length > 1).length;
-  ok(`8.x ${flag} ${value} writes ${expected} rows`, n === expected, n);
+  const r = run([f, flag, value]);
+  const n = r.ok
+    ? parseCsv(fs.readFileSync(f, 'utf8').slice(1)).slice(1).filter((x) => x.length > 1).length
+    : -1;
+  ok(`8.x ${flag} ${value} writes ${expected} rows`, n === expected, r.ok ? n : r.text.slice(0, 200));
 }
 
 section('9. It refuses to overwrite a live page');
@@ -320,6 +346,136 @@ ok('10.1 exercise-2 denominators stay gated until the pages are imported', !anyX
   [...denomKeys].filter((k) => k.endsWith('|exercise-2')).slice(0, 3));
 ok('10.2 the existing quiz denominators are untouched',
   [...denomKeys].filter((k) => k.endsWith('|quiz')).length === 35);
+
+section('11. Publishing a SUBSET, where the storefront decides which rows exist');
+//  Board 163. 17 of the 35 exercise-2 pages were never imported and 18 have
+//  been live since 2026-08-26. A sheet that publishes the 17 is only safe if
+//  the program can tell those two groups apart from a MEASUREMENT rather than
+//  from a fixture, and refuses everything it cannot account for.
+//
+//  The status file here is synthetic on purpose. If the suite read the real
+//  probe output it would pass for the wrong reason the day the storefront
+//  changed, and it would need a network. The shape is exactly what
+//  scripts/csp-exercise-2-live-status.js writes.
+const { readStatus, bodyLinkTargets, cedCodesVisible, checkPage: checkPageFn } = require('../scripts/csp-pages-csv');
+
+const STATUS = path.join(tmp, 'status.jsonl');
+const AT = '2026-09-02T00:00:00.000Z';
+const linkTargets = new Set();
+for (const p of x2) for (const t of bodyLinkTargets(p.bodyHtml)) linkTargets.add(t);
+
+//  Half the set pretended live, half pretended missing, and every internal link
+//  target answering 200.
+const baseRows = () => [
+  ...x2.map((p, i) => ({ handle: p.handle, at: AT, status: i < 18 ? 200 : 404, bytes: 1, attempts: 1 })),
+  ...[...linkTargets].map((h) => ({ handle: h, at: AT, status: 200, bytes: 1, attempts: 1 })),
+];
+const writeStatus = (rows) => { fs.writeFileSync(STATUS, rows.map((r) => JSON.stringify(r)).join('\n') + '\n'); };
+
+writeStatus(baseRows());
+const deadCsv = path.join(tmp, 'dead.csv');
+const r0 = run([deadCsv, '--kind', 'exercise-2', '--status', STATUS, '--only-dead', '--expect', '17']);
+ok('11.0 --only-dead writes a row for exactly the handles measured 404', r0.ok
+  && parseCsv(fs.readFileSync(deadCsv, 'utf8').slice(1)).slice(1).filter((r) => r.length > 1).length === 17,
+  r0.text.slice(0, 300));
+
+//  A page row carries Body HTML, and Body HTML over a page that exists is a
+//  rewrite. This program publishes; it does not rewrite. Without --only-dead all
+//  35 are selected and the 18 that already resolve have to stop the sheet.
+const r1 = run([path.join(tmp, 'nope1.csv'), '--kind', 'exercise-2', '--status', STATUS]);
+ok('11.2 a handle the storefront already serves is REFUSED, because that is a rewrite',
+  !r1.ok && /serves HTTP 200 for this handle already/.test(r1.text)
+    && !fs.existsSync(path.join(tmp, 'nope1.csv')), r1.text.slice(0, 240));
+
+//  Board item #79: 46 pages of this storefront answered 429 during a crawl. A
+//  handle nobody measured is not a handle that is missing, and folding the two
+//  together is how a publish turns into an overwrite.
+writeStatus(baseRows().filter((r) => r.handle !== x2[20].handle));
+const r2 = run([path.join(tmp, 'nope2.csv'), '--kind', 'exercise-2', '--status', STATUS,
+  '--only', x2[20].handle]);
+ok('11.3 a handle with no measurement at all is REFUSED, because unmeasured is not missing',
+  !r2.ok && /no row in the status file/.test(r2.text), r2.text.slice(0, 240));
+
+const unresolvedRows = baseRows().map((r) => (r.handle === x2[20].handle
+  ? { ...r, status: 429, unresolved: true, error: 'HTTP 429' } : r));
+writeStatus(unresolvedRows);
+const r2b = run([path.join(tmp, 'nope2b.csv'), '--kind', 'exercise-2', '--status', STATUS,
+  '--only', x2[20].handle]);
+ok('11.3b a throttled handle is REFUSED rather than read as a 404',
+  !r2b.ok && /the storefront never answered/.test(r2b.text), r2b.text.slice(0, 240));
+
+//  A page whose own links 404 ships broken. The target chosen is one the bodies
+//  really do link, read out of the markup rather than typed.
+//  Picked from the pages the synthetic status marks 404, because those are the
+//  rows --only-dead selects. A target linked only by a page that is not in the
+//  sheet would prove nothing, and the first version of this test did exactly
+//  that and read as a broken guard.
+const deadTargets = new Set();
+for (const p of x2.slice(18)) for (const t of bodyLinkTargets(p.bodyHtml)) deadTargets.add(t);
+const oneTarget = [...deadTargets][0];
+writeStatus(baseRows().map((r) => (r.handle === oneTarget ? { ...r, status: 404 } : r)));
+const r3 = run([path.join(tmp, 'nope3.csv'), '--kind', 'exercise-2', '--status', STATUS, '--only-dead']);
+ok('11.4 a body linking a handle that is not live is REFUSED',
+  !r3.ok && new RegExp(`links /pages/${oneTarget}, which returns HTTP 404`).test(r3.text),
+  r3.text.slice(0, 240));
+
+//  A body under 2000 bytes is not a finished page, and a short Body HTML cell
+//  destroys more than it publishes.
+const stub = { ...x2[0], bodyHtml: '<h1>x</h1>' };
+ok('11.1 a body under 2000 bytes is REFUSED as an unfinished page',
+  checkPageFn(stub).some((c) => /body is only \d+ bytes/.test(c)), checkPageFn(stub));
+
+//  218 CED codes reached students on the rebuilt Topic 1.1 lesson. Both shapes
+//  the site can emit are counted, and one is enough to stop the sheet.
+for (const [label, code] of [['AP CSP', 'AAP-2.K.4'], ['AP Cybersecurity', '1.1.A.2']]) {
+  const poisoned = x2[0].bodyHtml.replace('<h1', `<p>Recall ${code} here.</p><h1`);
+  ok(`11.5 a CED Essential Knowledge code in student-visible text is REFUSED (${label} shape)`,
+    cedCodesVisible(poisoned).includes(code), cedCodesVisible(poisoned).slice(0, 4));
+}
+ok('11.5c none of the 35 built bodies carries a CED code a student could read',
+  x2.every((p) => cedCodesVisible(p.bodyHtml).length === 0),
+  x2.filter((p) => cedCodesVisible(p.bodyHtml).length).map((p) => p.handle));
+
+//  THE INSTRUMENT BUG THIS REPO KEEPS REPEATING. A dead-link scan here once read
+//  href="/pages/'+prev.handle+'" out of a <script> and reported 141 dead links
+//  that were string concatenation. An href is a URL only where the HTML parser
+//  is the one reading it.
+//  The fixture has to contain a /pages/ href the REGEX WOULD MATCH, inside a
+//  script block. The first version put string concatenation there, which the
+//  regex never matched with or without the strip, so the mutation that deletes
+//  the strip left the suite green. The deploy gate reported it as a guard that
+//  does not test anything, which is what it was.
+const scripty = '<a href="/pages/real-one">x</a>'
+  + '<script>d.innerHTML = \'<a href="/pages/ghost-page">go</a>\';</script>';
+ok('11.6 a /pages/ href inside a script block is NOT counted as a link',
+  JSON.stringify(bodyLinkTargets(scripty)) === JSON.stringify(['real-one']), bodyLinkTargets(scripty));
+
+//  And the other half of the same rule: protection is decided by
+//  lib/cyber-ek-density.js, not re-decided here. A code inside an EK coverage
+//  table is a teacher artifact and must survive.
+const covered = '<div id="ek11-body"><table><tr><td class="term">1.1.A.2 Intimidation</td>'
+  + '<td>Covered</td></tr></table></div>';
+ok('11.7 a CED code inside the EK coverage table is NOT reported, per the resolver',
+  cedCodesVisible(covered).length === 0, cedCodesVisible(covered));
+
+//  THE WIRING, not just the detector. cedCodesVisible can be perfect and never
+//  be called. This runs the real generator over the real rendered bodies and
+//  requires both that it writes and that it did not have to say the word CED to
+//  get there. Mutate the RENDERER to emit one code and this is the assertion
+//  that goes red, which is the only way to prove the refusal is actually reached
+//  when no real body triggers it.
+writeStatus(baseRows());
+const r5 = run([path.join(tmp, 'wired.csv'), '--kind', 'exercise-2', '--status', STATUS,
+  '--only-dead', '--expect', '17']);
+ok('11.9 the generator writes the sheet only because no body carries a CED code',
+  r5.ok && !/CED Essential Knowledge/.test(r5.text), r5.text.slice(0, 300));
+
+//  A row count nobody reviewed is a different sheet with the same name.
+writeStatus(baseRows());
+const r4 = run([path.join(tmp, 'nope4.csv'), '--kind', 'exercise-2', '--status', STATUS,
+  '--only-dead', '--expect', '18']);
+ok('11.8 a selection whose size is not --expect is REFUSED as a different sheet',
+  !r4.ok && /--expect said 18/.test(r4.text), r4.text.slice(0, 240));
 
 fs.rmSync(tmp, { recursive: true, force: true });
 console.log(`\n  ${pass} passed, ${fail} failed\n`);
