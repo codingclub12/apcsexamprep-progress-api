@@ -190,6 +190,7 @@
     "smoke:seotitles": "node smoke/csa-daily-practice-seo-titles.js",
     "smoke:dpcode": "node smoke/csa-daily-practice-code-repair.js",
     "smoke:deadlinks": "node smoke/dead-internal-link-repair.js",
+    "smoke:emptyredirects": "node smoke/empty-page-redirects.js",
     "smoke:unitcourse": "node smoke/csa-unit-course-repair.js"
   },
   "keywords": [],
