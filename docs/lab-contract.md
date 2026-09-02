@@ -133,6 +133,33 @@ reason no teacher can see on screen. `ap-cybersecurity` is exactly that case
 today (see `docs/cyber-denominator-gaps.md`), so `1.2-lab` ships as practice.
 Flipping it later is one field plus `node scripts/seed-manifest.js --update`.
 
+## `graded: false` is a real setting, and two labs use it on purpose
+
+Four of the six labs in `config/labs/` are graded. **The two AP Cybersecurity
+terminal labs are not**, and that is declared in the file rather than being an
+oversight:
+
+    ap-cybersecurity-1.2-lab.json   graded: false
+    ap-cybersecurity-2.4-lab.json   graded: false
+    ap-networking-1.4-lab.json      graded: true
+    ap-networking-2.2-lab.json      graded: true
+    ap-networking-3.5-lab.json      graded: true
+    ap-networking-4.3-lab.json      graded: true
+
+Those two pages say so to the student in as many words: "This one is practice.
+It checks your work on the page and records nothing." The page text and the
+config agree, so a teacher reporting that a terminal lab shows nothing in the
+gradebook has found the design, not a defect.
+
+This is recorded because it has already been read the other way once, in a draft
+reply to a teacher that called it "a miss". A `points` value is present on both
+(6 and 8), which is what makes the misreading easy: points without `graded: true`
+prices the checkboxes on the page, not a gradebook cell.
+
+The five per-lesson Unit 1 labs are a different thing entirely from the two
+terminal labs, and a teacher asking about "the Unit 1 labs" almost always means
+those. There are only two terminal labs in the whole course.
+
 Nothing downstream needs changing when a lab is added. `lib/gradebook-contract.js`
 already maps `lab` to the canonical `lab` activity, so the item appears as
 `unit-4/4.3/lab` with its manifest denominator and no view branches on it.
