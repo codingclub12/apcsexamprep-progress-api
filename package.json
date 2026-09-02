@@ -179,7 +179,8 @@
     "verify:netreporting": "node scripts/verify-networking-reporting.js",
     "smoke:cyberunit3": "node smoke/cyber-unit3-lessons.js",
     "smoke:cybertopic32": "node smoke/cyber-topic32-gold.js",
-    "smoke:deploygate": "node smoke/deploy-gate.js"
+    "smoke:deploygate": "node smoke/deploy-gate.js",
+    "smoke:commandverify": "node smoke/command-verify.js"
   },
   "keywords": [],
   "author": "",

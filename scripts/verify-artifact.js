@@ -412,10 +412,15 @@ function report(x) {
   return out.join('\n');
 }
 
-// Exported so the smoke suite can exercise the pure helpers directly. The CLI
-// only runs when this file IS the entry point, so requiring it is side-effect
-// free.
-module.exports = { toRawUrl, looksHtml, classifyStatus };
+// Exported so the smoke suite can exercise the pure helpers directly, and so
+// lib/command-verify.js can run the SAME inspection the CLI runs rather than
+// growing a second one. Two implementations of "what does this URL actually
+// serve" would drift, and the whole point of this file is being the one answer.
+//
+// inspect() still reports EVIDENCE and never a verdict. Deciding what the
+// evidence means stays outside, which is why the auto-verify path can consume it
+// without this file gaining the power to mark anything verified.
+module.exports = { toRawUrl, looksHtml, classifyStatus, inspect, layers, locate };
 
 if (require.main !== module) return;
 
