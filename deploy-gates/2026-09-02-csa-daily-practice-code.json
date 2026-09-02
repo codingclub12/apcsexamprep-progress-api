@@ -1,0 +1,111 @@
+{
+  "change": "repair the 25 CSA daily-practice articles that serve a class attribute where the Java should be (board 153)",
+  "_note_on_expect_failure": "Every expect_failure below names the assertion with its [FAIL] prefix, not just its text. Without the prefix the string matches the PASS line too, so the subsumption check passes on a mutation caught by some other guard entirely. The prefix is what makes 'this guard is real' a claim rather than a hope.",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the repair deletes only what it declares, and the recovered code agrees with the article own answer key",
+      "command": "npm run --silent smoke:dpcode",
+      "expect": "106 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the preflight, with a blank cell treated as an erase in every column",
+      "command": "npm run --silent smoke:preflight",
+      "expect": "53 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT WOULD SHIP WRONG JAVA: the answer-key cross-check",
+      "file": "scripts/csa-daily-practice-code-repair.js",
+      "find": "  if (printed !== options[key]) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:dpcode",
+      "expect_failure": "[FAIL] a one-character change to a bound is caught",
+      "_why": "This is the only check that can tell a repair that ate a bound from one that did not. Everything else in the suite would stay green while 25 pages taught a wrong answer, because a body with 'i <= 5' in place of 'i <= 4' is still well formed, still passes the deletion proof, and still renders perfectly."
+    },
+    {
+      "kind": "mutation",
+      "name": "the stranded angle bracket has to come out with the span",
+      "file": "scripts/csa-daily-practice-code-repair.js",
+      "find": "const MANGLE = /<span class=\"&lt;span\">\"(apcs-[a-z]+)\"<\\/span>&gt;/g;",
+      "replace": "const MANGLE = /<span class=\"&lt;span\">\"(apcs-[a-z]+)\"<\\/span>/g;",
+      "command": "npm run --silent smoke:dpcode",
+      "expect_failure": "[FAIL] the mangle pattern consumes the stranded angle bracket",
+      "_why": "Drop the &gt; from the pattern and every repaired line still begins with a stray > in front of the Java. The page would look almost right, which is exactly the failure the deletion proof exists to catch."
+    },
+    {
+      "kind": "mutation",
+      "name": "strip tags first, decode second, or the check cannot see the defect it checks",
+      "file": "scripts/csa-daily-practice-code-repair.js",
+      "find": "    .replace(/<[^>]*>/g, '')\n    .replace(/&lt;/g, '<')",
+      "replace": "    .replace(/&lt;/g, '<')\n    .replace(/<[^>]*>/g, '')",
+      "command": "npm run --silent smoke:dpcode",
+      "expect_failure": "[FAIL] visible() strips a real tag before it decodes an escaped one",
+      "_why": "Decode first and the escaped &lt;span becomes a real tag, which the next line then strips. 58 of the 200 defects vanish from the comparison written to find them and 8 articles repair 'cleanly' into bodies missing half their code. Note which assertion this trips: the obvious one, visible() on a mangled span, passes under this mutation, because with only escaped markup present the two orders happen to agree. A test about the right subject that proves nothing is the failure mode this gate exists to surface."
+    },
+    {
+      "kind": "mutation",
+      "name": "the surviving well-formed spans are unwrapped, not left behind",
+      "file": "scripts/csa-daily-practice-code-repair.js",
+      "find": "  return block.replace(MANGLE, '').replace(WELL, (_m, _cls, inner) => inner);",
+      "replace": "  return block.replace(MANGLE, '');",
+      "command": "npm run --silent smoke:dpcode",
+      "expect_failure": "[FAIL] a well-formed highlight span is unwrapped, text kept and tags dropped",
+      "_why": "Leaves System.out.println with print blue and ln not, on a page with no other colour anywhere. That is the second half of what board 153 reported."
+    },
+    {
+      "kind": "mutation",
+      "name": "mangling in prose must stop the sheet, not be silently skipped",
+      "file": "scripts/csa-daily-practice-code-repair.js",
+      "find": "  if (loose) problems.push(loose + ' mangled spans sit OUTSIDE a code block; this repair would not reach them');",
+      "replace": "  if (false) problems.push('unreachable');",
+      "command": "npm run --silent smoke:dpcode",
+      "expect_failure": "[FAIL] mangling OUTSIDE a code block is refused",
+      "_why": "A repair scoped to code blocks cannot reach prose. Without this refusal an article mangled in its question text would report a clean repair and still read wrong, with the defect count now zero."
+    },
+    {
+      "kind": "mutation",
+      "name": "Java truncates integer division and JavaScript does not",
+      "file": "scripts/mini-java-trace.js",
+      "find": "const idiv = (a, b) => { if (b === 0) refuse('division by zero'); return Math.trunc(a / b); };",
+      "replace": "const idiv = (a, b) => { if (b === 0) refuse('division by zero'); return a / b; };",
+      "command": "npm run --silent smoke:dpcode",
+      "expect_failure": "[FAIL] integer division truncates",
+      "_why": "Day 5 asks whether (b / a == 2) holds for 7 and 3. In Java it does. Keep the remainder and the checker calls a correctly repaired article wrong, which would be a false alarm rather than a false pass, but a checker that cries wolf gets switched off."
+    },
+    {
+      "kind": "mutation",
+      "name": "a for-loop variable is scoped to its loop",
+      "file": "scripts/mini-java-trace.js",
+      "find": "    if (scopes[scopes.length - 1].has(n)) refuse('redeclared variable ' + n + ' in the same scope');\n    scopes[scopes.length - 1].set(n, v);",
+      "replace": "    if (scopes[0].has(n)) refuse('redeclared variable ' + n + ' in the same scope');\n    scopes[0].set(n, v);",
+      "command": "npm run --silent smoke:dpcode",
+      "expect_failure": "[FAIL] a nested loop variable is re-declarable",
+      "_why": "Declare into one flat scope, which is what this interpreter did first, and a nested 'for (int j ...)' is a redeclaration on the outer loop's second pass. Six of the 25 questions are nested loops, so the checker would refuse exactly the six hardest ones as unreadable and still report a clean run over the other nineteen."
+    },
+    {
+      "kind": "mutation",
+      "name": "no BOM, and Matrixify reads the first column name as garbage",
+      "file": "scripts/csa-daily-practice-code-repair.js",
+      "find": "const BOM = '﻿';",
+      "replace": "const BOM = '';",
+      "command": "npm run --silent smoke:dpcode",
+      "expect_failure": "[FAIL] utf-8 BOM"
+    },
+    {
+      "kind": "rederive",
+      "name": "a SECOND implementation, in another language, scanning tags instead of substituting patterns",
+      "command": "python3 scripts/verify-code-repair-sheet.py smoke/fixtures/csa-daily-practice-code imports/2026-09-02/csa-daily-practice-code-repair-blog-posts.csv",
+      "expect": "SHEET VERIFIED 25 rows, 200 mangled spans deleted",
+      "_why": "The generator substitutes patterns. This walks each code block one tag at a time, parses each span's class attribute, and rebuilds the block from the pieces, then requires the result to be byte-identical to what the sheet carries. It imports nothing from the generator, so it cannot agree with a bug in it, and it is stricter in one place that matters: it REQUIRES the stranded &gt; to follow each mangled span rather than assuming it. Proven not hollow by hand: change one bound in the finished sheet and it names the offset."
+    },
+    {
+      "kind": "live",
+      "name": "the storefront serves readable Java on all 25, and the defect is gone from the blog",
+      "command": "node scripts/verify-code-repair-live.js",
+      "expect": "LIVE VERIFIED 25 of 25",
+      "_why": "Every assertion here is FALSE right now: all 25 articles serve 'class=\"&lt;span\"' today, 200 times between them, and none of them serves the repaired code. It checks all 25 rather than a sample, because a partial Matrixify import is the ordinary failure and a sample would pass through one."
+    }
+  ]
+}
