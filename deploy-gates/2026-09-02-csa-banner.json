@@ -1,0 +1,64 @@
+{
+  "change": "the banner generator gets the committed test its byte guard never had, and the gate learns to pin which assertion a mutation trips",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the banner guard, tested for the first time",
+      "command": "npm run --silent smoke:csabanner",
+      "expect": "38 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the gate's own suite, with the subsumption rule in it",
+      "command": "npm run --silent smoke:deploygate",
+      "expect": "32 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "the byte-preservation guard is real, and it is the one that fires",
+      "file": "scripts/csa-removed-curriculum-banner.js",
+      "find": "  if (after !== BANNER + before) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:csabanner",
+      "expect_failure": "a whitespace-only change OUTSIDE the banner is refused"
+    },
+    {
+      "kind": "mutation",
+      "name": "running it twice really is refused by the skip, not by luck",
+      "file": "scripts/csa-removed-curriculum-banner.js",
+      "find": "  if (body.includes(MARKER)) return { body, changed: false, reason: 'already carries the banner' };",
+      "replace": "  if (false) return { body, changed: false, reason: 'already carries the banner' };",
+      "command": "npm run --silent smoke:csabanner",
+      "expect_failure": "a body that already carries the banner is skipped"
+    },
+    {
+      "kind": "mutation",
+      "name": "the new subsumption rule is not itself hollow",
+      "file": "scripts/deploy-gate.js",
+      "find": "  if (m.expect_failure && !String(res.out || '').includes(m.expect_failure)) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:deploygate",
+      "expect_failure": "with expect_failure naming the masked guard, the gate refuses it"
+    },
+    {
+      "kind": "mutation",
+      "name": "QUOTE_ALL is enforced, not assumed",
+      "file": "scripts/csa-removed-curriculum-banner.js",
+      "find": "  return '﻿' + [HEADER.map(cell).join(',')]",
+      "replace": "  return '﻿' + [HEADER.join(',')]",
+      "command": "npm run --silent smoke:csabanner",
+      "expect_failure": "every field on every line is quoted, header included"
+    },
+    {
+      "kind": "rederive",
+      "name": "the whole pipeline, re-run from a LIVE article rather than from the saved bodies",
+      "command": "node -e \"const cp=require('child_process');const {extractArticle}=require('./scripts/csa-article-body-extract');const {addBanner,verify}=require('./scripts/csa-removed-curriculum-banner');const u='https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/ap-csa-u3-c1-day-11-inheritance-basics';const html=cp.execSync('curl -sSL --max-time 40 '+JSON.stringify(u),{encoding:'utf8',maxBuffer:2e7});const e=extractArticle(html);if(e.error)throw new Error('extract refused: '+e.error);const r=addBanner('live',e.body);if(!r.changed)throw new Error('live page already bannered');const bad=verify('live',e.body,r.body);if(bad.length)throw new Error(bad[0]);if(r.body.slice(1088)!==e.body)throw new Error('body moved');console.log('REDERIVED FROM LIVE '+e.body.length+' body bytes, +'+(r.body.length-e.body.length));\""
+    },
+    {
+      "kind": "live",
+      "name": "production serves what this tree is",
+      "command": "node -e \"const cp=require('child_process');const want=cp.execSync('git rev-parse HEAD',{encoding:'utf8'}).trim().slice(0,7);const h=cp.execSync('curl -sS --max-time 25 https://progress.apcsexamprep.com/api/health',{encoding:'utf8'});const got=JSON.parse(h).commit;if(got!==want)throw new Error('production serves '+got+', this tree is '+want);console.log('PRODUCTION SERVES THIS TREE '+got);\"",
+      "expect": "PRODUCTION SERVES THIS TREE"
+    }
+  ]
+}
