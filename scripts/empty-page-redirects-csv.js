@@ -48,7 +48,28 @@ const fs = require('fs');
 //  sweep decides which pages are EMPTY, and a person decides where an empty URL
 //  is allowed to send a reader. `why` is the second half of the row and the part
 //  a reviewer actually reads.
-const PROPOSALS = [];
+const PROPOSALS = [
+  {
+    path: '/pages/ap-csa',
+    target: '/pages/ap-csa-course',
+    why: "the empty page's OWN title and meta description are "
+      + '"AP Computer Science A 2026-27: Free Full-Year Course" and "all 4 units, 400+ '
+      + 'exercises, a built-in Java editor". /pages/ap-csa-course delivers exactly that: '
+      + '"400+ practice exercises, built-in Java code editor on 39 skill lessons", 29,584 '
+      + 'characters of it. NOT settled: 13 pages link INTO /pages/ap-csa with the anchor '
+      + '"Return to the AP CSA hub", and /pages/ap-csa-exam-prep-hub is the page called that. '
+      + 'The page describes itself as the course; the pages linking to it call it the prep hub.',
+  },
+  {
+    path: '/pages/ap-csp',
+    target: '/pages/ap-csp-course',
+    why: "the empty page's own description is \"all 5 Big Ideas, Python labs, Create Task "
+      + 'guidance and exam practice" and /pages/ap-csp-course\'s is "all 5 Big Ideas with Python '
+      + 'labs, Create Task prep and exam practice", near word for word. 162 authored links '
+      + 'already point at the course, more than at any other CSP hub, and nothing links at all '
+      + 'to the empty page.',
+  },
+];
 
 //  How stale a status code may be before it stops being evidence. A redirect
 //  written against a 200 observed last week is written against a guess.

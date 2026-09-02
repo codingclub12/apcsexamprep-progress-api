@@ -54,7 +54,14 @@ console.log('\n1. THE SHELL IS REAL, READ OFF THE LIVE PAGE');
     .replace(/&#(\d+);/g, (m, d) => String.fromCodePoint(Number(d)))
     .replace(/&#x([0-9a-f]+);/gi, (m, d) => String.fromCodePoint(parseInt(d, 16)))
     .replace(/\s+/g, ' ').trim();
-  ok('its rendered main text is the documented 1448 characters', txt.length === 1448, txt.length);
+  //  CODE POINTS, not UTF-16 units, and the two are not the same here. This
+  //  assertion first read 1450 because the widget carries two astral emoji, a
+  //  school and a book, each of which is one character to Python's html module
+  //  and two to JavaScript's String#length. 1448 is what the board carried and
+  //  what tools/empty-page/rederive.py measures, so the JS side counts the same
+  //  thing rather than the number being adjusted to fit.
+  ok('its rendered main text is the documented 1448 characters',
+    [...txt].length === 1448, { codePoints: [...txt].length, utf16: txt.length });
   ok('and every one of them is the title plus the global contact widget',
     txt.startsWith('AP CSA Get in Touch Whether you'), txt.slice(0, 40));
 
@@ -62,15 +69,42 @@ console.log('\n1. THE SHELL IS REAL, READ OFF THE LIVE PAGE');
   //  is why rendered size can never be the measurement.
   const ev = evidence.get('ap-csa');
   ok('the same page renders over 300 KB of theme', ev.rendered > 300000, ev.rendered);
+
+  //  ── THE TWO CONTROLS, AND THEY ARE THE POINT ──────────────────────────────
+  //  Both of these would be called EMPTY by any measure of authored text or of
+  //  rendered main text, and both are working pages. They are real rows from the
+  //  same sweep, so the threshold is being tested against the store rather than
+  //  against a story about the store.
+  const tb = evidence.get('ap-csp-test-builder');
+  ok('ap-csp-test-builder measures ZERO authored text', tb.text_chars === 0, tb.text_chars);
+  ok('and renders within 120 characters of the empty shell',
+    Math.abs(tb.main_text_chars - 1448) < 120, tb.main_text_chars);
+  ok('and is a 496 KB application, so neither measure may be the threshold',
+    tb.stored_chars > 400000, tb.stored_chars);
+
+  const je = evidence.get('java-editor-test');
+  ok('java-editor-test also measures zero authored text', je.text_chars === 0, je.text_chars);
+  ok('and stores a 497 character Java editor mount, so it is not empty either',
+    je.stored_chars === 497, je.stored_chars);
+
+  //  A page on a template with no rte wrapper is UNRESOLVED, never empty.
+  //  Calling it empty is the failure this repo keeps repeating.
+  const emb = evidence.get('java-sandbox-embed');
+  ok('java-sandbox-embed is reported unresolved rather than empty',
+    emb.outcome === 'template' && emb.stored_chars === undefined, emb.outcome);
+
+  //  The seven, by the only threshold that survives those controls.
+  const seven = [...evidence.values()].filter((r) => r.outcome === 'stored' && r.stored_chars === 0);
+  ok('exactly the seven measured empties are in the fixture', seven.length === 7, seven.map((r) => r.handle));
 }
 
 console.log('\n2. THE REFUSALS, ONE HAZARD AT A TIME');
 {
-  const good = G.PROPOSALS.length
-    ? G.PROPOSALS.slice(0, 1)
-    : [{ path: '/pages/ap-csa', target: '/pages/ap-csa-course', why: 'placeholder for the shape' }];
-  const base = G.check(good, evidence, verified, NOW);
+  const base = G.check(G.PROPOSALS, evidence, verified, NOW);
   ok('the real proposal set verifies clean', base.problems.length === 0, base.problems);
+  ok('and produces exactly the two rows in the delivered sheet',
+    base.rows.length === 2 && base.rows[0].path === '/pages/ap-csa'
+      && base.rows[1].path === '/pages/ap-csp', base.rows.map((r) => r.path));
 
   //  The contract is "any problem at all means no file is written", so a
   //  refusal is proved by the NAMED problem appearing. Asserting on the named
@@ -92,13 +126,24 @@ console.log('\n2. THE REFUSALS, ONE HAZARD AT A TIME');
     null, { at: verified.at, checks: verified.checks.filter((c) => c.path !== '/pages/ap-csp-course') },
     null, 'was not in the verification pass');
 
+  //  THE REFUSAL THAT SAVES A HALF MEGABYTE APPLICATION. Its authored text is
+  //  zero and its rendered main text is inside the empty shell's range, so this
+  //  is the one case where the sheet would have been confidently, silently
+  //  wrong.
+  refuses('refuses a Path that stores a client-side app with zero authored text',
+    [{ path: '/pages/ap-csp-test-builder', target: '/pages/ap-csp-course',
+      why: 'zero authored text, and a rendered shell, and half a megabyte of application' }],
+    null,
+    { at: verified.at, checks: verified.checks.concat([{ path: '/pages/ap-csp-test-builder', status: 200 }]) },
+    null, 'stores 496715 characters. It is not empty');
+
   refuses('refuses a Path that still stores authored text',
     [{ path: '/pages/ap-csa-course', target: '/pages/ap-csp-course', why: 'a populated page' }],
-    null, null, null, 'characters of authored text. It is not empty');
+    null, null, null, 'stores 92090 characters. It is not empty');
 
   refuses('refuses a Target that is empty too',
     [{ path: '/pages/ap-csa', target: '/pages/ap-csp', why: 'nothing to nothing' }],
-    null, null, null, 'so it is empty too');
+    null, null, null, 'This would redirect nothing to nothing');
 
   refuses('refuses a chain, where a Target is itself redirected',
     [{ path: '/pages/ap-csa', target: '/pages/ap-csp', why: 'first hop' },
