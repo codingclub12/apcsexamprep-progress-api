@@ -1,0 +1,112 @@
+{
+  "change": "measure every live page body, enumerate the seven that store nothing, and build the Matrixify redirects sheet for the two rows the evidence settles",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the shell, the two controls that look empty and are not, and every refusal",
+      "command": "npm run --silent smoke:emptyredirects",
+      "expect": "38 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the Matrixify envelope rules, unchanged and still green",
+      "command": "npm run --silent smoke:preflight",
+      "expect": "passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT WOULD REDIRECT A WORKING APPLICATION: emptiness is stored bytes, not text",
+      "file": "scripts/empty-page-redirects-csv.js",
+      "find": "const EMPTY_STORED_MAX = 0;",
+      "replace": "const EMPTY_STORED_MAX = 1000000;",
+      "command": "npm run --silent smoke:emptyredirects",
+      "expect_failure": "[FAIL] refuses a Path that stores a client-side app with zero authored text",
+      "_why": "/pages/ap-csp-test-builder stores 496,715 characters, measures ZERO authored text because the body is one <script>, and renders 1,561 characters of main text against the 1,448 character empty shell. Both a text measure and a rendered measure call it empty. Only the stored size does not."
+    },
+    {
+      "kind": "mutation",
+      "name": "every Target is verified 200 before its row exists",
+      "file": "scripts/empty-page-redirects-csv.js",
+      "find": "    if (st.status !== 200) {",
+      "replace": "    if (false) {",
+      "command": "npm run --silent smoke:emptyredirects",
+      "expect_failure": "[FAIL] refuses a Target that answered anything but 200"
+    },
+    {
+      "kind": "mutation",
+      "name": "a Target with no status code at all is not a verified Target",
+      "file": "scripts/empty-page-redirects-csv.js",
+      "find": "    if (!st) { problems.push(pre + `target ${p.target} was not in the verification pass`); continue; }",
+      "replace": "    if (!st) { problems.push(pre + 'unrelated complaint'); continue; }",
+      "command": "npm run --silent smoke:emptyredirects",
+      "expect_failure": "[FAIL] refuses a Target with no verified status code at all"
+    },
+    {
+      "kind": "mutation",
+      "name": "a Target that is itself empty is a hop to the same nothing",
+      "file": "scripts/empty-page-redirects-csv.js",
+      "find": "    if (dst.text_chars < TARGET_MIN_TEXT) {",
+      "replace": "    if (false) {",
+      "command": "npm run --silent smoke:emptyredirects",
+      "expect_failure": "[FAIL] refuses a Target that is empty too"
+    },
+    {
+      "kind": "mutation",
+      "name": "a chain, where a Target is itself redirected away",
+      "file": "scripts/empty-page-redirects-csv.js",
+      "find": "    if (paths.has(p.target)) {",
+      "replace": "    if (false) {",
+      "command": "npm run --silent smoke:emptyredirects",
+      "expect_failure": "[FAIL] refuses a chain, where a Target is itself redirected"
+    },
+    {
+      "kind": "mutation",
+      "name": "ONE UNVERIFIABLE ROW REFUSES THE WHOLE SHEET, not just its own row",
+      "file": "scripts/empty-page-redirects-csv.js",
+      "find": "  if (rows.length !== proposals.length) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:emptyredirects",
+      "expect_failure": "[FAIL] one bad row refuses the whole sheet rather than just itself",
+      "_why": "A generator that drops the bad row and writes the rest produces a sheet that looks complete and quietly is not."
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT WOULD SHIP A SHEET THAT CANNOT FIRE: the Path is still 200",
+      "file": "scripts/empty-page-redirects-csv.js",
+      "find": "    if (ps.status === 200) {",
+      "replace": "    if (false) {",
+      "command": "npm run --silent smoke:emptyredirects",
+      "expect_failure": "[FAIL] a Path that still answers 200 raises the cannot-fire note",
+      "_why": "Shopify: \"If the URL still loads a valid webpage, then the URL redirect won't work.\" Importing this sheet before the pages are deleted creates redirects that never fire, and Matrixify logs every one of them as created."
+    },
+    {
+      "kind": "mutation",
+      "name": "the BOM, without which a bullet arrives on the store as three characters",
+      "file": "scripts/empty-page-redirects-csv.js",
+      "find": "  return '﻿' + lines.join('\\r\\n') + '\\r\\n';",
+      "replace": "  return lines.join('\\r\\n') + '\\r\\n';",
+      "command": "npm run --silent smoke:emptyredirects",
+      "expect_failure": "[FAIL] starts with a UTF-8 BOM"
+    },
+    {
+      "kind": "rederive",
+      "name": "a SECOND implementation, in Python, that never looks for the rte wrapper",
+      "command": "python3 tools/empty-page/rederive.py imports/2026-09-02/empty-course-head-redirects.csv",
+      "expect": "REDERIVE OK",
+      "_why": "The JS side bounds the stored body by finding the theme's rte wrapper and counting div opens against closes. This one takes <main>, removes the page title and the 1,441 character global contact widget, and requires the remainder to be empty. It reproduces the board's own numbers to the character: 1448, 31077 and 7409."
+    },
+    {
+      "kind": "rederive",
+      "name": "the envelope, read by the preflight that did not write the file",
+      "command": "node scripts/matrixify-preflight.js imports/2026-09-02/empty-course-head-redirects.csv --expect-command MERGE",
+      "expect": "clear to import"
+    },
+    {
+      "kind": "live",
+      "name": "the two head-term URLs 301 to their hubs",
+      "command": "node -e \"const cp=require('child_process');const want=[['/pages/ap-csa','/pages/ap-csa-course'],['/pages/ap-csp','/pages/ap-csp-course']];for(const [p,t] of want){const out=cp.execSync('curl -sS -o /dev/null -D - --max-time 40 -A \\\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\\\" https://www.apcsexamprep.com'+p,{encoding:'utf8'});const code=(/^HTTP\\\\/[\\\\d.]+ (\\\\d+)/m.exec(out)||[])[1];const loc=(/^location: (.*)$/im.exec(out)||[])[1];if(code!=='301')throw new Error(p+' answered '+code+', not 301');if(!String(loc||'').includes(t))throw new Error(p+' redirects to '+loc+', not '+t);}console.log('BOTH HEAD TERMS NOW 301 TO THEIR HUBS');\"",
+      "expect": "BOTH HEAD TERMS NOW 301 TO THEIR HUBS",
+      "_why": "FALSE TODAY, and measured rather than assumed: verification.json records both paths answering HTTP 200 with 354,518 and 352,055 bytes at 2026-09-02T17:48:01Z. This assertion cannot pass until a human deletes the two empty pages AND the sheet is imported, which is exactly the state change it exists to pin."
+    }
+  ]
+}

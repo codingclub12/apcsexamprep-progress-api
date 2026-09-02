@@ -1,0 +1,27 @@
+{
+  "at": "2026-09-02T17:48:01.896Z",
+  "store": "https://www.apcsexamprep.com",
+  "method": "GET, redirect: manual",
+  "checks": [
+    {
+      "path": "/pages/ap-csa",
+      "status": 200,
+      "bytes": 354518
+    },
+    {
+      "path": "/pages/ap-csa-course",
+      "status": 200,
+      "bytes": 444948
+    },
+    {
+      "path": "/pages/ap-csp",
+      "status": 200,
+      "bytes": 352055
+    },
+    {
+      "path": "/pages/ap-csp-course",
+      "status": 200,
+      "bytes": 392577
+    }
+  ]
+}
