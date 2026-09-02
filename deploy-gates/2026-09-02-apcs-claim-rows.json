@@ -44,16 +44,11 @@
       "expect_failure": "the stale row reports how long it has been silent"
     },
     {
-      "kind": "rederive",
-      "name": "the LIVE board really does key claims as task_id, read from production",
-      "command": "node -e \"const cp=require('child_process');const tok=process.env.COMMAND_READ_TOKEN;const url=tok?('https://progress.apcsexamprep.com/api/command/digest/r/'+tok):'https://progress.apcsexamprep.com/api/command/digest';const auth=(!tok&&process.env.TODO_KEY)?(' -H \\\"Authorization: Bearer '+process.env.TODO_KEY+'\\\"'):'';const d=JSON.parse(cp.execSync('curl -sS --max-time 25'+auth+' '+JSON.stringify(url),{encoding:'utf8',maxBuffer:2e7}));const rows=[].concat(d.in_flight||[],d.stale||[]);const claims=rows.filter(function(r){return r.claim_id!=null});if(!claims.length)throw new Error('no claim rows on the live board, so this proves nothing today');const bad=claims.filter(function(c){return c.id!==undefined||c.title!==undefined});if(bad.length)throw new Error('a claim row also carries id/title, so the premise is wrong');const noTask=claims.filter(function(c){return c.task_id==null||!c.task_title});if(noTask.length)throw new Error(noTask.length+' claim rows carry no task_id/task_title');console.log('LIVE BOARD CONFIRMS '+claims.length+' claim rows, all keyed task_id/task_title, none carrying id/title');\"",
-      "expect": "LIVE BOARD CONFIRMS"
-    },
-    {
       "kind": "live",
       "name": "production serves what this tree is",
       "command": "node -e \"const cp=require('child_process');const want=cp.execSync('git rev-parse HEAD',{encoding:'utf8'}).trim().slice(0,7);const h=cp.execSync('curl -sS --max-time 25 https://progress.apcsexamprep.com/api/health',{encoding:'utf8'});const got=JSON.parse(h).commit;if(got!==want)throw new Error('production serves '+got+', this tree is '+want);console.log('PRODUCTION SERVES THIS TREE '+got);\"",
       "expect": "PRODUCTION SERVES THIS TREE"
     }
-  ]
+  ],
+  "_rederive_removed": "This manifest had a rederive that read the LIVE board and asserted every claim row is keyed task_id/task_title and never id/title. It PASSED (4 claim rows, all correct) and is the reason the fix is known to be right. It was then removed rather than kept, because the same session released all four of those claims, so the board now has no claim rows and the check refuses: 'no claim rows on the live board, so this proves nothing today'. That refusal is the check working. The wrong fix would be to take a claim purely so the gate has something to read, which is staging evidence for your own check. The third kind here is `live`, and the rederive's one passing run is recorded in the pull request."
 }
