@@ -1,0 +1,100 @@
+{
+  "change": "board 163: the Matrixify sheet that publishes the 17 CSP exercise-2 pages the storefront answers 404 for, 102 graded questions written and never imported",
+  "_artifact": "imports/2026-09-02/csp-exercise-2-publish-17-pages.csv, md5 2e96a71b28a83e5cbde9e5abf07620e2",
+  "_note": "This gate covers the SHEET and the guards around it. The import itself is a human act against a live store and is not performed here. Run --pre before handover, and again without --pre after the import lands, when the live check can observe the 17 pages it currently cannot.",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the generator, its refusals, and the CED resolver",
+      "command": "npm run --silent smoke:csppages",
+      "expect": "65 passed, 0 failed"
+    },
+    {
+      "kind": "rederive",
+      "name": "a Python reader recomputes the sheet from the raw bytes and the raw probe",
+      "command": "python3 tools/csp-exercise-2/rederive_sheet.py imports/2026-09-02/csp-exercise-2-publish-17-pages.csv smoke/fixtures/csp-exercise-2-live-status.jsonl",
+      "expect": "REDERIVED INDEPENDENTLY",
+      "_why": "Different language, different CSV reader, never imports the generator or lib/csp-course-pages.js. It recounts the 404 set out of the JSONL and requires the sheet's handle set to be exactly that set: not a subset, which would silently drop a page somebody counted, and not a superset, which would write a Body HTML over a live page."
+    },
+    {
+      "kind": "rederive",
+      "name": "the house Matrixify preflight, which knows nothing about this page family",
+      "command": "node scripts/matrixify-preflight.js imports/2026-09-02/csp-exercise-2-publish-17-pages.csv",
+      "expect": "clear to import"
+    },
+    {
+      "kind": "mutation",
+      "name": "an unfinished body must not be publishable",
+      "file": "scripts/csp-pages-csv.js",
+      "find": "const MIN_BODY_BYTES = 2 * 1024;",
+      "replace": "const MIN_BODY_BYTES = 0;",
+      "command": "npm run --silent smoke:csppages",
+      "expect_failure": "[FAIL] 11.1 a body under 2000 bytes is REFUSED"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT SEPARATES A PUBLISH FROM A REWRITE",
+      "file": "scripts/csp-pages-csv.js",
+      "find": "      } else if (r.status !== 404) {",
+      "replace": "      } else if (false) {",
+      "command": "npm run --silent smoke:csppages",
+      "expect_failure": "[FAIL] 11.2 a handle the storefront already serves is REFUSED",
+      "_why": "18 of these 35 handles already resolve. Every row carries Body HTML, so a row for a live handle overwrites a page nobody meant to touch and Matrixify reports it as a success."
+    },
+    {
+      "kind": "mutation",
+      "name": "unmeasured is not missing, and a 429 is not a 404",
+      "file": "scripts/csp-pages-csv.js",
+      "find": "      const r = status.get(p.handle);\n      if (!r) {",
+      "replace": "      const r = status.get(p.handle) || { status: 404 };\n      if (!r) {",
+      "command": "npm run --silent smoke:csppages",
+      "expect_failure": "[FAIL] 11.3 a handle with no measurement at all is REFUSED",
+      "_why": "Board item #79 records 46 pages of this storefront answering 429 during a crawl. Defaulting an absent measurement to 404 is exactly how a publish becomes an overwrite."
+    },
+    {
+      "kind": "mutation",
+      "name": "a page must not ship with its own links dead",
+      "file": "scripts/csp-pages-csv.js",
+      "find": "        } else if (t.status !== 200) {",
+      "replace": "        } else if (false) {",
+      "command": "npm run --silent smoke:csppages",
+      "expect_failure": "[FAIL] 11.4 a body linking a handle that is not live is REFUSED"
+    },
+    {
+      "kind": "mutation",
+      "name": "the CED detector itself, both code shapes",
+      "file": "scripts/csp-pages-csv.js",
+      "find": "function cedCodesVisible(body) {\n  const found = [];",
+      "replace": "function cedCodesVisible(body) {\n  const found = [];\n  return found;",
+      "command": "npm run --silent smoke:csppages",
+      "expect_failure": "[FAIL] 11.5 a CED Essential Knowledge code in student-visible text is REFUSED (AP CSP shape)"
+    },
+    {
+      "kind": "mutation",
+      "name": "the CED detector is actually CONSULTED, proven from the renderer down",
+      "file": "lib/csp-course-pages.js",
+      "find": "<div class=\"mcq-q-num\">Question ${i + 1} of ${n}<span class=\"diff-tag\">",
+      "replace": "<div class=\"mcq-q-num\">Question ${i + 1} of ${n} EK AAP-2.K.4<span class=\"diff-tag\">",
+      "command": "npm run --silent smoke:csppages",
+      "expect_failure": "[FAIL] 11.9 the generator writes the sheet only because no body carries a CED code",
+      "_why": "No real body carries a CED code, so a detector that works perfectly and is never called would pass every other check. This makes the renderer emit one and requires the generator to stop, which is the only way to prove the refusal is reached rather than merely written."
+    },
+    {
+      "kind": "mutation",
+      "name": "an href inside a script block is not a link, which this repo has already got wrong",
+      "file": "scripts/csp-pages-csv.js",
+      "find": "  const markup = String(body).replace(/<script[\\s\\S]*?<\\/script>/g, '');",
+      "replace": "  const markup = String(body);",
+      "command": "npm run --silent smoke:csppages",
+      "expect_failure": "[FAIL] 11.6 a /pages/ href inside a script block is NOT counted as a link",
+      "_why": "A dead-link scan here once read href=\"/pages/'+prev.handle+'\" out of a script block and reported 141 dead links that were string concatenation."
+    },
+    {
+      "kind": "live",
+      "name": "all 17 return 200 and serve their six graded questions",
+      "command": "node scripts/csp-exercise-2-live-status.js verify imports/2026-09-02/csp-exercise-2-publish-17-handles.txt",
+      "expect": "PUBLISHED AND SERVING",
+      "_why": "FALSE TODAY, and measured as false rather than assumed: on 2026-09-02 all 17 answered HTTP 404, recorded per handle with a timestamp in smoke/fixtures/csp-exercise-2-live-status.jsonl. A Shopify 404 still returns a full 300 KB themed document, so the status code alone proves nothing after the import either. This asserts the wrapper id only the exercise-2 renderer emits AND counts the six mcq-item blocks, so a 200 serving the 404 template and a page that lost half its questions in the import both fail."
+    }
+  ]
+}

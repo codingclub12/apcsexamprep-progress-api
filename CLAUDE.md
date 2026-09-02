@@ -441,8 +441,14 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   evidence for a claim (this is not assessed, that belongs to Unit 2), in the
   collapsed coverage table a teacher audits, or in a teacher-facing answer key.
   The rebuilt Topic 1.1 lesson shipped with 218 of them in student-visible text
-  before anyone noticed. `docs/ap-cyber-unit1-ced-realignment.md`, under "Citing
-  the CED to students", has the full rule; `tools/ap-cyber-ced/validate_csv.py`
-  counts them.
+  before anyone noticed, and AP CSP handout exercise pages are shipping them
+  today. `docs/ap-cyber-unit1-ced-realignment.md`, under "Citing the CED to
+  students", has the full rule. `lib/cyber-ek-density.js` is the module that
+  finds them and knows which placements are protected; go through it rather
+  than writing a second opinion about the convention.
+  `tools/ap-cyber-ced/validate_csv.py` does NOT count them, whatever this file
+  said until 2026-09-02: it has no EK check at all and is shaped for AP
+  Cybersecurity page structure. Naming the wrong tool here is worse than naming
+  none, because the check comes back clean.
 - No em-dashes in any prose, comments, commit messages, or user-facing strings.
 - AP CSA references use the 2025-2026 4-unit structure exclusively.
