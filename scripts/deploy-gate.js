@@ -39,6 +39,14 @@
 //  mandatory, and so is at least one of `live` or `rederive`, because `suite`
 //  plus `mutation` still only ever examines this repo talking to itself.
 //
+//  A LIVE CHECK MUST ASSERT SOMETHING THAT WAS FALSE BEFORE THE DEPLOY.
+//  This gate's own first manifest expected `"status":"ok"` from /api/health.
+//  That was true before the deploy, true during it, and true if the deploy never
+//  happened at all, so it verified nothing while reading like proof. Pin the
+//  thing the change made true: the commit sha now serving, a byte string only
+//  the new build emits, a count that moved. If the assertion would have passed
+//  yesterday, it is decoration.
+//
 //  Usage:
 //    node scripts/deploy-gate.js <manifest.json>
 //    node scripts/deploy-gate.js <manifest.json> --pre    (skip `live` checks,
