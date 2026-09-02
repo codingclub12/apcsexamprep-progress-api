@@ -187,11 +187,30 @@ function preflight(path, opts) {
         problems.push('raw emoji present in a body, and no original was supplied to show '
           + 'it was already there. Pass --carrying <handle-to-body.json> for a round-trip.');
       } else {
-        const had = (String(original).match(EMOJI) || []).length;
-        if (found.length > had) {
-          problems.push(`a body gained ${found.length - had} emoji that the live page does not have`);
+        //  THE RULE IS THE GLYPH SET, NOT THE COUNT, and the difference is not a
+        //  convenience. Counting instances forbids ADDING A ROW to a list where
+        //  every row carries an icon: the Cyber Command Center resource rows all
+        //  have one, so a new row either invents an icon or renders an empty
+        //  icon slot. Neither is what the handoff is protecting against.
+        //
+        //  What it IS protecting against is an emoji turning up in content where
+        //  none belongs, and the mojibake that follows a bad encoding. A glyph
+        //  the page did not already use is exactly that, and is still refused.
+        //  More of a glyph it already uses, in the slot it already uses it in,
+        //  is not, and is reported so it is never silent.
+        const glyphs = (t) => new Set(String(t).match(EMOJI) || []);
+        const had = glyphs(original);
+        const now = glyphs(cellText);
+        const introduced = [...now].filter((g) => !had.has(g));
+        if (introduced.length) {
+          problems.push(`a body introduces ${introduced.length} emoji the live page does not use `
+            + `(${introduced.map((g) => 'U+' + g.codePointAt(0).toString(16).toUpperCase()).join(', ')})`);
         } else {
           carriedEmoji += found.length;
+          const extra = found.length - (String(original).match(EMOJI) || []).length;
+          if (extra > 0) {
+            notes.push(`${extra} more instance(s) of emoji the page already uses, no new glyph.`);
+          }
         }
       }
     }

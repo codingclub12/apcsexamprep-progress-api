@@ -185,9 +185,24 @@ console.log('\n8. EMOJI: carried is not the same as introduced');
   ok('  and the carried emoji are counted, not silently ignored',
     carried.notes.some((n) => /emoji carried through/.test(n)), carried.notes);
 
-  const added = preflight(write('e3-blog-posts.csv', HDR,
+  //  A NEW GLYPH is the hazard, and is refused.
+  const NEW = String.fromCodePoint(0x1F680);
+  const newGlyph = preflight(write('e3-blog-posts.csv', HDR,
+    [['b', 'h', 'MERGE', '<p>' + E + NEW + '</p>']]), { carrying: live });
+  ok('  a row that introduces a glyph the page never had is refused',
+    has(newGlyph, /introduces 1 emoji/), newGlyph.problems);
+  ok('  and the refusal names the code point',
+    has(newGlyph, /U\+1F680/), newGlyph.problems);
+
+  //  MORE OF A GLYPH THE PAGE ALREADY USES is not, because forbidding it would
+  //  forbid adding a row to a list where every row carries an icon.
+  const moreOfSame = preflight(write('e3b-blog-posts.csv', HDR,
     [['b', 'h', 'MERGE', '<p>' + E + E + ' now two</p>']]), { carrying: live });
-  ok('  a row that ADDS an emoji is still refused', has(added, /gained 1 emoji/), added.problems);
+  ok('  a second instance of an icon the page already uses is allowed',
+    moreOfSame.problems.length === 0, moreOfSame.problems);
+  ok('  and the extra instance is reported, never silent',
+    moreOfSame.notes.some((n) => /more instance\(s\) of emoji the page already uses/.test(n)),
+    moreOfSame.notes);
 
   const other = preflight(write('e4-blog-posts.csv', HDR,
     [['b', 'other-handle', 'MERGE', '<p>' + E + '</p>']]), { carrying: live });
