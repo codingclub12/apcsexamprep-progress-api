@@ -127,13 +127,41 @@ function preflight(path, opts) {
   if (unquoted.length) problems.push(`${unquoted.length} line(s) are not fully quoted`);
   if (!/\r\n/.test(raw)) notes.push('line terminator is not CRLF');
 
-  const bi = col('Body HTML');
-  if (bi !== -1) {
-    const blank = body.filter((r) => !String(r[bi] || '').trim());
-    if (blank.length) {
-      problems.push(`${blank.length} row(s) carry a BLANK Body HTML. That does not mean leave it `
-        + 'alone, it means set the body to empty, and it would wipe those pages.');
+  //  A BLANK CELL IS AN ERASE, IN EVERY COLUMN, NOT JUST Body HTML.
+  //
+  //  The handoff states this about Body HTML and that is where it hurts most, but
+  //  the mechanism is general: Matrixify writes what you give it. A sheet built
+  //  to roll ten page Titles carried a title_tag column because ONE of the ten
+  //  also needed that, so nine rows had an empty title_tag cell. It would have
+  //  cleared the SEO title on nine live pages, one of which had already been
+  //  migrated correctly by hand.
+  //
+  //  IDENTIFIER columns are exempt: they address the row rather than set it.
+  //  Body HTML keeps its OWN message and is checked first, because it is the
+  //  costliest instance and "it would wipe those pages" is what makes somebody
+  //  stop. Folding it into the general rule made the general rule shadow it,
+  //  which the suite caught by asserting on the message rather than the refusal.
+  const IDENTIFIER = /^(ID|Handle|Command|Blog: Handle|Blog: ID|Blog: Title)$/i;
+  const bodyIdx = col('Body HTML');
+  if (bodyIdx !== -1) {
+    const blankBody = body.filter((r) => !String(r[bodyIdx] || '').trim());
+    if (blankBody.length) {
+      problems.push(`${blankBody.length} row(s) carry a BLANK Body HTML. That does not mean leave `
+        + 'it alone, it means set the body to empty, and it would wipe those pages.');
     }
+  }
+  for (let i = 0; i < header.length; i++) {
+    if (IDENTIFIER.test(String(header[i]).trim())) continue;
+    if (i === bodyIdx) continue;
+    const blank = body.filter((r) => !String(r[i] || '').trim());
+    if (!blank.length) continue;
+    problems.push(`${blank.length} of ${body.length} row(s) carry a BLANK `
+      + `${JSON.stringify(header[i])}. A blank cell does not mean leave it alone, it means set `
+      + 'it to empty. Split the sheet so every column is one every row is changing.');
+  }
+
+  const bi = bodyIdx;
+  if (bi !== -1) {
     const isXlsx = /\.xlsx$/i.test(name);
     const cap = isXlsx ? XLSX_CELL_LIMIT : CSV_LARGE_CELL;
     const over = body.filter((r) => String(r[bi] || '').length > cap);

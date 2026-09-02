@@ -184,7 +184,8 @@
     "smoke:csabanner": "node smoke/csa-removed-curriculum-banner.js",
     "smoke:crawlnotes": "node smoke/crawl-annotations.js",
     "smoke:preflight": "node smoke/matrixify-preflight.js",
-    "smoke:ccrows": "node smoke/cyber-cc-unit-test-rows.js"
+    "smoke:ccrows": "node smoke/cyber-cc-unit-test-rows.js",
+    "smoke:schoolyear": "node smoke/school-year-rollover.js"
   },
   "keywords": [],
   "author": "",

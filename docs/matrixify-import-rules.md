@@ -20,10 +20,21 @@ ignores a column it does not recognise.
 **Only the columns you are changing, plus `Handle` and `Command`.** A column
 present in the file is a column Matrixify will write.
 
-**`Body HTML` is destructive.** A blank cell does not mean "leave it alone", it
-means "set the body to empty". One sheet that updated SEO titles across 40 pages
-with `Body HTML` left in the header and blank would wipe all 40 bodies. If a
-batch mixes body rewrites and metadata-only changes, split it into two files.
+**A BLANK CELL IS AN ERASE, IN EVERY COLUMN.** The handoff states this about
+`Body HTML`, which is where it costs most: a blank cell does not mean "leave it
+alone", it means "set the body to empty", so an SEO-title sheet with `Body HTML`
+left in the header would wipe every page in it.
+
+The mechanism is not specific to `Body HTML`. Matrixify writes what you give it.
+A sheet built to roll ten page Titles carried a `title_tag` column because ONE of
+the ten also needed that, leaving nine empty `title_tag` cells: it would have
+cleared the SEO title on nine live pages, one of which had already been migrated
+to 2026-27 by hand.
+
+So the rule is: **a sheet may only carry a column that every one of its rows is
+changing.** Split by field, not by convenience. Identifier columns (`Handle`,
+`Command`, `Blog: Handle`, `ID`) are exempt, because they address the row rather
+than set it. `scripts/matrixify-preflight.js` enforces this.
 
 **Never write a live server time into `Published At`.** Use `2026-03-01` for this
 store, or omit the column. A churning publish date scrambles sort order and feed
@@ -108,6 +119,35 @@ there. Proving the difference needs the original, which `--carrying
 <handle-to-body.json>` supplies. With no original, the safe reading is
 "introduced", so a round-trip sheet must pass its before-snapshot or it will be
 refused. Never author new emoji into page content.
+
+## "2025-2026" means two things, and only one of them is stale
+
+`scripts/school-year-rollover.js` exists because the nightly crawl flags both and
+cannot tell them apart.
+
+    THE SCHOOL YEAR    "AP CSA Exam Prep (2025-2026)", "Study Guides | All 4
+                       Units (2025-2026)". A teacher choosing a curriculum in
+                       September reads the year and moves on. This rolls.
+
+    THE SPECIFICATION  "Aligned to the 2025-2026 4-unit curriculum", "removed in
+                       the 2025-2026 course redesign", "Not on the 2025-2026
+                       exam". That is the NAME of the curriculum. CLAUDE.md says
+                       AP CSA references use the 2025-2026 4-unit structure
+                       exclusively, so rolling it makes the sentence false.
+
+The hard pair, because both put the year in front of the word exam:
+
+    "Not on the 2025-2026 exam"        the specification.  Refused.
+    "2025-2026 Exam Prep"              a school year.      Rolled.
+
+What separates them is the definite article, not the following noun. "THE
+2025-2026 exam" is one particular exam; "2025-2026 Exam Prep" is a service named
+after a year. That rule was found by pointing the tool at strings already live,
+one of which was a banner shipped hours earlier.
+
+Both dash forms are in use on this store, ASCII hyphen and en dash, and the roll
+preserves whichever it found. It never touches a handle: one article handle ends
+in `-2025-2026`, and renaming a handle is on the NEVER_AUTO list.
 
 ## Ship one row first
 
