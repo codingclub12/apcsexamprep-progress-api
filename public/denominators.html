@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>APCSExamPrep - Denominators</title>
+<!--
+  DENOMINATORS PANEL
+  The authored "out of" per graded column, and the one place it can be changed
+  without a terminal.
+
+  WHY THIS PAGE EXISTS
+  Adopting a denominator was reachable only by POSTing to
+  /api/admin/denominators/adopt with the x-admin-key header. That is a
+  reasonable API and a poor operation: it put a full read-plus-write credential
+  on a command line for a routine task, and the quoting defeated the operator
+  often enough that seven wrong denominators sat live while classes ran on them.
+
+  WHAT A WRONG NUMBER COSTS, so the guard rails below read as necessary rather
+  than fussy. A denominator IS the grade for a cyber lesson: the percent is the
+  only thing that reaches the gradebook, so an authored 4 against a page serving
+  24 records a perfect paper as 600 percent, and an absent one drops the column
+  out of the points sum entirely. Adopting a guessed value silently regrades a
+  live class, which is why nothing here is checked by default unless every
+  student who submitted it agrees on the same total.
+
+  THE KEY NEVER LEAVES THE BROWSER
+  It is held in a closure for the life of the page, never written to
+  localStorage, sessionStorage, a cookie, or the URL, and cleared on unload. The
+  field is type=password so it does not shoulder-surf or land in a screenshot.
+  Reads ride the httpOnly admin cookie; only the two mutations need the key,
+  which is the existing CSRF posture on routes/admin.js and not something this
+  page relaxes.
+
+  Zero PII: author content only. Column totals and per-column student COUNTS,
+  never a student, a name, or a score.
+  No em-dashes, per repo convention. Pure ASCII.
+-->
+<style>
+  :root {
+    color-scheme: light dark;
+    --plane:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --border:rgba(11,11,11,0.10);
+    --good:#0ca30c; --critical:#d03b3b; --warnc:#eda100; --accent:#2a78d6;
+    --shadow:0 1px 2px rgba(11,11,11,0.04),0 1px 3px rgba(11,11,11,0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --plane:#0d0d0d; --surface:#1a1a19; --ink:#fff; --ink-2:#c3c2b7; --muted:#898781;
+      --grid:#2c2c2a; --border:rgba(255,255,255,0.10);
+      --good:#3fbf6a; --critical:#e66767; --warnc:#c98500; --accent:#3987e5; --shadow:none;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin:0; background:var(--plane); color:var(--ink);
+    font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; -webkit-font-smoothing:antialiased;
+  }
+  .wrap { max-width:1180px; margin:0 auto; padding:24px 20px 80px; }
+  header { display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:4px; }
+  h1 { margin:0; font-size:20px; letter-spacing:-0.01em; }
+  .sub { color:var(--ink-2); font-size:13px; margin:0 0 20px; max-width:70ch; }
+  nav a { color:var(--accent); text-decoration:none; font-size:13px; margin-right:12px; }
+  nav a:hover { text-decoration:underline; }
+  .card {
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    box-shadow:var(--shadow); padding:16px 18px; margin-bottom:16px;
+  }
+  .row { display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap; }
+  label { display:block; font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:5px; }
+  select, input[type=password] {
+    font:inherit; color:var(--ink); background:var(--plane);
+    border:1px solid var(--border); border-radius:8px; padding:8px 10px;
+  }
+  input[type=password] { min-width:280px; font-family:ui-monospace,Menlo,monospace; }
+  button {
+    font:inherit; font-weight:600; cursor:pointer; border:none; border-radius:8px;
+    padding:9px 16px; background:var(--accent); color:#fff;
+  }
+  button.ghost { background:transparent; color:var(--accent); border:1px solid var(--border); }
+  button.danger { background:var(--critical); }
+  button:disabled { opacity:.45; cursor:default; }
+  .chips { display:flex; gap:8px; flex-wrap:wrap; margin:14px 0 0; }
+  .chip {
+    font-size:12px; padding:4px 10px; border-radius:999px;
+    border:1px solid var(--border); color:var(--ink-2); background:var(--plane);
+  }
+  .chip b { color:var(--ink); font-variant-numeric:tabular-nums; }
+  .chip.bad b { color:var(--critical); }
+  .chip.warn b { color:var(--warnc); }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th, td { text-align:left; padding:7px 9px; border-bottom:1px solid var(--grid); vertical-align:middle; }
+  th { font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); font-weight:600; }
+  td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+  tr.actionable { background:color-mix(in srgb, var(--warnc) 7%, transparent); }
+  tr.unsafe td.agree { color:var(--critical); font-weight:600; }
+  tr.settled { opacity:.55; }
+  .tag { font-size:11px; padding:2px 7px; border-radius:5px; border:1px solid var(--border); color:var(--ink-2); }
+  .tag.conflict { color:var(--critical); border-color:var(--critical); }
+  .tag.proposed { color:var(--warnc); border-color:var(--warnc); }
+  .arrow { color:var(--muted); }
+  .to { color:var(--good); font-weight:700; }
+  .scroll { overflow-x:auto; }
+  pre {
+    background:var(--plane); border:1px solid var(--border); border-radius:8px;
+    padding:12px; font-size:12px; font-family:ui-monospace,Menlo,monospace;
+    max-height:340px; overflow:auto; margin:12px 0 0; white-space:pre-wrap; word-break:break-word;
+  }
+  .msg { font-size:13px; margin-top:10px; min-height:18px; }
+  .msg.err { color:var(--critical); }
+  .msg.ok { color:var(--good); }
+  .warnbox {
+    border:1px solid var(--warnc); background:color-mix(in srgb, var(--warnc) 10%, transparent);
+    border-radius:8px; padding:11px 13px; font-size:13px; margin-top:12px; color:var(--ink);
+  }
+  .foot { color:var(--muted); font-size:12px; margin-top:6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Denominators</h1>
+    <nav>
+      <a href="/admin/command">Command</a><a href="/admin/gradebook">Gradebook</a><a href="/admin/teachers">Teachers</a><a href="/admin/dashboard">Dashboard</a>
+    </nav>
+  </header>
+  <p class="sub">
+    The authored "out of" for every graded column, next to what students actually
+    submitted. A denominator is the grade for these courses, so a wrong one is not
+    a display bug. Only columns where every submitting student agrees on the same
+    total are pre-selected.
+  </p>
+
+  <div class="card">
+    <div class="row">
+      <div>
+        <label for="course">Course</label>
+        <select id="course">
+          <option value="ap-cybersecurity">AP Cybersecurity</option>
+          <option value="ap-csa">AP Computer Science A</option>
+          <option value="ap-csp">AP Computer Science Principles</option>
+          <option value="intro-java">Intro to Java with Greenfoot</option>
+          <option value="ap-networking">AP Networking</option>
+        </select>
+      </div>
+      <button id="reload" class="ghost">Refresh</button>
+    </div>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <div class="card">
+    <div class="scroll"><table id="tbl">
+      <thead><tr>
+        <th style="width:34px"></th>
+        <th>Lesson</th><th>Activity</th>
+        <th class="num">Authored</th><th class="num">Observed</th>
+        <th class="num">Students</th><th class="num agree">Agree</th>
+        <th>Status</th><th>Change</th>
+      </tr></thead>
+      <tbody id="body"><tr><td colspan="9" style="color:var(--muted)">Loading...</td></tr></tbody>
+    </table></div>
+    <div class="foot" id="foot"></div>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <div>
+        <label for="key">Admin key</label>
+        <input id="key" type="password" autocomplete="off" spellcheck="false" placeholder="x-admin-key" />
+      </div>
+      <button id="preview">Preview changes</button>
+      <button id="apply" disabled>Apply</button>
+      <span class="msg" id="msg"></span>
+    </div>
+    <div class="warnbox">
+      Reads use your admin session. Only Preview and Apply send the key, because the
+      session cookie is accepted for safe methods only. The key stays in this tab,
+      is never stored, and is cleared when the page closes. Apply unlocks only
+      after a preview that matches your selection.
+    </div>
+    <pre id="out" hidden></pre>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // Every submitting student must have reported the same total. Anything less
+  // means two page variants are live and one cohort would be regraded wrongly,
+  // which is a content problem and cannot be resolved by choosing a number.
+  var SAFE_AGREEMENT = 100;
+
+  var els = {
+    course: document.getElementById("course"), reload: document.getElementById("reload"),
+    chips: document.getElementById("chips"), body: document.getElementById("body"),
+    foot: document.getElementById("foot"), key: document.getElementById("key"),
+    preview: document.getElementById("preview"), apply: document.getElementById("apply"),
+    msg: document.getElementById("msg"), out: document.getElementById("out")
+  };
+
+  var columns = [];
+  var previewedFor = null;   // JSON of the selection the last good preview covered
+
+  function say(text, kind) {
+    els.msg.textContent = text || "";
+    els.msg.className = "msg" + (kind ? " " + kind : "");
+  }
+  function cell(row, text, cls) {
+    var td = row.insertCell();
+    if (cls) td.className = cls;
+    td.textContent = text == null ? "" : String(text);
+    return td;
+  }
+
+  // A column is actionable when adopting would change something: the authored
+  // value disagrees with what students report, or there is no authored value and
+  // the data proposes one.
+  function target(c) {
+    if (!c.graded) return null;
+    var proposed = c.proposal != null ? c.proposal : c.observed_mode;
+    if (proposed == null || !(proposed > 0)) return null;
+    if (c.authored == null) return proposed;
+    return c.authored !== proposed ? proposed : null;
+  }
+
+  function render(data) {
+    columns = (data.columns || []).slice();
+    var s = data.summary || {};
+    els.chips.innerHTML = "";
+    [["graded columns", s.graded_columns, ""], ["authored", s.authored, ""],
+     ["conflicts", s.conflicts, "bad"], ["missing", s.missing, "warn"],
+     ["proposed", s.proposed, "warn"], ["no data", s.no_data, ""]
+    ].forEach(function (p) {
+      if (p[1] == null) return;
+      var d = document.createElement("span");
+      d.className = "chip " + p[2];
+      d.appendChild(document.createTextNode(p[0] + " "));
+      var b = document.createElement("b"); b.textContent = String(p[1]);
+      d.appendChild(b); els.chips.appendChild(d);
+    });
+
+    // Actionable rows first, then the settled ones for context.
+    var rows = columns.filter(function (c) { return c.graded; }).sort(function (a, b) {
+      var ta = target(a) != null, tb = target(b) != null;
+      if (ta !== tb) return ta ? -1 : 1;
+      return (a.lesson + a.activity_type).localeCompare(b.lesson + b.activity_type);
+    });
+
+    els.body.innerHTML = "";
+    var actionable = 0, safe = 0;
+    rows.forEach(function (c) {
+      var t = target(c);
+      var tr = els.body.insertRow();
+      var isSafe = t != null && c.agreement_pct >= SAFE_AGREEMENT && c.students_scored > 0;
+      if (t != null) { actionable++; tr.className = isSafe ? "actionable" : "actionable unsafe"; }
+      else tr.className = "settled";
+      if (isSafe) safe++;
+
+      var box = tr.insertCell();
+      if (t != null) {
+        var cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.checked = isSafe;               // safe rows only, by default
+        cb.dataset.key = c.lesson + "|" + c.activity_type;
+        cb.dataset.value = String(t);
+        cb.addEventListener("change", invalidate);
+        box.appendChild(cb);
+      }
+      cell(tr, c.lesson);
+      cell(tr, c.activity_type);
+      cell(tr, c.authored == null ? "none" : c.authored, "num");
+      cell(tr, c.observed_mode == null ? "" : c.observed_mode, "num");
+      cell(tr, c.students_scored, "num");
+      cell(tr, c.students_scored ? c.agreement_pct + "%" : "", "num agree");
+
+      var st = tr.insertCell();
+      if (c.conflict) { var g = document.createElement("span"); g.className = "tag conflict"; g.textContent = "conflict"; st.appendChild(g); }
+      else if (c.status === "proposed" || c.authored == null) { var p = document.createElement("span"); p.className = "tag proposed"; p.textContent = c.status; st.appendChild(p); }
+      else { var k = document.createElement("span"); k.className = "tag"; k.textContent = c.status; st.appendChild(k); }
+
+      var ch = tr.insertCell();
+      if (t != null) {
+        ch.appendChild(document.createTextNode(c.authored == null ? "none " : c.authored + " "));
+        var ar = document.createElement("span"); ar.className = "arrow"; ar.textContent = "-> "; ch.appendChild(ar);
+        var to = document.createElement("span"); to.className = "to"; to.textContent = String(t); ch.appendChild(to);
+      }
+    });
+
+    els.foot.textContent = actionable + " column(s) would change. " + safe +
+      " at " + SAFE_AGREEMENT + "% agreement and pre-selected; " + (actionable - safe) +
+      " below that, left unchecked because two page variants are likely live.";
+    invalidate();
+  }
+
+  function selection() {
+    var values = {};
+    Array.prototype.forEach.call(els.body.querySelectorAll("input[type=checkbox]"), function (cb) {
+      if (cb.checked) values[cb.dataset.key] = Number(cb.dataset.value);
+    });
+    return values;
+  }
+
+  function invalidate() {
+    previewedFor = null;
+    els.apply.disabled = true;
+    var n = Object.keys(selection()).length;
+    els.preview.disabled = n === 0;
+    if (n === 0) say("Nothing selected.");
+    else say(n + " column(s) selected. Preview before applying.");
+  }
+
+  function load() {
+    els.body.innerHTML = '<tr><td colspan="9" style="color:var(--muted)">Loading...</td></tr>';
+    els.out.hidden = true;
+    fetch("/api/admin/denominators?course=" + encodeURIComponent(els.course.value),
+          { credentials: "same-origin", headers: { accept: "application/json" } })
+      .then(function (r) {
+        if (r.status === 403) throw new Error("Session expired. Reload and sign in again.");
+        if (!r.ok) throw new Error("Coverage read failed: HTTP " + r.status);
+        return r.json();
+      })
+      .then(render)
+      .catch(function (e) {
+        els.body.innerHTML = "";
+        var tr = els.body.insertRow(); var td = tr.insertCell();
+        td.colSpan = 9; td.style.color = "var(--critical)"; td.textContent = e.message;
+      });
+  }
+
+  function send(dryRun) {
+    var key = els.key.value;
+    if (!key) { say("Admin key required for this step.", "err"); els.key.focus(); return; }
+    var values = selection();
+    if (!Object.keys(values).length) { say("Nothing selected.", "err"); return; }
+
+    els.preview.disabled = true; els.apply.disabled = true;
+    say(dryRun ? "Previewing..." : "Applying...");
+
+    fetch("/api/admin/denominators/adopt", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: { "content-type": "application/json", "x-admin-key": key },
+      body: JSON.stringify({
+        course: els.course.value,
+        values: values,
+        overwrite: true,     // these are corrections; without it every authored row skips
+        dry_run: !!dryRun
+      })
+    })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, status: r.status, body: j }; }); })
+      .then(function (res) {
+        els.out.hidden = false;
+        els.out.textContent = JSON.stringify(res.body, null, 2);
+        if (!res.ok) {
+          say(res.status === 403 ? "Admin key rejected." : "Failed: HTTP " + res.status, "err");
+          previewedFor = null; invalidate(); return;
+        }
+        if (dryRun) {
+          previewedFor = JSON.stringify(values);
+          els.apply.disabled = false; els.preview.disabled = false;
+          say("Preview only, nothing written. " + (res.body.would_write || 0) + " row(s) would change.", "ok");
+        } else {
+          say("Applied. Grades recompute at read time, so affected classes are correct now.", "ok");
+          els.key.value = "";
+          previewedFor = null;
+          load();   // re-read so the conflict count reflects reality, not our hope
+        }
+      })
+      .catch(function (e) { say(e.message, "err"); previewedFor = null; invalidate(); });
+  }
+
+  els.preview.addEventListener("click", function () { send(true); });
+  els.apply.addEventListener("click", function () {
+    // Apply is only ever reachable for a selection a preview actually covered.
+    if (previewedFor !== JSON.stringify(selection())) { say("Selection changed. Preview again.", "err"); invalidate(); return; }
+    var n = Object.keys(selection()).length;
+    if (!window.confirm("Write " + n + " denominator(s) for " + els.course.value +
+        "?\n\nThis regrades live classes immediately. Reversible from /api/admin/denominators/remove.")) return;
+    send(false);
+  });
+  els.course.addEventListener("change", load);
+  els.reload.addEventListener("click", load);
+  window.addEventListener("beforeunload", function () { els.key.value = ""; });
+
+  load();
+})();
+</script>
+</body>
+</html>
