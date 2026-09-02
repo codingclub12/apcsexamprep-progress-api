@@ -15,6 +15,7 @@ const express = require('express');
 const store = require('../lib/command-store');
 const write = require('../lib/command-write');
 const auth = require('../lib/command-auth');
+const evidence = require('../lib/command-verify');
 
 const router = express.Router();
 const db = store.db;
@@ -181,6 +182,47 @@ router.post('/:id/verify', auth.requireCookieAuth, (req, res) => {
   db.prepare("UPDATE tasks SET verified = ?, updated_at = datetime('now'), last_touched_at = datetime('now') WHERE id = ?").run(verified, id);
   store.logEvent(id, req.command.actor, 'set:verified', task.verified ? 1 : 0, verified);
   res.json({ task: store.getTask(id) });
+});
+
+// ── VERIFY BY EVIDENCE (bearer allowed, because it is not a claim) ───────────
+//  The cookie route above records that a person looked. This one records that
+//  the LIVE SYSTEM was asked. It never accepts an assertion: the only inputs are
+//  a task whose artifact is already a URL, and a phrase that has to appear in
+//  what that URL serves right now.
+//
+//  It is NOT an independent party. Every bearer caller is the actor `agent`, so
+//  the session that closed a task and the session verifying it are one identity,
+//  and an actor check here would read like a safeguard and enforce nothing.
+//  lib/command-verify.js says so at length. The weight is carried by
+//  re-derivation and by refusing a trivial expectation.
+//
+//  Every refusal is a 422 with a reason a person can act on, never a silent
+//  false. A verification nobody can reproduce is a claim, so the event log gets
+//  the url, the phrase, the layer it was found in, and the command to re-run.
+router.post('/:id/verify-by-evidence', async (req, res) => {
+  const id = Number(req.params.id);
+  const task = store.getTask(id);
+  if (!task) return res.status(404).json({ error: `No task #${id}` });
+
+  const phrase = req.body && req.body.expect;
+  let result;
+  try {
+    result = await evidence.verifyByEvidence(task, phrase);
+  } catch (e) {
+    // A verifier that throws must not leave the caller guessing whether it wrote.
+    return res.status(500).json({ error: `The check itself failed: ${String(e.message || e)}`,
+      verified: false });
+  }
+  if (!result.verified) {
+    return res.status(422).json({ error: result.reason, verified: false });
+  }
+
+  db.prepare("UPDATE tasks SET verified = 1, updated_at = datetime('now'), "
+    + "last_touched_at = datetime('now') WHERE id = ?").run(id);
+  store.logEvent(id, req.command.actor, 'set:verified', task.verified ? 1 : 0, 1);
+  store.logEvent(id, req.command.actor, 'note', null,
+    evidence.evidenceLine(result.evidence).slice(0, 500));
+  res.json({ task: store.getTask(id), verified: true, evidence: result.evidence });
 });
 
 // ── DEPS ─────────────────────────────────────────────────────────────────────

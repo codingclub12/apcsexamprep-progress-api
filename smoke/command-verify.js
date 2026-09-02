@@ -27,9 +27,18 @@ const DONE = {
 const PHRASE = 'apcs-cyber-lesson-map';
 
 // A stand-in for the network. Returns whatever the test says the page serves.
+//  THE STUB MUST MATCH THE REAL SHAPE, OR IT TESTS THE ASSUMPTION AND NOT THE
+//  CODE. Its first version invented `{found: true, layer: 'visible'}`. locate()
+//  actually returns `{phrase, visible, comment, script, style, total_in_source}`
+//  with no `found` at all, so the lib read undefined, could never verify
+//  anything, and all 42 assertions here passed anyway because the stub agreed
+//  with the bug. Pinned below against the real function so it cannot drift again.
 const serving = (opts) => async (url, phrases) => Object.assign({
   url, final_url: url, status: 200, usable: true, auth_gated: false, bytes: 4096,
-  phrases: phrases.map((p) => ({ phrase: p, found: true, layer: 'visible' })),
+  phrases: phrases.map((p) => ({
+    phrase: p, visible: true, comment: false, script: false, style: false,
+    total_in_source: 1,
+  })),
 }, opts || {});
 
 (async () => {
@@ -90,10 +99,25 @@ const serving = (opts) => async (url, phrases) => Object.assign({
     ok('  no expectation at all is refused', !r5.verified, r5.reason);
   }
 
+  console.log('\n2b. The stub matches what locate() really returns');
+  {
+    const { layers, locate } = require('../scripts/verify-artifact');
+    const html = '<html><body><p>' + PHRASE + ' is live</p></body></html>';
+    const real = locate(html, layers(html), PHRASE);
+    const stub = (await serving()('u', [PHRASE])).phrases[0];
+    ok('  the real locate has no `found` field', !('found' in real), Object.keys(real));
+    ok('  and the stub does not invent one', !('found' in stub), Object.keys(stub));
+    ok('  their keys match exactly',
+      Object.keys(real).sort().join() === Object.keys(stub).sort().join(),
+      { real: Object.keys(real).sort(), stub: Object.keys(stub).sort() });
+    ok('  and a real hit is what the lib treats as found', real.total_in_source > 0);
+  }
+
   console.log('\n3. It goes and looks, so a phrase that is not there fails');
   {
     const r = await verifyByEvidence(DONE, PHRASE, {
-      inspect: serving({ phrases: [{ phrase: PHRASE, found: false }] }),
+      inspect: serving({ phrases: [{ phrase: PHRASE, visible: false, comment: false,
+        script: false, style: false, total_in_source: 0 }] }),
     });
     ok('  a phrase absent from the live page is refused', !r.verified, r);
     ok('  and the message says the work is not live or the expectation is wrong',
@@ -107,7 +131,8 @@ const serving = (opts) => async (url, phrases) => Object.assign({
     // into trusting a report.
     const lying = Object.assign({}, DONE, { verified_by_agent: true, result: 'success' });
     const r = await verifyByEvidence(lying, PHRASE, {
-      inspect: serving({ phrases: [{ phrase: PHRASE, found: false }] }),
+      inspect: serving({ phrases: [{ phrase: PHRASE, visible: false, comment: false,
+        script: false, style: false, total_in_source: 0 }] }),
     });
     ok('  a task claiming its own success is still refused when the page disagrees', !r.verified, r);
   }
