@@ -182,7 +182,8 @@
     "smoke:deploygate": "node smoke/deploy-gate.js",
     "smoke:commandverify": "node smoke/command-verify.js",
     "smoke:csabanner": "node smoke/csa-removed-curriculum-banner.js",
-    "smoke:crawlnotes": "node smoke/crawl-annotations.js"
+    "smoke:crawlnotes": "node smoke/crawl-annotations.js",
+    "smoke:preflight": "node smoke/matrixify-preflight.js"
   },
   "keywords": [],
   "author": "",

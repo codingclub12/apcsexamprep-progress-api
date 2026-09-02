@@ -24,7 +24,7 @@
 //  No em-dashes, per repo convention.
 // ─────────────────────────────────────────────────────────────────────────────
 const {
-  BANNER, MARKER, addBanner, verify, sheetRows, toCsv, HEADER, BLOG_HANDLE,
+  BANNER, MARKER, addBanner, verify, sheetRows, toCsv, HEADER, BLOG_HANDLE, COMMAND,
 } = require('../scripts/csa-removed-curriculum-banner');
 
 let pass = 0, fail = 0;
@@ -150,8 +150,8 @@ console.log('\n5. The sheet, parsed back by a reader that did not write it');
     JSON.stringify(parsed[0]) === JSON.stringify(HEADER), parsed[0]);
   ok('  every row names the blog, so the articles are not orphaned',
     parsed.slice(1).every((r) => r[0] === BLOG_HANDLE), parsed[1] && parsed[1][0]);
-  ok('  every row is an UPDATE, never a create',
-    parsed.slice(1).every((r) => r[2] === 'UPDATE'));
+  ok('  every row carries the command the store handoff requires',
+    parsed.slice(1).every((r) => r[2] === COMMAND), parsed.slice(1).map((r) => r[2]));
   ok('  there is one row per article and no blank trailing row',
     parsed.length === 3, parsed.length);
 
@@ -206,12 +206,15 @@ console.log('\n5b. THE ENVELOPE, which is what actually failed');
     ok(`  ${JSON.stringify(good)} is accepted`, assertSheetName(good) === null, assertSheetName(good));
   }
 
-  //  UPDATE, not MERGE, and the difference is a live blog. MERGE creates a row
-  //  it cannot find, so one typo'd handle would publish a blank article.
+  //  MERGE, per the store handoff. The risk MERGE carries is that it CREATES a
+  //  row it cannot find, so a typo'd handle publishes a blank article to a live
+  //  blog. What answers that is not the command word, it is that every handle in
+  //  this sheet was fetched live and returned 200, and its body in the sheet IS
+  //  that response. A handle that cannot be fetched never reaches the sheet.
   const { rows } = sheetRows({ 'u3-c1-day-1': BODY });
   const line = toCsv(rows).split('\r\n')[1];
-  ok('  every row is UPDATE, so a typo skips instead of creating a blank article',
-    line.includes('"UPDATE"') && !line.includes('"MERGE"'), line.slice(0, 80));
+  ok('  every row is MERGE, matching the store handoff',
+    line.includes('"MERGE"') && !line.includes('"UPDATE"'), line.slice(0, 80));
 }
 
 console.log('\n6. A body the generator cannot handle is DROPPED, never guessed at');

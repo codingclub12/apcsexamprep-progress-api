@@ -117,10 +117,14 @@ function sheetRows(bodies) {
 //     assertSheetName below refuses to write a file Matrixify would reject,
 //     because a generator that cannot be imported is not a generator.
 //
-//  Command is UPDATE, not MERGE. This deviates from the repo default and the
-//  reason is worth keeping: MERGE CREATES a row it cannot find, so one typo'd
-//  handle would publish a blank article to a live blog. UPDATE skips it. There
-//  is nothing to create here, only 49 articles that already exist.
+//  Command is MERGE, per the store handoff. The reservation that made an
+//  earlier version use UPDATE was real and is answered rather than ignored:
+//  MERGE CREATES a row it cannot find, so a typo'd handle would publish a blank
+//  article to a live blog. What removes that risk is not the command, it is
+//  knowing the handles are real. All 49 were fetched from the live storefront
+//  and returned 200, and their bodies in this sheet ARE those responses, so
+//  there is nothing here for MERGE to create. Anything that cannot be fetched
+//  never reaches the sheet.
 const BLOG_HANDLE = 'ap-csa-daily-practice';
 const HEADER = ['Blog: Handle', 'Handle', 'Command', 'Body HTML'];
 
@@ -128,6 +132,7 @@ const HEADER = ['Blog: Handle', 'Handle', 'Command', 'Body HTML'];
 //  wrong is a one-second rejection with no per-row detail, so it is checked
 //  here rather than discovered in the Shopify admin.
 const SHEET_NAME_RE = /blog[-_ ]?posts?/i;
+const COMMAND = 'MERGE';
 
 function assertSheetName(outPath) {
   const name = String(outPath || '').split(/[\\/]/).pop();
@@ -145,7 +150,7 @@ function toCsv(rows) {
   //  everywhere except one line invites the next person to decide quoting is
   //  optional on the line that does carry a comma. Caught by smoke:csabanner.
   return '﻿' + [HEADER.map(cell).join(',')]
-    .concat(rows.map((r) => [cell(BLOG_HANDLE), cell(r.handle), cell('UPDATE'), cell(r.body)].join(',')))
+    .concat(rows.map((r) => [cell(BLOG_HANDLE), cell(r.handle), cell(COMMAND), cell(r.body)].join(',')))
     .join('\r\n') + '\r\n';
 }
 
@@ -193,4 +198,4 @@ if (require.main === module) {
 }
 
 module.exports = { BANNER, MARKER, addBanner, verify, sheetRows, toCsv, HEADER, BLOG_HANDLE,
-  assertSheetName, SHEET_NAME_RE };
+  assertSheetName, SHEET_NAME_RE, COMMAND };
