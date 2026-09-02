@@ -108,30 +108,39 @@ const orphan = pageFromHandle('ap-cyber-unit-2-lesson-5');
 if (orphan) fail(`ap-cyber-unit-2-lesson-5 -> ${orphan.lesson}, expected null`);
 else pass('ap-cyber-unit-2-lesson-5 stays untracked');
 
-//  6. THE THEME MUST USE THE SAME MAP, AND TODAY IT DOES NOT.
+//  6. THE THEME USES THE SAME MAP. FIXED 2026-09-02, PINNED HERE.
 //
 //  Everything above pins the SERVER. The number that reaches the gradebook is
 //  chosen by the STOREFRONT, which sets window.APCS_PAGE before apcs-tracker.js
-//  and apcs-score-reporter.js run. Read off the live page on 2026-09-02, that
-//  snippet derives the lesson by naive arithmetic on the handle ordinals:
+//  and apcs-score-reporter.js run.
 //
-//      m = h.match(/^ap-cyber-unit-(\d+)-lesson-(\d+)-(exercise-1|exercise-2|lab|quiz)$/);
-//      if (m) p = { unit: 'unit-' + m[1], lesson: m[1] + '.' + m[2], activity: m[3] };
+//  Until 2026-09-02 that snippet derived the lesson by naive arithmetic on the
+//  handle ordinals, lesson = unit + '.' + ordinal, and had never learned the
+//  renumbering. All 24 Unit 3 activity pages and all 6 of its lesson pages filed
+//  under the wrong lesson; four filed under the retired 3.6, which has no
+//  gradebook column at all. Exactly the silent failure this file's header
+//  describes, running in production for six days.
 //
-//  It never consulted the renumbering. That is exactly the silent failure the
-//  header of this file describes, running in production: lesson-3 files under
-//  3.3 while the page teaches 3.2, nothing throws, and a student's work lands on
-//  a lesson they never opened. Four handles report the retired 3.6, which has no
-//  column at all.
+//  Theme PR #93 replaced both derivation sites with snippets/apcs-cyber-lesson-
+//  map.liquid, which carries the override table below and falls through to the
+//  plain U.L form for every other unit. Verified live on the storefront, not
+//  against a merged pull request.
 //
-//  The fix belongs in the theme, which is a different repo. What belongs HERE is
-//  refusing to let the disagreement be rediscovered: the drift set is pinned
-//  exactly, so a NEW disagreement fails the build, and so does fixing the theme
-//  without emptying this list. Either way it gets edited on purpose.
-const THEME_ACTIVITIES = /^ap-cyber-unit-(\d+)-lesson-(\d+)-(exercise-1|exercise-2|lab|quiz)$/;
-const themeRule = (h) => {
-  const m = h.match(THEME_ACTIVITIES);
-  return m ? { unit: `unit-${m[1]}`, lesson: `${m[1]}.${m[2]}`, activity: m[3] } : null;
+//  WHAT THIS PINS, AND WHAT IT CANNOT
+//  This is a TRANSCRIPTION of the deployed rule, so it catches a change made
+//  HERE without a matching change in the theme. It cannot see the theme change
+//  on its own: the first version of this section pinned a drift list, the theme
+//  was then fixed, and this suite stayed green and kept reporting the old drift.
+//  A transcription is only as fresh as the last person who looked. The live
+//  check belongs in a scheduled job with network access, not in an offline
+//  suite, and that is worth building rather than pretending this covers it.
+const THEME_OVERRIDE = {
+  'unit-3': { 1: '3.1a', 2: '3.1b', 3: '3.2', 4: '3.3', 5: '3.4', 6: '3.5' },
+};
+const themeLesson = (unitOrdinal, lessonOrdinal) => {
+  const map = THEME_OVERRIDE[`unit-${unitOrdinal}`];
+  if (map) return map[lessonOrdinal] || null;   // refuses rather than guessing
+  return `${unitOrdinal}.${lessonOrdinal}`;
 };
 
 //  Every cyber activity handle, built from the course structure rather than
@@ -148,36 +157,26 @@ for (const [unit, cfg] of Object.entries(CYBER.units || CYBER)) {
   }
 }
 
-//  Live as of 2026-09-02: all 24 Unit 3 activity pages, and nothing else.
-const KNOWN_DRIFT = [];
-for (let n = 1; n <= 6; n++) {
-  for (const a of ['exercise-1', 'exercise-2', 'lab', 'quiz']) {
-    KNOWN_DRIFT.push(`ap-cyber-unit-3-lesson-${n}-${a}`);
-  }
+const drift = [];
+const refused = [];
+for (const h of allHandles) {
+  const m = h.match(/^ap-cyber-unit-(\d+)-lesson-(\d+)-/);
+  const sv = pageFromHandle(h);
+  if (!m || !sv) continue;
+  const t = themeLesson(Number(m[1]), Number(m[2]));
+  if (t === null) { refused.push(h); continue; }
+  if (t !== sv.lesson) drift.push(`${h}: theme ${t}, server ${sv.lesson}`);
 }
 
-const drift = allHandles.filter((h) => {
-  const t = themeRule(h), sv = pageFromHandle(h);
-  return t && sv && (t.lesson !== sv.lesson || t.unit !== sv.unit);
-});
-const unexpected = drift.filter((h) => !KNOWN_DRIFT.includes(h));
-const healed = KNOWN_DRIFT.filter((h) => !drift.includes(h));
-
-if (unexpected.length) {
-  fail(`the storefront and the server disagree on ${unexpected.length} handle(s) that were `
-    + `agreeing: ${unexpected.slice(0, 4).join(', ')}. Work posted from these lands on the `
-    + `wrong lesson.`);
-} else if (healed.length === KNOWN_DRIFT.length) {
-  fail('the storefront now agrees on every Unit 3 handle. Empty KNOWN_DRIFT in this file: '
-    + 'the defect it documents is fixed and the list is now a lie.');
-} else if (healed.length) {
-  fail(`the storefront was fixed for ${healed.length} of ${KNOWN_DRIFT.length} Unit 3 handles `
-    + `but not the rest: ${healed.slice(0, 4).join(', ')}. A half-applied renumbering is worse `
-    + `than none, because the two halves of Unit 3 now file under different schemes.`);
+if (drift.length) {
+  fail(`the storefront rule and the server map disagree on ${drift.length} handle(s). `
+    + `Work posted from these lands on the wrong lesson: ${drift.slice(0, 4).join('; ')}`);
+} else if (refused.length) {
+  fail(`the storefront rule refuses ${refused.length} handle(s) the server maps, so those `
+    + `pages would go untracked: ${refused.slice(0, 4).join(', ')}`);
 } else {
-  pass(`the storefront disagrees with the server on exactly the ${drift.length} known Unit 3 `
-    + 'handles, and agrees on the other ' + (allHandles.length - drift.length)
-    + '. This is a LIVE DEFECT awaiting a theme fix, not a passing state.');
+  pass(`the storefront rule agrees with the server on all ${allHandles.length} cyber activity `
+    + 'handles, Unit 3 included');
 }
 
 console.log(
