@@ -109,8 +109,21 @@ sheet.
 `<span class="&lt;span">"apcs-keyword"</span>&gt;int total = ...`, so a student
 reads `"apcs-keyword" >int total = "apcs-number" >0;` where the Java should be,
 and `println` is split into `print` + `ln`. This is a student-visible content
-defect and it outranks SEO titles. A scan for the signature `class="&lt;span"`
-across all 429 articles is running; scope goes on the board with the count.
+defect and it outranks SEO titles.
+
+Scope measured rather than estimated, by fetching all 429 articles and counting
+the signature `class="&lt;span"`, which cannot occur in well-formed markup:
+
+| family | articles | affected |
+|---|---|---|
+| `unit2-cycle2-*` | 28 | **25** |
+| `unit3-cycle2-*` | 28 | 0 |
+| `unit4-cycle2-*` | 28 | 0 |
+| `unit-2-cycle-2-*` | 28 | 0 |
+| `ap-csa-u2-*` | 56 | 0 |
+| everything else | 261 | 0 |
+
+25 of 429, all in one family, 4 to 13 mangled lines each. Board task 153.
 
 ## Still open
 
