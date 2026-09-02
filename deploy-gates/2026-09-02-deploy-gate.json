@@ -1,0 +1,45 @@
+{
+  "change": "deploy gate: three independent kinds of check before any automatic deploy",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the gate's own suite",
+      "command": "npm run --silent smoke:deploygate",
+      "expect": "24 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "nothing else regressed",
+      "command": "npm run --silent smoke:cyberunit3",
+      "expect": "all Unit 3 handle mappings correct"
+    },
+    {
+      "kind": "mutation",
+      "name": "the mandatory-mutation rule is real",
+      "file": "scripts/deploy-gate.js",
+      "find": "  if (!kinds.has(REQUIRED_KIND)) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:deploygate"
+    },
+    {
+      "kind": "mutation",
+      "name": "the hollow-mutation rule is real",
+      "file": "scripts/deploy-gate.js",
+      "find": "  if (res.ok) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:deploygate"
+    },
+    {
+      "kind": "live",
+      "name": "production is serving and healthy",
+      "command": "curl -sS --max-time 25 https://progress.apcsexamprep.com/api/health",
+      "expect": "\"status\":\"ok\""
+    },
+    {
+      "kind": "rederive",
+      "name": "the storefront agrees with the server, read live",
+      "command": "node -e \"const cp=require('child_process');const u=require('./utils.js');const h=cp.execSync('curl -sSL --max-time 40 https://apcsexamprep.com/pages/ap-cyber-unit-3-lesson-3-exercise-2',{encoding:'utf8',maxBuffer:2e7});const m=h.match(/<script>\\\\s*\\\\(function \\\\(\\\\) \\\\{\\\\s*\\\\/\\\\/ handle ordinal[\\\\s\\\\S]*?<\\\\/script>/);if(!m)throw new Error('map snippet not served');const w={};new Function('window',m[0].replace(/^<script>/,'').replace(/<\\\\/script>$/,''))(w);const live=w.APCS_CYBER_LESSON(3,3);const server=u.pageFromHandle('ap-cyber-unit-3-lesson-3-exercise-2').lesson;if(live!==server)throw new Error('live '+live+' vs server '+server);console.log('AGREE '+live);\" 2>/dev/null",
+      "expect": "AGREE 3.2"
+    }
+  ]
+}

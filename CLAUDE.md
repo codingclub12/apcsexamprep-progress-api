@@ -62,10 +62,25 @@ survive.
 3. **Close with an artifact.** A PR URL, a live curl result, a Shopify
    `updatedAt` delta, an md5. `apcs done` refuses without one, locally, before it
    writes anything. Agent reports are not evidence.
-4. **`verified` is not yours to set.** It is cookie-auth only, so the agent that
-   did the work can never be the one that closes the loop on it. `apcs verify`
-   exists solely to say so and hand you the URL. This is not a limitation to
-   route around; it is the whole reason the number means anything.
+4. **You may not verify your own work.** The agent that did a thing is never the
+   one that says it is true. That rule is unchanged and is the whole reason the
+   number means anything.
+
+   What changed on 2026-09-02 is HOW the loop closes. It used to be cookie-auth
+   only, which made Tanner's mouse the only path and left 68 tasks queued behind
+   it. Now `verified` can also be set by an INDEPENDENT re-check: a separate
+   process refetches live state and passes only if it matches the claim. A live
+   curl, a Shopify `updatedAt` delta, an md5, a served asset diff. Evidence a
+   machine can re-derive without trusting anybody's report.
+
+   Three things this does not license, and they are the point:
+   - The verifier must not be the worker. Same session, same run, same agent
+     asserting its own success is not evidence, it is a report.
+   - The evidence must be re-derivable. "The tests passed" is not; "the live page
+     serves this byte string" is.
+   - A judgement call still goes to a human. Whether a lesson reads well, whether
+     a price is right, whether a page is good enough: no re-check settles those,
+     and auto-verifying them would be the failure this rule was written against.
 
 Leave a run note in `docs/runs/YYYY-MM-DD-<agent>-<slug>.md`: what changed, the
 evidence, what is still open, what was learned. Institutional memory lives in the
@@ -90,8 +105,74 @@ rather than trusting the stored flag. Narrowing the size ceiling or adding a
 migration and nothing to hunt down.
 
 `GET /api/command/dispatch-queue` shows what would be handed out and why
-everything else was left. The overnight workflow reads it and reports; it does
-not execute.
+everything else was left.
+
+### Standing authority, set 2026-09-02
+
+Tanner runs this business from a treadmill, by voice, and asked for a CEO he
+talks to rather than a assistant he approves. So the default flipped: **act, then
+report.** Ending a turn with "say the word and I will" is the failure mode, not
+the safe choice. A session that investigates, concludes, and then waits has done
+half the job and spent the whole turn.
+
+That covers deploys. Merging to `main` ships to Railway; merging a theme PR into
+`claude/site-linking-audit-yhufjk` is live to students in under a minute with no
+CI in between. Both are yours to do once the evidence is in.
+
+What still stops you, and these are not negotiable:
+
+- The five `NEVER_AUTO` rules, which the router enforces: money and pricing,
+  deleting or renaming a handle, schema migrations and backfills, anything
+  flagged "a human must check", and writing student data beyond grade recording.
+- The Judge0 subsystem, which needs Tanner naming that change specifically.
+- A second PII exception. The sandbox is the only one and adding another is a
+  decision, not a patch.
+- Anything where you cannot state what you would check afterwards to know it
+  worked. If you cannot name the evidence, you are not ready to ship it, and
+  that is a thinking problem rather than a permission problem.
+
+Authority is not licence to skip the discipline. The verification standard goes
+UP as the asking goes down, because the check is now the only thing between a
+mistake and a student.
+
+### Every automatic deploy passes three INDEPENDENT kinds of check
+
+Not three runs. Three kinds. `scripts/deploy-gate.js` enforces it and refuses a
+manifest that cannot show them, because this repo has already proved that a
+convention does not survive a busy afternoon.
+
+    suite     the repo's own tests, run the way a contributor runs them
+    rederive  a SECOND implementation reaching the same conclusion from the raw
+              artifact, written without reference to the first
+    live      the deployed system observed directly, after the change is out
+    mutation  a guard proven not hollow: break it on purpose and require the
+              suite to go RED. A green mutation run is a FAILED check
+
+`mutation` is mandatory and at least one of `live` or `rederive` is mandatory.
+Suite plus mutation is still only this repo talking to itself, and a suite with
+no mutation behind it may be green because it tests nothing.
+
+The reason it is kinds and not repetitions is that every real defect found on
+2026-09-01 and 02 was caught by a kind of check DIFFERENT from the ones passing
+at the time:
+
+    the CSP sheet lost 90 bytes a page      every semantic check passed; a CSV
+                                            parse-back diff caught it
+    the rewriter reformatted 23 live pages  every test passed; comparing the live
+                                            body to the source caught it
+    CDACDA, a key repeating inside itself   distinct, per-column and overall
+                                            balance all held; periodicity caught it
+    Unit 3 filed under retired lesson ids   nothing threw anywhere; comparing the
+                                            storefront to the server caught it
+    two guards were hollow                  the suite was green either way;
+                                            mutation testing caught it
+
+Run `--pre` before the merge, which defers `live` and still demands `mutation`.
+Run it again without `--pre` after the deploy, when the live check can actually
+observe something. A deploy is not finished until that second run passes.
+
+Verify against live systems, never against a report, and say plainly in the same
+breath what you did and what you are still unsure of.
 
 ## What this repo is
 
@@ -314,9 +395,12 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
 
 - Additive migrations only. Never destructive operations against the production SQLite file.
 - Small commits. Pushing to main deploys via Railway's GitHub integration; verify the deploy branch config before the first push.
-- Claude Code may merge its own pull requests once CI is green. Work still lands on a
-  branch behind a PR, never straight to main, and merging is still a deploy: say what
-  was merged and check the Railway boot log after it lands.
+- Claude Code merges its own pull requests once CI is green, without asking. Work
+  still lands on a branch behind a PR, never straight to main, and merging is
+  still a deploy: say what was merged and check that production reports the new
+  commit after it lands. Before merging, confirm the SHA CI passed on is the SHA
+  you are merging. PR #435 auto-merged an older commit while a newer push was
+  still in flight, and only the tested half shipped.
 - **That "once CI is green" is now enforced, not trusted.** A ruleset on `main`
   requires the `Offline smoke suites` check, so a red or still-running suite blocks
   the merge button for a human and the API alike. It was a convention until
