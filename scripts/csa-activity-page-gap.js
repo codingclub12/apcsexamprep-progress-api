@@ -29,7 +29,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
-const { COURSES } = require('../utils');
+const { COURSES, trailingActivity } = require('../utils');
 const { manifest } = require('../seed/csa-course-manifest');
 
 const COURSE = 'ap-csa';
@@ -41,15 +41,23 @@ const DEFAULT_HANDLES = path.join(__dirname, '..', 'smoke', 'fixtures', 'live-pa
 //  lesson page IS the page.
 const ON_THE_LESSON_PAGE = new Set(['lesson', 'cfu', 'quiz']);
 
+//  THE ALIAS IS THE WHOLE REASON THIS READS utils AND NOT A REGEX OF ITS OWN.
+//  utils.trailingActivity maps a handle to the activity the GRADEBOOK uses, and
+//  ACTIVITY_ALIASES turns a page ending '-frq' into 'exercise-3', because that
+//  is the student-facing name for the same work. A first version of this script
+//  matched the suffix directly and reported all 53 exercise-3 columns as having
+//  no page, plus all 53 FRQ pages as priced at nothing. Both were the same
+//  mistake counted twice, and both were wrong: the FRQ page IS the exercise-3
+//  column. Reading the alias from the code that resolves it is what stops a
+//  measurement inventing a defect out of a naming convention.
 function livePages(file) {
   const byLesson = new Map();
   for (const h of fs.readFileSync(file, 'utf8').split('\n').map((s) => s.trim()).filter(Boolean)) {
     const m = /^ap-csa-lesson-(\d+)-(\d+)-(.+)$/.exec(h);
     if (!m) continue;
     const lesson = m[1] + '.' + m[2];
-    const suffix = /-(exercise-\d+|debug|frq)$/.exec(m[3]);
     if (!byLesson.has(lesson)) byLesson.set(lesson, new Set());
-    byLesson.get(lesson).add(suffix ? suffix[1] : 'lesson');
+    byLesson.get(lesson).add(trailingActivity(h));
   }
   return byLesson;
 }
