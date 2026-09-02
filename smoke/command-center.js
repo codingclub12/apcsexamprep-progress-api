@@ -97,6 +97,16 @@ app.get('/admin/command', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', adminSession.isAuthed(req) ? 'command.html' : 'login.html'));
 });
 
+// A page this suite controls, fetched over real HTTP by the evidence verifier.
+// Using a fixture rather than a stub means the route is exercised end to end,
+// network layer included, without depending on anything outside this process.
+app.get('/fixture/shipped', (req, res) => {
+  res.type('html').send('<html><body><p>apcs-cyber-lesson-map is live</p></body></html>');
+});
+app.get('/fixture/not-shipped', (req, res) => {
+  res.type('html').send('<html><body><p>nothing here yet</p></body></html>');
+});
+
 const server = app.listen(0);
 const PORT = server.address().port;
 const BASE = `http://127.0.0.1:${PORT}`;
@@ -632,6 +642,86 @@ const raw = (sql, ...args) => db.prepare(sql).run(...args);
     chatClaim.status === 400 && /cannot hold a claim/i.test(chatClaim.body.error), chatClaim.body);
 
   // ── Wrap ──────────────────────────────────────────────────────────────────
+  // ── VERIFY BY EVIDENCE ─────────────────────────────────────────────────────
+  //  The route that can mark work verified without a cookie. Weighted towards
+  //  refusal: a false negative costs a human ten seconds, a false positive puts
+  //  a tick next to work nobody checked.
+  section('Verify by evidence: re-derivation, never assertion');
+  {
+    const mk = async (artifact) => {
+      const r = await call('POST', '/api/todo', { body: {
+        title: 'evidence route fixture', bucket: 'week', artifact_url: artifact } });
+      const id = (r.body.task || r.body).id;
+      await call('PATCH', `/api/todo/${id}`, { body: { status: 'done' } });
+      return id;
+    };
+
+    const shipped = await mk(`${BASE}/fixture/shipped`);
+    const notShipped = await mk(`${BASE}/fixture/not-shipped`);
+    const noUrl = await mk('talked to the teacher, all good');
+
+    const good = await call('POST', `/api/todo/${shipped}/verify-by-evidence`,
+      { body: { expect: 'apcs-cyber-lesson-map' } });
+    ok('  a phrase present in the live page verifies over real http',
+      good.status === 200 && good.body.verified === true, good.body);
+    ok('  and the task actually flips to verified',
+      !!(good.body.task && good.body.task.verified), good.body.task && good.body.task.verified);
+    ok('  the evidence carries a re-runnable command',
+      good.body.evidence && /verify-artifact\.js .*--phrase/.test(good.body.evidence.rerun),
+      good.body.evidence);
+
+    const ev = await call('GET', `/api/todo/${shipped}`);
+    const notes = JSON.stringify(ev.body || '');
+    ok('  and the ledger records how it was verified, with the re-run command',
+      /machine-verified/.test(notes) && /Re-run:/.test(notes), notes.slice(0, 300));
+
+    const absent = await call('POST', `/api/todo/${notShipped}/verify-by-evidence`,
+      { body: { expect: 'apcs-cyber-lesson-map' } });
+    ok('  a phrase the page does not serve is refused 422',
+      absent.status === 422 && absent.body.verified === false, absent.body);
+    const stillOpen = await call('GET', `/api/todo/${notShipped}`);
+    ok('  and that task is NOT verified',
+      !(stillOpen.body.task || stillOpen.body).verified,
+      (stillOpen.body.task || stillOpen.body).verified);
+
+    //  'all good' clears the length floor, has enough distinct characters, and
+    //  its words are not all in the generic set, so ONLY the stoplist can refuse
+    //  it. A shorter fixture like 'live' is caught by the length rule first and
+    //  leaves the stoplist untested, which is how the same mutation survived
+    //  three separate suites before this line was written.
+    //  Fresh tasks: `shipped` was verified by the assertion above, and the
+    //  already-verified precondition fires before any phrase rule, so reusing it
+    //  tested the precondition while claiming to test the stoplist.
+    const forTrivial = await mk(`${BASE}/fixture/shipped`);
+    const forShort = await mk(`${BASE}/fixture/shipped`);
+    const trivial = await call('POST', `/api/todo/${forTrivial}/verify-by-evidence`,
+      { body: { expect: 'all good' } });
+    ok('  a trivial expectation is refused, and only the stoplist can do it',
+      trivial.status === 422 && /true of almost any page/.test(trivial.body.error || ''),
+      trivial.body);
+
+    const short = await call('POST', `/api/todo/${forShort}/verify-by-evidence`,
+      { body: { expect: 'live' } });
+    ok('  and a too-short expectation is refused by the length rule',
+      short.status === 422 && /characters/.test(short.body.error || ''), short.body);
+
+    const noExpect = await call('POST', `/api/todo/${notShipped}/verify-by-evidence`, { body: {} });
+    ok('  no expectation at all is refused', noExpect.status === 422, noExpect.body);
+
+    const note = await call('POST', `/api/todo/${noUrl}/verify-by-evidence`,
+      { body: { expect: 'apcs-cyber-lesson-map' } });
+    ok('  an artifact that is a note, not a url, is routed to a human',
+      note.status === 422 && /needs a human/.test(note.body.error || ''), note.body);
+
+    const missing = await call('POST', '/api/todo/99999/verify-by-evidence',
+      { body: { expect: 'apcs-cyber-lesson-map' } });
+    ok('  an unknown task is 404, not 422', missing.status === 404, missing.status);
+
+    const anon = await call('POST', `/api/todo/${notShipped}/verify-by-evidence`,
+      { as: 'none', body: { expect: 'apcs-cyber-lesson-map' } });
+    ok('  and it still requires a credential', anon.status === 401, anon.status);
+  }
+
   server.close();
   console.log(`\n${pass} passed, ${fail} failed`);
   if (fail) {
