@@ -1,0 +1,911 @@
+<style>
+/* =============================================================
+   SCOPED RESET --- nukes Shopify Dawn theme overrides
+   all:initial applies to wrapper ONLY (proven pattern from live
+   AP Cyber pages). Applying it to all descendants kills nested
+   element display values (table cells, buttons, inline-block badges).
+   ============================================================= */
+#apcsa-lesson {
+  all: initial !important;
+  display: block !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  max-width: 1080px !important;
+  margin: 0 auto !important;
+  padding: 32px 20px 80px !important;
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  line-height: 1.65 !important;
+  font-size: 17px !important;
+  background: #ffffff !important;
+}
+#apcsa-lesson * {
+  box-sizing: border-box !important;
+}
+#apcsa-lesson p, #apcsa-lesson li, #apcsa-lesson td, #apcsa-lesson th,
+#apcsa-lesson dt, #apcsa-lesson dd, #apcsa-lesson span, #apcsa-lesson em, #apcsa-lesson strong {
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  font-size: 17px !important;
+  line-height: 1.65 !important;
+}
+#apcsa-lesson em { font-style: italic !important; }
+#apcsa-lesson strong { font-weight: 700 !important; }
+#apcsa-lesson p { margin: 0 0 16px 0 !important; }
+#apcsa-lesson ul, #apcsa-lesson ol { display: block !important; margin: 0 0 16px 24px !important; padding: 0 !important; }
+#apcsa-lesson ul li { display: list-item !important; list-style: disc outside !important; margin: 0 0 6px 0 !important; }
+#apcsa-lesson ol li { display: list-item !important; list-style: decimal outside !important; margin: 0 0 6px 0 !important; }
+
+/* Headings */
+#apcsa-lesson h1, #apcsa-lesson h2, #apcsa-lesson h3, #apcsa-lesson h4 {
+  display: block !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  line-height: 1.25 !important;
+}
+#apcsa-lesson h1 { font-size: 36px !important; margin: 8px 0 12px 0 !important; letter-spacing: -0.02em !important; }
+#apcsa-lesson h2 { font-size: 26px !important; margin: 40px 0 14px 0 !important; padding-bottom: 8px !important; border-bottom: 2px solid #e5e7eb !important; }
+#apcsa-lesson h3 { font-size: 20px !important; margin: 24px 0 10px 0 !important; color: #1e3a8a !important; -webkit-text-fill-color: #1e3a8a !important; }
+#apcsa-lesson h4 { font-size: 17px !important; margin: 16px 0 8px 0 !important; }
+
+/* Links */
+#apcsa-lesson a:link, #apcsa-lesson a:visited {
+  color: #2563eb !important;
+  -webkit-text-fill-color: #2563eb !important;
+  text-decoration: underline !important;
+  cursor: pointer !important;
+}
+#apcsa-lesson a:hover, #apcsa-lesson a:active {
+  color: #1d4ed8 !important;
+  -webkit-text-fill-color: #1d4ed8 !important;
+}
+
+/* Code (used sparingly in conceptual lessons --- only for syntax mentions) */
+#apcsa-lesson code {
+  font-family: "SF Mono", Menlo, Consolas, Monaco, monospace !important;
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  font-size: 15px !important;
+}
+#apcsa-lesson pre {
+  display: block !important;
+  background: #0f172a !important;
+  color: #e2e8f0 !important;
+  -webkit-text-fill-color: #e2e8f0 !important;
+  padding: 18px 20px !important;
+  border-radius: 8px !important;
+  overflow-x: auto !important;
+  margin: 16px 0 !important;
+  font-family: "SF Mono", Menlo, Consolas, Monaco, monospace !important;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+  white-space: pre !important;
+}
+#apcsa-lesson pre code {
+  background: transparent !important;
+  color: #e2e8f0 !important;
+  -webkit-text-fill-color: #e2e8f0 !important;
+  padding: 0 !important;
+  font-size: 14px !important;
+}
+
+/* BREADCRUMB */
+#apcsa-lesson .apcsa-breadcrumb {
+  display: block !important;
+  font-size: 14px !important;
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+  margin-bottom: 16px !important;
+}
+#apcsa-lesson .apcsa-breadcrumb a:link, #apcsa-lesson .apcsa-breadcrumb a:visited {
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+  text-decoration: none !important;
+}
+#apcsa-lesson .apcsa-breadcrumb a:hover { text-decoration: underline !important; }
+#apcsa-lesson .apcsa-breadcrumb span.sep { margin: 0 8px !important; color: #cbd5e1 !important; -webkit-text-fill-color: #cbd5e1 !important; }
+
+/* HEADER */
+#apcsa-lesson .apcsa-header { display: block !important; margin-bottom: 28px !important; }
+#apcsa-lesson .apcsa-eyebrow {
+  display: inline-block !important;
+  background: #dbeafe !important;
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  padding: 5px 12px !important;
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 12px !important;
+}
+#apcsa-lesson .apcsa-meta-row {
+  display: flex !important;
+  gap: 16px !important;
+  flex-wrap: wrap !important;
+  margin-top: 12px !important;
+  font-size: 14px !important;
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+}
+#apcsa-lesson .apcsa-meta-row span { color: #64748b !important; -webkit-text-fill-color: #64748b !important; }
+
+/* "WHAT YOU'LL LEARN" BOX */
+#apcsa-lesson .apcsa-learn-box {
+  display: block !important;
+  background: #eff6ff !important;
+  border-left: 4px solid #2563eb !important;
+  padding: 20px 24px !important;
+  margin: 24px 0 !important;
+  border-radius: 0 8px 8px 0 !important;
+}
+#apcsa-lesson .apcsa-learn-box h3 {
+  margin-top: 0 !important;
+  color: #1e3a8a !important;
+  -webkit-text-fill-color: #1e3a8a !important;
+  font-size: 18px !important;
+}
+#apcsa-lesson .apcsa-learn-box ul li { margin-bottom: 8px !important; }
+
+/* CALLOUTS */
+#apcsa-lesson .apcsa-callout {
+  display: block !important;
+  padding: 18px 22px !important;
+  margin: 20px 0 !important;
+  border-radius: 0 8px 8px 0 !important;
+  border-left: 4px solid #94a3b8 !important;
+  background: #f8fafc !important;
+}
+#apcsa-lesson .apcsa-callout h4 {
+  margin-top: 0 !important;
+  margin-bottom: 8px !important;
+  font-size: 16px !important;
+  letter-spacing: 0.02em !important;
+}
+#apcsa-lesson .apcsa-callout.concept { background: #eff6ff !important; border-left-color: #2563eb !important; }
+#apcsa-lesson .apcsa-callout.concept h4 { color: #1e3a8a !important; -webkit-text-fill-color: #1e3a8a !important; }
+#apcsa-lesson .apcsa-callout.example { background: #f0fdf4 !important; border-left-color: #16a34a !important; }
+#apcsa-lesson .apcsa-callout.example h4 { color: #166534 !important; -webkit-text-fill-color: #166534 !important; }
+#apcsa-lesson .apcsa-callout.warning { background: #fef2f2 !important; border-left-color: #dc2626 !important; }
+#apcsa-lesson .apcsa-callout.warning h4 { color: #991b1b !important; -webkit-text-fill-color: #991b1b !important; }
+#apcsa-lesson .apcsa-callout.trap { background: #fef2f2 !important; border-left-color: #dc2626 !important; }
+#apcsa-lesson .apcsa-callout.trap h4 { color: #991b1b !important; -webkit-text-fill-color: #991b1b !important; }
+
+/* PRACTICE TIER */
+#apcsa-lesson .apcsa-practice-tier {
+  display: block !important;
+  background: #fafafa !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  padding: 24px 28px !important;
+  margin: 32px 0 !important;
+}
+#apcsa-lesson .apcsa-practice-tier h2 {
+  margin-top: 0 !important;
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+}
+#apcsa-lesson .apcsa-practice-tier .tier-label {
+  display: inline-block !important;
+  background: #1e40af !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  padding: 4px 10px !important;
+  border-radius: 4px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  margin-right: 10px !important;
+}
+
+/* MCQ */
+#apcsa-lesson .apcs-ex {
+  display: block !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  padding: 20px 22px !important;
+  margin: 16px 0 !important;
+}
+#apcsa-lesson .apcs-ex-stem { margin-bottom: 12px !important; }
+#apcsa-lesson .apcs-ex-stem strong { color: #0f172a !important; -webkit-text-fill-color: #0f172a !important; }
+
+/* MCQ options */
+#apcsa-lesson .apcs-ex-options { display: block !important; margin: 12px 0 !important; }
+#apcsa-lesson .apcs-ex-options .apcs-opt {
+  display: block !important;
+  padding: 10px 14p
+x !important;
+  margin: 6px 0 !important;
+  border: 2px solid #e5e7eb !important;
+  border-radius: 6px !important;
+  background: #ffffff !important;
+  cursor: pointer !important;
+  font-size: 16px !important;
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  transition: all 0.15s !important;
+}
+#apcsa-lesson .apcs-ex-options .apcs-opt:hover { border-color: #93c5fd !important; background: #eff6ff !important; }
+#apcsa-lesson .apcs-ex-options .apcs-opt.selected { border-color: #2563eb !important; background: #dbeafe !important; }
+#apcsa-lesson .apcs-ex-options .apcs-opt.correct { border-color: #16a34a !important; background: #dcfce7 !important; }
+#apcsa-lesson .apcs-ex-options .apcs-opt.incorrect { border-color: #dc2626 !important; background: #fee2e2 !important; }
+#apcsa-lesson .apcs-opt-letter {
+  display: inline-block !important;
+  font-weight: 700 !important;
+  margin-right: 10px !important;
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+}
+
+/* Predict gate */
+#apcsa-lesson .apcs-predict-gate {
+  display: block !important;
+  background: #fffbeb !important;
+  border-left: 3px solid #f59e0b !important;
+  padding: 10px 14px !important;
+  margin: 10px 0 !important;
+  font-size: 14px !important;
+  color: #78350f !important;
+  -webkit-text-fill-color: #78350f !important;
+  font-style: italic !important;
+}
+
+/* Buttons */
+#apcsa-lesson .apcs-btn,
+#apcsa-lesson .apcs-btn:link,
+#apcsa-lesson .apcs-btn:visited {
+  display: inline-block !important;
+  background: #2563eb !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  padding: 10px 20px !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  text-decoration: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  margin: 4px 4px 4px 0 !important;
+}
+#apcsa-lesson .apcs-btn:hover, #apcsa-lesson .apcs-btn:active {
+  background: #1d4ed8 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* Feedback */
+#apcsa-lesson .apcs-ex-feedback {
+  display: none !important;
+  margin-top: 12px !important;
+  padding: 14px 16px !important;
+  border-radius: 6px !important;
+  font-size: 15px !important;
+}
+#apcsa-lesson .apcs-ex-feedback.show { display: block !important; }
+#apcsa-lesson .apcs-ex-feedback.fb-correct {
+  background: #dcfce7 !important;
+  border-left: 4px solid #16a34a !important;
+  color: #14532d !important;
+  -webkit-text-fill-color: #14532d !important;
+}
+#apcsa-lesson .apcs-ex-feedback.fb-incorrect {
+  background: #fee2e2 !important;
+  border-left: 4px solid #dc2626 !important;
+  color: #7f1d1d !important;
+  -webkit-text-fill-color: #7f1d1d !important;
+}
+
+/* MASTERY */
+#apcsa-lesson .apcsa-mastery {
+  display: block !important;
+  background: #0f172a !important;
+  color: #f1f5f9 !important;
+  -webkit-text-fill-color: #f1f5f9
+ !important;
+  border-radius: 12px !important;
+  padding: 32px 32px 28px !important;
+  margin: 40px 0 !important;
+}
+#apcsa-lesson .apcsa-mastery,
+#apcsa-lesson .apcsa-mastery p,
+#apcsa-lesson .apcsa-mastery span,
+#apcsa-lesson .apcsa-mastery li,
+#apcsa-lesson .apcsa-mastery strong,
+#apcsa-lesson .apcsa-mastery em { color: #f1f5f9 !important; -webkit-text-fill-color: #f1f5f9 !important; }
+#apcsa-lesson .apcsa-mastery code { background: rgba(255,255,255,0.10) !important; color: #fde68a !important; -webkit-text-fill-color: #fde68a !important; padding: 2px 6px !important; border-radius: 4px !important; font-size: 14px !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-feedback.fb-correct strong { color: #14532d !important; -webkit-text-fill-color: #14532d !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-feedback.fb-correct code { background: rgba(20,83,45,0.12) !important; color: #14532d !important; -webkit-text-fill-color: #14532d !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-feedback.fb-incorrect strong { color: #7f1d1d !important; -webkit-text-fill-color: #7f1d1d !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-feedback.fb-incorrect code { background: rgba(127,29,29,0.12) !important; color: #7f1d1d !important; -webkit-text-fill-color: #7f1d1d !important; }
+#apcsa-lesson .apcsa-mastery .mastery-badge {
+  display: inline-block !important;
+  background: #f59e0b !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  padding: 5px 12px !important;
+  border-radius: 999px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 14px !important;
+}
+#apcsa-lesson .apcsa-mastery h2 { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; border-bottom: none !important; padding-bottom: 0 !important; margin-top: 0 !important; }
+#apcsa-lesson .apcsa-mastery h3 { color: #fbbf24 !important; -webkit-text-fill-color: #fbbf24 !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+#apcsa-lesson .apcsa-mastery .apcs-ex-stem,
+#apcsa-lesson .apcsa-mastery .apcs-ex-stem strong { color: #f1f5f9 !important; -webkit-text-fill-color: #f1f5f9 !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-options .apcs-opt {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #f1f5f9 !important;
+  -webkit-text-fill-color: #f1f5f9 !important;
+}
+#apcsa-lesson .apcsa-mastery .apcs-ex-options .apcs-opt:hover { border-color: #60a5fa !important; background: #1e293b !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-options .apcs-opt.selected { border-color: #60a5fa !important; background: #1e3a8a !important; }
+#apcsa-lesson .apcsa-mastery .mastery-rubric {
+  display: block !important;
+  margin-top: 18px !important;
+  padding: 16px 18px !important;
+  background: #1e293b !importa
+nt;
+  border-radius: 8px !important;
+  border: 1px solid #334155 !important;
+}
+#apcsa-lesson .apcsa-mastery .mastery-rubric h4 {
+  color: #fbbf24 !important;
+  -webkit-text-fill-color: #fbbf24 !important;
+  margin-top: 0 !important;
+  margin-bottom: 10px !important;
+  font-size: 15px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+}
+#apcsa-lesson .apcsa-mastery .rubric-row {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 8px 0 !important;
+  border-bottom: 1px solid #334155 !important;
+  gap: 12px !important;
+}
+#apcsa-lesson .apcsa-mastery .rubric-row:last-child { border-bottom: none !important; }
+#apcsa-lesson .apcsa-mastery .rubric-score {
+  display: inline-block !important;
+  background: #16a34a !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  padding: 3px 10px !important;
+  border-radius: 4px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+}
+
+/* EXTENSION */
+#apcsa-lesson .apcsa-extension {
+  display: block !important;
+  background: #faf5ff !important;
+  border: 1px solid #e9d5ff !important;
+  border-radius: 12px !important;
+  padding: 24px 28px !important;
+  margin: 32px 0 !important;
+}
+#apcsa-lesson .apcsa-extension h3 {
+  color: #6b21a8 !important;
+  -webkit-text-fill-color: #6b21a8 !important;
+  margin-top: 8px !important;
+}
+#apcsa-lesson .apcsa-extension .ext-badge {
+  display: inline-block !important;
+  background: #6b21a8 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  padding: 4px 10px !important;
+  border-radius: 4px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+}
+
+/* NAV */
+#apcsa-lesson .apcsa-lesson-nav {
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 14px !important;
+  margin: 40px 0 24px 0 !important;
+  padding-top: 24px !important;
+  border-top: 2px solid #e5e7eb !important;
+}
+#apcsa-lesson .apcsa-lesson-nav a:link, #apcsa-lesson .apcsa-lesson-nav a:visited {
+  display: block !important;
+  flex: 1 1 0 !important;
+  padding: 14px 18px !important;
+  background: #f8fafc !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  text-decoration: none !important;
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+}
+#apcsa-lesson .apcsa-lesson-nav a:hover { border-color: #2563eb !important; background: #eff6ff !important; }
+
+@media (max-width: 720px) {
+  #apcsa-lesson { padding: 20px 16px 60px !important; font-size: 16px !important; }
+  #apcsa-lesson h1 { font-size: 28px !important; }
+  #apcsa-lesson h2 { font-size: 22px !important; }
+}
+
+#apcsa-lesson .apcsa-mastery .apcs-predict-gate {
+  background: #1e293b !i
+mportant;
+  border-left-color: #f59e0b !important;
+  color: #fde68a !important;
+  -webkit-text-fill-color: #fde68a !important;
+}
+#apcsa-lesson .apcsa-game-block{margin:40px 0!important;}
+#apcsa-lesson .game-toggle-label{font-size:11px!important;font-weight:700!important;letter-spacing:1.5px!important;text-transform:uppercase!important;color:#6b7280!important;-webkit-text-fill-color:#6b7280!important;margin-bottom:10px!important;}
+#apcsa-lesson .game-toggle-pills{display:flex!important;gap:8px!important;margin-bottom:16px!important;flex-wrap:wrap!important;}
+#apcsa-lesson .game-pill{padding:8px 20px!important;border-radius:999px!important;border:2px solid #e5e7eb!important;background:#f9fafb!important;font-size:13px!important;font-weight:600!important;cursor:pointer!important;color:#374151!important;-webkit-text-fill-color:#374151!important;}
+#apcsa-lesson .game-pill.active{background:#6b21a8!important;border-color:#6b21a8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+#apcsa-lesson .game-pill:link,#apcsa-lesson .game-pill.visited{color:#374151!important;-webkit-text-fill-color:#374151!important;}
+#apcsa-lesson .game-pill.active:link,#apcsa-lesson .game-pill.active:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;}
+
+#srt-203{background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:24px!important;}#srt-203 .g-title{font-size:18px!important;font-weight:700!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;margin:0 0 4px!important;}#srt-203 .g-sub{font-size:13px!important;color:#6b7280!important;-webkit-text-fill-color:#6b7280!important;margin:0 0 16px!important;}#srt-203 .g-progress{display:flex!important;justify-content:space-between!important;margin-bottom:16px!important;font-size:13px!important;color:#6b7280!important;-webkit-text-fill-color:#6b7280!important;}#srt-203 .g-feedback{margin-top:12px!important;padding:14px!important;background:#fff!important;border-radius:8px!important;border:1px solid #e2e8f0!important;font-size:13px!important;color:#1f2937!important;-webkit-text-fill-color:#1f2937!important;line-height:1.6!important;display:none!important;}#srt-203 .g-complete{text-align:center!important;padding:32px 16px!important;display:none!important;}#srt-203 .g-complete-title{font-size:22px!important;font-weight:700!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;margin-bottom:8px!important;}#srt-203 .g-complete-score{font-size:16px!important;color:#4b5563!important;-webkit-text-fill-color:#4b5563!important;margin-bottom:20px!important;}#srt-203 .g-btn{background:#6b21a8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;padding:10px 20px!important;border-radius:8px!important;font-weight:600!important;font-size:14px!important;cursor:pointer!important;}#srt-203 .g-btn:disabled{background:#d1d5db!important;cursor:not-allowed!important;}#srt-203 .g-btn:
+link,#srt-203 .g-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;}#srt-203 .g-bank{display:flex!important;flex-direction:column!important;gap:6px!important;margin-bottom:12px!important;}#srt-203 .g-slot{display:flex!important;flex-direction:column!important;gap:6px!important;min-height:40px!important;margin-bottom:12px!important;padding:10px!important;background:#fff!important;border:2px dashed #cbd5e1!important;border-radius:8px!important;}#srt-203 .g-tile{padding:9px 14px!important;background:#fff!important;border:2px solid #e2e8f0!important;border-radius:6px!important;cursor:pointer!important;font-family:Consolas,monospace!important;font-size:13px!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;}#srt-203 .g-tile:hover{border-color:#6b21a8!important;background:#f5f0ff!important;}#srt-203 .g-tile.placed{background:#f5f0ff!important;border-color:#6b21a8!important;}#srt-203 .g-tile.ok{background:#f0fdf4!important;border-color:#15803d!important;}#srt-203 .g-tile.bad{background:#fef2f2!important;border-color:#b91c1c!important;}#srt-203 .g-prompt{font-size:14px!important;color:#1f2937!important;-webkit-text-fill-color:#1f2937!important;margin-bottom:12px!important;}#srt-203 .g-label{font-size:11px!important;font-weight:700!important;letter-spacing:1px!important;text-transform:uppercase!important;color:#6b7280!important;-webkit-text-fill-color:#6b7280!important;margin-bottom:6px!important;}
+#opq-203{background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:24px!important;}#opq-203 .g-title{font-size:18px!important;font-weight:700!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;margin:0 0 4px!important;}#opq-203 .g-sub{font-size:13px!important;color:#6b7280!important;-webkit-text-fill-color:#6b7280!important;margin:0 0 16px!important;}#opq-203 .g-progress{display:flex!important;justify-content:space-between!important;margin-bottom:16px!important;font-size:13px!important;color:#6b7280!important;-webkit-text-fill-color:#6b7280!important;}#opq-203 .g-feedback{margin-top:12px!important;padding:14px!important;background:#fff!important;border-radius:8px!important;border:1px solid #e2e8f0!important;font-size:13px!important;color:#1f2937!important;-webkit-text-fill-color:#1f2937!important;line-height:1.6!important;display:none!important;}#opq-203 .g-complete{text-align:center!important;padding:32px 16px!important;display:none!important;}#opq-203 .g-complete-title{font-size:22px!important;font-weight:700!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;margin-bottom:8px!important;}#opq-203 .g-complete-score{font-size:16px!important;color:#4b5563!important;-webkit-text-fill-color:#4b5563!important;margin-bottom:20px!important;}#opq-203 .g-btn{background:#6b21a8!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;padding:10px 20px!important;border-radius:8px!important;font-we
+ight:600!important;font-size:14px!important;cursor:pointer!important;}#opq-203 .g-btn:disabled{background:#d1d5db!important;cursor:not-allowed!important;}#opq-203 .g-btn:link,#opq-203 .g-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;}#opq-203 .g-code{background:#0f172a!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;padding:16px!important;border-radius:8px!important;font-family:Consolas,monospace!important;font-size:13px!important;white-space:pre!important;overflow-x:auto!important;margin-bottom:16px!important;}#opq-203 .g-input{width:100%!important;padding:10px!important;border:2px solid #e2e8f0!important;border-radius:8px!important;font-family:Consolas,monospace!important;font-size:13px!important;resize:vertical!important;background:#fff!important;color:#1f2937!important;-webkit-text-fill-color:#1f2937!important;margin-bottom:10px!important;}
+</style>
+<!-- CSANAV-START --><style>
+#csanav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;top:0!important;}
+#csanav *{box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important;-webkit-font-smoothing:antialiased!important;}
+#csanav .csn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#csanav .csn-rail::-webkit-scrollbar{display:none!important;}
+#csanav .csn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#csanav .csn-hub:link,#csanav .csn-hub:visited,#csanav a.csn-hub,#csanav a.csn-hub:link,#csanav a.csn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#csanav .csn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#csanav .csn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!impo
+rtant;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#csanav .csn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#csanav .csn-lesson:link,#csanav .csn-lesson:visited,#csanav .csn-lesson:hover,#csanav .csn-lesson:active,#csanav a.csn-lesson,#csanav a.csn-lesson:link,#csanav a.csn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#csanav .csn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#csanav .csn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#csanav .csn-lesson.open:link,#csanav .csn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#csanav .csn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#csanav .csn-lesson.open .csn-chevron{transform:rotate(180deg)!important;}
+#csanav .csn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#csanav .csn-steps.open{display:inline-flex!important;}
+#csanav .csn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#csanav .csn-step:link,#csanav .csn-step:visited,#csanav a.csn-step,#csanav a.csn-step:link,#csanav a.csn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#csanav .csn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#csanav .csn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#csanav .csn-step.current:link,#csanav .csn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@medi
+a(max-width:600px){#csanav .csn-badge{display:none!important;}}
+</style>
+<div id="csanav">
+<div class="csn-rail" id="csn-rail">
+<a href="/pages/ap-csa-course" class="csn-hub">AP CSA Hub</a> <span class="csn-badge">Unit 4</span> <a href="/pages/ap-csa-lesson-4-1-ethical-social-issues-data-collection" class="csn-lesson open" id="csn-l4-1" title="Ethical and Social Issues Around Data Collection">4.1 <span class="csn-chevron">▼</span></a> <span class="csn-steps open" id="csn-s4-1"> <span class="csn-step current">Lesson</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 1</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-4-2-introduction-to-using-data-sets" class="csn-lesson" id="csn-l4-2" title="Introduction to Using Data Sets">4.2 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s4-2"> <a href="/pages/ap-csa-lesson-4-2-introduction-to-using-data-sets" class="csn-step">Lesson</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 1</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-4-3-array-creation-and-access" class="csn-lesson" id="csn-l4-3" title="Array Creation and Access">4.3 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s4-3"> <a href="/pages/ap-csa-lesson-4-3-array-creation-and-access" class="csn-step">Lesson</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 1</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-4-4-traversing-arrays" class="csn-lesson" id="csn-l4-4" title="Traversing Arrays">4.4 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s4-4"> <a href="/pages/ap-csa-lesson-4-4-traversing-arrays" class="csn-step">Lesson</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 1</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-4-5-algorithms-with-arrays" class="csn-lesson" id="csn-l4-5" title="Algorithms with Arrays">4.5 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s4-5"> <a href="/pages/ap-csa-les%0Ason-4-5-algorithms-with-arrays" class="csn-step">Lesson</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 1</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-4-6-using-text-files" class="csn-lesson" id="csn-l4-6" title="Using Text Files">4.6 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s4-6"> <a href="/pages/ap-csa-lesson-4-6-using-text-files" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-4-6-using-text-files-exercise-1" class="csn-step">Ex 1</a> <a href="/pages/ap-csa-lesson-4-6-using-text-files-exercise-2" class="csn-step">Ex 2</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-4-7-wrapper-classes" class="csn-lesson" id="csn-l4-7" title="Wrapper Classes">4.7 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s4-7"> <a href="/pages/ap-csa-lesson-4-7-wrapper-classes" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-4-7-wrapper-classes-exercise-1" class="csn-step">Ex 1</a> <a href="/pages/ap-csa-lesson-4-7-wrapper-classes-exercise-2" class="csn-step">Ex 2</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-4-8-arraylist-methods" class="csn-lesson" id="csn-l4-8" title="ArrayList Methods">4.8 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s4-8"> <a href="/pages/ap-csa-lesson-4-8-arraylist-methods" class="csn-step">Lesson</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 1</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-4-9-traversing-arraylists" class="csn-lesson" id="csn-l4-9" title="Traversing ArrayLists">4.9 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s4-9"> <a href="/pages/ap-csa-lesson-4-9-traversing-arraylists" class="csn-step">Lesson</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 1</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-4-10-algorithms-with-arraylists" class="csn-lesson" id="csn-l4-10" title="Algorithms with ArrayLists">4.10 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s4-10"> <a href="/pages/ap-csa-lesson-4-10-algorithms-with-arraylists" class="csn-step">Lesson</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 1</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-4-11-2d-array-creation-and-access" class="csn-lesson" id="csn-l4-11" title="D Array Creation and Access">4.11 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s4-11"> <a href="/pages/ap-csa-lesson-4-11-2d-array-creation-and-access" class="csn-step">Lesson</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 1</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-4-12-traversing-2d-arrays" class="csn-lesson" id="csn-l4-12" title="Traversing 2D Arrays">4.12 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s4-12"> <a href="/pages/ap-csa-lesson-4-12-traversing-2d-arrays" class="csn-step">Lesson</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 1</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-4-13-implementing-2d-array-algorithms" class="csn-lesson" id="csn-l4-13" title="Implementing 2D Array Algorithms">4.13 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s4-13"> <a href="/pages/ap-csa-lesson-4-13-implementing-2d-array-algorithms" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-4-13-implementing-2d-array-algorithms-exercise-1" class="csn-step">Ex 1</a> <a href="/pages/ap-csa-lesson-4-13-implementing-2d-array-algorithms-exercise-2" class="csn-step">Ex 2</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-4-14-searching-algorithms" class="csn-lesson" id="csn-l4-14" title="Searching Algorithms">4.14 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s4-14"> <a href="/pages/ap-csa-lesson-4-14-searching-algorithms" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-4-14-searching-algorithms-exercise-1" class="csn-step">Ex 1</a> <a href="/pages/ap-csa-lesson-4-14-searching-algorithms-exercise-2" class="csn-step">Ex 2</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-4-15-sorting-algorith%0Ams" class="csn-lesson" id="csn-l4-15" title="Sorting Algorithms">4.15 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s4-15"> <a href="/pages/ap-csa-lesson-4-15-sorting-algorithms" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-4-15-sorting-algorithms-exercise-1" class="csn-step">Ex 1</a> <a href="/pages/ap-csa-lesson-4-15-sorting-algorithms-exercise-2" class="csn-step">Ex 2</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-4-16-recursion" class="csn-lesson" id="csn-l4-16" title="Recursion">4.16 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s4-16"> <a href="/pages/ap-csa-lesson-4-16-recursion" class="csn-step">Lesson</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 1</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-4-17-recursive-searching-and-sorting" class="csn-lesson" id="csn-l4-17" title="Recursive Searching and Sorting">4.17 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s4-17"> <a href="/pages/ap-csa-lesson-4-17-recursive-searching-and-sorting" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-4-17-recursive-searching-and-sorting-exercise-1" class="csn-step">Ex 1</a> <a href="/pages/ap-csa-lesson-4-17-recursive-searching-and-sorting-exercise-2" class="csn-step">Ex 2</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span>
+</div>
+</div>
+<p> </p>
+<script>
+(function(){
+  document.querySelectorAll('#csanav .csn-lesson').forEach(function(btn){
+    btn.addEventListener('click',function(e){
+      var stepsId='csn-s'+btn.id.replace('csn-l','');
+      var steps=document.getElementById(stepsId);
+      var isOpen=btn.classList.contains('open');
+      if(!isOpen)e.preventDefault();
+      document.querySelectorAll('#csanav .csn-lesson').forEach(function(b){b.classList.remove('open');});
+      document.querySelectorAll('#csanav .csn-steps').forEach(function(s){s.classList.remove('open');});
+      if(!isOpen&&steps){btn.classList.add('open');steps.classList.add('open');}
+    });
+  });
+})();
+</script><!-- CSANAV-END -->
+
+<div id="apcsa-lesson">
+
+<nav class="apcsa-breadcrumb" aria-label="Breadcrumb">
+  <a href="/pages/ap-csa-exam-prep-hub">AP CSA</a><span class="sep">›</span>
+  <a href="/pages/ap-csa-course">Course</a><span class="sep">›</span>
+  <a href="/pages/ap-csa-unit-4-course">Unit 4: Data Collections</a><span class="sep">›</span>
+  <span>Lesson 4.1</span>
+</nav>
+
+<header class="apcsa-header">
+  <span class="apcsa-eyebrow">Unit 4 · Lesson 4.
+1 · Ethics &amp; Society</span>
+  <h1>Lesson 4.1: Ethical and Social Issues Around Data Collection</h1>
+  <div class="apcsa-meta-row">
+    <span>🕑 25–30 min</span>
+    <span>·</span>
+    <span>8 Practice Questions</span>
+    <span>·</span>
+    <span>AP Exam Concept + Mastery</span>
+  </div>
+</header>
+
+<div class="apcsa-learn-box">
+  <h3>What You'll Learn</h3>
+  <ul>
+    <li>
+<strong>4.1.A:</strong> Explain the risks to privacy from collecting and storing personal data on computer systems.</li>
+    <li>
+<strong>4.1.B:</strong> Explain the importance of recognizing data quality and potential bias in data sets.</li>
+    <li>Distinguish between personally identifiable information (PII) and non-PII data.</li>
+    <li>Identify sources of bias in data collection and their downstream effects on algorithms.</li>
+    <li>Explain why legal compliance does not equal ethical behavior in data practices.</li>
+  </ul>
+</div>
+
+<div class="apcsa-block" style="margin:28px 0!important;">
+  <h3 style="font-size:17px!important;font-weight:700!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;margin:0 0 10px!important;">Key Vocabulary</h3>
+  <table style="width:100%!important;border-collapse:collapse!important;font-size:14px!important;">
+    <thead><tr style="background:#1e1b4b!important;">
+      <th style="padding:8px 12px!important;border:1px solid #334155!important;text-align:left!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px!important;width:26%!important;">Term</th>
+      <th style="padding:8px 12px!important;border:1px solid #334155!important;text-align:left!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px!important;">Definition</th>
+    </tr></thead>
+    <tbody>
+<tr>
+<td style="padding:8px 12px!important;border:1px solid #e5e7eb!important;font-weight:700!important;font-family:Consolas,monospace!important;font-size:13px!important;white-space:nowrap!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;background:#f9fafb!important;vertical-align:top!important;">PII</td>
+<td style="padding:8px 12px!important;border:1px solid #e5e7eb!important;color:#1f2937!important;-webkit-text-fill-color:#1f2937!important;vertical-align:top!important;">Personally Identifiable Information — any data that can identify a specific individual, such as name, SSN, email, or location.</td>
+</tr>
+<tr>
+<td style="padding:8px 12px!important;border:1px solid #e5e7eb!important;font-weight:700!important;font-family:Consolas,monospace!important;font-size:13px!important;white-space:nowrap!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;background:#f9fafb!important;vertical-align:top!important;">digital footprint</td>
+<td style="padding:8px 12px!important;border:1px solid #e5e7eb!important;color:#1f2937!important;-webkit-text-fill-color:#1f2937!important;vertical-align:top!impo
+rtant;">The trail of data a person generates through online activity, including searches, purchases, and location history.</td>
+</tr>
+<tr>
+<td style="padding:8px 12px!important;border:1px solid #e5e7eb!important;font-weight:700!important;font-family:Consolas,monospace!important;font-size:13px!important;white-space:nowrap!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;background:#f9fafb!important;vertical-align:top!important;">bias</td>
+<td style="padding:8px 12px!important;border:1px solid #e5e7eb!important;color:#1f2937!important;-webkit-text-fill-color:#1f2937!important;vertical-align:top!important;">Systematic error introduced when a data set does not accurately represent the population it is meant to model.</td>
+</tr>
+<tr>
+<td style="padding:8px 12px!important;border:1px solid #e5e7eb!important;font-weight:700!important;font-family:Consolas,monospace!important;font-size:13px!important;white-space:nowrap!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;background:#f9fafb!important;vertical-align:top!important;">informed consent</td>
+<td style="padding:8px 12px!important;border:1px solid #e5e7eb!important;color:#1f2937!important;-webkit-text-fill-color:#1f2937!important;vertical-align:top!important;">A person's knowing agreement to have their data collected, understanding what it will be used for.</td>
+</tr>
+<tr>
+<td style="padding:8px 12px!important;border:1px solid #e5e7eb!important;font-weight:700!important;font-family:Consolas,monospace!important;font-size:13px!important;white-space:nowrap!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;background:#f9fafb!important;vertical-align:top!important;">data aggregation</td>
+<td style="padding:8px 12px!important;border:1px solid #e5e7eb!important;color:#1f2937!important;-webkit-text-fill-color:#1f2937!important;vertical-align:top!important;">Combining multiple data sources or records so that non-sensitive data points together reveal sensitive information.</td>
+</tr>
+<tr>
+<td style="padding:8px 12px!important;border:1px solid #e5e7eb!important;font-weight:700!important;font-family:Consolas,monospace!important;font-size:13px!important;white-space:nowrap!important;color:#1e1b4b!important;-webkit-text-fill-color:#1e1b4b!important;background:#f9fafb!important;vertical-align:top!important;">representation bias</td>
+<td style="padding:8px 12px!important;border:1px solid #e5e7eb!important;color:#1f2937!important;-webkit-text-fill-color:#1f2937!important;vertical-align:top!important;">Bias that occurs when certain groups are over- or under-represented in a data set, causing a trained model to perform poorly for underrepresented groups.</td>
+</tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ==================== SECTION 1 ==================== -->
+<h2>Privacy Risks of Storing Personal Data (4.1.A)</h2>
+
+<p>Every time a program stores data about a user, it creates a potential privacy risk. The 
+AP CSA exam expects you to be able to <strong>identify what constitutes PII</strong>, explain <strong>why storing it creates risk</strong>, and recognize when combining non-PII data creates a new privacy problem.</p>
+
+<h3>What Is PII?</h3>
+<p>PII is any data that, alone or combined with other data, can identify a specific person. Examples include:</p>
+<ul>
+  <li>Name, address, phone number, email</li>
+  <li>Social Security number, driver's license, passport number</li>
+  <li>Biometric data (fingerprints, face scans)</li>
+  <li>IP address, GPS coordinates, device identifiers</li>
+  <li>Medical and financial records</li>
+</ul>
+
+<div class="apcsa-callout concept">
+  <h4>📌n The Aggregation Problem</h4>
+  <p>Each of the following alone seems harmless: your first name, the city you live in, the college you attended, your employer. But combined, they likely identify you uniquely. This is <strong>data aggregation</strong> — one of the most commonly tested concepts in this topic on the AP exam.</p>
+</div>
+
+<h3>Why Stored Data Creates Risk</h3>
+<p>Stored data can be breached, sold, subpoenaed, or used in ways users didn't anticipate. Key risks the AP exam focuses on:</p>
+<ul>
+  <li>
+<strong>Data breaches:</strong> Unauthorized access exposes stored PII.</li>
+  <li>
+<strong>Re-identification:</strong> Anonymized data can be de-anonymized when combined with other public data.</li>
+  <li>
+<strong>Surveillance:</strong> Governments or corporations can track behavior using digital footprints.</li>
+  <li>
+<strong>Purpose creep:</strong> Data collected for one reason is later used for another without consent.</li>
+</ul>
+
+<div class="apcsa-callout trap">
+  <h4>⚠️ AP Exam Trap: Legal ≠ Ethical</h4>
+  <p>The AP exam frequently tests whether students can distinguish between what is <em>legal</em> and what is <em>ethical</em>. A company can legally collect and sell your browsing history in many jurisdictions — but that doesn't make it ethical. Watch for MCQ answer choices that conflate the two.</p>
+</div>
+
+<!-- ==================== SECTION 2 ==================== -->
+<h2>Data Quality and Bias (4.1.B)</h2>
+
+<p>When a data set is biased, any algorithm trained on it or run against it will produce biased results — even if the code is written perfectly. Recognizing bias is a software design skill, not just a social awareness skill.</p>
+
+<h3>Types of Bias in Data</h3>
+<ul>
+  <li>
+<strong>Representation bias:</strong> The data set underrepresents some groups. A facial recognition model trained mostly on light-skinned faces performs poorly on darker-skinned faces.</li>
+  <li>
+<strong>Historical bias:</strong> Past data encodes past discrimination. A hiring algorithm trained on historical résumés may perpetuate the same patterns.</li>
+  <li>
+<strong>Measurement bias:</strong> The tool used to collect data is inaccurate for some groups. A sensor calibrated for one demographic may give systematically wrong reading
+s for another.</li>
+  <li>
+<strong>Feedback loop bias:</strong> An algorithm's decisions create more data that reinforces its original bias.</li>
+</ul>
+
+<div class="apcsa-callout example">
+  <h4>✅ Example: Biased Training Data</h4>
+  <p>A loan-approval algorithm is trained on 10 years of historical approvals. Because past practices denied loans to certain zip codes, the algorithm learns to penalize those zip codes — even if race is not an explicit variable. The data quality problem (biased historical decisions) produces a biased algorithm.</p>
+</div>
+
+<h3>Data Quality Factors</h3>
+<p>Beyond bias, data quality also depends on:</p>
+<ul>
+  <li>
+<strong>Accuracy:</strong> Does the data correctly reflect reality?</li>
+  <li>
+<strong>Completeness:</strong> Are there missing values that skew results?</li>
+  <li>
+<strong>Timeliness:</strong> Is the data current enough for the use case?</li>
+  <li>
+<strong>Consistency:</strong> Is data collected the same way across all records?</li>
+</ul>
+
+<!-- ==================== REAL WORLD ==================== -->
+<h2>Real-World Connection</h2>
+
+<div class="apcsa-callout concept">
+  <h4>📌 Why This Section Opens Unit 4</h4>
+  <p>Unit 4 is about arrays, ArrayLists, searching, sorting, and algorithms — powerful tools for processing data at scale. Topic 4.1 comes first to establish a principle: <strong>what you do with data has consequences</strong>. Every array you process in this unit could represent real people. The AP exam tests whether future programmers think about that before they write the loop.</p>
+</div>
+
+<h3>The Programmer's Responsibility</h3>
+<p>When you write code that collects, stores, or processes user data, you take on ethical obligations:</p>
+<ul>
+  <li>Collect only what you need (data minimization).</li>
+  <li>Be transparent about what data is collected and why.</li>
+  <li>Secure stored data appropriately.</li>
+  <li>Examine training data for bias before deploying algorithms.</li>
+  <li>Consider who might be harmed by your program's outputs.</li>
+</ul>
+
+<!-- ==================== SUMMARY ==================== -->
+<h2>Summary</h2>
+<ul>
+  <li>PII is any data that can identify a specific individual; combining non-PII data can also create PII through aggregation.</li>
+  <li>Storing personal data creates risks: breaches, re-identification, surveillance, and purpose creep.</li>
+  <li>Legal data practices are not automatically ethical — the AP exam tests this distinction explicitly.</li>
+  <li>Biased data produces biased algorithms; types include representation, historical, measurement, and feedback loop bias.</li>
+  <li>Programmers share responsibility for the ethical use of data their code handles.</li>
+</ul>
+
+<!-- ==================== PRACTICE ==================== -->
+<section class="apcsa-practice-tier">
+<h2>Practice Questions</h2>
+
+  <div class="apcs-ex" data-type="mcq" data-answer="C">
+    <span class="apcs-ex-label">MCQ 1
+    <div class="apcs-ex-stem">A website collects users' zip codes, ages, and job titles separately. Each piece of data is publicly available. Which of the following best describes the privacy concern?</div>
+    <div class="apcs-predict-gate"><em>Predict the answer before reading the options.</em></div>
+    <div class="apcs-ex-options">
+      <div class="apcs-opt" data-letter="A">
+<span class="apcs-opt-letter">A</span> There is no concern because each data point is public.</div>
+      <div class="apcs-opt" data-letter="B">
+<span class="apcs-opt-letter">B</span> The website is violating federal law by storing this data.</div>
+      <div class="apcs-opt" data-letter="C">
+<span class="apcs-opt-letter">C</span> Combining the data points may allow identification of specific individuals.</div>
+      <div class="apcs-opt" data-letter="D">
+<span class="apcs-opt-letter">D</span> Zip codes are PII and cannot be collected without consent.</div>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check Answer</button>
+    <div class="apcs-ex-feedback">✓ <strong>C.</strong> This is data aggregation — individually harmless data points combined can uniquely identify a person. A is wrong (aggregation creates new risk). B is wrong (no law is stated to be broken). D is wrong (zip codes alone are not PII).</div>
+  </span>
+</div>
+
+  <div class="apcs-ex" data-type="mcq" data-answer="B">
+    <span class="apcs-ex-label">MCQ 2</span>
+    <div class="apcs-ex-stem">A company's terms of service allow it to sell user browsing data to advertisers. Users who sign up agree to these terms. Which statement is most accurate?</div>
+    <div class="apcs-predict-gate"><em>Predict the answer before reading the options.</em></div>
+    <div class="apcs-ex-options">
+      <div class="apcs-opt" data-letter="A">
+<span class="apcs-opt-letter">A</span> The practice is both legal and ethical because users consented.</div>
+      <div class="apcs-opt" data-letter="B">
+<span class="apcs-opt-letter">B</span> The practice may be legal but could still be considered unethical.</div>
+      <div class="apcs-opt" data-letter="C">
+<span class="apcs-opt-letter">C</span> The practice is illegal because browsing data is PII.</div>
+      <div class="apcs-opt" data-letter="D">
+<span class="apcs-opt-letter">D</span> The practice is ethical only if the company is nonprofit.</div>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check Answer</button>
+    <div class="apcs-ex-feedback">✓ <strong>B.</strong> Burying consent in a terms-of-service agreement may be legally compliant but is widely considered ethically problematic because users often don't meaningfully understand what they're agreeing to. The AP exam frequently tests legal vs. ethical distinction.</div>
+  </div>
+
+  <div class="apcs-ex" data-type="mcq" data-answer="A">
+    <span class="apcs-ex-label">MCQ 3</span>
+    <div clas s="apcs-ex-stem">A medical AI is trained on patient data from hospitals in one region of the country. When deployed nationally, it produces less accurate diagnoses for patients from other regions. This is most likely an example of:</div>
+    <div class="apcs-ex-options">
+      <div class="apcs-opt" data-letter="A">
+<span class="apcs-opt-letter">A</span> Representation bias</div>
+      <div class="apcs-opt" data-letter="B">
+<span class="apcs-opt-letter">B</span> Feedback loop bias</div>
+      <div class="apcs-opt" data-letter="C">
+<span class="apcs-opt-letter">C</span> Purpose creep</div>
+      <div class="apcs-opt" data-letter="D">
+<span class="apcs-opt-letter">D</span> Data aggregation</div>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check Answer</button>
+    <div class="apcs-ex-feedback">✓ <strong>A.</strong> Representation bias — the training data only represented one region, so the model performs poorly for underrepresented groups. B (feedback loop) occurs when the model's own decisions generate new biased data. C (purpose creep) is using data for a different purpose than collected. D is combining data from multiple sources.</div>
+  </div>
+
+  <div class="apcs-ex" data-type="mcq" data-answer="D">
+    <span class="apcs-ex-label">MCQ 4</span>
+    <div class="apcs-ex-stem">Which of the following is NOT an example of PII?</div>
+    <div class="apcs-predict-gate"><em>Predict the answer before reading the options.</em></div>
+    <div class="apcs-ex-options">
+      <div class="apcs-opt" data-letter="A">
+<span class="apcs-opt-letter">A</span> A person's GPS coordinates logged every 10 seconds</div>
+      <div class="apcs-opt" data-letter="B">
+<span class="apcs-opt-letter">B</span> A user's IP address combined with their login timestamp</div>
+      <div class="apcs-opt" data-letter="C">
+<span class="apcs-opt-letter">C</span> A Social Security number stored in a database</div>
+      <div class="apcs-opt" data-letter="D">
+<span class="apcs-opt-letter">D</span> The average high temperature in Kansas City in July</div>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check Answer</button>
+    <div class="apcs-ex-feedback">✓ <strong>D.</strong> Weather data about a city is not linked to any individual and cannot identify anyone — it is not PII. A, B, and C all can identify or locate specific individuals.</div>
+  </div>
+
+</section>
+
+<!-- ==================== MASTERY ==================== -->
+<section class="apcsa-mastery">
+  <span class="mastery-badge">Tier 3 · AP Mastery</span>
+  <h2>Mastery: Ethical and Social Issues Around Data Collection</h2>
+
+  <div class="apcs-ex" data-type="mcq" data-answer="C">
+    <span class="apcs-ex-label">MCQ 5</span>
+    <div class="apcs-ex-stem">A city deploys a predictive policing algorithm trained on 20 years of arrest records. Critics argue the algorithm is biased. Which of
+ the following best explains the concern?</div>
+    <div class="apcs-predict-gate"><em>Predict the answer before reading the options.</em></div>
+    <div class="apcs-ex-options">
+      <div class="apcs-opt" data-letter="A">
+<span class="apcs-opt-letter">A</span> Arrest records are PII and cannot be used without individual consent.</div>
+      <div class="apcs-opt" data-letter="B">
+<span class="apcs-opt-letter">B</span> The algorithm is illegal because it uses historical data.</div>
+      <div class="apcs-opt" data-letter="C">
+<span class="apcs-opt-letter">C</span> Historical biases in policing are encoded in the training data, causing the algorithm to reinforce those biases.</div>
+      <div class="apcs-opt" data-letter="D">
+<span class="apcs-opt-letter">D</span> The algorithm has no bias because it uses real data.</div>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check Answer</button>
+    <div class="apcs-ex-feedback">✓ <strong>C.</strong> This is historical bias — past discriminatory practices create skewed training data, and the algorithm perpetuates those patterns. D is a classic misconception: real data can absolutely be biased if it reflects historical inequity.</div>
+  </div>
+
+  <div class="apcs-ex" data-type="mcq" data-answer="B">
+    <span class="apcs-ex-label">MCQ 6</span>
+    <div class="apcs-ex-stem">A fitness app stores users' step counts and sleep data. The company later begins selling this data to health insurance companies without updating its privacy policy. This scenario most directly illustrates:</div>
+    <div class="apcs-predict-gate"><em>Predict the answer before reading the options.</em></div>
+    <div class="apcs-ex-options">
+      <div class="apcs-opt" data-letter="A">
+<span class="apcs-opt-letter">A</span> Data aggregation</div>
+      <div class="apcs-opt" data-letter="B">
+<span class="apcs-opt-letter">B</span> Purpose creep</div>
+      <div class="apcs-opt" data-letter="C">
+<span class="apcs-opt-letter">C</span> Representation bias</div>
+      <div class="apcs-opt" data-letter="D">
+<span class="apcs-opt-letter">D</span> Feedback loop bias</div>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check Answer</button>
+    <div class="apcs-ex-feedback">✓ <strong>B.</strong> Purpose creep — data collected for one purpose (tracking fitness) is being used for a different purpose (insurance evaluation) that users didn't anticipate or consent to. This is a common real-world privacy concern that the AP exam tests.</div>
+  </div>
+
+  <div class="apcs-ex" data-type="mcq" data-answer="A">
+    <span class="apcs-ex-label">MCQ 7</span>
+    <div class="apcs-ex-stem">Which of the following best represents the principle of <em>data minimization</em>?</div>
+    <div class="apcs-predict-gate"><em>Predict the answer before reading the options.</em></div>
+    <div class="apcs-ex-options">
+      <d iv class="apcs-opt" data-letter="A">
+<span class="apcs-opt-letter">A</span> A shopping app requests only the user's shipping address, not their full contact list.</d>
+</div>
+      <div class="apcs-opt" data-letter="B">
+<span class="apcs-opt-letter">B</span> A company encrypts all stored user data.</div>
+      <div class="apcs-opt" data-letter="C">
+<span class="apcs-opt-letter">C</span> A database deletes records after 30 days.</div>
+      <div class="apcs-opt" data-letter="D">
+<span class="apcs-opt-letter">D</span> A website displays a privacy policy on its homepage.</div>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check Answer</button>
+    <div class="apcs-ex-feedback">✓ <strong>A.</strong> Data minimization means collecting only what is necessary for the stated purpose. B is about security, C is about retention policy, D is about transparency — all good practices but not specifically data minimization.</div>
+  </section>
+</div>
+
+  <div class="apcs-ex" data-type="mcq" data-answer="D">
+    <span class="apcs-ex-label">MCQ 8</span>
+    <div class="apcs-ex-stem">A software team is building an algorithm to predict student success. A team member notices that the training data contains very few records from rural schools. What is the most appropriate next step?</div>
+    <div class="apcs-predict-gate"><em>Predict the answer before reading the options.</em></div>
+    <div class="apcs-ex-options">
+      <div class="apcs-opt" data-letter="A">
+<span class="apcs-opt-letter">A</span> Deploy the algorithm and monitor for complaints after launch.</div>
+      <div class="apcs-opt" data-letter="B">
+<span class="apcs-opt-letter">B</span> Exclude rural schools from the algorithm's predictions entirely.</div>
+      <div class="apcs-opt" data-letter="C">
+<span class="apcs-opt-letter">C</span> The lack of rural data is not a concern because the algorithm is mathematically correct.</div>
+      <div class="apcs-opt" data-letter="D">
+<span class="apcs-opt-letter">D</span> Seek additional data from rural schools before training to reduce representation bias.</div>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check Answer</button>
+    <div class="apcs-ex-feedback">✓ <strong>D.</strong> The correct ethical response is to address the data quality problem before deployment. A is reckless (harm occurs before correction). B discriminates. C confuses mathematical correctness with ethical correctness — a well-written algorithm on biased data still produces biased results.</div>
+  </div>
+
+
+
+<nav class="apcsa-lesson-nav">
+  <a class="nav-prev" href="/pages/ap-csa-unit-4-course">← Unit 4 Overview</a>
+  <a class="nav-next" href="/pages/ap-csa-lesson-4-2-introduction-to-using-data-sets">Lesson 4.2: Introduction to Using Data Sets →</a>
+</nav>
+
+<script>
+(function() {
+  document.querySelectorAll('#apcsa-lesson .apcs-ex').forEach(function(ex) 
+{
+    if (ex.dataset.mcqInit) return;
+    ex.dataset.mcqInit = '1';
+    var correct = ex.getAttribute('data-answer');
+    var opts = ex.querySelectorAll('.apcs-opt');
+    var btn = ex.querySelector('.apcs-ex-check');
+    var feedback = ex.querySelector('.apcs-ex-feedback');
+    var chosen = null;
+
+    opts.forEach(function(opt) {
+      opt.style.cursor = 'pointer';
+      opt.addEventListener('click', function() {
+        if (ex.dataset.answered) return;
+        opts.forEach(function(o) { o.classList.remove('selected'); });
+        opt.classList.add('selected');
+        chosen = opt.getAttribute('data-letter');
+      });
+    });
+
+    if (btn) btn.addEventListener('click', function() {
+      if (!chosen || ex.dataset.answered) return;
+      ex.dataset.answered = '1';
+      opts.forEach(function(opt) {
+        var letter = opt.getAttribute('data-letter');
+        if (letter === correct) opt.classList.add('correct');
+        else if (letter === chosen) opt.classList.add('incorrect');
+        opt.classList.remove('selected');
+      });
+      if (feedback) {
+        feedback.classList.add('show');
+        feedback.classList.add(chosen === correct ? 'fb-correct' : 'fb-incorrect');
+      }
+      btn.disabled = true;
+    });
+  });
+})();
+</script>
+
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Lesson 4.1: Ethical and Social Issues Around Data Collection", "description": "AP CSA Lesson 4.1: Ethical and Social Issues Around Data Collection — aligned to 2025-2026 CED. Covers PII, data aggregation, bias types, and the legal vs. ethical distinction.", "url": "https://apcsexamprep.com/pages/ap-csa-lesson-4-1-ethical-social-issues-data-collection", "datePublished": "2026-05-27", "dateModified": "2026-05-27", "author": {"@type": "Person", "name": "Tanner Crow"}, "publisher": {"@type": "Organization", "name": "APCSExamPrep.com"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "AP CSA", "item": "https://apcsexamprep.com/pages/ap-csa-exam-prep-hub"}, {"@type": "ListItem", "position": 2, "name": "Unit 4", "item": "https://apcsexamprep.com/pages/ap-csa-unit-4-course"}, {"@type": "ListItem", "position": 3, "name": "Lesson 4.1: Ethical and Social Issues Around Data Collection", "item": "https://apcsexamprep.com/pages/ap-csa-lesson-4-1-ethical-social-issues-data-collection"}]}</script>
+
+<nav class="apcsa-nav" aria-label="Lesson navigation">
+  <a href="/pages/ap-csa-unit-4-course" class="nav-prev">
+    <span class="nav-direction">← Back to unit hub</span>
+    <span class="nav-title">Unit 4: Data Collections</span>
+  </a>
+  <a href="/pages/ap-csa-lesson-4-2-introduction-to-using-data-sets" class="nav-next">
+    <span c lass="nav-direction">Next lesson →</span>
+    <span class="nav-title">4.2 Introduction to Using Data Sets</span>
+  </a>
+</nav>

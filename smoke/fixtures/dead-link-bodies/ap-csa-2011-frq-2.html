@@ -1,0 +1,95 @@
+<meta property="og:title" content="2011 AP CSA FRQ 2 - AttractiveCritter Solution">
+<meta property="og:description" content="Complete Java solution for 2011 AP CSA FRQ 2. GridWorld Case Study (Legacy) with explanations.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.apcsexamprep.com/pages/ap-csa-2011-frq-2">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"TechArticle","headline":"2011 AP CSA FRQ 2 - AttractiveCritter","description":"Complete Java solution for 2011 AP CSA FRQ 2","author":{"@type":"Person","name":"Tanner Crow"},"dateModified":"2026-01-18"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.apcsexamprep.com"},{"@type":"ListItem","position":2,"name":"FRQ Archive","item":"https://www.apcsexamprep.com/pages/ap-csa-frq-archive"},{"@type":"ListItem","position":3,"name":"2011 FRQs","item":"https://www.apcsexamprep.com/pages/ap-csa-frq-2011"},{"@type":"ListItem","position":4,"name":"FRQ 2"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What concepts does 2011 FRQ 2 test?","acceptedAnswer":{"@type":"Answer","text":"Tests gridworld case study (legacy), part of Unit 2 (Selection & Iteration)."}},{"@type":"Question","name":"How many points?","acceptedAnswer":{"@type":"Answer","text":"9 points. FRQs are 40% of your total score."}},{"@type":"Question","name":"How long to spend?","acceptedAnswer":{"@type":"Answer","text":"About 20-22 minutes per FRQ."}}]}
+</script>
+<style>
+  .frq-container { max-width: 900px; margin: 0 auto; padding: 40px 20px 60px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; color: #1f2937; }
+  .frq-container h1 { color: #1e3a8a; font-size: 2.2em; margin-bottom: 10px; border-bottom: 3px solid #3b82f6; padding-bottom: 15px; }
+  .frq-container h2 { color: #1e40af; font-size: 1.6em; margin-top: 35px; margin-bottom: 15px; padding-left: 10px; border-left: 4px solid #60a5fa; }
+  .frq-container h3 { color: #1e40af; font-size: 1.3em; margin-top: 25px; margin-bottom: 12px; }
+  .frq-intro { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #3b82f6; }
+  .frq-container pre { background-color: #1e293b; color: #e2e8f0; padding: 18px; border-radius: 6px; overflow-x: auto; border: 1px solid #334155; margin: 15px 0; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.9em; line-height: 1.5; }
+  .frq-container code { font-family: 'Consolas', 'Monaco', monospace; font-size: 0.95em; background-color: #f1f5f9; padding: 2px 6px; border-radius: 4px; }
+  .frq-container pre code { background-color: transparent; padding: 0; }
+  .key-insight { background-color: #e0f2fe; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #0284c7; }
+  .warning-box { background-color: #fef2f2; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #ef4444; }
+  .practice-tip { background-color: #dcfce7; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #22c55e; }
+  .nav-buttons { display: flex; justify-content: space-between; margin-top: 40px; gap: 15px; flex-wrap: wrap; }
+  a.btn, .btn { padding: 12px 24px !important; background-color: #3b82f6 !important; color: white !important; text-decoration: none !important; border-radius: 6px !important; font-weight: 600 !important; transition: background-color 0.3s !important; text-align: center !important; display: inline-block !important; opacity: 1 !important; visibility: visible !important; }
+  a.btn:link, a.btn:visited { color: white !important; background-color: #3b82f6 !important; }
+  a.btn:hover { background-color: #2563eb !important; color: white !important; }
+  .toc-nav { background-color: #f3f4f6; padding: 15px 20px; border-radius: 6px; margin-bottom: 30px; }
+  .toc-nav h4 { margin-top: 0; font-size: 1.1em; color: #374151; }
+  .toc-nav ul { margin-bottom: 0; padding-left: 20px; }
+  .toc-nav li { margin: 8px 0; }
+  .toc-nav a { color: #2563eb; text-decoration: none; }
+  @media (max-width: 768px) { .frq-container h1 { font-size: 1.8em; } .frq-container { padding: 20px 15px; } .nav-buttons { flex-direction: column; } }
+</style>
+<article class="frq-container">
+<nav style="margin-bottom:20px;font-size:0.9em;color:#64748b;">
+<a href="/" style="color:#2563eb;">Home</a> › <a href="/pages/ap-csa-frq-archive" style="color:#2563eb;">FRQ Archive</a> › <a href="/pages/ap-csa-frq-2011" style="color:#2563eb;">2011 FRQs</a> › <span style="color:#1e3a8a;font-weight:500;">FRQ 2</span>
+</nav>
+<h1>2011 AP CSA FRQ 2: AttractiveCritter</h1>
+<div class="frq-intro">
+<p><strong>Topic:</strong> GridWorld Case Study (Legacy)</p>
+<p><strong>Skills:</strong> Case study specific - Critter method overriding</p>
+<p><strong>Unit:</strong> Unit 3 (Class Creation) (2025-2026 AP CSA)</p>
+<p><strong>Points:</strong> 9 | <strong>Time:</strong> ~22 minutes</p>
+</div>
+<div style="background:#eff6ff;padding:15px;border-radius:6px;margin-bottom:25px;border-left:4px solid #3b82f6;">
+<strong>Study Guide:</strong> <a href="/pages/unit-2-selection-and-iteration-ultimate-study-guide" style="color:#2563eb;font-weight:600;">Unit 2: Selection &amp; Iteration</a>
+</div>
+<nav class="toc-nav">
+<h4>Navigation:</h4>
+<ul>
+<li><a href="#part-a">Part (a)</a></li>
+<li><a href="#part-b">Part (b)</a></li>
+<li><a href="#concepts">Key Concepts</a></li>
+</ul>
+</nav>
+<div class="warning-box">
+<strong>Note:</strong> This FRQ used the GridWorld/Marine Biology Case Study (no longer tested).</div>
+<section id="part-a"><h2>Part (a)</h2>
+<p>Note: This FRQ was part of the GridWorld Case Study which is no longer tested.</p>
+<div class="practice-tip">
+<strong>Try First!</strong> Attempt before viewing solution.</div>
+<h3>Solution</h3>
+<pre><code>// GridWorld Case Study - no longer tested</code></pre></section>
+<section id="part-b"><h2>Part (b)</h2>
+<p>The GridWorld Case Study is no longer tested on the AP exam.</p>
+<h3>Solution</h3>
+<pre><code>// Focus on standard inheritance and polymorphism problems.</code></pre></section>
+
+<section id="concepts"><h2>Key Concepts</h2>
+<div class="key-insight">
+<div style="padding:6px 0;border-bottom:1px solid #e0f2fe;">✓ Method overriding</div>
+<div style="padding:6px 0;border-bottom:1px solid #e0f2fe;">✓ Critter behavior customization</div>
+</div></section>
+<section id="mistakes"><h2>Common Mistakes</h2>
+<div class="warning-box"><div style="padding:6px 0;border-bottom:1px solid #fee2e2;">
+<span style="color:#ef4444;">✗</span> This question used the deprecated GridWorld Case Study</div></div></section>
+<div style="background:#f0fdf4;padding:15px;border-radius:6px;margin:20px 0;border-left:4px solid #22c55e;">
+<strong>Practice Similar:</strong> <a href="/pages/ap-csa-2019-frq-4">2019 FRQ 4</a> | <a href="/pages/ap-csa-2022-frq-4">2022 FRQ 4</a> | <a href="/pages/ap-csa-2023-frq-4">2023 FRQ 4</a>
+</div>
+<div style="background:#f3f4f6;padding:20px;border-radius:8px;margin-top:30px;">
+<h3 style="margin-top:0;color:#1e3a8a;">Official Resources</h3>
+<ul><li><a href="https://apcentral.collegeboard.org/media/pdf/ap11-frq-computer-science-a.pdf" target="_blank">2011 FRQ PDF</a></li></ul>
+</div>
+<nav class="nav-buttons">
+<a class="btn" href="/pages/ap-csa-2011-frq-1">← FRQ 1</a>
+<a class="btn" href="/pages/ap-csa-frq-2011">2011 FRQs</a>
+<a class="btn" href="/pages/ap-csa-2011-frq-3">FRQ 3 →</a>
+</nav>
+<div style="margin-top:40px;padding:20px;background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 100%);border-radius:8px;border-left:4px solid #3b82f6;">
+<p style="margin:0;"><strong>Author:</strong> Tanner Crow - AP CS Teacher, 11+ years</p>
+</div>
+</article>

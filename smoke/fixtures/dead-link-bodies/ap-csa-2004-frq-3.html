@@ -1,0 +1,286 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "2004 AP CSA FRQ 3 - Fish Complete Solution",
+  "description": "Complete Java solution and walkthrough for 2004 AP Computer Science A FRQ 3 (Fish). Marine Biology Case Study (Legacy) with scoring rubric and common mistakes.",
+  "author": {
+    "@type": "Person",
+    "name": "Tanner Crow",
+    "jobTitle": "AP Computer Science Teacher"
+  },
+  "datePublished": "2024-01-15",
+  "dateModified": "2026-01-18",
+  "publisher": {
+    "@type": "Organization",
+    "name": "AP CS Exam Prep",
+    "url": "https://www.apcsexamprep.com"
+  },
+  "educationalLevel": "High School (AP)",
+  "teaches": "AP Computer Science A",
+  "about": {
+    "@type": "Thing",
+    "name": "Marine Biology Case Study (Legacy)"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://www.apcsexamprep.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "AP CSA FRQ Archive",
+      "item": "https://www.apcsexamprep.com/pages/ap-csa-frq-archive"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "2004 FRQs",
+      "item": "https://www.apcsexamprep.com/pages/ap-csa-frq-2004"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "FRQ 3: Fish",
+      "item": "https://www.apcsexamprep.com/pages/ap-csa-2004-frq-3"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What concepts does 2004 AP CSA FRQ 3 test?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "FRQ 3 (Fish) tests marine biology case study (legacy), which is part of Unit 1 (Primitive Types) in the AP Computer Science A curriculum."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many points is 2004 AP CSA FRQ 3 worth?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Each FRQ is worth 9 points. The free response section is 40% of your total AP CSA exam score, so each FRQ represents about 10% of your final grade."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long should I spend on AP CSA FRQ 3?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You have 90 minutes for 4 FRQs, so aim for about 20-22 minutes per question. Don't spend more than 25 minutes on any single FRQ."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What's the best way to practice for marine biology case study (legacy) FRQs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Practice similar FRQs from other years, review the Unit 1 study guide, and focus on common patterns like loop structures, method calls, and edge case handling."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  .frq-container { max-width: 900px; margin: 0 auto; padding: 40px 20px 60px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; color: #1f2937; }
+  .frq-container h1 { color: #1e3a8a; font-size: 2.2em; margin-bottom: 10px; border-bottom: 3px solid #3b82f6; padding-bottom: 15px; }
+  .frq-container h2 { color: #1e40af; font-size: 1.6em; margin-top: 35px; margin-bottom: 15px; padding-left: 10px; border-left: 4px solid #60a5fa; }
+  .frq-container h3 { color: #1e40af; font-size: 1.3em; margin-top: 25px; margin-bottom: 12px; }
+  .frq-intro { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #3b82f6; }
+  .frq-container pre { background-color: #1e293b; color: #e2e8f0; padding: 18px; border-radius: 6px; overflow-x: auto; border: 1px solid #334155; margin: 15px 0; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.9em; line-height: 1.5; }
+  .frq-container code { font-family: 'Consolas', 'Monaco', monospace; font-size: 0.95em; background-color: #f1f5f9; padding: 2px 6px; border-radius: 4px; }
+  .frq-container pre code { background-color: transparent; padding: 0; }
+  .frq-container table { width: 100%; border-collapse: collapse; margin: 20px 0; background-color: #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; }
+  .frq-container th, .frq-container td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+  .frq-container th { background-color: #1e3a8a; color: white; font-weight: 600; }
+  .frq-container tr:hover { background-color: #f8fafc; }
+  .key-insight { background-color: #e0f2fe; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #0284c7; }
+  .warning-box { background-color: #fef2f2; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #ef4444; }
+  .practice-tip { background-color: #dcfce7; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #22c55e; }
+  .scoring-note { background-color: #fef3c7; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #f59e0b; }
+  .nav-buttons { display: flex; justify-content: space-between; margin-top: 40px; gap: 15px; flex-wrap: wrap; }
+  a.btn, .btn { padding: 12px 24px !important; background-color: #3b82f6 !important; color: white !important; text-decoration: none !important; border-radius: 6px !important; font-weight: 600 !important; transition: background-color 0.3s !important; text-align: center !important; display: inline-block !important; opacity: 1 !important; visibility: visible !important; }
+  a.btn:link, a.btn:visited, .btn:link, .btn:visited { color: white !important; background-color: #3b82f6 !important; }
+  a.btn:hover, .btn:hover { background-color: #2563eb !important; color: white !important; }
+  .toc-nav { background-color: #f3f4f6; padding: 15px 20px; border-radius: 6px; margin-bottom: 30px; }
+  .toc-nav h4 { margin-top: 0; font-size: 1.1em; color: #374151; }
+  .toc-nav ul { margin-bottom: 0; padding-left: 20px; }
+  .toc-nav li { margin: 8px 0; }
+  .toc-nav a { color: #2563eb; text-decoration: none; }
+  .toc-nav a:hover { text-decoration: underline; }
+  .mistake-item { padding: 8px 0; border-bottom: 1px solid #fee2e2; }
+  .mistake-item:last-child { border-bottom: none; }
+  .concept-item { padding: 8px 0; border-bottom: 1px solid #e0f2fe; }
+  .concept-item:last-child { border-bottom: none; }
+  @media (max-width: 768px) {
+    .frq-container h1 { font-size: 1.8em; }
+    .frq-container { padding: 20px 15px; }
+    .nav-buttons { flex-direction: column; }
+    pre { font-size: 0.85em; }
+  }
+</style>
+
+<article class="frq-container" itemscope itemtype="https://schema.org/TechArticle">
+
+<!-- Breadcrumb Navigation -->
+<nav style="margin-bottom: 20px; font-size: 0.9em; color: #64748b;">
+  <a href="/" style="color: #2563eb; text-decoration: none;">Home</a> › 
+  <a href="/pages/ap-csa-frq-archive" style="color: #2563eb; text-decoration: none;">FRQ Archive</a> › 
+  <a href="/pages/ap-csa-frq-2004" style="color: #2563eb; text-decoration: none;">2004 FRQs</a> › 
+  <span style="color: #1e3a8a; font-weight: 500;">FRQ 3</span>
+</nav>
+
+<h1 itemprop="headline">2004 AP CSA FRQ 3: Fish</h1>
+
+<div class="frq-intro">
+  <p><strong>Topic:</strong> Marine Biology Case Study (Legacy)</p>
+  <p><strong>Skills Tested:</strong> 2D arrays, random placement, Environment class usage</p>
+  <p><strong>Curriculum Alignment:</strong> Unit 4 (Data Collections) (2025-2026 AP CSA)</p>
+  <p><strong>Points:</strong> 9 | <strong>Time Estimate:</strong> ~22 minutes</p>
+</div>
+
+<!-- Link to Unit Study Guide -->
+<div style="background-color: #eff6ff; padding: 15px; border-radius: 6px; margin-bottom: 25px; border-left: 4px solid #3b82f6;">
+  <strong>Study This Topic:</strong> <a href="/pages/ap-csa-unit-1-study-guide" style="color: #2563eb; font-weight: 600;">Unit 1: Primitive Types Complete Study Guide</a>
+</div>
+
+<nav class="toc-nav">
+  <h4>Quick Navigation:</h4>
+  <ul>
+    <li><a href="#part-a">Part (a) Solution</a></li>
+    <li><a href="#part-b">Part (b) Solution</a></li>
+    
+    <li><a href="#concepts">Key Concepts</a></li>
+    <li><a href="#mistakes">Common Mistakes</a></li>
+    <li><a href="#related">Related FRQs</a></li>
+  </ul>
+</nav>
+
+<div class="warning-box">
+  <strong>Note:</strong> This FRQ was part of the Marine Biology Case Study, which has been removed from the AP CSA curriculum. The underlying concepts (ArrayList operations, 2D arrays, object manipulation) are still tested in modern FRQs.
+</div>
+
+<section id="part-a">
+  <h2>Part (a)</h2>
+  <p>Note: This FRQ was part of the Marine Biology Case Study which is no longer part of the AP CSA curriculum. The concepts tested (working with 2D structures and random placement) are still relevant.</p>
+  
+  <div class="practice-tip">
+    <strong>Try It First!</strong> Attempt to solve this part before viewing the solution. Use the concepts: 2D arrays.
+  </div>
+  
+  <h3>Solution</h3>
+  <pre><code>// This FRQ required knowledge of the Marine Biology Case Study
+// which has been removed from the AP CSA curriculum.
+// Modern equivalent concepts include:
+// - Working with 2D arrays
+// - Random element placement
+// - Checking for empty positions</code></pre>
+</section>
+
+<section id="part-b">
+  <h2>Part (b)</h2>
+  <p>The Marine Biology Case Study is no longer tested on the AP exam.</p>
+  
+  <h3>Solution</h3>
+  <pre><code>// The key skills from this FRQ are now tested through
+// standard 2D array problems without the case study context.</code></pre>
+</section>
+
+<section id="concepts">
+  <h2>Key Concepts</h2>
+  <div class="key-insight">
+    <div class="concept-item">
+<strong>✓</strong> 2D array traversal patterns</div>
+<div class="concept-item">
+<strong>✓</strong> Random position generation</div>
+<div class="concept-item">
+<strong>✓</strong> Checking boundary conditions</div>
+<div class="concept-item">
+<strong>✓</strong> Object placement in grid structures</div>
+  </div>
+</section>
+
+<section id="mistakes">
+  <h2>Common Mistakes to Avoid</h2>
+  <div class="warning-box">
+    <div class="mistake-item">
+<span style="color:#ef4444;font-weight:bold;">✗</span> This question used the deprecated Marine Biology Case Study</div>
+<div class="mistake-item">
+<span style="color:#ef4444;font-weight:bold;">✗</span> Focus on modern 2D array FRQs instead</div>
+  </div>
+</section>
+
+<section id="related">
+  <h2>Practice More Marine Biology Case Study (Legacy) FRQs</h2>
+  <p>Master this topic by practicing similar FRQs from other years:</p>
+  
+<div style="background-color: #f0fdf4; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #22c55e;">
+  <strong>Practice Similar FRQs:</strong><br>
+  <span style="font-size: 0.95em;"><a href="/pages/ap-csa-2019-frq-1">2019 FRQ 1 (APCalendar)</a> | <a href="/pages/ap-csa-2021-frq-1">2021 FRQ 1 (WordMatch)</a> | <a href="/pages/ap-csa-2022-frq-1">2022 FRQ 1 (Game)</a> | <a href="/pages/ap-csa-2023-frq-1">2023 FRQ 1 (AppointmentBook)</a></span>
+</div>
+  <p style="margin-top: 15px;"><a href="/pages/ap-csa-frqs-by-topic" style="color: #2563eb;">View All FRQs Organized by Topic →</a></p>
+</section>
+
+<section id="scoring">
+  <h2>Scoring Guidelines</h2>
+  <div class="scoring-note">
+    <p><strong>Total Points:</strong> 9</p>
+    <p>Points are awarded for:</p>
+    <ul>
+      <li>Correct loop structure and bounds</li>
+      <li>Proper method calls and return statements</li>
+      <li>Correct conditional logic</li>
+      <li>Handling edge cases appropriately</li>
+    </ul>
+    <p><em>Partial credit is available for demonstrating understanding even with minor syntax errors.</em></p>
+  </div>
+</section>
+
+<div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin-top: 30px;">
+  <h3 style="margin-top: 0; color: #1e3a8a;">Official College Board Resources</h3>
+  <ul>
+    <li><a href="https://secure-media.collegeboard.org/apc/ap04_frq_compsci_a.pdf" target="_blank" rel="noopener">2004 FRQ Questions (PDF)</a></li>
+    <li><a href="https://secure-media.collegeboard.org/apc/ap04_sg_comp_sci_a.pdf" target="_blank" rel="noopener">2004 Scoring Guidelines (PDF)</a></li>
+  </ul>
+</div>
+
+<!-- More Resources -->
+<div style="background-color: #faf5ff; padding: 20px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #9333ea;">
+  <h3 style="margin-top: 0; color: #7c3aed;">Continue Studying</h3>
+  <ul style="margin-bottom: 0;">
+    <li><a href="/pages/ap-csa-unit-1-study-guide">Unit 1 Study Guide: Primitive Types</a></li>
+    <li><a href="/pages/ap-csa-frq-2004">All 2004 AP CSA FRQs</a></li>
+    <li><a href="/pages/ap-csa-frq-archive">Complete FRQ Archive (2004-2025)</a></li>
+    <li><a href="/blogs/ap-csa-daily-practice">Daily Practice Questions</a></li>
+  </ul>
+</div>
+
+<nav class="nav-buttons">
+  <a class="btn" href="/pages/ap-csa-2004-frq-2">← FRQ 2</a>
+  <a class="btn" href="/pages/ap-csa-frq-2004">2004 FRQs</a>
+  <a class="btn" href="/pages/ap-csa-2004-frq-4">FRQ 4 →</a>
+</nav>
+
+<div style="margin-top: 40px; padding: 20px; background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-radius: 8px; border-left: 4px solid #3b82f6;">
+  <p style="margin: 0;">
+    <strong>About the Author:</strong> Tanner Crow is a certified AP Computer Science teacher with 11+ years of experience helping students succeed on the AP CSA exam.
+  </p>
+  <p style="margin: 10px 0 0 0;"><em>Last updated: January 2026</em></p>
+</div>
+
+</article>

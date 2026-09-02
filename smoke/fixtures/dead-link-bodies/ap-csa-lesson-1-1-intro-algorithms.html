@@ -1,0 +1,1697 @@
+<!-- ap-csa-lesson-1-1-intro-algorithms | Built 2026-05-15 from lesson-CONCEPTUAL-TEMPLATE-v1.html -->
+<style>
+/* =============================================================
+   SCOPED RESET --- nukes Shopify Dawn theme overrides
+   all:initial applies to wrapper ONLY (proven pattern from live
+   AP Cyber pages). Applying it to all descendants kills nested
+   element display values (table cells, buttons, inline-block badges).
+   ============================================================= */
+#apcsa-lesson {
+  all: initial !important;
+  display: block !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  max-width: 1080px !important;
+  margin: 0 auto !important;
+  padding: 32px 20px 80px !important;
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  line-height: 1.65 !important;
+  font-size: 17px !important;
+  background: #ffffff !important;
+}
+#apcsa-lesson * {
+  box-sizing: border-box !important;
+}
+#apcsa-lesson p, #apcsa-lesson li, #apcsa-lesson td, #apcsa-lesson th,
+#apcsa-lesson dt, #apcsa-lesson dd, #apcsa-lesson span, #apcsa-lesson em, #apcsa-lesson strong {
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  font-size: 17px !important;
+  line-height: 1.65 !important;
+}
+#apcsa-lesson em { font-style: italic !important; }
+#apcsa-lesson strong { font-weight: 700 !important; }
+#apcsa-lesson p { margin: 0 0 16px 0 !important; }
+#apcsa-lesson ul, #apcsa-lesson ol { display: block !important; margin: 0 0 16px 24px !important; padding: 0 !important; }
+#apcsa-lesson ul li { display: list-item !important; list-style: disc outside !important; margin: 0 0 6px 0 !important; }
+#apcsa-lesson ol li { display: list-item !important; list-style: decimal outside !important; margin: 0 0 6px 0 !important; }
+
+/* Headings */
+#apcsa-lesson h1, #apcsa-lesson h2, #apcsa-lesson h3, #apcsa-lesson h4 {
+  display: block !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  line-height: 1.25 !important;
+}
+#apcsa-lesson h1 { font-size: 36px !important; margin: 8px 0 12px 0 !important; letter-spacing: -0.02em !important; }
+#apcsa-lesson h2 { font-size: 26px !important; margin: 40px 0 14px 0 !important; padding-bottom: 8px !important; border-bottom: 2px solid #e5e7eb !important; }
+#apcsa-lesson h3 { font-size: 20px !important; margin: 24px 0 10px 0 !important; color: #1e3a8a !important; -webkit-text-fill-color: #1e3a8a !important; }
+#apcsa-lesson h4 { font-size: 17px !important; margin: 16px 0 8px 0 !important; }
+
+/* Links */
+#apcsa-lesson a:link, #apcsa-lesson a:visited {
+  color: #2563eb !important;
+  -webkit-text-fill-color: #2563eb !important;
+  text-decoration: underline !important;
+  cursor: pointer !important;
+}
+#apcsa-lesson a:hover, #apcsa-lesson a:active {
+  color: #1d4ed8 !important;
+  -webkit-text-fill-color: #1d4ed8 !important;
+}
+
+/* Code (used sparingly in conceptual lessons --- only for syntax mentions) */
+#apcsa-lesson code {
+  font-family: "SF Mono", Menlo, Consolas, Monaco, monospace !important;
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  font-size: 15px !important;
+}
+#apcsa-lesson pre {
+  display: block !important;
+  background: #0f172a !important;
+  color: #e2e8f0 !important;
+  -webkit-text-fill-color: #e2e8f0 !important;
+  padding: 18px 20px !important;
+  border-radius: 8px !important;
+  overflow-x: auto !important;
+  margin: 16px 0 !important;
+  font-family: "SF Mono", Menlo, Consolas, Monaco, monospace !important;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+  white-space: pre !important;
+}
+#apcsa-lesson pre code {
+  background: transparent !important;
+  color: #e2e8f0 !important;
+  -webkit-text-fill-color: #e2e8f0 !important;
+  padding: 0 !important;
+  font-size: 14px !important;
+}
+
+/* BREADCRUMB */
+#apcsa-lesson .apcsa-breadcrumb {
+  display: block !important;
+  font-size: 14px !important;
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+  margin-bottom: 16px !important;
+}
+#apcsa-lesson .apcsa-breadcrumb a:link, #apcsa-lesson .apcsa-breadcrumb a:visited {
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+  text-decoration: none !important;
+}
+#apcsa-lesson .apcsa-breadcrumb a:hover { text-decoration: underline !important; }
+#apcsa-lesson .apcsa-breadcrumb span.sep { margin: 0 8px !important; color: #cbd5e1 !important; -webkit-text-fill-color: #cbd5e1 !important; }
+
+/* HEADER */
+#apcsa-lesson .apcsa-header { display: block !important; margin-bottom: 28px !important; }
+#apcsa-lesson .apcsa-eyebrow {
+  display: inline-block !important;
+  background: #dbeafe !important;
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  padding: 5px 12px !important;
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 12px !important;
+}
+#apcsa-lesson .apcsa-meta-row {
+  display: flex !important;
+  gap: 16px !important;
+  flex-wrap: wrap !important;
+  margin-top: 12px !important;
+  font-size: 14px !important;
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+}
+#apcsa-lesson .apcsa-meta-row span { color: #64748b !important; -webkit-text-fill-color: #64748b !important; }
+
+/* "WHAT YOU'LL LEARN" BOX */
+#apcsa-lesson .apcsa-learn-box {
+  display: block !important;
+  background: #eff6ff !important;
+  border-left: 4px solid #2563eb !important;
+  padding: 20px 24px !important;
+  margin: 24px 0 !important;
+  border-radius: 0 8px 8px 0 !important;
+}
+#apcsa-lesson .apcsa-learn-box h3 {
+  margin-top: 0 !important;
+  color: #1e3a8a !important;
+  -webkit-text-fill-color: #1e3a8a !important;
+  font-size: 18px !important;
+}
+#apcsa-lesson .apcsa-learn-box ul li { margin-bottom: 8px !important; }
+
+/* SLOTS */
+#apcsa-lesson .apcsa-slot {
+  display: block !important;
+  background: #f8fafc !important;
+  border: 1px dashed #cbd5e1 !important;
+  padding: 18px 24px !important;
+  margin: 24px 0 !important;
+  border-radius: 8px !important;
+  text-align: center !important;
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+  font-size: 14px !important;
+}
+#apcsa-lesson .apcsa-slot strong { color: #475569 !important; -webkit-text-fill-color: #475569 !important; }
+
+/* CALLOUTS */
+#apcsa-lesson .apcsa-callout {
+  display: block !important;
+  padding: 18px 22px !important;
+  margin: 20px 0 !important;
+  border-radius: 0 8px 8px 0 !important;
+  border-left: 4px solid #94a3b8 !important;
+  background: #f8fafc !important;
+}
+#apcsa-lesson .apcsa-callout h4 {
+  margin-top: 0 !important;
+  margin-bottom: 8px !important;
+  font-size: 16px !important;
+  letter-spacing: 0.02em !important;
+}
+#apcsa-lesson .apcsa-callout.concept { background: #eff6ff !important; border-left-color: #2563eb !important; }
+#apcsa-lesson .apcsa-callout.concept h4 { color: #1e3a8a !important; -webkit-text-fill-color: #1e3a8a !important; }
+#apcsa-lesson .apcsa-callout.example { background: #f0fdf4 !important; border-left-color: #16a34a !important; }
+#apcsa-lesson .apcsa-callout.example h4 { color: #166534 !important; -webkit-text-fill-color: #166534 !important; }
+#apcsa-lesson .apcsa-callout.warning { background: #fef2f2 !important; border-left-color: #dc2626 !important; }
+#apcsa-lesson .apcsa-callout.warning h4 { color: #991b1b !important; -webkit-text-fill-color: #991b1b !important; }
+#apcsa-lesson .apcsa-callout.key-insight { background: #fefce8 !important; border-left-color: #ca8a04 !important; }
+#apcsa-lesson .apcsa-callout.key-insight h4 { color: #713f12 !important; -webkit-text-fill-color: #713f12 !important; }
+
+/* VOCAB TABLE */
+#apcsa-lesson .apcsa-vocab {
+  display: table !important;
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 16px 0 !important;
+}
+#apcsa-lesson .apcsa-vocab thead, #apcsa-lesson .apcsa-vocab tbody { display: table-row-group !important; }
+#apcsa-lesson .apcsa-vocab tr { display: table-row !important; }
+#apcsa-lesson .apcsa-vocab th, #apcsa-lesson .apcsa-vocab td {
+  display: table-cell !important;
+  padding: 12px 14px !important;
+  border: 1px solid #e5e7eb !important;
+  vertical-align: top !important;
+}
+#apcsa-lesson .apcsa-vocab th {
+  background: #f3f4f6 !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  text-align: left !important;
+}
+
+/* TIER 2 PRACTICE */
+#apcsa-lesson .apcsa-practice-tier {
+  display: block !important;
+  background: #fafafa !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  padding: 24px 28px !important;
+  margin: 32px 0 !important;
+}
+#apcsa-lesson .apcsa-practice-tier h2 {
+  margin-top: 0 !important;
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+}
+#apcsa-lesson .apcsa-practice-tier .tier-label {
+  display: inline-block !important;
+  background: #1e40af !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  padding: 4px 10px !important;
+  border-radius: 4px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  margin-right: 10px !important;
+}
+
+#apcsa-lesson .apcs-ex {
+  display: block !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  padding: 20px 22px !important;
+  margin: 16px 0 !important;
+}
+#apcsa-lesson .apcs-ex-label {
+  display: inline-block !important;
+  background: #ede9fe !important;
+  color: #5b21b6 !important;
+  -webkit-text-fill-color: #5b21b6 !important;
+  padding: 3px 10px !important;
+  border-radius: 4px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 12px !important;
+}
+#apcsa-lesson .apcs-ex-stem { margin-bottom: 12px !important; }
+#apcsa-lesson .apcs-ex-stem strong { color: #0f172a !important; -webkit-text-fill-color: #0f172a !important; }
+
+/* MCQ option list */
+#apcsa-lesson .apcs-ex-options { display: block !important; margin: 12px 0 !important; }
+#apcsa-lesson .apcs-ex-options .apcs-opt {
+  display: block !important;
+  padding: 10px 14px !important;
+  margin: 6px 0 !important;
+  border: 2px solid #e5e7eb !important;
+  border-radius: 6px !important;
+  background: #ffffff !important;
+  cursor: pointer !important;
+  font-size: 16px !important;
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  transition: all 0.15s !important;
+}
+#apcsa-lesson .apcs-ex-options .apcs-opt:hover { border-color: #93c5fd !important; background: #eff6ff !important; }
+#apcsa-lesson .apcs-ex-options .apcs-opt.selected { border-color: #2563eb !important; background: #dbeafe !important; }
+#apcsa-lesson .apcs-ex-options .apcs-opt.correct { border-color: #16a34a !important; background: #dcfce7 !important; }
+#apcsa-lesson .apcs-ex-options .apcs-opt.incorrect { border-color: #dc2626 !important; background: #fee2e2 !important; }
+#apcsa-lesson .apcs-opt-letter {
+  display: inline-block !important;
+  font-weight: 700 !important;
+  margin-right: 10px !important;
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+}
+#apcsa-lesson .apcsa-mastery .apcs-opt-letter { color: #1e40af !important; -webkit-text-fill-color: #1e40af !important; }
+#apcsa-lesson .apcsa-mastery .apcs-opt { color: #1f2937 !important; -webkit-text-fill-color: #1f2937 !important; }
+
+/* Matching */
+#apcsa-lesson .apcs-matching {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 12px !important;
+  margin: 12px 0 !important;
+}
+#apcsa-lesson .apcs-matching .apcs-match-col {
+  display: block !important;
+  background: #f8fafc !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 6px !important;
+  padding: 12px !important;
+}
+#apcsa-lesson .apcs-matching .apcs-match-item {
+  display: block !important;
+  padding: 8px 12px !important;
+  margin: 4px 0 !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  font-size: 15px !important;
+}
+#apcsa-lesson .apcs-matching .apcs-match-item.selected { border-color: #2563eb !important; background: #dbeafe !important; }
+#apcsa-lesson .apcs-matching .apcs-match-item.matched { border-color: #16a34a !important; background: #dcfce7 !important; cursor: default !important; }
+
+/* Scenario-sort */
+#apcsa-lesson .apcs-sort-bank {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  padding: 14px !important;
+  background: #f8fafc !important;
+  border: 1px dashed #cbd5e1 !important;
+  border-radius: 6px !important;
+  margin: 10px 0 !important;
+}
+#apcsa-lesson .apcs-sort-item {
+  display: inline-block !important;
+  padding: 6px 12px !important;
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 4px !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+}
+#apcsa-lesson .apcs-sort-buckets {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 12px !important;
+  margin-top: 12px !important;
+}
+#apcsa-lesson .apcs-sort-bucket {
+  display: block !important;
+  min-height: 80px !important;
+  padding: 12px !important;
+  background: #ffffff !important;
+  border: 2px dashed #cbd5e1 !important;
+  border-radius: 6px !important;
+}
+#apcsa-lesson .apcs-sort-bucket h5 {
+  display: block !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  margin: 0 0 8px 0 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+}
+
+/* Cloze */
+#apcsa-lesson .apcs-cloze-text { display: block !important; line-height: 2 !important; font-size: 16px !important; }
+#apcsa-lesson .apcs-cloze-blank {
+  display: inline-block !important;
+  min-width: 90px !important;
+  padding: 4px 10px !important;
+  margin: 0 4px !important;
+  background: #fef9c3 !important;
+  border: 1px dashed #ca8a04 !important;
+  border-radius: 4px !important;
+  text-align: center !important;
+  font-size: 15px !important;
+}
+#apcsa-lesson .apcs-cloze-blank.filled { background: #dbeafe !important; border-style: solid !important; border-color: #2563eb !important; }
+#apcsa-lesson .apcs-cloze-blank.correct { background: #dcfce7 !important; border-color: #16a34a !important; }
+#apcsa-lesson .apcs-cloze-blank.incorrect { background: #fee2e2 !important; border-color: #dc2626 !important; }
+#apcsa-lesson .apcs-cloze-chips { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; margin-top: 12px !important; }
+
+/* Predict gate */
+#apcsa-lesson .apcs-predict-gate {
+  display: block !important;
+  background: #fffbeb !important;
+  border-left: 3px solid #f59e0b !important;
+  padding: 10px 14px !important;
+  margin: 10px 0 !important;
+  font-size: 14px !important;
+  color: #78350f !important;
+  -webkit-text-fill-color: #78350f !important;
+  font-style: italic !important;
+}
+
+/* Buttons */
+#apcsa-lesson .apcs-btn,
+#apcsa-lesson .apcs-btn:link,
+#apcsa-lesson .apcs-btn:visited {
+  display: inline-block !important;
+  background: #2563eb !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  padding: 10px 20px !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  text-decoration: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  margin: 4px 4px 4px 0 !important;
+}
+#apcsa-lesson .apcs-btn:hover, #apcsa-lesson .apcs-btn:active {
+  background: #1d4ed8 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+#apcsa-lesson .apcs-btn-secondary,
+#apcsa-lesson .apcs-btn-secondary:link,
+#apcsa-lesson .apcs-btn-secondary:visited {
+  background: #ffffff !important;
+  color: #2563eb !important;
+  -webkit-text-fill-color: #2563eb !important;
+  border: 2px solid #2563eb !important;
+  padding: 8px 18px !important;
+}
+#apcsa-lesson .apcs-btn-secondary:hover, #apcsa-lesson .apcs-btn-secondary:active {
+  background: #eff6ff !important;
+  color: #1d4ed8 !important;
+  -webkit-text-fill-color: #1d4ed8 !important;
+}
+
+/* Feedback */
+#apcsa-lesson .apcs-ex-feedback {
+  display: none !important;
+  margin-top: 12px !important;
+  padding: 14px 16px !important;
+  border-radius: 6px !important;
+  font-size: 15px !important;
+}
+#apcsa-lesson .apcs-ex-feedback.show { display: block !important; }
+#apcsa-lesson .apcs-ex-feedback.fb-correct {
+  background: #dcfce7 !important;
+  border-left: 4px solid #16a34a !important;
+  color: #14532d !important;
+  -webkit-text-fill-color: #14532d !important;
+}
+#apcsa-lesson .apcs-ex-feedback.fb-incorrect {
+  background: #fee2e2 !important;
+  border-left: 4px solid #dc2626 !important;
+  color: #7f1d1d !important;
+  -webkit-text-fill-color: #7f1d1d !important;
+}
+
+/* TIER 3 MASTERY */
+#apcsa-lesson .apcsa-mastery {
+  display: block !important;
+  background: #0f172a !important;
+  color: #f1f5f9 !important;
+  -webkit-text-fill-color: #f1f5f9 !important;
+  border-radius: 12px !important;
+  padding: 32px 32px 28px !important;
+  margin: 40px 0 !important;
+}
+#apcsa-lesson .apcsa-mastery,
+#apcsa-lesson .apcsa-mastery p,
+#apcsa-lesson .apcsa-mastery span,
+#apcsa-lesson .apcsa-mastery li,
+#apcsa-lesson .apcsa-mastery strong,
+#apcsa-lesson .apcsa-mastery em { color: #f1f5f9 !important; -webkit-text-fill-color: #f1f5f9 !important; }
+#apcsa-lesson .apcsa-mastery code { background: rgba(255,255,255,0.10) !important; color: #fde68a !important; -webkit-text-fill-color: #fde68a !important; padding: 2px 6px !important; border-radius: 4px !important; font-size: 14px !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-feedback.fb-correct strong { color: #14532d !important; -webkit-text-fill-color: #14532d !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-feedback.fb-correct code { background: rgba(20,83,45,0.12) !important; color: #14532d !important; -webkit-text-fill-color: #14532d !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-feedback.fb-incorrect strong { color: #7f1d1d !important; -webkit-text-fill-color: #7f1d1d !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-feedback.fb-incorrect code { background: rgba(127,29,29,0.12) !important; color: #7f1d1d !important; -webkit-text-fill-color: #7f1d1d !important; }
+#apcsa-lesson .apcsa-mastery .mastery-badge {
+  display: inline-block !important;
+  background: #f59e0b !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  padding: 5px 12px !important;
+  border-radius: 999px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 14px !important;
+}
+#apcsa-lesson .apcsa-mastery h2 { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; border-bottom: none !important; padding-bottom: 0 !important; margin-top: 0 !important; }
+#apcsa-lesson .apcsa-mastery h3 { color: #fbbf24 !important; -webkit-text-fill-color: #fbbf24 !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+#apcsa-lesson .apcsa-mastery .apcs-ex-stem,
+#apcsa-lesson .apcsa-mastery .apcs-ex-stem strong { color: #f1f5f9 !important; -webkit-text-fill-color: #f1f5f9 !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-options .apcs-opt {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #f1f5f9 !important;
+  -webkit-text-fill-color: #f1f5f9 !important;
+}
+#apcsa-lesson .apcsa-mastery .apcs-ex-options .apcs-opt:hover { border-color: #60a5fa !important; background: #1e293b !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-options .apcs-opt.selected { border-color: #60a5fa !important; background: #1e3a8a !important; }
+#apcsa-lesson .apcsa-mastery .apcs-predict-gate {
+  background: #1e293b !important;
+  border-left-color: #f59e0b !important;
+  color: #fde68a !important;
+  -webkit-text-fill-color: #fde68a !important;
+}
+#apcsa-lesson .apcsa-mastery .mastery-rubric {
+  display: none !important;
+  margin-top: 18px !important;
+  padding: 16px 18px !important;
+  background: #1e293b !important;
+  border-radius: 8px !important;
+  border: 1px solid #334155 !important;
+}
+#apcsa-lesson .apcsa-mastery .mastery-rubric[data-revealed="1"] {
+  display: block !important;
+}
+#apcsa-lesson .apcsa-mastery .mastery-rubric ~ div {
+  display: none !important;
+}
+#apcsa-lesson .apcsa-mastery .mastery-rubric[data-revealed="1"] ~ div {
+  display: block !important;
+}
+
+#apcsa-lesson .apcsa-mastery .mastery-rubric h4 {
+  color: #fbbf24 !important;
+  -webkit-text-fill-color: #fbbf24 !important;
+  margin-top: 0 !important;
+  margin-bottom: 10px !important;
+  font-size: 15px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+}
+#apcsa-lesson .apcsa-mastery .rubric-row {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 8px 0 !important;
+  border-bottom: 1px solid #334155 !important;
+  gap: 12px !important;
+}
+#apcsa-lesson .apcsa-mastery .rubric-row:last-child { border-bottom: none !important; }
+#apcsa-lesson .apcsa-mastery .rubric-score {
+  display: inline-block !important;
+  background: #16a34a !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  padding: 3px 10px !important;
+  border-radius: 4px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+}
+#apcsa-lesson .apcsa-mastery .rubric-score.partial { background: #ca8a04 !important; }
+#apcsa-lesson .apcsa-mastery .rubric-score.zero { background: #dc2626 !important; }
+
+/* TRAPS GRID */
+#apcsa-lesson .apcsa-traps {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 14px !important;
+  margin: 24px 0 !important;
+}
+#apcsa-lesson .apcsa-trap-card {
+  display: block !important;
+  background: #fef2f2 !important;
+  border-left: 4px solid #dc2626 !important;
+  padding: 16px 18px !important;
+  border-radius: 0 8px 8px 0 !important;
+}
+#apcsa-lesson .apcsa-trap-card h4 {
+  margin-top: 0 !important;
+  margin-bottom: 6px !important;
+  color: #991b1b !important;
+  -webkit-text-fill-color: #991b1b !important;
+  font-size: 15px !important;
+}
+#apcsa-lesson .apcsa-trap-card p { font-size: 15px !important; margin-bottom: 0 !important; }
+
+/* EXTENSION */
+#apcsa-lesson .apcsa-extension {
+  display: block !important;
+  background: #faf5ff !important;
+  border: 1px solid #e9d5ff !important;
+  border-radius: 12px !important;
+  padding: 24px 28px !important;
+  margin: 32px 0 !important;
+}
+#apcsa-lesson .apcsa-extension h3 {
+  color: #6b21a8 !important;
+  -webkit-text-fill-color: #6b21a8 !important;
+  margin-top: 8px !important;
+}
+#apcsa-lesson .apcsa-extension .ext-badge {
+  display: inline-block !important;
+  background: #6b21a8 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  padding: 4px 10px !important;
+  border-radius: 4px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+}
+
+/* RESOURCE GRID */
+#apcsa-lesson .apcsa-resources {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 12px !important;
+  margin: 16px 0 !important;
+}
+#apcsa-lesson .apcsa-resource-card,
+#apcsa-lesson .apcsa-resource-card:link,
+#apcsa-lesson .apcsa-resource-card:visited {
+  display: block !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  padding: 16px 18px !important;
+  text-decoration: none !important;
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  transition: all 0.15s !important;
+}
+#apcsa-lesson .apcsa-resource-card:hover {
+  border-color: #2563eb !important;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.08) !important;
+}
+#apcsa-lesson .apcsa-resource-card h4 {
+  color: #1e3a8a !important;
+  -webkit-text-fill-color: #1e3a8a !important;
+  margin-top: 0 !important;
+  margin-bottom: 6px !important;
+  font-size: 15px !important;
+}
+#apcsa-lesson .apcsa-resource-card p {
+  font-size: 14px !important;
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+  margin: 0 !important;
+}
+
+/* CTA BANNER */
+#apcsa-lesson .apcsa-cta-banner {
+  display: block !important;
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border-radius: 12px !important;
+  padding: 28px 32px !important;
+  margin: 40px 0 !important;
+  text-align: center !important;
+}
+#apcsa-lesson .apcsa-cta-banner,
+#apcsa-lesson .apcsa-cta-banner p,
+#apcsa-lesson .apcsa-cta-banner span,
+#apcsa-lesson .apcsa-cta-banner strong { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; }
+#apcsa-lesson .apcsa-cta-banner h3 {
+  font-size: 22px !important;
+  margin: 0 0 10px 0 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+#apcsa-lesson .apcsa-cta-banner p { font-size: 16px !important; margin-bottom: 16px !important; }
+#apcsa-lesson .apcsa-cta-banner .apcs-btn,
+#apcsa-lesson .apcsa-cta-banner .apcs-btn:link,
+#apcsa-lesson .apcsa-cta-banner .apcs-btn:visited {
+  background: #ffffff !important;
+  color: #1e3a8a !important;
+  -webkit-text-fill-color: #1e3a8a !important;
+}
+#apcsa-lesson .apcsa-cta-banner .apcs-btn:hover, #apcsa-lesson .apcsa-cta-banner .apcs-btn:active {
+  background: #f1f5f9 !important;
+  color: #1e3a8a !important;
+  -webkit-text-fill-color: #1e3a8a !important;
+}
+
+/* NAV */
+#apcsa-lesson .apcsa-nav {
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 14px !important;
+  margin: 40px 0 24px 0 !important;
+  padding-top: 24px !important;
+  border-top: 2px solid #e5e7eb !important;
+}
+#apcsa-lesson .apcsa-nav a:link, #apcsa-lesson .apcsa-nav a:visited {
+  display: block !important;
+  flex: 1 1 0 !important;
+  padding: 14px 18px !important;
+  background: #f8fafc !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  text-decoration: none !important;
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+}
+#apcsa-lesson .apcsa-nav a:hover { border-color: #2563eb !important; background: #eff6ff !important; }
+#apcsa-lesson .apcsa-nav .nav-direction {
+  display: block !important;
+  font-size: 12px !important;
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  margin-bottom: 4px !important;
+}
+#apcsa-lesson .apcsa-nav .nav-title {
+  display: block !important;
+  font-weight: 600 !important;
+  color: #1e3a8a !important;
+  -webkit-text-fill-color: #1e3a8a !important;
+}
+#apcsa-lesson .apcsa-nav .nav-next { text-align: right !important; }
+#apcsa-lesson .apcsa-nav .nav-prev.disabled,
+#apcsa-lesson .apcsa-nav .nav-prev.disabled:link,
+#apcsa-lesson .apcsa-nav .nav-prev.disabled:visited {
+  opacity: 0.4 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+
+#apcsa-lesson .apcsa-hub-links {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  justify-content: center !important;
+  font-size: 14px !important;
+}
+#apcsa-lesson .apcsa-hub-links a:link, #apcsa-lesson .apcsa-hub-links a:visited {
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+}
+
+@media (max-width: 720px) {
+  #apcsa-lesson { padding: 20px 16px 60px !important; font-size: 16px !important; }
+  #apcsa-lesson h1 { font-size: 28px !important; }
+  #apcsa-lesson h2 { font-size: 22px !important; }
+  #apcsa-lesson .apcsa-traps { grid-template-columns: 1fr !important; }
+  #apcsa-lesson .apcsa-matching { grid-template-columns: 1fr !important; }
+  #apcsa-lesson .apcsa-nav { flex-direction: column !important; }
+  #apcsa-lesson .apcsa-nav .nav-next { text-align: left !important; }
+  #apcsa-lesson .apcsa-mastery { padding: 24px 20px !important; }
+  #apcsa-lesson .apcsa-mastery .rubric-row { flex-direction: column !important; align-items: flex-start !important; }
+  #apcsa-lesson .apcsa-resources { grid-template-columns: 1fr !important; }
+}
+</style>
+<!-- CSANAV-START --><style>
+#csanav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;top:0!important;}
+#csanav *{box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important;-webkit-font-smoothing:antialiased!important;}
+#csanav .csn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#csanav .csn-rail::-webkit-scrollbar{display:none!important;}
+#csanav .csn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#csanav .csn-hub:link,#csanav .csn-hub:visited,#csanav a.csn-hub,#csanav a.csn-hub:link,#csanav a.csn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#csanav .csn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#csanav .csn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#csanav .csn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#csanav .csn-lesson:link,#csanav .csn-lesson:visited,#csanav .csn-lesson:hover,#csanav .csn-lesson:active,#csanav a.csn-lesson,#csanav a.csn-lesson:link,#csanav a.csn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#csanav .csn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#csanav .csn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#csanav .csn-lesson.open:link,#csanav .csn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#csanav .csn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#csanav .csn-lesson.open .csn-chevron{transform:rotate(180deg)!important;}
+#csanav .csn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#csanav .csn-steps.open{display:inline-flex!important;}
+#csanav .csn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#csanav .csn-step:link,#csanav .csn-step:visited,#csanav a.csn-step,#csanav a.csn-step:link,#csanav a.csn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#csanav .csn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#csanav .csn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#csanav .csn-step.current:link,#csanav .csn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#csanav .csn-badge{display:none!important;}}
+</style>
+<div id="csanav">
+<div class="csn-rail" id="csn-rail">
+<a href="/pages/ap-csa-course" class="csn-hub">AP CSA Hub</a> <span class="csn-badge">Unit 1</span> <a href="/pages/ap-csa-lesson-1-1-intro-algorithms" class="csn-lesson open" id="csn-l1-1" title="Introduction to Algorithms, Programming, and Compilers">1.1 <span class="csn-chevron">▼</span></a> <span class="csn-steps open" id="csn-s1-1"> <span class="csn-step current">Lesson</span> <a href="/pages/ap-csa-lesson-1-1-intro-algorithms-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-2-variables-data-types" class="csn-lesson" id="csn-l1-2" title="Variables and Data Types">1.2 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-2"> <a href="/pages/ap-csa-lesson-1-2-variables-data-types" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-2-variables-data-types-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-3-expressions-assignment" class="csn-lesson" id="csn-l1-3" title="Expressions and Output">1.3 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-3"> <a href="/pages/ap-csa-lesson-1-3-expressions-assignment" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-3-expressions-assignment-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-4-assignment-statements-input" class="csn-lesson" id="csn-l1-4" title="Assignment Statements and Input">1.4 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-4"> <a href="/pages/ap-csa-lesson-1-4-assignment-statements-input" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-4-assignment-statements-input-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-5-casting-range" class="csn-lesson" id="csn-l1-5" title="Casting and Range of Variables">1.5 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-5"> <a href="/pages/ap-csa-lesson-1-5-casting-range" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-5-casting-range-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-6-compound-assignment" class="csn-lesson" id="csn-l1-6" title="Compound Assignment Operators">1.6 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-6"> <a href="/pages/ap-csa-lesson-1-6-compound-assignment" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-6-compound-assignment-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-7-api-libraries" class="csn-lesson" id="csn-l1-7" title="Application Program Interface (API) and Libraries">1.7 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-7"> <a href="/pages/ap-csa-lesson-1-7-api-libraries" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-7-api-libraries-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-8-documentation-comments" class="csn-lesson" id="csn-l1-8" title="Documentation with Comments">1.8 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-8"> <a href="/pages/ap-csa-lesson-1-8-documentation-comments" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-8-documentation-comments-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-9-method-signatures" class="csn-lesson" id="csn-l1-9" title="Method Signatures">1.9 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-9"> <a href="/pages/ap-csa-lesson-1-9-method-signatures" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-9-method-signatures-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-10-calling-class-methods" class="csn-lesson" id="csn-l1-10" title="Calling Class Methods">1.10 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-10"> <a href="/pages/ap-csa-lesson-1-10-calling-class-methods" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-10-calling-class-methods-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-11-math-class" class="csn-lesson" id="csn-l1-11" title="Math Class">1.11 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-11"> <a href="/pages/ap-csa-lesson-1-11-math-class" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-11-math-class-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-12-objects-instances" class="csn-lesson" id="csn-l1-12" title="Objects: Instances of Classes">1.12 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-12"> <a href="/pages/ap-csa-lesson-1-12-objects-instances" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-12-objects-instances-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-13-object-creation" class="csn-lesson" id="csn-l1-13" title="Object Creation and Storage (Instantiation)">1.13 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-13"> <a href="/pages/ap-csa-lesson-1-13-object-creation" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-13-object-creation-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-14-calling-instance-methods" class="csn-lesson" id="csn-l1-14" title="Calling Instance Methods">1.14 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-14"> <a href="/pages/ap-csa-lesson-1-14-calling-instance-methods" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-14-calling-instance-methods-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-15-string-manipulation" class="csn-lesson" id="csn-l1-15" title="String Manipulation">1.15 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-15"> <a href="/pages/ap-csa-lesson-1-15-string-manipulation" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-15-string-manipulation-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span>
+</div>
+</div>
+<p> </p>
+<script>
+(function(){
+  document.querySelectorAll('#csanav .csn-lesson').forEach(function(btn){
+    btn.addEventListener('click',function(e){
+      var stepsId='csn-s'+btn.id.replace('csn-l','');
+      var steps=document.getElementById(stepsId);
+      var isOpen=btn.classList.contains('open');
+      if(!isOpen)e.preventDefault();
+      document.querySelectorAll('#csanav .csn-lesson').forEach(function(b){b.classList.remove('open');});
+      document.querySelectorAll('#csanav .csn-steps').forEach(function(s){s.classList.remove('open');});
+      if(!isOpen&&steps){btn.classList.add('open');steps.classList.add('open');}
+    });
+  });
+})();
+</script><!-- CSANAV-END -->
+
+
+<div id="apcsa-lesson" data-course="ap-csa" data-lesson-id="1.1">
+
+<nav class="apcsa-breadcrumb" aria-label="Breadcrumb">
+  <a href="/pages/ap-csa-exam-prep-hub">AP CSA</a>
+  <span class="sep">›</span>
+  <a href="/pages/ap-csa-course">Course</a>
+  <span class="sep">›</span>
+  <a href="/pages/ap-csa-unit-1-course">Unit 1: Using Objects and Methods</a>
+  <span class="sep">›</span>
+  <span>Lesson 1.1</span>
+</nav>
+
+<header class="apcsa-header">
+  <span class="apcsa-eyebrow">Unit 1 · Lesson 1.1 · Conceptual</span>
+  <h1>Lesson 1.1: Introduction to Algorithms, Programming, and Compilers</h1>
+  <div class="apcsa-meta-row">
+    <span>Reading time: 12-15 min</span>
+    <span>·</span>
+    <span>Practice: 6 exercises</span>
+    <span>·</span>
+    <span>Mastery: applied scenario</span>
+  </div>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Lesson 1.1: Introduction to Algorithms, Programming, and Compilers","description":"AP CSA Lesson 1.1 covers algorithms, the compilation and execution process, and types of programming errors. Aligned to 2025-2026 CED topics 1.1.A, 1.1.B, and 1.1.C.","url":"https://apcsexamprep.com/pages/ap-csa-lesson-1-1-intro-algorithms","datePublished":"2026-05-21","dateModified":"2026-05-21","author":{"@type":"Person","name":"Tanner Crow","url":"https://apcsexamprep.com"},"publisher":{"@type":"Organization","name":"APCSExamPrep.com","url":"https://apcsexamprep.com"},"wordCount":1100,"educationalLevel":"High School AP","about":{"@type":"Course","name":"AP Computer Science A"}}
+</script>
+</header>
+
+<div class="apcsa-learn-box">
+  <h3>What you’ll learn in this lesson</h3>
+  <ul>
+    <li>
+<strong>1.1.A.</strong> Represent everyday patterns and processes as algorithms using written language or diagrams, and explain why sequencing matters.</li>
+    <li>
+<strong>1.1.B.</strong> Explain the role of an IDE, the compilation step, and what kinds of errors the compiler can and cannot catch.</li>
+    <li>
+<strong>1.1.C.</strong> Identify and distinguish syntax errors, logic errors, run-time errors, and exceptions, including which are caught by the compiler and which only show up later.</li>
+  </ul>
+  <p style="margin-top: 8px !important; margin-bottom: 4px !important; font-size: 14px !important; color: #475569 !important; -webkit-text-fill-color: #475569 !important;">This lesson is part of the <a href="https://apcentral.collegeboard.org/courses/ap-computer-science-a" target="_blank" rel="noopener noreferrer" style="color:#2563eb !important; -webkit-text-fill-color:#2563eb !important;">AP CSA Course and Exam Description</a> (effective May 2027).</p>
+  <p style="margin-top: 12px !important; margin-bottom: 0 !important; font-size: 15px !important; color: #475569 !important; -webkit-text-fill-color: #475569 !important;">
+    <strong>AP exam weight:</strong> Conceptual lessons appear in the MCQ section, expect 1-3 questions per lesson topic on the live exam, often as scenario or definition stems. Lesson 1.1 vocabulary (syntax error, logic error, run-time error, exception) shows up across all four units.
+  </p>
+</div>
+
+<!-- VIDEO PLACEHOLDER: Add lesson video embed here when ready -->
+
+<h2>What is an algorithm, and what does a computer do with it?</h2>
+<p>
+  Every time you follow a recipe, give someone directions to your house, or work through long division, you are running an algorithm. You start with an input, you follow a fixed sequence of steps, and you end up with a result. Computer science takes that same everyday idea and asks a tighter question: what is the precise, unambiguous list of steps that solves this problem, and how do we hand those steps to a machine that has zero common sense?
+</p>
+
+<div class="apcsa-callout concept">
+  <h4>Definition</h4>
+  <p>An <strong>algorithm</strong> is a step-by-step process for completing a task or solving a problem. Algorithms can be represented in written language, in diagrams (like flowcharts), or in a programming language. <strong>Sequencing</strong> is the part of an algorithm that defines the order in which steps are performed, one step at a time.</p>
+</div>
+
+<p>
+  AP CSA is, at its core, a course about writing algorithms in Java. Before any code is involved, though, the algorithm has to exist as a clear, ordered plan. The CED is explicit about this: students should be able to <em>represent patterns and algorithms found in everyday life</em>, not just type Java. The reason is practical. Programmers who can’t describe their plan in plain English usually can’t describe it in Java either. They end up debugging a mental model that was never coherent to begin with.
+</p>
+
+<h3>Sequencing: one step at a time, in a specific order</h3>
+<p>
+  Sequencing sounds obvious until you try to break it. Consider making a peanut butter sandwich. “Spread the peanut butter, take out the bread, open the jar” lists all the right ingredients but produces a mess. The same is true in code. <code>System.out.println(name); String name = "Tanner";</code> uses the right pieces but compiles only if reordered. Computers execute statements <strong>one at a time, in the order written</strong>, with no ability to look ahead or guess what you meant.
+</p>
+
+<div class="apcsa-callout example">
+  <h4>Example</h4>
+  <p>Algorithm for “log in to a website”: (1) open the login page, (2) type the username, (3) type the password, (4) click submit, (5) wait for the server response, (6) display the home page <em>only if</em> the response was successful. Swap steps 3 and 4 and the password is never entered. Swap steps 4 and 5 and the user clicks submit before there’s anything to submit. The steps haven’t changed; only the sequence has, and the sequence is what makes it work.</p>
+</div>
+
+<h3>From algorithm to running program: writing, compiling, executing</h3>
+<p>
+  Once you have an algorithm, you write it in a programming language. Java code can be written in any text editor, but most programmers use an <strong>integrated development environment (IDE)</strong>, a single application that lets you write the code, compile it, and run it without leaving the window. Common AP CSA classroom IDEs include IntelliJ IDEA, Eclipse, BlueJ, and Replit. The CED treats the choice of IDE as classroom-dependent and not tested directly, what <em>is</em> tested is what the IDE does for you.
+</p>
+<p>
+  The key step is <strong>compilation</strong>. A <strong>compiler</strong> is a program that translates your Java source code into a form the machine can run, and along the way it checks the code for certain kinds of errors. If the compiler finds an error, your program does not run at all. You must fix the error first. This is one of the most important ideas in this lesson: <em>the compiler is a gatekeeper for one class of mistakes, but it is blind to others</em>.
+</p>
+
+<div class="apcsa-callout warning">
+  <h4>Common misconception</h4>
+  <p>“If my code compiles, it works.” This is wrong, and the AP exam tests it directly. The compiler only catches errors related to the rules of the Java language (missing semicolons, undeclared variables, type mismatches). A program can compile cleanly, run end-to-end, and still produce the wrong answer because the <em>logic</em>, the algorithm you wrote, is flawed. Successful compilation means “Java accepts this as valid Java,” not “this solves your problem.”</p>
+</div>
+
+<h3>The four error types you must distinguish</h3>
+<p>
+  The CED is unusually specific here. Topic 1.1.C names four error categories, and the AP exam tests whether you can place a given mistake into the right bucket. The distinctions matter because they tell you <em>when</em> an error will surface: at compile time, at run time, or only when you happen to test with the right input.
+</p>
+<ul>
+  <li>A <strong>syntax error</strong> is a violation of the rules of the Java language. Missing semicolon, misspelled keyword, unclosed brace. The compiler catches every syntax error. Your program does not run.</li>
+  <li>A <strong>logic error</strong> is a mistake in the algorithm itself. The code compiles and runs but produces wrong output. You only catch logic errors by testing with specific inputs and comparing actual output to expected output.</li>
+  <li>A <strong>run-time error</strong> is a problem that occurs <em>during execution</em>. The compiler accepted the code, but something goes wrong while the program is running, usually causing it to terminate abnormally.</li>
+  <li>An <strong>exception</strong> is a specific type of run-time error: an unexpected condition that the compiler couldn’t predict, which interrupts the normal flow of execution. <code>ArithmeticException</code> from dividing by zero and <code>NullPointerException</code> from calling a method on <code>null</code> are the two you’ll see most often in Unit 1.</li>
+</ul>
+
+<div class="apcsa-callout key-insight">
+  <h4>Key insight</h4>
+  <p>The compiler catches <em>syntax</em> errors only. Logic, run-time, and exception errors all slip past the compiler. They require running the program (and often testing with specific inputs) to surface. This is why writing test cases is part of programming, not an optional extra.</p>
+</div>
+
+<h3>Key vocabulary</h3>
+<table class="apcsa-vocab">
+  <thead>
+    <tr>
+<th style="width: 28% !important;">Term</th>
+<th>Definition</th>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td><strong>Algorithm</strong></td>
+<td>A step-by-step process for completing a task or solving a problem, representable in written language, diagrams, or code.</td>
+</tr>
+    <tr>
+<td><strong>Sequencing</strong></td>
+<td>The order in which steps in a process are completed; steps run one at a time.</td>
+</tr>
+    <tr>
+<td><strong>IDE</strong></td>
+<td>Integrated Development Environment, an application that bundles tools to write, compile, and run code in one place.</td>
+</tr>
+    <tr>
+<td><strong>Compiler</strong></td>
+<td>A program that translates source code into a runnable form and checks for certain language-rule errors before the program runs.</td>
+</tr>
+    <tr>
+<td><strong>Syntax error</strong></td>
+<td>A mistake that violates the rules of the programming language; detected by the compiler. The program does not run.</td>
+</tr>
+    <tr>
+<td><strong>Logic error</strong></td>
+<td>A mistake in the algorithm that causes incorrect or unexpected behavior; detected only by testing with specific inputs.</td>
+</tr>
+    <tr>
+<td><strong>Run-time error</strong></td>
+<td>A mistake that occurs during program execution, typically causing the program to terminate abnormally.</td>
+</tr>
+    <tr>
+<td><strong>Exception</strong></td>
+<td>A type of run-time error caused by an unexpected condition the compiler did not detect; interrupts the normal flow of execution.</td>
+</tr>
+  </tbody>
+</table>
+
+<!-- SLIDES PLACEHOLDER: Add slide deck download link here when ready -->
+
+
+
+<!-- in-lesson code editor -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+
+<style>
+#csa-ce-wrap{font-family:"DM Sans",-apple-system,sans-serif!important;background:#0f172a!important;border-radius:14px!important;padding:28px!important;margin:40px 0!important;box-sizing:border-box!important;}
+#csa-ce-wrap *{box-sizing:border-box!important;}
+#csa-ce-wrap .csa-ce-badge{display:inline-block!important;background:rgba(232,160,32,.15)!important;border:1px solid rgba(232,160,32,.4)!important;color:#fbbf24!important;-webkit-text-fill-color:#fbbf24!important;font-size:11px!important;font-weight:700!important;letter-spacing:.1em!important;text-transform:uppercase!important;padding:5px 14px!important;border-radius:100px!important;margin-bottom:10px!important;}
+#csa-ce-wrap .csa-ce-title{font-family:"DM Serif Display",Georgia,serif!important;font-size:22px!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;margin:0 0 4px 0!important;}
+#csa-ce-wrap .csa-ce-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin:0 0 20px 0!important;line-height:1.6!important;}
+#csa-ce-wrap .csa-ce-problem{background:rgba(255,255,255,.04)!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:10px!important;padding:18px 20px!important;margin-bottom:16px!important;}
+#csa-ce-wrap .csa-ce-num{font-size:11px!important;font-weight:700!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#fbbf24!important;-webkit-text-fill-color:#fbbf24!important;margin:0 0 8px 0!important;}
+#csa-ce-wrap .csa-ce-prompt{font-size:14px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.65!important;margin:0 0 12px 0!important;}
+#csa-ce-wrap .csa-ce-prompt code{background:rgba(255,255,255,.1)!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;padding:1px 6px!important;border-radius:4px!important;font-family:Menlo,Consolas,monospace!important;font-size:13px!important;}
+#csa-ce-wrap .csa-ce-editor{border:2px solid rgba(255,255,255,.12)!important;border-radius:8px!important;overflow:hidden!important;margin-bottom:10px!important;}
+#csa-ce-wrap .CodeMirror{height:auto!important;min-height:240px!important;background:#020617!important;color:#e2e8f0!important;font-family:Menlo,Consolas,monospace!important;font-size:13.5px!important;line-height:1.7!important;padding:6px 0!important;}
+#csa-ce-wrap .CodeMirror pre.CodeMirror-line,#csa-ce-wrap .CodeMirror pre.CodeMirror-line-like{padding-left:8px!important;border:0!important;border-radius:0!important;background:transparent!important;margin:0!important;}
+#csa-ce-wrap .CodeMirror-lines{padding:8px 0!important;}
+#csa-ce-wrap .CodeMirror-gutters{background:#020617!important;border-right:1px solid rgba(255,255,255,.08)!important;width:40px!important;}
+#csa-ce-wrap .CodeMirror-sizer{margin-left:40px!important;}
+#csa-ce-wrap .CodeMirror-linenumber{color:#475569!important;-webkit-text-fill-color:#475569!important;padding:0 7px 0 0!important;text-align:right!important;}
+#csa-ce-wrap .CodeMirror-cursor{border-left:2px solid #fbbf24!important;}
+#csa-ce-wrap .cm-keyword{color:#c4b5fd!important;}
+#csa-ce-wrap .cm-def{color:#93c5fd!important;}
+#csa-ce-wrap .cm-variable{color:#e2e8f0!important;}
+#csa-ce-wrap .cm-variable-2{color:#e2e8f0!important;}
+#csa-ce-wrap .cm-type{color:#5eead4!important;}
+#csa-ce-wrap .cm-string{color:#86efac!important;}
+#csa-ce-wrap .cm-number{color:#fbbf24!important;}
+#csa-ce-wrap .cm-comment{color:#64748b!important;font-style:italic!important;}
+#csa-ce-wrap .cm-operator{color:#f8fafc!important;}
+#csa-ce-wrap .csa-ce-btnrow{display:flex!important;gap:8px!important;flex-wrap:wrap!important;align-items:center!important;margin:0!important;}
+#csa-ce-wrap .csa-ce-run{padding:9px 22px!important;background:#16a34a!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border:none!important;border-radius:7px!important;font-size:13px!important;font-weight:700!important;cursor:pointer!important;font-family:inherit!important;letter-spacing:.02em!important;min-height:0!important;line-height:1.4!important;text-transform:none!important;box-shadow:none!important;}
+#csa-ce-wrap .csa-ce-run:hover{background:#15803d!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#csa-ce-wrap .csa-ce-run:disabled{background:#475569!important;cursor:wait!important;}
+#csa-ce-wrap .csa-ce-hintbtn,#csa-ce-wrap .csa-ce-resetbtn{padding:9px 16px!important;background:rgba(255,255,255,.1)!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;border:1px solid rgba(255,255,255,.3)!important;border-radius:7px!important;font-size:13px!important;font-weight:600!important;cursor:pointer!important;font-family:inherit!important;min-height:0!important;line-height:1.4!important;text-transform:none!important;box-shadow:none!important;}
+#csa-ce-wrap .csa-ce-hintbtn:hover,#csa-ce-wrap .csa-ce-resetbtn:hover,#csa-ce-wrap .csa-ce-wrapbtn:hover{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-color:rgba(255,255,255,.5)!important;background:rgba(255,255,255,.16)!important;}
+#csa-ce-wrap .csa-ce-wrapbtn{padding:9px 16px!important;background:rgba(255,255,255,.1)!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;border:1px solid rgba(255,255,255,.3)!important;border-radius:7px!important;font-size:13px!important;font-weight:600!important;cursor:pointer!important;font-family:inherit!important;min-height:0!important;line-height:1.4!important;text-transform:none!important;box-shadow:none!important;}
+#csa-ce-wrap .csa-ce-wrapbtn.on{background:rgba(232,160,32,.18)!important;color:#fbbf24!important;-webkit-text-fill-color:#fbbf24!important;border-color:rgba(232,160,32,.55)!important;}
+#csa-ce-wrap .csa-ce-status{font-size:12px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-style:italic!important;}
+#csa-ce-wrap .csa-ce-output{margin-top:10px!important;background:#020617!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:8px!important;padding:12px 16px!important;font-family:Menlo,Consolas,monospace!important;font-size:13px!important;line-height:1.7!important;display:none!important;white-space:pre-wrap!important;word-break:break-word!important;min-height:80px!important;}
+#csa-ce-wrap .csa-ce-output.show{display:block!important;}
+#csa-ce-wrap .csa-ce-output.ok{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;border-color:rgba(74,222,128,.35)!important;}
+#csa-ce-wrap .csa-ce-output.err{color:#f87171!important;-webkit-text-fill-color:#f87171!important;border-color:rgba(248,113,113,.35)!important;}
+#csa-ce-wrap .csa-ce-output.plain{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+#csa-ce-wrap .csa-ce-hint{margin-top:8px!important;background:rgba(147,197,253,.06)!important;border:1px solid rgba(147,197,253,.2)!important;border-radius:8px!important;padding:10px 14px!important;font-size:13px!important;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;display:none!important;line-height:1.6!important;}
+#csa-ce-wrap .csa-ce-hint.show{display:block!important;}
+#csa-ce-wrap .csa-ce-hint code{background:rgba(255,255,255,.1)!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;padding:1px 5px!important;border-radius:4px!important;font-family:Menlo,Consolas,monospace!important;}
+@media(max-width:600px){
+#csa-ce-wrap{padding:18px!important;}
+#csa-ce-wrap .CodeMirror{font-size:12.5px!important;min-height:260px!important;}
+}
+#csa-ce-wrap .CodeMirror-code,#csa-ce-wrap .CodeMirror-code>div,#csa-ce-wrap .CodeMirror pre.CodeMirror-line,#csa-ce-wrap .CodeMirror pre.CodeMirror-line-like{line-height:1.55!important;min-height:0!important;height:auto!important;margin:0!important;padding-top:0!important;padding-bottom:0!important;}
+#csa-ce-wrap .CodeMirror pre.CodeMirror-line,#csa-ce-wrap .CodeMirror pre.CodeMirror-line-like{padding-left:8px!important;}
+#csa-ce-wrap .CodeMirror,#csa-ce-wrap .CodeMirror pre.CodeMirror-line,#csa-ce-wrap .CodeMirror pre.CodeMirror-line-like,#csa-ce-wrap .CodeMirror-line span:not([class]){color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+#csa-ce-wrap .cm-keyword{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+#csa-ce-wrap .cm-def{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+#csa-ce-wrap .cm-variable,#csa-ce-wrap .cm-variable-2,#csa-ce-wrap .cm-property,#csa-ce-wrap .cm-meta,#csa-ce-wrap .cm-tag{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+#csa-ce-wrap .cm-type,#csa-ce-wrap .cm-variable-3{color:#5eead4!important;-webkit-text-fill-color:#5eead4!important;}
+#csa-ce-wrap .cm-string{color:#86efac!important;-webkit-text-fill-color:#86efac!important;}
+#csa-ce-wrap .cm-number{color:#fbbf24!important;-webkit-text-fill-color:#fbbf24!important;}
+#csa-ce-wrap .cm-comment{color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+#csa-ce-wrap .cm-operator,#csa-ce-wrap .cm-bracket,#csa-ce-wrap .cm-punctuation{color:#f8fafc!important;-webkit-text-fill-color:#f8fafc!important;}
+#csa-ce-wrap .CodeMirror{height:auto!important;min-height:140px!important;}
+#csa-ce-wrap .CodeMirror-scroll{max-height:55vh!important;}
+@media(max-width:600px){#csa-ce-wrap .CodeMirror{font-size:11px!important;}}
+</style>
+
+<div id="csa-ce-wrap" data-lesson-id="1.1" data-item-id="1.1-code-1">
+  <div class="csa-ce-badge">▶ Java Code Editor</div>
+  <div class="csa-ce-title">Try It Yourself</div>
+  <div class="csa-ce-sub">Write real Java, hit Run, and your code executes on a live compiler. Output is checked automatically.</div>
+  <div id="csa-ce-problems"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/clike/clike.min.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  var nativeFetch = window.__nativeFetch || window.fetch.bind(window);
+  var PROXY_URL = 'https://progress.apcsexamprep.com/api/judge0/run';
+  var CSACE_RUNS = 0, CSACE_RUN_CAP = 60, CSACE_COOLDOWN_MS = 3000;
+
+  var CSACE_PROBLEMS = [
+  {
+    id: 'p1',
+    title: 'Problem 1 of 3 — spot the compile error',
+    prompt: 'This should print <code>Hello, AP CSA</code> but will not compile. Fix it so it runs.',
+    starter: `public class Main
+{
+    public static void main(String[] args)
+    {
+        System.out.println("Hello, AP CSA")
+    }
+}`,
+    expected: `Hello, AP CSA`,
+    hint: 'Every Java statement ends with the same punctuation mark. Read the print line all the way to the end.'
+  },
+  {
+    id: 'p2',
+    title: 'Problem 2 of 3 — fix the bug',
+    prompt: 'A program runs steps in order. This should print <code>First</code> then <code>Second</code>, but the lines come out reversed. Fix the order.',
+    starter: `public class Main
+{
+    public static void main(String[] args)
+    {
+        System.out.println("Second");
+        System.out.println("First");
+    }
+}`,
+    expected: `First
+Second`,
+    hint: 'Statements run top to bottom, in the order you write them. Which line does the expected output show first?'
+  },
+  {
+    id: 'p3',
+    title: 'Problem 3 of 3 — write from spec',
+    prompt: 'Write code that prints exactly two lines: <code>Algorithm</code> on the first line and <code>Program</code> on the second.',
+    starter: `public class Main
+{
+    public static void main(String[] args)
+    {
+        // print Algorithm, then Program, each on its own line
+
+    }
+}`,
+    expected: `Algorithm
+Program`,
+    hint: 'Each print-line statement puts its output on its own line. How many lines does the expected output have, and so how many statements do you need?'
+  }
+];
+
+  var editors = {};
+
+  function normalize(s) {
+    if (!s) {
+      return '';
+    }
+    return s.replace(/\r\n/g, '\n').split('\n').map(function(line){
+      return line.replace(/\s+$/, '');
+    }).join('\n').replace(/\n+$/, '');
+  }
+
+  function el(tag, cls, html) {
+    var node = document.createElement(tag);
+    if (cls) {
+      node.className = cls;
+    }
+    if (html !== undefined) {
+      node.innerHTML = html;
+    }
+    return node;
+  }
+
+  function buildProblem(p, idx) {
+    var card = el('div', 'csa-ce-problem');
+    card.appendChild(el('div', 'csa-ce-num', p.title));
+    card.appendChild(el('div', 'csa-ce-prompt', p.prompt));
+
+    var edWrap = el('div', 'csa-ce-editor');
+    var ta = document.createElement('textarea');
+    ta.value = p.starter;
+    edWrap.appendChild(ta);
+    card.appendChild(edWrap);
+
+    var row = el('div', 'csa-ce-btnrow');
+    var runBtn = el('button', 'csa-ce-run', 'Run ▶');
+    var hintBtn = el('button', 'csa-ce-hintbtn', 'Hint');
+    var resetBtn = el('button', 'csa-ce-resetbtn', 'Reset');
+    var wrapBtn = el('button', 'csa-ce-wrapbtn', 'Wrap lines');
+    var status = el('span', 'csa-ce-status', '');
+    row.appendChild(runBtn);
+    row.appendChild(hintBtn);
+    row.appendChild(resetBtn);
+    row.appendChild(wrapBtn);
+    row.appendChild(status);
+    card.appendChild(row);
+
+    var out = el('div', 'csa-ce-output');
+    card.appendChild(out);
+
+    var hint = el('div', 'csa-ce-hint', '💡 ' + p.hint);
+    card.appendChild(hint);
+
+    document.getElementById('csa-ce-problems').appendChild(card);
+
+    var cm = CodeMirror.fromTextArea(ta, {
+      mode: 'text/x-java',
+      lineNumbers: true,
+      indentUnit: 4,
+      tabSize: 4,
+      indentWithTabs: false,
+      viewportMargin: Infinity,
+      lineWrapping: (window.innerWidth <= 600)
+    });
+    editors[p.id] = cm;
+    setTimeout(function(){ cm.refresh(); }, 0);
+    setTimeout(function(){ cm.refresh(); }, 350);
+
+    hintBtn.onclick = function() {
+      hint.classList.toggle('show');
+    };
+
+    if (cm.getOption('lineWrapping')) { wrapBtn.className = 'csa-ce-wrapbtn on'; wrapBtn.innerHTML = 'Wrap: on'; }
+    wrapBtn.onclick = function() {
+      var on = !cm.getOption('lineWrapping');
+      cm.setOption('lineWrapping', on);
+      wrapBtn.className = on ? 'csa-ce-wrapbtn on' : 'csa-ce-wrapbtn';
+      wrapBtn.innerHTML = on ? 'Wrap: on' : 'Wrap lines';
+      cm.refresh();
+    };
+
+    resetBtn.onclick = function() {
+      cm.setValue(p.starter);
+      out.className = 'csa-ce-output';
+      out.textContent = '';
+    };
+
+    runBtn.onclick = function() {
+      var code = cm.getValue();
+      var wrap = document.getElementById('csa-ce-wrap');
+      var lessonId = wrap ? (wrap.getAttribute('data-lesson-id') || '') : '';
+      if (CSACE_RUNS >= CSACE_RUN_CAP) {
+        out.className = 'csa-ce-output show err';
+        out.textContent = 'Run limit reached for this page. Refresh to keep practicing.';
+        return;
+      }
+      CSACE_RUNS++;
+      runBtn.disabled = true;
+      status.textContent = 'Compiling and running...';
+      out.className = 'csa-ce-output';
+      out.textContent = '';
+
+      nativeFetch(PROXY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: code, lessonId: lessonId, problemId: p.id })
+      })
+      .then(function(res) {
+        return res.json().then(function(data) {
+          return { ok: res.ok, status: res.status, data: data };
+        });
+      })
+      .then(function(result) {
+        setTimeout(function(){ runBtn.disabled = false; }, CSACE_COOLDOWN_MS);
+        status.textContent = '';
+        var data = result.data;
+
+        if (!result.ok) {
+          out.className = 'csa-ce-output show err';
+          out.textContent = data.message || 'Run failed. Try again.';
+          return;
+        }
+
+        if (data.compile_output) {
+          out.className = 'csa-ce-output show err';
+          out.textContent = 'Compile error:\n' + data.compile_output;
+          return;
+        }
+
+        if (data.stderr) {
+          out.className = 'csa-ce-output show err';
+          out.textContent = 'Runtime error:\n' + data.stderr;
+          return;
+        }
+
+        var stdout = data.stdout || '';
+
+        if (p.expected === null || p.expected === undefined) {
+          out.className = 'csa-ce-output show plain';
+          out.textContent = 'Output:\n' + (stdout || '(no output)');
+          return;
+        }
+
+        if (normalize(stdout) === normalize(p.expected)) {
+          out.className = 'csa-ce-output show ok';
+          if (window.APCS_reportAttempt) { APCS_reportAttempt({ item_id: lessonId + '-code-1', item_type: 'cfu', score: 1, max_score: 1, detail: [{ q: idx + 1, sel: null, ok: true }] }); }
+          out.textContent = '✓ Correct!\nOutput: ' + stdout.replace(/\n$/, '');
+        } else {
+          out.className = 'csa-ce-output show err';
+          out.textContent = '✗ Not quite.\nYour output: ' + (stdout.replace(/\n$/, '') || '(none)') + '\nExpected: ' + p.expected;
+        }
+      })
+      .catch(function(err) {
+        setTimeout(function(){ runBtn.disabled = false; }, CSACE_COOLDOWN_MS);
+        status.textContent = '';
+        out.className = 'csa-ce-output show err';
+        out.textContent = 'Could not reach the code runner. Check your connection and try again.';
+      });
+    };
+  }
+
+  function init() {
+    for (var i = 0; i < CSACE_PROBLEMS.length; i++) {
+      buildProblem(CSACE_PROBLEMS[i], i);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+<section class="apcsa-practice-tier">
+  <h2>
+<span class="tier-label">Tier 2 Practice</span> Check your understanding</h2>
+  <p style="font-size: 15px !important; color: #475569 !important; -webkit-text-fill-color: #475569 !important;">
+    Six questions covering the lesson concepts. On tougher questions, try predicting your answer before reading the options, it’s the best way to catch trap distractors. Mix of formats: MCQ, matching, classification, and a vocabulary cloze.
+  </p>
+
+  <!-- EX 1: I/II/III multi-correct, answer C -->
+  <div class="apcs-ex" data-type="mcq" data-answer="C" data-item-id="1.1-cfu-1">
+    <span class="apcs-ex-label">MCQ · Multi-select stem</span>
+    <div class="apcs-ex-stem">
+      <strong>1.</strong> A student is writing an algorithm to make oatmeal. Consider the following statements about algorithms and sequencing.
+      <ol style="margin-top: 10px !important; padding-left: 24px !important;">
+        <li>An algorithm can be represented in written language, in a diagram, or in code, and the representation does not change whether the algorithm is correct.</li>
+        <li>Reordering two steps in an algorithm always produces a different result.</li>
+        <li>An algorithm only counts as “an algorithm” once it is written in a programming language; a recipe on paper does not qualify.</li>
+      </ol>
+      Which of the statements are true?
+    </div>
+    <div class="apcs-ex-options">
+      <div class="apcs-opt" data-letter="A">
+<span class="apcs-opt-letter">A.</span> I only</div>
+      <div class="apcs-opt" data-letter="B">
+<span class="apcs-opt-letter">B.</span> I and II</div>
+      <div class="apcs-opt" data-letter="C">
+<span class="apcs-opt-letter">C.</span> I only is fully correct; II and III are false</div>
+      <div class="apcs-opt" data-letter="D">
+<span class="apcs-opt-letter">D.</span> II and III</div>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check answer</button>
+    <div class="apcs-ex-feedback">
+      <strong>C.</strong> Only statement I is true: the CED explicitly says algorithms can be represented in written language, diagrams, or code, and correctness is independent of representation. Statement II overreaches, reordering two steps <em>can</em> change the result, but if the two steps are independent (e.g., “put on left sock” then “put on right sock”) the result is identical. Statement III is the most common student mistake: a paper recipe and a flowchart are perfectly valid algorithm representations, nothing about the definition requires code.
+    </div>
+  </div>
+
+  <!-- EX 2: NOT/EXCEPT spot the misconception, predict-gate ON, answer D -->
+  <div class="apcs-ex" data-type="mcq" data-answer="D" data-item-id="1.1-cfu-2">
+    <span class="apcs-ex-label">MCQ · Spot the misconception</span>
+    <div class="apcs-ex-stem">
+      <strong>2.</strong> Which of the following statements about compilers and errors is <strong>NOT</strong> true?
+    </div>
+    <div class="apcs-predict-gate">This stem uses <strong>NOT</strong>. You’re looking for the option that is <em>wrong</em>. Before reading the choices, predict what a compiler can and cannot catch. Then read all four.</div>
+    <div class="apcs-ex-options">
+      <div class="apcs-opt" data-letter="A">
+<span class="apcs-opt-letter">A.</span> A program that fails to compile will not run at all until the errors are fixed.</div>
+      <div class="apcs-opt" data-letter="B">
+<span class="apcs-opt-letter">B.</span> Syntax errors are violations of the rules of the programming language and are detected by the compiler.</div>
+      <div class="apcs-opt" data-letter="C">
+<span class="apcs-opt-letter">C.</span> A program can compile successfully and still produce incorrect output for some inputs.</div>
+      <div class="apcs-opt" data-letter="D">
+<span class="apcs-opt-letter">D.</span> If a program compiles successfully, then it will never throw a run-time exception during execution.</div>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check answer</button>
+    <div class="apcs-ex-feedback">
+      <strong>D.</strong> Option D is the false statement, successful compilation means only that the code follows Java’s language rules, not that it is safe at run time. A compiled program can still throw exceptions like <code>ArithmeticException</code> (division by zero) or <code>NullPointerException</code> the moment it tries an operation the compiler couldn’t predict. A, B, and C are all accurate: compile failures block execution, syntax errors are language-rule violations the compiler catches, and clean compilation says nothing about logical correctness.
+    </div>
+  </div>
+
+  <!-- EX 3: Matching -->
+  <div class="apcs-ex" data-type="matching" data-item-id="1.1-cfu-3">
+    <span class="apcs-ex-label">Matching</span>
+    <div class="apcs-ex-stem">
+      <strong>3.</strong> Match each error type on the left to its precise definition on the right.
+    </div>
+    <div class="apcs-matching">
+      <div class="apcs-match-col">
+        <div class="apcs-match-item" data-key="t1"><strong>Syntax error</strong></div>
+        <div class="apcs-match-item" data-key="t2"><strong>Logic error</strong></div>
+        <div class="apcs-match-item" data-key="t3"><strong>Run-time error</strong></div>
+        <div class="apcs-match-item" data-key="t4"><strong>Exception</strong></div>
+      </div>
+      <div class="apcs-match-col">
+        <div class="apcs-match-item" data-match="t3">An error that occurs during program execution, typically causing the program to terminate abnormally.</div>
+        <div class="apcs-match-item" data-match="t1">A violation of the rules of the programming language; detected by the compiler before the program runs.</div>
+        <div class="apcs-match-item" data-match="t4">A type of run-time error from an unexpected condition the compiler did not detect, interrupting normal flow.</div>
+        <div class="apcs-match-item" data-match="t2">A mistake in the algorithm itself; the program runs but produces incorrect or unexpected results.</div>
+      </div>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check matches</button>
+    <div class="apcs-ex-feedback">
+      Syntax errors live entirely at compile time. Logic errors run cleanly but give wrong answers (think: off-by-one bug in a loop). Run-time errors halt execution mid-program. Exceptions are the specific subset of run-time errors that occur because of unexpected conditions like dividing by zero, every exception is a run-time error, but not every run-time error is an exception.
+    </div>
+  </div>
+
+  <!-- EX 4: Scenario sort (3 buckets: syntax / logic / run-time) -->
+  <div class="apcs-ex" data-type="scenario-sort" data-item-id="1.1-cfu-4">
+    <span class="apcs-ex-label">Classify</span>
+    <div class="apcs-ex-stem">
+      <strong>4.</strong> For each scenario below, classify the error as a syntax error, a logic error, or a run-time error.
+    </div>
+    <div class="apcs-sort-bank">
+      <div class="apcs-sort-item" data-bucket="b1">A student forgets the semicolon at the end of <code>int x = 5</code> and the program will not compile.</div>
+      <div class="apcs-sort-item" data-bucket="b2">A program that computes the average of three test scores returns the sum instead because the student forgot to divide by 3.</div>
+      <div class="apcs-sort-item" data-bucket="b3">A program crashes with <code>ArithmeticException</code> when the user enters 0 as the divisor.</div>
+      <div class="apcs-sort-item" data-bucket="b1">A student types <code>Sytem.out.println</code> with a misspelled class name and the IDE underlines it in red before running.</div>
+      <div class="apcs-sort-item" data-bucket="b2">A loop intended to print numbers 1 through 10 prints 0 through 9 because the student started the counter at the wrong value.</div>
+      <div class="apcs-sort-item" data-bucket="b3">A program that reads a file crashes partway through with <code>NullPointerException</code> the first time it encounters an empty line.</div>
+    </div>
+    <div class="apcs-sort-buckets">
+      <div class="apcs-sort-bucket" data-bucket="b1"><h5>Syntax error</h5></div>
+      <div class="apcs-sort-bucket" data-bucket="b2"><h5>Logic error</h5></div>
+      <div class="apcs-sort-bucket" data-bucket="b3"><h5>Run-time error</h5></div>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check sorting</button>
+    <div class="apcs-ex-feedback">
+      The two syntax errors (missing semicolon, misspelled <code>System</code>) are caught by the compiler, so the program never runs. The two logic errors compile and run but produce wrong output: in both cases Java did exactly what was written, which wasn’t what the student meant. The two run-time errors (division by zero, null pointer) compile cleanly and execute until they hit a condition the compiler couldn’t predict.
+    </div>
+  </div>
+
+  <!-- EX 5: Cloze -->
+  <div class="apcs-ex" data-type="cloze" data-item-id="1.1-cfu-5">
+    <span class="apcs-ex-label">Cloze · Vocabulary in context</span>
+    <div class="apcs-ex-stem">
+      <strong>5.</strong> Fill each blank with the correct term from the bank below.
+    </div>
+    <div class="apcs-cloze-text">
+      A student writes a Java program in their
+      <span class="apcs-cloze-blank" data-answer="IDE"></span>,
+      saves the file, and clicks Run. The
+      <span class="apcs-cloze-blank" data-answer="compiler"></span>
+      reports no errors, so the program starts executing. After thirty seconds it terminates abnormally with a stack trace; this is a
+      <span class="apcs-cloze-blank" data-answer="run-time error"></span>.
+      The student fixes the crash, runs the program again, and this time it finishes cleanly but produces the wrong answer for several inputs. This second problem is a
+      <span class="apcs-cloze-blank" data-answer="logic error"></span>.
+    </div>
+    <div class="apcs-cloze-chips">
+      <span class="apcs-sort-item" data-term="IDE">IDE</span>
+      <span class="apcs-sort-item" data-term="compiler">compiler</span>
+      <span class="apcs-sort-item" data-term="run-time error">run-time error</span>
+      <span class="apcs-sort-item" data-term="logic error">logic error</span>
+      <span class="apcs-sort-item" data-term="syntax error">syntax error</span>
+      <span class="apcs-sort-item" data-term="algorithm">algorithm</span>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check answers</button>
+    <div class="apcs-ex-feedback">
+      The IDE is where code is written and managed. The compiler is the gatekeeper before execution; if it reports no errors, syntax is not the problem. A program that compiles but terminates abnormally during execution is hitting a run-time error. A program that compiles, runs to completion, and produces wrong output has a logic error. The algorithm itself is flawed.
+    </div>
+  </div>
+
+  <!-- EX 6: Applied scenario, answer A -->
+  <div class="apcs-ex" data-type="mcq" data-answer="A" data-item-id="1.1-cfu-6">
+    <span class="apcs-ex-label">MCQ · Applied scenario</span>
+    <div class="apcs-ex-stem">
+      <strong>6.</strong> A student writes a Java program that calculates a tip on a restaurant bill. The program compiles without any errors and runs to completion every time, but the tip amount is consistently 10 times larger than it should be. Which of the following best classifies this mistake?
+    </div>
+    <div class="apcs-ex-options">
+      <div class="apcs-opt" data-letter="A">
+<span class="apcs-opt-letter">A.</span> A logic error, because the program runs without crashing but produces an incorrect result.</div>
+      <div class="apcs-opt" data-letter="B">
+<span class="apcs-opt-letter">B.</span> A syntax error, because the program is using the wrong math operator and the compiler should have caught it.</div>
+      <div class="apcs-opt" data-letter="C">
+<span class="apcs-opt-letter">C.</span> A run-time error, because the wrong value appears during execution rather than at compile time.</div>
+      <div class="apcs-opt" data-letter="D">
+<span class="apcs-opt-letter">D.</span> An exception, because the output deviates from what was expected.</div>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check answer</button>
+    <div class="apcs-ex-feedback">
+      <strong>A.</strong> The defining feature here is that the program compiles, runs to completion, and produces incorrect output, and that is the textbook signature of a logic error. B is wrong because the compiler does not check whether math is “correct” for your purposes; multiplying by 10 instead of 0.1 is valid Java. C is the most attractive trap: a run-time error specifically means execution is interrupted (the program terminates abnormally), which is not what happened. D is wrong because an exception is a specific kind of run-time error, not a generic label for any incorrect output.
+    </div>
+  </div>
+
+</section>
+
+<section class="apcsa-mastery" data-item-id="1.1-quiz">
+  <span class="mastery-badge">Tier 3 · AP Mastery Challenge</span>
+  <h2>The After-School Tutoring Scheduler</h2>
+  <p>Mr. Ramirez asks two of his students, Sara and Jordan, to write a Java program that prints the names of every student signed up for after-school tutoring on a given day. The program reads names from a text file (one name per line) and prints them in the order they appear. Sara writes the program in IntelliJ, clicks Run, and IntelliJ refuses to start the program; it underlines the second-to-last line in red. Sara fixes the underline and clicks Run again; this time the program starts, prints six names, and then terminates abnormally with a message about <code>NullPointerException</code>. Jordan looks at the same file and notices that the file has an empty line in the middle, which is where Sara’s program crashed. Jordan rewrites the program so it skips empty lines. It now runs to completion. But Mr. Ramirez points out that one of the printed names is wrong: the program is printing every name twice.</p>
+
+  <h3>Part A: Identify Sara’s first error</h3>
+  <div class="apcs-ex" data-type="mcq" data-answer="B">
+    <div class="apcs-ex-stem">When IntelliJ refused to start Sara’s program and underlined a line in red, what kind of error was Sara hitting?</div>
+    <div class="apcs-predict-gate">Predict first: what is the only error type that prevents a program from running at all? Then read the options.</div>
+    <div class="apcs-ex-options">
+      <div class="apcs-opt" data-letter="A">
+<span class="apcs-opt-letter">A.</span> A logic error, because the program is producing the wrong result.</div>
+      <div class="apcs-opt" data-letter="B">
+<span class="apcs-opt-letter">B.</span> A syntax error, because the compiler refused to compile the code and flagged a specific line.</div>
+      <div class="apcs-opt" data-letter="C">
+<span class="apcs-opt-letter">C.</span> A run-time error, because the IDE detected it before execution.</div>
+      <div class="apcs-opt" data-letter="D">
+<span class="apcs-opt-letter">D.</span> An exception, because the IDE handled it before the program ran.</div>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check answer</button>
+    <div class="apcs-ex-feedback">
+      <strong>B.</strong> The defining feature is that the program never ran. The IDE underlined a line in red and refused to compile, which is what happens with a syntax error. A is wrong because logic errors only show up after the program runs and produces wrong output. C is wrong because run-time errors happen during execution, not before it starts. D is wrong because exceptions are a specific kind of run-time error, again something that surfaces while the program is executing.
+    </div>
+  </div>
+
+  <h3>Part B: Identify Sara’s second error</h3>
+  <div class="apcs-ex" data-type="mcq" data-answer="A">
+    <div class="apcs-ex-stem">After Sara fixed her first error, the program ran, printed six names, and then crashed with <code>NullPointerException</code>. Which classification best describes this second error?</div>
+    <div class="apcs-predict-gate">Predict first: the compiler accepted this code, but execution stopped mid-program. Which category fits?</div>
+    <div class="apcs-ex-options">
+      <div class="apcs-opt" data-letter="A">
+<span class="apcs-opt-letter">A.</span> An exception, which is a type of run-time error caused by an unexpected condition the compiler could not detect.</div>
+      <div class="apcs-opt" data-letter="B">
+<span class="apcs-opt-letter">B.</span> A logic error, because the program ran for a while and then stopped.</div>
+      <div class="apcs-opt" data-letter="C">
+<span class="apcs-opt-letter">C.</span> A syntax error, because the compiler should have caught it before execution.</div>
+      <div class="apcs-opt" data-letter="D">
+<span class="apcs-opt-letter">D.</span> A compilation warning, because the IDE permitted the program to start but then halted it.</div>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check answer</button>
+    <div class="apcs-ex-feedback">
+      <strong>A.</strong> <code>NullPointerException</code> is a specific type of run-time error caused by an unexpected condition (a null value being used where an object was expected) that the compiler could not detect in advance. Every exception is a run-time error. B is wrong because a logic error means wrong output, not a crash. C is wrong because the compiler does not detect this kind of problem; the code is syntactically valid. D is wrong because Java does not have a notion of a “compilation warning” that halts execution mid-program.
+    </div>
+  </div>
+
+  <h3>Part C: Structured response</h3>
+  <p>In three to five sentences, explain to Mr. Ramirez why Jordan’s final program still has a problem, even though it now compiles and runs to completion without crashing. Identify what type of error this is, and explain how Jordan would have to track it down, since the compiler and the run-time will not flag it for him.</p>
+  <textarea style="display: block !important; width: 100% !important; min-height: 140px !important; padding: 12px !important; background: #1e293b !important; color: #f1f5f9 !important; -webkit-text-fill-color: #f1f5f9 !important; border: 1px solid #334155 !important; border-radius: 6px !important; font-family: -apple-system, sans-serif !important; font-size: 15px !important; line-height: 1.5 !important;" placeholder="Type your response here..."></textarea>
+  <button class="apcs-btn apcs-ex-check" style="margin-top: 12px !important;">Reveal rubric &amp; sample response</button>
+
+  <div class="mastery-rubric">
+    <h4>Scoring rubric</h4>
+    <div class="rubric-row">
+      <span>Correctly identifies the “every name printed twice” bug as a <strong>logic error</strong>.</span>
+      <span class="rubric-score">Full 1 pt</span>
+    </div>
+    <div class="rubric-row">
+      <span>Explains that the program compiles and runs to completion, so neither the compiler nor the run-time flags it.</span>
+      <span class="rubric-score">Full 1 pt</span>
+    </div>
+    <div class="rubric-row">
+      <span>States that the only way to find it is by testing with specific inputs and comparing actual output to expected output.</span>
+      <span class="rubric-score partial">Partial 0.5 pt</span>
+    </div>
+    <div class="rubric-row">
+      <span>Calls the bug a syntax error, run-time error, or exception.</span>
+      <span class="rubric-score zero">Zero 0 pt</span>
+    </div>
+  </div>
+
+  <div style="margin-top: 18px !important; padding: 16px 18px !important; background: #1e293b !important; border-radius: 8px !important; border: 1px solid #334155 !important;">
+    <h4 style="color: #fbbf24 !important; -webkit-text-fill-color: #fbbf24 !important; margin-top: 0 !important;">Sample full-credit response</h4>
+    <p>Jordan’s program is hitting a logic error. The code compiles, so it is not a syntax error, and the program runs to completion without crashing, so it is not a run-time error or exception. The bug is in the algorithm itself, somewhere in the code Jordan is processing each name twice (perhaps an extra loop or a duplicate print statement). Because neither the compiler nor the Java run-time can know what output Mr. Ramirez expected, no automatic tool will flag this. Jordan has to test the program with a known input file, compare the printed list to the names actually in the file, and trace through his code line by line to find where the duplication happens.</p>
+  </div>
+</section>
+
+<h2>Common AP exam traps</h2>
+<p>The exam predictably tests these same misconceptions year after year. Recognize them now and you’ll catch them in May.</p>
+<div class="apcsa-traps">
+  <div class="apcsa-trap-card">
+    <h4>Trap 1: “If it compiles, it works”</h4>
+    <p>Successful compilation means the code follows Java’s rules, nothing more. A compiled program can still throw exceptions at run time or produce completely wrong output. The compiler is one layer of error detection, not the only layer.</p>
+  </div>
+  <div class="apcsa-trap-card">
+    <h4>Trap 2: Confusing exception with run-time error</h4>
+    <p>Students often treat “exception” and “run-time error” as synonyms. An exception is a <em>specific kind</em> of run-time error caused by an unexpected condition the compiler did not detect. All exceptions are run-time errors, but not all run-time errors are exceptions.</p>
+  </div>
+  <div class="apcsa-trap-card">
+    <h4>Trap 3: Logic errors classified as something else</h4>
+    <p>If a program compiles, runs to completion, and produces wrong output, it is still a logic error, even when the wrong output seems “weird” or “unexpected.” The exam will phrase the scenario in ways that tempt you to call it an exception. Don’t.</p>
+  </div>
+  <div class="apcsa-trap-card">
+    <h4>Trap 4: “An algorithm has to be in code”</h4>
+    <p>The CED explicitly lists written language and diagrams as valid algorithm representations. A flowchart, a numbered list of steps, and a Java method are all algorithms; the form of representation has nothing to do with whether the algorithm is correct.</p>
+  </div>
+</div>
+
+<section class="apcsa-extension">
+  <span class="ext-badge">Tier 4 · Beyond AP (Optional)</span>
+  <h3>How real compilers find more than just syntax errors</h3>
+  <p>Modern compilers and IDEs go well beyond the bare minimum the AP exam describes. Java’s compiler also performs <em>type checking</em> (catching mismatches like assigning a <code>String</code> to an <code>int</code>) and <em>definite assignment analysis</em> (refusing to compile if a local variable might be used before it’s assigned). IntelliJ and Eclipse add static analysis on top of that, flagging suspicious patterns, unused variables, methods that always return the same value, possible null dereferences, before you even hit Run. Some of these warnings catch genuine logic errors before they ever execute. None of this is on the AP exam, but it’s worth knowing that the line between “compile-time” and “run-time” is blurrier in professional tools than the CED’s clean four-category framework suggests.</p>
+  <p style="font-size: 14px !important; color: #6b21a8 !important; -webkit-text-fill-color: #6b21a8 !important; font-style: italic !important;">
+    This material extends beyond the AP CSA curriculum. Skip it if you’re focused on exam prep.
+  </p>
+</section>
+
+<h2>Deep dive: more on this topic</h2>
+<div class="apcsa-resources">
+  <a class="apcsa-resource-card" href="https://docs.oracle.com/javase/specs/jls/se17/html/jls-1.html" target="_blank" rel="noopener">
+    <h4>Java Language Specification: Introduction</h4>
+    <p>Official documentation, the source-of-truth for what the Java compiler enforces.</p>
+  </a>
+  <a class="apcsa-resource-card" href="/pages/ap-csa-vocabulary-list">
+    <h4>AP CSA Vocabulary List</h4>
+    <p>150+ terms with AP-exam definitions.</p>
+  </a>
+  <a class="apcsa-resource-card" href="/pages/ap-csa-unit-1-complete-study-guide">
+    <h4>Unit 1 Study Guide</h4>
+    <p>Full unit overview with examples and practice.</p>
+  </a>
+  <a class="apcsa-resource-card" href="/blogs/ap-csa-daily-practice">
+    <h4>Daily Practice Question</h4>
+    <p>A new AP CSA question every day, free.</p>
+  </a>
+</div>
+
+<div class="apcsa-cta-banner">
+  <h3>Get the AP CSA daily practice question by email</h3>
+  <p>Free, daily, takes 90 seconds. Built by an AP CSA teacher with a 54.5% 5-rate.</p>
+  <a class="apcs-btn" href="/pages/ap-csa-daily-practice">Start daily practice →</a>
+</div>
+
+<nav class="apcsa-nav" aria-label="Lesson navigation">
+  <a href="/pages/ap-csa-unit-1-course" class="nav-prev">
+    <span class="nav-direction">← Back to unit hub</span>
+    <span class="nav-title">Unit 1: Using Objects and Methods</span>
+  </a>
+  <a href="/pages/ap-csa-lesson-1-2-variables-data-types" class="nav-next">
+    <span class="nav-direction">Next lesson →</span>
+    <span class="nav-title">1.2 Variables and Data Types</span>
+  </a>
+</nav>
+
+<div class="apcsa-hub-links">
+  <a href="/pages/ap-csa-course">Course hub</a>
+  <span style="color: #cbd5e1 !important; -webkit-text-fill-color: #cbd5e1 !important;">·</span>
+  <a href="/pages/ap-csa-unit-1-course">Unit 1 hub</a>
+  <span style="color: #cbd5e1 !important; -webkit-text-fill-color: #cbd5e1 !important;">·</span>
+  <a href="/pages/ap-csa-topics">All topics</a>
+  <span style="color: #cbd5e1 !important; -webkit-text-fill-color: #cbd5e1 !important;">·</span>
+  <a href="/pages/ap-csa-exam-prep-hub">AP CSA home</a>
+</div>
+
+
+
+</div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "AP CSA", "item": "https://apcsexamprep.com/pages/ap-csa-exam-prep-hub" },
+    { "@type": "ListItem", "position": 2, "name": "Course", "item": "https://apcsexamprep.com/pages/ap-csa-course" },
+    { "@type": "ListItem", "position": 3, "name": "Unit 1: Using Objects and Methods", "item": "https://apcsexamprep.com/pages/ap-csa-unit-1-course" },
+    { "@type": "ListItem", "position": 4, "name": "Lesson 1.1: Introduction to Algorithms, Programming, and Compilers", "item": "https://apcsexamprep.com/pages/ap-csa-lesson-1-1-intro-algorithms" }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LearningResource",
+  "name": "Lesson 1.1: Introduction to Algorithms, Programming, and Compilers",
+  "description": "AP CSA Lesson 1.1 covers algorithms, sequencing, IDEs, compilers, and the four error types tested on the AP exam: syntax, logic, run-time, and exception. Free practice and applied scenarios.",
+  "educationalLevel": "High School / AP",
+  "learningResourceType": "Lesson",
+  "teaches": "what is an algorithm AP CSA, syntax error vs logic error vs run-time error vs exception",
+  "inLanguage": "en-US",
+  "author": { "@type": "Person", "name": "Tanner Crow" },
+  "publisher": { "@type": "Organization", "name": "APCSExamPrep.com", "url": "https://apcsexamprep.com" },
+  "isPartOf": {
+    "@type": "Course",
+    "name": "AP Computer Science A (2025-2026)",
+    "url": "https://apcsexamprep.com/pages/ap-csa-course"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the difference between a syntax error and a logic error in AP CSA?",
+      "acceptedAnswer": { "@type": "Answer", "text": "A syntax error violates the rules of the Java language (a missing semicolon, a misspelled keyword). The compiler catches every syntax error and the program does not run until they are fixed. A logic error is a mistake in the algorithm itself: the program compiles, runs to completion, but produces incorrect output. Logic errors are caught only by testing with specific inputs and comparing the actual output to the expected output." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is an exception the same thing as a run-time error?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Not quite. An exception is a specific type of run-time error. All exceptions are run-time errors, but not all run-time errors are exceptions. The CED defines an exception as a run-time error that occurs because of an unexpected condition the compiler did not detect, and which interrupts the normal flow of execution. ArithmeticException from dividing by zero and NullPointerException from calling a method on null are the two AP CSA students see most often." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does an algorithm have to be written in code?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. The AP CSA Course and Exam Description explicitly states that algorithms can be represented using written language, diagrams (like flowcharts), or code. A numbered list of steps on paper, a flowchart, and a Java method are all valid algorithm representations. The representation does not change whether the algorithm is correct." }
+    },
+    {
+      "@type": "Question",
+      "name": "How often does Lesson 1.1 material appear on the AP exam?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Error-type vocabulary appears throughout the multiple-choice section of the AP CSA exam, not just in Unit 1. Expect one to three direct questions per exam on identifying error types, and additional scenario-based questions where you have to recognize that a described situation is a logic error rather than a compile error. The algorithm and sequencing concepts feed into every other lesson in the course." }
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Course",
+  "name": "AP Computer Science A (2025-2026 Curriculum)",
+  "description": "Full year-long AP CSA course aligned to the 2025-2026 4-Unit CED. Free lessons covering all topics across Units 1-4.",
+  "provider": { "@type": "Organization", "name": "APCSExamPrep.com", "url": "https://apcsexamprep.com" },
+  "hasCourseInstance": {
+    "@type": "CourseInstance",
+    "courseMode": "online",
+    "courseWorkload": "PT100H"
+  }
+}
+</script>
+
+<script src="https://cdn.shopify.com/s/files/1/0778/8403/1191/files/apcs-exercise.js?v=1778863178"></script>
+
+<script>
+(function() {
+  document.querySelectorAll('#apcsa-lesson .apcs-ex').forEach(function(ex) {
+    if (ex.dataset.mcqInit) return;
+    ex.dataset.mcqInit = '1';
+    var correct = ex.getAttribute('data-answer');
+    var opts = ex.querySelectorAll('.apcs-opt');
+    var btn = ex.querySelector('.apcs-ex-check');
+    var feedback = ex.querySelector('.apcs-ex-feedback');
+    var chosen = null;
+
+    opts.forEach(function(opt) {
+      opt.style.cursor = 'pointer';
+      opt.addEventListener('click', function() {
+        if (ex.dataset.answered) return;
+        opts.forEach(function(o) { o.classList.remove('selected'); });
+        opt.classList.add('selected');
+        chosen = opt.getAttribute('data-letter');
+      });
+    });
+
+    if (btn) btn.addEventListener('click', function() {
+      if (!chosen || ex.dataset.answered) return;
+      ex.dataset.answered = '1';
+      opts.forEach(function(opt) {
+        var letter = opt.getAttribute('data-letter');
+        if (letter === correct) opt.classList.add('correct');
+        else if (letter === chosen) opt.classList.add('incorrect');
+        opt.classList.remove('selected');
+      });
+      if (feedback) {
+        feedback.classList.add('show');
+        feedback.classList.add(chosen === correct ? 'fb-correct' : 'fb-incorrect');
+      }
+      btn.disabled = true;
+    });
+  });
+})();
+</script>
