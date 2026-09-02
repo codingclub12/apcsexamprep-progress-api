@@ -26,7 +26,11 @@ reporter-gap detector on `/api/health` a few hours later, and its live read on
 production settles it better than my page-by-page check could.
 
 - `snippets/quiz-tracker-wiring.liquid:34` parses the handle for
-  `exercise-1|exercise-2|lab|quiz` and sets `window.APCS_PAGE`.
+  `exercise-1|exercise-2|lab|quiz` and sets `window.APCS_PAGE`. CORRECTION: this
+  note first cited that line as evidence the wiring is sound. It derives the
+  lesson by bare arithmetic on the handle ordinals, `m[1] + '.' + m[2]`, with no
+  map. That is right for 80 cyber handles and WRONG for all 24 in Unit 3. See
+  the Unit 3 section below.
 - `assets/apcs-score-reporter.js:52` allows `exercise-1`, `exercise-2`, `lab`.
   Quizzes deliberately route through `apcs-quiz-wiring.js` so nothing is double
   graded.
@@ -66,12 +70,50 @@ into four problems. Read it before working any of them, rather than treating the
 list above as homogeneous. Two of its findings change how the list should be
 read:
 
-- The seven cyber rows are two groups, not one. Five pages never score at all;
-  two compute a score and never post it, which is the smaller fix.
+- RETRACTED, and this note repeated it before the retraction. The doc first
+  split the seven cyber rows into five pages that never score and two that
+  score without posting. It reached that by counting `apcseReportScore` in the
+  fetched HTML, and the reporter is not inlined per page: it is a theme asset
+  that all 104 cyber activity pages load. On that measure 103 of 104 look
+  broken. The count measured whether a page had been hand-patched, not whether
+  it can report. **The cause of the eleven records is not established.** What is
+  ruled out is "no reporter present".
 - Three of the four ap-csa rows have NO PAGE AT ALL. There are zero
   `exercise-3` pages in the entire CSA course, so `1.2` and `1.5 exercise-3`
   cannot be a broken reporter. Somebody authored `course_denominators` rows for
   activities nobody built, and something recorded completions against them.
+
+### Unit 3: the storefront and the server disagree about every lesson
+
+Found while checking the above, and it is a measured live defect rather than an
+inference. The theme snippet quoted earlier derives Unit 3 lesson ids by handle
+arithmetic and never learned the Fall 2026 CED renumbering, in which CED 3.1 is
+taught over two pages so every handle after the pair is offset by one. The
+server carries an explicit map; the storefront does not.
+
+    handle      theme says   server says
+    lesson-1    3.1          3.1a
+    lesson-2    3.2          3.1b
+    lesson-3    3.3          3.2
+    lesson-4    3.4          3.3
+    lesson-5    3.5          3.4
+    lesson-6    3.6          3.5
+
+All 24 Unit 3 activity pages. Four report the retired `3.6`, which has no
+gradebook column at all. Verified here against `utils.js` (which carries `3.1a`
+and `3.1b`) and `snippets/quiz-tracker-wiring.liquid:34`, not taken on the
+doc's word.
+
+Nothing throws and no request fails, so a student's work simply lands on a
+lesson they never opened. `smoke/cyber-unit3-lessons.js` now pins it; it is
+green today, and green here means the defect is still there. The fix belongs in
+the theme repo, where that snippet lives.
+
+One more trap this uncovered, worth carrying: `shopify/apcs-score-reporter.js`
+in THIS repo is a stale mirror and a materially different program from the
+served asset, with no note saying so. Read `assets/apcs-score-reporter.js` in
+the theme repo instead. The wiring findings above were read from the theme copy,
+so they stand.
 
 That third category is neither of the two gaps this item separates. It is a
 denominator authored ahead of a page, and it is a stated limit of the health
