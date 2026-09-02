@@ -3,21 +3,22 @@
 Every `/pages/` href in the stored body of all 1,311 readable Shopify pages,
 checked against the 1,344 handles `sitemap_pages_1.xml` advertises. Bodies come
 off the storefront through `scripts/fetch-page-bodies.js`, so this is authored
-content and not theme chrome.
+content and not theme chrome. A href inside a `<script>` or a `<style>` is not
+counted: this storefront builds its prev and next buttons at runtime and the
+first version of this report read that JavaScript as 28 broken anchors.
 
     node scripts/dead-internal-link-repair.js \
       --bodies bodies/ --handles smoke/fixtures/live-page-handles.txt
 
-**516 dead links across 163 targets.** 141 of them, on 45 pages, are repaired in
-`imports/2026-09-02/dead-link-repair-pages.csv`. The remaining 379, across 142
-targets, are listed below and are NOT repaired: each one needs a person to say
-where it was meant to go.
+**492 dead links across 164 targets.** 141 of them, on 45 pages, were repaired
+in `imports/2026-09-02/dead-link-repair-pages.csv` and are live. The remaining
+351, across 140 targets, are listed below and are NOT repaired: each one needs a
+person to say where it was meant to go.
 
 `docs/runs/2026-08-27-claude-code-internal-linking.md` reported 3 broken page
 links. That number came from a different measurement, of links whose target
-returned a non-200 during the crawl, and it undercounts by two orders of
-magnitude. This one asks a cheaper and stricter question: is the target handle
-in the sitemap at all.
+returned a non-200 during the crawl, and it undercounts. This one asks a cheaper
+and stricter question: is the target handle in the sitemap at all.
 
 Findings decay. Re-run the command rather than trusting the table.
 
@@ -29,14 +30,15 @@ Findings decay. Re-run the command rather than trusting the table.
 | retarget, by hand | 26 | two entries a person read off the live site |
 | retarget, unique extension | 113 | the target is the ONLY live handle that extends the dead one |
 
-## The 142 targets that were left alone
+Verified after the import by refetching all 45 pages from the storefront: every
+one is byte-identical to the sheet, and none carries a repairable link any more.
+
+## The 140 targets that were left alone
 
 - `/pages/tutoring` linked from 28: 2d-array-neighbors-ap-csa, ap-csa-api-quick-reference, ap-csa-boolean-expression-equivalence ...
 - `/pages/ap-computer-science-tutor` linked from 25: ap-csa-2018-frq-1-frogsimulation, ap-csa-2018-frq-2-wordpairlist, ap-csa-2018-frq-4-arraytester ...
 - `/pages/ap-computer-science-a` linked from 20: ap-csa-2d-array-cheat-sheet, ap-csa-2d-array-mistakes, ap-csa-2d-array-trace-problems ...
 - `/pages/ap-csa-qotd-hub` linked from 14: ap-csa-4-week-cram-kit, ap-csa-exam-format, ap-csa-frq-archive ...
-- `/pages/'+prev.handle+'` linked from 14: ap-csa-array-practice-exam, ap-csa-practice-test-2d-arrays, ap-csa-practice-test-arraylist ...
-- `/pages/'+next.handle+'` linked from 14: ap-csa-array-practice-exam, ap-csa-practice-test-2d-arrays, ap-csa-practice-test-arraylist ...
 - `/pages/ap-cyber-unit-1-lesson-1` linked from 14: ap-cybersecurity-complete-course-guide, ap-cybersecurity-curriculum-units-guide, ap-cybersecurity-curriculum ...
 - `/pages/ap-cybersecurity-unit-1-exam` linked from 11: ap-cyber-unit-3-lesson-1, ap-cyber-unit-3-lesson-2, ap-cyber-unit-3-lesson-4 ...
 - `/pages/ap-cybersecurity-unit-1-project` linked from 10: ap-cyber-unit-3-lesson-1, ap-cyber-unit-3-lesson-2, ap-cyber-unit-3-lesson-4 ...

@@ -5,7 +5,7 @@
       "kind": "suite",
       "name": "one mechanical rule, one evidenced map, and a missing target is never invented",
       "command": "npm run --silent smoke:deadlinks",
-      "expect": "83 passed, 0 failed"
+      "expect": "90 passed, 0 failed"
     },
     {
       "kind": "suite",
@@ -59,6 +59,16 @@
       "command": "npm run --silent smoke:deadlinks",
       "expect_failure": "the span round trip gives the original back byte for byte",
       "_why": "The bug the first version shipped with. ap-csa-lesson-4-1 links lesson 4-5 correctly in one place and with a newline in the handle in another, so a string replace turns the good link into a broken one and refuses a page it should repair."
+    },
+    {
+      "kind": "mutation",
+      "name": "a href inside a <script> is not a link, and blanking it must keep the offsets",
+      "file": "scripts/dead-internal-link-repair.js",
+      "find": "const withoutScripts = (body) => body.replace(NON_MARKUP,\n  (m) => m.replace(/[^\\n]/g, ' '));",
+      "replace": "const withoutScripts = (body) => body;",
+      "command": "npm run --silent smoke:deadlinks",
+      "expect_failure": "a href inside a script is not classified at all",
+      "_why": "This scanner shipped without it and reported 28 dead links that were working JavaScript: 14 practice-test pages build their prev and next buttons at runtime from a table of handles, so their source contains href=\"/pages/'+prev.handle+'\". None of the 141 repairs landed inside a script, because a repair also has to resolve to a live page and a JS expression never does, but the reporting half was wrong and it put a page-content bug on the board that was really a bug here."
     },
     {
       "kind": "rederive",

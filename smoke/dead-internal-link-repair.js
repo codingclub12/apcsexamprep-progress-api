@@ -152,6 +152,40 @@ console.log('\n4. The check that a naive string replace fails');
   ok('the length fell by exactly the characters removed', v.lengthOk && v.removed === 3, v);
 }
 
+console.log('\n4b. A href inside a <script> is not a link');
+{
+  //  This storefront builds prev and next buttons at runtime from a table of
+  //  handles, so 14 practice-test pages carry this in their source:
+  //      '<a class="tn-arrow" href="/pages/'+prev.handle+'">'
+  //  It is working JavaScript. Reading it as an anchor reported 28 dead links
+  //  that do not exist and put a page-content bug on the board that was really
+  //  a bug in this scanner.
+  const js = '<p><a href="/pages/ap-csa-exam-prep-hub">ok</a></p>'
+    + '<script>var h=\'<a href="/pages/\'+prev.handle+\'">x</a>\';</script>';
+  const r = m.repairBody(js, LIVE, BLOGS);
+  ok('a href inside a script is not classified at all',
+    r.found.length === 1 && r.found[0].kind === 'ok', r.found);
+  ok('so it is not reported as a dead target', r.missing.length === 0, r.missing);
+  const css = '<style>a[href="/pages/gone"]{color:red}</style>'
+    + '<a href="/pages/ap-csa-exam-prep-hub">ok</a>';
+  ok('and a href inside a style is not one either',
+    m.repairBody(css, LIVE, BLOGS).missing.length === 0);
+
+  //  Blanked, not deleted, because the repair records spans BY INDEX. Deleting
+  //  a script would slide every later offset and the round trip would fail.
+  const body = '<script>var x="/pages/zzz";</script>'
+    + '<a href="/pages/ap-csa-les%0Ason-4-5-algorithms-with-arrays">a</a>';
+  ok('a script is blanked to the same length, so offsets still line up',
+    m.withoutScripts(body).length === body.length, [m.withoutScripts(body).length, body.length]);
+  const rr = m.repairBody(body, LIVE, BLOGS);
+  ok('a repair after a script block still round trips',
+    m.verify(body, rr.after, rr.spans).roundTrip, rr.spans);
+  ok('and the script itself is untouched in the output',
+    rr.after.startsWith('<script>var x="/pages/zzz";</script>'), rr.after.slice(0, 60));
+  ok('newlines survive the blanking, so line numbers do too',
+    m.withoutScripts('<script>\na\nb\n</script>').split('\n').length === 4);
+}
+
 console.log('\n5. Nothing outside a href may move');
 {
   const before = '<a href="/pages/ap-csa-les%0Ason-4-5-algorithms-with-arrays">x</a><p>keep</p>';
