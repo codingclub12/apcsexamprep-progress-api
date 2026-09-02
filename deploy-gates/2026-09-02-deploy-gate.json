@@ -31,9 +31,9 @@
     },
     {
       "kind": "live",
-      "name": "production is serving THIS commit",
-      "command": "curl -sS --max-time 25 https://progress.apcsexamprep.com/api/health",
-      "expect": "\"commit\":\"74b4750\""
+      "name": "production serves what this tree is",
+      "command": "node -e \"const cp=require('child_process');const want=cp.execSync('git rev-parse HEAD',{encoding:'utf8'}).trim().slice(0,7);const h=cp.execSync('curl -sS --max-time 25 https://progress.apcsexamprep.com/api/health',{encoding:'utf8'});const got=JSON.parse(h).commit;if(got!==want)throw new Error('production serves '+got+', this tree is '+want);console.log('PRODUCTION SERVES THIS TREE '+got);\"",
+      "expect": "PRODUCTION SERVES THIS TREE"
     },
     {
       "kind": "rederive",
