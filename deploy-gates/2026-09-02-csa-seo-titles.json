@@ -1,0 +1,94 @@
+{
+  "change": "repair the SEO title on every CSA daily-practice article (board 147)",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the repair reaches all four defects and stops at the boundary",
+      "command": "npm run --silent smoke:seotitles",
+      "expect": "97 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the preflight, with a blank cell treated as an erase in every column",
+      "command": "npm run --silent smoke:preflight",
+      "expect": "50 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT WOULD PUBLISH A CUT TOPIC: the handle rederivation",
+      "file": "scripts/csa-daily-practice-seo-titles.js",
+      "find": "    if (rederived !== topic) {",
+      "replace": "    if (false) {",
+      "command": "npm run --silent smoke:seotitles",
+      "expect_failure": "a topic that does not rederive from the handle is REFUSED"
+    },
+    {
+      "kind": "mutation",
+      "name": "the guard that stops a future map entry rewriting prose",
+      "file": "scripts/csa-daily-practice-seo-titles.js",
+      "find": "  return b === a;",
+      "replace": "  return true;",
+      "command": "npm run --silent smoke:seotitles",
+      "expect_failure": "onlyDeclaredEdits REJECTS a word that merely changed"
+    },
+    {
+      "kind": "mutation",
+      "name": "a Java name missing from the vocabulary leaves a title still broken",
+      "file": "scripts/csa-daily-practice-seo-titles.js",
+      "find": "  'compareTo', 'indexOf', 'toString', 'toUpperCase', 'toLowerCase', 'charAt',",
+      "replace": "  'indexOf', 'toString', 'toUpperCase', 'toLowerCase', 'charAt',",
+      "command": "npm run --silent smoke:seotitles",
+      "expect_failure": "Compareto Ordering -> compareTo Ordering"
+    },
+    {
+      "kind": "mutation",
+      "name": "the last line, which reads the OUTPUT rather than trusting the input",
+      "file": "scripts/csa-daily-practice-seo-titles.js",
+      "find": "const manglings = (title) => title.split(' ').filter((tok) => JAVA_NAMES",
+      "replace": "const manglings = (title) => [].filter((tok) => JAVA_NAMES",
+      "command": "npm run --silent smoke:seotitles",
+      "expect_failure": "manglings finds a title-cased Java name"
+    },
+    {
+      "kind": "mutation",
+      "name": "the cut brand suffix has to be stripped before the topic is checked",
+      "file": "scripts/csa-daily-practice-seo-titles.js",
+      "find": "    const topic = m[3].replace(/ \\| Dail.*$/, '');",
+      "replace": "    const topic = m[3];",
+      "command": "npm run --silent smoke:seotitles",
+      "expect_failure": "a suffix cut mid word is restored whole, and the topic is untouched"
+    },
+    {
+      "kind": "mutation",
+      "name": "84 articles get their unit number back from the handle or not at all",
+      "file": "scripts/csa-daily-practice-seo-titles.js",
+      "find": "    const unit = m[1] || unitFromHandle(handle);",
+      "replace": "    const unit = m[1];",
+      "command": "npm run --silent smoke:seotitles",
+      "expect_failure": "a missing unit number is recovered from the handle"
+    },
+    {
+      "kind": "mutation",
+      "name": "no BOM, and Matrixify reads the first column name as garbage",
+      "file": "scripts/csa-daily-practice-seo-titles.js",
+      "find": "const BOM = '﻿';",
+      "replace": "const BOM = '';",
+      "command": "npm run --silent smoke:seotitles",
+      "expect_failure": "starts with a UTF-8 BOM"
+    },
+    {
+      "kind": "rederive",
+      "name": "a SECOND implementation, in another language, running the repair BACKWARDS",
+      "command": "python3 scripts/verify-seo-title-sheets.py smoke/fixtures/csa-daily-practice-live-titles.tsv imports/2026-09-02/csa-seo-title-repair-blog-posts.csv imports/2026-09-02/csa-seo-title-missing-blog-posts.csv",
+      "expect": "SHEETS VERIFIED 429 rows",
+      "_why": "It reads a finished sheet row, undoes every declared substitution, and requires what is left to be the handle's own topic slug. It imports nothing from the generator, so it cannot agree with a bug in it. It has already earned its place: it caught that the 9 articles with no SEO title take their topic from the article Title and not from the slug, which is why /unit-4-day-20-arraylist-vs-array keeps its full stop."
+    },
+    {
+      "kind": "live",
+      "name": "the storefront serves the repaired titles, one article per defect",
+      "command": "node -e \"const cp=require('child_process');const want={'ap-csa-u1-c2-day-13-iii-wrapper-behavior':'AP CSA Unit 1 Day 13: I/II/III Wrapper Behavior | Daily Practice','unit2-cycle2-day-10-iteration-accumulation':'AP CSA Unit 2 Day 10: Iteration Accumulation | Daily Practice','unit-1-cycle-2-day-14-indexof-substring-computed-indices':'AP CSA Unit 1 Day 14: indexOf Substring Computed Indices | Daily Practice','unit-4-day-16-arraylist-algorithms':'AP CSA Unit 4 Day 16: ArrayList Algorithms | Daily Practice'};for(const [h,t] of Object.entries(want)){const html=cp.execSync('curl -sSL --max-time 40 --compressed https://www.apcsexamprep.com/blogs/ap-csa-daily-practice/'+h,{encoding:'utf8',maxBuffer:1<<26});const m=/<title>([^<]*)<\\\\/title>/.exec(html);const got=m?m[1].replace(' | APCSExamPrep.com',''):'(no title)';if(got!==t)throw new Error(h+' serves '+JSON.stringify(got)+', expected '+JSON.stringify(t));}console.log('STOREFRONT SERVES THE REPAIRED TITLES on 4 of 4 sampled articles');\"",
+      "expect": "STOREFRONT SERVES THE REPAIRED TITLES",
+      "_why": "Every one of these four assertions is FALSE right now: the store serves 'AP CSAUnit 1 Day 13: Iii Wrapper Behavior', 'AP CSA Day 10: ...' with no unit, '... | Daily Practi' cut mid word, and 'Unit 4 Day 16 Arraylist Algorithms' with no SEO title at all. One article per defect, so a partial import cannot pass this."
+    }
+  ]
+}
