@@ -1,0 +1,54 @@
+{
+  "change": "the daily audit's red X could not say whether it broke or found something, so four reports went unread",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "broken and productive never produce the same annotation",
+      "command": "npm run --silent smoke:crawlnotes",
+      "expect": "22 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "an aborted crawl must not read as healthy",
+      "file": "scripts/crawl-annotations.js",
+      "find": "  if (crawl.aborted) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:crawlnotes",
+      "expect_failure": "a crawl that gave up IS broken"
+    },
+    {
+      "kind": "mutation",
+      "name": "a truncated crawl must not read as healthy",
+      "find": "  if (crawl.truncated) {",
+      "replace": "  if (false) {",
+      "file": "scripts/crawl-annotations.js",
+      "command": "npm run --silent smoke:crawlnotes",
+      "expect_failure": "a truncated run warns that an absent finding proves nothing",
+      "_why": "The first version pinned the bare word \"truncated\", which appears in three assertion names, so it would have matched whichever one happened to fail. A pin that matches several assertions pins none of them."
+    },
+    {
+      "kind": "mutation",
+      "name": "the P0 branch really says red means findings",
+      "file": "scripts/crawl-annotations.js",
+      "find": "  if (counts.P0 > 0) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:crawlnotes",
+      "expect_failure": "the healthy one says outright that red means findings"
+    },
+    {
+      "kind": "mutation",
+      "name": "newlines really are stripped out of the annotation",
+      "file": "scripts/crawl-annotations.js",
+      "find": "  const clean = (s) => String(s).replace(/[\\r\\n]+/g, ' ').replace(/::/g, ':');",
+      "replace": "  const clean = (s) => String(s);",
+      "command": "npm run --silent smoke:crawlnotes",
+      "expect_failure": "newlines never break out of the annotation"
+    },
+    {
+      "kind": "rederive",
+      "name": "run it against TONIGHT'S REAL crawl, not a fixture",
+      "command": "node -e \"const {verdict}=require('./scripts/crawl-annotations');const c=JSON.parse(require('fs').readFileSync('/tmp/claude-0/-home-user-apcsexamprep-progress-api/2cf3d1a5-a022-57bf-b3d4-58a93d6a1b12/scratchpad/crawl-now.json','utf8'));const v=verdict(c,0);if(v.broken)throw new Error('called a healthy 318-URL crawl broken');if(v.counts.P1!==46)throw new Error('counted '+v.counts.P1+' P1, the report says 46');if(v.counts.P2!==266)throw new Error('counted '+v.counts.P2+' P2, the report says 266');console.log('REAL CRAWL AGREES '+v.counts.P0+' P0, '+v.counts.P1+' P1, '+v.counts.P2+' P2, '+v.counts.P3+' P3');\"",
+      "expect": "REAL CRAWL AGREES"
+    }
+  ]
+}

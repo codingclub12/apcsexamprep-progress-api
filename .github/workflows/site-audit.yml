@@ -93,6 +93,7 @@ jobs:
             site-crawl-
 
       - name: Crawl
+        id: crawl
         env:
           STORE_ORIGIN: https://www.apcsexamprep.com
           APCS_BASE: ${{ vars.PROGRESS_BASE_URL || 'https://progress.apcsexamprep.com' }}
@@ -113,7 +114,34 @@ jobs:
           fi
 
           echo "site-crawl.js $ARGS"
+          # The crawler's exit code is needed by the annotation step BELOW, and a
+          # failing step hands nothing forward, so it is recorded before the step
+          # exits with it. PIPESTATUS[0] rather than $? because of the tee.
+          set +e
           node scripts/site-crawl.js $ARGS 2>&1 | tee crawl-report.txt
+          crawl_code=${PIPESTATUS[0]}
+          set -e
+          echo "code=$crawl_code" >> "$GITHUB_OUTPUT"
+          exit "$crawl_code"
+
+      # ── WHY IS IT RED ──────────────────────────────────────────────────────
+      #  site-crawl.js exits 1 for three different reasons and the Actions list
+      #  shows one red X for all of them. This audit "failed" on 2026-08-29,
+      #  08-30, 08-31 and 09-01, and nobody opened a report, because a red X
+      #  reads as a broken job. It was not broken: the complete-picture step
+      #  passed on all four, so aborted and truncated were both null and every
+      #  one of those runs was a healthy crawl reporting real findings.
+      #
+      #  The full report already reaches the job summary, so nothing is missing.
+      #  What was missing is a reason on the OUTSIDE of the box. An annotation is
+      #  the only text that appears next to the red X itself.
+      #
+      #  It never fails: an explainer that can fail the build is one more way for
+      #  the audit to look broken.
+      - name: Say why this run is red
+        if: always()
+        continue-on-error: true
+        run: node scripts/crawl-annotations.js current-crawl.json "${{ steps.crawl.outputs.code }}"
 
       # ── A RED RUN IS USUALLY THE ALARM, NOT A BROKEN JOB ────────────────────
       #  site-crawl.js exits 1 for THREE different reasons: it found a P0, it
