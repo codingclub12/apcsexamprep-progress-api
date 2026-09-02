@@ -187,7 +187,79 @@ const serving = (opts) => async (url, phrases) => Object.assign({
       !r4.verified && /DNS went away/.test(r4.reason), r4.reason);
   }
 
-  console.log('\n7. The pure helpers');
+  console.log('\n6b. ABSENCE: proving something was REMOVED, without proving nothing');
+{
+  //  Half the fixes on this board remove something. Presence cannot verify any
+  //  of them, so without this the tool simply could not check them.
+  //
+  //  The trap is that absence is the DEFAULT state of every failure. A phrase is
+  //  missing from a 404, from an empty body, from the wrong URL and from a page
+  //  where somebody typo'd the phrase. Three of those are lies that read as
+  //  success, which is why an absence claim has to be anchored to something that
+  //  must still be there.
+  const twoPhrase = (present, gone) => async (url, phrases) => ({
+    url, final_url: url, status: 200, usable: true, auth_gated: false, bytes: 4096,
+    phrases: phrases.map((p, i) => ({
+      phrase: p,
+      visible: i === 0 ? present : gone,
+      comment: false, script: false, style: false,
+      total_in_source: (i === 0 ? present : gone) ? 1 : 0,
+    })),
+  });
+
+  const r1 = await verifyByEvidence(DONE, PHRASE, {
+    absent: 'answerKey = ["A","B"]', inspect: twoPhrase(true, false),
+  });
+  ok('  anchor present and target gone verifies', r1.verified, r1.reason);
+  ok('  the evidence records what is gone, not only what is there',
+    r1.evidence && r1.evidence.absent && r1.evidence.absent.phrase === 'answerKey = ["A","B"]',
+    r1.evidence);
+  ok('  and the log line says it is GONE',
+    /is GONE from it/.test(evidenceLine(r1.evidence)), evidenceLine(r1.evidence));
+  ok('  the re-run command carries both phrases',
+    (r1.evidence.rerun.match(/--phrase/g) || []).length === 2, r1.evidence.rerun);
+
+  const r2 = await verifyByEvidence(DONE, PHRASE, {
+    absent: 'answerKey = ["A","B"]', inspect: twoPhrase(true, true),
+  });
+  ok('  a target still on the page is refused', !r2.verified, r2);
+  ok('  and the message says the removal did not ship',
+    /removal did not ship/.test(r2.reason), r2.reason);
+
+  //  THE RULE THAT CARRIES THE WEIGHT HERE. Without an anchor, every one of the
+  //  failure modes above passes.
+  const r3 = await verifyByEvidence(DONE, '', { absent: 'answerKey = ["A","B"]',
+    inspect: twoPhrase(false, false) });
+  ok('  an absence claim with NO anchor is refused', !r3.verified, r3.reason);
+
+  //  And when the anchor itself is missing, the page is wrong or truncated, so
+  //  the absence proves nothing even though the target really is not there.
+  const r4 = await verifyByEvidence(DONE, PHRASE, {
+    absent: 'answerKey = ["A","B"]', inspect: twoPhrase(false, false),
+  });
+  ok('  anchor missing is refused even though the target is absent too',
+    !r4.verified && /not live|expectation is wrong/.test(r4.reason), r4.reason);
+
+  const r5 = await verifyByEvidence(DONE, PHRASE, { absent: PHRASE, inspect: twoPhrase(true, true) });
+  ok('  the same string as both anchor and target is refused',
+    !r5.verified && /can never pass/.test(r5.reason), r5.reason);
+
+  const r6 = await verifyByEvidence(DONE, PHRASE, { absent: 'ok', inspect: twoPhrase(true, false) });
+  ok('  a trivial phrase is refused as the thing that must be gone',
+    !r6.verified && /not specific enough/.test(r6.reason), r6.reason);
+
+  //  A 404 must not read as "removed". This is the failure the anchor exists
+  //  for, arriving through the status check rather than the anchor itself.
+  const r7 = await verifyByEvidence(DONE, PHRASE, {
+    absent: 'answerKey = ["A","B"]',
+    inspect: async (url, phrases) => Object.assign(await twoPhrase(false, false)(url, phrases),
+      { status: 404, usable: false }),
+  });
+  ok('  a 404 is refused rather than counted as a removal',
+    !r7.verified && /answered 404/.test(r7.reason), r7.reason);
+}
+
+console.log('\n7. The pure helpers');
   {
     ok('  artifactUrl takes the first http url out of a mixed note',
       artifactUrl({ artifact_url: 'see https://example.com/x and also notes' }) === 'https://example.com/x');

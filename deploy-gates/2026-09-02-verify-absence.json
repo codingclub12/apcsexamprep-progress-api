@@ -1,0 +1,60 @@
+{
+  "change": "auto-verify could only prove presence, so it could never check a fix whose effect was a removal",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the verifier's own suite",
+      "command": "npm run --silent smoke:commandverify",
+      "expect": "57 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the route, over real http",
+      "command": "npm run --silent smoke:command",
+      "expect": "95 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ANCHOR RULE: without it a 404 verifies as a removal",
+      "file": "lib/command-verify.js",
+      "find": "  if (!anchor) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:command",
+      "expect_failure": "an absence claim with no anchor is refused outright",
+      "_why": "The first version of this mutation targeted a COPY of the anchor rule that had been left in assess while the original stayed in judgeAbsence. The battery reported a survivor, which was right: the judgeAbsence branch had become unreachable dead code that read like a safeguard. The rule now has one owner and one mutation, and killing it turns both suites red."
+    },
+    {
+      "kind": "mutation",
+      "name": "a phrase that is STILL on the page must not verify",
+      "file": "lib/command-verify.js",
+      "find": "    if (stillThere) {",
+      "replace": "    if (false) {",
+      "command": "npm run --silent smoke:command",
+      "expect_failure": "a leak that is still served is refused 422"
+    },
+    {
+      "kind": "mutation",
+      "name": "anchor and target being the same string is really refused",
+      "file": "lib/command-verify.js",
+      "find": "  if (String(absent).trim() === String(anchor).trim()) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:commandverify",
+      "expect_failure": "the same string as both anchor and target is refused"
+    },
+    {
+      "kind": "mutation",
+      "name": "the route actually passes expect_absent through",
+      "file": "routes/todo.js",
+      "find": "    result = await evidence.verifyByEvidence(task, phrase, { absent });",
+      "replace": "    result = await evidence.verifyByEvidence(task, phrase, {});",
+      "command": "npm run --silent smoke:command",
+      "expect_failure": "a leak that is still served is refused 422"
+    },
+    {
+      "kind": "live",
+      "name": "production serves what this tree is",
+      "command": "node -e \"const cp=require('child_process');const want=cp.execSync('git rev-parse HEAD',{encoding:'utf8'}).trim().slice(0,7);const h=cp.execSync('curl -sS --max-time 25 https://progress.apcsexamprep.com/api/health',{encoding:'utf8'});const got=JSON.parse(h).commit;if(got!==want)throw new Error('production serves '+got+', this tree is '+want);console.log('PRODUCTION SERVES THIS TREE '+got);\"",
+      "expect": "PRODUCTION SERVES THIS TREE"
+    }
+  ]
+}
