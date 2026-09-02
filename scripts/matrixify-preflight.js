@@ -45,7 +45,22 @@ const fs = require('fs');
 const XLSX_CELL_LIMIT = 32767;
 //  The handoff's own threshold for "check this one by hand" on a CSV.
 const CSV_LARGE_CELL = 250000;
-const PUBLISHED_AT_OK = ['', '2026-03-01'];
+//  The rule is that Published At must not be a LIVE SERVER TIME, because that
+//  scrambles sort order and feed behaviour. It is not that the cell must be
+//  bare. The store's own fixed date is 2026-03-01, and a fixed time on that
+//  date is the same fixed value with more precision:
+//  scripts/csp-lesson-exercise-links.js has written "2026-03-01 12:00:00" since
+//  August and its imports are live. This first refused that sheet, which was the
+//  check being narrower than the rule it enforces rather than the sheet being
+//  wrong. Anything on another date, or carrying today's date, still fails.
+const PUBLISHED_AT_DATE = '2026-03-01';
+const PUBLISHED_AT_OK = ['', PUBLISHED_AT_DATE];
+const publishedAtOk = (v) => {
+  const t = String(v || '').trim();
+  if (PUBLISHED_AT_OK.indexOf(t) !== -1) return true;
+  //  <date> then a time, and nothing else.
+  return new RegExp('^' + PUBLISHED_AT_DATE + '[ T]\\d{2}:\\d{2}(:\\d{2})?Z?$').test(t);
+};
 //  Built from code points so this file stays pure ASCII. These are the byte
 //  sequences a UTF-8 bullet, dash or emoji turns into when read as Latin-1.
 const MOJIBAKE = [[0xE2, 0x80], [0xC3, 0xA2], [0xF0, 0x9F]]
@@ -180,9 +195,10 @@ function preflight(path, opts) {
 
   const pi = col('Published At');
   if (pi !== -1) {
-    const bad = body.filter((r) => PUBLISHED_AT_OK.indexOf(String(r[pi] || '').trim()) === -1);
-    if (bad.length) problems.push(`${bad.length} row(s) set Published At to something other than `
-      + `${JSON.stringify(PUBLISHED_AT_OK[1])}. A live server time scrambles sort order.`);
+    const bad = body.filter((r) => !publishedAtOk(r[pi]));
+    if (bad.length) problems.push(`${bad.length} row(s) set Published At to something that is not `
+      + `${JSON.stringify(PUBLISHED_AT_DATE)}, with or without a fixed time. `
+      + 'A live server time scrambles sort order.');
   }
 
   const ci = col('Command');

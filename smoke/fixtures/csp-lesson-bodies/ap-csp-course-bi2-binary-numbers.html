@@ -1,0 +1,1561 @@
+<!--
+  PAGE: /pages/ap-csp-course-bi2-binary-numbers
+  TITLE: AP CSP 2.1 Binary Numbers | Bits, Bytes, and Binary to Decimal
+  META: AP CSP Topic 2.1: bits and bytes, binary to decimal conversion, overflow and roundoff, and analog versus digital. 6 exam MCQs plus the Binary Conversion Race game.
+-->
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+  :root{--navy:#0f1f3d;--bi3:#1a56db;--bi3-lt:#93c5fd;--bi3-bg:#eff6ff;--bi3-dk:#1e40af;--green:#16a34a;--amber:#d97706;--red:#dc2626;--slate:#64748b;--white:#ffffff;--py:#3b82f6;--pseudo:#8b5cf6;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  .lesson-page{font-family:"DM Sans",sans-serif;color:var(--navy);background:#f8fafc;line-height:1.6;}
+
+  .lesson-breadcrumb{background:#fff;border-bottom:1px solid #e2e8f0;padding:12px 24px;}
+  .lesson-breadcrumb-inner{max-width:880px;margin:0 auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate);flex-wrap:wrap;}
+  .lesson-breadcrumb a{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;text-decoration:none;font-weight:500;}
+  .bc-sep{color:#cbd5e1;}
+
+  .social-proof-bar{background:#fff;border-bottom:1px solid #e2e8f0;padding:10px 24px;}
+  .social-proof-inner{max-width:880px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 20px;font-size:13px;color:var(--slate);}
+  .social-proof-item{display:flex;align-items:center;gap:5px;font-weight:500;}
+  .social-proof-item strong{color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+
+  .lesson-hero{background:var(--navy);background-image:radial-gradient(ellipse 60% 70% at 90% 20%,rgba(26,86,219,.28) 0%,transparent 60%);padding:48px 24px 40px;}
+  .lesson-hero-inner{max-width:880px;margin:0 auto;}
+  .lesson-hero-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .lesson-num-badge{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:var(--bi3);font-weight:700;font-size:14px;color:#fff!important;-webkit-text-fill-color:#fff!important;flex-shrink:0;}
+  .lesson-eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;}
+  .lesson-hero h1{font-family:"DM Serif Display",serif!important;font-size:clamp(26px,4vw,40px)!important;line-height:1.2!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:14px!important;}
+  .lesson-hero-pills{display:flex;flex-wrap:wrap;gap:8px;}
+  .lesson-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:5px 12px;border-radius:100px;font-size:12px;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .ced-tag{display:inline-flex;align-items:center;background:rgba(26,86,219,.25);border:1px solid rgba(147,197,253,.3);padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;letter-spacing:.04em;}
+
+  /* PROGRESS STRIP */
+  .bi3-progress{background:#fff!important;border-bottom:1px solid #e2e8f0!important;padding:14px 20px!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;}
+  .bi3-progress-inner{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;gap:0!important;width:max-content!important;min-width:100%!important;}
+  .prog-step{display:flex!important;flex-direction:column!important;align-items:center!important;min-width:46px!important;text-align:center!important;flex-shrink:0!important;}
+  .prog-step-link{display:flex!important;flex-direction:column!important;align-items:center!important;min-width:46px!important;text-align:center!important;flex-shrink:0!important;text-decoration:none!important;cursor:pointer!important;}
+  .prog-step-link:hover .prog-dot{background:#dbeafe!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border-color:var(--bi3)!important;}
+  .prog-dot{width:26px!important;height:26px!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:9px!important;font-weight:700!important;margin-bottom:4px!important;flex-shrink:0!important;}
+  .prog-dot.active{background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .prog-dot.upcoming{background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:2px solid #e2e8f0!important;}
+  .prog-dot.done{background:#dbeafe!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border:2px solid var(--bi3)!important;}
+  .prog-label{font-size:8px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;line-height:1.2!important;white-space:nowrap!important;}
+  .prog-label.active-label{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;}
+  .prog-arrow{flex:1 0 4px!important;height:2px!important;background:#e2e8f0!important;margin-bottom:18px!important;min-width:4px!important;max-width:16px!important;flex-shrink:0!important;}
+
+  /* MAIN */
+  .lesson-main{max-width:880px;margin:0 auto;padding:40px 24px 80px;}
+  .lesson-objectives{background:var(--bi3-bg);border-left:4px solid var(--bi3);border-radius:0 10px 10px 0;padding:20px 24px;margin-bottom:28px;}
+  .lesson-objectives h2{font-size:14px!important;font-weight:700!important;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;text-transform:uppercase!important;letter-spacing:.06em!important;margin-bottom:12px!important;}
+  .lesson-objectives ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;}
+  .lesson-objectives li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#1e3a8a;line-height:1.5;}
+  .lesson-objectives li::before{content:"\2713";color:var(--bi3);font-weight:700;flex-shrink:0;margin-top:1px;}
+  .score-impact{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 18px;margin-bottom:28px;display:flex;align-items:center;gap:10px;font-size:14px;color:#14532d;}
+  .score-impact strong{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+
+  /* HOOK */
+  .hook-box{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px 28px;margin-bottom:32px;}
+  .hook-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:8px;}
+  .hook-box p{font-size:15px!important;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;line-height:1.7!important;margin-bottom:0!important;}
+
+  /* LESSON SECTIONS */
+  .lesson-section{margin-bottom:40px;}
+  .lesson-section h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;padding-bottom:10px!important;border-bottom:2px solid var(--bi3-bg)!important;}
+  .lesson-section h3{font-size:17px!important;font-weight:700!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-top:24px!important;margin-bottom:10px!important;}
+  .lesson-section p{font-size:15px;color:#374151;line-height:1.8;margin-bottom:14px;}
+  .lesson-section ul,.lesson-section ol{padding-left:20px;margin-bottom:14px;}
+  .lesson-section li{font-size:15px;color:#374151;line-height:1.7;margin-bottom:6px;}
+  .lesson-section code{background:#eef2ff;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+
+  /* DUAL CODE PANEL */
+  .code-panel-wrap{margin:20px 0;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;}
+  .code-panel-tabs{display:flex;background:#1e293b;}
+  .code-tab{padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;border:none;background:transparent;letter-spacing:.04em;transition:background .15s;font-family:inherit;}
+  .code-tab.py{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .code-tab.pseudo{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+  .code-tab.active{background:rgba(255,255,255,.15)!important;}
+  .code-tab-label{font-size:10px;opacity:.6;margin-left:4px;font-weight:400;}
+  .code-pane{background:#0f172a;padding:18px 20px;overflow-x:auto;height:0;overflow:hidden;padding:0;}
+  .code-pane.active{height:auto;overflow-x:auto;padding:18px 20px;}
+  .code-pane pre{font-family:monospace;font-size:13px;line-height:1.8;margin:0;white-space:pre-wrap;word-break:break-word;max-width:100%;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .py-kw{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:700;}
+  .py-fn{color:#6ee7b7!important;-webkit-text-fill-color:#6ee7b7!important;}
+  .py-num{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .py-str{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .py-comment{color:#475569!important;-webkit-text-fill-color:#475569!important;font-style:italic;}
+  .py-var{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .py-op{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;}
+  .ps-kw{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700;}
+  .ps-op{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .ps-num{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .ps-str{color:#86efac!important;-webkit-text-fill-color:#86efac!important;}
+  .ps-comment{color:#475569!important;-webkit-text-fill-color:#475569!important;font-style:italic;}
+  .ps-var{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+
+  /* CALLOUTS */
+  .callout-exam{background:#fffbeb;border:1px solid #fcd34d;border-left:4px solid var(--amber);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+  .callout-exam-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--amber)!important;-webkit-text-fill-color:var(--amber)!important;margin-bottom:6px;}
+  .callout-exam p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin-bottom:0!important;line-height:1.6!important;}
+  .callout-trap{background:#fef2f2;border:1px solid #fca5a5;border-left:4px solid var(--red);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+  .callout-trap-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;margin-bottom:6px;}
+  .callout-trap p{font-size:14px!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;margin-bottom:0!important;line-height:1.6!important;}
+
+  /* MINI EXERCISES */
+  .mini-ex{background:#fff;border:1px solid #bfdbfe;border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .mini-ex-label{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;margin-bottom:12px;}
+  .mini-ex-q{font-size:15px;font-weight:600;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px;line-height:1.5;}
+  .mini-ex-code{background:#0f172a;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;line-height:1.8;margin-bottom:14px;overflow-x:auto;white-space:pre;display:block;}
+  .mini-opts{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;}
+  .mini-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border:2px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:14px;font-family:monospace;color:#374151!important;-webkit-text-fill-color:#374151!important;background:#f8fafc;text-align:left;width:100%;transition:border-color .15s;}
+  .mini-opt:hover{border-color:var(--bi3-lt);background:var(--bi3-bg);}
+  .mini-opt.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mini-opt.incorrect{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mini-opt.reveal{border-color:var(--green)!important;background:#f0fdf4!important;}
+  .mini-opt-letter{font-weight:700;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;min-width:18px;font-family:inherit;}
+  .mini-opt.correct .mini-opt-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mini-opt.incorrect .mini-opt-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mini-fib-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;}
+  .mini-fib-input{padding:8px 12px;border:2px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:14px;width:130px;outline:none;color:var(--navy)!important;background:#f8fafc;}
+  .mini-fib-input:focus{border-color:var(--bi3-lt);}
+  .mini-fib-input.correct{border-color:var(--green);background:#f0fdf4;}
+  .mini-fib-input.incorrect{border-color:var(--red);background:#fef2f2;}
+  .mini-fib-btn{padding:8px 18px;background:var(--bi3);border:none;border-radius:8px;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .mini-fb{font-size:13px;font-weight:500;padding:8px 12px;border-radius:7px;margin-top:6px;display:none;line-height:1.5;}
+  .mini-fb.c{background:#f0fdf4;color:var(--green)!important;-webkit-text-fill-color:var(--green)!important;display:block;}
+  .mini-fb.w{background:#fef2f2;color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;display:block;}
+
+  /* VOCAB */
+  .vocab-table{width:100%;border-collapse:collapse;margin-bottom:24px;font-size:14px;}
+  .vocab-table thead tr{background:var(--bi3);}
+  .vocab-table thead th{padding:10px 16px;text-align:left;font-weight:600;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px;}
+  .vocab-table tbody tr:nth-child(even){background:var(--bi3-bg);}
+  .vocab-table tbody tr:nth-child(odd){background:#fff;}
+  .vocab-table tbody td{padding:10px 16px;border-bottom:1px solid #bfdbfe;color:#374151;vertical-align:top;line-height:1.5;}
+  .vocab-table tbody td:first-child{font-weight:700;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;white-space:nowrap;}
+
+  /* CPT CONNECTION */
+  .cpt-connection{background:#fefce8;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:0 10px 10px 0;padding:20px 24px;margin:28px 0;}
+  .cpt-connection-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#92400e!important;-webkit-text-fill-color:#92400e!important;margin-bottom:8px;}
+  .cpt-connection h3{font-size:16px!important;font-weight:700!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin:16px 0 8px!important;}
+  .cpt-connection p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;line-height:1.7!important;margin-bottom:12px!important;}
+  .cpt-connection a{color:#b45309!important;-webkit-text-fill-color:#b45309!important;font-weight:600;text-decoration:underline;}
+  .cpt-connection code{background:#fef3c7;color:#78350f!important;-webkit-text-fill-color:#78350f!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+  .cpt-stems{list-style:none;padding:0;margin:0 0 8px;display:flex;flex-direction:column;gap:8px;}
+  .cpt-stems li{background:#fffef5;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:13px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;line-height:1.6;}
+  .cpt-code{background:#0f172a;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;line-height:1.8;margin:6px 0 12px;overflow-x:auto;white-space:pre;display:block;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+
+  /* EMAIL */
+  .email-capture{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px 28px;margin-bottom:36px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
+  .email-capture-text{flex:1;min-width:200px;}
+  .email-capture-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:4px;}
+  .email-capture h3{font-size:16px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .email-capture p{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:0!important;line-height:1.5!important;}
+  .email-capture-form{display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0;}
+  .email-capture-input{padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff!important;font-size:14px;font-family:inherit;min-width:180px;outline:none;}
+  .email-capture-btn{padding:10px 20px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:8px!important;font-size:14px!important;font-weight:600!important;cursor:pointer!important;font-family:inherit!important;}
+  .email-capture-success{display:none;font-size:14px;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:600;padding:10px 0;}
+
+  /* MCQ */
+  .mcq-section{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:28px;margin-bottom:40px;}
+  .mcq-section-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--bi3-bg);}
+  .mcq-section-icon{width:40px;height:40px;border-radius:10px;background:var(--bi3-bg);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .mcq-section-title{font-family:"DM Serif Display",serif;font-size:20px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+  .mcq-section-sub{font-size:13px;color:var(--slate);}
+  .mcq-item{margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid #f1f5f9;}
+  .mcq-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .mcq-q-num{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:8px;}
+  .diff-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:100px;margin-left:8px;background:#fef2f2;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;border:1px solid #fca5a5;}
+  .mcq-q-text{font-size:15px!important;font-weight:600!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;margin-bottom:12px!important;}
+  .predict-note{font-size:12px;font-style:italic;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:12px;}
+  .mcq-code{background:#0f172a;border-radius:8px;padding:12px 14px;margin:10px 0 14px;font-family:monospace;font-size:13px;line-height:1.75;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;white-space:pre;overflow-x:auto;display:block;}
+  .mcq-code .k{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .mcq-code .s{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .mcq-code .n{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .mcq-code .c{color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-style:italic;}
+  .mcq-roman{list-style:none;padding:0;margin:10px 0 14px;display:flex;flex-direction:column;gap:6px;}
+  .mcq-roman li{font-family:monospace;font-size:13px;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;background:#f1f5f9;border-radius:6px;padding:8px 12px;}
+  .mcq-roman li strong{color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;font-family:"DM Sans",sans-serif;margin-right:8px;}
+  .mcq-options{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+  .mcq-option{display:flex!important;align-items:flex-start!important;gap:12px!important;padding:11px 14px!important;border:2px solid #e2e8f0!important;border-radius:8px!important;cursor:pointer!important;background:#f8fafc!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.5!important;text-align:left!important;width:100%!important;font-family:inherit!important;}
+  .mcq-option:hover{border-color:var(--bi3-lt)!important;background:var(--bi3-bg)!important;}
+  .mcq-option.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mcq-option.incorrect{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mcq-option.revealed-correct{border-color:var(--green)!important;background:#f0fdf4!important;}
+  .mcq-option-letter{font-weight:700!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;flex-shrink:0!important;min-width:18px!important;}
+  .mcq-option.correct .mcq-option-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mcq-option.incorrect .mcq-option-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mcq-feedback{display:none!important;padding:12px 16px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;margin-top:8px!important;}
+  .mcq-feedback.show{display:block!important;}
+  .mcq-feedback.correct-fb{background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #bbf7d0!important;}
+  .mcq-feedback.incorrect-fb{background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;border:1px solid #fecaca!important;}
+
+  /* GAME */
+  .game-section{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:14px;padding:28px;margin-bottom:40px;}
+  .game-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:10px;}
+  .game-title{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .game-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:20px!important;}
+  .vt-score-bar{display:flex;justify-content:space-between;background:rgba(255,255,255,.06);border-radius:10px;padding:12px 20px;margin-bottom:20px;flex-wrap:wrap;gap:8px;}
+  .vt-stat{text-align:center;}
+  .vt-stat-val{font-size:20px;font-weight:800;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1;}
+  .vt-stat-lbl{font-size:10px;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:2px;}
+  .vt-code-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  .vt-code-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:10px;}
+  .vt-code-lines{font-family:monospace;font-size:14px;line-height:2;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .vt-line{display:block;padding:2px 8px;border-radius:4px;white-space:pre;}
+  .vt-line.hl{background:rgba(147,197,253,.2);color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .vt-question{font-size:15px;font-weight:600;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;margin-bottom:14px;}
+  .vt-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+  .vt-btn{padding:12px;border-radius:9px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);cursor:pointer;font-size:15px;font-weight:700;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;font-family:monospace;transition:all .15s;}
+  .vt-btn:hover{border-color:var(--bi3-lt);background:rgba(26,86,219,.2);}
+  .vt-btn.c{border-color:#4ade80;background:rgba(74,222,128,.15);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+  .vt-btn.w{border-color:#f87171;background:rgba(248,113,113,.15);color:#f87171!important;-webkit-text-fill-color:#f87171!important;}
+  .vt-btn.rv{border-color:#4ade80;background:rgba(74,222,128,.08);}
+  .vt-fb{padding:10px 14px;border-radius:8px;font-size:13px;font-weight:500;margin-bottom:12px;display:none;line-height:1.5;}
+  .vt-fb.c{background:rgba(74,222,128,.1);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;display:block;}
+  .vt-fb.w{background:rgba(248,113,113,.1);color:#f87171!important;-webkit-text-fill-color:#f87171!important;display:block;}
+  .vt-next{display:none;width:100%;padding:12px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);border-radius:8px;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .vt-next.show{display:block;}
+  .vt-results{display:none;text-align:center;padding:20px;}
+  .vt-results.show{display:block;}
+  .vt-res-score{font-family:"DM Serif Display",serif;font-size:52px;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1;}
+  .vt-res-lbl{font-size:14px;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:12px;}
+  .vt-res-msg{font-size:14px;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;margin-bottom:20px;line-height:1.6;}
+  .vt-restart{background:rgba(255,255,255,.1);color:#fff!important;-webkit-text-fill-color:#fff!important;border:2px solid rgba(255,255,255,.2);border-radius:8px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+
+  /* CODE EDITOR (Pyodide live) */
+  .code-editor-section{background:#0f172a;border-radius:14px;padding:28px;margin-bottom:40px;}
+  .code-editor-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:10px;}
+  .code-editor-title{font-family:"DM Serif Display",serif!important;font-size:22px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .code-editor-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:20px!important;line-height:1.6;}
+  .code-problem{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+  .scaffold-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:rgba(147,197,253,.15);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;border:1px solid rgba(147,197,253,.35);margin-bottom:8px;}
+  .code-problem-num{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:8px;}
+  .code-problem-prompt{font-size:14px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.6!important;margin-bottom:12px!important;}
+  .code-problem-prompt code{background:rgba(147,197,253,.12);color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;padding:1px 6px;border-radius:5px;font-size:12px;}
+  .code-textarea{width:100%;min-height:120px;background:#020617;border:2px solid rgba(255,255,255,.1);border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;color:#e2e8f0!important;resize:vertical;outline:none;line-height:1.8;}
+  .code-textarea:focus{border-color:var(--bi3-lt);}
+  .code-btn-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center;}
+  .code-run-btn{padding:9px 20px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:7px!important;font-size:13px!important;font-weight:700!important;cursor:pointer!important;font-family:inherit!important;}
+  .code-run-btn:disabled{opacity:.6;cursor:wait;}
+  .code-hint-btn,.code-sol-btn{padding:9px 16px!important;background:rgba(255,255,255,.06)!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:7px!important;font-size:13px!important;cursor:pointer!important;font-family:inherit!important;}
+  .code-output{margin-top:10px;background:#020617;border-radius:8px;padding:12px 16px;font-family:monospace;font-size:13px;min-height:44px;display:none;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .code-output.show{display:block;}
+  .code-output.ok{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+  .code-output.err{color:#f87171!important;-webkit-text-fill-color:#f87171!important;}
+  .code-hint{margin-top:8px;background:rgba(147,197,253,.06);border:1px solid rgba(147,197,253,.2);border-radius:8px;padding:10px 14px;font-size:13px;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;display:none;line-height:1.6;}
+  .code-hint.show{display:block;}
+  .code-solution{margin-top:8px;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:8px;padding:12px 14px;font-family:monospace;font-size:13px;color:#bbf7d0!important;-webkit-text-fill-color:#bbf7d0!important;display:none;white-space:pre;line-height:1.8;overflow-x:auto;}
+  .code-solution.show{display:block;}
+
+  /* FAQ */
+  .faq-section{margin-bottom:40px;}
+  .faq-section h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;padding-bottom:10px!important;border-bottom:2px solid var(--bi3-bg)!important;}
+  .faq-item{background:#fff;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:10px;overflow:hidden;}
+  .faq-q{width:100%;text-align:left;padding:16px 20px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:15px!important;font-weight:600!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-family:inherit!important;line-height:1.4!important;}
+  .faq-q:hover{background:#f8fafc;}
+  .faq-icon{font-size:18px;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;flex-shrink:0;transition:transform .2s;font-style:normal;}
+  .faq-item.open .faq-icon{transform:rotate(45deg);}
+  .faq-a{display:none;padding:0 20px 16px;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.7!important;border-top:1px solid #f1f5f9;}
+  .faq-item.open .faq-a{display:block;}
+  .faq-a code{background:#eef2ff;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+
+  /* RELATED + SUPERPACK + TEACHER + NAV */
+  .related-links{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:24px;margin-bottom:40px;}
+  .related-links h3{font-size:15px!important;font-weight:700!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;}
+  .related-links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
+  .related-link{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;background:#f8fafc;text-decoration:none;font-size:13px!important;font-weight:500!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border:1px solid #bfdbfe;transition:background .15s;line-height:1.3;}
+  .related-link:link,.related-link:visited{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;}
+  .related-link:hover{background:var(--bi3-bg);}
+  .related-ext{color:var(--slate)!important;-webkit-text-fill-color:var(--slate)!important;border-color:#e2e8f0;}
+  .superpack-slim{background:#fff;border:1px solid #bfdbfe;border-radius:10px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:36px;}
+  .superpack-slim-icon{width:36px;height:36px;border-radius:8px;background:var(--bi3-bg);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .superpack-slim-text{font-size:14px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-weight:600;line-height:1.3;}
+  .superpack-slim-sub{font-size:12px;color:var(--slate);font-weight:400;display:block;margin-top:2px;}
+  .superpack-slim-btn{display:inline-flex!important;align-items:center!important;gap:6px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:9px 18px!important;border-radius:7px!important;font-size:13px!important;font-weight:600!important;text-decoration:none!important;white-space:nowrap!important;}
+  .superpack-slim-btn:link,.superpack-slim-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .teacher-callout{background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:18px 22px;margin-bottom:28px;display:flex;align-items:flex-start;gap:14px;}
+  .teacher-callout-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+  .teacher-callout-body{flex:1;}
+  .teacher-callout-label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#0369a1!important;-webkit-text-fill-color:#0369a1!important;margin-bottom:4px;}
+  .teacher-callout-body p{font-size:14px!important;color:#0c4a6e!important;-webkit-text-fill-color:#0c4a6e!important;margin-bottom:0!important;line-height:1.6!important;}
+  .teacher-callout-body a{color:#0369a1!important;-webkit-text-fill-color:#0369a1!important;font-weight:600;text-decoration:underline;}
+  .lesson-nav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:40px;}
+  .nav-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 20px;text-decoration:none;color:inherit;transition:box-shadow .15s;display:block;}
+  .nav-card:hover{box-shadow:0 4px 16px rgba(26,86,219,.1);border-color:#bfdbfe;}
+  .nav-card-dir{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:4px;}
+  .nav-card-title{font-size:14px;font-weight:700;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;line-height:1.3;}
+  .nav-card.next{border-left:3px solid var(--bi3);}
+
+  @media(max-width:600px){
+    .lesson-hero{padding:36px 20px 32px;}
+    .lesson-main{padding:32px 20px 60px;}
+    .vt-options{grid-template-columns:1fr 1fr;}
+    .lesson-nav{grid-template-columns:1fr;}
+    .mini-opts{gap:6px;}
+  }
+</style>
+<style>
+.code-usage{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin:-6px 0 18px!important;padding:8px 12px!important;background:rgba(255,255,255,.04)!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:8px!important;display:block!important;}
+.code-usage strong{color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;}
+.code-problem-prompt ul.rules{margin:10px 0 4px!important;padding-left:0!important;list-style:none!important;}
+.code-problem-prompt ul.rules li{position:relative;padding:3px 0 3px 20px!important;font-size:14px;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.55;}
+.code-problem-prompt ul.rules li::before{content:"\25B8";position:absolute;left:2px;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+.mcq-q-text ul.rules,.mini-ex-q ul.rules{margin:10px 0 4px!important;padding-left:0!important;list-style:none!important;}
+.mcq-q-text ul.rules li,.mini-ex-q ul.rules li{position:relative;padding:3px 0 3px 20px!important;font-size:15px;font-weight:400;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;line-height:1.5;}
+.mcq-q-text ul.rules li::before,.mini-ex-q ul.rules li::before{content:"\25B8";position:absolute;left:2px;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;}
+</style>
+<style>
+
+.lesson-visual{margin:0 0 40px!important;}
+.lv-kicker{font-size:11px!important;font-weight:700!important;letter-spacing:.1em!important;text-transform:uppercase!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;margin:0 0 10px!important;}
+/* before/after panel */
+.ba{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:14px!important;padding:20px!important;margin:0 0 14px!important;}
+.ba-cap-top{font-size:12px!important;font-weight:700!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;margin:0 0 14px!important;}
+.ba-grid{display:grid!important;grid-template-columns:1fr auto 1fr!important;align-items:center!important;gap:14px!important;}
+.ba-panel{border-radius:12px!important;padding:16px 14px!important;text-align:center!important;}
+.ba-panel.before{background:#f8fafc!important;border:1px solid #e2e8f0!important;}
+.ba-panel.after{background:#f0fdf4!important;border:1px solid #bbf7d0!important;}
+.ba-label{font-size:11px!important;font-weight:700!important;letter-spacing:.05em!important;text-transform:uppercase!important;margin:0 0 8px!important;}
+.ba-panel.before .ba-label{color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+.ba-panel.after .ba-label{color:#166534!important;-webkit-text-fill-color:#166534!important;}
+.ba-data{font-family:monospace!important;font-size:15px!important;letter-spacing:1px!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;word-break:break-all!important;}
+.ba-meta{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:6px!important;}
+.ba-arrow{font-size:26px!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;font-weight:700!important;}
+.ba-caption{font-size:13px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;line-height:1.55!important;margin:14px 0 0!important;padding-top:12px!important;border-top:1px solid #f1f5f9!important;}
+.ba-caption strong{color:#166534!important;-webkit-text-fill-color:#166534!important;}
+/* dark interactive card shell (shared by binary/rle/parallel/packet/io) */
+.wgt{background:#0f172a!important;border-radius:16px!important;padding:22px!important;border:1px solid #1e293b!important;margin:0 0 14px!important;}
+.wgt-h{font-family:"DM Serif Display",serif!important;font-size:18px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 3px!important;}
+.wgt-sub{font-size:13px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0 0 18px!important;}
+.wgt-btns{display:flex!important;gap:8px!important;justify-content:center!important;flex-wrap:wrap!important;margin-top:14px!important;}
+.wgt-btn{font-family:"DM Sans",sans-serif!important;font-size:13px!important;font-weight:700!important;padding:8px 14px!important;border-radius:9px!important;border:1px solid #334155!important;background:#1e293b!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;cursor:pointer!important;}
+.wgt-btn:hover{background:#334155!important;}
+.wgt-note{font-size:12.5px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;text-align:center!important;margin:12px 0 0!important;line-height:1.5!important;}
+.wgt-note.warn{color:#fca5a5!important;-webkit-text-fill-color:#fca5a5!important;}
+.wgt-note.good{color:#86efac!important;-webkit-text-fill-color:#86efac!important;}
+/* binary */
+.bpv-strip{display:flex!important;gap:6px!important;justify-content:center!important;flex-wrap:wrap!important;}
+.bpv-col{display:flex!important;flex-direction:column!important;align-items:center!important;gap:6px!important;}
+.bpv-pv{font-size:12px!important;font-weight:700!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-variant-numeric:tabular-nums!important;}
+.bpv-bit{width:44px!important;height:54px!important;border-radius:10px!important;border:2px solid #334155!important;background:#1e293b!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-family:monospace!important;font-size:23px!important;font-weight:700!important;cursor:pointer!important;}
+.bpv-bit.on{background:#1a56db!important;border-color:#60a5fa!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+.bpv-read{display:flex!important;align-items:baseline!important;justify-content:center!important;gap:14px!important;margin:20px 0 0!important;flex-wrap:wrap!important;}
+.bpv-binary{font-family:monospace!important;font-size:22px!important;letter-spacing:2px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+.bpv-eq{font-size:22px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+.bpv-dec{font-family:"DM Serif Display",serif!important;font-size:34px!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;line-height:1!important;}
+/* rle */
+.rle-in{width:100%!important;box-sizing:border-box!important;font-family:monospace!important;font-size:15px!important;padding:10px 12px!important;border-radius:9px!important;border:1px solid #334155!important;background:#1e293b!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;letter-spacing:1px!important;}
+.rle-row{display:flex!important;gap:12px!important;flex-wrap:wrap!important;margin-top:14px!important;}
+.rle-cell{flex:1!important;min-width:130px!important;background:#1e293b!important;border-radius:10px!important;padding:12px!important;text-align:center!important;}
+.rle-cell .l{font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:6px!important;}
+.rle-cell .v{font-family:monospace!important;font-size:16px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;word-break:break-all!important;}
+.rle-cell.out .v{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+.rle-cell .m{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:4px!important;}
+/* parallel timeline */
+.ptl-ctl{display:flex!important;align-items:center!important;gap:12px!important;justify-content:center!important;flex-wrap:wrap!important;margin-bottom:16px!important;}
+.ptl-ctl label{font-size:13px!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;font-weight:700!important;}
+.ptl-ctl input[type=range]{width:180px!important;}
+.ptl-ctl .n{font-family:"DM Serif Display",serif!important;font-size:22px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;min-width:28px!important;text-align:center!important;}
+.ptl-bar{height:26px!important;border-radius:6px!important;margin:8px 0!important;display:flex!important;overflow:hidden!important;}
+.ptl-seg{height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:11px!important;font-weight:700!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a!important;white-space:nowrap!important;}
+.ptl-seg.seq{background:#fca5a5!important;}
+.ptl-seg.par{background:#6ee7b7!important;}
+.ptl-lbl{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:2px!important;}
+.ptl-stat{display:flex!important;gap:18px!important;justify-content:center!important;margin-top:14px!important;flex-wrap:wrap!important;}
+.ptl-stat div{text-align:center!important;}
+.ptl-stat .k{font-size:11px!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+.ptl-stat .v{font-family:"DM Serif Display",serif!important;font-size:26px!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+/* packet */
+.pkt-track{display:flex!important;gap:8px!important;justify-content:center!important;flex-wrap:wrap!important;min-height:64px!important;}
+.pkt{width:58px!important;border-radius:9px!important;background:#1e293b!important;border:1px solid #334155!important;padding:8px 4px!important;text-align:center!important;}
+.pkt .seq{font-size:10px!important;font-weight:700!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+.pkt .ch{font-family:monospace!important;font-size:20px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;margin-top:2px!important;}
+.pkt.lost{opacity:.35!important;border-style:dashed!important;}
+.pkt-msg{font-family:monospace!important;font-size:20px!important;letter-spacing:3px!important;text-align:center!important;margin-top:16px!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;min-height:24px!important;}
+/* io mapper */
+.iom-flow{display:grid!important;grid-template-columns:1fr auto 1fr auto 1fr!important;align-items:center!important;gap:10px!important;}
+.iom-box{background:#1e293b!important;border-radius:12px!important;padding:14px!important;text-align:center!important;}
+.iom-box .l{font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:6px!important;}
+.iom-box .v{font-size:15px!important;font-weight:700!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+.iom-box.prog{background:#1a3a6b!important;}
+.iom-box.out .v{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+.iom-ar{font-size:20px!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;font-weight:700!important;}
+.iom-temp{font-family:"DM Serif Display",serif!important;font-size:26px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+@media(max-width:520px){.ba-grid{grid-template-columns:1fr!important;}.ba-arrow{transform:rotate(90deg)!important;}.iom-flow{grid-template-columns:1fr!important;}.iom-ar{transform:rotate(90deg)!important;}}
+
+</style>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "AP CSP Course", "item": "https://apcsexamprep.com/pages/ap-csp-course"}, {"@type": "ListItem", "position": 2, "name": "Big Idea 2", "item": "https://apcsexamprep.com/pages/ap-csp-course-big-idea-2-data"}, {"@type": "ListItem", "position": 3, "name": "Topic 2.1: Binary Numbers", "item": "https://apcsexamprep.com/pages/ap-csp-course-bi2-binary-numbers"}]}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "LearningResource", "name": "AP CSP Topic 2.1: Binary Numbers", "description": "AP CSP Topic 2.1: bits and bytes, binary to decimal conversion, overflow and roundoff, and analog versus digital. 6 exam MCQs plus the Binary Conversion Race game.", "url": "https://apcsexamprep.com/pages/ap-csp-course-bi2-binary-numbers", "educationalLevel": "High School", "learningResourceType": "Lesson", "author": {"@type": "Person", "name": "Tanner Crow"}, "isPartOf": {"@type": "Course", "name": "AP Computer Science Principles Complete Course", "url": "https://apcsexamprep.com/pages/ap-csp-course"}, "datePublished": "2026-03-01"}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is the difference between a bit and a byte?", "acceptedAnswer": {"@type": "Answer", "text": "A bit is a single binary digit, either 0 or 1, and is the smallest unit of data. A byte is a group of 8 bits. Computers represent all data, including numbers, text, images, and sound, as sequences of bits."}}, {"@type": "Question", "name": "How do I convert a binary number to decimal quickly?", "acceptedAnswer": {"@type": "Answer", "text": "Write the place values 128 64 32 16 8 4 2 1 above the bits, then add up the place values everywhere a 1 appears. For example, 1011 has 1s in the 8, 2, and 1 columns, so it equals 8 + 2 + 1 = 11."}}, {"@type": "Question", "name": "Why can 8 bits store only 256 different values?", "acceptedAnswer": {"@type": "Answer", "text": "With n bits you can represent 2 to the n distinct values, because each bit doubles the number of patterns. Eight bits give 2 to the 8 = 256 values. When used for whole numbers starting at 0, that range is 0 to 255."}}, {"@type": "Question", "name": "What is the difference between overflow and roundoff errors?", "acceptedAnswer": {"@type": "Answer", "text": "Overflow happens when a value is too large to represent in the available bits, such as going past the maximum a variable can hold. Roundoff happens when a value cannot be stored exactly, like many real numbers, so it is approximated. Overflow is too big to fit; roundoff is impossible to store precisely."}}, {"@type": "Question", "name": "What does analog versus digital mean on the exam?", "acceptedAnswer": {"@type": "Answer", "text": "Analog data changes smoothly and continuously with infinitely many possible values. Digital data uses discrete, separate values stored as bits. Analog signals are turned into digital data by sampling, and more samples with more bits per sample give a closer approximation of the original."}}]}</script>
+
+<div class="lesson-page" data-course="ap-csp" data-unit="bi-2" data-lesson="binary-numbers">
+
+  <div class="lesson-breadcrumb">
+    <div class="lesson-breadcrumb-inner">
+      <a href="/pages/ap-csp-course">AP CSP Course</a><span class="bc-sep">›</span>
+      <a href="/pages/ap-csp-course-big-idea-2-data">Big Idea 2</a><span class="bc-sep">›</span>
+      <span>2.1 Binary Numbers</span>
+    </div>
+  </div>
+  <div class="social-proof-bar">
+    <div class="social-proof-inner">
+      <span class="social-proof-item">⭐ <strong>5.0</strong> Wyzant rating</span>
+      <span class="social-proof-item">📚 <strong>1,845+</strong> tutoring hours</span>
+      <span class="social-proof-item">🏫 Built by an <strong>AP CS teacher</strong> with 11+ years experience</span>
+      <span class="social-proof-item">🎯 <strong>70%</strong> of classroom students score 4 or 5 on AP CSP</span>
+    </div>
+  </div>
+  <div class="lesson-hero">
+    <div class="lesson-hero-inner">
+      <div class="lesson-hero-meta">
+        <div class="lesson-num-badge">2.1</div>
+        <div><div class="lesson-eyebrow">Big Idea 2 • Data</div></div>
+      </div>
+      <h1>Binary Numbers</h1>
+      <div class="lesson-hero-pills">
+        <span class="lesson-pill">🕐 ~35 min</span>
+        <span class="lesson-pill" style="background:rgba(74,222,128,0.15);border-color:rgba(74,222,128,0.3);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;">FREE</span>
+        <span class="lesson-pill">📖 6 MCQ questions</span>
+        <span class="lesson-pill">🎮 Binary Conversion Race game</span>
+        <span class="ced-tag">DAT-1.A / DAT-1.B / DAT-1.C</span>
+      </div>
+    </div>
+  </div>
+  <div class="bi3-progress"><div class="bi3-progress-inner">
+<div class="prog-step">
+<div class="prog-dot active">2.1</div>
+<div class="prog-label active-label">Binary</div>
+</div>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi2-data-compression" class="prog-step-link"><div class="prog-dot upcoming">2.2</div>
+<div class="prog-label">Compress</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi2-extracting-information" class="prog-step-link"><div class="prog-dot upcoming">2.3</div>
+<div class="prog-label">Extract</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi2-using-programs-with-data" class="prog-step-link"><div class="prog-dot upcoming">2.4</div>
+<div class="prog-label">Programs</div></a>
+</div></div>
+
+  <div class="lesson-main">
+
+    <div class="lesson-objectives">
+      <h2>After this lesson, you will be able to:</h2>
+      <ul>
+        <li><span>Define a bit and a byte and explain that computers represent all data as sequences of bits</span></li>
+        <li><span>Convert a binary number to decimal by summing the place values where a 1 appears</span></li>
+        <li><span>Convert a decimal number to binary using powers of 2 or repeated division by 2</span></li>
+        <li><span>Explain why n bits represent 2 to the n distinct values, and relate this to overflow</span></li>
+        <li><span>Distinguish analog from digital data and explain overflow and roundoff errors as limits of fixed bit-width</span></li>
+      </ul>
+    </div>
+    <div class="score-impact">📈 <span>Big Idea 2 (Data) is 17 to 22 percent of the AP CSP exam, and binary questions are among the most predictable points on the whole test. Conversions and the 2 to the n rule show up every year, and the analog versus digital and overflow versus roundoff ideas are quick vocabulary points once you can tell them apart.</span>
+</div>
+    <div class="hook-box">
+      <div class="hook-label">💡 Think about this first</div>
+      <p>A single light switch can be off or on, which is exactly two states. String eight of those switches together and you can spell any letter, store a number up to 255, or set the shade of one pixel. Computers do not understand the number 42, a photo, or the word cat directly, yet all three end up as nothing but 0s and 1s. How can two symbols possibly be enough to represent everything a computer stores?</p>
+    </div>
+    <div class="lesson-section">
+      <h2>Bits, Bytes, and Why Two Symbols Are Enough</h2>
+      <p>A <strong>bit</strong> is a binary digit: a single value that is either <code>0</code> or <code>1</code>. It is the smallest unit of data a computer stores. A <strong>byte</strong> is a group of <strong>8 bits</strong>. Computers represent <strong>all</strong> data — numbers, text, images, and sound — as sequences of bits. A photo, a song, and this sentence are all, underneath, just long strings of 0s and 1s. The meaning comes from how a program agrees to interpret those bits, not from the bits themselves.</p>
+      <p>Two symbols are enough because you combine them in a <strong>place-value system</strong>, the same idea you already use in base ten. In decimal you have ten digits and each place is worth ten times the one to its right. <strong>Binary is base 2</strong>: only two digits, and each place is worth twice the one to its right. Add more bits and you can count higher, exactly the way adding another decimal digit lets you count past 9.</p>
+      <div class="callout-exam">
+        <div class="callout-exam-label">🎯 What the exam rewards</div>
+        <p>Know the vocabulary cold: a <strong>bit</strong> is one 0 or 1, a <strong>byte</strong> is 8 bits, and <strong>every</strong> kind of data is stored as bits. A question that says a computer stores text or images "as binary" or "as sequences of bits" is stating a fact you are expected to already accept.</p>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Binary Place Values and Converting to Decimal</h2>
+      <p>Because binary is base 2, the place values are the <strong>powers of 2</strong>. Reading right to left they are 1, 2, 4, 8, 16, 32, 64, 128, and so on, each one double the last. To convert a binary number to decimal, write the place values above the bits and <strong>add up the place values wherever a 1 appears</strong>.</p>
+      <table class="vocab-table">
+        <tr>
+<th>Place value</th>
+<th>128</th>
+<th>64</th>
+<th>32</th>
+<th>16</th>
+<th>8</th>
+<th>4</th>
+<th>2</th>
+<th>1</th>
+</tr>
+        <tr>
+<td><strong>Binary digit</strong></td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+      </table>
+      <p>In the row above, 1s sit in the 8, 2, and 1 columns, so the value is <code>8 + 2 + 1 = 11</code>. That is how you read the binary number <code>1011</code> as decimal 11. The reverse direction, decimal to binary, is covered next.</p>
+      <div class="mini-ex">
+        <div class="mini-ex-label">Quick check</div>
+        <div class="mini-ex-q">Convert the binary number <code>1011</code> to decimal.</div>
+        <div class="mini-opts" id="mc-binary-1-opts">
+          <button class="mini-opt" onclick="miniMCQ('mc-binary-1','A','C','mc-binary-1-fb')"><span class="mini-opt-letter">A</span> 7</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-binary-1','B','C','mc-binary-1-fb')"><span class="mini-opt-letter">B</span> 9</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-binary-1','C','C','mc-binary-1-fb')"><span class="mini-opt-letter">C</span> 11</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-binary-1','D','C','mc-binary-1-fb')"><span class="mini-opt-letter">D</span> 13</button>
+        </div>
+        <div class="mini-fb" id="mc-binary-1-fb"></div>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Converting Decimal to Binary</h2>
+      <p>Two reliable methods give the same answer. Pick whichever you trust under time pressure.</p>
+      <ul>
+        <li>
+<strong>Subtract the largest power of 2.</strong> Find the biggest power of 2 that fits, put a 1 there, subtract it, and repeat with what is left. For 37: 32 fits, leaving 5; 4 fits, leaving 1; 1 fits, leaving 0. Ones go in the 32, 4, and 1 columns, giving <code>100101</code>.</li>
+        <li>
+<strong>Repeated division by 2.</strong> Divide by 2 and record each remainder. The remainders, read from <strong>bottom to top</strong>, are the binary digits. Dividing 37 gives remainders 1, 0, 1, 0, 0, 1 from last to first, which reads as <code>100101</code>.</li>
+      </ul>
+      <p>Check your work by converting back: <code>32 + 4 + 1 = 37</code>. If the place values you marked do not add to the original decimal number, one of the bits is wrong.</p>
+      <div class="callout-trap">
+        <div class="callout-trap-label">⚠ Common trap</div>
+        <p>With the division method, students read the remainders in the order they wrote them and get the number backwards. The correct order is <strong>bottom to top</strong> (last remainder first). Always sanity-check by adding the place values back to the original decimal.</p>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>How Many Values Can n Bits Hold?</h2>
+      <p>With <code>n</code> bits you can represent <strong>2 to the n</strong> distinct values. Each bit doubles the count, because every existing pattern can now end in either a 0 or a 1. So 1 bit gives 2 values, 2 bits give 4, 3 bits give 8, and 8 bits (one byte) give <code>2^8 = 256</code> values. When those 256 values are used for whole numbers starting at zero, the range is <strong>0 to 255</strong>, not 1 to 256.</p>
+      <table class="vocab-table">
+        <tr>
+<th>Number of bits</th>
+<th>Distinct values (2 to the n)</th>
+</tr>
+        <tr>
+<td>1</td>
+<td>2</td>
+</tr>
+        <tr>
+<td>2</td>
+<td>4</td>
+</tr>
+        <tr>
+<td>4</td>
+<td>16</td>
+</tr>
+        <tr>
+<td>8 (one byte)</td>
+<td>256</td>
+</tr>
+      </table>
+      <p>This rule is the backbone of many exam questions. Adding a single bit does not add one more value, it <strong>doubles</strong> the number of values you can store.</p>
+      <div class="mini-ex">
+        <div class="mini-ex-label">Quick check</div>
+        <div class="mini-ex-q">Using 3 bits, how many distinct values can you represent?</div>
+        <div class="mini-opts" id="mc-binary-2-opts">
+          <button class="mini-opt" onclick="miniMCQ('mc-binary-2','A','C','mc-binary-2-fb')"><span class="mini-opt-letter">A</span> 3</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-binary-2','B','C','mc-binary-2-fb')"><span class="mini-opt-letter">B</span> 6</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-binary-2','C','C','mc-binary-2-fb')"><span class="mini-opt-letter">C</span> 8</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-binary-2','D','C','mc-binary-2-fb')"><span class="mini-opt-letter">D</span> 9</button>
+        </div>
+        <div class="mini-fb" id="mc-binary-2-fb"></div>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Analog vs Digital</h2>
+      <p><strong>Analog</strong> data changes smoothly and continuously, with infinitely many possible values between any two points — think of a dimmer knob sliding, a real sound wave, or a shadow lengthening through the afternoon. <strong>Digital</strong> data uses <strong>discrete</strong> values: a finite set of separate steps, stored as bits. To put analog information into a computer you take <strong>samples</strong>, measuring the signal at many moments and recording each measurement as a number.</p>
+      <p>A digital version is an <strong>approximation</strong> of the analog original, like a staircase tracing a ramp. The more samples you take and the more bits you use per sample, the closer the digital copy gets to the smooth original — but with a finite number of bits it can never be a perfect match.</p>
+      <div class="callout-exam">
+        <div class="callout-exam-label">🎯 What the exam rewards</div>
+        <p>Match the keyword to the concept: <strong>continuous</strong> means analog, <strong>discrete</strong> or <strong>sampled</strong> means digital. Expect a question where more samples and more bits per sample yield a <strong>closer</strong> approximation of an analog signal, never an exact one.</p>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Limits of Fixed Bit-Width: Overflow and Roundoff</h2>
+      <p>Because a computer sets aside a fixed number of bits for a value, some numbers simply do not fit, and the framework names two specific errors that result.</p>
+      <ul>
+        <li>
+<strong>Overflow error:</strong> a value is <strong>too large</strong> to represent in the available bits. With 8 bits the largest whole number is 255; try to store 256 and there is no room, so the result is wrong.</li>
+        <li>
+<strong>Roundoff error:</strong> a value <strong>cannot be stored exactly</strong> and must be approximated or rounded. Many real numbers, such as the result of <code>1 / 3</code>, would need infinitely many digits, so a fixed number of bits can only hold a rounded version.</li>
+      </ul>
+      <p>The clean split: overflow is about a number being <strong>too big to fit at all</strong>; roundoff is about a number being <strong>impossible to store precisely</strong>, so it is stored close-but-not-exact. Both come from the same root cause, a finite number of bits.</p>
+      <div class="callout-trap">
+        <div class="callout-trap-label">⚠ Common trap</div>
+        <p>Do not swap the two. If a program adds 1 to the largest value a variable can hold and gets a nonsense result, that is <strong>overflow</strong>. If a program stores 0.1 or 1/3 and later the arithmetic is slightly off, that is <strong>roundoff</strong>. "Too large to represent" is overflow; "cannot be represented exactly" is roundoff.</p>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Many Representations, Real Tradeoffs</h2>
+      <p>The same information can be represented in more than one way, and the choice has consequences. The number eleven can be written as decimal <code>11</code> or binary <code>1011</code>; both mean the same quantity. Using more bits per value widens the range you can store and reduces overflow and roundoff, but it also uses more memory and storage. Representations are chosen by weighing these <strong>tradeoffs</strong>, which is a theme you will see again in data compression.</p>
+    </div>
+    <div class="lesson-visual">
+      <p class="lv-kicker">💡 See it in action</p>
+    <div class="wgt" role="group" aria-label="Interactive binary place-value explorer">
+      <div class="wgt-h">Binary Place-Value Explorer</div>
+      <div class="wgt-sub">Click the bits. Watch the binary and the decimal update.</div>
+      <div class="bpv-strip" id="bpvStrip"></div>
+      <div class="bpv-read">
+<span class="bpv-binary" id="bpvBin" aria-live="polite">00000000</span><span class="bpv-eq">=</span><span class="bpv-dec" id="bpvDec" aria-live="polite">0</span>
+</div>
+      <div class="wgt-note" id="bpvNote">8 bits represent the values 0 to 255. Turn every bit on to reach 255.</div>
+      <div class="wgt-btns">
+<button class="wgt-btn" id="bpvClear" type="button">Clear</button><button class="wgt-btn" id="bpvRand" type="button">Random</button><button class="wgt-btn" id="bpvMax" type="button">All on (255)</button>
+</div>
+    </div>
+    <script>(function(){
+      var PV=[128,64,32,16,8,4,2,1],bits=[0,0,0,0,0,0,0,0],cells=[];
+      var strip=document.getElementById('bpvStrip'),binEl=document.getElementById('bpvBin'),decEl=document.getElementById('bpvDec'),noteEl=document.getElementById('bpvNote');
+      function render(){var dec=0,bin='';for(var i=0;i<8;i++){dec+=bits[i]*PV[i];bin+=bits[i];cells[i].classList.toggle('on',!!bits[i]);cells[i].textContent=bits[i];cells[i].setAttribute('aria-label','bit value '+PV[i]+', currently '+(bits[i]?'on':'off'));}
+        binEl.textContent=bin;decEl.textContent=dec;
+        if(dec===255){noteEl.textContent='All 8 bits on = 255, the largest value 8 bits can hold. One more would overflow back to 0.';noteEl.className='wgt-note warn';}
+        else{noteEl.textContent='8 bits represent the values 0 to 255. This is '+dec+' of 255.';noteEl.className='wgt-note';}}
+      for(var i=0;i<8;i++){(function(i){var col=document.createElement('div');col.className='bpv-col';var pv=document.createElement('div');pv.className='bpv-pv';pv.textContent=PV[i];var b=document.createElement('button');b.type='button';b.className='bpv-bit';b.textContent='0';b.onclick=function(){bits[i]=bits[i]?0:1;render();};col.appendChild(pv);col.appendChild(b);strip.appendChild(col);cells[i]=b;})(i);}
+      document.getElementById('bpvClear').onclick=function(){bits=[0,0,0,0,0,0,0,0];render();};
+      document.getElementById('bpvMax').onclick=function(){bits=[1,1,1,1,1,1,1,1];render();};
+      document.getElementById('bpvRand').onclick=function(){for(var i=0;i<8;i++)bits[i]=(i*7+bits[i]*3+bits[(i+1)%8]+1)%2;if(bits.join('')==='00000000')bits[3]=1;render();};
+      render();
+    })();</script>
+    </div>
+    <div class="lesson-section">
+      <h2>How Binary Is Tested on the Exam</h2>
+      <p>Binary number representation is <strong>multiple-choice material</strong>, not a skill you demonstrate on the Create Performance Task. You will not hand-convert numbers inside your Create Task program; instead the end-of-course multiple-choice exam asks you to convert between binary and decimal, apply the <strong>2 to the n</strong> rule, and tell overflow apart from roundoff. Treat this as fast, high-confidence points.</p>
+      <p>Quick strategy for the exam room:</p>
+      <ul>
+        <li>
+<strong>Write the place values first.</strong> Jot 128 64 32 16 8 4 2 1 across the top and line the bits up underneath. For binary to decimal, add the place values under each 1.</li>
+        <li>
+<strong>For decimal to binary, subtract the largest power of 2</strong> that fits, mark a 1, and repeat with the remainder.</li>
+        <li>
+<strong>Always check by converting back.</strong> Add your marked place values; they must equal the original decimal number.</li>
+        <li>
+<strong>Sort the error type by keyword.</strong> "Too large to store" is overflow; "cannot be stored exactly" is roundoff.</li>
+      </ul>
+    </div>
+    <div class="email-capture">
+      <div class="email-capture-text">
+        <div class="email-capture-eyebrow">FREE for students</div>
+        <h3>Get a free AP CSP question every day</h3>
+        <p>Join 3,000+ students. Daily practice, study tips, and exam strategies.</p>
+      </div>
+      <div>
+        <div class="email-capture-form" id="capture-form">
+          <input type="email" class="email-capture-input" id="capture-email" placeholder="your@email.com">
+          <button class="email-capture-btn" onclick="handleCapture()">Subscribe →</button>
+        </div>
+        <div class="email-capture-success" id="capture-success">✓ You're in!</div>
+      </div>
+    </div>
+    <div class="mcq-section">
+      <div class="mcq-section-header">
+        <div class="mcq-section-icon">📈</div>
+        <div>
+          <div class="mcq-section-title">MCQ Practice</div>
+          <div class="mcq-section-sub">6 questions • Exam difficulty and above • Predict before you peek</div>
+        </div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q1">
+        <div class="mcq-q-num">Question 1 of 6<span class="diff-tag">Binary to decimal</span>
+</div>
+        <div class="predict-note">Add the place values under each 1 before you look at the choices.</div>
+        <div class="mcq-q-text"><p>What is the decimal value of the binary number <code>1101</code>?</p></div>
+        <div class="mcq-options" id="q1-options">
+<button class="mcq-option" onclick="checkMCQ('q1','A','A','q1-fb-A')"><span class="mcq-option-letter">A</span> 13</button>
+<button class="mcq-option" onclick="checkMCQ('q1','B','A','q1-fb-B')"><span class="mcq-option-letter">B</span> 11</button>
+<button class="mcq-option" onclick="checkMCQ('q1','C','A','q1-fb-C')"><span class="mcq-option-letter">C</span> 12</button>
+<button class="mcq-option" onclick="checkMCQ('q1','D','A','q1-fb-D')"><span class="mcq-option-letter">D</span> 14</button>
+</div>
+<div id="q1-fb-A" class="mcq-feedback correct-fb">Correct. 1101 has 1s in the 8, 4, and 1 columns, so the value is 8 + 4 + 1 = 13.</div>
+<div id="q1-fb-B" class="mcq-feedback incorrect-fb">Incorrect. 11 is binary 1011. In 1101 the 1s are in the 8, 4, and 1 columns.</div>
+<div id="q1-fb-C" class="mcq-feedback incorrect-fb">Incorrect. 12 is binary 1100. The rightmost bit of 1101 is a 1, which adds one more.</div>
+<div id="q1-fb-D" class="mcq-feedback incorrect-fb">Incorrect. 14 is binary 1110. In 1101 the 2 column is 0, so you do not add 2.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q2">
+        <div class="mcq-q-num">Question 2 of 6<span class="diff-tag">Decimal to binary</span>
+</div>
+        <div class="predict-note">Subtract the largest powers of 2 first, then match to an option.</div>
+        <div class="mcq-q-text"><p>What is the binary representation of the decimal number 37?</p></div>
+        <div class="mcq-options" id="q2-options">
+          <button class="mcq-option" onclick="checkMCQ('q2','A','B','q2-fb-A')"><span class="mcq-option-letter">A</span> 101101</button>
+          <button class="mcq-option" onclick="checkMCQ('q2','B','B','q2-fb-B')"><span class="mcq-option-letter">B</span> 100101</button>
+          <button class="mcq-option" onclick="checkMCQ('q2','C','B','q2-fb-C')"><span class="mcq-option-letter">C</span> 110010</button>
+          <button class="mcq-option" onclick="checkMCQ('q2','D','B','q2-fb-D')"><span class="mcq-option-letter">D</span> 100111</button>
+        </div>
+        <div id="q2-fb-A" class="mcq-feedback incorrect-fb">Incorrect. 101101 equals 32 + 8 + 4 + 1 = 45, not 37.</div>
+        <div id="q2-fb-B" class="mcq-feedback correct-fb">Correct. 37 = 32 + 4 + 1, so 1s go in the 32, 4, and 1 columns, giving 100101.</div>
+        <div id="q2-fb-C" class="mcq-feedback incorrect-fb">Incorrect. 110010 equals 32 + 16 + 2 = 50, not 37.</div>
+        <div id="q2-fb-D" class="mcq-feedback incorrect-fb">Incorrect. 100111 equals 32 + 4 + 2 + 1 = 39, not 37.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q3">
+        <div class="mcq-q-num">Question 3 of 6<span class="diff-tag">Multiple statements</span>
+</div>
+        <div class="predict-note">Judge each statement true or false before choosing.</div>
+        <div class="mcq-q-text"><p>Consider these statements about how computers store data:</p></div>
+        <ul class="mcq-roman">
+          <li>
+<strong>I.</strong> A byte consists of 8 bits.</li>
+          <li>
+<strong>II.</strong> With n bits a computer can represent 2 to the n distinct values.</li>
+          <li>
+<strong>III.</strong> Text and images are stored as sequences of bits, just like numbers.</li>
+        </ul>
+        <div class="mcq-options" id="q3-options">
+<button class="mcq-option" onclick="checkMCQ('q3','A','C','q3-fb-A')"><span class="mcq-option-letter">A</span> I only</button>
+<button class="mcq-option" onclick="checkMCQ('q3','B','C','q3-fb-B')"><span class="mcq-option-letter">B</span> I and II only</button>
+<button class="mcq-option" onclick="checkMCQ('q3','C','C','q3-fb-C')"><span class="mcq-option-letter">C</span> I, II, and III</button>
+<button class="mcq-option" onclick="checkMCQ('q3','D','C','q3-fb-D')"><span class="mcq-option-letter">D</span> II and III only</button>
+</div>
+<div id="q3-fb-A" class="mcq-feedback incorrect-fb">Incorrect. Statements II and III are also true, not just I.</div>
+<div id="q3-fb-B" class="mcq-feedback incorrect-fb">Incorrect. Statement III is true as well, so this option is incomplete.</div>
+<div id="q3-fb-C" class="mcq-feedback correct-fb">Correct. All three are true: a byte is 8 bits, n bits give 2 to the n values, and all data types are stored as bits.</div>
+<div id="q3-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Statement I is also true, so this pairing leaves out a correct statement.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q4">
+        <div class="mcq-q-num">Question 4 of 6<span class="diff-tag">Overflow vs roundoff</span>
+</div>
+        <div class="predict-note">Decide which error the keyword describes before reading the options.</div>
+        <div class="mcq-q-text"><p>A program uses a fixed number of bits for each whole number. It repeatedly adds 1 to a variable that already holds the largest value those bits can store, and the next result is a wrong, much smaller number. Which error does this best illustrate?</p></div>
+        <div class="mcq-options" id="q4-options">
+<button class="mcq-option" onclick="checkMCQ('q4','A','D','q4-fb-A')"><span class="mcq-option-letter">A</span> A roundoff error, because the value could not be represented exactly</button>
+<button class="mcq-option" onclick="checkMCQ('q4','B','D','q4-fb-B')"><span class="mcq-option-letter">B</span> A syntax error, because the addition was written incorrectly</button>
+<button class="mcq-option" onclick="checkMCQ('q4','C','D','q4-fb-C')"><span class="mcq-option-letter">C</span> An analog error, because the data was continuous rather than discrete</button>
+<button class="mcq-option" onclick="checkMCQ('q4','D','D','q4-fb-D')"><span class="mcq-option-letter">D</span> An overflow error, because the value became too large to represent in the available bits</button>
+</div>
+<div id="q4-fb-A" class="mcq-feedback incorrect-fb">Incorrect. Roundoff is about a value that cannot be stored exactly, not about exceeding the maximum. Here the value was too large to fit.</div>
+<div id="q4-fb-B" class="mcq-feedback incorrect-fb">Incorrect. The code runs; nothing is written incorrectly. The failure comes from the bit-width limit, which is overflow.</div>
+<div id="q4-fb-C" class="mcq-feedback incorrect-fb">Incorrect. There is no such thing as an analog error here, and the data is already discrete whole numbers.</div>
+<div id="q4-fb-D" class="mcq-feedback correct-fb">Correct. Exceeding the largest value the fixed bits can hold is an overflow error.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q5">
+        <div class="mcq-q-num">Question 5 of 6<span class="diff-tag">Bit-width and range</span>
+</div>
+        <div class="predict-note">Work out how many values the bits give before scanning the choices.</div>
+        <div class="mcq-q-text"><p>A variable is stored using 8 bits and is used to hold whole numbers starting at 0. Which statement about this variable is correct?</p></div>
+        <div class="mcq-options" id="q5-options">
+<button class="mcq-option" onclick="checkMCQ('q5','A','A','q5-fb-A')"><span class="mcq-option-letter">A</span> It can represent 256 distinct values, ranging from 0 to 255</button>
+<button class="mcq-option" onclick="checkMCQ('q5','B','A','q5-fb-B')"><span class="mcq-option-letter">B</span> It can represent 256 distinct values, ranging from 1 to 256</button>
+<button class="mcq-option" onclick="checkMCQ('q5','C','A','q5-fb-C')"><span class="mcq-option-letter">C</span> It can represent 128 distinct values, ranging from 0 to 127</button>
+<button class="mcq-option" onclick="checkMCQ('q5','D','A','q5-fb-D')"><span class="mcq-option-letter">D</span> It can represent 255 distinct values, ranging from 0 to 255</button>
+</div>
+<div id="q5-fb-A" class="mcq-feedback correct-fb">Correct. 8 bits give 2 to the 8 = 256 values, and starting at 0 the range is 0 to 255.</div>
+<div id="q5-fb-B" class="mcq-feedback incorrect-fb">Incorrect. There are 256 values, but starting at 0 the range is 0 to 255, not 1 to 256.</div>
+<div id="q5-fb-C" class="mcq-feedback incorrect-fb">Incorrect. 128 is 2 to the 7. With 8 bits there are 2 to the 8 = 256 values.</div>
+<div id="q5-fb-D" class="mcq-feedback incorrect-fb">Incorrect. The count of values is 256, not 255. The largest value is 255, but 0 is also a value, so there are 256 in total.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q6">
+        <div class="mcq-q-num">Question 6 of 6<span class="diff-tag">Analog vs digital</span>
+</div>
+        <div class="predict-note">Predict what more samples do to a digital copy first.</div>
+        <div class="mcq-q-text"><p>An analog sound wave is recorded by measuring its height many times per second and storing each measurement as a number. Which statement best describes this digital recording?</p></div>
+        <div class="mcq-options" id="q6-options">
+<button class="mcq-option" onclick="checkMCQ('q6','A','C','q6-fb-A')"><span class="mcq-option-letter">A</span> It is an exact copy of the analog wave, because every point of the wave is stored</button>
+<button class="mcq-option" onclick="checkMCQ('q6','B','C','q6-fb-B')"><span class="mcq-option-letter">B</span> It is analog data, because sound is continuous by nature</button>
+<button class="mcq-option" onclick="checkMCQ('q6','C','C','q6-fb-C')"><span class="mcq-option-letter">C</span> It is an approximation of the analog wave, and taking more samples with more bits each makes it closer to the original</button>
+<button class="mcq-option" onclick="checkMCQ('q6','D','C','q6-fb-D')"><span class="mcq-option-letter">D</span> It is digital only if the wave never changes, since digital data cannot represent change</button>
+</div>
+<div id="q6-fb-A" class="mcq-feedback incorrect-fb">Incorrect. A finite set of samples cannot capture every point of a continuous wave, so it is an approximation, not an exact copy.</div>
+<div id="q6-fb-B" class="mcq-feedback incorrect-fb">Incorrect. Storing measurements as numbers makes the recording digital and discrete, even though the source was analog.</div>
+<div id="q6-fb-C" class="mcq-feedback correct-fb">Correct. Sampling produces a discrete approximation of the continuous signal, and more samples with more bits per sample bring it closer to the original.</div>
+<div id="q6-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Digital data represents change fine by storing many samples over time; that is exactly how the recording works.</div>
+      </div>
+    </div>
+    <div class="game-section">
+      <div style="text-align:center;margin-bottom:20px;">
+        <div class="game-badge">🎮 Lesson Game</div>
+        <div class="game-title">Binary Conversion Race</div>
+        <div class="game-sub">Convert between binary and decimal against the clock and build speed for the exam.</div>
+      </div>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+#bcr-game {
+  --navy: #0f1f3d;
+  --blue: #1a56db;
+  --lblue: #93c5fd;
+  --pale: #eff6ff;
+  --green: #16a34a;
+  --amber: #d97706;
+  --red: #dc2626;
+  --slate: #64748b;
+  --purple: #7c3aed;
+  --accent: #06b6d4;
+  --border: #e2e8f0;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  color: var(--navy) !important;
+  -webkit-text-fill-color: var(--navy) !important;
+  max-width: 640px !important;
+  margin: 0 auto !important;
+  padding: 12px !important;
+  box-sizing: border-box !important;
+  line-height: 1.45 !important;
+}
+#bcr-game *, #bcr-game *::before, #bcr-game *::after { box-sizing: border-box !important; }
+
+#bcr-game .bcr-hero {
+  background: linear-gradient(135deg, #0f1f3d 0%, #1a56db 100%) !important;
+  border-radius: 14px !important;
+  padding: 20px 22px !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+#bcr-game .bcr-title {
+  font-family: 'DM Serif Display', Georgia, serif !important;
+  font-size: 28px !important;
+  line-height: 1.1 !important;
+  margin: 0 0 6px 0 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+#bcr-game .bcr-desc {
+  font-size: 14px !important;
+  margin: 0 0 4px 0 !important;
+  color: #dbeafe !important;
+  -webkit-text-fill-color: #dbeafe !important;
+}
+#bcr-game .bcr-how {
+  font-size: 12.5px !important;
+  margin: 6px 0 0 0 !important;
+  color: #93c5fd !important;
+  -webkit-text-fill-color: #93c5fd !important;
+}
+
+#bcr-game .bcr-scorebar {
+  display: flex !important;
+  gap: 8px !important;
+  margin: 12px 0 !important;
+  flex-wrap: wrap !important;
+}
+#bcr-game .bcr-stat {
+  flex: 1 1 0 !important;
+  min-width: 74px !important;
+  background: #ffffff !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  padding: 8px 10px !important;
+  text-align: center !important;
+}
+#bcr-game .bcr-stat .bcr-lbl {
+  font-size: 10.5px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  font-weight: 700 !important;
+  color: var(--slate) !important;
+  -webkit-text-fill-color: var(--slate) !important;
+}
+#bcr-game .bcr-stat .bcr-val {
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  color: var(--navy) !important;
+  -webkit-text-fill-color: var(--navy) !important;
+}
+#bcr-game #bcr-time.bcr-low { color: var(--red) !important; -webkit-text-fill-color: var(--red) !important; }
+#bcr-game #bcr-streak-val.bcr-hot { color: var(--amber) !important; -webkit-text-fill-color: var(--amber) !important; }
+
+#bcr-game .bcr-timerbar {
+  height: 8px !important;
+  background: #e2e8f0 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  margin-bottom: 12px !important;
+}
+#bcr-game #bcr-timerfill {
+  height: 100% !important;
+  width: 100% !important;
+  background: linear-gradient(90deg, var(--green), var(--accent)) !important;
+  transition: width 0.25s linear !important;
+}
+
+#bcr-game .bcr-card {
+  background: #ffffff !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 14px !important;
+  padding: 16px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+#bcr-game .bcr-flash {
+  position: absolute !important;
+  inset: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  border-radius: 14px !important;
+}
+#bcr-game .bcr-flash.bcr-good { background: rgba(22,163,74,0.28) !important; animation: bcr-fl 0.5s ease !important; }
+#bcr-game .bcr-flash.bcr-bad { background: rgba(220,38,38,0.28) !important; animation: bcr-fl 0.5s ease !important; }
+@keyframes bcr-fl { 0%{opacity:1;} 100%{opacity:0;} }
+
+#bcr-game .bcr-roundtype {
+  display: inline-block !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  padding: 3px 9px !important;
+  border-radius: 999px !important;
+  background: var(--pale) !important;
+  color: var(--blue) !important;
+  -webkit-text-fill-color: var(--blue) !important;
+  margin-bottom: 8px !important;
+}
+#bcr-game .bcr-prompt {
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  margin: 0 0 4px 0 !important;
+  color: var(--navy) !important;
+  -webkit-text-fill-color: var(--navy) !important;
+}
+#bcr-game .bcr-target {
+  font-family: 'DM Serif Display', Georgia, serif !important;
+  font-size: 40px !important;
+  line-height: 1.05 !important;
+  color: var(--blue) !important;
+  -webkit-text-fill-color: var(--blue) !important;
+  margin: 2px 0 10px 0 !important;
+}
+
+/* place-value header + bit row */
+#bcr-game .bcr-bits {
+  display: grid !important;
+  grid-template-columns: repeat(8, 1fr) !important;
+  gap: 5px !important;
+  margin: 6px 0 !important;
+}
+#bcr-game .bcr-place {
+  text-align: center !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: var(--slate) !important;
+  -webkit-text-fill-color: var(--slate) !important;
+  padding-bottom: 2px !important;
+}
+#bcr-game .bcr-bit {
+  aspect-ratio: 1 / 1 !important;
+  border: 2px solid var(--border) !important;
+  border-radius: 10px !important;
+  background: #f8fafc !important;
+  color: var(--slate) !important;
+  -webkit-text-fill-color: var(--slate) !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  transition: transform 0.08s ease, background 0.12s ease, border-color 0.12s ease !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+#bcr-game .bcr-bit:active { transform: scale(0.92) !important; }
+#bcr-game .bcr-bit.bcr-on {
+  background: var(--blue) !important;
+  border-color: var(--blue) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(26,86,219,0.35) !important;
+}
+/* read-only bits (Round B) */
+#bcr-game .bcr-bit.bcr-ro { cursor: default !important; }
+#bcr-game .bcr-bit.bcr-ro:active { transform: none !important; }
+
+#bcr-game .bcr-sumline {
+  font-size: 13.5px !important;
+  color: var(--slate) !important;
+  -webkit-text-fill-color: var(--slate) !important;
+  margin: 8px 0 4px 0 !important;
+  min-height: 20px !important;
+}
+#bcr-game .bcr-sumline b {
+  color: var(--navy) !important;
+  -webkit-text-fill-color: var(--navy) !important;
+}
+
+#bcr-game .bcr-answerrow {
+  display: flex !important;
+  gap: 8px !important;
+  margin-top: 10px !important;
+  align-items: center !important;
+}
+#bcr-game #bcr-input {
+  flex: 1 1 auto !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  padding: 10px 12px !important;
+  border: 2px solid var(--border) !important;
+  border-radius: 10px !important;
+  background: #ffffff !important;
+  color: var(--navy) !important;
+  -webkit-text-fill-color: var(--navy) !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+#bcr-game #bcr-input:focus { outline: none !important; border-color: var(--blue) !important; }
+
+#bcr-game .bcr-btn {
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  padding: 12px 20px !important;
+  border-radius: 10px !important;
+  border: none !important;
+  cursor: pointer !important;
+  background: var(--blue) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+#bcr-game .bcr-btn:active { transform: scale(0.97) !important; }
+#bcr-game .bcr-btn.bcr-check { width: 100% !important; margin-top: 10px !important; }
+
+#bcr-game .bcr-feedback {
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  margin: 10px 0 0 0 !important;
+  min-height: 20px !important;
+}
+#bcr-game .bcr-feedback.bcr-ok { color: var(--green) !important; -webkit-text-fill-color: var(--green) !important; }
+#bcr-game .bcr-feedback.bcr-no { color: var(--red) !important; -webkit-text-fill-color: var(--red) !important; }
+
+/* start + end overlay */
+#bcr-game .bcr-screen {
+  text-align: center !important;
+  padding: 20px 16px !important;
+}
+#bcr-game .bcr-screen h2 {
+  font-family: 'DM Serif Display', Georgia, serif !important;
+  font-size: 26px !important;
+  margin: 0 0 8px 0 !important;
+  color: var(--navy) !important;
+  -webkit-text-fill-color: var(--navy) !important;
+}
+#bcr-game .bcr-screen p {
+  font-size: 14px !important;
+  color: var(--slate) !important;
+  -webkit-text-fill-color: var(--slate) !important;
+  margin: 4px 0 !important;
+}
+#bcr-game .bcr-bigscore {
+  font-family: 'DM Serif Display', Georgia, serif !important;
+  font-size: 52px !important;
+  color: var(--blue) !important;
+  -webkit-text-fill-color: var(--blue) !important;
+  margin: 6px 0 !important;
+}
+#bcr-game .bcr-endstats {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 22px !important;
+  margin: 10px 0 16px 0 !important;
+}
+#bcr-game .bcr-endstats div span {
+  display: block !important;
+}
+#bcr-game .bcr-endstats .bcr-en {
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  color: var(--navy) !important;
+  -webkit-text-fill-color: var(--navy) !important;
+}
+#bcr-game .bcr-endstats .bcr-el {
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  color: var(--slate) !important;
+  -webkit-text-fill-color: var(--slate) !important;
+}
+#bcr-game .bcr-hidden { display: none !important; }
+#bcr-game .bcr-combo {
+  color: var(--amber) !important;
+  -webkit-text-fill-color: var(--amber) !important;
+  font-weight: 700 !important;
+}
+</style>
+
+<div class="bcr-game" id="bcr-game">
+  <div class="bcr-hero">
+    <h1 class="bcr-title">Binary Conversion Race</h1>
+    <p class="bcr-desc">AP CSP • Big Idea 2, Topic 2.1  -  binary place value &amp; decimal↔binary conversion.</p>
+    <p class="bcr-how">How to play: beat the clock. Build numbers by toggling bits, or read a bit pattern and type its value. Correct answers grow your streak for bonus points.</p>
+  </div>
+
+  <div class="bcr-scorebar">
+    <div class="bcr-stat">
+<div class="bcr-lbl">Time</div>
+<div class="bcr-val" id="bcr-time">60</div>
+</div>
+    <div class="bcr-stat">
+<div class="bcr-lbl">Score</div>
+<div class="bcr-val" id="bcr-score">0</div>
+</div>
+    <div class="bcr-stat">
+<div class="bcr-lbl">Streak</div>
+<div class="bcr-val" id="bcr-streak-val">0</div>
+</div>
+    <div class="bcr-stat">
+<div class="bcr-lbl">Best</div>
+<div class="bcr-val" id="bcr-best">0</div>
+</div>
+  </div>
+  <div class="bcr-timerbar"><div id="bcr-timerfill"></div></div>
+
+  <!-- START SCREEN -->
+  <div class="bcr-card" id="bcr-start">
+    <div class="bcr-screen">
+      <h2>Ready to race?</h2>
+      <p>60 seconds. Two round types alternate: <b>Build the number</b> and <b>Read the bits</b>.</p>
+      <p>The place-value header (128 64 32 16 8 4 2 1) stays on screen the whole time to guide you.</p>
+      <button class="bcr-btn" id="bcr-startbtn" style="margin-top:14px !important;">▶ Start race</button>
+    </div>
+  </div>
+
+  <!-- PLAY CARD -->
+  <div class="bcr-card bcr-hidden" id="bcr-play">
+    <div class="bcr-flash" id="bcr-flash"></div>
+    <span class="bcr-roundtype" id="bcr-rtype">Build the number</span>
+    <p class="bcr-prompt" id="bcr-prompt">Make this decimal in binary:</p>
+    <div class="bcr-target" id="bcr-target">42</div>
+
+    <div class="bcr-bits" id="bcr-places"></div>
+    <div class="bcr-bits" id="bcr-bitrow"></div>
+
+    <div class="bcr-sumline" id="bcr-sumline"></div>
+
+    <div class="bcr-answerrow bcr-hidden" id="bcr-answerrow">
+      <input id="bcr-input" type="text" inputmode="numeric" autocomplete="off" placeholder="decimal value">
+    </div>
+
+    <button class="bcr-btn bcr-check" id="bcr-checkbtn">Check</button>
+    <p class="bcr-feedback" id="bcr-feedback"></p>
+  </div>
+
+  <!-- END SCREEN -->
+  <div class="bcr-card bcr-hidden" id="bcr-end">
+    <div class="bcr-screen">
+      <h2 id="bcr-endtitle">Time!</h2>
+      <div class="bcr-bigscore" id="bcr-endscore">0</div>
+      <div class="bcr-endstats">
+        <div>
+<span class="bcr-en" id="bcr-endbest">0</span><span class="bcr-el">Best streak</span>
+</div>
+        <div>
+<span class="bcr-en" id="bcr-endright">0</span><span class="bcr-el">Correct</span>
+</div>
+      </div>
+      <p id="bcr-endmsg">Nice work!</p>
+      <button class="bcr-btn" id="bcr-againbtn" style="margin-top:14px !important;">↻ Play again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var PLACES = [128, 64, 32, 16, 8, 4, 2, 1];
+  var GAME_SECONDS = 60;
+
+  var state = {
+    time: GAME_SECONDS,
+    score: 0,
+    streak: 0,
+    bestStreak: 0,
+    correct: 0,
+    rounds: 0,
+    mode: 'build',      // 'build' or 'read'
+    target: 0,          // build: decimal to make ; read: decimal answer
+    bits: [0,0,0,0,0,0,0,0], // build mode player toggles ; read mode fixed pattern
+    locked: false,
+    timerId: null
+  };
+
+  var el = {};
+  ['time','score','streak-val','best','timerfill','start','play','end','flash',
+   'rtype','prompt','target','places','bitrow','sumline','answerrow','input',
+   'checkbtn','feedback','startbtn','againbtn','endscore','endbest','endright',
+   'endmsg','endtitle'].forEach(function (id) {
+    el[id] = document.getElementById('bcr-' + id);
+  });
+
+  // Build the static place-value header once.
+  PLACES.forEach(function (p) {
+    var d = document.createElement('div');
+    d.className = 'bcr-place';
+    d.textContent = String(p);
+    el.places.appendChild(d);
+  });
+
+  // Build the 8 bit cells once; behavior depends on mode.
+  var bitCells = [];
+  for (var i = 0; i < 8; i++) {
+    (function (idx) {
+      var b = document.createElement('button');
+      b.className = 'bcr-bit';
+      b.type = 'button';
+      b.textContent = '0';
+      b.addEventListener('click', function () {
+        if (state.mode !== 'build' || state.locked) return;
+        state.bits[idx] = state.bits[idx] ? 0 : 1;
+        renderBits();
+        renderSum();
+      });
+      bitCells.push(b);
+      el.bitrow.appendChild(b);
+    })(i);
+  }
+
+  function bitsValue(bits) {
+    var s = 0;
+    for (var i = 0; i < 8; i++) if (bits[i]) s += PLACES[i];
+    return s;
+  }
+
+  function bitsString(bits) {
+    return bits.join('');
+  }
+
+  function renderBits() {
+    for (var i = 0; i < 8; i++) {
+      var on = !!state.bits[i];
+      bitCells[i].textContent = on ? '1' : '0';
+      bitCells[i].className = 'bcr-bit' + (on ? ' bcr-on' : '') +
+        (state.mode === 'read' ? ' bcr-ro' : '');
+    }
+  }
+
+  function renderSum() {
+    if (state.mode === 'build') {
+      var parts = [];
+      for (var i = 0; i < 8; i++) if (state.bits[i]) parts.push(PLACES[i]);
+      var sum = bitsValue(state.bits);
+      if (parts.length === 0) {
+        el.sumline.innerHTML = 'Current value: <b>0</b>';
+      } else {
+        el.sumline.innerHTML = 'Current value: ' + parts.join(' + ') + ' = <b>' + sum + '</b>';
+      }
+    } else {
+      el.sumline.innerHTML = 'Pattern: <b>' + bitsString(state.bits) + '</b>  -  add the lit place values.';
+    }
+  }
+
+  function randInt(max) { return Math.floor(Math.random() * (max + 1)); } // 0..max
+
+  // Difficulty ramps by rounds played.
+  function targetForRound(r) {
+    if (r < 3) return randInt(15) + 1;          // 1..16 -> small, 4 low bits area
+    if (r < 6) return randInt(31);              // 0..31
+    if (r < 10) return randInt(63);             // 0..63
+    return randInt(255);                        // full range 0..255
+  }
+
+  function nextRound() {
+    state.locked = false;
+    el.feedback.textContent = '';
+    el.feedback.className = 'bcr-feedback';
+    el.input.value = '';
+
+    // Alternate modes each round.
+    state.mode = (state.rounds % 2 === 0) ? 'build' : 'read';
+    var val = targetForRound(state.rounds);
+    state.target = val;
+
+    if (state.mode === 'build') {
+      state.bits = [0,0,0,0,0,0,0,0];
+      el.rtype.textContent = 'Build the number';
+      el.prompt.textContent = 'Toggle bits so the binary equals this decimal:';
+      el.target.textContent = String(val);
+      el.target.classList.remove('bcr-hidden');
+      el.answerrow.classList.add('bcr-hidden');
+      el.checkbtn.textContent = 'Check';
+    } else {
+      // Read the bits: display fixed pattern of the target value.
+      var bits = [];
+      for (var i = 0; i < 8; i++) bits.push((val & PLACES[i]) ? 1 : 0);
+      state.bits = bits;
+      el.rtype.textContent = 'Read the bits';
+      el.prompt.textContent = 'What decimal value does this 8-bit pattern equal?';
+      el.target.classList.add('bcr-hidden');
+      el.answerrow.classList.remove('bcr-hidden');
+      el.checkbtn.textContent = 'Check';
+      setTimeout(function () { try { el.input.focus(); } catch (e) {} }, 30);
+    }
+
+    renderBits();
+    renderSum();
+    updateStats();
+  }
+
+  function flash(good) {
+    el.flash.className = 'bcr-flash ' + (good ? 'bcr-good' : 'bcr-bad');
+    // force reflow to restart animation
+    void el.flash.offsetWidth;
+  }
+
+  function explainWrong() {
+    if (state.mode === 'build') {
+      var got = bitsValue(state.bits);
+      var want = state.target;
+      var parts = [];
+      for (var i = 0; i < 8; i++) if (state.bits[i]) parts.push(PLACES[i]);
+      var gotExpr = parts.length ? parts.join(' + ') + ' = ' + got : '0';
+      return bitsString(state.bits) + ' is ' + gotExpr + ', not ' + want + '. Check the place values.';
+    } else {
+      var parts2 = [];
+      for (var j = 0; j < 8; j++) if (state.bits[j]) parts2.push(PLACES[j]);
+      var expr = parts2.length ? parts2.join(' + ') + ' = ' + state.target : '0';
+      return bitsString(state.bits) + ' is ' + expr + '. Add every lit place value.';
+    }
+  }
+
+  function check() {
+    if (state.locked || el.play.classList.contains('bcr-hidden')) return;
+
+    var isCorrect;
+    if (state.mode === 'build') {
+      isCorrect = (bitsValue(state.bits) === state.target);
+    } else {
+      var raw = (el.input.value || '').trim();
+      if (raw === '' || !/^\d+$/.test(raw)) {
+        el.feedback.className = 'bcr-feedback bcr-no';
+        el.feedback.textContent = 'Enter a whole number 0-255.';
+        return;
+      }
+      isCorrect = (parseInt(raw, 10) === state.target);
+    }
+
+    state.rounds++;
+
+    if (isCorrect) {
+      state.streak++;
+      if (state.streak > state.bestStreak) state.bestStreak = state.streak;
+      state.correct++;
+      var base = 10;
+      var bonus = Math.min(state.streak - 1, 5) * 5; // up to +25 streak bonus
+      var gained = base + bonus;
+      state.score += gained;
+      flash(true);
+      el.feedback.className = 'bcr-feedback bcr-ok';
+      var comboTxt = state.streak >= 2
+        ? ' <span class="bcr-combo">' + state.streak + 'x combo! +' + gained + '</span>'
+        : ' +' + gained;
+      el.feedback.innerHTML = 'Correct!' + comboTxt;
+      updateStats();
+      state.locked = true;
+      setTimeout(function () { if (state.time > 0) nextRound(); }, 520);
+    } else {
+      state.streak = 0;
+      flash(false);
+      el.feedback.className = 'bcr-feedback bcr-no';
+      el.feedback.textContent = explainWrong();
+      updateStats();
+      // allow retry on same round (no auto-advance)
+    }
+  }
+
+  function updateStats() {
+    el.time.textContent = String(state.time);
+    el.score.textContent = String(state.score);
+    el['streak-val'].textContent = String(state.streak);
+    el.best.textContent = String(state.bestStreak);
+    if (state.time <= 10) el.time.classList.add('bcr-low'); else el.time.classList.remove('bcr-low');
+    if (state.streak >= 3) el['streak-val'].classList.add('bcr-hot'); else el['streak-val'].classList.remove('bcr-hot');
+    var pct = Math.max(0, (state.time / GAME_SECONDS) * 100);
+    el.timerfill.style.width = pct + '%';
+  }
+
+  function tick() {
+    state.time--;
+    if (state.time <= 0) {
+      state.time = 0;
+      updateStats();
+      endGame();
+      return;
+    }
+    updateStats();
+  }
+
+  function startGame() {
+    state.time = GAME_SECONDS;
+    state.score = 0;
+    state.streak = 0;
+    state.bestStreak = 0;
+    state.correct = 0;
+    state.rounds = 0;
+    state.locked = false;
+
+    el.start.classList.add('bcr-hidden');
+    el.end.classList.add('bcr-hidden');
+    el.play.classList.remove('bcr-hidden');
+
+    updateStats();
+    nextRound();
+
+    if (state.timerId) clearInterval(state.timerId);
+    state.timerId = setInterval(tick, 1000);
+  }
+
+  function endGame() {
+    if (state.timerId) { clearInterval(state.timerId); state.timerId = null; }
+    state.locked = true;
+    el.play.classList.add('bcr-hidden');
+    el.end.classList.remove('bcr-hidden');
+
+    el.endscore.textContent = String(state.score);
+    el.endbest.textContent = String(state.bestStreak);
+    el.endright.textContent = String(state.correct);
+
+    var msg;
+    if (state.score >= 200) msg = 'Binary master! You can read place values in your sleep.';
+    else if (state.score >= 120) msg = 'Great pace! Place value 128-64-32-16-8-4-2-1 is clicking.';
+    else if (state.score >= 60) msg = 'Solid run. Keep chaining streaks for the bonus points.';
+    else msg = 'Good start! Remember: each bit is worth double the one to its right.';
+    el.endmsg.textContent = msg;
+
+    document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: state.score } }));
+  }
+
+  el.startbtn.addEventListener('click', startGame);
+  el.againbtn.addEventListener('click', startGame);
+  el.checkbtn.addEventListener('click', check);
+  el.input.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); check(); }
+  });
+})();
+</script>
+    </div>
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What is the difference between a bit and a byte?<i class="faq-icon">+</i></button>
+        <div class="faq-a">A bit is a single binary digit, either 0 or 1, and is the smallest unit of data. A byte is a group of 8 bits. Computers represent all data, including numbers, text, images, and sound, as sequences of bits.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">How do I convert a binary number to decimal quickly?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Write the place values 128 64 32 16 8 4 2 1 above the bits, then add up the place values everywhere a 1 appears. For example, 1011 has 1s in the 8, 2, and 1 columns, so it equals 8 + 2 + 1 = 11.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Why can 8 bits store only 256 different values?<i class="faq-icon">+</i></button>
+        <div class="faq-a">With n bits you can represent 2 to the n distinct values, because each bit doubles the number of patterns. Eight bits give 2 to the 8 = 256 values. When used for whole numbers starting at 0, that range is 0 to 255.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What is the difference between overflow and roundoff errors?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Overflow happens when a value is too large to represent in the available bits, such as going past the maximum a variable can hold. Roundoff happens when a value cannot be stored exactly, like many real numbers, so it is approximated. Overflow is too big to fit; roundoff is impossible to store precisely.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What does analog versus digital mean on the exam?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Analog data changes smoothly and continuously with infinitely many possible values. Digital data uses discrete, separate values stored as bits. Analog signals are turned into digital data by sampling, and more samples with more bits per sample give a closer approximation of the original.</div>
+      </div>
+    </div>
+    <div class="related-links">
+      <h3>🔗 Continue studying</h3>
+      <div class="related-links-grid">
+        <a href="/pages/ap-csp-course-bi2-data-compression" class="related-link">2.2 Data Compression</a>
+        <a href="/pages/ap-csp-reference-sheet" class="related-link">AP CSP Reference Sheet</a>
+        <a href="/pages/ap-csp-study-games-hub" class="related-link">All CSP Study Games</a>
+      </div>
+    </div>
+    <div class="superpack-slim">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="superpack-slim-icon">📦</div>
+        <div><div class="superpack-slim-text">AP CSP Teacher Superpack<span class="superpack-slim-sub">Slides, lesson plans, unit tests for all 5 Big Ideas, $249</span>
+</div></div>
+      </div>
+      <a href="/products/ap-csp-teacher-superpack" class="superpack-slim-btn">Get the Superpack →</a>
+    </div>
+    <div class="teacher-callout">
+      <div class="teacher-callout-icon">🏫</div>
+      <div class="teacher-callout-body">
+        <div class="teacher-callout-label">For teachers</div>
+        <p>Binary is where students either click or freeze, so drill the place-value strip until conversions are automatic, then time them with the Binary Conversion Race game before the exam. The overflow versus roundoff distinction is a reliable point students miss, so anchor it with a keyword sort: too large to fit means overflow, cannot be stored exactly means roundoff. The Superpack includes conversion worksheets and an analog-to-digital sampling demo. <a href="/products/ap-csp-teacher-superpack">View what's included →</a></p>
+      </div>
+    </div>
+    <div class="lesson-nav">
+      <a href="/pages/ap-csp-course-bi1-identifying-correcting-errors" class="nav-card">
+        <div class="nav-card-dir">← Previous</div>
+        <div class="nav-card-title">1.4 Identifying and Correcting Errors</div>
+      </a>
+      <a href="/pages/ap-csp-course-bi2-data-compression" class="nav-card next">
+        <div class="nav-card-dir">Next lesson →</div>
+        <div class="nav-card-title">2.2 Data Compression</div>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var MINI_MSGS={"mc-binary-1": {"A": "Not quite. 7 is binary 111. In 1011 the 1s are in the 8, 2, and 1 columns.", "B": "Close, but recount the columns. 1011 has 1s in the 8, 2, and 1 places, and 8 + 2 + 1 is not 9.", "C": "Correct. 1011 has 1s in the 8, 2, and 1 columns, so the value is 8 + 2 + 1 = 11.", "D": "Not quite. 13 would be 1101. In 1011 the 1s sit in the 8, 2, and 1 columns, giving 11."}, "mc-binary-2": {"A": "No. That is the number of bits, not the number of values. Each bit doubles the count, so use 2 to the n.", "B": "No. Do not multiply bits by 2. The count is 2 to the n, so 3 bits give 2 to the 3.", "C": "Correct. With 3 bits you get 2 to the 3 = 8 distinct values.", "D": "No. That would be 3 squared. The rule is 2 to the number of bits, so 2 to the 3 = 8."}};
+var MINI_FIB={};
+
+function _activity(d){
+  try{ var w=document.querySelector('.lesson-page');
+    if(w){ d.course=w.getAttribute('data-course'); d.unit=w.getAttribute('data-unit'); d.lesson=w.getAttribute('data-lesson'); }
+    document.dispatchEvent(new CustomEvent('apcsActivity',{detail:d}));
+  }catch(e){}
+}
+function checkMCQ(qid, chosen, correct, fbId){
+  var opts=document.querySelectorAll('#'+qid+'-options .mcq-option');
+  opts.forEach(function(b){b.disabled=true;b.onclick=null;});
+  var letters=['A','B','C','D'];
+  opts[letters.indexOf(chosen)].classList.add(chosen===correct?'correct':'incorrect');
+  if(chosen!==correct)opts[letters.indexOf(correct)].classList.add('revealed-correct');
+  document.getElementById(fbId).classList.add('show');
+  _activity({activity:'quiz',item:qid,choice:chosen});
+}
+function miniMCQ(id, chosen, correct, fbId){
+  var opts=document.querySelectorAll('#'+id+'-opts .mini-opt');
+  opts.forEach(function(b){b.onclick=null;b.style.cursor='default';});
+  var letters=['A','B','C','D'];
+  opts[letters.indexOf(chosen)].classList.add(chosen===correct?'correct':'incorrect');
+  if(chosen!==correct)opts[letters.indexOf(correct)].classList.add('reveal');
+  var fb=document.getElementById(fbId);
+  if(MINI_MSGS[id]){fb.textContent=MINI_MSGS[id][chosen]||'';fb.className='mini-fb '+(chosen===correct?'c':'w');}
+}
+function miniFIB(id, fbId){
+  var inp=document.getElementById(id+'-inp'),fb=document.getElementById(fbId);
+  var val=inp.value.trim().toLowerCase();var d=MINI_FIB[id];
+  var ok=(val===String(d.correct).toLowerCase());
+  inp.classList.add(ok?'correct':'incorrect');
+  fb.textContent=ok?d.c:d.w; fb.className='mini-fb '+(ok?'c':'w'); inp.disabled=true;
+}
+function toggleFAQ(btn){
+  var item=btn.parentElement,wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(el){el.classList.remove('open');});
+  if(!wasOpen)item.classList.add('open');
+}
+function handleCapture(){
+  var email=document.getElementById('capture-email').value.trim();
+  if(!email||!email.includes('@')){document.getElementById('capture-email').focus();return;}
+  document.getElementById('capture-form').style.display='none';
+  document.getElementById('capture-success').style.display='block';
+  if(typeof window._learnq!=='undefined'){window._learnq.push(['identify',{'$email':email}]);}
+}
+/* Bridge: the embedded topic game dispatches 'apcsGameScore' on completion.
+   Convert that single completion into the standard exercise-2 gradebook hook. */
+document.addEventListener('apcsGameScore', function(e){
+  _activity({activity:'exercise-2', earned:1, possible:1});
+});
+</script>
+<!-- apcs-exercises (managed) -->
+<div id="apcs-ex-links">
+<style>
+#apcs-ex-links{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:28px auto 0!important;padding:0 16px 8px!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important}
+#apcs-ex-links *,#apcs-ex-links *::before,#apcs-ex-links *::after{box-sizing:border-box!important}
+#apcs-ex-links .ex-lbl{font-size:12px!important;font-weight:800!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:0 0 10px!important}
+#apcs-ex-links .ex-row{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important}
+@media (max-width:640px){#apcs-ex-links .ex-row{grid-template-columns:repeat(1,1fr)!important}}
+#apcs-ex-links a.ex,#apcs-ex-links a.ex:link,#apcs-ex-links a.ex:visited{display:block!important;text-decoration:none!important;border:1px solid #93c5fd!important;border-left:5px solid #1a56db!important;border-radius:0 12px 12px 0!important;background:#eff6ff!important;padding:14px 16px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;font-size:16px!important;font-weight:700!important;line-height:1.35!important}
+#apcs-ex-links a.ex:hover{background:#dbeafe!important}
+#apcs-ex-links a.ex span{display:block!important;margin-top:4px!important;font-size:13px!important;font-weight:400!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important}
+</style>
+<p class="ex-lbl">Exercises for Topic 2.1</p>
+<div class="ex-row">
+<a class="ex" href="/pages/ap-csp-topic-2-1-exercise-1">Exercise 1: The Wraparound Bug<span>Work it online. Saved in your browser, not graded</span></a>
+<a class="ex" href="/pages/ap-csp-topic-2-1-exercise-2">Exercise 2: Binary Help Desk<span>Work it online. Saved in your browser, not graded</span></a>
+</div>
+</div>

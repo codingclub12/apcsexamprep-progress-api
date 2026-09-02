@@ -149,6 +149,20 @@ console.log('\n5. Published At and Command');
   const fixed = preflight(write('pubok-blog-posts.csv', H2,
     [['b', 'h', 'MERGE', '<p>x</p>', '2026-03-01']]));
   ok('  the store\'s fixed date is accepted', fixed.problems.length === 0, fixed.problems);
+  //  A FIXED TIME ON THE FIXED DATE IS STILL FIXED. The rule is about a live
+  //  server time, not about precision. This check first refused
+  //  scripts/csp-lesson-exercise-links.js, which has written 2026-03-01 12:00:00
+  //  since August and whose imports are live, so the check was narrower than
+  //  the rule it enforces.
+  const withTime = preflight(write('pubt-blog-posts.csv', H2,
+    [['b', 'h', 'MERGE', '<p>x</p>', '2026-03-01 12:00:00']]));
+  ok('  the fixed date WITH a fixed time is accepted', withTime.problems.length === 0, withTime.problems);
+  const other = preflight(write('pubo-blog-posts.csv', H2,
+    [['b', 'h', 'MERGE', '<p>x</p>', '2026-04-01 12:00:00']]));
+  ok('  a fixed time on ANOTHER date is still refused', has(other, /Published At/), other.problems);
+  const todayFixed = preflight(write('pubn-blog-posts.csv', H2,
+    [['b', 'h', 'MERGE', '<p>x</p>', new Date().toISOString().slice(0, 10) + ' 12:00:00']]));
+  ok('  and today\'s date with a fixed time is refused too', has(todayFixed, /Published At/), todayFixed.problems);
   const absent = preflight(write('pubabs-blog-posts.csv', HDR, [GOOD]));
   ok('  omitting it entirely is accepted', absent.problems.length === 0, absent.problems);
 

@@ -1,0 +1,1241 @@
+<!--
+  PAGE: /pages/ap-csp-course-bi2-using-programs-with-data
+  TITLE: AP CSP 2.4 Using Programs with Data | Cleaning, Visualizing, Scaling
+  META: AP CSP Topic 2.4: using programs to process data, cleaning and transforming data, visualizations, and how programs scale to large data sets. 6 exam MCQs plus the Trend Hunter game.
+-->
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+  :root{--navy:#0f1f3d;--bi3:#1a56db;--bi3-lt:#93c5fd;--bi3-bg:#eff6ff;--bi3-dk:#1e40af;--green:#16a34a;--amber:#d97706;--red:#dc2626;--slate:#64748b;--white:#ffffff;--py:#3b82f6;--pseudo:#8b5cf6;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  .lesson-page{font-family:"DM Sans",sans-serif;color:var(--navy);background:#f8fafc;line-height:1.6;}
+
+  .lesson-breadcrumb{background:#fff;border-bottom:1px solid #e2e8f0;padding:12px 24px;}
+  .lesson-breadcrumb-inner{max-width:880px;margin:0 auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate);flex-wrap:wrap;}
+  .lesson-breadcrumb a{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;text-decoration:none;font-weight:500;}
+  .bc-sep{color:#cbd5e1;}
+
+  .social-proof-bar{background:#fff;border-bottom:1px solid #e2e8f0;padding:10px 24px;}
+  .social-proof-inner{max-width:880px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 20px;font-size:13px;color:var(--slate);}
+  .social-proof-item{display:flex;align-items:center;gap:5px;font-weight:500;}
+  .social-proof-item strong{color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+
+  .lesson-hero{background:var(--navy);background-image:radial-gradient(ellipse 60% 70% at 90% 20%,rgba(26,86,219,.28) 0%,transparent 60%);padding:48px 24px 40px;}
+  .lesson-hero-inner{max-width:880px;margin:0 auto;}
+  .lesson-hero-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .lesson-num-badge{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:var(--bi3);font-weight:700;font-size:14px;color:#fff!important;-webkit-text-fill-color:#fff!important;flex-shrink:0;}
+  .lesson-eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;}
+  .lesson-hero h1{font-family:"DM Serif Display",serif!important;font-size:clamp(26px,4vw,40px)!important;line-height:1.2!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:14px!important;}
+  .lesson-hero-pills{display:flex;flex-wrap:wrap;gap:8px;}
+  .lesson-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:5px 12px;border-radius:100px;font-size:12px;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .ced-tag{display:inline-flex;align-items:center;background:rgba(26,86,219,.25);border:1px solid rgba(147,197,253,.3);padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;letter-spacing:.04em;}
+
+  /* PROGRESS STRIP */
+  .bi3-progress{background:#fff!important;border-bottom:1px solid #e2e8f0!important;padding:14px 20px!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;}
+  .bi3-progress-inner{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;gap:0!important;width:max-content!important;min-width:100%!important;}
+  .prog-step{display:flex!important;flex-direction:column!important;align-items:center!important;min-width:46px!important;text-align:center!important;flex-shrink:0!important;}
+  .prog-step-link{display:flex!important;flex-direction:column!important;align-items:center!important;min-width:46px!important;text-align:center!important;flex-shrink:0!important;text-decoration:none!important;cursor:pointer!important;}
+  .prog-step-link:hover .prog-dot{background:#dbeafe!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border-color:var(--bi3)!important;}
+  .prog-dot{width:26px!important;height:26px!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:9px!important;font-weight:700!important;margin-bottom:4px!important;flex-shrink:0!important;}
+  .prog-dot.active{background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .prog-dot.upcoming{background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:2px solid #e2e8f0!important;}
+  .prog-dot.done{background:#dbeafe!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border:2px solid var(--bi3)!important;}
+  .prog-label{font-size:8px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;line-height:1.2!important;white-space:nowrap!important;}
+  .prog-label.active-label{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;}
+  .prog-arrow{flex:1 0 4px!important;height:2px!important;background:#e2e8f0!important;margin-bottom:18px!important;min-width:4px!important;max-width:16px!important;flex-shrink:0!important;}
+
+  /* MAIN */
+  .lesson-main{max-width:880px;margin:0 auto;padding:40px 24px 80px;}
+  .lesson-objectives{background:var(--bi3-bg);border-left:4px solid var(--bi3);border-radius:0 10px 10px 0;padding:20px 24px;margin-bottom:28px;}
+  .lesson-objectives h2{font-size:14px!important;font-weight:700!important;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;text-transform:uppercase!important;letter-spacing:.06em!important;margin-bottom:12px!important;}
+  .lesson-objectives ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;}
+  .lesson-objectives li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#1e3a8a;line-height:1.5;}
+  .lesson-objectives li::before{content:"\2713";color:var(--bi3);font-weight:700;flex-shrink:0;margin-top:1px;}
+  .score-impact{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 18px;margin-bottom:28px;display:flex;align-items:center;gap:10px;font-size:14px;color:#14532d;}
+  .score-impact strong{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+
+  /* HOOK */
+  .hook-box{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px 28px;margin-bottom:32px;}
+  .hook-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:8px;}
+  .hook-box p{font-size:15px!important;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;line-height:1.7!important;margin-bottom:0!important;}
+
+  /* LESSON SECTIONS */
+  .lesson-section{margin-bottom:40px;}
+  .lesson-section h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;padding-bottom:10px!important;border-bottom:2px solid var(--bi3-bg)!important;}
+  .lesson-section h3{font-size:17px!important;font-weight:700!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-top:24px!important;margin-bottom:10px!important;}
+  .lesson-section p{font-size:15px;color:#374151;line-height:1.8;margin-bottom:14px;}
+  .lesson-section ul,.lesson-section ol{padding-left:20px;margin-bottom:14px;}
+  .lesson-section li{font-size:15px;color:#374151;line-height:1.7;margin-bottom:6px;}
+  .lesson-section code{background:#eef2ff;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+
+  /* DUAL CODE PANEL */
+  .code-panel-wrap{margin:20px 0;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;}
+  .code-panel-tabs{display:flex;background:#1e293b;}
+  .code-tab{padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;border:none;background:transparent;letter-spacing:.04em;transition:background .15s;font-family:inherit;}
+  .code-tab.py{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .code-tab.pseudo{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+  .code-tab.active{background:rgba(255,255,255,.15)!important;}
+  .code-tab-label{font-size:10px;opacity:.6;margin-left:4px;font-weight:400;}
+  .code-pane{background:#0f172a;padding:18px 20px;overflow-x:auto;height:0;overflow:hidden;padding:0;}
+  .code-pane.active{height:auto;overflow-x:auto;padding:18px 20px;}
+  .code-pane pre{font-family:monospace;font-size:13px;line-height:1.8;margin:0;white-space:pre-wrap;word-break:break-word;max-width:100%;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .py-kw{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:700;}
+  .py-fn{color:#6ee7b7!important;-webkit-text-fill-color:#6ee7b7!important;}
+  .py-num{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .py-str{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .py-comment{color:#475569!important;-webkit-text-fill-color:#475569!important;font-style:italic;}
+  .py-var{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .py-op{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;}
+  .ps-kw{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700;}
+  .ps-op{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .ps-num{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .ps-str{color:#86efac!important;-webkit-text-fill-color:#86efac!important;}
+  .ps-comment{color:#475569!important;-webkit-text-fill-color:#475569!important;font-style:italic;}
+  .ps-var{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+
+  /* CALLOUTS */
+  .callout-exam{background:#fffbeb;border:1px solid #fcd34d;border-left:4px solid var(--amber);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+  .callout-exam-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--amber)!important;-webkit-text-fill-color:var(--amber)!important;margin-bottom:6px;}
+  .callout-exam p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin-bottom:0!important;line-height:1.6!important;}
+  .callout-trap{background:#fef2f2;border:1px solid #fca5a5;border-left:4px solid var(--red);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+  .callout-trap-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;margin-bottom:6px;}
+  .callout-trap p{font-size:14px!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;margin-bottom:0!important;line-height:1.6!important;}
+
+  /* MINI EXERCISES */
+  .mini-ex{background:#fff;border:1px solid #bfdbfe;border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .mini-ex-label{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;margin-bottom:12px;}
+  .mini-ex-q{font-size:15px;font-weight:600;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px;line-height:1.5;}
+  .mini-ex-code{background:#0f172a;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;line-height:1.8;margin-bottom:14px;overflow-x:auto;white-space:pre;display:block;}
+  .mini-opts{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;}
+  .mini-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border:2px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:14px;font-family:monospace;color:#374151!important;-webkit-text-fill-color:#374151!important;background:#f8fafc;text-align:left;width:100%;transition:border-color .15s;}
+  .mini-opt:hover{border-color:var(--bi3-lt);background:var(--bi3-bg);}
+  .mini-opt.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mini-opt.incorrect{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mini-opt.reveal{border-color:var(--green)!important;background:#f0fdf4!important;}
+  .mini-opt-letter{font-weight:700;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;min-width:18px;font-family:inherit;}
+  .mini-opt.correct .mini-opt-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mini-opt.incorrect .mini-opt-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mini-fib-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;}
+  .mini-fib-input{padding:8px 12px;border:2px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:14px;width:130px;outline:none;color:var(--navy)!important;background:#f8fafc;}
+  .mini-fib-input:focus{border-color:var(--bi3-lt);}
+  .mini-fib-input.correct{border-color:var(--green);background:#f0fdf4;}
+  .mini-fib-input.incorrect{border-color:var(--red);background:#fef2f2;}
+  .mini-fib-btn{padding:8px 18px;background:var(--bi3);border:none;border-radius:8px;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .mini-fb{font-size:13px;font-weight:500;padding:8px 12px;border-radius:7px;margin-top:6px;display:none;line-height:1.5;}
+  .mini-fb.c{background:#f0fdf4;color:var(--green)!important;-webkit-text-fill-color:var(--green)!important;display:block;}
+  .mini-fb.w{background:#fef2f2;color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;display:block;}
+
+  /* VOCAB */
+  .vocab-table{width:100%;border-collapse:collapse;margin-bottom:24px;font-size:14px;}
+  .vocab-table thead tr{background:var(--bi3);}
+  .vocab-table thead th{padding:10px 16px;text-align:left;font-weight:600;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px;}
+  .vocab-table tbody tr:nth-child(even){background:var(--bi3-bg);}
+  .vocab-table tbody tr:nth-child(odd){background:#fff;}
+  .vocab-table tbody td{padding:10px 16px;border-bottom:1px solid #bfdbfe;color:#374151;vertical-align:top;line-height:1.5;}
+  .vocab-table tbody td:first-child{font-weight:700;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;white-space:nowrap;}
+
+  /* CPT CONNECTION */
+  .cpt-connection{background:#fefce8;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:0 10px 10px 0;padding:20px 24px;margin:28px 0;}
+  .cpt-connection-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#92400e!important;-webkit-text-fill-color:#92400e!important;margin-bottom:8px;}
+  .cpt-connection h3{font-size:16px!important;font-weight:700!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin:16px 0 8px!important;}
+  .cpt-connection p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;line-height:1.7!important;margin-bottom:12px!important;}
+  .cpt-connection a{color:#b45309!important;-webkit-text-fill-color:#b45309!important;font-weight:600;text-decoration:underline;}
+  .cpt-connection code{background:#fef3c7;color:#78350f!important;-webkit-text-fill-color:#78350f!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+  .cpt-stems{list-style:none;padding:0;margin:0 0 8px;display:flex;flex-direction:column;gap:8px;}
+  .cpt-stems li{background:#fffef5;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:13px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;line-height:1.6;}
+  .cpt-code{background:#0f172a;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;line-height:1.8;margin:6px 0 12px;overflow-x:auto;white-space:pre;display:block;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+
+  /* EMAIL */
+  .email-capture{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px 28px;margin-bottom:36px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
+  .email-capture-text{flex:1;min-width:200px;}
+  .email-capture-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:4px;}
+  .email-capture h3{font-size:16px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .email-capture p{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:0!important;line-height:1.5!important;}
+  .email-capture-form{display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0;}
+  .email-capture-input{padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff!important;font-size:14px;font-family:inherit;min-width:180px;outline:none;}
+  .email-capture-btn{padding:10px 20px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:8px!important;font-size:14px!important;font-weight:600!important;cursor:pointer!important;font-family:inherit!important;}
+  .email-capture-success{display:none;font-size:14px;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:600;padding:10px 0;}
+
+  /* MCQ */
+  .mcq-section{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:28px;margin-bottom:40px;}
+  .mcq-section-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--bi3-bg);}
+  .mcq-section-icon{width:40px;height:40px;border-radius:10px;background:var(--bi3-bg);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .mcq-section-title{font-family:"DM Serif Display",serif;font-size:20px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+  .mcq-section-sub{font-size:13px;color:var(--slate);}
+  .mcq-item{margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid #f1f5f9;}
+  .mcq-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .mcq-q-num{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:8px;}
+  .diff-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:100px;margin-left:8px;background:#fef2f2;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;border:1px solid #fca5a5;}
+  .mcq-q-text{font-size:15px!important;font-weight:600!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;margin-bottom:12px!important;}
+  .predict-note{font-size:12px;font-style:italic;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:12px;}
+  .mcq-code{background:#0f172a;border-radius:8px;padding:12px 14px;margin:10px 0 14px;font-family:monospace;font-size:13px;line-height:1.75;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;white-space:pre;overflow-x:auto;display:block;}
+  .mcq-code .k{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .mcq-code .s{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .mcq-code .n{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .mcq-code .c{color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-style:italic;}
+  .mcq-roman{list-style:none;padding:0;margin:10px 0 14px;display:flex;flex-direction:column;gap:6px;}
+  .mcq-roman li{font-family:monospace;font-size:13px;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;background:#f1f5f9;border-radius:6px;padding:8px 12px;}
+  .mcq-roman li strong{color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;font-family:"DM Sans",sans-serif;margin-right:8px;}
+  .mcq-options{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+  .mcq-option{display:flex!important;align-items:flex-start!important;gap:12px!important;padding:11px 14px!important;border:2px solid #e2e8f0!important;border-radius:8px!important;cursor:pointer!important;background:#f8fafc!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.5!important;text-align:left!important;width:100%!important;font-family:inherit!important;}
+  .mcq-option:hover{border-color:var(--bi3-lt)!important;background:var(--bi3-bg)!important;}
+  .mcq-option.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mcq-option.incorrect{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mcq-option.revealed-correct{border-color:var(--green)!important;background:#f0fdf4!important;}
+  .mcq-option-letter{font-weight:700!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;flex-shrink:0!important;min-width:18px!important;}
+  .mcq-option.correct .mcq-option-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mcq-option.incorrect .mcq-option-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mcq-feedback{display:none!important;padding:12px 16px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;margin-top:8px!important;}
+  .mcq-feedback.show{display:block!important;}
+  .mcq-feedback.correct-fb{background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #bbf7d0!important;}
+  .mcq-feedback.incorrect-fb{background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;border:1px solid #fecaca!important;}
+
+  /* GAME */
+  .game-section{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:14px;padding:28px;margin-bottom:40px;}
+  .game-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:10px;}
+  .game-title{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .game-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:20px!important;}
+  .vt-score-bar{display:flex;justify-content:space-between;background:rgba(255,255,255,.06);border-radius:10px;padding:12px 20px;margin-bottom:20px;flex-wrap:wrap;gap:8px;}
+  .vt-stat{text-align:center;}
+  .vt-stat-val{font-size:20px;font-weight:800;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1;}
+  .vt-stat-lbl{font-size:10px;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:2px;}
+  .vt-code-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  .vt-code-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:10px;}
+  .vt-code-lines{font-family:monospace;font-size:14px;line-height:2;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .vt-line{display:block;padding:2px 8px;border-radius:4px;white-space:pre;}
+  .vt-line.hl{background:rgba(147,197,253,.2);color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .vt-question{font-size:15px;font-weight:600;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;margin-bottom:14px;}
+  .vt-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+  .vt-btn{padding:12px;border-radius:9px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);cursor:pointer;font-size:15px;font-weight:700;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;font-family:monospace;transition:all .15s;}
+  .vt-btn:hover{border-color:var(--bi3-lt);background:rgba(26,86,219,.2);}
+  .vt-btn.c{border-color:#4ade80;background:rgba(74,222,128,.15);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+  .vt-btn.w{border-color:#f87171;background:rgba(248,113,113,.15);color:#f87171!important;-webkit-text-fill-color:#f87171!important;}
+  .vt-btn.rv{border-color:#4ade80;background:rgba(74,222,128,.08);}
+  .vt-fb{padding:10px 14px;border-radius:8px;font-size:13px;font-weight:500;margin-bottom:12px;display:none;line-height:1.5;}
+  .vt-fb.c{background:rgba(74,222,128,.1);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;display:block;}
+  .vt-fb.w{background:rgba(248,113,113,.1);color:#f87171!important;-webkit-text-fill-color:#f87171!important;display:block;}
+  .vt-next{display:none;width:100%;padding:12px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);border-radius:8px;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .vt-next.show{display:block;}
+  .vt-results{display:none;text-align:center;padding:20px;}
+  .vt-results.show{display:block;}
+  .vt-res-score{font-family:"DM Serif Display",serif;font-size:52px;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1;}
+  .vt-res-lbl{font-size:14px;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:12px;}
+  .vt-res-msg{font-size:14px;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;margin-bottom:20px;line-height:1.6;}
+  .vt-restart{background:rgba(255,255,255,.1);color:#fff!important;-webkit-text-fill-color:#fff!important;border:2px solid rgba(255,255,255,.2);border-radius:8px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+
+  /* CODE EDITOR (Pyodide live) */
+  .code-editor-section{background:#0f172a;border-radius:14px;padding:28px;margin-bottom:40px;}
+  .code-editor-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:10px;}
+  .code-editor-title{font-family:"DM Serif Display",serif!important;font-size:22px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .code-editor-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:20px!important;line-height:1.6;}
+  .code-problem{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+  .scaffold-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:rgba(147,197,253,.15);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;border:1px solid rgba(147,197,253,.35);margin-bottom:8px;}
+  .code-problem-num{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:8px;}
+  .code-problem-prompt{font-size:14px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.6!important;margin-bottom:12px!important;}
+  .code-problem-prompt code{background:rgba(147,197,253,.12);color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;padding:1px 6px;border-radius:5px;font-size:12px;}
+  .code-textarea{width:100%;min-height:120px;background:#020617;border:2px solid rgba(255,255,255,.1);border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;color:#e2e8f0!important;resize:vertical;outline:none;line-height:1.8;}
+  .code-textarea:focus{border-color:var(--bi3-lt);}
+  .code-btn-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center;}
+  .code-run-btn{padding:9px 20px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:7px!important;font-size:13px!important;font-weight:700!important;cursor:pointer!important;font-family:inherit!important;}
+  .code-run-btn:disabled{opacity:.6;cursor:wait;}
+  .code-hint-btn,.code-sol-btn{padding:9px 16px!important;background:rgba(255,255,255,.06)!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:7px!important;font-size:13px!important;cursor:pointer!important;font-family:inherit!important;}
+  .code-output{margin-top:10px;background:#020617;border-radius:8px;padding:12px 16px;font-family:monospace;font-size:13px;min-height:44px;display:none;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .code-output.show{display:block;}
+  .code-output.ok{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+  .code-output.err{color:#f87171!important;-webkit-text-fill-color:#f87171!important;}
+  .code-hint{margin-top:8px;background:rgba(147,197,253,.06);border:1px solid rgba(147,197,253,.2);border-radius:8px;padding:10px 14px;font-size:13px;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;display:none;line-height:1.6;}
+  .code-hint.show{display:block;}
+  .code-solution{margin-top:8px;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:8px;padding:12px 14px;font-family:monospace;font-size:13px;color:#bbf7d0!important;-webkit-text-fill-color:#bbf7d0!important;display:none;white-space:pre;line-height:1.8;overflow-x:auto;}
+  .code-solution.show{display:block;}
+
+  /* FAQ */
+  .faq-section{margin-bottom:40px;}
+  .faq-section h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;padding-bottom:10px!important;border-bottom:2px solid var(--bi3-bg)!important;}
+  .faq-item{background:#fff;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:10px;overflow:hidden;}
+  .faq-q{width:100%;text-align:left;padding:16px 20px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:15px!important;font-weight:600!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-family:inherit!important;line-height:1.4!important;}
+  .faq-q:hover{background:#f8fafc;}
+  .faq-icon{font-size:18px;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;flex-shrink:0;transition:transform .2s;font-style:normal;}
+  .faq-item.open .faq-icon{transform:rotate(45deg);}
+  .faq-a{display:none;padding:0 20px 16px;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.7!important;border-top:1px solid #f1f5f9;}
+  .faq-item.open .faq-a{display:block;}
+  .faq-a code{background:#eef2ff;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+
+  /* RELATED + SUPERPACK + TEACHER + NAV */
+  .related-links{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:24px;margin-bottom:40px;}
+  .related-links h3{font-size:15px!important;font-weight:700!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;}
+  .related-links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
+  .related-link{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;background:#f8fafc;text-decoration:none;font-size:13px!important;font-weight:500!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border:1px solid #bfdbfe;transition:background .15s;line-height:1.3;}
+  .related-link:link,.related-link:visited{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;}
+  .related-link:hover{background:var(--bi3-bg);}
+  .related-ext{color:var(--slate)!important;-webkit-text-fill-color:var(--slate)!important;border-color:#e2e8f0;}
+  .superpack-slim{background:#fff;border:1px solid #bfdbfe;border-radius:10px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:36px;}
+  .superpack-slim-icon{width:36px;height:36px;border-radius:8px;background:var(--bi3-bg);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .superpack-slim-text{font-size:14px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-weight:600;line-height:1.3;}
+  .superpack-slim-sub{font-size:12px;color:var(--slate);font-weight:400;display:block;margin-top:2px;}
+  .superpack-slim-btn{display:inline-flex!important;align-items:center!important;gap:6px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:9px 18px!important;border-radius:7px!important;font-size:13px!important;font-weight:600!important;text-decoration:none!important;white-space:nowrap!important;}
+  .superpack-slim-btn:link,.superpack-slim-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .teacher-callout{background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:18px 22px;margin-bottom:28px;display:flex;align-items:flex-start;gap:14px;}
+  .teacher-callout-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+  .teacher-callout-body{flex:1;}
+  .teacher-callout-label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#0369a1!important;-webkit-text-fill-color:#0369a1!important;margin-bottom:4px;}
+  .teacher-callout-body p{font-size:14px!important;color:#0c4a6e!important;-webkit-text-fill-color:#0c4a6e!important;margin-bottom:0!important;line-height:1.6!important;}
+  .teacher-callout-body a{color:#0369a1!important;-webkit-text-fill-color:#0369a1!important;font-weight:600;text-decoration:underline;}
+  .lesson-nav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:40px;}
+  .nav-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 20px;text-decoration:none;color:inherit;transition:box-shadow .15s;display:block;}
+  .nav-card:hover{box-shadow:0 4px 16px rgba(26,86,219,.1);border-color:#bfdbfe;}
+  .nav-card-dir{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:4px;}
+  .nav-card-title{font-size:14px;font-weight:700;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;line-height:1.3;}
+  .nav-card.next{border-left:3px solid var(--bi3);}
+
+  @media(max-width:600px){
+    .lesson-hero{padding:36px 20px 32px;}
+    .lesson-main{padding:32px 20px 60px;}
+    .vt-options{grid-template-columns:1fr 1fr;}
+    .lesson-nav{grid-template-columns:1fr;}
+    .mini-opts{gap:6px;}
+  }
+</style>
+<style>
+.code-usage{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin:-6px 0 18px!important;padding:8px 12px!important;background:rgba(255,255,255,.04)!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:8px!important;display:block!important;}
+.code-usage strong{color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;}
+.code-problem-prompt ul.rules{margin:10px 0 4px!important;padding-left:0!important;list-style:none!important;}
+.code-problem-prompt ul.rules li{position:relative;padding:3px 0 3px 20px!important;font-size:14px;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.55;}
+.code-problem-prompt ul.rules li::before{content:"\25B8";position:absolute;left:2px;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+.mcq-q-text ul.rules,.mini-ex-q ul.rules{margin:10px 0 4px!important;padding-left:0!important;list-style:none!important;}
+.mcq-q-text ul.rules li,.mini-ex-q ul.rules li{position:relative;padding:3px 0 3px 20px!important;font-size:15px;font-weight:400;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;line-height:1.5;}
+.mcq-q-text ul.rules li::before,.mini-ex-q ul.rules li::before{content:"\25B8";position:absolute;left:2px;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;}
+</style>
+<style>
+
+.lesson-visual{margin:0 0 40px!important;}
+.lv-kicker{font-size:11px!important;font-weight:700!important;letter-spacing:.1em!important;text-transform:uppercase!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;margin:0 0 10px!important;}
+/* before/after panel */
+.ba{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:14px!important;padding:20px!important;margin:0 0 14px!important;}
+.ba-cap-top{font-size:12px!important;font-weight:700!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;margin:0 0 14px!important;}
+.ba-grid{display:grid!important;grid-template-columns:1fr auto 1fr!important;align-items:center!important;gap:14px!important;}
+.ba-panel{border-radius:12px!important;padding:16px 14px!important;text-align:center!important;}
+.ba-panel.before{background:#f8fafc!important;border:1px solid #e2e8f0!important;}
+.ba-panel.after{background:#f0fdf4!important;border:1px solid #bbf7d0!important;}
+.ba-label{font-size:11px!important;font-weight:700!important;letter-spacing:.05em!important;text-transform:uppercase!important;margin:0 0 8px!important;}
+.ba-panel.before .ba-label{color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+.ba-panel.after .ba-label{color:#166534!important;-webkit-text-fill-color:#166534!important;}
+.ba-data{font-family:monospace!important;font-size:15px!important;letter-spacing:1px!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;word-break:break-all!important;}
+.ba-meta{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:6px!important;}
+.ba-arrow{font-size:26px!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;font-weight:700!important;}
+.ba-caption{font-size:13px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;line-height:1.55!important;margin:14px 0 0!important;padding-top:12px!important;border-top:1px solid #f1f5f9!important;}
+.ba-caption strong{color:#166534!important;-webkit-text-fill-color:#166534!important;}
+/* dark interactive card shell (shared by binary/rle/parallel/packet/io) */
+.wgt{background:#0f172a!important;border-radius:16px!important;padding:22px!important;border:1px solid #1e293b!important;margin:0 0 14px!important;}
+.wgt-h{font-family:"DM Serif Display",serif!important;font-size:18px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 3px!important;}
+.wgt-sub{font-size:13px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0 0 18px!important;}
+.wgt-btns{display:flex!important;gap:8px!important;justify-content:center!important;flex-wrap:wrap!important;margin-top:14px!important;}
+.wgt-btn{font-family:"DM Sans",sans-serif!important;font-size:13px!important;font-weight:700!important;padding:8px 14px!important;border-radius:9px!important;border:1px solid #334155!important;background:#1e293b!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;cursor:pointer!important;}
+.wgt-btn:hover{background:#334155!important;}
+.wgt-note{font-size:12.5px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;text-align:center!important;margin:12px 0 0!important;line-height:1.5!important;}
+.wgt-note.warn{color:#fca5a5!important;-webkit-text-fill-color:#fca5a5!important;}
+.wgt-note.good{color:#86efac!important;-webkit-text-fill-color:#86efac!important;}
+/* binary */
+.bpv-strip{display:flex!important;gap:6px!important;justify-content:center!important;flex-wrap:wrap!important;}
+.bpv-col{display:flex!important;flex-direction:column!important;align-items:center!important;gap:6px!important;}
+.bpv-pv{font-size:12px!important;font-weight:700!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-variant-numeric:tabular-nums!important;}
+.bpv-bit{width:44px!important;height:54px!important;border-radius:10px!important;border:2px solid #334155!important;background:#1e293b!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-family:monospace!important;font-size:23px!important;font-weight:700!important;cursor:pointer!important;}
+.bpv-bit.on{background:#1a56db!important;border-color:#60a5fa!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+.bpv-read{display:flex!important;align-items:baseline!important;justify-content:center!important;gap:14px!important;margin:20px 0 0!important;flex-wrap:wrap!important;}
+.bpv-binary{font-family:monospace!important;font-size:22px!important;letter-spacing:2px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+.bpv-eq{font-size:22px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+.bpv-dec{font-family:"DM Serif Display",serif!important;font-size:34px!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;line-height:1!important;}
+/* rle */
+.rle-in{width:100%!important;box-sizing:border-box!important;font-family:monospace!important;font-size:15px!important;padding:10px 12px!important;border-radius:9px!important;border:1px solid #334155!important;background:#1e293b!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;letter-spacing:1px!important;}
+.rle-row{display:flex!important;gap:12px!important;flex-wrap:wrap!important;margin-top:14px!important;}
+.rle-cell{flex:1!important;min-width:130px!important;background:#1e293b!important;border-radius:10px!important;padding:12px!important;text-align:center!important;}
+.rle-cell .l{font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:6px!important;}
+.rle-cell .v{font-family:monospace!important;font-size:16px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;word-break:break-all!important;}
+.rle-cell.out .v{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+.rle-cell .m{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:4px!important;}
+/* parallel timeline */
+.ptl-ctl{display:flex!important;align-items:center!important;gap:12px!important;justify-content:center!important;flex-wrap:wrap!important;margin-bottom:16px!important;}
+.ptl-ctl label{font-size:13px!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;font-weight:700!important;}
+.ptl-ctl input[type=range]{width:180px!important;}
+.ptl-ctl .n{font-family:"DM Serif Display",serif!important;font-size:22px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;min-width:28px!important;text-align:center!important;}
+.ptl-bar{height:26px!important;border-radius:6px!important;margin:8px 0!important;display:flex!important;overflow:hidden!important;}
+.ptl-seg{height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:11px!important;font-weight:700!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a!important;white-space:nowrap!important;}
+.ptl-seg.seq{background:#fca5a5!important;}
+.ptl-seg.par{background:#6ee7b7!important;}
+.ptl-lbl{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:2px!important;}
+.ptl-stat{display:flex!important;gap:18px!important;justify-content:center!important;margin-top:14px!important;flex-wrap:wrap!important;}
+.ptl-stat div{text-align:center!important;}
+.ptl-stat .k{font-size:11px!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+.ptl-stat .v{font-family:"DM Serif Display",serif!important;font-size:26px!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+/* packet */
+.pkt-track{display:flex!important;gap:8px!important;justify-content:center!important;flex-wrap:wrap!important;min-height:64px!important;}
+.pkt{width:58px!important;border-radius:9px!important;background:#1e293b!important;border:1px solid #334155!important;padding:8px 4px!important;text-align:center!important;}
+.pkt .seq{font-size:10px!important;font-weight:700!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+.pkt .ch{font-family:monospace!important;font-size:20px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;margin-top:2px!important;}
+.pkt.lost{opacity:.35!important;border-style:dashed!important;}
+.pkt-msg{font-family:monospace!important;font-size:20px!important;letter-spacing:3px!important;text-align:center!important;margin-top:16px!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;min-height:24px!important;}
+/* io mapper */
+.iom-flow{display:grid!important;grid-template-columns:1fr auto 1fr auto 1fr!important;align-items:center!important;gap:10px!important;}
+.iom-box{background:#1e293b!important;border-radius:12px!important;padding:14px!important;text-align:center!important;}
+.iom-box .l{font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:6px!important;}
+.iom-box .v{font-size:15px!important;font-weight:700!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+.iom-box.prog{background:#1a3a6b!important;}
+.iom-box.out .v{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+.iom-ar{font-size:20px!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;font-weight:700!important;}
+.iom-temp{font-family:"DM Serif Display",serif!important;font-size:26px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+@media(max-width:520px){.ba-grid{grid-template-columns:1fr!important;}.ba-arrow{transform:rotate(90deg)!important;}.iom-flow{grid-template-columns:1fr!important;}.iom-ar{transform:rotate(90deg)!important;}}
+
+</style>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "AP CSP Course", "item": "https://apcsexamprep.com/pages/ap-csp-course"}, {"@type": "ListItem", "position": 2, "name": "Big Idea 2", "item": "https://apcsexamprep.com/pages/ap-csp-course-big-idea-2-data"}, {"@type": "ListItem", "position": 3, "name": "Topic 2.4: Using Programs with Data", "item": "https://apcsexamprep.com/pages/ap-csp-course-bi2-using-programs-with-data"}]}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "LearningResource", "name": "AP CSP Topic 2.4: Using Programs with Data", "description": "AP CSP Topic 2.4: using programs to process data, cleaning and transforming data, visualizations, and how programs scale to large data sets. 6 exam MCQs plus the Trend Hunter game.", "url": "https://apcsexamprep.com/pages/ap-csp-course-bi2-using-programs-with-data", "educationalLevel": "High School", "learningResourceType": "Lesson", "author": {"@type": "Person", "name": "Tanner Crow"}, "isPartOf": {"@type": "Course", "name": "AP Computer Science Principles Complete Course", "url": "https://apcsexamprep.com/pages/ap-csp-course"}, "datePublished": "2026-03-01"}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why does data need to be cleaned before a program analyzes it?", "acceptedAnswer": {"@type": "Answer", "text": "Raw data usually contains incomplete, duplicate, or invalid records and inconsistent formats. If you analyze it as is, the program computes a wrong answer: duplicates inflate counts, blanks distort averages, and mixed formats break sorting and grouping. Cleaning makes the data usable and consistent so the insight is valid."}}, {"@type": "Question", "name": "What is the difference between removing records and transforming data?", "acceptedAnswer": {"@type": "Answer", "text": "Removing records deletes rows that should not be counted, such as duplicates, blanks, or impossible values. Transforming, or standardizing, changes the form of the values that stay, such as writing every date the same way or converting units, so they can be compared. Both are cleaning, but one drops data and the other reformats it."}}, {"@type": "Question", "name": "How do I know which visualization to use?", "acceptedAnswer": {"@type": "Answer", "text": "Start from the question. Change over time fits a line graph, comparing a few categories fits a bar chart, geographic patterns fit a map, and a relationship between two numeric variables fits a scatter plot. The right choice is the one that makes the pattern the question asks about easy to see."}}, {"@type": "Question", "name": "Can a visualization be misleading even if the data is real?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. A vertical axis that does not start at zero can exaggerate a tiny difference, a cherry-picked time range can hide a trend, and a chart can imply a cause that the data only shows as a correlation. Always check the axes, the source data, and whether the claim matches what the chart actually shows."}}, {"@type": "Question", "name": "How does this topic connect to the Create Performance Task?", "acceptedAnswer": {"@type": "Answer", "text": "A very common Create Task program stores data in a list and uses a student-developed procedure to process it, such as filtering or summarizing the elements. That is the same 'process data to gain insight' idea from this lesson, so practicing it here prepares you for both the task and the multiple-choice questions."}}]}</script>
+
+<div class="lesson-page" data-course="ap-csp" data-unit="bi-2" data-lesson="using-programs-with-data">
+
+  <div class="lesson-breadcrumb">
+    <div class="lesson-breadcrumb-inner">
+      <a href="/pages/ap-csp-course">AP CSP Course</a><span class="bc-sep">›</span>
+      <a href="/pages/ap-csp-course-big-idea-2-data">Big Idea 2</a><span class="bc-sep">›</span>
+      <span>2.4 Using Programs with Data</span>
+    </div>
+  </div>
+  <div class="social-proof-bar">
+    <div class="social-proof-inner">
+      <span class="social-proof-item">⭐ <strong>5.0</strong> Wyzant rating</span>
+      <span class="social-proof-item">📚 <strong>1,845+</strong> tutoring hours</span>
+      <span class="social-proof-item">🏫 Built by an <strong>AP CS teacher</strong> with 11+ years experience</span>
+      <span class="social-proof-item">🎯 <strong>70%</strong> of classroom students score 4 or 5 on AP CSP</span>
+    </div>
+  </div>
+  <div class="lesson-hero">
+    <div class="lesson-hero-inner">
+      <div class="lesson-hero-meta">
+        <div class="lesson-num-badge">2.4</div>
+        <div><div class="lesson-eyebrow">Big Idea 2 • Data</div></div>
+      </div>
+      <h1>Using Programs with Data</h1>
+      <div class="lesson-hero-pills">
+        <span class="lesson-pill">🕐 ~30 min</span>
+        <span class="lesson-pill" style="background:rgba(74,222,128,0.15);border-color:rgba(74,222,128,0.3);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;">FREE</span>
+        <span class="lesson-pill">📖 6 MCQ questions</span>
+        <span class="lesson-pill">🎮 Trend Hunter game</span>
+        <span class="ced-tag">DAT-2.E / DAT-2.F / DAT-2.G</span>
+      </div>
+    </div>
+  </div>
+  <div class="bi3-progress"><div class="bi3-progress-inner">
+<a href="/pages/ap-csp-course-bi2-binary-numbers" class="prog-step-link"><div class="prog-dot done">2.1</div>
+<div class="prog-label">Binary</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi2-data-compression" class="prog-step-link"><div class="prog-dot done">2.2</div>
+<div class="prog-label">Compress</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi2-extracting-information" class="prog-step-link"><div class="prog-dot done">2.3</div>
+<div class="prog-label">Extract</div></a>
+<div class="prog-arrow"></div>
+<div class="prog-step">
+<div class="prog-dot active">2.4</div>
+<div class="prog-label active-label">Programs</div>
+</div>
+</div></div>
+
+  <div class="lesson-main">
+
+    <div class="lesson-objectives">
+      <h2>After this lesson, you will be able to:</h2>
+      <ul>
+        <li><span>Explain how programs process large data sets to gain insight and knowledge</span></li>
+        <li><span>Describe why data must be cleaned and give examples of cleaning steps</span></li>
+        <li><span>Distinguish transforming and standardizing data from removing bad records</span></li>
+        <li><span>Choose a data visualization that fits the question being asked</span></li>
+        <li><span>Judge whether a claim is actually supported by the data behind a visualization</span></li>
+      </ul>
+    </div>
+    <div class="score-impact">📈 <span>Big Idea 2 (Data) is 17 to 22 percent of the AP CSP exam, the largest single Big Idea. Questions on cleaning data, choosing visualizations, and deciding whether a claim is supported are frequent and predictable points, and the skill of processing a list with a program is exactly what the Create Performance Task asks you to demonstrate.</span>
+</div>
+    <div class="hook-box">
+      <div class="hook-label">💡 Think about this first</div>
+      <p>A city posts a spreadsheet of 2 million bike-share trips. Half the rows have the date written three different ways, some riders appear twice, and a few trips claim to last 40 hours. You want to answer one question: which hour of the day is busiest? You cannot read 2 million rows by hand. What does a program have to do to that messy pile before any chart you make can be trusted?</p>
+    </div>
+    <div class="lesson-section">
+      <h2>Why We Point Programs at Data</h2>
+      <p>The core idea of this topic is simple and heavily tested: <strong>programs are used to process data in order to gain insight and knowledge</strong>. A person can eyeball a list of ten numbers, but real data sets have thousands or millions of records. A program can <strong>filter</strong> (keep only the rows that match a condition), <strong>aggregate</strong> (count, sum, or average groups of rows), <strong>transform</strong> (change each value into a new form), and <strong>combine</strong> data from more than one source, and it can do all of that in seconds.</p>
+      <p>This ability to run operations over huge collections quickly is what makes programs valuable for data. The insight is not in the raw rows; it appears only after the program has organized, summarized, or filtered them. When a question asks what a program contributes to working with data, the answer is that it <strong>finds patterns and produces information a human could not extract by hand at that scale</strong>.</p>
+      <div class="callout-exam">
+        <div class="callout-exam-label">🎯 What the exam rewards</div>
+        <p>Tie every data operation back to a <strong>question</strong>. Programs process data to answer something specific. "Count trips per hour to find the busiest hour" is a purpose; "run some code on the data" is not. Strong answers name the operation (filter, aggregate, transform, combine) and the insight it produces.</p>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Clean First, Then Analyze</h2>
+      <p>Raw data is almost never ready to use. Before a program can produce a trustworthy result, the data usually has to be <strong>cleaned</strong>. Cleaning covers two different jobs, and the exam expects you to tell them apart:</p>
+      <ul>
+        <li>
+<strong>Removing bad records:</strong> deleting rows that are incomplete (missing values), duplicated (the same record twice), or invalid (a trip that lasts 40 hours, an age of 900).</li>
+        <li>
+<strong>Transforming and standardizing:</strong> putting values into one consistent format so they can be compared, such as writing every date as YYYY-MM-DD, converting all distances to the same unit, or making all text the same capitalization.</li>
+      </ul>
+      <p>Both jobs make the data <strong>usable and consistent</strong>. If you skip cleaning, the program will happily compute a wrong answer: duplicate riders inflate the count, mixed date formats break the sorting, and a stray 40-hour trip wrecks the average. Cleaning is not optional polish; it is what makes the later insight valid.</p>
+      <table class="vocab-table">
+        <tr>
+<th>Messy data problem</th>
+<th>Cleaning step that fixes it</th>
+</tr>
+        <tr>
+<td>Dates stored as 03/04/25, March 4 2025, and 2025-03-04</td>
+<td>Transform every date into one standard format so they sort and group correctly</td>
+</tr>
+        <tr>
+<td>The same customer appears in three rows</td>
+<td>Remove duplicate records so counts are not inflated</td>
+</tr>
+        <tr>
+<td>Some rows have a blank price field</td>
+<td>Remove or flag incomplete records so averages are not distorted</td>
+</tr>
+        <tr>
+<td>City names as "boston", "Boston", and "BOSTON"</td>
+<td>Standardize capitalization so the three are treated as one city</td>
+</tr>
+        <tr>
+<td>A recorded age of 900 years</td>
+<td>Remove or correct invalid records that fall outside a possible range</td>
+</tr>
+      </table>
+      <div class="mini-ex">
+        <div class="mini-ex-label">Quick check</div>
+        <div class="mini-ex-q">A data set lists temperatures where some rows are in Celsius and others in Fahrenheit, with no label. Before a program can compute a meaningful average, the most important cleaning step is to:</div>
+        <div class="mini-opts" id="mc-progdata-1-opts">
+          <button class="mini-opt" onclick="miniMCQ('mc-progdata-1','A','C','mc-progdata-1-fb')"><span class="mini-opt-letter">A</span> Delete every row, since the data is unusable</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-progdata-1','B','C','mc-progdata-1-fb')"><span class="mini-opt-letter">B</span> Sort the rows from lowest to highest number</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-progdata-1','C','C','mc-progdata-1-fb')"><span class="mini-opt-letter">C</span> Transform all temperatures into a single consistent unit</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-progdata-1','D','C','mc-progdata-1-fb')"><span class="mini-opt-letter">D</span> Round every value to the nearest whole number</button>
+        </div>
+        <div class="mini-fb" id="mc-progdata-1-fb"></div>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Classify, Filter, and Combine at Scale</h2>
+      <p>Once data is clean, programs do the heavy lifting a person cannot. They <strong>classify</strong> records into groups, <strong>filter</strong> out the rows that do not matter, and <strong>combine</strong> data from separate sources to answer richer questions. The key property is <strong>scalability</strong>: the same program that handles 100 rows handles 100 million rows, so insights that would take a human lifetimes appear almost instantly.</p>
+      <p>Scale is also why <strong>efficiency</strong> matters. A slow program that works on a small sample may be unusable on the full data set. The framework connects the size of the data to the need for programs that process it efficiently, because "it works on the test file" is not the same as "it finishes on the real one."</p>
+      <div class="callout-trap">
+        <div class="callout-trap-label">⚠ Common trap</div>
+        <p>Do not assume more data always means a better answer. A larger data set only helps if it is <strong>cleaned and relevant to the question</strong>. Ten million rows full of duplicates and invalid values will mislead a program faster than a hundred clean rows. Size supports a claim only when the data actually measures what the claim is about.</p>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Visualizations: The Right Chart for the Question</h2>
+      <p>After a program processes data, a <strong>data visualization</strong> (a chart, table, graph, or map) communicates the pattern to people. Visualizations make trends and outliers visible and can <strong>support or challenge a hypothesis</strong>. But the right visualization depends entirely on the question you are asking, and the wrong one can hide the pattern or mislead the reader.</p>
+      <table class="vocab-table">
+        <tr>
+<th>Question you are asking</th>
+<th>Visualization that fits</th>
+</tr>
+        <tr>
+<td>How has a value changed over time?</td>
+<td>A line graph, with time on the horizontal axis</td>
+</tr>
+        <tr>
+<td>How do a few categories compare in size?</td>
+<td>A bar chart comparing the categories</td>
+</tr>
+        <tr>
+<td>Where do events happen geographically?</td>
+<td>A map with the locations plotted</td>
+</tr>
+        <tr>
+<td>Is there a relationship between two numeric variables?</td>
+<td>A scatter plot of one variable against the other</td>
+</tr>
+      </table>
+      <p>A visualization can also <strong>mislead</strong>, sometimes by accident and sometimes on purpose: a bar chart whose vertical axis starts at 90 instead of 0 makes a tiny difference look huge, and a chart built from uncleaned data shows a pattern that is not real. Reading a visualization critically means asking what the axes show, what data it came from, and whether the picture actually supports the claim being made about it.</p>
+      <div class="callout-exam">
+        <div class="callout-exam-label">🎯 What the exam rewards</div>
+        <p>Any conclusion drawn from data must be <strong>supported by that data</strong>. If a visualization shows sales rising and someone claims a specific ad campaign caused it, the exam wants you to notice that the chart shows a trend, not a cause. Match the strength of the claim to what the data can actually show.</p>
+      </div>
+      <div class="mini-ex">
+        <div class="mini-ex-label">Quick check</div>
+        <div class="mini-ex-q">You want to show how a store's monthly revenue changed across the twelve months of one year. Which visualization best fits that question?</div>
+        <div class="mini-opts" id="mc-progdata-2-opts">
+          <button class="mini-opt" onclick="miniMCQ('mc-progdata-2','A','B','mc-progdata-2-fb')"><span class="mini-opt-letter">A</span> A map of the store's location</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-progdata-2','B','B','mc-progdata-2-fb')"><span class="mini-opt-letter">B</span> A line graph with months on the horizontal axis</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-progdata-2','C','B','mc-progdata-2-fb')"><span class="mini-opt-letter">C</span> A single number showing the yearly total</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-progdata-2','D','B','mc-progdata-2-fb')"><span class="mini-opt-letter">D</span> A scatter plot of revenue against store size</button>
+        </div>
+        <div class="mini-fb" id="mc-progdata-2-fb"></div>
+      </div>
+    </div>
+    <div class="lesson-visual">
+      <p class="lv-kicker">💡 See it in action</p>
+    <div class="ba" role="figure" aria-label="Cleaning data before use: Austin / austin / AUSTIN, " n becomes austin removed>
+      <p class="ba-cap-top">📈 Cleaning data before use</p>
+      <div class="ba-grid">
+        <div class="ba-panel before">
+<div class="ba-label">Raw</div>
+<div class="ba-data">Austin / austin / AUSTIN, "N/A", 72F</div>
+<div class="ba-meta">inconsistent, errors, duplicates</div>
+</div>
+        <div class="ba-arrow" aria-hidden="true">→</div>
+        <div class="ba-panel after">
+<div class="ba-label">Cleaned</div>
+<div class="ba-data">Austin, (missing removed), 72</div>
+<div class="ba-meta">standardized and usable</div>
+</div>
+      </div>
+      <p class="ba-caption">A program cleans data by standardizing formats and removing errors and duplicates. <strong>Clean data in, trustworthy insight out.</strong></p>
+    </div>
+    </div>
+    <div class="lesson-section">
+      <h2>How This Shows Up on the Create Performance Task</h2>
+      <p>The Create Performance Task is completed <strong>individually</strong>, and a very common design is a program that <strong>processes a list of data</strong>. You are expected to include a list that stores several elements and a <strong>student-developed procedure</strong> that does meaningful work on that list, such as filtering it, counting matches, or computing a summary. That is exactly the data processing this lesson describes: your procedure loops over the collection and produces a result, which is the "gain insight from data" idea in miniature.</p>
+      <p>The same concepts score on the multiple-choice section. Questions about which cleaning step fixes a described problem, which visualization fits a question, and whether a claim is supported by the data are frequent, so the vocabulary here (clean, transform, standardize, filter, aggregate, visualization, supported claim, scalability) pays off on both parts of the exam.</p>
+    </div>
+    <div class="email-capture">
+      <div class="email-capture-text">
+        <div class="email-capture-eyebrow">FREE for students</div>
+        <h3>Get a free AP CSP question every day</h3>
+        <p>Join 3,000+ students. Daily practice, study tips, and exam strategies.</p>
+      </div>
+      <div>
+        <div class="email-capture-form" id="capture-form">
+          <input type="email" class="email-capture-input" id="capture-email" placeholder="your@email.com">
+          <button class="email-capture-btn" onclick="handleCapture()">Subscribe →</button>
+        </div>
+        <div class="email-capture-success" id="capture-success">✓ You're in!</div>
+      </div>
+    </div>
+    <div class="mcq-section">
+      <div class="mcq-section-header">
+        <div class="mcq-section-icon">📈</div>
+        <div>
+          <div class="mcq-section-title">MCQ Practice</div>
+          <div class="mcq-section-sub">6 questions • Exam difficulty and above • Predict before you peek</div>
+        </div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q1">
+        <div class="mcq-q-num">Question 1 of 6<span class="diff-tag">Concept</span>
+</div>
+        <div class="predict-note">Predict what a program adds to a large data set before reading the options.</div>
+        <div class="mcq-q-text"><p>A researcher has a data set of 5 million weather readings and wants to know the average temperature for each month. Which statement best describes why a program is used for this task?</p></div>
+        <div class="mcq-options" id="q1-options">
+<button class="mcq-option" onclick="checkMCQ('q1','A','D','q1-fb-A')"><span class="mcq-option-letter">A</span> A program guarantees the readings were measured correctly by the sensors</button>
+<button class="mcq-option" onclick="checkMCQ('q1','B','D','q1-fb-B')"><span class="mcq-option-letter">B</span> A program makes the data set smaller so it fits on the screen</button>
+<button class="mcq-option" onclick="checkMCQ('q1','C','D','q1-fb-C')"><span class="mcq-option-letter">C</span> A program removes the need to decide what question is being asked</button>
+<button class="mcq-option" onclick="checkMCQ('q1','D','D','q1-fb-D')"><span class="mcq-option-letter">D</span> A program can aggregate the readings into monthly averages far faster than a person could by hand</button>
+</div>
+<div id="q1-fb-A" class="mcq-feedback incorrect-fb">Incorrect. A program cannot verify how the physical measurements were taken; it processes the values it is given.</div>
+<div id="q1-fb-B" class="mcq-feedback incorrect-fb">Incorrect. Producing an average is not about shrinking the data to fit a screen; it is about summarizing to answer a question.</div>
+<div id="q1-fb-C" class="mcq-feedback incorrect-fb">Incorrect. A program still needs a question to answer. Choosing the question is the human's job, not something the program removes.</div>
+<div id="q1-fb-D" class="mcq-feedback correct-fb">Correct. Programs process data to gain insight, here by aggregating millions of readings into monthly averages at a scale no person could match.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q2">
+        <div class="mcq-q-num">Question 2 of 6<span class="diff-tag">Data cleaning scenario</span>
+</div>
+        <div class="predict-note">Name the cleaning problem before matching it to a fix.</div>
+        <div class="mcq-q-text"><p>A store combines two customer files. Some customers appear in both files, several rows have a blank email field, and the join date is written as 1/2/25 in one file and 2025-01-02 in the other. To get a trustworthy count of unique customers per join date, which combination of cleaning steps is most appropriate?</p></div>
+        <div class="mcq-options" id="q2-options">
+<button class="mcq-option" onclick="checkMCQ('q2','A','A','q2-fb-A')"><span class="mcq-option-letter">A</span> Remove duplicate customers and standardize the date format so dates group correctly</button>
+<button class="mcq-option" onclick="checkMCQ('q2','B','A','q2-fb-B')"><span class="mcq-option-letter">B</span> Sort the rows alphabetically and compute the count</button>
+<button class="mcq-option" onclick="checkMCQ('q2','C','A','q2-fb-C')"><span class="mcq-option-letter">C</span> Delete the email column and leave everything else unchanged</button>
+<button class="mcq-option" onclick="checkMCQ('q2','D','A','q2-fb-D')"><span class="mcq-option-letter">D</span> Round the dates to the nearest month and keep all rows</button>
+</div>
+<div id="q2-fb-A" class="mcq-feedback correct-fb">Correct. Removing duplicates prevents an inflated count, and standardizing the date format lets the same day group together instead of splitting across formats.</div>
+<div id="q2-fb-B" class="mcq-feedback incorrect-fb">Incorrect. Sorting does not remove the duplicates or reconcile the two date formats, so the count would still be wrong.</div>
+<div id="q2-fb-C" class="mcq-feedback incorrect-fb">Incorrect. Dropping the email column ignores the real problems: duplicate customers and inconsistent dates both still corrupt the count.</div>
+<div id="q2-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Rounding to the nearest month loses the join date detail and does nothing about the duplicate customers.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q3">
+        <div class="mcq-q-num">Question 3 of 6<span class="diff-tag">II and III only style</span>
+</div>
+        <div class="predict-note">Decide which statements are true before matching to an option.</div>
+        <div class="mcq-q-text"><p>Consider these claims about cleaning a data set before analysis:</p></div>
+        <ul class="mcq-roman">
+          <li>
+<strong>I.</strong> Cleaning always means the data set becomes larger and more detailed.</li>
+          <li>
+<strong>II.</strong> Standardizing formats, such as writing all dates the same way, lets a program compare and group records correctly.</li>
+          <li>
+<strong>III.</strong> Removing incomplete, duplicate, or invalid records helps prevent misleading results.</li>
+        </ul>
+        <div class="mcq-options" id="q3-options">
+<button class="mcq-option" onclick="checkMCQ('q3','A','A','q3-fb-A')"><span class="mcq-option-letter">A</span> II and III only</button>
+<button class="mcq-option" onclick="checkMCQ('q3','B','A','q3-fb-B')"><span class="mcq-option-letter">B</span> I and II only</button>
+<button class="mcq-option" onclick="checkMCQ('q3','C','A','q3-fb-C')"><span class="mcq-option-letter">C</span> I and III only</button>
+<button class="mcq-option" onclick="checkMCQ('q3','D','A','q3-fb-D')"><span class="mcq-option-letter">D</span> I, II, and III</button>
+</div>
+<div id="q3-fb-A" class="mcq-feedback correct-fb">Correct. Standardizing formats (II) and removing bad records (III) are both cleaning steps. I is false because cleaning frequently shrinks the data set.</div>
+<div id="q3-fb-B" class="mcq-feedback incorrect-fb">Incorrect. Statement I is false. Cleaning often removes records, so the data set does not always grow.</div>
+<div id="q3-fb-C" class="mcq-feedback incorrect-fb">Incorrect. Statement I is false, and statement II is true, so this pairing cannot be right.</div>
+<div id="q3-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Statement I is false, so not all three can be correct.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q4">
+        <div class="mcq-q-num">Question 4 of 6<span class="diff-tag">Does the visualization support the claim</span>
+</div>
+        <div class="predict-note">Decide what the chart can and cannot prove before you read the choices.</div>
+        <div class="mcq-q-text"><p>A blog shows a line graph of a company's website visits rising steadily over six months. The caption claims, "Our new logo caused visits to grow." Which criticism of this claim is most valid?</p></div>
+        <div class="mcq-options" id="q4-options">
+<button class="mcq-option" onclick="checkMCQ('q4','A','C','q4-fb-A')"><span class="mcq-option-letter">A</span> A line graph can never be used to show change over time</button>
+<button class="mcq-option" onclick="checkMCQ('q4','B','C','q4-fb-B')"><span class="mcq-option-letter">B</span> The claim is fine because the line goes up, which proves the logo worked</button>
+<button class="mcq-option" onclick="checkMCQ('q4','C','C','q4-fb-C')"><span class="mcq-option-letter">C</span> The graph shows visits increased, but it does not show that the logo, rather than some other factor, caused the increase</button>
+<button class="mcq-option" onclick="checkMCQ('q4','D','C','q4-fb-D')"><span class="mcq-option-letter">D</span> The claim would only be valid if the data set were smaller</button>
+</div>
+<div id="q4-fb-A" class="mcq-feedback incorrect-fb">Incorrect. A line graph is an appropriate choice for change over time; that is not the flaw.</div>
+<div id="q4-fb-B" class="mcq-feedback incorrect-fb">Incorrect. An upward line shows a trend, not a cause. Concluding the logo caused it goes beyond what the data supports.</div>
+<div id="q4-fb-C" class="mcq-feedback correct-fb">Correct. The visualization supports that visits rose, but a rising trend is not evidence of cause. Other factors could explain the growth, so the causal claim is unsupported.</div>
+<div id="q4-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Shrinking the data set would weaken evidence, not fix the problem. The issue is claiming cause from a trend.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q5">
+        <div class="mcq-q-num">Question 5 of 6<span class="diff-tag">Choose the visualization</span>
+</div>
+        <div class="predict-note">Match the question to a chart type before looking.</div>
+        <div class="mcq-q-text"><p>An analyst wants to know whether students who spend more hours studying tend to score higher on a test, using data for 500 students. Which visualization most directly reveals the relationship between the two numeric variables?</p></div>
+        <div class="mcq-options" id="q5-options">
+<button class="mcq-option" onclick="checkMCQ('q5','A','C','q5-fb-A')"><span class="mcq-option-letter">A</span> A map of where each student lives</button>
+<button class="mcq-option" onclick="checkMCQ('q5','B','C','q5-fb-B')"><span class="mcq-option-letter">B</span> A single bar showing the average test score</button>
+<button class="mcq-option" onclick="checkMCQ('q5','C','C','q5-fb-C')"><span class="mcq-option-letter">C</span> A scatter plot of study hours against test score</button>
+<button class="mcq-option" onclick="checkMCQ('q5','D','C','q5-fb-D')"><span class="mcq-option-letter">D</span> A table listing all 500 students in the order they enrolled</button>
+</div>
+<div id="q5-fb-A" class="mcq-feedback incorrect-fb">Incorrect. A map answers a location question, not whether two numeric variables are related.</div>
+<div id="q5-fb-B" class="mcq-feedback incorrect-fb">Incorrect. A single average hides the relationship between the two variables entirely.</div>
+<div id="q5-fb-C" class="mcq-feedback correct-fb">Correct. A scatter plot of one numeric variable against another is built to reveal whether a relationship exists, such as higher study hours pairing with higher scores.</div>
+<div id="q5-fb-D" class="mcq-feedback incorrect-fb">Incorrect. An unsorted table of 500 rows does not make the relationship visible; that is exactly the pattern a visualization should surface.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q6">
+        <div class="mcq-q-num">Question 6 of 6<span class="diff-tag">Scalability application</span>
+</div>
+        <div class="predict-note">Predict why the sample worked but the full data set did not.</div>
+        <div class="mcq-q-text"><p>A program that flags fraudulent transactions runs in a second on a test file of 1,000 records but takes several days on the real file of 2 billion records, making it useless in practice. Which conclusion is best supported?</p></div>
+        <div class="mcq-options" id="q6-options">
+<button class="mcq-option" onclick="checkMCQ('q6','A','B','q6-fb-A')"><span class="mcq-option-letter">A</span> The program produces incorrect results on small data sets</button>
+<button class="mcq-option" onclick="checkMCQ('q6','B','B','q6-fb-B')"><span class="mcq-option-letter">B</span> The program is not efficient enough to scale to the size of the real data set</button>
+<button class="mcq-option" onclick="checkMCQ('q6','C','B','q6-fb-C')"><span class="mcq-option-letter">C</span> The real data set must contain invalid records that cannot be cleaned</button>
+<button class="mcq-option" onclick="checkMCQ('q6','D','B','q6-fb-D')"><span class="mcq-option-letter">D</span> Large data sets should always be reduced to 1,000 records before processing</button>
+</div>
+<div id="q6-fb-A" class="mcq-feedback incorrect-fb">Incorrect. It ran correctly on the small file in a second; the issue appears only at scale.</div>
+<div id="q6-fb-B" class="mcq-feedback correct-fb">Correct. A program that is fast on a sample but too slow on the full data set is not scalable. Larger data sets demand more efficient programs.</div>
+<div id="q6-fb-C" class="mcq-feedback incorrect-fb">Incorrect. Nothing here points to invalid records. The described problem is running time, not data quality.</div>
+<div id="q6-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Throwing away most of the data to make it fast would discard the very records the analysis needs; the fix is a more efficient program.</div>
+      </div>
+    </div>
+    <div class="game-section">
+      <div style="text-align:center;margin-bottom:20px;">
+        <div class="game-badge">🎮 Lesson Game</div>
+        <div class="game-title">Trend Hunter</div>
+        <div class="game-sub">Turn cleaned data into a claim, a visualization, and a defensible conclusion.</div>
+      </div>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+
+  #th-game{font-family:"DM Sans",sans-serif!important;max-width:560px;margin:0 auto;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;box-sizing:border-box;padding:0 4px;}
+  #th-game *{box-sizing:border-box;}
+  #th-game .th-card{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:14px!important;overflow:hidden;}
+  #th-game .th-hero{background:#0f1f3d!important;padding:18px 20px;}
+  #th-game .th-title{font-family:"DM Serif Display",serif!important;font-size:26px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1.1;margin:0;}
+  #th-game .th-sub{font-size:13px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin-top:6px;font-weight:500;}
+  #th-game .th-how{font-size:12px!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;margin-top:8px;}
+
+  #th-game .th-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 18px;background:#eff6ff!important;border-bottom:1px solid #e2e8f0;flex-wrap:wrap;}
+  #th-game .th-stat{font-size:13px!important;font-weight:700;color:#334155!important;-webkit-text-fill-color:#334155!important;}
+  #th-game .th-stat b{color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;font-size:15px!important;}
+  #th-game .th-stat.amb b{color:#d97706!important;-webkit-text-fill-color:#d97706!important;}
+  #th-game .th-stat.grn b{color:#16a34a!important;-webkit-text-fill-color:#16a34a!important;}
+
+  #th-game .th-body{padding:18px;}
+  #th-game .th-q{font-size:16px!important;font-weight:700;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.4;margin:0 0 4px;}
+  #th-game .th-ctx{font-size:13px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;line-height:1.5;margin:0 0 14px;}
+
+  #th-game .th-chart{background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:16px 14px 10px;margin-bottom:16px;}
+  #th-game .th-chart .th-cap{font-size:12px!important;font-weight:700;color:#475569!important;-webkit-text-fill-color:#475569!important;text-align:center;margin-bottom:12px;}
+  #th-game .th-bars{display:flex;align-items:flex-end;justify-content:space-around;gap:6px;height:150px;}
+  #th-game .th-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px;}
+  #th-game .th-colbar{width:100%;max-width:34px;background:#1a56db!important;border-radius:6px 6px 0 0;transition:height .4s ease;}
+  #th-game .th-col.hl .th-colbar{background:#d97706!important;}
+  #th-game .th-collab{font-size:10px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-weight:600;text-align:center;line-height:1.1;}
+  #th-game .th-colval{font-size:10px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;font-weight:700;}
+  #th-game svg{display:block;width:100%;height:auto;}
+
+  #th-game .th-opts{display:flex;flex-direction:column;gap:10px;}
+  #th-game .th-opt{width:100%;text-align:left;padding:13px 15px;border:1px solid #e2e8f0!important;border-radius:12px!important;background:#fff!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;font-family:inherit;font-size:14px!important;font-weight:600;cursor:pointer;transition:border-color .15s,background .15s;line-height:1.4;}
+  #th-game .th-opt:hover:not(:disabled){border-color:#1a56db!important;background:#eff6ff!important;}
+  #th-game .th-opt:disabled{cursor:default;}
+  #th-game .th-opt.correct{border-color:#16a34a!important;background:#f0fdf4!important;color:#166534!important;-webkit-text-fill-color:#166534!important;}
+  #th-game .th-opt.wrong{border-color:#dc2626!important;background:#fef2f2!important;color:#991b1b!important;-webkit-text-fill-color:#991b1b!important;}
+
+  #th-game .th-fb{margin-top:14px;padding:13px 15px;border-radius:12px!important;font-size:13px!important;line-height:1.5;display:none;}
+  #th-game .th-fb.show{display:block;}
+  #th-game .th-fb.good{background:#f0fdf4!important;border:1px solid #bbf7d0!important;color:#166534!important;-webkit-text-fill-color:#166534!important;}
+  #th-game .th-fb.bad{background:#fef2f2!important;border:1px solid #fecaca!important;color:#991b1b!important;-webkit-text-fill-color:#991b1b!important;}
+  #th-game .th-fb b{color:inherit!important;-webkit-text-fill-color:inherit!important;}
+
+  #th-game .th-next{margin-top:14px;width:100%;padding:13px;border:none;border-radius:12px!important;background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:inherit;font-size:15px!important;font-weight:700;cursor:pointer;display:none;}
+  #th-game .th-next.show{display:block;}
+
+  #th-game .th-end{text-align:center;padding:26px 20px;}
+  #th-game .th-endt{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin:0 0 6px;}
+  #th-game .th-endscore{font-size:15px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;margin-bottom:6px;font-weight:600;}
+  #th-game .th-endscore b{color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;font-size:20px!important;}
+  #th-game .th-endmsg{font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;line-height:1.6;margin:12px auto 18px;max-width:400px;}
+  #th-game .th-endmsg b{color:#7c3aed!important;-webkit-text-fill-color:#7c3aed!important;}
+  #th-game .th-again{padding:13px 26px;border:none;border-radius:12px!important;background:#16a34a!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-family:inherit;font-size:15px!important;font-weight:700;cursor:pointer;}
+
+  #th-game .th-prog{height:6px;background:#e2e8f0!important;border-radius:100px;overflow:hidden;margin-top:10px;}
+  #th-game .th-progfill{height:100%;background:#1a56db!important;border-radius:100px;transition:width .3s ease;width:0%;}
+</style>
+
+<div class="th-game" id="th-game">
+  <div class="th-card">
+    <div class="th-hero">
+      <h2 class="th-title">Trend Hunter</h2>
+      <div class="th-sub">Extract information from data: spot trends, catch outliers, and tell correlation from causation.</div>
+      <div class="th-how">How to play: read the chart, predict your answer, then pick the best option. Correct answers build your streak for bonus points.</div>
+      <div class="th-prog"><div class="th-progfill" id="th-progfill"></div></div>
+    </div>
+
+    <div class="th-bar">
+      <div class="th-stat">Round <b id="th-round">1</b> / <span id="th-total">7</span>
+</div>
+      <div class="th-stat grn">Score <b id="th-score">0</b>
+</div>
+      <div class="th-stat amb">Streak <b id="th-streak">0</b>
+</div>
+    </div>
+
+    <div class="th-body" id="th-play">
+      <p class="th-q" id="th-qtext"></p>
+      <p class="th-ctx" id="th-qctx"></p>
+      <div class="th-chart" id="th-chart"></div>
+      <div class="th-opts" id="th-opts"></div>
+      <div class="th-fb" id="th-fb"></div>
+      <button class="th-next" id="th-next">Next round ▶</button>
+    </div>
+
+    <div class="th-body th-end" id="th-end" style="display:none;">
+      <h3 class="th-endt" id="th-endt">Data decoded!</h3>
+      <div class="th-endscore">Final score: <b id="th-finalscore">0</b> points</div>
+      <div class="th-endscore" id="th-accuracy"></div>
+      <p class="th-endmsg" id="th-endmsg"></p>
+      <button class="th-again" id="th-again">↻ Play again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+
+  // ---- Chart drawing helpers (no libraries) ----
+  function barChart(cap, data, hlIndex){
+    var max = Math.max.apply(null, data.map(function(d){ return d.v; }));
+    var html = '<div class="th-cap">' + cap + '</div><div class="th-bars">';
+    data.forEach(function(d, i){
+      var h = max > 0 ? Math.round((d.v / max) * 100) : 0;
+      var hl = (hlIndex === i) ? ' hl' : '';
+      html += '<div class="th-col' + hl + '">'
+        + '<div class="th-colval">' + d.v + '</div>'
+        + '<div class="th-colbar" style="height:' + h + '%"></div>'
+        + '<div class="th-collab">' + d.l + '</div></div>';
+    });
+    return html + '</div>';
+  }
+
+  function lineChart(cap, data){
+    var W = 500, H = 170, padL = 34, padR = 14, padT = 12, padB = 26;
+    var vals = data.map(function(d){ return d.v; });
+    var max = Math.max.apply(null, vals), min = Math.min.apply(null, vals);
+    if(max === min){ max = max + 1; min = min - 1; }
+    var iw = W - padL - padR, ih = H - padT - padB;
+    var pts = data.map(function(d, i){
+      var x = padL + (data.length === 1 ? iw / 2 : (i / (data.length - 1)) * iw);
+      var y = padT + ih - ((d.v - min) / (max - min)) * ih;
+      return { x: x, y: y, d: d };
+    });
+    var svg = '<div class="th-cap">' + cap + '</div>';
+    svg += '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + cap + '">';
+    // gridlines
+    for(var g = 0; g <= 3; g++){
+      var gy = padT + (ih / 3) * g;
+      svg += '<line x1="' + padL + '" y1="' + gy + '" x2="' + (W - padR) + '" y2="' + gy + '" stroke="#e2e8f0" stroke-width="1"/>';
+    }
+    // axis
+    svg += '<line x1="' + padL + '" y1="' + padT + '" x2="' + padL + '" y2="' + (padT + ih) + '" stroke="#94a3b8" stroke-width="1"/>';
+    svg += '<line x1="' + padL + '" y1="' + (padT + ih) + '" x2="' + (W - padR) + '" y2="' + (padT + ih) + '" stroke="#94a3b8" stroke-width="1"/>';
+    // path
+    var dstr = pts.map(function(p, i){ return (i === 0 ? 'M' : 'L') + p.x.toFixed(1) + ' ' + p.y.toFixed(1); }).join(' ');
+    svg += '<path d="' + dstr + '" fill="none" stroke="#1a56db" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
+    // points + labels
+    pts.forEach(function(p){
+      svg += '<circle cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="3.5" fill="#1a56db"/>';
+      svg += '<text x="' + p.x.toFixed(1) + '" y="' + (padT + ih + 16) + '" font-size="10" fill="#64748b" text-anchor="middle" font-family="DM Sans, sans-serif">' + p.d.l + '</text>';
+    });
+    svg += '</svg>';
+    return svg;
+  }
+
+  // ---- Round bank ----
+  var ROUNDS = [
+    {
+      type: 'bar',
+      cap: 'Monthly active users (thousands)',
+      data: [{l:'Jan',v:12},{l:'Feb',v:19},{l:'Mar',v:27},{l:'Apr',v:34},{l:'May',v:41},{l:'Jun',v:52}],
+      q: 'What overall trend does this data show?',
+      ctx: 'Look at the shape of the data across all six months before you read the choices.',
+      opts: [
+        {t:'A steady increasing trend', ok:true},
+        {t:'A steady decreasing trend', ok:false},
+        {t:'A flat, unchanging trend', ok:false},
+        {t:'A repeating seasonal pattern', ok:false}
+      ],
+      fb: 'Each month is higher than the last, so the data shows a clear increasing trend. Reading the pattern is how we extract information from raw data.'
+    },
+    {
+      type: 'bar',
+      cap: 'Daily website load time (seconds)',
+      data: [{l:'S1',v:2},{l:'S2',v:2},{l:'S3',v:2},{l:'S4',v:9},{l:'S5',v:2},{l:'S6',v:2}],
+      hl: 3,
+      q: 'Which server reading is the outlier?',
+      ctx: 'An outlier is a value that sits far outside the pattern of the rest.',
+      opts: [
+        {t:'Server 4, at 9 seconds', ok:true},
+        {t:'Server 1, at 2 seconds', ok:false},
+        {t:'Server 6, at 2 seconds', ok:false},
+        {t:'There is no outlier here', ok:false}
+      ],
+      fb: 'Five servers cluster near 2 seconds while Server 4 jumps to 9. That single distant value is the outlier and is worth investigating separately.'
+    },
+    {
+      type: 'line',
+      cap: 'Ice cream sales and shark attacks by month',
+      data: [{l:'Mar',v:10},{l:'May',v:24},{l:'Jul',v:48},{l:'Sep',v:30},{l:'Nov',v:9}],
+      q: 'Ice cream sales and shark attacks rise and fall together. What is the best conclusion?',
+      ctx: 'Two things moving together is a correlation. Ask what else could be driving both.',
+      opts: [
+        {t:'A lurking variable (warm weather) drives both; neither causes the other', ok:true},
+        {t:'Eating ice cream makes people get attacked by sharks', ok:false},
+        {t:'Shark attacks make people crave ice cream', ok:false},
+        {t:'The two must be unrelated because it makes no sense', ok:false}
+      ],
+      fb: 'Correlation is not causation. Summer heat raises both ice cream sales and beach crowds, so a lurking variable explains the link. Neither one causes the other.'
+    },
+    {
+      type: 'line',
+      cap: 'Store foot traffic by quarter over two years',
+      data: [{l:'Q1',v:20},{l:'Q2',v:35},{l:'Q3',v:48},{l:'Q4',v:22},{l:'Q1',v:21},{l:'Q2',v:36},{l:'Q3',v:49},{l:'Q4',v:23}],
+      q: 'What trend best describes this data?',
+      ctx: 'Notice how the values move within each year and then repeat.',
+      opts: [
+        {t:'A seasonal pattern that repeats each year', ok:true},
+        {t:'A steady long term increase', ok:false},
+        {t:'A steady long term decrease', ok:false},
+        {t:'Completely random with no pattern', ok:false}
+      ],
+      fb: 'The rise-then-drop shape repeats almost identically across both years. That regular, calendar-driven cycle is a seasonal pattern.'
+    },
+    {
+      type: 'bar',
+      cap: 'Test scores across a class of students',
+      data: [{l:'A',v:84},{l:'B',v:88},{l:'C',v:81},{l:'D',v:12},{l:'E',v:86},{l:'F',v:83}],
+      hl: 3,
+      q: 'Which value should you investigate as a likely outlier or data error?',
+      ctx: 'Metadata matters: an outlier can signal a real event or a bad data entry.',
+      opts: [
+        {t:'Student D at 12, far below the cluster near 85', ok:true},
+        {t:'Student B at 88, the highest score', ok:false},
+        {t:'Student C at 81, slightly below average', ok:false},
+        {t:'Every score is equally normal', ok:false}
+      ],
+      fb: 'Most scores sit in the 80s, so 12 stands out sharply. Outliers like this deserve a second look; it could be a real struggle or a mis-entered score.'
+    },
+    {
+      type: 'line',
+      cap: 'Number of firefighters sent vs. fire damage cost',
+      data: [{l:'Small',v:5},{l:'Med',v:20},{l:'Large',v:45},{l:'Huge',v:80}],
+      q: 'More firefighters at a scene correlates with more fire damage. What is the sound conclusion?',
+      ctx: 'Predict the answer first: does sending help really cause damage?',
+      opts: [
+        {t:'Bigger fires cause both more damage and more firefighters; size is the lurking variable', ok:true},
+        {t:'Sending more firefighters causes more damage', ok:false},
+        {t:'Fire damage causes firefighters to appear', ok:false},
+        {t:'The data proves firefighters should stay home', ok:false}
+      ],
+      fb: 'The fire size drives both numbers. A strong correlation still is not causation; here a lurking variable (how big the fire is) explains the whole pattern.'
+    },
+    {
+      type: 'line',
+      cap: 'App downloads: first read vs. full year of data',
+      data: [{l:'W1',v:40},{l:'W2',v:44},{l:'W3',v:41},{l:'W4',v:60},{l:'W5',v:38},{l:'W6',v:42},{l:'W7',v:39}],
+      hl: null,
+      q: 'Early data looked like steady growth. With more weeks added, what does the fuller picture show?',
+      ctx: 'More data and metadata can change the story an early trend seemed to tell.',
+      opts: [
+        {t:'Mostly flat with a single spike in Week 4, not real growth', ok:true},
+        {t:'A confirmed steady upward trend', ok:false},
+        {t:'A clear seasonal cycle', ok:false},
+        {t:'A steady decline from the start', ok:false}
+      ],
+      fb: 'The Week 4 jump looked like a trend until more data arrived. The values hover around 40 with one spike, showing why more data can change your conclusion.'
+    }
+  ];
+
+  var TOTAL = ROUNDS.length;
+  var order = [], idx = 0, score = 0, streak = 0, correctCount = 0, answered = false;
+
+  function shuffle(a){
+    for(var i = a.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function start(){
+    order = ROUNDS.slice();
+    idx = 0; score = 0; streak = 0; correctCount = 0;
+    $('th-total').textContent = TOTAL;
+    $('th-end').style.display = 'none';
+    $('th-play').style.display = 'block';
+    updateBar();
+    render();
+  }
+
+  function updateBar(){
+    $('th-round').textContent = Math.min(idx + 1, TOTAL);
+    $('th-score').textContent = score;
+    $('th-streak').textContent = streak;
+    $('th-progfill').style.width = Math.round((idx / TOTAL) * 100) + '%';
+  }
+
+  function render(){
+    answered = false;
+    var r = order[idx];
+    $('th-qtext').textContent = r.q;
+    $('th-qctx').textContent = r.ctx;
+    var hl = (typeof r.hl === 'number') ? r.hl : -1;
+    $('th-chart').innerHTML = (r.type === 'bar')
+      ? barChart(r.cap, r.data, hl)
+      : lineChart(r.cap, r.data);
+
+    // animate bars from 0 for a lively feel
+    if(r.type === 'bar'){
+      var bars = $('th-chart').querySelectorAll('.th-colbar');
+      var heights = [];
+      Array.prototype.forEach.call(bars, function(b){ heights.push(b.style.height); b.style.height = '0%'; });
+      setTimeout(function(){ Array.prototype.forEach.call(bars, function(b, i){ b.style.height = heights[i]; }); }, 30);
+    }
+
+    var opts = $('th-opts');
+    opts.innerHTML = '';
+    var shuffled = shuffle(r.opts.map(function(o, i){ return { o:o, i:i }; }));
+    shuffled.forEach(function(entry){
+      var btn = document.createElement('button');
+      btn.className = 'th-opt';
+      btn.type = 'button';
+      btn.textContent = entry.o.t;
+      btn.onclick = function(){ choose(btn, entry.o, r); };
+      opts.appendChild(btn);
+    });
+
+    var fb = $('th-fb'); fb.className = 'th-fb'; fb.textContent = '';
+    $('th-next').className = 'th-next';
+    $('th-next').innerHTML = (idx === TOTAL - 1) ? 'See results ▶' : 'Next round ▶';
+    updateBar();
+  }
+
+  function choose(btn, opt, r){
+    if(answered) return;
+    answered = true;
+    var buttons = $('th-opts').querySelectorAll('.th-opt');
+    Array.prototype.forEach.call(buttons, function(b){
+      b.disabled = true;
+      if(b.textContent === r.opts.filter(function(o){ return o.ok; })[0].t){ b.classList.add('correct'); }
+    });
+    var fb = $('th-fb');
+    if(opt.ok){
+      score += 10 + streak * 5;
+      streak += 1;
+      correctCount += 1;
+      fb.className = 'th-fb show good';
+      fb.innerHTML = '<b>✅ Correct.</b> ' + r.fb;
+    } else {
+      streak = 0;
+      btn.classList.add('wrong');
+      fb.className = 'th-fb show bad';
+      fb.innerHTML = '<b>❌ Not quite.</b> ' + r.fb;
+    }
+    updateBar();
+    var nx = $('th-next');
+    nx.className = 'th-next show';
+  }
+
+  function nextRound(){
+    idx += 1;
+    if(idx >= TOTAL){ end(); return; }
+    render();
+  }
+
+  function end(){
+    $('th-play').style.display = 'none';
+    $('th-end').style.display = 'block';
+    $('th-progfill').style.width = '100%';
+    $('th-round').textContent = TOTAL;
+    $('th-finalscore').textContent = score;
+    $('th-accuracy').textContent = correctCount + ' of ' + TOTAL + ' rounds correct';
+    var msg, title;
+    if(correctCount === TOTAL){
+      title = 'Master data detective!';
+      msg = 'Flawless. You read every trend and never mistook a <b>correlation for causation</b>. Real analysts always ask what lurking variable might be hiding.';
+    } else if(correctCount >= TOTAL - 2){
+      title = 'Sharp analyst!';
+      msg = 'Strong work spotting trends and outliers. Remember: data reveals patterns, but a correlation alone is <b>never proof of causation</b>.';
+    } else {
+      title = 'Keep hunting!';
+      msg = 'Good start. The big idea: data shows patterns and outliers, yet two things moving together does <b>not</b> mean one causes the other. More data or metadata can change the picture.';
+    }
+    $('th-endt').textContent = title;
+    $('th-endmsg').innerHTML = msg;
+    document.dispatchEvent(new CustomEvent('apcsGameScore', { detail: { value: score } }));
+  }
+
+  $('th-next').addEventListener('click', nextRound);
+  $('th-again').addEventListener('click', start);
+
+  start();
+})();
+</script>
+    </div>
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Why does data need to be cleaned before a program analyzes it?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Raw data usually contains incomplete, duplicate, or invalid records and inconsistent formats. If you analyze it as is, the program computes a wrong answer: duplicates inflate counts, blanks distort averages, and mixed formats break sorting and grouping. Cleaning makes the data usable and consistent so the insight is valid.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What is the difference between removing records and transforming data?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Removing records deletes rows that should not be counted, such as duplicates, blanks, or impossible values. Transforming, or standardizing, changes the form of the values that stay, such as writing every date the same way or converting units, so they can be compared. Both are cleaning, but one drops data and the other reformats it.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">How do I know which visualization to use?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Start from the question. Change over time fits a line graph, comparing a few categories fits a bar chart, geographic patterns fit a map, and a relationship between two numeric variables fits a scatter plot. The right choice is the one that makes the pattern the question asks about easy to see.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Can a visualization be misleading even if the data is real?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Yes. A vertical axis that does not start at zero can exaggerate a tiny difference, a cherry-picked time range can hide a trend, and a chart can imply a cause that the data only shows as a correlation. Always check the axes, the source data, and whether the claim matches what the chart actually shows.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">How does this topic connect to the Create Performance Task?<i class="faq-icon">+</i></button>
+        <div class="faq-a">A very common Create Task program stores data in a list and uses a student-developed procedure to process it, such as filtering or summarizing the elements. That is the same 'process data to gain insight' idea from this lesson, so practicing it here prepares you for both the task and the multiple-choice questions.</div>
+      </div>
+    </div>
+    <div class="related-links">
+      <h3>🔗 Continue studying</h3>
+      <div class="related-links-grid">
+        <a href="/pages/ap-csp-course-big-idea-3-algorithms" class="related-link">Big Idea 3: Algorithms and Programming</a>
+        <a href="/pages/ap-csp-create-task-ultimate-guide" class="related-link">Create Task Ultimate Guide</a>
+        <a href="/pages/ap-csp-study-games-hub" class="related-link">All CSP Study Games</a>
+      </div>
+    </div>
+    <div class="superpack-slim">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="superpack-slim-icon">📦</div>
+        <div><div class="superpack-slim-text">AP CSP Teacher Superpack<span class="superpack-slim-sub">Slides, lesson plans, unit tests for all 5 Big Ideas, $249</span>
+</div></div>
+      </div>
+      <a href="/products/ap-csp-teacher-superpack" class="superpack-slim-btn">Get the Superpack →</a>
+    </div>
+    <div class="teacher-callout">
+      <div class="teacher-callout-icon">🏫</div>
+      <div class="teacher-callout-body">
+        <div class="teacher-callout-label">For teachers</div>
+        <p>Data cleaning is the concept students most often underestimate, so make it tangible: hand out a deliberately messy spreadsheet (mixed date formats, duplicate rows, an impossible value) and have students list the cleaning steps before touching a chart. Then have them pick a question, choose the matching visualization, and defend whether their claim is supported. The Superpack includes a messy-data cleaning worksheet, a chart-selection reference, and a 'misleading graph' spotting activity. <a href="/products/ap-csp-teacher-superpack">View what's included →</a></p>
+      </div>
+    </div>
+    <div class="lesson-nav">
+      <a href="/pages/ap-csp-course-bi2-extracting-information" class="nav-card">
+        <div class="nav-card-dir">← Previous</div>
+        <div class="nav-card-title">2.3 Extracting Information from Data</div>
+      </a>
+      <a href="/pages/ap-csp-course-big-idea-3-algorithms" class="nav-card next">
+        <div class="nav-card-dir">Next lesson →</div>
+        <div class="nav-card-title">Big Idea 3: Algorithms and Programming</div>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var MINI_MSGS={"mc-progdata-1": {"A": "Too drastic. The data is recoverable. The values are real; they are just recorded in mixed units, which cleaning can fix.", "B": "No. Sorting mixed-unit numbers is meaningless, because a 30 in Celsius is hotter than a 40 in Fahrenheit. You must standardize units first.", "C": "Correct. Transforming every temperature into one consistent unit is a standardization step that makes the values comparable before any average is computed.", "D": "Rounding does not fix the real problem. Values in different units still cannot be averaged together no matter how they are rounded."}, "mc-progdata-2": {"A": "A map answers a 'where' question. Here the question is about change over time, so a map does not fit.", "B": "Correct. Change over time is best shown by a line graph with time on the horizontal axis, which makes the month-to-month trend visible.", "C": "A single total hides the pattern. The question is how revenue changed month to month, which one number cannot show.", "D": "A scatter plot compares two numeric variables. The question is about a trend over time, not a relationship with store size."}};
+var MINI_FIB={};
+
+function _activity(d){
+  try{ var w=document.querySelector('.lesson-page');
+    if(w){ d.course=w.getAttribute('data-course'); d.unit=w.getAttribute('data-unit'); d.lesson=w.getAttribute('data-lesson'); }
+    document.dispatchEvent(new CustomEvent('apcsActivity',{detail:d}));
+  }catch(e){}
+}
+function checkMCQ(qid, chosen, correct, fbId){
+  var opts=document.querySelectorAll('#'+qid+'-options .mcq-option');
+  opts.forEach(function(b){b.disabled=true;b.onclick=null;});
+  var letters=['A','B','C','D'];
+  opts[letters.indexOf(chosen)].classList.add(chosen===correct?'correct':'incorrect');
+  if(chosen!==correct)opts[letters.indexOf(correct)].classList.add('revealed-correct');
+  document.getElementById(fbId).classList.add('show');
+  _activity({activity:'quiz',item:qid,choice:chosen});
+}
+function miniMCQ(id, chosen, correct, fbId){
+  var opts=document.querySelectorAll('#'+id+'-opts .mini-opt');
+  opts.forEach(function(b){b.onclick=null;b.style.cursor='default';});
+  var letters=['A','B','C','D'];
+  opts[letters.indexOf(chosen)].classList.add(chosen===correct?'correct':'incorrect');
+  if(chosen!==correct)opts[letters.indexOf(correct)].classList.add('reveal');
+  var fb=document.getElementById(fbId);
+  if(MINI_MSGS[id]){fb.textContent=MINI_MSGS[id][chosen]||'';fb.className='mini-fb '+(chosen===correct?'c':'w');}
+}
+function miniFIB(id, fbId){
+  var inp=document.getElementById(id+'-inp'),fb=document.getElementById(fbId);
+  var val=inp.value.trim().toLowerCase();var d=MINI_FIB[id];
+  var ok=(val===String(d.correct).toLowerCase());
+  inp.classList.add(ok?'correct':'incorrect');
+  fb.textContent=ok?d.c:d.w; fb.className='mini-fb '+(ok?'c':'w'); inp.disabled=true;
+}
+function toggleFAQ(btn){
+  var item=btn.parentElement,wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(el){el.classList.remove('open');});
+  if(!wasOpen)item.classList.add('open');
+}
+function handleCapture(){
+  var email=document.getElementById('capture-email').value.trim();
+  if(!email||!email.includes('@')){document.getElementById('capture-email').focus();return;}
+  document.getElementById('capture-form').style.display='none';
+  document.getElementById('capture-success').style.display='block';
+  if(typeof window._learnq!=='undefined'){window._learnq.push(['identify',{'$email':email}]);}
+}
+/* Bridge: the embedded topic game dispatches 'apcsGameScore' on completion.
+   Convert that single completion into the standard exercise-2 gradebook hook. */
+document.addEventListener('apcsGameScore', function(e){
+  _activity({activity:'exercise-2', earned:1, possible:1});
+});
+</script>
+<!-- apcs-exercises (managed) -->
+<div id="apcs-ex-links">
+<style>
+#apcs-ex-links{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:28px auto 0!important;padding:0 16px 8px!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important}
+#apcs-ex-links *,#apcs-ex-links *::before,#apcs-ex-links *::after{box-sizing:border-box!important}
+#apcs-ex-links .ex-lbl{font-size:12px!important;font-weight:800!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:0 0 10px!important}
+#apcs-ex-links .ex-row{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important}
+@media (max-width:640px){#apcs-ex-links .ex-row{grid-template-columns:repeat(1,1fr)!important}}
+#apcs-ex-links a.ex,#apcs-ex-links a.ex:link,#apcs-ex-links a.ex:visited{display:block!important;text-decoration:none!important;border:1px solid #93c5fd!important;border-left:5px solid #1a56db!important;border-radius:0 12px 12px 0!important;background:#eff6ff!important;padding:14px 16px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;font-size:16px!important;font-weight:700!important;line-height:1.35!important}
+#apcs-ex-links a.ex:hover{background:#dbeafe!important}
+#apcs-ex-links a.ex span{display:block!important;margin-top:4px!important;font-size:13px!important;font-weight:400!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important}
+</style>
+<p class="ex-lbl">Exercises for Topic 2.4</p>
+<div class="ex-row">
+<a class="ex" href="/pages/ap-csp-topic-2-4-exercise-1">Exercise 1: Extraction Process Identifier<span>Work it online. Saved in your browser, not graded</span></a>
+<a class="ex" href="/pages/ap-csp-topic-2-4-exercise-2">Exercise 2: Insight Pipeline Designer<span>Work it online. Saved in your browser, not graded</span></a>
+</div>
+</div>

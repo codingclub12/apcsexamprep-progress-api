@@ -1,0 +1,102 @@
+{
+  "change": "the CSP exercise block becomes idempotent, and links the 18 graded Applied Challenge pages nothing linked",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "running twice equals running once, and the applied card is not authored",
+      "command": "npm run --silent smoke:csp-exercise-discoverability",
+      "expect": "43 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the preflight, including a fixed time on the fixed date",
+      "command": "npm run --silent smoke:preflight",
+      "expect": "53 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT MADE THIS A ONE-SHOT: stripping the block back before rebuilding",
+      "file": "scripts/csp-lesson-exercise-links.js",
+      "find": "  const at = body.indexOf('\\n' + MARKER);\n  if (at === -1) return { body, had: false };",
+      "replace": "  const at = -1;\n  if (at === -1) return { body, had: false };",
+      "command": "npm run --silent smoke:csp-exercise-discoverability",
+      "expect_failure": "RUNNING TWICE EQUALS RUNNING ONCE, byte for byte",
+      "_why": "With the strip disabled the rebuild appends a second block, which is what the old refusal existed to prevent and what made the generator unable to reach its own live pages ever again."
+    },
+    {
+      "kind": "mutation",
+      "name": "two managed blocks is a page for a human, not another append",
+      "file": "scripts/csp-lesson-exercise-links.js",
+      "find": "  if (tail.indexOf(MARKER, MARKER.length) !== -1) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:csp-exercise-discoverability",
+      "expect_failure": "TWO blocks are REFUSED"
+    },
+    {
+      "kind": "mutation",
+      "name": "anything appended after the block must not be silently eaten",
+      "file": "scripts/csp-lesson-exercise-links.js",
+      "find": "  if (!tail.trimEnd().endsWith('</div>')) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:csp-exercise-discoverability",
+      "expect_failure": "anything appended AFTER the block is REFUSED"
+    },
+    {
+      "kind": "mutation",
+      "name": "a card is only added for a page the sitemap says is live",
+      "file": "scripts/csp-lesson-exercise-links.js",
+      "find": "    const appliedLive = applied && (!verified || verified.has(applied.handle)) ? applied : null;",
+      "replace": "    const appliedLive = applied || null;",
+      "command": "npm run --silent smoke:csp-exercise-discoverability",
+      "expect_failure": "only the topics whose applied page is live get a card"
+    },
+    {
+      "kind": "mutation",
+      "name": "the applied card must not be numbered, because both sets say Exercise 2",
+      "file": "scripts/csp-lesson-exercise-links.js",
+      "find": "    + esc('Applied Challenge')",
+      "replace": "    + esc('Exercise 3: Applied Challenge')",
+      "command": "npm run --silent smoke:csp-exercise-discoverability",
+      "expect_failure": "it is labelled Applied Challenge, not Exercise 2 or Exercise 3"
+    },
+    {
+      "kind": "mutation",
+      "name": "the wide rule is emitted only where it is used",
+      "file": "scripts/csp-lesson-exercise-links.js",
+      "find": "  const css = applied ? CSS + '\\n' + WIDE_CSS : CSS;",
+      "replace": "  const css = CSS + '\\n' + WIDE_CSS;",
+      "command": "npm run --silent smoke:csp-exercise-discoverability",
+      "expect_failure": "the wide rule is emitted only on a block that has one",
+      "_why": "Emitting a rule 17 blocks cannot use would rewrite 17 live bodies to change nothing a reader could see, and would destroy the byte-for-byte rebuild that proves this pass faithful."
+    },
+    {
+      "kind": "mutation",
+      "name": "a fixed time on ANOTHER date is still a live server time",
+      "file": "scripts/matrixify-preflight.js",
+      "find": "const PUBLISHED_AT_DATE = '2026-03-01';",
+      "replace": "const PUBLISHED_AT_DATE = '\\\\d{4}-\\\\d{2}-\\\\d{2}';",
+      "command": "npm run --silent smoke:preflight",
+      "expect_failure": "a fixed time on ANOTHER date is still refused"
+    },
+    {
+      "kind": "rederive",
+      "name": "14 of the 35 rebuild BYTE FOR BYTE as published, which is the proof",
+      "command": "node -e \"const fs=require('fs'),path=require('path'),os=require('os');const {OPEN}=require('./scripts/extract-live-body');const D='smoke/fixtures/csp-lesson-bodies';const t=fs.mkdtempSync(path.join(os.tmpdir(),'csplesson-'));for(const f of fs.readdirSync(D))if(f.endsWith('.html'))fs.writeFileSync(path.join(t,f),'<html><body>'+OPEN+fs.readFileSync(path.join(D,f),'utf8')+String.fromCharCode(10)+'  </div></body></html>');console.log(t);\" > /tmp/csplessondir.txt && node -e \"const fs=require('fs');const {build}=require('./scripts/csp-lesson-exercise-links');const v=new Set(fs.readFileSync('smoke/fixtures/live-page-handles.txt','utf8').split(String.fromCharCode(10)).map(s=>s.trim()).filter(Boolean));const r=build(fs.readFileSync('/tmp/csplessondir.txt','utf8').trim(),v);if(r.problems.length)throw new Error(r.problems[0]);if(r.pages.length!==35)throw new Error('built '+r.pages.length);const same=r.pages.filter(p=>p.body===p.original);const applied=r.pages.filter(p=>p.applied);const other=r.pages.filter(p=>p.body!==p.original&&!p.applied);if(same.length!==14)throw new Error('expected 14 byte-identical rebuilds, got '+same.length);if(applied.length!==18)throw new Error('expected 18 applied cards, got '+applied.length);if(other.length!==3)throw new Error('expected 3 subtitle corrections, got '+other.length);console.log('REBUILD FAITHFUL '+same.length+' byte-identical, '+applied.length+' gain the graded card, '+other.length+' correct a subtitle that says not graded on a graded page');\"",
+      "expect": "REBUILD FAITHFUL 14 byte-identical",
+      "_why": "The generator is run against the 35 CSP lesson bodies exactly as the storefront serves them. 14 come back byte for byte identical to what is published, which is a stronger statement about the rebuild than any synthetic fixture could make: it reproduces real live bodies exactly. The 21 that differ are accounted for one by one, 18 gaining the graded card and 3 correcting a subtitle that currently tells a student their work is not graded."
+    },
+    {
+      "kind": "rederive",
+      "name": "the sheet clears the preflight, with every emoji round-tripped against the live body",
+      "command": "node -e \"const fs=require('fs'),path=require('path'),os=require('os');const D='smoke/fixtures/csp-lesson-bodies';const out={};for(const f of fs.readdirSync(D))if(f.endsWith('.html'))out[f.slice(0,-5)]=fs.readFileSync(path.join(D,f),'utf8');const t=path.join(os.tmpdir(),'cspcarry.json');fs.writeFileSync(t,JSON.stringify(out));console.log(t);\" > /tmp/cspcarrypath.txt && node scripts/matrixify-preflight.js imports/2026-09-02/csp-exercise-links-pages.csv --carrying \"$(cat /tmp/cspcarrypath.txt)\"",
+      "expect": "clear to import"
+    },
+    {
+      "kind": "live",
+      "name": "a CSP lesson page now reaches its graded exercise, and no card lies about grading",
+      "command": "node -e \"const cp=require('child_process');const get=(h)=>cp.execSync('curl -sSL --max-time 40 --compressed https://www.apcsexamprep.com/pages/'+h,{encoding:'utf8',maxBuffer:1<<26});const a=get('ap-csp-course-bi3-binary-search');if(!a.includes('/pages/ap-csp-course-bi3-binary-search-exercise-2'))throw new Error('binary search still does not link its graded exercise');if(!a.includes('Applied Challenge'))throw new Error('no Applied Challenge card');const b=get('ap-csp-course-bi1-program-function-purpose');if(!b.includes('Work it online, then take the auto-graded check'))throw new Error('topic 1.2 card still says its graded exercise is not graded');console.log('CSP LESSON PAGES REACH THEIR GRADED EXERCISE');\"",
+      "expect": "CSP LESSON PAGES REACH THEIR GRADED EXERCISE",
+      "_why": "Both are false today: no page anywhere links ap-csp-course-bi3-binary-search-exercise-2, and topic 1.2's card still tells a student their work is not graded on a page that grades it."
+    }
+  ]
+}
