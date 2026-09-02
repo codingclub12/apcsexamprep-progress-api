@@ -89,13 +89,33 @@ const TARGETS = {
   //
   //  The measure improved and the thing the measure stood for got worse, which is
   //  the whole reason the ordered-key checks were added. These targets are
-  //  generated to satisfy all three properties at once and refuse to emit
-  //  otherwise: every key distinct, per-POSITION balance so no question number
-  //  drifts toward one letter, and overall balance. Result:
+  //  generated to satisfy every property at once and refuse to emit otherwise.
+  //
+  // ── PASS FOUR, 2026-09-02: NO KEY REPEATS INSIDE ITSELF ───────────────────
+  //  Pass three shipped ONE key that repeats: CDACDA, which is CDA twice. Learn
+  //  three answers and the quiz is free. It satisfied all three pass-three
+  //  properties, because every one of them compares keys to EACH OTHER and none
+  //  of them looks inside a single key. Same failure as pass two, one level in.
+  //
+  //  Found by the repeating-block check on the branch for ledger #125, then
+  //  reproduced here independently before anything was changed. Caught before
+  //  the import sheet was run, so no student ever saw it.
+  //
+  //  So the generator now refuses any key with a period that TILES it: p divides
+  //  the length and the key is that block repeated, which for six questions is
+  //  AAAAAA, ABABAB and CDACDA. A partial echo like ABCDAB is a two character
+  //  tail at 1 in 16, below the bar used elsewhere in this file, and is left to
+  //  distinctness, which is what made ABCDAB a problem in the first place.
+  //  scripts/csp-target-generator.js reproduces this table and mutation testing
+  //  it, by dropping the periodicity term, brings CDACDA straight back.
+  //
+  //  Two keys moved: legal-ethical-concerns CDACDA to CDACDB, and safe-computing
+  //  DABDCC to AACDAC as downstream drift from the changed counters. Result:
   //
   //      distinct     35 of 35
-  //      overall      A52 B52 C53 D53   of 210, even is 52.5
-  //      per column   9/9/9/8 in all six, which is the best 35 allows
+  //      periodic     0 of 35
+  //      overall      A53 B52 C53 D52   of 210, even is 52.5
+  //      per column   9/9/9/8 in five, 10/9/8/8 in the sixth
   // ── PASS TWO: the remaining 27 lesson quizzes ─────────────────────────────
   //  Pass one fixed the eight worst and OVER-CORRECTED toward D, so these lean
   //  back to B and C. Solved, not guessed: the seven unit test exams are already
@@ -130,8 +150,8 @@ const TARGETS = {
   'ap-csp-course-bi5-computing-bias':            ['A', 'B', 'C', 'D', 'C', 'C'],
   'ap-csp-course-bi5-crowdsourcing':             ['B', 'D', 'B', 'A', 'A', 'D'],
   'ap-csp-course-bi5-digital-divide':            ['B', 'C', 'D', 'A', 'B', 'B'],
-  'ap-csp-course-bi5-legal-ethical-concerns':    ['C', 'D', 'A', 'C', 'D', 'A'],
-  'ap-csp-course-bi5-safe-computing':            ['D', 'A', 'B', 'D', 'C', 'C'],
+  'ap-csp-course-bi5-legal-ethical-concerns':    ['C', 'D', 'A', 'C', 'D', 'B'],
+  'ap-csp-course-bi5-safe-computing':            ['A', 'A', 'C', 'D', 'A', 'C'],
 };
 
 const QUESTION_RE = /<div class="mcq-options" id="([^"]+)-options">([\s\S]*?)<\/div>\s*((?:\s*<div id="\1-fb-[A-D]"[\s\S]*?<\/div>)+)/g;
@@ -442,6 +462,41 @@ function verifyOptBtn(handle, before, after) {
 }
 
 // Permute so the correct option lands on `want`, carrying its feedback with it.
+// Where each tag sits and what whitespace separates them, so a rewrite can put
+// the tags back in a new order without reformatting the page around them.
+// gaps[i] is the text before part i; trail is what follows the last one.
+function layout(text, re) {
+  const gaps = [];
+  let last = 0, m, n = 0;
+  re.lastIndex = 0;
+  while ((m = re.exec(text))) {
+    gaps.push(text.slice(last, m.index));
+    last = m.index + m[0].length;
+    n += 1;
+  }
+  return { gaps, trail: text.slice(last), n };
+}
+
+const MCQ_BTN_RE = /<button class="mcq-option"[\s\S]*?<\/button>/g;
+const MCQ_FB_RE = /<div id="[^"]+-fb-[A-D]" class="mcq-feedback [^"]*">[\s\S]*?<\/div>/g;
+
+// REORDERING OPTIONS MUST NOT REFORMAT THE PAGE.
+//
+// This joined the rebuilt tags with a bare newline, which normalised the source
+// indentation away. The CSP import on 2026-09-02 stripped 3,280 bytes of it
+// across 23 pages: nothing rendered differently and nothing semantic changed,
+// which is precisely why every check was green. The opt-btn path had the same
+// bug and it was fixed there after the unit 5 sheet lost 90 bytes a page. This
+// is the other half of it, plus the guard in verify() that makes the shape
+// impossible to ship again.
+function weave(parts, lay) {
+  let s = '';
+  for (let i = 0; i < parts.length; i++) {
+    s += (lay.gaps[i] !== undefined ? lay.gaps[i] : '\n') + parts[i];
+  }
+  return s + (lay.n === parts.length ? lay.trail : '\n');
+}
+
 function rewriteBody(handle, body, targets) {
   const problems = [];
   let qi = 0, moved = 0;
@@ -462,13 +517,21 @@ function rewriteBody(handle, body, targets) {
       const src = q.opts.find((o) => assign.get(o.letter) === slot);
       return `<button class="mcq-option" onclick="checkMCQ('${qid}','${slot}','${want}','${qid}-fb-${slot}')">`
         + `<span class="mcq-option-letter">${slot}</span> ${src.text}</button>`;
-    }).join('\n');
+    });
     const fbs = L.map((slot) => {
       const src = q.opts.find((o) => assign.get(o.letter) === slot);
       const fb = q.fbs[src.letter];
       return `<div id="${qid}-fb-${slot}" class="mcq-feedback ${fb.kind}">${fb.inner}</div>`;
-    }).join('\n');
-    return `<div class="mcq-options" id="${qid}-options">\n${opts}\n</div>\n${fbs}`;
+    });
+
+    // The separator between the options div and the first feedback block is
+    // consumed by QUESTION_RE and never captured, so it is read back off the
+    // whole match rather than assumed to be a newline.
+    const head = `<div class="mcq-options" id="${qid}-options">`;
+    const sep = whole.slice(head.length + optsInner.length + '</div>'.length,
+      whole.length - fbsBlock.length);
+    return head + weave(opts, layout(optsInner, MCQ_BTN_RE)) + '</div>'
+      + sep + weave(fbs, layout(fbsBlock, MCQ_FB_RE));
   });
   return { body: out, questions: qi, moved, problems };
 }
@@ -492,6 +555,18 @@ function verify(handle, before, after) {
   };
   const A = read(before), B = read(after), bad = [];
   if (A.length !== B.length) return [`${handle}: question count ${A.length} -> ${B.length}`];
+  // EVERYTHING OUTSIDE THE OPTIONS AND THEIR FEEDBACK MUST BE BYTE IDENTICAL.
+  //
+  // The same guard verifyOptBtn has carried since the unit 5 sheet lost 90 bytes
+  // a page. Its absence here is why the CSP import normalised 3,280 bytes of
+  // indentation away with every semantic check green: the loss was BETWEEN the
+  // tags, and no check that reads option semantics can see the space around
+  // them. A rebalance that edits bytes it was not asked to edit cannot be
+  // reviewed by diffing, so it is refused.
+  const stripQ = (b) => b.replace(MCQ_BTN_RE, ' BTN ').replace(MCQ_FB_RE, ' FB ');
+  if (stripQ(before) !== stripQ(after)) {
+    bad.push(`${handle}: content OUTSIDE the options and their feedback changed`);
+  }
   for (let i = 0; i < A.length; i++) {
     if (A[i].correctText !== B[i].correctText) bad.push(`${handle} ${A[i].qid}: the CORRECT ANSWER TEXT changed`);
     if (JSON.stringify(A[i].texts) !== JSON.stringify(B[i].texts)) bad.push(`${handle} ${A[i].qid}: the option set changed`);
