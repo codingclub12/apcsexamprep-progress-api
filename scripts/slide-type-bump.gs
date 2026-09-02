@@ -122,35 +122,55 @@ var LADDER_CEILING = 18;
 // ceiling. Only used to BUILD a ladder, never to apply one.
 var MAX_LIFT = 2.5;
 
-// The shipped ladder, built by proposeLadder_() from the 63,842 runs preview()
-// read across 136 AP CSP decks on 2026-08-28. Strictly increasing by
-// construction and asserted so by smoke/slide-type-bump.js.
+// One ladder per course, built by proposeLadder_() from a full census of the
+// decks. Both are strictly increasing by construction and asserted so by
+// smoke/slide-type-bump.js against the real size histograms.
 //
-// Note it moves 14.5, 15, 16 and 17, which sit above the 10 to 14 band the
-// change was originally scoped to. That is forced, not scope creep: if nothing
-// above 14 may move, then the whole band is capped just under 14.5, the 14pt
-// bucket (11,638 runs, 18% of all text) can only reach 14.25, and the mean
-// lift inside the band falls from 1.96pt to 0.88pt. Order preservation and a
-// real lift at the top of the band are not both available unless the sizes
-// immediately above the band move too.
+// THE TWO COURSES GENUINELY DIFFER, which is why this is not one table. AP CSP
+// uses eleven distinct sizes inside the range; AP CYBER uses thirteen, adding
+// 11.5, 13.5 and 16.5 and lacking 14.5. A denser vocabulary leaves less room
+// between the floor and the ceiling, so proposeLadder_ backed the lift off
+// from 2.5pt to 1.5pt for cyber to keep the ladder strictly increasing. Using
+// CSP's ladder on cyber would have hit three sizes it does not describe, and
+// those decks would have been skipped.
 //
-// AP CYBERSECURITY IS NOT COVERED BY THIS LADDER. preview() ran out of time
-// after 136 decks, and the deck table lists all 224 CSP decks before the first
-// cyber one, so no cyber deck was ever opened. Run preview() with COURSES set
-// to ['ap-cybersecurity'], read the proposed ladder it prints, and paste it in
-// before bumping that course.
-var SIZE_LADDER = {
-  '10': 12.5,
-  '10.5': 13,
-  '11': 13.5,
-  '12': 14,
-  '12.5': 14.5,
-  '13': 15,
-  '14': 15.5,
-  '14.5': 16,
-  '15': 16.5,
-  '16': 17,
-  '17': 17.5
+// ap-csp            224 decks, sampled 136, 63,842 runs, 2026-08-28.
+//                   Mean lift inside the original 10 to 14 band: 1.96pt.
+// ap-cybersecurity   70 decks, ALL of them, 16,900 runs, 2026-09-02.
+//                   Mean lift inside the original 10 to 14 band: 1.50pt.
+//
+// A course absent from this map has no ladder, so every one of its in-range
+// sizes is unknown and every one of its decks is skipped with a reason. That
+// is the intended default for a course nobody has measured.
+var LADDERS = {
+  'ap-csp': {
+    '10': 12.5,
+    '10.5': 13,
+    '11': 13.5,
+    '12': 14,
+    '12.5': 14.5,
+    '13': 15,
+    '14': 15.5,
+    '14.5': 16,
+    '15': 16.5,
+    '16': 17,
+    '17': 17.5
+  },
+  'ap-cybersecurity': {
+    '10': 11.5,
+    '10.5': 12,
+    '11': 12.5,
+    '11.5': 13,
+    '12': 13.5,
+    '12.5': 14,
+    '13': 14.5,
+    '13.5': 15,
+    '14': 15.5,
+    '15': 16,
+    '16': 16.5,
+    '16.5': 17,
+    '17': 17.5
+  }
 };
 
 // ---------------------------------------------------------------------------
@@ -511,26 +531,31 @@ function sizeKey_(s) {
   return String(Math.round(s * 100) / 100);
 }
 
+/** The ladder for a course, or an empty one for a course never measured. */
+function ladderFor_(course) {
+  return Object.prototype.hasOwnProperty.call(LADDERS, course) ? LADDERS[course] : {};
+}
+
 /**
- * The new size for a run, or null to leave it alone.
+ * The new size for a run under a course's ladder, or null to leave it alone.
  *
  * Null means "outside the ladder's range, by design". A size INSIDE the range
  * with no ladder entry is a different thing entirely, and unknownSize_ is what
  * asks about that: the caller has to decide, because guessing is how the
  * arithmetic version broke the hierarchy in the first place.
  */
-function bumpedSize_(s) {
+function bumpedSize_(s, course) {
   if (s === null || s === undefined) return null;
   if (s < LADDER_FLOOR || s >= LADDER_CEILING) return null;
-  var k = sizeKey_(s);
-  return Object.prototype.hasOwnProperty.call(SIZE_LADDER, k) ? SIZE_LADDER[k] : null;
+  var ladder = ladderFor_(course), k = sizeKey_(s);
+  return Object.prototype.hasOwnProperty.call(ladder, k) ? ladder[k] : null;
 }
 
-/** True for a size the ladder should describe and does not. */
-function unknownSize_(s) {
+/** True for a size the course's ladder should describe and does not. */
+function unknownSize_(s, course) {
   if (s === null || s === undefined) return false;
   if (s < LADDER_FLOOR || s >= LADDER_CEILING) return false;
-  return !Object.prototype.hasOwnProperty.call(SIZE_LADDER, sizeKey_(s));
+  return !Object.prototype.hasOwnProperty.call(ladderFor_(course), sizeKey_(s));
 }
 
 /**
@@ -627,7 +652,7 @@ function collectFrom_(elements, out) {
  * The text itself is never edited, so those indices stay valid, which is what
  * makes the undo file usable later.
  */
-function planForDeck_(pres) {
+function planForDeck_(pres, course) {
   var plan = [], unknown = {};
   var slides = pres.getSlides();
   for (var i = 0; i < slides.length; i++) {
@@ -645,8 +670,8 @@ function planForDeck_(pres) {
         } catch (e) {
           continue; // a run with no resolvable style is one to leave alone
         }
-        if (unknownSize_(size)) { unknown[sizeKey_(size)] = true; continue; }
-        var next = bumpedSize_(size);
+        if (unknownSize_(size, course)) { unknown[sizeKey_(size)] = true; continue; }
+        var next = bumpedSize_(size, course);
         if (next === null) continue;
         plan.push([slideId, ranges[j].id, run.getStartIndex(), run.getEndIndex(), size, next]);
       }
@@ -702,7 +727,7 @@ function writeUndo_(deckId, course, key, plan) {
   var payload = JSON.stringify({
     deckId: deckId, course: course, key: key,
     writtenAt: new Date().toISOString(),
-    ladder: SIZE_LADDER,
+    ladder: ladderFor_(course),
     changes: plan
   });
   var existing = undoFileFor_(deckId);
@@ -789,9 +814,16 @@ function preview() {
   Logger.log('preview: ' + scope.length + ' deck(s) in scope, generated ' + DECKS_GENERATED_AT);
   Logger.log('NOTHING WILL BE WRITTEN BY THIS FUNCTION.');
 
-  var hist = {}, inRange = 0, total = 0, failed = 0;
-  var openedBy = {}, scopeBy = {};
+  // Everything is kept PER COURSE. The whole point of the first preview's
+  // failure was that one histogram looked like it described both courses and
+  // did not, and the two ladders that came out of the real data are different
+  // enough that a merged histogram would propose a ladder wrong for both.
+  var byCourse = {}, failed = 0;
+  var scopeBy = {};
   scope.forEach(function (d) { scopeBy[d[0]] = (scopeBy[d[0]] || 0) + 1; });
+  Object.keys(scopeBy).forEach(function (c) {
+    byCourse[c] = { hist: {}, total: 0, inRange: 0, opened: 0 };
+  });
 
   for (var i = 0; i < scope.length; i++) {
     if (new Date().getTime() - began > TIME_BUDGET_MS) {
@@ -799,6 +831,7 @@ function preview() {
       Logger.log('per-course coverage. Narrow COURSES and run again for the rest.');
       break;
     }
+    var course = scope[i][0], acc = byCourse[course];
     try {
       var pres = SlidesApp.openById(scope[i][2]);
       var slides = pres.getSlides();
@@ -811,59 +844,69 @@ function preview() {
             var size;
             try { size = runs[k].getTextStyle().getFontSize(); } catch (e) { continue; }
             if (size === null || size === undefined) continue;
-            total++;
-            hist[sizeKey_(size)] = (hist[sizeKey_(size)] || 0) + 1;
-            if (size >= LADDER_FLOOR && size < LADDER_CEILING) inRange++;
+            acc.total++;
+            acc.hist[sizeKey_(size)] = (acc.hist[sizeKey_(size)] || 0) + 1;
+            if (size >= LADDER_FLOOR && size < LADDER_CEILING) acc.inRange++;
           }
         }
       }
       pres.saveAndClose();
-      openedBy[scope[i][0]] = (openedBy[scope[i][0]] || 0) + 1;
+      acc.opened++;
     } catch (e) {
       failed++;
-      Logger.log('could not open ' + scope[i][0] + ' ' + scope[i][1] + ': ' + e);
+      Logger.log('could not open ' + course + ' ' + scope[i][1] + ': ' + e);
     }
   }
 
-  var opened = 0;
   Logger.log('');
   Logger.log('per-course coverage:');
   Object.keys(scopeBy).sort().forEach(function (c) {
-    var n = openedBy[c] || 0;
-    opened += n;
+    var n = byCourse[c].opened;
     Logger.log('  ' + c + ': opened ' + n + ' of ' + scopeBy[c]
       + (n === 0 ? '   <-- NOTHING SEEN, this course is not described below' : ''));
   });
   Logger.log('  ' + failed + ' failed to open');
 
-  var sizes = Object.keys(hist).map(Number).sort(function (a, b) { return a - b; });
-  Logger.log('');
-  Logger.log('text runs seen: ' + total);
-  Logger.log('runs in the ' + LADDER_FLOOR + ' to ' + LADDER_CEILING + 'pt range: ' + inRange
-    + (total ? '  (' + Math.round(inRange * 100 / total) + '%)' : ''));
-  Logger.log('');
-  Logger.log('size histogram (pt: runs, per deck), smallest first:');
-  sizes.forEach(function (sz) {
-    var n = hist[sizeKey_(sz)];
-    var to = bumpedSize_(sz);
-    var mark = to !== null ? '  -> ' + to : (unknownSize_(sz) ? '  <-- NO LADDER ENTRY' : '');
-    Logger.log('  ' + sz + ': ' + n + '   ' + (opened ? (n / opened).toFixed(1) : '?') + '/deck' + mark);
-  });
-
-  var missing = sizes.filter(unknownSize_);
-  if (missing.length) {
+  Object.keys(scopeBy).sort().forEach(function (c) {
+    var acc = byCourse[c];
     Logger.log('');
-    Logger.log(missing.length + ' size(s) in range have no ladder entry: ' + missing.join(', '));
-    Logger.log('start() will SKIP every deck containing one of those.');
-  }
+    Logger.log('=== ' + c + ' ===');
+    if (!acc.opened) {
+      Logger.log('  no deck opened, so nothing is known about this course.');
+      Logger.log('  Set COURSES to [\'' + c + '\'] and run preview() again.');
+      return;
+    }
+    var sizes = Object.keys(acc.hist).map(Number).sort(function (a, b) { return a - b; });
+    Logger.log('  decks read: ' + acc.opened + '   text runs: ' + acc.total);
+    Logger.log('  runs in the ' + LADDER_FLOOR + ' to ' + LADDER_CEILING + 'pt range: '
+      + acc.inRange + '  (' + Math.round(acc.inRange * 100 / acc.total) + '%)');
+    Logger.log('');
+    Logger.log('  size histogram (pt: runs, per deck), smallest first:');
+    sizes.forEach(function (sz) {
+      var n = acc.hist[sizeKey_(sz)];
+      var to = bumpedSize_(sz, c);
+      var mark = to !== null ? '  -> ' + to
+        : (unknownSize_(sz, c) ? '  <-- NO LADDER ENTRY' : '');
+      Logger.log('    ' + sz + ': ' + n + '   ' + (n / acc.opened).toFixed(1) + '/deck' + mark);
+    });
 
-  Logger.log('');
-  Logger.log('proposed ladder for what was seen, paste over SIZE_LADDER:');
-  Logger.log('var SIZE_LADDER = {');
-  proposeLadder_(sizes).forEach(function (pair) {
-    Logger.log("  '" + pair[0] + "': " + pair[1] + ',');
+    var missing = sizes.filter(function (sz) { return unknownSize_(sz, c); });
+    if (missing.length) {
+      Logger.log('');
+      Logger.log('  ' + missing.length + ' size(s) in range have no ladder entry: '
+        + missing.join(', '));
+      Logger.log('  start() will SKIP every ' + c + ' deck containing one of those.');
+    }
+
+    Logger.log('');
+    Logger.log('  proposed ladder, paste into LADDERS under this course:');
+    Logger.log("    '" + c + "': {");
+    proposeLadder_(sizes).forEach(function (pair) {
+      Logger.log("      '" + pair[0] + "': " + pair[1] + ',');
+    });
+    Logger.log('    },');
   });
-  Logger.log('};');
+
   Logger.log('');
   Logger.log('This is a read of the decks, not a promise about how they look.');
   Logger.log('A Slides text box does not shrink text to fit, so the only way to');
@@ -929,7 +972,7 @@ function start() {
         continue;
       }
       var pres = SlidesApp.openById(d[2]);
-      var res = planForDeck_(pres);
+      var res = planForDeck_(pres, d[0]);
       var slideCount = pres.getSlides().length;
 
       if (res.unknown.length && !ALLOW_UNKNOWN) {
