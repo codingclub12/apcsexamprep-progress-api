@@ -92,10 +92,23 @@ function runMutation(m) {
   return { ok: true, detail: `broke ${m.file} and the suite went red, as it must` };
 }
 
+// A gate whose failure message does not say what went wrong gets re-run instead
+// of read, which is how a real failure becomes a suspected flake. A thrown Node
+// error puts the useful line near the top and a stack trace after it, so the
+// tail of the output is exactly the wrong slice to show. Prefer the message.
+function explain(out) {
+  const text = String(out || '').trim();
+  if (!text) return 'no output';
+  const err = text.split('\n').find((l) => /^(?:.*\b)?Error:\s*\S/.test(l));
+  if (err) return err.replace(/^.*?Error:\s*/, '').trim().slice(0, 160);
+  const lines = text.split('\n').filter((l) => l.trim() && !/^\s+at\s/.test(l));
+  return lines.slice(-3).join(' | ').slice(0, 160);
+}
+
 function runCheck(c) {
   if (c.kind === 'mutation') return runMutation(c);
   const res = sh(c.command);
-  if (!res.ok) return { ok: false, detail: (res.out || '').trim().split('\n').slice(-3).join(' | ') };
+  if (!res.ok) return { ok: false, detail: explain(res.out) };
   if (c.expect && !res.out.includes(c.expect)) {
     return { ok: false, detail: `output did not contain ${JSON.stringify(c.expect)}` };
   }

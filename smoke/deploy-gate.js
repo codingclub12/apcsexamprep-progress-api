@@ -180,6 +180,24 @@ console.log('\n8. A failing check fails the gate, and an unknown kind cannot sne
   ok('  and says which kinds exist', /expected one of/.test(r2.problems.join(' ')), r2.problems);
 }
 
+console.log('\n8b. A failure says WHAT went wrong, not the bottom of a stack trace');
+{
+  //  The live check throws with a real message. Reporting the tail of the output
+  //  showed "at node:internal/main/eval_string:74:3" instead, and a gate whose
+  //  failure does not say what is wrong gets re-run rather than read, which is
+  //  how a real failure becomes a suspected flake.
+  const thrower = 'node -e "throw new Error(\'production serves aaa, this tree is bbb\')"';
+  const r = gate({ checks: [
+    { kind: 'suite', name: 'tests', command: TRUE },
+    { kind: 'live', name: 'deployed sha', command: thrower },
+    killable,
+  ] });
+  ok('  a thrown error is refused', !r.ok);
+  ok('  and the message is the error, not the stack',
+    /production serves aaa, this tree is bbb/.test(r.problems.join(' ')), r.problems);
+  ok('  with no stack frames in it', !/eval_string|\bat Object\./.test(r.problems.join(' ')), r.problems);
+}
+
 console.log('\n9. Pre-deploy mode defers live but never the mutation');
 {
   const r = gate(full(), { pre: true });
