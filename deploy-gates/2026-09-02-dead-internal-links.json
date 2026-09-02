@@ -5,7 +5,7 @@
       "kind": "suite",
       "name": "one mechanical rule, one evidenced map, and a missing target is never invented",
       "command": "npm run --silent smoke:deadlinks",
-      "expect": "90 passed, 0 failed"
+      "expect": "94 passed, 0 failed"
     },
     {
       "kind": "suite",
@@ -17,7 +17,7 @@
       "kind": "mutation",
       "name": "THE ONE THAT WOULD WRITE A LINK TO NOTHING: rule one's liveness requirement",
       "file": "scripts/dead-internal-link-repair.js",
-      "find": "  if (cleaned !== p.handle && live.has(cleaned)) {",
+      "find": "  if (cleaned !== p.handle && within.has(cleaned)) {",
       "replace": "  if (cleaned !== p.handle) {",
       "command": "npm run --silent smoke:deadlinks",
       "expect_failure": "a cleaned handle that is not live is REPORTED, not repaired"
@@ -26,7 +26,7 @@
       "kind": "mutation",
       "name": "a map entry whose own target has gone away must fail loudly",
       "file": "scripts/dead-internal-link-repair.js",
-      "find": "  if (mapped && live.has(mapped.to)) {",
+      "find": "  if (mapped && within.has(mapped.to)) {",
       "replace": "  if (mapped) {",
       "command": "npm run --silent smoke:deadlinks",
       "expect_failure": "a map entry pointing at a page that is no longer live is REPORTED"

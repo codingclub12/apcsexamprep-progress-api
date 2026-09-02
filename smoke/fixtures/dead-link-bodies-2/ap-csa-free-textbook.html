@@ -1,0 +1,730 @@
+<style>
+/* ===== HIDE SHOPIFY DEFAULT TITLE ===== */
+.page-title,
+.page__title,
+.article-template__title,
+.main-page-title,
+h1.page-title,
+.template-page h1:first-of-type,
+.shopify-section h1.title,
+#MainContent > h1:first-child,
+.page-header h1,
+.page-header__title,
+main h1:first-child,
+.rte > h1:first-child {
+    display: none !important;
+}
+
+/* ===== CSS RESET FOR ISOLATION ===== */
+#apcs-textbook-hub * {
+    box-sizing: border-box;
+}
+
+/* ===== BASE STYLES ===== */
+#apcs-textbook-hub {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    line-height: 1.7;
+    color: #1f2937;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #ffffff;
+}
+
+/* ===== HERO HEADER ===== */
+.textbook-hero {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+    border-radius: 16px;
+    padding: 48px 36px;
+    text-align: center;
+    margin-bottom: 40px;
+    color: #ffffff;
+}
+
+.textbook-hero h1 {
+    color: #ffffff !important;
+    font-size: 2.4rem;
+    margin: 0 0 12px 0;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.textbook-hero .subtitle {
+    color: #bfdbfe;
+    font-size: 1.25rem;
+    margin: 0 0 20px 0;
+    font-weight: 400;
+}
+
+.textbook-hero .badges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.textbook-hero .badge {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* ===== INTRO SECTION ===== */
+.intro-section {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 36px;
+    border-left: 4px solid #2563eb;
+}
+
+.intro-section h2 {
+    color: #1e3a5f;
+    font-size: 1.4rem;
+    margin: 0 0 16px 0;
+}
+
+.intro-section p {
+    margin: 0 0 12px 0;
+    font-size: 1.05rem;
+}
+
+.intro-section p:last-child {
+    margin-bottom: 0;
+}
+
+/* ===== UNIT CARDS GRID ===== */
+.units-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+@media (max-width: 768px) {
+    .units-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.unit-card {
+    background: #ffffff;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 28px;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.unit-card:hover {
+    border-color: #2563eb;
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.12);
+    transform: translateY(-2px);
+}
+
+.unit-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+}
+
+.unit-card.unit-1::before { background: #2563eb; }
+.unit-card.unit-2::before { background: #7c3aed; }
+.unit-card.unit-3::before { background: #059669; }
+.unit-card.unit-4::before { background: #dc2626; }
+
+.unit-number {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+}
+
+.unit-1 .unit-number { color: #2563eb; }
+.unit-2 .unit-number { color: #7c3aed; }
+.unit-3 .unit-number { color: #059669; }
+.unit-4 .unit-number { color: #dc2626; }
+
+.unit-card h3 {
+    color: #1f2937;
+    font-size: 1.35rem;
+    margin: 0 0 8px 0;
+    line-height: 1.3;
+}
+
+.unit-weight {
+    display: inline-block;
+    background: #f3f4f6;
+    color: #4b5563;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+.unit-card p {
+    color: #6b7280;
+    font-size: 0.95rem;
+    margin: 0 0 16px 0;
+    line-height: 1.6;
+}
+
+.unit-topics {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+}
+
+.unit-topics li {
+    padding: 6px 0;
+    padding-left: 24px;
+    position: relative;
+    color: #4b5563;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.unit-topics li:last-child {
+    border-bottom: none;
+}
+
+.unit-topics li::before {
+    content: ">";
+    position: absolute;
+    left: 0;
+    color: #9ca3af;
+    font-weight: bold;
+}
+
+/* ===== BUTTONS ===== */
+.btn-read {
+    display: inline-block;
+    background: #2563eb !important;
+    color: #ffffff !important;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none !important;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: background 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-read:link,
+.btn-read:visited {
+    color: #ffffff !important;
+    background: #2563eb !important;
+}
+
+.btn-read:hover {
+    background: #1d4ed8 !important;
+    color: #ffffff !important;
+}
+
+.unit-2 .btn-read { background: #7c3aed !important; }
+.unit-2 .btn-read:link, .unit-2 .btn-read:visited { background: #7c3aed !important; }
+.unit-2 .btn-read:hover { background: #6d28d9 !important; }
+
+.unit-3 .btn-read { background: #059669 !important; }
+.unit-3 .btn-read:link, .unit-3 .btn-read:visited { background: #059669 !important; }
+.unit-3 .btn-read:hover { background: #047857 !important; }
+
+.unit-4 .btn-read { background: #dc2626 !important; }
+.unit-4 .btn-read:link, .unit-4 .btn-read:visited { background: #dc2626 !important; }
+.unit-4 .btn-read:hover { background: #b91c1c !important; }
+
+/* ===== WHY THIS TEXTBOOK SECTION ===== */
+.why-section {
+    background: #ffffff;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 36px;
+}
+
+.why-section h2 {
+    color: #1e3a5f;
+    font-size: 1.5rem;
+    margin: 0 0 24px 0;
+    text-align: center;
+}
+
+.why-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+@media (max-width: 768px) {
+    .why-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.why-item {
+    text-align: center;
+    padding: 20px;
+}
+
+.why-icon {
+    font-size: 2rem;
+    margin-bottom: 12px;
+}
+
+.why-item h3 {
+    color: #1f2937;
+    font-size: 1.1rem;
+    margin: 0 0 8px 0;
+}
+
+.why-item p {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* ===== EXAM FORMAT SECTION ===== */
+.exam-section {
+    background: #fef3c7;
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 36px;
+    border-left: 4px solid #f59e0b;
+}
+
+.exam-section h2 {
+    color: #92400e;
+    font-size: 1.3rem;
+    margin: 0 0 16px 0;
+}
+
+.exam-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+@media (max-width: 600px) {
+    .exam-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.exam-box {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.exam-box h3 {
+    color: #1f2937;
+    font-size: 1.05rem;
+    margin: 0 0 8px 0;
+}
+
+.exam-box p {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* ===== RESOURCES SECTION ===== */
+.resources-section {
+    background: #f0fdf4;
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 36px;
+    border-left: 4px solid #22c55e;
+}
+
+.resources-section h2 {
+    color: #166534;
+    font-size: 1.3rem;
+    margin: 0 0 16px 0;
+}
+
+.resources-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .resources-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+.resources-list li {
+    padding: 0;
+}
+
+.resources-list a {
+    display: block;
+    background: #ffffff;
+    color: #166534 !important;
+    padding: 14px 18px;
+    border-radius: 8px;
+    text-decoration: none !important;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid #bbf7d0;
+}
+
+.resources-list a:hover {
+    background: #166534;
+    color: #ffffff !important;
+    border-color: #166534;
+}
+
+/* ===== FAQ SECTION ===== */
+.faq-section {
+    margin-bottom: 36px;
+}
+
+.faq-section h2 {
+    color: #1e3a5f;
+    font-size: 1.5rem;
+    margin: 0 0 24px 0;
+    text-align: center;
+}
+
+.faq-item {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+}
+
+.faq-item h3 {
+    color: #1f2937;
+    font-size: 1.05rem;
+    margin: 0 0 8px 0;
+}
+
+.faq-item p {
+    color: #6b7280;
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* ===== CTA SECTION ===== */
+.cta-section {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+    border-radius: 12px;
+    padding: 36px;
+    text-align: center;
+    color: #ffffff;
+}
+
+.cta-section h2 {
+    color: #ffffff !important;
+    font-size: 1.5rem;
+    margin: 0 0 12px 0;
+}
+
+.cta-section p {
+    color: #bfdbfe;
+    font-size: 1rem;
+    margin: 0 0 20px 0;
+}
+
+.cta-btn {
+    display: inline-block;
+    background: #ffffff !important;
+    color: #2563eb !important;
+    padding: 14px 32px;
+    border-radius: 8px;
+    text-decoration: none !important;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.cta-btn:link,
+.cta-btn:visited {
+    background: #ffffff !important;
+    color: #2563eb !important;
+}
+
+.cta-btn:hover {
+    background: #eff6ff !important;
+    color: #1d4ed8 !important;
+}
+
+/* ===== FOOTER ===== */
+.textbook-footer {
+    text-align: center;
+    padding: 24px;
+    color: #9ca3af;
+    font-size: 0.85rem;
+}
+
+.textbook-footer a {
+    color: #6b7280;
+}
+</style>
+
+<div id="apcs-textbook-hub">
+
+    <!-- ===== HERO HEADER ===== -->
+    <header class="textbook-hero">
+        <h1>Free AP Computer Science A Textbook</h1>
+        <p class="subtitle">Complete 2025-2026 Java Course — All 4 Units</p>
+        <div class="badges">
+            <span class="badge">100% Free</span>
+            <span class="badge">2025-2026 Curriculum</span>
+            <span class="badge">4-Unit Structure</span>
+            <span class="badge">AP Exam Aligned</span>
+        </div>
+    </header>
+
+    <!-- ===== INTRO SECTION ===== -->
+    <section class="intro-section">
+        <h2>Your Complete AP CSA Learning Resource</h2>
+        <p>This free online textbook covers everything you need to learn Java and prepare for the AP Computer Science A exam. Aligned with the <strong>2025-2026 College Board curriculum</strong>, each unit builds on the previous one to give you a solid foundation in object-oriented programming.</p>
+        <p>Whether you are self-studying, supplementing your classroom instruction, or reviewing for the exam, this textbook provides clear explanations, code examples, and practice opportunities for every topic on the AP CSA exam.</p>
+    </section>
+
+    <!-- ===== UNIT CARDS GRID ===== -->
+    <section class="units-grid">
+
+        <!-- Unit 1 -->
+        <div class="unit-card unit-1">
+            <div class="unit-number">Unit 1</div>
+            <h3>Using Objects and Methods</h3>
+            <span class="unit-weight">~25% of AP Exam</span>
+            <p>Start your Java journey with variables, data types, objects, and the essential String and Math classes.</p>
+            <ul class="unit-topics">
+                <li>Variables and primitive data types</li>
+                <li>Expressions and assignment operators</li>
+                <li>Creating and using objects</li>
+                <li>String methods and manipulation</li>
+                <li>The Math class and random numbers</li>
+            </ul>
+            <a href="/pages/ap-csa-unit-1-textbook" class="btn-read">Read Unit 1 Textbook →</a>
+        </div>
+
+        <!-- Unit 2 -->
+        <div class="unit-card unit-2">
+            <div class="unit-number">Unit 2</div>
+            <h3>Selection and Iteration</h3>
+            <span class="unit-weight">~30% of AP Exam</span>
+            <p>Master program control flow with conditionals, loops, and boolean logic—the most heavily tested content.</p>
+            <ul class="unit-topics">
+                <li>Boolean expressions and operators</li>
+                <li>If, else-if, and nested conditionals</li>
+                <li>While loops and for loops</li>
+                <li>Loop algorithms and patterns</li>
+                <li>String traversal techniques</li>
+            </ul>
+            <a href="/pages/ap-csa-unit-2-textbook" class="btn-read">Read Unit 2 Textbook →</a>
+        </div>
+
+        <!-- Unit 3 -->
+        <div class="unit-card unit-3">
+            <div class="unit-number">Unit 3</div>
+            <h3>Class Creation</h3>
+            <span class="unit-weight">~25% of AP Exam</span>
+            <p>Learn to design your own classes with constructors, methods, encapsulation, and inheritance.</p>
+            <ul class="unit-topics">
+                <li>Writing classes and instance variables</li>
+                <li>Constructors and method overloading</li>
+                <li>Accessor and mutator methods</li>
+                <li>Inheritance and the super keyword</li>
+                <li>Polymorphism and method overriding</li>
+            </ul>
+            <a href="/pages/ap-csa-unit-3-textbook" class="btn-read">Read Unit 3 Textbook →</a>
+        </div>
+
+        <!-- Unit 4 -->
+        <div class="unit-card unit-4">
+            <div class="unit-number">Unit 4</div>
+            <h3>Data Collections</h3>
+            <span class="unit-weight">~20% of AP Exam</span>
+            <p>Work with arrays, ArrayLists, and 2D arrays to store and manipulate collections of data.</p>
+            <ul class="unit-topics">
+                <li>Array declaration and traversal</li>
+                <li>ArrayList methods and operations</li>
+                <li>Searching and sorting algorithms</li>
+                <li>2D array creation and access</li>
+                <li>Row-major and column-major traversal</li>
+            </ul>
+            <a href="/pages/ap-csa-unit-4-textbook" class="btn-read">Read Unit 4 Textbook →</a>
+        </div>
+
+    </section>
+
+    <!-- ===== WHY THIS TEXTBOOK ===== -->
+    <section class="why-section">
+        <h2>Why Use This AP CSA Textbook?</h2>
+        <div class="why-grid">
+            <div class="why-item">
+                <div class="why-icon">[Aligned]</div>
+                <h3>2025-2026 Curriculum</h3>
+                <p>Updated for the latest 4-unit AP CSA course structure. Covers exactly what College Board tests.</p>
+            </div>
+            <div class="why-item">
+                <div class="why-icon">[Clear]</div>
+                <h3>Student-Friendly Explanations</h3>
+                <p>Written by an AP CS teacher with 11+ years of experience helping students succeed.</p>
+            </div>
+            <div class="why-item">
+                <div class="why-icon">[Practical]</div>
+                <h3>Code Examples Throughout</h3>
+                <p>Learn by example with properly formatted Java code you can study and modify.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== EXAM FORMAT ===== -->
+    <section class="exam-section">
+        <h2>AP CSA Exam Format at a Glance</h2>
+        <div class="exam-grid">
+            <div class="exam-box">
+                <h3>Section I: Multiple Choice</h3>
+                <p>40 questions in 90 minutes. Tests code reading, tracing, and error identification. Worth 50% of your score.</p>
+            </div>
+            <div class="exam-box">
+                <h3>Section II: Free Response</h3>
+                <p>4 questions in 90 minutes. Tests code writing: methods, classes, arrays, and 2D arrays. Worth 50% of your score.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ADDITIONAL RESOURCES ===== -->
+    <section class="resources-section">
+        <h2>More AP CSA Study Resources</h2>
+        <ul class="resources-list">
+            <li><a href="/blogs/daily-ap-csa-practice">Daily AP CSA Practice Questions</a></li>
+            <li><a href="/pages/ap-csa-frq-archive">FRQ Archive (2004-2025)</a></li>
+            <li><a href="/pages/ap-csa-study-games">21 Interactive Study Games</a></li>
+            <li><a href="/pages/ap-csa-frqs-by-topic">FRQs Organized by Topic</a></li>
+            <li><a href="/pages/ap-csa-exam-prep-hub">Complete AP CSA Study Hub</a></li>
+            <li><a href="/pages/ap-computer-science-tutor">1-on-1 AP CS Tutoring</a></li>
+        </ul>
+    </section>
+
+    <!-- ===== FAQ SECTION ===== -->
+    <section class="faq-section">
+        <h2>Frequently Asked Questions</h2>
+        
+        <div class="faq-item">
+            <h3>Is this textbook really free?</h3>
+            <p>Yes, completely free. All four unit textbooks are available online at no cost. We believe quality AP CSA resources should be accessible to every student.</p>
+        </div>
+        
+        <div class="faq-item">
+            <h3>Does this cover the entire AP CSA curriculum?</h3>
+            <p>Yes. This textbook covers all four units in the 2025-2026 AP Computer Science A curriculum: Using Objects and Methods, Selection and Iteration, Class Creation, and Data Collections.</p>
+        </div>
+        
+        <div class="faq-item">
+            <h3>Can I use this as my only study resource?</h3>
+            <p>This textbook provides comprehensive coverage of all topics, but we recommend supplementing with practice problems (especially FRQs) and timed practice exams to fully prepare for the AP exam.</p>
+        </div>
+        
+        <div class="faq-item">
+            <h3>What programming experience do I need?</h3>
+            <p>None. Unit 1 starts from the very beginning and assumes no prior programming knowledge. The textbook builds progressively through each unit.</p>
+        </div>
+    </section>
+
+    <!-- ===== CTA SECTION ===== -->
+    <section class="cta-section">
+        <h2>Ready to Start Learning Java?</h2>
+        <p>Begin with Unit 1 and work your way through all four units. Good luck on your AP CSA journey!</p>
+        <a href="/pages/ap-csa-unit-1-textbook" class="cta-btn">Start Unit 1: Using Objects and Methods →</a>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="textbook-footer">
+        <p><strong>AP Computer Science A Free Textbook</strong> — 2025-2026 Curriculum</p>
+        <p>© AP CS Exam Prep | <a href="/pages/ap-csa-exam-prep-hub">Back to AP CSA Hub</a></p>
+    </footer>
+
+</div>
+
+<!-- FAQ Schema for SEO -->
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "Is this AP CSA textbook really free?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, completely free. All four unit textbooks are available online at no cost. We believe quality AP CSA resources should be accessible to every student."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Does this textbook cover the entire AP CSA curriculum?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. This textbook covers all four units in the 2025-2026 AP Computer Science A curriculum: Using Objects and Methods, Selection and Iteration, Class Creation, and Data Collections."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I use this as my only AP CSA study resource?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "This textbook provides comprehensive coverage of all topics, but we recommend supplementing with practice problems (especially FRQs) and timed practice exams to fully prepare for the AP exam."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What programming experience do I need for AP CSA?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "None. Unit 1 starts from the very beginning and assumes no prior programming knowledge. The textbook builds progressively through each unit."
+            }
+        }
+    ]
+}
+</script>
+
+<!-- Course Schema for SEO -->
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Course",
+    "name": "AP Computer Science A Free Textbook",
+    "description": "Complete free online textbook for AP Computer Science A covering all 4 units of the 2025-2026 curriculum: Using Objects and Methods, Selection and Iteration, Class Creation, and Data Collections.",
+    "provider": {
+        "@type": "Organization",
+        "name": "AP CS Exam Prep",
+        "url": "https://www.apcsexamprep.com"
+    },
+    "educationalLevel": "High School",
+    "inLanguage": "en",
+    "isAccessibleForFree": true,
+    "teaches": ["Java Programming", "Object-Oriented Programming", "AP Computer Science A"],
+    "hasCourseInstance": {
+        "@type": "CourseInstance",
+        "courseMode": "online",
+        "courseWorkload": "PT80H"
+    }
+}
+</script>
