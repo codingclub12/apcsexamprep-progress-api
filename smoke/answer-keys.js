@@ -14,7 +14,8 @@
 //  Run: npm run smoke:answerkeys
 // ─────────────────────────────────────────────────────────────────────────────
 const { keysFor, distributionRows, rewriteBody, verify, audit,
-  readOptBtnQuestions, rewriteBodyOptBtn, verifyOptBtn } = require('../scripts/answer-key-audit');
+  readOptBtnQuestions, rewriteBodyOptBtn, verifyOptBtn,
+  longestCycle, cycleFinding, TARGETS } = require('../scripts/answer-key-audit');
 
 let pass = 0, fail = 0;
 const ok = (n, c, x) => {
@@ -348,6 +349,73 @@ console.log('\nopt-btn rebalance');
   ok('  a flush left page stays flush left',
     rf.body.length === flat.length && !/\n {10}<button/.test(rf.body));
 }
+
+
+// ── A REPEATING BLOCK INSIDE ONE KEY ────────────────────────────────────────
+//  Duplicate keys and position lock compare activities to each OTHER. A single
+//  quiz whose own key cycles slips past both, and past the histogram. Both keys
+//  below are real, from the AP Cyber teacher bundle, and both passed every check
+//  that existed on 2026-09-01.
+const K = (s) => s.split('');
+console.log('\nREPEATING BLOCK\n');
+
+const bundle22 = 'CADBCADBCADBCADBCABDBCDADACD';
+const bundle21 = 'ACBDABCDBCDABCDA';
+
+const f22 = cycleFinding(K(bundle22));
+ok('  the 2.2 bundle key is flagged as a repeating CADB block',
+  f22 && f22.block === 'CADB' && f22.len === 18, f22);
+
+const d22 = {};
+K(bundle22).forEach((l) => { d22[l] = (d22[l] || 0) + 1; });
+ok('  ...while its distribution passes the 60 percent bar untouched',
+  Math.max(...Object.values(d22)) / bundle22.length < 0.6, d22);
+
+// REGRESSION, and the reason longestCycle takes a maxPeriod. Searching every
+// period and then rejecting the winner for being too long reports NOTHING here:
+// a meaningless period-7 run of 12 sits on top of the real period-4 BCDA BCDA.
+const f21 = cycleFinding(K(bundle21));
+ok('  the 2.1 bundle key is flagged as BCDA twice, not masked by a longer noisy run',
+  f21 && f21.block === 'BCDA' && f21.len === 8, f21);
+ok('  ...and the unbounded search is exactly what used to hide it',
+  longestCycle(K(bundle21)).period === 7 && longestCycle(K(bundle21), 4).period === 4);
+
+ok('  the replacement 2.1 key is clean', cycleFinding(K('DADBACBCABCBDACD')) === null);
+ok('  the replacement 2.2 key is clean', cycleFinding(K('BADDACDADCACBDBCABCBACADBDCB')) === null);
+ok('  a run of eight identical answers is caught even when the rest varies',
+  (cycleFinding(K('AAAAAAAABCDB')) || {}).len === 8);
+
+// CDACDA is the pass-three CSP target this check found, fixed in the generator
+// by bc3504e. The audit keeps its own copy of the predicate because the
+// generator only covers keys IT produces, and nothing it produces reaches the
+// AP Cyber bundle or a hand-authored page.
+ok('  a fully periodic six-item key IS flagged, however short',
+  (cycleFinding(K('CDACDA')) || {}).block === 'CDA');
+ok('  ...but a six-item key that merely starts to repeat is not',
+  cycleFinding(K('ABCDAB')) === null && cycleFinding(K('ABCDB')) === null);
+ok('  an all-one-letter key is left to allSame rather than reported twice',
+  cycleFinding(K('BBBBBB')) === null);
+ok('  a key with no repeating block is left alone',
+  cycleFinding(K('DCBAACADBBDCACBD')) === null);
+
+// The shipped targets must agree with the generator that produced them.
+ok('  none of the live CSP targets repeats inside itself',
+  Object.values(TARGETS).every((k) => cycleFinding(k) === null),
+  Object.entries(TARGETS).filter(([, k]) => cycleFinding(k)).map(([h]) => h));
+
+// End to end through audit(), on the opt-btn shape the live pages use.
+const cycKey = 'CADBCADBCADBCADB';
+const cycEdges = [{ node: { handle: 'bundle-2-2', title: 'x',
+  body: cycKey.split('').map((c, i) => optBtn('b22quiz', i + 1, c, LETTERS)).join('\n') } }];
+const hush = console.log; console.log = () => {};
+const cycRes = audit(cycEdges);
+console.log = hush;
+ok('  audit() reports the cycle while its other four checks stay silent',
+  cycRes.cycles.length === 1 && cycRes.cycles[0].c.block === 'CADB'
+  && cycRes.same.length === 0 && cycRes.skew.length === 0
+  && cycRes.dupes.length === 0 && cycRes.locked.length === 0,
+  { cycles: cycRes.cycles.length, same: cycRes.same.length, skew: cycRes.skew.length,
+    dupes: cycRes.dupes.length, locked: cycRes.locked.length });
 
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);

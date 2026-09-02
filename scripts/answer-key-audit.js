@@ -254,6 +254,70 @@ function distributionRows(edges) {
   return rows.sort((a, b) => b.maxShare - a.maxShare);
 }
 
+// ── THE PATTERN NONE OF THE CHECKS ABOVE SEE: A REPEATING BLOCK ─────────────
+//  Duplicate keys and position lock both compare activities to EACH OTHER, so a
+//  single quiz whose OWN key cycles slips past them, and the histogram never had
+//  a chance. Measured on the AP Cyber teacher bundle, 2026-09-01:
+//
+//      2.1  ACBD ABCD BCDA BCDA                      4/4/4/4, dead even
+//      2.2  CADB CADB CADB CADB CABD BCDA DACD       CADB four and a half times
+//
+//  All four checks report "none" on the most guessable key a quiz can carry.
+//
+//  csp-target-generator.js refuses to EMIT a key like this, which is the same
+//  property enforced one step earlier. This is still needed: the generator only
+//  covers keys it produces, and nothing it produces reaches the AP Cyber bundle
+//  or any hand-authored page. This reads what is actually live.
+
+// The longest stretch anywhere in the key that repeats a block of `period`,
+// counting the block plus every repeat, so "CADB" x4 reports 16.
+//
+// `maxPeriod` bounds the SEARCH rather than filtering its result, and that is
+// the whole correctness of this function. Taking the longest cycle at any period
+// and then rejecting it for being too long reports nothing on 2.1: a meaningless
+// period-7 run of 12 sits on top of the real period-4 BCDA BCDA and hides it.
+// There is an assertion named for that mutation.
+function longestCycle(letters, maxPeriod = Infinity) {
+  const n = letters.length;
+  let best = { period: 0, start: 0, len: 0 };
+  for (let p = 1; p * 2 <= n && p <= maxPeriod; p++) {
+    let i = p;
+    while (i < n) {
+      if (letters[i] !== letters[i - p]) { i++; continue; }
+      let j = i;
+      while (j < n && letters[j] === letters[j - p]) j++;
+      const len = (j - i) + p;
+      if (len > best.len || (len === best.len && p < best.period)) best = { period: p, start: i - p, len };
+      i = j + 1;
+    }
+  }
+  return best;
+}
+
+// Two ways a cycle is worth reporting, and a short quiz needs the second one.
+//
+//   LONG ENOUGH TO RIDE. Eight or more answers, covering at least half the key.
+//   Below that, flagging would teach people to skip the check, which is the same
+//   reasoning POSITION_MIN is set on.
+//
+//   FULLY PERIODIC. The whole key is one block repeated at least twice, however
+//   short. CDACDA is not long enough for the first rule and is still a free
+//   second half. A random six-key doing that is (1/4)^3, or 1 in 64, the same bar
+//   POSITION_MIN answers to. This is the same predicate csp-target-generator.js
+//   refuses to emit, so the two agree by construction.
+//
+// Period 1 is excluded from the second rule only because allSame already owns
+// it, and one defect should not be reported twice.
+function cycleFinding(letters) {
+  const n = letters.length;
+  const c = longestCycle(letters, 4);
+  if (!c.period) return null;
+  const longEnough = c.len >= 8 && c.len >= n / 2;
+  const fullyPeriodic = c.len === n && c.period > 1 && c.len / c.period >= 2;
+  if (!longEnough && !fullyPeriodic) return null;
+  return Object.assign({}, c, { block: letters.slice(c.start, c.start + c.period).join('') });
+}
+
 function audit(edges) {
   const rows = distributionRows(edges);
   const same = rows.filter((r) => r.allSame);
@@ -307,7 +371,15 @@ function audit(edges) {
   const N = Object.values(tot).reduce((a, b) => a + b, 0);
   console.log(`\nWHOLE-COURSE DISTRIBUTION (${N} questions, even would be 25 percent each):`);
   Object.keys(tot).sort().forEach((k) => console.log(`  ${k}  ${String(tot[k]).padStart(4)}  ${(100 * tot[k] / N).toFixed(1)}%`));
-  return { same, skew, dupes, locked };
+  //  REPEATING BLOCK, the one defect visible inside a single key on its own.
+  const cycles = rows.map((r) => ({ r, c: cycleFinding(r.letters) })).filter((x) => x.c);
+  console.log(`\nA REPEATING BLOCK INSIDE ONE KEY (${cycles.length}):`);
+  cycles.length ? cycles.forEach(({ r, c }) => console.log(
+    `  ${r.handle.padEnd(42)}${r.activity.padEnd(10)}${c.block} x${(c.len / c.period).toFixed(1)}`
+    + ` covers ${c.len} of ${r.n}   ${r.key}`))
+                : console.log('  none');
+
+  return { same, skew, dupes, locked, cycles };
 }
 
 // ── THE opt-btn SHAPE, FOR REBALANCE ────────────────────────────────────────
@@ -629,4 +701,5 @@ if (require.main === module) {
 }
 
 module.exports = { keysFor, distributionRows, rewriteBody, verify, audit,
-  readOptBtnQuestions, rewriteBodyOptBtn, verifyOptBtn, TARGETS };
+  readOptBtnQuestions, rewriteBodyOptBtn, verifyOptBtn,
+  longestCycle, cycleFinding, TARGETS };
