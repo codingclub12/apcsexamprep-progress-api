@@ -1,5 +1,24 @@
 'use strict';
 // ─────────────────────────────────────────────────────────────────────────────
+//  STALE MIRROR. THE DEPLOYED ASSET IS A DIFFERENT PROGRAM. Checked 2026-09-02.
+//
+//  This repo is NOT canonical for this file, the same way it is not for
+//  apcs-tracker.js. The asset the storefront serves lives in the theme repo and
+//  reaches pages through Shopify's GitHub sync.
+//
+//  The served version is 4,417 bytes minified against 8,317 here, and the
+//  difference is behaviour, not formatting. It gates on an ALLOWED_ACTIVITIES
+//  list, refuses to start unless window.APCS_PAGE names an allowed activity,
+//  hands the score to window.APCS_saveLessonScore instead of posting to the API
+//  itself, splits its score elements into RESULT and PROGRESS tiers, and adds a
+//  1500 ms settle timer plus a visibility test. None of that is below.
+//
+//  A stale copy with no warning is worse than no copy: reading this file is what
+//  produced the wrong conclusion in docs/reporter-gap-handoff.md that the graded
+//  cyber pages carry no reporter. They all load one. Read the served asset
+//  before reasoning about reporting behaviour.
+// ─────────────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
 //  APCS SCORE REPORTER - one script for every graded page.
 //
 //  WHY ONE SCRIPT

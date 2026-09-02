@@ -108,6 +108,78 @@ const orphan = pageFromHandle('ap-cyber-unit-2-lesson-5');
 if (orphan) fail(`ap-cyber-unit-2-lesson-5 -> ${orphan.lesson}, expected null`);
 else pass('ap-cyber-unit-2-lesson-5 stays untracked');
 
+//  6. THE THEME MUST USE THE SAME MAP, AND TODAY IT DOES NOT.
+//
+//  Everything above pins the SERVER. The number that reaches the gradebook is
+//  chosen by the STOREFRONT, which sets window.APCS_PAGE before apcs-tracker.js
+//  and apcs-score-reporter.js run. Read off the live page on 2026-09-02, that
+//  snippet derives the lesson by naive arithmetic on the handle ordinals:
+//
+//      m = h.match(/^ap-cyber-unit-(\d+)-lesson-(\d+)-(exercise-1|exercise-2|lab|quiz)$/);
+//      if (m) p = { unit: 'unit-' + m[1], lesson: m[1] + '.' + m[2], activity: m[3] };
+//
+//  It never consulted the renumbering. That is exactly the silent failure the
+//  header of this file describes, running in production: lesson-3 files under
+//  3.3 while the page teaches 3.2, nothing throws, and a student's work lands on
+//  a lesson they never opened. Four handles report the retired 3.6, which has no
+//  column at all.
+//
+//  The fix belongs in the theme, which is a different repo. What belongs HERE is
+//  refusing to let the disagreement be rediscovered: the drift set is pinned
+//  exactly, so a NEW disagreement fails the build, and so does fixing the theme
+//  without emptying this list. Either way it gets edited on purpose.
+const THEME_ACTIVITIES = /^ap-cyber-unit-(\d+)-lesson-(\d+)-(exercise-1|exercise-2|lab|quiz)$/;
+const themeRule = (h) => {
+  const m = h.match(THEME_ACTIVITIES);
+  return m ? { unit: `unit-${m[1]}`, lesson: `${m[1]}.${m[2]}`, activity: m[3] } : null;
+};
+
+//  Every cyber activity handle, built from the course structure rather than
+//  typed out, so a new lesson or activity is compared automatically.
+const { COURSES } = require('../utils');
+const CYBER = COURSES['ap-cybersecurity'];
+const allHandles = [];
+for (const [unit, cfg] of Object.entries(CYBER.units || CYBER)) {
+  if (!cfg || !cfg.lessons) continue;
+  for (let i = 1; i <= cfg.lessons.length; i++) {
+    for (const a of ['exercise-1', 'exercise-2', 'lab', 'quiz']) {
+      allHandles.push(`${unit.replace('unit-', 'ap-cyber-unit-')}-lesson-${i}-${a}`);
+    }
+  }
+}
+
+//  Live as of 2026-09-02: all 24 Unit 3 activity pages, and nothing else.
+const KNOWN_DRIFT = [];
+for (let n = 1; n <= 6; n++) {
+  for (const a of ['exercise-1', 'exercise-2', 'lab', 'quiz']) {
+    KNOWN_DRIFT.push(`ap-cyber-unit-3-lesson-${n}-${a}`);
+  }
+}
+
+const drift = allHandles.filter((h) => {
+  const t = themeRule(h), sv = pageFromHandle(h);
+  return t && sv && (t.lesson !== sv.lesson || t.unit !== sv.unit);
+});
+const unexpected = drift.filter((h) => !KNOWN_DRIFT.includes(h));
+const healed = KNOWN_DRIFT.filter((h) => !drift.includes(h));
+
+if (unexpected.length) {
+  fail(`the storefront and the server disagree on ${unexpected.length} handle(s) that were `
+    + `agreeing: ${unexpected.slice(0, 4).join(', ')}. Work posted from these lands on the `
+    + `wrong lesson.`);
+} else if (healed.length === KNOWN_DRIFT.length) {
+  fail('the storefront now agrees on every Unit 3 handle. Empty KNOWN_DRIFT in this file: '
+    + 'the defect it documents is fixed and the list is now a lie.');
+} else if (healed.length) {
+  fail(`the storefront was fixed for ${healed.length} of ${KNOWN_DRIFT.length} Unit 3 handles `
+    + `but not the rest: ${healed.slice(0, 4).join(', ')}. A half-applied renumbering is worse `
+    + `than none, because the two halves of Unit 3 now file under different schemes.`);
+} else {
+  pass(`the storefront disagrees with the server on exactly the ${drift.length} known Unit 3 `
+    + 'handles, and agrees on the other ' + (allHandles.length - drift.length)
+    + '. This is a LIVE DEFECT awaiting a theme fix, not a passing state.');
+}
+
 console.log(
   failures
     ? `\n${failures} assertion(s) failed`
