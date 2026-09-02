@@ -39,6 +39,17 @@ BY_HAND = {
     "pages/ap-csa-unit-4-study-guide": "ap-csa-unit-4-data-collections-study-guide",
     "products/ap-csa-unit-1-superpack-free": "ap-csa-teacher-superpack-free-preview",
     "blogs/daily-ap-csa-practice": "ap-csa-daily-practice",
+    #  AP Cyber Unit 1, linked by the topic name and published under the
+    #  lesson number. Topic 1.3 is wireless security and 1.5 is AI cyber
+    #  defense, stated by the lesson page and by the matching quiz.
+    "pages/ap-cybersecurity-unit-1-wireless-security-exercise-1": "ap-cyber-unit-1-lesson-3-exercise-1",
+    "pages/ap-cybersecurity-unit-1-wireless-security-exercise-2": "ap-cyber-unit-1-lesson-3-exercise-2",
+    "pages/ap-cybersecurity-unit-1-wireless-security-lab": "ap-cyber-unit-1-lesson-3-lab",
+    "pages/ap-cybersecurity-unit-1-wireless-security-quiz": "ap-cyber-unit-1-lesson-3-quiz",
+    "pages/ap-cybersecurity-unit-1-ai-cyber-defense-exercise-1": "ap-cyber-unit-1-lesson-5-exercise-1",
+    "pages/ap-cybersecurity-unit-1-ai-cyber-defense-exercise-2": "ap-cyber-unit-1-lesson-5-exercise-2",
+    "pages/ap-cybersecurity-unit-1-ai-cyber-defense-lab": "ap-cyber-unit-1-lesson-5-lab",
+    "pages/ap-cybersecurity-unit-1-ai-cyber-defense-quiz": "ap-cyber-unit-1-lesson-5-quiz",
 }
 
 

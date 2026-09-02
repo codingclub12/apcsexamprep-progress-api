@@ -123,7 +123,8 @@ console.log('\n2b. Every entry is checked against the live handle list, not take
   //  extends the dead one at a hyphen. Uniqueness is the proof; two candidates
   //  is not a proof, it is a choice.
   const BY_HAND = new Set(['pages/ap-csa-daily-practice', 'pages/ap-csa-unit-4-study-guide',
-    'products/ap-csa-unit-1-superpack-free', 'blogs/daily-ap-csa-practice']);
+    'products/ap-csa-unit-1-superpack-free', 'blogs/daily-ap-csa-practice',
+    ...Object.keys(m.RETARGET).filter((k) => k.includes('ap-cybersecurity-unit-1-'))]);
   const extensionsOf = (h) => [...handles].filter((x) => x.startsWith(h + '-'));
   for (const [dead, entry] of Object.entries(m.RETARGET)) {
     if (BY_HAND.has(dead)) continue;
@@ -144,6 +145,29 @@ console.log('\n2b. Every entry is checked against the live handle list, not take
     extensionsOf('ap-computer-science-a'));
   ok('ap-csa-study-games is NOT mapped, though it extends uniquely',
     !m.RETARGET['ap-csa-study-games'] && extensionsOf('ap-csa-study-games').length === 1);
+}
+
+console.log('\n2c. AP Cyber Unit 1: the course is named twice and linked by the other name');
+{
+  //  The lesson pages are ap-cybersecurity-unit-1-<topic> and their activities
+  //  are ap-cyber-unit-1-lesson-<n>. Eight links inside Unit 1 use the first
+  //  naming for an activity and 404. Board 159 called those pages unbuilt; all
+  //  eight are live under the other name.
+  const handles = new Set(fs.readFileSync(path.join(__dirname, 'fixtures', 'live-page-handles.txt'), 'utf8')
+    .split('\n').map((s2) => s2.trim()).filter(Boolean));
+  const cyber = Object.entries(m.RETARGET).filter(([k]) => k.includes('ap-cybersecurity-unit-1-'));
+  ok('eight Unit 1 activity links are mapped', cyber.length === 8, cyber.length);
+  ok('each dead handle really is dead', cyber.every(([k]) => !handles.has(k.slice(6))));
+  ok('each target really is live', cyber.every(([, v]) => handles.has(v.to)));
+  //  Topic 1.3 to lesson 3 and Topic 1.5 to lesson 5, and the suffix never moves:
+  //  a quiz link must not become a lab.
+  ok('wireless security maps to lesson 3, AI cyber defense to lesson 5',
+    cyber.every(([k, v]) => v.to.includes(k.includes('wireless-security') ? 'lesson-3' : 'lesson-5')));
+  ok('the activity kind is preserved, so a quiz never becomes a lab',
+    cyber.every(([k, v]) => k.split('-').pop() === v.to.split('-').pop()
+      && k.endsWith('exercise-1') === v.to.endsWith('exercise-1')));
+  ok('every entry carries the evidence it was read from',
+    cyber.every(([, v]) => /Topic 1\.[35]/.test(v.why)));
 }
 
 console.log('\n3. THE ONE THAT MATTERS: a target that does not exist is never invented');
