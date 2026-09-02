@@ -1,0 +1,171 @@
+{
+  "checked_at": "2026-09-01",
+  "note": "Written by scripts/ced-watch.js. Do not hand-edit: the next run overwrites it.",
+  "sources": [
+    {
+      "id": "course-changes-overview",
+      "label": "AP course and exam changes (program-wide)",
+      "course": "all",
+      "kind": "html",
+      "critical": true,
+      "url": "https://apcentral.collegeboard.org/courses/how-ap-develops-courses-and-exams/course-changes-overview",
+      "hash": "bcf1730ee2b924f1cb25241c8826d34d4d276c9ff95f8345b26ab3f64942f09d",
+      "bytes": 54509,
+      "last_modified": null
+    },
+    {
+      "id": "csa-course",
+      "label": "AP Computer Science A course page",
+      "course": "ap-csa",
+      "kind": "html",
+      "critical": false,
+      "url": "https://apcentral.collegeboard.org/courses/ap-computer-science-a",
+      "hash": "69f84f039254bf918c348af7bba5ff57e40abe63a663892320bcf5dc0bfe9bdd",
+      "bytes": 49969,
+      "last_modified": null
+    },
+    {
+      "id": "csp-ced-pdf",
+      "label": "AP CSP Course and Exam Description (PDF)",
+      "course": "ap-csp",
+      "kind": "pdf",
+      "critical": false,
+      "url": "https://apcentral.collegeboard.org/media/pdf/ap-computer-science-principles-course-and-exam-description.pdf",
+      "hash": "144e1af475c01ced6d068356d5494e09d8ed8136d397872ce03c448a4886b1f5",
+      "bytes": 7498387,
+      "last_modified": "Tue, 06 Jan 2026 19:17:58 GMT"
+    },
+    {
+      "id": "csp-course",
+      "label": "AP Computer Science Principles course page",
+      "course": "ap-csp",
+      "kind": "html",
+      "critical": false,
+      "url": "https://apcentral.collegeboard.org/courses/ap-computer-science-principles",
+      "hash": "5ebcd9300737f316a41b2f876f1a996300f1347f1dfa08bcba391214ec5e4a7a",
+      "bytes": 54261,
+      "last_modified": null
+    },
+    {
+      "id": "cyber-ced-pdf",
+      "label": "AP Cybersecurity Course and Exam Description (PDF)",
+      "course": "ap-cybersecurity",
+      "kind": "pdf",
+      "critical": true,
+      "url": "https://apcentral.collegeboard.org/media/pdf/ap-cybersecurity-course-and-exam-description.pdf",
+      "hash": "169ac424ba436754de71c2ba2e09541eb43bfaf170435f39f4cec55c67c597da",
+      "bytes": 5947037,
+      "last_modified": "Wed, 22 Jul 2026 19:13:25 GMT"
+    },
+    {
+      "id": "cyber-classroom-resources",
+      "label": "AP Cybersecurity classroom resources",
+      "course": "ap-cybersecurity",
+      "kind": "html",
+      "critical": false,
+      "url": "https://apcentral.collegeboard.org/courses/ap-cybersecurity/classroom-resources",
+      "hash": "41f5f18483fff902e9aa5dafbf017138cb35b9bf06a1b171e9817b7268310a08",
+      "bytes": 27460,
+      "last_modified": null
+    },
+    {
+      "id": "cyber-course",
+      "label": "AP Cybersecurity course page",
+      "course": "ap-cybersecurity",
+      "kind": "html",
+      "critical": true,
+      "url": "https://apcentral.collegeboard.org/courses/ap-cybersecurity",
+      "hash": "8b66f4279eb5b85b75f9decfa70e2ede403dce23709eee7913268a93cc8d551f",
+      "bytes": 46967,
+      "last_modified": null
+    },
+    {
+      "id": "cyber-exam",
+      "label": "AP Cybersecurity Exam",
+      "course": "ap-cybersecurity",
+      "kind": "html",
+      "critical": false,
+      "url": "https://apcentral.collegeboard.org/courses/ap-cybersecurity/exam",
+      "hash": "fe3d7601c1bd612d5246366262c9418fb031a92c8657f5ca4262e1df0ae2f40f",
+      "bytes": 31710,
+      "last_modified": null
+    },
+    {
+      "id": "exam-dates",
+      "label": "AP exam dates",
+      "course": "all",
+      "kind": "html",
+      "critical": false,
+      "url": "https://apcentral.collegeboard.org/exam-administration-ordering-scores/exam-dates",
+      "hash": "7113dc5729c5762a6e808527bdd2d05a3b7df1fc06702ddc2432ad08bc6deb93",
+      "bytes": 29276,
+      "last_modified": null
+    },
+    {
+      "id": "kickstart-hub",
+      "label": "AP Career Kickstart hub",
+      "course": "ap-networking",
+      "kind": "html",
+      "critical": false,
+      "url": "https://apcentral.collegeboard.org/courses/ap-career-kickstart",
+      "hash": "3e9e829cb97d1299584145625ac96cf5b74ba10c294b637875b9a9b5dbfd552a",
+      "bytes": 49482,
+      "last_modified": null
+    },
+    {
+      "id": "kickstart-pilots",
+      "label": "AP Career Kickstart pilots",
+      "course": "ap-networking",
+      "kind": "html",
+      "critical": true,
+      "url": "https://apcentral.collegeboard.org/courses/ap-career-kickstart/pilots",
+      "hash": "d0926339702b71bbe9292e7a1bf7226ec7407cdaeb0c8abec789b840a1be1f73",
+      "bytes": 31763,
+      "last_modified": null
+    },
+    {
+      "id": "networking-about",
+      "label": "About AP Networking",
+      "course": "ap-networking",
+      "kind": "html",
+      "critical": true,
+      "url": "https://apcentral.collegeboard.org/courses/ap-networking/about",
+      "hash": "57c7f798c98c4b1bc6c8a5e0855278b508b4896ba43916844edc44e1f9035c5e",
+      "bytes": 34115,
+      "last_modified": null
+    },
+    {
+      "id": "networking-adopt",
+      "label": "Adopt AP Networking",
+      "course": "ap-networking",
+      "kind": "html",
+      "critical": false,
+      "url": "https://apcentral.collegeboard.org/courses/ap-networking/adopt",
+      "hash": "142b34c80e2ab5eb8e77888c9d24771a103788e7aef44b4c47c184eafa4f7d41",
+      "bytes": 29661,
+      "last_modified": null
+    },
+    {
+      "id": "networking-credential",
+      "label": "AP Networking Credential",
+      "course": "ap-networking",
+      "kind": "html",
+      "critical": false,
+      "url": "https://apcentral.collegeboard.org/courses/ap-career-kickstart/credentials/ap-networking",
+      "hash": "f54def01f0e2773930e5f3ef11f5381213054052044ec4df3e837200d15b18a9",
+      "bytes": 31366,
+      "last_modified": null
+    },
+    {
+      "id": "networking-framework-pdf",
+      "label": "AP Networking Course Framework (PDF)",
+      "course": "ap-networking",
+      "kind": "pdf",
+      "critical": true,
+      "url": "https://apcentral.collegeboard.org/media/pdf/ap-networking-course-framework.pdf",
+      "hash": "2dd45c6fc59c90533a1570102a3be0ec9fcae4bf731b389525fe25a80c80bd8f",
+      "bytes": 2101433,
+      "last_modified": "Fri, 13 Mar 2026 15:26:57 GMT"
+    }
+  ]
+}
