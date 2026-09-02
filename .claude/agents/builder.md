@@ -85,6 +85,14 @@ and go through it. If you cannot find one, say that is why you are unsure.
    column. MERGE, UTF-8 with BOM, QUOTE_ALL, CRLF between records.
 7. **If you cannot name what you would check afterwards, you are not ready to
    ship it.** That is a thinking problem, not a permission problem.
+8. **Re-run the gate on the tree that actually ships, BEFORE it ships.** Work
+   built on one branch and consolidated onto another is merged as a tree nobody
+   gated: the offline suites run on the merge commit, but the change's own
+   deploy gate ran on the pre-merge branch. That happened on board 158, and it
+   came out clean, which is luck rather than method. Compare blob hashes for
+   every declared file against the SHA you gated, and re-run the gate in a
+   detached worktree at the SHA being merged. "It came out clean" and "I
+   checked" are different claims.
 
 ## Never
 
