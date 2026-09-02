@@ -164,7 +164,10 @@ ok('password inputs are masked', /maskInputOptions:\s*\{\s*password:\s*true\s*\}
 // is what the masking above keys off. A future page that uses type=text for a
 // credential would silently start recording it.
 const pages = fs.readdirSync(path.join(__dirname, '..', 'public')).filter((f) => f.endsWith('.html'));
-const credPages = ['login.html', 'teacher-reset.html', 'teacher-change-password.html'];
+// denominators.html joined this list the day it was added: it takes the admin
+// key in an id="key" box, which is the exact case the comment above anticipates.
+// A page is added here when it starts accepting a credential, not later.
+const credPages = ['login.html', 'teacher-reset.html', 'teacher-change-password.html', 'denominators.html'];
 credPages.forEach((f) => {
   const html = fs.readFileSync(path.join(__dirname, '..', 'public', f), 'utf8');
   const inputs = html.match(/<input[^>]*>/g) || [];
