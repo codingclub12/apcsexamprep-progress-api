@@ -203,3 +203,46 @@ is the other session's code and its own change.
 ```
 smoke:answerkeys  48 passed, 0 failed   (22 originally, 36 on main, 48 here)
 ```
+
+## Addendum, 02:40 on 2026-09-02: the CDACDA finding came back fixed
+
+`bc3504e` landed on main overnight and closed the loop on the finding above,
+crediting where it came from:
+
+> Found by the repeating-block check on the branch for ledger #125, then
+> reproduced here independently before anything was changed. Caught before the
+> import sheet was run, so no student ever saw it.
+
+The fix went where this note said it belonged, in the generator rather than in a
+hand-edited table. `scripts/csp-target-generator.js` is now checked in and now
+refuses any key with a period that TILES it. Two targets moved:
+`legal-ethical-concerns` from `CDACDA` to `CDACDB`, and `safe-computing` from
+`DABDCC` to `AACDAC` as downstream drift. 35 of 35 distinct, 0 of 35 periodic.
+
+They drew the short-key line in the same place this branch did, independently:
+a partial echo like `ABCDAB` is a two character tail at 1 in 16 and is left to
+distinctness, while a tiling repeat is worth refusing. Two people reaching the
+same threshold from different directions is the best evidence available that the
+threshold is right.
+
+`75f8dd1` also landed, fixing a byte-loss bug in the checkMCQ rewrite path: the
+CSP import stripped 3,280 bytes of indentation across 23 live pages, the same
+defect the opt-btn path had shipped at 90 bytes a page. Neither touches this
+branch's check.
+
+**The audit keeps its own copy of the predicate, and that is not duplication.**
+The generator only covers keys IT produces. Nothing it produces reaches the AP
+Cyber teacher bundle or any hand-authored page, which is where both bundle keys
+came from. One refuses to write a bad key; the other reads what is actually
+live. A new assertion pins the two together: every shipped CSP target must pass
+the audit's own check, so if the generator ever regresses, `smoke:answerkeys`
+says so rather than the next import.
+
+```
+smoke:answerkeys  57 passed, 0 failed   (22 originally, 47 on main, 57 here)
+```
+
+Fourth time main has collided with this branch in one day. Each time the
+resolution was the same: take main's version of both files wholesale, re-apply
+only the repeating-block check. Nothing another session wrote has been
+overwritten.

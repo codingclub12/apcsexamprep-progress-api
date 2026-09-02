@@ -15,7 +15,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 const { keysFor, distributionRows, rewriteBody, verify, audit,
   readOptBtnQuestions, rewriteBodyOptBtn, verifyOptBtn,
-  longestCycle, cycleFinding } = require('../scripts/answer-key-audit');
+  longestCycle, cycleFinding, TARGETS } = require('../scripts/answer-key-audit');
 
 let pass = 0, fail = 0;
 const ok = (n, c, x) => {
@@ -292,6 +292,64 @@ console.log('\nopt-btn rebalance');
     verifyOptBtn('t', body, corrupted));
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+//  THE REWRITE MUST NOT REFORMAT THE PAGE.
+//
+//  Every fixture above joins its tags with a bare newline, which is the shape
+//  rewriteBody happened to emit, so none of them could see the defect: the real
+//  CSP pages indent their buttons ten spaces, and the rewrite normalised that
+//  away. The 2026-09-02 import stripped 3,280 bytes of indentation across 23
+//  live pages with every semantic check green, because the loss was BETWEEN the
+//  tags and no check that reads option semantics can see the space around them.
+//
+//  Same defect the opt-btn path shipped on the unit 5 sheet, 90 bytes a page.
+//  So the fixture here is INDENTED on purpose.
+{
+  console.log('\nLayout: an indented page comes back indented');
+  const IND = (qid, correct, texts) => {
+    const opts = ['A', 'B', 'C', 'D'].map((l, i) =>
+      `          <button class="mcq-option" onclick="checkMCQ('${qid}','${l}','${correct}','${qid}-fb-${l}')">`
+      + `<span class="mcq-option-letter">${l}</span> ${texts[i]}</button>`).join('\n');
+    const fbs = ['A', 'B', 'C', 'D'].map((l) =>
+      `        <div id="${qid}-fb-${l}" class="mcq-feedback ${l === correct ? 'correct-fb' : 'incorrect-fb'}">why ${texts['ABCD'.indexOf(l)]}</div>`).join('\n');
+    return `<div class="mcq-item" data-activity="quiz" data-item="${qid}">\n`
+      + `        <div class="mcq-options" id="${qid}-options">\n${opts}\n        </div>\n${fbs}\n      </div>`;
+  };
+  const body = IND('q1', 'A', ['eleven', 'twelve', 'thirteen', 'fourteen'])
+             + IND('q2', 'C', ['red', 'green', 'blue', 'grey']);
+
+  const r = rewriteBody('t', body, ['C', 'A']);
+  ok('  both questions moved', r.moved === 2, r.moved);
+  ok('  the correct answer still reads the same', verify('t', body, r.body).length === 0,
+    verify('t', body, r.body));
+
+  // Only letters move, and a letter is one character, so the byte count is the
+  // proof that no layout was silently normalised.
+  ok('  the body length is unchanged', r.body.length === body.length,
+    { before: body.length, after: r.body.length });
+  ok('  the ten space button indentation survives',
+    (r.body.match(/\n {10}<button class="mcq-option"/g) || []).length === 8,
+    (r.body.match(/\n {10}<button class="mcq-option"/g) || []).length);
+  ok('  and the eight space feedback indentation survives',
+    (r.body.match(/\n {8}<div id="q\d-fb-[A-D]"/g) || []).length === 8,
+    (r.body.match(/\n {8}<div id="q\d-fb-[A-D]"/g) || []).length);
+
+  // The guard that makes it impossible to ship again. Reformatting alone, with
+  // every answer left where the rewrite put it, must be refused.
+  const reformatted = r.body.replace(/\n {10}<button/g, '\n<button');
+  ok('  verify refuses a rewrite that only reformats',
+    verify('t', body, reformatted).length > 0, verify('t', body, reformatted));
+  ok('  and names it as content outside the options',
+    /OUTSIDE the options/.test(verify('t', body, reformatted).join(' ')));
+
+  // A page authored flush left must NOT be indented by the rewrite either: the
+  // rule is preserve, not impose.
+  const flat = body.replace(/\n {10}</g, '\n<').replace(/\n {8}</g, '\n<');
+  const rf = rewriteBody('t', flat, ['C', 'A']);
+  ok('  a flush left page stays flush left',
+    rf.body.length === flat.length && !/\n {10}<button/.test(rf.body));
+}
+
 
 // ── A REPEATING BLOCK INSIDE ONE KEY ────────────────────────────────────────
 //  Duplicate keys and position lock compare activities to each OTHER. A single
@@ -326,9 +384,11 @@ ok('  the replacement 2.1 key is clean', cycleFinding(K('DADBACBCABCBDACD')) ===
 ok('  the replacement 2.2 key is clean', cycleFinding(K('BADDACDADCACBDBCABCBACADBDCB')) === null);
 ok('  a run of eight identical answers is caught even when the rest varies',
   (cycleFinding(K('AAAAAAAABCDB')) || {}).len === 8);
-// A short key is not automatically safe. CDACDA is one block twice over: too
-// short for the eight-answer rule, and still a free second half. It is a real
-// target, generated for ap-csp-course-bi5-legal-ethical-concerns in 974b2cf.
+
+// CDACDA is the pass-three CSP target this check found, fixed in the generator
+// by bc3504e. The audit keeps its own copy of the predicate because the
+// generator only covers keys IT produces, and nothing it produces reaches the
+// AP Cyber bundle or a hand-authored page.
 ok('  a fully periodic six-item key IS flagged, however short',
   (cycleFinding(K('CDACDA')) || {}).block === 'CDA');
 ok('  ...but a six-item key that merely starts to repeat is not',
@@ -337,6 +397,11 @@ ok('  an all-one-letter key is left to allSame rather than reported twice',
   cycleFinding(K('BBBBBB')) === null);
 ok('  a key with no repeating block is left alone',
   cycleFinding(K('DCBAACADBBDCACBD')) === null);
+
+// The shipped targets must agree with the generator that produced them.
+ok('  none of the live CSP targets repeats inside itself',
+  Object.values(TARGETS).every((k) => cycleFinding(k) === null),
+  Object.entries(TARGETS).filter(([, k]) => cycleFinding(k)).map(([h]) => h));
 
 // End to end through audit(), on the opt-btn shape the live pages use.
 const cycKey = 'CADBCADBCADBCADB';
