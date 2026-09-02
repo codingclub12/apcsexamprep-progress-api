@@ -67,26 +67,67 @@ traffic that makes these pages worth having.
 **NOT rewriting the questions.** They are correct Java. They are simply not on
 this exam, and a student tracing them is not harmed as long as the page says so.
 
-## Where the sheet build stopped, and why
+## The sheet, and the two things that decide whether it imports
 
-The banner ships as a Matrixify Blogs/Articles import, which needs each article's
-RAW body. A rendered page cannot be used: it carries theme nav, popups and
-Klaviyo that are not in the article body, so uploading one injects the nav INTO
-the content.
+The banner ships as a Matrixify Blog Posts import, which needs each article's RAW
+body. A rendered page cannot be used: it carries theme nav, popups and Klaviyo
+that are not in the article body, so uploading one injects the nav INTO the
+content.
 
-`extract_article.js` takes a byte-exact slice bounded by tokens the body itself
-starts and ends with, and refuses anything that does not match. Against the one
-article whose raw body was pulled from the Admin API as a control:
+`scripts/csa-article-body-extract.js` anchors on the THEME rather than on the
+article. Both content templates render into the same element:
+
+    <div class="article-template__content ... rte ...">{{ article.content }}</div>
+
+so the body is exactly that element's children, and counting div nesting finds
+the close without knowing anything about the article's own markup. All 49
+extract. Against the one article whose raw body was pulled from the Admin API as
+a control:
 
     13,023 bytes, first and last bytes identical to the Admin API body
-    Dog extends Animal present, correctAnswer 'D' present, no theme markup
 
-It extracts 22 of the 49 cleanly and **refuses the other 27**, which use an older
-content template with no `apcs-practice-wrapper` block at all. Refusing is the
-correct behaviour; guessing a second anchor across 27 live pages is not.
+An earlier extractor keyed on the article's own opening token, handled 22 of 49
+and REFUSED the other 27. Refusing was right; guessing a second anchor across 27
+live pages was not.
 
-Those 27 need their bodies from the Admin API `body` field rather than a rendered
-slice. That is the next step, and it is bounded work, not a research problem.
+### The first upload was rejected in one second, and the bodies were fine
+
+    Import Failed
+    Cannot understand the uploaded file.
+    Duration: 1 sec
+
+Every body in that file was correct byte for byte, and all 38 assertions covering
+them were green. Both defects were in the ENVELOPE, which nothing checked.
+
+**The post's own columns are not prefixed.** The header said `Article: Handle`,
+`Article: Command`, `Article: Body HTML`. Matrixify names the sheet's own entity
+columns bare and prefixes only RELATED entities:
+
+    Blog: Handle | Handle | Command | Body HTML
+
+The evidence was already in this repo. `scripts/frq-pages-csv.js` and
+`scripts/lab-pages-csv.js` write `Handle, Command, Title, Body HTML` and import
+fine, and comparing against them also ruled out the mechanics: both quote the
+header and emit a BOM, exactly as this generator does.
+
+**A CSV has no tab name, so the FILE NAME is the sheet name.** Matrixify decides
+what a file contains from the tab name, and for a CSV that falls to the filename.
+`csa-banner-canary.csv` told it nothing, so the whole file was rejected before a
+single row was read. That is why the failure carried no per-row detail. The name
+must contain something like `blog-posts`, and `assertSheetName` now refuses to
+WRITE a file Matrixify would reject: a generator whose output cannot be imported
+is not a generator, and this is the one defect class the per-row checks
+structurally cannot see, because they all run inside a file that never gets
+opened.
+
+Confirmed against matrixify.app/documentation/blog-posts/ rather than inferred.
+
+**Command is UPDATE, not the repo's usual MERGE.** MERGE creates a row it cannot
+find, so one typo'd handle would publish a blank article to a live blog. There is
+nothing to create here, only 49 articles that already exist.
+
+**The canary is the whole reason this cost one row.** A format guess verified by
+one page costs a minute; the same guess applied to 49 pages does not.
 
 ## Not verified
 
