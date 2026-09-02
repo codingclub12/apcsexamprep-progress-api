@@ -1,0 +1,240 @@
+<style>
+    .apcs-practice-wrapper{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;line-height:1.6;color:#2d3748;max-width:900px;margin:0 auto;padding:20px}.apcs-header{background:#fff;border-radius:12px;padding:32px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.1)}.apcs-unit-section{color:#5a67d8;font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}.apcs-meta{color:#718096;font-size:14px}.apcs-focus-badge{display:inline-block;background:#edf2f7;color:#2d3748;padding:8px 16px;border-radius:20px;font-size:14px;font-weight:500;margin-top:16px}.apcs-difficulty-badge{display:inline-block;background:#48bb78;color:#fff;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600;margin-left:8px}.apcs-question-card{background:#fff;border-radius:12px;padding:32px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.1)}.apcs-question-header{font-size:18px;font-weight:600;color:#2d3748;margin-bottom:20px}.apcs-question-text{font-size:16px;margin-bottom:20px;line-height:1.7}.apcs-code-block{background:#2d3748;color:#e2e8f0;padding:20px;border-radius:8px;margin:20px 0;overflow-x:auto;font-family:Consolas,Monaco,'Courier New',monospace;font-size:14px}.apcs-code-block pre{margin:0;padding:0;white-space:pre;line-height:1.6}.apcs-code-block code{color:#e2e8f0;font-family:Consolas,Monaco,'Courier New',monospace}.apcs-keyword{color:#fc8181}.apcs-function{color:#90cdf4}.apcs-number{color:#f6ad55}.apcs-string{color:#68d391}.apcs-comment{color:#a0aec0;font-style:italic}.apcs-answer-options{margin:24px 0}.apcs-option{background:#f7fafc;border:2px solid #e2e8f0;border-radius:8px;padding:16px;margin-bottom:12px;cursor:pointer;transition:all .2s;display:grid;grid-template-columns:18px 30px 1fr;gap:8px;align-items:start}.apcs-option:hover{border-color:#5a67d8;background:#edf2f7}.apcs-option input[type=radio]{cursor:pointer;width:18px;height:18px;margin-top:2px}.apcs-option-letter{font-weight:600;font-size:15px;padding-top:1px}.apcs-option-content{font-size:15px;line-height:1.5;white-space:pre-line;padding-top:1px}.apcs-submit-btn{background:#5a67d8;color:#fff;border:none;padding:14px 32px;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;transition:background .2s;width:100%;margin-top:8px}.apcs-submit-btn:hover{background:#4c51bf}.apcs-feedback{background:#fff;border-radius:12px;padding:32px;margin-top:24px;box-shadow:0 1px 3px rgba(0,0,0,.1);display:none}.apcs-feedback.apcs-correct{border-left:4px solid #48bb78}.apcs-feedback.apcs-incorrect{border-left:4px solid #f56565}.apcs-feedback-header{font-size:20px;font-weight:700;margin-bottom:20px}.apcs-feedback-header.apcs-correct{color:#48bb78}.apcs-feedback-header.apcs-incorrect{color:#f56565}.apcs-section-title{font-size:18px;font-weight:600;color:#2d3748;margin-top:28px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e2e8f0}.apcs-section-content{margin-bottom:20px;line-height:1.7}.apcs-section-content p{margin-bottom:12px}.apcs-trace-table{width:100%;border-collapse:collapse;margin:16px 0;font-family:Consolas,Monaco,monospace;font-size:14px}.apcs-trace-table th{background:#edf2f7;padding:12px;text-align:left;font-weight:600;border:1px solid #e2e8f0}.apcs-trace-table td{padding:10px 12px;border:1px solid #e2e8f0}.apcs-trace-table tr:nth-child(even){background:#f7fafc}.apcs-mistake-block{background:#fff5f5;border-left:3px solid #f56565;padding:16px;margin:12px 0;border-radius:4px}.apcs-mistake-title{font-weight:600;color:#c53030;margin-bottom:8px}.apcs-concept-list{list-style:none;padding:0}.apcs-concept-list li{padding:8px 0;padding-left:24px;position:relative}.apcs-concept-list li:before{content:"→";position:absolute;left:0;color:#5a67d8;font-weight:700}.apcs-tip-box{background:#ebf8ff;border-left:4px solid#4299e1;padding:20px;margin:20px 0;border-radius:4px}.apcs-tip-title{font-weight:600;color:#2c5282;margin-bottom:12px}.apcs-cta-box{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;padding:32px;border-radius:12px;margin-top:24px;text-align:center}.apcs-cta-box h3{margin-bottom:12px;color:#fff;font-size:22px}.apcs-cta-box p{margin-bottom:16px;font-size:16px}.apcs-cta-link{display:inline-block;background:#fff;color:#5a67d8;padding:12px 28px;border-radius:8px;font-weight:600;text-decoration:none;margin:8px}.apcs-cta-link:hover{background:#f7fafc;transform:translateY(-2px)}.apcs-cta-secondary{background:rgba(255,255,255,.2);color:#fff;border:2px solid #fff}.apcs-info-bar{margin-top:24px;padding:16px;background:#edf2f7;border-radius:8px;font-size:14px}.apcs-study-section{background:#f7fafc;border-radius:12px;padding:32px;margin-top:32px;border-top:4px solid #5a67d8}.apcs-study-section h3{color:#2d3748;font-size:20px;font-weight:700;margin-bottom:16px}.apcs-study-section p{margin-bottom:12px;line-height:1.7}@media (max-width:768px){.apcs-practice-wrapper{padding:12px}.apcs-header,.apcs-question-card,.apcs-feedback{padding:20px}}
+
+/* NAVIGATION ULTRA FIX v2 */
+.apcs-navigation{background:#fff!important;border-radius:12px!important;padding:24px!important;margin-top:24px!important;box-shadow:0 1px 3px rgba(0,0,0,.1)!important;display:flex!important;justify-content:space-between!important;align-items:center!important;flex-wrap:wrap!important;gap:16px!important}
+
+.apcs-navigation a,
+.apcs-navigation a.apcs-nav-link,
+a.apcs-nav-link,
+.apcs-practice-wrapper .apcs-navigation a,
+.apcs-practice-wrapper a.apcs-nav-link,
+div.apcs-navigation a,
+div.apcs-navigation a.apcs-nav-link,
+.apcs-navigation > a,
+.apcs-navigation > a.apcs-nav-link {
+    color:#5a67d8!important;
+    background:#fff!important;
+    padding:12px 20px!important;
+    border-radius:8px!important;
+    text-decoration:none!important;
+    font-weight:600!important;
+    font-size:15px!important;
+    box-shadow:0 1px 3px rgba(0,0,0,.1)!important;
+    display:inline-block!important;
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+    cursor:pointer!important;
+    -webkit-text-fill-color:#5a67d8!important;
+}
+
+.apcs-navigation a:link,
+.apcs-navigation a:visited,
+.apcs-navigation a:active,
+.apcs-navigation a.apcs-nav-link:link,
+.apcs-navigation a.apcs-nav-link:visited,
+.apcs-navigation a.apcs-nav-link:active,
+a.apcs-nav-link:link,
+a.apcs-nav-link:visited,
+a.apcs-nav-link:active {
+    color:#5a67d8!important;
+    background:#fff!important;
+    opacity:1!important;
+    visibility:visible!important;
+    -webkit-text-fill-color:#5a67d8!important;
+}
+
+.apcs-navigation a:hover,
+.apcs-navigation a.apcs-nav-link:hover,
+a.apcs-nav-link:hover {
+    background:#edf2f7!important;
+    transform:translateY(-2px)!important;
+    box-shadow:0 2px 6px rgba(0,0,0,.15)!important;
+}
+
+.apcs-navigation a.disabled,
+.apcs-navigation a.apcs-nav-link.disabled {
+    opacity:0.4!important;
+    pointer-events:none!important;
+    cursor:not-allowed!important;
+}
+</style>
+
+<div class="apcs-practice-wrapper">
+
+<!-- HEADER -->
+<div class="apcs-header">
+<div class="apcs-unit-section">Unit 2, Selection &amp; Iteration • Cycle 2</div>
+<div class="apcs-meta">Day 27 Advanced Practice • Harder Difficulty</div>
+<div class="apcs-focus-badge">
+Focus: Nested Filtering
+<span class="apcs-difficulty-badge" style="background:#f56565">Hard</span>
+<span class="apcs-difficulty-badge" style="background:#805ad5;margin-left:4px">Iteration + Selection (nested filtering)</span>
+</div>
+</div>
+
+<!-- QUESTION CARD -->
+<div class="apcs-question-card">
+<h2 class="apcs-question-header">Advanced Practice Question</h2>
+<div class="apcs-question-text">
+<strong>Format:</strong> Iteration + Selection (nested filtering)<br><br>
+What is printed?
+</div>
+
+
+<div class="apcs-code-block">
+<pre><code><span class="&lt;span">"apcs-keyword"</span>&gt;int c = <span class="&lt;span">"apcs-number"</span>&gt;0;
+
+<span class="&lt;span">"apcs-keyword"</span>&gt;for (<span class="&lt;span">"apcs-keyword"</span>&gt;int i = <span class="&lt;span">"apcs-number"</span>&gt;1; i &lt;= <span class="&lt;span">"apcs-number"</span>&gt;2; i++)
+{
+    <span class="&lt;span">"apcs-keyword"</span>&gt;for (<span class="&lt;span">"apcs-keyword"</span>&gt;int j = <span class="&lt;span">"apcs-number"</span>&gt;1; j &lt;= <span class="&lt;span">"apcs-number"</span>&gt;4; j++)
+    {
+        <span class="&lt;span">"apcs-keyword"</span>&gt;if (j % <span class="&lt;span">"apcs-number"</span>&gt;2 != <span class="&lt;span">"apcs-number"</span>&gt;0)
+        {
+            c++;
+        }
+    }
+}
+
+System.<span class="apcs-function">out</span>.<span class="apcs-function">print</span>ln(c);</code></pre>
+</div>
+
+
+<!-- ANSWER OPTIONS -->
+<form id="apcs-quiz-form">
+<div class="apcs-answer-options">
+<label class="apcs-option">
+<input type="radio" name="answer" value="A">
+<span class="apcs-option-letter">A)</span>
+<span class="apcs-option-content">2</span>
+</label>
+<label class="apcs-option">
+<input type="radio" name="answer" value="B">
+<span class="apcs-option-letter">B)</span>
+<span class="apcs-option-content">4</span>
+</label>
+<label class="apcs-option">
+<input type="radio" name="answer" value="C">
+<span class="apcs-option-letter">C)</span>
+<span class="apcs-option-content">6</span>
+</label>
+<label class="apcs-option">
+<input type="radio" name="answer" value="D">
+<span class="apcs-option-letter">D)</span>
+<span class="apcs-option-content">8</span>
+</label>
+</div>
+<button type="submit" class="apcs-submit-btn">Submit Answer</button>
+</form>
+</div>
+
+<!-- FEEDBACK SECTION -->
+<div id="apcs-feedback" class="apcs-feedback">
+<div id="apcs-feedback-header" class="apcs-feedback-header"></div>
+
+<div class="apcs-info-bar">
+<strong>Difficulty:</strong> Hard  | 
+<strong>Topic:</strong> Iteration + Selection (nested filtering)  | 
+<strong>Cycle:</strong> 2 (Advanced)
+</div>
+
+<div class="apcs-section-title">Why This Answer?</div>
+<div class="apcs-section-content">
+<p>For each i, odd j values are 1 and 3, so c increments 2 times per outer iteration. Two outer iterations → 4.</p>
+</div>
+
+<div class="apcs-section-title">Common Mistake</div>
+<div class="apcs-mistake-block">
+<div class="apcs-mistake-title">Watch Out!</div>
+<p>Counting all j values (4 per i) instead of only odd j values (2 per i).</p>
+</div>
+
+<div class="apcs-tip-box">
+<div class="apcs-tip-title">AP Exam Strategy</div>
+<p>When a condition filters iterations, count only the values that pass.</p>
+</div>
+</div>
+
+<!-- NAVIGATION -->
+<div class="apcs-navigation">
+<a href="/blogs/ap-csa-daily-practice/unit2-cycle2-day-26-iteration-break-in-nested-loops" class="apcs-nav-link" id="prev-day-link">← Previous</a>
+<a href="/pages/ap-csa-qotd-hub" class="apcs-nav-link">Hub</a>
+<a href="/blogs/ap-csa-daily-practice/unit2-cycle2-day-28-iteration-nested-loop-accumulation" class="apcs-nav-link" id="next-day-link">Next →</a>
+</div>
+
+<!-- STUDY SECTION -->
+<div class="apcs-study-section">
+<h3>Master This Topic</h3>
+<p>This Cycle 2 HARD question tests nested filtering. Review Unit 2 concepts to build mastery of selection and iteration.</p>
+<ul class="apcs-concept-list">
+<li>Understanding nested filtering</li>
+<li>Tracing code execution accurately</li>
+<li>Avoiding common pitfalls</li>
+</ul>
+<a href="/pages/ap-csa-unit-2-ultimate-study-guide" class="apcs-cta-link">View Unit 2 Study Guide</a>
+</div>
+
+<!-- CTA BOX -->
+<div class="apcs-cta-box">
+<h3>Ready for More Challenges?</h3>
+<p>Cycle 2 questions prepare you for the hardest AP CSA exam questions.</p>
+<a href="/pages/ap-csa-study-games" class="apcs-cta-link">Study Games</a>
+<a href="/pages/ap-csa-frq-archive" class="apcs-cta-link apcs-cta-secondary">Practice FRQs</a>
+</div>
+
+</div>
+
+<script>
+document.getElementById('apcs-quiz-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var selected = document.querySelector('input[name="answer"]:checked');
+    if (!selected) {
+        alert('Please select an answer.');
+        return;
+    }
+    
+    var feedback = document.getElementById('apcs-feedback');
+    var header = document.getElementById('apcs-feedback-header');
+    var correctAnswer = 'B';
+    
+    feedback.style.display = 'block';
+    feedback.classList.remove('apcs-correct', 'apcs-incorrect');
+    header.classList.remove('apcs-correct', 'apcs-incorrect');
+    
+    if (selected.value === correctAnswer) {
+        feedback.classList.add('apcs-correct');
+        header.classList.add('apcs-correct');
+        header.textContent = 'Correct! You\'ve mastered this concept.';
+    } else {
+        feedback.classList.add('apcs-incorrect');
+        header.classList.add('apcs-incorrect');
+        header.textContent = 'Not quite. The correct answer is ' + correctAnswer + '. Review the explanation.';
+    }
+    
+    feedback.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+// Date-based next day control
+(function() {
+    var startDate = new Date('2026-01-06T00:00:00');
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+    
+    var cycle2StartDay = 99;
+    var unit1Cycle2Days = 28;
+    var currentUnit2Cycle2Day = 27;
+    var overallDayNumber = cycle2StartDay + unit1Cycle2Days + currentUnit2Cycle2Day;
+    
+    if (overallDayNumber > diffDays) {
+        var nextLink = document.getElementById('next-day-link');
+        if (nextLink) {
+            nextLink.classList.add('disabled');
+            nextLink.style.opacity = '0.4';
+            nextLink.style.pointerEvents = 'none';
+            nextLink.style.cursor = 'not-allowed';
+        }
+    }
+})();
+</script>
