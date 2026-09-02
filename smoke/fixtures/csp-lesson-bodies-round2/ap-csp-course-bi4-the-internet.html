@@ -1,0 +1,1513 @@
+<!--
+  PAGE: /pages/ap-csp-course-bi4-the-internet
+  TITLE: AP CSP 4.1 The Internet | Protocols, Packets, Routing, and Redundancy
+  META: AP CSP Topic 4.1: how the Internet works, protocols and IP addresses, packets and routing, bandwidth, and redundancy. 6 exam MCQs plus the Internet Routing game.
+-->
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+  :root{--navy:#0f1f3d;--bi3:#1a56db;--bi3-lt:#93c5fd;--bi3-bg:#eff6ff;--bi3-dk:#1e40af;--green:#16a34a;--amber:#d97706;--red:#dc2626;--slate:#64748b;--white:#ffffff;--py:#3b82f6;--pseudo:#8b5cf6;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  .lesson-page{font-family:"DM Sans",sans-serif;color:var(--navy);background:#f8fafc;line-height:1.6;}
+
+  .lesson-breadcrumb{background:#fff;border-bottom:1px solid #e2e8f0;padding:12px 24px;}
+  .lesson-breadcrumb-inner{max-width:880px;margin:0 auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate);flex-wrap:wrap;}
+  .lesson-breadcrumb a{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;text-decoration:none;font-weight:500;}
+  .bc-sep{color:#cbd5e1;}
+
+  .social-proof-bar{background:#fff;border-bottom:1px solid #e2e8f0;padding:10px 24px;}
+  .social-proof-inner{max-width:880px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 20px;font-size:13px;color:var(--slate);}
+  .social-proof-item{display:flex;align-items:center;gap:5px;font-weight:500;}
+  .social-proof-item strong{color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+
+  .lesson-hero{background:var(--navy);background-image:radial-gradient(ellipse 60% 70% at 90% 20%,rgba(26,86,219,.28) 0%,transparent 60%);padding:48px 24px 40px;}
+  .lesson-hero-inner{max-width:880px;margin:0 auto;}
+  .lesson-hero-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .lesson-num-badge{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:var(--bi3);font-weight:700;font-size:14px;color:#fff!important;-webkit-text-fill-color:#fff!important;flex-shrink:0;}
+  .lesson-eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;}
+  .lesson-hero h1{font-family:"DM Serif Display",serif!important;font-size:clamp(26px,4vw,40px)!important;line-height:1.2!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:14px!important;}
+  .lesson-hero-pills{display:flex;flex-wrap:wrap;gap:8px;}
+  .lesson-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:5px 12px;border-radius:100px;font-size:12px;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .ced-tag{display:inline-flex;align-items:center;background:rgba(26,86,219,.25);border:1px solid rgba(147,197,253,.3);padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;letter-spacing:.04em;}
+
+  /* PROGRESS STRIP */
+  .bi3-progress{background:#fff!important;border-bottom:1px solid #e2e8f0!important;padding:14px 20px!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;}
+  .bi3-progress-inner{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;gap:0!important;width:max-content!important;min-width:100%!important;}
+  .prog-step{display:flex!important;flex-direction:column!important;align-items:center!important;min-width:46px!important;text-align:center!important;flex-shrink:0!important;}
+  .prog-step-link{display:flex!important;flex-direction:column!important;align-items:center!important;min-width:46px!important;text-align:center!important;flex-shrink:0!important;text-decoration:none!important;cursor:pointer!important;}
+  .prog-step-link:hover .prog-dot{background:#dbeafe!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border-color:var(--bi3)!important;}
+  .prog-dot{width:26px!important;height:26px!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:9px!important;font-weight:700!important;margin-bottom:4px!important;flex-shrink:0!important;}
+  .prog-dot.active{background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .prog-dot.upcoming{background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:2px solid #e2e8f0!important;}
+  .prog-dot.done{background:#dbeafe!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border:2px solid var(--bi3)!important;}
+  .prog-label{font-size:8px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;line-height:1.2!important;white-space:nowrap!important;}
+  .prog-label.active-label{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;}
+  .prog-arrow{flex:1 0 4px!important;height:2px!important;background:#e2e8f0!important;margin-bottom:18px!important;min-width:4px!important;max-width:16px!important;flex-shrink:0!important;}
+
+  /* MAIN */
+  .lesson-main{max-width:880px;margin:0 auto;padding:40px 24px 80px;}
+  .lesson-objectives{background:var(--bi3-bg);border-left:4px solid var(--bi3);border-radius:0 10px 10px 0;padding:20px 24px;margin-bottom:28px;}
+  .lesson-objectives h2{font-size:14px!important;font-weight:700!important;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;text-transform:uppercase!important;letter-spacing:.06em!important;margin-bottom:12px!important;}
+  .lesson-objectives ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;}
+  .lesson-objectives li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#1e3a8a;line-height:1.5;}
+  .lesson-objectives li::before{content:"\2713";color:var(--bi3);font-weight:700;flex-shrink:0;margin-top:1px;}
+  .score-impact{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 18px;margin-bottom:28px;display:flex;align-items:center;gap:10px;font-size:14px;color:#14532d;}
+  .score-impact strong{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+
+  /* HOOK */
+  .hook-box{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px 28px;margin-bottom:32px;}
+  .hook-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:8px;}
+  .hook-box p{font-size:15px!important;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;line-height:1.7!important;margin-bottom:0!important;}
+
+  /* LESSON SECTIONS */
+  .lesson-section{margin-bottom:40px;}
+  .lesson-section h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;padding-bottom:10px!important;border-bottom:2px solid var(--bi3-bg)!important;}
+  .lesson-section h3{font-size:17px!important;font-weight:700!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-top:24px!important;margin-bottom:10px!important;}
+  .lesson-section p{font-size:15px;color:#374151;line-height:1.8;margin-bottom:14px;}
+  .lesson-section ul,.lesson-section ol{padding-left:20px;margin-bottom:14px;}
+  .lesson-section li{font-size:15px;color:#374151;line-height:1.7;margin-bottom:6px;}
+  .lesson-section code{background:#eef2ff;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+
+  /* DUAL CODE PANEL */
+  .code-panel-wrap{margin:20px 0;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;}
+  .code-panel-tabs{display:flex;background:#1e293b;}
+  .code-tab{padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;border:none;background:transparent;letter-spacing:.04em;transition:background .15s;font-family:inherit;}
+  .code-tab.py{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .code-tab.pseudo{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+  .code-tab.active{background:rgba(255,255,255,.15)!important;}
+  .code-tab-label{font-size:10px;opacity:.6;margin-left:4px;font-weight:400;}
+  .code-pane{background:#0f172a;padding:18px 20px;overflow-x:auto;height:0;overflow:hidden;padding:0;}
+  .code-pane.active{height:auto;overflow-x:auto;padding:18px 20px;}
+  .code-pane pre{font-family:monospace;font-size:13px;line-height:1.8;margin:0;white-space:pre-wrap;word-break:break-word;max-width:100%;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .py-kw{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:700;}
+  .py-fn{color:#6ee7b7!important;-webkit-text-fill-color:#6ee7b7!important;}
+  .py-num{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .py-str{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .py-comment{color:#475569!important;-webkit-text-fill-color:#475569!important;font-style:italic;}
+  .py-var{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .py-op{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;}
+  .ps-kw{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700;}
+  .ps-op{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .ps-num{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .ps-str{color:#86efac!important;-webkit-text-fill-color:#86efac!important;}
+  .ps-comment{color:#475569!important;-webkit-text-fill-color:#475569!important;font-style:italic;}
+  .ps-var{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+
+  /* CALLOUTS */
+  .callout-exam{background:#fffbeb;border:1px solid #fcd34d;border-left:4px solid var(--amber);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+  .callout-exam-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--amber)!important;-webkit-text-fill-color:var(--amber)!important;margin-bottom:6px;}
+  .callout-exam p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin-bottom:0!important;line-height:1.6!important;}
+  .callout-trap{background:#fef2f2;border:1px solid #fca5a5;border-left:4px solid var(--red);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+  .callout-trap-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;margin-bottom:6px;}
+  .callout-trap p{font-size:14px!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;margin-bottom:0!important;line-height:1.6!important;}
+
+  /* MINI EXERCISES */
+  .mini-ex{background:#fff;border:1px solid #bfdbfe;border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .mini-ex-label{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;margin-bottom:12px;}
+  .mini-ex-q{font-size:15px;font-weight:600;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px;line-height:1.5;}
+  .mini-ex-code{background:#0f172a;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;line-height:1.8;margin-bottom:14px;overflow-x:auto;white-space:pre;display:block;}
+  .mini-opts{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;}
+  .mini-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border:2px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:14px;font-family:monospace;color:#374151!important;-webkit-text-fill-color:#374151!important;background:#f8fafc;text-align:left;width:100%;transition:border-color .15s;}
+  .mini-opt:hover{border-color:var(--bi3-lt);background:var(--bi3-bg);}
+  .mini-opt.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mini-opt.incorrect{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mini-opt.reveal{border-color:var(--green)!important;background:#f0fdf4!important;}
+  .mini-opt-letter{font-weight:700;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;min-width:18px;font-family:inherit;}
+  .mini-opt.correct .mini-opt-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mini-opt.incorrect .mini-opt-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mini-fib-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;}
+  .mini-fib-input{padding:8px 12px;border:2px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:14px;width:130px;outline:none;color:var(--navy)!important;background:#f8fafc;}
+  .mini-fib-input:focus{border-color:var(--bi3-lt);}
+  .mini-fib-input.correct{border-color:var(--green);background:#f0fdf4;}
+  .mini-fib-input.incorrect{border-color:var(--red);background:#fef2f2;}
+  .mini-fib-btn{padding:8px 18px;background:var(--bi3);border:none;border-radius:8px;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .mini-fb{font-size:13px;font-weight:500;padding:8px 12px;border-radius:7px;margin-top:6px;display:none;line-height:1.5;}
+  .mini-fb.c{background:#f0fdf4;color:var(--green)!important;-webkit-text-fill-color:var(--green)!important;display:block;}
+  .mini-fb.w{background:#fef2f2;color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;display:block;}
+
+  /* VOCAB */
+  .vocab-table{width:100%;border-collapse:collapse;margin-bottom:24px;font-size:14px;}
+  .vocab-table thead tr{background:var(--bi3);}
+  .vocab-table thead th{padding:10px 16px;text-align:left;font-weight:600;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px;}
+  .vocab-table tbody tr:nth-child(even){background:var(--bi3-bg);}
+  .vocab-table tbody tr:nth-child(odd){background:#fff;}
+  .vocab-table tbody td{padding:10px 16px;border-bottom:1px solid #bfdbfe;color:#374151;vertical-align:top;line-height:1.5;}
+  .vocab-table tbody td:first-child{font-weight:700;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;white-space:nowrap;}
+
+  /* CPT CONNECTION */
+  .cpt-connection{background:#fefce8;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:0 10px 10px 0;padding:20px 24px;margin:28px 0;}
+  .cpt-connection-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#92400e!important;-webkit-text-fill-color:#92400e!important;margin-bottom:8px;}
+  .cpt-connection h3{font-size:16px!important;font-weight:700!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin:16px 0 8px!important;}
+  .cpt-connection p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;line-height:1.7!important;margin-bottom:12px!important;}
+  .cpt-connection a{color:#b45309!important;-webkit-text-fill-color:#b45309!important;font-weight:600;text-decoration:underline;}
+  .cpt-connection code{background:#fef3c7;color:#78350f!important;-webkit-text-fill-color:#78350f!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+  .cpt-stems{list-style:none;padding:0;margin:0 0 8px;display:flex;flex-direction:column;gap:8px;}
+  .cpt-stems li{background:#fffef5;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:13px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;line-height:1.6;}
+  .cpt-code{background:#0f172a;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;line-height:1.8;margin:6px 0 12px;overflow-x:auto;white-space:pre;display:block;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+
+  /* EMAIL */
+  .email-capture{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px 28px;margin-bottom:36px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
+  .email-capture-text{flex:1;min-width:200px;}
+  .email-capture-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:4px;}
+  .email-capture h3{font-size:16px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .email-capture p{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:0!important;line-height:1.5!important;}
+  .email-capture-form{display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0;}
+  .email-capture-input{padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff!important;font-size:14px;font-family:inherit;min-width:180px;outline:none;}
+  .email-capture-btn{padding:10px 20px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:8px!important;font-size:14px!important;font-weight:600!important;cursor:pointer!important;font-family:inherit!important;}
+  .email-capture-success{display:none;font-size:14px;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:600;padding:10px 0;}
+
+  /* MCQ */
+  .mcq-section{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:28px;margin-bottom:40px;}
+  .mcq-section-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--bi3-bg);}
+  .mcq-section-icon{width:40px;height:40px;border-radius:10px;background:var(--bi3-bg);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .mcq-section-title{font-family:"DM Serif Display",serif;font-size:20px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+  .mcq-section-sub{font-size:13px;color:var(--slate);}
+  .mcq-item{margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid #f1f5f9;}
+  .mcq-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .mcq-q-num{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:8px;}
+  .diff-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:100px;margin-left:8px;background:#fef2f2;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;border:1px solid #fca5a5;}
+  .mcq-q-text{font-size:15px!important;font-weight:600!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;margin-bottom:12px!important;}
+  .predict-note{font-size:12px;font-style:italic;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:12px;}
+  .mcq-code{background:#0f172a;border-radius:8px;padding:12px 14px;margin:10px 0 14px;font-family:monospace;font-size:13px;line-height:1.75;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;white-space:pre;overflow-x:auto;display:block;}
+  .mcq-code .k{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .mcq-code .s{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .mcq-code .n{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .mcq-code .c{color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-style:italic;}
+  .mcq-roman{list-style:none;padding:0;margin:10px 0 14px;display:flex;flex-direction:column;gap:6px;}
+  .mcq-roman li{font-family:monospace;font-size:13px;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;background:#f1f5f9;border-radius:6px;padding:8px 12px;}
+  .mcq-roman li strong{color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;font-family:"DM Sans",sans-serif;margin-right:8px;}
+  .mcq-options{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+  .mcq-option{display:flex!important;align-items:flex-start!important;gap:12px!important;padding:11px 14px!important;border:2px solid #e2e8f0!important;border-radius:8px!important;cursor:pointer!important;background:#f8fafc!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.5!important;text-align:left!important;width:100%!important;font-family:inherit!important;}
+  .mcq-option:hover{border-color:var(--bi3-lt)!important;background:var(--bi3-bg)!important;}
+  .mcq-option.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mcq-option.incorrect{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mcq-option.revealed-correct{border-color:var(--green)!important;background:#f0fdf4!important;}
+  .mcq-option-letter{font-weight:700!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;flex-shrink:0!important;min-width:18px!important;}
+  .mcq-option.correct .mcq-option-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mcq-option.incorrect .mcq-option-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mcq-feedback{display:none!important;padding:12px 16px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;margin-top:8px!important;}
+  .mcq-feedback.show{display:block!important;}
+  .mcq-feedback.correct-fb{background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #bbf7d0!important;}
+  .mcq-feedback.incorrect-fb{background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;border:1px solid #fecaca!important;}
+
+  /* GAME */
+  .game-section{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:14px;padding:28px;margin-bottom:40px;}
+  .game-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:10px;}
+  .game-title{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .game-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:20px!important;}
+  .vt-score-bar{display:flex;justify-content:space-between;background:rgba(255,255,255,.06);border-radius:10px;padding:12px 20px;margin-bottom:20px;flex-wrap:wrap;gap:8px;}
+  .vt-stat{text-align:center;}
+  .vt-stat-val{font-size:20px;font-weight:800;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1;}
+  .vt-stat-lbl{font-size:10px;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:2px;}
+  .vt-code-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  .vt-code-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:10px;}
+  .vt-code-lines{font-family:monospace;font-size:14px;line-height:2;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .vt-line{display:block;padding:2px 8px;border-radius:4px;white-space:pre;}
+  .vt-line.hl{background:rgba(147,197,253,.2);color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .vt-question{font-size:15px;font-weight:600;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;margin-bottom:14px;}
+  .vt-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+  .vt-btn{padding:12px;border-radius:9px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);cursor:pointer;font-size:15px;font-weight:700;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;font-family:monospace;transition:all .15s;}
+  .vt-btn:hover{border-color:var(--bi3-lt);background:rgba(26,86,219,.2);}
+  .vt-btn.c{border-color:#4ade80;background:rgba(74,222,128,.15);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+  .vt-btn.w{border-color:#f87171;background:rgba(248,113,113,.15);color:#f87171!important;-webkit-text-fill-color:#f87171!important;}
+  .vt-btn.rv{border-color:#4ade80;background:rgba(74,222,128,.08);}
+  .vt-fb{padding:10px 14px;border-radius:8px;font-size:13px;font-weight:500;margin-bottom:12px;display:none;line-height:1.5;}
+  .vt-fb.c{background:rgba(74,222,128,.1);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;display:block;}
+  .vt-fb.w{background:rgba(248,113,113,.1);color:#f87171!important;-webkit-text-fill-color:#f87171!important;display:block;}
+  .vt-next{display:none;width:100%;padding:12px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);border-radius:8px;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .vt-next.show{display:block;}
+  .vt-results{display:none;text-align:center;padding:20px;}
+  .vt-results.show{display:block;}
+  .vt-res-score{font-family:"DM Serif Display",serif;font-size:52px;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1;}
+  .vt-res-lbl{font-size:14px;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:12px;}
+  .vt-res-msg{font-size:14px;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;margin-bottom:20px;line-height:1.6;}
+  .vt-restart{background:rgba(255,255,255,.1);color:#fff!important;-webkit-text-fill-color:#fff!important;border:2px solid rgba(255,255,255,.2);border-radius:8px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+
+  /* CODE EDITOR (Pyodide live) */
+  .code-editor-section{background:#0f172a;border-radius:14px;padding:28px;margin-bottom:40px;}
+  .code-editor-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:10px;}
+  .code-editor-title{font-family:"DM Serif Display",serif!important;font-size:22px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .code-editor-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:20px!important;line-height:1.6;}
+  .code-problem{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+  .scaffold-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:rgba(147,197,253,.15);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;border:1px solid rgba(147,197,253,.35);margin-bottom:8px;}
+  .code-problem-num{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:8px;}
+  .code-problem-prompt{font-size:14px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.6!important;margin-bottom:12px!important;}
+  .code-problem-prompt code{background:rgba(147,197,253,.12);color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;padding:1px 6px;border-radius:5px;font-size:12px;}
+  .code-textarea{width:100%;min-height:120px;background:#020617;border:2px solid rgba(255,255,255,.1);border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;color:#e2e8f0!important;resize:vertical;outline:none;line-height:1.8;}
+  .code-textarea:focus{border-color:var(--bi3-lt);}
+  .code-btn-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center;}
+  .code-run-btn{padding:9px 20px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:7px!important;font-size:13px!important;font-weight:700!important;cursor:pointer!important;font-family:inherit!important;}
+  .code-run-btn:disabled{opacity:.6;cursor:wait;}
+  .code-hint-btn,.code-sol-btn{padding:9px 16px!important;background:rgba(255,255,255,.06)!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:7px!important;font-size:13px!important;cursor:pointer!important;font-family:inherit!important;}
+  .code-output{margin-top:10px;background:#020617;border-radius:8px;padding:12px 16px;font-family:monospace;font-size:13px;min-height:44px;display:none;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .code-output.show{display:block;}
+  .code-output.ok{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+  .code-output.err{color:#f87171!important;-webkit-text-fill-color:#f87171!important;}
+  .code-hint{margin-top:8px;background:rgba(147,197,253,.06);border:1px solid rgba(147,197,253,.2);border-radius:8px;padding:10px 14px;font-size:13px;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;display:none;line-height:1.6;}
+  .code-hint.show{display:block;}
+  .code-solution{margin-top:8px;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:8px;padding:12px 14px;font-family:monospace;font-size:13px;color:#bbf7d0!important;-webkit-text-fill-color:#bbf7d0!important;display:none;white-space:pre;line-height:1.8;overflow-x:auto;}
+  .code-solution.show{display:block;}
+
+  /* FAQ */
+  .faq-section{margin-bottom:40px;}
+  .faq-section h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;padding-bottom:10px!important;border-bottom:2px solid var(--bi3-bg)!important;}
+  .faq-item{background:#fff;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:10px;overflow:hidden;}
+  .faq-q{width:100%;text-align:left;padding:16px 20px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:15px!important;font-weight:600!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-family:inherit!important;line-height:1.4!important;}
+  .faq-q:hover{background:#f8fafc;}
+  .faq-icon{font-size:18px;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;flex-shrink:0;transition:transform .2s;font-style:normal;}
+  .faq-item.open .faq-icon{transform:rotate(45deg);}
+  .faq-a{display:none;padding:0 20px 16px;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.7!important;border-top:1px solid #f1f5f9;}
+  .faq-item.open .faq-a{display:block;}
+  .faq-a code{background:#eef2ff;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+
+  /* RELATED + SUPERPACK + TEACHER + NAV */
+  .related-links{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:24px;margin-bottom:40px;}
+  .related-links h3{font-size:15px!important;font-weight:700!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;}
+  .related-links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
+  .related-link{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;background:#f8fafc;text-decoration:none;font-size:13px!important;font-weight:500!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border:1px solid #bfdbfe;transition:background .15s;line-height:1.3;}
+  .related-link:link,.related-link:visited{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;}
+  .related-link:hover{background:var(--bi3-bg);}
+  .related-ext{color:var(--slate)!important;-webkit-text-fill-color:var(--slate)!important;border-color:#e2e8f0;}
+  .superpack-slim{background:#fff;border:1px solid #bfdbfe;border-radius:10px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:36px;}
+  .superpack-slim-icon{width:36px;height:36px;border-radius:8px;background:var(--bi3-bg);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .superpack-slim-text{font-size:14px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-weight:600;line-height:1.3;}
+  .superpack-slim-sub{font-size:12px;color:var(--slate);font-weight:400;display:block;margin-top:2px;}
+  .superpack-slim-btn{display:inline-flex!important;align-items:center!important;gap:6px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:9px 18px!important;border-radius:7px!important;font-size:13px!important;font-weight:600!important;text-decoration:none!important;white-space:nowrap!important;}
+  .superpack-slim-btn:link,.superpack-slim-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .teacher-callout{background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:18px 22px;margin-bottom:28px;display:flex;align-items:flex-start;gap:14px;}
+  .teacher-callout-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+  .teacher-callout-body{flex:1;}
+  .teacher-callout-label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#0369a1!important;-webkit-text-fill-color:#0369a1!important;margin-bottom:4px;}
+  .teacher-callout-body p{font-size:14px!important;color:#0c4a6e!important;-webkit-text-fill-color:#0c4a6e!important;margin-bottom:0!important;line-height:1.6!important;}
+  .teacher-callout-body a{color:#0369a1!important;-webkit-text-fill-color:#0369a1!important;font-weight:600;text-decoration:underline;}
+  .lesson-nav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:40px;}
+  .nav-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 20px;text-decoration:none;color:inherit;transition:box-shadow .15s;display:block;}
+  .nav-card:hover{box-shadow:0 4px 16px rgba(26,86,219,.1);border-color:#bfdbfe;}
+  .nav-card-dir{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:4px;}
+  .nav-card-title{font-size:14px;font-weight:700;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;line-height:1.3;}
+  .nav-card.next{border-left:3px solid var(--bi3);}
+
+  @media(max-width:600px){
+    .lesson-hero{padding:36px 20px 32px;}
+    .lesson-main{padding:32px 20px 60px;}
+    .vt-options{grid-template-columns:1fr 1fr;}
+    .lesson-nav{grid-template-columns:1fr;}
+    .mini-opts{gap:6px;}
+  }
+</style>
+<style>
+.code-usage{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin:-6px 0 18px!important;padding:8px 12px!important;background:rgba(255,255,255,.04)!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:8px!important;display:block!important;}
+.code-usage strong{color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;}
+.code-problem-prompt ul.rules{margin:10px 0 4px!important;padding-left:0!important;list-style:none!important;}
+.code-problem-prompt ul.rules li{position:relative;padding:3px 0 3px 20px!important;font-size:14px;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.55;}
+.code-problem-prompt ul.rules li::before{content:"\25B8";position:absolute;left:2px;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+.mcq-q-text ul.rules,.mini-ex-q ul.rules{margin:10px 0 4px!important;padding-left:0!important;list-style:none!important;}
+.mcq-q-text ul.rules li,.mini-ex-q ul.rules li{position:relative;padding:3px 0 3px 20px!important;font-size:15px;font-weight:400;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;line-height:1.5;}
+.mcq-q-text ul.rules li::before,.mini-ex-q ul.rules li::before{content:"\25B8";position:absolute;left:2px;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;}
+</style>
+<style>
+
+.lesson-visual{margin:0 0 40px!important;}
+.lv-kicker{font-size:11px!important;font-weight:700!important;letter-spacing:.1em!important;text-transform:uppercase!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;margin:0 0 10px!important;}
+/* before/after panel */
+.ba{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:14px!important;padding:20px!important;margin:0 0 14px!important;}
+.ba-cap-top{font-size:12px!important;font-weight:700!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;margin:0 0 14px!important;}
+.ba-grid{display:grid!important;grid-template-columns:1fr auto 1fr!important;align-items:center!important;gap:14px!important;}
+.ba-panel{border-radius:12px!important;padding:16px 14px!important;text-align:center!important;}
+.ba-panel.before{background:#f8fafc!important;border:1px solid #e2e8f0!important;}
+.ba-panel.after{background:#f0fdf4!important;border:1px solid #bbf7d0!important;}
+.ba-label{font-size:11px!important;font-weight:700!important;letter-spacing:.05em!important;text-transform:uppercase!important;margin:0 0 8px!important;}
+.ba-panel.before .ba-label{color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+.ba-panel.after .ba-label{color:#166534!important;-webkit-text-fill-color:#166534!important;}
+.ba-data{font-family:monospace!important;font-size:15px!important;letter-spacing:1px!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;word-break:break-all!important;}
+.ba-meta{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:6px!important;}
+.ba-arrow{font-size:26px!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;font-weight:700!important;}
+.ba-caption{font-size:13px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;line-height:1.55!important;margin:14px 0 0!important;padding-top:12px!important;border-top:1px solid #f1f5f9!important;}
+.ba-caption strong{color:#166534!important;-webkit-text-fill-color:#166534!important;}
+/* dark interactive card shell (shared by binary/rle/parallel/packet/io) */
+.wgt{background:#0f172a!important;border-radius:16px!important;padding:22px!important;border:1px solid #1e293b!important;margin:0 0 14px!important;}
+.wgt-h{font-family:"DM Serif Display",serif!important;font-size:18px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 3px!important;}
+.wgt-sub{font-size:13px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0 0 18px!important;}
+.wgt-btns{display:flex!important;gap:8px!important;justify-content:center!important;flex-wrap:wrap!important;margin-top:14px!important;}
+.wgt-btn{font-family:"DM Sans",sans-serif!important;font-size:13px!important;font-weight:700!important;padding:8px 14px!important;border-radius:9px!important;border:1px solid #334155!important;background:#1e293b!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;cursor:pointer!important;}
+.wgt-btn:hover{background:#334155!important;}
+.wgt-note{font-size:12.5px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;text-align:center!important;margin:12px 0 0!important;line-height:1.5!important;}
+.wgt-note.warn{color:#fca5a5!important;-webkit-text-fill-color:#fca5a5!important;}
+.wgt-note.good{color:#86efac!important;-webkit-text-fill-color:#86efac!important;}
+/* binary */
+.bpv-strip{display:flex!important;gap:6px!important;justify-content:center!important;flex-wrap:wrap!important;}
+.bpv-col{display:flex!important;flex-direction:column!important;align-items:center!important;gap:6px!important;}
+.bpv-pv{font-size:12px!important;font-weight:700!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-variant-numeric:tabular-nums!important;}
+.bpv-bit{width:44px!important;height:54px!important;border-radius:10px!important;border:2px solid #334155!important;background:#1e293b!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-family:monospace!important;font-size:23px!important;font-weight:700!important;cursor:pointer!important;}
+.bpv-bit.on{background:#1a56db!important;border-color:#60a5fa!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+.bpv-read{display:flex!important;align-items:baseline!important;justify-content:center!important;gap:14px!important;margin:20px 0 0!important;flex-wrap:wrap!important;}
+.bpv-binary{font-family:monospace!important;font-size:22px!important;letter-spacing:2px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+.bpv-eq{font-size:22px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+.bpv-dec{font-family:"DM Serif Display",serif!important;font-size:34px!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;line-height:1!important;}
+/* rle */
+.rle-in{width:100%!important;box-sizing:border-box!important;font-family:monospace!important;font-size:15px!important;padding:10px 12px!important;border-radius:9px!important;border:1px solid #334155!important;background:#1e293b!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;letter-spacing:1px!important;}
+.rle-row{display:flex!important;gap:12px!important;flex-wrap:wrap!important;margin-top:14px!important;}
+.rle-cell{flex:1!important;min-width:130px!important;background:#1e293b!important;border-radius:10px!important;padding:12px!important;text-align:center!important;}
+.rle-cell .l{font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:6px!important;}
+.rle-cell .v{font-family:monospace!important;font-size:16px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;word-break:break-all!important;}
+.rle-cell.out .v{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+.rle-cell .m{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:4px!important;}
+/* parallel timeline */
+.ptl-ctl{display:flex!important;align-items:center!important;gap:12px!important;justify-content:center!important;flex-wrap:wrap!important;margin-bottom:16px!important;}
+.ptl-ctl label{font-size:13px!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;font-weight:700!important;}
+.ptl-ctl input[type=range]{width:180px!important;}
+.ptl-ctl .n{font-family:"DM Serif Display",serif!important;font-size:22px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;min-width:28px!important;text-align:center!important;}
+.ptl-bar{height:26px!important;border-radius:6px!important;margin:8px 0!important;display:flex!important;overflow:hidden!important;}
+.ptl-seg{height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:11px!important;font-weight:700!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a!important;white-space:nowrap!important;}
+.ptl-seg.seq{background:#fca5a5!important;}
+.ptl-seg.par{background:#6ee7b7!important;}
+.ptl-lbl{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:2px!important;}
+.ptl-stat{display:flex!important;gap:18px!important;justify-content:center!important;margin-top:14px!important;flex-wrap:wrap!important;}
+.ptl-stat div{text-align:center!important;}
+.ptl-stat .k{font-size:11px!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+.ptl-stat .v{font-family:"DM Serif Display",serif!important;font-size:26px!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+/* packet */
+.pkt-track{display:flex!important;gap:8px!important;justify-content:center!important;flex-wrap:wrap!important;min-height:64px!important;}
+.pkt{width:58px!important;border-radius:9px!important;background:#1e293b!important;border:1px solid #334155!important;padding:8px 4px!important;text-align:center!important;}
+.pkt .seq{font-size:10px!important;font-weight:700!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+.pkt .ch{font-family:monospace!important;font-size:20px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;margin-top:2px!important;}
+.pkt.lost{opacity:.35!important;border-style:dashed!important;}
+.pkt-msg{font-family:monospace!important;font-size:20px!important;letter-spacing:3px!important;text-align:center!important;margin-top:16px!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;min-height:24px!important;}
+/* io mapper */
+.iom-flow{display:grid!important;grid-template-columns:1fr auto 1fr auto 1fr!important;align-items:center!important;gap:10px!important;}
+.iom-box{background:#1e293b!important;border-radius:12px!important;padding:14px!important;text-align:center!important;}
+.iom-box .l{font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:6px!important;}
+.iom-box .v{font-size:15px!important;font-weight:700!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+.iom-box.prog{background:#1a3a6b!important;}
+.iom-box.out .v{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+.iom-ar{font-size:20px!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;font-weight:700!important;}
+.iom-temp{font-family:"DM Serif Display",serif!important;font-size:26px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+@media(max-width:520px){.ba-grid{grid-template-columns:1fr!important;}.ba-arrow{transform:rotate(90deg)!important;}.iom-flow{grid-template-columns:1fr!important;}.iom-ar{transform:rotate(90deg)!important;}}
+
+</style>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "AP CSP Course", "item": "https://apcsexamprep.com/pages/ap-csp-course"}, {"@type": "ListItem", "position": 2, "name": "Big Idea 4", "item": "https://apcsexamprep.com/pages/ap-csp-course-big-idea-4-computer-systems"}, {"@type": "ListItem", "position": 3, "name": "Topic 4.1: The Internet", "item": "https://apcsexamprep.com/pages/ap-csp-course-bi4-the-internet"}]}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "LearningResource", "name": "AP CSP Topic 4.1: The Internet", "description": "AP CSP Topic 4.1: how the Internet works, protocols and IP addresses, packets and routing, bandwidth, and redundancy. 6 exam MCQs plus the Internet Routing game.", "url": "https://apcsexamprep.com/pages/ap-csp-course-bi4-the-internet", "educationalLevel": "High School", "learningResourceType": "Lesson", "author": {"@type": "Person", "name": "Tanner Crow"}, "isPartOf": {"@type": "Course", "name": "AP Computer Science Principles Complete Course", "url": "https://apcsexamprep.com/pages/ap-csp-course"}, "datePublished": "2026-03-01"}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the World Wide Web the same as the Internet?", "acceptedAnswer": {"@type": "Answer", "text": "No. The Internet is a network of networks, the global infrastructure that connects billions of devices. The World Wide Web is one service that runs over the Internet: a system of linked pages and resources accessed using HTTP. Email and video calls also use the Internet without being part of the Web."}}, {"@type": "Question", "name": "What is a protocol, and why do open protocols matter?", "acceptedAnswer": {"@type": "Answer", "text": "A protocol is an agreed-upon set of rules for formatting and transmitting data. Open, standardized protocols are published and free to use, so devices from different manufacturers running different software can interoperate as long as they follow the same rules. That is what lets the whole Internet work together."}}, {"@type": "Question", "name": "Why are packets that take different paths and arrive out of order not a problem?", "acceptedAnswer": {"@type": "Answer", "text": "Because each packet carries a sequence number and a destination address. Packets are routed independently and may arrive out of order, but at the destination TCP uses the sequence numbers to reassemble them in the correct order and requests a resend for anything lost, so the original data is restored."}}, {"@type": "Question", "name": "What is the difference between bandwidth and latency?", "acceptedAnswer": {"@type": "Answer", "text": "Bandwidth is a rate: the maximum amount of data that can be sent per unit of time, such as bits per second. Latency is the delay, the time it takes data to travel from one point to another. A connection can have high bandwidth and still have noticeable latency, so the two are not the same measurement."}}, {"@type": "Question", "name": "Why was IPv6 created if IPv4 already existed?", "acceptedAnswer": {"@type": "Answer", "text": "IPv4 uses 32-bit addresses and can only provide about 4.3 billion unique IP addresses, which is not enough for all the phones, computers, and smart devices online today. IPv6 uses 128-bit addresses and offers a vastly larger pool, which is how the addressing system was designed to scale as the Internet keeps growing."}}]}</script>
+
+<div class="lesson-page" data-course="ap-csp" data-unit="bi-4" data-lesson="the-internet">
+
+  <div class="lesson-breadcrumb">
+    <div class="lesson-breadcrumb-inner">
+      <a href="/pages/ap-csp-course">AP CSP Course</a><span class="bc-sep">›</span>
+      <a href="/pages/ap-csp-course-big-idea-4-computer-systems">Big Idea 4</a><span class="bc-sep">›</span>
+      <span>4.1 The Internet</span>
+    </div>
+  </div>
+  <div class="social-proof-bar">
+    <div class="social-proof-inner">
+      <span class="social-proof-item">⭐ <strong>5.0</strong> Wyzant rating</span>
+      <span class="social-proof-item">📚 <strong>1,845+</strong> tutoring hours</span>
+      <span class="social-proof-item">🏫 Built by an <strong>AP CS teacher</strong> with 11+ years experience</span>
+      <span class="social-proof-item">🎯 <strong>70%</strong> of classroom students score 4 or 5 on AP CSP</span>
+    </div>
+  </div>
+  <div class="lesson-hero">
+    <div class="lesson-hero-inner">
+      <div class="lesson-hero-meta">
+        <div class="lesson-num-badge">4.1</div>
+        <div><div class="lesson-eyebrow">Big Idea 4 • Computing Systems &amp; Networks</div></div>
+      </div>
+      <h1>The Internet</h1>
+      <div class="lesson-hero-pills">
+        <span class="lesson-pill">🕐 ~35 min</span>
+        <span class="lesson-pill" style="background:rgba(74,222,128,0.15);border-color:rgba(74,222,128,0.3);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;">FREE</span>
+        <span class="lesson-pill">📖 6 MCQ questions</span>
+        <span class="lesson-pill">🎮 Internet Routing game</span>
+        <span class="ced-tag">CSN-1.A / CSN-1.B / CSN-1.C / CSN-1.D / CSN-1.E</span>
+      </div>
+    </div>
+  </div>
+  <div class="bi3-progress"><div class="bi3-progress-inner">
+<div class="prog-step">
+<div class="prog-dot active">4.1</div>
+<div class="prog-label active-label">Internet</div>
+</div>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi4-fault-tolerance" class="prog-step-link"><div class="prog-dot upcoming">4.2</div>
+<div class="prog-label">Fault Tol</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi4-parallel-distributed-computing" class="prog-step-link"><div class="prog-dot upcoming">4.3</div>
+<div class="prog-label">Parallel</div></a>
+</div></div>
+
+  <div class="lesson-main">
+
+    <div class="lesson-objectives">
+      <h2>After this lesson, you will be able to:</h2>
+      <ul>
+        <li><span>Distinguish a computing device, a computer network, the Internet, and the World Wide Web</span></li>
+        <li><span>Explain what a protocol is and describe the roles of IP, TCP, UDP, and HTTP/HTTPS</span></li>
+        <li><span>Trace how data is split into packets that are routed independently, may take different paths, arrive out of order, and are reassembled</span></li>
+        <li><span>Explain how IP addresses uniquely identify devices and why the addressing system must scale (IPv4 versus IPv6)</span></li>
+        <li><span>Distinguish bandwidth (a data rate) from latency, and connect redundancy to a scalable, fault-tolerant network</span></li>
+      </ul>
+    </div>
+    <div class="score-impact">📈 <span>Big Idea 4 (Computing Systems and Networks) is 11 to 15 percent of the AP CSP exam, and 4.1 supplies the vocabulary the whole unit is built on. Protocols, packets, IP addresses, and bandwidth show up as fast, factual multiple-choice points, and the trap questions (Internet versus Web, bandwidth versus latency) are easy to get right once you have seen them named.</span>
+</div>
+    <div class="hook-box">
+      <div class="hook-label">💡 Think about this first</div>
+      <p>You click a link and a photo from a server thousands of miles away appears on your screen in under a second. That photo did not travel as one piece down one wire. It was chopped into hundreds of numbered pieces that scattered across different paths through a global web of networks, some arriving out of order, and your device stitched them back together perfectly. How does a system with no central controller pull that off every single time?</p>
+    </div>
+    <div class="lesson-section">
+      <h2>Devices, Networks, the Internet, and the Web</h2>
+      <p>These four words get used loosely in everyday speech, but the exam expects you to keep them separate. A <strong>computing device</strong> is a machine that processes and stores data: a laptop, a phone, a server, even a smart thermostat. A <strong>computer network</strong> is two or more computing devices connected so they can <strong>share data</strong>. The <strong>Internet</strong> is a <strong>network of networks</strong>, a global system that connects billions of devices by linking many smaller networks together.</p>
+      <p>The <strong>World Wide Web</strong> is not the same thing as the Internet. The Web is a <strong>system of linked pages and resources</strong> (documents, images, videos) that are identified by addresses and accessed <strong>over</strong> the Internet using the HTTP protocol. Think of the Internet as the roads and the Web as one popular kind of traffic that travels on those roads. Email, video calls, and online games also run on the Internet without being part of the Web.</p>
+      <div class="callout-trap">
+        <div class="callout-trap-label">⚠ Common trap</div>
+        <p>"The Internet and the World Wide Web are the same thing." They are not. The <strong>Internet</strong> is the underlying network of networks; the <strong>Web</strong> is one service (linked pages and resources) that runs on top of it. If a question treats them as identical, that choice is wrong.</p>
+      </div>
+      <div class="mini-ex">
+        <div class="mini-ex-label">Quick check</div>
+        <div class="mini-ex-q">Which statement correctly describes the relationship between the Internet and the World Wide Web?</div>
+        <div class="mini-opts" id="mc-internet-1-opts">
+          <button class="mini-opt" onclick="miniMCQ('mc-internet-1','A','C','mc-internet-1-fb')"><span class="mini-opt-letter">A</span> They are two names for exactly the same system</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-internet-1','B','C','mc-internet-1-fb')"><span class="mini-opt-letter">B</span> The Internet is a collection of web pages accessed through the Web</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-internet-1','C','C','mc-internet-1-fb')"><span class="mini-opt-letter">C</span> The Web is a system of linked resources accessed over the Internet, which is a network of networks</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-internet-1','D','C','mc-internet-1-fb')"><span class="mini-opt-letter">D</span> The Web is the physical wiring and the Internet is the software that runs on it</button>
+        </div>
+        <div class="mini-fb" id="mc-internet-1-fb"></div>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Protocols: The Rules That Let Everything Talk</h2>
+      <p>A <strong>protocol</strong> is an agreed-upon set of <strong>rules</strong> for how data is formatted and transmitted between devices. Protocols are what make the Internet work across a huge variety of hardware and software: as long as two devices follow the same standardized <strong>open</strong> protocol, they can communicate even if they were built by different companies and run different operating systems. "Open" here means the rules are published and free to use, which is why any manufacturer's device can join the network and <strong>interoperate</strong>.</p>
+      <table class="vocab-table">
+        <tr>
+<th>Protocol</th>
+<th>What it does</th>
+</tr>
+        <tr>
+<td>
+<strong>IP</strong> (Internet Protocol)</td>
+<td>Handles <strong>addressing and routing</strong>: gives each device an IP address and gets packets from sender toward receiver across networks.</td>
+</tr>
+        <tr>
+<td>
+<strong>TCP</strong> (Transmission Control Protocol)</td>
+<td>Provides <strong>reliable, ordered delivery</strong>: numbers packets, acknowledges what arrives, and retransmits anything lost, then reassembles them in order.</td>
+</tr>
+        <tr>
+<td>
+<strong>UDP</strong> (User Datagram Protocol)</td>
+<td>
+<strong>Faster but unreliable</strong>: sends packets without acknowledgements or retransmission. Used when speed matters more than perfection, like live video or games.</td>
+</tr>
+        <tr>
+<td><strong>HTTP / HTTPS</strong></td>
+<td>Rules for requesting and delivering <strong>web pages and resources</strong>. HTTPS is the encrypted, secure version.</td>
+</tr>
+      </table>
+      <p>Notice the division of labor: <strong>IP</strong> gets data to the right place, and <strong>TCP</strong> makes sure it all arrives correctly and in order. They are often mentioned together as TCP/IP because they work as a team.</p>
+      <div class="callout-exam">
+        <div class="callout-exam-label">🎯 What the exam rewards</div>
+        <p>When a question asks which protocol guarantees that data arrives <strong>complete and in the correct order</strong>, the answer is <strong>TCP</strong> (it acknowledges and retransmits). When it asks what assigns addresses and <strong>routes</strong> packets, the answer is <strong>IP</strong>. When speed is prioritized over reliability, think <strong>UDP</strong>.</p>
+      </div>
+      <div class="mini-ex">
+        <div class="mini-ex-label">Quick check</div>
+        <div class="mini-ex-q">A file must arrive complete, with every piece in the correct order, even if some packets are lost along the way. Which protocol is responsible for ensuring that reliable, ordered delivery?</div>
+        <div class="mini-opts" id="mc-internet-2-opts">
+          <button class="mini-opt" onclick="miniMCQ('mc-internet-2','A','B','mc-internet-2-fb')"><span class="mini-opt-letter">A</span> IP, because it assigns each device an address</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-internet-2','B','B','mc-internet-2-fb')"><span class="mini-opt-letter">B</span> TCP, because it acknowledges and retransmits lost packets and reorders them</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-internet-2','C','B','mc-internet-2-fb')"><span class="mini-opt-letter">C</span> UDP, because it sends packets as fast as possible</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-internet-2','D','B','mc-internet-2-fb')"><span class="mini-opt-letter">D</span> HTTP, because it delivers web pages</button>
+        </div>
+        <div class="mini-fb" id="mc-internet-2-fb"></div>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Packets and Routing</h2>
+      <p>Data does not travel across the Internet as one continuous stream. It is broken into small pieces called <strong>packets</strong>. Each packet carries a chunk of the data plus header information, including the destination address and a sequence number. Here is the key idea the exam loves: packets are <strong>routed independently</strong>. Each one may take a <strong>different path</strong> through the network depending on traffic and available links, so they can <strong>arrive out of order</strong> or arrive at slightly different times.</p>
+      <p><strong>Routing</strong> is the process of finding a path from the sender to the receiver across the many connected networks. There is no single master computer directing traffic; routers pass packets along hop by hop toward the destination. Because a packet can be sent along whatever path is currently open, the network keeps working even when one route is busy or broken.</p>
+      <p>At the destination, the packets are <strong>reassembled</strong> into the original data. TCP uses the sequence numbers to put everything back in the right order and requests a resend for any packet that never arrived. This is why you can watch a video that arrived in scrambled pieces and never notice.</p>
+      <ul>
+        <li>Data is split into <strong>packets</strong> before it is sent.</li>
+        <li>Packets are <strong>routed independently</strong> and may follow <strong>different paths</strong>.</li>
+        <li>They can <strong>arrive out of order</strong>; the destination <strong>reassembles</strong> them using sequence numbers.</li>
+      </ul>
+      <div class="callout-trap">
+        <div class="callout-trap-label">⚠ Common trap</div>
+        <p>"All packets in a message follow the same route and always arrive in the order they were sent." False. Packets are routed <strong>independently</strong>, can take <strong>different paths</strong>, and may arrive <strong>out of order</strong>. Reassembly into the correct order happens at the destination, not automatically during transmission.</p>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>IP Addresses and Scaling</h2>
+      <p>Every device on the Internet needs a unique identifier so packets can find it. That identifier is an <strong>IP address</strong>. Just as a postal address lets mail reach one specific house, an IP address lets packets reach one specific device.</p>
+      <p>The addressing system has to <strong>scale</strong> as more and more devices come online. The older standard, <strong>IPv4</strong>, uses 32-bit addresses, which allows only about <strong>4.3 billion</strong> unique addresses. With billions of phones, computers, and smart devices, that supply ran short. The newer standard, <strong>IPv6</strong>, uses 128-bit addresses, providing a vastly larger pool, effectively enough for every device imaginable. This is a direct example of designing a system to <strong>scale</strong>: expanding the address space so the Internet can keep growing.</p>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Bandwidth, Redundancy, and Scale</h2>
+      <p><strong>Bandwidth</strong> is the <strong>maximum amount of data that can be sent per unit of time</strong>, a <strong>rate</strong> usually measured in bits per second (bps). Higher bandwidth means more data moves through the connection each second, like a wider pipe carrying more water. Bandwidth is <strong>not</strong> the time it takes a single bit to travel from one point to another; that delay is called <strong>latency</strong>. A connection can have high bandwidth and still have noticeable latency, and vice versa.</p>
+      <div class="callout-trap">
+        <div class="callout-trap-label">⚠ Common trap</div>
+        <p>"Bandwidth is how fast a single bit gets from one place to another." No. That is <strong>latency</strong> (delay). <strong>Bandwidth</strong> is a <strong>rate</strong>: the maximum data per unit time. If an answer defines bandwidth as the travel time of one bit or one message, it is describing latency and is wrong.</p>
+      </div>
+      <p>Finally, the Internet was deliberately designed to be <strong>scalable</strong> (able to grow to more devices and more traffic) and <strong>redundant</strong> (offering <strong>multiple paths</strong> between points). Redundancy is why the network is <strong>fault tolerant</strong>: if one link or router fails, packets are simply routed along another available path and communication continues. That fault-tolerance idea is explored further in lesson 4.2.</p>
+    </div>
+    <div class="lesson-visual">
+      <p class="lv-kicker">💡 See it in action</p>
+    <div class="wgt" role="group" aria-label="Interactive packet routing and reassembly demo">
+      <div class="wgt-h">Packets: Split, Scramble, Reassemble</div>
+      <div class="wgt-sub">A message is split into numbered packets that travel separately and arrive out of order.</div>
+      <div class="pkt-track" id="pktTrack"></div>
+      <div class="pkt-msg" id="pktMsg" aria-live="polite"></div>
+      <div class="wgt-note" id="pktNote">Packets arrived out of order. Reassemble puts them back by sequence number.</div>
+      <div class="wgt-btns">
+<button class="wgt-btn" id="pktShuffle" type="button">Scramble</button><button class="wgt-btn" id="pktDrop" type="button">Drop one</button><button class="wgt-btn" id="pktSort" type="button">Reassemble</button>
+</div>
+    </div>
+    <script>(function(){
+      var MSG='NETWORK',base=[];for(var i=0;i<MSG.length;i++)base.push({seq:i+1,ch:MSG[i],lost:false});
+      var order=base.slice(),track=document.getElementById('pktTrack'),msg=document.getElementById('pktMsg'),note=document.getElementById('pktNote');
+      function shuffle(a){for(var i=a.length-1;i>0;i--){var j=(i*3+2)%(i+1);var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+      function paint(){track.innerHTML='';order.forEach(function(p){var d=document.createElement('div');d.className='pkt'+(p.lost?' lost':'');d.innerHTML='<div class="seq">#'+p.seq+'</div><div class="ch">'+(p.lost?'?':p.ch)+'</div>';track.appendChild(d);});}
+      function doScramble(){order=shuffle(base.slice());base.forEach(function(p){p.lost=false;});msg.textContent='';note.textContent='Packets arrived out of order. Reassemble puts them back by sequence number.';note.className='wgt-note';paint();}
+      document.getElementById('pktShuffle').onclick=doScramble;
+      document.getElementById('pktDrop').onclick=function(){var live=order.filter(function(p){return !p.lost;});if(live.length){live[(live.length*2)%live.length].lost=true;} msg.textContent='';note.textContent='A packet was dropped in transit. The receiver detects the gap by sequence number and requests a resend.';note.className='wgt-note warn';paint();};
+      document.getElementById('pktSort').onclick=function(){order.sort(function(a,b){return a.seq-b.seq;});paint();
+        if(order.some(function(p){return p.lost;})){msg.textContent='';note.textContent='Cannot finish: a packet is missing. Reliable delivery would resend it first.';note.className='wgt-note warn';}
+        else{msg.textContent=order.map(function(p){return p.ch;}).join('');note.textContent='Reassembled in sequence order. The full message is recovered.';note.className='wgt-note good';}};
+      doScramble();
+    })();</script>
+    </div>
+    <div class="lesson-section">
+      <h2>How 4.1 Is Tested on the Multiple-Choice Exam</h2>
+      <p>Topic 4.1 is not a Create Performance Task skill; it is <strong>multiple-choice material</strong>, and the questions reward precise vocabulary rather than programming. Expect fast factual items and a few carefully worded traps. The most common ones are worth memorizing:</p>
+      <ul>
+        <li>
+<strong>Internet versus Web.</strong> Any option that treats the Internet and the World Wide Web as the same thing is wrong. The Web is a system of linked resources accessed <strong>over</strong> the Internet.</li>
+        <li>
+<strong>Packets and routing.</strong> Remember that packets are routed <strong>independently</strong>, may take <strong>different paths</strong>, can arrive <strong>out of order</strong>, and are <strong>reassembled</strong> at the destination. Distractors often claim a fixed single path or guaranteed arrival order.</li>
+        <li>
+<strong>Redundancy and scalability.</strong> The Internet uses <strong>multiple paths</strong> (redundancy) so it keeps working when parts fail, and it is designed to <strong>scale</strong> (for example IPv6 expanding the address space).</li>
+        <li>
+<strong>Bandwidth versus latency.</strong> Bandwidth is a data <strong>rate</strong> (data per unit time), not the travel time of a single bit.</li>
+      </ul>
+      <p>When you see a protocol question, match the job to the protocol: IP for addressing and routing, TCP for reliable ordered delivery, UDP for fast unreliable delivery, HTTP/HTTPS for the web. Getting these definitions exactly right is where the points are.</p>
+    </div>
+    <div class="email-capture">
+      <div class="email-capture-text">
+        <div class="email-capture-eyebrow">FREE for students</div>
+        <h3>Get a free AP CSP question every day</h3>
+        <p>Join 3,000+ students. Daily practice, study tips, and exam strategies.</p>
+      </div>
+      <div>
+        <div class="email-capture-form" id="capture-form">
+          <input type="email" class="email-capture-input" id="capture-email" placeholder="your@email.com">
+          <button class="email-capture-btn" onclick="handleCapture()">Subscribe →</button>
+        </div>
+        <div class="email-capture-success" id="capture-success">✓ You're in!</div>
+      </div>
+    </div>
+    <div class="mcq-section">
+      <div class="mcq-section-header">
+        <div class="mcq-section-icon">📈</div>
+        <div>
+          <div class="mcq-section-title">MCQ Practice</div>
+          <div class="mcq-section-sub">6 questions • Exam difficulty and above • Predict before you peek</div>
+        </div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q1">
+        <div class="mcq-q-num">Question 1 of 6<span class="diff-tag">Concept</span>
+</div>
+        <div class="predict-note">Predict the correct distinction before reading the options.</div>
+        <div class="mcq-q-text"><p>A teacher asks students to explain the difference between the Internet and the World Wide Web. Which explanation is correct?</p></div>
+        <div class="mcq-options" id="q1-options">
+<button class="mcq-option" onclick="checkMCQ('q1','A','C','q1-fb-A')"><span class="mcq-option-letter">A</span> The Internet and the World Wide Web are two names for the same global system</button>
+<button class="mcq-option" onclick="checkMCQ('q1','B','C','q1-fb-B')"><span class="mcq-option-letter">B</span> The World Wide Web is a network of networks, and the Internet is a set of pages that runs on top of it</button>
+<button class="mcq-option" onclick="checkMCQ('q1','C','C','q1-fb-C')"><span class="mcq-option-letter">C</span> The Internet is a network of networks, and the World Wide Web is a system of linked resources accessed over the Internet</button>
+<button class="mcq-option" onclick="checkMCQ('q1','D','C','q1-fb-D')"><span class="mcq-option-letter">D</span> The Internet only connects web servers, while the World Wide Web connects all other devices</button>
+</div>
+<div id="q1-fb-A" class="mcq-feedback incorrect-fb">Incorrect. They are not the same. One is the underlying network of networks; the other is a service that runs on it.</div>
+<div id="q1-fb-B" class="mcq-feedback incorrect-fb">Incorrect. This reverses the two. The Internet is the network of networks; the Web is the system of linked resources.</div>
+<div id="q1-fb-C" class="mcq-feedback correct-fb">Correct. The Internet is a network of networks, and the World Wide Web is a system of linked pages and resources accessed over the Internet.</div>
+<div id="q1-fb-D" class="mcq-feedback incorrect-fb">Incorrect. The Internet connects all kinds of devices, not only web servers, and the Web is a service running over it.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q2">
+        <div class="mcq-q-num">Question 2 of 6<span class="diff-tag">Protocols</span>
+</div>
+        <div class="predict-note">Match the job to the protocol before you look.</div>
+        <div class="mcq-q-text"><p>An application must send a large file so that it arrives complete and with its pieces in the original order, retransmitting anything that is lost. Which protocol is designed to provide this?</p></div>
+        <div class="mcq-options" id="q2-options">
+<button class="mcq-option" onclick="checkMCQ('q2','A','C','q2-fb-A')"><span class="mcq-option-letter">A</span> IP, because it assigns addresses and routes packets</button>
+<button class="mcq-option" onclick="checkMCQ('q2','B','C','q2-fb-B')"><span class="mcq-option-letter">B</span> UDP, because it prioritizes speed over reliability</button>
+<button class="mcq-option" onclick="checkMCQ('q2','C','C','q2-fb-C')"><span class="mcq-option-letter">C</span> TCP, because it acknowledges packets, retransmits losses, and reassembles them in order</button>
+<button class="mcq-option" onclick="checkMCQ('q2','D','C','q2-fb-D')"><span class="mcq-option-letter">D</span> HTTP, because it formats requests for web pages</button>
+</div>
+<div id="q2-fb-A" class="mcq-feedback incorrect-fb">Incorrect. IP handles addressing and routing but does not guarantee ordered, reliable delivery.</div>
+<div id="q2-fb-B" class="mcq-feedback incorrect-fb">Incorrect. UDP is fast but unreliable; it does not acknowledge or retransmit lost packets.</div>
+<div id="q2-fb-C" class="mcq-feedback correct-fb">Correct. TCP provides reliable, ordered delivery using acknowledgements, retransmission, and reassembly by sequence number.</div>
+<div id="q2-fb-D" class="mcq-feedback incorrect-fb">Incorrect. HTTP defines web requests but relies on TCP underneath for reliable delivery.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q3">
+        <div class="mcq-q-num">Question 3 of 6<span class="diff-tag">Packets and routing</span>
+</div>
+        <div class="predict-note">Decide what really happens to packets in transit first.</div>
+        <div class="mcq-q-text"><p>A message is divided into many packets and sent across the Internet. Which statement best describes how those packets travel to the destination?</p></div>
+        <div class="mcq-options" id="q3-options">
+<button class="mcq-option" onclick="checkMCQ('q3','A','D','q3-fb-A')"><span class="mcq-option-letter">A</span> All packets follow the exact same path and arrive in the order they were sent</button>
+<button class="mcq-option" onclick="checkMCQ('q3','B','D','q3-fb-B')"><span class="mcq-option-letter">B</span> The packets are combined into one large unit before sending so ordering is never an issue</button>
+<button class="mcq-option" onclick="checkMCQ('q3','C','D','q3-fb-C')"><span class="mcq-option-letter">C</span> Packets are sent only after a single fixed route to the destination is reserved for the whole message</button>
+<button class="mcq-option" onclick="checkMCQ('q3','D','D','q3-fb-D')"><span class="mcq-option-letter">D</span> Each packet is routed independently, may take a different path, and packets can arrive out of order and be reassembled at the destination</button>
+</div>
+<div id="q3-fb-A" class="mcq-feedback incorrect-fb">Incorrect. Packets are routed independently and may take different paths, so they do not all follow one route or arrive in order.</div>
+<div id="q3-fb-B" class="mcq-feedback incorrect-fb">Incorrect. Data is split into packets for sending; it is not merged into one unit to avoid ordering.</div>
+<div id="q3-fb-C" class="mcq-feedback incorrect-fb">Incorrect. No single route is reserved for the whole message; each packet is routed independently over available paths.</div>
+<div id="q3-fb-D" class="mcq-feedback correct-fb">Correct. Packets are routed independently, may take different paths, can arrive out of order, and are reassembled at the destination.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q4">
+        <div class="mcq-q-num">Question 4 of 6<span class="diff-tag">I and II only style</span>
+</div>
+        <div class="predict-note">Judge each statement true or false before matching an option.</div>
+        <div class="mcq-q-text"><p>Consider these statements about IP addresses and the Internet's addressing system:</p></div>
+        <ul class="mcq-roman">
+          <li>
+<strong>I.</strong> An IP address uniquely identifies a device so that packets can be delivered to it.</li>
+          <li>
+<strong>II.</strong> IPv6 was introduced largely because IPv4 provides only about 4.3 billion addresses, which is not enough for all connected devices.</li>
+          <li>
+<strong>III.</strong> Because IPv4 has a fixed number of addresses, the Internet cannot be designed to scale to more devices.</li>
+        </ul>
+        <div class="mcq-options" id="q4-options">
+<button class="mcq-option" onclick="checkMCQ('q4','A','B','q4-fb-A')"><span class="mcq-option-letter">A</span> I only</button>
+<button class="mcq-option" onclick="checkMCQ('q4','B','B','q4-fb-B')"><span class="mcq-option-letter">B</span> I and II only</button>
+<button class="mcq-option" onclick="checkMCQ('q4','C','B','q4-fb-C')"><span class="mcq-option-letter">C</span> II and III only</button>
+<button class="mcq-option" onclick="checkMCQ('q4','D','B','q4-fb-D')"><span class="mcq-option-letter">D</span> I, II, and III</button>
+</div>
+<div id="q4-fb-A" class="mcq-feedback incorrect-fb">Incorrect. Statement II is also true; IPv6 expands the address space precisely because IPv4 ran short.</div>
+<div id="q4-fb-B" class="mcq-feedback correct-fb">Correct. I and II are true. III is false, since IPv6 shows the system was designed to scale beyond IPv4's limit.</div>
+<div id="q4-fb-C" class="mcq-feedback incorrect-fb">Incorrect. Statement III is false: expanding to IPv6 is exactly how the addressing system was designed to scale.</div>
+<div id="q4-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Statement III is false, so not all three can be correct.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q5">
+        <div class="mcq-q-num">Question 5 of 6<span class="diff-tag">Bandwidth vs latency</span>
+</div>
+        <div class="predict-note">Define bandwidth in your own words before reading the choices.</div>
+        <div class="mcq-q-text"><p>A network engineer says a connection has high <strong>bandwidth</strong>. Which statement correctly describes what bandwidth measures?</p></div>
+        <div class="mcq-options" id="q5-options">
+<button class="mcq-option" onclick="checkMCQ('q5','A','B','q5-fb-A')"><span class="mcq-option-letter">A</span> The time it takes a single bit to travel from the sender to the receiver</button>
+<button class="mcq-option" onclick="checkMCQ('q5','B','B','q5-fb-B')"><span class="mcq-option-letter">B</span> The maximum amount of data that can be transmitted per unit of time</button>
+<button class="mcq-option" onclick="checkMCQ('q5','C','B','q5-fb-C')"><span class="mcq-option-letter">C</span> The number of different routers a packet passes through on its path</button>
+<button class="mcq-option" onclick="checkMCQ('q5','D','B','q5-fb-D')"><span class="mcq-option-letter">D</span> The total number of devices that can be assigned a unique IP address</button>
+</div>
+<div id="q5-fb-A" class="mcq-feedback incorrect-fb">Incorrect. That describes latency, the delay for data to travel, not bandwidth.</div>
+<div id="q5-fb-B" class="mcq-feedback correct-fb">Correct. Bandwidth is a rate: the maximum amount of data that can be sent per unit of time, such as bits per second.</div>
+<div id="q5-fb-C" class="mcq-feedback incorrect-fb">Incorrect. The number of routers on a path relates to hops, not bandwidth.</div>
+<div id="q5-fb-D" class="mcq-feedback incorrect-fb">Incorrect. That describes the size of the address space, not bandwidth.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q6">
+        <div class="mcq-q-num">Question 6 of 6<span class="diff-tag">Redundancy and scale</span>
+</div>
+        <div class="predict-note">Predict why the design keeps working when a link fails.</div>
+        <div class="mcq-q-text"><p>The Internet was deliberately designed to be scalable and redundant. A router on a commonly used path suddenly fails while two devices are communicating. Which outcome most directly reflects this design, and why?</p></div>
+        <div class="mcq-options" id="q6-options">
+<button class="mcq-option" onclick="checkMCQ('q6','A','C','q6-fb-A')"><span class="mcq-option-letter">A</span> Communication stops permanently, because each message is locked to one fixed route</button>
+<button class="mcq-option" onclick="checkMCQ('q6','B','C','q6-fb-B')"><span class="mcq-option-letter">B</span> Communication continues, because a central control computer instantly repairs the broken router</button>
+<button class="mcq-option" onclick="checkMCQ('q6','C','C','q6-fb-C')"><span class="mcq-option-letter">C</span> Communication continues, because redundancy provides multiple paths and packets are rerouted around the failure</button>
+<button class="mcq-option" onclick="checkMCQ('q6','D','C','q6-fb-D')"><span class="mcq-option-letter">D</span> Communication continues only if the two devices switch from IP addresses to web addresses</button>
+</div>
+<div id="q6-fb-A" class="mcq-feedback incorrect-fb">Incorrect. Messages are not locked to one route; redundant paths exist precisely so a failure is not fatal.</div>
+<div id="q6-fb-B" class="mcq-feedback incorrect-fb">Incorrect. There is no central control computer directing or repairing the Internet; rerouting is distributed across routers.</div>
+<div id="q6-fb-C" class="mcq-feedback correct-fb">Correct. Redundancy means multiple paths exist, so packets are rerouted around the failed router and communication continues, making the network fault tolerant.</div>
+<div id="q6-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Switching to web addresses is not how rerouting works; redundant paths and independent routing keep data flowing.</div>
+      </div>
+    </div>
+    <div class="game-section">
+      <div style="text-align:center;margin-bottom:20px;">
+        <div class="game-badge">🎮 Lesson Game</div>
+        <div class="game-title">Internet Routing</div>
+        <div class="game-sub">Hop a packet router to router toward the server and reroute around failures.</div>
+      </div>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+#irs-game{
+  font-family:'DM Sans',system-ui,-apple-system,sans-serif !important;
+  color:#0f1f3d !important;
+  -webkit-text-fill-color:#0f1f3d !important;
+  max-width:760px;margin:0 auto;padding:0;box-sizing:border-box;
+  background:#ffffff !important;
+}
+#irs-game *{box-sizing:border-box;}
+
+#irs-game .irs-header{
+  background:#0f1f3d !important;
+  border-radius:14px 14px 0 0;
+  padding:18px 20px 16px;
+}
+#irs-game .irs-title{
+  font-family:'DM Serif Display',Georgia,serif !important;
+  font-size:26px;line-height:1.1;margin:0 0 4px;
+  color:#ffffff !important;-webkit-text-fill-color:#ffffff !important;
+}
+#irs-game .irs-sub{
+  font-size:13.5px;margin:0;
+  color:#93c5fd !important;-webkit-text-fill-color:#93c5fd !important;
+}
+#irs-game .irs-how{
+  background:#eff6ff !important;
+  border:1px solid #e2e8f0;border-top:none;
+  padding:9px 20px;font-size:12.5px;
+  color:#1a56db !important;-webkit-text-fill-color:#1a56db !important;
+  font-weight:600;
+}
+#irs-game .irs-bar{
+  display:flex;gap:8px;flex-wrap:wrap;
+  padding:12px 20px;background:#ffffff !important;
+  border:1px solid #e2e8f0;border-top:none;
+}
+#irs-game .irs-stat{
+  flex:1 1 0;min-width:70px;text-align:center;
+  background:#f8fafc !important;border:1px solid #e2e8f0;border-radius:12px;
+  padding:8px 4px;
+}
+#irs-game .irs-stat .k{
+  font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;font-weight:700;
+  color:#64748b !important;-webkit-text-fill-color:#64748b !important;
+}
+#irs-game .irs-stat .v{
+  font-size:20px;font-weight:700;margin-top:2px;
+  color:#0f1f3d !important;-webkit-text-fill-color:#0f1f3d !important;
+}
+#irs-game .irs-note{
+  padding:10px 20px;font-size:13px;line-height:1.4;
+  background:#ffffff !important;border:1px solid #e2e8f0;border-top:none;
+  color:#334155 !important;-webkit-text-fill-color:#334155 !important;
+}
+#irs-game .irs-note b{color:#7c3aed !important;-webkit-text-fill-color:#7c3aed !important;}
+
+#irs-game .irs-stage{
+  position:relative;background:#f1f5f9 !important;
+  border:1px solid #e2e8f0;border-top:none;
+}
+#irs-game #irs-svg{display:block;width:100%;height:auto;touch-action:manipulation;}
+
+#irs-game .irs-overlay{
+  position:absolute;inset:0;display:none;
+  align-items:center;justify-content:center;padding:16px;
+  background:rgba(15,31,61,0.86) !important;
+  border-radius:0;
+}
+#irs-game .irs-overlay.show{display:flex;}
+#irs-game .irs-card{
+  background:#ffffff !important;border-radius:14px;padding:20px;max-width:420px;text-align:center;
+  border:1px solid #e2e8f0;
+}
+#irs-game .irs-card h3{
+  font-family:'DM Serif Display',Georgia,serif !important;
+  margin:0 0 8px;font-size:22px;
+  color:#0f1f3d !important;-webkit-text-fill-color:#0f1f3d !important;
+}
+#irs-game .irs-card p{
+  margin:0 0 14px;font-size:13.5px;line-height:1.5;
+  color:#334155 !important;-webkit-text-fill-color:#334155 !important;
+}
+#irs-game .irs-card .win{color:#16a34a !important;-webkit-text-fill-color:#16a34a !important;font-weight:700;}
+#irs-game .irs-card .bad{color:#dc2626 !important;-webkit-text-fill-color:#dc2626 !important;font-weight:700;}
+
+#irs-game .irs-controls{
+  display:flex;gap:8px;flex-wrap:wrap;padding:12px 20px;
+  background:#ffffff !important;border:1px solid #e2e8f0;border-top:none;
+}
+#irs-game .btn{
+  flex:1 1 auto;min-width:120px;
+  font-family:'DM Sans',sans-serif !important;font-size:13px;font-weight:700;
+  padding:11px 12px;border-radius:12px;cursor:pointer;border:1px solid transparent;
+  transition:transform .05s ease,filter .15s ease;
+}
+#irs-game .btn:active{transform:translateY(1px);}
+#irs-game .btn-primary{
+  background:#1a56db !important;color:#ffffff !important;-webkit-text-fill-color:#ffffff !important;
+}
+#irs-game .btn-accent{
+  background:#7c3aed !important;color:#ffffff !important;-webkit-text-fill-color:#ffffff !important;
+}
+#irs-game .btn-ghost{
+  background:#eff6ff !important;color:#1a56db !important;-webkit-text-fill-color:#1a56db !important;
+  border:1px solid #bfdbfe;
+}
+#irs-game .btn-break{
+  background:#fef2f2 !important;color:#dc2626 !important;-webkit-text-fill-color:#dc2626 !important;
+  border:1px solid #fecaca;
+}
+#irs-game .btn-break.on{
+  background:#dc2626 !important;color:#ffffff !important;-webkit-text-fill-color:#ffffff !important;
+  border-color:#dc2626;
+}
+
+#irs-game .irs-feedback{
+  padding:12px 20px;font-size:13px;line-height:1.45;min-height:20px;font-weight:600;
+  background:#ffffff !important;border:1px solid #e2e8f0;border-top:none;
+  color:#334155 !important;-webkit-text-fill-color:#334155 !important;
+}
+#irs-game .irs-feedback.ok{color:#16a34a !important;-webkit-text-fill-color:#16a34a !important;}
+#irs-game .irs-feedback.err{color:#dc2626 !important;-webkit-text-fill-color:#dc2626 !important;}
+#irs-game .irs-feedback.info{color:#1a56db !important;-webkit-text-fill-color:#1a56db !important;}
+
+#irs-game .irs-legend{
+  display:flex;gap:14px;flex-wrap:wrap;justify-content:center;
+  padding:11px 20px;background:#f8fafc !important;
+  border:1px solid #e2e8f0;border-top:none;border-radius:0 0 14px 14px;
+  font-size:11.5px;
+  color:#64748b !important;-webkit-text-fill-color:#64748b !important;
+}
+#irs-game .irs-legend span{display:inline-flex;align-items:center;gap:5px;font-weight:600;}
+#irs-game .irs-legend i{width:12px;height:12px;border-radius:50%;display:inline-block;}
+
+#irs-game text{font-family:'DM Sans',sans-serif !important;}
+</style>
+
+<div class="irs-game" id="irs-game">
+  <div class="irs-header">
+    <p class="irs-title">Internet Routing Simulator</p>
+    <p class="irs-sub">The Internet delivers data by hopping packets router-to-router along links  -  and reroutes around failures.</p>
+  </div>
+  <div class="irs-how">
+    How to play: tap the next router along a link to move your packet toward the server. Fewer hops = higher score. Break routers/links and route around them.
+  </div>
+  <div class="irs-bar">
+    <div class="irs-stat">
+<div class="k">Level</div>
+<div class="v" id="irs-level">1 / 5</div>
+</div>
+    <div class="irs-stat">
+<div class="k">Hops</div>
+<div class="v" id="irs-hops">0</div>
+</div>
+    <div class="irs-stat">
+<div class="k">Delivered</div>
+<div class="v" id="irs-delivered">0</div>
+</div>
+    <div class="irs-stat">
+<div class="k">Score</div>
+<div class="v" id="irs-score">0</div>
+</div>
+  </div>
+  <div class="irs-note" id="irs-note"></div>
+  <div class="irs-stage">
+    <svg id="irs-svg" viewbox="0 0 620 400" preserveaspectratio="xMidYMid meet" role="img" aria-label="Network map"></svg>
+    <div class="irs-overlay" id="irs-overlay"></div>
+  </div>
+  <div class="irs-controls">
+    <button class="btn btn-primary" id="irs-send">New Packet</button>
+    <button class="btn btn-accent" id="irs-auto">Auto-Route ▶</button>
+    <button class="btn btn-break" id="irs-break">Break Mode: OFF</button>
+    <button class="btn btn-ghost" id="irs-restart">Restart Level</button>
+  </div>
+  <div class="irs-feedback info" id="irs-feedback">Tap a router next to your computer to send the first hop.</div>
+  <div class="irs-legend">
+    <span><i style="background:#1a56db"></i>You (source)</span>
+    <span><i style="background:#16a34a"></i>Server (destination)</span>
+    <span><i style="background:#0f1f3d"></i>Router</span>
+    <span><i style="background:#dc2626"></i>Broken</span>
+    <span><i style="background:#d97706"></i>Packet</span>
+  </div>
+</div>
+
+<script>
+(function(){
+  var SVGNS = "http://www.w3.org/2000/svg";
+  var root = document.getElementById("irs-game");
+  var svg = document.getElementById("irs-svg");
+  var overlay = document.getElementById("irs-overlay");
+  var noteEl = document.getElementById("irs-note");
+  var fbEl = document.getElementById("irs-feedback");
+  var elLevel = document.getElementById("irs-level");
+  var elHops = document.getElementById("irs-hops");
+  var elDelivered = document.getElementById("irs-delivered");
+  var elScore = document.getElementById("irs-score");
+
+  // ---- Level definitions ----
+  var LEVELS = [
+    {
+      name:"First Hop",
+      note:"Your <b>packet</b> travels one hop at a time. Tap a router that shares a link with your current position, all the way to the Server.",
+      nodes:[
+        {id:"S",x:70,y:200,label:"You",type:"source"},
+        {id:"A",x:235,y:110,label:"R1"},
+        {id:"B",x:235,y:290,label:"R2"},
+        {id:"M",x:410,y:200,label:"R3"},
+        {id:"D",x:560,y:200,label:"Server",type:"dest"}
+      ],
+      edges:[["S","A"],["S","B"],["A","M"],["B","M"],["A","B"],["M","D"]],
+      brokenNodes:[],brokenEdges:[]
+    },
+    {
+      name:"Route Around a Dead Link",
+      note:"A <b>link is down</b> (red dashes). The Internet does not rely on one path  -  find a redundant route to the Server.",
+      nodes:[
+        {id:"S",x:70,y:200,label:"You",type:"source"},
+        {id:"A",x:235,y:110,label:"R1"},
+        {id:"B",x:235,y:290,label:"R2"},
+        {id:"M",x:410,y:200,label:"R3"},
+        {id:"D",x:560,y:200,label:"Server",type:"dest"}
+      ],
+      edges:[["S","A"],["S","B"],["A","M"],["B","M"],["A","B"],["M","D"]],
+      brokenNodes:[],brokenEdges:[["A","M"]]
+    },
+    {
+      name:"The Longer Way Round",
+      note:"A whole <b>router has failed</b>. The short path is gone  -  the only working route is longer, but the packet still gets there.",
+      nodes:[
+        {id:"S",x:70,y:200,label:"You",type:"source"},
+        {id:"A",x:300,y:95,label:"R1"},
+        {id:"B",x:225,y:300,label:"R2"},
+        {id:"C",x:415,y:300,label:"R3"},
+        {id:"D",x:560,y:200,label:"Server",type:"dest"}
+      ],
+      edges:[["S","A"],["A","D"],["S","B"],["B","C"],["C","D"],["A","B"]],
+      brokenNodes:["A"],brokenEdges:[]
+    },
+    {
+      name:"Network Storm",
+      note:"<b>Two failures at once.</b> Trace a surviving path through the mesh  -  redundancy means many routers can carry the packet.",
+      nodes:[
+        {id:"S",x:60,y:200,label:"You",type:"source"},
+        {id:"A",x:195,y:95,label:"R1"},
+        {id:"B",x:195,y:305,label:"R2"},
+        {id:"C",x:345,y:95,label:"R3"},
+        {id:"E",x:345,y:305,label:"R4"},
+        {id:"F",x:470,y:200,label:"R5"},
+        {id:"D",x:575,y:200,label:"Server",type:"dest"}
+      ],
+      edges:[["S","A"],["S","B"],["A","B"],["A","C"],["A","E"],["B","E"],["C","E"],["C","F"],["E","F"],["F","D"]],
+      brokenNodes:["C","B"],brokenEdges:[]
+    },
+    {
+      name:"Single Point of Failure",
+      note:"This network has <b>no redundancy</b>: the Server sits behind one gateway. That gateway is down. Try to route  -  then see what a real outage looks like.",
+      nodes:[
+        {id:"S",x:70,y:200,label:"You",type:"source"},
+        {id:"A",x:235,y:110,label:"R1"},
+        {id:"B",x:235,y:290,label:"R2"},
+        {id:"G",x:410,y:200,label:"GW"},
+        {id:"D",x:560,y:200,label:"Server",type:"dest"}
+      ],
+      edges:[["S","A"],["S","B"],["A","B"],["A","G"],["B","G"],["G","D"]],
+      brokenNodes:["G"],brokenEdges:[],
+      unreachable:true
+    }
+  ];
+
+  // ---- State ----
+  var levelIdx = 0;
+  var nodes = [], edges = [];
+  var brokenNodes = {}, brokenEdges = {};
+  var source = null, dest = null, current = null;
+  var hops = 0, delivered = 0, score = 0;
+  var optimal = null;
+  var animating = false;
+  var breakMode = false;
+  var levelDone = false;
+  var packet = null;
+
+  function keyOf(a,b){ return a<b ? a+"|"+b : b+"|"+a; }
+  function nodeById(id){ for(var i=0;i<nodes.length;i++){ if(nodes[i].id===id) return nodes[i]; } return null; }
+
+  function neighbors(id){
+    if(brokenNodes[id]) return [];
+    var res=[];
+    for(var i=0;i<edges.length;i++){
+      var a=edges[i][0], b=edges[i][1];
+      if(brokenEdges[keyOf(a,b)]) continue;
+      if(a===id && !brokenNodes[b]) res.push(b);
+      else if(b===id && !brokenNodes[a]) res.push(a);
+    }
+    return res;
+  }
+
+  function shortestPath(src,dst){
+    if(brokenNodes[src] || brokenNodes[dst]) return null;
+    var q=[src], seen={}, prev={};
+    seen[src]=true;
+    while(q.length){
+      var cur=q.shift();
+      if(cur===dst){
+        var path=[dst];
+        while(path[0]!==src) path.unshift(prev[path[0]]);
+        return path;
+      }
+      var ns=neighbors(cur);
+      for(var i=0;i<ns.length;i++){
+        var n=ns[i];
+        if(!seen[n]){ seen[n]=true; prev[n]=cur; q.push(n); }
+      }
+    }
+    return null;
+  }
+
+  // ---- Rendering ----
+  function clearSvg(){ while(svg.firstChild) svg.removeChild(svg.firstChild); }
+
+  function mk(tag,attrs){
+    var e=document.createElementNS(SVGNS,tag);
+    for(var k in attrs){ if(attrs.hasOwnProperty(k)) e.setAttribute(k,attrs[k]); }
+    return e;
+  }
+
+  function render(){
+    clearSvg();
+    // edges
+    for(var i=0;i<edges.length;i++){
+      var a=nodeById(edges[i][0]), b=nodeById(edges[i][1]);
+      var broken = !!brokenEdges[keyOf(a.id,b.id)];
+      var line = mk("line",{
+        x1:a.x,y1:a.y,x2:b.x,y2:b.y,
+        stroke: broken ? "#dc2626" : "#94a3b8",
+        "stroke-width": broken ? 4 : 5,
+        "stroke-linecap":"round",
+        "stroke-dasharray": broken ? "9 8" : "0"
+      });
+      svg.appendChild(line);
+      // wide transparent hit line for breaking
+      var hit = mk("line",{x1:a.x,y1:a.y,x2:b.x,y2:b.y,stroke:"transparent","stroke-width":18});
+      hit.style.cursor = breakMode ? "crosshair" : "default";
+      (function(ea,eb){ hit.addEventListener("click",function(){ onEdgeClick(ea,eb); }); })(a.id,b.id);
+      svg.appendChild(hit);
+    }
+    // nodes
+    for(var j=0;j<nodes.length;j++){
+      drawNode(nodes[j]);
+    }
+    // packet on top
+    var cn = nodeById(current);
+    packet = mk("circle",{cx:cn.x,cy:cn.y,r:9,fill:"#d97706",stroke:"#ffffff","stroke-width":3});
+    packet.setAttribute("filter","");
+    svg.appendChild(packet);
+  }
+
+  function drawNode(n){
+    var g = mk("g",{});
+    var broken = !!brokenNodes[n.id];
+    var fill, stroke;
+    if(broken){ fill="#dc2626"; stroke="#991b1b"; }
+    else if(n.type==="source"){ fill="#1a56db"; stroke="#0f1f3d"; }
+    else if(n.type==="dest"){ fill="#16a34a"; stroke="#14532d"; }
+    else { fill="#0f1f3d"; stroke="#334155"; }
+
+    var isCurrent = (n.id===current) && !broken;
+    if(isCurrent){
+      var ring = mk("circle",{cx:n.x,cy:n.y,r:31,fill:"none",stroke:"#d97706","stroke-width":3});
+      g.appendChild(ring);
+    }
+    // highlight valid next hops
+    var validNext = (!animating && !breakMode && !levelDone && neighbors(current).indexOf(n.id)>=0);
+    var circle = mk("circle",{cx:n.x,cy:n.y,r:24,fill:fill,stroke: validNext ? "#d97706" : stroke,"stroke-width": validNext ? 4 : 2});
+    circle.style.cursor="pointer";
+    g.appendChild(circle);
+
+    var lbl = mk("text",{x:n.x,y:n.y+4,"text-anchor":"middle","font-size":"12","font-weight":"700",fill:"#ffffff"});
+    lbl.style.webkitTextFillColor="#ffffff";
+    lbl.style.pointerEvents="none";
+    lbl.textContent = broken ? "\u2715" : n.label;
+    g.appendChild(lbl);
+
+    if(n.type==="source" || n.type==="dest"){
+      var cap = mk("text",{x:n.x,y:n.y+42,"text-anchor":"middle","font-size":"11","font-weight":"700",fill:"#334155"});
+      cap.style.webkitTextFillColor="#334155";
+      cap.style.pointerEvents="none";
+      cap.textContent = n.type==="source" ? "SOURCE" : "DEST";
+      g.appendChild(cap);
+    }
+
+    (function(id){ g.addEventListener("click",function(){ onNodeClick(id); }); })(n.id);
+    svg.appendChild(g);
+  }
+
+  // ---- Feedback ----
+  function say(msg,cls){
+    fbEl.textContent = msg;
+    fbEl.className = "irs-feedback " + (cls||"info");
+  }
+
+  function updateBar(){
+    elLevel.textContent = (levelIdx+1) + " / " + LEVELS.length;
+    elHops.textContent = hops;
+    elDelivered.textContent = delivered;
+    elScore.textContent = score;
+  }
+
+  // ---- Interactions ----
+  function onNodeClick(id){
+    var lvl = LEVELS[levelIdx];
+    if(breakMode){
+      var n = nodeById(id);
+      if(n.type==="source" || n.type==="dest"){ say("You can't break the source or the destination themselves.","err"); return; }
+      if(id===current && !brokenNodes[id]){ say("The packet is sitting on that router  -  move it first, or break a different node.","err"); return; }
+      brokenNodes[id] = !brokenNodes[id];
+      render();
+      recomputeOptimal();
+      say(brokenNodes[id] ? ("Router " + n.label + " disabled. If it was on your path, route around it.") : ("Router " + n.label + " restored."), "info");
+      return;
+    }
+    if(animating || levelDone) return;
+    if(id===current) return;
+    var nbrs = neighbors(current);
+    if(nbrs.indexOf(id)<0){
+      say("No link there. Packets can only travel along an existing link between two routers.","err");
+      flash(id);
+      return;
+    }
+    movePacket(current,id,function(){
+      current=id; hops++; updateBar(); render();
+      if(id===dest){ onDelivered(); }
+      else { say("Hop taken. Next router?","ok"); }
+    });
+  }
+
+  function onEdgeClick(a,b){
+    if(!breakMode) return;
+    var k = keyOf(a,b);
+    brokenEdges[k] = !brokenEdges[k];
+    render();
+    recomputeOptimal();
+    say(brokenEdges[k] ? "Link disabled. Packets can no longer cross it  -  use a redundant link." : "Link restored.","info");
+  }
+
+  function flash(id){
+    var g = svg.lastChild; // packet is last; find node circle instead
+    // brief red pulse on the target node
+    var n = nodeById(id);
+    var pulse = mk("circle",{cx:n.x,cy:n.y,r:24,fill:"none",stroke:"#dc2626","stroke-width":4});
+    svg.appendChild(pulse);
+    var t=0;
+    var iv=setInterval(function(){
+      t++;
+      pulse.setAttribute("r",24+t*3);
+      pulse.setAttribute("stroke","rgba(220,38,38,"+(1-t/8)+")");
+      if(t>=8){ clearInterval(iv); if(pulse.parentNode) pulse.parentNode.removeChild(pulse); }
+    },30);
+  }
+
+  function movePacket(fromId,toId,cb){
+    animating=true;
+    render(); // clears next-hop highlights during motion
+    var f=nodeById(fromId), t=nodeById(toId);
+    var start=null, dur=430;
+    function frame(now){
+      if(start===null) start=now;
+      var p=Math.min(1,(now-start)/dur);
+      var e = p<0.5 ? 2*p*p : 1-Math.pow(-2*p+2,2)/2;
+      packet.setAttribute("cx", f.x+(t.x-f.x)*e);
+      packet.setAttribute("cy", f.y+(t.y-f.y)*e);
+      if(p<1) requestAnimationFrame(frame);
+      else { animating=false; if(cb) cb(); }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function autoRoute(){
+    if(animating || levelDone) return;
+    var path = shortestPath(current,dest);
+    if(!path){
+      if(LEVELS[levelIdx].unreachable){
+        showOutage();
+      } else {
+        say("No path from here. A router or link on every route is broken  -  try restoring or restarting the level.","err");
+      }
+      return;
+    }
+    if(path.length===1){ onDelivered(); return; }
+    say("Auto-routing along the shortest surviving path...","info");
+    stepPath(path,0);
+  }
+
+  function stepPath(path,i){
+    if(i>=path.length-1){
+      current=path[path.length-1];
+      onDelivered();
+      return;
+    }
+    movePacket(path[i],path[i+1],function(){
+      current=path[i+1]; hops++; updateBar(); render();
+      stepPath(path,i+1);
+    });
+  }
+
+  function onDelivered(){
+    if(levelDone) return;
+    levelDone=true;
+    delivered++;
+    var opt = optimal===null ? hops : optimal;
+    var extra = hops - opt;
+    var pts = Math.max(20, 100 - (extra<0?0:extra)*20);
+    score += pts;
+    updateBar();
+    render();
+
+    var hadFailure = countBroken() > 0;
+    var effLine = (extra<=0) ? "Perfect  -  you used the fewest possible hops!" : ("You used " + hops + " hops; the shortest surviving route was " + opt + ".");
+    var teach = hadFailure
+      ? "You routed <b>around a failure</b>. Redundant paths are exactly why the Internet keeps working when a router or link goes down."
+      : "Each hop moved the packet across one link. There is no single fixed wire  -  routers pass packets along until they reach the destination.";
+
+    var isLastDeliverable = true;
+    for(var i=levelIdx+1;i<LEVELS.length;i++){ if(!LEVELS[i].unreachable){ isLastDeliverable=false; break; } }
+    var moreLevels = (levelIdx < LEVELS.length-1);
+
+    var btn = moreLevels ? '<button class="btn btn-primary" id="irs-next" style="min-width:160px">Next Level →</button>'
+                         : '<button class="btn btn-primary" id="irs-next" style="min-width:160px">See Results →</button>';
+
+    showOverlay(
+      '<h3 class="win">Packet Delivered!</h3>'+
+      '<p><b>'+hops+' hops</b> • +'+pts+' points<br>'+effLine+'</p>'+
+      '<p>'+teach+'</p>'+
+      btn
+    );
+    document.getElementById("irs-next").addEventListener("click", function(){
+      if(moreLevels) startLevel(levelIdx+1);
+      else showResults();
+    });
+    say("Delivered in " + hops + " hops. +" + pts + " points.","ok");
+  }
+
+  function showOutage(){
+    levelDone=true;
+    render();
+    showOverlay(
+      '<h3 class="bad">Server Unreachable  -  Outage</h3>'+
+      '<p>Every route to the Server passes through one gateway, and it is down. With <b>no redundant path</b>, the packet cannot be delivered at all.</p>'+
+      '<p>This is what a real outage looks like: a single point of failure with no backup. The Internet avoids this by building <b>many</b> paths between points.</p>'+
+      '<button class="btn btn-primary" id="irs-finish" style="min-width:160px">Finish →</button>'
+    );
+    document.getElementById("irs-finish").addEventListener("click", showResults);
+    say("No path exists. One gateway, no redundancy = total outage.","err");
+  }
+
+  function showResults(){
+    document.dispatchEvent(new CustomEvent('apcsGameScore',{detail:{value:score}}));
+    showOverlay(
+      '<h3 class="win">Network Mastered!</h3>'+
+      '<p>Packets delivered: <b>'+delivered+'</b><br>Final score: <b>'+score+'</b></p>'+
+      '<p>You routed packets hop-by-hop, rerouted around broken routers and links, and saw why a single point of failure breaks everything. <b>The Internet is fault-tolerant because it offers many redundant paths, not one fixed route.</b></p>'+
+      '<button class="btn btn-primary" id="irs-again" style="min-width:160px">Play Again</button>'
+    );
+    document.getElementById("irs-again").addEventListener("click", function(){
+      score=0; delivered=0; updateBar(); startLevel(0);
+    });
+  }
+
+  function showOverlay(html){
+    overlay.innerHTML = '<div class="irs-card">'+html+'</div>';
+    overlay.className = "irs-overlay show";
+  }
+  function hideOverlay(){ overlay.className="irs-overlay"; overlay.innerHTML=""; }
+
+  function countBroken(){
+    var c=0,k;
+    for(k in brokenNodes){ if(brokenNodes[k]) c++; }
+    for(k in brokenEdges){ if(brokenEdges[k]) c++; }
+    return c;
+  }
+
+  function recomputeOptimal(){
+    optimal = null;
+    var p = shortestPath(source,dest);
+    if(p) optimal = p.length-1;
+  }
+
+  // ---- Level setup ----
+  function startLevel(i){
+    levelIdx=i;
+    var lvl=LEVELS[i];
+    // deep-copy nodes so we can reuse defs
+    nodes = lvl.nodes.map(function(n){ return {id:n.id,x:n.x,y:n.y,label:n.label,type:n.type}; });
+    edges = lvl.edges.map(function(e){ return [e[0],e[1]]; });
+    brokenNodes={}; brokenEdges={};
+    lvl.brokenNodes.forEach(function(id){ brokenNodes[id]=true; });
+    lvl.brokenEdges.forEach(function(e){ brokenEdges[keyOf(e[0],e[1])]=true; });
+    source=null; dest=null;
+    nodes.forEach(function(n){ if(n.type==="source") source=n.id; if(n.type==="dest") dest=n.id; });
+    current=source;
+    hops=0; levelDone=false; breakMode=false;
+    setBreakBtn();
+    recomputeOptimal();
+    hideOverlay();
+    noteEl.innerHTML = "<b>Level "+(i+1)+" • "+lvl.name+".</b> "+lvl.note;
+    updateBar();
+    render();
+    if(lvl.unreachable){
+      say("Try to reach the Server. Use Auto-Route to test if any path survives.","info");
+    } else if(countBroken()>0){
+      say("Something is broken. Find a working route to the Server, or tap Auto-Route.","info");
+    } else {
+      say("Tap a router linked to your computer to send the first hop.","info");
+    }
+  }
+
+  function newPacket(){
+    if(animating) return;
+    current=source; hops=0; levelDone=false;
+    hideOverlay();
+    updateBar();
+    render();
+    say("Fresh packet at the source. Route it to the Server.","info");
+  }
+
+  function setBreakBtn(){
+    var b=document.getElementById("irs-break");
+    if(breakMode){ b.textContent="Break Mode: ON"; b.className="btn btn-break on"; }
+    else { b.textContent="Break Mode: OFF"; b.className="btn btn-break"; }
+  }
+
+  // ---- Buttons ----
+  document.getElementById("irs-send").addEventListener("click", newPacket);
+  document.getElementById("irs-auto").addEventListener("click", autoRoute);
+  document.getElementById("irs-restart").addEventListener("click", function(){ startLevel(levelIdx); });
+  document.getElementById("irs-break").addEventListener("click", function(){
+    if(animating) return;
+    breakMode=!breakMode;
+    setBreakBtn();
+    render();
+    if(breakMode) say("Break Mode ON: tap a router or a link to disable it (tap again to restore). Then route around it.","info");
+    else say("Break Mode OFF: tap routers to move your packet again.","info");
+  });
+
+  // ---- Go ----
+  startLevel(0);
+})();
+</script>
+    </div>
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Is the World Wide Web the same as the Internet?<i class="faq-icon">+</i></button>
+        <div class="faq-a">No. The Internet is a network of networks, the global infrastructure that connects billions of devices. The World Wide Web is one service that runs over the Internet: a system of linked pages and resources accessed using HTTP. Email and video calls also use the Internet without being part of the Web.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What is a protocol, and why do open protocols matter?<i class="faq-icon">+</i></button>
+        <div class="faq-a">A protocol is an agreed-upon set of rules for formatting and transmitting data. Open, standardized protocols are published and free to use, so devices from different manufacturers running different software can interoperate as long as they follow the same rules. That is what lets the whole Internet work together.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Why are packets that take different paths and arrive out of order not a problem?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Because each packet carries a sequence number and a destination address. Packets are routed independently and may arrive out of order, but at the destination TCP uses the sequence numbers to reassemble them in the correct order and requests a resend for anything lost, so the original data is restored.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What is the difference between bandwidth and latency?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Bandwidth is a rate: the maximum amount of data that can be sent per unit of time, such as bits per second. Latency is the delay, the time it takes data to travel from one point to another. A connection can have high bandwidth and still have noticeable latency, so the two are not the same measurement.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Why was IPv6 created if IPv4 already existed?<i class="faq-icon">+</i></button>
+        <div class="faq-a">IPv4 uses 32-bit addresses and can only provide about 4.3 billion unique IP addresses, which is not enough for all the phones, computers, and smart devices online today. IPv6 uses 128-bit addresses and offers a vastly larger pool, which is how the addressing system was designed to scale as the Internet keeps growing.</div>
+      </div>
+    </div>
+    <div class="related-links">
+      <h3>🔗 Continue studying</h3>
+      <div class="related-links-grid">
+        <a href="/pages/ap-csp-course-bi4-fault-tolerance" class="related-link">4.2 Fault Tolerance</a>
+        <a href="/pages/ap-csp-reference-sheet" class="related-link">AP CSP Reference Sheet</a>
+        <a href="/pages/ap-csp-study-games-hub" class="related-link">All CSP Study Games</a>
+      </div>
+    </div>
+    <div class="superpack-slim">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="superpack-slim-icon">📦</div>
+        <div><div class="superpack-slim-text">AP CSP Teacher Superpack<span class="superpack-slim-sub">Slides, lesson plans, unit tests for all 5 Big Ideas, $249</span>
+</div></div>
+      </div>
+      <a href="/products/ap-csp-teacher-superpack" class="superpack-slim-btn">Get the Superpack →</a>
+    </div>
+    <div class="teacher-callout">
+      <div class="teacher-callout-icon">🏫</div>
+      <div class="teacher-callout-body">
+        <div class="teacher-callout-label">For teachers</div>
+        <p>Topic 4.1 is dense with vocabulary that students blur together, so front-load the distinctions: Internet versus Web, bandwidth versus latency, and IP versus TCP. Run the Internet Routing game to make packet independence and rerouting concrete, then drill the trap statements as quick true/false warm-ups. The Superpack includes a protocol matching sheet and a packets-and-routing diagram walkthrough. <a href="/products/ap-csp-teacher-superpack">View what's included →</a></p>
+      </div>
+    </div>
+    <div class="lesson-nav">
+      <a href="/pages/ap-csp-course-big-idea-4-computer-systems" class="nav-card">
+        <div class="nav-card-dir">← Previous</div>
+        <div class="nav-card-title">Big Idea 4: Computing Systems and Networks</div>
+      </a>
+      <a href="/pages/ap-csp-course-bi4-fault-tolerance" class="nav-card next">
+        <div class="nav-card-dir">Next lesson →</div>
+        <div class="nav-card-title">4.2 Fault Tolerance</div>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var MINI_MSGS={"mc-internet-1": {"A": "Not quite. They are not the same. The Internet is the network of networks; the Web is one service (linked resources) running over it.", "B": "Reversed. Web pages are part of the Web, and the Web runs over the Internet, not the other way around.", "C": "Correct. The Internet is a network of networks, and the World Wide Web is a system of linked resources accessed over it.", "D": "No. The Internet is not defined as the physical wiring, and the Web is not the software layer. The Web is a system of linked resources accessed over the Internet."}, "mc-internet-2": {"A": "IP handles addressing and routing, but it does not guarantee ordered, reliable delivery. That job belongs to TCP.", "B": "Correct. TCP provides reliable, ordered delivery by numbering packets, acknowledging arrivals, retransmitting losses, and reassembling in order.", "C": "UDP is fast but unreliable. It does not acknowledge or retransmit, so it cannot guarantee complete, ordered delivery.", "D": "HTTP defines how web pages are requested and delivered, but it relies on TCP underneath for reliable delivery."}};
+var MINI_FIB={};
+
+function _activity(d){
+  try{ var w=document.querySelector('.lesson-page');
+    if(w){ d.course=w.getAttribute('data-course'); d.unit=w.getAttribute('data-unit'); d.lesson=w.getAttribute('data-lesson'); }
+    document.dispatchEvent(new CustomEvent('apcsActivity',{detail:d}));
+  }catch(e){}
+}
+function checkMCQ(qid, chosen, correct, fbId){
+  var opts=document.querySelectorAll('#'+qid+'-options .mcq-option');
+  opts.forEach(function(b){b.disabled=true;b.onclick=null;});
+  var letters=['A','B','C','D'];
+  opts[letters.indexOf(chosen)].classList.add(chosen===correct?'correct':'incorrect');
+  if(chosen!==correct)opts[letters.indexOf(correct)].classList.add('revealed-correct');
+  document.getElementById(fbId).classList.add('show');
+  _activity({activity:'quiz',item:qid,choice:chosen});
+}
+function miniMCQ(id, chosen, correct, fbId){
+  var opts=document.querySelectorAll('#'+id+'-opts .mini-opt');
+  opts.forEach(function(b){b.onclick=null;b.style.cursor='default';});
+  var letters=['A','B','C','D'];
+  opts[letters.indexOf(chosen)].classList.add(chosen===correct?'correct':'incorrect');
+  if(chosen!==correct)opts[letters.indexOf(correct)].classList.add('reveal');
+  var fb=document.getElementById(fbId);
+  if(MINI_MSGS[id]){fb.textContent=MINI_MSGS[id][chosen]||'';fb.className='mini-fb '+(chosen===correct?'c':'w');}
+}
+function miniFIB(id, fbId){
+  var inp=document.getElementById(id+'-inp'),fb=document.getElementById(fbId);
+  var val=inp.value.trim().toLowerCase();var d=MINI_FIB[id];
+  var ok=(val===String(d.correct).toLowerCase());
+  inp.classList.add(ok?'correct':'incorrect');
+  fb.textContent=ok?d.c:d.w; fb.className='mini-fb '+(ok?'c':'w'); inp.disabled=true;
+}
+function toggleFAQ(btn){
+  var item=btn.parentElement,wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(el){el.classList.remove('open');});
+  if(!wasOpen)item.classList.add('open');
+}
+function handleCapture(){
+  var email=document.getElementById('capture-email').value.trim();
+  if(!email||!email.includes('@')){document.getElementById('capture-email').focus();return;}
+  document.getElementById('capture-form').style.display='none';
+  document.getElementById('capture-success').style.display='block';
+  if(typeof window._learnq!=='undefined'){window._learnq.push(['identify',{'$email':email}]);}
+}
+/* Bridge: the embedded topic game dispatches 'apcsGameScore' on completion.
+   Convert that single completion into the standard exercise-2 gradebook hook. */
+document.addEventListener('apcsGameScore', function(e){
+  _activity({activity:'exercise-2', earned:1, possible:1});
+});
+</script>
+<!-- apcs-exercises (managed) -->
+<div id="apcs-ex-links">
+<style>
+#apcs-ex-links{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:28px auto 0!important;padding:0 16px 8px!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important}
+#apcs-ex-links *,#apcs-ex-links *::before,#apcs-ex-links *::after{box-sizing:border-box!important}
+#apcs-ex-links .ex-lbl{font-size:12px!important;font-weight:800!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:0 0 10px!important}
+#apcs-ex-links .ex-row{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important}
+@media (max-width:640px){#apcs-ex-links .ex-row{grid-template-columns:repeat(1,1fr)!important}}
+#apcs-ex-links a.ex,#apcs-ex-links a.ex:link,#apcs-ex-links a.ex:visited{display:block!important;text-decoration:none!important;border:1px solid #93c5fd!important;border-left:5px solid #1a56db!important;border-radius:0 12px 12px 0!important;background:#eff6ff!important;padding:14px 16px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;font-size:16px!important;font-weight:700!important;line-height:1.35!important}
+#apcs-ex-links a.ex:hover{background:#dbeafe!important}
+#apcs-ex-links a.ex span{display:block!important;margin-top:4px!important;font-size:13px!important;font-weight:400!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important}
+</style>
+<p class="ex-lbl">Exercises for Topic 4.1</p>
+<div class="ex-row">
+<a class="ex" href="/pages/ap-csp-topic-4-1-exercise-1">Exercise 1: Packet Journey - The Photo That Arrived in Pieces<span>Work it online. Saved in your browser, not graded</span></a>
+<a class="ex" href="/pages/ap-csp-topic-4-1-exercise-2">Exercise 2: Network Diagnosis Clinic<span>Work it online. Saved in your browser, not graded</span></a>
+</div>
+</div>

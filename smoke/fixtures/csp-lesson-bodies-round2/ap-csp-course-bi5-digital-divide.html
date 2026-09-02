@@ -1,0 +1,1109 @@
+<!--
+  PAGE: /pages/ap-csp-course-bi5-digital-divide
+  TITLE: AP CSP 5.2 Digital Divide | Access, Equity, and Computing
+  META: AP CSP Topic 5.2: the digital divide, unequal access to computing by geography, income, and other factors, and its effects. 6 exam MCQs plus the Bridge the Divide game.
+-->
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+  :root{--navy:#0f1f3d;--bi3:#1a56db;--bi3-lt:#93c5fd;--bi3-bg:#eff6ff;--bi3-dk:#1e40af;--green:#16a34a;--amber:#d97706;--red:#dc2626;--slate:#64748b;--white:#ffffff;--py:#3b82f6;--pseudo:#8b5cf6;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  .lesson-page{font-family:"DM Sans",sans-serif;color:var(--navy);background:#f8fafc;line-height:1.6;}
+
+  .lesson-breadcrumb{background:#fff;border-bottom:1px solid #e2e8f0;padding:12px 24px;}
+  .lesson-breadcrumb-inner{max-width:880px;margin:0 auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate);flex-wrap:wrap;}
+  .lesson-breadcrumb a{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;text-decoration:none;font-weight:500;}
+  .bc-sep{color:#cbd5e1;}
+
+  .social-proof-bar{background:#fff;border-bottom:1px solid #e2e8f0;padding:10px 24px;}
+  .social-proof-inner{max-width:880px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 20px;font-size:13px;color:var(--slate);}
+  .social-proof-item{display:flex;align-items:center;gap:5px;font-weight:500;}
+  .social-proof-item strong{color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+
+  .lesson-hero{background:var(--navy);background-image:radial-gradient(ellipse 60% 70% at 90% 20%,rgba(26,86,219,.28) 0%,transparent 60%);padding:48px 24px 40px;}
+  .lesson-hero-inner{max-width:880px;margin:0 auto;}
+  .lesson-hero-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .lesson-num-badge{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:var(--bi3);font-weight:700;font-size:14px;color:#fff!important;-webkit-text-fill-color:#fff!important;flex-shrink:0;}
+  .lesson-eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;}
+  .lesson-hero h1{font-family:"DM Serif Display",serif!important;font-size:clamp(26px,4vw,40px)!important;line-height:1.2!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:14px!important;}
+  .lesson-hero-pills{display:flex;flex-wrap:wrap;gap:8px;}
+  .lesson-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:5px 12px;border-radius:100px;font-size:12px;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .ced-tag{display:inline-flex;align-items:center;background:rgba(26,86,219,.25);border:1px solid rgba(147,197,253,.3);padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;letter-spacing:.04em;}
+
+  /* PROGRESS STRIP */
+  .bi3-progress{background:#fff!important;border-bottom:1px solid #e2e8f0!important;padding:14px 20px!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;}
+  .bi3-progress-inner{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;gap:0!important;width:max-content!important;min-width:100%!important;}
+  .prog-step{display:flex!important;flex-direction:column!important;align-items:center!important;min-width:46px!important;text-align:center!important;flex-shrink:0!important;}
+  .prog-step-link{display:flex!important;flex-direction:column!important;align-items:center!important;min-width:46px!important;text-align:center!important;flex-shrink:0!important;text-decoration:none!important;cursor:pointer!important;}
+  .prog-step-link:hover .prog-dot{background:#dbeafe!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border-color:var(--bi3)!important;}
+  .prog-dot{width:26px!important;height:26px!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:9px!important;font-weight:700!important;margin-bottom:4px!important;flex-shrink:0!important;}
+  .prog-dot.active{background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .prog-dot.upcoming{background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:2px solid #e2e8f0!important;}
+  .prog-dot.done{background:#dbeafe!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border:2px solid var(--bi3)!important;}
+  .prog-label{font-size:8px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;line-height:1.2!important;white-space:nowrap!important;}
+  .prog-label.active-label{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;}
+  .prog-arrow{flex:1 0 4px!important;height:2px!important;background:#e2e8f0!important;margin-bottom:18px!important;min-width:4px!important;max-width:16px!important;flex-shrink:0!important;}
+
+  /* MAIN */
+  .lesson-main{max-width:880px;margin:0 auto;padding:40px 24px 80px;}
+  .lesson-objectives{background:var(--bi3-bg);border-left:4px solid var(--bi3);border-radius:0 10px 10px 0;padding:20px 24px;margin-bottom:28px;}
+  .lesson-objectives h2{font-size:14px!important;font-weight:700!important;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;text-transform:uppercase!important;letter-spacing:.06em!important;margin-bottom:12px!important;}
+  .lesson-objectives ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;}
+  .lesson-objectives li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#1e3a8a;line-height:1.5;}
+  .lesson-objectives li::before{content:"\2713";color:var(--bi3);font-weight:700;flex-shrink:0;margin-top:1px;}
+  .score-impact{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 18px;margin-bottom:28px;display:flex;align-items:center;gap:10px;font-size:14px;color:#14532d;}
+  .score-impact strong{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+
+  /* HOOK */
+  .hook-box{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px 28px;margin-bottom:32px;}
+  .hook-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:8px;}
+  .hook-box p{font-size:15px!important;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;line-height:1.7!important;margin-bottom:0!important;}
+
+  /* LESSON SECTIONS */
+  .lesson-section{margin-bottom:40px;}
+  .lesson-section h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;padding-bottom:10px!important;border-bottom:2px solid var(--bi3-bg)!important;}
+  .lesson-section h3{font-size:17px!important;font-weight:700!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-top:24px!important;margin-bottom:10px!important;}
+  .lesson-section p{font-size:15px;color:#374151;line-height:1.8;margin-bottom:14px;}
+  .lesson-section ul,.lesson-section ol{padding-left:20px;margin-bottom:14px;}
+  .lesson-section li{font-size:15px;color:#374151;line-height:1.7;margin-bottom:6px;}
+  .lesson-section code{background:#eef2ff;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+
+  /* DUAL CODE PANEL */
+  .code-panel-wrap{margin:20px 0;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;}
+  .code-panel-tabs{display:flex;background:#1e293b;}
+  .code-tab{padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;border:none;background:transparent;letter-spacing:.04em;transition:background .15s;font-family:inherit;}
+  .code-tab.py{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .code-tab.pseudo{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+  .code-tab.active{background:rgba(255,255,255,.15)!important;}
+  .code-tab-label{font-size:10px;opacity:.6;margin-left:4px;font-weight:400;}
+  .code-pane{background:#0f172a;padding:18px 20px;overflow-x:auto;height:0;overflow:hidden;padding:0;}
+  .code-pane.active{height:auto;overflow-x:auto;padding:18px 20px;}
+  .code-pane pre{font-family:monospace;font-size:13px;line-height:1.8;margin:0;white-space:pre-wrap;word-break:break-word;max-width:100%;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .py-kw{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:700;}
+  .py-fn{color:#6ee7b7!important;-webkit-text-fill-color:#6ee7b7!important;}
+  .py-num{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .py-str{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .py-comment{color:#475569!important;-webkit-text-fill-color:#475569!important;font-style:italic;}
+  .py-var{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .py-op{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;}
+  .ps-kw{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700;}
+  .ps-op{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .ps-num{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .ps-str{color:#86efac!important;-webkit-text-fill-color:#86efac!important;}
+  .ps-comment{color:#475569!important;-webkit-text-fill-color:#475569!important;font-style:italic;}
+  .ps-var{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+
+  /* CALLOUTS */
+  .callout-exam{background:#fffbeb;border:1px solid #fcd34d;border-left:4px solid var(--amber);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+  .callout-exam-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--amber)!important;-webkit-text-fill-color:var(--amber)!important;margin-bottom:6px;}
+  .callout-exam p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin-bottom:0!important;line-height:1.6!important;}
+  .callout-trap{background:#fef2f2;border:1px solid #fca5a5;border-left:4px solid var(--red);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+  .callout-trap-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;margin-bottom:6px;}
+  .callout-trap p{font-size:14px!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;margin-bottom:0!important;line-height:1.6!important;}
+
+  /* MINI EXERCISES */
+  .mini-ex{background:#fff;border:1px solid #bfdbfe;border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .mini-ex-label{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;margin-bottom:12px;}
+  .mini-ex-q{font-size:15px;font-weight:600;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px;line-height:1.5;}
+  .mini-ex-code{background:#0f172a;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;line-height:1.8;margin-bottom:14px;overflow-x:auto;white-space:pre;display:block;}
+  .mini-opts{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;}
+  .mini-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border:2px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:14px;font-family:monospace;color:#374151!important;-webkit-text-fill-color:#374151!important;background:#f8fafc;text-align:left;width:100%;transition:border-color .15s;}
+  .mini-opt:hover{border-color:var(--bi3-lt);background:var(--bi3-bg);}
+  .mini-opt.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mini-opt.incorrect{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mini-opt.reveal{border-color:var(--green)!important;background:#f0fdf4!important;}
+  .mini-opt-letter{font-weight:700;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;min-width:18px;font-family:inherit;}
+  .mini-opt.correct .mini-opt-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mini-opt.incorrect .mini-opt-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mini-fib-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;}
+  .mini-fib-input{padding:8px 12px;border:2px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:14px;width:130px;outline:none;color:var(--navy)!important;background:#f8fafc;}
+  .mini-fib-input:focus{border-color:var(--bi3-lt);}
+  .mini-fib-input.correct{border-color:var(--green);background:#f0fdf4;}
+  .mini-fib-input.incorrect{border-color:var(--red);background:#fef2f2;}
+  .mini-fib-btn{padding:8px 18px;background:var(--bi3);border:none;border-radius:8px;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .mini-fb{font-size:13px;font-weight:500;padding:8px 12px;border-radius:7px;margin-top:6px;display:none;line-height:1.5;}
+  .mini-fb.c{background:#f0fdf4;color:var(--green)!important;-webkit-text-fill-color:var(--green)!important;display:block;}
+  .mini-fb.w{background:#fef2f2;color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;display:block;}
+
+  /* VOCAB */
+  .vocab-table{width:100%;border-collapse:collapse;margin-bottom:24px;font-size:14px;}
+  .vocab-table thead tr{background:var(--bi3);}
+  .vocab-table thead th{padding:10px 16px;text-align:left;font-weight:600;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px;}
+  .vocab-table tbody tr:nth-child(even){background:var(--bi3-bg);}
+  .vocab-table tbody tr:nth-child(odd){background:#fff;}
+  .vocab-table tbody td{padding:10px 16px;border-bottom:1px solid #bfdbfe;color:#374151;vertical-align:top;line-height:1.5;}
+  .vocab-table tbody td:first-child{font-weight:700;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;white-space:nowrap;}
+
+  /* CPT CONNECTION */
+  .cpt-connection{background:#fefce8;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:0 10px 10px 0;padding:20px 24px;margin:28px 0;}
+  .cpt-connection-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#92400e!important;-webkit-text-fill-color:#92400e!important;margin-bottom:8px;}
+  .cpt-connection h3{font-size:16px!important;font-weight:700!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin:16px 0 8px!important;}
+  .cpt-connection p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;line-height:1.7!important;margin-bottom:12px!important;}
+  .cpt-connection a{color:#b45309!important;-webkit-text-fill-color:#b45309!important;font-weight:600;text-decoration:underline;}
+  .cpt-connection code{background:#fef3c7;color:#78350f!important;-webkit-text-fill-color:#78350f!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+  .cpt-stems{list-style:none;padding:0;margin:0 0 8px;display:flex;flex-direction:column;gap:8px;}
+  .cpt-stems li{background:#fffef5;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:13px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;line-height:1.6;}
+  .cpt-code{background:#0f172a;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;line-height:1.8;margin:6px 0 12px;overflow-x:auto;white-space:pre;display:block;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+
+  /* EMAIL */
+  .email-capture{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px 28px;margin-bottom:36px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
+  .email-capture-text{flex:1;min-width:200px;}
+  .email-capture-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:4px;}
+  .email-capture h3{font-size:16px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .email-capture p{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:0!important;line-height:1.5!important;}
+  .email-capture-form{display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0;}
+  .email-capture-input{padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff!important;font-size:14px;font-family:inherit;min-width:180px;outline:none;}
+  .email-capture-btn{padding:10px 20px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:8px!important;font-size:14px!important;font-weight:600!important;cursor:pointer!important;font-family:inherit!important;}
+  .email-capture-success{display:none;font-size:14px;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:600;padding:10px 0;}
+
+  /* MCQ */
+  .mcq-section{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:28px;margin-bottom:40px;}
+  .mcq-section-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--bi3-bg);}
+  .mcq-section-icon{width:40px;height:40px;border-radius:10px;background:var(--bi3-bg);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .mcq-section-title{font-family:"DM Serif Display",serif;font-size:20px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+  .mcq-section-sub{font-size:13px;color:var(--slate);}
+  .mcq-item{margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid #f1f5f9;}
+  .mcq-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .mcq-q-num{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:8px;}
+  .diff-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:100px;margin-left:8px;background:#fef2f2;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;border:1px solid #fca5a5;}
+  .mcq-q-text{font-size:15px!important;font-weight:600!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;margin-bottom:12px!important;}
+  .predict-note{font-size:12px;font-style:italic;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:12px;}
+  .mcq-code{background:#0f172a;border-radius:8px;padding:12px 14px;margin:10px 0 14px;font-family:monospace;font-size:13px;line-height:1.75;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;white-space:pre;overflow-x:auto;display:block;}
+  .mcq-code .k{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .mcq-code .s{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .mcq-code .n{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .mcq-code .c{color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-style:italic;}
+  .mcq-roman{list-style:none;padding:0;margin:10px 0 14px;display:flex;flex-direction:column;gap:6px;}
+  .mcq-roman li{font-family:monospace;font-size:13px;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;background:#f1f5f9;border-radius:6px;padding:8px 12px;}
+  .mcq-roman li strong{color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;font-family:"DM Sans",sans-serif;margin-right:8px;}
+  .mcq-options{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+  .mcq-option{display:flex!important;align-items:flex-start!important;gap:12px!important;padding:11px 14px!important;border:2px solid #e2e8f0!important;border-radius:8px!important;cursor:pointer!important;background:#f8fafc!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.5!important;text-align:left!important;width:100%!important;font-family:inherit!important;}
+  .mcq-option:hover{border-color:var(--bi3-lt)!important;background:var(--bi3-bg)!important;}
+  .mcq-option.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mcq-option.incorrect{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mcq-option.revealed-correct{border-color:var(--green)!important;background:#f0fdf4!important;}
+  .mcq-option-letter{font-weight:700!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;flex-shrink:0!important;min-width:18px!important;}
+  .mcq-option.correct .mcq-option-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mcq-option.incorrect .mcq-option-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mcq-feedback{display:none!important;padding:12px 16px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;margin-top:8px!important;}
+  .mcq-feedback.show{display:block!important;}
+  .mcq-feedback.correct-fb{background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #bbf7d0!important;}
+  .mcq-feedback.incorrect-fb{background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;border:1px solid #fecaca!important;}
+
+  /* GAME */
+  .game-section{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:14px;padding:28px;margin-bottom:40px;}
+  .game-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:10px;}
+  .game-title{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .game-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:20px!important;}
+  .vt-score-bar{display:flex;justify-content:space-between;background:rgba(255,255,255,.06);border-radius:10px;padding:12px 20px;margin-bottom:20px;flex-wrap:wrap;gap:8px;}
+  .vt-stat{text-align:center;}
+  .vt-stat-val{font-size:20px;font-weight:800;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1;}
+  .vt-stat-lbl{font-size:10px;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:2px;}
+  .vt-code-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  .vt-code-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:10px;}
+  .vt-code-lines{font-family:monospace;font-size:14px;line-height:2;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .vt-line{display:block;padding:2px 8px;border-radius:4px;white-space:pre;}
+  .vt-line.hl{background:rgba(147,197,253,.2);color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .vt-question{font-size:15px;font-weight:600;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;margin-bottom:14px;}
+  .vt-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+  .vt-btn{padding:12px;border-radius:9px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);cursor:pointer;font-size:15px;font-weight:700;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;font-family:monospace;transition:all .15s;}
+  .vt-btn:hover{border-color:var(--bi3-lt);background:rgba(26,86,219,.2);}
+  .vt-btn.c{border-color:#4ade80;background:rgba(74,222,128,.15);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+  .vt-btn.w{border-color:#f87171;background:rgba(248,113,113,.15);color:#f87171!important;-webkit-text-fill-color:#f87171!important;}
+  .vt-btn.rv{border-color:#4ade80;background:rgba(74,222,128,.08);}
+  .vt-fb{padding:10px 14px;border-radius:8px;font-size:13px;font-weight:500;margin-bottom:12px;display:none;line-height:1.5;}
+  .vt-fb.c{background:rgba(74,222,128,.1);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;display:block;}
+  .vt-fb.w{background:rgba(248,113,113,.1);color:#f87171!important;-webkit-text-fill-color:#f87171!important;display:block;}
+  .vt-next{display:none;width:100%;padding:12px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);border-radius:8px;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .vt-next.show{display:block;}
+  .vt-results{display:none;text-align:center;padding:20px;}
+  .vt-results.show{display:block;}
+  .vt-res-score{font-family:"DM Serif Display",serif;font-size:52px;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1;}
+  .vt-res-lbl{font-size:14px;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:12px;}
+  .vt-res-msg{font-size:14px;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;margin-bottom:20px;line-height:1.6;}
+  .vt-restart{background:rgba(255,255,255,.1);color:#fff!important;-webkit-text-fill-color:#fff!important;border:2px solid rgba(255,255,255,.2);border-radius:8px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+
+  /* CODE EDITOR (Pyodide live) */
+  .code-editor-section{background:#0f172a;border-radius:14px;padding:28px;margin-bottom:40px;}
+  .code-editor-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:10px;}
+  .code-editor-title{font-family:"DM Serif Display",serif!important;font-size:22px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .code-editor-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:20px!important;line-height:1.6;}
+  .code-problem{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+  .scaffold-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:rgba(147,197,253,.15);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;border:1px solid rgba(147,197,253,.35);margin-bottom:8px;}
+  .code-problem-num{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:8px;}
+  .code-problem-prompt{font-size:14px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.6!important;margin-bottom:12px!important;}
+  .code-problem-prompt code{background:rgba(147,197,253,.12);color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;padding:1px 6px;border-radius:5px;font-size:12px;}
+  .code-textarea{width:100%;min-height:120px;background:#020617;border:2px solid rgba(255,255,255,.1);border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;color:#e2e8f0!important;resize:vertical;outline:none;line-height:1.8;}
+  .code-textarea:focus{border-color:var(--bi3-lt);}
+  .code-btn-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center;}
+  .code-run-btn{padding:9px 20px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:7px!important;font-size:13px!important;font-weight:700!important;cursor:pointer!important;font-family:inherit!important;}
+  .code-run-btn:disabled{opacity:.6;cursor:wait;}
+  .code-hint-btn,.code-sol-btn{padding:9px 16px!important;background:rgba(255,255,255,.06)!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:7px!important;font-size:13px!important;cursor:pointer!important;font-family:inherit!important;}
+  .code-output{margin-top:10px;background:#020617;border-radius:8px;padding:12px 16px;font-family:monospace;font-size:13px;min-height:44px;display:none;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .code-output.show{display:block;}
+  .code-output.ok{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+  .code-output.err{color:#f87171!important;-webkit-text-fill-color:#f87171!important;}
+  .code-hint{margin-top:8px;background:rgba(147,197,253,.06);border:1px solid rgba(147,197,253,.2);border-radius:8px;padding:10px 14px;font-size:13px;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;display:none;line-height:1.6;}
+  .code-hint.show{display:block;}
+  .code-solution{margin-top:8px;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:8px;padding:12px 14px;font-family:monospace;font-size:13px;color:#bbf7d0!important;-webkit-text-fill-color:#bbf7d0!important;display:none;white-space:pre;line-height:1.8;overflow-x:auto;}
+  .code-solution.show{display:block;}
+
+  /* FAQ */
+  .faq-section{margin-bottom:40px;}
+  .faq-section h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;padding-bottom:10px!important;border-bottom:2px solid var(--bi3-bg)!important;}
+  .faq-item{background:#fff;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:10px;overflow:hidden;}
+  .faq-q{width:100%;text-align:left;padding:16px 20px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:15px!important;font-weight:600!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-family:inherit!important;line-height:1.4!important;}
+  .faq-q:hover{background:#f8fafc;}
+  .faq-icon{font-size:18px;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;flex-shrink:0;transition:transform .2s;font-style:normal;}
+  .faq-item.open .faq-icon{transform:rotate(45deg);}
+  .faq-a{display:none;padding:0 20px 16px;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.7!important;border-top:1px solid #f1f5f9;}
+  .faq-item.open .faq-a{display:block;}
+  .faq-a code{background:#eef2ff;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+
+  /* RELATED + SUPERPACK + TEACHER + NAV */
+  .related-links{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:24px;margin-bottom:40px;}
+  .related-links h3{font-size:15px!important;font-weight:700!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;}
+  .related-links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
+  .related-link{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;background:#f8fafc;text-decoration:none;font-size:13px!important;font-weight:500!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border:1px solid #bfdbfe;transition:background .15s;line-height:1.3;}
+  .related-link:link,.related-link:visited{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;}
+  .related-link:hover{background:var(--bi3-bg);}
+  .related-ext{color:var(--slate)!important;-webkit-text-fill-color:var(--slate)!important;border-color:#e2e8f0;}
+  .superpack-slim{background:#fff;border:1px solid #bfdbfe;border-radius:10px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:36px;}
+  .superpack-slim-icon{width:36px;height:36px;border-radius:8px;background:var(--bi3-bg);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .superpack-slim-text{font-size:14px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-weight:600;line-height:1.3;}
+  .superpack-slim-sub{font-size:12px;color:var(--slate);font-weight:400;display:block;margin-top:2px;}
+  .superpack-slim-btn{display:inline-flex!important;align-items:center!important;gap:6px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:9px 18px!important;border-radius:7px!important;font-size:13px!important;font-weight:600!important;text-decoration:none!important;white-space:nowrap!important;}
+  .superpack-slim-btn:link,.superpack-slim-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .teacher-callout{background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:18px 22px;margin-bottom:28px;display:flex;align-items:flex-start;gap:14px;}
+  .teacher-callout-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+  .teacher-callout-body{flex:1;}
+  .teacher-callout-label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#0369a1!important;-webkit-text-fill-color:#0369a1!important;margin-bottom:4px;}
+  .teacher-callout-body p{font-size:14px!important;color:#0c4a6e!important;-webkit-text-fill-color:#0c4a6e!important;margin-bottom:0!important;line-height:1.6!important;}
+  .teacher-callout-body a{color:#0369a1!important;-webkit-text-fill-color:#0369a1!important;font-weight:600;text-decoration:underline;}
+  .lesson-nav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:40px;}
+  .nav-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 20px;text-decoration:none;color:inherit;transition:box-shadow .15s;display:block;}
+  .nav-card:hover{box-shadow:0 4px 16px rgba(26,86,219,.1);border-color:#bfdbfe;}
+  .nav-card-dir{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:4px;}
+  .nav-card-title{font-size:14px;font-weight:700;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;line-height:1.3;}
+  .nav-card.next{border-left:3px solid var(--bi3);}
+
+  @media(max-width:600px){
+    .lesson-hero{padding:36px 20px 32px;}
+    .lesson-main{padding:32px 20px 60px;}
+    .vt-options{grid-template-columns:1fr 1fr;}
+    .lesson-nav{grid-template-columns:1fr;}
+    .mini-opts{gap:6px;}
+  }
+</style>
+<style>
+.code-usage{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin:-6px 0 18px!important;padding:8px 12px!important;background:rgba(255,255,255,.04)!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:8px!important;display:block!important;}
+.code-usage strong{color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;}
+.code-problem-prompt ul.rules{margin:10px 0 4px!important;padding-left:0!important;list-style:none!important;}
+.code-problem-prompt ul.rules li{position:relative;padding:3px 0 3px 20px!important;font-size:14px;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.55;}
+.code-problem-prompt ul.rules li::before{content:"\25B8";position:absolute;left:2px;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+.mcq-q-text ul.rules,.mini-ex-q ul.rules{margin:10px 0 4px!important;padding-left:0!important;list-style:none!important;}
+.mcq-q-text ul.rules li,.mini-ex-q ul.rules li{position:relative;padding:3px 0 3px 20px!important;font-size:15px;font-weight:400;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;line-height:1.5;}
+.mcq-q-text ul.rules li::before,.mini-ex-q ul.rules li::before{content:"\25B8";position:absolute;left:2px;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;}
+</style>
+<style>
+
+.lesson-visual{margin:0 0 40px!important;}
+.lv-kicker{font-size:11px!important;font-weight:700!important;letter-spacing:.1em!important;text-transform:uppercase!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;margin:0 0 10px!important;}
+/* before/after panel */
+.ba{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:14px!important;padding:20px!important;margin:0 0 14px!important;}
+.ba-cap-top{font-size:12px!important;font-weight:700!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;margin:0 0 14px!important;}
+.ba-grid{display:grid!important;grid-template-columns:1fr auto 1fr!important;align-items:center!important;gap:14px!important;}
+.ba-panel{border-radius:12px!important;padding:16px 14px!important;text-align:center!important;}
+.ba-panel.before{background:#f8fafc!important;border:1px solid #e2e8f0!important;}
+.ba-panel.after{background:#f0fdf4!important;border:1px solid #bbf7d0!important;}
+.ba-label{font-size:11px!important;font-weight:700!important;letter-spacing:.05em!important;text-transform:uppercase!important;margin:0 0 8px!important;}
+.ba-panel.before .ba-label{color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+.ba-panel.after .ba-label{color:#166534!important;-webkit-text-fill-color:#166534!important;}
+.ba-data{font-family:monospace!important;font-size:15px!important;letter-spacing:1px!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;word-break:break-all!important;}
+.ba-meta{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:6px!important;}
+.ba-arrow{font-size:26px!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;font-weight:700!important;}
+.ba-caption{font-size:13px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;line-height:1.55!important;margin:14px 0 0!important;padding-top:12px!important;border-top:1px solid #f1f5f9!important;}
+.ba-caption strong{color:#166534!important;-webkit-text-fill-color:#166534!important;}
+/* dark interactive card shell (shared by binary/rle/parallel/packet/io) */
+.wgt{background:#0f172a!important;border-radius:16px!important;padding:22px!important;border:1px solid #1e293b!important;margin:0 0 14px!important;}
+.wgt-h{font-family:"DM Serif Display",serif!important;font-size:18px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 3px!important;}
+.wgt-sub{font-size:13px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0 0 18px!important;}
+.wgt-btns{display:flex!important;gap:8px!important;justify-content:center!important;flex-wrap:wrap!important;margin-top:14px!important;}
+.wgt-btn{font-family:"DM Sans",sans-serif!important;font-size:13px!important;font-weight:700!important;padding:8px 14px!important;border-radius:9px!important;border:1px solid #334155!important;background:#1e293b!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;cursor:pointer!important;}
+.wgt-btn:hover{background:#334155!important;}
+.wgt-note{font-size:12.5px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;text-align:center!important;margin:12px 0 0!important;line-height:1.5!important;}
+.wgt-note.warn{color:#fca5a5!important;-webkit-text-fill-color:#fca5a5!important;}
+.wgt-note.good{color:#86efac!important;-webkit-text-fill-color:#86efac!important;}
+/* binary */
+.bpv-strip{display:flex!important;gap:6px!important;justify-content:center!important;flex-wrap:wrap!important;}
+.bpv-col{display:flex!important;flex-direction:column!important;align-items:center!important;gap:6px!important;}
+.bpv-pv{font-size:12px!important;font-weight:700!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-variant-numeric:tabular-nums!important;}
+.bpv-bit{width:44px!important;height:54px!important;border-radius:10px!important;border:2px solid #334155!important;background:#1e293b!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-family:monospace!important;font-size:23px!important;font-weight:700!important;cursor:pointer!important;}
+.bpv-bit.on{background:#1a56db!important;border-color:#60a5fa!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+.bpv-read{display:flex!important;align-items:baseline!important;justify-content:center!important;gap:14px!important;margin:20px 0 0!important;flex-wrap:wrap!important;}
+.bpv-binary{font-family:monospace!important;font-size:22px!important;letter-spacing:2px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+.bpv-eq{font-size:22px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+.bpv-dec{font-family:"DM Serif Display",serif!important;font-size:34px!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;line-height:1!important;}
+/* rle */
+.rle-in{width:100%!important;box-sizing:border-box!important;font-family:monospace!important;font-size:15px!important;padding:10px 12px!important;border-radius:9px!important;border:1px solid #334155!important;background:#1e293b!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;letter-spacing:1px!important;}
+.rle-row{display:flex!important;gap:12px!important;flex-wrap:wrap!important;margin-top:14px!important;}
+.rle-cell{flex:1!important;min-width:130px!important;background:#1e293b!important;border-radius:10px!important;padding:12px!important;text-align:center!important;}
+.rle-cell .l{font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:6px!important;}
+.rle-cell .v{font-family:monospace!important;font-size:16px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;word-break:break-all!important;}
+.rle-cell.out .v{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+.rle-cell .m{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:4px!important;}
+/* parallel timeline */
+.ptl-ctl{display:flex!important;align-items:center!important;gap:12px!important;justify-content:center!important;flex-wrap:wrap!important;margin-bottom:16px!important;}
+.ptl-ctl label{font-size:13px!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;font-weight:700!important;}
+.ptl-ctl input[type=range]{width:180px!important;}
+.ptl-ctl .n{font-family:"DM Serif Display",serif!important;font-size:22px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;min-width:28px!important;text-align:center!important;}
+.ptl-bar{height:26px!important;border-radius:6px!important;margin:8px 0!important;display:flex!important;overflow:hidden!important;}
+.ptl-seg{height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:11px!important;font-weight:700!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a!important;white-space:nowrap!important;}
+.ptl-seg.seq{background:#fca5a5!important;}
+.ptl-seg.par{background:#6ee7b7!important;}
+.ptl-lbl{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:2px!important;}
+.ptl-stat{display:flex!important;gap:18px!important;justify-content:center!important;margin-top:14px!important;flex-wrap:wrap!important;}
+.ptl-stat div{text-align:center!important;}
+.ptl-stat .k{font-size:11px!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+.ptl-stat .v{font-family:"DM Serif Display",serif!important;font-size:26px!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+/* packet */
+.pkt-track{display:flex!important;gap:8px!important;justify-content:center!important;flex-wrap:wrap!important;min-height:64px!important;}
+.pkt{width:58px!important;border-radius:9px!important;background:#1e293b!important;border:1px solid #334155!important;padding:8px 4px!important;text-align:center!important;}
+.pkt .seq{font-size:10px!important;font-weight:700!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+.pkt .ch{font-family:monospace!important;font-size:20px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;margin-top:2px!important;}
+.pkt.lost{opacity:.35!important;border-style:dashed!important;}
+.pkt-msg{font-family:monospace!important;font-size:20px!important;letter-spacing:3px!important;text-align:center!important;margin-top:16px!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;min-height:24px!important;}
+/* io mapper */
+.iom-flow{display:grid!important;grid-template-columns:1fr auto 1fr auto 1fr!important;align-items:center!important;gap:10px!important;}
+.iom-box{background:#1e293b!important;border-radius:12px!important;padding:14px!important;text-align:center!important;}
+.iom-box .l{font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:6px!important;}
+.iom-box .v{font-size:15px!important;font-weight:700!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+.iom-box.prog{background:#1a3a6b!important;}
+.iom-box.out .v{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+.iom-ar{font-size:20px!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;font-weight:700!important;}
+.iom-temp{font-family:"DM Serif Display",serif!important;font-size:26px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+@media(max-width:520px){.ba-grid{grid-template-columns:1fr!important;}.ba-arrow{transform:rotate(90deg)!important;}.iom-flow{grid-template-columns:1fr!important;}.iom-ar{transform:rotate(90deg)!important;}}
+
+</style>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "AP CSP Course", "item": "https://apcsexamprep.com/pages/ap-csp-course"}, {"@type": "ListItem", "position": 2, "name": "Big Idea 5", "item": "https://apcsexamprep.com/pages/ap-csp-course-big-idea-5-impact"}, {"@type": "ListItem", "position": 3, "name": "Topic 5.2: Digital Divide", "item": "https://apcsexamprep.com/pages/ap-csp-course-bi5-digital-divide"}]}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "LearningResource", "name": "AP CSP Topic 5.2: Digital Divide", "description": "AP CSP Topic 5.2: the digital divide, unequal access to computing by geography, income, and other factors, and its effects. 6 exam MCQs plus the Bridge the Divide game.", "url": "https://apcsexamprep.com/pages/ap-csp-course-bi5-digital-divide", "educationalLevel": "High School", "learningResourceType": "Lesson", "author": {"@type": "Person", "name": "Tanner Crow"}, "isPartOf": {"@type": "Course", "name": "AP Computer Science Principles Complete Course", "url": "https://apcsexamprep.com/pages/ap-csp-course"}, "datePublished": "2026-03-01"}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is the digital divide only about not having a computer?", "acceptedAnswer": {"@type": "Answer", "text": "No. It covers unequal access to both computing devices and the Internet. Someone can own a phone but still be on the wrong side of the divide if they have no reliable connection, or a connection so slow it cannot do the task."}}, {"@type": "Question", "name": "What factors cause the digital divide?", "acceptedAnswer": {"@type": "Answer", "text": "The main ones on the exam are socioeconomic status (income), geography (rural versus urban, and richer versus poorer countries), and demographics such as age, education, and disability. Digital literacy, the skills to use the technology, is also a factor. These often overlap."}}, {"@type": "Question", "name": "What does 'local, national, and global' mean for the divide?", "acceptedAnswer": {"@type": "Answer", "text": "It is the scope of the gap. Local is between neighborhoods or households in the same area. National is within one country, such as urban versus rural regions. Global is between countries, where wealthier nations generally have much higher access."}}, {"@type": "Question", "name": "Does the digital divide mean some groups are worse at using technology?", "acceptedAnswer": {"@type": "Answer", "text": "No, and that is a common trap. The divide is about unequal access to devices, connection, and training, not about natural ability. Given access and instruction, people can participate. Framing it as a skill gap by nature is incorrect on the exam."}}, {"@type": "Question", "name": "How can the digital divide be reduced?", "acceptedAnswer": {"@type": "Answer", "text": "By lowering the access barriers: expanding infrastructure into areas without service, lowering the cost of devices and service, and providing digital literacy training. Effective efforts usually combine several, and can come from governments, companies, nonprofits, or individuals. The exam stays evenhanded and does not favor one specific policy."}}]}</script>
+
+<div class="lesson-page" data-course="ap-csp" data-unit="bi-5" data-lesson="digital-divide">
+
+  <div class="lesson-breadcrumb">
+    <div class="lesson-breadcrumb-inner">
+      <a href="/pages/ap-csp-course">AP CSP Course</a><span class="bc-sep">›</span>
+      <a href="/pages/ap-csp-course-big-idea-5-impact">Big Idea 5</a><span class="bc-sep">›</span>
+      <span>5.2 Digital Divide</span>
+    </div>
+  </div>
+  <div class="social-proof-bar">
+    <div class="social-proof-inner">
+      <span class="social-proof-item">⭐ <strong>5.0</strong> Wyzant rating</span>
+      <span class="social-proof-item">📚 <strong>1,845+</strong> tutoring hours</span>
+      <span class="social-proof-item">🏫 Built by an <strong>AP CS teacher</strong> with 11+ years experience</span>
+      <span class="social-proof-item">🎯 <strong>70%</strong> of classroom students score 4 or 5 on AP CSP</span>
+    </div>
+  </div>
+  <div class="lesson-hero">
+    <div class="lesson-hero-inner">
+      <div class="lesson-hero-meta">
+        <div class="lesson-num-badge">5.2</div>
+        <div><div class="lesson-eyebrow">Big Idea 5 • Impact of Computing</div></div>
+      </div>
+      <h1>Digital Divide</h1>
+      <div class="lesson-hero-pills">
+        <span class="lesson-pill">🕐 ~25 min</span>
+        <span class="lesson-pill" style="background:rgba(74,222,128,0.15);border-color:rgba(74,222,128,0.3);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;">FREE</span>
+        <span class="lesson-pill">📖 6 MCQ questions</span>
+        <span class="lesson-pill">🎮 Bridge the Divide game</span>
+        <span class="ced-tag">IOC-1.C</span>
+      </div>
+    </div>
+  </div>
+  <div class="bi3-progress"><div class="bi3-progress-inner">
+<a href="/pages/ap-csp-course-bi5-beneficial-harmful-effects" class="prog-step-link"><div class="prog-dot done">5.1</div>
+<div class="prog-label">Effects</div></a>
+<div class="prog-arrow"></div>
+<div class="prog-step">
+<div class="prog-dot active">5.2</div>
+<div class="prog-label active-label">Divide</div>
+</div>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi5-computing-bias" class="prog-step-link"><div class="prog-dot upcoming">5.3</div>
+<div class="prog-label">Bias</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi5-crowdsourcing" class="prog-step-link"><div class="prog-dot upcoming">5.4</div>
+<div class="prog-label">Crowd</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi5-legal-ethical-concerns" class="prog-step-link"><div class="prog-dot upcoming">5.5</div>
+<div class="prog-label">Legal</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi5-safe-computing" class="prog-step-link"><div class="prog-dot upcoming">5.6</div>
+<div class="prog-label">Safe</div></a>
+</div></div>
+
+  <div class="lesson-main">
+
+    <div class="lesson-objectives">
+      <h2>After this lesson, you will be able to:</h2>
+      <ul>
+        <li><span>Define the digital divide as unequal access to computing devices and to the Internet</span></li>
+        <li><span>Identify factors that drive the divide, including income, geography, and demographics</span></li>
+        <li><span>Explain how the divide affects who can participate in and benefit from computing</span></li>
+        <li><span>Distinguish the local, national, and global levels at which the divide exists</span></li>
+        <li><span>Describe evenhanded efforts that can reduce the divide, such as infrastructure, cost, and training</span></li>
+      </ul>
+    </div>
+    <div class="score-impact">📈 <span>Big Idea 5 (Impact of Computing) is 21 to 26 percent of the AP CSP exam, the single largest slice, and the digital divide is a favorite target because it is easy to write clear, fair questions about it. Nail the definition and the causes and you bank reliable points.</span>
+</div>
+    <div class="hook-box">
+      <div class="hook-label">💡 Think about this first</div>
+      <p>Two students are assigned the same online research project. One has a laptop at home and fast, reliable Internet; the other shares a single phone with three siblings and can only get online at the public library before it closes. Both are equally smart and equally hardworking, yet one will almost certainly turn in more. What is actually different between them, and what would it take to close that gap?</p>
+    </div>
+    <div class="lesson-section">
+      <h2>What the Digital Divide Actually Is</h2>
+      <p>The <strong>digital divide</strong> is the unequal <strong>access</strong> to computing devices and to the Internet across different groups of people. That word, access, is the whole idea. The divide is not about who is smart or who is good with computers. It is about who has a working device, a reliable connection, and the ability to use them, and who does not.</p>
+      <p>Access is really two things at once. A person needs a <strong>device</strong> (a computer, tablet, or phone that can do the task) and a <strong>connection</strong> (Internet service that is fast and reliable enough to be useful). Having a phone but no home Internet, or having Internet so slow that a video call keeps dropping, still counts as being on the wrong side of the divide. The AP framework ties this directly to opportunity: access to computing shapes who can participate in and benefit from what computing offers.</p>
+      <div class="callout-exam">
+        <div class="callout-exam-label">🎯 What the exam rewards</div>
+        <p>When a question describes the digital divide, the key idea graders want is <strong>unequal access to computing and the Internet, and the resulting difference in who can participate</strong>. Answers that focus on access and opportunity beat answers about personal talent or interest almost every time.</p>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>What Drives the Divide</h2>
+      <p>The framework lists the groups the divide falls along. You should be able to recognize each factor:</p>
+      <table class="vocab-table">
+        <tr>
+<th>Factor</th>
+<th>How it affects access</th>
+</tr>
+        <tr>
+<td><strong>Socioeconomic status (income)</strong></td>
+<td>Devices and monthly Internet service cost money. Lower-income households are less able to afford a good device or a fast plan.</td>
+</tr>
+        <tr>
+<td><strong>Geography</strong></td>
+<td>Rural and remote areas often lack the infrastructure (cables, towers) that cities have, so service may be slow, expensive, or unavailable. This also differs between wealthier and less wealthy countries.</td>
+</tr>
+        <tr>
+<td><strong>Demographics</strong></td>
+<td>Access can differ by age, education level, and disability. For example, a site that is unusable with a screen reader shuts out some users regardless of their connection.</td>
+</tr>
+        <tr>
+<td><strong>Digital literacy</strong></td>
+<td>Even with a device and a connection, a person needs the skills to use them. Lack of training is its own barrier.</td>
+</tr>
+      </table>
+      <p>These factors overlap. A low-income household in a rural area faces both a cost barrier and an infrastructure barrier at the same time. The divide is also shaped by <strong>decisions</strong>, by governments, companies, and individuals, about where to build infrastructure, how to price service, and what to teach.</p>
+      <div class="mini-ex">
+        <div class="mini-ex-label">Quick check</div>
+        <div class="mini-ex-q">A town's homes are spread far apart in a remote area, and no company has run high-speed cable out to them, so residents can only get slow service at high prices. Which factor of the digital divide does this best illustrate?</div>
+        <div class="mini-opts" id="mc-divide-1-opts">
+          <button class="mini-opt" onclick="miniMCQ('mc-divide-1','A','C','mc-divide-1-fb')"><span class="mini-opt-letter">A</span> The residents lack interest in the Internet</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-divide-1','B','C','mc-divide-1-fb')"><span class="mini-opt-letter">B</span> The residents are not skilled enough to use computers</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-divide-1','C','C','mc-divide-1-fb')"><span class="mini-opt-letter">C</span> Geography and infrastructure limit their access</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-divide-1','D','C','mc-divide-1-fb')"><span class="mini-opt-letter">D</span> The Internet itself is running out of space</button>
+        </div>
+        <div class="mini-fb" id="mc-divide-1-fb"></div>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Why It Matters: Participation and Benefit</h2>
+      <p>So much of daily life now runs through computing: applying for jobs, doing schoolwork, seeing a doctor over video, filing government forms, banking, and finding information. When access is unequal, so is the chance to <strong>participate in and benefit from</strong> all of that. The divide can widen existing gaps, because the people who most need affordable services online are sometimes the least able to reach them.</p>
+      <p>The divide exists at three levels, and the exam expects you to tell them apart:</p>
+      <ul>
+        <li>
+<strong>Local</strong>: differences between neighborhoods or households in the same town, such as which students have home Internet.</li>
+        <li>
+<strong>National</strong>: differences within one country, such as urban versus rural regions.</li>
+        <li>
+<strong>Global</strong>: differences between countries, where wealthier nations tend to have far higher access than lower-income ones.</li>
+      </ul>
+      <div class="callout-trap">
+        <div class="callout-trap-label">⚠ Common trap</div>
+        <p>The digital divide is about <strong>access and opportunity, not natural ability</strong>. A wrong answer will suggest some groups are simply "not good with technology" or "not interested." The framework is clear that the divide is a difference in access to devices, connection, and training, not a difference in how capable people are. If someone gets a device, a connection, and instruction, they can participate.</p>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Narrowing the Divide</h2>
+      <p>Because the divide comes from access barriers, efforts to reduce it target those barriers. The framework wants you to recognize the general categories, not to endorse any one plan:</p>
+      <ul>
+        <li>
+<strong>Expanding infrastructure</strong>: building cable, fiber, or wireless coverage into areas that lack it.</li>
+        <li>
+<strong>Lowering cost</strong>: making devices and service more affordable, for example through subsidized plans or low-cost hardware.</li>
+        <li>
+<strong>Providing training</strong>: teaching digital literacy so people can actually use the access they gain.</li>
+      </ul>
+      <p>These can come from governments, companies, nonprofits, schools, or individuals, and real solutions usually combine several. A program that ships free laptops but never provides Internet or instruction has only solved one piece of the problem. Keep your reasoning <strong>evenhanded</strong>: the exam asks which actions reduce access barriers, not which political approach is best.</p>
+      <div class="mini-ex">
+        <div class="mini-ex-label">Quick check</div>
+        <div class="mini-ex-q">A district gives every student a laptop but discovers many still cannot complete online homework because their homes have no Internet service. Which additional action would most directly reduce the remaining divide?</div>
+        <div class="mini-opts" id="mc-divide-2-opts">
+          <button class="mini-opt" onclick="miniMCQ('mc-divide-2','A','B','mc-divide-2-fb')"><span class="mini-opt-letter">A</span> Giving each student a second laptop</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-divide-2','B','B','mc-divide-2-fb')"><span class="mini-opt-letter">B</span> Providing affordable home Internet access to those households</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-divide-2','C','B','mc-divide-2-fb')"><span class="mini-opt-letter">C</span> Assigning only homework that requires no computer</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-divide-2','D','B','mc-divide-2-fb')"><span class="mini-opt-letter">D</span> Making the laptops run faster</button>
+        </div>
+        <div class="mini-fb" id="mc-divide-2-fb"></div>
+      </div>
+    </div>
+    <div class="lesson-section">
+      <h2>How 5.2 Is Tested on the Multiple-Choice Exam</h2>
+      <p>Digital divide questions on the AP CSP exam cluster around three things, and knowing the shape of them makes the points easy. First, the <strong>definition</strong>: expect a question that asks what the digital divide is, where the correct answer names unequal access to computing devices and the Internet across groups. Second, the <strong>causes</strong>: a scenario will describe a person or community, and you identify which factor (income, geography, demographics, or digital literacy) explains their limited access, or which action would reduce that barrier. Third, the <strong>effects</strong>: questions connect access to who can participate in and benefit from computing, such as school, jobs, or services.</p>
+      <p>Two habits keep you out of the traps. Keep your framing <strong>evenhanded</strong>: the exam treats the divide as a matter of access and opportunity, never as a claim that some group is naturally worse with technology, and it does not favor one political solution over another. And read for <strong>level</strong>: notice whether a question is describing a local, national, or global gap, because the correct answer often hinges on that scope.</p>
+    </div>
+    <div class="email-capture">
+      <div class="email-capture-text">
+        <div class="email-capture-eyebrow">FREE for students</div>
+        <h3>Get a free AP CSP question every day</h3>
+        <p>Join 3,000+ students. Daily practice, study tips, and exam strategies.</p>
+      </div>
+      <div>
+        <div class="email-capture-form" id="capture-form">
+          <input type="email" class="email-capture-input" id="capture-email" placeholder="your@email.com">
+          <button class="email-capture-btn" onclick="handleCapture()">Subscribe →</button>
+        </div>
+        <div class="email-capture-success" id="capture-success">✓ You're in!</div>
+      </div>
+    </div>
+    <div class="mcq-section">
+      <div class="mcq-section-header">
+        <div class="mcq-section-icon">📈</div>
+        <div>
+          <div class="mcq-section-title">MCQ Practice</div>
+          <div class="mcq-section-sub">6 questions • Exam difficulty and above • Predict before you peek</div>
+        </div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q1">
+        <div class="mcq-q-num">Question 1 of 6<span class="diff-tag">Definition</span>
+</div>
+        <div class="predict-note">State the definition in your own words before reading the options.</div>
+        <div class="mcq-q-text"><p>Which statement best describes the digital divide as defined by the AP CSP framework?</p></div>
+        <div class="mcq-options" id="q1-options">
+<button class="mcq-option" onclick="checkMCQ('q1','A','B','q1-fb-A')"><span class="mcq-option-letter">A</span> The gap between people who enjoy using technology and people who dislike it</button>
+<button class="mcq-option" onclick="checkMCQ('q1','B','B','q1-fb-B')"><span class="mcq-option-letter">B</span> The unequal access to computing devices and the Internet across different groups of people</button>
+<button class="mcq-option" onclick="checkMCQ('q1','C','B','q1-fb-C')"><span class="mcq-option-letter">C</span> The difference in typing speed between experienced and new computer users</button>
+<button class="mcq-option" onclick="checkMCQ('q1','D','B','q1-fb-D')"><span class="mcq-option-letter">D</span> The delay between when a technology is invented and when it becomes popular</button>
+</div>
+<div id="q1-fb-A" class="mcq-feedback incorrect-fb">Incorrect. The divide is about access and opportunity, not personal preference or enjoyment.</div>
+<div id="q1-fb-B" class="mcq-feedback correct-fb">Correct. The digital divide is the unequal access to computing devices and the Internet among different groups, which affects who can participate and benefit.</div>
+<div id="q1-fb-C" class="mcq-feedback incorrect-fb">Incorrect. Typing speed is a personal skill, not the access gap the framework describes.</div>
+<div id="q1-fb-D" class="mcq-feedback incorrect-fb">Incorrect. That describes technology adoption over time, not unequal access across groups.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q2">
+        <div class="mcq-q-num">Question 2 of 6<span class="diff-tag">Identify who and why</span>
+</div>
+        <div class="predict-note">Predict which factor explains the gap before matching to an option.</div>
+        <div class="mcq-q-text"><p>In a single city, students in higher-income neighborhoods almost all have fast home Internet, while many students in lower-income neighborhoods rely on a shared phone or the public library. This situation most directly illustrates a digital divide driven by which factor, and at which level?</p></div>
+        <div class="mcq-options" id="q2-options">
+<button class="mcq-option" onclick="checkMCQ('q2','A','C','q2-fb-A')"><span class="mcq-option-letter">A</span> Digital literacy, at the global level</button>
+<button class="mcq-option" onclick="checkMCQ('q2','B','C','q2-fb-B')"><span class="mcq-option-letter">B</span> Disability, at the national level</button>
+<button class="mcq-option" onclick="checkMCQ('q2','C','C','q2-fb-C')"><span class="mcq-option-letter">C</span> Socioeconomic status, at the local level</button>
+<button class="mcq-option" onclick="checkMCQ('q2','D','C','q2-fb-D')"><span class="mcq-option-letter">D</span> Infrastructure age, at the global level</button>
+</div>
+<div id="q2-fb-A" class="mcq-feedback incorrect-fb">Incorrect. The scenario is about affording service, not about skills, and it compares neighborhoods in one city, not countries.</div>
+<div id="q2-fb-B" class="mcq-feedback incorrect-fb">Incorrect. Nothing here points to disability, and comparing neighborhoods in one city is local, not national.</div>
+<div id="q2-fb-C" class="mcq-feedback correct-fb">Correct. The gap tracks income (socioeconomic status), and because it is between neighborhoods in the same city it is a local-level divide.</div>
+<div id="q2-fb-D" class="mcq-feedback incorrect-fb">Incorrect. The described cause is affordability by income, and one city is a local scope, not global.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q3">
+        <div class="mcq-q-num">Question 3 of 6<span class="diff-tag">Spot the wrong claim</span>
+</div>
+        <div class="predict-note">Find which statement misrepresents the divide before choosing.</div>
+        <div class="mcq-q-text"><p>A student writes four claims about the digital divide. Which claim is <strong>incorrect</strong>?</p></div>
+        <div class="mcq-options" id="q3-options">
+<button class="mcq-option" onclick="checkMCQ('q3','A','D','q3-fb-A')"><span class="mcq-option-letter">A</span> The divide can exist at local, national, and global levels</button>
+<button class="mcq-option" onclick="checkMCQ('q3','B','D','q3-fb-B')"><span class="mcq-option-letter">B</span> The divide is influenced by the cost of devices and Internet service</button>
+<button class="mcq-option" onclick="checkMCQ('q3','C','D','q3-fb-C')"><span class="mcq-option-letter">C</span> Access to training in digital literacy can affect the divide</button>
+<button class="mcq-option" onclick="checkMCQ('q3','D','D','q3-fb-D')"><span class="mcq-option-letter">D</span> The divide exists because some groups are naturally less capable with technology</button>
+</div>
+<div id="q3-fb-A" class="mcq-feedback incorrect-fb">Incorrect. This claim is true. The divide does occur across local, national, and global scopes.</div>
+<div id="q3-fb-B" class="mcq-feedback incorrect-fb">Incorrect. This claim is true. Cost of devices and service is a real driver of the divide.</div>
+<div id="q3-fb-C" class="mcq-feedback incorrect-fb">Incorrect. This claim is true. Digital literacy and training influence who can use the access they have.</div>
+<div id="q3-fb-D" class="mcq-feedback correct-fb">Correct. This is the false claim. The divide is about unequal access and opportunity, not any natural difference in ability between groups.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q4">
+        <div class="mcq-q-num">Question 4 of 6<span class="diff-tag">I and II only style</span>
+</div>
+        <div class="predict-note">Decide which statements are true before matching to an option.</div>
+        <div class="mcq-q-text"><p>Consider these statements about efforts to reduce the digital divide:</p></div>
+        <ul class="mcq-roman">
+          <li>
+<strong>I.</strong> Expanding Internet infrastructure into areas that currently lack service can increase access.</li>
+          <li>
+<strong>II.</strong> Lowering the cost of devices and service can increase access for lower-income households.</li>
+          <li>
+<strong>III.</strong> Access alone always guarantees a person can use computing effectively, so training is unnecessary.</li>
+        </ul>
+        <div class="mcq-options" id="q4-options">
+<button class="mcq-option" onclick="checkMCQ('q4','A','A','q4-fb-A')"><span class="mcq-option-letter">A</span> I and II only</button>
+<button class="mcq-option" onclick="checkMCQ('q4','B','A','q4-fb-B')"><span class="mcq-option-letter">B</span> I only</button>
+<button class="mcq-option" onclick="checkMCQ('q4','C','A','q4-fb-C')"><span class="mcq-option-letter">C</span> II and III only</button>
+<button class="mcq-option" onclick="checkMCQ('q4','D','A','q4-fb-D')"><span class="mcq-option-letter">D</span> I, II, and III</button>
+</div>
+<div id="q4-fb-A" class="mcq-feedback correct-fb">Correct. I and II both reduce access barriers. III is false: without digital literacy, access alone does not guarantee effective use, which is why training matters.</div>
+<div id="q4-fb-B" class="mcq-feedback incorrect-fb">Incorrect. Statement II is also a valid way to reduce the divide, so I only is too narrow.</div>
+<div id="q4-fb-C" class="mcq-feedback incorrect-fb">Incorrect. Statement III is false, and statement I is true, so this pairing cannot be right.</div>
+<div id="q4-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Statement III is false, so not all three can be correct.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q5">
+        <div class="mcq-q-num">Question 5 of 6<span class="diff-tag">Identify the effect</span>
+</div>
+        <div class="predict-note">Predict the effect of unequal access before you look.</div>
+        <div class="mcq-q-text"><p>A country moves nearly all job applications, school enrollment, and government services online. According to the framework, what is the most direct consequence of the digital divide in this setting?</p></div>
+        <div class="mcq-options" id="q5-options">
+<button class="mcq-option" onclick="checkMCQ('q5','A','B','q5-fb-A')"><span class="mcq-option-letter">A</span> Everyone gains equal access to these services because they are now online</button>
+<button class="mcq-option" onclick="checkMCQ('q5','B','B','q5-fb-B')"><span class="mcq-option-letter">B</span> People without reliable devices and Internet access are less able to participate in and benefit from these services</button>
+<button class="mcq-option" onclick="checkMCQ('q5','C','B','q5-fb-C')"><span class="mcq-option-letter">C</span> The digital divide disappears once services move to the Internet</button>
+<button class="mcq-option" onclick="checkMCQ('q5','D','B','q5-fb-D')"><span class="mcq-option-letter">D</span> The main effect is that servers must be upgraded to handle more traffic</button>
+</div>
+<div id="q5-fb-A" class="mcq-feedback incorrect-fb">Incorrect. Moving services online does not give everyone access; it can shut out those who lack devices or a connection.</div>
+<div id="q5-fb-B" class="mcq-feedback correct-fb">Correct. When essential services require computing, the people on the wrong side of the divide are least able to participate in and benefit from them.</div>
+<div id="q5-fb-C" class="mcq-feedback incorrect-fb">Incorrect. Putting services online does not remove the underlying access gaps; it can make them matter more.</div>
+<div id="q5-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Server capacity is a technical detail, not the framework's point about unequal participation.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q6">
+        <div class="mcq-q-num">Question 6 of 6<span class="diff-tag">Best action</span>
+</div>
+        <div class="predict-note">Predict the action that targets the real barrier first.</div>
+        <div class="mcq-q-text"><p>A nonprofit wants to reduce the global digital divide between a wealthy nation and a lower-income nation where few communities have any Internet infrastructure at all. Which action would most directly address the barrier described?</p></div>
+        <div class="mcq-options" id="q6-options">
+<button class="mcq-option" onclick="checkMCQ('q6','A','B','q6-fb-A')"><span class="mcq-option-letter">A</span> Publishing its website in more languages</button>
+<button class="mcq-option" onclick="checkMCQ('q6','B','B','q6-fb-B')"><span class="mcq-option-letter">B</span> Building network infrastructure so communities that currently have no service can connect</button>
+<button class="mcq-option" onclick="checkMCQ('q6','C','B','q6-fb-C')"><span class="mcq-option-letter">C</span> Speeding up the servers in the wealthy nation</button>
+<button class="mcq-option" onclick="checkMCQ('q6','D','B','q6-fb-D')"><span class="mcq-option-letter">D</span> Encouraging residents to buy newer phones on their own</button>
+</div>
+<div id="q6-fb-A" class="mcq-feedback incorrect-fb">Incorrect. Translation helps usability but does nothing for communities that have no connection at all.</div>
+<div id="q6-fb-B" class="mcq-feedback correct-fb">Correct. The stated barrier is a lack of infrastructure, so building network coverage is the action that most directly creates access.</div>
+<div id="q6-fb-C" class="mcq-feedback incorrect-fb">Incorrect. Faster servers elsewhere do not help communities that cannot connect in the first place.</div>
+<div id="q6-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Telling people to buy devices ignores that there is no service to connect them, and it assumes they can afford it.</div>
+      </div>
+    </div>
+    <div class="game-section">
+      <div style="text-align:center;margin-bottom:20px;">
+        <div class="game-badge">🎮 Lesson Game</div>
+        <div class="game-title">Bridge the Divide</div>
+        <div class="game-sub">Allocate limited resources to close access gaps and see what really drives the divide.</div>
+      </div>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+  #btd-game{font-family:"DM Sans",sans-serif!important;max-width:720px;margin:0 auto;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;box-sizing:border-box;padding:0 8px;}
+  #btd-game *{box-sizing:border-box;}
+  #btd-game .btd-card{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:14px!important;overflow:hidden;}
+  #btd-game .btd-hero{background:#0f1f3d!important;padding:22px 22px 20px;}
+  #btd-game .btd-title{font-family:"DM Serif Display",serif!important;font-size:30px!important;line-height:1.1;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 6px;}
+  #btd-game .btd-sub{font-size:14px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0 0 4px;font-weight:600;}
+  #btd-game .btd-how{font-size:13px!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;margin:8px 0 0;line-height:1.5;}
+  #btd-game .btd-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;padding:12px 16px;background:#eff6ff!important;border-bottom:1px solid #e2e8f0;}
+  #btd-game .btd-stat{font-size:13px!important;font-weight:700;color:#334155!important;-webkit-text-fill-color:#334155!important;}
+  #btd-game .btd-stat b{color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;}
+  #btd-game .btd-budget{font-size:15px!important;font-weight:800;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;}
+  #btd-game .btd-budget.low{color:#dc2626!important;-webkit-text-fill-color:#dc2626!important;}
+  #btd-game .btd-body{padding:16px;}
+  #btd-game .btd-round-h{font-size:14px!important;font-weight:800;color:#7c3aed!important;-webkit-text-fill-color:#7c3aed!important;margin:0 0 4px;text-transform:uppercase;letter-spacing:.04em;}
+  #btd-game .btd-round-t{font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;margin:0 0 14px;line-height:1.5;}
+  #btd-game .btd-comm{border:1px solid #e2e8f0!important;border-radius:12px!important;padding:12px 14px;margin:0 0 12px;background:#fff!important;}
+  #btd-game .btd-comm-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;}
+  #btd-game .btd-comm-name{font-size:15px!important;font-weight:800;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;}
+  #btd-game .btd-comm-pop{font-size:12px!important;font-weight:700;color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+  #btd-game .btd-need{font-size:12px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:3px 0 10px;line-height:1.45;}
+  #btd-game .btd-opts{display:flex;gap:8px;flex-wrap:wrap;}
+  #btd-game .btd-opt{flex:1;min-width:140px;text-align:left;border:1px solid #e2e8f0!important;background:#f8fafc!important;border-radius:10px!important;padding:9px 11px;cursor:pointer;font-family:inherit;transition:transform .06s,border-color .12s;}
+  #btd-game .btd-opt:hover{border-color:#93c5fd!important;}
+  #btd-game .btd-opt:active{transform:scale(.98);}
+  #btd-game .btd-opt.sel{border-color:#1a56db!important;background:#eff6ff!important;box-shadow:0 0 0 2px #bfdbfe inset;}
+  #btd-game .btd-opt.dis{opacity:.45;cursor:not-allowed;}
+  #btd-game .btd-opt-n{display:block;font-size:13px!important;font-weight:800;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;}
+  #btd-game .btd-opt-c{display:block;font-size:12px!important;font-weight:700;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;margin-top:2px;}
+  #btd-game .btd-opt-d{display:block;font-size:11px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-top:3px;line-height:1.35;}
+  #btd-game .btd-opt.sel .btd-opt-c{color:#16a34a!important;-webkit-text-fill-color:#16a34a!important;}
+  #btd-game .btd-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;}
+  #btd-game .btd-btn{background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none;border-radius:10px!important;font-family:inherit;font-size:15px!important;font-weight:800;padding:12px 22px;cursor:pointer;}
+  #btd-game .btd-btn:disabled{background:#94a3b8!important;cursor:not-allowed;}
+  #btd-game .btd-btn.ghost{background:#fff!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;border:1px solid #bfdbfe!important;}
+  #btd-game .btd-res-comm{border:1px solid #e2e8f0!important;border-radius:12px!important;padding:11px 14px;margin:0 0 10px;background:#f8fafc!important;}
+  #btd-game .btd-res-name{font-size:14px!important;font-weight:800;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;}
+  #btd-game .btd-res-conn{font-size:13px!important;font-weight:800;margin-top:2px;}
+  #btd-game .btd-res-conn.good{color:#16a34a!important;-webkit-text-fill-color:#16a34a!important;}
+  #btd-game .btd-res-conn.mid{color:#d97706!important;-webkit-text-fill-color:#d97706!important;}
+  #btd-game .btd-res-conn.bad{color:#dc2626!important;-webkit-text-fill-color:#dc2626!important;}
+  #btd-game .btd-res-why{font-size:12px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;margin-top:3px;line-height:1.45;}
+  #btd-game .btd-meter{height:8px;background:#e2e8f0!important;border-radius:99px;overflow:hidden;margin-top:7px;}
+  #btd-game .btd-meter i{display:block;height:100%;background:#16a34a!important;border-radius:99px;}
+  #btd-game .btd-note{font-size:13px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;background:#eff6ff!important;border:1px solid #bfdbfe!important;border-radius:10px!important;padding:11px 13px;margin:2px 0 14px;line-height:1.5;}
+  #btd-game .btd-end-h{font-family:"DM Serif Display",serif!important;font-size:26px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin:2px 0 6px;}
+  #btd-game .btd-end-big{font-size:40px!important;font-weight:800;color:#16a34a!important;-webkit-text-fill-color:#16a34a!important;line-height:1;margin:8px 0;}
+  #btd-game .btd-end-lbl{font-size:13px!important;font-weight:700;color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+  #btd-game .btd-end-msg{font-size:14px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;line-height:1.55;margin:12px 0 16px;}
+  #btd-game .btd-warn{font-size:12px!important;color:#dc2626!important;-webkit-text-fill-color:#dc2626!important;font-weight:700;min-height:16px;margin-top:6px;}
+</style>
+<div class="btd-game" id="btd-game">
+  <div class="btd-card">
+    <div class="btd-hero">
+      <p class="btd-sub">AP CSP • Big Idea 5, Topic 5.2 • The Digital Divide</p>
+      <h2 class="btd-title">Bridge the Divide</h2>
+      <p class="btd-how">Access to computing is not equal. Spend a limited connectivity budget across communities to connect the most people  -  and learn what drives each access gap: cost, geography, income, and skills. <b>How to play:</b> pick the best investment for each community, then resolve the round. Budgets tighten each round.</p>
+    </div>
+    <div class="btd-bar">
+      <span class="btd-stat">Round <b id="btd-round">1</b> / 4</span>
+      <span class="btd-stat">Connected: <b id="btd-total">0</b> people</span>
+      <span class="btd-budget" id="btd-budget">Budget: 0</span>
+    </div>
+    <div class="btd-body" id="btd-body"></div>
+  </div>
+</div>
+<script>
+(function(){
+  var root = document.getElementById('btd-game');
+  var body = root.querySelector('#btd-body');
+  var elRound = root.querySelector('#btd-round');
+  var elTotal = root.querySelector('#btd-total');
+  var elBudget = root.querySelector('#btd-budget');
+
+  // Investment option catalog. Each option targets the cause of a community's gap.
+  // effect = fraction of that community's disconnected population reached if the option matches the gap driver.
+  var OPTS = {
+    broadband: { name:'Broadband infrastructure', cost:5, driver:'geography', d:'Lay cables / towers to reach areas with no service.' },
+    devices:   { name:'Computers & devices',    cost:3, driver:'income',    d:'Provide laptops/tablets to those who cannot afford them.' },
+    training:  { name:'Digital-literacy training', cost:2, driver:'skills',    d:'Teach people the skills to actually use technology.' },
+    library:   { name:'Public / library access',  cost:4, driver:'cost',      d:'Shared free access points for whole-community use.' }
+  };
+
+  // Rounds: budgets shrink to force trade-offs (escalating difficulty).
+  var ROUNDS = [
+    { budget:12, note:'Warm-up. You can nearly fund everyone  -  notice how each fix matches a different cause.',
+      comms:[
+        { name:'Rural Farm County', pop:400, gap:'No broadband lines reach these homes; too far from providers.', driver:'geography', why:'Geography: providers skip low-density areas because the cost per home is too high.' },
+        { name:'Riverside Low-Income Blocks', pop:350, gap:'Service exists but families cannot afford a plan or a computer.', driver:'income', why:'Income: the service is available, but the monthly cost and devices are out of reach.' },
+        { name:'Lincoln Middle School', pop:300, gap:'Classrooms have Wi-Fi but almost no student devices.', driver:'income', why:'Income: connectivity is present, but hardware access is the barrier.' }
+      ]},
+    { budget:9, note:'Tighter budget. You cannot fully fund all three  -  invest where the money reaches the most people.',
+      comms:[
+        { name:'Mountain Ridge Villages', pop:500, gap:'Remote terrain; no cables and no cell towers.', driver:'geography', why:'Geography: rugged, remote terrain makes physical infrastructure the only fix.' },
+        { name:'Downtown Senior Center', pop:250, gap:'Seniors have devices but do not know how to use them.', driver:'skills', why:'Skills: hardware is not enough without digital-literacy training.' },
+        { name:'Eastside Apartments', pop:450, gap:'A shared free access point would serve the whole building cheaply.', driver:'cost', why:'Cost: one shared/public access point spreads a low cost across many users.' }
+      ]},
+    { budget:7, note:'Scarce budget. Match each investment to the exact cause of the gap or you waste money.',
+      comms:[
+        { name:'Delta Fishing Town', pop:550, gap:'Isolated coastline; no provider will build out here.', driver:'geography', why:'Geography: isolation raises build-out cost, so infrastructure must come first.' },
+        { name:'Newcomer Family Center', pop:300, gap:'Free devices given out, but users need training to get online.', driver:'skills', why:'Skills: the digital divide includes the ability to use tech, not just own it.' },
+        { name:'Public Housing Estate', pop:500, gap:'Households cannot afford personal plans or laptops.', driver:'income', why:'Income: affordability of service and devices is the core barrier.' }
+      ]},
+    { budget:6, note:'Final crisis round. Every point counts  -  connect the largest, cheapest wins first.',
+      comms:[
+        { name:'High Plains Reservation', pop:700, gap:'Vast rural land with no broadband backbone.', driver:'geography', why:'Geography: sparse rural land needs infrastructure; nothing else works without it.' },
+        { name:'Community Library Branch', pop:600, gap:'A single public access hub would reach the entire district.', driver:'cost', why:'Cost: shared public access is the cheapest way to reach the most people at once.' },
+        { name:'Elder Housing Complex', pop:280, gap:'Residents are online-ready but need literacy coaching.', driver:'skills', why:'Skills: closing this gap is cheap and fast when the only barrier is know-how.' }
+      ]}
+  ];
+
+  var state = { round:0, total:0, choices:[] };
+
+  function optKeyForDriver(driver){
+    for(var k in OPTS){ if(OPTS[k].driver===driver) return k; }
+    return null;
+  }
+
+  function renderPlay(){
+    var R = ROUNDS[state.round];
+    state.choices = R.comms.map(function(){ return null; });
+    elRound.textContent = state.round+1;
+    elTotal.textContent = state.total;
+    updateBudget();
+
+    var html = '';
+    html += '<p class="btd-round-h">Round '+(state.round+1)+' of 4</p>';
+    html += '<p class="btd-round-t">'+R.note+'</p>';
+
+    R.comms.forEach(function(c, ci){
+      html += '<div class="btd-comm">';
+      html += '<div class="btd-comm-top"><span class="btd-comm-name">'+c.name+'</span>'+
+              '<span class="btd-comm-pop">'+c.pop+' unconnected</span></div>';
+      html += '<p class="btd-need">Gap: '+c.gap+'</p>';
+      html += '<div class="btd-opts">';
+      for(var k in OPTS){
+        var o = OPTS[k];
+        html += '<button class="btd-opt" data-ci="'+ci+'" data-k="'+k+'">'+
+                '<span class="btd-opt-n">'+o.name+'</span>'+
+                '<span class="btd-opt-c">Cost '+o.cost+'</span>'+
+                '<span class="btd-opt-d">'+o.d+'</span></button>';
+      }
+      html += '</div></div>';
+    });
+    html += '<p class="btd-warn" id="btd-warn"></p>';
+    html += '<div class="btd-actions">'+
+            '<button class="btd-btn" id="btd-resolve">Resolve round ▶</button>'+
+            '<button class="btd-btn ghost" id="btd-clear">Clear picks</button>'+
+            '</div>';
+    body.innerHTML = html;
+
+    Array.prototype.forEach.call(body.querySelectorAll('.btd-opt'), function(btn){
+      btn.addEventListener('click', function(){ togglePick(parseInt(btn.getAttribute('data-ci'),10), btn.getAttribute('data-k')); });
+    });
+    body.querySelector('#btd-resolve').addEventListener('click', resolveRound);
+    body.querySelector('#btd-clear').addEventListener('click', function(){ renderPlay(); });
+  }
+
+  function spent(){
+    var s = 0;
+    state.choices.forEach(function(k){ if(k) s += OPTS[k].cost; });
+    return s;
+  }
+  function updateBudget(){
+    var R = ROUNDS[state.round];
+    var left = R.budget - spent();
+    elBudget.textContent = 'Budget: '+left+' / '+R.budget;
+    elBudget.classList.toggle('low', left<=2);
+    return left;
+  }
+
+  function togglePick(ci, k){
+    var R = ROUNDS[state.round];
+    var warn = body.querySelector('#btd-warn');
+    warn.textContent = '';
+    var prev = state.choices[ci];
+    // toggle off if same
+    if(prev===k){ state.choices[ci]=null; }
+    else {
+      var wouldSpend = spent() - (prev?OPTS[prev].cost:0) + OPTS[k].cost;
+      if(wouldSpend > R.budget){ warn.textContent = 'Not enough budget for that pick. Free up points or choose a cheaper fix.'; refreshSel(); return; }
+      state.choices[ci]=k;
+    }
+    refreshSel();
+  }
+
+  function refreshSel(){
+    var R = ROUNDS[state.round];
+    var left = updateBudget();
+    Array.prototype.forEach.call(body.querySelectorAll('.btd-opt'), function(btn){
+      var ci = parseInt(btn.getAttribute('data-ci'),10);
+      var k = btn.getAttribute('data-k');
+      var sel = state.choices[ci]===k;
+      btn.classList.toggle('sel', sel);
+      // disable options that cost more than remaining (unless already selected in this community)
+      var curCost = state.choices[ci]?OPTS[state.choices[ci]].cost:0;
+      var affordable = (OPTS[k].cost - curCost) <= left || sel;
+      btn.classList.toggle('dis', !affordable);
+    });
+  }
+
+  function resolveRound(){
+    var R = ROUNDS[state.round];
+    var roundConnected = 0;
+    var results = R.comms.map(function(c, ci){
+      var k = state.choices[ci];
+      var connected = 0, cls='bad', explain='';
+      if(!k){
+        connected = 0; cls='bad';
+        explain = 'No investment  -  0 connected. ' + c.why;
+      } else if(OPTS[k].driver === c.driver){
+        connected = c.pop; cls='good';
+        explain = 'Right fix for the cause  -  all '+c.pop+' connected. ' + c.why;
+      } else {
+        connected = Math.round(c.pop*0.25); cls='mid';
+        explain = 'Partial: this helps a little but does not address the real cause. ' + c.why;
+      }
+      roundConnected += connected;
+      return { c:c, connected:connected, cls:cls, explain:explain };
+    });
+    state.total += roundConnected;
+
+    var html = '';
+    html += '<p class="btd-round-h">Round '+(state.round+1)+' results</p>';
+    html += '<p class="btd-note">You connected <b>'+roundConnected+'</b> people this round. The digital divide is about <b>unequal access and its causes</b>  -  matching each fix to what actually drives the gap connects the most people.</p>';
+    results.forEach(function(r){
+      var pct = Math.round(r.connected / r.c.pop * 100);
+      html += '<div class="btd-res-comm">';
+      html += '<div class="btd-res-name">'+r.c.name+'</div>';
+      html += '<div class="btd-res-conn '+r.cls+'">'+r.connected+' / '+r.c.pop+' connected ('+pct+'%)</div>';
+      html += '<div class="btd-meter"><i style="width:'+pct+'%"></i></div>';
+      html += '<div class="btd-res-why">'+r.explain+'</div>';
+      html += '</div>';
+    });
+    var last = state.round >= ROUNDS.length-1;
+    html += '<div class="btd-actions">'+
+            '<button class="btd-btn" id="btd-next">'+(last?'See final results ▶':'Next round ▶')+'</button>'+
+            '</div>';
+    body.innerHTML = html;
+    elTotal.textContent = state.total;
+
+    body.querySelector('#btd-next').addEventListener('click', function(){
+      if(last){ renderEnd(); }
+      else { state.round++; renderPlay(); }
+    });
+  }
+
+  function renderEnd(){
+    elRound.textContent = 4;
+    var maxPeople = 0;
+    ROUNDS.forEach(function(R){ R.comms.forEach(function(c){ maxPeople += c.pop; }); });
+    var pct = Math.round(state.total / maxPeople * 100);
+    var msg;
+    if(pct>=90) msg = 'Outstanding. You matched investments to the true drivers  -  geography, income, skills, and cost  -  and closed nearly every gap.';
+    else if(pct>=65) msg = 'Solid work. You connected most people. The biggest wins came from matching each fix to what actually caused the gap.';
+    else msg = 'The gaps stayed wide. Remember: the divide is not just "no internet"  -  infrastructure fixes geography, devices fix income, training fixes skills, and shared access fixes cost.';
+
+    var html = '';
+    html += '<h3 class="btd-end-h">🌐 Every fix has a cause</h3>';
+    html += '<div class="btd-end-lbl">Total people connected</div>';
+    html += '<div class="btd-end-big">'+state.total+'</div>';
+    html += '<div class="btd-end-lbl">out of '+maxPeople+' possible ('+pct+'%)</div>';
+    html += '<p class="btd-end-msg">'+msg+' The <b>digital divide</b> describes unequal access to computing driven by socioeconomic status, geography, and other factors  -  and closing it means addressing the specific cause each community faces.</p>';
+    html += '<div class="btd-actions">'+
+            '<button class="btd-btn" id="btd-again">↻ Play again</button>'+
+            '</div>';
+    body.innerHTML = html;
+
+    body.querySelector('#btd-again').addEventListener('click', function(){
+      state = { round:0, total:0, choices:[] };
+      renderPlay();
+    });
+
+    document.dispatchEvent(new CustomEvent('apcsGameScore', { detail:{ value: state.total } }));
+  }
+
+  renderPlay();
+})();
+</script>
+    </div>
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Is the digital divide only about not having a computer?<i class="faq-icon">+</i></button>
+        <div class="faq-a">No. It covers unequal access to both computing devices and the Internet. Someone can own a phone but still be on the wrong side of the divide if they have no reliable connection, or a connection so slow it cannot do the task.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What factors cause the digital divide?<i class="faq-icon">+</i></button>
+        <div class="faq-a">The main ones on the exam are socioeconomic status (income), geography (rural versus urban, and richer versus poorer countries), and demographics such as age, education, and disability. Digital literacy, the skills to use the technology, is also a factor. These often overlap.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What does 'local, national, and global' mean for the divide?<i class="faq-icon">+</i></button>
+        <div class="faq-a">It is the scope of the gap. Local is between neighborhoods or households in the same area. National is within one country, such as urban versus rural regions. Global is between countries, where wealthier nations generally have much higher access.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Does the digital divide mean some groups are worse at using technology?<i class="faq-icon">+</i></button>
+        <div class="faq-a">No, and that is a common trap. The divide is about unequal access to devices, connection, and training, not about natural ability. Given access and instruction, people can participate. Framing it as a skill gap by nature is incorrect on the exam.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">How can the digital divide be reduced?<i class="faq-icon">+</i></button>
+        <div class="faq-a">By lowering the access barriers: expanding infrastructure into areas without service, lowering the cost of devices and service, and providing digital literacy training. Effective efforts usually combine several, and can come from governments, companies, nonprofits, or individuals. The exam stays evenhanded and does not favor one specific policy.</div>
+      </div>
+    </div>
+    <div class="related-links">
+      <h3>🔗 Continue studying</h3>
+      <div class="related-links-grid">
+        <a href="/pages/ap-csp-course-bi5-computing-bias" class="related-link">5.3 Computing Bias</a>
+        <a href="/pages/ap-csp-digital-divide" class="related-link">Digital Divide Deep Dive</a>
+        <a href="/pages/ap-csp-study-games-hub" class="related-link">All CSP Study Games</a>
+      </div>
+    </div>
+    <div class="superpack-slim">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="superpack-slim-icon">📦</div>
+        <div><div class="superpack-slim-text">AP CSP Teacher Superpack<span class="superpack-slim-sub">Slides, lesson plans, unit tests for all 5 Big Ideas, $249</span>
+</div></div>
+      </div>
+      <a href="/products/ap-csp-teacher-superpack" class="superpack-slim-btn">Get the Superpack →</a>
+    </div>
+    <div class="teacher-callout">
+      <div class="teacher-callout-icon">🏫</div>
+      <div class="teacher-callout-body">
+        <div class="teacher-callout-label">For teachers</div>
+        <p>The digital divide lands best when students see it in their own school. Try an anonymous poll of home Internet reliability, then map the local, national, and global levels onto it. Emphasize the access-not-ability framing early, since that is the trap most students fall into on the MCQ. The Superpack includes a levels sorting activity, a factors matching set, and an evenhanded 'design a program to close the gap' prompt. <a href="/products/ap-csp-teacher-superpack">View what's included →</a></p>
+      </div>
+    </div>
+    <div class="lesson-nav">
+      <a href="/pages/ap-csp-course-bi5-beneficial-harmful-effects" class="nav-card">
+        <div class="nav-card-dir">← Previous</div>
+        <div class="nav-card-title">5.1 Beneficial and Harmful Effects</div>
+      </a>
+      <a href="/pages/ap-csp-course-bi5-computing-bias" class="nav-card next">
+        <div class="nav-card-dir">Next lesson →</div>
+        <div class="nav-card-title">5.3 Computing Bias</div>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var MINI_MSGS={"mc-divide-1": {"A": "Not quite. The scenario says nothing about interest. The barrier described is that no high-speed cable reaches this remote area, which is geography and infrastructure.", "B": "No. Skill is a separate factor, and the scenario does not mention it. The problem here is that service is slow and costly because of where the town is and the missing infrastructure.", "C": "Correct. Homes spread across a remote area with no high-speed cable run to them is a classic geography and infrastructure barrier to access.", "D": "No. The Internet does not run out of space. The barrier is that infrastructure was never built out to this remote location."}, "mc-divide-2": {"A": "No. The students already have a working device. A second one does not solve the actual barrier, which is the lack of a home connection.", "B": "Correct. The remaining barrier is the missing connection, so making affordable home Internet available is the action that most directly closes the gap.", "C": "Not the best fix. Avoiding computer work sidesteps the problem rather than reducing the divide, and it removes the very skill-building the tools provide.", "D": "No. Speed of the device is not the issue. The households have devices but no Internet service, so a faster laptop changes nothing."}};
+var MINI_FIB={};
+
+function _activity(d){
+  try{ var w=document.querySelector('.lesson-page');
+    if(w){ d.course=w.getAttribute('data-course'); d.unit=w.getAttribute('data-unit'); d.lesson=w.getAttribute('data-lesson'); }
+    document.dispatchEvent(new CustomEvent('apcsActivity',{detail:d}));
+  }catch(e){}
+}
+function checkMCQ(qid, chosen, correct, fbId){
+  var opts=document.querySelectorAll('#'+qid+'-options .mcq-option');
+  opts.forEach(function(b){b.disabled=true;b.onclick=null;});
+  var letters=['A','B','C','D'];
+  opts[letters.indexOf(chosen)].classList.add(chosen===correct?'correct':'incorrect');
+  if(chosen!==correct)opts[letters.indexOf(correct)].classList.add('revealed-correct');
+  document.getElementById(fbId).classList.add('show');
+  _activity({activity:'quiz',item:qid,choice:chosen});
+}
+function miniMCQ(id, chosen, correct, fbId){
+  var opts=document.querySelectorAll('#'+id+'-opts .mini-opt');
+  opts.forEach(function(b){b.onclick=null;b.style.cursor='default';});
+  var letters=['A','B','C','D'];
+  opts[letters.indexOf(chosen)].classList.add(chosen===correct?'correct':'incorrect');
+  if(chosen!==correct)opts[letters.indexOf(correct)].classList.add('reveal');
+  var fb=document.getElementById(fbId);
+  if(MINI_MSGS[id]){fb.textContent=MINI_MSGS[id][chosen]||'';fb.className='mini-fb '+(chosen===correct?'c':'w');}
+}
+function miniFIB(id, fbId){
+  var inp=document.getElementById(id+'-inp'),fb=document.getElementById(fbId);
+  var val=inp.value.trim().toLowerCase();var d=MINI_FIB[id];
+  var ok=(val===String(d.correct).toLowerCase());
+  inp.classList.add(ok?'correct':'incorrect');
+  fb.textContent=ok?d.c:d.w; fb.className='mini-fb '+(ok?'c':'w'); inp.disabled=true;
+}
+function toggleFAQ(btn){
+  var item=btn.parentElement,wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(el){el.classList.remove('open');});
+  if(!wasOpen)item.classList.add('open');
+}
+function handleCapture(){
+  var email=document.getElementById('capture-email').value.trim();
+  if(!email||!email.includes('@')){document.getElementById('capture-email').focus();return;}
+  document.getElementById('capture-form').style.display='none';
+  document.getElementById('capture-success').style.display='block';
+  if(typeof window._learnq!=='undefined'){window._learnq.push(['identify',{'$email':email}]);}
+}
+/* Bridge: the embedded topic game dispatches 'apcsGameScore' on completion.
+   Convert that single completion into the standard exercise-2 gradebook hook. */
+document.addEventListener('apcsGameScore', function(e){
+  _activity({activity:'exercise-2', earned:1, possible:1});
+});
+</script>
+<!-- apcs-exercises (managed) -->
+<div id="apcs-ex-links">
+<style>
+#apcs-ex-links{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:28px auto 0!important;padding:0 16px 8px!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important}
+#apcs-ex-links *,#apcs-ex-links *::before,#apcs-ex-links *::after{box-sizing:border-box!important}
+#apcs-ex-links .ex-lbl{font-size:12px!important;font-weight:800!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:0 0 10px!important}
+#apcs-ex-links .ex-row{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important}
+@media (max-width:640px){#apcs-ex-links .ex-row{grid-template-columns:repeat(1,1fr)!important}}
+#apcs-ex-links a.ex,#apcs-ex-links a.ex:link,#apcs-ex-links a.ex:visited{display:block!important;text-decoration:none!important;border:1px solid #93c5fd!important;border-left:5px solid #1a56db!important;border-radius:0 12px 12px 0!important;background:#eff6ff!important;padding:14px 16px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;font-size:16px!important;font-weight:700!important;line-height:1.35!important}
+#apcs-ex-links a.ex:hover{background:#dbeafe!important}
+#apcs-ex-links a.ex span{display:block!important;margin-top:4px!important;font-size:13px!important;font-weight:400!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important}
+</style>
+<p class="ex-lbl">Exercises for Topic 5.2</p>
+<div class="ex-row">
+<a class="ex" href="/pages/ap-csp-topic-5-2-exercise-1">Exercise 1: The Maple Hollow Access Audit<span>Work it online. Saved in your browser, not graded</span></a>
+<a class="ex" href="/pages/ap-csp-topic-5-2-exercise-2">Exercise 2: Divide Diagnosis Clinic<span>Work it online. Saved in your browser, not graded</span></a>
+</div>
+</div>

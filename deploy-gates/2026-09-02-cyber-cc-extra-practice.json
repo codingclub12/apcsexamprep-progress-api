@@ -1,0 +1,62 @@
+{
+  "change": "the cyber Command Center pacing strip stops budgeting days and says what exists (board 168)",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the strip is matched verbatim or nothing happens, and the day values leave the display but stay in the arithmetic",
+      "command": "npm run --silent smoke:ccpacing",
+      "expect": "25 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the preflight, with a blank cell treated as an erase in every column",
+      "command": "npm run --silent smoke:preflight",
+      "expect": "53 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT WOULD REPORT SUCCESS HAVING CHANGED NOTHING: the verbatim match",
+      "file": "scripts/cyber-cc-extra-practice.js",
+      "find": "  if (n === 0) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:ccpacing",
+      "expect_failure": "[FAIL] a body whose strip has been edited elsewhere is refused",
+      "_why": "This edit is six lines matched as one string. The day someone touches any of them, the pattern stops matching, and without this refusal the program writes a sheet whose Body HTML is the live body unchanged. Matrixify imports it, logs a success, and the page is exactly as it was. A silent no-op on a body edit is indistinguishable from a working run."
+    },
+    {
+      "kind": "mutation",
+      "name": "the day values must survive in unitDays(), because 37 days of pacing hang off them",
+      "file": "scripts/cyber-cc-extra-practice.js",
+      "find": "    if (!after.includes('u.' + f)) problems.push(f + ' no longer feeds unitDays(), which would move every day number');",
+      "replace": "    if (false) problems.push('unreachable');",
+      "command": "npm run --silent smoke:ccpacing",
+      "expect_failure": "[FAIL] removing the data from unitDays() is refused",
+      "_why": "unitDays() sums frqDays, labDays and testDays into each unit's span, and the running day numbers down the whole page are built from it. Taking the values out along with their display would move 37 days of pacing that a teacher may already be planning against, and nothing on the page would say so."
+    },
+    {
+      "kind": "mutation",
+      "name": "no emoji may be introduced that was not already on the page",
+      "file": "scripts/cyber-cc-extra-practice.js",
+      "find": "  \"        + '<a class=\\\"wpl\\\" href=\\\"\" + LABS + \"\\\">\\u{1F527} Terminal labs (adding more)</a>'\",",
+      "replace": "  \"        + '<a class=\\\"wpl\\\" href=\\\"\" + LABS + \"\\\">\\u{1F5A5} Terminal labs (adding more)</a>'\",",
+      "command": "npm run --silent smoke:ccpacing",
+      "expect_failure": "[FAIL] no emoji is introduced that was not already there",
+      "_why": "A monitor glyph reads better for terminal labs than a wrench, and that is exactly why the guard exists: this is a script block on a live page, the repo rule is pure ASCII source and no new emoji, and the two that survive survive because they were already there. Changing the glyph is a decision for a human, not a tidy-up."
+    },
+    {
+      "kind": "rederive",
+      "name": "the house Matrixify preflight, which knows nothing about this page, with every emoji round-tripped against the live body",
+      "command": "node scripts/matrixify-preflight.js imports/2026-09-02/cyber-command-center-pages.csv --carrying smoke/fixtures/cyber-command-center-body.json",
+      "expect": "clear to import",
+      "_why": "An independent reader of the finished file. It confirms the row carries no Published At column, that the single script block survives intact, and that all 29 emoji in the sheet were already in the live body rather than introduced here."
+    },
+    {
+      "kind": "live",
+      "name": "the strip reads extra practice, and no day number on the page moved",
+      "command": "node scripts/verify-cc-pacing-live.js",
+      "expect": "PACING STRIP LIVE: 8 of 8",
+      "_why": "Seven of its eight assertions are FALSE right now, measured: the live page says 'Days set aside in this unit', renders three day counts, and calls the labs hub 'Lab / project'. The eighth is true before and after on purpose, because a check that only looked for the new words would pass just as happily on a page whose pacing had silently shifted by 37 days."
+    }
+  ],
+  "_hollow_guard_removed": "A fifth mutation targeted a 'nothing outside the strip moved' check in repair(). It survived: the suite stayed green with the guard broken, because a single replace(BEFORE, AFTER) with more-than-one already refused cannot change anything outside the strip. The guard was unfalsifiable, so it was deleted rather than decorated. The property is still asserted against the real body in the suite. This note exists so the next reader does not add it back believing it was an oversight."
+}

@@ -1,0 +1,1085 @@
+<!--
+  PAGE: /pages/ap-csp-course-bi5-computing-bias
+  TITLE: AP CSP 5.3 Computing Bias | Bias in Data and Algorithms
+  META: AP CSP Topic 5.3: how bias enters computing systems through data and algorithm design, and how it can be reduced. 6 exam MCQs plus the Spot the Bias game.
+-->
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+  :root{--navy:#0f1f3d;--bi3:#1a56db;--bi3-lt:#93c5fd;--bi3-bg:#eff6ff;--bi3-dk:#1e40af;--green:#16a34a;--amber:#d97706;--red:#dc2626;--slate:#64748b;--white:#ffffff;--py:#3b82f6;--pseudo:#8b5cf6;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  .lesson-page{font-family:"DM Sans",sans-serif;color:var(--navy);background:#f8fafc;line-height:1.6;}
+
+  .lesson-breadcrumb{background:#fff;border-bottom:1px solid #e2e8f0;padding:12px 24px;}
+  .lesson-breadcrumb-inner{max-width:880px;margin:0 auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate);flex-wrap:wrap;}
+  .lesson-breadcrumb a{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;text-decoration:none;font-weight:500;}
+  .bc-sep{color:#cbd5e1;}
+
+  .social-proof-bar{background:#fff;border-bottom:1px solid #e2e8f0;padding:10px 24px;}
+  .social-proof-inner{max-width:880px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 20px;font-size:13px;color:var(--slate);}
+  .social-proof-item{display:flex;align-items:center;gap:5px;font-weight:500;}
+  .social-proof-item strong{color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+
+  .lesson-hero{background:var(--navy);background-image:radial-gradient(ellipse 60% 70% at 90% 20%,rgba(26,86,219,.28) 0%,transparent 60%);padding:48px 24px 40px;}
+  .lesson-hero-inner{max-width:880px;margin:0 auto;}
+  .lesson-hero-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .lesson-num-badge{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:var(--bi3);font-weight:700;font-size:14px;color:#fff!important;-webkit-text-fill-color:#fff!important;flex-shrink:0;}
+  .lesson-eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;}
+  .lesson-hero h1{font-family:"DM Serif Display",serif!important;font-size:clamp(26px,4vw,40px)!important;line-height:1.2!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:14px!important;}
+  .lesson-hero-pills{display:flex;flex-wrap:wrap;gap:8px;}
+  .lesson-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:5px 12px;border-radius:100px;font-size:12px;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .ced-tag{display:inline-flex;align-items:center;background:rgba(26,86,219,.25);border:1px solid rgba(147,197,253,.3);padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;letter-spacing:.04em;}
+
+  /* PROGRESS STRIP */
+  .bi3-progress{background:#fff!important;border-bottom:1px solid #e2e8f0!important;padding:14px 20px!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;}
+  .bi3-progress-inner{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;gap:0!important;width:max-content!important;min-width:100%!important;}
+  .prog-step{display:flex!important;flex-direction:column!important;align-items:center!important;min-width:46px!important;text-align:center!important;flex-shrink:0!important;}
+  .prog-step-link{display:flex!important;flex-direction:column!important;align-items:center!important;min-width:46px!important;text-align:center!important;flex-shrink:0!important;text-decoration:none!important;cursor:pointer!important;}
+  .prog-step-link:hover .prog-dot{background:#dbeafe!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border-color:var(--bi3)!important;}
+  .prog-dot{width:26px!important;height:26px!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:9px!important;font-weight:700!important;margin-bottom:4px!important;flex-shrink:0!important;}
+  .prog-dot.active{background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .prog-dot.upcoming{background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:2px solid #e2e8f0!important;}
+  .prog-dot.done{background:#dbeafe!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border:2px solid var(--bi3)!important;}
+  .prog-label{font-size:8px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;line-height:1.2!important;white-space:nowrap!important;}
+  .prog-label.active-label{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;}
+  .prog-arrow{flex:1 0 4px!important;height:2px!important;background:#e2e8f0!important;margin-bottom:18px!important;min-width:4px!important;max-width:16px!important;flex-shrink:0!important;}
+
+  /* MAIN */
+  .lesson-main{max-width:880px;margin:0 auto;padding:40px 24px 80px;}
+  .lesson-objectives{background:var(--bi3-bg);border-left:4px solid var(--bi3);border-radius:0 10px 10px 0;padding:20px 24px;margin-bottom:28px;}
+  .lesson-objectives h2{font-size:14px!important;font-weight:700!important;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;text-transform:uppercase!important;letter-spacing:.06em!important;margin-bottom:12px!important;}
+  .lesson-objectives ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;}
+  .lesson-objectives li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#1e3a8a;line-height:1.5;}
+  .lesson-objectives li::before{content:"\2713";color:var(--bi3);font-weight:700;flex-shrink:0;margin-top:1px;}
+  .score-impact{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 18px;margin-bottom:28px;display:flex;align-items:center;gap:10px;font-size:14px;color:#14532d;}
+  .score-impact strong{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+
+  /* HOOK */
+  .hook-box{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px 28px;margin-bottom:32px;}
+  .hook-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:8px;}
+  .hook-box p{font-size:15px!important;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;line-height:1.7!important;margin-bottom:0!important;}
+
+  /* LESSON SECTIONS */
+  .lesson-section{margin-bottom:40px;}
+  .lesson-section h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;padding-bottom:10px!important;border-bottom:2px solid var(--bi3-bg)!important;}
+  .lesson-section h3{font-size:17px!important;font-weight:700!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-top:24px!important;margin-bottom:10px!important;}
+  .lesson-section p{font-size:15px;color:#374151;line-height:1.8;margin-bottom:14px;}
+  .lesson-section ul,.lesson-section ol{padding-left:20px;margin-bottom:14px;}
+  .lesson-section li{font-size:15px;color:#374151;line-height:1.7;margin-bottom:6px;}
+  .lesson-section code{background:#eef2ff;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+
+  /* DUAL CODE PANEL */
+  .code-panel-wrap{margin:20px 0;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;}
+  .code-panel-tabs{display:flex;background:#1e293b;}
+  .code-tab{padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;border:none;background:transparent;letter-spacing:.04em;transition:background .15s;font-family:inherit;}
+  .code-tab.py{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .code-tab.pseudo{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+  .code-tab.active{background:rgba(255,255,255,.15)!important;}
+  .code-tab-label{font-size:10px;opacity:.6;margin-left:4px;font-weight:400;}
+  .code-pane{background:#0f172a;padding:18px 20px;overflow-x:auto;height:0;overflow:hidden;padding:0;}
+  .code-pane.active{height:auto;overflow-x:auto;padding:18px 20px;}
+  .code-pane pre{font-family:monospace;font-size:13px;line-height:1.8;margin:0;white-space:pre-wrap;word-break:break-word;max-width:100%;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .py-kw{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:700;}
+  .py-fn{color:#6ee7b7!important;-webkit-text-fill-color:#6ee7b7!important;}
+  .py-num{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .py-str{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .py-comment{color:#475569!important;-webkit-text-fill-color:#475569!important;font-style:italic;}
+  .py-var{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .py-op{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;}
+  .ps-kw{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700;}
+  .ps-op{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .ps-num{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .ps-str{color:#86efac!important;-webkit-text-fill-color:#86efac!important;}
+  .ps-comment{color:#475569!important;-webkit-text-fill-color:#475569!important;font-style:italic;}
+  .ps-var{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+
+  /* CALLOUTS */
+  .callout-exam{background:#fffbeb;border:1px solid #fcd34d;border-left:4px solid var(--amber);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+  .callout-exam-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--amber)!important;-webkit-text-fill-color:var(--amber)!important;margin-bottom:6px;}
+  .callout-exam p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin-bottom:0!important;line-height:1.6!important;}
+  .callout-trap{background:#fef2f2;border:1px solid #fca5a5;border-left:4px solid var(--red);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+  .callout-trap-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;margin-bottom:6px;}
+  .callout-trap p{font-size:14px!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;margin-bottom:0!important;line-height:1.6!important;}
+
+  /* MINI EXERCISES */
+  .mini-ex{background:#fff;border:1px solid #bfdbfe;border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .mini-ex-label{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;margin-bottom:12px;}
+  .mini-ex-q{font-size:15px;font-weight:600;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px;line-height:1.5;}
+  .mini-ex-code{background:#0f172a;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;line-height:1.8;margin-bottom:14px;overflow-x:auto;white-space:pre;display:block;}
+  .mini-opts{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;}
+  .mini-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border:2px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:14px;font-family:monospace;color:#374151!important;-webkit-text-fill-color:#374151!important;background:#f8fafc;text-align:left;width:100%;transition:border-color .15s;}
+  .mini-opt:hover{border-color:var(--bi3-lt);background:var(--bi3-bg);}
+  .mini-opt.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mini-opt.incorrect{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mini-opt.reveal{border-color:var(--green)!important;background:#f0fdf4!important;}
+  .mini-opt-letter{font-weight:700;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;min-width:18px;font-family:inherit;}
+  .mini-opt.correct .mini-opt-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mini-opt.incorrect .mini-opt-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mini-fib-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;}
+  .mini-fib-input{padding:8px 12px;border:2px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:14px;width:130px;outline:none;color:var(--navy)!important;background:#f8fafc;}
+  .mini-fib-input:focus{border-color:var(--bi3-lt);}
+  .mini-fib-input.correct{border-color:var(--green);background:#f0fdf4;}
+  .mini-fib-input.incorrect{border-color:var(--red);background:#fef2f2;}
+  .mini-fib-btn{padding:8px 18px;background:var(--bi3);border:none;border-radius:8px;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .mini-fb{font-size:13px;font-weight:500;padding:8px 12px;border-radius:7px;margin-top:6px;display:none;line-height:1.5;}
+  .mini-fb.c{background:#f0fdf4;color:var(--green)!important;-webkit-text-fill-color:var(--green)!important;display:block;}
+  .mini-fb.w{background:#fef2f2;color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;display:block;}
+
+  /* VOCAB */
+  .vocab-table{width:100%;border-collapse:collapse;margin-bottom:24px;font-size:14px;}
+  .vocab-table thead tr{background:var(--bi3);}
+  .vocab-table thead th{padding:10px 16px;text-align:left;font-weight:600;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px;}
+  .vocab-table tbody tr:nth-child(even){background:var(--bi3-bg);}
+  .vocab-table tbody tr:nth-child(odd){background:#fff;}
+  .vocab-table tbody td{padding:10px 16px;border-bottom:1px solid #bfdbfe;color:#374151;vertical-align:top;line-height:1.5;}
+  .vocab-table tbody td:first-child{font-weight:700;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;white-space:nowrap;}
+
+  /* CPT CONNECTION */
+  .cpt-connection{background:#fefce8;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:0 10px 10px 0;padding:20px 24px;margin:28px 0;}
+  .cpt-connection-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#92400e!important;-webkit-text-fill-color:#92400e!important;margin-bottom:8px;}
+  .cpt-connection h3{font-size:16px!important;font-weight:700!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin:16px 0 8px!important;}
+  .cpt-connection p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;line-height:1.7!important;margin-bottom:12px!important;}
+  .cpt-connection a{color:#b45309!important;-webkit-text-fill-color:#b45309!important;font-weight:600;text-decoration:underline;}
+  .cpt-connection code{background:#fef3c7;color:#78350f!important;-webkit-text-fill-color:#78350f!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+  .cpt-stems{list-style:none;padding:0;margin:0 0 8px;display:flex;flex-direction:column;gap:8px;}
+  .cpt-stems li{background:#fffef5;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:13px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;line-height:1.6;}
+  .cpt-code{background:#0f172a;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;line-height:1.8;margin:6px 0 12px;overflow-x:auto;white-space:pre;display:block;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+
+  /* EMAIL */
+  .email-capture{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px 28px;margin-bottom:36px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
+  .email-capture-text{flex:1;min-width:200px;}
+  .email-capture-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:4px;}
+  .email-capture h3{font-size:16px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .email-capture p{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:0!important;line-height:1.5!important;}
+  .email-capture-form{display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0;}
+  .email-capture-input{padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff!important;font-size:14px;font-family:inherit;min-width:180px;outline:none;}
+  .email-capture-btn{padding:10px 20px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:8px!important;font-size:14px!important;font-weight:600!important;cursor:pointer!important;font-family:inherit!important;}
+  .email-capture-success{display:none;font-size:14px;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:600;padding:10px 0;}
+
+  /* MCQ */
+  .mcq-section{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:28px;margin-bottom:40px;}
+  .mcq-section-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--bi3-bg);}
+  .mcq-section-icon{width:40px;height:40px;border-radius:10px;background:var(--bi3-bg);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .mcq-section-title{font-family:"DM Serif Display",serif;font-size:20px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+  .mcq-section-sub{font-size:13px;color:var(--slate);}
+  .mcq-item{margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid #f1f5f9;}
+  .mcq-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .mcq-q-num{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:8px;}
+  .diff-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:100px;margin-left:8px;background:#fef2f2;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;border:1px solid #fca5a5;}
+  .mcq-q-text{font-size:15px!important;font-weight:600!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;margin-bottom:12px!important;}
+  .predict-note{font-size:12px;font-style:italic;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:12px;}
+  .mcq-code{background:#0f172a;border-radius:8px;padding:12px 14px;margin:10px 0 14px;font-family:monospace;font-size:13px;line-height:1.75;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;white-space:pre;overflow-x:auto;display:block;}
+  .mcq-code .k{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .mcq-code .s{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .mcq-code .n{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .mcq-code .c{color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-style:italic;}
+  .mcq-roman{list-style:none;padding:0;margin:10px 0 14px;display:flex;flex-direction:column;gap:6px;}
+  .mcq-roman li{font-family:monospace;font-size:13px;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;background:#f1f5f9;border-radius:6px;padding:8px 12px;}
+  .mcq-roman li strong{color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;font-family:"DM Sans",sans-serif;margin-right:8px;}
+  .mcq-options{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+  .mcq-option{display:flex!important;align-items:flex-start!important;gap:12px!important;padding:11px 14px!important;border:2px solid #e2e8f0!important;border-radius:8px!important;cursor:pointer!important;background:#f8fafc!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.5!important;text-align:left!important;width:100%!important;font-family:inherit!important;}
+  .mcq-option:hover{border-color:var(--bi3-lt)!important;background:var(--bi3-bg)!important;}
+  .mcq-option.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mcq-option.incorrect{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mcq-option.revealed-correct{border-color:var(--green)!important;background:#f0fdf4!important;}
+  .mcq-option-letter{font-weight:700!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;flex-shrink:0!important;min-width:18px!important;}
+  .mcq-option.correct .mcq-option-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mcq-option.incorrect .mcq-option-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mcq-feedback{display:none!important;padding:12px 16px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;margin-top:8px!important;}
+  .mcq-feedback.show{display:block!important;}
+  .mcq-feedback.correct-fb{background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #bbf7d0!important;}
+  .mcq-feedback.incorrect-fb{background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;border:1px solid #fecaca!important;}
+
+  /* GAME */
+  .game-section{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:14px;padding:28px;margin-bottom:40px;}
+  .game-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:10px;}
+  .game-title{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .game-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:20px!important;}
+  .vt-score-bar{display:flex;justify-content:space-between;background:rgba(255,255,255,.06);border-radius:10px;padding:12px 20px;margin-bottom:20px;flex-wrap:wrap;gap:8px;}
+  .vt-stat{text-align:center;}
+  .vt-stat-val{font-size:20px;font-weight:800;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1;}
+  .vt-stat-lbl{font-size:10px;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:2px;}
+  .vt-code-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  .vt-code-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:10px;}
+  .vt-code-lines{font-family:monospace;font-size:14px;line-height:2;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .vt-line{display:block;padding:2px 8px;border-radius:4px;white-space:pre;}
+  .vt-line.hl{background:rgba(147,197,253,.2);color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .vt-question{font-size:15px;font-weight:600;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;margin-bottom:14px;}
+  .vt-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+  .vt-btn{padding:12px;border-radius:9px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);cursor:pointer;font-size:15px;font-weight:700;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;font-family:monospace;transition:all .15s;}
+  .vt-btn:hover{border-color:var(--bi3-lt);background:rgba(26,86,219,.2);}
+  .vt-btn.c{border-color:#4ade80;background:rgba(74,222,128,.15);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+  .vt-btn.w{border-color:#f87171;background:rgba(248,113,113,.15);color:#f87171!important;-webkit-text-fill-color:#f87171!important;}
+  .vt-btn.rv{border-color:#4ade80;background:rgba(74,222,128,.08);}
+  .vt-fb{padding:10px 14px;border-radius:8px;font-size:13px;font-weight:500;margin-bottom:12px;display:none;line-height:1.5;}
+  .vt-fb.c{background:rgba(74,222,128,.1);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;display:block;}
+  .vt-fb.w{background:rgba(248,113,113,.1);color:#f87171!important;-webkit-text-fill-color:#f87171!important;display:block;}
+  .vt-next{display:none;width:100%;padding:12px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);border-radius:8px;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .vt-next.show{display:block;}
+  .vt-results{display:none;text-align:center;padding:20px;}
+  .vt-results.show{display:block;}
+  .vt-res-score{font-family:"DM Serif Display",serif;font-size:52px;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1;}
+  .vt-res-lbl{font-size:14px;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:12px;}
+  .vt-res-msg{font-size:14px;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;margin-bottom:20px;line-height:1.6;}
+  .vt-restart{background:rgba(255,255,255,.1);color:#fff!important;-webkit-text-fill-color:#fff!important;border:2px solid rgba(255,255,255,.2);border-radius:8px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+
+  /* CODE EDITOR (Pyodide live) */
+  .code-editor-section{background:#0f172a;border-radius:14px;padding:28px;margin-bottom:40px;}
+  .code-editor-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:10px;}
+  .code-editor-title{font-family:"DM Serif Display",serif!important;font-size:22px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .code-editor-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:20px!important;line-height:1.6;}
+  .code-problem{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+  .scaffold-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:rgba(147,197,253,.15);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;border:1px solid rgba(147,197,253,.35);margin-bottom:8px;}
+  .code-problem-num{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:8px;}
+  .code-problem-prompt{font-size:14px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.6!important;margin-bottom:12px!important;}
+  .code-problem-prompt code{background:rgba(147,197,253,.12);color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;padding:1px 6px;border-radius:5px;font-size:12px;}
+  .code-textarea{width:100%;min-height:120px;background:#020617;border:2px solid rgba(255,255,255,.1);border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;color:#e2e8f0!important;resize:vertical;outline:none;line-height:1.8;}
+  .code-textarea:focus{border-color:var(--bi3-lt);}
+  .code-btn-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center;}
+  .code-run-btn{padding:9px 20px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:7px!important;font-size:13px!important;font-weight:700!important;cursor:pointer!important;font-family:inherit!important;}
+  .code-run-btn:disabled{opacity:.6;cursor:wait;}
+  .code-hint-btn,.code-sol-btn{padding:9px 16px!important;background:rgba(255,255,255,.06)!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:7px!important;font-size:13px!important;cursor:pointer!important;font-family:inherit!important;}
+  .code-output{margin-top:10px;background:#020617;border-radius:8px;padding:12px 16px;font-family:monospace;font-size:13px;min-height:44px;display:none;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .code-output.show{display:block;}
+  .code-output.ok{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+  .code-output.err{color:#f87171!important;-webkit-text-fill-color:#f87171!important;}
+  .code-hint{margin-top:8px;background:rgba(147,197,253,.06);border:1px solid rgba(147,197,253,.2);border-radius:8px;padding:10px 14px;font-size:13px;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;display:none;line-height:1.6;}
+  .code-hint.show{display:block;}
+  .code-solution{margin-top:8px;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:8px;padding:12px 14px;font-family:monospace;font-size:13px;color:#bbf7d0!important;-webkit-text-fill-color:#bbf7d0!important;display:none;white-space:pre;line-height:1.8;overflow-x:auto;}
+  .code-solution.show{display:block;}
+
+  /* FAQ */
+  .faq-section{margin-bottom:40px;}
+  .faq-section h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;padding-bottom:10px!important;border-bottom:2px solid var(--bi3-bg)!important;}
+  .faq-item{background:#fff;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:10px;overflow:hidden;}
+  .faq-q{width:100%;text-align:left;padding:16px 20px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:15px!important;font-weight:600!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-family:inherit!important;line-height:1.4!important;}
+  .faq-q:hover{background:#f8fafc;}
+  .faq-icon{font-size:18px;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;flex-shrink:0;transition:transform .2s;font-style:normal;}
+  .faq-item.open .faq-icon{transform:rotate(45deg);}
+  .faq-a{display:none;padding:0 20px 16px;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.7!important;border-top:1px solid #f1f5f9;}
+  .faq-item.open .faq-a{display:block;}
+  .faq-a code{background:#eef2ff;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+
+  /* RELATED + SUPERPACK + TEACHER + NAV */
+  .related-links{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:24px;margin-bottom:40px;}
+  .related-links h3{font-size:15px!important;font-weight:700!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;}
+  .related-links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
+  .related-link{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;background:#f8fafc;text-decoration:none;font-size:13px!important;font-weight:500!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border:1px solid #bfdbfe;transition:background .15s;line-height:1.3;}
+  .related-link:link,.related-link:visited{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;}
+  .related-link:hover{background:var(--bi3-bg);}
+  .related-ext{color:var(--slate)!important;-webkit-text-fill-color:var(--slate)!important;border-color:#e2e8f0;}
+  .superpack-slim{background:#fff;border:1px solid #bfdbfe;border-radius:10px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:36px;}
+  .superpack-slim-icon{width:36px;height:36px;border-radius:8px;background:var(--bi3-bg);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .superpack-slim-text{font-size:14px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-weight:600;line-height:1.3;}
+  .superpack-slim-sub{font-size:12px;color:var(--slate);font-weight:400;display:block;margin-top:2px;}
+  .superpack-slim-btn{display:inline-flex!important;align-items:center!important;gap:6px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:9px 18px!important;border-radius:7px!important;font-size:13px!important;font-weight:600!important;text-decoration:none!important;white-space:nowrap!important;}
+  .superpack-slim-btn:link,.superpack-slim-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .teacher-callout{background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:18px 22px;margin-bottom:28px;display:flex;align-items:flex-start;gap:14px;}
+  .teacher-callout-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+  .teacher-callout-body{flex:1;}
+  .teacher-callout-label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#0369a1!important;-webkit-text-fill-color:#0369a1!important;margin-bottom:4px;}
+  .teacher-callout-body p{font-size:14px!important;color:#0c4a6e!important;-webkit-text-fill-color:#0c4a6e!important;margin-bottom:0!important;line-height:1.6!important;}
+  .teacher-callout-body a{color:#0369a1!important;-webkit-text-fill-color:#0369a1!important;font-weight:600;text-decoration:underline;}
+  .lesson-nav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:40px;}
+  .nav-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 20px;text-decoration:none;color:inherit;transition:box-shadow .15s;display:block;}
+  .nav-card:hover{box-shadow:0 4px 16px rgba(26,86,219,.1);border-color:#bfdbfe;}
+  .nav-card-dir{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:4px;}
+  .nav-card-title{font-size:14px;font-weight:700;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;line-height:1.3;}
+  .nav-card.next{border-left:3px solid var(--bi3);}
+
+  @media(max-width:600px){
+    .lesson-hero{padding:36px 20px 32px;}
+    .lesson-main{padding:32px 20px 60px;}
+    .vt-options{grid-template-columns:1fr 1fr;}
+    .lesson-nav{grid-template-columns:1fr;}
+    .mini-opts{gap:6px;}
+  }
+</style>
+<style>
+.code-usage{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin:-6px 0 18px!important;padding:8px 12px!important;background:rgba(255,255,255,.04)!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:8px!important;display:block!important;}
+.code-usage strong{color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;}
+.code-problem-prompt ul.rules{margin:10px 0 4px!important;padding-left:0!important;list-style:none!important;}
+.code-problem-prompt ul.rules li{position:relative;padding:3px 0 3px 20px!important;font-size:14px;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.55;}
+.code-problem-prompt ul.rules li::before{content:"\25B8";position:absolute;left:2px;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+.mcq-q-text ul.rules,.mini-ex-q ul.rules{margin:10px 0 4px!important;padding-left:0!important;list-style:none!important;}
+.mcq-q-text ul.rules li,.mini-ex-q ul.rules li{position:relative;padding:3px 0 3px 20px!important;font-size:15px;font-weight:400;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;line-height:1.5;}
+.mcq-q-text ul.rules li::before,.mini-ex-q ul.rules li::before{content:"\25B8";position:absolute;left:2px;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;}
+</style>
+<style>
+
+.lesson-visual{margin:0 0 40px!important;}
+.lv-kicker{font-size:11px!important;font-weight:700!important;letter-spacing:.1em!important;text-transform:uppercase!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;margin:0 0 10px!important;}
+/* before/after panel */
+.ba{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:14px!important;padding:20px!important;margin:0 0 14px!important;}
+.ba-cap-top{font-size:12px!important;font-weight:700!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;margin:0 0 14px!important;}
+.ba-grid{display:grid!important;grid-template-columns:1fr auto 1fr!important;align-items:center!important;gap:14px!important;}
+.ba-panel{border-radius:12px!important;padding:16px 14px!important;text-align:center!important;}
+.ba-panel.before{background:#f8fafc!important;border:1px solid #e2e8f0!important;}
+.ba-panel.after{background:#f0fdf4!important;border:1px solid #bbf7d0!important;}
+.ba-label{font-size:11px!important;font-weight:700!important;letter-spacing:.05em!important;text-transform:uppercase!important;margin:0 0 8px!important;}
+.ba-panel.before .ba-label{color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+.ba-panel.after .ba-label{color:#166534!important;-webkit-text-fill-color:#166534!important;}
+.ba-data{font-family:monospace!important;font-size:15px!important;letter-spacing:1px!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;word-break:break-all!important;}
+.ba-meta{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:6px!important;}
+.ba-arrow{font-size:26px!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;font-weight:700!important;}
+.ba-caption{font-size:13px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;line-height:1.55!important;margin:14px 0 0!important;padding-top:12px!important;border-top:1px solid #f1f5f9!important;}
+.ba-caption strong{color:#166534!important;-webkit-text-fill-color:#166534!important;}
+/* dark interactive card shell (shared by binary/rle/parallel/packet/io) */
+.wgt{background:#0f172a!important;border-radius:16px!important;padding:22px!important;border:1px solid #1e293b!important;margin:0 0 14px!important;}
+.wgt-h{font-family:"DM Serif Display",serif!important;font-size:18px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 3px!important;}
+.wgt-sub{font-size:13px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0 0 18px!important;}
+.wgt-btns{display:flex!important;gap:8px!important;justify-content:center!important;flex-wrap:wrap!important;margin-top:14px!important;}
+.wgt-btn{font-family:"DM Sans",sans-serif!important;font-size:13px!important;font-weight:700!important;padding:8px 14px!important;border-radius:9px!important;border:1px solid #334155!important;background:#1e293b!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;cursor:pointer!important;}
+.wgt-btn:hover{background:#334155!important;}
+.wgt-note{font-size:12.5px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;text-align:center!important;margin:12px 0 0!important;line-height:1.5!important;}
+.wgt-note.warn{color:#fca5a5!important;-webkit-text-fill-color:#fca5a5!important;}
+.wgt-note.good{color:#86efac!important;-webkit-text-fill-color:#86efac!important;}
+/* binary */
+.bpv-strip{display:flex!important;gap:6px!important;justify-content:center!important;flex-wrap:wrap!important;}
+.bpv-col{display:flex!important;flex-direction:column!important;align-items:center!important;gap:6px!important;}
+.bpv-pv{font-size:12px!important;font-weight:700!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-variant-numeric:tabular-nums!important;}
+.bpv-bit{width:44px!important;height:54px!important;border-radius:10px!important;border:2px solid #334155!important;background:#1e293b!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-family:monospace!important;font-size:23px!important;font-weight:700!important;cursor:pointer!important;}
+.bpv-bit.on{background:#1a56db!important;border-color:#60a5fa!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+.bpv-read{display:flex!important;align-items:baseline!important;justify-content:center!important;gap:14px!important;margin:20px 0 0!important;flex-wrap:wrap!important;}
+.bpv-binary{font-family:monospace!important;font-size:22px!important;letter-spacing:2px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+.bpv-eq{font-size:22px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+.bpv-dec{font-family:"DM Serif Display",serif!important;font-size:34px!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;line-height:1!important;}
+/* rle */
+.rle-in{width:100%!important;box-sizing:border-box!important;font-family:monospace!important;font-size:15px!important;padding:10px 12px!important;border-radius:9px!important;border:1px solid #334155!important;background:#1e293b!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;letter-spacing:1px!important;}
+.rle-row{display:flex!important;gap:12px!important;flex-wrap:wrap!important;margin-top:14px!important;}
+.rle-cell{flex:1!important;min-width:130px!important;background:#1e293b!important;border-radius:10px!important;padding:12px!important;text-align:center!important;}
+.rle-cell .l{font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:6px!important;}
+.rle-cell .v{font-family:monospace!important;font-size:16px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;word-break:break-all!important;}
+.rle-cell.out .v{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+.rle-cell .m{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:4px!important;}
+/* parallel timeline */
+.ptl-ctl{display:flex!important;align-items:center!important;gap:12px!important;justify-content:center!important;flex-wrap:wrap!important;margin-bottom:16px!important;}
+.ptl-ctl label{font-size:13px!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;font-weight:700!important;}
+.ptl-ctl input[type=range]{width:180px!important;}
+.ptl-ctl .n{font-family:"DM Serif Display",serif!important;font-size:22px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;min-width:28px!important;text-align:center!important;}
+.ptl-bar{height:26px!important;border-radius:6px!important;margin:8px 0!important;display:flex!important;overflow:hidden!important;}
+.ptl-seg{height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:11px!important;font-weight:700!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a!important;white-space:nowrap!important;}
+.ptl-seg.seq{background:#fca5a5!important;}
+.ptl-seg.par{background:#6ee7b7!important;}
+.ptl-lbl{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:2px!important;}
+.ptl-stat{display:flex!important;gap:18px!important;justify-content:center!important;margin-top:14px!important;flex-wrap:wrap!important;}
+.ptl-stat div{text-align:center!important;}
+.ptl-stat .k{font-size:11px!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+.ptl-stat .v{font-family:"DM Serif Display",serif!important;font-size:26px!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+/* packet */
+.pkt-track{display:flex!important;gap:8px!important;justify-content:center!important;flex-wrap:wrap!important;min-height:64px!important;}
+.pkt{width:58px!important;border-radius:9px!important;background:#1e293b!important;border:1px solid #334155!important;padding:8px 4px!important;text-align:center!important;}
+.pkt .seq{font-size:10px!important;font-weight:700!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+.pkt .ch{font-family:monospace!important;font-size:20px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;margin-top:2px!important;}
+.pkt.lost{opacity:.35!important;border-style:dashed!important;}
+.pkt-msg{font-family:monospace!important;font-size:20px!important;letter-spacing:3px!important;text-align:center!important;margin-top:16px!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;min-height:24px!important;}
+/* io mapper */
+.iom-flow{display:grid!important;grid-template-columns:1fr auto 1fr auto 1fr!important;align-items:center!important;gap:10px!important;}
+.iom-box{background:#1e293b!important;border-radius:12px!important;padding:14px!important;text-align:center!important;}
+.iom-box .l{font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:6px!important;}
+.iom-box .v{font-size:15px!important;font-weight:700!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+.iom-box.prog{background:#1a3a6b!important;}
+.iom-box.out .v{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+.iom-ar{font-size:20px!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;font-weight:700!important;}
+.iom-temp{font-family:"DM Serif Display",serif!important;font-size:26px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+@media(max-width:520px){.ba-grid{grid-template-columns:1fr!important;}.ba-arrow{transform:rotate(90deg)!important;}.iom-flow{grid-template-columns:1fr!important;}.iom-ar{transform:rotate(90deg)!important;}}
+
+</style>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "AP CSP Course", "item": "https://apcsexamprep.com/pages/ap-csp-course"}, {"@type": "ListItem", "position": 2, "name": "Big Idea 5", "item": "https://apcsexamprep.com/pages/ap-csp-course-big-idea-5-impact"}, {"@type": "ListItem", "position": 3, "name": "Topic 5.3: Computing Bias", "item": "https://apcsexamprep.com/pages/ap-csp-course-bi5-computing-bias"}]}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "LearningResource", "name": "AP CSP Topic 5.3: Computing Bias", "description": "AP CSP Topic 5.3: how bias enters computing systems through data and algorithm design, and how it can be reduced. 6 exam MCQs plus the Spot the Bias game.", "url": "https://apcsexamprep.com/pages/ap-csp-course-bi5-computing-bias", "educationalLevel": "High School", "learningResourceType": "Lesson", "author": {"@type": "Person", "name": "Tanner Crow"}, "isPartOf": {"@type": "Course", "name": "AP Computer Science Principles Complete Course", "url": "https://apcsexamprep.com/pages/ap-csp-course"}, "datePublished": "2026-03-01"}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does bias in computing mean the programmers were being unfair on purpose?", "acceptedAnswer": {"@type": "Answer", "text": "No. The AP CSP framework says bias in computing is most often unintentional. It usually enters through data that does not represent all users or through design choices about which inputs matter, not through a deliberate unfair rule. A well-meaning team can still build a biased system."}}, {"@type": "Question", "name": "What are the two main places bias can enter a computing system?", "acceptedAnswer": {"@type": "Answer", "text": "The data and the algorithm or design. Bias in the data comes from training or sample data that is not representative of everyone the system affects. Bias in the design comes from choices about which inputs are considered and how heavily each factor is weighted."}}, {"@type": "Question", "name": "Why is bias sometimes hard to detect?", "acceptedAnswer": {"@type": "Answer", "text": "Because it often does not appear until the system is used by a wide range of people. A team that tests only on users like themselves may see the program work perfectly, while a group they never tested with runs into failures. Testing with diverse users is what surfaces the problem."}}, {"@type": "Question", "name": "How can programmers reduce bias?", "acceptedAnswer": {"@type": "Answer", "text": "Use data that represents the full range of affected users, test the system with diverse users so group-specific failures appear before release, and review the design to ask who could be disadvantaged by which inputs are used and how they are weighted. Bias can rarely be removed completely, but it can be reduced."}}, {"@type": "Question", "name": "If a system works well for most users, is it still biased?", "acceptedAnswer": {"@type": "Answer", "text": "It can be. Working for a majority does not erase unfair results for a specific group. If the system consistently performs worse for one group because of its data or design, that is bias even if most users are served well."}}]}</script>
+
+<div class="lesson-page" data-course="ap-csp" data-unit="bi-5" data-lesson="computing-bias">
+
+  <div class="lesson-breadcrumb">
+    <div class="lesson-breadcrumb-inner">
+      <a href="/pages/ap-csp-course">AP CSP Course</a><span class="bc-sep">›</span>
+      <a href="/pages/ap-csp-course-big-idea-5-impact">Big Idea 5</a><span class="bc-sep">›</span>
+      <span>5.3 Computing Bias</span>
+    </div>
+  </div>
+  <div class="social-proof-bar">
+    <div class="social-proof-inner">
+      <span class="social-proof-item">⭐ <strong>5.0</strong> Wyzant rating</span>
+      <span class="social-proof-item">📚 <strong>1,845+</strong> tutoring hours</span>
+      <span class="social-proof-item">🏫 Built by an <strong>AP CS teacher</strong> with 11+ years experience</span>
+      <span class="social-proof-item">🎯 <strong>70%</strong> of classroom students score 4 or 5 on AP CSP</span>
+    </div>
+  </div>
+  <div class="lesson-hero">
+    <div class="lesson-hero-inner">
+      <div class="lesson-hero-meta">
+        <div class="lesson-num-badge">5.3</div>
+        <div><div class="lesson-eyebrow">Big Idea 5 • Impact of Computing</div></div>
+      </div>
+      <h1>Computing Bias</h1>
+      <div class="lesson-hero-pills">
+        <span class="lesson-pill">🕐 ~30 min</span>
+        <span class="lesson-pill" style="background:rgba(74,222,128,0.15);border-color:rgba(74,222,128,0.3);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;">FREE</span>
+        <span class="lesson-pill">📖 6 MCQ questions</span>
+        <span class="lesson-pill">🎮 Spot the Bias game</span>
+        <span class="ced-tag">IOC-1.D</span>
+      </div>
+    </div>
+  </div>
+  <div class="bi3-progress"><div class="bi3-progress-inner">
+<a href="/pages/ap-csp-course-bi5-beneficial-harmful-effects" class="prog-step-link"><div class="prog-dot done">5.1</div>
+<div class="prog-label">Effects</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi5-digital-divide" class="prog-step-link"><div class="prog-dot done">5.2</div>
+<div class="prog-label">Divide</div></a>
+<div class="prog-arrow"></div>
+<div class="prog-step">
+<div class="prog-dot active">5.3</div>
+<div class="prog-label active-label">Bias</div>
+</div>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi5-crowdsourcing" class="prog-step-link"><div class="prog-dot upcoming">5.4</div>
+<div class="prog-label">Crowd</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi5-legal-ethical-concerns" class="prog-step-link"><div class="prog-dot upcoming">5.5</div>
+<div class="prog-label">Legal</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi5-safe-computing" class="prog-step-link"><div class="prog-dot upcoming">5.6</div>
+<div class="prog-label">Safe</div></a>
+</div></div>
+
+  <div class="lesson-main">
+
+    <div class="lesson-objectives">
+      <h2>After this lesson, you will be able to:</h2>
+      <ul>
+        <li><span>Explain that computing innovations can reflect existing human biases, usually unintentionally</span></li>
+        <li><span>Identify the two main places bias enters a system: the data and the algorithm or design</span></li>
+        <li><span>Explain why bias can exist even when no one intended it and can be hard to detect until use</span></li>
+        <li><span>Locate the source of bias in a scenario as coming from the data or from the design</span></li>
+        <li><span>Describe how programmers can reduce bias with representative data and testing with diverse users</span></li>
+      </ul>
+    </div>
+    <div class="score-impact">📈 <span>Big Idea 5 (Impact of Computing) is 5 to 8 percent of the AP CSP exam, and bias questions appear almost every year. They are quick concept points if you can tell where the bias entered and remember that bias does not require bad intent.</span>
+</div>
+    <div class="hook-box">
+      <div class="hook-label">💡 Think about this first</div>
+      <p>A company builds a resume-screening tool and trains it on ten years of its own past hiring decisions. The team writes careful, neutral code and never once tries to favor any group. A year later the tool is quietly ranking certain qualified applicants lower than others. Nobody wrote a rule to do that, so where did the bias actually come from, and how could a program end up biased when no one meant for it to be?</p>
+    </div>
+    <div class="lesson-section">
+      <h2>Computing Reflects Human Bias</h2>
+      <p>A <strong>computing innovation</strong> is anything that includes a program as an integral part, from a phone app to a machine-learning model. The AP CSP framework makes a claim you will be tested on: computing innovations can <strong>reflect existing human biases</strong>, sometimes on purpose but <strong>more often unintentionally</strong>. A program is built by people and trained on data produced by people, so any assumptions or imbalances baked into those people and that data can carry straight into the finished system.</p>
+      <p>The key word is <strong>unintentional</strong>. Bias in computing does not mean someone was malicious. Most biased systems are built by well-meaning teams who never wrote a single unfair rule. The bias slips in through the material they used and the choices they made about how the program should work, and it often stays invisible until real users start hitting it.</p>
+      <div class="callout-exam">
+        <div class="callout-exam-label">🎯 What the exam rewards</div>
+        <p>When a question describes a system that ends up treating some group unfairly, the strongest answer usually identifies <strong>where the bias entered</strong> (the data or the design) and notes that it can happen <strong>without anyone intending it</strong>. "The programmers were dishonest" is almost never the credited answer.</p>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Two Places Bias Enters: Data and Algorithm</h2>
+      <p>Bias can be embedded at two main points in a computing system, and the exam expects you to tell them apart.</p>
+      <ul>
+        <li>
+<strong>Bias in the data</strong> happens when the information used to build or train the system does not fairly represent everyone it will affect. A face-recognition model trained mostly on photos of one group will work worse for the groups that were underrepresented in the photos.</li>
+        <li>
+<strong>Bias in the algorithm or design</strong> happens through the choices built into how the program works: which inputs it considers, what it ignores, and how heavily it weights each factor. If a loan model weights a factor that happens to track with one group, the design itself can produce a biased result even on balanced data.</li>
+      </ul>
+      <table class="vocab-table">
+        <tr>
+<th>Source of bias</th>
+<th>What it means</th>
+<th>Example</th>
+</tr>
+        <tr>
+<td><strong>Bias in the DATA</strong></td>
+<td>The training or sample data is not representative of all users the system will affect.</td>
+<td>An image classifier trained on photos of mostly one skin tone misidentifies people with other skin tones.</td>
+</tr>
+        <tr>
+<td><strong>Bias in the ALGORITHM / design</strong></td>
+<td>The choices about which inputs matter and how factors are weighted advantage or disadvantage some group.</td>
+<td>A hiring model is designed to rank candidates by how closely they resemble past hires, so it keeps repeating the old pattern.</td>
+</tr>
+      </table>
+      <p>Sometimes both are present at once, but on the exam you should be ready to point to the <strong>primary</strong> source a scenario is describing.</p>
+      <div class="mini-ex">
+        <div class="mini-ex-label">Quick check</div>
+        <div class="mini-ex-q">A map app gives poor directions in rural areas because very few rural roads were included in the map information it was built from. This bias comes primarily from the:</div>
+        <div class="mini-opts" id="mc-bias-1-opts">
+          <button class="mini-opt" onclick="miniMCQ('mc-bias-1','A','B','mc-bias-1-fb')"><span class="mini-opt-letter">A</span> Speed of the app</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-bias-1','B','B','mc-bias-1-fb')"><span class="mini-opt-letter">B</span> Data the app was built from</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-bias-1','C','B','mc-bias-1-fb')"><span class="mini-opt-letter">C</span> Color of the interface</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-bias-1','D','B','mc-bias-1-fb')"><span class="mini-opt-letter">D</span> Number of downloads</button>
+        </div>
+        <div class="mini-fb" id="mc-bias-1-fb"></div>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Unintended and Hard to Detect</h2>
+      <p>Because bias usually arrives through imbalanced data or design choices rather than a deliberate rule, it can be <strong>present even when no one intended it</strong>, and it is often <strong>difficult to detect</strong> until the system is actually used by a wide range of people. A team testing only on users like themselves may see the program work perfectly and conclude it is fair, while a group they did not test with runs into failures. This is why real-world testing with diverse users matters so much: it surfaces bias that a small, similar test group would never reveal.</p>
+      <div class="callout-trap">
+        <div class="callout-trap-label">⚠ Common trap</div>
+        <p>Bias in computing does <strong>NOT</strong> require bad intent. A very common wrong answer says a system can only be biased if its creators were prejudiced or trying to discriminate. The framework is explicit that bias is most often <strong>unintentional</strong>, entering through unrepresentative data or design choices. A team that meant well can still ship a biased system.</p>
+      </div>
+      <div class="mini-ex">
+        <div class="mini-ex-label">Quick check</div>
+        <div class="mini-ex-q">A team builds a photo tool and never intends to favor anyone, but it performs worse for some users. Which statement is correct?</div>
+        <div class="mini-opts" id="mc-bias-2-opts">
+          <button class="mini-opt" onclick="miniMCQ('mc-bias-2','A','C','mc-bias-2-fb')"><span class="mini-opt-letter">A</span> The tool cannot be biased because no one intended it</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-bias-2','B','C','mc-bias-2-fb')"><span class="mini-opt-letter">B</span> Bias only exists if a programmer wrote an unfair rule on purpose</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-bias-2','C','C','mc-bias-2-fb')"><span class="mini-opt-letter">C</span> The tool can still be biased, since bias is often unintentional</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-bias-2','D','C','mc-bias-2-fb')"><span class="mini-opt-letter">D</span> Intent is the only thing that determines whether bias exists</button>
+        </div>
+        <div class="mini-fb" id="mc-bias-2-fb"></div>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Reducing Bias</h2>
+      <p>The framework does not just describe bias, it expects designers to try to <strong>reduce</strong> it. Programmers and designers should take deliberate steps:</p>
+      <ul>
+        <li>Use <strong>representative data</strong> that reflects the full range of people the system will affect, not just the easiest group to collect.</li>
+        <li>
+<strong>Test with diverse users</strong> so failures that hurt a specific group show up before release, not after.</li>
+        <li>Review the design to ask <strong>who could be disadvantaged</strong> by which inputs are used and how factors are weighted.</li>
+      </ul>
+      <p>Bias can rarely be reduced to zero, and adding more data alone is not a guaranteed fix if that data is itself skewed. The point is that bias is something teams are responsible for <strong>looking for and reducing</strong>, not a fact of nature they can ignore.</p>
+    </div>
+    <div class="lesson-section">
+      <h2>How This Shows Up on the Exam</h2>
+      <p>Topic 5.3 is tested almost entirely on the <strong>multiple-choice section</strong>, and the questions follow a small number of patterns. Most common is a short scenario in which a system produces an unfair or lopsided result, and you must <strong>identify the source of the bias</strong>: did it enter through the <strong>data</strong> (unrepresentative training or sample data) or through the <strong>algorithm and design</strong> (which inputs are used and how they are weighted)? A second frequent pattern checks whether you understand that <strong>bias can be unintentional</strong>, so answers that insist the creators must have been malicious are distractors, not the key. You may also see a question about <strong>reducing</strong> bias, where the credited answer involves representative data and testing with diverse users rather than simply removing a feature or adding more of the same skewed data. Read for who is affected and where the bias came from, and these become reliable points.</p>
+    </div>
+    <div class="email-capture">
+      <div class="email-capture-text">
+        <div class="email-capture-eyebrow">FREE for students</div>
+        <h3>Get a free AP CSP question every day</h3>
+        <p>Join 3,000+ students. Daily practice, study tips, and exam strategies.</p>
+      </div>
+      <div>
+        <div class="email-capture-form" id="capture-form">
+          <input type="email" class="email-capture-input" id="capture-email" placeholder="your@email.com">
+          <button class="email-capture-btn" onclick="handleCapture()">Subscribe →</button>
+        </div>
+        <div class="email-capture-success" id="capture-success">✓ You're in!</div>
+      </div>
+    </div>
+    <div class="mcq-section">
+      <div class="mcq-section-header">
+        <div class="mcq-section-icon">📈</div>
+        <div>
+          <div class="mcq-section-title">MCQ Practice</div>
+          <div class="mcq-section-sub">6 questions • Exam difficulty and above • Predict before you peek</div>
+        </div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q1">
+        <div class="mcq-q-num">Question 1 of 6<span class="diff-tag">Locate the source</span>
+</div>
+        <div class="predict-note">Decide whether the bias came from the data or the design before reading options.</div>
+        <div class="mcq-q-text"><p>A hospital builds a model to flag patients who need extra care. It is trained on records from the past, when one neighborhood rarely received such care. The model now recommends less care for patients from that neighborhood. Where did the bias most directly enter this system?</p></div>
+        <div class="mcq-options" id="q1-options">
+          <button class="mcq-option" onclick="checkMCQ('q1','A','A','q1-fb-A')"><span class="mcq-option-letter">A</span> Through the training data, which reflected an unequal past pattern</button>
+          <button class="mcq-option" onclick="checkMCQ('q1','B','A','q1-fb-B')"><span class="mcq-option-letter">B</span> Through a deliberate rule the programmers wrote to exclude the neighborhood</button>
+          <button class="mcq-option" onclick="checkMCQ('q1','C','A','q1-fb-C')"><span class="mcq-option-letter">C</span> Through the speed of the hospital's computers</button>
+          <button class="mcq-option" onclick="checkMCQ('q1','D','A','q1-fb-D')"><span class="mcq-option-letter">D</span> Through the number of patients using the system</button>
+        </div>
+        <div id="q1-fb-A" class="mcq-feedback correct-fb">Correct. The model learned from historical records that under-served one neighborhood, so the bias entered through unrepresentative training data.</div>
+        <div id="q1-fb-B" class="mcq-feedback incorrect-fb">Incorrect. Nothing indicates a deliberate exclusion rule. The framework stresses that such bias is usually unintentional and here it came from the data.</div>
+        <div id="q1-fb-C" class="mcq-feedback incorrect-fb">Incorrect. Processing speed does not determine which patients are flagged; the historical data does.</div>
+        <div id="q1-fb-D" class="mcq-feedback incorrect-fb">Incorrect. The number of users does not create the biased recommendation. The past pattern in the training data does.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q2">
+        <div class="mcq-q-num">Question 2 of 6<span class="diff-tag">Unintended bias</span>
+</div>
+        <div class="predict-note">Predict whether intent is required for bias.</div>
+        <div class="mcq-q-text"><p>A design team builds a voice-command feature and genuinely tries to make it work for everyone. After release, speakers with certain accents find it frequently misunderstands them. Which statement best describes this situation?</p></div>
+        <div class="mcq-options" id="q2-options">
+          <button class="mcq-option" onclick="checkMCQ('q2','A','B','q2-fb-A')"><span class="mcq-option-letter">A</span> The feature is not biased, because the team did not intend any unfairness</button>
+          <button class="mcq-option" onclick="checkMCQ('q2','B','B','q2-fb-B')"><span class="mcq-option-letter">B</span> The feature shows unintended bias, which is common and can be hard to detect before real use</button>
+          <button class="mcq-option" onclick="checkMCQ('q2','C','B','q2-fb-C')"><span class="mcq-option-letter">C</span> The feature can only be called biased if the team admits they were prejudiced</button>
+          <button class="mcq-option" onclick="checkMCQ('q2','D','B','q2-fb-D')"><span class="mcq-option-letter">D</span> The feature is unbiased as long as it works for most users</button>
+        </div>
+        <div id="q2-fb-A" class="mcq-feedback incorrect-fb">Incorrect. Lack of intent does not make a system unbiased. The framework says bias is most often unintentional.</div>
+        <div id="q2-fb-B" class="mcq-feedback correct-fb">Correct. Bias can be present without intent and is often undetected until diverse users try the system, exactly as described here.</div>
+        <div id="q2-fb-C" class="mcq-feedback incorrect-fb">Incorrect. An admission of prejudice is not required. Unintended bias still counts as bias.</div>
+        <div id="q2-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Working for most users does not erase bias against a specific group; that is the bias being described.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q3">
+        <div class="mcq-q-num">Question 3 of 6<span class="diff-tag">I and II only style</span>
+</div>
+        <div class="predict-note">Judge each statement true or false before matching an option.</div>
+        <div class="mcq-q-text"><p>Consider these claims about bias in computing innovations:</p></div>
+        <ul class="mcq-roman">
+          <li>
+<strong>I.</strong> Bias can enter through data that is not representative of all users.</li>
+          <li>
+<strong>II.</strong> Bias can enter through design choices about which inputs are used and how they are weighted.</li>
+          <li>
+<strong>III.</strong> A computing innovation can only be biased if its creators intended to discriminate.</li>
+        </ul>
+        <div class="mcq-options" id="q3-options">
+          <button class="mcq-option" onclick="checkMCQ('q3','A','C','q3-fb-A')"><span class="mcq-option-letter">A</span> I only</button>
+          <button class="mcq-option" onclick="checkMCQ('q3','B','C','q3-fb-B')"><span class="mcq-option-letter">B</span> II and III only</button>
+          <button class="mcq-option" onclick="checkMCQ('q3','C','C','q3-fb-C')"><span class="mcq-option-letter">C</span> I and II only</button>
+          <button class="mcq-option" onclick="checkMCQ('q3','D','C','q3-fb-D')"><span class="mcq-option-letter">D</span> I, II, and III</button>
+        </div>
+        <div id="q3-fb-A" class="mcq-feedback incorrect-fb">Incorrect. Statement II is also true; design choices are a recognized source of bias.</div>
+        <div id="q3-fb-B" class="mcq-feedback incorrect-fb">Incorrect. Statement III is false, and statement I is true, so this pairing cannot be right.</div>
+        <div id="q3-fb-C" class="mcq-feedback correct-fb">Correct. I and II are the two main sources of bias. III is false, since bias is most often unintentional.</div>
+        <div id="q3-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Statement III is false, so not all three can be correct.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q4">
+        <div class="mcq-q-num">Question 4 of 6<span class="diff-tag">Reducing bias</span>
+</div>
+        <div class="predict-note">Predict the action most likely to reduce bias first.</div>
+        <div class="mcq-q-text"><p>A team learns that their image classifier performs poorly for a group that was scarcely present in its training photos. Which action would most directly reduce the bias?</p></div>
+        <div class="mcq-options" id="q4-options">
+<button class="mcq-option" onclick="checkMCQ('q4','A','D','q4-fb-A')"><span class="mcq-option-letter">A</span> Make the classifier run faster so it returns results sooner</button>
+<button class="mcq-option" onclick="checkMCQ('q4','B','D','q4-fb-B')"><span class="mcq-option-letter">B</span> Hide the accuracy results so users do not notice the failures</button>
+<button class="mcq-option" onclick="checkMCQ('q4','C','D','q4-fb-C')"><span class="mcq-option-letter">C</span> Add more photos of the group that was already well represented</button>
+<button class="mcq-option" onclick="checkMCQ('q4','D','D','q4-fb-D')"><span class="mcq-option-letter">D</span> Add more photos of the underrepresented group so the training data better represents all users, and retest with diverse users</button>
+</div>
+<div id="q4-fb-A" class="mcq-feedback incorrect-fb">Incorrect. Speed does not change accuracy for the underrepresented group; the data imbalance remains.</div>
+<div id="q4-fb-B" class="mcq-feedback incorrect-fb">Incorrect. Hiding results conceals the bias rather than reducing it, and the system stays biased.</div>
+<div id="q4-fb-C" class="mcq-feedback incorrect-fb">Incorrect. Adding more of the already-represented group deepens the imbalance instead of correcting it.</div>
+<div id="q4-fb-D" class="mcq-feedback correct-fb">Correct. More representative data plus testing with diverse users targets the actual cause, unrepresentative training data.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q5">
+        <div class="mcq-q-num">Question 5 of 6<span class="diff-tag">Distinguish source</span>
+</div>
+        <div class="predict-note">Predict whether this is a data problem or a design problem.</div>
+        <div class="mcq-q-text"><p>Two teams each ship a biased app. Team X used a balanced dataset but designed the ranking to weight a factor that happens to favor one group. Team Y wrote neutral ranking logic but trained it on data drawn almost entirely from one group. Which best describes the primary source of bias for each team?</p></div>
+        <div class="mcq-options" id="q5-options">
+<button class="mcq-option" onclick="checkMCQ('q5','A','C','q5-fb-A')"><span class="mcq-option-letter">A</span> Both teams have bias that came from the data</button>
+<button class="mcq-option" onclick="checkMCQ('q5','B','C','q5-fb-B')"><span class="mcq-option-letter">B</span> Both teams have bias that came from the algorithm design</button>
+<button class="mcq-option" onclick="checkMCQ('q5','C','C','q5-fb-C')"><span class="mcq-option-letter">C</span> Team X has bias from the algorithm design, and Team Y has bias from the data</button>
+<button class="mcq-option" onclick="checkMCQ('q5','D','C','q5-fb-D')"><span class="mcq-option-letter">D</span> Team X has bias from the data, and Team Y has bias from the algorithm design</button>
+</div>
+<div id="q5-fb-A" class="mcq-feedback incorrect-fb">Incorrect. Team X used balanced data; its bias came from a design choice, not the data.</div>
+<div id="q5-fb-B" class="mcq-feedback incorrect-fb">Incorrect. Team Y used neutral logic; its bias came from unrepresentative data, not the design.</div>
+<div id="q5-fb-C" class="mcq-feedback correct-fb">Correct. Team X's bias is in the weighting design, while Team Y's is in the unrepresentative training data.</div>
+<div id="q5-fb-D" class="mcq-feedback incorrect-fb">Incorrect. The two are reversed. Team X is a design problem and Team Y is a data problem.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q6">
+        <div class="mcq-q-num">Question 6 of 6<span class="diff-tag">Application</span>
+</div>
+        <div class="predict-note">Predict the most accurate takeaway before reading options.</div>
+        <div class="mcq-q-text"><p>After a widely used screening tool is found to disadvantage a group, the developers say they are surprised because they never wrote any rule targeting that group and tested the tool before release. Which conclusion is best supported by the AP CSP framework?</p></div>
+        <div class="mcq-options" id="q6-options">
+<button class="mcq-option" onclick="checkMCQ('q6','A','C','q6-fb-A')"><span class="mcq-option-letter">A</span> The tool must actually be fair, since no targeting rule was written</button>
+<button class="mcq-option" onclick="checkMCQ('q6','B','C','q6-fb-B')"><span class="mcq-option-letter">B</span> The developers clearly intended to discriminate and are not being honest</button>
+<button class="mcq-option" onclick="checkMCQ('q6','C','C','q6-fb-C')"><span class="mcq-option-letter">C</span> Bias can enter unintentionally through data or design and can go undetected when testing does not include diverse users</button>
+<button class="mcq-option" onclick="checkMCQ('q6','D','C','q6-fb-D')"><span class="mcq-option-letter">D</span> The tool would be unbiased if it simply ran on faster hardware</button>
+</div>
+<div id="q6-fb-A" class="mcq-feedback incorrect-fb">Incorrect. The absence of a targeting rule does not make the tool fair; unintended bias still disadvantages the group.</div>
+<div id="q6-fb-B" class="mcq-feedback incorrect-fb">Incorrect. Nothing supports an accusation of intent, and the framework emphasizes that bias is usually unintentional.</div>
+<div id="q6-fb-C" class="mcq-feedback correct-fb">Correct. The framework holds that bias is often unintentional, entering through data or design, and can escape detection when testing lacks diverse users.</div>
+<div id="q6-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Hardware speed does not address a bias rooted in data or design.</div>
+      </div>
+    </div>
+    <div class="game-section">
+      <div style="text-align:center;margin-bottom:20px;">
+        <div class="game-badge">🎮 Lesson Game</div>
+        <div class="game-title">Spot the Bias</div>
+        <div class="game-sub">Find where bias entered the data or the algorithm in each scenario.</div>
+      </div>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+  #stb-game{font-family:"DM Sans",sans-serif!important;max-width:560px;margin:0 auto;padding:0 12px;box-sizing:border-box;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;}
+  #stb-game *{box-sizing:border-box;}
+  #stb-game .stb-card{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:14px!important;overflow:hidden;box-shadow:0 4px 14px rgba(15,31,61,.06);}
+  #stb-game .stb-hero{background:#0f1f3d!important;padding:18px 20px;}
+  #stb-game .stb-title{font-family:"DM Serif Display",serif!important;font-size:26px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1.1;margin:0;}
+  #stb-game .stb-sub{font-size:13px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:6px 0 0;line-height:1.4;}
+  #stb-game .stb-how{font-size:12px!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;margin:8px 0 0;}
+  #stb-game .stb-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 18px;background:#eff6ff!important;border-bottom:1px solid #e2e8f0;flex-wrap:wrap;}
+  #stb-game .stb-stat{font-size:13px!important;font-weight:700;color:#334155!important;-webkit-text-fill-color:#334155!important;}
+  #stb-game .stb-stat b{color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;}
+  #stb-game .stb-streak{color:#d97706!important;-webkit-text-fill-color:#d97706!important;}
+  #stb-game .stb-prog{height:7px;background:#dbeafe!important;border-radius:100px;overflow:hidden;margin:0 18px;}
+  #stb-game .stb-prog i{display:block;height:100%;background:#1a56db!important;width:0;transition:width .3s;}
+  #stb-game .stb-body{padding:18px;}
+  #stb-game .stb-tag{display:inline-block;font-size:11px!important;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#7c3aed!important;-webkit-text-fill-color:#7c3aed!important;background:#f3e8ff!important;padding:4px 10px;border-radius:100px;margin-bottom:10px;}
+  #stb-game .stb-scn{font-size:15px!important;line-height:1.5;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;background:#f8fafc!important;border:1px solid #e2e8f0;border-left:4px solid #1a56db!important;border-radius:10px;padding:14px 16px;margin:0 0 14px;}
+  #stb-game .stb-q{font-size:14px!important;font-weight:700;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin:0 0 12px;}
+  #stb-game .stb-opts{display:flex;flex-direction:column;gap:9px;}
+  #stb-game .stb-opt{text-align:left;width:100%;font-family:inherit;font-size:14px!important;font-weight:600;line-height:1.4;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;background:#fff!important;border:2px solid #e2e8f0!important;border-radius:10px;padding:12px 14px;cursor:pointer;transition:border-color .15s,background .15s;}
+  #stb-game .stb-opt:hover:not(:disabled){border-color:#93c5fd!important;background:#f8fafc!important;}
+  #stb-game .stb-opt:disabled{cursor:default;}
+  #stb-game .stb-opt.right{border-color:#16a34a!important;background:#f0fdf4!important;color:#166534!important;-webkit-text-fill-color:#166534!important;}
+  #stb-game .stb-opt.wrong{border-color:#dc2626!important;background:#fef2f2!important;color:#991b1b!important;-webkit-text-fill-color:#991b1b!important;}
+  #stb-game .stb-fb{margin-top:14px;padding:12px 14px;border-radius:10px;font-size:13px!important;line-height:1.5;display:none;}
+  #stb-game .stb-fb.show{display:block;}
+  #stb-game .stb-fb.ok{background:#f0fdf4!important;border:1px solid #bbf7d0;color:#166534!important;-webkit-text-fill-color:#166534!important;}
+  #stb-game .stb-fb.no{background:#fef2f2!important;border:1px solid #fecaca;color:#991b1b!important;-webkit-text-fill-color:#991b1b!important;}
+  #stb-game .stb-fb b{font-weight:800;}
+  #stb-game .stb-next{display:none;margin-top:14px;width:100%;font-family:inherit;font-size:15px!important;font-weight:800;color:#fff!important;-webkit-text-fill-color:#fff!important;background:#1a56db!important;border:none;border-radius:10px;padding:13px;cursor:pointer;}
+  #stb-game .stb-next.show{display:block;}
+  #stb-game .stb-next:hover{background:#1e40af!important;}
+  #stb-game .stb-end{text-align:center;padding:26px 18px;}
+  #stb-game .stb-end h3{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin:0 0 6px;}
+  #stb-game .stb-score-big{font-size:44px!important;font-weight:800;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;line-height:1;margin:10px 0;}
+  #stb-game .stb-end p{font-size:14px!important;line-height:1.6;color:#334155!important;-webkit-text-fill-color:#334155!important;margin:6px auto 0;max-width:400px;}
+  #stb-game .stb-again{margin-top:18px;font-family:inherit;font-size:15px!important;font-weight:800;color:#fff!important;-webkit-text-fill-color:#fff!important;background:#16a34a!important;border:none;border-radius:10px;padding:13px 26px;cursor:pointer;}
+  #stb-game .stb-again:hover{background:#15803d!important;}
+</style>
+
+<div class="stb-game" id="stb-game">
+  <div class="stb-card">
+    <div class="stb-hero">
+      <h2 class="stb-title">Spot the Bias</h2>
+      <p class="stb-sub">Bias can slip into a computing system through its data or its design  -  often unintentionally  -  and computing can amplify it. (AP CSP 5.3)</p>
+      <p class="stb-how"><b>How to play:</b> Read each system, predict the flaw, then pick where the bias entered. Answer fast, keep your streak.</p>
+    </div>
+    <div class="stb-bar">
+      <span class="stb-stat">Round <b id="stb-round">1</b>/<span id="stb-total">8</span></span>
+      <span class="stb-stat">Score <b id="stb-score">0</b></span>
+      <span class="stb-stat stb-streak">🔥 Streak <b id="stb-streak">0</b></span>
+    </div>
+    <div class="stb-prog"><i id="stb-prog"></i></div>
+    <div class="stb-body" id="stb-body"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var SCN = [
+    {
+      tag:"Resume screening",
+      text:"A company builds an AI to rank job applicants. It is trained on the resumes of people the company hired over the past 10 years. That team was almost entirely one gender. The model now scores similar applicants highest.",
+      q:"Where did the bias primarily enter this system?",
+      opts:[
+        "Unrepresentative training data -- the past hires reflect a skewed history",
+        "A random software bug in the ranking code",
+        "The applicants deliberately gamed the model",
+        "Nothing -- hiring the same profile is always correct"
+      ],
+      correct:0,
+      fb:"The model learned from a skewed record of past hires, so it inherits that historical imbalance as if it were merit."
+    },
+    {
+      tag:"Facial recognition",
+      text:"A facial-recognition system is tested and works great. Later, users report it fails far more often on darker-skinned faces. The dataset used to build it was about 80% light-skinned faces.",
+      q:"What is the most accurate description of the problem?",
+      opts:[
+        "The dataset under-represented some groups, so accuracy is uneven across them",
+        "Cameras simply cannot capture darker faces",
+        "The algorithm is racist on purpose by design intent",
+        "The users were holding their phones incorrectly"
+      ],
+      correct:0,
+      fb:"Under-representation in the data means the model had far fewer examples to learn some faces, producing unequal accuracy."
+    },
+    {
+      tag:"Predictive policing",
+      text:"A model predicts where crime will happen using historical arrest records. Police are sent to the flagged areas, make more arrests there, and those new arrests are fed back into the model for next month.",
+      q:"Beyond biased input data, what makes this worse over time?",
+      opts:[
+        "A feedback loop -- the model's outputs shape the next inputs, amplifying the bias",
+        "The model slowly deletes its own data",
+        "Nothing amplifies it; bias stays exactly constant",
+        "The hardware overheats and skews results"
+      ],
+      correct:0,
+      fb:"Sending police where the model points generates more arrests there, which re-trains the model to point there again -- a self-reinforcing loop."
+    },
+    {
+      tag:"Photo tagging",
+      text:"A photo app auto-labels images. The human labelers who tagged the training photos consistently labeled photos of people cooking as 'woman,' even when the person was a man.",
+      q:"Which statement is correct?",
+      opts:[
+        "The labeling choices introduced bias, and the model reproduces those human assumptions",
+        "The model invented the bias entirely on its own with no human cause",
+        "Auto-labeling is neutral, so no bias is possible here",
+        "The bias only exists if a user complains"
+      ],
+      correct:0,
+      fb:"Bias in the humans' labeling decisions becomes bias in the trained model -- a biased design/labeling choice, not a neutral process."
+    },
+    {
+      tag:"Search autocomplete",
+      text:"A search bar suggests completions ranked by what past users clicked most. For one profession, the top suggestions are demeaning stereotypes because many past users clicked those.",
+      q:"How is bias operating in this system?",
+      opts:[
+        "Aggregated past user behavior is amplified and surfaced as a 'neutral' suggestion",
+        "The search engine has personal opinions it is expressing",
+        "Autocomplete picks words completely at random",
+        "There is no bias because a computer chose it"
+      ],
+      correct:0,
+      fb:"The system amplifies existing human bias in click data and presents it as an objective recommendation."
+    },
+    {
+      tag:"Loan approval",
+      text:"A bank's loan model does NOT use race as an input. But it heavily weights zip code and shopping history, which closely track race in that city. Approval rates end up split sharply along racial lines.",
+      q:"Consider these claims. I: The model can still be biased. II: Removing the race field alone guarantees fairness. III: A stand-in variable (proxy) can carry the bias. Which are correct?",
+      opts:[
+        "I and III only",
+        "II only",
+        "I and II only",
+        "I, II, and III"
+      ],
+      correct:0,
+      fb:"Proxy variables like zip code can smuggle bias back in, so dropping the race field alone does NOT guarantee fairness. I and III hold; II is false."
+    },
+    {
+      tag:"Health risk score",
+      text:"A hospital ranks who needs extra care using past healthcare spending as a stand-in for how sick a patient is. Because one group historically had less access and spent less, the model rates them as healthier than they are.",
+      q:"What is the flaw here?",
+      opts:[
+        "A biased design choice -- the chosen proxy (spending) does not fairly measure the real target (illness)",
+        "The patients lied about their symptoms",
+        "The model has too few decimal places",
+        "Spending is always a perfect measure of health"
+      ],
+      correct:0,
+      fb:"Choosing spending as a proxy for need bakes past unequal access into the score -- a design decision, not a data-entry error."
+    },
+    {
+      tag:"Voice assistant",
+      text:"A voice assistant is trained mostly on speakers with one regional accent. It transcribes them well but frequently misunderstands users with other accents, who then stop using it.",
+      q:"Pick the single most accurate statement.",
+      opts:[
+        "Biased data collection produced uneven performance, which can worsen as fewer diverse users contribute data",
+        "Accents are objectively harder and no dataset could help",
+        "The assistant is choosing to ignore certain people",
+        "This is a hardware microphone defect, not bias"
+      ],
+      correct:0,
+      fb:"Narrow data collection creates unequal accuracy; if excluded users leave, future data stays narrow -- bias can be amplified over time."
+    }
+  ];
+
+  var TOTAL = SCN.length;
+  var idx=0, score=0, streak=0, answered=false;
+
+  var $=function(id){ return document.getElementById(id); };
+  var body=$('stb-body');
+  $('stb-total').textContent=TOTAL;
+
+  function updateBar(){
+    $('stb-round').textContent=Math.min(idx+1,TOTAL);
+    $('stb-score').textContent=score;
+    $('stb-streak').textContent=streak;
+    $('stb-prog').style.width=(idx/TOTAL*100)+'%';
+  }
+
+  function renderRound(){
+    answered=false;
+    updateBar();
+    var s=SCN[idx];
+    var html='';
+    html+='<span class="stb-tag">'+s.tag+'</span>';
+    html+='<div class="stb-scn">'+s.text+'</div>';
+    html+='<p class="stb-q">'+s.q+'</p>';
+    html+='<div class="stb-opts" id="stb-opts"></div>';
+    html+='<div class="stb-fb" id="stb-fb"></div>';
+    html+='<button class="stb-next" id="stb-next">Next round →</button>';
+    body.innerHTML=html;
+    var opts=$('stb-opts');
+    s.opts.forEach(function(txt,i){
+      var b=document.createElement('button');
+      b.className='stb-opt';
+      b.type='button';
+      b.innerHTML=txt;
+      b.onclick=function(){ choose(i,b); };
+      opts.appendChild(b);
+    });
+    $('stb-next').onclick=next;
+  }
+
+  function choose(i,btn){
+    if(answered) return;
+    answered=true;
+    var s=SCN[idx];
+    var buttons=body.querySelectorAll('.stb-opt');
+    Array.prototype.forEach.call(buttons,function(b){ b.disabled=true; });
+    var fb=$('stb-fb');
+    if(i===s.correct){
+      btn.classList.add('right');
+      streak++;
+      var gain=10+Math.min(streak,5)*2;
+      score+=gain;
+      fb.className='stb-fb show ok';
+      fb.innerHTML='<b>Correct (+'+gain+').</b> '+s.fb;
+    } else {
+      btn.classList.add('wrong');
+      buttons[s.correct].classList.add('right');
+      streak=0;
+      fb.className='stb-fb show no';
+      fb.innerHTML='<b>Not quite.</b> '+s.fb;
+    }
+    updateBar();
+    var nb=$('stb-next');
+    nb.innerHTML=(idx>=TOTAL-1)?'See results →':'Next round →';
+    nb.className='stb-next show';
+  }
+
+  function next(){
+    idx++;
+    if(idx>=TOTAL){ endGame(); return; }
+    renderRound();
+  }
+
+  function endGame(){
+    $('stb-prog').style.width='100%';
+    $('stb-round').textContent=TOTAL;
+    $('stb-score').textContent=score;
+    var max=SCN.reduce(function(a){ return a+20; },0);
+    var pct=score/max;
+    var msg;
+    if(pct>=0.85) msg="Outstanding. You can trace bias to its source -- data, labeling, design, or a feedback loop -- and explain how systems amplify it.";
+    else if(pct>=0.5) msg="Solid work. Remember: bias often enters unintentionally through unrepresentative data or design choices, then gets amplified at scale.";
+    else msg="Keep going. The key idea: computing bias usually comes from the data or the design, not a computer 'deciding' to be unfair -- and it can grow through feedback loops.";
+    body.innerHTML=
+      '<div class="stb-end">'+
+        '<h3>🎯 Run complete!</h3>'+
+        '<div class="stb-score-big">'+score+'</div>'+
+        '<p>'+msg+'</p>'+
+        '<button class="stb-again" id="stb-again" type="button">↻ Play again</button>'+
+      '</div>';
+    $('stb-again').onclick=reset;
+    document.dispatchEvent(new CustomEvent('apcsGameScore',{detail:{value:score}}));
+  }
+
+  function reset(){
+    idx=0; score=0; streak=0;
+    renderRound();
+  }
+
+  renderRound();
+})();
+</script>
+    </div>
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Does bias in computing mean the programmers were being unfair on purpose?<i class="faq-icon">+</i></button>
+        <div class="faq-a">No. The AP CSP framework says bias in computing is most often unintentional. It usually enters through data that does not represent all users or through design choices about which inputs matter, not through a deliberate unfair rule. A well-meaning team can still build a biased system.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What are the two main places bias can enter a computing system?<i class="faq-icon">+</i></button>
+        <div class="faq-a">The data and the algorithm or design. Bias in the data comes from training or sample data that is not representative of everyone the system affects. Bias in the design comes from choices about which inputs are considered and how heavily each factor is weighted.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Why is bias sometimes hard to detect?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Because it often does not appear until the system is used by a wide range of people. A team that tests only on users like themselves may see the program work perfectly, while a group they never tested with runs into failures. Testing with diverse users is what surfaces the problem.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">How can programmers reduce bias?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Use data that represents the full range of affected users, test the system with diverse users so group-specific failures appear before release, and review the design to ask who could be disadvantaged by which inputs are used and how they are weighted. Bias can rarely be removed completely, but it can be reduced.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">If a system works well for most users, is it still biased?<i class="faq-icon">+</i></button>
+        <div class="faq-a">It can be. Working for a majority does not erase unfair results for a specific group. If the system consistently performs worse for one group because of its data or design, that is bias even if most users are served well.</div>
+      </div>
+    </div>
+    <div class="related-links">
+      <h3>🔗 Continue studying</h3>
+      <div class="related-links-grid">
+        <a href="/pages/ap-csp-course-bi5-crowdsourcing" class="related-link">5.4 Crowdsourcing</a>
+        <a href="/pages/ap-csp-algorithmic-bias" class="related-link">Algorithmic Bias Deep Dive</a>
+        <a href="/pages/ap-csp-study-games-hub" class="related-link">All CSP Study Games</a>
+      </div>
+    </div>
+    <div class="superpack-slim">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="superpack-slim-icon">📦</div>
+        <div><div class="superpack-slim-text">AP CSP Teacher Superpack<span class="superpack-slim-sub">Slides, lesson plans, unit tests for all 5 Big Ideas, $249</span>
+</div></div>
+      </div>
+      <a href="/products/ap-csp-teacher-superpack" class="superpack-slim-btn">Get the Superpack →</a>
+    </div>
+    <div class="teacher-callout">
+      <div class="teacher-callout-icon">🏫</div>
+      <div class="teacher-callout-body">
+        <div class="teacher-callout-label">For teachers</div>
+        <p>Computing bias lands best when students hunt for the source themselves: give short real-world scenarios and have the class sort each into bias-from-data or bias-from-design, then debate the ones that could be both. Stress the unintentional point early, since students default to assuming malice. The Superpack includes a bias-source sorting set, a reduce-the-bias case study, and exam-style item drills. <a href="/products/ap-csp-teacher-superpack">View what's included →</a></p>
+      </div>
+    </div>
+    <div class="lesson-nav">
+      <a href="/pages/ap-csp-course-bi5-digital-divide" class="nav-card">
+        <div class="nav-card-dir">← Previous</div>
+        <div class="nav-card-title">5.2 Digital Divide</div>
+      </a>
+      <a href="/pages/ap-csp-course-bi5-crowdsourcing" class="nav-card next">
+        <div class="nav-card-dir">Next lesson →</div>
+        <div class="nav-card-title">5.4 Crowdsourcing</div>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var MINI_MSGS={"mc-bias-1": {"A": "Not quite. Speed is a performance issue, not the source of the biased directions. The problem is what information the map was built from.", "B": "Correct. The rural roads were missing from the data the app was built on, so the bias entered through unrepresentative data.", "C": "No. The interface color has nothing to do with why rural directions are poor. The cause is missing data.", "D": "No. Download counts do not affect direction quality. The bias comes from the sparse rural data used to build the app."}, "mc-bias-2": {"A": "Incorrect. Lack of intent does not rule out bias. Framework bias is most often unintentional.", "B": "Incorrect. Bias does not require a deliberate unfair rule; it commonly enters through data or design choices.", "C": "Correct. A system can be biased even with no bad intent, because bias frequently enters unintentionally through data or design.", "D": "Incorrect. Intent is not the deciding factor. Unintended bias still counts as bias."}};
+var MINI_FIB={};
+
+function _activity(d){
+  try{ var w=document.querySelector('.lesson-page');
+    if(w){ d.course=w.getAttribute('data-course'); d.unit=w.getAttribute('data-unit'); d.lesson=w.getAttribute('data-lesson'); }
+    document.dispatchEvent(new CustomEvent('apcsActivity',{detail:d}));
+  }catch(e){}
+}
+function checkMCQ(qid, chosen, correct, fbId){
+  var opts=document.querySelectorAll('#'+qid+'-options .mcq-option');
+  opts.forEach(function(b){b.disabled=true;b.onclick=null;});
+  var letters=['A','B','C','D'];
+  opts[letters.indexOf(chosen)].classList.add(chosen===correct?'correct':'incorrect');
+  if(chosen!==correct)opts[letters.indexOf(correct)].classList.add('revealed-correct');
+  document.getElementById(fbId).classList.add('show');
+  _activity({activity:'quiz',item:qid,choice:chosen});
+}
+function miniMCQ(id, chosen, correct, fbId){
+  var opts=document.querySelectorAll('#'+id+'-opts .mini-opt');
+  opts.forEach(function(b){b.onclick=null;b.style.cursor='default';});
+  var letters=['A','B','C','D'];
+  opts[letters.indexOf(chosen)].classList.add(chosen===correct?'correct':'incorrect');
+  if(chosen!==correct)opts[letters.indexOf(correct)].classList.add('reveal');
+  var fb=document.getElementById(fbId);
+  if(MINI_MSGS[id]){fb.textContent=MINI_MSGS[id][chosen]||'';fb.className='mini-fb '+(chosen===correct?'c':'w');}
+}
+function miniFIB(id, fbId){
+  var inp=document.getElementById(id+'-inp'),fb=document.getElementById(fbId);
+  var val=inp.value.trim().toLowerCase();var d=MINI_FIB[id];
+  var ok=(val===String(d.correct).toLowerCase());
+  inp.classList.add(ok?'correct':'incorrect');
+  fb.textContent=ok?d.c:d.w; fb.className='mini-fb '+(ok?'c':'w'); inp.disabled=true;
+}
+function toggleFAQ(btn){
+  var item=btn.parentElement,wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(el){el.classList.remove('open');});
+  if(!wasOpen)item.classList.add('open');
+}
+function handleCapture(){
+  var email=document.getElementById('capture-email').value.trim();
+  if(!email||!email.includes('@')){document.getElementById('capture-email').focus();return;}
+  document.getElementById('capture-form').style.display='none';
+  document.getElementById('capture-success').style.display='block';
+  if(typeof window._learnq!=='undefined'){window._learnq.push(['identify',{'$email':email}]);}
+}
+/* Bridge: the embedded topic game dispatches 'apcsGameScore' on completion.
+   Convert that single completion into the standard exercise-2 gradebook hook. */
+document.addEventListener('apcsGameScore', function(e){
+  _activity({activity:'exercise-2', earned:1, possible:1});
+});
+</script>
+<!-- apcs-exercises (managed) -->
+<div id="apcs-ex-links">
+<style>
+#apcs-ex-links{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:28px auto 0!important;padding:0 16px 8px!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important}
+#apcs-ex-links *,#apcs-ex-links *::before,#apcs-ex-links *::after{box-sizing:border-box!important}
+#apcs-ex-links .ex-lbl{font-size:12px!important;font-weight:800!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:0 0 10px!important}
+#apcs-ex-links .ex-row{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important}
+@media (max-width:640px){#apcs-ex-links .ex-row{grid-template-columns:repeat(1,1fr)!important}}
+#apcs-ex-links a.ex,#apcs-ex-links a.ex:link,#apcs-ex-links a.ex:visited{display:block!important;text-decoration:none!important;border:1px solid #93c5fd!important;border-left:5px solid #1a56db!important;border-radius:0 12px 12px 0!important;background:#eff6ff!important;padding:14px 16px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;font-size:16px!important;font-weight:700!important;line-height:1.35!important}
+#apcs-ex-links a.ex:hover{background:#dbeafe!important}
+#apcs-ex-links a.ex span{display:block!important;margin-top:4px!important;font-size:13px!important;font-weight:400!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important}
+</style>
+<p class="ex-lbl">Exercises for Topic 5.3</p>
+<div class="ex-row">
+<a class="ex" href="/pages/ap-csp-topic-5-3-exercise-1">Exercise 1: Bias Auditor - The Incident Log<span>Work it online. Saved in your browser, not graded</span></a>
+<a class="ex" href="/pages/ap-csp-topic-5-3-exercise-2">Exercise 2: The Bias Reduction Clinic<span>Work it online. Saved in your browser, not graded</span></a>
+</div>
+</div>
