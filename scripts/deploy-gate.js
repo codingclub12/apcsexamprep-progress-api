@@ -209,7 +209,18 @@ if (require.main === module) {
     console.error('');
     process.exit(1);
   }
-  console.log('\n  three independent kinds agree. clear to ship.\n');
+  //  Say what actually ran. The line used to read "three independent kinds
+  //  agree" unconditionally, including after a --pre run where the count is
+  //  deliberately NOT enforced and only two kinds had passed. A summary that
+  //  overstates what was checked is the same defect as a live check asserting
+  //  something already true: it reads like proof and is not.
+  if (pre) {
+    console.log(`\n  ${r.kinds.length} kind(s) agree so far: ${r.kinds.join(', ')}. `
+      + `Clear to ship, but the gate is NOT satisfied until the live check runs `
+      + `after the deploy.\n`);
+  } else {
+    console.log(`\n  ${r.kinds.length} independent kinds agree: ${r.kinds.join(', ')}. clear to ship.\n`);
+  }
 }
 
 module.exports = { gate, runCheck, runMutation, KINDS, MIN_KINDS };
