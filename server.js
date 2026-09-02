@@ -385,6 +385,17 @@ app.get('/admin/gradebook', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', file));
 });
 
+// Denominators panel. The authored "out of" per graded column, and the only way
+// to change one without putting ADMIN_KEY on a command line. Same cookie gate as
+// every other admin page for the PAGE; the adopt call the page makes still needs
+// the x-admin-key header, because requireAdmin honours the cookie for safe
+// methods only. This route serves markup, never a credential.
+app.get('/admin/denominators', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  const file = adminSession.isAuthed(req) ? 'denominators.html' : 'login.html';
+  res.sendFile(path.join(__dirname, 'public', file));
+});
+
 // Command center. Same cookie gate as every other admin page: without a valid
 // session the login page is served, so neither the markup nor its data-fetching
 // JS reaches an unauthenticated visitor. The page never embeds TODO_KEY in any
