@@ -177,6 +177,43 @@ console.log('\n5. The sheet, parsed back by a reader that did not write it');
     unquoted.length === 0, unquoted.map((l) => l.slice(0, 60)));
 }
 
+console.log('\n5b. THE ENVELOPE, which is what actually failed');
+{
+  //  The first sheet generated here was REFUSED by Matrixify in one second:
+  //  "Cannot understand the uploaded file". The bodies in it were correct, byte
+  //  for byte. Everything this suite checked was right and the file was still
+  //  unimportable, because nothing checked the two things that decide whether
+  //  Matrixify will read a file at all.
+  const { assertSheetName } = require('../scripts/csa-removed-curriculum-banner');
+
+  //  1. The post's OWN columns are bare. Matrixify prefixes only RELATED
+  //     entities, so `Article: Handle` is not a column it knows.
+  ok('  the post\'s own columns are not prefixed',
+    HEADER.includes('Handle') && HEADER.includes('Command') && HEADER.includes('Body HTML'), HEADER);
+  ok('  and nothing in the header is prefixed with Article:',
+    !HEADER.some((h) => /^Article:/i.test(h)), HEADER);
+  ok('  the parent blog IS prefixed, because it is a related entity',
+    HEADER.includes('Blog: Handle'), HEADER);
+
+  //  2. A CSV has no tab name, so Matrixify reads the sheet type off the FILE
+  //     NAME. This is the one that cost the canary.
+  ok('  a file name Matrixify cannot recognise is refused',
+    !!assertSheetName('csa-banner-canary.csv'), assertSheetName('csa-banner-canary.csv'));
+  ok('  and the refusal explains that the name IS the sheet type',
+    /reads the sheet type off the file name/.test(assertSheetName('x.csv') || ''));
+  for (const good of ['csa-banner-blog-posts.csv', 'Blog Posts.csv', 'my_blog_post.csv',
+    '/tmp/deep/path/all-blog-posts.csv']) {
+    ok(`  ${JSON.stringify(good)} is accepted`, assertSheetName(good) === null, assertSheetName(good));
+  }
+
+  //  UPDATE, not MERGE, and the difference is a live blog. MERGE creates a row
+  //  it cannot find, so one typo'd handle would publish a blank article.
+  const { rows } = sheetRows({ 'u3-c1-day-1': BODY });
+  const line = toCsv(rows).split('\r\n')[1];
+  ok('  every row is UPDATE, so a typo skips instead of creating a blank article',
+    line.includes('"UPDATE"') && !line.includes('"MERGE"'), line.slice(0, 80));
+}
+
 console.log('\n6. A body the generator cannot handle is DROPPED, never guessed at');
 {
   //  sheetRows must not emit a row it could not verify. A refusal costs a
