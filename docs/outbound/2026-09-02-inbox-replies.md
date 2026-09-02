@@ -247,6 +247,34 @@ name. Light touch on that below.
 
 ---
 
+## 3b. Two more v2 claims that do not survive a live check
+
+Recorded here because v2 is in circulation and these two would go to customers.
+
+**v2's Kal diagnosis is not on the page.** It says: "Two of the three pills are
+anchors; the third is a bare `<span>` with no `href`... Task 114 wired two of
+three and left the last one," and its draft tells her "I found the cause."
+Checked today on the live hub (372KB) and on
+`/pages/ap-cybersecurity-unit-1-introduction-to-security` (442KB): each unit is
+referenced exactly three times and **all three are real `<a href>` anchors** to
+the unit page. There is no fourth item and no bare span. The only "unit test"
+strings on either page are a Teacher Bundle blurb and an AP **CSA** Unit Tests
+Hub link in the nav dropdown. Sending "I found the cause" would be a confident
+diagnosis of an element that is not there. Note also that unit tests were
+deliberately pulled off the public site (a student could reach them via a fake
+teacher account) and moved to Drive, so the item may have been removed outright
+rather than left dead.
+
+**v2 invents a deadline for Lynn Manuel.** Its draft says the CSP bundle is
+"$249. Worth mentioning since I'm raising that price on Friday." The live CSP
+product page returns HTTP 200 at $249 and carries **no deadline string at all**,
+no "September" date of any kind. That is manufactured scarcity to a cold lead who
+has taught CodeHS for seven years, and it is the same shape as the Sept 4 date in
+v2's Naggar draft: an urgency claim with nothing behind it. My Manuel draft below
+makes no price claim.
+
+---
+
 ## 4. Nansu Kal - PREMISE DOES NOT HOLD, ask before fixing
 
 Parsed every anchor on the live `/pages/ap-cybersecurity-course`. There are zero
