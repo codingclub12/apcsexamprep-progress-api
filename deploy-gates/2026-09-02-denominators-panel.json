@@ -1,0 +1,60 @@
+{
+  "change": "the denominators admin panel: adopting a corrected 'out of' becomes a button instead of an admin key pasted onto a command line",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the cookie opens the read and is still refused for adopt and remove",
+      "command": "npm run --silent smoke:denompanel",
+      "expect": "23 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "every page carries the analytics tag, and every credential box is masked",
+      "command": "npm run --silent smoke:posthog",
+      "expect": "50 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the existing denominator safety rules are unchanged by the new caller",
+      "command": "npm run --silent smoke:denomsafety",
+      "expect": "11 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT WOULD PUT A CSRF HOLE IN FRONT OF A GRADEBOOK: the cookie must not authorize a write",
+      "file": "routes/admin.js",
+      "find": "  if ((req.method === 'GET' || req.method === 'HEAD') && session.isAuthed(req)) return next();",
+      "replace": "  if (session.isAuthed(req)) return next();",
+      "command": "npm run --silent smoke:denompanel",
+      "expect_failure": "the same cookie does NOT authorize adopt",
+      "_why": "This is the first admin page that can WRITE. The session cookie travels on every request from a logged-in operator's browser, so a page that mutates is one convenience away from accepting it. With the hole open the suite does not merely go red: 'and the refused adopt wrote nothing' reports 24, meaning a cookie-only request really does change a live denominator."
+    },
+    {
+      "kind": "mutation",
+      "name": "the admin key box must stay type=password or session replay records it",
+      "file": "public/denominators.html",
+      "find": "<input id=\"key\" type=\"password\" autocomplete=\"off\" spellcheck=\"false\" placeholder=\"x-admin-key\" />",
+      "replace": "<input id=\"key\" type=\"text\" autocomplete=\"off\" spellcheck=\"false\" placeholder=\"x-admin-key\" />",
+      "command": "npm run --silent smoke:posthog",
+      "expect_failure": "denominators.html: every credential input is type=password",
+      "_why": "posthog-init.js masks password inputs in replay and nothing else. denominators.html was NOT in that suite's credPages list when the page was written, so this exact mutation passed silently until the list was extended. A hollow guard here means the admin key is recorded the first time anyone uses the page."
+    },
+    {
+      "kind": "mutation",
+      "name": "the key must never reach storage that outlives the tab",
+      "file": "public/denominators.html",
+      "find": "  els.preview.addEventListener(\"click\", function () { send(true); });",
+      "replace": "  els.preview.addEventListener(\"click\", function () { localStorage.setItem(\"k\", els.key.value); send(true); });",
+      "command": "npm run --silent smoke:denompanel",
+      "expect_failure": "the panel never persists the key",
+      "_why": "The first version of this assertion read the whole document and went red on the header comment PROMISING the key is never written to localStorage, because the words appear in prose saying the opposite. It now scans the script body. This mutation is what proves the narrowed check still catches a real write."
+    },
+    {
+      "kind": "live",
+      "name": "the panel is reachable, and an anonymous visitor still gets the sign-in page instead of it",
+      "command": "node -e \"const cp=require('child_process');const q=(u)=>cp.execSync('curl -sS --max-time 40 -w \\\"\\\\n%{http_code}\\\" '+u,{encoding:'utf8',maxBuffer:1<<24});const r=q('https://progress.apcsexamprep.com/admin/denominators');const lines=r.split('\\n');const code=lines.pop().trim();const body=lines.join('\\n');if(code!=='200')throw new Error('route not serving, HTTP '+code);if(body.indexOf('SAFE_AGREEMENT')!==-1)throw new Error('THE PANEL LEAKED TO AN ANONYMOUS VISITOR');if(body.indexOf('Admin sign-in')===-1)throw new Error('anonymous visitor got neither the panel nor the sign-in page');console.log('PANEL IS LIVE AND STILL GATED');\"",
+      "expect": "PANEL IS LIVE AND STILL GATED",
+      "_why": "Both halves are FALSE before this deploy and only one of them for the obvious reason. /admin/denominators returns 404 today, verified against production minutes before the merge, while /admin/command returns 200; so a 200 here can only mean this change shipped. The second half is the assertion worth having: it observes that the new route serves login.html rather than the panel to a caller with no session, which is the property a page-level gate exists for and the one a source check in the suite can only infer."
+    }
+  ]
+}
