@@ -56,6 +56,7 @@ const fs = require('fs');
 const path = require('path');
 const { extract } = require('./extract-live-body');
 const { allPages, BY_TOPIC } = require('../lib/csp-exercise-pages');
+const { allPages: coursePages } = require('../lib/csp-course-pages');
 
 const PUBLISHED_AT = '2026-03-01 12:00:00';
 const MARKER = '<!-- apcs-exercises (managed) -->';
@@ -70,6 +71,17 @@ const CSS = [
   '#apcs-ex-links a.ex:hover{background:#dbeafe!important}',
   '#apcs-ex-links a.ex span{display:block!important;margin-top:4px!important;font-size:13px!important;font-weight:400!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important}',
 ].join('\n');
+
+//  The applied challenge is the third card in a two-column row, so it spans both
+//  rather than sitting alone in the left column looking like an orphan. Nothing
+//  else about it differs: same border, same background, same type.
+//
+//  Emitted ONLY on a block that has one. 17 of the 35 topics have no applied
+//  page live, and adding a rule they cannot use would rewrite 17 live bodies to
+//  change nothing a reader could see. With it left off, those blocks rebuild
+//  byte for byte identical to what is already published and drop out of the
+//  sheet, which is the check that the rebuild is faithful.
+const WIDE_CSS = '#apcs-ex-links a.ex.wide{grid-column:1/-1!important}';
 
 function esc(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -90,18 +102,72 @@ function lessonHandleFor(topic) {
   return `ap-csp-course-bi${topic.split('.')[0]}-${t.slug}`;
 }
 
-function blockFor(topic, pages) {
+//  THE APPLIED CHALLENGE IS NOT NUMBERED, AND THAT IS DELIBERATE.
+//
+//  Both sets call themselves Exercise 2. The handout mirror
+//  /pages/ap-csp-topic-3-11-exercise-2 reads "Topic 3.11 - Exercise 2 - Sorted
+//  or Not?" and the graded page /pages/ap-csp-course-bi3-binary-search-exercise-2
+//  reads "Topic 3.11 - Exercise 2 - Binary Search: Applied Challenge". Two cards
+//  both labelled Exercise 2 in one row is the confusion this whole pass exists
+//  to remove, and numbering the second one 3 would contradict the page it opens.
+//
+//  So it is labelled by what it is. "Applied Challenge" is the second half of
+//  the page's own h1, and the subtitle is the page's own promise with its own
+//  question count in it. Nothing here is authored.
+function appliedCard(applied) {
+  const n = applied.questions.length;
+  return '<a class="ex wide" href="' + esc('/pages/' + applied.handle) + '">'
+    + esc('Applied Challenge')
+    + '<span>' + esc(n + ' questions, and every answer is recorded for your teacher')
+    + '</span></a>';
+}
+
+function blockFor(topic, pages, applied) {
   const cards = pages.map((p) => {
     const n = p.kind.slice('exercise-'.length);
     return '<a class="ex" href="' + esc('/pages/' + p.handle) + '">'
       + esc('Exercise ' + n + ': ' + p.title.replace(/^AP CSP [\d.]+ Exercise \d+: /, ''))
       + '<span>' + esc(subtitle(p)) + '</span></a>';
   });
-  return '\n' + MARKER + '\n<div id="apcs-ex-links">\n<style>\n' + CSS + '\n</style>\n'
+  if (applied) cards.push(appliedCard(applied));
+  const css = applied ? CSS + '\n' + WIDE_CSS : CSS;
+  return '\n' + MARKER + '\n<div id="apcs-ex-links">\n<style>\n' + css + '\n</style>\n'
     + '<p class="ex-lbl">Exercises for Topic ' + esc(topic) + '</p>\n'
     + '<div class="ex-row">\n'
     + cards.join('\n')
     + '\n</div>\n</div>';
+}
+
+//  STRIP THE MANAGED BLOCK BACK OFF, so a rerun equals a run.
+//
+//  This used to refuse a page that already carried the block, which made the
+//  generator a one-shot: the 35 pages went live on 2026-08-24 and no change to
+//  the block could ever reach them again. That is how 18 graded exercise-2
+//  pages ended up published with nothing linking them.
+//
+//  The block is appended last and nothing is appended after it, checked here
+//  rather than assumed, so removing it is removing the tail. What is left must
+//  carry no marker at all: two nested blocks would mean an earlier run appended
+//  inside its own region and the page needs a human, not another append.
+function unmark(body) {
+  const at = body.indexOf('\n' + MARKER);
+  if (at === -1) return { body, had: false };
+  const tail = body.slice(at);
+  if (!tail.startsWith('\n' + MARKER + '\n<div id="apcs-ex-links">')) {
+    return { error: 'the managed block does not start the way this program writes it' };
+  }
+  if (!tail.trimEnd().endsWith('</div>')) {
+    return { error: 'something was appended after the managed block' };
+  }
+  //  More than one marker means an earlier run appended a second block, and
+  //  cutting from the first to the end would eat whatever sits between them.
+  //  Two blocks is a page for a human, not another append.
+  if (tail.indexOf(MARKER, MARKER.length) !== -1) {
+    return { error: 'the page carries more than one managed block' };
+  }
+  const rest = body.slice(0, at);
+  if (rest.includes(MARKER)) return { error: 'the page carries more than one managed block' };
+  return { body: rest, had: true };
 }
 
 function build(dir, verified) {
@@ -111,6 +177,14 @@ function build(dir, verified) {
     byTopic.get(p.topic).push(p);
   }
   for (const list of byTopic.values()) list.sort((a, b) => a.kind.localeCompare(b.kind));
+
+  //  The graded exercise-2 pages, keyed by topic. Same repo, same source of
+  //  truth that renders them, so the handle, the question count and the title
+  //  come from the generator that made the page rather than from reading it.
+  const appliedFor = new Map();
+  for (const p of coursePages()) {
+    if (p.kind === 'exercise-2') appliedFor.set(p.topic, p);
+  }
 
   const pages = [];
   const problems = [];
@@ -124,11 +198,15 @@ function build(dir, verified) {
     try { body = extract(fs.readFileSync(file, 'utf8')); }
     catch (e) { problems.push(`${topic}: ${e.message}`); continue; }
 
-    if (body.includes(MARKER)) { problems.push(`${topic}: the block is already on this page`); continue; }
+    //  Idempotent: an existing block is taken back off and rebuilt.
+    const un = unmark(body);
+    if (un.error) { problems.push(`${topic}: ${un.error}`); continue; }
+    const original = un.body;
+    const rebuilt = un.had;
     // A lesson page for this topic carries its own handle somewhere in its body
     // (its nav, its tracker wrapper, or a self link). If it does not, the file
     // is not the page it was named after and nothing is appended to it.
-    if (!body.includes(handle) && !body.includes('data-lesson')) {
+    if (!original.includes(handle) && !original.includes('data-lesson')) {
       problems.push(`${topic}: ${handle}.html does not look like that lesson page`);
       continue;
     }
@@ -142,11 +220,20 @@ function build(dir, verified) {
       }
     }
 
-    const next = body + blockFor(topic, exercises);
-    // Additive means additive: the original bytes have to still be there, in
-    // front, untouched.
-    if (!next.startsWith(body)) { problems.push(`${topic}: the original body was modified`); continue; }
-    pages.push({ handle, topic, body: next, graded: exercises.some((e) => e.graded) });
+    //  The graded exercise-2 for this topic, when the page is actually live.
+    //  35 are declared in seed/csp-exercise-2 and the manifest carries a
+    //  denominator for every one of them; 18 are published today, all in Big
+    //  Idea 3. A card is added only for a handle in the verified live set, so
+    //  the other 17 stay uncarded rather than becoming 404s.
+    const applied = appliedFor.get(topic);
+    const appliedLive = applied && (!verified || verified.has(applied.handle)) ? applied : null;
+
+    const next = original + blockFor(topic, exercises, appliedLive);
+    // Additive means additive: the bytes that were on the page before this
+    // program ever touched it have to still be there, in front, untouched.
+    if (!next.startsWith(original)) { problems.push(`${topic}: the original body was modified`); continue; }
+    pages.push({ handle, topic, body: next, original: body, graded: exercises.some((e) => e.graded),
+      applied: !!appliedLive, rebuilt });
   }
   return { pages, problems };
 }
@@ -174,6 +261,11 @@ function main(argv) {
     console.error(`\n  Refused: built ${r.pages.length} pages, expected all 35 CSP topics\n`);
     process.exit(1);
   }
+  //  A row that changes nothing is not a row. The 17 topics with no applied page
+  //  live rebuild to exactly what is published, and rewriting a live body to
+  //  change nothing is a risk taken for no gain.
+  const changed = r.pages.filter((p) => p.body !== p.original);
+  const unchanged = r.pages.length - changed.length;
   // House rule, checked rather than assumed.
   const nonAscii = r.pages.filter((p) => /[^\x09\x0A\x0D\x20-\x7E]/.test(p.body.slice(p.body.indexOf(MARKER)))); // eslint-disable-line no-control-regex
   if (nonAscii.length) {
@@ -184,19 +276,24 @@ function main(argv) {
   const cell = (s) => '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"';
   const header = ['Handle', 'Command', 'Body HTML', 'Published', 'Published At'];
   const lines = [header.map(cell).join(',')];
-  for (const p of r.pages) {
+  for (const p of changed) {
     lines.push([p.handle, 'MERGE', p.body, 'TRUE', PUBLISHED_AT].map(cell).join(','));
   }
   fs.writeFileSync(out, '﻿' + lines.join('\r\n') + '\r\n');
 
   const graded = r.pages.filter((p) => p.graded).length;
   console.log('');
-  console.log(`    ${String(r.pages.length).padStart(3)}  lesson pages given an exercise block`);
-  console.log(`    ${String(r.pages.length * 2).padStart(3)}  exercise links, two per topic`);
+  console.log(`    ${String(r.pages.length).padStart(3)}  lesson pages built`);
+  console.log(`    ${String(unchanged).padStart(3)}  rebuilt BYTE FOR BYTE as published, so they are not in the sheet`);
+  console.log(`    ${String(changed.length).padStart(3)}  rows written`);
+  console.log(`    ${String(r.pages.length * 2).padStart(3)}  handout exercise links, two per topic`);
+  console.log(`    ${String(r.pages.filter((p) => p.applied).length).padStart(3)}  graded Applied Challenge links, `
+    + 'which nothing on the site linked before');
+  console.log(`    ${String(r.pages.filter((p) => p.rebuilt).length).padStart(3)}  block(s) rebuilt rather than refused`);
   console.log(`    ${String(graded).padStart(3)}  topic(s) whose exercises are auto-graded, the rest say so`);
   console.log(`\n  wrote ${out}`);
   console.log('\n  Import settings: MERGE mode, QUOTE_ALL quoting, utf-8-sig encoding. One import at a time.\n');
 }
 
 if (require.main === module) main(process.argv.slice(2));
-module.exports = { build, blockFor, subtitle, MARKER };
+module.exports = { build, blockFor, subtitle, unmark, appliedCard, MARKER, CSS, WIDE_CSS };

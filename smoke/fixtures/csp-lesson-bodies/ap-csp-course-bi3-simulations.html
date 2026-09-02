@@ -1,0 +1,1274 @@
+<!--
+  PAGE: /pages/ap-csp-course-bi3-simulations
+  TITLE: Topic 3.16: Simulations | AP CSP Big Idea 3 | APCSExamPrep.com
+  META: Master AP CSP Topic 3.16 Simulations. Why we simulate, the role of randomness and iteration, seeds and reproducibility, limitations and approximation, a live Python code editor, the Simulation Station game, and Create Task use-cases.
+-->
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+  :root{--navy:#0f1f3d;--bi3:#1a56db;--bi3-lt:#93c5fd;--bi3-bg:#eff6ff;--bi3-dk:#1e40af;--green:#16a34a;--amber:#d97706;--red:#dc2626;--slate:#64748b;--white:#ffffff;--py:#3b82f6;--pseudo:#8b5cf6;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  .lesson-page{font-family:"DM Sans",sans-serif;color:var(--navy);background:#f8fafc;line-height:1.6;}
+
+  .lesson-breadcrumb{background:#fff;border-bottom:1px solid #e2e8f0;padding:12px 24px;}
+  .lesson-breadcrumb-inner{max-width:880px;margin:0 auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate);flex-wrap:wrap;}
+  .lesson-breadcrumb a{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;text-decoration:none;font-weight:500;}
+  .bc-sep{color:#cbd5e1;}
+
+  .social-proof-bar{background:#fff;border-bottom:1px solid #e2e8f0;padding:10px 24px;}
+  .social-proof-inner{max-width:880px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 20px;font-size:13px;color:var(--slate);}
+  .social-proof-item{display:flex;align-items:center;gap:5px;font-weight:500;}
+  .social-proof-item strong{color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+
+  .lesson-hero{background:var(--navy);background-image:radial-gradient(ellipse 60% 70% at 90% 20%,rgba(26,86,219,.28) 0%,transparent 60%);padding:48px 24px 40px;}
+  .lesson-hero-inner{max-width:880px;margin:0 auto;}
+  .lesson-hero-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .lesson-num-badge{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:var(--bi3);font-weight:700;font-size:14px;color:#fff!important;-webkit-text-fill-color:#fff!important;flex-shrink:0;}
+  .lesson-eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;}
+  .lesson-hero h1{font-family:"DM Serif Display",serif!important;font-size:clamp(26px,4vw,40px)!important;line-height:1.2!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:14px!important;}
+  .lesson-hero-pills{display:flex;flex-wrap:wrap;gap:8px;}
+  .lesson-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:5px 12px;border-radius:100px;font-size:12px;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .ced-tag{display:inline-flex;align-items:center;background:rgba(26,86,219,.25);border:1px solid rgba(147,197,253,.3);padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;letter-spacing:.04em;}
+
+  /* PROGRESS STRIP */
+  .bi3-progress{background:#fff!important;border-bottom:1px solid #e2e8f0!important;padding:14px 20px!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;}
+  .bi3-progress-inner{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;gap:0!important;width:max-content!important;min-width:100%!important;}
+  .prog-step{display:flex!important;flex-direction:column!important;align-items:center!important;min-width:46px!important;text-align:center!important;flex-shrink:0!important;}
+  .prog-step-link{display:flex!important;flex-direction:column!important;align-items:center!important;min-width:46px!important;text-align:center!important;flex-shrink:0!important;text-decoration:none!important;cursor:pointer!important;}
+  .prog-step-link:hover .prog-dot{background:#dbeafe!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border-color:var(--bi3)!important;}
+  .prog-dot{width:26px!important;height:26px!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:9px!important;font-weight:700!important;margin-bottom:4px!important;flex-shrink:0!important;}
+  .prog-dot.active{background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .prog-dot.upcoming{background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:2px solid #e2e8f0!important;}
+  .prog-dot.done{background:#dbeafe!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border:2px solid var(--bi3)!important;}
+  .prog-label{font-size:8px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;line-height:1.2!important;white-space:nowrap!important;}
+  .prog-label.active-label{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;}
+  .prog-arrow{flex:1 0 4px!important;height:2px!important;background:#e2e8f0!important;margin-bottom:18px!important;min-width:4px!important;max-width:16px!important;flex-shrink:0!important;}
+
+  /* MAIN */
+  .lesson-main{max-width:880px;margin:0 auto;padding:40px 24px 80px;}
+  .lesson-objectives{background:var(--bi3-bg);border-left:4px solid var(--bi3);border-radius:0 10px 10px 0;padding:20px 24px;margin-bottom:28px;}
+  .lesson-objectives h2{font-size:14px!important;font-weight:700!important;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;text-transform:uppercase!important;letter-spacing:.06em!important;margin-bottom:12px!important;}
+  .lesson-objectives ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;}
+  .lesson-objectives li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#1e3a8a;line-height:1.5;}
+  .lesson-objectives li::before{content:"\2713";color:var(--bi3);font-weight:700;flex-shrink:0;margin-top:1px;}
+  .score-impact{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 18px;margin-bottom:28px;display:flex;align-items:center;gap:10px;font-size:14px;color:#14532d;}
+  .score-impact strong{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+
+  /* HOOK */
+  .hook-box{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px 28px;margin-bottom:32px;}
+  .hook-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:8px;}
+  .hook-box p{font-size:15px!important;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;line-height:1.7!important;margin-bottom:0!important;}
+
+  /* LESSON SECTIONS */
+  .lesson-section{margin-bottom:40px;}
+  .lesson-section h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;padding-bottom:10px!important;border-bottom:2px solid var(--bi3-bg)!important;}
+  .lesson-section h3{font-size:17px!important;font-weight:700!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-top:24px!important;margin-bottom:10px!important;}
+  .lesson-section p{font-size:15px;color:#374151;line-height:1.8;margin-bottom:14px;}
+  .lesson-section ul,.lesson-section ol{padding-left:20px;margin-bottom:14px;}
+  .lesson-section li{font-size:15px;color:#374151;line-height:1.7;margin-bottom:6px;}
+  .lesson-section code{background:#eef2ff;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+
+  /* DUAL CODE PANEL */
+  .code-panel-wrap{margin:20px 0;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;}
+  .code-panel-tabs{display:flex;background:#1e293b;}
+  .code-tab{padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;border:none;background:transparent;letter-spacing:.04em;transition:background .15s;font-family:inherit;}
+  .code-tab.py{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .code-tab.pseudo{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+  .code-tab.active{background:rgba(255,255,255,.15)!important;}
+  .code-tab-label{font-size:10px;opacity:.6;margin-left:4px;font-weight:400;}
+  .code-pane{background:#0f172a;padding:18px 20px;overflow-x:auto;height:0;overflow:hidden;padding:0;}
+  .code-pane.active{height:auto;overflow-x:auto;padding:18px 20px;}
+  .code-pane pre{font-family:monospace;font-size:13px;line-height:1.8;margin:0;white-space:pre-wrap;word-break:break-word;max-width:100%;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .py-kw{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:700;}
+  .py-fn{color:#6ee7b7!important;-webkit-text-fill-color:#6ee7b7!important;}
+  .py-num{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .py-str{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .py-comment{color:#475569!important;-webkit-text-fill-color:#475569!important;font-style:italic;}
+  .py-var{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .py-op{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;}
+  .ps-kw{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700;}
+  .ps-op{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .ps-num{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .ps-str{color:#86efac!important;-webkit-text-fill-color:#86efac!important;}
+  .ps-comment{color:#475569!important;-webkit-text-fill-color:#475569!important;font-style:italic;}
+  .ps-var{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+
+  /* CALLOUTS */
+  .callout-exam{background:#fffbeb;border:1px solid #fcd34d;border-left:4px solid var(--amber);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+  .callout-exam-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--amber)!important;-webkit-text-fill-color:var(--amber)!important;margin-bottom:6px;}
+  .callout-exam p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin-bottom:0!important;line-height:1.6!important;}
+  .callout-trap{background:#fef2f2;border:1px solid #fca5a5;border-left:4px solid var(--red);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+  .callout-trap-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;margin-bottom:6px;}
+  .callout-trap p{font-size:14px!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;margin-bottom:0!important;line-height:1.6!important;}
+
+  /* MINI EXERCISES */
+  .mini-ex{background:#fff;border:1px solid #bfdbfe;border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .mini-ex-label{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;margin-bottom:12px;}
+  .mini-ex-q{font-size:15px;font-weight:600;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px;line-height:1.5;}
+  .mini-ex-code{background:#0f172a;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;line-height:1.8;margin-bottom:14px;overflow-x:auto;white-space:pre;display:block;}
+  .mini-opts{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;}
+  .mini-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border:2px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:14px;font-family:monospace;color:#374151!important;-webkit-text-fill-color:#374151!important;background:#f8fafc;text-align:left;width:100%;transition:border-color .15s;}
+  .mini-opt:hover{border-color:var(--bi3-lt);background:var(--bi3-bg);}
+  .mini-opt.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mini-opt.incorrect{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mini-opt.reveal{border-color:var(--green)!important;background:#f0fdf4!important;}
+  .mini-opt-letter{font-weight:700;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;min-width:18px;font-family:inherit;}
+  .mini-opt.correct .mini-opt-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mini-opt.incorrect .mini-opt-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mini-fib-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;}
+  .mini-fib-input{padding:8px 12px;border:2px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:14px;width:130px;outline:none;color:var(--navy)!important;background:#f8fafc;}
+  .mini-fib-input:focus{border-color:var(--bi3-lt);}
+  .mini-fib-input.correct{border-color:var(--green);background:#f0fdf4;}
+  .mini-fib-input.incorrect{border-color:var(--red);background:#fef2f2;}
+  .mini-fib-btn{padding:8px 18px;background:var(--bi3);border:none;border-radius:8px;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .mini-fb{font-size:13px;font-weight:500;padding:8px 12px;border-radius:7px;margin-top:6px;display:none;line-height:1.5;}
+  .mini-fb.c{background:#f0fdf4;color:var(--green)!important;-webkit-text-fill-color:var(--green)!important;display:block;}
+  .mini-fb.w{background:#fef2f2;color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;display:block;}
+
+  /* VOCAB */
+  .vocab-table{width:100%;border-collapse:collapse;margin-bottom:24px;font-size:14px;}
+  .vocab-table thead tr{background:var(--bi3);}
+  .vocab-table thead th{padding:10px 16px;text-align:left;font-weight:600;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px;}
+  .vocab-table tbody tr:nth-child(even){background:var(--bi3-bg);}
+  .vocab-table tbody tr:nth-child(odd){background:#fff;}
+  .vocab-table tbody td{padding:10px 16px;border-bottom:1px solid #bfdbfe;color:#374151;vertical-align:top;line-height:1.5;}
+  .vocab-table tbody td:first-child{font-weight:700;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;white-space:nowrap;}
+
+  /* CPT CONNECTION */
+  .cpt-connection{background:#fefce8;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:0 10px 10px 0;padding:20px 24px;margin:28px 0;}
+  .cpt-connection-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#92400e!important;-webkit-text-fill-color:#92400e!important;margin-bottom:8px;}
+  .cpt-connection h3{font-size:16px!important;font-weight:700!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin:16px 0 8px!important;}
+  .cpt-connection p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;line-height:1.7!important;margin-bottom:12px!important;}
+  .cpt-connection a{color:#b45309!important;-webkit-text-fill-color:#b45309!important;font-weight:600;text-decoration:underline;}
+  .cpt-connection code{background:#fef3c7;color:#78350f!important;-webkit-text-fill-color:#78350f!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+  .cpt-stems{list-style:none;padding:0;margin:0 0 8px;display:flex;flex-direction:column;gap:8px;}
+  .cpt-stems li{background:#fffef5;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:13px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;line-height:1.6;}
+  .cpt-code{background:#0f172a;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;line-height:1.8;margin:6px 0 12px;overflow-x:auto;white-space:pre;display:block;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+
+  /* EMAIL */
+  .email-capture{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px 28px;margin-bottom:36px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
+  .email-capture-text{flex:1;min-width:200px;}
+  .email-capture-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:4px;}
+  .email-capture h3{font-size:16px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .email-capture p{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:0!important;line-height:1.5!important;}
+  .email-capture-form{display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0;}
+  .email-capture-input{padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff!important;font-size:14px;font-family:inherit;min-width:180px;outline:none;}
+  .email-capture-btn{padding:10px 20px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:8px!important;font-size:14px!important;font-weight:600!important;cursor:pointer!important;font-family:inherit!important;}
+  .email-capture-success{display:none;font-size:14px;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:600;padding:10px 0;}
+
+  /* MCQ */
+  .mcq-section{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:28px;margin-bottom:40px;}
+  .mcq-section-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--bi3-bg);}
+  .mcq-section-icon{width:40px;height:40px;border-radius:10px;background:var(--bi3-bg);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .mcq-section-title{font-family:"DM Serif Display",serif;font-size:20px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+  .mcq-section-sub{font-size:13px;color:var(--slate);}
+  .mcq-item{margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid #f1f5f9;}
+  .mcq-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .mcq-q-num{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:8px;}
+  .diff-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:100px;margin-left:8px;background:#fef2f2;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;border:1px solid #fca5a5;}
+  .mcq-q-text{font-size:15px!important;font-weight:600!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;margin-bottom:12px!important;}
+  .predict-note{font-size:12px;font-style:italic;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:12px;}
+  .mcq-code{background:#0f172a;border-radius:8px;padding:12px 14px;margin:10px 0 14px;font-family:monospace;font-size:13px;line-height:1.75;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;white-space:pre;overflow-x:auto;display:block;}
+  .mcq-code .k{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .mcq-code .s{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .mcq-code .n{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .mcq-code .c{color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-style:italic;}
+  .mcq-roman{list-style:none;padding:0;margin:10px 0 14px;display:flex;flex-direction:column;gap:6px;}
+  .mcq-roman li{font-family:monospace;font-size:13px;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;background:#f1f5f9;border-radius:6px;padding:8px 12px;}
+  .mcq-roman li strong{color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;font-family:"DM Sans",sans-serif;margin-right:8px;}
+  .mcq-options{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+  .mcq-option{display:flex!important;align-items:flex-start!important;gap:12px!important;padding:11px 14px!important;border:2px solid #e2e8f0!important;border-radius:8px!important;cursor:pointer!important;background:#f8fafc!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.5!important;text-align:left!important;width:100%!important;font-family:inherit!important;}
+  .mcq-option:hover{border-color:var(--bi3-lt)!important;background:var(--bi3-bg)!important;}
+  .mcq-option.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mcq-option.incorrect{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mcq-option.revealed-correct{border-color:var(--green)!important;background:#f0fdf4!important;}
+  .mcq-option-letter{font-weight:700!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;flex-shrink:0!important;min-width:18px!important;}
+  .mcq-option.correct .mcq-option-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mcq-option.incorrect .mcq-option-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mcq-feedback{display:none!important;padding:12px 16px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;margin-top:8px!important;}
+  .mcq-feedback.show{display:block!important;}
+  .mcq-feedback.correct-fb{background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #bbf7d0!important;}
+  .mcq-feedback.incorrect-fb{background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;border:1px solid #fecaca!important;}
+
+  /* GAME */
+  .game-section{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:14px;padding:28px;margin-bottom:40px;}
+  .game-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:10px;}
+  .game-title{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .game-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:20px!important;}
+  .vt-score-bar{display:flex;justify-content:space-between;background:rgba(255,255,255,.06);border-radius:10px;padding:12px 20px;margin-bottom:20px;flex-wrap:wrap;gap:8px;}
+  .vt-stat{text-align:center;}
+  .vt-stat-val{font-size:20px;font-weight:800;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1;}
+  .vt-stat-lbl{font-size:10px;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:2px;}
+  .vt-code-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  .vt-code-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:10px;}
+  .vt-code-lines{font-family:monospace;font-size:14px;line-height:2;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .vt-line{display:block;padding:2px 8px;border-radius:4px;white-space:pre;}
+  .vt-line.hl{background:rgba(147,197,253,.2);color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .vt-question{font-size:15px;font-weight:600;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;margin-bottom:14px;}
+  .vt-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+  .vt-btn{padding:12px;border-radius:9px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);cursor:pointer;font-size:15px;font-weight:700;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;font-family:monospace;transition:all .15s;}
+  .vt-btn:hover{border-color:var(--bi3-lt);background:rgba(26,86,219,.2);}
+  .vt-btn.c{border-color:#4ade80;background:rgba(74,222,128,.15);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+  .vt-btn.w{border-color:#f87171;background:rgba(248,113,113,.15);color:#f87171!important;-webkit-text-fill-color:#f87171!important;}
+  .vt-btn.rv{border-color:#4ade80;background:rgba(74,222,128,.08);}
+  .vt-fb{padding:10px 14px;border-radius:8px;font-size:13px;font-weight:500;margin-bottom:12px;display:none;line-height:1.5;}
+  .vt-fb.c{background:rgba(74,222,128,.1);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;display:block;}
+  .vt-fb.w{background:rgba(248,113,113,.1);color:#f87171!important;-webkit-text-fill-color:#f87171!important;display:block;}
+  .vt-next{display:none;width:100%;padding:12px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);border-radius:8px;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .vt-next.show{display:block;}
+  .vt-results{display:none;text-align:center;padding:20px;}
+  .vt-results.show{display:block;}
+  .vt-res-score{font-family:"DM Serif Display",serif;font-size:52px;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1;}
+  .vt-res-lbl{font-size:14px;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:12px;}
+  .vt-res-msg{font-size:14px;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;margin-bottom:20px;line-height:1.6;}
+  .vt-restart{background:rgba(255,255,255,.1);color:#fff!important;-webkit-text-fill-color:#fff!important;border:2px solid rgba(255,255,255,.2);border-radius:8px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+
+  /* CODE EDITOR (Pyodide live) */
+  .code-editor-section{background:#0f172a;border-radius:14px;padding:28px;margin-bottom:40px;}
+  .code-editor-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:10px;}
+  .code-editor-title{font-family:"DM Serif Display",serif!important;font-size:22px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .code-editor-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:20px!important;line-height:1.6;}
+  .code-problem{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+  .scaffold-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:rgba(147,197,253,.15);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;border:1px solid rgba(147,197,253,.35);margin-bottom:8px;}
+  .code-problem-num{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:8px;}
+  .code-problem-prompt{font-size:14px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.6!important;margin-bottom:12px!important;}
+  .code-problem-prompt code{background:rgba(147,197,253,.12);color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;padding:1px 6px;border-radius:5px;font-size:12px;}
+  .code-textarea{width:100%;min-height:120px;background:#020617;border:2px solid rgba(255,255,255,.1);border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;color:#e2e8f0!important;resize:vertical;outline:none;line-height:1.8;}
+  .code-textarea:focus{border-color:var(--bi3-lt);}
+  .code-btn-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center;}
+  .code-run-btn{padding:9px 20px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:7px!important;font-size:13px!important;font-weight:700!important;cursor:pointer!important;font-family:inherit!important;}
+  .code-run-btn:disabled{opacity:.6;cursor:wait;}
+  .code-hint-btn,.code-sol-btn{padding:9px 16px!important;background:rgba(255,255,255,.06)!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:7px!important;font-size:13px!important;cursor:pointer!important;font-family:inherit!important;}
+  .code-output{margin-top:10px;background:#020617;border-radius:8px;padding:12px 16px;font-family:monospace;font-size:13px;min-height:44px;display:none;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .code-output.show{display:block;}
+  .code-output.ok{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+  .code-output.err{color:#f87171!important;-webkit-text-fill-color:#f87171!important;}
+  .code-hint{margin-top:8px;background:rgba(147,197,253,.06);border:1px solid rgba(147,197,253,.2);border-radius:8px;padding:10px 14px;font-size:13px;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;display:none;line-height:1.6;}
+  .code-hint.show{display:block;}
+  .code-solution{margin-top:8px;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:8px;padding:12px 14px;font-family:monospace;font-size:13px;color:#bbf7d0!important;-webkit-text-fill-color:#bbf7d0!important;display:none;white-space:pre;line-height:1.8;overflow-x:auto;}
+  .code-solution.show{display:block;}
+
+  /* FAQ */
+  .faq-section{margin-bottom:40px;}
+  .faq-section h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;padding-bottom:10px!important;border-bottom:2px solid var(--bi3-bg)!important;}
+  .faq-item{background:#fff;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:10px;overflow:hidden;}
+  .faq-q{width:100%;text-align:left;padding:16px 20px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:15px!important;font-weight:600!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-family:inherit!important;line-height:1.4!important;}
+  .faq-q:hover{background:#f8fafc;}
+  .faq-icon{font-size:18px;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;flex-shrink:0;transition:transform .2s;font-style:normal;}
+  .faq-item.open .faq-icon{transform:rotate(45deg);}
+  .faq-a{display:none;padding:0 20px 16px;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.7!important;border-top:1px solid #f1f5f9;}
+  .faq-item.open .faq-a{display:block;}
+  .faq-a code{background:#eef2ff;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+
+  /* RELATED + SUPERPACK + TEACHER + NAV */
+  .related-links{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:24px;margin-bottom:40px;}
+  .related-links h3{font-size:15px!important;font-weight:700!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;}
+  .related-links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
+  .related-link{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;background:#f8fafc;text-decoration:none;font-size:13px!important;font-weight:500!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border:1px solid #bfdbfe;transition:background .15s;line-height:1.3;}
+  .related-link:link,.related-link:visited{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;}
+  .related-link:hover{background:var(--bi3-bg);}
+  .related-ext{color:var(--slate)!important;-webkit-text-fill-color:var(--slate)!important;border-color:#e2e8f0;}
+  .superpack-slim{background:#fff;border:1px solid #bfdbfe;border-radius:10px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:36px;}
+  .superpack-slim-icon{width:36px;height:36px;border-radius:8px;background:var(--bi3-bg);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .superpack-slim-text{font-size:14px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-weight:600;line-height:1.3;}
+  .superpack-slim-sub{font-size:12px;color:var(--slate);font-weight:400;display:block;margin-top:2px;}
+  .superpack-slim-btn{display:inline-flex!important;align-items:center!important;gap:6px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:9px 18px!important;border-radius:7px!important;font-size:13px!important;font-weight:600!important;text-decoration:none!important;white-space:nowrap!important;}
+  .superpack-slim-btn:link,.superpack-slim-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .teacher-callout{background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:18px 22px;margin-bottom:28px;display:flex;align-items:flex-start;gap:14px;}
+  .teacher-callout-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+  .teacher-callout-body{flex:1;}
+  .teacher-callout-label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#0369a1!important;-webkit-text-fill-color:#0369a1!important;margin-bottom:4px;}
+  .teacher-callout-body p{font-size:14px!important;color:#0c4a6e!important;-webkit-text-fill-color:#0c4a6e!important;margin-bottom:0!important;line-height:1.6!important;}
+  .teacher-callout-body a{color:#0369a1!important;-webkit-text-fill-color:#0369a1!important;font-weight:600;text-decoration:underline;}
+  .lesson-nav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:40px;}
+  .nav-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 20px;text-decoration:none;color:inherit;transition:box-shadow .15s;display:block;}
+  .nav-card:hover{box-shadow:0 4px 16px rgba(26,86,219,.1);border-color:#bfdbfe;}
+  .nav-card-dir{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:4px;}
+  .nav-card-title{font-size:14px;font-weight:700;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;line-height:1.3;}
+  .nav-card.next{border-left:3px solid var(--bi3);}
+
+  @media(max-width:600px){
+    .lesson-hero{padding:36px 20px 32px;}
+    .lesson-main{padding:32px 20px 60px;}
+    .vt-options{grid-template-columns:1fr 1fr;}
+    .lesson-nav{grid-template-columns:1fr;}
+    .mini-opts{gap:6px;}
+  }
+</style>
+<style>
+.code-usage{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin:-6px 0 18px!important;padding:8px 12px!important;background:rgba(255,255,255,.04)!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:8px!important;display:block!important;}
+.code-usage strong{color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;}
+.code-problem-prompt ul.rules{margin:10px 0 4px!important;padding-left:0!important;list-style:none!important;}
+.code-problem-prompt ul.rules li{position:relative;padding:3px 0 3px 20px!important;font-size:14px;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.55;}
+.code-problem-prompt ul.rules li::before{content:"\25B8";position:absolute;left:2px;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+.mcq-q-text ul.rules,.mini-ex-q ul.rules{margin:10px 0 4px!important;padding-left:0!important;list-style:none!important;}
+.mcq-q-text ul.rules li,.mini-ex-q ul.rules li{position:relative;padding:3px 0 3px 20px!important;font-size:15px;font-weight:400;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;line-height:1.5;}
+.mcq-q-text ul.rules li::before,.mini-ex-q ul.rules li::before{content:"\25B8";position:absolute;left:2px;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;}
+</style>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "AP CSP Course", "item": "https://apcsexamprep.com/pages/ap-csp-course"}, {"@type": "ListItem", "position": 2, "name": "Big Idea 3", "item": "https://apcsexamprep.com/pages/ap-csp-course-big-idea-3-algorithms"}, {"@type": "ListItem", "position": 3, "name": "Topic 3.16: Simulations", "item": "https://apcsexamprep.com/pages/ap-csp-course-bi3-simulations"}]}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "LearningResource", "name": "AP CSP Topic 3.16: Simulations", "description": "Master AP CSP Topic 3.16 Simulations. Why we simulate, the role of randomness and iteration, seeds and reproducibility, limitations and approximation, a live Python code editor, the Simulation Station game, and Create Task use-cases.", "url": "https://apcsexamprep.com/pages/ap-csp-course-bi3-simulations", "educationalLevel": "High School", "learningResourceType": "Lesson", "author": {"@type": "Person", "name": "Tanner Crow"}, "isPartOf": {"@type": "Course", "name": "AP Computer Science Principles Complete Course", "url": "https://apcsexamprep.com/pages/ap-csp-course"}, "datePublished": "2026-03-01"}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is a simulation in AP CSP?", "acceptedAnswer": {"@type": "Answer", "text": "A simulation is a program that models a real-world phenomenon so you can study it on a computer. It is an abstraction built on assumptions, it often uses randomness to mimic real uncertainty, and it uses iteration to run many trials. Because it simplifies reality, its results are approximations, not exact truths."}}, {"@type": "Question", "name": "Why use a simulation instead of a real experiment?", "acceptedAnswer": {"@type": "Answer", "text": "Simulations are usually cheaper, safer, and faster than the real thing, and they are easy to repeat and adjust. You can crash-test a design, play out thousands of games, or model something dangerous or slow to observe, all without real-world cost or risk."}}, {"@type": "Question", "name": "Why do two runs of the same simulation give different results?", "acceptedAnswer": {"@type": "Answer", "text": "Because the simulation uses randomness. Each run draws different random values, so the tallies differ. To make a run reproducible, set a seed; the same seed always produces the same sequence. Different seeds, or no seed, give runs that vary."}}, {"@type": "Question", "name": "Does running more trials make a simulation exact?", "acceptedAnswer": {"@type": "Answer", "text": "No. More independent trials generally make the estimate more reliable and closer to the true value, but the result is always an approximation. A simulation reports an estimate, never a guaranteed exact answer."}}, {"@type": "Question", "name": "What are the limitations of a simulation?", "acceptedAnswer": {"@type": "Answer", "text": "A simulation is only as good as its assumptions. It leaves out details, so if the model is wrong (for example, assuming a fair coin that is actually weighted), the results will be confidently wrong. Its output depends on the model and the number of trials, and it approximates rather than proves."}}]}</script>
+
+<div class="lesson-page" data-course="ap-csp" data-unit="bi-3" data-lesson="simulations">
+
+  <div class="lesson-breadcrumb">
+    <div class="lesson-breadcrumb-inner">
+      <a href="/pages/ap-csp-course">AP CSP Course</a><span class="bc-sep">›</span>
+      <a href="/pages/ap-csp-course-big-idea-3-algorithms">Big Idea 3</a><span class="bc-sep">›</span>
+      <span>3.16 Simulations</span>
+    </div>
+  </div>
+  <div class="social-proof-bar">
+    <div class="social-proof-inner">
+      <span class="social-proof-item">⭐ <strong>5.0</strong> Wyzant rating</span>
+      <span class="social-proof-item">📚 <strong>1,845+</strong> tutoring hours</span>
+      <span class="social-proof-item">🏫 Built by an <strong>AP CS teacher</strong> with 11+ years experience</span>
+      <span class="social-proof-item">🎯 <strong>70%</strong> of classroom students score 4 or 5 on AP CSP</span>
+    </div>
+  </div>
+  <div class="lesson-hero">
+    <div class="lesson-hero-inner">
+      <div class="lesson-hero-meta">
+        <div class="lesson-num-badge">3.16</div>
+        <div><div class="lesson-eyebrow">Big Idea 3 • Algorithms &amp; Programming</div></div>
+      </div>
+      <h1>Simulations</h1>
+      <div class="lesson-hero-pills">
+        <span class="lesson-pill">🕐 ~40 min</span>
+        <span class="lesson-pill" style="background:rgba(74,222,128,0.15);border-color:rgba(74,222,128,0.3);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;">FREE</span>
+        <span class="lesson-pill">📖 6 MCQ questions</span>
+        <span class="lesson-pill">🎮 Simulation Station game</span>
+        <span class="lesson-pill">💻 Live Python editor</span>
+        <span class="ced-tag">AAP-3.F</span>
+      </div>
+    </div>
+  </div>
+  <div class="bi3-progress"><div class="bi3-progress-inner">
+<a href="/pages/ap-csp-course-bi3-variables" class="prog-step-link"><div class="prog-dot done">3.1</div>
+<div class="prog-label">Variables</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-data-abstraction" class="prog-step-link"><div class="prog-dot done">3.2</div>
+<div class="prog-label">Abstraction</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-mathematical-expressions" class="prog-step-link"><div class="prog-dot done">3.3</div>
+<div class="prog-label">Expressions</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-strings" class="prog-step-link"><div class="prog-dot done">3.4</div>
+<div class="prog-label">Strings</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-boolean-expressions" class="prog-step-link"><div class="prog-dot done">3.5</div>
+<div class="prog-label">Booleans</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-conditionals" class="prog-step-link"><div class="prog-dot done">3.6</div>
+<div class="prog-label">IF/ELSE</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-nested-conditionals" class="prog-step-link"><div class="prog-dot done">3.7</div>
+<div class="prog-label">Nested IF</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-iteration" class="prog-step-link"><div class="prog-dot done">3.8</div>
+<div class="prog-label">Iteration</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-developing-algorithms" class="prog-step-link"><div class="prog-dot done">3.9</div>
+<div class="prog-label">Algorithms</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-lists" class="prog-step-link"><div class="prog-dot done">3.10</div>
+<div class="prog-label">Lists</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-binary-search" class="prog-step-link"><div class="prog-dot done">3.11</div>
+<div class="prog-label">Search</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-calling-procedures" class="prog-step-link"><div class="prog-dot done">3.12</div>
+<div class="prog-label">Procedures</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-developing-procedures" class="prog-step-link"><div class="prog-dot done">3.13</div>
+<div class="prog-label">Dev Procs</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-libraries" class="prog-step-link"><div class="prog-dot done">3.14</div>
+<div class="prog-label">Libraries</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-random-values" class="prog-step-link"><div class="prog-dot done">3.15</div>
+<div class="prog-label">Random</div></a>
+<div class="prog-arrow"></div>
+<div class="prog-step">
+<div class="prog-dot active">3.16</div>
+<div class="prog-label active-label">Simulate</div>
+</div>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-algorithmic-efficiency" class="prog-step-link"><div class="prog-dot upcoming">3.17</div>
+<div class="prog-label">Efficiency</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-undecidable-problems" class="prog-step-link"><div class="prog-dot upcoming">3.18</div>
+<div class="prog-label">Undecidable</div></a>
+</div></div>
+
+  <div class="lesson-main">
+
+    <div class="lesson-objectives">
+      <h2>After this lesson, you will be able to:</h2>
+      <ul>
+        <li><span>Explain what a simulation is and how it abstracts a real-world phenomenon using assumptions</span></li>
+        <li><span>Give concrete reasons a simulation is used instead of a real experiment, such as cost, safety, speed, and repeatability</span></li>
+        <li><span>Describe how randomness and iteration let a simulation run many trials and tally outcomes</span></li>
+        <li><span>Explain why more trials generally give a more reliable estimate while results stay approximate</span></li>
+        <li><span>Identify the limitations of a simulation, including its dependence on the model and its assumptions</span></li>
+        <li><span>Read and trace simulation code that seeds randomness, loops over trials, and reports a summary</span></li>
+      </ul>
+    </div>
+    <div class="score-impact">📈 <span><strong>Exam weight:</strong> Simulations (AAP-3.F) show up as reasoning questions across Big Idea 3: why simulate, what randomness and loops are doing, and what results can and cannot prove. The benefit-versus-limitation trade-off is a favorite trap, and a simulation is a natural Create Task program.</span>
+</div>
+    <div class="hook-box">
+      <div class="hook-label">💡 Think about this first</div>
+      <p>How would you find the chance of rolling a 6? You could roll a real die thousands of times, or you could write ten lines of code that rolls a virtual die a million times in a second, counts the sixes, and reports the fraction. That is a simulation: a safe, fast, repeatable model of the real world. The catch is that a model is only a model, and this lesson is about trusting it exactly as far as its assumptions allow.</p>
+    </div>
+    <div class="lesson-section">
+      <h2>What a Simulation Is</h2>
+      <p>A <strong>simulation</strong> is a program that imitates a real-world process so you can study it on a computer instead of in the real world. It is a kind of <strong>abstraction</strong>: it keeps the details that matter for the question you are asking and leaves out everything else. A flight simulator does not recreate every molecule of air; it keeps just enough physics to practice flying. Because a simulation is built on <strong>assumptions</strong> and <strong>hypotheses</strong> about how the real thing behaves, it is a simplified stand-in, not a perfect copy.</p>
+      <p>Many simulations include <strong>randomness</strong>, because the real process being modeled has chance in it: a coin flip, a dice roll, whether it rains, which customer arrives next. The simulation uses a random number generator to mimic that uncertainty, and it uses a <strong>loop</strong> to run the scenario many times so it can see the range of things that could happen.</p>
+      <div class="code-panel-wrap">
+  <div class="code-panel-tabs">
+    <button class="code-tab py active" onclick="switchTab(this,'py','pan-1')">🐛 Python</button>
+    <button class="code-tab pseudo" onclick="switchTab(this,'pseudo','pan-1')">📋 AP Pseudocode</button>
+  </div>
+  <div class="code-pane active" id="pan-1-py"><pre><span class="py-kw">import</span><span class="py-var"> </span><span class="py-var">random</span>
+<span class="py-var">random</span><span class="py-var">.</span><span class="py-var">seed</span><span class="py-var">(</span><span class="py-num">1</span><span class="py-var">)</span>
+<span class="py-var">heads</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">0</span>
+<span class="py-kw">for</span><span class="py-var"> </span><span class="py-var">i</span><span class="py-var"> </span><span class="py-kw">in</span><span class="py-var"> </span><span class="py-kw">range</span><span class="py-var">(</span><span class="py-num">100</span><span class="py-var">)</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">if</span><span class="py-var"> </span><span class="py-var">random</span><span class="py-var">.</span><span class="py-var">randint</span><span class="py-var">(</span><span class="py-num">0</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">1</span><span class="py-var">)</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">1</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var">heads</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">heads</span><span class="py-var"> </span><span class="py-var">+</span><span class="py-var"> </span><span class="py-num">1</span>
+<span class="py-kw">print</span><span class="py-var">(</span><span class="py-var">heads</span><span class="py-var">)</span></pre></div>
+  <div class="code-pane" id="pan-1-pseudo"><pre><span class="ps-var">heads</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-num">0</span>
+<span class="ps-kw">REPEAT</span><span class="ps-var"> </span><span class="ps-num">100</span><span class="ps-var"> </span><span class="ps-kw">TIMES</span>
+<span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">flip</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-var">RANDOM</span><span class="ps-var">(</span><span class="ps-num">0</span><span class="ps-var">,</span><span class="ps-var"> </span><span class="ps-num">1</span><span class="ps-var">)</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">IF</span><span class="ps-var"> </span><span class="ps-var">(</span><span class="ps-var">flip</span><span class="ps-var"> </span><span class="ps-var">=</span><span class="ps-var"> </span><span class="ps-num">1</span><span class="ps-var">)</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">heads</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-var">heads</span><span class="ps-var"> </span><span class="ps-var">+</span><span class="ps-var"> </span><span class="ps-num">1</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">}</span>
+<span class="ps-var">}</span>
+<span class="ps-kw">DISPLAY</span><span class="ps-var">(</span><span class="ps-var">heads</span><span class="ps-var">)</span></pre></div>
+</div>
+      <p>The code above models flipping a coin 100 times and counts the heads. The <code>random.seed(1)</code> line fixes the random sequence so the run is reproducible: everyone who runs it gets the same tally. Notice the AP pseudocode on the right expresses the same idea with <code>RANDOM(0, 1)</code> and <code>REPEAT 100 TIMES</code>. The two are just different spellings of one simulation.</p>
+      <div class="callout-exam">
+        <div class="callout-exam-label">🎯 What the exam expects</div>
+        <p>The CED (AAP-3.F) says a simulation is "an abstraction of a real-world phenomenon" that uses "hypotheses" and often randomness. The exam will not ask you to write a full simulation. It asks you to reason about one: why it is used, what randomness and loops are doing, and what its results can and cannot tell you.</p>
+      </div>
+
+      <div class="mini-ex">
+        <div class="mini-ex-label">✍ Mini Exercise 1 • Predict the output</div>
+        <div class="mini-ex-q">A simulation tallied 3 wins out of 4 games. What percent does this report?</div>
+        <div class="mini-ex-code"><pre style="margin:0;white-space:pre;font-family:monospace;font-size:13px;color:#e2e8f0;"><span class="py-var">wins</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">3</span>
+<span class="py-var">games</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">4</span>
+<span class="py-kw">print</span><span class="py-var">(</span><span class="py-var">wins</span><span class="py-var"> </span><span class="py-var">*</span><span class="py-var"> </span><span class="py-num">100</span><span class="py-var"> </span><span class="py-comment">// games)</span></pre></div>
+        <div class="mini-opts" id="me1-opts">
+          <button class="mini-opt" onclick="miniMCQ('me1','A','A','me1-fb')"><span class="mini-opt-letter">A</span> 75</button>
+          <button class="mini-opt" onclick="miniMCQ('me1','B','A','me1-fb')"><span class="mini-opt-letter">B</span> 7</button>
+          <button class="mini-opt" onclick="miniMCQ('me1','C','A','me1-fb')"><span class="mini-opt-letter">C</span> 0.75</button>
+          <button class="mini-opt" onclick="miniMCQ('me1','D','A','me1-fb')"><span class="mini-opt-letter">D</span> 3</button>
+        </div>
+        <div class="mini-fb" id="me1-fb"></div>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Why We Simulate</h2>
+      <p>If you can flip a real coin, why write a program to flip a fake one? Because for most interesting questions the real experiment is expensive, slow, dangerous, or impossible to repeat. A simulation removes those obstacles:</p>
+      <ul>
+        <li>
+<strong>Cheaper and safer:</strong> crash-test a bridge design or a rocket engine on a computer before spending money or risking harm.</li>
+        <li>
+<strong>Faster:</strong> a program can play out a hundred years of climate or a million dice games in seconds.</li>
+        <li>
+<strong>Repeatable and adjustable:</strong> you can run the exact same scenario again, or change one parameter (the rain chance, the number of trials) and immediately see the effect.</li>
+        <li>
+<strong>Observable:</strong> you can model things that are hard to watch directly, like the spread of a disease or the motion of galaxies.</li>
+      </ul>
+      <div class="code-panel-wrap">
+  <div class="code-panel-tabs">
+    <button class="code-tab py active" onclick="switchTab(this,'py','pan-2')">🐛 Python</button>
+    <button class="code-tab pseudo" onclick="switchTab(this,'pseudo','pan-2')">📋 AP Pseudocode</button>
+  </div>
+  <div class="code-pane active" id="pan-2-py"><pre><span class="py-kw">import</span><span class="py-var"> </span><span class="py-var">random</span>
+<span class="py-var">random</span><span class="py-var">.</span><span class="py-var">seed</span><span class="py-var">(</span><span class="py-num">2</span><span class="py-var">)</span>
+<span class="py-var">sixes</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">0</span>
+<span class="py-var">trials</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">600</span>
+<span class="py-kw">for</span><span class="py-var"> </span><span class="py-var">i</span><span class="py-var"> </span><span class="py-kw">in</span><span class="py-var"> </span><span class="py-kw">range</span><span class="py-var">(</span><span class="py-var">trials</span><span class="py-var">)</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">if</span><span class="py-var"> </span><span class="py-var">random</span><span class="py-var">.</span><span class="py-var">randint</span><span class="py-var">(</span><span class="py-num">1</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">6</span><span class="py-var">)</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">6</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var">sixes</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">sixes</span><span class="py-var"> </span><span class="py-var">+</span><span class="py-var"> </span><span class="py-num">1</span>
+<span class="py-kw">print</span><span class="py-var">(</span><span class="py-var">sixes</span><span class="py-var"> </span><span class="py-var">*</span><span class="py-var"> </span><span class="py-num">100</span><span class="py-var"> </span><span class="py-comment">// trials)</span></pre></div>
+  <div class="code-pane" id="pan-2-pseudo"><pre><span class="ps-var">sixes</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-num">0</span>
+<span class="ps-var">trials</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-num">600</span>
+<span class="ps-kw">REPEAT</span><span class="ps-var"> </span><span class="ps-var">trials</span><span class="ps-var"> </span><span class="ps-kw">TIMES</span>
+<span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">roll</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-var">RANDOM</span><span class="ps-var">(</span><span class="ps-num">1</span><span class="ps-var">,</span><span class="ps-var"> </span><span class="ps-num">6</span><span class="ps-var">)</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">IF</span><span class="ps-var"> </span><span class="ps-var">(</span><span class="ps-var">roll</span><span class="ps-var"> </span><span class="ps-var">=</span><span class="ps-var"> </span><span class="ps-num">6</span><span class="ps-var">)</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">sixes</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-var">sixes</span><span class="ps-var"> </span><span class="ps-var">+</span><span class="ps-var"> </span><span class="ps-num">1</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">}</span>
+<span class="ps-var">}</span>
+<span class="ps-kw">DISPLAY</span><span class="ps-var">(</span><span class="ps-var">sixes</span><span class="ps-var"> </span><span class="ps-var">*</span><span class="ps-var"> </span><span class="ps-num">100</span><span class="ps-var"> </span><span class="ps-var">/</span><span class="ps-var"> </span><span class="ps-var">trials</span><span class="ps-var">)</span></pre></div>
+</div>
+      <p>Here the loop runs 600 trials of rolling a die and counts how often a 6 appears, then reports that count as a percent of the trials. That percent is an <strong>estimate</strong> of the true probability of rolling a 6. This is the core pattern of a probability simulation: run many trials, tally an outcome, report the fraction.</p>
+      <div class="callout-exam">
+        <div class="callout-exam-label">🎯 More trials, more reliable</div>
+        <p>The more independent trials you run, the closer the estimate tends to land to the true probability. Six hundred rolls gives a steadier estimate than six rolls. A favorite exam idea: increasing the number of trials improves the reliability of the estimate but never makes it exact.</p>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Randomness, Seeds, and Reproducibility</h2>
+      <p>Randomness is what makes a simulation feel like the real, unpredictable world, and it is also why two runs can give slightly different answers. To make a run reproducible for testing or grading, you set a <strong>seed</strong>. Seeding fixes the random sequence, so the same seed always produces the same outcomes. That is useful, but the seed has to be set in the right place.</p>
+      <div class="code-panel-wrap">
+  <div class="code-panel-tabs">
+    <button class="code-tab py active" onclick="switchTab(this,'py','pan-3')">🐛 Python (buggy)</button>
+    <button class="code-tab pseudo" onclick="switchTab(this,'pseudo','pan-3')">📋 Pseudocode (fixed)</button>
+  </div>
+  <div class="code-pane active" id="pan-3-py"><pre><span class="py-comment"># BUG: seed is inside the loop</span>
+<span class="py-kw">for</span><span class="py-var"> </span><span class="py-var">i</span><span class="py-var"> </span><span class="py-kw">in</span><span class="py-var"> </span><span class="py-kw">range</span><span class="py-var">(</span><span class="py-num">4</span><span class="py-var">)</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var">random</span><span class="py-var">.</span><span class="py-var">seed</span><span class="py-var">(</span><span class="py-num">1</span><span class="py-var">)</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">print</span><span class="py-var">(</span><span class="py-var">random</span><span class="py-var">.</span><span class="py-var">randint</span><span class="py-var">(</span><span class="py-num">1</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">6</span><span class="py-var">)</span><span class="py-var">)</span></pre></div>
+  <div class="code-pane" id="pan-3-pseudo"><pre><span class="ps-comment"># FIX: seed once, before the loop</span>
+<span class="ps-var">random</span><span class="ps-var">.</span><span class="ps-var">seed</span><span class="ps-var">(</span><span class="ps-num">1</span><span class="ps-var">)</span>
+<span class="ps-kw">REPEAT</span><span class="ps-var"> </span><span class="ps-num">4</span><span class="ps-var"> </span><span class="ps-kw">TIMES</span>
+<span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">DISPLAY</span><span class="ps-var">(</span><span class="ps-var">RANDOM</span><span class="ps-var">(</span><span class="ps-num">1</span><span class="ps-var">,</span><span class="ps-var"> </span><span class="ps-num">6</span><span class="ps-var">)</span><span class="ps-var">)</span>
+<span class="ps-var">}</span></pre></div>
+</div>
+      <p>On the left the seed is placed <em>inside</em> the loop, so every iteration resets the generator to the same starting point and every roll comes out identical. That is not a simulation of four different rolls, it is the same roll printed four times. The fix on the right seeds <strong>once</strong>, before the loop, so the four rolls vary as intended while the whole run stays reproducible.</p>
+      <div class="callout-trap">
+        <div class="callout-trap-label">⚠ Runs differ, and that is expected</div>
+        <p>Because a simulation uses randomness, two runs with different seeds can produce different tallies and different estimates. That variation is not a bug. It is a property of the model. It also means a single run is weak evidence: you judge a simulation by many trials, not one lucky result.</p>
+      </div>
+
+      <div class="mini-ex">
+        <div class="mini-ex-label">✍ Mini Exercise 2 • Spot the flaw</div>
+        <div class="mini-ex-q">This model estimates the chance of a 6 using only 5 trials. Why is that estimate <strong>unreliable</strong>?</div>
+        <div class="mini-ex-code"><pre style="margin:0;white-space:pre;font-family:monospace;font-size:13px;color:#e2e8f0;"><span class="py-kw">import</span><span class="py-var"> </span><span class="py-var">random</span>
+<span class="py-var">random</span><span class="py-var">.</span><span class="py-var">seed</span><span class="py-var">(</span><span class="py-num">1</span><span class="py-var">)</span>
+<span class="py-var">c</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">0</span>
+<span class="py-kw">for</span><span class="py-var"> </span><span class="py-var">i</span><span class="py-var"> </span><span class="py-kw">in</span><span class="py-var"> </span><span class="py-kw">range</span><span class="py-var">(</span><span class="py-num">5</span><span class="py-var">)</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">if</span><span class="py-var"> </span><span class="py-var">random</span><span class="py-var">.</span><span class="py-var">randint</span><span class="py-var">(</span><span class="py-num">1</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">6</span><span class="py-var">)</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">6</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var">c</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">c</span><span class="py-var"> </span><span class="py-var">+</span><span class="py-var"> </span><span class="py-num">1</span>
+<span class="py-kw">print</span><span class="py-var">(</span><span class="py-var">c</span><span class="py-var">)</span></pre></div>
+        <div class="mini-opts" id="me2-opts">
+          <button class="mini-opt" onclick="miniMCQ('me2','A','A','me2-fb')"><span class="mini-opt-letter">A</span> 5 trials is too few, so random variation dominates and the estimate can be far from the true probability</button>
+          <button class="mini-opt" onclick="miniMCQ('me2','B','A','me2-fb')"><span class="mini-opt-letter">B</span> a fair die cannot be simulated on a computer</button>
+          <button class="mini-opt" onclick="miniMCQ('me2','C','A','me2-fb')"><span class="mini-opt-letter">C</span> the seed was not set, so the code will crash</button>
+          <button class="mini-opt" onclick="miniMCQ('me2','D','A','me2-fb')"><span class="mini-opt-letter">D</span> 5 is an odd number, so the percentages cannot be computed</button>
+        </div>
+        <div class="mini-fb" id="me2-fb"></div>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Limitations: A Model Is Only as Good as Its Assumptions</h2>
+      <p>A simulation is powerful precisely because it simplifies, and that simplification is also its weakness. Every simulation leaves things out, and its results are only as trustworthy as the assumptions built into it. If the model assumes a fair coin but the real coin is weighted, the simulation will confidently produce wrong conclusions. The output is an <strong>approximation</strong> of reality that depends entirely on the quality of the model.</p>
+      <p>The parameterized weather model below assumes a fixed 40 percent chance of rain every single day, independent of the day before. Real weather does not work that way, so this simulation is a rough abstraction. It is still useful for exploring "what if the chance were higher," but its numbers should never be mistaken for a real forecast.</p>
+      <div class="code-panel-wrap">
+  <div class="code-panel-tabs">
+    <button class="code-tab py active" onclick="switchTab(this,'py','pan-4')">🐛 Python</button>
+    <button class="code-tab pseudo" onclick="switchTab(this,'pseudo','pan-4')">📋 AP Pseudocode</button>
+  </div>
+  <div class="code-pane active" id="pan-4-py"><pre><span class="py-kw">import</span><span class="py-var"> </span><span class="py-var">random</span>
+<span class="py-var">random</span><span class="py-var">.</span><span class="py-var">seed</span><span class="py-var">(</span><span class="py-num">4</span><span class="py-var">)</span>
+<span class="py-var">rainy</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">0</span>
+<span class="py-var">chance</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">40</span>
+<span class="py-kw">for</span><span class="py-var"> </span><span class="py-var">day</span><span class="py-var"> </span><span class="py-kw">in</span><span class="py-var"> </span><span class="py-kw">range</span><span class="py-var">(</span><span class="py-num">30</span><span class="py-var">)</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">if</span><span class="py-var"> </span><span class="py-var">random</span><span class="py-var">.</span><span class="py-var">randint</span><span class="py-var">(</span><span class="py-num">1</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">100</span><span class="py-var">)</span><span class="py-var"> </span><span class="py-var">&lt;</span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">chance</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var">rainy</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">rainy</span><span class="py-var"> </span><span class="py-var">+</span><span class="py-var"> </span><span class="py-num">1</span>
+<span class="py-kw">print</span><span class="py-var">(</span><span class="py-var">rainy</span><span class="py-var">)</span></pre></div>
+  <div class="code-pane" id="pan-4-pseudo"><pre><span class="ps-var">rainy</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-num">0</span>
+<span class="ps-var">chance</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-num">40</span>
+<span class="ps-kw">REPEAT</span><span class="ps-var"> </span><span class="ps-num">30</span><span class="ps-var"> </span><span class="ps-kw">TIMES</span>
+<span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">IF</span><span class="ps-var"> </span><span class="ps-var">(</span><span class="ps-var">RANDOM</span><span class="ps-var">(</span><span class="ps-num">1</span><span class="ps-var">,</span><span class="ps-var"> </span><span class="ps-num">100</span><span class="ps-var">)</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">=</span><span class="ps-var"> </span><span class="ps-var">chance</span><span class="ps-var">)</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">rainy</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-var">rainy</span><span class="ps-var"> </span><span class="ps-var">+</span><span class="ps-var"> </span><span class="ps-num">1</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">}</span>
+<span class="ps-var">}</span>
+<span class="ps-kw">DISPLAY</span><span class="ps-var">(</span><span class="ps-var">rainy</span><span class="ps-var">)</span></pre></div>
+</div>
+      <p>When you evaluate a simulation, ask two questions: are the assumptions reasonable for the question being asked, and were enough trials run to make the estimate stable? A well-built simulation with sound assumptions and many trials gives a useful approximation. A simulation with bad assumptions gives precise-looking numbers that are simply wrong.</p>
+
+      <div class="mini-ex">
+        <div class="mini-ex-label">✍ Mini Exercise 3 • Fill in the blank</div>
+        <div class="mini-ex-q">A coin simulation ran 200 flips and tallied 120 heads. Type the whole-number percent it reports.</div>
+        <div class="mini-ex-code"><pre style="margin:0;white-space:pre;font-family:monospace;font-size:13px;color:#e2e8f0;"><span class="py-var">heads</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">120</span>
+<span class="py-var">total</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">200</span>
+<span class="py-kw">print</span><span class="py-var">(</span><span class="py-var">heads</span><span class="py-var"> </span><span class="py-var">*</span><span class="py-var"> </span><span class="py-num">100</span><span class="py-var"> </span><span class="py-comment">// total)</span></pre></div>
+        <div class="mini-fib-row">
+          <span style="font-size:14px;color:#374151;">prints:</span>
+          <input type="text" class="mini-fib-input" id="me3-inp" placeholder="?">
+          <button class="mini-fib-btn" onclick="miniFIB('me3','me3-fb')">Check</button>
+        </div>
+        <div class="mini-fb" id="me3-fb"></div>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Key Vocabulary</h2>
+      <table class="vocab-table">
+        <thead><tr>
+<th>Term</th>
+<th>Definition</th>
+<th>Example</th>
+</tr></thead>
+        <tbody>
+          <tr>
+<td>Simulation</td>
+<td>A program that imitates a real-world process to study it safely and cheaply</td>
+<td>a flight simulator</td>
+</tr>
+          <tr>
+<td>Abstraction</td>
+<td>Keeping the details that matter and removing the rest</td>
+<td>ignoring air molecules</td>
+</tr>
+          <tr>
+<td>Assumption</td>
+<td>A simplifying belief the model is built on, which limits its accuracy</td>
+<td>"rain chance is 40% daily"</td>
+</tr>
+          <tr>
+<td>Trial</td>
+<td>One run of the scenario inside the simulation loop</td>
+<td>one dice roll</td>
+</tr>
+          <tr>
+<td>Estimate</td>
+<td>An approximate result computed from tallying many trials</td>
+<td>sixes / trials</td>
+</tr>
+          <tr>
+<td>Seed</td>
+<td>A fixed starting point that makes a random run reproducible</td>
+<td><code>random.seed(1)</code></td>
+</tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cpt-connection">
+      <div class="cpt-connection-label">📋 Create Performance Task • A simulation as your program</div>
+      <p>A simulation is a strong choice for the Create Performance Task because it naturally uses a list, a loop, randomness, and a procedure that returns a result, which is exactly the machinery the rubric rewards. The key is to describe it honestly as a model with assumptions, not as reality.</p>
+      <h3>A point-earning example</h3>
+      <p>Imagine a program that estimates the chance of rolling a 6 by simulating many dice rolls and reporting the percentage:</p>
+      <div class="cpt-code">sixes &lt;- 0
+trials &lt;- 1000
+REPEAT trials TIMES
+{
+    roll &lt;- RANDOM(1, 6)
+    IF (roll = 6)
+    {
+        sixes &lt;- sixes + 1
+    }
+}
+DISPLAY(sixes * 100 / trials)</div>
+      <p>In your written response, name the phenomenon, the randomness, and the role of iteration:</p>
+      <ul class="cpt-stems">
+        <li>"My program simulates rolling a fair die, using <code>RANDOM(1, 6)</code> to model one roll."</li>
+        <li>"The loop runs 1000 independent trials and tallies how many are a 6, so the output estimates the probability rather than computing it exactly."</li>
+        <li>"Because the estimate depends on randomness, running more trials makes it more reliable, but it remains an approximation based on the assumption that the die is fair."</li>
+      </ul>
+      <h3>The trap to avoid</h3>
+      <p>Do not claim your simulation produces the true, exact answer. A simulation reports an approximation that depends on its assumptions and the number of trials. Saying "this proves the probability is exactly 16 percent" loses the abstraction point. <a href="/pages/ap-csp-course-create-task">See the full Create Task module →</a></p>
+    </div>
+    <div class="email-capture">
+      <div class="email-capture-text">
+        <div class="email-capture-eyebrow">FREE for students</div>
+        <h3>Get a free AP CSP question every day</h3>
+        <p>Join 3,000+ students. Daily practice, study tips, and exam strategies.</p>
+      </div>
+      <div>
+        <div class="email-capture-form" id="capture-form">
+          <input type="email" class="email-capture-input" id="capture-email" placeholder="your@email.com">
+          <button class="email-capture-btn" onclick="handleCapture()">Subscribe →</button>
+        </div>
+        <div class="email-capture-success" id="capture-success">✓ You're in!</div>
+      </div>
+    </div>
+    <div class="mcq-section">
+      <div class="mcq-section-header">
+        <div class="mcq-section-icon">📈</div>
+        <div>
+          <div class="mcq-section-title">MCQ Practice</div>
+          <div class="mcq-section-sub">6 questions • Exam difficulty and above • Predict before you peek</div>
+        </div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q1">
+        <div class="mcq-q-num">Question 1 of 6<span class="diff-tag">Trace</span>
+</div>
+        <div class="predict-note">Predict first: compute n times 100, divided by t, before you read the options.</div>
+        <div class="mcq-q-text">A simulation counted <code>n</code> successes out of <code>t</code> trials and reports the result as a whole-number percent. What is displayed?</div>
+        <div class="mcq-code">
+<span class="k">n</span> = <span class="n">45</span>
+<span class="k">t</span> = <span class="n">60</span>
+<span class="k">print</span>(n * <span class="n">100</span> // t)</div>
+        <div class="mcq-options" id="q1-options">
+<button class="mcq-option" onclick="checkMCQ('q1','A','D','q1-fb-A')"><span class="mcq-option-letter">A</span> 45</button>
+<button class="mcq-option" onclick="checkMCQ('q1','B','D','q1-fb-B')"><span class="mcq-option-letter">B</span> 60</button>
+<button class="mcq-option" onclick="checkMCQ('q1','C','D','q1-fb-C')"><span class="mcq-option-letter">C</span> 133</button>
+<button class="mcq-option" onclick="checkMCQ('q1','D','D','q1-fb-D')"><span class="mcq-option-letter">D</span> 75</button>
+</div>
+<div id="q1-fb-A" class="mcq-feedback incorrect-fb">Incorrect. 45 is the raw success count n, not the percent. You still divide by the trials after multiplying by 100.</div>
+<div id="q1-fb-B" class="mcq-feedback incorrect-fb">Incorrect. 60 is the number of trials t, not the percent of successes.</div>
+<div id="q1-fb-C" class="mcq-feedback incorrect-fb">Incorrect. 133 is t * 100 // n, the ratio computed upside down. The successes go on top.</div>
+<div id="q1-fb-D" class="mcq-feedback correct-fb">Correct. 45 * 100 is 4500, and 4500 // 60 is 75, so it reports 75 percent.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q2">
+        <div class="mcq-q-num">Question 2 of 6<span class="diff-tag">Spot the bug</span>
+</div>
+        <div class="mcq-q-text">This is meant to run a reproducible simulation of four <strong>different</strong> dice rolls. What is the bug?</div>
+        <div class="mcq-code">
+<span class="k">import</span> random
+<span class="k">for</span> i <span class="k">in</span> <span class="k">range</span>(<span class="n">4</span>):
+    random.seed(<span class="n">1</span>)
+    <span class="k">print</span>(random.randint(<span class="n">1</span>, <span class="n">6</span>))</div>
+        <div class="mcq-options" id="q2-options">
+<button class="mcq-option" onclick="checkMCQ('q2','A','A','q2-fb-A')"><span class="mcq-option-letter">A</span> The seed is set inside the loop, so every roll restarts from the same point and all four rolls are identical</button>
+<button class="mcq-option" onclick="checkMCQ('q2','B','A','q2-fb-B')"><span class="mcq-option-letter">B</span> The range should start at 1, so range(4) skips the first roll of the simulation</button>
+<button class="mcq-option" onclick="checkMCQ('q2','C','A','q2-fb-C')"><span class="mcq-option-letter">C</span> randint(1, 6) can only return 1 or 6, so the other faces never appear</button>
+<button class="mcq-option" onclick="checkMCQ('q2','D','A','q2-fb-D')"><span class="mcq-option-letter">D</span> A simulation is not allowed to call random more than once per program</button>
+</div>
+<div id="q2-fb-A" class="mcq-feedback correct-fb">Correct. Reseeding to 1 every iteration resets the generator, so randint returns the same value each time and the four rolls are the same, not four different rolls.</div>
+<div id="q2-fb-B" class="mcq-feedback incorrect-fb">Incorrect. range(4) correctly produces four iterations. The problem is the seed placement, not the range.</div>
+<div id="q2-fb-C" class="mcq-feedback incorrect-fb">Incorrect. randint(1, 6) returns any integer from 1 to 6 inclusive, not only the endpoints.</div>
+<div id="q2-fb-D" class="mcq-feedback incorrect-fb">Incorrect. There is no such rule. Calling random repeatedly is exactly how a simulation runs many trials.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q3">
+        <div class="mcq-q-num">Question 3 of 6<span class="diff-tag">Spot the bug</span>
+</div>
+        <div class="mcq-q-text">This is meant to count how many entries of the list <code>data</code> equal 1. It prints the wrong total. Where is the bug?</div>
+        <div class="mcq-code">
+<span class="k">c</span> = <span class="n">0</span>
+<span class="k">for</span> k <span class="k">in</span> <span class="k">range</span>(<span class="k">len</span>(data)):
+    c = <span class="n">0</span>
+    <span class="k">if</span> data[k] == <span class="n">1</span>:
+        c = c + <span class="n">1</span>
+<span class="k">print</span>(c)</div>
+        <div class="mcq-options" id="q3-options">
+<button class="mcq-option" onclick="checkMCQ('q3','A','B','q3-fb-A')"><span class="mcq-option-letter">A</span> The comparison should be = instead of ==, so the if never runs</button>
+<button class="mcq-option" onclick="checkMCQ('q3','B','B','q3-fb-B')"><span class="mcq-option-letter">B</span> The counter c is reset to 0 inside the loop, so only the last entry is ever counted</button>
+<button class="mcq-option" onclick="checkMCQ('q3','C','B','q3-fb-C')"><span class="mcq-option-letter">C</span> range(len(data)) skips the last index, so one entry is missed</button>
+<button class="mcq-option" onclick="checkMCQ('q3','D','B','q3-fb-D')"><span class="mcq-option-letter">D</span> print(c) is outside the loop, so nothing is ever displayed</button>
+</div>
+<div id="q3-fb-A" class="mcq-feedback incorrect-fb">Incorrect. == is the correct comparison operator. A single = would be an assignment and a syntax error here.</div>
+<div id="q3-fb-B" class="mcq-feedback correct-fb">Correct. c = 0 sits inside the loop, so every iteration wipes the running total. The final value reflects only the last element, not the whole tally.</div>
+<div id="q3-fb-C" class="mcq-feedback incorrect-fb">Incorrect. range(len(data)) visits every valid index from 0 to len(data) - 1, so no entry is skipped.</div>
+<div id="q3-fb-D" class="mcq-feedback incorrect-fb">Incorrect. print(c) is outside the loop on purpose, which is correct. It runs once after the loop and does display a value.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q4">
+        <div class="mcq-q-num">Question 4 of 6<span class="diff-tag">I, II, III</span>
+</div>
+        <div class="mcq-q-text">Which of the following statements about simulations are <strong>true</strong>?</div>
+        <ul class="mcq-roman">
+          <li>
+<strong>I.</strong> A simulation uses simplifying assumptions, so its results are approximations of the real world.</li>
+          <li>
+<strong>II.</strong> Running more independent trials generally makes the estimate more reliable.</li>
+          <li>
+<strong>III.</strong> A simulation that uses randomness produces the exact same output on every run, no matter the seed.</li>
+        </ul>
+        <div class="mcq-options" id="q4-options">
+<button class="mcq-option" onclick="checkMCQ('q4','A','C','q4-fb-A')"><span class="mcq-option-letter">A</span> I only</button>
+<button class="mcq-option" onclick="checkMCQ('q4','B','C','q4-fb-B')"><span class="mcq-option-letter">B</span> II and III only</button>
+<button class="mcq-option" onclick="checkMCQ('q4','C','C','q4-fb-C')"><span class="mcq-option-letter">C</span> I and II only</button>
+<button class="mcq-option" onclick="checkMCQ('q4','D','C','q4-fb-D')"><span class="mcq-option-letter">D</span> I, II, and III</button>
+</div>
+<div id="q4-fb-A" class="mcq-feedback incorrect-fb">Incorrect. I is true, but II is also true: more independent trials generally give a more reliable estimate.</div>
+<div id="q4-fb-B" class="mcq-feedback incorrect-fb">Incorrect. III is false. Runs with different seeds differ, so III cannot be part of the answer.</div>
+<div id="q4-fb-C" class="mcq-feedback correct-fb">Correct. I and II are both true. III is false because different seeds produce different runs. Only a fixed seed makes a run repeat exactly.</div>
+<div id="q4-fb-D" class="mcq-feedback incorrect-fb">Incorrect. III is false, so not all three are true. Different seeds give different outputs.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q5">
+        <div class="mcq-q-num">Question 5 of 6<span class="diff-tag">NOT question</span>
+</div>
+        <div class="mcq-q-text">Which of the following is <strong>NOT</strong> a valid reason to use a simulation instead of a real-world experiment?</div>
+        <div class="mcq-options" id="q5-options">
+<button class="mcq-option" onclick="checkMCQ('q5','A','D','q5-fb-A')"><span class="mcq-option-letter">A</span> It is often cheaper and safer than performing the real experiment</button>
+<button class="mcq-option" onclick="checkMCQ('q5','B','D','q5-fb-B')"><span class="mcq-option-letter">B</span> It lets you repeat a scenario and vary parameters quickly</button>
+<button class="mcq-option" onclick="checkMCQ('q5','C','D','q5-fb-C')"><span class="mcq-option-letter">C</span> It can model situations that are hard, slow, or dangerous to observe directly</button>
+<button class="mcq-option" onclick="checkMCQ('q5','D','D','q5-fb-D')"><span class="mcq-option-letter">D</span> It guarantees results that are exactly correct for the real world</button>
+</div>
+<div id="q5-fb-A" class="mcq-feedback incorrect-fb">Incorrect. Being cheaper and safer IS a valid reason to simulate, so it is not the exception the question asks for.</div>
+<div id="q5-fb-B" class="mcq-feedback incorrect-fb">Incorrect. Repeating and adjusting a scenario IS a real benefit of simulation, so it is not the exception.</div>
+<div id="q5-fb-C" class="mcq-feedback incorrect-fb">Incorrect. Modeling hard-to-observe situations IS a genuine benefit, so it is not the exception.</div>
+<div id="q5-fb-D" class="mcq-feedback correct-fb">Correct. A simulation gives an approximation based on its assumptions. It does not guarantee exactly correct real-world results, so this is not a valid reason.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q6">
+        <div class="mcq-q-num">Question 6 of 6<span class="diff-tag">Benefit vs limitation</span>
+</div>
+        <div class="mcq-q-text">A team increases the number of trials in a probability simulation from 100 to 100,000. Which statement <strong>best</strong> describes the likely effect?</div>
+        <div class="mcq-options" id="q6-options">
+<button class="mcq-option" onclick="checkMCQ('q6','A','B','q6-fb-A')"><span class="mcq-option-letter">A</span> The estimate will now exactly equal the true probability</button>
+<button class="mcq-option" onclick="checkMCQ('q6','B','B','q6-fb-B')"><span class="mcq-option-letter">B</span> The estimate is likely closer to the true probability, but it is still an approximation</button>
+<button class="mcq-option" onclick="checkMCQ('q6','C','B','q6-fb-C')"><span class="mcq-option-letter">C</span> The simulation no longer relies on any assumptions about the model</button>
+<button class="mcq-option" onclick="checkMCQ('q6','D','B','q6-fb-D')"><span class="mcq-option-letter">D</span> Randomness no longer affects the result of any individual trial</button>
+</div>
+<div id="q6-fb-A" class="mcq-feedback incorrect-fb">Incorrect. More trials improve reliability but do not make an estimate exact. A simulation still only approximates.</div>
+<div id="q6-fb-B" class="mcq-feedback correct-fb">Correct. More independent trials generally push the estimate closer to the true probability, yet it remains an approximation, never a guarantee.</div>
+<div id="q6-fb-C" class="mcq-feedback incorrect-fb">Incorrect. The number of trials does not change the model's assumptions. Those are built into how each trial works.</div>
+<div id="q6-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Each individual trial is still random. More trials change the reliability of the summary, not the randomness of a single trial.</div>
+      </div>
+    </div>
+    <div class="game-section">
+      <div style="text-align:center;margin-bottom:20px;">
+        <div class="game-badge">🎮 Lesson Game</div>
+        <div class="game-title">Simulation Station</div>
+        <div class="game-sub">Trace each simulation and predict the tally or estimate it reports. 8 rounds.</div>
+      </div>
+      <div id="vt-active">
+        <div class="vt-score-bar">
+          <div class="vt-stat">
+<div class="vt-stat-val" id="vt-score">0</div>
+<div class="vt-stat-lbl">Correct</div>
+</div>
+          <div class="vt-stat">
+<div class="vt-stat-val" id="vt-qn">1/8</div>
+<div class="vt-stat-lbl">Round</div>
+</div>
+          <div class="vt-stat">
+<div class="vt-stat-val" id="vt-streak">0</div>
+<div class="vt-stat-lbl">Streak 🔥</div>
+</div>
+        </div>
+        <div class="vt-code-card">
+          <div class="vt-code-label">🐛 Python • what does it report?</div>
+          <div class="vt-code-lines" id="vt-code"></div>
+        </div>
+        <div class="vt-question" id="vt-question"></div>
+        <div class="vt-options" id="vt-options"></div>
+        <div class="vt-fb" id="vt-fb"></div>
+        <button class="vt-next" id="vt-next" onclick="vtNext()">Next →</button>
+      </div>
+      <div class="vt-results" id="vt-results">
+        <div class="vt-res-score" id="vt-res-score">0/8</div>
+        <div class="vt-res-lbl">correct answers</div>
+        <div class="vt-res-msg" id="vt-res-msg"></div>
+        <button class="vt-restart" onclick="vtRestart()">↻ Play again</button>
+      </div>
+    </div>
+    <div class="code-editor-section">
+      <div class="code-editor-badge">💻 Live Python Code Editor</div>
+      <div class="code-editor-title">Practice Problems</div>
+      <div class="code-editor-sub">Real Python runs right here in your browser. The first time you press Run, the Python engine loads (a few seconds); after that it is instant. Problems build from guided to Create-Task level. Use Hint if you are stuck, and check your output against the target.</div>
+      <div class="code-usage" id="code-usage">Hints used: <strong>0</strong> • Solutions viewed: <strong>0</strong>
+</div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-1">
+        <div class="scaffold-badge">Level 1 • Guided</div>
+        <div class="code-problem-num">Problem 1 of 8 • report a percent</div>
+        <div class="code-problem-prompt">A coin simulation already tallied its results. Report the percent that were heads using integer division.<ul class="rules">
+<li>
+<code>heads</code> is the count of heads</li>
+<li>
+<code>total</code> is the number of flips</li>
+</ul>Target output: <strong>54</strong>
+</div>
+        <textarea class="code-textarea" id="ce-1" rows="6" spellcheck="false">heads = 27
+total = 50
+# TODO: print heads as a whole-number percent of total (use // )
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-1" onclick="runPy(1)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(1)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-1" onclick="showSol(1)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-1"></div>
+        <div class="code-hint" id="ce-hint-1"></div>
+        <div class="code-solution" id="ce-sol-1"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-2">
+        <div class="scaffold-badge">Level 2 • Tally a loop</div>
+        <div class="code-problem-num">Problem 2 of 8 • count the successes</div>
+        <div class="code-problem-prompt">
+<code>results</code> is a list where 1 means success and 0 means failure. Loop through it, count the 1s, and print the count. Target output: <strong>4</strong>
+</div>
+        <textarea class="code-textarea" id="ce-2" rows="6" spellcheck="false">results = [1, 0, 1, 1, 1, 0]
+# TODO: loop through results and count how many equal 1, then print the count
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-2" onclick="runPy(2)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(2)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-2" onclick="showSol(2)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-2"></div>
+        <div class="code-hint" id="ce-hint-2"></div>
+        <div class="code-solution" id="ce-sol-2"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-3">
+        <div class="scaffold-badge">Level 3 • Seeded simulation</div>
+        <div class="code-problem-num">Problem 3 of 8 • count the sixes</div>
+        <div class="code-problem-prompt">The seed is already set so your run is reproducible. Roll a die (<code>random.randint(1, 6)</code>) 10 times, count how many are a 6, and print the count. Target output: <strong>4</strong>
+</div>
+        <textarea class="code-textarea" id="ce-3" rows="6" spellcheck="false">import random
+random.seed(5)
+sixes = 0
+# TODO: roll 10 times; add 1 to sixes each time you roll a 6, then print sixes
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-3" onclick="runPy(3)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(3)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-3" onclick="showSol(3)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-3"></div>
+        <div class="code-hint" id="ce-hint-3"></div>
+        <div class="code-solution" id="ce-sol-3"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-4">
+        <div class="scaffold-badge">Level 4 • Fix the bug</div>
+        <div class="code-problem-num">Problem 4 of 8 • move the seed</div>
+        <div class="code-problem-prompt">This should run one reproducible simulation of 12 rolls and count the sixes, but the seed is <strong>inside</strong> the loop, so every roll is identical. Move the seed so it runs once, before the loop. Target output: <strong>1</strong>
+</div>
+        <textarea class="code-textarea" id="ce-4" rows="6" spellcheck="false">import random
+count = 0
+for i in range(12):
+    random.seed(1)
+    if random.randint(1, 6) == 6:
+        count = count + 1
+print(count)
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-4" onclick="runPy(4)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(4)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-4" onclick="showSol(4)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-4"></div>
+        <div class="code-hint" id="ce-hint-4"></div>
+        <div class="code-solution" id="ce-sol-4"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-5">
+        <div class="scaffold-badge">Level 5 • Estimate</div>
+        <div class="code-problem-num">Problem 5 of 8 • tally a condition</div>
+        <div class="code-problem-prompt">Simulate 60 dice rolls with the seed already set. Count how many rolls are <strong>5 or higher</strong> and print that count. Target output: <strong>16</strong>
+</div>
+        <textarea class="code-textarea" id="ce-5" rows="6" spellcheck="false">import random
+random.seed(20)
+big = 0
+# TODO: roll 60 times; add 1 to big each time the roll is &gt;= 5, then print big
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-5" onclick="runPy(5)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(5)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-5" onclick="showSol(5)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-5"></div>
+        <div class="code-hint" id="ce-hint-5"></div>
+        <div class="code-solution" id="ce-sol-5"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-6">
+        <div class="scaffold-badge">Level 6 • Create Task style</div>
+        <div class="code-problem-num">Problem 6 of 8 • parameterized model</div>
+        <div class="code-problem-prompt">A weather model assumes a fixed <code>chance</code> of rain each day. Simulate 30 days: each day, if <code>random.randint(1, 100)</code> is at most <code>chance</code>, it rained. Count and print the rainy days.<ul class="rules"><li>
+<code>chance</code> is 40 (a 40 percent daily chance)</li></ul>Target output: <strong>19</strong>
+</div>
+        <textarea class="code-textarea" id="ce-6" rows="6" spellcheck="false">import random
+random.seed(4)
+chance = 40
+rainy = 0
+# TODO: for each of 30 days, if randint(1, 100) &lt;= chance, add 1 to rainy; then print rainy
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-6" onclick="runPy(6)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(6)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-6" onclick="showSol(6)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-6"></div>
+        <div class="code-hint" id="ce-hint-6"></div>
+        <div class="code-solution" id="ce-sol-6"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-7">
+        <div class="scaffold-badge">Level 7 • Challenge</div>
+        <div class="code-problem-num">Problem 7 of 8 • you write the whole simulation</div>
+        <div class="code-problem-prompt">Open ended. Write the <strong>entire</strong> simulation yourself. Using the seed provided, simulate rolling a fair die 20 times and print how many of the rolls were a 6. Only the import and seed are given. Target output: <strong>1</strong>
+</div>
+        <textarea class="code-textarea" id="ce-7" rows="6" spellcheck="false">import random
+random.seed(7)
+# Write the full simulation below.
+# Roll a die (1 to 6) 20 times, count the sixes, and print the count.
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-7" onclick="runPy(7)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(7)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-7" onclick="showSol(7)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-7"></div>
+        <div class="code-hint" id="ce-hint-7"></div>
+        <div class="code-solution" id="ce-sol-7"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-8">
+        <div class="scaffold-badge">Level 8 • Challenge</div>
+        <div class="code-problem-num">Problem 8 of 8 • multi-line summary</div>
+        <div class="code-problem-prompt">Open ended. Write the <strong>entire</strong> simulation yourself. Using the seed provided, flip a coin (<code>random.randint(0, 1)</code>, where 1 is heads) 50 times. Print three lines:<ul class="rules">
+<li>line 1: the number of heads</li>
+<li>line 2: the number of tails</li>
+<li>line 3: the whole-number percent that were heads</li>
+</ul>Target output: <strong>28</strong> then <strong>22</strong> then <strong>56</strong> on three lines.</div>
+        <textarea class="code-textarea" id="ce-8" rows="6" spellcheck="false">import random
+random.seed(10)
+# Write the full coin simulation below.
+# Flip 50 times; count heads and tails; print heads, then tails, then percent heads.
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-8" onclick="runPy(8)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(8)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-8" onclick="showSol(8)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-8"></div>
+        <div class="code-hint" id="ce-hint-8"></div>
+        <div class="code-solution" id="ce-sol-8"></div>
+      </div>
+    </div>
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What is a simulation in AP CSP?<i class="faq-icon">+</i></button>
+        <div class="faq-a">A simulation is a program that models a real-world phenomenon so you can study it on a computer. It is an abstraction built on assumptions, it often uses randomness to mimic real uncertainty, and it uses iteration to run many trials. Because it simplifies reality, its results are approximations, not exact truths.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Why use a simulation instead of a real experiment?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Simulations are usually cheaper, safer, and faster than the real thing, and they are easy to repeat and adjust. You can crash-test a design, play out thousands of games, or model something dangerous or slow to observe, all without real-world cost or risk.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Why do two runs of the same simulation give different results?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Because the simulation uses <code>randomness</code>. Each run draws different random values, so the tallies differ. To make a run reproducible, set a <code>seed</code>; the same seed always produces the same sequence. Different seeds, or no seed, give runs that vary.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Does running more trials make a simulation exact?<i class="faq-icon">+</i></button>
+        <div class="faq-a">No. More independent trials generally make the estimate more reliable and closer to the true value, but the result is always an approximation. A simulation reports an estimate, never a guaranteed exact answer.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What are the limitations of a simulation?<i class="faq-icon">+</i></button>
+        <div class="faq-a">A simulation is only as good as its assumptions. It leaves out details, so if the model is wrong (for example, assuming a fair coin that is actually weighted), the results will be confidently wrong. Its output depends on the model and the number of trials, and it approximates rather than proves.</div>
+      </div>
+    </div>
+    <div class="related-links">
+      <h3>🔗 Continue studying</h3>
+      <div class="related-links-grid">
+        <a href="/pages/ap-csp-course-big-idea-3-algorithms" class="related-link">← BI3 Hub</a>
+        <a href="/pages/ap-csp-course-bi3-random-values" class="related-link">← 3.15 Random Values</a>
+        <a href="/pages/ap-csp-course-bi3-algorithmic-efficiency" class="related-link">Next: 3.17 Algorithmic Efficiency →</a>
+        <a href="/pages/ap-csp-course-bi3-iteration" class="related-link">3.8 Iteration</a>
+        <a href="/pages/ap-csp-course-create-task" class="related-link">Create Task Module</a>
+        <a href="/pages/ap-csp-question-of-the-day" class="related-link">Daily Practice Questions</a>
+        <a href="https://apcentral.collegeboard.org/courses/ap-computer-science-principles" class="related-link related-ext" target="_blank" rel="noopener">College Board AP CSP ↗</a>
+      </div>
+    </div>
+    <div class="superpack-slim">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="superpack-slim-icon">📦</div>
+        <div><div class="superpack-slim-text">AP CSP Teacher Superpack<span class="superpack-slim-sub">Slides, lesson plans, unit tests for all 5 Big Ideas, $249</span>
+</div></div>
+      </div>
+      <a href="/products/ap-csp-teacher-superpack" class="superpack-slim-btn">Get the Superpack →</a>
+    </div>
+    <div class="teacher-callout">
+      <div class="teacher-callout-icon">🏫</div>
+      <div class="teacher-callout-body">
+        <div class="teacher-callout-label">For teachers</div>
+        <p>The Superpack includes an editable Topic 3.16 slide deck with animated trial-and-tally traces, a benefits-versus-limitations discussion bank, seed-placement bug examples, a print-ready simulation worksheet, and a unit quiz. <a href="/products/ap-csp-teacher-superpack">View what's included →</a></p>
+      </div>
+    </div>
+    <div class="lesson-nav">
+      <a href="/pages/ap-csp-course-bi3-random-values" class="nav-card">
+        <div class="nav-card-dir">← Previous</div>
+        <div class="nav-card-title">3.15 Random Values</div>
+      </a>
+      <a href="/pages/ap-csp-course-bi3-algorithmic-efficiency" class="nav-card next">
+        <div class="nav-card-dir">Next lesson →</div>
+        <div class="nav-card-title">3.17 Algorithmic Efficiency</div>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var MINI_MSGS={"me1": {"A": "\u2713 Correct! 3 * 100 is 300, and 300 // 4 is 75, so it reports 75 percent.", "B": "\u2717 7 is not the percent. You must multiply the wins by 100 before dividing by the games.", "C": "\u2717 0.75 is the fraction, but integer division by 100 gives a whole-number percent, which is 75.", "D": "\u2717 3 is the raw win count, not the percent of games won."}, "me2": {"A": "\u2713 Correct! With only 5 trials, one lucky or unlucky streak swings the estimate a lot, so it may sit far from the true 1-in-6 probability. More trials would steady it.", "B": "\u2717 A fair die is easy to simulate with random.randint(1, 6). That is not the issue.", "C": "\u2717 The seed is set, and a missing seed would not crash the program anyway. The issue is the tiny number of trials.", "D": "\u2717 Whether 5 is odd is irrelevant. The problem is that 5 trials is simply too few to be reliable."}};
+var MINI_FIB={"me3": {"correct": "60", "c": "\u2713 Correct! 120 * 100 is 12000, and 12000 // 200 is 60, so it reports 60 percent.", "w": "\u2717 Not quite. Multiply heads by 100, then divide by total: 120 * 100 // 200 is 60."}};
+var CE_EXPECTED={"1": "54", "2": "4", "3": "4", "4": "1", "5": "16", "6": "19", "7": "1", "8": "28\n22\n56"};
+var CE_HINTS={"1": ["Percent means multiply by 100, then divide by the total.", "Use // so the answer is a whole number: heads * 100 // total.", "Full pattern:\nprint(heads * 100 // total)"], "2": ["Start a counter at 0 before the loop.", "Inside the loop, add 1 only when the entry equals 1.", "Full pattern:\ncount = 0\nfor r in results:\n    if r == 1:\n        count = count + 1\nprint(count)"], "3": ["Keep the seed where it is, before the loop, so the run is reproducible.", "Loop 10 times with range(10); compare random.randint(1, 6) to 6.", "Full pattern:\nfor i in range(10):\n    if random.randint(1, 6) == 6:\n        sixes = sixes + 1\nprint(sixes)"], "4": ["A seed should run once, before the loop, not on every iteration.", "Delete the seed line inside the loop and put random.seed(1) above the loop."], "5": ["Loop 60 times and roll with random.randint(1, 6).", "5 or higher means the condition roll >= 5.", "Full pattern:\nfor i in range(60):\n    if random.randint(1, 6) >= 5:\n        big = big + 1\nprint(big)"], "6": ["Loop 30 times, once per simulated day.", "Rain happens when random.randint(1, 100) <= chance; add 1 to rainy then.", "Full pattern:\nfor day in range(30):\n    if random.randint(1, 100) <= chance:\n        rainy = rainy + 1\nprint(rainy)"], "7": ["Set a counter to 0, then loop 20 times with range(20).", "Each trial: if random.randint(1, 6) == 6, add 1 to your counter, then print it after the loop.", "Full solution:\nsixes = 0\nfor i in range(20):\n    if random.randint(1, 6) == 6:\n        sixes = sixes + 1\nprint(sixes)"], "8": ["Keep two counters, heads and tails, both starting at 0.", "Loop 50 times: if randint(0, 1) == 1 add to heads, else add to tails. Percent is heads * 100 // 50.", "Full solution:\nheads = 0\ntails = 0\nfor i in range(50):\n    if random.randint(0, 1) == 1:\n        heads = heads + 1\n    else:\n        tails = tails + 1\nprint(heads)\nprint(tails)\nprint(heads * 100 // 50)"]};
+var CE_SOL={"1": "heads = 27\ntotal = 50\nprint(heads * 100 // total)", "2": "results = [1, 0, 1, 1, 1, 0]\ncount = 0\nfor r in results:\n    if r == 1:\n        count = count + 1\nprint(count)", "3": "import random\nrandom.seed(5)\nsixes = 0\nfor i in range(10):\n    if random.randint(1, 6) == 6:\n        sixes = sixes + 1\nprint(sixes)", "4": "import random\nrandom.seed(1)\ncount = 0\nfor i in range(12):\n    if random.randint(1, 6) == 6:\n        count = count + 1\nprint(count)", "5": "import random\nrandom.seed(20)\nbig = 0\nfor i in range(60):\n    if random.randint(1, 6) >= 5:\n        big = big + 1\nprint(big)", "6": "import random\nrandom.seed(4)\nchance = 40\nrainy = 0\nfor day in range(30):\n    if random.randint(1, 100) <= chance:\n        rainy = rainy + 1\nprint(rainy)", "7": "import random\nrandom.seed(7)\nsixes = 0\nfor i in range(20):\n    if random.randint(1, 6) == 6:\n        sixes = sixes + 1\nprint(sixes)", "8": "import random\nrandom.seed(10)\nheads = 0\ntails = 0\nfor i in range(50):\n    if random.randint(0, 1) == 1:\n        heads = heads + 1\n    else:\n        tails = tails + 1\nprint(heads)\nprint(tails)\nprint(heads * 100 // 50)"};
+var VT_QS=[{"lines": ["heads = 27", "total = 50", "print(heads * 100 // total)"], "hl": 2, "q": "What percent does this simulation report?", "choices": ["27", "50", "54", "46"], "correct": 2, "exp": "27 * 100 is 2700, and 2700 // 50 is 54, so it reports 54 percent."}, {"lines": ["sixes = 3", "rolls = 20", "print(sixes * 100 // rolls)"], "hl": 2, "q": "What percent does this report?", "choices": ["3", "6", "15", "20"], "correct": 2, "exp": "3 * 100 is 300, and 300 // 20 is 15, so the estimate is 15 percent."}, {"lines": ["import random", "random.seed(3)", "print(random.randint(1, 6))"], "hl": 1, "q": "What is displayed?", "choices": ["1", "2", "6", "random"], "correct": 1, "exp": "The fixed seed makes this reproducible. With seed 3, randint(1, 6) returns 2 every time."}, {"lines": ["count = 0", "for i in range(5):", "    count = count + 1", "print(count)"], "hl": 1, "q": "What is displayed?", "choices": ["4", "5", "6", "0"], "correct": 1, "exp": "The loop runs once per trial for 5 trials, adding 1 each time, so count ends at 5."}, {"lines": ["wins = 0", "results = [1, 0, 1, 1, 0]", "for r in results:", "    if r == 1:", "        wins = wins + 1", "print(wins)"], "hl": 3, "q": "What is displayed?", "choices": ["2", "3", "4", "5"], "correct": 1, "exp": "There are three 1s in the results list, so the tally ends at 3."}, {"lines": ["total = 0", "outcomes = [2, 4, 6, 4]", "for x in outcomes:", "    total = total + x", "print(total // len(outcomes))"], "hl": 4, "q": "What is displayed?", "choices": ["3", "4", "5", "16"], "correct": 1, "exp": "The outcomes sum to 16 and there are 4 of them, so 16 // 4 is 4."}, {"lines": ["hits = 1", "trials = 4", "print(hits / trials)"], "hl": 2, "q": "What is displayed?", "choices": ["0.25", "0.4", "4", "0.5"], "correct": 0, "exp": "1 / 4 is 0.25, the estimated fraction of successful trials."}, {"lines": ["import random", "random.seed(2)", "heads = 0", "for i in range(6):", "    if random.randint(0, 1) == 1:", "        heads = heads + 1", "print(heads)"], "hl": 4, "q": "What is displayed?", "choices": ["1", "2", "3", "6"], "correct": 1, "exp": "With seed 2, this reproducible run of 6 flips tallies 2 heads."}];
+var VT_MSGS=["Simulations take reps. Remember: run many trials, then tally the outcome.", "Getting there. A seeded run is reproducible; the same seed gives the same result.", "Decent. Percent estimates are successes times 100, divided by trials.", "Solid. You are reading simulation tallies well.", "Strong. You understand why more trials means a more reliable estimate.", "Very strong. Nearly perfect.", "Almost flawless.", "Perfect! You can reason about any simulation the AP exam shows you, benefits and limitations alike."];
+
+function switchTab(btn, lang, panelId){
+  var wrap=btn.parentElement.parentElement;
+  var tabs=wrap.querySelectorAll('.code-tab'),panes=wrap.querySelectorAll('.code-pane');
+  for(var i=0;i<tabs.length;i++)tabs[i].classList.remove('active');
+  for(var i=0;i<panes.length;i++)panes[i].classList.remove('active');
+  btn.classList.add('active');
+  var t=document.getElementById(panelId+'-'+lang); if(t)t.classList.add('active');
+}
+/* Gradebook hook: fire one standard event per graded interaction. The theme reporter
+   listens for 'apcsActivity' and reads course/unit/lesson off the .lesson-page wrapper. */
+function _activity(d){
+  try{ var w=document.querySelector('.lesson-page');
+    if(w){ d.course=w.getAttribute('data-course'); d.unit=w.getAttribute('data-unit'); d.lesson=w.getAttribute('data-lesson'); }
+    document.dispatchEvent(new CustomEvent('apcsActivity',{detail:d}));
+  }catch(e){}
+}
+function miniMCQ(id, chosen, correct, fbId){
+  var opts=document.querySelectorAll('#'+id+'-opts .mini-opt');
+  opts.forEach(function(b){b.onclick=null;b.style.cursor='default';});
+  var letters=['A','B','C','D'];
+  opts[letters.indexOf(chosen)].classList.add(chosen===correct?'correct':'incorrect');
+  if(chosen!==correct)opts[letters.indexOf(correct)].classList.add('reveal');
+  var fb=document.getElementById(fbId);
+  if(MINI_MSGS[id]){fb.textContent=MINI_MSGS[id][chosen]||'';fb.className='mini-fb '+(chosen===correct?'c':'w');}
+}
+function miniFIB(id, fbId){
+  var inp=document.getElementById(id+'-inp'),fb=document.getElementById(fbId);
+  var val=inp.value.trim().toLowerCase();var d=MINI_FIB[id];
+  var ok=(val===String(d.correct).toLowerCase());
+  inp.classList.add(ok?'correct':'incorrect');
+  fb.textContent=ok?d.c:d.w; fb.className='mini-fb '+(ok?'c':'w'); inp.disabled=true;
+}
+function checkMCQ(qid, chosen, correct, fbId){
+  var opts=document.querySelectorAll('#'+qid+'-options .mcq-option');
+  opts.forEach(function(b){b.disabled=true;b.onclick=null;});
+  var letters=['A','B','C','D'];
+  opts[letters.indexOf(chosen)].classList.add(chosen===correct?'correct':'incorrect');
+  if(chosen!==correct)opts[letters.indexOf(correct)].classList.add('revealed-correct');
+  document.getElementById(fbId).classList.add('show');
+  _activity({activity:'quiz',item:qid,choice:chosen});
+}
+function toggleFAQ(btn){
+  var item=btn.parentElement,wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(el){el.classList.remove('open');});
+  if(!wasOpen)item.classList.add('open');
+}
+function handleCapture(){
+  var email=document.getElementById('capture-email').value.trim();
+  if(!email||!email.includes('@')){document.getElementById('capture-email').focus();return;}
+  document.getElementById('capture-form').style.display='none';
+  document.getElementById('capture-success').style.display='block';
+  if(typeof window._learnq!=='undefined'){window._learnq.push(['identify',{'$email':email}]);}
+}
+var PY_URL='https://cdn.jsdelivr.net/pyodide/v0.26.2/full/';
+var CE_HINT_IDX={};
+/* Hint/solution usage tracking. window.LESSON_USAGE is read by the gradebook reporter
+   (separate task) and mirrored in a visible on-page tally so teachers can factor it in. */
+var LESSON_USAGE={hints:{},solutions:{},totalHints:0,totalSolutions:0};
+window.LESSON_USAGE=LESSON_USAGE;
+function _sumv(o){var t=0;for(var k in o){t+=o[k];}return t;}
+function updateUsage(){
+  var el=document.getElementById('code-usage');
+  if(el){el.innerHTML='Hints used: <strong>'+LESSON_USAGE.totalHints+'</strong> • Solutions viewed: <strong>'+LESSON_USAGE.totalSolutions+'</strong>';}
+  try{document.dispatchEvent(new CustomEvent('lessonUsage',{detail:LESSON_USAGE}));}catch(e){}
+}
+function loadScriptOnce(src){return new Promise(function(res,rej){
+  if(document.querySelector('script[data-pyodide]')){res();return;}
+  var s=document.createElement('script');s.src=src;s.setAttribute('data-pyodide','1');
+  s.onload=function(){res();};s.onerror=function(){rej(new Error('script load failed'));};
+  document.head.appendChild(s);});}
+function ensurePy(){if(window.__pyPromise)return window.__pyPromise;
+  window.__pyPromise=(async function(){await loadScriptOnce(PY_URL+'pyodide.js');
+    var py=await loadPyodide({indexURL:PY_URL});window.__pyodide=py;return py;})();
+  return window.__pyPromise;}
+function cleanErr(msg){if(!msg)return 'error';var lines=String(msg).trim().split('\n');return lines.slice(-3).join('\n');}
+function execUser(py,code){var output='',err=null;
+  try{py.runPython('import sys, io\n__old_out = sys.stdout\nsys.stdout = io.StringIO()\nsys.stderr = sys.stdout');
+    try{var ns=py.globals.get('dict')();py.runPython(code,{globals:ns});ns.destroy();}
+    catch(e){err=cleanErr(e.message);}
+    output=py.runPython('sys.stdout.getvalue()');}
+  catch(e2){err=cleanErr((e2&&e2.message)||String(e2));}
+  finally{try{py.runPython('sys.stdout = __old_out\nsys.stderr = __old_out');}catch(e3){}}
+  return {output:output,err:err};}
+async function runPy(n){
+  var out=document.getElementById('ce-out-'+n),btn=document.getElementById('run-btn-'+n);
+  out.className='code-output show';out.textContent='Loading Python (first run may take a few seconds)...';
+  if(btn)btn.disabled=true;var py;
+  try{py=await ensurePy();}catch(e){out.className='code-output show err';
+    out.textContent='Could not load the Python engine. Check your connection and try Run again.';if(btn)btn.disabled=false;return;}
+  var code=document.getElementById('ce-'+n).value;var res=execUser(py,code);
+  var solBtn=document.getElementById('sol-btn-'+n);
+  if(res.err){out.className='code-output show err';out.textContent='\u2717 Error:\n'+res.err;}
+  else{var got=(res.output||'').replace(/\s+$/,'');var exp=CE_EXPECTED[n];
+    var shown=res.output&&res.output.length?res.output.replace(/\n$/,''):'(no output)';
+    if(exp!==undefined&&got===exp){out.className='code-output show ok';out.textContent='\u2713 Correct! Output:\n'+shown;if(solBtn)solBtn.style.display='inline-block';}
+    else if(exp!==undefined){out.className='code-output show err';out.textContent='Output:\n'+shown+'\n\nTarget: '+exp+'\nKeep going, or press Hint.';}
+    else{out.className='code-output show';out.textContent='Output:\n'+shown;}
+    if(typeof exp!=='undefined')_activity({activity:'exercise-1',item:'ce-'+n,correct:(got===exp)});}
+  if(btn)btn.disabled=false;}
+function showHint(n){var box=document.getElementById('ce-hint-'+n);
+  if(CE_HINT_IDX[n]===undefined)CE_HINT_IDX[n]=0;var hints=CE_HINTS[n]||[];
+  if(hints.length===0)return;
+  if(CE_HINT_IDX[n]>=hints.length)CE_HINT_IDX[n]=hints.length-1;
+  var shown=CE_HINT_IDX[n]+1;var text='';
+  for(var i=0;i<shown;i++){text+='Hint '+(i+1)+': '+hints[i]+(i<shown-1?'\n\n':'');}
+  box.textContent=text;box.className='code-hint show';box.style.whiteSpace='pre-wrap';
+  LESSON_USAGE.hints[n]=shown;LESSON_USAGE.totalHints=_sumv(LESSON_USAGE.hints);updateUsage();
+  if(CE_HINT_IDX[n]<hints.length-1)CE_HINT_IDX[n]++;
+  var solBtn=document.getElementById('sol-btn-'+n);if(solBtn)solBtn.style.display='inline-block';}
+function showSol(n){var box=document.getElementById('ce-sol-'+n);box.textContent=CE_SOL[n]||'';box.className='code-solution show';
+  LESSON_USAGE.solutions[n]=1;LESSON_USAGE.totalSolutions=_sumv(LESSON_USAGE.solutions);updateUsage();}
+var vtScore=0,vtQ=0,vtStreak=0,vtAnswered=false;
+function vtRender(){if(vtQ>=VT_QS.length){vtShowResults();return;}vtAnswered=false;var q=VT_QS[vtQ];
+  document.getElementById('vt-qn').textContent=(vtQ+1)+'/'+VT_QS.length;
+  document.getElementById('vt-streak').textContent=vtStreak;
+  var codeEl=document.getElementById('vt-code');codeEl.innerHTML='';
+  q.lines.forEach(function(line,i){var span=document.createElement('span');
+    span.className='vt-line'+(i===q.hl?' hl':'');span.textContent=line;codeEl.appendChild(span);});
+  document.getElementById('vt-question').textContent=q.q;
+  var optEl=document.getElementById('vt-options');optEl.innerHTML='';
+  q.choices.forEach(function(ch,i){var btn=document.createElement('button');btn.className='vt-btn';btn.textContent=ch;
+    btn.onclick=(function(idx){return function(){vtAnswer(idx);};})(i);optEl.appendChild(btn);});
+  document.getElementById('vt-fb').className='vt-fb';document.getElementById('vt-next').className='vt-next';}
+function vtAnswer(idx){if(vtAnswered)return;vtAnswered=true;var q=VT_QS[vtQ];
+  var btns=document.querySelectorAll('.vt-btn');btns.forEach(function(b){b.onclick=null;});
+  var fb=document.getElementById('vt-fb');
+  if(idx===q.correct){vtScore++;vtStreak++;btns[idx].classList.add('c');fb.textContent='\u2713 Correct! '+q.exp;fb.className='vt-fb c';}
+  else{vtStreak=0;btns[idx].classList.add('w');btns[q.correct].classList.add('rv');fb.textContent='\u2717 Not quite. '+q.exp;fb.className='vt-fb w';}
+  document.getElementById('vt-score').textContent=vtScore;document.getElementById('vt-streak').textContent=vtStreak;
+  document.getElementById('vt-next').className='vt-next show';}
+function vtNext(){vtQ++;vtRender();}
+function vtShowResults(){document.getElementById('vt-active').style.display='none';
+  document.getElementById('vt-results').className='vt-results show';
+  document.getElementById('vt-res-score').textContent=vtScore+'/'+VT_QS.length;
+  document.getElementById('vt-res-msg').textContent=VT_MSGS[Math.min(vtScore,VT_MSGS.length-1)];
+  _activity({activity:'exercise-2',earned:vtScore,possible:VT_QS.length});}
+function vtRestart(){vtScore=0;vtQ=0;vtStreak=0;vtAnswered=false;
+  document.getElementById('vt-results').className='vt-results';
+  document.getElementById('vt-active').style.display='block';
+  document.getElementById('vt-score').textContent='0';vtRender();}
+vtRender();
+</script>
+<!-- apcs-keepgoing (managed) -->
+<div id="apcs-kg">
+<style>
+#apcs-kg{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:28px auto 0!important;padding:0 16px 8px!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important}
+#apcs-kg *,#apcs-kg *::before,#apcs-kg *::after{box-sizing:border-box!important}
+#apcs-kg .kg-lbl{font-size:12px!important;font-weight:800!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 10px!important}
+#apcs-kg .kg-row{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:12px!important}
+@media (max-width:640px){#apcs-kg .kg-row{grid-template-columns:repeat(1,1fr)!important}}
+#apcs-kg a.kg,#apcs-kg a.kg:link,#apcs-kg a.kg:visited{display:block!important;text-decoration:none!important;border:1px solid #BBE5D2!important;border-left:5px solid #10B981!important;border-radius:0 12px 12px 0!important;background:#ECFDF5!important;padding:14px 16px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;font-size:16px!important;font-weight:700!important;line-height:1.35!important}
+#apcs-kg a.kg:hover{background:#D1FAE5!important}
+#apcs-kg a.kg span{display:block!important;margin-top:4px!important;font-size:13px!important;font-weight:400!important;color:#5B7268!important;-webkit-text-fill-color:#5B7268!important}
+</style>
+<p class="kg-lbl">Keep going with Topic 3.16</p>
+<div class="kg-row">
+<a class="kg" href="/pages/ap-csp-topic-3-16-code">Coding practice<span>Write and run real code, checked as you go</span></a>
+<a class="kg" href="/pages/ap-csp-game-sim-lab">Study game<span>Not graded, just for the practice</span></a>
+<a class="kg" href="/pages/ap-csp-topic-3-16-guided-notes">Guided notes<span>Print them or fill them in here</span></a>
+</div>
+</div>
+<!-- apcs-exercises (managed) -->
+<div id="apcs-ex-links">
+<style>
+#apcs-ex-links{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:28px auto 0!important;padding:0 16px 8px!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important}
+#apcs-ex-links *,#apcs-ex-links *::before,#apcs-ex-links *::after{box-sizing:border-box!important}
+#apcs-ex-links .ex-lbl{font-size:12px!important;font-weight:800!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:0 0 10px!important}
+#apcs-ex-links .ex-row{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important}
+@media (max-width:640px){#apcs-ex-links .ex-row{grid-template-columns:repeat(1,1fr)!important}}
+#apcs-ex-links a.ex,#apcs-ex-links a.ex:link,#apcs-ex-links a.ex:visited{display:block!important;text-decoration:none!important;border:1px solid #93c5fd!important;border-left:5px solid #1a56db!important;border-radius:0 12px 12px 0!important;background:#eff6ff!important;padding:14px 16px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;font-size:16px!important;font-weight:700!important;line-height:1.35!important}
+#apcs-ex-links a.ex:hover{background:#dbeafe!important}
+#apcs-ex-links a.ex span{display:block!important;margin-top:4px!important;font-size:13px!important;font-weight:400!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important}
+</style>
+<p class="ex-lbl">Exercises for Topic 3.16</p>
+<div class="ex-row">
+<a class="ex" href="/pages/ap-csp-topic-3-16-exercise-1">Exercise 1: Trace the Rain Simulation<span>Work it online. Saved in your browser, not graded</span></a>
+<a class="ex" href="/pages/ap-csp-topic-3-16-exercise-2">Exercise 2: Audit for Bias<span>Work it online. Saved in your browser, not graded</span></a>
+</div>
+</div>

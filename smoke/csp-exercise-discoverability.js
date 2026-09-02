@@ -116,17 +116,94 @@ ok('  the only thing added is the managed block',
   built.pages.length === 35
     && built.pages.every((p) => p.body.slice(bodyFor(p.topic).length).trimStart().startsWith(lessonLinks.MARKER)));
 
-// A rerun must refuse rather than append a second block.
+// RUNNING TWICE EQUALS RUNNING ONCE.
+//
+// This used to REFUSE a page that already carried the block, which made the
+// generator a one-shot: the 35 pages went live on 2026-08-24 and no change to
+// the block could ever reach them again. That is how 18 graded exercise-2
+// pages stayed published with nothing linking them. It strips the fenced region
+// back and rebuilds now, so the second run has to produce the same bytes as the
+// first, which is a stronger statement than the refusal ever was.
 for (const p of built.pages) {
   fs.writeFileSync(path.join(dir, p.handle + '.html'), `<html><body>${OPEN}${p.body}\n  </div></body></html>`);
 }
 const again = lessonLinks.build(dir, verified);
-ok('  a rerun over already-edited pages refuses every one of them',
-  again.pages.length === 0 && again.problems.length === 35, {
-    built: again.pages.length, problems: again.problems.length,
+ok('  a rerun rebuilds every page rather than refusing it',
+  again.pages.length === 35 && again.problems.length === 0, {
+    built: again.pages.length, problems: again.problems.slice(0, 2),
   });
-ok('  and says why, naming the block it found',
-  again.problems.every((s) => /already on this page/.test(s)), again.problems.slice(0, 2));
+ok('  and every one says it was rebuilt', again.pages.every((p) => p.rebuilt));
+ok('  RUNNING TWICE EQUALS RUNNING ONCE, byte for byte',
+  again.pages.length === 35
+    && again.pages.every((p, i) => p.body === built.pages[i].body),
+  again.pages.filter((p, i) => built.pages[i] && p.body !== built.pages[i].body).map((p) => p.handle));
+ok('  and a third run changes nothing either',
+  (() => {
+    for (const p of again.pages) {
+      fs.writeFileSync(path.join(dir, p.handle + '.html'), `<html><body>${OPEN}${p.body}\n  </div></body></html>`);
+    }
+    const third = lessonLinks.build(dir, verified);
+    return third.pages.length === 35 && third.pages.every((p, i) => p.body === built.pages[i].body);
+  })());
+
+// unmark() is the half that makes the rebuild safe, so it is tested on its own.
+{
+  const M = lessonLinks.MARKER;
+  const plain = '<p>body</p>';
+  ok('  a page with no block is returned unchanged', lessonLinks.unmark(plain).body === plain
+    && lessonLinks.unmark(plain).had === false);
+  const withBlock = plain + '\n' + M + '\n<div id="apcs-ex-links">x</div>';
+  ok('  a page with one block is stripped back to exactly what it was',
+    lessonLinks.unmark(withBlock).body === plain && lessonLinks.unmark(withBlock).had === true);
+  ok('  TWO blocks are REFUSED, because an earlier run nested inside its own region',
+    !!lessonLinks.unmark(withBlock + '\n' + M + '\n<div id="apcs-ex-links">y</div>').error);
+  ok('  anything appended AFTER the block is REFUSED, not silently eaten',
+    !!lessonLinks.unmark(withBlock + '<p>someone else added this</p>').error);
+  ok('  a marker not followed by this block is REFUSED',
+    !!lessonLinks.unmark(plain + '\n' + M + '\n<div id="something-else">x</div>').error);
+}
+
+// ── 2b. The graded Applied Challenge card ────────────────────────────────────
+section('2b. The graded exercise-2 nothing on the site linked');
+{
+  const { allPages: coursePages } = require('../lib/csp-course-pages');
+  const applied = coursePages().filter((p) => p.kind === 'exercise-2');
+  ok('  seed/csp-exercise-2 declares 35 graded exercise-2 pages', applied.length === 35, applied.length);
+  const liveHandles = new Set(fs.readFileSync(path.join(__dirname, 'fixtures', 'live-page-handles.txt'), 'utf8')
+    .split('\n').map((x) => x.trim()).filter(Boolean));
+  const live = applied.filter((p) => liveHandles.has(p.handle));
+  ok('  18 of them are published, all in Big Idea 3', live.length === 18
+    && live.every((p) => p.handle.startsWith('ap-csp-course-bi3-')), live.length);
+
+  const one = live.find((p) => p.handle.includes('binary-search'));
+  const card = lessonLinks.appliedCard(one);
+  ok('  the card points at the graded page', card.includes(`href="/pages/${one.handle}"`), card);
+  //  NOT NUMBERED. Both sets call themselves Exercise 2: the handout mirror
+  //  ap-csp-topic-3-11-exercise-2 and this one. Two cards labelled Exercise 2
+  //  in one row is the confusion this pass exists to remove, and calling this
+  //  one 3 would contradict the page it opens.
+  ok('  it is labelled Applied Challenge, not Exercise 2 or Exercise 3',
+    card.includes('>Applied Challenge<') && !/Exercise [23]/.test(card), card);
+  ok('  the subtitle carries the page\'s own question count',
+    card.includes(`${one.questions.length} questions`), card);
+  ok('  and the page\'s own promise, so no card over-promises',
+    card.includes('recorded for your teacher'));
+  ok('  it spans the row rather than sitting alone in one column',
+    card.includes('class="ex wide"'));
+
+  //  A card is only ever added for a handle in the verified live set, so the 17
+  //  topics whose page is not published stay uncarded rather than gaining a 404.
+  const built2 = lessonLinks.build(dir, verified);
+  const carded = built2.pages.filter((p) => p.applied);
+  ok('  only the topics whose applied page is live get a card', carded.length === 0,
+    carded.map((p) => p.handle));
+  const withApplied = lessonLinks.build(dir, new Set([...verified, ...live.map((p) => p.handle)]));
+  ok('  and with those 18 verified, 18 cards appear',
+    withApplied.pages.filter((p) => p.applied).length === 18,
+    withApplied.pages.filter((p) => p.applied).length);
+  ok('  the wide rule is emitted only on a block that has one',
+    withApplied.pages.every((p) => p.body.includes(lessonLinks.WIDE_CSS) === p.applied));
+}
 
 // ── 3. The Command Center edit ───────────────────────────────────────────────
 section('3. The Command Center edit is an insertion, and the labels are honest');

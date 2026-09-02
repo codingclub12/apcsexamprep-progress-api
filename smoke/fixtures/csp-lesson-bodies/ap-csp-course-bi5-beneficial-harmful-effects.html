@@ -1,0 +1,1086 @@
+<!--
+  PAGE: /pages/ap-csp-course-bi5-beneficial-harmful-effects
+  TITLE: AP CSP 5.1 Beneficial and Harmful Effects | Impact of Computing
+  META: AP CSP Topic 5.1: beneficial and harmful effects of computing innovations, intended versus unintended consequences, and dual-use effects. 6 exam MCQs plus the Two Sides game.
+-->
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+  :root{--navy:#0f1f3d;--bi3:#1a56db;--bi3-lt:#93c5fd;--bi3-bg:#eff6ff;--bi3-dk:#1e40af;--green:#16a34a;--amber:#d97706;--red:#dc2626;--slate:#64748b;--white:#ffffff;--py:#3b82f6;--pseudo:#8b5cf6;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  .lesson-page{font-family:"DM Sans",sans-serif;color:var(--navy);background:#f8fafc;line-height:1.6;}
+
+  .lesson-breadcrumb{background:#fff;border-bottom:1px solid #e2e8f0;padding:12px 24px;}
+  .lesson-breadcrumb-inner{max-width:880px;margin:0 auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate);flex-wrap:wrap;}
+  .lesson-breadcrumb a{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;text-decoration:none;font-weight:500;}
+  .bc-sep{color:#cbd5e1;}
+
+  .social-proof-bar{background:#fff;border-bottom:1px solid #e2e8f0;padding:10px 24px;}
+  .social-proof-inner{max-width:880px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 20px;font-size:13px;color:var(--slate);}
+  .social-proof-item{display:flex;align-items:center;gap:5px;font-weight:500;}
+  .social-proof-item strong{color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+
+  .lesson-hero{background:var(--navy);background-image:radial-gradient(ellipse 60% 70% at 90% 20%,rgba(26,86,219,.28) 0%,transparent 60%);padding:48px 24px 40px;}
+  .lesson-hero-inner{max-width:880px;margin:0 auto;}
+  .lesson-hero-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .lesson-num-badge{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:var(--bi3);font-weight:700;font-size:14px;color:#fff!important;-webkit-text-fill-color:#fff!important;flex-shrink:0;}
+  .lesson-eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;}
+  .lesson-hero h1{font-family:"DM Serif Display",serif!important;font-size:clamp(26px,4vw,40px)!important;line-height:1.2!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:14px!important;}
+  .lesson-hero-pills{display:flex;flex-wrap:wrap;gap:8px;}
+  .lesson-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:5px 12px;border-radius:100px;font-size:12px;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .ced-tag{display:inline-flex;align-items:center;background:rgba(26,86,219,.25);border:1px solid rgba(147,197,253,.3);padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;letter-spacing:.04em;}
+
+  /* PROGRESS STRIP */
+  .bi3-progress{background:#fff!important;border-bottom:1px solid #e2e8f0!important;padding:14px 20px!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;}
+  .bi3-progress-inner{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;gap:0!important;width:max-content!important;min-width:100%!important;}
+  .prog-step{display:flex!important;flex-direction:column!important;align-items:center!important;min-width:46px!important;text-align:center!important;flex-shrink:0!important;}
+  .prog-step-link{display:flex!important;flex-direction:column!important;align-items:center!important;min-width:46px!important;text-align:center!important;flex-shrink:0!important;text-decoration:none!important;cursor:pointer!important;}
+  .prog-step-link:hover .prog-dot{background:#dbeafe!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border-color:var(--bi3)!important;}
+  .prog-dot{width:26px!important;height:26px!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:9px!important;font-weight:700!important;margin-bottom:4px!important;flex-shrink:0!important;}
+  .prog-dot.active{background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .prog-dot.upcoming{background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:2px solid #e2e8f0!important;}
+  .prog-dot.done{background:#dbeafe!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border:2px solid var(--bi3)!important;}
+  .prog-label{font-size:8px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;line-height:1.2!important;white-space:nowrap!important;}
+  .prog-label.active-label{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;}
+  .prog-arrow{flex:1 0 4px!important;height:2px!important;background:#e2e8f0!important;margin-bottom:18px!important;min-width:4px!important;max-width:16px!important;flex-shrink:0!important;}
+
+  /* MAIN */
+  .lesson-main{max-width:880px;margin:0 auto;padding:40px 24px 80px;}
+  .lesson-objectives{background:var(--bi3-bg);border-left:4px solid var(--bi3);border-radius:0 10px 10px 0;padding:20px 24px;margin-bottom:28px;}
+  .lesson-objectives h2{font-size:14px!important;font-weight:700!important;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;text-transform:uppercase!important;letter-spacing:.06em!important;margin-bottom:12px!important;}
+  .lesson-objectives ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;}
+  .lesson-objectives li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#1e3a8a;line-height:1.5;}
+  .lesson-objectives li::before{content:"\2713";color:var(--bi3);font-weight:700;flex-shrink:0;margin-top:1px;}
+  .score-impact{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 18px;margin-bottom:28px;display:flex;align-items:center;gap:10px;font-size:14px;color:#14532d;}
+  .score-impact strong{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+
+  /* HOOK */
+  .hook-box{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px 28px;margin-bottom:32px;}
+  .hook-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:8px;}
+  .hook-box p{font-size:15px!important;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;line-height:1.7!important;margin-bottom:0!important;}
+
+  /* LESSON SECTIONS */
+  .lesson-section{margin-bottom:40px;}
+  .lesson-section h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;padding-bottom:10px!important;border-bottom:2px solid var(--bi3-bg)!important;}
+  .lesson-section h3{font-size:17px!important;font-weight:700!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-top:24px!important;margin-bottom:10px!important;}
+  .lesson-section p{font-size:15px;color:#374151;line-height:1.8;margin-bottom:14px;}
+  .lesson-section ul,.lesson-section ol{padding-left:20px;margin-bottom:14px;}
+  .lesson-section li{font-size:15px;color:#374151;line-height:1.7;margin-bottom:6px;}
+  .lesson-section code{background:#eef2ff;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+
+  /* DUAL CODE PANEL */
+  .code-panel-wrap{margin:20px 0;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;}
+  .code-panel-tabs{display:flex;background:#1e293b;}
+  .code-tab{padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;border:none;background:transparent;letter-spacing:.04em;transition:background .15s;font-family:inherit;}
+  .code-tab.py{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .code-tab.pseudo{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+  .code-tab.active{background:rgba(255,255,255,.15)!important;}
+  .code-tab-label{font-size:10px;opacity:.6;margin-left:4px;font-weight:400;}
+  .code-pane{background:#0f172a;padding:18px 20px;overflow-x:auto;height:0;overflow:hidden;padding:0;}
+  .code-pane.active{height:auto;overflow-x:auto;padding:18px 20px;}
+  .code-pane pre{font-family:monospace;font-size:13px;line-height:1.8;margin:0;white-space:pre-wrap;word-break:break-word;max-width:100%;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .py-kw{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:700;}
+  .py-fn{color:#6ee7b7!important;-webkit-text-fill-color:#6ee7b7!important;}
+  .py-num{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .py-str{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .py-comment{color:#475569!important;-webkit-text-fill-color:#475569!important;font-style:italic;}
+  .py-var{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .py-op{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;}
+  .ps-kw{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700;}
+  .ps-op{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .ps-num{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .ps-str{color:#86efac!important;-webkit-text-fill-color:#86efac!important;}
+  .ps-comment{color:#475569!important;-webkit-text-fill-color:#475569!important;font-style:italic;}
+  .ps-var{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+
+  /* CALLOUTS */
+  .callout-exam{background:#fffbeb;border:1px solid #fcd34d;border-left:4px solid var(--amber);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+  .callout-exam-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--amber)!important;-webkit-text-fill-color:var(--amber)!important;margin-bottom:6px;}
+  .callout-exam p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin-bottom:0!important;line-height:1.6!important;}
+  .callout-trap{background:#fef2f2;border:1px solid #fca5a5;border-left:4px solid var(--red);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+  .callout-trap-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;margin-bottom:6px;}
+  .callout-trap p{font-size:14px!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;margin-bottom:0!important;line-height:1.6!important;}
+
+  /* MINI EXERCISES */
+  .mini-ex{background:#fff;border:1px solid #bfdbfe;border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .mini-ex-label{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;margin-bottom:12px;}
+  .mini-ex-q{font-size:15px;font-weight:600;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px;line-height:1.5;}
+  .mini-ex-code{background:#0f172a;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;line-height:1.8;margin-bottom:14px;overflow-x:auto;white-space:pre;display:block;}
+  .mini-opts{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;}
+  .mini-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border:2px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:14px;font-family:monospace;color:#374151!important;-webkit-text-fill-color:#374151!important;background:#f8fafc;text-align:left;width:100%;transition:border-color .15s;}
+  .mini-opt:hover{border-color:var(--bi3-lt);background:var(--bi3-bg);}
+  .mini-opt.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mini-opt.incorrect{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mini-opt.reveal{border-color:var(--green)!important;background:#f0fdf4!important;}
+  .mini-opt-letter{font-weight:700;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;min-width:18px;font-family:inherit;}
+  .mini-opt.correct .mini-opt-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mini-opt.incorrect .mini-opt-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mini-fib-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;}
+  .mini-fib-input{padding:8px 12px;border:2px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:14px;width:130px;outline:none;color:var(--navy)!important;background:#f8fafc;}
+  .mini-fib-input:focus{border-color:var(--bi3-lt);}
+  .mini-fib-input.correct{border-color:var(--green);background:#f0fdf4;}
+  .mini-fib-input.incorrect{border-color:var(--red);background:#fef2f2;}
+  .mini-fib-btn{padding:8px 18px;background:var(--bi3);border:none;border-radius:8px;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .mini-fb{font-size:13px;font-weight:500;padding:8px 12px;border-radius:7px;margin-top:6px;display:none;line-height:1.5;}
+  .mini-fb.c{background:#f0fdf4;color:var(--green)!important;-webkit-text-fill-color:var(--green)!important;display:block;}
+  .mini-fb.w{background:#fef2f2;color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;display:block;}
+
+  /* VOCAB */
+  .vocab-table{width:100%;border-collapse:collapse;margin-bottom:24px;font-size:14px;}
+  .vocab-table thead tr{background:var(--bi3);}
+  .vocab-table thead th{padding:10px 16px;text-align:left;font-weight:600;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px;}
+  .vocab-table tbody tr:nth-child(even){background:var(--bi3-bg);}
+  .vocab-table tbody tr:nth-child(odd){background:#fff;}
+  .vocab-table tbody td{padding:10px 16px;border-bottom:1px solid #bfdbfe;color:#374151;vertical-align:top;line-height:1.5;}
+  .vocab-table tbody td:first-child{font-weight:700;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;white-space:nowrap;}
+
+  /* CPT CONNECTION */
+  .cpt-connection{background:#fefce8;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:0 10px 10px 0;padding:20px 24px;margin:28px 0;}
+  .cpt-connection-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#92400e!important;-webkit-text-fill-color:#92400e!important;margin-bottom:8px;}
+  .cpt-connection h3{font-size:16px!important;font-weight:700!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin:16px 0 8px!important;}
+  .cpt-connection p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;line-height:1.7!important;margin-bottom:12px!important;}
+  .cpt-connection a{color:#b45309!important;-webkit-text-fill-color:#b45309!important;font-weight:600;text-decoration:underline;}
+  .cpt-connection code{background:#fef3c7;color:#78350f!important;-webkit-text-fill-color:#78350f!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+  .cpt-stems{list-style:none;padding:0;margin:0 0 8px;display:flex;flex-direction:column;gap:8px;}
+  .cpt-stems li{background:#fffef5;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:13px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;line-height:1.6;}
+  .cpt-code{background:#0f172a;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;line-height:1.8;margin:6px 0 12px;overflow-x:auto;white-space:pre;display:block;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+
+  /* EMAIL */
+  .email-capture{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px 28px;margin-bottom:36px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
+  .email-capture-text{flex:1;min-width:200px;}
+  .email-capture-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:4px;}
+  .email-capture h3{font-size:16px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .email-capture p{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:0!important;line-height:1.5!important;}
+  .email-capture-form{display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0;}
+  .email-capture-input{padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff!important;font-size:14px;font-family:inherit;min-width:180px;outline:none;}
+  .email-capture-btn{padding:10px 20px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:8px!important;font-size:14px!important;font-weight:600!important;cursor:pointer!important;font-family:inherit!important;}
+  .email-capture-success{display:none;font-size:14px;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:600;padding:10px 0;}
+
+  /* MCQ */
+  .mcq-section{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:28px;margin-bottom:40px;}
+  .mcq-section-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--bi3-bg);}
+  .mcq-section-icon{width:40px;height:40px;border-radius:10px;background:var(--bi3-bg);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .mcq-section-title{font-family:"DM Serif Display",serif;font-size:20px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+  .mcq-section-sub{font-size:13px;color:var(--slate);}
+  .mcq-item{margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid #f1f5f9;}
+  .mcq-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .mcq-q-num{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:8px;}
+  .diff-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:100px;margin-left:8px;background:#fef2f2;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;border:1px solid #fca5a5;}
+  .mcq-q-text{font-size:15px!important;font-weight:600!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;margin-bottom:12px!important;}
+  .predict-note{font-size:12px;font-style:italic;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:12px;}
+  .mcq-code{background:#0f172a;border-radius:8px;padding:12px 14px;margin:10px 0 14px;font-family:monospace;font-size:13px;line-height:1.75;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;white-space:pre;overflow-x:auto;display:block;}
+  .mcq-code .k{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .mcq-code .s{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .mcq-code .n{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .mcq-code .c{color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-style:italic;}
+  .mcq-roman{list-style:none;padding:0;margin:10px 0 14px;display:flex;flex-direction:column;gap:6px;}
+  .mcq-roman li{font-family:monospace;font-size:13px;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;background:#f1f5f9;border-radius:6px;padding:8px 12px;}
+  .mcq-roman li strong{color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;font-family:"DM Sans",sans-serif;margin-right:8px;}
+  .mcq-options{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+  .mcq-option{display:flex!important;align-items:flex-start!important;gap:12px!important;padding:11px 14px!important;border:2px solid #e2e8f0!important;border-radius:8px!important;cursor:pointer!important;background:#f8fafc!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.5!important;text-align:left!important;width:100%!important;font-family:inherit!important;}
+  .mcq-option:hover{border-color:var(--bi3-lt)!important;background:var(--bi3-bg)!important;}
+  .mcq-option.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mcq-option.incorrect{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mcq-option.revealed-correct{border-color:var(--green)!important;background:#f0fdf4!important;}
+  .mcq-option-letter{font-weight:700!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;flex-shrink:0!important;min-width:18px!important;}
+  .mcq-option.correct .mcq-option-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mcq-option.incorrect .mcq-option-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mcq-feedback{display:none!important;padding:12px 16px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;margin-top:8px!important;}
+  .mcq-feedback.show{display:block!important;}
+  .mcq-feedback.correct-fb{background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #bbf7d0!important;}
+  .mcq-feedback.incorrect-fb{background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;border:1px solid #fecaca!important;}
+
+  /* GAME */
+  .game-section{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:14px;padding:28px;margin-bottom:40px;}
+  .game-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:10px;}
+  .game-title{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .game-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:20px!important;}
+  .vt-score-bar{display:flex;justify-content:space-between;background:rgba(255,255,255,.06);border-radius:10px;padding:12px 20px;margin-bottom:20px;flex-wrap:wrap;gap:8px;}
+  .vt-stat{text-align:center;}
+  .vt-stat-val{font-size:20px;font-weight:800;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1;}
+  .vt-stat-lbl{font-size:10px;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:2px;}
+  .vt-code-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  .vt-code-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:10px;}
+  .vt-code-lines{font-family:monospace;font-size:14px;line-height:2;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .vt-line{display:block;padding:2px 8px;border-radius:4px;white-space:pre;}
+  .vt-line.hl{background:rgba(147,197,253,.2);color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .vt-question{font-size:15px;font-weight:600;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;margin-bottom:14px;}
+  .vt-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+  .vt-btn{padding:12px;border-radius:9px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);cursor:pointer;font-size:15px;font-weight:700;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;font-family:monospace;transition:all .15s;}
+  .vt-btn:hover{border-color:var(--bi3-lt);background:rgba(26,86,219,.2);}
+  .vt-btn.c{border-color:#4ade80;background:rgba(74,222,128,.15);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+  .vt-btn.w{border-color:#f87171;background:rgba(248,113,113,.15);color:#f87171!important;-webkit-text-fill-color:#f87171!important;}
+  .vt-btn.rv{border-color:#4ade80;background:rgba(74,222,128,.08);}
+  .vt-fb{padding:10px 14px;border-radius:8px;font-size:13px;font-weight:500;margin-bottom:12px;display:none;line-height:1.5;}
+  .vt-fb.c{background:rgba(74,222,128,.1);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;display:block;}
+  .vt-fb.w{background:rgba(248,113,113,.1);color:#f87171!important;-webkit-text-fill-color:#f87171!important;display:block;}
+  .vt-next{display:none;width:100%;padding:12px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);border-radius:8px;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .vt-next.show{display:block;}
+  .vt-results{display:none;text-align:center;padding:20px;}
+  .vt-results.show{display:block;}
+  .vt-res-score{font-family:"DM Serif Display",serif;font-size:52px;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1;}
+  .vt-res-lbl{font-size:14px;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:12px;}
+  .vt-res-msg{font-size:14px;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;margin-bottom:20px;line-height:1.6;}
+  .vt-restart{background:rgba(255,255,255,.1);color:#fff!important;-webkit-text-fill-color:#fff!important;border:2px solid rgba(255,255,255,.2);border-radius:8px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+
+  /* CODE EDITOR (Pyodide live) */
+  .code-editor-section{background:#0f172a;border-radius:14px;padding:28px;margin-bottom:40px;}
+  .code-editor-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:10px;}
+  .code-editor-title{font-family:"DM Serif Display",serif!important;font-size:22px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .code-editor-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:20px!important;line-height:1.6;}
+  .code-problem{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+  .scaffold-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:rgba(147,197,253,.15);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;border:1px solid rgba(147,197,253,.35);margin-bottom:8px;}
+  .code-problem-num{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:8px;}
+  .code-problem-prompt{font-size:14px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.6!important;margin-bottom:12px!important;}
+  .code-problem-prompt code{background:rgba(147,197,253,.12);color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;padding:1px 6px;border-radius:5px;font-size:12px;}
+  .code-textarea{width:100%;min-height:120px;background:#020617;border:2px solid rgba(255,255,255,.1);border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;color:#e2e8f0!important;resize:vertical;outline:none;line-height:1.8;}
+  .code-textarea:focus{border-color:var(--bi3-lt);}
+  .code-btn-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center;}
+  .code-run-btn{padding:9px 20px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:7px!important;font-size:13px!important;font-weight:700!important;cursor:pointer!important;font-family:inherit!important;}
+  .code-run-btn:disabled{opacity:.6;cursor:wait;}
+  .code-hint-btn,.code-sol-btn{padding:9px 16px!important;background:rgba(255,255,255,.06)!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:7px!important;font-size:13px!important;cursor:pointer!important;font-family:inherit!important;}
+  .code-output{margin-top:10px;background:#020617;border-radius:8px;padding:12px 16px;font-family:monospace;font-size:13px;min-height:44px;display:none;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .code-output.show{display:block;}
+  .code-output.ok{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+  .code-output.err{color:#f87171!important;-webkit-text-fill-color:#f87171!important;}
+  .code-hint{margin-top:8px;background:rgba(147,197,253,.06);border:1px solid rgba(147,197,253,.2);border-radius:8px;padding:10px 14px;font-size:13px;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;display:none;line-height:1.6;}
+  .code-hint.show{display:block;}
+  .code-solution{margin-top:8px;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:8px;padding:12px 14px;font-family:monospace;font-size:13px;color:#bbf7d0!important;-webkit-text-fill-color:#bbf7d0!important;display:none;white-space:pre;line-height:1.8;overflow-x:auto;}
+  .code-solution.show{display:block;}
+
+  /* FAQ */
+  .faq-section{margin-bottom:40px;}
+  .faq-section h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;padding-bottom:10px!important;border-bottom:2px solid var(--bi3-bg)!important;}
+  .faq-item{background:#fff;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:10px;overflow:hidden;}
+  .faq-q{width:100%;text-align:left;padding:16px 20px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:15px!important;font-weight:600!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-family:inherit!important;line-height:1.4!important;}
+  .faq-q:hover{background:#f8fafc;}
+  .faq-icon{font-size:18px;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;flex-shrink:0;transition:transform .2s;font-style:normal;}
+  .faq-item.open .faq-icon{transform:rotate(45deg);}
+  .faq-a{display:none;padding:0 20px 16px;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.7!important;border-top:1px solid #f1f5f9;}
+  .faq-item.open .faq-a{display:block;}
+  .faq-a code{background:#eef2ff;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+
+  /* RELATED + SUPERPACK + TEACHER + NAV */
+  .related-links{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:24px;margin-bottom:40px;}
+  .related-links h3{font-size:15px!important;font-weight:700!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;}
+  .related-links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
+  .related-link{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;background:#f8fafc;text-decoration:none;font-size:13px!important;font-weight:500!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border:1px solid #bfdbfe;transition:background .15s;line-height:1.3;}
+  .related-link:link,.related-link:visited{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;}
+  .related-link:hover{background:var(--bi3-bg);}
+  .related-ext{color:var(--slate)!important;-webkit-text-fill-color:var(--slate)!important;border-color:#e2e8f0;}
+  .superpack-slim{background:#fff;border:1px solid #bfdbfe;border-radius:10px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:36px;}
+  .superpack-slim-icon{width:36px;height:36px;border-radius:8px;background:var(--bi3-bg);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .superpack-slim-text{font-size:14px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-weight:600;line-height:1.3;}
+  .superpack-slim-sub{font-size:12px;color:var(--slate);font-weight:400;display:block;margin-top:2px;}
+  .superpack-slim-btn{display:inline-flex!important;align-items:center!important;gap:6px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:9px 18px!important;border-radius:7px!important;font-size:13px!important;font-weight:600!important;text-decoration:none!important;white-space:nowrap!important;}
+  .superpack-slim-btn:link,.superpack-slim-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .teacher-callout{background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:18px 22px;margin-bottom:28px;display:flex;align-items:flex-start;gap:14px;}
+  .teacher-callout-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+  .teacher-callout-body{flex:1;}
+  .teacher-callout-label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#0369a1!important;-webkit-text-fill-color:#0369a1!important;margin-bottom:4px;}
+  .teacher-callout-body p{font-size:14px!important;color:#0c4a6e!important;-webkit-text-fill-color:#0c4a6e!important;margin-bottom:0!important;line-height:1.6!important;}
+  .teacher-callout-body a{color:#0369a1!important;-webkit-text-fill-color:#0369a1!important;font-weight:600;text-decoration:underline;}
+  .lesson-nav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:40px;}
+  .nav-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 20px;text-decoration:none;color:inherit;transition:box-shadow .15s;display:block;}
+  .nav-card:hover{box-shadow:0 4px 16px rgba(26,86,219,.1);border-color:#bfdbfe;}
+  .nav-card-dir{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:4px;}
+  .nav-card-title{font-size:14px;font-weight:700;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;line-height:1.3;}
+  .nav-card.next{border-left:3px solid var(--bi3);}
+
+  @media(max-width:600px){
+    .lesson-hero{padding:36px 20px 32px;}
+    .lesson-main{padding:32px 20px 60px;}
+    .vt-options{grid-template-columns:1fr 1fr;}
+    .lesson-nav{grid-template-columns:1fr;}
+    .mini-opts{gap:6px;}
+  }
+</style>
+<style>
+.code-usage{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin:-6px 0 18px!important;padding:8px 12px!important;background:rgba(255,255,255,.04)!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:8px!important;display:block!important;}
+.code-usage strong{color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;}
+.code-problem-prompt ul.rules{margin:10px 0 4px!important;padding-left:0!important;list-style:none!important;}
+.code-problem-prompt ul.rules li{position:relative;padding:3px 0 3px 20px!important;font-size:14px;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.55;}
+.code-problem-prompt ul.rules li::before{content:"\25B8";position:absolute;left:2px;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+.mcq-q-text ul.rules,.mini-ex-q ul.rules{margin:10px 0 4px!important;padding-left:0!important;list-style:none!important;}
+.mcq-q-text ul.rules li,.mini-ex-q ul.rules li{position:relative;padding:3px 0 3px 20px!important;font-size:15px;font-weight:400;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;line-height:1.5;}
+.mcq-q-text ul.rules li::before,.mini-ex-q ul.rules li::before{content:"\25B8";position:absolute;left:2px;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;}
+</style>
+<style>
+
+.lesson-visual{margin:0 0 40px!important;}
+.lv-kicker{font-size:11px!important;font-weight:700!important;letter-spacing:.1em!important;text-transform:uppercase!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;margin:0 0 10px!important;}
+/* before/after panel */
+.ba{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:14px!important;padding:20px!important;margin:0 0 14px!important;}
+.ba-cap-top{font-size:12px!important;font-weight:700!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;margin:0 0 14px!important;}
+.ba-grid{display:grid!important;grid-template-columns:1fr auto 1fr!important;align-items:center!important;gap:14px!important;}
+.ba-panel{border-radius:12px!important;padding:16px 14px!important;text-align:center!important;}
+.ba-panel.before{background:#f8fafc!important;border:1px solid #e2e8f0!important;}
+.ba-panel.after{background:#f0fdf4!important;border:1px solid #bbf7d0!important;}
+.ba-label{font-size:11px!important;font-weight:700!important;letter-spacing:.05em!important;text-transform:uppercase!important;margin:0 0 8px!important;}
+.ba-panel.before .ba-label{color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+.ba-panel.after .ba-label{color:#166534!important;-webkit-text-fill-color:#166534!important;}
+.ba-data{font-family:monospace!important;font-size:15px!important;letter-spacing:1px!important;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;word-break:break-all!important;}
+.ba-meta{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:6px!important;}
+.ba-arrow{font-size:26px!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;font-weight:700!important;}
+.ba-caption{font-size:13px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;line-height:1.55!important;margin:14px 0 0!important;padding-top:12px!important;border-top:1px solid #f1f5f9!important;}
+.ba-caption strong{color:#166534!important;-webkit-text-fill-color:#166534!important;}
+/* dark interactive card shell (shared by binary/rle/parallel/packet/io) */
+.wgt{background:#0f172a!important;border-radius:16px!important;padding:22px!important;border:1px solid #1e293b!important;margin:0 0 14px!important;}
+.wgt-h{font-family:"DM Serif Display",serif!important;font-size:18px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 3px!important;}
+.wgt-sub{font-size:13px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0 0 18px!important;}
+.wgt-btns{display:flex!important;gap:8px!important;justify-content:center!important;flex-wrap:wrap!important;margin-top:14px!important;}
+.wgt-btn{font-family:"DM Sans",sans-serif!important;font-size:13px!important;font-weight:700!important;padding:8px 14px!important;border-radius:9px!important;border:1px solid #334155!important;background:#1e293b!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;cursor:pointer!important;}
+.wgt-btn:hover{background:#334155!important;}
+.wgt-note{font-size:12.5px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;text-align:center!important;margin:12px 0 0!important;line-height:1.5!important;}
+.wgt-note.warn{color:#fca5a5!important;-webkit-text-fill-color:#fca5a5!important;}
+.wgt-note.good{color:#86efac!important;-webkit-text-fill-color:#86efac!important;}
+/* binary */
+.bpv-strip{display:flex!important;gap:6px!important;justify-content:center!important;flex-wrap:wrap!important;}
+.bpv-col{display:flex!important;flex-direction:column!important;align-items:center!important;gap:6px!important;}
+.bpv-pv{font-size:12px!important;font-weight:700!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-variant-numeric:tabular-nums!important;}
+.bpv-bit{width:44px!important;height:54px!important;border-radius:10px!important;border:2px solid #334155!important;background:#1e293b!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-family:monospace!important;font-size:23px!important;font-weight:700!important;cursor:pointer!important;}
+.bpv-bit.on{background:#1a56db!important;border-color:#60a5fa!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+.bpv-read{display:flex!important;align-items:baseline!important;justify-content:center!important;gap:14px!important;margin:20px 0 0!important;flex-wrap:wrap!important;}
+.bpv-binary{font-family:monospace!important;font-size:22px!important;letter-spacing:2px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+.bpv-eq{font-size:22px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+.bpv-dec{font-family:"DM Serif Display",serif!important;font-size:34px!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;line-height:1!important;}
+/* rle */
+.rle-in{width:100%!important;box-sizing:border-box!important;font-family:monospace!important;font-size:15px!important;padding:10px 12px!important;border-radius:9px!important;border:1px solid #334155!important;background:#1e293b!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;letter-spacing:1px!important;}
+.rle-row{display:flex!important;gap:12px!important;flex-wrap:wrap!important;margin-top:14px!important;}
+.rle-cell{flex:1!important;min-width:130px!important;background:#1e293b!important;border-radius:10px!important;padding:12px!important;text-align:center!important;}
+.rle-cell .l{font-size:11px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:6px!important;}
+.rle-cell .v{font-family:monospace!important;font-size:16px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;word-break:break-all!important;}
+.rle-cell.out .v{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+.rle-cell .m{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:4px!important;}
+/* parallel timeline */
+.ptl-ctl{display:flex!important;align-items:center!important;gap:12px!important;justify-content:center!important;flex-wrap:wrap!important;margin-bottom:16px!important;}
+.ptl-ctl label{font-size:13px!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;font-weight:700!important;}
+.ptl-ctl input[type=range]{width:180px!important;}
+.ptl-ctl .n{font-family:"DM Serif Display",serif!important;font-size:22px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;min-width:28px!important;text-align:center!important;}
+.ptl-bar{height:26px!important;border-radius:6px!important;margin:8px 0!important;display:flex!important;overflow:hidden!important;}
+.ptl-seg{height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:11px!important;font-weight:700!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a!important;white-space:nowrap!important;}
+.ptl-seg.seq{background:#fca5a5!important;}
+.ptl-seg.par{background:#6ee7b7!important;}
+.ptl-lbl{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:2px!important;}
+.ptl-stat{display:flex!important;gap:18px!important;justify-content:center!important;margin-top:14px!important;flex-wrap:wrap!important;}
+.ptl-stat div{text-align:center!important;}
+.ptl-stat .k{font-size:11px!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+.ptl-stat .v{font-family:"DM Serif Display",serif!important;font-size:26px!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+/* packet */
+.pkt-track{display:flex!important;gap:8px!important;justify-content:center!important;flex-wrap:wrap!important;min-height:64px!important;}
+.pkt{width:58px!important;border-radius:9px!important;background:#1e293b!important;border:1px solid #334155!important;padding:8px 4px!important;text-align:center!important;}
+.pkt .seq{font-size:10px!important;font-weight:700!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+.pkt .ch{font-family:monospace!important;font-size:20px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;margin-top:2px!important;}
+.pkt.lost{opacity:.35!important;border-style:dashed!important;}
+.pkt-msg{font-family:monospace!important;font-size:20px!important;letter-spacing:3px!important;text-align:center!important;margin-top:16px!important;color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;min-height:24px!important;}
+/* io mapper */
+.iom-flow{display:grid!important;grid-template-columns:1fr auto 1fr auto 1fr!important;align-items:center!important;gap:10px!important;}
+.iom-box{background:#1e293b!important;border-radius:12px!important;padding:14px!important;text-align:center!important;}
+.iom-box .l{font-size:10px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:6px!important;}
+.iom-box .v{font-size:15px!important;font-weight:700!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+.iom-box.prog{background:#1a3a6b!important;}
+.iom-box.out .v{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+.iom-ar{font-size:20px!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;font-weight:700!important;}
+.iom-temp{font-family:"DM Serif Display",serif!important;font-size:26px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+@media(max-width:520px){.ba-grid{grid-template-columns:1fr!important;}.ba-arrow{transform:rotate(90deg)!important;}.iom-flow{grid-template-columns:1fr!important;}.iom-ar{transform:rotate(90deg)!important;}}
+
+</style>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "AP CSP Course", "item": "https://apcsexamprep.com/pages/ap-csp-course"}, {"@type": "ListItem", "position": 2, "name": "Big Idea 5", "item": "https://apcsexamprep.com/pages/ap-csp-course-big-idea-5-impact"}, {"@type": "ListItem", "position": 3, "name": "Topic 5.1: Beneficial and Harmful Effects", "item": "https://apcsexamprep.com/pages/ap-csp-course-bi5-beneficial-harmful-effects"}]}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "LearningResource", "name": "AP CSP Topic 5.1: Beneficial and Harmful Effects", "description": "AP CSP Topic 5.1: beneficial and harmful effects of computing innovations, intended versus unintended consequences, and dual-use effects. 6 exam MCQs plus the Two Sides game.", "url": "https://apcsexamprep.com/pages/ap-csp-course-bi5-beneficial-harmful-effects", "educationalLevel": "High School", "learningResourceType": "Lesson", "author": {"@type": "Person", "name": "Tanner Crow"}, "isPartOf": {"@type": "Course", "name": "AP Computer Science Principles Complete Course", "url": "https://apcsexamprep.com/pages/ap-csp-course"}, "datePublished": "2026-03-01"}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What exactly makes something a 'computing innovation'?", "acceptedAnswer": {"@type": "Answer", "text": "It has a program as an integral part of its function. That program can drive a physical device (a fitness tracker), be non-physical software (a photo app), or underlie a non-physical concept (e-commerce). If no program is essential to how it works, like a printed book, it is not a computing innovation."}}, {"@type": "Question", "name": "Can one innovation be both beneficial and harmful?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, and this is the main idea of 5.1. Most computing innovations produce some benefits and some harms at the same time. A complete answer names both sides instead of sorting the innovation into a purely good or purely bad pile."}}, {"@type": "Question", "name": "How can the same effect be beneficial and harmful?", "acceptedAnswer": {"@type": "Answer", "text": "Because different people evaluate it differently, and even the same person can feel both ways. A recommendation feed that shows more of what you like is convenient to one user and limiting to another. The effect is identical; the point of view changes."}}, {"@type": "Question", "name": "What is the difference between an intended purpose and an unintended consequence?", "acceptedAnswer": {"@type": "Answer", "text": "The intended purpose is the reason creators built the innovation. An unintended consequence is an effect they did not plan for. Importantly, an unintended consequence can be positive or negative, so 'unintended' does not mean 'harmful.'"}}, {"@type": "Question", "name": "Are unintended consequences always bad?", "acceptedAnswer": {"@type": "Answer", "text": "No. GPS was built for military navigation, and its spread into everyday maps, ride-sharing, and delivery was an unintended but hugely beneficial consequence. Judge each unintended effect on its own rather than assuming it is harmful."}}]}</script>
+
+<div class="lesson-page" data-course="ap-csp" data-unit="bi-5" data-lesson="beneficial-harmful-effects">
+
+  <div class="lesson-breadcrumb">
+    <div class="lesson-breadcrumb-inner">
+      <a href="/pages/ap-csp-course">AP CSP Course</a><span class="bc-sep">›</span>
+      <a href="/pages/ap-csp-course-big-idea-5-impact">Big Idea 5</a><span class="bc-sep">›</span>
+      <span>5.1 Beneficial and Harmful Effects</span>
+    </div>
+  </div>
+  <div class="social-proof-bar">
+    <div class="social-proof-inner">
+      <span class="social-proof-item">⭐ <strong>5.0</strong> Wyzant rating</span>
+      <span class="social-proof-item">📚 <strong>1,845+</strong> tutoring hours</span>
+      <span class="social-proof-item">🏫 Built by an <strong>AP CS teacher</strong> with 11+ years experience</span>
+      <span class="social-proof-item">🎯 <strong>70%</strong> of classroom students score 4 or 5 on AP CSP</span>
+    </div>
+  </div>
+  <div class="lesson-hero">
+    <div class="lesson-hero-inner">
+      <div class="lesson-hero-meta">
+        <div class="lesson-num-badge">5.1</div>
+        <div><div class="lesson-eyebrow">Big Idea 5 • Impact of Computing</div></div>
+      </div>
+      <h1>Beneficial and Harmful Effects</h1>
+      <div class="lesson-hero-pills">
+        <span class="lesson-pill">🕐 ~30 min</span>
+        <span class="lesson-pill" style="background:rgba(74,222,128,0.15);border-color:rgba(74,222,128,0.3);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;">FREE</span>
+        <span class="lesson-pill">📖 6 MCQ questions</span>
+        <span class="lesson-pill">🎮 Two Sides game</span>
+        <span class="ced-tag">IOC-1.A / IOC-1.B</span>
+      </div>
+    </div>
+  </div>
+  <div class="bi3-progress"><div class="bi3-progress-inner">
+<div class="prog-step">
+<div class="prog-dot active">5.1</div>
+<div class="prog-label active-label">Effects</div>
+</div>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi5-digital-divide" class="prog-step-link"><div class="prog-dot upcoming">5.2</div>
+<div class="prog-label">Divide</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi5-computing-bias" class="prog-step-link"><div class="prog-dot upcoming">5.3</div>
+<div class="prog-label">Bias</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi5-crowdsourcing" class="prog-step-link"><div class="prog-dot upcoming">5.4</div>
+<div class="prog-label">Crowd</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi5-legal-ethical-concerns" class="prog-step-link"><div class="prog-dot upcoming">5.5</div>
+<div class="prog-label">Legal</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi5-safe-computing" class="prog-step-link"><div class="prog-dot upcoming">5.6</div>
+<div class="prog-label">Safe</div></a>
+</div></div>
+
+  <div class="lesson-main">
+
+    <div class="lesson-objectives">
+      <h2>After this lesson, you will be able to:</h2>
+      <ul>
+        <li><span>Define a computing innovation and identify examples that are physical, non-physical software, and non-physical concepts</span></li>
+        <li><span>Explain that a single computing innovation can have both beneficial and harmful effects</span></li>
+        <li><span>Explain how the same effect can be seen as beneficial by some people and harmful by others</span></li>
+        <li><span>Distinguish the intended purpose of an innovation from its unintended consequences</span></li>
+        <li><span>Analyze the effects of an innovation on society, economy, and culture depending on how it is used</span></li>
+      </ul>
+    </div>
+    <div class="score-impact">📈 <span>Big Idea 5 (Impact of Computing) is 5 to 10 percent of the AP CSP exam, and 5.1 is the foundation for the whole unit. The exact idea that an innovation is not purely good or purely bad also shows up in the written reasoning you do about impacts, so this lesson earns points in more than one place.</span>
+</div>
+    <div class="hook-box">
+      <div class="hook-label">💡 Think about this first</div>
+      <p>A navigation app quietly reroutes thousands of drivers off a jammed highway and onto a quiet residential street. Commuters save twenty minutes and love it. The families who live on that street now have traffic racing past their front yards all day and hate it. Nobody who built the app planned for that street. Is the app's effect beneficial or harmful, and who gets to decide?</p>
+    </div>
+    <div class="lesson-section">
+      <h2>What Counts as a Computing Innovation</h2>
+      <p>People create <strong>computing innovations</strong>, and every question in Big Idea 5 starts with knowing what that phrase means. A <strong>computing innovation</strong> is anything that includes a program as an integral part of its function. That is the whole test: if a program is essential to how it works, it qualifies. Computing innovations come in three shapes:</p>
+      <ul>
+        <li>A <strong>physical</strong> innovation, such as a self-driving car or a fitness tracker, where hardware runs a program.</li>
+        <li>A <strong>non-physical software</strong> innovation, such as a photo-editing app or an operating system.</li>
+        <li>A <strong>non-physical concept</strong>, such as e-commerce or online transaction systems, which are built on programs but are not a single object.</li>
+      </ul>
+      <p>A printed book is not a computing innovation, because no program is integral to it. An e-reader is, because a program is essential to how it works. Getting this definition right is the first thing the exam checks.</p>
+      <div class="callout-exam">
+        <div class="callout-exam-label">🎯 What the exam rewards</div>
+        <p>When a question asks whether something is a computing innovation, the deciding factor is always the same: <strong>is a program an integral part of it?</strong> Do not get distracted by whether it is physical or not. Both a smartwatch and a search engine qualify because a program is essential to each.</p>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Effects Are Both Beneficial and Harmful</h2>
+      <p>The central claim of 5.1 is short and heavily tested: the effects of a computing innovation can be <strong>both beneficial and harmful</strong>. The framework does not sort innovations into a good pile and a bad pile. A single innovation almost always does some good and some harm at the same time, and a mature answer names both sides.</p>
+      <p>Even sharper: a <strong>single effect</strong> can be viewed as beneficial by some people and harmful by others, or even by the same person. A recommendation system that keeps showing you more of what you like is convenient when it surfaces a song you love and troubling when it narrows what you ever see. The effect did not change. The point of view did.</p>
+      <table class="vocab-table">
+        <tr>
+<th>Innovation</th>
+<th>Beneficial view</th>
+<th>Harmful view</th>
+</tr>
+        <tr>
+<td><strong>Facial recognition</strong></td>
+<td>Unlocks your phone instantly and helps reunite missing people with their families.</td>
+<td>Enables tracking of people without their knowledge and can misidentify some groups more often.</td>
+</tr>
+      </table>
+      <p>Notice that the table does not declare a winner. The exam wants you to hold both columns at once, because that is how impact actually works.</p>
+      <div class="mini-ex">
+        <div class="mini-ex-label">Quick check</div>
+        <div class="mini-ex-q">Social media lets a small business reach customers worldwide for free, and it also spreads a rumor about that same business faster than it can respond. This best illustrates that:</div>
+        <div class="mini-opts" id="mc-effects-1-opts">
+          <button class="mini-opt" onclick="miniMCQ('mc-effects-1','A','C','mc-effects-1-fb')"><span class="mini-opt-letter">A</span> Social media is a harmful innovation overall</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-effects-1','B','C','mc-effects-1-fb')"><span class="mini-opt-letter">B</span> Social media is not a computing innovation</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-effects-1','C','C','mc-effects-1-fb')"><span class="mini-opt-letter">C</span> A single innovation can produce both beneficial and harmful effects</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-effects-1','D','C','mc-effects-1-fb')"><span class="mini-opt-letter">D</span> Only the business owner is affected by the innovation</button>
+        </div>
+        <div class="mini-fb" id="mc-effects-1-fb"></div>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Intended Purpose vs Unintended Consequences</h2>
+      <p>Every innovation is built with an <strong>intended purpose</strong>, the reason its creators made it. But not every effect is <strong>anticipated</strong>. Innovations also produce <strong>unintended consequences</strong>, effects the creators did not plan for. Crucially, an unintended consequence can be positive or negative, not just bad.</p>
+      <ul>
+        <li>GPS was intended for military navigation. An unintended, and largely positive, consequence is that it now powers ride-sharing, delivery, and everyday maps.</li>
+        <li>A social feed intended to help friends stay in touch produced the unintended consequence that some users compare themselves to others and feel worse.</li>
+      </ul>
+      <p>On the exam, watch for the word <strong>unintended</strong>. It signals an effect outside the original purpose, and it does not tell you whether that effect is good or bad. You have to judge each one on its own.</p>
+      <div class="callout-trap">
+        <div class="callout-trap-label">⚠ Common trap</div>
+        <p>Two traps live here. First, assuming an innovation is <strong>purely good or purely bad</strong>. It rarely is, so an answer that names only one side is usually incomplete. Second, assuming <strong>unintended means harmful</strong>. An unintended consequence can be a happy surprise. GPS reaching civilians was unplanned and hugely beneficial.</p>
+      </div>
+      <div class="mini-ex">
+        <div class="mini-ex-label">Quick check</div>
+        <div class="mini-ex-q">A study app is built so students can review flashcards on their phones. Teachers later notice students also use it to quietly message each other during class. The messaging use is best described as:</div>
+        <div class="mini-opts" id="mc-effects-2-opts">
+          <button class="mini-opt" onclick="miniMCQ('mc-effects-2','A','B','mc-effects-2-fb')"><span class="mini-opt-letter">A</span> The intended purpose of the app</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-effects-2','B','B','mc-effects-2-fb')"><span class="mini-opt-letter">B</span> An unintended consequence of the app</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-effects-2','C','B','mc-effects-2-fb')"><span class="mini-opt-letter">C</span> Proof the app is not a computing innovation</button>
+          <button class="mini-opt" onclick="miniMCQ('mc-effects-2','D','B','mc-effects-2-fb')"><span class="mini-opt-letter">D</span> A beneficial effect the creators planned</button>
+        </div>
+        <div class="mini-fb" id="mc-effects-2-fb"></div>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Effects Depend on Context and Use</h2>
+      <p>The same innovation lands differently depending on <strong>context</strong> and on <strong>how people use it</strong>. Its effects ripple through <strong>society, economy, and culture</strong> all at once. A translation app breaks down language barriers for a traveler (a cultural benefit), can put some human translators out of work (an economic harm), and reshapes how strangers across the world communicate (a social change). None of these cancels the others out.</p>
+      <p>This is why the exam asks you to reason about effects rather than memorize a verdict. The right analysis identifies <em>who</em> is affected, <em>how</em>, and whether the effect was intended, and it accepts that the answer can point in more than one direction at the same time.</p>
+    </div>
+    <div class="lesson-section">
+      <h2>How 5.1 Is Tested, and Where Impact Shows Up in Writing</h2>
+      <p>On the multiple-choice exam, 5.1 questions usually hand you a scenario about a real-sounding innovation and ask you to reason about its effects. Expect to be asked to identify whether something is a <strong>computing innovation</strong>, to name <strong>both</strong> a beneficial and a harmful effect, to tell an <strong>intended purpose</strong> from an <strong>unintended consequence</strong>, and to recognize when a single effect is seen differently by different people. The strongest answers avoid declaring an innovation purely good or purely bad.</p>
+      <p>This thinking is not only for the MCQ. Reasoning about the impact of a computing innovation, weighing benefits against harms and considering data and context, is exactly the Explore-style analysis the course trains, and that same reasoning about effects appears when you write about the impact of an innovation. Practicing evenhanded, two-sided impact analysis here builds the habit you use in written responses.</p>
+    </div>
+    <div class="email-capture">
+      <div class="email-capture-text">
+        <div class="email-capture-eyebrow">FREE for students</div>
+        <h3>Get a free AP CSP question every day</h3>
+        <p>Join 3,000+ students. Daily practice, study tips, and exam strategies.</p>
+      </div>
+      <div>
+        <div class="email-capture-form" id="capture-form">
+          <input type="email" class="email-capture-input" id="capture-email" placeholder="your@email.com">
+          <button class="email-capture-btn" onclick="handleCapture()">Subscribe →</button>
+        </div>
+        <div class="email-capture-success" id="capture-success">✓ You're in!</div>
+      </div>
+    </div>
+    <div class="mcq-section">
+      <div class="mcq-section-header">
+        <div class="mcq-section-icon">📈</div>
+        <div>
+          <div class="mcq-section-title">MCQ Practice</div>
+          <div class="mcq-section-sub">6 questions • Exam difficulty and above • Predict before you peek</div>
+        </div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q1">
+        <div class="mcq-q-num">Question 1 of 6<span class="diff-tag">Definition</span>
+</div>
+        <div class="predict-note">Decide what makes something a computing innovation before you look.</div>
+        <div class="mcq-q-text"><p>Which of the following is the best example of a computing innovation as defined by the AP CSP framework?</p></div>
+        <div class="mcq-options" id="q1-options">
+<button class="mcq-option" onclick="checkMCQ('q1','A','D','q1-fb-A')"><span class="mcq-option-letter">A</span> A paperback dictionary printed and bound in a factory</button>
+<button class="mcq-option" onclick="checkMCQ('q1','B','D','q1-fb-B')"><span class="mcq-option-letter">B</span> A wooden abacus used to add numbers by hand</button>
+<button class="mcq-option" onclick="checkMCQ('q1','C','D','q1-fb-C')"><span class="mcq-option-letter">C</span> A metal filing cabinet used to store paper documents</button>
+<button class="mcq-option" onclick="checkMCQ('q1','D','D','q1-fb-D')"><span class="mcq-option-letter">D</span> An online mapping service that uses a program to find routes in real time</button>
+</div>
+<div id="q1-fb-A" class="mcq-feedback incorrect-fb">Incorrect. A printed dictionary has no program integral to its function, so it is not a computing innovation.</div>
+<div id="q1-fb-B" class="mcq-feedback incorrect-fb">Incorrect. An abacus is a manual tool with no program running it, so it does not qualify.</div>
+<div id="q1-fb-C" class="mcq-feedback incorrect-fb">Incorrect. A filing cabinet stores paper mechanically and runs no program, so it is not a computing innovation.</div>
+<div id="q1-fb-D" class="mcq-feedback correct-fb">Correct. A program is an integral part of an online mapping service, which is exactly what makes something a computing innovation.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q2">
+        <div class="mcq-q-num">Question 2 of 6<span class="diff-tag">Both effects</span>
+</div>
+        <div class="predict-note">Predict how the framework describes an innovation's effects first.</div>
+        <div class="mcq-q-text"><p>A ride-sharing app lets drivers earn flexible income and lets riders get around without owning a car, while also reducing the earnings of traditional taxi drivers in the same city. Which statement best characterizes the app's effects?</p></div>
+        <div class="mcq-options" id="q2-options">
+<button class="mcq-option" onclick="checkMCQ('q2','A','A','q2-fb-A')"><span class="mcq-option-letter">A</span> The app has beneficial effects for some people and harmful effects for others at the same time</button>
+<button class="mcq-option" onclick="checkMCQ('q2','B','A','q2-fb-B')"><span class="mcq-option-letter">B</span> The app has only beneficial effects because more people can get rides</button>
+<button class="mcq-option" onclick="checkMCQ('q2','C','A','q2-fb-C')"><span class="mcq-option-letter">C</span> The app has only harmful effects because taxi drivers earn less</button>
+<button class="mcq-option" onclick="checkMCQ('q2','D','A','q2-fb-D')"><span class="mcq-option-letter">D</span> The app has no real effect because transportation existed before it</button>
+</div>
+<div id="q2-fb-A" class="mcq-feedback correct-fb">Correct. Some groups benefit (flexible drivers, carless riders) while another group is harmed (taxi drivers). A single innovation commonly produces both at once.</div>
+<div id="q2-fb-B" class="mcq-feedback incorrect-fb">Incorrect. Ignoring the harm to taxi drivers tells only one side of the story.</div>
+<div id="q2-fb-C" class="mcq-feedback incorrect-fb">Incorrect. Ignoring the benefits to riders and flexible drivers tells only one side of the story.</div>
+<div id="q2-fb-D" class="mcq-feedback incorrect-fb">Incorrect. The app clearly changed how people earn and travel, so saying it has no effect is wrong.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q3">
+        <div class="mcq-q-num">Question 3 of 6<span class="diff-tag">Intended vs unintended</span>
+</div>
+        <div class="predict-note">Separate the original purpose from the surprise before matching an option.</div>
+        <div class="mcq-q-text"><p>Engineers create a smart thermostat intended to lower home energy bills. After it is widely adopted, a power company discovers it can use the aggregated data to predict neighborhood electricity demand and prevent blackouts. The blackout-prevention benefit is best described as:</p></div>
+        <div class="mcq-options" id="q3-options">
+<button class="mcq-option" onclick="checkMCQ('q3','A','A','q3-fb-A')"><span class="mcq-option-letter">A</span> A beneficial but unintended consequence of the thermostat</button>
+<button class="mcq-option" onclick="checkMCQ('q3','B','A','q3-fb-B')"><span class="mcq-option-letter">B</span> The intended purpose of the thermostat</button>
+<button class="mcq-option" onclick="checkMCQ('q3','C','A','q3-fb-C')"><span class="mcq-option-letter">C</span> Evidence the thermostat is not a computing innovation</button>
+<button class="mcq-option" onclick="checkMCQ('q3','D','A','q3-fb-D')"><span class="mcq-option-letter">D</span> A harmful effect that outweighs the energy savings</button>
+</div>
+<div id="q3-fb-A" class="mcq-feedback correct-fb">Correct. The creators did not plan for demand prediction, so it is unintended, and it is clearly positive, so it is a beneficial unintended consequence.</div>
+<div id="q3-fb-B" class="mcq-feedback incorrect-fb">Incorrect. The intended purpose was lowering home energy bills, not predicting demand across a neighborhood.</div>
+<div id="q3-fb-C" class="mcq-feedback incorrect-fb">Incorrect. A program is integral to a smart thermostat, so it is a computing innovation.</div>
+<div id="q3-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Preventing blackouts is a benefit, not a harm, and nothing here says it outweighs anything.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q4">
+        <div class="mcq-q-num">Question 4 of 6<span class="diff-tag">I and II only style</span>
+</div>
+        <div class="predict-note">Judge each statement true or false before choosing.</div>
+        <div class="mcq-q-text"><p>Consider these statements about the effects of computing innovations:</p></div>
+        <ul class="mcq-roman">
+          <li>
+<strong>I.</strong> A single effect of an innovation can be seen as beneficial by some people and harmful by others.</li>
+          <li>
+<strong>II.</strong> An unintended consequence of an innovation is always harmful.</li>
+          <li>
+<strong>III.</strong> An innovation can have both beneficial and harmful effects at the same time.</li>
+        </ul>
+        <div class="mcq-options" id="q4-options">
+<button class="mcq-option" onclick="checkMCQ('q4','A','C','q4-fb-A')"><span class="mcq-option-letter">A</span> I only</button>
+<button class="mcq-option" onclick="checkMCQ('q4','B','C','q4-fb-B')"><span class="mcq-option-letter">B</span> II and III only</button>
+<button class="mcq-option" onclick="checkMCQ('q4','C','C','q4-fb-C')"><span class="mcq-option-letter">C</span> I and III only</button>
+<button class="mcq-option" onclick="checkMCQ('q4','D','C','q4-fb-D')"><span class="mcq-option-letter">D</span> I, II, and III</button>
+</div>
+<div id="q4-fb-A" class="mcq-feedback incorrect-fb">Incorrect. Statement III is also true, so 'I only' is too narrow.</div>
+<div id="q4-fb-B" class="mcq-feedback incorrect-fb">Incorrect. Statement II is false, so any choice that includes it cannot be right.</div>
+<div id="q4-fb-C" class="mcq-feedback correct-fb">Correct. I and III match the framework. II is false because an unintended consequence can be positive, such as GPS reaching civilians.</div>
+<div id="q4-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Statement II is false, so not all three can be correct.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q5">
+        <div class="mcq-q-num">Question 5 of 6<span class="diff-tag">Same effect, two views</span>
+</div>
+        <div class="predict-note">Predict what changed between the two people before reading options.</div>
+        <div class="mcq-q-text"><p>A streaming service uses a recommendation program that automatically fills your queue with more of what you already watch. One user calls this effect helpful because they always have something to watch, while another calls the exact same effect harmful because they rarely discover anything new. What does this scenario most directly illustrate?</p></div>
+        <div class="mcq-options" id="q5-options">
+<button class="mcq-option" onclick="checkMCQ('q5','A','D','q5-fb-A')"><span class="mcq-option-letter">A</span> The recommendation program has stopped functioning correctly</button>
+<button class="mcq-option" onclick="checkMCQ('q5','B','D','q5-fb-B')"><span class="mcq-option-letter">B</span> Recommendation programs cannot be considered computing innovations</button>
+<button class="mcq-option" onclick="checkMCQ('q5','C','D','q5-fb-C')"><span class="mcq-option-letter">C</span> The effect is only beneficial and the second user is simply mistaken</button>
+<button class="mcq-option" onclick="checkMCQ('q5','D','D','q5-fb-D')"><span class="mcq-option-letter">D</span> The same effect of an innovation can be viewed as beneficial or harmful depending on the person</button>
+</div>
+<div id="q5-fb-A" class="mcq-feedback incorrect-fb">Incorrect. The program is working as designed; the scenario is about differing views of that design, not a malfunction.</div>
+<div id="q5-fb-B" class="mcq-feedback incorrect-fb">Incorrect. A program is integral to a recommendation service, so it is a computing innovation.</div>
+<div id="q5-fb-C" class="mcq-feedback incorrect-fb">Incorrect. The framework treats both viewpoints as valid; neither user is 'mistaken' for weighing the effect differently.</div>
+<div id="q5-fb-D" class="mcq-feedback correct-fb">Correct. The effect did not change. Two people evaluate the identical behavior differently, which is exactly the framework's point about a single effect.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q6">
+        <div class="mcq-q-num">Question 6 of 6<span class="diff-tag">Application</span>
+</div>
+        <div class="predict-note">Name the beneficial and harmful sides before you choose.</div>
+        <div class="mcq-q-text"><p>A city installs a network of traffic cameras running image-recognition programs to automatically ticket drivers who run red lights. Collisions at those intersections drop, but civil-liberties groups warn the cameras also record the movements of every driver who passes. Which analysis of this innovation is most consistent with the framework?</p></div>
+        <div class="mcq-options" id="q6-options">
+<button class="mcq-option" onclick="checkMCQ('q6','A','B','q6-fb-A')"><span class="mcq-option-letter">A</span> The cameras should be judged purely beneficial because collisions dropped</button>
+<button class="mcq-option" onclick="checkMCQ('q6','B','B','q6-fb-B')"><span class="mcq-option-letter">B</span> The cameras have a beneficial effect on safety and a harmful effect on privacy, and both should be weighed</button>
+<button class="mcq-option" onclick="checkMCQ('q6','C','B','q6-fb-C')"><span class="mcq-option-letter">C</span> The cameras are not a computing innovation because they are physical hardware</button>
+<button class="mcq-option" onclick="checkMCQ('q6','D','B','q6-fb-D')"><span class="mcq-option-letter">D</span> The cameras should be judged purely harmful because they record drivers</button>
+</div>
+<div id="q6-fb-A" class="mcq-feedback incorrect-fb">Incorrect. Naming only the safety benefit ignores the privacy concern and treats the innovation as purely good.</div>
+<div id="q6-fb-B" class="mcq-feedback correct-fb">Correct. The framework expects you to hold both sides: a safety benefit and a privacy harm, weighed together rather than reduced to one verdict.</div>
+<div id="q6-fb-C" class="mcq-feedback incorrect-fb">Incorrect. A program is integral to the cameras' function, so being physical hardware does not disqualify them.</div>
+<div id="q6-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Naming only the privacy harm ignores the measurable drop in collisions and treats the innovation as purely bad.</div>
+      </div>
+    </div>
+    <div class="game-section">
+      <div style="text-align:center;margin-bottom:20px;">
+        <div class="game-badge">🎮 Lesson Game</div>
+        <div class="game-title">Two Sides</div>
+        <div class="game-sub">Sort each real effect of an innovation into beneficial or harmful; most are both.</div>
+      </div>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+
+  #ts-game{font-family:"DM Sans",sans-serif!important;max-width:560px;margin:0 auto;padding:0 12px;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;box-sizing:border-box;}
+  #ts-game *{box-sizing:border-box;}
+  #ts-game .ts-card{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:14px!important;overflow:hidden;box-shadow:0 6px 20px rgba(15,31,61,.06);}
+  #ts-game .ts-hero{background:#0f1f3d!important;padding:20px 20px 18px;}
+  #ts-game .ts-title{font-family:"DM Serif Display",serif!important;font-size:28px!important;line-height:1.1;color:#fff!important;-webkit-text-fill-color:#fff!important;margin:0 0 6px;}
+  #ts-game .ts-sub{font-size:13px!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;margin:0;line-height:1.4;}
+  #ts-game .ts-how{font-size:12px!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;margin:10px 0 0;line-height:1.4;}
+
+  #ts-game .ts-bar{display:flex;gap:8px;padding:12px 16px;background:#eff6ff!important;border-bottom:1px solid #e2e8f0!important;align-items:center;flex-wrap:wrap;}
+  #ts-game .ts-stat{flex:1;min-width:72px;text-align:center;}
+  #ts-game .ts-stat .lab{font-size:10px!important;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+  #ts-game .ts-stat .val{font-size:19px!important;font-weight:800;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;font-variant-numeric:tabular-nums;}
+  #ts-game .ts-stat .val.streak{color:#d97706!important;-webkit-text-fill-color:#d97706!important;}
+
+  #ts-game .ts-body{padding:18px 16px 20px;}
+  #ts-game .ts-innov{display:flex;align-items:center;gap:8px;justify-content:center;margin:0 0 4px;}
+  #ts-game .ts-innov .chip{background:#7c3aed!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:11px!important;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:4px 12px;border-radius:100px;}
+  #ts-game .ts-prompt{text-align:center;font-size:12px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin:6px 0 12px;}
+
+  #ts-game .ts-effect{background:#f8fafc!important;border:1px solid #e2e8f0!important;border-radius:12px!important;padding:20px 18px;min-height:96px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:17px!important;font-weight:600;line-height:1.4;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;}
+
+  #ts-game .ts-choices{display:flex;gap:8px;margin-top:14px;}
+  #ts-game .ts-btn{flex:1;border:none;border-radius:12px!important;padding:14px 8px;font-family:inherit;font-size:14px!important;font-weight:800;cursor:pointer;color:#fff!important;-webkit-text-fill-color:#fff!important;transition:transform .08s,filter .12s;line-height:1.15;}
+  #ts-game .ts-btn:active{transform:translateY(1px);}
+  #ts-game .ts-btn.good{background:#16a34a!important;}
+  #ts-game .ts-btn.dep{background:#d97706!important;}
+  #ts-game .ts-btn.bad{background:#dc2626!important;}
+  #ts-game .ts-btn:disabled{filter:grayscale(.55) opacity(.6);cursor:default;}
+  #ts-game .ts-btn .sm{display:block;font-size:10px!important;font-weight:600;opacity:.9;margin-top:2px;}
+
+  #ts-game .ts-fb{margin-top:14px;border-radius:12px!important;padding:14px 14px;font-size:13px!important;line-height:1.5;border:1px solid transparent;display:none;}
+  #ts-game .ts-fb.show{display:block;}
+  #ts-game .ts-fb .verdict{font-weight:800;display:block;margin-bottom:3px;font-size:14px!important;}
+  #ts-game .ts-fb.right{background:#f0fdf4!important;border-color:#bbf7d0!important;color:#166534!important;-webkit-text-fill-color:#166534!important;}
+  #ts-game .ts-fb.right .verdict{color:#16a34a!important;-webkit-text-fill-color:#16a34a!important;}
+  #ts-game .ts-fb.wrong{background:#fef2f2!important;border-color:#fecaca!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  #ts-game .ts-fb.wrong .verdict{color:#dc2626!important;-webkit-text-fill-color:#dc2626!important;}
+  #ts-game .ts-fb .teach{color:#334155!important;-webkit-text-fill-color:#334155!important;margin-top:5px;display:block;}
+
+  #ts-game .ts-next{margin-top:12px;width:100%;background:#1a56db!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none;border-radius:12px!important;padding:13px;font-family:inherit;font-size:15px!important;font-weight:800;cursor:pointer;display:none;}
+  #ts-game .ts-next.show{display:block;}
+
+  #ts-game .ts-progress{height:6px;background:#e2e8f0!important;border-radius:100px!important;overflow:hidden;margin-top:16px;}
+  #ts-game .ts-progress .fill{height:100%;background:#1a56db!important;width:0;transition:width .3s;}
+
+  #ts-game .ts-end{text-align:center;padding:26px 18px;}
+  #ts-game .ts-end .emoji{font-size:44px!important;line-height:1;}
+  #ts-game .ts-end h2{font-family:"DM Serif Display",serif!important;font-size:26px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;margin:12px 0 4px;}
+  #ts-game .ts-end .fscore{font-size:16px!important;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;font-weight:800;margin:0 0 10px;}
+  #ts-game .ts-end .msg{font-size:14px!important;color:#334155!important;-webkit-text-fill-color:#334155!important;line-height:1.55;max-width:420px;margin:0 auto 18px;}
+  #ts-game .ts-again{background:#16a34a!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none;border-radius:12px!important;padding:13px 28px;font-family:inherit;font-size:15px!important;font-weight:800;cursor:pointer;}
+  #ts-game .hidden{display:none!important;}
+</style>
+
+<div class="ts-game" id="ts-game">
+  <div class="ts-card">
+    <div class="ts-hero">
+      <h1 class="ts-title">Two Sides</h1>
+      <p class="ts-sub">Every computing innovation usually has BOTH beneficial and harmful effects  -  and some effects were never intended.</p>
+      <p class="ts-how">How to play: read each real-world effect and sort it as Beneficial, Harmful, or It Depends. Some cards are deliberately context-dependent. Answer fast for a streak bonus.</p>
+    </div>
+
+    <div class="ts-bar">
+      <div class="ts-stat">
+<div class="lab">Score</div>
+<div class="val" id="ts-score">0</div>
+</div>
+      <div class="ts-stat">
+<div class="lab">Streak</div>
+<div class="val streak" id="ts-streak">0</div>
+</div>
+      <div class="ts-stat">
+<div class="lab">Card</div>
+<div class="val" id="ts-count">1/14</div>
+</div>
+    </div>
+
+    <div class="ts-body" id="ts-play">
+      <div class="ts-innov"><span class="chip" id="ts-innov">Social media</span></div>
+      <p class="ts-prompt">Effect of this innovation:</p>
+      <div class="ts-effect" id="ts-effect">Loading...</div>
+
+      <div class="ts-choices" id="ts-choices">
+        <button class="ts-btn good" data-c="beneficial" id="ts-b-good">Beneficial<span class="sm">helps people</span></button>
+        <button class="ts-btn dep" data-c="depends" id="ts-b-dep">It Depends<span class="sm">both / context</span></button>
+        <button class="ts-btn bad" data-c="harmful" id="ts-b-bad">Harmful<span class="sm">hurts people</span></button>
+      </div>
+
+      <div class="ts-fb" id="ts-fb"></div>
+      <button class="ts-next" id="ts-next">Next card ▶</button>
+
+      <div class="ts-progress"><div class="fill" id="ts-fill"></div></div>
+    </div>
+
+    <div class="ts-body ts-end hidden" id="ts-endscreen">
+      <div class="emoji" id="ts-emoji">🏆</div>
+      <h2 id="ts-endtitle">Round complete!</h2>
+      <p class="fscore" id="ts-fscore">You scored 0 points</p>
+      <p class="msg" id="ts-endmsg"></p>
+      <button class="ts-again" id="ts-again">Play again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var CARDS = [
+    { innov:'Social media', text:'People separated by long distances can stay in daily contact with family and friends.', ans:'beneficial',
+      fb:'A clear benefit: computing innovations can connect people across geographic barriers.' },
+    { innov:'Social media', text:'Recommendation algorithms can trap users in an "echo chamber" that only shows views they already agree with.', ans:'harmful',
+      fb:'This is an unintended harmful effect: the design goal was engagement, not narrowing what people see.' },
+    { innov:'Social media', text:'A platform lets grassroots activists organize protests and raise money quickly.', ans:'depends',
+      fb:'It depends on the cause and the viewer. The same organizing power can spread help OR spread harm.' },
+
+    { innov:'GPS navigation', text:'Emergency responders reach accident scenes faster using real-time routing.', ans:'beneficial',
+      fb:'Faster response times save lives  -  a strong beneficial effect.' },
+    { innov:'GPS navigation', text:'Apps route heavy traffic through quiet residential streets that were never built for it.', ans:'harmful',
+      fb:'An unintended harmful effect on neighborhoods the designers never considered.' },
+    { innov:'GPS navigation', text:'Constant location tracking makes navigation work but also records everywhere you go.', ans:'depends',
+      fb:'It depends: the same location data enables directions AND enables surveillance of your movements.' },
+
+    { innov:'Facial recognition', text:'It can help reunite a lost child or a missing person with their family.', ans:'beneficial',
+      fb:'A genuine benefit when used to identify and locate people who need help.' },
+    { innov:'Facial recognition', text:'Studies show it misidentifies some groups far more often, leading to wrongful accusations.', ans:'harmful',
+      fb:'Bias in the data produces a harmful effect  -  the error is not spread equally across people.' },
+    { innov:'Facial recognition', text:'A store uses it to speed up checkout and also to secretly track how long you browse.', ans:'depends',
+      fb:'It depends on how it is used and whether you consent: convenience and hidden tracking come together.' },
+
+    { innov:'AI chatbots', text:'A student gets instant, patient explanations of a hard topic at 2 a.m.', ans:'beneficial',
+      fb:'On-demand tutoring is a real benefit of the innovation.' },
+    { innov:'AI chatbots', text:'A confident-sounding answer is simply made up, and the user acts on the false information.', ans:'harmful',
+      fb:'"Hallucinated" output is an unintended harmful effect of how these systems generate text.' },
+
+    { innov:'Drones', text:'They deliver medicine to remote villages with no roads.', ans:'beneficial',
+      fb:'Reaching places roads cannot is a clear beneficial effect.' },
+    { innov:'Ride-sharing apps', text:'A rider with no car gets an affordable late-night ride home.', ans:'beneficial',
+      fb:'Expanded access to transportation is a beneficial effect.' },
+    { innov:'Ride-sharing apps', text:'More cars circling for passengers adds to traffic and city pollution.', ans:'harmful',
+      fb:'Increased congestion is an unintended harmful effect of the innovation.' },
+
+    { innov:'Smart speakers', text:'They let a person with limited mobility control lights and calls by voice.', ans:'beneficial',
+      fb:'Improved accessibility is a strong beneficial effect.' },
+    { innov:'Smart speakers', text:'An always-on microphone is convenient but is also listening in your home.', ans:'depends',
+      fb:'It depends: the same listening enables hands-free help AND raises real privacy concerns.' },
+
+    { innov:'Online reviews', text:'Honest reviews help shoppers avoid scams and low-quality products.', ans:'beneficial',
+      fb:'Better-informed decisions are a beneficial effect.' },
+    { innov:'Online reviews', text:'Fake reviews can be planted to boost a bad product or sink a rival.', ans:'harmful',
+      fb:'Manipulated reviews are a harmful effect that undermines the whole system.' }
+  ];
+
+  var ROUND = 14;
+  var deck = [], idx = 0, score = 0, streak = 0, cardStart = 0, answered = false;
+
+  var $ = function(id){ return document.getElementById(id); };
+  var els = {
+    score:$('ts-score'), streak:$('ts-streak'), count:$('ts-count'),
+    innov:$('ts-innov'), effect:$('ts-effect'), choices:$('ts-choices'),
+    fb:$('ts-fb'), next:$('ts-next'), fill:$('ts-fill'),
+    play:$('ts-play'), end:$('ts-endscreen'),
+    emoji:$('ts-emoji'), endtitle:$('ts-endtitle'), fscore:$('ts-fscore'), endmsg:$('ts-endmsg')
+  };
+  var btns = els.choices.querySelectorAll('.ts-btn');
+
+  function shuffle(a){
+    var arr = a.slice();
+    for(var i=arr.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=arr[i];arr[i]=arr[j];arr[j]=t; }
+    return arr;
+  }
+
+  function buildDeck(){
+    var s = shuffle(CARDS);
+    deck = s.slice(0, Math.min(ROUND, s.length));
+  }
+
+  function label(c){
+    return c==='beneficial' ? 'Beneficial' : c==='harmful' ? 'Harmful' : 'It Depends';
+  }
+
+  function start(){
+    buildDeck(); idx=0; score=0; streak=0;
+    els.score.textContent='0'; els.streak.textContent='0';
+    els.end.classList.add('hidden'); els.play.classList.remove('hidden');
+    showCard();
+  }
+
+  function showCard(){
+    answered=false;
+    var c = deck[idx];
+    els.innov.textContent = c.innov;
+    els.effect.textContent = c.text;
+    els.count.textContent = (idx+1)+'/'+deck.length;
+    els.fb.className='ts-fb'; els.fb.innerHTML='';
+    els.next.className='ts-next';
+    Array.prototype.forEach.call(btns, function(b){ b.disabled=false; });
+    els.fill.style.width = (idx/deck.length*100)+'%';
+    cardStart = Date.now();
+  }
+
+  function answer(choice){
+    if(answered) return;
+    answered=true;
+    var c = deck[idx];
+    var correct = (choice===c.ans);
+    Array.prototype.forEach.call(btns, function(b){ b.disabled=true; });
+
+    var gained = 0;
+    if(correct){
+      var fast = (Date.now()-cardStart) < 6000;
+      streak += 1;
+      var base = 100;
+      var streakBonus = (streak-1)*20;
+      var speedBonus = fast ? 30 : 0;
+      gained = base + streakBonus + speedBonus;
+      score += gained;
+    } else {
+      streak = 0;
+    }
+    els.score.textContent = score;
+    els.streak.textContent = streak;
+
+    els.fb.classList.add('show', correct ? 'right' : 'wrong');
+    var head = correct
+      ? ('Correct • ' + label(c.ans) + (gained?('  +'+gained+' pts'):''))
+      : ('Not quite • the best answer is ' + label(c.ans));
+    els.fb.innerHTML = '<span class="verdict">'+head+'</span>'+
+      '<span class="teach">'+c.fb+'</span>';
+
+    els.fill.style.width = ((idx+1)/deck.length*100)+'%';
+    els.next.textContent = (idx+1>=deck.length) ? 'See results ▶' : 'Next card ▶';
+    els.next.classList.add('show');
+  }
+
+  function next(){
+    if(!answered) return;
+    idx += 1;
+    if(idx >= deck.length){ endGame(); return; }
+    showCard();
+  }
+
+  function endGame(){
+    els.play.classList.add('hidden');
+    els.end.classList.remove('hidden');
+    var max = 0;
+    // rough perfect estimate for message tiering
+    var pct = score;
+    var emoji, title, msg;
+    if(score >= 1600){ emoji='🏆'; title='Balanced thinker!'; }
+    else if(score >= 1000){ emoji='🎉'; title='Nicely done!'; }
+    else { emoji='💡'; title='Good start!'; }
+    msg = 'Key idea: almost every computing innovation carries BOTH beneficial and harmful effects, '+
+          'and many of the harms are unintended  -  side effects the designers never planned for. '+
+          'On the exam, look for the second side, and remember that context often decides whether an effect helps or hurts.';
+    els.emoji.innerHTML = emoji;
+    els.endtitle.innerHTML = title;
+    els.fscore.textContent = 'You scored ' + score + ' points';
+    els.endmsg.innerHTML = msg;
+
+    document.dispatchEvent(new CustomEvent('apcsGameScore',{detail:{value:score}}));
+  }
+
+  Array.prototype.forEach.call(btns, function(b){
+    b.addEventListener('click', function(){ answer(b.getAttribute('data-c')); });
+  });
+  els.next.addEventListener('click', next);
+  $('ts-again').addEventListener('click', start);
+
+  start();
+})();
+</script>
+    </div>
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What exactly makes something a 'computing innovation'?<i class="faq-icon">+</i></button>
+        <div class="faq-a">It has a program as an integral part of its function. That program can drive a physical device (a fitness tracker), be non-physical software (a photo app), or underlie a non-physical concept (e-commerce). If no program is essential to how it works, like a printed book, it is not a computing innovation.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Can one innovation be both beneficial and harmful?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Yes, and this is the main idea of 5.1. Most computing innovations produce some benefits and some harms at the same time. A complete answer names both sides instead of sorting the innovation into a purely good or purely bad pile.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">How can the same effect be beneficial and harmful?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Because different people evaluate it differently, and even the same person can feel both ways. A recommendation feed that shows more of what you like is convenient to one user and limiting to another. The effect is identical; the point of view changes.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What is the difference between an intended purpose and an unintended consequence?<i class="faq-icon">+</i></button>
+        <div class="faq-a">The intended purpose is the reason creators built the innovation. An unintended consequence is an effect they did not plan for. Importantly, an unintended consequence can be positive or negative, so 'unintended' does not mean 'harmful.'</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Are unintended consequences always bad?<i class="faq-icon">+</i></button>
+        <div class="faq-a">No. GPS was built for military navigation, and its spread into everyday maps, ride-sharing, and delivery was an unintended but hugely beneficial consequence. Judge each unintended effect on its own rather than assuming it is harmful.</div>
+      </div>
+    </div>
+    <div class="related-links">
+      <h3>🔗 Continue studying</h3>
+      <div class="related-links-grid">
+        <a href="/pages/ap-csp-course-bi5-digital-divide" class="related-link">5.2 Digital Divide</a>
+        <a href="/pages/ap-csp-unintended-consequences" class="related-link">Unintended Consequences</a>
+        <a href="/pages/ap-csp-study-games-hub" class="related-link">All CSP Study Games</a>
+      </div>
+    </div>
+    <div class="superpack-slim">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="superpack-slim-icon">📦</div>
+        <div><div class="superpack-slim-text">AP CSP Teacher Superpack<span class="superpack-slim-sub">Slides, lesson plans, unit tests for all 5 Big Ideas, $249</span>
+</div></div>
+      </div>
+      <a href="/products/ap-csp-teacher-superpack" class="superpack-slim-btn">Get the Superpack →</a>
+    </div>
+    <div class="teacher-callout">
+      <div class="teacher-callout-icon">🏫</div>
+      <div class="teacher-callout-body">
+        <div class="teacher-callout-label">For teachers</div>
+        <p>This topic is where students learn to argue both sides instead of picking a team. Run a quick 'Two Sides' sort where students list one benefit and one harm for the same innovation, then flag which effects were intended versus unintended. The Superpack includes a dual-effect scenario bank and a sentence-frame handout for evenhanded impact writing. <a href="/products/ap-csp-teacher-superpack">View what's included →</a></p>
+      </div>
+    </div>
+    <div class="lesson-nav">
+      <a href="/pages/ap-csp-course-big-idea-5-impact" class="nav-card">
+        <div class="nav-card-dir">← Previous</div>
+        <div class="nav-card-title">Big Idea 5: Impact of Computing</div>
+      </a>
+      <a href="/pages/ap-csp-course-bi5-digital-divide" class="nav-card next">
+        <div class="nav-card-dir">Next lesson →</div>
+        <div class="nav-card-title">5.2 Digital Divide</div>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var MINI_MSGS={"mc-effects-1": {"A": "Not the best read. The example shows a benefit and a harm side by side, so calling it 'harmful overall' ignores the free worldwide reach the business gained.", "B": "Incorrect. Social media clearly relies on programs as an integral part, so it is a computing innovation.", "C": "Correct. One innovation delivered a clear benefit (free global reach) and a clear harm (fast-spreading rumor) at the same time. That is the core idea of 5.1.", "D": "Incorrect. Customers, the public, and the business are all affected, not just the owner."}, "mc-effects-2": {"A": "Incorrect. The intended purpose was reviewing flashcards. Messaging is not what the creators designed the app to do.", "B": "Correct. Messaging during class is an effect the creators did not plan for, which is exactly an unintended consequence.", "C": "Incorrect. A program is still integral to the app, so it remains a computing innovation regardless of how students use it.", "D": "Incorrect. The creators did not plan the messaging use, so it was neither planned nor obviously beneficial here."}};
+var MINI_FIB={};
+
+function _activity(d){
+  try{ var w=document.querySelector('.lesson-page');
+    if(w){ d.course=w.getAttribute('data-course'); d.unit=w.getAttribute('data-unit'); d.lesson=w.getAttribute('data-lesson'); }
+    document.dispatchEvent(new CustomEvent('apcsActivity',{detail:d}));
+  }catch(e){}
+}
+function checkMCQ(qid, chosen, correct, fbId){
+  var opts=document.querySelectorAll('#'+qid+'-options .mcq-option');
+  opts.forEach(function(b){b.disabled=true;b.onclick=null;});
+  var letters=['A','B','C','D'];
+  opts[letters.indexOf(chosen)].classList.add(chosen===correct?'correct':'incorrect');
+  if(chosen!==correct)opts[letters.indexOf(correct)].classList.add('revealed-correct');
+  document.getElementById(fbId).classList.add('show');
+  _activity({activity:'quiz',item:qid,choice:chosen});
+}
+function miniMCQ(id, chosen, correct, fbId){
+  var opts=document.querySelectorAll('#'+id+'-opts .mini-opt');
+  opts.forEach(function(b){b.onclick=null;b.style.cursor='default';});
+  var letters=['A','B','C','D'];
+  opts[letters.indexOf(chosen)].classList.add(chosen===correct?'correct':'incorrect');
+  if(chosen!==correct)opts[letters.indexOf(correct)].classList.add('reveal');
+  var fb=document.getElementById(fbId);
+  if(MINI_MSGS[id]){fb.textContent=MINI_MSGS[id][chosen]||'';fb.className='mini-fb '+(chosen===correct?'c':'w');}
+}
+function miniFIB(id, fbId){
+  var inp=document.getElementById(id+'-inp'),fb=document.getElementById(fbId);
+  var val=inp.value.trim().toLowerCase();var d=MINI_FIB[id];
+  var ok=(val===String(d.correct).toLowerCase());
+  inp.classList.add(ok?'correct':'incorrect');
+  fb.textContent=ok?d.c:d.w; fb.className='mini-fb '+(ok?'c':'w'); inp.disabled=true;
+}
+function toggleFAQ(btn){
+  var item=btn.parentElement,wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(el){el.classList.remove('open');});
+  if(!wasOpen)item.classList.add('open');
+}
+function handleCapture(){
+  var email=document.getElementById('capture-email').value.trim();
+  if(!email||!email.includes('@')){document.getElementById('capture-email').focus();return;}
+  document.getElementById('capture-form').style.display='none';
+  document.getElementById('capture-success').style.display='block';
+  if(typeof window._learnq!=='undefined'){window._learnq.push(['identify',{'$email':email}]);}
+}
+/* Bridge: the embedded topic game dispatches 'apcsGameScore' on completion.
+   Convert that single completion into the standard exercise-2 gradebook hook. */
+document.addEventListener('apcsGameScore', function(e){
+  _activity({activity:'exercise-2', earned:1, possible:1});
+});
+</script>
+<!-- apcs-exercises (managed) -->
+<div id="apcs-ex-links">
+<style>
+#apcs-ex-links{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:28px auto 0!important;padding:0 16px 8px!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important}
+#apcs-ex-links *,#apcs-ex-links *::before,#apcs-ex-links *::after{box-sizing:border-box!important}
+#apcs-ex-links .ex-lbl{font-size:12px!important;font-weight:800!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:0 0 10px!important}
+#apcs-ex-links .ex-row{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important}
+@media (max-width:640px){#apcs-ex-links .ex-row{grid-template-columns:repeat(1,1fr)!important}}
+#apcs-ex-links a.ex,#apcs-ex-links a.ex:link,#apcs-ex-links a.ex:visited{display:block!important;text-decoration:none!important;border:1px solid #93c5fd!important;border-left:5px solid #1a56db!important;border-radius:0 12px 12px 0!important;background:#eff6ff!important;padding:14px 16px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;font-size:16px!important;font-weight:700!important;line-height:1.35!important}
+#apcs-ex-links a.ex:hover{background:#dbeafe!important}
+#apcs-ex-links a.ex span{display:block!important;margin-top:4px!important;font-size:13px!important;font-weight:400!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important}
+</style>
+<p class="ex-lbl">Exercises for Topic 5.1</p>
+<div class="ex-row">
+<a class="ex" href="/pages/ap-csp-topic-5-1-exercise-1">Exercise 1: Innovation Effects Dossier - The ShortCut File<span>Work it online. Saved in your browser, not graded</span></a>
+<a class="ex" href="/pages/ap-csp-topic-5-1-exercise-2">Exercise 2: Impact Court<span>Work it online. Saved in your browser, not graded</span></a>
+</div>
+</div>

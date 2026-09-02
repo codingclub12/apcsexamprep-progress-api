@@ -1,0 +1,1334 @@
+<!--
+  PAGE: /pages/ap-csp-course-bi3-binary-search
+  TITLE: Topic 3.11: Binary Search | AP CSP Big Idea 3 | APCSExamPrep.com
+  META: Master AP CSP Topic 3.11 Binary Search. Why data must be sorted, low/high/mid, eliminating half each step, log2(n) steps versus linear search, a live Python code editor, the Halving Hunter game, and Create Task use-cases.
+-->
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+  :root{--navy:#0f1f3d;--bi3:#1a56db;--bi3-lt:#93c5fd;--bi3-bg:#eff6ff;--bi3-dk:#1e40af;--green:#16a34a;--amber:#d97706;--red:#dc2626;--slate:#64748b;--white:#ffffff;--py:#3b82f6;--pseudo:#8b5cf6;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  .lesson-page{font-family:"DM Sans",sans-serif;color:var(--navy);background:#f8fafc;line-height:1.6;}
+
+  .lesson-breadcrumb{background:#fff;border-bottom:1px solid #e2e8f0;padding:12px 24px;}
+  .lesson-breadcrumb-inner{max-width:880px;margin:0 auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate);flex-wrap:wrap;}
+  .lesson-breadcrumb a{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;text-decoration:none;font-weight:500;}
+  .bc-sep{color:#cbd5e1;}
+
+  .social-proof-bar{background:#fff;border-bottom:1px solid #e2e8f0;padding:10px 24px;}
+  .social-proof-inner{max-width:880px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:6px 20px;font-size:13px;color:var(--slate);}
+  .social-proof-item{display:flex;align-items:center;gap:5px;font-weight:500;}
+  .social-proof-item strong{color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+
+  .lesson-hero{background:var(--navy);background-image:radial-gradient(ellipse 60% 70% at 90% 20%,rgba(26,86,219,.28) 0%,transparent 60%);padding:48px 24px 40px;}
+  .lesson-hero-inner{max-width:880px;margin:0 auto;}
+  .lesson-hero-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .lesson-num-badge{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:var(--bi3);font-weight:700;font-size:14px;color:#fff!important;-webkit-text-fill-color:#fff!important;flex-shrink:0;}
+  .lesson-eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;}
+  .lesson-hero h1{font-family:"DM Serif Display",serif!important;font-size:clamp(26px,4vw,40px)!important;line-height:1.2!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:14px!important;}
+  .lesson-hero-pills{display:flex;flex-wrap:wrap;gap:8px;}
+  .lesson-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:5px 12px;border-radius:100px;font-size:12px;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .ced-tag{display:inline-flex;align-items:center;background:rgba(26,86,219,.25);border:1px solid rgba(147,197,253,.3);padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;letter-spacing:.04em;}
+
+  /* PROGRESS STRIP */
+  .bi3-progress{background:#fff!important;border-bottom:1px solid #e2e8f0!important;padding:14px 20px!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;}
+  .bi3-progress-inner{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;gap:0!important;width:max-content!important;min-width:100%!important;}
+  .prog-step{display:flex!important;flex-direction:column!important;align-items:center!important;min-width:46px!important;text-align:center!important;flex-shrink:0!important;}
+  .prog-step-link{display:flex!important;flex-direction:column!important;align-items:center!important;min-width:46px!important;text-align:center!important;flex-shrink:0!important;text-decoration:none!important;cursor:pointer!important;}
+  .prog-step-link:hover .prog-dot{background:#dbeafe!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border-color:var(--bi3)!important;}
+  .prog-dot{width:26px!important;height:26px!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:9px!important;font-weight:700!important;margin-bottom:4px!important;flex-shrink:0!important;}
+  .prog-dot.active{background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .prog-dot.upcoming{background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:2px solid #e2e8f0!important;}
+  .prog-dot.done{background:#dbeafe!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border:2px solid var(--bi3)!important;}
+  .prog-label{font-size:8px!important;font-weight:600!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;line-height:1.2!important;white-space:nowrap!important;}
+  .prog-label.active-label{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;}
+  .prog-arrow{flex:1 0 4px!important;height:2px!important;background:#e2e8f0!important;margin-bottom:18px!important;min-width:4px!important;max-width:16px!important;flex-shrink:0!important;}
+
+  /* MAIN */
+  .lesson-main{max-width:880px;margin:0 auto;padding:40px 24px 80px;}
+  .lesson-objectives{background:var(--bi3-bg);border-left:4px solid var(--bi3);border-radius:0 10px 10px 0;padding:20px 24px;margin-bottom:28px;}
+  .lesson-objectives h2{font-size:14px!important;font-weight:700!important;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;text-transform:uppercase!important;letter-spacing:.06em!important;margin-bottom:12px!important;}
+  .lesson-objectives ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;}
+  .lesson-objectives li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#1e3a8a;line-height:1.5;}
+  .lesson-objectives li::before{content:"\2713";color:var(--bi3);font-weight:700;flex-shrink:0;margin-top:1px;}
+  .score-impact{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 18px;margin-bottom:28px;display:flex;align-items:center;gap:10px;font-size:14px;color:#14532d;}
+  .score-impact strong{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+
+  /* HOOK */
+  .hook-box{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px 28px;margin-bottom:32px;}
+  .hook-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:8px;}
+  .hook-box p{font-size:15px!important;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;line-height:1.7!important;margin-bottom:0!important;}
+
+  /* LESSON SECTIONS */
+  .lesson-section{margin-bottom:40px;}
+  .lesson-section h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;padding-bottom:10px!important;border-bottom:2px solid var(--bi3-bg)!important;}
+  .lesson-section h3{font-size:17px!important;font-weight:700!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-top:24px!important;margin-bottom:10px!important;}
+  .lesson-section p{font-size:15px;color:#374151;line-height:1.8;margin-bottom:14px;}
+  .lesson-section ul,.lesson-section ol{padding-left:20px;margin-bottom:14px;}
+  .lesson-section li{font-size:15px;color:#374151;line-height:1.7;margin-bottom:6px;}
+  .lesson-section code{background:#eef2ff;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+
+  /* DUAL CODE PANEL */
+  .code-panel-wrap{margin:20px 0;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;}
+  .code-panel-tabs{display:flex;background:#1e293b;}
+  .code-tab{padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;border:none;background:transparent;letter-spacing:.04em;transition:background .15s;font-family:inherit;}
+  .code-tab.py{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .code-tab.pseudo{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+  .code-tab.active{background:rgba(255,255,255,.15)!important;}
+  .code-tab-label{font-size:10px;opacity:.6;margin-left:4px;font-weight:400;}
+  .code-pane{background:#0f172a;padding:18px 20px;overflow-x:auto;height:0;overflow:hidden;padding:0;}
+  .code-pane.active{height:auto;overflow-x:auto;padding:18px 20px;}
+  .code-pane pre{font-family:monospace;font-size:13px;line-height:1.8;margin:0;white-space:pre-wrap;word-break:break-word;max-width:100%;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .py-kw{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:700;}
+  .py-fn{color:#6ee7b7!important;-webkit-text-fill-color:#6ee7b7!important;}
+  .py-num{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .py-str{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .py-comment{color:#475569!important;-webkit-text-fill-color:#475569!important;font-style:italic;}
+  .py-var{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .py-op{color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;}
+  .ps-kw{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700;}
+  .ps-op{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .ps-num{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .ps-str{color:#86efac!important;-webkit-text-fill-color:#86efac!important;}
+  .ps-comment{color:#475569!important;-webkit-text-fill-color:#475569!important;font-style:italic;}
+  .ps-var{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+
+  /* CALLOUTS */
+  .callout-exam{background:#fffbeb;border:1px solid #fcd34d;border-left:4px solid var(--amber);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+  .callout-exam-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--amber)!important;-webkit-text-fill-color:var(--amber)!important;margin-bottom:6px;}
+  .callout-exam p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin-bottom:0!important;line-height:1.6!important;}
+  .callout-trap{background:#fef2f2;border:1px solid #fca5a5;border-left:4px solid var(--red);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+  .callout-trap-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;margin-bottom:6px;}
+  .callout-trap p{font-size:14px!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;margin-bottom:0!important;line-height:1.6!important;}
+
+  /* MINI EXERCISES */
+  .mini-ex{background:#fff;border:1px solid #bfdbfe;border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .mini-ex-label{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;margin-bottom:12px;}
+  .mini-ex-q{font-size:15px;font-weight:600;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px;line-height:1.5;}
+  .mini-ex-code{background:#0f172a;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;line-height:1.8;margin-bottom:14px;overflow-x:auto;white-space:pre;display:block;}
+  .mini-opts{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;}
+  .mini-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border:2px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:14px;font-family:monospace;color:#374151!important;-webkit-text-fill-color:#374151!important;background:#f8fafc;text-align:left;width:100%;transition:border-color .15s;}
+  .mini-opt:hover{border-color:var(--bi3-lt);background:var(--bi3-bg);}
+  .mini-opt.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mini-opt.incorrect{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mini-opt.reveal{border-color:var(--green)!important;background:#f0fdf4!important;}
+  .mini-opt-letter{font-weight:700;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;min-width:18px;font-family:inherit;}
+  .mini-opt.correct .mini-opt-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mini-opt.incorrect .mini-opt-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mini-fib-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;}
+  .mini-fib-input{padding:8px 12px;border:2px solid #e2e8f0;border-radius:8px;font-family:monospace;font-size:14px;width:130px;outline:none;color:var(--navy)!important;background:#f8fafc;}
+  .mini-fib-input:focus{border-color:var(--bi3-lt);}
+  .mini-fib-input.correct{border-color:var(--green);background:#f0fdf4;}
+  .mini-fib-input.incorrect{border-color:var(--red);background:#fef2f2;}
+  .mini-fib-btn{padding:8px 18px;background:var(--bi3);border:none;border-radius:8px;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .mini-fb{font-size:13px;font-weight:500;padding:8px 12px;border-radius:7px;margin-top:6px;display:none;line-height:1.5;}
+  .mini-fb.c{background:#f0fdf4;color:var(--green)!important;-webkit-text-fill-color:var(--green)!important;display:block;}
+  .mini-fb.w{background:#fef2f2;color:var(--red)!important;-webkit-text-fill-color:var(--red)!important;display:block;}
+
+  /* VOCAB */
+  .vocab-table{width:100%;border-collapse:collapse;margin-bottom:24px;font-size:14px;}
+  .vocab-table thead tr{background:var(--bi3);}
+  .vocab-table thead th{padding:10px 16px;text-align:left;font-weight:600;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:13px;}
+  .vocab-table tbody tr:nth-child(even){background:var(--bi3-bg);}
+  .vocab-table tbody tr:nth-child(odd){background:#fff;}
+  .vocab-table tbody td{padding:10px 16px;border-bottom:1px solid #bfdbfe;color:#374151;vertical-align:top;line-height:1.5;}
+  .vocab-table tbody td:first-child{font-weight:700;color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;white-space:nowrap;}
+
+  /* CPT CONNECTION */
+  .cpt-connection{background:#fefce8;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:0 10px 10px 0;padding:20px 24px;margin:28px 0;}
+  .cpt-connection-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#92400e!important;-webkit-text-fill-color:#92400e!important;margin-bottom:8px;}
+  .cpt-connection h3{font-size:16px!important;font-weight:700!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin:16px 0 8px!important;}
+  .cpt-connection p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;line-height:1.7!important;margin-bottom:12px!important;}
+  .cpt-connection a{color:#b45309!important;-webkit-text-fill-color:#b45309!important;font-weight:600;text-decoration:underline;}
+  .cpt-connection code{background:#fef3c7;color:#78350f!important;-webkit-text-fill-color:#78350f!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+  .cpt-stems{list-style:none;padding:0;margin:0 0 8px;display:flex;flex-direction:column;gap:8px;}
+  .cpt-stems li{background:#fffef5;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:13px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;line-height:1.6;}
+  .cpt-code{background:#0f172a;border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;line-height:1.8;margin:6px 0 12px;overflow-x:auto;white-space:pre;display:block;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+
+  /* EMAIL */
+  .email-capture{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px 28px;margin-bottom:36px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
+  .email-capture-text{flex:1;min-width:200px;}
+  .email-capture-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:4px;}
+  .email-capture h3{font-size:16px!important;font-weight:700!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .email-capture p{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:0!important;line-height:1.5!important;}
+  .email-capture-form{display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0;}
+  .email-capture-input{padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff!important;font-size:14px;font-family:inherit;min-width:180px;outline:none;}
+  .email-capture-btn{padding:10px 20px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:8px!important;font-size:14px!important;font-weight:600!important;cursor:pointer!important;font-family:inherit!important;}
+  .email-capture-success{display:none;font-size:14px;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;font-weight:600;padding:10px 0;}
+
+  /* MCQ */
+  .mcq-section{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:28px;margin-bottom:40px;}
+  .mcq-section-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--bi3-bg);}
+  .mcq-section-icon{width:40px;height:40px;border-radius:10px;background:var(--bi3-bg);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .mcq-section-title{font-family:"DM Serif Display",serif;font-size:20px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+  .mcq-section-sub{font-size:13px;color:var(--slate);}
+  .mcq-item{margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid #f1f5f9;}
+  .mcq-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .mcq-q-num{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:8px;}
+  .diff-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:100px;margin-left:8px;background:#fef2f2;color:#b91c1c!important;-webkit-text-fill-color:#b91c1c!important;border:1px solid #fca5a5;}
+  .mcq-q-text{font-size:15px!important;font-weight:600!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;line-height:1.6!important;margin-bottom:12px!important;}
+  .predict-note{font-size:12px;font-style:italic;color:#64748b!important;-webkit-text-fill-color:#64748b!important;margin-bottom:12px;}
+  .mcq-code{background:#0f172a;border-radius:8px;padding:12px 14px;margin:10px 0 14px;font-family:monospace;font-size:13px;line-height:1.75;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;white-space:pre;overflow-x:auto;display:block;}
+  .mcq-code .k{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .mcq-code .s{color:#f9a8d4!important;-webkit-text-fill-color:#f9a8d4!important;}
+  .mcq-code .n{color:#fde68a!important;-webkit-text-fill-color:#fde68a!important;}
+  .mcq-code .c{color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-style:italic;}
+  .mcq-roman{list-style:none;padding:0;margin:10px 0 14px;display:flex;flex-direction:column;gap:6px;}
+  .mcq-roman li{font-family:monospace;font-size:13px;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;background:#f1f5f9;border-radius:6px;padding:8px 12px;}
+  .mcq-roman li strong{color:var(--bi3-dk)!important;-webkit-text-fill-color:var(--bi3-dk)!important;font-family:"DM Sans",sans-serif;margin-right:8px;}
+  .mcq-options{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+  .mcq-option{display:flex!important;align-items:flex-start!important;gap:12px!important;padding:11px 14px!important;border:2px solid #e2e8f0!important;border-radius:8px!important;cursor:pointer!important;background:#f8fafc!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.5!important;text-align:left!important;width:100%!important;font-family:inherit!important;}
+  .mcq-option:hover{border-color:var(--bi3-lt)!important;background:var(--bi3-bg)!important;}
+  .mcq-option.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mcq-option.incorrect{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mcq-option.revealed-correct{border-color:var(--green)!important;background:#f0fdf4!important;}
+  .mcq-option-letter{font-weight:700!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;flex-shrink:0!important;min-width:18px!important;}
+  .mcq-option.correct .mcq-option-letter{color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+  .mcq-option.incorrect .mcq-option-letter{color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+  .mcq-feedback{display:none!important;padding:12px 16px!important;border-radius:8px!important;font-size:14px!important;line-height:1.6!important;margin-top:8px!important;}
+  .mcq-feedback.show{display:block!important;}
+  .mcq-feedback.correct-fb{background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;border:1px solid #bbf7d0!important;}
+  .mcq-feedback.incorrect-fb{background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;border:1px solid #fecaca!important;}
+
+  /* GAME */
+  .game-section{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:14px;padding:28px;margin-bottom:40px;}
+  .game-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:10px;}
+  .game-title{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .game-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:20px!important;}
+  .vt-score-bar{display:flex;justify-content:space-between;background:rgba(255,255,255,.06);border-radius:10px;padding:12px 20px;margin-bottom:20px;flex-wrap:wrap;gap:8px;}
+  .vt-stat{text-align:center;}
+  .vt-stat-val{font-size:20px;font-weight:800;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1;}
+  .vt-stat-lbl{font-size:10px;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-top:2px;}
+  .vt-code-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  .vt-code-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:10px;}
+  .vt-code-lines{font-family:monospace;font-size:14px;line-height:2;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .vt-line{display:block;padding:2px 8px;border-radius:4px;white-space:pre;}
+  .vt-line.hl{background:rgba(147,197,253,.2);color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+  .vt-question{font-size:15px;font-weight:600;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;margin-bottom:14px;}
+  .vt-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+  .vt-btn{padding:12px;border-radius:9px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);cursor:pointer;font-size:15px;font-weight:700;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;font-family:monospace;transition:all .15s;}
+  .vt-btn:hover{border-color:var(--bi3-lt);background:rgba(26,86,219,.2);}
+  .vt-btn.c{border-color:#4ade80;background:rgba(74,222,128,.15);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+  .vt-btn.w{border-color:#f87171;background:rgba(248,113,113,.15);color:#f87171!important;-webkit-text-fill-color:#f87171!important;}
+  .vt-btn.rv{border-color:#4ade80;background:rgba(74,222,128,.08);}
+  .vt-fb{padding:10px 14px;border-radius:8px;font-size:13px;font-weight:500;margin-bottom:12px;display:none;line-height:1.5;}
+  .vt-fb.c{background:rgba(74,222,128,.1);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;display:block;}
+  .vt-fb.w{background:rgba(248,113,113,.1);color:#f87171!important;-webkit-text-fill-color:#f87171!important;display:block;}
+  .vt-next{display:none;width:100%;padding:12px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);border-radius:8px;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .vt-next.show{display:block;}
+  .vt-results{display:none;text-align:center;padding:20px;}
+  .vt-results.show{display:block;}
+  .vt-res-score{font-family:"DM Serif Display",serif;font-size:52px;color:#fff!important;-webkit-text-fill-color:#fff!important;line-height:1;}
+  .vt-res-lbl{font-size:14px;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:12px;}
+  .vt-res-msg{font-size:14px;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;margin-bottom:20px;line-height:1.6;}
+  .vt-restart{background:rgba(255,255,255,.1);color:#fff!important;-webkit-text-fill-color:#fff!important;border:2px solid rgba(255,255,255,.2);border-radius:8px;padding:11px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+
+  /* CODE EDITOR (Pyodide live) */
+  .code-editor-section{background:#0f172a;border-radius:14px;padding:28px;margin-bottom:40px;}
+  .code-editor-badge{display:inline-block;background:rgba(147,197,253,.15);border:1px solid rgba(147,197,253,.35);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:10px;}
+  .code-editor-title{font-family:"DM Serif Display",serif!important;font-size:22px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;margin-bottom:4px!important;}
+  .code-editor-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin-bottom:20px!important;line-height:1.6;}
+  .code-problem{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+  .scaffold-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:rgba(147,197,253,.15);color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;border:1px solid rgba(147,197,253,.35);margin-bottom:8px;}
+  .code-problem-num{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bi3-lt)!important;-webkit-text-fill-color:var(--bi3-lt)!important;margin-bottom:8px;}
+  .code-problem-prompt{font-size:14px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.6!important;margin-bottom:12px!important;}
+  .code-problem-prompt code{background:rgba(147,197,253,.12);color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;padding:1px 6px;border-radius:5px;font-size:12px;}
+  .code-textarea{width:100%;min-height:120px;background:#020617;border:2px solid rgba(255,255,255,.1);border-radius:8px;padding:14px 16px;font-family:monospace;font-size:13px;color:#e2e8f0!important;resize:vertical;outline:none;line-height:1.8;}
+  .code-textarea:focus{border-color:var(--bi3-lt);}
+  .code-btn-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center;}
+  .code-run-btn{padding:9px 20px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:none!important;border-radius:7px!important;font-size:13px!important;font-weight:700!important;cursor:pointer!important;font-family:inherit!important;}
+  .code-run-btn:disabled{opacity:.6;cursor:wait;}
+  .code-hint-btn,.code-sol-btn{padding:9px 16px!important;background:rgba(255,255,255,.06)!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:7px!important;font-size:13px!important;cursor:pointer!important;font-family:inherit!important;}
+  .code-output{margin-top:10px;background:#020617;border-radius:8px;padding:12px 16px;font-family:monospace;font-size:13px;min-height:44px;display:none;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+  .code-output.show{display:block;}
+  .code-output.ok{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;}
+  .code-output.err{color:#f87171!important;-webkit-text-fill-color:#f87171!important;}
+  .code-hint{margin-top:8px;background:rgba(147,197,253,.06);border:1px solid rgba(147,197,253,.2);border-radius:8px;padding:10px 14px;font-size:13px;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;display:none;line-height:1.6;}
+  .code-hint.show{display:block;}
+  .code-solution{margin-top:8px;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:8px;padding:12px 14px;font-family:monospace;font-size:13px;color:#bbf7d0!important;-webkit-text-fill-color:#bbf7d0!important;display:none;white-space:pre;line-height:1.8;overflow-x:auto;}
+  .code-solution.show{display:block;}
+
+  /* FAQ */
+  .faq-section{margin-bottom:40px;}
+  .faq-section h2{font-family:"DM Serif Display",serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;padding-bottom:10px!important;border-bottom:2px solid var(--bi3-bg)!important;}
+  .faq-item{background:#fff;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:10px;overflow:hidden;}
+  .faq-q{width:100%;text-align:left;padding:16px 20px;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:15px!important;font-weight:600!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-family:inherit!important;line-height:1.4!important;}
+  .faq-q:hover{background:#f8fafc;}
+  .faq-icon{font-size:18px;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;flex-shrink:0;transition:transform .2s;font-style:normal;}
+  .faq-item.open .faq-icon{transform:rotate(45deg);}
+  .faq-a{display:none;padding:0 20px 16px;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.7!important;border-top:1px solid #f1f5f9;}
+  .faq-item.open .faq-a{display:block;}
+  .faq-a code{background:#eef2ff;color:#1e3a8a!important;-webkit-text-fill-color:#1e3a8a!important;padding:1px 6px;border-radius:5px;font-size:13px;}
+
+  /* RELATED + SUPERPACK + TEACHER + NAV */
+  .related-links{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:24px;margin-bottom:40px;}
+  .related-links h3{font-size:15px!important;font-weight:700!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:14px!important;}
+  .related-links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
+  .related-link{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;background:#f8fafc;text-decoration:none;font-size:13px!important;font-weight:500!important;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;border:1px solid #bfdbfe;transition:background .15s;line-height:1.3;}
+  .related-link:link,.related-link:visited{color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;}
+  .related-link:hover{background:var(--bi3-bg);}
+  .related-ext{color:var(--slate)!important;-webkit-text-fill-color:var(--slate)!important;border-color:#e2e8f0;}
+  .superpack-slim{background:#fff;border:1px solid #bfdbfe;border-radius:10px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:36px;}
+  .superpack-slim-icon{width:36px;height:36px;border-radius:8px;background:var(--bi3-bg);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .superpack-slim-text{font-size:14px;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;font-weight:600;line-height:1.3;}
+  .superpack-slim-sub{font-size:12px;color:var(--slate);font-weight:400;display:block;margin-top:2px;}
+  .superpack-slim-btn{display:inline-flex!important;align-items:center!important;gap:6px!important;background:var(--bi3)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;padding:9px 18px!important;border-radius:7px!important;font-size:13px!important;font-weight:600!important;text-decoration:none!important;white-space:nowrap!important;}
+  .superpack-slim-btn:link,.superpack-slim-btn:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;}
+  .teacher-callout{background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:18px 22px;margin-bottom:28px;display:flex;align-items:flex-start;gap:14px;}
+  .teacher-callout-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+  .teacher-callout-body{flex:1;}
+  .teacher-callout-label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#0369a1!important;-webkit-text-fill-color:#0369a1!important;margin-bottom:4px;}
+  .teacher-callout-body p{font-size:14px!important;color:#0c4a6e!important;-webkit-text-fill-color:#0c4a6e!important;margin-bottom:0!important;line-height:1.6!important;}
+  .teacher-callout-body a{color:#0369a1!important;-webkit-text-fill-color:#0369a1!important;font-weight:600;text-decoration:underline;}
+  .lesson-nav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:40px;}
+  .nav-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 20px;text-decoration:none;color:inherit;transition:box-shadow .15s;display:block;}
+  .nav-card:hover{box-shadow:0 4px 16px rgba(26,86,219,.1);border-color:#bfdbfe;}
+  .nav-card-dir{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:4px;}
+  .nav-card-title{font-size:14px;font-weight:700;color:var(--bi3)!important;-webkit-text-fill-color:var(--bi3)!important;line-height:1.3;}
+  .nav-card.next{border-left:3px solid var(--bi3);}
+
+  @media(max-width:600px){
+    .lesson-hero{padding:36px 20px 32px;}
+    .lesson-main{padding:32px 20px 60px;}
+    .vt-options{grid-template-columns:1fr 1fr;}
+    .lesson-nav{grid-template-columns:1fr;}
+    .mini-opts{gap:6px;}
+  }
+</style>
+<style>
+.code-usage{font-size:12px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin:-6px 0 18px!important;padding:8px 12px!important;background:rgba(255,255,255,.04)!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:8px!important;display:block!important;}
+.code-usage strong{color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;}
+.code-problem-prompt ul.rules{margin:10px 0 4px!important;padding-left:0!important;list-style:none!important;}
+.code-problem-prompt ul.rules li{position:relative;padding:3px 0 3px 20px!important;font-size:14px;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.55;}
+.code-problem-prompt ul.rules li::before{content:"\25B8";position:absolute;left:2px;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+.mcq-q-text ul.rules,.mini-ex-q ul.rules{margin:10px 0 4px!important;padding-left:0!important;list-style:none!important;}
+.mcq-q-text ul.rules li,.mini-ex-q ul.rules li{position:relative;padding:3px 0 3px 20px!important;font-size:15px;font-weight:400;color:#1e293b!important;-webkit-text-fill-color:#1e293b!important;line-height:1.5;}
+.mcq-q-text ul.rules li::before,.mini-ex-q ul.rules li::before{content:"\25B8";position:absolute;left:2px;color:#1a56db!important;-webkit-text-fill-color:#1a56db!important;}
+</style>
+
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "AP CSP Course", "item": "https://apcsexamprep.com/pages/ap-csp-course"}, {"@type": "ListItem", "position": 2, "name": "Big Idea 3", "item": "https://apcsexamprep.com/pages/ap-csp-course-big-idea-3-algorithms"}, {"@type": "ListItem", "position": 3, "name": "Topic 3.11: Binary Search", "item": "https://apcsexamprep.com/pages/ap-csp-course-bi3-binary-search"}]}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "LearningResource", "name": "AP CSP Topic 3.11: Binary Search", "description": "Master AP CSP Topic 3.11 Binary Search. Why data must be sorted, low/high/mid, eliminating half each step, log2(n) steps versus linear search, a live Python code editor, the Halving Hunter game, and Create Task use-cases.", "url": "https://apcsexamprep.com/pages/ap-csp-course-bi3-binary-search", "educationalLevel": "High School", "learningResourceType": "Lesson", "author": {"@type": "Person", "name": "Tanner Crow"}, "isPartOf": {"@type": "Course", "name": "AP Computer Science Principles Complete Course", "url": "https://apcsexamprep.com/pages/ap-csp-course"}, "datePublished": "2026-03-01"}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why does binary search require sorted data?", "acceptedAnswer": {"@type": "Answer", "text": "Binary search decides which half of the list to keep by comparing the target to the middle element. That comparison is only meaningful if the elements are in order. On an unsorted list, a smaller middle value does not guarantee the target is to the right, so the search can eliminate the half that actually contains the value and report it as not found."}}, {"@type": "Question", "name": "How many steps does binary search take?", "acceptedAnswer": {"@type": "Answer", "text": "About log2(n) steps for a list of n items, because each step eliminates half of what remains. A list of 1000 items takes at most about 10 checks, and 1,000,000 items takes about 20. Linear search on those same lists could take up to 1000 and 1,000,000 checks."}}, {"@type": "Question", "name": "How is mid calculated?", "acceptedAnswer": {"@type": "Answer", "text": "The middle index is mid = (low + high) // 2 using integer division, which drops any fraction. For example, with low 0 and high 6, mid is 3. Computing mid is the single most common place students make an error, so it is worth practicing directly."}}, {"@type": "Question", "name": "What is the difference between binary search and linear search?", "acceptedAnswer": {"@type": "Answer", "text": "Linear search checks each element one at a time and works on any list, sorted or not, but may need up to n comparisons. Binary search is much faster at about log2(n) steps, but it only works when the data is already sorted. Choose linear search for small or unsorted data and binary search for large sorted data."}}, {"@type": "Question", "name": "When does binary search report not found?", "acceptedAnswer": {"@type": "Answer", "text": "When the region being searched empties out, meaning low becomes greater than high, the value is not in the list. A common way to handle this is to store the found index in a variable that starts at -1 and, after the loop, print the index if it changed or print not found otherwise."}}]}</script>
+
+<div class="lesson-page" data-course="ap-csp" data-unit="bi-3" data-lesson="binary-search">
+
+  <div class="lesson-breadcrumb">
+    <div class="lesson-breadcrumb-inner">
+      <a href="/pages/ap-csp-course">AP CSP Course</a><span class="bc-sep">›</span>
+      <a href="/pages/ap-csp-course-big-idea-3-algorithms">Big Idea 3</a><span class="bc-sep">›</span>
+      <span>3.11 Binary Search</span>
+    </div>
+  </div>
+  <div class="social-proof-bar">
+    <div class="social-proof-inner">
+      <span class="social-proof-item">⭐ <strong>5.0</strong> Wyzant rating</span>
+      <span class="social-proof-item">📚 <strong>1,845+</strong> tutoring hours</span>
+      <span class="social-proof-item">🏫 Built by an <strong>AP CS teacher</strong> with 11+ years experience</span>
+      <span class="social-proof-item">🎯 <strong>70%</strong> of classroom students score 4 or 5 on AP CSP</span>
+    </div>
+  </div>
+  <div class="lesson-hero">
+    <div class="lesson-hero-inner">
+      <div class="lesson-hero-meta">
+        <div class="lesson-num-badge">3.11</div>
+        <div><div class="lesson-eyebrow">Big Idea 3 • Algorithms &amp; Programming</div></div>
+      </div>
+      <h1>Binary Search</h1>
+      <div class="lesson-hero-pills">
+        <span class="lesson-pill">🕐 ~40 min</span>
+        <span class="lesson-pill" style="background:rgba(74,222,128,0.15);border-color:rgba(74,222,128,0.3);color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;">FREE</span>
+        <span class="lesson-pill">📖 6 MCQ questions</span>
+        <span class="lesson-pill">🎮 Halving Hunter game</span>
+        <span class="lesson-pill">💻 Live Python editor</span>
+        <span class="ced-tag">AAP-2.P</span>
+      </div>
+    </div>
+  </div>
+  <div class="bi3-progress"><div class="bi3-progress-inner">
+<a href="/pages/ap-csp-course-bi3-variables" class="prog-step-link"><div class="prog-dot done">3.1</div>
+<div class="prog-label">Variables</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-data-abstraction" class="prog-step-link"><div class="prog-dot done">3.2</div>
+<div class="prog-label">Abstraction</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-mathematical-expressions" class="prog-step-link"><div class="prog-dot done">3.3</div>
+<div class="prog-label">Expressions</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-strings" class="prog-step-link"><div class="prog-dot done">3.4</div>
+<div class="prog-label">Strings</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-boolean-expressions" class="prog-step-link"><div class="prog-dot done">3.5</div>
+<div class="prog-label">Booleans</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-conditionals" class="prog-step-link"><div class="prog-dot done">3.6</div>
+<div class="prog-label">IF/ELSE</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-nested-conditionals" class="prog-step-link"><div class="prog-dot done">3.7</div>
+<div class="prog-label">Nested IF</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-iteration" class="prog-step-link"><div class="prog-dot done">3.8</div>
+<div class="prog-label">Iteration</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-developing-algorithms" class="prog-step-link"><div class="prog-dot done">3.9</div>
+<div class="prog-label">Algorithms</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-lists" class="prog-step-link"><div class="prog-dot done">3.10</div>
+<div class="prog-label">Lists</div></a>
+<div class="prog-arrow"></div>
+<div class="prog-step">
+<div class="prog-dot active">3.11</div>
+<div class="prog-label active-label">Search</div>
+</div>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-calling-procedures" class="prog-step-link"><div class="prog-dot upcoming">3.12</div>
+<div class="prog-label">Procedures</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-developing-procedures" class="prog-step-link"><div class="prog-dot upcoming">3.13</div>
+<div class="prog-label">Dev Procs</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-libraries" class="prog-step-link"><div class="prog-dot upcoming">3.14</div>
+<div class="prog-label">Libraries</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-random-values" class="prog-step-link"><div class="prog-dot upcoming">3.15</div>
+<div class="prog-label">Random</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-simulations" class="prog-step-link"><div class="prog-dot upcoming">3.16</div>
+<div class="prog-label">Simulate</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-algorithmic-efficiency" class="prog-step-link"><div class="prog-dot upcoming">3.17</div>
+<div class="prog-label">Efficiency</div></a>
+<div class="prog-arrow"></div>
+<a href="/pages/ap-csp-course-bi3-undecidable-problems" class="prog-step-link"><div class="prog-dot upcoming">3.18</div>
+<div class="prog-label">Undecidable</div></a>
+</div></div>
+
+  <div class="lesson-main">
+
+    <div class="lesson-objectives">
+      <h2>After this lesson, you will be able to:</h2>
+      <ul>
+        <li><span>Explain why binary search requires the data to be sorted</span></li>
+        <li><span>Track low, high, and mid to trace a binary search step by step</span></li>
+        <li><span>Determine which half of the list is eliminated after each comparison</span></li>
+        <li><span>Estimate the number of steps as about log2(n) and contrast it with linear search</span></li>
+        <li><span>Write a binary search that prints the index found or reports not found</span></li>
+        <li><span>Describe binary search as a meaningful algorithm for your Create Performance Task</span></li>
+      </ul>
+    </div>
+    <div class="score-impact">📈 <span><strong>Exam weight:</strong> Binary search is a named algorithm in AAP-2.P and appears in tracing, spot-the-bug, and efficiency questions across Big Idea 3. Forgetting the sorted requirement and miscomputing the middle index are the most common ways students lose these points.</span>
+</div>
+    <div class="hook-box">
+      <div class="hook-label">💡 Think about this first</div>
+      <p>Think about finding a word in a physical dictionary. You do not start at page one and read every entry. You open to the middle, see whether your word comes before or after, and instantly ignore half the book. Repeat a few times and you are there. That is binary search. It is dramatically faster than checking every page, but it only works because a dictionary is already sorted.</p>
+    </div>
+    <div class="lesson-section">
+      <h2>What Binary Search Is</h2>
+      <p><strong>Binary search</strong> is a fast way to find a value in a list. Instead of checking items one at a time, it repeatedly looks at the <strong>middle</strong> element and throws away half of the remaining items with a single comparison. Because it can discard half the data on every step, it reaches an answer in far fewer checks than looking at each item in turn.</p>
+      <p>There is one hard requirement: <strong>the data must already be sorted</strong>. Binary search only works because comparing the target to the middle element tells you which half the target must be in. If the list is not in order, that comparison tells you nothing, and the search can skip right past the value it is looking for.</p>
+      <div class="code-panel-wrap">
+  <div class="code-panel-tabs">
+    <button class="code-tab py active" onclick="switchTab(this,'py','pan-1')">🐛 Python</button>
+    <button class="code-tab pseudo" onclick="switchTab(this,'pseudo','pan-1')">📋 AP Pseudocode</button>
+  </div>
+  <div class="code-pane active" id="pan-1-py"><pre><span class="py-var">data</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">[</span><span class="py-num">2</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">5</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">8</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">12</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">16</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">23</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">38</span><span class="py-var">]</span>
+<span class="py-var">target</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">23</span>
+<span class="py-var">low</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">0</span>
+<span class="py-var">high</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-kw">len</span><span class="py-var">(</span><span class="py-var">data</span><span class="py-var">)</span><span class="py-var"> </span><span class="py-var">-</span><span class="py-var"> </span><span class="py-num">1</span>
+<span class="py-kw">while</span><span class="py-var"> </span><span class="py-var">low</span><span class="py-var"> </span><span class="py-var">&lt;</span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">high</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var">mid</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">(</span><span class="py-var">low</span><span class="py-var"> </span><span class="py-var">+</span><span class="py-var"> </span><span class="py-var">high</span><span class="py-var">)</span><span class="py-var"> </span><span class="py-comment">// 2</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">if</span><span class="py-var"> </span><span class="py-var">data</span><span class="py-var">[</span><span class="py-var">mid</span><span class="py-var">]</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">target</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">print</span><span class="py-var">(</span><span class="py-var">mid</span><span class="py-var">)</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var">break</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">elif</span><span class="py-var"> </span><span class="py-var">data</span><span class="py-var">[</span><span class="py-var">mid</span><span class="py-var">]</span><span class="py-var"> </span><span class="py-var">&lt;</span><span class="py-var"> </span><span class="py-var">target</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var">low</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">mid</span><span class="py-var"> </span><span class="py-var">+</span><span class="py-var"> </span><span class="py-num">1</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">else</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var">high</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">mid</span><span class="py-var"> </span><span class="py-var">-</span><span class="py-var"> </span><span class="py-num">1</span></pre></div>
+  <div class="code-pane" id="pan-1-pseudo"><pre><span class="ps-var">data</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-var">[</span><span class="ps-num">2</span><span class="ps-var">,</span><span class="ps-var"> </span><span class="ps-num">5</span><span class="ps-var">,</span><span class="ps-var"> </span><span class="ps-num">8</span><span class="ps-var">,</span><span class="ps-var"> </span><span class="ps-num">12</span><span class="ps-var">,</span><span class="ps-var"> </span><span class="ps-num">16</span><span class="ps-var">,</span><span class="ps-var"> </span><span class="ps-num">23</span><span class="ps-var">,</span><span class="ps-var"> </span><span class="ps-num">38</span><span class="ps-var">]</span>
+<span class="ps-var">target</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-num">23</span>
+<span class="ps-var">low</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-num">1</span>
+<span class="ps-var">high</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-kw">LENGTH</span><span class="ps-var">(</span><span class="ps-var">data</span><span class="ps-var">)</span>
+<span class="ps-kw">REPEAT</span><span class="ps-var"> </span><span class="ps-kw">UNTIL</span><span class="ps-var"> </span><span class="ps-var">(</span><span class="ps-var">low</span><span class="ps-var"> </span><span class="ps-var">&gt;</span><span class="ps-var"> </span><span class="ps-var">high</span><span class="ps-var">)</span>
+<span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">mid</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-var">(</span><span class="ps-var">low</span><span class="ps-var"> </span><span class="ps-var">+</span><span class="ps-var"> </span><span class="ps-var">high</span><span class="ps-var">)</span><span class="ps-var"> </span><span class="ps-var">/</span><span class="ps-var"> </span><span class="ps-num">2</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">IF</span><span class="ps-var"> </span><span class="ps-var">(</span><span class="ps-var">data</span><span class="ps-var">[</span><span class="ps-var">mid</span><span class="ps-var">]</span><span class="ps-var"> </span><span class="ps-var">=</span><span class="ps-var"> </span><span class="ps-var">target</span><span class="ps-var">)</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">DISPLAY</span><span class="ps-var">(</span><span class="ps-var">mid</span><span class="ps-var">)</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">}</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">ELSE</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">IF</span><span class="ps-var"> </span><span class="ps-var">(</span><span class="ps-var">data</span><span class="ps-var">[</span><span class="ps-var">mid</span><span class="ps-var">]</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var"> </span><span class="ps-var">target</span><span class="ps-var">)</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">low</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-var">mid</span><span class="ps-var"> </span><span class="ps-var">+</span><span class="ps-var"> </span><span class="ps-num">1</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">}</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">ELSE</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">high</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-var">mid</span><span class="ps-var"> </span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-num">1</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">}</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">}</span>
+<span class="ps-var">}</span></pre></div>
+</div>
+      <p>Searching this sorted list of 7 items for 23, the first middle is index 3 (value 12). Since 12 &lt; 23, everything from index 3 and below is eliminated and the search continues in the upper half. The next middle is index 5 (value 23), a match. Binary search found the value in just two checks, while looking one by one could have taken six.</p>
+      <div class="callout-exam">
+        <div class="callout-exam-label">🎯 What the exam expects</div>
+        <p>The CED objective AAP-2.P says binary search "can be used" only on a <strong>sorted</strong> list, and that it "starts at the middle" and eliminates half the list each iteration. Expect questions that hand you an unsorted list and ask why the search fails, or that ask roughly how many steps a search of n items takes.</p>
+      </div>
+
+      <div class="mini-ex">
+        <div class="mini-ex-label">✍ Mini Exercise 1 • Predict the output</div>
+        <div class="mini-ex-q">The list is sorted and the middle index is computed. What does this print?</div>
+        <div class="mini-ex-code"><pre style="margin:0;white-space:pre;font-family:monospace;font-size:13px;color:#e2e8f0;"><span class="py-var">data</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">[</span><span class="py-num">3</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">7</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">11</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">20</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">25</span><span class="py-var">]</span>
+<span class="py-var">low</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">0</span>
+<span class="py-var">high</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">4</span>
+<span class="py-var">mid</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">(</span><span class="py-var">low</span><span class="py-var"> </span><span class="py-var">+</span><span class="py-var"> </span><span class="py-var">high</span><span class="py-var">)</span><span class="py-var"> </span><span class="py-comment">// 2</span>
+<span class="py-kw">print</span><span class="py-var">(</span><span class="py-var">data</span><span class="py-var">[</span><span class="py-var">mid</span><span class="py-var">]</span><span class="py-var">)</span></pre></div>
+        <div class="mini-opts" id="me1-opts">
+          <button class="mini-opt" onclick="miniMCQ('me1','A','B','me1-fb')"><span class="mini-opt-letter">A</span> 7</button>
+          <button class="mini-opt" onclick="miniMCQ('me1','B','B','me1-fb')"><span class="mini-opt-letter">B</span> 11</button>
+          <button class="mini-opt" onclick="miniMCQ('me1','C','B','me1-fb')"><span class="mini-opt-letter">C</span> 20</button>
+          <button class="mini-opt" onclick="miniMCQ('me1','D','B','me1-fb')"><span class="mini-opt-letter">D</span> 25</button>
+        </div>
+        <div class="mini-fb" id="me1-fb"></div>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Linear Search vs Binary Search</h2>
+      <p><strong>Linear search</strong> checks each element from the start until it finds the target or runs off the end. It is simple and it works on <strong>any</strong> list, sorted or not, but for a list of n items it may need up to n comparisons.</p>
+      <div class="code-panel-wrap">
+  <div class="code-panel-tabs">
+    <button class="code-tab py active" onclick="switchTab(this,'py','pan-2')">🐛 Python (linear)</button>
+    <button class="code-tab pseudo" onclick="switchTab(this,'pseudo','pan-2')">📋 Pseudocode (linear)</button>
+  </div>
+  <div class="code-pane active" id="pan-2-py"><pre><span class="py-comment"># linear search: no sorting needed</span>
+<span class="py-var">data</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">[</span><span class="py-num">38</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">5</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">23</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">8</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">16</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">2</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">12</span><span class="py-var">]</span>
+<span class="py-var">target</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">23</span>
+<span class="py-var">found</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">-</span><span class="py-num">1</span>
+<span class="py-kw">for</span><span class="py-var"> </span><span class="py-var">i</span><span class="py-var"> </span><span class="py-kw">in</span><span class="py-var"> </span><span class="py-kw">range</span><span class="py-var">(</span><span class="py-kw">len</span><span class="py-var">(</span><span class="py-var">data</span><span class="py-var">)</span><span class="py-var">)</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-kw">if</span><span class="py-var"> </span><span class="py-var">data</span><span class="py-var">[</span><span class="py-var">i</span><span class="py-var">]</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">target</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var">found</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">i</span>
+<span class="py-kw">print</span><span class="py-var">(</span><span class="py-var">found</span><span class="py-var">)</span></pre></div>
+  <div class="code-pane" id="pan-2-pseudo"><pre><span class="ps-var">i</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-num">1</span>
+<span class="ps-var">found</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-var">-</span><span class="ps-num">1</span>
+<span class="ps-kw">REPEAT</span><span class="ps-var"> </span><span class="ps-kw">LENGTH</span><span class="ps-var">(</span><span class="ps-var">data</span><span class="ps-var">)</span><span class="ps-var"> </span><span class="ps-kw">TIMES</span>
+<span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-kw">IF</span><span class="ps-var"> </span><span class="ps-var">(</span><span class="ps-var">data</span><span class="ps-var">[</span><span class="ps-var">i</span><span class="ps-var">]</span><span class="ps-var"> </span><span class="ps-var">=</span><span class="ps-var"> </span><span class="ps-var">target</span><span class="ps-var">)</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">found</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-var">i</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">}</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">i</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-var">i</span><span class="ps-var"> </span><span class="ps-var">+</span><span class="ps-var"> </span><span class="ps-num">1</span>
+<span class="ps-var">}</span>
+<span class="ps-kw">DISPLAY</span><span class="ps-var">(</span><span class="ps-var">found</span><span class="ps-var">)</span></pre></div>
+</div>
+      <p>Binary search trades that flexibility for speed. It demands a sorted list, but in return it finds a value (or reports it is missing) in about <strong>log2(n)</strong> steps because each step halves the remaining items. The difference grows fast: a list of 1000 items takes up to 1000 checks with linear search but only about 10 with binary search, since 2 to the 10th power is 1024. Double the list to 2000 items and binary search needs just one more step.</p>
+      <div class="callout-exam">
+        <div class="callout-exam-label">🎯 The number-of-steps shortcut</div>
+        <p>To estimate binary search steps, ask how many times you can halve n before reaching 1. That is log2(n). Handy anchors: 8 items take about 3 steps, 16 take about 4, 1000 take about 10, and 1,000,000 take about 20. Linear search on those same lists could take 8, 16, 1000, and 1,000,000 checks.</p>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>How the Halving Works: low, high, and mid</h2>
+      <p>Binary search keeps track of the region of the list still worth searching using two markers: <code>low</code> (the first index of that region) and <code>high</code> (the last index). Each step it computes the middle index as <code>mid = (low + high) // 2</code> and compares <code>data[mid]</code> to the target. That one comparison decides which half survives:</p>
+      <ul class="rules">
+        <li>if <code>data[mid]</code> equals the target: found it, stop</li>
+        <li>if <code>data[mid] &lt; target</code>: the target must be to the right, so set <code>low = mid + 1</code>
+</li>
+        <li>if <code>data[mid] &gt; target</code>: the target must be to the left, so set <code>high = mid - 1</code>
+</li>
+      </ul>
+      <div class="code-panel-wrap">
+  <div class="code-panel-tabs">
+    <button class="code-tab py active" onclick="switchTab(this,'py','pan-3')">🐛 Python</button>
+    <button class="code-tab pseudo" onclick="switchTab(this,'pseudo','pan-3')">📋 AP Pseudocode</button>
+  </div>
+  <div class="code-pane active" id="pan-3-py"><pre><span class="py-var">data</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">[</span><span class="py-num">4</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">9</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">15</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">22</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">30</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">41</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">55</span><span class="py-var">]</span>
+<span class="py-var">target</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">41</span>
+<span class="py-var">low</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">0</span>
+<span class="py-var">high</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">6</span>
+<span class="py-var">mid</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">(</span><span class="py-var">low</span><span class="py-var"> </span><span class="py-var">+</span><span class="py-var"> </span><span class="py-var">high</span><span class="py-var">)</span><span class="py-var"> </span><span class="py-comment">// 2</span>
+<span class="py-kw">if</span><span class="py-var"> </span><span class="py-var">data</span><span class="py-var">[</span><span class="py-var">mid</span><span class="py-var">]</span><span class="py-var"> </span><span class="py-var">&lt;</span><span class="py-var"> </span><span class="py-var">target</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var">low</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">mid</span><span class="py-var"> </span><span class="py-var">+</span><span class="py-var"> </span><span class="py-num">1</span>
+<span class="py-kw">else</span><span class="py-var">:</span>
+<span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var"> </span><span class="py-var">high</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">mid</span><span class="py-var"> </span><span class="py-var">-</span><span class="py-var"> </span><span class="py-num">1</span></pre></div>
+  <div class="code-pane" id="pan-3-pseudo"><pre><span class="ps-var">low</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-num">1</span>
+<span class="ps-var">high</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-num">7</span>
+<span class="ps-var">mid</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-var">(</span><span class="ps-var">low</span><span class="ps-var"> </span><span class="ps-var">+</span><span class="ps-var"> </span><span class="ps-var">high</span><span class="ps-var">)</span><span class="ps-var"> </span><span class="ps-var">/</span><span class="ps-var"> </span><span class="ps-num">2</span>
+<span class="ps-kw">IF</span><span class="ps-var"> </span><span class="ps-var">(</span><span class="ps-var">data</span><span class="ps-var">[</span><span class="ps-var">mid</span><span class="ps-var">]</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var"> </span><span class="ps-var">target</span><span class="ps-var">)</span>
+<span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">low</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-var">mid</span><span class="ps-var"> </span><span class="ps-var">+</span><span class="ps-var"> </span><span class="ps-num">1</span>
+<span class="ps-var">}</span>
+<span class="ps-kw">ELSE</span>
+<span class="ps-var">{</span>
+<span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var"> </span><span class="ps-var">high</span><span class="ps-var"> </span><span class="ps-var">&lt;</span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-var">mid</span><span class="ps-var"> </span><span class="ps-var">-</span><span class="ps-var"> </span><span class="ps-num">1</span>
+<span class="ps-var">}</span></pre></div>
+</div>
+      <p>Here the middle value 22 is less than the target 41, so the entire lower half (indices 0 through 3, including the middle) is eliminated and <code>low</code> jumps to 4. Notice you move past <code>mid</code> with <code>mid + 1</code> or <code>mid - 1</code>, never leaving it in the region. The loop ends when <code>low</code> passes <code>high</code>, which means the region is empty and the value is not present.</p>
+      <div class="callout-trap">
+        <div class="callout-trap-label">⚠ Two classic traps</div>
+        <p>First, binary search on <strong>unsorted</strong> data is simply wrong; it can report "not found" for a value that is actually in the list. Second, watch the off-by-one: writing <code>low = mid</code> instead of <code>low = mid + 1</code> can leave <code>low</code> and <code>high</code> stuck on the same spot forever, an infinite loop. Always step past <code>mid</code>.</p>
+      </div>
+
+      <div class="mini-ex">
+        <div class="mini-ex-label">✍ Mini Exercise 2 • Which half survives</div>
+        <div class="mini-ex-q">The middle value 22 is less than the target 41. Which items does binary search <strong>eliminate</strong> on this step?</div>
+        <div class="mini-ex-code"><pre style="margin:0;white-space:pre;font-family:monospace;font-size:13px;color:#e2e8f0;"><span class="py-var">data</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">[</span><span class="py-num">4</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">9</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">15</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">22</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">30</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">41</span><span class="py-var">,</span><span class="py-var"> </span><span class="py-num">55</span><span class="py-var">]</span>
+<span class="py-var">target</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">41</span>
+<span class="py-var">low</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">0</span>
+<span class="py-var">high</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">6</span>
+<span class="py-var">mid</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">(</span><span class="py-var">low</span><span class="py-var"> </span><span class="py-var">+</span><span class="py-var"> </span><span class="py-var">high</span><span class="py-var">)</span><span class="py-var"> </span><span class="py-comment">// 2   # mid = 3, data[mid] = 22</span></pre></div>
+        <div class="mini-opts" id="me2-opts">
+          <button class="mini-opt" onclick="miniMCQ('me2','A','A','me2-fb')"><span class="mini-opt-letter">A</span> indices 0 through 3, the lower half including the middle</button>
+          <button class="mini-opt" onclick="miniMCQ('me2','B','A','me2-fb')"><span class="mini-opt-letter">B</span> indices 4 through 6, the upper half</button>
+          <button class="mini-opt" onclick="miniMCQ('me2','C','A','me2-fb')"><span class="mini-opt-letter">C</span> none, the search stops because 22 is not 41</button>
+          <button class="mini-opt" onclick="miniMCQ('me2','D','A','me2-fb')"><span class="mini-opt-letter">D</span> the whole list, since no value equals the target yet</button>
+        </div>
+        <div class="mini-fb" id="me2-fb"></div>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Tracing Binary Search by Hand</h2>
+      <p>Use one disciplined procedure and these traces become mechanical:</p>
+      <ol>
+        <li>Write the current <strong>low</strong> and <strong>high</strong>. Start with low at the first index and high at the last.</li>
+        <li>Compute <code>mid = (low + high) // 2</code> using integer division (drop any fraction).</li>
+        <li>Compare <code>data[mid]</code> to the target. If equal, you are done.</li>
+        <li>If <code>data[mid]</code> is too small, set <code>low = mid + 1</code>. If it is too big, set <code>high = mid - 1</code>.</li>
+        <li>Repeat until you find the target or <code>low</code> becomes greater than <code>high</code>, which means not found.</li>
+      </ol>
+      <p>Counting the number of times you compute a new <code>mid</code> gives the number of steps, which is what step-counting questions ask for. Computing <code>mid</code> correctly is the single most common place students slip, so practice it directly below.</p>
+
+      <div class="mini-ex">
+        <div class="mini-ex-label">✍ Mini Exercise 3 • Compute the middle index</div>
+        <div class="mini-ex-q">Type the exact number this prints.</div>
+        <div class="mini-ex-code"><pre style="margin:0;white-space:pre;font-family:monospace;font-size:13px;color:#e2e8f0;"><span class="py-var">low</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">0</span>
+<span class="py-var">high</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-num">8</span>
+<span class="py-var">mid</span><span class="py-var"> </span><span class="py-var">=</span><span class="py-var"> </span><span class="py-var">(</span><span class="py-var">low</span><span class="py-var"> </span><span class="py-var">+</span><span class="py-var"> </span><span class="py-var">high</span><span class="py-var">)</span><span class="py-var"> </span><span class="py-comment">// 2</span>
+<span class="py-kw">print</span><span class="py-var">(</span><span class="py-var">mid</span><span class="py-var">)</span></pre></div>
+        <div class="mini-fib-row">
+          <span style="font-size:14px;color:#374151;">prints:</span>
+          <input type="text" class="mini-fib-input" id="me3-inp" placeholder="?">
+          <button class="mini-fib-btn" onclick="miniFIB('me3','me3-fb')">Check</button>
+        </div>
+        <div class="mini-fb" id="me3-fb"></div>
+      </div>
+    </div>
+
+    <div class="lesson-section">
+      <h2>Key Vocabulary</h2>
+      <table class="vocab-table">
+        <thead><tr>
+<th>Term</th>
+<th>Definition</th>
+<th>Example</th>
+</tr></thead>
+        <tbody>
+          <tr>
+<td>Binary search</td>
+<td>A fast search that repeatedly checks the middle of a sorted list and eliminates half the items</td>
+<td>find 23 in ~2 steps</td>
+</tr>
+          <tr>
+<td>Sorted (required)</td>
+<td>Elements arranged in order; binary search only works on sorted data</td>
+<td>[2, 5, 8, 12, 16]</td>
+</tr>
+          <tr>
+<td>Linear search</td>
+<td>Checks each element in order; works on any list; up to n comparisons</td>
+<td>scan left to right</td>
+</tr>
+          <tr>
+<td>mid</td>
+<td>The middle index checked each step, computed as (low + high) // 2</td>
+<td>(0 + 6) // 2 is 3</td>
+</tr>
+          <tr>
+<td>low / high</td>
+<td>The first and last indices of the region still being searched</td>
+<td>low = 4, high = 6</td>
+</tr>
+          <tr>
+<td>log2(n)</td>
+<td>The approximate number of steps binary search needs for n items</td>
+<td>1000 items, ~10 steps</td>
+</tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cpt-connection">
+      <div class="cpt-connection-label">📋 Create Performance Task • Binary search as an algorithm you can explain</div>
+      <p>Binary search is a strong choice for the algorithm your Create Task program develops, because it combines <strong>iteration</strong> (the loop that keeps narrowing the region) with <strong>selection</strong> (the comparison that decides which half to keep). That combination is exactly what the rubric asks you to identify and explain in your written responses.</p>
+      <h3>A point-earning example</h3>
+      <p>Suppose your program searches a sorted list of scores for a target value:</p>
+      <div class="cpt-code">low &lt;- 1
+high &lt;- LENGTH(scores)
+REPEAT UNTIL (low &gt; high)
+{
+    mid &lt;- (low + high) / 2
+    IF (scores[mid] = target)
+    {
+        DISPLAY(mid)
+    }
+    ELSE
+    {
+        IF (scores[mid] &lt; target)
+        {
+            low &lt;- mid + 1
+        }
+        ELSE
+        {
+            high &lt;- mid - 1
+        }
+    }
+}</div>
+      <p>In your written response, name the algorithm and explain how the loop and the comparison work together:</p>
+      <ul class="cpt-stems">
+        <li>"My algorithm uses binary search, which requires the list to be sorted first."</li>
+        <li>"Each iteration computes the middle index and compares <code>scores[mid]</code> to the target, then updates <code>low</code> or <code>high</code> to keep only the half that could contain the target."</li>
+        <li>"Because it eliminates half the remaining items each time, it finds the value in about log2(n) steps instead of up to n."</li>
+      </ul>
+      <h3>The trap to avoid</h3>
+      <p>Do not claim binary search on a list you never sorted. If your data is not in order, the algorithm is incorrect and your explanation loses credibility. Sort first, or describe a linear search instead. <a href="/pages/ap-csp-course-create-task">See the full Create Task module →</a></p>
+    </div>
+    <div class="email-capture">
+      <div class="email-capture-text">
+        <div class="email-capture-eyebrow">FREE for students</div>
+        <h3>Get a free AP CSP question every day</h3>
+        <p>Join 3,000+ students. Daily practice, study tips, and exam strategies.</p>
+      </div>
+      <div>
+        <div class="email-capture-form" id="capture-form">
+          <input type="email" class="email-capture-input" id="capture-email" placeholder="your@email.com">
+          <button class="email-capture-btn" onclick="handleCapture()">Subscribe →</button>
+        </div>
+        <div class="email-capture-success" id="capture-success">✓ You're in!</div>
+      </div>
+    </div>
+    <div class="mcq-section">
+      <div class="mcq-section-header">
+        <div class="mcq-section-icon">📈</div>
+        <div>
+          <div class="mcq-section-title">MCQ Practice</div>
+          <div class="mcq-section-sub">6 questions • Exam difficulty and above • Predict before you peek</div>
+        </div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q1">
+        <div class="mcq-q-num">Question 1 of 6<span class="diff-tag">Trace</span>
+</div>
+        <div class="predict-note">Predict first: at which index does the search land on the target?</div>
+        <div class="mcq-q-text">The list <code>data</code> is <code>[1, 4, 6, 9, 13, 18, 21]</code> (indices 0 to 6) and the target is 18. What index does this binary search display?</div>
+        <div class="mcq-code">
+<span class="k">low</span> = <span class="n">0</span>
+<span class="k">high</span> = <span class="n">6</span>
+<span class="k">while</span> low &lt;= high:
+    <span class="k">mid</span> = (low + high) // <span class="n">2</span>
+    <span class="k">if</span> data[mid] == target:
+        <span class="k">print</span>(mid)
+        <span class="k">break</span>
+    <span class="k">elif</span> data[mid] &lt; target:
+        low = mid + <span class="n">1</span>
+    <span class="k">else</span>:
+        high = mid - <span class="n">1</span>
+</div>
+        <div class="mcq-options" id="q1-options">
+<button class="mcq-option" onclick="checkMCQ('q1','A','D','q1-fb-A')"><span class="mcq-option-letter">A</span> 3</button>
+<button class="mcq-option" onclick="checkMCQ('q1','B','D','q1-fb-B')"><span class="mcq-option-letter">B</span> 4</button>
+<button class="mcq-option" onclick="checkMCQ('q1','C','D','q1-fb-C')"><span class="mcq-option-letter">C</span> 6</button>
+<button class="mcq-option" onclick="checkMCQ('q1','D','D','q1-fb-D')"><span class="mcq-option-letter">D</span> 5</button>
+</div>
+<div id="q1-fb-A" class="mcq-feedback incorrect-fb">Incorrect. Index 3 (value 9) is the first middle checked, but 9 &lt; 18 so the search moves right; it does not stop here.</div>
+<div id="q1-fb-B" class="mcq-feedback incorrect-fb">Incorrect. The second middle of the region 4 to 6 is index 5, not 4. Recompute (4 + 6) // 2.</div>
+<div id="q1-fb-C" class="mcq-feedback incorrect-fb">Incorrect. The search finds 18 at index 5 and stops before ever reaching index 6.</div>
+<div id="q1-fb-D" class="mcq-feedback correct-fb">Correct. First mid is 3 (value 9), and 9 &lt; 18 so low becomes 4. Next mid is (4 + 6) // 2 = 5, and data[5] is 18, a match. It prints 5.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q2">
+        <div class="mcq-q-num">Question 2 of 6<span class="diff-tag">Spot the bug</span>
+</div>
+        <div class="mcq-q-text">This binary search compiles and terminates, but it can give a wrong result. For which list does it fail to find a value that is actually present?</div>
+        <div class="mcq-code">
+<span class="k">low</span> = <span class="n">0</span>
+<span class="k">high</span> = len(data) - <span class="n">1</span>
+<span class="k">while</span> low &lt;= high:
+    <span class="k">mid</span> = (low + high) // <span class="n">2</span>
+    <span class="k">if</span> data[mid] == target:
+        <span class="k">print</span>(mid); <span class="k">break</span>
+    <span class="k">elif</span> data[mid] &lt; target:
+        low = mid + <span class="n">1</span>
+    <span class="k">else</span>:
+        high = mid - <span class="n">1</span>
+</div>
+        <div class="mcq-options" id="q2-options">
+<button class="mcq-option" onclick="checkMCQ('q2','A','A','q2-fb-A')"><span class="mcq-option-letter">A</span> data = [9, 2, 7, 1, 5]</button>
+<button class="mcq-option" onclick="checkMCQ('q2','B','A','q2-fb-B')"><span class="mcq-option-letter">B</span> data = [1, 3, 5, 7, 9]</button>
+<button class="mcq-option" onclick="checkMCQ('q2','C','A','q2-fb-C')"><span class="mcq-option-letter">C</span> data = [2, 4, 6, 8, 10]</button>
+<button class="mcq-option" onclick="checkMCQ('q2','D','A','q2-fb-D')"><span class="mcq-option-letter">D</span> data = [10, 20, 30, 40]</button>
+</div>
+<div id="q2-fb-A" class="mcq-feedback correct-fb">Correct. The code is fine, but the data must be sorted for binary search to be valid. [9, 2, 7, 1, 5] is unsorted, so a comparison to the middle points the search the wrong way and a present value can be missed.</div>
+<div id="q2-fb-B" class="mcq-feedback incorrect-fb">Incorrect. This list is sorted, so the binary search works correctly on it.</div>
+<div id="q2-fb-C" class="mcq-feedback incorrect-fb">Incorrect. This list is sorted in increasing order, so binary search behaves correctly.</div>
+<div id="q2-fb-D" class="mcq-feedback incorrect-fb">Incorrect. This list is sorted, so the algorithm searches it correctly.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q3">
+        <div class="mcq-q-num">Question 3 of 6<span class="diff-tag">Spot the bug</span>
+</div>
+        <div class="mcq-q-text">A student wants binary search to find a value or report not found, but their loop never ends for some targets. Which single change is the bug?</div>
+        <div class="mcq-code">
+<span class="k">low</span> = <span class="n">0</span>
+<span class="k">high</span> = len(data) - <span class="n">1</span>
+<span class="k">while</span> low &lt;= high:
+    <span class="k">mid</span> = (low + high) // <span class="n">2</span>
+    <span class="k">if</span> data[mid] == target:
+        <span class="k">print</span>(mid); <span class="k">break</span>
+    <span class="k">elif</span> data[mid] &lt; target:
+        low = mid
+    <span class="k">else</span>:
+        high = mid - <span class="n">1</span>
+</div>
+        <div class="mcq-options" id="q3-options">
+          <button class="mcq-option" onclick="checkMCQ('q3','A','A','q3-fb-A')"><span class="mcq-option-letter">A</span> <code>low = mid</code> should be <code>low = mid + 1</code></button>
+          <button class="mcq-option" onclick="checkMCQ('q3','B','A','q3-fb-B')"><span class="mcq-option-letter">B</span> <code>high = mid - 1</code> should be <code>high = mid</code></button>
+          <button class="mcq-option" onclick="checkMCQ('q3','C','A','q3-fb-C')"><span class="mcq-option-letter">C</span> the loop should use <code>low &lt; high</code></button>
+          <button class="mcq-option" onclick="checkMCQ('q3','D','A','q3-fb-D')"><span class="mcq-option-letter">D</span> <code>mid</code> should be <code>(low + high) / 2</code></button>
+        </div>
+        <div id="q3-fb-A" class="mcq-feedback correct-fb">Correct. Setting low = mid can leave low and high stuck on the same index forever, since mid keeps landing on that same spot. Advancing with low = mid + 1 always shrinks the region and guarantees the loop ends.</div>
+        <div id="q3-fb-B" class="mcq-feedback incorrect-fb">Incorrect. high = mid - 1 already moves past the middle correctly; changing it to high = mid would create the very problem being described.</div>
+        <div id="q3-fb-C" class="mcq-feedback incorrect-fb">Incorrect. Using low &lt; high would stop one step too early and could miss a value; it does not fix the infinite loop.</div>
+        <div id="q3-fb-D" class="mcq-feedback incorrect-fb">Incorrect. Regular division would give a non-integer index and cause an error, not fix the endless loop.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q4">
+        <div class="mcq-q-num">Question 4 of 6<span class="diff-tag">NOT question</span>
+</div>
+        <div class="mcq-q-text">Which statement about binary search is <strong>NOT</strong> true?</div>
+        <div class="mcq-options" id="q4-options">
+<button class="mcq-option" onclick="checkMCQ('q4','A','B','q4-fb-A')"><span class="mcq-option-letter">A</span> It requires the data to be sorted before it will work correctly</button>
+<button class="mcq-option" onclick="checkMCQ('q4','B','B','q4-fb-B')"><span class="mcq-option-letter">B</span> It works correctly on any list regardless of the order of the elements</button>
+<button class="mcq-option" onclick="checkMCQ('q4','C','B','q4-fb-C')"><span class="mcq-option-letter">C</span> It checks a middle element and eliminates about half the items each step</button>
+<button class="mcq-option" onclick="checkMCQ('q4','D','B','q4-fb-D')"><span class="mcq-option-letter">D</span> It finds a value in about log2(n) steps for a list of n items</button>
+</div>
+<div id="q4-fb-A" class="mcq-feedback incorrect-fb">Incorrect. This IS true. Sorted data is exactly what binary search requires, so it is not the answer to a NOT question.</div>
+<div id="q4-fb-B" class="mcq-feedback correct-fb">Correct. This statement is false, so it is the NOT answer. Binary search only works on sorted data; on an unordered list it can return the wrong result.</div>
+<div id="q4-fb-C" class="mcq-feedback incorrect-fb">Incorrect. This IS true. Halving the remaining items each step is how binary search works, so it is not the answer.</div>
+<div id="q4-fb-D" class="mcq-feedback incorrect-fb">Incorrect. This IS true. About log2(n) steps is the defining speed of binary search, so it is not the answer.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q5">
+        <div class="mcq-q-num">Question 5 of 6<span class="diff-tag">I, II, III</span>
+</div>
+        <div class="mcq-q-text">Which of the following statements comparing linear search and binary search are correct?</div>
+        <ul class="mcq-roman">
+          <li>
+<strong>I.</strong> Binary search requires the list to be sorted, while linear search does not.</li>
+          <li>
+<strong>II.</strong> For a sorted list of 1000 items, binary search needs at most about 10 checks while linear search may need up to 1000.</li>
+          <li>
+<strong>III.</strong> Binary search is always faster than linear search on every list, sorted or not.</li>
+        </ul>
+        <div class="mcq-options" id="q5-options">
+<button class="mcq-option" onclick="checkMCQ('q5','A','C','q5-fb-A')"><span class="mcq-option-letter">A</span> I only</button>
+<button class="mcq-option" onclick="checkMCQ('q5','B','C','q5-fb-B')"><span class="mcq-option-letter">B</span> II and III only</button>
+<button class="mcq-option" onclick="checkMCQ('q5','C','C','q5-fb-C')"><span class="mcq-option-letter">C</span> I and II only</button>
+<button class="mcq-option" onclick="checkMCQ('q5','D','C','q5-fb-D')"><span class="mcq-option-letter">D</span> I, II, and III</button>
+</div>
+<div id="q5-fb-A" class="mcq-feedback incorrect-fb">Incorrect. I is correct, but II is also correct: log2(1000) is about 10 while linear search can take up to 1000 checks.</div>
+<div id="q5-fb-B" class="mcq-feedback incorrect-fb">Incorrect. III is false. Binary search cannot even be used on an unsorted list, so it is not always faster on every list.</div>
+<div id="q5-fb-C" class="mcq-feedback correct-fb">Correct. I states the sorting requirement accurately and II gives the right step counts. III is false because binary search needs sorted data, and on tiny lists linear search can match it, so "always faster on every list" is wrong.</div>
+<div id="q5-fb-D" class="mcq-feedback incorrect-fb">Incorrect. III is false, so not all three are correct. The word "always" and "sorted or not" make III wrong.</div>
+      </div>
+      <div class="mcq-item" data-activity="quiz" data-item="q6">
+        <div class="mcq-q-num">Question 6 of 6<span class="diff-tag">Trace</span>
+</div>
+        <div class="predict-note">Predict first: after one comparison, which end of the list is thrown away?</div>
+        <div class="mcq-q-text">The list <code>data</code> is <code>[2, 5, 9, 14, 19, 26, 33, 40]</code> (indices 0 to 7) and the target is 5. After the very first comparison of a binary search, which indices remain to be searched?</div>
+        <div class="mcq-code">
+<span class="k">low</span> = <span class="n">0</span>
+<span class="k">high</span> = <span class="n">7</span>
+<span class="k">mid</span> = (low + high) // <span class="n">2</span>
+<span class="c"># compare data[mid] to target</span>
+</div>
+        <div class="mcq-options" id="q6-options">
+<button class="mcq-option" onclick="checkMCQ('q6','A','D','q6-fb-A')"><span class="mcq-option-letter">A</span> indices 4 through 7</button>
+<button class="mcq-option" onclick="checkMCQ('q6','B','D','q6-fb-B')"><span class="mcq-option-letter">B</span> indices 0 through 7</button>
+<button class="mcq-option" onclick="checkMCQ('q6','C','D','q6-fb-C')"><span class="mcq-option-letter">C</span> index 3 only</button>
+<button class="mcq-option" onclick="checkMCQ('q6','D','D','q6-fb-D')"><span class="mcq-option-letter">D</span> indices 0 through 2</button>
+</div>
+<div id="q6-fb-A" class="mcq-feedback incorrect-fb">Incorrect. The upper half is eliminated, not kept. Because 5 is less than the middle value 14, the search keeps the lower indices.</div>
+<div id="q6-fb-B" class="mcq-feedback incorrect-fb">Incorrect. A comparison has already happened, so half the list is gone; the full range 0 through 7 is no longer being searched.</div>
+<div id="q6-fb-C" class="mcq-feedback incorrect-fb">Incorrect. Index 3 is the middle that was just checked and rejected; the search continues in the surviving half, not on index 3 alone.</div>
+<div id="q6-fb-D" class="mcq-feedback correct-fb">Correct. mid is (0 + 7) // 2 = 3, and data[3] is 14. Since 5 &lt; 14, the target must be to the left, so high becomes 2 and only indices 0 through 2 remain.</div>
+      </div>
+    </div>
+    <div class="game-section">
+      <div style="text-align:center;margin-bottom:20px;">
+        <div class="game-badge">🎮 Lesson Game</div>
+        <div class="game-title">Halving Hunter</div>
+        <div class="game-sub">Trace each binary search step and predict what it displays. 8 rounds.</div>
+      </div>
+      <div id="vt-active">
+        <div class="vt-score-bar">
+          <div class="vt-stat">
+<div class="vt-stat-val" id="vt-score">0</div>
+<div class="vt-stat-lbl">Correct</div>
+</div>
+          <div class="vt-stat">
+<div class="vt-stat-val" id="vt-qn">1/8</div>
+<div class="vt-stat-lbl">Round</div>
+</div>
+          <div class="vt-stat">
+<div class="vt-stat-val" id="vt-streak">0</div>
+<div class="vt-stat-lbl">Streak 🔥</div>
+</div>
+        </div>
+        <div class="vt-code-card">
+          <div class="vt-code-label">🐛 Python • what is printed?</div>
+          <div class="vt-code-lines" id="vt-code"></div>
+        </div>
+        <div class="vt-question" id="vt-question"></div>
+        <div class="vt-options" id="vt-options"></div>
+        <div class="vt-fb" id="vt-fb"></div>
+        <button class="vt-next" id="vt-next" onclick="vtNext()">Next →</button>
+      </div>
+      <div class="vt-results" id="vt-results">
+        <div class="vt-res-score" id="vt-res-score">0/8</div>
+        <div class="vt-res-lbl">correct answers</div>
+        <div class="vt-res-msg" id="vt-res-msg"></div>
+        <button class="vt-restart" onclick="vtRestart()">↻ Play again</button>
+      </div>
+    </div>
+    <div class="code-editor-section">
+      <div class="code-editor-badge">💻 Live Python Code Editor</div>
+      <div class="code-editor-title">Practice Problems</div>
+      <div class="code-editor-sub">Real Python runs right here in your browser. The first time you press Run, the Python engine loads (a few seconds); after that it is instant. Problems build from guided to Create-Task level. Use Hint if you are stuck, and check your output against the target.</div>
+      <div class="code-usage" id="code-usage">Hints used: <strong>0</strong> • Solutions viewed: <strong>0</strong>
+</div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-1">
+        <div class="scaffold-badge">Level 1 • Guided</div>
+        <div class="code-problem-num">Problem 1 of 8 • compute the middle index</div>
+        <div class="code-problem-prompt">Binary search always starts by finding the middle of the current region. Given <code>low</code> and <code>high</code>, compute <code>mid = (low + high) // 2</code> and print it. Target output: <strong>3</strong>
+</div>
+        <textarea class="code-textarea" id="ce-1" rows="6" spellcheck="false">low = 0
+high = 6
+# TODO: compute mid with integer division and print it
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-1" onclick="runPy(1)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(1)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-1" onclick="showSol(1)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-1"></div>
+        <div class="code-hint" id="ce-hint-1"></div>
+        <div class="code-solution" id="ce-sol-1"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-2">
+        <div class="scaffold-badge">Level 2 • One comparison</div>
+        <div class="code-problem-num">Problem 2 of 8 • which way to go</div>
+        <div class="code-problem-prompt">The list is sorted. Compute the middle index, then print <code>right</code> if the middle value is less than the target (search moves right), otherwise print <code>left</code>. Target output: <strong>right</strong>
+</div>
+        <textarea class="code-textarea" id="ce-2" rows="6" spellcheck="false">data = [2, 5, 9, 14, 20, 27, 35]
+target = 27
+low = 0
+high = 6
+# TODO: compute mid, then print "right" or "left"
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-2" onclick="runPy(2)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(2)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-2" onclick="showSol(2)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-2"></div>
+        <div class="code-hint" id="ce-hint-2"></div>
+        <div class="code-solution" id="ce-sol-2"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-3">
+        <div class="scaffold-badge">Level 3 • Full search</div>
+        <div class="code-problem-num">Problem 3 of 8 • find and print the index</div>
+        <div class="code-problem-prompt">Write a complete binary search that prints the index where <code>target</code> is found. Track <code>low</code> and <code>high</code>, compute <code>mid</code>, and update the correct bound each step. Target output: <strong>5</strong>
+</div>
+        <textarea class="code-textarea" id="ce-3" rows="6" spellcheck="false">data = [3, 6, 9, 12, 15, 18, 21, 24]
+target = 18
+low = 0
+high = len(data) - 1
+# TODO: loop until found; print the index of target
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-3" onclick="runPy(3)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(3)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-3" onclick="showSol(3)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-3"></div>
+        <div class="code-hint" id="ce-hint-3"></div>
+        <div class="code-solution" id="ce-sol-3"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-4">
+        <div class="scaffold-badge">Level 4 • Fix the bug</div>
+        <div class="code-problem-num">Problem 4 of 8 • the two updates are swapped</div>
+        <div class="code-problem-prompt">This search runs and stops, but the two bound updates point the wrong way, so it reports <code>-1</code> instead of the real index. Swap them so a smaller middle moves <code>low</code> up and a larger middle moves <code>high</code> down. Target output: <strong>4</strong>
+</div>
+        <textarea class="code-textarea" id="ce-4" rows="6" spellcheck="false">data = [1, 4, 7, 10, 13]
+target = 13
+low = 0
+high = len(data) - 1
+ans = -1
+while low &lt;= high:
+    mid = (low + high) // 2
+    if data[mid] == target:
+        ans = mid
+        break
+    elif data[mid] &lt; target:
+        high = mid - 1
+    else:
+        low = mid + 1
+print(ans)
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-4" onclick="runPy(4)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(4)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-4" onclick="showSol(4)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-4"></div>
+        <div class="code-hint" id="ce-hint-4"></div>
+        <div class="code-solution" id="ce-sol-4"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-5">
+        <div class="scaffold-badge">Level 5 • Not found</div>
+        <div class="code-problem-num">Problem 5 of 8 • report a missing value</div>
+        <div class="code-problem-prompt">The target is not in this sorted list. Write a binary search that prints the index if the value is found, or the words <code>not found</code> if the region empties out. Target output: <strong>not found</strong>
+</div>
+        <textarea class="code-textarea" id="ce-5" rows="6" spellcheck="false">data = [2, 4, 6, 8, 10]
+target = 7
+low = 0
+high = len(data) - 1
+# TODO: print the index, or "not found" if low passes high
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-5" onclick="runPy(5)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(5)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-5" onclick="showSol(5)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-5"></div>
+        <div class="code-hint" id="ce-hint-5"></div>
+        <div class="code-solution" id="ce-sol-5"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-6">
+        <div class="scaffold-badge">Level 6 • Create Task style</div>
+        <div class="code-problem-num">Problem 6 of 8 • count the steps</div>
+        <div class="code-problem-prompt">Efficiency questions ask how many checks a search takes. Run a binary search for the target and, instead of the index, print how many times it computes a middle element before finding the value. Target output: <strong>3</strong>
+</div>
+        <textarea class="code-textarea" id="ce-6" rows="6" spellcheck="false">data = [5, 10, 15, 20, 25, 30, 35, 40]
+target = 5
+low = 0
+high = len(data) - 1
+steps = 0
+# TODO: count each mid check; print the total when found
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-6" onclick="runPy(6)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(6)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-6" onclick="showSol(6)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-6"></div>
+        <div class="code-hint" id="ce-hint-6"></div>
+        <div class="code-solution" id="ce-sol-6"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-7">
+        <div class="scaffold-badge">Level 7 • Challenge</div>
+        <div class="code-problem-num">Problem 7 of 8 • you write the whole search</div>
+        <div class="code-problem-prompt">Open ended. Write the <strong>entire</strong> binary search yourself. The two inputs are given. Your program must:<ul class="rules">
+<li>track <code>low</code> and <code>high</code> over a loop</li>
+<li>compute <code>mid</code> each step and compare <code>data[mid]</code> to <code>target</code>
+</li>
+<li>print the index where <code>target</code> is found</li>
+<li>print <code>not found</code> if it is missing</li>
+</ul>Target output: <strong>5</strong>
+</div>
+        <textarea class="code-textarea" id="ce-7" rows="6" spellcheck="false">data = [3, 8, 12, 19, 24, 31, 45, 50, 67]
+target = 31
+# Write the full binary search below.
+# Print the index of target, or "not found".
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-7" onclick="runPy(7)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(7)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-7" onclick="showSol(7)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-7"></div>
+        <div class="code-hint" id="ce-hint-7"></div>
+        <div class="code-solution" id="ce-sol-7"></div>
+      </div>
+      <div class="code-problem" data-activity="exercise-1" data-item="ce-8">
+        <div class="scaffold-badge">Level 8 • Challenge</div>
+        <div class="code-problem-num">Problem 8 of 8 • index and step count</div>
+        <div class="code-problem-prompt">Open ended. Write the <strong>entire</strong> program yourself. Run a binary search on the given sorted list and print exactly two lines:<ul class="rules">
+<li>first line: <code>found at index N</code> where N is the index</li>
+<li>second line: <code>steps K</code> where K is how many middles were checked</li>
+</ul>Target output: <strong>found at index 7</strong> then <strong>steps 4</strong>
+</div>
+        <textarea class="code-textarea" id="ce-8" rows="6" spellcheck="false">data = [1, 3, 5, 7, 9, 11, 13, 15]
+target = 15
+# Write the full search below, counting each mid check.
+# Print "found at index N" then "steps K".
+</textarea>
+        <div class="code-btn-row">
+          <button class="code-run-btn" id="run-btn-8" onclick="runPy(8)">▶ Run</button>
+          <button class="code-hint-btn" onclick="showHint(8)">📝 Hint</button>
+          <button class="code-sol-btn" id="sol-btn-8" onclick="showSol(8)" style="display:none;">Show solution</button>
+        </div>
+        <div class="code-output" id="ce-out-8"></div>
+        <div class="code-hint" id="ce-hint-8"></div>
+        <div class="code-solution" id="ce-sol-8"></div>
+      </div>
+    </div>
+    <div class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">Why does binary search require sorted data?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Binary search decides which half of the list to keep by comparing the target to the middle element. That comparison is only meaningful if the elements are in order. On an unsorted list, a smaller middle value does not guarantee the target is to the right, so the search can eliminate the half that actually contains the value and report it as not found.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">How many steps does binary search take?<i class="faq-icon">+</i></button>
+        <div class="faq-a">About <code>log2(n)</code> steps for a list of n items, because each step eliminates half of what remains. A list of 1000 items takes at most about 10 checks, and 1,000,000 items takes about 20. Linear search on those same lists could take up to 1000 and 1,000,000 checks.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">How is mid calculated?<i class="faq-icon">+</i></button>
+        <div class="faq-a">The middle index is <code>mid = (low + high) // 2</code> using integer division, which drops any fraction. For example, with low 0 and high 6, mid is 3. Computing mid is the single most common place students make an error, so it is worth practicing directly.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">What is the difference between binary search and linear search?<i class="faq-icon">+</i></button>
+        <div class="faq-a">Linear search checks each element one at a time and works on any list, sorted or not, but may need up to n comparisons. Binary search is much faster at about log2(n) steps, but it only works when the data is already sorted. Choose linear search for small or unsorted data and binary search for large sorted data.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">When does binary search report not found?<i class="faq-icon">+</i></button>
+        <div class="faq-a">When the region being searched empties out, meaning <code>low</code> becomes greater than <code>high</code>, the value is not in the list. A common way to handle this is to store the found index in a variable that starts at -1 and, after the loop, print the index if it changed or print not found otherwise.</div>
+      </div>
+    </div>
+    <div class="related-links">
+      <h3>🔗 Continue studying</h3>
+      <div class="related-links-grid">
+        <a href="/pages/ap-csp-course-big-idea-3-algorithms" class="related-link">← BI3 Hub</a>
+        <a href="/pages/ap-csp-course-bi3-lists" class="related-link">← 3.10 Lists</a>
+        <a href="/pages/ap-csp-course-bi3-calling-procedures" class="related-link">Next: 3.12 Calling Procedures →</a>
+        <a href="/pages/ap-csp-course-bi3-developing-algorithms" class="related-link">3.9 Developing Algorithms</a>
+        <a href="/pages/ap-csp-course-create-task" class="related-link">Create Task Module</a>
+        <a href="/pages/ap-csp-question-of-the-day" class="related-link">Daily Practice Questions</a>
+        <a href="https://apcentral.collegeboard.org/courses/ap-computer-science-principles" class="related-link related-ext" target="_blank" rel="noopener">College Board AP CSP ↗</a>
+      </div>
+    </div>
+    <div class="superpack-slim">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="superpack-slim-icon">📦</div>
+        <div><div class="superpack-slim-text">AP CSP Teacher Superpack<span class="superpack-slim-sub">Slides, lesson plans, unit tests for all 5 Big Ideas, $249</span>
+</div></div>
+      </div>
+      <a href="/products/ap-csp-teacher-superpack" class="superpack-slim-btn">Get the Superpack →</a>
+    </div>
+    <div class="teacher-callout">
+      <div class="teacher-callout-icon">🏫</div>
+      <div class="teacher-callout-body">
+        <div class="teacher-callout-label">For teachers</div>
+        <p>The Superpack includes an editable Topic 3.11 slide deck with animated low/high/mid traces, a sorted-versus-unsorted demonstration, a linear-versus-binary step-count worksheet, a spot-the-bug bank, and a unit quiz. <a href="/products/ap-csp-teacher-superpack">View what's included →</a></p>
+      </div>
+    </div>
+    <div class="lesson-nav">
+      <a href="/pages/ap-csp-course-bi3-lists" class="nav-card">
+        <div class="nav-card-dir">← Previous</div>
+        <div class="nav-card-title">3.10 Lists</div>
+      </a>
+      <a href="/pages/ap-csp-course-bi3-calling-procedures" class="nav-card next">
+        <div class="nav-card-dir">Next lesson →</div>
+        <div class="nav-card-title">3.12 Calling Procedures</div>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var MINI_MSGS={"me1": {"A": "\u2717 7 is data[1], but mid is (0 + 4) // 2 = 2, not 1.", "B": "\u2713 Correct! mid is (0 + 4) // 2 = 2, and data[2] is 11.", "C": "\u2717 20 is data[3]. The middle index here is 2, not 3.", "D": "\u2717 25 is the last element, data[4]. The computed middle index is 2."}, "me2": {"A": "\u2713 Correct! Since 22 is less than 41, the target must be to the right, so low becomes mid + 1 and indices 0 through 3 are discarded.", "B": "\u2717 The upper half is what SURVIVES. Because 22 is too small, the search keeps the higher indices, not eliminates them.", "C": "\u2717 The search does not stop; a non-match just tells it which half to drop and continue.", "D": "\u2717 Only half the list is eliminated, not all of it. The comparison to 22 keeps the upper half alive."}};
+var MINI_FIB={"me3": {"correct": "4", "c": "\u2713 Correct! (0 + 8) // 2 is 4, so it prints 4.", "w": "\u2717 Not quite. Compute (0 + 8) // 2 with integer division: that is 4."}};
+var CE_EXPECTED={"1": "3", "2": "right", "3": "5", "4": "4", "5": "not found", "6": "3", "7": "5", "8": "found at index 7\nsteps 4"};
+var CE_HINTS={"1": ["Integer division in Python is the // operator.", "Compute mid = (0 + 6) // 2, then print mid.", "Full pattern:\nmid = (low + high) // 2\nprint(mid)"], "2": ["First compute mid = (low + high) // 2, which is 3 here.", "Compare data[mid] to target: if it is smaller, the target is to the right.", "Full pattern:\nmid = (low + high) // 2\nif data[mid] < target:\n    print(\"right\")\nelse:\n    print(\"left\")"], "3": ["Loop while low <= high, computing mid each time.", "If data[mid] == target print mid and break; if it is less, low = mid + 1; else high = mid - 1.", "Full pattern:\nwhile low <= high:\n    mid = (low + high) // 2\n    if data[mid] == target:\n        print(mid)\n        break\n    elif data[mid] < target:\n        low = mid + 1\n    else:\n        high = mid - 1"], "4": ["A middle that is too SMALL means the target is to the right, so low must go up.", "Swap the two branches: data[mid] < target should set low = mid + 1, and the else should set high = mid - 1."], "5": ["Track the found index in a variable that starts at -1.", "After the loop, print the index if it changed, otherwise print not found.", "Full pattern:\nif ans == -1:\n    print(\"not found\")\nelse:\n    print(ans)"], "6": ["Add 1 to a steps counter every time you compute a new mid.", "Do the count inside the loop, before checking for a match, and print steps after the loop or after break.", "Full pattern:\nsteps = steps + 1\nif data[mid] == target:\n    break"], "7": ["Set up low, high, and an answer variable at -1 before the loop.", "Loop while low <= high; update low or high based on the comparison; after the loop print the index or not found.", "Full solution:\nlow = 0\nhigh = len(data) - 1\nans = -1\nwhile low <= high:\n    mid = (low + high) // 2\n    if data[mid] == target:\n        ans = mid\n        break\n    elif data[mid] < target:\n        low = mid + 1\n    else:\n        high = mid - 1\nif ans == -1:\n    print(\"not found\")\nelse:\n    print(ans)"], "8": ["Keep both an answer variable and a steps counter; add 1 to steps at each mid.", "After the loop, print two separate lines: the index line, then the steps line, using str() to join text and numbers.", "Full solution:\nsteps = 0\nans = -1\nwhile low <= high:\n    mid = (low + high) // 2\n    steps = steps + 1\n    if data[mid] == target:\n        ans = mid\n        break\n    elif data[mid] < target:\n        low = mid + 1\n    else:\n        high = mid - 1\nprint(\"found at index \" + str(ans))\nprint(\"steps \" + str(steps))"]};
+var CE_SOL={"1": "low = 0\nhigh = 6\nmid = (low + high) // 2\nprint(mid)", "2": "data = [2, 5, 9, 14, 20, 27, 35]\ntarget = 27\nlow = 0\nhigh = 6\nmid = (low + high) // 2\nif data[mid] < target:\n    print(\"right\")\nelse:\n    print(\"left\")", "3": "data = [3, 6, 9, 12, 15, 18, 21, 24]\ntarget = 18\nlow = 0\nhigh = len(data) - 1\nwhile low <= high:\n    mid = (low + high) // 2\n    if data[mid] == target:\n        print(mid)\n        break\n    elif data[mid] < target:\n        low = mid + 1\n    else:\n        high = mid - 1", "4": "data = [1, 4, 7, 10, 13]\ntarget = 13\nlow = 0\nhigh = len(data) - 1\nans = -1\nwhile low <= high:\n    mid = (low + high) // 2\n    if data[mid] == target:\n        ans = mid\n        break\n    elif data[mid] < target:\n        low = mid + 1\n    else:\n        high = mid - 1\nprint(ans)", "5": "data = [2, 4, 6, 8, 10]\ntarget = 7\nlow = 0\nhigh = len(data) - 1\nans = -1\nwhile low <= high:\n    mid = (low + high) // 2\n    if data[mid] == target:\n        ans = mid\n        break\n    elif data[mid] < target:\n        low = mid + 1\n    else:\n        high = mid - 1\nif ans == -1:\n    print(\"not found\")\nelse:\n    print(ans)", "6": "data = [5, 10, 15, 20, 25, 30, 35, 40]\ntarget = 5\nlow = 0\nhigh = len(data) - 1\nsteps = 0\nwhile low <= high:\n    mid = (low + high) // 2\n    steps = steps + 1\n    if data[mid] == target:\n        break\n    elif data[mid] < target:\n        low = mid + 1\n    else:\n        high = mid - 1\nprint(steps)", "7": "data = [3, 8, 12, 19, 24, 31, 45, 50, 67]\ntarget = 31\nlow = 0\nhigh = len(data) - 1\nans = -1\nwhile low <= high:\n    mid = (low + high) // 2\n    if data[mid] == target:\n        ans = mid\n        break\n    elif data[mid] < target:\n        low = mid + 1\n    else:\n        high = mid - 1\nif ans == -1:\n    print(\"not found\")\nelse:\n    print(ans)", "8": "data = [1, 3, 5, 7, 9, 11, 13, 15]\ntarget = 15\nlow = 0\nhigh = len(data) - 1\nsteps = 0\nans = -1\nwhile low <= high:\n    mid = (low + high) // 2\n    steps = steps + 1\n    if data[mid] == target:\n        ans = mid\n        break\n    elif data[mid] < target:\n        low = mid + 1\n    else:\n        high = mid - 1\nprint(\"found at index \" + str(ans))\nprint(\"steps \" + str(steps))"};
+var VT_QS=[{"lines": ["low = 0", "high = 6", "mid = (low + high) // 2", "print(mid)"], "hl": 2, "q": "What is displayed?", "choices": ["2", "3", "4", "6"], "correct": 1, "exp": "(0 + 6) // 2 is 3, so it prints 3."}, {"lines": ["data = [3, 7, 11, 18, 25]", "mid = (0 + 4) // 2", "print(data[mid])"], "hl": 1, "q": "What is displayed?", "choices": ["7", "11", "18", "25"], "correct": 1, "exp": "mid is 2, and data[2] is 11."}, {"lines": ["data = [2, 6, 10, 15, 21, 30]", "target = 21", "low = 0", "high = 5", "mid = (low + high) // 2", "if data[mid] < target:", "    print(\"go right\")", "else:", "    print(\"go left\")"], "hl": 5, "q": "What is displayed?", "choices": ["go left", "go right", "found", "nothing"], "correct": 1, "exp": "mid is 2, data[2] is 10, and 10 < 21, so it goes right."}, {"lines": ["data = [1, 4, 8, 12, 16]", "target = 8", "low = 0", "high = 4", "mid = (low + high) // 2", "if data[mid] == target:", "    print(mid)"], "hl": 6, "q": "What is displayed?", "choices": ["1", "2", "3", "nothing"], "correct": 1, "exp": "mid is 2 and data[2] is 8, a match, so it prints 2."}, {"lines": ["data = [5, 10, 15, 20]", "target = 12", "low = 0", "high = 3", "found = -1", "while low <= high:", "    mid = (low + high) // 2", "    if data[mid] == target:", "        found = mid", "        break", "    elif data[mid] < target:", "        low = mid + 1", "    else:", "        high = mid - 1", "print(found)"], "hl": 14, "q": "What is displayed?", "choices": ["-1", "1", "2", "3"], "correct": 0, "exp": "12 is not in the list, so low passes high and found stays -1."}, {"lines": ["n = 8", "steps = 0", "while n > 1:", "    n = n // 2", "    steps += 1", "print(steps)"], "hl": 5, "q": "What is displayed?", "choices": ["2", "3", "4", "8"], "correct": 1, "exp": "8 halves to 4, then 2, then 1: three steps."}, {"lines": ["data = [2, 4, 6, 8, 10, 12, 14]", "target = 12", "low = 0", "high = 6", "ans = -1", "while low <= high:", "    mid = (low + high) // 2", "    if data[mid] == target:", "        ans = mid", "        break", "    elif data[mid] < target:", "        low = mid + 1", "    else:", "        high = mid - 1", "print(ans)"], "hl": 14, "q": "What is displayed?", "choices": ["3", "4", "5", "6"], "correct": 2, "exp": "First mid 3 (value 8) is too small, next mid 5 is 12, a match, so ans is 5."}, {"lines": ["data = [1, 3, 5, 7, 9, 11]", "target = 3", "low = 0", "high = 5", "mid = (low + high) // 2", "if data[mid] > target:", "    high = mid - 1", "print(high)"], "hl": 6, "q": "What is displayed?", "choices": ["1", "2", "4", "5"], "correct": 0, "exp": "mid is 2, data[2] is 5, and 5 > 3, so high becomes mid - 1, which is 1."}];
+var VT_MSGS=["Binary search takes reps. Compute mid first, then decide which half to drop.", "Getting there. Remember the list must be sorted for this to work.", "Decent. Watch how low and high move past mid each step.", "Solid. You are tracing the halving well.", "Strong. You will handle most binary search questions on the exam.", "Very strong. Nearly perfect.", "Almost flawless.", "Perfect! You can trace any binary search the AP exam shows you."];
+
+function switchTab(btn, lang, panelId){
+  var wrap=btn.parentElement.parentElement;
+  var tabs=wrap.querySelectorAll('.code-tab'),panes=wrap.querySelectorAll('.code-pane');
+  for(var i=0;i<tabs.length;i++)tabs[i].classList.remove('active');
+  for(var i=0;i<panes.length;i++)panes[i].classList.remove('active');
+  btn.classList.add('active');
+  var t=document.getElementById(panelId+'-'+lang); if(t)t.classList.add('active');
+}
+/* Gradebook hook: fire one standard event per graded interaction. The theme reporter
+   listens for 'apcsActivity' and reads course/unit/lesson off the .lesson-page wrapper. */
+function _activity(d){
+  try{ var w=document.querySelector('.lesson-page');
+    if(w){ d.course=w.getAttribute('data-course'); d.unit=w.getAttribute('data-unit'); d.lesson=w.getAttribute('data-lesson'); }
+    document.dispatchEvent(new CustomEvent('apcsActivity',{detail:d}));
+  }catch(e){}
+}
+function miniMCQ(id, chosen, correct, fbId){
+  var opts=document.querySelectorAll('#'+id+'-opts .mini-opt');
+  opts.forEach(function(b){b.onclick=null;b.style.cursor='default';});
+  var letters=['A','B','C','D'];
+  opts[letters.indexOf(chosen)].classList.add(chosen===correct?'correct':'incorrect');
+  if(chosen!==correct)opts[letters.indexOf(correct)].classList.add('reveal');
+  var fb=document.getElementById(fbId);
+  if(MINI_MSGS[id]){fb.textContent=MINI_MSGS[id][chosen]||'';fb.className='mini-fb '+(chosen===correct?'c':'w');}
+}
+function miniFIB(id, fbId){
+  var inp=document.getElementById(id+'-inp'),fb=document.getElementById(fbId);
+  var val=inp.value.trim().toLowerCase();var d=MINI_FIB[id];
+  var ok=(val===String(d.correct).toLowerCase());
+  inp.classList.add(ok?'correct':'incorrect');
+  fb.textContent=ok?d.c:d.w; fb.className='mini-fb '+(ok?'c':'w'); inp.disabled=true;
+}
+function checkMCQ(qid, chosen, correct, fbId){
+  var opts=document.querySelectorAll('#'+qid+'-options .mcq-option');
+  opts.forEach(function(b){b.disabled=true;b.onclick=null;});
+  var letters=['A','B','C','D'];
+  opts[letters.indexOf(chosen)].classList.add(chosen===correct?'correct':'incorrect');
+  if(chosen!==correct)opts[letters.indexOf(correct)].classList.add('revealed-correct');
+  document.getElementById(fbId).classList.add('show');
+  _activity({activity:'quiz',item:qid,choice:chosen});
+}
+function toggleFAQ(btn){
+  var item=btn.parentElement,wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(el){el.classList.remove('open');});
+  if(!wasOpen)item.classList.add('open');
+}
+function handleCapture(){
+  var email=document.getElementById('capture-email').value.trim();
+  if(!email||!email.includes('@')){document.getElementById('capture-email').focus();return;}
+  document.getElementById('capture-form').style.display='none';
+  document.getElementById('capture-success').style.display='block';
+  if(typeof window._learnq!=='undefined'){window._learnq.push(['identify',{'$email':email}]);}
+}
+var PY_URL='https://cdn.jsdelivr.net/pyodide/v0.26.2/full/';
+var CE_HINT_IDX={};
+/* Hint/solution usage tracking. window.LESSON_USAGE is read by the gradebook reporter
+   (separate task) and mirrored in a visible on-page tally so teachers can factor it in. */
+var LESSON_USAGE={hints:{},solutions:{},totalHints:0,totalSolutions:0};
+window.LESSON_USAGE=LESSON_USAGE;
+function _sumv(o){var t=0;for(var k in o){t+=o[k];}return t;}
+function updateUsage(){
+  var el=document.getElementById('code-usage');
+  if(el){el.innerHTML='Hints used: <strong>'+LESSON_USAGE.totalHints+'</strong> • Solutions viewed: <strong>'+LESSON_USAGE.totalSolutions+'</strong>';}
+  try{document.dispatchEvent(new CustomEvent('lessonUsage',{detail:LESSON_USAGE}));}catch(e){}
+}
+function loadScriptOnce(src){return new Promise(function(res,rej){
+  if(document.querySelector('script[data-pyodide]')){res();return;}
+  var s=document.createElement('script');s.src=src;s.setAttribute('data-pyodide','1');
+  s.onload=function(){res();};s.onerror=function(){rej(new Error('script load failed'));};
+  document.head.appendChild(s);});}
+function ensurePy(){if(window.__pyPromise)return window.__pyPromise;
+  window.__pyPromise=(async function(){await loadScriptOnce(PY_URL+'pyodide.js');
+    var py=await loadPyodide({indexURL:PY_URL});window.__pyodide=py;return py;})();
+  return window.__pyPromise;}
+function cleanErr(msg){if(!msg)return 'error';var lines=String(msg).trim().split('\n');return lines.slice(-3).join('\n');}
+function execUser(py,code){var output='',err=null;
+  try{py.runPython('import sys, io\n__old_out = sys.stdout\nsys.stdout = io.StringIO()\nsys.stderr = sys.stdout');
+    try{var ns=py.globals.get('dict')();py.runPython(code,{globals:ns});ns.destroy();}
+    catch(e){err=cleanErr(e.message);}
+    output=py.runPython('sys.stdout.getvalue()');}
+  catch(e2){err=cleanErr((e2&&e2.message)||String(e2));}
+  finally{try{py.runPython('sys.stdout = __old_out\nsys.stderr = __old_out');}catch(e3){}}
+  return {output:output,err:err};}
+async function runPy(n){
+  var out=document.getElementById('ce-out-'+n),btn=document.getElementById('run-btn-'+n);
+  out.className='code-output show';out.textContent='Loading Python (first run may take a few seconds)...';
+  if(btn)btn.disabled=true;var py;
+  try{py=await ensurePy();}catch(e){out.className='code-output show err';
+    out.textContent='Could not load the Python engine. Check your connection and try Run again.';if(btn)btn.disabled=false;return;}
+  var code=document.getElementById('ce-'+n).value;var res=execUser(py,code);
+  var solBtn=document.getElementById('sol-btn-'+n);
+  if(res.err){out.className='code-output show err';out.textContent='\u2717 Error:\n'+res.err;}
+  else{var got=(res.output||'').replace(/\s+$/,'');var exp=CE_EXPECTED[n];
+    var shown=res.output&&res.output.length?res.output.replace(/\n$/,''):'(no output)';
+    if(exp!==undefined&&got===exp){out.className='code-output show ok';out.textContent='\u2713 Correct! Output:\n'+shown;if(solBtn)solBtn.style.display='inline-block';}
+    else if(exp!==undefined){out.className='code-output show err';out.textContent='Output:\n'+shown+'\n\nTarget: '+exp+'\nKeep going, or press Hint.';}
+    else{out.className='code-output show';out.textContent='Output:\n'+shown;}
+    if(typeof exp!=='undefined')_activity({activity:'exercise-1',item:'ce-'+n,correct:(got===exp)});}
+  if(btn)btn.disabled=false;}
+function showHint(n){var box=document.getElementById('ce-hint-'+n);
+  if(CE_HINT_IDX[n]===undefined)CE_HINT_IDX[n]=0;var hints=CE_HINTS[n]||[];
+  if(hints.length===0)return;
+  if(CE_HINT_IDX[n]>=hints.length)CE_HINT_IDX[n]=hints.length-1;
+  var shown=CE_HINT_IDX[n]+1;var text='';
+  for(var i=0;i<shown;i++){text+='Hint '+(i+1)+': '+hints[i]+(i<shown-1?'\n\n':'');}
+  box.textContent=text;box.className='code-hint show';box.style.whiteSpace='pre-wrap';
+  LESSON_USAGE.hints[n]=shown;LESSON_USAGE.totalHints=_sumv(LESSON_USAGE.hints);updateUsage();
+  if(CE_HINT_IDX[n]<hints.length-1)CE_HINT_IDX[n]++;
+  var solBtn=document.getElementById('sol-btn-'+n);if(solBtn)solBtn.style.display='inline-block';}
+function showSol(n){var box=document.getElementById('ce-sol-'+n);box.textContent=CE_SOL[n]||'';box.className='code-solution show';
+  LESSON_USAGE.solutions[n]=1;LESSON_USAGE.totalSolutions=_sumv(LESSON_USAGE.solutions);updateUsage();}
+var vtScore=0,vtQ=0,vtStreak=0,vtAnswered=false;
+function vtRender(){if(vtQ>=VT_QS.length){vtShowResults();return;}vtAnswered=false;var q=VT_QS[vtQ];
+  document.getElementById('vt-qn').textContent=(vtQ+1)+'/'+VT_QS.length;
+  document.getElementById('vt-streak').textContent=vtStreak;
+  var codeEl=document.getElementById('vt-code');codeEl.innerHTML='';
+  q.lines.forEach(function(line,i){var span=document.createElement('span');
+    span.className='vt-line'+(i===q.hl?' hl':'');span.textContent=line;codeEl.appendChild(span);});
+  document.getElementById('vt-question').textContent=q.q;
+  var optEl=document.getElementById('vt-options');optEl.innerHTML='';
+  q.choices.forEach(function(ch,i){var btn=document.createElement('button');btn.className='vt-btn';btn.textContent=ch;
+    btn.onclick=(function(idx){return function(){vtAnswer(idx);};})(i);optEl.appendChild(btn);});
+  document.getElementById('vt-fb').className='vt-fb';document.getElementById('vt-next').className='vt-next';}
+function vtAnswer(idx){if(vtAnswered)return;vtAnswered=true;var q=VT_QS[vtQ];
+  var btns=document.querySelectorAll('.vt-btn');btns.forEach(function(b){b.onclick=null;});
+  var fb=document.getElementById('vt-fb');
+  if(idx===q.correct){vtScore++;vtStreak++;btns[idx].classList.add('c');fb.textContent='\u2713 Correct! '+q.exp;fb.className='vt-fb c';}
+  else{vtStreak=0;btns[idx].classList.add('w');btns[q.correct].classList.add('rv');fb.textContent='\u2717 Not quite. '+q.exp;fb.className='vt-fb w';}
+  document.getElementById('vt-score').textContent=vtScore;document.getElementById('vt-streak').textContent=vtStreak;
+  document.getElementById('vt-next').className='vt-next show';}
+function vtNext(){vtQ++;vtRender();}
+function vtShowResults(){document.getElementById('vt-active').style.display='none';
+  document.getElementById('vt-results').className='vt-results show';
+  document.getElementById('vt-res-score').textContent=vtScore+'/'+VT_QS.length;
+  document.getElementById('vt-res-msg').textContent=VT_MSGS[Math.min(vtScore,VT_MSGS.length-1)];
+  _activity({activity:'exercise-2',earned:vtScore,possible:VT_QS.length});}
+function vtRestart(){vtScore=0;vtQ=0;vtStreak=0;vtAnswered=false;
+  document.getElementById('vt-results').className='vt-results';
+  document.getElementById('vt-active').style.display='block';
+  document.getElementById('vt-score').textContent='0';vtRender();}
+vtRender();
+</script>
+<!-- apcs-keepgoing (managed) -->
+<div id="apcs-kg">
+<style>
+#apcs-kg{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:28px auto 0!important;padding:0 16px 8px!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important}
+#apcs-kg *,#apcs-kg *::before,#apcs-kg *::after{box-sizing:border-box!important}
+#apcs-kg .kg-lbl{font-size:12px!important;font-weight:800!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#065F46!important;-webkit-text-fill-color:#065F46!important;margin:0 0 10px!important}
+#apcs-kg .kg-row{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:12px!important}
+@media (max-width:640px){#apcs-kg .kg-row{grid-template-columns:repeat(1,1fr)!important}}
+#apcs-kg a.kg,#apcs-kg a.kg:link,#apcs-kg a.kg:visited{display:block!important;text-decoration:none!important;border:1px solid #BBE5D2!important;border-left:5px solid #10B981!important;border-radius:0 12px 12px 0!important;background:#ECFDF5!important;padding:14px 16px!important;color:#022C22!important;-webkit-text-fill-color:#022C22!important;font-size:16px!important;font-weight:700!important;line-height:1.35!important}
+#apcs-kg a.kg:hover{background:#D1FAE5!important}
+#apcs-kg a.kg span{display:block!important;margin-top:4px!important;font-size:13px!important;font-weight:400!important;color:#5B7268!important;-webkit-text-fill-color:#5B7268!important}
+</style>
+<p class="kg-lbl">Keep going with Topic 3.11</p>
+<div class="kg-row">
+<a class="kg" href="/pages/ap-csp-topic-3-11-code">Coding practice<span>Write and run real code, checked as you go</span></a>
+<a class="kg" href="/pages/ap-csp-game-halving-hunter">Study game<span>Not graded, just for the practice</span></a>
+<a class="kg" href="/pages/ap-csp-topic-3-11-guided-notes">Guided notes<span>Print them or fill them in here</span></a>
+</div>
+</div>
+<!-- apcs-exercises (managed) -->
+<div id="apcs-ex-links">
+<style>
+#apcs-ex-links{all:initial!important;display:block!important;box-sizing:border-box!important;max-width:880px!important;margin:28px auto 0!important;padding:0 16px 8px!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif!important}
+#apcs-ex-links *,#apcs-ex-links *::before,#apcs-ex-links *::after{box-sizing:border-box!important}
+#apcs-ex-links .ex-lbl{font-size:12px!important;font-weight:800!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;margin:0 0 10px!important}
+#apcs-ex-links .ex-row{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important}
+@media (max-width:640px){#apcs-ex-links .ex-row{grid-template-columns:repeat(1,1fr)!important}}
+#apcs-ex-links a.ex,#apcs-ex-links a.ex:link,#apcs-ex-links a.ex:visited{display:block!important;text-decoration:none!important;border:1px solid #93c5fd!important;border-left:5px solid #1a56db!important;border-radius:0 12px 12px 0!important;background:#eff6ff!important;padding:14px 16px!important;color:#0f1f3d!important;-webkit-text-fill-color:#0f1f3d!important;font-size:16px!important;font-weight:700!important;line-height:1.35!important}
+#apcs-ex-links a.ex:hover{background:#dbeafe!important}
+#apcs-ex-links a.ex span{display:block!important;margin-top:4px!important;font-size:13px!important;font-weight:400!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important}
+</style>
+<p class="ex-lbl">Exercises for Topic 3.11</p>
+<div class="ex-row">
+<a class="ex" href="/pages/ap-csp-topic-3-11-exercise-1">Exercise 1: Trace the Shelf<span>Work it online. Saved in your browser, not graded</span></a>
+<a class="ex" href="/pages/ap-csp-topic-3-11-exercise-2">Exercise 2: Sorted or Not?<span>Work it online. Saved in your browser, not graded</span></a>
+</div>
+</div>
