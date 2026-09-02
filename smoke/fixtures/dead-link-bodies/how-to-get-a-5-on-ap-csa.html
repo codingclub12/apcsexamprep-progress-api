@@ -1,0 +1,661 @@
+<div id="csa-system-wrapper">
+<style>
+#csa-system-wrapper {
+  all: initial !important;
+  display: block !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif !important;
+  color: #1a1a2e !important;
+  -webkit-text-fill-color: #1a1a2e !important;
+  line-height: 1.7 !important;
+  max-width: 820px !important;
+  margin: 0 auto !important;
+  padding: 20px !important;
+  box-sizing: border-box !important;
+}
+#csa-system-wrapper div,
+#csa-system-wrapper h1,
+#csa-system-wrapper h2,
+#csa-system-wrapper h3,
+#csa-system-wrapper p,
+#csa-system-wrapper span,
+#csa-system-wrapper a,
+#csa-system-wrapper strong {
+  font-family: inherit !important;
+  line-height: inherit !important;
+  box-sizing: border-box !important;
+}
+#csa-system-wrapper div {
+  display: block !important;
+  color: inherit !important;
+  -webkit-text-fill-color: inherit !important;
+}
+#csa-system-wrapper h1 {
+  display: block !important;
+  font-size: 2.2em !important;
+  font-weight: 800 !important;
+  color: #1a1a2e !important;
+  -webkit-text-fill-color: #1a1a2e !important;
+  line-height: 1.2 !important;
+  margin: 0 0 10px 0 !important;
+  padding: 0 !important;
+  text-align: center !important;
+}
+#csa-system-wrapper .subtitle {
+  display: block !important;
+  text-align: center !important;
+  font-size: 1.15em !important;
+  color: #555 !important;
+  -webkit-text-fill-color: #555 !important;
+  margin: 0 0 30px 0 !important;
+}
+#csa-system-wrapper h2 {
+  display: block !important;
+  font-size: 1.5em !important;
+  font-weight: 700 !important;
+  color: #1a1a2e !important;
+  -webkit-text-fill-color: #1a1a2e !important;
+  margin: 40px 0 15px 0 !important;
+  padding: 0 0 8px 0 !important;
+  border-bottom: 3px solid #2563eb !important;
+}
+#csa-system-wrapper h3 {
+  display: block !important;
+  font-size: 1.2em !important;
+  font-weight: 700 !important;
+  color: #1a1a2e !important;
+  -webkit-text-fill-color: #1a1a2e !important;
+  margin: 0 0 10px 0 !important;
+  padding: 0 !important;
+}
+#csa-system-wrapper p {
+  display: block !important;
+  font-size: 1.05em !important;
+  color: #1a1a2e !important;
+  -webkit-text-fill-color: #1a1a2e !important;
+  margin: 0 0 16px 0 !important;
+  padding: 0 !important;
+}
+#csa-system-wrapper strong {
+  font-weight: 700 !important;
+  color: inherit !important;
+  -webkit-text-fill-color: inherit !important;
+}
+
+/* --- HOOK --- */
+#csa-system-wrapper .hook-block {
+  background: #f0f4ff !important;
+  border-left: 5px solid #2563eb !important;
+  border-right: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  padding: 25px 30px !important;
+  margin: 0 0 20px 0 !important;
+  border-radius: 0 8px 8px 0 !important;
+}
+#csa-system-wrapper .hook-block p {
+  font-size: 1.15em !important;
+  margin: 0 0 8px 0 !important;
+}
+#csa-system-wrapper .hook-block p:last-child {
+  margin-bottom: 0 !important;
+  font-weight: 700 !important;
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+}
+
+/* --- HUB LINK --- */
+#csa-system-wrapper .hub-link {
+  text-align: center !important;
+  margin: 0 0 30px 0 !important;
+  font-size: 1.05em !important;
+}
+
+/* --- STATS --- */
+#csa-system-wrapper .stat-row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 20px !important;
+  margin: 25px 0 30px 0 !important;
+}
+#csa-system-wrapper .stat-card {
+  flex: 1 1 200px !important;
+  background: #1e40af !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  padding: 25px !important;
+  border-radius: 10px !important;
+  text-align: center !important;
+}
+#csa-system-wrapper .stat-card .stat-num {
+  display: block !important;
+  font-size: 2.4em !important;
+  font-weight: 800 !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  line-height: 1.1 !important;
+}
+#csa-system-wrapper .stat-card .stat-label {
+  display: block !important;
+  font-size: 0.95em !important;
+  color: #bfdbfe !important;
+  -webkit-text-fill-color: #bfdbfe !important;
+  margin-top: 5px !important;
+}
+
+/* --- TIMELINE --- */
+#csa-system-wrapper .timeline-section {
+  background: #f8fafc !important;
+  border: 2px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  padding: 25px 30px !important;
+  margin: 0 0 35px 0 !important;
+}
+#csa-system-wrapper .timeline-section h2 {
+  margin-top: 0 !important;
+  border-bottom: none !important;
+  text-align: center !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 20px !important;
+}
+#csa-system-wrapper .tl-item {
+  padding: 15px 0 !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+#csa-system-wrapper .tl-item:last-child {
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+}
+#csa-system-wrapper .tl-label {
+  display: inline-block !important;
+  background: #2563eb !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  font-size: 0.85em !important;
+  font-weight: 700 !important;
+  padding: 3px 12px !important;
+  border-radius: 20px !important;
+  margin: 0 0 6px 0 !important;
+}
+#csa-system-wrapper .tl-label-urgent {
+  background: #dc2626 !important;
+}
+#csa-system-wrapper .tl-item p {
+  margin: 4px 0 0 0 !important;
+  font-size: 1em !important;
+}
+
+/* --- STEP BOXES --- */
+#csa-system-wrapper .step-box {
+  background: #fff !important;
+  border: 2px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  padding: 25px 30px !important;
+  margin: 0 0 25px 0 !important;
+}
+#csa-system-wrapper .step-num {
+  display: inline-block !important;
+  background: #2563eb !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  font-size: 0.85em !important;
+  font-weight: 700 !important;
+  padding: 4px 14px !important;
+  border-radius: 20px !important;
+  margin: 0 0 12px 0 !important;
+  letter-spacing: 0.5px !important;
+}
+#csa-system-wrapper .step-box p {
+  color: #374151 !important;
+  -webkit-text-fill-color: #374151 !important;
+}
+
+/* --- RESOURCE LINKS --- */
+#csa-system-wrapper .resource-links {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  margin: 12px 0 0 0 !important;
+}
+#csa-system-wrapper .resource-links a,
+#csa-system-wrapper .resource-links a:link,
+#csa-system-wrapper .resource-links a:visited {
+  display: inline-block !important;
+  background: #eff6ff !important;
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  padding: 8px 16px !important;
+  border-radius: 6px !important;
+  font-size: 0.95em !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  border: 1px solid #bfdbfe !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  cursor: pointer !important;
+}
+#csa-system-wrapper .resource-links a:hover {
+  background: #2563eb !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  border-color: #2563eb !important;
+}
+
+/* --- WEAK AREAS --- */
+#csa-system-wrapper .weak-areas {
+  background: #fff !important;
+  border: 2px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  padding: 25px 30px !important;
+  margin: 0 0 25px 0 !important;
+}
+#csa-system-wrapper .weak-areas h3 {
+  margin-top: 0 !important;
+}
+
+/* --- PROOF --- */
+#csa-system-wrapper .proof-section {
+  background: #f8fafc !important;
+  border: 2px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  padding: 30px !important;
+  margin: 30px 0 !important;
+}
+#csa-system-wrapper .proof-item {
+  padding: 12px 0 !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  color: #1a1a2e !important;
+  -webkit-text-fill-color: #1a1a2e !important;
+  font-size: 1.05em !important;
+}
+#csa-system-wrapper .proof-item:last-child {
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+}
+#csa-system-wrapper .proof-item strong {
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+}
+
+/* --- CTA --- */
+#csa-system-wrapper .cta-section {
+  background: linear-gradient(135deg, #1e40af, #2563eb) !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  padding: 40px 30px !important;
+  border-radius: 12px !important;
+  text-align: center !important;
+  margin: 35px 0 !important;
+  border: none !important;
+}
+#csa-system-wrapper .cta-section h2 {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  border-bottom: none !important;
+  margin: 0 0 10px 0 !important;
+  text-align: center !important;
+}
+#csa-system-wrapper .cta-section p {
+  color: #dbeafe !important;
+  -webkit-text-fill-color: #dbeafe !important;
+  font-size: 1.1em !important;
+  margin: 0 0 25px 0 !important;
+}
+#csa-system-wrapper .cta-buttons {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 15px !important;
+  justify-content: center !important;
+}
+#csa-system-wrapper .cta-buttons a,
+#csa-system-wrapper .cta-buttons a:link,
+#csa-system-wrapper .cta-buttons a:visited {
+  display: inline-block !important;
+  padding: 14px 28px !important;
+  border-radius: 8px !important;
+  font-size: 1.05em !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+#csa-system-wrapper .cta-primary,
+#csa-system-wrapper a.cta-primary:link,
+#csa-system-wrapper a.cta-primary:visited {
+  background: #fff !important;
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  border: none !important;
+}
+#csa-system-wrapper a.cta-primary:hover {
+  background: #dbeafe !important;
+}
+#csa-system-wrapper .cta-secondary,
+#csa-system-wrapper a.cta-secondary:link,
+#csa-system-wrapper a.cta-secondary:visited {
+  background: transparent !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  border: 2px solid #fff !important;
+}
+#csa-system-wrapper a.cta-secondary:hover {
+  background: rgba(255,255,255,0.15) !important;
+}
+
+/* --- EXAM INFO --- */
+#csa-system-wrapper .exam-info {
+  background: #fef3c7 !important;
+  border: 2px solid #f59e0b !important;
+  border-radius: 10px !important;
+  padding: 20px 25px !important;
+  margin: 30px 0 !important;
+  text-align: center !important;
+}
+#csa-system-wrapper .exam-info p {
+  margin: 0 0 5px 0 !important;
+  font-weight: 600 !important;
+  color: #92400e !important;
+  -webkit-text-fill-color: #92400e !important;
+  font-size: 1.05em !important;
+}
+#csa-system-wrapper .exam-info p:last-child {
+  margin-bottom: 0 !important;
+  font-weight: 400 !important;
+  font-size: 0.95em !important;
+}
+
+/* --- INLINE LINKS --- */
+#csa-system-wrapper a.inline-link,
+#csa-system-wrapper a.inline-link:link,
+#csa-system-wrapper a.inline-link:visited {
+  display: inline !important;
+  color: #2563eb !important;
+  -webkit-text-fill-color: #2563eb !important;
+  text-decoration: underline !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  cursor: pointer !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+#csa-system-wrapper a.inline-link:hover {
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+}
+
+/* --- MOBILE --- */
+@media (max-width: 600px) {
+  #csa-system-wrapper { padding: 15px !important; }
+  #csa-system-wrapper h1 { font-size: 1.6em !important; }
+  #csa-system-wrapper .stat-row { flex-direction: column !important; }
+  #csa-system-wrapper .stat-card { flex: 1 1 100% !important; }
+  #csa-system-wrapper .cta-buttons { flex-direction: column !important; }
+  #csa-system-wrapper .step-box { padding: 20px !important; }
+  #csa-system-wrapper .resource-links { flex-direction: column !important; }
+  #csa-system-wrapper .resource-links a { text-align: center !important; }
+  #csa-system-wrapper .timeline-section { padding: 20px !important; }
+}
+</style>
+
+<h1>How to Get a 5 on the AP Computer Science A Exam</h1>
+<p class="subtitle">The Proven 5-Step Study System Behind a 54.5% AP CSA 5 Rate</p>
+
+<div class="hook-block">
+<p>Most students study AP CSA wrong.</p>
+<p>They re-read notes. They highlight. They watch videos on 2x speed the night before. Then they open the exam and freeze on the first FRQ.</p>
+<p>The students who score 4s and 5s do not study harder. They follow a system.</p>
+</div>
+
+<p class="hub-link">Start with the <a href="/pages/ap-csa-exam-prep-hub" class="inline-link">AP CSA Hub</a> and then follow the 5-step system below.</p>
+
+<div class="stat-row">
+<div class="stat-card">
+<span class="stat-num">54.5%</span>
+<span class="stat-label">of our students score 5s</span>
+</div>
+<div class="stat-card">
+<span class="stat-num">25.5%</span>
+<span class="stat-label">national average for 5s</span>
+</div>
+<div class="stat-card">
+<span class="stat-num">1,800+</span>
+<span class="stat-label">hours of AP CS tutoring</span>
+</div>
+</div>
+
+<div class="timeline-section">
+<h2>Start Here Based on Your Timeline</h2>
+
+<div class="tl-item">
+<div class="tl-label">4+ WEEKS OUT</div>
+<p>Start with the <a href="/pages/ap-csa-unit-1-complete-study-guide" class="inline-link">AP CSA study guides</a> and <a href="/pages/ap-csa-qotd-hub" class="inline-link">AP CSA daily practice questions</a>. You have time to build real understanding.</p>
+</div>
+
+<div class="tl-item">
+<div class="tl-label">2 WEEKS OUT</div>
+<p>Focus on <a href="/pages/ap-csa-practice-questions" class="inline-link">AP CSA practice questions by unit and topic</a>, <a href="/pages/ap-csa-frq-archive" class="inline-link">AP CSA FRQ practice</a>, and fixing weak areas. Skip what you already know.</p>
+</div>
+
+<div class="tl-item">
+<div class="tl-label">7 DAYS OUT</div>
+<p>Use the <a href="/collections/ap-csa" class="inline-link">cram kit</a>, <a href="/pages/ap-csa-frq-strategy-guide" class="inline-link">FRQ strategy guide</a>, and <a href="/pages/ap-csa-practice-exams" class="inline-link">full practice exams</a>. Prioritize ruthlessly.</p>
+</div>
+
+<div class="tl-item">
+<div class="tl-label tl-label-urgent">NEED HELP NOW</div>
+<p><a href="/pages/ap-computer-science-a-tutor" class="inline-link">Book tutoring</a> or <a href="/collections/live-events" class="inline-link">join a bootcamp</a>. Expert guidance in the final stretch makes the biggest difference.</p>
+</div>
+</div>
+
+<h2>The 5-Step System</h2>
+
+<p>This is the exact approach used with AP CSA students over 11+ years of teaching, where results have consistently exceeded national averages. Every resource linked below is free or low-cost, and every step maps directly to the <a href="/pages/ap-csa-exam-format" class="inline-link">2025-2026 AP CSA exam format</a> — 42 multiple-choice questions and 4 free-response questions across 4 units.</p>
+
+<div class="step-box">
+<div class="step-num">STEP 1</div>
+<h3>Learn the Concept</h3>
+<p>Every unit has a comprehensive study guide that breaks down every topic the College Board tests. Do not skip units or jump ahead. Start with Unit 1 and build forward. Each guide covers the exact skills, vocabulary, and code patterns that appear on the exam.</p>
+<div class="resource-links">
+<a href="/pages/ap-csa-unit-1-complete-study-guide">AP CSA Unit 1 study guide (objects and methods)</a>
+<a href="/pages/unit-2-selection-and-iteration-ultimate-study-guide">AP CSA Unit 2 study guide (selection and iteration)</a>
+<a href="/pages/ap-csa-unit-3-class-creation-study-guide">AP CSA Unit 3 study guide (class creation)</a>
+<a href="/pages/ap-csa-unit-4-data-collections-study-guide">AP CSA Unit 4 study guide (arrays and ArrayList)</a>
+</div>
+</div>
+
+<div class="step-box">
+<div class="step-num">STEP 2</div>
+<h3>Practice Every Day</h3>
+<p>Reading is not studying. You need to write code, trace code, and predict output every single day. The daily Question of the Day system gives you one exam-quality MCQ per day, organized by unit. Each question forces you to predict the answer before seeing the choices — one of the most effective test-taking strategies for AP CSA.</p>
+<div class="resource-links">
+<a href="/pages/ap-csa-practice-questions">AP CSA practice questions by unit and topic</a>
+<a href="/pages/ap-csa-practice-questions-frq-style">AP CSA practice questions (FRQ style)</a>
+<a href="/pages/ap-csa-qotd-hub">AP CSA daily practice questions</a>
+<a href="/pages/ap-csa-flashcards">AP CSA Flashcards (200 Cards)</a>
+<a href="/pages/ap-csa-study-games-hub">21 Interactive Study Games</a>
+<a href="/pages/ap-csa-vocabulary-list">AP CSA Vocabulary List</a>
+</div>
+</div>
+
+<div class="step-box">
+<div class="step-num">STEP 3</div>
+<h3>Apply It: Free-Response Questions</h3>
+<p>Free-response questions are worth 45% of your score. That is nearly half the exam. Students who only practice MCQs leave massive points on the table. Work through real College Board FRQs from 2019–2025, then check your solution against the scoring guidelines. Pay attention to the <strong>exact</strong> method signatures, return types, and edge cases the rubric requires.</p>
+<div class="resource-links">
+<a href="/pages/ap-csa-frq-archive">AP CSA FRQ practice (2004–2025)</a>
+<a href="/pages/ap-csa-frq-strategy-guide">AP CSA FRQ strategy guide</a>
+<a href="/pages/ap-csa-frqs-by-topic">AP CSA FRQs sorted by topic</a>
+<a href="/pages/ap-csa-reference-sheet">AP CSA Java Quick Reference Sheet</a>
+</div>
+<p style="margin-top:12px!important;font-size:0.92em!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-style:italic!important;">FRQs 2, 3, and 4 are all Unit 4 topics. If you are struggling with arrays or ArrayLists, focus here: <a href="/pages/ap-csa-array-traversal" class="inline-link">AP CSA array traversal</a>, <a href="/pages/ap-csa-arraylist-basics" class="inline-link">AP CSA ArrayList guide</a>, <a href="/pages/ap-csa-2d-arrays" class="inline-link">AP CSA 2D arrays guide</a>.</p>
+</div>
+
+<div class="cta-section" style="margin:25px 0!important;padding:25px!important;">
+<h2>Feeling Behind?</h2>
+<p>A structured plan makes all the difference in the final weeks.</p>
+<div class="cta-buttons">
+<a href="/collections/ap-csa" class="cta-primary">Get the AP CSA Cram Kit</a>
+<a href="/pages/ap-computer-science-a-tutor" class="cta-secondary">Book a Tutoring Session</a>
+</div>
+</div>
+
+<div class="step-box">
+<div class="step-num">STEP 4</div>
+<h3>Simulate the Real Exam</h3>
+<p>You would never run a marathon without a practice run. Take at least two full-length practice exams under timed conditions before exam day. The Test Builder lets you create custom quizzes filtered by unit and topic, so you can drill specific weak areas or build a full 42-question simulation. Time yourself in Bluebook-like conditions. No notes, no IDE, no outside help.</p>
+<div class="resource-links">
+<a href="/pages/ap-csa-test-builder">Build a custom AP CSA test for your weak areas (586 questions)</a>
+<a href="/pages/ap-csa-practice-exams">AP CSA full practice exams</a>
+<a href="/pages/ap-csa-unit-tests-hub">AP CSA unit practice tests</a>
+</div>
+</div>
+
+<div class="step-box">
+<div class="step-num">STEP 5</div>
+<h3>Fix Your Weak Areas</h3>
+<p>After every practice test, go back to the questions you missed. Do not just read the explanation — rework the problem from scratch. If you keep missing ArrayList traversal questions, go back to the ArrayList study material and do five more problems on that topic alone. The students who score 5s are the ones who spend their final weeks fixing weaknesses, not re-reading what they already know.</p>
+<div class="resource-links">
+<a href="/pages/ap-csa-topics">AP CSA all topics (A–Z)</a>
+<a href="/pages/ap-csa-api-quick-reference">AP CSA API quick reference</a>
+<a href="/pages/ap-csa-exam-review">AP CSA exam review checklist</a>
+</div>
+</div>
+
+<div class="weak-areas">
+<h3>Common Weak Areas to Target</h3>
+<p>These are the topics students miss most often on practice exams. If you are short on time, start here.</p>
+<div class="resource-links">
+<a href="/pages/ap-csa-arraylist-traversal">AP CSA ArrayList traversal</a>
+<a href="/pages/ap-csa-2d-arrays">AP CSA 2D arrays guide</a>
+<a href="/pages/ap-csa-arraylist-remove-while-iterating">Removing elements while iterating</a>
+<a href="/pages/ap-csa-loop-tracing">AP CSA loop tracing</a>
+<a href="/pages/ap-csa-string-methods">AP CSA String methods</a>
+<a href="/pages/ap-csa-boolean-expression-equivalence">Boolean expression equivalence</a>
+<a href="/pages/ap-csa-array-traversal">AP CSA array traversal patterns</a>
+<a href="/pages/ap-csa-arraylist-basics">AP CSA ArrayList basics</a>
+</div>
+</div>
+
+<div class="exam-info">
+<p>2026 AP Computer Science A Exam: May 15, 2026 — Digital via Bluebook</p>
+<p>42 MCQ (55%) + 4 FRQ (45%) | 4 Units | No inheritance, no polymorphism, and no writing recursion</p>
+</div>
+
+<h2>Why This System Works</h2>
+
+<div class="proof-section">
+<div class="proof-item">
+<strong>54.5%</strong> of students using this system score 5s on AP CSA, compared to the 25.5% national average.</div>
+<div class="proof-item">
+<strong>34.8%</strong> of AP CSP students score 5s, compared to 9.6% nationally.</div>
+<div class="proof-item">
+<strong>1,800+ hours</strong> of one-on-one AP Computer Science tutoring completed.</div>
+<div class="proof-item">
+<strong>11+ years</strong> teaching AP Computer Science at Blue Valley North High School.</div>
+<div class="proof-item">
+<strong>586 exam-quality MCQs</strong> in the Test Builder alone, with balanced answer key distribution and difficulty calibrated above exam level.</div>
+<div class="proof-item">
+<strong>Every FRQ from 2004–2025</strong> with full solutions and scoring breakdowns.</div>
+</div>
+
+<p>This is not a collection of random resources. Every study guide, every daily question, every practice exam, and every FRQ solution was built by the same teacher whose students produce these results — year after year.</p>
+
+<div class="cta-section">
+<h2>Ready to Start?</h2>
+<p>Pick the path that fits your timeline.</p>
+<div class="cta-buttons">
+<a href="/pages/ap-csa-exam-prep-hub" class="cta-primary">Start the Free Study System</a>
+<a href="/collections/ap-csa" class="cta-secondary">Get the Cram Kit</a>
+</div>
+</div>
+
+<h2>Need More Help?</h2>
+
+<p>If you are behind, struggling with FRQs, or just want expert guidance in the final weeks, one-on-one tutoring can close the gap fast. Sessions are tailored to your specific weak areas, your exam timeline, and the exact topics the College Board tests.</p>
+
+<div class="resource-links">
+<a href="/pages/ap-computer-science-a-tutor">AP CSA Tutoring</a>
+<a href="/collections/live-events">Live Exam Bootcamps</a>
+</div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Get a 5 on the AP Computer Science A Exam",
+  "description": "54.5% of our AP CSA students score 5s vs. 25.5% nationally. Follow this proven 5-step study system to maximize your AP CSA score.",
+  "author": {
+    "@type": "Person",
+    "name": "Tanner Crow",
+    "jobTitle": "AP Computer Science Teacher",
+    "worksFor": {
+      "@type": "Organization",
+      "name": "Blue Valley North High School"
+    }
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "APCSExamPrep",
+    "url": "https://www.apcsexamprep.com"
+  },
+  "mainEntityOfPage": "https://www.apcsexamprep.com/pages/how-to-get-a-5-on-ap-csa",
+  "datePublished": "2026-04-04",
+  "dateModified": "2026-04-04"
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How hard is it to get a 5 on AP CSA?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nationally, about 25.5% of students score a 5. With a structured study plan that combines daily practice, FRQ drilling, and timed practice exams, students can significantly improve their odds. Students following the APCSExamPrep system score 5s at a 54.5% rate."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How should I study for AP Computer Science A?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Follow a 5-step system: (1) Learn each unit thoroughly with a study guide, (2) Practice daily with exam-quality MCQs, (3) Work through real College Board FRQs, (4) Take full-length timed practice exams, (5) Identify and fix weak areas through targeted review."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is on the 2026 AP CSA exam?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The 2025-2026 AP CSA exam has 42 multiple-choice questions (55%) and 4 free-response questions (45%) across 4 units. The exam is digital via Bluebook. Inheritance, polymorphism, and writing recursion have been removed. Recursion tracing, File/Scanner, and data sets have been added."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long should I study for AP CSA?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ideally, start daily practice at least 4-6 weeks before the exam. A 4-week cram plan with 30-60 minutes per day of focused practice is enough to significantly raise your score if you follow a structured system."
+      }
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.apcsexamprep.com"},
+    {"@type": "ListItem", "position": 2, "name": "AP CSA", "item": "https://www.apcsexamprep.com/pages/ap-csa-exam-prep-hub"},
+    {"@type": "ListItem", "position": 3, "name": "How to Get a 5 on AP CSA", "item": "https://www.apcsexamprep.com/pages/how-to-get-a-5-on-ap-csa"}
+  ]
+}
+</script>
+</div>

@@ -1,0 +1,328 @@
+<style>
+.page-title,.article__title,.page__title,.template-page h1:first-of-type{display:none!important;}
+.cyc{--navy:#1E1B4B;--cy:#6B21A8;--cy2:#7C3AED;--cy-lt:#C4B5FD;--cy-bg:#F5F0FF;--cy-dk:#581C87;--accent:#A855F7;--green:#16a34a;--amber:#d97706;--red:#dc2626;--slate:#64748b;--gb:#e5e7eb;}
+.cyc *{box-sizing:border-box;margin:0;padding:0;}
+.cyc{font-family:"DM Sans",system-ui,sans-serif;color:var(--navy);background:#f8fafc;line-height:1.6;}
+.cyc-bc{background:#fff;border-bottom:1px solid var(--gb);padding:11px 24px;}
+.cyc-bc-in{max-width:860px;margin:0 auto;font-size:13px;color:var(--slate);}
+.cyc-bc a,.cyc-bc a:link,.cyc-bc a:visited{color:var(--cy)!important;-webkit-text-fill-color:var(--cy)!important;text-decoration:none;font-weight:600;}
+.cyc-hero{background:var(--navy);background-image:radial-gradient(ellipse 60% 70% at 88% 18%,rgba(168,85,247,.30) 0%,transparent 60%);padding:38px 24px 32px;}
+.cyc-hero-in{max-width:860px;margin:0 auto;}
+.cyc-eyebrow{font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--cy-lt)!important;-webkit-text-fill-color:var(--cy-lt)!important;margin-bottom:9px;}
+.cyc-hero h1{font-family:"DM Serif Display",Georgia,serif!important;font-size:clamp(25px,4vw,37px)!important;line-height:1.18!important;color:#fff!important;-webkit-text-fill-color:#fff!important;}
+.cyc-main{max-width:860px;margin:0 auto;padding:32px 24px 70px;}
+.cyc-lede{font-size:16px;color:#374151;line-height:1.8;margin-bottom:22px;}
+.cyc-lede b{color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+.cyc-toc{background:#fff;border:1px solid var(--gb);border-radius:12px;padding:16px 20px;margin-bottom:26px;}
+.cyc-toc h2{font-size:12px!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.06em!important;color:var(--cy)!important;-webkit-text-fill-color:var(--cy)!important;margin-bottom:10px!important;}
+.cyc-toc ol{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:6px 16px;}
+.cyc-toc a,.cyc-toc a:link,.cyc-toc a:visited{color:var(--cy-dk)!important;-webkit-text-fill-color:var(--cy-dk)!important;text-decoration:none;font-size:14px;font-weight:600;}
+.cyc-toc a:hover{text-decoration:underline;}
+.cyc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:26px;}
+.cyc-stat{background:var(--cy-bg);border:1px solid #e9d5ff;border-radius:12px;padding:16px;text-align:center;}
+.cyc-stat .n{display:block;font-family:"DM Serif Display",Georgia,serif!important;font-size:24px!important;font-weight:700;color:var(--cy)!important;-webkit-text-fill-color:var(--cy)!important;}
+.cyc-stat .l{display:block;font-size:12px;color:#4b5563!important;-webkit-text-fill-color:#4b5563!important;margin-top:4px;line-height:1.4;}
+.cyc-fig{background:#fff;border:1px solid var(--gb);border-radius:12px;padding:18px;margin:0 0 26px;}
+.cyc-fig svg{width:100%;height:auto;display:block;}
+.cyc-fig .cap{font-size:12px;color:var(--slate);text-align:center;margin-top:10px;font-style:italic;}
+.cyc-sec{margin-bottom:32px;scroll-margin-top:80px;}
+.cyc-sec h2{font-family:"DM Serif Display",Georgia,serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:12px!important;padding-bottom:9px!important;border-bottom:2px solid var(--cy-bg)!important;}
+.cyc-sec p{font-size:15px;color:#374151;line-height:1.8;margin-bottom:13px;}
+.cyc-sec p b,.cyc-sec li b{color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;}
+.cyc-sec ul{padding-left:20px;margin-bottom:13px;}.cyc-sec li{font-size:15px;color:#374151;line-height:1.7;margin-bottom:6px;}
+.cyc-scn{background:#fff;border:1px solid #e9d5ff;border-left:4px solid var(--accent);border-radius:0 10px 10px 0;padding:16px 18px;margin:18px 0;}
+.cyc-scn .lbl{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cy)!important;-webkit-text-fill-color:var(--cy)!important;margin-bottom:6px;}
+.cyc-scn p{font-size:14.5px;color:#374151;line-height:1.65;margin-bottom:0;}
+.cyc-scn details{margin-top:10px;}.cyc-scn summary{cursor:pointer;color:var(--cy2)!important;-webkit-text-fill-color:var(--cy2)!important;font-weight:700;font-size:14px;}
+.cyc-scn details p{margin-top:8px;color:#4c1d95!important;-webkit-text-fill-color:#4c1d95!important;font-size:14px;}
+.co.exam{background:#fffbeb;border:1px solid #fcd34d;border-left:4px solid var(--amber);border-radius:0 8px 8px 0;padding:14px 18px;margin:18px 0;}
+.co.exam .col{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--amber)!important;-webkit-text-fill-color:var(--amber)!important;margin-bottom:5px;}
+.co.exam p{font-size:14px!important;color:#78350f!important;-webkit-text-fill-color:#78350f!important;margin:0!important;line-height:1.6;}
+.cyc-rw{background:#faf5ff;border:1px solid #e9d5ff;border-left:4px solid var(--cy);border-radius:0 12px 12px 0;padding:18px 20px;margin-bottom:30px;scroll-margin-top:80px;}
+.cyc-rw .lbl{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--cy)!important;-webkit-text-fill-color:var(--cy)!important;margin-bottom:6px;}
+.cyc-rw h3{font-size:17px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:7px!important;}
+.cyc-rw p{font-size:14.5px!important;color:#374151!important;line-height:1.7!important;margin-bottom:8px!important;}
+.cyc-rw .tie{font-size:13px;font-weight:600;color:var(--cy-dk)!important;-webkit-text-fill-color:var(--cy-dk)!important;}
+.cyc-gloss{margin-bottom:30px;scroll-margin-top:80px;}
+.cyc-gloss h2{font-family:"DM Serif Display",Georgia,serif!important;font-size:22px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:12px!important;}
+.cyc-gtbl{width:100%;border-collapse:collapse;font-size:14px;border:1px solid var(--gb);border-radius:10px;overflow:hidden;}
+.cyc-gtbl tr:nth-child(even){background:var(--cy-bg);}
+.cyc-gtbl td{padding:10px 16px;border-bottom:1px solid #eee;color:#374151;vertical-align:top;line-height:1.5;}
+.cyc-gtbl td:first-child{font-weight:700;color:var(--cy-dk)!important;-webkit-text-fill-color:var(--cy-dk)!important;white-space:nowrap;width:34%;}
+.cyc-match{background:#fff;border:1px solid var(--gb);border-radius:14px;padding:22px;margin-bottom:30px;scroll-margin-top:80px;}
+.cyc-match h2{font-family:"DM Serif Display",Georgia,serif!important;font-size:21px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:4px!important;}
+.cyc-match .sub{font-size:13px;color:var(--slate);margin-bottom:16px;}
+.m-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;}
+.m-col-h{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--cy)!important;-webkit-text-fill-color:var(--cy)!important;margin-bottom:4px;}
+.m-item{display:block;width:100%;text-align:left;font-family:inherit;font-size:14px;padding:11px 14px;margin-bottom:8px;border:2px solid var(--gb);border-radius:9px;background:#f8fafc;color:#374151!important;-webkit-text-fill-color:#374151!important;cursor:pointer;line-height:1.4;}
+.m-item:hover{border-color:var(--cy-lt);background:var(--cy-bg);}
+.m-item.sel{border-color:var(--cy2)!important;background:#ede9fe!important;}
+.m-item.ok{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;cursor:default;}
+.m-item.bad{border-color:var(--red)!important;background:#fef2f2!important;}
+.m-msg{margin-top:12px;font-size:14px;font-weight:600;color:var(--green)!important;-webkit-text-fill-color:var(--green)!important;display:none;}
+.m-msg.show{display:block;}
+.cyc-pit .row{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid #f1f5f9;}.cyc-pit .row:last-child{border-bottom:none;}
+.cyc-pit .num{flex:0 0 28px;height:28px;border-radius:50%;background:var(--red);color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;}
+.cyc-pit h4{font-size:15px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:4px!important;}.cyc-pit p{font-size:14px;color:#374151;line-height:1.6;}
+.cyc-quiz{background:#fff;border:1px solid var(--gb);border-radius:14px;padding:24px;margin:30px 0;scroll-margin-top:80px;}
+.cyc-quiz h2{font-family:"DM Serif Display",Georgia,serif!important;font-size:21px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-bottom:4px!important;}
+.cyc-quiz .sub{font-size:13px;color:var(--slate);margin-bottom:18px;}
+.mcq{margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid #f1f5f9;}.mcq:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.mcq-n{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--slate);margin-bottom:8px;display:flex;gap:8px;align-items:center;}
+.pf{background:#fef3c7;color:#92400e!important;-webkit-text-fill-color:#92400e!important;font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;text-transform:uppercase;}
+.mcq-q{font-size:15px!important;font-weight:600!important;color:#1E1B4B!important;-webkit-text-fill-color:#1E1B4B!important;line-height:1.6!important;margin-bottom:12px!important;}
+.mcq-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
+.mcq-o{display:flex!important;gap:11px!important;align-items:flex-start!important;padding:11px 14px!important;border:2px solid var(--gb)!important;border-radius:8px!important;cursor:pointer!important;background:#f8fafc!important;font-size:14px!important;color:#374151!important;-webkit-text-fill-color:#374151!important;line-height:1.5!important;text-align:left!important;width:100%!important;font-family:inherit!important;}
+.mcq-o:hover{border-color:var(--cy-lt)!important;background:var(--cy-bg)!important;}
+.mcq-o.correct{border-color:var(--green)!important;background:#f0fdf4!important;color:#14532d!important;-webkit-text-fill-color:#14532d!important;}
+.mcq-o.wrong{border-color:var(--red)!important;background:#fef2f2!important;color:#7f1d1d!important;-webkit-text-fill-color:#7f1d1d!important;}
+.mcq-o.rev{border-color:var(--green)!important;background:#f0fdf4!important;}
+.mcq-ol{font-weight:700!important;color:var(--cy)!important;-webkit-text-fill-color:var(--cy)!important;flex-shrink:0!important;min-width:16px!important;}
+.mcq-exp{display:none;background:var(--cy-bg);border-radius:8px;padding:11px 14px;font-size:13.5px;color:#4c1d95!important;-webkit-text-fill-color:#4c1d95!important;line-height:1.6;}
+.mcq-exp.show{display:block;}.mcq-exp b{color:var(--cy-dk)!important;-webkit-text-fill-color:var(--cy-dk)!important;}
+.cyc-faq h2{font-family:"DM Serif Display",Georgia,serif!important;font-size:24px!important;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin:30px 0 14px!important;scroll-margin-top:80px;}
+.faq{border:1px solid var(--gb);border-radius:10px;margin-bottom:9px;overflow:hidden;background:#fff;}
+.faq-q{width:100%;text-align:left;background:none;border:none;padding:15px 18px;font-family:inherit;font-size:15px;font-weight:600;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;cursor:pointer;display:flex;justify-content:space-between;gap:12px;}
+.faq-q .pm{color:var(--cy)!important;-webkit-text-fill-color:var(--cy)!important;font-weight:700;}
+.faq-a{display:none;padding:0 18px 15px;font-size:14px;color:#374151;line-height:1.7;}.faq.open .faq-a{display:block;}
+.cyc-nav{display:flex;justify-content:space-between;gap:12px;margin-top:34px;flex-wrap:wrap;}
+.cyc-nav a,.cyc-nav a:link,.cyc-nav a:visited{flex:1;min-width:200px;text-decoration:none;border:1px solid var(--gb);border-radius:10px;padding:14px 16px;background:#fff;}
+.cyc-nav a:hover{border-color:var(--accent);background:var(--cy-bg);}
+.cyc-nav .dir{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--cy)!important;-webkit-text-fill-color:var(--cy)!important;}
+.cyc-nav .ttl{display:block;font-size:15px;font-weight:700;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-top:3px;}.cyc-nav .next{text-align:right;}
+.cyc-keep{background:#faf5ff;border:1px solid #e9d5ff;border-radius:12px;padding:18px 20px;margin-top:22px;}
+.cyc-keep .col{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--cy)!important;-webkit-text-fill-color:var(--cy)!important;margin-bottom:8px;}
+.cyc-keep a,.cyc-keep a:link,.cyc-keep a:visited{color:var(--cy2)!important;-webkit-text-fill-color:var(--cy2)!important;font-weight:600;text-decoration:none;margin-right:16px;font-size:14px;}
+@media(max-width:600px){.cyc-stats{grid-template-columns:1fr;}.m-grid{grid-template-columns:1fr;}}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AP Cybersecurity","item":"https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide"},{"@type":"ListItem","position":2,"name":"All Topics","item":"https://www.apcsexamprep.com/pages/ap-cybersecurity-topics"},{"@type":"ListItem","position":3,"name":"Intimidation vs Urgency","item":"https://www.apcsexamprep.com/pages/ap-cybersecurity-intimidation-vs-urgency"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"Intimidation vs Urgency: Social Engineering Tactics Explained | AP Cybersecurity","description":"Intimidation vs urgency in social engineering: what each tactic is, why it works, real examples, and how to spot the primary tactic. Built for AP Cybersecurity (Topic 1.1).","url":"https://www.apcsexamprep.com/pages/ap-cybersecurity-intimidation-vs-urgency","educationalLevel":"High School","learningResourceType":"Concept Guide","author":{"@type":"Organization","name":"AP CS Exam Prep"},"isPartOf":{"@type":"Course","name":"AP Cybersecurity Complete Course","url":"https://www.apcsexamprep.com/pages/ap-cybersecurity-complete-course-guide"},"datePublished":"2026-03-01","dateModified":"2026-06-10"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the difference between intimidation and urgency?","acceptedAnswer":{"@type":"Answer","text":"Intimidation threatens a negative consequence to force compliance; urgency imposes a deadline so the target acts before thinking. Many messages use both, so the exam asks for the primary tactic."}},{"@type":"Question","name":"Can a social engineering message use both tactics?","acceptedAnswer":{"@type":"Answer","text":"Yes, and most do. Identify the dominant lever: a threatened loss points to intimidation, a countdown points to urgency."}},{"@type":"Question","name":"Is urgency just a deadline?","acceptedAnswer":{"@type":"Answer","text":"Urgency is the tactic of using time pressure, such as a deadline or a closing window, to stop the target from pausing to verify the request."}}]}</script><div class="cyc">
+<div class="cyc-bc"><div class="cyc-bc-in">
+<a href="/pages/ap-cybersecurity-topics">AP Cybersecurity Topics</a> › Intimidation vs Urgency</div></div>
+<div class="cyc-hero"><div class="cyc-hero-in">
+<div class="cyc-eyebrow">Unit 1 • Topic 1.1 • Social Engineering</div>
+<h1>Social Engineering Tactics: Intimidation vs Urgency (Examples &amp; How to Spot Them)</h1>
+</div></div>
+<div class="cyc-main">
+<p class="cyc-lede"><b>Intimidation</b> and <b>urgency</b> are the two psychological tactics the AP Cybersecurity framework names for social engineering. Intimidation pressures you with the threat of a consequence; urgency pressures you with a deadline. The exam shows you a message and asks which tactic is primary.</p>
+<div class="cyc-toc">
+<h2>Contents</h2>
+<ol>
+<li><a href="#tactics">The two tactics</a></li>
+<li><a href="#why">Why these tactics work</a></li>
+<li><a href="#realworld">Real-world example</a></li>
+<li><a href="#glossary">Key terms</a></li>
+<li><a href="#match">Match it up</a></li>
+<li><a href="#practice">Check for Understanding</a></li>
+<li><a href="#faq">FAQ</a></li>
+</ol>
+</div>
+<div class="cyc-stats">
+<div class="cyc-stat">
+<span class="n">2</span><span class="l">framework tactics (EK 1.1.A.2)</span>
+</div>
+<div class="cyc-stat">
+<span class="n">Threat</span><span class="l">= intimidation</span>
+</div>
+<div class="cyc-stat">
+<span class="n">Deadline</span><span class="l">= urgency</span>
+</div>
+</div>
+<div class="cyc-fig">
+<svg viewbox="0 0 700 130" role="img" aria-label="The two framework tactics: a threat (intimidation) vs a clock (urgency)."><rect x="20" y="25" width="310" height="80" rx="12" fill="#fef2f2" stroke="#fca5a5" stroke-width="2"></rect><text x="175" y="60" fill="#b91c1c" font-family="DM Sans,sans-serif" font-size="17" font-weight="700" text-anchor="middle">Intimidation</text><text x="175" y="84" fill="#7f1d1d" font-family="DM Sans,sans-serif" font-size="13" font-weight="400" text-anchor="middle">Threat of a consequence</text><rect x="370" y="25" width="310" height="80" rx="12" fill="#fffbeb" stroke="#fcd34d" stroke-width="2"></rect><text x="525" y="60" fill="#b45309" font-family="DM Sans,sans-serif" font-size="17" font-weight="700" text-anchor="middle">Urgency</text><text x="525" y="84" fill="#78350f" font-family="DM Sans,sans-serif" font-size="13" font-weight="400" text-anchor="middle">Pressure of a deadline</text><circle cx="350" cy="65" r="18" fill="#6B21A8"></circle><text x="350" y="70" fill="#fff" font-family="DM Sans,sans-serif" font-size="13" font-weight="700" text-anchor="middle">vs</text></svg><div class="cap">The two framework tactics: a threat (intimidation) vs a clock (urgency).</div>
+</div>
+<div class="cyc-sec" id="tactics">
+<h2>The two tactics</h2>
+<p><b>Intimidation</b> threatens a negative consequence if the target does not comply, such as losing access, being fined, or being reported (EK 1.1.A.2). It works by triggering a natural aversion to harm, so fear pushes the target to act (EK 1.1.B.2).</p>
+<p><b>Urgency</b> invents a reason the target must act immediately, such as a short countdown or a closing window (EK 1.1.A.2). It works by triggering a fast reaction to time pressure, which prevents the target from stopping to check whether the request is reasonable (EK 1.1.B.3).</p>
+<div class="cyc-scn">
+<div class="lbl">Scenario</div>
+<p>A message reads: 'Your account shows illegal activity. Verify now or it will be reported to authorities.' Which tactic is primary?</p>
+<details><summary>Reveal answer</summary><p>Intimidation. The core lever is the threatened consequence (being reported). The word 'now' adds urgency, but the message leans on fear of a negative outcome.</p></details>
+</div>
+<div class="co exam">
+<div class="col">Exam tip</div>
+<p>Most real messages use both. The question asks for the PRIMARY tactic. Ask one thing: is the pressure a threat (intimidation) or a clock (urgency)?</p>
+</div>
+</div>
+<div class="cyc-sec" id="why">
+<h2>Why these tactics work</h2>
+<p>Both tactics rely on common psychological principles that influence behavior (EK 1.1.B.1). They short-circuit careful thinking, just in different ways.</p>
+<p>Intimidation hijacks fear: people avoid threatened losses quickly. Urgency hijacks reflex: people rush time-sensitive tasks and skip the safety check they would normally run.</p>
+<div class="cyc-scn">
+<div class="lbl">Scenario</div>
+<p>'Congratulations, you won a gift card. Claim it in the next 10 minutes.' Which tactic is primary?</p>
+<details><summary>Reveal answer</summary><p>Urgency. A reward paired with a short deadline is time pressure, not a threat. There is no negative consequence, so it is not intimidation.</p></details>
+</div>
+</div>
+<div class="cyc-rw" id="realworld">
+<div class="lbl">Real-world example</div>
+<h3>Government-impersonation scam calls</h3>
+<p>The FTC has warned for years about calls claiming to be the IRS or police that threaten arrest or fines unless you pay that same day. The threatened consequence is intimidation; the same-day deadline adds urgency.</p>
+<p class="tie">Primary tactic: intimidation, with urgency layered on top.</p>
+</div>
+<div class="cyc-gloss" id="glossary">
+<h2>Key Terms</h2>
+<table class="cyc-gtbl"><tbody>
+<tr>
+<td>Social engineering</td>
+<td>Manipulating a person into revealing information or taking an unsafe action.</td>
+</tr>
+<tr>
+<td>Intimidation</td>
+<td>Threatening a negative consequence to force compliance.</td>
+</tr>
+<tr>
+<td>Urgency</td>
+<td>Creating time pressure so the target acts before thinking.</td>
+</tr>
+<tr>
+<td>Elicitation</td>
+<td>Drawing sensitive information out of a target through conversation.</td>
+</tr>
+</tbody></table>
+</div>
+<div class="cyc-match" id="match">
+<h2>Match It Up</h2>
+<div class="sub">Tap a term, then tap its definition. Correct pairs lock in green.</div>
+<div class="m-grid">
+<div>
+<div class="m-col-h">Term</div>
+<button class="m-item" data-side="t" data-k="0">Intimidation</button><button class="m-item" data-side="t" data-k="1">Urgency</button><button class="m-item" data-side="t" data-k="2">Elicitation</button><button class="m-item" data-side="t" data-k="3">Social engineering</button>
+</div>
+<div>
+<div class="m-col-h">Definition</div>
+<button class="m-item" data-side="d" data-k="1">Imposes a deadline</button><button class="m-item" data-side="d" data-k="2">Draws out information</button><button class="m-item" data-side="d" data-k="3">Manipulates a person, not a machine</button><button class="m-item" data-side="d" data-k="0">Threatens a negative consequence</button>
+</div>
+</div>
+<div class="m-msg">All matched. Nice work.</div>
+</div>
+<div class="cyc-sec">
+<h2>Common Mistakes</h2>
+<div class="cyc-pit">
+<div class="row">
+<div class="num">!</div>
+<div>
+<h4>Calling any deadline 'intimidation'</h4>
+<p>A countdown with no threatened consequence is urgency. Intimidation requires a threatened loss.</p>
+</div>
+</div>
+<div class="row">
+<div class="num">!</div>
+<div>
+<h4>Treating the tactic as the impact</h4>
+<p>Intimidation is a tactic. The impacts are what the attacker gains: personal information, credentials, or malware.</p>
+</div>
+</div>
+<div class="row">
+<div class="num">!</div>
+<div>
+<h4>Assuming only one tactic is present</h4>
+<p>Real messages often mix both. Identify the dominant lever, not the only one.</p>
+</div>
+</div>
+<div class="row">
+<div class="num">!</div>
+<div>
+<h4>Reading a reward as intimidation</h4>
+<p>A prize with a deadline is urgency. Intimidation needs a threatened negative outcome.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="cyc-quiz" id="practice">
+<h2>Check for Understanding</h2>
+<div class="sub">Predict your answer before you tap. Click a choice to check it and read why.</div>
+<div class="mcq">
+<div class="mcq-n">Question 1</div>
+<div class="mcq-q">A message says: 'Pay the overdue balance in the next hour or your account is suspended.' Which best describes the tactics?</div>
+<div class="mcq-opts">
+<button class="mcq-o" data-correct="0"><span class="mcq-ol">A</span><span>Intimidation only, because of the suspension</span></button><button class="mcq-o" data-correct="1"><span class="mcq-ol">B</span><span>Both urgency (one-hour deadline) and intimidation (suspension), with urgency the dominant lever</span></button><button class="mcq-o" data-correct="0"><span class="mcq-ol">C</span><span>Neither, because no information is requested</span></button><button class="mcq-o" data-correct="0"><span class="mcq-ol">D</span><span>Elicitation, because it asks for payment</span></button>
+</div>
+<div class="mcq-exp">
+<b>B.</b> The one-hour clock is the dominant pressure (urgency); the suspension is a mild threat. Both appear, urgency leads.</div>
+</div>
+<div class="mcq">
+<div class="mcq-n">Question 2 <span class="pf">Predict first</span>
+</div>
+<div class="mcq-q">'This is the IRS. A warrant will be issued for your arrest if you do not verify today.' Which tactic is primary?</div>
+<div class="mcq-opts">
+<button class="mcq-o" data-correct="0"><span class="mcq-ol">A</span><span>Urgency, because of 'today'</span></button><button class="mcq-o" data-correct="0"><span class="mcq-ol">B</span><span>Pretexting, because it claims to be the IRS</span></button><button class="mcq-o" data-correct="0"><span class="mcq-ol">C</span><span>Baiting, because it offers something</span></button><button class="mcq-o" data-correct="1"><span class="mcq-ol">D</span><span>Intimidation, because it threatens arrest</span></button>
+</div>
+<div class="mcq-exp">
+<b>D.</b> The core lever is the threatened arrest, a negative consequence, which is intimidation. 'Today' adds urgency but the message leans on fear.</div>
+</div>
+<div class="mcq">
+<div class="mcq-n">Question 3</div>
+<div class="mcq-q">Which best defines urgency as a social engineering tactic?</div>
+<div class="mcq-opts">
+<button class="mcq-o" data-correct="1"><span class="mcq-ol">A</span><span>Creating time pressure so the target acts before thinking</span></button><button class="mcq-o" data-correct="0"><span class="mcq-ol">B</span><span>Threatening arrest or account loss</span></button><button class="mcq-o" data-correct="0"><span class="mcq-ol">C</span><span>Impersonating an IT technician</span></button><button class="mcq-o" data-correct="0"><span class="mcq-ol">D</span><span>Installing malware on a device</span></button>
+</div>
+<div class="mcq-exp">
+<b>A.</b> Urgency is time pressure that prevents the target from pausing to verify (EK 1.1.B.3).</div>
+</div>
+<div class="mcq">
+<div class="mcq-n">Question 4 <span class="pf">Predict first</span>
+</div>
+<div class="mcq-q">'You won a prize. Claim it within 10 minutes.' Which tactic is primary?</div>
+<div class="mcq-opts">
+<button class="mcq-o" data-correct="0"><span class="mcq-ol">A</span><span>Intimidation</span></button><button class="mcq-o" data-correct="0"><span class="mcq-ol">B</span><span>Credential theft</span></button><button class="mcq-o" data-correct="1"><span class="mcq-ol">C</span><span>Urgency</span></button><button class="mcq-o" data-correct="0"><span class="mcq-ol">D</span><span>Integrity</span></button>
+</div>
+<div class="mcq-exp">
+<b>C.</b> A reward with a short deadline is urgency. No threatened consequence is present, so it is not intimidation.</div>
+</div>
+<div class="mcq">
+<div class="mcq-n">Question 5</div>
+<div class="mcq-q">Which statements are true of intimidation? I. It threatens a negative consequence. II. It leverages fear. III. It always offers a reward.</div>
+<div class="mcq-opts">
+<button class="mcq-o" data-correct="0"><span class="mcq-ol">A</span><span>I only</span></button><button class="mcq-o" data-correct="1"><span class="mcq-ol">B</span><span>I and II only</span></button><button class="mcq-o" data-correct="0"><span class="mcq-ol">C</span><span>II and III only</span></button><button class="mcq-o" data-correct="0"><span class="mcq-ol">D</span><span>I, II, and III</span></button>
+</div>
+<div class="mcq-exp">
+<b>B.</b> I and II describe intimidation. Rewards belong to other lures, so III is false.</div>
+</div>
+<div class="mcq">
+<div class="mcq-n">Question 6 <span class="pf">Predict first</span>
+</div>
+<div class="mcq-q">A message combines a threat and a deadline and the question asks for the PRIMARY tactic. What should you do?</div>
+<div class="mcq-opts">
+<button class="mcq-o" data-correct="1"><span class="mcq-ol">A</span><span>Decide which lever the message leans on hardest</span></button><button class="mcq-o" data-correct="0"><span class="mcq-ol">B</span><span>Always answer intimidation</span></button><button class="mcq-o" data-correct="0"><span class="mcq-ol">C</span><span>Always answer urgency</span></button><button class="mcq-o" data-correct="0"><span class="mcq-ol">D</span><span>Answer that they are exactly equal</span></button>
+</div>
+<div class="mcq-exp">
+<b>A.</b> When both appear, pick the dominant lever based on what the message emphasizes.</div>
+</div>
+</div>
+<div class="cyc-faq">
+<h2 id="faq">Frequently Asked Questions</h2>
+<div class="faq">
+<button class="faq-q">What is the difference between intimidation and urgency?<span class="pm">+</span></button><div class="faq-a">Intimidation threatens a negative consequence to force compliance; urgency imposes a deadline so the target acts before thinking. Many messages use both, so the exam asks for the primary tactic.</div>
+</div>
+<div class="faq">
+<button class="faq-q">Can a social engineering message use both tactics?<span class="pm">+</span></button><div class="faq-a">Yes, and most do. Identify the dominant lever: a threatened loss points to intimidation, a countdown points to urgency.</div>
+</div>
+<div class="faq">
+<button class="faq-q">Is urgency just a deadline?<span class="pm">+</span></button><div class="faq-a">Urgency is the tactic of using time pressure, such as a deadline or a closing window, to stop the target from pausing to verify the request.</div>
+</div>
+</div>
+<div class="cyc-nav">
+<a href="/pages/ap-cybersecurity-social-engineering"><span class="dir">← Previous</span><span class="ttl">Social Engineering</span></a><a class="next" href="/pages/ap-cybersecurity-phishing-vishing-smishing"><span class="dir">Next →</span><span class="ttl">Phishing, Vishing &amp; Smishing</span></a>
+</div>
+<div class="cyc-keep">
+<div class="col">Keep studying</div>
+<a href="/pages/ap-cybersecurity-topics">All Topics</a><a href="/pages/ap-cybersecurity-unit-1-introduction-to-security">Unit 1 Study Guide</a><a href="/pages/ap-cybersecurity-practice-questions">Practice Questions</a>
+</div>
+</div>
+</div><script>(function(){
+document.querySelectorAll('.cyc .mcq-opts').forEach(function(g){var e=g.parentElement.querySelector('.mcq-exp');
+g.querySelectorAll('.mcq-o').forEach(function(b){b.addEventListener('click',function(){if(g.dataset.d)return;g.dataset.d=1;
+g.querySelectorAll('.mcq-o').forEach(function(x){if(x.getAttribute('data-correct')==='1')x.classList.add(x===b?'correct':'rev');else if(x===b)x.classList.add('wrong');});if(e)e.classList.add('show');});});});
+document.querySelectorAll('.cyc .faq-q').forEach(function(q){q.addEventListener('click',function(){var f=q.parentElement,o=f.classList.contains('open');f.classList.toggle('open');q.querySelector('.pm').textContent=o?'+':'\u2212';});});
+document.querySelectorAll('.cyc .cyc-match').forEach(function(w){var sel=null,done=0,total=w.querySelectorAll('[data-side=t]').length;
+w.querySelectorAll('.m-item').forEach(function(b){b.addEventListener('click',function(){
+if(b.classList.contains('ok'))return;
+if(b.dataset.side==='t'){w.querySelectorAll('[data-side=t]').forEach(function(x){x.classList.remove('sel');});b.classList.add('sel');sel=b;return;}
+if(!sel)return;
+if(sel.dataset.k===b.dataset.k){sel.classList.remove('sel');sel.classList.add('ok');b.classList.add('ok');done++;if(done===total)w.querySelector('.m-msg').classList.add('show');sel=null;}
+else{var s=sel;b.classList.add('bad');s.classList.add('bad');setTimeout(function(){b.classList.remove('bad');s.classList.remove('bad','sel');},500);sel=null;}
+});});});
+})();</script>

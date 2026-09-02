@@ -1,0 +1,499 @@
+<!-- ================= UNIT 2 HEADER ================= -->
+<h1>AP Computer Science A Unit 2 Exam (2025) - Selection &amp; Iteration</h1>
+<div class="exam-note">
+<strong>Prerequisite:</strong> Before attempting this exam, make sure you have mastered <a href="/pages/ap-csa-unit-1-exam-objects-methods-expressions"> AP Computer Science A Unit 1 - Objects, Methods &amp; Expressions </a>, as Unit 2 builds directly on those concepts.</div>
+<p class="exam-subtitle">Looking for written practice? SKIP TO: <a href="#FRQ"> AP CSA Unit 2 Free-Response Practice (FRQs) </a> to strengthen your loop and conditional reasoning.</p>
+<p class="exam-subtitle">This <strong>AP Computer Science A Unit 2 exam</strong> is designed for the <strong>new 2025 AP CSA 4-Unit curriculum</strong> and focuses on decision-making and repetition, two of the most heavily tested skills on the AP exam.</p>
+<div class="exam-intro-card">
+<p><strong>Unit 2</strong> builds on foundational Java syntax by teaching programs how to <strong>make decisions</strong> using boolean expressions and <strong>repeat actions</strong> using loops. These skills appear extensively in both multiple-choice questions and free-response questions.</p>
+<p>This assessment includes <strong>high-difficulty multiple-choice questions</strong> modeled after:</p>
+<ul>
+<li>✔ The official <strong>AP Computer Science A Course and Exam Description (CED)</strong>
+</li>
+<li>✔ Barron's AP CSA loop-tracing and logic challenges</li>
+<li>✔ CodeHS and AP Classroom progress-check style problems</li>
+<li>✔ Common AP CSA mistakes involving conditionals, short-circuit logic, and loop errors</li>
+</ul>
+<p>The questions emphasize <strong>precise tracing</strong>, <strong>boolean reasoning</strong>, and the ability to recognize <strong>loop patterns and pitfalls</strong> under exam pressure.</p>
+<div class="exam-focus">
+<strong>Unit 2 Topics Covered:</strong>
+<ul>
+<li>Boolean expressions and logical operators (<code>&amp;&amp;</code>, <code>||</code>, <code>!</code>)</li>
+<li>Relational operators and compound conditions</li>
+<li>if, else-if, else, and nested conditionals</li>
+<li>Short-circuit evaluation</li>
+<li>while loops and for loops</li>
+<li>Common loop patterns (counting, summing, searching)</li>
+<li>Off-by-one errors and infinite loops</li>
+<li>Tracing and debugging selection + iteration logic</li>
+</ul>
+</div>
+<p>At the bottom of this exam, you will complete <strong>two concise Free-Response Questions (FRQs)</strong> written in the style of <strong>AP Classroom Progress Checks</strong>, where you will write and test code using a Java sandbox.</p>
+<div class="exam-note">
+<strong>Exam Tip:</strong> Many Unit 2 errors on the AP exam come from <em>mis-grouped boolean expressions</em>, <em>incorrect loop boundaries</em>, and <em>misunderstanding short-circuit evaluation</em>. Trace carefully.</div>
+</div>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f7f9fc;
+  color: #1f2937;
+  margin: 0 auto;
+  padding: 80px 20px 80px;
+  max-width: 1100px;
+}
+
+h1, h2, h3 {
+  color: #1e3a8a;
+}
+
+.card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+label {
+  display: block;
+  margin: 6px 0;
+}
+
+pre {
+  background: #0f172a;
+  color: #e5e7eb;
+  padding: 12px;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+button {
+  background: #2563eb; 
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+ 
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+.answer {
+  display: none;
+  background: #eef2ff;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.progress-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: #e5e7eb;
+  z-index: 1000;
+}
+
+.progress-bar {
+  height: 6px;
+  width: 0%;
+  background: #2563eb;
+}
+
+#timer {
+  position: fixed;
+  top: 10px;
+  right: 20px;
+  background: #1e3a8a;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: bold;
+  z-index: 1001;
+}
+  .link1 {
+    background: #2563eb; 
+    color: white !important; 
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    text-decoration: none !important;
+    
+  }
+</style>
+<div class="progress-container">
+<div id="progressBar" class="progress-bar"></div>
+</div>
+<div id="timer">Time Left: 45:00</div>
+<h1>AP Computer Science A - Unit 2 Exam</h1>
+<h2>Selection &amp; Iteration (High Difficulty)</h2>
+<h2>Section I: Multiple Choice (30 Questions)</h2>
+<!-- ================= QUESTIONS 1-30 ================= -->
+
+<!-- ================= MCQ QUESTIONS ================= -->
+
+<!-- Q1 -->
+<div class="card">
+<h3>Question 1</h3>
+<p>What is printed?</p>
+<pre>int x = 0;
+if (x != 0 &amp;&amp; 10 / x &gt; 1)
+    System.out.println("Yes");
+else
+    System.out.println("No");</pre>
+<label><input type="radio" name="q1" value="A"> A. Yes</label> <label><input type="radio" name="q1" value="B"> B. No</label> <label><input type="radio" name="q1" value="C"> C. Runtime error</label> <label><input type="radio" name="q1" value="D"> D. Nothing</label> <button class="toggle-btn" data-target="a1">Show Answer</button>
+<div class="answer" id="a1">
+<strong>Answer: B</strong><br>Short-circuit evaluation prevents division by zero.</div>
+</div>
+<!-- Q2 -->
+<div class="card">
+<h3>Question 2</h3>
+<p>How many times does the loop execute?</p>
+<pre>for (int i = 2; i &lt;= 20; i += 3)
+    System.out.print(i + " ");</pre>
+<label><input type="radio" name="q2" value="A"> A. 5</label> <label><input type="radio" name="q2" value="B"> B. 6</label> <label><input type="radio" name="q2" value="C"> C. 7</label> <label><input type="radio" name="q2" value="D"> D. 8</label> <button class="toggle-btn" data-target="a2">Show Answer</button>
+<div class="answer" id="a2">
+<strong>Answer: B</strong><br>2,5,8,11,14,17 → 6 iterations.</div>
+</div>
+<!-- Q3 -->
+<div class="card">
+<h3>Question 3</h3>
+<p>Which condition checks if <code>x</code> is outside 1-10 inclusive?</p>
+<label><input type="radio" name="q3" value="A"> A. x &lt; 1 || x &gt; 10</label> <label><input type="radio" name="q3" value="B"> B. x &lt;= 1 &amp;&amp; x &gt;= 10</label> <label><input type="radio" name="q3" value="C"> C. !(x &gt; 1 &amp;&amp; x &lt; 10)</label> <label><input type="radio" name="q3" value="D"> D. x &lt; 1 &amp;&amp; x &gt; 10</label> <button class="toggle-btn" data-target="a3">Show Answer</button>
+<div class="answer" id="a3">
+<strong>Answer: A</strong><br>Outside a range requires OR.</div>
+</div>
+<!-- Q4 -->
+<div class="card">
+<h3>Question 4</h3>
+<p>What is printed?</p>
+<pre>int n = 5;
+while (n &gt; 0) {
+    n -= 2;
+    System.out.print(n + " ");
+}</pre>
+<label><input type="radio" name="q4" value="A"> A. 3 1 -1</label> <label><input type="radio" name="q4" value="B"> B. 5 3 1</label> <label><input type="radio" name="q4" value="C"> C. 3 1</label> <label><input type="radio" name="q4" value="D"> D. Infinite loop</label> <button class="toggle-btn" data-target="a4">Show Answer</button>
+<div class="answer" id="a4">
+<strong>Answer: A</strong><br>Loop stops when n becomes negative.</div>
+</div>
+<!-- Q5 -->
+<div class="card">
+<h3>Question 5</h3>
+<p>What is printed?</p>
+<pre>String s = "java";
+for (int i = 0; i &lt; s.length(); i++)
+    if (s.charAt(i) == 'a')
+        System.out.print(i + " ");</pre>
+<label><input type="radio" name="q5" value="A"> A. 0 2</label> <label><input type="radio" name="q5" value="B"> B. 1 3</label> <label><input type="radio" name="q5" value="C"> C. 2 4</label> <label><input type="radio" name="q5" value="D"> D. 1 2</label> <button class="toggle-btn" data-target="a5">Show Answer</button>
+<div class="answer" id="a5">
+<strong>Answer: B</strong><br>'a' appears at indices 1 and 3.</div>
+</div>
+<!-- Q6 -->
+<div class="card">
+<h3>Question 6</h3>
+<p>Which statement about loops is TRUE?</p>
+<label><input type="radio" name="q6" value="A"> A. while loops always run once</label> <label><input type="radio" name="q6" value="B"> B. for loops cannot be infinite</label> <label><input type="radio" name="q6" value="C"> C. Loop conditions must eventually become false</label> <label><input type="radio" name="q6" value="D"> D. Loops cannot contain if statements</label> <button class="toggle-btn" data-target="a6">Show Answer</button>
+<div class="answer" id="a6">
+<strong>Answer: C</strong><br>All correct loops must terminate.</div>
+</div>
+<!-- Q7 -->
+<div class="card">
+<h3>Question 7</h3>
+<p>What is printed?</p>
+<pre>int x = 10;
+if (x &gt; 5)
+    if (x &lt; 8)
+        System.out.println("A");
+    else
+        System.out.println("B");</pre>
+<label><input type="radio" name="q7" value="A"> A. A</label> <label><input type="radio" name="q7" value="B"> B. B</label> <label><input type="radio" name="q7" value="C"> C. Nothing</label> <label><input type="radio" name="q7" value="D"> D. Compile error</label> <button class="toggle-btn" data-target="a7">Show Answer</button>
+<div class="answer" id="a7">
+<strong>Answer: B</strong><br>Else pairs with the nearest if.</div>
+</div>
+<!-- Q8 -->
+<div class="card">
+<h3>Question 8</h3>
+<p>What is printed?</p>
+<pre>int sum = 0;
+for (int i = 1; i &lt;= 4; i++)
+    sum += i;
+System.out.println(sum);</pre>
+<label><input type="radio" name="q8" value="A"> A. 6</label> <label><input type="radio" name="q8" value="B"> B. 10</label> <label><input type="radio" name="q8" value="C"> C. 12</label> <label><input type="radio" name="q8" value="D"> D. 16</label> <button class="toggle-btn" data-target="a8">Show Answer</button>
+<div class="answer" id="a8">
+<strong>Answer: B</strong><br>1+2+3+4 = 10.</div>
+</div>
+<!-- Q9 -->
+<div class="card">
+<h3>Question 9</h3>
+<p>Which expression generates a random integer from 1-6 inclusive?</p>
+<label><input type="radio" name="q9" value="A"> A. (int)(Math.random() * 6)</label> <label><input type="radio" name="q9" value="B"> B. (int)(Math.random() * 6) + 1</label> <label><input type="radio" name="q9" value="C"> C. (int)(Math.random() * 5) + 1</label> <label><input type="radio" name="q9" value="D"> D. (int)(Math.random() * 7)</label> <button class="toggle-btn" data-target="a9">Show Answer</button>
+<div class="answer" id="a9">
+<strong>Answer: B</strong><br>Correct inclusive random pattern.</div>
+</div>
+<!-- Q10 -->
+<div class="card">
+<h3>Question 10</h3>
+<p>What is printed?</p>
+<pre>String s = "hello";
+s.toUpperCase();
+System.out.println(s);</pre>
+<label><input type="radio" name="q10" value="A"> A. hello</label> <label><input type="radio" name="q10" value="B"> B. HELLO</label> <label><input type="radio" name="q10" value="C"> C. Hello</label> <label><input type="radio" name="q10" value="D"> D. Runtime error</label> <button class="toggle-btn" data-target="a10">Show Answer</button>
+<div class="answer" id="a10">
+<strong>Answer: A</strong><br>Strings are immutable.</div>
+</div>
+<!-- Q11 -->
+<div class="card">
+<h3>Question 11</h3>
+<p>What is printed?</p>
+<pre>int x = 1;
+while (x &lt; 10) {
+    x *= 2;
+}
+System.out.println(x);</pre>
+<label><input type="radio" name="q11" value="A"> A. 8</label> <label><input type="radio" name="q11" value="B"> B. 10</label> <label><input type="radio" name="q11" value="C"> C. 16</label> <label><input type="radio" name="q11" value="D"> D. Infinite loop</label> <button class="toggle-btn" data-target="a11">Show Answer</button>
+<div class="answer" id="a11">
+<strong>Answer: C</strong><br>1 → 2 → 4 → 8 → 16, then condition fails.</div>
+</div>
+<!-- Q12 -->
+<div class="card">
+<h3>Question 12</h3>
+<p>Which expression is equivalent to <code>!(a &gt;= 5 &amp;&amp; a &lt;= 10)</code>?</p>
+<label><input type="radio" name="q12" value="A"> A. a &lt; 5 || a &gt; 10</label> <label><input type="radio" name="q12" value="B"> B. a &lt; 5 &amp;&amp; a &gt; 10</label> <label><input type="radio" name="q12" value="C"> C. !(a &gt; 5 || a &lt; 10)</label> <label><input type="radio" name="q12" value="D"> D. a == 5 || a == 10</label> <button class="toggle-btn" data-target="a12">Show Answer</button>
+<div class="answer" id="a12">
+<strong>Answer: A</strong><br>De Morgan's Law: NOT (AND) → OR of negations.</div>
+</div>
+<!-- Q13 -->
+<div class="card">
+<h3>Question 13</h3>
+<p>What is printed?</p>
+<pre>int count = 0;
+for (int i = 1; i &lt;= 10; i++) {
+    if (i % 4 == 0)
+        count++;
+}
+System.out.println(count);</pre>
+<label><input type="radio" name="q13" value="A"> A. 2</label> <label><input type="radio" name="q13" value="B"> B. 3</label> <label><input type="radio" name="q13" value="C"> C. 4</label> <label><input type="radio" name="q13" value="D"> D. 5</label> <button class="toggle-btn" data-target="a13">Show Answer</button>
+<div class="answer" id="a13">
+<strong>Answer: A</strong><br>Only 4 and 8 are divisible by 4.</div>
+</div>
+<!-- Q14 -->
+<div class="card">
+<h3>Question 14</h3>
+<p>What is printed?</p>
+<pre>int x = 3;
+for (int i = 0; i &lt; x; i++) {
+    x--;
+    System.out.print(i + " ");
+}</pre>
+<label><input type="radio" name="q14" value="A"> A. 0</label> <label><input type="radio" name="q14" value="B"> B. 0 1</label> <label><input type="radio" name="q14" value="C"> C. 0 1 2</label> <label><input type="radio" name="q14" value="D"> D. Infinite loop</label> <button class="toggle-btn" data-target="a14">Show Answer</button>
+<div class="answer" id="a14">
+<strong>Answer: A</strong><br>x decreases, causing early termination.</div>
+</div>
+<!-- Q15 -->
+<div class="card">
+<h3>Question 15</h3>
+<p>Which statement about <code>while</code> loops is TRUE?</p>
+<label><input type="radio" name="q15" value="A"> A. They always execute once</label> <label><input type="radio" name="q15" value="B"> B. Condition checked after loop</label> <label><input type="radio" name="q15" value="C"> C. They may execute zero times</label> <label><input type="radio" name="q15" value="D"> D. They cannot be infinite</label> <button class="toggle-btn" data-target="a15">Show Answer</button>
+<div class="answer" id="a15">
+<strong>Answer: C</strong><br>If the condition starts false, the loop never runs.</div>
+</div>
+<!-- Q16 -->
+<div class="card">
+<h3>Question 16</h3>
+<p>What is printed?</p>
+<pre>String s = "APCSA";
+for (int i = 1; i &lt; s.length(); i += 2)
+    System.out.print(s.charAt(i));</pre>
+<label><input type="radio" name="q16" value="A"> A. PSA</label> <label><input type="radio" name="q16" value="B"> B. ASA</label> <label><input type="radio" name="q16" value="C"> C. PCA</label> <label><input type="radio" name="q16" value="D"> D. APS</label> <button class="toggle-btn" data-target="a16">Show Answer</button>
+<div class="answer" id="a16">
+<strong>Answer: A</strong><br>Indices 1,3,5 → P, S, A.</div>
+</div>
+<!-- Q17 -->
+<div class="card">
+<h3>Question 17</h3>
+<p>What causes an infinite loop?</p>
+<label><input type="radio" name="q17" value="A"> A. Variable moves toward condition</label> <label><input type="radio" name="q17" value="B"> B. Condition becomes false</label> <label><input type="radio" name="q17" value="C"> C. Loop variable never changes</label> <label><input type="radio" name="q17" value="D"> D. Using a for loop</label> <button class="toggle-btn" data-target="a17">Show Answer</button>
+<div class="answer" id="a17">
+<strong>Answer: C</strong><br>If nothing changes, the condition never becomes false.</div>
+</div>
+<!-- Q18 -->
+<div class="card">
+<h3>Question 18</h3>
+<p>What is printed?</p>
+<pre>int x = 10;
+if (x &lt; 5 || x / 2 &gt; 3)
+    System.out.println("A");
+else
+    System.out.println("B");</pre>
+<label><input type="radio" name="q18" value="A"> A. A</label> <label><input type="radio" name="q18" value="B"> B. B</label> <label><input type="radio" name="q18" value="C"> C. Runtime error</label> <label><input type="radio" name="q18" value="D"> D. Nothing</label> <button class="toggle-btn" data-target="a18">Show Answer</button>
+<div class="answer" id="a18">
+<strong>Answer: A</strong><br>10 / 2 = 5, which is greater than 3.</div>
+</div>
+<!-- Q19 -->
+<div class="card">
+<h3>Question 19</h3>
+<p>What is printed?</p>
+<pre>int n = 7;
+int count = 0;
+while (n &gt; 0) {
+    n -= 3;
+    count++;
+}
+System.out.println(count);</pre>
+<label><input type="radio" name="q19" value="A"> A. 2</label> <label><input type="radio" name="q19" value="B"> B. 3</label> <label><input type="radio" name="q19" value="C"> C. 4</label> <label><input type="radio" name="q19" value="D"> D. 5</label> <button class="toggle-btn" data-target="a19">Show Answer</button>
+<div class="answer" id="a19">
+<strong>Answer: B</strong><br>7 → 4 → 1 → -2 → 3 iterations.</div>
+</div>
+<!-- Q20 -->
+<div class="card">
+<h3>Question 20</h3>
+<p>Which condition checks if <code>x</code> equals 2, 4, or 6?</p>
+<label><input type="radio" name="q20" value="A"> A. x == 2 || 4 || 6</label> <label><input type="radio" name="q20" value="B"> B. x == 2 &amp;&amp; x == 4 &amp;&amp; x == 6</label> <label><input type="radio" name="q20" value="C"> C. x == 2 || x == 4 || x == 6</label> <label><input type="radio" name="q20" value="D"> D. x &gt;= 2 &amp;&amp; x &lt;= 6</label> <button class="toggle-btn" data-target="a20">Show Answer</button>
+<div class="answer" id="a20">
+<strong>Answer: C</strong><br>Each equality must be explicitly stated.</div>
+</div>
+<!-- Q21 -->
+<div class="card">
+<h3>Question 21</h3>
+<p>What is printed?</p>
+<pre>for (int i = 5; i &gt; 0; i--) {
+    if (i == 3)
+        break;
+    System.out.print(i + " ");
+}</pre>
+<label><input type="radio" name="q21" value="A"> A. 5 4 3</label> <label><input type="radio" name="q21" value="B"> B. 5 4</label> <label><input type="radio" name="q21" value="C"> C. 4 3</label> <label><input type="radio" name="q21" value="D"> D. 5 4 2</label> <button class="toggle-btn" data-target="a21">Show Answer</button>
+<div class="answer" id="a21">
+<strong>Answer: B</strong><br>Loop stops when i equals 3.</div>
+</div>
+<!-- Q22 -->
+<div class="card">
+<h3>Question 22</h3>
+<p>Which best describes short-circuit evaluation?</p>
+<label><input type="radio" name="q22" value="A"> A. Both sides always evaluate</label> <label><input type="radio" name="q22" value="B"> B. Second condition may be skipped</label> <label><input type="radio" name="q22" value="C"> C. Conditions evaluate randomly</label> <label><input type="radio" name="q22" value="D"> D. Only applies to OR</label> <button class="toggle-btn" data-target="a22">Show Answer</button>
+<div class="answer" id="a22">
+<strong>Answer: B</strong><br>Evaluation stops once result is known.</div>
+</div>
+<!-- Q23 -->
+<div class="card">
+<h3>Question 23</h3>
+<p>What is printed?</p>
+<pre>int sum = 0;
+for (int i = 1; i &lt;= 3; i++)
+    for (int j = 1; j &lt;= 2; j++)
+        sum++;
+System.out.println(sum);</pre>
+<label><input type="radio" name="q23" value="A"> A. 5</label> <label><input type="radio" name="q23" value="B"> B. 6</label> <label><input type="radio" name="q23" value="C"> C. 7</label> <label><input type="radio" name="q23" value="D"> D. 8</label> <button class="toggle-btn" data-target="a23">Show Answer</button>
+<div class="answer" id="a23">
+<strong>Answer: B</strong><br>3 x 2 = 6 total iterations.</div>
+</div>
+<!-- Q24 -->
+<div class="card">
+<h3>Question 24</h3>
+<p>What is printed?</p>
+<pre>int x = 1;
+while (x &lt;= 5) {
+    System.out.print(x + " ");
+    x += 2;
+}</pre>
+<label><input type="radio" name="q24" value="A"> A. 1 3 5</label> <label><input type="radio" name="q24" value="B"> B. 1 2 3 4 5</label> <label><input type="radio" name="q24" value="C"> C. 2 4</label> <label><input type="radio" name="q24" value="D"> D. Infinite loop</label> <button class="toggle-btn" data-target="a24">Show Answer</button>
+<div class="answer" id="a24">
+<strong>Answer: A</strong><br>x increases by 2 each time.</div>
+</div>
+<!-- Q25 -->
+<div class="card">
+<h3>Question 25</h3>
+<p>Which loop counts from 10 down to 1?</p>
+<label><input type="radio" name="q25" value="A"> A. for (int i = 1; i &lt;= 10; i--)</label> <label><input type="radio" name="q25" value="B"> B. for (int i = 10; i &gt;= 1; i--)</label> <label><input type="radio" name="q25" value="C"> C. for (int i = 10; i &lt;= 1; i--)</label> <label><input type="radio" name="q25" value="D"> D. for (int i = 1; i &gt;= 10; i++)</label> <button class="toggle-btn" data-target="a25">Show Answer</button>
+<div class="answer" id="a25">
+<strong>Answer: B</strong><br>Starts at 10 and decrements to 1.</div>
+</div>
+<!-- Q26 -->
+<div class="card">
+<h3>Question 26</h3>
+<p>What is printed?</p>
+<pre>int x = 4;
+int y = 0;
+while (x &gt; 0) {
+    y++;
+    x /= 2;
+}
+System.out.println(y);</pre>
+<label><input type="radio" name="q26" value="A"> A. 2</label> <label><input type="radio" name="q26" value="B"> B. 3</label> <label><input type="radio" name="q26" value="C"> C. 4</label> <label><input type="radio" name="q26" value="D"> D. Infinite loop</label> <button class="toggle-btn" data-target="a26">Show Answer</button>
+<div class="answer" id="a26">
+<strong>Answer: B</strong><br>4 → 2 → 1 → 0 → 3 iterations.</div>
+</div>
+<!-- Q27 -->
+<div class="card">
+<h3>Question 27</h3>
+<p>Which statement about <code>break</code> is TRUE?</p>
+<label><input type="radio" name="q27" value="A"> A. Exits only an if-statement</label> <label><input type="radio" name="q27" value="B"> B. Exits the nearest loop</label> <label><input type="radio" name="q27" value="C"> C. Skips the loop condition</label> <label><input type="radio" name="q27" value="D"> D. Ends the program</label> <button class="toggle-btn" data-target="a27">Show Answer</button>
+<div class="answer" id="a27">
+<strong>Answer: B</strong><br>break exits the innermost loop immediately.</div>
+</div>
+<!-- Q28 -->
+<div class="card">
+<h3>Question 28</h3>
+<p>What is printed?</p>
+<pre>int count = 0;
+for (int i = 1; i &lt;= 20; i++) {
+    if (i % 2 == 0 &amp;&amp; i % 5 == 0)
+        count++;
+}
+System.out.println(count);</pre>
+<label><input type="radio" name="q28" value="A"> A. 1</label> <label><input type="radio" name="q28" value="B"> B. 2</label> <label><input type="radio" name="q28" value="C"> C. 3</label> <label><input type="radio" name="q28" value="D"> D. 4</label> <button class="toggle-btn" data-target="a28">Show Answer</button>
+<div class="answer" id="a28">
+<strong>Answer: B</strong><br>10 and 20 satisfy both conditions.</div>
+</div>
+<!-- Q29 -->
+<div class="card">
+<h3>Question 29</h3>
+<p>What is printed?</p>
+<pre>int i = 0;
+while (i &lt; 5)
+    System.out.print(i++);</pre>
+<label><input type="radio" name="q29" value="A"> A. 01234</label> <label><input type="radio" name="q29" value="B"> B. 12345</label> <label><input type="radio" name="q29" value="C"> C. 012345</label> <label><input type="radio" name="q29" value="D"> D. Infinite loop</label> <button class="toggle-btn" data-target="a29">Show Answer</button>
+<div class="answer" id="a29">
+<strong>Answer: A</strong><br>Post-increment prints before incrementing.</div>
+</div>
+<!-- Q30 -->
+<div class="card">
+<h3>Question 30</h3>
+<p>Which scenario BEST uses a sentinel-controlled loop?</p>
+<label><input type="radio" name="q30" value="A"> A. Looping a fixed number of times</label> <label><input type="radio" name="q30" value="B"> B. Reading input until -1 is entered</label> <label><input type="radio" name="q30" value="C"> C. Printing numbers 1-100</label> <label><input type="radio" name="q30" value="D"> D. Traversing a String</label> <button class="toggle-btn" data-target="a30">Show Answer</button>
+<div class="answer" id="a30">
+<strong>Answer: B</strong><br>Sentinel loops terminate on a specific value.</div>
+</div>
+<p><button id="submitBtn">Submit Exam</button></p>
+<div id="scoreDisplay"></div>
+<div style="display: none; margin-top: 40px;" id="testSummary">
+<h2>Š Test Summary</h2>
+<div id="summaryContent"></div>
+</div>
+<!-- ================= SECTION II ================= -->
+<h2>Section II: Free Response (Progress Check Style)</h2>
+<div class="card" id="FRQ">
+<h3>FRQ 1 - Loop Logic</h3>
+<p>Write a method <code>countMultiples</code> that returns how many integers between <code>start</code> and <code>end</code> inclusive are divisible by <code>k</code>.</p>
+<pre>public static int countMultiples(int start, int end, int k)</pre>
+</div>
+<div class="card">
+<h3>FRQ 2 - String Traversal</h3>
+<p>Write a method <code>hasAlternatingCase</code> that returns <code>true</code> if a string alternates uppercase and lowercase letters starting at index 0.</p>
+<pre>public static boolean hasAlternatingCase(String s)</pre>
+</div>
+<p><iframe src="https://codehs.com/sandbox/tannercrow/unit-2-frq-practice/embed/?display_mode=default&amp;show_file_tree=False" height="500" width="1050">
+</iframe></p>
+<div class="exam-card">
+<h3> Next Step: Unit 3</h3>
+<p>Once you are comfortable with <strong>selection and iteration</strong>, you are ready to move on to <a href="/pages/ap-csa-unit-3-class-creation" class="link1"><p> AP Computer Science A Unit 3 - Class Creation </p></a>, where you will design classes, write constructors, and define methods.</p>
+<p class="exam-note">Want to test everything together? Try our &gt;<a class="link1" href="/pages/ap-csa-full-practice-exam"><p>Full AP CSA Practice Exam</p></a> for a timed, exam-length experience.</p>
+</div>
+<p class="exam-note">Stuck on loops or conditionals? Explore <a href="/pages/ap-csa-tutoring" class="link1"><p> AP CSA tutoring for loops and conditionals</p></a>with step-by-step guidance.</p>

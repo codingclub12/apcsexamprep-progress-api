@@ -1,0 +1,85 @@
+{
+  "change": "repair the internal /pages/ links that can be proved, and enumerate the ones that cannot (board 156)",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "one mechanical rule, one evidenced map, and a missing target is never invented",
+      "command": "npm run --silent smoke:deadlinks",
+      "expect": "83 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the preflight, with a blank cell treated as an erase in every column",
+      "command": "npm run --silent smoke:preflight",
+      "expect": "50 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT WOULD WRITE A LINK TO NOTHING: rule one's liveness requirement",
+      "file": "scripts/dead-internal-link-repair.js",
+      "find": "  if (cleaned !== p.handle && live.has(cleaned)) {",
+      "replace": "  if (cleaned !== p.handle) {",
+      "command": "npm run --silent smoke:deadlinks",
+      "expect_failure": "a cleaned handle that is not live is REPORTED, not repaired"
+    },
+    {
+      "kind": "mutation",
+      "name": "a map entry whose own target has gone away must fail loudly",
+      "file": "scripts/dead-internal-link-repair.js",
+      "find": "  if (mapped && live.has(mapped.to)) {",
+      "replace": "  if (mapped) {",
+      "command": "npm run --silent smoke:deadlinks",
+      "expect_failure": "a map entry pointing at a page that is no longer live is REPORTED"
+    },
+    {
+      "kind": "mutation",
+      "name": "case folding, which is the other half of rule one",
+      "file": "scripts/dead-internal-link-repair.js",
+      "find": "  const cleaned = stripIllegal(decodeControls(p.handle).toLowerCase());",
+      "replace": "  const cleaned = stripIllegal(decodeControls(p.handle));",
+      "command": "npm run --silent smoke:deadlinks",
+      "expect_failure": "an uppercase handle is folded to the live lowercase one",
+      "_why": "The first version of this mutation flipped the character class in stripIllegal from [^a-z0-9-] to [^a-zA-Z0-9-] and SURVIVED, because toLowerCase runs first and no uppercase letter ever reaches it. The battery reported the survivor, which is what a survivor is for. The guard that actually does the work is the case fold, so that is what is broken here."
+    },
+    {
+      "kind": "mutation",
+      "name": "the round trip is what stops an edit outside a href going unnoticed",
+      "file": "scripts/dead-internal-link-repair.js",
+      "find": "  return { roundTrip: undone === before, lengthOk: before.length - after.length === removed, removed };",
+      "replace": "  return { roundTrip: true, lengthOk: before.length - after.length === removed, removed };",
+      "command": "npm run --silent smoke:deadlinks",
+      "expect_failure": "an edit outside the recorded spans is REJECTED"
+    },
+    {
+      "kind": "mutation",
+      "name": "undoing by position rather than by string replace",
+      "file": "scripts/dead-internal-link-repair.js",
+      "find": "  for (const s of [...spans].sort((a, b) => b.outAt - a.outAt)) {\n    undone = undone.slice(0, s.outAt) + s.from + undone.slice(s.outAt + s.to.length);\n  }",
+      "replace": "  for (const s of spans) undone = undone.split(s.to).join(s.from);",
+      "command": "npm run --silent smoke:deadlinks",
+      "expect_failure": "the span round trip gives the original back byte for byte",
+      "_why": "The bug the first version shipped with. ap-csa-lesson-4-1 links lesson 4-5 correctly in one place and with a newline in the handle in another, so a string replace turns the good link into a broken one and refuses a page it should repair."
+    },
+    {
+      "kind": "rederive",
+      "name": "a SECOND implementation, in another language, asking a different question",
+      "command": "python3 scripts/verify-dead-link-sheet.py --sheet imports/2026-09-02/dead-link-repair-pages.csv --bodies smoke/fixtures/dead-link-bodies --handles smoke/fixtures/live-page-handles.txt",
+      "expect": "SHEET VERIFIED",
+      "_why": "The generator records spans and reverses them. This blanks every href out of the before and the after body and requires what is left to be identical, which is one statement that nothing outside a link attribute moved and does not care how the edit was made. It keeps its OWN copy of the retarget map rather than importing it, so a new entry is refused until a person agrees with it twice. Mutation-tested against a byte changed outside a href, an invented target, an unmapped retarget, a plausible but wrong typo repair, a wrong Command and a no-op row."
+    },
+    {
+      "kind": "rederive",
+      "name": "the sheet clears the preflight, with every emoji round-tripped against the live body",
+      "command": "node -e \"const fs=require('fs'),os=require('os'),path=require('path');const D='smoke/fixtures/dead-link-bodies';const out={};for(const f of fs.readdirSync(D))if(f.endsWith('.html'))out[f.slice(0,-5)]=fs.readFileSync(path.join(D,f),'utf8');const t=path.join(os.tmpdir(),'dead-link-carrying.json');fs.writeFileSync(t,JSON.stringify(out));console.log(t);\" > /tmp/carrying-path.txt && node scripts/matrixify-preflight.js imports/2026-09-02/dead-link-repair-pages.csv --carrying \"$(cat /tmp/carrying-path.txt)\"",
+      "expect": "clear to import",
+      "_why": "The preflight reads the FILE rather than the intention: BOM, CRLF, QUOTE_ALL, a recognisable filename, Command, cell limits, and the blank-cell rule. Passing the live bodies as --carrying is what separates an emoji this sheet ADDED from one it round-tripped; without it the sheet is refused, which is the correct default."
+    },
+    {
+      "kind": "live",
+      "name": "the storefront no longer serves a link to nothing on these three pages",
+      "command": "node -e \"const cp=require('child_process');const want=[['ap-csa-lesson-4-1-ethical-social-issues-data-collection',[],['%0A']],['ap-csa-lesson-1-1-intro-algorithms',['Start daily practice'],['/pages/ap-csa-daily-practice']],['ap-csa-lesson-1-2-variables-data-types',['Start daily practice'],['/pages/ap-csa-daily-practice']]];for(const [h,present,absent] of want){const html=cp.execSync('curl -sSL --max-time 40 --compressed https://www.apcsexamprep.com/pages/'+h,{encoding:'utf8',maxBuffer:1<<26});for(const s of present)if(!html.includes(s))throw new Error(h+' no longer carries '+JSON.stringify(s));for(const s of absent)if(html.includes(s))throw new Error(h+' still serves '+JSON.stringify(s));}console.log('STOREFRONT LINKS RESOLVE on 3 of 3 repaired pages');\"",
+      "expect": "STOREFRONT LINKS RESOLVE",
+      "_why": "The ABSENT assertions are the ones that are false today and cannot pass without the import: the lesson 4-1 page serves two hrefs with %0A inside the handle, and both Unit 1 lesson pages serve a Start daily practice button pointing at /pages/ap-csa-daily-practice, which is a 404. The PRESENT assertion is deliberately not the proof, because the rendered page already links /pages/daily-practice eight times from the theme chrome; it is here so that deleting the button instead of repointing it cannot pass either. A first draft of this check asserted /pages/daily-practice was present and would have passed before the import, on chrome alone, which is the decoration this gate exists to refuse."
+    }
+  ]
+}

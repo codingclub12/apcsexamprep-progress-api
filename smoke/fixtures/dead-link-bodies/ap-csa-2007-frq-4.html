@@ -1,0 +1,254 @@
+<!-- Open Graph Tags for Social Sharing -->
+<meta property="og:title" content="2007 AP CSA FRQ 4 - GameState Solution">
+<meta property="og:description" content="Complete Java solution for 2007 AP Computer Science A FRQ 4. Inheritance &amp; Game Simulation with step-by-step walkthrough.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.apcsexamprep.com/pages/ap-csa-2007-frq-4">
+<meta property="og:site_name" content="AP CS Exam Prep">
+
+<!-- TechArticle Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "2007 AP CSA FRQ 4 - GameState Complete Solution",
+  "description": "Complete Java solution for 2007 AP Computer Science A FRQ 4 (GameState). Inheritance & Game Simulation with scoring rubric and common mistakes.",
+  "author": {
+    "@type": "Person",
+    "name": "Tanner Crow",
+    "jobTitle": "AP Computer Science Teacher"
+  },
+  "datePublished": "2024-01-15",
+  "dateModified": "2026-01-18",
+  "publisher": {
+    "@type": "Organization",
+    "name": "AP CS Exam Prep",
+    "url": "https://www.apcsexamprep.com"
+  },
+  "educationalLevel": "High School (AP)",
+  "teaches": "AP Computer Science A"
+}
+</script>
+
+<!-- BreadcrumbList Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.apcsexamprep.com" },
+    { "@type": "ListItem", "position": 2, "name": "FRQ Archive", "item": "https://www.apcsexamprep.com/pages/ap-csa-frq-archive" },
+    { "@type": "ListItem", "position": 3, "name": "2007 FRQs", "item": "https://www.apcsexamprep.com/pages/ap-csa-frq-2007" },
+    { "@type": "ListItem", "position": 4, "name": "FRQ 4", "item": "https://www.apcsexamprep.com/pages/ap-csa-2007-frq-4" }
+  ]
+}
+</script>
+
+<!-- FAQPage Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What concepts does 2007 AP CSA FRQ 4 test?",
+      "acceptedAnswer": { "@type": "Answer", "text": "FRQ 4 (GameState) tests inheritance & game simulation, part of Unit 3 (Class Creation)." }
+    },
+    {
+      "@type": "Question",
+      "name": "How many points is 2007 AP CSA FRQ 4 worth?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Each FRQ is worth 9 points. The free response section is 40% of your total AP CSA exam score." }
+    },
+    {
+      "@type": "Question",
+      "name": "How long should I spend on this FRQ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Aim for 20-22 minutes per FRQ. You have 90 minutes total for all 4 questions." }
+    },
+    {
+      "@type": "Question",
+      "name": "What's the best way to practice?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Attempt the problem first, then compare to the solution. Review the Unit 3 study guide for related concepts." }
+    }
+  ]
+}
+</script>
+<style>
+  .frq-container { max-width: 900px; margin: 0 auto; padding: 40px 20px 60px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; color: #1f2937; }
+  .frq-container h1 { color: #1e3a8a; font-size: 2.2em; margin-bottom: 10px; border-bottom: 3px solid #3b82f6; padding-bottom: 15px; }
+  .frq-container h2 { color: #1e40af; font-size: 1.6em; margin-top: 35px; margin-bottom: 15px; padding-left: 10px; border-left: 4px solid #60a5fa; }
+  .frq-container h3 { color: #1e40af; font-size: 1.3em; margin-top: 25px; margin-bottom: 12px; }
+  .frq-intro { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #3b82f6; }
+  .frq-container pre { background-color: #1e293b; color: #e2e8f0; padding: 18px; border-radius: 6px; overflow-x: auto; border: 1px solid #334155; margin: 15px 0; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.9em; line-height: 1.5; }
+  .frq-container code { font-family: 'Consolas', 'Monaco', monospace; font-size: 0.95em; background-color: #f1f5f9; padding: 2px 6px; border-radius: 4px; }
+  .frq-container pre code { background-color: transparent; padding: 0; }
+  .key-insight { background-color: #e0f2fe; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #0284c7; }
+  .warning-box { background-color: #fef2f2; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #ef4444; }
+  .practice-tip { background-color: #dcfce7; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #22c55e; }
+  .scoring-note { background-color: #fef3c7; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #f59e0b; }
+  .nav-buttons { display: flex; justify-content: space-between; margin-top: 40px; gap: 15px; flex-wrap: wrap; }
+  a.btn, .btn { padding: 12px 24px !important; background-color: #3b82f6 !important; color: white !important; text-decoration: none !important; border-radius: 6px !important; font-weight: 600 !important; transition: background-color 0.3s !important; text-align: center !important; display: inline-block !important; opacity: 1 !important; visibility: visible !important; }
+  a.btn:link, a.btn:visited, .btn:link, .btn:visited { color: white !important; background-color: #3b82f6 !important; }
+  a.btn:hover, .btn:hover { background-color: #2563eb !important; color: white !important; }
+  .toc-nav { background-color: #f3f4f6; padding: 15px 20px; border-radius: 6px; margin-bottom: 30px; }
+  .toc-nav h4 { margin-top: 0; font-size: 1.1em; color: #374151; }
+  .toc-nav ul { margin-bottom: 0; padding-left: 20px; }
+  .toc-nav li { margin: 8px 0; }
+  .toc-nav a { color: #2563eb; text-decoration: none; }
+  .toc-nav a:hover { text-decoration: underline; }
+  .mistake-item { padding: 8px 0; border-bottom: 1px solid #fee2e2; }
+  .mistake-item:last-child { border-bottom: none; }
+  .concept-item { padding: 8px 0; border-bottom: 1px solid #e0f2fe; }
+  .concept-item:last-child { border-bottom: none; }
+  @media (max-width: 768px) {
+    .frq-container h1 { font-size: 1.8em; }
+    .frq-container { padding: 20px 15px; }
+    .nav-buttons { flex-direction: column; }
+    pre { font-size: 0.85em; }
+  }
+</style>
+
+<article class="frq-container">
+
+<nav style="margin-bottom: 20px; font-size: 0.9em; color: #64748b;">
+  <a href="/" style="color: #2563eb; text-decoration: none;">Home</a> › 
+  <a href="/pages/ap-csa-frq-archive" style="color: #2563eb; text-decoration: none;">FRQ Archive</a> › 
+  <a href="/pages/ap-csa-frq-2007" style="color: #2563eb; text-decoration: none;">2007 FRQs</a> › 
+  <span style="color: #1e3a8a; font-weight: 500;">FRQ 4</span>
+</nav>
+
+<h1>2007 AP CSA FRQ 4: GameState</h1>
+
+<div class="frq-intro">
+  <p><strong>Topic:</strong> Inheritance &amp; Game Simulation</p>
+  <p><strong>Skills Tested:</strong> Subclass creation, polymorphism, game loop implementation, ArrayList with random</p>
+  <p><strong>Curriculum Alignment:</strong> Unit 3 (Class Creation) (2025-2026 AP CSA)</p>
+  <p><strong>Points:</strong> 9 | <strong>Time Estimate:</strong> ~22 minutes</p>
+</div>
+
+<div style="background-color: #eff6ff; padding: 15px; border-radius: 6px; margin-bottom: 25px; border-left: 4px solid #3b82f6;">
+  <strong>Study This Topic:</strong> <a href="/pages/ap-csa-unit-3-class-creation-study-guide" style="color: #2563eb; font-weight: 600;">Unit 3: Class Creation Complete Study Guide</a>
+</div>
+
+<nav class="toc-nav">
+  <h4>Quick Navigation:</h4>
+  <ul>
+    <li><a href="#part-a">Part (a) Solution</a></li>
+    <li><a href="#part-b">Part (b) Solution</a></li>
+    
+    <li><a href="#concepts">Key Concepts</a></li>
+    <li><a href="#mistakes">Common Mistakes</a></li>
+  </ul>
+</nav>
+
+
+
+<section id="part-a">
+  <h2>Part (a)</h2>
+  <p>Write the complete <code>RandomPlayer</code> class that extends <code>Player</code> and selects moves randomly.</p>
+  <div class="practice-tip">
+<strong>Try It First!</strong> Attempt to solve this part before viewing the solution.</div>
+  <h3>Solution</h3>
+  <pre><code>public class RandomPlayer extends Player
+{
+    public RandomPlayer(String name)
+    {
+        super(name);
+    }
+    
+    public String getNextMove(GameState state)
+    {
+        ArrayList<string> moves = state.getCurrentMoves();
+        
+        if (moves.size() == 0)
+            return "no move";
+        
+        int index = (int) (Math.random() * moves.size());
+        return moves.get(index);
+    }
+}</string></code></pre>
+</section>
+
+<section id="part-b">
+  <h2>Part (b)</h2>
+  <p>Write the <code>play</code> method that runs the game loop until completion, printing moves and announcing the winner.</p>
+  <h3>Solution</h3>
+  <pre><code>public void play()
+{
+    System.out.println(state);
+    
+    while (!state.isGameOver())
+    {
+        Player player = state.getCurrentPlayer();
+        String move = player.getNextMove(state);
+        
+        System.out.println(player.getName() + " " + move);
+        state.makeMove(move);
+    }
+    
+    Player winner = state.getWinner();
+    
+    if (winner != null)
+        System.out.println(winner.getName() + " wins");
+    else
+        System.out.println("Game ends in a draw");
+}</code></pre>
+</section>
+
+
+
+<section id="concepts">
+  <h2>Key Concepts</h2>
+  <div class="key-insight">
+<div class="concept-item">
+<strong>✓</strong> Use super(name) to call parent constructor</div>
+<div class="concept-item">
+<strong>✓</strong> Math.random() returns [0, 1), multiply by size for index</div>
+<div class="concept-item">
+<strong>✓</strong> Cast to int truncates to get valid array index</div>
+<div class="concept-item">
+<strong>✓</strong> Game loop continues while !isGameOver()</div>
+</div>
+</section>
+
+<section id="mistakes">
+  <h2>Common Mistakes to Avoid</h2>
+  <div class="warning-box">
+<div class="mistake-item">
+<span style="color:#ef4444;font-weight:bold;">✗</span> Forgetting to call super(name) in constructor</div>
+<div class="mistake-item">
+<span style="color:#ef4444;font-weight:bold;">✗</span> Not handling empty moves list (size == 0)</div>
+<div class="mistake-item">
+<span style="color:#ef4444;font-weight:bold;">✗</span> Incorrect random index calculation</div>
+<div class="mistake-item">
+<span style="color:#ef4444;font-weight:bold;">✗</span> Not checking for null winner (draw case)</div>
+</div>
+</section>
+
+<section id="related">
+  <h2>Practice More FRQs Like This</h2>
+  <div style="background-color: #f0fdf4; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #22c55e;">
+  <strong>Practice Similar FRQs:</strong><br><span style="font-size: 0.95em;"><a href="/pages/ap-csa-2019-frq-2">2019 FRQ 2 (StepTracker)</a> | <a href="/pages/ap-csa-2022-frq-2">2022 FRQ 2 (Textbook)</a> | <a href="/pages/ap-csa-2023-frq-2">2023 FRQ 2 (Sign)</a> | <a href="/pages/ap-csa-2024-frq-2">2024 FRQ 2 (Scoreboard)</a></span>
+</div>
+  <p><a href="/pages/ap-csa-frqs-by-topic" style="color: #2563eb;">View All FRQs by Topic →</a></p>
+</section>
+
+<div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin-top: 30px;">
+  <h3 style="margin-top: 0; color: #1e3a8a;">Official College Board Resources</h3>
+  <ul>
+    <li><a href="https://secure-media.collegeboard.org/apc/ap07_frq_computer_sc.pdf" target="_blank">2007 FRQ Questions (PDF)</a></li>
+    <li><a href="https://secure-media.collegeboard.org/apc/ap07_comp_sci_a_sgs.pdf" target="_blank">2007 Scoring Guidelines (PDF)</a></li>
+  </ul>
+</div>
+
+<nav class="nav-buttons">
+  <a class="btn" href="/pages/ap-csa-2007-frq-3">← FRQ 3</a>
+  <a class="btn" href="/pages/ap-csa-frq-2007">2007 FRQs</a>
+  <a class="btn" href="/pages/ap-csa-frq-2008">2008 FRQs →</a>
+</nav>
+
+<div style="margin-top: 40px; padding: 20px; background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-radius: 8px; border-left: 4px solid #3b82f6;">
+  <p style="margin: 0;"><strong>About the Author:</strong> Tanner Crow is a certified AP Computer Science teacher with 11+ years of experience.</p>
+  <p style="margin: 10px 0 0 0;"><em>Last updated: January 2026</em></p>
+</div>
+
+</article>

@@ -1,0 +1,1747 @@
+<!-- ap-csa-lesson-1-2-variables-data-types | Built 2026-05-15 from lesson-CONCEPTUAL-TEMPLATE-v1.html -->
+<style>
+/* =============================================================
+   SCOPED RESET --- nukes Shopify Dawn theme overrides
+   all:initial applies to wrapper ONLY (proven pattern from live
+   AP Cyber pages). Applying it to all descendants kills nested
+   element display values (table cells, buttons, inline-block badges).
+   ============================================================= */
+#apcsa-lesson {
+  all: initial !important;
+  display: block !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  max-width: 1080px !important;
+  margin: 0 auto !important;
+  padding: 32px 20px 80px !important;
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  line-height: 1.65 !important;
+  font-size: 17px !important;
+  background: #ffffff !important;
+}
+#apcsa-lesson * {
+  box-sizing: border-box !important;
+}
+#apcsa-lesson p, #apcsa-lesson li, #apcsa-lesson td, #apcsa-lesson th,
+#apcsa-lesson dt, #apcsa-lesson dd, #apcsa-lesson span, #apcsa-lesson em, #apcsa-lesson strong {
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  font-size: 17px !important;
+  line-height: 1.65 !important;
+}
+#apcsa-lesson em { font-style: italic !important; }
+#apcsa-lesson strong { font-weight: 700 !important; }
+#apcsa-lesson p { margin: 0 0 16px 0 !important; }
+#apcsa-lesson ul, #apcsa-lesson ol { display: block !important; margin: 0 0 16px 24px !important; padding: 0 !important; }
+#apcsa-lesson ul li { display: list-item !important; list-style: disc outside !important; margin: 0 0 6px 0 !important; }
+#apcsa-lesson ol li { display: list-item !important; list-style: decimal outside !important; margin: 0 0 6px 0 !important; }
+
+/* Headings */
+#apcsa-lesson h1, #apcsa-lesson h2, #apcsa-lesson h3, #apcsa-lesson h4 {
+  display: block !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  line-height: 1.25 !important;
+}
+#apcsa-lesson h1 { font-size: 36px !important; margin: 8px 0 12px 0 !important; letter-spacing: -0.02em !important; }
+#apcsa-lesson h2 { font-size: 26px !important; margin: 40px 0 14px 0 !important; padding-bottom: 8px !important; border-bottom: 2px solid #e5e7eb !important; }
+#apcsa-lesson h3 { font-size: 20px !important; margin: 24px 0 10px 0 !important; color: #1e3a8a !important; -webkit-text-fill-color: #1e3a8a !important; }
+#apcsa-lesson h4 { font-size: 17px !important; margin: 16px 0 8px 0 !important; }
+
+/* Links */
+#apcsa-lesson a:link, #apcsa-lesson a:visited {
+  color: #2563eb !important;
+  -webkit-text-fill-color: #2563eb !important;
+  text-decoration: underline !important;
+  cursor: pointer !important;
+}
+#apcsa-lesson a:hover, #apcsa-lesson a:active {
+  color: #1d4ed8 !important;
+  -webkit-text-fill-color: #1d4ed8 !important;
+}
+
+/* Code (used sparingly in conceptual lessons --- only for syntax mentions) */
+#apcsa-lesson code {
+  font-family: "SF Mono", Menlo, Consolas, Monaco, monospace !important;
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  font-size: 15px !important;
+}
+#apcsa-lesson pre {
+  display: block !important;
+  background: #0f172a !important;
+  color: #e2e8f0 !important;
+  -webkit-text-fill-color: #e2e8f0 !important;
+  padding: 18px 20px !important;
+  border-radius: 8px !important;
+  overflow-x: auto !important;
+  margin: 16px 0 !important;
+  font-family: "SF Mono", Menlo, Consolas, Monaco, monospace !important;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+  white-space: pre !important;
+}
+#apcsa-lesson pre code {
+  background: transparent !important;
+  color: #e2e8f0 !important;
+  -webkit-text-fill-color: #e2e8f0 !important;
+  padding: 0 !important;
+  font-size: 14px !important;
+}
+
+/* BREADCRUMB */
+#apcsa-lesson .apcsa-breadcrumb {
+  display: block !important;
+  font-size: 14px !important;
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+  margin-bottom: 16px !important;
+}
+#apcsa-lesson .apcsa-breadcrumb a:link, #apcsa-lesson .apcsa-breadcrumb a:visited {
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+  text-decoration: none !important;
+}
+#apcsa-lesson .apcsa-breadcrumb a:hover { text-decoration: underline !important; }
+#apcsa-lesson .apcsa-breadcrumb span.sep { margin: 0 8px !important; color: #cbd5e1 !important; -webkit-text-fill-color: #cbd5e1 !important; }
+
+/* HEADER */
+#apcsa-lesson .apcsa-header { display: block !important; margin-bottom: 28px !important; }
+#apcsa-lesson .apcsa-eyebrow {
+  display: inline-block !important;
+  background: #dbeafe !important;
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  padding: 5px 12px !important;
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 12px !important;
+}
+#apcsa-lesson .apcsa-meta-row {
+  display: flex !important;
+  gap: 16px !important;
+  flex-wrap: wrap !important;
+  margin-top: 12px !important;
+  font-size: 14px !important;
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+}
+#apcsa-lesson .apcsa-meta-row span { color: #64748b !important; -webkit-text-fill-color: #64748b !important; }
+
+/* "WHAT YOU'LL LEARN" BOX */
+#apcsa-lesson .apcsa-learn-box {
+  display: block !important;
+  background: #eff6ff !important;
+  border-left: 4px solid #2563eb !important;
+  padding: 20px 24px !important;
+  margin: 24px 0 !important;
+  border-radius: 0 8px 8px 0 !important;
+}
+#apcsa-lesson .apcsa-learn-box h3 {
+  margin-top: 0 !important;
+  color: #1e3a8a !important;
+  -webkit-text-fill-color: #1e3a8a !important;
+  font-size: 18px !important;
+}
+#apcsa-lesson .apcsa-learn-box ul li { margin-bottom: 8px !important; }
+
+/* SLOTS */
+#apcsa-lesson .apcsa-slot {
+  display: block !important;
+  background: #f8fafc !important;
+  border: 1px dashed #cbd5e1 !important;
+  padding: 18px 24px !important;
+  margin: 24px 0 !important;
+  border-radius: 8px !important;
+  text-align: center !important;
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+  font-size: 14px !important;
+}
+#apcsa-lesson .apcsa-slot strong { color: #475569 !important; -webkit-text-fill-color: #475569 !important; }
+
+/* CALLOUTS */
+#apcsa-lesson .apcsa-callout {
+  display: block !important;
+  padding: 18px 22px !important;
+  margin: 20px 0 !important;
+  border-radius: 0 8px 8px 0 !important;
+  border-left: 4px solid #94a3b8 !important;
+  background: #f8fafc !important;
+}
+#apcsa-lesson .apcsa-callout h4 {
+  margin-top: 0 !important;
+  margin-bottom: 8px !important;
+  font-size: 16px !important;
+  letter-spacing: 0.02em !important;
+}
+#apcsa-lesson .apcsa-callout.concept { background: #eff6ff !important; border-left-color: #2563eb !important; }
+#apcsa-lesson .apcsa-callout.concept h4 { color: #1e3a8a !important; -webkit-text-fill-color: #1e3a8a !important; }
+#apcsa-lesson .apcsa-callout.example { background: #f0fdf4 !important; border-left-color: #16a34a !important; }
+#apcsa-lesson .apcsa-callout.example h4 { color: #166534 !important; -webkit-text-fill-color: #166534 !important; }
+#apcsa-lesson .apcsa-callout.warning { background: #fef2f2 !important; border-left-color: #dc2626 !important; }
+#apcsa-lesson .apcsa-callout.warning h4 { color: #991b1b !important; -webkit-text-fill-color: #991b1b !important; }
+#apcsa-lesson .apcsa-callout.key-insight { background: #fefce8 !important; border-left-color: #ca8a04 !important; }
+#apcsa-lesson .apcsa-callout.key-insight h4 { color: #713f12 !important; -webkit-text-fill-color: #713f12 !important; }
+
+/* VOCAB TABLE */
+#apcsa-lesson .apcsa-vocab {
+  display: table !important;
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 16px 0 !important;
+}
+#apcsa-lesson .apcsa-vocab thead, #apcsa-lesson .apcsa-vocab tbody { display: table-row-group !important; }
+#apcsa-lesson .apcsa-vocab tr { display: table-row !important; }
+#apcsa-lesson .apcsa-vocab th, #apcsa-lesson .apcsa-vocab td {
+  display: table-cell !important;
+  padding: 12px 14px !important;
+  border: 1px solid #e5e7eb !important;
+  vertical-align: top !important;
+}
+#apcsa-lesson .apcsa-vocab th {
+  background: #f3f4f6 !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  text-align: left !important;
+}
+
+/* TIER 2 PRACTICE */
+#apcsa-lesson .apcsa-practice-tier {
+  display: block !important;
+  background: #fafafa !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  padding: 24px 28px !important;
+  margin: 32px 0 !important;
+}
+#apcsa-lesson .apcsa-practice-tier h2 {
+  margin-top: 0 !important;
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+}
+#apcsa-lesson .apcsa-practice-tier .tier-label {
+  display: inline-block !important;
+  background: #1e40af !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  padding: 4px 10px !important;
+  border-radius: 4px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  margin-right: 10px !important;
+}
+
+#apcsa-lesson .apcs-ex {
+  display: block !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  padding: 20px 22px !important;
+  margin: 16px 0 !important;
+}
+#apcsa-lesson .apcs-ex-label {
+  display: inline-block !important;
+  background: #ede9fe !important;
+  color: #5b21b6 !important;
+  -webkit-text-fill-color: #5b21b6 !important;
+  padding: 3px 10px !important;
+  border-radius: 4px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 12px !important;
+}
+#apcsa-lesson .apcs-ex-stem { margin-bottom: 12px !important; }
+#apcsa-lesson .apcs-ex-stem strong { color: #0f172a !important; -webkit-text-fill-color: #0f172a !important; }
+
+/* MCQ option list */
+#apcsa-lesson .apcs-ex-options { display: block !important; margin: 12px 0 !important; }
+#apcsa-lesson .apcs-ex-options .apcs-opt {
+  display: block !important;
+  padding: 10px 14px !important;
+  margin: 6px 0 !important;
+  border: 2px solid #e5e7eb !important;
+  border-radius: 6px !important;
+  background: #ffffff !important;
+  cursor: pointer !important;
+  font-size: 16px !important;
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  transition: all 0.15s !important;
+}
+#apcsa-lesson .apcs-ex-options .apcs-opt:hover { border-color: #93c5fd !important; background: #eff6ff !important; }
+#apcsa-lesson .apcs-ex-options .apcs-opt.selected { border-color: #2563eb !important; background: #dbeafe !important; }
+#apcsa-lesson .apcs-ex-options .apcs-opt.correct { border-color: #16a34a !important; background: #dcfce7 !important; }
+#apcsa-lesson .apcs-ex-options .apcs-opt.incorrect { border-color: #dc2626 !important; background: #fee2e2 !important; }
+#apcsa-lesson .apcs-opt-letter {
+  display: inline-block !important;
+  font-weight: 700 !important;
+  margin-right: 10px !important;
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+}
+#apcsa-lesson .apcsa-mastery .apcs-opt-letter { color: #1e40af !important; -webkit-text-fill-color: #1e40af !important; }
+#apcsa-lesson .apcsa-mastery .apcs-opt { color: #1f2937 !important; -webkit-text-fill-color: #1f2937 !important; }
+
+/* Matching */
+#apcsa-lesson .apcs-matching {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 12px !important;
+  margin: 12px 0 !important;
+}
+#apcsa-lesson .apcs-matching .apcs-match-col {
+  display: block !important;
+  background: #f8fafc !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 6px !important;
+  padding: 12px !important;
+}
+#apcsa-lesson .apcs-matching .apcs-match-item {
+  display: block !important;
+  padding: 8px 12px !important;
+  margin: 4px 0 !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  font-size: 15px !important;
+}
+#apcsa-lesson .apcs-matching .apcs-match-item.selected { border-color: #2563eb !important; background: #dbeafe !important; }
+#apcsa-lesson .apcs-matching .apcs-match-item.matched { border-color: #16a34a !important; background: #dcfce7 !important; cursor: default !important; }
+
+/* Scenario-sort */
+#apcsa-lesson .apcs-sort-bank {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  padding: 14px !important;
+  background: #f8fafc !important;
+  border: 1px dashed #cbd5e1 !important;
+  border-radius: 6px !important;
+  margin: 10px 0 !important;
+}
+#apcsa-lesson .apcs-sort-item {
+  display: inline-block !important;
+  padding: 6px 12px !important;
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 4px !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+}
+#apcsa-lesson .apcs-sort-buckets {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 12px !important;
+  margin-top: 12px !important;
+}
+#apcsa-lesson .apcs-sort-bucket {
+  display: block !important;
+  min-height: 80px !important;
+  padding: 12px !important;
+  background: #ffffff !important;
+  border: 2px dashed #cbd5e1 !important;
+  border-radius: 6px !important;
+}
+#apcsa-lesson .apcs-sort-bucket h5 {
+  display: block !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #1e40af !important;
+  -webkit-text-fill-color: #1e40af !important;
+  margin: 0 0 8px 0 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+}
+
+/* Cloze */
+#apcsa-lesson .apcs-cloze-text { display: block !important; line-height: 2 !important; font-size: 16px !important; }
+#apcsa-lesson .apcs-cloze-blank {
+  display: inline-block !important;
+  min-width: 90px !important;
+  padding: 4px 10px !important;
+  margin: 0 4px !important;
+  background: #fef9c3 !important;
+  border: 1px dashed #ca8a04 !important;
+  border-radius: 4px !important;
+  text-align: center !important;
+  font-size: 15px !important;
+}
+#apcsa-lesson .apcs-cloze-blank.filled { background: #dbeafe !important; border-style: solid !important; border-color: #2563eb !important; }
+#apcsa-lesson .apcs-cloze-blank.correct { background: #dcfce7 !important; border-color: #16a34a !important; }
+#apcsa-lesson .apcs-cloze-blank.incorrect { background: #fee2e2 !important; border-color: #dc2626 !important; }
+#apcsa-lesson .apcs-cloze-chips { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; margin-top: 12px !important; }
+
+/* Predict gate */
+#apcsa-lesson .apcs-predict-gate {
+  display: block !important;
+  background: #fffbeb !important;
+  border-left: 3px solid #f59e0b !important;
+  padding: 10px 14px !important;
+  margin: 10px 0 !important;
+  font-size: 14px !important;
+  color: #78350f !important;
+  -webkit-text-fill-color: #78350f !important;
+  font-style: italic !important;
+}
+
+/* Buttons */
+#apcsa-lesson .apcs-btn,
+#apcsa-lesson .apcs-btn:link,
+#apcsa-lesson .apcs-btn:visited {
+  display: inline-block !important;
+  background: #2563eb !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  padding: 10px 20px !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  text-decoration: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  margin: 4px 4px 4px 0 !important;
+}
+#apcsa-lesson .apcs-btn:hover, #apcsa-lesson .apcs-btn:active {
+  background: #1d4ed8 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+#apcsa-lesson .apcs-btn-secondary,
+#apcsa-lesson .apcs-btn-secondary:link,
+#apcsa-lesson .apcs-btn-secondary:visited {
+  background: #ffffff !important;
+  color: #2563eb !important;
+  -webkit-text-fill-color: #2563eb !important;
+  border: 2px solid #2563eb !important;
+  padding: 8px 18px !important;
+}
+#apcsa-lesson .apcs-btn-secondary:hover, #apcsa-lesson .apcs-btn-secondary:active {
+  background: #eff6ff !important;
+  color: #1d4ed8 !important;
+  -webkit-text-fill-color: #1d4ed8 !important;
+}
+
+/* Feedback */
+#apcsa-lesson .apcs-ex-feedback {
+  display: none !important;
+  margin-top: 12px !important;
+  padding: 14px 16px !important;
+  border-radius: 6px !important;
+  font-size: 15px !important;
+}
+#apcsa-lesson .apcs-ex-feedback.show { display: block !important; }
+#apcsa-lesson .apcs-ex-feedback.fb-correct {
+  background: #dcfce7 !important;
+  border-left: 4px solid #16a34a !important;
+  color: #14532d !important;
+  -webkit-text-fill-color: #14532d !important;
+}
+#apcsa-lesson .apcs-ex-feedback.fb-incorrect {
+  background: #fee2e2 !important;
+  border-left: 4px solid #dc2626 !important;
+  color: #7f1d1d !important;
+  -webkit-text-fill-color: #7f1d1d !important;
+}
+
+/* TIER 3 MASTERY */
+#apcsa-lesson .apcsa-mastery {
+  display: block !important;
+  background: #0f172a !important;
+  color: #f1f5f9 !important;
+  -webkit-text-fill-color: #f1f5f9 !important;
+  border-radius: 12px !important;
+  padding: 32px 32px 28px !important;
+  margin: 40px 0 !important;
+}
+#apcsa-lesson .apcsa-mastery,
+#apcsa-lesson .apcsa-mastery p,
+#apcsa-lesson .apcsa-mastery span,
+#apcsa-lesson .apcsa-mastery li,
+#apcsa-lesson .apcsa-mastery strong,
+#apcsa-lesson .apcsa-mastery em { color: #f1f5f9 !important; -webkit-text-fill-color: #f1f5f9 !important; }
+#apcsa-lesson .apcsa-mastery code { background: rgba(255,255,255,0.10) !important; color: #fde68a !important; -webkit-text-fill-color: #fde68a !important; padding: 2px 6px !important; border-radius: 4px !important; font-size: 14px !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-feedback.fb-correct strong { color: #14532d !important; -webkit-text-fill-color: #14532d !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-feedback.fb-correct code { background: rgba(20,83,45,0.12) !important; color: #14532d !important; -webkit-text-fill-color: #14532d !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-feedback.fb-incorrect strong { color: #7f1d1d !important; -webkit-text-fill-color: #7f1d1d !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-feedback.fb-incorrect code { background: rgba(127,29,29,0.12) !important; color: #7f1d1d !important; -webkit-text-fill-color: #7f1d1d !important; }
+#apcsa-lesson .apcsa-mastery .mastery-badge {
+  display: inline-block !important;
+  background: #f59e0b !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  padding: 5px 12px !important;
+  border-radius: 999px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 14px !important;
+}
+#apcsa-lesson .apcsa-mastery h2 { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; border-bottom: none !important; padding-bottom: 0 !important; margin-top: 0 !important; }
+#apcsa-lesson .apcsa-mastery h3 { color: #fbbf24 !important; -webkit-text-fill-color: #fbbf24 !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+#apcsa-lesson .apcsa-mastery .apcs-ex-stem,
+#apcsa-lesson .apcsa-mastery .apcs-ex-stem strong { color: #f1f5f9 !important; -webkit-text-fill-color: #f1f5f9 !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-options .apcs-opt {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #f1f5f9 !important;
+  -webkit-text-fill-color: #f1f5f9 !important;
+}
+#apcsa-lesson .apcsa-mastery .apcs-ex-options .apcs-opt:hover { border-color: #60a5fa !important; background: #1e293b !important; }
+#apcsa-lesson .apcsa-mastery .apcs-ex-options .apcs-opt.selected { border-color: #60a5fa !important; background: #1e3a8a !important; }
+#apcsa-lesson .apcsa-mastery .apcs-predict-gate {
+  background: #1e293b !important;
+  border-left-color: #f59e0b !important;
+  color: #fde68a !important;
+  -webkit-text-fill-color: #fde68a !important;
+}
+#apcsa-lesson .apcsa-mastery .mastery-rubric {
+  display: none !important;
+  margin-top: 18px !important;
+  padding: 16px 18px !important;
+  background: #1e293b !important;
+  border-radius: 8px !important;
+  border: 1px solid #334155 !important;
+}
+#apcsa-lesson .apcsa-mastery .mastery-rubric[data-revealed="1"] {
+  display: block !important;
+}
+#apcsa-lesson .apcsa-mastery .mastery-rubric ~ div {
+  display: none !important;
+}
+#apcsa-lesson .apcsa-mastery .mastery-rubric[data-revealed="1"] ~ div {
+  display: block !important;
+}
+
+#apcsa-lesson .apcsa-mastery .mastery-rubric h4 {
+  color: #fbbf24 !important;
+  -webkit-text-fill-color: #fbbf24 !important;
+  margin-top: 0 !important;
+  margin-bottom: 10px !important;
+  font-size: 15px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+}
+#apcsa-lesson .apcsa-mastery .rubric-row {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 8px 0 !important;
+  border-bottom: 1px solid #334155 !important;
+  gap: 12px !important;
+}
+#apcsa-lesson .apcsa-mastery .rubric-row:last-child { border-bottom: none !important; }
+#apcsa-lesson .apcsa-mastery .rubric-score {
+  display: inline-block !important;
+  background: #16a34a !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  padding: 3px 10px !important;
+  border-radius: 4px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+}
+#apcsa-lesson .apcsa-mastery .rubric-score.partial { background: #ca8a04 !important; }
+#apcsa-lesson .apcsa-mastery .rubric-score.zero { background: #dc2626 !important; }
+
+/* TRAPS GRID */
+#apcsa-lesson .apcsa-traps {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 14px !important;
+  margin: 24px 0 !important;
+}
+#apcsa-lesson .apcsa-trap-card {
+  display: block !important;
+  background: #fef2f2 !important;
+  border-left: 4px solid #dc2626 !important;
+  padding: 16px 18px !important;
+  border-radius: 0 8px 8px 0 !important;
+}
+#apcsa-lesson .apcsa-trap-card h4 {
+  margin-top: 0 !important;
+  margin-bottom: 6px !important;
+  color: #991b1b !important;
+  -webkit-text-fill-color: #991b1b !important;
+  font-size: 15px !important;
+}
+#apcsa-lesson .apcsa-trap-card p { font-size: 15px !important; margin-bottom: 0 !important; }
+
+/* EXTENSION */
+#apcsa-lesson .apcsa-extension {
+  display: block !important;
+  background: #faf5ff !important;
+  border: 1px solid #e9d5ff !important;
+  border-radius: 12px !important;
+  padding: 24px 28px !important;
+  margin: 32px 0 !important;
+}
+#apcsa-lesson .apcsa-extension h3 {
+  color: #6b21a8 !important;
+  -webkit-text-fill-color: #6b21a8 !important;
+  margin-top: 8px !important;
+}
+#apcsa-lesson .apcsa-extension .ext-badge {
+  display: inline-block !important;
+  background: #6b21a8 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  padding: 4px 10px !important;
+  border-radius: 4px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+}
+
+/* RESOURCE GRID */
+#apcsa-lesson .apcsa-resources {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 12px !important;
+  margin: 16px 0 !important;
+}
+#apcsa-lesson .apcsa-resource-card,
+#apcsa-lesson .apcsa-resource-card:link,
+#apcsa-lesson .apcsa-resource-card:visited {
+  display: block !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  padding: 16px 18px !important;
+  text-decoration: none !important;
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  transition: all 0.15s !important;
+}
+#apcsa-lesson .apcsa-resource-card:hover {
+  border-color: #2563eb !important;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.08) !important;
+}
+#apcsa-lesson .apcsa-resource-card h4 {
+  color: #1e3a8a !important;
+  -webkit-text-fill-color: #1e3a8a !important;
+  margin-top: 0 !important;
+  margin-bottom: 6px !important;
+  font-size: 15px !important;
+}
+#apcsa-lesson .apcsa-resource-card p {
+  font-size: 14px !important;
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+  margin: 0 !important;
+}
+
+/* CTA BANNER */
+#apcsa-lesson .apcsa-cta-banner {
+  display: block !important;
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border-radius: 12px !important;
+  padding: 28px 32px !important;
+  margin: 40px 0 !important;
+  text-align: center !important;
+}
+#apcsa-lesson .apcsa-cta-banner,
+#apcsa-lesson .apcsa-cta-banner p,
+#apcsa-lesson .apcsa-cta-banner span,
+#apcsa-lesson .apcsa-cta-banner strong { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; }
+#apcsa-lesson .apcsa-cta-banner h3 {
+  font-size: 22px !important;
+  margin: 0 0 10px 0 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+#apcsa-lesson .apcsa-cta-banner p { font-size: 16px !important; margin-bottom: 16px !important; }
+#apcsa-lesson .apcsa-cta-banner .apcs-btn,
+#apcsa-lesson .apcsa-cta-banner .apcs-btn:link,
+#apcsa-lesson .apcsa-cta-banner .apcs-btn:visited {
+  background: #ffffff !important;
+  color: #1e3a8a !important;
+  -webkit-text-fill-color: #1e3a8a !important;
+}
+#apcsa-lesson .apcsa-cta-banner .apcs-btn:hover, #apcsa-lesson .apcsa-cta-banner .apcs-btn:active {
+  background: #f1f5f9 !important;
+  color: #1e3a8a !important;
+  -webkit-text-fill-color: #1e3a8a !important;
+}
+
+/* NAV */
+#apcsa-lesson .apcsa-nav {
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 14px !important;
+  margin: 40px 0 24px 0 !important;
+  padding-top: 24px !important;
+  border-top: 2px solid #e5e7eb !important;
+}
+#apcsa-lesson .apcsa-nav a:link, #apcsa-lesson .apcsa-nav a:visited {
+  display: block !important;
+  flex: 1 1 0 !important;
+  padding: 14px 18px !important;
+  background: #f8fafc !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  text-decoration: none !important;
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+}
+#apcsa-lesson .apcsa-nav a:hover { border-color: #2563eb !important; background: #eff6ff !important; }
+#apcsa-lesson .apcsa-nav .nav-direction {
+  display: block !important;
+  font-size: 12px !important;
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  margin-bottom: 4px !important;
+}
+#apcsa-lesson .apcsa-nav .nav-title {
+  display: block !important;
+  font-weight: 600 !important;
+  color: #1e3a8a !important;
+  -webkit-text-fill-color: #1e3a8a !important;
+}
+#apcsa-lesson .apcsa-nav .nav-next { text-align: right !important; }
+#apcsa-lesson .apcsa-nav .nav-prev.disabled,
+#apcsa-lesson .apcsa-nav .nav-prev.disabled:link,
+#apcsa-lesson .apcsa-nav .nav-prev.disabled:visited {
+  opacity: 0.4 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+
+#apcsa-lesson .apcsa-hub-links {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  justify-content: center !important;
+  font-size: 14px !important;
+}
+#apcsa-lesson .apcsa-hub-links a:link, #apcsa-lesson .apcsa-hub-links a:visited {
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+}
+
+@media (max-width: 720px) {
+  #apcsa-lesson { padding: 20px 16px 60px !important; font-size: 16px !important; }
+  #apcsa-lesson h1 { font-size: 28px !important; }
+  #apcsa-lesson h2 { font-size: 22px !important; }
+  #apcsa-lesson .apcsa-traps { grid-template-columns: 1fr !important; }
+  #apcsa-lesson .apcsa-matching { grid-template-columns: 1fr !important; }
+  #apcsa-lesson .apcsa-nav { flex-direction: column !important; }
+  #apcsa-lesson .apcsa-nav .nav-next { text-align: left !important; }
+  #apcsa-lesson .apcsa-mastery { padding: 24px 20px !important; }
+  #apcsa-lesson .apcsa-mastery .rubric-row { flex-direction: column !important; align-items: flex-start !important; }
+  #apcsa-lesson .apcsa-resources { grid-template-columns: 1fr !important; }
+}
+</style>
+<!-- CSANAV-START --><style>
+#csanav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;width:100%!important;max-width:980px!important;z-index:10000!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important;box-shadow:0 3px 18px rgba(0,0,0,.4)!important;background:#1a0840!important;margin:0!important;padding:0!important;border-radius:0 0 12px 12px!important;top:0!important;}
+#csanav *{box-sizing:border-box!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif!important;-webkit-font-smoothing:antialiased!important;}
+#csanav .csn-rail{display:flex!important;align-items:stretch!important;height:40px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;background:#1a0840!important;border-bottom:2px solid rgba(109,40,217,.5)!important;border-radius:0 0 12px 12px!important;}
+#csanav .csn-rail::-webkit-scrollbar{display:none!important;}
+#csanav .csn-hub{display:inline-flex!important;align-items:center!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.8px!important;white-space:nowrap!important;text-decoration:none!important;background:#6d28d9!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-right:2px solid rgba(167,139,250,.4)!important;transition:background .15s!important;}
+#csanav .csn-hub:link,#csanav .csn-hub:visited,#csanav a.csn-hub,#csanav a.csn-hub:link,#csanav a.csn-hub:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;text-decoration:none!important;}
+#csanav .csn-hub:hover{background:#5b21b6!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#csanav .csn-badge{display:inline-flex!important;align-items:center!important;padding:0 12px 0 14px!important;flex-shrink:0!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:1.2px!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;border-right:1px solid rgba(167,139,250,.25)!important;white-space:nowrap!important;}
+#csanav .csn-lesson{display:inline-flex!important;align-items:center!important;gap:6px!important;padding:0 14px!important;height:40px!important;flex-shrink:0!important;cursor:pointer!important;font-size:13px!important;font-weight:600!important;background:transparent!important;border:none!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.08)!important;transition:background .15s!important;text-decoration:none!important;color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;}
+#csanav .csn-lesson:link,#csanav .csn-lesson:visited,#csanav .csn-lesson:hover,#csanav .csn-lesson:active,#csanav a.csn-lesson,#csanav a.csn-lesson:link,#csanav a.csn-lesson:visited{color:#e2e0f0!important;-webkit-text-fill-color:#e2e0f0!important;text-decoration:none!important;}
+#csanav .csn-lesson:hover{background:rgba(109,40,217,.25)!important;}
+#csanav .csn-lesson.open{background:rgba(109,40,217,.4)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-bottom:2px solid #7c3aed!important;margin-bottom:-2px!important;}
+#csanav .csn-lesson.open:link,#csanav .csn-lesson.open:visited{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#csanav .csn-chevron{font-size:9px!important;transition:transform .2s!important;color:#a78bfa!important;-webkit-text-fill-color:#a78bfa!important;display:inline-block!important;}
+#csanav .csn-lesson.open .csn-chevron{transform:rotate(180deg)!important;}
+#csanav .csn-steps{display:none!important;align-items:stretch!important;border-left:2px solid #7c3aed!important;flex-shrink:0!important;}
+#csanav .csn-steps.open{display:inline-flex!important;}
+#csanav .csn-step{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0 13px!important;height:40px!important;flex-shrink:0!important;font-size:12px!important;font-weight:500!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.07)!important;text-decoration:none!important;transition:background .12s,color .12s!important;color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;background:rgba(109,40,217,.15)!important;}
+#csanav .csn-step:link,#csanav .csn-step:visited,#csanav a.csn-step,#csanav a.csn-step:link,#csanav a.csn-step:visited{color:#d4d0f0!important;-webkit-text-fill-color:#d4d0f0!important;text-decoration:none!important;}
+#csanav .csn-step:hover{background:rgba(109,40,217,.35)!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#csanav .csn-step.current{background:rgba(109,40,217,.45)!important;color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;font-weight:700!important;}
+#csanav .csn-step.current:link,#csanav .csn-step.current:visited{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+@media(max-width:600px){#csanav .csn-badge{display:none!important;}}
+</style>
+<div id="csanav">
+<div class="csn-rail" id="csn-rail">
+<a href="/pages/ap-csa-course" class="csn-hub">AP CSA Hub</a> <span class="csn-badge">Unit 1</span> <a href="/pages/ap-csa-lesson-1-1-intro-algorithms" class="csn-lesson" id="csn-l1-1" title="Introduction to Algorithms, Programming, and Compilers">1.1 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-1"> <a href="/pages/ap-csa-lesson-1-1-intro-algorithms" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-1-intro-algorithms-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-2-variables-data-types" class="csn-lesson open" id="csn-l1-2" title="Variables and Data Types">1.2 <span class="csn-chevron">▼</span></a> <span class="csn-steps open" id="csn-s1-2"> <span class="csn-step current">Lesson</span> <a href="/pages/ap-csa-lesson-1-2-variables-data-types-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-3-expressions-assignment" class="csn-lesson" id="csn-l1-3" title="Expressions and Output">1.3 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-3"> <a href="/pages/ap-csa-lesson-1-3-expressions-assignment" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-3-expressions-assignment-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-4-assignment-statements-input" class="csn-lesson" id="csn-l1-4" title="Assignment Statements and Input">1.4 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-4"> <a href="/pages/ap-csa-lesson-1-4-assignment-statements-input" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-4-assignment-statements-input-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-5-casting-range" class="csn-lesson" id="csn-l1-5" title="Casting and Range of Variables">1.5 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-5"> <a href="/pages/ap-csa-lesson-1-5-casting-range" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-5-casting-range-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-6-compound-assignment" class="csn-lesson" id="csn-l1-6" title="Compound Assignment Operators">1.6 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-6"> <a href="/pages/ap-csa-lesson-1-6-compound-assignment" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-6-compound-assignment-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-7-api-libraries" class="csn-lesson" id="csn-l1-7" title="Application Program Interface (API) and Libraries">1.7 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-7"> <a href="/pages/ap-csa-lesson-1-7-api-libraries" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-7-api-libraries-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-8-documentation-comments" class="csn-lesson" id="csn-l1-8" title="Documentation with Comments">1.8 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-8"> <a href="/pages/ap-csa-lesson-1-8-documentation-comments" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-8-documentation-comments-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-9-method-signatures" class="csn-lesson" id="csn-l1-9" title="Method Signatures">1.9 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-9"> <a href="/pages/ap-csa-lesson-1-9-method-signatures" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-9-method-signatures-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-10-calling-class-methods" class="csn-lesson" id="csn-l1-10" title="Calling Class Methods">1.10 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-10"> <a href="/pages/ap-csa-lesson-1-10-calling-class-methods" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-10-calling-class-methods-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-11-math-class" class="csn-lesson" id="csn-l1-11" title="Math Class">1.11 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-11"> <a href="/pages/ap-csa-lesson-1-11-math-class" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-11-math-class-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-12-objects-instances" class="csn-lesson" id="csn-l1-12" title="Objects: Instances of Classes">1.12 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-12"> <a href="/pages/ap-csa-lesson-1-12-objects-instances" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-12-objects-instances-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-13-object-creation" class="csn-lesson" id="csn-l1-13" title="Object Creation and Storage (Instantiation)">1.13 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-13"> <a href="/pages/ap-csa-lesson-1-13-object-creation" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-13-object-creation-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-14-calling-instance-methods" class="csn-lesson" id="csn-l1-14" title="Calling Instance Methods">1.14 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-14"> <a href="/pages/ap-csa-lesson-1-14-calling-instance-methods" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-14-calling-instance-methods-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span> <a href="/pages/ap-csa-lesson-1-15-string-manipulation" class="csn-lesson" id="csn-l1-15" title="String Manipulation">1.15 <span class="csn-chevron">▼</span></a> <span class="csn-steps" id="csn-s1-15"> <a href="/pages/ap-csa-lesson-1-15-string-manipulation" class="csn-step">Lesson</a> <a href="/pages/ap-csa-lesson-1-15-string-manipulation-exercise-1" class="csn-step">Ex 1</a> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Ex 2</span> <span class="csn-step" style="opacity:0.4!important;cursor:not-allowed!important;">Quiz</span> </span>
+</div>
+</div>
+<p> </p>
+<script>
+(function(){
+  document.querySelectorAll('#csanav .csn-lesson').forEach(function(btn){
+    btn.addEventListener('click',function(e){
+      var stepsId='csn-s'+btn.id.replace('csn-l','');
+      var steps=document.getElementById(stepsId);
+      var isOpen=btn.classList.contains('open');
+      if(!isOpen)e.preventDefault();
+      document.querySelectorAll('#csanav .csn-lesson').forEach(function(b){b.classList.remove('open');});
+      document.querySelectorAll('#csanav .csn-steps').forEach(function(s){s.classList.remove('open');});
+      if(!isOpen&&steps){btn.classList.add('open');steps.classList.add('open');}
+    });
+  });
+})();
+</script><!-- CSANAV-END -->
+
+
+<div id="apcsa-lesson" data-course="ap-csa" data-lesson-id="1.2">
+
+<nav class="apcsa-breadcrumb" aria-label="Breadcrumb">
+  <a href="/pages/ap-csa-exam-prep-hub">AP CSA</a>
+  <span class="sep">›</span>
+  <a href="/pages/ap-csa-course">Course</a>
+  <span class="sep">›</span>
+  <a href="/pages/ap-csa-unit-1-course">Unit 1: Using Objects and Methods</a>
+  <span class="sep">›</span>
+  <span>Lesson 1.2</span>
+</nav>
+
+<header class="apcsa-header">
+  <span class="apcsa-eyebrow">Unit 1 · Lesson 1.2 · Conceptual</span>
+  <h1>Lesson 1.2: Variables and Data Types</h1>
+  <div class="apcsa-meta-row">
+    <span>Reading time: 14-16 min</span>
+    <span>·</span>
+    <span>Practice: 6 exercises</span>
+    <span>·</span>
+    <span>Mastery: applied scenario</span>
+  </div>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Lesson 1.2: Variables and Data Types","description":"AP CSA Lesson 1.2 covers primitive types int, double, and boolean, variable declaration and naming rules, and type selection. Aligned to 2025-2026 CED topics 1.2.A and 1.2.B.","url":"https://apcsexamprep.com/pages/ap-csa-lesson-1-2-variables-data-types","datePublished":"2026-05-21","dateModified":"2026-05-21","author":{"@type":"Person","name":"Tanner Crow","url":"https://apcsexamprep.com"},"publisher":{"@type":"Organization","name":"APCSExamPrep.com","url":"https://apcsexamprep.com"},"wordCount":1200,"educationalLevel":"High School AP","about":{"@type":"Course","name":"AP Computer Science A"}}
+</script>
+</header>
+
+<div class="apcsa-learn-box">
+  <h3>What you’ll learn in this lesson</h3>
+  <ul>
+    <li>
+<strong>1.2.A.</strong> Identify the most appropriate data type category (primitive vs. reference) for a particular specification, and recognize the three primitive types used in AP CSA.</li>
+    <li>
+<strong>1.2.B.</strong> Declare variables to store numbers and Boolean values using <code>int</code>, <code>double</code>, and <code>boolean</code>, with the correct syntax for naming and initialization.</li>
+  </ul>
+  <p style="margin-top: 8px !important; margin-bottom: 4px !important; font-size: 14px !important; color: #475569 !important; -webkit-text-fill-color: #475569 !important;">This lesson is part of the <a href="https://apcentral.collegeboard.org/courses/ap-computer-science-a" target="_blank" rel="noopener noreferrer" style="color:#2563eb !important; -webkit-text-fill-color:#2563eb !important;">AP CSA Course and Exam Description</a> (effective May 2027).</p>
+  <p style="margin-top: 12px !important; margin-bottom: 0 !important; font-size: 15px !important; color: #475569 !important; -webkit-text-fill-color: #475569 !important;">
+    <strong>AP exam weight:</strong> Variable declarations and data type selection appear in nearly every MCQ on the exam, usually as part of larger code segments. The exclusion statement matters too: AP CSA only tests <code>int</code>, <code>double</code>, and <code>boolean</code> for primitives, so anything involving <code>long</code>, <code>float</code>, <code>short</code>, <code>byte</code>, or <code>char</code> is a trap distractor by definition.
+  </p>
+</div>
+
+<!-- VIDEO PLACEHOLDER: Add lesson video embed here when ready -->
+
+<h2>What is a variable, and why do we need types?</h2>
+<p>
+  A program that just prints “Hello, World” isn’t very useful. Real programs work with data, test scores, prices, names, true/false flags, and that data has to live somewhere while the program runs. That somewhere is a <strong>variable</strong>: a named storage location that holds a value, where the value can change as the program executes.
+</p>
+
+<div class="apcsa-callout concept">
+  <h4>Definition</h4>
+  <p>A <strong>variable</strong> is a storage location that holds a value, which can change while the program is running. Every variable has a <em>name</em> and an associated <em>data type</em>. A variable of a primitive type holds a primitive value from that type.</p>
+</div>
+
+<p>
+  Naming a storage location is only half the picture. Java is a <em>statically typed</em> language, which means every variable also has a fixed data type that the compiler tracks. The data type tells Java two things: what set of values can be stored there, and what operations are allowed on those values. Storing the number <code>42</code> behaves very differently from storing the text <code>"42"</code>, one is an integer you can do arithmetic on, the other is a string of characters.
+</p>
+
+<h3>The two categories: primitive vs. reference</h3>
+<p>
+  Java divides every data type into one of two categories. <strong>Primitive types</strong> directly hold simple values like numbers and Boolean truth values. <strong>Reference types</strong> are used to define objects, things like <code>String</code>, <code>Scanner</code>, and any class you write yourself. The CED is explicit about this distinction because it’s the foundation for everything you’ll learn about objects in Unit 1, classes in Unit 3, and collections in Unit 4.
+</p>
+<p>
+  For now, the important thing is that primitives hold the value <em>itself</em>, while references hold a way to find an object that lives elsewhere in memory. In Lesson 1.2 we work entirely with primitives. Reference types come in lesson 1.5 when you create your first <code>String</code> object.
+</p>
+
+<div class="apcsa-callout warning">
+  <h4>Exclusion statement: AP exam scope</h4>
+  <p>The AP Computer Science A course and exam uses only three primitive types: <code>int</code>, <code>double</code>, and <code>boolean</code>. The other five Java primitives, <code>long</code>, <code>short</code>, <code>byte</code>, <code>float</code>, and <code>char</code>, are explicitly excluded from the AP CSA exam. If you see any of those five in an answer choice, the choice is wrong by definition of the course scope.</p>
+</div>
+
+<h3>The three primitive types in AP CSA</h3>
+<p>Each of the three has a specific job, defined by what values it can hold:</p>
+<ul>
+  <li>
+<strong><code>int</code></strong>. Stores an integer (a whole number, positive, negative, or zero). Examples: <code>0</code>, <code>42</code>, <code>-7</code>, <code>1000000</code>. The <code>int</code> type cannot store decimals.</li>
+  <li>
+<strong><code>double</code></strong>. Stores a real number, including decimals. Examples: <code>3.14</code>, <code>-0.5</code>, <code>2.0</code>, <code>99.99</code>. Use <code>double</code> any time the value has a fractional part or could need one.</li>
+  <li>
+<strong><code>boolean</code></strong>. Stores exactly one of two values: <code>true</code> or <code>false</code>. No quotes, no capitals. Use <code>boolean</code> for yes/no flags, on/off states, and the result of comparisons.</li>
+</ul>
+
+<div class="apcsa-callout example">
+  <h4>Example: picking the right type</h4>
+  <p>A program that tracks how many students are in a classroom should use <code>int</code> because you cannot have 24.5 students. A program that tracks the average exam grade should use <code>double</code>. The average of 87, 91, and 95 is 91.0, but the average of 87, 90, and 92 is 89.666..., which an <code>int</code> would truncate to 89. A program that tracks whether the lights in the building are on should use <code>boolean</code>; the lights are either on or off, nothing in between.</p>
+</div>
+
+<h3>Declaring variables: the syntax</h3>
+<p>
+  To declare a variable in Java, you write the data type, then the variable name, optionally followed by <code>=</code> and an initial value, and finally a semicolon. The pattern is:
+</p>
+<pre><code>dataType variableName = initialValue;</code></pre>
+<p>
+  Concrete examples that follow the AP CSA scope:
+</p>
+<pre><code>int score = 0;
+double price = 19.99;
+boolean isPassing = true;</code></pre>
+<p>
+  You can also declare a variable without giving it an initial value, <code>int score;</code> is legal, but the variable then has no usable value, and Java will refuse to let you use it in an expression until you assign one. This is called <em>definite assignment</em>, and on the AP exam any code that reads from an uninitialized local variable is a syntax/compile error.
+</p>
+
+<h3>Variable naming rules</h3>
+<p>
+  Java imposes a small set of rules for variable names. They are not optional, breaking them produces a syntax error and the compiler refuses to compile the program:
+</p>
+<ul>
+  <li>Must start with a letter, an underscore (<code>_</code>), or a dollar sign (<code>$</code>), never a digit.</li>
+  <li>After the first character, can contain letters, digits, underscores, and dollar signs.</li>
+  <li>Cannot be a Java reserved word (<code>int</code>, <code>double</code>, <code>boolean</code>, <code>class</code>, <code>if</code>, etc.).</li>
+  <li>Case sensitive: <code>score</code> and <code>Score</code> are two different variables.</li>
+  <li>Convention (not a rule, but expected on the exam): use <em>camelCase</em>. The first word is lowercase; subsequent words start with a capital letter. So <code>numStudents</code>, not <code>num_students</code> or <code>NumStudents</code>.</li>
+</ul>
+
+<div class="apcsa-callout key-insight">
+  <h4>Key insight</h4>
+  <p>The data type a programmer chooses is a <em>design decision</em>, not a Java decision. Java will happily let you store the number of students in a <code>double</code>, the program compiles and runs. But on the AP exam, “which is the most appropriate data type” questions have one right answer: the type that exactly matches the values the specification allows. Whole-number quantities use <code>int</code>. Quantities with fractional parts use <code>double</code>. Yes/no states use <code>boolean</code>. Picking a wider type “just in case” is wrong on the exam, even though it might be reasonable engineering elsewhere.</p>
+</div>
+
+<h3>Key vocabulary</h3>
+<table class="apcsa-vocab">
+  <thead>
+    <tr>
+<th style="width: 28% !important;">Term</th>
+<th>Definition</th>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td><strong>Data type</strong></td>
+<td>A set of values plus the operations defined on those values. Categorized as either primitive or reference.</td>
+</tr>
+    <tr>
+<td><strong>Primitive type</strong></td>
+<td>A data type that directly holds a simple value. AP CSA uses three: <code>int</code>, <code>double</code>, <code>boolean</code>.</td>
+</tr>
+    <tr>
+<td><strong>Reference type</strong></td>
+<td>A data type used to define an object. Lesson 1.5 introduces <code>String</code> as the first reference type.</td>
+</tr>
+    <tr>
+<td><strong>Variable</strong></td>
+<td>A named storage location that holds a value. The value can change during execution; the data type cannot.</td>
+</tr>
+    <tr>
+<td><strong><code>int</code></strong></td>
+<td>Primitive type storing integers (whole numbers, positive, negative, or zero). No decimal portion.</td>
+</tr>
+    <tr>
+<td><strong><code>double</code></strong></td>
+<td>Primitive type storing real numbers, including decimal values.</td>
+</tr>
+    <tr>
+<td><strong><code>boolean</code></strong></td>
+<td>Primitive type storing exactly one of <code>true</code> or <code>false</code> (lowercase, no quotes).</td>
+</tr>
+    <tr>
+<td><strong>Declaration</strong></td>
+<td>The statement that creates a variable. Has the form <code>dataType name = value;</code> with the initial value optional.</td>
+</tr>
+    <tr>
+<td><strong>Definite assignment</strong></td>
+<td>The Java rule that a local variable must be assigned a value before it is read. Reading an unassigned local is a compile error.</td>
+</tr>
+  </tbody>
+</table>
+
+<!-- SLIDES PLACEHOLDER: Add slide deck download link here when ready -->
+
+
+
+<!-- in-lesson code editor -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+
+<style>
+#csa-ce-wrap{font-family:"DM Sans",-apple-system,sans-serif!important;background:#0f172a!important;border-radius:14px!important;padding:28px!important;margin:40px 0!important;box-sizing:border-box!important;}
+#csa-ce-wrap *{box-sizing:border-box!important;}
+#csa-ce-wrap .csa-ce-badge{display:inline-block!important;background:rgba(232,160,32,.15)!important;border:1px solid rgba(232,160,32,.4)!important;color:#fbbf24!important;-webkit-text-fill-color:#fbbf24!important;font-size:11px!important;font-weight:700!important;letter-spacing:.1em!important;text-transform:uppercase!important;padding:5px 14px!important;border-radius:100px!important;margin-bottom:10px!important;}
+#csa-ce-wrap .csa-ce-title{font-family:"DM Serif Display",Georgia,serif!important;font-size:22px!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;margin:0 0 4px 0!important;}
+#csa-ce-wrap .csa-ce-sub{font-size:13px!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;margin:0 0 20px 0!important;line-height:1.6!important;}
+#csa-ce-wrap .csa-ce-problem{background:rgba(255,255,255,.04)!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:10px!important;padding:18px 20px!important;margin-bottom:16px!important;}
+#csa-ce-wrap .csa-ce-num{font-size:11px!important;font-weight:700!important;letter-spacing:.06em!important;text-transform:uppercase!important;color:#fbbf24!important;-webkit-text-fill-color:#fbbf24!important;margin:0 0 8px 0!important;}
+#csa-ce-wrap .csa-ce-prompt{font-size:14px!important;color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;line-height:1.65!important;margin:0 0 12px 0!important;}
+#csa-ce-wrap .csa-ce-prompt code{background:rgba(255,255,255,.1)!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;padding:1px 6px!important;border-radius:4px!important;font-family:Menlo,Consolas,monospace!important;font-size:13px!important;}
+#csa-ce-wrap .csa-ce-editor{border:2px solid rgba(255,255,255,.12)!important;border-radius:8px!important;overflow:hidden!important;margin-bottom:10px!important;}
+#csa-ce-wrap .CodeMirror{height:auto!important;min-height:240px!important;background:#020617!important;color:#e2e8f0!important;font-family:Menlo,Consolas,monospace!important;font-size:13.5px!important;line-height:1.7!important;padding:6px 0!important;}
+#csa-ce-wrap .CodeMirror pre.CodeMirror-line,#csa-ce-wrap .CodeMirror pre.CodeMirror-line-like{padding-left:8px!important;border:0!important;border-radius:0!important;background:transparent!important;margin:0!important;}
+#csa-ce-wrap .CodeMirror-lines{padding:8px 0!important;}
+#csa-ce-wrap .CodeMirror-gutters{background:#020617!important;border-right:1px solid rgba(255,255,255,.08)!important;width:40px!important;}
+#csa-ce-wrap .CodeMirror-sizer{margin-left:40px!important;}
+#csa-ce-wrap .CodeMirror-linenumber{color:#475569!important;-webkit-text-fill-color:#475569!important;padding:0 7px 0 0!important;text-align:right!important;}
+#csa-ce-wrap .CodeMirror-cursor{border-left:2px solid #fbbf24!important;}
+#csa-ce-wrap .cm-keyword{color:#c4b5fd!important;}
+#csa-ce-wrap .cm-def{color:#93c5fd!important;}
+#csa-ce-wrap .cm-variable{color:#e2e8f0!important;}
+#csa-ce-wrap .cm-variable-2{color:#e2e8f0!important;}
+#csa-ce-wrap .cm-type{color:#5eead4!important;}
+#csa-ce-wrap .cm-string{color:#86efac!important;}
+#csa-ce-wrap .cm-number{color:#fbbf24!important;}
+#csa-ce-wrap .cm-comment{color:#64748b!important;font-style:italic!important;}
+#csa-ce-wrap .cm-operator{color:#f8fafc!important;}
+#csa-ce-wrap .csa-ce-btnrow{display:flex!important;gap:8px!important;flex-wrap:wrap!important;align-items:center!important;margin:0!important;}
+#csa-ce-wrap .csa-ce-run{padding:9px 22px!important;background:#16a34a!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border:none!important;border-radius:7px!important;font-size:13px!important;font-weight:700!important;cursor:pointer!important;font-family:inherit!important;letter-spacing:.02em!important;min-height:0!important;line-height:1.4!important;text-transform:none!important;box-shadow:none!important;}
+#csa-ce-wrap .csa-ce-run:hover{background:#15803d!important;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;}
+#csa-ce-wrap .csa-ce-run:disabled{background:#475569!important;cursor:wait!important;}
+#csa-ce-wrap .csa-ce-hintbtn,#csa-ce-wrap .csa-ce-resetbtn{padding:9px 16px!important;background:rgba(255,255,255,.1)!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;border:1px solid rgba(255,255,255,.3)!important;border-radius:7px!important;font-size:13px!important;font-weight:600!important;cursor:pointer!important;font-family:inherit!important;min-height:0!important;line-height:1.4!important;text-transform:none!important;box-shadow:none!important;}
+#csa-ce-wrap .csa-ce-hintbtn:hover,#csa-ce-wrap .csa-ce-resetbtn:hover,#csa-ce-wrap .csa-ce-wrapbtn:hover{color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;border-color:rgba(255,255,255,.5)!important;background:rgba(255,255,255,.16)!important;}
+#csa-ce-wrap .csa-ce-wrapbtn{padding:9px 16px!important;background:rgba(255,255,255,.1)!important;color:#cbd5e1!important;-webkit-text-fill-color:#cbd5e1!important;border:1px solid rgba(255,255,255,.3)!important;border-radius:7px!important;font-size:13px!important;font-weight:600!important;cursor:pointer!important;font-family:inherit!important;min-height:0!important;line-height:1.4!important;text-transform:none!important;box-shadow:none!important;}
+#csa-ce-wrap .csa-ce-wrapbtn.on{background:rgba(232,160,32,.18)!important;color:#fbbf24!important;-webkit-text-fill-color:#fbbf24!important;border-color:rgba(232,160,32,.55)!important;}
+#csa-ce-wrap .csa-ce-status{font-size:12px!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;font-style:italic!important;}
+#csa-ce-wrap .csa-ce-output{margin-top:10px!important;background:#020617!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:8px!important;padding:12px 16px!important;font-family:Menlo,Consolas,monospace!important;font-size:13px!important;line-height:1.7!important;display:none!important;white-space:pre-wrap!important;word-break:break-word!important;min-height:80px!important;}
+#csa-ce-wrap .csa-ce-output.show{display:block!important;}
+#csa-ce-wrap .csa-ce-output.ok{color:#4ade80!important;-webkit-text-fill-color:#4ade80!important;border-color:rgba(74,222,128,.35)!important;}
+#csa-ce-wrap .csa-ce-output.err{color:#f87171!important;-webkit-text-fill-color:#f87171!important;border-color:rgba(248,113,113,.35)!important;}
+#csa-ce-wrap .csa-ce-output.plain{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+#csa-ce-wrap .csa-ce-hint{margin-top:8px!important;background:rgba(147,197,253,.06)!important;border:1px solid rgba(147,197,253,.2)!important;border-radius:8px!important;padding:10px 14px!important;font-size:13px!important;color:#bfdbfe!important;-webkit-text-fill-color:#bfdbfe!important;display:none!important;line-height:1.6!important;}
+#csa-ce-wrap .csa-ce-hint.show{display:block!important;}
+#csa-ce-wrap .csa-ce-hint code{background:rgba(255,255,255,.1)!important;color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;padding:1px 5px!important;border-radius:4px!important;font-family:Menlo,Consolas,monospace!important;}
+@media(max-width:600px){
+#csa-ce-wrap{padding:18px!important;}
+#csa-ce-wrap .CodeMirror{font-size:12.5px!important;min-height:260px!important;}
+}
+#csa-ce-wrap .CodeMirror-code,#csa-ce-wrap .CodeMirror-code>div,#csa-ce-wrap .CodeMirror pre.CodeMirror-line,#csa-ce-wrap .CodeMirror pre.CodeMirror-line-like{line-height:1.55!important;min-height:0!important;height:auto!important;margin:0!important;padding-top:0!important;padding-bottom:0!important;}
+#csa-ce-wrap .CodeMirror pre.CodeMirror-line,#csa-ce-wrap .CodeMirror pre.CodeMirror-line-like{padding-left:8px!important;}
+#csa-ce-wrap .CodeMirror,#csa-ce-wrap .CodeMirror pre.CodeMirror-line,#csa-ce-wrap .CodeMirror pre.CodeMirror-line-like,#csa-ce-wrap .CodeMirror-line span:not([class]){color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+#csa-ce-wrap .cm-keyword{color:#c4b5fd!important;-webkit-text-fill-color:#c4b5fd!important;}
+#csa-ce-wrap .cm-def{color:#93c5fd!important;-webkit-text-fill-color:#93c5fd!important;}
+#csa-ce-wrap .cm-variable,#csa-ce-wrap .cm-variable-2,#csa-ce-wrap .cm-property,#csa-ce-wrap .cm-meta,#csa-ce-wrap .cm-tag{color:#e2e8f0!important;-webkit-text-fill-color:#e2e8f0!important;}
+#csa-ce-wrap .cm-type,#csa-ce-wrap .cm-variable-3{color:#5eead4!important;-webkit-text-fill-color:#5eead4!important;}
+#csa-ce-wrap .cm-string{color:#86efac!important;-webkit-text-fill-color:#86efac!important;}
+#csa-ce-wrap .cm-number{color:#fbbf24!important;-webkit-text-fill-color:#fbbf24!important;}
+#csa-ce-wrap .cm-comment{color:#64748b!important;-webkit-text-fill-color:#64748b!important;}
+#csa-ce-wrap .cm-operator,#csa-ce-wrap .cm-bracket,#csa-ce-wrap .cm-punctuation{color:#f8fafc!important;-webkit-text-fill-color:#f8fafc!important;}
+#csa-ce-wrap .CodeMirror{height:auto!important;min-height:140px!important;}
+#csa-ce-wrap .CodeMirror-scroll{max-height:55vh!important;}
+@media(max-width:600px){#csa-ce-wrap .CodeMirror{font-size:11px!important;}}
+</style>
+
+<div id="csa-ce-wrap" data-lesson-id="1.2" data-item-id="1.2-code-1">
+  <div class="csa-ce-badge">▶ Java Code Editor</div>
+  <div class="csa-ce-title">Try It Yourself</div>
+  <div class="csa-ce-sub">Write real Java, hit Run, and your code executes on a live compiler. Output is checked automatically.</div>
+  <div id="csa-ce-problems"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/clike/clike.min.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  var nativeFetch = window.__nativeFetch || window.fetch.bind(window);
+  var PROXY_URL = 'https://progress.apcsexamprep.com/api/judge0/run';
+  var CSACE_RUNS = 0, CSACE_RUN_CAP = 60, CSACE_COOLDOWN_MS = 3000;
+
+  var CSACE_PROBLEMS = [
+  {
+    id: 'p1',
+    title: 'Problem 1 of 3 — spot the compile error',
+    prompt: 'Fix the variable name so this compiles and prints <code>5</code>.',
+    starter: `public class Main
+{
+    public static void main(String[] args)
+    {
+        int 2count = 5;
+        System.out.println(2count);
+    }
+}`,
+    expected: `5`,
+    hint: 'Java has rules about what a variable name may start with. Look at the first character of the name, and remember the name has to match on both lines.'
+  },
+  {
+    id: 'p2',
+    title: 'Problem 2 of 3 — fix the bug',
+    prompt: 'A level is a whole number. This prints <code>5.0</code>, but it should print <code>5</code>. Pick the correct type.',
+    starter: `public class Main
+{
+    public static void main(String[] args)
+    {
+        double level = 5;
+        System.out.println(level);
+    }
+}`,
+    expected: `5`,
+    hint: 'Which primitive type is meant for whole numbers? The declared type, not the value, decides how it prints.'
+  },
+  {
+    id: 'p3',
+    title: 'Problem 3 of 3 — write from spec',
+    prompt: 'Declare three variables with the correct type and print each on its own line: a single character <code>J</code>, a whole number <code>7</code>, then a decimal <code>1.5</code>.',
+    starter: `public class Main
+{
+    public static void main(String[] args)
+    {
+        // declare a char, an int, and a double, then print each
+
+    }
+}`,
+    expected: `J
+7
+1.5`,
+    hint: 'Three values, three different primitive types. Which one is written with single quotes, and which one needs a decimal point?'
+  }
+];
+
+  var editors = {};
+
+  function normalize(s) {
+    if (!s) {
+      return '';
+    }
+    return s.replace(/\r\n/g, '\n').split('\n').map(function(line){
+      return line.replace(/\s+$/, '');
+    }).join('\n').replace(/\n+$/, '');
+  }
+
+  function el(tag, cls, html) {
+    var node = document.createElement(tag);
+    if (cls) {
+      node.className = cls;
+    }
+    if (html !== undefined) {
+      node.innerHTML = html;
+    }
+    return node;
+  }
+
+  function buildProblem(p, idx) {
+    var card = el('div', 'csa-ce-problem');
+    card.appendChild(el('div', 'csa-ce-num', p.title));
+    card.appendChild(el('div', 'csa-ce-prompt', p.prompt));
+
+    var edWrap = el('div', 'csa-ce-editor');
+    var ta = document.createElement('textarea');
+    ta.value = p.starter;
+    edWrap.appendChild(ta);
+    card.appendChild(edWrap);
+
+    var row = el('div', 'csa-ce-btnrow');
+    var runBtn = el('button', 'csa-ce-run', 'Run ▶');
+    var hintBtn = el('button', 'csa-ce-hintbtn', 'Hint');
+    var resetBtn = el('button', 'csa-ce-resetbtn', 'Reset');
+    var wrapBtn = el('button', 'csa-ce-wrapbtn', 'Wrap lines');
+    var status = el('span', 'csa-ce-status', '');
+    row.appendChild(runBtn);
+    row.appendChild(hintBtn);
+    row.appendChild(resetBtn);
+    row.appendChild(wrapBtn);
+    row.appendChild(status);
+    card.appendChild(row);
+
+    var out = el('div', 'csa-ce-output');
+    card.appendChild(out);
+
+    var hint = el('div', 'csa-ce-hint', '💡 ' + p.hint);
+    card.appendChild(hint);
+
+    document.getElementById('csa-ce-problems').appendChild(card);
+
+    var cm = CodeMirror.fromTextArea(ta, {
+      mode: 'text/x-java',
+      lineNumbers: true,
+      indentUnit: 4,
+      tabSize: 4,
+      indentWithTabs: false,
+      viewportMargin: Infinity,
+      lineWrapping: (window.innerWidth <= 600)
+    });
+    editors[p.id] = cm;
+    setTimeout(function(){ cm.refresh(); }, 0);
+    setTimeout(function(){ cm.refresh(); }, 350);
+
+    hintBtn.onclick = function() {
+      hint.classList.toggle('show');
+    };
+
+    if (cm.getOption('lineWrapping')) { wrapBtn.className = 'csa-ce-wrapbtn on'; wrapBtn.innerHTML = 'Wrap: on'; }
+    wrapBtn.onclick = function() {
+      var on = !cm.getOption('lineWrapping');
+      cm.setOption('lineWrapping', on);
+      wrapBtn.className = on ? 'csa-ce-wrapbtn on' : 'csa-ce-wrapbtn';
+      wrapBtn.innerHTML = on ? 'Wrap: on' : 'Wrap lines';
+      cm.refresh();
+    };
+
+    resetBtn.onclick = function() {
+      cm.setValue(p.starter);
+      out.className = 'csa-ce-output';
+      out.textContent = '';
+    };
+
+    runBtn.onclick = function() {
+      var code = cm.getValue();
+      var wrap = document.getElementById('csa-ce-wrap');
+      var lessonId = wrap ? (wrap.getAttribute('data-lesson-id') || '') : '';
+      if (CSACE_RUNS >= CSACE_RUN_CAP) {
+        out.className = 'csa-ce-output show err';
+        out.textContent = 'Run limit reached for this page. Refresh to keep practicing.';
+        return;
+      }
+      CSACE_RUNS++;
+      runBtn.disabled = true;
+      status.textContent = 'Compiling and running...';
+      out.className = 'csa-ce-output';
+      out.textContent = '';
+
+      nativeFetch(PROXY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: code, lessonId: lessonId, problemId: p.id })
+      })
+      .then(function(res) {
+        return res.json().then(function(data) {
+          return { ok: res.ok, status: res.status, data: data };
+        });
+      })
+      .then(function(result) {
+        setTimeout(function(){ runBtn.disabled = false; }, CSACE_COOLDOWN_MS);
+        status.textContent = '';
+        var data = result.data;
+
+        if (!result.ok) {
+          out.className = 'csa-ce-output show err';
+          out.textContent = data.message || 'Run failed. Try again.';
+          return;
+        }
+
+        if (data.compile_output) {
+          out.className = 'csa-ce-output show err';
+          out.textContent = 'Compile error:\n' + data.compile_output;
+          return;
+        }
+
+        if (data.stderr) {
+          out.className = 'csa-ce-output show err';
+          out.textContent = 'Runtime error:\n' + data.stderr;
+          return;
+        }
+
+        var stdout = data.stdout || '';
+
+        if (p.expected === null || p.expected === undefined) {
+          out.className = 'csa-ce-output show plain';
+          out.textContent = 'Output:\n' + (stdout || '(no output)');
+          return;
+        }
+
+        if (normalize(stdout) === normalize(p.expected)) {
+          out.className = 'csa-ce-output show ok';
+          if (window.APCS_reportAttempt) { APCS_reportAttempt({ item_id: lessonId + '-code-1', item_type: 'cfu', score: 1, max_score: 1, detail: [{ q: idx + 1, sel: null, ok: true }] }); }
+          out.textContent = '✓ Correct!\nOutput: ' + stdout.replace(/\n$/, '');
+        } else {
+          out.className = 'csa-ce-output show err';
+          out.textContent = '✗ Not quite.\nYour output: ' + (stdout.replace(/\n$/, '') || '(none)') + '\nExpected: ' + p.expected;
+        }
+      })
+      .catch(function(err) {
+        setTimeout(function(){ runBtn.disabled = false; }, CSACE_COOLDOWN_MS);
+        status.textContent = '';
+        out.className = 'csa-ce-output show err';
+        out.textContent = 'Could not reach the code runner. Check your connection and try again.';
+      });
+    };
+  }
+
+  function init() {
+    for (var i = 0; i < CSACE_PROBLEMS.length; i++) {
+      buildProblem(CSACE_PROBLEMS[i], i);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+<section class="apcsa-practice-tier">
+  <h2>
+<span class="tier-label">Tier 2 Practice</span> Check your understanding</h2>
+  <p style="font-size: 15px !important; color: #475569 !important; -webkit-text-fill-color: #475569 !important;">
+    Six exercises covering data type categories, the three primitives in scope, declaration syntax, and the AP exam exclusions. Watch out for distractors that use Java types <em>outside</em> AP CSA scope. They appear constantly on the real exam as wrong answers.
+  </p>
+
+  <!-- EX 1: I/II/III multi-correct, answer B -->
+  <div class="apcs-ex" data-type="mcq" data-answer="B" data-item-id="1.2-cfu-1">
+    <span class="apcs-ex-label">MCQ · Multi-select stem</span>
+    <div class="apcs-ex-stem">
+      <strong>1.</strong> Consider the following statements about primitive data types in AP Computer Science A.
+      <ol style="margin-top: 10px !important; padding-left: 24px !important;">
+        <li>The three primitive types used in this course are <code>int</code>, <code>double</code>, and <code>boolean</code>.</li>
+        <li>A primitive type defines a set of values and a corresponding set of operations on those values.</li>
+        <li>The <code>float</code> type is a valid primitive in AP CSA for storing decimal numbers, since it is shorter than <code>double</code>.</li>
+      </ol>
+      Which of the statements are true?
+    </div>
+    <div class="apcs-ex-options">
+      <div class="apcs-opt" data-letter="A">
+<span class="apcs-opt-letter">A.</span> I only</div>
+      <div class="apcs-opt" data-letter="B">
+<span class="apcs-opt-letter">B.</span> I and II only</div>
+      <div class="apcs-opt" data-letter="C">
+<span class="apcs-opt-letter">C.</span> I and III only</div>
+      <div class="apcs-opt" data-letter="D">
+<span class="apcs-opt-letter">D.</span> I, II, and III</div>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check answer</button>
+    <div class="apcs-ex-feedback">
+      <strong>B.</strong> Statements I and II are both directly from the CED: the three in-scope primitives are <code>int</code>, <code>double</code>, and <code>boolean</code>, and a data type is defined as a set of values plus the operations on them. Statement III is the trap: <code>float</code> exists in Java but is explicitly excluded from AP CSA. The exclusion statement names <code>long</code>, <code>short</code>, <code>byte</code>, <code>float</code>, and <code>char</code> as out of scope. Recognize all five. They appear as wrong answers throughout the exam.
+    </div>
+  </div>
+
+  <!-- EX 2: NOT/EXCEPT spot-the-error, predict gate, answer C -->
+  <div class="apcs-ex" data-type="mcq" data-answer="C" data-item-id="1.2-cfu-2">
+    <span class="apcs-ex-label">MCQ · Spot the syntax error</span>
+    <div class="apcs-ex-stem">
+      <strong>2.</strong> Which of the following variable declarations is <strong>NOT</strong> valid Java syntax?
+    </div>
+    <div class="apcs-predict-gate">This stem uses <strong>NOT</strong>. You’re looking for the one that <em>would not compile</em>. Before reading the choices, recall the naming and type rules. Then read all four carefully.</div>
+    <div class="apcs-ex-options">
+      <div class="apcs-opt" data-letter="A">
+<span class="apcs-opt-letter">A.</span> <code>int numStudents = 25;</code>
+</div>
+      <div class="apcs-opt" data-letter="B">
+<span class="apcs-opt-letter">B.</span> <code>double price = 19.99;</code>
+</div>
+      <div class="apcs-opt" data-letter="C">
+<span class="apcs-opt-letter">C.</span> <code>int 1stPlace = 100;</code>
+</div>
+      <div class="apcs-opt" data-letter="D">
+<span class="apcs-opt-letter">D.</span> <code>boolean hasPassed = false;</code>
+</div>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check answer</button>
+    <div class="apcs-ex-feedback">
+      <strong>C.</strong> Option C is the invalid one because a variable name cannot start with a digit. The first character must be a letter, an underscore, or a dollar sign. The compiler will reject <code>1stPlace</code> as a syntax error. Options A, B, and D all follow the rules: valid type, valid name starting with a letter, valid initial value, semicolon at the end. Renaming option C to <code>firstPlace</code> or <code>place1</code> would make it valid.
+    </div>
+  </div>
+
+  <!-- EX 3: Matching -->
+  <div class="apcs-ex" data-type="matching" data-item-id="1.2-cfu-3">
+    <span class="apcs-ex-label">Matching</span>
+    <div class="apcs-ex-stem">
+      <strong>3.</strong> Match each data type on the left with the most appropriate use case from the AP CSA scope.
+    </div>
+    <div class="apcs-matching">
+      <div class="apcs-match-col">
+        <div class="apcs-match-item" data-key="t1"><strong><code>int</code></strong></div>
+        <div class="apcs-match-item" data-key="t2"><strong><code>double</code></strong></div>
+        <div class="apcs-match-item" data-key="t3"><strong><code>boolean</code></strong></div>
+        <div class="apcs-match-item" data-key="t4"><strong>Reference type</strong></div>
+      </div>
+      <div class="apcs-match-col">
+        <div class="apcs-match-item" data-match="t2">Storing the average score on a quiz where the average may have a decimal portion.</div>
+        <div class="apcs-match-item" data-match="t4">Storing the name of a student, since text is not a primitive value.</div>
+        <div class="apcs-match-item" data-match="t1">Storing the number of seats in a classroom, where partial seats make no sense.</div>
+        <div class="apcs-match-item" data-match="t3">Storing whether a student has turned in their homework, yes or no.</div>
+      </div>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check matches</button>
+    <div class="apcs-ex-feedback">
+      <code>int</code> for counts of indivisible things. <code>double</code> for measurements and averages that can have fractional parts. <code>boolean</code> for yes/no states. Reference types, like <code>String</code>, introduced in Lesson 1.5, for everything that isn’t a primitive. Names, sentences, and lists of values are all reference types.
+    </div>
+  </div>
+
+  <!-- EX 4: Scenario sort (3 buckets: int / double / boolean) -->
+  <div class="apcs-ex" data-type="scenario-sort" data-item-id="1.2-cfu-4">
+    <span class="apcs-ex-label">Classify · Best primitive type</span>
+    <div class="apcs-ex-stem">
+      <strong>4.</strong> For each variable described below, classify the most appropriate primitive type.
+    </div>
+    <div class="apcs-sort-bank">
+      <div class="apcs-sort-item" data-bucket="b1">The number of laps a runner has completed.</div>
+      <div class="apcs-sort-item" data-bucket="b2">The current temperature in degrees Celsius.</div>
+      <div class="apcs-sort-item" data-bucket="b3">Whether the front door is currently locked.</div>
+      <div class="apcs-sort-item" data-bucket="b1">A student’s test score on a 100-point exam (whole numbers only).</div>
+      <div class="apcs-sort-item" data-bucket="b2">The exact price of an item, including cents.</div>
+      <div class="apcs-sort-item" data-bucket="b3">Whether a player has won the game.</div>
+    </div>
+    <div class="apcs-sort-buckets">
+      <div class="apcs-sort-bucket" data-bucket="b1"><h5><code>int</code></h5></div>
+      <div class="apcs-sort-bucket" data-bucket="b2"><h5><code>double</code></h5></div>
+      <div class="apcs-sort-bucket" data-bucket="b3"><h5><code>boolean</code></h5></div>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check sorting</button>
+    <div class="apcs-ex-feedback">
+      Whole-number counts (laps, test scores out of 100) call for <code>int</code>. Anything with a fractional component (temperature, prices with cents) calls for <code>double</code>. Anything with exactly two states (locked/unlocked, won/not won) calls for <code>boolean</code>. The trap on the real exam is picking <code>double</code> for things that should be <code>int</code> “to be safe”. On the AP exam, the most appropriate type is the one that exactly matches the values allowed.
+    </div>
+  </div>
+
+  <!-- EX 5: Cloze -->
+  <div class="apcs-ex" data-type="cloze" data-item-id="1.2-cfu-5">
+    <span class="apcs-ex-label">Cloze · Vocabulary in context</span>
+    <div class="apcs-ex-stem">
+      <strong>5.</strong> Fill each blank with the correct term from the bank.
+    </div>
+    <div class="apcs-cloze-text">
+      In Java, a
+      <span class="apcs-cloze-blank" data-answer="variable"></span>
+      is a named storage location whose value can change during execution. Every variable has a fixed
+      <span class="apcs-cloze-blank" data-answer="data type"></span>,
+      which determines the set of values it can hold. The three primitive types used in AP CSA are
+      <span class="apcs-cloze-blank" data-answer="int"></span>
+      for whole numbers,
+      <span class="apcs-cloze-blank" data-answer="double"></span>
+      for real numbers with decimals, and
+      <span class="apcs-cloze-blank" data-answer="boolean"></span>
+      for true/false values.
+    </div>
+    <div class="apcs-cloze-chips">
+      <span class="apcs-sort-item" data-term="variable">variable</span>
+      <span class="apcs-sort-item" data-term="data type">data type</span>
+      <span class="apcs-sort-item" data-term="int">int</span>
+      <span class="apcs-sort-item" data-term="double">double</span>
+      <span class="apcs-sort-item" data-term="boolean">boolean</span>
+      <span class="apcs-sort-item" data-term="float">float</span>
+      <span class="apcs-sort-item" data-term="reference">reference</span>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check answers</button>
+    <div class="apcs-ex-feedback">
+      Variable, data type, int, double, boolean: the five core terms of Lesson 1.2. <code>float</code> is in the chip bank as a distractor because it’s a real Java type but is explicitly out of AP CSA scope. The CED specifies <code>double</code> as the only primitive for decimal values.
+    </div>
+  </div>
+
+  <!-- EX 6: Applied scenario, answer D -->
+  <div class="apcs-ex" data-type="mcq" data-answer="D" data-item-id="1.2-cfu-6">
+    <span class="apcs-ex-label">MCQ · Applied scenario</span>
+    <div class="apcs-ex-stem">
+      <strong>6.</strong> A programmer is writing a Java program that calculates a customer’s total bill at a restaurant. The bill includes a subtotal of the food prices, a sales tax amount, and a tip amount, all of which can include cents. Which is the most appropriate data type to use for the variable storing the final total bill?
+    </div>
+    <div class="apcs-ex-options">
+      <div class="apcs-opt" data-letter="A">
+<span class="apcs-opt-letter">A.</span> <code>int</code>, because money amounts should be stored as whole numbers to avoid rounding errors.</div>
+      <div class="apcs-opt" data-letter="B">
+<span class="apcs-opt-letter">B.</span> <code>boolean</code>, since the bill is either paid or unpaid.</div>
+      <div class="apcs-opt" data-letter="C">
+<span class="apcs-opt-letter">C.</span> <code>String</code>, because dollar amounts are usually displayed with a dollar sign.</div>
+      <div class="apcs-opt" data-letter="D">
+<span class="apcs-opt-letter">D.</span> <code>double</code>, because the bill must be able to store decimal values such as 28.47.</div>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check answer</button>
+    <div class="apcs-ex-feedback">
+      <strong>D.</strong> The bill total can include cents, that is, a fractional dollar amount, so <code>double</code> is the only AP CSA primitive type that fits. Option A is wrong because <code>int</code> cannot store cents (and the exam does not expect students to do the “store money as integer pennies” engineering trick, that’s outside the AP scope). Option B confuses storing the value with storing a payment status. Option C, <code>String</code>, is a reference type used for text display, not arithmetic; you cannot add two <code>String</code> bills together with a <code>+</code> in the math sense.
+    </div>
+  </div>
+
+</section>
+
+
+
+
+
+
+<section class="apcsa-mastery" data-item-id="1.2-quiz">
+  <span class="mastery-badge">Tier 3 · AP Mastery Challenge</span>
+  <h2>The Library Checkout System</h2>
+  <p>Mr. Chen’s computer science class is designing a small library checkout system. The program needs to track, for each book: the book’s ID number (whole numbers from 1 up to several thousand), the late fee owed on the book (which can include cents), and whether the book is currently checked out. One student suggests declaring the variables this way, all in their <code>main</code> method:</p>
+  <pre><code>double bookId = 4271.0;
+int lateFee = 2.50;
+boolean isCheckedOut = "true";</code></pre>
+  <p>Mr. Chen looks at the declarations and tells the student that two of the three will not compile, and the third compiles but uses an inappropriate type for the AP CSA design standard.</p>
+
+  <h3>Part A: Which declaration is technically valid but uses the wrong type?</h3>
+  <div class="apcs-ex" data-type="mcq" data-answer="A">
+    <div class="apcs-ex-stem">Which of the three declarations compiles successfully but uses an inappropriate data type for what the value represents?</div>
+    <div class="apcs-predict-gate">Predict first: which line has correct syntax but the wrong type-to-value match?</div>
+    <div class="apcs-ex-options">
+      <div class="apcs-opt" data-letter="A">
+<span class="apcs-opt-letter">A.</span> <code>double bookId = 4271.0;</code> compiles, but a book ID is a whole number, so <code>int</code> is the appropriate type.</div>
+      <div class="apcs-opt" data-letter="B">
+<span class="apcs-opt-letter">B.</span> <code>int lateFee = 2.50;</code> compiles, but should use <code>double</code> for clarity.</div>
+      <div class="apcs-opt" data-letter="C">
+<span class="apcs-opt-letter">C.</span> <code>boolean isCheckedOut = "true";</code> compiles, but Boolean values shouldn’t be in quotes.</div>
+      <div class="apcs-opt" data-letter="D">
+<span class="apcs-opt-letter">D.</span> None of them compile.</div>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check answer</button>
+    <div class="apcs-ex-feedback">
+      <strong>A.</strong> <code>double bookId = 4271.0;</code> is the one that compiles but uses the wrong type. The syntax is valid Java, but a book ID is always a whole number, so the appropriate AP CSA type is <code>int</code>. B is wrong because <code>int lateFee = 2.50;</code> does not compile at all (decimal value into an int variable). C is wrong because <code>"true"</code> is a String literal, not a Boolean, so that declaration also fails to compile. D is wrong because option A does compile.
+    </div>
+  </div>
+
+  <h3>Part B: Which declaration has a clear syntax error?</h3>
+  <div class="apcs-ex" data-type="mcq" data-answer="B">
+    <div class="apcs-ex-stem">Which declaration produces a compile error because the value on the right side does not match the declared type?</div>
+    <div class="apcs-predict-gate">Predict first: Java is statically typed, so the compiler checks that the value matches the type. Which line breaks that rule most clearly?</div>
+    <div class="apcs-ex-options">
+      <div class="apcs-opt" data-letter="A">
+<span class="apcs-opt-letter">A.</span> <code>double bookId = 4271.0;</code>
+</div>
+      <div class="apcs-opt" data-letter="B">
+<span class="apcs-opt-letter">B.</span> <code>int lateFee = 2.50;</code> (storing a decimal value into an <code>int</code> variable).</div>
+      <div class="apcs-opt" data-letter="C">
+<span class="apcs-opt-letter">C.</span> <code>boolean isCheckedOut = "true";</code>
+</div>
+      <div class="apcs-opt" data-letter="D">
+<span class="apcs-opt-letter">D.</span> Both B and C produce compile errors for type mismatch.</div>
+    </div>
+    <button class="apcs-btn apcs-ex-check">Check answer</button>
+    <div class="apcs-ex-feedback">
+      <strong>B.</strong> <code>int lateFee = 2.50;</code> is the clearest type-mismatch error: the right side is a <code>double</code> literal (2.50) and the variable is declared <code>int</code>. Java refuses to implicitly narrow a <code>double</code> to an <code>int</code>. A is wrong because <code>double bookId = 4271.0;</code> is perfectly valid syntax (a <code>double</code> can hold 4271.0). C also fails to compile, but D over-claims: while C does have a type mismatch, the question asks for the clearest single example, and only one answer can be correct in standard AP MCQ format.
+    </div>
+  </div>
+
+  <h3>Part C: Structured response</h3>
+  <p>In four to six sentences, rewrite all three declarations correctly so they compile and use the most appropriate AP CSA primitive type for what each value represents. Then explain in one or two sentences why a <code>String</code> in quotes (like <code>"true"</code>) is not the same as the Boolean value <code>true</code> in Java, even though they look similar.</p>
+  <textarea style="display: block !important; width: 100% !important; min-height: 160px !important; padding: 12px !important; background: #1e293b !important; color: #f1f5f9 !important; -webkit-text-fill-color: #f1f5f9 !important; border: 1px solid #334155 !important; border-radius: 6px !important; font-family: -apple-system, sans-serif !important; font-size: 15px !important; line-height: 1.5 !important;" placeholder="Type your response here..."></textarea>
+  <button class="apcs-btn apcs-ex-check" style="margin-top: 12px !important;">Reveal rubric &amp; sample response</button>
+
+  <div class="mastery-rubric">
+    <h4>Scoring rubric</h4>
+    <div class="rubric-row">
+      <span>Rewrites <code>bookId</code> as <code>int bookId = 4271;</code> (correct type for whole number).</span>
+      <span class="rubric-score">Full 1 pt</span>
+    </div>
+    <div class="rubric-row">
+      <span>Rewrites <code>lateFee</code> as <code>double lateFee = 2.50;</code> (correct type for decimal value).</span>
+      <span class="rubric-score">Full 1 pt</span>
+    </div>
+    <div class="rubric-row">
+      <span>Rewrites <code>isCheckedOut</code> as <code>boolean isCheckedOut = true;</code> (Boolean literal, no quotes).</span>
+      <span class="rubric-score">Full 1 pt</span>
+    </div>
+    <div class="rubric-row">
+      <span>Explains the difference between the <code>String</code> <code>"true"</code> (text/characters) and the <code>boolean</code> value <code>true</code> (a primitive truth value).</span>
+      <span class="rubric-score partial">Partial 0.5 pt</span>
+    </div>
+    <div class="rubric-row">
+      <span>Uses any of the excluded primitive types (<code>long</code>, <code>float</code>, etc.) in the rewrites.</span>
+      <span class="rubric-score zero">Zero 0 pt</span>
+    </div>
+  </div>
+
+  <div style="margin-top: 18px !important; padding: 16px 18px !important; background: #1e293b !important; border-radius: 8px !important; border: 1px solid #334155 !important;">
+    <h4 style="color: #fbbf24 !important; -webkit-text-fill-color: #fbbf24 !important; margin-top: 0 !important;">Sample full-credit response</h4>
+    <p>The corrected declarations are: <code>int bookId = 4271;</code> because book IDs are whole numbers; <code>double lateFee = 2.50;</code> because a late fee can have cents; and <code>boolean isCheckedOut = true;</code> because checkout status is exactly true or false. The original <code>isCheckedOut = "true";</code> would not compile because <code>"true"</code> in double quotes is a <code>String</code>, a sequence of four characters: t, r, u, e. The <code>boolean</code> literal <code>true</code> is a primitive value, not a string. Java’s static type checking refuses to assign a <code>String</code> to a <code>boolean</code> variable because they are entirely different types, even though they look similar to a human reader.</p>
+  </div>
+</section>
+
+<h2>Common AP exam traps</h2>
+<p>The exam tests these same mistakes year after year. Spotting them in May starts with recognizing them now.</p>
+<div class="apcsa-traps">
+  <div class="apcsa-trap-card">
+    <h4>Trap 1: Out-of-scope primitives as distractors</h4>
+    <p>Answer choices that mention <code>long</code>, <code>short</code>, <code>byte</code>, <code>float</code>, or <code>char</code> are <em>always wrong</em> on the AP CSA exam by definition of course scope. If you see them, eliminate them immediately. The only correct primitives are <code>int</code>, <code>double</code>, and <code>boolean</code>.</p>
+  </div>
+  <div class="apcsa-trap-card">
+    <h4>Trap 2: Storing decimals in <code>int</code>
+</h4>
+    <p>An assignment like <code>int x = 2.5;</code> does <em>not</em> compile. Java refuses to assign a <code>double</code> value to an <code>int</code> variable without explicit conversion (covered in Lesson 1.3). The compiler reports a type mismatch error.</p>
+  </div>
+  <div class="apcsa-trap-card">
+    <h4>Trap 3: Confusing <code>"true"</code> with <code>true</code>
+</h4>
+    <p>A Boolean literal is <code>true</code> or <code>false</code>, lowercase, no quotes. Quoting them turns them into <code>String</code> values, which cannot be assigned to a <code>boolean</code> variable. The exam tests this directly.</p>
+  </div>
+  <div class="apcsa-trap-card">
+    <h4>Trap 4: Variable names that start with a digit</h4>
+    <p><code>int 1stPlace</code> is a syntax error. The first character must be a letter, an underscore, or a dollar sign. <code>place1</code> and <code>firstPlace</code> are valid; <code>1stPlace</code> is not.</p>
+  </div>
+</div>
+
+<section class="apcsa-extension">
+  <span class="ext-badge">Tier 4 · Beyond AP (Optional)</span>
+  <h3>Why money is usually <em>not</em> stored as <code>double</code> in real systems</h3>
+  <p>The AP exam expects <code>double</code> for any quantity with a decimal part, including money. In real production systems, though, financial software almost never uses <code>double</code> for money. The reason is that <code>double</code> stores values in binary floating-point format, which cannot exactly represent simple decimals like 0.1. Adding 0.1 + 0.2 in Java produces 0.30000000000000004, close, but not exact. Over millions of transactions, those rounding errors compound. Real banking software uses arbitrary-precision decimal types (Java’s <code>BigDecimal</code>, or in some languages a dedicated “money” type) that store the digits exactly. This is beyond the AP CSA scope, but it’s worth knowing that “the most appropriate type on the exam” and “the most appropriate type in industry” are not always the same answer.</p>
+  <p style="font-size: 14px !important; color: #6b21a8 !important; -webkit-text-fill-color: #6b21a8 !important; font-style: italic !important;">
+    This material extends beyond the AP CSA curriculum. Skip it if you’re focused on exam prep.
+  </p>
+</section>
+
+<h2>Deep dive: more on this topic</h2>
+<div class="apcsa-resources">
+  <a class="apcsa-resource-card" href="https://docs.oracle.com/javase/specs/jls/se17/html/jls-4.html" target="_blank" rel="noopener">
+    <h4>Java Language Specification: Types and Values</h4>
+    <p>Official documentation defining all of Java’s primitive and reference types.</p>
+  </a>
+  <a class="apcsa-resource-card" href="/pages/ap-csa-vocabulary-list">
+    <h4>AP CSA Vocabulary List</h4>
+    <p>150+ terms with AP-exam definitions.</p>
+  </a>
+  <a class="apcsa-resource-card" href="/pages/ap-csa-unit-1-complete-study-guide">
+    <h4>Unit 1 Study Guide</h4>
+    <p>Full unit overview with examples and practice.</p>
+  </a>
+  <a class="apcsa-resource-card" href="/blogs/ap-csa-daily-practice">
+    <h4>Daily Practice Question</h4>
+    <p>A new AP CSA question every day, free.</p>
+  </a>
+</div>
+
+<div class="apcsa-cta-banner">
+  <h3>Get the AP CSA daily practice question by email</h3>
+  <p>Free, daily, takes 90 seconds. Built by an AP CSA teacher with a 54.5% 5-rate.</p>
+  <a class="apcs-btn" href="/pages/ap-csa-daily-practice">Start daily practice →</a>
+</div>
+
+<nav class="apcsa-nav" aria-label="Lesson navigation">
+  <a href="/pages/ap-csa-lesson-1-1-intro-algorithms" class="nav-prev">
+    <span class="nav-direction">← Previous lesson</span>
+    <span class="nav-title">1.1 Algorithms, Programming &amp; Compilers</span>
+  </a>
+  <a href="/pages/ap-csa-lesson-1-3-expressions-assignment" class="nav-next">
+    <span class="nav-direction">Next lesson →</span>
+    <span class="nav-title">1.3 Expressions and Output</span>
+  </a>
+</nav>
+
+<div class="apcsa-hub-links">
+  <a href="/pages/ap-csa-course">Course hub</a>
+  <span style="color: #cbd5e1 !important; -webkit-text-fill-color: #cbd5e1 !important;">·</span>
+  <a href="/pages/ap-csa-unit-1-course">Unit 1 hub</a>
+  <span style="color: #cbd5e1 !important; -webkit-text-fill-color: #cbd5e1 !important;">·</span>
+  <a href="/pages/ap-csa-topics">All topics</a>
+  <span style="color: #cbd5e1 !important; -webkit-text-fill-color: #cbd5e1 !important;">·</span>
+  <a href="/pages/ap-csa-exam-prep-hub">AP CSA home</a>
+</div>
+
+
+
+</div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "AP CSA", "item": "https://apcsexamprep.com/pages/ap-csa-exam-prep-hub" },
+    { "@type": "ListItem", "position": 2, "name": "Course", "item": "https://apcsexamprep.com/pages/ap-csa-course" },
+    { "@type": "ListItem", "position": 3, "name": "Unit 1: Using Objects and Methods", "item": "https://apcsexamprep.com/pages/ap-csa-unit-1-course" },
+    { "@type": "ListItem", "position": 4, "name": "Lesson 1.2: Variables and Data Types", "item": "https://apcsexamprep.com/pages/ap-csa-lesson-1-2-variables-data-types" }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LearningResource",
+  "name": "Lesson 1.2: Variables and Data Types",
+  "description": "AP CSA Lesson 1.2 covers variables, primitive vs reference types, and the three AP CSA primitives: int, double, and boolean. Includes declaration syntax, naming rules, and applied scenarios.",
+  "educationalLevel": "High School / AP",
+  "learningResourceType": "Lesson",
+  "teaches": "AP CSA variable declaration, int double boolean primitive types, Java naming rules",
+  "inLanguage": "en-US",
+  "author": { "@type": "Person", "name": "Tanner Crow" },
+  "publisher": { "@type": "Organization", "name": "APCSExamPrep.com", "url": "https://apcsexamprep.com" },
+  "isPartOf": {
+    "@type": "Course",
+    "name": "AP Computer Science A (2025-2026)",
+    "url": "https://apcsexamprep.com/pages/ap-csa-course"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What are the three primitive data types in AP Computer Science A?",
+      "acceptedAnswer": { "@type": "Answer", "text": "The AP CSA course uses exactly three primitive types: int for integers (whole numbers), double for real numbers including decimals, and boolean for true/false values. The other five Java primitives (long, short, byte, float, and char) are explicitly excluded from the AP CSA exam by the College Board." }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between a primitive type and a reference type?",
+      "acceptedAnswer": { "@type": "Answer", "text": "A primitive type directly holds a simple value like a number or a Boolean. A reference type is used to define objects, such as String, Scanner, or any class you write. Primitives store the value itself; references store a way to locate an object that lives elsewhere in memory. AP CSA Lesson 1.2 works only with primitives; reference types are introduced in Lesson 1.5 with the String class." }
+    },
+    {
+      "@type": "Question",
+      "name": "Why can a variable name not start with a digit?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Java's syntax rules require that a variable name begin with a letter, an underscore, or a dollar sign. Names cannot start with a digit because Java needs to distinguish identifiers (names) from numeric literals. The declaration int 1stPlace = 100 is a syntax error; valid alternatives include int firstPlace = 100 or int place1 = 100." }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is boolean isReady = \"true\" wrong?",
+      "acceptedAnswer": { "@type": "Answer", "text": "The double-quoted \"true\" is a String literal, which is a reference type holding the four characters t, r, u, e. The boolean primitive type can only store the literal values true or false (lowercase, no quotes). Java is statically typed, so the compiler refuses to assign a String to a boolean variable even though they look similar to a human reader. The correct declaration is boolean isReady = true." }
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Course",
+  "name": "AP Computer Science A (2025-2026 Curriculum)",
+  "description": "Full year-long AP CSA course aligned to the 2025-2026 4-Unit CED. Free lessons covering all topics across Units 1-4.",
+  "provider": { "@type": "Organization", "name": "APCSExamPrep.com", "url": "https://apcsexamprep.com" },
+  "hasCourseInstance": {
+    "@type": "CourseInstance",
+    "courseMode": "online",
+    "courseWorkload": "PT100H"
+  }
+}
+</script>
+
+<script src="https://cdn.shopify.com/s/files/1/0778/8403/1191/files/apcs-exercise.js?v=1778863178"></script>
+
+<script>
+(function() {
+  document.querySelectorAll('#apcsa-lesson .apcs-ex').forEach(function(ex) {
+    if (ex.dataset.mcqInit) return;
+    ex.dataset.mcqInit = '1';
+    var correct = ex.getAttribute('data-answer');
+    var opts = ex.querySelectorAll('.apcs-opt');
+    var btn = ex.querySelector('.apcs-ex-check');
+    var feedback = ex.querySelector('.apcs-ex-feedback');
+    var chosen = null;
+
+    opts.forEach(function(opt) {
+      opt.style.cursor = 'pointer';
+      opt.addEventListener('click', function() {
+        if (ex.dataset.answered) return;
+        opts.forEach(function(o) { o.classList.remove('selected'); });
+        opt.classList.add('selected');
+        chosen = opt.getAttribute('data-letter');
+      });
+    });
+
+    if (btn) btn.addEventListener('click', function() {
+      if (!chosen || ex.dataset.answered) return;
+      ex.dataset.answered = '1';
+      opts.forEach(function(opt) {
+        var letter = opt.getAttribute('data-letter');
+        if (letter === correct) opt.classList.add('correct');
+        else if (letter === chosen) opt.classList.add('incorrect');
+        opt.classList.remove('selected');
+      });
+      if (feedback) {
+        feedback.classList.add('show');
+        feedback.classList.add(chosen === correct ? 'fb-correct' : 'fb-incorrect');
+      }
+      btn.disabled = true;
+    });
+  });
+})();
+</script>

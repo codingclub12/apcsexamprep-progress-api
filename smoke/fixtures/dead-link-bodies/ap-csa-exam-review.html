@@ -1,0 +1,467 @@
+<style>
+/* --- Base & Layout --- */
+body {
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+  background-color: #f7f9fc;
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 30px 20px 60px 20px;
+}
+
+/* --- Headings --- */
+h1 {
+  color: #1e3a8a;
+  font-size: 2.4em;
+  text-align: center;
+  margin-bottom: 10px;
+}
+.subtitle {
+  text-align: center;
+  color: #475569;
+  max-width: 850px;
+  margin: 0 auto 35px auto;
+}
+h2 {
+  color: #1e3a8a;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 8px;
+  margin-top: 40px;
+  font-size: 1.7em;
+}
+h3 {
+  color: #2563eb;
+  font-size: 1.25em;
+  margin-top: 20px;
+}
+
+/* Sections / Cards */
+.section { margin-bottom: 35px; }
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px 25px;
+  margin-top: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+/* Highlight boxes */
+.highlight {
+  background: #eef7ff;
+  border-left: 5px solid #3b82f6;
+  padding: 12px 15px;
+  margin: 18px 0;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+/* Code & Diagrams */
+pre, .diagram {
+  background: #0f172a;
+  color: #e5e7eb;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-family: "Consolas", "Courier New", monospace;
+  font-size: 0.9em;
+  overflow-x: auto;
+  margin: 16px 0;
+}
+.diagram { font-size: 0.9em; }
+
+/* Buttons (for quiz in Part 2) */
+.btn {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 9px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9em;
+  margin-top: 8px;
+}
+.btn:hover { background-color: #2563eb; }
+
+/* Links */
+a.resource-link {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+a.resource-link:hover { text-decoration: underline; }
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0;
+  font-size: 0.9em;
+}
+th, td {
+  border: 1px solid #e5e7eb;
+  padding: 8px 10px;
+  text-align: center;
+}
+th { background-color: #eff6ff; }
+
+/* Responsive */
+@media (max-width: 700px) {
+  body { padding: 20px 12px 40px 12px; }
+}
+</style>
+<h1>AP Computer Science A –  Complete AP Exam Review (2025)</h1>
+<p class="subtitle">This comprehensive AP CSA Exam Review will help you understand the exam format, master MCQs and FRQs, eliminate common mistakes, and adopt high-performing strategies used by students who consistently earn 4s and 5s.</p>
+<!-- SECTION 1 -->
+<div class="section">
+<h2>📘 5.1 What the AP CSA Exam Actually Tests</h2>
+<div class="card">
+<p>The AP Computer Science A exam measures your ability to think, reason, trace, and design programs using <strong>object-oriented programming in Java</strong>. Contrary to what many students think, the exam does <em>not</em> reward memorization. Instead, the AP exam tests:</p>
+<ul>
+<li>Logical reasoning and tracing ability</li>
+<li>Understanding Java behavior (especially object references)</li>
+<li>Ability to analyze and modify existing code</li>
+<li>Correct use of arrays and ArrayLists</li>
+<li>Proper class construction: constructors, methods, fields</li>
+<li>Control structures: loops and selection</li>
+<li>Recognizing errors and edge cases</li>
+</ul>
+<p>You do <strong>not</strong> need to memorize:</p>
+<ul>
+<li>Java libraries beyond what’s required (no HashMaps, no file I/O)</li>
+<li>Complex algorithms (merge sort, binary search)</li>
+<li>Java syntax obscure features</li>
+</ul>
+<div class="highlight">The strongest students don’t memorize—they understand patterns. The AP CSA exam tests <strong>habits of thinking</strong> more than raw knowledge.</div>
+</div>
+</div>
+<!-- SECTION 2 -->
+<div class="section">
+<h2>📝 5.2 AP CSA Exam Format (2025 Update)</h2>
+<div class="card">
+<p>As of the current AP Computer Science A exam specification, the exam is structured as follows:</p>
+<h3>📌 Section I — Multiple Choice (MCQ)</h3>
+<ul>
+<li><strong>40 questions</strong></li>
+<li><strong>90 minutes</strong></li>
+<li><strong>50% of your exam score</strong></li>
+<li>Single-select, no penalty for guessing</li>
+<li>Covers Units 1–4, with heavy emphasis on Unit 4</li>
+</ul>
+<h3>📌 Section II — Free Response (FRQ)</h3>
+<ul>
+<li><strong>4 FRQs</strong></li>
+<li><strong>90 minutes</strong></li>
+<li><strong>50% of exam score</strong></li>
+<li>All require writing Java code by hand</li>
+<li>The 4 FRQ types are typically:</li>
+<ul>
+<li>Methods &amp; Control Structures</li>
+<li>Class Design</li>
+<li>Array / Array Algorithm</li>
+<li>ArrayList / Data Structure</li>
+</ul>
+</ul>
+<div class="highlight">FRQ #2 and FRQ #4 almost always relate to <strong>Unit 4: Data Collections</strong>. This means mastering arrays and ArrayLists gives you a huge scoring advantage.</div>
+</div>
+</div>
+<!-- SECTION 3 -->
+<div class="section">
+<h2>🎯 5.3 How to Study for AP CSA (Most Effective Strategy)</h2>
+<div class="card">
+<p>Students often waste hours “practicing Java” without learning what the AP exam actually wants. The following approach is the most efficient and proven way to prepare for the test.</p>
+<h3>Step 1 — Master Tracing</h3>
+<p>Tracing means following code line-by-line and predicting the output or final state. Over half of the MCQs are tracing-based.</p>
+<div class="diagram">x = 3 for (int i = 0; i &lt; 3; i++) { x += i; } // x → 3+0 → 3+1 → 3+2 = 6</div>
+<h3>Step 2 — Memorize Common Patterns, Not Syntax</h3>
+<ul>
+<li>sum/count loops</li>
+<li>max/min loops</li>
+<li>index-based traversal of arrays</li>
+<li>removal pattern for ArrayLists</li>
+<li>constructor + getter + setter trio</li>
+</ul>
+<h3>Step 3 — Practice FRQ Structure</h3>
+<p>Most FRQ points come from clean structure: correct headers, correct return types, and proper use of instance variables—not fancy code.</p>
+<h3>Step 4 — Do Actual Practice Exams</h3>
+<p>Nothing replaces real AP-style practice. Use:</p>
+<ul>
+<li>Your own practice exams (on your site)</li>
+<li>Released CB FRQs</li>
+<li>Unit-specific quizzes</li>
+</ul>
+<div class="highlight">This unit (Unit 5) links out to your full practice exam and all previous FRQs, making it a powerful internal traffic hub for SEO.</div>
+</div>
+</div>
+<!-- SECTION 4 -->
+<div class="section">
+<h2>🔁 5.4 MCQ Strategy — How to Increase Your Score Quickly</h2>
+<div class="card">
+<p>The multiple-choice section rewards pattern recognition and precision. These are the most effective MCQ strategies:</p>
+<h3>Tip 1 — Always Identify the Topic First</h3>
+<p>Before looking at the answer choices, identify whether the question is testing:</p>
+<ul>
+<li>Array traversal</li>
+<li>ArrayList shifting</li>
+<li>Object references</li>
+<li>Boolean logic</li>
+<li>Constructor behavior</li>
+<li>Loop conditions</li>
+</ul>
+<h3>Tip 2 — Predict the Answer Before Reading Choices</h3>
+<p>This prevents you from being “persuaded” by tricky distractors.</p>
+<h3>Tip 3 — Draw Quick Diagrams</h3>
+<p>Especially for array index movement, ArrayList shifts, and reference tracing.</p>
+<h3>Tip 4 — When Unsure, Eliminate Wrong Answers Fast</h3>
+<p>You can almost always eliminate:</p>
+<ul>
+<li>Choices involving impossible index values</li>
+<li>Choices that violate Java syntax</li>
+<li>Choices contradicting loop behavior</li>
+</ul>
+<h3>Tip 5 — Don’t Overthink Easy Questions</h3>
+<p>The AP includes many straightforward tracing and array questions—don’t assume they’re trick questions.</p>
+<div class="highlight">Good MCQ performance comes from recognizing patterns, not being a “Java expert.”</div>
+</div>
+</div>
+<!-- SECTION 5 -->
+<div class="section">
+<h2>🏗 5.5 FRQ Strategy — How to Guarantee Points</h2>
+<div class="card">
+<p>FRQs are where students can earn huge gains because graders reward <strong>structure and correctness</strong>, not elegance. You can often score 7/9 points on an FRQ without writing flawless code.</p>
+<h3>FRQ Scoring Reality</h3>
+<ul>
+<li>Each FRQ is scored on a rubric with 9 points.</li>
+<li>Most points come from:
+<ul>
+<li>correct method headers</li>
+<li>using instance variables properly</li>
+<li>returning correct values</li>
+<li>traversing arrays/ArrayLists correctly</li>
+</ul>
+</li>
+<li>Small mistakes rarely destroy your score.</li>
+</ul>
+<h3>Most Common FRQ Patterns</h3>
+<ul>
+<li>Implementing a method using loops</li>
+<li>Using a given class’s instance variables properly</li>
+<li>Traversing data collections (arrays/ArrayLists)</li>
+<li>String processing</li>
+<li>Accessor/mutator method writing</li>
+<li>Constructor completion</li>
+</ul>
+<div class="highlight">FRQs reward consistent structure. If you master the top 6 FRQ patterns, you can score 80%+ every year.</div>
+</div>
+</div>
+<!-- STOP — Part 2 will continue immediately -->
+
+<!-- CONTINUATION OF UNIT 5 – PART 2 -->
+
+<!-- SECTION 6 -->
+<div class="section">
+<h2>🧠 5.6 Deep-Dive FRQ Strategy: How to Write Code Under Pressure</h2>
+<div class="card">
+<p>Performing well on the FRQs isn’t about writing perfect Java—it’s about showing the grader you understand <strong>logic, structure, and reasoning</strong>. Here is the most reliable method for scoring high.</p>
+<h3>1. Start With the Method Header</h3>
+<p>You earn points instantly for writing a correct method signature:</p>
+<pre>public int countGreaterThan(int[] arr, int value)
+</pre>
+<div class="highlight">You don’t need to understand the whole problem—write the header first.</div>
+<h3>2. Write the Loop Structure Next</h3>
+<p>All array/ArrayList FRQs rely on this skeleton:</p>
+<pre>for (int i = 0; i &lt; arr.length; i++) {
+    // logic here
+}
+</pre>
+<h3>3. Use Instance Variables Properly</h3>
+<p>If the FRQ gives you fields like:</p>
+<pre>private int count;
+private ArrayList<string> words;
+</string></pre>
+<p><strong>Never redeclare them</strong> inside the method. Use <code>this.count</code> or <code>words.get(i)</code>.</p>
+<h3>4. Always Handle Edge Cases</h3>
+<p>Many FRQ points are awarded for avoiding errors like:</p>
+<ul>
+<li>index out of bounds</li>
+<li>null or empty arrays</li>
+<li>checking size before removing items</li>
+</ul>
+<h3>5. Return Something Even if Unsure</h3>
+<p>A missing <code>return</code> statement loses guaranteed points. Even a wrong return value earns partial credit if structure is correct.</p>
+<div class="highlight">FRQ grading is generous. If your code is “logically on the right track,” you can score 7–8/9 points.</div>
+</div>
+</div>
+<!-- SECTION 7 -->
+<div class="section">
+<h2>⏱ 5.7 Time Management on the AP CSA Exam</h2>
+<div class="card">
+<p>Here is the most effective time plan used by students who consistently earn 5s:</p>
+<h3>Multiple Choice — 90 minutes</h3>
+<ul>
+<li>
+<strong>Pass 1:</strong> Answer easy/medium questions (45 min)</li>
+<li>
+<strong>Pass 2:</strong> Return to flagged questions (30 min)</li>
+<li>
+<strong>Final Check:</strong> Ensure all questions are answered (15 min)</li>
+</ul>
+<h3>Free Response — 90 minutes</h3>
+<ul>
+<li><strong>Q1: Methods &amp; Control Structures — 20 minutes</strong></li>
+<li><strong>Q2: Class Design — 25 minutes</strong></li>
+<li><strong>Q3: Array — 20 minutes</strong></li>
+<li><strong>Q4: ArrayList — 25 minutes</strong></li>
+</ul>
+<div class="highlight">Never leave an FRQ blank. Even partial answers earn points.</div>
+</div>
+</div>
+<!-- SECTION 8 -->
+<div class="section">
+<h2>⚠️ 5.8 The Most Common Mistakes on the AP CSA Exam</h2>
+<div class="card">
+<h3>1. Off-by-One Errors</h3>
+<p>60% of students lose points for missing one index. Always verify your loop boundaries:</p>
+<ul>
+<li>Arrays → <code>i &lt; arr.length</code>
+</li>
+<li>ArrayLists → <code>i &lt; list.size()</code>
+</li>
+</ul>
+<h3>2. Confusing <code>==</code> with <code>equals()</code>
+</h3>
+<p><code>==</code> compares memory references. <code>equals()</code> compares String content.</p>
+<h3>3. Calling Methods Incorrectly</h3>
+<p>Remember: instance methods need an object:</p>
+<pre>word.toUpperCase();
+</pre>
+<h3>4. Invalid Removal from ArrayLists</h3>
+<p>Use a <strong>while loop with index control</strong> when removing items:</p>
+<pre>int i = 0;
+while (i &lt; list.size()) {
+    if (list.get(i) &lt; 0) {
+        list.remove(i);
+    } else {
+        i++;
+    }
+}
+</pre>
+<h3>5. Forgetting Return Statements</h3>
+<div class="highlight">1 missing <code>return</code> = immediate point loss. Always return something—even a placeholder.</div>
+</div>
+</div>
+<!-- SECTION 9 -->
+<div class="section">
+<h2>📅 5.9 What to Do the Week Before the AP CSA Exam</h2>
+<div class="card">
+<h3>Day 1 — MCQ Drills</h3>
+<ul>
+<li>Complete 30–40 MCQs</li>
+</ul>
+<h3>Day 2 — Array + ArrayList FRQs</h3>
+<ul>
+<li>Focus on traversal patterns</li>
+</ul>
+<h3>Day 3 — Class Design FRQ</h3>
+<ul>
+<li>Practice constructor + getter + setter patterns</li>
+</ul>
+<h3>Day 4 — Full Practice Exam</h3>
+<ul>
+<li>Simulate real timing</li>
+</ul>
+<h3>Day 5 — Review All Mistakes</h3>
+<ul>
+<li>Look for repeating patterns</li>
+</ul>
+<h3>Day 6 — Light Review</h3>
+<ul>
+<li>Don’t cram. Skim patterns.</li>
+</ul>
+<h3>Day 7 — Rest + Confidence</h3>
+<ul>
+<li>Go into the exam calm and prepared.</li>
+</ul>
+</div>
+</div>
+<!-- SECTION 10 -->
+<div class="section">
+<h2>🧪 5.10 Unit 5 – AP CSA Exam Review Quiz</h2>
+<div class="card">
+<p>Click “Show Answer” to reveal the solution to each question.</p>
+<!-- QUESTION TEMPLATE --> <script>
+      function toggleAnswer(id) {
+        const ans = document.getElementById(id);
+        ans.style.display = ans.style.display === 'none' ? 'block' : 'none';
+      }
+    </script> <!-- Q1 -->
+<p><strong>1. What is the most common cause of MCQ mistakes on array problems?</strong></p>
+<button class="btn">Show Answer</button>
+<div id="a1" style="display: none;">Off-by-one errors and incorrect loop boundaries.</div>
+<!-- Q2 -->
+<p><strong>2. What should you write FIRST on any FRQ?</strong></p>
+<button class="btn">Show Answer</button>
+<div id="a2" style="display: none;">The method header (signature), because it earns immediate points.</div>
+<!-- Q3 -->
+<p><strong>3. What does the AP exam heavily emphasize in FRQ #2?</strong></p>
+<button class="btn">Show Answer</button>
+<div id="a3" style="display: none;">Class design: constructors, accessors, mutators, and proper use of fields.</div>
+<!-- Q4 -->
+<p><strong>4. When removing elements from an ArrayList, what loop should you use?</strong></p>
+<button class="btn">Show Answer</button>
+<div id="a4" style="display: none;">A while loop with manual index control to avoid skipping elements.</div>
+<!-- Q5 -->
+<p><strong>5. What does <code>==</code> test when comparing Strings?</strong></p>
+<button class="btn">Show Answer</button>
+<div id="a5" style="display: none;">Memory reference equality, not content equality.</div>
+<!-- Q6 -->
+<p><strong>6. What is the best way to increase MCQ speed?</strong></p>
+<button class="btn">Show Answer</button>
+<div id="a6" style="display: none;">Recognizing patterns and predicting answers before reading choices.</div>
+<!-- Q7 -->
+<p><strong>7. How many FRQ points can you earn even with imperfect code?</strong></p>
+<button class="btn">Show Answer</button>
+<div id="a7" style="display: none;">Often 7–8 out of 9, if structure and logic are correct.</div>
+<!-- Q8 -->
+<p><strong>8. What should you ALWAYS check before accessing an ArrayList?</strong></p>
+<button class="btn">Show Answer</button>
+<div id="a8" style="display: none;">That the index is valid and less than list.size().</div>
+<!-- Q9 -->
+<p><strong>9. How is the MCQ section weighted?</strong></p>
+<button class="btn">Show Answer</button>
+<div id="a9" style="display: none;">50% of the exam score.</div>
+<!-- Q10 -->
+<p><strong>10. What’s the single most important habit for FRQ success?</strong></p>
+<button class="btn">Show Answer</button>
+<div id="a10" style="display: none;">Writing correct method structure every time—even before solving the logic.</div>
+</div>
+</div>
+<!-- SECTION 11 -->
+<div class="section">
+<h2>🔗 5.11 What to Study Next (Internal Links)</h2>
+<div class="card">
+<p>Continue your studying with these resources:</p>
+<ul>
+<li><a class="resource-link" href="/pages/ap-csa-unit-1">Unit 1 – Using Objects &amp; Methods</a></li>
+<li><a class="resource-link" href="/pages/ap-csa-unit-2">Unit 2 – Selection &amp; Iteration</a></li>
+<li><a class="resource-link" href="/pages/ap-csa-unit-3">Unit 3 – Class Creation</a></li>
+<li><a class="resource-link" href="/pages/ap-csa-unit-4">Unit 4 – Data Collections</a></li>
+<li><a class="resource-link" href="https://www.apcsexamprep.com/pages/ap-csa-2025-practice-mcq">Full Practice AP CSA MCQ Exam</a></li>
+<li><a class="resource-link" href="/pages/ap-csa-frqs">FRQ Archives (2017–2025)</a></li>
+</ul>
+</div>
+</div>
+<!-- SECTION 12 -->
+<div class="section">
+<h2>🎓 5.12 Need Personalized Help?</h2>
+<div class="card">
+<p>If you'd like individualized guidance for AP Computer Science A, I offer one-on-one tutoring focused on:</p>
+<ul>
+<li>FRQ mastery</li>
+<li>MCQ pattern recognition</li>
+<li>Debugging and code structure</li>
+<li>Exam-confidence training</li>
+</ul>
+<p><strong>You don’t need to study alone.</strong> Get personalized support and maximize your chance of earning a 5.</p>
+<a class="resource-link" href="/pages/tutoring">📘 View AP CSA Tutoring Options</a>
+</div>
+</div>
