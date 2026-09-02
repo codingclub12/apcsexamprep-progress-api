@@ -39,6 +39,15 @@
 //  mandatory, and so is at least one of `live` or `rederive`, because `suite`
 //  plus `mutation` still only ever examines this repo talking to itself.
 //
+//  A MUTATION SHOULD NAME THE ASSERTION IT EXPECTS TO TRIP: `expect_failure`.
+//  "The suite went red" and "this guard is real" are not the same claim. Where
+//  guards overlap, the strong one masks the weak one, and a suite that stops at
+//  the first failure never even reaches the guard under test. The battery then
+//  reports a clean run over a guard that cannot fire at all. That is how the
+//  stoplist rule in lib/command-verify.js survived three separate suites. Set
+//  `expect_failure` to a distinctive slice of the assertion that must appear in
+//  the red output, and a mutation caught by some OTHER guard is refused.
+//
 //  A LIVE CHECK MUST ASSERT SOMETHING THAT WAS FALSE BEFORE THE DEPLOY.
 //  This gate's own first manifest expected `"status":"ok"` from /api/health.
 //  That was true before the deploy, true during it, and true if the deploy never
@@ -89,7 +98,19 @@ function runMutation(m) {
   if (res.ok) {
     return { ok: false, detail: `the suite still PASSED with the guard broken, so it does not test it` };
   }
-  return { ok: true, detail: `broke ${m.file} and the suite went red, as it must` };
+  //  GUARD SUBSUMPTION. "The suite went red" is not the same as "this guard is
+  //  real". Where guards overlap, a strong one masks a weak one: a mutation
+  //  aimed at "the group disallows everything" can be caught entirely by "the
+  //  group exists", and the weak guard stays hollow while the battery reports a
+  //  clean run. That is the same shape as the stoplist mutation that survived
+  //  three separate suites here, and it is invisible without naming the
+  //  assertion you expect to trip.
+  if (m.expect_failure && !String(res.out || '').includes(m.expect_failure)) {
+    return { ok: false, detail: `the suite went red, but NOT for ${JSON.stringify(m.expect_failure)}. `
+      + `Another guard caught this mutation, so the one it targets is still unproven` };
+  }
+  return { ok: true, detail: `broke ${m.file} and the suite went red`
+    + (m.expect_failure ? `, on ${JSON.stringify(m.expect_failure.slice(0, 48))}` : '') };
 }
 
 // A gate whose failure message does not say what went wrong gets re-run instead

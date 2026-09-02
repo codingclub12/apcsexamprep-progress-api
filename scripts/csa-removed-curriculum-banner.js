@@ -106,7 +106,11 @@ const HEADER = ['Blog: Handle', 'Article: Handle', 'Article: Command', 'Article:
 
 function toCsv(rows) {
   const cell = (s) => '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"';
-  return '﻿' + [HEADER.join(',')]
+  //  The HEADER is quoted too. It used to be joined raw, which parses fine and
+  //  is still wrong: CONVENTIONS.md says QUOTE_ALL, and a file that is quoted
+  //  everywhere except one line invites the next person to decide quoting is
+  //  optional on the line that does carry a comma. Caught by smoke:csabanner.
+  return '﻿' + [HEADER.map(cell).join(',')]
     .concat(rows.map((r) => [cell(BLOG_HANDLE), cell(r.handle), cell('UPDATE'), cell(r.body)].join(',')))
     .join('\r\n') + '\r\n';
 }

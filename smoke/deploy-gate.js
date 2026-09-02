@@ -206,6 +206,52 @@ console.log('\n9. Pre-deploy mode defers live but never the mutation');
   ok('  but a pre-deploy run with no mutation is still refused', !r2.ok, r2.problems);
 }
 
+console.log('\n10. GUARD SUBSUMPTION: a mutation must trip the guard it TARGETS');
+{
+  //  The failure this rule exists for. Two guards overlap, and the suite checks
+  //  the strong one first and stops there. Deleting the whole group trips "the
+  //  group exists" and the second guard never runs, so the battery sees a red
+  //  suite and calls the weak guard proven. It is not: it is unreachable.
+  //
+  //  This is the same shape as the stoplist mutation that survived three
+  //  separate suites in this repo, where the length rule refused every fixture
+  //  before the rule under test could see it.
+  const target = path.join(tmp, 'rules.txt');
+  const intact = 'GROUP\nDISALLOW_ALL\n';
+  fs.writeFileSync(target, intact);
+  const suite = path.join(tmp, 'suite.js');
+  fs.writeFileSync(suite,
+    'const s = require("fs").readFileSync(' + JSON.stringify(target) + ', "utf8");\n'
+    + 'if (!s.includes("GROUP")) { console.log("[FAIL] the group exists"); process.exit(1); }\n'
+    + 'if (!s.includes("DISALLOW_ALL")) { console.log("[FAIL] the group disallows everything"); process.exit(1); }\n'
+    + 'console.log("ok");\n');
+
+  const base = [
+    { kind: 'suite', name: 'tests', command: TRUE },
+    { kind: 'live', name: 'production', command: `node -e "console.log('live ok')"` },
+  ];
+  //  Deleting the whole group. The suite goes red, but on the OTHER guard.
+  const masked = { kind: 'mutation', name: 'targets the weak guard', file: target,
+    find: intact, replace: '', command: `node ${suite}` };
+
+  const r1 = gate({ checks: base.concat([Object.assign({}, masked)]) });
+  ok('  without expect_failure the masked mutation still counts, as it always did', r1.ok, r1.problems);
+
+  const r2 = gate({ checks: base.concat([Object.assign({}, masked,
+    { expect_failure: 'the group disallows everything' })]) });
+  ok('  with expect_failure naming the masked guard, the gate refuses it', !r2.ok, r2.problems);
+  ok('  and says another guard caught it',
+    /NOT for|still unproven/.test(r2.problems.join(' ')), r2.problems);
+
+  //  And the honest case: a mutation that really does trip its own guard.
+  const honest = { kind: 'mutation', name: 'targets the guard it breaks', file: target,
+    find: 'DISALLOW_ALL', replace: 'DISALLOW_SOME', command: `node ${suite}`,
+    expect_failure: 'the group disallows everything' };
+  const r3 = gate({ checks: base.concat([honest]) });
+  ok('  a mutation that trips its OWN guard passes', r3.ok, r3.problems);
+  ok('  the file is restored after all of it', fs.readFileSync(target, 'utf8') === intact);
+}
+
 fs.rmSync(tmp, { recursive: true, force: true });
 console.log(`\n${pass} passed, ${fail} failed\n`);
 process.exit(fail ? 1 : 0);
