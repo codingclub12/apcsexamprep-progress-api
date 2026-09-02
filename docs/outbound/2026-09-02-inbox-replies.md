@@ -14,7 +14,7 @@ Three corrections, and the first one reverses the central claim of v2.
 
 | # | v2 said | Verified today | Effect |
 |---|---------|----------------|--------|
-| 1 | Vo's Ex2/Lab/Quiz scores "were never calculated", not retroactively recoverable | Cyber **Unit 1 records fine**. Live `/api/health` lists 11 reporter-gap activities and **not one is cyber Unit 1**. The gap is Units 2 through 5. | Vo's draft rewritten. The v2 version would have told a paying customer his data was gone when it is sitting in the database. |
+| 1 | Vo's Ex2/Lab/Quiz scores "were never calculated", not retroactively recoverable | **UNRESOLVED. My first pass claimed this was disproven and that was an error, retracted below.** The health check I cited cannot see the activities in question. | Vo's draft now asks rather than asserts. Neither this file nor v2 has established what happened to his data. |
 | 2 | "No gating exists, confirmed at the schema level" | **Gating exists.** `lib/activity-gate.js`, the `activity_gates` table, `classes.quiz_lock_default`. Quiz and exam are default-gated. What does NOT exist is *scheduled* release. | Gargano's draft rewritten. This is a yes, not a no, and she is deciding whether to use the platform at all. |
 | 3 | Naggar's founding price expires "Friday" | The live product page states **September 1, 2026**, three times. That was yesterday. | Naggar's draft no longer cites a Friday deadline. See the note in his section. |
 
@@ -22,8 +22,9 @@ Three corrections, and the first one reverses the central claim of v2.
 
 | Claim | Verdict | Source, checked 2026-09-02 |
 |-------|---------|----------------------------|
-| Cyber Unit 1 Ex2/Lab/Quiz post scores | TRUE | `/api/health` `reporters.worst`: 11 rows, zero in cyber unit-1 |
-| Units 2-5 lose some scores | TRUE | Same read: 7 cyber rows across units 2, 3, 4, 5, including one Ex2 and one Lab |
+| Cyber Unit 1 Ex2/Lab/Quiz post scores | **UNKNOWN, and I wrongly called this TRUE** | `/api/health` inner-joins `course_denominators` (`lib/health-integrity.js`), so an activity with no authored denominator CANNOT appear in that list. The seed script states fifteen Unit 1 activities are deliberately unpriced. Zero cyber unit-1 rows is what this check returns whether Unit 1 is perfect or wholly broken. |
+| Units 2-5 lose some scores, among PRICED activities | TRUE | Same read: 7 cyber rows across units 2, 3, 4, 5, including one Ex2 and one Lab. This is a floor, not a total: unpriced activities are invisible to it in every unit. |
+| Five board tasks claim Unit 1 scoring is broken | TRUE, and all are `done` with `verified: false` | #102, #104, #105, #143, #145. #105: "no score reaches the gradebook". #143: "10 of 15 AP Cyber Unit 1 activity pages" |
 | Task 85 percentage-averaging bug is fixed in prod | TRUE | `lib/admin-gradebook.js:378` points-based; `smoke/gradebook-agreement.js` 26/26, `smoke/admin-gradebook.js` 58/58 |
 | Cyber bundle checkout works | TRUE | `/cart/48609263222999:1` -> HTTP 302 into live Shop Pay with a valid token |
 | Bundle is ACTIVE at $249 | TRUE | Admin API: `price 249.00`, `compareAtPrice 349.00`, `availableForSale true`, `inventoryPolicy CONTINUE` (a card will not bounce on stock) |
@@ -84,41 +85,72 @@ today.
 
 ---
 
-## 2. Peter Vo (Klein ISD) - SEND AFTER ONE CHECK
+## 2. Peter Vo (Klein ISD) - DO NOT SEND YET
 
-This is the draft that changed most, and the reason matters.
+**Retraction first, because I told Tanner the opposite an hour ago.**
 
-**v2 would have been wrong, in the same direction as last time.** It told him the
-scores were never calculated and were not recoverable. Checked against production
-today, cyber Unit 1 reporters work: `/api/health` lists every activity that has
-completions but has never received a score, and not one of the eleven is in cyber
-Unit 1. His student's 15/15 was recorded. It is in the database. Telling a
-customer his data is gone when it is not would have been the third confident
-wrong answer in this thread, and he is the person best placed to catch it.
+I said Vo's data was safe, that his student's 15/15 was recorded and sitting in
+the database, and that v2 would have wrongly told a customer his data was gone.
+That was an overclaim and I am withdrawing it. It is not established. It may well
+be false.
 
-What I could NOT settle: why a recorded score is not rendering for him.
+**How I got it wrong.** I read `/api/health`, saw eleven reporter-gap activities
+with none in cyber Unit 1, and treated that absence as proof Unit 1 records. The
+query behind it (`lib/health-integrity.js`) begins:
 
-**`[TANNER]` The 30-second check that settles it.** Signed in, open:
+    FROM progress p
+    JOIN course_denominators d
+      ON d.course = p.course AND d.lesson = p.lesson
+     AND d.activity_type = p.activity_type
 
+That is an INNER join. An activity with no authored denominator cannot appear in
+that list at all, no matter how badly it is broken. And
+`scripts/seed-cyber-denominators.js` says in its own header that twenty
+activities are deliberately unpriced, **fifteen of them in Unit 1**.
+
+So "zero cyber Unit 1 rows" is exactly what that check returns whether Unit 1 is
+perfect or completely broken. I counted something that could not contain the
+answer and read the silence as evidence. That is the `/admin/command` login.html
+trap, pointed at me, and it is the same failure this whole thread is about.
+
+**What the board says, which I should have weighted first.** Five tasks, every
+one `done`, every one `verified: false`, every one about Unit 1:
+
+    #102  Cyber 1.2 Exercise 1 and 2 record a fabricated 0: pages never report
+    #104  9 pages post a fabricated 0, 4 pages (incl 1.2 ex1/ex2) never complete
+    #105  Cyber 1.2 and 1.3-1.5 exercises still carry no reporter: they complete
+          as done-ungraded, so NO SCORE REACHES THE GRADEBOOK
+    #143  Score reporter posts a false zero - 10 of 15 AP Cyber Unit 1 pages
+    #145  Clear the 2026-09-01 score-reporter false zeros
+
+#105 is Vo's symptom, in Unit 1, in the words of whoever filed it. Marked done.
+Never verified. #143's "10 of 15" is the same fifteen unpriced Unit 1 activities.
+
+**v2 is not thereby correct either.** Its claim that only Exercise 1 was ever
+wired came from counting `apcseReportScore` occurrences in fetched page HTML.
+`docs/runs/2026-09-01-...-verification-checklist.md` retracts that method
+explicitly: the reporter is a theme asset that all 104 cyber activity pages load,
+not per-page inlined markup, so that count measures whether a page was
+hand-patched, not whether it can report. On that measure 103 of 104 pages look
+broken.
+
+So both documents reached a confident answer with an instrument that could not
+see the thing. They disagree, and neither is evidence.
+
+**`[TANNER]` The check that settles it.** Signed in, either of:
+
+    https://progress.apcsexamprep.com/api/admin/denominators?course=ap-cybersecurity
     https://progress.apcsexamprep.com/api/admin/class/<his_class_id>/gradebook
 
-and look at whether the Ex2 column exists at all, and what `items_percent_only`
-contains. That distinguishes the two live candidates:
+The first says whether Unit 1 Ex2/Lab/Quiz have an authored "out of" at all. The
+second says what his class actually holds. Every read of `course_denominators`
+sits behind teacher or admin auth, so I cannot reach either from here.
 
-- The score is stored but the column is unpriced, so it cannot join the points
-  sum and renders blank. Fix is one denominator row, and the grade appears
-  retroactively for every student at once.
-- The score is stored and priced but against a lesson id his page is not
-  reporting. That is the Unit 3 handle-offset defect, in which case Unit 1 is
-  clean and something else is going on.
-
-**One detail worth handing you.** He said 15/15. No Unit 1 Exercise 2 in the seed
-has a denominator of 15; they are 8, 30, 24, 25 and 4. So either he is not in
-Unit 1, or the page is printing a total the gradebook was never told about. That
-is the first thing I would look at.
-
-The draft below commits to what is verified and asks one question, rather than
-diagnosing out loud.
+Until one of those comes back, the honest email is the one below: it commits to
+nothing about his data, apologises for the miss, and asks for what would let me
+finish. It deliberately does NOT repeat v2's "your work is unrecoverable, students
+must redo it", because telling twenty teachers to re-run a week of class on an
+unverified premise is the more expensive way to be wrong.
 
 > Subject: Re: Student progress not showing after Exercise 1
 >
@@ -129,31 +161,32 @@ diagnosing out loud.
 > then had to write again through the contact form to get an answer at all. That
 > is my fault and I am sorry for it.
 >
-> Here is where things actually stand, checked against the server this morning
-> rather than assumed.
+> I am not going to give you a third confident answer that turns out to be wrong.
+> So here is exactly where I am.
 >
-> The good news: your student's 15/15 was recorded. Work submitted on Unit 1
-> Exercise 2, the Lab and the Quiz is reaching the server and being stored. This
-> is not lost data and nothing needs to be redone by your students.
+> You are right that something is broken. I have found records going back through
+> last week showing the scoring on Unit 1 exercise, lab and quiz pages was worked
+> on repeatedly and never confirmed as fixed, which fits what you are seeing
+> precisely. What I do not yet know is whether your students' scores were recorded
+> and are failing to display, or were never calculated in the first place. Those
+> need different fixes and one of them has consequences for your grading that the
+> other does not.
 >
-> The problem is on the display side, between the stored score and the column you
-> are looking at, and I have not yet pinned down which of two causes it is. I did
-> not want to sit on your message any longer while I finish that, and I am not
-> going to guess at it in an email to you again.
+> I will know within the day. I did not want to leave your message sitting while I
+> find out.
 >
-> One thing that would help me finish it today: could you send me the class code,
-> and the name of the lesson page your students were on when they did that
-> Exercise 2? The score you quoted, 15 out of 15, does not match any total I have
-> on file for Unit 1 Exercise 2, which is itself a useful clue about where this is
-> going wrong.
+> Two things would let me answer you properly:
 >
-> On the wider point: separately from your class, I found that some activities in
-> Units 2 through 5 are not recording scores properly. Unit 1 is not affected, so
-> it should not touch what your students have done so far, but you would have run
-> into it in a few weeks and I would rather you heard it from me now.
+> Your class code, and the name of the lesson page your students were on for that
+> Exercise 2. The 15 out of 15 you quoted does not match any total I have on file
+> for a Unit 1 Exercise 2, which is itself a clue.
 >
-> I will write back today with either a fix or a straight answer about how long
-> one will take.
+> One thing I can tell you now: do not re-enter or re-assign anything yet. If the
+> scores are recorded and simply not displaying, that work is fine and I would
+> hate for you to have your students redo work that was never lost.
+>
+> I will write again today either with a fix or with a straight account of what is
+> wrong and how long it takes.
 >
 > Best,
 > Tanner
@@ -353,8 +386,12 @@ The Unit 1 project material is in Drive under **AP Cybersecurity Course >
 Course_Resources**, which holds `Threat_Defense_Report_Rubric.docx` and two pacing
 guides. Per-lesson lab material sits under each lesson's `Supplements/` folder.
 
-No document explicitly named "3-day lab" exists. If that is a distinct artifact
-rather than the project rubric plus pacing, it is not in Drive under that name.
+**Correction, and v2 had this right where my source did not.** `/pages/ap-cybersecurity-labs`
+returns HTTP 200, checked today. The lab is on the SITE, not in Drive. The source I
+first worked from searched only Drive, found no document named "3-day lab", and I
+repeated that as though absence from Drive meant absence. The Drive folders hold
+deck, notes, quiz, supplements and teacher guide; labs live on the site. That split
+is the likely reason he could not find it, and it is worth making explicit to him.
 
 **Trap to avoid:** an older tree named "Unit 1 - Introduction to Security"
 contains a folder literally called `Superpack` that is **empty**, plus a stale
@@ -366,14 +403,18 @@ index doc. Do not send him a link into that tree.
 >
 > Here is where the Unit 1 project material lives.
 >
-> The main artifact is the Threat Defense Report, and its rubric is in the
-> Course_Resources folder of your AP Cybersecurity Course drive, alongside two
-> pacing guides, one for a traditional schedule and one for block and semester.
-> The pacing guides are where the three-day shape of it is laid out.
+> The lab is on the site rather than in Drive, which is almost certainly why you
+> could not find it:
 >
-> The per-lesson lab material is not at the course level. Each lesson folder has
-> its own Supplements folder, and that is where the hands-on work for that lesson
-> sits.
+> https://www.apcsexamprep.com/pages/ap-cybersecurity-labs
+>
+> The rubric for the Threat Defense Report is in the Course_Resources folder of
+> your Drive, alongside two pacing guides, one for a traditional schedule and one
+> for block and semester. The pacing guides are where the three-day shape is laid
+> out.
+>
+> The split is not obvious: Drive holds the deck, guided notes, quiz, supplements
+> and teacher guide, and the labs live on the site. That is on me to make clearer.
 >
 > One warning so you do not waste an afternoon: there is an older folder tree in
 > there from an earlier version of the course, including a folder named Superpack
@@ -523,25 +564,31 @@ College Board course. Do not invent a citation here.
 
 # Two things I want on the record
 
-## The cohort-wide disclosure question is now much smaller than v2 said
+## The cohort-wide disclosure: I argued both sides today, so discount me
 
-v2 recommended a disclosure email to the whole cohort, on the premise that
-everyone's gradebook was silently missing a third of its data and the damage was
-accruing daily because it could not be backfilled.
+At the start of this session I recommended sending it. An hour later I recommended
+against it, on the strength of a health-check reading that turned out to be blind
+to the activities in question. Both recommendations were confident and one of them
+was worthless, so treat this section as input rather than advice.
 
-Checked live, that premise was too broad. The measured blast radius today is
-**11 activities and 11 completions**, none of them in cyber Unit 1, which is where
-every teacher who started this week actually is. That is what early September
-looks like before classes ramp. It is a real defect and it is worth fixing this
-week, but it is not a cohort-wide emergency and an all-hands "your grades are
-broken" email would do more reputational damage than the bug.
+What is actually known:
 
-My recommendation flips: **do not send a cohort-wide disclosure.** Tell Vo and
-Campbell, who asked, which the drafts above do. Fix the eleven. If the count
-climbs as Units 2 and 3 come into use, revisit it.
+- Among activities that HAVE an authored denominator, 11 are losing scores, none
+  in cyber Unit 1. That is a floor, not a total.
+- Fifteen Unit 1 activities have no denominator and are therefore invisible to
+  that count. Whether they are recording is unknown.
+- Five board tasks assert Unit 1 scoring is broken. All are `done`. None is
+  verified.
 
-That is a judgment call about your business, so it stays yours. I have not
-drafted the disclosure email because I no longer think it should go.
+The decision turns entirely on the check in Vo's section, and it should not be
+made before that check is run. If Unit 1 is recording, this is a Units 2-5 problem
+affecting eleven completions and no disclosure is warranted. If Unit 1 is not
+recording, every founding-cohort teacher is grading against incomplete data and
+they should hear it from you first.
+
+Do not send a disclosure describing work as unrecoverable until someone has
+confirmed it is unrecoverable. That claim is the one that makes teachers re-run a
+week of class, and it is currently resting on a retracted measurement.
 
 ## The board is asserting things that are not true
 
