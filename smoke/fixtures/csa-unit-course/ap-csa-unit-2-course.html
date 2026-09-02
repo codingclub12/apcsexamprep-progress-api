@@ -1,0 +1,294 @@
+<style>
+#u2-hub { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important; max-width: 860px !important; margin: 0 auto !important; padding: 24px 16px !important; }
+#u2-hub * { box-sizing: border-box !important; }
+.u2-breadcrumb { font-size: 13px !important; color: #6b7280 !important; -webkit-text-fill-color: #6b7280 !important; margin-bottom: 24px !important; }
+.u2-breadcrumb a { color: #2563eb !important; -webkit-text-fill-color: #2563eb !important; text-decoration: none !important; }
+.u2-breadcrumb .sep { margin: 0 6px !important; }
+.u2-eyebrow { display: inline-block !important; font-size: 11px !important; font-weight: 700 !important; letter-spacing: 1.5px !important; text-transform: uppercase !important; color: #1e40af !important; -webkit-text-fill-color: #1e40af !important; margin-bottom: 8px !important; }
+.u2-heading { font-size: 32px !important; font-weight: 800 !important; color: #1e1b4b !important; -webkit-text-fill-color: #1e1b4b !important; margin: 0 0 12px !important; line-height: 1.2 !important; }
+.u2-desc { font-size: 16px !important; color: #475569 !important; -webkit-text-fill-color: #475569 !important; line-height: 1.6 !important; margin-bottom: 32px !important; }
+.u2-stats { display: flex !important; gap: 24px !important; flex-wrap: wrap !important; margin-bottom: 36px !important; padding: 20px !important; background: #f8fafc !important; border-radius: 12px !important; border: 1px solid #e2e8f0 !important; }
+.u2-stat { text-align: center !important; }
+.u2-stat-val { font-size: 28px !important; font-weight: 800 !important; color: #1e40af !important; -webkit-text-fill-color: #1e40af !important; display: block !important; }
+.u2-stat-label { font-size: 12px !important; color: #6b7280 !important; -webkit-text-fill-color: #6b7280 !important; }
+.u2-learn { margin-bottom: 36px !important; padding: 24px !important; background: #eff6ff !important; border-radius: 12px !important; border-left: 4px solid #1e40af !important; }
+.u2-learn-title { font-size: 16px !important; font-weight: 700 !important; color: #1e1b4b !important; -webkit-text-fill-color: #1e1b4b !important; margin: 0 0 14px !important; }
+.u2-learn-list { margin: 0 !important; padding: 0 !important; list-style: none !important; }
+.u2-learn-list li { font-size: 15px !important; color: #374151 !important; -webkit-text-fill-color: #374151 !important; padding: 5px 0 5px 22px !important; position: relative !important; line-height: 1.5 !important; }
+.u2-learn-list li::before { content: "✓" !important; position: absolute !important; left: 0 !important; color: #1e40af !important; -webkit-text-fill-color: #1e40af !important; font-weight: 700 !important; }
+.u2-resources { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; margin-bottom: 40px !important; }
+@media (max-width: 540px) { .u2-resources { grid-template-columns: 1fr !important; } }
+.u2-resource-card { display: block !important; padding: 16px 18px !important; background: #fff !important; border: 2px solid #e5e7eb !important; border-radius: 10px !important; text-decoration: none !important; }
+.u2-resource-card:link, .u2-resource-card:visited { text-decoration: none !important; }
+.u2-resource-card:hover { border-color: #1e40af !important; }
+.u2-resource-label { font-size: 10px !important; font-weight: 700 !important; letter-spacing: 1.2px !important; text-transform: uppercase !important; color: #1e40af !important; -webkit-text-fill-color: #1e40af !important; display: block !important; margin-bottom: 4px !important; }
+.u2-resource-name { font-size: 14px !important; font-weight: 700 !important; color: #1e1b4b !important; -webkit-text-fill-color: #1e1b4b !important; display: block !important; margin-bottom: 4px !important; line-height: 1.3 !important; }
+.u2-resource-desc { font-size: 12px !important; color: #6b7280 !important; -webkit-text-fill-color: #6b7280 !important; display: block !important; }
+.u2-section-title { font-size: 20px !important; font-weight: 700 !important; color: #1e1b4b !important; -webkit-text-fill-color: #1e1b4b !important; margin: 0 0 16px !important; }
+.u2-grid { display: grid !important; grid-template-columns: 1fr !important; gap: 12px !important; margin-bottom: 48px !important; }
+@media (min-width: 600px) { .u2-grid { grid-template-columns: repeat(2, 1fr) !important; } }
+@media (min-width: 900px) { .u2-grid { grid-template-columns: repeat(3, 1fr) !important; } }
+.u2-lesson-card { display: block !important; padding: 16px !important; background: #fff !important; border: 2px solid #e5e7eb !important; border-radius: 10px !important; text-decoration: none !important; transition: border-color 0.15s !important; }
+.u2-lesson-card:hover { border-color: #1e40af !important; }
+.u2-lesson-card:link, .u2-lesson-card:visited { text-decoration: none !important; }
+.u2-lesson-num { font-size: 11px !important; font-weight: 700 !important; letter-spacing: 1px !important; text-transform: uppercase !important; color: #1e40af !important; -webkit-text-fill-color: #1e40af !important; margin-bottom: 6px !important; }
+.u2-lesson-title { font-size: 15px !important; font-weight: 600 !important; color: #1e1b4b !important; -webkit-text-fill-color: #1e1b4b !important; line-height: 1.4 !important; margin-bottom: 10px !important; }
+.u2-lesson-meta { display: flex !important; align-items: center !important; gap: 8px !important; flex-wrap: wrap !important; }
+.u2-lesson-time { font-size: 12px !important; color: #6b7280 !important; -webkit-text-fill-color: #6b7280 !important; }
+.u2-lesson-type { font-size: 11px !important; font-weight: 600 !important; color: #fff !important; -webkit-text-fill-color: #fff !important; padding: 2px 8px !important; border-radius: 999px !important; }
+.u2-cta { background: linear-gradient(135deg, #1e1b4b 0%, #1e40af 100%) !important; border-radius: 16px !important; padding: 32px !important; text-align: center !important; margin-bottom: 32px !important; }
+.u2-cta h2 { color: #fff !important; -webkit-text-fill-color: #fff !important; font-size: 22px !important; font-weight: 700 !important; margin: 0 0 8px !important; }
+.u2-cta p { color: #bfdbfe !important; -webkit-text-fill-color: #bfdbfe !important; margin: 0 0 20px !important; font-size: 15px !important; }
+.u2-cta-btn { display: inline-block !important; background: #fff !important; color: #1e40af !important; -webkit-text-fill-color: #1e40af !important; font-weight: 700 !important; font-size: 15px !important; padding: 12px 28px !important; border-radius: 8px !important; text-decoration: none !important; }
+.u2-cta-btn:link, .u2-cta-btn:visited { color: #1e40af !important; -webkit-text-fill-color: #1e40af !important; }
+.u2-units-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+@media (min-width: 700px) { .u2-units-grid { grid-template-columns: repeat(4, 1fr) !important; } }
+.u2-unit-chip { display: block !important; padding: 14px 12px !important; border-radius: 10px !important; text-decoration: none !important; }
+.u2-unit-chip:link, .u2-unit-chip:visited { text-decoration: none !important; }
+.u2-unit-chip-num { font-size: 10px !important; font-weight: 700 !important; letter-spacing: 1px !important; text-transform: uppercase !important; color: rgba(255,255,255,0.8) !important; -webkit-text-fill-color: rgba(255,255,255,0.8) !important; display: block !important; margin-bottom: 4px !important; }
+.u2-unit-chip-name { font-size: 13px !important; font-weight: 700 !important; color: #fff !important; -webkit-text-fill-color: #fff !important; display: block !important; line-height: 1.3 !important; margin-bottom: 6px !important; }
+.u2-unit-chip-meta { font-size: 11px !important; color: rgba(255,255,255,0.75) !important; -webkit-text-fill-color: rgba(255,255,255,0.75) !important; display: block !important; }
+.u2-unit-chip-current { font-size: 10px !important; font-weight: 700 !important; background: rgba(255,255,255,0.25) !important; color: #fff !important; -webkit-text-fill-color: #fff !important; padding: 1px 7px !important; border-radius: 999px !important; display: inline-block !important; margin-top: 4px !important; }
+.u2-nav { display: flex !important; justify-content: space-between !important; align-items: center !important; padding-top: 24px !important; border-top: 1px solid #e5e7eb !important; }
+.u2-nav-link { font-size: 14px !important; font-weight: 600 !important; color: #2563eb !important; -webkit-text-fill-color: #2563eb !important; text-decoration: none !important; }
+</style>
+
+<div id="u2-hub">
+
+<nav class="u2-breadcrumb">
+  <a href="/pages/ap-csa-exam-prep-hub">AP CSA</a>
+  <span class="sep">›</span>
+  <a href="/pages/ap-csa-course">Course</a>
+  <span class="sep">›</span>
+  <span>Unit 2: Selection and Iteration</span>
+</nav>
+
+<div class="u2-header">
+  <span class="u2-eyebrow">AP CSA · Unit 2 · 12 Lessons</span>
+  <h1 class="u2-heading">Unit 2: Selection and Iteration</h1>
+  <p class="u2-desc">Master conditional statements and loops. Understand the control structures that form the foundation of every algorithm you’ll write in AP CSA and beyond.</p>
+</div>
+
+<div class="u2-stats">
+  <div class="u2-stat">
+    <span class="u2-stat-val">12</span>
+    <span class="u2-stat-label">Lessons</span>
+  </div>
+  <div class="u2-stat">
+    <span class="u2-stat-val">~30%</span>
+    <span class="u2-stat-label">AP Exam Weight</span>
+  </div>
+  <div class="u2-stat">
+    <span class="u2-stat-val">96+</span>
+    <span class="u2-stat-label">Practice Questions</span>
+  </div>
+</div>
+
+<h2 class="u2-section-title">All 12 Lessons</h2>
+<div class="u2-grid">
+
+  <a class="u2-lesson-card" href="/pages/ap-csa-lesson-2-1-algorithms-selection-repetition">
+    <div class="u2-lesson-num">Lesson 2.1</div>
+    <div class="u2-lesson-title">Algorithms with Selection and Repetition</div>
+    <div class="u2-lesson-meta">      <span class="u2-lesson-type" style="background:#1e40af!important;">Conceptual</span>
+    </div>
+  </a>
+
+  <a class="u2-lesson-card" href="/pages/ap-csa-lesson-2-2-boolean-expressions">
+    <div class="u2-lesson-num">Lesson 2.2</div>
+    <div class="u2-lesson-title">Boolean Expressions</div>
+    <div class="u2-lesson-meta">      <span class="u2-lesson-type" style="background:#1e40af!important;">Code Mechanics</span>
+    </div>
+  </a>
+
+  <a class="u2-lesson-card" href="/pages/ap-csa-lesson-2-3-if-statements">
+    <div class="u2-lesson-num">Lesson 2.3</div>
+    <div class="u2-lesson-title">if Statements</div>
+    <div class="u2-lesson-meta">      <span class="u2-lesson-type" style="background:#1e40af!important;">Code Mechanics</span>
+    </div>
+  </a>
+
+  <a class="u2-lesson-card" href="/pages/ap-csa-lesson-2-4-nested-if-statements">
+    <div class="u2-lesson-num">Lesson 2.4</div>
+    <div class="u2-lesson-title">Nested if Statements</div>
+    <div class="u2-lesson-meta">      <span class="u2-lesson-type" style="background:#1e40af!important;">Code Mechanics</span>
+    </div>
+  </a>
+
+  <a class="u2-lesson-card" href="/pages/ap-csa-lesson-2-5-compound-boolean-expressions">
+    <div class="u2-lesson-num">Lesson 2.5</div>
+    <div class="u2-lesson-title">Compound Boolean Expressions</div>
+    <div class="u2-lesson-meta">      <span class="u2-lesson-type" style="background:#1e40af!important;">Code Mechanics</span>
+    </div>
+  </a>
+
+  <a class="u2-lesson-card" href="/pages/ap-csa-lesson-2-6-comparing-boolean-expressions">
+    <div class="u2-lesson-num">Lesson 2.6</div>
+    <div class="u2-lesson-title">Comparing Boolean Expressions</div>
+    <div class="u2-lesson-meta">      <span class="u2-lesson-type" style="background:#1e40af!important;">Code Mechanics</span>
+    </div>
+  </a>
+
+  <a class="u2-lesson-card" href="/pages/ap-csa-lesson-2-7-while-loops">
+    <div class="u2-lesson-num">Lesson 2.7</div>
+    <div class="u2-lesson-title">while Loops</div>
+    <div class="u2-lesson-meta">      <span class="u2-lesson-type" style="background:#1e40af!important;">Code Mechanics</span>
+    </div>
+  </a>
+
+  <a class="u2-lesson-card" href="/pages/ap-csa-lesson-2-8-for-loops">
+    <div class="u2-lesson-num">Lesson 2.8</div>
+    <div class="u2-lesson-title">for Loops</div>
+    <div class="u2-lesson-meta">      <span class="u2-lesson-type" style="background:#1e40af!important;">Code Mechanics</span>
+    </div>
+  </a>
+
+  <a class="u2-lesson-card" href="/pages/ap-csa-lesson-2-9-implementing-selection-iteration-algorithms">
+    <div class="u2-lesson-num">Lesson 2.9</div>
+    <div class="u2-lesson-title">Implementing Selection and Iteration Algorithms</div>
+    <div class="u2-lesson-meta">      <span class="u2-lesson-type" style="background:#1e40af!important;">Code Mechanics</span>
+    </div>
+  </a>
+
+  <a class="u2-lesson-card" href="/pages/ap-csa-lesson-2-10-implementing-string-algorithms">
+    <div class="u2-lesson-num">Lesson 2.10</div>
+    <div class="u2-lesson-title">Implementing String Algorithms</div>
+    <div class="u2-lesson-meta">      <span class="u2-lesson-type" style="background:#1e40af!important;">Code Mechanics</span>
+    </div>
+  </a>
+
+  <a class="u2-lesson-card" href="/pages/ap-csa-lesson-2-11-nested-iteration">
+    <div class="u2-lesson-num">Lesson 2.11</div>
+    <div class="u2-lesson-title">Nested Iteration</div>
+    <div class="u2-lesson-meta">      <span class="u2-lesson-type" style="background:#1e40af!important;">Code Mechanics</span>
+    </div>
+  </a>
+
+  <a class="u2-lesson-card" href="/pages/ap-csa-lesson-2-12-informal-run-time-analysis">
+    <div class="u2-lesson-num">Lesson 2.12</div>
+    <div class="u2-lesson-title">Informal Run-Time Analysis</div>
+    <div class="u2-lesson-meta">      <span class="u2-lesson-type" style="background:#6b21a8!important;">Conceptual</span>
+    </div>
+  </a>
+
+</div>
+
+
+<div class="u2-exercises" style="margin-bottom:40px!important;">
+<h2 class="u2-section-title">Coding Practice</h2>
+<p style="font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;line-height:1.6!important;margin:0 0 14px!important;">Write real Java in the browser and submit it. Everything here is graded against hidden test cases, and your score reports to your teacher automatically. Exercise 1 is write-it-from-scratch, Debug hands you somebody else's broken attempt to fix, and FRQ is the shape the exam actually asks for. 12 of 12 lessons are open so far; the rest unlock as they are built.</p>
+<div style="background:#fff!important;border:2px solid #e5e7eb!important;border-radius:10px!important;padding:6px 16px!important;">
+<div style="display:flex!important;align-items:baseline!important;gap:12px!important;flex-wrap:wrap!important;padding:10px 0!important;border-bottom:1px solid #f1f5f9!important;">
+<span style="font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;min-width:52px!important;">2.1</span><span style="font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;flex:1 1 200px!important;">Algorithms with Selection and Repetition</span><span style="flex:0 0 auto!important;"><a href="/pages/ap-csa-lesson-2-1-algorithms-selection-repetition-exercise-1" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Exercise 1 →</a><span style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;cursor:not-allowed!important;border:1px solid #e2e8f0!important;" title="Not built yet">🔒 Exercise 2</span><a href="/pages/ap-csa-lesson-2-1-algorithms-selection-repetition-debug" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Debug →</a><a href="/pages/ap-csa-lesson-2-1-algorithms-selection-repetition-frq" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">FRQ →</a></span>
+</div>
+<div style="display:flex!important;align-items:baseline!important;gap:12px!important;flex-wrap:wrap!important;padding:10px 0!important;border-bottom:1px solid #f1f5f9!important;">
+<span style="font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;min-width:52px!important;">2.2</span><span style="font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;flex:1 1 200px!important;">Boolean Expressions</span><span style="flex:0 0 auto!important;"><a href="/pages/ap-csa-lesson-2-2-boolean-expressions-exercise-1" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Exercise 1 →</a><span style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;cursor:not-allowed!important;border:1px solid #e2e8f0!important;" title="Not built yet">🔒 Exercise 2</span><a href="/pages/ap-csa-lesson-2-2-boolean-expressions-debug" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Debug →</a><a href="/pages/ap-csa-lesson-2-2-boolean-expressions-frq" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">FRQ →</a></span>
+</div>
+<div style="display:flex!important;align-items:baseline!important;gap:12px!important;flex-wrap:wrap!important;padding:10px 0!important;border-bottom:1px solid #f1f5f9!important;">
+<span style="font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;min-width:52px!important;">2.3</span><span style="font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;flex:1 1 200px!important;">if Statements</span><span style="flex:0 0 auto!important;"><a href="/pages/ap-csa-lesson-2-3-if-statements-exercise-1" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Exercise 1 →</a><span style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;cursor:not-allowed!important;border:1px solid #e2e8f0!important;" title="Not built yet">🔒 Exercise 2</span><a href="/pages/ap-csa-lesson-2-3-if-statements-debug" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Debug →</a><a href="/pages/ap-csa-lesson-2-3-if-statements-frq" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">FRQ →</a></span>
+</div>
+<div style="display:flex!important;align-items:baseline!important;gap:12px!important;flex-wrap:wrap!important;padding:10px 0!important;border-bottom:1px solid #f1f5f9!important;">
+<span style="font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;min-width:52px!important;">2.4</span><span style="font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;flex:1 1 200px!important;">Nested if Statements</span><span style="flex:0 0 auto!important;"><a href="/pages/ap-csa-lesson-2-4-nested-if-statements-exercise-1" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Exercise 1 →</a><span style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;cursor:not-allowed!important;border:1px solid #e2e8f0!important;" title="Not built yet">🔒 Exercise 2</span><a href="/pages/ap-csa-lesson-2-4-nested-if-statements-debug" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Debug →</a><a href="/pages/ap-csa-lesson-2-4-nested-if-statements-frq" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">FRQ →</a></span>
+</div>
+<div style="display:flex!important;align-items:baseline!important;gap:12px!important;flex-wrap:wrap!important;padding:10px 0!important;border-bottom:1px solid #f1f5f9!important;">
+<span style="font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;min-width:52px!important;">2.5</span><span style="font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;flex:1 1 200px!important;">Compound Boolean Expressions</span><span style="flex:0 0 auto!important;"><a href="/pages/ap-csa-lesson-2-5-compound-boolean-expressions-exercise-1" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Exercise 1 →</a><span style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;cursor:not-allowed!important;border:1px solid #e2e8f0!important;" title="Not built yet">🔒 Exercise 2</span><a href="/pages/ap-csa-lesson-2-5-compound-boolean-expressions-debug" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Debug →</a><a href="/pages/ap-csa-lesson-2-5-compound-boolean-expressions-frq" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">FRQ →</a></span>
+</div>
+<div style="display:flex!important;align-items:baseline!important;gap:12px!important;flex-wrap:wrap!important;padding:10px 0!important;border-bottom:1px solid #f1f5f9!important;">
+<span style="font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;min-width:52px!important;">2.6</span><span style="font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;flex:1 1 200px!important;">Comparing Boolean Expressions</span><span style="flex:0 0 auto!important;"><a href="/pages/ap-csa-lesson-2-6-comparing-boolean-expressions-exercise-1" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Exercise 1 →</a><span style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;cursor:not-allowed!important;border:1px solid #e2e8f0!important;" title="Not built yet">🔒 Exercise 2</span><a href="/pages/ap-csa-lesson-2-6-comparing-boolean-expressions-debug" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Debug →</a><a href="/pages/ap-csa-lesson-2-6-comparing-boolean-expressions-frq" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">FRQ →</a></span>
+</div>
+<div style="display:flex!important;align-items:baseline!important;gap:12px!important;flex-wrap:wrap!important;padding:10px 0!important;border-bottom:1px solid #f1f5f9!important;">
+<span style="font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;min-width:52px!important;">2.7</span><span style="font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;flex:1 1 200px!important;">while Loops</span><span style="flex:0 0 auto!important;"><a href="/pages/ap-csa-lesson-2-7-while-loops-exercise-1" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Exercise 1 →</a><span style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;cursor:not-allowed!important;border:1px solid #e2e8f0!important;" title="Not built yet">🔒 Exercise 2</span><a href="/pages/ap-csa-lesson-2-7-while-loops-debug" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Debug →</a><a href="/pages/ap-csa-lesson-2-7-while-loops-frq" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">FRQ →</a></span>
+</div>
+<div style="display:flex!important;align-items:baseline!important;gap:12px!important;flex-wrap:wrap!important;padding:10px 0!important;border-bottom:1px solid #f1f5f9!important;">
+<span style="font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;min-width:52px!important;">2.8</span><span style="font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;flex:1 1 200px!important;">for Loops</span><span style="flex:0 0 auto!important;"><a href="/pages/ap-csa-lesson-2-8-for-loops-exercise-1" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Exercise 1 →</a><span style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;cursor:not-allowed!important;border:1px solid #e2e8f0!important;" title="Not built yet">🔒 Exercise 2</span><a href="/pages/ap-csa-lesson-2-8-for-loops-debug" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Debug →</a><a href="/pages/ap-csa-lesson-2-8-for-loops-frq" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">FRQ →</a></span>
+</div>
+<div style="display:flex!important;align-items:baseline!important;gap:12px!important;flex-wrap:wrap!important;padding:10px 0!important;border-bottom:1px solid #f1f5f9!important;">
+<span style="font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;min-width:52px!important;">2.9</span><span style="font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;flex:1 1 200px!important;">Implementing Selection and Iteration Algorithms</span><span style="flex:0 0 auto!important;"><a href="/pages/ap-csa-lesson-2-9-implementing-selection-iteration-algorithms-exercise-1" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Exercise 1 →</a><span style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;cursor:not-allowed!important;border:1px solid #e2e8f0!important;" title="Not built yet">🔒 Exercise 2</span><a href="/pages/ap-csa-lesson-2-9-implementing-selection-iteration-algorithms-debug" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Debug →</a><a href="/pages/ap-csa-lesson-2-9-implementing-selection-iteration-algorithms-frq" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">FRQ →</a></span>
+</div>
+<div style="display:flex!important;align-items:baseline!important;gap:12px!important;flex-wrap:wrap!important;padding:10px 0!important;border-bottom:1px solid #f1f5f9!important;">
+<span style="font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;min-width:52px!important;">2.10</span><span style="font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;flex:1 1 200px!important;">Implementing String Algorithms</span><span style="flex:0 0 auto!important;"><a href="/pages/ap-csa-lesson-2-10-implementing-string-algorithms-exercise-1" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Exercise 1 →</a><span style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;cursor:not-allowed!important;border:1px solid #e2e8f0!important;" title="Not built yet">🔒 Exercise 2</span><a href="/pages/ap-csa-lesson-2-10-implementing-string-algorithms-debug" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Debug →</a><a href="/pages/ap-csa-lesson-2-10-implementing-string-algorithms-frq" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">FRQ →</a></span>
+</div>
+<div style="display:flex!important;align-items:baseline!important;gap:12px!important;flex-wrap:wrap!important;padding:10px 0!important;border-bottom:1px solid #f1f5f9!important;">
+<span style="font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;min-width:52px!important;">2.11</span><span style="font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;flex:1 1 200px!important;">Nested Iteration</span><span style="flex:0 0 auto!important;"><a href="/pages/ap-csa-lesson-2-11-nested-iteration-exercise-1" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Exercise 1 →</a><span style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;cursor:not-allowed!important;border:1px solid #e2e8f0!important;" title="Not built yet">🔒 Exercise 2</span><a href="/pages/ap-csa-lesson-2-11-nested-iteration-debug" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Debug →</a><a href="/pages/ap-csa-lesson-2-11-nested-iteration-frq" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">FRQ →</a></span>
+</div>
+<div style="display:flex!important;align-items:baseline!important;gap:12px!important;flex-wrap:wrap!important;padding:10px 0!important;border-bottom:1px solid #f1f5f9!important;">
+<span style="font-size:13px!important;font-weight:700!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;min-width:52px!important;">2.12</span><span style="font-size:14px!important;color:#475569!important;-webkit-text-fill-color:#475569!important;flex:1 1 200px!important;">Informal Run-Time Analysis</span><span style="flex:0 0 auto!important;"><a href="/pages/ap-csa-lesson-2-12-informal-run-time-analysis-exercise-1" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Exercise 1 →</a><span style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#f1f5f9!important;color:#94a3b8!important;-webkit-text-fill-color:#94a3b8!important;cursor:not-allowed!important;border:1px solid #e2e8f0!important;" title="Not built yet">🔒 Exercise 2</span><a href="/pages/ap-csa-lesson-2-12-informal-run-time-analysis-debug" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">Debug →</a><a href="/pages/ap-csa-lesson-2-12-informal-run-time-analysis-frq" style="display:inline-block!important;font-size:12px!important;font-weight:700!important;padding:4px 10px!important;border-radius:999px!important;margin:0 6px 6px 0!important;text-decoration:none!important;background:#fffbeb!important;color:#92400e!important;-webkit-text-fill-color:#92400e!important;border:1px solid #fcd34d!important;">FRQ →</a></span>
+</div>
+</div>
+</div>
+<div class="u2-learn">
+  <div class="u2-learn-title">What you’ll learn in Unit 2</div>
+  <ul class="u2-learn-list">
+    <li>Write boolean expressions using relational and logical operators</li>
+    <li>Use if, if-else, and if-else-if statements to control program flow</li>
+    <li>Build while and for loops to repeat code efficiently</li>
+    <li>Implement selection and iteration algorithms (accumulator, counter, sentinel)</li>
+    <li>Trace and debug complex control flow including nested structures</li>
+  </ul>
+</div>
+<div class="u2-resources">
+  <a class="u2-resource-card" href="/pages/ap-csa-exam-prep-hub">
+    <span class="u2-resource-label">Hub</span>
+    <span class="u2-resource-name">AP CSA Exam Prep Hub</span>
+    <span class="u2-resource-desc">Full practice exams, FRQs, flashcards, and all study tools</span>
+  </a>
+  <a class="u2-resource-card" href="/pages/ap-csa-test-builder">
+    <span class="u2-resource-label">Practice</span>
+    <span class="u2-resource-name">AP CSA Test Builder</span>
+    <span class="u2-resource-desc">Filter to Unit 2 topics and build a custom practice exam</span>
+  </a>
+  <a class="u2-resource-card" href="/pages/unit-2-selection-and-iteration-ultimate-study-guide">
+    <span class="u2-resource-label">Study Guide</span>
+    <span class="u2-resource-name">Unit 2 Complete Study Guide</span>
+    <span class="u2-resource-desc">Full unit summary — ideal for review and exam-week cramming</span>
+  </a>
+  <a class="u2-resource-card" href="/pages/ap-computer-science-a-tutor">
+    <span class="u2-resource-label">Tutoring</span>
+    <span class="u2-resource-name">1-on-1 AP CSA Tutoring</span>
+    <span class="u2-resource-desc">Targeted help from a teacher with a 54.5% score-5 rate</span>
+  </a>
+</div>
+
+<div class="u2-cta">
+  <h2>Ready to test yourself?</h2>
+  <p>Build a custom Unit 2 practice exam or review all AP CSA study tools.</p>
+  <a class="u2-cta-btn" href="/pages/ap-csa-test-builder">Build a Practice Exam →</a>
+</div>
+
+<div class="u2-units-strip" style="margin-bottom:40px!important;">
+  <div class="u2-section-title" style="margin-bottom:12px!important;">Also in this course</div>
+  <div class="u2-units-grid">
+    <a class="u2-unit-chip" href="/pages/ap-csa-unit-1-course" style="background:linear-gradient(135deg,#4c1d95,#7c3aed)!important;">
+      <span class="u2-unit-chip-num">Unit 1</span>
+      <span class="u2-unit-chip-name">Using Objects and Methods</span>
+      <span class="u2-unit-chip-meta">15 lessons · ~20% of exam</span>
+    </a>
+    <a class="u2-unit-chip" href="/pages/ap-csa-unit-2-course" style="background:linear-gradient(135deg,#1e3a8a,#2563eb)!important;">
+      <span class="u2-unit-chip-num">Unit 2</span>
+      <span class="u2-unit-chip-name">Selection and Iteration</span>
+      <span class="u2-unit-chip-meta">12 lessons · ~30% of exam</span>
+      <span class="u2-unit-chip-current">You are here</span>
+    </a>
+    <a class="u2-unit-chip" href="/pages/ap-csa-unit-3-course" style="background:linear-gradient(135deg,#134e4a,#0f766e)!important;">
+      <span class="u2-unit-chip-num">Unit 3</span>
+      <span class="u2-unit-chip-name">Class Creation</span>
+      <span class="u2-unit-chip-meta">9 lessons · ~14% of exam</span>
+    </a>
+    <a class="u2-unit-chip" href="/pages/ap-csa-unit-4-course" style="background:linear-gradient(135deg,#7c2d12,#c2410c)!important;">
+      <span class="u2-unit-chip-num">Unit 4</span>
+      <span class="u2-unit-chip-name">Data Collections</span>
+      <span class="u2-unit-chip-meta">17 lessons · ~35% of exam</span>
+    </a>
+  </div>
+</div>
+
+<nav class="u2-nav">
+  <a class="u2-nav-link" href="/pages/ap-csa-unit-1-course">← Unit 1: Using Objects and Methods</a>
+  <a class="u2-nav-link" href="/pages/ap-csa-unit-3-course">Unit 3: Class Creation →</a>
+</nav>
+</div>
+
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Course","name":"AP CSA Unit 2: Selection and Iteration","description":"12-lesson unit covering boolean expressions, conditional statements, while and for loops, and selection and iteration algorithms. Part of the AP Computer Science A 2025-2026 curriculum.","provider":{"@type":"Organization","name":"APCSExamPrep.com","url":"https://apcsexamprep.com"},"url":"https://apcsexamprep.com/pages/ap-csa-unit-2-course","hasCourseInstance":{"@type":"CourseInstance","courseMode":"online"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AP CSA","item":"https://apcsexamprep.com/pages/ap-csa-exam-prep-hub"},{"@type":"ListItem","position":2,"name":"AP CSA Course","item":"https://apcsexamprep.com/pages/ap-csa-course"},{"@type":"ListItem","position":3,"name":"Unit 2: Selection and Iteration","item":"https://apcsexamprep.com/pages/ap-csa-unit-2-course"}]}</script>
