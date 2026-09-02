@@ -42,7 +42,11 @@ const path = require('path');
 //  Everything a handle may contain. Anything else in the path segment is
 //  damage, whether it arrived percent-encoded or raw.
 const LEGAL = /^[a-z0-9-]+$/;
-const HREF = /href="(\/pages\/[^"]*)"/g;
+//  Four sections carry authored links on this store and all four go wrong the
+//  same way. Sweeping only /pages/ missed 18 dead links, three of them the
+//  "Download free" button on a paid teacher bundle.
+const SECTIONS = ['pages', 'products', 'collections', 'blogs'];
+const HREF = new RegExp('href="(\\/(?:' + SECTIONS.join('|') + ')\\/[^"]*)"', 'g');
 
 //  A href inside a <script> or a <style> is not a link. This storefront builds
 //  its prev and next buttons at runtime from a table of handles, so the source
@@ -74,13 +78,13 @@ const stripIllegal = (s) => s.replace(/[^a-z0-9-]/g, '');
 //  live page, so a retired mapping fails loudly instead of writing a new 404.
 const RETARGET = {
   //  TWO ENTRIES READ OFF THE SITE BY HAND.
-  'ap-csa-daily-practice': {
+  'pages/ap-csa-daily-practice': {
     to: 'daily-practice',
     why: 'the CSA lesson pages carry a "Start daily practice" button under '
       + '"Get the AP CSA daily practice question by email". /pages/daily-practice '
       + 'is live and its own h1 is "AP CSA Daily Practice".',
   },
-  'ap-csa-unit-4-study-guide': {
+  'pages/ap-csa-unit-4-study-guide': {
     to: 'ap-csa-unit-4-data-collections-study-guide',
     why: 'the unit was renamed, not removed. Exactly one live handle matches '
       + 'ap-csa-unit-4-*study-guide, and Unit 4 of the 2025-2026 CED is Data '
@@ -101,104 +105,131 @@ const RETARGET = {
   //    ap-csa-study-games  extends uniquely to ap-csa-study-games-hub, but the
   //      live storefront 301s that URL to ap-csa-exam-prep-hub instead. Two
   //      plausible targets is not one.
-  'ap-csa-2019-frq-1': {
+  'pages/ap-csa-2019-frq-1': {
     to: 'ap-csa-2019-frq-1-apcalendar',
     why: 'the only live page whose handle extends this one, 7 links',
   },
-  'ap-csa-2019-frq-2': {
+  'pages/ap-csa-2019-frq-2': {
     to: 'ap-csa-2019-frq-2-steptracker',
     why: 'the only live page whose handle extends this one, 6 links',
   },
-  'ap-csa-2019-frq-3': {
+  'pages/ap-csa-2019-frq-3': {
     to: 'ap-csa-2019-frq-3-delimiters',
     why: 'the only live page whose handle extends this one, 8 links',
   },
-  'ap-csa-2019-frq-4': {
+  'pages/ap-csa-2019-frq-4': {
     to: 'ap-csa-2019-frq-4-lightboard',
     why: 'the only live page whose handle extends this one, 11 links',
   },
-  'ap-csa-2021-frq-1': {
+  'pages/ap-csa-2021-frq-1': {
     to: 'ap-csa-2021-frq-1-wordmatch',
     why: 'the only live page whose handle extends this one, 4 links',
   },
-  'ap-csa-2021-frq-2': {
+  'pages/ap-csa-2021-frq-2': {
     to: 'ap-csa-2021-frq-2-combinedtable',
     why: 'the only live page whose handle extends this one, 2 links',
   },
-  'ap-csa-2021-frq-3': {
+  'pages/ap-csa-2021-frq-3': {
     to: 'ap-csa-2021-frq-3-clubmembers',
     why: 'the only live page whose handle extends this one, 8 links',
   },
-  'ap-csa-2022-frq-1': {
+  'pages/ap-csa-2022-frq-1': {
     to: 'ap-csa-2022-frq-1-game',
     why: 'the only live page whose handle extends this one, 7 links',
   },
-  'ap-csa-2022-frq-2': {
+  'pages/ap-csa-2022-frq-2': {
     to: 'ap-csa-2022-frq-2-textbook',
     why: 'the only live page whose handle extends this one, 6 links',
   },
-  'ap-csa-2022-frq-4': {
+  'pages/ap-csa-2022-frq-4': {
     to: 'ap-csa-2022-frq-4-data',
     why: 'the only live page whose handle extends this one, 11 links',
   },
-  'ap-csa-2023-frq-1': {
+  'pages/ap-csa-2023-frq-1': {
     to: 'ap-csa-2023-frq-1-appointmentbook',
     why: 'the only live page whose handle extends this one, 7 links',
   },
-  'ap-csa-2023-frq-2': {
+  'pages/ap-csa-2023-frq-2': {
     to: 'ap-csa-2023-frq-2-sign',
     why: 'the only live page whose handle extends this one, 6 links',
   },
-  'ap-csa-2023-frq-3': {
+  'pages/ap-csa-2023-frq-3': {
     to: 'ap-csa-2023-frq-3-weatherdata',
     why: 'the only live page whose handle extends this one, 8 links',
   },
-  'ap-csa-2023-frq-4': {
+  'pages/ap-csa-2023-frq-4': {
     to: 'ap-csa-2023-frq-4-boxofcandy',
     why: 'the only live page whose handle extends this one, 11 links',
   },
-  'ap-csa-2024-frq-2': {
+  'pages/ap-csa-2024-frq-2': {
     to: 'ap-csa-2024-frq-2-scoreboard',
     why: 'the only live page whose handle extends this one, 2 links',
   },
-  'ap-csa-2024-frq-3': {
+  'pages/ap-csa-2024-frq-3': {
     to: 'ap-csa-2024-frq-3-wordchecker',
     why: 'the only live page whose handle extends this one, 4 links',
   },
-  'ap-csa-frqs': {
+  'pages/ap-csa-frqs': {
     to: 'ap-csa-frqs-by-topic',
     why: 'the only live page whose handle extends this one, 1 links',
   },
-  'ap-csa-loop-tracing': {
+  'pages/ap-csa-loop-tracing': {
     to: 'ap-csa-loop-tracing-game',
     why: 'the only live page whose handle extends this one, 1 links',
   },
-  'ap-csa-unit-3-class-creation': {
+  'pages/ap-csa-unit-3-class-creation': {
     to: 'ap-csa-unit-3-class-creation-study-guide',
     why: 'the only live page whose handle extends this one, 1 links',
   },
-  'ap-cybersecurity-social-engineering': {
+  'pages/ap-cybersecurity-social-engineering': {
     to: 'ap-cybersecurity-social-engineering-tactics',
     why: 'the only live page whose handle extends this one, 2 links',
   },
+  //  THREE MORE SECTIONS, ADDED AFTER SWEEPING ONLY /pages/ MISSED THEM.
+  'products/ap-csa-unit-1-superpack-free': {
+    to: 'ap-csa-teacher-superpack-free-preview',
+    why: 'three buttons on /pages/ap-csa-teacher-superpack read "Download free", '
+      + '"Free Unit 1 Preview" and "Free Unit 1 Preview, no purchase needed", and all '
+      + 'three 404. Exactly one live product is the CSA teacher superpack free preview. '
+      + 'A free-preview CTA on a paid teacher bundle going nowhere is a conversion leak.',
+  },
+  'blogs/daily-ap-csa-practice': {
+    to: 'ap-csa-daily-practice',
+    why: 'the same tokens in a different order, which docs/internal-linking.md already '
+      + 'records as one of this site five naming irregularities. One live blog carries '
+      + 'these tokens and it holds the 429 daily-practice articles. 6 links.',
+  },
 };
 
-//  Split a href into the handle and whatever query or fragment trails it, so a
-//  repair never eats a ?variant= or a #anchor.
+//  Split a href into its section, its handle and whatever query or fragment
+//  trails it, so a repair never eats a ?variant= or a #anchor.
+//  ONE path segment after the section, and no more. A /blogs/<blog>/<article>
+//  link names an article, and this program has the blog list but not the
+//  article list for six of the seven blogs. Checking it against the blog names
+//  reported 50-odd live articles as dead the first time this ran. A link it
+//  cannot check is counted as unchecked, never as broken.
 function parseHref(href) {
-  const m = /^\/pages\/([^?#]*)([?#].*)?$/.exec(href);
-  return m ? { handle: m[1], tail: m[2] || '' } : null;
+  const m = new RegExp('^\\/(' + SECTIONS.join('|') + ')\\/([^/?#]*)([?#].*)?$').exec(href);
+  return m ? { section: m[1], handle: m[2], tail: m[3] || '' } : null;
 }
 
-function classify(href, live, blogs) {
+//  A repair never moves a link between sections. /pages/ap-csa-daily-practice
+//  and /blogs/ap-csa-daily-practice are different pages with different content,
+//  and choosing between them is a content decision rather than a repair. Every
+//  rule below therefore resolves inside the section the link already names.
+const setFor = (live, section) => (live && live[section]) || new Set();
+
+function classify(href, live) {
   const p = parseHref(href);
-  if (!p) return { kind: 'unparsed', href };
-  if (live.has(p.handle)) return { kind: 'ok', href };
+  if (!p) return { kind: 'unchecked', href };
+  const within = setFor(live, p.section);
+  if (within.has(p.handle)) return { kind: 'ok', href };
   //  RULE 1, a typo. Illegal characters deleted, and the result has to be a
   //  page the sitemap says is live.
   const cleaned = stripIllegal(decodeControls(p.handle).toLowerCase());
-  if (cleaned !== p.handle && live.has(cleaned)) {
-    return { kind: 'repair', rule: 'typo', href, to: `/pages/${cleaned}${p.tail}`, target: cleaned };
+  if (cleaned !== p.handle && within.has(cleaned)) {
+    return { kind: 'repair', rule: 'typo', href, to: `/${p.section}/${cleaned}${p.tail}`,
+      target: cleaned, section: p.section };
   }
   //  RULE 2, retargeted by hand. Not a rule at all: a named map, one entry per
   //  dead target, each carrying the evidence that says where it was meant to
@@ -214,13 +245,13 @@ function classify(href, live, blogs) {
   //  handle was simply wrong. A rule that moves a URL between sections is
   //  deciding what KIND of thing the reader lands on, which is a content
   //  decision wearing a typo's clothes.
-  const mapped = RETARGET[p.handle];
-  if (mapped && live.has(mapped.to)) {
-    return { kind: 'repair', rule: 'retarget', href, to: `/pages/${mapped.to}${p.tail}`,
-      target: mapped.to, why: mapped.why };
+  const mapped = RETARGET[`${p.section}/${p.handle}`];
+  if (mapped && within.has(mapped.to)) {
+    return { kind: 'repair', rule: 'retarget', href, to: `/${p.section}/${mapped.to}${p.tail}`,
+      target: mapped.to, section: p.section, why: mapped.why };
   }
-  if (mapped) return { kind: 'missing', href, handle: p.handle, staleMap: mapped.to };
-  return { kind: 'missing', href, handle: p.handle };
+  if (mapped) return { kind: 'missing', href, handle: p.handle, section: p.section, staleMap: mapped.to };
+  return { kind: 'missing', href, handle: p.handle, section: p.section };
 }
 
 //  Nothing outside the href attributes may move, and the check has to survive
@@ -247,7 +278,7 @@ function verify(before, after, spans) {
   return { roundTrip: undone === before, lengthOk: before.length - after.length === removed, removed };
 }
 
-function repairBody(before, live, blogs) {
+function repairBody(before, live) {
   const found = [];
   const spans = [];
   let out = '';
@@ -256,7 +287,7 @@ function repairBody(before, live, blogs) {
   const scannable = withoutScripts(before);
   HREF.lastIndex = 0;
   while ((m = HREF.exec(scannable)) !== null) {
-    const c = classify(m[1], live, blogs);
+    const c = classify(m[1], live);
     found.push(c);
     if (c.kind !== 'repair') continue;
     const from = `href="${m[1]}"`;
@@ -270,25 +301,26 @@ function repairBody(before, live, blogs) {
   return { after: spans.length ? out : before, spans, found,
     repairs: found.filter((f) => f.kind === 'repair'),
     missing: found.filter((f) => f.kind === 'missing'),
-    unparsed: found.filter((f) => f.kind === 'unparsed') };
+    unchecked: found.filter((f) => f.kind === 'unchecked') };
 }
 
-function build(bodies, live, blogs) {
+function build(bodies, live) {
   const rows = [];
   const missing = [];
   const problems = [];
+  let unchecked = 0;
   for (const { handle, body } of bodies) {
     if (!body || !body.trim()) continue;
-    const r = repairBody(body, live, blogs);
-    for (const mi of r.missing) missing.push({ from: handle, href: mi.href, target: mi.handle });
-    for (const u of r.unparsed) problems.push(`${handle}: could not parse href ${JSON.stringify(u.href)}`);
+    const r = repairBody(body, live);
+    for (const mi of r.missing) missing.push({ from: handle, href: mi.href, target: `${mi.section}/${mi.handle}` });
+    unchecked += r.unchecked.length;
     if (!r.spans.length) continue;
     const v = verify(body, r.after, r.spans);
     if (!v.roundTrip) { problems.push(`${handle}: reversing the repair does not give the original body back`); continue; }
     if (!v.lengthOk) { problems.push(`${handle}: the body changed by more than the characters removed`); continue; }
     rows.push({ handle, before: body, after: r.after, spans: r.spans, removed: v.removed });
   }
-  return { rows, missing, problems };
+  return { rows, missing, problems, unchecked };
 }
 
 const cell = (s) => '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"';
@@ -318,18 +350,28 @@ if (require.main === module) {
   const handlesFile = opt('handles');
   if (!dir || !handlesFile) {
     console.error('usage: node scripts/dead-internal-link-repair.js --bodies <dir> '
-      + '--handles <live-handles.txt> [--blogs <live-blogs.txt>] [--out <dir>]');
+      + '--handles <pages.txt> --products <p.txt> --collections <c.txt> --blogs <b.txt> '
+      + '[--out <dir>]');
     process.exit(2);
   }
-  const live = new Set(fs.readFileSync(handlesFile, 'utf8').split('\n').map((s) => s.trim()).filter(Boolean));
-  if (live.size < 100) { console.error(`refusing: only ${live.size} live handles, that is not the sitemap`); process.exit(1); }
-  const blogsFile = opt('blogs');
-  const blogs = new Set(blogsFile
-    ? fs.readFileSync(blogsFile, 'utf8').split('\n').map((s2) => s2.trim()).filter(Boolean) : []);
+  const readSet = (f) => new Set(f ? fs.readFileSync(f, 'utf8').split('\n')
+    .map((s2) => s2.trim()).filter(Boolean) : []);
+  const live = {
+    pages: readSet(handlesFile),
+    products: readSet(opt('products')),
+    collections: readSet(opt('collections')),
+    blogs: readSet(opt('blogs')),
+  };
+  if (live.pages.size < 100) { console.error(`refusing: only ${live.pages.size} live page handles, that is not the sitemap`); process.exit(1); }
+  //  A section with no live set would make every link in it look dead, so an
+  //  empty one is refused rather than reported as 400 broken links.
+  for (const sec of ['products', 'collections', 'blogs']) {
+    if (live[sec].size === 0) { console.error(`refusing: no --${sec} list, so every /${sec}/ link would read as dead`); process.exit(1); }
+  }
   const bodies = readBodies(dir);
-  const { rows, missing, problems } = build(bodies, live, blogs);
+  const { rows, missing, problems, unchecked } = build(bodies, live);
 
-  console.log(`\nDEAD INTERNAL LINKS\n\n  read ${bodies.length} page bodies against ${live.size} live handles\n`);
+  console.log(`\nDEAD INTERNAL LINKS\n\n  read ${bodies.length} bodies against ${live.pages.size} pages, ${live.products.size} products, ${live.collections.size} collections and ${live.blogs.size} blogs\n`);
   console.log(`  ${rows.length} pages carry a href this can prove is a typo`);
   for (const r of rows) {
     console.log(`\n    ${r.handle}`);
@@ -340,10 +382,12 @@ if (require.main === module) {
     if (!byTarget.has(mi.target)) byTarget.set(mi.target, []);
     byTarget.get(mi.target).push(mi.from);
   }
+  if (unchecked) console.log(`\n  ${unchecked} links go deeper than one segment `
+    + '(a blog article, say) and are not checked either way.');
   console.log(`\n  ${byTarget.size} link targets do not exist and are NOT repaired, `
     + `across ${missing.length} links:\n`);
   for (const [target, froms] of [...byTarget.entries()].sort((a, b) => b[1].length - a[1].length)) {
-    console.log(`    /pages/${target}   linked from ${froms.length}: ${froms.slice(0, 3).join(', ')}${froms.length > 3 ? ' ...' : ''}`);
+    console.log(`    /${target}   linked from ${froms.length}: ${froms.slice(0, 3).join(', ')}${froms.length > 3 ? ' ...' : ''}`);
   }
   if (problems.length) {
     console.error(`\n  ${problems.length} refused. No file written.\n`);
@@ -361,4 +405,4 @@ if (require.main === module) {
 }
 
 module.exports = { classify, repairBody, build, sheet, verify, parseHref, stripIllegal,
-  decodeControls, LEGAL, HREF, RETARGET, withoutScripts, NON_MARKUP };
+  decodeControls, LEGAL, HREF, RETARGET, withoutScripts, NON_MARKUP, SECTIONS, setFor };

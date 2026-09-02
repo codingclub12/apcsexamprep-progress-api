@@ -26,11 +26,18 @@ const ok = (n, c, x) => {
   if (c) { pass += 1; console.log('  [PASS] ' + n); }
   else { fail += 1; console.log('  [FAIL] ' + n + (x !== undefined ? '  ' + JSON.stringify(x) : '')); }
 };
-const LIVE = new Set(['ap-csa-lesson-4-5-algorithms-with-arrays', 'ap-csa-lesson-4-15-sorting-algorithms',
-  'ap-csa-lesson-4-1-ethical-social-issues-data-collection', 'ap-csa-exam-prep-hub', 'ap-csa', 'ap-csp',
-  'daily-practice']);
-const BLOGS = new Set(['ap-csa-daily-practice', 'news', 'ap-csa', 'ap-csp']);
-const one = (href) => m.classify(href, LIVE, BLOGS);
+//  Live handles PER SECTION. A link is only ever resolved inside the section it
+//  already names: /pages/ap-csa and /blogs/ap-csa are different things.
+const LIVE = {
+  pages: new Set(['ap-csa-lesson-4-5-algorithms-with-arrays', 'ap-csa-lesson-4-15-sorting-algorithms',
+    'ap-csa-lesson-4-1-ethical-social-issues-data-collection', 'ap-csa-exam-prep-hub', 'ap-csa',
+    'ap-csp', 'daily-practice']),
+  products: new Set(['ap-csa-teacher-superpack-free-preview', 'ap-cs-tutoring-single-session']),
+  collections: new Set(['all']),
+  blogs: new Set(['ap-csa-daily-practice', 'news', 'ap-csa', 'ap-csp']),
+};
+const BLOGS = LIVE.blogs;
+const one = (href) => m.classify(href, LIVE);
 
 console.log('\n1. Rule one: an illegal character deleted, and the result has to be live');
 {
@@ -74,16 +81,34 @@ console.log('\n2. Rule two is a named map, not a rule, and it has to be live');
     one('/pages/ap-csa-daily-practice?utm=x').to === '/pages/daily-practice?utm=x');
   //  A map entry whose own target has gone away must fail loudly rather than
   //  write a fresh 404 into a live page.
-  const stale = m.classify('/pages/ap-csa-daily-practice', new Set(['ap-csa']), new Set());
+  const stale = m.classify('/pages/ap-csa-daily-practice', { pages: new Set(['ap-csa']) });
   ok('a map entry pointing at a page that is no longer live is REPORTED',
     stale.kind === 'missing' && stale.staleMap === 'daily-practice', stale);
   //  The rule this replaced said a handle that is a live blog only has the
   //  wrong section. It was provable and it was the wrong destination.
   ok('a blog with the same handle is NOT treated as the target on its own',
-    m.classify('/pages/ap-csp-daily-practice', LIVE, new Set(['ap-csp-daily-practice'])).kind
-      === 'missing');
-  ok('every map entry is spelled as a legal handle',
-    Object.entries(m.RETARGET).every(([k, v]) => /^[a-z0-9-]+$/.test(k) && /^[a-z0-9-]+$/.test(v.to)));
+    m.classify('/pages/ap-csp-daily-practice',
+      { pages: LIVE.pages, blogs: new Set(['ap-csp-daily-practice']) }).kind === 'missing');
+  //  The three sections added after sweeping only /pages/ missed 18 links.
+  const sp = one('/products/ap-csa-unit-1-superpack-free');
+  ok('a dead PRODUCT link is repaired inside /products/',
+    sp.kind === 'repair' && sp.to === '/products/ap-csa-teacher-superpack-free-preview', sp);
+  const bl = one('/blogs/daily-ap-csa-practice');
+  ok('a dead BLOG link is repaired inside /blogs/',
+    bl.kind === 'repair' && bl.to === '/blogs/ap-csa-daily-practice', bl);
+  ok('a live product link is left alone', one('/products/ap-cs-tutoring-single-session').kind === 'ok');
+  //  A link this program cannot check must never be called broken. Six of the
+  //  seven blogs have no article list here, and the first run of the four
+  //  section sweep reported 50-odd live articles as dead.
+  ok('a blog ARTICLE link is unchecked, not dead',
+    one('/blogs/ap-csa-daily-practice/ap-csa-u1-c1-day-1-declaring-variables').kind === 'unchecked');
+  ok('and a deeper path in any section is unchecked too',
+    one('/pages/a/b').kind === 'unchecked');
+  ok('every map entry is a section plus a legal handle, on both sides',
+    Object.entries(m.RETARGET).every(([k, v]) => /^[a-z]+\/[a-z0-9-]+$/.test(k)
+      && /^[a-z0-9-]+$/.test(v.to)),
+    Object.entries(m.RETARGET).filter(([k, v]) => !/^[a-z]+\/[a-z0-9-]+$/.test(k)
+      || !/^[a-z0-9-]+$/.test(v.to)).map(([k]) => k));
   ok('every map entry carries its evidence',
     Object.values(m.RETARGET).every((v) => typeof v.why === 'string' && v.why.length > 40));
 }
@@ -97,18 +122,22 @@ console.log('\n2b. Every entry is checked against the live handle list, not take
   //  else has to satisfy the property: the target is the ONLY live handle that
   //  extends the dead one at a hyphen. Uniqueness is the proof; two candidates
   //  is not a proof, it is a choice.
-  const BY_HAND = new Set(['ap-csa-daily-practice', 'ap-csa-unit-4-study-guide']);
+  const BY_HAND = new Set(['pages/ap-csa-daily-practice', 'pages/ap-csa-unit-4-study-guide',
+    'products/ap-csa-unit-1-superpack-free', 'blogs/daily-ap-csa-practice']);
   const extensionsOf = (h) => [...handles].filter((x) => x.startsWith(h + '-'));
   for (const [dead, entry] of Object.entries(m.RETARGET)) {
-    ok(`  ${entry.to} is live`, handles.has(entry.to), entry.to);
     if (BY_HAND.has(dead)) continue;
-    const ext = extensionsOf(dead);
+    ok(`  ${entry.to} is live`, handles.has(entry.to), entry.to);
+    const ext = extensionsOf(dead.replace(/^pages\//, ''));
     ok(`  ${dead} extends to exactly one live page, and it is the target`,
       ext.length === 1 && ext[0] === entry.to, ext.slice(0, 4));
   }
-  ok('no map entry points at a page that is itself live as written',
-    Object.keys(m.RETARGET).every((k) => !handles.has(k)),
-    Object.keys(m.RETARGET).filter((k) => handles.has(k)));
+  ok('every map key is section-qualified',
+    Object.keys(m.RETARGET).every((k) => m.SECTIONS.includes(k.split('/')[0])),
+    Object.keys(m.RETARGET).filter((k) => !m.SECTIONS.includes(k.split('/')[0])));
+  ok('no page map entry points at a page that is itself live as written',
+    Object.keys(m.RETARGET).filter((k) => k.startsWith('pages/'))
+      .every((k) => !handles.has(k.slice(6))));
   //  The two that look like the rest and were deliberately left out.
   ok('ap-computer-science-a is NOT mapped, though it extends uniquely',
     !m.RETARGET['ap-computer-science-a'] && extensionsOf('ap-computer-science-a').length === 1,
@@ -140,7 +169,7 @@ console.log('\n4. The check that a naive string replace fails');
   //  it should have repaired. Spans do not have that problem.
   const before = '<p><a href="/pages/ap-csa-lesson-4-5-algorithms-with-arrays">good</a>'
     + '<a href="/pages/ap-csa-les%0Ason-4-5-algorithms-with-arrays">broken</a></p>';
-  const r = m.repairBody(before, LIVE, BLOGS);
+  const r = m.repairBody(before, LIVE);
   ok('only the broken one is rewritten', r.spans.length === 1, r.spans.length);
   ok('the good link is untouched',
     r.after.indexOf('href="/pages/ap-csa-lesson-4-5-algorithms-with-arrays"') === before
@@ -162,14 +191,14 @@ console.log('\n4b. A href inside a <script> is not a link');
   //  a bug in this scanner.
   const js = '<p><a href="/pages/ap-csa-exam-prep-hub">ok</a></p>'
     + '<script>var h=\'<a href="/pages/\'+prev.handle+\'">x</a>\';</script>';
-  const r = m.repairBody(js, LIVE, BLOGS);
+  const r = m.repairBody(js, LIVE);
   ok('a href inside a script is not classified at all',
     r.found.length === 1 && r.found[0].kind === 'ok', r.found);
   ok('so it is not reported as a dead target', r.missing.length === 0, r.missing);
   const css = '<style>a[href="/pages/gone"]{color:red}</style>'
     + '<a href="/pages/ap-csa-exam-prep-hub">ok</a>';
   ok('and a href inside a style is not one either',
-    m.repairBody(css, LIVE, BLOGS).missing.length === 0);
+    m.repairBody(css, LIVE).missing.length === 0);
 
   //  Blanked, not deleted, because the repair records spans BY INDEX. Deleting
   //  a script would slide every later offset and the round trip would fail.
@@ -177,7 +206,7 @@ console.log('\n4b. A href inside a <script> is not a link');
     + '<a href="/pages/ap-csa-les%0Ason-4-5-algorithms-with-arrays">a</a>';
   ok('a script is blanked to the same length, so offsets still line up',
     m.withoutScripts(body).length === body.length, [m.withoutScripts(body).length, body.length]);
-  const rr = m.repairBody(body, LIVE, BLOGS);
+  const rr = m.repairBody(body, LIVE);
   ok('a repair after a script block still round trips',
     m.verify(body, rr.after, rr.spans).roundTrip, rr.spans);
   ok('and the script itself is untouched in the output',
@@ -189,7 +218,7 @@ console.log('\n4b. A href inside a <script> is not a link');
 console.log('\n5. Nothing outside a href may move');
 {
   const before = '<a href="/pages/ap-csa-les%0Ason-4-5-algorithms-with-arrays">x</a><p>keep</p>';
-  const r = m.repairBody(before, LIVE, BLOGS);
+  const r = m.repairBody(before, LIVE);
   ok('the surrounding markup is identical',
     r.after.endsWith('>x</a><p>keep</p>') && r.after.startsWith('<a href='), r.after);
   //  verify() has to reject an edit it did not record, which is what stops a
@@ -211,12 +240,12 @@ console.log('\n6. build() over a set of bodies');
     { handle: 'p4', body: '<a href="/pages/ap-csa-exam-prep-hub">d</a>' },
     { handle: 'p5', body: '   ' },
   ];
-  const { rows, missing, problems } = m.build(bodies, LIVE, BLOGS);
+  const { rows, missing, problems } = m.build(bodies, LIVE);
   ok('nothing is refused', problems.length === 0, problems);
   ok('two pages are repaired, and only the two', rows.length === 2
     && rows.map((r) => r.handle).join() === 'p1,p2', rows.map((r) => r.handle));
-  ok('the missing target is carried out for a human', missing.length === 1
-    && missing[0].target === 'ap-csp-exam-prep-hub', missing);
+  ok('the missing target is carried out for a human, with its section', missing.length === 1
+    && missing[0].target === 'pages/ap-csp-exam-prep-hub', missing);
   ok('a page whose links all resolve gets no row', !rows.some((r) => r.handle === 'p4'));
   ok('an empty body is skipped rather than rewritten', !rows.some((r) => r.handle === 'p5'));
 }

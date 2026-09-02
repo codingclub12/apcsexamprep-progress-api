@@ -1,0 +1,1130 @@
+<style>
+    /* Reset and isolate from Shopify */
+    #apcs-games-hub-wrapper {
+        all: initial;
+        display: block;
+        font-family: 'Outfit', sans-serif;
+    }
+    
+    #apcs-games-hub-wrapper *,
+    #apcs-games-hub-wrapper *::before,
+    #apcs-games-hub-wrapper *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    #apcs-games-hub-wrapper {
+        --bg-dark: #0a0a12;
+        --bg-card: #13131f;
+        --bg-card-hover: #1a1a2e;
+        --border: #2a2a4a;
+        --text: #f0f0ff;
+        --text-dim: #8080a0;
+        --neon-blue: #00d4ff;
+        --neon-pink: #ff00aa;
+        --neon-green: #00ff88;
+        --neon-yellow: #ffee00;
+        --neon-purple: #aa00ff;
+        --neon-orange: #ff6600;
+        --glow-blue: rgba(0, 212, 255, 0.4);
+        --glow-pink: rgba(255, 0, 170, 0.4);
+        --glow-green: rgba(0, 255, 136, 0.4);
+        
+        background: var(--bg-dark) !important;
+        color: var(--text) !important;
+        min-height: 100vh;
+        overflow-x: hidden;
+        position: relative;
+    }
+
+    /* Hide Shopify page title */
+    .page-title, .article__title, .page__title, h1.title {
+        display: none !important;
+    }
+
+    #apcs-games-hub-wrapper a {
+        color: inherit !important;
+        text-decoration: none !important;
+    }
+
+    #apcs-games-hub-wrapper a:hover {
+        text-decoration: none !important;
+    }
+
+    /* Animated background grid */
+    #apcs-games-hub-wrapper .bg-grid {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px) !important;
+        background-size: 50px 50px !important;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    #apcs-games-hub-wrapper .bg-glow {
+        position: fixed;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        filter: blur(150px);
+        opacity: 0.3;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    #apcs-games-hub-wrapper .bg-glow-1 {
+        top: -200px;
+        left: -200px;
+        background: var(--neon-blue) !important;
+        animation: float1 20s ease-in-out infinite;
+    }
+
+    #apcs-games-hub-wrapper .bg-glow-2 {
+        bottom: -200px;
+        right: -200px;
+        background: var(--neon-pink) !important;
+        animation: float2 25s ease-in-out infinite;
+    }
+
+    #apcs-games-hub-wrapper .bg-glow-3 {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: var(--neon-purple) !important;
+        opacity: 0.15;
+        animation: pulse 10s ease-in-out infinite;
+    }
+
+    @keyframes float1 {
+        0%, 100% { transform: translate(0, 0); }
+        50% { transform: translate(100px, 100px); }
+    }
+
+    @keyframes float2 {
+        0%, 100% { transform: translate(0, 0); }
+        50% { transform: translate(-100px, -100px); }
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 0.15; transform: translate(-50%, -50%) scale(1); }
+        50% { opacity: 0.25; transform: translate(-50%, -50%) scale(1.1); }
+    }
+
+    #apcs-games-hub-wrapper .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Header */
+    #apcs-games-hub-wrapper .header {
+        text-align: center !important;
+        margin-bottom: 60px;
+    }
+
+    #apcs-games-hub-wrapper .header-badge {
+        display: inline-block;
+        padding: 8px 20px;
+        background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple)) !important;
+        border-radius: 30px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.8; }
+    }
+
+    #apcs-games-hub-wrapper .header-title {
+        font-family: 'Press Start 2P', monospace !important;
+        font-size: clamp(1.8rem, 5vw, 3rem) !important;
+        line-height: 1.4 !important;
+        margin-bottom: 20px !important;
+        color: var(--text) !important;
+        text-shadow: 
+            0 0 10px var(--glow-blue),
+            0 0 20px var(--glow-blue),
+            0 0 40px var(--glow-blue) !important;
+    }
+
+    #apcs-games-hub-wrapper .header-title .accent {
+        color: var(--neon-green) !important;
+        text-shadow: 
+            0 0 10px var(--glow-green),
+            0 0 20px var(--glow-green),
+            0 0 40px var(--glow-green) !important;
+    }
+
+    #apcs-games-hub-wrapper .header-subtitle {
+        font-size: 1.2rem !important;
+        color: var(--text-dim) !important;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6 !important;
+    }
+
+    /* Stats bar */
+    #apcs-games-hub-wrapper .stats-bar {
+        display: flex !important;
+        justify-content: center !important;
+        gap: 40px;
+        margin: 40px 0;
+        flex-wrap: wrap;
+    }
+
+    #apcs-games-hub-wrapper .stat-item {
+        text-align: center !important;
+    }
+
+    #apcs-games-hub-wrapper .stat-value {
+        font-family: 'Press Start 2P', monospace !important;
+        font-size: 1.5rem !important;
+        color: var(--neon-yellow) !important;
+        text-shadow: 0 0 10px rgba(255, 238, 0, 0.5) !important;
+    }
+
+    #apcs-games-hub-wrapper .stat-label {
+        font-size: 0.85rem !important;
+        color: var(--text-dim) !important;
+        margin-top: 5px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* Games grid */
+    #apcs-games-hub-wrapper .games-grid {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
+        gap: 30px !important;
+        margin-bottom: 60px;
+    }
+
+    #apcs-games-hub-wrapper .game-card {
+        background: var(--bg-card) !important;
+        border: 2px solid var(--border) !important;
+        border-radius: 20px !important;
+        padding: 30px !important;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+        text-decoration: none !important;
+        color: inherit !important;
+        display: block !important;
+    }
+
+    #apcs-games-hub-wrapper .game-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--card-color), transparent) !important;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    #apcs-games-hub-wrapper .game-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        border-color: var(--card-color) !important;
+        box-shadow: 
+            0 20px 40px rgba(0, 0, 0, 0.4),
+            0 0 30px var(--card-glow) !important;
+    }
+
+    #apcs-games-hub-wrapper .game-card:hover::before {
+        opacity: 1;
+    }
+
+    #apcs-games-hub-wrapper .game-card.wordle { --card-color: var(--neon-green); --card-glow: var(--glow-green); }
+    #apcs-games-hub-wrapper .game-card.bughunt { --card-color: var(--neon-pink); --card-glow: var(--glow-pink); }
+    #apcs-games-hub-wrapper .game-card.output { --card-color: var(--neon-purple); --card-glow: rgba(170, 0, 255, 0.3); }
+    #apcs-games-hub-wrapper .game-card.connections { --card-color: var(--neon-blue); --card-glow: var(--glow-blue); }
+    #apcs-games-hub-wrapper .game-card.looprace { --card-color: #00ffcc; --card-glow: rgba(0, 255, 204, 0.3); }
+    #apcs-games-hub-wrapper .game-card.arraymaze { --card-color: #ff9500; --card-glow: rgba(255, 149, 0, 0.3); }
+    #apcs-games-hub-wrapper .game-card.sorting { --card-color: #ff5599; --card-glow: rgba(255, 85, 153, 0.3); }
+    #apcs-games-hub-wrapper .game-card.recursion { --card-color: #77dd00; --card-glow: rgba(119, 221, 0, 0.3); }
+    #apcs-games-hub-wrapper .game-card.flashcard { --card-color: #ffcc00; --card-glow: rgba(255, 204, 0, 0.3); }
+    #apcs-games-hub-wrapper .game-card.jeopardy { --card-color: #0066ff; --card-glow: rgba(0, 102, 255, 0.3); }
+    #apcs-games-hub-wrapper .game-card.crossword { --card-color: #9966ff; --card-glow: rgba(153, 102, 255, 0.3); }
+    #apcs-games-hub-wrapper .game-card.wordsearch { --card-color: #00ccaa; --card-glow: rgba(0, 204, 170, 0.3); }
+    #apcs-games-hub-wrapper .game-card.hangman { --card-color: #ff6666; --card-glow: rgba(255, 102, 102, 0.3); }
+    #apcs-games-hub-wrapper .game-card.millionaire { --card-color: #ffd700; --card-glow: rgba(255, 215, 0, 0.4); }
+    #apcs-games-hub-wrapper .game-card.trivia { --card-color: #ff00ff; --card-glow: rgba(255, 0, 255, 0.3); }
+    #apcs-games-hub-wrapper .game-card.truefalse { --card-color: #00ff66; --card-glow: rgba(0, 255, 102, 0.3); }
+    #apcs-games-hub-wrapper .game-card.parsons { --card-color: #ff8844; --card-glow: rgba(255, 136, 68, 0.3); }
+    #apcs-games-hub-wrapper .game-card.fillblank { --card-color: #44aaff; --card-glow: rgba(68, 170, 255, 0.3); }
+    #apcs-games-hub-wrapper .game-card.spotdiff { --card-color: #ff44aa; --card-glow: rgba(255, 68, 170, 0.3); }
+    #apcs-games-hub-wrapper .game-card.typeracer { --card-color: #44ffaa; --card-glow: rgba(68, 255, 170, 0.3); }
+    #apcs-games-hub-wrapper .game-card.codegolf { --card-color: #aaff44; --card-glow: rgba(170, 255, 68, 0.3); }
+    #apcs-games-hub-wrapper .game-card.coming { --card-color: var(--neon-orange); --card-glow: rgba(255, 102, 0, 0.3); }
+
+    #apcs-games-hub-wrapper .game-icon {
+        width: 70px !important;
+        height: 70px !important;
+        border-radius: 16px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 2rem !important;
+        margin-bottom: 20px !important;
+        background: linear-gradient(135deg, var(--card-color), transparent) !important;
+        border: 2px solid var(--card-color) !important;
+        box-shadow: 0 0 20px var(--card-glow) !important;
+    }
+
+    #apcs-games-hub-wrapper .game-title {
+        font-family: 'Press Start 2P', monospace !important;
+        font-size: 1rem !important;
+        margin-bottom: 12px !important;
+        color: var(--card-color) !important;
+        line-height: 1.4 !important;
+    }
+
+    #apcs-games-hub-wrapper .game-description {
+        color: var(--text-dim) !important;
+        font-size: 0.95rem !important;
+        line-height: 1.6 !important;
+        margin-bottom: 20px !important;
+    }
+
+    #apcs-games-hub-wrapper .game-tags {
+        display: flex !important;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+
+    #apcs-games-hub-wrapper .game-tag {
+        padding: 5px 12px !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid var(--border) !important;
+        border-radius: 20px !important;
+        font-size: 0.75rem !important;
+        color: var(--text-dim) !important;
+    }
+
+    #apcs-games-hub-wrapper .game-cta {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 8px;
+        padding: 12px 24px !important;
+        background: var(--card-color) !important;
+        color: var(--bg-dark) !important;
+        border-radius: 10px !important;
+        font-weight: 700 !important;
+        font-size: 0.9rem !important;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+    }
+
+    #apcs-games-hub-wrapper .game-card:hover .game-cta {
+        box-shadow: 0 0 20px var(--card-glow) !important;
+    }
+
+    #apcs-games-hub-wrapper .game-cta-arrow {
+        transition: transform 0.3s ease;
+    }
+
+    #apcs-games-hub-wrapper .game-card:hover .game-cta-arrow {
+        transform: translateX(5px);
+    }
+
+    #apcs-games-hub-wrapper .coming-soon-badge {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        padding: 6px 14px !important;
+        background: var(--neon-orange) !important;
+        color: var(--bg-dark) !important;
+        border-radius: 20px !important;
+        font-size: 0.7rem !important;
+        font-weight: 700 !important;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* Benefits section */
+    #apcs-games-hub-wrapper .benefits-section {
+        margin: 80px 0;
+        text-align: center !important;
+    }
+
+    #apcs-games-hub-wrapper .section-title {
+        font-family: 'Press Start 2P', monospace !important;
+        font-size: 1.2rem !important;
+        margin-bottom: 40px !important;
+        color: var(--neon-yellow) !important;
+        text-shadow: 0 0 10px rgba(255, 238, 0, 0.4) !important;
+    }
+
+    #apcs-games-hub-wrapper .benefits-grid {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
+        gap: 30px !important;
+    }
+
+    #apcs-games-hub-wrapper .benefit-item {
+        padding: 30px !important;
+        background: var(--bg-card) !important;
+        border: 1px solid var(--border) !important;
+        border-radius: 16px !important;
+        transition: all 0.3s ease;
+    }
+
+    #apcs-games-hub-wrapper .benefit-item:hover {
+        border-color: var(--neon-blue) !important;
+        transform: translateY(-5px);
+    }
+
+    #apcs-games-hub-wrapper .benefit-icon {
+        font-size: 2.5rem !important;
+        margin-bottom: 15px !important;
+    }
+
+    #apcs-games-hub-wrapper .benefit-title {
+        font-weight: 700 !important;
+        font-size: 1.1rem !important;
+        margin-bottom: 10px !important;
+        color: var(--text) !important;
+    }
+
+    #apcs-games-hub-wrapper .benefit-text {
+        color: var(--text-dim) !important;
+        font-size: 0.9rem !important;
+        line-height: 1.5 !important;
+    }
+
+    /* CTA Section */
+    #apcs-games-hub-wrapper .cta-section {
+        text-align: center !important;
+        padding: 60px 40px !important;
+        background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(170, 0, 255, 0.1)) !important;
+        border: 2px solid var(--border) !important;
+        border-radius: 24px !important;
+        margin-top: 60px;
+    }
+
+    #apcs-games-hub-wrapper .cta-title {
+        font-family: 'Press Start 2P', monospace !important;
+        font-size: 1rem !important;
+        margin-bottom: 15px !important;
+        line-height: 1.6 !important;
+        color: var(--text) !important;
+    }
+
+    #apcs-games-hub-wrapper .cta-text {
+        color: var(--text-dim) !important;
+        font-size: 1rem !important;
+        margin-bottom: 30px !important;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #apcs-games-hub-wrapper .cta-buttons {
+        display: flex !important;
+        gap: 20px;
+        justify-content: center !important;
+        flex-wrap: wrap;
+    }
+
+    #apcs-games-hub-wrapper .cta-btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 10px;
+        padding: 16px 32px !important;
+        border-radius: 12px !important;
+        font-weight: 700 !important;
+        font-size: 1rem !important;
+        text-decoration: none !important;
+        transition: all 0.3s ease;
+    }
+
+    #apcs-games-hub-wrapper .cta-btn-primary {
+        background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple)) !important;
+        color: #fff !important;
+    }
+
+    #apcs-games-hub-wrapper .cta-btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px var(--glow-blue) !important;
+    }
+
+    #apcs-games-hub-wrapper .cta-btn-secondary {
+        background: transparent !important;
+        border: 2px solid var(--neon-green) !important;
+        color: var(--neon-green) !important;
+    }
+
+    #apcs-games-hub-wrapper .cta-btn-secondary:hover {
+        background: var(--neon-green) !important;
+        color: var(--bg-dark) !important;
+    }
+
+    /* Footer */
+    #apcs-games-hub-wrapper footer {
+        text-align: center !important;
+        padding: 40px 20px !important;
+        color: var(--text-dim) !important;
+        font-size: 0.9rem !important;
+    }
+
+    #apcs-games-hub-wrapper footer a {
+        color: var(--neon-blue) !important;
+        text-decoration: none !important;
+    }
+
+    #apcs-games-hub-wrapper footer a:hover {
+        text-decoration: underline !important;
+    }
+
+    #apcs-games-hub-wrapper .footer-links {
+        display: flex !important;
+        justify-content: center !important;
+        gap: 30px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        #apcs-games-hub-wrapper .header-title {
+            font-size: 1.5rem !important;
+        }
+
+        #apcs-games-hub-wrapper .stats-bar {
+            gap: 25px;
+        }
+
+        #apcs-games-hub-wrapper .stat-value {
+            font-size: 1.2rem !important;
+        }
+
+        #apcs-games-hub-wrapper .games-grid {
+            grid-template-columns: 1fr !important;
+        }
+
+        #apcs-games-hub-wrapper .game-card {
+            padding: 25px !important;
+        }
+
+        #apcs-games-hub-wrapper .cta-section {
+            padding: 40px 20px !important;
+        }
+    }
+
+    /* Entrance animations */
+    #apcs-games-hub-wrapper .fade-in {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.6s ease forwards;
+    }
+
+    #apcs-games-hub-wrapper .fade-in:nth-child(1) { animation-delay: 0.1s; }
+    #apcs-games-hub-wrapper .fade-in:nth-child(2) { animation-delay: 0.2s; }
+    #apcs-games-hub-wrapper .fade-in:nth-child(3) { animation-delay: 0.3s; }
+    #apcs-games-hub-wrapper .fade-in:nth-child(4) { animation-delay: 0.4s; }
+    #apcs-games-hub-wrapper .fade-in:nth-child(5) { animation-delay: 0.5s; }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Game Selector Dropdown */
+    #apcs-games-hub-wrapper .game-selector-wrapper {
+        text-align: center !important;
+        margin: 40px auto 50px auto;
+        max-width: 600px;
+    }
+
+    #apcs-games-hub-wrapper .selector-label {
+        display: block !important;
+        font-family: 'Press Start 2P', monospace !important;
+        font-size: 0.8rem !important;
+        color: var(--neon-blue) !important;
+        margin-bottom: 15px !important;
+        letter-spacing: 3px;
+    }
+
+    #apcs-games-hub-wrapper .game-selector-container {
+        display: flex !important;
+        gap: 0;
+        justify-content: center !important;
+        align-items: stretch !important;
+    }
+
+    #apcs-games-hub-wrapper .game-selector {
+        flex: 1;
+        max-width: 400px;
+        padding: 16px 20px !important;
+        font-family: 'Outfit', sans-serif !important;
+        font-size: 1rem !important;
+        font-weight: 500 !important;
+        color: var(--text) !important;
+        background: var(--bg-card) !important;
+        border: 2px solid var(--border) !important;
+        border-right: none !important;
+        border-radius: 12px 0 0 12px !important;
+        cursor: pointer;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2300d4ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 15px center;
+        background-size: 20px;
+        padding-right: 50px !important;
+    }
+
+    #apcs-games-hub-wrapper .game-selector:focus {
+        outline: none !important;
+        border-color: var(--neon-blue) !important;
+        box-shadow: 0 0 20px var(--glow-blue) !important;
+    }
+
+    #apcs-games-hub-wrapper .game-selector option {
+        background: var(--bg-dark) !important;
+        color: var(--text) !important;
+        padding: 10px !important;
+    }
+
+    #apcs-games-hub-wrapper .game-selector optgroup {
+        background: var(--bg-card) !important;
+        color: var(--neon-blue) !important;
+        font-weight: 700 !important;
+        font-style: normal !important;
+    }
+
+    #apcs-games-hub-wrapper .play-btn {
+        padding: 16px 30px !important;
+        font-family: 'Press Start 2P', monospace !important;
+        font-size: 0.75rem !important;
+        font-weight: 700 !important;
+        color: var(--bg-dark) !important;
+        background: linear-gradient(135deg, var(--neon-green), #00cc6a) !important;
+        border: 2px solid var(--neon-green) !important;
+        border-radius: 0 12px 12px 0 !important;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+    }
+
+    #apcs-games-hub-wrapper .play-btn:hover {
+        background: linear-gradient(135deg, #00ff99, var(--neon-green)) !important;
+        box-shadow: 0 0 25px var(--glow-green) !important;
+        transform: scale(1.02);
+    }
+
+    #apcs-games-hub-wrapper .play-btn:active {
+        transform: scale(0.98);
+    }
+
+    @media (max-width: 500px) {
+        #apcs-games-hub-wrapper .game-selector-container {
+            flex-direction: column !important;
+        }
+        
+        #apcs-games-hub-wrapper .game-selector {
+            border-right: 2px solid var(--border) !important;
+            border-radius: 12px 12px 0 0 !important;
+            max-width: 100%;
+        }
+        
+        #apcs-games-hub-wrapper .play-btn {
+            border-radius: 0 0 12px 12px !important;
+            border-top: none !important;
+        }
+    }
+
+    @keyframes pulse-btn {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+</style>
+
+<div id="apcs-games-hub-wrapper">
+    <!-- Background effects -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    <div class="bg-glow bg-glow-3"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-badge">2025-2026 AP CSA Curriculum</div>
+            <h1 class="header-title">AP CSA<br><span class="accent">STUDY GAMES</span>
+</h1>
+            <p class="header-subtitle">Learn Java the fun way. Master AP Computer Science A concepts through interactive games designed to make studying feel like play.</p>
+        </header>
+
+        <!-- Stats -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-value">17</div>
+                <div class="stat-label">Games</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">750+</div>
+                <div class="stat-label">Questions</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">4</div>
+                <div class="stat-label">Units Covered</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">FREE</div>
+                <div class="stat-label">Always</div>
+            </div>
+        </div>
+
+        <!-- Quick Game Selector -->
+        <div class="game-selector-wrapper">
+            <label class="selector-label" for="gameSelector">QUICK PLAY</label>
+            <div class="game-selector-container">
+                <select class="game-selector" id="gameSelector">
+                    <option value="">-- Select a Game --</option>
+                    <optgroup label="Code Tracing &amp; Debugging">
+                        <option value="/pages/ap-csa-bug-hunter-study-game">Bug Hunt - Find the Error</option>
+                        <option value="/pages/ap-csa-output-predictor-study-game">Output Predictor - What Will Print?</option>
+                        <option value="/pages/ap-csa-loop-tracing-game">Loop Tracing Race - Timed Challenge</option>
+                    </optgroup>
+                    <optgroup label="Vocabulary &amp; Terms">
+                        <option value="/pages/ap-csa-wordle">Java Wordle - Guess the Keyword</option>
+                        <option value="/pages/ap-csa-connections-game">Connections - Group Related Terms</option>
+                        <option value="/pages/ap-csa-memory-match-game">Flashcard Match - Memory Game</option>
+                        <option value="/pages/ap-csa-crossword-game">Java Crossword - Definition Clues</option>
+                        <option value="/pages/ap-csa-word-search-study-game">Word Search - Find Hidden Terms</option>
+                        <option value="/pages/ap-csa-hangman-study-game">Java Hangman - Guess Letters</option>
+                    </optgroup>
+                    <optgroup label="Data Structures &amp; Algorithms">
+                        <option value="/pages/ap-csa-array-maze-game">Array Maze - Navigate Arrays</option>
+                        <option value="/pages/ap-csa-selection-and-insertion-sorting-game">Sorting Game - Visualize Sorts</option>
+                        <option value="/pages/ap-csa-recursion-tree-game">Recursion Tree - Trace Calls</option>
+                    </optgroup>
+                    <optgroup label="Trivia &amp; Quiz">
+                        <option value="/pages/ap-csa-jeopardy-game">Java Jeopardy - Category Trivia</option>
+                        <option value="/pages/ap-csa-who-wants-to-be-a-millionaire-study-game">Java Millionaire - Lifelines Available</option>
+                        <option value="/pages/ap-csa-trivia-game">Trivia Race - Kahoot Style</option>
+                        <option value="/pages/ap-csa-true-or-false-game">True or False - Speed Round</option>
+                    </optgroup>
+                    <optgroup label="Code Writing &amp; Structure">
+                        <option value="/pages/ap-csa-parsons-problems">Parsons Problems - Arrange Code</option>
+                    </optgroup>
+                </select>
+                <button class="play-btn" id="playBtn">PLAY</button>
+            </div>
+        </div>
+
+        <!-- Games Grid -->
+        <div class="games-grid">
+            <!-- Java Wordle -->
+            <a class="game-card wordle fade-in" href="/pages/ap-csa-wordle">
+                <div class="game-icon">W</div>
+                <h2 class="game-title">JAVA WORDLE</h2>
+                <p class="game-description">Guess Java keywords in 6 tries or less. Each guess reveals which letters are correct. Learn definitions and exam tips for every word!</p>
+                <div class="game-tags">
+                    <span class="game-tag">3-8 Letter Words</span>
+                    <span class="game-tag">Vocabulary</span>
+                    <span class="game-tag">Definitions</span>
+                </div>
+                <span class="game-cta">PLAY NOW <span class="game-cta-arrow">-&gt;</span></span>
+            </a>
+
+            <!-- Bug Hunt -->
+            <a class="game-card bughunt fade-in" href="/pages/ap-csa-bug-hunter-study-game">
+                <div class="game-icon">B</div>
+                <h2 class="game-title">BUG HUNT</h2>
+                <p class="game-description">Find the bug in Java code snippets. Click on the line with the error. Practice spotting common mistakes like off-by-one errors, null pointers, and more.</p>
+                <div class="game-tags">
+                    <span class="game-tag">Debugging</span>
+                    <span class="game-tag">Code Analysis</span>
+                    <span class="game-tag">10 Questions</span>
+                </div>
+                <span class="game-cta">PLAY NOW <span class="game-cta-arrow">-&gt;</span></span>
+            </a>
+
+            <!-- Output Predictor -->
+            <a class="game-card output fade-in" href="/pages/ap-csa-output-predictor-study-game">
+                <div class="game-icon">&gt;</div>
+                <h2 class="game-title">OUTPUT PREDICTOR</h2>
+                <p class="game-description">What will this code print? Master code tracing by predicting output before looking at answers. Essential skill for AP CSA multiple choice!</p>
+                <div class="game-tags">
+                    <span class="game-tag">Code Tracing</span>
+                    <span class="game-tag">MCQ Prep</span>
+                    <span class="game-tag">Explanations</span>
+                </div>
+                <span class="game-cta">PLAY NOW <span class="game-cta-arrow">-&gt;</span></span>
+            </a>
+
+            <!-- Connections -->
+            <a class="game-card connections fade-in" href="/pages/ap-csa-connections-game">
+                <div class="game-icon">#</div>
+                <h2 class="game-title">CONNECTIONS</h2>
+                <p class="game-description">Find 4 groups of 4 related Java terms. Categories get progressively harder. Test your understanding of how concepts relate to each other.</p>
+                <div class="game-tags">
+                    <span class="game-tag">Categorization</span>
+                    <span class="game-tag">Concept Links</span>
+                    <span class="game-tag">4 Difficulty Levels</span>
+                </div>
+                <span class="game-cta">PLAY NOW <span class="game-cta-arrow">-&gt;</span></span>
+            </a>
+
+            <!-- Loop Tracing Race -->
+            <a class="game-card looprace fade-in" href="/pages/ap-csa-loop-tracing-game">
+                <div class="game-icon">T</div>
+                <h2 class="game-title">LOOP TRACING RACE</h2>
+                <p class="game-description">Race against the clock to trace Java loops! Track variables through for, while, and nested loops. Build speed and accuracy for the AP exam.</p>
+                <div class="game-tags">
+                    <span class="game-tag">Timed Challenge</span>
+                    <span class="game-tag">Loop Tracing</span>
+                    <span class="game-tag">Variable Tracking</span>
+                </div>
+                <span class="game-cta">PLAY NOW <span class="game-cta-arrow">-&gt;</span></span>
+            </a>
+
+            <!-- Array Maze -->
+            <a class="game-card arraymaze fade-in" href="/pages/ap-csa-array-maze-game">
+                <div class="game-icon">[]</div>
+                <h2 class="game-title">ARRAY MAZE</h2>
+                <p class="game-description">Navigate through arrays and 2D arrays to reach the goal! Practice indexing, traversal patterns, and boundary checking in a visual puzzle format.</p>
+                <div class="game-tags">
+                    <span class="game-tag">Arrays</span>
+                    <span class="game-tag">2D Arrays</span>
+                    <span class="game-tag">Indexing</span>
+                </div>
+                <span class="game-cta">PLAY NOW <span class="game-cta-arrow">-&gt;</span></span>
+            </a>
+
+            <!-- Sorting Game -->
+            <a class="game-card sorting fade-in" href="/pages/ap-csa-selection-and-insertion-sorting-game">
+                <div class="game-icon">S</div>
+                <h2 class="game-title">SORTING GAME</h2>
+                <p class="game-description">Visualize and practice sorting algorithms! Step through selection sort and insertion sort manually. Understand how elements move and compare.</p>
+                <div class="game-tags">
+                    <span class="game-tag">Selection Sort</span>
+                    <span class="game-tag">Insertion Sort</span>
+                    <span class="game-tag">Visualization</span>
+                </div>
+                <span class="game-cta">PLAY NOW <span class="game-cta-arrow">-&gt;</span></span>
+            </a>
+
+            <!-- Recursion Tree -->
+            <a class="game-card recursion fade-in" href="/pages/ap-csa-recursion-tree-game">
+                <div class="game-icon">R</div>
+                <h2 class="game-title">RECURSION TREE</h2>
+                <p class="game-description">Visualize recursive calls as a tree! Trace through recursive methods, predict return values, and understand the call stack step by step.</p>
+                <div class="game-tags">
+                    <span class="game-tag">Recursion</span>
+                    <span class="game-tag">Call Stack</span>
+                    <span class="game-tag">Tree Visualization</span>
+                </div>
+                <span class="game-cta">PLAY NOW <span class="game-cta-arrow">-&gt;</span></span>
+            </a>
+
+            <!-- Flashcard Match -->
+            <a class="game-card flashcard fade-in" href="/pages/ap-csa-memory-match-game">
+                <div class="game-icon">M</div>
+                <h2 class="game-title">FLASHCARD MATCH</h2>
+                <p class="game-description">Flip cards to match Java terms with their definitions! Race against time in this memory-style matching game. Beat your best time!</p>
+                <div class="game-tags">
+                    <span class="game-tag">Memory Game</span>
+                    <span class="game-tag">Terms and Definitions</span>
+                    <span class="game-tag">Timed</span>
+                </div>
+                <span class="game-cta">PLAY NOW <span class="game-cta-arrow">-&gt;</span></span>
+            </a>
+
+            <!-- Jeopardy -->
+            <a class="game-card jeopardy fade-in" href="/pages/ap-csa-jeopardy-game">
+                <div class="game-icon">!</div>
+                <h2 class="game-title">JAVA JEOPARDY</h2>
+                <p class="game-description">Test your knowledge across categories! Choose questions worth 100-500 points. Categories include Arrays, Objects, Loops, Classes, and more.</p>
+                <div class="game-tags">
+                    <span class="game-tag">Categories</span>
+                    <span class="game-tag">Point Values</span>
+                    <span class="game-tag">All Units</span>
+                </div>
+                <span class="game-cta">PLAY NOW <span class="game-cta-arrow">-&gt;</span></span>
+            </a>
+
+            <!-- Crossword -->
+            <a class="game-card crossword fade-in" href="/pages/ap-csa-crossword-game">
+                <div class="game-icon">+</div>
+                <h2 class="game-title">JAVA CROSSWORD</h2>
+                <p class="game-description">Solve crossword puzzles with Java vocabulary! Clues are definitions - answers are keywords, methods, and concepts from the AP CSA curriculum.</p>
+                <div class="game-tags">
+                    <span class="game-tag">Vocabulary</span>
+                    <span class="game-tag">Definitions</span>
+                    <span class="game-tag">Puzzle</span>
+                </div>
+                <span class="game-cta">PLAY NOW <span class="game-cta-arrow">-&gt;</span></span>
+            </a>
+
+            <!-- Word Search -->
+            <a class="game-card wordsearch fade-in" href="/pages/ap-csa-word-search-study-game">
+                <div class="game-icon">?</div>
+                <h2 class="game-title">WORD SEARCH</h2>
+                <p class="game-description">Find hidden Java terms in the grid! Search horizontally, vertically, and diagonally. Great for reinforcing vocabulary recognition.</p>
+                <div class="game-tags">
+                    <span class="game-tag">Vocabulary</span>
+                    <span class="game-tag">Pattern Recognition</span>
+                    <span class="game-tag">Relaxed</span>
+                </div>
+                <span class="game-cta">PLAY NOW <span class="game-cta-arrow">-&gt;</span></span>
+            </a>
+
+            <!-- Hangman -->
+            <a class="game-card hangman fade-in" href="/pages/ap-csa-hangman-study-game">
+                <div class="game-icon">_</div>
+                <h2 class="game-title">JAVA HANGMAN</h2>
+                <p class="game-description">Guess letters to reveal Java terms before running out of attempts! Hints available if you get stuck. Learn new vocabulary with every game.</p>
+                <div class="game-tags">
+                    <span class="game-tag">Word Guessing</span>
+                    <span class="game-tag">Vocabulary</span>
+                    <span class="game-tag">Hints Available</span>
+                </div>
+                <span class="game-cta">PLAY NOW <span class="game-cta-arrow">-&gt;</span></span>
+            </a>
+
+            <!-- Millionaire -->
+            <a class="game-card millionaire fade-in" href="/pages/ap-csa-who-wants-to-be-a-millionaire-study-game">
+                <div class="game-icon">$</div>
+                <h2 class="game-title">JAVA MILLIONAIRE</h2>
+                <p class="game-description">Answer increasingly difficult questions to climb the money ladder! Use lifelines wisely: 50/50, Ask the Audience, and Phone a Friend.</p>
+                <div class="game-tags">
+                    <span class="game-tag">Increasing Difficulty</span>
+                    <span class="game-tag">Lifelines</span>
+                    <span class="game-tag">15 Questions</span>
+                </div>
+                <span class="game-cta">PLAY NOW <span class="game-cta-arrow">-&gt;</span></span>
+            </a>
+
+            <!-- Trivia Race -->
+            <a class="game-card trivia fade-in" href="/pages/ap-csa-trivia-game">
+                <div class="game-icon">!</div>
+                <h2 class="game-title">TRIVIA RACE</h2>
+                <p class="game-description">Kahoot-style timed trivia! Answer quickly for bonus points. Compete against yourself or challenge friends. Fast-paced AP CSA review.</p>
+                <div class="game-tags">
+                    <span class="game-tag">Timed</span>
+                    <span class="game-tag">Speed Bonus</span>
+                    <span class="game-tag">Leaderboard</span>
+                </div>
+                <span class="game-cta">PLAY NOW <span class="game-cta-arrow">-&gt;</span></span>
+            </a>
+
+            <!-- True or False -->
+            <a class="game-card truefalse fade-in" href="/pages/ap-csa-true-or-false-game">
+                <div class="game-icon">?</div>
+                <h2 class="game-title">TRUE OR FALSE</h2>
+                <p class="game-description">Quick-fire statements about Java - are they true or false? Test your knowledge in this fast-paced speed round. How many can you get right?</p>
+                <div class="game-tags">
+                    <span class="game-tag">Speed Round</span>
+                    <span class="game-tag">Quick Decisions</span>
+                    <span class="game-tag">30 Seconds</span>
+                </div>
+                <span class="game-cta">PLAY NOW <span class="game-cta-arrow">-&gt;</span></span>
+            </a>
+
+            <!-- Parsons Problems -->
+            <a class="game-card parsons fade-in" href="/pages/ap-csa-parsons-problems">
+                <div class="game-icon">=</div>
+                <h2 class="game-title">PARSONS PROBLEMS</h2>
+                <p class="game-description">Drag and drop scrambled code lines into the correct order! Build methods, loops, and classes by arranging code blocks logically.</p>
+                <div class="game-tags">
+                    <span class="game-tag">Drag and Drop</span>
+                    <span class="game-tag">Code Structure</span>
+                    <span class="game-tag">Logic Building</span>
+                </div>
+                <span class="game-cta">PLAY NOW <span class="game-cta-arrow">-&gt;</span></span>
+            </a>
+        </div>
+
+        <!-- Benefits Section -->
+        <section class="benefits-section">
+            <h2 class="section-title">WHY STUDY WITH GAMES?</h2>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-icon">B</div>
+                    <h3 class="benefit-title">Active Recall</h3>
+                    <p class="benefit-text">Games force you to retrieve information from memory, which strengthens neural pathways far better than passive reading.</p>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">!</div>
+                    <h3 class="benefit-title">Instant Feedback</h3>
+                    <p class="benefit-text">Know immediately if you are right or wrong. Detailed explanations help you understand WHY, not just memorize answers.</p>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">*</div>
+                    <h3 class="benefit-title">Spaced Repetition</h3>
+                    <p class="benefit-text">Short game sessions spread over time beat marathon study sessions. Play a few rounds daily for maximum retention.</p>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">^</div>
+                    <h3 class="benefit-title">Track Progress</h3>
+                    <p class="benefit-text">Stats and streaks keep you motivated. See your improvement over time and identify topics that need more practice.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <h2 class="cta-title">READY FOR MORE PRACTICE?</h2>
+            <p class="cta-text">Games are just the beginning. Explore our complete AP CSA study resources including unit guides, FRQ archives, and daily practice questions.</p>
+            <div class="cta-buttons">
+                <a class="cta-btn cta-btn-primary" href="/pages/ap-csa-exam-prep-hub">AP CSA Hub <span>-&gt;</span></a>
+                <a class="cta-btn cta-btn-secondary" href="/blogs/daily-ap-csa-practice">Daily Practice <span>-&gt;</span></a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-links">
+            <a href="/pages/ap-csa-exam-prep-hub">AP CSA Hub</a>
+            <a href="/pages/ap-computer-science-principles-resources">AP CSP Hub</a>
+            <a href="/pages/ap-csa-frq-archive">FRQ Archive</a>
+            <a href="/products/computer-science-tutoring-lesson">1-on-1 Tutoring</a>
+        </div>
+        <p>AP CS Exam Prep - Free resources for AP Computer Science students</p>
+        <p style="margin-top: 10px; font-size: 0.8rem;">AP and Advanced Placement are registered trademarks of the College Board, which was not involved in the production of this website.</p>
+    </footer>
+</div>
+
+<script>
+document.getElementById('playBtn').addEventListener('click', function() {
+    var selector = document.getElementById('gameSelector');
+    var selectedGame = selector.value;
+    if (selectedGame) {
+        trackGameClick(selectedGame);
+        window.location.href = selectedGame;
+    } else {
+        alert('Please select a game first!');
+    }
+});
+
+document.getElementById('gameSelector').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        document.getElementById('playBtn').click();
+    }
+});
+
+/* ========== INVISIBLE ANALYTICS TRACKING ========== */
+(function() {
+    var STORAGE_KEY = 'apcs_games_analytics';
+    
+    // Initialize or get existing stats
+    function getStats() {
+        try {
+            var stored = localStorage.getItem(STORAGE_KEY);
+            return stored ? JSON.parse(stored) : { hubVisits: 0, gameClicks: {}, firstVisit: new Date().toISOString() };
+        } catch(e) {
+            return { hubVisits: 0, gameClicks: {}, firstVisit: new Date().toISOString() };
+        }
+    }
+    
+    function saveStats(stats) {
+        try {
+            stats.lastUpdated = new Date().toISOString();
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(stats));
+        } catch(e) {}
+    }
+    
+    // Track hub page visit
+    function trackHubVisit() {
+        var stats = getStats();
+        stats.hubVisits = (stats.hubVisits || 0) + 1;
+        saveStats(stats);
+        
+        // Send to Google Analytics 4 if available
+        if (typeof gtag === 'function') {
+            gtag('event', 'hub_visit', {
+                'event_category': 'AP CSA Games',
+                'event_label': 'Study Games Hub',
+                'value': stats.hubVisits
+            });
+        }
+    }
+    
+    // Track game click - exposed globally
+    window.trackGameClick = function(gameUrl) {
+        var gameName = gameUrl.replace('/pages/', '').replace('ap-csa-', '').replace(/-/g, ' ');
+        var stats = getStats();
+        
+        if (!stats.gameClicks) stats.gameClicks = {};
+        stats.gameClicks[gameUrl] = (stats.gameClicks[gameUrl] || 0) + 1;
+        saveStats(stats);
+        
+        // Send to Google Analytics 4 if available
+        if (typeof gtag === 'function') {
+            gtag('event', 'game_click', {
+                'event_category': 'AP CSA Games',
+                'event_label': gameName,
+                'game_url': gameUrl,
+                'click_count': stats.gameClicks[gameUrl]
+            });
+        }
+    };
+    
+    // Add click tracking to all game cards
+    function attachGameTracking() {
+        var gameCards = document.querySelectorAll('#apcs-games-hub-wrapper .game-card');
+        gameCards.forEach(function(card) {
+            card.addEventListener('click', function(e) {
+                var href = this.getAttribute('href');
+                if (href) {
+                    trackGameClick(href);
+                }
+            });
+        });
+    }
+    
+    // Console helper to view stats (type apcsStats() in browser console)
+    window.apcsStats = function() {
+        var stats = getStats();
+        console.log('%c AP CSA Games Hub Analytics ', 'background: #0a0a12; color: #00ff88; font-size: 14px; padding: 5px;');
+        console.log('%c Hub Page Visits: ' + stats.hubVisits, 'color: #00d4ff; font-size: 12px;');
+        console.log('%c First Visit: ' + stats.firstVisit, 'color: #8080a0; font-size: 11px;');
+        console.log('%c Last Updated: ' + stats.lastUpdated, 'color: #8080a0; font-size: 11px;');
+        console.log('%c Game Click Counts:', 'color: #ffee00; font-size: 12px;');
+        
+        // Sort by clicks descending
+        var sorted = Object.entries(stats.gameClicks || {}).sort(function(a, b) { return b[1] - a[1]; });
+        sorted.forEach(function(item, i) {
+            var name = item[0].replace('/pages/ap-csa-', '').replace(/-/g, ' ');
+            console.log('  ' + (i + 1) + '. ' + name + ': ' + item[1] + ' clicks');
+        });
+        
+        return stats;
+    };
+    
+    // Reset stats helper (type apcsResetStats() in console)
+    window.apcsResetStats = function() {
+        localStorage.removeItem(STORAGE_KEY);
+        console.log('%c Stats reset!', 'color: #ff00aa;');
+    };
+    
+    // Initialize on page load
+    trackHubVisit();
+    attachGameTracking();
+})();
+</script>

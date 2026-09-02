@@ -1,0 +1,849 @@
+<style>
+        :root {
+            --bg-primary: #0f0f13;
+            --bg-secondary: #16161d;
+            --bg-code: #1a1a24;
+            --border: #2d2d3d;
+            --text: #e8e8f0;
+            --text-dim: #7a7a8c;
+            --accent-red: #ff6b6b;
+            --accent-green: #4ade80;
+            --accent-yellow: #fbbf24;
+            --accent-blue: #60a5fa;
+            --accent-purple: #a78bfa;
+            --glow-red: rgba(255, 107, 107, 0.2);
+            --glow-green: rgba(74, 222, 128, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+            background-image: 
+                radial-gradient(ellipse at 10% 90%, var(--glow-red) 0%, transparent 40%),
+                radial-gradient(ellipse at 90% 10%, rgba(167, 139, 250, 0.1) 0%, transparent 40%);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .bug-icon {
+            font-size: 2.5rem;
+        }
+
+        .logo-text {
+            background: linear-gradient(135deg, var(--accent-red), var(--accent-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 1rem;
+        }
+
+        .game-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: var(--border);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-blue));
+            transition: width 0.3s ease;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .question-num {
+            font-weight: 600;
+            color: var(--accent-purple);
+        }
+
+        .timer {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Fira Code', monospace;
+            font-weight: 500;
+        }
+
+        .timer-icon {
+            color: var(--accent-yellow);
+        }
+
+        .score-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .score-label {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .score-value {
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+            color: var(--accent-green);
+        }
+
+        .question-section {
+            padding: 25px;
+        }
+
+        .instruction {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: var(--text);
+        }
+
+        .instruction strong {
+            color: var(--accent-red);
+        }
+
+        .unit-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(167, 139, 250, 0.15);
+            color: var(--accent-purple);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .code-container {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot.red { background: #ff5f56; }
+        .dot.yellow { background: #ffbd2e; }
+        .dot.green { background: #27ca3f; }
+
+        .filename {
+            margin-left: 10px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        .code-body {
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        .code-line {
+            display: flex;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            cursor: pointer;
+            padding: 4px 12px;
+            margin: 0 -12px;
+            border-radius: 6px;
+            transition: all 0.15s ease;
+        }
+
+        .code-line:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .code-line.selected {
+            background: rgba(255, 107, 107, 0.15);
+            border: 1px solid var(--accent-red);
+            margin: 0 -13px;
+        }
+
+        .code-line.correct-answer {
+            background: rgba(74, 222, 128, 0.15);
+            border: 1px solid var(--accent-green);
+            margin: 0 -13px;
+        }
+
+        .code-line.wrong-answer {
+            background: rgba(255, 107, 107, 0.15);
+            border: 1px solid var(--accent-red);
+            margin: 0 -13px;
+        }
+
+        .line-num {
+            min-width: 35px;
+            color: var(--text-dim);
+            user-select: none;
+            text-align: right;
+            padding-right: 15px;
+            border-right: 1px solid var(--border);
+            margin-right: 15px;
+        }
+
+        .line-content {
+            flex: 1;
+            white-space: pre;
+            color: #e0e0e0;
+        }
+
+        /* Syntax highlighting */
+        .keyword { color: #c678dd; }
+        .type { color: #e5c07b; }
+        .string { color: #98c379; }
+        .number { color: #d19a66; }
+        .comment { color: #5c6370; font-style: italic; }
+        .method { color: #61afef; }
+        .operator { color: #56b6c2; }
+
+        .answer-section {
+            padding: 0 25px 25px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--accent-red), #ff8787);
+            border: none;
+            border-radius: 10px;
+            color: #000;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px var(--glow-red);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        .feedback.correct {
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid var(--accent-green);
+        }
+
+        .feedback.incorrect {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid var(--accent-red);
+        }
+
+        .feedback-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .feedback.correct .feedback-header {
+            color: var(--accent-green);
+        }
+
+        .feedback.incorrect .feedback-header {
+            color: var(--accent-red);
+        }
+
+        .feedback-text {
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .feedback-text code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9em;
+        }
+
+        .next-btn {
+            width: 100%;
+            padding: 14px;
+            margin-top: 15px;
+            background: var(--accent-purple);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(167, 139, 250, 0.3);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .results-screen {
+            text-align: center;
+            padding: 50px 30px;
+            display: none;
+        }
+
+        .results-screen.show {
+            display: block;
+        }
+
+        .results-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .results-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .results-score {
+            font-family: 'Fira Code', monospace;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            margin: 20px 0;
+        }
+
+        .results-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 30px 0;
+        }
+
+        .breakdown-item {
+            text-align: center;
+        }
+
+        .breakdown-value {
+            font-family: 'Fira Code', monospace;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .breakdown-label {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .play-again-btn {
+            padding: 16px 40px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 20px;
+        }
+
+        .play-again-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(167, 139, 250, 0.4);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--accent-purple);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .code-line {
+                font-size: 0.85rem;
+            }
+            .game-header {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+        }
+    </style>
+
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <span class="bug-icon">🐛</span>
+                <span class="logo-text">Bug Hunt</span>
+            </div>
+            <p class="subtitle">Find the error in each Java code snippet</p>
+        </header>
+
+        <div class="game-card">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress" style="width: 0%"></div>
+            </div>
+
+            <div id="gameScreen">
+                <div class="game-header">
+                    <span class="question-num" id="questionNum">Question 1 of 10</span>
+                    <div class="timer">
+                        <span class="timer-icon">⏱</span>
+                        <span id="timer">0:00</span>
+                    </div>
+                    <div class="score-display">
+                        <span class="score-label">Score:</span>
+                        <span class="score-value" id="score">0</span>
+                    </div>
+                </div>
+
+                <div class="question-section">
+                    <div class="unit-tag" id="unitTag">Unit 1</div>
+                    <p class="instruction">Click on the line that contains the <strong>bug</strong>:</p>
+                    
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                            <span class="filename" id="filename">Example.java</span>
+                        </div>
+                        <div class="code-body" id="codeBody"></div>
+                    </div>
+                </div>
+
+                <div class="answer-section">
+                    <button class="submit-btn" id="submitBtn" disabled>Find the Bug</button>
+                    
+                    <div class="feedback" id="feedback">
+                        <div class="feedback-header" id="feedbackHeader"></div>
+                        <div class="feedback-text" id="feedbackText"></div>
+                        <button class="next-btn" id="nextBtn">Next Question</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-screen" id="resultsScreen">
+                <div class="results-icon">🏆</div>
+                <h2 class="results-title">Bug Hunt Complete!</h2>
+                <div class="results-score" id="finalScore">0/10</div>
+                <div class="results-breakdown">
+                    <div class="breakdown-item">
+                        <div class="breakdown-value" id="correctCount" style="color: var(--accent-green)">0</div>
+                        <div class="breakdown-label">Correct</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-value" id="incorrectCount" style="color: var(--accent-red)">0</div>
+                        <div class="breakdown-label">Incorrect</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-value" id="avgTime">0s</div>
+                        <div class="breakdown-label">Avg Time</div>
+                    </div>
+                </div>
+                <button class="play-again-btn" id="playAgainBtn">Play Again</button>
+            </div>
+        </div>
+
+        <footer>
+            <p>AP CSA Bug Hunt - Aligned with 2025-2026 Curriculum (4 Units)</p>
+            <p><a href="/pages/ap-csa-exam-prep-hub">AP CSA Hub</a> | <a href="/blogs/daily-ap-csa-practice">Daily Practice</a></p>
+        </footer>
+    </div>
+
+    <script>
+        const QUESTIONS = [
+            {
+                unit: 'Unit 1: Using Objects',
+                filename: 'StringCompare.java',
+                code: [
+                    { num: 1, content: 'String name1 = "Alice";', highlight: '' },
+                    { num: 2, content: 'String name2 = "Alice";', highlight: '' },
+                    { num: 3, content: 'if (name1 == name2)', highlight: '', isBug: true },
+                    { num: 4, content: '{', highlight: '' },
+                    { num: 5, content: '    System.out.println("Same name!");', highlight: '' },
+                    { num: 6, content: '}', highlight: '' }
+                ],
+                bugLine: 3,
+                explanation: 'Use <code>.equals()</code> to compare String content, not <code>==</code>. The <code>==</code> operator compares object references (memory addresses), not the actual string values. Should be: <code>if (name1.equals(name2))</code>'
+            },
+            {
+                unit: 'Unit 1: Using Objects',
+                filename: 'Substring.java',
+                code: [
+                    { num: 1, content: 'String word = "Hello";', highlight: '' },
+                    { num: 2, content: 'String sub = word.substring(0, 5);', highlight: '' },
+                    { num: 3, content: 'System.out.println(sub.substring(2, 6));', highlight: '', isBug: true }
+                ],
+                bugLine: 3,
+                explanation: 'StringIndexOutOfBoundsException! The string "Hello" has indices 0-4. <code>substring(2, 6)</code> tries to access index 5, which does not exist. Remember: <code>substring(start, end)</code> where end is EXCLUSIVE.'
+            },
+            {
+                unit: 'Unit 2: Selection and Iteration',
+                filename: 'LoopError.java',
+                code: [
+                    { num: 1, content: 'int sum = 0;', highlight: '' },
+                    { num: 2, content: 'for (int i = 1; i < 10; i++)', highlight: '' },
+                    { num: 3, content: '    sum += i;', highlight: '' },
+                    { num: 4, content: '    System.out.println(i);', highlight: '', isBug: true }
+                ],
+                bugLine: 4,
+                explanation: 'Missing curly braces! Without braces, only line 3 is inside the loop. Line 4 executes once after the loop ends, printing only 10. For multiple statements in a loop, always use <code>{ }</code> braces.'
+            },
+            {
+                unit: 'Unit 2: Selection and Iteration',
+                filename: 'InfiniteLoop.java',
+                code: [
+                    { num: 1, content: 'int count = 10;', highlight: '' },
+                    { num: 2, content: 'while (count > 0)', highlight: '' },
+                    { num: 3, content: '{', highlight: '' },
+                    { num: 4, content: '    System.out.println(count);', highlight: '' },
+                    { num: 5, content: '    count++;', highlight: '', isBug: true },
+                    { num: 6, content: '}', highlight: '' }
+                ],
+                bugLine: 5,
+                explanation: 'Infinite loop! The condition is <code>count > 0</code>, but <code>count++</code> increases count, so it will always be > 0. Should be <code>count--</code> to count down to 0.'
+            },
+            {
+                unit: 'Unit 2: Selection and Iteration',
+                filename: 'OffByOne.java',
+                code: [
+                    { num: 1, content: 'int[] arr = {1, 2, 3, 4, 5};', highlight: '' },
+                    { num: 2, content: 'for (int i = 0; i <= arr.length; i++)', highlight: '', isBug: true },
+                    { num: 3, content: '{', highlight: '' },
+                    { num: 4, content: '    System.out.println(arr[i]);', highlight: '' },
+                    { num: 5, content: '}', highlight: '' }
+                ],
+                bugLine: 2,
+                explanation: 'ArrayIndexOutOfBoundsException! Using <code><=</code> instead of <code><</code> causes the loop to access <code>arr[5]</code>, but valid indices are 0-4. Classic off-by-one error. Should be <code>i < arr.length</code>.'
+            },
+            {
+                unit: 'Unit 3: Class Creation',
+                filename: 'Constructor.java',
+                code: [
+                    { num: 1, content: 'public class Student', highlight: '' },
+                    { num: 2, content: '{', highlight: '' },
+                    { num: 3, content: '    private String name;', highlight: '' },
+                    { num: 4, content: '    ', highlight: '' },
+                    { num: 5, content: '    public void Student(String n)', highlight: '', isBug: true },
+                    { num: 6, content: '    {', highlight: '' },
+                    { num: 7, content: '        name = n;', highlight: '' },
+                    { num: 8, content: '    }', highlight: '' },
+                    { num: 9, content: '}', highlight: '' }
+                ],
+                bugLine: 5,
+                explanation: 'Constructors have NO return type! Adding <code>void</code> makes this a regular method named "Student", not a constructor. Remove <code>void</code>: <code>public Student(String n)</code>'
+            },
+            {
+                unit: 'Unit 3: Class Creation',
+                filename: 'StaticAccess.java',
+                code: [
+                    { num: 1, content: 'public class Counter', highlight: '' },
+                    { num: 2, content: '{', highlight: '' },
+                    { num: 3, content: '    private int count = 0;', highlight: '' },
+                    { num: 4, content: '    ', highlight: '' },
+                    { num: 5, content: '    public static void increment()', highlight: '' },
+                    { num: 6, content: '    {', highlight: '' },
+                    { num: 7, content: '        count++;', highlight: '', isBug: true },
+                    { num: 8, content: '    }', highlight: '' },
+                    { num: 9, content: '}', highlight: '' }
+                ],
+                bugLine: 7,
+                explanation: 'Static methods cannot access instance variables! <code>count</code> is an instance variable, but <code>increment()</code> is static. Either make <code>count</code> static, or make <code>increment()</code> non-static.'
+            },
+            {
+                unit: 'Unit 4: Data Collections',
+                filename: 'ArrayListRemove.java',
+                code: [
+                    { num: 1, content: 'ArrayList<String> list = new ArrayList<String>();', highlight: '' },
+                    { num: 2, content: 'list.add("a"); list.add("b"); list.add("c");', highlight: '' },
+                    { num: 3, content: 'for (int i = 0; i < list.size(); i++)', highlight: '' },
+                    { num: 4, content: '{', highlight: '' },
+                    { num: 5, content: '    list.remove(i);', highlight: '', isBug: true },
+                    { num: 6, content: '}', highlight: '' }
+                ],
+                bugLine: 5,
+                explanation: 'Removing while iterating forward skips elements! When you remove index 0, everything shifts down. Index 1 becomes index 0, but i becomes 1, skipping it. Iterate backwards or use an Iterator.'
+            },
+            {
+                unit: 'Unit 4: Data Collections',
+                filename: 'NullPointer.java',
+                code: [
+                    { num: 1, content: 'String[] names = new String[3];', highlight: '' },
+                    { num: 2, content: 'names[0] = "Alice";', highlight: '' },
+                    { num: 3, content: 'names[2] = "Charlie";', highlight: '' },
+                    { num: 4, content: 'for (String name : names)', highlight: '' },
+                    { num: 5, content: '{', highlight: '' },
+                    { num: 6, content: '    System.out.println(name.length());', highlight: '', isBug: true },
+                    { num: 7, content: '}', highlight: '' }
+                ],
+                bugLine: 6,
+                explanation: 'NullPointerException! <code>names[1]</code> was never assigned, so it is <code>null</code>. Calling <code>.length()</code> on null crashes. Check for null first: <code>if (name != null)</code>'
+            },
+            {
+                unit: 'Unit 1: Using Objects',
+                filename: 'IntegerDivision.java',
+                code: [
+                    { num: 1, content: 'int total = 7;', highlight: '' },
+                    { num: 2, content: 'int count = 3;', highlight: '' },
+                    { num: 3, content: 'double average = total / count;', highlight: '', isBug: true },
+                    { num: 4, content: 'System.out.println(average); // Prints 2.0', highlight: '' }
+                ],
+                bugLine: 3,
+                explanation: 'Integer division truncates! <code>7 / 3</code> equals 2 (not 2.33). The result is then converted to 2.0. Cast first: <code>double average = (double) total / count;</code>'
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedLine = null;
+        let answered = false;
+        let startTime = 0;
+        let totalTime = 0;
+        let timerInterval = null;
+        let shuffledQuestions = [];
+
+        function init() {
+            shuffledQuestions = [...QUESTIONS].sort(() => Math.random() - 0.5).slice(0, 10);
+            currentQuestion = 0;
+            score = 0;
+            totalTime = 0;
+            loadQuestion();
+            
+            document.getElementById('submitBtn').addEventListener('click', submitAnswer);
+            document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+            document.getElementById('playAgainBtn').addEventListener('click', restartGame);
+        }
+
+        function loadQuestion() {
+            const q = shuffledQuestions[currentQuestion];
+            answered = false;
+            selectedLine = null;
+            
+            document.getElementById('questionNum').textContent = `Question ${currentQuestion + 1} of ${shuffledQuestions.length}`;
+            document.getElementById('progress').style.width = `${(currentQuestion / shuffledQuestions.length) * 100}%`;
+            document.getElementById('unitTag').textContent = q.unit;
+            document.getElementById('filename').textContent = q.filename;
+            document.getElementById('score').textContent = score;
+            
+            const codeBody = document.getElementById('codeBody');
+            codeBody.innerHTML = '';
+            
+            q.code.forEach(line => {
+                const lineDiv = document.createElement('div');
+                lineDiv.className = 'code-line';
+                lineDiv.dataset.lineNum = line.num;
+                
+                const lineNumSpan = document.createElement('span');
+                lineNumSpan.className = 'line-num';
+                lineNumSpan.textContent = line.num;
+                
+                const lineContentSpan = document.createElement('span');
+                lineContentSpan.className = 'line-content';
+                lineContentSpan.textContent = line.content;
+                
+                lineDiv.appendChild(lineNumSpan);
+                lineDiv.appendChild(lineContentSpan);
+                lineDiv.addEventListener('click', () => selectLine(line.num, lineDiv));
+                codeBody.appendChild(lineDiv);
+            });
+            
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('feedback').classList.remove('show');
+            
+            startTime = Date.now();
+            startTimer();
+        }
+
+        function selectLine(lineNum, element) {
+            if (answered) return;
+            
+            document.querySelectorAll('.code-line').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedLine = lineNum;
+            document.getElementById('submitBtn').disabled = false;
+        }
+
+        function submitAnswer() {
+            if (selectedLine === null || answered) return;
+            
+            answered = true;
+            stopTimer();
+            totalTime += (Date.now() - startTime) / 1000;
+            
+            const q = shuffledQuestions[currentQuestion];
+            const isCorrect = selectedLine === q.bugLine;
+            
+            const feedback = document.getElementById('feedback');
+            const feedbackHeader = document.getElementById('feedbackHeader');
+            const feedbackText = document.getElementById('feedbackText');
+            
+            // Mark lines
+            document.querySelectorAll('.code-line').forEach(el => {
+                const num = parseInt(el.dataset.lineNum);
+                if (num === q.bugLine) {
+                    el.classList.add('correct-answer');
+                    el.classList.remove('selected');
+                } else if (num === selectedLine && !isCorrect) {
+                    el.classList.add('wrong-answer');
+                    el.classList.remove('selected');
+                }
+            });
+            
+            if (isCorrect) {
+                score++;
+                document.getElementById('score').textContent = score;
+                feedback.className = 'feedback show correct';
+                feedbackHeader.innerHTML = '✔ Correct!';
+            } else {
+                feedback.className = 'feedback show incorrect';
+                feedbackHeader.innerHTML = '✘ Not quite...';
+            }
+            
+            feedbackText.innerHTML = q.explanation;
+            document.getElementById('submitBtn').disabled = true;
+            
+            if (currentQuestion === shuffledQuestions.length - 1) {
+                document.getElementById('nextBtn').textContent = 'See Results';
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            
+            if (currentQuestion >= shuffledQuestions.length) {
+                showResults();
+            } else {
+                loadQuestion();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('gameScreen').style.display = 'none';
+            document.getElementById('resultsScreen').classList.add('show');
+            
+            const correct = score;
+            const incorrect = shuffledQuestions.length - score;
+            const avgTime = (totalTime / shuffledQuestions.length).toFixed(1);
+            
+            document.getElementById('finalScore').textContent = `${score}/${shuffledQuestions.length}`;
+            document.getElementById('correctCount').textContent = correct;
+            document.getElementById('incorrectCount').textContent = incorrect;
+            document.getElementById('avgTime').textContent = `${avgTime}s`;
+            document.getElementById('progress').style.width = '100%';
+        }
+
+        function restartGame() {
+            document.getElementById('resultsScreen').classList.remove('show');
+            document.getElementById('gameScreen').style.display = 'block';
+            init();
+        }
+
+        function startTimer() {
+            const timerEl = document.getElementById('timer');
+            let seconds = 0;
+            
+            timerInterval = setInterval(() => {
+                seconds++;
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                timerEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        init();
+    </script>

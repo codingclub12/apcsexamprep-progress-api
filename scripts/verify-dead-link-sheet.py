@@ -22,8 +22,11 @@ import re
 import sys
 
 HREF = re.compile(r'href="([^"]*)"')
-PAGES = re.compile(r"^/pages/([^?#]*)([?#].*)?$")
-BLOGS = re.compile(r"^/blogs/([^?#]*)([?#].*)?$")
+SECTIONS = ("pages", "products", "collections", "blogs")
+#  ONE segment after the section. A /blogs/<blog>/<article> link names an
+#  article and neither side has the article list, so it is unchecked, never
+#  broken.
+LINK = re.compile(r"^/(" + "|".join(SECTIONS) + r")/([^/?#]*)([?#].*)?$")
 LEGAL = re.compile(r"^[a-z0-9-]+$")
 
 #  This file does NOT carry a copy of the generator's retarget map, because 22
@@ -32,8 +35,10 @@ LEGAL = re.compile(r"^[a-z0-9-]+$")
 #  that extends the dead one at a hyphen. An entry that does not satisfy that
 #  has to be named here, by hand, with a person having looked at it.
 BY_HAND = {
-    "ap-csa-daily-practice": "daily-practice",
-    "ap-csa-unit-4-study-guide": "ap-csa-unit-4-data-collections-study-guide",
+    "pages/ap-csa-daily-practice": "daily-practice",
+    "pages/ap-csa-unit-4-study-guide": "ap-csa-unit-4-data-collections-study-guide",
+    "products/ap-csa-unit-1-superpack-free": "ap-csa-teacher-superpack-free-preview",
+    "blogs/daily-ap-csa-practice": "ap-csa-daily-practice",
 }
 
 
@@ -125,36 +130,37 @@ def main():
             if b == aa:
                 continue
             edits += 1
-            bm = PAGES.match(b)
+            bm = LINK.match(b)
             if not bm:
-                problems.append(f"{where}: rewrote a href that is not a /pages/ link: {b!r}")
+                problems.append(f"{where}: rewrote a href this cannot check: {b!r}")
                 continue
-            if bm.group(1) in live:
+            section, dead_handle, tail = bm.group(1), bm.group(2), bm.group(3) or ""
+            if section == "pages" and dead_handle in live:
                 problems.append(f"{where}: rewrote {b!r}, which already resolved")
                 continue
-            am = PAGES.match(aa)
-            bl = BLOGS.match(aa)
-            tail = bm.group(2) or ""
+            am = LINK.match(aa)
+            if am and am.group(1) != section:
+                problems.append(f"{where}: {b!r} -> {aa!r} moved the link between sections")
+                continue
             if am:
-                cleaned = strip_illegal(bm.group(1))
-                by_hand = BY_HAND.get(bm.group(1))
-                extension = unique_extension(bm.group(1), live)
-                if am.group(1) == cleaned and cleaned != bm.group(1):
+                cleaned = strip_illegal(dead_handle)
+                by_hand = BY_HAND.get(f"{section}/{dead_handle}")
+                extension = unique_extension(dead_handle, live) if section == "pages" else None
+                if am.group(2) == cleaned and cleaned != dead_handle and section == "pages":
                     #  Rule one, a typo. Illegal characters deleted.
                     if cleaned not in live:
                         problems.append(f"{where}: {b!r} -> {aa!r}, and that page is not live")
-                elif by_hand is not None and am.group(1) == by_hand:
+                elif by_hand is not None and am.group(2) == by_hand:
                     #  A retarget a person looked at, named on both sides.
-                    if by_hand not in live:
-                        problems.append(f"{where}: {b!r} -> {aa!r}, and that page is not live")
-                elif extension is not None and am.group(1) == extension:
+                    pass
+                elif extension is not None and am.group(2) == extension:
                     #  The target is the ONLY live handle extending the dead one.
                     pass
                 else:
                     problems.append(
                         f"{where}: {b!r} -> {aa!r} is not the illegal characters deleted, "
                         f"is not the only live handle extending it, and is not named by hand here")
-                if (am.group(2) or "") != tail:
+                if (am.group(3) or "") != tail:
                     problems.append(f"{where}: {b!r} -> {aa!r} changed the query or fragment")
             else:
                 problems.append(f"{where}: {b!r} -> {aa!r} is not a /pages/ link")

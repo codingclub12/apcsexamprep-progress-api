@@ -1,0 +1,285 @@
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AP CSA Teacher Superpack | APCSExamPrep.com</title>
+<meta name="description" content="AP CSA Teacher Superpack — slides and lesson resources for all 4 Units (2025-2026 curriculum), built by an AP CS teacher and tutor who knows exactly which question types trip students up on exam day. Free Unit 1 preview.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&amp;display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#09090b;--ink-2:#3f3f46;--ink-3:#71717a;
+  --paper:#fafaf9;--paper-3:#e4e4e7;
+  --teal:#0f766e;--teal-bg:#f0fdfa;--teal-border:#99f6e4;
+  --green:#16a34a;--green-bg:#f0fdf4;--green-border:#bbf7d0;
+  --amber-bg:#fffbeb;--amber-border:#fde68a;--amber-text:#78350f;
+  --warn-bg:#fefce8;--warn-border:#fde047;--warn-text:#713f12;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;}
+
+.announce{background:var(--ink);color:#fff;text-align:center;padding:10px 20px;font-size:13px;font-weight:500;}
+.announce a{color:#6ee7b7;text-decoration:underline;}
+
+.hero{background:#040d0c;position:relative;overflow:hidden;}
+.hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 78% 50%,rgba(15,118,110,.28) 0%,transparent 68%);pointer-events:none;}
+.hero-inner{max-width:860px;margin:0 auto;padding:88px 40px 80px;position:relative;z-index:2;}
+.hero-kicker{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#3f3f46;margin-bottom:20px;}
+.hero h1{font-family:'Fraunces',serif;font-size:clamp(38px,5.5vw,62px);font-weight:900;line-height:1.06;color:#fff;letter-spacing:-.025em;margin-bottom:28px;}
+.hero h1 em{font-style:italic;font-weight:300;color:#6ee7b7;}
+.hero-sub{font-size:18px;color:#a1a1aa;line-height:1.85;max-width:600px;margin-bottom:40px;}
+.hero-sub strong{color:#e4e4e7;font-weight:600;}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:20px;}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:#fff;font-size:15px;font-weight:700;padding:15px 30px;border-radius:8px;text-decoration:none;transition:background .15s,transform .1s;white-space:nowrap;}
+.btn-primary:hover{background:#0d6460;transform:translateY(-1px);}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:#d4d4d8;font-size:14px;font-weight:600;padding:15px 24px;border-radius:8px;text-decoration:none;border:1px solid rgba(255,255,255,.18);transition:border-color .15s;white-space:nowrap;}
+.btn-ghost:hover{border-color:rgba(255,255,255,.45);}
+.hero-footnote{font-size:12px;color:#3f3f46;}
+
+.trust{background:#fff;border-bottom:1px solid var(--paper-3);padding:14px 40px;}
+.trust-inner{max-width:860px;margin:0 auto;display:flex;flex-wrap:wrap;gap:6px 28px;font-size:13px;color:var(--ink-2);}
+.trust-item strong{color:var(--ink);}
+
+.main{max-width:860px;margin:0 auto;padding:80px 40px;}
+
+.curr-alert{background:var(--warn-bg);border:1px solid var(--warn-border);border-left:4px solid #eab308;border-radius:10px;padding:18px 24px;margin-bottom:56px;font-size:14px;color:var(--warn-text);line-height:1.8;display:flex;gap:14px;align-items:flex-start;}
+.curr-alert strong{color:#92400e;}
+
+.kicker{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:8px;}
+.h2{font-family:'Fraunces',serif;font-size:clamp(26px,3.5vw,38px);font-weight:700;color:var(--ink);line-height:1.15;letter-spacing:-.02em;margin-bottom:14px;}
+.sub{font-size:16px;color:var(--ink-3);line-height:1.8;margin-bottom:40px;max-width:600px;}
+
+.insight{margin-bottom:80px;}
+.insight-story{background:#040d0c;border-radius:14px;padding:36px;margin-bottom:24px;}
+.insight-quote{font-family:'Fraunces',serif;font-size:clamp(18px,2.5vw,24px);font-style:italic;font-weight:300;color:#e2e8f0;line-height:1.6;margin-bottom:20px;border-left:3px solid #14b8a6;padding-left:20px;}
+.insight-attr{font-size:13px;color:#3f3f46;}
+.insight-attr strong{color:#6ee7b7;}
+
+.trap-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
+.trap-card{background:#fff;border:1px solid var(--paper-3);border-radius:12px;padding:22px;}
+.trap-num{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin-bottom:8px;}
+.trap-title{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:6px;line-height:1.3;}
+.trap-desc{font-size:13px;color:var(--ink-3);line-height:1.65;}
+.trap-card.featured{background:var(--teal-bg);border-color:var(--teal-border);}
+.trap-card.featured .trap-num{color:var(--teal);}
+.insight-cta{background:var(--teal-bg);border:1px solid var(--teal-border);border-radius:12px;padding:24px 28px;}
+.insight-cta-title{font-size:15px;font-weight:700;color:var(--teal);margin-bottom:8px;}
+.insight-cta-body{font-size:15px;color:#134e4a;line-height:1.75;}
+.insight-cta-body strong{color:var(--teal);}
+
+.inside{margin-bottom:80px;}
+.unit-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.unit-card{background:#fff;border:1px solid var(--paper-3);border-radius:12px;padding:22px;transition:border-color .15s,box-shadow .15s;}
+.unit-card:hover{border-color:var(--teal-border);box-shadow:0 4px 20px rgba(15,118,110,.07);}
+.unit-card.free{border-color:var(--green-border);background:var(--green-bg);}
+.unit-card.bonus{grid-column:1/-1;background:var(--teal-bg);border-color:var(--teal-border);}
+.free-tag{display:inline-flex;background:var(--green);color:#fff;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:100px;margin-bottom:10px;}
+.unit-num{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin-bottom:4px;}
+.unit-card.free .unit-num{color:var(--green);}
+.unit-title{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:7px;line-height:1.3;}
+.unit-items{font-size:12px;color:var(--ink-3);line-height:1.75;}
+.also{background:var(--teal-bg);border:1px solid var(--teal-border);border-radius:12px;padding:22px 28px;}
+.also-title{font-size:13px;font-weight:700;color:var(--teal);margin-bottom:12px;}
+.also-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;list-style:none;}
+.also-list li{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#134e4a;line-height:1.5;}
+.also-list li::before{content:'✓';color:var(--teal);font-weight:700;flex-shrink:0;}
+
+.honest{background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:12px;padding:22px 28px;margin-bottom:80px;font-size:14px;color:var(--amber-text);line-height:1.8;}
+.honest strong{color:#92400e;}
+
+.who{margin-bottom:80px;}
+.who-list{display:grid;grid-template-columns:1fr 1fr;gap:12px;list-style:none;margin-top:32px;}
+.who-list li{background:#fff;border:1px solid var(--paper-3);border-radius:10px;padding:18px 20px;font-size:14px;color:var(--ink-2);line-height:1.6;display:flex;gap:12px;}
+.who-list li::before{content:'→';color:var(--teal);font-weight:700;flex-shrink:0;margin-top:2px;}
+
+.author{background:#040d0c;border-radius:16px;padding:48px;margin-bottom:80px;display:grid;grid-template-columns:auto 1fr;gap:32px;align-items:start;}
+.author-av{width:68px;height:68px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:26px;font-weight:900;color:#fff;flex-shrink:0;}
+.author-name{font-family:'Fraunces',serif;font-size:21px;font-weight:700;color:#fff;margin-bottom:4px;}
+.author-role{font-size:13px;color:#6ee7b7;margin-bottom:16px;}
+.author-body{font-size:14px;color:#a1a1aa;line-height:1.85;margin-bottom:20px;}
+.author-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.author-tag{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:5px 12px;border-radius:6px;font-size:12px;color:#d4d4d8;}
+
+.cta-section{background:var(--teal);border-radius:16px;padding:56px 48px;text-align:center;margin-bottom:48px;position:relative;overflow:hidden;}
+.cta-section::before{content:'';position:absolute;top:-100px;right:-100px;width:400px;height:400px;background:rgba(255,255,255,.05);border-radius:50%;}
+.cta-h2{font-family:'Fraunces',serif;font-size:clamp(26px,3.5vw,40px);font-weight:900;color:#fff;margin-bottom:14px;letter-spacing:-.025em;position:relative;}
+.cta-h2 em{font-style:italic;font-weight:300;color:#6ee7b7;}
+.cta-body{font-size:16px;color:#ccfbf1;max-width:480px;margin:0 auto 32px;line-height:1.75;position:relative;}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;position:relative;}
+.btn-cta{display:inline-flex;align-items:center;gap:8px;background:#fff;color:var(--teal);font-size:15px;font-weight:700;padding:15px 30px;border-radius:8px;text-decoration:none;transition:transform .1s;white-space:nowrap;}
+.btn-cta:hover{transform:translateY(-1px);}
+.btn-cta-outline{display:inline-flex;align-items:center;gap:8px;background:transparent;color:#fff;font-size:14px;font-weight:600;padding:15px 24px;border-radius:8px;text-decoration:none;border:1px solid rgba(255,255,255,.3);transition:border-color .15s;white-space:nowrap;}
+.btn-cta-outline:hover{border-color:rgba(255,255,255,.65);}
+.cta-note{font-size:12px;color:#6ee7b7;margin-top:16px;position:relative;}
+
+@media(max-width:640px){
+  .hero-inner,.main{padding-left:24px;padding-right:24px;}
+  .trust{padding-left:24px;padding-right:24px;}
+  .trap-grid{grid-template-columns:1fr;}
+  .unit-grid{grid-template-columns:1fr;}.unit-card.bonus{grid-column:1;}
+  .also-list,.who-list{grid-template-columns:1fr;}
+  .author{grid-template-columns:1fr;padding:32px 24px;}
+  .cta-section{padding:40px 24px;}
+}
+</style>
+
+<div class="announce">Free Unit 1 Superpack — no purchase needed. <a href="/products/ap-csa-unit-1-superpack-free">Download free →</a>
+</div>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-kicker">AP Computer Science A · Teacher Superpack</div>
+    <h1>Built from 2,000 hours of<br><em>watching students miss questions.</em>
+</h1>
+    <p class="hero-sub">After tutoring AP CS students for hundreds of hours, I know exactly where they get tripped up on exam day — and exactly what wasn't in their course materials. <strong>I built APCSExamPrep.com to fix that.</strong> The Teacher Superpack brings that same approach into your classroom, built for the 2025-2026 curriculum.</p>
+    <div class="hero-actions">
+      <a href="/products/ap-csa-teacher-superpack" class="btn-primary">Get the Superpack — $249 →</a>
+      <a href="/products/ap-csa-unit-1-superpack-free" class="btn-ghost">Free Unit 1 Preview — no purchase needed</a>
+    </div>
+    <div class="hero-footnote">One-time · Instant delivery · Updates through summer 2026 included</div>
+  </div>
+</section>
+
+<div class="trust">
+  <div class="trust-inner">
+    <span class="trust-item">✅ <strong>11+ years</strong> AP CS classroom experience</span>
+    <span class="trust-item">⭐ <strong>5.0</strong> on Wyzant · 499 verified reviews</span>
+    <span class="trust-item">📚 <strong>2,067</strong> tutoring hours</span>
+    <span class="trust-item">📋 <strong>2025-2026</strong> 4-unit CED aligned</span>
+  </div>
+</div>
+
+<main class="main">
+
+  <div class="curr-alert">
+    <span style="font-size:20px;flex-shrink:0;margin-top:2px;">⚠️</span>
+    <p><strong>2025-2026 curriculum restructure:</strong> AP CSA moved from 10 units to 4 and removed inheritance, polymorphism, extends, and super. File/Scanner I/O was added. FRQ 3 is ArrayList only. Every resource in this Superpack is built for the new structure — not the old curriculum still circulating widely.</p>
+  </div>
+
+  <section class="insight">
+    <div class="kicker">What 2,000 tutoring hours taught me</div>
+    <h2 class="h2">I've seen every resource. I know where each one leaves students unprepared.</h2>
+    <p class="sub">Tutoring gives you a diagnostic view that classroom teaching alone doesn't. When a student comes to you before the AP exam, you see exactly which concepts didn't land — and exactly how their course materials framed those concepts differently from how the exam actually tests them.</p>
+
+    <div class="insight-story">
+      <p class="insight-quote">"I knew how to write a for loop. I knew what an ArrayList was. But the exam questions felt like they were testing something different from what I practiced. I kept second-guessing myself."</p>
+      <div class="insight-attr">— Pattern I heard from <strong>students across dozens of tutoring sessions</strong>
+</div>
+    </div>
+
+    <div class="trap-grid">
+      <div class="trap-card featured">
+        <div class="trap-num">The core problem</div>
+        <div class="trap-title">Understanding the concept is not the same as answering the question</div>
+        <div class="trap-desc">AP CSA MCQ questions are written to test specific misconceptions — off-by-one errors, parameter vs return confusion, scope issues. Resources that teach the concept without practicing those exact question structures leave students unprepared for how the exam is actually phrased.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-num">What I see in tutoring</div>
+        <div class="trap-title">Students who understand Java but miss exam questions about Java</div>
+        <div class="trap-desc">They can write the code. They can explain how it works. But multi-step code tracing questions, constructor parameter shadowing traps, and ArrayList traversal edge cases require exam-specific practice — not just general Java fluency.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-num">The FRQ pattern</div>
+        <div class="trap-title">Students who practice the wrong FRQ format</div>
+        <div class="trap-desc">FRQ 3 is ArrayList only in the 2025-2026 format. Students who practiced old-format FRQs with inheritance and super methods practiced for an exam that no longer exists. That mismatch shows up as lost points on questions they should have owned.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-num">The curriculum change pattern</div>
+        <div class="trap-title">Old materials covering removed content</div>
+        <div class="trap-desc">Inheritance, extends, and super are gone from the 2025-2026 exam. Students who spent time on those topics spent time on content that will not earn them a single point in May. Realigning mid-year is harder than starting aligned.</div>
+      </div>
+    </div>
+
+    <div class="insight-cta">
+      <div class="insight-cta-title">What this means for the Superpack</div>
+      <p class="insight-cta-body">Every lesson, slide, and practice question is built with those tutoring patterns in mind. <strong>The gaps students show up to tutoring with are the gaps this course was designed to close before exam day.</strong> The free Unit 1 preview lets you see that approach in practice before spending anything.</p>
+    </div>
+  </section>
+
+  <section class="inside">
+    <div class="kicker">What's included</div>
+    <h2 class="h2">All 4 Units. 2025-2026 curriculum only.</h2>
+    <p class="sub">Each unit includes slides and lesson resources aligned to every lesson on APCSExamPrep.com. No inheritance. No extends. No super. Built for the exam your students are actually taking.</p>
+    <div class="unit-grid">
+      <div class="unit-card free">
+        <div class="free-tag">Free Preview</div>
+        <div class="unit-num">Unit 1</div>
+        <div class="unit-title">Using Objects and Methods</div>
+        <div class="unit-items">Slides · Primitive types · String methods · Math class · Object creation · Try it before buying</div>
+      </div>
+      <div class="unit-card">
+        <div class="unit-num">Unit 2</div>
+        <div class="unit-title">Selection and Iteration</div>
+        <div class="unit-items">Slides · if/else · while and for loops · Boolean logic · Compound conditions · Loop patterns</div>
+      </div>
+      <div class="unit-card">
+        <div class="unit-num">Unit 3</div>
+        <div class="unit-title">Class Creation</div>
+        <div class="unit-items">Slides · Writing classes · Constructors · Instance methods · Encapsulation · Access modifiers</div>
+      </div>
+      <div class="unit-card">
+        <div class="unit-num">Unit 4</div>
+        <div class="unit-title">Data Collections</div>
+        <div class="unit-items">Slides · Arrays · ArrayList · 2D arrays · File/Scanner I/O · Recursion tracing only</div>
+      </div>
+      <div class="unit-card bonus">
+        <div class="unit-num">Also included</div>
+        <div class="unit-title">APCSExamPrep.com — student access for your class</div>
+        <div class="unit-items">Interactive lessons · Exam-aligned MCQs built from tutoring insight · FRQ practice library · Daily QOTD · The same practice that closes the gaps tutoring reveals</div>
+      </div>
+    </div>
+    <div class="also" style="margin-top:14px;">
+      <div class="also-title">Every purchase also includes</div>
+      <ul class="also-list">
+        <li>2025-2026 aligned — no inheritance, includes File/Scanner I/O</li>
+        <li>FRQ prep for the new format (ArrayList-only FRQ 3)</li>
+        <li>MCQs built to match AP exam phrasing exactly</li>
+        <li>charAt() removed per updated Quick Reference</li>
+        <li>Updates through summer 2026 automatically</li>
+        <li>Direct access to reach me with questions</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="honest">
+    <strong>What you're actually buying:</strong> Slides and lesson resources for all 4 Units of the 2025-2026 AP CSA curriculum, aligned to every lesson on APCSExamPrep.com. Materials are being finalized through summer 2026 — updates are automatic. Unit 1 is a free download. Use it in your classroom first. Buy the rest only if it works for you.
+  </div>
+
+  <section class="who">
+    <div class="kicker">Who this is for</div>
+    <h2 class="h2">Built for AP CSA teachers.</h2>
+    <ul class="who-list">
+      <li>Teachers whose students use APCSExamPrep.com and want classroom instruction built to the same exam-accurate standard that the tutoring insight behind it reflects</li>
+      <li>Teachers navigating the 2025-2026 restructure who need materials built for the new curriculum — not old content that still covers inheritance</li>
+      <li>First-year AP CSA teachers who want a foundation built from 2,067 hours of tutoring insight, not a blank slide deck</li>
+      <li>Experienced teachers who've watched students understand Java but still miss exam questions — and want to close that gap upstream</li>
+    </ul>
+  </section>
+
+  <div class="author">
+    <div class="author-av">TC</div>
+    <div>
+      <div class="author-name">Tanner Crow</div>
+      <div class="author-role">AP CS Teacher &amp; Tutor · 11+ years · Kansas City area</div>
+      <p class="author-body">I've taught AP Computer Science for over a decade and logged 2,067 hours tutoring AP CS students one-on-one, with a 5.0 rating and 499 verified reviews on Wyzant. Tutoring gave me a diagnostic view I couldn't get from teaching alone — I saw exactly which concepts students understood but still couldn't answer correctly because of how the AP exam phrases its questions. When the 2025-2026 restructure changed the curriculum, I rebuilt everything from the new CED. The Superpack is that work packaged as a complete course for your classroom.</p>
+      <div class="author-tags">
+        <span class="author-tag">11+ years AP CS</span>
+        <span class="author-tag">5.0 ★ Wyzant</span>
+        <span class="author-tag">499+ reviews</span>
+        <span class="author-tag">2,067 tutoring hours</span>
+        <span class="author-tag">2025-2026 CED aligned</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-section">
+    <h2 class="cta-h2">Try Unit 1 free.<br><em>Buy the rest if it works.</em>
+</h2>
+    <p class="cta-body">Download Unit 1 at no cost. Use it in your classroom. If your students are better prepared for the way the AP exam actually phrases its questions, the full course is $249.</p>
+    <div class="cta-row">
+      <a href="/products/ap-csa-teacher-superpack" class="btn-cta">Get the Full Superpack — $249 →</a>
+      <a href="/products/ap-csa-unit-1-superpack-free" class="btn-cta-outline">Free Unit 1 Preview</a>
+    </div>
+    <div class="cta-note">One-time · Instant delivery · Updates through summer 2026</div>
+  </div>
+
+</main>

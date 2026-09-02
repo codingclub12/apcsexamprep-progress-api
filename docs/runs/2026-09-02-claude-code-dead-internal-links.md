@@ -168,3 +168,46 @@ defects still being served returns zero.
 **Dead links, 45 of 45.** Every repaired page was refetched and is byte-identical
 to the sheet, embedded newlines included, with no repairable link left on any of
 them. Matrixify preserved the bodies exactly.
+
+## Round two: the other three sections
+
+Sweeping only `/pages/` missed 18 dead links. Products, collections and blogs
+carry authored links too, and three of the ones they carry are the "Download
+free" button on a paid teacher bundle.
+
+**`imports/2026-09-02/dead-link-repair-round-2-pages.csv`, 7 pages, 9 links.**
+
+| dead target | links | why the repair is provable |
+|---|---|---|
+| `/products/ap-csa-unit-1-superpack-free` | 3 | three buttons on `/pages/ap-csa-teacher-superpack` read "Download free", "Free Unit 1 Preview" and "Free Unit 1 Preview, no purchase needed", and all three 404. Exactly one live product is that free preview. |
+| `/blogs/daily-ap-csa-practice` | 6 | the same tokens in a different order, which `docs/internal-linking.md` already records as one of this site's five naming irregularities. One live blog carries them, and it holds the 429 daily-practice articles. |
+
+The scanner now resolves a link inside the section it already names and never
+moves it between sections, because `/pages/ap-csa` and `/blogs/ap-csa` are
+different things.
+
+### Two more things this got wrong first
+
+**It called about 50 live blog articles dead.** `/blogs/<blog>/<article>` was
+matched as a single handle and checked against the seven blog names. The article
+list exists here for one blog of seven, so a two-segment link is now counted as
+unchecked rather than broken, with a mutation behind it.
+
+**A page and a product can share a handle.** `ap-csa-teacher-superpack` is both.
+Keying the body snapshot by handle alone let the product description overwrite
+the page body, which briefly hid the free-preview finding entirely. The two
+sections are swept separately now.
+
+### What round two found and did NOT fix
+
+- **The CSP teacher bundle advertises a free preview that does not exist.** Three
+  buttons on `/pages/ap-csp-teacher-superpack` read "Download free" and "Free BI1
+  Preview, no purchase needed" and point at
+  `/products/ap-csp-big-idea-1-superpack-free`. There is no CSP free-preview
+  product on the store at all, so there is nothing to point them at. CSA has one;
+  CSP does not. Board 160.
+- Four links to `/products/computer-science-tutoring-lesson`, which is gone.
+  Three live tutoring products could be the target, and board 76 asks whether
+  tutoring is being discontinued at all, so this waits on that.
+- Two links from the CSP cram kit to `/products/ap-csp-full-practice-exam` and
+  `/products/ap-csp-quick-reference-guide`, neither of which exists.

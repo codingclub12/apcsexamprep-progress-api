@@ -1,0 +1,103 @@
+{
+  "change": "sweep products, collections and blogs too, and repair the 9 links that can be proved (round 2)",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "four sections, two provable rules, and an unchecked link is never called broken",
+      "command": "npm run --silent smoke:deadlinks",
+      "expect": "94 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the preflight, with a blank cell treated as an erase in every column",
+      "command": "npm run --silent smoke:preflight",
+      "expect": "50 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT WOULD CALL LIVE ARTICLES BROKEN: one path segment, not more",
+      "file": "scripts/dead-internal-link-repair.js",
+      "find": "  const m = new RegExp('^\\\\/(' + SECTIONS.join('|') + ')\\\\/([^/?#]*)([?#].*)?$').exec(href);",
+      "replace": "  const m = new RegExp('^\\\\/(' + SECTIONS.join('|') + ')\\\\/([^?#]*)([?#].*)?$').exec(href);",
+      "command": "npm run --silent smoke:deadlinks",
+      "expect_failure": "a blog ARTICLE link is unchecked, not dead",
+      "_why": "The first four-section run reported about 50 live blog articles as dead, because /blogs/<blog>/<article> was matched as one handle and checked against the blog names. This program has the article list for one blog of seven. A link it cannot check must be counted unchecked, never broken."
+    },
+    {
+      "kind": "mutation",
+      "name": "a repair never moves a link between sections",
+      "file": "scripts/dead-internal-link-repair.js",
+      "find": "  const within = setFor(live, p.section);",
+      "replace": "  const within = setFor(live, 'pages');",
+      "command": "npm run --silent smoke:deadlinks",
+      "expect_failure": "a live product link is left alone"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT WOULD WRITE A LINK TO NOTHING: rule one's liveness requirement",
+      "file": "scripts/dead-internal-link-repair.js",
+      "find": "  if (cleaned !== p.handle && within.has(cleaned)) {",
+      "replace": "  if (cleaned !== p.handle) {",
+      "command": "npm run --silent smoke:deadlinks",
+      "expect_failure": "a cleaned handle that is not live is REPORTED, not repaired"
+    },
+    {
+      "kind": "mutation",
+      "name": "a map entry whose own target has gone away must fail loudly",
+      "file": "scripts/dead-internal-link-repair.js",
+      "find": "  if (mapped && within.has(mapped.to)) {",
+      "replace": "  if (mapped) {",
+      "command": "npm run --silent smoke:deadlinks",
+      "expect_failure": "a map entry pointing at a page that is no longer live is REPORTED"
+    },
+    {
+      "kind": "mutation",
+      "name": "the round trip is what stops an edit outside a href going unnoticed",
+      "file": "scripts/dead-internal-link-repair.js",
+      "find": "  return { roundTrip: undone === before, lengthOk: before.length - after.length === removed, removed };",
+      "replace": "  return { roundTrip: true, lengthOk: before.length - after.length === removed, removed };",
+      "command": "npm run --silent smoke:deadlinks",
+      "expect_failure": "an edit outside the recorded spans is REJECTED"
+    },
+    {
+      "kind": "mutation",
+      "name": "undoing by position rather than by string replace",
+      "file": "scripts/dead-internal-link-repair.js",
+      "find": "  for (const s of [...spans].sort((a, b) => b.outAt - a.outAt)) {\n    undone = undone.slice(0, s.outAt) + s.from + undone.slice(s.outAt + s.to.length);\n  }",
+      "replace": "  for (const s of spans) undone = undone.split(s.to).join(s.from);",
+      "command": "npm run --silent smoke:deadlinks",
+      "expect_failure": "the span round trip gives the original back byte for byte",
+      "_why": "The bug the first version shipped with. ap-csa-lesson-4-1 links lesson 4-5 correctly in one place and with a newline in the handle in another, so a string replace turns the good link into a broken one and refuses a page it should repair."
+    },
+    {
+      "kind": "mutation",
+      "name": "a href inside a <script> is not a link, and blanking it must keep the offsets",
+      "file": "scripts/dead-internal-link-repair.js",
+      "find": "const withoutScripts = (body) => body.replace(NON_MARKUP,\n  (m) => m.replace(/[^\\n]/g, ' '));",
+      "replace": "const withoutScripts = (body) => body;",
+      "command": "npm run --silent smoke:deadlinks",
+      "expect_failure": "a href inside a script is not classified at all",
+      "_why": "This scanner shipped without it and reported 28 dead links that were working JavaScript: 14 practice-test pages build their prev and next buttons at runtime from a table of handles, so their source contains href=\"/pages/'+prev.handle+'\". None of the 141 repairs landed inside a script, because a repair also has to resolve to a live page and a JS expression never does, but the reporting half was wrong and it put a page-content bug on the board that was really a bug here."
+    },
+    {
+      "kind": "rederive",
+      "name": "a SECOND implementation, in another language, over BOTH sheets",
+      "command": "python3 scripts/verify-dead-link-sheet.py --sheet imports/2026-09-02/dead-link-repair-round-2-pages.csv --bodies smoke/fixtures/dead-link-bodies-2 --handles smoke/fixtures/live-page-handles.txt && python3 scripts/verify-dead-link-sheet.py --sheet imports/2026-09-02/dead-link-repair-pages.csv --bodies smoke/fixtures/dead-link-bodies --handles smoke/fixtures/live-page-handles.txt",
+      "expect": "SHEET VERIFIED 45 pages",
+      "_why": "Run over the new sheet AND over the one already imported, so the section change cannot quietly invalidate the round it is built on."
+    },
+    {
+      "kind": "rederive",
+      "name": "the sheet clears the preflight, with every emoji round-tripped against the live body",
+      "command": "node -e \"const fs=require('fs'),os=require('os'),path=require('path');const D='smoke/fixtures/dead-link-bodies-2';const out={};for(const f of fs.readdirSync(D))if(f.endsWith('.html'))out[f.slice(0,-5)]=fs.readFileSync(path.join(D,f),'utf8');const t=path.join(os.tmpdir(),'dl2.json');fs.writeFileSync(t,JSON.stringify(out));console.log(t);\" > /tmp/dl2path.txt && node scripts/matrixify-preflight.js imports/2026-09-02/dead-link-repair-round-2-pages.csv --carrying \"$(cat /tmp/dl2path.txt)\"",
+      "expect": "clear to import"
+    },
+    {
+      "kind": "live",
+      "name": "the free-preview button and the daily-practice links resolve",
+      "command": "node -e \"const cp=require('child_process');const want=[['ap-csa-teacher-superpack',['/products/ap-csa-teacher-superpack-free-preview'],['/products/ap-csa-unit-1-superpack-free']],['ap-csa-study-games-hub',['/blogs/ap-csa-daily-practice'],['/blogs/daily-ap-csa-practice']],['ap-csa-wordle',['/blogs/ap-csa-daily-practice'],['/blogs/daily-ap-csa-practice']]];for(const [h,present,absent] of want){const html=cp.execSync('curl -sSL --max-time 40 --compressed https://www.apcsexamprep.com/pages/'+h,{encoding:'utf8',maxBuffer:1<<26});for(const s of present)if(!html.includes(s))throw new Error(h+' does not link '+s);for(const s of absent)if(html.includes(s))throw new Error(h+' still serves '+s);}console.log('STOREFRONT ROUND 2 LINKS RESOLVE on 3 of 3 pages');\"",
+      "expect": "STOREFRONT ROUND 2 LINKS RESOLVE",
+      "_why": "Both halves are false today: /products/ap-csa-unit-1-superpack-free is a 404 behind three Download free buttons on the CSA teacher bundle, and /blogs/daily-ap-csa-practice is a 404 behind six study-game links."
+    }
+  ]
+}

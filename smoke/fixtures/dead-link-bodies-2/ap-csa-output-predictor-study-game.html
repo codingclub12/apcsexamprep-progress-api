@@ -1,0 +1,463 @@
+<style>
+        :root {
+            --bg-base: #fafaf9;
+            --bg-card: #ffffff;
+            --bg-code: #1e1e2e;
+            --border: #e5e5e5;
+            --text: #1c1917;
+            --text-secondary: #78716c;
+            --accent: #7c3aed;
+            --correct: #16a34a;
+            --incorrect: #dc2626;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-base);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .logo { font-size: 2.2rem; font-weight: 700; color: var(--accent); margin-bottom: 8px; }
+        .logo span { color: var(--text); }
+        .subtitle { color: var(--text-secondary); font-size: 1.05rem; }
+        .game-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(180deg, #fafafa, #fff);
+        }
+        .question-badge { display: flex; align-items: center; gap: 10px; }
+        .question-num {
+            background: var(--accent);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .difficulty {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .difficulty.easy { background: #dcfce7; color: #166534; }
+        .difficulty.medium { background: #fef3c7; color: #92400e; }
+        .difficulty.hard { background: #fee2e2; color: #991b1b; }
+        .stats-row { display: flex; gap: 20px; }
+        .stat { text-align: center; }
+        .stat-value { font-family: 'IBM Plex Mono', monospace; font-size: 1.3rem; font-weight: 600; color: var(--accent); }
+        .stat-label { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; }
+        .question-body { padding: 30px; }
+        .unit-tag {
+            display: inline-block;
+            padding: 5px 12px;
+            background: #f3e8ff;
+            color: var(--accent);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .prompt { font-size: 1.15rem; font-weight: 500; margin-bottom: 20px; }
+        .code-block { background: var(--bg-code); border-radius: 12px; overflow: hidden; margin-bottom: 25px; }
+        .code-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: #181825;
+            border-bottom: 1px solid #313244;
+        }
+        .window-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .window-dot.red { background: #f38ba8; }
+        .window-dot.yellow { background: #f9e2af; }
+        .window-dot.green { background: #a6e3a1; }
+        .code-content {
+            padding: 20px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #cdd6f4;
+            overflow-x: auto;
+        }
+        .code-content .keyword { color: #cba6f7; }
+        .code-content .type { color: #f9e2af; }
+        .code-content .string { color: #a6e3a1; }
+        .code-content .number { color: #fab387; }
+        .code-content .comment { color: #6c7086; }
+        .code-content .method { color: #89b4fa; }
+        .answer-section h3 { font-size: 1rem; font-weight: 600; margin-bottom: 15px; color: var(--text-secondary); }
+        .options { display: grid; gap: 12px; }
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 16px 20px;
+            background: var(--bg-base);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .option:hover { border-color: #a78bfa; background: #faf5ff; }
+        .option.selected { border-color: var(--accent); background: #f3e8ff; }
+        .option.correct { border-color: var(--correct); background: #dcfce7; }
+        .option.incorrect { border-color: var(--incorrect); background: #fee2e2; }
+        .option.disabled { cursor: default; opacity: 0.7; }
+        .option-letter {
+            width: 32px; height: 32px;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--bg-card);
+            border: 2px solid #d4d4d4;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .option.selected .option-letter { background: var(--accent); border-color: var(--accent); color: #fff; }
+        .option.correct .option-letter { background: var(--correct); border-color: var(--correct); color: #fff; }
+        .option.incorrect .option-letter { background: var(--incorrect); border-color: var(--incorrect); color: #fff; }
+        .option-text { font-family: 'IBM Plex Mono', monospace; font-size: 0.95rem; }
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            margin-top: 20px;
+            background: var(--accent);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .submit-btn:hover:not(:disabled) { background: #6d28d9; transform: translateY(-2px); }
+        .submit-btn:disabled { background: #d4d4d4; cursor: not-allowed; }
+        .explanation {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            display: none;
+        }
+        .explanation.show { display: block; }
+        .explanation-header { display: flex; align-items: center; gap: 10px; font-weight: 600; margin-bottom: 12px; }
+        .explanation-header.correct { color: var(--correct); }
+        .explanation-header.incorrect { color: var(--incorrect); }
+        .explanation-text { color: var(--text-secondary); line-height: 1.6; }
+        .explanation-text code { background: #e5e5e5; padding: 2px 6px; border-radius: 4px; font-family: 'IBM Plex Mono', monospace; }
+        .next-btn {
+            width: 100%;
+            padding: 14px;
+            margin-top: 15px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(124,58,237,0.3); }
+        .results-card { text-align: center; padding: 50px 30px; display: none; }
+        .results-card.show { display: block; }
+        .results-icon { font-size: 4rem; margin-bottom: 20px; }
+        .results-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; }
+        .results-subtitle { color: var(--text-secondary); margin-bottom: 30px; }
+        .results-score { font-family: 'IBM Plex Mono', monospace; font-size: 3.5rem; font-weight: 700; color: var(--accent); }
+        .results-percentage { font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 30px; }
+        .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
+        .result-stat { padding: 20px; background: var(--bg-base); border-radius: 12px; }
+        .result-stat-value { font-family: 'IBM Plex Mono', monospace; font-size: 1.5rem; font-weight: 600; }
+        .result-stat-label { font-size: 0.85rem; color: var(--text-secondary); margin-top: 5px; }
+        .play-again-btn {
+            padding: 16px 50px;
+            background: var(--accent);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        footer { text-align: center; margin-top: 40px; color: var(--text-secondary); font-size: 0.9rem; }
+        footer a { color: var(--accent); text-decoration: none; }
+        @media (max-width: 600px) {
+            .card-header { flex-direction: column; gap: 15px; }
+            .results-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+
+    <div class="container">
+        <header class="header">
+            <h1 class="logo">Output<span>Predictor</span>
+</h1>
+            <p class="subtitle">What will this code print? Master code tracing!</p>
+        </header>
+        <div class="game-card">
+            <div id="gameScreen">
+                <div class="card-header">
+                    <div class="question-badge">
+                        <span class="question-num" id="questionNum">1 / 10</span>
+                        <span class="difficulty" id="difficulty">Easy</span>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stat">
+                            <div class="stat-value" id="correct">0</div>
+                            <div class="stat-label">Correct</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="streak">0</div>
+                            <div class="stat-label">Streak</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="question-body">
+                    <div class="unit-tag" id="unitTag">Unit 1</div>
+                    <p class="prompt">What is the output of the following code?</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="window-dot red"></span>
+                            <span class="window-dot yellow"></span>
+                            <span class="window-dot green"></span>
+                        </div>
+                        <pre class="code-content" id="codeContent"></pre>
+                    </div>
+                    <div class="answer-section">
+                        <h3>Select your answer:</h3>
+                        <div class="options" id="options"></div>
+                    </div>
+                    <button class="submit-btn" id="submitBtn" disabled>Check Answer</button>
+                    <div class="explanation" id="explanation">
+                        <div class="explanation-header" id="explanationHeader"></div>
+                        <div class="explanation-text" id="explanationText"></div>
+                        <button class="next-btn" id="nextBtn">Next Question</button>
+                    </div>
+                </div>
+            </div>
+            <div class="results-card" id="resultsCard">
+                <div class="results-icon" id="resultsIcon">🏆</div>
+                <h2 class="results-title" id="resultsTitle">Great Job!</h2>
+                <p class="results-subtitle">You completed the challenge</p>
+                <div class="results-score" id="resultsScore">8/10</div>
+                <p class="results-percentage" id="resultsPercentage">80% accuracy</p>
+                <div class="results-grid">
+                    <div class="result-stat">
+                        <div class="result-stat-value" style="color: var(--correct)" id="totalCorrect">8</div>
+                        <div class="result-stat-label">Correct</div>
+                    </div>
+                    <div class="result-stat">
+                        <div class="result-stat-value" style="color: var(--incorrect)" id="totalIncorrect">2</div>
+                        <div class="result-stat-label">Incorrect</div>
+                    </div>
+                    <div class="result-stat">
+                        <div class="result-stat-value" style="color: var(--accent)" id="maxStreak">5</div>
+                        <div class="result-stat-label">Best Streak</div>
+                    </div>
+                </div>
+                <button class="play-again-btn" id="playAgainBtn">Play Again</button>
+            </div>
+        </div>
+        <footer>
+            <p>AP CSA Output Predictor - 2025-2026 Curriculum (4 Units)</p>
+            <p><a href="/pages/ap-csa-exam-prep-hub">AP CSA Hub</a> | <a href="/blogs/daily-ap-csa-practice">Daily Practice</a></p>
+        </footer>
+    </div>
+    <script>
+        const QUESTIONS = [
+            {
+                unit: 'Unit 1: Using Objects',
+                difficulty: 'easy',
+                code: '<span class="type">int</span> x = <span class="number">5</span>;\n<span class="type">int</span> y = <span class="number">3</span>;\nSystem.out.println(<span class="string">"Sum: "</span> + x + y);',
+                options: ['Sum: 8', 'Sum: 53', 'Sum: 5 + 3', '53'],
+                correct: 1,
+                explanation: 'When a String appears first in concatenation, Java converts the remaining operands to Strings. "Sum: " + 5 = "Sum: 5", then "Sum: 5" + 3 = "Sum: 53". Use parentheses for math: "Sum: " + (x + y)'
+            },
+            {
+                unit: 'Unit 1: Using Objects',
+                difficulty: 'easy',
+                code: '<span class="type">String</span> s = <span class="string">"Hello"</span>;\nSystem.out.println(s.substring(<span class="number">1</span>, <span class="number">3</span>));',
+                options: ['He', 'el', 'ell', 'Hel'],
+                correct: 1,
+                explanation: 'substring(1, 3) returns characters from index 1 up to (but NOT including) index 3. Index 1 is "e", index 2 is "l". Result is "el". Remember: end index is EXCLUSIVE!'
+            },
+            {
+                unit: 'Unit 2: Selection and Iteration',
+                difficulty: 'easy',
+                code: '<span class="type">int</span> count = <span class="number">0</span>;\n<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i <= <span class="number">4</span>; i++) {\n    count += i;\n}\nSystem.out.println(count);',
+                options: ['4', '6', '10', '15'],
+                correct: 2,
+                explanation: 'Trace: i=1, count=1. i=2, count=3. i=3, count=6. i=4, count=10. Loop ends at i=5. Sum of 1+2+3+4 = 10.'
+            },
+            {
+                unit: 'Unit 2: Selection and Iteration',
+                difficulty: 'medium',
+                code: '<span class="type">int</span> x = <span class="number">7</span>;\n<span class="keyword">if</span> (x > <span class="number">5</span>)\n    System.out.print(<span class="string">"A"</span>);\n    System.out.print(<span class="string">"B"</span>);\nSystem.out.print(<span class="string">"C"</span>);',
+                options: ['ABC', 'AC', 'BC', 'A'],
+                correct: 0,
+                explanation: 'Without braces, only the FIRST statement after if is conditional. "A" prints (x > 5). "B" prints ALWAYS (not in if). "C" always prints. Output: ABC. Use braces!'
+            },
+            {
+                unit: 'Unit 2: Selection and Iteration',
+                difficulty: 'medium',
+                code: '<span class="type">int</span> i = <span class="number">0</span>;\n<span class="keyword">while</span> (i < <span class="number">3</span>) {\n    System.out.print(i);\n    i++;\n}\nSystem.out.print(<span class="string">"done"</span>);',
+                options: ['012done', '123done', '0123done', '012'],
+                correct: 0,
+                explanation: 'Trace: i=0 prints "0", i=1 prints "1", i=2 prints "2", i=3 exits loop. Then "done" prints. Output is "012done". Note: no spaces between numbers since we used print() not println().'
+            },
+            {
+                unit: 'Unit 2: Selection and Iteration',
+                difficulty: 'hard',
+                code: '<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i < <span class="number">3</span>; i++) {\n    <span class="keyword">for</span> (<span class="type">int</span> j = i; j < <span class="number">3</span>; j++) {\n        System.out.print(<span class="string">"*"</span>);\n    }\n    System.out.println();\n}',
+                options: ['***<br>***<br>***', '***<br>**<br>*', '*<br>**<br>***', '***<br>  **<br>    *'],
+                correct: 1,
+                explanation: 'j starts at i. When i=0: j=0,1,2 (3 stars). When i=1: j=1,2 (2 stars). When i=2: j=2 (1 star). Pattern: ***<br>**<br>*'
+            },
+            {
+                unit: 'Unit 4: Data Collections',
+                difficulty: 'easy',
+                code: '<span class="type">int</span>[] arr = {<span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>, <span class="number">8</span>};\nSystem.out.println(arr[<span class="number">2</span>]);',
+                options: ['2', '4', '6', '8'],
+                correct: 2,
+                explanation: 'Array indices start at 0! arr[0]=2, arr[1]=4, arr[2]=6, arr[3]=8. So arr[2] returns 6.'
+            },
+            {
+                unit: 'Unit 4: Data Collections',
+                difficulty: 'medium',
+                code: '<span class="type">int</span>[] nums = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>};\n<span class="keyword">for</span> (<span class="type">int</span> n : nums) {\n    n = n * <span class="number">2</span>;\n}\nSystem.out.println(nums[<span class="number">1</span>]);',
+                options: ['1', '2', '4', '6'],
+                correct: 1,
+                explanation: 'Enhanced for loop creates a COPY of each element. Changing n does NOT change the array! nums[1] is still 2.'
+            },
+            {
+                unit: 'Unit 1: Using Objects',
+                difficulty: 'medium',
+                code: '<span class="type">double</span> result = <span class="number">7</span> / <span class="number">2</span>;\nSystem.out.println(result);',
+                options: ['3.5', '3.0', '3', '4.0'],
+                correct: 1,
+                explanation: 'Integer division! 7 / 2 = 3 (truncated), then converted to 3.0. For 3.5, cast first: (double)7 / 2'
+            },
+            {
+                unit: 'Unit 3: Class Creation',
+                difficulty: 'hard',
+                code: '<span class="keyword">public class</span> Counter {\n    <span class="keyword">private</span> <span class="type">int</span> count = <span class="number">0</span>;\n    <span class="keyword">public void</span> add() { count++; }\n    <span class="keyword">public int</span> get() { <span class="keyword">return</span> count; }\n}\n<span class="comment">// In main:</span>\nCounter c1 = <span class="keyword">new</span> Counter();\nCounter c2 = c1;\nc1.add();\nc2.add();\nSystem.out.println(c1.get());',
+                options: ['0', '1', '2', 'Error'],
+                correct: 2,
+                explanation: 'c1 and c2 reference the SAME object! Both point to one Counter. c1.add() makes count=1, c2.add() makes count=2. c1.get() returns 2.'
+            }
+        ];
+
+        let currentQuestion = 0, correctCount = 0, streak = 0, maxStreak = 0, selectedOption = null, answered = false, shuffledQuestions = [];
+
+        function init() {
+            shuffledQuestions = [...QUESTIONS].sort(() => Math.random() - 0.5).slice(0, 10);
+            currentQuestion = 0; correctCount = 0; streak = 0; maxStreak = 0;
+            loadQuestion();
+            document.getElementById('submitBtn').addEventListener('click', submitAnswer);
+            document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+            document.getElementById('playAgainBtn').addEventListener('click', restartGame);
+        }
+
+        function loadQuestion() {
+            const q = shuffledQuestions[currentQuestion];
+            answered = false; selectedOption = null;
+            document.getElementById('questionNum').textContent = `${currentQuestion + 1} / ${shuffledQuestions.length}`;
+            document.getElementById('unitTag').textContent = q.unit;
+            document.getElementById('codeContent').innerHTML = q.code;
+            document.getElementById('correct').textContent = correctCount;
+            document.getElementById('streak').textContent = streak;
+            const diffEl = document.getElementById('difficulty');
+            diffEl.textContent = q.difficulty.charAt(0).toUpperCase() + q.difficulty.slice(1);
+            diffEl.className = 'difficulty ' + q.difficulty;
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            const letters = ['A', 'B', 'C', 'D'];
+            q.options.forEach((opt, idx) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.innerHTML = `<span class="option-letter">${letters[idx]}</span><span class="option-text">${opt}</span>`;
+                optionDiv.addEventListener('click', () => selectOption(idx, optionDiv));
+                optionsContainer.appendChild(optionDiv);
+            });
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('explanation').classList.remove('show');
+        }
+
+        function selectOption(idx, element) {
+            if (answered) return;
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedOption = idx;
+            document.getElementById('submitBtn').disabled = false;
+        }
+
+        function submitAnswer() {
+            if (selectedOption === null || answered) return;
+            answered = true;
+            const q = shuffledQuestions[currentQuestion];
+            const isCorrect = selectedOption === q.correct;
+            document.querySelectorAll('.option').forEach((opt, idx) => {
+                opt.classList.add('disabled');
+                if (idx === q.correct) opt.classList.add('correct');
+                else if (idx === selectedOption && !isCorrect) opt.classList.add('incorrect');
+            });
+            const explanationHeader = document.getElementById('explanationHeader');
+            if (isCorrect) {
+                correctCount++; streak++;
+                if (streak > maxStreak) maxStreak = streak;
+                explanationHeader.className = 'explanation-header correct';
+                explanationHeader.innerHTML = '✔ Correct!';
+            } else {
+                streak = 0;
+                explanationHeader.className = 'explanation-header incorrect';
+                explanationHeader.innerHTML = '✘ Incorrect';
+            }
+            document.getElementById('explanationText').innerHTML = q.explanation;
+            document.getElementById('explanation').classList.add('show');
+            document.getElementById('correct').textContent = correctCount;
+            document.getElementById('streak').textContent = streak;
+            document.getElementById('submitBtn').disabled = true;
+            if (currentQuestion === shuffledQuestions.length - 1) document.getElementById('nextBtn').textContent = 'See Results';
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion >= shuffledQuestions.length) showResults();
+            else loadQuestion();
+        }
+
+        function showResults() {
+            document.getElementById('gameScreen').style.display = 'none';
+            document.getElementById('resultsCard').classList.add('show');
+            const percentage = Math.round((correctCount / shuffledQuestions.length) * 100);
+            document.getElementById('resultsScore').textContent = `${correctCount}/${shuffledQuestions.length}`;
+            document.getElementById('resultsPercentage').textContent = `${percentage}% accuracy`;
+            document.getElementById('totalCorrect').textContent = correctCount;
+            document.getElementById('totalIncorrect').textContent = shuffledQuestions.length - correctCount;
+            document.getElementById('maxStreak').textContent = maxStreak;
+            if (percentage >= 80) { document.getElementById('resultsIcon').textContent = '\u{1F3C6}'; document.getElementById('resultsTitle').textContent = 'Excellent!'; }
+            else if (percentage >= 60) { document.getElementById('resultsIcon').textContent = '\u{1F44D}'; document.getElementById('resultsTitle').textContent = 'Good Job!'; }
+            else { document.getElementById('resultsIcon').textContent = '\u{1F4DA}'; document.getElementById('resultsTitle').textContent = 'Keep Practicing!'; }
+        }
+
+        function restartGame() {
+            document.getElementById('resultsCard').classList.remove('show');
+            document.getElementById('gameScreen').style.display = 'block';
+            init();
+        }
+
+        init();
+    </script>

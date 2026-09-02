@@ -1,0 +1,1077 @@
+<style>
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-tile: #1a1a24;
+            --border: #2a2a3a;
+            --text-primary: #f0f0f5;
+            --text-secondary: #8888aa;
+            --correct: #22c55e;
+            --present: #eab308;
+            --absent: #3a3a4a;
+            --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.3);
+        }
+
+```
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Space Grotesk', sans-serif;
+        background: var(--bg-dark);
+        color: var(--text-primary);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        background-image: 
+            radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 80%, rgba(34, 197, 94, 0.06) 0%, transparent 50%);
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .logo {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--accent), var(--correct));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -2px;
+        margin-bottom: 8px;
+    }
+
+    .subtitle {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+    }
+
+    .mode-selector {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .mode-btn {
+        padding: 10px 18px;
+        background: var(--bg-tile);
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        color: var(--text-secondary);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .mode-btn:hover {
+        border-color: var(--accent);
+        color: var(--text-primary);
+    }
+
+    .mode-btn.active {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+    }
+
+    .game-container {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 25px;
+        max-width: 500px;
+        width: 100%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    .word-length-indicator {
+        text-align: center;
+        margin-bottom: 15px;
+        font-family: 'JetBrains Mono', monospace;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
+    .word-length-indicator span {
+        color: var(--accent);
+        font-weight: 600;
+    }
+
+    .board {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+
+    .row {
+        display: flex;
+        gap: 6px;
+        justify-content: center;
+    }
+
+    .tile {
+        width: 52px;
+        height: 52px;
+        background: var(--bg-tile);
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 1.4rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        transition: all 0.15s ease;
+    }
+
+    .tile.small {
+        width: 44px;
+        height: 44px;
+        font-size: 1.2rem;
+    }
+
+    .tile.filled {
+        border-color: var(--text-secondary);
+        animation: pop 0.1s ease;
+    }
+
+    .tile.correct {
+        background: var(--correct);
+        border-color: var(--correct);
+        color: #000;
+    }
+
+    .tile.present {
+        background: var(--present);
+        border-color: var(--present);
+        color: #000;
+    }
+
+    .tile.absent {
+        background: var(--absent);
+        border-color: var(--absent);
+    }
+
+    .tile.reveal {
+        animation: flip 0.5s ease forwards;
+    }
+
+    @keyframes pop {
+        50% { transform: scale(1.1); }
+    }
+
+    @keyframes flip {
+        0% { transform: rotateX(0); }
+        50% { transform: rotateX(90deg); }
+        100% { transform: rotateX(0); }
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        20%, 60% { transform: translateX(-5px); }
+        40%, 80% { transform: translateX(5px); }
+    }
+
+    .shake {
+        animation: shake 0.4s ease;
+    }
+
+    .keyboard {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .keyboard-row {
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .key {
+        min-width: 28px;
+        height: 48px;
+        padding: 0 10px;
+        background: var(--bg-tile);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text-primary);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        text-transform: uppercase;
+    }
+
+    .key:hover {
+        background: var(--border);
+        transform: translateY(-2px);
+    }
+
+    .key:active {
+        transform: translateY(0);
+    }
+
+    .key.wide {
+        min-width: 56px;
+        font-size: 0.7rem;
+    }
+
+    .key.correct {
+        background: var(--correct);
+        border-color: var(--correct);
+        color: #000;
+    }
+
+    .key.present {
+        background: var(--present);
+        border-color: var(--present);
+        color: #000;
+    }
+
+    .key.absent {
+        background: var(--absent);
+        border-color: var(--absent);
+        color: var(--text-secondary);
+    }
+
+    .message {
+        text-align: center;
+        padding: 12px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        font-weight: 600;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .message.show {
+        opacity: 1;
+    }
+
+    .message.error {
+        background: rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+    }
+
+    .message.success {
+        background: rgba(34, 197, 94, 0.2);
+        color: var(--correct);
+    }
+
+    .message.info {
+        background: rgba(99, 102, 241, 0.2);
+        color: var(--accent);
+    }
+
+    .definition-card {
+        margin-top: 20px;
+        padding: 20px;
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(34, 197, 94, 0.1));
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        display: none;
+    }
+
+    .definition-card.show {
+        display: block;
+        animation: slideIn 0.4s ease;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .definition-word {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--correct);
+        margin-bottom: 5px;
+        text-transform: uppercase;
+    }
+
+    .definition-unit {
+        display: inline-block;
+        padding: 4px 10px;
+        background: rgba(99, 102, 241, 0.2);
+        color: var(--accent);
+        border-radius: 15px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+    .definition-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+    }
+
+    .definition-text {
+        color: var(--text-secondary);
+        line-height: 1.6;
+        font-size: 0.95rem;
+        margin-bottom: 15px;
+    }
+
+    .definition-example {
+        background: var(--bg-dark);
+        border-radius: 8px;
+        padding: 12px 15px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.85rem;
+        color: #a5b4fc;
+        overflow-x: auto;
+        white-space: pre;
+    }
+
+    .definition-example-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+
+    .definition-tip {
+        margin-top: 15px;
+        padding: 12px;
+        background: rgba(234, 179, 8, 0.1);
+        border-left: 3px solid var(--present);
+        border-radius: 0 8px 8px 0;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+    }
+
+    .definition-tip strong {
+        color: var(--present);
+    }
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+    }
+
+    .stat {
+        text-align: center;
+    }
+
+    .stat-value {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--accent);
+    }
+
+    .stat-label {
+        font-size: 0.65rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .new-game-btn {
+        width: 100%;
+        padding: 14px;
+        margin-top: 15px;
+        background: linear-gradient(135deg, var(--accent), #818cf8);
+        border: none;
+        border-radius: 8px;
+        color: #fff;
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: none;
+    }
+
+    .new-game-btn.show {
+        display: block;
+    }
+
+    .new-game-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px var(--accent-glow);
+    }
+
+    .word-count-info {
+        text-align: center;
+        margin-top: 15px;
+        padding: 12px;
+        background: var(--bg-tile);
+        border-radius: 8px;
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+    }
+
+    .word-count-info strong {
+        color: var(--accent);
+    }
+
+    footer {
+        margin-top: 30px;
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+    }
+
+    footer a {
+        color: var(--accent);
+        text-decoration: none;
+    }
+
+    footer a:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 500px) {
+        .game-container {
+            padding: 20px 15px;
+        }
+        .tile {
+            width: 42px;
+            height: 42px;
+            font-size: 1.2rem;
+        }
+        .tile.small {
+            width: 36px;
+            height: 36px;
+            font-size: 1rem;
+        }
+        .key {
+            min-width: 24px;
+            height: 44px;
+            padding: 0 8px;
+            font-size: 0.8rem;
+        }
+        .key.wide {
+            min-width: 48px;
+        }
+        .mode-btn {
+            padding: 8px 12px;
+            font-size: 0.8rem;
+        }
+    }
+</style>
+```
+
+    <header class="header">
+        <div class="logo"><javawordle></javawordle></div>
+        <p class="subtitle">Guess the Java keyword - Learn the definition!</p>
+    </header>
+
+```
+<div class="mode-selector">
+    <button class="mode-btn" data-length="3">3</button>
+    <button class="mode-btn" data-length="4">4</button>
+    <button class="mode-btn active" data-length="5">5</button>
+    <button class="mode-btn" data-length="6">6</button>
+    <button class="mode-btn" data-length="7">7</button>
+    <button class="mode-btn" data-length="8">8</button>
+    <button class="mode-btn" data-length="random">Random</button>
+</div>
+
+<div class="game-container">
+    <div class="word-length-indicator">Word length: <span id="lengthDisplay">5</span> letters</div>
+    <div id="message" class="message"></div>
+    
+    <div class="board" id="board"></div>
+
+    <div class="keyboard" id="keyboard"></div>
+
+    <div class="definition-card" id="definitionCard">
+        <div class="definition-word" id="defWord"></div>
+        <div class="definition-unit" id="defUnit"></div>
+        <div class="definition-title" id="defTitle"></div>
+        <div class="definition-text" id="defText"></div>
+        <div class="definition-example-label">Example:</div>
+        <div class="definition-example" id="defExample"></div>
+        <div class="definition-tip" id="defTip"></div>
+    </div>
+
+    <button class="new-game-btn" id="newGameBtn">Next Word</button>
+
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-value" id="played">0</div>
+            <div class="stat-label">Played</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value" id="winRate">0</div>
+            <div class="stat-label">Win %</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value" id="streak">0</div>
+            <div class="stat-label">Streak</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value" id="maxStreak">0</div>
+            <div class="stat-label">Max</div>
+        </div>
+    </div>
+
+    <div class="word-count-info">
+        <strong id="wordCountDisplay">0</strong> words available in current mode
+    </div>
+</div>
+
+<footer>
+    <p>Part of <a href="/pages/ap-csa-exam-prep-hub">AP CS Exam Prep</a> | 2025-2026 Curriculum (4 Units)</p>
+    <p><a href="/pages/ap-csa-connections-game">Connections</a> | <a href="/pages/ap-csa-bug-hunt">Bug Hunt</a> | <a href="/blogs/daily-ap-csa-practice">Daily Practice</a></p>
+</footer>
+
+<script>
+    // Comprehensive word list with detailed definitions
+    const WORDS = [
+        // 3-letter words
+        { word: 'int', unit: 'Unit 1', title: 'Primitive Data Type', 
+          definition: 'A primitive data type that stores whole numbers (integers) without decimal points. Range: -2,147,483,648 to 2,147,483,647. One of the most commonly used types in AP CSA.',
+          example: 'int age = 17;\nint score = 100;\nint negative = -50;',
+          tip: 'Integer division truncates! 7/2 = 3, not 3.5. Cast to double first if you need decimals.' },
+        
+        { word: 'new', unit: 'Unit 1', title: 'Object Instantiation Keyword',
+          definition: 'Keyword used to create a new instance (object) of a class. Allocates memory and calls the constructor to initialize the object.',
+          example: 'String s = new String("Hello");\nArrayList<Integer> list = new ArrayList<Integer>();\nScanner input = new Scanner(System.in);',
+          tip: 'Every object (except String literals) must be created with "new". Forgetting it causes a compile error.' },
+        
+        { word: 'for', unit: 'Unit 2', title: 'Counted Loop Structure',
+          definition: 'A loop that repeats a block of code a specific number of times. Has three parts: initialization, condition, and update. Best when you know how many iterations you need.',
+          example: 'for (int i = 0; i < 10; i++) {\n    System.out.println(i);\n}',
+          tip: 'The enhanced for loop (for-each) is different: for (int n : array) - use it for traversing, not modifying.' },
+        
+        // 4-letter words
+        { word: 'void', unit: 'Unit 3', title: 'No Return Type',
+          definition: 'Indicates a method does not return a value. Void methods perform actions but cannot be used in expressions or assignments.',
+          example: 'public void printMessage() {\n    System.out.println("Hello!");\n    // No return statement needed\n}',
+          tip: 'Constructors have NO return type at all - not even void! Writing "void" before a constructor name makes it a regular method.' },
+        
+        { word: 'null', unit: 'Unit 1', title: 'Absence of Object Reference',
+          definition: 'A special literal representing "no object" or an uninitialized reference. Calling methods on null causes NullPointerException.',
+          example: 'String s = null;\nif (s != null) {\n    System.out.println(s.length());\n}',
+          tip: 'Always check for null before calling methods on objects. Array elements of object types default to null.' },
+        
+        { word: 'else', unit: 'Unit 2', title: 'Alternative Branch',
+          definition: 'Specifies code to execute when an if condition is false. Can be followed by another if to create else-if chains.',
+          example: 'if (score >= 90) {\n    grade = "A";\n} else if (score >= 80) {\n    grade = "B";\n} else {\n    grade = "C";\n}',
+          tip: 'else always pairs with the nearest unmatched if. Use braces to avoid ambiguity!' },
+        
+        { word: 'true', unit: 'Unit 2', title: 'Boolean Literal',
+          definition: 'One of two boolean literals (true/false). Represents logical truth. Used in conditions, flags, and boolean expressions.',
+          example: 'boolean isValid = true;\nwhile (true) {\n    // infinite loop\n}',
+          tip: 'Avoid writing "if (x == true)" - just write "if (x)". Similarly, "if (x == false)" should be "if (!x)".' },
+        
+        { word: 'this', unit: 'Unit 3', title: 'Current Object Reference',
+          definition: 'Refers to the current object instance. Used to distinguish instance variables from parameters with the same name, or to call other constructors.',
+          example: 'public class Person {\n    private String name;\n    public Person(String name) {\n        this.name = name; // this.name is the field\n    }\n}',
+          tip: 'this() calls another constructor in the same class - must be the first statement if used.' },
+        
+        // 5-letter words
+        { word: 'class', unit: 'Unit 3', title: 'Blueprint for Objects',
+          definition: 'Defines a new type by specifying its data (instance variables) and behavior (methods). Classes are templates; objects are instances created from them.',
+          example: 'public class Student {\n    private String name;\n    private int grade;\n    \n    public Student(String name) {\n        this.name = name;\n    }\n}',
+          tip: 'One public class per file, filename must match class name. Class names use PascalCase.' },
+        
+        { word: 'while', unit: 'Unit 2', title: 'Conditional Loop',
+          definition: 'Repeats a block of code as long as a boolean condition remains true. Condition is checked before each iteration. May execute zero times.',
+          example: 'int count = 0;\nwhile (count < 5) {\n    System.out.println(count);\n    count++;\n}',
+          tip: 'Ensure the loop variable changes inside the loop, or you will create an infinite loop!' },
+        
+        { word: 'break', unit: 'Unit 2', title: 'Exit Loop Immediately',
+          definition: 'Immediately exits the innermost loop (for, while, do-while) or switch statement. Code after the loop continues.',
+          example: 'for (int i = 0; i < 100; i++) {\n    if (i == 10) {\n        break; // exits when i is 10\n    }\n}',
+          tip: 'break only exits ONE loop level. In nested loops, it exits only the innermost loop.' },
+        
+        { word: 'super', unit: 'Unit 3', title: 'Parent Class Reference',
+          definition: 'Refers to the superclass (parent class). Used to call superclass constructors or access overridden methods from the parent.',
+          example: 'public class Student extends Person {\n    public Student(String name) {\n        super(name); // calls Person constructor\n    }\n}',
+          tip: 'super() must be the FIRST statement in a subclass constructor. Java adds it automatically if you do not.' },
+        
+        { word: 'final', unit: 'Unit 1', title: 'Constant Modifier',
+          definition: 'Makes a variable constant (cannot be reassigned). For primitives, the value cannot change. For objects, the reference cannot change (but object contents can).',
+          example: 'final double PI = 3.14159;\nfinal int MAX_SIZE = 100;\n// PI = 3.0; // ERROR - cannot reassign',
+          tip: 'Convention: final variables use ALL_CAPS_WITH_UNDERSCORES.' },
+        
+        { word: 'false', unit: 'Unit 2', title: 'Boolean Literal',
+          definition: 'One of two boolean literals (true/false). Represents logical falsehood. Methods often return false to indicate failure or "no".',
+          example: 'boolean found = false;\nfor (int n : array) {\n    if (n == target) {\n        found = true;\n        break;\n    }\n}',
+          tip: 'false is a keyword, not a String. Do not put quotes around it: false not "false".' },
+        
+        { word: 'array', unit: 'Unit 4', title: 'Fixed-Size Data Structure',
+          definition: 'A fixed-size, ordered collection of elements of the same type. Elements are accessed by index (0 to length-1). Size cannot change after creation.',
+          example: 'int[] numbers = new int[5];\nint[] grades = {90, 85, 92, 88};\nSystem.out.println(grades[0]); // 90',
+          tip: 'Arrays use .length (no parentheses). ArrayLists use .size() (with parentheses). Common exam trap!' },
+        
+        { word: 'index', unit: 'Unit 4', title: 'Position Identifier',
+          definition: 'The position of an element in an array, String, or ArrayList. Java uses zero-based indexing: first element is at index 0, last is at length-1.',
+          example: 'String s = "Hello";\nchar first = s.charAt(0);  // H\nchar last = s.charAt(4);   // o\n// s.charAt(5) throws StringIndexOutOfBoundsException',
+          tip: 'Off-by-one errors are extremely common. Remember: valid indices are 0 to length-1, NOT 1 to length.' },
+        
+        // 6-letter words
+        { word: 'return', unit: 'Unit 3', title: 'Method Exit with Value',
+          definition: 'Exits a method and optionally sends a value back to the caller. Non-void methods must return a value of the declared type.',
+          example: 'public int add(int a, int b) {\n    return a + b;\n}\n\npublic boolean isEven(int n) {\n    return n % 2 == 0;\n}',
+          tip: 'A method can have multiple return statements (in different branches), but only one executes per call.' },
+        
+        { word: 'static', unit: 'Unit 3', title: 'Class-Level Member',
+          definition: 'Belongs to the class itself, not to instances. Static members are shared by all objects. Static methods cannot access instance variables directly.',
+          example: 'public class Counter {\n    private static int count = 0;\n    \n    public static int getCount() {\n        return count;\n    }\n}',
+          tip: 'Call static methods with ClassName.method(), not object.method(). Math.random() is static!' },
+        
+        { word: 'String', unit: 'Unit 1', title: 'Text Data Type',
+          definition: 'An immutable sequence of characters. Strings are objects but have special syntax support. Methods return NEW strings; they do not modify the original.',
+          example: 'String name = "Alice";\nString upper = name.toUpperCase(); // "ALICE"\n// name is still "Alice" (immutable)',
+          tip: 'Use .equals() to compare String content, not ==. The == operator compares references, not values.' },
+        
+        { word: 'public', unit: 'Unit 3', title: 'Access Modifier',
+          definition: 'Makes a class, method, or variable accessible from any other class. Public methods form the interface that other code can use.',
+          example: 'public class Calculator {\n    public int add(int a, int b) {\n        return a + b;\n    }\n}',
+          tip: 'AP CSA focuses on public and private. Generally: instance variables are private, methods are public.' },
+        
+        { word: 'double', unit: 'Unit 1', title: 'Decimal Number Type',
+          definition: 'A primitive type for floating-point (decimal) numbers. Has about 15 digits of precision. Used for measurements, calculations needing decimals.',
+          example: 'double price = 19.99;\ndouble pi = 3.14159;\ndouble result = 7.0 / 2; // 3.5',
+          tip: 'Avoid comparing doubles with == due to precision issues. Use Math.abs(a-b) < 0.0001 instead.' },
+        
+        { word: 'import', unit: 'Unit 1', title: 'Package Access Statement',
+          definition: 'Allows using classes from other packages without fully qualified names. Must appear at the top of the file, before the class declaration.',
+          example: 'import java.util.ArrayList;\nimport java.util.Scanner;\n// or import java.util.*;',
+          tip: 'java.lang is automatically imported (String, Math, System). You must import java.util for ArrayList.' },
+        
+        { word: 'length', unit: 'Unit 4', title: 'Array Size Property',
+          definition: 'Property that returns the number of elements in an array. Note: it is a property (no parentheses), not a method.',
+          example: 'int[] arr = {1, 2, 3, 4, 5};\nSystem.out.println(arr.length); // 5\n\nfor (int i = 0; i < arr.length; i++) {\n    // process arr[i]\n}',
+          tip: 'Arrays: .length (no parens). Strings: .length() (with parens). ArrayLists: .size() (with parens).' },
+        
+        // 7-letter words
+        { word: 'boolean', unit: 'Unit 2', title: 'Logical Data Type',
+          definition: 'A primitive type with only two possible values: true or false. Used for conditions, flags, and logical operations.',
+          example: 'boolean isValid = true;\nboolean found = false;\n\nif (isValid && !found) {\n    // both conditions met\n}',
+          tip: 'Boolean expressions short-circuit: in (a && b), if a is false, b is not evaluated. Same for (a || b) if a is true.' },
+        
+        { word: 'private', unit: 'Unit 3', title: 'Access Modifier',
+          definition: 'Restricts access to only within the same class. Used for instance variables to enforce encapsulation. Other classes must use public methods to access.',
+          example: 'public class BankAccount {\n    private double balance; // hidden\n    \n    public double getBalance() {\n        return balance; // controlled access\n    }\n}',
+          tip: 'Encapsulation: make fields private, provide public getters/setters. This protects data integrity.' },
+        
+        { word: 'extends', unit: 'Unit 3', title: 'Inheritance Keyword',
+          definition: 'Creates a subclass that inherits from a superclass. The subclass gets all public/protected members and can add new ones or override existing methods.',
+          example: 'public class Student extends Person {\n    private int gradeLevel;\n    \n    // Student inherits all Person methods\n}',
+          tip: 'Java has single inheritance - a class can only extend ONE other class. But it can implement multiple interfaces.' },
+        
+        { word: 'println', unit: 'Unit 1', title: 'Print with Newline',
+          definition: 'Method of System.out that prints text followed by a newline character. After printing, the cursor moves to the next line.',
+          example: 'System.out.println("Hello");\nSystem.out.println("World");\n// Output:\n// Hello\n// World',
+          tip: 'println() with no argument just prints a blank line. Use print() (no ln) to stay on the same line.' },
+        
+        // 8-letter words
+        { word: 'abstract', unit: 'Unit 3', title: 'Incomplete Class/Method',
+          definition: 'An abstract class cannot be instantiated directly. An abstract method has no body and must be overridden by subclasses. Used to define common interfaces.',
+          example: 'public abstract class Shape {\n    public abstract double getArea();\n    // subclasses MUST implement getArea()\n}',
+          tip: 'If a class has ANY abstract method, the class itself must be declared abstract.' },
+        
+        { word: 'override', unit: 'Unit 3', title: 'Replace Inherited Method',
+          definition: 'When a subclass provides its own implementation of a method inherited from its superclass. The subclass version is called for subclass objects.',
+          example: 'public class Dog extends Animal {\n    @Override\n    public void speak() {\n        System.out.println("Woof!");\n    }\n}',
+          tip: 'Use @Override annotation - it catches errors if you misspell the method name or get parameters wrong.' },
+        
+        { word: 'toString', unit: 'Unit 3', title: 'String Representation Method',
+          definition: 'Method inherited from Object that returns a String representation. Override it to provide meaningful output when printing objects.',
+          example: 'public class Student {\n    private String name;\n    \n    @Override\n    public String toString() {\n        return "Student: " + name;\n    }\n}',
+          tip: 'System.out.println(object) automatically calls toString(). Without override, you get classname@hashcode.' },
+        
+        { word: 'modifier', unit: 'Unit 3', title: 'Access Control Keyword',
+          definition: 'Keywords that control visibility and behavior: public, private, static, final, abstract. They appear before the return type in method declarations.',
+          example: 'public static void main(String[] args)\n// public = accessible anywhere\n// static = belongs to class\n// void = no return value',
+          tip: 'Order matters: access modifier, then static/final, then return type, then method name.' },
+        
+        { word: 'arraylist', unit: 'Unit 4', title: 'Dynamic Array Class',
+          definition: 'A resizable array implementation from java.util. Unlike arrays, ArrayLists can grow and shrink. Stores objects only (use wrapper classes for primitives).',
+          example: 'ArrayList<String> names = new ArrayList<String>();\nnames.add("Alice");\nnames.add("Bob");\nString first = names.get(0);',
+          tip: 'ArrayList<int> is WRONG. Use ArrayList<Integer>. Java auto-boxes between int and Integer.' },
+        
+        { word: 'traverse', unit: 'Unit 4', title: 'Visit All Elements',
+          definition: 'The process of visiting every element in a data structure (array, ArrayList, String) exactly once, usually with a loop.',
+          example: '// Standard traversal\nfor (int i = 0; i < arr.length; i++) {\n    process(arr[i]);\n}\n\n// Enhanced for loop\nfor (int n : arr) {\n    process(n);\n}',
+          tip: 'Use standard for loop when you need the index or want to modify elements. Use enhanced for loop for read-only traversal.' },
+        
+        { word: 'polymorp', unit: 'Unit 3', title: 'Many Forms (Polymorphism)',
+          definition: 'The ability of objects of different classes to respond to the same method call. A superclass reference can hold subclass objects and call overridden methods.',
+          example: 'Animal a = new Dog(); // Dog is-a Animal\na.speak(); // calls Dog\'s speak(), not Animal\'s\n\nAnimal b = new Cat();\nb.speak(); // calls Cat\'s speak()',
+          tip: 'At compile time, Java checks the reference type. At runtime, it uses the actual object type for method calls.' },
+    ];
+
+    const KEYBOARD_ROWS = [
+        ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
+        ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
+        ['enter', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'back']
+    ];
+
+    let currentWord = null;
+    let wordLength = 5;
+    let currentRow = 0;
+    let currentTile = 0;
+    let gameOver = false;
+    let guesses = [];
+    let keyStates = {};
+    let mode = 'fixed'; // 'fixed' or 'random'
+
+    // Stats
+    let stats = JSON.parse(localStorage.getItem('javaWordleStats2')) || {
+        played: 0,
+        wins: 0,
+        streak: 0,
+        maxStreak: 0
+    };
+
+    function init() {
+        selectNewWord();
+        createBoard();
+        createKeyboard();
+        updateStats();
+        updateWordCount();
+        
+        document.addEventListener('keydown', handleKeyPress);
+        document.getElementById('newGameBtn').addEventListener('click', resetGame);
+        
+        // Mode selector
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const length = btn.dataset.length;
+                if (length === 'random') {
+                    mode = 'random';
+                    wordLength = getRandomLength();
+                } else {
+                    mode = 'fixed';
+                    wordLength = parseInt(length);
+                }
+                
+                document.getElementById('lengthDisplay').textContent = wordLength;
+                updateWordCount();
+                resetGame();
+            });
+        });
+    }
+
+    function getRandomLength() {
+        const lengths = [3, 4, 5, 6, 7, 8];
+        const availableLengths = lengths.filter(len => 
+            WORDS.some(w => w.word.length === len)
+        );
+        return availableLengths[Math.floor(Math.random() * availableLengths.length)];
+    }
+
+    function getWordsOfLength(len) {
+        return WORDS.filter(w => w.word.length === len);
+    }
+
+    function updateWordCount() {
+        const count = mode === 'random' ? WORDS.length : getWordsOfLength(wordLength).length;
+        document.getElementById('wordCountDisplay').textContent = count;
+    }
+
+    function selectNewWord() {
+        if (mode === 'random') {
+            wordLength = getRandomLength();
+            document.getElementById('lengthDisplay').textContent = wordLength;
+        }
+        
+        const availableWords = getWordsOfLength(wordLength);
+        currentWord = availableWords[Math.floor(Math.random() * availableWords.length)];
+    }
+
+    function createBoard() {
+        const board = document.getElementById('board');
+        board.innerHTML = '';
+        
+        const maxAttempts = wordLength <= 4 ? 5 : 6;
+        const tileClass = wordLength >= 7 ? 'tile small' : 'tile';
+        
+        for (let i = 0; i < maxAttempts; i++) {
+            const row = document.createElement('div');
+            row.className = 'row';
+            row.id = `row-${i}`;
+            
+            for (let j = 0; j < wordLength; j++) {
+                const tile = document.createElement('div');
+                tile.className = tileClass;
+                tile.id = `tile-${i}-${j}`;
+                row.appendChild(tile);
+            }
+            
+            board.appendChild(row);
+        }
+    }
+
+    function createKeyboard() {
+        const keyboard = document.getElementById('keyboard');
+        keyboard.innerHTML = '';
+        keyStates = {};
+        
+        KEYBOARD_ROWS.forEach(row => {
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'keyboard-row';
+            
+            row.forEach(key => {
+                const keyBtn = document.createElement('button');
+                keyBtn.className = 'key' + (key.length > 1 ? ' wide' : '');
+                keyBtn.textContent = key === 'back' ? 'DEL' : key;
+                keyBtn.dataset.key = key;
+                keyBtn.addEventListener('click', () => handleInput(key));
+                rowDiv.appendChild(keyBtn);
+            });
+            
+            keyboard.appendChild(rowDiv);
+        });
+    }
+
+    function handleKeyPress(e) {
+        if (gameOver) return;
+        
+        const key = e.key.toLowerCase();
+        
+        if (key === 'enter') {
+            handleInput('enter');
+        } else if (key === 'backspace') {
+            handleInput('back');
+        } else if (/^[a-z]$/.test(key)) {
+            handleInput(key);
+        }
+    }
+
+    function handleInput(key) {
+        if (gameOver) return;
+        
+        if (key === 'enter') {
+            submitGuess();
+        } else if (key === 'back') {
+            deleteLetter();
+        } else if (currentTile < wordLength) {
+            addLetter(key);
+        }
+    }
+
+    function addLetter(letter) {
+        const tile = document.getElementById(`tile-${currentRow}-${currentTile}`);
+        tile.textContent = letter;
+        tile.classList.add('filled');
+        currentTile++;
+    }
+
+    function deleteLetter() {
+        if (currentTile > 0) {
+            currentTile--;
+            const tile = document.getElementById(`tile-${currentRow}-${currentTile}`);
+            tile.textContent = '';
+            tile.classList.remove('filled');
+        }
+    }
+
+    function submitGuess() {
+        if (currentTile < wordLength) {
+            showMessage('Not enough letters', 'error');
+            shakeRow();
+            return;
+        }
+
+        let guess = '';
+        for (let i = 0; i < wordLength; i++) {
+            guess += document.getElementById(`tile-${currentRow}-${i}`).textContent;
+        }
+        guess = guess.toLowerCase();
+        guesses.push(guess);
+
+        revealGuess(guess);
+    }
+
+    function revealGuess(guess) {
+        const row = document.getElementById(`row-${currentRow}`);
+        const tiles = row.querySelectorAll('.tile');
+        const wordArray = currentWord.word.toLowerCase().split('');
+        const guessArray = guess.split('');
+        const result = new Array(wordLength).fill('absent');
+
+        // First pass: find correct letters
+        for (let i = 0; i < wordLength; i++) {
+            if (guessArray[i] === wordArray[i]) {
+                result[i] = 'correct';
+                wordArray[i] = null;
+            }
+        }
+
+        // Second pass: find present letters
+        for (let i = 0; i < wordLength; i++) {
+            if (result[i] !== 'correct') {
+                const idx = wordArray.indexOf(guessArray[i]);
+                if (idx !== -1) {
+                    result[i] = 'present';
+                    wordArray[idx] = null;
+                }
+            }
+        }
+
+        // Animate tiles
+        tiles.forEach((tile, i) => {
+            setTimeout(() => {
+                tile.classList.add('reveal', result[i]);
+                updateKeyboard(guessArray[i], result[i]);
+            }, i * 100);
+        });
+
+        const maxAttempts = wordLength <= 4 ? 5 : 6;
+        
+        // Check win/lose after animation
+        setTimeout(() => {
+            if (guess === currentWord.word.toLowerCase()) {
+                gameWon();
+            } else if (currentRow === maxAttempts - 1) {
+                gameLost();
+            } else {
+                currentRow++;
+                currentTile = 0;
+            }
+        }, wordLength * 100 + 300);
+    }
+
+    function updateKeyboard(letter, state) {
+        const key = document.querySelector(`[data-key="${letter}"]`);
+        if (!key) return;
+
+        const currentState = keyStates[letter];
+        
+        if (state === 'correct') {
+            key.className = 'key correct';
+            keyStates[letter] = 'correct';
+        } else if (state === 'present' && currentState !== 'correct') {
+            key.className = 'key present';
+            keyStates[letter] = 'present';
+        } else if (!currentState) {
+            key.className = 'key absent';
+            keyStates[letter] = 'absent';
+        }
+    }
+
+    function showDefinition() {
+        const card = document.getElementById('definitionCard');
+        document.getElementById('defWord').textContent = currentWord.word;
+        document.getElementById('defUnit').textContent = currentWord.unit;
+        document.getElementById('defTitle').textContent = currentWord.title;
+        document.getElementById('defText').textContent = currentWord.definition;
+        document.getElementById('defExample').textContent = currentWord.example;
+        document.getElementById('defTip').innerHTML = '<strong>Exam Tip:</strong> ' + currentWord.tip;
+        card.classList.add('show');
+    }
+
+    function gameWon() {
+        gameOver = true;
+        const messages = ['Genius!', 'Magnificent!', 'Impressive!', 'Splendid!', 'Great!', 'Phew!'];
+        showMessage(messages[Math.min(currentRow, messages.length - 1)], 'success');
+        
+        stats.played++;
+        stats.wins++;
+        stats.streak++;
+        if (stats.streak > stats.maxStreak) {
+            stats.maxStreak = stats.streak;
+        }
+        saveStats();
+        updateStats();
+        
+        showDefinition();
+        document.getElementById('newGameBtn').classList.add('show');
+    }
+
+    function gameLost() {
+        gameOver = true;
+        showMessage(`The word was: ${currentWord.word.toUpperCase()}`, 'info');
+        
+        stats.played++;
+        stats.streak = 0;
+        saveStats();
+        updateStats();
+        
+        showDefinition();
+        document.getElementById('newGameBtn').classList.add('show');
+    }
+
+    function showMessage(text, type) {
+        const message = document.getElementById('message');
+        message.textContent = text;
+        message.className = `message show ${type}`;
+        
+        if (type !== 'info' || !gameOver) {
+            setTimeout(() => {
+                message.classList.remove('show');
+            }, 2000);
+        }
+    }
+
+    function shakeRow() {
+        const row = document.getElementById(`row-${currentRow}`);
+        row.classList.add('shake');
+        setTimeout(() => row.classList.remove('shake'), 400);
+    }
+
+    function resetGame() {
+        currentRow = 0;
+        currentTile = 0;
+        gameOver = false;
+        guesses = [];
+        
+        selectNewWord();
+        createBoard();
+        createKeyboard();
+        updateWordCount();
+        
+        document.getElementById('definitionCard').classList.remove('show');
+        document.getElementById('newGameBtn').classList.remove('show');
+        document.getElementById('message').classList.remove('show');
+    }
+
+    function saveStats() {
+        localStorage.setItem('javaWordleStats2', JSON.stringify(stats));
+    }
+
+    function updateStats() {
+        document.getElementById('played').textContent = stats.played;
+        document.getElementById('winRate').textContent = 
+            stats.played ? Math.round((stats.wins / stats.played) * 100) : 0;
+        document.getElementById('streak').textContent = stats.streak;
+        document.getElementById('maxStreak').textContent = stats.maxStreak;
+    }
+
+    init();
+</script>
+```

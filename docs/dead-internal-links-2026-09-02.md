@@ -1,39 +1,41 @@
 # Internal links that go nowhere, measured 2026-09-02
 
-Every `/pages/` href in the stored body of all 1,311 readable Shopify pages,
-checked against the 1,344 handles `sitemap_pages_1.xml` advertises. Bodies come
-off the storefront through `scripts/fetch-page-bodies.js`, so this is authored
-content and not theme chrome. A href inside a `<script>` or a `<style>` is not
-counted: this storefront builds its prev and next buttons at runtime and the
-first version of this report read that JavaScript as 28 broken anchors.
+Every `/pages/`, `/products/`, `/collections/` and `/blogs/` href in the stored
+body of all 1,311 readable Shopify pages and all 50 product descriptions,
+checked against the handles the sitemaps advertise. This is authored content,
+never theme chrome.
 
-    node scripts/dead-internal-link-repair.js \
-      --bodies bodies/ --handles smoke/fixtures/live-page-handles.txt
+Three things this deliberately does not count, each of which it got wrong once:
 
-**492 dead links across 164 targets.** 141 of them, on 45 pages, were repaired
-in `imports/2026-09-02/dead-link-repair-pages.csv` and are live. The remaining
-351, across 140 targets, are listed below and are NOT repaired: each one needs a
+- a href inside a `<script>` or `<style>`. The storefront builds its prev and
+  next buttons at runtime, so 14 practice-test pages carry
+  `href="/pages/'+prev.handle+'"` in their source. That is JavaScript.
+- a link deeper than one segment, such as `/blogs/<blog>/<article>`. The article
+  list exists here for one blog of seven, so those are counted as unchecked.
+- a link resolved in a section it does not name. `/pages/ap-csa` and
+  `/blogs/ap-csa` are different things and moving between them is a content
+  decision, not a repair.
+
+```
+node scripts/dead-internal-link-repair.js --bodies bodies/ \
+  --handles smoke/fixtures/live-page-handles.txt \
+  --products smoke/fixtures/live-product-handles.txt \
+  --collections smoke/fixtures/live-collection-handles.txt \
+  --blogs smoke/fixtures/live-blog-handles.txt
+```
+
+150 links have been repaired and imported across two rounds; 358 remain, across
+142 targets, and are listed below. They are NOT repaired: each one needs a
 person to say where it was meant to go.
 
-`docs/runs/2026-08-27-claude-code-internal-linking.md` reported 3 broken page
-links. That number came from a different measurement, of links whose target
-returned a non-200 during the crawl, and it undercounts. This one asks a cheaper
-and stricter question: is the target handle in the sitemap at all.
+| round | pages | links | what |
+|---|---|---|---|
+| 1 | 45 | 141 | `/pages/` only: 2 typos, 26 by hand, 113 unique-extension |
+| 2 | 7 | 9 | the other three sections: a free-preview product and a blog |
 
 Findings decay. Re-run the command rather than trusting the table.
 
-## What was repaired, and on what grounds
-
-| rule | links | grounds |
-|---|---|---|
-| typo | 2 | a character that cannot legally be in a handle, deleted, and the result is live |
-| retarget, by hand | 26 | two entries a person read off the live site |
-| retarget, unique extension | 113 | the target is the ONLY live handle that extends the dead one |
-
-Verified after the import by refetching all 45 pages from the storefront: every
-one is byte-identical to the sheet, and none carries a repairable link any more.
-
-## The 140 targets that were left alone
+## The 142 targets that were left alone
 
 - `/pages/tutoring` linked from 28: 2d-array-neighbors-ap-csa, ap-csa-api-quick-reference, ap-csa-boolean-expression-equivalence ...
 - `/pages/ap-computer-science-tutor` linked from 25: ap-csa-2018-frq-1-frogsimulation, ap-csa-2018-frq-2-wordpairlist, ap-csa-2018-frq-4-arraytester ...
@@ -55,6 +57,7 @@ one is byte-identical to the sheet, and none carries a repairable link any more.
 - `/pages/ap-csp-full-practice-exam-70-mcq` linked from 4: ap-computer-science-principles-resources, ap-computer-science-principles-resources, ap-csp-question-of-the-day ...
 - `/pages/ap-csa-unit-1-study-guide` linked from 4: ap-csa-2004-frq-3, ap-csa-2004-frq-3, ap-csa-2005-frq-3 ...
 - `/pages/ap-csa-2d-array-traversal` linked from 4: ap-csa-2d-array-cheat-sheet, ap-csa-2d-array-mistakes, ap-csa-2d-array-trace-problems ...
+- `/products/computer-science-tutoring-lesson` linked from 4: ap-csa-study-games-hub, ap-csp-question-of-the-day, ap-cybersecurity-question-of-the-day ...
 - `/pages/ap-cybersecurity-unit-1-password-attacks-quiz` linked from 4: ap-cyber-unit-1-lesson-1-exercise-2, ap-cyber-unit-1-lesson-2-exercise-1, ap-cyber-unit-1-project ...
 - `/pages/ap-csa-frq-all-years` linked from 3: ap-csa-4-week-cram-kit, ap-csa-ced-explained, ap-csa-cram-sheet
 - `/pages/ap-csa-arraylist-methods-explained` linked from 3: ap-csa-array-methods-cheat-sheet, ap-csa-array-vs-arraylist, ap-csa-arrays-arraylist-exam-guide
@@ -63,6 +66,7 @@ one is byte-identical to the sheet, and none carries a repairable link any more.
 - `/pages/ap-csa-lesson-4-13-searching-and-sorting` linked from 3: ap-csa-lesson-4-12-traversing-2d-arrays, ap-csa-lesson-4-12-traversing-2d-arrays, ap-csa-unit-4-data-collections-study-guide
 - `/pages/ap-cybersecurity-study-guides` linked from 3: ap-csa-study-guides, ap-csp-study-guides, ap-cybersecurity-complete-course-guide
 - `/pages/codehs-ap-csp-ap-csa-practice-hub` linked from 3: ap-csp-codehs-javascript-practice-page, ap-csp-codehs-javascript-practice-page, ap-csp-codehs-javascript-practice-page
+- `/products/ap-csp-big-idea-1-superpack-free` linked from 3: ap-csp-teacher-superpack, ap-csp-teacher-superpack, ap-csp-teacher-superpack
 - `/pages/ap-networking-network-securing` linked from 3: ap-networking-defending-many-connections, ap-networking-managing-many-connections, ap-networking-security-fundamentals
 - `/pages/ap-csp-codehs-js` linked from 3: codehs-ap-csp-practice-material-javascript-and-python, codehs-ap-csp-practice-material-javascript-and-python, codehs-ap-csp-practice-material-javascript-and-python
 - `/pages/ap-csp-codehs-python` linked from 3: codehs-ap-csp-practice-material-javascript-and-python, codehs-ap-csp-practice-material-javascript-and-python, codehs-ap-csp-practice-material-javascript-and-python
@@ -175,4 +179,11 @@ one is byte-identical to the sheet, and none carries a repairable link any more.
 - `/pages/java-errors-arrayindexoutofboundsexception-ap-csa` linked from 1: java-errors-stringindexoutofboundsexception-ap-csa
 - `/pages/java-errors-nullpointerexception-ap-csa` linked from 1: java-errors-stringindexoutofboundsexception-ap-csa
 - `/pages/ap-csa-unit-4-data-collection-complete-study-guide-2025` linked from 1: what-is-ap-csa
+
+
+## And in the 50 product descriptions
+
+- `/pages/tutoring-packages` linked from 1: ap-cs-tutoring-single-session
+- `/products/ap-csp-full-practice-exam` linked from 1: ap-csp-4-week-cram-kit
+- `/products/ap-csp-quick-reference-guide` linked from 1: ap-csp-4-week-cram-kit
 

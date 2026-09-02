@@ -1,0 +1,2167 @@
+<!-- Twitter -->
+
+    <style>
+        /* ===== CSS VARIABLES ===== */
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --primary-light: #e0e7ff;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --unit1: #3b82f6;
+            --unit2: #8b5cf6;
+            --unit3: #ec4899;
+            --unit4: #f97316;
+        }
+
+        /* ===== BASE STYLES ===== */
+        .vocab-page-wrapper * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box !important;
+        }
+
+        .vocab-page-wrapper {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif !important;
+            line-height: 1.6 !important;
+            color: #1f2937 !important;
+            background: #f9fafb !important;
+        }
+
+        /* ===== HEADER ===== */
+        .vocab-page-wrapper .vocab-header {
+            background: linear-gradient(135deg, #111827 0%, #1f2937 100%) !important;
+            color: #ffffff !important;
+            padding: 60px 20px !important;
+            text-align: center !important;
+        }
+
+        .vocab-page-wrapper .vocab-header h1,
+        .vocab-header h1 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem) !important;
+            margin-bottom: 16px !important;
+            line-height: 1.2 !important;
+            color: #ffffff !important;
+            background: none !important;
+            text-shadow: none !important;
+        }
+
+        .vocab-page-wrapper .vocab-header .subtitle,
+        .vocab-header .subtitle {
+            font-size: 1.1rem !important;
+            color: #a5b4fc !important;
+            margin-bottom: 24px !important;
+        }
+
+        .vocab-page-wrapper .header-badges,
+        .header-badges {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+            gap: 12px !important;
+            margin-bottom: 24px !important;
+        }
+
+        .vocab-page-wrapper .header-badge,
+        .header-badge {
+            background: rgba(255,255,255,0.1) !important;
+            border: 1px solid rgba(255,255,255,0.2) !important;
+            padding: 8px 16px !important;
+            border-radius: 20px !important;
+            font-size: 14px !important;
+            color: #e0e7ff !important;
+        }
+
+        .vocab-page-wrapper a.header-cta,
+        .vocab-page-wrapper a.header-cta:link,
+        .vocab-page-wrapper a.header-cta:visited,
+        a.header-cta,
+        a.header-cta:link,
+        a.header-cta:visited {
+            display: inline-block !important;
+            background: #4f46e5 !important;
+            color: #ffffff !important;
+            padding: 14px 28px !important;
+            border-radius: 8px !important;
+            text-decoration: none !important;
+            font-weight: 600 !important;
+            transition: background 0.2s !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        .vocab-page-wrapper a.header-cta:hover,
+        a.header-cta:hover {
+            background: #4338ca !important;
+            color: #ffffff !important;
+            text-decoration: none !important;
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .vocab-page-wrapper .vocab-container,
+        .vocab-container {
+            max-width: 1000px !important;
+            margin: 0 auto !important;
+            padding: 40px 20px !important;
+        }
+
+        /* ===== TABLE OF CONTENTS ===== */
+        .vocab-page-wrapper .toc-box,
+        .toc-box {
+            background: #ffffff !important;
+            border-radius: 12px !important;
+            padding: 28px !important;
+            margin-bottom: 40px !important;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+        }
+
+        .vocab-page-wrapper .toc-box h2,
+        .toc-box h2 {
+            font-size: 1.3rem !important;
+            margin-bottom: 16px !important;
+            color: #111827 !important;
+        }
+
+        .vocab-page-wrapper .toc-grid,
+        .toc-grid {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+            gap: 12px !important;
+        }
+
+        .vocab-page-wrapper a.toc-item,
+        .vocab-page-wrapper a.toc-item:link,
+        .vocab-page-wrapper a.toc-item:visited,
+        a.toc-item,
+        a.toc-item:link,
+        a.toc-item:visited {
+            display: flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+            padding: 12px 16px !important;
+            background: #f9fafb !important;
+            border-radius: 8px !important;
+            text-decoration: none !important;
+            color: #374151 !important;
+            transition: all 0.2s !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        .vocab-page-wrapper a.toc-item:hover,
+        a.toc-item:hover {
+            background: #e0e7ff !important;
+            color: #4338ca !important;
+            text-decoration: none !important;
+        }
+
+        .vocab-page-wrapper .toc-number,
+        .toc-number {
+            width: 28px !important;
+            height: 28px !important;
+            border-radius: 50% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-weight: 700 !important;
+            font-size: 14px !important;
+            color: #ffffff !important;
+        }
+
+        .vocab-page-wrapper a.toc-item[href="#unit1"] .toc-number,
+        a.toc-item[href="#unit1"] .toc-number { background: #3b82f6 !important; }
+        .vocab-page-wrapper a.toc-item[href="#unit2"] .toc-number,
+        a.toc-item[href="#unit2"] .toc-number { background: #8b5cf6 !important; }
+        .vocab-page-wrapper a.toc-item[href="#unit3"] .toc-number,
+        a.toc-item[href="#unit3"] .toc-number { background: #ec4899 !important; }
+        .vocab-page-wrapper a.toc-item[href="#unit4"] .toc-number,
+        a.toc-item[href="#unit4"] .toc-number { background: #f97316 !important; }
+        .vocab-page-wrapper a.toc-item[href="#traps"] .toc-number,
+        a.toc-item[href="#traps"] .toc-number { background: #ef4444 !important; }
+        .vocab-page-wrapper a.toc-item[href="#index"] .toc-number,
+        a.toc-item[href="#index"] .toc-number { background: #4b5563 !important; }
+
+        /* ===== UNIT SECTIONS ===== */
+        .vocab-page-wrapper .unit-section,
+        .unit-section {
+            background: #ffffff !important;
+            border-radius: 12px !important;
+            margin-bottom: 32px !important;
+            overflow: hidden !important;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+        }
+
+        .vocab-page-wrapper .unit-header,
+        .unit-header {
+            padding: 24px 28px !important;
+            color: #ffffff !important;
+        }
+
+        .vocab-page-wrapper .unit-header.unit1,
+        .unit-header.unit1 { background: linear-gradient(135deg, #3b82f6, #2563eb) !important; }
+        .vocab-page-wrapper .unit-header.unit2,
+        .unit-header.unit2 { background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important; }
+        .vocab-page-wrapper .unit-header.unit3,
+        .unit-header.unit3 { background: linear-gradient(135deg, #ec4899, #db2777) !important; }
+        .vocab-page-wrapper .unit-header.unit4,
+        .unit-header.unit4 { background: linear-gradient(135deg, #f97316, #ea580c) !important; }
+
+        .vocab-page-wrapper .unit-header h2,
+        .unit-header h2 {
+            font-size: 1.5rem !important;
+            margin-bottom: 8px !important;
+            color: #ffffff !important;
+            background: none !important;
+        }
+
+        .vocab-page-wrapper .unit-header .unit-meta,
+        .unit-header .unit-meta {
+            font-size: 14px !important;
+            opacity: 0.9 !important;
+            color: #ffffff !important;
+        }
+
+        .vocab-page-wrapper .unit-content,
+        .unit-content {
+            padding: 28px !important;
+            background: #ffffff !important;
+        }
+
+        /* ===== CATEGORY HEADERS ===== */
+        .vocab-page-wrapper .category-header,
+        .category-header {
+            font-size: 1.1rem !important;
+            color: #1f2937 !important;
+            margin: 28px 0 16px 0 !important;
+            padding-bottom: 8px !important;
+            border-bottom: 2px solid #e5e7eb !important;
+            background: none !important;
+        }
+
+        .vocab-page-wrapper .category-header:first-child,
+        .category-header:first-child {
+            margin-top: 0 !important;
+        }
+
+        /* ===== VOCAB TABLE ===== */
+        .vocab-page-wrapper .vocab-table,
+        .vocab-table {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            margin-bottom: 24px !important;
+        }
+
+        .vocab-page-wrapper .vocab-table th,
+        .vocab-table th {
+            text-align: left !important;
+            padding: 12px 16px !important;
+            background: #f3f4f6 !important;
+            font-weight: 600 !important;
+            font-size: 14px !important;
+            color: #374151 !important;
+            border-bottom: 2px solid #e5e7eb !important;
+        }
+
+        .vocab-page-wrapper .vocab-table td,
+        .vocab-table td {
+            padding: 14px 16px !important;
+            border-bottom: 1px solid #e5e7eb !important;
+            vertical-align: top !important;
+            background: #ffffff !important;
+        }
+
+        .vocab-page-wrapper .vocab-table tr:last-child td,
+        .vocab-table tr:last-child td {
+            border-bottom: none !important;
+        }
+
+        .vocab-page-wrapper .vocab-table tr:hover td,
+        .vocab-table tr:hover td {
+            background: #f9fafb !important;
+        }
+
+        .vocab-page-wrapper .term,
+        .term {
+            font-weight: 600 !important;
+            color: #111827 !important;
+            font-family: 'Consolas', 'Monaco', monospace !important;
+            font-size: 15px !important;
+        }
+
+        .vocab-page-wrapper .definition,
+        .definition {
+            color: #374151 !important;
+            font-size: 15px !important;
+        }
+
+        /* ===== CODE STYLING ===== */
+        .vocab-page-wrapper code,
+        code {
+            background: #f3f4f6 !important;
+            padding: 2px 6px !important;
+            border-radius: 4px !important;
+            font-family: 'Consolas', 'Monaco', monospace !important;
+            font-size: 14px !important;
+            color: #4338ca !important;
+        }
+
+        /* ===== EMAIL GATE ===== */
+        .vocab-page-wrapper .email-gate,
+        .email-gate {
+            background: linear-gradient(135deg, #111827 0%, #312e81 100%) !important;
+            border-radius: 16px !important;
+            padding: 48px 32px !important;
+            text-align: center !important;
+            margin: 48px 0 !important;
+            color: #ffffff !important;
+        }
+
+        .vocab-page-wrapper .email-gate h3,
+        .email-gate h3 {
+            font-size: 1.8rem !important;
+            margin-bottom: 12px !important;
+            color: #ffffff !important;
+            background: none !important;
+        }
+
+        .vocab-page-wrapper .email-gate p,
+        .email-gate p {
+            font-size: 1.1rem !important;
+            color: #c7d2fe !important;
+            margin-bottom: 28px !important;
+            max-width: 500px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        .vocab-page-wrapper .email-gate-benefits,
+        .email-gate-benefits {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+            gap: 16px !important;
+            margin-bottom: 28px !important;
+        }
+
+        .vocab-page-wrapper .email-gate-benefit,
+        .email-gate-benefit {
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            background: rgba(255,255,255,0.1) !important;
+            padding: 10px 16px !important;
+            border-radius: 8px !important;
+            font-size: 14px !important;
+            color: #ffffff !important;
+        }
+
+        .vocab-page-wrapper .email-gate-benefit svg,
+        .email-gate-benefit svg {
+            width: 18px !important;
+            height: 18px !important;
+            color: #10b981 !important;
+        }
+
+        .vocab-page-wrapper .email-gate .privacy-note,
+        .email-gate .privacy-note {
+            font-size: 13px !important;
+            color: rgba(255,255,255,0.5) !important;
+            margin-top: 16px !important;
+        }
+
+        /* ===== LOCKED CONTENT OVERLAY ===== */
+        .vocab-page-wrapper .locked-content,
+        .locked-content {
+            position: relative !important;
+        }
+
+        .vocab-page-wrapper .locked-content.is-locked::after,
+        .locked-content.is-locked::after {
+            content: '' !important;
+            position: absolute !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            height: 200px !important;
+            background: linear-gradient(transparent, #ffffff) !important;
+            pointer-events: none !important;
+        }
+
+        .vocab-page-wrapper .locked-content.is-locked .hidden-content,
+        .locked-content.is-locked .hidden-content {
+            display: none !important;
+        }
+
+        .vocab-page-wrapper .locked-content.is-unlocked .email-gate,
+        .locked-content.is-unlocked .email-gate {
+            display: none !important;
+        }
+
+        /* ===== EXAM TRAPS SECTION ===== */
+        .vocab-page-wrapper .traps-section,
+        .traps-section {
+            background: #ffffff !important;
+            border-radius: 12px !important;
+            overflow: hidden !important;
+            margin-bottom: 32px !important;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+        }
+
+        .vocab-page-wrapper .traps-header,
+        .traps-header {
+            background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+            padding: 24px 28px !important;
+            color: #ffffff !important;
+        }
+
+        .vocab-page-wrapper .traps-header h2,
+        .traps-header h2 {
+            font-size: 1.5rem !important;
+            color: #ffffff !important;
+            background: none !important;
+        }
+
+        .vocab-page-wrapper .trap-card,
+        .trap-card {
+            background: #fef2f2 !important;
+            border-left: 4px solid #ef4444 !important;
+            padding: 20px !important;
+            margin: 20px 28px !important;
+            border-radius: 0 8px 8px 0 !important;
+        }
+
+        .vocab-page-wrapper .trap-card h4,
+        .trap-card h4 {
+            color: #ef4444 !important;
+            margin-bottom: 12px !important;
+            font-size: 1rem !important;
+            background: none !important;
+        }
+
+        .vocab-page-wrapper .trap-card pre,
+        .trap-card pre {
+            background: #111827 !important;
+            color: #e2e8f0 !important;
+            padding: 16px !important;
+            border-radius: 8px !important;
+            overflow-x: auto !important;
+            font-size: 14px !important;
+            margin: 12px 0 !important;
+        }
+
+        .vocab-page-wrapper .trap-card .correct,
+        .trap-card .correct {
+            color: #10b981 !important;
+        }
+
+        .vocab-page-wrapper .trap-card .incorrect,
+        .trap-card .incorrect {
+            color: #ef4444 !important;
+        }
+
+        /* ===== INDEX SECTION ===== */
+        .vocab-page-wrapper .index-section,
+        .index-section {
+            background: #ffffff !important;
+            border-radius: 12px !important;
+            padding: 28px !important;
+            margin-bottom: 32px !important;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+        }
+
+        .vocab-page-wrapper .index-section h2,
+        .index-section h2 {
+            font-size: 1.5rem !important;
+            margin-bottom: 20px !important;
+            color: #111827 !important;
+            background: none !important;
+        }
+
+        .vocab-page-wrapper .index-grid,
+        .index-grid {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+            gap: 8px !important;
+        }
+
+        .vocab-page-wrapper .index-item,
+        .index-item {
+            display: flex !important;
+            justify-content: space-between !important;
+            padding: 8px 12px !important;
+            background: #f9fafb !important;
+            border-radius: 6px !important;
+            font-size: 14px !important;
+        }
+
+        .vocab-page-wrapper .index-item .index-term,
+        .index-item .index-term {
+            font-weight: 500 !important;
+            color: #1f2937 !important;
+        }
+
+        .vocab-page-wrapper .index-item .index-unit,
+        .index-item .index-unit {
+            color: #6b7280 !important;
+            font-size: 13px !important;
+        }
+
+        /* ===== CTA SECTION ===== */
+        .vocab-page-wrapper .cta-section,
+        .cta-section {
+            background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%) !important;
+            border-radius: 12px !important;
+            padding: 40px 28px !important;
+            text-align: center !important;
+            color: #ffffff !important;
+            margin-bottom: 32px !important;
+        }
+
+        .vocab-page-wrapper .cta-section h3,
+        .cta-section h3 {
+            font-size: 1.5rem !important;
+            margin-bottom: 12px !important;
+            color: #ffffff !important;
+            background: none !important;
+        }
+
+        .vocab-page-wrapper .cta-section p,
+        .cta-section p {
+            margin-bottom: 24px !important;
+            opacity: 0.9 !important;
+            color: #ffffff !important;
+        }
+
+        .vocab-page-wrapper .cta-buttons,
+        .cta-buttons {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+            gap: 12px !important;
+        }
+
+        .vocab-page-wrapper a.cta-btn,
+        .vocab-page-wrapper a.cta-btn:link,
+        .vocab-page-wrapper a.cta-btn:visited,
+        a.cta-btn,
+        a.cta-btn:link,
+        a.cta-btn:visited {
+            display: inline-block !important;
+            padding: 12px 24px !important;
+            border-radius: 8px !important;
+            text-decoration: none !important;
+            font-weight: 600 !important;
+            transition: transform 0.2s, box-shadow 0.2s !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        .vocab-page-wrapper a.cta-btn:hover,
+        a.cta-btn:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+            text-decoration: none !important;
+        }
+
+        .vocab-page-wrapper a.cta-btn.primary,
+        .vocab-page-wrapper a.cta-btn.primary:link,
+        .vocab-page-wrapper a.cta-btn.primary:visited,
+        a.cta-btn.primary,
+        a.cta-btn.primary:link,
+        a.cta-btn.primary:visited {
+            background: #ffffff !important;
+            color: #4338ca !important;
+        }
+
+        .vocab-page-wrapper a.cta-btn.secondary,
+        .vocab-page-wrapper a.cta-btn.secondary:link,
+        .vocab-page-wrapper a.cta-btn.secondary:visited,
+        a.cta-btn.secondary,
+        a.cta-btn.secondary:link,
+        a.cta-btn.secondary:visited {
+            background: rgba(255,255,255,0.2) !important;
+            color: #ffffff !important;
+            border: 2px solid rgba(255,255,255,0.3) !important;
+        }
+
+        /* ===== FOOTER ===== */
+        .vocab-page-wrapper .vocab-footer,
+        .vocab-footer {
+            text-align: center !important;
+            padding: 40px 20px !important;
+            color: #4b5563 !important;
+            font-size: 14px !important;
+        }
+
+        .vocab-page-wrapper .vocab-footer a,
+        .vocab-page-wrapper .vocab-footer a:link,
+        .vocab-page-wrapper .vocab-footer a:visited,
+        .vocab-footer a,
+        .vocab-footer a:link,
+        .vocab-footer a:visited {
+            color: #4f46e5 !important;
+            text-decoration: none !important;
+        }
+
+        .vocab-page-wrapper .vocab-footer a:hover,
+        .vocab-footer a:hover {
+            text-decoration: underline !important;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .vocab-page-wrapper .vocab-header,
+            .vocab-header {
+                padding: 40px 16px !important;
+            }
+
+            .vocab-page-wrapper .unit-content,
+            .unit-content {
+                padding: 20px 16px !important;
+            }
+
+            .vocab-page-wrapper .vocab-table th:first-child,
+            .vocab-page-wrapper .vocab-table td:first-child,
+            .vocab-table th:first-child,
+            .vocab-table td:first-child {
+                width: 35% !important;
+            }
+
+            .vocab-page-wrapper .email-gate,
+            .email-gate {
+                padding: 32px 20px !important;
+            }
+
+            .vocab-page-wrapper .email-gate h3,
+            .email-gate h3 {
+                font-size: 1.4rem !important;
+            }
+        }
+
+        /* ===== PRINT STYLES ===== */
+        @media print {
+            .email-gate, .cta-section, .toc-box {
+                display: none !important;
+            }
+
+            .unit-section {
+                break-inside: avoid !important;
+                box-shadow: none !important;
+                border: 1px solid #ddd !important;
+            }
+
+            .vocab-header {
+                background: #ffffff !important;
+                color: #000000 !important;
+                padding: 20px !important;
+            }
+
+            .vocab-header h1 {
+                color: #000000 !important;
+            }
+
+            .vocab-header .subtitle,
+            .header-badges {
+                color: #666666 !important;
+            }
+        }
+    </style>
+
+<div class="vocab-page-wrapper">
+
+<!-- ===== HEADER ===== -->
+<header class="vocab-header">
+    <h1>AP Computer Science A<br>Complete Vocabulary List</h1>
+    <p class="subtitle">2025-2026 Curriculum • 4-Unit Structure • 150+ Essential Terms</p>
+    <div class="header-badges">
+        <span class="header-badge">📚 Organized by Unit</span>
+        <span class="header-badge">✅ Exam-Aligned</span>
+        <span class="header-badge">🎯 Common Traps Included</span>
+        <span class="header-badge">📖 Alphabetical Index</span>
+    </div>
+    <a href="#unit1" class="header-cta">Start Learning →</a>
+</header>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main class="vocab-container">
+
+    <!-- TABLE OF CONTENTS -->
+    <nav class="toc-box">
+        <h2>📑 Quick Navigation</h2>
+        <div class="toc-grid">
+            <a href="#unit1" class="toc-item">
+                <span class="toc-number">1</span>
+                <span>Using Objects &amp; Methods</span>
+            </a>
+            <a href="#unit2" class="toc-item">
+                <span class="toc-number">2</span>
+                <span>Selection &amp; Iteration</span>
+            </a>
+            <a href="#unit3" class="toc-item">
+                <span class="toc-number">3</span>
+                <span>Class Creation</span>
+            </a>
+            <a href="#unit4" class="toc-item">
+                <span class="toc-number">4</span>
+                <span>Data Collections</span>
+            </a>
+            <a href="#traps" class="toc-item">
+                <span class="toc-number">!</span>
+                <span>Common Exam Traps</span>
+            </a>
+            <a href="#index" class="toc-item">
+                <span class="toc-number">A-Z</span>
+                <span>Alphabetical Index</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- ==================== UNIT 1 ==================== -->
+    <section id="unit1" class="unit-section">
+        <div class="unit-header unit1">
+            <h2>Unit 1: Using Objects and Methods</h2>
+            <p class="unit-meta">15-17.5% of AP Exam • Foundation for All Units</p>
+        </div>
+        <div class="unit-content">
+
+            <h3 class="category-header">Programming Fundamentals</h3>
+            <table class="vocab-table">
+                <thead>
+                    <tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+                </thead>
+                <tbody>
+                    <tr>
+<td class="term">Algorithm</td>
+<td class="definition">A step-by-step procedure for solving a problem or accomplishing a task</td>
+</tr>
+                    <tr>
+<td class="term">Program</td>
+<td class="definition">A set of instructions written in a programming language that a computer can execute</td>
+</tr>
+                    <tr>
+<td class="term">Source Code</td>
+<td class="definition">Human-readable instructions written in a programming language (like Java)</td>
+</tr>
+                    <tr>
+<td class="term">Bytecode</td>
+<td class="definition">Intermediate code generated by the Java compiler; executed by the JVM</td>
+</tr>
+                    <tr>
+<td class="term">Compiler</td>
+<td class="definition">Software that translates source code into bytecode (javac for Java)</td>
+</tr>
+                    <tr>
+<td class="term">Java Virtual Machine (JVM)</td>
+<td class="definition">The runtime environment that executes Java bytecode</td>
+</tr>
+                    <tr>
+<td class="term">Syntax</td>
+<td class="definition">The rules that define how code must be written in a programming language</td>
+</tr>
+                    <tr>
+<td class="term">Syntax Error</td>
+<td class="definition">An error caused by violating the rules of the programming language</td>
+</tr>
+                    <tr>
+<td class="term">Logic Error</td>
+<td class="definition">An error where code runs but produces incorrect results</td>
+</tr>
+                    <tr>
+<td class="term">Runtime Error</td>
+<td class="definition">An error that occurs while the program is executing</td>
+</tr>
+                    <tr>
+<td class="term">Comment</td>
+<td class="definition">Text in code that is ignored by the compiler; used for documentation</td>
+</tr>
+                </tbody>
+            </table>
+
+            <h3 class="category-header">Variables and Data Types</h3>
+            <table class="vocab-table">
+                <thead>
+                    <tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+                </thead>
+                <tbody>
+                    <tr>
+<td class="term">Variable</td>
+<td class="definition">A named storage location in memory that holds a value</td>
+</tr>
+                    <tr>
+<td class="term">Data Type</td>
+<td class="definition">The classification of data that determines what values it can hold</td>
+</tr>
+                    <tr>
+<td class="term">Primitive Type</td>
+<td class="definition">A basic data type built into Java (<code>int</code>, <code>double</code>, <code>boolean</code>, <code>char</code>)</td>
+</tr>
+                    <tr>
+<td class="term">int</td>
+<td class="definition">A primitive type that stores whole numbers (32-bit integers)</td>
+</tr>
+                    <tr>
+<td class="term">double</td>
+<td class="definition">A primitive type that stores decimal numbers (64-bit floating-point)</td>
+</tr>
+                    <tr>
+<td class="term">boolean</td>
+<td class="definition">A primitive type that stores <code>true</code> or <code>false</code>
+</td>
+</tr>
+                    <tr>
+<td class="term">Declaration</td>
+<td class="definition">The statement that creates a variable with a specific type</td>
+</tr>
+                    <tr>
+<td class="term">Initialization</td>
+<td class="definition">Assigning an initial value to a variable</td>
+</tr>
+                    <tr>
+<td class="term">Literal</td>
+<td class="definition">A fixed value written directly in code (e.g., <code>42</code>, <code>3.14</code>, <code>"Hello"</code>)</td>
+</tr>
+                    <tr>
+<td class="term">Constant</td>
+<td class="definition">A variable whose value cannot change after initialization (uses <code>final</code>)</td>
+</tr>
+                </tbody>
+            </table>
+
+            <h3 class="category-header">Expressions and Operators</h3>
+            <table class="vocab-table">
+                <thead>
+                    <tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+                </thead>
+                <tbody>
+                    <tr>
+<td class="term">Expression</td>
+<td class="definition">A combination of values, variables, and operators that evaluates to a single value</td>
+</tr>
+                    <tr>
+<td class="term">Operator</td>
+<td class="definition">A symbol that performs an operation on one or more operands</td>
+</tr>
+                    <tr>
+<td class="term">Arithmetic Operator</td>
+<td class="definition">Operators that perform mathematical calculations (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>%</code>)</td>
+</tr>
+                    <tr>
+<td class="term">Modulo (%)</td>
+<td class="definition">The remainder operator; returns the remainder after division</td>
+</tr>
+                    <tr>
+<td class="term">Integer Division</td>
+<td class="definition">Division between integers that discards any decimal portion</td>
+</tr>
+                    <tr>
+<td class="term">Operator Precedence</td>
+<td class="definition">The order in which operators are evaluated in an expression</td>
+</tr>
+                    <tr>
+<td class="term">Compound Assignment</td>
+<td class="definition">Combines an operation with assignment (<code>+=</code>, <code>-=</code>, <code>*=</code>, <code>/=</code>)</td>
+</tr>
+                    <tr>
+<td class="term">Increment (++)</td>
+<td class="definition">Increases a variable's value by 1</td>
+</tr>
+                    <tr>
+<td class="term">Decrement (--)</td>
+<td class="definition">Decreases a variable's value by 1</td>
+</tr>
+                    <tr>
+<td class="term">Casting</td>
+<td class="definition">Explicitly converting a value from one data type to another</td>
+</tr>
+                    <tr>
+<td class="term">Concatenation</td>
+<td class="definition">Joining two strings together using the <code>+</code> operator</td>
+</tr>
+                </tbody>
+            </table>
+
+            <h3 class="category-header">Objects and Classes</h3>
+            <table class="vocab-table">
+                <thead>
+                    <tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+                </thead>
+                <tbody>
+                    <tr>
+<td class="term">Object</td>
+<td class="definition">An instance of a class that contains data and behavior</td>
+</tr>
+                    <tr>
+<td class="term">Class</td>
+<td class="definition">A blueprint or template that defines the structure and behavior of objects</td>
+</tr>
+                    <tr>
+<td class="term">Instance</td>
+<td class="definition">A specific object created from a class</td>
+</tr>
+                    <tr>
+<td class="term">Instantiation</td>
+<td class="definition">The process of creating an object using the <code>new</code> keyword</td>
+</tr>
+                    <tr>
+<td class="term">Constructor</td>
+<td class="definition">A special method that initializes a new object</td>
+</tr>
+                    <tr>
+<td class="term">Reference</td>
+<td class="definition">A variable that stores the memory address of an object</td>
+</tr>
+                    <tr>
+<td class="term">null</td>
+<td class="definition">A special value indicating that a reference points to nothing</td>
+</tr>
+                    <tr>
+<td class="term">NullPointerException</td>
+<td class="definition">An error that occurs when calling a method on a null reference</td>
+</tr>
+                </tbody>
+            </table>
+
+            <h3 class="category-header">Methods</h3>
+            <table class="vocab-table">
+                <thead>
+                    <tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+                </thead>
+                <tbody>
+                    <tr>
+<td class="term">Method</td>
+<td class="definition">A named block of code that performs a specific task</td>
+</tr>
+                    <tr>
+<td class="term">Method Call</td>
+<td class="definition">Executing a method by using its name followed by parentheses</td>
+</tr>
+                    <tr>
+<td class="term">Method Signature</td>
+<td class="definition">The combination of a method's name and parameter types</td>
+</tr>
+                    <tr>
+<td class="term">Parameter</td>
+<td class="definition">A variable in a method definition that receives a value when called</td>
+</tr>
+                    <tr>
+<td class="term">Argument</td>
+<td class="definition">The actual value passed to a method when it is called</td>
+</tr>
+                    <tr>
+<td class="term">Return Type</td>
+<td class="definition">The data type of the value a method sends back</td>
+</tr>
+                    <tr>
+<td class="term">void</td>
+<td class="definition">A return type indicating a method returns no value</td>
+</tr>
+                    <tr>
+<td class="term">Static Method</td>
+<td class="definition">A method that belongs to the class rather than an instance</td>
+</tr>
+                    <tr>
+<td class="term">Dot Operator (.)</td>
+<td class="definition">Used to access methods and variables of an object</td>
+</tr>
+                </tbody>
+            </table>
+
+            <h3 class="category-header">The String Class</h3>
+            <table class="vocab-table">
+                <thead>
+                    <tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+                </thead>
+                <tbody>
+                    <tr>
+<td class="term">String</td>
+<td class="definition">An object that represents a sequence of characters</td>
+</tr>
+                    <tr>
+<td class="term">Immutable</td>
+<td class="definition">Cannot be changed after creation (Strings are immutable)</td>
+</tr>
+                    <tr>
+<td class="term">length()</td>
+<td class="definition">Returns the number of characters in a String</td>
+</tr>
+                    <tr>
+<td class="term">substring()</td>
+<td class="definition">Returns a portion of a String</td>
+</tr>
+                    <tr>
+<td class="term">indexOf()</td>
+<td class="definition">Returns the position of a character or substring within a String</td>
+</tr>
+                    <tr>
+<td class="term">equals()</td>
+<td class="definition">Compares two Strings for identical content</td>
+</tr>
+                    <tr>
+<td class="term">compareTo()</td>
+<td class="definition">Compares two Strings lexicographically</td>
+</tr>
+                    <tr>
+<td class="term">Zero-indexed</td>
+<td class="definition">A counting system where the first position is 0</td>
+</tr>
+                </tbody>
+            </table>
+
+            <h3 class="category-header">The Math Class</h3>
+            <table class="vocab-table">
+                <thead>
+                    <tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+                </thead>
+                <tbody>
+                    <tr>
+<td class="term">Math.abs()</td>
+<td class="definition">Returns the absolute value of a number</td>
+</tr>
+                    <tr>
+<td class="term">Math.pow()</td>
+<td class="definition">Returns a number raised to a power</td>
+</tr>
+                    <tr>
+<td class="term">Math.sqrt()</td>
+<td class="definition">Returns the square root of a number</td>
+</tr>
+                    <tr>
+<td class="term">Math.random()</td>
+<td class="definition">Returns a random double from 0.0 (inclusive) to 1.0 (exclusive)</td>
+</tr>
+                    <tr>
+<td class="term">Math.min()</td>
+<td class="definition">Returns the smaller of two values</td>
+</tr>
+                    <tr>
+<td class="term">Math.max()</td>
+<td class="definition">Returns the larger of two values</td>
+</tr>
+                </tbody>
+            </table>
+
+        </div>
+    </section>
+
+    <!-- ==================== UNIT 2 ==================== -->
+    <section id="unit2" class="unit-section">
+        <div class="unit-header unit2">
+            <h2>Unit 2: Selection and Iteration</h2>
+            <p class="unit-meta">22.5-27.5% of AP Exam • Decision-Making &amp; Repetition</p>
+        </div>
+        <div class="unit-content">
+
+            <h3 class="category-header">Boolean Logic</h3>
+            <table class="vocab-table">
+                <thead>
+                    <tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+                </thead>
+                <tbody>
+                    <tr>
+<td class="term">Boolean Expression</td>
+<td class="definition">An expression that evaluates to <code>true</code> or <code>false</code>
+</td>
+</tr>
+                    <tr>
+<td class="term">Relational Operator</td>
+<td class="definition">Compares two values (<code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>, <code>==</code>, <code>!=</code>)</td>
+</tr>
+                    <tr>
+<td class="term">Equality (==)</td>
+<td class="definition">Tests if two primitive values are equal</td>
+</tr>
+                    <tr>
+<td class="term">Inequality (!=)</td>
+<td class="definition">Tests if two values are not equal</td>
+</tr>
+                    <tr>
+<td class="term">AND (&amp;&amp;)</td>
+<td class="definition">Returns true only if both operands are true</td>
+</tr>
+                    <tr>
+<td class="term">OR (||)</td>
+<td class="definition">Returns true if at least one operand is true</td>
+</tr>
+                    <tr>
+<td class="term">NOT (!)</td>
+<td class="definition">Reverses a boolean value</td>
+</tr>
+                    <tr>
+<td class="term">Short-circuit Evaluation</td>
+<td class="definition">Stopping evaluation when the result is already determined</td>
+</tr>
+                    <tr>
+<td class="term">De Morgan's Laws</td>
+<td class="definition">Rules for negating compound boolean expressions</td>
+</tr>
+                </tbody>
+            </table>
+
+            <h3 class="category-header">Conditional Statements</h3>
+            <table class="vocab-table">
+                <thead>
+                    <tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+                </thead>
+                <tbody>
+                    <tr>
+<td class="term">Conditional Statement</td>
+<td class="definition">A statement that executes code based on a condition</td>
+</tr>
+                    <tr>
+<td class="term">if Statement</td>
+<td class="definition">Executes code only if a condition is true</td>
+</tr>
+                    <tr>
+<td class="term">if-else Statement</td>
+<td class="definition">Executes one block if true, another if false</td>
+</tr>
+                    <tr>
+<td class="term">else if</td>
+<td class="definition">Tests an additional condition when previous conditions are false</td>
+</tr>
+                    <tr>
+<td class="term">Nested Conditional</td>
+<td class="definition">An if statement inside another if statement</td>
+</tr>
+                    <tr>
+<td class="term">Block</td>
+<td class="definition">Code enclosed in curly braces <code>{ }</code>
+</td>
+</tr>
+                    <tr>
+<td class="term">Scope</td>
+<td class="definition">The region of code where a variable can be accessed</td>
+</tr>
+                </tbody>
+            </table>
+
+            <h3 class="category-header">Iteration (Loops)</h3>
+            <table class="vocab-table">
+                <thead>
+                    <tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+                </thead>
+                <tbody>
+                    <tr>
+<td class="term">Iteration</td>
+<td class="definition">Repeating a set of instructions multiple times</td>
+</tr>
+                    <tr>
+<td class="term">Loop</td>
+<td class="definition">A control structure that repeats code</td>
+</tr>
+                    <tr>
+<td class="term">Loop Body</td>
+<td class="definition">The block of code that executes each iteration</td>
+</tr>
+                    <tr>
+<td class="term">Loop Control Variable</td>
+<td class="definition">A variable that controls how many times a loop runs</td>
+</tr>
+                    <tr>
+<td class="term">while Loop</td>
+<td class="definition">Repeats while a condition is true; checks before each iteration</td>
+</tr>
+                    <tr>
+<td class="term">for Loop</td>
+<td class="definition">A loop with initialization, condition, and update in one line</td>
+</tr>
+                    <tr>
+<td class="term">for-each Loop</td>
+<td class="definition">Iterates through each element in an array or collection</td>
+</tr>
+                    <tr>
+<td class="term">Infinite Loop</td>
+<td class="definition">A loop that never terminates</td>
+</tr>
+                    <tr>
+<td class="term">Off-by-one Error</td>
+<td class="definition">A loop that runs one too many or one too few times</td>
+</tr>
+                    <tr>
+<td class="term">Counter Variable</td>
+<td class="definition">A variable that counts iterations</td>
+</tr>
+                    <tr>
+<td class="term">Accumulator</td>
+<td class="definition">A variable that accumulates a running total</td>
+</tr>
+                    <tr>
+<td class="term">Nested Loop</td>
+<td class="definition">A loop inside another loop</td>
+</tr>
+                    <tr>
+<td class="term">break</td>
+<td class="definition">Immediately exits the innermost loop</td>
+</tr>
+                </tbody>
+            </table>
+
+            <h3 class="category-header">String Traversal &amp; Algorithms</h3>
+            <table class="vocab-table">
+                <thead>
+                    <tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+                </thead>
+                <tbody>
+                    <tr>
+<td class="term">String Traversal</td>
+<td class="definition">Processing each character in a String one at a time</td>
+</tr>
+                    <tr>
+<td class="term">charAt()</td>
+<td class="definition">Returns the character at a specified index</td>
+</tr>
+                    <tr>
+<td class="term">Linear Search</td>
+<td class="definition">Checking each element in order until finding a match</td>
+</tr>
+                    <tr>
+<td class="term">Counting Algorithm</td>
+<td class="definition">Counts how many elements meet a condition</td>
+</tr>
+                    <tr>
+<td class="term">Sum Algorithm</td>
+<td class="definition">Calculates the total of a collection of values</td>
+</tr>
+                </tbody>
+            </table>
+
+        </div>
+    </section>
+
+    <!-- ==================== EMAIL GATE ==================== -->
+    <div class="locked-content is-locked" id="locked-content">
+
+        <div class="email-gate" id="email-gate">
+            <h3>🔓 Unlock the Complete Vocabulary List</h3>
+            <p>Enter your email to instantly access Units 3 &amp; 4, Common Exam Traps, and the Alphabetical Index</p>
+
+            <div class="email-gate-benefits">
+                <span class="email-gate-benefit">
+                    <svg fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Unit 3: Class Creation
+                </span>
+                <span class="email-gate-benefit">
+                    <svg fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Unit 4: Data Collections
+                </span>
+                <span class="email-gate-benefit">
+                    <svg fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Exam Trap Quick Reference
+                </span>
+                <span class="email-gate-benefit">
+                    <svg fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Downloadable PDF
+                </span>
+            </div>
+
+            <!-- Klaviyo Form Embed -->
+            <div class="klaviyo-form-TL5xzF"></div>
+
+            <p class="privacy-note">📧 We'll also send you weekly AP CSA tips. Unsubscribe anytime.</p>
+        </div>
+
+        <!-- ==================== HIDDEN CONTENT (UNIT 3, 4, TRAPS, INDEX) ==================== -->
+        <div class="hidden-content" id="hidden-content">
+
+            <!-- ==================== UNIT 3 ==================== -->
+            <section id="unit3" class="unit-section">
+                <div class="unit-header unit3">
+                    <h2>Unit 3: Class Creation</h2>
+                    <p class="unit-meta">20-25% of AP Exam • Writing Your Own Classes</p>
+                </div>
+                <div class="unit-content">
+
+                    <h3 class="category-header">Class Structure</h3>
+                    <table class="vocab-table">
+                        <thead>
+                            <tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+<td class="term">Class Definition</td>
+<td class="definition">The code that describes a class's variables and methods</td>
+</tr>
+                            <tr>
+<td class="term">Instance Variable</td>
+<td class="definition">A variable that belongs to each instance of a class</td>
+</tr>
+                            <tr>
+<td class="term">Field</td>
+<td class="definition">Another term for instance variable</td>
+</tr>
+                            <tr>
+<td class="term">State</td>
+<td class="definition">The current values of an object's instance variables</td>
+</tr>
+                            <tr>
+<td class="term">Behavior</td>
+<td class="definition">The actions an object can perform (defined by methods)</td>
+</tr>
+                            <tr>
+<td class="term">Client Code</td>
+<td class="definition">Code that uses a class (outside the class definition)</td>
+</tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="category-header">Encapsulation and Access</h3>
+                    <table class="vocab-table">
+                        <thead>
+                            <tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+<td class="term">Encapsulation</td>
+<td class="definition">Bundling data and methods together; hiding implementation details</td>
+</tr>
+                            <tr>
+<td class="term">Information Hiding</td>
+<td class="definition">Restricting direct access to internal data</td>
+</tr>
+                            <tr>
+<td class="term">Access Modifier</td>
+<td class="definition">Keywords that control visibility (<code>public</code>, <code>private</code>)</td>
+</tr>
+                            <tr>
+<td class="term">public</td>
+<td class="definition">Accessible from any class</td>
+</tr>
+                            <tr>
+<td class="term">private</td>
+<td class="definition">Accessible only within the same class</td>
+</tr>
+                            <tr>
+<td class="term">Accessor Method (Getter)</td>
+<td class="definition">A method that returns the value of an instance variable</td>
+</tr>
+                            <tr>
+<td class="term">Mutator Method (Setter)</td>
+<td class="definition">A method that changes the value of an instance variable</td>
+</tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="category-header">Constructors</h3>
+                    <table class="vocab-table">
+                        <thead>
+                            <tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+<td class="term">Constructor</td>
+<td class="definition">A special method that initializes a new object</td>
+</tr>
+                            <tr>
+<td class="term">Default Constructor</td>
+<td class="definition">A no-argument constructor (provided by Java if none written)</td>
+</tr>
+                            <tr>
+<td class="term">Constructor Overloading</td>
+<td class="definition">Having multiple constructors with different parameter lists</td>
+</tr>
+                            <tr>
+<td class="term">this</td>
+<td class="definition">A reference to the current object</td>
+</tr>
+                            <tr>
+<td class="term">this()</td>
+<td class="definition">Calls another constructor in the same class</td>
+</tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="category-header">Methods in Detail</h3>
+                    <table class="vocab-table">
+                        <thead>
+                            <tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+<td class="term">Method Decomposition</td>
+<td class="definition">Breaking a complex problem into smaller methods</td>
+</tr>
+                            <tr>
+<td class="term">Helper Method</td>
+<td class="definition">A private method that assists other methods</td>
+</tr>
+                            <tr>
+<td class="term">Overloading</td>
+<td class="definition">Multiple methods with the same name but different parameters</td>
+</tr>
+                            <tr>
+<td class="term">Formal Parameter</td>
+<td class="definition">The parameter variable in a method definition</td>
+</tr>
+                            <tr>
+<td class="term">Actual Parameter</td>
+<td class="definition">The argument passed when calling a method</td>
+</tr>
+                            <tr>
+<td class="term">Pass by Value</td>
+<td class="definition">Java passes a copy of primitive values to methods</td>
+</tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="category-header">Static Members</h3>
+                    <table class="vocab-table">
+                        <thead>
+                            <tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+<td class="term">static</td>
+<td class="definition">Belongs to the class rather than any instance</td>
+</tr>
+                            <tr>
+<td class="term">Static Variable</td>
+<td class="definition">A variable shared by all instances of a class</td>
+</tr>
+                            <tr>
+<td class="term">Static Method</td>
+<td class="definition">A method called on the class, not an object</td>
+</tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="category-header">Object Comparison</h3>
+                    <table class="vocab-table">
+                        <thead>
+                            <tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+<td class="term">== (for objects)</td>
+<td class="definition">Compares references (memory addresses), not content</td>
+</tr>
+                            <tr>
+<td class="term">equals() method</td>
+<td class="definition">Compares the content of two objects</td>
+</tr>
+                            <tr>
+<td class="term">Aliasing</td>
+<td class="definition">When multiple references point to the same object</td>
+</tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </section>
+
+            <!-- ==================== UNIT 4 ==================== -->
+            <section id="unit4" class="unit-section">
+                <div class="unit-header unit4">
+                    <h2>Unit 4: Data Collections</h2>
+                    <p class="unit-meta">32.5-40% of AP Exam • Arrays, ArrayLists, 2D Arrays</p>
+                </div>
+                <div class="unit-content">
+
+                    <h3 class="category-header">Arrays</h3>
+                    <table class="vocab-table">
+                        <thead>
+                            <tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+<td class="term">Array</td>
+<td class="definition">A fixed-size data structure that holds multiple values of the same type</td>
+</tr>
+                            <tr>
+<td class="term">Element</td>
+<td class="definition">A single value stored in an array</td>
+</tr>
+                            <tr>
+<td class="term">Index</td>
+<td class="definition">The position of an element in an array (starts at 0)</td>
+</tr>
+                            <tr>
+<td class="term">Array Initializer List</td>
+<td class="definition">Creating and populating an array in one step (e.g., <code>{1, 2, 3}</code>)</td>
+</tr>
+                            <tr>
+<td class="term">length (property)</td>
+<td class="definition">Returns the number of elements in an array</td>
+</tr>
+                            <tr>
+<td class="term">Array Traversal</td>
+<td class="definition">Processing each element in an array</td>
+</tr>
+                            <tr>
+<td class="term">ArrayIndexOutOfBoundsException</td>
+<td class="definition">Error from accessing an invalid array index</td>
+</tr>
+                            <tr>
+<td class="term">Default Values</td>
+<td class="definition">Initial values in arrays (0 for numbers, false for boolean, null for objects)</td>
+</tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="category-header">Array Algorithms</h3>
+                    <table class="vocab-table">
+                        <thead>
+                            <tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+<td class="term">Linear Search</td>
+<td class="definition">Searching by checking each element from start to end</td>
+</tr>
+                            <tr>
+<td class="term">Selection Sort</td>
+<td class="definition">Sorting by repeatedly finding the minimum and moving it</td>
+</tr>
+                            <tr>
+<td class="term">Insertion Sort</td>
+<td class="definition">Sorting by inserting each element into its correct position</td>
+</tr>
+                            <tr>
+<td class="term">Binary Search</td>
+<td class="definition">Efficient search on sorted arrays by repeatedly halving</td>
+</tr>
+                            <tr>
+<td class="term">Swap</td>
+<td class="definition">Exchanging two elements' positions</td>
+</tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="category-header">ArrayList</h3>
+                    <table class="vocab-table">
+                        <thead>
+                            <tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+<td class="term">ArrayList</td>
+<td class="definition">A resizable array implementation from <code>java.util</code>
+</td>
+</tr>
+                            <tr>
+<td class="term">Generic Type</td>
+<td class="definition">The type parameter in angle brackets (e.g., <code><string></string></code>)</td>
+</tr>
+                            <tr>
+<td class="term">add()</td>
+<td class="definition">Adds an element to the ArrayList</td>
+</tr>
+                            <tr>
+<td class="term">get()</td>
+<td class="definition">Returns the element at a specified index</td>
+</tr>
+                            <tr>
+<td class="term">set()</td>
+<td class="definition">Replaces the element at a specified index</td>
+</tr>
+                            <tr>
+<td class="term">remove()</td>
+<td class="definition">Removes an element at a specified index or by value</td>
+</tr>
+                            <tr>
+<td class="term">size()</td>
+<td class="definition">Returns the number of elements in the ArrayList</td>
+</tr>
+                            <tr>
+<td class="term">Wrapper Class</td>
+<td class="definition">Classes that wrap primitives (<code>Integer</code>, <code>Double</code>, <code>Boolean</code>)</td>
+</tr>
+                            <tr>
+<td class="term">Autoboxing</td>
+<td class="definition">Automatic conversion from primitive to wrapper object</td>
+</tr>
+                            <tr>
+<td class="term">Unboxing</td>
+<td class="definition">Automatic conversion from wrapper object to primitive</td>
+</tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="category-header">2D Arrays</h3>
+                    <table class="vocab-table">
+                        <thead>
+                            <tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+<td class="term">2D Array</td>
+<td class="definition">An array of arrays; represents rows and columns</td>
+</tr>
+                            <tr>
+<td class="term">Row</td>
+<td class="definition">The first dimension of a 2D array</td>
+</tr>
+                            <tr>
+<td class="term">Column</td>
+<td class="definition">The second dimension of a 2D array</td>
+</tr>
+                            <tr>
+<td class="term">Row-major Order</td>
+<td class="definition">Processing a 2D array row by row</td>
+</tr>
+                            <tr>
+<td class="term">Column-major Order</td>
+<td class="definition">Processing a 2D array column by column</td>
+</tr>
+                            <tr>
+<td class="term">grid[row][col]</td>
+<td class="definition">The correct syntax to access elements (NOT <code>grid[col][row]</code>)</td>
+</tr>
+                            <tr>
+<td class="term">grid.length</td>
+<td class="definition">Returns the number of rows</td>
+</tr>
+                            <tr>
+<td class="term">grid[0].length</td>
+<td class="definition">Returns the number of columns (assuming rectangular)</td>
+</tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="category-header">Advanced Topics</h3>
+                    <table class="vocab-table">
+                        <thead>
+                            <tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+<td class="term">Recursion</td>
+<td class="definition">A method that calls itself</td>
+</tr>
+                            <tr>
+<td class="term">Base Case</td>
+<td class="definition">The condition that stops recursion</td>
+</tr>
+                            <tr>
+<td class="term">Recursive Case</td>
+<td class="definition">The condition where the method calls itself</td>
+</tr>
+                            <tr>
+<td class="term">O(n)</td>
+<td class="definition">Linear time – runtime grows proportionally with input</td>
+</tr>
+                            <tr>
+<td class="term">O(n²)</td>
+<td class="definition">Quadratic time – runtime grows with square of input</td>
+</tr>
+                            <tr>
+<td class="term">O(log n)</td>
+<td class="definition">Logarithmic time – runtime grows slowly (binary search)</td>
+</tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </section>
+
+            <!-- ==================== EXAM TRAPS ==================== -->
+            <section id="traps" class="traps-section">
+                <div class="traps-header">
+                    <h2>⚠️ Common Exam Traps</h2>
+                </div>
+                <div class="unit-content">
+
+                    <div class="trap-card">
+                        <h4>🔴 String Comparison</h4>
+                        <pre><code><span class="incorrect">// WRONG - compares references</span>
+if (str1 == str2)
+
+<span class="correct">// CORRECT - compares content</span>
+if (str1.equals(str2))</code></pre>
+                        <p>Always use <code>.equals()</code> to compare String content. The <code>==</code> operator checks if two references point to the same object in memory.</p>
+                    </div>
+
+                    <div class="trap-card">
+                        <h4>🔴 Integer Division</h4>
+                        <pre><code>int result = 5 / 2;      <span class="incorrect">// Returns 2, not 2.5</span>
+double result = 5.0 / 2;  <span class="correct">// Returns 2.5</span>
+double result = (double) 5 / 2;  <span class="correct">// Returns 2.5</span></code></pre>
+                        <p>When dividing two integers, Java truncates the decimal. Cast to double before dividing if you need the decimal portion.</p>
+                    </div>
+
+                    <div class="trap-card">
+                        <h4>🔴 ArrayList Removal in Loops</h4>
+                        <pre><code><span class="incorrect">// WRONG - skips elements after removal</span>
+for (int i = 0; i &lt; list.size(); i++) {
+    if (condition) {
+        list.remove(i);
+    }
+}
+
+<span class="correct">// CORRECT - traverse backward</span>
+for (int i = list.size() - 1; i &gt;= 0; i--) {
+    if (condition) {
+        list.remove(i);
+    }
+}</code></pre>
+                        <p>When removing from an ArrayList in a loop, traverse <strong>backward</strong> to avoid skipping elements.</p>
+                    </div>
+
+                    <div class="trap-card">
+                        <h4>🔴 2D Array Access Order</h4>
+                        <pre><code><span class="correct">// CORRECT: grid[row][col]</span>
+int value = grid[2][3];  // Row 2, Column 3
+
+<span class="incorrect">// WRONG: grid[col][row]</span>
+int value = grid[3][2];  // This is Row 3, Column 2!</code></pre>
+                        <p>Always remember: <strong>row first, then column</strong>. Think "RC" like "remote control."</p>
+                    </div>
+
+                    <div class="trap-card">
+                        <h4>🔴 Enhanced For Loop Limitations</h4>
+                        <pre><code><span class="incorrect">// WRONG - doesn't modify the actual array</span>
+for (int num : nums) {
+    num = num * 2;  // Only changes local copy!
+}
+
+<span class="correct">// CORRECT - use standard for loop to modify</span>
+for (int i = 0; i &lt; nums.length; i++) {
+    nums[i] = nums[i] * 2;
+}</code></pre>
+                        <p>Enhanced for loops <strong>cannot modify</strong> array elements, access the index, or traverse in reverse.</p>
+                    </div>
+
+                    <div class="trap-card">
+                        <h4>🔴 Off-by-One Errors</h4>
+                        <pre><code><span class="incorrect">// WRONG - ArrayIndexOutOfBoundsException</span>
+for (int i = 0; i &lt;= arr.length; i++)
+
+<span class="correct">// CORRECT - stops at length - 1</span>
+for (int i = 0; i &lt; arr.length; i++)</code></pre>
+                        <p>Arrays are zero-indexed, so valid indices are <code>0</code> to <code>length - 1</code>. Use <code>&lt;</code> not <code>&lt;=</code>.</p>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ==================== ALPHABETICAL INDEX ==================== -->
+            <section id="index" class="index-section">
+                <h2>📖 Alphabetical Index</h2>
+                <div class="index-grid">
+                    <div class="index-item">
+<span class="index-term">Accessor Method</span><span class="index-unit">Unit 3</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Accumulator</span><span class="index-unit">Unit 2</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Algorithm</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Aliasing</span><span class="index-unit">Unit 3</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">AND (&amp;&amp;)</span><span class="index-unit">Unit 2</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Argument</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Array</span><span class="index-unit">Unit 4</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">ArrayList</span><span class="index-unit">Unit 4</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Autoboxing</span><span class="index-unit">Unit 4</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Base Case</span><span class="index-unit">Unit 4</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Binary Search</span><span class="index-unit">Unit 4</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Block</span><span class="index-unit">Unit 2</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">boolean</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Boolean Expression</span><span class="index-unit">Unit 2</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">break</span><span class="index-unit">Unit 2</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Bytecode</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Casting</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">charAt()</span><span class="index-unit">Unit 2</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Class</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Compiler</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Concatenation</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Conditional Statement</span><span class="index-unit">Unit 2</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Constructor</span><span class="index-unit">Unit 1, 3</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Counter Variable</span><span class="index-unit">Unit 2</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">De Morgan's Laws</span><span class="index-unit">Unit 2</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Default Constructor</span><span class="index-unit">Unit 3</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Dot Operator</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">double</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Element</span><span class="index-unit">Unit 4</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Encapsulation</span><span class="index-unit">Unit 3</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">equals()</span><span class="index-unit">Unit 1, 3</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Expression</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">for Loop</span><span class="index-unit">Unit 2</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">for-each Loop</span><span class="index-unit">Unit 2</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Generic Type</span><span class="index-unit">Unit 4</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Helper Method</span><span class="index-unit">Unit 3</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Immutable</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Index</span><span class="index-unit">Unit 1, 4</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">indexOf()</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Infinite Loop</span><span class="index-unit">Unit 2</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Instance</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Instance Variable</span><span class="index-unit">Unit 3</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Instantiation</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">int</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Integer Division</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Iteration</span><span class="index-unit">Unit 2</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">length()</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">length (property)</span><span class="index-unit">Unit 4</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Linear Search</span><span class="index-unit">Unit 2, 4</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Literal</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Logic Error</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Loop</span><span class="index-unit">Unit 2</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Math.random()</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Method</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Method Decomposition</span><span class="index-unit">Unit 3</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Modulo (%)</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Mutator Method</span><span class="index-unit">Unit 3</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Nested Conditional</span><span class="index-unit">Unit 2</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Nested Loop</span><span class="index-unit">Unit 2, 4</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">NOT (!)</span><span class="index-unit">Unit 2</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">null</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">NullPointerException</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Object</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Off-by-one Error</span><span class="index-unit">Unit 2</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Operator</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">OR (||)</span><span class="index-unit">Unit 2</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Overloading</span><span class="index-unit">Unit 3</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Parameter</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Pass by Value</span><span class="index-unit">Unit 3</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Primitive Type</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">private</span><span class="index-unit">Unit 3</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">public</span><span class="index-unit">Unit 3</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Recursion</span><span class="index-unit">Unit 4</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Reference</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Relational Operator</span><span class="index-unit">Unit 2</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Return Type</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Row-major Order</span><span class="index-unit">Unit 4</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Runtime Error</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Scope</span><span class="index-unit">Unit 2</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Short-circuit Evaluation</span><span class="index-unit">Unit 2</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">size()</span><span class="index-unit">Unit 4</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Source Code</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">State</span><span class="index-unit">Unit 3</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">static</span><span class="index-unit">Unit 3</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Static Method</span><span class="index-unit">Unit 1, 3</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">String</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">String Traversal</span><span class="index-unit">Unit 2</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">substring()</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Syntax</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Syntax Error</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">this</span><span class="index-unit">Unit 3</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">2D Array</span><span class="index-unit">Unit 4</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Unboxing</span><span class="index-unit">Unit 4</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Variable</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">void</span><span class="index-unit">Unit 1</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">while Loop</span><span class="index-unit">Unit 2</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Wrapper Class</span><span class="index-unit">Unit 4</span>
+</div>
+                    <div class="index-item">
+<span class="index-term">Zero-indexed</span><span class="index-unit">Unit 1</span>
+</div>
+                </div>
+            </section>
+
+            <!-- ==================== CTA ==================== -->
+            <section class="cta-section">
+                <h3>Ready to Practice?</h3>
+                <p>Put your vocabulary knowledge to the test with daily practice questions and full-length practice exams.</p>
+                <div class="cta-buttons">
+                    <a href="/blogs/daily-ap-csa-practice" class="cta-btn primary">Daily Practice Questions →</a>
+                    <a href="/pages/ap-csa-2025-practice-mcq" class="cta-btn secondary">Full Practice Exam</a>
+                </div>
+            </section>
+
+        </div>
+<!-- end hidden-content -->
+
+    </div>
+<!-- end locked-content -->
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="vocab-footer">
+        <p>© 2025 <a href="https://www.apcsexamprep.com">AP CS Exam Prep</a> • Aligned to 2025-2026 AP Computer Science A Curriculum</p>
+        <p>Created by Tanner Crow • <a href="/pages/tutoring">Book 1-on-1 Tutoring</a></p>
+    </footer>
+
+</main>
+
+</div>
+<!-- end vocab-page-wrapper -->
+
+<!-- Klaviyo Script -->
+<script async type="text/javascript" src="https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=XbXGVC"></script>
+
+<script>
+    // Check if user has already unlocked
+    const isUnlocked = localStorage.getItem('vocab_unlocked') === 'true';
+    const lockedContent = document.getElementById('locked-content');
+
+    if (isUnlocked) {
+        lockedContent.classList.remove('is-locked');
+        lockedContent.classList.add('is-unlocked');
+    }
+
+    // Listen for Klaviyo form submission
+    // Klaviyo fires a custom event when form is submitted successfully
+    window.addEventListener('klaviyoForms', function(e) {
+        if (e.detail.type === 'submit') {
+            // Form was submitted successfully
+            localStorage.setItem('vocab_unlocked', 'true');
+            lockedContent.classList.remove('is-locked');
+            lockedContent.classList.add('is-unlocked');
+            
+            // Scroll to Unit 3 after a brief delay
+            setTimeout(function() {
+                document.getElementById('unit3').scrollIntoView({ behavior: 'smooth' });
+            }, 500);
+        }
+    });
+</script>
