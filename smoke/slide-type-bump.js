@@ -64,6 +64,24 @@ const CORPUS = {
 };
 const CORPUS_SIZES = Object.keys(CORPUS).map(Number).sort((a, b) => a - b);
 
+// AP CYBER, read on 2026-09-02 from ALL 70 decks (not a sample), 16,900 runs.
+// Its vocabulary is denser than CSP's: it adds 11.5, 13.5 and 16.5, and lacks
+// 14.5. That difference is why the two courses cannot share one ladder, and
+// why proposeLadder_ has to back the lift off for this one.
+const CYBER = {
+  7.5: 863, 8: 206, 9: 1918, 9.5: 48, 10: 662, 10.5: 342, 11: 1398, 11.5: 6,
+  12: 1722, 12.5: 134, 13: 1209, 13.5: 16, 14: 4996, 15: 984, 16: 212,
+  16.5: 20, 17: 434, 18: 76, 19: 34, 20: 174, 22: 150, 24: 60, 28: 22,
+  30: 108, 32: 596, 34: 4, 36: 197, 44: 10, 54: 70, 72: 34, 96: 60,
+  130: 6, 160: 14, 200: 115,
+};
+const CYBER_SIZES = Object.keys(CYBER).map(Number).sort((a, b) => a - b);
+
+const CORPORA = [
+  ['ap-csp', CORPUS, CORPUS_SIZES],
+  ['ap-cybersecurity', CYBER, CYBER_SIZES],
+];
+
 // ── stubs ────────────────────────────────────────────────────────────────────
 
 function makeText(runs) {
@@ -225,55 +243,74 @@ function loadGs(decksById, opts) {
 console.log('\nslide-type-bump smoke\n');
 
 // ── A. the ladder, against the real corpus ───────────────────────────────────
-console.log('the ladder, checked against the 136-deck corpus');
-{
+console.log('the ladder, checked against the real corpora');
+for (const [course, hist, sizes] of CORPORA) {
   const { ctx } = loadGs({});
-  const b = ctx.bumpedSize_;
-  const unknown = ctx.unknownSize_;
+  const b = (x) => ctx.bumpedSize_(x, course);
+  const unk = (x) => ctx.unknownSize_(x, course);
   const FLOOR = ctx.LADDER_FLOOR, CEIL = ctx.LADDER_CEILING;
+  const P = (n) => `${course}: ${n}`;
 
-  ok('outside the range is untouched (7.5, 9, 9.5, 18, 32, 200)',
-    [7.5, 9, 9.5, 18, 32, 200].every((s) => b(s) === null),
-    [7.5, 9, 18, 200].map(b));
-  ok('null and undefined are untouched', b(null) === null && b(undefined) === null);
-  ok('every corpus size in range has a ladder entry',
-    CORPUS_SIZES.filter((s) => s >= FLOOR && s < CEIL).every((s) => b(s) !== null),
-    CORPUS_SIZES.filter((s) => s >= FLOOR && s < CEIL && b(s) === null));
-  ok('every bump is an increase',
-    CORPUS_SIZES.filter((s) => b(s) !== null).every((s) => b(s) > s));
+  ok(P('outside the range is untouched'),
+    [7.5, 9, 9.5, 18, 32, 200].every((x) => b(x) === null));
+  ok(P('null and undefined are untouched'), b(null) === null && b(undefined) === null);
+  ok(P('every corpus size in range has a ladder entry'),
+    sizes.filter((x) => x >= FLOOR && x < CEIL).every((x) => b(x) !== null),
+    sizes.filter((x) => x >= FLOOR && x < CEIL && b(x) === null));
+  ok(P('every bump is an increase'),
+    sizes.filter((x) => b(x) !== null).every((x) => b(x) > x));
 
   // The assertion the first version of this suite got wrong. `>=` passes for a
   // collision; `>` does not.
-  const mapped = CORPUS_SIZES.map((s) => [s, b(s) === null ? s : b(s)]);
+  const mapped = sizes.map((x) => [x, b(x) === null ? x : b(x)]);
   let strict = true, offender = null;
   for (let i = 1; i < mapped.length; i++) {
     if (mapped[i][1] <= mapped[i - 1][1]) { strict = false; offender = [mapped[i - 1], mapped[i]]; break; }
   }
-  ok('the map is STRICTLY increasing over every size in the corpus', strict, offender);
+  ok(P('the map is STRICTLY increasing over every size in the corpus'), strict, offender);
 
-  // Stated separately because it is the specific failure that shipped: two
-  // different sizes landing on one.
   const landings = mapped.map((m) => m[1]);
-  ok('no two corpus sizes land on the same size',
+  ok(P('no two corpus sizes land on the same size'),
     new Set(landings).size === landings.length,
     landings.filter((v, i) => landings.indexOf(v) !== i));
 
-  // And the specific inversion: a bumped size passing an untouched one.
   let inverted = 0;
   for (let i = 0; i < mapped.length; i++) {
     for (let j = i + 1; j < mapped.length; j++) {
-      if (mapped[i][1] >= mapped[j][1]) inverted += CORPUS[mapped[i][0]];
+      if (mapped[i][1] >= mapped[j][1]) inverted += hist[mapped[i][0]];
     }
   }
-  ok('no run ends up at or above text that used to be bigger', inverted === 0, inverted);
+  ok(P('no run ends up at or above text that used to be bigger'), inverted === 0, inverted);
 
-  const inBand = CORPUS_SIZES.filter((s) => s >= 10 && s <= 14);
-  const lift = inBand.reduce((a, s) => a + CORPUS[s] * (b(s) - s), 0)
-    / inBand.reduce((a, s) => a + CORPUS[s], 0);
-  ok('the mean lift across the original 10 to 14 band is at least 1.5pt',
-    lift >= 1.5, lift.toFixed(2));
-  ok('no single bump exceeds 2.5pt',
-    CORPUS_SIZES.filter((s) => b(s) !== null).every((s) => b(s) - s <= 2.5));
+  const inBand = sizes.filter((x) => x >= 10 && x <= 14);
+  const lift = inBand.reduce((acc, x) => acc + hist[x] * (b(x) - x), 0)
+    / inBand.reduce((acc, x) => acc + hist[x], 0);
+  ok(P('the mean lift across the original 10 to 14 band is at least 1.25pt'),
+    lift >= 1.25, lift.toFixed(2));
+  ok(P('no single bump exceeds 2.5pt'),
+    sizes.filter((x) => b(x) !== null).every((x) => b(x) - x <= 2.5));
+  ok(P('nothing in the corpus is left unknown'),
+    !sizes.some(unk), sizes.filter(unk));
+}
+
+// The two courses must not be sharing a table.
+console.log('\nthe two courses have genuinely different ladders');
+{
+  const { ctx } = loadGs({});
+  ok('cyber knows 11.5, 13.5 and 16.5; CSP does not',
+    [11.5, 13.5, 16.5].every((x) => ctx.bumpedSize_(x, 'ap-cybersecurity') !== null
+      && ctx.bumpedSize_(x, 'ap-csp') === null));
+  ok('CSP knows 14.5; cyber does not',
+    ctx.bumpedSize_(14.5, 'ap-csp') !== null
+      && ctx.bumpedSize_(14.5, 'ap-cybersecurity') === null);
+  ok('the same size can map differently per course (10pt)',
+    ctx.bumpedSize_(10, 'ap-csp') !== ctx.bumpedSize_(10, 'ap-cybersecurity'),
+    [ctx.bumpedSize_(10, 'ap-csp'), ctx.bumpedSize_(10, 'ap-cybersecurity')]);
+  ok('a course with no ladder treats every in-range size as unknown',
+    [10, 12, 14, 17].every((x) => ctx.unknownSize_(x, 'ap-networking'))
+      && [10, 12, 14, 17].every((x) => ctx.bumpedSize_(x, 'ap-networking') === null));
+  ok('and still leaves out-of-range sizes alone rather than calling them unknown',
+    !ctx.unknownSize_(9, 'ap-networking') && !ctx.unknownSize_(32, 'ap-networking'));
 }
 
 // ── proposeLadder_ ───────────────────────────────────────────────────────────
@@ -282,10 +319,14 @@ console.log('\nproposeLadder_, the generator behind the shipped ladder');
   const { ctx } = loadGs({});
   const proposed = ctx.proposeLadder_(CORPUS_SIZES);
 
-  ok('it reproduces the shipped ladder from the corpus it was built from',
-    proposed.every(([s, t]) => ctx.SIZE_LADDER[String(s)] === t)
-      && proposed.length === Object.keys(ctx.SIZE_LADDER).length,
-    { proposed, shipped: ctx.SIZE_LADDER });
+  for (const [course, , sizes] of CORPORA) {
+    const p = ctx.proposeLadder_(sizes);
+    const shipped = ctx.LADDERS[course];
+    ok(`${course}: it reproduces the shipped ladder from the corpus it was built from`,
+      p.every(([s, t]) => shipped[String(s)] === t)
+        && p.length === Object.keys(shipped).length,
+      { proposed: p, shipped });
+  }
 
   ok('its output is strictly increasing',
     proposed.every(([, t], i) => i === 0 || t > proposed[i - 1][1]), proposed);
@@ -311,8 +352,18 @@ console.log('\nproposeLadder_, the generator behind the shipped ladder');
     p2.length === dense.length && p2.every(([, t], i) => i === 0 || t > p2[i - 1][1]));
 
   const inRange = CORPUS_SIZES.filter((s) => s >= ctx.LADDER_FLOOR && s < ctx.LADDER_CEILING);
-  ok('the real corpus DOES fit at the full lift, so it needs no backoff',
+  ok('CSP DOES fit at the full lift, so it needs no backoff',
     ctx.buildLadder_(inRange, ctx.MAX_LIFT) !== null);
+
+  // Cyber is the real-world case for the backoff, not a synthetic one: thirteen
+  // sizes in the range instead of eleven, so the full lift does not fit and the
+  // ladder that ships for it lifts by 1.5pt rather than 2.5.
+  const cyRange = CYBER_SIZES.filter((s) => s >= ctx.LADDER_FLOOR && s < ctx.LADDER_CEILING);
+  ok('cyber does NOT fit at the full lift, so the backoff is load-bearing in production',
+    ctx.buildLadder_(cyRange, ctx.MAX_LIFT) === null);
+  ok('and the cyber ladder that ships is the backed-off one',
+    Math.max(...ctx.proposeLadder_(CYBER_SIZES).map(([s, t]) => t - s)) < ctx.MAX_LIFT,
+    Math.max(...ctx.proposeLadder_(CYBER_SIZES).map(([s, t]) => t - s)));
 
   // A vocabulary packed against the ceiling has no room at all. Coming back
   // with an identity ladder is the honest answer: it reads as "nothing to do
@@ -337,7 +388,7 @@ console.log('\nwalking a deck');
     ]),
   ]);
   const { ctx } = loadGs({ D: deck });
-  const { plan, unknown } = ctx.planForDeck_(deck);
+  const { plan, unknown } = ctx.planForDeck_(deck, 'ap-csp');
   ok('plan covers shape, table cell and grouped shape, and nothing else',
     plan.length === 3, plan.map((p) => [p[1], p[4], p[5]]));
   ok('a shape nested in a group is found', plan.some((p) => p[1] === 'nested'));
@@ -354,12 +405,13 @@ console.log('\nunknown sizes are refused, not guessed at');
 {
   const { ctx } = loadGs({});
   ok('a size in range with no ladder entry is flagged unknown',
-    ctx.unknownSize_(11.25) && ctx.unknownSize_(13.5) && ctx.unknownSize_(16.5));
+    ctx.unknownSize_(11.25, 'ap-csp') && ctx.unknownSize_(13.5, 'ap-csp'));
   ok('and bumpedSize_ declines to invent a value for it',
-    ctx.bumpedSize_(11.25) === null && ctx.bumpedSize_(13.5) === null);
+    ctx.bumpedSize_(11.25, 'ap-csp') === null && ctx.bumpedSize_(13.5, 'ap-csp') === null);
   ok('a size outside the range is not "unknown", it is out of scope',
-    !ctx.unknownSize_(9) && !ctx.unknownSize_(18) && !ctx.unknownSize_(32));
-  ok('a known size is not unknown', CORPUS_SIZES.every((s) => !ctx.unknownSize_(s)));
+    !ctx.unknownSize_(9, 'ap-csp') && !ctx.unknownSize_(18, 'ap-csp'));
+  ok('a known size is not unknown',
+    CORPUS_SIZES.every((s) => !ctx.unknownSize_(s, 'ap-csp')));
 
   const mk = () => makeDeck([slide('s1', [
     shapeEl('sh1', [{ text: 'a', size: 12 }, { text: 'b', size: 13.5 }]),
@@ -380,6 +432,18 @@ console.log('\nunknown sizes are refused, not guessed at');
     h.sheetRows);
   ok('no undo file is written for a skipped deck', h.files.size === 0);
 
+  // The same deck under CYBER's ladder is fine, because 13.5 is a size cyber
+  // has. Nothing about the deck changed; only which ladder was asked.
+  const deckCy = mk();
+  const hCy = loadGs({ A: deckCy }, {
+    decks: [['ap-cybersecurity', 'a', 'A']],
+    config: { DECK_LIMIT: 0, DRY_RUN: false, FORCE: false, ALLOW_UNKNOWN: false, COURSES: ['ap-cybersecurity'] },
+  });
+  hCy.ctx.start();
+  ok('the same deck under the cyber ladder is bumped, not skipped',
+    sizesOf(deckCy)[0] === 13.5 && sizesOf(deckCy)[1] === 15,
+    sizesOf(deckCy));
+
   const deck2 = mk();
   const h2 = loadGs({ A: deck2 }, {
     decks: [['ap-csp', 'a', 'A']],
@@ -388,6 +452,17 @@ console.log('\nunknown sizes are refused, not guessed at');
   h2.ctx.start();
   ok('ALLOW_UNKNOWN bumps the known sizes and leaves the unknown one alone',
     sizesOf(deck2)[0] === 14 && sizesOf(deck2)[1] === 13.5, sizesOf(deck2));
+
+  // A course nobody has measured has no ladder, so every deck is skipped.
+  const deck3 = makeDeck([slide('s1', [shapeEl('sh1', [{ text: 'x', size: 12 }])])]);
+  const h3 = loadGs({ A: deck3 }, {
+    decks: [['ap-networking', 'a', 'A']],
+    config: { DECK_LIMIT: 0, DRY_RUN: false, FORCE: false, ALLOW_UNKNOWN: false, COURSES: ['ap-networking'] },
+  });
+  h3.ctx.start();
+  ok('a course with no ladder has every deck skipped, untouched',
+    sizesOf(deck3)[0] === 12 && h3.sheetRows.some((r) => String(r[5]).indexOf('SKIPPED') === 0),
+    [sizesOf(deck3), h3.sheetRows]);
 }
 
 // ── B. the round trip ────────────────────────────────────────────────────────
@@ -409,7 +484,7 @@ console.log('\napply and revert round trip');
   const before = sizesOf(deck);
   const { ctx } = loadGs({ D: deck });
 
-  const { plan } = ctx.planForDeck_(deck);
+  const { plan } = ctx.planForDeck_(deck, 'ap-csp');
   const changed = ctx.applyPlan_(deck, plan);
   const after = sizesOf(deck);
 
@@ -440,7 +515,11 @@ console.log('\nstart(), guards and the undo record');
   const h = loadGs(decks, { decks: table, config: cfg });
   h.ctx.start();
 
-  ok('both decks bumped 12 -> 14', sizesOf(decks.A)[0] === 14 && sizesOf(decks.B)[0] === 14,
+  // Deck A is CSP and deck B is cyber, and 12pt maps differently under each.
+  // Asserting one shared value here would pass only if the ladders had been
+  // merged, which is the bug this split exists to prevent.
+  ok('each deck is bumped under ITS OWN course ladder (csp 12->14, cyber 12->13.5)',
+    sizesOf(decks.A)[0] === 14 && sizesOf(decks.B)[0] === 13.5,
     [sizesOf(decks.A), sizesOf(decks.B)]);
   ok('each deck was saved and closed', decks.A._closed() && decks.B._closed());
   ok('an undo file was written per deck', h.files.has('A.json') && h.files.has('B.json'));
@@ -452,17 +531,22 @@ console.log('\nstart(), guards and the undo record');
     rec.changes[0][4] === 12 && rec.changes[0][5] === 14, rec.changes[0]);
   ok('the undo file records the ladder it was written under',
     rec.ladder && rec.ladder['12'] === 14, rec.ladder);
+  const recB = JSON.parse(h.files.get('B.json'));
+  ok('and a cyber deck records the CYBER ladder, not the CSP one',
+    recB.ladder['12'] === 13.5, recB.ladder);
 
   h.ctx.start();
   ok('a second start() leaves the sizes alone (sheet guard)',
-    sizesOf(decks.A)[0] === 14 && sizesOf(decks.B)[0] === 14);
+    sizesOf(decks.A)[0] === 14 && sizesOf(decks.B)[0] === 13.5,
+    [sizesOf(decks.A), sizesOf(decks.B)]);
 
   const h2 = loadGs(decks, { decks: table, config: cfg });
   h2.files.set('A.json', h.files.get('A.json'));
   h2.files.set('B.json', h.files.get('B.json'));
   h2.ctx.start();
   ok('a lost sheet still does not double-bump, because the undo file is the second guard',
-    sizesOf(decks.A)[0] === 14 && sizesOf(decks.B)[0] === 14);
+    sizesOf(decks.A)[0] === 14 && sizesOf(decks.B)[0] === 13.5,
+    [sizesOf(decks.A), sizesOf(decks.B)]);
   ok('the skip is recorded rather than silent',
     h2.sheetRows.some((r) => String(r[5]).indexOf('SKIPPED') === 0));
 }
