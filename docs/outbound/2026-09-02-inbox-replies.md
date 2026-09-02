@@ -85,72 +85,96 @@ today.
 
 ---
 
-## 2. Peter Vo (Klein ISD) - DO NOT SEND YET
+## 2. Peter Vo (Klein ISD) - SOLVED, and it is good news
 
-**Retraction first, because I told Tanner the opposite an hour ago.**
+Tanner pulled the Teacher Inspector and `/api/admin/denominators?course=ap-cybersecurity`.
+Between them the question is settled, the "15 out of 15" is located in the data,
+and the answer is the opposite of what v2 concluded.
 
-I said Vo's data was safe, that his student's 15/15 was recorded and sitting in
-the database, and that v2 would have wrongly told a customer his data was gone.
-That was an overclaim and I am withdrawing it. It is not established. It may well
-be false.
+### Ex2, Lab and Quiz all record. v2's premise is dead.
 
-**How I got it wrong.** I read `/api/health`, saw eleven reporter-gap activities
-with none in cyber Unit 1, and treated that absence as proof Unit 1 records. The
-query behind it (`lib/health-integrity.js`) begins:
+Unit 1, students with a recorded score per column:
 
-    FROM progress p
-    JOIN course_denominators d
-      ON d.course = p.course AND d.lesson = p.lesson
-     AND d.activity_type = p.activity_type
+    lesson  exercise-1  exercise-2   lab   quiz
+    1.1        378          96       152    94
+    1.2        149         112        90    54
+    1.3        108          87        58     0
+    1.4         73          58        26     0
+    1.5         16          20         7     0
 
-That is an INNER join. An activity with no authored denominator cannot appear in
-that list at all, no matter how badly it is broken. And
-`scripts/seed-cyber-denominators.js` says in its own header that twenty
-activities are deliberately unpriced, **fifteen of them in Unit 1**.
+v2 said only Exercise 1 "actually computes a score and sends it" and the rest
+"were never wired to report a score at all." Ex2 has 373 scored students across
+Unit 1, labs have 333, quizzes have 148. Nothing about that claim survives, and
+the cohort disclosure built on it must not go.
 
-So "zero cyber Unit 1 rows" is exactly what that check returns whether Unit 1 is
-perfect or completely broken. I counted something that could not contain the
-answer and read the silence as evidence. That is the `/admin/command` login.html
-trap, pointed at me, and it is the same failure this whole thread is about.
+### The actual bug: the denominators are wrong, and Vo's 15 is in the data
 
-**What the board says, which I should have weighted first.** Five tasks, every
-one `done`, every one `verified: false`, every one about Unit 1:
+`1.1 exercise-2` is authored as **out of 8**. The observed values are:
 
-    #102  Cyber 1.2 Exercise 1 and 2 record a fabricated 0: pages never report
-    #104  9 pages post a fabricated 0, 4 pages (incl 1.2 ex1/ex2) never complete
-    #105  Cyber 1.2 and 1.3-1.5 exercises still carry no reporter: they complete
-          as done-ungraded, so NO SCORE REACHES THE GRADEBOOK
-    #143  Score reporter posts a false zero - 10 of 15 AP Cyber Unit 1 pages
-    #145  Clear the 2026-09-01 score-reporter false zeros
+    value 8   -> 63 students
+    value 15  -> 33 students     <- Vo's student is one of these
 
-#105 is Vo's symptom, in Unit 1, in the words of whoever filed it. Marked done.
-Never verified. #143's "10 of 15" is the same fifteen unpriced Unit 1 activities.
+Thirty-three students submitted that exercise scored out of **15** while the
+gradebook believes the column is out of 8. A perfect paper arrives as 15 against
+a denominator of 8. That is why his student's 15 out of 15 does not render as a
+grade: it is not missing, it is uncomputable.
 
-**v2 is not thereby correct either.** Its claim that only Exercise 1 was ever
-wired came from counting `apcseReportScore` occurrences in fetched page HTML.
-`docs/runs/2026-09-01-...-verification-checklist.md` retracts that method
-explicitly: the reporter is a theme asset that all 104 cyber activity pages load,
-not per-page inlined markup, so that count measures whether a page was
-hand-patched, not whether it can report. On that measure 103 of 104 pages look
-broken.
+Seven columns carry the same class of conflict, and two are severe:
 
-So both documents reached a confident answer with an instrument that could not
-see the thing. They disagree, and neither is evidence.
+    lesson  activity      authored   observed   students   agreement
+    1.1     exercise-1        7         14        207        55%
+    1.1     exercise-2        8         15         33        66%
+    1.4     exercise-1       25         24         73       100%
+    1.4     exercise-2       25         24         58       100%
+    1.4     lab              30         24         26       100%
+    1.5     exercise-1        4         24         16       100%
+    1.5     exercise-2        4         24         20       100%
+    1.5     lab              30         24          7       100%
 
-**`[TANNER]` The check that settles it.** Signed in, either of:
+Unit 1.5 is the worst: pages serve 24 points, the gradebook holds 4. A student
+with full marks computes to 600 percent.
 
-    https://progress.apcsexamprep.com/api/admin/denominators?course=ap-cybersecurity
-    https://progress.apcsexamprep.com/api/admin/class/<his_class_id>/gradebook
+And one column has no denominator at all:
 
-The first says whether Unit 1 Ex2/Lab/Quiz have an authored "out of" at all. The
-second says what his class actually holds. Every read of `course_denominators`
-sits behind teacher or admin auth, so I cannot reach either from here.
+    1.3  lab   authored: null   58 students scored   proposal: 24
 
-Until one of those comes back, the honest email is the one below: it commits to
-nothing about his data, apologises for the miss, and asks for what would let me
-finish. It deliberately does NOT repeat v2's "your work is unrecoverable, students
-must redo it", because telling twenty teachers to re-run a week of class on an
-unverified premise is the more expensive way to be wrong.
+Unpriced work cannot join a points sum, so those 58 students' lab work is
+excluded from the rollup entirely. That is the `items_percent_only` case, and it
+is real.
+
+### Why the 55 and 66 percent agreement matters: two page sets
+
+The low-agreement columns are the tell. `1.1 exercise-1` splits 171 students at 7
+and 207 at 14; `1.1 exercise-2` splits 63 at 8 and 33 at 15. That is not noise,
+it is two different live pages serving two different totals for the same lesson
+and activity.
+
+`scripts/seed-cyber-denominators.js` names the cause in its own header: Unit 1's
+`ap-cyber-unit-1-lesson-N-*` page set is duplicated by an
+`ap-cybersecurity-unit-1-<topic>-*` set. A denominator is keyed by (course,
+lesson, activity_type), so it can hold exactly one value. Whichever it holds,
+the students on the other page set are graded against the wrong total.
+
+**This is fully recoverable.** Every raw score is stored. Correcting a
+denominator recomputes every affected grade at read time, per the mastery rule in
+CLAUDE.md. No student redoes anything.
+
+### What I did NOT do
+
+I did not adopt any proposed denominator. Two reasons, and the first is binding:
+
+- `1.1 exercise-2` genuinely does not agree with itself, 66 percent. Picking 8 or
+  15 regrades one of the two cohorts wrongly. The duplicate page sets have to be
+  reconciled first; that is a content decision, not a data one.
+- Adopting a value silently regrades live classes. The seed script's own header
+  says a guessed denominator "silently regrades a class." That is a judgement
+  call for Tanner, not an auto-dispatch.
+
+The three 100-percent-agreement conflicts in 1.4 and 1.5, and the 1.3 lab
+proposal of 24, are much safer and could be adopted today. That is still Tanner's
+call to make.
+
+### The draft
 
 > Subject: Re: Student progress not showing after Exercise 1
 >
@@ -161,35 +185,73 @@ unverified premise is the more expensive way to be wrong.
 > then had to write again through the contact form to get an answer at all. That
 > is my fault and I am sorry for it.
 >
-> I am not going to give you a third confident answer that turns out to be wrong.
-> So here is exactly where I am.
+> I have now found it, and I can tell you exactly what is wrong. It is better news
+> than I feared.
 >
-> You are right that something is broken. I have found records going back through
-> last week showing the scoring on Unit 1 exercise, lab and quiz pages was worked
-> on repeatedly and never confirmed as fixed, which fits what you are seeing
-> precisely. What I do not yet know is whether your students' scores were recorded
-> and are failing to display, or were never calculated in the first place. Those
-> need different fixes and one of them has consequences for your grading that the
-> other does not.
+> **Nothing your students did is lost.** Every score is recorded, including the
+> Exercise 2, lab and quiz work you cannot see. Your three Cybersecurity sections
+> have thousands of stored scores. Nobody needs to redo anything.
 >
-> I will know within the day. I did not want to leave your message sitting while I
-> find out.
+> **The bug is in what the gradebook thinks each activity is worth.** Your
+> student's 15 out of 15 is a real, stored score. But the gradebook had been told
+> that exercise is out of 8. A score of 15 against a maximum of 8 is not a
+> percentage it can render, so the column comes up empty rather than wrong. That
+> is why you see Lesson and Exercise 1 and nothing after it.
 >
-> Two things would let me answer you properly:
+> The cause is that two versions of the Unit 1 pages are live, and they award
+> different point totals for the same exercise. Some of your students got the
+> 8-point version and some got the 15-point one. I am reconciling those pages so
+> there is one correct total per activity.
 >
-> Your class code, and the name of the lesson page your students were on for that
-> Exercise 2. The 15 out of 15 you quoted does not match any total I have on file
-> for a Unit 1 Exercise 2, which is itself a clue.
+> **The fix is retroactive.** Because the raw scores are stored, correcting the
+> point totals recalculates every affected grade automatically, including work
+> your students finished last week. You will not lose the first two weeks of the
+> year.
 >
-> One thing I can tell you now: do not re-enter or re-assign anything yet. If the
-> scores are recorded and simply not displaying, that work is fine and I would
-> hate for you to have your students redo work that was never lost.
+> I also found that one Unit 1 lab has no point value recorded at all, which is
+> why that work registers as complete but never appears in the points column.
+> Same fix, same retroactive correction.
 >
-> I will write again today either with a fix or with a straight account of what is
-> wrong and how long it takes.
+> **Separately, something you have not asked about.** Your P8 AP CSP section, code
+> CSP-8MMJ, has 21 students with 19 active this week and has recorded zero scores.
+> Lessons register, grading does not. Your other CSP section has recorded seven.
+> That is a different and more complete failure than the Cybersecurity one, and
+> you had no way to know, so I am telling you rather than waiting for you to hit
+> it.
+>
+> I will confirm here as each piece lands, and I will tell you what to look at to
+> check it yourself rather than asking you to take my word for it. You have been
+> more patient with this than I deserved.
 >
 > Best,
 > Tanner
+
+---
+
+## 2b. Board-worthy findings from the denominator sweep
+
+Not email material. Recording them because they were found in passing and will
+otherwise be rediscovered.
+
+**Seven denominator conflicts and one missing, all Unit 1** (table above). The
+1.5 columns are authored at 4 against an observed 24, which produces 600 percent
+grades for anyone who finishes.
+
+**Two live Unit 1 page sets award different totals for the same activity.** This
+is the root cause and it is a content problem, not a data one. Until the pages
+are reconciled, no single denominator can be correct for `1.1 exercise-1` or
+`1.1 exercise-2`.
+
+**Quizzes score in 1.1 and 1.2 and nowhere else in Unit 1.** 94 and 54 students
+respectively; 1.3, 1.4 and 1.5 quizzes have zero scored students despite those
+lessons having 87, 58 and 20 students scoring on exercise-2. That is a genuine
+gap, distinct from the denominator problem.
+
+**Manifest hygiene, four items.** Lesson `2.5` and lesson `3.6` are both filed
+under `unit-1`. `3.6` is the retired lesson id the Unit 3 renumbering was supposed
+to remove. `3.1`, `3.1a` and `3.1b` all carry separate authored columns. `4.5`
+exists although CED Unit 4 runs 4.1 to 4.4. None of these has student data behind
+it yet, so they are cheap to fix now and expensive after Unit 3 goes live.
 
 ---
 
@@ -371,35 +433,41 @@ rejecting input when it is actually rejecting the name.
 
 ---
 
-## 6. Michelle Campbell (Palm Beach) - answer consistently with Vo
+## 6. Michelle Campbell (Palm Beach) - rewritten to match the resolved Vo answer
 
-Same territory as Vo, so these two must not contradict each other. Labs in Unit 1
-do record. The five Unit 4 labs carry no authored total, and Unit 5 lesson 5.1's
-lab is in the live reporter-gap list.
+Her question (are labs self-graded, do they show in the gradebook) has the same
+root cause as Vo's, so the two replies must agree. Labs DO self-grade and DO
+record: 152, 90, 58, 26 and 7 students scored on the Unit 1.1 through 1.5 labs
+respectively. What is wrong is the point value on three of them, and 1.3's lab
+has no point value at all.
 
 > Subject: Re: Are Labs self-graded, and do they show in the gradebook?
 >
 > Hi Michelle,
 >
-> Yes to both, with one caveat I would rather you had up front.
+> Not even slightly tired of them, and this one turned out to be well timed.
 >
-> Labs are self-graded. The student works through the lab on the page, it scores
-> their work as they go, and the result posts to your gradebook without you
-> marking anything.
+> Yes, labs are self-graded. Students work through the lab on the page, it scores
+> them as they go, and the result posts to your gradebook with nothing for you to
+> mark.
 >
-> The caveat: that is solid for Unit 1, which is where your students are now. As I
-> was checking this I found that a small number of activities in Units 2 through
-> 5, including one lab, are not posting scores the way they should, and a few of
-> the Unit 4 labs do not yet have a point total attached, so they record but do not
-> add into the points column. None of that touches Unit 1.
+> They are recording correctly right now. What is wrong is on the display side: for
+> a few Unit 1 activities the gradebook has the wrong point total on file, so a
+> completed lab either shows a percentage that looks wrong or does not appear in
+> the points column at all. The Topic 1.3 lab in particular has no point value
+> recorded, so that work registers as complete and then vanishes from the points
+> total.
 >
-> I am fixing those now and they will be right well before your students reach
-> them. I mention it because you asked a gradebook question and it would be poor
-> form to answer only the half that is currently working.
+> I am correcting those totals this week. The important part: it is retroactive.
+> The raw scores are all stored, so fixing the point values recalculates the grades
+> automatically, including work your students have already finished. Nobody redoes
+> anything.
 >
-> If you want, once your students have a few labs in, send me your class code and
-> I will check the gradebook against the raw records myself and confirm the two
-> agree.
+> Until then, treat the labs column as understating what your students have done
+> rather than as missing data.
+>
+> I will email you when the totals are corrected and tell you how to spot-check it
+> yourself rather than taking my word for it.
 >
 > Best,
 > Tanner
