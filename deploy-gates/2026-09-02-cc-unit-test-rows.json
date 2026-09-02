@@ -1,0 +1,77 @@
+{
+  "change": "the Cyber Command Center budgets two days a unit for a test it never hands the teacher",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "two rows go in and nothing else on the page moves",
+      "command": "npm run --silent smoke:ccrows",
+      "expect": "28 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the preflight, with the glyph-set emoji rule",
+      "command": "npm run --silent smoke:preflight",
+      "expect": "43 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE GUARD: a change anywhere else in the body must be refused",
+      "file": "scripts/cyber-cc-unit-test-rows.js",
+      "find": "  if (rebuilt !== before) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:ccrows",
+      "expect_failure": "a one-space change elsewhere in the body is refused"
+    },
+    {
+      "kind": "mutation",
+      "name": "the anchor must find the END of RESOURCES, not the first array that looks like it",
+      "file": "scripts/cyber-cc-unit-test-rows.js",
+      "find": "  const at = before.lastIndexOf(ANCHOR);",
+      "replace": "  const at = before.indexOf(ANCHOR);",
+      "command": "npm run --silent smoke:ccrows",
+      "expect_failure": "they landed inside RESOURCES, not the decoy array"
+    },
+    {
+      "kind": "mutation",
+      "name": "running it twice must not add the rows again",
+      "file": "scripts/cyber-cc-unit-test-rows.js",
+      "find": "  if (before.includes('Unit Tests: Teacher Bundle')) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:ccrows",
+      "expect_failure": "running it twice adds nothing"
+    },
+    {
+      "kind": "mutation",
+      "name": "a malformed Drive id must not reach a teacher's page",
+      "file": "scripts/cyber-cc-unit-test-rows.js",
+      "find": "  if (!DRIVE_ID.test(String(folderId || ''))) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:ccrows",
+      "expect_failure": "a malformed Drive id is refused"
+    },
+    {
+      "kind": "mutation",
+      "name": "the icon must be one the page already used",
+      "file": "scripts/cyber-cc-unit-test-rows.js",
+      "find": "  if (!/[\\u{1F4CB}]/u.test(before)) bad.push('the icon used is not one the page already had');",
+      "replace": "  if (false) bad.push('the icon used is not one the page already had');",
+      "command": "npm run --silent smoke:ccrows",
+      "expect_failure": "verify refuses when the icon is NOT already on the page"
+    },
+    {
+      "kind": "mutation",
+      "name": "a NEW emoji glyph must still be refused by the preflight",
+      "file": "scripts/matrixify-preflight.js",
+      "find": "        if (introduced.length) {",
+      "replace": "        if (false) {",
+      "command": "npm run --silent smoke:preflight",
+      "expect_failure": "a row that introduces a glyph the page never had is refused"
+    },
+    {
+      "kind": "rederive",
+      "name": "run the whole thing against the REAL 68,654 character body and preflight the sheet",
+      "command": "node -e \"const fs=require('fs');const {addRows,verify,toCsv}=require('./scripts/cyber-cc-unit-test-rows');const {preflight}=require('./scripts/matrixify-preflight');const B='/tmp/claude-0/-home-user-apcsexamprep-progress-api/2cf3d1a5-a022-57bf-b3d4-58a93d6a1b12/scratchpad/cc/cyber-command-center.before.html';const before=fs.readFileSync(B,'utf8');const r=addRows(before,'1nVxjKSNwZLUVayeEl8qAGW21IWI8Xl0j');if(r.error)throw new Error(r.error);if(!r.changed)throw new Error('no change against the real body');const bad=verify(before,r.after,'1nVxjKSNwZLUVayeEl8qAGW21IWI8Xl0j');if(bad.length)throw new Error(bad[0]);const p=preflight('/tmp/claude-0/-home-user-apcsexamprep-progress-api/2cf3d1a5-a022-57bf-b3d4-58a93d6a1b12/scratchpad/cc/cc-unit-tests-pages.csv',{carrying:JSON.parse(fs.readFileSync('/tmp/claude-0/-home-user-apcsexamprep-progress-api/2cf3d1a5-a022-57bf-b3d4-58a93d6a1b12/scratchpad/cc/carrying.json','utf8'))});if(p.problems.length)throw new Error(p.problems[0]);if(p.rows!==1)throw new Error('expected 1 row');console.log('REAL BODY OK '+before.length+' to '+r.after.length+' chars, +'+(r.after.length-before.length)+', sheet clear, '+p.scriptsChecked+' script block compiled');\"",
+      "expect": "REAL BODY OK"
+    }
+  ]
+}
