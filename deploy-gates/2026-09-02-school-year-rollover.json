@@ -1,0 +1,69 @@
+{
+  "change": "roll the school year to 2026-2027, and only where the year is a school year",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "curriculum and exam-spec references are refused, school years roll",
+      "command": "npm run --silent smoke:schoolyear",
+      "expect": "35 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the preflight, with a blank cell treated as an erase in every column",
+      "command": "npm run --silent smoke:preflight",
+      "expect": "50 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT WOULD PUT A FALSE FACT ON A PAGE: the curriculum guard",
+      "file": "scripts/school-year-rollover.js",
+      "find": "  if (CURRICULUM.test(before) || SPEC_PHRASE.test(before)) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:schoolyear",
+      "expect_failure": "refused: Aligned to the 2025-2026 4-unit curriculum"
+    },
+    {
+      "kind": "mutation",
+      "name": "the definite-article rule, which separates the exam SPEC from Exam Prep",
+      "file": "scripts/school-year-rollover.js",
+      "find": "  if (CURRICULUM.test(before) || SPEC_PHRASE.test(before)) {",
+      "replace": "  if (CURRICULUM.test(before)) {",
+      "command": "npm run --silent smoke:schoolyear",
+      "expect_failure": "the 2025-2026 exam\" is the SPEC and is refused"
+    },
+    {
+      "kind": "mutation",
+      "name": "a roll that edits anything but the year must be refused",
+      "file": "scripts/school-year-rollover.js",
+      "find": "  if (neutral(before) !== neutral(after)) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:schoolyear",
+      "expect_failure": "a same-length edit elsewhere is still refused",
+      "_why": "The first fixture dropped a letter, so the LENGTH check caught the mutation and the byte-comparison guard never fired. The battery reported a survivor, which is what a survivor is for. The fixture is now same-length so only this guard can catch it."
+    },
+    {
+      "kind": "mutation",
+      "name": "A BLANK CELL IS AN ERASE: the generalised rule",
+      "file": "scripts/matrixify-preflight.js",
+      "find": "    if (!blank.length) continue;",
+      "replace": "    if (true) continue;",
+      "command": "npm run --silent smoke:preflight",
+      "expect_failure": "a column blank on SOME rows is refused"
+    },
+    {
+      "kind": "mutation",
+      "name": "Body HTML keeps its own louder message",
+      "file": "scripts/matrixify-preflight.js",
+      "find": "    if (blankBody.length) {",
+      "replace": "    if (false) {",
+      "command": "npm run --silent smoke:preflight",
+      "expect_failure": "a blank Body HTML still says it would WIPE the page"
+    },
+    {
+      "kind": "rederive",
+      "name": "run it against the REAL titles read off the live store, and preflight every sheet",
+      "command": "node -e \"const fs=require('fs');const {build,sheet}=require('./scripts/school-year-rollover');const {preflight}=require('./scripts/matrixify-preflight');const t=JSON.parse(fs.readFileSync('/tmp/claude-0/-home-user-apcsexamprep-progress-api/2cf3d1a5-a022-57bf-b3d4-58a93d6a1b12/scratchpad/year/targets.json','utf8'));const {pages,articles,problems}=build(t);if(problems.length)throw new Error(problems[0]);let n=0;for(const f of ['school-year-pages-title','school-year-pages-title-tag','school-year-blog-posts-title','school-year-blog-posts-title-tag']){const p=preflight('/tmp/claude-0/-home-user-apcsexamprep-progress-api/2cf3d1a5-a022-57bf-b3d4-58a93d6a1b12/scratchpad/year/'+f+'.csv');if(p.problems.length)throw new Error(f+': '+p.problems[0]);n+=p.rows;}if(n!==18)throw new Error('expected 18 rows across four sheets, got '+n);console.log('REAL TITLES OK '+pages.length+' page fields, '+articles.length+' article fields, four sheets clear, '+n+' rows');\"",
+      "expect": "REAL TITLES OK"
+    }
+  ]
+}

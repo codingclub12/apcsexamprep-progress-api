@@ -63,6 +63,46 @@ console.log('\n2. THE ONE THAT WIPES PAGES: a blank Body HTML');
     has(ws, /BLANK Body HTML/), ws.problems);
 }
 
+console.log('\n2b. A BLANK CELL IS AN ERASE IN EVERY COLUMN, not just Body HTML');
+{
+  //  Found by building a real sheet. Ten page Titles needed rolling to 2026-2027
+  //  and exactly ONE of the ten also needed its title_tag rolled, so the sheet
+  //  carried a title_tag column with nine empty cells. Matrixify writes what you
+  //  give it: that would have CLEARED the SEO title on nine live pages, one of
+  //  which had already been migrated to 2026-27 by hand.
+  const H = ['Handle', 'Command', 'Title', 'Metafield: global.title_tag [single_line_text_field]'];
+  const mixed = preflight(write('mixed-pages.csv', H, [
+    ['a', 'MERGE', 'New A', ''],
+    ['b', 'MERGE', 'New B', 'only this one'],
+  ]));
+  ok('  a column blank on SOME rows is refused', has(mixed, /BLANK "Metafield/), mixed.problems);
+  ok('  and the message says to split the sheet', has(mixed, /Split the sheet/), mixed.problems);
+  ok('  it counts how many rows would be erased', has(mixed, /1 of 2 row/), mixed.problems);
+
+  //  Split the way the rule asks, and both halves pass.
+  const titles = preflight(write('split-a-pages.csv', ['Handle', 'Command', 'Title'],
+    [['a', 'MERGE', 'New A'], ['b', 'MERGE', 'New B']]));
+  const tags = preflight(write('split-b-pages.csv',
+    ['Handle', 'Command', 'Metafield: global.title_tag [single_line_text_field]'],
+    [['b', 'MERGE', 'only this one']]));
+  ok('  the split title sheet passes', titles.problems.length === 0, titles.problems);
+  ok('  the split metafield sheet passes', tags.problems.length === 0, tags.problems);
+
+  //  IDENTIFIER columns address a row rather than set it, so a blank there is a
+  //  different bug and must not be reported as an erase.
+  const ident = preflight(write('ident-pages.csv', ['Handle', 'Command', 'Title'],
+    [['a', 'MERGE', 'New A'], ['', 'MERGE', 'New B']]));
+  ok('  a blank Handle is not reported as an erase',
+    !ident.problems.some((x) => /BLANK "Handle"/.test(x)), ident.problems);
+
+  //  Body HTML keeps its own louder message, because that is the one that makes
+  //  somebody stop reading and check.
+  const bodySheet = preflight(write('body-pages.csv', ['Handle', 'Command', 'Body HTML'],
+    [['a', 'MERGE', '<p>x</p>'], ['b', 'MERGE', '']]));
+  ok('  a blank Body HTML still says it would WIPE the page',
+    has(bodySheet, /wipe those pages/), bodySheet.problems);
+}
+
 console.log('\n3. Encoding: the BOM is not optional');
 {
   const r = preflight(write('nobom-blog-posts.csv', HDR, [GOOD], { noBom: true }));
