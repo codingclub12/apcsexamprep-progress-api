@@ -164,10 +164,33 @@ ok('a challenge short-circuits the other checks rather than reporting ten of the
   C.checkPage(url('x'), res('<html><title>Just a moment...</title></html>')).length === 1);
 
 console.log('\n  Encoding, template leaks and placeholders\n');
-ok('double-encoded text is detected', C.detectMojibake('the studentâ€™s answer').length > 0);
-ok('a correctly encoded accent is NOT mojibake', C.detectMojibake('naive café résumé').length === 0);
+
+// Fixtures are GENERATED from bytes, not pasted. A pasted fixture is itself
+// mojibake sitting in a tracked file, so the repository scan in
+// smoke/encoding-guard.js has to either flag it or exempt the file, and the
+// exemption is what hid four real corruptions until 2026-09-03.
+// The cp1252 table is DERIVED, not typed. The first draft of this fixture typed
+// out five entries of it and omitted byte 0x99, which produced a string that was
+// cp1252 for one byte and latin-1 for the next. Real corruption is never mixed,
+// so the detector correctly ignored it and the test failed for a reason that had
+// nothing to do with the detector.
+//
+// Use only the 'windows-1252' label here. 'iso-8859-1' is a WHATWG ALIAS for
+// windows-1252 and does not give you latin-1; scripts/mojibake-rederive.js has
+// the full story and the 40 missed hits it cost.
+const CP1252 = new TextDecoder('windows-1252');
+const misread = (s) => Array.from(Buffer.from(s, 'utf8'))
+  .map((b) => CP1252.decode(Buffer.from([b]))).join('');
+const RQUOTE = misread(String.fromCodePoint(0x2019));   // right single quote
+const EMOJI  = misread(String.fromCodePoint(0x1F3AF));  // 4 bytes, was invisible
+ok('double-encoded text is detected', C.detectMojibake('the student' + RQUOTE + 's answer').length > 0);
+ok('a double-encoded EMOJI is detected, which needs a 4 byte sequence width',
+  C.detectMojibake('nice ' + EMOJI + ' work').length > 0);
+ok('a correctly encoded accent is NOT mojibake',
+  C.detectMojibake('naive caf' + String.fromCodePoint(0x00E9) + ' r'
+    + String.fromCodePoint(0x00E9) + 'sum' + String.fromCodePoint(0x00E9)).length === 0);
 ok('mojibake in visible prose is a finding',
-  C.checkPage(url('x'), res(page({ body: '<p>the studentâ€™s answer</p>' }))).some((f) => f.kind === 'mojibake'));
+  C.checkPage(url('x'), res(page({ body: '<p>the student' + RQUOTE + 's answer</p>' }))).some((f) => f.kind === 'mojibake'));
 ok('unrendered Liquid in the body is a finding',
   C.checkPage(url('x'), res(page({ body: '<p>{{ product.title }}</p>' }))).some((f) => f.kind === 'liquid-leak'));
 ok('a Liquid tag is a finding',
