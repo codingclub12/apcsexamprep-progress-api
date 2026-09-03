@@ -16,6 +16,7 @@
     "availability": "node scripts/page-availability.js",
     "practicehubs": "node scripts/cyber-practice-hubs-csv.js",
     "smoke:labs": "node smoke/labs.js",
+    "smoke:storefront": "node smoke/storefront-fetch.js",
     "smoke:teacher": "node smoke/teacher-dashboard.js",
     "smoke:quizgate": "node smoke/quiz-gate.js",
     "smoke:quiztogradebook": "node smoke/quiz-to-gradebook.js",

@@ -1,0 +1,105 @@
+{
+  "change": "the Unit 1 terminal lab spec reaches production so its already-live page has something to mount, the permissions lab moves to Unit 4 (board 170), and every live verifier stops believing a body it did not prove it fetched",
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the labs suite plays every spec's own solution through the real player, and pins points to check count",
+      "command": "npm run --silent smoke:labs",
+      "expect": "145 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "a live check may not believe a body it did not prove it fetched",
+      "command": "npm run --silent smoke:storefront",
+      "expect": "22 passed, 0 failed"
+    },
+    {
+      "kind": "suite",
+      "name": "the workflow reporting suite, unchanged by this branch but shipping on the same tree",
+      "command": "npm run --silent smoke:deployreporting",
+      "expect": "94 passed, 0 failed"
+    },
+    {
+      "kind": "mutation",
+      "name": "THE ONE THAT MADE THREE VERIFIERS LIE: a body that is not the page must be refused",
+      "file": "lib/storefront-fetch.js",
+      "find": "  return MARKERS.every((m) => body.includes(m));",
+      "replace": "  return true;",
+      "command": "npm run --silent smoke:storefront",
+      "expect_failure": "[FAIL] 2.1 the challenge body is not a real page",
+      "_why": "This is the guard the whole change is about. Without it a 403 bot challenge is accepted as a page, and every assertion of the form 'this string is gone now' passes on it. Measured, before the fix: verify-cc-pacing-live reported 4 of 8 failed on a strip that was live and correct, and verify-csp-applied-cards-live reported 17 pages serving 0 of 6 questions when all 17 serve six. An agent believing the second one re-ships seventeen pages that were already right."
+    },
+    {
+      "kind": "mutation",
+      "name": "a themed 404 carries every marker, so the status must be checked independently of the shape",
+      "file": "lib/storefront-fetch.js",
+      "find": "  if (r.code !== '200') return 'answered ' + r.code + ' rather than 200';",
+      "replace": "  if (false) return 'unreachable';",
+      "command": "npm run --silent smoke:storefront",
+      "expect_failure": "[FAIL] 4.1 a 200-shaped body served with 404 is still refused",
+      "_why": "Shopify renders its 404 through the theme, so a missing page carries Shopify.theme and cdn/shopifycloud exactly like a real one. Shape alone can never be enough, and a verifier handed a themed 404 would report the page's whole content as missing."
+    },
+    {
+      "kind": "mutation",
+      "name": "the regression guard is live: a verifier that spoofs a browser again must be caught",
+      "file": "scripts/verify-cyber-labs-live.js",
+      "find": "const API = 'https://progress.apcsexamprep.com';",
+      "replace": "const API = 'https://progress.apcsexamprep.com';\nconst UA = 'Mozilla/5.0 (Macintosh) Chrome/120'; const H = 'User-Agent: ' + UA;",
+      "command": "npm run --silent smoke:storefront",
+      "expect_failure": "[FAIL] 5.2 verify-cyber-labs-live.js sends no User-Agent of its own",
+      "_why": "The static scan in section 5 is the only thing stopping this coming back, and a scan is exactly the kind of check that quietly matches nothing. This puts a browser UA back into a verifier and requires the scan to name that file. Note the scan strips comments first, because the comments in these files deliberately explain the User-Agent incident."
+    },
+    {
+      "kind": "mutation",
+      "name": "the refusal has to name the User-Agent, or the next agent spends a pass rediscovering it",
+      "file": "lib/storefront-fetch.js",
+      "find": "  if (CHALLENGE.test(r.body)) {",
+      "replace": "  if (false) {",
+      "command": "npm run --silent smoke:storefront",
+      "expect_failure": "[FAIL] 2.3 the refusal names the challenge, so the operator is not left guessing",
+      "_why": "Without this branch a challenged fetch is still refused, by the marker test, but the message reads 'body carries none of the storefront markers'. That is true and useless: it points at the theme rather than at the header being sent. The whole cost of this incident was time spent believing the wrong story, so the message naming the cause is a guard, not a nicety."
+    },
+    {
+      "kind": "mutation",
+      "name": "a lab's points must equal its check count, and the LOADER is what refuses it",
+      "file": "config/labs/ap-cybersecurity-1.2-auth-lab.json",
+      "find": "  \"points\": 8,",
+      "replace": "  \"points\": 7,",
+      "command": "npm run --silent smoke:labs",
+      "expect_failure": "FAIL  every spec in config/labs passes validation",
+      "_why": "The manifest row is generated FROM the spec, so points drifting from the check count is how a lab silently scores a whole class out of the wrong total. The first cut of this mutation expected the per-spec points assertion and the gate refused it: lib/lab-spec.js validate() rejects the spec at load, so it never reaches that assertion. The guard that actually does the work is the loader's, and this now names it. The per-spec check is kept because it reports WHICH lab and by how much."
+    },
+    {
+      "kind": "mutation",
+      "name": "and the SECOND reader catches the same drift independently, which is what makes it a rederive",
+      "file": "config/labs/ap-cybersecurity-1.2-auth-lab.json",
+      "find": "  \"points\": 8,",
+      "replace": "  \"points\": 7,",
+      "command": "python3 tools/rederive-lab-specs.py",
+      "expect_failure": "1.2-auth-lab: points 7 but 8 checks",
+      "_why": "A rederive nobody has broken on purpose is a second opinion that might agree by doing nothing. The same one-character edit is required to turn both readers red, by two different routes: the loader refuses to construct the spec, and the Python reader recomputes the count from the file. If only one goes red, they are not independent."
+    },
+    {
+      "kind": "rederive",
+      "name": "a second reader, in Python, reaching the same verdict from the raw JSON without importing lib/lab-spec.js",
+      "command": "python3 tools/rederive-lab-specs.py",
+      "expect": "REDERIVED: 7 of 7 specs internally consistent",
+      "_why": "smoke/labs.js proves a lab is playable by running the real player over the authored solution. This reaches the same conclusion the other way: it reads the JSON as data, in a different language, and recomputes points against check count, every answer index against its option list, and every answer-check against the question ids it names. If the loader and the file ever disagree about what the file says, these two diverge."
+    },
+    {
+      "kind": "live",
+      "name": "the Unit 1 lab page is bound to a spec production actually serves, and the permissions lab is in Unit 4",
+      "command": "node scripts/verify-cyber-labs-live.js",
+      "expect": "CYBER LABS LIVE: 11 of 11",
+      "_why": "Eight of its eleven assertions are FALSE right now, measured against production on 2264d03: /api/labs/ap-cybersecurity/1.2-auth-lab answers 404, and 1.2-lab reports unit-1 and lesson 1.2. The three that already pass are the NEVER_AUTO edges the move ran along (the item_id and the live handle are unchanged, and the 2.4 badge log was not in scope), and they are there because a check that only looked for the new unit would pass just as happily on a deploy that renamed a handle out from under a live page."
+    },
+    {
+      "kind": "live",
+      "name": "the three verifiers this change repaired agree with the site again",
+      "command": "node scripts/verify-cc-pacing-live.js",
+      "expect": "PACING STRIP LIVE: 8 of 8",
+      "_why": "This reported 4 of 8 failed before the fetch was fixed, on a page that had not changed. It is included as a live check because the thing being verified is the instrument, and the only place an instrument can be shown to have stopped lying is against the live system it was lying about."
+    }
+  ],
+  "_still_open": "Twenty eight other scripts still send a browser User-Agent to the storefront. They are not repaired here and they are not silently broken either: the CSV generators go through scripts/extract-live-body.js, which throws 'no rte wrapper on this page' on the challenge body, so they fail loudly rather than writing a sheet from it. Verified by feeding the saved challenge fixture to extract(). The sweeps (link-graph, site-crawl, empty-page-sweep, cyber-unit-sweep) will report the whole site as broken until they are moved onto lib/storefront-fetch.js. That is a separate change and is filed."
+}
