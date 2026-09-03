@@ -735,6 +735,51 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   Its em-dashes and curly quotes are College Board's verbatim wording, so the
   no-em-dash convention above does not apply to it: that rule governs text we
   author, and re-flattening a quoted source is a corruption, not a fix.
+- **Content arriving from the Claude chat project is a PROPOSAL, not a source.**
+  That surface does not have this repo, so every file path, filename, identifier
+  and topic number in it is a recollection rather than a reading, and it arrives
+  with the same confidence either way. Open each one before landing it.
+  The CLAUDE.md additions of 2026-09-03 carried four wrong claims and three were
+  exactly this: a `data/cyber-topics.json` that has never existed, named as "the
+  only authority" for the 24 topic titles; a topic swap attributed to 1.3 and 1.4
+  when the audit records it at 3.3 and 3.4; and a CED PDF described as being in
+  this repo when only its sha256 is. None of the three was careless. All are
+  structural, and the structure does not improve with more care on that side.
+  The fourth kind is worse, because it survives review: a claim about what a
+  CHECK covers. Verify that by RUNNING the check against the case, never by
+  reading its comment or its rule list. Both mojibake validators in this repo
+  read as complete and both have holes.
+  This cuts the same way against a session's own output, and twice on 2026-09-03
+  alone. The exercise-design section below was written here, confidently, hours
+  after `docs/exercise-design-proposal.md` had already refuted it. And a session
+  spent an afternoon rebuilding the mojibake detector that another session had
+  already rebuilt better, on this same branch, because it read the code and not
+  the log. Whoever wrote it is not the variable; whether it was opened is.
+- **Nothing shipped may read as machine-written.** This is an acceptance
+  criterion on every page, email, blog post and lesson, stated by Tanner on
+  2026-09-03 alongside "as long as it does not come up as an error". A teacher
+  who thinks a lesson was generated stops trusting the course, and that judgement
+  happens in the first paragraph and is not recoverable by being correct
+  underneath.
+  The em-dash rule below is one instance of this and the most famous tell, not
+  the whole of it. The others, in rough order of how much they give away:
+  - The three-part list used as a rhythm rather than because there are three
+    things. Two is usually the honest count and one is often enough.
+  - "It is not just X, it is Y." Also "more than a Z", "at its core",
+    "fundamentally", "the reality is".
+  - Signposting a paragraph before writing it: "Let us look at three reasons."
+    Write the reasons.
+  - Reflexive hedging on a fact that is known. Say it or check it.
+  - Vocabulary a teacher would not use out loud: delve, leverage as a verb,
+    seamless, robust, holistic, unlock, elevate, navigate a challenge, in today's
+    fast-paced world.
+  - A closing paragraph that restates the opening in different words.
+  - Every section the same length, every bullet the same shape. Real writing is
+    lumpy because some points need more room than others.
+  The test is to read it aloud. If it sounds like a brochure rather than a person
+  who teaches this for a living, it fails, and no amount of technical accuracy
+  fixes it. This applies to a run note and a commit message too, just with a
+  lower bar: those are read by people who work here.
 - No em-dashes in any prose, comments, commit messages, or user-facing strings.
 - AP CSA references use the 2025-2026 4-unit structure exclusively.
 
