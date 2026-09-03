@@ -157,10 +157,26 @@ Not moved: any cyber score, column, denominator or percentage. Visit rows are
 skipped by `denominatorMap` and by `lib/attempt-rollup.js`, and cyber's graded
 work still arrives through `score_events` against authored denominators.
 
-Moved: lesson completion. `lib/admin-exec.js` denominates that from manifest
-visit rows and cyber had none, so every cyber student counted zero lessons
-assigned; they are now assigned 24. `manifest_items` on the live digest goes 908
-to 932, which is the post-deploy live check.
+Moved, in the code: lesson completion. `lib/admin-exec.js` denominates that from
+manifest visit rows and cyber had none, so every cyber student counted zero
+lessons assigned; once the rows exist they are assigned 24. `manifest_items` on
+the live digest going 908 to 932 is the post-deploy live check.
+
+**That check FAILED, and the correction belongs here rather than in a later
+note.** The merge deployed at 17:41Z, `/api/health` reports `d059208`, the
+railway-deploy check went green, and `manifest_items` is still 908. The 24 rows
+are not in production. Ruled out by measuring: a cached digest (other counters
+moved between the same two reads), a different database, the prune path (an
+orphan is a row absent from `buildRows()` and these are in it), the incremental
+seed (it adds exactly 24 against a populated manifest locally), a missing file in
+the artifact (tracked, not gitignored, full checkout uploaded, volume mounts at
+`/data`), and an item_id collision (all 24 ids are reused by another course, so a
+legacy `UNIQUE(item_id)` would explain it perfectly, except production already
+holds 179 such shared ids among its 908 rows, so no such constraint exists).
+
+What is left is two cases only the container can tell apart: the seed threw, or
+it ran and wrote nothing. Board 191, and PR #489 ships the instrument that says
+which.
 
 ## What changed after the merge, and what it proved
 
