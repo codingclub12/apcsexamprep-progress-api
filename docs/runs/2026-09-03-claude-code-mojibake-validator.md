@@ -164,6 +164,20 @@ Its mutation survives by design. That is written in the code and asserted in the
 suite, so the next session to mutation test this does not find a surviving
 mutation, conclude the guard is hollow, and delete a speedup.
 
+## Merged and deployed
+
+PR #482 merged as `bc5d38a` on the same SHA CI passed on, `b1bd094`. Railway
+deployed in about 50 seconds. The deploy gate then ran WITHOUT `--pre` and all
+four kinds pass, which is the run that actually satisfies it:
+
+    suite     54 + 6 + 131 assertions
+    mutation  7, each red on the assertion naming the guard it targets
+    rederive  a second implementation agrees, 120 generated cases + 1514 files
+    live      PRODUCTION SERVES THIS TREE bc5d38a
+
+The live assertion was false before the deploy and is true only after it, which
+is the property the gate's own first manifest failed to have.
+
 ## What is still open
 
 - **I could not reproduce the reported live-page corruption.** Five pages scan
