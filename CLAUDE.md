@@ -22,6 +22,35 @@ so it belongs in Railway and the Actions secret and nowhere else. Get the read
 token from `GET /api/command/read-token` while signed in, rotate it with
 `POST /api/command/read-token/rotate`.
 
+**This repository is PUBLIC**, and until 2026-09-03 that was written down nowhere.
+Confirmed against the GitHub API that day: `codingclub12/apcsexamprep-progress-api`
+reports `"visibility": "public"` and `"private": false`. So the README's endpoint
+contracts, the auth model, the Shopify page handles, this file, and every run note
+under `docs/runs/` are world-readable, and a credential committed here is disclosed
+when it lands rather than when somebody notices. That is the reason the paragraph
+above is strict about where `TODO_KEY` lives, and the reason it was worth stating
+the reason rather than only the rule.
+
+Whether public is the INTENT is a decision and not a patch. Flipping it touches the
+Railway integration and the Actions runs, so a session must not flip it; ask Tanner.
+What a session must do is behave as though every commit is published, because it is.
+
+The transcript leak has now happened twice, and the second one has a shape worth
+naming. A shell idiom that looks like a presence check is not one: `${TOKEN:-no}`
+and `${TOKEN:+yes}${TOKEN:-no}` both EXPAND TO THE VALUE when the variable is set,
+so a line written to print "yes" prints the secret instead. Use
+`[ -n "$TOKEN" ] && echo set`, or test the length, and never interpolate a
+credential into anything that gets printed. Both tokens went into a session
+transcript this way on 2026-09-03.
+
+Rotation of the read token is deliberately NOT available to an agent:
+`POST /api/command/read-token/rotate` answers
+`403 {"error":"This action requires the browser session. An agent credential cannot
+perform it."}` to a bearer credential. So a session that leaks the read token cannot
+clean up after itself and must say so loudly instead of quietly moving on. `TODO_KEY`
+is the same, in Railway and the Actions secret. Both rotations are Tanner's, at a
+browser.
+
 The session's container must also be able to REACH the board:
 `progress.apcsexamprep.com` has to be in the environment's Custom allowed
 domains, or every session opens with DIGEST UNREACHABLE no matter which
@@ -200,6 +229,99 @@ reads and writes, no teacher or admin path to it, capped lengths, and nothing
 logged. Every OTHER path in this repo still stores no student-typed text, and
 adding a second exception is a decision, not a patch. See docs/sandbox.md.
 
+### The AP Cybersecurity exam, so no session has to look it up
+
+Every number here is checked against a first-party source that is IN THIS REPO, so
+the next session can re-derive it without a network call:
+
+- `docs/ced-snapshot/cyber-exam.txt`, College Board's own "The Exam" page for AP
+  Cybersecurity, captured by `scripts/ced-watch.js`. `docs/ced-snapshot/index.json`
+  carries the capture date; it read 2026-09-01 when this was written.
+- `docs/ced-snapshot/exam-dates.txt`, the 2027 AP Exam schedule from the same run.
+- `docs/cyber-exam-format.md`, read 2026-08-21 from the CED PDF, page 147, for the
+  things only the CED states.
+
+Fully digital in Bluebook. Two hours ten minutes, which is the sum of the two
+sections rather than a figure College Board prints.
+
+| Section | Type | Count | Weighting | Timing |
+|---|---|---|---|---|
+| I | Multiple-choice | 60 | 70% | 80 minutes |
+| II | Free-response | 1 | 30% | 50 minutes |
+
+First national administration: Wednesday, May 5, 2027, Session 1. Most schools,
+including all of the lower 48, Hawaii and Washington D.C., begin Session 1 at 8 a.m.
+local time. AP Networking is Friday, May 7, 2027, 2026-27 pilot schools only.
+
+The single FRQ is named **Device Security Analysis**. It supplies several simulated
+sources about one digital device: a set of firewall rules, several system and
+application logs, a list of files with their permissions, and a device policy. The
+student determines security issues and attacks, explains parts of the policy, finds
+signs of attacks in the logs, configures file permissions and firewall rules, and
+suggests ways to harden the device, citing evidence from the sources throughout.
+`docs/cyber-exam-format.md` carries the CED's own six-source sample and its parts A
+to E, including the detail that part C (iii) asks the student to WRITE a `chmod`
+command. The terminal labs in `config/labs/` are practice for a graded part of this
+exam, not a nice extra beside it.
+
+**Only Skill Categories 2 and 3 are assessed on the FRQ.** An FRQ practice prompt
+testing category 1 or 4 is mislabeled regardless of how good the item is.
+
+Multiple-choice weighting is by skill category, and the CED states it as a band:
+
+| Skill Category | Approximate MCQ weighting |
+|---|---|
+| 1 Analyze Risk | 25 to 40% |
+| 2 Mitigate Risk | 25 to 40% |
+| 3 Detect Attacks | 25 to 40% |
+
+Category 4 Collaborate does not appear in the MCQ weighting table. All five units
+are assessed in Section I.
+
+**There are no published per-unit exam weightings.** College Board's exam page
+prints the two section weightings and nothing per unit. Every per-unit percentage
+circulating online is fabricated: do not put one on a page, and treat one appearing
+in a generated sheet as a validator failure rather than a copy edit. The 25 to 40%
+per-category band, by contrast, is CED-verbatim and may be printed as fact.
+
+**The CED has 24 topics: 1.1-1.5, 2.1-2.4, 3.1-3.5, 4.1-4.4, 5.1-5.6.** There is no
+2.5, no 3.6 and no 4.5, and the site teaches all three of those as full lessons with
+their own exercises, labs and quizzes. The authority for topic numbers and titles is
+the CED text extracted under `tools/ap-cyber-ced/`: `CED-UNIT1-EXTRACT.txt` and
+`CED-UNITS-2-5-EXTRACT.txt`, both greppable by `TOPIC N.N`. The enumeration, and
+every place the site disagrees with it, is recorded in
+`docs/ap-cyber-units-2-5-ced-audit.md`.
+
+Do not retype a topic title. Retyping is how site 3.3 and 3.4 ended up as each
+other's CED topics, so that a teacher assigning "3.4 Firewalls" from the CED sent
+the class to Network Segmentation. `lib/cyber-unit3-renumber.js` carries the
+correction and the reason the fix has to be one single-pass callback rather than a
+sequence of replaces.
+
+**There is no `data/cyber-topics.json`.** A draft of this section named that file as
+the only authority for the 24 titles, and no such file has ever existed in this
+repo. Naming an authority that does not exist is worse than naming none, for exactly
+the reason `validate_csv.py` was worse than nothing under the EK convention: the
+check comes back clean.
+
+### Where the CED actually lives in this repo
+
+The PDFs are NOT committed. `config/ced-sources.json` watches
+`ap-cybersecurity-course-and-exam-description.pdf` at its College Board URL under
+the id `cyber-ced-pdf` and stores only a sha256 and a byte length, on the stated
+reasoning that the one question worth asking of a PDF is "did it change, go read
+it". `docs/ced-snapshot/` holds the normalized visible text of the HTML sources, so
+that a diff is readable.
+
+A session looking for the CED will therefore not find a PDF, and must not conclude
+the CED is unavailable. Read `tools/ap-cyber-ced/CED-UNIT1-EXTRACT.txt` and
+`CED-UNITS-2-5-EXTRACT.txt` as plain text. A local download may also arrive with a
+browser-suffixed name such as `ap-cybersecurity-course-and-exam-description__1_.pdf`
+and may turn out to be extracted UTF-8 text despite the extension, in which case
+`pdftotext` and `pdfplumber` both fail on it and a plain text read succeeds. Check
+for a `%PDF` header before reaching for a PDF library, and check for a `/Root`
+object before believing the header.
+
 ## Current mission
 
 Add attempt-level progress saves for CFUs and quizzes on ap-csa and ap-csp. Today those two courses record page visits only. ap-cybersecurity already has working grade reporting into this API; port that pattern rather than inventing a new one. Everything here is additive. Never break or migrate existing visit tracking data.
@@ -249,6 +371,27 @@ and scored zero are different facts and must never render alike.
 The teacher route and `GET /api/admin/class/:id/gradebook/as-teacher` call the same
 builder with the same arguments, so the operator view cannot drift from the teacher
 view. Do not add a second implementation of either.
+
+**Status, checked 2026-09-03: the points model is IN the code, and board task 85 is
+stale as written.** `lib/admin-gradebook.js` computes the overall grade as
+`pct(earnedSum, possibleSum)` and reports `basis: 'points'`, and its own comment
+describes percentage-averaging in the past tense together with the worked example
+that motivated the change: a cyber student on 0/7, 7/8 and 5/5 plus two unpriced
+zeroes read 38% on the operator page and 60% on the teacher's, because the mean
+counted two columns nobody had priced as whole assignments. A mean of percentages
+survives only as a labelled fallback, `basis: 'percent'`, for a class where nothing
+has points assigned at all.
+
+Board task 85 still reads "replace percentage-averaging with points-based
+three-denominator model" and still sits in the `bleeding` bucket. Do NOT close it on
+the strength of this paragraph. The board is the authority on what is left, and the
+resolution the discrepancy asks for is a live gradebook response attached to a run
+note, produced by a session that is not the one that would do the rebuild. What is
+established here is a code read anyone can re-derive, which is not an observation of
+production. `GET /api/admin/class/:id/gradebook` is fail-closed and answered
+`403 {"error":"Invalid or missing admin key."}` to a session holding only
+`COMMAND_READ_TOKEN` and `TODO_KEY`, so that live check needs the admin key and has
+not been done.
 
 ### 2. Manifest table replaces the ?total denominator
 
@@ -471,5 +614,144 @@ Deadline anchor: both courses fully wired by early August 2026, ahead of the fal
   `scripts/extract-live-body.js`, which throws on the challenge body, so they
   fail loudly rather than writing a sheet from it. The SWEEPS will report the
   whole site as broken until they are moved over.
+- Any page set larger than about three ships as four things: canonical data, a
+  generator, a validator, and a Matrixify sheet. Hand-authoring structurally
+  identical pages is how drift enters, and the drift is never in the page you are
+  looking at. The validator refuses a sheet carrying a CED Essential Knowledge code
+  in student-visible text, a fabricated per-unit exam weighting, an em-dash, a title
+  that does not match canonical data byte for byte, a Body HTML column on a row not
+  receiving a body update, an unresolvable internal link, or mojibake.
+- Generate the sheet, then PARSE IT BACK and diff against the source spec.
+  Generation is not evidence that generation worked. The CSP sheet lost 90 bytes a
+  page while every semantic check passed, and a parse-back diff is what caught it.
+- Validators get mutation tested, and a green mutation run is a FAILED check. Break
+  each rule on purpose and require the suite to go red per rule INDEPENDENTLY, not
+  in aggregate: a suite that goes red for a different rule is telling you the rule
+  you meant to test is hollow. Two guards here were found hollow on 2026-09-02 and a
+  third on 2026-09-03, which is why this is a convention rather than a suggestion.
+- **The mojibake rule, and why the obvious version of it is wrong.**
+  `smoke/encoding-guard.js` is the guard and `npm run smoke:encoding` runs it. Its
+  method is right and worth understanding before touching it: mojibake is
+  REVERSIBLE, so take a run of suspicious characters, encode it back through a
+  single-byte codec, decode that as UTF-8, and if the result is one different
+  character then the text was corrupted and you have just recovered the original.
+  Nothing about the shape of the text proves this. Only the round trip does, which
+  is why double-encoded text passes every other check in the repo: it is still
+  perfectly valid UTF-8, it parses, it lints, it serves, and the only thing wrong
+  with it is that it means the wrong character.
+
+  Two depths of corruption exist and they look nothing alike. UTF-8 bytes read as
+  cp1252 and re-encoded is SINGLE pass. Doing that twice is double pass. Written as
+  codepoints, because writing them as characters would put real mojibake in this
+  file and turn the guard red on its own repository scan:
+
+      intended         single pass                   double pass
+      U+2022 bullet    E2 80 A2 read as              C3 A2 E2 82 AC C2 A2 read as
+                       U+00E2 U+20AC U+00A2          U+00C3 U+00A2 U+00E2 U+201A U+00AC U+00C2 U+00A2
+      U+1F3AF target   U+00F0 U+0178 U+017D U+00AF   U+00C3 U+00B0 U+00C5 U+00B8 U+00C5 U+00BD U+00C2 U+00AF
+      U+00E9 e-acute   U+00C3 U+00A9                 U+00C3 U+0192 U+00C2 U+00A9
+
+  Measured 2026-09-03, and the measurement is the whole point. The guard as shipped
+  catches every DOUBLE-pass case and misses single-pass bullet, emoji and triangle.
+  Its lead set is only U+00C2, U+00C3 and U+00E2, and it encodes through latin-1
+  only. Single-pass corruption of a 3- or 4-byte character starts at U+00E0 to
+  U+00F4, outside that set, and its continuation bytes land on cp1252 punctuation
+  such as U+20AC, which latin-1 cannot express, so the round trip is never even
+  attempted. The 2026-08-07 incident it was built for was double-pass, so it has
+  always looked complete.
+
+  A tempting general rule, "any U+00C3 followed by U+0080 to U+00BF", is WORSE
+  rather than better. It misses single-pass bullet, emoji and triangle exactly as
+  the guard does, and additionally misses double-pass e-acute and double-pass
+  non-breaking space. Do not swap it in for the round trip.
+
+  Closing the gap means widening the lead set to every character a UTF-8 lead byte
+  C2 to F4 becomes, adding a cp1252 ENCODER beside latin-1, and trying chunk widths
+  up to 4 so a 4-byte emoji can be reversed. Checked against six characters at both
+  depths and seven legitimate samples including Portuguese and Vietnamese: recovers
+  all six, zero false positives. Not yet shipped; it is a guard change and wants its
+  own claim and its own mutation run.
+
+  **A mutation test for this rule must inject SINGLE-pass mojibake.** A mutation
+  built from the double-pass form goes red against a guard that is blind to the bug
+  actually seen on live pages, and that green report is worse than no report at all.
+  Assert both depths independently.
 - No em-dashes in any prose, comments, commit messages, or user-facing strings.
 - AP CSA references use the 2025-2026 4-unit structure exclusively.
+
+## Public and premium assessment content must not share items
+
+Three tiers, and the distinction between the first and the third is the one that
+matters.
+
+1. **Public practice.** Topic quizzes, practice exams, QOTD. Open, indexed,
+   rationale shown. This is the SEO engine, and gating it would be a strategic error
+   rather than a security improvement.
+2. **Auto-graded coursework.** Lesson quizzes scored server-side, identity-aware,
+   keys never in page source.
+3. **Premium teacher assessments.** Unit tests plus keys. Gated, noindex, premium
+   only.
+
+**Tiers 1 and 3 must draw from disjoint item banks.** A gated unit test built out of
+items that also appear in the public practice set is not gated, it is inconvenient.
+Any task that adds a premium assessment therefore carries the obligation to author
+new items rather than reuse public ones, and the overlap check that enforces it
+fails at overlap greater than zero, not at some tolerable fraction.
+
+Visual locking is not gating. A link whose URL sits in the page body is public no
+matter what the CSS does to it.
+
+## The exercise design standard
+
+An exercise that exists only to demonstrate an operator teaches the operator and
+nothing else. Divide two ints, then one of each, then repeat the whole pair for
+casting: the student learns the syntax and builds no intuition about when it
+matters.
+
+Every exercise produces a small working artifact, and the topic is the tool that
+artifact needs. Integer division and modulus become a change maker. Casting becomes
+a grade average that has to round rather than truncate. Compound booleans become a
+login validator. Exercise 1 builds a piece, Exercise 2 assembles the lesson into one
+working program.
+
+Structure with PRIMM: predict, run, investigate, modify, make. Parsons problems are
+the rung between reading code and writing it, for the students who stall at a blank
+editor.
+
+`docs/exercise-design-proposal.md` is the worked version of everything above, with
+the five rewritten CSA exercises, the `studio` activity type, and a recommended
+build order. Read it before scoping any of this; it landed on `main` the same day
+this section did.
+
+**The fork is which SHAPE the artifact is, and it decides the infrastructure. It is
+not a blocker, and an earlier draft of this section said it was.** Two shapes:
+
+- **A one-period autograded exercise does NOT need the sandbox and should not use
+  it.** It uses what the 53 existing CSA exercise pages already use: `program` or
+  `driver` mode in `lib/csa-code-modes.js`, hidden test cases, and the code-grading
+  contract where source is graded in transit and then DISCARDED, never stored. A
+  bigger exercise is a longer version of that shape, not a different one, so it
+  adds zero new PII surface and needs no Judge0 exception. What it needs built is
+  the activity type, a manifest row generator, and a verifier that checks each
+  stated requirement rather than only final stdout.
+- **A multi-day, personally-owned project is what the sandbox is already for,
+  today, with no new capability required.** It already runs Java for CSA and Python
+  and JavaScript for CSP, and already persists work and reopens it tomorrow. It
+  needs POINTING AT rather than building: `docs/sandbox.md` names both real gaps
+  itself, that it is not linked from the storefront and has no teacher visibility.
+  Closing the first is theme work and touches the PII posture not at all.
+
+So one artifact cannot be both, and that is the whole content of the fork: graded
+code is discarded by contract, sandbox work persists by design. Which need you are
+serving picks the shape, and the shape picks the infrastructure.
+
+**The one genuinely open decision is teacher visibility into sandbox work**, and it
+is Tanner's. Grading or even reviewing a multi-day capstone needs either a standing
+teacher read of `sandbox_programs` or a student-initiated snapshot into something a
+teacher can see. Strictly neither is a SECOND PII exception, since the text already
+sits in that table under the one exception this project has, but both expand what
+that exception covers, and `docs/sandbox.md` already says adding a teacher or admin
+path is a decision and not a patch. The proposal recommends the student-initiated
+snapshot over a standing read, and flags its own recommendation as the human's call.
+Do not scope `studio` or capstone work to depend on a teacher seeing it until that
+decision is made.
