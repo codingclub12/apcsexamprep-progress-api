@@ -1,0 +1,137 @@
+{
+  "change": "board 171: the practice exam page advertised an exam shape that does not exist",
+  "_context": [
+    "The live page called itself a FULL LENGTH practice EXAM while carrying 40 MCQ",
+    "and 3 free-response questions. The real AP Cybersecurity exam is 60 MCQ and",
+    "ONE free-response question, Device Security Analysis. A teacher pacing a class",
+    "against this page prepared students for a shape that does not exist.",
+    "",
+    "This is a RELABEL, not a rebuild. Board 176 owns building the 60 + 1 replica.",
+    "All 43 questions are carried through untouched, which the suite asserts.",
+    "",
+    "Every mutation below regenerates the sheet under the mutation, so the sheet",
+    "under test is the mutated one. That matters: mutating only the generator would",
+    "make the byte-identity check fail first, and a suite going red on a DIFFERENT",
+    "assertion than the one you meant to test is telling you the rule is hollow.",
+    "",
+    "TWO LAYERS ARE PROVEN SEPARATELY, and the first draft of this manifest proved",
+    "only one. The generator refuses to write a sheet that fails its own result",
+    "guards, so every mutation aimed at the smoke was caught by the generator first",
+    "and the gate correctly reported the targeted guard as still unproven. So the",
+    "GENERATOR mutations below edit the generator and expect its refusal, and the",
+    "SHEET mutations corrupt the committed CSV directly and expect the smoke's own",
+    "assertion, which is the only way to show the smoke would catch a bad sheet no",
+    "matter how it was produced.",
+    "",
+    "The suite check REGENERATES before asserting, because a generator mutation",
+    "rewrites the CSV as a side effect and the gate restores only the file it",
+    "mutated. Without this the committed sheet is left mutated after a gate run."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the sheet is parsed BACK and diffed against the source, not just generated",
+      "command": "node scripts/cyber-practice-exam-format-csv.js && npm run --silent smoke:practiceexamformat",
+      "expect": "OK - all 18 checks passed"
+    },
+    {
+      "kind": "suite",
+      "name": "Matrixify preflight passes with the round-trip original supplied",
+      "command": "node -e \"const fs=require('fs');const n=JSON.parse(fs.readFileSync('shopify/page-snapshots/ap-cybersecurity-practice-exam.before-format-relabel.json','utf8')).data.pages.edges[0].node;fs.writeFileSync('/tmp/pe-carrying.json',JSON.stringify({[n.handle]:n.body}))\" && node scripts/matrixify-preflight.js imports/2026-09-03/cyber-practice-exam-format-pages.csv --carrying /tmp/pe-carrying.json",
+      "expect": "clear to import"
+    },
+    {
+      "kind": "mutation",
+      "name": "GENERATOR: leaving FULL LENGTH in place must refuse the write",
+      "_why": "This is the exact state of the live page.",
+      "file": "scripts/cyber-practice-exam-format-csv.js",
+      "find": "  ['AP CYBERSECURITY PRACTICE EXAM - FULL LENGTH',\n   'AP CYBERSECURITY PRACTICE SET - 40 MCQ + 3 FRQ, NOT EXAM SHAPED', 1],",
+      "replace": "",
+      "command": "node scripts/cyber-practice-exam-format-csv.js && npm run --silent smoke:practiceexamformat",
+      "expect_failure": "a full-length claim survives the transform"
+    },
+    {
+      "kind": "mutation",
+      "name": "GENERATOR: leaving the H1 as an exam must refuse the write",
+      "file": "scripts/cyber-practice-exam-format-csv.js",
+      "find": "  ['<h1>AP Cybersecurity Practice Exam</h1>',\n   '<h1>AP Cybersecurity Practice Set</h1>', 1],",
+      "replace": "",
+      "command": "node scripts/cyber-practice-exam-format-csv.js && npm run --silent smoke:practiceexamformat",
+      "expect_failure": "the H1 still calls this an exam"
+    },
+    {
+      "kind": "mutation",
+      "name": "GENERATOR SCOPE GUARD: dropping a question card must refuse the write",
+      "_why": "Board 176 owns the item set. Without this, a relabel could quietly become a rebuild.",
+      "file": "scripts/cyber-practice-exam-format-csv.js",
+      "find": "  const { out: body, applied } = transform(node.body);",
+      "replace": "  const t = transform(node.body); t.out = t.out.replace('<div class=\"pq-card\"', '<div class=\"pq-gone\"'); const { out: body, applied } = t;",
+      "command": "node scripts/cyber-practice-exam-format-csv.js && npm run --silent smoke:practiceexamformat",
+      "expect_failure": "the question count changed"
+    },
+    {
+      "kind": "mutation",
+      "name": "GENERATOR: an em-dash this edit ADDS must refuse, though 59 pre-existing are carried",
+      "_why": "The guard is before/after. Checked absolutely it would refuse on the page's own history.",
+      "file": "scripts/cyber-practice-exam-format-csv.js",
+      "find": "   'AP CYBERSECURITY PRACTICE SET - 40 MCQ + 3 FRQ, NOT EXAM SHAPED', 1],",
+      "replace": "   'AP CYBERSECURITY PRACTICE SET \\u2014 40 MCQ + 3 FRQ, NOT EXAM SHAPED', 1],",
+      "command": "node scripts/cyber-practice-exam-format-csv.js && npm run --silent smoke:practiceexamformat",
+      "expect_failure": "this edit ADDS 1 em-dash"
+    },
+    {
+      "kind": "mutation",
+      "name": "GENERATOR: a stale live title must stop the run",
+      "file": "scripts/cyber-practice-exam-format-csv.js",
+      "find": "const LIVE_TITLE = 'AP Cybersecurity Practice Exam | Full Practice Test | APCSExamPrep.com';",
+      "replace": "const LIVE_TITLE = 'something the page does not say';",
+      "command": "node scripts/cyber-practice-exam-format-csv.js && npm run --silent smoke:practiceexamformat",
+      "expect_failure": "live title moved"
+    },
+    {
+      "kind": "mutation",
+      "name": "GENERATOR: an edit that matches nothing must stop the run, not silently do less",
+      "_why": "A replace that no-ops is how drift enters. It must be loud.",
+      "file": "scripts/cyber-practice-exam-format-csv.js",
+      "find": "  ['\"position\": 3, \"name\": \"Practice Exam\"',",
+      "replace": "  ['\"position\": 3, \"name\": \"Practice Examination\"',",
+      "command": "node scripts/cyber-practice-exam-format-csv.js && npm run --silent smoke:practiceexamformat",
+      "expect_failure": "edit matched 0 times, expected 1"
+    },
+    {
+      "kind": "mutation",
+      "name": "SHEET: a question deleted from the CSV must be caught by the suite itself",
+      "_why": "Proves the smoke catches a bad sheet however it was produced, not just a bad generator.",
+      "file": "imports/2026-09-03/cyber-practice-exam-format-pages.csv",
+      "find": "class=\"\"pq-card\"\"",
+      "replace": "class=\"\"pq-dead\"\"",
+      "command": "npm run --silent smoke:practiceexamformat",
+      "expect_failure": "43 question cards, unchanged"
+    },
+    {
+      "kind": "mutation",
+      "name": "SHEET: a reverted H1 in the CSV must be caught by the suite itself",
+      "file": "imports/2026-09-03/cyber-practice-exam-format-pages.csv",
+      "find": "<h1>AP Cybersecurity Practice Set</h1>",
+      "replace": "<h1>AP Cybersecurity Practice Exam</h1>",
+      "command": "npm run --silent smoke:practiceexamformat",
+      "expect_failure": "the H1 no longer calls it an exam"
+    },
+    {
+      "kind": "mutation",
+      "name": "SHEET: a wrong Title in the CSV must be caught by the suite itself",
+      "file": "imports/2026-09-03/cyber-practice-exam-format-pages.csv",
+      "find": "AP Cybersecurity Practice Set | 40 MCQ + 3 FRQ | APCSExamPrep.com",
+      "replace": "AP Cybersecurity Practice Exam | Full Practice Test | APCSExamPrep.com",
+      "command": "npm run --silent smoke:practiceexamformat",
+      "expect_failure": "title is the new one"
+    },
+    {
+      "kind": "live",
+      "name": "the live page stops advertising an exam shape that does not exist",
+      "_why": "Every assertion is false before the import. Run this AFTER importing the sheet.",
+      "command": "npm run --silent verify:practiceexamformat",
+      "expect": "OK - all 9 checks passed"
+    }
+  ]
+}

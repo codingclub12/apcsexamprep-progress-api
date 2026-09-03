@@ -1,0 +1,133 @@
+{
+  "change": "board 195: the page named AP Cybersecurity Exam Format said the format was unreleased",
+  "_context": [
+    "Measured on the stored body 2026-09-03: zero occurrences of '60 multiple',",
+    "'one free-response', '80 minutes', '50 minutes', 'Device Security Analysis'",
+    "or the 25 to 40% band. Its only two '70%' strings are CSS gradient stops. The",
+    "page whose whole job is stating the format stated none of it, in two places,",
+    "and was last touched 2026-06-05.",
+    "",
+    "Two layers are proven separately. The generator refuses to write a sheet that",
+    "fails its own result guards, so a mutation aimed at the suite is caught by the",
+    "generator first and the targeted guard stays unproven. GENERATOR mutations",
+    "expect the refusal; SHEET mutations corrupt the CSV directly and expect the",
+    "suite's own assertion.",
+    "",
+    "The suite check REGENERATES before asserting. A generator mutation rewrites the",
+    "CSV as a side effect and the gate restores only the file it mutated, so without",
+    "this the committed sheet is left mutated and a later run fails on stale output.",
+    "",
+    "The 25 to 40% band and Device Security Analysis are proven at the SHEET layer,",
+    "not the generator layer. Both facts appear in the generator's guard list as well",
+    "as in its output text, so a literal find/replace removes the guard along with",
+    "the fact and a different guard catches the mutation. Corrupting the CSV isolates",
+    "the property cleanly."
+  ],
+  "checks": [
+    {
+      "kind": "suite",
+      "name": "the sheet is parsed BACK and diffed against the source",
+      "command": "node scripts/cyber-exam-format-ced-csv.js && npm run --silent smoke:examformatced",
+      "expect": "OK - all 19 checks passed"
+    },
+    {
+      "kind": "suite",
+      "name": "Matrixify preflight passes with the round-trip original",
+      "command": "node -e \"const fs=require('fs');const n=JSON.parse(fs.readFileSync('shopify/page-snapshots/ap-cybersecurity-exam-format.before-ced-format.json','utf8')).data.pages.edges[0].node;fs.writeFileSync('/tmp/ef-carrying.json',JSON.stringify({[n.handle]:n.body}))\" && node scripts/matrixify-preflight.js imports/2026-09-03/cyber-exam-format-ced-pages.csv --carrying /tmp/ef-carrying.json",
+      "expect": "clear to import"
+    },
+    {
+      "kind": "mutation",
+      "name": "GENERATOR: leaving the stale FAQ answer must refuse the write",
+      "_why": "This is the exact state of the live page.",
+      "file": "scripts/cyber-exam-format-ced-csv.js",
+      "find": "  [STALE_FAQ, FRESH_FAQ, 1],",
+      "replace": "",
+      "command": "node scripts/cyber-exam-format-ced-csv.js && npm run --silent smoke:examformatced",
+      "expect_failure": "a \"not yet released\" claim survives"
+    },
+    {
+      "kind": "mutation",
+      "name": "SHEET: the 25 to 40% band removed from the CSV must be caught by the suite",
+      "_why": "CED verbatim and the only weighting printable as fact. Proven here rather than at the generator, because the literal also appears in the generator's own guard list.",
+      "file": "imports/2026-09-03/cyber-exam-format-ced-pages.csv",
+      "find": "25 to 40% each",
+      "replace": "some amount each",
+      "command": "npm run --silent smoke:examformatced",
+      "expect_failure": "the 25 to 40% per-category band"
+    },
+    {
+      "kind": "mutation",
+      "name": "SHEET: Device Security Analysis removed from the CSV must be caught by the suite",
+      "file": "imports/2026-09-03/cyber-exam-format-ced-pages.csv",
+      "find": "Device Security Analysis",
+      "replace": "a scenario task",
+      "command": "npm run --silent smoke:examformatced",
+      "expect_failure": "Device Security Analysis"
+    },
+    {
+      "kind": "mutation",
+      "name": "GENERATOR THE FABRICATION GUARD: a per-unit weighting must refuse the write",
+      "_why": "Every per-unit percentage circulating online is invented. CLAUDE.md calls one appearing in a generated sheet a validator failure rather than a copy edit.",
+      "file": "scripts/cyber-exam-format-ced-csv.js",
+      "find": "No per-unit weightings have been published,",
+      "replace": "Unit 3 is 25% of the exam, and no per-unit weightings have been published,",
+      "command": "node scripts/cyber-exam-format-ced-csv.js && npm run --silent smoke:examformatced",
+      "expect_failure": "a per-unit exam weighting appears"
+    },
+    {
+      "kind": "mutation",
+      "name": "GENERATOR: non-ASCII this edit adds must refuse the write",
+      "_why": "The first draft slipped in two curly apostrophes; the preflight reports non-ASCII only in aggregate, so they would not have stood out.",
+      "file": "scripts/cyber-exam-format-ced-csv.js",
+      "find": "is a guess rather than a published figure.",
+      "replace": "is a guess rather than a published figure\\u2019s.",
+      "command": "node scripts/cyber-exam-format-ced-csv.js && npm run --silent smoke:examformatced",
+      "expect_failure": "this edit adds non-ASCII U+2019"
+    },
+    {
+      "kind": "mutation",
+      "name": "GENERATOR: a structural change must refuse, since this is a text edit",
+      "file": "scripts/cyber-exam-format-ced-csv.js",
+      "find": "  const { out: body } = transform(node.body);",
+      "replace": "  const t = transform(node.body); t.out = t.out.replace('ef-faq-item', 'ef-faq-gone'); const { out: body } = t;",
+      "command": "node scripts/cyber-exam-format-ced-csv.js && npm run --silent smoke:examformatced",
+      "expect_failure": "ef-faq-item count changed"
+    },
+    {
+      "kind": "mutation",
+      "name": "GENERATOR: an edit matching nothing must stop the run, not silently do less",
+      "file": "scripts/cyber-exam-format-ced-csv.js",
+      "find": "const STALE_FAQ = '<p>The College Board has not yet released",
+      "replace": "const STALE_FAQ = '<p>The College Board has never released",
+      "command": "node scripts/cyber-exam-format-ced-csv.js && npm run --silent smoke:examformatced",
+      "expect_failure": "edit matched 0 times, expected 1"
+    },
+    {
+      "kind": "mutation",
+      "name": "SHEET: a reverted FAQ in the CSV must be caught by the suite itself",
+      "_why": "Proves the suite catches a bad sheet however it was produced.",
+      "file": "imports/2026-09-03/cyber-exam-format-ced-pages.csv",
+      "find": "Sixty. Section I is 60 multiple choice questions",
+      "replace": "The College Board has not yet released the exact number of questions",
+      "command": "npm run --silent smoke:examformatced",
+      "expect_failure": "no \"not yet released\" claim survives"
+    },
+    {
+      "kind": "mutation",
+      "name": "SHEET: a per-unit weighting injected into the CSV must be caught by the suite",
+      "file": "imports/2026-09-03/cyber-exam-format-ced-pages.csv",
+      "find": "No per-unit weightings have been published",
+      "replace": "Unit 4 is 30% of the exam and no per-unit weightings have been published",
+      "command": "npm run --silent smoke:examformatced",
+      "expect_failure": "no per-unit exam weighting anywhere"
+    },
+    {
+      "kind": "live",
+      "name": "the live page states the format it is named after",
+      "_why": "Every assertion is false before the import. Run AFTER importing.",
+      "command": "npm run --silent verify:examformatced",
+      "expect": "OK - all 7 checks passed"
+    }
+  ]
+}
