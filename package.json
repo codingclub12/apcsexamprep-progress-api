@@ -206,7 +206,8 @@
     "smoke:deadlinks": "node smoke/dead-internal-link-repair.js",
     "smoke:emptyredirects": "node smoke/empty-page-redirects.js",
     "smoke:unitcourse": "node smoke/csa-unit-course-repair.js",
-    "smoke:denompanel": "node smoke/denominator-panel.js"
+    "smoke:denompanel": "node smoke/denominator-panel.js",
+    "smoke:adminreadkey": "node smoke/admin-read-key.js"
   },
   "keywords": [],
   "author": "",
