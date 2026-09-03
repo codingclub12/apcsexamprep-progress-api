@@ -48,10 +48,21 @@ fi
 #                        rotation across three stores and anything written in
 #                        between.
 #
-#  Environment configuration is not a secrets store - anyone who can use the
-#  environment can read it - and a session can echo a variable into its own
-#  transcript at any time. That already happened once with TODO_KEY. So the
-#  value sitting in readable config should be the one that would not matter.
+#  BOTH ARE EXPECTED TO BE SET HERE, and TODO_KEY being present is deliberate.
+#  Tanner decided that on 2026-09-03, with the exposure stated to him: environment
+#  configuration is not a secrets store, anyone who can use the environment can
+#  read it, and a session can echo a variable into its own transcript at any time,
+#  which had happened to both tokens that same day. He took the trade anyway,
+#  because claiming a lock is a WRITE and a session holding only the read token
+#  cannot claim, which made rule 2 of CLAUDE.md unenforceable by the sessions it
+#  governs. Do not report the write token's presence as a defect and do not
+#  remove it. See the top of CLAUDE.md for the full decision.
+#
+#  The preference below is unchanged and still right: this hook only READS, so it
+#  uses the read-only credential when one is available and keeps the write token
+#  out of the request entirely. Preferring the cheap credential for a read is not
+#  the retired containment rule, it is just not spending authority it does not
+#  need. apcs.js reaches for TODO_KEY when a claim actually has to be written.
 #
 #  THE READ TOKEN IS IN THE URL, not a header. Every path below that prints a
 #  URL or a server response must redact it, or this change swaps one leak for
